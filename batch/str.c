@@ -44,12 +44,15 @@ ContStrExt;
 
 int                 LineNum;	/* compteur de lignes du fichier source */
 
-static Name          srceFileName; /* nom du fichier a compiler */
-static PtrSSchema pSSchema;	/* pointeur sur le schema de structure en cours
+static Name         srceFileName;	/* nom du fichier a compiler */
+static PtrSSchema   pSSchema;	/* pointeur sur le schema de structure en cours
+
 				   de construction */
 static int          TextConstPtr;
+
 				/* index courant dans le buffer des const */
 static boolean      CompilAttr;	/* on est en train d'analyser les attributs
+
 				   globaux */
 static boolean      CompilLocAttr;	/* on est en train d'analyser des attributs
 
@@ -60,7 +63,7 @@ static boolean      CompilUnits;	/* on analyse les unites exportees */
 static boolean      RootRule;	/* on attend la regle racine */
 static boolean      Rules;	/* on est dans les Rules */
 static boolean      CompilExtens;	/* on est dans les regles d'extension */
-static boolean      ExceptExternalType;	/* on a rencontre' "EXTERN" avant un nom */
+static boolean      ExceptExternalType;		/* on a rencontre' "EXTERN" avant un nom */
 
 				/* de type dans la section EXCEPT */
 static SRule       *CurExtensRule;	/* regle d'extension en cours de traitement */
@@ -69,20 +72,20 @@ static boolean      Maximum;	/* nombre maximum d'elements d'une liste */
 static boolean      RRight[MAX_SRULE_RECURS];	/* on est dans la partie droite de la regle */
 
 static int          RecursLevel;	/* niveau de recursivite' */
-static int  CurRule[MAX_SRULE_RECURS];		/* numero de la regle courante */
-static Name          CurName;	/* symbole gauche de la derniere regle
+static int          CurRule[MAX_SRULE_RECURS];	/* numero de la regle courante */
+static Name         CurName;	/* symbole gauche de la derniere regle
 
 				   rencontree */
 static int          CurNum;	/* indice de ce nom dans la table des
 
 				   identificateurs */
 static int          CurNLocAttr;	/* nombre d'attributs locaux asocies a CurName */
-static int CurLocAttr[MAX_LOCAL_ATTR];	/* les attributs  locaux
+static int          CurLocAttr[MAX_LOCAL_ATTR];		/* les attributs  locaux
 
 							   associes a CurName */
-static boolean      CurReqAttr[MAX_LOCAL_ATTR];	/* les booleens 'Required' des
+static boolean      CurReqAttr[MAX_LOCAL_ATTR];		/* les booleens 'Required' des
 
-						   attributs locaux associes a CurName */
+							   attributs locaux associes a CurName */
 static boolean      CurParam;	/* la derniere regle rencontree est un param */
 static boolean      CurAssoc;	/* la derniere regle rencontree est un associe' */
 static boolean      CurUnit;	/* la derniere regle rencontree est une unite
@@ -94,30 +97,30 @@ static boolean      MandatoryAttr;	/* c'est un attribut obligatoire */
 static int          Sign;	/* -1 ou 1 selon le signe de la derniere valeur 
 
 				 * d'attribut rencontree */
-static PtrSSchema pExternSSchema;	/* pointeur sur le schema de structure externe */
-static int  RuleExportWith;	/* element dont on traite le contenu exporte' */
-static Name          ReferredTypeName;	/* dernier nom d'un type reference' */
+static PtrSSchema   pExternSSchema;	/* pointeur sur le schema de structure externe */
+static int          RuleExportWith;	/* element dont on traite le contenu exporte' */
+static Name         ReferredTypeName;	/* dernier nom d'un type reference' */
 static int          BeginReferredTypeName;	/* position de ce nom dans la ligne */
 static ContStrExt   ExternalStructContext;	/* contexte ou est utilise' une structure externe */
 static boolean      UnknownContent;	/* indique que le contenu d'un element exporte 
 
 					   n'est pas declare dans le schema */
-static Name          PreviousIdent;	/* Name du dernier identificateur de type rencontre' */
-static int  PreviousRule;
+static Name         PreviousIdent;	/* Name du dernier identificateur de type rencontre' */
+static int          PreviousRule;
 
 static int          NExternalTypes;	/* nombre de types declares comme externes */
-static Name          ExternalType[MAX_EXTERNAL_TYPES];	/* table des noms de types
+static Name         ExternalType[MAX_EXTERNAL_TYPES];	/* table des noms de types
 
 							   declares comme externes */
 static boolean      IncludedExternalType[MAX_EXTERNAL_TYPES];	/* table des noms de */
 
 				/* types declares comme externes inclus */
 static boolean      CompilExcept;	/* on est dans les declarations d'exceptions */
-static int  ExceptType;	/* numero du type d'element dont on traite les exceptions */
-static int ExceptAttr;	/* Numero de l'attribut dont on traite les exceptions */
+static int          ExceptType;	/* numero du type d'element dont on traite les exceptions */
+static int          ExceptAttr;	/* Numero de l'attribut dont on traite les exceptions */
 static int          CurBasicElem;	/* numero du type de base courant */
 static int          NAlias;	/* nombre d'alias definis dans le schema */
-static int  Alias[MAX_RULES_SSCHEMA];		/* les regles du schema qui definissent
+static int          Alias[MAX_RULES_SSCHEMA];	/* les regles du schema qui definissent
 
 						   des alias */
 static boolean      FirstInPair;	/* on a rencontre' le mot-cle "First" */
@@ -156,7 +159,7 @@ static void         InitBasicType (SRule * pRule, char *name, BasicType typ)
 static void         InitBasicType (pRule, name, typ)
 SRule              *pRule;
 char               *name;
-BasicType          typ;
+BasicType           typ;
 
 #endif /* __STDC__ */
 
@@ -192,7 +195,7 @@ static void         Initialize ()
 
 {
    int                 i;
-   TtAttribute           *pAttr;
+   TtAttribute        *pAttr;
    SRule              *pRule;
 
    pSSchema->SsExtension = False;
@@ -302,7 +305,7 @@ static boolean      RuleNameExist ()
 {
    int                 r;
    boolean             ret;
-   Name                 name;
+   Name                name;
 
    /* valeur de retour de la fonction */
    ret = False;
@@ -333,11 +336,11 @@ int                 n;
 #endif /* __STDC__ */
 {
    int                 j;
-   SrcIdentDesc          *pIdent;
+   SrcIdentDesc       *pIdent;
    SRule              *pRule;
 
    pIdent = &Identifier[n - 1];
-   TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_EXTERNAL_STRUCT), pIdent->SrcIdentifier);
+   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_EXTERNAL_STRUCT), pIdent->SrcIdentifier);
    if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
       TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
    /* trop de regles */
@@ -522,8 +525,8 @@ static void         ChangeRules ()
 #endif				/* __STDC__ */
 
 {
-   int         i;
-   TtAttribute           *pAttr;
+   int                 i;
+   TtAttribute        *pAttr;
 
    /* utilise l'indicateur SrRecursDone, avec le sens `regle non utilisee' */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
@@ -563,9 +566,9 @@ static void         CopyWord (Name name, indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static void         CopyWord (name, wi, wl)
-Name                 name;
-indLine               wi;
-indLine               wl;
+Name                name;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
@@ -588,7 +591,7 @@ static void         Push (indLine wi)
 
 #else  /* __STDC__ */
 static void         Push (wi)
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -613,7 +616,7 @@ static void         RightIdentifier (int n, indLine wi)
 #else  /* __STDC__ */
 static void         RightIdentifier (n, wi)
 int                 n;
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -675,7 +678,7 @@ static void         NewRule (indLine wi)
 
 #else  /* __STDC__ */
 static void         NewRule (wi)
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -764,14 +767,14 @@ static int          RuleNumber (indLine wl, indLine wi)
 
 #else  /* __STDC__ */
 static int          RuleNumber (wl, wi)
-indLine              wl;
-indLine              wi;
+indLine             wl;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
    int                 RuleNum;
-   Name                 N;
+   Name                N;
    boolean             ok;
 
    CopyWord (N, wi, wl);
@@ -796,14 +799,14 @@ static int          AttributeNumber (indLine wl, indLine wi)
 
 #else  /* __STDC__ */
 static int          AttributeNumber (wl, wi)
-indLine               wl;
-indLine               wi;
+indLine             wl;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
    int                 AttrNum;
-   Name                 N;
+   Name                N;
    boolean             ok;
 
    CopyWord (N, wi, wl);
@@ -835,13 +838,13 @@ int                 Num;
 boolean             checkType;
 boolean             checkAttr;
 boolean             CheckIntAttr;
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
    SRule              *pRule;
-   TtAttribute           *pAttr;
+   TtAttribute        *pAttr;
 
    if (checkType && ExceptType == 0)
       CompilerError (wi, STR, FATAL, STR_ONLY_FOR_ELEMS, inputLine, LineNum);
@@ -896,8 +899,8 @@ static void         BasicEl (int n, indLine wi, SyntRuleNum pr)
 #else  /* __STDC__ */
 static void         BasicEl (n, wi, pr)
 int                 n;
-indLine               wi;
-SyntRuleNum                 pr;
+indLine             wi;
+SyntRuleNum         pr;
 
 #endif /* __STDC__ */
 
@@ -1064,14 +1067,14 @@ static SRule       *GetExtensionRule (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static SRule       *GetExtensionRule (wi, wl)
-indLine               wi;
-indLine               wl;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
 {
    SRule              *pRule;
-   Name                 n;
+   Name                n;
    int                 r;
    boolean             found;
 
@@ -1105,8 +1108,8 @@ static SRule       *NewExtensionRule (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static SRule       *NewExtensionRule (wi, wl)
-indLine               wi;
-indLine               wl;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
@@ -1146,19 +1149,19 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, Synta
 
 #else  /* __STDC__ */
 static void         ProcessToken (wi, wl, c, r, nb, pr)
-indLine               wi;
-indLine               wl;
-SyntacticCode             c;
-SyntacticCode             r;
+indLine             wi;
+indLine             wl;
+SyntacticCode       c;
+SyntacticCode       r;
 int                 nb;
-SyntRuleNum                 pr;
+SyntRuleNum         pr;
 
 #endif /* __STDC__ */
 
 {
    int                 SynInteger, i, j;
-   Name                 N;
-   TtAttribute           *pAttr;
+   Name                N;
+   TtAttribute        *pAttr;
    SRule              *pRule;
    boolean             ok;
    int                 attrNum;
@@ -1625,7 +1628,7 @@ SyntRuleNum                 pr;
 			       pRule->SrNChoices = 0;	/* UNIT  */
 			    else
 			       /* 19:     */
-			       pRule->SrNChoices = -1;		/* NATURE  */
+			       pRule->SrNChoices = -1;	/* NATURE  */
 			 }
 		    }
 		  break;
@@ -1650,7 +1653,7 @@ SyntRuleNum                 pr;
 			  IncludedExternalType[NExternalTypes - 1] = False;
 			  strncpy (ExternalType[NExternalTypes - 1], PreviousIdent, MAX_NAME_LENGTH);
 			  if (strcmp (PreviousIdent, pSSchema->
-			  SsRule[pSSchema->SsRootElem - 1].SrName) == 0)
+			      SsRule[pSSchema->SsRootElem - 1].SrName) == 0)
 			     /* C'est le type de document lui-meme qui est utilise' */
 			     /* comme externe */
 			    {
@@ -2006,7 +2009,7 @@ SyntRuleNum                 pr;
 							       {
 								  pSSchema->SsRule[pRule->SrChoice[j] - 1].SrExportContent = i + 1;
 								  strncpy (pSSchema->SsRule[pRule->
-											       SrChoice[j] - 1].SrNatExpContent, N, MAX_NAME_LENGTH);
+											    SrChoice[j] - 1].SrNatExpContent, N, MAX_NAME_LENGTH);
 							       }
 						       break;
 						 }
@@ -2452,7 +2455,7 @@ SyntRuleNum                 pr;
 		       else
 			  pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 		       if (pSSchema->SsAttribute[pRule->SrDefAttr[
-			 pRule->SrNDefAttrs - 1] - 1].AttrType != AtTextAttr)
+			pRule->SrNDefAttrs - 1] - 1].AttrType != AtTextAttr)
 			  CompilerError (wi, STR, FATAL, STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, LineNum);
 		       else
 			  pRule->SrDefAttrValue[pRule->SrNDefAttrs - 1] =
@@ -2524,8 +2527,8 @@ static void         CheckRecursivity (int r, int path[], int level, boolean busy
 
 #else  /* __STDC__ */
 static void         CheckRecursivity (r, path, level, busy, done)
-int         r;
-int         path[];
+int                 r;
+int                 path[];
 int                 level;
 boolean             busy[];
 boolean             done[];
@@ -2602,8 +2605,8 @@ static void         ChkRecurs ()
 #endif				/* __STDC__ */
 
 {
-   int         i;
-   int         path[100];
+   int                 i;
+   int                 path[100];
    boolean             busy[MAX_RULES_SSCHEMA + 1], done[MAX_RULES_SSCHEMA + 1];
    SRule              *pRule;
 
@@ -2617,7 +2620,7 @@ static void         ChkRecurs ()
      {
 	pRule = &pSSchema->SsRule[i];
 	if (pRule->SrRecursive)
-	   TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_RECURSIVE_ELEM), (char *) pRule->SrName);
+	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_RECURSIVE_ELEM), (char *) pRule->SrName);
      }
 }
 
@@ -2633,59 +2636,59 @@ static void         ListAssocElem ()
 #endif				/* __STDC__ */
 
 {
-  int	i;
-  SRule	*pRule;
+   int                 i;
+   SRule              *pRule;
 
-  /* parcourt toute la table des regles */
-  for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
-    {
-      if (pSSchema->SsRule[i].SrParamElem)
-	/* affiche un message */
-	    TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_PARAMETER), (char *)pSSchema->SsRule[i].SrName);
-      if (pSSchema->SsRule[i].SrAssocElem)
-	if (!pSSchema->SsRule[i].SrRecursDone)
-	  /* l'element associe est utilise dans une autre regle, erreur */
-	  {
-	    CompilerErrorString(0, STR, INFO, STR_THE_ASSOC_ELEM_IS_USED_IN_ANOTHER_RULE, inputLine, LineNum, pSSchema->SsRule[i].SrName);
-	    error = True;
-	  } 
-	else	
-	  /* element associe correct */
-	  /* On cree une nouvelle regle liste a la fin de la table des */
-	  /* regles */
-	  {
-	    if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
-		TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
-	    /* saturation de la table des regles */
-	    else
-	      pSSchema->SsNRules++;
-	    pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
-	    /* la nouvelle regle liste prend le nom de ses elements... */
-	    strncpy(pRule->SrName, pSSchema->SsRule[i].SrName, MAX_NAME_LENGTH-2);
-	    /* ... suivi de 's' */
-	    pRule->SrName[MAX_NAME_LENGTH-2] = '\0';
-	    strcat(pRule->SrName, "s");
-	    pRule->SrNDefAttrs = 0;
-	    pRule->SrNLocalAttrs = 0;
-	    pRule->SrNInclusions = 0;
-	    pRule->SrNExclusions = 0;
-	    pRule->SrRefImportedDoc = False;
-	    pRule->SrAssocElem = False;
-	    pRule->SrParamElem = False;
-	    pRule->SrUnitElem = False;
-	    pRule->SrRecursive = False;
-	    pRule->SrExportedElem = False;
-	    pRule->SrFirstExcept = 0;
-	    pRule->SrLastExcept = 0;
-	    pRule->SrConstruct = CsList;
-	    pRule->SrListItem = i+1;
-	    pRule->SrMinItems = 0;
-	    pRule->SrMaxItems = 32000;
-	    /* ecrit un message au terminal */
-	    TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_ASSOC_ELEMS), (char *)pRule->SrName);
-	    if (RuleNameExist())
-		TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
-	  }
+   /* parcourt toute la table des regles */
+   for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
+     {
+	if (pSSchema->SsRule[i].SrParamElem)
+	   /* affiche un message */
+	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_PARAMETER), (char *) pSSchema->SsRule[i].SrName);
+	if (pSSchema->SsRule[i].SrAssocElem)
+	   if (!pSSchema->SsRule[i].SrRecursDone)
+	      /* l'element associe est utilise dans une autre regle, erreur */
+	     {
+		CompilerErrorString (0, STR, INFO, STR_THE_ASSOC_ELEM_IS_USED_IN_ANOTHER_RULE, inputLine, LineNum, pSSchema->SsRule[i].SrName);
+		error = True;
+	     }
+	   else
+	      /* element associe correct */
+	      /* On cree une nouvelle regle liste a la fin de la table des */
+	      /* regles */
+	     {
+		if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
+		   TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
+		/* saturation de la table des regles */
+		else
+		   pSSchema->SsNRules++;
+		pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
+		/* la nouvelle regle liste prend le nom de ses elements... */
+		strncpy (pRule->SrName, pSSchema->SsRule[i].SrName, MAX_NAME_LENGTH - 2);
+		/* ... suivi de 's' */
+		pRule->SrName[MAX_NAME_LENGTH - 2] = '\0';
+		strcat (pRule->SrName, "s");
+		pRule->SrNDefAttrs = 0;
+		pRule->SrNLocalAttrs = 0;
+		pRule->SrNInclusions = 0;
+		pRule->SrNExclusions = 0;
+		pRule->SrRefImportedDoc = False;
+		pRule->SrAssocElem = False;
+		pRule->SrParamElem = False;
+		pRule->SrUnitElem = False;
+		pRule->SrRecursive = False;
+		pRule->SrExportedElem = False;
+		pRule->SrFirstExcept = 0;
+		pRule->SrLastExcept = 0;
+		pRule->SrConstruct = CsList;
+		pRule->SrListItem = i + 1;
+		pRule->SrMinItems = 0;
+		pRule->SrMaxItems = 32000;
+		/* ecrit un message au terminal */
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ASSOC_ELEMS), (char *) pRule->SrName);
+		if (RuleNameExist ())
+		   TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
+	     }
 	else
 	   /* ce n'est pas un element associe */
 	if (pSSchema->SsRule[i].SrRecursDone)
@@ -2697,14 +2700,14 @@ static void         ListAssocElem ()
 		  {
 		     NAlias++;
 		     Alias[NAlias - 1] = i + 1;
-		     TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_ALIAS), (char *) pSSchema->SsRule[i].SrName);
+		     TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS), (char *) pSSchema->SsRule[i].SrName);
 		  }
 		else
 		   /* les regles de Fin de CsPairedElement ne sont jamais referencees */
 		   if (pSSchema->SsRule[i].SrConstruct != CsPairedElement ||
 		       pSSchema->SsRule[i].SrFirstOfPair)
 		   /* c'est une definition inutile */
-		   TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_UNUSED), (char *) pSSchema->SsRule[i].SrName);
+		   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED), (char *) pSSchema->SsRule[i].SrName);
 	     }
      }
 }
@@ -2723,7 +2726,7 @@ static void         ListNotCreated ()
 #endif				/* __STDC__ */
 
 {
-   int         r, rr;
+   int                 r, rr;
    int                 i;
    boolean             temp;
    SRule              *pRule;
@@ -2826,7 +2829,7 @@ static void         ListNotCreated ()
 	     else
 		for (rr = 0; rr < pSSchema->SsNRules; rr++)
 		   if (pSSchema->SsRule[rr].SrConstruct == CsAggregate ||
-		       pSSchema->SsRule[rr].SrConstruct == CsUnorderedAggregate)
+		   pSSchema->SsRule[rr].SrConstruct == CsUnorderedAggregate)
 		      for (i = 0; i < pSSchema->SsRule[rr].SrNComponents; i++)
 			 if (pSSchema->SsRule[rr].SrComponent[i] == r + 1)
 			    temp = False;
@@ -2837,13 +2840,13 @@ static void         ListNotCreated ()
 		      /* l'element est dans la table. Il ne sera pas cree */
 		      temp = False;
 	     if (temp)
-		TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_IS_A_TEMPORARY_ELEM), (char *) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_IS_A_TEMPORARY_ELEM), (char *) pRule->SrName);
 	  }
 	else if (!pRule->SrRecursDone)
 	   /* les unites peuvent ne pas etre utilisees dans le schema */
 	   if (!pRule->SrUnitElem)
 	     {
-		TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_WON_T_BE_CREATED), (char *) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED), (char *) pRule->SrName);
 		/* cherche s'il y a des REFERENCES sur ce type d'element */
 		for (rr = 0; rr < pSSchema->SsNRules; rr++)
 		  {
@@ -2851,7 +2854,7 @@ static void         ListNotCreated ()
 		     if (pRule2->SrConstruct == CsReference)
 			if (pRule2->SrRefTypeNat[0] == '\0')
 			   if (pRule2->SrReferredType == r + 1)
-			      TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_WON_T_BE_CREATED_AND_IS_REFD), (char *) pRule->SrName);
+			      TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED_AND_IS_REFD), (char *) pRule->SrName);
 		  }
 	     }
      }
@@ -2872,18 +2875,18 @@ char              **argv;
 #endif /* __STDC__ */
 
 {
-   FILE                *inputFile;
+   FILE               *inputFile;
    boolean             fileOK;
    char                buffer[200];
-   indLine               i;	/* position courante dans la ligne en cours */
-   indLine               wi;	/* position du debut du mot courant dans la
+   indLine             i;	/* position courante dans la ligne en cours */
+   indLine             wi;	/* position du debut du mot courant dans la
 
 				   ligne en cours */
-   indLine               wl;	/* longueur du mot courant */
-   SyntacticType              wn;	/* SyntacticType du mot courant */
-   SyntRuleNum                 r;	/* numero de regle */
-   SyntRuleNum                 pr;	/* numero de la regle precedente */
-   SyntacticCode             c;	/* code grammatical du mot trouve */
+   indLine             wl;	/* longueur du mot courant */
+   SyntacticType       wn;	/* SyntacticType du mot courant */
+   SyntRuleNum         r;	/* numero de regle */
+   SyntRuleNum         pr;	/* numero de la regle precedente */
+   SyntacticCode       c;	/* code grammatical du mot trouve */
    int                 nb;	/* indice dans Identifier du mot trouve, si
 
 				   c'est un identificateur */
@@ -2974,7 +2977,7 @@ char              **argv;
 				   }
 			      }
 			    while (wi != 0 && !error);
-			/* il n'y a plus de mots a traiter dans la ligne */
+			    /* il n'y a plus de mots a traiter dans la ligne */
 			 }
 		    }
 		  if (!error)
@@ -3005,7 +3008,7 @@ char              **argv;
 			    strcat (srceFileName, ".STR");
 			    fileOK = WriteStructureSchema (srceFileName, pSSchema, 0);
 			    if (!fileOK)
-			       TtaDisplayMessage (FATAL, TtaGetMessage(STR, STR_CANNOT_WRITE), srceFileName);
+			       TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_CANNOT_WRITE), srceFileName);
 			 }
 		    }
 		  free (pSSchema);

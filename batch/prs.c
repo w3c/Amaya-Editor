@@ -48,26 +48,26 @@ extern void         TtaSaveAppRegistry ();
 #endif /* __STDC__ */
 
 static PtrPSchema   pPSchema;	/* Schema de presentation genere */
-static PtrSSchema pSSchema;   /* Schema de structure */
-static int       CurView;	/* numero de la vue courante */
-static PtrPRule FirstRule;	/* pointeur sur la premiere regle de la suite
+static PtrSSchema   pSSchema;	/* Schema de structure */
+static int          CurView;	/* numero de la vue courante */
+static PtrPRule     FirstRule;	/* pointeur sur la premiere regle de la suite
 
 				   de regles courante */
-static PtrPRule CurRule;	/* pointeur sur la regle de present. courante */
-static PtrPRule NextRule;	/* pointeur sur la regle de present. suivante */
-static int CurAttrNum;	/* numero de l'attribut en cours */
-static int CurAttrVal;	/* numero de la valeur d'attribut en cours */
-static int CurComparAttr;	/* numero de l'attribut de comparaison */
-static int  CurElemHeritAttr;	/* numero de l'element heritant de cet
+static PtrPRule     CurRule;	/* pointeur sur la regle de present. courante */
+static PtrPRule     NextRule;	/* pointeur sur la regle de present. suivante */
+static int          CurAttrNum;	/* numero de l'attribut en cours */
+static int          CurAttrVal;	/* numero de la valeur d'attribut en cours */
+static int          CurComparAttr;	/* numero de l'attribut de comparaison */
+static int          CurElemHeritAttr;	/* numero de l'element heritant de cet
 
 					   attribut */
 static int          CurAttrLowerBound;	/* borne inferieure de comparaison */
 static int          CurAttrUpperBound;	/* borne superieure de comparaison */
-static Name          CurTextEqual;	/* valeur d'attribut textuel */
-static int  CurType;	/* numero de la regle de structure definissant
+static Name         CurTextEqual;	/* valeur d'attribut textuel */
+static int          CurType;	/* numero de la regle de structure definissant
 
 				   le type dont on analyse les regles de presentation */
-static int CurPresBox;	/* numero de la boite de presentation courante */
+static int          CurPresBox;	/* numero de la boite de presentation courante */
 static boolean      ViewDef;	/* on est dans la definition des vues du doc. */
 static boolean      CounterDef;	/* on est dans la definition des compteurs */
 static boolean      ConstantDef;	/* on est dans la definition des constantes */
@@ -82,9 +82,9 @@ static boolean      AttributeDef;	/* on est dans la definition des attributs */
 static boolean      NewAttributeDef;	/* definition d'un nouveau paquet de regles
 
 					   de presentation d'un attribut */
-static int          TransmittedCounter;	/* numero du compteur dont on traite la regle
+static int          TransmittedCounter;		/* numero du compteur dont on traite la regle
 
-					   de transmission */
+						   de transmission */
 static int          TransmittedElem;	/* type de l'element dont on traite la regle
 
 					   de transmission */
@@ -94,7 +94,7 @@ static boolean      InLineBreakRule;	/* on est dans une regle 'LineBreak' */
 static boolean      InGatherRule;	/* on est dans une regle 'Gather' */
 static boolean      InInLineRule;	/* on est dans une regle 'InLine' */
 static boolean      IncludedColumn;
-static boolean      InRule;		/* on est dans une regle */
+static boolean      InRule;	/* on est dans une regle */
 static boolean      InWithinCond;	/* on est dans une condition 'Within' */
 static boolean      AxisDef;	/* le prochain repere boite rencontre est une
 
@@ -129,17 +129,17 @@ static boolean      SignGreaterOrLess;	/* il y a un signe > ou < dans la conditi
 
 					   Within en cours de traitement */
 static int          CurCondCntSign;	/* signe dans une condition */
-static Name          CopyType;		/* nom du type qui apparait dans la regle Copy */
+static Name         CopyType;	/* nom du type qui apparait dans la regle Copy */
 static int          BeginCopyType;	/* indice dans la ligne du debut de ce nom */
-static PtrSSchema pExternalSS;	/* pointeur sur le schema de structure externe */
+static PtrSSchema   pExternalSS;	/* pointeur sur le schema de structure externe */
 static boolean      InCondPage;	/* on est dans une condition Even, Odd ou One */
 static boolean      InclusionRefName;	/* le nom de type qui suit doit etre interprete
 
 					   comme le nom d'une reference d'inclusion
 					   sans expansion */
-static boolean      VCondLess;		/* on est dans une condition 'Less' */
-static boolean      VCondGreater;		/* on est dans une condition 'Greater' */
-static boolean      CondEqual;		/* on est dans une condition 'Equal' */
+static boolean      VCondLess;	/* on est dans une condition 'Less' */
+static boolean      VCondGreater;	/* on est dans une condition 'Greater' */
+static boolean      CondEqual;	/* on est dans une condition 'Equal' */
 
 static boolean      FirstInPair;	/* on a rencontre' "First" */
 static boolean      SecondInPair;	/* on a rencontre' "Second" */
@@ -282,9 +282,9 @@ static void         CopyName (Name n, indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static void         CopyName (n, wi, wl)
-Name                 n;
-indLine               wi;
-indLine               wl;
+Name                n;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
@@ -307,7 +307,7 @@ static void         CheckConditions (indLine wi)
 
 #else  /* __STDC__ */
 static void         CheckConditions (wi)
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -352,12 +352,12 @@ static void         CreatePRule (PRuleType t, indLine wi)
 #else  /* __STDC__ */
 static void         CreatePRule (t, wi)
 PRuleType           t;
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPRuleV;
+   PtrPRule            pPRuleV;
 
    ConditionEnd ();
    if (t != PtFunction)
@@ -471,8 +471,8 @@ static void         SetLevel (Level lev, indLine wi)
 
 #else  /* __STDC__ */
 static void         SetLevel (lev, wi)
-Level              lev;
-indLine               wi;
+Level               lev;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -536,7 +536,7 @@ static void         EndOfRulesForType ()
 
 {
    AttributePres      *pPRuleA;
-   NumAttrCase         *pAttrCase;
+   NumAttrCase        *pAttrCase;
    int                 l;
 
    if (RuleDef)
@@ -587,8 +587,8 @@ static void         EndOfRulesForType ()
 static void         NewVarListItem (PresVariable * pVar, indLine wi)
 #else  /* __STDC__ */
 static void         NewVarListItem (pVar, wi)
-PresVariable            *pVar;
-indLine               wi;
+PresVariable       *pVar;
+indLine             wi;
 
 #endif /* __STDC__ */
 {
@@ -612,7 +612,7 @@ indLine               wi;
 static void         NewCondition (indLine wi)
 #else  /* __STDC__ */
 static void         NewCondition (wi)
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 {
@@ -646,7 +646,7 @@ static void         NewConst (indLine wi)
 
 #else  /* __STDC__ */
 static void         NewConst (wi)
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -668,7 +668,7 @@ static void         NewVar (indLine wi)
 
 #else  /* __STDC__ */
 static void         NewVar (wi)
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -864,7 +864,7 @@ int                 att;
 #endif /* __STDC__ */
 {
    AttributePres      *pPRuleA;
-   NumAttrCase         *pAttrCase;
+   NumAttrCase        *pAttrCase;
    int                 j;
 
    pPRuleA = (AttributePres *) malloc (sizeof (AttributePres));
@@ -916,13 +916,13 @@ static void         GenerateRPresAttribut (indLine wi)
 
 #else  /* __STDC__ */
 static void         GenerateRPresAttribut (wi)
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
    AttributePres      *pPRuleA;
-   NumAttrCase         *pAttrCase;
+   NumAttrCase        *pAttrCase;
    int                 l;
 
    /* s'il n'y a pas de structure AttributePres, on en alloue une */
@@ -1066,7 +1066,7 @@ int                 pageView;
 {
    int                 counter;
    int                 item;
-   Counter           *pCntr;
+   Counter            *pCntr;
 
    /* parcourt tous les compteurs du schema de presentation */
    for (counter = 0; counter < pPSchema->PsNCounters; counter++)
@@ -1094,17 +1094,17 @@ static void         ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 #else  /* __STDC__ */
 static void         ProcessShortKeyWord (x, wi, gCode)
 int                 x;
-indLine               wi;
-SyntacticCode             gCode;
+indLine             wi;
+SyntacticCode       gCode;
 
 #endif /* __STDC__ */
 
 {
-   PresVariable            *pPresVar;
+   PresVariable       *pPresVar;
 
    switch (x)
 	 {
-	    /* traitement selon le code du mot-cle court */
+	       /* traitement selon le code du mot-cle court */
 	    case CHR_59:
 	       /*  ;  */
 	       if (gCode == RULE_Rule)
@@ -1250,7 +1250,7 @@ SyntacticCode             gCode;
 		       CurRule->PrDimRule.DrAbsolute = False;
 		 }
 	       else if (gCode == RULE_AbsDist)	/* introduit une partie decimale */
-		  if (LatestNumberAttr)	/* interdit apres un attribut */
+		  if (LatestNumberAttr)		/* interdit apres un attribut */
 		     CompilerError (wi, PRS, FATAL, NO_DECIMAL_PART_AFTER_AN_ATTR, inputLine, LineNum);
 	       break;
 	    case CHR_42:
@@ -1317,8 +1317,8 @@ static void         ProcessAxis (BoxEdge axis, indLine wi)
 
 #else  /* __STDC__ */
 static void         ProcessAxis (axis, wi)
-BoxEdge         axis;
-indLine               wi;
+BoxEdge             axis;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -1377,13 +1377,13 @@ static void         CreateConstant (BasicType constType, indLine wi)
 
 #else  /* __STDC__ */
 static void         CreateConstant (constType, wi)
-BasicType          constType;
-indLine               wi;
+BasicType           constType;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
-   PresVariable            *pPresVar;
+   PresVariable       *pPresVar;
 
    if (!ConstantDef)
      {
@@ -1424,12 +1424,12 @@ static void         NewCounterOper (CounterOp oper, indLine wi)
 #else  /* __STDC__ */
 static void         NewCounterOper (oper, wi)
 CounterOp           oper;
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
-   Counter           *pCntr;
+   Counter            *pCntr;
 
    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
    if (pCntr->CnNItems >= MAX_PRES_COUNT_ITEM)
@@ -1452,17 +1452,17 @@ indLine               wi;
    regles qui commence par la regle firstR.                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule ChercheTRegle (PRuleType ruleType, PtrPRule firstR)
+static PtrPRule     ChercheTRegle (PRuleType ruleType, PtrPRule firstR)
 
 #else  /* __STDC__ */
-static PtrPRule ChercheTRegle (ruleType, firstR)
+static PtrPRule     ChercheTRegle (ruleType, firstR)
 PRuleType           ruleType;
-PtrPRule        firstR;
+PtrPRule            firstR;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRule;
+   PtrPRule            pRule;
    boolean             stop;
 
    pRule = firstR;
@@ -1513,7 +1513,7 @@ static void         InheritRule (InheritMode inheritType)
 
 #else  /* __STDC__ */
 static void         InheritRule (inheritType)
-InheritMode        inheritType;
+InheritMode         inheritType;
 
 #endif /* __STDC__ */
 
@@ -1538,7 +1538,7 @@ static void         CheckDefaultRules ()
 
 #else  /* __STDC__ */
 static void         CheckDefaultRules ()
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -1801,7 +1801,7 @@ static void         CheckForwardRef (indLine wi)
 
 #else  /* __STDC__ */
 static void         CheckForwardRef (wi)
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 {
@@ -1858,7 +1858,7 @@ boolean             bool;
    int                 k;
 
    if (InBreakRule)
-	/* on est dans une regle 'Break' */
+      /* on est dans une regle 'Break' */
      {
 	if (DefaultRuleDef)
 	   /* on est dans les regles par defaut */
@@ -1892,7 +1892,7 @@ boolean             bool;
 	  }
      }
    else if (InPageBreakRule)
-	/* on est dans une regle 'PageBreak' */
+      /* on est dans une regle 'PageBreak' */
      {
 	if (DefaultRuleDef)	/* on est dans les regles par defaut */
 	   /* initialise la secabilite dans toutes les boites de */
@@ -1961,8 +1961,8 @@ static void         CreationRule (FunctionType creatFonct, indLine wi)
 
 #else  /* __STDC__ */
 static void         CreationRule (creatFonct, wi)
-FunctionType           creatFonct;
-indLine               wi;
+FunctionType        creatFonct;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -1999,13 +1999,13 @@ static void         LayoutRule (FunctionType layoutFonct, indLine wi)
 
 #else  /* __STDC__ */
 static void         LayoutRule (layoutFonct, wi)
-FunctionType           layoutFonct;
-indLine               wi;
+FunctionType        layoutFonct;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPRule;
+   PtrPRule            pPRule;
 
    ConditionEnd ();
    if (PresBoxDef)
@@ -2051,7 +2051,7 @@ indLine               wi;
 #ifdef __COLPAGE__
 			   /* on autorise quand meme Page suivi de Column */
 			   if (!((layoutFonct == FnColumn && pPRule->PrPresFunction == FnPage) ||
-			   (layoutFonct == FnSubColumn && pPRule->PrPresFunction == FnColumn)))
+				 (layoutFonct == FnSubColumn && pPRule->PrPresFunction == FnColumn)))
 #endif /* __COLPAGE__ */
 			      CompilerError (wi, PRS, FATAL, ONLY_ONE_PAGE_RULE, inputLine, LineNum);
 		  pPRule = pPRule->PrNextPRule;
@@ -2068,13 +2068,13 @@ static void         GenerateCopyRule (FunctionType fonctType, indLine wi)
 
 #else  /* __STDC__ */
 static void         GenerateCopyRule (fonctType, wi)
-FunctionType           fonctType;
-indLine               wi;
+FunctionType        fonctType;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        R;
+   PtrPRule            R;
 
    /* verifie qu'il n'y a que des conditions Within parmi les
       conditions courantes */
@@ -2212,16 +2212,16 @@ static void         ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 #else  /* __STDC__ */
 static void         ProcessLongKeyWord (x, gCode, wi)
 int                 x;
-SyntacticCode             gCode;
-indLine               wi;
+SyntacticCode       gCode;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
    boolean             assoc;
-   Counter           *pCntr;
-   PresVariable            *pPresVar;
+   Counter            *pCntr;
+   PresVariable       *pPresVar;
 
    switch (x)
 	 {
@@ -2350,7 +2350,7 @@ indLine               wi;
 			   break;
 			case RULE_CondRuleList:
 			   /* fin CondRuleList */
-			   CurView = 1;	/* la vue par defaut est la premiere */
+			   CurView = 1;		/* la vue par defaut est la premiere */
 			   RulesForView = False;
 			   CondBlock = False;
 			   if (!ViewBlock)
@@ -2745,8 +2745,8 @@ indLine               wi;
 	       else
 		  /* on n'est pas dans une boite de presentation */
 		  if (!(RuleDef &&
-		    (pSSchema->SsRule[CurType - 1].SrConstruct == CsReference ||
-		     pSSchema->SsRule[CurType - 1].SrConstruct == CsPairedElement)))
+			(pSSchema->SsRule[CurType - 1].SrConstruct == CsReference ||
+			 pSSchema->SsRule[CurType - 1].SrConstruct == CsPairedElement)))
 		  /* on n'est pas dans les regles d'un element reference */
 		  /* ni dans celles d'un element CsPairedElement */
 		  CompilerError (wi, PRS, FATAL, AUTHORIZED_ONLY_FOR_BOXES_AND_REFS, inputLine, LineNum);
@@ -3271,9 +3271,9 @@ static int          GetTypeNumber (indLine wl, indLine wi, Name typeName)
 
 #else  /* __STDC__ */
 static int          GetTypeNumber (wl, wi, typeName)
-indLine               wl;
-indLine               wi;
-Name                 typeName;
+indLine             wl;
+indLine             wi;
+Name                typeName;
 
 #endif /* __STDC__ */
 
@@ -3316,10 +3316,10 @@ static void         ProcessTypeName (SyntacticCode prevRule, Name typeName, indL
 
 #else  /* __STDC__ */
 static void         ProcessTypeName (prevRule, typeName, wi, wl)
-SyntacticCode             prevRule;
-Name                 typeName;
-indLine               wi;
-indLine               wl;
+SyntacticCode       prevRule;
+Name                typeName;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
@@ -3327,7 +3327,7 @@ indLine               wl;
    int                 i;
    boolean             found;
    SRule              *pSRule;
-   Counter           *pCntr;
+   Counter            *pCntr;
 
    i = GetTypeNumber (wl, wi, typeName);
    if (i == 0)
@@ -3386,7 +3386,7 @@ indLine               wl;
 	  {
 	     TransmittedElem = i;
 	     if (pPSchema->PsNTransmElems >= MAX_TRANSM_ELEM)
-		CompilerError (wi, PRS, FATAL, MAX_MANY_TRANSMIT_RULES_FOR_ELEMS_OVERFLOW, inputLine, LineNum);	/* table PsTransmElem saturee */
+		CompilerError (wi, PRS, FATAL, MAX_MANY_TRANSMIT_RULES_FOR_ELEMS_OVERFLOW, inputLine, LineNum);		/* table PsTransmElem saturee */
 	     else if (pPSchema->PsElemTransmit[i - 1] > 0)
 		CompilerError (wi, PRS, FATAL, ELEM_HAS_A_TRANSMIT_RULE, inputLine, LineNum);	/* deja une regle transmit pout l'element */
 	     else
@@ -3529,14 +3529,14 @@ static void         NewBoxName (indLine wl, indLine wi, int identnum)
 
 #else  /* __STDC__ */
 static void         NewBoxName (wl, wi, identnum)
-indLine               wl;
-indLine               wi;
+indLine             wl;
+indLine             wi;
 int                 identnum;
 
 #endif /* __STDC__ */
 
 {
-   PresentationBox             *pPresBox;
+   PresentationBox    *pPresBox;
 
    pPresBox = &pPSchema->PsPresentBox[pPSchema->PsNPresentBoxes];
    pPSchema->PsNPresentBoxes++;
@@ -3566,9 +3566,9 @@ static void         IntAttribute (int attr, SyntacticCode prevRule, indLine wi)
 
 #else  /* __STDC__ */
 static void         IntAttribute (attr, prevRule, wi)
-int      attr;
-SyntacticCode             prevRule;
-indLine               wi;
+int                 attr;
+SyntacticCode       prevRule;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -3661,29 +3661,29 @@ static void         ProcessName (SyntacticCode gCode, int identnum, SyntacticCod
 
 #else  /* __STDC__ */
 static void         ProcessName (gCode, identnum, prevRule, wl, wi)
-SyntacticCode             gCode;
+SyntacticCode       gCode;
 int                 identnum;
-SyntacticCode             prevRule;
-indLine               wl;
-indLine               wi;
+SyntacticCode       prevRule;
+indLine             wl;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
-   Name                 n;
+   Name                n;
    int                 i, j;
    boolean             ok, new;
-   Counter           *pCntr;
-   PresVariable            *pPresVar;
-   PresentationBox             *pPresBox;
-   PresVarItem            *pVarElem;
-   PtrPRule        pPRule;
+   Counter            *pCntr;
+   PresVariable       *pPresVar;
+   PresentationBox    *pPresBox;
+   PresVarItem        *pVarElem;
+   PtrPRule            pPRule;
    PtrCondition        pCond;
-   TtAttribute           *pAttr;
+   TtAttribute        *pAttr;
 
    switch (gCode)
 	 {
-	    /* gCode = numero de la regle ou apparait le nom */
+	       /* gCode = numero de la regle ou apparait le nom */
 	    case RULE_TypeName /* TypeName */ :
 	       if (prevRule == RULE_PresentModel)
 		  /* nom de la structure generique */
@@ -3904,7 +3904,7 @@ indLine               wi;
 		 }
 	       else if (prevRule == RULE_CounterAttrPage)
 		  if (Identifier[identnum].SrcIdentDefRule == 0)
-		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);	/* Vue non declaree */
+		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);		/* Vue non declaree */
 		  else
 		    {
 		       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
@@ -3949,7 +3949,7 @@ indLine               wi;
 	       else if (Identifier[identnum].SrcIdentDefRule == 0)
 		  /* on n'a pas encore rencontre' ce nom */
 		  if (prevRule != RULE_CounterAttrPage)
-		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);	/* compteur non declare' */
+		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);		/* compteur non declare' */
 		  else
 		     /* on vient de la regle CounterAttrPage; peut-etre est-ce un */
 		     /* nom d'attribut */
@@ -4407,7 +4407,7 @@ indLine               wi;
 					   Identifier[identnum].SrcIdentDefRule;
 					CurRule->PrNPresBoxes++;
 					if (CurRule->PrPresFunction == FnCreateFirst
-					  || CurRule->PrPresFunction == FnCreateLast
+					    || CurRule->PrPresFunction == FnCreateLast
 					    || CurRule->PrPresFunction == FnCreateBefore
 					    || CurRule->PrPresFunction == FnCreateWith
 					    || CurRule->PrPresFunction == FnCreateAfter)
@@ -4563,15 +4563,15 @@ static void         ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 
 #else  /* __STDC__ */
 static void         ProcessInteger (gCode, wl, wi)
-SyntacticCode             gCode;
-indLine               wl;
-indLine               wi;
+SyntacticCode       gCode;
+indLine             wl;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
    int                 n;
-   Counter           *pCntr;
+   Counter            *pCntr;
 
    n = AsciiToInt (wi, wl);
    switch (gCode)
@@ -4829,15 +4829,15 @@ static void         ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 
 #else  /* __STDC__ */
 static void         ProcessString (gCode, wl, wi)
-SyntacticCode             gCode;
-indLine               wl;
-indLine               wi;
+SyntacticCode       gCode;
+indLine             wl;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   PresConstant          *pPresConst;
+   PresConstant       *pPresConst;
 
    if (gCode == RULE_ConstValue)
       /* ConstValue c'est une valeur de constante */
@@ -4879,12 +4879,12 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, Synta
 
 #else  /* __STDC__ */
 static void         ProcessToken (wi, wl, c, r, identnum, pr)
-indLine               wi;
-indLine               wl;
-SyntacticCode             c;
-SyntacticCode             r;
+indLine             wi;
+indLine             wl;
+SyntacticCode       c;
+SyntacticCode       r;
 int                 identnum;
-SyntacticCode             pr;
+SyntacticCode       pr;
 
 #endif /* __STDC__ */
 
@@ -4925,8 +4925,8 @@ static boolean      RuleBefore (PtrPRule pPRule1, PtrPRule pPRule2)
 
 #else  /* __STDC__ */
 static boolean      RuleBefore (pPRule1, pPRule2)
-PtrPRule        pPRule1;
-PtrPRule        pPRule2;
+PtrPRule            pPRule1;
+PtrPRule            pPRule2;
 
 #endif /* __STDC__ */
 
@@ -4947,8 +4947,8 @@ PtrPRule        pPRule2;
 #ifdef __COLPAGE__
 	     if (((pPRule1->PrPresFunction == FnPage) || (pPRule1->PrPresFunction == FnColumn) ||
 		  (pPRule1->PrPresFunction == FnSubColumn)) &&
-	       ((pPRule2->PrPresFunction == FnPage) || (pPRule2->PrPresFunction == FnColumn) ||
-		(pPRule2->PrPresFunction == FnSubColumn)))
+		 ((pPRule2->PrPresFunction == FnPage) || (pPRule2->PrPresFunction == FnColumn) ||
+		  (pPRule2->PrPresFunction == FnSubColumn)))
 		/* fonctions equivalentes (Page, Column, Included Column), on */
 		/* classe dans l'ordre des vues */
 		ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
@@ -4980,12 +4980,12 @@ static void         SortPresRules (PtrPRule * firstPRule)
 
 #else  /* __STDC__ */
 static void         SortPresRules (firstPRule)
-PtrPRule       *firstPRule;
+PtrPRule           *firstPRule;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        oldPRule, curOldPRule, newPRule, curNewPRule, newAnchor;
+   PtrPRule            oldPRule, curOldPRule, newPRule, curNewPRule, newAnchor;
    boolean             done, stop;
 
    if (*firstPRule != NULL)
@@ -5064,7 +5064,7 @@ void                SortAllPRules ()
 
 {
    int                 j, l;
-   int       k;
+   int                 k;
    AttributePres      *pPRuleA;
 
    /* ordonne les regles par defaut */
@@ -5125,7 +5125,7 @@ int                 counter;
 #endif /* __STDC__ */
 
 {
-   Counter           *pCntr;
+   Counter            *pCntr;
    boolean             ret;
 
    pCntr = &pPSchema->PsCounter[counter - 1];
@@ -5145,18 +5145,18 @@ int                 counter;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrPRule SearchPRule (PtrPRule * firstRule, PRuleType ruleType, int view)
+static PtrPRule     SearchPRule (PtrPRule * firstRule, PRuleType ruleType, int view)
 
 #else  /* __STDC__ */
-static PtrPRule SearchPRule (firstRule, ruleType, view)
-PtrPRule       *firstRule;
+static PtrPRule     SearchPRule (firstRule, ruleType, view)
+PtrPRule           *firstRule;
 PRuleType           ruleType;
 int                 view;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pR, pPRule;
+   PtrPRule            pR, pPRule;
    boolean             stop, cree;
 
    pR = *firstRule;
@@ -5234,21 +5234,21 @@ static void         CheckPageBoxes ()
 #endif				/* __STDC__ */
 
 {
-   PtrPRule        pR, pHeadR, pPRule, pRule;
+   PtrPRule            pR, pHeadR, pPRule, pRule;
    int                 b, hfB, el, view, footHeight, headHeight, h, i,
                        counter;
    boolean             stop, stop1, exist;
-   PresentationBox             *pPresBox;
-   PresVariable            *pPresVar;
+   PresentationBox    *pPresBox;
+   PresVariable       *pPresVar;
    PtrCondition        pCond;
    int                 viewOfBox[MAX_PRES_BOX];
 
 #ifdef __COLPAGE__
    int                 bc;
-   PtrPRule        pRC;
+   PtrPRule            pRC;
 
 #else  /* __COLPAGE__ */
-   PtrPRule        pRLarg;
+   PtrPRule            pRLarg;
 
 #endif /* __COLPAGE__ */
 
@@ -5317,12 +5317,12 @@ static void         CheckPageBoxes ()
 		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de hauteur, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else if (!pRule->PrDimRule.DrAbsolute
 				|| pRule->PrDimRule.DrUnit == UnRelative
 				|| pRule->PrDimRule.DrPosition)
 			  /* ce n'est pas une hauteur absolue fixe, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       /* cherche la regle de largeur */
 		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
 		       stop1 = False;
@@ -5344,19 +5344,19 @@ static void         CheckPageBoxes ()
 		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de largeur, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else if (!pRule->PrDimRule.DrAbsolute
 				|| pRule->PrDimRule.DrUnit == UnRelative
 				|| pRule->PrDimRule.DrPosition)
 			  /* ce n'est pas une largeur absolue fixe, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       /* cherche la regle de largeur de la boite qui porte la */
 		       /* regle Page, ou cree une regle s'il n'y a pas de regle de */
 		       /* largeur */
 #ifndef __COLPAGE__
 		       /* supprime pour les colonnes */
 		       pRLarg = SearchPRule (&pPSchema->PsElemPRule[el], PtWidth,
-					      pR->PrViewNum);
+					     pR->PrViewNum);
 		       /* modifie la regle de largeur: meme regle que la boite page */
 		       pRLarg->PrPresMode = PresImmediate;
 		       pRLarg->PrDimRule = pRule->PrDimRule;
@@ -5383,7 +5383,7 @@ static void         CheckPageBoxes ()
 		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de position verticale, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else
 			 {
 #ifdef __COLPAGE__
@@ -5405,7 +5405,7 @@ static void         CheckPageBoxes ()
 #endif /* __COLPAGE__ */
 			       /* et distance absolue */
 			       /* ce n'est pas un positionnement correct, erreur */
-			       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 			 }
 		       /* cherche la regle de position horizontale */
 		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
@@ -5428,7 +5428,7 @@ static void         CheckPageBoxes ()
 		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de position horiz., erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else
 			 {
 			    if (pRule->PrPosRule.PoPosDef != Left
@@ -5440,7 +5440,7 @@ static void         CheckPageBoxes ()
 				|| (pRule->PrPosRule.PoDistUnit == UnRelative && pRule->PrPosRule.PoDistance != 0))
 			       /* et distance absolue */
 			       /* ce n'est pas un positionnement correct, erreur */
-			       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 			 }
 		    }
 		  pR = pR->PrNextPRule;
@@ -5482,7 +5482,7 @@ static void         CheckPageBoxes ()
 			/* c'est une regle de creation */
 			if (!(pR->PrPresFunction == FnCreateBefore || pR->PrPresFunction == FnCreateAfter))
 			   /* ce n'est pas une regle de creation autorisee, erreur */
-			   TtaDisplayMessage (FATAL, TtaGetMessage(PRS, FORBIDDEN_CREA_RULE), pPSchema->PsPresentBox[b].PbName);
+			   TtaDisplayMessage (FATAL, TtaGetMessage (PRS, FORBIDDEN_CREA_RULE), pPSchema->PsPresentBox[b].PbName);
 			else
 			   /* la regle pR est une regle CreateAfter ou */
 			   /* a CreateBefore */
@@ -5522,30 +5522,30 @@ static void         CheckPageBoxes ()
 			     while (!stop1);
 			     if (!exist)
 				/* pas de regle de positionnement vertical, erreur */
-				TtaDisplayMessage (FATAL, TtaGetMessage(PRS, MISSING_VERTIC_POS_IN_THE_PAGE), pPSchema->PsPresentBox[hfB].PbName);
+				TtaDisplayMessage (FATAL, TtaGetMessage (PRS, MISSING_VERTIC_POS_IN_THE_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 			     else
 			       {
 #ifdef __COLPAGE__
 				  if (!(pPRule->PrPosRule.PoPosDef == Top
-				      || pPRule->PrPosRule.PoPosDef == Bottom
+				     || pPRule->PrPosRule.PoPosDef == Bottom
 					|| pPRule->PrPosRule.PoPosDef == HorizMiddle))
 				     /* on ne teste plus PoPosDef,PoNotRel et PoRefElem */
 				     /* suppression test elt ref. != marque de page */
 #else  /* __COLPAGE__ */
 				  if (!(pPRule->PrPosRule.PoPosDef == Top
-				      || pPRule->PrPosRule.PoPosDef == Bottom
-				  || pPRule->PrPosRule.PoPosDef == HorizMiddle)
+				     || pPRule->PrPosRule.PoPosDef == Bottom
+					|| pPRule->PrPosRule.PoPosDef == HorizMiddle)
 				      || pPRule->PrPosRule.PoNotRel
 				      || !pPRule->PrPosRule.PoRefElem
 				      || pPRule->PrPosRule.PoTypeRefElem != PageBreak + 1)
 #endif /* __COLPAGE__ */
-				     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, INVALID_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
+				     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 				  if (pPRule->PrPosRule.PoDistance != 0)
 				     if (pPRule->PrPosRule.PoDistUnit == UnRelative)
-					TtaDisplayMessage (FATAL, TtaGetMessage(PRS, VERTIC_DIST_ISNT_CONSTANT), pPSchema->PsPresentBox[hfB].PbName);
+					TtaDisplayMessage (FATAL, TtaGetMessage (PRS, VERTIC_DIST_ISNT_CONSTANT), pPSchema->PsPresentBox[hfB].PbName);
 #ifdef __COLPAGE__
 				  if (pPRule->PrPosRule.PoRelation != RlPrevious)
-				     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, INVALID_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
+				     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 				  else
 				     /* la boite creee est positionnee par rapport */
 				     /* a la boite precedente : seul cas autorise */
@@ -5580,19 +5580,19 @@ static void         CheckPageBoxes ()
 				       if (exist)
 					  if (pHeadR->PrDimRule.DrPosition)
 					     /* c'est une hauteur elastique, erreur */
-					     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
+					     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 					  else if (!pHeadR->PrDimRule.DrAbsolute)
 					     /* c'est une hauteur relative, on n'accepte */
 					     /* que la hauteur du contenu */
 					    {
 					       if (pHeadR->PrDimRule.DrRelation != RlEnclosed)
-						  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
+						  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 					    }
 					  else
 					     /* regle de hauteur absolue */
 					  if (pHeadR->PrDimRule.DrUnit == UnRelative)
 					     /* la hauteur n'est pas en unites fixes */
-					     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
+					     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 					  else
 					     /* calcule la distance entre le bas de la */
 					     /* boite de haut de page et le haut de la page */
@@ -5658,24 +5658,24 @@ static void         CheckPageBoxes ()
 #else  /* __COLPAGE__ */
 				       if (!exist)
 					  /* il n'y a pas de regle de hauteur, erreur */
-					  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
+					  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 				       else
 #endif /* __COLPAGE__ */
 				       if (pHeadR->PrDimRule.DrPosition)
 					  /* c'est une hauteur elastique, erreur */
-					  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
+					  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 				       else if (!pHeadR->PrDimRule.DrAbsolute)
 					  /* c'est une hauteur relative, on n'accepte */
 					  /* que la hauteur du contenu */
 					 {
 					    if (pHeadR->PrDimRule.DrRelation != RlEnclosed)
-					       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
+					       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 					 }
 				       else
 					  /* regle de hauteur absolue */
 				       if (pHeadR->PrDimRule.DrUnit == UnRelative)
 					  /* la hauteur n'est pas en unites fixes */
-					  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
+					  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 				       else
 					  /* calcule la distance entre le haut de la */
 					  /* boite de bas de page et le bas de la page */
@@ -5713,7 +5713,7 @@ static void         CheckPageBoxes ()
 				  else
 				     /* la boite creee n'est pas positionnee par */
 				     /* rapport a la page, erreur */
-				     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, INVALID_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
+				     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 #endif /* __COLPAGE__ */
 				  /* examine les conditions de creation de la boite de */
 				  /* haut ou de bas de page, a la recherche d'un */
@@ -5735,7 +5735,7 @@ static void         CheckPageBoxes ()
 						 {
 						    if (pPSchema->PsPresentBox[b].PbPageCounter != counter)
 						       /* ce n'est pas le meme compteur */
-						       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, USES_DIFFERENT_PAGE_COUNTERS), pPSchema->PsPresentBox[b].PbName);
+						       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, USES_DIFFERENT_PAGE_COUNTERS), pPSchema->PsPresentBox[b].PbName);
 						 }
 					       else
 						  /* on a trouve' le compteur de pages associe' */
@@ -5764,7 +5764,7 @@ static void         CheckPageBoxes ()
 						      {
 							 if (pPSchema->PsPresentBox[b].PbPageCounter != counter)
 							    /* ce n'est pas le meme compteur */
-							    TtaDisplayMessage (FATAL, TtaGetMessage(PRS, TWO_DIFFERENT_PAGE_NUMBERS), pPSchema->PsPresentBox[hfB].PbName);
+							    TtaDisplayMessage (FATAL, TtaGetMessage (PRS, TWO_DIFFERENT_PAGE_NUMBERS), pPSchema->PsPresentBox[hfB].PbName);
 						      }
 						    else
 						       /* on trouve' le compteur de pages */
@@ -5800,7 +5800,7 @@ static void         CheckPageBoxes ()
 						    /* c'est une regle de creation */
 						    if (pRC->PrPresFunction == FnCreateBefore || pRC->PrPresFunction == FnCreateAfter)
 						       /* ce n'est pas une regle de creation autorisee, erreur */
-						       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, FORBIDDEN_CREA_RULE), pPSchema->PsPresentBox[hfB].PbName);
+						       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, FORBIDDEN_CREA_RULE), pPSchema->PsPresentBox[hfB].PbName);
 						    else
 						       /* la regle pRC est une regle CreatePremFils ou */
 						       /* CreateDerFils */
@@ -5829,7 +5829,7 @@ static void         CheckPageBoxes ()
 									     {
 										if (pPSchema->PsPresentBox[b].PbPageCounter != counter)
 										   /* ce n'est pas le meme compteur */
-										   TtaDisplayMessage (FATAL, TtaGetMessage(PRS, TWO_DIFFERENT_PAGE_NUMBERS), pPSchema->PsPresentBox[hfB].PbName);
+										   TtaDisplayMessage (FATAL, TtaGetMessage (PRS, TWO_DIFFERENT_PAGE_NUMBERS), pPSchema->PsPresentBox[hfB].PbName);
 									     }
 									   else
 									      /* on a trouve' le compteur de pages */
@@ -5874,14 +5874,14 @@ static void         CheckPageBoxes ()
 	   /* verifie sa regle Content */
 	   if (pPresBox->PbContent == ContElement)
 	      /* le contenu est un type d'element, erreur */
-	      TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_CONTENT_RULE), pPSchema->PsPresentBox[b].PbName);
+	      TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_CONTENT_RULE), pPSchema->PsPresentBox[b].PbName);
 	if (pPresBox->PbPageHeader || pPresBox->PbPageFooter)
 	   /* c'est une boite de haut ou bas de page, */
 	   if (pPresBox->PbContent == ContElement)
 	      /* son contenu est un type d'element */
 	      if (viewOfBox[b] != 1)
 		 /* elle n'est pas creee par une page de la vue 1 */
-		 TtaDisplayMessage (FATAL, TtaGetMessage(PRS, FORBIDDEN_OUTSIDE_OF_MAIN_VIEW), pPSchema->PsPresentBox[b].PbName);
+		 TtaDisplayMessage (FATAL, TtaGetMessage (PRS, FORBIDDEN_OUTSIDE_OF_MAIN_VIEW), pPSchema->PsPresentBox[b].PbName);
 	/* cherche les regles de creation de la boite */
 	pR = pPresBox->PbFirstPRule;
 	/* 1ere regle de presentation */
@@ -5900,7 +5900,7 @@ static void         CheckPageBoxes ()
 			  || pR->PrPresFunction == FnCreateAfter))
 		     /* ce n'est pas une regle de creation autorisee */
 		     if (!pPresBox->PbPageBox)
-			TtaDisplayMessage (FATAL, TtaGetMessage(PRS, FORBIDDEN_CREA_RULE), pPSchema->PsPresentBox[b].PbName);
+			TtaDisplayMessage (FATAL, TtaGetMessage (PRS, FORBIDDEN_CREA_RULE), pPSchema->PsPresentBox[b].PbName);
 		  pR = pR->PrNextPRule;
 		  /* passe a la regle suivante */
 	       }
@@ -5980,7 +5980,7 @@ static void         CheckUsedBoxes (PtrPRule pRule, boolean usedBox[MAX_PRES_BOX
 
 #else  /* __STDC__ */
 static void         CheckUsedBoxes (pRule, usedBox)
-PtrPRule        pRule;
+PtrPRule            pRule;
 boolean             usedBox[MAX_PRES_BOX];
 
 #endif /* __STDC__ */
@@ -6012,7 +6012,7 @@ boolean             usedBox[MAX_PRES_BOX];
 		/* marque la boite utilisee */
 		usedBox[pRule->PrPresBox[0] - 1] = True;
 	     else if (pRule->PrType == PtFunction
-	      && (pRule->PrPresFunction == FnColumn || pRule->PrPresFunction == FnSubColumn))
+		      && (pRule->PrPresFunction == FnColumn || pRule->PrPresFunction == FnSubColumn))
 		/* c'est une regle de colonnage */
 		for (i = 0; i < pRule->PrNPresBoxes; i++)
 		   usedBox[pRule->PrPresBox[i] - 1] = True;
@@ -6091,7 +6091,7 @@ static void         CheckAllBoxesUsed ()
    /* sort un message pour chaque boite inutilisee */
    for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
       if (!usedBox[b])
-	 TtaDisplayMessage (INFO, TtaGetMessage(PRS, UNUSED_BOX), pPSchema->PsPresentBox[b].PbName);
+	 TtaDisplayMessage (INFO, TtaGetMessage (PRS, UNUSED_BOX), pPSchema->PsPresentBox[b].PbName);
 }
 
 
@@ -6110,19 +6110,21 @@ char              **argv;
 #endif /* __STDC__ */
 
 {
-   FILE*               infile;
+   FILE               *infile;
    boolean             fileOK;
    char                fname[100];
    char                buffer[200];
    Name                srceFileName;	/* nom du fichier a compiler */
-   indLine               wi;	/* position du debut du mot courant dans la
+   indLine             wi;	/* position du debut du mot courant dans la
+
 				   ligne en cours */
-   indLine               wl;	/* longueur du mot courant */
-   SyntacticType              wn;	/* SyntacticType grammaticale du mot courant */
-   SyntRuleNum                 r;	/* numero de regle de grammaire */
-   SyntRuleNum                 pr;	/* numero de la regle de grammaire precedente*/
-   SyntacticCode             c;	/* code grammatical du mot trouve */
+   indLine             wl;	/* longueur du mot courant */
+   SyntacticType       wn;	/* SyntacticType grammaticale du mot courant */
+   SyntRuleNum         r;	/* numero de regle de grammaire */
+   SyntRuleNum         pr;	/* numero de la regle de grammaire precedente */
+   SyntacticCode       c;	/* code grammatical du mot trouve */
    int                 nb;	/* indice dans Identifier du mot trouve', si
+
 				   identificateur */
    int                 i;
 
@@ -6150,7 +6152,7 @@ char              **argv;
 	strcat (fname, ".SCH");
 	/* ouvre le fichier a compiler */
 	if (ThotFile_exist (fname) == 0)
-	   TtaDisplayMessage (FATAL, TtaGetMessage(PRS, UNKNOWN_FILE), fname);
+	   TtaDisplayMessage (FATAL, TtaGetMessage (PRS, UNKNOWN_FILE), fname);
 	else
 	  {
 	     infile = BIOreadOpen (fname);
@@ -6237,7 +6239,7 @@ char              **argv;
 		  /* ecrit le schema compile' dans le directory courant */
 		  fileOK = WritePresentationSchema (fname, pPSchema, pSSchema);
 		  if (!fileOK)
-		     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, WRITE_ERROR), fname);
+		     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), fname);
 	       }
 	  }
      }

@@ -24,7 +24,7 @@ typedef struct _ParserStackItem
      int                 StRule;	/* numero de la regle */
      int                 StRuleInd;	/* pointeur dans la regle */
      boolean             Option;	/* option en cours */
-     boolean             Alt;		/* on peut chercher une alternative */
+     boolean             Alt;	        /* on peut chercher une alternative */
      boolean             Tested;	/* regle en cours de test avec le mot courant */
   }
 ParserStackItem;
@@ -37,13 +37,14 @@ ParserStackItem;
 #include "compilmsg_f.h"
 
 extern int          LineNum;	/* Numero de la ligne courante dans le fichier
+
 				   en cours de compilation */
 
 static boolean      Comment;	/* on est dans un commentaire */
 
 #define STACKSIZE 40		/* taille de la pile */
 static int          level;	/* niveau courant dans la pile */
-static ParserStackItem    Stack[STACKSIZE];	/* pile d'analyse */
+static ParserStackItem Stack[STACKSIZE];	/* pile d'analyse */
 
 #include "fileaccess_f.h"
 #include "parser_f.h"
@@ -79,8 +80,8 @@ static void         CheckShortKeyword (indLine index, SyntacticCode * ret)
 
 #else  /* __STDC__ */
 static void         CheckShortKeyword (index, ret)
-indLine               index;
-SyntacticCode            *ret;
+indLine             index;
+SyntacticCode      *ret;
 
 #endif /* __STDC__ */
 
@@ -111,9 +112,9 @@ static void         CheckLongKeyword (indLine index, indLine len, SyntacticCode 
 
 #else  /* __STDC__ */
 static void         CheckLongKeyword (index, len, ret)
-indLine               index;
-indLine               len;
-SyntacticCode            *ret;
+indLine             index;
+indLine             len;
+SyntacticCode      *ret;
 
 #endif /* __STDC__ */
 
@@ -147,10 +148,10 @@ static void         CheckIdent (indLine index, indLine len, SyntacticCode * ret,
 
 #else  /* __STDC__ */
 static void         CheckIdent (index, len, ret, rank)
-indLine               index;
-indLine               len;
-SyntacticCode        *ret;
-int                  *rank;
+indLine             index;
+indLine             len;
+SyntacticCode      *ret;
+int                *rank;
 
 #endif /* __STDC__ */
 
@@ -187,15 +188,15 @@ static void         NewIdent (indLine index, indLine len, SyntacticCode code, in
 
 #else  /* __STDC__ */
 static void         NewIdent (index, len, code, rank)
-indLine               index;
-indLine               len;
-SyntacticCode             code;
+indLine             index;
+indLine             len;
+SyntacticCode       code;
 int                *rank;
 
 #endif /* __STDC__ */
 
 {
-   indLine               i;
+   indLine             i;
 
    *rank = 0;
    if (NIdentifiers >= MAX_IDENTIFIERS)
@@ -228,8 +229,8 @@ int                 AsciiToInt (indLine index, indLine len)
 
 #else  /* __STDC__ */
 int                 AsciiToInt (index, len)
-indLine               index;
-indLine               len;
+indLine             index;
+indLine             len;
 
 #endif /* __STDC__ */
 
@@ -264,10 +265,10 @@ void                OctalToChar ()
    i = 0;
    while (inputLine[i] != '\0')
      {
-	if (inputLine[i] == '\\')      
+	if (inputLine[i] == '\\')
 	  {
 	     shift = 0;
-	     if (inputLine[i + 1] == '\\')  
+	     if (inputLine[i + 1] == '\\')
 		shift = 1;
 	     else if (inputLine[i + 1] >= '0' && inputLine[i + 1] <= '7')
 	       {
@@ -319,15 +320,15 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
 
 #else  /* __STDC__ */
 void                GetNextToken (start, wi, wl, wn)
-indLine               start;
-indLine              *wi;
-indLine              *wl;
-SyntacticType             *wn;
+indLine             start;
+indLine            *wi;
+indLine            *wl;
+SyntacticType      *wn;
 
 #endif /* __STDC__ */
 
 {
-   indLine               j, k;
+   indLine             j, k;
    boolean             stop;
 
    *wi = 0;
@@ -383,7 +384,7 @@ SyntacticType             *wn;
 	if (inputLine[j] >= '0' && inputLine[j] <= '9')
 	   *wn = SynInteger;
 	else if ((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-		 || inputLine[j] == (unsigned char) '\240' /*nobreakspace */
+		 || inputLine[j] == (unsigned char) '\240'	/*nobreakspace */
 		 || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 
 		 || (((int) inputLine[j]) >= 192 &&
@@ -427,8 +428,8 @@ SyntacticType             *wn;
 
 				       || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 				       || (inputLine[j] >= '0' && inputLine[j] <= '9')
-				       || (((int)inputLine[j]) >= 192 &&
-					   ((int)inputLine[j]) <= 255)
+				       || (((int) inputLine[j]) >= 192 &&
+					   ((int) inputLine[j]) <= 255)
 				 /* lettre accentuee */
 				       || inputLine[j] == '_'))
 				   {
@@ -456,7 +457,7 @@ SyntacticType             *wn;
 		if (inputLine[j] == '\0')
 		  {
 		     CompilerError (*wi,
-		       COMPIL, FATAL, MULTIPLE_LINE_STRINGS_ERROR,
+				 COMPIL, FATAL, MULTIPLE_LINE_STRINGS_ERROR,
 				    inputLine, LineNum);
 		     *wn = SynError;
 		     stop = True;
@@ -502,17 +503,17 @@ static boolean      TokenMatch (indLine wi, indLine wl, SyntacticType wn, Syntac
 
 #else  /* __STDC__ */
 static boolean      TokenMatch (wi, wl, wn, c, r, rank)
-indLine               wi;
-indLine               wl;
-SyntacticType              wn;
-SyntacticCode             c;
-SyntacticCode             r;
+indLine             wi;
+indLine             wl;
+SyntacticType       wn;
+SyntacticCode       c;
+SyntacticCode       r;
 int                *rank;
 
 #endif /* __STDC__ */
 
 {
-   SyntacticCode             code;
+   SyntacticCode       code;
    boolean             match;
 
    match = False;
@@ -603,13 +604,13 @@ void                AnalyzeToken (indLine wi, indLine wl, SyntacticType wn, Synt
 
 #else  /* __STDC__ */
 void                AnalyzeToken (wi, wl, wn, c, r, rank, pr)
-indLine               wi;
-indLine               wl;
-SyntacticType              wn;
-SyntacticCode            *c;
-SyntRuleNum                *r;
+indLine             wi;
+indLine             wl;
+SyntacticType       wn;
+SyntacticCode      *c;
+SyntRuleNum        *r;
 int                *rank;
-SyntRuleNum                *pr;
+SyntRuleNum        *pr;
 
 #endif /* __STDC__ */
 
@@ -785,7 +786,7 @@ SyntRuleNum                *pr;
 		  else
 		    {
 		       /* le mot ne correspond pas */
-		       if (Stack[level].Option)	/* saute la partie optionnelle */
+		       if (Stack[level].Option)		/* saute la partie optionnelle */
 			  /* cherche la fin de la partie a option */
 			 {
 			    do
@@ -915,20 +916,20 @@ void                InitSyntax (char *fileName)
 
 #else  /* __STDC__ */
 void                InitSyntax (fileName)
-	char       *fileName;
+char               *fileName;
 
 #endif /* __STDC__ */
 
 {
-   indLine               j, wind, wlen;
-   SyntacticType              wnat;
+   indLine             j, wind, wlen;
+   SyntacticType       wnat;
    int                 l;
    boolean             readingKeywordTable;
    int                 ruleptr;
    int                 currule;
    char                pgrname[200];
    char                pnomcourt[200];
-   SrcKeywordDesc             *pkw1;
+   SrcKeywordDesc     *pkw1;
    BinFile             grmFile;
    boolean             fileOK;
 
@@ -993,9 +994,9 @@ void                InitSyntax (fileName)
 			    for (l = 0; l < wlen; l++)
 			      {
 				 pkw1->SrcKeyword[l] = inputLine[wind + l - 1];
-				 if ((char) (((int)pkw1->SrcKeyword[l]) - 32) >= 'A'
-				     && (char) (((int)pkw1->SrcKeyword[l]) - 32) <= 'Z')
-				    pkw1->SrcKeyword[l] = (char) (((int)pkw1->SrcKeyword[l]) - 32);
+				 if ((char) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
+				     && (char) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
+				    pkw1->SrcKeyword[l] = (char) (((int) pkw1->SrcKeyword[l]) - 32);
 			      }
 			    /* traduit le mot-cle en majuscules */
 			    j = wind + wlen;
@@ -1018,7 +1019,7 @@ void                InitSyntax (fileName)
 			if (ruleptr == 0)
 			   /* nouvelle regle */
 			  {
-			     currule = AsciiToInt (wind, wlen);	/* numero de regle */
+			     currule = AsciiToInt (wind, wlen);		/* numero de regle */
 			     if (currule > MAX_RULES)
 			       {
 				  /* table des regles saturee */
@@ -1044,9 +1045,9 @@ void                InitSyntax (fileName)
 			  }
 		     else
 			/* ce n'est pas un nombre */
-		        if (wind > 0)
-			  /* fichier incorrect */
-			  CompilerError (wind, COMPIL, FATAL, INCORR_GRAMMAR_FILE_GRM, inputLine, LineNum);
+		     if (wind > 0)
+			/* fichier incorrect */
+			CompilerError (wind, COMPIL, FATAL, INCORR_GRAMMAR_FILE_GRM, inputLine, LineNum);
 		  j = wind + wlen;	/* fin du mot */
 	       }
 	     while (wind != 0);	/* plus de mot dans la ligne */

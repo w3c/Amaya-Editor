@@ -3,8 +3,8 @@
  ***/
 
 /*
-    Ce module sauve dans un fichier un schema de presentation qui a
-    ete compile' en memoire
+   Ce module sauve dans un fichier un schema de presentation qui a
+   ete compile' en memoire
  */
 
 #include "thot_sys.h"
@@ -40,7 +40,7 @@ int                 n;
 static void         WriteSignedShort (int n)
 #else  /* __STDC__ */
 static void         WriteSignedShort (n)
-int             n;
+int                 n;
 
 #endif /* __STDC__ */
 {
@@ -57,7 +57,7 @@ int             n;
 static void         WriteName (Name n)
 #else  /* __STDC__ */
 static void         WriteName (n)
-Name                 n;
+Name                n;
 
 #endif /* __STDC__ */
 {
@@ -65,7 +65,7 @@ Name                 n;
 
    i = 0;
    do
-	BIOwriteByte (outfile, n[i++]);
+      BIOwriteByte (outfile, n[i++]);
    while (n[i - 1] != '\0');
 }
 
@@ -77,7 +77,7 @@ Name                 n;
 static void         WriteRulePtr (PtrPRule p)
 #else  /* __STDC__ */
 static void         WriteRulePtr (p)
-PtrPRule        p;
+PtrPRule            p;
 
 #endif /* __STDC__ */
 {
@@ -247,7 +247,7 @@ static void         WritePresMode (PresMode mode)
 
 #else  /* __STDC__ */
 static void         WritePresMode (mode)
-PresMode          mode;
+PresMode            mode;
 
 #endif /* __STDC__ */
 {
@@ -276,7 +276,7 @@ PresMode          mode;
 static void         WriteInheritMode (InheritMode mode)
 #else  /* __STDC__ */
 static void         WriteInheritMode (mode)
-InheritMode        mode;
+InheritMode         mode;
 
 #endif /* __STDC__ */
 {
@@ -511,7 +511,7 @@ PresCondition       cond;
 static void         WriteCounterValue (CounterValue val)
 #else  /* __STDC__ */
 static void         WriteCounterValue (val)
-CounterValue      val;
+CounterValue        val;
 
 #endif /* __STDC__ */
 {
@@ -540,7 +540,7 @@ CounterValue      val;
 static void         WriteArithRel (ArithRel rel)
 #else  /* __STDC__ */
 static void         WriteArithRel (rel)
-ArithRel          rel;
+ArithRel            rel;
 
 #endif /* __STDC__ */
 {
@@ -568,7 +568,7 @@ ArithRel          rel;
 static void         WriteBoxEdge (BoxEdge edge)
 #else  /* __STDC__ */
 static void         WriteBoxEdge (edge)
-BoxEdge         edge;
+BoxEdge             edge;
 
 #endif /* __STDC__ */
 {
@@ -615,7 +615,7 @@ BoxEdge         edge;
 static void         WriteLevel (Level level)
 #else  /* __STDC__ */
 static void         WriteLevel (level)
-Level              level;
+Level               level;
 
 #endif /* __STDC__ */
 {
@@ -697,7 +697,7 @@ CounterOp           op;
 static void         WriteBasicType (BasicType typ)
 #else  /* __STDC__ */
 static void         WriteBasicType (typ)
-BasicType          typ;
+BasicType           typ;
 
 #endif /* __STDC__ */
 {
@@ -735,7 +735,7 @@ BasicType          typ;
 void                WriteVariableType (VariableType typ)
 #else  /* __STDC__ */
 void                WriteVariableType (typ)
-VariableType             typ;
+VariableType        typ;
 
 #endif /* __STDC__ */
 {
@@ -785,7 +785,7 @@ VariableType             typ;
 static void         WriteCounterStyle (CounterStyle style)
 #else  /* __STDC__ */
 static void         WriteCounterStyle (style)
-CounterStyle          style;
+CounterStyle        style;
 
 #endif /* __STDC__ */
 {
@@ -877,7 +877,7 @@ AttrComparType      typ;
 static void         WritePosRule (PosRule posRule)
 #else  /* __STDC__ */
 static void         WritePosRule (posRule)
-PosRule            posRule;
+PosRule             posRule;
 
 #endif /* __STDC__ */
 {
@@ -905,13 +905,13 @@ PosRule            posRule;
 void                WritePRules (PtrPRule pPRule)
 #else  /* __STDC__ */
 void                WritePRules (pPRule)
-PtrPRule        pPRule;
+PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 {
    PtrPRule            currentRule, nextRule;
    PtrCondition        pCond;
-   DimensionRule       *pDim;
+   DimensionRule      *pDim;
    int                 i;
 
    currentRule = pPRule;
@@ -1084,14 +1084,14 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   Counter             *pCntr;
-   CntrItem            *pCItem;
-   PresConstant        *pConst;
-   PresVariable        *pVar;
-   PresVarItem         *pVarItem;
-   PresentationBox     *pBox;
-   AttributePres       *pAttPres;
-   NumAttrCase         *pCase;
+   Counter            *pCntr;
+   CntrItem           *pCItem;
+   PresConstant       *pConst;
+   PresVariable       *pVar;
+   PresVarItem        *pVarItem;
+   PresentationBox    *pBox;
+   AttributePres      *pAttPres;
+   NumAttrCase        *pCase;
    int                 i, j, k;
 
    /* cree le fichier */
@@ -1180,7 +1180,7 @@ PtrSSchema          pSS;
 	BIOwriteByte (outfile, pConst->PdAlphabet);
 	j = 0;
 	do
-	     BIOwriteByte (outfile, pConst->PdString[j++]);
+	   BIOwriteByte (outfile, pConst->PdString[j++]);
 	while (pConst->PdString[j - 1] != '\0');
      }
 
@@ -1361,8 +1361,8 @@ PtrSSchema          pSS;
 
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBoolean (pPSch->PsAssocPaginated[i]);
-   /* for (i = 0; i < pSS->SsNRules; i++) */		/* TODO */
-   /* WriteBoolean (pPSch->SPVueAssocAvecCol[i]); */	/* TODO */
+   /* for (i = 0; i < pSS->SsNRules; i++) *//* TODO */
+   /* WriteBoolean (pPSch->SPVueAssocAvecCol[i]); *//* TODO */
    for (i = 0; i < pSS->SsNRules; i++)
       WriteShort (pPSch->PsElemTransmit[i]);
    WriteShort (pPSch->PsNTransmElems);
@@ -1374,4 +1374,3 @@ PtrSSchema          pSS;
    BIOwriteClose (outfile);
    return True;
 }
-

@@ -20,21 +20,21 @@
 #define EXPORT
 #include "platform_tv.h"
 
-static PtrSSchema pSchStr;
-static PtrSSchema pSchStrExt;
-static int a;
+static PtrSSchema   pSchStr;
+static PtrSSchema   pSchStrExt;
+static int          a;
 static int          i, min, nb;
-static Name          fn;
-static int  r;
-static int  PremRegle;
+static Name         fn;
+static int          r;
+static int          PremRegle;
 static boolean      Prem;
 static boolean      optionh = False;
 static boolean      optionl = False;
 static int          NbCommentaire;
 static int          STR;	/* Identification des messages Str */
-PtrSSchema        pSc1;
+PtrSSchema          pSc1;
 SRule              *pRe1;
-TtAttribute           *pAt1;
+TtAttribute        *pAt1;
 
 #include "readstr_f.h"
 
@@ -84,7 +84,7 @@ static void         wrcar (unsigned char ch)
 
 #else  /* __STDC__ */
 static void         wrcar (ch)
-unsigned char                ch;
+unsigned char       ch;
 
 #endif /* __STDC__ */
 
@@ -215,7 +215,7 @@ static void         wrnom (Name n)
 
 #else  /* __STDC__ */
 static void         wrnom (n)
-Name                 n;
+Name                n;
 
 #endif /* __STDC__ */
 
@@ -240,7 +240,7 @@ static void         wrnomregle (int r)
 
 #else  /* __STDC__ */
 static void         wrnomregle (r)
-int         r;
+int                 r;
 
 #endif /* __STDC__ */
 
@@ -321,8 +321,8 @@ static void         wrnomreglext (int r, Name N)
 
 #else  /* __STDC__ */
 static void         wrnomreglext (r, N)
-int         r;
-Name                 N;
+int                 r;
+Name                N;
 
 #endif /* __STDC__ */
 
@@ -475,13 +475,13 @@ static void         wrattr (int a)
 
 #else  /* __STDC__ */
 static void         wrattr (a)
-int      a;
+int                 a;
 
 #endif /* __STDC__ */
 
 {
    int                 j;
-   TtAttribute           *pAt1;
+   TtAttribute        *pAt1;
 
    pAt1 = &pSchStr->SsAttribute[a - 1];
    if (optionh)
@@ -563,7 +563,7 @@ static void         wrext (int r)
 
 #else  /* __STDC__ */
 static void         wrext (r)
-int         r;
+int                 r;
 
 #endif /* __STDC__ */
 
@@ -589,7 +589,7 @@ static void         welembase ()
 #endif				/* __STDC__ */
 
 {
-   PtrSSchema        pSc1;
+   PtrSSchema          pSc1;
    int                 r;
 
    pSc1 = pSchStr;
@@ -652,16 +652,16 @@ static void         wrrule (int r, SRule * pRegleExtens)
 
 #else  /* __STDC__ */
 static void         wrrule (r, pRegleExtens)
-int         r;
+int                 r;
 SRule              *pRegleExtens;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   PtrSSchema        pSc1;
+   PtrSSchema          pSc1;
    SRule              *pRe1;
-   TtAttribute           *pAt1;
+   TtAttribute        *pAt1;
 
    pSc1 = pSchStr;
    if (pRegleExtens != NULL)

@@ -40,10 +40,11 @@
 
 int                 LineNum;	/* compteur de lignes */
 
-static PtrSSchema pSSchema;	/* pointeur sur le schema de structure */
-static PtrSSchema pExtSSchema;	/* pointeur sur le schema de structure
-				   externe */
-static PtrTSchema pTSchema;	/* pointeur sur le schema de traduction */
+static PtrSSchema   pSSchema;	/* pointeur sur le schema de structure */
+static PtrSSchema   pExtSSchema;	/* pointeur sur le schema de structure
+
+					   externe */
+static PtrTSchema   pTSchema;	/* pointeur sur le schema de traduction */
 
 static boolean      BuffDef;	/* on est dans les declarations de buffers */
 static boolean      ConstDef;	/* on est dans les declaration de constantes */
@@ -63,30 +64,34 @@ static int          CurAttr;	/* numero de l'attribut courant */
 static int          CurValAttr;	/* numero de la valeur d'attribut */
 static int          CurPres;	/* numero de la presentation courante */
 static int          CurPresVal;	/* numero de la valeur courante de la
+
 				   presentation courante */
 static boolean      ChangeRuleBlock;	/* il faut ouvrir un nouveau bloc de regles */
 static PtrTRuleBlock CurBlock;	/* bloc de regles courant */
-static PtrTRule CurTRule;	/* current translation SyntacticRule */
+static PtrTRule     CurTRule;	/* current translation SyntacticRule */
 static int          CurEntry;	/* entree courante de la table de traduction
+
 				   de caracteres */
 static int          ConstIndx;	/* indice courant dans le buffer des
+
 				   constantes */
 static boolean      ExternalSchema;	/* TypeIdent est un nom de schema externe */
-static Name          TypeInGetRule;	/* TypeIdent dans la regle Get courante */
-static int          BeginTypeInGetRule;	/* indice du debut du TypeIdent dans la ligne */
-static Name          TypeWithin;	/* TypeIdent dans la condition Within ou */
+static Name         TypeInGetRule;	/* TypeIdent dans la regle Get courante */
+static int          BeginTypeInGetRule;		/* indice du debut du TypeIdent dans la ligne */
+static Name         TypeWithin;	/* TypeIdent dans la condition Within ou */
 
 				/* First Within en cours d'analyse */
 static int          BeginTypeWithin;	/* indice du debut de ce TypeIdent dans la */
 
 				/* ligne en cours de traitement */
-static Name          AncestorName;	/* 1er TypeIdent dans la regle LevelOrType */
+static Name         AncestorName;	/* 1er TypeIdent dans la regle LevelOrType */
 static int          BeginAncestorName;	/* indice du debut de ce TypeIdent dans la */
 
 				/* ligne en cours de traitement */
 static boolean      Immediately;	/* condition Immediately Within */
 static boolean      Asterisk;	/* on a rencontre' "" dans une condition */
 static boolean      GreaterOrLessSign;	/* On a rencontre' un signe > ou < apres */
+
 				/* Within ou FirstWithin dans la condition  */
 				/* courante */
 static int          AttrValSign;	/* Signe d'une valeur d'attribut numerique */
@@ -165,7 +170,7 @@ static void         Initialize ()
    /* initialise le schema de traduction */
    pTSchema->TsLineLength = 0;	/* pas de longueur max des lignes traduites */
    strcpy (pTSchema->TsEOL, "\n");	/* caractere fin de ligne par
-						   defaut */
+					   defaut */
    strcpy (pTSchema->TsTranslEOL, "\n");	/* fin de ligne a inserer par
 						   defaut */
    pTSchema->TsNConstants = 0;	/* nombre de constantes */
@@ -175,7 +180,7 @@ static void         Initialize ()
    pTSchema->TsPictureBuffer = 0;	/* pas de buffer pour les images */
    for (i = 0; i < MAX_RULES_SSCHEMA; i++)
      {
-	pTSchema->TsElemTRule[i] = NULL;		/* pointeurs sur le debut de la chaine
+	pTSchema->TsElemTRule[i] = NULL;	/* pointeurs sur le debut de la chaine
 						   de regles de traduction specifiques a chaque type d'element */
 	pTSchema->TsInheritAttr[i] = False;
      }
@@ -183,15 +188,15 @@ static void         Initialize ()
       pTSchema->TsPresTRule[i].RtExist = False;
    pTSchema->TsNTranslAlphabets = 0;	/* pas de traduction de texte */
    pTSchema->TsSymbolFirst = 0;	/* indice de la 1ere regle de traduction
-					   de symboles dans la table TsCharTransl */
+				   de symboles dans la table TsCharTransl */
    pTSchema->TsSymbolLast = 0;	/* indice de la derniere regle de traduction de
 				   symboles dans la meme table */
    pTSchema->TsGraphicsFirst = 0;	/* indice de la 1ere regle de traduction de
-				   graphiques dans la table TsCharTransl */
+					   graphiques dans la table TsCharTransl */
    pTSchema->TsGraphicsLast = 0;	/* indice de la derniere regle de traduction
-				   de graphiques dans la meme table */
+					   de graphiques dans la meme table */
    pTSchema->TsNCharTransls = 0;	/* nombre total de regles de traduction de
-				   caracteres */
+					   caracteres */
 }
 
 /*----------------------------------------------------------------------
@@ -207,8 +212,8 @@ static void         InitAttrTransl ()
 
 {
    int                 i, j;
-   AttributeTransl      *pAttTr;
-   TranslNumAttrCase        *pCase;
+   AttributeTransl    *pAttTr;
+   TranslNumAttrCase  *pCase;
 
    for (i = 0; i < pSSchema->SsNAttributes; i++)
      {
@@ -223,7 +228,7 @@ static void         InitAttrTransl ()
 		      {
 			 pCase = &pAttTr->AtrCase[j];
 			 pCase->TaLowerBound = -MAX_INT_ATTR_VAL - 1;	/* - infini */
-			 pCase->TaUpperBound = MAX_INT_ATTR_VAL + 1;		/* + infini */
+			 pCase->TaUpperBound = MAX_INT_ATTR_VAL + 1;	/* + infini */
 			 pCase->TaTRuleBlock = NULL;
 		      }
 		    break;
@@ -254,7 +259,7 @@ static void         EndOfContdition (PtrSSchema pSS)
 
 #else  /* __STDC__ */
 static void         EndOfContdition (pSS)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -289,7 +294,7 @@ static void         ProcessAncestorName (PtrSSchema pSS)
 
 #else  /* __STDC__ */
 static void         ProcessAncestorName (pSS)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -324,15 +329,15 @@ static void         PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int w
 #else  /* __STDC__ */
 static void         PresentationName (TypeRPres, pr, wi)
 PRuleType           TypeRPres;
-SyntRuleNum                 pr;
+SyntRuleNum         pr;
 int                 wi;
 
 #endif /* __STDC__ */
 
 {
    int                 i, j;
-   PRuleTransl       *pPresTrans;
-   TranslNumAttrCase        *pCase;
+   PRuleTransl        *pPresTrans;
+   TranslNumAttrCase  *pCase;
 
    if (pr == RULE_TransPres)
       /* debut des regles de traduction d'une presentation */
@@ -425,7 +430,7 @@ int                 wi;
 
 {
    int                 i;
-   PRuleTransl       *pPresTrans;
+   PRuleTransl        *pPresTrans;
 
    if (InCondition)
       /* valeur d'une presentation dans une condition */
@@ -462,7 +467,7 @@ int                 wi;
 
 #ifdef __STDC__
 static int          SrceStringGreater (int framet, int lent, int rank, boolean * equal,
-			       SourceString source)
+				       SourceString source)
 
 #else  /* __STDC__ */
 static int          SrceStringGreater (framet, lent, rank, equal, source)
@@ -470,7 +475,7 @@ int                 framet;
 int                 lent;
 int                 rank;
 boolean            *equal;
-SourceString            source;
+SourceString        source;
 
 #endif /* __STDC__ */
 
@@ -522,9 +527,9 @@ int                 len;
 {
    int                 k;
    boolean             equal;
-   SourceString            source;
+   SourceString        source;
    int                 firstEntry, lastEntry;
-   AlphabetTransl            *pAlphTrans;
+   AlphabetTransl     *pAlphTrans;
 
    firstEntry = 0;
    lastEntry = 0;
@@ -606,7 +611,7 @@ int                 len;
 
 {
    int                 k;
-   TargetString            target;
+   TargetString        target;
 
    /* recupere le parametre 'target' */
    for (k = 0; k <= len - 2; k++)
@@ -629,8 +634,8 @@ static void         NewRuleBlock ()
 
 {
    PtrTRuleBlock       pBlock;
-   AttributeTransl      *pAttrTrans;
-   PRuleTransl       *pPresTrans;
+   AttributeTransl    *pAttrTrans;
+   PRuleTransl        *pPresTrans;
 
    ChangeRuleBlock = False;
    if ((pBlock = (PtrTRuleBlock) malloc (sizeof (TRuleBlock))) == NULL)
@@ -703,7 +708,7 @@ static void         NewTransRule ()
 #endif				/* __STDC__ */
 
 {
-   PtrTRule        pTRule;
+   PtrTRule            pTRule;
 
    EndOfContdition (pSSchema);
    InCondition = False;
@@ -736,7 +741,7 @@ static void         ProcessTypeName (PtrSSchema pSS)
 
 #else  /* __STDC__ */
 static void         ProcessTypeName (pSS)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -805,9 +810,9 @@ static void         CopyWord (Name n, indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static void         CopyWord (n, wi, wl)
-Name                 n;
-indLine               wi;
-indLine               wl;
+Name                n;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
@@ -830,8 +835,8 @@ static void         NewConstant (indLine wl, indLine wi)
 
 #else  /* __STDC__ */
 static void         NewConstant (wl, wi)
-indLine               wl;
-indLine               wi;
+indLine             wl;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -869,14 +874,14 @@ static void         AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
 #else  /* __STDC__ */
 static void         AttrInCreateOrWrite (att, pr, wi)
 int                 att;
-SyntRuleNum                 pr;
-indLine               wi;
+SyntRuleNum         pr;
+indLine             wi;
 
 #endif /* __STDC__ */
 
 {
    SRule              *pSRule;
-   TranslVariable            *pTransVar;
+   TranslVariable     *pTransVar;
    boolean             ok;
    int                 j;
 
@@ -944,8 +949,8 @@ static int          PatternNum (Name n, indLine wi)
 
 #else  /* __STDC__ */
 static int          PatternNum (n, wi)
-Name                 n;
-indLine               wi;
+Name                n;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -983,8 +988,8 @@ static int          ColorNum (Name n, indLine wi)
 
 #else  /* __STDC__ */
 static int          ColorNum (n, wi)
-Name                 n;
-indLine               wi;
+Name                n;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -1011,13 +1016,13 @@ static int          ElementTypeNum (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static int          ElementTypeNum (wi, wl)
-indLine               wi;
-indLine               wl;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
 {
-   Name                 n;
+   Name                n;
    int                 i;
 
    CopyWord (n, wi, wl);
@@ -1048,26 +1053,26 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, Synta
 
 #else  /* __STDC__ */
 static void         ProcessToken (wi, wl, c, r, nb, pr)
-indLine               wi;
-indLine               wl;
-SyntacticCode             c;
-SyntacticCode             r;
+indLine             wi;
+indLine             wl;
+SyntacticCode       c;
+SyntacticCode       r;
 int                 nb;
-SyntRuleNum                 pr;
+SyntRuleNum         pr;
 
 #endif /* __STDC__ */
 
 {
    int                 i, k;
-   Name                 n;
+   Name                n;
    boolean             InUseRule, InGetRule, InCreateWriteRule;
-   AlphabetTransl            *pAlphTrans;
-   TranslVariable            *pTransVar;
-   TCounter         *pCntr;
-   AttributeTransl      *pAttrTrans;
-   TtAttribute           *pAttr;
-   TranslNumAttrCase        *pCase;
-   PRuleTransl       *pPresTrans;
+   AlphabetTransl     *pAlphTrans;
+   TranslVariable     *pTransVar;
+   TCounter           *pCntr;
+   AttributeTransl    *pAttrTrans;
+   TtAttribute        *pAttr;
+   TranslNumAttrCase  *pCase;
+   PRuleTransl        *pPresTrans;
 
    i = 1;
    if (c < 1000)
@@ -1423,7 +1428,7 @@ SyntRuleNum                 pr;
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
-				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtCounter;
+			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtCounter;
 			 }
 		       break;
 
@@ -1435,7 +1440,7 @@ SyntRuleNum                 pr;
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
-				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtFileDir;
+			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtFileDir;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer le nom du directory du fichier de sortie */
@@ -1450,7 +1455,7 @@ SyntRuleNum                 pr;
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
-				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtFileName;
+			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtFileName;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer le nom du fichier de sortie */
@@ -1465,7 +1470,7 @@ SyntRuleNum                 pr;
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
-				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtExtension;
+			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtExtension;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer l'extensiion (suffixe) du fichier de sortie */
@@ -1699,7 +1704,7 @@ SyntRuleNum                 pr;
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
-				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtDocumentName;
+			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtDocumentName;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer le nom du document traduit */
@@ -1723,7 +1728,7 @@ SyntRuleNum                 pr;
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
-				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtDocumentDir;
+			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtDocumentDir;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer le nom du directory du document traduit */
@@ -2267,10 +2272,10 @@ SyntRuleNum                 pr;
 						     if (SecondInPair || FirstInPair)
 							/* le nom du type etait precede' de First ou Second, erreur */
 							CompilerError (wi, TRA, FATAL, NOT_A_PAIR,
-							 inputLine, LineNum);
+							inputLine, LineNum);
 						     if (pTSchema->TsElemTRule[i - 1] != NULL)
 							CompilerError (wi, TRA, FATAL, CANT_REDEFINE,
-							 inputLine, LineNum);
+							inputLine, LineNum);
 						     else
 						       {
 							  CurType = i;
@@ -2320,7 +2325,7 @@ SyntRuleNum                 pr;
 					   /* de structure */
 					   i = 1;
 					   while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0
-						&& i < pSSchema->SsNAttributes)
+					     && i < pSSchema->SsNAttributes)
 					      i++;
 					   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
 					      /* attribut inconnu */
@@ -3074,17 +3079,17 @@ char              **argv;
 #endif /* __STDC__ */
 
 {
-   FILE*               infile;
+   FILE               *infile;
    Name                srceFileName;	/* nom du fichier a compiler */
    int                 len, i;
    boolean             fileOK;
    char                buffer[200];
-   indLine               wi;	/* position du debut du mot courant dans la ligne */
-   indLine               wl;	/* longueur du mot courant */
-   SyntacticType              wn;	/* SyntacticType du mot courant */
-   SyntRuleNum                 r;	/* numero de regle */
-   SyntRuleNum                 pr;	/* numero de la regle precedente */
-   SyntacticCode             c;	/* code grammatical du mot trouve */
+   indLine             wi;	/* position du debut du mot courant dans la ligne */
+   indLine             wl;	/* longueur du mot courant */
+   SyntacticType       wn;	/* SyntacticType du mot courant */
+   SyntRuleNum         r;	/* numero de regle */
+   SyntRuleNum         pr;	/* numero de la regle precedente */
+   SyntacticCode       c;	/* code grammatical du mot trouve */
    int                 nb;	/* indice dans Identifier du mot trouve, si c'est un
 
 				   identificateur */
@@ -3185,7 +3190,7 @@ char              **argv;
 		       strcat (srceFileName, ".TRA");
 		       fileOK = WriteTranslationSchema (srceFileName, pTSchema, pSSchema);
 		       if (!fileOK)
-			  TtaDisplayMessage (FATAL, TtaGetMessage(TRA, CANT_WRITE), srceFileName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (TRA, CANT_WRITE), srceFileName);
 		    }
 		  free (pTSchema);
 		  free (pSSchema);

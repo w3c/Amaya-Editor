@@ -3,8 +3,8 @@
  ***/
 
 /*
-    Ce module sauve dans un fichier un schema de traduction qui a ete
-    compile' en memoire.
+   Ce module sauve dans un fichier un schema de traduction qui a ete
+   compile' en memoire.
  */
 
 #include "thot_sys.h"
@@ -43,7 +43,7 @@ void                WriteSignedShort (int n)
 
 #else  /* __STDC__ */
 void                WriteSignedShort (n)
-int             n;
+int                 n;
 
 #endif /* __STDC__ */
 
@@ -63,7 +63,7 @@ void                WriteName (Name n)
 
 #else  /* __STDC__ */
 void                WriteName (n)
-Name                 n;
+Name                n;
 
 #endif /* __STDC__ */
 
@@ -72,7 +72,7 @@ Name                 n;
 
    i = 0;
    do
-	BIOwriteByte (outfile, n[i++]);
+      BIOwriteByte (outfile, n[i++]);
    while (n[i - 1] != '\0');
 }
 
@@ -109,7 +109,7 @@ void                WriteTransCondition (TransCondition cond)
 
 #else  /* __STDC__ */
 void                WriteTransCondition (cond)
-TransCondition        cond;
+TransCondition      cond;
 
 #endif /* __STDC__ */
 
@@ -197,7 +197,7 @@ void                WriteRelatNAscend (RelatNAscend rel)
 
 #else  /* __STDC__ */
 void                WriteRelatNAscend (rel)
-RelatNAscend         rel;
+RelatNAscend        rel;
 
 #endif /* __STDC__ */
 
@@ -226,7 +226,7 @@ void                WriteTRuleType (TRuleType typ)
 
 #else  /* __STDC__ */
 void                WriteTRuleType (typ)
-TRuleType       typ;
+TRuleType           typ;
 
 #endif /* __STDC__ */
 
@@ -288,7 +288,7 @@ void                WriteTOrder (TOrder order)
 
 #else  /* __STDC__ */
 void                WriteTOrder (order)
-TOrder          order;
+TOrder              order;
 
 #endif /* __STDC__ */
 
@@ -316,7 +316,7 @@ void                WriteCreatedObject (CreatedObject obj)
 
 #else  /* __STDC__ */
 void                WriteCreatedObject (obj)
-CreatedObject            obj;
+CreatedObject       obj;
 
 #endif /* __STDC__ */
 
@@ -398,7 +398,7 @@ void                WriteRelativePosition (TRelatPosition pos)
 
 #else  /* __STDC__ */
 void                WriteRelativePosition (pos)
-TRelatPosition            pos;
+TRelatPosition      pos;
 
 #endif /* __STDC__ */
 
@@ -432,7 +432,7 @@ void                WriteTCounterOp (TCounterOp op)
 
 #else  /* __STDC__ */
 void                WriteTCounterOp (op)
-TCounterOp         op;
+TCounterOp          op;
 
 #endif /* __STDC__ */
 
@@ -466,7 +466,7 @@ void                WriteTVarType (TranslVarType typ)
 
 #else  /* __STDC__ */
 void                WriteTVarType (typ)
-TranslVarType         typ;
+TranslVarType       typ;
 
 #endif /* __STDC__ */
 
@@ -512,7 +512,7 @@ void                WriteCounterStyle (CounterStyle style)
 
 #else  /* __STDC__ */
 void                WriteCounterStyle (style)
-CounterStyle          style;
+CounterStyle        style;
 
 #endif /* __STDC__ */
 
@@ -547,7 +547,7 @@ void                WriteTRulePtr (PtrTRule ptr)
 
 #else  /* __STDC__ */
 void                WriteTRulePtr (ptr)
-PtrTRule        ptr;
+PtrTRule            ptr;
 
 #endif /* __STDC__ */
 
@@ -568,12 +568,12 @@ void                WriteTRules (PtrTRule pTRule)
 
 #else  /* __STDC__ */
 void                WriteTRules (pTRule)
-PtrTRule        pTRule;
+PtrTRule            pTRule;
 
 #endif /* __STDC__ */
 
 {
-   PtrTRule        currentRule, nextRule;
+   PtrTRule            currentRule, nextRule;
 
    currentRule = pTRule;
    while (currentRule != NULL)
@@ -668,7 +668,7 @@ PtrSSchema          pSS;
 
 {
    PtrTRuleBlock       curBlock, nextBlock;
-   TranslCondition     *pCond;
+   TranslCondition    *pCond;
    int                 cond;
 
    curBlock = pBlock;
@@ -765,8 +765,8 @@ PtrTSchema          pTSch;
 
 #endif /* __STDC__ */
 {
-   AttributeTransl     *pAttrT;
-   TranslNumAttrCase   *pCase;
+   AttributeTransl    *pAttrT;
+   TranslNumAttrCase  *pCase;
    int                 i;
 
    pAttrT = &pTSch->TsAttrTRule[att - 1];
@@ -816,14 +816,14 @@ PtrTSchema          pTSch;
 #endif /* __STDC__ */
 
 {
-   PRuleTransl         *pPRuleTr;
-   TranslNumAttrCase   *pCase;
+   PRuleTransl        *pPRuleTr;
+   TranslNumAttrCase  *pCase;
    int                 i;
 
    pPRuleTr = &pTSch->TsPresTRule[pres - 1];
    if (pPRuleTr->RtExist)
       if (pres == PtSize + 1 || pres == PtIndent + 1 ||
-          pres == PtLineSpacing + 1 || pres == PtLineWeight + 1 ||
+	  pres == PtLineSpacing + 1 || pres == PtLineWeight + 1 ||
 	  pres == PtFillPattern + 1 || pres == PtBackground + 1 ||
 	  pres == PtForeground + 1)
 	 /* presentation a valeur numerique */
@@ -861,14 +861,14 @@ PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
-   TCounter         *pCntr;
-   TranslVariable   *pVar;
-   TranslVarItem    *pVarItem;
-   AttributeTransl  *pAttrTr;
-   AlphabetTransl   *pAlphTr;
-   StringTransl     *pStrnTr;
-   PRuleTransl      *pPruleTr;
-   int              i, j;
+   TCounter           *pCntr;
+   TranslVariable     *pVar;
+   TranslVarItem      *pVarItem;
+   AttributeTransl    *pAttrTr;
+   AlphabetTransl     *pAlphTr;
+   StringTransl       *pStrnTr;
+   PRuleTransl        *pPruleTr;
+   int                 i, j;
 
    /* cree le fichier */
    outfile = BIOwriteOpen (fileName);
@@ -956,7 +956,7 @@ PtrSSchema          pSS;
 	WriteBoolean (pPruleTr->RtExist);
 	if (pPruleTr->RtExist)
 	   if (i == PtSize || i == PtIndent || i == PtLineSpacing ||
-	       i == PtLineWeight || i == PtFillPattern || i == PtBackground ||
+	     i == PtLineWeight || i == PtFillPattern || i == PtBackground ||
 	       i == PtForeground)
 	      /* presentation a valeur numerique */
 	     {
@@ -986,26 +986,26 @@ PtrSSchema          pSS;
 	pStrnTr = &pTSch->TsCharTransl[i];
 	j = 0;
 	do
-	     BIOwriteByte (outfile, pStrnTr->StSource[j++]);
+	   BIOwriteByte (outfile, pStrnTr->StSource[j++]);
 	while (pStrnTr->StSource[j - 1] != '\0');
 	j = 0;
 	do
-	     BIOwriteByte (outfile, pStrnTr->StTarget[j++]);
+	   BIOwriteByte (outfile, pStrnTr->StTarget[j++]);
 	while (pStrnTr->StTarget[j - 1] != '\0');
      }
    for (i = 0; i < pTSch->TsNConstants; i++)
      {
 	j = pTSch->TsConstBegin[i] - 1;
 	do
-	     BIOwriteByte (outfile, pTSch->TsConstant[j++]);
+	   BIOwriteByte (outfile, pTSch->TsConstant[j++]);
 	while (pTSch->TsConstant[j - 1] != '\0');
      }
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBlocks (pTSch->TsElemTRule[i], pSS);
    for (i = 0; i < pSS->SsNAttributes; i++)
-      WriteTRulesAttr (i+1, pSS, pTSch);
+      WriteTRulesAttr (i + 1, pSS, pTSch);
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
-      WritePRuleTrans (i+1, pSS, pTSch);
+      WritePRuleTrans (i + 1, pSS, pTSch);
    BIOwriteClose (outfile);
    return True;
 }

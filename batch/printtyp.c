@@ -21,13 +21,13 @@
 
 #include "memory_f.h"
 
-static PtrSSchema pSchemaStr;
+static PtrSSchema   pSchemaStr;
 static PtrSchTypo   pSchemaTyp;
 static char         filename[1000];
 static int          i, j, El, Attr, Val;
 static int          TYP;	/* Identification des messages Typ */
 
-TtAttribute           *pAt1;
+TtAttribute        *pAt1;
 RTypoAttribut      *pRT1;
 TyCasAttrNum       *pCa1;
 
@@ -100,7 +100,7 @@ static void         wrnom (Name n)
 
 #else  /* __STDC__ */
 static void         wrnom (n)
-Name                 n;
+Name                n;
 
 #endif /* __STDC__ */
 
@@ -134,7 +134,7 @@ static void         wrnomregle (int r)
 
 #else  /* __STDC__ */
 static void         wrnomregle (r)
-int         r;
+int                 r;
 
 #endif /* __STDC__ */
 
@@ -153,7 +153,7 @@ static void         wrnomattr (int a)
 
 #else  /* __STDC__ */
 static void         wrnomattr (a)
-int      a;
+int                 a;
 
 #endif /* __STDC__ */
 

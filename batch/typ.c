@@ -46,19 +46,19 @@
 
 
 /* Variables locales de TYP */
-static Name          pfilename;	/* pointeur sur le nom du fichier a compiler */
+static Name         pfilename;	/* pointeur sur le nom du fichier a compiler */
 int                 LineNum;	/* compteur de lignes */
-static indLine        i;		/* position courante dans la ligne en cours */
-static indLine        wi;		/* position du debut du mot courant dans la
+static indLine      i;		/* position courante dans la ligne en cours */
+static indLine      wi;		/* position du debut du mot courant dans la
 
-				 * ligne en cours */
-static indLine        wl;		/* longueur du mot courant */
-static SyntacticType       wn;		/* SyntacticType du mot courant */
-static SyntRuleNum          r;		/* numero de regle */
-static SyntRuleNum          pr;		/* numero de la regle precedente */
-static SyntacticCode      c;		/* code grammatical du mot trouve */
+				   * ligne en cours */
+static indLine      wl;		/* longueur du mot courant */
+static SyntacticType wn;	/* SyntacticType du mot courant */
+static SyntRuleNum  r;		/* numero de regle */
+static SyntRuleNum  pr;		/* numero de la regle precedente */
+static SyntacticCode c;		/* code grammatical du mot trouve */
 static int          nb;		/* indice dans Identifier du mot trouve, si identific */
-static PtrSSchema pSchStr;	/* pointeur sur le schema de structure */
+static PtrSSchema   pSchStr;	/* pointeur sur le schema de structure */
 static PtrSchTypo   pSchTypo;	/* pointeur sur le schema de typographie */
 static PtrTypoFunction PremFonction;	/* pointeur sur la premiere fonction de la
 
@@ -94,7 +94,7 @@ static int /* 0 .. MaxTyCond */ NbCourCond;	/* rang de la condition courante */
 
 static int          SigneAttrVal;	/* Signe d'une valeur d'attribut numerique */
 static int /* 0 .. MAX_ATTR_SSCHEMA */ CourAttr;	/* numero de l'attribut courant */
-static int /* 0 .. MAX_ATTR_VAL */ CourValAttr;	/* numero de la valeur d'attribut */
+static int /* 0 .. MAX_ATTR_VAL */ CourValAttr;		/* numero de la valeur d'attribut */
 
 #include "platform_f.h"
 #include "parser_f.h"
@@ -224,7 +224,7 @@ PtrTypoFunction     ChercheFonction (Name NomFonct)
 
 #else  /* __STDC__ */
 PtrTypoFunction     ChercheFonction (NomFonct)
-Name                 NomFonct;
+Name                NomFonct;
 
 #endif /* __STDC__ */
 
@@ -251,7 +251,7 @@ void                NewModele (Name NomModele)
 
 #else  /* __STDC__ */
 void                NewModele (NomModele)
-Name                 NomModele;
+Name                NomModele;
 
 #endif /* __STDC__ */
 
@@ -288,7 +288,7 @@ PtrModeleCompo      ChercheModele (Name NomModele)
 
 #else  /* __STDC__ */
 PtrModeleCompo      ChercheModele (NomModele)
-Name                 NomModele;
+Name                NomModele;
 
 #endif /* __STDC__ */
 
@@ -395,7 +395,7 @@ int                 att;
 	       for (j = 1; j <= MaxCasTyAttrNum; j++)
 		 {
 		    pTC1 = &pRT1->RTyACas[j - 1];
-		    pTC1->TyANBorneInf = -MAX_INT_ATTR_VAL - 1;	/* - infini */
+		    pTC1->TyANBorneInf = -MAX_INT_ATTR_VAL - 1;		/* - infini */
 		    pTC1->TyANBorneSup = MAX_INT_ATTR_VAL + 1;	/* + infini */
 		    pTC1->TyANBlocRegles = NULL;
 		 }
@@ -621,7 +621,7 @@ void                NewRule (TypeFunct TypeF, Name NomF)
 #else  /* __STDC__ */
 void                NewRule (TypeF, NomF)
 TypeFunct           TypeF;
-Name                 NomF;
+Name                NomF;
 
 #endif /* __STDC__ */
 
@@ -673,7 +673,7 @@ PtrRegleTypo        pReg;
 {
    PtrRegleTypo        pRe1;
    TypeFunct           TypeF;
-   Name                 NomF;
+   Name                NomF;
    boolean             trouve = False;
 
    pRe1 = CourBloc;
@@ -751,9 +751,9 @@ void                copy_generate (Name n, indLine * wi, indLine * wl)
 
 #else  /* __STDC__ */
 void                copy_generate (n, wi, wl)
-Name                 n;
-indLine              *wi;
-indLine              *wl;
+Name                n;
+indLine            *wi;
+indLine            *wl;
 
 #endif /* __STDC__ */
 
@@ -782,13 +782,13 @@ static int          NumType (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static int          NumType (wi, wl)
-indLine               wi;
-indLine               wl;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
 {
-   Name                 n;
+   Name                n;
    int                 i;
 
    copy_generate (n, &wi, &wl);
@@ -818,23 +818,23 @@ void                ProcessToken (indLine wi, indLine wl, SyntacticCode c, Synta
 
 #else  /* __STDC__ */
 void                ProcessToken (wi, wl, c, r, nb, pr)
-indLine               wi;
-indLine               wl;
-SyntacticCode             c;
-SyntacticCode             r;
+indLine             wi;
+indLine             wl;
+SyntacticCode       c;
+SyntacticCode       r;
 int                 nb;
-SyntRuleNum                 pr;
+SyntRuleNum         pr;
 
 #endif /* __STDC__ */
 
 {
-   Name                 n;
+   Name                n;
    int                 k;
    PtrTypoFunction     pFunct;
    PtrModeleCompo      pMod;
    RTypoAttribut      *pRTy1;
    TyCasAttrNum       *pTC1;
-   TtAttribute           *pAt1;
+   TtAttribute        *pAt1;
 
 
    if (c < 1000)
@@ -1166,7 +1166,7 @@ SyntRuleNum                 pr;
 						       if (pSchTypo->STyRegleElem[i - 1] != NULL)
 							  CompilerError (wi, TYP, FATAL,
 									 TYP_ALREADY_DEFINED,
-							  inputLine, LineNum);
+									 inputLine, LineNum);
 						       else
 							 {
 							    CourType = i;
@@ -1575,7 +1575,7 @@ char              **argv;
 				 if (wi > 0)
 				    /* on a trouve un mot */
 				   {
-				      AnalyzeToken(wi, wl, wn, &c, &r, &nb, &pr);
+				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
 				      /* on analyse le mot */
 				      if (!error)
 					 ProcessToken (wi, wl, c, r, nb, pr);

@@ -47,26 +47,32 @@ EXPORT PtrSSchema   pSSchema;
 extern int          IncNbIdent;
 
 int                 LineNum;	/* compteur de lignes dans le fichier source */
-static Name          fileName;
-PtrSSchema        pSSchema;
+static Name         fileName;
+PtrSSchema          pSSchema;
 PtrEventsSet        pAppli;
 
 /* Pointeur sur la liste des schemas d'interfaces utilise's par EDITOR.A */
 PtrAppName          SchemasUsed = NULL;
+
 /* Pointeur sur la liste des noms de menus effectivement utilises */
 PtrAppName          MenusUsed = NULL;
+
 /* pointeur sur la liste des noms d'items effectivement utilises */
 PtrAppName          ItemsUsed = NULL;
+
 /* pointeur sur la liste des noms d'actions effectivement utilisees */
 PtrAppName          ActionsUsed = NULL;
+
 /* pointeur sur la chaine des menus de la fenetre principale de l'application */
 PtrAppMenu          MainWindowMenus = NULL;
+
 /* pointeur sur la chaine des menus des frames document de l'application */
 PtrAppMenu          DocWindowMenus = NULL;
+
 /* pointeur sur la chaine des descripteurs des menus de chaque type de document */
 PtrAppDocType       DocTypeMenus = NULL;
-static boolean      FirstInPair = False; /* on a rencontre' le mot cle "First"  */
-static boolean      SecondInPair = False;  /* on a rencontre' le mot cle "Second" */
+static boolean      FirstInPair = False;	/* on a rencontre' le mot cle "First"  */
+static boolean      SecondInPair = False;	/* on a rencontre' le mot cle "Second" */
 static int          typeNum;
 static int          attrNum;
 static int          curEvent;	/* l'evenement courant               */
@@ -341,9 +347,9 @@ int                *rank;
 /*----------------------------------------------------------------------
    ConstructAbstractSchStruct                                      
   ----------------------------------------------------------------------*/
-static PtrSSchema ConstructAbstractSchStruct ()
+static PtrSSchema   ConstructAbstractSchStruct ()
 {
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
 
    pSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
    pSS->SsCode = 0;
@@ -539,59 +545,59 @@ static void         ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode p
 #else  /* __STDC__ */
 static void         ProcessShortKeyWord (x, r, pr)
 int                 x;
-SyntacticCode             r;
-SyntacticCode             pr;
+SyntacticCode       r;
+SyntacticCode       pr;
 
 #endif /* __STDC__ */
 {
    int                 typeId;
 
    switch (x)
-     {
-       /* traitement selon le code du mot-cle court */
-     case CHR_59:
-       /*  ;  */
-       switch (r)
 	 {
-	 case RULE_EvtAction:
-	   if (DefaultSection)
-	     typeId = 0;
-	   else if (ElementsSection)
-	     typeId = typeNum;
-	   else if (AttributesSection)
-	     typeId = attrNum;
-	   else
-	     typeId = 0;
-	   TteAddActionEvent (pAppli, typeId, curEvent, PreEvent, eventAction);
-	   curEvent = 0;
-	   PreEvent = True;
-	   eventAction = NULL;
-	   break;
-	 case RULE_NewMenu:
-	   NewMenuComplete ();
-	   InitMenu ();
-	   break;
-	 default:
-	   break;
+	       /* traitement selon le code du mot-cle court */
+	    case CHR_59:
+	       /*  ;  */
+	       switch (r)
+		     {
+			case RULE_EvtAction:
+			   if (DefaultSection)
+			      typeId = 0;
+			   else if (ElementsSection)
+			      typeId = typeNum;
+			   else if (AttributesSection)
+			      typeId = attrNum;
+			   else
+			      typeId = 0;
+			   TteAddActionEvent (pAppli, typeId, curEvent, PreEvent, eventAction);
+			   curEvent = 0;
+			   PreEvent = True;
+			   eventAction = NULL;
+			   break;
+			case RULE_NewMenu:
+			   NewMenuComplete ();
+			   InitMenu ();
+			   break;
+			default:
+			   break;
+		     }
+	       break;
+	    case CHR_44:
+	       /*  ,  */
+	       break;
+
+	    case CHR_46:
+	       /* .  */
+	       break;
+
+	    case CHR_58:
+	       /* :  */
+	       if (r == RULE_Menus)
+		  InitMenu ();
+	       break;
+
+	    default:
+	       break;
 	 }
-       break;
-     case CHR_44:
-       /*  ,  */
-       break;
-       
-     case CHR_46:
-       /* .  */
-       break;
-       
-     case CHR_58:
-       /* :  */
-       if (r == RULE_Menus)
-	 InitMenu ();
-       break;
-       
-     default:
-       break;
-     }
 }
 
 
@@ -604,8 +610,8 @@ static void         ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
 #else  /* __STDC__ */
 static void         ProcessLongKeyWord (x, r, wi)
 int                 x;
-SyntacticCode             r;
-indLine               wi;
+SyntacticCode       r;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -730,10 +736,10 @@ indLine               wi;
 static void         ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine wi)
 #else  /* __STDC__ */
 static void         ProcessName (r, pr, wl, wi)
-SyntacticCode             r;
-SyntacticCode             pr;
-indLine               wl;
-indLine               wi;
+SyntacticCode       r;
+SyntacticCode       pr;
+indLine             wl;
+indLine             wi;
 
 #endif /* __STDC__ */
 {
@@ -777,7 +783,7 @@ indLine               wi;
 					   inputLine, LineNum);
 			 else if (strcmp (name, pSSchema->SsName) != 0)
 			    CompilerError (wi, APP, FATAL,
-					UNMATCHING_STRUCT_SCHEME,
+					   UNMATCHING_STRUCT_SCHEME,
 					   inputLine, LineNum);
 			 else
 			    /* acquiert un schema */
@@ -994,9 +1000,9 @@ indLine               wi;
 static void         ProcessInteger (SyntacticCode r, indLine wl, indLine wi)
 #else  /* __STDC__ */
 static void         ProcessInteger (r, wl, wi)
-SyntacticCode             r;
-indLine               wl;
-indLine               wi;
+SyntacticCode       r;
+indLine             wl;
+indLine             wi;
 
 #endif /* __STDC__ */
 {
@@ -1005,7 +1011,7 @@ indLine               wi;
    n = AsciiToInt (wi, wl);
    switch (r)
 	 {
-	    /* r = numero de la regle ou apparait le nombre */
+	       /* r = numero de la regle ou apparait le nombre */
 	    case RULE_ViewNum:
 	       ViewNumber = n;
 	       break;
@@ -1026,11 +1032,11 @@ indLine               wi;
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, SyntacticCode pr)
 #else  /* __STDC__ */
 static void         ProcessToken (wi, wl, c, r, pr)
-indLine               wi;
-indLine               wl;
-SyntacticCode             c;
-SyntacticCode             r;
-SyntacticCode             pr;
+indLine             wi;
+indLine             wl;
+SyntacticCode       c;
+SyntacticCode       r;
+SyntacticCode       pr;
 
 #endif /* __STDC__ */
 {
@@ -1157,7 +1163,7 @@ static void         WriteName (FILE * Hfile, Name n)
 #else  /* __STDC__ */
 static void         WriteName (Hfile, n)
 FILE               *Hfile;
-Name                 n;
+Name                n;
 
 #endif /* __STDC__ */
 
@@ -1182,7 +1188,7 @@ static void         WriteRuleName (FILE * Hfile, int r)
 #else  /* __STDC__ */
 static void         WriteRuleName (Hfile, r)
 FILE               *Hfile;
-int         r;
+int                 r;
 
 #endif /* __STDC__ */
 
@@ -1203,13 +1209,13 @@ static void         WriteAttribute (FILE * Hfile, int a)
 #else  /* __STDC__ */
 static void         WriteAttribute (Hfile, a)
 FILE               *Hfile;
-int      a;
+int                 a;
 
 #endif /* __STDC__ */
 
 {
    int                 j;
-   TtAttribute           *pAttr;
+   TtAttribute        *pAttr;
 
    pAttr = &pSSchema->SsAttribute[a];
    if (pAttr->AttrGlobal)
@@ -1296,7 +1302,7 @@ static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
 #else  /* __STDC__ */
 static void         WriteRule (Hfile, r, pExtensRule)
 FILE               *Hfile;
-int         r;
+int                 r;
 SRule              *pExtensRule;
 
 #endif /* __STDC__ */
@@ -1350,11 +1356,11 @@ char               *fname;
 {
    boolean             firstLocalAttribute;
    boolean             first;
-   int		       firstRule;
+   int                 firstRule;
    int                 i;
    int                 rule;
    SRule              *pRule;
-   Name                 HFileName;
+   Name                HFileName;
    FILE               *Hfile;
 
    sprintf (HFileName, "%s.h", fname);
@@ -1503,19 +1509,20 @@ void                main (int argc, char **argv)
 void                main (argc, argv)
 int                 argc;
 char              **argv;
+
 #endif /* __STDC__ */
 {
    FILE               *filedesc;
    boolean             fileOK;
    char                buffer[200];
-   Name                 pFileName;
+   Name                pFileName;
    int                 i;
    int                 wi;	/* position du debut du mot courant dans la ligne */
    int                 wl;	/* longueur du mot courant */
-   SyntacticType              wn;	/* SyntacticType du mot courant */
-   SyntRuleNum                 r;	/* numero de regle */
-   SyntRuleNum                 pr;	/* numero de la regle precedente */
-   SyntacticCode             c;	/* code grammatical du mot trouve */
+   SyntacticType       wn;	/* SyntacticType du mot courant */
+   SyntRuleNum         r;	/* numero de regle */
+   SyntRuleNum         pr;	/* numero de la regle precedente */
+   SyntacticCode       c;	/* code grammatical du mot trouve */
    int                 idNum;	/* indice dans Identifier du mot trouve, si */
 
    /* identificateur */
@@ -1547,7 +1554,7 @@ char              **argv;
 	     /* ouvre le fichier a compiler */
 	     filedesc = fopen (pFileName, "r");
 	     if (filedesc == 0)
-		TtaDisplayMessage (FATAL, TtaGetMessage(APP, FILE_NOT_FOUND), pFileName);
+		TtaDisplayMessage (FATAL, TtaGetMessage (APP, FILE_NOT_FOUND), pFileName);
 	     else
 	       {
 		  /* le fichier a compiler est ouvert */

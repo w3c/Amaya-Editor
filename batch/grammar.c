@@ -47,28 +47,28 @@ typedef char        fname[30];	/* nom de fichier */
 
 typedef struct _RefList
   {
-     int              NRuleRefs;	/* number of references in the list */
-     int              RuleRef[MAX_RULE_REF];	/* number of a referred list */
+     int                 NRuleRefs;	/* number of references in the list */
+     int                 RuleRef[MAX_RULE_REF];		/* number of a referred list */
   }
 RefList;
 
-int                 LineNum;	/* compteur de lignes */
-static RefList      identRef[MAX_IDENTIFIERS];	/* table des references des identificateurs */
-static RefList      kwRef[MAX_STRING_GRM];	/* table des references des mots-cles */
-static int          Nstrings;	/* longueur effective de la table */
-static SrcIdentDesc    strng[MAX_STRING_GRM];		/* table des chaines */
-static RefList      nameRef;	/* liste des references a 'NAME' */
-static RefList      numberRef;	/* liste des references a 'NUMBER' */
-static RefList      stringRef;	/* liste des references a 'STRING' */
+int                  LineNum;	/* compteur de lignes */
+static RefList       identRef[MAX_IDENTIFIERS];	/* table des references des identificateurs */
+static RefList       kwRef[MAX_STRING_GRM];	/* table des references des mots-cles */
+static int           Nstrings;	/* longueur effective de la table */
+static SrcIdentDesc  strng[MAX_STRING_GRM];	/* table des chaines */
+static RefList       nameRef;	/* liste des references a 'NAME' */
+static RefList       numberRef;	/* liste des references a 'NUMBER' */
+static RefList       stringRef;	/* liste des references a 'STRING' */
 static Name          fileName;	/* nom du fichier a compiler */
 
-static int          shortKeywordCode;	/* code du dernier mot-cle court cree */
-static int          KeywordCode;	/* code du dernier mot-cle long cree */
-static int          NSyntRules;	/* longueur effective de la table */
-static SyntacticRule         SyntRule[MAX_RULE_GRM];	/* table des regles codees */
-static int          curRule;	/* regle en cours de generation */
-static int          curIndx;	/* position courante dans la regle courante */
-static FILE        *listFile;	/* fichier des listes */
+static int           shortKeywordCode;	/* code du dernier mot-cle court cree */
+static int           KeywordCode;	/* code du dernier mot-cle long cree */
+static int           NSyntRules;	/* longueur effective de la table */
+static SyntacticRule SyntRule[MAX_RULE_GRM];	/* table des regles codees */
+static int           curRule;	/* regle en cours de generation */
+static int           curIndx;	/* position courante dans la regle courante */
+static FILE         *listFile;	/* fichier des listes */
 
 #include "parser_f.h"
 #include "platform_f.h"
@@ -118,7 +118,7 @@ static void         AddRefToTable (RefList * ref, indLine wi)
 #else  /* __STDC__ */
 static void         AddRefToTable (ref, wi)
 RefList            *ref;
-indLine               wi;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -126,7 +126,7 @@ indLine               wi;
    if (ref->NRuleRefs >= MAX_RULE_REF)
       CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_REF_TABLL, inputLine, LineNum);
    else
-	ref->RuleRef[ref->NRuleRefs++] = curRule;
+      ref->RuleRef[ref->NRuleRefs++] = curRule;
 }
 
 
@@ -139,8 +139,8 @@ static void         PutToken (SyntacticCode code, indLine wi)
 
 #else  /* __STDC__ */
 static void         PutToken (code, wi)
-SyntacticCode             code;
-indLine               wi;
+SyntacticCode       code;
+indLine             wi;
 
 #endif /* __STDC__ */
 
@@ -164,10 +164,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode code, in
 
 #else  /* __STDC__ */
 static void         ProcessToken (wi, wl, code, r, rank)
-indLine               wi;
-indLine               wl;
-SyntacticCode             code;
-int              r;
+indLine             wi;
+indLine             wl;
+SyntacticCode       code;
+int                 r;
 int                 rank;
 
 #endif /* __STDC__ */
@@ -266,7 +266,7 @@ int                 rank;
 		       do
 			  j++;
 		       while (inputLine[wi + j - 2] == strng[i].SrcIdentifier[j - 1] &&
-				j < wl - 1);
+			      j < wl - 1);
 		       if (j == wl - 1)
 			  if (inputLine[wi + j - 2] == strng[i].SrcIdentifier[j - 1])
 			     known = True;
@@ -344,16 +344,16 @@ static void         InitGrammar ()
    Keywords[6].SrcKeywordCode = 1007;
    LastShortKeyword = 7;
    strncpy (Keywords[7].SrcKeyword, "END", KEWWORD_LENGTH);
-   Keywords[7].SrcKeywordLen = strlen(Keywords[7].SrcKeyword);
+   Keywords[7].SrcKeywordLen = strlen (Keywords[7].SrcKeyword);
    Keywords[7].SrcKeywordCode = 1101;
    strncpy (Keywords[8].SrcKeyword, "NAME", KEWWORD_LENGTH);
-   Keywords[8].SrcKeywordLen = strlen(Keywords[8].SrcKeyword);
+   Keywords[8].SrcKeywordLen = strlen (Keywords[8].SrcKeyword);
    Keywords[8].SrcKeywordCode = 1102;
    strncpy (Keywords[9].SrcKeyword, "STRING", KEWWORD_LENGTH);
-   Keywords[9].SrcKeywordLen = strlen(Keywords[9].SrcKeyword);
+   Keywords[9].SrcKeywordLen = strlen (Keywords[9].SrcKeyword);
    Keywords[9].SrcKeywordCode = 1103;
    strncpy (Keywords[10].SrcKeyword, "NUMBER", KEWWORD_LENGTH);
-   Keywords[10].SrcKeywordLen = strlen(Keywords[10].SrcKeyword);
+   Keywords[10].SrcKeywordLen = strlen (Keywords[10].SrcKeyword);
    Keywords[10].SrcKeywordCode = 1104;
    NKeywords = 11;
    GramRule[0][1] = 2;
@@ -449,7 +449,7 @@ static void         WriteFiles ()
    Hfile = fopen (fileName, "w");
    if (Hfile == NULL)
      {
-	TtaDisplayMessage (FATAL, TtaGetMessage(GRM, CANT_CREATE_HEADER_FILE), fileName);
+	TtaDisplayMessage (FATAL, TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE), fileName);
 	exit (1);
      }
    else
@@ -466,7 +466,7 @@ static void         WriteFiles ()
 	     if (strng[mc].SrcIdentLen == 1)
 	       {
 		  fprintf (Hfile, "#define CHR_%d \t%4d\n",
-		   (int) strng[mc].SrcIdentifier[0], strng[mc].SrcIdentCode);
+		  (int) strng[mc].SrcIdentifier[0], strng[mc].SrcIdentCode);
 		  fprintf (GRMfile, "%c %4d\n", strng[mc].SrcIdentifier[0], strng[mc].SrcIdentCode);
 		  fprintf (listFile, "%4d      ", strng[mc].SrcIdentCode);
 		  if (strng[mc].SrcIdentifier[0] < ' ')
@@ -666,13 +666,13 @@ static void         CheckKeyword (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static void         CheckKeyword (wi, wl)
-indLine               wi;
-indLine               wl;
+indLine             wi;
+indLine             wl;
 
 #endif /* __STDC__ */
 
 {
-   indLine               j;
+   indLine             j;
 
    if (wl == 2)
      {
@@ -693,8 +693,8 @@ indLine               wl;
 	/* mot-cle long */
 	if ((inputLine[wi - 1] >= 'A'
 	     && inputLine[wi - 1] <= 'Z') || (inputLine[wi - 1] >= 'a'
-	       && inputLine[wi - 1] <= 'z') || (((int)inputLine[wi - 1]) >= 1
-					  && inputLine[wi - 1] < ' '))
+	     && inputLine[wi - 1] <= 'z') || (((int) inputLine[wi - 1]) >= 1
+					      && inputLine[wi - 1] < ' '))
 	   /* le premier caractere est une lettre */
 	  {
 	     j = wi;
@@ -703,8 +703,8 @@ indLine               wl;
 		  if (!((inputLine[j] >= 'A'
 			 && inputLine[j] <= 'Z') || (inputLine[j] >= 'a'
 			     && inputLine[j] <= 'z') || (inputLine[j] >= '0'
-		    && inputLine[j] <= '9') || (((int)inputLine[wi - 1]) >= 1
-				&& inputLine[wi - 1] < ' ')))
+		  && inputLine[j] <= '9') || (((int) inputLine[wi - 1]) >= 1
+					      && inputLine[wi - 1] < ' ')))
 		     CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
 		  j++;
 	       }
@@ -737,13 +737,13 @@ static boolean      CheckDefAndRef ()
      {
 	if (Identifier[ic].SrcIdentDefRule == 0)
 	  {
-	     TtaDisplayMessage (FATAL, TtaGetMessage(GRM, UNDEFINED_SYMBOL), Identifier[ic].SrcIdentifier);
+	     TtaDisplayMessage (FATAL, TtaGetMessage (GRM, UNDEFINED_SYMBOL), Identifier[ic].SrcIdentifier);
 	     ok = False;
 	  }
 	if (Identifier[ic].SrcIdentRefRule == 0)
 	   if (ic > 0)
 	     {
-		TtaDisplayMessage (FATAL, TtaGetMessage(GRM, UNREFERENCED_SYMBOL), Identifier[ic].SrcIdentifier);
+		TtaDisplayMessage (FATAL, TtaGetMessage (GRM, UNREFERENCED_SYMBOL), Identifier[ic].SrcIdentifier);
 		ok = False;
 	     }
      }
@@ -769,14 +769,15 @@ char              **argv;
    FILE               *infile;
    boolean             fileOK;
    lineBuffer          sourceLine;	/* ligne source non traduite */
-   indLine               i;	/* position courante dans la ligne en cours */
-   indLine               wi;	/* position du debut du mot courant dans la ligne */
-   indLine               wl;	/* longueur du mot courant */
-   SyntacticType              wn;	/* SyntacticType du mot courant */
-   SyntRuleNum                 r;	/* numero de regle */
-   SyntRuleNum                 pr;	/* numero de la regle precedente */
-   SyntacticCode             code;	/* code grammatical du mot trouve */
+   indLine             i;	/* position courante dans la ligne en cours */
+   indLine             wi;	/* position du debut du mot courant dans la ligne */
+   indLine             wl;	/* longueur du mot courant */
+   SyntacticType       wn;	/* SyntacticType du mot courant */
+   SyntRuleNum         r;	/* numero de regle */
+   SyntRuleNum         pr;	/* numero de la regle precedente */
+   SyntacticCode       code;	/* code grammatical du mot trouve */
    int                 rank;	/* indice dans Identifier du mot trouve, si
+
 				   identificateur */
 
    TtaInitializeAppRegistry (argv[0]);
@@ -834,7 +835,7 @@ char              **argv;
 		  /* marque la fin reelle de la ligne */
 		  inputLine[i - 1] = '\0';
 		  /* garde une copie de la ligne avant traduction */
-		  strncpy ((char*)sourceLine, (char*)inputLine, LINE_LENGTH);
+		  strncpy ((char *) sourceLine, (char *) inputLine, LINE_LENGTH);
 		  LineNum++;
 		  /* traduit les caracteres de la ligne */
 		  OctalToChar ();
@@ -845,14 +846,14 @@ char              **argv;
 		  do
 		    {
 		       i = wi + wl;
-		       GetNextToken (i, &wi, &wl, &wn);	/* mot suivant */
+		       GetNextToken (i, &wi, &wl, &wn);		/* mot suivant */
 		       if (wi > 0)
 			 {
 			    /* on a trouve un mot */
 			    if (wn == SynString)
 			       CheckKeyword (wi, wl);	/* mot-cle valide ? */
 			    if (!error)
-			       AnalyzeToken (wi, wl, wn, &code, &r, &rank, &pr);		/* on analyse le mot */
+			       AnalyzeToken (wi, wl, wn, &code, &r, &rank, &pr);	/* on analyse le mot */
 			    if (!error)
 			       ProcessToken (wi, wl, code, r, rank);	/* on le traite */
 			 }

@@ -85,7 +85,7 @@ void                WriteName (Name name)
 
 #else  /* __STDC__ */
 void                WriteName (name)
-Name                 name;
+Name                name;
 
 #endif /* __STDC__ */
 
@@ -94,7 +94,7 @@ Name                 name;
 
    i = 0;
    do
-	BIOwriteByte (outfile, name[i++]);
+      BIOwriteByte (outfile, name[i++]);
    while (name[i - 1] != '\0');
 }
 
@@ -127,7 +127,7 @@ void                WriteAttributeType (AttribType typ)
 
 #else  /* __STDC__ */
 void                WriteAttributeType (typ)
-AttribType        typ;
+AttribType          typ;
 
 #endif /* __STDC__ */
 
@@ -159,7 +159,7 @@ void                WriteConstructor (RConstruct constr)
 
 #else  /* __STDC__ */
 void                WriteConstructor (constr)
-RConstruct        constr;
+RConstruct          constr;
 
 #endif /* __STDC__ */
 
@@ -211,7 +211,7 @@ void                WriteBasicType (BasicType typ)
 
 #else  /* __STDC__ */
 void                WriteBasicType (typ)
-BasicType          typ;
+BasicType           typ;
 
 #endif /* __STDC__ */
 
@@ -357,8 +357,8 @@ int                 code;
 #endif /* __STDC__ */
 
 {
-   TtAttribute      *pAttr;
-   int              i, j;
+   TtAttribute        *pAttr;
+   int                 i, j;
 
    /* ouvre le fichier */
    outfile = BIOwriteOpen (fileName);
@@ -387,7 +387,7 @@ int                 code;
    /* ecrit le texte des constantes */
    i = 0;
    do
-	BIOwriteByte (outfile, pSS->SsConstBuffer[i++]);
+      BIOwriteByte (outfile, pSS->SsConstBuffer[i++]);
    while (pSS->SsConstBuffer[i - 1] != '\0' || pSS->SsConstBuffer[i] != '\0');
 
    /* SsFirstDynNature */

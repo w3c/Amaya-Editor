@@ -42,6 +42,7 @@ static void         WriteIncludes (char *fname, FILE * file)
 static void         WriteIncludes (fname, file)
 char               *fname;
 FILE               *file;
+
 #endif /* __STDC__ */
 {
    PtrAppName          menuAction;
@@ -75,18 +76,19 @@ static void         WriteAnEvent (char *eventName, PtrActionEvent pactevent)
 #else  /* __STDC__ */
 static void         WriteAnEvent (eventName, pactevent)
 char               *eventName;
-PtrActionEvent pactevent;
+PtrActionEvent      pactevent;
+
 #endif /* __STDC__ */
 {
-  if (pactevent == NULL)
-    return;
+   if (pactevent == NULL)
+      return;
 
-  WriteAnEvent (eventName, pactevent->AEvNext);
-  fprintf (AppFile, "  TteAddActionEvent (appliActions, %d, %s, %d, \"%s\");\n",
-	   pactevent->AEvType,
-	   eventName,
-	   pactevent->AEvPre,
-	   pactevent->AEvAction->ActName);
+   WriteAnEvent (eventName, pactevent->AEvNext);
+   fprintf (AppFile, "  TteAddActionEvent (appliActions, %d, %s, %d, \"%s\");\n",
+	    pactevent->AEvType,
+	    eventName,
+	    pactevent->AEvPre,
+	    pactevent->AEvAction->ActName);
 }
 
 
@@ -97,20 +99,21 @@ PtrActionEvent pactevent;
 static void         WriteEventsList (PtrEventsSet pAppli)
 #else  /* __STDC__ */
 static void         WriteEventsList (pAppli)
-PtrEventsSet  pAppli;
+PtrEventsSet        pAppli;
+
 #endif /* __STDC__ */
 {
-  int          event;
-  char         name[50];
+   int                 event;
+   char                name[50];
 
-  fprintf (AppFile, "   /* Generate event/action entries */\n");
-  strcpy (name, "Tte");
-  for (event = 0; event <= TteExit; event++)
-    {
-      strcpy (&name[3], RegisteredAppEvents[event]);
-      WriteAnEvent (name, pAppli->EvSList[event]);
-    }
-  fprintf (AppFile, "\n");
+   fprintf (AppFile, "   /* Generate event/action entries */\n");
+   strcpy (name, "Tte");
+   for (event = 0; event <= TteExit; event++)
+     {
+	strcpy (&name[3], RegisteredAppEvents[event]);
+	WriteAnEvent (name, pAppli->EvSList[event]);
+     }
+   fprintf (AppFile, "\n");
 }
 
 /*----------------------------------------------------------------------
@@ -323,7 +326,7 @@ static void         WriteAppliInit (char *fname, PtrEventsSet pAppli)
 #else  /* __STDC__ */
 static void         WriteAppliInit (fname, pAppli)
 char               *fname;
-PtrEventsSet  pAppli;
+PtrEventsSet        pAppli;
 
 #endif /* __STDC__ */
 
@@ -798,7 +801,7 @@ FILE               *dialogueFile;
 
    fprintf (dotHFile, "/* Basic types */\n");
    for (i = 0; i < pSSchema->SsNRules; i++)
-      fprintf (dotHFile, "#define %s  %d\n", pSSchema->SsRule[i].SrName, i+1);
+      fprintf (dotHFile, "#define %s  %d\n", pSSchema->SsRule[i].SrName, i + 1);
 
    /* liste tous les noms de menus et d'items reellement utilises */
    num = 0;
@@ -832,11 +835,12 @@ FILE               *dialogueFile;
    GenerateApplication generates the application prototype.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               GenerateApplication (char *fname, PtrEventsSet pAppli)
+void                GenerateApplication (char *fname, PtrEventsSet pAppli)
 #else  /* __STDC__ */
-void               GenerateApplication (fname, pAppli)
+void                GenerateApplication (fname, pAppli)
 char               *fname;
 PtrEventsSet        pAppli;
+
 #endif /* __STDC__ */
 {
    int                 i;

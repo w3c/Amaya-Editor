@@ -31,6 +31,7 @@ void                WriteShort (int n)
 #else  /* __STDC__ */
 void                WriteShort (n)
 int                 n;
+
 #endif /* __STDC__ */
 
 {
@@ -48,7 +49,7 @@ void                WriteSignedShort (int n)
 
 #else  /* __STDC__ */
 void                WriteSignedShort (n)
-int             n;
+int                 n;
 
 #endif /* __STDC__ */
 
@@ -70,7 +71,7 @@ void                wrnom (Name N)
 
 #else  /* __STDC__ */
 void                wrnom (N)
-Name                 N;
+Name                N;
 
 #endif /* __STDC__ */
 
@@ -97,7 +98,7 @@ void                wrnomproc (Name N)
 
 #else  /* __STDC__ */
 void                wrnomproc (N)
-Name                 N;
+Name                N;
 
 #endif /* __STDC__ */
 
@@ -412,7 +413,7 @@ void                WriteReglesAttr (int att, PtrRTypoAttribut pA, PtrSSchema pS
 void                WriteReglesAttr (att, pA, pSchStr)
 int                 att;
 PtrRTypoAttribut    pA;
-PtrSSchema        pSchStr;
+PtrSSchema          pSchStr;
 
 #endif /* __STDC__ */
 
@@ -472,9 +473,9 @@ void                WrSchTyp (Name fname, PtrSchTypo pSchTypo, PtrSSchema pSchSt
 
 #else  /* __STDC__ */
 void                WrSchTyp (fname, pSchTypo, pSchStr)
-Name                 fname;
+Name                fname;
 PtrSchTypo          pSchTypo;
-PtrSSchema        pSchStr;
+PtrSSchema          pSchStr;
 
 #endif /* __STDC__ */
 
