@@ -15,6 +15,8 @@ extern void FollowTheLink_callback ( int targetDocument,
                                      char *outputfile,
                                      AHTHeaders *http_headers,
                                      void *context );
+extern ThotBool IsCSSLink ( Element el,
+                            Document doc );
 extern void DoAction ( Document doc,
                        View view );
 extern void AccessKeyHandler ( Document doc,
@@ -46,6 +48,8 @@ extern void FollowTheLink_callback (/* int targetDocument,
                                        char *outputfile,
                                        AHTHeaders *http_headers,
                                        void *context */);
+extern ThotBool IsCSSLink (/* Element el,
+                              Document doc */);
 extern void DoAction (/* Document doc,
                          View view */);
 extern void AccessKeyHandler (/* Document doc,

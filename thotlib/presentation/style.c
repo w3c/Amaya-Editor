@@ -1059,7 +1059,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	    /* the attribute should be attached to that element */
 	    PresRuleAddAttrCond (pRule, ctxt->type);
 	  /* add other conditions ... */
-	  i = 1;
+	  i = 0;
 	  while (i < MAX_ANCESTORS)
 	    {
 	      if (ctxt->name[i] && ctxt->names_nb[i] > 0)

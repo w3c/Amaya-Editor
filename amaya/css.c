@@ -583,7 +583,6 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
   FILE               *res;
   char                tempfile[MAX_LENGTH];
   char                tempURL[MAX_LENGTH];
-  char               *buffer = NULL;
   char               *tmpBuff;
   int                 len;
   ThotBool            import, printing;
@@ -667,7 +666,7 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 		return;
 	      }
 
-      tmpBuff = TtaGetMemory (buf.st_size + 1000);
+	  tmpBuff = TtaGetMemory (buf.st_size + 1000);
 	  if (tmpBuff == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
@@ -685,14 +684,8 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	  tmpBuff[buf.st_size] = 0;
 	  fclose (res);
 
-#     ifdef _I18N_
-	  buffer = TtaGetMemory (buf.st_size + 1000);
-      mbstowcs (buffer, tmpBuff, buf.st_size + 1000);
-#     else  /* !_I18N_ */
-      buffer = tmpBuff;
-#     endif /* !_I18N_ */
-	  ReadCSSRules (doc, oldcss, buffer, FALSE);
-	  TtaFreeMemory (buffer);
+	  ReadCSSRules (doc, oldcss, tmpBuff, FALSE);
+	  TtaFreeMemory (tmpBuff);
 	}
     }
 }

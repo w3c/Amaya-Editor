@@ -171,40 +171,32 @@ ThotBool RemoveAccessKey (NotifyAttribute *event)
    RemoveLink: destroy the link element and remove CSS rules when the
    link points to a CSS file.
   ----------------------------------------------------------------------*/
-void                RemoveLink (Element el, Document doc)
+void RemoveLink (Element el, Document doc)
 {
-   ElementType	       elType;
-   AttributeType       attrType;
-   Attribute           attr;
-   char              buffer[MAX_LENGTH];   char              pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
-   int                 length;
+  ElementType	    elType;
+  AttributeType     attrType;
+  Attribute         attr;
+  char              buffer[MAX_LENGTH];
+  char              pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
+  int               length;
 
-   /* Search the refered image */
-   elType = TtaGetElementType (el);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_REL;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr != 0)
-     {
-       /* get a buffer for the attribute value */
-       length = MAX_LENGTH;
-       TtaGiveTextAttributeValue (attr, buffer, &length);
-       if (!strcasecmp (buffer, "stylesheet") ||
-	   !strcasecmp (buffer, "style"))
-	 {
-	   /* it's a link to a style sheet. Remove that style sheet */
-	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	   attr = TtaGetAttribute (el, attrType);
-	   if (attr != 0)
-	     {
-	       /* copy the HREF attribute into the buffer */
-	       length = MAX_LENGTH;
-	       TtaGiveTextAttributeValue (attr, buffer, &length);
-	       NormalizeURL (buffer, doc, pathname, documentname, NULL);
-	       RemoveStyleSheet (pathname, doc, TRUE, TRUE);
-	     }
-	 }
-     }
+  /* Search the refered image */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (IsCSSLink (el, doc))
+    {
+      /* it's a link to a style sheet. Remove that style sheet */
+      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+	{
+	  /* copy the HREF attribute into the buffer */
+	  length = MAX_LENGTH;
+	  TtaGiveTextAttributeValue (attr, buffer, &length);
+	  NormalizeURL (buffer, doc, pathname, documentname, NULL);
+	  RemoveStyleSheet (pathname, doc, TRUE, TRUE);
+	}
+    }
 }
 /*----------------------------------------------------------------------
    DeleteLink                                              

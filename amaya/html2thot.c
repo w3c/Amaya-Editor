@@ -1591,60 +1591,50 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
   Attribute           attr;
   AttributeType       attrType;
   CSSmedia            media;
-  char               *name1, *name2;
+  char               *buff;
   int                 length;
 
-       /* A LINK element is complete.
-	  If it is a link to a style sheet, load that style sheet.
-       */
-       attrType.AttrSSchema = schema;
-       attrType.AttrTypeNum = HTML_ATTR_REL;
-       attr = TtaGetAttribute (el, attrType);
-       if (attr != NULL)
-	  /* there is an attribute REL */
-	 {
-	    length = TtaGetTextAttributeLength (attr);
-	    name1 = TtaGetMemory (length + 1);
-	    TtaGiveTextAttributeValue (attr, name1, &length);
-	    if (!strcasecmp (name1, "stylesheet") ||
-		!strcasecmp (name1, "style"))
-	      {
-		 /* it's a link to a style sheet */
-		 /* get the media specification */
-		 attrType.AttrTypeNum = HTML_ATTR_media;
-		 attr = TtaGetAttribute (el, attrType);
-		 if (attr != NULL)
-		   {
-		      length = TtaGetTextAttributeLength (attr);
-		      name2 = TtaGetMemory (length + 1);
-		      TtaGiveTextAttributeValue (attr, name2, &length);
-		      if (!strcasecmp (name2, "screen"))
-			media = CSS_SCREEN;
-		      else if (!strcasecmp (name2, "print"))
-			media = CSS_PRINT;
-		      else if (!strcasecmp (name2, "all"))
-			media = CSS_ALL;
-		      else
-			media = CSS_OTHER;
-		      TtaFreeMemory (name2);
-		   }
-		 else
-		   media = CSS_ALL;
-		 /* Load that style sheet */
-		 attrType.AttrTypeNum = HTML_ATTR_HREF_;
-		 attr = TtaGetAttribute (el, attrType);
-		 if (attr != NULL)
-		   {
-		      length = TtaGetTextAttributeLength (attr);
-		      name2 = TtaGetMemory (length + 1);
-		      TtaGiveTextAttributeValue (attr, name2, &length);
-		      /* load the stylesheet file found here ! */
-		      LoadStyleSheet (name2, doc, el, NULL, media);
-		      TtaFreeMemory (name2);
-		   }
-	      }		/* other kind of Links ... */
-	    TtaFreeMemory (name1);
-	 }
+  /* A LINK element is complete.
+     If it is a link to a style sheet, load that style sheet.
+  */
+  attrType.AttrSSchema = schema;
+  if (IsCSSLink (el, doc))
+    {
+      /* it's a link to a style sheet */
+      /* get the media specification */
+      attrType.AttrTypeNum = HTML_ATTR_media;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  buff = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, buff, &length);
+	  if (!strcasecmp (buff, "screen"))
+	    media = CSS_SCREEN;
+	  else if (!strcasecmp (buff, "print"))
+	    media = CSS_PRINT;
+	  else if (!strcasecmp (buff, "all"))
+	    media = CSS_ALL;
+	  else
+	    media = CSS_OTHER;
+	  TtaFreeMemory (buff);
+	}
+      else
+	media = CSS_ALL;
+
+      /* Load that style sheet */
+      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  buff = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, buff, &length);
+	  /* load the stylesheet file found here ! */
+	  LoadStyleSheet (buff, doc, el, NULL, media);
+	  TtaFreeMemory (buff);
+	}
+    }
 }
 
 

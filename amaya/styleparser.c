@@ -3273,14 +3273,18 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
       if (*selector == ':' || *selector == '.' || *selector == '#')
-	/* keep the element name which precedes the id or
-	 pseudo class or the class */
-	deb = cur;
+	{
+	  /* keep the element name which precedes the id or
+	     pseudo class or the class */
+	  cur = selector + 1;
+	  deb = cur;
+	}
 
       if (*selector == '.')
 	{
-	  /* copy into sel[] the class */
-	  classes[0] = cur;
+	  /* copy into sel[] the class if it's valid name */
+	  if (cur[0] > 64)
+	    classes[0] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
 		 *selector != '.' && *selector != ':' &&
@@ -3290,8 +3294,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	}
       else if (*selector == ':')
 	{
-	  /* copy into sel[] the pseudoclass */
-	  pseudoclasses[0]= cur;
+	  /* copy into sel[] the pseudoclass if it's valid name */
+	  if (cur[0] > 64)
+	    pseudoclasses[0]= cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
              *selector != '.' && *selector != ':' &&
@@ -3301,8 +3306,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	}
       else if (*selector == '#')
 	{
-	  /* copy into sel[] the attribute */
-	  ids[0] = cur;
+	  /* copy into sel[] the attribute if it's valid name */
+	  if (cur[0] > 64)
+	    ids[0] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
              *selector != '.' && *selector != ':' &&
@@ -3312,8 +3318,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	}
       else if (*selector == '[')
 	{
-	  /* copy into sel[] the attribute */
-	  attrs[0] = cur;
+	  /* copy into sel[] the attribute if it's valid name */
+	  if (cur[0] > 64)
+	    attrs[0] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ']' && *selector != '=')
 	    *cur++ = *selector++;
@@ -3338,7 +3345,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	}
 
       selector = SkipBlanksAndComments (selector);
-
       /* is it a multi-level selector? */
       if (*selector == EOS)
 	/* end of the selector */
@@ -3470,7 +3476,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  }
       i++;
     }
-  
+
   /* Get the schema name of the main element */
   if (ctxt->schema == NULL)
     ctxt->schema = TtaGetDocumentSSchema (doc);

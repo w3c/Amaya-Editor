@@ -4114,18 +4114,16 @@ static void   XmlParse (FILE     *infile,
    The parameter pathURL gives the original (local or
    distant) path or URL of the xml document.
   ----------------------------------------------------------------------*/
-void StartXmlParser (Document doc, char *htmlFileName,
+void StartXmlParser (Document doc, char *fileName,
 		     char *documentName, char *documentDirectory,
 		     char *pathURL, ThotBool xmlDec,
 		     ThotBool xmlDoctype)
-
 {
   Element         el, oldel;
   char           *s;
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
   char           *profile;
-  char            www_file_name[MAX_LENGTH];
   int             length, error;
   ThotBool        isXHTML;
   CHARSET         charset;
@@ -4141,8 +4139,7 @@ void StartXmlParser (Document doc, char *htmlFileName,
   XMLErrorsFound = FALSE;
 
   /* Reading of the file */
-  wc2iso_strcpy (www_file_name, htmlFileName);
-  stream = gzopen (www_file_name, "r");
+  stream = gzopen (fileName, "r");
 
   if (stream != 0)
     {
@@ -4162,16 +4159,16 @@ void StartXmlParser (Document doc, char *htmlFileName,
 
       /* Set document URL */
       length = strlen (pathURL);
-      if (strcmp (pathURL, htmlFileName) == 0)
+      if (strcmp (pathURL, fileName) == 0)
 	{
 	  docURL = TtaGetMemory (length + 1);
 	  strcpy (docURL, pathURL);
 	}
       else
 	{
-	  length += strlen (htmlFileName) + 20;
+	  length += strlen (fileName) + 20;
 	  docURL = TtaGetMemory (length+1);
-	  sprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
+	  sprintf (docURL, "%s temp file: %s", pathURL, fileName);
 	}
 
       /* Do not check the Thot abstract tree against the structure */

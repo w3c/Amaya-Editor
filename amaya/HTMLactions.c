@@ -547,6 +547,40 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
 }
 
 /*----------------------------------------------------------------------
+   IsCSSLink returns TRUE is the element links a CSS stylesheet.
+  ----------------------------------------------------------------------*/
+ThotBool IsCSSLink (Element el, Document doc)
+{
+  AttributeType       attrType;
+  Attribute           attr;
+  char                buffer[MAX_LENGTH];
+  int                 length;
+
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrTypeNum = HTML_ATTR_REL;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    {
+      /* get a buffer for the attribute value */
+      length = MAX_LENGTH;
+      TtaGiveTextAttributeValue (attr, buffer, &length);
+      if (strcasecmp (buffer, "stylesheet") >= 0 ||
+	  !strcasecmp (buffer, "style"))
+	{
+	  /* now check the type of the stylesheet */
+	  attrType.AttrTypeNum = HTML_ATTR_Link_type;
+	  attr = TtaGetAttribute (el, attrType);
+	  /* get a buffer for the attribute value */
+	  length = MAX_LENGTH;
+	  TtaGiveTextAttributeValue (attr, buffer, &length);
+	  if (!strcasecmp (buffer, "text/css"))
+	    return TRUE;
+	}
+    }
+   return FALSE;
+}
+
+/*----------------------------------------------------------------------
   FollowTheLink follows the link starting from the anchor element for a
   double click on the elSource element.
   The parameter doc is the document that contains the origin element.
@@ -707,29 +741,17 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
 		   reldoc = doc;
 		   method = CE_RELATIVE;
 		   history = TRUE;
-		   if (isHTML && elType.ElTypeNum == HTML_EL_LINK)
+		   if (isHTML && elType.ElTypeNum == HTML_EL_LINK &&
+		       IsCSSLink (anchor, doc))
 		     {
-		       attrType.AttrSSchema = HTMLSSchema;
-		       attrType.AttrTypeNum = HTML_ATTR_REL;
-		       attr = TtaGetAttribute (anchor, attrType);
-		       if (attr)
-			 {
-			   /* get a buffer for the attribute value */
-			   length = MAX_LENGTH;
-			   TtaGiveTextAttributeValue (attr, buffer, &length);
-			   if (!strcasecmp (buffer, "stylesheet") ||
-			       !strcasecmp (buffer, "style"))
-			     {
-			       /* opening a CSS */
-			       reldoc = 0;
-			       method = CE_CSS;
-			       history = FALSE;
-			       /* normalize the URL */
-			       strcpy (buffer, documentURL);
-			       NormalizeURL (buffer, doc, documentURL,
-					     documentname, NULL);
-			     }
-			 }
+		       /* opening a CSS */
+		       reldoc = 0;
+		       method = CE_CSS;
+		       history = FALSE;
+		       /* normalize the URL */
+		       strcpy (buffer, documentURL);
+		       NormalizeURL (buffer, doc, documentURL,
+				     documentname, NULL);
 		     }
 		 }
 	       if (method != CE_RELATIVE || InNewWindow ||
