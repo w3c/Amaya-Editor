@@ -1058,7 +1058,7 @@ void SetNamespacesAndDTD (Document doc)
    docEl = TtaGetMainRoot (doc);
    if ((useMathML || useSVG || useHTML || useXML) && DocumentMeta[doc]->xmlformat)
      {
-       /* remove the DOCTYPE declaration */
+       /* Remove the DOCTYPE declaration for compound documents */
        elType = TtaGetElementType (docEl);
        s = TtaGetSSchemaName (elType.ElSSchema);
        if (strcmp (s, "HTML") == 0)
@@ -1074,11 +1074,13 @@ void SetNamespacesAndDTD (Document doc)
 	 {
 	   TtaDeleteTree (doctype, doc);
 	   TtaSetDocumentProfile (doc, L_Other);
-	   if (useMathML && 
-	       (strcmp (s, "HTML") == 0) &&
+	   if (useMathML && (strcmp (s, "HTML") == 0) &&
 	       DocumentMeta[doc]->xmlformat)
-	     /* Create a XHTML + MathML doctype */
-	     CreateDoctype (doc, L_Xhtml11);
+	     {
+	       /* Create a XHTML + MathML doctype */
+	       CreateDoctype (doc, L_Xhtml11);
+	       TtaSetDocumentProfile (doc, L_Xhtml11);
+	     }
    	 }
      }
    
