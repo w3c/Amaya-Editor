@@ -732,6 +732,7 @@ Document AnnotThread_searchRoot (char *root)
    ------------------------------------------------------------*/
 Document AnnotThread_searchThreadDoc (char *annot_url)
 {
+#ifdef ANNOT_ON_ANNOT
   int i;
   AnnotMetaDataSearch searchType;
 
@@ -749,6 +750,9 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
 	break;
     }
   return (i == DocumentTableLength) ? 0 : i;
+#else
+  return 0;
+#endif /* ANNOT_ON_ANNOT */
 }
 
 /*------------------------------------------------------------
