@@ -1840,6 +1840,7 @@ void TtaChangeButton (Document doc, View view, int index,
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 #endif /* _GTK */
 #ifdef _WX
+	      /* TODO ? : mettre a jour l'image */
 	      wxLogDebug(_T("TtaChangeButton"));
 	      WindowTable[window_id].Button[index]->Enable( state );
 #endif /* _WX */
