@@ -666,7 +666,7 @@ Document doc;
         ((int)entityValue[0]) == 160)	/* sticky space */
         /* null character or space */
         /* create a text element containing the entity name with an
-           attribute entity */
+           attribute IntEntity */
 	{
 	XMLTextToDocument ();
 	len = ustrlen (entityName);

@@ -20,6 +20,8 @@ ATTR
 
    { generic attributes for internal use }
    Invalid_attribute = TEXT;	{ to store an unknown attribute }
+   IntEntity = yes_;		{ the content of the element is the name of
+				  an entity }
    Ghost_restruct = TEXT;	{ to help structure transformation }
 
 CONST
@@ -42,8 +44,7 @@ STRUCT
 		fontstyle = normal_, italic;
 		IntFontstyle = IntNormal, IntItalic;	{ for internal use }
 		fontfamily = TEXT;
-		color = TEXT;
-		IntEntity = yes_)			{ for internal use }
+		color = TEXT)
 	  = TEXT;
 
       MI
