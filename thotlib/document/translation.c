@@ -75,6 +75,7 @@ static ThotBool     ExportCRLF;
 #include "applicationapi_f.h"
 #include "callback_f.h"
 #include "content_f.h"
+#include "exceptions_f.h"
 #include "externalref_f.h"
 #include "fileaccess_f.h"
 #include "memory_f.h"
@@ -528,10 +529,10 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
   When the parameter attrVal is TRUE doublequotes are translated into
   the entity &#34;.
   ----------------------------------------------------------------------*/
-static void TranslateText (PtrTextBuffer pBufT, PtrSSchema pSS,
-			   PtrTSchema pTSch,
+static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			   ScriptTransl *pTransAlph, ThotBool lineBreak,
-			   int fnum, PtrDocument pDoc, ThotBool attrVal)
+			   int fnum, PtrDocument pDoc, ThotBool attrVal,
+			   ThotBool entityName)
 {
   PtrTextBuffer        pNextBufT, pPrevBufT;
   CHAR_T              c, cs;
@@ -657,7 +658,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrSSchema pSS,
 		    }
 		  else
 		  PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak,
-			   TRUE, !strcmp(pSS->SsName, "MathML"));
+			   TRUE, entityName);
 		  j++;
 		}
 	      /* prepare la prochaine recherche dans la table */
@@ -704,7 +705,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrSSchema pSS,
 	    }
 	  else if (c != EOS)
 	    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
-		     !strcmp(pSS->SsName, "MathML"));
+		     entityName);
 	}
       else
 	/* on avait commence' a analyser une sequence de caracteres. */
@@ -740,7 +741,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrSSchema pSS,
 		}
 	      else
 		PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE,
-			 !strcmp(pSS->SsName, "MathML"));
+			 entityName);
 	    }
 	  b = 0;
 	  ft = textTransBegin;
@@ -775,8 +776,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrSSchema pSS,
 	   PutChar ((wchar_t) ';', fnum, NULL, pDoc, FALSE, FALSE, FALSE);
 	 }
        else
-	 PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
-		  !strcmp(pSS->SsName, "MathML"));
+	 PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE, entityName);
      }
 }
 
@@ -790,11 +790,12 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 {
   PtrTSchema          pTSch;
   PtrTextBuffer       pBufT;
-  ScriptTransl     *pTransAlph;
+  ScriptTransl       *pTransAlph;
   StringTransl       *pTrans;
-  CHAR_T             c;
+  CHAR_T              c;
   char                ci;
   int                 i, j, b, ft, lt;
+  ThotBool            entityName;
 
   pTransAlph = NULL;
   lt = 0;
@@ -813,24 +814,25 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	/* la feuille n'est pas vide */
 	{
 	  pBufT = pEl->ElText;	/* 1er buffer a traiter */
+	  entityName = !strcmp (pEl->ElStructSchema->SsName, "MathML");
 	  if (!pTransAlph || !transChar)
 	    /* on ne traduit pas quand la table de traduction est vide */
 	    /* parcourt les buffers de l'element */
-	    while (pBufT != NULL)
+	    while (pBufT)
 	      {
 		i = 0;
 		while (pBufT->BuContent[i] != EOS)
 		  {
 		    c = pBufT->BuContent[i++];
 		    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
-			     !strcmp(pEl->ElStructSchema->SsName, "MathML"));
+			     entityName);
 		  }
 		pBufT = pBufT->BuNext;
 	      }
 	  else if (pTSch != NULL)
 	    /* effectue les traductions de caracteres selon la table */
-	    TranslateText (pBufT, pEl->ElStructSchema, pTSch, pTransAlph,
-			   lineBreak, fnum, pDoc, FALSE);
+	    TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fnum,
+			   pDoc, FALSE, entityName);
 	}
       break;
 
@@ -2481,7 +2483,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
   char                currentFileName[MAX_PATH]; /* nom du fichier principal*/
   PathBuffer          directoryName;
   FILE               *newFile;
-  ThotBool            found, possibleRef;
+  ThotBool            found, possibleRef, encode, entityName;
 
   if (*ignoreEl)
     return;
@@ -2574,8 +2576,14 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		if (pTRule->TrObject == ToTranslatedAttr)
 		  pTransTextSch = GetTransSchForContent(pEl, LtText, &pTransAlph);
 		pBuf = pA->AeAttrText;
+		/* double quotes within attribute values are encoded
+		   except for invisible (internal) attributes */
+		encode = !AttrHasException (ExcInvisible, pA->AeAttrNum,
+					    pA->AeAttrSSchema);
+		entityName = !strcmp (pA->AeAttrSSchema->SsName, "MathML");
 		if (pBuf)
 		  {
+		    /* don't insert line breaks in attribute values */
 		    if (!pTransTextSch || !pTransAlph)
 		      /* no translation */
 		      while (pBuf != NULL)
@@ -2584,7 +2592,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			  while (i < pBuf->BuLength)
 			    {
 			      c = pBuf->BuContent[i++];
-			      if (c == 34)
+			      if (encode && c == 34)
 				{
 				  /* write a numeric entity */
 				  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
@@ -2602,10 +2610,9 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			  pBuf = pBuf->BuNext;
 			}
 		    else
-		      /* translate the attribute value, but don't insert
-			 line breaks. */
-		      TranslateText (pBuf, pA->AeAttrSSchema, pTransTextSch,
-				     pTransAlph, FALSE, fnum, pDoc, TRUE);
+		      /* translate the attribute value */
+		      TranslateText (pBuf, pTransTextSch, pTransAlph, FALSE,
+				     fnum, pDoc, encode, entityName);
 		  }
 		break;
 	      case AtReferenceAttr:
@@ -3779,122 +3786,122 @@ static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
 			   PtrTextBuffer pBT, int length,
 			   FILE *fileDescriptor)
 {
-   PtrTextBuffer       b;
-   int                 i, line;
-   unsigned char       mbc [50], *ptr;
-   int                 nb_bytes2write, index;
-   char               *entity;
-   wchar_t             c;
-   ThotBool            translate;
-   PtrElement          parent;
-   PtrSRule            pRe1;
+  PtrTextBuffer       b;
+  int                 i, line;
+  unsigned char       mbc [50], *ptr;
+  int                 nb_bytes2write, index;
+  char               *entity;
+  wchar_t             c;
+  ThotBool            translate;
+  PtrElement          parent;
+  PtrSRule            pRe1;
+  ThotBool            entityName;
 
-   line = 0;
-   b = pBT;
+  line = 0;
+  b = pBT;
 
-   /* Don't translate predefined-entities for some elements */
-   translate = TRUE;
-   parent = pNode->ElParent;
+  /* Don't translate predefined-entities for some elements */
+  translate = TRUE;
+  parent = pNode->ElParent;
 
-   pRe1 = parent->ElStructSchema->SsRule->SrElem[parent->ElTypeNumber - 1];
-   if (pRe1->SrName != NULL &&
-       ((strcmp (pRe1->SrName, "xmlcomment_line") == 0) ||
-	(strcmp (pRe1->SrName, "xmlpi_line") == 0) ||
-	(strcmp (pRe1->SrName, "cdata_line") == 0) ||
-	(strcmp (pRe1->SrName, "doctype_line") == 0)))
-     translate = FALSE;
+  pRe1 = parent->ElStructSchema->SsRule->SrElem[parent->ElTypeNumber - 1];
+  if (pRe1->SrName != NULL &&
+      ((strcmp (pRe1->SrName, "xmlcomment_line") == 0) ||
+       (strcmp (pRe1->SrName, "xmlpi_line") == 0) ||
+       (strcmp (pRe1->SrName, "cdata_line") == 0) ||
+       (strcmp (pRe1->SrName, "doctype_line") == 0)))
+    translate = FALSE;
 
-   /* Export the text buffer content */
-   while (b != NULL)
-     {
-       i = 0;
-       while (i < b->BuLength && b->BuContent[i] != EOS)
-	 {
-	   c = b->BuContent[i];
-	   if (translate)
-	     {
-	       if (c == START_ENTITY)
-		 {
-		   mbc[0] = '&';
-		   nb_bytes2write = 1;
-		 }
-	       else if (c == EOL)
-		 {
-		   nb_bytes2write = 0;
-		   if (ExportCRLF)
-		     mbc[nb_bytes2write++] = __CR__;
-		   mbc[nb_bytes2write++] = EOL;
-		   mbc[nb_bytes2write] = EOS;
-		 }
-	       /* Predefined entities */
-	       else if (c == 0X22) /* &quot; */
-		 {
-		   strcpy (&mbc[0], "&quot;");
-		   nb_bytes2write = 6;
-		 }
-	       else if (c == 0X26) /* &amp; */
-		 {
-		   strcpy (&mbc[0], "&amp;");
-		   nb_bytes2write = 5;
-		 }
-	       else if (c == 0X3C) /* &lt; */
-		 {
-		   strcpy (&mbc[0], "&lt;");
-		   nb_bytes2write = 4;
-		 }
-	       else if (c == 0X3E) /* &gt; */
-		 {
-		   strcpy (&mbc[0], "&gt;");
-		   nb_bytes2write = 4;
-		 }
-	       else if (c == 0XA0) /* &nbsp; */
-		 {
-		   strcpy (&mbc[0], "&nbsp;");
-		   nb_bytes2write = 6;
-		 }
-	       /* Translate the input character */
-	       else if ((c > 127 && pDoc->DocCharset == US_ASCII) ||
-			(c > 255 && pDoc->DocCharset == ISO_8859_1))
-		 {
-		   /* generate an entity into an ASCII or ISO_8859_1 file */
-		   if (GetEntityFunction && 
-		       !strcmp(pNode->ElStructSchema->SsName, "MathML"))
-		     /* in MathML, try to generate the name of the char. */
-		     (*GetEntityFunction) (c, &entity);
-                   else
-                     entity = NULL;
-		   mbc[0] = '&';
-		   if (entity)
-		     {
-		       strncpy (&mbc[1], entity, 40);
-		       mbc[42] = EOS;
-		     }
-		   else
-		     {
-		       mbc[1] = '#';
-		       mbc[2] = 'x';
-		       sprintf (&mbc[3], "%x", (int)c);
-		     }
-		   nb_bytes2write = strlen (mbc);
-		   mbc[nb_bytes2write++] = ';';
-		 }
-	       else if (pDoc->DocCharset == UTF_8)
-		 {
-		   /* UTF-8 encoding */
-		   ptr = mbc;
-		   nb_bytes2write = TtaWCToMBstring ((wchar_t) c, &ptr);
-		 }
-	       else
-		 {
-		   /* other encodings */
+  /* in MathML, try to generate the name of the char. */
+  entityName = !strcmp (pNode->ElStructSchema->SsName, "MathML");
+  /* Export the text buffer content */
+  while (b != NULL)
+    {
+      i = 0;
+      while (i < b->BuLength && b->BuContent[i] != EOS)
+	{
+	  c = b->BuContent[i];
+	  if (translate)
+	    {
+	      if (c == START_ENTITY)
+		{
+		  mbc[0] = '&';
+		  nb_bytes2write = 1;
+		}
+	      else if (c == EOL)
+		{
+		  nb_bytes2write = 0;
+		  if (ExportCRLF)
+		    mbc[nb_bytes2write++] = __CR__;
+		  mbc[nb_bytes2write++] = EOL;
+		  mbc[nb_bytes2write] = EOS;
+		}
+	      /* Predefined entities */
+	      else if (c == 0X22) /* &quot; */
+		{
+		  strcpy (&mbc[0], "&quot;");
+		  nb_bytes2write = 6;
+		}
+	      else if (c == 0X26) /* &amp; */
+		{
+		  strcpy (&mbc[0], "&amp;");
+		  nb_bytes2write = 5;
+		}
+	      else if (c == 0X3C) /* &lt; */
+		{
+		  strcpy (&mbc[0], "&lt;");
+		  nb_bytes2write = 4;
+		}
+	      else if (c == 0X3E) /* &gt; */
+		{
+		  strcpy (&mbc[0], "&gt;");
+		  nb_bytes2write = 4;
+		}
+	      else if (c == 0XA0) /* &nbsp; */
+		{
+		  strcpy (&mbc[0], "&nbsp;");
+		  nb_bytes2write = 6;
+		}
+	      /* Translate the input character */
+	      else if ((c > 127 && pDoc->DocCharset == US_ASCII) ||
+		       (c > 255 && pDoc->DocCharset == ISO_8859_1))
+		{
+		  /* generate an entity into an ASCII or ISO_8859_1 file */
+		  if (entityName && GetEntityFunction)
+		    (*GetEntityFunction) (c, &entity);
+		  else
+		    entity = NULL;
+		  mbc[0] = '&';
+		  if (entity)
+		    {
+		      strncpy (&mbc[1], entity, 40);
+		      mbc[42] = EOS;
+		    }
+		  else
+		    {
+		      mbc[1] = '#';
+		      mbc[2] = 'x';
+		      sprintf (&mbc[3], "%x", (int)c);
+		    }
+		  nb_bytes2write = strlen (mbc);
+		  mbc[nb_bytes2write++] = ';';
+		}
+	      else if (pDoc->DocCharset == UTF_8)
+		{
+		  /* UTF-8 encoding */
+		  ptr = mbc;
+		  nb_bytes2write = TtaWCToMBstring ((wchar_t) c, &ptr);
+		}
+	      else
+		{
+		  /* other encodings */
 #ifdef _I18N_
 		   nb_bytes2write = 1;
 		   mbc[0] = TtaGetCharFromWC (c, pDoc->DocCharset);
 		   if (mbc[0] == EOS && c != EOS)
 		     {
 		       /* generate an entity into an ISO_8859_1 file */
-		       if (GetEntityFunction && 
-			   !strcmp(pNode->ElStructSchema->SsName, "MathML"))
+		       if (entityName && GetEntityFunction)
 			 (*GetEntityFunction) (c, &entity);
 		       else
 			 entity = NULL;
