@@ -18,6 +18,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#include "parser.h"
 #include "zlib.h"
 #include "css_f.h"
 #include "HTMLactions_f.h"
@@ -27,7 +28,6 @@
 #include "HTMLimage_f.h"
 #include "UIcss_f.h"
 
-#include "parser.h"
 #include "fetchHTMLname.h"
 #include "XHTMLbuilder_f.h"
 #include "MathMLbuilder_f.h"
@@ -411,29 +411,6 @@ static int          EmptyElement[] =
    HTML_EL_PICTURE_UNIT,
    0};
 
-/* character level elements */
-static int          CharLevelElement[] =
-{
-   HTML_EL_TEXT_UNIT, HTML_EL_PICTURE_UNIT,
-   HTML_EL_Anchor,
-   HTML_EL_Teletype_text, HTML_EL_Italic_text, HTML_EL_Bold_text,
-   HTML_EL_Underlined_text, HTML_EL_Struck_text, HTML_EL_Big_text,
-   HTML_EL_Small_text,
-   HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
-   HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite, HTML_EL_ABBR,
-   HTML_EL_ACRONYM,
-   HTML_EL_Font_, HTML_EL_Quotation, HTML_EL_Subscript, HTML_EL_Superscript,
-   HTML_EL_Span, HTML_EL_BDO, HTML_EL_INS, HTML_EL_DEL,
-   HTML_EL_Math,
-   HTML_EL_Input,
-   HTML_EL_Option, HTML_EL_OptGroup, HTML_EL_Option_Menu,
-   HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,
-   HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text, HTML_EL_Text_Area,
-   HTML_EL_Button_Input, HTML_EL_BUTTON,
-   HTML_EL_LABEL,
-   HTML_EL_BR,
-   0};
-
 /* block level elements */
 static int          BlockLevelElement[] =
 {
@@ -506,150 +483,6 @@ static oneLine      StartTagEndingElem[] =
 };
 
 
-/* mapping table of HTML attribute values */
-
-static AttrValueMapping HTMLAttrValueMappingTable[] =
-{
-   {HTML_ATTR_dir, TEXT("ltr"), HTML_ATTR_dir_VAL_ltr},
-   {HTML_ATTR_dir, TEXT("rtl"), HTML_ATTR_dir_VAL_rtl},
-
-   {HTML_ATTR_TextAlign, TEXT("left"), HTML_ATTR_TextAlign_VAL_left_},
-   {HTML_ATTR_TextAlign, TEXT("center"), HTML_ATTR_TextAlign_VAL_center_},
-   {HTML_ATTR_TextAlign, TEXT("right"), HTML_ATTR_TextAlign_VAL_right_},
-   {HTML_ATTR_TextAlign, TEXT("justify"), HTML_ATTR_TextAlign_VAL_justify_},
-
-   {HTML_ATTR_Align, TEXT("left"), HTML_ATTR_Align_VAL_left_},
-   {HTML_ATTR_Align, TEXT("center"), HTML_ATTR_Align_VAL_center_},
-   {HTML_ATTR_Align, TEXT("right"), HTML_ATTR_Align_VAL_right_},
-
-   {HTML_ATTR_LAlign, TEXT("top"), HTML_ATTR_LAlign_VAL_Top_},
-   {HTML_ATTR_LAlign, TEXT("bottom"), HTML_ATTR_LAlign_VAL_Bottom_},
-   {HTML_ATTR_LAlign, TEXT("left"), HTML_ATTR_LAlign_VAL_Left_},
-   {HTML_ATTR_LAlign, TEXT("right"), HTML_ATTR_LAlign_VAL_Right_},
-
-   {HTML_ATTR_Clear, TEXT("left"), HTML_ATTR_Clear_VAL_Left_},
-   {HTML_ATTR_Clear, TEXT("right"), HTML_ATTR_Clear_VAL_Right_},
-   {HTML_ATTR_Clear, TEXT("all"), HTML_ATTR_Clear_VAL_All_},
-   {HTML_ATTR_Clear, TEXT("none"), HTML_ATTR_Clear_VAL_None_},
-
-   {HTML_ATTR_NumberStyle, TEXT("1"), HTML_ATTR_NumberStyle_VAL_Arabic_},
-   {HTML_ATTR_NumberStyle, TEXT("a"), HTML_ATTR_NumberStyle_VAL_LowerAlpha},
-   {HTML_ATTR_NumberStyle, TEXT("A"), HTML_ATTR_NumberStyle_VAL_UpperAlpha},
-   {HTML_ATTR_NumberStyle, TEXT("i"), HTML_ATTR_NumberStyle_VAL_LowerRoman},
-   {HTML_ATTR_NumberStyle, TEXT("I"), HTML_ATTR_NumberStyle_VAL_UpperRoman},
-
-   {HTML_ATTR_BulletStyle, TEXT("disc"), HTML_ATTR_BulletStyle_VAL_disc},
-   {HTML_ATTR_BulletStyle, TEXT("square"), HTML_ATTR_BulletStyle_VAL_square},
-   {HTML_ATTR_BulletStyle, TEXT("circle"), HTML_ATTR_BulletStyle_VAL_circle},
-
-   {HTML_ATTR_ItemStyle, TEXT("1"), HTML_ATTR_ItemStyle_VAL_Arabic_},
-   {HTML_ATTR_ItemStyle, TEXT("a"), HTML_ATTR_ItemStyle_VAL_LowerAlpha},
-   {HTML_ATTR_ItemStyle, TEXT("A"), HTML_ATTR_ItemStyle_VAL_UpperAlpha},
-   {HTML_ATTR_ItemStyle, TEXT("i"), HTML_ATTR_ItemStyle_VAL_LowerRoman},
-   {HTML_ATTR_ItemStyle, TEXT("I"), HTML_ATTR_ItemStyle_VAL_UpperRoman},
-   {HTML_ATTR_ItemStyle, TEXT("disc"), HTML_ATTR_ItemStyle_VAL_disc},
-   {HTML_ATTR_ItemStyle, TEXT("square"), HTML_ATTR_ItemStyle_VAL_square},
-   {HTML_ATTR_ItemStyle, TEXT("circle"), HTML_ATTR_ItemStyle_VAL_circle},
-
-   {HTML_ATTR_Button_type, TEXT("button"), HTML_ATTR_Button_type_VAL_button},
-   {HTML_ATTR_Button_type, TEXT("submit"), HTML_ATTR_Button_type_VAL_submit},
-   {HTML_ATTR_Button_type, TEXT("reset"), HTML_ATTR_Button_type_VAL_reset},
-
-   {HTML_ATTR_mode, TEXT("display"), HTML_ATTR_mode_VAL_display},
-   {HTML_ATTR_mode, TEXT("inline"), HTML_ATTR_mode_VAL_inline_math},
-
-   {HTML_ATTR_frame, TEXT("void"), HTML_ATTR_frame_VAL_void},
-   {HTML_ATTR_frame, TEXT("above"), HTML_ATTR_frame_VAL_above},
-   {HTML_ATTR_frame, TEXT("below"), HTML_ATTR_frame_VAL_below},
-   {HTML_ATTR_frame, TEXT("hsides"), HTML_ATTR_frame_VAL_hsides},
-   {HTML_ATTR_frame, TEXT("lhs"), HTML_ATTR_frame_VAL_lhs},
-   {HTML_ATTR_frame, TEXT("rhs"), HTML_ATTR_frame_VAL_rhs},
-   {HTML_ATTR_frame, TEXT("vsides"), HTML_ATTR_frame_VAL_vsides},
-   {HTML_ATTR_frame, TEXT("box"), HTML_ATTR_frame_VAL_box},
-   {HTML_ATTR_frame, TEXT("border"), HTML_ATTR_frame_VAL_border},
-
-   {HTML_ATTR_frameborder, TEXT("0"), HTML_ATTR_frameborder_VAL_Border0},
-   {HTML_ATTR_frameborder, TEXT("1"), HTML_ATTR_frameborder_VAL_Border1},
-
-   {HTML_ATTR_scrolling, TEXT("yes"), HTML_ATTR_scrolling_VAL_Yes_},
-   {HTML_ATTR_scrolling, TEXT("no"), HTML_ATTR_scrolling_VAL_No_},
-   {HTML_ATTR_scrolling, TEXT("auto"), HTML_ATTR_scrolling_VAL_auto_},
-
-   {HTML_ATTR_rules_, TEXT("none"), HTML_ATTR_rules__VAL_none_},
-   {HTML_ATTR_rules_, TEXT("groups"), HTML_ATTR_rules__VAL_groups},
-   {HTML_ATTR_rules_, TEXT("rows"), HTML_ATTR_rules__VAL_rows},
-   {HTML_ATTR_rules_, TEXT("cols"), HTML_ATTR_rules__VAL_cols},
-   {HTML_ATTR_rules_, TEXT("all"), HTML_ATTR_rules__VAL_all},
-
-   {HTML_ATTR_Cell_align, TEXT("left"), HTML_ATTR_Cell_align_VAL_Cell_left},
-   {HTML_ATTR_Cell_align, TEXT("center"), HTML_ATTR_Cell_align_VAL_Cell_center},
-   {HTML_ATTR_Cell_align, TEXT("right"), HTML_ATTR_Cell_align_VAL_Cell_right},
-   {HTML_ATTR_Cell_align, TEXT("justify"), HTML_ATTR_Cell_align_VAL_Cell_justify},
-   {HTML_ATTR_Cell_align, TEXT("char"), HTML_ATTR_Cell_align_VAL_Cell_char},
-
-   {HTML_ATTR_Alignment, TEXT("top"), HTML_ATTR_Alignment_VAL_Top_},
-   {HTML_ATTR_Alignment, TEXT("middle"), HTML_ATTR_Alignment_VAL_Middle_},
-   {HTML_ATTR_Alignment, TEXT("bottom"), HTML_ATTR_Alignment_VAL_Bottom_},
-   {HTML_ATTR_Alignment, TEXT("left"), HTML_ATTR_Alignment_VAL_Left_},
-   {HTML_ATTR_Alignment, TEXT("right"), HTML_ATTR_Alignment_VAL_Right_},
-
-   {HTML_ATTR_METHOD, TEXT("get"), HTML_ATTR_METHOD_VAL_Get_},
-   {HTML_ATTR_METHOD, TEXT("post"), HTML_ATTR_METHOD_VAL_Post_},
-
-   {HTML_ATTR_Position, TEXT("top"), HTML_ATTR_Position_VAL_Position_top},
-   {HTML_ATTR_Position, TEXT("bottom"), HTML_ATTR_Position_VAL_Position_bottom},
-   {HTML_ATTR_Position, TEXT("left"), HTML_ATTR_Position_VAL_Position_left},
-   {HTML_ATTR_Position, TEXT("right"), HTML_ATTR_Position_VAL_Position_right},
-
-   {HTML_ATTR_Row_valign, TEXT("top"), HTML_ATTR_Row_valign_VAL_Row_top},
-   {HTML_ATTR_Row_valign, TEXT("middle"), HTML_ATTR_Row_valign_VAL_Row_middle},
-   {HTML_ATTR_Row_valign, TEXT("bottom"), HTML_ATTR_Row_valign_VAL_Row_bottom},
-   {HTML_ATTR_Row_valign, TEXT("baseline"), HTML_ATTR_Row_valign_VAL_Row_baseline},
-
-   {HTML_ATTR_Cell_valign, TEXT("top"), HTML_ATTR_Cell_valign_VAL_Cell_top},
-   {HTML_ATTR_Cell_valign, TEXT("middle"), HTML_ATTR_Cell_valign_VAL_Cell_middle},
-   {HTML_ATTR_Cell_valign, TEXT("bottom"), HTML_ATTR_Cell_valign_VAL_Cell_bottom},
-   {HTML_ATTR_Cell_valign, TEXT("baseline"), HTML_ATTR_Cell_valign_VAL_Cell_baseline},
-
-   {HTML_ATTR_shape, TEXT("rect"), HTML_ATTR_shape_VAL_rectangle},
-   {HTML_ATTR_shape, TEXT("circle"), HTML_ATTR_shape_VAL_circle},
-   {HTML_ATTR_shape, TEXT("poly"), HTML_ATTR_shape_VAL_polygon},
-
-   {HTML_ATTR_valuetype, TEXT("data"), HTML_ATTR_valuetype_VAL_data_},
-   {HTML_ATTR_valuetype, TEXT("ref"), HTML_ATTR_valuetype_VAL_ref},
-   {HTML_ATTR_valuetype, TEXT("object"), HTML_ATTR_valuetype_VAL_object_},
-
-/* HTML attribute TYPE generates a Thot element */
-   {DummyAttribute, TEXT("button"), HTML_EL_Button_Input},
-   {DummyAttribute, TEXT("checkbox"), HTML_EL_Checkbox_Input},
-   {DummyAttribute, TEXT("file"), HTML_EL_File_Input},
-   {DummyAttribute, TEXT("hidden"), HTML_EL_Hidden_Input},
-   {DummyAttribute, TEXT("image"), HTML_EL_PICTURE_UNIT},
-   {DummyAttribute, TEXT("password"), HTML_EL_Password_Input},
-   {DummyAttribute, TEXT("radio"), HTML_EL_Radio_Input},
-   {DummyAttribute, TEXT("reset"), HTML_EL_Reset_Input},
-   {DummyAttribute, TEXT("submit"), HTML_EL_Submit_Input},
-   {DummyAttribute, TEXT("text"), HTML_EL_Text_Input},
-
-/* The following declarations allow the parser to accept boolean attributes */
-/* written "checked=CHECKED"), for instance */
-   {HTML_ATTR_ISMAP, TEXT("ismap"), HTML_ATTR_ISMAP_VAL_Yes_},
-   {HTML_ATTR_nohref, TEXT("nohref"), HTML_ATTR_nohref_VAL_Yes_},
-   {HTML_ATTR_COMPACT, TEXT("compact"), HTML_ATTR_COMPACT_VAL_Yes_},
-   {HTML_ATTR_Multiple, TEXT("multiple"), HTML_ATTR_Multiple_VAL_Yes_},
-   {HTML_ATTR_Selected, TEXT("selected"), HTML_ATTR_Selected_VAL_Yes_},
-   {HTML_ATTR_Checked, TEXT("checked"), HTML_ATTR_Checked_VAL_Yes_},
-   {HTML_ATTR_No_wrap, TEXT("nowrap"), HTML_ATTR_No_wrap_VAL_no_wrap},
-   {HTML_ATTR_NoShade, TEXT("noshade"), HTML_ATTR_NoShade_VAL_NoShade_},
-   {HTML_ATTR_declare, TEXT("declare"), HTML_ATTR_declare_VAL_Yes_},
-   {HTML_ATTR_defer, TEXT("defer"), HTML_ATTR_defer_VAL_Yes_},
-   {HTML_ATTR_disabled, TEXT("disabled"), HTML_ATTR_disabled_VAL_Yes_},
-   {HTML_ATTR_readonly, TEXT("readonly"), HTML_ATTR_readonly_VAL_Yes_},
-   {HTML_ATTR_no_resize, TEXT("noresize"), HTML_ATTR_no_resize_VAL_Yes_},
-   {0, TEXT(""), 0}			/* Last entry. Mandatory */
-};
-
-
 /* ---------------------- static variables ---------------------- */
 
 #ifdef EXPAT
@@ -666,17 +499,16 @@ static PtrParserCtxt	currentParserCtxt = NULL;
 
 /* parser stack */
 	        /* maximum stack height */
-#define MaxStack   200
-                /* entry of GIMappingTable */
-static int         GINumberStack[MaxStack];
-                /* element in the Thot abstract tree */
-static Element     ElementStack[MaxStack];
-                /* level of element in the Thot tree */
-static int         ThotLevel[MaxStack];
-                /* element language */
-static Language	   LanguageStack[MaxStack];
-                /* first free element on the stack */
-static int         StackLevel = 0;
+#define MAX_STACK_HEIGHT   200
+                  /* XML element name */
+static USTRING       nameElementStack[MAX_STACK_HEIGHT]; 
+                  /* element in the Thot abstract tree */
+static Element       elementStack[MAX_STACK_HEIGHT];
+                  /* element language */
+static Language	     languageStack[MAX_STACK_HEIGHT];
+static PtrParserCtxt parserCtxtStack[MAX_STACK_HEIGHT];
+                  /* first free element on the stack */
+static int           stackLevel = 0;
 
 
 static gzFile      stream = 0;
@@ -702,10 +534,6 @@ static int	   BufferLineNumber = 0;
 
 
 /* information about the Thot document under construction */
-                /* the Thot document */
-static Document    theDocument = 0;
-                /* language used in the document */
-static Language    currentLanguage;
                 /* the HTML structure schema */
 static SSchema     DocumentSSchema = NULL;
                 /* root element of the document */
@@ -717,6 +545,9 @@ static ThotBool    lastElementClosed = FALSE;
                 /* index in the GIMappingTable of the
 		   element being created */
 static int         lastElemEntry = 0;
+                /* the last start tag encountered is invalid */
+static ThotBool    UnknownTag = FALSE;
+
                 /* last attribute created */
 static Attribute   lastAttribute = NULL;
                 /* element with which the last
@@ -724,24 +555,23 @@ static Attribute   lastAttribute = NULL;
 static Attribute   lastAttrElement = NULL;
                 /* entry in the AttributeMappingTable
 		   of the attribute being created */
-static AttributeMapping* lastAttrEntry = NULL;
+static AttributeMapping* lastMappedAttr = NULL;
                 /* the last attribute encountered is invalid */
 static ThotBool    UnknownAttr = FALSE;
 static ThotBool    ReadingAnAttrValue = FALSE;
+
                 /* TEXT element of the current Comment element */
 static Element     CommentText = NULL;
-                /* the last start tag encountered is invalid */
-static ThotBool    UnknownTag = FALSE;
                 /* character data should be catenated
 		   with the last Text element */
 static ThotBool    MergeText = FALSE;
-static ThotBool    HTMLrootClosed = FALSE;
-static CHAR_T*     HTMLrootClosingTag = NULL;
+static PtrElemToBeChecked FirstElemToBeChecked = NULL;
+static PtrElemToBeChecked LastElemToBeChecked = NULL;
 
 
 /* information about the Thot document under construction */
-static Document     currentDocument = 0;	  /* the Thot document */
-static Language     currentLanguage;	  /* language used in the document */
+static Document     currentDocument = 0;         /* the Thot document */
+static Language     currentLanguage;             /* language used in the document */
 static Element	    currentElement = NULL;
 static ThotBool	    currentElementClosed = FALSE;
 static CHAR_T	    currentElementContent = ' ';
@@ -752,9 +582,8 @@ static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
 static ThotBool	    lastTagRead = FALSE;
 static ThotBool     XMLabort = FALSE;
-static PtrElemToBeChecked FirstElemToBeChecked = NULL;
-static PtrElemToBeChecked LastElemToBeChecked = NULL;
 
+static CHAR_T	    currentMappedName[16];
 
 /* information about an entity being read */
                 /* maximum size entity */
@@ -801,19 +630,15 @@ static void            InitXmlParserContexts ()
       firstParserCtxt = ctxt;
    else
       prevCtxt->NextParserCtxt = ctxt;
-   ctxt->NextParserCtxt = NULL;	/* last context */
+   ctxt->NextParserCtxt = NULL;
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
    ustrcpy (ctxt->SSchemaName, TEXT("HTML"));
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = XHTML_TYPE;
-   ctxt->MapAttribute = NULL;
-   ctxt->MapAttributeValue = NULL;
-   /*
-   ctxt->MapEntity = (Proc) XHTMLMapEntity;
-   ctxt->EntityCreated = (Proc) XHTMLEntityCreated;
-   */
-   ctxt->MapEntity = NULL;
-   ctxt->EntityCreated = NULL;
+   ctxt->MapAttribute = (Proc) XhtmlMapAttribute;;
+   ctxt->MapAttributeValue = (Proc) XhtmlMapAttributeValue;
+   ctxt->MapEntity = (Proc) XhtmlMapEntity;
+   ctxt->EntityCreated = (Proc) XhtmlEntityCreated;
    ctxt->ElementComplete = NULL;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
@@ -825,7 +650,7 @@ static void            InitXmlParserContexts ()
       firstParserCtxt = ctxt;
    else
       prevCtxt->NextParserCtxt = ctxt;
-   ctxt->NextParserCtxt = NULL;	/* last context */
+   ctxt->NextParserCtxt = NULL;
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
    ustrcpy (ctxt->SSchemaName, TEXT("MathML"));
    ctxt->XMLSSchema = NULL;
@@ -846,8 +671,7 @@ static void            InitXmlParserContexts ()
       firstParserCtxt = ctxt;
    else
       prevCtxt->NextParserCtxt = ctxt;
-
-   ctxt->NextParserCtxt = NULL;	/* last context */
+   ctxt->NextParserCtxt = NULL;
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
    ustrcpy (ctxt->SSchemaName, TEXT("GraphML"));
    ctxt->XMLSSchema = NULL;
@@ -881,8 +705,7 @@ STRING              DTDname;
     currentParserCtxt = currentParserCtxt->NextParserCtxt;
 
   /* initialize the corresponding entry */
-  if (currentParserCtxt != NULL &&
-      currentParserCtxt->XMLSSchema == NULL)
+  if (currentParserCtxt != NULL)
         currentParserCtxt->XMLSSchema = 
           GetXmlDTD (currentParserCtxt->XMLtype, currentDocument);
 }
@@ -1022,7 +845,7 @@ Element el;
                       CharEncoding = UTF_8;
                    else {
                         /* copy the charset to the document's metadata info */
-                        root = TtaGetMainRoot (theDocument);
+                        root = TtaGetMainRoot (currentDocument);
                         attrType.AttrTypeNum = HTML_ATTR_Charset;
                         attr = TtaGetAttribute (root, attrType);
                         if (!attr)
@@ -1030,10 +853,10 @@ Element el;
                            Create one */
 						{
                           attr = TtaNewAttribute (attrType);
-                          TtaAttachAttribute (root, attr, theDocument);
+                          TtaAttachAttribute (root, attr, currentDocument);
 						}
                         TtaSetAttributeText (attr, charsetname,
-					     root, theDocument);
+					     root, currentDocument);
 				   }
                    charset_undefined = FALSE;
 				 }
@@ -1101,12 +924,12 @@ SSchema		    ThotSSchema;
    ElementType         elType;
 
    ret = FALSE;
-   i = StackLevel - 1;
+   i = stackLevel - 1;
    while (i >= 0 && !ret)
      {
-	if (ElementStack[i] != NULL)
+	if (elementStack[i] != NULL)
 	  {
-	     elType = TtaGetElementType (ElementStack[i]);
+	     elType = TtaGetElementType (elementStack[i]);
 	     if (elType.ElTypeNum == ThotType &&
 		 elType.ElSSchema == ThotSSchema)
 		ret = TRUE;
@@ -1124,15 +947,17 @@ SSchema		    ThotSSchema;
   ----------------------------------------------------------------------*/
 static ThotBool     InsertSibling ()
 {
-   if (StackLevel == 0)
-      return FALSE;
-   else if (lastElementClosed ||
-	    TtaIsLeaf (TtaGetElementType (lastElement)) ||
-	    (GINumberStack[StackLevel - 1] >= 0 &&
-	     pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlContents == 'E'))
-      return TRUE;
+   if (stackLevel == 0)
+       return FALSE;
    else
-      return FALSE;
+     if (lastElementClosed ||
+	 TtaIsLeaf (TtaGetElementType (lastElement)) ||
+	 (nameElementStack[stackLevel - 1] != NULL &&
+	  currentElementContent == 'E'))
+       return TRUE;
+     else
+       return FALSE;
+
 }
 
 /*----------------------------------------------------------------------
@@ -1300,14 +1125,14 @@ Element           parent;
 	      {
 	      newElType.ElSSchema = DocumentSSchema;
 	      newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-	      newEl = TtaNewElement (theDocument, newElType);
+	      newEl = TtaNewElement (currentDocument, newElType);
 	      TtaSetElementLineNumber (newEl, NumberOfLinesRead);
 	      /* insert the new Pseudo_paragraph element */
 	      InsertElement (&newEl);
 	      if (newEl != NULL)
 	        {
 	          /* insert the Text element in the tree */
-	          TtaInsertFirstChild (el, newEl, theDocument);
+	          TtaInsertFirstChild (el, newEl, currentDocument);
 	          BlockInCharLevelElem (newEl);
 		  ret = TRUE;
 
@@ -1323,8 +1148,8 @@ Element           parent;
 		     else
 			{
 			prevprev = prev;  TtaPreviousSibling (&prevprev);
-			TtaRemoveTree (prev, theDocument);
-			TtaInsertFirstChild (&prev, newEl, theDocument);
+			TtaRemoveTree (prev, currentDocument);
+			TtaInsertFirstChild (&prev, newEl, currentDocument);
 			prev = prevprev;
 			}
 		     }
@@ -1345,12 +1170,12 @@ Element           parent;
 	  {
 	     newElType.ElSSchema = DocumentSSchema;
 	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	     newEl = TtaNewElement (theDocument, newElType);
+	     newEl = TtaNewElement (currentDocument, newElType);
 	     TtaSetElementLineNumber (newEl, NumberOfLinesRead);
 	     InsertElement (&newEl);
 	     if (newEl != NULL)
 	       {
-	         TtaInsertFirstChild (el, newEl, theDocument);
+	         TtaInsertFirstChild (el, newEl, currentDocument);
 		 ret = TRUE;
 	       }
 	  }
@@ -1383,10 +1208,10 @@ Element            *el;
 	   parent = TtaGetParent (lastElement);
 	if (!CheckSurrounding (el, parent))
 	  if (parent != NULL)
-	    TtaInsertSibling (*el, lastElement, FALSE, theDocument);
+	    TtaInsertSibling (*el, lastElement, FALSE, currentDocument);
 	  else
 	    {
-	       TtaDeleteTree (*el, theDocument);
+	       TtaDeleteTree (*el, currentDocument);
 	       *el = NULL;
 	    }
 	ret = TRUE;
@@ -1394,7 +1219,7 @@ Element            *el;
    else
      {
 	if (!CheckSurrounding (el, lastElement))
-	  TtaInsertFirstChild (el, lastElement, theDocument);
+	  TtaInsertFirstChild (el, lastElement, currentDocument);
 	ret = FALSE;
      }
    if (*el != NULL)
@@ -1403,69 +1228,6 @@ Element            *el;
 	lastElementClosed = FALSE;
      }
    return ret;
-}
-
-/*----------------------------------------------------------------------
-   CreateAttr 
-   Create an attribute of type attrType for the element el.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CreateAttr (Element el,
-				AttributeType attrType,
-				CHAR_T* text,
-				ThotBool invalid)
-#else
-static void         CreateAttr (el,
-				attrType,
-				text,
-				invalid)
-Element             el;
-AttributeType       attrType;
-CHAR_T*             text;
-ThotBool            invalid;
-
-#endif
-{
-   int                 attrKind;
-   int                 length;
-   CHAR_T*             buffer;
-   Attribute           attr, oldAttr;
-
-   if (attrType.AttrTypeNum != 0)
-     {
-	oldAttr = TtaGetAttribute (el, attrType);
-	if (oldAttr != NULL)
-	   /* this attribute already exists */
-	   attr = oldAttr;
-	else
-	   /* create a new attribute and attach it to the element */
-	  {
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (el, attr, theDocument);
-	  }
-	lastAttribute = attr;
-	lastAttrElement = el;
-	TtaGiveAttributeType (attr, &attrType, &attrKind);
-	if (attrKind == 0)	/* enumerate */
-	   TtaSetAttributeValue (attr, 1, el, theDocument);
-	/* attribute BORDER without any value (ThotBool attribute) is */
-	/* considered as BORDER=1 */
-	if (attrType.AttrTypeNum == HTML_ATTR_Border)
-	   TtaSetAttributeValue (attr, 1, el, theDocument);
-	if (invalid)
-	   /* Copy the name of the invalid attribute as the content */
-	   /* of the Invalid_attribute attribute. */
-	  {
-	     length = ustrlen (text) + 2;
-	     length += TtaGetTextAttributeLength (attr);
-	     buffer = TtaAllocString (length + 1);
-	     TtaGiveTextAttributeValue (attr, buffer, &length);
-	     ustrcat (buffer, TEXT(" "));
-	     ustrcat (buffer, text);
-	     TtaSetAttributeText (attr, buffer, el, theDocument);
-	     TtaFreeMemory (buffer);
-	  }
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -1577,9 +1339,6 @@ Element             el;
    STRING              text;
    CHAR_T              lastChar[2];
    STRING              name1;
-#ifdef STANDALONE
-   STRING              imageName, name2;
-#endif
    int                 length;
 
    elType = TtaGetElementType (el);
@@ -1602,11 +1361,11 @@ Element             el;
 	   desc = child;
 	   /* create the PICTURE element */
 	   elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	   child = TtaNewTree (theDocument, elType, "");
+	   child = TtaNewTree (currentDocument, elType, "");
 	   if (desc == NULL)
-	     TtaInsertFirstChild (&child, el, theDocument);
+	     TtaInsertFirstChild (&child, el, currentDocument);
 	   else
-	     TtaInsertSibling (child, desc, TRUE, theDocument);
+	     TtaInsertSibling (child, desc, TRUE, currentDocument);
 	 }
        /* copy attribute data into SRC attribute of Object_Image */
        attrType.AttrSSchema = DocumentSSchema;
@@ -1624,9 +1383,9 @@ Element             el;
 		if (attr == NULL)
 		  {
 		    attr = TtaNewAttribute (attrType);
-		    TtaAttachAttribute (child, attr, theDocument);
+		    TtaAttachAttribute (child, attr, currentDocument);
 		  }
-		TtaSetAttributeText (attr, name1, child, theDocument);
+		TtaSetAttributeText (attr, name1, child, currentDocument);
 		TtaFreeMemory (name1);
 	      }
 	 }
@@ -1641,14 +1400,14 @@ Element             el;
 	 {
 	   /* create Object_Content */
 	   elType.ElTypeNum = HTML_EL_Object_Content;
-	   desc = TtaNewTree (theDocument, elType, "");
-	   TtaInsertSibling (desc, child, FALSE, theDocument);
+	   desc = TtaNewTree (currentDocument, elType, "");
+	   TtaInsertSibling (desc, child, FALSE, currentDocument);
 	   /* move previous existing children into Object_Content */
 	   child = TtaGetLastChild(el);
 	   while (child != desc)
 	     {
-	       TtaRemoveTree (child, theDocument);
-	       TtaInsertFirstChild (&child, desc, theDocument);
+	       TtaRemoveTree (child, currentDocument);
+	       TtaInsertFirstChild (&child, desc, currentDocument);
 	       child = TtaGetLastChild(el);
 	     }
 	 }
@@ -1690,11 +1449,11 @@ Element             el;
 		      }
 		   /* move the list element after the last child of the
 		      previous List_Item */
-		   TtaRemoveTree (child, theDocument);
+		   TtaRemoveTree (child, currentDocument);
 		   if (last)
-		      TtaInsertSibling (child, last, FALSE, theDocument);
+		      TtaInsertSibling (child, last, FALSE, currentDocument);
 		   else
-		      TtaInsertFirstChild (&child, prev, theDocument);
+		      TtaInsertFirstChild (&child, prev, currentDocument);
 		   child = prev;
 		   }
 	        }
@@ -1723,16 +1482,16 @@ Element             el;
 		 {
 		    newElType.ElSSchema = DocumentSSchema;
 		    newElType.ElTypeNum = HTML_EL_Frames;
-		    elFrames = TtaNewElement (theDocument, newElType);
+		    elFrames = TtaNewElement (currentDocument, newElType);
 		    TtaSetElementLineNumber (elFrames, NumberOfLinesRead);
-		    TtaInsertSibling (elFrames, child, TRUE, theDocument);
+		    TtaInsertSibling (elFrames, child, TRUE, currentDocument);
 		 }
 	       /* move the element as the last child of the Frames element */
-	       TtaRemoveTree (child, theDocument);
+	       TtaRemoveTree (child, currentDocument);
 	       if (lastFrame == NULL)
-		  TtaInsertFirstChild (&child, elFrames, theDocument);
+		  TtaInsertFirstChild (&child, elFrames, currentDocument);
 	       else
-		  TtaInsertSibling (child, lastFrame, FALSE, theDocument);
+		  TtaInsertSibling (child, lastFrame, FALSE, currentDocument);
 	       lastFrame = child;
 	       }
 	   child = next;
@@ -1742,9 +1501,9 @@ Element             el;
     case HTML_EL_Input:	/* it's an INPUT without any TYPE attribute */
 	/* Create a child of type Text_Input */
 	elType.ElTypeNum = HTML_EL_Text_Input;
-	child = TtaNewTree (theDocument, elType, "");
+	child = TtaNewTree (currentDocument, elType, "");
 	TtaSetElementLineNumber (child, NumberOfLinesRead);
-	TtaInsertFirstChild (&child, el, theDocument);
+	TtaInsertFirstChild (&child, el, currentDocument);
 	/* now, process it like a Text_Input element */
     case HTML_EL_Text_Input:
     case HTML_EL_Password_Input:
@@ -1774,7 +1533,7 @@ Element             el;
 			  text = TtaAllocString (length + 1);
 			  TtaGiveTextAttributeValue (attr, text, &length);
 			  TtaSetTextContent (leaf, text, currentLanguage,
-					     theDocument);
+					     currentDocument);
 			  TtaFreeMemory (text);
 			}
 		    }
@@ -1807,25 +1566,23 @@ Element             el;
 			{
 		        if (length == 1)
 		          /* empty TEXT element */
-		          TtaDeleteTree (leaf, theDocument);
+		          TtaDeleteTree (leaf, currentDocument);
 		        else
 		          /* remove the last character */
 		          TtaDeleteTextContent (leaf, length, 1,
-					        theDocument);
+					        currentDocument);
 			}
 		  }
 	      }
 	  }
        if (ParsingCSS)
 	 {
-#ifndef STANDALONE
 	   text = GetStyleContents (el);
 	   if (text)
 	     {
-	       ReadCSSRules (theDocument, NULL, text, FALSE);
+	       ReadCSSRules (currentDocument, NULL, text, FALSE);
 	       TtaFreeMemory (text);
 	     }
-#endif /* !STANDALONE */
 	   ParsingCSS = FALSE;
 	 }
 	/* and continue as if it were a Preformatted or a Script */
@@ -1839,8 +1596,8 @@ Element             el;
 	  /* insert a Inserted_Text element in the element */
 	 {
 	   newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	   child = TtaNewTree (theDocument, newElType, "");
-	   TtaInsertFirstChild (&child, el, theDocument);
+	   child = TtaNewTree (currentDocument, newElType, "");
+	   TtaInsertFirstChild (&child, el, currentDocument);
 	 }
        else
 	 {
@@ -1851,19 +1608,19 @@ Element             el;
 	     /* attribute Default_Value is missing */
 	     {
 	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (el, attr, theDocument);
+	       TtaAttachAttribute (el, attr, currentDocument);
 	       desc = TtaGetFirstChild (child);
 	       length = TtaGetTextLength (desc) + 1;
 	       text = TtaAllocString (length);
 	       TtaGiveTextContent (desc, text, &length, &lang);
-	       TtaSetAttributeText (attr, text, el, theDocument);
+	       TtaSetAttributeText (attr, text, el, currentDocument);
 	       TtaFreeMemory (text);
 	     }
 	 }
        /* insert a Frame element */
        newElType.ElTypeNum = HTML_EL_Frame;
-       constElem = TtaNewTree (theDocument, newElType, "");
-       TtaInsertSibling (constElem, child, FALSE, theDocument);
+       constElem = TtaNewTree (currentDocument, newElType, "");
+       TtaInsertSibling (constElem, child, FALSE, currentDocument);
        break;
 
     case HTML_EL_Radio_Input:
@@ -1875,48 +1632,22 @@ Element             el;
 	  /* attribute Checked is missing */
 	 {
 	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (el, attr, theDocument);
+	    TtaAttachAttribute (el, attr, currentDocument);
 	    TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, el,
-				  theDocument);
+				  currentDocument);
 	 }
        break;
 
     case HTML_EL_Option_Menu:
        /* Check that at least one option has a SELECTED attribute */
-       OnlyOneOptionSelected (el, theDocument, TRUE);
+       OnlyOneOptionSelected (el, currentDocument, TRUE);
        break;
     case HTML_EL_PICTURE_UNIT:
-#ifdef STANDALONE
-       /* copy value of attribute SRC into the content of the element */
-       attrType.AttrSSchema = DocumentSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_SRC;
-       attr = TtaGetAttribute (el, attrType);
-       if (attr != NULL)
-	 {
-	    length = TtaGetTextAttributeLength (attr);
-	    name1 = TtaAllocString (length + 1);
-	    name2 = TtaAllocString (length + 1);
-	    imageName = TtaAllocString (length + 1);
-	    TtaGiveTextAttributeValue (attr, name1, &length);
-	    /* extract image name from full name */
-	    TtaExtractName (name1, name2, imageName);
-	    if (ustrlen (imageName) == 0)
-	       /* full names ends with ''/ */
-	       TtaExtractName (name2, name1, imageName);
-	    if (ustrlen (imageName) != 0)
-	       TtaSetTextContent (el, imageName, currentLanguage, theDocument);
-	    TtaFreeMemory (name1);
-	    TtaFreeMemory (name2);
-	    TtaFreeMemory (imageName);
-	 }
-#endif /* STANDALONE */
        break;
 
-#ifndef STANDALONE
     case HTML_EL_LINK:
-       CheckCSSLink (el, theDocument, DocumentSSchema);
+       CheckCSSLink (el, currentDocument, DocumentSSchema);
        break;
-#endif /* STANDALONE */
 
     case HTML_EL_Data_cell:
     case HTML_EL_Heading_cell:
@@ -1925,31 +1656,25 @@ Element             el;
        if (child == NULL)
 	 {
 	   elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-	   child = TtaNewTree (theDocument, elType, "");
+	   child = TtaNewTree (currentDocument, elType, "");
 	   if (child != NULL)
-	     TtaInsertFirstChild (&child, el, theDocument);
+	     TtaInsertFirstChild (&child, el, currentDocument);
 	 }
 
-#ifndef STANDALONE
        /* detect whether we're parsing a whole table or just a cell */
        if (WithinTable == 0)
-	 NewCell (el, theDocument, FALSE);
-#endif /* STANDALONE */
+	 NewCell (el, currentDocument, FALSE);
        break;
 
     case HTML_EL_Table:
-#ifndef STANDALONE
-       CheckTable (el, theDocument);
-#endif
+       CheckTable (el, currentDocument);
        WithinTable--;
        break;
 
-#ifndef STANDALONE
     case HTML_EL_TITLE:
        /* show the TITLE in the main window */
-       UpdateTitle (el, theDocument);
+       UpdateTitle (el, currentDocument);
        break;
-#endif
 
     default:
        break;
@@ -2007,11 +1732,11 @@ Element el;
 		       if (nbspaces > 0)
 			 if (length == 0)
 			   /* empty TEXT element */
-			   TtaDeleteTree (lastLeaf, theDocument);
+			   TtaDeleteTree (lastLeaf, currentDocument);
 			 else
 			   /* remove the ending spaces */
 			   TtaDeleteTextContent (lastLeaf, length + 1,
-						 nbspaces, theDocument);
+						 nbspaces, currentDocument);
 		     }
 		 }
 	     }
@@ -2022,27 +1747,20 @@ Element el;
 
 /*----------------------------------------------------------------------
    CloseElement
-   End of HTML element defined in entry entry of pHTMLGIMapping.
+   End of XML mappedName element.
    Terminate all corresponding Thot elements.
-   If start < 0, an explicit end tag has been encountered in the HTML file,
-   else the end of element is implied by the beginning of an element
-   described by entry start of pHTMLGIMapping.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     CloseElement (int entry,
-				  int start,
+static ThotBool     CloseElement (USTRING mappedName,
 				  ThotBool onStartTag)
 #else
-static ThotBool     CloseElement (entry,
-				  start,
+static ThotBool     CloseElement (mappedName,
 				  onStartTag)
-int                 entry;
-int                 start;
-ThotBool            onStartTag;
+USTRING           mappedName;
+ThotBool         onStartTag;
 #endif
 {
    int                 i;
-   ElementType         elType, parentType;
    Element             el, parent;
    ThotBool            ret, stop, spacesDeleted;
 
@@ -2050,148 +1768,78 @@ ThotBool            onStartTag;
    /* the closed HTML element corresponds to a Thot element. */
    stop = FALSE;
    /* type of the element to be closed */
-   elType.ElSSchema = DocumentSSchema;
-   elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
-   if (StackLevel > 0)
+
+   if (stackLevel > 0)
      {
        el = lastElement;
        if (lastElementClosed)
 	  el = TtaGetParent (el);
-       i = StackLevel - 1;
-       if (start < 0)
-	 /* Explicit close */
+       i = stackLevel - 1;
+
+       /* If we meet the end tag of a form, font or center
+	  looks for that element in the stack, but not at
+	  a higher level as a table element */
+       if (!onStartTag &&
+	   (!ustrcmp (mappedName, TEXT("form")) ||
+            !ustrcmp (mappedName, TEXT("font")) ||
+            !ustrcmp (mappedName, TEXT("center"))))
 	 {
-	   /* If we meet the end tag of a form, font or center
-	      looks for that element in the stack, but not at
-	      a higher level as a table element */
-	   if (!onStartTag &&
-	       (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("form")) ||
-            !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("font")) ||
-            !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("center"))))
-	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("tbody")) ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("tr"))    ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("th"))    ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("td")))
-		 {
-		   /* ignore this end tag */
-		   ret = FALSE;
-		   stop = TRUE;
-		   i = -1;
-		 }
-	       else
-		 i--;
-	   else
-	     /* looks in the stack for the element to be closed */
-	     while (i >= 0 && entry != GINumberStack[i])
+	   while (i > 0 &&
+		  mappedName != nameElementStack[i] &&
+		  !stop)
+	     if (!ustrcmp (nameElementStack[i], TEXT("tbody")) ||
+		 !ustrcmp (nameElementStack[i], TEXT("tr"))    ||
+		 !ustrcmp (nameElementStack[i], TEXT("th"))    ||
+		 !ustrcmp (nameElementStack[i], TEXT("td")))
+	       {
+		 /* ignore this end tag */
+		 ret = FALSE;
+		 stop = TRUE;
+		 i = -1;
+	       }
+	     else
 	       i--;
 	 }
        else
-	 /* Implicit close */
-	 {
-	   /* If the element to be closed is a list item (or
-	      equivalent), looks for that element in the
-	      stack, but not at a higher level as the list (or
-	      equivalent) element */
-	   if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("li")))
-	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("ol"))  ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("ul"))  ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("dir")) ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("menu")))
-		 stop = TRUE;
-	       else
-		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("option")))
-	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("select")))
-		 stop = TRUE;
-	       else
-		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("dd")) ||
-                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("dt")))
-	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("dl")))
-		 stop = TRUE;
-	       else
-		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("tr")) ||
-                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("td")) ||
-                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("th")))
-	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("table")))
-		 stop = TRUE;
-	       else
-		 i--;
-	 }
-
-       if (i >= 0 && entry == GINumberStack[i])
+	 /* looks in the stack for the element to be closed */
+	 while (i >= 0 && mappedName != nameElementStack[i])
+	   i--;
+       
+       if (i >= 0 && mappedName == nameElementStack[i])
 	 /* element found in the stack */
 	 {
 	   /* This element and its whole subtree are closed */
-	   StackLevel = i;
-	   lastElement = ElementStack[i];
+	   stackLevel = i;
+	   lastElement = elementStack[i];
 	   lastElementClosed = TRUE;
 	   ret = TRUE;
 	 }
-       else if (!stop)
-	 /* element not found in the stack */
-	 if (start >= 0 && lastElement != NULL)
-	   {
-	     /* implicit close. Check the parent of current element */
-	     if (InsertSibling ())
-	       parent = TtaGetParent (lastElement);
-	     else
-	       parent = lastElement;
-	     if (parent != NULL)
-	       {
-	         parentType = TtaGetElementType (parent);
-	         if (elType.ElTypeNum == parentType.ElTypeNum)
-	           {
-	             lastElement = parent;
-	             lastElementClosed = TRUE;
-	             ret = TRUE;
-	           }
-	         else if (TtaIsLeaf (TtaGetElementType (lastElement)))
-	           {
-	             parent = TtaGetParent (parent);
-	             if (parent != NULL)
-	               {
-	                 parentType = TtaGetElementType (parent);
-	                 if (elType.ElTypeNum == parentType.ElTypeNum)
-	                   {
-	                     lastElement = parent;
-	                     lastElementClosed = TRUE;
-	                     ret = TRUE;
-	                   }
-	               }
-	           }
-	       }
-	   }
 
        if (ret)
 	 /* successful close */
 	 {
 	   /* remove closed elements from the stack */
 	   while (i > 0)
-	     if (ElementStack[i] == lastElement)
+	     if (elementStack[i] == lastElement)
 	       {
-		 StackLevel = i;
+		 stackLevel = i;
 		 i = 0;
 	       }
 	     else
 	       {
-		 if (TtaIsAncestor (ElementStack[i], lastElement))
-	           StackLevel = i;
+		 if (TtaIsAncestor (elementStack[i], lastElement))
+	             stackLevel = i;
 	         i--;
 	       }
-	   if (StackLevel > 0)
-	     currentLanguage = LanguageStack[StackLevel - 1];
+
+	   if (stackLevel > 0)
+	     currentLanguage = languageStack[stackLevel - 1];
 
 	   /* complete all closed elements */
 	   if (el != lastElement)
-	     if (!TtaIsAncestor(el, lastElement))
-	       el = NULL;
+	       if (!TtaIsAncestor(el, lastElement))
+	           el = NULL;
+	   
 	   spacesDeleted = FALSE;
 	   while (el != NULL)
 	     {
@@ -2231,105 +1879,38 @@ CHAR_T   *name;
   Attribute           attr;
   int                 length;
   STRING              text;
-  ThotBool	      math;
 
   UnknownTag = FALSE;
-  if ((lastElement != NULL) && (lastElemEntry != -1))
+  if ((lastElement != NULL) &&
+      (currentMappedName != NULL))
     {
-      math = FALSE;
-
-      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI,
-		    TEXT("math")))
-	/* a <math> tag has been read */
-	  math = TRUE;
-      else
-	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI,
-		      TEXT("mathdisp")))
-	  /* a <mathdisp> tag has been read.  add an attribute "mode=display"
-	     (for compatibility with old MathML version WD-math-970704 */
-	  {
-	    math = TRUE;
-	    elType = TtaGetElementType (lastElement);
-	    attrType.AttrSSchema = elType.ElSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_mode;
-	    attr = TtaGetAttribute (lastElement, attrType);
-	    if (attr == NULL)
-	      /* create a new attribute and attach it to the element */
-	      {
-		attr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (lastElement, attr, theDocument);
-	      }
-	    TtaSetAttributeValue (attr, HTML_ATTR_mode_VAL_display,
-				  lastElement, theDocument);
-	  }
-      
-      if (math)
+      if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("pre"))   ||
+	  !ustrcmp (nameElementStack[stackLevel - 1], TEXT("style")) ||
+	  !ustrcmp (nameElementStack[stackLevel - 1], TEXT("script")))
 	{
-#ifndef STANDALONE
-#ifdef LC
-	  /* Parse the MathML structure */
-	  XMLparse (stream,
-		    &CurrentBufChar,
-		    TEXT("MathML"),
-		    theDocument,
-		    lastElement,
-		    FALSE,
-		    currentLanguage,
-		    pHTMLGIMapping[lastElemEntry].htmlGI);
-#endif /* LC */
-#endif /* STANDALONE */
-	  /* when returning from the XML parser, the end tag has already
-	     been read */
-	  (void) CloseElement (lastElemEntry, -1, FALSE);
+	  /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
+	  AfterTagPRE = TRUE;
 	}
-
       else
-	/* !math */
-	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI,
-		      TEXT("xmlgraphics")))
-	  /* a <XMLGRAPHICS> tag has been read */
-	  {
-	    /* Parse the GraphML structure */
-#ifndef STANDALONE
-#ifdef LC
-	    XMLparse (stream,
-		      &CurrentBufChar,
-		      TEXT("GraphML"),
-		      theDocument,
-		      lastElement,
-		      FALSE,
-		      currentLanguage,
-		      pHTMLGIMapping[lastElemEntry].htmlGI);
-#endif /* LC */
-#endif /* STANDALONE */
-	    /* when returning from the XML parser, the end tag has already
-	       been read */
-	    (void) CloseElement (lastElemEntry, -1, FALSE);	   
-	  }
-	else
-	  /* !math and !graph*/
-	  if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("pre"))   ||
-	      !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("style")) ||
-	      !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("script")))
-	    /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
-	    AfterTagPRE = TRUE;
+	{
+	  if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
+	    /* <TABLE> has been read */
+	    WithinTable++;
 	  else
-	    if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("table")))
-	      /* <TABLE> has been read */
-	      WithinTable++;
-	    else
-	      if (pHTMLGIMapping[lastElemEntry].htmlContents == 'E')
-		/* this is an empty element. Do not expect an end tag */
-		{
-		  CloseElement (lastElemEntry, -1, TRUE);
-		  ElementComplete (lastElement);
-		}
+	    if (currentElementContent == 'E')
+	      /* this is an empty element. Do not expect an end tag */
+	      {
+		CloseElement (currentMappedName, TRUE);
+		ElementComplete (lastElement);
+	      }
+	}
       
       /* if it's a LI element, creates its IntItemStyle attribute
 	 according to surrounding elements */
-      SetAttrIntItemStyle (lastElement, theDocument);
+      SetAttrIntItemStyle (lastElement, currentDocument);
       /* if it's an AREA element, computes its position and size */
-      ParseAreaCoords (lastElement, theDocument);
+      ParseAreaCoords (lastElement, currentDocument);
+ 
       /* if it's a STYLE element in CSS notation, activate the CSS */
       /* parser for parsing the element content */
       elType = TtaGetElementType (lastElement);
@@ -2369,181 +1950,98 @@ CHAR_T   *name;
    is allowed to occur in the current structural context.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     ContextOK (int entry)
+static ThotBool     ContextOK (STRING elName)
 #else
-static ThotBool     ContextOK (entry)
-int                 entry;
+static ThotBool     ContextOK (elName)
+STRING    elName;
 
 #endif
 {
-   ThotBool            ok;
-   int		       saveLastElemEntry;
+   ThotBool      ok;
 
-   if (StackLevel == 0 || GINumberStack[StackLevel - 1] < 0)
+   if (stackLevel == 0 || nameElementStack[stackLevel - 1] == NULL)
      return TRUE;
    else
      {
        ok = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
-       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tr")))
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")) &&
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")))
+       if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("tr")))
+	 if (ustrcmp (elName, TEXT("th")) &&
+	     ustrcmp (elName, TEXT("td")))
 	   ok = FALSE;
+
        if (ok)
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
-	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("table")))
-	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("caption"))  &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("thead"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tfoot"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tbody"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("colgroup")) &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("col"))      &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tr")))
-	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")) ||
-             !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")))
-	       /* Table cell within a table, without a tr. Assume tr */
-	       {
-		/* save the last last GI read from the input file */
-		saveLastElemEntry = lastElemEntry;
-		/* simulate a <TR> tag */
-	        ProcessStartGI (TEXT("tr"));
-		/* restore the last tag that has actually been read */
-		lastElemEntry = saveLastElemEntry;
-	       }
-	     else
-	       ok = FALSE;
+	 if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
+	   {
+	     if (ustrcmp (elName, TEXT("caption"))  &&
+		 ustrcmp (elName, TEXT("thead"))    &&
+		 ustrcmp (elName, TEXT("tfoot"))    &&
+		 ustrcmp (elName, TEXT("tbody"))    &&
+		 ustrcmp (elName, TEXT("colgroup")) &&
+		 ustrcmp (elName, TEXT("col"))      &&
+		 ustrcmp (elName, TEXT("tr")))
+	         if (!ustrcmp (elName, TEXT("td")) ||
+		     !ustrcmp (elName, TEXT("th")))
+		   /* Table cell within a table, without a tr. Assume tr */
+		   {
+		     /* simulate a <TR> tag */
+		     ProcessStartGI (TEXT("tr"));
+		   }
+		 else
+		   ok = FALSE;
+	   }
+
        if (ok)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("caption"))  == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("thead"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tfoot"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tbody"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("colgroup")) == 0)
-	   if (ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI,
-			TEXT("table")) != 0)
-	      ok = FALSE;
+	 if (ustrcmp (elName, TEXT("caption"))  == 0 ||
+	     ustrcmp (elName, TEXT("thead"))    == 0 ||
+	     ustrcmp (elName, TEXT("tfoot"))    == 0 ||
+	     ustrcmp (elName, TEXT("tbody"))    == 0 ||
+	     ustrcmp (elName, TEXT("colgroup")) == 0)
+	     if (ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")) != 0)
+	         ok = FALSE;
+
        if (ok)
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("thead")) ||
-	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tfoot")) ||
-	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tbody")))
-	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tr")))
-	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")) ||
-             !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")))
-	       /* Table cell within a thead, tfoot or tbody without a tr. */
-	       /* Assume tr */
-	       {
-		/* save the last last GI read from the input file */
-		saveLastElemEntry = lastElemEntry;
-		/* simulate a <tr> tag */
-	        ProcessStartGI (TEXT("tr"));
-		/* restore the last tag that has actually been read */
-		lastElemEntry = saveLastElemEntry;
-	       }
-	     else
-	       ok = FALSE;
+	 if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("thead")) ||
+	     !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tfoot")) ||
+	     !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tbody")))
+	   {
+	     if (ustrcmp (elName, TEXT("tr")))
+	         if (!ustrcmp (elName, TEXT("td")) ||
+		     !ustrcmp (elName, TEXT("th")))
+		   /* Table cell within a thead, tfoot or tbody without a tr. */
+		   /* Assume tr */
+		   {
+		     /* simulate a <tr> tag */
+		     ProcessStartGI (TEXT("tr"));
+		   }
+		 else
+		   ok = FALSE;
+	   }
+
        if (ok)
 	 /* refuse BODY within BODY */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("body")) == 0)
-	   if (Within (HTML_EL_BODY, DocumentSSchema))
-	     ok = FALSE;
+	 if (ustrcmp (elName, TEXT("body")) == 0)
+	     if (Within (HTML_EL_BODY, DocumentSSchema))
+	         ok = FALSE;
+
        if (ok)
 	 /* refuse HEAD within HEAD */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("head")) == 0)
+	 if (ustrcmp (elName, TEXT("head")) == 0)
 	   if (Within (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
+
        if (ok)
 	 /* refuse STYLE within STYLE */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("style")) == 0)
+	 if (ustrcmp (elName, TEXT("style")) == 0)
 	   if (Within (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
+
        return ok;
-     }
-}
-
-/*----------------------------------------------------------------------
-   SpecialImplicitEnd
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SpecialImplicitEnd (int entry)
-#else
-static void         SpecialImplicitEnd (entry)
-int                 entry;
-
-#endif
-{
-   ElementType         elType;
-
-   /* if current element is DD, Hn closes that DD only when there is */
-   /* no enclosing DL */
-   if (pHTMLGIMapping[entry].htmlGI[0] == TEXT('H') &&
-       pHTMLGIMapping[entry].htmlGI[1] >= TEXT('1') &&
-       pHTMLGIMapping[entry].htmlGI[1] <= TEXT('6') &&
-       pHTMLGIMapping[entry].htmlGI[2] == WC_EOS)
-      /* the new element is a Hn */
-      if (StackLevel > 1)
-	 if (ElementStack[StackLevel - 1] != NULL)
-	   {
-	      elType = TtaGetElementType (ElementStack[StackLevel - 1]);
-	      if (elType.ElTypeNum == HTML_EL_Definition)
-		 /* the current element is a DD */
-		{
-		   elType = TtaGetElementType (ElementStack[StackLevel - 2]);
-		   if (elType.ElTypeNum != HTML_EL_Definition_List)
-		      /* DD in not within a DL. Close the DD element */
-		      CloseElement (GINumberStack[StackLevel - 1], entry, FALSE);
-		}
-	   }
-}
-
-/*----------------------------------------------------------------------
-   InsertInvalidEl
-   create an element Invalid_element with the indicated content.
-   position indicate whether the element type is unknown (FALSE) or the
-   tag position is incorrect (TRUE).
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         InsertInvalidEl (CHAR_T* content,
-				     ThotBool position)
-#else
-static void         InsertInvalidEl (content,
-				     position)
-CHAR_T*             content;
-ThotBool	    position;
-
-#endif
-{
-   ElementType         elType;
-   AttributeType       attrType;
-   Element             elInv, elText;
-   Attribute	       attr;
-
-   elType.ElSSchema = DocumentSSchema;
-   elType.ElTypeNum = HTML_EL_Invalid_element;
-   elInv = TtaNewElement (theDocument, elType);
-   TtaSetElementLineNumber (elInv, NumberOfLinesRead);
-   InsertElement (&elInv);
-   if (elInv != NULL)
-     {
-	lastElementClosed = TRUE;
-	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	elText = TtaNewElement (theDocument, elType);
-	TtaSetElementLineNumber (elText, NumberOfLinesRead);
-	TtaInsertFirstChild (&elText, elInv, theDocument);
-	TtaSetTextContent (elText, content, currentLanguage, theDocument);
-	TtaSetAccessRight (elText, ReadOnly, theDocument);
-	attrType.AttrSSchema = DocumentSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_Error_type;
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (elInv, attr, theDocument);
-	if (position)
-	   TtaSetAttributeValue (attr, HTML_ATTR_Error_type_VAL_BadPosition,
-				 elInv, theDocument);
-	else
-	   TtaSetAttributeValue (attr, HTML_ATTR_Error_type_VAL_UnknownTag,
-				 elInv, theDocument);
      }
 }
 
@@ -2562,118 +2060,122 @@ CHAR_T*             GIname;
 #endif
 {
   ElementType         elType;
-  Element             el;
-  int                 entry, i;
+  Element             newElement;
+  int                 i;
   CHAR_T              msgBuffer[MaxMsgLength];
-  PtrClosedElement    pClose;
   ThotBool            sameLevel;
-  SSchema	      schema;
+  STRING              mappedName;
+  ThotBool            elInStack = FALSE;
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, DocumentSSchema))
     if (ustrcasecmp (GIname, TEXT("p")) == 0)
       return;
 
-  /* search the HTML element name in the mapping table */
-  schema = DocumentSSchema;
-  entry = MapGI (GIname, &schema, theDocument);
-  lastElemEntry = entry;
-  if (entry < 0)
-    /* not found in the HTML DTD */
-    {
-      /* check if it's the math or svg tag with a namespace prefix */
-      /* So, look for a colon in the element name */
-      for (i = 0; GIname[i] != TEXT(':') && GIname[i] != WC_EOS; i++);
-      if (GIname[i] == TEXT(':') &&
-	      (ustrcasecmp (&GIname[i+1], TEXT("math")) == 0 ||
-	       ustrcasecmp (&GIname[i+1], TEXT("xmlgraphics")) == 0))
-	/* it's a math or svg tag with a namespace prefix. OK */
-	{
-         entry = MapGI (&GIname[i+1], &schema, theDocument);
-	 lastElemEntry = entry;
-	}
-      else
-	/* unknown tag */
-	{
-	  if (ustrlen (GIname) > MaxMsgLength - 20)
-	    GIname[MaxMsgLength - 20] = WC_EOS;
-	  usprintf (msgBuffer, TEXT("Unknown tag <%s>"), GIname);
-	  ParseHTMLError (theDocument, msgBuffer);
-	  UnknownTag = TRUE;
-	  /* create an Invalid_element */
-	  usprintf (msgBuffer, TEXT("<%s"), GIname);
-	  InsertInvalidEl (msgBuffer, FALSE);
-	}
-    }
-  if (entry >= 0)
-    {
-      /* does this start tag also imply the end tag of some current elements? */
-      pClose = pHTMLGIMapping[entry].firstClosedElem;
-      while (pClose != NULL)
-	{
-	  CloseElement (pClose->tagNum, entry, TRUE);
-	  pClose = pClose->nextClosedElem;
-	}
-      /* process some special cases... */
-      SpecialImplicitEnd (entry);
-      if (!ContextOK (entry))
-	/* element not allowed in the current structural context */
-	{
-	  usprintf (msgBuffer, TEXT("Tag <%s> is not allowed here"), GIname);
-	  ParseHTMLError (theDocument, msgBuffer);
-	  UnknownTag = TRUE;
-	  /* create an Invalid_element */
-	  usprintf (msgBuffer, TEXT("<%s"), GIname);
-	  InsertInvalidEl (msgBuffer, TRUE);
-	}
-      else
-	  {
-	    el = NULL;
-	    sameLevel = TRUE;
-	    if (pHTMLGIMapping[entry].ThotType > 0)
-	      {
-		if (pHTMLGIMapping[entry].ThotType == HTML_EL_HTML)
-		  /* the corresponding Thot element is the root of the
-		     abstract tree, which has been created at initialization */
-		  el = rootElement;
-		else
-		  /* create a Thot element */
-		  {
-		    elType.ElSSchema = DocumentSSchema;
-		    elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
-		    if (pHTMLGIMapping[entry].htmlContents == 'E')
-		      /* empty HTML element. Create all children specified */
-		      /* in the Thot structure schema */
-		      el = TtaNewTree (theDocument, elType, "");
-		    else
-		      /* the HTML element may have children. Create only */
-		      /* the corresponding Thot element, without any child */
-		      el = TtaNewElement (theDocument, elType);
-		    TtaSetElementLineNumber (el, NumberOfLinesRead);
-		    sameLevel = InsertElement (&el);
-		    if (el != NULL)
-		      {
-			if (pHTMLGIMapping[entry].htmlContents == 'E')
-			  lastElementClosed = TRUE;
-			if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			  /* an empty Text element has been created. The */
-			  /* following character data must go to that elem. */
-			  MergeText = TRUE;
-		      }
-		  }
-	      }
-	    if (pHTMLGIMapping[entry].htmlContents != 'E')
-	      {
-		ElementStack[StackLevel] = el;
-		if (sameLevel)
-		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
-		else
-		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
-	        LanguageStack[StackLevel] = currentLanguage;
-		GINumberStack[StackLevel++] = entry;
-	      }
-	  }
-     }
+  if (currentElement != NULL)
+      ParseHTMLError (currentDocument,
+		      TEXT("XML parser error 1"));
+  else
+    if (stackLevel == MAX_STACK_HEIGHT)
+      {
+	ParseHTMLError (currentDocument,
+			TEXT("**FATAL** Too many XML levels"));
+	XMLabort = TRUE;
+      }
+    else
+      {
+	/* search the XML element name in the corresponding mapping table */
+       elType.ElSSchema = NULL;
+       elType.ElTypeNum = 0;
+       currentMappedName[0] = WC_EOS;
+       GetXmlElType (GIname, &elType, &mappedName,
+		     &currentElementContent, currentDocument);
+       if (mappedName != NULL)
+	   ustrcpy (currentMappedName, mappedName);
+
+       if (elType.ElTypeNum <= 0)
+	 {
+	   /* not found in the corresponding DTD */
+	   if (ustrlen (GIname) > MaxMsgLength - 20)
+	       GIname[MaxMsgLength - 20] = WC_EOS;
+	   usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
+	   ParseHTMLError (currentDocument, msgBuffer);
+	   UnknownTag = TRUE;
+	   nameElementStack[stackLevel] = NULL;
+	   elementStack[stackLevel] = NULL;
+	   elInStack = TRUE;
+	 }
+       else
+	 {
+	   /* element found in the corresponding DTD */
+	   if (!ContextOK (mappedName))
+	     /* element not allowed in the current structural context */
+	     {
+	       usprintf (msgBuffer,
+			 TEXT("Tag <%s> is not allowed here"), GIname);
+	       ParseHTMLError (currentDocument, msgBuffer);
+	       UnknownTag = TRUE;
+	       nameElementStack[stackLevel] = NULL;
+	       elementStack[stackLevel] = NULL;
+	       elInStack = TRUE;
+	     }
+	   else
+	     {
+	       newElement = NULL;
+	       sameLevel = TRUE;
+	       
+	       if (elType.ElTypeNum == HTML_EL_HTML)
+		 /* the corresponding Thot element is the root of the
+		    abstract tree, which has been created at initialization */
+		 newElement = rootElement;
+	       else
+		 /* create a Thot element */
+		 {
+		   if (currentElementContent == 'E')
+		     /* empty XML element. Create all children specified */
+		     /* in the Thot structure schema */
+		     newElement = TtaNewTree (currentDocument, elType, "");
+		   else
+		     /* the HTML element may have children. Create only */
+		     /* the corresponding Thot element, without any child */
+		     newElement = TtaNewElement (currentDocument, elType);
+		   
+		   TtaSetElementLineNumber (newElement, NumberOfLinesRead);
+		   sameLevel = InsertElement (&newElement);
+		   if (newElement != NULL)
+		     {
+		       if (currentElementContent == 'E')
+			   lastElementClosed = TRUE;
+			   currentElementClosed = TRUE;
+
+		       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			 /* an empty Text element has been created. The */
+			 /* following character data must go to that elem. */
+			 MergeText = TRUE;
+		     }
+		 }
+	       
+	       if (currentElementContent != 'E')
+		 {
+		   elementStack[stackLevel] = newElement;
+		   nameElementStack[stackLevel] = mappedName;
+		   elInStack = TRUE;
+		 }
+	     }
+	 }
+
+       if (elInStack)
+	 {
+	   languageStack[stackLevel] = currentLanguage;
+	   parserCtxtStack[stackLevel] = currentParserCtxt;
+	   stackLevel++;
+	 }
+
+       currentAttribute = NULL;
+       HTMLStyleAttribute = FALSE;
+
+      }
+  
 }
 /*----------------------  StartElement  (end)  -----------------------*/
 
@@ -2685,23 +2187,23 @@ CHAR_T*             GIname;
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    EndOfElement (CHAR_T *tagName)
+static void    EndOfElement (CHAR_T *GIname)
 #else
-static void    EndOfElement (tagName)
-CHAR_T     *tagName;
+static void    EndOfElement (GIname)
+CHAR_T     *GIname;
 
 #endif
 {
-   SSchema	schema;
    CHAR_T       msgBuffer[MaxMsgLength];
-   int          entry;
+   STRING       mappedName;
+   ElementType  elType;
    int          i;
    ThotBool     ok;
 
 
    if (ParsingTextArea)
      {
-       if (ustrcasecmp (tagName, TEXT("textarea")) != 0)
+       if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
          /* We are parsing the contents of a textarea element. The end
 	    tag is not the one closing the current textarea, consider it
 	    as plain text */
@@ -2712,45 +2214,40 @@ CHAR_T     *tagName;
 
    /* is it the end of the current HTML fragment ? */
    ok = FALSE;
-   if (HTMLrootClosingTag != EOS)
+   if (XMLrootClosingTag != EOS)
      {
-#ifdef LC
-       /* look for a colon in the element name (namespaces) and ignore the
-	  prefix if there is one */
-       for (i = 0; i < LgBuffer && inputBuffer[i] != TEXT(':'); i++);
-       if (inputBuffer[i] == TEXT(':'))
-	 i++;
-       else
-	 i = 0;
-#endif /* LC */
-       if (ustrcasecmp (tagName, HTMLrootClosingTag) == 0)
+       if (ustrcasecmp (GIname, XMLrootClosingTag) == 0)
 	 {
-	   HTMLrootClosed = TRUE;
+	   XMLrootClosed = TRUE;
 	   ok = TRUE;
 	 }
      }
    
    if (!ok)
      {
-       /* search the HTML tag in the mapping table */
-       schema = DocumentSSchema;
-       entry = MapGI (tagName, &schema, theDocument);
-       if (entry < 0)
+       /* search the XML tag in the mapping table */
+       elType.ElSSchema = NULL;
+       elType.ElTypeNum = 0;
+       GetXmlElType (GIname, &elType, &mappedName,
+		     &currentElementContent, currentDocument);
+
+       if (elType.ElTypeNum <= 0)
+	   /* not found in the corresponding DTD */
 	 {
-	   if (ustrlen (tagName) > MaxMsgLength - 20)
-	       tagName[MaxMsgLength - 20] = WC_EOS;
-	   usprintf (msgBuffer, TEXT("Unknown tag </%s>"), tagName);
-	   ParseHTMLError (theDocument, msgBuffer);
+	   if (ustrlen (GIname) > MaxMsgLength - 20)
+	       GIname[MaxMsgLength - 20] = WC_EOS;
+	   usprintf (msgBuffer,
+		     TEXT("Unknown XML element </%s>"), GIname);
+	   ParseHTMLError (currentDocument, msgBuffer);
 	 }
        else
 	 {
-	   if (!CloseElement (entry, -1, FALSE))
+	   if (!CloseElement (mappedName, FALSE))
 	     /* the end tag does not close any current element */
 	     {
 	       usprintf (msgBuffer,
-			 TEXT("Unexpected end tag </%s>"),
-			 tagName);
-	       ParseHTMLError (theDocument, msgBuffer);
+			 TEXT("Unexpected end tag </%s>"), GIname);
+	       ParseHTMLError (currentDocument, msgBuffer);
 	     }
 	 }
      }
@@ -2875,14 +2372,14 @@ STRING      data;
 	      {
 		TtaAppendTextContent (lastElement,
 				      &(data[i]),
-				      theDocument);
+				      currentDocument);
 	      }
 	    else
 	      {
 		/* create a TEXT element */
 		elType.ElSSchema = DocumentSSchema;
 		elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-		elText = TtaNewElement (theDocument, elType);
+		elText = TtaNewElement (currentDocument, elType);
 		TtaSetElementLineNumber (elText, BufferLineNumber);
 		InsertElement (&elText);
 		lastElementClosed = TRUE;
@@ -2893,7 +2390,7 @@ STRING      data;
 		    TtaSetTextContent (elText,
 				       &(data[i]),
 				       currentLanguage,
-				       theDocument);
+				       currentDocument);
 		  }
 	      }
 	  }
@@ -2903,6 +2400,216 @@ STRING      data;
 
 
 /*--------------------  Attributes  (start)  ---------------------*/
+
+/*----------------------------------------------------------------------
+   CreateAttr 
+   Create an attribute of type attrType for the element el.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CreateAttr (Element el,
+				AttributeType attrType,
+				CHAR_T* text,
+				ThotBool invalid)
+#else
+static void         CreateAttr (el,
+				attrType,
+				text,
+				invalid)
+Element             el;
+AttributeType       attrType;
+CHAR_T*             text;
+ThotBool            invalid;
+
+#endif
+{
+   int                 attrKind;
+   int                 length;
+   CHAR_T*             buffer;
+   Attribute           attr, oldAttr;
+
+   if (attrType.AttrTypeNum != 0)
+     {
+	oldAttr = TtaGetAttribute (el, attrType);
+	if (oldAttr != NULL)
+	   /* this attribute already exists */
+	   attr = oldAttr;
+	else
+	   /* create a new attribute and attach it to the element */
+	  {
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (el, attr, currentDocument);
+	  }
+	lastAttribute = attr;
+	lastAttrElement = el;
+	TtaGiveAttributeType (attr, &attrType, &attrKind);
+	if (attrKind == 0)	/* enumerate */
+	   TtaSetAttributeValue (attr, 1, el, currentDocument);
+	/* attribute BORDER without any value (ThotBool attribute) is */
+	/* considered as BORDER=1 */
+	if (attrType.AttrTypeNum == HTML_ATTR_Border)
+	   TtaSetAttributeValue (attr, 1, el, currentDocument);
+	if (invalid)
+	   /* Copy the name of the invalid attribute as the content */
+	   /* of the Invalid_attribute attribute. */
+	  {
+	     length = ustrlen (text) + 2;
+	     length += TtaGetTextAttributeLength (attr);
+	     buffer = TtaAllocString (length + 1);
+	     TtaGiveTextAttributeValue (attr, buffer, &length);
+	     ustrcat (buffer, TEXT(" "));
+	     ustrcat (buffer, text);
+	     TtaSetAttributeText (attr, buffer, el, currentDocument);
+	     TtaFreeMemory (buffer);
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
+   EndOfAttrName   
+   A XML attribute has been read. 
+   Create the corresponding Thot attribute.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfAttrName (CHAR_T *attrName)
+#else
+static void         EndOfAttrName (attrName)
+CHAR_T         *attrName;
+
+#endif
+{
+   AttributeMapping*   mapAttr;
+   AttributeType       attrType;
+   ElementType         elType;
+   Element             child;
+   Attribute           attr;
+   CHAR_T              translation;
+   ThotBool            invaldAttr;
+   CHAR_T              msgBuffer[MaxMsgLength];
+
+
+   currentAttribute = NULL;
+   HTMLStyleAttribute = FALSE;
+
+   if (nameElementStack[stackLevel-1] == NULL) 
+       return;
+
+   /* if a single '/' or '?' has been read instead of an attribute name, ignore
+      that character.  This is to accept the XML syntax for empty elements or
+      processing instructions, such as <img src="SomeUrl" /> or
+      <?xml version="1.0"?>  */
+
+   /* A FAIRE */
+
+   invaldAttr = FALSE;
+   /* get the corresponding Thot attribute */
+   if (UnknownTag)
+      /* ignore attributes of unknown tags */
+      mapAttr = NULL;
+   else
+      mapAttr = XhtmlMapAttribute (attrName, &attrType,
+				   nameElementStack[stackLevel-1],
+				   currentDocument);
+
+   if (mapAttr == NULL)
+      /* this attribute is not in the HTML mapping table */
+     {
+	if (ustrcasecmp (attrName, TEXT("xmlns")) == 0 ||
+	    ustrncasecmp (attrName, TEXT("xmlattrNamens:"), 6) == 0)
+	  /* this is a namespace declaration */
+	  {
+	    lastMappedAttr = NULL;
+	    /**** register this namespace ****/;
+	  }
+	else
+	  if (ustrcasecmp (attrName, TEXT("xml:lang")) == 0)
+	    /* attribute xml:lang is not considered as invalid, but it is
+	       ignored */
+	    lastMappedAttr = NULL;
+	  else
+	    {
+	      if (ustrlen (attrName) > MaxMsgLength - 30)
+		  attrName[MaxMsgLength - 30] = WC_EOS;
+	      usprintf (msgBuffer,
+			TEXT("Unknown attribute \"%s\""),
+			attrName);
+	      ParseHTMLError (currentDocument, msgBuffer);
+	      /* attach an Invalid_attribute to the current element */
+	      mapAttr = XhtmlMapAttribute (TEXT("unknown_attr"),
+					   &attrType,
+					   nameElementStack[stackLevel-1],
+					   currentDocument);
+	      invaldAttr = TRUE;
+	      UnknownAttr = TRUE;
+	    }
+     }
+   else
+        UnknownAttr = FALSE;
+
+
+   if (mapAttr != NULL && lastElement != NULL &&
+       (!lastElementClosed || (lastElement != rootElement)))
+     {
+       lastMappedAttr = mapAttr;
+       translation = lastMappedAttr->AttrOrContent;
+
+       switch (translation)
+	 {
+	 case 'C':	/* Content */
+	   /* Nothing to do yet: wait for attribute value */
+	   break;
+	   
+	 case 'A':
+	   /* create an attribute for current element */
+	   CreateAttr (lastElement, attrType, attrName, invaldAttr);
+	   if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
+	     {
+	       elType = TtaGetElementType (lastElement);
+	       if (elType.ElTypeNum == HTML_EL_Anchor)
+		 /* attribute HREF for element Anchor */
+		 /* create attribute PseudoClass = link */
+		 {
+		   attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+		   attr = TtaNewAttribute (attrType);
+		   TtaAttachAttribute (lastElement, attr, currentDocument);
+		   TtaSetAttributeText (attr, TEXT("link"),
+					lastElement, currentDocument);
+		 }
+	     }
+	   else
+	     if (attrType.AttrTypeNum == HTML_ATTR_Checked)
+	       {
+		 /* create Default-Checked attribute */
+		 child = TtaGetFirstChild (lastElement);
+		 if (child != NULL)
+		   {
+		     attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
+		     attr = TtaNewAttribute (attrType);
+		     TtaAttachAttribute (child, attr, currentDocument);
+		     TtaSetAttributeValue (attr, HTML_ATTR_DefaultChecked_VAL_Yes_,
+					   child, currentDocument);
+		   }
+	       }
+	     else 
+	       if (attrType.AttrTypeNum == HTML_ATTR_Selected)
+		 {
+		   /* create Default-Selected attribute */
+		   attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
+		   attr = TtaNewAttribute (attrType);
+		   TtaAttachAttribute (lastElement, attr, currentDocument);
+		   TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_,
+					 lastElement, currentDocument);
+		 }
+	   break;
+
+	 case SPACE:
+	   /* nothing to do */
+	   break;
+	   
+	 default:
+	   break;
+	 }
+     }
+}
 
 /*----------------------------------------------------------------------
    PutInContent    
@@ -2937,9 +2644,9 @@ STRING              ChrString;
 	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	   length = TtaGetTextLength (el);
 	if (length == 0)
-	   TtaSetTextContent (el, ChrString, currentLanguage, theDocument);
+	   TtaSetTextContent (el, ChrString, currentLanguage, currentDocument);
 	else
-	   TtaAppendTextContent (el, ChrString, theDocument);
+	   TtaAppendTextContent (el, ChrString, currentDocument);
      }
    return el;
 }
@@ -2964,16 +2671,19 @@ CHAR_T*             val;
   CHAR_T              msgBuffer[MaxMsgLength];
   int                 value;
 
-  value = MapAttrValue (DummyAttribute, val);
+  attrType.AttrSSchema = DocumentSSchema;
+  attrType.AttrTypeNum = DummyAttribute;
+  XhtmlMapAttributeValue (val, attrType, &value);
+
   if (value < 0)
     {
       if (ustrlen (val) > MaxMsgLength - 40)
-         val[MaxMsgLength - 40] = WC_EOS;
+          val[MaxMsgLength - 40] = WC_EOS;
       usprintf (msgBuffer, TEXT("Unknown attribute value \"type = %s\""), val);
-      ParseHTMLError (theDocument, msgBuffer);
-      attrType.AttrSSchema = DocumentSSchema;
-      attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
+      ParseHTMLError (currentDocument, msgBuffer);
       usprintf (msgBuffer, TEXT("type=%s"), val);
+      XhtmlMapAttribute (TEXT("unknown_attr"), &attrType,
+			 NULL, currentDocument);
       CreateAttr (lastElement, attrType, msgBuffer, TRUE);
     }
   else
@@ -2989,159 +2699,19 @@ CHAR_T*             val;
 	{
 	  elType.ElSSchema = DocumentSSchema;
 	  elType.ElTypeNum = value;
-	  newChild = TtaNewTree (theDocument, elType, "");
+	  newChild = TtaNewTree (currentDocument, elType, "");
 	  TtaSetElementLineNumber (newChild, NumberOfLinesRead);
-	  TtaInsertFirstChild (&newChild, lastElement, theDocument);
+	  TtaInsertFirstChild (&newChild, lastElement, currentDocument);
 	  if (value == HTML_EL_PICTURE_UNIT)
 	    {
 	      /* add the attribute IsInput to input pictures */
 	      attrType.AttrSSchema = elType.ElSSchema;
 	      attrType.AttrTypeNum = HTML_ATTR_IsInput;
 	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (newChild, attr, theDocument);
+	      TtaAttachAttribute (newChild, attr, currentDocument);
 	    }
 	}
     }
-}
-
-/*----------------------------------------------------------------------
-   EndOfAttrName   
-   A XHTML attribute has been read. Create the 
-   corresponding Thot attribute.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EndOfAttrName (CHAR_T *attrName)
-#else
-static void         EndOfAttrName (attrName)
-CHAR_T         *attrName;
-
-#endif
-{
-   AttributeMapping*   tableEntry;
-   AttributeType       attrType;
-   ElementType         elType;
-   Element             child;
-   Attribute           attr;
-   SSchema             schema;
-   CHAR_T              translation;
-   CHAR_T              msgBuffer[MaxMsgLength];
-
-   /* if a single '/' or '?' has been read instead of an attribute name, ignore
-      that character.  This is to accept the XML syntax for empty elements or
-      processing instructions, such as <img src="SomeUrl" /> or
-      <?xml version="1.0"?>  */
-
-   /* A FAIRE */
-
-   /* get the corresponding Thot attribute */
-   if (UnknownTag)
-      /* ignore attributes of unknown tags */
-      tableEntry = NULL;
-   else
-      tableEntry = MapAttr (attrName, &schema,
-			    lastElemEntry, theDocument);
-
-   if (tableEntry == NULL)
-      /* this attribute is not in the HTML mapping table */
-     {
-	if (ustrcasecmp (attrName, TEXT("xmlns")) == 0 ||
-	    ustrncasecmp (attrName, TEXT("xmlattrNamens:"), 6) == 0)
-	  /* this is a namespace declaration */
-	  {
-	    lastAttrEntry = NULL;
-	    /**** register this namespace ****/;
-	  }
-	else
-	  if (ustrcasecmp (attrName, TEXT("xml:lang")) == 0)
-	    /* attribute xml:lang is not considered as invalid, but it is
-	       ignored */
-	    lastAttrEntry = NULL;
-	  else
-	    {
-	      if (ustrlen (attrName) > MaxMsgLength - 30)
-		  attrName[MaxMsgLength - 30] = WC_EOS;
-	      usprintf (msgBuffer,
-			TEXT("Unknown attribute \"%s\""),
-			attrName);
-	      ParseHTMLError (theDocument, msgBuffer);
-	      /* attach an Invalid_attribute to the current element */
-	      tableEntry = &pHTMLAttributeMapping[0];
-	      schema = DocumentSSchema;
-	      UnknownAttr = TRUE;
-	    }
-     }
-   else
-        UnknownAttr = FALSE;
-
-
-   if (tableEntry != NULL &&
-       lastElement != NULL &&
-       (!lastElementClosed || (lastElement != rootElement)))
-     {
-       lastAttrEntry = tableEntry;
-       translation = lastAttrEntry->AttrOrContent;
-
-       switch (translation)
-	 {
-	 case 'C':	/* Content */
-	   /* Nothing to do yet: wait for attribute value */
-	   break;
-	   
-	 case 'A':
-	   /* create an attribute for current element */
-	   attrType.AttrSSchema = schema;
-	   attrType.AttrTypeNum = tableEntry->ThotAttribute;
-	   CreateAttr (lastElement, attrType, attrName, 
-		       (ThotBool)(tableEntry == &pHTMLAttributeMapping[0]));
-	   if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
-	     {
-	       elType = TtaGetElementType (lastElement);
-	       if (elType.ElTypeNum == HTML_EL_Anchor)
-		 /* attribute HREF for element Anchor */
-		 /* create attribute PseudoClass = link */
-		 {
-		   attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (lastElement, attr, theDocument);
-		   TtaSetAttributeText (attr, TEXT("link"),
-					lastElement, theDocument);
-		 }
-	     }
-	   else if (attrType.AttrTypeNum == HTML_ATTR_Checked)
-	     {
-	       /* create Default-Checked attribute */
-	       child = TtaGetFirstChild (lastElement);
-	       if (child != NULL)
-		 {
-		   attrType.AttrSSchema = DocumentSSchema;
-		   attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
-		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (child, attr, theDocument);
-		   TtaSetAttributeValue (attr, HTML_ATTR_DefaultChecked_VAL_Yes_,
-					 child, theDocument);
-		 }
-	     }
-	   else 
-	     if (attrType.AttrTypeNum == HTML_ATTR_Selected)
-	       {
-		 /* create Default-Selected attribute */
-		 attrType.AttrSSchema = DocumentSSchema;
-		 attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
-		 attr = TtaNewAttribute (attrType);
-		 TtaAttachAttribute (lastElement, attr, theDocument);
-		 TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_,
-				       lastElement, theDocument);
-	       }
-	   break;
-
-	 case SPACE:
-	   /* nothing to do */
-	   break;
-	   
-	 default:
-	   break;
-	 }
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -3179,56 +2749,47 @@ CHAR_T     *attrValue;
        /* quote character that ends the value for copying it into the */
        /* Invalid_attribute. */
      {
-       /* What to do in thos case ? */
+       /* What to do in this case ? */
      }
 
-   if (lastAttrEntry == NULL)
+   if (lastMappedAttr == NULL)
      {
        return;
      }
 
    done = FALSE;
-   if (lastElementClosed && (lastElement == rootElement))
-      /* an attribute after the tag </html>, ignore it */
-      done = TRUE;
-
+   /* treatments of some particular HTML attributes */
+   if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("style")))
+     {
+       TtaSetAttributeText (lastAttribute, attrValue,
+			    lastAttrElement, currentDocument);
+       ParseHTMLSpecificStyle (lastElement, attrValue,
+			       currentDocument, FALSE);
+       done = TRUE;
+     }
    else
-      /* treatments of some particular HTML attributes */
-      if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("style")))
-	{
-#       ifndef STANDALONE
-	  TtaSetAttributeText (lastAttribute, attrValue,
-			       lastAttrElement, theDocument);
-	  ParseHTMLSpecificStyle (lastElement, attrValue,
-				  theDocument, FALSE);
-#       endif
-	  done = TRUE;
-	}
-#  ifndef STANDALONE
-      else
-	{
-	  if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("link")))
-	      HTMLSetAlinkColor (theDocument, attrValue);
-	  else
-	    if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("alink")))
-	        HTMLSetAactiveColor (theDocument, attrValue);
-	    else
-	      if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("vlink")))
-	          HTMLSetAvisitedColor (theDocument, attrValue);
-	}
-#  endif
+     {
+       if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("link")))
+	   HTMLSetAlinkColor (currentDocument, attrValue);
+       else
+	   if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("alink")))
+	       HTMLSetAactiveColor (currentDocument, attrValue);
+	   else
+	       if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("vlink")))
+		   HTMLSetAvisitedColor (currentDocument, attrValue);
+     }
 
    if (!done)
      {
        val = 0;
-       translation = lastAttrEntry->AttrOrContent;
+       translation = lastMappedAttr->AttrOrContent;
 
        switch (translation)
 	 {
 	 case 'C':	/* Content */
 	   child = PutInContent (attrValue);
 	   if (child != NULL)
-	       TtaAppendTextContent (child, TEXT("\" "), theDocument);
+	       TtaAppendTextContent (child, TEXT("\" "), currentDocument);
 	   break;
 
 	 case 'A':
@@ -3238,7 +2799,7 @@ CHAR_T     *attrValue;
 	       switch (attrKind)
 		 {
 		 case 0:	/* enumerate */
-		   val = MapAttrValue (lastAttrEntry->ThotAttribute, attrValue);
+		   XhtmlMapAttributeValue (attrValue, attrType, &val);
 		   if (val < 0)
 		     {
 		       TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
@@ -3248,19 +2809,22 @@ CHAR_T     *attrValue;
 		       usprintf (msgBuffer,
 				 TEXT("Unknown attribute value \"%s = %s\""),
 				 attrName, attrValue);
-		       ParseHTMLError (theDocument, msgBuffer);
+		       ParseHTMLError (currentDocument, msgBuffer);
+
 		       /* remove the attribute and replace it by an */
 		       /* Invalid_attribute */
 		       TtaRemoveAttribute (lastAttrElement,
-					   lastAttribute, theDocument);
-		       attrType.AttrSSchema = DocumentSSchema;
-		       attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
+					   lastAttribute, currentDocument);
 		       usprintf (msgBuffer, TEXT("%s=%s"), attrName, attrValue);
+		       XhtmlMapAttribute (TEXT("unknown_attr"),
+					  &attrType,
+					  NULL,
+					  currentDocument);
 		       CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
 		     }
 		   else
 		       TtaSetAttributeValue (lastAttribute, val,
-					     lastAttrElement, theDocument);
+					     lastAttrElement, currentDocument);
 		   break;
 		 case 1:	/* integer */
 		   if (attrType.AttrTypeNum == HTML_ATTR_Border &&
@@ -3269,27 +2833,29 @@ CHAR_T     *attrValue;
 		       /* border="border" for a table */
 		       val = 1;
 		       TtaSetAttributeValue (lastAttribute, val,
-					     lastAttrElement, theDocument);
+					     lastAttrElement, currentDocument);
 		     }
 		   else
-		     if (usscanf (attrValue, TEXT("%d"), &val))
-		       TtaSetAttributeValue (lastAttribute, val,
-					     lastAttrElement, theDocument);
-		     else
-		       {
-			 TtaRemoveAttribute (lastAttrElement,
-					     lastAttribute, theDocument);
-			 usprintf (msgBuffer,
-				   TEXT("Invalid attribute value \"%s\""),
-				   attrValue);
-			 ParseHTMLError (theDocument, msgBuffer);
-		       }
+		     {
+		       if (usscanf (attrValue, TEXT("%d"), &val))
+			   TtaSetAttributeValue (lastAttribute, val,
+						 lastAttrElement, currentDocument);
+		       else
+			 {
+			   TtaRemoveAttribute (lastAttrElement,
+					       lastAttribute, currentDocument);
+			   usprintf (msgBuffer,
+				     TEXT("Invalid attribute value \"%s\""),
+				     attrValue);
+			   ParseHTMLError (currentDocument, msgBuffer);
+			 }
+		     }
 		   break;
 		 case 2:	/* text */
 		   if (!UnknownAttr)
 		     {
 		       TtaSetAttributeText (lastAttribute, attrValue,
-					    lastAttrElement, theDocument);
+					    lastAttrElement, currentDocument);
 		       if (attrType.AttrTypeNum == HTML_ATTR_Langue)
 			 {
 			   /* it's a LANG attribute value */
@@ -3299,13 +2865,13 @@ CHAR_T     *attrValue;
 			       usprintf (msgBuffer,
 					 TEXT("Unknown language: %s"),
 					 attrValue);
-			       ParseHTMLError (theDocument, msgBuffer);
+			       ParseHTMLError (currentDocument, msgBuffer);
 			     }
 			   else
 			     {
 			       /* change current language */
 			       currentLanguage = lang;
-			       LanguageStack[StackLevel - 1] = currentLanguage;
+			       languageStack[stackLevel - 1] = currentLanguage;
 			     }
 			   if (!TtaGetParent (lastAttrElement))
 			     /* it's a LANG attribute on the root element */
@@ -3315,10 +2881,10 @@ CHAR_T     *attrValue;
 			       attrType1.AttrTypeNum = HTML_ATTR_RealLang;
 			       attr = TtaNewAttribute (attrType1);
 			       TtaAttachAttribute (lastAttrElement,
-						   attr, theDocument);
+						   attr, currentDocument);
 			       TtaSetAttributeValue (attr,
 						     HTML_ATTR_RealLang_VAL_Yes_,
-						     lastAttrElement, theDocument);
+						     lastAttrElement, currentDocument);
 			     }
 			 }
 		     }
@@ -3334,7 +2900,7 @@ CHAR_T     *attrValue;
 		       ustrcat (buffer, TEXT("="));
 		       ustrcat (buffer, attrValue);
 		       TtaSetAttributeText (lastAttribute, buffer,
-					    lastAttrElement, theDocument);
+					    lastAttrElement, currentDocument);
 		       TtaFreeMemory (buffer);
 		     }
 		   break;
@@ -3352,23 +2918,23 @@ CHAR_T     *attrValue;
 	   break;
 	 }
 
-       if (lastAttrEntry->ThotAttribute == HTML_ATTR_Width__)
+       if (lastMappedAttr->ThotAttribute == HTML_ATTR_Width__)
 	 /* HTML attribute "width" for a table or a hr */
 	 /* create the corresponding attribute IntWidthPercent or */
 	 /* IntWidthPxl */
-	 CreateAttrWidthPercentPxl (attrValue,
-				    lastAttrElement, theDocument, -1);
+	 CreateAttrWidthPercentPxl (attrValue, lastAttrElement,
+				    currentDocument, -1);
        else
-	 if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("size")))
+	 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("size")))
 	   {
 	     TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
 	     if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
 	         CreateAttrIntSize (attrValue,
 				    lastAttrElement,
-				    theDocument);
+				    currentDocument);
 	   }
 	 else
-	   if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("shape")))
+	   if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("shape")))
 	     {
 	       child = TtaGetFirstChild (lastAttrElement);
 	       if (child != NULL)
@@ -3388,11 +2954,11 @@ CHAR_T     *attrValue;
 		       shape = SPACE;
 		       break;
 		     }
-		   TtaSetGraphicsShape (child, shape, theDocument);
+		   TtaSetGraphicsShape (child, shape, currentDocument);
 		 }
 	     }
 	   else
-	     if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("value")))
+	     if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("value")))
 	       {
 		 elType = TtaGetElementType (lastAttrElement);
 		 if (elType.ElTypeNum == HTML_EL_Text_Input ||
@@ -3404,19 +2970,19 @@ CHAR_T     *attrValue;
 		     attrType1.AttrSSchema = attrType.AttrSSchema;
 		     attrType1.AttrTypeNum = HTML_ATTR_Default_Value;
 		     attr = TtaNewAttribute (attrType1);
-		     TtaAttachAttribute (lastAttrElement, attr, theDocument);
+		     TtaAttachAttribute (lastAttrElement, attr, currentDocument);
 		     TtaSetAttributeText (attr, attrValue,
-					  lastAttrElement, theDocument);
+					  lastAttrElement, currentDocument);
 		   }
 	       }
-#ifndef STANDALONE
+
        /* Some HTML attributes are equivalent to a CSS property:      */
        /*      background     ->                   background         */
        /*      bgcolor        ->                   background         */
        /*      text           ->                   color              */
        /*      color          ->                   color              */
 	     else
-	       if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("background")))
+	       if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("background")))
 		 {
 		   if (ustrlen (attrValue) > MaxMsgLength - 30)
 		       attrValue[MaxMsgLength - 30] = WC_EOS;
@@ -3424,18 +2990,17 @@ CHAR_T     *attrValue;
 			     TEXT("background: url(%s)"),
 			     attrValue );
 		   ParseHTMLSpecificStyle (lastElement, msgBuffer,
-					   theDocument, FALSE);
+					   currentDocument, FALSE);
 		 }
 	       else
-		 if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("bgcolor")))
-		     HTMLSetBackgroundColor (theDocument,
+		 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("bgcolor")))
+		     HTMLSetBackgroundColor (currentDocument,
 					     lastElement, attrValue);
 		 else
-		   if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("text")) ||
-		       !ustrcmp (lastAttrEntry->XMLattribute, TEXT("color")))
-		     HTMLSetForegroundColor (theDocument,
+		   if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("text")) ||
+		       !ustrcmp (lastMappedAttr->XMLattribute, TEXT("color")))
+		     HTMLSetForegroundColor (currentDocument,
 					     lastElement, attrValue);
-#endif /* !STANDALONE */
      }
 }
 /*--------------------  Attributes  (end)  ---------------------*/
@@ -3481,7 +3046,7 @@ STRING           entityName;
        /* create a new text leaf */
        elType.ElSSchema = DocumentSSchema;
        elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-       elText = TtaNewElement (theDocument, elType);
+       elText = TtaNewElement (currentDocument, elType);
        TtaSetElementLineNumber (elText, NumberOfLinesRead);
        InsertElement (&elText);
        lastElementClosed = TRUE;
@@ -3489,18 +3054,18 @@ STRING           entityName;
        l = currentLanguage;
        GetFallbackCharacter (code, buffer, &lang);
        /* put that fallback character in the new text leaf */
-       TtaSetTextContent (elText, buffer, lang, theDocument);
+       TtaSetTextContent (elText, buffer, lang, currentDocument);
        currentLanguage = l;
        /* make that text leaf read-only */
-       TtaSetAccessRight (elText, ReadOnly, theDocument);
+       TtaSetAccessRight (elText, ReadOnly, currentDocument);
        /* associate an attribute EntityName with the new text leaf */
        attrType.AttrSSchema = DocumentSSchema;
        attrType.AttrTypeNum = HTML_ATTR_EntityName;
        attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (elText, attr, theDocument);
+       TtaAttachAttribute (elText, attr, currentDocument);
        ustrcpy (buffer, prefix);
        ustrcat (buffer, entityName);
-       TtaSetAttributeText (attr, buffer, elText, theDocument);
+       TtaSetAttributeText (attr, buffer, elText, currentDocument);
        MergeText = FALSE;
      }
 }
@@ -3563,7 +3128,7 @@ STRING       entityName;
        usprintf (msgBuffer,
 		 TEXT("Invalid entity \"&%s;\""),
 		 entityName);
-       ParseHTMLError (theDocument, msgBuffer);
+       ParseHTMLError (currentDocument, msgBuffer);
      }   
 
    TtaFreeMemory (buffer);
@@ -3873,13 +3438,12 @@ const XML_Char **attlist;
        /* May be useless with expat ? */
        if (lastElementClosed && (lastElement == rootElement))
 	 {
-	   ParseHTMLError (theDocument,
+	   ParseHTMLError (currentDocument,
 			   TEXT("Element after tag </html>. Ignored"));
 	   return;
 	 }
 
        ProcessStartGI ((CHAR_T*) name);
-       ProcessEndGI ((CHAR_T*) name);
      }
    
    /* Treatment for the attributes */
@@ -3887,7 +3451,7 @@ const XML_Char **attlist;
    
    while (*attlist != NULL)
      {
-       /* creation of the attribut into the Thot tree */
+       /* Create the corresponding Thot attribute */
        buffer = TtaGetMemory ((strlen (*attlist)) + 1);
        strcpy (buffer, *attlist);
        printf ("\n  attr %s :", buffer);
@@ -3906,6 +3470,8 @@ const XML_Char **attlist;
 	 }
        attlist++;
      }
+   
+   ProcessEndGI ((CHAR_T*) name);
 }
 
 /*----------------------------------------------------------------------
@@ -4174,12 +3740,12 @@ char        *HTMLbuf;
        endOfFile = FALSE;
      }
 
-   HTMLrootClosed = FALSE;
+   XMLrootClosed = FALSE;
 
 
   /* read the XML file */
 
-  while (!endOfFile && !HTMLrootClosed)
+  while (!endOfFile && !XMLrootClosed)
     {
       res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
 
@@ -4197,8 +3763,8 @@ char        *HTMLbuf;
 	}
     }
   
-  HTMLrootClosingTag = NULL;
-  HTMLrootClosed = FALSE;
+  XMLrootClosingTag = NULL;
+  XMLrootClosed = FALSE;
 
   if (ErrFile)
     {
@@ -4370,15 +3936,15 @@ Document            doc;
    int              i;
    SSchema          schema;
 
-   StackLevel = 1;
+   stackLevel = 1;
    currentLanguage = TtaGetDefaultLanguage ();
 
    if (lastelem != NULL && doc != 0)
      {
 	/* initialize the stack with ancestors of lastelem */
-	theDocument = doc;
-	DocumentSSchema = TtaGetDocumentSSchema (theDocument);
-	rootElement = TtaGetMainRoot (theDocument);
+	currentDocument = doc;
+	DocumentSSchema = TtaGetDocumentSSchema (currentDocument);
+	rootElement = TtaGetMainRoot (currentDocument);
 	if (isclosed)
 	   elem = TtaGetParent (lastelem);
 	else
@@ -4389,19 +3955,17 @@ Document            doc;
 	     ustrcpy (tag, GITagNameByType (TtaGetElementType (elem)));
 	     if (ustrcmp (tag, TEXT("???")))
 	       {
-		  for (i = StackLevel; i > 0; i--)
+		  for (i = stackLevel; i > 0; i--)
 		    {
-		       GINumberStack[i + 1] = GINumberStack[i];
-		       ElementStack[i + 1] = ElementStack[i];
-		       LanguageStack[i + 1] = LanguageStack[i];
-		       ThotLevel[i + 1] = ThotLevel[i] + 1;
+		       nameElementStack[i + 1] = nameElementStack[i];
+		       elementStack[i + 1] = elementStack[i];
+		       languageStack[i + 1] = languageStack[i];
+		       parserCtxtStack[i + 1] = parserCtxtStack[i];
 		    }
 		  schema = DocumentSSchema;
-		  GINumberStack[1] = MapGI (tag, &schema, theDocument);
-		  ElementStack[1] = elem;
-		  ThotLevel[1] = 1;
-		  LanguageStack[1] = currentLanguage;
-		  StackLevel++;
+		  elementStack[1] = elem;
+		  languageStack[1] = currentLanguage;
+		  stackLevel++;
 	       }
 	     elem = TtaGetParent (elem);
 	  }
@@ -4418,15 +3982,12 @@ Document            doc;
    NumberOfLinesRead = 1;
 
    /* input file is supposed to be XML */
-   GINumberStack[0] = -1;
-   ElementStack[0] = rootElement;
-   ThotLevel[0] = 1;
-   lastElemEntry = 0;
+   elementStack[0] = rootElement;
 
    /* initialize input buffer */
    lastAttribute = NULL;
    lastAttrElement = NULL;
-   lastAttrEntry = NULL;
+   lastMappedAttr = NULL;
    UnknownAttr = FALSE;
    ReadingAnAttrValue = FALSE;
    MergeText = FALSE;
@@ -4485,28 +4046,23 @@ ThotBool    plainText;
   ThotBool        oldlastTagRead;
   int	          oldStackLevel;
 
-  /* -- */
   currentDocument = doc;
-  /* -- */
-
-  theDocument = doc;
   FirstElemToBeChecked = NULL;
   LastElemToBeChecked = NULL;
   lastElement = NULL;
   lastElementClosed = FALSE;
-  lastElemEntry = 0;
   lastAttribute = NULL;
   lastAttrElement = NULL;
-  lastAttrEntry = NULL;
+  lastMappedAttr = NULL;
   UnknownAttr = FALSE;
   ReadingAnAttrValue = FALSE;
   CommentText = NULL;
   UnknownTag = FALSE;
   MergeText = FALSE;
 
+
   wc2iso_strcpy (www_file_name, htmlFileName);
   stream = gzopen (www_file_name, "r");
-
 
   if (stream != 0)
     {
@@ -4628,7 +4184,7 @@ ThotBool    plainText;
       }
     }
    TtaSetDocumentUnmodified (doc);
-   theDocument = 0;
+   currentDocument = 0;
 }
 
 /* end of module */

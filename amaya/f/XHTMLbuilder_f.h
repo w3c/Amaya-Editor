@@ -6,22 +6,40 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void XHTMLMapEntity ( STRING entityName,
+extern void XhtmlGetDTDName ( STRING DTDname,
+			      STRING elementName );
+extern AttributeMapping* XhtmlMapAttribute ( CHAR_T* Attr,
+					    AttributeType* attrType,
+					    CHAR_T* elementName,
+					    Document doc );
+extern void XhtmlMapAttributeValue ( CHAR_T* AttrVal,
+				     AttributeType attrType,
+				     int* value );
+extern void XhtmlMapEntity ( STRING entityName,
 			     STRING entityValue,
 			     int valueLength,
 			     STRING alphabet );
-extern void XHTMLEntityCreated ( USTRING entityValue,
+extern void XhtmlEntityCreated ( USTRING entityValue,
 				 Language lang,
 				 STRING entityName,
 				 Document doc );
 
 #else /* __STDC__ */
 
-extern void XHTMLMapEntity (/* STRING entityName,
+extern void XhtmlGetDTDName (/* STRING DTDname,
+			      STRING elementName */);
+extern AttributeMapping* XhtmlMapAttribute (/* CHAR_T* Attr,
+					       AttributeType* attrType,
+					       CHAR_T* elementName,
+					       Document doc */);
+extern void XhtmlMapAttributeValue (/* CHAR_T* AttrVal,
+				     AttributeType attrType,
+				     int* value */);
+extern void XhtmlMapEntity (/* STRING entityName,
 			       STRING entityValue,
 			       int valueLength,
 			       STRING alphabet */);
-extern void XHTMLEntityCreated (/* USTRING entityValue,
+extern void XhtmlEntityCreated (/* USTRING entityValue,
 				   Language lang,
 				   STRING entityName,
 				   Document doc */);
