@@ -825,7 +825,7 @@ EXCEPT
 	SCRIPT:		ReturnCreateNL;
 	Text_Area:	ReturnCreateNL;
 	HTMLfragment:	NoMove, NoResize, Hidden;
-	XMLGraphics:    MoveResize, NoMove;
+	XMLGraphics:    IsDraw, MoveResize, NoMove;
 
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;

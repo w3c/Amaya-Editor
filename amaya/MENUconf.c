@@ -186,6 +186,8 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 static int      ColorBase;
 static CHAR_T   FgColor [MAX_LENGTH];
 static CHAR_T   BgColor [MAX_LENGTH];
+static CHAR_T   SelColor [MAX_LENGTH];
+static CHAR_T   InsColor [MAX_LENGTH];
 #ifndef _WINDOWS
 static CHAR_T   MenuFgColor [MAX_LENGTH];
 static CHAR_T   MenuBgColor [MAX_LENGTH];
@@ -2424,6 +2426,8 @@ static void GetColorConf ()
 {
   GetEnvString ("ForegroundColor", FgColor);
   GetEnvString ("BackgroundColor", BgColor);
+  GetEnvString ("DocSelectColor", SelColor);
+  GetEnvString ("InserPointColor", InsColor);
 #ifndef _WINDOWS
   GetEnvString ("MenuFgColor", MenuFgColor);
   GetEnvString ("MenuBgColor", MenuBgColor);
@@ -2442,6 +2446,8 @@ static void GetDefaultColorConf ()
 {
   GetDefEnvString ("ForegroundColor", FgColor);
   GetDefEnvString ("BackgroundColor", BgColor);
+  GetDefEnvString ("DocSelectColor", SelColor);
+  GetDefEnvString ("InserPointColor", InsColor);
 #ifndef _WINDOWS
   GetDefEnvString ("MenuFgColor", MenuFgColor);
   GetDefEnvString ("MenuBgColor", MenuBgColor);
@@ -2460,6 +2466,8 @@ static void SetColorConf ()
 {
   TtaSetEnvString ("ForegroundColor", FgColor, TRUE);
   TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
+  TtaSetEnvString ("DocSelectColor", SelColor, TRUE);
+  TtaSetEnvString ("InserPointColor", InsColor, TRUE);
 #ifndef _WINDOWS
   TtaSetEnvString ("MenuFgColor", MenuFgColor, TRUE);
   TtaSetEnvString ("MenuBgColor", MenuBgColor, TRUE);
@@ -2484,6 +2492,8 @@ HWND hwnDlg;
 {
   SetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor);
   SetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor);
+  SetDlgItemText (hwnDlg, IDC_SECOLOR, SelColor);
+  SetDlgItemText (hwnDlg, IDC_INCOLOR, InsColor);
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -2498,6 +2508,8 @@ static void RefreshColorMenu ()
 {
   TtaSetTextForm (ColorBase + mFgColor, FgColor);
   TtaSetTextForm (ColorBase + mBgColor, BgColor);
+  TtaSetTextForm (ColorBase + mSeColor, SelColor);
+  TtaSetTextForm (ColorBase + mInColor, InsColor);
   TtaSetTextForm (ColorBase + mMenuFgColor, MenuFgColor);
   TtaSetTextForm (ColorBase + mMenuBgColor, MenuBgColor);
 }
@@ -2546,9 +2558,17 @@ LPARAM lParam;
 	      GetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor,
 			      sizeof (FgColor) - 1);
 	      break;
-		case IDC_BGCOLOR:
+	    case IDC_BGCOLOR:
 	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor,
 			      sizeof (BgColor) - 1);
+	      break;
+	    case IDC_SECOLOR:
+	      GetDlgItemText (hwnDlg, IDC_FGCOLOR, SelColor,
+			      sizeof (SelColor) - 1);
+	      break;
+	    case IDC_INCOLOR:
+	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, InsColor,
+			      sizeof (InsColor) - 1);
 	      break;
 	    }
 	}
@@ -2643,6 +2663,18 @@ STRING              data;
 	  else
 	    BgColor [0] = EOS;
 	  break;
+	case mSeColor:
+	  if (data)
+	    ustrcpy (SelColor, data);
+	  else
+	    SelColor [0] = EOS;
+	  break;
+	case mInColor:
+	  if (data)
+	    ustrcpy (InsColor, data);
+	  else
+	    InsColor [0] = EOS;
+	  break;
 	case mMenuFgColor:
 	  if (data)
 	    ustrcpy (MenuFgColor, data);
@@ -2704,6 +2736,19 @@ STRING              pathname;
 		   1,
 		   FALSE);   
    /* second line */
+   TtaNewTextForm (ColorBase + mSeColor,
+		   ColorBase + ColorMenu,
+		   TtaGetMessage (AMAYA, AM_DOC_SEL_COLOR),
+		   20,
+		   1,
+		   FALSE);   
+   TtaNewTextForm (ColorBase + mInColor,
+		   ColorBase + ColorMenu,
+		   TtaGetMessage (AMAYA, AM_DOC_INS_COLOR),
+		   20,
+		   1,
+		   FALSE);   
+   /* third line */
    TtaNewTextForm (ColorBase + mMenuFgColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_MENU_FG_COLOR),

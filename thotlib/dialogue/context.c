@@ -234,6 +234,8 @@ ThotColor*  colorpixel;
      DefaultFColor = col;
    else if (strcmp (colorplace, "DocSelectColor") == 0)
      SelColor = col;
+   else if (strcmp (colorplace, "InserPointColor") == 0)
+     InsertColor = col;
 #ifdef _WINDOWS 
    *colorpixel = col;
 #else  /* _WINDOWS */
@@ -267,28 +269,32 @@ void TtaUpdateEditorColors (void)
 void TtaUpdateEditorColors ()
 #endif /* __STDC__ */
 {
-  CHAR_T*   app_name;
+  CHAR_T   *name;
   ThotBool  found;
 
-  app_name =  TtaGetEnvString ("appname");
-
+  name = TtaGetEnvString ("appname");
   /* background color */
-#       ifndef _WINDOWS
-  found = FindColor (0, app_name, "BackgroundColor", TEXT("gainsboro"), &White_Color);
-#       else  /* _WINDOWS */
-  found = FindColor (0, app_name, "BackgroundColor", TEXT("LightGrey1"), &White_Color);
-#       endif /* _WINDOWS */
+  found = FindColor (0, name, "BackgroundColor", TEXT("#E1E1E1"), &White_Color);
   /* drawing color */
-  found = FindColor (0, app_name, "ForegroundColor", TEXT("Black"), &Black_Color);
+  found = FindColor (0, name, "ForegroundColor", TEXT("Black"), &Black_Color);
+  /* selection colors */
+  found = FindColor (0, name, "InserPointColor", TEXT("Red"), &Select_Color);
+  found = FindColor (0, name, "DocSelectColor", TEXT("#FFE9C1"), &Select_Color);
+  /* The reference color */
+  found = FindColor (0, name, "ActiveBoxColor", TEXT("Red"), &(Box_Color));
+  /* color for read-only sections */
+  found = FindColor (0, name, "ReadOnlyColor", TEXT("Black"), &(RO_Color));
   /* color for the menu background */
-  found = FindColor (0, app_name, "MenuBgColor", TEXT("Grey"), &BgMenu_Color);
+  found = FindColor (0, name, "MenuBgColor", TEXT("Grey"), &BgMenu_Color);
   /* color for the menu foregroundground */
-  found = FindColor (0, app_name, "MenuFgColor", TEXT("Black"), &FgMenu_Color);
+  found = FindColor (0, name, "MenuFgColor", TEXT("Black"), &FgMenu_Color);
   /* scrolls color */
   Scroll_Color = BgMenu_Color;
+  /* color for the inactive entries */
+  found = FindColor (0, name, "InactiveItemColor", TEXT("#E1E1E1"), &InactiveB_Color);
 #ifdef _WINDOWS
-   WinInitColors ();
-#  endif /* _WINDOWS */
+  /*WinInitColors ();*/
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -381,7 +387,7 @@ CHAR_T*             name;
 	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
      }
    /* Initialize colors for the application */
-   Black_Color  = cblack.pixel;
+   Black_Color = Box_Color = RO_Color = cblack.pixel;
    FgMenu_Color = Select_Color = cblack.pixel;
    White_Color  = cwhite.pixel;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
@@ -390,55 +396,13 @@ CHAR_T*             name;
 
    if (TtWDepth > 1)
      {
-#ifndef _WINDOWS
-#ifdef _GTK
-	/* background color */
-	found = FindColor (0, name, "BackgroundColor", "Grey", &White_Color);
-	/* color for the selection */
-	found = FindColor (0, name, "DocSelectColor", "#CECECE", &Select_Color);
-#else /* _GTK */
-	/* background color */
-	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
-	/* color for borders and buttons */
-	found = FindColor (0, name, "DocSelectColor", "#CECECE", &Select_Color);
-#endif /* _GTK */
-#else  /* _WINDOWS */
-	/* background color */
-	found = FindColor (0, name, "BackgroundColor", TEXT("LightGrey1"), &White_Color);
-	/* color for borders and buttons */
-	found = FindColor (0, name, "DocSelectColor", TEXT("#CECECE"), &Select_Color);
-#endif /* _WINDOWS */
-	/* color for the selection */
-	found = FindColor (0, name, "InactiveItemColor", TEXT("LightGrey1"), &InactiveB_Color);
-	/* drawing color */
-	found = FindColor (0, name, "ForegroundColor", TEXT("Black"), &Black_Color);
-	/* color for the menu background */
-	found = FindColor (0, name, "MenuBgColor", TEXT("Grey"), &BgMenu_Color);
-	/* color for the menu foregroundground */
-	found = FindColor (0, name, "MenuFgColor", TEXT("Black"), &FgMenu_Color);
-	/* scrolls color */
-	Scroll_Color = BgMenu_Color;
+       TtaUpdateEditorColors ();
      }
    else
-      /* at least allocate the selection color */
-      found = FindColor (0, name, "DocSelectColor", TEXT("White"), &Select_Color);
+     /* at least allocate the selection color */
+     found = FindColor (0, name, "DocSelectColor", TEXT("White"), &Select_Color);
 
-   /* The reference color */
-   found = FindColor (0, name, "ActiveBoxColor", TEXT("Red"), &(Box_Color));
-
-   /* color for read-only sections */
-   found = FindColor (0, name, "ReadOnlyColor", TEXT("Black"), &(RO_Color));
-
-#ifndef _WINDOWS
-   if (!found)
-      Box_Color = cwhite.pixel;
-   else if (TtWDepth == 1)
-      Box_Color = cblack.pixel;
-   if (!found)
-      RO_Color = cwhite.pixel;
-   else if (TtWDepth == 1)
-      RO_Color = cblack.pixel;
-#  else  /* _WINDOWS */
+#ifdef _WINDOWS
    WinInitColors ();
 #  endif /* _WINDOWS */
 }

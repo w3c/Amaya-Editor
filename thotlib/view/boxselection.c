@@ -150,28 +150,34 @@ int                 frame;
 		if (pBox1 == pBox2)
 		  {
 		    /* only one box is selected */
-		    if (pFrame->FrSelectionBegin.VsIndBox == 0)
-		      {
-			/* the whole box is selected */
-			x1 = pBox1->BxXOrg;
-			x2 = pBox1->BxXOrg + pBox1->BxWidth;
-		      }
+		    if (pBox1->BxType == BoGhost)
+		      /* the highlight is transmitted to children */
+		      DrawBoxSelection (frame, pBox1);
 		    else
 		      {
-			x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
-			x2 = pBox1->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
+			if (pFrame->FrSelectionBegin.VsIndBox == 0)
+			  {
+			    /* the whole box is selected */
+			    x1 = pBox1->BxXOrg;
+			    x2 = pBox1->BxXOrg + pBox1->BxWidth;
+			  }
+			else
+			  {
+			    x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
+			    x2 = pBox1->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
+			  }
+			DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
+			/* undisplay the current selection */
+			if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
+			  /* need to redraw more than one box */
+			  RedrawFrameBottom (frame, 0, NULL);
+			else
+			  RedrawFrameBottom (frame, 0, pAb1);
 		      }
-		    DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
-		    /* undisplay the current selection */
-		    if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
-		      /* need to redraw more than one box */
-		      RedrawFrameBottom (frame, 0, NULL);
-		    else
-		      RedrawFrameBottom (frame, 0, pAb1);
 		  }
 		else if (pAb1 == pAb2)
 		  {
-		    /* several piece of a split box are selected */
+		    /* several pieces of a split box are selected */
 		    /* the first one */
 		    x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 		    x2 = pBox1->BxXOrg + pBox1->BxWidth;
@@ -195,62 +201,74 @@ int                 frame;
 		else
 		  {
 		    /* undisplay the beginning of the selection */
-		    if (pFrame->FrSelectionBegin.VsIndBox == 0)
-		      {
-			/* the whole box is selected */
-			x1 = pBox1->BxXOrg;
-			x2 = pBox1->BxXOrg + pBox1->BxWidth;
-		      }
+		    if (pBox1->BxType == BoGhost)
+		      /* the highlight is transmitted to children */
+		      DrawBoxSelection (frame, pBox1);
 		    else
 		      {
-			x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
-			x2 = pBox1->BxXOrg + pBox1->BxWidth;
-		      }
-		    DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
-		    if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
-		      /* need to redraw more thsn one box */
-		      RedrawFrameBottom (frame, 0, NULL);
-		    else
-		      RedrawFrameBottom (frame, 0, pAb1);
-		    if (pBox1->BxType == BoPiece)
-		      {
-			/* unselect the end of the split text */
-			pBox = pBox1->BxNexChild;
-			while (pBox)
+			if (pFrame->FrSelectionBegin.VsIndBox == 0)
 			  {
-			    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-			    RedrawFrameBottom (frame, 0, pAb1);
-			    pBox = pBox->BxNexChild;
+			    /* the whole box is selected */
+			    x1 = pBox1->BxXOrg;
+			    x2 = pBox1->BxXOrg + pBox1->BxWidth;
+			  }
+			else
+			  {
+			    x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
+			    x2 = pBox1->BxXOrg + pBox1->BxWidth;
+			  }
+			DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
+			if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
+			  /* need to redraw more thsn one box */
+			  RedrawFrameBottom (frame, 0, NULL);
+			else
+			  RedrawFrameBottom (frame, 0, pAb1);
+			if (pBox1->BxType == BoPiece)
+			  {
+			    /* unselect the end of the split text */
+			    pBox = pBox1->BxNexChild;
+			    while (pBox)
+			      {
+				DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+				RedrawFrameBottom (frame, 0, pAb1);
+				pBox = pBox->BxNexChild;
+			      }
 			  }
 		      }
 		
 		    /* undisplay the end of the selection */
-		    if (pFrame->FrSelectionEnd.VsIndBox == 0)
-		      {
-			/* the whole box is selected */
-			x1 = pBox2->BxXOrg;
-			x2 = pBox2->BxXOrg + pBox2->BxWidth;
-		      }
+		    if (pBox2->BxType == BoGhost)
+		      /* the highlight is transmitted to children */
+		      DrawBoxSelection (frame, pBox2);
 		    else
 		      {
-			x1 = pBox2->BxXOrg;
-			x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
-		      }
-		    DefClip (frame, x1, pBox2->BxYOrg, x2, pBox2->BxYOrg + pBox2->BxHeight);
-		    if (pAb2->AbLeafType == LtGraphics || pAb2->AbLeafType == LtPolyLine)
-		      /* need to redraw more than one box */
-		      RedrawFrameBottom (frame, 0, NULL);
-		    else
-		      RedrawFrameBottom (frame, 0, pAb2);
-		    if (pBox2->BxType == BoPiece)
-		      {
-			/* select the begin of the split text */
-			pBox = pAb2->AbBox->BxNexChild;
-			while (pBox != pBox2)
+			if (pFrame->FrSelectionEnd.VsIndBox == 0)
 			  {
-			    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-			    RedrawFrameBottom (frame, 0, pAb2);
-			    pBox = pBox->BxNexChild;
+			    /* the whole box is selected */
+			    x1 = pBox2->BxXOrg;
+			    x2 = pBox2->BxXOrg + pBox2->BxWidth;
+			  }
+			else
+			  {
+			    x1 = pBox2->BxXOrg;
+			    x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
+			  }
+			DefClip (frame, x1, pBox2->BxYOrg, x2, pBox2->BxYOrg + pBox2->BxHeight);
+			if (pAb2->AbLeafType == LtGraphics || pAb2->AbLeafType == LtPolyLine)
+			  /* need to redraw more than one box */
+			  RedrawFrameBottom (frame, 0, NULL);
+			else
+			  RedrawFrameBottom (frame, 0, pAb2);
+			if (pBox2->BxType == BoPiece)
+			  {
+			    /* select the begin of the split text */
+			    pBox = pAb2->AbBox->BxNexChild;
+			    while (pBox != pBox2)
+			      {
+				DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+				RedrawFrameBottom (frame, 0, pAb2);
+				pBox = pBox->BxNexChild;
+			      }
 			  }
 		      }
 		  }
@@ -774,68 +792,84 @@ ThotBool            alone;
 	      /* ready to display the current selection */
 	      if (startSelection && endSelection)
 		{
-		  /* display the whole selection */
+		  /* only one box is selected */
 		  pBox = pViewSel->VsBox;
-		  if (pViewSel->VsIndBox == 0)
-		    {
-		      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
-			/* need to redraw more than one box */
-			RedrawFrameBottom (frame, 0, NULL);
-		      else
-			RedrawFrameBottom (frame, 0, pAb);
-		    }
-		  else if (pBox != pFrame->FrSelectionBegin.VsBox)
-		    {
-		      /* several pieces of a split box are selected */
-		      /* the last one */
-		      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
-		      RedrawFrameBottom (frame, 0, pAb);
-		      /* the first one */
-		      pBox = pFrame->FrSelectionBegin.VsBox;
-		      DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-		      RedrawFrameBottom (frame, 0, pAb);
-		      /* intermediate boxes */
-		      pBox = pBox->BxNexChild;
-		      while (pBox != pFrame->FrSelectionEnd.VsBox)
-			{
-			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-			  RedrawFrameBottom (frame, 0, pAb);
-			  pBox = pBox->BxNexChild;
-			}
-		    }
+		  if (pBox->BxType == BoGhost)
+		    /* the highlight is transmitted to children */
+		    DrawBoxSelection (frame, pBox);
 		  else
 		    {
-		      DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
-		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
-			/* need to redraw more than one box */
-			RedrawFrameBottom (frame, 0, NULL);
+		      if (pViewSel->VsIndBox == 0)
+			{
+			  /* the whole box is selected */
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			    /* need to redraw more than one box */
+			    RedrawFrameBottom (frame, 0, NULL);
+			  else
+			    RedrawFrameBottom (frame, 0, pAb);
+			}
+		      else if (pBox != pFrame->FrSelectionBegin.VsBox)
+			{
+			  /* several pieces of a split box are selected */
+			  /* the last one */
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+			  RedrawFrameBottom (frame, 0, pAb);
+			  /* the first one */
+			  pBox = pFrame->FrSelectionBegin.VsBox;
+			  DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			  RedrawFrameBottom (frame, 0, pAb);
+			  /* intermediate boxes */
+			  pBox = pBox->BxNexChild;
+			  while (pBox != pFrame->FrSelectionEnd.VsBox)
+			    {
+			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			      RedrawFrameBottom (frame, 0, pAb);
+			      pBox = pBox->BxNexChild;
+			    }
+			}
 		      else
-			RedrawFrameBottom (frame, 0, pAb);
+			{
+			  /* a substring or a point of the box is selected */
+			  DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+			  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			    /* need to redraw more than one box */
+			    RedrawFrameBottom (frame, 0, NULL);
+			  else
+			    RedrawFrameBottom (frame, 0, pAb);
+			}
 		    }
 		}
 	      else if (endSelection)
 		{
 		  /* display the end of the selection */
 		  pBox = pViewSel->VsBox;
-		  if (pViewSel->VsIndBox == 0)
-		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		  if (pBox->BxType == BoGhost)
+		    /* the highlight is transmitted to children */
+		    DrawBoxSelection (frame, pBox);
 		  else
-		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+		    {
+		      if (pViewSel->VsIndBox == 0)
+			/* the whole box is selected */
+			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		      else
+			/* a substring or a point of the box is selected */
+			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
 		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
 			/* need to redraw more than one box */
 			RedrawFrameBottom (frame, 0, NULL);
 		      else
 			RedrawFrameBottom (frame, 0, pAb);
-		  if (pBox->BxType == BoPiece)
-		    {
-		      /* select the begin of the split text */
-		      pBox = pAb->AbBox->BxNexChild;
-		      while (pBox != pViewSel->VsBox)
+		      if (pBox->BxType == BoPiece)
 			{
-			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-			  RedrawFrameBottom (frame, 0, pAb);
-			  pBox = pBox->BxNexChild;
+			  /* select the begin of the split text */
+			  pBox = pAb->AbBox->BxNexChild;
+			  while (pBox != pViewSel->VsBox)
+			    {
+			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			      RedrawFrameBottom (frame, 0, pAb);
+			      pBox = pBox->BxNexChild;
+			    }
 			}
 		    }
 		}
@@ -843,25 +877,33 @@ ThotBool            alone;
 		{
 		  /* display the beginning of the selection */
 		  pBox = pViewSel->VsBox;
-		  if (pViewSel->VsIndBox == 0)
-		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		  if (pBox->BxType == BoGhost)
+		    /* the highlight is transmitted to children */
+		    DrawBoxSelection (frame, pBox);
 		  else
-		    DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		    {
+		      if (pViewSel->VsIndBox == 0)
+			/* the whole box is selected */
+			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		      else
+			/* a substring or a point of the box is selected */
+			DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
 		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
 			/* need to redraw more than one box */
 			RedrawFrameBottom (frame, 0, NULL);
 		      else
 			RedrawFrameBottom (frame, 0, pAb);
-		  
-		  if (pBox->BxType == BoPiece)
-		    {
-		      /* select the end of the split text */
-		      pBox = pBox->BxNexChild;
-		      while (pBox)
+		      
+		      if (pBox->BxType == BoPiece)
 			{
-			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-			  RedrawFrameBottom (frame, 0, pAb);
+			  /* select the end of the split text */
 			  pBox = pBox->BxNexChild;
+			  while (pBox)
+			    {
+			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			      RedrawFrameBottom (frame, 0, pAb);
+			      pBox = pBox->BxNexChild;
+			    }
 			}
 		    }
 		}

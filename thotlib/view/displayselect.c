@@ -85,21 +85,21 @@ int                 pointselect;
 	{
 	  /* 8 characteristic points */
 	  DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-			 0, 0, 0, SelColor, 2);
+			 0, 0, 0, InsertColor, 2);
 	  DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
-			 0, 0, 0, SelColor, 2);
+			 0, 0, 0, InsertColor, 2);
 	  DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-			 0, 0, 0, SelColor, 2);
+			 0, 0, 0, InsertColor, 2);
 	  DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-			 0, 0, 0, SelColor, 2);
+			 0, 0, 0, InsertColor, 2);
 	  DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-			 0, 0, 0, SelColor, 2);
+			 0, 0, 0, InsertColor, 2);
 	  DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-			 0, 0, 0, SelColor, 2);
+			 0, 0, 0, InsertColor, 2);
 	  DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
-			 0, 0, 0, SelColor, 2);
+			 0, 0, 0, InsertColor, 2);
 	  DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			 0, 0, 0, SelColor, 2);
+			 0, 0, 0, InsertColor, 2);
 	}
       else if (pAb->AbLeafType == LtPolyLine && pBox->BxNChars > 1)
 	{
@@ -132,7 +132,7 @@ int                 pointselect;
 		  DrawRectangle (frame, 0, 0,
 				 x, y,
 				 thick, thick,
-				 0, 0, 0, SelColor, 2);
+				 0, 0, 0, InsertColor, 2);
 		}
 	      
 	      j++;
@@ -156,21 +156,21 @@ int                 pointselect;
 	  case TEXT('8'):
 	    /* 8 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'C':
 	  case 'L':
@@ -180,49 +180,49 @@ int                 pointselect;
 	  case 'Q':
 	    /* 4 characteristic points */
 	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'W':
 	    /* 3 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'X':
 	    /* 3 characteristic points */
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'Y':
 	    /* 3 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'Z':
 	    /* 3 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	    
 	  case 'h':
@@ -230,72 +230,72 @@ int                 pointselect;
 	  case '>':
 	    /* 2 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 't':
 	    /* 3 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'b':
 	    /* 3 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'v':
 	  case '^':
 	  case 'V':
 	    /* 2 characteristic points */
 	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'l':
 	    /* 3 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case 'r':
 	    /* 3 characteristic points */
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case '\\':
 	  case 'O':
 	  case 'e':
 	    /* 2 characteristic points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  case '/':
 	  case 'o':
 	  case 'E':
 	    /* 2 characteristic points */
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-			   0, 0, 0, SelColor, 2);
+			   0, 0, 0, InsertColor, 2);
 	    break;
 	  default:
 	    break;
@@ -538,6 +538,7 @@ PtrBox              pBox;
   PtrAbstractBox      pAb;
   int                 width, height;
   int                 topY, h;
+  int                 col;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox != NULL)
@@ -580,8 +581,12 @@ PtrBox              pBox;
 	  else
 	    width = rightX - leftX;
 	}
+      if (width <= 2)
+	col = InsertColor;
+      else
+	col = SelColor;
       DrawRectangle (frame, 0, 0, leftX, topY, width, h,
-		     0, 0, 0, SelColor, 2);
+		     0, 0, 0, col, 2);
     }
 }
 

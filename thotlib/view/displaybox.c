@@ -778,10 +778,11 @@ int                 frame;
       /* show the selection on the whole image */
       selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
 		  pFrame->FrSelectionEnd.VsBox == pBox);
-      if (selected && !pFrame->FrSelectOnePosition)
-	DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
-      else
-	DisplayPointSelection (frame, pBox, 0);
+      if (selected)
+	if (!pFrame->FrSelectOnePosition)
+	  DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
+	else
+	  DisplayPointSelection (frame, pBox, 0);
     }
 }
 

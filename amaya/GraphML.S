@@ -250,7 +250,7 @@ STRUCT
 
 EXCEPT
 
-   GraphML:		NoMove, NoResize, Hidden;
+   GraphML:		IsDraw, NoMove, NoResize, Hidden;
    Label:		NoMove, NoResize, NoShowBox;
    Line_:		MoveResize, HighlightChildren, NoShowBox;
    Rectangle:		MoveResize, HighlightChildren, NoShowBox;

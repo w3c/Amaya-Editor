@@ -212,4 +212,6 @@ int                 AMAYA;
 #define AM_ANNOT_POST_SERVER          200
 #define AM_ANNOT_SERVERS              201
 #define AM_ANNOT_AUTOLOAD             202
-#define AMAYA_MSG_MAX                 203
+#define AM_DOC_SEL_COLOR              203
+#define AM_DOC_INS_COLOR              204
+#define AMAYA_MSG_MAX                 205

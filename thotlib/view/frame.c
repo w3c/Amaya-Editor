@@ -863,7 +863,7 @@ PtrAbstractBox      subtree;
    PtrBox              ToCreate;
    PtrBox              pFirstBox;
    ViewFrame          *pFrame;
-   PtrAbstractBox      pAb, pCell;
+   PtrAbstractBox      pAb, pParent;
    int                 plane;
    int                 nextplane;
    int                 i, delta;
@@ -905,23 +905,29 @@ PtrAbstractBox      subtree;
 	if (subtree)
 	  {
 	    /* if the box is enclosed by a cell and that cell has
-               a bacgroung the frame attached to the cell should be
-	       redisplay too */ 
-	    pCell = GetParentCell (subtree->AbBox);
-	    if (pCell)
-	      subtree = pCell->AbEnclosing;
+               a backgroung the frame attached to that cell should be
+	       redisplayed too */ 
+	    pParent = GetParentCell (subtree->AbBox);
+	    if (pParent)
+	      subtree = pParent->AbEnclosing;
+	    /* if the box is enclosed by a draw the whole contents of
+	       that draw should be redisplayed */ 
+	    pParent = GetParentDraw (subtree->AbBox);
+	    if (pParent)
+	      subtree = pParent;
 	    pAb = subtree;
-	  /* get the first terminal box */
-	  while (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
-	    pAb = pAb->AbFirstEnclosed;
-	  if (pAb)
-	    {
-	      pBox = pAb->AbBox;
-	      if (pBox && pBox->BxType == BoSplit)
-		pBox = pBox->BxNexChild;
-	    }
-	  else
-	    pBox = NULL;
+
+	    /* get the first terminal box */
+	    while (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
+	      pAb = pAb->AbFirstEnclosed;
+	    if (pAb)
+	      {
+		pBox = pAb->AbBox;
+		if (pBox && pBox->BxType == BoSplit)
+		  pBox = pBox->BxNexChild;
+	      }
+	    else
+	      pBox = NULL;
 	  }
 	else
 	  {
@@ -943,20 +949,13 @@ PtrAbstractBox      subtree;
 	delta = height - h / 2;
 
 	/* Redraw from top to bottom all filled boxes */
-	if (subtree == NULL ||
-	    (subtree->AbLeafType != LtPolyLine && subtree->AbLeafType != LtGraphics))
-	  {
-
-	    DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
-	    RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
-	    /* paint the background of all selected boxes */
-	    if (subtree)
-	      DisplayBgSelection (frame, subtree);
-	    else
-	      DisplayBgSelection (frame, pFrame->FrAbstractBox);
-	  }
+	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
+	RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
+	/* paint the background of all selected boxes */
+	if (subtree)
+	  DisplayBgSelection (frame, subtree);
 	else
-	  DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 0);
+	  DisplayBgSelection (frame, pFrame->FrAbstractBox);
 
 	/* Display planes in reverse order from biggest to lowest */
 	plane = 65536;

@@ -52,10 +52,12 @@
 #define ColorMenu           1
 #define mFgColor            2
 #define mBgColor            3
-#define mMenuFgColor        4
-#define mMenuBgColor        5
-#define mColorEmpty1        6
-#define MAX_COLORMENU_DLG   7
+#define mSeColor            4
+#define mInColor            5
+#define mMenuFgColor        6
+#define mMenuBgColor        7
+#define mColorEmpty1        8
+#define MAX_COLORMENU_DLG   9
 
 #define GeometryMenu         1
 #define mGeometryLabel1      2
