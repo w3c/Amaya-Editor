@@ -599,7 +599,7 @@ boolean             alone;
 			  pViewSel->VsXPos = 0;
 		       pViewSel->VsNSpaces = 0;
 		    }
-		  if (endSelection)
+		  if (endSelection || SelPosition)
 		    {
 		       pViewSel = &pFrame->FrSelectionEnd;
 		       pViewSel->VsBox = pBox;

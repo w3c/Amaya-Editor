@@ -188,13 +188,13 @@ STRUCT
 	   IntWidthPercent; IntWidthPxl) =
 	CONSTANT C_Empty;
 
+  Basic_Set = LIST OF (Basic_Elem);
+
   AddressContent = CASE OF
 	Basic_Elem;
 	Paragraph;		{ P }
 	Pseudo_paragraph;
 	END;
-
-  Basic_Set = LIST OF (Basic_Elem);
 
   Paragraph							{ P }
      (ATTR TextAlign = left_, center_, right_, justify_) =

@@ -183,12 +183,7 @@ Element             selectedElement;
 	    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);;
 	    /* get the ID attribute of the selected element */
 	    attrType.AttrTypeNum = HTML_ATTR_ID;
-	    el = selectedElement;
-	    while (attr == NULL && el != NULL)
-	      {
-		attr = TtaGetAttribute (el, attrType);
-		el = TtaGetParent(el);
-	      }
+	    attr = TtaGetAttribute (selectedElement, attrType);
 	  }
      }
    return (attr);

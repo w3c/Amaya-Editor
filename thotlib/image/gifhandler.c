@@ -261,7 +261,7 @@ int                 ignore;
 
  fini:
    if (LWZReadByte (fd, FALSE, c) >= 0)
-      fprintf (stderr, "too much input data, ignoring extra...\n");
+      fprintf (stderr, "gifhandler: too much input data, ignoring extra...\n");
    return (data);
 }
 
@@ -502,7 +502,7 @@ unsigned char      *buf;
    unsigned char       count;
 
    if (!ReadOK (fd, &count, 1)) {
-      fprintf (stderr, "error in getting DataBlock size\n");
+      fprintf (stderr, "gifhandler: error in getting DataBlock size\n");
       return -1;
    }
 
@@ -761,7 +761,7 @@ unsigned long       ul;
 	  case 0xFFFF:
 	       return (8 + 8);
 	  default:
-	       fprintf (stderr, "nbbits : invalid PicMask\n");
+	       fprintf (stderr, "gifhandler: nbbits : invalid PicMask\n");
 	       return (8);
    }
 }
@@ -1178,7 +1178,7 @@ ThotColorStruct    *colrs;
 					width, height, 32, 0);
 	       break;
 	    default:
-	       fprintf (stderr, "Don't know how to format image for display of depth %d\n", depth);
+	       fprintf (stderr, "gifhandler: Don't know how to format image for display of depth %d\n", depth);
 	       return (None);
 	 }
 
@@ -1733,9 +1733,6 @@ char               *datafile;
 
    if (!ReadOK (fp, buf, 6))
      {
-#if 0
-	fprintf (stderr, "error reading magic number\n");
-#endif
 	if (fp != stdin)
 	   fclose (fp);
 	return FALSE;
@@ -1743,10 +1740,6 @@ char               *datafile;
 
    if (strncmp ((char *) buf, "GIF", 3) != 0)
      {
-#if 0
-	if (verbose)
-	   fprintf (stderr, "not a GIF file\n");
-#endif
 	if (fp != stdin)
 	   fclose (fp);
 	return (FALSE);
@@ -1757,9 +1750,6 @@ char               *datafile;
 
    if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
      {
-#if 0
-	fprintf (stderr, "bad version number, not '87a' or '89a'\n");
-#endif
 	if (fp != stdin)
 	   fclose (fp);
 	return (FALSE);

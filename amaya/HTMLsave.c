@@ -449,20 +449,20 @@ DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentN
      }
    else
      {
-     if (SaveAsXML)
+       if (SaveAsXML)
          {
-         SetNamespaces (SavingDocument);
-         TtaExportDocument (SavingDocument, tempname, "HTMLTX");
+	   SetNamespaces (SavingDocument);
+	   TtaExportDocument (SavingDocument, tempname, "HTMLTX");
          }
-      else
+       else
          TtaExportDocument (SavingDocument, tempname, "HTMLT");
-      TtaSetDocumentDirectory (SavingDocument, directoryName);
-      strcpy (docname, documentName);
-      ExtractSuffix (docname, tempname);
-      /* Change the document name in all views */
-      TtaSetDocumentName (SavingDocument, docname);
-      TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-      TtaSetDocumentUnmodified (SavingDocument);
+       TtaSetDocumentDirectory (SavingDocument, directoryName);
+       strcpy (docname, documentName);
+       ExtractSuffix (docname, tempname);
+       /* Change the document name in all views */
+       TtaSetDocumentName (SavingDocument, docname);
+       TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
+       TtaSetDocumentUnmodified (SavingDocument);
      }
 }
 
@@ -888,60 +888,51 @@ DBG(fprintf(stderr, "SaveDocument : local saving\n");)
 void                   BackUpDocs ()
 {
   Document             doc;
-  ElementType          elType;
-  Element              el, parent;
+  FILE                *f;
   char                 pathname[MAX_LENGTH];
   char                 docname[MAX_LENGTH];
   char                *ptr;
   int                  l;
 
   /* check all modified documents */
+  f = NULL;
   for (doc = 1; doc < DocumentTableLength; doc++)
-    if (DocumentURLs[doc] != NULL && TtaIsDocumentModified (doc))
+    if (DocumentURLs[doc] != NULL && TtaIsDocumentModified (doc) && doc != W3Loading)
       {
+	if (f == NULL)
+	  {
+	    /* open the crash file */
+	    sprintf (pathname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
+	    f = fopen (pathname, "w");
+	    if (f == NULL)
+	      return;
+	  }
+
 	SavingDocument = 0;
 	ptr = DocumentURLs[doc];
 	l = strlen (ptr) - 1;
-	if (ptr[l] == DIR_SEP || ptr[l] == URL_SEP)
+	if (IsW3Path (ptr) &&  ptr[l] == URL_SEP)
 	  {
 	    /* it's a directory name */
 	    ptr[l] = EOS;
+	    TtaExtractName (DocumentURLs[doc], pathname, docname);
+	    ptr[l] = URL_SEP;
 	    l = 0;
 	  }
-	elType.ElSSchema = TtaGetDocumentSSchema (doc);
-	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-	  {
-	    /* add a Comment to register the previous URL */
-	    parent = TtaGetMainRoot (doc);
-	    elType.ElTypeNum = HTML_EL_HEAD;
-	    parent = TtaSearchTypedElement (elType, SearchForward, parent);
-	    if (parent != NULL)
-	      {
-		elType.ElTypeNum = HTML_EL_Comment_;
-		el = TtaNewElement (doc, elType);
-		TtaInsertFirstChild (&el, parent, doc);
-		/* create the Comment_line within the Comment */
-		elType.ElTypeNum = HTML_EL_Comment_line;
-		parent = el;
-		el = TtaNewElement (doc, elType);
-		TtaInsertFirstChild (&el, parent, doc);
-		/* create the text within the Comment_line */
-		elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-		parent = el;
-		el = TtaNewElement (doc, elType);
-		TtaInsertFirstChild (&el, parent, doc);
-		TtaSetTextContent (el, DocumentURLs[doc], TtaGetDefaultLanguage (), doc);
-	      }
-	  }
-
-	TtaExtractName (DocumentURLs[doc], pathname, docname);
-	if (l == 0)
-	  sprintf (pathname, "%s%c%%%s.html", TempFileDirectory, DIR_SEP, docname);
 	else
-	  sprintf (pathname, "%s%c%%%s", TempFileDirectory, DIR_SEP, docname);
+	  TtaExtractName (DocumentURLs[doc], pathname, docname);
+	if (l == 0)
+	  sprintf (pathname, "%s%c%s.html", TempFileDirectory, DIR_SEP, docname);
+	else
+	  sprintf (pathname, "%s%c%s", TempFileDirectory, DIR_SEP, docname);
  	DocumentURLs[doc] = pathname;
 	SaveDocument (doc, 1);
+	/* register the temporary doument name */
+	fprintf (f, "%s %s\n", pathname, ptr);
       }
+  /* now close the crash file */
+  if (f == NULL)
+    fclose (f);
 }
 
 /*----------------------------------------------------------------------

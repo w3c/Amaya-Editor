@@ -157,7 +157,7 @@ static HWND   currentParent;
 #endif /* _WINDOWS */
 
 static ThotTranslations TextTranslations;
-static ThotWidget       MainShell;
+static ThotWidget       MainShell, PopShell;
 
 #include "appdialogue_f.h"
 #include "memory_f.h"
@@ -1339,6 +1339,11 @@ caddr_t             call_d;
 
 	XtManageChild (w);
 	XtManageChild (XtParent (w));
+	if (PopShell != 0)
+	  {
+	    XtSetValues (PopShell, args, n);
+	    XtPopup (PopShell, XtGrabNonexclusive);
+	  }
 #       else  /* _WINDOWS */
         ShowWindow (w, SW_SHOWNORMAL);
         UpdateWindow (w);
@@ -1865,6 +1870,7 @@ Display           **Dp;
    TextTranslations = NULL;
 #  endif /* _WINDOWS */
    MainShell = 0;
+   PopShell = 0;
    /* Pas encore de reference attribuee */
    FirstFreeRef = 0;
 #  ifdef _WINDOWS
@@ -1975,6 +1981,7 @@ char               *textmenu;
 #  endif /* _WINDOWS */
    FrameTable[0].WdStatus = 0;
    MainShell = 0;
+   PopShell = 0;
    FrameTable[0].WdFrame = 0;	/* widget frame */
    n = 0;
    value = TtaGetEnvString ("Geometry");
@@ -5504,6 +5511,11 @@ int                 ref;
 #       ifndef _WINDOWS
 	if (catalogue->Cat_Type != CAT_PULL)
 	   XtDestroyWidget (catalogue->Cat_Widget);
+	if (PopShell != 0)
+	  {
+	    XtDestroyWidget (PopShell);
+	    PopShell = 0;
+	  }
 #       endif /* _WINDOWS */
 	/* Libere le catalogue */
 	catalogue->Cat_Widget = 0;
@@ -5602,7 +5614,7 @@ int                 cattype;
 #  else /* _WINDOWS */
    Arg                 args[MAX_ARGS];
    Arg                 argform[1];
-   XmString            title_string;
+   XmString            title_string, OK_string;
    ThotWidget          row;
 #  endif /* _WINDOWS */
 
@@ -5628,8 +5640,17 @@ int                 cattype;
 	/* Recherche le widget parent */
 	if (MainShell == 0 && parent == 0)
 	  {
-	     TtaError (ERR_invalid_parent_dialogue);
-	     return;
+	    OK_string = XmStringCreateSimple (Confirm_string);
+	    n = 0;
+	    XtSetArg (args[n], XmNx, (Position) ShowX);
+	    n++;
+	    XtSetArg (args[n], XmNy, (Position) ShowY);
+	    n++;
+	    XtSetArg (args[n], XmNallowShellResize, TRUE);
+	    n++;
+	    XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
+	    n++;
+	    PopShell = XtCreatePopupShell ("", applicationShellWidgetClass, RootShell, args, 0);
 	  }
 	/*________________________________________________ Feuillet principal __*/
 	else
@@ -5642,14 +5663,19 @@ int                 cattype;
 	/* Cree la fenetre du formulaire */
 	if (parent != 0)
 	   w = parent;
+	else if (MainShell == 0)
+	   w = PopShell;
 	else
 	   w = MainShell;
+
 	n = 0;
 #       ifndef _WINDOWS
 	XtSetArg (args[n], XmNfontList, DefaultFont);
 	n++;
-	/*XtSetArg(args[n], XmNallowShellResize, TRUE); n++; */
-	form = XtCreateWidget (title, topLevelShellWidgetClass, w, args, n);
+	if (w == PopShell)
+	  form = PopShell;
+	else
+	  form = XtCreateWidget (title, topLevelShellWidgetClass, w, args, n);
 	XtAddCallback (form, XmNdestroyCallback, (XtCallbackProc) formKill, catalogue);
 #       endif /* !_WINDOWS */
 

@@ -2382,7 +2382,8 @@ int                 editType;
 	     if (pBox == NULL)
 	       {
 		 /* take in account another box */
-		 if (ThotLocalActions[T_deletenextchar] != NULL)
+		 if (ThotLocalActions[T_deletenextchar] != NULL &&
+		     (editType == TEXT_CUT || editType == TEXT_DEL))
 		   {
 		     (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
 		     return;

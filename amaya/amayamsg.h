@@ -140,5 +140,5 @@ int                 AMAYA;
 #define AM_REPEAT_MODE                128
 #define AM_REPEAT                     129
 #define AM_REPEAT_X                   130
-
-#define AMAYA_MSG_MAX                 142
+#define AM_RELOAD_FILES               131
+#define AMAYA_MSG_MAX                 132

@@ -1210,8 +1210,10 @@ char               *pathname;
 }
 
 /*----------------------------------------------------------------------
-   LoadHTMLDocument parse of the new document and         
-   store its path (or URL) into the document table.       
+  LoadHTMLDocument parses of the new document and stores its path (or
+  URL) into the document table.
+  For a local loading tempfile must be an empty string, for a remote loading
+  tempfile gives the file name of the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Document     LoadHTMLDocument (Document doc, char *pathname, char *tempfile, char *documentname, char *content_type, boolean history)
@@ -1510,8 +1512,7 @@ Document            document;
 View                view;
 #endif
 {
-  int               visibility, zoomVal;
-  char             *zoomStr;
+  int               visibility;
 
   visibility = TtaGetSensibility (document, view);
   if (visibility == 4)
@@ -1955,8 +1956,13 @@ void *context;
    strncpy (pathname, urlName, MAX_LENGTH);
    pathname[MAX_LENGTH] = EOS;
    tempfile = TtaGetMemory (MAX_LENGTH + 1);
-   strncpy (tempfile, outputfile, MAX_LENGTH);
-   tempfile[MAX_LENGTH] = EOS;
+   if (outputfile != NULL)
+     {
+       strncpy (tempfile, outputfile, MAX_LENGTH);
+       tempfile[MAX_LENGTH] = EOS;
+     }
+   else
+     tempfile[0] = 0;
    
    if (ok && !local_link)
      {
@@ -2009,7 +2015,7 @@ void *context;
      }
 
    /* select the target if present */
-   if (ok && target[0] != EOS && newdoc != 0)
+   if (ok && target != NULL && target[0] != EOS && newdoc != 0)
      {
        /* attribute HREF contains the NAME of a target anchor */
        elFound = SearchNAMEattribute (newdoc, target, NULL);
@@ -2216,7 +2222,6 @@ void               *ctx_cbf;
 		 }
 	     }
 #endif /* AMAYA_JAVA */
-	   
 	   if (ok)
 	     {
 	       /* this document is currently in load */
@@ -2233,65 +2238,65 @@ void               *ctx_cbf;
 #else
 	         mode = AMAYA_ASYNC;
 #endif /* AMAYA_JAVA */
-	       if (IsW3Path (pathname))
-		 {
-		   if (CE_event == CE_FORM_POST)
-		     toparse =  GetObjectWWW (newdoc,
-					     pathname,
-					      form_data, 
-					     tempfile,
-					      mode,
-					      NULL,
-					      NULL, 
-					      (void *) GetHTMLDocument_callback,
-					      (void *) ctx,
-					      YES,
-					      NULL);
-		   else
-		     {
-		       if (!strcmp (documentname, "noname.html"))
-			 {
-			   slash = strlen (pathname);
-			   if (slash && pathname[slash - 1] != '/')
-			     strcat (pathname, "/");
-			   
-			   toparse = GetObjectWWW (newdoc,
+		 if (IsW3Path (pathname))
+		   {
+		     if (CE_event == CE_FORM_POST)
+		       toparse =  GetObjectWWW (newdoc,
+						pathname,
+						form_data, 
+						tempfile,
+						mode,
+						NULL,
+						NULL, 
+						(void *) GetHTMLDocument_callback,
+						(void *) ctx,
+						YES,
+						NULL);
+		     else
+		       {
+			 if (!strcmp (documentname, "noname.html"))
+			   {
+			     slash = strlen (pathname);
+			     if (slash && pathname[slash - 1] != '/')
+			       strcat (pathname, "/");
+			     
+			     toparse = GetObjectWWW (newdoc,
+						     pathname,
+						     NULL, 
+						     tempfile,
+						     mode,
+						     NULL,
+						     NULL,
+						     (void *) GetHTMLDocument_callback, 
+						     (void *) ctx,
+						     YES,
+						     NULL);
+			   }
+			 else 
+			   toparse = GetObjectWWW (newdoc, 
 						   pathname,
 						   NULL, 
-						   tempfile,
+						   tempfile, 
 						   mode,
-						   NULL,
+						   NULL, 
 						   NULL,
 						   (void *) GetHTMLDocument_callback, 
 						   (void *) ctx,
 						   YES,
 						   NULL);
-			   
-			 }
-		       else 
-			 toparse = GetObjectWWW (newdoc, 
-						 pathname,
-						 NULL, 
-						 tempfile, 
-						 mode,
-						 NULL, 
-						 NULL,
-						 (void *) GetHTMLDocument_callback, 
-						 (void *) ctx,
-						 YES,
-						 NULL);
-		     }
-		 }
-	       else {
-		 /* wasn't a document off the web, we need to open it */
-		 TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-		 GetHTMLDocument_callback (newdoc, 0,
-					   pathname,
-					   tempfile, 
-					   NULL,
-					   (void *) ctx);
-		 TtaHandlePendingEvents ();
-	       }
+		       }
+		   }
+		 else
+		   {
+		     /* wasn't a document off the web, we need to open it */
+		     TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+		     GetHTMLDocument_callback (newdoc, 0,
+					       pathname,
+					       tempfile, 
+					       NULL,
+					       (void *) ctx);
+		     TtaHandlePendingEvents ();
+		   }
 	     }
 	 }
      }
@@ -2879,6 +2884,86 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
+  RestoreAmayaDocs checks if Amaya has previously crashed.
+  The file Crash.amaya gives the list of saved files
+  ----------------------------------------------------------------------*/
+static boolean        RestoreAmayaDocs ()
+{
+  FILE               *f;
+  char                tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  char                docname[MAX_LENGTH], tempfile[MAX_LENGTH];
+  int                 newdoc, len;
+  boolean             aDoc;
+
+  /* check if Amaya has crashed */
+  sprintf (tempname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
+  /* no document is opened */
+  aDoc = FALSE;
+  if (TtaFileExist (tempname))
+    {
+      InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
+      if (UserAnswer)
+	f = fopen (tempname, "r");
+      else
+	f = NULL;
+      if (f != NULL)
+	{
+	  InNewWindow = TRUE;
+	  tempdoc[0] = EOS;
+	  fscanf (f, "%s %s\n", tempdoc, docname);
+	  while (tempdoc[0] != EOS && TtaFileExist (tempdoc))
+	    {
+	      if (UserAnswer)
+		{
+		  newdoc = InitDocView (0, docname);
+		  if (newdoc != 0)
+		    {
+		      /* load the saved file */
+		      W3Loading = newdoc;
+		      TtaExtractName (tempdoc, DirectoryName, DocumentName);
+		      if (IsW3Path (docname))
+			{
+			  /* it's a remote file */
+			  LoadHTMLDocument (newdoc, docname, tempdoc, 
+					    DocumentName, NULL, FALSE);
+			}
+		      else
+			{
+			  /* it's a local file */
+			  tempfile[0] = EOS;
+			  /* load the temporary file */
+			  LoadHTMLDocument (newdoc, tempdoc, tempfile, 
+					    DocumentName, NULL, FALSE);
+			  /* change its URL */
+			  TtaFreeMemory (DocumentURLs[newdoc]);
+			  len = strlen (docname) + 1;
+			  DocumentURLs[newdoc] = TtaGetMemory (len);
+			  strcpy (DocumentURLs[newdoc], docname);
+			  /* change its directory name */
+			  TtaExtractName (docname, DirectoryName, DocumentName);
+			  TtaSetDocumentDirectory (newdoc, DirectoryName);
+			}
+		      W3Loading = 0;		/* loading is complete now */
+		      FetchAndDisplayImages (newdoc, 0);
+		      TtaSetDocumentModified (newdoc);
+		      /* almost one file is restored */
+		      aDoc = TRUE;
+		    }
+		}
+	      /* unlink this saved file */
+	      TtaFileUnlink (tempdoc);
+	      /*next saved file */
+	      tempdoc[0] = EOS;
+	      fscanf (f, "%s %s\n", tempdoc, docname);
+	    }
+	  InNewWindow = FALSE;	  
+	}
+      TtaFileUnlink (tempname);
+    }
+  return (aDoc);
+}
+
+/*----------------------------------------------------------------------
   InitAmaya intializes Amaya variables and opent the first document
   window.
   ----------------------------------------------------------------------*/
@@ -2889,8 +2974,9 @@ void                InitAmaya (event)
 NotifyEvent        *event;
 #endif
 {
-   int                 i;
    char               *s, *tempname;
+   int                 i;
+   boolean             restoredDoc;
 
    if (AmayaInitialized)
       return;
@@ -3010,6 +3096,12 @@ NotifyEvent        *event;
    /* add the temporary directory in document path */
    TtaAppendDocumentPath (TempFileDirectory);
 
+   /* allocate working buffers */
+   LastURLName = TtaGetMemory (MAX_LENGTH);
+   LastURLName[0] = EOS;
+   DirectoryName = TtaGetMemory (MAX_LENGTH);
+   tempname = TtaGetMemory (MAX_LENGTH);
+
    /* Create and intialize resources needed for each document */
    /* Style sheets are strored in directory .amaya/0 */
    for (i = 0; i < DocumentTableLength; i++)
@@ -3019,19 +3111,11 @@ NotifyEvent        *event;
        DocumentTypes[i] = docHTML;
        /* initialize history */
        InitDocHistory (i);
-       /* Create a temporary sub-directory for storing the HTML and
-	  image files */
-       tempname = TtaGetMemory (MAX_LENGTH);
+       /* Create a temporary sub-directory for storing the HTML and image files */
        sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
        if (!TtaCheckDirectory (tempname))
           mkdir (tempname, S_IRWXU);
-       TtaFreeMemory (tempname);
      }
-
-   /* allocate working buffers */
-   LastURLName = TtaGetMemory (MAX_LENGTH);
-   LastURLName[0] = EOS;
-   DirectoryName = TtaGetMemory (MAX_LENGTH);
 
    /* set path on current directory */
    getcwd (DirectoryName, MAX_LENGTH);
@@ -3084,9 +3168,15 @@ NotifyEvent        *event;
    CurrentDocument = 0;
    DocBook = 0;
    InNewWindow = FALSE;
+   TtaFreeMemory (tempname);
+   restoredDoc = RestoreAmayaDocs ();
+
    if (appArgc % 2 == 0)
       /* The last argument in the command line is the document to be opened */
       s = appArgv[appArgc - 1];
+   else if (restoredDoc)
+     /* old documents are restored */
+     return;
    else
       /* No argument in the command line. Try the variable HOME_PAGE */
       s = (char *) TtaGetEnvString ("HOME_PAGE");
@@ -3096,17 +3186,17 @@ NotifyEvent        *event;
       /* default Amaya URL */
      {
        s = (char *) TtaGetEnvString ("THOTDIR");
-       if (s != NULL) {
-#         ifdef _WINDOWS
-          sprintf (LostPicturePath, "%s\\amaya\\lost.gif", s);              
-#         endif /* _WINDOWS */
-          strcpy (LastURLName, s);
-          }
+       if (s != NULL)
+	 {
+#          ifdef _WINDOWS
+	   sprintf (LostPicturePath, "%s\\amaya\\lost.gif", s);              
+#          endif /* _WINDOWS */
+	   strcpy (LastURLName, s);
+	 }
        else
-	LastURLName[0] = EOS;
+	 LastURLName[0] = EOS;
        strcat (LastURLName, AMAYA_PAGE);
        CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-       /* Amaya-page in read-only TtaSetDocumentAccessMode (1, 0); */
      }
    else if (IsW3Path (s))
      {
@@ -3116,26 +3206,26 @@ NotifyEvent        *event;
      }
    else
      {
-     if (strncmp(s, "file://localhost", 16) == 0)
-	s += 16;
-     if (TtaFileExist (s))
-        {
-	NormalizeFile (s, LastURLName);
-	/* check if it is an absolute or a relative name */
-#       ifdef _WINDOWS
-	if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == ':'))
-#       else  /* !_WINDOWS */
-	if (LastURLName[0] == DIR_SEP)
-#       endif /* !_WINDOWS */
-	   /* it is an absolute name */
-	   TtaExtractName (LastURLName, DirectoryName, DocumentName);
-	else
-	   /* it is a relative name */
-	   strcpy (DocumentName, LastURLName);
-	/* start with the local document */
-	LastURLName[0] = EOS;
-	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-        }
+       if (strncmp(s, "file://localhost", 16) == 0)
+	 s += 16;
+       if (TtaFileExist (s))
+	 {
+	   NormalizeFile (s, LastURLName);
+	   /* check if it is an absolute or a relative name */
+#          ifdef _WINDOWS
+	   if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == ':'))
+#          else  /* !_WINDOWS */
+	   if (LastURLName[0] == DIR_SEP)
+#          endif /* !_WINDOWS */
+	     /* it is an absolute name */
+	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
+	   else
+	     /* it is a relative name */
+	     strcpy (DocumentName, LastURLName);
+	   /* start with the local document */
+	   LastURLName[0] = EOS;
+	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+	 }
     else
         /* Create a new document */
         New (0, 1);

@@ -29,13 +29,13 @@ src="../Icons/right.gif"></a></p>
 <h2>Editing mathematics</h2>
 <p>
 Amaya allows you to include mathematical expressions in web pages, following
-the <a href="../../TR/REC-MathML/">Mathematical Markup Language</a> (MathML)
-specification. Mathematical expressions are handled as structured components,
-exactly in the same way as HTML elements. Therefore, you can manipulate math
-expressions in the same way you manipulate other parts of HTML documents. All
-editing commands provided by Amaya for handling text are also available for
-math, and there are some additional controls to enter mathematical
-constructs.</p>
+the <a href="http://www.w3.org/TR/REC-MathML/">Mathematical Markup
+Language</a> (MathML) specification. Mathematical expressions are handled as
+structured components, exactly in the same way as HTML elements. Therefore,
+you can manipulate math expressions in the same way you manipulate other parts
+of HTML documents. All editing commands provided by Amaya for handling text
+are also available for math, and there are some additional controls to enter
+mathematical constructs.</p>
 <p>
 <strong>Warning:</strong> In the current version of Amaya only <a
 href="#Limitations">a subset of MathML is implemented</a>. The purpose of this
@@ -64,11 +64,13 @@ within a MathML element):</p>
 <li>
 The <strong>Math</strong> button (or the <strong>Inline math</strong> item)
 creates an inline formula.
+</li>
 <li>
 The <strong>MathDisp</strong> button (or the <strong>Equation</strong> item)
 creates a display (block level) formula. If the caret is in a block element,
 such as a paragraph or a heading, this block element is split and the new
 formula is created between the two parts.
+</li>
 </ul>
 <p>
 The next items of the <strong>Math</strong> menu (or palette) allow you to
@@ -88,6 +90,7 @@ Root with index, <code>mroot</code> in MathML:  <math>
   </mroot>
 </math>
 
+</li>
 <li>
 Square root, <code>msqrt</code>: <math>
   <msqrt>
@@ -99,6 +102,7 @@ Square root, <code>msqrt</code>: <math>
   </msqrt>
 </math>
 
+</li>
 <li>
 Fraction, <code>mfrac</code>: <math>
   <mfrac>
@@ -111,6 +115,7 @@ Fraction, <code>mfrac</code>: <math>
   </mfrac>
 </math>
 
+</li>
 <li>
 Expression with subscript and superscript, <code>msubsup</code>: <math>
   <msubsup>
@@ -134,6 +139,7 @@ Expression with subscript and superscript, <code>msubsup</code>: <math>
   </mrow>
 </math>
 
+</li>
 <li>
 Expression with a subscript, <code>msub</code>: <math>
   <msub>
@@ -142,6 +148,7 @@ Expression with a subscript, <code>msub</code>: <math>
   </msub>
 </math>
 
+</li>
 <li>
 Expression with a superscript, <code>msup</code>: <math>
   <msup>
@@ -150,6 +157,7 @@ Expression with a superscript, <code>msup</code>: <math>
   </msup>
 </math>
 
+</li>
 <li>
 Expression with under- and overscript, <code>munderover</code>: <math>
   <munderover>
@@ -163,6 +171,7 @@ Expression with under- and overscript, <code>munderover</code>: <math>
   </munderover>
 </math>
 
+</li>
 <li>
 Expression with underscript, <code>munder</code>: <math>
   <munder>
@@ -171,6 +180,7 @@ Expression with underscript, <code>munder</code>: <math>
   </munder>
 </math>
 
+</li>
 <li>
 Expression with overscript, <code>mover</code>: <math>
   <mrow>
@@ -183,6 +193,7 @@ Expression with overscript, <code>mover</code>: <math>
   </mrow>
 </math>
 
+</li>
 <li>
 Expression within parentheses, <code>mrow</code>: <math>
   <mrow>
@@ -196,6 +207,7 @@ Expression within parentheses, <code>mrow</code>: <math>
   </mrow>
 </math>
 
+</li>
 <li>
 Expression with prescripts and tensor indices, <code>mmultiscripts</code>:
 <math>
@@ -209,6 +221,7 @@ Expression with prescripts and tensor indices, <code>mmultiscripts</code>:
   </mmultiscripts>
 </math>
 
+</li>
 <li>
 Matrix or table, <code>mtable</code>: <math>
   <mtable>
@@ -231,6 +244,7 @@ Matrix or table, <code>mtable</code>: <math>
   </mtable>
 </math>
 
+</li>
 </ul>
 <p>
 The last item of the <strong>Math</strong> palette (<math>
@@ -295,15 +309,16 @@ href="Views.html#Structure">Show Structure</a> item from the
 the Structure view shows the main structure of the HTML document. In this
 view, MathML elements are only represented by a <code>MATH</code> tag and
 their actual contents is not shown.
+</li>
 <li>
 the Math_Structure view shows only MathML elements, but here, all their
 components are visible.
+</li>
 </ul>
 <p>
 You can edit math expressions either in the main view or in the Math_Structure
 view. The Math_Structure view is especially helpful to avoid ambiguity.
 Consider the following example:</p>
-
 <math mode="display">
   <mrow>
     <mi>x</mi>
@@ -319,7 +334,6 @@ Consider the following example:</p>
     <mn>1</mn>
   </mrow>
 </math>
-
 <p>
 When moving the caret after character <em>b</em>, it is not clear whether you
 want to add something <em>within</em> the square root or <em>after</em> it.
@@ -381,6 +395,7 @@ can be the target of a link (<code>id</code> attribute).</p>
 <p>
 </p>
 <hr>
+
 </div>
 </body>
 </html>

@@ -122,7 +122,7 @@ boolean         removeFile;
     {
       if (removeFile && css->category == CSS_EXTERNAL_STYLE && IsW3Path (css->url))
 	/* remove the file */
-	unlink (css->localName);
+	TtaFileUnlink (css->localName);
       TtaFreeMemory (css->localName);
       TtaFreeMemory (css->url);
       /* free presentation schemas */

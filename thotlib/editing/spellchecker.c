@@ -83,32 +83,44 @@ int                *pDictionary;
 boolean             ToCreate;
 #endif /* __STDC__ */
 {
-  char              *dicodoc;
+  char              *extenddic, *ptr;
   char               path[MAX_PATH], dictname[MAX_PATH];
 
   /* dictionary name = document name */
   *pDictionary = (int) NULL;
   
-  dicodoc = (char *) TtaGetEnvString ("EXTENDDICT");
-  if (dicodoc != NULL)
+  extenddic = (char *) TtaGetEnvString ("EXTENDDICT");
+  if (extenddic != NULL)
     {
-      TtaExtractName (dicodoc, path, dictname);
-      if (path[0] == DIR_SEP)
-	strcpy (path, TtaGetEnvString ("HOME"));
-      LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
-		       path, FALSE, ToCreate);
+      TtaExtractName (extenddic, path, dictname);
+      if (dictname[0] == EOS)
+	strcpy (dictname, ".thot");
     }
   else
     {
-#     ifdef _WINDOWS
-	  if ((TtaGetEnvString ("HOME")) == NULL)
-		 path [0] = EOS;
-#     else /* !_WINDOWS */
-      strcpy (path, TtaGetEnvString ("HOME"));
-#     endif /* !_WINDOWS */
-      LoadTreatedDict ((PtrDict *) pDictionary, 0, document, ".thot",
-		       path, FALSE, ToCreate);
+      strcpy (dictname, ".thot");
+      path[0] = EOS;
     }
+
+# ifdef _WINDOWS
+  if (path[0] == EOS ||  !TtaFileExist (path))
+    {
+      ptr = TtaGetEnvString ("HOME");
+      if (ptr != NULL)
+	strcpy (path, ptr);
+      else
+	{
+	  strcpy (path, "C:\\TEMP");
+	  if (!TtaFileExist (path))
+	    mkdir (path);
+	}
+    }
+# else  /* !_WINDOWS */
+  if (path[0] == EOS ||  !TtaCheckDirectory (path))
+    strcpy (path, TtaGetEnvString ("HOME"));
+#     endif /* !_WINDOWS */
+  LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
+		   path, FALSE, ToCreate);
   return (*pDictionary != EOS);
 }
 
@@ -713,7 +725,7 @@ static void         SaveDictFile (docDict)
 PtrDict             docDict;
 #endif /* __STDC__ */
 {
-   FILE               *fichier;
+   FILE               *f;
    int                 i, j;
    char                tempbuffer[THOT_MAX_CHAR];
    char                word[MAX_WORD_LEN];
@@ -721,22 +733,22 @@ PtrDict             docDict;
    FindCompleteName (docDict->DictName, "DIC", docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
-	fichier = fopen (tempbuffer, "w");
-	if (fichier != NULL)
+	f = fopen (tempbuffer, "w");
+	if (f != NULL)
 	  {
 	    /* enregistrer d'abord nb words and nb chars effectifs */
 	     i = docDict->DictNbWords;
 	     j = docDict->DictNbChars;
-	     fprintf (fichier, "%d %d\n", i, j);
+	     fprintf (f, "%d %d\n", i, j);
 
 	     for (i = 0; i <= docDict->DictNbWords; i++)
 	       {
 		  strcpy (word, &docDict->DictString[docDict->DictWords[i]]);
 		  Code2Asci (word);
-		  fprintf (fichier, "%s\n", word);
+		  fprintf (f, "%s\n", word);
 		  /* ajouter le CR de fin de ligne */
 	       }
-	     fclose (fichier);
+	     fclose (f);
 	     /* OK sauvegarde dictionnaire document */
 	     TtaDisplayMessage (INFO, TtaGetMessage (CORR, OK_SAVE),
 				docDict->DictName);
