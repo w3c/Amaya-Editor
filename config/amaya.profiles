@@ -38,6 +38,10 @@
 +config
 #+templates
 +edit
+ConfigAnnot
+CustomQuery
+DAVPreferences
+FilterAnnot
 ShowButtons
 ShowAddress
 ZoomIn
@@ -232,7 +236,6 @@ PropDocument
 CopyLockInformation
 LockIndicator
 CooperationConfig
-DAVPreferences
 DAVLockDocument
 
 ######### BROWSING
@@ -680,10 +683,7 @@ HelpNumbering
 [annot]
 AnnotateSelection
 AnnotateDocument
-ConfigAnnot
-CustomQuery
 DeleteAnnotation
-FilterAnnot
 HelpAnnotation
 LoadAnnotations
 MoveAnnotationSel
