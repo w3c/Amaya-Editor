@@ -1013,7 +1013,7 @@ void ANNOT_Post_callback (int doc, int status,
 					    annot->body_url);
 
 		   /* update the annotation icon to the new type if it has changed */
-		   if (!annot->inReplyTo)
+		   if (!isReplyTo)
 		     LINK_UpdateAnnotIcon (source_doc, annot);
  
 #ifdef ANNOT_ON_ANNOT

@@ -1295,7 +1295,7 @@ ThotBool ANNOT_LocalSave (Document doc_annot, char *html_filename)
 					       "AnnotT");
 
   /* update the annotation icon to the new type */
-  if (result && !annot->inReplyTo)
+  if (result && !Annot_IsReplyTo (doc_annot))
       LINK_UpdateAnnotIcon (DocumentMeta[doc_annot]->source_doc, annot);
 
   return result;

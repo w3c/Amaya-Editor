@@ -38,6 +38,8 @@
 #include "MathML.h"
 #include "SVG.h"
 
+/* thotlib includes */
+#include "content.h"
 
 /*-----------------------------------------------------------------------
   LINK_CreateAName
@@ -617,6 +619,9 @@ void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
 	  annot_list = AnnotMetaData[rootDoc].annotations;  
 	  doc_url = DocumentURLs[rootDoc];
 	}
+      /* JK: what shall we do if there is no thread, return. signal an error? */
+      else
+	return;
     }
   else
 #endif /* ANNOT_ON ANNOT */
