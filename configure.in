@@ -712,7 +712,11 @@ if test "$with_gl" = "yes" ; then
 	fi
 AC_SUBST(GL_INCLUDES)
 AC_SUBST(GL_LIBRARIES)
+PRINTIFNOTGL=" "
+else
+PRINTIFNOTGL=" print_prog"
 fi
+AC_SUBST(PRINTIFNOTGL)
 
 AC_ARG_ENABLE(svg,           [  --disable-svg           remove SVG support ])
 AC_ARG_ENABLE(annot,         [  --disable-annot         remove Annotations support ])

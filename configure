@@ -6647,7 +6647,11 @@ echo "configure:6585: checking gcc3" >&5
 	fi
 
 
+PRINTIFNOTGL=" "
+else
+PRINTIFNOTGL=" print_prog"
 fi
+
 
 # Check whether --enable-svg or --disable-svg was given.
 if test "${enable_svg+set}" = set; then
@@ -7151,6 +7155,7 @@ s%@MAKEJPEG@%$MAKEJPEG%g
 s%@MAKEPNG@%$MAKEPNG%g
 s%@GL_INCLUDES@%$GL_INCLUDES%g
 s%@GL_LIBRARIES@%$GL_LIBRARIES%g
+s%@PRINTIFNOTGL@%$PRINTIFNOTGL%g
 s%@AMAYA_VER@%$AMAYA_VER%g
 s%@CEXTRACT_VER@%$CEXTRACT_VER%g
 s%@CEXTRACT_FLAGS@%$CEXTRACT_FLAGS%g
