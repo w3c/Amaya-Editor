@@ -1,6 +1,4 @@
 
-/*begin-old-version{{*/
-
 /* The W3C Core Styles Copyright (c) 1998 W3C (MIT, INRIA, Keio), All Rights
 Reserved. W3C liability, trademark, document use and software licensing rules
 apply. See http://www.w3.org/Consortium/Legal/ipr-notice.html
@@ -11,60 +9,24 @@ agents may lead to unexpected results. Please refer to its address rather than
 copy it. */
 
 
-
-
-
-/* WinIE4 */
-  /* begin body type */ /* 1 - humanist sans a */
-
-BODY  {
+body  {
   font-weight:  normal;
   word-spacing: normal;
   letter-spacing: normal;
   text-transform: none;
   font-family:  Verdana, Myriad Web, Syntax, sans-serif;
+  background:white;  color : Black;
   }
 
-/* inherit from body
-P, BLOCKQUOTE, UL, OL, DL, DD, LI, DIR, MENU  {
-}
-*/
-
-SMALL {
+small {
   font-size:  .92em;
   }
 
-BIG {
-  font-size:  1.17em;
-  }
-
-PRE {
+pre {
   font-family:  'Monotype.com', Courier New, monospace;
   }
 
-OL LI {
-  list-style-type:  decimal;
-  }
-
-OL OL LI  {
-  list-style-type:  lower-alpha;
-  }
-
-OL OL OL LI {
-  list-style-type:  lower-roman;
-  }
-
-  /* end body type */
-
-PRE, CODE, TT { font-size:  1.17em; }
-
-BODY  {
-  font-weight:normal;
-  word-spacing:normal;
-  letter-spacing:normal;
-  text-transform:none;
-  font-family:Verdana, Myriad Web, Syntax, sans-serif;
-}
+pre, code, tt { font-size:  1.17em; }
 
 p.ProcedureCaption, li.ProcedureCaption, div.ProcedureCaption
       {
@@ -84,196 +46,107 @@ p.Note, p.ProcedureNote
   border-top : thin solid;
 }
 
-TABLE {
-  border-bottom : thick solid;
-  border-top : thick solid;
-  border-left : none;
-  border-right : none;
+/*table {
+  border: thick solid black;
   text-align : left;
   vertical-align : middle;
   width : 100%;
-  border-color: black;
-}
+  }*/
 
-TABLE.characters {border : thin solid;
-}
-
-TD {
-  border-collapse: separate;
-  border : none;
-  }
-
-.characters TD {
+.characters td {
 border : thin solid black;
 padding: 4px
 }
 
-TD.Title {
-  border-bottom :  thin solid;
+td.Title {
+  border-bottom :  thin solid black;
   border-top: none;
   font-weight : bold;
   }
 
-TD.Title2 {
-  border-bottom :  thin solid;
+td.Title2 {
+  border-bottom :  thin solid black;
   border-top: none;
   font-weight : bold;
-  border-left: thin solid;
+  border-left: thin solid black;
 }
 
-TD.Second {
-  border-left: thin solid;
-}
+td.Second {
+  border-left: thin solid black;
+  }
 
-
-/* WinIE4 */
-  /* begin header type */ /* 1 - humanist sans a */
-
-H1  {
+h1  {
   font-family:  Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust: .53;
   font-size:  2em;
   font-weight:  500;
-  font-style: normal;
-  text-decoration:  none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
   }
 
-H2  {
+h2  {
   font-family:  Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust: .53;
   font-size:  1.75em;
   font-weight:  500;
-  font-style: normal;
-  text-decoration:  none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
   }
 
-H3  {
+h3  {
   font-family:  Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust: .53;
   font-size:  1.58em;
   font-weight:  600;
-  font-style: normal;
-  text-decoration:  none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
   }
 
-H4  {
+h4  {
   font-family:  Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust: .53;
   font-size:  1.33em;
   font-weight:  600;
-  font-style: normal;
-  text-decoration:  none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
   }
 
-H5, DT  {
+h5, dt  {
   font-family:  Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust: .53;
   font-size:  1.17em;
   font-weight:  600;
-  font-style: normal;
-  text-decoration:  none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
   }
 
-H6  {
+h6  {
   font-family:  Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust: .53;
   font-size:  1em;
   font-weight:  700;
-  font-style: normal;
-  text-decoration:  none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
   }
 
-/*TFOOT, THEAD  {
-  font-size:  1em;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
-  font-family:  Verdana, Myriad Web, Syntax, sans-serif;
-  font-size-adjust: .53;
+h1, h2, h3, h4, h5, h6, dt, th  {
+  color:  #036;
   }
 
-TH  {
-  vertical-align: baseline;
-  font-size:  1em;
-  font-weight:  bold;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
-  font-family:  Verdana, Myriad Web, Syntax, sans-serif;
-  font-size-adjust: .53;
-  } */
-
-HR  {
-  visibility: visible;
-  border-bottom : thin solid Black;
+hr  {
+    border-bottom : thin solid Black;
+    color:  #036;
   }
 
-  /* end header type */
-
-
-
-
-
-/* WinIE4 */
-  /* begin affordances */ /* 1 - blue orange */
-
-A, ADDRESS, BLOCKQUOTE, BODY, CITE, CODE, DD, DEL, DFN,
-DIV, DL, DT, EM, FORM, H1, H2, H3, H4, H5, H6, IFRAME, IMG, KBD,
-LI, OBJECT, OL, P, Q, SAMP, SMALL, SPAN, STRONG, SUB, SUP, UL, VAR,
-APPLET, BIG, CENTER, DIR, FONT, HR, MENU, PRE,
-ABBR, ACRONYM, BDO, BUTTON, FIELDSET, INS, LABEL  {
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
-  text-decoration:  none;
-  border-color: #036;
-  border-style: none;
-  }
-
-BODY  {
-  background:white;
-  color : Black;
-}
-
-EM  {
+em  {
   font-style: normal;
   font-weight:  bold;
   }
 
-STRONG  {
+strong  {
   font-style: italic;
   font-weight:  bold;
   }
 
-EM STRONG, STRONG EM  {
+em strong, strong em  {
   text-transform: uppercase;
   font-style: normal;
   font-weight:  bolder;
   }
 
-B {
+b {
   font-weight:  bold;
   }
 
-I {
+i {
   font-style: italic;
   }
 
@@ -285,111 +158,72 @@ I {
   color:  black;
   }
 
-.UI {
+.ui {
   font : bold;
 }
 
 
-DEL {
+del {
   text-decoration:  line-through;
   background: #F66;
   }
 
-INS {
+ins {
   text-decoration:  none;
   background: yellow;
   }
 
-VAR, CITE, DFN  {
+var, cite, dfn  {
   font-style: italic;
   }
 
-ADDRESS {
+address {
   font-style: normal;
   letter-spacing: .1em;
   }
 
-ACRONYM {
+acronym {
   font-variant: small-caps;
   letter-spacing: 0.1em;
-  }
-
-H1, H2, H3, H4, H5, H6, DT, TH, THEAD, TFOOT  {
-  color:  #036;
-  }
-
-HR  {
-  color:  #036;
   }
 
 #colophon {
   display:  none;
   }
 
-COL, COLGROUP, TABLE, TBODY, TD, TR {
-  text-decoration:  none;
-  border-color: black;
-  border-style: none;
-  }
-
-A:link  {
+a:link  {
   text-decoration:  none;
   font-weight:  bold;
   color:  #F30;
-  background: white;
   }
 
-A:visited {
+a:visited {
   text-decoration:  none;
   font-weight:  bold;
   color:  #996;
-  background: white;
   }
 
-A:active  {
+a:active  {
   text-decoration:  none;
   font-weight:  bold;
   color:  #F30;
   background: #FF0;
   }
 
-A:hover {
+a:hover {
   text-decoration:  none;
   color:  #F30;
   background: white;
   }
 
-A.offsite {
+a.offsite {
   text-decoration:  none;
   font-weight:  normal;
   color:  #C30;
   background: white;
   }
 
-  /* end affordances */
-
-
-
-
-
-/* WinIE4 */
-  /* begin vertical */  /* 1 - pentatonic a */
-
-A, ADDRESS, BLOCKQUOTE, CITE, CODE, DD, DEL, DFN,
-DIV, DL, DT, EM, FORM, H1, H2, H3, H4, H5, H6, IFRAME, IMG, KBD,
-LI, OBJECT, OL, P, Q, SAMP, SMALL, SPAN, STRONG, SUB, SUP, UL, VAR,
-APPLET, B, BIG, CENTER, DIR, FONT, HR, I, MENU, PRE, S, STRIKE, TT,
-U, ABBR, ACRONYM, BDO, BUTTON, FIELDSET, INS, LABEL {
-  /*margin-top: 0;
-  margin-bottom:  0;
-  padding-top:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-bottom:  0;
-  vertical-align: baseline;*/
-  }
-
-DIV > P:first-child, BODY > P:first-child, TD > P:first-child {
+div > p:first-child, body > p:first-child, td > p:first-child {
   margin-top: .75em;
   margin-bottom:  .75em;
   padding-top:  0;
@@ -398,20 +232,12 @@ DIV > P:first-child, BODY > P:first-child, TD > P:first-child {
   border-bottom:  0;
   }
 
-H1 + P, H2 + P, H3 + P, H4 + P, H5 + P, H6 + P, DIV + P, P.initial  {
-  margin-top: .75em;
-  margin-bottom:  .75em;
-  padding-top:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-bottom:  0;
-  }
 
-H1, H2, H3, H4, H5, H6  {
+h1, h2, h3, h4, h5, h6  {
   line-height:  1.33em;
   }
 
-H1  {
+h1  {
   margin-top: 1.33em;
   margin-bottom:  .33em;
   padding-top:  0;
@@ -420,7 +246,7 @@ H1  {
   border-bottom:  0;
   }
 
-H2  {
+h2  {
   margin-top: 1.75em;
   margin-bottom:  .33em;
   padding-top:  0;
@@ -429,7 +255,7 @@ H2  {
   border-bottom:  0;
   }
 
-H3  {
+h3  {
   margin-top: 1.58em;
   margin-bottom:  .33em;
   padding-top:  0;
@@ -438,7 +264,7 @@ H3  {
   border-bottom:  0;
   }
 
-H4  {
+h4  {
   margin-top: 1.33em;
   margin-bottom:  .33em;
   padding-top:  0;
@@ -447,7 +273,7 @@ H4  {
   border-bottom:  0;
   }
 
-H5  {
+h5  {
   margin-top: 1.17em;
   margin-bottom:  .33em;
   padding-top:  0;
@@ -456,7 +282,7 @@ H5  {
   border-bottom:  0;
   }
 
-H6  {
+h6  {
   margin-top: 1em;
   margin-bottom:  .33em;
   padding-top:  0;
@@ -465,7 +291,7 @@ H6  {
   border-bottom:  0;
   }
 
-P {
+ul, ol, dl, p, pre, hr {
   margin-top: .75em;
   margin-bottom:  .75em;
   padding-top:  0;
@@ -474,16 +300,7 @@ P {
   border-bottom:  0;
   }
 
-BLOCKQUOTE, FIELDSET, FORM, UL, OL, DL, DIR, MENU {
-  margin-top: .75em;
-  margin-bottom:  .75em;
-  padding-top:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-bottom:  0;
-  }
-
-DT  {
+li, dt, div  {
   margin-top: 0;
   margin-bottom:  0;
   padding-top:  0;
@@ -492,34 +309,7 @@ DT  {
   border-bottom:  0;
   }
 
-DD  {
-  margin-top: 0;
-  margin-bottom:  .75em;
-  padding-top:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-bottom:  0;
-  }
-
-UL UL, OL OL, LI ADDRESS, LI DL, LI OL, LI P, LI UL, LI DIR, LI HR, LI MENU, LI PRE, LI H1, LI H2, LI H3, LI H4, LI H5, LI H6, DD ADDRESS, DD DL, DD OL, DD P, DD UL, DD DIR, DD HR, DD MENU, DD PRE, DD H1, DD H2, DD H3, DD H4, DD H5, DD H6  {
-  margin-top: 0;
-  margin-bottom:  0;
-  padding-top:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-bottom:  0;
-  }
-
-LI  {
-  margin-top: 0;
-  margin-bottom:  0;
-  padding-top:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-bottom:  0;
-  }
-
-ADDRESS {
+address {
   margin-top: 1.58em;
   margin-bottom:  1.58em;
   padding-top:  0;
@@ -528,27 +318,25 @@ ADDRESS {
   border-bottom:  0;
   }
 
-PRE {
-  margin-top: .75em;
-  margin-bottom:  .75em;
-  padding-top:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-bottom:  0;
+pre {
   line-height:  1.25em;
   }
 
-HR  {
-  margin-top: .75em;
+hr  {
+  width: 100%
+  height: 1px;
+  }
+
+dd  {
+  margin-top: 0;
   margin-bottom:  .75em;
   padding-top:  0;
   padding-bottom: 0;
   border-top: 0;
   border-bottom:  0;
-  height: 1px;
   }
 
-DIV, CENTER {
+ul ul, ol ol, li address, li dl, li ul, li ol, li p, li hr, li pre, dd ol, dd p, dd ul, dd pre, {
   margin-top: 0;
   margin-bottom:  0;
   padding-top:  0;
@@ -596,96 +384,19 @@ DIV, CENTER {
   border-style: solid
   }
 
-COL, COLGROUP, TABLE, TBODY, TD, TFOOT, TH, THEAD, TR {
-  margin-top: 0;
-  margin-bottom:  0;
-  padding-top:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-bottom:  0;
-  }
 
-TD, TH  {
+td, th  {
   line-height:  1.33em;
   }
 
-  /* end vertical */
-
-
-
-
-
-
-HR  {
-  margin-left:  0;
-  margin-right: 0;
-  padding-left: 0;
-  padding-right:  0;
-  border-left:  0;
-  border-right: 0;
-  text-align: left;
-  width:  100%;
-  }
-
-CENTER  {
-  margin-left:  0;
-  margin-right: 0;
-  padding-left: 0;
-  padding-right:  0;
-  border-left:  0;
-  border-right: 0;
+table, td, th, caption {
   text-align: left;
   }
 
-COL, COLGROUP, TABLE, TBODY, TD, TFOOT, TH, THEAD, TR {
-  margin-left:  0;
-  margin-right: 0;
-  padding-left: 0;
-  padding-right:  0;
-  border-left:  0;
-  border-right: 0;
-  float:  none;
-  clear:  none;
-  }
-
-TABLE {
-  text-align: left;
-  }
-
-TD  {
-  text-align: left;
-  }
-
-TH  {
-  text-align: left;
-  }
-
-CAPTION {
-  text-align: left;
-  }
-
-  /* end horizontal */
-
-
-
-
-
-/* WinIE4 */
-  /* begin body box */  /* 1 - 'em-based symmetric a' */
-
-BODY  {
+body  {
   margin-top: 1.58em;
   margin-left:  1.58em;
   margin-right: 1ex;
   margin-bottom:  1.58em;
-  padding-top:  0;
-  padding-left: 0;
-  padding-right:  0;
-  padding-bottom: 0;
-  border-top: 0;
-  border-left:  0;
-  border-bottom:  0;
-  border-right: 0;
-  width:  auto;
   }
-  /* end body box */
+ 
