@@ -160,7 +160,7 @@ RULES
         BEGIN
 	CreateBefore (Bookmark_point_box);
 	VertPos: Top = Previous AnyElem . Bottom + 0.2;
-	HorizPos: Left = Previous . Right + 0.4;
+	HorizPos: Left = Enclosing . Left;
 	Width: Enclosing . Width;
         END;
 
