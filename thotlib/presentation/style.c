@@ -993,7 +993,7 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 			   PRuleType pres, unsigned int att)
 {
   PtrCondition        firstCond, cond;
-  int                 nbcond, nbCtxtCond;
+  int                 nbcond, nbCtxtCond, prevAttr;
   unsigned            i;
 
   /* test the number and type of the rule */
@@ -1013,18 +1013,22 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
       nbcond++;
     }
   nbCtxtCond = 0;
+  prevAttr = ctxt->attrType[0];
   if (att < MAX_ANCESTORS)
     /* the rule is associated to an attribute */
     {
       /* count the number of conditions in the context */
-      if (ctxt->name[0])
-	nbCtxtCond++;
       for (i = 1; i < MAX_ANCESTORS; i++)
 	{
 	  if (ctxt->name[i])
 	    nbCtxtCond++;
 	  if (ctxt->attrType[i])
-	    nbCtxtCond++;
+	    {
+	    if (prevAttr)
+	      nbCtxtCond++;
+	    else
+	      prevAttr = ctxt->attrType[i];
+	    }
 	}
     }
   else
@@ -1042,22 +1046,9 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
     return (-1);
 
   /* same number of conditions */
-  if (att < MAX_ANCESTORS && ctxt->name[0])
-    /* the context has a condition on the element that has that attribute */
-    {
-      cond = firstCond;
-      while (cond &&
-	     (cond->CoCondition != PcElemType ||
-	      cond->CoTypeElem != ctxt->name[0]))
-	cond = cond->CoNextCondition;
-      if (cond == NULL)
-	/* conditions are different */
-	return (1);
-    }
-
-   /* check if all ancestors are within the rule conditions */
-   i = 1;
-   while (i < MAX_ANCESTORS)
+  /* check if all ancestors are within the rule conditions */
+  i = 1;
+  while (i < MAX_ANCESTORS)
      {
        if (ctxt->names_nb[i] > 0)
 	 {
@@ -1092,8 +1083,8 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
        i++;
      }
 
-   /* all conditions are the same */
-   return (0);
+  /* all conditions are the same */
+  return (0);
 }
 
 /*----------------------------------------------------------------------
