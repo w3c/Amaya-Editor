@@ -747,12 +747,14 @@ int                 construct;
 	  if (!selectFirstChild)
 	     /* get the second child */
 	     TtaNextSibling (&child);
+	  leaf = NULL;
 	  while (child != NULL)
 	    {
 	      leaf = child;
 	      child = TtaGetFirstChild (child);
 	    }
-	  TtaSelectElement (doc, leaf);
+	  if (leaf)
+	    TtaSelectElement (doc, leaf);
 	}
 }
 

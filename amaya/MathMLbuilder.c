@@ -940,6 +940,7 @@ void SetSingleHorizStretchAttr (el, doc, selEl)
 		     if ((int)text[0] == 172 || (int)text[0] == 174)
 			/* horizontal arrow */
 			{
+			c = EOS;
 			/* attach a horizstretch attribute */
 			attrType.AttrSSchema = elType.ElSSchema;
 			attrType.AttrTypeNum = MathML_ATTR_horizstretch;
@@ -958,7 +959,8 @@ void SetSingleHorizStretchAttr (el, doc, selEl)
 			   c = '<';
 			if ((int)text[0] == 174)
 			   c = '>';
-			TtaSetGraphicsShape (symbolEl, c, doc);
+			if (c != EOS)
+			   TtaSetGraphicsShape (symbolEl, c, doc);
 			}
 		}
 	      }
@@ -1369,9 +1371,9 @@ void LinkMathCellsWithColumnHeads (elMTABLE, doc)
 	   }
 	TtaNextSibling (&cell);
 	}
+      if (nCell > nCol)
+         nCol = nCell;
       }
-    if (nCell > nCol)
-       nCol = nCell;
     TtaNextSibling (&row);
     }
 
@@ -1742,7 +1744,8 @@ void ChangeTypeOfElement (elem, doc, newTypeNum)
  
 {
      Element    prev, next, parent;
- 
+
+     parent = NULL;
      prev = elem;
      TtaPreviousSibling (&prev);
      if (prev == NULL)

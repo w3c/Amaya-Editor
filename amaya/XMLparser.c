@@ -1170,8 +1170,8 @@ char                c;
       commentText = TtaNewElement (currentDocument, elType);
       TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
       TtaSetTextContent (commentText, "", currentLanguage, currentDocument);
+      currentElement = commentEl;
       }
-   currentElement = commentEl;
    /* the input buffer is now empty */
    bufferLength = 0;
 }

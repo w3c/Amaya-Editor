@@ -301,6 +301,7 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = GraphML_ATTR_position;
       attr = TtaGetAttribute (el, attrType);
+      unit = UnPoint;
       posX = posY = 0;
       if (attr == NULL)
 	/* element el has no position attribute, get its IntPosX and IntPosY
@@ -322,7 +323,6 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
 	}
       *minX = *minY = 32000;
       *maxX = *maxY = 0;
-      unit = UnPoint;
       buffer[0] = EOS;
       for (point = 1; point <= nbPoints; point++)
 	{
@@ -1068,6 +1068,7 @@ int                 construct;
 
        TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
        TtcInsertGraph (doc, 1, shape);
+       dispMode = TtaGetDisplayMode (doc);
        /* ask Thot to stop displaying changes made in the document */
        if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
