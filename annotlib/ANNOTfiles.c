@@ -69,7 +69,7 @@ Document ANNOT_NewDocument (doc)
   fname = urlname + 5;
 
   /* @@ 10 should be docAnnot, but I have a problem to set it up */
-  annotDoc = InitDocView (0, "annot", 10, FALSE);
+  annotDoc = InitDocView (0, "annot", 10, 0, FALSE);
 
   if (annotDoc == 0) 
     {
@@ -642,12 +642,16 @@ Document            doc;
 {
   CHAR_T *filename;
   
-  filename =  TtaAllocString (DocumentURLs[doc]);
-  /* we skip the file: prefix if it's present */
-  NormalizeFile (DocumentURLs[doc], filename);
-  TtaExportDocument (doc, filename, TEXT("AnnotT"));
+  if (!TtaIsDocumentModified (doc))
+    return TRUE; /* prevent Thot from performing normal save operation */
 
+  filename =  TtaStrdup (DocumentURLs[doc]);
+  /* we skip the file: prefix if it's present */
+  NormalizeFile (DocumentURLs[doc], filename, AM_CONV_ALL);
+  TtaExportDocument (doc, filename, TEXT("AnnotT"));
   TtaFreeMemory (filename);
+  TtaSetDocumentUnmodified (doc);
+
   return TRUE; /* prevent Thot from performing normal save operation */
 }
 

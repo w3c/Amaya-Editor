@@ -29,16 +29,10 @@
 
 #include "html2thot_f.h"
 #include "init_f.h"
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
 #include "query_f.h"
-#endif /* AMAYA_JAVA */
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
-#if 0
-#include "HTMLstyle_f.h"
-#endif
 #include "HTMLtable_f.h"
 
 /* Structures and global variables */
@@ -46,10 +40,12 @@
 /* an annot metadata element */ 
 typedef struct _AnnotMetaDataElement {
   int annotNum;
-  STRING author;
-  STRING date;
+  CHAR_T *about;
+  CHAR_T *source_url;
+  CHAR_T *date;
+  CHAR_T *author;
+  CHAR_T *annotFile;
   STRING type;
-  STRING annotFile;
   struct _AnnotMetaDataElement *next;
 } AnnotMetaDataElement;
 

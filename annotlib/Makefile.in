@@ -179,12 +179,3 @@ proto : ../bin/cextract
 	      $(MV) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h ; \
 	  fi ; \
 	 done)
-
-
-
-
-
-
-
-
-

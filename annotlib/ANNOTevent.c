@@ -226,8 +226,10 @@ View view;
 
   /*
    * Parsing test!
-  RDFParseFile ("/tmp/rdf.tmp");
   */
+#if 0
+  RDFParseFile ("/tmp/rdf.tmp");
+#endif
 
   /*
    * load the local annotations 
