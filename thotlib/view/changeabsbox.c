@@ -5609,6 +5609,21 @@ PtrAttribute        pAttrComp;
 				else
 				  pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
 				pAbb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
+				if (pAbb != NULL)
+				  /* au moins un pave a ete cree. pAbb est le
+				     premier. Cherche le dernier cree */
+				  {
+				  pAbbNext = pAbb;
+				  stop = FALSE;
+				  do
+				    if (pAbbNext->AbNext == NULL)
+					stop = TRUE;
+				    else if (pAbbNext->AbNext->AbElement != pEl)
+					stop = TRUE;
+				    else
+					pAbbNext = pAbbNext->AbNext;
+				  while (!stop);
+				  }
 			      }
 			 }
 		       if (createBox
@@ -5627,27 +5642,16 @@ PtrAttribute        pAttrComp;
 			     pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
 			   pAbb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, view,
 						  pSchP, FALSE, TRUE);
+			   pAbbNext = pAbb;
 			 }
 		       /* traite les paves crees par la regle de visibilite ou de */
 		       /* creation */
 		       /* code inutile et incorrect (fait dans AbsBoxesCreate) si saut de page */
 		       /* il reste correct si on a cree seulement des paves de presentation */
 		       if (pAbb != NULL)
-			 {
-			    pAbbNext = pAbb;
-			    stop = FALSE;
-			    do
-			       if (pAbbNext->AbNext == NULL)
-				  stop = TRUE;
-			       else if (pAbbNext->AbNext->AbElement != pEl)
-				  stop = TRUE;
-			       else
-				  pAbbNext = pAbbNext->AbNext;
-			    while (!stop);
 			    /* les nouveaux paves doivent etre pris en compte par */
 			    /* leurs voisins */
 			    ApplyRefAbsBoxNew (pAbb, pAbbNext, &pReaff, pDoc);
-			 }
 
 		       /* traite les paves qui existaient deja */
 		       /* il faut faire une boucle de parcours des paves dupliques de l'element */
