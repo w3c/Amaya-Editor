@@ -473,7 +473,10 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
 	  rowList[irow] = pTabRel->TaRTable[j];
 	  rowHeight[irow] = 0;
 	  row = rowList[irow];
-	  pAttr = row->AbElement->ElFirstAttr;
+	  if (row && row->AbElement)
+	    pAttr = row->AbElement->ElFirstAttr;
+	  else
+	    pAttr = NULL;
 	  while (pAttr)
 	    {
 	      if (pAttr->AeAttrNum == attrHeight &&
