@@ -3250,7 +3250,7 @@ void WIN_RefreshProfileMenu (HWND hwnDlg)
 {		
   SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
   SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
-  SendMessage (wndProfilesList, LB_RESETCONTENT, 0, 0);
+  /* SendMessage (wndProfilesList, LB_RESETCONTENT, 0, 0); */
 }
 
 /*----------------------------------------------------------------------
@@ -3270,7 +3270,7 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       ProfileHwnd = hwnDlg;
       wndProfilesList = CreateWindow ("listbox", NULL, 
 				      WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				      10, 90, 200, 90, hwnDlg, (HMENU) 1, 
+				      10, 90, 300, 90, hwnDlg, (HMENU) 1, 
 				      (HINSTANCE) GetWindowLong (hwnDlg, 
 				             GWL_HINSTANCE), NULL);
       WIN_SetMenuText (hwnDlg, WIN_ProfileMenuText);
