@@ -463,7 +463,7 @@ int             frame;
   PtrAbstractBox      cell, row , firstRow, pAb;
   PtrAbstractBox      rowList[MAX_COLROW];
   PtrTabRelations     pTabRel;
-  int                 i, j, k;
+  int                 i, j, k, org, val;
   int                 sum, height;
   int                 attrHeight;
   int                 remainder;
@@ -535,12 +535,39 @@ int             frame;
 		  else
 		    row = NULL;
 		}
+
+	      /* get the real cell height */
+	      pAb = cell->AbFirstEnclosed;
+	      org = cell->AbBox->BxYOrg;
+	      height = 0;
+	      while (pAb != NULL)
+		{
+		  if (!pAb->AbDead && pAb->AbBox != NULL )
+		    {
+		      if (pAb->AbHeight.DimAbRef == NULL ||
+			  !IsParentBox (pAb->AbHeight.DimAbRef->AbBox, pAb->AbBox))
+			{
+			  val = pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight - org;
+			  if (height < val)
+			    height = val;
+			  pAb = NextSiblingAbsBox (pAb, cell);
+			}
+		      else
+			pAb = pAb->AbFirstEnclosed;
+		    }
+		  else
+		    pAb = NextSiblingAbsBox (pAb, cell);
+		}
+	      /* add space between the the cell and the encluding row */
+	      if (firstRow != NULL)
+		height += org - firstRow->AbBox->BxYOrg;
+
 #ifdef TAB_DEBUG
 printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], sum);
 #endif
 	   
 	      /* update rows' height if necessary */
-	      height = cell->AbBox->BxHeight - sum;
+	      height = height - sum;
 	      if (height > 0)
 		{
 		  height = height / rowSpans[i];
