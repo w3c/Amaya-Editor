@@ -2390,10 +2390,7 @@ PtrLine SearchLine (PtrBox pBox)
    if (pBox)
      {
        pAb = pBox->BxAbstractBox;
-       /*if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
-	 pAb = NULL;
-	 else*/
-	 pAb = pAb->AbEnclosing;
+       pAb = pAb->AbEnclosing;
      }
 
    /* look for an enclosing block of lines */

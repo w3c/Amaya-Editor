@@ -2306,7 +2306,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  /* retore the value if necessary */
 		  Propagate = ToSiblings;
 		}
-	      else
+	      else if (pCurrentAb->AbFloat == 'N')
 		RecordEnclosing (pAb->AbBox, TRUE);
 	    }
 
@@ -2815,7 +2815,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			HeightPack (pAb, pSourceBox, frame);
 		    }
 		}
-	      else
+	      else if (pCurrentAb->AbFloat == 'N')
 		RecordEnclosing (pAb->AbBox, FALSE);
 	    }
 	  else if (pBox->BxType == BoCell &&
