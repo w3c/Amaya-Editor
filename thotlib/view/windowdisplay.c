@@ -1622,13 +1622,13 @@ static void  DoDrawPolygon (int frame, int thick, int style,
    if (hBrush)
      {
        hOldBrush = SelectObject (TtPrinterDC, hBrush);
-       Polygon (TtPrinterDC, points, nb);
+       Polygon (TtPrinterDC, points, npoints);
        SelectObject (TtPrinterDC, hOldBrush);
      }
 
    /* draw the border */
    if (thick > 0)
-     Polyline (TtPrinterDC, points, nb);
+     Polyline (TtPrinterDC, points, npoints);
    SelectObject (TtPrinterDC, hOldPen);
 #else  /* _WIN_PRINT */
    WIN_GetDeviceContext (frame);
@@ -1639,13 +1639,13 @@ static void  DoDrawPolygon (int frame, int thick, int style,
    if (hBrush)
      {
        hOldBrush = SelectObject (TtDisplay, hBrush);
-       Polygon (TtDisplay, points, nb);
+       Polygon (TtDisplay, points, npoints);
        SelectObject (TtDisplay, hOldBrush);
      }
 
    /* draw the border */
     if (thick > 0)
-     Polyline (TtDisplay, points, nb);
+     Polyline (TtDisplay, points, npoints);
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
@@ -2144,11 +2144,8 @@ static void  DrawCurrent (int frame, int thick, int style, int fg, int bg,
     {
       if (npoints == 2)
 	/* only two points, that's a single segment */
-	{
-	  InitDrawing (style, thick, fg);
-	  DoDrawOneLine (frame, points[0].x, points[0].y,
-			 points[1].x, points[1].y);
-	}
+	DrawOneLine (frame, thick, style, points[0].x, points[0].y,
+		     points[1].x, points[1].y);
       else
 	/* draw a polyline or a ploygon */
 	DoDrawPolygon (frame, thick, style, points, npoints, fg, bg, pattern);
@@ -2187,14 +2184,14 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 	  switch (pPa->PaShape)
 	    {
 	    case PtLine:
-	      x1 = x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-	      y1 = y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-	      x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
+	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
 	      PolyNewPoint ((int) x1, (int) y1);
 	      PolyNewPoint ((int) x2, (int) y2);
 	      break;
