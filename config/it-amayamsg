@@ -212,22 +212,23 @@
 210 Paesaggio
 211 Abilita FTP (sperimentale)
 212 Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion
-213 Nel profilo attuale di Amaya:
-214 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
-215 La codifica per questo documento non e` supportata da Amaya
-216 Questo documento non ha una dichiarazione di codifica
-217 Non è indicata codifica: usare ISO_8859_1?
-218 Non disponibile
-219 Scorri
-220 File Browser
-221 Selezione
-222 Menu per i filtri locali - annotazioni
-223 Mostra
-224 Nascondi
-225 Mostra tutto
-226 Nascondi tutto
-227 * significa nascosto, - significa parzialmente nascosto
-228 Opzioni per i filtri
-229 Per autore
-230 Per tipo
-231 Per server
+213 **Some characters are not supported - see Views/Show parsing errors
+214 Nel profilo attuale di Amaya:
+215 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
+216 La codifica per questo documento non e` supportata da Amaya
+217 Questo documento non ha una dichiarazione di codifica
+218 Non è indicata codifica: usare ISO_8859_1?
+219 Non disponibile
+220 Scorri
+221 File Browser
+222 Selezione
+223 Menu per i filtri locali - annotazioni
+224 Mostra
+225 Nascondi
+226 Mostra tutto
+227 Nascondi tutto
+228 * significa nascosto, - significa parzialmente nascosto
+229 Opzioni per i filtri
+230 Per autore
+231 Per tipo
+232 Per server

@@ -212,22 +212,23 @@
 210 Querformat
 211 FTP zulassen (noch in der Erprobung)
 212 Unvollständiges Dokument, bitte nicht speichern! - Siehe Ansicht/Parsefehler anzeigen
-213 Im gegenwärtigen Amaya Profil:
-214 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-215 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-216 Dieses Dokument enthält keine Kodierungsdeklaration
-217 Keine Kodierung vorhanden, ISO_8859_1 verwenden?
-218 Nicht verfügbar
-219 Browsen
-220 Datei-Browser
-221 Auswahl
-222 Menü für lokale Kommentierungsfilter
-223 Anzeigen
-224 Nicht anzeigen
-225 Alles anzeigen
-226 Nichts anzeigen
-227 * bedeutet verborgen, - bedeutet teilweise verborgen
-228 Filteroptionen
-229 Vom Autor
-230 Vom Typ
-231 Vom Server
+213 **Some characters are not supported - see Views/Show parsing errors
+214 Im gegenwärtigen Amaya Profil:
+215 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
+216 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
+217 Dieses Dokument enthält keine Kodierungsdeklaration
+218 Keine Kodierung vorhanden, ISO_8859_1 verwenden?
+219 Nicht verfügbar
+220 Browsen
+221 Datei-Browser
+222 Auswahl
+223 Menü für lokale Kommentierungsfilter
+224 Anzeigen
+225 Nicht anzeigen
+226 Alles anzeigen
+227 Nichts anzeigen
+228 * bedeutet verborgen, - bedeutet teilweise verborgen
+229 Filteroptionen
+230 Vom Autor
+231 Vom Typ
+232 Vom Server

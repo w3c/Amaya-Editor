@@ -212,22 +212,23 @@
 210 Apaisado
 211 Activar FTP (experimental)
 212 El document ha sido truncado. No lo salve - Vea Vistas/Mostrar fichero log
-213 En el perfil actual de Amaya:
-214 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
-215 La codificación de este documento no está soportada por Amaya
-216 El documento no tiene una declaracion de codage
-217 Ningun codage declarado. Utilisar ISO_8859_1 ?
-218 No disponible
-219 Navegar
-220 Navegador de ficheros
-221 Selección
-222 Filtro local de annotaciones
-223 Mostrar
-224 Esconder
-225 Mostrar todo
-226 Esconder todo
-227 * significa escondido, - significa parcialmente escondido
-228 Opciones de filtrado
-229 Por autor
-230 Por typo
-231 Por servidor
+213 **Some characters are not supported - see Views/Show parsing errors
+214 En el perfil actual de Amaya:
+215 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
+216 La codificación de este documento no está soportada por Amaya
+217 El documento no tiene una declaracion de codage
+218 Ningun codage declarado. Utilisar ISO_8859_1 ?
+219 No disponible
+220 Navegar
+221 Navegador de ficheros
+222 Selección
+223 Filtro local de annotaciones
+224 Mostrar
+225 Esconder
+226 Mostrar todo
+227 Esconder todo
+228 * significa escondido, - significa parcialmente escondido
+229 Opciones de filtrado
+230 Por autor
+231 Por typo
+232 Por servidor

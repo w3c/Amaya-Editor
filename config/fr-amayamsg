@@ -56,7 +56,7 @@
 54 Authentification requise pour le domaine \'%s\' du serveur \'%s\'
 55 Domaine: %s
 56 Serveur: %s
-57 Editeur/Navigateur
+57 Éditeur/Navigateur
 58 Délai expiré - le serveur n'a pas répondu
 59 %s existe déjà. Forcer l'écriture ?
 60 %s a changé. Forcer l'écriture ?
@@ -84,13 +84,13 @@
 82 Il y a %d requêtes en cours
 83 Pas de fichier CSS possible
 84 Interrompre le chargement
-85 Document precedent
+85 Document précédent
 86 Document suivant
 87 Recharger
 88 Sauver
 89 Imprimer
 90 Chercher
-91 Mise en evidence
+91 Mise en évidence
 92 Important
 93 Fonte fixe
 94 no-repeat
@@ -99,8 +99,8 @@
 97 Titre niveau 2
 98 Titre niveau 3
 99 Liste
-100 Liste numerotee
-101 Liste de definitions
+100 Liste numérotée
+101 Liste de définitions
 102 Lien
 103 Table
 104 Le document n'a pas de nom. Sauvé en :
@@ -212,22 +212,23 @@
 210 Paysage
 211 Support FTP (experimental)
 212 Ce document est incomplet, ne le sauvez pas - voir Vues/Montrer les erreurs
-213 Dans le profil Amaya courant :
-214 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
-215 Le codage de ce document n'est pas supporté par Amaya
-216 Aucun codage n'est déclaré pour ce document
-217 Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?
-218 Non disponible
-219 Butiner
-220 Sélecteur de fichiers
-221 Sélection
-222 Filtre local des annotations
-223 Montrer
-224 Cacher
-225 Montrer tout
-226 Cacher tout
-227 * signifie caché, - signifie partiellement caché
-228 Options de filtrage
-229 Par auteur
-230 Par type
-231 Par serveur
+213 Certains caractères ne sont pas supportés - voir Vues/Montrer les erreurs
+214 Dans le profil Amaya courant :
+215 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
+216 Le codage de ce document n'est pas supporté par Amaya
+217 Aucun codage n'est déclaré pour ce document
+218 Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?
+219 Non disponible
+220 Butiner
+221 Sélecteur de fichiers
+222 Sélection
+223 Filtre local des annotations
+224 Montrer
+225 Cacher
+226 Montrer tout
+227 Cacher tout
+228 * signifie caché, - signifie partiellement caché
+229 Options de filtrage
+230 Par auteur
+231 Par type
+232 Par serveur

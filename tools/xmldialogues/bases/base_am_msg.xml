@@ -1620,6 +1620,11 @@
 	<message xml:lang="es">El document ha sido truncado. No lo salve - Vea Vistas/Mostrar fichero log</message>
 	<message xml:lang="it">Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion</message>
 </label>
+
+<label define="AM_XML_CHARACTER_ERROR">
+	<message xml:lang="en">Some characters are not supported - see Views/Show parsing errors</message>
+	<message xml:lang="fr">Certains caractères ne sont pas supportés - voir Vues/Montrer les erreurs</message>
+</label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">In the current Amaya profile:</message>
 	<message xml:lang="fr">Dans le profil Amaya courant :</message>

@@ -201,9 +201,11 @@ typedef enum
 {
   errorEncoding,
   errorNotWellFormed,
+  errorCharacterNotSupported,
   errorParsing,
   errorParsingProfile,
 } ErrorType;
+static ThotBool XMLCharacterNotSupported;
 
 /* Virtual DOCTYPE Declaration */
 #define DECL_DOCTYPE "<!DOCTYPE html PUBLIC \"\" \"\">\n"
@@ -218,33 +220,19 @@ static  int         SUBTREE_ROOT_LEN = 20;
 /* maximum size of error messages */
 #define MaxMsgLength 200
 
-#ifdef __STDC__
 static void   StartOfXmlStartElement (CHAR_T *GIname);
 static void   DisableExpatParser ();
 static void   XhtmlCheckInsert (Element *el, Element parent, Document doc, ThotBool *inserted);
 static void   XmlCheckInsert (Element *el, Element parent, Document doc, ThotBool *inserted);
 static void   XhtmlCheckContext (STRING elName, ElementType elType, ThotBool *isAllowed);
 static void   XmlCheckContext (STRING elName, ElementType elType, ThotBool *isAllowed);
-#else
-static void   StartOfXmlStartElement (GIname);
-static void   DisableExpatParser ();
-static void   XhtmlCheckInsert (el, parent, doc, inserted);
-static void   XmlCheckInsert (el, parent, doc, inserted);
-static void   XhtmlCheckContext (elName, elType, isAllowed);
-static void   XmlCheckContext (elName, elType, isAllowed);
-#endif
 
 /*----------------------------------------------------------------------
    ChangeXmlParserContextDTD
    Get the parser context correponding to a given DTD
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     ChangeXmlParserContextDTD (STRING DTDname)
-#else
-static void     ChangeXmlParserContextDTD (DTDname)
-STRING              DTDname;
- 
-#endif
+
 {
   currentParserCtxt = firstParserCtxt;
   while (currentParserCtxt != NULL &&
@@ -262,13 +250,8 @@ STRING              DTDname;
    ChangeXmlParserContextUri
    Get the parser context correponding to a given uri
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     ChangeXmlParserContextUri (STRING uriName)
-#else
-static void     ChangeXmlParserContextUri (uriName)
-STRING      uriName;
 
-#endif
 {
   currentParserCtxt = firstParserCtxt;
   while (currentParserCtxt != NULL &&
@@ -286,13 +269,8 @@ STRING      uriName;
    ChangeXmlParserContextRootName
    Get the parser context correponding to a given tag
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     ChangeXmlParserContextTagName (STRING tagName)
-#else
-static void     ChangeXmlParserContextTagName (tagName)
-STRING      tagName;
 
-#endif
 {
   if (!ustrcmp (tagName, TEXT("math")))
     ChangeXmlParserContextDTD (TEXT("MathML"));
@@ -311,11 +289,8 @@ STRING      tagName;
    InitXmlParserContexts
    Create the chain of parser contexts decribing all recognized XML DTDs
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void    InitXmlParserContexts (void)
-#else
-static void    InitXmlParserContexts ()
-#endif
+
 {
    PtrParserCtxt   ctxt, prevCtxt;
 
@@ -459,12 +434,8 @@ static void    InitXmlParserContexts ()
    XmlSetElemLineNumber
    Assigns the current line number (number given by EXPAT parser.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         XmlSetElemLineNumber (Element el)
-#else
-void         XmlSetElemLineNumber (el)
-Element		el;
-#endif
+
 {
   int     lineNumber;
 
@@ -480,14 +451,8 @@ Element		el;
    print the error message msg on stderr.
    When the line is 0 ask to expat the current line number
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  XmlParseError (ErrorType type, CHAR_T *msg, int line)
-#else
-static void  XmlParseError (type, msg, line)
-ErrorType   type;
-CHAR_T     *msg;
-int         line;
-#endif
+
 {
 #ifdef _I18N_
    unsigned char   mbcsMsg [MAX_TXT_LEN * 2];
@@ -530,6 +495,18 @@ int         line;
 	 fprintf (ErrFile, "  line %d: %s\n", line, mbcsMsg); 
        XMLNotWellFormed = TRUE;
        break;
+     case errorCharacterNotSupported:
+       if (line == 0)
+	 {
+	   fprintf (ErrFile, "  line %d, char %d: %s\n",
+		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
+		    XML_GetCurrentColumnNumber (parser),
+		    mbcsMsg);
+	 }
+       else
+	 fprintf (ErrFile, "  line %d: %s\n", line, mbcsMsg); 
+       XMLCharacterNotSupported = TRUE;
+       break;
      case errorParsing:
        if (line == 0)
 	 {
@@ -561,12 +538,8 @@ int         line;
   IsParsingCSS 
   Returns the value of ParsingCSS boolean.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool  IsParsingCSS ()
-#else
 ThotBool  IsParsingCSS ()
 
-#endif
 {
    return XMLcontext.parsingCSS;
 }
@@ -575,13 +548,8 @@ ThotBool  IsParsingCSS ()
   SetParsingCSS 
   Sets the value of ParsingCSS boolean.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  SetParsingCSS (ThotBool value)
-#else
-void  SetParsingCSS (value)
-ThotBool   value;
 
-#endif
 {
    XMLcontext.parsingCSS = value;
 }
@@ -590,13 +558,8 @@ ThotBool   value;
   SetParsingTextArea
   Sets the value of ParsingTextArea boolean.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  SetParsingTextArea (ThotBool value)
-#else
-void  SetParsingTextArea (value)
-ThotBool   value;
 
-#endif
 {
    XMLcontext.parsingTextArea = value;
 }
@@ -605,12 +568,8 @@ ThotBool   value;
   IsWithinTable 
   Returns the value of WithinTable integer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int  IsWithinTable ()
-#else
 int  IsWithinTable ()
 
-#endif
 {
    return XMLcontext.withinTable;
 }
@@ -618,11 +577,8 @@ int  IsWithinTable ()
 /*----------------------------------------------------------------------
   SubWithinTable
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  SubWithinTable ()
-#else
-void  SubWithinTable ()
-#endif
+
 {
    XMLcontext.withinTable--;
 }
@@ -631,12 +587,8 @@ void  SubWithinTable ()
    XmlWhiteSpaceHandling
    Is there an openend element with a xml:space attribute ?
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    XmlWhiteSpaceHandling ()
-#else
 static void    XmlWhiteSpaceHandling ()
 
-#endif
 {
   int        i;
   ThotBool   found;
@@ -684,13 +636,8 @@ static void    XmlWhiteSpaceHandling ()
    The last element in stack has a xml:space attribute
    (or it is a PRE, STYLE or SCRIPT element in XHTML)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void    XmlWhiteSpaceInStack (CHAR_T  *attrValue)
-#else
-static void    XmlWhiteSpaceInStack (attrValue)
-CHAR_T     *attrValue,
 
-#endif
 {
   if (attrValue == NULL)
       spacePreservedStack[stackLevel-1] = 'P';
@@ -707,15 +654,8 @@ CHAR_T     *attrValue,
   XmlWithinStack  
   Checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool  XmlWithinStack (int ThotType,
-				 SSchema ThotSSchema)
-#else
-static ThotBool  XmlWithinStack (ThotType, ThotSSchema)
-int       ThotType;
-SSchema	  ThotSSchema;
+static ThotBool  XmlWithinStack (int ThotType, SSchema ThotSSchema)
 
-#endif
 {
    ThotBool       ret;
    int            i;
@@ -761,13 +701,8 @@ static ThotBool     InsertSibling ()
   XmlGetFallbackCharacter
   Try to find a fallback character
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  XmlGetFallbackCharacter (wchar_t wcharRead)
-#else
-static void  XmlGetFallbackCharacter (wcharRead)
-wchar_t  wcharRead;
 
-#endif
 {
    Language       lang;
    char           fallback[5];
@@ -813,13 +748,8 @@ wchar_t  wcharRead;
    XhtmlCannotContainText 
    Return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool   XhtmlCannotContainText (ElementType elType)
-#else
-static ThotBool   XhtmlCannotContainText (elType)
-ElementType       elType;
 
-#endif
 {
    int            i;
    ThotBool       ret;
@@ -844,17 +774,9 @@ ElementType       elType;
    Inserts a Pseudo_paragraph element in the abstract tree if el 
    is a math within a XHTML element 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  XmlCheckInsert (Element *el, Element parent,
 			     Document doc, ThotBool *inserted)
-#else
-static void  XmlCheckInsert (el, parent, doc, inserted)
-Element     *el;
-Element      parent;
-Document     doc;
-ThotBool    *inserted;
 
-#endif
 {
    ElementType  newElType, elType, prevType;
    Element      newEl, ancestor, prev, prevprev;
@@ -934,17 +856,9 @@ ThotBool    *inserted;
 
    Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  XhtmlCheckInsert (Element *el, Element  parent,
 			       Document doc, ThotBool *inserted)
-#else
-static void  XhtmlCheckInsert(el, parent, doc, inserted)
-Element     *el;
-Element      parent;
-Document     doc;
-ThotBool    *inserted;
 
-#endif
 {
    ElementType   parentType, newElType, elType, prevType, ancestorType;
    Element       newEl, ancestor, prev, prevprev;
@@ -1059,13 +973,8 @@ ThotBool    *inserted;
    InsertXmlElement   
    Inserts an element el in the Thot abstract tree , at the current position.
   ---------------------------------------------------------------------------*/
-#ifdef __STDC__
 void     InsertXmlElement (Element *el)
-#else
-void     InsertXmlElement (el)
-Element  *el;
 
-#endif
 {
   Element   parent;
   ThotBool  inserted = FALSE;
@@ -1114,19 +1023,10 @@ Element  *el;
    name Xmlname and returns the corresponding Thot element type.
    Schema = NULL if not found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   GetXmlElType (STRING XMLname, ElementType *elType,
 			    STRING *mappedName, CHAR_T *content,
 			    ThotBool *level, Document doc)
-#else
-static void   GetXmlElType (XMLname, elType, mappedName, content, level, doc)
-STRING         XMLname;
-ElementType   *elType;
-STRING        *mappedName;
-CHAR_T        *content;
-ThotBool      *level;
-Document       doc;
-#endif
+
 {
  /* initialize all parser contexts if not done yet */
   if (firstParserCtxt == NULL)
@@ -1151,13 +1051,8 @@ Document       doc;
    XmlLastLeafInElement
    return the last leaf element in element el.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Element      XmlLastLeafInElement (Element el)
-#else
-Element      XmlLastLeafInElement (el)
-Element             el;
 
-#endif
 {
    Element  child, lastLeaf;
 
@@ -1178,13 +1073,8 @@ Element             el;
    at the end of that element.
    Return TRUE if spaces have been removed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     RemoveEndingSpaces (Element el)
-#else
-static ThotBool     RemoveEndingSpaces (el)
-Element el;
 
-#endif
 {
    int           length, nbspaces;
    ElementType   elType;
@@ -1240,13 +1130,8 @@ Element el;
 /*----------------------------------------------------------------------
    RemoveTrailingSpaces
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     RemoveTrailingSpaces (Element el)
-#else
-static void     RemoveTrailingSpaces (el)
-Element el;
 
-#endif
 {
    int           length, nbspaces;
    ElementType   elType;
@@ -1323,12 +1208,8 @@ Element el;
    XmlCloseElement
    Terminate the corresponding Thot element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool   XmlCloseElement (USTRING mappedName)
-#else
-static ThotBool   XmlCloseElement (mappedName)
-USTRING          mappedName;
-#endif
+
 {
    int                 i, error;
    Element             el, parent;
@@ -1439,17 +1320,10 @@ USTRING          mappedName;
    Verifies if the element elName is allowed to occur in the current
    structural context.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   XmlCheckContext (STRING elName,
 			       ElementType elType,
 			       ThotBool *isAllowed)
-#else
-static void   XmlCheckContext (elName, elType, isAllowed)
-STRING        elName;
-ElementType   elType;
-ThotBool     *isAllowed;
 
-#endif
 {
   *isAllowed = TRUE;
   return;
@@ -1460,17 +1334,10 @@ ThotBool     *isAllowed;
    Verifies if the XHTML element elName is allowed to occur 
    in the current structural context.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   XhtmlCheckContext (STRING elName,
 				 ElementType elType,
 				 ThotBool *isAllowed)
-#else
-static void   XhtmlCheckContext (elName, elType, isAllowed)
-STRING        elName;
-ElementType   elType;
-ThotBool     *isAllowed;
 
-#endif
 {
    if (stackLevel <= 1 || nameElementStack[stackLevel - 1] == NULL)
      {
@@ -1578,13 +1445,8 @@ ThotBool     *isAllowed;
    The name of an element type has been read from a start tag.
    Create the corresponding Thot element according to the mapping table.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void       StartOfXmlStartElement (CHAR_T* GIname)
-#else
-static void       StartOfXmlStartElement (GIname)
-CHAR_T*           GIname;
 
-#endif
 {
   ElementType     elType;
   Element         newElement;
@@ -1706,13 +1568,8 @@ CHAR_T*           GIname;
    EndOfXmlStartElement
    Function called at the end of a start tag.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     EndOfXmlStartElement (CHAR_T *name)
-#else
-static void     EndOfXmlStartElement (name)
-CHAR_T   *name;
 
-#endif
 {
 
   ElementType     elType;
@@ -1792,13 +1649,8 @@ CHAR_T   *name;
    XmlEndElement
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void    XmlEndElement (CHAR_T *GIname)
-#else
-static void    XmlEndElement (GIname)
-CHAR_T     *GIname;
 
-#endif
 {
    CHAR_T         msgBuffer[MaxMsgLength];
    ElementType    elType;
@@ -2825,25 +2677,63 @@ CHAR_T     *attrValue;
    An attribute value has been read from the HTML file.
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    EndOfAttributeValue (CHAR_T *attrValue)
-#else
-static void    EndOfAttributeValue (attrValue)
-CHAR_T     *attrValue;
-
-#endif
+static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 {
+
+   CHAR_T         msgBuffer[MaxMsgLength];
+   unsigned char *buffer;
+   unsigned char *srcbuf;
+   wchar_t        wcharRead;
+   char           charRead;
+   int            nbBytesRead = 0;
+   int            i = 0, j = 0;
+   int            length;
+   ThotBool       isSupported;
 
    if (lastMappedAttr != NULL  || currentAttribute != NULL) 
      {
        if (currentParserCtxt != NULL)
 	 {
-	   if (XMLSpaceAttribute)
-	     XmlWhiteSpaceInStack (attrValue);
-	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-	     XhtmlEndOfAttrValue (attrValue);
-	   else
-	     XmlEndOfAttrValue (attrValue);
+	   /* Actually, Amaya supports only ISO-LATIN characters
+	      in th e attributes value */
+	   length = ustrlen (attrValue);
+	   buffer = TtaAllocString (length + 1);
+	   buffer[j] = WC_EOS;
+	   isSupported = TRUE;
+
+	   while (i < length && isSupported)
+	     {
+	       srcbuf = (unsigned char *) &attrValue[i];
+	       nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
+								    &srcbuf,
+								    UTF_8);
+	       i += nbBytesRead;
+	       if (wcharRead < 0x100)
+		 {
+		   /* It's an 8bits character */
+		   charRead = (char) wcharRead;
+		   buffer[j++] = charRead;
+		 }
+	       else
+		 {
+		   /* It's not an 8bits character */
+		   usprintf (msgBuffer, TEXT("Some characters are not supported in the value of the attribute : %s"), attrName);
+		   XmlParseError (errorCharacterNotSupported, msgBuffer, 0);
+		   isSupported = FALSE;
+		 }
+	     }
+
+	   if (isSupported)
+	     {
+	       if (buffer[0] != WC_EOS)
+		 buffer[j] = WC_EOS; 
+	       if (XMLSpaceAttribute)
+		 XmlWhiteSpaceInStack (buffer);
+	       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+		 XhtmlEndOfAttrValue (buffer);
+	       else
+		 XmlEndOfAttrValue (buffer);
+	     }
 	 }
      }
 
@@ -2863,13 +2753,8 @@ CHAR_T     *attrValue;
    Search that entity in the corresponding entity table and 
    put the corresponding character in the corresponding element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     CreateXmlEntity (CHAR_T *data, int length)
-#else
-static void     CreateXmlEntity (data, length)
-CHAR_T    *data;
-int        length;
-#endif
+
 {
    CHAR_T       msgBuffer[MaxMsgLength];
    STRING       buffer;
@@ -2907,7 +2792,8 @@ int        length;
    else
      {
        /* not found */
-       usprintf (msgBuffer, TEXT("Unknown XML entity %s"), buffer);
+       usprintf (msgBuffer,
+		 TEXT("Unknown namespace for a XML entity %s"), buffer);
        XmlParseError (errorParsing, msgBuffer, 0);
        return;
      }
@@ -2922,13 +2808,8 @@ int        length;
    CreateXmlComment
    Create a comment element into the Thot tree.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    CreateXmlComment (CHAR_T *commentValue)
-#else
-static void    CreateXmlComment (commentValue)
-CHAR_T     *commentValue;
+static void       CreateXmlComment (CHAR_T *commentValue)
 
-#endif
 {
    ElementType    elType, elTypeLeaf;
    Element  	  commentEl, commentLineEl, commentLeaf, lastChild;
@@ -3106,14 +2987,8 @@ CHAR_T     *commentValue;
    CreateXmlPi
    Create a Processing Instruction element into the Thot tree.
   ---------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
-#else
-static void    CreateXmlPi (PiTarget, PiData)
-CHAR_T   *PiTarget;
-CHAR_T   *PiData;
+static void      CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
 
-#endif
 {
    ElementType   elType, elTypeTxt;
    Element  	 PiEl, PiLineEl, PiText;
@@ -3126,7 +3001,8 @@ CHAR_T   *PiData;
    /* Create a Thot element for the PI */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXmlElType (TEXT("XMLPI"), &elType, &mappedName, &cont, &level, XMLcontext.doc);
+   GetXmlElType (TEXT("XMLPI"), &elType, &mappedName,
+		 &cont, &level, XMLcontext.doc);
    if (elType.ElTypeNum > 0)
      {
        PiEl = TtaNewElement (XMLcontext.doc, elType);
@@ -3433,27 +3309,21 @@ void            *userData;
    Handler for start tags
    Attributes are passed as a pointer to a vector of char pointers
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     Hndl_ElementStart (void *userData,
-				   const XML_Char *name,
-				   const XML_Char **attlist)
-#else  /* __STDC__ */
-static void     Hndl_ElementStart (userData, name, attlist)
-void            *userData; 
-const XML_Char  *name;
-const XML_Char **attlist;
-#endif  /* __STDC__ */
+static void       Hndl_ElementStart (void *userData,
+				     const XML_Char *name,
+				     const XML_Char **attlist)
 
 {
-   int             nbatts = 0;
-   CHAR_T         *buffer = NULL;
-   CHAR_T         *bufAttr;
-   CHAR_T         *bufName = NULL;
-   CHAR_T         *ptr;
-   PtrParserCtxt   elementParserCtxt = NULL;
-   CHAR_T          msgBuffer[MaxMsgLength];
-   Element         savCurrentElement = NULL;
-   ThotBool        isRoot = FALSE;
+   int            nbatts = 0;
+   CHAR_T        *buffer = NULL;
+   CHAR_T        *attrName = NULL;
+   CHAR_T        *attrValue = NULL;
+   CHAR_T        *bufName = NULL;
+   CHAR_T        *ptr;
+   PtrParserCtxt  elementParserCtxt = NULL;
+   CHAR_T         msgBuffer[MaxMsgLength];
+   Element        savCurrentElement = NULL;
+   ThotBool       isRoot = FALSE;
 
 #ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_ElementStart '%s'\n", name);
@@ -3530,12 +3400,15 @@ const XML_Char **attlist;
 	  while (*attlist != NULL)
 	    {
 	      /* Create the corresponding Thot attribute */
-	      bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
-	      strcpy (bufAttr, *attlist);
-	      EndOfAttributeName (bufAttr);
-	      TtaFreeMemory (bufAttr);
+	      attrName = TtaGetMemory ((strlen (*attlist)) + 1);
+	      strcpy (attrName, *attlist);
+#ifdef EXPAT_PARSER_DEBUG
+	      printf ("  attr %s :", attrName);
+#endif /* EXPAT_PARSER_DEBUG */
+	      EndOfAttributeName (attrName);
 	      
-	      /* Element context if attribute name is unknown */
+	      /* Restore the element context */
+	      /* It occurs if the attribute name is unknown */
 	      if (currentParserCtxt == NULL)
 		currentParserCtxt = elementParserCtxt;
 	      
@@ -3543,12 +3416,18 @@ const XML_Char **attlist;
 	      attlist++;
 	      if (*attlist != NULL)
 		{
-		  bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
-		  strcpy (bufAttr, *attlist);
-		  EndOfAttributeValue (bufAttr);
-		  TtaFreeMemory (bufAttr);
+		  attrValue = TtaGetMemory ((strlen (*attlist)) + 1);
+		  strcpy (attrValue, *attlist);
+#ifdef EXPAT_PARSER_DEBUG
+		  printf (" value=%s \n", attrValue);
+#endif /* EXPAT_PARSER_DEBUG */
+		  EndOfAttributeValue (attrValue, attrName);
 		}
 	      attlist++;
+	      if (attrName != NULL)
+		TtaFreeMemory (attrName);
+	      if (attrValue != NULL)
+	      TtaFreeMemory (attrValue);
 	    }
 	  if (isRoot && nbatts != 0)
 	    XMLcontext.lastElement = savCurrentElement;
@@ -3859,13 +3738,10 @@ const XML_Char  *notationName;
    FreeXmlParser
    Frees all ressources associated with the XML parser.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreeXmlParserContexts (void)
-#else
-void                FreeXmlParserContexts ()
-#endif
+void             FreeXmlParserContexts (void)
+
 {
-   PtrParserCtxt       ctxt, nextCtxt;
+  PtrParserCtxt  ctxt, nextCtxt;
 
    /* free parser contexts */
    ctxt = firstParserCtxt;
@@ -3885,11 +3761,7 @@ void                FreeXmlParserContexts ()
    DisableExpatParser
    Disable all handlers
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void      DisableExpatParser ()
-#else  /* __STDC__ */
-static void      DisableExpatParser ()
-#endif  /* __STDC__ */
+static void    DisableExpatParser ()
 
 {    
   int    paramEntityParsing;
@@ -3913,11 +3785,7 @@ static void      DisableExpatParser ()
 /*----------------------------------------------------------------------
    FreeExpatParser
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         FreeExpatParser ()
-#else  /* __STDC__ */
-static void         FreeExpatParser ()
-#endif  /* __STDC__ */
+static void     FreeExpatParser ()
 
 {  
   DisableExpatParser ();
@@ -3930,15 +3798,10 @@ static void         FreeExpatParser ()
    InitializeExpatParser
    Specific initialization for expat
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     InitializeExpatParser (CHARSET charset)
-#else  /* __STDC__ */
-static void     InitializeExpatParser (charset)
-CHARSET  charset;
-#endif  /* __STDC__ */
+static void  InitializeExpatParser (CHARSET charset)
 
 {  
-  int    paramEntityParsing;
+  int        paramEntityParsing;
 
   /* Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
@@ -3953,7 +3816,7 @@ CHARSET  charset;
     /* These encoding are automatically recognized by Expat */
     parser = XML_ParserCreateNS (NULL, NS_SEP);
   else if (charset == US_ASCII)
-    /* US-ASCII may has been set for us-ascii or ascii*/
+    /* US-ASCII may has been set for us-ascii or ascii */
     parser = XML_ParserCreateNS ("US-ASCII", NS_SEP);
   else if (charset == ISO_8859_1)
     /* ISO_8859_1 may has been set for a HTML document with no encoding */
@@ -4053,19 +3916,11 @@ CHARSET  charset;
    InitializeXmlParsingContext
    initializes variables and stack for parsing file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    InitializeXmlParsingContext (Document doc,
-					    Element  lastElem,
-					    ThotBool isClosed,
-					    ThotBool isSubTree)
-#else  /* __STDC__ */
-static void    InitializeXmlParsingContext (doc, lastElem, isClosed, isSubtree)
+static void  InitializeXmlParsingContext (Document doc,
+					  Element  lastElem,
+					  ThotBool isClosed,
+					  ThotBool isSubTree)
 
-Document   doc;
-Element    lastElem;
-ThotBool   isClosed;
-ThotBool   isSubTree;
-#endif  /* __STDC__ */
 {
   XMLcontext.doc = doc;
   XMLcontext.lastElement = lastElem;
@@ -4088,6 +3943,7 @@ ThotBool   isSubTree;
 
   XMLNotWellFormed = FALSE;
   XMLUnknownEncoding = FALSE;
+  XMLCharacterNotSupported = FALSE;
   htmlLineRead = 0;
   htmlCharRead = 0;
   
@@ -4102,21 +3958,12 @@ ThotBool   isSubTree;
    Thot abstract tree.
    Return TRUE if the parsing of the XML sub-tree doesn't detects errors.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool    ParseXmlSubTree (char     *xmlBuffer,
-			     Element  *el,
-			     ThotBool *isclosed,
-			     Document  doc,
-			     Language  lang)
-#else
-ThotBool    ParseXmlSubTree (xmlBuffer, el, isclosed, doc, lang)
+ThotBool       ParseXmlSubTree (char     *xmlBuffer,
+				Element  *el,
+				ThotBool *isclosed,
+				Document  doc,
+				Language  lang)
 
-char      *xmlBuffer;
-Element   *el;
-ThotBool  *isclosed;
-Document   doc;
-Language   lang;
-#endif
 {
   int          tmpLen = 0;
   CHAR_T      *transBuffer = NULL;
@@ -4208,47 +4055,23 @@ Language   lang;
    be null
    Return TRUE if the parsing of the sub-tree has no error.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool    ParseIncludedXml (FILE     *infile,
-			      char     *infileBuffer,
-			      int       infileBufferLength,
-			      ThotBool *infileEnd,
-			      ThotBool *infileNotToRead,
-			      char     *infilePreviousBuffer,
-			      int      *infileLastChar,
-			      char     *htmlBuffer,
-			      int      *index,
-			      int      *nbLineRead,
-			      int      *nbCharRead,
-			      STRING    DTDname,
-			      Document  doc,
-			      Element  *el,
-			      ThotBool *isclosed,
-			      Language  lang)
-#else
-ThotBool    ParseIncludedXml (infile, infileBuffer, infileBufferLength,
-			      infileEnd, infileNotToRead,
-			      infilePreviousBuffer, infileLastChar,
-			      htmlBuffer, index, nbLineRead, nbCharRead,
-			      DTDname, doc, el, isclosed, lang)
+ThotBool       ParseIncludedXml (FILE     *infile,
+				 char     *infileBuffer,
+				 int       infileBufferLength,
+				 ThotBool *infileEnd,
+				 ThotBool *infileNotToRead,
+				 char     *infilePreviousBuffer,
+				 int      *infileLastChar,
+				 char     *htmlBuffer,
+				 int      *index,
+				 int      *nbLineRead,
+				 int      *nbCharRead,
+				 STRING    DTDname,
+				 Document  doc,
+				 Element  *el,
+				 ThotBool *isclosed,
+				 Language  lang)
 
-FILE     *infile;
-char     *infileBuffer;
-int       infileBufferLength;
-ThotBool *infileEnd;
-ThotBool *infileNotToRead;
-char     *infilePreviousBuffer;
-int      *infileLastChar;
-char     *htmlBuffer;
-int      *index;
-int      *nbLineRead;
-int      *nbCharRead;
-STRING    DTDname;
-Document  doc;
-Element  *el;
-ThotBool *isclosed;
-Language  lang;
-#endif
 {
   ThotBool     endOfParsing = FALSE;
   int          res = 0;
@@ -4421,17 +4244,10 @@ Language  lang;
    XmlParse
    Parses the XML file infile and builds the equivalent Thot abstract tree.
   ---------------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   XmlParse (FILE     *infile,
 			ThotBool *xmlDec,
 			ThotBool *xmlDoctype)
-#else
-static void   XmlParse (infile, xmlDec, xmlDoctype)
-FILE      *infile;
-ThotBool  *xmlDec;
-ThotBool  *xmlDoctype;
 
-#endif
 {
 #define	 COPY_BUFFER_SIZE	1024
    char         bufferRead[COPY_BUFFER_SIZE];
@@ -4514,7 +4330,6 @@ ThotBool  *xmlDoctype;
    The parameter pathURL gives the original (local or
    distant) path or URL of the xml document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void       StartXmlParser (Document doc,
 			   CHAR_T*  htmlFileName,
 			   CHAR_T*  documentName,
@@ -4522,22 +4337,6 @@ void       StartXmlParser (Document doc,
 			   CHAR_T*  pathURL,
 			   ThotBool xmlDec,
 			   ThotBool xmlDoctype)
-#else
-void       StartXmlParser (doc,
-			   htmlFileName,
-			   documentName,
-			   documentDirectory,
-			   pathURL,
-			   xmlDec,
-			   xmlDoctype)
-Document    doc;
-CHAR_T*     htmlFileName;
-CHAR_T*     documentName;
-CHAR_T*     documentDirectory;
-CHAR_T*     pathURL;
-ThotBool    xmlDec;
-ThotBool    xmlDoctype;
-#endif
 
 {
   Element         el, oldel;
@@ -4722,6 +4521,12 @@ ThotBool    xmlDoctype;
 	   ChangeToBrowserMode (doc);
 	   XMLErrorsFound = TRUE;
 	   XMLNotWellFormed = FALSE;
+	 }
+       else if (XMLCharacterNotSupported)
+	 {
+	   /* Some characters are not supported */
+	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR));
+	   XMLErrorsFound = TRUE;
 	 }
        else if (XMLErrorsFound)
 	 {
