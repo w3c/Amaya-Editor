@@ -14,7 +14,7 @@ typedef enum {
 } ThotDirBrowse_mask;
 
 typedef struct {
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
   WIN32_FIND_DATA   data;
   HANDLE	    handle;
 #else /* WWW_MSWINDOWS */
