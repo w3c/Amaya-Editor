@@ -62,6 +62,8 @@ static BOOL   wndRegistered = FALSE;
 
 extern LPCTSTR iconID;
 
+extern boolean ColorMenuConf;
+
 #ifdef __STDC__
 LRESULT CALLBACK ThotColorPaletteWndProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* __STDC__ */
@@ -360,12 +362,22 @@ int                 y;
    if (y < 60 || y > 345) {
 	  if (button == Button1) {
 	     /* couleur de trace' standard */
-	     ModifyColor (-1, FALSE);
-	     ThotSelectPalette (LastBg, -1);
+		  if (ColorMenuConf) {
+             ColorMenuConf = FALSE;
+             TtaSetEnvString ("ForegroundColor", "Black", TRUE);
+		  } else {
+	          ModifyColor (-1, FALSE);
+	          ThotSelectPalette (LastBg, -1);
+		  }
 	  } else {
 	       /* couleur de fond standard */
+		  if (ColorMenuConf) {
+			  ColorMenuConf = FALSE;
+             TtaSetEnvString ("BackgroundColor", "Gray", TRUE);
+		  } else {
 	       ModifyColor (-1, TRUE);
 	       ThotSelectPalette (-1, LastFg);
+		  }
 	  }
 	  return;
    } 
@@ -376,14 +388,24 @@ int                 y;
    if (button == Button1)
      {
 	/* selectionne la couleur de trace' */
-	ModifyColor (color, FALSE);
-	ThotSelectPalette (LastBg, color);
+       if (ColorMenuConf) {
+          ColorMenuConf = FALSE;
+          TtaSetEnvString ("ForegroundColor", ColorName (color), TRUE);
+	   } else {
+      	ModifyColor (color, FALSE);
+	    ThotSelectPalette (LastBg, color);
+	   }
      }
    else
      {
 	/* selectionne la couleur de fond */
-	ModifyColor (color, TRUE);
-	ThotSelectPalette (color, LastFg);
+       if (ColorMenuConf) {
+          ColorMenuConf = FALSE;
+          TtaSetEnvString ("BackgroundColor", ColorName (color), TRUE);
+	   } else {
+    	ModifyColor (color, TRUE);
+    	ThotSelectPalette (color, LastFg);
+	   }
      }
 
 }
@@ -419,9 +441,9 @@ ThotEvent             *event;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-static BOOL         ThotCreatePalette (int x, int y)
+BOOL         ThotCreatePalette (int x, int y)
 #else  /* __STDC__ */
-static BOOL         ThotCreatePalette (x, y)
+BOOL         ThotCreatePalette (x, y)
 int                 x;
 int                 y;
 
