@@ -1581,10 +1581,8 @@ static void ValidateGeneralConf (void)
   char        old_AppTmpDir [MAX_LENGTH];
   int         i;
 
-#ifdef _WINDOWS
   /* normalize and validate the zoom factor */
   SetDlgItemInt (GeneralHwnd, IDC_ZOOM, Zoom, TRUE);
-#endif /* _WINDOWS */
 
   /* 
   **validate the tmp dir
@@ -1617,10 +1615,9 @@ static void ValidateGeneralConf (void)
       else
 	change++;
     }
-#ifdef _WINDOWS
+
   if (change)
     SetDlgItemText (GeneralHwnd, IDC_TMPDIR, AppTmpDir);
-#endif /* _WINDOWS */
 
   /* if AppTmpDir changed, update the cache dir env variables */
   GetEnvString ("APP_TMPDIR", old_AppTmpDir);
@@ -3320,6 +3317,14 @@ static void GetDefaultProfileConf (void)
   ----------------------------------------------------------------------*/
 static void SetProfileConf (void)
 {
+  char def_profiles_file [MAX_LENGTH];
+
+  TtaGetDefProfileFileName (def_profiles_file, MAX_LENGTH);
+  if (!strcasecmp (def_profiles_file, Profiles_File))
+    {
+      /* it is the default value. Erase the precedent registry value */
+      Profiles_File[0] = EOS;
+    }
   TtaSetEnvString ("Profiles_File", Profiles_File, TRUE);
   TtaSetEnvString ("Profile", Profile, TRUE);
   TtaSaveAppRegistry ();
