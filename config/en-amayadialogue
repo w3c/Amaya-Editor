@@ -17,50 +17,50 @@
 15 &Bookmarks
 16 &Cooperation
 17 &Help
-18 New
-19 New XHTML 1.1 document...
-20 New XHTML 1.0 Transitional document...
-21 New XHTML 1.0 Strict document...
-22 New XHTML 1.0 Basic document...
-23 New MathML document...
-24 New SVG document...
-25 New CSS style sheet...
-26 From template
-27 Open document...
-28 Open in new window...
-29 Reload document
-30 Back
-31 Forward
-32 Save
-33 Save as...
-34 Synchronize
-35 Modify doctype
-36 Remove doctype
-37 Set doctype to XHTML 1.1
-38 Set doctype to XHTML 1.0 Transitional
-39 Set doctype to XHTML 1.0 Strict
-40 Set doctype to XHTML 1.0 Basic
-41 Set doctype to HTML 4.01 Transitional
-42 Set doctype to HTML 4.01 Strict
-43 Set doctype to XHTML 1.1 + MathML 2.0
-44 Set doctype to MathML 2.0
-45 Set doctype to SVG 1.0
-46 Document Information
-47 Setup and Print...
-48 Print
-49 Close window
-50 Exit Amaya
-51 Close view
-52 Undo
-53 Redo
-54 Cut
-55 Copy
-56 Paste
-57 Delete
-58 Editor Mode
-59 Find...
-60 Check spelling...
-61 Transform...
+18 &New
+19 New &XHTML 1.1 document...
+20 New XHTML 1.0 &Transitional document...
+21 New XHTML 1.0 St&rict document...
+22 New XHTML 1.0 &Basic document...
+23 New &MathML document...
+24 New &SVG document...
+25 New &CSS style sheet...
+26 From t&emplate
+27 &Open document...
+28 Open in new &window...
+29 &Reload document
+30 &Back
+31 &Forward
+32 &Save
+33 Save &as...
+34 S&ynchronize
+35 Modify &doctype
+36 &Remove doctype
+37 Set doctype to &XHTML 1.1
+38 Set doctype to XHTML 1.0 &Transitional
+39 Set doctype to XHTML 1.0 &Strict
+40 Set doctype to XHTML 1.0 &Basic
+41 Set doctype to &HTML 4.01 Transitional
+42 Set doctype to HTML 4.01 Str&ict
+43 Set doctype to XHTML 1.1 + &MathML 2.0
+44 Set doctype to M&athML 2.0
+45 Set doctype to SV&G 1.0
+46 Document &Information
+47 Set&up and Print...
+48 &Print
+49 &Close window
+50 E&xit Amaya
+51 Close &view
+52 &Undo
+53 &Redo
+54 Cu&t
+55 &Copy
+56 &Paste
+57 &Delete
+58 &Editor Mode
+59 &Find...
+60 Chec&k spelling...
+61 Trans&form...
 62 base
 63 meta
 64 link

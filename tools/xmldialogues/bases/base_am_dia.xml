@@ -186,8 +186,8 @@
 	<message xml:lang="fi">&amp;Ohje</message>
 </label>
 <label define="New1">
-	<message xml:lang="en">New</message>
-	<message xml:lang="fr">Nouveau</message>
+	<message xml:lang="en">&amp;New</message>
+	<message xml:lang="fr">&amp;Nouveau</message>
 	<message xml:lang="de">Neu</message>
 	<message xml:lang="it">Nuovo</message>
 	<message xml:lang="tr">Yeni</message>
@@ -196,8 +196,8 @@
 	<message xml:lang="fi">Uusi</message>
 </label>
 <label define="BHtml11">
-	<message xml:lang="en">New XHTML 1.1 document...</message>
-	<message xml:lang="fr">Nouveau document XHTML 1.1...</message>
+	<message xml:lang="en">New &amp;XHTML 1.1 document...</message>
+	<message xml:lang="fr">Nouveau document &amp;XHTML 1.1...</message>
 	<message xml:lang="de">XHTML 1.1...</message>
 	<message xml:lang="it">Nuovo documento XHTML 1.1...</message>
 	<message xml:lang="es">Documento XHTML 1.1 nuevo...</message>
@@ -206,8 +206,8 @@
 	<message xml:lang="tr">Yeni XHTML 1.1 dosyası...</message>
 </label>
 <label define="BHtmlTransitional">
-	<message xml:lang="en">New XHTML 1.0 Transitional document...</message>
-	<message xml:lang="fr">Nouveau document XHTML 1.0 Transitional...</message>
+	<message xml:lang="en">New XHTML 1.0 &amp;Transitional document...</message>
+	<message xml:lang="fr">Nouveau document XHTML 1.0 &amp;Transitional...</message>
 	<message xml:lang="de">XHTML 1.0 Transitional...</message>
 	<message xml:lang="it">Nuovo documento XHTML 1.0 Transitional...</message>
 	<message xml:lang="es">Documento XHTML 1.0 Transitional nuevo...</message>
@@ -216,8 +216,8 @@
 	<message xml:lang="tr">Yeni XHTML 1.0 Transitional dosyası...</message>
 </label>
 <label define="BHtmlStrict">
-	<message xml:lang="en">New XHTML 1.0 Strict document...</message>
-	<message xml:lang="fr">Nouveau document XHTML 1.0 Strict...</message>
+	<message xml:lang="en">New XHTML 1.0 St&amp;rict document...</message>
+	<message xml:lang="fr">Nouveau document XHTML 1.0 &amp;Strict...</message>
 	<message xml:lang="de">XHTML 1.0 Strict...</message>
 	<message xml:lang="it">Nuovo documento XHTML 1.0 Strict...</message>
 	<message xml:lang="es">Documento XHTML 1.0 Strict nuevo...</message>
@@ -226,8 +226,8 @@
 	<message xml:lang="tr">Yeni XHTML 1.0 Strict dosyası...</message>
 </label>
 <label define="BHtmlBasic">
-	<message xml:lang="en">New XHTML 1.0 Basic document...</message>
-	<message xml:lang="fr">Nouveau document XHTML 1.0 Basic ...</message>
+	<message xml:lang="en">New XHTML 1.0 &amp;Basic document...</message>
+	<message xml:lang="fr">Nouveau document XHTML 1.0 &amp;Basic ...</message>
 	<message xml:lang="de">XHTML 1.0 Basic...</message>
 	<message xml:lang="it">Nuovo documento XHTML 1.0 Basic...</message>
 	<message xml:lang="es">Documento XHTML 1.0 Basic nuevo...</message>
@@ -236,8 +236,8 @@
 	<message xml:lang="tr">Yeni XHTML 1.0 Basic dosyası...</message>
 </label>
 <label define="BMathml">
-	<message xml:lang="en">New MathML document...</message>
-	<message xml:lang="fr">Nouveau document MathML...</message>
+	<message xml:lang="en">New &amp;MathML document...</message>
+	<message xml:lang="fr">Nouveau document &amp;MathML...</message>
 	<message xml:lang="de">MathML...</message>
 	<message xml:lang="it">Nuovo documento MathML...</message>
 	<message xml:lang="es">Documento MathML nuevo...</message>
@@ -246,8 +246,8 @@
 	<message xml:lang="tr">Yeni MathML dosyası...</message>
 </label>
 <label define="BSvg">
-	<message xml:lang="en">New SVG document...</message>
-	<message xml:lang="fr">Nouveau document SVG...</message>
+	<message xml:lang="en">New &amp;SVG document...</message>
+	<message xml:lang="fr">Nouveau document &amp;SVG...</message>
 	<message xml:lang="de">SVG...</message>
 	<message xml:lang="it">Nuovo documento SVG...</message>
 	<message xml:lang="es">Documento SVG nuevo...</message>
@@ -256,8 +256,8 @@
 	<message xml:lang="tr">Yeni SVG dosyası...</message>
 </label>
 <label define="BCss">
-	<message xml:lang="en">New CSS style sheet...</message>
-	<message xml:lang="fr">Nouvelle feuille de style...</message>
+	<message xml:lang="en">New &amp;CSS style sheet...</message>
+	<message xml:lang="fr">Nouvelle &amp;feuille de style...</message>
 	<message xml:lang="de">Formatvorlage...</message>
 	<message xml:lang="it">Nuovo stile CSS...</message>
 	<message xml:lang="es">Nueva hoja de estilo CSS...</message>
@@ -266,8 +266,8 @@
 	<message xml:lang="tr">Yeni CSS düz dizayn...</message>
 </label>
 <label define="BTemplate">
-	<message xml:lang="en">From template</message>
-	<message xml:lang="fr">Modèle</message>
+	<message xml:lang="en">From t&amp;emplate</message>
+	<message xml:lang="fr">M&amp;odèle</message>
 	<message xml:lang="de">Schablone...</message>
 	<message xml:lang="it">Modello</message>
 	<message xml:lang="es">Desde plantilla</message>
@@ -276,8 +276,8 @@
 	<message xml:lang="tr">Model</message>
 </label>
 <label define="BOpenDoc">
-	<message xml:lang="en">Open document...</message>
-	<message xml:lang="fr">Ouvrir...</message>
+	<message xml:lang="en">&amp;Open document...</message>
+	<message xml:lang="fr">&amp;Ouvrir...</message>
 	<message xml:lang="de">Öffnen...</message>
 	<message xml:lang="it">Apri documento...</message>
 	<message xml:lang="tr">Belge aç...</message>
@@ -286,8 +286,8 @@
 	<message xml:lang="fi">Avaa dokumentti...</message>
 </label>
 <label define="BOpenInNewWindow">
-	<message xml:lang="en">Open in new window...</message>
-	<message xml:lang="fr">Ouvrir dans nouvelle fenêtre...</message>
+	<message xml:lang="en">Open in new &amp;window...</message>
+	<message xml:lang="fr">Ouvrir dans nou&amp;velle fenêtre...</message>
 	<message xml:lang="de">Öffnen (neues Fenster)...</message>
 	<message xml:lang="it">Apri in una nuova finestra...</message>
 	<message xml:lang="tr">Yeni pencerede aç...</message>
@@ -296,8 +296,8 @@
 	<message xml:lang="fi">Avaa uudessa ikkunassa...</message>
 </label>
 <label define="BReload">
-	<message xml:lang="en">Reload document</message>
-	<message xml:lang="fr">Recharger le document</message>
+	<message xml:lang="en">&amp;Reload document</message>
+	<message xml:lang="fr">&amp;Recharger le document</message>
 	<message xml:lang="de">Aktualisieren</message>
 	<message xml:lang="it">Ricarica documento</message>
 	<message xml:lang="tr">Belgeyi yeniden yükle</message>
@@ -306,8 +306,8 @@
 	<message xml:lang="fi">Päivitä dokumentti</message>
 </label>
 <label define="BBack">
-	<message xml:lang="en">Back</message>
-	<message xml:lang="fr">Précédent</message>
+	<message xml:lang="en">&amp;Back</message>
+	<message xml:lang="fr">Pr&amp;écédent</message>
 	<message xml:lang="de">Zurück</message>
 	<message xml:lang="it">Precedente</message>
 	<message xml:lang="es">Atrás</message>
@@ -316,8 +316,8 @@
 	<message xml:lang="tr">Geri</message>
 </label>
 <label define="BForward">
-	<message xml:lang="en">Forward</message>
-	<message xml:lang="fr">Suivant</message>
+	<message xml:lang="en">&amp;Forward</message>
+	<message xml:lang="fr">S&amp;uivant</message>
 	<message xml:lang="de">Vorwärts</message>
 	<message xml:lang="it">Successivo</message>
 	<message xml:lang="es">Adelante</message>
@@ -326,8 +326,8 @@
 	<message xml:lang="tr">Ileri</message>
 </label>
 <label define="BSave">
-	<message xml:lang="en">Save</message>
-	<message xml:lang="fr">Sauver</message>
+	<message xml:lang="en">&amp;Save</message>
+	<message xml:lang="fr">&amp;Sauver</message>
 	<message xml:lang="de">Speichern</message>
 	<message xml:lang="it">Salva</message>
 	<message xml:lang="tr">Kaydet</message>
@@ -336,8 +336,8 @@
 	<message xml:lang="fi">Tallenna</message>
 </label>
 <label define="BSaveAs">
-	<message xml:lang="en">Save as...</message>
-	<message xml:lang="fr">Sauver comme...</message>
+	<message xml:lang="en">Save &amp;as...</message>
+	<message xml:lang="fr">Sauver &amp;comme...</message>
 	<message xml:lang="de">Speichern unter...</message>
 	<message xml:lang="it">Salva con nome...</message>
 	<message xml:lang="tr">Isimle kaydet...</message>
@@ -346,8 +346,8 @@
 	<message xml:lang="fi">Tallenna nimellä...</message>
 </label>
 <label define="BSynchro">
-	<message xml:lang="en">Synchronize</message>
-	<message xml:lang="fr">Synchroniser</message>
+	<message xml:lang="en">S&amp;ynchronize</message>
+	<message xml:lang="fr">S&amp;ynchroniser</message>
 	<message xml:lang="de">Synchronisieren</message>
 	<message xml:lang="it">Sincronizza</message>
 	<message xml:lang="es">Sincronizar</message>
@@ -356,8 +356,8 @@
 	<message xml:lang="tr">Eşlemek</message>
 </label>
 <label define="Doctype1">
-	<message xml:lang="en">Modify doctype</message>
-	<message xml:lang="fr">Modifier le doctype</message>
+	<message xml:lang="en">Modify &amp;doctype</message>
+	<message xml:lang="fr">Modifier le &amp;doctype</message>
 	<message xml:lang="it">Modifica doctype</message>
 	<message xml:lang="de">DTD ändern</message>
 	<message xml:lang="es">Modificar doctype</message>
@@ -366,8 +366,8 @@
 	<message xml:lang="tr">doctype\'bı düzenle</message>
 </label>
 <label define="BRemoveDoctype">
-	<message xml:lang="en">Remove doctype</message>
-	<message xml:lang="fr">Supprimer le doctype</message>
+	<message xml:lang="en">&amp;Remove doctype</message>
+	<message xml:lang="fr">S&amp;upprimer le doctype</message>
 	<message xml:lang="it">Elimina doctype</message>
 	<message xml:lang="de">DTD entfernen</message>
 	<message xml:lang="es">Eliminar doctype</message>
@@ -376,8 +376,8 @@
 	<message xml:lang="tr">doctype\'bı sil</message>
 </label>
 <label define="BDoctypeXhtml11">
-	<message xml:lang="en">Set doctype to XHTML 1.1</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1</message>
+	<message xml:lang="en">Set doctype to &amp;XHTML 1.1</message>
+	<message xml:lang="fr">Changer/Créer doctype &amp;XHTML 1.1</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1</message>
 	<message xml:lang="de">XHTML 1.1</message>
 	<message xml:lang="es">Cambiar doctype a XHTML 1.1</message>
@@ -386,16 +386,16 @@
 	<message xml:lang="tr">XHTML 1.1 doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BBDoctypeXhtmlTransitional">
-	<message xml:lang="en">Set doctype to XHTML 1.0 Transitional</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Transitional</message>
+	<message xml:lang="en">Set doctype to XHTML 1.0 &amp;Transitional</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 &amp;Transitional</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Transitional</message>
 	<message xml:lang="de">Dokumenttyp XHTML 1.0 Transitional zuweisen</message>
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Transicional</message>
 	<message xml:lang="pt">Modificar/Criar doctype XHTML 1.0</message>
 </label>
 <label define="BDoctypeXhtmlStrict">
-	<message xml:lang="en">Set doctype to XHTML 1.0 Strict</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Strict</message>
+	<message xml:lang="en">Set doctype to XHTML 1.0 &amp;Strict</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 &amp;Strict</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Strict</message>
 	<message xml:lang="de">XHTML 1.0 Strict</message>
 	<message xml:lang="es">Cambiar doctype a XHTML 1.0 Strict</message>
@@ -404,8 +404,8 @@
 	<message xml:lang="tr">XHTML 1.0 Strict doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BDoctypeXhtmlBasic">
-	<message xml:lang="en">Set doctype to XHTML 1.0 Basic</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Basic</message>
+	<message xml:lang="en">Set doctype to XHTML 1.0 &amp;Basic</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 &amp;Basic</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Basic</message>
 	<message xml:lang="de">XHTML 1.0 Basic</message>
 	<message xml:lang="es">Cambiar doctype a XHTML 1.0 Basic</message>
@@ -414,16 +414,16 @@
 	<message xml:lang="tr">XHTML 1.0 Basic doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BBDoctypeHtmlTransitional">
-	<message xml:lang="en">Set doctype to HTML 4.01 Transitional</message>
-	<message xml:lang="fr">Changer/Créer doctype HTML 4.01 Transitional</message>
+	<message xml:lang="en">Set doctype to &amp;HTML 4.01 Transitional</message>
+	<message xml:lang="fr">Changer/Créer doctype &amp;HTML 4.01 Transitional</message>
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Transitional</message>
 	<message xml:lang="de">Dokumenttyp HTML 4.01 Transitional zuweisen</message>
 	<message xml:lang="es">Cambiar/Crear doctype HTML 4.01 Transicional</message>
 	<message xml:lang="pt">Modificar/Criar doctype HTML 4.01 Transitional</message>
 </label>
 <label define="BDoctypeHtmlStrict">
-	<message xml:lang="en">Set doctype to HTML 4.01 Strict</message>
-	<message xml:lang="fr">Changer/Créer doctype HTML 4.01 Strict</message>
+	<message xml:lang="en">Set doctype to HTML 4.01 Str&amp;ict</message>
+	<message xml:lang="fr">Changer/Créer doctype HTML 4.01 Str&amp;ict</message>
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Strict</message>
 	<message xml:lang="de">HTML Strict</message>
 	<message xml:lang="es">Cambiar doctype a HTML 4.01 Strict</message>
@@ -432,8 +432,8 @@
 	<message xml:lang="tr">HTML 4.01 Strict doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BDoctypeXhtmlPlusMath">
-	<message xml:lang="en">Set doctype to XHTML 1.1 + MathML 2.0</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + MathML 2.0</message>
+	<message xml:lang="en">Set doctype to XHTML 1.1 + &amp;MathML 2.0</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + &amp;MathML 2.0</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML 2.0</message>
 	<message xml:lang="de">XHTML 1.1 + MathML</message>
 	<message xml:lang="es">Combiar doctype a XHTML 1.1 + MathML 2.0</message>
@@ -442,8 +442,8 @@
 	<message xml:lang="tr">XHTML 1.1 + MathML 2.0 doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BDoctypeMathML">
-	<message xml:lang="en">Set doctype to MathML 2.0</message>
-	<message xml:lang="fr">Changer/Créer doctype MathML 2.0</message>
+	<message xml:lang="en">Set doctype to M&amp;athML 2.0</message>
+	<message xml:lang="fr">Changer/Créer doctype M&amp;athML 2.0</message>
 	<message xml:lang="it">Cambia/Crea doctype MathML 2.0</message>
 	<message xml:lang="de">MathML</message>
 	<message xml:lang="es">Cambiar doctype a MathML 2.0</message>
@@ -452,8 +452,8 @@
 	<message xml:lang="tr">MathML 2.0 doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BDoctypeSVG">
-	<message xml:lang="en">Set doctype to SVG 1.0</message>
-	<message xml:lang="fr">Changer/Créer doctype SVG 1.0</message>
+	<message xml:lang="en">Set doctype to SV&amp;G 1.0</message>
+	<message xml:lang="fr">Changer/Créer doctype SV&amp;G 1.0</message>
 	<message xml:lang="it">Cambia/Crea doctype SVG 1.0</message>
 	<message xml:lang="de">SVG</message>
 	<message xml:lang="es">Cambiar doctype a SVG 1.0</message>
@@ -462,8 +462,8 @@
 	<message xml:lang="tr">SVG 1.0 doctype'bı değiştir/yarat</message>
 </label>
 <label define="BDocInfo">
-	<message xml:lang="en">Document Information</message>
-	<message xml:lang="fr">Informations sur le document</message>
+	<message xml:lang="en">Document &amp;Information</message>
+	<message xml:lang="fr">Infor&amp;mations sur le document</message>
 	<message xml:lang="de">Kurzinfo</message>
 	<message xml:lang="it">Informazioni sul documento</message>
 	<message xml:lang="es">Información de documento</message>
@@ -472,8 +472,8 @@
 	<message xml:lang="tr">Doküman bilgisi</message>
 </label>
 <label define="BSetUpandPrint">
-	<message xml:lang="en">Setup and Print...</message>
-	<message xml:lang="fr">Paramétrer et imprimer...</message>
+	<message xml:lang="en">Set&amp;up and Print...</message>
+	<message xml:lang="fr">&amp;Paramétrer et imprimer...</message>
 	<message xml:lang="de">Druckoptionen...</message>
 	<message xml:lang="it">Imposta e stampa...</message>
 	<message xml:lang="es">Configurar e imprimir...</message>
@@ -482,8 +482,8 @@
 	<message xml:lang="tr">Kur ve yazdır</message>
 </label>
 <label define="BPrint">
-	<message xml:lang="en">Print</message>
-	<message xml:lang="fr">Imprimer</message>
+	<message xml:lang="en">&amp;Print</message>
+	<message xml:lang="fr">&amp;Imprimer</message>
 	<message xml:lang="de">Drucken</message>
 	<message xml:lang="it">Stampa</message>
 	<message xml:lang="tr">Yapılandır ve yazdır</message>
@@ -492,8 +492,8 @@
 	<message xml:lang="fi">Tulosta</message>
 </label>
 <label define="BClose">
-	<message xml:lang="en">Close window</message>
-	<message xml:lang="fr">Fermer la fenêtre</message>
+	<message xml:lang="en">&amp;Close window</message>
+	<message xml:lang="fr">&amp;Fermer la fenêtre</message>
 	<message xml:lang="de">Schließen</message>
 	<message xml:lang="it">Chiudi</message>
 	<message xml:lang="tr">Belgeyi kapat</message>
@@ -502,8 +502,8 @@
 	<message xml:lang="fi">Sulje ikkuna</message>
 </label>
 <label define="BExit">
-	<message xml:lang="en">Exit Amaya</message>
-	<message xml:lang="fr">Quitter Amaya</message>
+	<message xml:lang="en">E&amp;xit Amaya</message>
+	<message xml:lang="fr">&amp;Quitter Amaya</message>
 	<message xml:lang="de">Beenden</message>
 	<message xml:lang="it">Esci</message>
 	<message xml:lang="tr">Çıkış</message>
@@ -512,7 +512,7 @@
 	<message xml:lang="fi">Sulje Amaya</message>
 </label>
 <label define="BCloseView">
-	<message xml:lang="en">Close view</message>
+	<message xml:lang="en">Close &amp;view</message>
 	<message xml:lang="fr">Fermer la vue</message>
 	<message xml:lang="de">Ansicht schließen</message>
 	<message xml:lang="it">Chiudi vista</message>
@@ -522,8 +522,8 @@
 	<message xml:lang="fi">Sulje näkymä</message>
 </label>
 <label define="BUndo">
-	<message xml:lang="en">Undo</message>
-	<message xml:lang="fr">Défaire</message>
+	<message xml:lang="en">&amp;Undo</message>
+	<message xml:lang="fr">&amp;Défaire</message>
 	<message xml:lang="de">Rückgängig</message>
 	<message xml:lang="it">Ritratta</message>
 	<message xml:lang="es">Deshacer</message>
@@ -532,8 +532,8 @@
 	<message xml:lang="tr">Geri al</message>
 </label>
 <label define="BRedo">
-	<message xml:lang="en">Redo</message>
-	<message xml:lang="fr">Refaire</message>
+	<message xml:lang="en">&amp;Redo</message>
+	<message xml:lang="fr">&amp;Refaire</message>
 	<message xml:lang="de">Erneut</message>
 	<message xml:lang="it">Rifai</message>
 	<message xml:lang="es">Rehacer</message>
@@ -542,8 +542,8 @@
 	<message xml:lang="tr">Iileri al</message>
 </label>
 <label define="BCut">
-	<message xml:lang="en">Cut</message>
-	<message xml:lang="fr">Couper</message>
+	<message xml:lang="en">Cu&amp;t</message>
+	<message xml:lang="fr">Cou&amp;per</message>
 	<message xml:lang="de">Ausschneiden</message>
 	<message xml:lang="it">Taglia</message>
 	<message xml:lang="tr">Kes</message>
@@ -552,8 +552,8 @@
 	<message xml:lang="fi">Leikkaa</message>
 </label>
 <label define="BCopy">
-	<message xml:lang="en">Copy</message>
-	<message xml:lang="fr">Copier</message>
+	<message xml:lang="en">&amp;Copy</message>
+	<message xml:lang="fr">&amp;Copier</message>
 	<message xml:lang="de">Kopieren</message>
 	<message xml:lang="it">Copia</message>
 	<message xml:lang="tr">Kopyala</message>
@@ -562,8 +562,8 @@
 	<message xml:lang="fi">Kopioi</message>
 </label>
 <label define="BPaste">
-	<message xml:lang="en">Paste</message>
-	<message xml:lang="fr">Coller</message>
+	<message xml:lang="en">&amp;Paste</message>
+	<message xml:lang="fr">Co&amp;ller</message>
 	<message xml:lang="de">Einfügen</message>
 	<message xml:lang="it">Incolla</message>
 	<message xml:lang="tr">Yapıştır</message>
@@ -572,8 +572,8 @@
 	<message xml:lang="fi">Liitä</message>
 </label>
 <label define="BClear">
-	<message xml:lang="en">Delete</message>
-	<message xml:lang="fr">Détruire</message>
+	<message xml:lang="en">&amp;Delete</message>
+	<message xml:lang="fr">Dé&amp;truire</message>
 	<message xml:lang="de">Löschen</message>
 	<message xml:lang="it">Cancella</message>
 	<message xml:lang="tr">Temizle</message>
@@ -582,8 +582,8 @@
 	<message xml:lang="fi">Poista</message>
 </label>
 <label define="TEditMode">
-	<message xml:lang="en">Editor Mode</message>
-	<message xml:lang="fr">Mode éditeur</message>
+	<message xml:lang="en">&amp;Editor Mode</message>
+	<message xml:lang="fr">Mode &amp;éditeur</message>
 	<message xml:lang="de">Editormodus</message>
 	<message xml:lang="it">Modo Editor</message>
 	<message xml:lang="es">Modo Edición</message>
@@ -592,8 +592,8 @@
 	<message xml:lang="tr">Editör modu</message>
 </label>
 <label define="BFind">
-	<message xml:lang="en">Find...</message>
-	<message xml:lang="fr">Rechercher...</message>
+	<message xml:lang="en">&amp;Find...</message>
+	<message xml:lang="fr">Rec&amp;hercher...</message>
 	<message xml:lang="de">Suchen/Ersetzen...</message>
 	<message xml:lang="it">Trova...</message>
 	<message xml:lang="tr">Ara...</message>
@@ -602,8 +602,8 @@
 	<message xml:lang="fi">Etsi...</message>
 </label>
 <label define="BSpellCheck">
-	<message xml:lang="en">Check spelling...</message>
-	<message xml:lang="fr">Vérifier orthographe...</message>
+	<message xml:lang="en">Chec&amp;k spelling...</message>
+	<message xml:lang="fr">Vérifier &amp;orthographe...</message>
 	<message xml:lang="de">Rechtschreibprüfung...</message>
 	<message xml:lang="it">Controllo ortografico...</message>
 	<message xml:lang="tr">Yazım hataları ara...</message>
@@ -612,8 +612,8 @@
 	<message xml:lang="fi">Tarkista oikeinkirjoitus...</message>
 </label>
 <label define="BTransform">
-	<message xml:lang="en">Transform...</message>
-	<message xml:lang="fr">Transformer...</message>
+	<message xml:lang="en">Trans&amp;form...</message>
+	<message xml:lang="fr">Trans&amp;former...</message>
 	<message xml:lang="de">Transformieren...</message>
 	<message xml:lang="it">Trasforma...</message>
 	<message xml:lang="tr">Dönüştür</message>

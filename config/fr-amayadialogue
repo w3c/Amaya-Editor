@@ -17,50 +17,50 @@
 15 **&Bookmarks
 16 &Coopération
 17 A&ide
-18 Nouveau
-19 Nouveau document XHTML 1.1...
-20 Nouveau document XHTML 1.0 Transitional...
-21 Nouveau document XHTML 1.0 Strict...
-22 Nouveau document XHTML 1.0 Basic ...
-23 Nouveau document MathML...
-24 Nouveau document SVG...
-25 Nouvelle feuille de style...
-26 Modèle
-27 Ouvrir...
-28 Ouvrir dans nouvelle fenêtre...
-29 Recharger le document
-30 Précédent
-31 Suivant
-32 Sauver
-33 Sauver comme...
-34 Synchroniser
-35 Modifier le doctype
-36 Supprimer le doctype
-37 Changer/Créer doctype XHTML 1.1
-38 Changer/Créer doctype XHTML 1.0 Transitional
-39 Changer/Créer doctype XHTML 1.0 Strict
-40 Changer/Créer doctype XHTML 1.0 Basic
-41 Changer/Créer doctype HTML 4.01 Transitional
-42 Changer/Créer doctype HTML 4.01 Strict
-43 Changer/Créer doctype XHTML 1.1 + MathML 2.0
-44 Changer/Créer doctype MathML 2.0
-45 Changer/Créer doctype SVG 1.0
-46 Informations sur le document
-47 Paramétrer et imprimer...
-48 Imprimer
-49 Fermer la fenêtre
-50 Quitter Amaya
+18 &Nouveau
+19 Nouveau document &XHTML 1.1...
+20 Nouveau document XHTML 1.0 &Transitional...
+21 Nouveau document XHTML 1.0 &Strict...
+22 Nouveau document XHTML 1.0 &Basic ...
+23 Nouveau document &MathML...
+24 Nouveau document &SVG...
+25 Nouvelle &feuille de style...
+26 M&odèle
+27 &Ouvrir...
+28 Ouvrir dans nou&velle fenêtre...
+29 &Recharger le document
+30 Pr&écédent
+31 S&uivant
+32 &Sauver
+33 Sauver &comme...
+34 S&ynchroniser
+35 Modifier le &doctype
+36 S&upprimer le doctype
+37 Changer/Créer doctype &XHTML 1.1
+38 Changer/Créer doctype XHTML 1.0 &Transitional
+39 Changer/Créer doctype XHTML 1.0 &Strict
+40 Changer/Créer doctype XHTML 1.0 &Basic
+41 Changer/Créer doctype &HTML 4.01 Transitional
+42 Changer/Créer doctype HTML 4.01 Str&ict
+43 Changer/Créer doctype XHTML 1.1 + &MathML 2.0
+44 Changer/Créer doctype M&athML 2.0
+45 Changer/Créer doctype SV&G 1.0
+46 Infor&mations sur le document
+47 &Paramétrer et imprimer...
+48 &Imprimer
+49 &Fermer la fenêtre
+50 &Quitter Amaya
 51 Fermer la vue
-52 Défaire
-53 Refaire
-54 Couper
-55 Copier
-56 Coller
-57 Détruire
-58 Mode éditeur
-59 Rechercher...
-60 Vérifier orthographe...
-61 Transformer...
+52 &Défaire
+53 &Refaire
+54 Cou&per
+55 &Copier
+56 Co&ller
+57 Dé&truire
+58 Mode &éditeur
+59 Rec&hercher...
+60 Vérifier &orthographe...
+61 Trans&former...
 62 base
 63 meta
 64 Lien (link)

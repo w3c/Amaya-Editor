@@ -37,10 +37,10 @@
 35 doctype\'bı düzenle
 36 doctype\'bı sil
 37 XHTML 1.1 doctype\'bı değiştir/yarat
-38 **Set doctype to XHTML 1.0 Transitional
+38 **Set doctype to XHTML 1.0 &Transitional
 39 XHTML 1.0 Strict doctype\'bı değiştir/yarat
 40 XHTML 1.0 Basic doctype\'bı değiştir/yarat
-41 **Set doctype to HTML 4.01 Transitional
+41 **Set doctype to &HTML 4.01 Transitional
 42 HTML 4.01 Strict doctype\'bı değiştir/yarat
 43 XHTML 1.1 + MathML 2.0 doctype\'bı değiştir/yarat
 44 MathML 2.0 doctype\'bı değiştir/yarat
