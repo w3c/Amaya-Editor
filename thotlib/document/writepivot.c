@@ -654,6 +654,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	  TtaWriteByte (pivFile, C_PR_BORDERLEFTCOLOR);
 	  break;
 	default:
+          printf ("\nERROR: wrong pres rule *****\n");
 	  break;
 	}
       /* ecrit les parametres de la regle */
@@ -884,6 +885,9 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
       /* write the view number */
       PutShort (pivFile, 1);
+      /* write the specificity and the importance of the rule */
+      PutShort (pivFile, pPRule->PrSpecificity);
+      PutBoolean (pivFile, pPRule->PrImportant);
       /* write the presentation box number */
       PutShort (pivFile, 0);
       /* write the specific rule and its parameters */
