@@ -607,8 +607,8 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
-  int                *colVSpan, hspan, differredRef[MAX_COLS];
-  int                 span, cRef, cNumber;
+  int                *colVSpan;
+  int                 span, cRef, cNumber, extracol;
   int                 i, rowType;
   ThotBool            inMath;
 
@@ -617,7 +617,6 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 
   colElement = TtaGetMemory (sizeof (Element) * MAX_COLS);
   colVSpan = TtaGetMemory (sizeof (int) * MAX_COLS);
-
   /* store the list of colheads */
   elType = TtaGetElementType (table);
   inMath = !TtaSameSSchemas (elType.ElSSchema,
@@ -643,8 +642,8 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       cNumber++;
     }
   cell = NULL;
-  /* number of differed colspan rules */
-  hspan = 0;
+  /* number of extra columns */
+  extracol = 0;
   attrType.AttrSSchema = elType.ElSSchema;
   attrTypeHSpan.AttrSSchema = elType.ElSSchema;
   if (inMath)
@@ -761,6 +760,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		    i++;
 		    }
 		  if (nextCell)
+		    extracol++;
 		    /* Create additional Column_heads */
 		    while (i < span)
 		      {
@@ -774,15 +774,6 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		      colVSpan[cRef] = colVSpan[cRef-1];
 		      i++;
 		      }
-		  else if (i < span && hspan < MAX_COLS &&
-			   colVSpan[cRef] == 0)
-		    {
-		    /* differs the management of the colspan */
-		     differredHSpan[hspan] = cell;
-		     differredRef[hspan] = cRef - i + 1;
-		     hspan++;
-		     span = 1;
-		    }
 		  if (span > 1)
 		    {
 		    /* set attribute ColExt */
@@ -875,48 +866,6 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	  }
 	else
 	  row = NULL;
-	}
-      }
-    }
-  /* now manage differed colspan rules */
-  for (i = 0; i < hspan; i++)
-    {
-    /* if there an attribute colspan for that cell, update attribute ColExt */
-    cell = differredHSpan[i];
-    attr = TtaGetAttribute (cell, attrTypeHSpan);
-    span = TtaGetAttributeValue (attr);
-    cRef = differredRef[i];
-    if (span + cRef >= cNumber)
-      {
-      span = cNumber - cRef;
-      /* the span value is not correct, set the right value */
-      TtaSetAttributeValue (attr, span, cell, doc);
-      }
-    if (span > 1)
-      {
-      /* set attribute ColExt */
-      if (inMath)
-	attrType.AttrTypeNum = MathML_ATTR_MColExt;
-      else
-	attrType.AttrTypeNum = HTML_ATTR_ColExt;
-      attr = TtaGetAttribute (cell, attrType);
-      if (attr == NULL)
-	{
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (cell, attr, doc);
-	}
-      if (attr != NULL)
-	TtaSetAttributeReference (attr, cell, doc, colElement[cRef + span - 1],
-				  doc);
-      /* remove extra cells */
-      nextCell = cell;
-      TtaNextSibling (&nextCell);
-      while (span > 1 && nextCell != NULL)
-	{
-	cell = nextCell;
-	TtaNextSibling (&nextCell);
-	TtaDeleteTree (cell, doc);
-	span--;
 	}
       }
     }
