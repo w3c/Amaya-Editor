@@ -39,12 +39,12 @@ typedef struct _Frame_Ctl
 #else  /* _WINDOWS */
   TBBUTTON*	Button[MAX_BUTTON];	/* Widget des boutons		  */
 #endif /* _WINDOWS */
-  Proc  	Call_Button[MAX_BUTTON];/* Callback des boutons		   */
-  ThotWidget	Text_Zone[MAX_TEXTZONE];/* Widget des boutons		   */
+  Proc  	Call_Button[MAX_BUTTON];/* Callback des boutons		  */
+  ThotWidget	Text_Zone[MAX_TEXTZONE];/* Widget des boutons		  */
 #ifdef _WINDOWS
   ThotWidget    Label[MAX_TEXTZONE];  /* Labels of text zones             */
 #endif /* _WINDOWS */
-  Proc  	Call_Text[MAX_TEXTZONE];/* Callback des boutons		   */
+  Proc  	Call_Text[MAX_TEXTZONE];/* Callback des boutons		  */
 }Frame_Ctl;
 #endif /* !NODISPLAY */
 

@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int DumpCSSToFile ( Document doc,
-                           CSSInfoPtr css,
-                           char *filename );
 extern void AddCSS ( CSSInfoPtr css );
 extern void FreeCSS ( CSSInfoPtr css );
 extern void InitDocumentCSS ( Document doc );
@@ -58,16 +55,10 @@ extern void RedrawRRPI ( char *name );
 extern void CSSHandleMerge ( char which,
                              boolean copy );
 extern void RebuildAllCSS ( void );
-extern int SaveCSSThroughNet ( Document doc,
-                               View view,
-                               CSSInfoPtr css );
 extern void InitCSS ( void );
 
 #else /* __STDC__ */
 
-extern int DumpCSSToFile (/* Document doc,
-                             CSSInfoPtr css,
-                             char *filename */);
 extern void AddCSS (/* CSSInfoPtr css */);
 extern void FreeCSS (/* CSSInfoPtr css */);
 extern void InitDocumentCSS (/* Document doc */);
@@ -117,9 +108,6 @@ extern void RedrawRRPI (/* char *name */);
 extern void CSSHandleMerge (/* char which,
                                boolean copy */);
 extern void RebuildAllCSS (/* void */);
-extern int SaveCSSThroughNet (/* Document doc,
-                                 View view,
-                                 CSSInfoPtr css */);
 extern void InitCSS (/* void */);
 
 #endif /* __STDC__ */

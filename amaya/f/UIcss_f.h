@@ -15,7 +15,6 @@ extern void SelectExternalCSS ( Document doc,
 extern void CSSConfirm ( Document document,
                          View view,
                          char *label );
-extern void RedisplayDocument ( Document doc );
 extern void ApplyExtraPresentation ( Document doc );
 extern void InitBrowse ( Document doc,
                          View view,
@@ -35,7 +34,6 @@ extern void SelectExternalCSS (/* Document doc,
 extern void CSSConfirm (/* Document document,
                            View view,
                            char *label */);
-extern void RedisplayDocument (/* Document doc */);
 extern void ApplyExtraPresentation (/* Document doc */);
 extern void InitBrowse (/* Document doc,
                            View view,

@@ -2630,6 +2630,8 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
+  InitAmaya intializes Amaya variables and opent the first document
+  window.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitAmaya (NotifyEvent * event)
@@ -2809,6 +2811,8 @@ NotifyEvent        *event;
    QueryInit ();
 #endif
 
+   /* Define the backup function */
+   TtaSetBackup (BackUpDocs);
    AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */
    BaseDialog = TtaSetCallback (CallbackDialogue, MAX_REF);

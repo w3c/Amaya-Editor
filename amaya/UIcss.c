@@ -7,7 +7,8 @@
 
 /*
  *
- * Author: D. Veillard
+ * Authors: D. Veillard
+ *          I. Vatton
  *
  */
 
@@ -27,29 +28,32 @@ static char         currentExternalCSS[500] = "";
 static char         currentDeleteCSS[500] = "";
 static boolean      CSSUserAnswer = FALSE;
 static CSSInfoPtr   sauve_css = NULL;
-
+static boolean      RListRPIModified;
+static char         URL[500];
 
 extern CSSInfoPtr   ListCSS;
 extern Document     currentDocument;
 extern CSSInfoPtr   User_CSS;
+extern CSSInfoPtr   LCSS;
+extern CSSInfoPtr   RCSS;
+extern PRuleInfoPtr LListRPI;
+extern PRuleInfoPtr RListRPI;
 extern char        *CSSDocumentName;
 extern char        *CSSDirectoryName;
 extern char        *amaya_save_dir;
-extern boolean      NonPPresentChanged;
-extern int          BaseCSSDialog;
-extern CSSInfoPtr   LCSS;
-extern CSSInfoPtr   RCSS;
 extern char         currentLRPI[500];
 extern char         currentRRPI[500];
+extern char        *currentLCSS;
+extern char        *currentRCSS;
 extern int          LListRPIIndex;
 extern int          RListRPIIndex;
-extern PRuleInfoPtr LListRPI;
-extern PRuleInfoPtr RListRPI;
+extern int          BaseCSSDialog;
 extern boolean      LListRPIModified;
+extern boolean      NonPPresentChanged;
 
-static boolean         RListRPIModified;
 
 #include "css_f.h"
+#include "query_f.h"
 #include "p2css_f.h"
 #include "AHTURLTools_f.h"
 #include "UIcss_f.h"
@@ -65,14 +69,12 @@ static char        *last_message = NULL;
 /*----------------------------------------------------------------------
    InitCSSDialog                                                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                InitCSSDialog (Document doc, View view)
 #else
 void                InitCSSDialog (doc, view)
 Document            doc;
 View                view;
-
 #endif
 {
 #  ifndef _WINDOWS
@@ -163,14 +165,12 @@ View                view;
    SelectExternalCSS : dialog used to select and load an external   
    CSS file.                                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                SelectExternalCSS (Document doc, View view)
 #else
 void                SelectExternalCSS (doc, view)
 Document            doc;
 View                view;
-
 #endif
 {
    char                buffer[3000];
@@ -199,7 +199,6 @@ View                view;
 /*----------------------------------------------------------------------
    CSSConfirm                                                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CSSConfirm (Document document, View view, char *label)
 #else
@@ -207,7 +206,6 @@ void                CSSConfirm (document, view, label)
 Document            document;
 View                view;
 char               *label;
-
 #endif
 {
    /* Confirm form */
@@ -220,30 +218,6 @@ char               *label;
    TtaWaitShowDialogue ();
 }
 
-/*----------------------------------------------------------------------
-   RedisplayDocument : force the Thot kernel to rebuild the internal 
-   image representation to reflect changes in    
-   the generic presentation for example.         
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                RedisplayDocument (Document doc)
-#else
-void                RedisplayDocument (doc)
-Document            doc;
-
-#endif
-{
-/***********************
-  int mode;
-
-  mode = TtaGetDisplayMode(doc);
-  if (mode == DisplayImmediately) {
-      TtaSetDisplayMode (doc, NoComputedDisplay);
-      TtaSetDisplayMode (doc, DisplayImmediately);
-  }
- ***********************/
-}
 
 /*----------------------------------------------------------------------
    ApplyExtraPresentation : Change the presentation attributes     
@@ -324,55 +298,10 @@ char               *url;
 
 #endif
 {
-   char               *proto, *host, *dir, *file;
-   boolean                dir_ok = FALSE;
-   static char         URL[500];
+  TtaExtractName (url, CSSDirectoryName, CSSDocumentName);
+  if (CSSDocumentName[0] == EOS)
+    strcpy (CSSDocumentName, "noname.css");
 
-   strcpy (URL, url);
-   ExplodeURL (URL, &proto, &host, &dir, &file);
-
-   if (file == NULL)
-      file = "noname.css";
-
-   if ((host != NULL) && (amaya_save_dir != NULL))
-     {
-	if (dir != NULL)
-	  {
-	     sprintf (CSSDirectoryName, amaya_save_dir, host);
-	     strcat (CSSDirectoryName, DIR_STR);
-	     strcat (CSSDirectoryName, dir);
-	     dir_ok = TtaCheckDirectory (CSSDirectoryName);
-	  }
-	if (!dir_ok)
-	  {
-	     sprintf (CSSDirectoryName, amaya_save_dir, host);
-	     dir_ok = TtaCheckDirectory (CSSDirectoryName);
-	  }
-	if ((dir != NULL) && (!dir_ok))
-	  {
-	     sprintf (CSSDirectoryName, amaya_save_dir, "");
-	     strcat (CSSDirectoryName, DIR_STR);
-	     strcat (CSSDirectoryName, dir);
-	     dir_ok = TtaCheckDirectory (CSSDirectoryName);
-	  }
-	if (!dir_ok)
-	  {
-	     sprintf (CSSDirectoryName, amaya_save_dir, "");
-	     dir_ok = TtaCheckDirectory (CSSDirectoryName);
-	  }
-     }
-   if ((host == NULL) && (dir != NULL))
-     {
-	/* local file : users preferences for example */
-	strcpy (CSSDirectoryName, dir);
-	dir_ok = TtaCheckDirectory (CSSDirectoryName);
-     }
-   if (!dir_ok)
-     {
-	getcwd (CSSDirectoryName, MAX_LENGTH);
-     }
-   strcpy (CSSDocumentName, file);
-   /* don't try to use file or dir from here, they reference URL ! */
    strcpy (URL, CSSDirectoryName);
    strcat (URL, DIR_STR);
    strcat (URL, CSSDocumentName);
@@ -391,9 +320,169 @@ char               *url;
 }
 
 /*----------------------------------------------------------------------
+   DumpCSSToFile                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean      DumpCSSToFile (Document doc, CSSInfoPtr css, char *filename)
+#else
+static boolean      DumpCSSToFile (doc, css, output)
+Document            doc;
+CSSInfoPtr          css;
+char               *filename;
+#endif
+{
+   struct tm          *tm;
+   time_t              current_date;
+   PRuleInfoPtr        rpi, list;
+   FILE               *output;
+   char               *buffer, *cour, *user;
+   int                 size;
+   boolean             ok;
+
+   ok = FALSE;
+   if (css != NULL && css->pschema != NULL && filename != NULL)
+     {
+       list = PSchema2RPI (doc, css);
+       /* calculate the output file size */
+       size = 1000;    	/* overestimated header size ... */
+       for (rpi = list; rpi != NULL; rpi = rpi->NextRPI)
+	 /*     selector " { "  css_rule   " }\n\r" */
+	 size += strlen (rpi->selector) + 3 + strlen (rpi->css_rule) + 4;
+
+       /* allocate it */
+       buffer = TtaGetMemory (size);
+       if (buffer != NULL)
+	 {
+	   output = fopen (filename, "w");
+	   if (output != NULL)
+	     {
+	       ok = TRUE;
+	       /* fill in the header with pertinent informations */
+	       cour = buffer;
+	       sprintf (cour, "/*\n * CSS 1.0 Style Sheet produced by Amaya\n * \n");
+
+	       while (*cour != 0)
+		 cour++;
+	       if (css->name)
+		 {
+		   sprintf (cour, " * %s\n *\n", css->name);
+		   while (*cour != 0)
+		     cour++;
+		 }
+
+	       if (css->url)
+		 {
+		   sprintf (cour, " * URL : %s\n", css->url);
+		   while (*cour != 0)
+		     cour++;
+		 }
+	       sprintf (cour, " * Last updated ");
+
+	       while (*cour != 0)
+		 cour++;
+	       (void) time (&current_date);
+	       tm = localtime (&current_date);
+	       (void) strftime (cour, 100, "%x %X", tm);
+
+	       while (*cour != 0)
+		 cour++;
+	       user = TtaGetEnvString ("USER");
+	       if (user == NULL)
+		 user = "unknown user";
+	       sprintf (cour, " by %s on ", user);
+	   
+	       while (*cour != 0)
+		 cour++;
+	       (void) gethostname (cour, 100);
+	       
+	       while (*cour != 0)
+		 cour++;
+	       sprintf (cour, "\n */\n\n");
+	       
+	       while (*cour != 0)
+		 cour++;
+	       /* dump the rules to the buffer, and free them */
+	       for (rpi = list; rpi != NULL; rpi = rpi->NextRPI)
+		 {
+		   strcpy (cour, rpi->selector);
+		   while (*cour != 0)
+		     cour++;
+		   strcpy (cour, " { ");
+		   while (*cour != 0)
+		     cour++;
+		   strcpy (cour, rpi->css_rule);
+		   while (*cour != 0)
+		     cour++;
+		   strcpy (cour, " }\n");
+		   while (*cour != 0)
+		     cour++;
+		 }
+
+	       /* mark the end */
+	       strcpy (cour, "\n/* CSS end */\n");
+
+	       /* save it to the file */
+	       fwrite (buffer, strlen (buffer), 1, output);
+	       fclose (output);
+
+	       /* update the css_rule field in the css_structure */
+	       if (css->css_rule != NULL)
+		 TtaFreeMemory (css->css_rule);
+	       css->css_rule = buffer;
+
+	       /* mark the rule as unchanged */
+	       css->state = CSS_STATE_Unmodified;
+	     }
+	 }
+       CleanListRPI (&list);
+     }
+   return (ok);
+}
+
+/*----------------------------------------------------------------------
+   SaveCSS : Save locally or use the PUT method to save a CSS file.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean   SaveCSS (Document doc, View view, CSSInfoPtr css)
+#else
+static boolean   SaveCSS (doc, view, css)
+Document         doc;
+View             view;
+CSSInfoPtr       css;
+#endif
+{
+  char               *filename;
+  boolean             ok = TRUE;
+
+  if (css == NULL || css->url == NULL)
+    return (FALSE);
+  else if (IsW3Path (css->url))
+    {
+      filename = GetLocalPath (doc, css->url);
+      ok = DumpCSSToFile (doc, css, filename);
+      if (ok)
+	ok = (boolean) PutObjectWWW (doc, filename, css->url, AMAYA_SYNC,
+				     unknown_type, NULL, NULL);
+      TtaFreeMemory (filename);
+    }
+  else
+    ok = DumpCSSToFile (doc, css, css->url);
+  
+  if (ok)
+    {
+      TtaDisplayMessage (CONFIRM, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), css->url);
+      return (FALSE);
+    }
+  else
+    {
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), css->url);
+      return (TRUE);
+     }
+}
+
+/*----------------------------------------------------------------------
    CSSCallbackDialogue : procedure for style dialogue events          
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CSSCallbackDialogue (int ref, int typedata, char *data)
 #else
@@ -401,7 +490,6 @@ void                CSSCallbackDialogue (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
-
 #endif
 {
   int                 val;
@@ -430,31 +518,39 @@ char               *data;
 	{
 	case 0:
 	  currentDocument = -1;
+	  if (currentLCSS)
+	    TtaFreeMemory (currentLCSS);
+	  currentLCSS = NULL;
+	  if (currentRCSS)
+	    TtaFreeMemory (currentRCSS);
+	  currentRCSS = NULL;
 	  TtaDestroyDialogue (BaseCSSDialog + FormCSS);
 	  break;
 	case 1:
-	  if (CSSBrowseState != CSS_BROWSE_None)
-	    break;
-	  if (sauve_css != NULL)
-	    break;
-	  sauve_css = ListCSS;
-	  while (sauve_css != NULL)
+	case 2:
+	  if (CSSBrowseState == CSS_BROWSE_None && sauve_css == NULL)
 	    {
-	      while ((sauve_css != NULL) &&
-		     ((sauve_css->state != CSS_STATE_Modified) ||
-		      (sauve_css->category == CSS_DOCUMENT_STYLE)))
-		sauve_css = sauve_css->NextCSS;
-	      if (sauve_css != NULL)
+	      sauve_css = ListCSS;
+	      while (sauve_css != NULL)
 		{
-		  if (SaveCSSThroughNet (currentDocument,
-					 1, sauve_css) == 0)
-		    continue;
-		  CSSBrowseState = CSS_BROWSE_SaveAll;
-		  InitBrowse (currentDocument, 1, sauve_css->url);
+		  while (sauve_css != NULL &&
+			 (sauve_css->state != CSS_STATE_Modified ||
+			  sauve_css->category == CSS_DOCUMENT_STYLE))
+		    sauve_css = sauve_css->NextCSS;
+		  if (sauve_css != NULL)
+		    {
+		      if (val == 1)
+			SaveCSS (currentDocument, 1, sauve_css);
+		      else
+			{
+			  CSSBrowseState = CSS_BROWSE_SaveAll;
+			  InitBrowse (currentDocument, 1, sauve_css->url);
+			}
+		    }
+		  else
+		    TtaSetStatus (currentDocument, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
 		}
 	    }
-	  break;
-	case 2:
 	  break;
 	case 3:
 	  RebuildAllCSS ();
@@ -501,21 +597,19 @@ char               *data;
 	      rpi = SearchRPISel (currentLRPI, LListRPI);
 	      LListRPIModified = TRUE;
 	      LCSS->state = CSS_STATE_Modified;
-	      RedrawLRPI (NULL);
 	    }
 	  else if (currentRRPI[0] != EOS)
 	    {
 	      rpi = SearchRPISel (currentRRPI, RListRPI);
 	      RCSS->state = CSS_STATE_Modified;
 	      RListRPIModified = TRUE;
-	      RedrawRRPI (NULL);
 	    }
 
 	  if (rpi != NULL)
 	    {
 	      RemoveRPI (currentDocument, rpi);
+	      RedrawRRPI (NULL);
 	      RebuildHTMLStyleHeader (currentDocument);
-	      /*RedisplayDocument (currentDocument);*/
 	    }
 	  break;
 	case 3:
@@ -543,10 +637,8 @@ char               *data;
 	   * add currentExternalCSS to the list of external
 	   * style sheets of the document.
 	   */
-	  LoadHTMLExternalStyleSheet (currentExternalCSS,
-				      currentDocument, TRUE);
-	  RedisplayDocument (currentDocument);
-	  if ((RListRPIIndex == -1) || (LListRPIIndex != -1))
+	  LoadHTMLExternalStyleSheet (currentExternalCSS, currentDocument, TRUE);
+	  if (RListRPIIndex == -1 || LListRPIIndex != -1)
 	    {
 	      RCSS = SearchCSS (currentDocument, CSS_EXTERNAL_STYLE,
 				currentExternalCSS);
@@ -568,7 +660,7 @@ char               *data;
 	   */
 	  LoadHTMLExternalStyleSheet (currentExternalCSS,
 				      currentDocument, FALSE);
-	  if ((RListRPIIndex == -1) || (LListRPIIndex != -1))
+	  if (RListRPIIndex == -1 || LListRPIIndex != -1)
 	    {
 	      RCSS = SearchCSS (currentDocument, CSS_BROWSED_STYLE,
 				currentExternalCSS);
@@ -733,26 +825,23 @@ char               *data;
 	  /* reinitialize directories and document lists */
 	  TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
 			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
-			    ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
+			    ".css", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
+	}
+      else if (IsW3Path (data))
+	{
+	  /* reset the CSSDirectoryName */
+	  strcpy (tempfile, CSSDirectoryName);
+	  strcat (tempfile, DIR_STR);
+	  TtaExtractName (data, CSSDirectoryName, tempname);
+	  strcat (tempfile, tempname);
+	  /* reinitialize directories and document lists */
+	  TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
+			    ".css", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
+	  TtaSetTextForm (BaseCSSDialog + CSSNomURL, tempfile);
 	}
       else
-	{
-	  if (IsW3Path (data))
-	    {
-	      /* reset the CSSDirectoryName */
-	      strcpy (tempfile, CSSDirectoryName);
-	      strcat (tempfile, DIR_STR);
-	      TtaExtractName (data, CSSDirectoryName, tempname);
-	      strcat (tempfile, tempname);
-	      /* reinitialize directories and document lists */
-	      TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
-				TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
-				".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
-	      TtaSetTextForm (BaseCSSDialog + CSSNomURL, tempfile);
-	    }
-	  else
-	    TtaExtractName (data, CSSDirectoryName, CSSDocumentName);
-	}
+	TtaExtractName (data, CSSDirectoryName, CSSDocumentName);
       break;
     default:
       break;

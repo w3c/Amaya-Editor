@@ -149,4 +149,5 @@ int                 AMAYA;
 #define AM_CSS_ERROR		      137
 #define AM_INVALID_TYPE		      138
 #define AM_UPDATED_LINK		      139
-#define AMAYA_MSG_MAX                 140
+#define AM_NOTHING_TO_SAVE	      140
+#define AMAYA_MSG_MAX                 141

@@ -80,6 +80,7 @@ extern void	    BackupOnFatalErrorLoadResources ();
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 extern void         TteConnectAction (int id, Proc procedure);
+extern void         TtaSetBackup (Proc procedure);
 extern void         TteZeroMenu (WindowType windowtype, char *schemaName);
 extern void         TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon);
 extern void         TteInitMenus (char *name, int number);
@@ -167,6 +168,7 @@ extern void         TtcSwitchCommands (Document document, View view);
 #else  /* __STDC__ */
 
 extern void         TteConnectAction ( /*int id, Proc procedure */ );
+extern void         TtaSetBackup (/* Proc procedure */);
 extern void         TteZeroMenu ( /*WindowType windowtype, char *schemaName */ );
 extern void         TteOpenMainWindow ( /*char *name, Pixmap logo, Pixmap icon */ );
 extern void         TteInitMenus ( /*char *name,int number */ );

@@ -699,6 +699,12 @@ View                view;
 
    if (SavingDocument != 0)
       return;
+   else if (!TtaIsDocumentModified (document))
+     {
+       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
+
+       return;
+     }
    SavingDocument = document;
    ok = FALSE;
 
@@ -762,6 +768,32 @@ DBG(fprintf(stderr, "SaveDocument : local saving\n");)
        TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
        SavingDocument = 0;
      }
+}
+
+
+/*----------------------------------------------------------------------
+  BackupAll save all opened documents when the application crashes
+  ----------------------------------------------------------------------*/
+void                   BackUpDocs ()
+{
+  Document             doc;
+  char                 pathname[MAX_LENGTH];
+  char                 docname[MAX_LENGTH];
+  char                 savename[MAX_LENGTH];
+
+  /* check all modified documents */
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    if (DocumentURLs[doc] != NULL && TtaIsDocumentModified (doc))
+      {
+	SavingDocument = 0;
+	TtaExtractName (DocumentURLs[doc], pathname, docname);
+	if (docname[0] == EOS)
+	  sprintf (pathname, "%s%c#%d.html", TempFileDirectory, DIR_SEP, doc);
+	else
+	  sprintf (pathname, "%s%c#%s", TempFileDirectory, DIR_SEP, docname);
+ 	DocumentURLs[doc] = pathname;
+	SaveDocument (doc, 1);
+      }
 }
 
 /*----------------------------------------------------------------------

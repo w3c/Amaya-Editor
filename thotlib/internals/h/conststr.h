@@ -15,11 +15,7 @@
 #define __CONST_STR_H__
 
 #define MAX_NAME_LENGTH 32	/* maximum name length */	
-#define MAX_RULES_SSCHEMA 350	/* maximum number of rules in a structure
-				   schema */	
 #define MAX_PARAM_SSCHEMA 10	/* maximum number of parameter definitions in
-				   a structure schema */
-#define MAX_ATTR_SSCHEMA 200	/* maximum number of attribute definitions in
 				   a structure schema */
 #define MAX_INT_ATTR_VAL 32000	/* maximum value of a numerical attribute */
 #define MAX_OPTION_CASE 28	/* maximum number of options in a choice */
@@ -34,13 +30,24 @@
 #define MAX_ATTR_VAL 20		/* maximum number of values for an enumerated
 				   attribute */
 #define MAX_LEN_ALL_CONST 512	/* maximum total length of constant strings */
-
 #define MAX_EXCEPT_SSCHEMA 350	/* maximum number of exceptions in a
 				   structure schema */	
 #define MAX_INCL_EXCL_SRULE 10	/* max number of inclusions/exclusions in a
 				   structure rule */	
 #define MAX_EXTENS_SSCHEMA 20	/* maximum number of extension rules in a */
 				/* structure schema */
+
+#ifdef _WINDOWS
+#define MAX_RULES_SSCHEMA 200	/* maximum number of rules in a structure
+				   schema */	
+#define MAX_ATTR_SSCHEMA 200	/* maximum number of attribute definitions in
+				   a structure schema */
+#else /* _WINDOWS ---------------------------------------*/
+#define MAX_RULES_SSCHEMA 350	/* maximum number of rules in a structure
+				   schema */	
+#define MAX_ATTR_SSCHEMA 200	/* maximum number of attribute definitions in
+				   a structure schema */
+#endif /* _WINDOWS */
 
 /* Constants defining exceptions */
 #define ExcNoCut 10

@@ -367,6 +367,7 @@ static PtrSSchema   ConstructAbstractSchStruct ()
    PtrSSchema          pSS;
 
    pSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
+   memset (pSS, 0, sizeof (StructSchema));
    pSS->SsCode = 0;
 
    /* initialise les types de base */

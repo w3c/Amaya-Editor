@@ -44,4 +44,17 @@ Proc                procedure;
    ThotLocalActions[id] = procedure;
 }
 
+/*----------------------------------------------------------------------
+   TtaSetBackup connect the backup function: procedure().
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetBackup (Proc procedure)
+#else  /* __STDC__ */
+void                TtaSetBackup (procedure)
+int                 id;
+Proc                procedure;
 
+#endif /* __STDC__ */
+{
+  TteConnectAction (T_backuponfatal, procedure);
+}

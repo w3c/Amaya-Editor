@@ -9,7 +9,8 @@
  * CSS.c : Handle all the dialogs and interface functions needed 
  * to manipulate CSS.
  *
- * Author: D. Veillard
+ * Authors: D. Veillard
+ *          I. Vatton
  *
  */
 
@@ -57,30 +58,30 @@
 
 #define AMAYA_SAVE_DIR "AMAYA_SAVE_DIR"
 
-static char        *currentLCSS = NULL;
-static char        *currentRCSS = NULL;
 static char         currentBRPI[2000] = "";
 static int          CSSLEntry = -1;
 static int          CSSREntry = -1;
 
-boolean             RListRPIModified = FALSE;
-boolean             LListRPIModified = FALSE;
 PRuleInfoPtr        RListRPI = NULL;
 PRuleInfoPtr        LListRPI = NULL;
-int                 RListRPIIndex = -1;
-int                 LListRPIIndex = -1;
-char                currentRRPI[500] = "";
-char                currentLRPI[500] = "";
 CSSInfoPtr          RCSS = NULL;
 CSSInfoPtr          LCSS = NULL;
 CSSInfoPtr          ListCSS = NULL;
 Document            currentDocument = -1;
 CSSInfoPtr          User_CSS = NULL;
+int                 BaseCSSDialog = -1;
+int                 RListRPIIndex = -1;
+int                 LListRPIIndex = -1;
+char                currentRRPI[500] = "";
+char                currentLRPI[500] = "";
 char               *CSSDocumentName = NULL;
 char               *CSSDirectoryName = NULL;
 char               *amaya_save_dir = NULL;
+char               *currentLCSS = NULL;
+char               *currentRCSS = NULL;
+boolean             RListRPIModified = FALSE;
+boolean             LListRPIModified = FALSE;
 boolean             NonPPresentChanged = FALSE;
-int                 BaseCSSDialog = -1;
 
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)
@@ -280,136 +281,6 @@ FILE               *output;
 #endif /* DEBUG_CSS */
 
 /*----------------------------------------------------------------------
-   DumpCSSToFile                                                  
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 DumpCSSToFile (Document doc, CSSInfoPtr css, char *filename)
-#else
-int                 DumpCSSToFile (doc, css, output)
-Document            doc;
-CSSInfoPtr          css;
-char               *filename;
-#endif
-{
-   int                 size;
-   char               *buffer, *cour, *user;
-   struct tm          *tm;
-   time_t              current_date;
-   PRuleInfoPtr        rpi, list;
-   FILE               *output;
-
-   if (css == NULL)
-      return (-1);
-   if (css->pschema == NULL)
-      return (-1);
-   if (filename == NULL)
-      return (-1);
-
-   list = PSchema2RPI (doc, css);
-
-   /* calculate the output file size */
-   size = 1000;			/* overestimated header size ... */
-   for (rpi = list; rpi != NULL; rpi = rpi->NextRPI)
-      /*     selector          " { "     css_rule        " }\n\r" */
-      size += strlen (rpi->selector) + 3 + strlen (rpi->css_rule) + 4;
-
-   /* allocate it */
-   buffer = TtaGetMemory (size);
-   if (buffer == NULL)
-     {
-	CleanListRPI (&list);
-	return (-1);
-     }
-   /* fill in the header with pertinent informations */
-   cour = buffer;
-   sprintf (cour, "/*\n * CSS 1.0 Style Sheet produced by Amaya\n * \n");
-   while (*cour != 0)
-      cour++;
-   if (css->name)
-     {
-	sprintf (cour, " * %s\n *\n", css->name);
-	while (*cour != 0)
-	   cour++;
-     }
-   if (css->url)
-     {
-	sprintf (cour, " * URL : %s\n", css->url);
-	while (*cour != 0)
-	   cour++;
-     }
-   sprintf (cour, " * Last updated ");
-   while (*cour != 0)
-      cour++;
-   (void) time (&current_date);
-   tm = localtime (&current_date);
-   (void) strftime (cour, 100, "%x %X", tm);
-   while (*cour != 0)
-      cour++;
-   user = TtaGetEnvString ("USER");
-   if (user == NULL)
-      user = "unknown user";
-   sprintf (cour, " by %s on ", user);
-   while (*cour != 0)
-      cour++;
-   (void) gethostname (cour, 100);
-   while (*cour != 0)
-      cour++;
-   sprintf (cour, "\n */\n\n");
-   while (*cour != 0)
-      cour++;
-
-   /* dump the rules to the buffer, and free them */
-   for (rpi = list; rpi != NULL; rpi = rpi->NextRPI)
-     {
-	strcpy (cour, rpi->selector);
-	while (*cour != 0)
-	   cour++;
-	strcpy (cour, " { ");
-	while (*cour != 0)
-	   cour++;
-	strcpy (cour, rpi->css_rule);
-	while (*cour != 0)
-	   cour++;
-	strcpy (cour, " }\n");
-	while (*cour != 0)
-	   cour++;
-     }
-   CleanListRPI (&list);
-
-   /* mark the end */
-   strcpy (cour, "\n/* CSS end */\n");
-
-   /* save it to the file */
-   output = fopen (filename, "w");
-   if (output == NULL)
-     {
-	fprintf (stderr, "CSS : unable to write to %s : aborted\n", filename);
-	return (-1);
-     }
-   if (fwrite (buffer, strlen (buffer), 1, output) < 0)
-     {
-	fprintf (stderr, "CSS : write to %s failed\n", filename);
-	fclose (output);
-	return (-1);
-     }
-   fclose (output);
-
-   /* update the css_rule field in the css_structure */
-   if (css->css_rule != NULL)
-      TtaFreeMemory (css->css_rule);
-   css->css_rule = buffer;
-
-   /* mark the rule as unchanged */
-   css->state = CSS_STATE_Unmodified;
-
-#ifdef DEBUG_CSS
-   fprintf (stderr, "CSS sucessfully dumped to %s\n", filename);
-#endif /* DEBUG_CSS */
-
-   return (0);
-}
-
-/*----------------------------------------------------------------------
    AddCSS                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -607,10 +478,15 @@ char               *url;
 	      if (css->url != NULL && !strcmp (url, css->url))
 		return (css);
 	      break;
-	    case CSS_USER_STYLE:
 	    case CSS_DOCUMENT_STYLE:
 	      if (category == css->category)
 		return (css);
+	      break;
+	    case CSS_USER_STYLE:
+	      if (category == css->category)
+		return (css);
+	      break;
+	    default:
 	      break;
 	    }
 	}
@@ -1063,6 +939,7 @@ Document            doc;
 	  local = TRUE;
 	  strcpy (tempfile, tempURL);
 	}
+
       if (tempfile[0] == EOS)
 	{
 	  fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
@@ -1403,6 +1280,7 @@ Document            doc;
       css->category = CSS_USER_STYLE;
       css->pschema = TtaNewPSchema ();
       css->mschema = NULL;
+      css->documents[doc] = TRUE;
       pSchema = TtaGetFirstPSchema (doc, NULL);
       prev = NULL;
       while (pSchema != NULL)
@@ -1759,12 +1637,12 @@ char               *first;
    char               *val = NULL;
    CSSInfoPtr          css;
 
-   if ((doc < 0) || (doc > DocumentTableLength)) return(0);
+   if (doc < 0 || doc > DocumentTableLength)
+     return (0);
 
-   /*
-    * add the first element if specified.
-    */
+   /* add the first element if specified */
    buf[0] = EOS;
+#ifdef IV
    if (first)
      {
 	strcpy (&buf[index], first);
@@ -1774,52 +1652,47 @@ char               *first;
 	index += len;
 	nb++;
      }
+#endif
    css = ListCSS;
    while (css != NULL)
      {
-	if (css->documents[doc])
-	  {
-	     switch (css->category)
-		   {
-		      case CSS_Unknown:
-			 val = css->url;
-			 break;
-		      case CSS_USER_STYLE:
-			 val = TtaGetMessage (AMAYA, AM_USER_PREFERENCES);
-			 break;
-		      case CSS_DOCUMENT_STYLE:
-			 val = TtaGetMessage (AMAYA, AM_DOC_STYLE);
-			 break;
-		      case CSS_EXTERNAL_STYLE:
-			 val = css->url;
-			 break;
-		      case CSS_BROWSED_STYLE:
-			 css = css->NextCSS;
-			 continue;
-		   }
-	     if (val == NULL)
-	       {
-		  css = css->NextCSS;
-		  continue;
-	       }
-	     if (!strcmp (val, buf))
-	       {		/* ensure unicity / first */
-		  css = css->NextCSS;
-		  continue;
-	       }
-	     len = strlen (val);
-	     len++;
-	     if (len >= free)
-	       {
-		  MSG ("BuildCSSList : Too many styles\n");
-		  break;
-	       }
-	     strcpy (&buf[index], val);
-	     free -= len;
-	     index += len;
-	     nb++;
-	  }
-	css = css->NextCSS;
+       if (css->documents[doc])
+	 {
+	   switch (css->category)
+	     {
+	     case CSS_Unknown:
+	       val = css->url;
+	       break;
+	     case CSS_USER_STYLE:
+	       val = TtaGetMessage (AMAYA, AM_USER_PREFERENCES);
+	       break;
+	     case CSS_DOCUMENT_STYLE:
+	       val = TtaGetMessage (AMAYA, AM_DOC_STYLE);
+	       break;
+	     case CSS_EXTERNAL_STYLE:
+	       val = css->url;
+	       break;
+	     default:
+	       val = NULL;
+	     }
+	 }
+
+       if (val != NULL /*&& strcmp (val, buf)*/)
+	 /* ensure unicity of first */
+	 {
+	   len = strlen (val);
+	   len++;
+	   if (len >= free)
+	     {
+	       MSG ("BuildCSSList : Too many styles\n");
+	       break;
+	     }
+	   strcpy (&buf[index], val);
+	   free -= len;
+	   index += len;
+	   nb++;
+	 }
+       css = css->NextCSS;
      }
 
 #ifdef DEBUG_CSS
@@ -1863,68 +1736,48 @@ char               *name;
    int                 index;
    Document            doc = currentDocument;
 
-   if ((name) && (currentRCSS) && (!strcmp (currentRCSS, name)))
+   if (name && currentRCSS && !strcmp (currentRCSS, name))
      {
 	TtaSetSelector (BaseCSSDialog + CSSLName, CSSLEntry, "");
 	return;
      }
    /* rebuild the list and redraw the CSS selector */
    nb_css = BuildCSSList (doc, buffer, 3000, name);
+   if (nb_css < 1)
+     return;
    TtaNewSelector (BaseCSSDialog + CSSLName, BaseCSSDialog + FormCSS,
 		   TtaGetMessage (AMAYA, AM_CSS_FILE_1), nb_css,
 		   buffer, 3, NULL, FALSE, TRUE);
 
    if (!name)
+     name = GetlistEntry (buffer, 0);
+   /* look if the name given is an existing CSS element */
+   for (index = 0; index < nb_css; index++)
+     if (!strcmp (name, GetlistEntry (buffer, index)))
+       break;
+   
+   if (index >= nb_css)
      {
-	if (nb_css > 0)
-	  {
-	     TtaSetSelector (BaseCSSDialog + CSSLName, 0, NULL);
-	     CSSLEntry = 0;
-	     name = GetlistEntry (buffer, 0);
-	  }
-	else
-	  {
-	     TtaSetSelector (BaseCSSDialog + CSSLName, -1, "");
-	     CSSLEntry = -1;
-	  }
+       MSG ("non-existent CSS selected\n");
+       return;
      }
-   if (name)
-     {
-	/*
-	 * look if the name given is an existing CSS element.
-	 */
-	for (index = 0; index < nb_css; index++)
-	   if (!strcmp (name, GetlistEntry (buffer, index)))
-	      break;
 
-	if (index >= nb_css)
-	  {
-	     MSG ("non-existent CSS selected\n");
-	     return;
-	  }
-	if (currentLCSS)
-	   TtaFreeMemory (currentLCSS);
+   if (currentLCSS)
+     TtaFreeMemory (currentLCSS);
+   currentLCSS = TtaStrdup (name);
 
-	currentLCSS = TtaStrdup (name);
-	TtaSetSelector (BaseCSSDialog + CSSLName, index, NULL);
-	CSSLEntry = index;
-	if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE)))
-	  LCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
-	else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES)))
-	  LCSS = SearchCSS (doc, CSS_USER_STYLE, name);
-	else
-	  LCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
-	if (LCSS == NULL)
-	  {
-	     MSG ("CSS selected not found in list\n");
-	     return;
-	  }
-     }
+   TtaSetSelector (BaseCSSDialog + CSSLName, index, NULL);
+   CSSLEntry = index;
+   if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE)))
+     LCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
+   else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES)))
+     LCSS = SearchCSS (doc, CSS_USER_STYLE, name);
    else
+     LCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
+   if (LCSS == NULL)
      {
-	if (currentLCSS)
-	   TtaFreeMemory (currentLCSS);
-	currentLCSS = NULL;
+       MSG ("CSS selected not found in list\n");
+       return;
      }
 }
 
@@ -1988,68 +1841,47 @@ char               *name;
    int                 index;
    Document            doc = currentDocument;
 
-   if ((name) && (currentLCSS) && (!strcmp (currentLCSS, name)))
+   if (name && currentLCSS && !strcmp (currentLCSS, name))
      {
 	TtaSetSelector (BaseCSSDialog + CSSRName, CSSREntry, "");
 	return;
      }
    /* rebuild the list and redraw the CSS selector */
    nb_css = BuildCSSList (doc, buffer, 3000, name);
+   if (nb_css < 1)
+     return;
    TtaNewSelector (BaseCSSDialog + CSSRName, BaseCSSDialog + FormCSS,
 		   TtaGetMessage (AMAYA, AM_CSS_FILE_2), nb_css,
 		   buffer, 3, NULL, FALSE, TRUE);
 
    if (!name)
-     {
-	if (nb_css > 1)
-	  {
-	     TtaSetSelector (BaseCSSDialog + CSSRName, 1, NULL);
-	     CSSREntry = 1;
-	     name = GetlistEntry (buffer, 1);
-	  }
-	else
-	  {
-	     TtaSetSelector (BaseCSSDialog + CSSRName, -1, "");
-	     CSSREntry = -1;
-	  }
-     }
+     name = GetlistEntry (buffer, 1);
+   /* look if the name given is an existing CSS element */
+   for (index = 0; index < nb_css; index++)
+     if (!strcmp (name, GetlistEntry (buffer, index)))
+       break;
 
-   if (name)
+   if (index >= nb_css)
      {
-	/*
-	 * look if the name given is an existing CSS element.
-	 */
-	for (index = 0; index < nb_css; index++)
-	   if (!strcmp (name, GetlistEntry (buffer, index)))
-	      break;
-
-	if (index >= nb_css)
-	  {
-	     MSG ("non-existent CSS selected\n");
-	     return;
-	  }
-	if (currentRCSS)
-	   TtaFreeMemory (currentRCSS);
-	currentRCSS = TtaStrdup (name);
-	TtaSetSelector (BaseCSSDialog + CSSRName, index, NULL);
-	CSSREntry = index;
-	if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE)))
-	  RCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
-	else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES)))
-	  RCSS = SearchCSS (doc, CSS_USER_STYLE, name);
-	else
-	  RCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
-	if (RCSS == NULL)
-	  {
-	     MSG ("CSS selected not found in list\n");
-	     return;
-	  }
+       MSG ("non-existent CSS selected\n");
+       return;
      }
+   if (currentRCSS)
+     TtaFreeMemory (currentRCSS);
+   currentRCSS = TtaStrdup (name);
+   
+   TtaSetSelector (BaseCSSDialog + CSSRName, index, NULL);
+   CSSREntry = index;
+   if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE)))
+     RCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
+   else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES)))
+     RCSS = SearchCSS (doc, CSS_USER_STYLE, name);
    else
+     RCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
+   if (RCSS == NULL)
      {
-	if (currentRCSS)
-	   TtaFreeMemory (currentRCSS);
-	currentRCSS = NULL;
+       MSG ("CSS selected not found in list\n");
+       return;
      }
 }
 
@@ -2077,9 +1909,7 @@ char               *name;
        RListRPI = PSchema2RPI (doc, RCSS);
      }
    else
-     {
-	nb_rpi = 0;
-     }
+     nb_rpi = 0;
    if (!name)
      TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS,
 		     TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2), nb_rpi,
@@ -2103,7 +1933,6 @@ char               *name;
 /*----------------------------------------------------------------------
    CSSHandleMerge : procedure used as a front end for merge operations
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CSSHandleMerge (char which, boolean copy)
 #else
@@ -2256,7 +2085,6 @@ boolean                copy;
    RebuildAllCSS : rebuild the whole internal structures with the  
    all the original CSS rules.                                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RebuildAllCSS (void)
 #else
@@ -2271,57 +2099,10 @@ void                RebuildAllCSS ()
 	   RebuildCSS (css);
 	css = css->NextCSS;
      }
-   /*
-   RedisplayDocument (currentDocument);
-    */
    RedrawLCSS (TtaGetMessage (AMAYA, AM_DOC_STYLE));
    RedrawRCSS (NULL);
    RedrawLRPI (NULL);
    RedrawRRPI (NULL);
-}
-
-/*----------------------------------------------------------------------
-   SaveCSSThroughNet : Use The PUT method to save a CSS file       
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 SaveCSSThroughNet (Document doc, View view, CSSInfoPtr css)
-#else
-int                 SaveCSSThroughNet (doc, view, css)
-Document            doc;
-View                view;
-CSSInfoPtr          css;
-
-#endif
-{
-   char               *proto, *host, *dir, *file;
-   static char         URL[500];
-   char                filename[300];
-   int                 res;
-
-   if ((css == NULL) || (css->url == NULL))
-      return (-1);
-
-   strcpy (URL, css->url);
-   if (IsW3Path (URL))
-     {
-	ExplodeURL (URL, &proto, &host, &dir, &file);
-	sprintf (filename, "%s/%d/%s", TempFileDirectory, doc, file);
-	if (DumpCSSToFile (currentDocument, css, filename))
-	   return (-1);
-	res = PutObjectWWW (doc, filename, css->url, AMAYA_SYNC, unknown_type,
-			    NULL, NULL);
-	if (res)
-	  {
-	     CSSConfirm (doc, view, "Failed to save to URL");
-	  }
-	else
-	  {
-	     CSSConfirm (doc, view, "Saving to URL succeded");
-	     return (0);
-	  }
-     }
-   return (-1);
 }
 
 /*----------------------------------------------------------------------
