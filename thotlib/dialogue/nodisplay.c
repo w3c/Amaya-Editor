@@ -7,6 +7,7 @@
 #include "typemedia.h"
 #include "language.h"
 #include "appaction.h"
+#include "storage.h"
 
 #define EXPORT extern
 #include "edit_tv.h"
@@ -16,6 +17,7 @@
 
 
 #include "memory_f.h"
+#include "readpivot_f.h"
 
 /* procedure bidon declarees localement et exportees */
 #ifdef __STDC__

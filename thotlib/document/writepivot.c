@@ -20,6 +20,8 @@
 #include "appaction.h"
 #include "app.h"
 #include "typecorr.h"
+#include "thotdir.h"
+#include "thotfile.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -45,14 +47,9 @@
 #include "fileaccess_f.h"
 #include "structschema_f.h"
 #include "content_f.h"
-
-#ifdef __STDC__
-extern int          RemoveFile (char *);
-
-#else  /* __STDC__ */
-extern int          RemoveFile ();
-
-#endif /* __STDC__ */
+#include "applicationapi_f.h"
+#include "platform_f.h"
+#include "readpivot_f.h"
 
 /*----------------------------------------------------------------------
    Retourne Vrai si les deux elements pointes par pEl1 et pEl2     

@@ -25,6 +25,7 @@
 #include "structschema_f.h"
 #include "content_f.h"
 #include "thotmsg_f.h"
+#include "viewapi_f.h"
 
 extern int          UserErrorCode;
 extern int          AvecControleStruct;

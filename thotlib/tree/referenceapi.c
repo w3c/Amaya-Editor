@@ -25,6 +25,9 @@
 #include "thotmsg_f.h"
 #include "structmodif_f.h"
 #include "memory_f.h"
+#include "readpivot_f.h"
+#include "applicationapi_f.h"
+#include "viewapi_f.h"
 
 extern int          UserErrorCode;
 

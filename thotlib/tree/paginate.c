@@ -15,6 +15,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "appdialogue.h"
+#include "storage.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -50,7 +51,7 @@
 #include "content_f.h"
 #include "presvariables_f.h"
 #include "print_f.h"
-
+#include "writepivot_f.h"
 
 #define MaxPageLib 20
 #define HMinPage 60	/* Hauteur minimum du corps de la page */

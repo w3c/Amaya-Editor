@@ -78,6 +78,7 @@ static char         fileExtension[MAX_PATH];
 #include "fileaccess_f.h"
 #include "structschema_f.h"
 #include "content_f.h"
+#include "applicationapi_f.h"
 
 /*----------------------------------------------------------------------
    GetSecondaryFile  retourne le fichier secondaire de nom fName.	

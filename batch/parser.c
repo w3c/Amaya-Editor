@@ -43,7 +43,7 @@ static ParserStackItem    Stack[STACKSIZE];	/* pile d'analyse */
 
 #include "fileaccess_f.h"
 #include "parser_f.h"
-
+#include "registry_f.h"
 /* ---------------------------------------------------------------------- */
 /* |    InitParser initialise les donnees de l'analyseur syntaxique.    | */
 /* ---------------------------------------------------------------------- */

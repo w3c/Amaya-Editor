@@ -13,6 +13,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "storage.h"
 
 #define EXPORT extern
 #include "platform_tv.h"
@@ -35,6 +36,8 @@
 #include "references_f.h"
 #include "presvariables_f.h"
 #include "content_f.h"
+#include "searchref_f.h"
+#include "writepivot_f.h"
 
 static PtrAbstractBox      pAbbBegin[MAX_VIEW_DOC];
 

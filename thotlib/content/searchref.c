@@ -47,6 +47,8 @@
 #include "structselect_f.h"
 #include "fileaccess_f.h"
 #include "structschema_f.h"
+#include "docs_f.h"
+#include "readpivot_f.h"
 
 #define MAX_ITEM_MENU_REF 10
 

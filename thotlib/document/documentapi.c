@@ -11,6 +11,8 @@
 #include "constpiv.h"
 #include "typecorr.h"
 #include "appdialogue.h"
+#include "thotdir.h"
+#include "thotfile.h"
 
 #ifdef NODISPLAY
 /*** For the ThotKernel, variables FirstSelectedElement and
@@ -49,6 +51,9 @@
 #include "fileaccess_f.h"
 #include "structschema_f.h"
 #include "thotmsg_f.h"
+#include "docs_f.h"
+#include "applicationapi_f.h"
+#include "platform_f.h"
 
 extern int          UserErrorCode;
 static Name          nameBuffer;

@@ -66,7 +66,7 @@ static int          newColor[] =
 #include "fileaccess_f.h"
 #include "structschema_f.h"
 #include "content_f.h"
-
+#include "applicationapi_f.h"
 
 /*----------------------------------------------------------------------
    	PivotError							

@@ -1,3 +1,6 @@
+#ifndef _THOT_DIR_H__
+#define _THOT_DIR_H__
+
 typedef enum {
   ThotDirBrowse_FILES = 1, 
   ThotDirBrowse_DIRECTORIES = 2, 
@@ -20,3 +23,5 @@ typedef struct {
 int ThotDirBrowse_close(ThotDirBrowse * me);
 int ThotDirBrowse_next(ThotDirBrowse * me);
 int ThotDirBrowse_first(ThotDirBrowse * me, char * dir, char * name, char * ext);
+
+#endif /* _THOT_DIR_H__ */

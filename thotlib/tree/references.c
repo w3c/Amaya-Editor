@@ -23,6 +23,8 @@
 #include "fileaccess_f.h"
 #include "content_f.h"
 #include "structschema_f.h"
+#include "readpivot_f.h"
+#include "applicationapi_f.h"
 
 /*----------------------------------------------------------------------
    SearchElemLabel    cherche dans tout le sous arbre de pEl	

@@ -29,6 +29,8 @@
 #include "structschema_f.h"
 #include "thotmsg_f.h"
 #include "viewapi_f.h"
+#include "documentapi_f.h"
+#include "applicationapi_f.h"
 
 extern int          UserErrorCode;
 static Name         nameBuffer;

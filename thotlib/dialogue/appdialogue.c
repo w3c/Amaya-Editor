@@ -82,22 +82,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #include "boxselection_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
-
-#ifdef __STDC__
-extern void         CloseInsertion (void);
-extern void         InitDocContexts (void);
-extern void         ThotInitDisplay (char *, int, int);
-extern void         TteLoadApplications (void);
-extern ThotWidget   XmCreateForem (ThotWidget, char *, Arg[], int);
-
-#else
-extern void         CloseInsertion ();
-extern void         InitDocContexts ();
-extern void         ThotInitDisplay ();
-extern void         TteLoadApplications ();
-extern ThotWidget   XmCreateForem ();
-
-#endif
+#include "dialogapi_f.h"
 
 /*----------------------------------------------------------------------
    TteConnectAction rend accessible une action locale (Callback).     

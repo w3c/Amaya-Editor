@@ -21,6 +21,7 @@
 #include "memory_f.h"
 #include "changepresent_f.h"
 #include "boxpositions_f.h"
+#include "viewapi_f.h"
 
 extern int          UserErrorCode;
 

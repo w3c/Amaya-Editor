@@ -30,6 +30,8 @@
 
 #include "specificdriver.h"
 
+#include "presentationapi_f.h"
+
 /*
  * GetSpecificContext : user level function needed to allocate and
  *        initialize a SpecificContext.

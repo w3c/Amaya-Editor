@@ -39,6 +39,8 @@
 #include "presrules_f.h"
 #include "boxselection_f.h"
 #include "structselect_f.h"
+#include "applicationapi_f.h"
+#include "appli_f.h"
 
 #ifdef __STDC__
 static void ApplyInherit(PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc);

@@ -17,6 +17,7 @@
 #include "thotfile.h"
 #include "thotdir.h"
 #include "png.h"
+#include "storage.h"
 #define EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
@@ -38,6 +39,7 @@
 #include "xpmhandler_f.h"
 #include "pnghandler_f.h"
 #include "epshandler_f.h"
+#include "fileaccess_f.h"
 
 static PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
 static int             PictureIdType      [MAX_PICT_FORMATS];

@@ -16,6 +16,7 @@
 #include "language.h"
 #include "application.h"
 #include "appdialogue.h"
+#include "storage.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -32,6 +33,7 @@
 #include "memory_f.h"
 #include "message_f.h"
 #include "thotmsg_f.h"
+#include "fileaccess_f.h"
 
 static char        *doc_items[MAX_ITEM_CONF];
 static boolean      doc_import[MAX_ITEM_CONF];

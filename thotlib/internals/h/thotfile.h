@@ -1,3 +1,6 @@
+#ifndef __THOTFILE_H_
+#define __THOTFILE_H_
+
 typedef struct { /* fill in with more elements as they are needed */
 #ifdef WWW_MSWINDOWS
     FILETIME atime; /* don't know yet what format will be used most */
@@ -54,3 +57,4 @@ ThotFileOffset ThotFile_seek(/* ThotFileHandle handle, ThotFileOffset offset, Th
 int ThotFile_stat(/* ThotFileHandle handle, ThotFileInfo * pInfo */);
 #endif /* !__STDC__ */
 
+#endif /* __THOTFILE_H_ */

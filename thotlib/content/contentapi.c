@@ -12,6 +12,7 @@
 #include "view.h"
 #include "selection.h"
 #include "language.h"
+#include "storage.h"
 #ifndef NODISPLAY
 #include "frame.h"
 #endif
@@ -30,7 +31,8 @@
 #endif
 #include "content_f.h"
 #include "thotmsg_f.h"
-
+#include "writepivot_f.h"
+#include "viewapi_f.h"
 
 #undef EXPORT
 #define EXPORT

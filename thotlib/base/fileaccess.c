@@ -10,12 +10,16 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "storage.h"
-
+#include "thotdir.h"
+#include "thotfile.h"
+ 
 #undef EXPORT
 #define EXPORT extern
 #include "platform_tv.h"
 
 #include "fileaccess_f.h"
+#include "platform_f.h"
+#include "registry_f.h"
 
 /*----------------------------------------------------------------------
    BIOreadByte reads a character (or byte) value.                  

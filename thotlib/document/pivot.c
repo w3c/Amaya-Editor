@@ -2,11 +2,11 @@
  * Copyright (c) 1996 INRIA, All rights reserved
  */
 
-	/*                                                              */
-	/*      Ce module implemente les fonctions de l'API Thot qui    */
-	/*      permettent de lire ou d'ecrire certaines parties de     */
-	/*      la forme pivot des documents.                           */
-	/*                                                              */
+/*                                                              */
+/*      Ce module implemente les fonctions de l'API Thot qui    */
+/*      permettent de lire ou d'ecrire certaines parties de     */
+/*      la forme pivot des documents.                           */
+/*                                                              */
 
 #include "thot_sys.h"
 #include "constmedia.h"
