@@ -74,6 +74,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* fnof     */ {402, 166},  /* latin small f with hook = function = florin, U+0192 ISOtech */
 /* circ     */ {710, 2217}, /* modifier letter circumflex accent, U+02C6 ISOpub */
 /* tilde    */ {732, 1126}, /* small tilde, U+02DC ISOdia */
+/* hat      */ {770, 1094}, /* small tilde, U+02DC ISOdia */
 /* UnderBar */ {818, 45}, /* U+0332 */
 /* Alpha    */ {913, 65}, /* greek capital letter alpha, U+0391 */
 /* Beta     */ {914, 66}, /* greek capital letter beta, U+0392 */
@@ -167,7 +168,9 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* real     */ {8476, 194}, /* blackletter capital R = real part symbol,  U+211C ISOamso */
 /* trade    */ {8482, 212}, /* trade mark sign, U+2122 ISOnum */
 /* alefsym  */ {8501, 192}, /* alef symbol = first transfinite cardinal,  U+2135 NEW */
-/*DifferentialD*/ {8518, 100}, /* U+2146 */
+/*DifferentialD*/{8518, 100}, /* U+2146 */
+/*ExponentialE*/{8519, 1101},/* */
+/*ImaginaryI*/ {8520, 1105},/* */
 /* larr     */ {8592, 172}, /* leftwards arrow, U+2190 ISOnum */
 /* uarr     */ {8593, 173}, /* upwards arrow, U+2191 ISOnum*/
 /* rarr     */ {8594, 174}, /* rightwards arrow, U+2192 ISOnum */
@@ -191,11 +194,13 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* prod     */ {8719, 213}, /* n-ary product = product sign,  U+220F ISOamsb */
 /* sum      */ {8721, 229}, /* n-ary sumation, U+2211 ISOamsb */
 /* minus    */ {8722, 45},  /* minus sign, U+2212 ISOtech */
+/* Backslash*/ {8726, 1092},/* U+8726 */
 /* lowast   */ {8727, 42},  /* asterisk operator, U+2217 ISOtech */
 /* radic    */ {8730, 214}, /* square root = radical sign,  U+221A ISOtech */
 /* prop     */ {8733, 181}, /* proportional to, U+221D ISOtech */
 /* infin    */ {8734, 165}, /* infinity, U+221E ISOtech */
 /* ang      */ {8736, 208}, /* angle, U+2220 ISOamso */
+/* VerticalBar*/ {8739, 1124}, /* angle, U+2220 ISOamso */
 /* and      */ {8743, 217}, /* logical and = wedge, U+2227 ISOtech */
 /* or       */ {8744, 218}, /* logical or = vee, U+2228 ISOtech */
 /* cap      */ {8745, 199}, /* intersection = cap, U+2229 ISOtech */
@@ -226,6 +231,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /*Intersection*/ {8899, 200},  /* U+22C3 ISOamsb */
 /* Diamond  */ {8900, 168}, /* diamond operator, U+22C4 ISOamsb */
 /* sdot     */ {8901, 215}, /* dot operator, U+22C5 ISOamsb */
+/* star     */ {8902, 1042},/* */
 /* Subset   */ {8912, 204}, /* U+22D0 */
 /* Cap      */ {8914, 199}, /* U+22D2 */
 /* Cup      */ {8915, 199}, /* U+22D3 */
@@ -243,6 +249,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* diams    */ {9830, 168}, /* black diamond suit, U+2666 ISOpub */
 /* And      */ {10835, 217}, /* U+2A53 */
 /* Or       */ {10836, 218}, /* U+2A54 */
+/* Equal    */ {10869, 1061},/*  */
 /* Not      */ {10988, 216}, /* U+2AEC */
 /* OverBrace*/ {65079, 132}, /* U+FE37 */
 /*UnderBrace*/ {65080, 133}, /* U+FE38 */
@@ -3483,7 +3490,7 @@ static void      EndOfEntity (CHAR_T c)
 	 {
 	   if (ReadingAnAttrValue)
 	     {
-	       PutInBuffer ((char) 128);
+	       PutInBuffer ((char) START_ENTITY);
 	       for (i = 0; i < LgEntityName; i++)
 		 PutInBuffer (EntityName[i]);
 	       PutInBuffer (';');
@@ -3497,7 +3504,7 @@ static void      EndOfEntity (CHAR_T c)
    else
      {
        /* entity not in the table. Print an error message */
-       PutInBuffer ((char) 128);
+       PutInBuffer ((char) START_ENTITY);
        for (i = 0; i < LgEntityName; i++)
 	 PutInBuffer (EntityName[i]);
        PutInBuffer (';');
@@ -3551,7 +3558,7 @@ static void      EntityChar (unsigned char c)
 	     {
 	       if (ReadingAnAttrValue)
 		 {
-		   PutInBuffer ((char) 128);
+		   PutInBuffer ((char) START_ENTITY);
 		   for (i = 0; i < LgEntityName; i++)
 		     PutInBuffer (EntityName[i]);
 		   PutInBuffer (';');
@@ -3602,7 +3609,7 @@ static void      EntityChar (unsigned char c)
 	   /* the entity name read so far is not in the table */
 	   /* invalid entity */
 	   /* put the entity name in the buffer */
-	   PutInBuffer ((char) 128);
+	   PutInBuffer ((char) START_ENTITY);
 	   for (i = 0; i < LgEntityName; i++)
 	     PutInBuffer (EntityName[i]);
 	   /* print an error message only if it's not the first character
@@ -3643,7 +3650,7 @@ static void      EndOfDecEntity (CHAR_T c)
      {
        if (ReadingAnAttrValue)
 	 {
-	   PutInBuffer ((char) 128);
+	   PutInBuffer ((char) START_ENTITY);
 	   PutInBuffer ('#');
 	   for (i = 0; i < LgEntityName; i++)
 	     PutInBuffer (EntityName[i]);
@@ -3711,7 +3718,7 @@ static void         EndOfHexEntity (CHAR_T c)
      {
        if (ReadingAnAttrValue)
 	 {
-	   PutInBuffer ((char) 128);
+	   PutInBuffer ((char) START_ENTITY);
 	   PutInBuffer ('#');
 	   PutInBuffer ('x');
 	   for (i = 0; i < LgEntityName; i++)
