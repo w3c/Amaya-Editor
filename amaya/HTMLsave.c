@@ -120,15 +120,15 @@ LPARAM lParam;
 	  break;
 
 	case IDCANCEL:
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
 	  EndDialog (hwnDlg, IDCANCEL);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
 	  break;
 
 	case ID_CONFIRM:
 	  /* TODO: Extract directory and file name from urlToOpen */
+	  EndDialog (hwnDlg, ID_CONFIRM);
 	  TtaExtractName (currentDocToSave, SavePath, ObjectName);
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 1);
-	  EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
 	}
       break;
@@ -515,8 +515,17 @@ boolean            *ok;
 {
    char                msg[MAX_LENGTH];
    char                documentname[MAX_LENGTH];
+   char                url_sep;
+   int                 len;
 
 DBG(fprintf(stderr, "AddNoName :  %s \n", url);)
+
+  if (strchr (url, '/'))
+    url_sep = '/';
+  else 
+    url_sep = DIR_SEP;
+
+  len = strlen (url);
 
    TtaExtractName (url, msg, documentname);
    *ok = (documentname[0] != EOS);
@@ -527,7 +536,8 @@ DBG(fprintf(stderr, "AddNoName :  %s \n", url);)
        /* the name is not correct for the put operation */
        strcpy (msg, TtaGetMessage(AMAYA, AM_NO_NAME));
        strcat (msg, url);
-       strcat (msg, DIR_STR);
+       if (url [len -1] != url_sep)
+          strcat (msg, url_sep);
        strcat (msg, "noname.html");
        InitConfirm (document, view, msg);
        if (UserAnswer == 0)
@@ -1363,6 +1373,7 @@ void                DoSaveAs ()
   char                imgbase[MAX_LENGTH];
   char                url_sep;
   int                 res;
+  int                 len;
   boolean             src_is_local;
   boolean             dst_is_local, ok;
 
@@ -1375,16 +1386,16 @@ DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentUR
   /* New document path */
   documentFile = TtaGetMemory (MAX_LENGTH);
   strcpy (documentFile, SavePath);
-  if (dst_is_local)
-    {
-      strcat (documentFile, DIR_STR);
-      url_sep = DIR_SEP;
-    }
-  else
-    {
-      strcat (documentFile, "/");
-      url_sep = '/';
-    }
+  len = strlen (documentFile);
+  if (documentFile [len -1] != DIR_SEP && documentFile [len - 1] != '/') {
+     if (dst_is_local) {
+        strcat (documentFile, DIR_STR);
+        url_sep = DIR_SEP;
+     } else {
+           strcat (documentFile, "/");
+           url_sep = '/';
+     }
+  }
 
   strcat (documentFile, SaveName);
   if (SaveName[0] == EOS)

@@ -192,10 +192,10 @@ char *filename;
 {
 #ifdef _WINDOWS
  int fd;
-  fd = open (filename, _O_WRONLY | _O_BINARY);
+  fd = _open (filename, _O_WRONLY | _O_BINARY);
   if (fd != -1)
     {
-      close (fd);
+      _close (fd);
       return 0;
     }
   else
@@ -1340,7 +1340,11 @@ View view;
 	      strcpy (ptr, ffd.cFileName);
 	      strcat (ptr, DIR_STR);
 	      RecCleanCache (t_dir);
+#         ifdef _WINDOWS
+	      _rmdir (t_dir);
+#         else /* !_WINDOWS */
 	      rmdir (t_dir);
+#         endif /* _WINDOWS */
 	    }
 	}
 	else
@@ -1785,8 +1789,8 @@ static int          LoopForStop (AHTReqContext * me)
 
   old_active_window = GetActiveWindow ();
   libwww_window = HTEventList_getWinHandle (&libwww_msg);
-
-  while (GetMessage (&msg, libwww_window, 0, 0)
+ 
+  while (GetMessage (&msg, NULL, 0, 0)
 	 && me->reqStatus != HT_END && me->reqStatus != HT_ERR
 	 && me->reqStatus != HT_ABORT && AmayaIsAlive ())
     {
@@ -2390,7 +2394,7 @@ void               *context_tcbf;
 #ifndef _WINDOWS
    if ((fd = open (fileName, O_RDONLY)) == -1)
 #else 
-   if ((fd = open (fileName, _O_RDONLY | _O_BINARY)) == -1)
+   if ((fd = _open (fileName, _O_RDONLY | _O_BINARY)) == -1)
 #endif /* _WINDOWS */
      {
 	/* if we could not open the file, exit */
@@ -2399,7 +2403,11 @@ void               *context_tcbf;
      }
 
    fstat (fd, &file_stat);
+#  ifdef _WINDOWS
+   _close (fd);
+#  else /* _WINDOWS */
    close (fd);
+#  endif /* _WINDOWS */
 
    if (file_stat.st_size == 0)
      {
