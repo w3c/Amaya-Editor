@@ -1189,6 +1189,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
   char      windir[MAX_PATH+1];
   DWORD       dwSize;
   ThotBool    status;
+  char        *ptr2, *ptr3;
 #else /*  _WINDOWS */
   struct stat stat_buf;
   char        c_execname[MAX_LENGTH];
@@ -1465,6 +1466,11 @@ void TtaInitializeAppRegistry (char *appArgv0)
    ** Unix: $HOME/.appname,
    ** Win95: $THOTDIR/users/login-name/
    ** WinNT: c:\WINNT\profiles\login-name
+   ** Win2000/XP: $HOMEDRIVE\$HOMEPATH
+   **              or
+   **             Documents and settings\All Users\login-name
+   **              or
+   **             the same thing as WinNT.
    */
    /* No this should NOT be a call to TtaGetEnvString */
 #ifdef _WINDOWS
@@ -1486,8 +1492,40 @@ void TtaInitializeAppRegistry (char *appArgv0)
      /* winnt: apphome is windowsdir\profiles\username\appname */
      {
        dwSize = MAX_PATH;
-       GetWindowsDirectory (windir, dwSize);
-       sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
+       app_home[0] = EOS;
+#if 0
+       /* JK: commented as it needs installing a SP */
+       /* this function will fail if dwSize is inferior to the buffer size.
+	  As we gave it the maximum possible value, we don't control
+	  the return code */
+       GetUserProfileDirectory (AccessTokenHandle, app_home, &dwSize);
+#endif
+       /* use the HOMEDRIVE and HOMEPATH environment variables first */
+       ptr2 = getenv ("HOMEDRIVE");
+       ptr3 = getenv ("HOMEPATH");
+       if (ptr2 && *ptr2 && ptr3)
+	 {
+	   sprintf (windir, "%s%s", ptr2, ptr3);
+	   if (TtaDirExists (windir))
+	     sprintf (app_home, "%s\\%s", windir, AppNameW);
+	   else
+	     app_home[0] = EOS;
+	 }
+       if (app_home[0] == EOS)
+	 {
+	   /* try to use one of the system home dirs */
+	   GetWindowsDirectory (windir, dwSize);
+	   /* the Windows 2000/XP convention */
+	   sprintf (app_home, "%s\\Documents and Settings", windir);
+	   if (! TtaDirExists (app_home))
+	     {
+	       /* the Windows NT convention */
+	       sprintf (app_home, "%s\\profiles", windir);
+	     }
+	   /* add the end suffix */
+	   sprintf (windir, "\\%s\\%s", ptr, AppNameW);
+	   strcat (app_home, windir);
+	 }
      }
    else
      /* win95: apphome is  thotdir\users\username */
