@@ -4,8 +4,7 @@ CFG=libThotEditor - Win32 Debug
 !MESSAGE No configuration specified. Defaulting to libThotEditor - Win32 Debug.
 !ENDIF 
 
-!IF "$(CFG)" != "libThotEditor - Win32 Release" && "$(CFG)" !=\
- "libThotEditor - Win32 Debug"
+!IF "$(CFG)" != "libThotEditor - Win32 Release" && "$(CFG)" != "libThotEditor - Win32 Debug"
 !MESSAGE Invalid configuration "$(CFG)" specified.
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
@@ -14,8 +13,7 @@ CFG=libThotEditor - Win32 Debug
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "libThotEditor - Win32 Release" (based on\
- "Win32 (x86) Static Library")
+!MESSAGE "libThotEditor - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "libThotEditor - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 !ERROR An invalid configuration is specified.
@@ -35,20 +33,14 @@ INTDIR=.\Release
 OutDir=.\..\ 
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
-
 ALL : "$(OUTDIR)\libThotEditor.lib"
 
-!ELSE 
-
-ALL : "$(OUTDIR)\libThotEditor.lib"
-
-!ENDIF 
 
 CLEAN :
 	-@erase "$(INTDIR)\absboxes.obj"
 	-@erase "$(INTDIR)\abspictures.obj"
 	-@erase "$(INTDIR)\actions.obj"
+	-@erase "$(INTDIR)\animbox.obj"
 	-@erase "$(INTDIR)\appdialogue.obj"
 	-@erase "$(INTDIR)\appli.obj"
 	-@erase "$(INTDIR)\applicationapi.obj"
@@ -93,6 +85,7 @@ CLEAN :
 	-@erase "$(INTDIR)\externalref.obj"
 	-@erase "$(INTDIR)\fileaccess.obj"
 	-@erase "$(INTDIR)\font.obj"
+	-@erase "$(INTDIR)\fontconfig.obj"
 	-@erase "$(INTDIR)\frame.obj"
 	-@erase "$(INTDIR)\geom.obj"
 	-@erase "$(INTDIR)\gifhandler.obj"
@@ -140,6 +133,7 @@ CLEAN :
 	-@erase "$(INTDIR)\searchref.obj"
 	-@erase "$(INTDIR)\selectionapi.obj"
 	-@erase "$(INTDIR)\spellchecker.obj"
+	-@erase "$(INTDIR)\stix.obj"
 	-@erase "$(INTDIR)\structchange.obj"
 	-@erase "$(INTDIR)\structcommands.obj"
 	-@erase "$(INTDIR)\structcreation.obj"
@@ -161,7 +155,7 @@ CLEAN :
 	-@erase "$(INTDIR)\unstructchange.obj"
 	-@erase "$(INTDIR)\unstructlocate.obj"
 	-@erase "$(INTDIR)\ustring.obj"
-	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\viewapi.obj"
 	-@erase "$(INTDIR)\views.obj"
 	-@erase "$(INTDIR)\windowdisplay.obj"
@@ -178,48 +172,40 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-RSC=rc.exe
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
- "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
- "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
- "..\..\libpng\zlib" /I "..\..\amaya" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D\
- "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D\
- "SOCKSTHOT_TOOLTIPS" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\"\
- /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Release/
-CPP_SBRS=.
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
-.c{$(CPP_OBJS)}.obj::
+.c{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_OBJS)}.obj::
+.cpp{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_OBJS)}.obj::
+.cxx{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.c{$(CPP_SBRS)}.sbr::
+.c{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_SBRS)}.sbr::
+.cpp{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_SBRS)}.sbr::
+.cxx{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -230,6 +216,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\absboxes.obj" \
 	"$(INTDIR)\abspictures.obj" \
 	"$(INTDIR)\actions.obj" \
+	"$(INTDIR)\animbox.obj" \
 	"$(INTDIR)\appdialogue.obj" \
 	"$(INTDIR)\appli.obj" \
 	"$(INTDIR)\applicationapi.obj" \
@@ -274,6 +261,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\externalref.obj" \
 	"$(INTDIR)\fileaccess.obj" \
 	"$(INTDIR)\font.obj" \
+	"$(INTDIR)\fontconfig.obj" \
 	"$(INTDIR)\frame.obj" \
 	"$(INTDIR)\geom.obj" \
 	"$(INTDIR)\gifhandler.obj" \
@@ -321,6 +309,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\searchref.obj" \
 	"$(INTDIR)\selectionapi.obj" \
 	"$(INTDIR)\spellchecker.obj" \
+	"$(INTDIR)\stix.obj" \
 	"$(INTDIR)\structchange.obj" \
 	"$(INTDIR)\structcommands.obj" \
 	"$(INTDIR)\structcreation.obj" \
@@ -364,141 +353,264 @@ INTDIR=.\Debug
 OutDir=.\..\ 
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
+ALL : "$(OUTDIR)\libThotEditor.lib" "$(OUTDIR)\libThotEditor.bsc"
 
-ALL : "$(OUTDIR)\libThotEditor.lib"
-
-!ELSE 
-
-ALL : "$(OUTDIR)\libThotEditor.lib"
-
-!ENDIF 
 
 CLEAN :
 	-@erase "$(INTDIR)\absboxes.obj"
+	-@erase "$(INTDIR)\absboxes.sbr"
 	-@erase "$(INTDIR)\abspictures.obj"
+	-@erase "$(INTDIR)\abspictures.sbr"
 	-@erase "$(INTDIR)\actions.obj"
+	-@erase "$(INTDIR)\actions.sbr"
+	-@erase "$(INTDIR)\animbox.obj"
+	-@erase "$(INTDIR)\animbox.sbr"
 	-@erase "$(INTDIR)\appdialogue.obj"
+	-@erase "$(INTDIR)\appdialogue.sbr"
 	-@erase "$(INTDIR)\appli.obj"
+	-@erase "$(INTDIR)\appli.sbr"
 	-@erase "$(INTDIR)\applicationapi.obj"
+	-@erase "$(INTDIR)\applicationapi.sbr"
 	-@erase "$(INTDIR)\attributeapi.obj"
+	-@erase "$(INTDIR)\attributeapi.sbr"
 	-@erase "$(INTDIR)\attributes.obj"
+	-@erase "$(INTDIR)\attributes.sbr"
 	-@erase "$(INTDIR)\attrmenu.obj"
+	-@erase "$(INTDIR)\attrmenu.sbr"
 	-@erase "$(INTDIR)\attrpresent.obj"
+	-@erase "$(INTDIR)\attrpresent.sbr"
 	-@erase "$(INTDIR)\boxlocate.obj"
+	-@erase "$(INTDIR)\boxlocate.sbr"
 	-@erase "$(INTDIR)\boxmoves.obj"
+	-@erase "$(INTDIR)\boxmoves.sbr"
 	-@erase "$(INTDIR)\boxparams.obj"
+	-@erase "$(INTDIR)\boxparams.sbr"
 	-@erase "$(INTDIR)\boxpositions.obj"
+	-@erase "$(INTDIR)\boxpositions.sbr"
 	-@erase "$(INTDIR)\boxrelations.obj"
+	-@erase "$(INTDIR)\boxrelations.sbr"
 	-@erase "$(INTDIR)\boxselection.obj"
+	-@erase "$(INTDIR)\boxselection.sbr"
 	-@erase "$(INTDIR)\browser.obj"
+	-@erase "$(INTDIR)\browser.sbr"
 	-@erase "$(INTDIR)\buildboxes.obj"
+	-@erase "$(INTDIR)\buildboxes.sbr"
 	-@erase "$(INTDIR)\buildlines.obj"
+	-@erase "$(INTDIR)\buildlines.sbr"
 	-@erase "$(INTDIR)\callback.obj"
+	-@erase "$(INTDIR)\callback.sbr"
 	-@erase "$(INTDIR)\callbackinit.obj"
+	-@erase "$(INTDIR)\callbackinit.sbr"
 	-@erase "$(INTDIR)\changeabsbox.obj"
+	-@erase "$(INTDIR)\changeabsbox.sbr"
 	-@erase "$(INTDIR)\changepresent.obj"
+	-@erase "$(INTDIR)\changepresent.sbr"
 	-@erase "$(INTDIR)\checkaccess.obj"
+	-@erase "$(INTDIR)\checkaccess.sbr"
 	-@erase "$(INTDIR)\checkermenu.obj"
+	-@erase "$(INTDIR)\checkermenu.sbr"
 	-@erase "$(INTDIR)\closedoc.obj"
+	-@erase "$(INTDIR)\closedoc.sbr"
 	-@erase "$(INTDIR)\colors.obj"
+	-@erase "$(INTDIR)\colors.sbr"
 	-@erase "$(INTDIR)\config.obj"
+	-@erase "$(INTDIR)\config.sbr"
 	-@erase "$(INTDIR)\content.obj"
+	-@erase "$(INTDIR)\content.sbr"
 	-@erase "$(INTDIR)\contentapi.obj"
+	-@erase "$(INTDIR)\contentapi.sbr"
 	-@erase "$(INTDIR)\context.obj"
+	-@erase "$(INTDIR)\context.sbr"
 	-@erase "$(INTDIR)\createabsbox.obj"
+	-@erase "$(INTDIR)\createabsbox.sbr"
 	-@erase "$(INTDIR)\createpages.obj"
+	-@erase "$(INTDIR)\createpages.sbr"
 	-@erase "$(INTDIR)\creationmenu.obj"
+	-@erase "$(INTDIR)\creationmenu.sbr"
 	-@erase "$(INTDIR)\dialogapi.obj"
+	-@erase "$(INTDIR)\dialogapi.sbr"
 	-@erase "$(INTDIR)\dictionary.obj"
+	-@erase "$(INTDIR)\dictionary.sbr"
 	-@erase "$(INTDIR)\displaybox.obj"
+	-@erase "$(INTDIR)\displaybox.sbr"
 	-@erase "$(INTDIR)\displayselect.obj"
+	-@erase "$(INTDIR)\displayselect.sbr"
 	-@erase "$(INTDIR)\displayview.obj"
+	-@erase "$(INTDIR)\displayview.sbr"
 	-@erase "$(INTDIR)\docs.obj"
+	-@erase "$(INTDIR)\docs.sbr"
 	-@erase "$(INTDIR)\documentapi.obj"
+	-@erase "$(INTDIR)\documentapi.sbr"
 	-@erase "$(INTDIR)\editcommands.obj"
+	-@erase "$(INTDIR)\editcommands.sbr"
 	-@erase "$(INTDIR)\epshandler.obj"
+	-@erase "$(INTDIR)\epshandler.sbr"
 	-@erase "$(INTDIR)\exceptions.obj"
+	-@erase "$(INTDIR)\exceptions.sbr"
 	-@erase "$(INTDIR)\externalref.obj"
+	-@erase "$(INTDIR)\externalref.sbr"
 	-@erase "$(INTDIR)\fileaccess.obj"
+	-@erase "$(INTDIR)\fileaccess.sbr"
 	-@erase "$(INTDIR)\font.obj"
+	-@erase "$(INTDIR)\font.sbr"
+	-@erase "$(INTDIR)\fontconfig.obj"
+	-@erase "$(INTDIR)\fontconfig.sbr"
 	-@erase "$(INTDIR)\frame.obj"
+	-@erase "$(INTDIR)\frame.sbr"
 	-@erase "$(INTDIR)\geom.obj"
+	-@erase "$(INTDIR)\geom.sbr"
 	-@erase "$(INTDIR)\gifhandler.obj"
+	-@erase "$(INTDIR)\gifhandler.sbr"
 	-@erase "$(INTDIR)\hyphen.obj"
+	-@erase "$(INTDIR)\hyphen.sbr"
 	-@erase "$(INTDIR)\inites.obj"
+	-@erase "$(INTDIR)\inites.sbr"
 	-@erase "$(INTDIR)\input.obj"
+	-@erase "$(INTDIR)\input.sbr"
 	-@erase "$(INTDIR)\interface.obj"
+	-@erase "$(INTDIR)\interface.sbr"
 	-@erase "$(INTDIR)\jpeghandler.obj"
+	-@erase "$(INTDIR)\jpeghandler.sbr"
 	-@erase "$(INTDIR)\keyboards.obj"
+	-@erase "$(INTDIR)\keyboards.sbr"
 	-@erase "$(INTDIR)\labelalloc.obj"
+	-@erase "$(INTDIR)\labelalloc.sbr"
 	-@erase "$(INTDIR)\language.obj"
+	-@erase "$(INTDIR)\language.sbr"
 	-@erase "$(INTDIR)\memory.obj"
+	-@erase "$(INTDIR)\memory.sbr"
 	-@erase "$(INTDIR)\message.obj"
+	-@erase "$(INTDIR)\message.sbr"
 	-@erase "$(INTDIR)\modiftype.obj"
+	-@erase "$(INTDIR)\modiftype.sbr"
 	-@erase "$(INTDIR)\pagecommands.obj"
+	-@erase "$(INTDIR)\pagecommands.sbr"
 	-@erase "$(INTDIR)\paginate.obj"
+	-@erase "$(INTDIR)\paginate.sbr"
 	-@erase "$(INTDIR)\picture.obj"
+	-@erase "$(INTDIR)\picture.sbr"
 	-@erase "$(INTDIR)\pictureapi.obj"
+	-@erase "$(INTDIR)\pictureapi.sbr"
 	-@erase "$(INTDIR)\pivot.obj"
+	-@erase "$(INTDIR)\pivot.sbr"
 	-@erase "$(INTDIR)\platform.obj"
+	-@erase "$(INTDIR)\platform.sbr"
 	-@erase "$(INTDIR)\pnghandler.obj"
+	-@erase "$(INTDIR)\pnghandler.sbr"
 	-@erase "$(INTDIR)\presentationapi.obj"
+	-@erase "$(INTDIR)\presentationapi.sbr"
 	-@erase "$(INTDIR)\presentmenu.obj"
+	-@erase "$(INTDIR)\presentmenu.sbr"
 	-@erase "$(INTDIR)\presrules.obj"
+	-@erase "$(INTDIR)\presrules.sbr"
 	-@erase "$(INTDIR)\presvariables.obj"
+	-@erase "$(INTDIR)\presvariables.sbr"
 	-@erase "$(INTDIR)\printmenu.obj"
+	-@erase "$(INTDIR)\printmenu.sbr"
 	-@erase "$(INTDIR)\Profiles.obj"
+	-@erase "$(INTDIR)\Profiles.sbr"
 	-@erase "$(INTDIR)\pschemaapi.obj"
+	-@erase "$(INTDIR)\pschemaapi.sbr"
 	-@erase "$(INTDIR)\quit.obj"
+	-@erase "$(INTDIR)\quit.sbr"
 	-@erase "$(INTDIR)\readpivot.obj"
+	-@erase "$(INTDIR)\readpivot.sbr"
 	-@erase "$(INTDIR)\readprs.obj"
+	-@erase "$(INTDIR)\readprs.sbr"
 	-@erase "$(INTDIR)\readstr.obj"
+	-@erase "$(INTDIR)\readstr.sbr"
 	-@erase "$(INTDIR)\readtra.obj"
+	-@erase "$(INTDIR)\readtra.sbr"
 	-@erase "$(INTDIR)\referenceapi.obj"
+	-@erase "$(INTDIR)\referenceapi.sbr"
 	-@erase "$(INTDIR)\references.obj"
+	-@erase "$(INTDIR)\references.sbr"
 	-@erase "$(INTDIR)\registry.obj"
+	-@erase "$(INTDIR)\registry.sbr"
 	-@erase "$(INTDIR)\res.obj"
+	-@erase "$(INTDIR)\res.sbr"
 	-@erase "$(INTDIR)\resgen.obj"
+	-@erase "$(INTDIR)\resgen.sbr"
 	-@erase "$(INTDIR)\resmatch.obj"
+	-@erase "$(INTDIR)\resmatch.sbr"
 	-@erase "$(INTDIR)\schemas.obj"
+	-@erase "$(INTDIR)\schemas.sbr"
 	-@erase "$(INTDIR)\schtrad.obj"
+	-@erase "$(INTDIR)\schtrad.sbr"
 	-@erase "$(INTDIR)\scroll.obj"
+	-@erase "$(INTDIR)\scroll.sbr"
 	-@erase "$(INTDIR)\search.obj"
+	-@erase "$(INTDIR)\search.sbr"
 	-@erase "$(INTDIR)\searchmenu.obj"
+	-@erase "$(INTDIR)\searchmenu.sbr"
 	-@erase "$(INTDIR)\searchref.obj"
+	-@erase "$(INTDIR)\searchref.sbr"
 	-@erase "$(INTDIR)\selectionapi.obj"
+	-@erase "$(INTDIR)\selectionapi.sbr"
 	-@erase "$(INTDIR)\spellchecker.obj"
+	-@erase "$(INTDIR)\spellchecker.sbr"
+	-@erase "$(INTDIR)\stix.obj"
+	-@erase "$(INTDIR)\stix.sbr"
 	-@erase "$(INTDIR)\structchange.obj"
+	-@erase "$(INTDIR)\structchange.sbr"
 	-@erase "$(INTDIR)\structcommands.obj"
+	-@erase "$(INTDIR)\structcommands.sbr"
 	-@erase "$(INTDIR)\structcreation.obj"
+	-@erase "$(INTDIR)\structcreation.sbr"
 	-@erase "$(INTDIR)\structlist.obj"
+	-@erase "$(INTDIR)\structlist.sbr"
 	-@erase "$(INTDIR)\structlocate.obj"
+	-@erase "$(INTDIR)\structlocate.sbr"
 	-@erase "$(INTDIR)\structmodif.obj"
+	-@erase "$(INTDIR)\structmodif.sbr"
 	-@erase "$(INTDIR)\structschema.obj"
+	-@erase "$(INTDIR)\structschema.sbr"
 	-@erase "$(INTDIR)\structselect.obj"
+	-@erase "$(INTDIR)\structselect.sbr"
 	-@erase "$(INTDIR)\style.obj"
+	-@erase "$(INTDIR)\style.sbr"
 	-@erase "$(INTDIR)\textcommands.obj"
+	-@erase "$(INTDIR)\textcommands.sbr"
 	-@erase "$(INTDIR)\thotmsg.obj"
+	-@erase "$(INTDIR)\thotmsg.sbr"
 	-@erase "$(INTDIR)\translation.obj"
+	-@erase "$(INTDIR)\translation.sbr"
 	-@erase "$(INTDIR)\tree.obj"
+	-@erase "$(INTDIR)\tree.sbr"
 	-@erase "$(INTDIR)\treeapi.obj"
+	-@erase "$(INTDIR)\treeapi.sbr"
 	-@erase "$(INTDIR)\uconvert.obj"
+	-@erase "$(INTDIR)\uconvert.sbr"
 	-@erase "$(INTDIR)\undo.obj"
+	-@erase "$(INTDIR)\undo.sbr"
 	-@erase "$(INTDIR)\undoapi.obj"
+	-@erase "$(INTDIR)\undoapi.sbr"
 	-@erase "$(INTDIR)\units.obj"
+	-@erase "$(INTDIR)\units.sbr"
 	-@erase "$(INTDIR)\unstructchange.obj"
+	-@erase "$(INTDIR)\unstructchange.sbr"
 	-@erase "$(INTDIR)\unstructlocate.obj"
+	-@erase "$(INTDIR)\unstructlocate.sbr"
 	-@erase "$(INTDIR)\ustring.obj"
-	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\ustring.sbr"
+	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\viewapi.obj"
+	-@erase "$(INTDIR)\viewapi.sbr"
 	-@erase "$(INTDIR)\views.obj"
+	-@erase "$(INTDIR)\views.sbr"
 	-@erase "$(INTDIR)\windowdisplay.obj"
+	-@erase "$(INTDIR)\windowdisplay.sbr"
 	-@erase "$(INTDIR)\word.obj"
+	-@erase "$(INTDIR)\word.sbr"
 	-@erase "$(INTDIR)\writedoc.obj"
+	-@erase "$(INTDIR)\writedoc.sbr"
 	-@erase "$(INTDIR)\writepivot.obj"
+	-@erase "$(INTDIR)\writepivot.sbr"
 	-@erase "$(INTDIR)\xbmhandler.obj"
+	-@erase "$(INTDIR)\xbmhandler.sbr"
 	-@erase "$(INTDIR)\xpmhandler.obj"
+	-@erase "$(INTDIR)\xpmhandler.sbr"
+	-@erase "$(OUTDIR)\libThotEditor.bsc"
 	-@erase "$(OUTDIR)\libThotEditor.lib"
 
 "$(OUTDIR)" :
@@ -507,58 +619,182 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-RSC=rc.exe
 CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
- "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
- "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
- "..\..\libpng\zlib" /I "..\..\amaya" /D "_DEBUG" /D "WWW_WIN_ASYNC" /D\
- "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D\
- "SOCKSTHOT_TOOLTIPS" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\"\
- /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Debug/
-CPP_SBRS=.
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
-.c{$(CPP_OBJS)}.obj::
+.c{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_OBJS)}.obj::
+.cpp{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_OBJS)}.obj::
+.cxx{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.c{$(CPP_SBRS)}.sbr::
+.c{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_SBRS)}.sbr::
+.cpp{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_SBRS)}.sbr::
+.cxx{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
-	
+	"$(INTDIR)\absboxes.sbr" \
+	"$(INTDIR)\abspictures.sbr" \
+	"$(INTDIR)\actions.sbr" \
+	"$(INTDIR)\animbox.sbr" \
+	"$(INTDIR)\appdialogue.sbr" \
+	"$(INTDIR)\appli.sbr" \
+	"$(INTDIR)\applicationapi.sbr" \
+	"$(INTDIR)\attributeapi.sbr" \
+	"$(INTDIR)\attributes.sbr" \
+	"$(INTDIR)\attrmenu.sbr" \
+	"$(INTDIR)\attrpresent.sbr" \
+	"$(INTDIR)\boxlocate.sbr" \
+	"$(INTDIR)\boxmoves.sbr" \
+	"$(INTDIR)\boxparams.sbr" \
+	"$(INTDIR)\boxpositions.sbr" \
+	"$(INTDIR)\boxrelations.sbr" \
+	"$(INTDIR)\boxselection.sbr" \
+	"$(INTDIR)\browser.sbr" \
+	"$(INTDIR)\buildboxes.sbr" \
+	"$(INTDIR)\buildlines.sbr" \
+	"$(INTDIR)\callback.sbr" \
+	"$(INTDIR)\callbackinit.sbr" \
+	"$(INTDIR)\changeabsbox.sbr" \
+	"$(INTDIR)\changepresent.sbr" \
+	"$(INTDIR)\checkaccess.sbr" \
+	"$(INTDIR)\checkermenu.sbr" \
+	"$(INTDIR)\closedoc.sbr" \
+	"$(INTDIR)\colors.sbr" \
+	"$(INTDIR)\config.sbr" \
+	"$(INTDIR)\content.sbr" \
+	"$(INTDIR)\contentapi.sbr" \
+	"$(INTDIR)\context.sbr" \
+	"$(INTDIR)\createabsbox.sbr" \
+	"$(INTDIR)\createpages.sbr" \
+	"$(INTDIR)\creationmenu.sbr" \
+	"$(INTDIR)\dialogapi.sbr" \
+	"$(INTDIR)\dictionary.sbr" \
+	"$(INTDIR)\displaybox.sbr" \
+	"$(INTDIR)\displayselect.sbr" \
+	"$(INTDIR)\displayview.sbr" \
+	"$(INTDIR)\docs.sbr" \
+	"$(INTDIR)\documentapi.sbr" \
+	"$(INTDIR)\editcommands.sbr" \
+	"$(INTDIR)\epshandler.sbr" \
+	"$(INTDIR)\exceptions.sbr" \
+	"$(INTDIR)\externalref.sbr" \
+	"$(INTDIR)\fileaccess.sbr" \
+	"$(INTDIR)\font.sbr" \
+	"$(INTDIR)\fontconfig.sbr" \
+	"$(INTDIR)\frame.sbr" \
+	"$(INTDIR)\geom.sbr" \
+	"$(INTDIR)\gifhandler.sbr" \
+	"$(INTDIR)\hyphen.sbr" \
+	"$(INTDIR)\inites.sbr" \
+	"$(INTDIR)\input.sbr" \
+	"$(INTDIR)\interface.sbr" \
+	"$(INTDIR)\jpeghandler.sbr" \
+	"$(INTDIR)\keyboards.sbr" \
+	"$(INTDIR)\labelalloc.sbr" \
+	"$(INTDIR)\language.sbr" \
+	"$(INTDIR)\memory.sbr" \
+	"$(INTDIR)\message.sbr" \
+	"$(INTDIR)\modiftype.sbr" \
+	"$(INTDIR)\pagecommands.sbr" \
+	"$(INTDIR)\paginate.sbr" \
+	"$(INTDIR)\picture.sbr" \
+	"$(INTDIR)\pictureapi.sbr" \
+	"$(INTDIR)\pivot.sbr" \
+	"$(INTDIR)\platform.sbr" \
+	"$(INTDIR)\pnghandler.sbr" \
+	"$(INTDIR)\presentationapi.sbr" \
+	"$(INTDIR)\presentmenu.sbr" \
+	"$(INTDIR)\presrules.sbr" \
+	"$(INTDIR)\presvariables.sbr" \
+	"$(INTDIR)\printmenu.sbr" \
+	"$(INTDIR)\Profiles.sbr" \
+	"$(INTDIR)\pschemaapi.sbr" \
+	"$(INTDIR)\quit.sbr" \
+	"$(INTDIR)\readpivot.sbr" \
+	"$(INTDIR)\readprs.sbr" \
+	"$(INTDIR)\readstr.sbr" \
+	"$(INTDIR)\readtra.sbr" \
+	"$(INTDIR)\referenceapi.sbr" \
+	"$(INTDIR)\references.sbr" \
+	"$(INTDIR)\registry.sbr" \
+	"$(INTDIR)\res.sbr" \
+	"$(INTDIR)\resgen.sbr" \
+	"$(INTDIR)\resmatch.sbr" \
+	"$(INTDIR)\schemas.sbr" \
+	"$(INTDIR)\schtrad.sbr" \
+	"$(INTDIR)\scroll.sbr" \
+	"$(INTDIR)\search.sbr" \
+	"$(INTDIR)\searchmenu.sbr" \
+	"$(INTDIR)\searchref.sbr" \
+	"$(INTDIR)\selectionapi.sbr" \
+	"$(INTDIR)\spellchecker.sbr" \
+	"$(INTDIR)\stix.sbr" \
+	"$(INTDIR)\structchange.sbr" \
+	"$(INTDIR)\structcommands.sbr" \
+	"$(INTDIR)\structcreation.sbr" \
+	"$(INTDIR)\structlist.sbr" \
+	"$(INTDIR)\structlocate.sbr" \
+	"$(INTDIR)\structmodif.sbr" \
+	"$(INTDIR)\structschema.sbr" \
+	"$(INTDIR)\structselect.sbr" \
+	"$(INTDIR)\style.sbr" \
+	"$(INTDIR)\textcommands.sbr" \
+	"$(INTDIR)\thotmsg.sbr" \
+	"$(INTDIR)\translation.sbr" \
+	"$(INTDIR)\tree.sbr" \
+	"$(INTDIR)\treeapi.sbr" \
+	"$(INTDIR)\uconvert.sbr" \
+	"$(INTDIR)\undo.sbr" \
+	"$(INTDIR)\undoapi.sbr" \
+	"$(INTDIR)\units.sbr" \
+	"$(INTDIR)\unstructchange.sbr" \
+	"$(INTDIR)\unstructlocate.sbr" \
+	"$(INTDIR)\ustring.sbr" \
+	"$(INTDIR)\viewapi.sbr" \
+	"$(INTDIR)\views.sbr" \
+	"$(INTDIR)\windowdisplay.sbr" \
+	"$(INTDIR)\word.sbr" \
+	"$(INTDIR)\writedoc.sbr" \
+	"$(INTDIR)\writepivot.sbr" \
+	"$(INTDIR)\xbmhandler.sbr" \
+	"$(INTDIR)\xpmhandler.sbr"
+
+"$(OUTDIR)\libThotEditor.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
+    $(BSC32) @<<
+  $(BSC32_FLAGS) $(BSC32_SBRS)
+<<
+
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotEditor.lib" 
 LIB32_OBJS= \
 	"$(INTDIR)\absboxes.obj" \
 	"$(INTDIR)\abspictures.obj" \
 	"$(INTDIR)\actions.obj" \
+	"$(INTDIR)\animbox.obj" \
 	"$(INTDIR)\appdialogue.obj" \
 	"$(INTDIR)\appli.obj" \
 	"$(INTDIR)\applicationapi.obj" \
@@ -603,6 +839,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\externalref.obj" \
 	"$(INTDIR)\fileaccess.obj" \
 	"$(INTDIR)\font.obj" \
+	"$(INTDIR)\fontconfig.obj" \
 	"$(INTDIR)\frame.obj" \
 	"$(INTDIR)\geom.obj" \
 	"$(INTDIR)\gifhandler.obj" \
@@ -650,6 +887,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\searchref.obj" \
 	"$(INTDIR)\selectionapi.obj" \
 	"$(INTDIR)\spellchecker.obj" \
+	"$(INTDIR)\stix.obj" \
 	"$(INTDIR)\structchange.obj" \
 	"$(INTDIR)\structcommands.obj" \
 	"$(INTDIR)\structcreation.obj" \
@@ -688,131 +926,29 @@ LIB32_OBJS= \
 !ENDIF 
 
 
-!IF "$(CFG)" == "libThotEditor - Win32 Release" || "$(CFG)" ==\
- "libThotEditor - Win32 Debug"
+!IF "$(NO_EXTERNAL_DEPS)" != "1"
+!IF EXISTS("libThotEditor.dep")
+!INCLUDE "libThotEditor.dep"
+!ELSE 
+!MESSAGE Warning: cannot find "libThotEditor.dep"
+!ENDIF 
+!ENDIF 
+
+
+!IF "$(CFG)" == "libThotEditor - Win32 Release" || "$(CFG)" == "libThotEditor - Win32 Debug"
 SOURCE=..\..\thotlib\view\absboxes.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_ABSBO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\absboxes.obj" : $(SOURCE) $(DEP_CPP_ABSBO) "$(INTDIR)"
+"$(INTDIR)\absboxes.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_ABSBO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\absboxes.obj" : $(SOURCE) $(DEP_CPP_ABSBO) "$(INTDIR)"
+"$(INTDIR)\absboxes.obj"	"$(INTDIR)\absboxes.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -822,87 +958,15 @@ SOURCE=..\..\thotlib\image\abspictures.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_ABSPI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\abspictures.obj" : $(SOURCE) $(DEP_CPP_ABSPI) "$(INTDIR)"
+"$(INTDIR)\abspictures.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_ABSPI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\abspictures.obj" : $(SOURCE) $(DEP_CPP_ABSPI) "$(INTDIR)"
+"$(INTDIR)\abspictures.obj"	"$(INTDIR)\abspictures.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -912,69 +976,33 @@ SOURCE=..\..\thotlib\base\actions.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_ACTIO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	
 
-"$(INTDIR)\actions.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
+"$(INTDIR)\actions.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_ACTIO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	
 
-"$(INTDIR)\actions.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
+"$(INTDIR)\actions.obj"	"$(INTDIR)\actions.sbr" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\thotlib\view\animbox.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+
+"$(INTDIR)\animbox.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+
+"$(INTDIR)\animbox.obj"	"$(INTDIR)\animbox.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -984,149 +1012,15 @@ SOURCE=..\..\thotlib\dialogue\appdialogue.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_APPDI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\dictionary_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\profiles_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\appdialogue.obj" : $(SOURCE) $(DEP_CPP_APPDI) "$(INTDIR)"
+"$(INTDIR)\appdialogue.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_APPDI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\dictionary_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\profiles_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\appdialogue.obj" : $(SOURCE) $(DEP_CPP_APPDI) "$(INTDIR)"
+"$(INTDIR)\appdialogue.obj"	"$(INTDIR)\appdialogue.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1136,177 +1030,15 @@ SOURCE=..\..\thotlib\dialogue\appli.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_APPLI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\interface_f.h"\
-	"..\..\thotlib\internals\f\keyboards_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thot_key.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\appli.obj" : $(SOURCE) $(DEP_CPP_APPLI) "$(INTDIR)"
+"$(INTDIR)\appli.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_APPLI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\interface_f.h"\
-	"..\..\thotlib\internals\f\keyboards_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thot_key.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\appli.obj" : $(SOURCE) $(DEP_CPP_APPLI) "$(INTDIR)"
+"$(INTDIR)\appli.obj"	"$(INTDIR)\appli.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1316,169 +1048,15 @@ SOURCE=..\..\thotlib\editing\applicationapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_APPLIC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\callbackinit_f.h"\
-	"..\..\thotlib\internals\f\checkaccess_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\profiles_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schtrad_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\thotpattern.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	"..\..\thotlib\internals\var\thotpalette_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\applicationapi.obj" : $(SOURCE) $(DEP_CPP_APPLIC) "$(INTDIR)"
+"$(INTDIR)\applicationapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_APPLIC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\callbackinit_f.h"\
-	"..\..\thotlib\internals\f\checkaccess_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\profiles_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schtrad_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\thotpattern.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	"..\..\thotlib\internals\var\thotpalette_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\applicationapi.obj" : $(SOURCE) $(DEP_CPP_APPLIC) "$(INTDIR)"
+"$(INTDIR)\applicationapi.obj"	"$(INTDIR)\applicationapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1488,125 +1066,15 @@ SOURCE=..\..\thotlib\tree\attributeapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_ATTRI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\attributeapi.obj" : $(SOURCE) $(DEP_CPP_ATTRI) "$(INTDIR)"
+"$(INTDIR)\attributeapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_ATTRI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\attributeapi.obj" : $(SOURCE) $(DEP_CPP_ATTRI) "$(INTDIR)"
+"$(INTDIR)\attributeapi.obj"	"$(INTDIR)\attributeapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1616,155 +1084,15 @@ SOURCE=..\..\thotlib\tree\attributes.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_ATTRIB=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrmenu_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\attributes.obj" : $(SOURCE) $(DEP_CPP_ATTRIB) "$(INTDIR)"
+"$(INTDIR)\attributes.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_ATTRIB=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrmenu_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\attributes.obj" : $(SOURCE) $(DEP_CPP_ATTRIB) "$(INTDIR)"
+"$(INTDIR)\attributes.obj"	"$(INTDIR)\attributes.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1774,143 +1102,15 @@ SOURCE=..\..\thotlib\dialogue\attrmenu.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_ATTRM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\attrmenu.obj" : $(SOURCE) $(DEP_CPP_ATTRM) "$(INTDIR)"
+"$(INTDIR)\attrmenu.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_ATTRM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\attrmenu.obj" : $(SOURCE) $(DEP_CPP_ATTRM) "$(INTDIR)"
+"$(INTDIR)\attrmenu.obj"	"$(INTDIR)\attrmenu.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1920,93 +1120,15 @@ SOURCE=..\..\thotlib\presentation\attrpresent.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_ATTRP=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\attrpresent.obj" : $(SOURCE) $(DEP_CPP_ATTRP) "$(INTDIR)"
+"$(INTDIR)\attrpresent.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_ATTRP=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\attrpresent.obj" : $(SOURCE) $(DEP_CPP_ATTRP) "$(INTDIR)"
+"$(INTDIR)\attrpresent.obj"	"$(INTDIR)\attrpresent.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2016,151 +1138,15 @@ SOURCE=..\..\thotlib\view\boxlocate.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BOXLO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\boxlocate.obj" : $(SOURCE) $(DEP_CPP_BOXLO) "$(INTDIR)"
+"$(INTDIR)\boxlocate.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BOXLO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\boxlocate.obj" : $(SOURCE) $(DEP_CPP_BOXLO) "$(INTDIR)"
+"$(INTDIR)\boxlocate.obj"	"$(INTDIR)\boxlocate.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2170,105 +1156,15 @@ SOURCE=..\..\thotlib\view\boxmoves.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BOXMO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxrelations_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	
 
-"$(INTDIR)\boxmoves.obj" : $(SOURCE) $(DEP_CPP_BOXMO) "$(INTDIR)"
+"$(INTDIR)\boxmoves.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BOXMO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxrelations_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	
 
-"$(INTDIR)\boxmoves.obj" : $(SOURCE) $(DEP_CPP_BOXMO) "$(INTDIR)"
+"$(INTDIR)\boxmoves.obj"	"$(INTDIR)\boxmoves.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2278,105 +1174,15 @@ SOURCE=..\..\thotlib\view\boxparams.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BOXPA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\boxparams.obj" : $(SOURCE) $(DEP_CPP_BOXPA) "$(INTDIR)"
+"$(INTDIR)\boxparams.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BOXPA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\boxparams.obj" : $(SOURCE) $(DEP_CPP_BOXPA) "$(INTDIR)"
+"$(INTDIR)\boxparams.obj"	"$(INTDIR)\boxparams.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2386,111 +1192,15 @@ SOURCE=..\..\thotlib\view\boxpositions.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BOXPO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxrelations_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\boxpositions.obj" : $(SOURCE) $(DEP_CPP_BOXPO) "$(INTDIR)"
+"$(INTDIR)\boxpositions.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BOXPO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxrelations_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\boxpositions.obj" : $(SOURCE) $(DEP_CPP_BOXPO) "$(INTDIR)"
+"$(INTDIR)\boxpositions.obj"	"$(INTDIR)\boxpositions.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2500,99 +1210,15 @@ SOURCE=..\..\thotlib\view\boxrelations.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BOXRE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxrelations_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	
 
-"$(INTDIR)\boxrelations.obj" : $(SOURCE) $(DEP_CPP_BOXRE) "$(INTDIR)"
+"$(INTDIR)\boxrelations.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BOXRE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxrelations_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	
 
-"$(INTDIR)\boxrelations.obj" : $(SOURCE) $(DEP_CPP_BOXRE) "$(INTDIR)"
+"$(INTDIR)\boxrelations.obj"	"$(INTDIR)\boxrelations.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2602,131 +1228,15 @@ SOURCE=..\..\thotlib\view\boxselection.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BOXSE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\boxselection.obj" : $(SOURCE) $(DEP_CPP_BOXSE) "$(INTDIR)"
+"$(INTDIR)\boxselection.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BOXSE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\boxselection.obj" : $(SOURCE) $(DEP_CPP_BOXSE) "$(INTDIR)"
+"$(INTDIR)\boxselection.obj"	"$(INTDIR)\boxselection.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2736,89 +1246,15 @@ SOURCE=..\..\thotlib\dialogue\browser.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BROWS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\browser_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\browser.obj" : $(SOURCE) $(DEP_CPP_BROWS) "$(INTDIR)"
+"$(INTDIR)\browser.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BROWS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\browser_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\browser.obj" : $(SOURCE) $(DEP_CPP_BROWS) "$(INTDIR)"
+"$(INTDIR)\browser.obj"	"$(INTDIR)\browser.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2828,147 +1264,15 @@ SOURCE=..\..\thotlib\view\buildboxes.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BUILD=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxrelations_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\buildboxes.obj" : $(SOURCE) $(DEP_CPP_BUILD) "$(INTDIR)"
+"$(INTDIR)\buildboxes.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BUILD=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxrelations_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\buildboxes.obj" : $(SOURCE) $(DEP_CPP_BUILD) "$(INTDIR)"
+"$(INTDIR)\buildboxes.obj"	"$(INTDIR)\buildboxes.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -2978,97 +1282,15 @@ SOURCE=..\..\thotlib\view\buildlines.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_BUILDL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	
 
-"$(INTDIR)\buildlines.obj" : $(SOURCE) $(DEP_CPP_BUILDL) "$(INTDIR)"
+"$(INTDIR)\buildlines.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_BUILDL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	
 
-"$(INTDIR)\buildlines.obj" : $(SOURCE) $(DEP_CPP_BUILDL) "$(INTDIR)"
+"$(INTDIR)\buildlines.obj"	"$(INTDIR)\buildlines.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3078,87 +1300,15 @@ SOURCE=..\..\thotlib\dialogue\callback.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CALLB=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\callbackinit_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\callback.obj" : $(SOURCE) $(DEP_CPP_CALLB) "$(INTDIR)"
+"$(INTDIR)\callback.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CALLB=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\callbackinit_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\callback.obj" : $(SOURCE) $(DEP_CPP_CALLB) "$(INTDIR)"
+"$(INTDIR)\callback.obj"	"$(INTDIR)\callback.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3168,93 +1318,15 @@ SOURCE=..\..\thotlib\dialogue\callbackinit.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CALLBA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	
 
-"$(INTDIR)\callbackinit.obj" : $(SOURCE) $(DEP_CPP_CALLBA) "$(INTDIR)"
+"$(INTDIR)\callbackinit.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CALLBA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	
 
-"$(INTDIR)\callbackinit.obj" : $(SOURCE) $(DEP_CPP_CALLBA) "$(INTDIR)"
+"$(INTDIR)\callbackinit.obj"	"$(INTDIR)\callbackinit.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3264,129 +1336,15 @@ SOURCE=..\..\thotlib\view\changeabsbox.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CHANG=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\changeabsbox.obj" : $(SOURCE) $(DEP_CPP_CHANG) "$(INTDIR)"
+"$(INTDIR)\changeabsbox.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CHANG=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\changeabsbox.obj" : $(SOURCE) $(DEP_CPP_CHANG) "$(INTDIR)"
+"$(INTDIR)\changeabsbox.obj"	"$(INTDIR)\changeabsbox.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3396,155 +1354,15 @@ SOURCE=..\..\thotlib\presentation\changepresent.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CHANGE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\unstructchange_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\changepresent.obj" : $(SOURCE) $(DEP_CPP_CHANGE) "$(INTDIR)"
+"$(INTDIR)\changepresent.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CHANGE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\unstructchange_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\changepresent.obj" : $(SOURCE) $(DEP_CPP_CHANGE) "$(INTDIR)"
+"$(INTDIR)\changepresent.obj"	"$(INTDIR)\changepresent.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3554,127 +1372,15 @@ SOURCE=..\..\thotlib\tree\checkaccess.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CHECK=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\res.h"\
-	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\checkaccess.obj" : $(SOURCE) $(DEP_CPP_CHECK) "$(INTDIR)"
+"$(INTDIR)\checkaccess.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CHECK=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\res.h"\
-	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\checkaccess.obj" : $(SOURCE) $(DEP_CPP_CHECK) "$(INTDIR)"
+"$(INTDIR)\checkaccess.obj"	"$(INTDIR)\checkaccess.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3684,127 +1390,15 @@ SOURCE=..\..\thotlib\editing\checkermenu.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CHECKE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\dictionary_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\spellchecker_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constcorr.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\corrmenu.h"\
-	"..\..\thotlib\internals\h\corrmsg.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\spell_tv.h"\
-	
 
-"$(INTDIR)\checkermenu.obj" : $(SOURCE) $(DEP_CPP_CHECKE) "$(INTDIR)"
+"$(INTDIR)\checkermenu.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CHECKE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\dictionary_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\spellchecker_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constcorr.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\corrmenu.h"\
-	"..\..\thotlib\internals\h\corrmsg.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\spell_tv.h"\
-	
 
-"$(INTDIR)\checkermenu.obj" : $(SOURCE) $(DEP_CPP_CHECKE) "$(INTDIR)"
+"$(INTDIR)\checkermenu.obj"	"$(INTDIR)\checkermenu.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3814,111 +1408,15 @@ SOURCE=..\..\thotlib\dialogue\closedoc.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CLOSE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\closedoc.obj" : $(SOURCE) $(DEP_CPP_CLOSE) "$(INTDIR)"
+"$(INTDIR)\closedoc.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CLOSE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\closedoc.obj" : $(SOURCE) $(DEP_CPP_CLOSE) "$(INTDIR)"
+"$(INTDIR)\closedoc.obj"	"$(INTDIR)\closedoc.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3928,127 +1426,15 @@ SOURCE=..\..\thotlib\dialogue\colors.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_COLOR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\presentmenu_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\colors.obj" : $(SOURCE) $(DEP_CPP_COLOR) "$(INTDIR)"
+"$(INTDIR)\colors.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_COLOR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\presentmenu_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\colors.obj" : $(SOURCE) $(DEP_CPP_COLOR) "$(INTDIR)"
+"$(INTDIR)\colors.obj"	"$(INTDIR)\colors.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4058,117 +1444,15 @@ SOURCE=..\..\thotlib\base\config.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CONFI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\config.obj" : $(SOURCE) $(DEP_CPP_CONFI) "$(INTDIR)"
+"$(INTDIR)\config.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CONFI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\config.obj" : $(SOURCE) $(DEP_CPP_CONFI) "$(INTDIR)"
+"$(INTDIR)\config.obj"	"$(INTDIR)\config.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4178,109 +1462,15 @@ SOURCE=..\..\thotlib\content\content.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CONTE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\content.obj" : $(SOURCE) $(DEP_CPP_CONTE) "$(INTDIR)"
+"$(INTDIR)\content.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CONTE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\content.obj" : $(SOURCE) $(DEP_CPP_CONTE) "$(INTDIR)"
+"$(INTDIR)\content.obj"	"$(INTDIR)\content.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4290,129 +1480,15 @@ SOURCE=..\..\thotlib\content\contentapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CONTEN=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\contentapi.obj" : $(SOURCE) $(DEP_CPP_CONTEN) "$(INTDIR)"
+"$(INTDIR)\contentapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CONTEN=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\contentapi.obj" : $(SOURCE) $(DEP_CPP_CONTEN) "$(INTDIR)"
+"$(INTDIR)\contentapi.obj"	"$(INTDIR)\contentapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4422,123 +1498,15 @@ SOURCE=..\..\thotlib\dialogue\context.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CONTEX=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\checkermenu_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\context.obj" : $(SOURCE) $(DEP_CPP_CONTEX) "$(INTDIR)"
+"$(INTDIR)\context.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CONTEX=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\checkermenu_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\context.obj" : $(SOURCE) $(DEP_CPP_CONTEX) "$(INTDIR)"
+"$(INTDIR)\context.obj"	"$(INTDIR)\context.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4548,141 +1516,15 @@ SOURCE=..\..\thotlib\view\createabsbox.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CREAT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\createabsbox.obj" : $(SOURCE) $(DEP_CPP_CREAT) "$(INTDIR)"
+"$(INTDIR)\createabsbox.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CREAT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\createabsbox.obj" : $(SOURCE) $(DEP_CPP_CREAT) "$(INTDIR)"
+"$(INTDIR)\createabsbox.obj"	"$(INTDIR)\createabsbox.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4692,121 +1534,15 @@ SOURCE=..\..\thotlib\view\createpages.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CREATE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\createpages.obj" : $(SOURCE) $(DEP_CPP_CREATE) "$(INTDIR)"
+"$(INTDIR)\createpages.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CREATE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\createpages.obj" : $(SOURCE) $(DEP_CPP_CREATE) "$(INTDIR)"
+"$(INTDIR)\createpages.obj"	"$(INTDIR)\createpages.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4816,97 +1552,15 @@ SOURCE=..\..\thotlib\dialogue\creationmenu.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_CREATI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\creationmenu.obj" : $(SOURCE) $(DEP_CPP_CREATI) "$(INTDIR)"
+"$(INTDIR)\creationmenu.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_CREATI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\creationmenu.obj" : $(SOURCE) $(DEP_CPP_CREATI) "$(INTDIR)"
+"$(INTDIR)\creationmenu.obj"	"$(INTDIR)\creationmenu.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4916,121 +1570,15 @@ SOURCE=..\..\thotlib\dialogue\dialogapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_DIALO=\
-	"..\..\thotlib\dialogue\winerrdata.c"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\copyright.xbm"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\dialogapi.obj" : $(SOURCE) $(DEP_CPP_DIALO) "$(INTDIR)"
+"$(INTDIR)\dialogapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_DIALO=\
-	"..\..\thotlib\dialogue\winerrdata.c"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\copyright.xbm"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\dialogapi.obj" : $(SOURCE) $(DEP_CPP_DIALO) "$(INTDIR)"
+"$(INTDIR)\dialogapi.obj"	"$(INTDIR)\dialogapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -5040,101 +1588,15 @@ SOURCE=..\..\thotlib\content\dictionary.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_DICTI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\dictionary.obj" : $(SOURCE) $(DEP_CPP_DICTI) "$(INTDIR)"
+"$(INTDIR)\dictionary.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_DICTI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\dictionary.obj" : $(SOURCE) $(DEP_CPP_DICTI) "$(INTDIR)"
+"$(INTDIR)\dictionary.obj"	"$(INTDIR)\dictionary.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -5144,109 +1606,15 @@ SOURCE=..\..\thotlib\view\displaybox.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_DISPL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\displaybox_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\displaybox.obj" : $(SOURCE) $(DEP_CPP_DISPL) "$(INTDIR)"
+"$(INTDIR)\displaybox.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_DISPL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\displaybox_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\displaybox.obj" : $(SOURCE) $(DEP_CPP_DISPL) "$(INTDIR)"
+"$(INTDIR)\displaybox.obj"	"$(INTDIR)\displaybox.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -5256,105 +1624,15 @@ SOURCE=..\..\thotlib\view\displayselect.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_DISPLA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\displayselect.obj" : $(SOURCE) $(DEP_CPP_DISPLA) "$(INTDIR)"
+"$(INTDIR)\displayselect.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_DISPLA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\displayselect.obj" : $(SOURCE) $(DEP_CPP_DISPLA) "$(INTDIR)"
+"$(INTDIR)\displayselect.obj"	"$(INTDIR)\displayselect.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -5364,189 +1642,15 @@ SOURCE=..\..\Thotlib\View\displayview.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_DISPLAY=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrmenu_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\creationmenu_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\displayview.obj" : $(SOURCE) $(DEP_CPP_DISPLAY) "$(INTDIR)"
+"$(INTDIR)\displayview.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_DISPLAY=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrmenu_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\creationmenu_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\displayview.obj" : $(SOURCE) $(DEP_CPP_DISPLAY) "$(INTDIR)"
+"$(INTDIR)\displayview.obj"	"$(INTDIR)\displayview.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -5556,191 +1660,15 @@ SOURCE=..\..\thotlib\document\docs.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_DOCS_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\callbackinit_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\docs.obj" : $(SOURCE) $(DEP_CPP_DOCS_) "$(INTDIR)"
+"$(INTDIR)\docs.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_DOCS_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\callbackinit_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\appevents_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\docs.obj" : $(SOURCE) $(DEP_CPP_DOCS_) "$(INTDIR)"
+"$(INTDIR)\docs.obj"	"$(INTDIR)\docs.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -5750,151 +1678,15 @@ SOURCE=..\..\thotlib\document\documentapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_DOCUM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\translation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	
 
-"$(INTDIR)\documentapi.obj" : $(SOURCE) $(DEP_CPP_DOCUM) "$(INTDIR)"
+"$(INTDIR)\documentapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_DOCUM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\translation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	
 
-"$(INTDIR)\documentapi.obj" : $(SOURCE) $(DEP_CPP_DOCUM) "$(INTDIR)"
+"$(INTDIR)\documentapi.obj"	"$(INTDIR)\documentapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -5904,185 +1696,15 @@ SOURCE=..\..\thotlib\editing\editcommands.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_EDITC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\unstructchange_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\editcommands.obj" : $(SOURCE) $(DEP_CPP_EDITC) "$(INTDIR)"
+"$(INTDIR)\editcommands.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_EDITC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\unstructchange_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\editcommands.obj" : $(SOURCE) $(DEP_CPP_EDITC) "$(INTDIR)"
+"$(INTDIR)\editcommands.obj"	"$(INTDIR)\editcommands.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6092,101 +1714,15 @@ SOURCE=..\..\thotlib\image\epshandler.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_EPSHA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\epshandler.obj" : $(SOURCE) $(DEP_CPP_EPSHA) "$(INTDIR)"
+"$(INTDIR)\epshandler.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_EPSHA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\epshandler.obj" : $(SOURCE) $(DEP_CPP_EPSHA) "$(INTDIR)"
+"$(INTDIR)\epshandler.obj"	"$(INTDIR)\epshandler.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6196,87 +1732,15 @@ SOURCE=..\..\thotlib\tree\exceptions.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_EXCEP=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\exceptions.obj" : $(SOURCE) $(DEP_CPP_EXCEP) "$(INTDIR)"
+"$(INTDIR)\exceptions.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_EXCEP=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\exceptions.obj" : $(SOURCE) $(DEP_CPP_EXCEP) "$(INTDIR)"
+"$(INTDIR)\exceptions.obj"	"$(INTDIR)\exceptions.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6286,95 +1750,15 @@ SOURCE=..\..\thotlib\document\externalref.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_EXTER=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\externalref.obj" : $(SOURCE) $(DEP_CPP_EXTER) "$(INTDIR)"
+"$(INTDIR)\externalref.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_EXTER=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\externalref.obj" : $(SOURCE) $(DEP_CPP_EXTER) "$(INTDIR)"
+"$(INTDIR)\externalref.obj"	"$(INTDIR)\externalref.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6384,91 +1768,15 @@ SOURCE=..\..\thotlib\base\fileaccess.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_FILEA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\fileaccess.obj" : $(SOURCE) $(DEP_CPP_FILEA) "$(INTDIR)"
+"$(INTDIR)\fileaccess.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_FILEA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\fileaccess.obj" : $(SOURCE) $(DEP_CPP_FILEA) "$(INTDIR)"
+"$(INTDIR)\fileaccess.obj"	"$(INTDIR)\fileaccess.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6478,111 +1786,33 @@ SOURCE=..\..\thotlib\dialogue\font.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_FONT_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\font.obj" : $(SOURCE) $(DEP_CPP_FONT_) "$(INTDIR)"
+"$(INTDIR)\font.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_FONT_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\font.obj" : $(SOURCE) $(DEP_CPP_FONT_) "$(INTDIR)"
+"$(INTDIR)\font.obj"	"$(INTDIR)\font.sbr" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\thotlib\dialogue\fontconfig.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+
+"$(INTDIR)\fontconfig.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+
+"$(INTDIR)\fontconfig.obj"	"$(INTDIR)\fontconfig.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6592,127 +1822,15 @@ SOURCE=..\..\thotlib\view\frame.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_FRAME=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\displaybox_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\frame.obj" : $(SOURCE) $(DEP_CPP_FRAME) "$(INTDIR)"
+"$(INTDIR)\frame.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_FRAME=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\displaybox_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\frame.obj" : $(SOURCE) $(DEP_CPP_FRAME) "$(INTDIR)"
+"$(INTDIR)\frame.obj"	"$(INTDIR)\frame.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6722,107 +1840,15 @@ SOURCE=..\..\thotlib\dialogue\geom.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_GEOM_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\geom.obj" : $(SOURCE) $(DEP_CPP_GEOM_) "$(INTDIR)"
+"$(INTDIR)\geom.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_GEOM_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\geom.obj" : $(SOURCE) $(DEP_CPP_GEOM_) "$(INTDIR)"
+"$(INTDIR)\geom.obj"	"$(INTDIR)\geom.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6832,121 +1858,15 @@ SOURCE=..\..\thotlib\image\gifhandler.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_GIFHA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\simx.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\h\xpm.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\gifhandler.obj" : $(SOURCE) $(DEP_CPP_GIFHA) "$(INTDIR)"
+"$(INTDIR)\gifhandler.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_GIFHA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\simx.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\h\xpm.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\gifhandler.obj" : $(SOURCE) $(DEP_CPP_GIFHA) "$(INTDIR)"
+"$(INTDIR)\gifhandler.obj"	"$(INTDIR)\gifhandler.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6956,91 +1876,15 @@ SOURCE=..\..\thotlib\view\hyphen.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_HYPHE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\uconvert_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	
 
-"$(INTDIR)\hyphen.obj" : $(SOURCE) $(DEP_CPP_HYPHE) "$(INTDIR)"
+"$(INTDIR)\hyphen.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_HYPHE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\uconvert_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	
 
-"$(INTDIR)\hyphen.obj" : $(SOURCE) $(DEP_CPP_HYPHE) "$(INTDIR)"
+"$(INTDIR)\hyphen.obj"	"$(INTDIR)\hyphen.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7050,105 +1894,15 @@ SOURCE=..\..\thotlib\view\inites.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_INITE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\pattern.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\inites.obj" : $(SOURCE) $(DEP_CPP_INITE) "$(INTDIR)"
+"$(INTDIR)\inites.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_INITE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\pattern.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\inites.obj" : $(SOURCE) $(DEP_CPP_INITE) "$(INTDIR)"
+"$(INTDIR)\inites.obj"	"$(INTDIR)\inites.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7158,127 +1912,15 @@ SOURCE=..\..\thotlib\dialogue\input.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_INPUT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thot_key.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\input.obj" : $(SOURCE) $(DEP_CPP_INPUT) "$(INTDIR)"
+"$(INTDIR)\input.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_INPUT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thot_key.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\input.obj" : $(SOURCE) $(DEP_CPP_INPUT) "$(INTDIR)"
+"$(INTDIR)\input.obj"	"$(INTDIR)\input.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7288,143 +1930,15 @@ SOURCE=..\..\thotlib\dialogue\interface.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_INTER=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\displaybox_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\keyboards_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\interface.obj" : $(SOURCE) $(DEP_CPP_INTER) "$(INTDIR)"
+"$(INTDIR)\interface.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_INTER=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\displaybox_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\keyboards_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\interface.obj" : $(SOURCE) $(DEP_CPP_INTER) "$(INTDIR)"
+"$(INTDIR)\interface.obj"	"$(INTDIR)\interface.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7434,113 +1948,15 @@ SOURCE=..\..\thotlib\image\jpeghandler.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_JPEGH=\
-	"..\..\libjpeg\jconfig.h"\
-	"..\..\libjpeg\jmorecfg.h"\
-	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\jpeghandler.obj" : $(SOURCE) $(DEP_CPP_JPEGH) "$(INTDIR)"
+"$(INTDIR)\jpeghandler.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_JPEGH=\
-	"..\..\libjpeg\jconfig.h"\
-	"..\..\libjpeg\jmorecfg.h"\
-	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\jpeghandler.obj" : $(SOURCE) $(DEP_CPP_JPEGH) "$(INTDIR)"
+"$(INTDIR)\jpeghandler.obj"	"$(INTDIR)\jpeghandler.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7550,121 +1966,15 @@ SOURCE=..\..\thotlib\dialogue\keyboards.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_KEYBO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\keyboards.obj" : $(SOURCE) $(DEP_CPP_KEYBO) "$(INTDIR)"
+"$(INTDIR)\keyboards.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_KEYBO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\keyboards.obj" : $(SOURCE) $(DEP_CPP_KEYBO) "$(INTDIR)"
+"$(INTDIR)\keyboards.obj"	"$(INTDIR)\keyboards.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7674,69 +1984,15 @@ SOURCE=..\..\thotlib\tree\labelalloc.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_LABEL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\labelalloc.obj" : $(SOURCE) $(DEP_CPP_LABEL) "$(INTDIR)"
+"$(INTDIR)\labelalloc.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_LABEL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\labelalloc.obj" : $(SOURCE) $(DEP_CPP_LABEL) "$(INTDIR)"
+"$(INTDIR)\labelalloc.obj"	"$(INTDIR)\labelalloc.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7746,91 +2002,15 @@ SOURCE=..\..\thotlib\document\language.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_LANGU=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\language.obj" : $(SOURCE) $(DEP_CPP_LANGU) "$(INTDIR)"
+"$(INTDIR)\language.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_LANGU=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\language.obj" : $(SOURCE) $(DEP_CPP_LANGU) "$(INTDIR)"
+"$(INTDIR)\language.obj"	"$(INTDIR)\language.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7840,91 +2020,15 @@ SOURCE=..\..\thotlib\base\memory.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_MEMOR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\memory.obj" : $(SOURCE) $(DEP_CPP_MEMOR) "$(INTDIR)"
+"$(INTDIR)\memory.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_MEMOR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\memory.obj" : $(SOURCE) $(DEP_CPP_MEMOR) "$(INTDIR)"
+"$(INTDIR)\memory.obj"	"$(INTDIR)\memory.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -7934,97 +2038,15 @@ SOURCE=..\..\thotlib\base\message.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_MESSA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\message.obj" : $(SOURCE) $(DEP_CPP_MESSA) "$(INTDIR)"
+"$(INTDIR)\message.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_MESSA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\message.obj" : $(SOURCE) $(DEP_CPP_MESSA) "$(INTDIR)"
+"$(INTDIR)\message.obj"	"$(INTDIR)\message.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8034,127 +2056,15 @@ SOURCE=..\..\thotlib\dialogue\modiftype.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_MODIF=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\attrmenu_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\creationmenu_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\keyboards_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\modiftype.obj" : $(SOURCE) $(DEP_CPP_MODIF) "$(INTDIR)"
+"$(INTDIR)\modiftype.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_MODIF=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\attrmenu_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\creationmenu_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\input_f.h"\
-	"..\..\thotlib\internals\f\keyboards_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\modiftype.obj" : $(SOURCE) $(DEP_CPP_MODIF) "$(INTDIR)"
+"$(INTDIR)\modiftype.obj"	"$(INTDIR)\modiftype.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8164,93 +2074,15 @@ SOURCE=..\..\thotlib\tree\pagecommands.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PAGEC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\pagecommands_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	
 
-"$(INTDIR)\pagecommands.obj" : $(SOURCE) $(DEP_CPP_PAGEC) "$(INTDIR)"
+"$(INTDIR)\pagecommands.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PAGEC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\pagecommands_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	
 
-"$(INTDIR)\pagecommands.obj" : $(SOURCE) $(DEP_CPP_PAGEC) "$(INTDIR)"
+"$(INTDIR)\pagecommands.obj"	"$(INTDIR)\pagecommands.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8260,155 +2092,15 @@ SOURCE=..\..\thotlib\tree\paginate.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PAGIN=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\pagecommands_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\print_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\paginate.obj" : $(SOURCE) $(DEP_CPP_PAGIN) "$(INTDIR)"
+"$(INTDIR)\paginate.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PAGIN=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\pagecommands_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\print_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\paginate.obj" : $(SOURCE) $(DEP_CPP_PAGIN) "$(INTDIR)"
+"$(INTDIR)\paginate.obj"	"$(INTDIR)\paginate.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8418,153 +2110,15 @@ SOURCE=..\..\thotlib\image\picture.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PICTU=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\epshandler_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\jpeghandler_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\pnghandler_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\xbmhandler_f.h"\
-	"..\..\thotlib\internals\f\xpmhandler_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\epsflogo.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\lost.xpm"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\picture.obj" : $(SOURCE) $(DEP_CPP_PICTU) "$(INTDIR)"
+"$(INTDIR)\picture.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PICTU=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\epshandler_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\jpeghandler_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\pnghandler_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\xbmhandler_f.h"\
-	"..\..\thotlib\internals\f\xpmhandler_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\epsflogo.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\lost.xpm"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\picture.obj" : $(SOURCE) $(DEP_CPP_PICTU) "$(INTDIR)"
+"$(INTDIR)\picture.obj"	"$(INTDIR)\picture.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8574,91 +2128,15 @@ SOURCE=..\..\thotlib\image\pictureapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PICTUR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\simx.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\xpm.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\pictureapi.obj" : $(SOURCE) $(DEP_CPP_PICTUR) "$(INTDIR)"
+"$(INTDIR)\pictureapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PICTUR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\simx.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\xpm.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\pictureapi.obj" : $(SOURCE) $(DEP_CPP_PICTUR) "$(INTDIR)"
+"$(INTDIR)\pictureapi.obj"	"$(INTDIR)\pictureapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8668,109 +2146,15 @@ SOURCE=..\..\thotlib\document\pivot.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PIVOT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\pivot.obj" : $(SOURCE) $(DEP_CPP_PIVOT) "$(INTDIR)"
+"$(INTDIR)\pivot.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PIVOT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\pivot.obj" : $(SOURCE) $(DEP_CPP_PIVOT) "$(INTDIR)"
+"$(INTDIR)\pivot.obj"	"$(INTDIR)\pivot.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8780,43 +2164,15 @@ SOURCE=..\..\thotlib\base\platform.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PLATF=\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	
 
-"$(INTDIR)\platform.obj" : $(SOURCE) $(DEP_CPP_PLATF) "$(INTDIR)"
+"$(INTDIR)\platform.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PLATF=\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	
 
-"$(INTDIR)\platform.obj" : $(SOURCE) $(DEP_CPP_PLATF) "$(INTDIR)"
+"$(INTDIR)\platform.obj"	"$(INTDIR)\platform.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8826,117 +2182,15 @@ SOURCE=..\..\thotlib\image\pnghandler.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PNGHA=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\pnghandler.obj" : $(SOURCE) $(DEP_CPP_PNGHA) "$(INTDIR)"
+"$(INTDIR)\pnghandler.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PNGHA=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\pnghandler.obj" : $(SOURCE) $(DEP_CPP_PNGHA) "$(INTDIR)"
+"$(INTDIR)\pnghandler.obj"	"$(INTDIR)\pnghandler.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8946,137 +2200,15 @@ SOURCE=..\..\thotlib\presentation\presentationapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PRESE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\compilmsg_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\presentationapi.obj" : $(SOURCE) $(DEP_CPP_PRESE) "$(INTDIR)"
+"$(INTDIR)\presentationapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PRESE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\compilmsg_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\presentationapi.obj" : $(SOURCE) $(DEP_CPP_PRESE) "$(INTDIR)"
+"$(INTDIR)\presentationapi.obj"	"$(INTDIR)\presentationapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -9086,149 +2218,15 @@ SOURCE=..\..\thotlib\dialogue\presentmenu.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PRESEN=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\unstructchange_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\presentmenu.obj" : $(SOURCE) $(DEP_CPP_PRESEN) "$(INTDIR)"
+"$(INTDIR)\presentmenu.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PRESEN=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\unstructchange_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\presentmenu.obj" : $(SOURCE) $(DEP_CPP_PRESEN) "$(INTDIR)"
+"$(INTDIR)\presentmenu.obj"	"$(INTDIR)\presentmenu.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -9238,137 +2236,15 @@ SOURCE=..\..\thotlib\presentation\presrules.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PRESR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\presrules.obj" : $(SOURCE) $(DEP_CPP_PRESR) "$(INTDIR)"
+"$(INTDIR)\presrules.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PRESR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\boxpositions_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\presrules.obj" : $(SOURCE) $(DEP_CPP_PRESR) "$(INTDIR)"
+"$(INTDIR)\presrules.obj"	"$(INTDIR)\presrules.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -9378,95 +2254,15 @@ SOURCE=..\..\thotlib\presentation\presvariables.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PRESV=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\presvariables.obj" : $(SOURCE) $(DEP_CPP_PRESV) "$(INTDIR)"
+"$(INTDIR)\presvariables.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PRESV=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\presvariables.obj" : $(SOURCE) $(DEP_CPP_PRESV) "$(INTDIR)"
+"$(INTDIR)\presvariables.obj"	"$(INTDIR)\presvariables.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -9476,163 +2272,15 @@ SOURCE=..\..\thotlib\dialogue\printmenu.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PRINT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\print.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attrmenu_f.h"\
-	"..\..\thotlib\internals\f\browser_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\creationmenu_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presentmenu_f.h"\
-	"..\..\thotlib\internals\f\printmenu_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\thotprinter_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writedoc_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	
 
-"$(INTDIR)\printmenu.obj" : $(SOURCE) $(DEP_CPP_PRINT) "$(INTDIR)"
+"$(INTDIR)\printmenu.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PRINT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\print.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attrmenu_f.h"\
-	"..\..\thotlib\internals\f\browser_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\creationmenu_f.h"\
-	"..\..\thotlib\internals\f\dialogapi_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presentmenu_f.h"\
-	"..\..\thotlib\internals\f\printmenu_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\thotprinter_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writedoc_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	
 
-"$(INTDIR)\printmenu.obj" : $(SOURCE) $(DEP_CPP_PRINT) "$(INTDIR)"
+"$(INTDIR)\printmenu.obj"	"$(INTDIR)\printmenu.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -9642,93 +2290,15 @@ SOURCE=..\..\Thotlib\Dialogue\Profiles.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PROFI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\profiles.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\Profiles.obj" : $(SOURCE) $(DEP_CPP_PROFI) "$(INTDIR)"
+"$(INTDIR)\Profiles.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PROFI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\profiles.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\Profiles.obj" : $(SOURCE) $(DEP_CPP_PROFI) "$(INTDIR)"
+"$(INTDIR)\Profiles.obj"	"$(INTDIR)\Profiles.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -9738,91 +2308,15 @@ SOURCE=..\..\thotlib\presentation\pschemaapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_PSCHE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\compilmsg_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\pschemaapi.obj" : $(SOURCE) $(DEP_CPP_PSCHE) "$(INTDIR)"
+"$(INTDIR)\pschemaapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_PSCHE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\compilmsg_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\pschemaapi.obj" : $(SOURCE) $(DEP_CPP_PSCHE) "$(INTDIR)"
+"$(INTDIR)\pschemaapi.obj"	"$(INTDIR)\pschemaapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -9832,97 +2326,15 @@ SOURCE=..\..\thotlib\dialogue\quit.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_QUIT_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\closedoc_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\quit.obj" : $(SOURCE) $(DEP_CPP_QUIT_) "$(INTDIR)"
+"$(INTDIR)\quit.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_QUIT_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\closedoc_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\quit.obj" : $(SOURCE) $(DEP_CPP_QUIT_) "$(INTDIR)"
+"$(INTDIR)\quit.obj"	"$(INTDIR)\quit.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -9932,147 +2344,15 @@ SOURCE=..\..\thotlib\document\readpivot.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_READP=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\readpivot.obj" : $(SOURCE) $(DEP_CPP_READP) "$(INTDIR)"
+"$(INTDIR)\readpivot.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_READP=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\readpivot.obj" : $(SOURCE) $(DEP_CPP_READP) "$(INTDIR)"
+"$(INTDIR)\readpivot.obj"	"$(INTDIR)\readpivot.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10082,95 +2362,15 @@ SOURCE=..\..\thotlib\document\readprs.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_READPR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readprs_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\readprs.obj" : $(SOURCE) $(DEP_CPP_READPR) "$(INTDIR)"
+"$(INTDIR)\readprs.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_READPR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readprs_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\readprs.obj" : $(SOURCE) $(DEP_CPP_READPR) "$(INTDIR)"
+"$(INTDIR)\readprs.obj"	"$(INTDIR)\readprs.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10180,91 +2380,15 @@ SOURCE=..\..\thotlib\document\readstr.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_READS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\readstr.obj" : $(SOURCE) $(DEP_CPP_READS) "$(INTDIR)"
+"$(INTDIR)\readstr.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_READS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\readstr.obj" : $(SOURCE) $(DEP_CPP_READS) "$(INTDIR)"
+"$(INTDIR)\readstr.obj"	"$(INTDIR)\readstr.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10274,93 +2398,15 @@ SOURCE=..\..\thotlib\document\readtra.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_READT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\readtra_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\readtra.obj" : $(SOURCE) $(DEP_CPP_READT) "$(INTDIR)"
+"$(INTDIR)\readtra.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_READT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\readtra_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\readtra.obj" : $(SOURCE) $(DEP_CPP_READT) "$(INTDIR)"
+"$(INTDIR)\readtra.obj"	"$(INTDIR)\readtra.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10370,117 +2416,15 @@ SOURCE=..\..\thotlib\tree\referenceapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_REFER=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\referenceapi.obj" : $(SOURCE) $(DEP_CPP_REFER) "$(INTDIR)"
+"$(INTDIR)\referenceapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_REFER=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\referenceapi.obj" : $(SOURCE) $(DEP_CPP_REFER) "$(INTDIR)"
+"$(INTDIR)\referenceapi.obj"	"$(INTDIR)\referenceapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10490,105 +2434,15 @@ SOURCE=..\..\thotlib\tree\references.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_REFERE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\references.obj" : $(SOURCE) $(DEP_CPP_REFERE) "$(INTDIR)"
+"$(INTDIR)\references.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_REFERE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\references.obj" : $(SOURCE) $(DEP_CPP_REFERE) "$(INTDIR)"
+"$(INTDIR)\references.obj"	"$(INTDIR)\references.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10598,97 +2452,15 @@ SOURCE=..\..\thotlib\base\registry.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_REGIS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\uconvert_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\registry.obj" : $(SOURCE) $(DEP_CPP_REGIS) "$(INTDIR)"
+"$(INTDIR)\registry.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_REGIS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\uconvert_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\registry.obj" : $(SOURCE) $(DEP_CPP_REGIS) "$(INTDIR)"
+"$(INTDIR)\registry.obj"	"$(INTDIR)\registry.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10698,77 +2470,15 @@ SOURCE=..\..\thotlib\tree\res.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_RES_C=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\resgen_f.h"\
-	"..\..\thotlib\internals\f\resmatch_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\res.obj" : $(SOURCE) $(DEP_CPP_RES_C) "$(INTDIR)"
+"$(INTDIR)\res.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_RES_C=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\resgen_f.h"\
-	"..\..\thotlib\internals\f\resmatch_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\res.obj" : $(SOURCE) $(DEP_CPP_RES_C) "$(INTDIR)"
+"$(INTDIR)\res.obj"	"$(INTDIR)\res.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10778,71 +2488,15 @@ SOURCE=..\..\thotlib\tree\resgen.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_RESGE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\resmatch_f.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\resgen.obj" : $(SOURCE) $(DEP_CPP_RESGE) "$(INTDIR)"
+"$(INTDIR)\resgen.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_RESGE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\resmatch_f.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\resgen.obj" : $(SOURCE) $(DEP_CPP_RESGE) "$(INTDIR)"
+"$(INTDIR)\resgen.obj"	"$(INTDIR)\resgen.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10852,65 +2506,15 @@ SOURCE=..\..\thotlib\tree\resmatch.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_RESMA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\resmatch.obj" : $(SOURCE) $(DEP_CPP_RESMA) "$(INTDIR)"
+"$(INTDIR)\resmatch.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_RESMA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
 
-"$(INTDIR)\resmatch.obj" : $(SOURCE) $(DEP_CPP_RESMA) "$(INTDIR)"
+"$(INTDIR)\resmatch.obj"	"$(INTDIR)\resmatch.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10920,107 +2524,15 @@ SOURCE=..\..\thotlib\document\schemas.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_SCHEM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readprs_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	
 
-"$(INTDIR)\schemas.obj" : $(SOURCE) $(DEP_CPP_SCHEM) "$(INTDIR)"
+"$(INTDIR)\schemas.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_SCHEM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readprs_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	
 
-"$(INTDIR)\schemas.obj" : $(SOURCE) $(DEP_CPP_SCHEM) "$(INTDIR)"
+"$(INTDIR)\schemas.obj"	"$(INTDIR)\schemas.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11030,91 +2542,15 @@ SOURCE=..\..\thotlib\document\schtrad.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_SCHTR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\readtra_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schtrad_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\schtrad.obj" : $(SOURCE) $(DEP_CPP_SCHTR) "$(INTDIR)"
+"$(INTDIR)\schtrad.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_SCHTR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\readtra_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schtrad_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\schtrad.obj" : $(SOURCE) $(DEP_CPP_SCHTR) "$(INTDIR)"
+"$(INTDIR)\schtrad.obj"	"$(INTDIR)\schtrad.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11124,107 +2560,15 @@ SOURCE=..\..\thotlib\editing\scroll.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_SCROL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\scroll.obj" : $(SOURCE) $(DEP_CPP_SCROL) "$(INTDIR)"
+"$(INTDIR)\scroll.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_SCROL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
 
-"$(INTDIR)\scroll.obj" : $(SOURCE) $(DEP_CPP_SCROL) "$(INTDIR)"
+"$(INTDIR)\scroll.obj"	"$(INTDIR)\scroll.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11234,139 +2578,15 @@ SOURCE=..\..\thotlib\content\search.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_SEARC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\search.obj" : $(SOURCE) $(DEP_CPP_SEARC) "$(INTDIR)"
+"$(INTDIR)\search.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_SEARC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\search.obj" : $(SOURCE) $(DEP_CPP_SEARC) "$(INTDIR)"
+"$(INTDIR)\search.obj"	"$(INTDIR)\search.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11376,147 +2596,15 @@ SOURCE=..\..\thotlib\dialogue\searchmenu.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_SEARCH=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\regexp_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\searchmenu.obj" : $(SOURCE) $(DEP_CPP_SEARCH) "$(INTDIR)"
+"$(INTDIR)\searchmenu.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_SEARCH=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\regexp_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\searchmenu.obj" : $(SOURCE) $(DEP_CPP_SEARCH) "$(INTDIR)"
+"$(INTDIR)\searchmenu.obj"	"$(INTDIR)\searchmenu.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11526,149 +2614,15 @@ SOURCE=..\..\thotlib\content\searchref.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_SEARCHR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\searchref.obj" : $(SOURCE) $(DEP_CPP_SEARCHR) "$(INTDIR)"
+"$(INTDIR)\searchref.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_SEARCHR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\searchref.obj" : $(SOURCE) $(DEP_CPP_SEARCHR) "$(INTDIR)"
+"$(INTDIR)\searchref.obj"	"$(INTDIR)\searchref.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11678,105 +2632,15 @@ SOURCE=..\..\thotlib\editing\selectionapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_SELEC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\selectionapi.obj" : $(SOURCE) $(DEP_CPP_SELEC) "$(INTDIR)"
+"$(INTDIR)\selectionapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_SELEC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\selectionapi.obj" : $(SOURCE) $(DEP_CPP_SELEC) "$(INTDIR)"
+"$(INTDIR)\selectionapi.obj"	"$(INTDIR)\selectionapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11786,117 +2650,33 @@ SOURCE=..\..\thotlib\editing\spellchecker.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_SPELL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\dictionary_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\spellchecker_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\constcorr.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmot.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\corrmsg.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\spell_tv.h"\
-	"..\..\thotlib\internals\var\word_tv.h"\
-	
 
-"$(INTDIR)\spellchecker.obj" : $(SOURCE) $(DEP_CPP_SPELL) "$(INTDIR)"
+"$(INTDIR)\spellchecker.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_SPELL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\dictionary_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\spellchecker_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\constcorr.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmot.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\corrmsg.h"\
-	"..\..\thotlib\internals\h\dictionary.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\spell_tv.h"\
-	"..\..\thotlib\internals\var\word_tv.h"\
-	
 
-"$(INTDIR)\spellchecker.obj" : $(SOURCE) $(DEP_CPP_SPELL) "$(INTDIR)"
+"$(INTDIR)\spellchecker.obj"	"$(INTDIR)\spellchecker.sbr" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\thotlib\dialogue\stix.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+
+"$(INTDIR)\stix.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+
+"$(INTDIR)\stix.obj"	"$(INTDIR)\stix.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11906,183 +2686,15 @@ SOURCE=..\..\thotlib\editing\structchange.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STRUC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structlocate_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structchange.obj" : $(SOURCE) $(DEP_CPP_STRUC) "$(INTDIR)"
+"$(INTDIR)\structchange.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STRUC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structlocate_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structchange.obj" : $(SOURCE) $(DEP_CPP_STRUC) "$(INTDIR)"
+"$(INTDIR)\structchange.obj"	"$(INTDIR)\structchange.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -12092,187 +2704,15 @@ SOURCE=..\..\thotlib\editing\structcommands.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STRUCT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\res_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structcommands.obj" : $(SOURCE) $(DEP_CPP_STRUCT) "$(INTDIR)"
+"$(INTDIR)\structcommands.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STRUCT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\res_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structcommands.obj" : $(SOURCE) $(DEP_CPP_STRUCT) "$(INTDIR)"
+"$(INTDIR)\structcommands.obj"	"$(INTDIR)\structcommands.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -12282,177 +2722,15 @@ SOURCE=..\..\thotlib\editing\structcreation.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STRUCTC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\creationmenu_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structcreation.obj" : $(SOURCE) $(DEP_CPP_STRUCTC) "$(INTDIR)"
+"$(INTDIR)\structcreation.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STRUCTC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\creationmenu_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structcreation.obj" : $(SOURCE) $(DEP_CPP_STRUCTC) "$(INTDIR)"
+"$(INTDIR)\structcreation.obj"	"$(INTDIR)\structcreation.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -12462,109 +2740,15 @@ SOURCE=..\..\thotlib\base\structlist.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STRUCTL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\structlist.obj" : $(SOURCE) $(DEP_CPP_STRUCTL) "$(INTDIR)"
+"$(INTDIR)\structlist.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STRUCTL=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\structlist.obj" : $(SOURCE) $(DEP_CPP_STRUCTL) "$(INTDIR)"
+"$(INTDIR)\structlist.obj"	"$(INTDIR)\structlist.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -12574,121 +2758,15 @@ SOURCE=..\..\thotlib\view\structlocate.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STRUCTLO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\structlocate.obj" : $(SOURCE) $(DEP_CPP_STRUCTLO) "$(INTDIR)"
+"$(INTDIR)\structlocate.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STRUCTLO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\structlocate.obj" : $(SOURCE) $(DEP_CPP_STRUCTLO) "$(INTDIR)"
+"$(INTDIR)\structlocate.obj"	"$(INTDIR)\structlocate.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -12698,179 +2776,15 @@ SOURCE=..\..\thotlib\editing\structmodif.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STRUCTM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\res.h"\
-	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structmodif.obj" : $(SOURCE) $(DEP_CPP_STRUCTM) "$(INTDIR)"
+"$(INTDIR)\structmodif.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STRUCTM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\res.h"\
-	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structmodif.obj" : $(SOURCE) $(DEP_CPP_STRUCTM) "$(INTDIR)"
+"$(INTDIR)\structmodif.obj"	"$(INTDIR)\structmodif.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -12880,103 +2794,15 @@ SOURCE=..\..\thotlib\tree\structschema.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STRUCTS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\structschema.obj" : $(SOURCE) $(DEP_CPP_STRUCTS) "$(INTDIR)"
+"$(INTDIR)\structschema.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STRUCTS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\structschema.obj" : $(SOURCE) $(DEP_CPP_STRUCTS) "$(INTDIR)"
+"$(INTDIR)\structschema.obj"	"$(INTDIR)\structschema.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -12986,143 +2812,15 @@ SOURCE=..\..\thotlib\editing\structselect.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STRUCTSE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\checkermenu_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\keyboards_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\selectionapi_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structselect.obj" : $(SOURCE) $(DEP_CPP_STRUCTSE) "$(INTDIR)"
+"$(INTDIR)\structselect.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STRUCTSE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\checkermenu_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayselect_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\keyboards_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchmenu_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\selectionapi_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\structselect.obj" : $(SOURCE) $(DEP_CPP_STRUCTSE) "$(INTDIR)"
+"$(INTDIR)\structselect.obj"	"$(INTDIR)\structselect.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13132,115 +2830,15 @@ SOURCE=..\..\thotlib\presentation\style.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_STYLE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\style.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\style_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\htmlstylecolor.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\style.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
+"$(INTDIR)\style.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_STYLE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\style.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\style_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\htmlstylecolor.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\style.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
+"$(INTDIR)\style.obj"	"$(INTDIR)\style.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13250,153 +2848,15 @@ SOURCE=..\..\thotlib\editing\textcommands.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_TEXTC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\textcommands.obj" : $(SOURCE) $(DEP_CPP_TEXTC) "$(INTDIR)"
+"$(INTDIR)\textcommands.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_TEXTC=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\windowdisplay_f.h"\
-	"..\..\thotlib\internals\f\word_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\textcommands.obj" : $(SOURCE) $(DEP_CPP_TEXTC) "$(INTDIR)"
+"$(INTDIR)\textcommands.obj"	"$(INTDIR)\textcommands.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13406,89 +2866,15 @@ SOURCE=..\..\thotlib\base\thotmsg.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_THOTM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\thotmsg.obj" : $(SOURCE) $(DEP_CPP_THOTM) "$(INTDIR)"
+"$(INTDIR)\thotmsg.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_THOTM=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
 
-"$(INTDIR)\thotmsg.obj" : $(SOURCE) $(DEP_CPP_THOTM) "$(INTDIR)"
+"$(INTDIR)\thotmsg.obj"	"$(INTDIR)\thotmsg.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13498,129 +2884,15 @@ SOURCE=..\..\thotlib\document\translation.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_TRANS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readprs_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schtrad_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\translation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\uconvert_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\translation.obj" : $(SOURCE) $(DEP_CPP_TRANS) "$(INTDIR)"
+"$(INTDIR)\translation.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_TRANS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readprs_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schtrad_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\translation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\uconvert_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\translation.obj" : $(SOURCE) $(DEP_CPP_TRANS) "$(INTDIR)"
+"$(INTDIR)\translation.obj"	"$(INTDIR)\translation.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13630,137 +2902,15 @@ SOURCE=..\..\thotlib\tree\tree.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_TREE_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\res.h"\
-	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\tree.obj" : $(SOURCE) $(DEP_CPP_TREE_) "$(INTDIR)"
+"$(INTDIR)\tree.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_TREE_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\res.h"\
-	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\tree.obj" : $(SOURCE) $(DEP_CPP_TREE_) "$(INTDIR)"
+"$(INTDIR)\tree.obj"	"$(INTDIR)\tree.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13770,135 +2920,15 @@ SOURCE=..\..\thotlib\tree\treeapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_TREEA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\translation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\treeapi.obj" : $(SOURCE) $(DEP_CPP_TREEA) "$(INTDIR)"
+"$(INTDIR)\treeapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_TREEA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\translation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\treeapi.obj" : $(SOURCE) $(DEP_CPP_TREEA) "$(INTDIR)"
+"$(INTDIR)\treeapi.obj"	"$(INTDIR)\treeapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13908,27 +2938,15 @@ SOURCE=..\..\thotlib\unicode\uconvert.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_UCONV=\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	
 
-"$(INTDIR)\uconvert.obj" : $(SOURCE) $(DEP_CPP_UCONV) "$(INTDIR)"
+"$(INTDIR)\uconvert.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_UCONV=\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	
 
-"$(INTDIR)\uconvert.obj" : $(SOURCE) $(DEP_CPP_UCONV) "$(INTDIR)"
+"$(INTDIR)\uconvert.obj"	"$(INTDIR)\uconvert.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13938,129 +2956,15 @@ SOURCE=..\..\thotlib\editing\undo.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_UNDO_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\undo.obj" : $(SOURCE) $(DEP_CPP_UNDO_) "$(INTDIR)"
+"$(INTDIR)\undo.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_UNDO_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\constres.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\undo.obj" : $(SOURCE) $(DEP_CPP_UNDO_) "$(INTDIR)"
+"$(INTDIR)\undo.obj"	"$(INTDIR)\undo.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -14070,93 +2974,15 @@ SOURCE=..\..\thotlib\editing\undoapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_UNDOA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\undoapi.obj" : $(SOURCE) $(DEP_CPP_UNDOA) "$(INTDIR)"
+"$(INTDIR)\undoapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_UNDOA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\undoapi.obj" : $(SOURCE) $(DEP_CPP_UNDOA) "$(INTDIR)"
+"$(INTDIR)\undoapi.obj"	"$(INTDIR)\undoapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -14166,85 +2992,15 @@ SOURCE=..\..\thotlib\base\units.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_UNITS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\units.obj" : $(SOURCE) $(DEP_CPP_UNITS) "$(INTDIR)"
+"$(INTDIR)\units.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_UNITS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\units.obj" : $(SOURCE) $(DEP_CPP_UNITS) "$(INTDIR)"
+"$(INTDIR)\units.obj"	"$(INTDIR)\units.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -14254,189 +3010,15 @@ SOURCE=..\..\thotlib\editing\unstructchange.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_UNSTR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\unstructlocate_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\unstructchange.obj" : $(SOURCE) $(DEP_CPP_UNSTR) "$(INTDIR)"
+"$(INTDIR)\unstructchange.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_UNSTR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\contentapi_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\editcommands_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\selectmenu_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\textcommands_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\unstructlocate_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\modif.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\creation_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\unstructchange.obj" : $(SOURCE) $(DEP_CPP_UNSTR) "$(INTDIR)"
+"$(INTDIR)\unstructchange.obj"	"$(INTDIR)\unstructchange.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -14446,121 +3028,15 @@ SOURCE=..\..\thotlib\view\unstructlocate.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_UNSTRU=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\unstructlocate.obj" : $(SOURCE) $(DEP_CPP_UNSTRU) "$(INTDIR)"
+"$(INTDIR)\unstructlocate.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_UNSTRU=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxmoves_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\unstructlocate.obj" : $(SOURCE) $(DEP_CPP_UNSTRU) "$(INTDIR)"
+"$(INTDIR)\unstructlocate.obj"	"$(INTDIR)\unstructlocate.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -14570,29 +3046,15 @@ SOURCE=..\..\thotlib\unicode\ustring.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_USTRI=\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
-	
 
-"$(INTDIR)\ustring.obj" : $(SOURCE) $(DEP_CPP_USTRI) "$(INTDIR)"
+"$(INTDIR)\ustring.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_USTRI=\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
-	
 
-"$(INTDIR)\ustring.obj" : $(SOURCE) $(DEP_CPP_USTRI) "$(INTDIR)"
+"$(INTDIR)\ustring.obj"	"$(INTDIR)\ustring.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -14602,175 +3064,15 @@ SOURCE=..\..\thotlib\view\viewapi.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_VIEWA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\viewapi.obj" : $(SOURCE) $(DEP_CPP_VIEWA) "$(INTDIR)"
+"$(INTDIR)\viewapi.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_VIEWA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\boxlocate_f.h"\
-	"..\..\thotlib\internals\f\boxparams_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\geom_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\scroll_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
 
-"$(INTDIR)\viewapi.obj" : $(SOURCE) $(DEP_CPP_VIEWA) "$(INTDIR)"
+"$(INTDIR)\viewapi.obj"	"$(INTDIR)\viewapi.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -14780,187 +3082,15 @@ SOURCE=..\..\thotlib\document\views.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_VIEWS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\closedoc_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\views.obj" : $(SOURCE) $(DEP_CPP_VIEWS) "$(INTDIR)"
+"$(INTDIR)\views.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_VIEWS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributeapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\closedoc_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\views.obj" : $(SOURCE) $(DEP_CPP_VIEWS) "$(INTDIR)"
+"$(INTDIR)\views.obj"	"$(INTDIR)\views.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -14970,113 +3100,15 @@ SOURCE=..\..\thotlib\view\windowdisplay.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_WINDO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\windowdisplay.obj" : $(SOURCE) $(DEP_CPP_WINDO) "$(INTDIR)"
+"$(INTDIR)\windowdisplay.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_WINDO=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\context_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\xwindowdisplay_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	"..\..\thotlib\internals\var\units_tv.h"\
-	
 
-"$(INTDIR)\windowdisplay.obj" : $(SOURCE) $(DEP_CPP_WINDO) "$(INTDIR)"
+"$(INTDIR)\windowdisplay.obj"	"$(INTDIR)\windowdisplay.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -15086,83 +3118,15 @@ SOURCE=..\..\thotlib\content\word.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_WORD_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\word.obj" : $(SOURCE) $(DEP_CPP_WORD_) "$(INTDIR)"
+"$(INTDIR)\word.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_WORD_=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\hyphen_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
 
-"$(INTDIR)\word.obj" : $(SOURCE) $(DEP_CPP_WORD_) "$(INTDIR)"
+"$(INTDIR)\word.obj"	"$(INTDIR)\word.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -15172,179 +3136,15 @@ SOURCE=..\..\thotlib\document\writedoc.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_WRITE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\writedoc.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
+"$(INTDIR)\writedoc.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_WRITE=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\appli_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\docs_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\paginate_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structcommands_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	
 
-"$(INTDIR)\writedoc.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
+"$(INTDIR)\writedoc.obj"	"$(INTDIR)\writedoc.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -15354,143 +3154,15 @@ SOURCE=..\..\thotlib\document\writepivot.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_WRITEP=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\writepivot.obj" : $(SOURCE) $(DEP_CPP_WRITEP) "$(INTDIR)"
+"$(INTDIR)\writepivot.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_WRITEP=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\labelalloc_f.h"\
-	"..\..\thotlib\internals\f\language_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\readpivot_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\modif_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
 
-"$(INTDIR)\writepivot.obj" : $(SOURCE) $(DEP_CPP_WRITEP) "$(INTDIR)"
+"$(INTDIR)\writepivot.obj"	"$(INTDIR)\writepivot.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -15500,93 +3172,15 @@ SOURCE=..\..\thotlib\image\xbmhandler.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_XBMHA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\xbmhandler.obj" : $(SOURCE) $(DEP_CPP_XBMHA) "$(INTDIR)"
+"$(INTDIR)\xbmhandler.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_XBMHA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\xbmhandler.obj" : $(SOURCE) $(DEP_CPP_XBMHA) "$(INTDIR)"
+"$(INTDIR)\xbmhandler.obj"	"$(INTDIR)\xbmhandler.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -15596,105 +3190,15 @@ SOURCE=..\..\thotlib\image\xpmhandler.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
-DEP_CPP_XPMHA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\simx.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\xpm.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\xpmhandler.obj" : $(SOURCE) $(DEP_CPP_XPMHA) "$(INTDIR)"
+"$(INTDIR)\xpmhandler.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
-DEP_CPP_XPMHA=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\gifhandler_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\simx.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\xpm.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\picture_tv.h"\
-	
 
-"$(INTDIR)\xpmhandler.obj" : $(SOURCE) $(DEP_CPP_XPMHA) "$(INTDIR)"
+"$(INTDIR)\xpmhandler.obj"	"$(INTDIR)\xpmhandler.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

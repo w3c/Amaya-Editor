@@ -39,12 +39,12 @@ ALL : "$(OUTDIR)\str.dll"
 
 !ELSE 
 
-ALL : "LibThotKernel - Win32 Release" "cpp - Win32 Release" "$(OUTDIR)\str.dll"
+ALL : "LibThotKernel - Win32 Release" "$(OUTDIR)\str.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"cpp - Win32 ReleaseCLEAN" "LibThotKernel - Win32 ReleaseCLEAN" 
+CLEAN :"LibThotKernel - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -110,8 +110,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\parser.obj" \
 	"$(INTDIR)\str.obj" \
 	"$(INTDIR)\writestr.obj" \
-	"..\LibThotKernel.lib" \
-	"$(OUTDIR)\cpp.lib"
+	"..\LibThotKernel.lib"
 
 "$(OUTDIR)\str.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -132,12 +131,12 @@ ALL : "$(OUTDIR)\str.dll"
 
 !ELSE 
 
-ALL : "LibThotKernel - Win32 Debug" "cpp - Win32 Debug" "$(OUTDIR)\str.dll"
+ALL : "LibThotKernel - Win32 Debug" "$(OUTDIR)\str.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"cpp - Win32 DebugCLEAN" "LibThotKernel - Win32 DebugCLEAN" 
+CLEAN :"LibThotKernel - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -160,7 +159,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\str.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "__STDC__" /D "_WINDOWS_COMPILERS" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\str.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -206,8 +205,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\parser.obj" \
 	"$(INTDIR)\str.obj" \
 	"$(INTDIR)\writestr.obj" \
-	"..\LibThotKernel.lib" \
-	"$(OUTDIR)\cpp.lib"
+	"..\LibThotKernel.lib"
 
 "$(OUTDIR)\str.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -230,51 +228,25 @@ LINK32_OBJS= \
 
 !IF  "$(CFG)" == "str - Win32 Release"
 
-"cpp - Win32 Release" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" 
-   cd "..\str"
-
-"cpp - Win32 ReleaseCLEAN" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" RECURSE=1 CLEAN 
-   cd "..\str"
-
-!ELSEIF  "$(CFG)" == "str - Win32 Debug"
-
-"cpp - Win32 Debug" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" 
-   cd "..\str"
-
-"cpp - Win32 DebugCLEAN" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" RECURSE=1 CLEAN 
-   cd "..\str"
-
-!ENDIF 
-
-!IF  "$(CFG)" == "str - Win32 Release"
-
 "LibThotKernel - Win32 Release" : 
-   cd "..\LibThotKernel"
+   cd "\src\Amaya\Windows\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Release" 
    cd "..\str"
 
 "LibThotKernel - Win32 ReleaseCLEAN" : 
-   cd "..\LibThotKernel"
+   cd "\src\Amaya\Windows\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Release" RECURSE=1 CLEAN 
    cd "..\str"
 
 !ELSEIF  "$(CFG)" == "str - Win32 Debug"
 
 "LibThotKernel - Win32 Debug" : 
-   cd "..\LibThotKernel"
+   cd "\src\Amaya\Windows\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Debug" 
    cd "..\str"
 
 "LibThotKernel - Win32 DebugCLEAN" : 
-   cd "..\LibThotKernel"
+   cd "\src\Amaya\Windows\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\str"
 

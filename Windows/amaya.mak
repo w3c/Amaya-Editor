@@ -25,10 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
 OUTDIR=.\bin
@@ -58,6 +54,7 @@ CLEAN :
 	-@erase "$(INTDIR)\AHTURLTools.obj"
 	-@erase "$(INTDIR)\amaya.res"
 	-@erase "$(INTDIR)\anim.obj"
+	-@erase "$(INTDIR)\animbuilder.obj"
 	-@erase "$(INTDIR)\answer.obj"
 	-@erase "$(INTDIR)\css.obj"
 	-@erase "$(INTDIR)\EDITimage.obj"
@@ -66,8 +63,6 @@ CLEAN :
 	-@erase "$(INTDIR)\EDITstyle.obj"
 	-@erase "$(INTDIR)\fetchHTMLname.obj"
 	-@erase "$(INTDIR)\fetchXMLname.obj"
-	-@erase "$(INTDIR)\gldisplay.obj"
-	-@erase "$(INTDIR)\glwindowdisplay.obj"
 	-@erase "$(INTDIR)\html2thot.obj"
 	-@erase "$(INTDIR)\HTMLactions.obj"
 	-@erase "$(INTDIR)\HTMLAPP.obj"
@@ -117,8 +112,42 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\davlib" /I "..\davlib\f" /I "..\davlib\tree\h" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /D "NDEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "WIN32" /D "_WINDOWS" /D "DAV" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL" 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -132,6 +161,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\AHTMemConv.obj" \
 	"$(INTDIR)\AHTURLTools.obj" \
 	"$(INTDIR)\anim.obj" \
+	"$(INTDIR)\animbuilder.obj" \
 	"$(INTDIR)\answer.obj" \
 	"$(INTDIR)\css.obj" \
 	"$(INTDIR)\EDITimage.obj" \
@@ -140,8 +170,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\EDITstyle.obj" \
 	"$(INTDIR)\fetchHTMLname.obj" \
 	"$(INTDIR)\fetchXMLname.obj" \
-	"$(INTDIR)\gldisplay.obj" \
-	"$(INTDIR)\glwindowdisplay.obj" \
 	"$(INTDIR)\html2thot.obj" \
 	"$(INTDIR)\HTMLactions.obj" \
 	"$(INTDIR)\HTMLAPP.obj" \
@@ -232,6 +260,8 @@ CLEAN :
 	-@erase "$(INTDIR)\amaya.res"
 	-@erase "$(INTDIR)\anim.obj"
 	-@erase "$(INTDIR)\anim.sbr"
+	-@erase "$(INTDIR)\animbuilder.obj"
+	-@erase "$(INTDIR)\animbuilder.sbr"
 	-@erase "$(INTDIR)\answer.obj"
 	-@erase "$(INTDIR)\answer.sbr"
 	-@erase "$(INTDIR)\css.obj"
@@ -248,10 +278,6 @@ CLEAN :
 	-@erase "$(INTDIR)\fetchHTMLname.sbr"
 	-@erase "$(INTDIR)\fetchXMLname.obj"
 	-@erase "$(INTDIR)\fetchXMLname.sbr"
-	-@erase "$(INTDIR)\gldisplay.obj"
-	-@erase "$(INTDIR)\gldisplay.sbr"
-	-@erase "$(INTDIR)\glwindowdisplay.obj"
-	-@erase "$(INTDIR)\glwindowdisplay.sbr"
 	-@erase "$(INTDIR)\html2thot.obj"
 	-@erase "$(INTDIR)\html2thot.sbr"
 	-@erase "$(INTDIR)\HTMLactions.obj"
@@ -345,8 +371,42 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /GX /ZI /Od /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "EXPAT_PARSER" /D "ANNOT_ON_ANNOT" /D "_DEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "WIN32" /D "_WINDOWS" /D "DAV" /D "_SVGLIB" /D "_SVGANIM" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP=cl.exe
+CPP_PROJ=/nologo /MLd /W3 /GX /ZI /Od /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "EXPAT_PARSER" /D "ANNOT_ON_ANNOT" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "_SVGLIB" /D "_SVGANIM" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL" 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -356,6 +416,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\AHTMemConv.sbr" \
 	"$(INTDIR)\AHTURLTools.sbr" \
 	"$(INTDIR)\anim.sbr" \
+	"$(INTDIR)\animbuilder.sbr" \
 	"$(INTDIR)\answer.sbr" \
 	"$(INTDIR)\css.sbr" \
 	"$(INTDIR)\EDITimage.sbr" \
@@ -364,8 +425,6 @@ BSC32_SBRS= \
 	"$(INTDIR)\EDITstyle.sbr" \
 	"$(INTDIR)\fetchHTMLname.sbr" \
 	"$(INTDIR)\fetchXMLname.sbr" \
-	"$(INTDIR)\gldisplay.sbr" \
-	"$(INTDIR)\glwindowdisplay.sbr" \
 	"$(INTDIR)\html2thot.sbr" \
 	"$(INTDIR)\HTMLactions.sbr" \
 	"$(INTDIR)\HTMLAPP.sbr" \
@@ -420,6 +479,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\AHTMemConv.obj" \
 	"$(INTDIR)\AHTURLTools.obj" \
 	"$(INTDIR)\anim.obj" \
+	"$(INTDIR)\animbuilder.obj" \
 	"$(INTDIR)\answer.obj" \
 	"$(INTDIR)\css.obj" \
 	"$(INTDIR)\EDITimage.obj" \
@@ -428,8 +488,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\EDITstyle.obj" \
 	"$(INTDIR)\fetchHTMLname.obj" \
 	"$(INTDIR)\fetchXMLname.obj" \
-	"$(INTDIR)\gldisplay.obj" \
-	"$(INTDIR)\glwindowdisplay.obj" \
 	"$(INTDIR)\html2thot.obj" \
 	"$(INTDIR)\HTMLactions.obj" \
 	"$(INTDIR)\HTMLAPP.obj" \
@@ -487,36 +545,6 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -842,14 +870,14 @@ SOURCE=..\amaya\amaya.rc
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\Amaya\amaya" /d "NDEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\src\Amaya\amaya" /d "NDEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\Amaya\amaya" /d "_DEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\src\Amaya\amaya" /d "_DEBUG" $(SOURCE)
 
 
 !ENDIF 
@@ -867,6 +895,24 @@ SOURCE=..\amaya\anim.c
 
 
 "$(INTDIR)\anim.obj"	"$(INTDIR)\anim.sbr" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\amaya\animbuilder.c
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+
+"$(INTDIR)\animbuilder.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+
+"$(INTDIR)\animbuilder.obj"	"$(INTDIR)\animbuilder.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1011,42 +1057,6 @@ SOURCE=..\Amaya\fetchXMLname.c
 
 
 "$(INTDIR)\fetchXMLname.obj"	"$(INTDIR)\fetchXMLname.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\thotlib\view\gldisplay.c
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-
-"$(INTDIR)\gldisplay.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-
-"$(INTDIR)\gldisplay.obj"	"$(INTDIR)\gldisplay.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\thotlib\view\glwindowdisplay.c
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-
-"$(INTDIR)\glwindowdisplay.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-
-"$(INTDIR)\glwindowdisplay.obj"	"$(INTDIR)\glwindowdisplay.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
