@@ -1835,9 +1835,9 @@ void GetSearchContext (PtrSearchContext * pSearch)
 	  s->SDocument = NULL;
 	  s->STree = 0;
 	  s->SStartElement = NULL;
-	  s->SStartChar = 0;
+	  s->SStartChar = 1;
 	  s->SEndElement = NULL;
-	  s->SEndChar = 0;
+	  s->SEndChar = 1;
 	  s->SStartToEnd = TRUE;
 	  s->SWholeDocument = FALSE;
 	}

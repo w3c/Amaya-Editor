@@ -260,7 +260,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 
   /* Check that element is a Text element and that the research does */
   /* not start on the last character */
-  if (pEl != NULL)
+  if (pEl)
     {
       if (pEl->ElTypeNumber != CharString + 1 || iChar >= pEl->ElTextLength)
 	{
@@ -320,7 +320,10 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
   else
     {
       /* Calcule l'index de depart de la recherche */
-      len = iChar - 1;
+      if (iChar > 0)
+	len = iChar - 1;
+      else
+	len = iChar;
       while (len >= pBuf->BuLength)
 	{
 	  /* On passe au buffer suivant */

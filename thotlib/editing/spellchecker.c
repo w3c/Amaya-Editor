@@ -941,7 +941,7 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 	/* met eventuellement a jour la borne de fin du domaine de recherche */
 	if (ChkrElement == ChkrRange->SEndElement)
 	   /* la borne est dans l'element ou` on a fait le remplacement */
-	   if (ChkrRange->SEndChar != 0)
+	   if (ChkrRange->SEndChar > 1)
 	      /* la borne n'est pas a la fin de l'element, on decale la borne */
 	      ChkrRange->SEndChar += lgChaineRempl - stringLength;
      }
@@ -984,6 +984,9 @@ ThotBool CheckChangeSelection ()
 	c1 = ChkrIndChar;
 	ok = GetCurrentSelection (&ChkrRange->SDocument, &ChkrElement, &pElN,
 				  &cN, &ChkrIndChar);
+	if (pElN && ChkrIndChar == 0)
+	  /* the whole element is selected */
+	  ChkrIndChar = pElN->ElVolume;
      }
    else
      {
@@ -991,6 +994,9 @@ ThotBool CheckChangeSelection ()
 	c1 = ChkrIndChar;
 	ok = GetCurrentSelection (&ChkrRange->SDocument, &pElN, &ChkrElement,
 				  &ChkrIndChar, &cN);
+	if (pElN && ChkrIndChar == 0)
+	  /* the whole element is selected */
+	  ChkrIndChar = 1;
      }
 
    if (!ok)

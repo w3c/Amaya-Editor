@@ -713,7 +713,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 			    if (pFirstSel == SearchingD->SEndElement)
 			      /* la borne est dans l'element ou` on a */
 			      /* fait le remplacement */
-			      if (SearchingD->SEndChar != 0)
+			      if (SearchingD->SEndChar > 1)
 				/* la borne n'est pas a la fin de */
 				/* l'element, on decale la borne */
 				SearchingD->SEndChar +=
