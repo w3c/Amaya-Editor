@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ConfigFree ( void );
+extern void TtaFreeAllCatalogs ( void );
+extern void TteFreeAllEventsList ( void );
 extern int GetObjectWWW ( int docid,
                           STRING urlName,
                           STRING formdata,
@@ -109,6 +112,9 @@ extern void Clear ( int frame,
 
 #else /* __STDC__ */
 
+extern void ConfigFree (/* void */);
+extern void TtaFreeAllCatalogs (/* void */);
+extern void TteFreeAllEventsList (/* void */);
 extern int GetObjectWWW (/* int docid,
                             STRING urlName,
                             STRING formdata,

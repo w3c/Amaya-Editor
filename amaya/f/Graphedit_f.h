@@ -11,7 +11,6 @@ extern void AddGraphicsButton ( Document doc,
 extern void SwitchIconGraph ( Document doc,
                               View view,
                               ThotBool state );
-extern void InitGraphML ( );
 
 #else /* __STDC__ */
 
@@ -20,7 +19,6 @@ extern void AddGraphicsButton (/* Document doc,
 extern void SwitchIconGraph (/* Document doc,
                                 View view,
                                 ThotBool state */);
-extern void InitGraphML (/* */ );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

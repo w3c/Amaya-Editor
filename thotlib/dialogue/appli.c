@@ -2094,7 +2094,7 @@ void               *event;
        t1 = 0;
        TtaAbortShowDialogue ();
 #ifndef _GTK
-       XCharTranslation (ev);
+       XCharTranslation ((ThotKeyEvent *)ev);
 #endif /* _GTK */
        break;
 

@@ -37,6 +37,8 @@
 #include "frame_f.h"
 #ifdef _WINDOWS
 #include "wininclude.h"
+#else /* _WINDOWS */
+#include <X11/Intrinsic.h>
 #endif /* _WINDOWS */
 
 #define MAX_ARGS 20
@@ -555,32 +557,13 @@ ThotComposeStatus  *status;	/* not implemented */
     }
 
   keycode = keycode - TtaMinKeyCode;
-  state = event->state;
-  state = state & (ShiftMask | LockMask | Mod1Mask | Mod3Mask);
+  state = event->state & 127;
 
   /* search for the keysym depending on the state flags */
-  if (state == 0)
-    {
-      sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
-      if ((sym >= XK_A) && (sym <= XK_Z))
-	sym = sym + (XK_a - XK_A);
-    }
-  else if (state == ShiftMask || state == LockMask)
-    {
-      sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 1];
-      if (sym == NoSymbol)
-	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
-    }
-  else if (state == Mod3Mask || state == Mod1Mask)
+  sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
+  if (sym == NoSymbol)
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
-  else if (state == (ShiftMask | Mod3Mask) || state == (ShiftMask | Mod1Mask))
-    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
-  else if ((state & (dpy->mode_switch | ShiftMask)) == (dpy->mode_switch | ShiftMask))
-    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
-  else if ((state & dpy->mode_switch) == dpy->mode_switch)
-    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
-  if (keysym != NULL)
-    *keysym = sym;
+  *keysym = sym;
   if (sym != NoSymbol)
     {
 #ifdef DEBUG_MULTIKEY
@@ -646,28 +629,43 @@ ThotComposeStatus  *status;	/* not implemented */
 	  return (1);
 	}
     }
-  else if (keysym != NULL)
-    *keysym = 0;
   return (0);
 }
 
 /*----------------------------------------------------------------------
-   TtaIsKeycodeOK
-
-   Heuristic on where to place the new Keysyms on the Keymap layout.
-   We should avoid to put them on keycode used for modifiers or
-   (this is due to Sun Xserver behavior probably X11R5) on Keycode
-   assigned to Keypad keys :-( .
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          TtaIsKeycodeOK (int keycode)
+void        TtaTranslateKey (Display *dpy, int keycode, Modifiers mods, Modifiers *mod_return, KeySym *keysym)
 #else  /* __STDC__ */
-static int          TtaIsKeycodeOK (keycode)
-int                 keycode;
+void        TtaTranslateKey (dpy, keycode, mods, mod_return, keysym)
+Display    *dpy;
+int         keycode;
+Modifiers   mods;
+Modifiers  *mod_return;
+KeySym     *keysym
 #endif /* __STDC__ */
 {
-   return (TRUE);
-}
+  ThotKeyEvent        ev;
+  UCHAR_T             string[2];
+  ThotComposeStatus   ComS;
+  int                 status, state;
+
+  *mod_return = mods;
+  ev.state = mods;
+  ev.keycode = keycode;
+  ev.display = dpy;
+  ev.type = 2;
+  /* control, alt and mouse status bits of the state are ignored */
+  state = mods & 127;
+  if (mods == 127)
+    {
+      status = TtaXLookupString (&ev, string, 2, keysym, &ComS);
+      *mod_return = state;
+    }
+  else
+    status = XLookupString (&ev, string, 2, keysym, &ComS);
+
+ }
 #endif /* _WINDOWS */
 
 
@@ -806,8 +804,7 @@ void                TtaInstallMultiKey ()
 	      * on this display, but verify that the Sun rule doesn't apply
 	      * or that this key is not a modifier.
 	      */
-	     if ((index == TtaModifierNumber) &&
-		 (TtaIsKeycodeOK (codeline)))
+	     if (index == TtaModifierNumber)
 		continue;
 
 	     /*
@@ -824,9 +821,8 @@ void                TtaInstallMultiKey ()
 	 * which fits for inserting the new keysym.
 	 */
 	for (; keycode < (TtaMaxKeyCode - TtaMinKeyCode + 1); keycode++)
-	   if ((TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode +
-			       TtaModifierNumber] == NoSymbol) &&
-	       (TtaIsKeycodeOK (keycode)))
+	   if (TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode +
+			       TtaModifierNumber] == NoSymbol)
 	      break;
 
 	if (keycode >= (TtaMaxKeyCode - TtaMinKeyCode + 1))
@@ -842,6 +838,7 @@ void                TtaInstallMultiKey ()
 	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] = keysym;
      }
    TtaKeyboardMapInstalled = 1;
+   XtSetKeyTranslator (dpy, (XtKeyProc)TtaTranslateKey);
 #endif /* _WINDOWS */
 }
 
@@ -904,17 +901,16 @@ int*   k;
    Modify the ThotEvent given as the argument to reference a given KeySym.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaGetIsoKeysym (ThotEvent * event, KeySym keysym)
+static int          TtaGetIsoKeysym (ThotKeyEvent *ev, KeySym keysym)
 #else  /* __STDC__ */
-int                 TtaGetIsoKeysym (event, keysym)
-ThotEvent             *event;
+static int          TtaGetIsoKeysym (ev, keysym)
+  ThotKeyEvent     *ev;
 KeySym              keysym;
 #endif /* __STDC__ */
 {
   KeyCode             keycode;
   int                 codeline;
   int                 index;
-  ThotKeyEvent          *ev = (ThotKeyEvent *) event;
 
   /* look for the index in the key corresponding to this keycode */
   for (codeline = 0; codeline < TtaMaxKeyCode - TtaMinKeyCode; codeline++)
@@ -942,12 +938,12 @@ KeySym              keysym;
 	    case 3:
 	      /* Here comes the trouble, Modified key, non-standard */
 	      ev->keycode = keycode;
-	      ev->state = Mod3Mask | ShiftMask;
+	      ev->state = 127;
 	      break;
 	    default:
 	      fprintf (stderr, "TtaGetIsoKeysym :internal error, index too big\n");
-	      return (0);
 	    }
+	  return (0);
 	}
   /* not found */
   return (0);
@@ -976,10 +972,10 @@ KeySym              keysym;
    event corresponding to a KeyPress for the result character is generated
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaHandleMultiKeyEvent (ThotEvent * event)
+static int          TtaHandleMultiKeyEvent ( ThotKeyEvent *event)
 #else  /* __STDC__ */
-int                 TtaHandleMultiKeyEvent (event)
-ThotEvent             *event;
+static int          TtaHandleMultiKeyEvent (event)
+ThotKeyEvent       *event;
 #endif /* __STDC__ */
 {
    KeySym              KS;
@@ -990,18 +986,12 @@ ThotEvent             *event;
    int                 index;
    int                 ret;
 
+   keycode = event->keycode;
+   state =  event->state;
+   ret = XLookupString (event, buf, 2, &KS, &status);
    /* control, alt and mouse status bits of the state are ignored */
    if (Enable_Multikey)
      {
-       state = event->xkey.state & (ShiftMask | LockMask | Mod3Mask | ButtonMotionMask);
-       if (event->xkey.state != state)
-	 {
-	   /* control, alt and mouse status bits of the state are not Multikeys */
-	   mk_state = 0;
-	   return (1);
-	 }
-       keycode = event->xkey.keycode;
-       ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
        if (ret == 0)
 	 return (1);
 
@@ -1025,8 +1015,8 @@ fprintf (stderr, " mapped to %c\n", mk_tab[index].r);
 		  return (1);
 	       }
 	   /* in other cases keep the first character */
-	   event->xkey.keycode = previous_value;
-	   event->xkey.state = previous_state;
+	   event->keycode = previous_value;
+	   event->state = previous_state;
 	   return (1);
 	 }
        else if (KS == XK_grave ||
@@ -1049,15 +1039,12 @@ fprintf (stderr, " mapped to %c\n", mk_tab[index].r);
      }
    else
      {
-       state = event->xkey.state & (ShiftMask | LockMask | ControlMask | Mod1Mask | Mod2Mask | Mod3Mask | ButtonMotionMask);
-       ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
        if (ret == 0)
 	 {
 	   /* try without the shift */
-	   state2 = event->xkey.state;
-	   event->xkey.state &= ShiftMask;
-	   ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
-	   event->xkey.state = state2;
+	   event->state &= ShiftMask;
+	   ret = XLookupString (event, buf, 2, &KS, &status);
+	   event->state = state;
 	 }
 
        if (KS == XK_Multi_key || KS == XK_Alt_R)
@@ -1085,7 +1072,8 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 #endif
             mk_state = 0;
 	    for (index = 0; index < ExtNB_MK; index++)
-	      if (emk_tab[index].c == previous_keysym && emk_tab[index].m == KS)
+	      if (emk_tab[index].c == previous_keysym && emk_tab[index].m == KS ||
+		  emk_tab[index].c == KS && emk_tab[index].m == previous_keysym)
 		{
 		  /*
 		   * The corresponding sequence is found. 
@@ -1103,8 +1091,8 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 	     * Generation of the character gotten (dead keys).
 	     */
 	    TtaGetIsoKeysym (event, previous_value);
-	    event->xkey.state = previous_value;
-	    event->xkey.keycode = previous_state;
+	    event->state = previous_value;
+	    event->keycode = previous_state;
 	    /*XtDispatchEvent (event);*/
 	    return (1);
 	 }
@@ -1366,7 +1354,7 @@ ThotEvent             *ev;
     }
   else if (ev->type == KeyPress)
     {
-      if (!TtaHandleMultiKeyEvent (ev))
+      if (!TtaHandleMultiKeyEvent ((ThotKeyEvent *)ev))
 	return;
     }
   else

@@ -208,7 +208,6 @@ EDITOR_OBJ = \
 	dialogue/input.o \
 	dialogue/interface.o \
 	dialogue/keyboards.o \
-	dialogue/lookup.o \
 	dialogue/modiftype.o \
 	dialogue/opendoc.o \
 	dialogue/openview.o \

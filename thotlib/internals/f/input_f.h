@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void XCharTranslation ( ThotEvent * event );
+extern void XCharTranslation ( ThotKeyEvent *event );
 extern void ThotInput ( int frame,
                         USTRING string,
                         unsigned int nb,
@@ -17,7 +17,7 @@ extern ThotTranslations InitTranslations ( CHAR_T* appliname );
 
 #else /* __STDC__ */
 
-extern void XCharTranslation (/* ThotEvent * event */);
+extern void XCharTranslation (/* ThotKeyEvent *event */);
 extern void ThotInput (/* int frame,
                           USTRING string,
                           unsigned int nb,

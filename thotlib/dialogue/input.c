@@ -568,8 +568,14 @@ LPARAM lParam;
 
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
-#endif /* _WINDOWS */
+#else /* _WINDOWS */
 
+/*----------------------------------------------------------------------
+   XCharTranslation
+   X-Window front-end to the character translation and handling.
+   Decodes the X-Window event  and calls the generic character
+   handling function.
+  ----------------------------------------------------------------------*/
 #ifdef _GTK
 #ifdef __STDC__
 void                XCharTranslation (GdkEventKey * event, gpointer * data)
@@ -597,7 +603,7 @@ gpointer *data;
    state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK );
    if (event->state == state) {
        /* status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS); */
-     strncpy(string, event->string, 2);
+     strncpy (string, event->string, 2);
      KS = event->keyval;
      /*ComS = NULL ; */
 
@@ -607,7 +613,7 @@ gpointer *data;
        event->state = state;
        state = save;
        /* status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);*/
-       strncpy(string, event->string, 2);
+       strncpy (string, event->string, 2);
        KS = event->keyval;
        /* ComS = NULL ;*/
 
@@ -626,47 +632,33 @@ gpointer *data;
    ThotInput (frame, &string[0], event->length, PicMask, KS);
 }
 
-
 #else /* _GTK */
-#ifndef _WINDOWS
-/*----------------------------------------------------------------------
-   XCharTranslation
-   X-Window front-end to the character translation and handling.
-   Decodes the X-Window event  and calls the generic character
-   handling function.
-  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                XCharTranslation (ThotEvent * event)
+void                XCharTranslation (ThotKeyEvent *event)
 #else  /* __STDC__ */
 void                XCharTranslation (event)
-ThotEvent             *event;
-
+  ThotKeyEvent     *event;
 #endif /* __STDC__ */
 {
+   KeySym              KS;
+   UCHAR_T             string[2];
+   ThotComposeStatus   ComS;
    int                 status;
    int                 PicMask;
    int                 frame;
    unsigned int        state, save;
-   UCHAR_T       string[2];
-   ThotComposeStatus      ComS;
-   KeySym              KS;
 
-   frame = GetWindowFrame (event->xany.window);
+   frame = GetWindowFrame (event->window);
    if (frame > MAX_FRAME)
       frame = 0;
 
    status = 0;
    /* control, alt and mouse status bits of the state are ignored */
-   state = event->xkey.state & (ShiftMask | LockMask | Mod3Mask | ButtonMotionMask);
-   if (event->xkey.state == state)
-     status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);
+   state = event->state & 127;
+   if (event->state == 127)
+     status = TtaXLookupString (event, string, 2, &KS, &ComS);
    else
-     {
-       save = event->xkey.state;
-       event->xkey.state = state;
-       state = save;
-       status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);
-     }
+     status = XLookupString (event, string, 2, &KS, &ComS);
 
    PicMask = 0;
    if (state & ShiftMask)
@@ -680,8 +672,8 @@ ThotEvent             *event;
 
    ThotInput (frame, &string[0], status, PicMask, KS);
 }
-#endif /* !_WINDOWS */
 #endif /* _GTK */
+#endif /* !_WINDOWS */
 
 
 /*----------------------------------------------------------------------
