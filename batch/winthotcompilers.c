@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include "fileaccess.h"
 #include "message.h"
-
+#include "registry.h"
 /* #include "compilers_f.h" */
 
 #define OPEN    100
@@ -63,8 +63,8 @@ LRESULT CALLBACK CompilersWndProc ();
 #endif /* __STDC__ */
 
 static OPENFILENAME OpenFileName;
-static LPSTR        szFilter = "Amaya Makefiles (*.mkf)\0*.mkf\0All files (*.*)\0*.*\0";
-static TCHAR        szFileName[256];
+static STRING       szFilter = "Amaya Makefiles (*.mkf)\0*.mkf\0All files (*.*)\0*.*\0";
+static CHAR_T       szFileName[256];
 static char         fileToOpen [256];
 static int          iVscrollPos = 0, iVscrollMax, iVscrollInc; 
 
@@ -859,7 +859,7 @@ char* fileName;
                       SrcFileName = (char*) malloc (len + strlen (BinFiles[i]) + 1);
                       sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [i]);
 				  } else {
-                         SrcFileName = (char*) malloc (len + strlen (BinFiles) + 2);
+                         SrcFileName = (char*) malloc (len + strlen (BinFiles [i]) + 2);
                          sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [i]);
 				  }
                   _unlink (SrcFileName);

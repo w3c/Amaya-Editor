@@ -42,7 +42,7 @@
 #include "fileaccess.h"
 #include "thotdir.h"
 
-typedef CHAR        fname[30];	/* nom de fichier */
+typedef CHAR_T        fname[30];	/* nom de fichier */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT
@@ -810,7 +810,7 @@ char              **argv;
    SyntacticCode       code;	/* code grammatical du mot trouve */
    int                 rank;	/* indice dans Identifier du mot trouve, si identificateur */
 #  ifdef _WINDOWS 
-   CHAR                msg [800];
+   CHAR_T                msg [800];
    int                 ndx;
 #  endif /* _WINDOWS */
 

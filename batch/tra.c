@@ -423,10 +423,10 @@ int                 wi;
    traite le mot-cle' representant une valeur d'une presentation.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PresentValue (CHAR value, int wi)
+static void         PresentValue (CHAR_T value, int wi)
 #else  /* __STDC__ */
 static void         PresentValue (value, wi)
-CHAR                value;
+CHAR_T                value;
 int                 wi;
 #endif /* __STDC__ */
 {
@@ -3195,7 +3195,7 @@ char              **argv;
 {
    FILE               *infile;
    boolean             fileOK;
-   CHAR                fname[200], buffer[200];
+   CHAR_T                fname[200], buffer[200];
    STRING              pwd, ptr;
    Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi;	/* position du debut du mot courant dans la ligne */
@@ -3211,11 +3211,11 @@ char              **argv;
 #  ifdef _WINDOWS
    STRING               cmd [100];
    int                 ndx, pIndex = 0;
-   CHAR                msg [800];
+   CHAR_T                msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #  else  /* !_WINDOWS */
-   CHAR                cmd[800];
+   CHAR_T                cmd[800];
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS 
@@ -3243,7 +3243,7 @@ char              **argv;
      {
         /* prepare the cpp command */
 #     ifdef _WINDOWS
-      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR));
+      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR_T));
       ustrcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
       ustrcpy (cmd, CPP " ");

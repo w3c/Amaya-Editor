@@ -2817,7 +2817,7 @@ char              **argv;
 #endif /* _WINDOWS */
 {
    FILE               *inputFile;
-   CHAR                buffer[200], fname[200];
+   CHAR_T                buffer[200], fname[200];
    STRING              pwd, ptr;
    indLine             i;	/* current position in current line */
    indLine             wi;	/* start position of current word in the line */
@@ -2833,11 +2833,11 @@ char              **argv;
 #  ifdef _WINDOWS 
    STRING               cmd [100];
    int                 ndx, pIndex = 0;
-   CHAR                msg [800];
+   CHAR_T                msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #  else  /* !_WINDOWS */
-   CHAR                cmd[800];
+   CHAR_T                cmd[800];
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
@@ -2863,7 +2863,7 @@ char              **argv;
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS 
-      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR));
+      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR_T));
       ustrcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
       ustrcpy (cmd, CPP " ");

@@ -47,8 +47,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   TtaWriteByte (outfile, (CHAR) (n / 256));
-   TtaWriteByte (outfile, (CHAR) (n % 256));
+   TtaWriteByte (outfile, (CHAR_T) (n / 256));
+   TtaWriteByte (outfile, (CHAR_T) (n % 256));
 }
 
 /*----------------------------------------------------------------------

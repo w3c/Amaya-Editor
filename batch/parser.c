@@ -324,7 +324,7 @@ void                OctalToChar ()
 				    inputLine, LineNum);
 		  else
 		    {
-		       inputLine[i] = (UCHAR) n;
+		       inputLine[i] = (UCHAR_T) n;
 		       shift = k - i - 1;
 		    }
 	       }
@@ -426,7 +426,7 @@ SyntacticType      *wn;
 	if (inputLine[j] >= '0' && inputLine[j] <= '9')
 	   *wn = SynInteger;
 	else if ((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-		 || inputLine[j] == (UCHAR) '\240'	/*nobreakspace */
+		 || inputLine[j] == (UCHAR_T) '\240'	/*nobreakspace */
 		 || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 
 		 || (((int) inputLine[j]) >= 192 &&
@@ -447,7 +447,7 @@ SyntacticType      *wn;
 		    || (inputLine[j] >= ':' && inputLine[j] <= '@')
 		    || (inputLine[j] >= '[' && inputLine[j] <= '^')
 		    || (inputLine[j] >= '{' && inputLine[j] <= '~')
-		    || inputLine[j] == (CHAR) (127)
+		    || inputLine[j] == (CHAR_T) (127)
 		    || inputLine[j] == '`')
 		   /* on a trouve un separateur */
 		   stop = True;	/* verifie l'homogeneite */
@@ -466,7 +466,7 @@ SyntacticType      *wn;
 				 break;
 			      case SynIdentifier:
 				 if (!((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-				       || (inputLine[j] == (UCHAR) '\240' /*nobreakspace */ )
+				       || (inputLine[j] == (UCHAR_T) '\240' /*nobreakspace */ )
 
 				       || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 				       || (inputLine[j] >= '0' && inputLine[j] <= '9')
@@ -970,8 +970,8 @@ STRING              fileName;
    boolean             readingKeywordTable;
    int                 ruleptr;
    int                 currule;
-   CHAR                pgrname[200];
-   CHAR                pnomcourt[200];
+   CHAR_T                pgrname[200];
+   CHAR_T                pnomcourt[200];
    SrcKeywordDesc     *pkw1;
    BinFile             grmFile;
    boolean             fileOK;
@@ -1041,9 +1041,9 @@ STRING              fileName;
 			    for (l = 0; l < wlen; l++)
 			      {
 				 pkw1->SrcKeyword[l] = inputLine[wind + l - 1];
-				 if ((CHAR) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
-				     && (CHAR) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
-				    pkw1->SrcKeyword[l] = (CHAR) (((int) pkw1->SrcKeyword[l]) - 32);
+				 if ((CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
+				     && (CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
+				    pkw1->SrcKeyword[l] = (CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32);
 			      }
 			    /* traduit le mot-cle en majuscules */
 			    j = wind + wlen;

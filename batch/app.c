@@ -100,13 +100,13 @@ static boolean      AttributesSection;	/* within the section ATTRIBUTES     */
 static boolean      MenusSection;	/* within the section MENUS          */
 static PtrAppMenu  *MenuList;
 static int          ViewNumber;
-static CHAR         MenuName[100];
-static CHAR         SubmenuName[100];
-static CHAR         ItemName[100];
-static CHAR         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
+static CHAR_T         MenuName[100];
+static CHAR_T         SubmenuName[100];
+static CHAR_T         ItemName[100];
+static CHAR_T         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
 
 				     	/* 'S' = Separator, 'D' = Dynamic.   */
-static CHAR         ActionName[100];
+static CHAR_T         ActionName[100];
 
 /* the list RegisteredAppEvents have to be conform to the type enum APPevent
    defined into appaction.h */
@@ -1099,12 +1099,12 @@ SyntacticCode       pr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         WriteChar (FILE * Hfile, UCHAR ch)
+static void         WriteChar (FILE * Hfile, UCHAR_T ch)
 
 #else  /* __STDC__ */
 static void         WriteChar (Hfile, ch)
 FILE               *Hfile;
-UCHAR       ch;
+UCHAR_T       ch;
 
 #endif /* __STDC__ */
 
@@ -1554,7 +1554,7 @@ char              **argv;
 {
    FILE               *filedesc;
    boolean             fileOK;
-   CHAR                buffer[200];
+   CHAR_T                buffer[200];
    STRING              pwd, ptr;
    Name                srceFileName;
    int                 i;
@@ -1572,11 +1572,11 @@ char              **argv;
    STRING               pChar;
    int                 ndx, pIndex = 0;
    int                 len;
-   CHAR                msg [800];
+   CHAR_T                msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #  else  /* !_WINDOWS */
-   CHAR                cmd[800];
+   CHAR_T                cmd[800];
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
@@ -1604,7 +1604,7 @@ char              **argv;
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS
-      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR));
+      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR_T));
       ustrcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
       ustrcpy (cmd, CPP " ");
