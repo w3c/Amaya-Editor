@@ -213,7 +213,7 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
 			    {
 			      ptr = strstr (s, ".");
 			      if (ptr)
-				strcpy (s, ptr);
+				strcpy (s, &ptr[1]);
 			    }
 			  /* compare the name or the suffix with the requested string */
 			  ptr = strstr (s, ref);
