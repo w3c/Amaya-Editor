@@ -2098,7 +2098,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    }
 	  /* Moving included boxes or reevalution of the block of lines? */
 	  if (pCurrentAb->AbLeafType == LtCompound &&
-	      !pBox->BxContentWidth &&
+	      !pCurrentAb->AbNew && /* children are not already created */
+	      (!pBox->BxContentWidth || /* a fraction by example */
+	       (pBox->BxType != BoBlock && pBox->BxType != BoFloatBlock)) &&
 	      (absoluteMove ||
 	       pCurrentAb->AbWidth.DimAbRef ||
 	       pCurrentAb->AbWidth.DimValue >= 0))
@@ -2292,6 +2294,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		{
 		  /* Within a block of line */
 		  if (pAb->AbBox != pSourceBox &&
+		      !pAb->AbNew && /* not created yet */
 		      (pAb->AbBox->BxType == BoBlock ||
 		        pAb->AbBox->BxType == BoFloatBlock))
 		    {
@@ -3386,7 +3389,6 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
     {
       /* register that we're preforming the job */
       pBox->BxCycles += 1;
-      
       /* Keep in mind if the box positionning is absolute or not */
       absoluteMove = IsXPosComplete (pBox);
       if (absoluteMove)
@@ -3411,9 +3413,12 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       while (pChildAb != NULL)
 	{
 	  pChildBox = pChildAb->AbBox;
-	  if (!pChildAb->AbDead && pChildBox != NULL
-	      && pChildAb->AbHorizEnclosing
-	      && (pChildAb->AbWidth.DimAbRef != pAb || pChildBox->BxContentWidth))
+	  if (!pChildAb->AbDead && pChildBox &&
+	      pChildAb->AbHorizEnclosing &&
+	      (pChildAb->AbWidth.DimAbRef != pAb ||
+	       pChildBox->BxContentWidth ||
+	       /* Sometimes table width doesn't follow the rule */
+	       pChildBox->BxType == BoTable))
 	    {
 	      /* look for the box which relies the box to its enclosing */
 	      pRelativeBox = GetHPosRelativeBox (pChildBox, NULL);
@@ -3483,9 +3488,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	while (pChildAb != NULL)
 	  {
 	    pChildBox = pChildAb->AbBox;
-	    if (!pChildAb->AbDead && pChildBox != NULL && pChildAb->AbHorizEnclosing)
+	    if (!pChildAb->AbDead && pChildBox && pChildAb->AbHorizEnclosing)
 	      {
-		
 		/* look for the box which relies the box to its enclosing */
 		pRelativeBox = GetHPosRelativeBox (pChildBox, NULL);
 		if (pRelativeBox && pRelativeBox->BxAbstractBox &&

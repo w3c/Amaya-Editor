@@ -1393,7 +1393,7 @@ void CreateAttrIntAreaSize (int value, Element el, Document doc)
     }
   /* the presentation rule associated with attribute IntAreaSize expresses
      the element width in "em". Convert the value into em */
-  TtaSetAttributeValue (attr, (int) (value * 0.55), el, doc);
+  TtaSetAttributeValue (attr, (int) (value * 0.40), el, doc);
 }
 
 /*----------------------------------------------------------------------

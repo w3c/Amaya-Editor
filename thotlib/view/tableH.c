@@ -425,6 +425,7 @@ static ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width,
 			       int *percent)
 {
   PtrAttribute        pAttr;
+  PtrAbstractBox      pParent;
   ThotBool            found;
 
   *width = 0;
@@ -447,15 +448,13 @@ static ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width,
     }
 
   /* these values can be overwritten by CSS rules */
-  if (!pAb->AbWidth.DimIsPosition &&
-      pAb->AbWidth.DimUnit == UnPercent)
+  if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimUnit == UnPercent)
     {
       found = TRUE;
       *width = 0;
       *percent = pAb->AbWidth.DimValue;
     }
-  else if (!pAb->AbWidth.DimIsPosition &&
-	  pAb->AbWidth.DimValue > 0)
+  else if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimValue > 0)
     {
       found = TRUE;
       *width = PixelValue (pAb->AbWidth.DimValue, pAb->AbWidth.DimUnit, NULL, zoom);
@@ -815,7 +814,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 #ifdef TAB_DEBUG
   printf ("\nCheckTableWidths (%s) %d cols\n", table->AbElement->ElLabel, cNumber);
 #endif
-
+if (!strcmp (table->AbElement->ElLabel, "L254"))
+  printf ("%s max=%d min=%d w=%d\n",table->AbElement->ElLabel, max, min, width);
   /* now update real widths */
   pBox->BxCycles = 1;
   if (max + sum + sumPercent <= width && !constraint)
@@ -854,7 +854,7 @@ printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 #endif
 	}
     }
-  else if (min + sum + sumPercent >= width && (freely || pCell == NULL))
+  else if (min + sum + sumPercent >= width /*&& (freely || pCell == NULL)*/)
     {
 #ifdef TAB_DEBUG
 printf ("Minimum Widths ...\n");
@@ -1179,6 +1179,7 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 	  else if (!pAb->AbWidth.DimIsPosition &&
 		   pAb->AbHorizEnclosing &&
 		   pAb->AbWidth.DimUnit != UnPercent &&
+		   pAb->AbWidth.DimUnit != UnAuto &&
 		   (pAb->AbWidth.DimAbRef == NULL ||
 		    !IsParentBox (pAb->AbWidth.DimAbRef->AbBox, pAb->AbBox)))
 	    {
@@ -1648,7 +1649,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
     {
       /* the table width is constrained */
       width += mbp;
-      max = width;
+      //max = width;
     }
   /* do we need to reformat the table */
   change = (pBox->BxRuleWidth != width ||  pBox->BxMinWidth != min ||
@@ -2175,6 +2176,11 @@ void TtaUnlockTableFormatting ()
 			pLine = NULL;
 		       RecomputeLines (table->AbEnclosing, pLine, NULL, pLockRel->LockRFrame[i]);
 		    }
+		  else if (table && table->AbEnclosing->AbBox &&
+		      table->AbEnclosing->AbBox->BxType != BoCell &&
+		      table->AbEnclosing->AbWidth.DimAbRef == NULL &&
+		      table->AbEnclosing->AbWidth.DimValue == -1)
+		    WidthPack (table->AbEnclosing, table->AbBox, pLockRel->LockRFrame[i]);
 		  ComputeEnclosing (pLockRel->LockRFrame[i]);
 		  DisplayFrame (pLockRel->LockRFrame[i]);
 		}

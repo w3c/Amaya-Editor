@@ -1347,12 +1347,13 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       while (pChildAb != NULL)
 	{
 	  pChildBox = pChildAb->AbBox;
-	  if (!pChildAb->AbDead && pChildBox != NULL)
+	  if (!pChildAb->AbDead && pChildBox)
 	    {
-	      if ((pChildAb->AbWidth.DimAbRef != pAb &&
-		   pChildAb->AbHorizEnclosing) ||
-		  (!pChildAb->AbWidth.DimIsPosition &&
-		   pChildAb->AbWidth.DimMinimum))
+	      if (pChildAb->AbHorizEnclosing &&
+		  (pChildAb->AbWidth.DimAbRef != pAb ||
+		   pChildBox->BxContentWidth ||
+		   /* Sometimes table width doesn't follow the rule */
+		   pChildBox->BxType == BoTable))
 		{
 		  /* the width of that box doesn't depend on the enclosing */
 		  if (pChildBox->BxXOrg < 0)
@@ -1362,10 +1363,9 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 		  if (val > *width)
 		    *width = val;
 		}
-	      if ((pChildAb->AbHeight.DimAbRef != pAb &&
-		   pChildAb->AbVertEnclosing) ||
-		  (!pChildAb->AbHeight.DimIsPosition &&
-		   pChildAb->AbHeight.DimMinimum))
+	      if (pChildAb->AbVertEnclosing &&
+		  (pChildAb->AbHeight.DimAbRef != pAb ||
+		   pChildBox->BxContentHeight))
 		{
 		  /* the height of that box doesn't depend on the enclosing */
 		  if (pChildBox->BxYOrg < 0)
@@ -1383,7 +1383,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       *width -= x;
       *height -= y;
       /*
-       * Now we move included boxes which depend on the parent width and height
+       * Now move included boxes which depend on the parent width and height
        */
       pChildAb = pFirstAb;
       if (Propagate == ToSiblings)
@@ -2184,6 +2184,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	pCurrentBox->BxShadow = FALSE;
       /* Note if there is a border or a fill */
       MarkDisplayedBox (pCurrentBox);
+      pAb->AbNew = FALSE;	/* The box is now created */
       
       /* Evaluation du contenu de la boite */
       switch (pAb->AbLeafType)
@@ -2403,7 +2404,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	}   
 #endif /* _GL */
 
-      pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
       /* manage table exceptions */
       if (boxType == BoTable)
 	UpdateTable (pAb, NULL, NULL, frame);
