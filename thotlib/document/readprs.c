@@ -1242,7 +1242,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
    NumAttrCase*        pCase;
    PathBuffer          dirBuffer;
    BinFile             file;
-   CHAR_T              buf[MAX_TXT_LEN];
+   char                buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j, k, l;
    PtrHostView         pHostView, prevHostView;
    ThotBool            ret;
@@ -1250,7 +1250,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
    error = FALSE;
    pPSch = NULL;
    /* compose le nom du fichier a ouvrir */
-   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
+   strncpy (dirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (fileName, "PRS", dirBuffer, buf, &i);
 
    /* teste si le fichier existe */
@@ -1258,20 +1258,20 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
    if (file == 0)
      {
 	/* message 'Fichier inaccessible' */
-	ustrncpy (buf, fileName, MAX_NAME_LENGTH);
-	ustrcat (buf, ".PRS");
+	strncpy (buf, fileName, MAX_NAME_LENGTH);
+	strcat (buf, ".PRS");
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB,TMSG_INCORRECT_PRS_FILE ), buf);
      }
    else
      {
 	/* supprime le suffixe .PRS a la fin du nom de fichier */
-	buf[i - 4] = WC_EOS;
+	buf[i - 4] = EOS;
 	GetSchPres (&pPSch);
 	/* acquiert un bloc pour la prochaine regle lue */
 	GetPresentRule (&pNextPRule);
 	pNextPRule->PrCond = NULL;
 	/* met son nom dans le schema de presentation */
-	ustrncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
+	strncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
 	/* lit la partie fixe du schema de presentation */
 	/* lit le nom du schema de structure correspondant */
 	TtaReadName (file, pPSch->PsStructName);
@@ -1396,7 +1396,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 		     j = 0;
 		     if (!error)
 			do
-			   if (!TtaReadWideChar (file, &pConst->PdString[j++], ISO_8859_1))
+			   if (!TtaReadByte (file, &pConst->PdString[j++]))
 			      error = True;
 			while (pConst->PdString[j - 1] != EOS && !error) ;
 		  }

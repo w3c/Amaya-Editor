@@ -351,13 +351,11 @@ unsigned short WIN1257CP [] = {
 };
 #define WIN1257CP_length sizeof(WIN1257CP) / sizeof(unsigned short);
 
-extern STRING TtaAllocString (unsigned int);
-extern void*  TtaGetMemory (unsigned int);
 
 /*----------------------------------------------------------------------
   uctio
   ----------------------------------------------------------------------*/
-int          uatoi (const STRING string)
+int uatoi (const STRING string)
 {
 #ifdef _I18N_
 #ifdef _WINDOWS
@@ -386,7 +384,7 @@ int          uatoi (const STRING string)
 /*----------------------------------------------------------------------
   uatol converts a strint to a long
   ----------------------------------------------------------------------*/
-long         uatol (const STRING string)
+long uatol (const STRING string)
 {
 #ifdef _I18N_
 #ifdef _WINDOWS
@@ -419,7 +417,7 @@ CHAR_T utolower (CHAR_T c)
   TtaGetCharFromUnicode: returns the char code in the corresponding encoding
   of  the Unicode value wc.
   ----------------------------------------------------------------------*/
-unsigned char  TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding)
+unsigned char TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding)
 {
   unsigned int  c, max;
   unsigned short *table;
@@ -513,7 +511,7 @@ unsigned char  TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding)
 
 
 /*----------------------------------------------------------------------
-  TtaGetUnicodeValueFrom_ISO_8859_2_Code: return the Unicode val corresponding
+  TtaGetUnicodeFromChar: return the Unicode val corresponding
   to the ISO Latin 2 code c.
   ----------------------------------------------------------------------*/
 wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding)
@@ -610,7 +608,7 @@ wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding)
   TtaWC2MB converts a wide character into a multibyte character.
   Returns the number of bytes in the multibyte character or -1
   ----------------------------------------------------------------------*/
-int     TtaWC2MB (wchar_t wchar, char* mbchar, CHARSET encoding)
+int TtaWC2MB (wchar_t wchar, char *mbchar, CHARSET encoding)
 {
   unsigned char   leadByteMark;
   unsigned char  *mbcptr = mbchar;
@@ -776,12 +774,12 @@ int TtaMBS2WCS (unsigned char** src, wchar_t** target, CHARSET encoding)
   ----------------------------------------------------------------------*/
 int TtaWCS2MBS (wchar_t** src, unsigned char** target, CHARSET encoding)
 {
-  wchar_t          *ptrSrc           = *src;
+  wchar_t          *ptrSrc = *src;
   wchar_t           wc = *ptrSrc++;
-  unsigned char    *ptrTarget        = *target;
+  unsigned char    *ptrTarget = *target;
   unsigned char     leadByteMark;
   int               nbBytesConverted = 0;
-  int    nbBytesToConvert ;
+  int               nbBytesToConvert;
   
   if (encoding ==  UTF_8)
     {
@@ -952,4 +950,48 @@ int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
     }
 
   return nbBytesToRead;
+}
+
+/*-------------------------------------------------------------
+  TtaCopyWC2Iso copies src (16-bit) into dest (8-bit). This 
+  function suposes that enough memory has been already allocated.
+  Return the encoding detected.
+  -------------------------------------------------------------*/
+void TtaCopyWC2Iso (unsigned char *dest, CHAR_T *src, CHARSET encoding)
+{
+#ifdef _I18N_
+  int               i;
+
+  i = 0;
+  while (src[i] != WC_EOS)
+    {
+      dest[i] = TtaGetCharFromUnicode (src[i], encoding);
+      i++;
+    }
+  dest[i] = EOS;
+#else  /* _I18N_ */
+  strcpy (dest, src);
+#endif /* _I18N_ */
+}
+
+
+/*-------------------------------------------------------------
+  TtaCopyIso2WC copies src (8-bit) into dest (16-bits). This 
+  function suposes that enough memory has been already allocated.
+  -------------------------------------------------------------*/
+void TtaCopyIso2WC (CHAR_T *dest, unsigned char *src, CHARSET encoding)
+{
+#ifdef _I18N_ 
+  int               i;
+
+  i = 0;
+  while (src[i] != EOS)
+    {
+      dest[i] = TtaGetUnicodeFromChar (src[i], encoding);
+      i++;
+    }
+  dest[i] = WC_EOS;
+#else  /* _I18N_ */
+  strcpy (dest, src);
+#endif /* _I18N_ */
 }

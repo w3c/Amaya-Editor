@@ -4767,7 +4767,7 @@ static ThotBool       RestoreAmayaDocs ()
 		}
 	      while (line[i] != '"');
 	      line[i] = EOS;
-	      iso2wc_strcpy (tempdoc, &line[1]);
+	      strcpy (tempdoc, &line[1]);
 	      /* skip spaces and the next first " */
 	      do
 		{
@@ -4784,7 +4784,7 @@ static ThotBool       RestoreAmayaDocs ()
 		}
 	      while (line[i] != '"');
 	      line[i] = EOS;
-	      iso2wc_strcpy (docname, &line[j]);
+	      strcpy (docname, &line[j]);
 	      /* skip spaces */
 	      do
 		{

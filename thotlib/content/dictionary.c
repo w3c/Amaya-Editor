@@ -270,27 +270,19 @@ static void ReadDictionary (FILE *dictFile, PtrDict dict)
       i = 0;
       while (i < dict->DictNbChars)
 	{
-#     ifdef _I18N_
-      TtaReadWideChar (dictFile, &(dict->DictString[i]), CharEncoding);
-#     else  /* !_I18N_ */
 	  TtaReadByte (dictFile, &(dict->DictString[i]));
-#     endif /* !_I18N_ */
 	  i++;
 	}
-      
       i = 0;
       while (i < dict->DictNbWords)
 	{
 	  TtaReadByte (dictFile, &(dict->DictCommon[i]));
 	  i++;
 	}
-      
       for (i = 0; i < dict->DictNbWords; i++)
 	TtaReadInteger (dictFile, &dict->DictWords[i]);
-      
       for (i = 0; i < MAX_WORD_LEN; i++)
 	TtaReadInteger (dictFile, &dict->DictLengths[i]);
-      
       /* Loaded */
       dict->DictLoaded = TRUE;
     }

@@ -36,192 +36,131 @@ struct _HTStream
   Static function prototypes 
 ***/
 
-#ifdef __STDC__
-static int AHTFWriter_flush ( HTStream * me );
-static int AHTFWriter_put_character ( HTStream * me,
-                                              char c );
-static int AHTFWriter_put_string ( HTStream * me,
-                                           const char* s );
-static int AHTFWriter_write ( HTStream * me,
-                                      const char *s,
-                                      int l );
-static int AHTFWriter_abort (HTStream * me, HTList *e);
-#else 
-static int AHTFWriter_flush (/* HTStream * me */);
-static int AHTFWriter_put_character (/* HTStream * me,
-                                                char c */);
-static int AHTFWriter_put_string (/* HTStream * me,
-                                             const char *s */);
-static int AHTFWriter_write (/* HTStream * me,
-                                        const char *s,
-                                        int l */);
-static int AHTFWriter_abort (/*HTStream * me, HTList *e */);
-#endif
+static int AHTFWriter_flush ( HTStream *me);
+static int AHTFWriter_put_string ( HTStream *me, const char *s);
+static int AHTFWriter_write ( HTStream *me, const char *s, int l);
+static int AHTFWriter_abort (HTStream *me, HTList *e);
 
 /*----------------------------------------------------------------------
   AHTFWriter_put_character
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int         AHTFWriter_put_character (HTStream * me, char c)
-#else				/* __STDC__ */
-static int         AHTFWriter_put_character (me, c)
-Stream             *me;
-char               c;
-
-#endif /* __STDC__ */
+static int AHTFWriter_put_character (HTStream *me, char c)
 {
-   int                 status;
-   AHTReqContext      *reqcont;
+  int                 status;
+  AHTReqContext      *reqcont;
 
-   if (me->fp == NULL) {
+  if (me->fp == NULL)
+    {
 #ifdef DEBUG_LIBWWW
      fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
      return HT_ERROR;
    }
 
-   /* Don't write anything if the output is stdout (used for publishing */
-   if (me->fp == stdout) 
-     return HT_OK;
+  /* Don't write anything if the output is stdout (used for publishing */
+  if (me->fp == stdout) 
+    return HT_OK;
+  status = (fputc (c, me->fp) == EOF) ? HT_ERROR : HT_OK;
+  if (status == HT_OK)
+    status = AHTFWriter_flush (me);
 
-   status = (fputc (c, me->fp) == EOF) ? HT_ERROR : HT_OK;
-
-   if (status == HT_OK)
-      status = AHTFWriter_flush (me);
-
-   reqcont = (AHTReqContext *) HTRequest_context (me->request);
-   if (reqcont && reqcont->incremental_cbf) {
-      char urlName[MAX_LENGTH];
-      char outputfile[MAX_LENGTH];
-      
-      wc2iso_strcpy (urlName, reqcont->urlName);
-      wc2iso_strcpy (outputfile, reqcont->outputfile);
-      /* @@ JK: http_headers isn't initalized here yet */
-      (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile,  &(reqcont->http_headers), &c, 1, reqcont->context_icbf);
-   } 
-
+  reqcont = (AHTReqContext *) HTRequest_context (me->request);
+  if (reqcont && reqcont->incremental_cbf)
+    /* @@ JK: http_headers isn't initalized here yet */
+    (*reqcont->incremental_cbf) (reqcont->docid, 1, reqcont->urlName,
+				 reqcont->outputfile,  &(reqcont->http_headers),
+				 &c, 1, reqcont->context_icbf);
    return status; 
 }
 
 /*----------------------------------------------------------------------
   AHTFWriter_put_string
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int         AHTFWriter_put_string (HTStream * me, const char* s)
-#else  /* __STDC__ */
-static int         AHTFWriter_put_string (me, s)
-HTStream           *me;
-const char*        s;
-#endif /* __STDC__ */
+static int AHTFWriter_put_string (HTStream *me, const char* s)
 {
-   int                 status = HT_OK;
-   AHTReqContext      *reqcont;
+  int                 status = HT_OK;
+  AHTReqContext      *reqcont;
 
 
-   if (me->fp == NULL) {
-#     ifdef DEBUG_LIBWWW
+  if (me->fp == NULL)
+    {
+#ifdef DEBUG_LIBWWW
       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
-#     endif
+#endif
      return HT_ERROR;
-   }
+    }
 
-   /* Don't write anything if the output is stdout (used for publishing */
-   if (me->fp == stdout) 
-      return HT_OK;
-
-   if (*s) {
+  /* Don't write anything if the output is stdout (used for publishing */
+  if (me->fp == stdout) 
+    return HT_OK;
+  if (*s)
+    {
       status = (fputs (s, me->fp) == EOF) ? HT_ERROR : HT_OK;
       if (status == HT_OK)
-         status = AHTFWriter_flush (me);
+	status = AHTFWriter_flush (me);
 
       reqcont = (AHTReqContext *) HTRequest_context (me->request);
- 
-      if (reqcont && reqcont->incremental_cbf) {
-         char urlName[MAX_LENGTH];
-         char outputfile[MAX_LENGTH];
-      
-         wc2iso_strcpy (urlName, reqcont->urlName);
-         wc2iso_strcpy (outputfile, reqcont->outputfile);
-
-	 /* @@ JK: http_headers isn't initalized here yet */
-         (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile,  &(reqcont->http_headers), s, strlen (s), reqcont->context_icbf);
-	  }
-   } else 
-         status = HT_ERROR;
-
+      if (reqcont && reqcont->incremental_cbf)
+	/* @@ JK: http_headers isn't initalized here yet */
+	(*reqcont->incremental_cbf) (reqcont->docid, 1, reqcont->urlName,
+				     reqcont->outputfile, &(reqcont->http_headers),
+				     s, strlen (s), reqcont->context_icbf);
+    }
+  else
+    status = HT_ERROR;
   /* JK: Should there we a callback to incremental too? */
-   return status;
+  return status;
 }
 
 
 /*----------------------------------------------------------------------
   AHTFWriter_write
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int         AHTFWriter_write (HTStream * me, const char *s, int l)
-#else  /* __STDC__ */
-static int         AHTFWriter_write (me, s, l)
-HTStream           *me;
-const char         *s;
-int                 l;
-
-#endif /* __STDC__ */
+static int AHTFWriter_write (HTStream *me, const char *s, int l)
 {
-   ThotBool           status;
-   AHTReqContext      *reqcont;
+  ThotBool           status;
+  AHTReqContext      *reqcont;
 
-   if (me->fp == NULL) {
+  if (me->fp == NULL)
+    {
 #ifdef DEBUG_LIBWWW
-     fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+      fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
-     return HT_ERROR;
-   }
+      return HT_ERROR;
+    }
 
-   /* Don't write anything if the output is stdout (used for publishing */
-   if (me->fp == stdout) 
-     return HT_OK;
+  /* Don't write anything if the output is stdout (used for publishing */
+  if (me->fp == stdout) 
+    return HT_OK;
+  status = (fwrite (s, 1, l, me->fp) != (unsigned int)l) ? HT_ERROR : HT_OK;
+  if (l > 1 && status == HT_OK)
+    (void) AHTFWriter_flush (me);
 
-   status = (fwrite (s, 1, l, me->fp) != (unsigned int)l) ? HT_ERROR : HT_OK;
-   if (l > 1 && status == HT_OK)
-      (void) AHTFWriter_flush (me);
-
-   reqcont = (AHTReqContext *) HTRequest_context (me->request);
-
-   if (reqcont && reqcont->incremental_cbf) {
-      char urlName[MAX_LENGTH];
-      char outputfile[MAX_LENGTH];
-      
-      wc2iso_strcpy (urlName, reqcont->urlName);
-      wc2iso_strcpy (outputfile, reqcont->outputfile);
-      /* @@ JK: http_headers isn't initalized here yet */
-      (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile, &(reqcont->http_headers), s, l, reqcont->context_icbf);
-   }
-
+  reqcont = (AHTReqContext *) HTRequest_context (me->request);
+   if (reqcont && reqcont->incremental_cbf)
+     /* @@ JK: http_headers isn't initalized here yet */
+     (*reqcont->incremental_cbf) (reqcont->docid, 1, reqcont->urlName,
+				  reqcont->outputfile, &(reqcont->http_headers),
+				  s, l, reqcont->context_icbf);
    return status;
 }
 
 /*----------------------------------------------------------------------
   AHTFWriter_flush
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int         AHTFWriter_flush (HTStream * me)
-#else  /* __STDC__ */
-static int         AHTFWriter_flush (me)
-HTStream           *me
-#endif				/* __STDC__ */
+static int AHTFWriter_flush (HTStream *me)
 {
-
-   if (me->fp == NULL) {
+   if (me->fp == NULL)
+     {
 #ifdef DEBUG_LIBWWW
-     fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
-     return HT_OK;
-   }
+       return HT_OK;
+     }
 
    /* Don't write anything if the output is stdout (used for publishing */
    if (me->fp == stdout) 
      return HT_OK;
-
    return (fflush (me->fp) == EOF) ? HT_ERROR : HT_OK;
 }
 
@@ -229,35 +168,22 @@ HTStream           *me
 /*----------------------------------------------------------------------
   AHTFWriter_FREE
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int         AHTFWriter_FREE (HTStream * me)
-#else  /* __STDC__ */
-int         AHTFWriter_FREE (me)
-HTStream           *me;
-
-#endif /* __STDC__ */
+int AHTFWriter_FREE (HTStream *me)
 {
-   if (me)
-     {
-	if (me->leave_open != YES && me->fp != stdout)
-	   fclose (me->fp);
-	HTRequest_setOutputStream (me->request, NULL);
-	HT_FREE (me);
-     }
-   return HT_OK;
+  if (me)
+    {
+      if (me->leave_open != YES && me->fp != stdout)
+	fclose (me->fp);
+      HTRequest_setOutputStream (me->request, NULL);
+      HT_FREE (me);
+    }
+  return HT_OK;
 }
 
 /*----------------------------------------------------------------------
   AHTFWriter_abort
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int  AHTFWriter_abort (HTStream * me, HTList *e)
-#else  /* __STDC__ */
-static int  AHTFWriter_abort (me, e)
-HTStream           *me;
-HTList             *e;
-
-#endif /* __STDC__ */
+static int AHTFWriter_abort (HTStream *me, HTList *e)
 {
 
   if (STREAM_TRACE)
@@ -274,7 +200,6 @@ HTList             *e;
 
 /*      AHTFWriter class stream
  */
-
 static const HTStreamClass AHTFWriter =	/* As opposed to print etc */
 {
    "FileWriter",
@@ -290,17 +215,9 @@ static const HTStreamClass AHTFWriter =	/* As opposed to print etc */
 /*----------------------------------------------------------------------
   AHTFWriter_new
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-HTStream           *AHTFWriter_new (HTRequest * request, FILE * fp, BOOL leave_open)
-#else  
-HTStream           *AHTFWriter_new (request, fp, leave_open)
-HTRequest          *request;
-FILE               *fp;
-BOOL                leave_open;
-#endif /* __STDC__ */
+HTStream *AHTFWriter_new (HTRequest *request, FILE *fp, BOOL leave_open)
 {
    HTStream           *me = NULL;
-
 
    if (!fp)
      {

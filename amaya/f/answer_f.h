@@ -30,14 +30,14 @@ extern BOOL AHTPromptUsernameAndPassword ( HTRequest *request,
                                            const char *dfault,
                                            void *input,
                                            HTAlertPar * reply );
-extern ThotBool IsHTTP09Error ( HTRequest * request );
-extern BOOL AHTError_print ( HTRequest * request,
+extern ThotBool IsHTTP09Error ( HTRequest *request );
+extern BOOL AHTError_print ( HTRequest *request,
                              HTAlertOpcode op,
                              int msgnum,
                              const char *dfault,
                              void *input,
-                             HTAlertPar * reply );
-extern void AHTError_MemPrint ( HTRequest * request );
+                             HTAlertPar *reply );
+extern void AHTError_MemPrint ( HTRequest *request );
 extern void AHTPrintPendingRequestStatus ( Document docid,
                                            BOOL last_seconds_of_life );
 extern void PrintTerminateStatus ( AHTReqContext *me,
@@ -69,14 +69,14 @@ extern BOOL AHTPromptUsernameAndPassword (/* HTRequest *request,
                                              const char *dfault,
                                              void *input,
                                              HTAlertPar * reply */);
-extern ThotBool IsHTTP09Error (/* HTRequest * request */);
-extern BOOL AHTError_print (/* HTRequest * request,
+extern ThotBool IsHTTP09Error (/* HTRequest *request */);
+extern BOOL AHTError_print (/* HTRequest *request,
                                HTAlertOpcode op,
                                int msgnum,
                                const char *dfault,
                                void *input,
-                               HTAlertPar * reply */);
-extern void AHTError_MemPrint (/* HTRequest * request */);
+                               HTAlertPar *reply */);
+extern void AHTError_MemPrint (/* HTRequest *request */);
 extern void AHTPrintPendingRequestStatus (/* Document docid,
                                              BOOL last_seconds_of_life */);
 extern void PrintTerminateStatus (/* AHTReqContext *me,

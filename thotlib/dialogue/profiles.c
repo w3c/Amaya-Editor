@@ -491,7 +491,7 @@ void Prof_InitTable ()
 	  /* what is the current active profile */  
 	  ptr = TtaGetEnvString ("Profile");
 	  if (ptr && *ptr)
-	    wc2iso_strcpy (UserProfile, ptr);	
+	    strcpy (UserProfile, ptr);	
 	  else
 	    UserProfile[0] = EOS;
 

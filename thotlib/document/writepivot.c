@@ -156,47 +156,47 @@ static void PutBoolean (BinFile pivFile, ThotBool b)
 /*----------------------------------------------------------------------
    PutAlignment ecrit un BAlignment dans le fichier sur un octet      
   ----------------------------------------------------------------------*/
-static void         PutAlignment (BinFile pivFile, BAlignment c)
+static void PutAlignment (BinFile pivFile, BAlignment c)
 {
-   switch (c)
-	 {
-	    case AlignLeft:
-	       TtaWriteByte (pivFile, C_PIV_LEFT);
-	       break;
-	    case AlignRight:
-	       TtaWriteByte (pivFile, C_PIV_RIGHT);
-	       break;
-	    case AlignCenter:
-	       TtaWriteByte (pivFile, C_PIV_CENTERED);
-	       break;
-	    case AlignLeftDots:
-	       TtaWriteByte (pivFile, C_PIV_LEFTDOT);
-	       break;
-	    case AlignJustify:
-	       TtaWriteByte (pivFile, C_PIV_JUSTIFY);
-	       break;
-	 }
+  switch (c)
+    {
+    case AlignLeft:
+      TtaWriteByte (pivFile, C_PIV_LEFT);
+      break;
+    case AlignRight:
+      TtaWriteByte (pivFile, C_PIV_RIGHT);
+      break;
+    case AlignCenter:
+      TtaWriteByte (pivFile, C_PIV_CENTERED);
+      break;
+    case AlignLeftDots:
+      TtaWriteByte (pivFile, C_PIV_LEFTDOT);
+      break;
+    case AlignJustify:
+      TtaWriteByte (pivFile, C_PIV_JUSTIFY);
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
    PutPageType ecrit un type de page dans le fichier sur un octet     
   ----------------------------------------------------------------------*/
-static void         PutPageType (BinFile pivFile, PageType t)
+static void PutPageType (BinFile pivFile, PageType t)
 {
-   switch (t)
-	 {
-	    case PgComputed:
-	       TtaWriteByte (pivFile, C_PIV_COMPUTED_PAGE);
-	       break;
-	    case PgBegin:
-	       TtaWriteByte (pivFile, C_PIV_START_PAGE);
-	       break;
-	    case PgUser:
-	       TtaWriteByte (pivFile, C_PIV_USER_PAGE);
-	       break;
-	    default:
-	       break;
-	 }
+  switch (t)
+    {
+    case PgComputed:
+      TtaWriteByte (pivFile, C_PIV_COMPUTED_PAGE);
+      break;
+    case PgBegin:
+      TtaWriteByte (pivFile, C_PIV_START_PAGE);
+      break;
+    case PgUser:
+      TtaWriteByte (pivFile, C_PIV_USER_PAGE);
+      break;
+    default:
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -207,18 +207,18 @@ static void         PutPageType (BinFile pivFile, PageType t)
 static void PutReferenceType (BinFile pivFile, ReferenceType t,
 			      ThotBool expansion)
 {
-   switch (t)
-	 {
-	    case RefFollow:
-	       TtaWriteByte (pivFile, C_PIV_REF_FOLLOW);
-	       break;
-	    case RefInclusion:
-	       if (expansion)
-		  TtaWriteByte (pivFile, C_PIV_REF_INCLUS_EXP);
-	       else
-		  TtaWriteByte (pivFile, C_PIV_REF_INCLUSION);
-	       break;
-	 }
+  switch (t)
+    {
+    case RefFollow:
+      TtaWriteByte (pivFile, C_PIV_REF_FOLLOW);
+      break;
+    case RefInclusion:
+      if (expansion)
+	TtaWriteByte (pivFile, C_PIV_REF_INCLUS_EXP);
+      else
+	TtaWriteByte (pivFile, C_PIV_REF_INCLUSION);
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -375,34 +375,32 @@ void PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
 	PutShort (pivFile, pAttr->AeAttrNum);
 	/* numero de l'attribut */
 	switch (pAttr->AeAttrType)
+	  {
+	  case AtEnumAttr:
+	    PutShort (pivFile, pAttr->AeAttrValue);
+	    /* valeur de cet attribut */
+	    break;
+	  case AtNumAttr:
+	    PutShort (pivFile, abs (pAttr->AeAttrValue));
+	    PutSign (pivFile, (ThotBool)(pAttr->AeAttrValue >= 0));
+	    break;
+	  case AtReferenceAttr:
+	    PutReference (pivFile, pAttr->AeAttrReference);
+	    break;
+	  case AtTextAttr:
+	    pBuf = pAttr->AeAttrText;
+	    while (pBuf != NULL)
 	      {
-		 case AtEnumAttr:
-		    PutShort (pivFile, pAttr->AeAttrValue);
-		    /* valeur de cet attribut */
-		    break;
-		 case AtNumAttr:
-		    PutShort (pivFile, abs (pAttr->AeAttrValue));
-		    PutSign (pivFile, (ThotBool)(pAttr->AeAttrValue >= 0));
-		    break;
-		 case AtReferenceAttr:
-		    PutReference (pivFile, pAttr->AeAttrReference);
-		    break;
-		 case AtTextAttr:
-		    pBuf = pAttr->AeAttrText;
-		    while (pBuf != NULL)
-		      {
-			 i = 0;
-			 while (pBuf->BuContent[i] != EOS)
-			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++],
-					      ISO_8859_1);
-			 pBuf = pBuf->BuNext;
-		      }
-		    TtaWriteByte (pivFile, EOS);
-		    break;
-		 default:
-		    break;
+		i = 0;
+		while (pBuf->BuContent[i] != WC_EOS)
+		  TtaWriteWideChar (pivFile, pBuf->BuContent[i++], UTF_8);
+		pBuf = pBuf->BuNext;
 	      }
-
+	    TtaWriteByte (pivFile, EOS);
+	    break;
+	  default:
+	    break;
+	  }
      }
 }
 
@@ -898,7 +896,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 		  if (i > 0)
 		    {
 		      TtaWriteByte (pivFile, C_PIV_LANG);
-		      TtaWriteByte (pivFile, (char)i);
+		      TtaWriteByte (pivFile, (char) i);
 		    }
 		}
 	      if (pEl1->ElLeafType != LtReference)
@@ -916,38 +914,33 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 		      while (c < pEl1->ElTextLength && pBuf != NULL)
 			{
 			  i = 0;
-			  while (pBuf->BuContent[i] != EOS &&
-				 i < pBuf->BuLength)
-			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++],
-					      ISO_8859_1);
+			  while (pBuf->BuContent[i] != WC_EOS && i < pBuf->BuLength)
+			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++], UTF_8);
 			  c = c + i;
 			  /* buffer suivant du meme element */
 			  pBuf = pBuf->BuNext;
 			}
 		      /* peut-on concatener l'element suivant ? */
 		      stop = TRUE;
-		      if (pEl1->ElLeafType == LtText)
-			/* c'est du texte */
-			if (pEl1->ElNext != NULL)
-			  /* il y a un suivant.. */
-			  if (pEl1->ElNext->ElTerminal)
-			    if (pEl1->ElNext->ElLeafType == LtText)
-			      /* qui est une feuille de text */
-			      if (pEl1->ElNext->ElLanguage == pEl1->ElLanguage)
-				if (pEl1->ElNext->ElSource == NULL)
-				  /* le suivant n'est pas une inclusion */
-				  if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant)
-				    if (pEl1->ElNext->ElStructSchema->SsRule[pEl1->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant)
-				      if (SameAttributes (*pEl, pEl1->ElNext))
-					/* il a les memes attributs */
-					if (BothHaveNoSpecRules (*pEl, pEl1->ElNext))
-					  /* il a les memes regles de */
-					  /* presentation specifique  */
-					  /* on concatene */
-					  {
-					    stop = FALSE;
-					    pEl1 = pEl1->ElNext;
-					  }
+		      if (pEl1->ElLeafType == LtText && pEl1->ElNext != NULL &&
+			  /* c'est du texte, il y a un suivant.. */
+			  pEl1->ElNext->ElTerminal &&
+			  pEl1->ElNext->ElLeafType == LtText &&
+			  /* qui est une feuille de text */
+			  pEl1->ElNext->ElLanguage == pEl1->ElLanguage &&
+			  pEl1->ElNext->ElSource == NULL &&
+			  /* le suivant n'est pas une inclusion */
+			  pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant &&
+			  pEl1->ElNext->ElStructSchema->SsRule[pEl1->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant &&
+			  SameAttributes (*pEl, pEl1->ElNext))
+			/* il a les memes attributs */
+			if (BothHaveNoSpecRules (*pEl, pEl1->ElNext))
+			  /* il a les memes regles de presentation specifique  */
+			  /* on concatene */
+			  {
+			    stop = FALSE;
+			    pEl1 = pEl1->ElNext;
+			  }
 		    }
 		  while (!stop);
 		  /* update pEl value */
@@ -1124,7 +1117,7 @@ static void PutName (BinFile pivFile, Name N)
    int                 j;
 
    for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != EOS; j++)
-      TtaWriteWideChar (pivFile, N[j], ISO_8859_1);
+      TtaWriteByte (pivFile, N[j]);
    TtaWriteByte (pivFile, EOS);
 }
 

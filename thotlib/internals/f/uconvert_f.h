@@ -14,7 +14,7 @@ extern unsigned char TtaGetCharFromUnicode ( const wchar_t wc,
 extern wchar_t TtaGetUnicodeFromChar ( const unsigned char c,
                                        CHARSET encoding );
 extern int TtaWC2MB ( wchar_t wchar,
-                      char* mbchar,
+                      char *mbchar,
                       CHARSET encoding );
 extern int TtaMBS2WCS ( unsigned char** src,
                         wchar_t** target,
@@ -27,6 +27,12 @@ extern int TtaGetNextWideCharFromMultibyteString ( wchar_t *car,
                                                    CHARSET encoding );
 extern int TtaGetNumberOfBytesToRead ( unsigned char **txt,
                                        CHARSET encoding );
+extern void TtaCopyWC2Iso ( unsigned char *dest,
+                            CHAR_T *src,
+                            CHARSET encoding );
+extern void TtaCopyIso2WC ( CHAR_T *dest,
+                            unsigned char *src,
+                            CHARSET encoding );
 
 #else /* __STDC__ */
 
@@ -38,7 +44,7 @@ extern unsigned char TtaGetCharFromUnicode (/* const wchar_t wc,
 extern wchar_t TtaGetUnicodeFromChar (/* const unsigned char c,
                                          CHARSET encoding */);
 extern int TtaWC2MB (/* wchar_t wchar,
-                        char* mbchar,
+                        char *mbchar,
                         CHARSET encoding */);
 extern int TtaMBS2WCS (/* unsigned char** src,
                           wchar_t** target,
@@ -51,6 +57,12 @@ extern int TtaGetNextWideCharFromMultibyteString (/* wchar_t *car,
                                                      CHARSET encoding */);
 extern int TtaGetNumberOfBytesToRead (/* unsigned char **txt,
                                          CHARSET encoding */);
+extern void TtaCopyWC2Iso (/* unsigned char *dest,
+                              CHAR_T *src,
+                              CHARSET encoding */);
+extern void TtaCopyIso2WC (/* CHAR_T *dest,
+                              unsigned char *src,
+                              CHARSET encoding */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -35,6 +35,7 @@ static CHAR_T sepcar[] =
 
 #include "memory_f.h"
 #include "font_f.h"
+#include "uconvert_f.h"
 #include "ustring_f.h"
 
 /*----------------------------------------------------------------------
@@ -58,7 +59,7 @@ static int PatternHyphen (STRING word, int length, Language language,
    status = 0;
    /* current patterns concern only iso-latin characters */
    iso = TtaGetMemory (ustrlen (word) + 1);
-   wc2iso_strcpy (iso, word);
+   TtaCopyWC2Iso (iso, word, ISO_8859_1);
    pHyphen = TtaGetPatternHyphenList (iso, language);
    TtaFreeMemory (iso);
    if (pHyphen == NULL)

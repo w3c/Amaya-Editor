@@ -759,7 +759,7 @@ static void ReadBlocks (BinFile file, PtrTRuleBlock *pBlock, PtrTRule *pNextTRul
    FreeBlocks     libere une suite de blocs de regles ainsi que    
    les regles attachees.                                   
   ----------------------------------------------------------------------*/
-static void         FreeBlocks (PtrTRuleBlock pBlock)
+static void FreeBlocks (PtrTRuleBlock pBlock)
 {
    PtrTRuleBlock       pNextBlock;
    PtrTRule            pTRule, nextRule;
@@ -952,21 +952,21 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
    StringTransl       *pStringTr;
    PRuleTransl        *pPRuleTr;
    PathBuffer          dirBuffer;
-   CHAR_T              buf[MAX_TXT_LEN];
+   char                buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j;
 
    error = FALSE;
    pTSch = NULL;
    /* compose le nom du fichier a ouvrir */
-   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
+   strncpy (dirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (fileName, "TRA", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
    if (file == 0)
      {
-	ustrncpy (buf, fileName, MAX_PATH);
-	ustrcat (buf, ".TRA");
+	strncpy (buf, fileName, MAX_PATH);
+	strcat (buf, ".TRA");
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_TRA_FILE_INCORRECT), buf);
      }
    else
@@ -1136,13 +1136,13 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 		/* lit la chaine source */
 		j = 0;
 		do
-		   TtaReadWideChar (file, &pStringTr->StSource[j++], ISO_8859_1);
-		while (pStringTr->StSource[j - 1] != WC_EOS);
+		   TtaReadByte (file, &pStringTr->StSource[j++]);
+		while (pStringTr->StSource[j - 1] != EOS);
 		/* lit la chaine cible */
 		j = 0;
 		do
-		   TtaReadWideChar (file, &pStringTr->StTarget[j++], ISO_8859_1);
-		while (pStringTr->StTarget[j - 1] != WC_EOS);
+		   TtaReadByte (file, &pStringTr->StTarget[j++]);
+		while (pStringTr->StTarget[j - 1] != EOS);
 	     }
 	if (!error)
 	   /* lit les constantes */
@@ -1150,8 +1150,8 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	     {
 		j = pTSch->TsConstBegin[i] - 1;
 		do
-		   TtaReadWideChar (file, &pTSch->TsConstant[j++], ISO_8859_1);
-		while (pTSch->TsConstant[j - 1] != WC_EOS);
+		   TtaReadByte (file, &pTSch->TsConstant[j++]);
+		while (pTSch->TsConstant[j - 1] != EOS);
 	     }
 	/* lit les blocs de regles des elements */
 	if (!error)

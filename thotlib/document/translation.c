@@ -3102,8 +3102,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       if (includedFile != 0)
 	/* le fichier a inclure est ouvert */
 	{
-	  /* while (TtaReadByte (includedFile, &c)) */
-	  while (TtaReadWideChar (includedFile, &c, pDoc->DocCharset))
+	  while (TtaReadByte (includedFile, &c))
 	    /* on ecrit dans le fichier principal courant */
 	    PutChar ((wchar_t) c, 1, NULL, pDoc, *lineBreak, TRUE);
 	  TtaReadClose (includedFile);

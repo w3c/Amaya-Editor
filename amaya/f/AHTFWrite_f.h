@@ -6,16 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int AHTFWriter_FREE ( HTStream * me );
-extern HTStream *AHTFWriter_new ( HTRequest * request,
-                                  FILE * fp,
+extern int AHTFWriter_FREE ( HTStream *me );
+extern HTStream *AHTFWriter_new ( HTRequest *request,
+                                  FILE *fp,
                                   BOOL leave_open );
 
 #else /* __STDC__ */
 
-extern int AHTFWriter_FREE (/* HTStream * me */);
-extern HTStream *AHTFWriter_new (/* HTRequest * request,
-                                    FILE * fp,
+extern int AHTFWriter_FREE (/* HTStream *me */);
+extern HTStream *AHTFWriter_new (/* HTRequest *request,
+                                    FILE *fp,
                                     BOOL leave_open */);
 
 #endif /* __STDC__ */

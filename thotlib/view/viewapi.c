@@ -7,10 +7,8 @@
 
 /*
  * Authors: V. Quint, I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) Unicode and Windows version
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -178,7 +176,7 @@ static View OpenView (Document document, char *viewName, int x, int y,
 	found = FALSE;
 	for (i = 0; i < nbViews && !found; i++)
 	  {
-	    found = ustrcmp (viewName, allViews[i].VdViewName) == 0;
+	    found = strcmp (viewName, allViews[i].VdViewName) == 0;
 	    if (found)
 	      v = i;
 	  }
@@ -225,7 +223,7 @@ static View OpenView (Document document, char *viewName, int x, int y,
    Return value:
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-View TtaOpenView (Document document, STRING viewName, int x, int y, int w, int h)
+View TtaOpenView (Document document, char *viewName, int x, int y, int w, int h)
 {
    return OpenView (document, viewName, x, y, w, h, NULL);
 }
@@ -246,7 +244,7 @@ View TtaOpenView (Document document, STRING viewName, int x, int y, int w, int h
    Return value:
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-View TtaOpenSubView (Document document, STRING viewName, int x, int y,
+View TtaOpenSubView (Document document, char *viewName, int x, int y,
 		     int w, int h, Element subtree)
 {
    return OpenView (document, viewName, x, y, w, h, subtree);
@@ -283,7 +281,7 @@ void TtaCloseView (Document document, View view)
    view: the view.
    title: the new title.
   ----------------------------------------------------------------------*/
-void TtaChangeViewTitle (Document document, View view, STRING title)
+void TtaChangeViewTitle (Document document, View view, char *title)
 {
    UserErrorCode = 0;
    /* Checks the parameter document */
@@ -485,7 +483,7 @@ void TtaShowElement (Document document, View view, Element element, int position
    Return value:
    current value of the sensibility.
   ----------------------------------------------------------------------*/
-int                 TtaGetSensibility (Document document, View view)
+int TtaGetSensibility (Document document, View view)
 {
    int                 frame;
    int                 valzoom;
@@ -497,7 +495,7 @@ int                 TtaGetSensibility (Document document, View view)
    if (frame != 0)
      GetFrameParams (frame, &value, &valzoom);
    return value;
-}				/*TtaGetSensibility */
+}
 
 
 /*----------------------------------------------------------------------
@@ -511,7 +509,7 @@ int                 TtaGetSensibility (Document document, View view)
    Return value:
    current value of the zoom.
   ----------------------------------------------------------------------*/
-int                 TtaGetZoom (Document document, View view)
+int TtaGetZoom (Document document, View view)
 {
    int                 frame;
    int                 valvisib;
@@ -523,7 +521,7 @@ int                 TtaGetZoom (Document document, View view)
    if (frame != 0)
      GetFrameParams (frame, &valvisib, &value);
    return value;
-}				/*TtaGetZoom */
+}
 
 
 /*----------------------------------------------------------------------
@@ -538,7 +536,7 @@ int                 TtaGetZoom (Document document, View view)
    Return value:
    1 if the presentation schema can be applied, 0 if it can not.
   ----------------------------------------------------------------------*/
-int TtaIsPSchemaValid (STRING structureName, STRING presentationName)
+int TtaIsPSchemaValid (char *structureName, char *presentationName)
 {
    PathBuffer          DirBuffer;
    BinFile             file;
@@ -551,7 +549,7 @@ int TtaIsPSchemaValid (STRING structureName, STRING presentationName)
    result = 0;
    /* Arrange the name of the file to be opened with the schema directory
       name */
-   ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
+   strncpy (DirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (presentationName, "PRS", DirBuffer, text, &i);
    /* Checks if the file exists */
    file = TtaReadOpen (text);
@@ -562,7 +560,7 @@ int TtaIsPSchemaValid (STRING structureName, STRING presentationName)
      {
 	/* Gets the corresponding structure schema name */
 	TtaReadName (file, gotStructName);
-	if (ustrcmp (structureName, gotStructName) == 0)
+	if (strcmp (structureName, gotStructName) == 0)
 	   result = 1;
 	TtaReadClose (file);
      }
@@ -583,9 +581,8 @@ int TtaIsPSchemaValid (STRING structureName, STRING presentationName)
    at the       end.
    nbViews: number of names in the list, 0 if not any view can be open.
   ----------------------------------------------------------------------*/
-void TtaGiveViewsToOpen (Document document, STRING buffer, int *nbViews)
+void TtaGiveViewsToOpen (Document document, char *buffer, int *nbViews)
 {
-
    UserErrorCode = 0;
    /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
@@ -608,7 +605,7 @@ void TtaGiveViewsToOpen (Document document, STRING buffer, int *nbViews)
    Return value:
    Name of the view. The buffer must be provided by the caller.
   ----------------------------------------------------------------------*/
-STRING              TtaGetViewName (Document document, View view)
+char *TtaGetViewName (Document document, View view)
 {
   PtrDocument         pDoc;
   PtrPSchema          pPS;
@@ -630,8 +627,8 @@ STRING              TtaGetViewName (Document document, View view)
       if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
 	{
 	  pPS = PresentationSchema (dView.DvSSchema, pDoc);
-	  ustrncpy (nameBuffer, pPS->PsView[dView.DvPSchemaView - 1],
-		    MAX_NAME_LENGTH);
+	  strncpy (nameBuffer, pPS->PsView[dView.DvPSchemaView - 1],
+		   MAX_NAME_LENGTH);
 	}
     }
   return nameBuffer;
@@ -648,7 +645,7 @@ STRING              TtaGetViewName (Document document, View view)
    Return value:
    TRUE or FALSE.
   ----------------------------------------------------------------------*/
-ThotBool            TtaIsViewOpen (Document document, View view)
+ThotBool TtaIsViewOpen (Document document, View view)
 {
    DocViewDescr        dView;
    ThotBool            opened;
@@ -681,14 +678,13 @@ ThotBool            TtaIsViewOpen (Document document, View view)
    Return value:
    the view. 0 if no view of that name is currently open for the document.
   ----------------------------------------------------------------------*/
-View TtaGetViewFromName (Document document, char* viewName)
+View TtaGetViewFromName (Document document, char *viewName)
 {
    View                view;
    PtrDocument         pDoc;
    PtrPSchema          pPS;
    DocViewDescr        dView;
    int                 aView;
-   char                ViewName[MAX_LENGTH];
 
    UserErrorCode = 0;
    view = 0;
@@ -699,7 +695,6 @@ View TtaGetViewFromName (Document document, char* viewName)
       TtaError (ERR_invalid_document_parameter);
    else
       {
-      iso2wc_strcpy (ViewName, viewName);
       /* parameter document is ok */
       pDoc = LoadedDocument[document - 1];
       /* search in the opened views of the main tree */
@@ -709,7 +704,7 @@ View TtaGetViewFromName (Document document, char* viewName)
 	 if (dView.DvSSchema != NULL && dView.DvPSchemaView != 0)
 	   {
 	   pPS = PresentationSchema (dView.DvSSchema, pDoc);
-	   if (ustrcmp (ViewName, pPS->PsView[dView.DvPSchemaView - 1]) == 0)
+	   if (strcmp (viewName, pPS->PsView[dView.DvPSchemaView - 1]) == 0)
 	      view = aView;
 	   }
 	 }

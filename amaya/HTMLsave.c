@@ -1889,15 +1889,13 @@ void                SaveDocument (Document doc, View view)
 /*----------------------------------------------------------------------
   BackupAll save all opened documents when the application crashes
   ----------------------------------------------------------------------*/
-void                   BackUpDocs ()
+void BackUpDocs ()
 {
   Document        doc;
   FILE           *f;
-  char          pathname[MAX_LENGTH];
-  char          docname[MAX_LENGTH];
-  char*         ptr;
-  char            tempdocA[MAX_LENGTH];
-  char            docnameA[MAX_LENGTH];  
+  char            pathname[MAX_LENGTH];
+  char            docname[MAX_LENGTH];
+  char           *ptr;
   int             l;
 
   /* check all modified documents */
@@ -1937,9 +1935,7 @@ void                   BackUpDocs ()
         DocumentURLs[doc] = pathname;
         SaveDocument (doc, 1);
 	/* register the backup file name and the original document name */
-	wc2iso_strcpy (tempdocA, pathname);
-	wc2iso_strcpy (docnameA, ptr);
-	fprintf (f, "\"%s\" \"%s\" %d\n", tempdocA, docnameA, DocumentTypes[doc]);
+	fprintf (f, "\"%s\" \"%s\" %d\n", pathname, ptr, DocumentTypes[doc]);
 	TtaFreeMemory (ptr);
       }
   /* now close the crash file */

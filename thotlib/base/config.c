@@ -1493,7 +1493,6 @@ void TtaGetViewGeometry (Document document, char *name, int *x, int *y,
 {
   PtrDocument pDoc;
   char        line[MAX_TXT_LEN];
-  char        ptr2[MAX_TXT_LEN];
   char       *ptr;
 
   
@@ -1513,8 +1512,7 @@ void TtaGetViewGeometry (Document document, char *name, int *x, int *y,
 	ConfigGetViewGeometry (pDoc, name, x, y, width, height);
       else
 	{
-	  wc2iso_strcpy (ptr2, ptr);
-	  sprintf (line, ":%s", ptr2);
+	  sprintf (line, ":%s", ptr);
 	  getXYWidthHeight (line, pDoc, x, y, width, height);
 	}
     } 

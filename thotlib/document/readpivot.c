@@ -313,37 +313,6 @@ void                DeleteAllTrees (PtrDocument pDoc)
 
 
 /*----------------------------------------------------------------------
-   NormalizeFileName recupere les informations contenues dans le      
-   nom de fichier (cas des anciens fichiers pivots).       
-   La presentation et le type de l'image sont code's sur   
-   1 octet au debut du nom. On retourne dans name, le nom  
-   correct et dans oldTypeImage et oldPres le type et la   
-   presentation trouve ou 0.                               
-  ----------------------------------------------------------------------*/
-static char *NormalizeFileName (char *fileName, int *oldTypeImage,
-				PictureScaling *oldPres, ThotBool *found)
-{
-   char             *name;
-
-   name = fileName;
-   if (*name < SPACE)
-     {
-	*oldTypeImage = *name++ - 1;
-	*oldPres = (PictureScaling) (*oldTypeImage / 4);
-	*oldTypeImage = *oldTypeImage % 4;
-	*found = TRUE;
-     }
-   else
-     {
-	*found = FALSE;
-	*oldPres = RealSize;
-     }
-   *oldTypeImage = UNKNOWN_FORMAT;
-   return name;
-}
-
-
-/*----------------------------------------------------------------------
    ReadDimensionType lit un type de dimension dans le fichier et	
    	retourne sa valeur.                                             
   ----------------------------------------------------------------------*/
@@ -473,7 +442,7 @@ static BAlignment   ReadAlign (BinFile file)
    ReadPageType	lit un Type de page dans le fichier et retourne	
    sa valeur.                                              
   ----------------------------------------------------------------------*/
-static PageType     ReadPageType (BinFile file)
+static PageType ReadPageType (BinFile file)
 {
    char     c;
    PageType typ;
@@ -906,75 +875,72 @@ static int ReadType (PtrDocument pDoc, PtrSSchema *pSS, BinFile pivFile, char *t
 static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
 			     PtrSSchema *pContSS, int *contentType)
 {
-   int                 i;
-   ThotBool            ok;
-   SRule              *pSRule;
+  int                 i;
+  ThotBool            ok;
+  SRule              *pSRule;
 
-   if (*contentType != 0 && *pContSS != NULL)
-     {
-       ok = FALSE;
-       if (!strcmp ((*pContSS)->SsName, (*pSS)->SsName))
-	 {
-	   if (*elType == *contentType)
-	     /* meme numero de type */
-	     ok = TRUE;
-	   else
-	     {
-	       pSRule = &(*pContSS)->SsRule[*contentType - 1];
-	       if (pSRule->SrConstruct == CsChoice)
-		 /* le contenu a creer est un choix */
-		 if (pSRule->SrNChoices > 0)
-		   /* on compare le type de l'element courant */
-		   /* avec toutes les options du choix */
-		   /* choix explicite */
-		   {
-		     i = 0;
-		     do
-		       {
-			 i++;
-			 ok = pSRule->SrChoice[i - 1] == *elType;
-		       }
-		     while (!ok && i < pSRule->SrNChoices);
-		   }
-	     }
-	 }
-       
-       if (!ok && *elType == (*pSS)->SsRootElem)
-	 {
-	   pSRule = &(*pContSS)->SsRule[*contentType - 1];
-	   if (pSRule->SrConstruct == CsNatureSchema)
-	     {
-	       /* le contenu cherche' est justement une racine de nature */
-	       if (pSRule->SrSSchemaNat != NULL)
-		 ok = !strcmp (pSRule->SrSSchemaNat->SsName, (*pSS)->SsName);
-	     }
-	   else if (pSRule->SrConstruct == CsChoice &&
-		    pSRule->SrNChoices > 0)
-	     /* le contenu cherche' est un choix. Y a-t-il, parmi les */
-	     /* options de ce choix, la nature dont l'element courant est */
-	     /* racine? */
-	     /* choix explicite */
-	     {
-	       i = 0;
-	       do
-		 {
-		   i++;
-		   if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].
-		                              SrConstruct == CsNatureSchema &&
-		       /* l'option i est un changement de nature */
-		       (*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].
-		                              SrSSchemaNat != NULL)
-		     ok = (!strcmp ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsName, (*pSS)->SsName));
-		 }
-	       while (!ok && i < pSRule->SrNChoices);
-	     }
-	 }
-       if (ok)
-	 {
-	   *createAll = TRUE;	/* on cree toute la descendance de l'element */
-	   *contentType = 0;	/* on ne creera plus de contenu pour cet elem*/
-	 }
-     }
+  if (*contentType != 0 && *pContSS != NULL)
+    {
+      ok = FALSE;
+      if (!strcmp ((*pContSS)->SsName, (*pSS)->SsName))
+	{
+	  if (*elType == *contentType)
+	    /* meme numero de type */
+	    ok = TRUE;
+	  else
+	    {
+	      pSRule = &(*pContSS)->SsRule[*contentType - 1];
+	      if (pSRule->SrConstruct == CsChoice &&
+		  /* le contenu a creer est un choix */
+		  pSRule->SrNChoices > 0)
+		/* on compare le type de l'element courant */
+		/* avec toutes les options du choix */
+		/* choix explicite */
+		{
+		  i = 0;
+		  do
+		    {
+		      i++;
+		      ok = pSRule->SrChoice[i - 1] == *elType;
+		    }
+		  while (!ok && i < pSRule->SrNChoices);
+		}
+	    }
+	}
+      
+      if (!ok && *elType == (*pSS)->SsRootElem)
+	{
+	  pSRule = &(*pContSS)->SsRule[*contentType - 1];
+	  if (pSRule->SrConstruct == CsNatureSchema)
+	    {
+	      /* le contenu cherche' est justement une racine de nature */
+	      if (pSRule->SrSSchemaNat != NULL)
+		ok = !strcmp (pSRule->SrSSchemaNat->SsName, (*pSS)->SsName);
+	    }
+	  else if (pSRule->SrConstruct == CsChoice && pSRule->SrNChoices > 0)
+	    /* le contenu cherche' est un choix. Y a-t-il, parmi les */
+	    /* options de ce choix, la nature dont l'element courant est */
+	    /* racine? */
+	    /* choix explicite */
+	    {
+	      i = 0;
+	      do
+		{
+		  i++;
+		  if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1]. SrConstruct == CsNatureSchema &&
+		      /* l'option i est un changement de nature */
+		      (*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1]. SrSSchemaNat != NULL)
+		    ok = (!strcmp ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsName, (*pSS)->SsName));
+		}
+	      while (!ok && i < pSRule->SrNChoices);
+	    }
+	}
+      if (ok)
+	{
+	  *createAll = TRUE;	/* on cree toute la descendance de l'element */
+	  *contentType = 0;	/* on ne creera plus de contenu pour cet elem*/
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -985,26 +951,26 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
   ----------------------------------------------------------------------*/
 static void CheckMandatAttrSRule (PtrElement pEl, SRule *pSRule, PtrSSchema pSS)
 {
-   PtrAttribute        pAttr;
-   int                 i, att;
-   ThotBool            found;
+  PtrAttribute        pAttr;
+  int                 i, att;
+  ThotBool            found;
 
-   /* parcourt tous les attributs locaux definis dans la regle */
-   for (i = 0; i < pSRule->SrNLocalAttrs; i++)
-     if (pSRule->SrRequiredAttr[i])
-       /* cet attribut local est requis */
-       {
-	 att = pSRule->SrLocalAttr[i];
-	 /* cherche si l'element possede cet attribut */
-	 pAttr = pEl->ElFirstAttr;
-	 found = FALSE;
-	 while (pAttr != NULL && !found)
-	   if (pAttr->AeAttrNum == att &&
-	       !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
-	     found = TRUE;
-	   else
-	     pAttr = pAttr->AeNext;
-       }
+  /* parcourt tous les attributs locaux definis dans la regle */
+  for (i = 0; i < pSRule->SrNLocalAttrs; i++)
+    if (pSRule->SrRequiredAttr[i])
+      /* cet attribut local est requis */
+      {
+	att = pSRule->SrLocalAttr[i];
+	/* cherche si l'element possede cet attribut */
+	pAttr = pEl->ElFirstAttr;
+	found = FALSE;
+	while (pAttr != NULL && !found)
+	  if (pAttr->AeAttrNum == att &&
+	      !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+	    found = TRUE;
+	  else
+	    pAttr = pAttr->AeNext;
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -1015,38 +981,37 @@ static void CheckMandatAttrSRule (PtrElement pEl, SRule *pSRule, PtrSSchema pSS)
 static void CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
 {
 
-   SRule              *pSRule;
-   PtrSSchema          pSS;
+  SRule              *pSRule;
+  PtrSSchema          pSS;
 
-   if (pEl != NULL)
-     {
-	/* traite d'abord les attributs requis par la regle de structure */
-	/* qui definit l'element */
-	pSS = pEl->ElStructSchema;
-	pSRule = &pSS->SsRule[pEl->ElTypeNumber - 1];
-	CheckMandatAttrSRule (pEl, pSRule, pSS);
-	/* traite les attributs requis par toutes les regles d'extension de */
-	/* ce type d'element */
-	pSS = pDoc->DocSSchema;
-	if (pSS != NULL)
-	  {
-	     pSS = pSS->SsNextExtens;
-	     /* parcourt tous les schemas d'extension du document */
-	     while (pSS != NULL)
-	       {
-		  /* cherche dans ce schema d'extension la regle qui concerne
-		     le type de l'element */
-		  pSRule = ExtensionRule (pEl->ElStructSchema,
-					  pEl->ElTypeNumber, pSS);
-		  if (pSRule != NULL)
-		     /* il y a une regle d'extension, on la traite */
-		     CheckMandatAttrSRule (pEl, pSRule, pSS);
-		  /* passe au schema d'extension suivant */
-		  pSS = pSS->SsNextExtens;
-	       }
-	  }
-
-     }
+  if (pEl != NULL)
+    {
+      /* traite d'abord les attributs requis par la regle de structure */
+      /* qui definit l'element */
+      pSS = pEl->ElStructSchema;
+      pSRule = &pSS->SsRule[pEl->ElTypeNumber - 1];
+      CheckMandatAttrSRule (pEl, pSRule, pSS);
+      /* traite les attributs requis par toutes les regles d'extension de */
+      /* ce type d'element */
+      pSS = pDoc->DocSSchema;
+      if (pSS != NULL)
+	{
+	  pSS = pSS->SsNextExtens;
+	  /* parcourt tous les schemas d'extension du document */
+	  while (pSS != NULL)
+	    {
+	      /* cherche dans ce schema d'extension la regle qui concerne
+		 le type de l'element */
+	      pSRule = ExtensionRule (pEl->ElStructSchema,
+				      pEl->ElTypeNumber, pSS);
+	      if (pSRule != NULL)
+		/* il y a une regle d'extension, on la traite */
+		CheckMandatAttrSRule (pEl, pSRule, pSS);
+	      /* passe au schema d'extension suivant */
+	      pSS = pSS->SsNextExtens;
+	    }
+	}
+    }
 }
 
 
@@ -1125,52 +1090,42 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 	 if (!create)
 	   /* on consomme le texte de l'attribut, sans le garder */
 	   do
-	     if (!TtaReadByte (pivFile, &c))
-	       PivotError (pivFile, "Attribute");
-	   while (!error && c != EOS) ;
-	     else
-	       { 
-		 /* acquiert un premier buffer de texte */
-		 GetTextBuffer (&pPremBuff);
-		 pBT = pPremBuff;
-		 /* lit tout le texte de l'attribut */
-		 stop = FALSE;
-		 do
-		   if (!TtaReadWideChar (pivFile,
-					 &pBT->BuContent[pBT->BuLength++],
-					 pDoc->DocCharset))
-		     /* erreur de lecture */
-		     PivotError (pivFile, "Attribute1");
-		   else
-		     /* on a lu correctement un caractere */
-		     if (pBT->BuContent[pBT->BuLength - 1] == EOS)
-		       /* c'est la fin du texte de l'attribut */
-		       stop = TRUE;
-		     else
-		       /* ce n'est pas la fin du texte de l'attribut */
-		       if (pBT->BuLength >= THOT_MAX_CHAR - 1)
-			 /* le buffer courant est plein */
-			 {
-			   /* fin du buffer */
-			   pBT->BuContent[pBT->BuLength] = EOS;
-			   /* acquiert un nouveau buffer */
-			   pBT = NewTextBuffer (pBT);
-			 }
-		 while (!error && !stop);
-		 pBT->BuLength--;
-		 /* convert old language names into RFC-1766 codes */
-		 if (attr == 1)
-		   /* language attribute */
-		   if (strlen(pPremBuff->BuContent) != 2 &&
-		       pPremBuff->BuContent[1] != '-' &&
-		       pPremBuff->BuContent[2] != '-')
-		     /* it's not a valid language code. Convert it */
-		     {
-		       iso2wc_strcpy (pPremBuff->BuContent,
-			    TtaGetLanguageCodeFromName (pPremBuff->BuContent));
-		       pBT->BuLength = strlen (pPremBuff->BuContent);
-		     }
+	     {
+	       if (!TtaReadByte (pivFile, &c))
+		 PivotError (pivFile, "Attribute");
+	     }
+	   while (!error && c != EOS);
+	 else
+	   { 
+	     /* acquiert un premier buffer de texte */
+	     GetTextBuffer (&pPremBuff);
+	     pBT = pPremBuff;
+	     /* lit tout le texte de l'attribut */
+	     stop = FALSE;
+	     do
+	       {
+		 if (!TtaReadWideChar (pivFile,
+				       &pBT->BuContent[pBT->BuLength++],
+				       UTF_8))
+		   /* erreur de lecture */
+		   PivotError (pivFile, "Attribute1");
+		 else if (pBT->BuContent[pBT->BuLength - 1] == WC_EOS)
+		   /* on a lu correctement un caractere */
+		   /* c'est la fin du texte de l'attribut */
+		   stop = TRUE;
+		 else if (pBT->BuLength >= THOT_MAX_CHAR - 1)
+		   /* ce n'est pas la fin du texte de l'attribut */
+		   /* le buffer courant est plein */
+		   {
+		     /* fin du buffer */
+		     pBT->BuContent[pBT->BuLength] = WC_EOS;
+		     /* acquiert un nouveau buffer */
+		     pBT = NewTextBuffer (pBT);
+		   }
 	       }
+	     while (!error && !stop);
+	     pBT->BuLength--;
+	   }
 	 break;
        }
    if (error)
@@ -1190,10 +1145,9 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 	       pA = pEl->ElFirstAttr;
 	       while (pA != NULL && !found)
 		 {
-		   if (pA->AeAttrSSchema == pSchAttr)
-		     if (pA->AeAttrNum == attr)
-		       found = TRUE;
-		   if (!found)
+		   if (pA->AeAttrSSchema == pSchAttr && pA->AeAttrNum == attr)
+		     found = TRUE;
+		   else
 		     pA = pA->AeNext;
 		 }
 	     }
@@ -1920,8 +1874,8 @@ void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
    - createDesc: si cree<desc est faux, on ne cree pas     
    l'element lu ni sa descendance. Prioritaire sur createAll
   ----------------------------------------------------------------------*/
-PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc
-			, char *tag, ThotBool createAll,
+PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc,
+			char *tag, ThotBool createAll,
 			int *contentType, PtrSSchema *pContSS, int *typeRead,
 			PtrSSchema *pSSRead, ThotBool createPage,
 			PtrElement pParent, ThotBool createDesc)
@@ -1939,15 +1893,14 @@ static  LabelString         label;
   BasicType           leafType;
   PageType            pageType;
   ReferenceType       refType;
-  PictureScaling      pres;
   NotifyElement       notifyEl;
   PictInfo           *image;
-  int                 i, j, n, view, pictureType, elType, rule, n1, n2, n3, n4;
+  int                 i, j, n, view, elType, rule, n1, n2, n3, n4;
   char                alphabet;
-  char                c, ch;
+  char                c;
+  CHAR_T              ctext;
   ThotBool            create, inclusion, modif, b1, b2;
-  ThotBool            findtype, refExt, found, withReferences, sign,
-                      newSubPath;
+  ThotBool            refExt, found, withReferences, sign, newSubPath;
   
   pSRule = NULL;
   pEl = NULL;
@@ -2294,8 +2247,7 @@ static  LabelString         label;
 		      }
 		    if (create)
 		      {
-			pEl->ElLanguage =
-			             TtaGetLanguageIdFromAlphabet (alphabet);
+			pEl->ElLanguage = TtaGetLanguageIdFromAlphabet (alphabet);
 			/* verifie que la langue est dans la table des langues
 			   du document */
 			found = FALSE;
@@ -2305,8 +2257,7 @@ static  LabelString         label;
 			if (!found && pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
 			  /* elle n'y est pas, on la met */
 			  {
-			    pDoc->DocLanguages[pDoc->DocNLanguages] =
-			                                      pEl->ElLanguage;
+			    pDoc->DocLanguages[pDoc->DocNLanguages] = pEl->ElLanguage;
 			    pDoc->DocNLanguages++;
 			  }
 		      }
@@ -2315,183 +2266,113 @@ static  LabelString         label;
 	      
 	      if (*tag == C_PIV_BEGIN && !error)
 		{
-		  if (leafType != PageBreak)
-		    if (!TtaReadByte (pivFile, tag))
-		      PivotError (pivFile, "PivotError: Text 1");
-		  if (*tag != C_PIV_END)	/* il y a un contenu */
+		  if (leafType == CharString || leafType == Picture)
 		    {
-		      switch (leafType)
+		      if (!TtaReadWideChar (pivFile,& ctext, UTF_8))
+			PivotError (pivFile, "PivotError: Text 1");
+		      if (ctext != (CHAR_T) C_PIV_END)
 			{
-			case CharString:
-			  if (!create)
-			    /* saute le texte de l'element */
+			  /* not empty contents */
+			  if (!create || ctext == WC_EOS)
+			    /* skip the text */
 			    {
-			      ch = *tag;
-			      while (ch != EOS && !error)
-				if (!TtaReadByte (pivFile, &ch))
-				  PivotError (pivFile,
-					      "PivotError: Text 2");
+			      while (ctext != WC_EOS && !error)
+				if (!TtaReadWideChar (pivFile, &ctext, UTF_8))
+				  PivotError (pivFile, "PivotError: Text 2");
 			    }
 			  else
-			    /* lit le texte et remplit les buffers de texte */
+			    /* read the text into the element buffers */
 			    {
 			      pBuf = pEl->ElText;
 			      n = 0;
 			      pEl->ElTextLength = 0;
-			      ch = *tag;
 			      do
-				if (ch != EOS)
-				  {
-				    if (n == THOT_MAX_CHAR - 1)
-				      {
-					pEl->ElTextLength += n;
-					pBuf->BuLength = n;
-					pBuf->BuContent[n] = EOS;
-					pBuf = NewTextBuffer (pBuf);
-					n = 0;
-				      }
-				    n++;
-				    /* mise a la norme iso des anciens pivots*/
-				    if (pDoc->DocPivotVersion < 3)
-				      if (((int) ch) >= 1 && ch < SPACE)
-					switch (ch)
-					  {
-					  case '\021':
-					    ch = '\040';
-					    break;	/*space */
-					  case '\030':
-					    ch = '\230';
-					    break;	/*oe */
-					  case '\036':
-					    ch = '\377';
-					    break;	/*ydiaresis */
-					  case '\037':
-					    ch = '\351';
-					    break;	/*eacute */
-					  default:
-					    ch = (((int) ch) + 223);
-					  }
-				    /* changement des oe et OE */
-				    if (pDoc->DocPivotVersion < 4)
-				      {
-				      if (ch == '\230')
-					ch = '\367';
-				      else if (ch == '\367')
-					ch = '\230';
-				      else if (ch == '\231')
-					ch = '\327';
-				      else if (ch == '\327')
-					ch = '\231';
-				      }
-				    /* range le caractere et lit le suivant */
-				    pBuf->BuContent[n - 1] = ch;
-				    if (!TtaReadByte (pivFile, &ch))
-				      PivotError (pivFile,
-						  "PivotError: Text 3");
-				  }
-			      while (ch != EOS) ;
+				{
+				  if (n == THOT_MAX_CHAR - 1)
+				    {
+				      if (leafType == Picture)
+					PivotError (pivFile, "PivotError: Picture 2");
+				      pEl->ElTextLength += n;
+				      pBuf->BuLength = n;
+				      pBuf->BuContent[n] = WC_EOS;
+				      pBuf = NewTextBuffer (pBuf);
+				      n = 0;
+				    }
+				  n++;
+				  /* store the character and read the next one */
+				  pBuf->BuContent[n - 1] = ctext;
+				  if (!TtaReadWideChar (pivFile, &ctext, UTF_8))
+				    PivotError (pivFile, "PivotError: Text 3");
+				}
+			      while (ctext != WC_EOS);
 			      pEl->ElTextLength += n;
 			      pBuf->BuLength = n;
-			      pBuf->BuContent[n] = EOS;
+			      pBuf->BuContent[n] = WC_EOS;
 			      pEl->ElVolume = pEl->ElTextLength;
+			      if (leafType == Picture)
+				{
+				  /* complete the Picture information block */
+				  image = (PictInfo *)pEl->ElPictInfo;
+				  if (image != NULL)
+				    image->PicFileName = pBuf->BuContent;
+				}
 			    }
 			  if (!TtaReadByte (pivFile, tag))
 			    PivotError (pivFile, "PivotError: Text 4");
-			  break;
-			case Picture:
-			  if (!create)
-			    /* saute le texte de l'element */
-			    {
-			      ch = *tag;
-			      while (ch != EOS)
-				if (!TtaReadByte (pivFile, &ch))
-				  PivotError (pivFile,
-					      "PivotError: Picture 1");
-			    }
-			  else
-			    /* lit le texte et remplit les buffers de texte */
-			    {
-			      pBuf = pEl->ElPictureName;
-			      n = 0;
-			      pEl->ElNameLength = 0;
-			      ch = *tag;
-			      do
-				if (ch != EOS)
-				  {
-				    /* TODO : nom d'image > THOT_MAX_CHAR */
-				    if (n == THOT_MAX_CHAR - 1)
-					PivotError (pivFile,
-					       "PiveotError: Picture 2");
-				    n++;
-				    /* range le caractere et lit le suivant */
-				    pBuf->BuContent[n - 1] = ch;
-				    if (!TtaReadByte (pivFile, &ch))
-				      PivotError (pivFile,
-						"PivotError: Picture 3");
-				  }
-			      while (ch != EOS);
-
-			      /* on suppose que le nom tient en entier dans un
-				 buffer. On normalise le nom */
-			      strcpy (pBuf->BuContent,
-				       NormalizeFileName (pBuf->BuContent,
-							  &pictureType,
-							  &pres, &findtype));
-			      if (findtype)
-				{
-				  /* on a trouve une image v1, on cree une
-				     regle de presentation PictInfo pour
-				     l'element */
-				  SetImageRule (pEl, 0, 0, 0, 0, pictureType,
-						pres);
-				}
-			      /* complete the Picture information block */
-			      image = (PictInfo *)pEl->ElPictInfo;
-			      if (image != NULL)
-				image->PicFileName = pBuf->BuContent;
-			      pEl->ElNameLength += n;
-			      pBuf->BuLength = n;
-			      pBuf->BuContent[n] = EOS;
-			      pEl->ElVolume = pEl->ElNameLength;
-			    }
+			}
+		    }
+		  else if (leafType == PageBreak)
+		    {
+		      /* read the page number and the type of page */
+		      TtaReadShort (pivFile, &n);
+		      TtaReadShort (pivFile, &view);
+		      pageType = ReadPageType (pivFile);
+		      modif = ReadBoolean (pivFile);
+		      if (create)
+			{
+			  pEl->ElPageNumber = n;
+			  pEl->ElViewPSchema = view;
+			  pEl->ElPageType = pageType;
+			  pEl->ElPageModified = modif;
+			}
+		      if (!TtaReadByte (pivFile, tag))
+			PivotError (pivFile, "PivotError: PageBreak");
+		    }
+		  else
+		    {
+		      if (!TtaReadByte (pivFile, tag))
+			PivotError (pivFile, "PivotError: Text 1");
+		      if (*tag != C_PIV_END &&
+			  (leafType == Symbol || leafType == GraphicElem))
+			{
+			  /* the code that gives the form was read */
+			  c = *tag;
+			  /* read the next byte */
 			  if (!TtaReadByte (pivFile, tag))
-			    PivotError (pivFile,
-					"PivotError: Picture 4");
-			  break;
-			case Symbol:
-			case GraphicElem:
-			  /* on a lu le code representant la forme */
-			  ch = *tag;
-			  /* lit l'octet qui suit */
-			  if (!TtaReadByte (pivFile, tag))
-			    PivotError (pivFile,
-					"PivotError: Graphic 1");
+			    PivotError (pivFile, "PivotError: Graphic 1");
 			  else if (*tag == C_PIV_POLYLINE)
-			    /* c'est une Polyline */
 			    {
-			      /* lit le nombre de points de la ligne */
+			      /* read the number of points in the polyline */
 			      if (!TtaReadShort (pivFile, &n))
-				PivotError (pivFile,
-					    "PivotError: Polyline");
-			      /* lit tous les points */
+				PivotError (pivFile, "PivotError: Polyline");
+			      /* read all points */
 			      else if (!create)
 				for (i = 0; i < n; i++)
 				  TtaReadInteger (pivFile, &j);
 			      else
 				{
-				  /* transforme l'element graphique simple
-				     en Polyline */
+				  /* transform into a Polyline */
 				  pEl->ElLeafType = LtPolyLine;
 				  GetTextBuffer (&pEl->ElPolyLineBuffer);
 				  pEl->ElVolume = n;
-				  pEl->ElPolyLineType = ch;
+				  pEl->ElPolyLineType = c;
 				  pEl->ElNPoints = n;
 				  pBuf = pEl->ElPolyLineBuffer;
 				  j = 0;
 				  for (i = 0; i < n; i++)
 				    {
 				      if ((unsigned)j >= MAX_POINT_POLY)
-					/* buffer courant plein */
+					/* buffer if full */
 					{
 					  pBuf = NewTextBuffer (pBuf);
 					  j = 0;
@@ -2506,8 +2387,7 @@ static  LabelString         label;
 				}
 			      /* lit l'octet qui suit (tag de fin d'element) */
 			      if (!TtaReadByte (pivFile, tag))
-				PivotError (pivFile,
-					    "PivotError: Polyline 1");
+				PivotError (pivFile, "PivotError: Polyline 1");
 			    }
 			  else if (*tag == C_PIV_PATH)
 			    /* c'est un path graphique */
@@ -2524,8 +2404,7 @@ static  LabelString         label;
 			      /* lit l'octet qui suit (type d'element de path
 			         ou tag de fin d'element) */
 			      if (!TtaReadByte (pivFile, tag))
-				PivotError (pivFile,
-					    "PivotError: Path 1");
+				PivotError (pivFile, "PivotError: Path 1");
 			      else
 				{
 				while (*tag != C_PIV_END)
@@ -2642,7 +2521,7 @@ static  LabelString         label;
 			    {
 			      if (create)
 				{
-				  pEl->ElGraph = ch;
+				  pEl->ElGraph = c;
 				  pEl->ElWideChar = 0;
 				  /* remplace les anciens rectangles trame's */
 				  /* par de simple rectangles */
@@ -2652,33 +2531,12 @@ static  LabelString         label;
 				  else if (pEl->ElGraph >= '\260' &&
 					   pEl->ElGraph <= '\270')
 				    pEl->ElGraph = 'R';
-				  if (ch == EOS)
+				  if (c == EOS)
 				    pEl->ElVolume = 0;
 				  else
 				    pEl->ElVolume = 1;
 				}
 			    }
-			  break;
-			case PageBreak:
-			  /* lit le numero de page et */
-			  /* le type de page */
-			  TtaReadShort (pivFile, &n);
-			  TtaReadShort (pivFile, &view);
-			  pageType = ReadPageType (pivFile);
-			  modif = ReadBoolean (pivFile);
-			  if (create)
-			    {
-			      pEl->ElPageNumber = n;
-			      pEl->ElViewPSchema = view;
-			      pEl->ElPageType = pageType;
-			      pEl->ElPageModified = modif;
-			    }
-			  if (!TtaReadByte (pivFile, tag))
-			    PivotError (pivFile,
-					"PivotError: PageBreak");
-			  break;
-			default:
-			  break;
 			}
 		      
 		    }
@@ -3016,7 +2874,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
    rank = 1;
    /* lit le type du document */
    do
-     if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
+     if (!TtaReadByte (file, &SSName[i++]))
        PivotError (file, "PivotError: Schema");
    while (!error && SSName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
    if (SSName[i - 1] != EOS)
@@ -3031,7 +2889,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        /* Lit le nom du schema de presentation associe' */
        i = 0;
        do
-	 if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
+	 if (!TtaReadByte (file, &PSchemaName[i++]))
 	   PivotError (file, "PivotError: Schema 3");
        while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
 
@@ -3078,7 +2936,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        i = 0;
        rank++;
        do
-	 if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
+	 if (!TtaReadByte (file, &SSName[i++]))
 	   PivotError (file, "PivotError: Schema ext");
        while (SSName[i - 1] != EOS && !error) ;
        if (pDoc->DocPivotVersion >= 4)
@@ -3096,7 +2954,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 	   PSchemaName[0] = *tag;
 	   i = 1;
 	   do
-	     if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
+	     if (!TtaReadByte (file, &PSchemaName[i++]))
 	       PivotError (file, "PivotError: Schema 9");
 	   while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
 
@@ -3166,7 +3024,7 @@ void ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char *tag)
        {
 	 i = 0;
 	 do
-	   if (!TtaReadWideChar (file, &languageName[i++], ISO_8859_1))
+	   if (!TtaReadByte (file, &languageName[i++]))
 	     PivotError (file, "PivotError: Language 2");
 	 while (!error && languageName[i - 1] != EOS &&
 		i != MAX_NAME_LENGTH) ;

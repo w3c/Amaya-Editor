@@ -1058,242 +1058,239 @@ void WIN_InitDialogueFonts (HDC hDC, char* name)
 void InitDialogueFonts (char* name)
 #endif /* _WINDOWS */
 {
-#  ifndef _WINDOWS
-   int              ndir, ncurrent;
-   char             FONT_PATH[128];
-   char            *fontpath;
-#  endif /* _WINDOWS */
-   char**           dirlist = NULL;
-   char**           currentlist = NULL;
-   char*          value;
-   char             alphabet;
-   int              f3;
-   int              i;
+#ifndef _WINDOWS
+  int              ndir, ncurrent;
+  char             FONT_PATH[128];
+  char            *fontpath;
+#endif /* _WINDOWS */
+  char           **dirlist = NULL;
+  char           **currentlist = NULL;
+  char            *value;
+  char             alphabet;
+  int              f3;
+  int              i;
 
-   /* is there a predefined font family ? */
-   MenuSize = 12;
-   alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
-   /* initialize the font zoom */
-   TtaGetEnvInt ("ZOOM",&FontZoom);
-   value = TtaGetEnvString ("FontFamily");
-   MaxNumberOfSizes = 10;
-   if (value == NULL)
-     {
-	FontFamily = TtaGetMemory (8);
-	strcpy (FontFamily, "-");
-	strcat (FontFamily, "*");
-     }
-   else
-     {
-	FontFamily = TtaGetMemory (strlen (value) + 1);
-	wc2iso_strcpy (FontFamily, value);
-	if (!strcmp (FontFamily, "-b&h-lucida"))
-	   UseLucidaFamily = TRUE;
-	else
-	  {
-	     UseLucidaFamily = FALSE;
-	     if (!strcmp (FontFamily, "gipsi-bitstream"))
-	       {
-		  UseBitStreamFamily = TRUE;
-		  /* Changes size 30, 40 and 60 to resp. 36, 48 et 72 */
-		  LogicalPointsSizes[MaxNumberOfSizes] = 72;
-		  LogicalPointsSizes[MaxNumberOfSizes - 1] = 48;
-		  LogicalPointsSizes[MaxNumberOfSizes - 2] = 36;
-		  MenuSize = 11;
-	       }
-	     else
-		UseBitStreamFamily = FALSE;
-	  }
-     }
+  /* is there a predefined font family ? */
+  MenuSize = 12;
+  alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
+  /* initialize the font zoom */
+  TtaGetEnvInt ("ZOOM",&FontZoom);
+  value = TtaGetEnvString ("FontFamily");
+  MaxNumberOfSizes = 10;
+  if (value == NULL)
+    {
+      FontFamily = TtaGetMemory (8);
+      strcpy (FontFamily, "-");
+      strcat (FontFamily, "*");
+    }
+  else
+    {
+      FontFamily = TtaGetMemory (strlen (value) + 1);
+      strcpy (FontFamily, value);
+      if (!strcmp (FontFamily, "-b&h-lucida"))
+	UseLucidaFamily = TRUE;
+      else
+	{
+	  UseLucidaFamily = FALSE;
+	  if (!strcmp (FontFamily, "gipsi-bitstream"))
+	    {
+	      UseBitStreamFamily = TRUE;
+	      /* Changes size 30, 40 and 60 to resp. 36, 48 et 72 */
+	      LogicalPointsSizes[MaxNumberOfSizes] = 72;
+	      LogicalPointsSizes[MaxNumberOfSizes - 1] = 48;
+	      LogicalPointsSizes[MaxNumberOfSizes - 2] = 36;
+	      MenuSize = 11;
+	    }
+	  else
+	    UseBitStreamFamily = FALSE;
+	}
+    }
 #ifdef _WINDOWS
-   DOT_PER_INCHE = GetDeviceCaps(hDC, LOGPIXELSY);
+  DOT_PER_INCHE = GetDeviceCaps(hDC, LOGPIXELSY);
 #else  /* !_WINDOWS */
-   DOT_PER_INCHE = 72;
+  DOT_PER_INCHE = 72;
 #endif /* _WINDOWS */
 
-
-   /* Is there any predefined size for menu fonts ? */
-   value = TtaGetEnvString ("FontMenuSize");
-   if (value != NULL)
-      sscanf (value, "%d", &MenuSize);
-   f3 = MenuSize + 2;
-
+  /* Is there any predefined size for menu fonts ? */
+  value = TtaGetEnvString ("FontMenuSize");
+  if (value != NULL)
+    sscanf (value, "%d", &MenuSize);
+  f3 = MenuSize + 2;
+  
 #ifndef _WINDOWS
-   fontpath = TtaGetEnvString ("THOTFONT");
-   if (fontpath)
-     {
-	wc2iso_strcpy (FONT_PATH, fontpath);
-	strcat (FONT_PATH, "/");
-
-	/* Add the directory to the X server font path */
-	currentlist = XGetFontPath (TtDisplay, &ncurrent);
-	ndir = 1;
-	/* check that the directory is not already in the list */
-	i = 0;
-	while ((ndir == 1) && (i < ncurrent))
-	  {
-	     if (strncmp (currentlist[i], FONT_PATH, strlen (currentlist[i]) - 1) == 0)
-		ndir = 0;
-	     else
-		i++;
-	  }
-
-	/* Should we write down the new value ? */
-	if (ndir > 0)
-	  {
-	     ndir += ncurrent;
-	     dirlist = (char**) TtaGetMemory (ndir * sizeof(char*));
-
-	     if (currentlist != NULL)
+  fontpath = TtaGetEnvString ("THOTFONT");
+  if (fontpath)
+    {
+      strcpy (FONT_PATH, fontpath);
+      strcat (FONT_PATH, "/");
+      
+      /* Add the directory to the X server font path */
+      currentlist = XGetFontPath (TtDisplay, &ncurrent);
+      ndir = 1;
+      /* check that the directory is not already in the list */
+      i = 0;
+      while ((ndir == 1) && (i < ncurrent))
+	{
+	  if (strncmp (currentlist[i], FONT_PATH, strlen (currentlist[i]) - 1) == 0)
+	    ndir = 0;
+	  else
+	    i++;
+	}
+      
+      /* Should we write down the new value ? */
+      if (ndir > 0)
+	{
+	  ndir += ncurrent;
+	  dirlist = (char**) TtaGetMemory (ndir * sizeof(char*));
+	  
+	  if (currentlist != NULL)
 #ifdef SYSV
-		memcpy (dirlist, currentlist, ncurrent * sizeof (char*));
-
+	    memcpy (dirlist, currentlist, ncurrent * sizeof (char*));
 #else /* SYSV */
-		bcopy (currentlist, dirlist, ncurrent * sizeof (char*));
-
+	    bcopy (currentlist, dirlist, ncurrent * sizeof (char*));
 #endif /* SYSV */
-	     dirlist[ncurrent] = FONT_PATH;
-	     XSetFontPath (TtDisplay, dirlist, ndir);
-	     TtaFreeMemory ( dirlist);
-	  }
-	TtaFreeMemory ( currentlist);
-     }
+	  dirlist[ncurrent] = FONT_PATH;
+	  XSetFontPath (TtDisplay, dirlist, ndir);
+	  TtaFreeMemory ( dirlist);
+	}
+      TtaFreeMemory ( currentlist);
+    }
 #ifndef _GTK
-   for (i = 0; i < MAX_FONT; i++)
-     TtPatchedFont[i] = 0;
+  for (i = 0; i < MAX_FONT; i++)
+    TtPatchedFont[i] = 0;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
-   /* Initialize the Thot Lib standards fonts */
-   FontDialogue = IFontDialogue = LargeFontDialogue = NULL;
-   SymbolIcons = NULL;
-   GraphicsIcons = NULL;
-   SmallFontDialogue = NULL;
+  /* Initialize the Thot Lib standards fonts */
+  FontDialogue = IFontDialogue = LargeFontDialogue = NULL;
+  SymbolIcons = NULL;
+  GraphicsIcons = NULL;
+  SmallFontDialogue = NULL;
 
-   /* Initialize the font table */
-   for (i = 0; i < MAX_FONT; i++)
-     TtFonts[i] = NULL;
-   /* load first five predefined fonts */
-   FontDialogue = ThotLoadFont (alphabet, 't', 0, MenuSize, UnPoint, 0);
-   if (FontDialogue == NULL)
-     {
-	FontDialogue = ThotLoadFont (alphabet, 'l', 0, MenuSize, UnPoint, 0);
-	if (FontDialogue == NULL)
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
-     }
+  /* Initialize the font table */
+  for (i = 0; i < MAX_FONT; i++)
+    TtFonts[i] = NULL;
+  /* load first five predefined fonts */
+  FontDialogue = ThotLoadFont (alphabet, 't', 0, MenuSize, UnPoint, 0);
+  if (FontDialogue == NULL)
+    {
+      FontDialogue = ThotLoadFont (alphabet, 'l', 0, MenuSize, UnPoint, 0);
+      if (FontDialogue == NULL)
+	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
+    }
 
-   IFontDialogue = ThotLoadFont (alphabet, 't', 2, MenuSize, UnPoint, 0);
-   if (IFontDialogue == NULL)
-     {
-	IFontDialogue = ThotLoadFont (alphabet, 'l', 2, MenuSize, UnPoint, 0);
-	if (IFontDialogue == NULL)
-	   IFontDialogue = FontDialogue;
-     }
+  IFontDialogue = ThotLoadFont (alphabet, 't', 2, MenuSize, UnPoint, 0);
+  if (IFontDialogue == NULL)
+    {
+      IFontDialogue = ThotLoadFont (alphabet, 'l', 2, MenuSize, UnPoint, 0);
+      if (IFontDialogue == NULL)
+	IFontDialogue = FontDialogue;
+    }
 
-   LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
-   if (LargeFontDialogue == NULL)
-     {
-	LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
-	if (LargeFontDialogue == NULL)
-	   LargeFontDialogue = IFontDialogue;
-     }
-   FirstRemovableFont = 3;
+  LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
+  if (LargeFontDialogue == NULL)
+    {
+      LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
+      if (LargeFontDialogue == NULL)
+	LargeFontDialogue = IFontDialogue;
+    }
+  FirstRemovableFont = 3;
 }
 
 /*----------------------------------------------------------------------
  *      ThotFreeFont free the font familly loaded by a frame.
   ----------------------------------------------------------------------*/
-void                ThotFreeFont (int frame)
+void ThotFreeFont (int frame)
 {
-    /* TODO : Free the gtk fonts */
-   int                 i, j, mask;
-   int                 flag;
+  /* TODO : Free the gtk fonts */
+  int                 i, j, mask;
+  int                 flag;
 
-   if (frame > 0)
-     {
-	/* compute the frame mask */
-	mask = 1 << (frame - 1);
-
-	i = FirstRemovableFont;
-	/* keep the first fonts */
-	while (i < MAX_FONT && TtFonts[i] != NULL)
-	  {
-	     /* if this font family is only used by this frame */
-	     if (TtFontFrames[i] == mask)
-	       {
-		  j = 0;
-		  flag = 0;
-		  while (flag == 0)
-		    {
-		       if (j == MAX_FONT)
-			  flag = 1;
-		       else if (j == i)
-			  j++;
-		       else if (TtFonts[j] == TtFonts[i])
-			  flag = 1;
-		       else
-			  j++;
-		    }
-
-		  /* Shall we free this family ? */
+  if (frame > 0)
+    {
+      /* compute the frame mask */
+      mask = 1 << (frame - 1);
+      
+      i = FirstRemovableFont;
+      /* keep the first fonts */
+      while (i < MAX_FONT && TtFonts[i] != NULL)
+	{
+	  /* if this font family is only used by this frame */
+	  if (TtFontFrames[i] == mask)
+	    {
+	      j = 0;
+	      flag = 0;
+	      while (flag == 0)
+		{
 		  if (j == MAX_FONT)
+		    flag = 1;
+		  else if (j == i)
+		    j++;
+		  else if (TtFonts[j] == TtFonts[i])
+		    flag = 1;
+		  else
+		    j++;
+		}
+
+	      /* Shall we free this family ? */
+	      if (j == MAX_FONT)
 #ifdef _WINDOWS
-		    {
-		      DeleteObject (SelectObject (TtDisplay, ActiveFont));
-		      TtaFreeMemory (TtFonts[i]);
-		    }
+		{
+		  DeleteObject (SelectObject (TtDisplay, ActiveFont));
+		  TtaFreeMemory (TtFonts[i]);
+		}
 #else  /* _WINDOWS */
 #ifdef _GTK
-		  gdk_font_unref (TtFonts[i]);
+	        gdk_font_unref (TtFonts[i]);
 #else /* _GTK */
-		  {
-		    /* remove the indicator */
-		    if (TtPatchedFont[i])
-		      TtPatchedFont[i] = 0;
-		    XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
-		  }
+		{
+		  /* remove the indicator */
+		  if (TtPatchedFont[i])
+		    TtPatchedFont[i] = 0;
+		  XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
+		}
 #endif /* _GTK */
 #endif /* _WINDOWS */
-		  TtFonts[i] = NULL;
-		  TtFontFrames[i] = 0;
-	       }
-	     else
-		TtFontFrames[i] = TtFontFrames[i] & (~mask);
-	     i++;
-	  }
+	      TtFonts[i] = NULL;
+	      TtFontFrames[i] = 0;
+	    }
+	  else
+	    TtFontFrames[i] = TtFontFrames[i] & (~mask);
+	  i++;
+	}
 
-	/* pack the font table */
-	j = FirstRemovableFont;
-	i--;
-	while (j < i)
-	  {
-	     while (TtFonts[j] != NULL)
-	       {
-		  j++;
-		  /* skip the used entries */
-	       }
-	     while (TtFonts[i] == NULL)
-	       {
-		  i--;
-		  /* skip the empty entries */
-	       }
-	     if (j < i)
-	       {
-		  TtFonts[j] = TtFonts[i];
-		  TtFonts[i] = NULL;
-		  TtFontFrames[j] = TtFontFrames[i];
-		  strcpy (&TtFontName[j * MAX_FONTNAME], &TtFontName[i * MAX_FONTNAME]);
-		  i--;
-		  j++;
-	       }
-	  }
-     }
+      /* pack the font table */
+      j = FirstRemovableFont;
+      i--;
+      while (j < i)
+	{
+	  while (TtFonts[j] != NULL)
+	    {
+	      j++;
+	      /* skip the used entries */
+	    }
+	  while (TtFonts[i] == NULL)
+	    {
+	      i--;
+	      /* skip the empty entries */
+	    }
+	  if (j < i)
+	    {
+	      TtFonts[j] = TtFonts[i];
+	      TtFonts[i] = NULL;
+	      TtFontFrames[j] = TtFontFrames[i];
+	      strcpy (&TtFontName[j * MAX_FONTNAME], &TtFontName[i * MAX_FONTNAME]);
+	      i--;
+	      j++;
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
  *      ThotFreeAllFonts
   ----------------------------------------------------------------------*/
-void                ThotFreeAllFonts (void)
+void ThotFreeAllFonts (void)
 {
    TtaFreeMemory (FontFamily);
    TtaFreeMemory (FontDialogue);

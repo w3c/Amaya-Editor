@@ -15,12 +15,8 @@ extern CHAR_T *ustrchr ( const CHAR_T *src,
                          CHAR_T c );
 extern int ustrcmp ( const CHAR_T *str1,
                      const CHAR_T *str2 );
-extern int ustrcoll ( const CHAR_T *str1,
-                      const CHAR_T *str2 );
 extern CHAR_T *ustrcpy ( CHAR_T *dest,
                          const CHAR_T *src );
-extern CHAR_T *iso2wc_strcpy ( CHAR_T *dest,
-                               const char *src );
 extern size_t ustrlen ( const CHAR_T *str );
 extern int ustrncasecmp ( const CHAR_T *str1,
                           const CHAR_T *str2,
@@ -40,9 +36,7 @@ extern CHAR_T *ustrtok ( CHAR_T *str,
                          const CHAR_T *delemiter );
 extern CHAR_T *ustrstr ( const CHAR_T *str,
                          const CHAR_T *strCharSet );
-extern char *wc2iso_strcpy ( char *dest,
-                             const CHAR_T *src );
-extern CHARSET TtaGetCharset ( const CHAR_T *charsetname );
+extern CHARSET TtaGetCharset ( char *charsetname );
 extern char *TtaGetCharsetName ( CHARSET charset );
 
 #else /* __STDC__ */
@@ -56,12 +50,8 @@ extern CHAR_T *ustrchr (/* const CHAR_T *src,
                            CHAR_T c */);
 extern int ustrcmp (/* const CHAR_T *str1,
                        const CHAR_T *str2 */);
-extern int ustrcoll (/* const CHAR_T *str1,
-                        const CHAR_T *str2 */);
 extern CHAR_T *ustrcpy (/* CHAR_T *dest,
                            const CHAR_T *src */);
-extern CHAR_T *iso2wc_strcpy (/* CHAR_T *dest,
-                                 const char *src */);
 extern size_t ustrlen (/* const CHAR_T *str */);
 extern int ustrncasecmp (/* const CHAR_T *str1,
                             const CHAR_T *str2,
@@ -81,9 +71,7 @@ extern CHAR_T *ustrtok (/* CHAR_T *str,
                            const CHAR_T *delemiter */);
 extern CHAR_T *ustrstr (/* const CHAR_T *str,
                            const CHAR_T *strCharSet */);
-extern char *wc2iso_strcpy (/* char *dest,
-                               const CHAR_T *src */);
-extern CHARSET TtaGetCharset (/* const CHAR_T *charsetname */);
+extern CHARSET TtaGetCharset (/* char *charsetname */);
 extern char *TtaGetCharsetName (/* CHARSET charset */);
 
 #endif /* __STDC__ */

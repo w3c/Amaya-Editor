@@ -255,7 +255,7 @@ static int      ProfileBase;
 static char     Profile [MAX_LENGTH];
 static char     Profiles_File [MAX_LENGTH];
 #define MAX_PRO 50
-static char*    MenuText[MAX_PRO];
+static char    *MenuText[MAX_PRO];
 
 /* Templates menu option */
 #ifdef _WINDOWS
@@ -459,7 +459,7 @@ void InitAmayaDefEnv (void)
    care of switching the toggle button according to the status of the
    variable.
   ----------------------------------------------------------------------*/
-static void GetDefEnvToggle (char* name, ThotBool *value, int ref, int entry)
+static void GetDefEnvToggle (char *name, ThotBool *value, int ref, int entry)
 {
   ThotBool old = *value;
 
@@ -477,7 +477,7 @@ static void GetDefEnvToggle (char* name, ThotBool *value, int ref, int entry)
    GetDefEnvString: front end to TtaGetDefEnvString. If the variable name 
    doesn't exist, it sets the value to an empty ("") string
   ----------------------------------------------------------------------*/
-static void GetDefEnvString (char* name, char  *value)
+static void GetDefEnvString (char *name, char  *value)
 {
   char  *ptr;
 
@@ -2749,11 +2749,8 @@ void         ColorConfMenu (Document document, View view)
   Restores the default integer geometry values that are stored in a 
   registry entry under the form "x y w h"
   ----------------------------------------------------------------------*/
-static void RestoreDefEnvGeom (char* env_var, Document doc)
+static void RestoreDefEnvGeom (char *env_var, Document doc)
 {
-  char   EnvVar[MAX_LENGTH];
-  iso2wc_strcpy (EnvVar, env_var);
-
   /* in order to read the default values from HTML.conf, we erase the 
      registry entry */
   TtaClearEnvString (env_var);
@@ -2764,7 +2761,7 @@ static void RestoreDefEnvGeom (char* env_var, Document doc)
   Gets the current geometry for a view and saves it in the registry
   using the format "x y w h"
   ----------------------------------------------------------------------*/
-static void SetEnvGeom (char* view_name, Document doc)
+static void SetEnvGeom (char *view_name, Document doc)
 {
   int view;
   int x, y, w, h;

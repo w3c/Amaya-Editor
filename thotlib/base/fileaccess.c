@@ -118,38 +118,6 @@ ThotBool TtaReadWideChar (BinFile file, char *bval, CHARSET encoding)
       *bval = TtaGetUnicodeValueFrom_ISO_8859_9_Code (car);
       break;
 
-    case WINDOWS_1250:
-      *bval = TtaGetUnicodeValueFromWindows1250CP (car);
-      break;
-
-    case WINDOWS_1251:
-      *bval = TtaGetUnicodeValueFromWindows1251CP (car);
-      break;
-
-    case WINDOWS_1252:
-      *bval = TtaGetUnicodeValueFromWindows1252CP (car);
-      break;
-
-    case WINDOWS_1253:
-      *bval = TtaGetUnicodeValueFromWindows1253CP (car);
-      break;
-
-    case WINDOWS_1254:
-      *bval = TtaGetUnicodeValueFromWindows1254CP (car);
-      break;
-
-    case WINDOWS_1255:
-      *bval = TtaGetUnicodeValueFromWindows1255CP (car);
-      break;
-
-    case WINDOWS_1256:
-      *bval = TtaGetUnicodeValueFromWindows1256CP (car);
-      break;
-
-    case WINDOWS_1257:
-      *bval = TtaGetUnicodeValueFromWindows1257CP (car);
-      break;
-
     case UTF_8:
       if (car < 0xC0)
 	nbBytesToRead = 1;
@@ -202,7 +170,7 @@ ThotBool TtaReadWideChar (BinFile file, char *bval, CHARSET encoding)
   return (TRUE);
 #else  /* !_I18N_ */
   return TtaReadByte (file, bval);
-#endif /* !_I18N_ */ 
+#endif /* !_I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -330,24 +298,24 @@ ThotBool TtaReadInteger (BinFile file, int *sval)
   ----------------------------------------------------------------------*/
 ThotBool TtaReadName (BinFile file, char *name)
 {
-   int                 i;
+  int                 i;
 
-   for (i = 0; i < MAX_NAME_LENGTH; i++)
-     {
-        if (!TtaReadWideChar (file, &name[i], ISO_8859_1))
-           {
-              name[i] = EOS;
-              return FALSE;
-           }
-        if (name[i] == EOS)
-           break;
-     }
-   if (i >= MAX_NAME_LENGTH)
-      {
-         name[0] = EOS;
-         return FALSE;
-      }
-   return TRUE;
+  for (i = 0; i < MAX_NAME_LENGTH; i++)
+    {
+      if (!TtaReadByte (file, &name[i]))
+	{
+	  name[i] = EOS;
+	  return FALSE;
+	}
+      if (name[i] == EOS)
+	break;
+    }
+  if (i >= MAX_NAME_LENGTH)
+    {
+      name[0] = EOS;
+      return FALSE;
+    }
+  return TRUE;
 }
 
 
@@ -419,17 +387,17 @@ ThotBool TtaWriteByte (BinFile file, char bval)
 ThotBool TtaWriteWideChar (BinFile file, char val, CHARSET encoding)
 {
 #ifdef _I18N_
-   unsigned char mbc[MAX_BYTES + 1] = "\0";
+   unsigned char mbc[MAX_BYTES + 1];
    int           nbBytes;
    int           i;
 
+   mbc[0] = WC_EOS;
    nbBytes = TtaWC2MB (val, mbc, encoding);
    if (nbBytes == -1)
       return FALSE;
    if (fwrite ((char *) mbc, sizeof (char), nbBytes, file) == 0)
       return FALSE;
    return TRUE;
-   
 #else  /* !_I18N_ */
    if (fwrite ((char *) &val, sizeof (char), 1, file) == 0)
       return FALSE;
@@ -454,19 +422,14 @@ ThotBool TtaWriteShort (BinFile file, int sval)
    -------------------------------------------------------------------- */
 ThotBool TtaWriteInteger (BinFile file, int lval)
 {
-
    if (!TtaWriteByte (file, (char) ((lval >> DECAL_3) & LMASK)))
       return FALSE;
-
    if (!TtaWriteByte (file, (char) ((lval >> DECAL_2) & LMASK)))
       return FALSE;
-
    if (!TtaWriteByte (file, (char) ((lval >> DECAL_1) & LMASK)))
       return FALSE;
-
    if (!TtaWriteByte (file, (char) (lval & LMASK)))
       return FALSE;
-
    return TRUE;
 }
 
@@ -477,29 +440,11 @@ ThotBool TtaWriteInteger (BinFile file, int lval)
 void TtaWriteDocIdent (BinFile file, DocumentIdentifier Ident)
 {
    int                 j;
-#ifdef _I18N_
-   char                mbcstr[3] = "\0";
-   int                 nbBytes;
-   char              WCcar;
-#endif /* _I18N_ */
 
    j = 1;
    while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != EOS)
      {
-#ifdef _I18N_
-       WCcar = Ident[j - 1];
-       nbBytes = wctomb (mbcstr, WCcar);
-       switch (nbBytes) {
-       case 1: TtaWriteByte (file, mbcstr[0]);
-	 break;
-       case 2: TtaWriteByte (file, mbcstr[0]);
-	 TtaWriteByte (file, mbcstr[1]);
-	 break;
-       default: break;
-       }
-#else  /* !_I18N_ */
        TtaWriteByte (file, Ident[j - 1]);
-#endif /* !_I18N_ */
        j++;
      }
    /* termine le nom par un octet nul */
@@ -514,13 +459,8 @@ void TtaReadDocIdent (BinFile file, DocumentIdentifier *Ident)
    int j = 0;
    
    do
-#ifdef _I18N_
-     if (!TtaReadWideChar (file, &((*Ident)[j++]), ISO_8859_1))
-       (*Ident)[j - 1] = EOS;
-#else /* !_I18N_ */
    if (!TtaReadByte (file, &((*Ident)[j++])))
      (*Ident)[j - 1] = EOS;
-#endif /* !_I18N_ */
    while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == EOS)) ;
 }
 
@@ -577,8 +517,8 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
    char               URL_DIR_SEP;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
-      return;			/* No input text or error in input parameters */
-
+     /* No input text or error in input parameters */
+      return;
    if (text && strchr (text, '/'))
      URL_DIR_SEP = '/';
    else 
@@ -598,8 +538,8 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
 	     oldptr = &ptr[1];
 	 }
        while (ptr != NULL);
-       
-       i = ((int) (oldptr) - (int) (text)) / sizeof (char);	/* the length of the directory part */
+       /* the length of the directory part */
+       i = ((int) (oldptr) - (int) (text)) / sizeof (char);
        if (i > 1)
 	 {
 	   strncpy (aDirectory, text, i);
@@ -611,11 +551,11 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
        if (i != lg)
           strcpy (aName, oldptr);
      }
-#    ifdef _WINDOWS
+#ifdef _WINDOWS
      lg = strlen (aName);
      if (!strcasecmp (&aName[lg - 4], ".exe"))
         aName[lg - 4] = EOS;
-#    endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -764,78 +704,72 @@ void FindCompleteName (char *fileName, char *extension,
 		       PathBuffer directory, PathBuffer completeName,
 		       int *length)
 {
-   int              i, j, k, h = 0;
-   char            *home_dir = NULL;
+  int              i, j, k, h = 0;
+  char            *home_dir = NULL;
 
-   /* on recopie le repertoire */
-   i = strlen (directory);
-   j = strlen (fileName);
+  /* on recopie le repertoire */
+  i = strlen (directory);
+  j = strlen (fileName);
+  /* check for tilde indicating the HOME directory */
+  if (directory[0] == '~')
+    {
+#ifdef _WINDOWS
+      home_dir = NULL;
+#else  /* !_WINDOWS */
+      home_dir = TtaGetEnvString ("HOME");
+      if (home_dir != NULL)
+	{
+	  /* tilde will not be copied */
+	  i--;
+	  h = strlen (home_dir);
+	}
+#endif /* _WINDOWS */
+    }
+  if (i > 1)
+    /* for the added DIR_STR */
+    i++;
 
-   /* check for tilde indicating the HOME directory */
-   if (directory[0] == '~')
-     {
-#   ifdef _WINDOWS
-    home_dir = NULL;
-#   else  /* !_WINDOWS */
-	home_dir = TtaGetEnvString ("HOME");
-#   endif /* _WINDOWS */
-
-	if (home_dir != NULL)
-	  {
-	    /* tilde will not be copied */
-	    i--;
-	    h = strlen (home_dir);
-	  }
-     }
-   if (i > 1)
-      /* for the added DIR_STR */
-      i++;
-
-   /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
-      termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (strcmp (extension, "PIV") == 0)
-     {
-	if (j > 4)
-	   if (fileName[j - 4] == '.')
-	      if (fileName[j - 3] == 'p')
-		 if (fileName[j - 2] == 'i')
-		    if (fileName[j - 1] == 'v')
-		      {
-			 fileName[j - 3] = 'P';
-			 fileName[j - 2] = 'I';
-			 fileName[j - 1] = 'V';
-		      }
-     }
-   if (!IsExtended (fileName, extension) && extension[0] != EOS)
-      k = strlen (extension) + 1;	/* dont forget the '.' */
-   else
-      k = 0;
-   if (i + j + k + h >= MAX_PATH)
-      return;
-
-   completeName[0] = EOS;
-   if (home_dir)
-     {
-       strcat (completeName, home_dir);
-       strcat (completeName, &directory[1]);
-     }
-   else
-     strcat (completeName, directory);
-
-   /* on ajoute un DIR_STR */
-   if (i >= 1)
-     strcat (completeName, DIR_STR);
-
-   /* on recopie le nom */
-   strcat (completeName, fileName);
-   if (k != 0)
-     {
-	/* on ajoute l'extension */
-	strcat (completeName, ".");
-	strcat (completeName, extension);
-     }
-   /* on termine la chaine */
-   *length = i + j + k + h;
+  /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
+     termine par ".piv", on remplace ce suffixe par ".PIV" */
+  if (strcmp (extension, "PIV") == 0)
+    {
+      if (j > 4 &&
+	  fileName[j - 4] == '.' && fileName[j - 3] == 'p' &&
+	  fileName[j - 2] == 'i' && fileName[j - 1] == 'v')
+	{
+	  fileName[j - 3] = 'P';
+	  fileName[j - 2] = 'I';
+	  fileName[j - 1] = 'V';
+	}
+    }
+  if (!IsExtended (fileName, extension) && extension[0] != EOS)
+    k = strlen (extension) + 1;	/* dont forget the '.' */
+  else
+    k = 0;
+  if (i + j + k + h >= MAX_PATH)
+    return;
+  completeName[0] = EOS;
+  if (home_dir)
+    {
+      strcat (completeName, home_dir);
+      strcat (completeName, &directory[1]);
+    }
+  else
+    strcat (completeName, directory);
+  
+  /* on ajoute un DIR_STR */
+  if (i >= 1)
+    strcat (completeName, DIR_STR);
+  /* on recopie le nom */
+  strcat (completeName, fileName);
+  if (k != 0)
+    {
+      /* on ajoute l'extension */
+      strcat (completeName, ".");
+      strcat (completeName, extension);
+    }
+  /* on termine la chaine */
+  *length = i + j + k + h;
 }
 
 
@@ -916,156 +850,152 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 	string[(*len)++] = '-';
 	number = -number;
      }
-
    switch (style)
+     {
+     case CntArabic:
+       if (number >= 100000)
 	 {
-	    case CntArabic:
-	       if (number >= 100000)
-		 {
-		    string[(*len)++] = '?';
-		    number = number % 100000;
-		 }
-	       if (number >= 10000)
-		  c = 5;
-	       else if (number >= 1000)
-		  c = 4;
-	       else if (number >= 100)
-		  c = 3;
-	       else if (number >= 10)
-		  c = 2;
-	       else
-		  c = 1;
-	       *len += c;
-	       i = *len;
-	       do
-		 {
-		    string[i - 1] = (char) ((int) ('0') + number % 10);
-		    i--;
-		    number = number / 10;
-		 }
-	       while (number > 0);
-	       break;
-
-	    case CntURoman:
-	    case CntLRoman:
-	       if (number >= 4000)
-		  string[(*len)++] = '?';
-	       else
-		 {
-		    begin = *len + 1;
-		    while (number >= 1000)
-		      {
-			 string[(*len)++] = 'M';
-			 number -= 1000;
-		      }
-		    if (number >= 900)
-		      {
-			 string[(*len)++] = 'C';
-			 string[(*len)++] = 'M';
-			 number -= 900;
-		      }
-		    else if (number >= 500)
-		      {
-			 string[(*len)++] = 'D';
-			 number -= 500;
-		      }
-		    else if (number >= 400)
-		      {
-			 string[(*len)++] = 'C';
-			 string[(*len)++] = 'D';
-			 number -= 400;
-		      }
-		    while (number >= 100)
-		      {
-			 string[(*len)++] = 'C';
-			 number -= 100;
-		      }
-		    if (number >= 90)
-		      {
-			 string[(*len)++] = 'X';
-			 string[(*len)++] = 'C';
-			 number -= 90;
-		      }
-		    else if (number >= 50)
-		      {
-			 string[(*len)++] = 'L';
-			 number -= 50;
-		      }
-		    else if (number >= 40)
-		      {
-			 string[(*len)++] = 'X';
-			 string[(*len)++] = 'L';
-			 number -= 40;
-		      }
-		    while (number >= 10)
-		      {
-			 string[(*len)++] = 'X';
-			 number -= 10;
-		      }
-		    if (number >= 9)
-		      {
-			 string[(*len)++] = 'I';
-			 string[(*len)++] = 'X';
-			 number -= 9;
-		      }
-		    else if (number >= 5)
-		      {
-			 string[(*len)++] = 'V';
-			 number -= 5;
-		      }
-		    else if (number >= 4)
-		      {
-			 string[(*len)++] = 'I';
-			 string[(*len)++] = 'V';
-			 number -= 4;
-		      }
-		    while (number >= 1)
-		      {
-			 string[(*len)++] = 'I';
-			 number--;
-		      }
-		    if (style == CntLRoman)
-		       /* UPPERCASE --> lowercase */
-		       for (i = begin; i <= *len; i++)
-			  if (string[i - 1] != '?')
-			     string[i - 1] = (char) ((int) (string[i - 1]) + 32);
-		 }
-	       break;
-
-	    case CntUppercase:
-	    case CntLowercase:
-	       if (number > 475354)
-		 {
-		  string[(*len)++] = '?';
-		  number = number % 475254;
-		 }
-	       if (number > 18278)
-		 c = 4;
-	       else if (number > 702)
-		 c = 3;
-	       else if (number > 26)
-		 c = 2;
-	       else
-		 c = 1;
-	       *len += c;
-	       i = *len;
-	       do
-		 {
-	          number --;
-	          if (style == CntUppercase)
-		     string[i - 1] = (char) ((number % 26) + (int) ('A'));
-	          else
-		     string[i - 1] = (char) ((number % 26) + (int) ('a'));
-		  i --;
-		  c --;
-		  number = number / 26;
-		 }
-	       while (c > 0);
-	       break;
-
-	    default:
-	       break;
+	   string[(*len)++] = '?';
+	   number = number % 100000;
 	 }
+       if (number >= 10000)
+	 c = 5;
+       else if (number >= 1000)
+	 c = 4;
+       else if (number >= 100)
+	 c = 3;
+       else if (number >= 10)
+	 c = 2;
+       else
+	 c = 1;
+       *len += c;
+       i = *len;
+       do
+	 {
+	   string[i - 1] = (char) ((int) ('0') + number % 10);
+	   i--;
+	   number = number / 10;
+	 }
+       while (number > 0);
+       break;
+     case CntURoman:
+     case CntLRoman:
+       if (number >= 4000)
+	 string[(*len)++] = '?';
+       else
+	 {
+	   begin = *len + 1;
+	   while (number >= 1000)
+	     {
+	       string[(*len)++] = 'M';
+	       number -= 1000;
+	     }
+	   if (number >= 900)
+	     {
+	       string[(*len)++] = 'C';
+	       string[(*len)++] = 'M';
+	       number -= 900;
+	     }
+	   else if (number >= 500)
+	     {
+	       string[(*len)++] = 'D';
+	       number -= 500;
+	     }
+	   else if (number >= 400)
+	     {
+	       string[(*len)++] = 'C';
+	       string[(*len)++] = 'D';
+	       number -= 400;
+	     }
+	   while (number >= 100)
+	     {
+	       string[(*len)++] = 'C';
+	       number -= 100;
+	     }
+	   if (number >= 90)
+	     {
+	       string[(*len)++] = 'X';
+	       string[(*len)++] = 'C';
+	       number -= 90;
+	     }
+	   else if (number >= 50)
+	     {
+	       string[(*len)++] = 'L';
+	       number -= 50;
+	     }
+	   else if (number >= 40)
+	     {
+	       string[(*len)++] = 'X';
+	       string[(*len)++] = 'L';
+	       number -= 40;
+	     }
+	   while (number >= 10)
+	     {
+	       string[(*len)++] = 'X';
+	       number -= 10;
+	     }
+	   if (number >= 9)
+	     {
+	       string[(*len)++] = 'I';
+	       string[(*len)++] = 'X';
+	       number -= 9;
+	     }
+	   else if (number >= 5)
+	     {
+	       string[(*len)++] = 'V';
+	       number -= 5;
+	     }
+	   else if (number >= 4)
+	     {
+	       string[(*len)++] = 'I';
+	       string[(*len)++] = 'V';
+	       number -= 4;
+	     }
+	   while (number >= 1)
+	     {
+	       string[(*len)++] = 'I';
+	       number--;
+	     }
+	   if (style == CntLRoman)
+	     /* UPPERCASE --> lowercase */
+	     for (i = begin; i <= *len; i++)
+	       if (string[i - 1] != '?')
+		 string[i - 1] = (char) ((int) (string[i - 1]) + 32);
+	 }
+       break;
+     case CntUppercase:
+     case CntLowercase:
+       if (number > 475354)
+	 {
+	   string[(*len)++] = '?';
+	   number = number % 475254;
+	 }
+       if (number > 18278)
+	 c = 4;
+       else if (number > 702)
+	 c = 3;
+       else if (number > 26)
+	 c = 2;
+       else
+	 c = 1;
+       *len += c;
+       i = *len;
+       do
+	 {
+	   number --;
+	   if (style == CntUppercase)
+	     string[i - 1] = (char) ((number % 26) + (int) ('A'));
+	   else
+	     string[i - 1] = (char) ((number % 26) + (int) ('a'));
+	   i --;
+	   c --;
+	   number = number / 26;
+	 }
+       while (c > 0);
+       break;
+     default:
+       break;
+     }
    string[*len] = EOS;
 }
 
@@ -1122,24 +1052,6 @@ ThotBool TtaCheckDirectory (char *directory)
       return FALSE;
    return TRUE;
 #else  /* _WINDOWS */
-
-#  ifdef _I18N_
-   char        mbs_directory[2 * MAX_TXT_LEN];
-   struct stat fileStat;
-
-   wcstombs (mbs_directory, directory, 2 * MAX_TXT_LEN);
-
-   /* does the directory exist ? */
-   if (strlen (mbs_directory) < 1)
-      return (FALSE);
-   if (stat (mbs_directory, &fileStat) != 0)
-        return (FALSE);
-   if (S_ISDIR (fileStat.st_mode))
-        return (TRUE);
-   return (FALSE);
-
-#  else  /* !_I18N_ */
-
    struct stat         fileStat;
 
    /* does the directory exist ? */
@@ -1151,9 +1063,7 @@ ThotBool TtaCheckDirectory (char *directory)
       return (TRUE);
    else
       return (FALSE);
-
-#  endif /* !_I18N_ */
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }
 
 

@@ -29,7 +29,7 @@
    ReadAttribType                                                  
    lit un type d'attribut et retourne sa valeur.   		
   ----------------------------------------------------------------------*/
-static ThotBool     ReadAttribType (BinFile file, AttribType * attrType)
+static ThotBool ReadAttribType (BinFile file, AttribType *attrType)
 {
    char c;
 
@@ -57,10 +57,10 @@ static ThotBool     ReadAttribType (BinFile file, AttribType * attrType)
 }
 
 /*----------------------------------------------------------------------
-   ReadRConstruct							
-   	lit un constructeur et retourne sa valeur.                      
+  ReadRConstruct							
+  lit un constructeur et retourne sa valeur.                      
   ----------------------------------------------------------------------*/
-static ThotBool     ReadRConstruct (BinFile file, RConstruct * constr)
+static ThotBool ReadRConstruct (BinFile file, RConstruct *constr)
 {
    char c;
 
@@ -120,7 +120,7 @@ static ThotBool     ReadRConstruct (BinFile file, RConstruct * constr)
    ReadBasicType                                                   
    lit un type de base et retourne sa valeur.      		
   ----------------------------------------------------------------------*/
-static ThotBool     ReadBasicType (BinFile file, BasicType * typ)
+static ThotBool ReadBasicType (BinFile file, BasicType *typ)
 {
    char c;
 
@@ -158,13 +158,13 @@ static ThotBool     ReadBasicType (BinFile file, BasicType * typ)
 /*----------------------------------------------------------------------
    ReadAttribute                                			
   ----------------------------------------------------------------------*/
-static ThotBool     ReadAttribute (BinFile file, TtAttribute * pAttr)
+static ThotBool     ReadAttribute (BinFile file, TtAttribute *pAttr)
 {
    AttribType          attrType;
    int                 j;
 
    TtaReadName (file, pAttr->AttrName);
-   ustrcpy (pAttr->AttrOrigName, pAttr->AttrName);
+   strcpy (pAttr->AttrOrigName, pAttr->AttrName);
    TtaReadBool (file, &pAttr->AttrGlobal);
    TtaReadShort (file, &pAttr->AttrFirstExcept);
    TtaReadShort (file, &pAttr->AttrLastExcept);
@@ -185,7 +185,7 @@ static ThotBool     ReadAttribute (BinFile file, TtAttribute * pAttr)
 		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
 		      {
 			TtaReadName (file, pAttr->AttrEnumValue[j]);
-			ustrcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
+			strcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
 		      }
 		    break;
 	      }
@@ -198,13 +198,13 @@ static ThotBool     ReadAttribute (BinFile file, TtAttribute * pAttr)
 /*----------------------------------------------------------------------
    ReadSRule                                  			
   ----------------------------------------------------------------------*/
-static ThotBool     ReadSRule (BinFile file, SRule * pSRule)
+static ThotBool     ReadSRule (BinFile file, SRule *pSRule)
 {
    RConstruct          constr;
    int                 j;
 
    TtaReadName (file, pSRule->SrName);
-   ustrcpy (pSRule->SrOrigName, pSRule->SrName);
+   strcpy (pSRule->SrOrigName, pSRule->SrName);
    TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
       TtaReadShort (file, &pSRule->SrDefAttr[j]);
@@ -248,7 +248,7 @@ static ThotBool     ReadSRule (BinFile file, SRule * pSRule)
    switch (pSRule->SrConstruct)
 	 {
 	    case CsNatureSchema:
-	       ustrcpy (pSRule->SrOrigNat, pSRule->SrName);
+	       strcpy (pSRule->SrOrigNat, pSRule->SrName);
 	       pSRule->SrSSchemaNat = NULL;
 	       break;
 	    case CsBasicElement:
@@ -298,32 +298,10 @@ static ThotBool     ReadSRule (BinFile file, SRule * pSRule)
 /*----------------------------------------------------------------------
    ReadConstants                                          		
   ----------------------------------------------------------------------*/
-static ThotBool     ReadConstants (BinFile file, PtrSSchema pSS)
+static ThotBool ReadConstants (BinFile file, PtrSSchema pSS)
 {
-#ifdef _I18N_
-   CHAR_T c;
-   int    i;
-
-   i = 0;
-   do
-     {
-       do
-	 {
-	   TtaReadWideChar (file, &c, ISO_8859_1);
-	   pSS->SsConstBuffer[i++] = c;
-	 }
-       while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
-       TtaReadWideChar (file, &c, ISO_8859_1);
-       pSS->SsConstBuffer[i++] = c;
-     }
-   while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
-   if (i >= MAX_LEN_ALL_CONST)
-     return FALSE;
-   else
-     return TRUE;
-#else  /* !_I18N_ */
-   char c;
-   int                 i;
+  char                c;
+  int                 i;
 
    i = 0;
    do
@@ -342,7 +320,6 @@ static ThotBool     ReadConstants (BinFile file, PtrSSchema pSS)
       return FALSE;
    else
       return TRUE;
-#endif /* !_I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -353,7 +330,7 @@ static ThotBool     ReadConstants (BinFile file, PtrSSchema pSS)
    pSS: schema de structure en memoire a remplir.               	
    Retourne VRAI si chargement reussi, FAUX si echec.              
   ----------------------------------------------------------------------*/
-ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
+ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
 { 
    BinFile             file;
    PathBuffer          buf;
@@ -361,12 +338,7 @@ ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
    int                 i;
 
    /* compose le nom du fichier a ouvrir */
-#if 0 
-   pwdPath = TtaGetEnvString ("PWD");
-   ustrncpy (dirBuffer, pwdPath, MAX_PATH);
-#endif  /* !_WINDOWS_COMPILERS */
-   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
-/* #endif * _WINDOWS_COMPILERS */
+   strncpy (dirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (fileName, "STR", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
@@ -374,8 +346,8 @@ ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
    if (file == 0)
       /* echec */
      {
-	ustrncpy (buf, fileName, MAX_PATH);
-	ustrcat (buf, ".STR");
+	strncpy (buf, fileName, MAX_PATH);
+	strcat (buf, ".STR");
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE),
 			   buf);
 	return FALSE;

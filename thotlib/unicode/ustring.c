@@ -179,20 +179,6 @@ int ustrcmp (const CHAR_T *str1, const CHAR_T *str2)
 
 
 /*-------------------------------------------------------------
-  ustrcoll: compare strings using local-specific information.
-  -------------------------------------------------------------*/
-int ustrcoll (const CHAR_T *str1, const CHAR_T *str2)
-{
-#ifdef _I18N_
-  /* Compatibility of wcscoll: ANSI, WIN NT and WIN 9x */
-  return wcscoll ((wchar_t*)str1, (wchar_t*)str2);
-#else  /* _I18N_ */
-  return strcoll ((char*)str1, (char*)str2);
-#endif /* _I18N_ */
-}
-
-
-/*-------------------------------------------------------------
   ustrcpy: copies src into dest. This function suposes that
   momery has been already allocated in the same way that strcpy
   does.
@@ -209,28 +195,9 @@ CHAR_T *ustrcpy (CHAR_T *dest, const CHAR_T *src)
 
 
 /*-------------------------------------------------------------
-  iso2wc_strcpy: copies src (8-bit) into dest (16-bit). This 
-  function suposes that momery has been already allocated in the 
-  same way that strcpy does.
-  -------------------------------------------------------------*/
-CHAR_T *iso2wc_strcpy (CHAR_T *dest, const char *src)
-{
-#ifdef _I18N_
-  int len;
-
-  len = strlen (src);
-  mbstowcs (dest, src, len + 1);
-  return dest;
-#else  /* _I18N_ */
-  return (CHAR_T *) strcpy ((char *)dest, (char *)src);
-#endif /* _I18N_ */
-}
-
-
-/*-------------------------------------------------------------
   ustrlen: get the length of a string.
   -------------------------------------------------------------*/
-size_t        ustrlen (const CHAR_T *str)
+size_t ustrlen (const CHAR_T *str)
 {
 #ifdef _I18N_
   /* Compatibility of wcslen: ANSI, WIN NT and WIN 9x */
@@ -339,7 +306,7 @@ CHAR_T *ustrncpy (CHAR_T *dest, const CHAR_T *src, unsigned int count)
 /*-------------------------------------------------------------
   ustrrchr: scan a string for the last occurrence of a character.
   -------------------------------------------------------------*/
-CHAR_T        *ustrrchr (const CHAR_T *str, CHAR_T c)
+CHAR_T *ustrrchr (const CHAR_T *str, CHAR_T c)
 {
 #ifdef _I18N_
   /* Compatibility of wcsrchr: ANSI, WIN NT and WIN 9x */
@@ -353,7 +320,7 @@ CHAR_T        *ustrrchr (const CHAR_T *str, CHAR_T c)
 /*-------------------------------------------------------------
   ustrtok: find the next token in a string.
   -------------------------------------------------------------*/
-CHAR_T       *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
+CHAR_T *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
 {
 #ifdef _I18N_ 
   /* Compatibility of wcstok: ANSI, WIN NT and WIN 9x */
@@ -382,34 +349,18 @@ CHAR_T *ustrstr (const CHAR_T *str, const CHAR_T *strCharSet)
 }
 
 
-/*-------------------------------------------------------------
-  wc2iso_strcpy: copies src (16-bit) into dest (8-bit). This 
-  function suposes that momery has been already allocated in the 
-  same way that strcpy does.
-  -------------------------------------------------------------*/
-char *wc2iso_strcpy (char *dest, const CHAR_T *src)
-{
-#ifdef _I18N_
-  wcstombs (dest, src, MAX_TXT_LEN);
-#else  /* _I18N_ */
-  strcpy (dest, src);
-#endif /* _I18N_ */
-  return dest;
-}
-
-
 /*----------------------------------------------------------------------
   TtaGetCharset gives the charset 
   ----------------------------------------------------------------------*/
-CHARSET       TtaGetCharset (const CHAR_T *charsetname)
+CHARSET TtaGetCharset (char *charsetname)
 {
   int index = 0;
 
-  if (charsetname == NULL || charsetname[0] == 0)
+  if (charsetname == NULL || charsetname[0] == EOS)
     return UNDEFINED_CHARSET;
   while (CharsetCodeTable[index].Charset != UNDEFINED_CHARSET)
     {
-      if (!ustrcasecmp (CharsetCodeTable[index].ISOCode, charsetname))
+      if (!strcasecmp (CharsetCodeTable[index].ISOCode, charsetname))
 	return CharsetCodeTable[index].Charset;
       index++;
     }
