@@ -73,6 +73,7 @@ KEY;
 #include "structselect_f.h"
 #include "textcommands_f.h"
 #include "windowdisplay_f.h"
+#include "ustring_f.h"
 
 /* Default actions for XK_Up, XK_Left, XK_Right, XK_Down keys */
 #define MY_KEY_Up        0
@@ -723,7 +724,12 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 	}
     }
   if ( strlen(event->string) > 0 )
-    ThotInput (frame, (unsigned int)key, 0, PicMask, key);
+    {
+      /* event->string is encoded in system locale charset */
+      CHARSET local_charset = TtaGetLocaleCharset();
+      wchar_t * value = TtaConvertByteToWC((unsigned char *)event->string, local_charset);
+      ThotInput (frame, (unsigned int)value[0], 0, PicMask, key);
+    }
   else
     ThotInput (frame, (unsigned int)EOS, 0, PicMask, key);
   gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");

@@ -17,6 +17,8 @@
 #include "registry_f.h"
 #include "ustring_f.h"
 
+static CHARSET LocaleSystemCharset = UNSUPPORTED_CHARSET;
+
 unsigned long offset[6] = {
   0x00000000UL,
   0x00003080UL,
@@ -408,16 +410,40 @@ char *TtaGetCharsetName (CHARSET charset)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+/*----------------------------------------------------------------------
+  TtaGetLocaleCharset returns the user system charset
+  ----------------------------------------------------------------------*/
+CHARSET TtaGetLocaleCharset()
+{
+#ifdef _UNIX
+  if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
+    {
+      char * lang = getenv("LANG");
+      if (lang)
+	{
+	  int fd;
+	  char buffer[256];
+	  memset( buffer, 0, 256 );
+	  
+	  /* ask the system using locale command */
+	  system ("locale -ck LC_MESSAGES | grep messages-codeset | sed 's/.*=\"//' | sed 's/\"//' > /tmp/locale");
+	  fd = open("/tmp/locale", O_RDONLY);
+	  read (fd, buffer, 255);
+	  close (fd);
+	  system ("rm -f /tmp/locale");
+	  buffer[strlen(buffer)-1] = '\0';
+	  
+	  /* convert the string into thotlib index */
+	  LocaleSystemCharset = TtaGetCharset(buffer); 
+	}
+      else
+	/* default unix charset is iso-latin-1 */
+	LocaleSystemCharset = ISO_8859_1;
+    }
+#else /* _UNIX */
+  /* TODO : if this function is used on window, write the code to detect the local charset ... */
+  LocaleSystemCharset = ISO_8859_1;
+#endif /* _UNIX */
+  return LocaleSystemCharset;
+}
 

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void CreateInheritedAttrTable ( int typeNum,
-				       PtrSSchema pSS,
+                                       PtrSSchema pSS,
                                        PtrPSchema pPS,
                                        PtrDocument pDoc );
 extern void CreateComparAttrTable ( PtrAttribute pAttr,
@@ -22,7 +22,7 @@ extern void RepApplyTransmitRules ( PtrElement pTransmEl,
 #else /* __STDC__ */
 
 extern void CreateInheritedAttrTable ( int typeNum,
-				         PtrSSchema pSS,
+                                         PtrSSchema pSS,
                                          PtrPSchema pPS,
                                          PtrDocument pDoc );
 extern void CreateComparAttrTable ( PtrAttribute pAttr,
