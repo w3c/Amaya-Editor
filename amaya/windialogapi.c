@@ -1031,7 +1031,7 @@ LRESULT CALLBACK CharsetDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       /* get the default GUI font */
-      SetWindowText (hwnDlg, "Select a Charset");
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SELECT_CHARSET));
       SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	  if (!strcmp (UserCharset, "us-ascii"))
@@ -1105,7 +1105,7 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       /* get the default GUI font */
       MimeTypeDlg = hwnDlg;
       newFont = GetStockObject (DEFAULT_GUI_FONT); 
-      SetWindowText (hwnDlg, "Select a MIME type");
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SELECT_MIMETYPE));
       SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
@@ -1275,15 +1275,14 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 
       /* mime type */
       _snprintf (buff, 500, "MIME type: %s", 
-		 UserMimeType[0] != EOS ? UserMimeType : "UNKNOWN");
+		 UserMimeType[0] != EOS ? UserMimeType : TtaGetMessage (AMAYA, AM_UNKNOWN));
       SetDlgItemText (hwnDlg, IDC_MIMETYPE, buff);
-      SetDlgItemText (hwnDlg, ID_CHANGEMIMETYPE, "Change");
-      
+      SetDlgItemText (hwnDlg, ID_CHANGEMIMETYPE,  TtaGetMessage (AMAYA, AM_CHANGE));
       /* charset */
       _snprintf (buff, 500, "Charset: %s", 
-		 UserCharset[0] != EOS ? UserCharset : "UNKNOWN");
+		 UserCharset[0] != EOS ? UserCharset : TtaGetMessage (AMAYA, AM_UNKNOWN));
       SetDlgItemText (hwnDlg, IDC_CHARSET, buff);
-      SetDlgItemText (hwnDlg, ID_CHANGECHARSET, "Change");
+      SetDlgItemText (hwnDlg, ID_CHANGECHARSET, TtaGetMessage (AMAYA, AM_CHANGE));
 
       /* set the default focus and return FALSE to validate it */
       SetFocus (GetDlgItem (hwnDlg, IDC_EDITDOCSAVE));
@@ -3438,7 +3437,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       if (DocumentURLs[doc] != NULL)
 	content = DocumentURLs[doc];
       else
-	content = "Unknown";
+	content = TtaGetMessage (AMAYA, AM_UNKNOWN);
       SetDlgItemText (hwnDlg, IDC_DIURL_VAL, content);
 
       /* MIME type */
@@ -3446,7 +3445,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       if (DocumentMeta[doc] && DocumentMeta[doc]->content_type != NULL)
 	content  = DocumentMeta[doc]->content_type;
       else
-	content = "Unknown";
+	content = TtaGetMessage (AMAYA, AM_UNKNOWN);
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, content);
 
       /* charset */
@@ -3454,7 +3453,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       if (DocumentMeta[doc] && DocumentMeta[doc]->charset != NULL)
 	content = DocumentMeta[doc]->charset;
       else
-	content = "Unknown";
+	content = TtaGetMessage (AMAYA, AM_UNKNOWN);
       SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, content);
 
       /* content length */
@@ -3462,7 +3461,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       if (DocumentMeta[doc] && DocumentMeta[doc]->content_length != NULL)
 	content = DocumentMeta[doc]->content_length;
       else
-	content = "Unknown";
+	content = TtaGetMessage (AMAYA, AM_UNKNOWN);
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, content);
       break;
 
