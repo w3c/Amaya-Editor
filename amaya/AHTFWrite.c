@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-1999.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -30,9 +30,6 @@ struct _HTStream
      const HTStreamClass *isa;
      FILE               *fp;
      BOOL                leave_open;	  /* Close file when TtaFreeMemory? */
-     char               *end_command;	  /* Command to execute       */
-     BOOL                remove_on_close; /* Remove file?             */
-     char               *filename;	  /* Name of file             */
      HTRequest          *request;	  /* saved for callback       */
      HTRequestCallback  *callback;
   };
@@ -47,7 +44,7 @@ static int AHTFWriter_put_character ( HTStream * me,
                                               char c );
 static int AHTFWriter_put_string ( HTStream * me,
                                            const char *s );
-static int AHTFWriter_put_block ( HTStream * me,
+static int AHTFWriter_write ( HTStream * me,
                                       const char *s,
                                       int l );
 static int AHTFWriter_abort (HTStream * me, HTList *e);
@@ -57,7 +54,7 @@ static int AHTFWriter_put_character (/* HTStream * me,
                                                 char c */);
 static int AHTFWriter_put_string (/* HTStream * me,
                                              const char *s */);
-static int AHTFWriter_put_block (/* HTStream * me,
+static int AHTFWriter_write (/* HTStream * me,
                                         const char *s,
                                         int l */);
 static int AHTFWriter_abort (/*HTStream * me, HTList *e */);
@@ -152,10 +149,10 @@ const char         *s;
 
 
 /*----------------------------------------------------------------------
-  AHTFWriter_put_block
+  AHTFWriter_write
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int         AHTFWriter_put_block (HTStream * me, const char *s, int l)
+static int         AHTFWriter_write (HTStream * me, const char *s, int l)
 #else  /* __STDC__ */
 static int         AHTFWriter_write (me, s, l)
 HTStream           *me;
@@ -233,16 +230,6 @@ HTStream           *me;
      {
 	if (me->leave_open != YES && me->fp != stdout)
 	   fclose (me->fp);
-#ifdef HAVE_SYSTEM
-	if (me->end_command)
-	   system (me->end_command);	/* SECURITY HOLE!!! */
-#endif
-	if (me->remove_on_close)
-	   REMOVE (me->filename);
-	if (me->callback)
-	   (*me->callback) (me->request, me->filename);
-	HT_FREE (me->end_command);
-	HT_FREE (me->filename);
 	HTRequest_setOutputStream (me->request, NULL);
 	HT_FREE (me);
      }
@@ -268,10 +255,6 @@ HTList             *e;
     {
       if (me->leave_open != YES && me->fp)
 	fclose (me->fp);
-      if (me->remove_on_close)
-	REMOVE (me->filename);
-      HT_FREE (me->end_command);
-      HT_FREE (me->filename);
       HTRequest_setOutputStream (me->request, NULL);
       HT_FREE (me);
     }
@@ -289,7 +272,7 @@ static const HTStreamClass AHTFWriter =	/* As opposed to print etc */
    AHTFWriter_abort,
    AHTFWriter_put_character,
    AHTFWriter_put_string,
-   AHTFWriter_put_block
+   AHTFWriter_write
 };
 
 
@@ -325,7 +308,6 @@ BOOL                leave_open;
    me->fp = fp;
    me->leave_open = leave_open;
    me->request = request;
-   me->callback = (void *) NULL;
    return me;
 }
 
@@ -335,4 +317,3 @@ BOOL                leave_open;
 */
 
 #endif /* !AMAYA_JAVA */
-
