@@ -413,14 +413,14 @@ static void KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 /*----------------------------------------------------------------------
   KbdCallbackHandler handles the keyboard keys.
   ----------------------------------------------------------------------*/
-void KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
+void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
 {
    CHAR_T              car;
    ThotWidget          wp;
    int                 i;
 
    /* Recupere la table des items */
-   car = (CHAR_T) param % 256;
+   car = (CHAR_T) (param % 256);
    /* Recupere le widget de la palette */
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -432,11 +432,11 @@ void KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
    wp = GTK_WIDGET (w)->parent->parent->parent->parent;
 #endif /* !_GTK */
    /* met a jour l'indicateur de palette */
-   if(Keyboards[KeyboardMode] != wp)
+   if (Keyboards[KeyboardMode] != wp)
      {
      CloseTextInsertion();
-     for(i = 0; i < (MAX_KEYBOARD + 1); i++)
-       if(Keyboards[i] == wp)
+     for (i = 0; i < (MAX_KEYBOARD + 1); i++)
+       if (Keyboards[i] == wp)
          KeyboardMode = i;
      }
    /* Insert the selected character */

@@ -3311,7 +3311,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	  j--;
 	j++;
 	c = text[j];
-	text[j] = '\0';
+	text[j] = EOS;
 	TtaSetBufferContent (textEl, &text[start], language[start], doc);
 	text[j] = c;
 	lastEl = newEl;

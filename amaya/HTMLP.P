@@ -811,6 +811,18 @@ BOXES
 	IN Table_of_contents
 		Visibility: 5;
 	END;
+ Target_space: BEGIN
+	Content: (Graphics ' ');
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Visibility: Enclosing =;
+	Width: 1 px;
+	Height: 4 px;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
 #endif
 
  Option_gif_left: BEGIN
@@ -4079,7 +4091,6 @@ RULES
 	END;
 
 
-
  Anchor: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
@@ -5363,7 +5374,11 @@ ATTRIBUTES
         if Anchor CreateAfter(TargetPageNumber);
 #endif
 #ifndef PAGE
-	if Anchor and not ID CreateFirst(Target_gif);
+	if Anchor and not ID
+	BEGIN
+	 CreateFirst(Target_gif);
+	 CreateFirst(Target_space);
+	END;
 #ifdef BLACK_WHITE
 	if Anchor Underline: Underlined;
 	if MAP Underline: Underlined;
@@ -6799,7 +6814,10 @@ ATTRIBUTES
 	if PICTURE_UNIT
 	   CreateBefore(Target_gif);
 	if not PICTURE_UNIT
+	BEGIN
 	   CreateFirst(Target_gif);
+	   CreateFirst(Target_space);
+	END;
 #endif
 	if Anchor BEGIN
 	   CreateLast(ATTR_ID_ANCH);

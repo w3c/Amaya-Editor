@@ -6635,15 +6635,6 @@ void InitAmaya (NotifyEvent * event)
        SAddress[i] = add;
        /* initialize history */
        InitDocHistory (i);
-#if 0  /* moved to CreateAmayaCache */
-       /* Create a temporary sub-directory for storing the HTML and
-	  image files */
-       sprintf (ptr, "%s%c%d", TempFileDirectory, DIR_SEP, i);
-       TtaMakeDirectory (ptr);
-#endif
-       /* adding the CSS directory */
-       if (i == 0)
-	 TtaAppendDocumentPath (ptr);
      }
 
    /* allocate working buffers */

@@ -1085,7 +1085,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   ViewFrame*        pFrame;
   PtrAbstractBox    pAb;
   PictureScaling    picPresent;
-  int               delta, dx, dy;
+  int               delta, dx, dy, x, y;
 #ifdef _WINDOWS
   HDC               hMemDC;
   BITMAP            bm;
@@ -1095,7 +1095,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   HDC               hOrigDC;
   POINT             ptOrg, ptSize;
   int               clipWidth, clipHeight;
-  int               nbPalColors, x, y;
+  int               nbPalColors;
   int               i, j, iw, jh, ix, jy;
   HRGN              hrgn;
 #else /* _WINDOWS */
@@ -1126,7 +1126,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   pFrame = &ViewFrameTable[frame - 1];
   if (pixmap != None)
     {
-      /* shift in the image */
+      /* dx, dy give the shift in the target display */
       dx = pFrame->FrClipXBegin + pFrame->FrXOrg;
       dy = pFrame->FrClipYBegin + pFrame->FrYOrg;
       pAb = box->BxAbstractBox;
@@ -1139,6 +1139,23 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	}
       dx -= (dx / imageDesc->PicWArea) * imageDesc->PicWArea;
       dy -= (dy / imageDesc->PicHArea) * imageDesc->PicHArea;
+      /* x, y give the shift in the source image */
+      x = 0;
+      if (xFrame < dx)
+	{
+	  x = -dx;
+	  dx = 0;
+	}
+      else
+	x = 0;
+      if (yFrame < dy)
+	{
+	  y = -dy;
+	  dy = 0;
+	}
+      else
+	y = 0;
+
       /* the default presentation depends on the box type */
       picPresent = imageDesc->PicPresent;
       if (picPresent == DefaultPres)
@@ -1302,8 +1319,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #ifndef _GTK
 	  valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
 	  values.tile = pixmap;
-	  values.ts_x_origin = 0;
-	  values.ts_y_origin = 0;
+	  values.ts_x_origin = x;
+	  values.ts_y_origin = y;
 	  values.fill_style = FillTiled;
 	  XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	  if (picPresent == RealSize)
@@ -1336,7 +1353,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	    }
 #else /* _GTK */
 	  gdk_gc_set_fill (tiledGC, GDK_TILED);
-          gdk_gc_set_ts_origin (tiledGC, 0, 0);
+          gdk_gc_set_ts_origin (tiledGC, x, y);
 	  gdk_gc_set_tile (tiledGC, (GdkPixmap *) pixmap);
 	  if (picPresent == RealSize)
 	    {
