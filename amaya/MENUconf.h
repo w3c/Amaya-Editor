@@ -32,14 +32,15 @@
 #define mToolTipDelay        2
 #define mDoubleClickDelay    3
 #define mZoom                4
-#define mMultikey            5
-#define mHomePage            6
-#define mThotPrint           7
-#define mBgImages            8
-#define mDoubleClick         9
-#define mDialogueLang        10
-#define mFontMenuSize        11
-#define MAX_GENERALMENU_DLG  12
+#define mHomePage            5
+#define mThotPrint           6
+#define mDialogueLang        7
+#define mFontMenuSize        8
+#define mGeneralEmpty1       9
+#define mGeneralEmpty2       10
+#define mGeneralEmpty3       11
+#define mToggleGeneral       12
+#define MAX_GENERALMENU_DLG  13
 
 #define PublishMenu         1
 #define mTogglePublish      2

@@ -41,7 +41,8 @@
 
 #define MAX_GEOMETRY_LENGTH 24
 
-static int NetworkStatus;
+static int CacheStatus;
+static int ProxyStatus;
 
 /* Cache menu options */
 static int CacheBase;
@@ -68,7 +69,7 @@ static CHAR ThotPrint [MAX_LENGTH+1];
 static CHAR DefaultName [MAX_LENGTH+1];
 static boolean BgImages;
 static boolean DoubleClick;
-static CHAR Lang [MAX_LENGTH+1];
+static CHAR DialogueLang [MAX_LENGTH+1];
 static int FontMenuSize;
 
 /* Publish menu options */
@@ -357,16 +358,16 @@ STRING              data;
 	      SetCacheConf ();
 #ifdef AMAYA_JAVA
 #else      
-	      libwww_updateNetworkConf (NetworkStatus);
+	      libwww_updateNetworkConf (CacheStatus);
 #endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
-	      NetworkStatus = 0;
+	      CacheStatus = 0;
 	      break;
 	    case 2:
 	      GetDefaultCacheConf ();
 	      RefreshCacheMenu ();
 	      /* always signal this as modified */
-	      NetworkStatus = AMAYA_CACHE_RESTART;
+	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      break;
 	    case 3:
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
@@ -386,19 +387,19 @@ STRING              data;
 	  switch (val) 
 	    {
 	    case 0:
-	      NetworkStatus |= AMAYA_CACHE_RESTART;
+	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      EnableCache = !EnableCache;
 	      break;
 	    case 1:
-	      NetworkStatus |= AMAYA_CACHE_RESTART;
+	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      CacheProtectedDocs = !CacheProtectedDocs;
 	      break;
 	    case 2:
-	      NetworkStatus |= AMAYA_CACHE_RESTART;
+	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      CacheDisconnectMode = !CacheDisconnectMode;
 	      break;
 	    case 3:
-	      NetworkStatus |= AMAYA_CACHE_RESTART;
+	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      CacheExpireIgnore = !CacheExpireIgnore;
 	      break;
 
@@ -408,18 +409,18 @@ STRING              data;
 	  break;
 	  
 	case mCacheDirectory:
-	  NetworkStatus |= AMAYA_CACHE_RESTART;
+	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  if (data)
 	    ustrcpy (CacheDirectory, data);
 	  else
 	    CacheDirectory [0] = EOS;
 	  break;
 	case mCacheSize:
-	  NetworkStatus |= AMAYA_CACHE_RESTART;
+	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  CacheSize = val;
 	  break;
 	case mMaxCacheFile:
-	  NetworkStatus |= AMAYA_CACHE_RESTART;
+	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  MaxCacheFile = val;
 	  break;
 
@@ -581,7 +582,7 @@ View                view;
    GetCacheConf ();
    RefreshCacheMenu ();
    /* clean the modified flags */
-   NetworkStatus = 0;
+   CacheStatus = 0;
   /* display the menu */
   TtaShowDialogue (CacheBase + CacheMenu, TRUE);
 }
@@ -627,16 +628,16 @@ STRING              data;
 	      SetProxyConf ();
 #ifdef AMAYA_JAVA
 #else      
-	      libwww_updateNetworkConf (NetworkStatus);
+	      libwww_updateNetworkConf (ProxyStatus);
 #endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
-	      NetworkStatus = 0;
+	      ProxyStatus = 0;
 	      break;
 	    case 2:
 	      GetDefaultProxyConf ();
 	      RefreshProxyMenu ();
 	      /* always signal this as modified */
-	      NetworkStatus = AMAYA_PROXY_RESTART;
+	      ProxyStatus |= AMAYA_PROXY_RESTART;
 	      break;
 	    default:
 	      break;
@@ -644,7 +645,7 @@ STRING              data;
 	  break;
 
 	case mHttpProxy:
-	  NetworkStatus |= AMAYA_PROXY_RESTART;
+	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
 	    ustrcpy (HttpProxy, data);
 	  else
@@ -652,7 +653,7 @@ STRING              data;
 	  break;
 
 	case mNoProxy:
-	  NetworkStatus |= AMAYA_PROXY_RESTART;
+	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
 	    ustrcpy (NoProxy, data);
 	  else
@@ -765,7 +766,7 @@ View                view;
    GetProxyConf ();
    RefreshProxyMenu ();
    /* clean the modified flags */
-   NetworkStatus = 0;
+   ProxyStatus = 0;
   /* display the menu */
   TtaShowDialogue (ProxyBase + ProxyMenu, TRUE);
 }
@@ -830,18 +831,6 @@ STRING              data;
 	  Zoom = val;
 	  break;
 
-	case mMultikey:
-	  Multikey = !Multikey;
-	  break;
-
-	case mBgImages:
-	  BgImages = !BgImages;
-	  break;
-
-	case mDoubleClick:
-	  DoubleClick = !DoubleClick;
-	  break;
-
 	case mHomePage:
 	  if (data)
 	    ustrcpy (HomePage, data);
@@ -856,7 +845,32 @@ STRING              data;
 	    ThotPrint [0] = EOS;
 	  break;
 
-	  /** add cases for mLang and mFontMenuSize */
+	case mToggleGeneral:
+	  switch (val) 
+	    {
+	    case 0:
+	      Multikey = !Multikey;
+	      break;
+	    case 1:
+	      BgImages = !BgImages;
+	      break;
+	    case 2:
+	      DoubleClick = !DoubleClick;
+	      break;
+	    }
+	  break;
+
+	case mFontMenuSize:
+	  FontMenuSize = val;
+	  break;
+	  
+	case mDialogueLang:
+	  if (data)
+	    ustrcpy (DialogueLang, data);
+	  else
+	    DialogueLang [0] = EOS;
+	  break;
+
 	default:
 	  break;
 	}
@@ -881,7 +895,7 @@ static void GetGeneralConf ()
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("THOTPRINT", ThotPrint);
-  GetEnvString ("LANG", Lang);
+  GetEnvString ("LANG", DialogueLang);
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
 
 }
@@ -914,7 +928,7 @@ static void SetGeneralConf ()
   TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("THOTPRINT", ThotPrint, TRUE);
-  TtaSetEnvString ("LANG", Lang, TRUE);
+  TtaSetEnvString ("LANG", DialogueLang, TRUE);
   TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
 }
 
@@ -932,14 +946,14 @@ static void GetDefaultGeneralConf ()
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetDefEnvInt ("ZOOM", &Zoom);
   GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
-		       GeneralBase + mMultikey, 0);
+		       GeneralBase + mToggleGeneral, 0);
   GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
-		       GeneralBase + mBgImages, 0);
+		       GeneralBase + mToggleGeneral, 1);
   GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
-		       GeneralBase + mDoubleClick, 0);
+		       GeneralBase + mToggleGeneral, 2);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("THOTPRINT", ThotPrint);
-  GetDefEnvString ("LANG", Lang);
+  GetDefEnvString ("LANG", DialogueLang);
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
 
 }
@@ -958,14 +972,14 @@ static void RefreshGeneralMenu ()
   TtaSetNumberForm (GeneralBase + mDoubleClickDelay, DoubleClickDelay);
   TtaSetNumberForm (GeneralBase + mZoom, Zoom);
 #ifndef _WINDOWS
-  TtaSetToggleMenu (GeneralBase + mMultikey, 0, Multikey);
-  TtaSetToggleMenu (GeneralBase + mBgImages, 0, BgImages);
-  TtaSetToggleMenu (GeneralBase + mDoubleClick, 0, DoubleClick);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, Multikey);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, BgImages);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, DoubleClick);
 #endif /* _WINDOWS */
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mThotPrint, ThotPrint);
+  TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
-  TtaSetTextForm (GeneralBase + mDialogueLang, Lang);
 }
 
 /*----------------------------------------------------------------------
@@ -994,34 +1008,16 @@ STRING              pathname;
 
    TtaNewSheet (GeneralBase + GeneralMenu, 
 		TtaGetViewFrame (document, view),
-	       "General Configuration", 2, s, FALSE, 11, 'L', D_DONE);
-   TtaNewToggleMenu (GeneralBase + mMultikey,
-		     GeneralBase + GeneralMenu,
-		     NULL,
-		     1,
-		     "BEnable Multikey",
-		     NULL,
-		     FALSE);
-   TtaNewToggleMenu (GeneralBase + mBgImages,
-		     GeneralBase + GeneralMenu,
-		     NULL,
-		     1,
-		     "BShow background images",
-		     NULL,
-		     FALSE);
-   TtaNewToggleMenu (GeneralBase + mDoubleClick,
-		     GeneralBase + GeneralMenu,
-		     NULL,
-		     1,
-		     "BDouble click activates anchor",
-		     NULL,
-		     FALSE);
+	       "General Configuration", 2, s, TRUE, 2, 'L', D_DONE);
+   /* first line */
    TtaNewTextForm (GeneralBase + mHomePage,
 		   GeneralBase + GeneralMenu,
 		   "Home Page",
-		   20,
+		   40,
 		   1,
 		   FALSE);
+   TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, "");
+   /* second line */
    TtaNewNumberForm (GeneralBase + mToolTipDelay,
 		     GeneralBase + GeneralMenu,
 		     "ToolTip delay (ms)",
@@ -1034,30 +1030,48 @@ STRING              pathname;
 		     0,
 		     65000,
 		     FALSE);   
-   TtaNewNumberForm (GeneralBase + mZoom,
-		     GeneralBase + GeneralMenu,
-		     "Zoom",
-		     0,
-		     10,
-		     FALSE);   
-   TtaNewTextForm (GeneralBase + mDialogueLang,
-		   GeneralBase + GeneralMenu,
-		   "Dialogue language",
-		   20,
-		   1,
-		   FALSE);   
+   /* third line */
    TtaNewNumberForm (GeneralBase + mFontMenuSize,
 		     GeneralBase + GeneralMenu,
 		     "Menu font size",
 		     8,
 		     20,
 		     FALSE);   
+
+   TtaNewNumberForm (GeneralBase + mZoom,
+		     GeneralBase + GeneralMenu,
+		     "Zoom",
+		     0,
+		     10,
+		     FALSE);   
+   /* fourth line */
    TtaNewTextForm (GeneralBase + mThotPrint,
 		   GeneralBase + GeneralMenu,
-		   "Printer",
+		   "Printer command",
 		   20,
 		   1,
 		   FALSE);
+   TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, "");   
+   /* fifth line */
+   TtaNewTextForm (GeneralBase + mDialogueLang,
+		   GeneralBase + GeneralMenu,
+		   "Dialogue language",
+		   10,
+		   1,
+		   FALSE);
+   TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, "");   
+   /* sixth line */
+   sprintf (s, "B%s%cB%s%cB%s", 
+	    "Enable Multikey", EOS, 
+	    "Show background images", EOS,
+	    "Double click activates link");
+   TtaNewToggleMenu (GeneralBase + mToggleGeneral,
+		     GeneralBase + GeneralMenu,
+		     NULL,
+		     3,
+		     s,
+		     NULL,
+		     FALSE);
    /* load and display the current values */
    GetGeneralConf ();
    RefreshGeneralMenu ();
@@ -1106,7 +1120,7 @@ STRING              data;
 	      break;
 	    case 2:
 	      GetDefaultPublishConf ();
-	      RefreshGeneralMenu ();
+	      RefreshPublishMenu ();
 	      break;
 	    default:
 	      break;
@@ -1522,7 +1536,7 @@ STRING              pathname;
 	       "Geometry Configuration", 2, s, TRUE, 3, 'L', D_DONE);
    TtaNewTextForm (GeometryBase + mFormattedView,
 		   GeometryBase + GeometryMenu,
-		   "Formatted view)",
+		   "Formatted view",
 		   20,
 		   1,
 		   FALSE);   
