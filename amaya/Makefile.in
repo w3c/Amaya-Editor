@@ -60,7 +60,7 @@ amaya : ../thotlib/libThotEditor.a ../tablelib/libThotTable.a amaya_schemas amay
 all : amaya_schemas amaya_src ../bin/amaya ../bin/print
 
 clean :
-	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* SVG* XLink* XML* logo.*
+	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* SVG* Timeline* XLink* XML* logo.* *.a
 
 include .depends
 
