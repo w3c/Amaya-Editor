@@ -1741,7 +1741,11 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *uniqueChild)
 			pInc->AbWidth.DimValue != -1)))
 		    found = TRUE;
 		  else if (pInc->AbPrevious == NULL && pInc->AbNext == NULL)
-		    found = HasFloatingChild (pInc, &unique);
+		    {
+		      found = HasFloatingChild (pInc, &unique);
+		      if (!unique)
+			found = FALSE;
+		    }
 		}
 	    }
 	  pChildAb = pChildAb->AbNext;
@@ -1770,7 +1774,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 	   pAb->AbWidth.DimAbRef ||
 	   pAb->AbWidth.DimValue == -1))
 	{
-	  /* the box cannot be float */
+	  /* cannot be a floated box */
 	  pAb->AbFloat = 'N';
 	}
       else if (box)
@@ -1863,7 +1867,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 	}
     }
 }
-	   
+
 
 /*----------------------------------------------------------------------
   CreateBox creates the box associated to the abstract box pAb.
@@ -1931,7 +1935,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   /* teste l'unite */
   font = ThotLoadFont (script, pAb->AbFont, FontStyleAndWeight(pAb),
 		       height, unit, frame);
- 
+
   /* Creation */
   pCurrentBox = pAb->AbBox;
   if (pCurrentBox == NULL)

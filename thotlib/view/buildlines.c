@@ -2647,7 +2647,10 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
-      if (box->BxWidth <= w)
+      if (box->BxWidth < w + 20 &&
+	  (pBlock->BxType == BoBlock ||
+	   (boxPrevL && y == boxPrevL->BxYOrg) ||
+	   (boxPrevR && y == boxPrevR->BxYOrg)))
 	{
 	  /* it's possible to display the floating box at the current position */
 	  if (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
@@ -2701,6 +2704,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	    y = boxPrevL->BxYOrg + boxPrevL->BxHeight;
 	  else if (y < boxPrevR->BxYOrg + boxPrevR->BxHeight)
 	    y = boxPrevR->BxYOrg + boxPrevR->BxHeight;
+	  /* following lines cannot be displayed above this box */
+	  pLine->LiYOrg = y - orgY;
 	}
     }
 
@@ -2968,7 +2973,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* avoid any cycle */
   if (pBox->BxCycles > 0)
     {
-      *height = pBox->BxHeight;
+      *height = pBox->BxH;
       return;
     }
   pBox->BxCycles++;
@@ -3782,16 +3787,16 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	if (ibox &&
 	    (ibox->BxType == BoPiece || ibox->BxType == BoDotted ||
 	     ibox->BxType == BoScript))
-	      ibox = ibox->BxAbstractBox->AbBox;
+	  ibox = ibox->BxAbstractBox->AbBox;
 
 	status = ReadyToDisplay;
 	ReadyToDisplay = FALSE;
 	RemoveLines (pBox, frame, pLine, FALSE, &changeSelectBegin, &changeSelectEnd);
 	if (pBox->BxFirstLine == NULL)
 	  {
-	  /* fait reevaluer la mise en lignes et on recupere */
-	  /* la hauteur et la largeur du contenu de la boite */
-	  GiveEnclosureSize (pAb, frame, &width, &height);
+	    /* fait reevaluer la mise en lignes et on recupere */
+	    /* la hauteur et la largeur du contenu de la boite */
+	    GiveEnclosureSize (pAb, frame, &width, &height);
 	  }
 	else
 	  {
@@ -4129,8 +4134,8 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	  if (pLine)
 	    /* rebuild adjacent lines of that floating box */
 	    RecomputeLines (pAb, pLine, NULL, frame);
-	  else
-	    h = pBlock->BxH;
+	  /* get the current block heigh */
+	  h = pBlock->BxH;
 	}
       else
 	{
