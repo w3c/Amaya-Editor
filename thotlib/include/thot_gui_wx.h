@@ -7,11 +7,16 @@
 #ifndef WX_PRECOMP
     #include "wx/wx.h"
     #include "wx/toolbar.h"
+    #include "wx/colour.h"
+    #include "wx/event.h"
+    #include "wx/font.h"
 #endif
+
+class AmayaFrame;
 
 typedef wxObject *	ThotWidget;
 typedef wxScrollBar * 	ThotScrollBar;
-typedef wxFrame	*	ThotFrame;
+typedef AmayaFrame *	ThotFrame;
 typedef wxStatusBar *	ThotStatusBar;
 
 typedef wxWindow *	ThotWindow;
@@ -20,24 +25,29 @@ typedef wxMenuBar *	ThotMenuBar;
 typedef wxMenu *	ThotMenu;
 typedef wxToolBar *	ThotToolBar;
 typedef wxControl *	ThotControl;
-typedef int             ThotBitmap;
-typedef int             ThotGC;
-typedef unsigned long   ThotColor;
-typedef int           * PtrFont;
+typedef wxColour *      ThotColor;
+#ifdef _GL
+typedef void *          ThotFont; // these fonts are used for low level display
+#else /* _GL */
+typedef wxFont *        ThotFont;
+#endif /* _GL */
+//typedef int           * PtrFont;
 typedef void          * ThotCursor;
 
 #ifndef _GL
 //  typedef XPoint       ThotPoint;
 #endif /* _GL */
 
-typedef void *         ThotEvent;
+typedef wxEvent *      ThotEvent;
 typedef void *         ThotKeyEvent;
 typedef void *         ThotComposeStatus;
 typedef void *         ThotAppContext;
 typedef void *         ThotTranslations;
 
+typedef int            ThotGC;
 typedef wxBitmap *     ThotIcon;
 typedef wxBitmap *     ThotPixmap;
+typedef wxBitmap *     ThotBitmap;
 
   // TODO : remove this X dependancy used in AHTBridge (ask jose)
   typedef unsigned long        XtInputId;

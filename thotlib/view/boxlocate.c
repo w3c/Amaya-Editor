@@ -1053,7 +1053,7 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   ----------------------------------------------------------------------*/
 static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 {
-  PtrFont             font;
+  ThotFont            font;
   PtrBox              pBox;
   int                 controlPoint;
   int                 arc, xm, xp;

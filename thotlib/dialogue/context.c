@@ -261,7 +261,7 @@ static void InitColors (char* name)
      }
 }
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 /*----------------------------------------------------------------------
   InitGraphicContexts initialize the X-Windows graphic contexts and their
   Windows counterpart in Microsoft environment.
@@ -388,7 +388,7 @@ static void InitGraphicContexts (void)
 #endif /* _MOTIF */
 }
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 
 /*----------------------------------------------------------------------
@@ -488,6 +488,17 @@ void ThotInitDisplay (char* name, int dx, int dy)
    InitPictureHandlers (FALSE);
 #endif /* _GTK */
 
+#ifdef _WX  
+   InitDocColors (name);
+   InitColors (name);
+   InitGraphicContexts ();
+   InitCurs ();
+   InitDialogueFonts (name);
+
+   /* Initialization of Picture Drivers */
+   InitPictureHandlers (FALSE);
+#endif /* _WX */
+
 #ifdef _MOTIF
    XSetErrorHandler (XWindowError);
    XSetIOErrorHandler (XWindowFatalError);
@@ -520,7 +531,9 @@ void InitDocContexts ()
   /* Initialisation de la table des frames */
   for (i = 0; i <= MAX_FRAME; i++)
     {
+#ifndef _WX
       FrRef[i] = 0;
+#endif /* _WX */
 #ifdef _WINDOWS
       FrMainRef[i] = 0;
 #endif /* _WINDOWS */

@@ -1211,10 +1211,10 @@ void TtaMainLoop ()
    TtaGetMenuColor
    Returns the color used for the background of dialogue windows.
   ----------------------------------------------------------------------*/
-ThotPixel TtaGetMenuColor ()
+ThotColor TtaGetMenuColor ()
 {
    UserErrorCode = 0;
-   return (ThotPixel) BgMenu_Color;
+   return (ThotColor) BgMenu_Color;
 }
 
 

@@ -48,17 +48,17 @@ typedef struct _FontInfo {
   char  FiScript; 
   char  FiFamily; 
 } FontInfo;
-typedef FontInfo      *PtrFont;
+typedef FontInfo      *ThotFont;
 
 typedef void          *ThotWidget;
 typedef HWND           ThotWindow;
-typedef ThotWidget 	ThotScrollBar;
-typedef ThotWidget	ThotFrame;
-typedef ThotWidget	ThotStatusBar;
+typedef ThotWidget     ThotScrollBar;
+typedef ThotWidget     ThotFrame;
+typedef ThotWidget     ThotStatusBar;
 typedef TBBUTTON      *ThotButton;
-typedef ThotWidget 	ThotMenuBar;
+typedef ThotWidget     ThotMenuBar;
 typedef HMENU          ThotMenu;
-typedef ThotWidget	ThotToolBar;
+typedef ThotWidget     ThotToolBar;
 typedef HBITMAP        ThotBitmap;
 typedef COLORREF       ThotColor;
 typedef COLORREF       Pixel;

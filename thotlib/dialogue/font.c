@@ -50,7 +50,7 @@ static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 static char        *FontFamily;
 static char         GreekFontScript;
 #ifdef _WINDOWS
-  static PtrFont    LastUsedFont = NULL;
+  static ThotFont   LastUsedFont = NULL;
   static HFONT      OldFont;
   
   #include "wininclude.h"  
@@ -418,7 +418,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
 /*----------------------------------------------------------------------
   WinLoadFont : Load a Windows font in a Device context.
   ----------------------------------------------------------------------*/
-HFONT WinLoadFont (HDC hdc, PtrFont font)
+HFONT WinLoadFont (HDC hdc, ThotFont font)
 {
   /*if (font && LastUsedFont != font)*/
     {
@@ -486,7 +486,7 @@ static XCharStruct *CharacterStructure(CHAR_T c, XFontStruct *xf)
 /*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterWidth (int c, PtrFont font)
+int CharacterWidth (int c, ThotFont font)
 {
 #ifdef _MOTIF
   XFontStruct        *xf = (XFontStruct *) font;
@@ -699,7 +699,7 @@ int SpecialCharBoxWidth (CHAR_T c)
 int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 {
 #ifdef _I18N_
-  PtrFont         font;
+  ThotFont        font;
   int             car;
 
   if (SpecialCharBoxWidth (c))
@@ -721,7 +721,7 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 /*----------------------------------------------------------------------
   CharacterHeight returns the height of a char in a given font
   ----------------------------------------------------------------------*/
-int CharacterHeight (int c, PtrFont font)
+int CharacterHeight (int c, ThotFont font)
 {
   int              l;
 #ifdef _MOTIF
@@ -762,11 +762,11 @@ int CharacterHeight (int c, PtrFont font)
 /*----------------------------------------------------------------------
   CharacterAscent returns the ascent of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterAscent (int c, PtrFont font)
+int CharacterAscent (int c, ThotFont font)
 {
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   int		    i;
-#endif /*#if defined(_GTK) || defined(_MOTIF)*/
+#endif /*#if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 
 #if defined(_GTK) || defined(_MOTIF) || defined(_GL)
   int               ascent;
@@ -792,7 +792,7 @@ int CharacterAscent (int c, PtrFont font)
   else
     ascent = gl_font_char_ascent (font, (CHAR_T *) &c);
 
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   if (c == 244)
     {
       i = 0;
@@ -801,7 +801,7 @@ int CharacterAscent (int c, PtrFont font)
       if (TtPatchedFont[i])
 	ascent -= 2;
     }
-#endif /*#if defined(_GTK) || defined(_MOTIF)*/
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
   
   return (ascent);
 #else /*_GL*/
@@ -847,15 +847,12 @@ int CharacterAscent (int c, PtrFont font)
   return 0;
 #endif /* _NOGUI */
 
-#ifdef _WX
-  return 0;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
   FontAscent returns a global ascent for a font.
   ----------------------------------------------------------------------*/
-int FontAscent (PtrFont font)
+int FontAscent (ThotFont font)
 {
   if (font == NULL)
     return (0);
@@ -879,16 +876,15 @@ int FontAscent (PtrFont font)
     return (((XFontStruct *) font)->ascent);
 #endif /* _GTK */
 
+#ifdef _WX
+    /* TODO : a faire si on desir porter la version non opengl de wxwindows */
+#endif /* _WX */
+
 #endif /*_GL*/
 
 #ifdef _NOGUI
   return 0;
 #endif /* #ifdef _NOGUI */   
-
-#ifdef _WX
-  return 0;
-#endif /* _WX */
- 
 }
 
 /*----------------------------------------------------------------------
@@ -897,7 +893,7 @@ int FontAscent (PtrFont font)
 static int XFontAscent (SpecFont specfont)
 {
 #ifdef _I18N_
-  PtrFont         font;
+  ThotFont        font;
   unsigned char   car;
 
   car = GetFontAndIndexFromSpec (120, specfont, &font);
@@ -912,7 +908,7 @@ static int XFontAscent (SpecFont specfont)
 /*----------------------------------------------------------------------
   FontHeight returns the height of a given font.
   ----------------------------------------------------------------------*/
-int FontHeight (PtrFont font)
+int FontHeight (ThotFont font)
 {
   if (font == NULL)
     return (0);
@@ -934,15 +930,15 @@ int FontHeight (PtrFont font)
     return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
 #endif /* _MOTIF */
 
+#ifdef _WX
+    /* TODO : a faire si on desir porter la version non opengl de wxwindows */
+#endif /* _WX */
+    
 #endif /*_GL*/
 
 #ifdef _NOGUI
   return 0;
 #endif /* #ifdef _NOGUI */       
-
-#ifdef _WX
-  return 0;
-#endif /* _WX */ 
 }
 
 /*----------------------------------------------------------------------
@@ -951,7 +947,7 @@ int FontHeight (PtrFont font)
 int BoxFontHeight (SpecFont specfont)
 {
 #ifdef _I18N_
-  PtrFont         font;
+  ThotFont        font;
   int             car;
 
   car = GetFontAndIndexFromSpec (120, specfont, &font);
@@ -1122,7 +1118,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 /*----------------------------------------------------------------------
   FontBase returns the shifting of the base line for a given font.
   ----------------------------------------------------------------------*/
-int FontBase (PtrFont font)
+int FontBase (ThotFont font)
 {
    if (font == NULL)
       return (0);
@@ -1136,7 +1132,7 @@ int FontBase (PtrFont font)
 int BoxFontBase (SpecFont specfont)
 {
 #ifdef _I18N_
-  PtrFont         font;
+  ThotFont        font;
   unsigned char   car;
 
   car = GetFontAndIndexFromSpec (120, specfont, &font);
@@ -1177,9 +1173,9 @@ int FontPointSize (int size)
 /*----------------------------------------------------------------------
   LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
-PtrFont LoadFont (char *name)
+ThotFont LoadFont (char *name)
 {
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 #ifdef _I18N_
   /*printf ("%s\n", name);*/
 #endif /* _I18N_ */
@@ -1192,11 +1188,17 @@ PtrFont LoadFont (char *name)
 #endif /* _GTK */
 
 #ifdef _MOTIF  
-  return ((PtrFont) XLoadQueryFont (TtDisplay, name));
+  return ((ThotFont) XLoadQueryFont (TtDisplay, name));
 #endif /* _MOTIF */
-#else /* #if defined(_GTK) || defined(_MOTIF) */
+
+#ifdef _WX
+    /* TODO : a faire si on desir porter la version non opengl de wxwindows */
+    return NULL;
+#endif /* _WX */
+  
+#else /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
   return NULL;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1237,9 +1239,9 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 {
   char        *wght, *slant, *ffamily;
   char        encoding[3];
-#if defined(_GTK) || defined(_MOTIF)
-  PtrFont     ptfont;
-#endif /*#if defined(_GTK) || defined(_MOTIF)*/
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
+  ThotFont    ptfont;
+#endif /*#if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 
   /* apply the current font zoom */
   if (unit == UnRelative)
@@ -1264,9 +1266,9 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       sprintf (r_nameX, "%s-%s-%s-normal-*-%d-173-100-100-p-106-iso10646-1",
 		 ffamily, wght, slant, size);
       GeneratePostscriptFont (r_name, script, family, highlight, size);
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
       ptfont = LoadFont (r_nameX);
-#endif /*#if defined(_GTK) || defined(_MOTIF)*/
+#endif /*#if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
     }
   else
     { 
@@ -1414,7 +1416,7 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 			TypeUnit unit, char text[10], char textX[100])
 {
   char *result = NULL;
-#if ( defined(_GTK) || defined(_MOTIF) ) && !defined(_GL)
+#if ( defined(_GTK) || defined(_MOTIF) || defined(_WX)) && !defined(_GL)
   int i, j, k, internalsize;
 
   if (!Printing)
@@ -1464,7 +1466,7 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 	  GeneratePostscriptFont (text, script, family, highlight, internalsize);
 	}
     }
-#endif /* #if ( defined(_GTK) || defined(_MOTIF) ) && !defined(_GL) */
+#endif /* #if ( defined(_GTK) || defined(_MOTIF) || defined(_WX) ) && !defined(_GL) */
   if (result == NULL)
     FontIdentifier (script, family, highlight, size, unit, text, textX);
 }
@@ -1472,16 +1474,16 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 /*----------------------------------------------------------------------
   ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
-PtrFont ReadFont (char script, int family, int highlight, int size,
+ThotFont ReadFont (char script, int family, int highlight, int size,
 		  TypeUnit unit)
 {
   char             name[10], nameX[100];
 
   GetFontIdentifier (script, family, highlight, size, unit, name, nameX);
 
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   return LoadFont (nameX);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 
 #ifdef _WINDOWS  
   return NULL;
@@ -1490,11 +1492,6 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
 #ifdef _NOGUI
   return NULL;
 #endif /* #ifdef _NOGUI */    
-
-#ifdef _WX
-  return NULL;
-#endif /* _WX */
-  
 }
  
 /*----------------------------------------------------------------------
@@ -1569,7 +1566,7 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
   Parameters increase decrease are true when a new test is allowed.
   The parameter requestedsize gives the initial requested size.
   ----------------------------------------------------------------------*/
-static PtrFont LoadNearestFont (char script, int family, int highlight,
+static ThotFont LoadNearestFont (char script, int family, int highlight,
 				int size, int requestedsize, int frame,
 				ThotBool increase, ThotBool decrease)
 {
@@ -1586,7 +1583,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   HDC                 display;
 #endif /* _WINDOWS */
   
-  PtrFont             ptfont;
+  ThotFont            ptfont;
 
   GetFontIdentifier (script, family, highlight, size, UnRelative, text, textX);
   /* initialize the PostScript font name */
@@ -1622,7 +1619,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  g_print ("\n XLFD selection : %s %s", textX, text);
 #endif /*_PCLDEBUG*/
 
-    ptfont = (PtrFont)GL_LoadFont (script, family, highlight, size);
+    ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
 #else /*_GL*/
 
 #ifdef _WINDOWS
@@ -1731,9 +1728,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	    ptfont = NULL;
 #endif  /* _WINDOWS */
 
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	  ptfont = LoadFont (textX);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 
 #endif/*  _GL */
     
@@ -1795,7 +1792,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		GreekFontScript = 'G';
  	      else
 		{
-		  ptfont = (PtrFont)LoadStixFont ('E', 10);
+		  ptfont = (ThotFont)LoadStixFont ('E', 10);
 		  if (ptfont)
 		    /* now we'll work with the Stix font */
 		    GreekFontScript = 'E';
@@ -1805,7 +1802,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 
 #ifdef _GL
 	  if (ptfont == NULL)
-	    ptfont = (PtrFont) DefaultGLFont;
+	    ptfont = DefaultGLFont;
 #else /* _GL */
 	  if (ptfont == NULL)
 	    ptfont = DialogFont;
@@ -1825,13 +1822,13 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  TtFonts[i] = ptfont;
 	  TtFontMask[i] = 0;
     
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
           val = LogicalPointsSizes[size];
 	  if (script == 'G' &&
 	      (val == 8 || val == 10 || val == 12 ||
 	       val == 14 || val == 24))
 	    TtPatchedFont[i] = val;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 
 	}
       /* rely to the current frame */
@@ -1891,10 +1888,10 @@ void ChangeFontsetSize (int size, PtrBox box, int frame)
   GetFontAndIndexFromSpec return the glyph index and the font
   used to display the wide character c;
   ----------------------------------------------------------------------*/
-int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
+int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 {
 #ifdef _I18N_
-  PtrFont            lfont, *pfont;
+  ThotFont           lfont, *pfont;
   CHARSET            encoding;
   char               code;
   int                car;
@@ -1959,9 +1956,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 #ifdef _WINDOWS
 		  encoding = WINDOWS_1253;
 #endif /* _WINDOWS */
-#if defined(_GTK) || defined(_MOTIF)      
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 		  encoding = ISO_8859_7;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 		}
 	      else
 		{
@@ -1978,9 +1975,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1252;
 #endif /* _WINDOWS */
 
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX) 
 	      encoding = ISO_8859_1;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
         
 	      code = '1'; /* West Europe Latin */
 	      pfont = &(fontset->FontIso_1);
@@ -2008,7 +2005,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1252;
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX) 
 	      if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
 		  c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/)
 		{
@@ -2065,7 +2062,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 			c = 188;
 		    }
 		}
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 	    }
 	  else if (c == 0x11F || c == 0x130 || c == 0x131 || c == 0x15F)
 	    {
@@ -2075,9 +2072,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1254;
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_9;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
         
 	    }
 	  else if (c < 0x17F)
@@ -2089,9 +2086,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1250;
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_2;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
         
 	    }
 	  else if ((c > 0x2000 && c < 0x237F &&
@@ -2116,9 +2113,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 #ifdef _WINDOWS
 		  encoding = WINDOWS_1253;
 #endif /* _WINDOWS */
-#if defined(_GTK) || defined(_MOTIF)      
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 		  encoding = ISO_8859_7;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 #endif /* _GL */
 	    }
 	  else if (c < 0x24F)
@@ -2129,9 +2126,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1250;
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_3;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
         
 	    }
 	  else if (c < 0x2AF)
@@ -2142,9 +2139,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1257;
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_4;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
         
 	    }
 	  else if (c < 0x45F)
@@ -2155,9 +2152,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1251;
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_5;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 	    }
 	  else if (c < 0x5FF)
 	    {
@@ -2167,9 +2164,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1255;
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_8;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
         
 	    }
 	  else if (c < 0x5FF)
@@ -2180,9 +2177,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1254;        
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_9;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
         
 	    }
 	  else if (c < 0x65F)
@@ -2193,9 +2190,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = WINDOWS_1256;
 #endif /* _WINDOWS */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = UNICODE_1_1;
-#endif /* _WINDOWS */
+#endif /* defined(_GTK) || defined(_MOTIF) || defined(_WX) */
         
 	    }
 	  else
@@ -2415,11 +2412,11 @@ void TtaSetFontZoom (int zoom)
   ----------------------------------------------------------------------*/
 void InitDialogueFonts (char *name)
 {
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   int              ndir, ncurrent;
   char            FONT_PATH[128];
   char            *fontpath;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
   char           **dirlist = NULL;
   char           **currentlist = NULL;
   char            *value;
@@ -2444,13 +2441,13 @@ void InitDialogueFonts (char *name)
   GreekFontScript = '7';
 #endif /* _WINDOWS */
   
-#if defined(_GTK) || defined(_MOTIF)  
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   if (Printing)
     /* Only the sysmbol font is available in Postscript */
     GreekFontScript = 'G';
   else
     GreekFontScript = '7';
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
   
   FontFamily = (char *)TtaGetMemory (8);
   strcpy (FontFamily, "-*");
@@ -2459,6 +2456,10 @@ void InitDialogueFonts (char *name)
   if (value != NULL)
     sscanf (value, "%d", &MenuSize);
   f3 = MenuSize + 2;
+
+#if defined(_WX)
+  /* TODO : a faire si on desir porter la version non opengl avec wxwindows */  
+#endif /* _WX */
   
 #if defined(_GTK) || defined(_MOTIF)
   if (!Printing)
@@ -2529,7 +2530,7 @@ void InitDialogueFonts (char *name)
     DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
 #endif /* _WINDOWS */
     
-#if defined(_GTK) || defined(_MOTIF)    
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
   if (DialogFont == NULL)
     {
@@ -2555,19 +2556,23 @@ void InitDialogueFonts (char *name)
       if (LargeDialogFont == NULL)
 	LargeDialogFont = IDialogFont;
     }
-#endif /*#if defined(_GTK) || defined(_MOTIF)*/
+#endif /*#if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
   
 #ifdef _GL
+
+#if defined(_GTK) || defined(_WX)
   /* Need a default GL font because the format is different */
   DefaultGLFont = NULL;
   i = 1;
   while (DefaultGLFont == NULL && i < 3)
     {
-      DefaultGLFont = (PtrFont)GL_LoadFont ('L', i, 1, 3);
+      DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, 3);
       i++;
     }
   if (DefaultGLFont == NULL)
     printf ("Cannot load any GL fonts\n");
+#endif /* _GTK */
+
 #endif /* _GL */
   
 }
@@ -2608,18 +2613,28 @@ static void FreeAFont (int i)
 
 #endif  /* _WINDOWS */
 
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   
 #ifdef _GTK
 #ifndef _GL 
 	if (TtFonts[i] != DefaultFont)
 	  gdk_font_unref (TtFonts[i]);
 #else /*_GL */
-	if (TtFonts[i] != (PtrFont) DefaultGLFont)	
+	if (TtFonts[i] != (ThotFont) DefaultGLFont)	
 	  gl_font_delete (TtFonts[i]);
 #endif /*_GL*/
 #endif /* _GTK */
 
+#ifdef _WX
+#ifndef _GL
+	/* TODO : a faire si on desir porter la version non opengl sous wxwindows */
+#else /*_GL */
+	if (TtFonts[i] != (ThotFont) DefaultGLFont)
+	  gl_font_delete (TtFonts[i]);
+#endif /*_GL*/
+#endif /* _WX */
+
+	
 #ifdef _MOTIF  
 	XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
 #endif /* _MOTIF */
@@ -2628,7 +2643,7 @@ static void FreeAFont (int i)
       if (TtPatchedFont[i])
 	TtPatchedFont[i] = 0;
       
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
       
       TtFontMask[i] = 0;
       /* pack the font table */
@@ -2640,7 +2655,7 @@ static void FreeAFont (int i)
 	  TtFonts[i] = TtFonts[j];
 	  TtFontMask[i] = TtFontMask[j];
 
-#if (defined(_GTK) || defined(_MOTIF)) && !defined(_GL)
+#if (defined(_GTK) || defined(_MOTIF) || defined(_WX)) && !defined(_GL)
 	  TtPatchedFont[i] = TtPatchedFont[j];
 #endif /* #if (defined(_GTK) || defined(_MOTIF)) && !defined(_GL) */
     
@@ -2756,10 +2771,10 @@ void ThotFreeAllFonts (void)
   LoadingArabicFont is a special function which load only arabic font
   "arabweb.ttf"
   ----------------------------------------------------------------------------*/
-void LoadingArabicFont (SpecFont fontset ,PtrFont *font)
+void LoadingArabicFont (SpecFont fontset ,ThotFont *font)
 {
 #ifdef _I18N_
-  PtrFont      lfont;
+  ThotFont     lfont;
   int          encoding;
   int          frame;
   unsigned int mask;
@@ -2830,7 +2845,7 @@ void Put_Char_Width (int car, int l )
 int BoxArabicCharacterWidth (CHAR_T c, PtrTextBuffer *adbuff, int *ind,
 			     SpecFont specfont)
 {
-  PtrFont      font; 
+  ThotFont     font; 
   int          car, l;
   CHAR_T       prevChar, nextChar; 
 

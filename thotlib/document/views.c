@@ -73,6 +73,8 @@
 #include "viewapi_f.h"
 #include "writepivot_f.h"
 
+#include "appdialogue_wx_f.h"
+
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -540,9 +542,17 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       schView = pDoc->DocView[view - 1].DvPSchemaView;
       /* creation d'une fenetre pour la vue */
       pSS = pDoc->DocSSchema;
+
+#ifdef _WX
+      frame = TtaMakeFrame( IdentDocument (pDoc), view, width, height, &volume );
+#endif /* _WX */
+      
+#if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS)
       frame = MakeFrame (pSS->SsName, schView,  pDoc->DocDName, X, Y,
 			 width, height, &volume, IdentDocument (pDoc),
 			 withMenu, withButton);
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) */
+      
     } 
   if (frame == 0)
     {

@@ -18,28 +18,28 @@ int GetMathFontWidth (SpecFont fontset,
 		      int size,
 		      int height);
 
-void GiveStixSize (PtrFont font, PtrAbstractBox pAb, 
+void GiveStixSize (ThotFont font, PtrAbstractBox pAb, 
 		   int *width, int *height, int size);
 
 
 
-void DrawStixChar (PtrFont font, unsigned char symb, 
+void DrawStixChar (ThotFont font, unsigned char symb, 
 		   int x, int y, 
 		   int l, int h, 
 		   int fg, int frame);
 void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
-		       int type, PtrFont font, int fg);
+		       int type, ThotFont font, int fg);
 void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
-		      int direction, PtrFont font, int fg);
+		      int direction, ThotFont font, int fg);
 void DrawStixPointyBracket (int frame, int thick, int x, int y, int l, int h,
-			    int direction, PtrFont font, int fg);
+			    int direction, ThotFont font, int fg);
 void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
-			  int direction, PtrFont font, int fg);
+			  int direction, ThotFont font, int fg);
 void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
-		    int direction, PtrFont font, int fg);
+		    int direction, ThotFont font, int fg);
 void DrawStixSigma (int frame, int x, int y, 
 		    int l, int h, 
-		    PtrFont font, int fg);
+		    ThotFont font, int fg);
 
 
 int SizetoLogical (int size);

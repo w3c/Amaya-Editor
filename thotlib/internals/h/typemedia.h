@@ -28,22 +28,22 @@ typedef struct _FontSet {
   int           FontHighlight;
   int           FontSize;
   unsigned int  FontMask;
-  PtrFont       FontIso_1;
-  PtrFont       FontIso_2;
-  PtrFont       FontIso_3;
-  PtrFont       FontIso_4;
-  PtrFont       FontIso_5;
-  PtrFont       FontIso_6;
-  PtrFont       FontIso_7;
-  PtrFont       FontIso_8;
-  PtrFont       FontIso_9;
-  PtrFont       FontIso_13;
-  PtrFont       FontIso_15;
-  PtrFont       FontSymbol; /* Symbol of Stix fonts ?? */
-  PtrFont       FontUnicode;
+  ThotFont      FontIso_1;
+  ThotFont      FontIso_2;
+  ThotFont      FontIso_3;
+  ThotFont      FontIso_4;
+  ThotFont      FontIso_5;
+  ThotFont      FontIso_6;
+  ThotFont      FontIso_7;
+  ThotFont      FontIso_8;
+  ThotFont      FontIso_9;
+  ThotFont      FontIso_13;
+  ThotFont      FontIso_15;
+  ThotFont      FontSymbol; /* Symbol of Stix fonts ?? */
+  ThotFont      FontUnicode;
 } FontSet;
 #else /* _I18N_ */
-typedef PtrFont               SpecFont;
+typedef ThotFont              SpecFont;
 #endif /* _I18N_ */
 
 typedef unsigned char RuleSet[32];

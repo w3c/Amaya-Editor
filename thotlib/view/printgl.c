@@ -119,9 +119,14 @@ static GLfloat       LastLineWidth;
 GLcontext *GL = NULL;
 static int            X, Y;
 
+#ifdef _WX
+/* TODO : rendre le code plus propre car FrRef n'a rien a voir avec un file descriptor !!! */
+/* TODO : FrRef est definit dans print.c */
+extern ThotWindow  FrRef[MAX_FRAME + 2];
+#endif /* _WX */
+
 /*#define FILE_STREAM GL->stream;*/
 #define FILE_STREAM ((FILE*) FrRef[1])
-
 
 #define GL_HEIGHT 2048
 #define GL_WIDTH 2048
@@ -653,13 +658,13 @@ GLint GLText (const char *str,
   if (length > 0)
     {
       GL_SetPrintForeground (fg); 
-      GetPostscriptNameFromFont ((PtrFont) font, fontname);
+      GetPostscriptNameFromFont ((ThotFont) font, fontname);
       fprintf (FILE_STREAM, fontname);
       fprintf (FILE_STREAM, "(");
       for (i = 0; i < length; i++)
 	{
 	  fprintf (FILE_STREAM, "%c", str[i]); 
-	  width += CharacterWidth (42, (PtrFont) font);     
+	  width += CharacterWidth (42, (ThotFont) font);     
 	}
       fprintf (FILE_STREAM, ") %d %d %d s\n", width, x, -y);
     }
@@ -705,7 +710,7 @@ static void Transcode (FILE *fout, int encoding, unsigned char car)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 int GLString (unsigned char *buff, int lg, int frame, int x, int y,
-		PtrFont font, int boxWidth, int bl, int hyphen,
+		ThotFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg)
 {
   FILE               *fout;
@@ -981,7 +986,7 @@ void WinGL_Swap (HDC hDC)
   WDrawString draw a char string of lg chars beginning in buff.
    ----------------------------------------------------------------------*/
 int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
-		 PtrFont font, int boxWidth, int bl, int hyphen,
+		 ThotFont font, int boxWidth, int bl, int hyphen,
 		 int startABlock, int fg)
 {
   if (lg < 0)

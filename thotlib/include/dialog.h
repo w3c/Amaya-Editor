@@ -160,7 +160,7 @@ extern void TtaChangeMenuEntry (int ref, int entry, char *texte);
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
 extern void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
-				ThotPixel color, int activate);
+				ThotColor color, int activate);
 
 /*----------------------------------------------------------------------
    TtaDestroyDialogue de'truit le catalogue de'signe' par ref.                

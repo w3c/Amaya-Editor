@@ -14,8 +14,16 @@
 
 #ifndef NODISPLAY
 
-/* Frames table */
+/* Frames table 
+ * _WX : a frame is a view, 2 frame could be shown in one Page_Ctrl
+ * */
 THOT_EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
+
+#ifdef _WX
+class AmayaWindow;
+THOT_EXPORT AmayaWindow * WindowsTable[MAX_WINDOW+1];
+#endif /* _WX */
+
 #ifdef _GTK
 THOT_EXPORT GtkWidget   *DefaultWindow;
 THOT_EXPORT GtkWidget   *DefaultDrawingarea;
@@ -23,9 +31,9 @@ THOT_EXPORT GdkDrawable *DefaultDrawable;
 THOT_EXPORT GdkDrawable *FrRef[MAX_FRAME + 2];    /* window references */
 #endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINDOWS) || defined(_NOGUI)
 THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];     /* window references */
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_NOGUI) */
 
 #ifdef _WINDOWS
 THOT_EXPORT ThotWindow  FrMainRef[MAX_FRAME + 2]; /* window references */
@@ -61,7 +69,7 @@ THOT_EXPORT HRGN         clipRgn;
 #ifdef _GTK
 /*THOT_EXPORT ThotWidget   RootShell;*/
 THOT_EXPORT GdkFont     *DefaultFont;  /* default Font                  */
-THOT_EXPORT ThotDisplay     *TtDisplay;/* Server context                */ /* used but should be removed, this is one of the few X11 dependencies */
+THOT_EXPORT ThotDisplay *TtDisplay;/* Server context                */ /* used but should be removed, this is one of the few X11 dependencies */
 THOT_EXPORT int          TtScreen;     /* Screen                        */
 THOT_EXPORT GdkColormap *TtCmap;       /* Color palette                 */
 THOT_EXPORT GdkGC       *TtWhiteGC;
@@ -92,12 +100,20 @@ THOT_EXPORT ThotGC       TtGraphicGC;	/* Graphic context for images    */
 THOT_EXPORT int          TtPatchedFont[MAX_FONT];/* size of the patched font */
 #endif /* #ifdef _MOTIF */
 
+#ifdef _WX
+  THOT_EXPORT int         TtPatchedFont[MAX_FONT];  /* size of the patched font */
+#endif /* _WX */
+    
+#ifdef _NOGUI
+  THOT_EXPORT int         TtPatchedFont[MAX_FONT];  /* size of the patched font */
+#endif /* _NOGUI */
+
 THOT_EXPORT ThotWindow TtRootWindow;    /* Thot root window              */
 THOT_EXPORT int        TtWDepth;	/* Screen color depth            */
 THOT_EXPORT int        TtWPrinterDepth;	/* Printer color depth           */
 THOT_EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* font names */
 THOT_EXPORT char       TtPsFontName[MAX_FONT * 8];/* PS font names       */
-THOT_EXPORT PtrFont    TtFonts[MAX_FONT];/* loaded fonts                 */
+THOT_EXPORT ThotFont   TtFonts[MAX_FONT];/* loaded fonts                 */
 
 #ifdef _GTK
 THOT_EXPORT ThotCursor ArrowCurs;	/* The base   Cursor             */
@@ -136,17 +152,6 @@ THOT_EXPORT Proc	   CurrentCallbackAPI;
     THOT_EXPORT HGLRC GL_Context[MAX_FRAME];
   #endif /* _GL */
 #endif /* _WINDOWS */
-
-#ifdef _WX
-  THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];     /* window references */
-  THOT_EXPORT int         TtPatchedFont[MAX_FONT];/* size of the patched font */
-#endif /* _WX */
-    
-#ifdef _NOGUI
-  THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];     /* window references */
-  THOT_EXPORT int         TtPatchedFont[MAX_FONT];/* size of the patched font */
-#endif /* _NOGUI */
-
 
 #endif /* !NODISPLAY */
   

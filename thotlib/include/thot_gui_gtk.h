@@ -44,7 +44,7 @@ typedef ThotWidget     ThotToolBar;
 typedef GdkBitmap     *ThotBitmap;
 typedef GdkGC         *ThotGC;
 typedef unsigned long  ThotColor;
-typedef GdkFont       *PtrFont;
+typedef GdkFont       *ThotFont;
 typedef GdkCursor     *ThotCursor;
 typedef Display        ThotDisplay; /* X11 dependancy :( */
 typedef Visual         ThotVisual;  /* X11 dependancy :( */

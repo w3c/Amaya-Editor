@@ -15,15 +15,31 @@ extern void XFlushOutput ( int frame );
 extern void FrameToRedisplay ( ThotWindow w,
                                int frame,
                                void *ev );
+extern void FrameRedraw ( int frame,
+                          unsigned int width,
+                          unsigned int height );
+extern ThotBool FrameExposeCallback ( int frame,
+                                      int x,
+                                      int y,
+                                      int w,
+                                      int h );
 extern void FrameResized ( int *w,
                            int frame,
                            int *info );
+extern ThotBool FrameResizedCallback ( int frame,
+                                       int new_width,
+                                       int new_height );
+extern void FrameHScrolledCallback ( int frame,
+                                     int position,
+                                     int page_size );
 extern void FrameHScrolled ( int *w,
                              int frame,
                              int *param );
 extern void FrameVScrolled ( int *w,
                              int frame,
                              int *param );
+extern void FrameVScrolledCallback ( int frame,
+                                     int position );
 extern void TtcLineUp ( Document document,
                         View view );
 extern void TtcLineDown ( Document document,
@@ -49,6 +65,31 @@ extern void TtaSetStatus ( Document document,
                            View view,
                            char *text,
                            char *name );
+extern ThotBool FrameButtonDownCallback ( int frame,
+                                          int thot_button_id,
+                                          int thot_mod_mask,
+                                          int x,
+                                          int y );
+extern ThotBool FrameButtonUpCallback ( int frame,
+                                        int thot_button_id,
+                                        int thot_mod_mask,
+                                        int x,
+                                        int y );
+extern ThotBool FrameButtonDClickCallback ( int frame,
+                                            int thot_button_id,
+                                            int thot_mod_mask,
+                                            int x,
+                                            int y );
+extern ThotBool FrameMotionCallback ( int frame,
+                                      int thot_mod_mask,
+                                      int x,
+                                      int y );
+extern ThotBool FrameMouseWheelCallback ( int frame,
+                                          int thot_mod_mask,
+                                          int direction,
+                                          int delta,
+                                          int x,
+                                          int y );
 extern void FrameCallback ( int frame,
                             void *evnt );
 extern void ThotGrab ( ThotWindow win,
@@ -95,15 +136,31 @@ extern void XFlushOutput (/* int frame */);
 extern void FrameToRedisplay (/* ThotWindow w,
                                  int frame,
                                  void *ev */);
+extern void FrameRedraw (/* int frame,
+                            unsigned int width,
+                            unsigned int height */);
+extern ThotBool FrameExposeCallback (/* int frame,
+                                        int x,
+                                        int y,
+                                        int w,
+                                        int h */);
 extern void FrameResized (/* int *w,
                              int frame,
                              int *info */);
+extern ThotBool FrameResizedCallback (/* int frame,
+                                         int new_width,
+                                         int new_height */);
+extern void FrameHScrolledCallback (/* int frame,
+                                       int position,
+                                       int page_size */);
 extern void FrameHScrolled (/* int *w,
                                int frame,
                                int *param */);
 extern void FrameVScrolled (/* int *w,
                                int frame,
                                int *param */);
+extern void FrameVScrolledCallback (/* int frame,
+                                       int position */);
 extern void TtcLineUp (/* Document document,
                           View view */);
 extern void TtcLineDown (/* Document document,
@@ -129,6 +186,31 @@ extern void TtaSetStatus (/* Document document,
                              View view,
                              char *text,
                              char *name */);
+extern ThotBool FrameButtonDownCallback (/* int frame,
+                                            int thot_button_id,
+                                            int thot_mod_mask,
+                                            int x,
+                                            int y */);
+extern ThotBool FrameButtonUpCallback (/* int frame,
+                                          int thot_button_id,
+                                          int thot_mod_mask,
+                                          int x,
+                                          int y */);
+extern ThotBool FrameButtonDClickCallback (/* int frame,
+                                              int thot_button_id,
+                                              int thot_mod_mask,
+                                              int x,
+                                              int y */);
+extern ThotBool FrameMotionCallback (/* int frame,
+                                        int thot_mod_mask,
+                                        int x,
+                                        int y */);
+extern ThotBool FrameMouseWheelCallback (/* int frame,
+                                            int thot_mod_mask,
+                                            int direction,
+                                            int delta,
+                                            int x,
+                                            int y */);
 extern void FrameCallback (/* int frame,
                               void *evnt */);
 extern void ThotGrab (/* ThotWindow win,

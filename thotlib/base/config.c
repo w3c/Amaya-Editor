@@ -1400,8 +1400,11 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 		     int *height)
 {
 #ifdef _WX
+
+  /* TODO
+   * 
   int 		frame;
-  ThotFrame	pFrame;
+  ThotFrame	pFrame = NULL;
     
   frame = GetWindowNumber (doc, view);
   pFrame = FrameTable[frame].WdFrame;
@@ -1410,7 +1413,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
     {
       pFrame->GetPosition( xmm, ymm );
       pFrame->GetSize( width,height );
-    }
+    }*/
 #endif /* _WX */
   
 #if defined(_MOTIF) || defined(_GTK)

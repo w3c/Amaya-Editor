@@ -60,6 +60,9 @@ extern ThotBool TtaIsViewOpen ( Document document,
                                 View view );
 extern View TtaGetViewFromName ( Document document,
                                  char *viewName );
+extern int TtaGetWindowId ( Document document );
+extern void TtaSetWindowId ( Document document,
+                             int window_id );
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
 extern void DisplayHolophrasted ( PtrElement pEl,
@@ -141,6 +144,9 @@ extern ThotBool TtaIsViewOpen (/* Document document,
                                   View view */);
 extern View TtaGetViewFromName (/* Document document,
                                    char *viewName */);
+extern int TtaGetWindowId (/* Document document */);
+extern void TtaSetWindowId (/* Document document,
+                               int window_id */);
 extern void TtaGiveActiveView (/* Document * document,
                                   View * view */);
 extern void DisplayHolophrasted (/* PtrElement pEl,

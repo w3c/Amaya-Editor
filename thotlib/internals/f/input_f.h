@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void CharTranslationWX ( int frame,
+                                int thot_mask,
+                                ThotKeySym thot_keysym,
+                                unsigned int value );
 extern void CharTranslation ( ThotKeyEvent *event );
 extern ThotBool ThotInput ( int frame,
                             unsigned int value,
@@ -26,6 +30,10 @@ extern void InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
 
+extern void CharTranslationWX (/* int frame,
+                                  int thot_mask,
+                                  ThotKeySym thot_keysym,
+                                  unsigned int value */);
 extern void CharTranslation (/* ThotKeyEvent *event */);
 extern ThotBool ThotInput (/* int frame,
                               unsigned int value,

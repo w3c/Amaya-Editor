@@ -399,7 +399,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	  colors[i].blue  = info_ptr->palette[i].blue;
 #endif /* _WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)    
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	  colors[i].red   = info_ptr->palette[i].red << 8;
 	  colors[i].green = info_ptr->palette[i].green << 8;
 	  colors[i].blue  = info_ptr->palette[i].blue << 8;
@@ -407,7 +407,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 #ifdef _MOTIF
 	  colors[i].flags = DoRed|DoGreen|DoBlue;
 #endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 	}
     }
   else if (color_type == PNG_COLOR_TYPE_RGB)
@@ -431,14 +431,14 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	      colors[i].blue = Std_color_cube[i].blue;
 #endif /* _WINDOWS */
         
-#if defined(_MOTIF) || defined(_GTK)        
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)    
 	      colors[i].red = Std_color_cube[i].red << 8;
 	      colors[i].green = Std_color_cube[i].green << 8;
 	      colors[i].blue = Std_color_cube[i].blue << 8;
 #ifdef _MOTIF
 	      colors[i].flags = DoRed|DoGreen|DoBlue;
 #endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 	    }
 	}
     }
@@ -459,16 +459,16 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	  *ncolors = 16; 
 	  for (i = 0; i < 15; i++)
 	    {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_WINDOWS)
 	      colors[i].red = colors[i].green = colors[i].blue = i;
 #endif /* _WINDOWS */
         
-#if defined(_MOTIF) || defined(_GTK)        
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	      colors[i].red = colors[i].green = colors[i].blue = i << 8;
 #ifdef _MOTIF
 	      colors[i].flags = DoRed|DoGreen|DoBlue;
 #endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 	    }
 	}
     }
@@ -650,9 +650,9 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
   unsigned char *bit_data;
   FILE           *fp;
       
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   fp = fopen (datafile, "r");
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
   
 #ifdef _WINDOWS
   fp = fopen (datafile, "rb");

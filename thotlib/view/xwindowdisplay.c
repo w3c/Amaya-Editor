@@ -46,7 +46,7 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtkprivate.h>
 
-ThotBool is_gtk_font_2byte (PtrFont font)
+ThotBool is_gtk_font_2byte (ThotFont font)
 {
   XFontStruct *xfs;
   
@@ -68,7 +68,7 @@ ThotBool is_gtk_font_2byte (PtrFont font)
   FontOrig update and (x, y) location before DrawString
   accordingly to the ascent of the font used.
   ----------------------------------------------------------------------*/
-void FontOrig (PtrFont font, char firstchar, int *pX, int *pY)
+void FontOrig (ThotFont font, char firstchar, int *pX, int *pY)
 {
 #if defined(_MOTIF) || defined(_GTK)
    if (!font)
@@ -203,7 +203,7 @@ static void TranslateChars (unsigned char *text)
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
+void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
 {
    ThotWindow          w;
    w = FrRef[frame];
@@ -227,7 +227,7 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
   DrawAAText : Using a Antialiased library if present, 
   named GDKXFT.so, it draws antialiased text.
   ----------------------------------------------------------------------*/
-int DrawAAText (int frame, PtrFont font, const gchar *text,
+int DrawAAText (int frame, ThotFont font, const gchar *text,
 	       gint text_length, int x,int y)
  {
    GdkWindowPrivate *drawable_private;
@@ -281,7 +281,7 @@ int DrawAAText (int frame, PtrFont font, const gchar *text,
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
-		PtrFont font, int boxWidth, int bl, int hyphen,
+		ThotFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg)
 {
   ThotWindow          w;
@@ -347,7 +347,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
-		 PtrFont font, int boxWidth, int bl, int hyphen,
+		 ThotFont font, int boxWidth, int bl, int hyphen,
 		 int startABlock, int fg)
 {
   ThotWindow          w;
@@ -433,7 +433,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	       |             I                  |
 	      \|/____________I_________________\|/_ bottom
   ----------------------------------------------------------------------*/
-void DisplayUnderline (int frame, int x, int y, PtrFont font, int type,
+void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
 		       int lg, int fg)
 {
    ThotWindow          w;
@@ -495,7 +495,7 @@ void DisplayUnderline (int frame, int x, int y, PtrFont font, int type,
 void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
    ThotWindow          w;
-   PtrFont             font;
+   ThotFont            font;
    SpecFont            spec;
    char               *ptcar;
    int                 xcour, width, nb;
@@ -545,7 +545,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawRadical (int frame, int thick, int x, int y, int l, int h,
-		  PtrFont font, int fg)
+		  ThotFont font, int fg)
 {
   int                 xm, xp, fh;
 
@@ -574,7 +574,7 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
-		   int type, PtrFont font, int fg)
+		   int type, ThotFont font, int fg)
 {
    int                 yf;
    int                 yend, delta;
@@ -623,7 +623,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 static void DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
-			  int h, PtrFont font, int fg)
+			  int h, ThotFont font, int fg)
 {
    int                 xm, yf;
 
@@ -638,7 +638,7 @@ static void DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
   active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
+void DrawSigma (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
    int                 xm, ym, fh;
 
@@ -671,7 +671,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
   DrawPi draw a PI symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawPi (int frame, int x, int y, int l, int h, PtrFont font, int fg)
+void DrawPi (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
    int                 fh;
 
@@ -701,7 +701,7 @@ void DrawPi (int frame, int x, int y, int l, int h, PtrFont font, int fg)
   DrawIntersection draw an intersection symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
+void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
 		       int fg)
 {
    int                 arc, fh;
@@ -739,7 +739,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
   DrawUnion draw an Union symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
+void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
    int                 arc, fh;
 
@@ -909,7 +909,7 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawBracket (int frame, int thick, int x, int y, int l, int h,
-		  int direction, PtrFont font, int fg)
+		  int direction, ThotFont font, int fg)
 {
   int                 xm, yf, yend;
 
@@ -969,7 +969,7 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
-			int direction, PtrFont font, int fg)
+			int direction, ThotFont font, int fg)
 {
   int         xm, yf;
 
@@ -1018,7 +1018,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
-		      int direction, PtrFont font, int fg)
+		      int direction, ThotFont font, int fg)
 {
   int                 xm, yf, yend, delta, asc, hd;
 
@@ -1095,7 +1095,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
-		int direction, PtrFont font, int fg)
+		int direction, ThotFont font, int fg)
 {
   int                 xm, ym, yf, yend, delta, hd, asc;
 
@@ -2649,7 +2649,7 @@ void Clear (int frame, int width, int height, int x, int y)
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.
   ----------------------------------------------------------------------*/
-void WChaine (ThotWindow w, char *string, int x, int y, PtrFont font,
+void WChaine (ThotWindow w, char *string, int x, int y, ThotFont font,
 	      ThotGC GClocal)
 {
 #ifdef _GTK

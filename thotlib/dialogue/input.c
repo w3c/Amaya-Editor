@@ -24,12 +24,6 @@
 #include "message.h"
 #include "appdialogue.h"
 #define MAX_EQUIV 25
-#define THOT_NO_MOD	0
-#define THOT_MOD_CTRL	1
-#define THOT_MOD_ALT	2
-#define THOT_MOD_SHIFT	4
-#define THOT_MOD_S_CTRL	5
-#define THOT_MOD_S_ALT	6
 #define MAX_AUTOMATA	80
 /* automata structure for the keys */
 typedef struct _key
@@ -199,9 +193,9 @@ static char *KeyName (unsigned int key)
     case THOT_KEY_BackSpace:
       return "Backspace";
     case THOT_KEY_Tab:
-#ifndef _WINDOWS
+#if !defined(_WINDOWS) && !defined(_WX)
     case THOT_KEY_TAB:
-#endif /* _WINDOWS */
+#endif /* !defined(_WINDOWS) && !defned(_WX) */
       return "Tab";
     case THOT_KEY_Escape:
       return "Escape";
@@ -864,6 +858,59 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
+   CharTranslationWX
+   WX front-end to the character translation and handling.
+   Decodes the WX key press event  and calls the generic character
+   handling function.
+  ----------------------------------------------------------------------*/
+void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym, unsigned int value )
+{
+#if 0
+#ifdef _WX
+  CHARSET             charset;
+  wchar_t            *str, *p;
+
+  Document            document;
+  View                view;
+
+#ifdef __WXDEBUG__
+  printf( "KeyPressed :%s\n", KeyName (thot_keysym) );
+#endif /* #ifdef __WXDEBUG__ */
+  
+  if (frame > MAX_FRAME)
+    frame = 0;
+  FrameToView (frame, &document, &view);
+ 
+  if(thot_keysym == 0)
+    {
+      /******* Not sure this code makes sense */
+      charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
+      if (charset != UNDEFINED_CHARSET)
+	{
+	  str = TtaConvertByteToWC ((unsigned char*)&value, charset);
+	  p = str;
+	  while (*p)
+	    {
+	      if (MenuActionList[0].Call_Action)
+		(*(Proc3)MenuActionList[0].Call_Action) (
+			(void *)document,
+			(void *)view,
+			(void *)*p);
+	      p++;
+	    }
+	  TtaFreeMemory (str);
+	  return FALSE;
+	}
+    }
+
+  ThotInput (frame, value, 0, thot_mask, thot_keysym);
+  
+  return TRUE;
+#endif /* _WX */
+#endif
+}
+
+/*----------------------------------------------------------------------
    CharTranslation
    X-Window front-end to the character translation and handling.
    Decodes the X-Window event  and calls the generic character
@@ -1111,9 +1158,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		  if (ptr->K_EntryCode == key
 		      && ptr->K_Special == Special)
 #endif /* _WINDOWS */
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 		  if (ptr->K_EntryCode == key)
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 		    {
 		      /* first level entry found */
 		      found = TRUE;
@@ -1125,10 +1172,10 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 			  command = ptr->K_Command;
 			}
 		    }
-#if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS)        
+#if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) || defined(_WX)
 		  else
 		    ptr = ptr->K_Other;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) || defined(_WX) */
 		}
 	    }
 	}
@@ -1137,9 +1184,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 #ifdef _WINDOWS
   if (Special && !found)
 #endif /* !_WINDOWS */
-#if defined(_MOTIF) || defined(_GTK)    
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   if (!found)
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
     {
       /* Handling special keys */
       switch (key)
@@ -1625,9 +1672,9 @@ void InitTranslations (char *appliname)
   strcat (name, ".kb");
 #endif  /* _WINDOWS */
   
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   strcat (name, ".keyboard");
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
   strcpy (home, appHome);
   strcat (home, DIR_STR);

@@ -25,6 +25,10 @@
   #include <gtkgl/gtkglarea.h>
 #endif /* _GTK */
 
+#ifdef _WX
+  #include "AmayaFrame.h"
+#endif /* _WX */
+
 #include <GL/gl.h>
 
 #include "ustring.h"
@@ -656,6 +660,15 @@ ThotBool GL_prepare (int frame)
 	          return TRUE;
 #endif /* #ifdef _GTK */
 
+#ifdef _WX
+    wxLogDebug(_T("GL_prepare: frame=%d"), frame);
+    if (FrameTable[frame].WdFrame)
+    {
+      FrameTable[frame].WdFrame->SetCurrent();
+      return TRUE;
+    }
+#endif /* _WX */
+
     }
   return FALSE;
 }
@@ -686,7 +699,15 @@ void GL_Swap (int frame)
         gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
       }
 #endif /* #ifdef _GTK */
-      
+
+#ifdef _WX
+      if (FrameTable[frame].WdFrame)
+      {
+	wxLogDebug(_T("GL_Swap: frame=%d"), frame);
+	FrameTable[frame].WdFrame->SwapBuffers();
+      }
+#endif /* _WX */
+
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
     }
@@ -839,7 +860,7 @@ return 0;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 int GLString (unsigned char *buff, int lg, int frame, int x, int y,
-		PtrFont font, int boxWidth, int bl, int hyphen,
+		ThotFont font, int boxWidth, int bl, int hyphen,
 	      int startABlock, int fg)
 {
 return 0;

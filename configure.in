@@ -359,11 +359,11 @@ if test "$with_wx" = "yes" ; then
   WX_INCLUDES="`wx-config --cxxflags`"
   AC_SUBST(WX_INCLUDES)
 
+  WX_LIBRARIES="`wx-config --libs`"
+
   dnl GL is used ?
-  if test "${with_gl}" == "yes" ; then
-    WX_LIBRARIES="`wx-config --gl-libs`"
-  else
-    WX_LIBRARIES="`wx-config --libs`"
+  if test "${with_gl}" = "yes" ; then
+    WX_LIBRARIES="${WX_LIBRARIES} `wx-config --gl-libs`"
   fi
 
   AC_SUBST(WX_LIBRARIES)

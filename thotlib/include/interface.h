@@ -267,7 +267,7 @@ extern void TtaResetCursor (Document document, View view);
    TtaGetMenuColor
    Returns the color used for the background of dialogue windows.
   ----------------------------------------------------------------------*/
-extern ThotPixel TtaGetMenuColor (void);
+extern ThotColor TtaGetMenuColor (void);
 
 /*----------------------------------------------------------------------
   TtaUpdateEditorColors
@@ -318,6 +318,26 @@ extern void TtaGiveSelectPosition (Document document, Element element, View view
   The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
 extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
+
+/*----------------------------------------------------------------------
+  TtaMakeWindow create a AmayaWindow object and place it
+  into WindowsTable array
+  returns:
+ 	+ the window id
+        + -1 if too much created windows
+  ----------------------------------------------------------------------*/
+extern int TtaMakeWindow( );
+
+/*----------------------------------------------------------------------
+  TtaMakeFrame create a frame (view container)
+  notice : a frame need to be attached to a window
+  params:
+    + doc : the document id
+  returns:
+    + the frame id
+    + -1 if too much created views
+  ----------------------------------------------------------------------*/
+extern int TtaMakeFrame( Document doc );
 
 /*----------------------------------------------------------------------
    TtaListShortcuts

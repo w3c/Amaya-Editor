@@ -809,8 +809,8 @@ void SetupAndPrint (Document doc, View view)
   if (textFile)
     {
       /* invalid dialogue entries */
-      TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, -1, FALSE);
-      TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, -1, FALSE);
+      TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, (ThotColor)-1, FALSE);
+      TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, (ThotColor)-1, FALSE);
     }
 #else  /* _WINDOWS */
   CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSfile);

@@ -56,12 +56,15 @@
 
 #include "glprint.h"
 
-#ifdef _GTK
+#if defined(_GTK)
   #include <gtkgl/gtkglarea.h>
+#endif /* #if defined(_GTK) */
+
+#if defined(_GTK) || defined(_WX)
   /* Unix timer */
   #include <unistd.h>
   #include <sys/timeb.h>
-#endif /*_GTK*/
+#endif /* #if defined(_GTK) || defined(_WX) */
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -180,6 +183,9 @@ ThotBool GL_Err()
 #ifdef _GTK
       g_print ("\n%s :", (char*) gluErrorString (errCode));
 #endif /*_GTK*/
+#ifdef _WX
+      wxPrintf( _T("\n%s :"), (char*) gluErrorString (errCode) );
+#endif /*_WX*/
 #ifdef _WINDOWS
       WinErrorBox (NULL, (char*) gluErrorString (errCode));
 #endif /*_WINDOWS*/
@@ -1283,23 +1289,23 @@ void TtaRegisterTimeEvent(void (*pfunc) (Document doc, double current_time))
   ----------------------------------------------------------------------*/
 AnimTime ComputeThotCurrentTime (int frame)
 {
-#ifdef _GTK
+#if defined _GTK || defined(_WX)
   /* draw and calculate draw time 
      bench that helps finding bottlenecks...*/
   struct timeb	after;
-#endif /*_GTK*/
+#endif /* #if defined _GTK || defined(_WX) */
   AnimTime current_time; 
   int i;
 
   if (FrameTable[frame].Anim_play) 
     {   
 
-#ifdef _GTK
+#if defined _GTK || defined(_WX)
       /* while (gtk_events_pending ()) */
       /*   gtk_main_iteration (); */
       ftime (&after);
       current_time = after.time + (((double)after.millitm)/1000);      
-#endif /* _GTK */
+#endif /* _GTK || defined(_WX) */
       
 #ifdef _WINDOWS
       current_time = ((double) GetTickCount ()) / 1000; 
@@ -1350,9 +1356,9 @@ void SetGlPipelineState ()
       WinErrorBox (NULL,  GLU_ERROR_MSG);
 #endif /*  _WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)      
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
       fprintf( stderr, GLU_ERROR_MSG);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK)  || defined(_WX) */
       
       exit (1);
     }
@@ -1473,6 +1479,11 @@ void SetGlPipelineState ()
   if (GL_Err())
     g_print ("Bad INIT\n"); 
 #endif /*_GTK*/
+
+#ifdef _WX
+  if (GL_Err())
+    wxPrintf( _T("OpenGL Bad INIT\n") ); 
+#endif /*_WX*/
 
 #ifdef _WINDOWS
   if (GL_Err())

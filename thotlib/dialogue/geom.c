@@ -116,7 +116,11 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
 {
   ThotWindow          w;
 
+#ifndef _WX
   w = FrRef[frame];
+#else /* _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* _WX */
   if (w != None)
     {
 #ifdef _GL
@@ -175,7 +179,11 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
 #endif /*_GL*/
 #endif /* _WINDOWS */
 
+#ifndef _WX
   w = FrRef[frame];
+#else /* _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* _WX */
   if (w != None)
     {
 #ifdef _GL
@@ -225,7 +233,11 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
   int                 i, j;
   PtrTextBuffer       adbuff;
 
+#ifndef _WX
   w = FrRef[frame];
+#else /* _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* _WX */
   *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = -1;
   /* allocate a table of points */
   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
@@ -344,7 +356,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		       int *nbpoints, int maxPoints, int width, int height,
 		       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 {
-#if defined(_MOTIF) || defined(_WINDOWS) || defined(_GTK)
+#if defined(_MOTIF) || defined(_WINDOWS) || defined(_GTK) /* TODO : _WX */
   
   ThotWindow          w;
 #if defined(_MOTIF) || defined(_WINDOWS)
@@ -377,7 +389,11 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   /* need the window to change the cursor */
+#ifndef _WX
   w = FrRef[frame];
+#else /* _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* _WX */
   /* trasformation factor between the box and the abstract box */
   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) Bbuffer->BuPoints[0].XCoord;
   /* trasformation factor between the box and the abstract box */
@@ -985,7 +1001,11 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   /* need the window to change the cursor */
+#ifndef _WX 
   w = FrRef[frame];
+#else /* #ifndef _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* #ifndef _WX */
   newx = newy = 0;
   /* trasformation factor between the box and the abstract box */
   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) Bbuffer->BuPoints[0].XCoord;
@@ -1927,7 +1947,11 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 	       pAb->AbLeafType == LtGraphics &&
 	       (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
   /* select the correct cursor */
+#ifndef _WX 
   w = FrRef[frame];
+#else /* #ifndef _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* #ifndef _WX */
   /* Use the reference point to move the box */
   switch (box->BxHorizEdge)
     {
@@ -2742,7 +2766,12 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 #endif /* #if defined (_MOTIF) || defined(_GTK) */
 
   /* select the correct cursor */
+#ifndef _WX 
   w = FrRef[frame];
+#else /* #ifndef _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* #ifndef _WX */
+
 #ifdef _WINDOWS
 #ifndef _GL
   Gdc = GetDC (w);
@@ -2831,7 +2860,11 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 	       pAb->AbLeafType == LtGraphics &&
 	       (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
    /* Pick the correct cursor */
-   w = FrRef[frame];
+#ifndef _WX 
+  w = FrRef[frame];
+#else /* #ifndef _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* #ifndef _WX */
   /* draw the current box geometry */
   switch (box->BxHorizEdge)
     {
@@ -3278,7 +3311,11 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   /* Pick the correct cursor */
+#ifndef _WX 
   w = FrRef[frame];
+#else /* #ifndef _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* #ifndef _WX */
 
 #ifdef _WINDOWS
 #ifndef _GL
@@ -3432,7 +3469,11 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
       break;
     }
   /* change the cursor, modify library state */
+#ifndef _WX 
   w = FrRef[frame];
+#else /* #ifndef _WX */
+  w = (ThotWindow)FrameTable[frame].WdFrame;
+#endif /* #ifndef _WX */
 
 #ifdef _WINDOWS
   cross = LoadCursor (NULL, IDC_CROSS);

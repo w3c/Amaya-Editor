@@ -217,9 +217,13 @@ EDITOR_OBJ = \
 	dialogue/quit.o \
 	dialogue/searchmenu.o \
 	dialogue/selectmenu.o \
-	dialogue/AmayaFrame.o \
-	dialogue/AmayaDocument.o \
 	dialogue/AmayaCallback.o \
+	dialogue/AmayaWindow.o \
+	dialogue/AmayaPanel.o \
+	dialogue/AmayaPage.o \
+	dialogue/AmayaFrame.o \
+	dialogue/AmayaCanvas.o \
+	dialogue/appdialogue_wx.o \
 	document/pivot.o \
 	document/docs.o \
 	document/views.o \

@@ -387,7 +387,7 @@ void UnsetEntryMenu (int ref, int ent)
    else
      {
 	GetFontIdentifier ('L', 'T', 2, 11, (TypeUnit)1, text, fontname);
-	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
+	TtaRedrawMenuEntry (ref, ent, fontname, (ThotColor)-1, 0);
      }
 }
 #endif /* _WINDOWS */
@@ -473,9 +473,9 @@ void TtcSpellCheck (Document doc, View view)
    else
      {
 
-	TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, -1, 1);
-	TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, -1, 1);
-	TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, -1, 1);
+	TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, (ThotColor)-1, 1);
+	TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, (ThotColor)-1, 1);
+	TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, (ThotColor)-1, 1);
      }
 
    /* initialise le champ termine de correction courante */
@@ -810,9 +810,9 @@ void CallbackChecker (int ref, int dataType, char *data)
 	      if (pDocSel == ChkrRange->SDocument)
 		{
 		  /* Il faut reactiver les entree */
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, -1, 1);
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, -1, 1);
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, -1, 1);
+		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, (ThotColor)-1, 1);
+		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, (ThotColor)-1, 1);
+		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, (ThotColor)-1, 1);
 		} 
 #endif /* !_WINDOWS */
 	    }

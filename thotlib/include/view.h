@@ -302,6 +302,28 @@ extern ThotBool TtaIsViewOpen (Document document, View view);
 extern View TtaGetViewFromName (Document document, char *viewName);
 
 /*----------------------------------------------------------------------
+   TtaGetWindowId
+
+   Returns the window id to which that document belongs.
+   Parameter:
+     + document
+   Return values:
+     + int window_id : the document window id
+  ----------------------------------------------------------------------*/
+extern int TtaGetWindowId( Document document );
+
+/*----------------------------------------------------------------------
+   TtaSetWindowId
+
+   Set the document window id (the window is the document container).
+   Parameter:
+     + document
+   Return values:
+     + nothing
+  ----------------------------------------------------------------------*/
+extern void TtaSetWindowId( Document document, int window_id );
+
+/*----------------------------------------------------------------------
    Map and raise the corresponding window.                          
   ----------------------------------------------------------------------*/
 extern void TtaRaiseView (Document document, View view);

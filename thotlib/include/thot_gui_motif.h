@@ -54,7 +54,7 @@ typedef ThotWidget     ThotToolBar;
 typedef Drawable       ThotBitmap;
 typedef GC             ThotGC;
 typedef unsigned long  ThotColor;
-typedef int           *PtrFont;
+typedef int           *ThotFont;
 typedef Cursor         ThotCursor;
 typedef XEvent         ThotEvent;
 typedef XKeyEvent      ThotKeyEvent;

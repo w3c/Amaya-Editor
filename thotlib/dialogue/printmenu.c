@@ -331,14 +331,22 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    i = strlen (cmd);
 #endif /*_WINDOWS_DLL*/
 
-   if (FrRef[0] != 0)
+#ifndef _WX
+     if (FrRef[0] != 0)
+#else /* _WX */
+     if (FrameTable[0].WdFrame != 0)
+#endif /* _WX */
      {
 #ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (20);
        sprintf (printArgv[printArgc], "-w%ld", FrRef[0]);
        printArgc++;
 #else /* _WINDOWS_DLL */
+#ifndef _WX
        sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
+#else /* _WX */
+       sprintf (&cmd[i], " -w%u", (unsigned int) FrameTable[0].WdFrame);
+#endif /* _WX */
 #endif /* _WINDOWS */
      }
    else
@@ -353,7 +361,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	   sprintf (printArgv[printArgc], "-w%ld", FrRef[frame]);
 	   printArgc++;
 #else /* _WINDOWS_DLL */
-	   sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[frame]);
+#ifndef _WX
+           sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
+#else /* _WX */
+           sprintf (&cmd[i], " -w%u", (unsigned int) FrameTable[0].WdFrame);
+#endif /* _WX */
 #endif /* _WINDOWS */
 	 }
        else
@@ -363,7 +375,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	   sprintf (printArgv[printArgc], "-w%ld", FrRef[0]);
 	   printArgc++;
 #else /* _WINDOWS_DLL */
-	   sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
+#ifndef _WX
+           sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
+#else /* _WX */
+           sprintf (&cmd[i], " -w%u", (unsigned int) FrameTable[0].WdFrame);
+#endif /* _WX */
 #endif /* _WINDOWS */
 	 }
      }

@@ -1038,6 +1038,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
   for (view = 1; view <= MAX_VIEW_DOC; view++)
   {
   frame = pDoc->DocViewFrame[view - 1];
+#ifndef _WX // TODO
   if (frame != 0 && FrameTable[frame].MenuAttr != -1)
 	  {
 #ifdef _WINDOWS 
@@ -1119,7 +1120,9 @@ void UpdateAttrMenu (PtrDocument pDoc)
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 	      TtaSetMenuOn (document, view, menuID);
   	  }
-	  }
+	}
+#endif //#ifndef _WX // TODO
+  
   }
 }
 

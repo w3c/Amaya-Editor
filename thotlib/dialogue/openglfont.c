@@ -29,7 +29,6 @@
 #include "font_f.h"
 #include "glwindowdisplay.h"
 
-
 #ifdef _SUPERS
 /* 
    Supposed to give 
@@ -361,11 +360,11 @@ static int FontFaceSize (GL_font *font, unsigned int size, unsigned int res)
     return 0;
   size = SUPERSAMPLINGMUL (size);
 
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
   err = FT_Set_Char_Size (font->face, 0, size * 64, res, res);
   if (err) 
     err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
-#endif /* #ifdef _GTK */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS
   err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
@@ -707,10 +706,12 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
   err = 0;
   if (g != 0)
     /*use of FT_LOAD_DEFAULT when quality will be ok*/
+  {
     if (!FT_Load_Glyph (font->face, 
-		       g, 
-			FT_LOAD_NO_HINTING)) 
-      if (!FT_Get_Glyph (font->face->glyph, 
+	  g, 
+	  FT_LOAD_NO_HINTING))
+     {
+        if (!FT_Get_Glyph (font->face->glyph, 
 			 &Glyph))
 	{
 	  /*Last parameter tells that we destroy font's bitmap
@@ -762,6 +763,14 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 	      return;	      
 	    }
 	}
+      }
+      else
+      {
+#ifdef _WX
+	  wxPrintf( _T("FT_Load_Glyph error") );
+#endif /* _WX */
+      }    
+    }
   BitmapGlyph->data = NULL;
   BitmapGlyph->advance = 0;
   BitmapGlyph->pos.x = 0;

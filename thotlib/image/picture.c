@@ -2746,7 +2746,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   PictureScaling      pres;
   PtrAbstractBox      pAb;
   Picture_Report      status;
+#ifndef _WX
   unsigned long       Bgcolor;
+#else /* #ifndef _WX */  
+  ThotColor           Bgcolor;
+#endif /* #ifndef _WX */
   int                 typeImage;
   int                 xBox = 0;
   int                 yBox = 0;
@@ -2971,7 +2975,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		   (void *)&yBox,
 		   (void *)&wBox,
 		   (void *)&hBox,
+#ifndef _WX		   
 		   (void *)Bgcolor,
+#else /* #ifdef _WX */
+		   (void *)&Bgcolor,
+#endif /* #ifdef _WX */		   
 		   (void *)&width,
 		   (void *)&height,
 		   (void *)ViewFrameTable[frame - 1].FrMagnification );
@@ -2985,7 +2993,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		       	(void *)&yBox,
 		       	(void *)&wBox,
 		       	(void *)&hBox,
-			(void *)Bgcolor,
+#ifndef _WX		   
+	    	   	(void *)Bgcolor,
+#else /* #ifdef _WX */
+		        (void *)&Bgcolor,
+#endif /* #ifdef _WX */		   
 		       	(void *)&width,
 		       	(void *)&height,
 			(void *)ViewFrameTable[frame - 1].FrMagnification);
@@ -3173,7 +3185,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 
   PtrAbstractBox      pAb;
   Picture_Report      status;
+#ifndef _WX
   unsigned long       Bgcolor;
+#else /* #ifndef _WX */  
+  ThotColor           Bgcolor;
+#endif /* #ifndef _WX */
   int                 typeImage;
   int                 xBox = 0;
   int                 yBox = 0;
@@ -3393,7 +3409,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yBox = h;
 		}
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX)
 	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			(void *)fileName,
 			(void *)imageDesc,
@@ -3401,12 +3417,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			(void *)&yBox,
 			(void *)&wBox,
 			(void *)&hBox,
+#ifndef _WX			
 			(void *)Bgcolor,
+#else /* #ifndef _WX */
+			(void *)&Bgcolor,
+#endif /* #ifndef _WX */
 			(void *)&width,
 			(void *)&height,
 			(void *)ViewFrameTable[frame - 1].FrMagnification);
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
-        
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) */
+
 #ifdef _GTK
 	      if (typeImage == EPS_FORMAT)
 		drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (

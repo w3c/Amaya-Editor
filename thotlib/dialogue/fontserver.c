@@ -15,6 +15,12 @@
 
 #ifdef _GL
 
+#ifdef _WX
+//  #include "wx/gdicmn.h"
+//  #include "wx/font.h"
+  #include "Xft.h"
+#endif /* _WX */
+
 #ifdef _GTK
   /* Font Server */
   #include <gdk/gdkx.h>
@@ -54,7 +60,7 @@ static int GetFontFilenameFromConfig (char script, int family, int highlight,
 int GetFontFilename (char script, int family, int highlight, int size, 
 		     char *filename)
 {
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
   XftPattern	*match, *pat;
   XftResult     result;
   char	        *s;
@@ -337,7 +343,12 @@ int GetFontFilename (char script, int family, int highlight, int size,
     XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
 
   /* Returns a pattern more precise that let us load fonts*/
-  match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result); 
+#ifdef _WX
+  match = XftFontMatch ((Display*)wxGetDisplay(), 0, pat, &result); 
+#endif /* _WX */
+#ifdef _GTK
+  match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result);   
+#endif /* _GTK */
   if (match) 
     {
      if (XftPatternGetString (match, XFT_FILE, 0, &s) == XftResultMatch)
@@ -358,7 +369,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
     }
   XftPatternDestroy (pat); 
   return ok;
-#endif /* _GTK */
+#endif /* #if defined(_GTK) || defined(_WX) */
   
 
 #ifdef _WINDOWS  

@@ -29,11 +29,6 @@
   #include "wininclude.h"
 #endif /* _WINDOWS */
 
-#ifdef _WX
-  #include "AmayaFrame.h"
-//  #include "AmayaMenu.h"
-#endif /* _WX */
-
 #ifdef _GTK
   #include <gdk/gdkx.h>
 #endif /* _GTK */
@@ -175,6 +170,8 @@ static int GetMenuParentNumber (ThotMenu menu)
   while (iframe <= MAX_FRAME && !found)
     {
       menuIndex = 0;
+      
+#ifndef _WX // TODO
       while (menuIndex < MAX_MENU && !found) 
 	if (FrameTable[iframe].WdMenus[menuIndex] == menu)
 	  {
@@ -183,6 +180,8 @@ static int GetMenuParentNumber (ThotMenu menu)
 	  }
 	else 
 	  menuIndex++;
+#endif //#ifndef _WX // TODO
+
       if (!found)
 	iframe++;
     }
@@ -2862,9 +2861,9 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 
 #ifdef _WX
       int frame           = GetMenuParentNumber( (ThotMenu)menu );
-      AmayaFrame * pFrame = NULL;
-      if ( frame != -1 )
-	pFrame = (AmayaFrame *)FrameTable[frame].WdFrame;
+//      AmayaFrame * pFrame = NULL;
+//      if ( frame != -1 )
+//	pFrame = (AmayaFrame *)FrameTable[frame].WdFrame;
 #endif /* _WX */
       
 #ifdef _WX 
@@ -3063,7 +3062,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		      wxString( menu_item, conv_ascii ),
 //		      _T(""),
 //		      wxITEM_NORMAL );		    
- 
+#if 0 
 		    pFrame->appendMenuItem( 
 			menu,					/* parent */
 			i,					/* id */
@@ -3071,7 +3070,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			_T(""),					/* help */
 			wxITEM_NORMAL,				/* item kind */
 			AmayaCParam() );			/* callback */
-		      
+#endif		      
 		    adbloc->E_ThotWidget[ent] = (ThotWidget)i; //p_menu_item;
 #endif /* _WX */
 	    	    
@@ -3134,7 +3133,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		      wxString( menu_item, conv_ascii ),
 //		      _T(""),
 //		      wxITEM_CHECK );		    
- 
+#if 0
 		    pFrame->appendMenuItem( 
 			menu,					/* parent */
 			i,					/* id */
@@ -3142,7 +3141,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			_T(""),					/* help */
 			wxITEM_CHECK,				/* item kind */
 			AmayaCParam() );			/* callback */
-
+#endif
 		    adbloc->E_ThotWidget[ent] = (ThotWidget)i; //p_menu_item;
 #endif /* _WX */
 		    
@@ -3221,7 +3220,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		      wxString( menu_item, conv_ascii ),
 //		      _T(""),
 //		      wxITEM_NORMAL );		    
-
+#if 0 
 		    pFrame->appendMenuItem( 
 			menu,					/* parent */
 			i,					/* id */
@@ -3229,7 +3228,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			_T(""),					/* help */
 			wxITEM_NORMAL,				/* item kind */
 			AmayaCParam() );			/* callback */
-		    
+#endif		    
 		    adbloc->E_ThotWidget[ent] = (ThotWidget)i; //p_menu_item;
 #endif /* _WX */
 
@@ -3271,7 +3270,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		      _T(""),
 //		      _T(""),
 //		      wxITEM_SEPARATOR );
-
+#if 0 
 		    pFrame->appendMenuItem( 
 			menu,					/* parent */
 			wxID_SEPARATOR,				/* id */
@@ -3279,7 +3278,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			_T(""),					/* help */
 			wxITEM_SEPARATOR,			/* item kind */
 			AmayaCParam() );			/* callback */
-
+#endif
 		    adbloc->E_ThotWidget[ent] = (ThotWidget)i; //p_menu_item;
 #endif /* _WX */
 		    
@@ -6205,7 +6204,7 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
 void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
-			 ThotPixel color, int activate)
+			 ThotColor color, int activate)
 {
   struct Cat_Context *catalogue;
 #ifdef _WINDOWS
@@ -6654,6 +6653,9 @@ void TtaDestroyDialogue (int ref)
 	     PopShell = 0;
 #endif /* _GTK */
 
+#ifdef _WX
+	     /* TODO : a faire qd on aura porte les dialogues */
+#endif /* #ifdef _WX */
 	     return;
 	  }
 	/* Note que tous les fils sont detruits */
@@ -6675,7 +6677,11 @@ void TtaDestroyDialogue (int ref)
        	if (catalogue->Cat_Type != CAT_PULL)
 	  gtk_widget_destroy (GTK_WIDGET(catalogue->Cat_Widget));
 #endif /* _GTK */
-        
+
+#ifdef _WX
+	     /* TODO : a faire qd on aura porte les dialogues */
+#endif /* #ifdef _WX */
+	
 	/* Libere le catalogue */
 	catalogue->Cat_Widget = 0;
      }
@@ -6689,8 +6695,6 @@ void TtaDestroyDialogue (int ref)
   ----------------------------------------------------------------------*/
 void TtaChangeFormTitle (int ref, char *title)
 {
-#if defined(_MOTIF) || defined(_GTK)
-
   struct Cat_Context *catalogue;
 
 #ifdef _MOTIF
@@ -6726,9 +6730,11 @@ void TtaChangeFormTitle (int ref, char *title)
        /* Set the window title with GTK */
        gdk_window_set_title(GTK_WIDGET(catalogue->Cat_Widget)->window, title);
 #endif /* _GTK */
-       
+
+#ifdef _WX
+	     /* TODO : a faire qd on aura porte les dialogues */
+#endif /* #ifdef _WX */
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6737,7 +6743,7 @@ void TtaChangeFormTitle (int ref, char *title)
   ----------------------------------------------------------------------*/
 void TtaSetDefaultButton (int ref, int button)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
    struct Cat_Context *catalogue;
 
    if (ref)
@@ -6746,7 +6752,7 @@ void TtaSetDefaultButton (int ref, int button)
        if (catalogue)
 	 catalogue->Cat_Default = (unsigned char) button;
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------

@@ -59,7 +59,7 @@
 /*----------------------------------------------------------------------
   DrawStixSigma
   ----------------------------------------------------------------------*/
-void DrawStixSigma (int frame, int x, int y,  int l, int h, PtrFont font, int fg)
+void DrawStixSigma (int frame, int x, int y,  int l, int h, ThotFont font, int fg)
 {
    if (fg < 0)
      return;
@@ -93,7 +93,7 @@ void DrawStixSigma (int frame, int x, int y,  int l, int h, PtrFont font, int fg
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
-		       int type, PtrFont font, int fg)
+		       int type, ThotFont font, int fg)
 {
   /* Integrals using esstix6 charmap
      52 - => 3x text 3 line eq
@@ -102,19 +102,19 @@ void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
   if (h < LOW_CHAR)
      /* display a single glyph */
      {
-       font =  (PtrFont)LoadStixFont (6, FontRelSize (h-15));
+       font =  (ThotFont)LoadStixFont (6, FontRelSize (h-15));
        DrawStixChar (font, 69, x, y, l, h, fg, frame);
      }
   else if (h < MID_CHAR)
     /* display a single glyph */
     {
-      font =  (PtrFont)LoadStixFont (6, FontRelSize (h-5));
+      font =  (ThotFont)LoadStixFont (6, FontRelSize (h-5));
       DrawStixChar (font, 33, x, y, l, h, fg, frame);
     }
   else 
     /* display a single glyph */
     {
-      font =  (PtrFont)LoadStixFont (6, FontRelSize (h-5));
+      font =  (ThotFont)LoadStixFont (6, FontRelSize (h-5));
       DrawStixChar (font, 52, x, y, l, h, fg, frame);
      }
    if (type == 2)		
@@ -132,7 +132,7 @@ void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
 /* ----------------------------------------------------------------------
   StixIntegralWidth
   ----------------------------------------------------------------------*/
-static int StixIntegralWidth (int h, PtrFont font)
+static int StixIntegralWidth (int h, ThotFont font)
 {
   int i;
   
@@ -150,7 +150,7 @@ static int StixIntegralWidth (int h, PtrFont font)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
-		  int direction, PtrFont font, int fg)
+		  int direction, ThotFont font, int fg)
 {
   /*  Esstix 7 : 
       61 normal
@@ -185,7 +185,7 @@ void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
 /* ----------------------------------------------------------------------
   StixParenthesisWidth
   ----------------------------------------------------------------------*/
-static int StixBracketWidth (int h, PtrFont font)
+static int StixBracketWidth (int h, ThotFont font)
 {
   int i;
   
@@ -206,7 +206,7 @@ static int StixBracketWidth (int h, PtrFont font)
 void DrawStixPointyBracket (int frame, int thick,
 			    int x, int y,
 			    int l, int h,
-			    int direction, PtrFont font, int fg)
+			    int direction, ThotFont font, int fg)
 {
   if (fg < 0)
     return;
@@ -248,7 +248,7 @@ void DrawStixPointyBracket (int frame, int thick,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
-		      int direction, PtrFont font, int fg)
+		      int direction, ThotFont font, int fg)
 {
   /*  Esstix 7 : 
     61 normal
@@ -284,7 +284,7 @@ void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
 /* ----------------------------------------------------------------------
   StixParenthesisWidth
   ----------------------------------------------------------------------*/
-static int StixParenthesisWidth (int h, PtrFont font)
+static int StixParenthesisWidth (int h, ThotFont font)
 {
   int i;
   
@@ -302,7 +302,7 @@ static int StixParenthesisWidth (int h, PtrFont font)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
-		    int direction, PtrFont font, int fg)
+		    int direction, ThotFont font, int fg)
 {
 /*
   Esstix 7 : 
@@ -340,7 +340,7 @@ void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
 /* ----------------------------------------------------------------------
   StixBraceWidth
   ----------------------------------------------------------------------*/
-static int StixBraceWidth (int h, PtrFont font)
+static int StixBraceWidth (int h, ThotFont font)
 {
   int i;
   
@@ -358,7 +358,7 @@ static int StixBraceWidth (int h, PtrFont font)
   DrawStixChar draw a one glyph symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixChar (PtrFont font, unsigned char symb, int x, int y, 
+void DrawStixChar (ThotFont font, unsigned char symb, int x, int y, 
 		   int l, int h, int fg, int frame)
 {
   x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
@@ -372,7 +372,7 @@ void DrawStixChar (PtrFont font, unsigned char symb, int x, int y,
 ----------------------------------------------------------------------*/
 int GetMathFontWidth (SpecFont fontset, char shape, int size, int height)
 {
-  PtrFont       pfont = NULL;
+  ThotFont      pfont = NULL;
   int           i;
 
   i = 0;
@@ -414,7 +414,7 @@ int GetMathFontWidth (SpecFont fontset, char shape, int size, int height)
 /*----------------------------------------------------------------------
    GiveStixSize gives the internal size of a symbol box.
   ----------------------------------------------------------------------*/
-void GiveStixSize (PtrFont pfont, PtrAbstractBox pAb, int *width,
+void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
 		   int *height, int size)
 {
   int                 hfont;

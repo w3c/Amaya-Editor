@@ -506,7 +506,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
 			 NULL, TRUE);
        if (DocumentTypes[document] == docMath ||
 	   DocumentTypes[document] == docXml)
-	 TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, -1, FALSE);
+	 TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, (ThotColor)-1, FALSE);
        else
 	 TtaSetToggleMenu (BaseDialog + ToggleSave, 0, CopyImages);
        TtaSetToggleMenu (BaseDialog + ToggleSave, 1, UpdateURLs);

@@ -66,7 +66,7 @@
 #include "units_tv.h"
 
 int          PRINT;	/* Identification des messages */
-PtrFont      PostscriptFont;
+ThotFont     PostscriptFont;
 int          ColorPs;
 
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
@@ -144,6 +144,12 @@ static int          FirstPrinted;
 static int          LastPrinted;
 /* TODO : cette ligne provoque une erreur de compilation
  * extern int          errno;*/
+
+#ifdef _WX
+/* TODO : rendre le code plus propre car FrRef n'a rien a voir avec un file descriptor !!!
+ * pourtant on l'utilise comme tel dans le print :( */
+ThotWindow  FrRef[MAX_FRAME + 2];
+#endif /* _WX */
 
 #ifdef _GTK
   GtkWidget *window;

@@ -83,7 +83,7 @@ extern int GetArabFontAndIndex ( CHAR_T c,
                                  CHAR_T prev,
                                  CHAR_T next,
                                  SpecFont fontset,
-                                 PtrFont *font );
+                                 ThotFont *font );
 
 #else /* __STDC__ */
 
@@ -164,7 +164,7 @@ extern int GetArabFontAndIndex (/* CHAR_T c,
                                    CHAR_T prev,
                                    CHAR_T next,
                                    SpecFont fontset,
-                                   PtrFont *font */);
+                                   ThotFont *font */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

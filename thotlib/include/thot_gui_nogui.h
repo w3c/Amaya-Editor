@@ -14,7 +14,7 @@ typedef ThotWidget     ThotToolBar;
 typedef int            ThotBitmap;
 typedef int            ThotGC;
 typedef unsigned long  ThotColor;
-typedef int *          PtrFont;
+typedef int *          ThotFont;
 typedef void *         ThotCursor;
 #ifndef _GL
 //typedef XPoint         ThotPoint;

@@ -184,7 +184,7 @@ static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
 	{
 	  for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	    {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	      colrs[i].red = cinfo.colormap[0][i] << 8;
 	      colrs[i].green = cinfo.colormap[1][i] << 8;
 	      colrs[i].blue = cinfo.colormap[2][i] << 8;
@@ -192,7 +192,7 @@ static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
 #ifdef _MOTIF
 	      colrs[i].flags = DoRed | DoGreen | DoBlue;
 #endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
         
 #ifdef _WINDOWS
 	      colrs[i].red = cinfo.colormap[0][i];
@@ -205,13 +205,13 @@ static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
 	{
 	  for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	    {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	      colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
 	      colrs[i].pixel = i;
 #ifdef _MOTIF
 	      colrs[i].flags = DoRed | DoGreen | DoBlue;
 #endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */        
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */        
         
 #ifdef _WINDOWS
 	      colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];

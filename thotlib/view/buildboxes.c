@@ -671,7 +671,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   SpecFont            font;
   PtrBox              box;
   int                 hfont;
-  PtrFont             pfont = NULL;
+  ThotFont            pfont = NULL;
 
   box = pAb->AbBox;
   font = box->BxFont;

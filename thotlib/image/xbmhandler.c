@@ -68,6 +68,11 @@ ThotDrawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #ifdef _NOGUI
   return NULL;
 #endif /* #ifdef _NOGUI */ 
+
+#ifdef _WX
+  return NULL;
+#endif /* #ifdef _WX */ 
+
 }
 
 
@@ -196,7 +201,12 @@ ThotBool IsXbmFormat (char *fn)
 #endif /* _GTK */
 
 #ifdef _NOGUI
-  return NULL;
+  return FALSE;
 #endif /* #ifdef _NOGUI*/   
+
+#ifdef _WX
+  return FALSE;
+#endif /* #ifdef _WX */ 
+
 }
 

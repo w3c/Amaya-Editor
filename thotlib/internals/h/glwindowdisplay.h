@@ -90,7 +90,7 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
 
 /*Text rendering*/
 void TranslateChars (CHAR_T *text);
-int UnicodeCharacterWidth (CHAR_T c, PtrFont font);
+int UnicodeCharacterWidth (CHAR_T c, ThotFont font);
 int GL_DrawString (int fg, 
 		   CHAR_T *str, 
 		   float x, float y, 

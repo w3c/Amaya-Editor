@@ -257,7 +257,11 @@ ThotBool GL_DrawAll ()
 	  frame_animating = TRUE; 
 	  for (frame = 0 ; frame < MAX_FRAME; frame++)
 	    {
+#ifndef _WX
 	      if (FrRef[frame] != 0)
+#else /* _WX */
+	      if (FrameTable[frame].WdFrame != 0)
+#endif /* _WX */
 		{
 		  if (FrameTable[frame].Animated_Boxes &&
 		      FrameTable[frame].Anim_play)

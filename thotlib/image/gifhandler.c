@@ -356,9 +356,9 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	   colrs[i].green = GifScreen.ColorMap[1][i] * COLORMAPSCALE;
 	   colrs[i].blue  = GifScreen.ColorMap[2][i] * COLORMAPSCALE;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	   colrs[i].pixel = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _MOTIF
 	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
@@ -371,9 +371,9 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	   colrs[i].green = 0;
 	   colrs[i].blue = 0;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	   colrs[i].pixel = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _MOTIF
 	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
@@ -420,9 +420,9 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	       colrs[i].red   = localColorMap[0][i] * COLORMAPSCALE;
 	       colrs[i].green = localColorMap[1][i] * COLORMAPSCALE;
 	       colrs[i].blue  = localColorMap[2][i] * COLORMAPSCALE;
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	   colrs[i].pixel = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _MOTIF
 	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
@@ -435,9 +435,9 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	       colrs[i].green = 0;
 	       colrs[i].blue  = 0;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	   colrs[i].pixel = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _MOTIF
 	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
@@ -1518,9 +1518,9 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
    unsigned char      *bit_data;
    FILE               *fp;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
    fp = fopen (datafile, "r");
-#endif /* #if defined(_MOTIF) || defined(_GTK) */   
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS
    fp = fopen (datafile, "rb");
@@ -1822,7 +1822,7 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
 void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   ThotColorStruct     colrs[256];
   unsigned char      *data;
   int                 picW, picH;
@@ -1834,7 +1834,7 @@ void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
 		 GifTransparent, bgColor, colrs, FALSE, FALSE);
   TtaFreeMemory (data);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------

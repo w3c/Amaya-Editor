@@ -81,7 +81,7 @@ ThotDrawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _MOTIF */
 
 
-#if defined(_GTK) || defined(_WINDOWS)
+#if defined(_GTK) || defined(_WINDOWS) || defined(_WX)
   *width = 0;
   *height = 0;
   *wif = 0;
@@ -89,7 +89,7 @@ ThotDrawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *xif = 0;
   *yif = 0;
   return (ThotDrawable) (NULL);
-#endif /* defined(_GTK) OR defined(_WINDOWS) */
+#endif /* defined(_GTK) OR defined(_WINDOWS) || defined(_WX) */
 
 #ifdef _NOGUI
   return NULL;

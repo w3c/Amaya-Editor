@@ -171,13 +171,13 @@ ThotWidget TtaGetViewFrame (Document document, View view)
     return (FrMainRef[frame]);
 #endif /* _WINDOWS */
   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_MOTIF) || defined(_GTK) 
     return (FrameTable[frame].WdFrame);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _NOGUI
+#if defined(_NOGUI) || defined(_WX)
     return 0;
-#endif /* #ifdef _NOGUI */
+#endif /* #ifdef _NOGUI || defined(_WX) */
 }
 #endif
 

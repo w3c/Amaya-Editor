@@ -56,6 +56,15 @@ bool AmayaApp::OnInit()
 
   SetTopWindow(frame);
   */
+
+/*  // Insert a log window for debug
+  wxTextCtrl * p_log_win = new wxTextCtrl( this, -1, _T("This is the log window.\n"),
+                            wxPoint(5,260), wxSize(630,100),
+                            wxTE_MULTILINE | wxTE_READONLY );
+ */
+  
+  // for debug : the output is stderr
+  delete wxLog::SetActiveTarget( new wxLogStderr( ) );
   
   // just convert arguments format (unicode to iso-8859-1) before passing it to amaya_main
   InitAmayaArgs();

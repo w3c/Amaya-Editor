@@ -1,7 +1,7 @@
 #ifdef _WX
 
-#ifndef __AMAYAFRAME_H__
-#define __AMAYAFRAME_H__
+#ifndef __AMAYAPANEL_H__
+#define __AMAYAPANEL_H__
 
 #include "wx/wxprec.h"
 
@@ -10,14 +10,11 @@
     #include "wx/panel.h"
 #endif
 
-class AmayaCanvas;
-
 /*
  * =====================================================================================
- *        Class:  AmayaFrame
+ *        Class:  AmayaPanel
  * 
- *  Description:  - AmayaFrame is contained by a AmayaPage
- *  		  - it contains a AmayaCanvas (opengl) and 2 scrollbars (1 H and 1 V)
+ *  Description:  - AmayaPanel contains a panel (bookmarks, elemets, attributes ...)
  * 
  * +[AmayaWindow]-------------------------------------+
  * |+------------------------------------------------+|
@@ -43,39 +40,26 @@ class AmayaCanvas;
  *     Revision:  none
  * =====================================================================================
  */
-class AmayaFrame : public wxPanel
+class AmayaPanel : public wxPanel
 {
 public:
-  AmayaFrame(  int            frame_id
-      	      ,wxWindow *     p_parent_window = NULL
-	    );
-  virtual ~AmayaFrame( );
+  AmayaPanel(   // int            panel_id
+      		wxWindow *     p_parent_window = NULL
+		,wxWindowID     id = -1
+	        ,const wxPoint& pos  = wxDefaultPosition
+	        ,const wxSize&  size = wxDefaultSize
+		,long style = wxTAB_TRAVERSAL
+	      );
+  virtual ~AmayaPanel();
 
-  inline int GetFrameId() { return m_FrameId; }
-  inline wxScrollBar * GetScrollbarH() { return m_pScrollBarH; }
-  inline wxScrollBar * GetScrollbarV() { return m_pScrollBarV; }
-   
-#ifdef _GL
-  void SetCurrent();
-  void SwapBuffers();
-#endif // #ifdef _GL
-  
-  void OnScroll( wxScrollEvent& event );
+ protected:
+//  DECLARE_EVENT_TABLE()
+  int          m_PanelId;        // amaya panel id
+  int          m_ParentWindowId; // amaya parent window id
 
-protected:
-  DECLARE_EVENT_TABLE()
-  
-  int          m_FrameId;        // amaya frame id
-
-  AmayaCanvas *   m_pCanvas;
-
-  wxFlexGridSizer * m_pFlexSizer;
-  wxScrollBar *   m_pScrollBarH;
-  wxScrollBar *   m_pScrollBarV;
 };
 
-#endif // __AMAYAFRAME_H__
+#endif // __AMAYAPANEL_H__
 
 #endif /* #ifdef _WX */
-
 

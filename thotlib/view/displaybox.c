@@ -278,7 +278,7 @@ ThotBool WinFontExist (char *fontname)
 static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 			   int t, int b, int l, int r)
 {
-  PtrFont             font;
+  ThotFont            font;
   ViewFrame          *pFrame;
   int                 xd, yd, i, w;
   int                 fg, bg;
@@ -1165,8 +1165,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   PtrBox              nbox;
   PtrAbstractBox      pAb;
   SpecFont            font;
-  PtrFont             prevfont = NULL;
-  PtrFont             nextfont = NULL;
+  ThotFont            prevfont = NULL;
+  ThotFont            nextfont = NULL;
   CHAR_T              c;
   wchar_t            *wbuffer = NULL;
   unsigned char      *buffer = NULL;
@@ -2400,7 +2400,7 @@ static int FindIndex (CHAR_T c, int p, int q)
   given c and it's load the arab font.                       
   ---------------------------------------------------------------------*/
 int GetArabFontAndIndex (CHAR_T c, CHAR_T prev, CHAR_T next, 
-			 SpecFont fontset, PtrFont *font)
+			 SpecFont fontset, ThotFont *font)
 {
   int    i, j, k;
  

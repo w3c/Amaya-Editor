@@ -118,6 +118,8 @@ void                UpdateSelectMenu (PtrDocument pDoc)
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
      {
 	frame = pDoc->DocViewFrame[vue - 1];
+#ifndef _WX // TODO
+
 	if (frame != 0 && FrameTable[frame].MenuSelect != -1)
 	  {
 	     menuID = FrameTable[frame].MenuSelect;
@@ -136,6 +138,8 @@ void                UpdateSelectMenu (PtrDocument pDoc)
 		  TtaSetMenuOn (document, vue, menuID);
 	       }
 	  }
+#endif //#ifndef _WX // TODO
+	
      }
 }
 

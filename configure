@@ -12731,10 +12731,10 @@ if test "$with_wx" = "yes" ; then
   WX_INCLUDES="`wx-config --cxxflags`"
 
 
-    if test "${with_gl}" == "yes" ; then
-    WX_LIBRARIES="`wx-config --gl-libs`"
-  else
-    WX_LIBRARIES="`wx-config --libs`"
+  WX_LIBRARIES="`wx-config --libs`"
+
+    if test "${with_gl}" = "yes" ; then
+    WX_LIBRARIES="${WX_LIBRARIES} `wx-config --gl-libs`"
   fi
 
 

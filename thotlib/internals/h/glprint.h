@@ -134,7 +134,7 @@ extern "C" {
 		const int y, 
 		const int length);
   int GLString (unsigned char *buff, int lg, int frame, int x, int y,
-		PtrFont font, int boxWidth, int bl, int hyphen,
+		ThotFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg);
 
   /*Pictures*/

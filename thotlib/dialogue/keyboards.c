@@ -52,7 +52,7 @@ ITEM;
 
 
 static ThotWidget   Keyboards[MAX_KEYBOARD];
-static PtrFont      KbFonts[MAX_KEYBOARD];
+static ThotFont     KbFonts[MAX_KEYBOARD];
 static int          KbX = 800;
 static int          KbY = 100;
 #if defined(_MOTIF) || defined(_WINDOWS)
@@ -381,7 +381,7 @@ static ITEM         Items_Graph[] =
    Function func indicates if it's an active box (1) or not (0).
   ----------------------------------------------------------------------*/
 static void WChar (ThotWindow w, char ch, int x, int y, int func,
-		   PtrFont font, int disp, ThotGC GClocal)
+		   ThotFont font, int disp, ThotGC GClocal)
 {
    int                 length;
 
@@ -514,7 +514,7 @@ static void ExposeKbd (ThotWidget w, int param,
 /*----------------------------------------------------------------------
    CreateKeyboard creates a keyboard.
   ----------------------------------------------------------------------*/
-static void CreateKeyboard (int number, char *title, PtrFont pFont,
+static void CreateKeyboard (int number, char *title, ThotFont pFont,
 			    int col, int x, int y, ITEM *items, int nbitem)
 {
    int                 n;
@@ -700,7 +700,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 /*----------------------------------------------------------------------
   CreateKeyboard creates a keyboard.
   ----------------------------------------------------------------------*/
-static void CreateKeyboard (int number, char *title, PtrFont pFont,
+static void CreateKeyboard (int number, char *title, ThotFont pFont,
 			    int col, int x, int y, ITEM *items, int nbitem)
 {
   int                 i,j;
@@ -837,8 +837,8 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
   ----------------------------------------------------------------------*/
 static void LoadKbd (int number)
 {
-  PtrFont             pFontAc;
-  PtrFont             pFontIg;
+  ThotFont            pFontAc;
+  ThotFont            pFontIg;
 
   ConfigKeyboard (&KbX, &KbY);
   switch (number)

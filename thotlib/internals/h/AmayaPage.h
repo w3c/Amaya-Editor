@@ -1,23 +1,26 @@
 #ifdef _WX
 
-#ifndef __AMAYAFRAME_H__
-#define __AMAYAFRAME_H__
+#ifndef __AMAYAPAGE_H__
+#define __AMAYAPAGE_H__
 
 #include "wx/wxprec.h"
 
 #ifndef WX_PRECOMP
     #include "wx/wx.h"
     #include "wx/panel.h"
+    #include "wx/splitter.h"
 #endif
 
-class AmayaCanvas;
+class AmayaFrame;
 
 /*
  * =====================================================================================
- *        Class:  AmayaFrame
+ *        Class:  AmayaPage
  * 
- *  Description:  - AmayaFrame is contained by a AmayaPage
- *  		  - it contains a AmayaCanvas (opengl) and 2 scrollbars (1 H and 1 V)
+ *  Description:  - a page contains 1 or 2 frames which are splited
+ *                into a wxSplitterWindow
+ *                - the m_SlashRatio is used to control the percentage givent to the
+ *                top and bottom areas.
  * 
  * +[AmayaWindow]-------------------------------------+
  * |+------------------------------------------------+|
@@ -39,43 +42,39 @@ class AmayaCanvas;
  * |+------------------------------------------------+|
  * +--------------------------------------------------+
  *       Author:  Stephane GULLY
- *      Created:  12/10/2003 04:45:34 PM CET
+ *      Created:  12/10/2003 04:42:56 PM CET
  *     Revision:  none
  * =====================================================================================
  */
-class AmayaFrame : public wxPanel
+
+class AmayaPage : public wxPanel
 {
 public:
-  AmayaFrame(  int            frame_id
-      	      ,wxWindow *     p_parent_window = NULL
-	    );
-  virtual ~AmayaFrame( );
+  AmayaPage( wxWindow * p_parent_window );
+  virtual ~AmayaPage();
 
-  inline int GetFrameId() { return m_FrameId; }
-  inline wxScrollBar * GetScrollbarH() { return m_pScrollBarH; }
-  inline wxScrollBar * GetScrollbarV() { return m_pScrollBarV; }
-   
-#ifdef _GL
-  void SetCurrent();
-  void SwapBuffers();
-#endif // #ifdef _GL
+  AmayaFrame * AttachTopFrame( AmayaFrame * p_frame );
+  AmayaFrame * AttachBottomFrame( AmayaFrame * p_frame );
+  AmayaFrame * DetachTopFrame( AmayaFrame * p_frame );
+  AmayaFrame * DetachBottomFrame( AmayaFrame * p_frame );
   
-  void OnScroll( wxScrollEvent& event );
+  void OnSplitterPosChanged( wxSplitterEvent& event );
+  void OnSplitterDClick( wxSplitterEvent& event );
+  void OnSplitterUnsplit( wxSplitterEvent& event );
+  
+  void OnSize( wxSizeEvent& event );
+  void OnClose( wxCloseEvent& event );
 
-protected:
+ protected:
   DECLARE_EVENT_TABLE()
-  
-  int          m_FrameId;        // amaya frame id
 
-  AmayaCanvas *   m_pCanvas;
+  wxSplitterWindow * m_pSplitterWindow;
+  AmayaFrame *       m_pTopFrame;
+  AmayaFrame *       m_pBottomFrame;  
 
-  wxFlexGridSizer * m_pFlexSizer;
-  wxScrollBar *   m_pScrollBarH;
-  wxScrollBar *   m_pScrollBarV;
+  float              m_SlashRatio; // 0.5 => page is half splitted
 };
 
-#endif // __AMAYAFRAME_H__
+#endif // __AMAYAPAGE_H__
 
 #endif /* #ifdef _WX */
-
-

@@ -732,6 +732,68 @@ View TtaGetViewFromName (Document document, char *viewName)
 }
 
 /*----------------------------------------------------------------------
+   TtaGetWindowId
+
+   Returns the window id to which that document belongs.
+   Parameter:
+     + document
+   Return values:
+     + int window_id : the document window id
+  ----------------------------------------------------------------------*/
+int TtaGetWindowId( Document document )
+{
+#ifdef _WX  
+  PtrDocument pDoc;
+  
+  if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else
+     {
+       /* parameter document is ok */
+       pDoc = LoadedDocument[document - 1];
+       
+       /* return the corresponding window id */
+       return pDoc->DocWindowId;
+     }
+#else
+   return -1;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+   TtaSetWindowId
+
+   Set the document window id (the window is the document container).
+   Parameter:
+     + document
+   Return values:
+     + nothing
+  ----------------------------------------------------------------------*/
+void TtaSetWindowId( Document document, int window_id )
+{
+#ifdef _WX  
+  PtrDocument pDoc;
+  
+  if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else
+     {
+       /* parameter document is ok */
+       pDoc = LoadedDocument[document - 1];
+       
+       /* set the corresponding window id */
+       pDoc->DocWindowId = window_id;
+     }
+#else
+   return;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
    TtaGiveActiveView
 
    Returns the active view and the document to which that view belongs.
