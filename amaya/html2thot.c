@@ -4442,6 +4442,65 @@ char               *HTMLbuf;
 
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CheckHeadElements (Element el, Element *elHead, Element *elBody, Document doc)
+#else
+static void         CheckHeadElements (el, elHead, elBody, doc)
+Element             el;
+Element            *elHead;
+Element            *elBody, 
+Document            doc;
+#endif
+{
+  Element           nextEl, rootElement, lastChild;
+  ElementType       elType;
+
+  /* check all children of the given element */
+  el = TtaGetFirstChild (el);
+  lastChild = NULL;
+  while (el != NULL)
+    {
+      nextEl = el;
+      TtaNextSibling (&nextEl);
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_BODY && *elBody == NULL)
+	*elBody = el;
+      else if (elType.ElTypeNum == HTML_EL_TITLE ||
+	       elType.ElTypeNum == HTML_EL_ISINDEX ||
+	       elType.ElTypeNum == HTML_EL_BASE ||
+	       elType.ElTypeNum == HTML_EL_Styles ||
+	       elType.ElTypeNum == HTML_EL_Scripts ||
+	       elType.ElTypeNum == HTML_EL_SCRIPT ||
+	       elType.ElTypeNum == HTML_EL_Metas ||
+	       elType.ElTypeNum == HTML_EL_META ||
+	       elType.ElTypeNum == HTML_EL_Links ||
+	       elType.ElTypeNum == HTML_EL_LINK)
+	/* this element should be a child of HEAD */
+	{
+	  /* create the HEAD element if it does not exist */
+	  if (*elHead == NULL)
+	    {
+	      rootElement = TtaGetMainRoot (doc);
+	      elType.ElTypeNum = HTML_EL_HEAD;
+	      *elHead = TtaNewElement (doc, elType);
+	      TtaInsertFirstChild (elHead, rootElement, doc);
+	    }
+	  /* move the element as the last child of the HEAD element */
+	  TtaRemoveTree (el, doc);
+	  if (lastChild == NULL)
+	    TtaInsertFirstChild (&el, *elHead, doc);
+	  else
+	    TtaInsertSibling (el, lastChild, FALSE, doc);
+	  lastChild = el;
+	}
+      /* get next child of the root */
+      el = nextEl;
+    }
+}
+
+
+/*----------------------------------------------------------------------
    CheckAbstractTree       Check the Thot abstract tree and create
    the missing elements.
   ----------------------------------------------------------------------*/
@@ -4511,46 +4570,9 @@ char               *pathURL;
 		elBody = el;
 	  }
 	/* check all children of the root element */
-	lastChild = NULL;
-	el = TtaGetFirstChild (rootElement);
-	while (el != NULL)
-	  {
-	     nextEl = el;
-	     TtaNextSibling (&nextEl);
-	     elType = TtaGetElementType (el);
-	     if (elType.ElTypeNum == HTML_EL_BODY && elBody == NULL)
-		elBody = el;
-	     else if (elType.ElTypeNum == HTML_EL_TITLE ||
-		      elType.ElTypeNum == HTML_EL_ISINDEX ||
-		      elType.ElTypeNum == HTML_EL_BASE ||
-		      elType.ElTypeNum == HTML_EL_Styles ||
-		      elType.ElTypeNum == HTML_EL_Scripts ||
-		      elType.ElTypeNum == HTML_EL_SCRIPT ||
-		      elType.ElTypeNum == HTML_EL_Metas ||
-		      elType.ElTypeNum == HTML_EL_META ||
-		      elType.ElTypeNum == HTML_EL_Links ||
-		      elType.ElTypeNum == HTML_EL_LINK)
-		/* this element should be a child of HEAD */
-	       {
-		  /* create the HEAD element if it does not exist */
-		  if (elHead == NULL)
-		    {
-		       newElType.ElSSchema = structSchema;
-		       newElType.ElTypeNum = HTML_EL_HEAD;
-		       elHead = TtaNewElement (theDocument, newElType);
-		       TtaInsertFirstChild (&elHead, rootElement, theDocument);
-		    }
-		  /* move the element as the last child of the HEAD element */
-		  TtaRemoveTree (el, theDocument);
-		  if (lastChild == NULL)
-		     TtaInsertFirstChild (&el, elHead, theDocument);
-		  else
-		     TtaInsertSibling (el, lastChild, FALSE, theDocument);
-		  lastChild = el;
-	       }
-	     /* get next child of the root */
-	     el = nextEl;
-	  }
+	CheckHeadElements (rootElement, &elHead, &elBody, theDocument);
+	if (elBody != NULL)
+	  CheckHeadElements (elBody, &elHead, &elBody, theDocument);
 
 	if (elHead != NULL)
 	  {

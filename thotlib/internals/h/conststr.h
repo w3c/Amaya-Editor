@@ -34,7 +34,7 @@
 
 #define MAX_EXCEPT_SSCHEMA 350	/* maximum number of exceptions in a
 				   structure schema */	
-#define MAX_INCL_EXCL_SRULE 5	/* max number of inclusions/exclusions in a
+#define MAX_INCL_EXCL_SRULE 10	/* max number of inclusions/exclusions in a
 				   structure rule */	
 #define MAX_EXTENS_SSCHEMA 20	/* maximum number of extension rules in a */
 				/* structure schema */

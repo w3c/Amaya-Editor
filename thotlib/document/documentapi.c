@@ -430,10 +430,9 @@ Document            document;
 	    DestroyFrame (pDoc->DocAssocFrame[numassoc - 1]);
 	    CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
 	  }
-#else
+#endif
       UnloadTree (document);
       UnloadDocument (&LoadedDocument[document - 1]);
-#endif
     }
 }
 

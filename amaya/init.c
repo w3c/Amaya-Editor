@@ -1825,9 +1825,9 @@ boolean            deleteTree;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void                GetIncludedDocuments (Element el, Document document)
+static Element      GetIncludedDocuments (Element el, Document document)
 #else
-static void                GetIncludedDocuments (el, document)
+static Element      GetIncludedDocuments (el, document)
 Element		    el;
 Document            document;
 #endif
@@ -1836,7 +1836,7 @@ Document            document;
    Attribute		RelAttr, HrefAttr;
    AttributeType	attrType;
    int			length;
-   char			*text;
+   char			*text, *ptr;
    Document		includedDocument, newdoc;
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
@@ -1867,9 +1867,11 @@ Document            document;
 	   length = TtaGetTextAttributeLength (HrefAttr);
 	   text = TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
-	   if (text[0] != '#')
+	   /*don't  take in account reference with name */
+	   ptr = strrchr (text, '#');
+	   if (ptr == NULL)
 	     {
-	       /* its a remote document */
+	       /* its a complete remote document */
 	       includedDocument = TtaNewDocument ("HTML", "tmp");
 	       newdoc = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
 	       if (newdoc != 0 && newdoc != document)
@@ -1880,8 +1882,9 @@ Document            document;
 	     }
 	   TtaFreeMemory (text);
 	 }
-       GetIncludedDocuments (next, document);
+       return (next);
      }
+   return (NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1948,21 +1951,21 @@ View                view;
 #endif
 {
 #ifdef PRINTBOOK
-   Element	    root, body;
+   Element	    root, el;
    ElementType	    elType;
 
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
    elType.ElTypeNum = HTML_EL_BODY;
-   body = TtaSearchTypedElement (elType, SearchForward, root);
-   if (body != NULL)
-      {
-      GetIncludedDocuments (body, document);
-      SetInternaLinks (body, document);		
-      /********
-      TtaPrint (document, "Formatted_view Table_of_contents Links_view");
-      *********/
-      }
+   root = TtaSearchTypedElement (elType, SearchForward, root);
+   el = root;
+   TtaSetDocumentModified (document);
+   while (el != NULL)
+     el = GetIncludedDocuments (el, document);
+   SetInternaLinks (root, document);		
+   /********
+     TtaPrint (document, "Formatted_view Table_of_contents Links_view");
+     *********/
 #endif /* PRINTBOOK */
 }
 

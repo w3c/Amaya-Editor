@@ -872,6 +872,9 @@ char               *name;
    else
      {
 	frame = GetWindowNumber (document, view);
+	if (frame == 0)
+	  /* try to display in document 1 */
+	  frame = GetWindowNumber (1, view);
 	if (frame != 0)
 	  if (FrameTable[frame].WdStatus != 0)
 	    {
@@ -901,7 +904,7 @@ char               *name;
 #endif /* _WINDOWS */
 	    }
      }
-}				/*TtaSetStatus */
+}
 
 
 
