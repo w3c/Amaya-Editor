@@ -15,17 +15,19 @@
 #define SHOWN_BREAK_LINE  182 /* BREAK_LINE display value */
 #define UNBREAKABLE_SPACE 0xA0
 
+#define EN_QUAD           0x2000
+#define EM_QUAD           0x2001
 #define EN_SPACE          0x2002
 #define EM_SPACE          0x2003
 #define THICK_SPACE       0x2004
-#define HALF_EM           0x2005
+#define FOUR_PER_EM       0x2005
 #define SIX_PER_EM        0x2006
 #define FIG_SPACE         0x2007
 #define PUNC_SPACE        0x2008
 #define THIN_SPACE        0x2009
 #define HAIR_SPACE        0x200A
 #define ZERO_SPACE        0x200B
-#define MID_SPACE         0x205F
+#define MEDIUM_SPACE      0x205F
 /****
 #define THIN_SPACE        129
 #define HALF_EM           130

@@ -153,7 +153,7 @@ static void TranslateChars (unsigned char *text)
       if (!ShowSpace)
 	    text[i] = SHOWN_THIN_SPACE;
 	  break;
-	case HALF_EM:
+	case FOUR_PER_EM:
       if (!ShowSpace)
 	    text[i] = SHOWN_HALF_EM;
 	  break;

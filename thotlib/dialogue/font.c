@@ -329,8 +329,7 @@ int CharacterWidth (int c, PtrFont font)
   if (c == START_ENTITY)
     c = '&';
   else if (c == TAB || c == UNBREAKABLE_SPACE ||
-	   c == THICK_SPACE || c == FIG_SPACE ||
-	   c == EM_SPACE || c == MID_SPACE)
+	   c == EN_SPACE || c == EN_QUAD || c == FIG_SPACE)
     /* we use the SPACE width for the character TAB */
     c = SPACE;
 
@@ -340,17 +339,23 @@ int CharacterWidth (int c, PtrFont font)
   else
     {
 #ifdef _WINDOWS
-      if (c == THIN_SPACE || c == EN_SPACE ||
-	  c == SIX_PER_EM || c == HAIR_SPACE ||
-	  c == HALF_EM || c == PUNC_SPACE)
+      if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
+	  c == FOUR_PER_EM || c == SIX_PER_EM || c == PUNC_SPACE ||
+	  c == THIN_SPACE || c == HAIR_SPACE || c == MEDIUM_SPACE)
 	{
 	  if (font->FiFirstChar <= 32 && font->FiLastChar >= 32)
 	  {
-	    l = font->FiWidths[32 - font->FiFirstChar] + 3;
-	    if (c == HALF_EM || c == PUNC_SPACE)
-	      l = l / 2;
-	    else
-	      l = l / 4;
+	    l = font->FiWidths[32 - font->FiFirstChar];
+	    if (c == EM_QUAD || c == EM_SPACE)
+	      l = 2 * l;
+	    else if (c == THICK_SPACE)
+	      l = (2 * l) / 3;
+	    else if (c == FOUR_PER_EM || c == PUNC_SPACE || c == MEDIUM_SPACE)
+	      l = (l + 1) / 2;
+	    else if (c == SIX_PER_EM || c == THIN_SPACE)
+	      l = (l + 2) / 3;
+	    else if (c == HAIR_SPACE)
+	      l = (l + 3) / 4;
 	  }
 	}
       else if (font->FiFirstChar <= c && font->FiLastChar >= c)
@@ -359,11 +364,22 @@ int CharacterWidth (int c, PtrFont font)
 	l = font->FiAscent; /* MJD: Simple hack, works only approximately */
 #else  /* _WINDOWS */
 #ifdef _GTK
-      if (c == THIN_SPACE || c == EN_SPACE ||
-	  c == SIX_PER_EM || c == HAIR_SPACE)
-	l = gdk_char_width (font, 32) / 4;
-      else if (c == HALF_EM || c == PUNC_SPACE)
-	l = gdk_char_width (font, 32) / 2;
+      if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
+	  c == FOUR_PER_EM || c == SIX_PER_EM || c == PUNC_SPACE ||
+	  c == THIN_SPACE || c == HAIR_SPACE || c == MEDIUM_SPACE)
+	{
+	  l = gdk_char_width (font, 32);
+	  if (c == EM_QUAD || c == EM_SPACE)
+	    l = 2 * l;
+	  else if (c == THICK_SPACE)
+	    l = (2 * l) / 3;
+	  else if (c == FOUR_PER_EM || c == PUNC_SPACE || c == MEDIUM_SPACE)
+	    l = (l + 1) / 2;
+	  else if (c == SIX_PER_EM || c == THIN_SPACE)
+	    l = (l + 2) / 3;
+	  else if (c == HAIR_SPACE)
+	    l = (l + 3) / 4;
+	}
       else if (c > 256)
 	{
 	  l = gdk_text_width_wc (font, (GdkWChar *)&c, 2);
@@ -373,21 +389,28 @@ int CharacterWidth (int c, PtrFont font)
       else
 	l = gdk_char_width (font, c);
 #else /* _GTK */
-      if (c == THIN_SPACE || c == EN_SPACE ||
-	  c == SIX_PER_EM || c == HAIR_SPACE ||
-	  c == HALF_EM || c == PUNC_SPACE)
+      if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
+	  c == FOUR_PER_EM || c == SIX_PER_EM || c == PUNC_SPACE ||
+	  c == THIN_SPACE || c == HAIR_SPACE || c == MEDIUM_SPACE)
 	xc = CharacterStructure (32, xf);
       else
 	xc = CharacterStructure (c, xf);
+
       if (xc == NULL)
 	l = xf->max_bounds.width;
       else
 	l = xc->width;
-      if (c == THIN_SPACE || c == EN_SPACE ||
-	  c == SIX_PER_EM || c == HAIR_SPACE)
-	l = (l + 3)/4;
-      else if (c == HALF_EM || c == PUNC_SPACE)
-	l = (l + 1)/2;
+
+      if (c == EM_QUAD || c == EM_SPACE)
+	l = 2 * l;
+      else if (c == THICK_SPACE)
+	l = (2 * l) / 3;
+      else if (c == FOUR_PER_EM || c == PUNC_SPACE || c == MEDIUM_SPACE)
+	l = (l + 1) / 2;
+      else if (c == SIX_PER_EM || c == THIN_SPACE)
+	l = (l + 2) / 3;
+      else if (c == HAIR_SPACE)
+	l = (l + 3) / 4;
 #endif  /* _GTK */
       if (c == 244)
 	{
@@ -1597,14 +1620,16 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
   car = EOS;
   if (fontset)
     {
-      if (c == ZERO_SPACE || c == EOL || c == SPACE ||
-	  c == TAB || c == UNBREAKABLE_SPACE ||
-	  c == THICK_SPACE || c == FIG_SPACE ||
-	  c == EM_SPACE || c == MID_SPACE ||
-	  c == NEW_LINE || c == BREAK_LINE ||
-	  c == THIN_SPACE || c == EN_SPACE ||
-	  c == SIX_PER_EM || c == HAIR_SPACE ||
-	  c == HALF_EM || c == PUNC_SPACE)
+      if (c == ZERO_SPACE ||
+	  c == EOL || c == BREAK_LINE ||
+	  c == SPACE || c == TAB ||
+	  c == NEW_LINE || c == UNBREAKABLE_SPACE ||
+	  c == EN_QUAD || c == EM_QUAD ||
+	  c == EN_SPACE || c == EM_SPACE ||
+	  c == THICK_SPACE || c == FOUR_PER_EM || 
+	  c == SIX_PER_EM || c == FIG_SPACE ||
+	  c == PUNC_SPACE || c == THIN_SPACE ||
+	  c == HAIR_SPACE || c == MEDIUM_SPACE)
 	{
 	  /* various spaces */
 	  *font = fontset->FontIso_1;
@@ -1651,10 +1676,10 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		  encoding = ISO_SYMBOL;
 		}
 	    }
-	  else if (c == 0x2148 /* imaginaryi */ ||
+	  else if (c == 0x210E /* planckh */ ||
 		   c == 0x2146 /* DifferentialD */ ||
-		   c == 0x210E /* planckh */ ||
-		   c == 0x2147 /* ExponentialE */)
+		   c == 0x2147 /* ExponentialE */ ||
+		   c == 0x2148 /* ImaginaryI */)
 	    {
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1252;
@@ -1663,13 +1688,13 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 #endif /* _WINDOWS */
 	      code = '1'; /* West Europe Latin */
 	      pfont = &(fontset->FontIso_1);
-	      if (c == 0x2148 /* imaginaryi */)
+	      if (c == 0x2148 /* ImaginaryI */)
 		c = 105;
 	      else if (c == 0x2146 /* DifferentialD */)
 		c = 100;
 	      else if (c == 0x210E /* planckh */)
 		c = 104;
-	      else
+	      else /* ExponentialE */
 		c = 101;
 	    }
 	  else if (c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
@@ -1720,14 +1745,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		    c = 94;
 		  else if (c == 0x2DC)  /*tilde*/
 		    c = 126;
-#if 0
-		  else if (c == 0x2002) /*ensp*/
-		    c = 130;
-                  else if (c == 0x2003) /*emsp*/
-		    c = 160;
-		  else if (c == 0x2009) /*thinsp*/
-		    c = 129;
-#endif
 		  else if (c == 0x2018 || c == 0x201C)
 		    c = 96;
 		  else if (c == 0x2019 || c == 0x201D)

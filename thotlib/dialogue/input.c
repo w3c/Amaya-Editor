@@ -1099,7 +1099,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
       
 	  /*** Sequence de traitement des espaces ***/
 	  if (value == BREAK_LINE || value == THIN_SPACE ||
-	      value == HALF_EM || value == UNBREAKABLE_SPACE)
+	      value == FOUR_PER_EM || value == UNBREAKABLE_SPACE)
 	    {
 	      if (MenuActionList[0].Call_Action)
 		(*MenuActionList[0].Call_Action) (document, view, value);

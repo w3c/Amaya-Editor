@@ -1374,12 +1374,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      prevfont = nextfont;
 		    }
 		  if (c == SPACE || c == TAB ||
-		      c == THICK_SPACE || c == FIG_SPACE ||
-		      c == EM_SPACE || c == MID_SPACE ||
 		      c == NEW_LINE || c == UNBREAKABLE_SPACE ||
-		      c == THIN_SPACE || c == EN_SPACE ||
-		      c == SIX_PER_EM || c == HAIR_SPACE ||
-		      c == HALF_EM || c == PUNC_SPACE)
+		      c == EN_QUAD || c == EM_QUAD ||
+		      c == EN_SPACE || c == EM_SPACE ||
+		      c == THICK_SPACE || c == FOUR_PER_EM ||
+		      c == SIX_PER_EM || c == FIG_SPACE ||
+		      c == PUNC_SPACE || c == THIN_SPACE ||
+		      c == HAIR_SPACE || c == MEDIUM_SPACE)
 		    {
 		      /* display previous chars handled */
 		      if (nbcar > 0)
@@ -1413,7 +1414,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			    DrawChar ((char) SHOWN_SPACE, frame, x, y, nextfont, fg);
 			  else if (c == THIN_SPACE)
 			    DrawChar ((char) SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
-			  else if (c == HALF_EM)
+			  else if (c == FOUR_PER_EM)
 			    DrawChar ((char) SHOWN_HALF_EM, frame, x, y, nextfont, fg);
 			  else if (c == UNBREAKABLE_SPACE)
 			    DrawChar ((char) SHOWN_UNBREAKABLE_SPACE, frame, x, y,

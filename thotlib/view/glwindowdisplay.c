@@ -961,7 +961,7 @@ void TranslateChars (CHAR_T *text)
       if (!ShowSpace)
 	    text[i] = SHOWN_THIN_SPACE;
 	  break;
-	case HALF_EM:
+	case FOUR_PER_EM:
       if (!ShowSpace)
 	    text[i] = SHOWN_HALF_EM;
 	  break;
@@ -1124,7 +1124,7 @@ int CharacterWidth (int c, PtrFont font)
 	  */
       if (c == THIN_SPACE)
 		l = gl_font_char_width ((void *) font, 32) / 4;
-      else if (c == HALF_EM)
+      else if (c == FOUR_PER_EM)
 		l = gl_font_char_width ((void *) font, 32) / 2;
       else
 		l = gl_font_char_width ((void *) font, (CHAR_T) c);
