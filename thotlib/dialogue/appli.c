@@ -2671,7 +2671,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 }
 #endif /* _WINGUI */
 
-#ifdef _GTK
 /*----------------------------------------------------------------------
   GtkLiningSelection 
 
@@ -2681,8 +2680,11 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   in order to repeat user action until he released the button
   or move away from the widget.
   ----------------------------------------------------------------------*/
-static ThotBool     Selecting = FALSE;
+#if defined(_GTK) || defined(_WX)
+  static ThotBool     Selecting = FALSE;
+#endif /* defined(_GTK) || defined(_WX) */
 
+#ifdef _GTK
 gboolean GtkLiningSelection (gpointer data)
 {
   Document            doc; 
@@ -2802,15 +2804,6 @@ ThotBool FrameButtonDownCallback(
   Document   document;
   View       view;
  
-  /* drag is finished */
-/*  if (timer != None)
-  {
-    // TODO : gtk_timeout_remove (timer);
-    timer = None;
-    Selecting = FALSE;
-  }
-  */
-
   switch( thot_button_id )
   {
     case THOT_LEFT_BUTTON:
@@ -2819,12 +2812,12 @@ ThotBool FrameButtonDownCallback(
       CloseInsertion ();
 
       /* Est-ce que la touche modifieur de geometrie est active ? */
-      if (thot_mod_mask & THOT_MOD_CTRL)
+      if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
       {
 	/* moving a box */     
 	ApplyDirectTranslate (frame, x, y);
       }
-      else if (thot_mod_mask & THOT_MOD_SHIFT)
+      else if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
       {
 	/* a selection extension */
 	TtaAbortShowDialogue ();
@@ -2839,7 +2832,7 @@ ThotBool FrameButtonDownCallback(
 	ClickX = x;
 	ClickY = y;
 	LocateSelectionInView (frame, ClickX, ClickY, 2);
-/* TODO	m_Selecting = TRUE; */
+	Selecting = TRUE;
       }
     }
     break;
@@ -2917,6 +2910,17 @@ ThotBool FrameButtonUpCallback(
     TtcCopyToClipboard (document, view);
   }
   else */
+
+  Document   document;
+  View       view;
+
+  if ( Selecting )
+    {
+      Selecting = FALSE;
+      FrameToView (frame, &document, &view);
+      TtcCopyToClipboard (document, view);
+    } 
+
   if (thot_button_id == THOT_LEFT_BUTTON)
   {
     ClickFrame = frame;
@@ -3000,6 +3004,83 @@ ThotBool FrameMotionCallback(
     int thot_mod_mask,
     int x, int y )
 {
+  if ( Selecting )
+    {
+      
+      Document            doc;
+      int                 view;
+      ViewFrame          *pFrame;
+      static int          Motion_y = 0;
+      static int          Motion_x = 0;
+  
+      if ( x != Motion_x || y != Motion_y )
+	{
+	  Motion_y = y;
+	  Motion_x = x;
+	  FrameToView (frame, &doc, &view);
+	  pFrame = &ViewFrameTable[frame - 1];
+	  /* generate a scroll if necessary */
+	  if (Motion_y > FrameTable[frame].FrHeight)
+	    {
+#ifndef _GL
+	      if (pFrame->FrAbstractBox &&
+		  pFrame->FrAbstractBox->AbBox &&
+		  pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxHeight)
+		TtcLineDown (doc, view);
+#else /* _GL */
+	      if (pFrame->FrAbstractBox &&
+		  pFrame->FrAbstractBox->AbBox &&
+		  pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxClipH)
+		TtcLineDown (doc, view);
+#endif /* _GL */
+	      else
+		{
+		  /* stop the scrolling */
+		  Selecting = FALSE;
+		  Motion_y = FrameTable[frame].FrHeight;
+		}
+	    }
+	  else if (Motion_y < 0)
+	    {
+	      if (pFrame->FrYOrg > 0)
+		TtcLineUp (doc, view);
+	      else
+		{
+		  /* stop the scrolling */
+		  Selecting = FALSE;
+		  Motion_y = 0;
+		}
+	    }
+	  if (FrameTable[frame].FrScrollWidth > FrameTable[frame].FrWidth)
+	    {
+	      if (Motion_x > FrameTable[frame].FrWidth)
+		{
+		  if (pFrame->FrXOrg + FrameTable[frame].FrWidth < FrameTable[frame].FrScrollWidth)
+		    TtcScrollRight (doc, view);
+		  else
+		    {
+		      Selecting = FALSE;
+		      Motion_x = FrameTable[frame].FrWidth;
+		    }
+		}
+	      else if (Motion_x < 1)
+		{
+		  if (pFrame->FrXOrg > 0)
+		    TtcScrollLeft (doc, view);
+		  else
+		    {
+		      Selecting = FALSE;
+		      Motion_x = 0;
+		    }
+		}
+	    }
+	  if (Selecting)
+	    {
+	      LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
+	      TtcCopyToClipboard (doc, view);
+	    }
+	}      
+    }
   return TRUE;
 }
 
