@@ -1226,6 +1226,8 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 			      (GdkEventExpose *) & event);
 	  /*XtDispatchEvent (&event);*/
 	  break;
+	default:
+          break;
 	}
 #endif /* !_GTK */
 #endif /* _WINDOWS */
