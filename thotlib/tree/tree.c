@@ -1204,12 +1204,13 @@ int                 assocNum;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, boolean Check)
+static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocument pDoc, boolean Check)
 
 #else  /* __STDC__ */
-static void         CopyAttributes (pEl1, pEl2, Check)
+static void         CopyAttributes (pEl1, pEl2, pDoc, Check)
 PtrElement          pEl1;
 PtrElement          pEl2;
+PtrDocument	    pDoc;
 boolean             Check;
 
 #endif /* __STDC__ */
@@ -1282,7 +1283,7 @@ boolean             Check;
 			    }
 		       while (pAsc != NULL && !found);
 		    }
-		  if (found)
+		  if (found && pDoc->DocCheckingMode & STR_CHECK_MASK)
 		     found = CanAssociateAttr (pEl2, NULL, pAttr1, &bool);
 	       }
 	     if (found)
@@ -3829,7 +3830,7 @@ boolean             shareRef;
 		  /* for CopyAttributes */
 		  pEl->ElParent = pParent;
 		  /* copies the attributes */
-		  CopyAttributes (pSource, pEl, checkAttr);
+		  CopyAttributes (pSource, pEl, pDocCopy, checkAttr);
 		  /* copies the specific presentation rules */
 		  CopyPresRules (pSource, pEl);	
 		  /* copies the commentary associated to the element */
@@ -4096,7 +4097,7 @@ PtrDocument         pDoc;
 		   copy it's content */
 	       {
 		  /* we copy the attributes */
-		  CopyAttributes (pSource, pEl, TRUE);
+		  CopyAttributes (pSource, pEl, pDoc, TRUE);
 		  /* we copy the specific presentation rules */
 		  CopyPresRules (pSource, pEl);
 		  /* we copy the comment associated to the element */
@@ -4240,7 +4241,7 @@ PtrDocument         pDoc;
    ConvertIntToLabel (NewLabel (pDoc), pNew->ElLabel);
    /* copies the attributes without verifying because we don't change 
       the structure  scheme */
-   CopyAttributes (pEl, pNew, FALSE);
+   CopyAttributes (pEl, pNew, pDoc, FALSE);
    /* copies the specific presentation rules */
    CopyPresRules (pEl, pNew);
    pNew->ElPrevious = NULL;
