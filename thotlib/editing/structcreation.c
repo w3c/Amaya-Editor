@@ -135,7 +135,12 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
 	notify = FALSE;
     }
   else if (inRow &&
-	   TypeHasException (ExcIsCell, pEl->ElTypeNumber, pEl->ElStructSchema))
+	   TypeHasException (ExcIsCell, pEl->ElTypeNumber,
+			     pEl->ElStructSchema))
+    notify = FALSE;
+  else if (inTable &&
+	   TypeHasException (ExcIsColHead, pEl->ElTypeNumber,
+			     pEl->ElStructSchema))
     notify = FALSE;
   if (notify)
   CallEventType ((NotifyEvent *) & notifyEl, FALSE);

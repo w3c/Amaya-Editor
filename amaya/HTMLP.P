@@ -692,6 +692,18 @@ BOXES
         END;
 }
 
+ IMG_type_image: BEGIN
+	Content: Text ' type=image';
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
  ATTR_Checkbox: BEGIN
 	Content: Text ' type=checkbox';
 	HorizPos: Left = Previous . Right;
@@ -816,11 +828,12 @@ BOXES
 	END;
 
  IMG_in_S: BEGIN
-	Content: Text 'input type=image ';
+	Content: Text 'input ';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
+		Font: TAG_Font;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -4081,9 +4094,11 @@ RULES
 
  PICTURE_UNIT: BEGIN
 	if ALT
-	    CreateBefore(IMG_ALT);
-	if IsInput
+	        CreateBefore(IMG_ALT);
+	if IsInput BEGIN
 		CreateBefore(IMG_in_S);
+		CreateBefore(IMG_type_image);
+	        END;
 	if not Immediately within Object and not IsInput
 		CreateBefore(ElementName);
 	LineBreak: No;
@@ -4801,9 +4816,7 @@ RULES
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: 0.4;
 	IN Structure_view BEGIN
-		MarginTop: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;

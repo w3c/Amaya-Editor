@@ -2429,7 +2429,7 @@ static void ProcessStartGI (char* GIname)
 	  if (DocumentMeta[HTMLcontext.doc] &&
 	      DocumentMeta[HTMLcontext.doc]->xmlformat)
 	    {
-	      sprintf (msgBuffer, "Invalid tag <%s> (removed if saving)", GIname);
+	      sprintf (msgBuffer, "Invalid tag <%s> (removed when saving)", GIname);
 	      HTMLParseError (HTMLcontext.doc, msgBuffer);
 	      removed = TRUE;
 	    }
@@ -2495,7 +2495,7 @@ static void ProcessStartGI (char* GIname)
 	  if (!ContextOK (entry))
 	    /* element not allowed in the current structural context */
 	    {
-	      sprintf (msgBuffer, "Tag <%s> is not allowed here (removed if saving)", GIname);
+	      sprintf (msgBuffer, "Tag <%s> is not allowed here (removed when saving)", GIname);
 	      HTMLParseError (HTMLcontext.doc, msgBuffer);
 	      UnknownTag = TRUE;
 	      /* create an Invalid_element */
@@ -2724,7 +2724,7 @@ static void EndOfEndTag (char c)
 	       if (DocumentMeta[HTMLcontext.doc] &&
 		   DocumentMeta[HTMLcontext.doc]->xmlformat)
 		 {
-		   sprintf (msgBuffer, "Invalid tag <%s> (removed if saving)", inputBuffer);
+		   sprintf (msgBuffer, "Invalid tag <%s> (removed when saving)", inputBuffer);
 		   HTMLParseError (HTMLcontext.doc, msgBuffer);
 		   removed = TRUE;
 		 }
@@ -2807,7 +2807,7 @@ static void EndOfEndTag (char c)
 		       sprintf (msgBuffer, "</%s", inputBuffer);
 		       InsertInvalidEl (msgBuffer, TRUE);
 		       /* print an error message... */
-		       sprintf (msgBuffer, "Invalid end tag </%s> (removed if saving)",
+		       sprintf (msgBuffer, "Invalid end tag </%s> (removed when saving)",
 				inputBuffer);
 		     }
 		   else
@@ -2908,7 +2908,7 @@ static void EndOfAttrName (char c)
 	     {
 	       if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)
 		 inputBuffer[MaxMsgLength - 30] = EOS;
-	       sprintf (msgBuffer, "Invalid attribute \"%s\"(removed if saving)", inputBuffer);
+	       sprintf (msgBuffer, "Invalid attribute \"%s\"(removed when saving)", inputBuffer);
 	       HTMLParseError (HTMLcontext.doc, msgBuffer);
 	       /* attach an Invalid_attribute to the current element */
 	       tableEntry = &pHTMLAttributeMapping[0];
