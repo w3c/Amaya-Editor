@@ -29,14 +29,14 @@ boolean             TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS
 boolean             TypeHasException (exceptNum, typeNum, pSS)
 int                 exceptNum;
 int                 typeNum;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
    boolean             ret;
-   int           e;
+   int                 e;
    SRule              *pSRule;
-   PtrSSchema        pExtSS;
+   PtrSSchema          pExtSS;
 
    ret = FALSE;
    if (pSS != NULL)
@@ -98,14 +98,14 @@ boolean             AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
 boolean             AttrHasException (exceptNum, attr, pSS)
 int                 exceptNum;
 int                 attr;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
    boolean             ret;
-   int           e;
-   TtAttribute           *pAtt;
+   int                 e;
+   TtAttribute        *pAtt;
 
    ret = FALSE;
    if (pSS != NULL)
@@ -141,7 +141,7 @@ int                 GetAttrWithException (int exceptNum, PtrSSchema pSS)
 #else  /* __STDC__ */
 int                 GetAttrWithException (exceptNum, pSS)
 int                 exceptNum;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -175,7 +175,7 @@ int                 GetElemWithException (int exceptNum, PtrSSchema pSS)
 #else  /* __STDC__ */
 int                 GetElemWithException (exceptNum, pSS)
 int                 exceptNum;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -194,4 +194,3 @@ PtrSSchema        pSS;
      }
    return ret;
 }
-

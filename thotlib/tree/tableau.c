@@ -42,22 +42,22 @@
    dans le buffer Couper-Coller. */
 
 #ifdef __STDC__
-static void Tableau_OrphanCell(PtrElement pCell, PtrElement pSauve, boolean *InCutBuffer)
+static void         Tableau_OrphanCell (PtrElement pCell, PtrElement pSauve, boolean * InCutBuffer)
 
 #else  /* __STDC__ */
-static void Tableau_OrphanCell(pCell, pSauve, InCutBuffer)
+static void         Tableau_OrphanCell (pCell, pSauve, InCutBuffer)
 PtrElement          pCell;
 PtrElement          pSauve;
-boolean             *InCutBuffer;
+boolean            *InCutBuffer;
 
 #endif /* __STDC__ */
 
 {
    int                 attr;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    PtrElement          pCol, pE;
 
-  *InCutBuffer = FALSE;
+   *InCutBuffer = FALSE;
    /* cherche l'attribut La_colonne de la cellule */
    pCol = NULL;
    attr = GetAttrWithException (EXC_ID_Ref_Colonne, pCell->ElStructSchema);
@@ -102,17 +102,17 @@ boolean             *InCutBuffer;
    au corps de ligne */
 
 #ifdef __STDC__
-static boolean             Tableau_EscapeSpecial (PtrDocument SelDoc)
+static boolean      Tableau_EscapeSpecial (PtrDocument SelDoc)
 
 #else  /* __STDC__ */
-static boolean             Tableau_EscapeSpecial (SelDoc)
+static boolean      Tableau_EscapeSpecial (SelDoc)
 PtrDocument         SelDoc;
 
 #endif /* __STDC__ */
 
 {
    int                 attr;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    if (FirstSelectedElement == LastSelectedElement)
      {
@@ -144,19 +144,19 @@ PtrDocument         SelDoc;
 /* sur toutes les elements portant une exception EXC_TR_Cellule_ATTRIBUT */
 
 #ifdef __STDC__
-static void                Tableau_DistribAlignHorizVertic (PtrElement pEl, PtrAttribute pAttrCell, PtrDocument SelDoc)
+static void         Tableau_DistribAlignHorizVertic (PtrElement pEl, PtrAttribute pAttrCell, PtrDocument SelDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_DistribAlignHorizVertic (pEl, pAttrCell, SelDoc)
+static void         Tableau_DistribAlignHorizVertic (pEl, pAttrCell, SelDoc)
 PtrElement          pEl;
-PtrAttribute         pAttrCell;
+PtrAttribute        pAttrCell;
 PtrDocument         SelDoc;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pCell;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    boolean             PasDExtension;
 
    if (TypeHasException (EXC_TR_Cellule_ATTRIBUT, pEl->ElTypeNumber, pEl->ElStructSchema))
@@ -197,22 +197,22 @@ PtrDocument         SelDoc;
 /* - le cas particulier de l'attribut Alignement vertical */
 
 #ifdef __STDC__
-static void                TableauAttributSpecial (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
+static void         TableauAttributSpecial (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                TableauAttributSpecial (pEl, pAttr, pDoc)
+static void         TableauAttributSpecial (pEl, pAttr, pDoc)
 PtrElement          pEl;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   AttributeBlock          AttrCell;
-   PtrAttribute         pAttrCell;
+   AttributeBlock      AttrCell;
+   PtrAttribute        pAttrCell;
 
    if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElStructSchema)
-   && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElStructSchema))
+       && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElStructSchema))
      {
 	DestroyAbsBoxes (pEl, pDoc, FALSE);
 	AbstractImageUpdated (pDoc);
@@ -243,19 +243,19 @@ PtrDocument         pDoc;
 /* Tableau_TypeExclus retourne vrai si on peut inserer l'element dans un menu de choix */
 
 #ifdef __STDC__
-static boolean             Tableau_TypeExclus (PtrElement pEl, int eltype, PtrSSchema pSS)
+static boolean      Tableau_TypeExclus (PtrElement pEl, int eltype, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static boolean             Tableau_TypeExclus (pEl, eltype, pSS)
+static boolean      Tableau_TypeExclus (pEl, eltype, pSS)
 PtrElement          pEl;
 int                 eltype;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
    int                 attr;
-   PtrAttribute         pAttrTab;
+   PtrAttribute        pAttrTab;
    PtrElement          pElAttr;
 
    if (eltype == GetElemWithException (EXC_ID_Colonne_Composee, pSS)
@@ -271,13 +271,13 @@ PtrSSchema        pSS;
 	     /* on inhibe le choix colonne composee quand
 	        quand l'attribut Type_Tableau vaut Lignes ou Tabulations */
 	     if (eltype == GetElemWithException (EXC_ID_Colonne_Composee, pSS)
-		 && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
+	      && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
 		return (TRUE);
 
 	     /* on inhibe le choix ligne composee quand
 	        quand l'attribut Type_Tableau vaut Colonnes ou Tabulations */
 	     else if (eltype == GetElemWithException (EXC_ID_Ligne_Composee, pSS)
-		  && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
+	      && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
 		return (TRUE);
 	  }
      }
@@ -289,12 +289,12 @@ PtrSSchema        pSS;
 /* l'attribut Ref_largeur ou l'attribut La_colonne. */
 
 #ifdef __STDC__
-static void             Tableau_AttributRef (PtrAttribute pAttr, boolean *ret)
+static void         Tableau_AttributRef (PtrAttribute pAttr, boolean * ret)
 
 #else  /* __STDC__ */
 boolean             Tableau_AttributRef (pAttr, ret)
-PtrAttribute         pAttr;
-boolean             *ret;
+PtrAttribute        pAttr;
+boolean            *ret;
 
 #endif /* __STDC__ */
 
@@ -313,10 +313,10 @@ boolean             *ret;
 /* degre' d'imbrication des lignes composees. */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrTitreLigne (PtrElement pTitre, PtrDocument pDoc)
+static void         Tableau_MetAttrTitreLigne (PtrElement pTitre, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrTitreLigne (pTitre, pDoc)
+static void         Tableau_MetAttrTitreLigne (pTitre, pDoc)
 PtrElement          pTitre;
 PtrDocument         pDoc;
 
@@ -324,7 +324,7 @@ PtrDocument         pDoc;
 
 {
    PtrElement          pE, pT, pTitreTableau;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    int                 pourcent;
 
    /* cherche l'element Titre_Tableau */
@@ -390,17 +390,17 @@ PtrDocument         pDoc;
 /* MetAttributLigne     met l'attribut Filet_Gauche et Filet_Bas a l'element */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrLigne (PtrElement pLigne, PtrDocument pDoc)
+static void         Tableau_MetAttrLigne (PtrElement pLigne, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrLigne (pLigne, pDoc)
+static void         Tableau_MetAttrLigne (pLigne, pDoc)
 PtrElement          pLigne;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pAttr = AttachAttrByExceptNum (EXC_ID_Filet_Bas_LigSimp, pLigne, NULL, pDoc);
    pAttr->AeAttrValue = 2;
@@ -432,17 +432,17 @@ PtrDocument         pDoc;
 /* MetAttrColonneSimple met l'attribut Largeur a l'element */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrColonneSimple (PtrElement pCol, PtrDocument pDoc)
+static void         Tableau_MetAttrColonneSimple (PtrElement pCol, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrColonneSimple (pCol, pDoc)
+static void         Tableau_MetAttrColonneSimple (pCol, pDoc)
 PtrElement          pCol;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pAttr = AttachAttrByExceptNum (EXC_ID_Largeur_Colonne, pCol, NULL, pDoc);
    pAttr->AeAttrValue = 50;
@@ -455,17 +455,17 @@ PtrDocument         pDoc;
 /* la colonne est simple */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrColonneComp (PtrElement pCol, PtrDocument pDoc)
+static void         Tableau_MetAttrColonneComp (PtrElement pCol, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrColonneComp (pCol, pDoc)
+static void         Tableau_MetAttrColonneComp (pCol, pDoc)
 PtrElement          pCol;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pAttr = AttachAttrByExceptNum (EXC_ID_Filet_Bas_ColComp, pCol, NULL, pDoc);
    pAttr->AeAttrValue = 2;
@@ -477,17 +477,17 @@ PtrDocument         pDoc;
 /* MetAttributTitreTableau met l'attribut Filet_Haut et Filet_Gauche */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrTitreTableau (PtrElement pTitreTab, PtrDocument pDoc)
+static void         Tableau_MetAttrTitreTableau (PtrElement pTitreTab, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrTitreTableau (pTitreTab, pDoc)
+static void         Tableau_MetAttrTitreTableau (pTitreTab, pDoc)
 PtrElement          pTitreTab;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pAttr = AttachAttrByExceptNum (EXC_ID_Largeur_Titre, pTitreTab, NULL, pDoc);
    pAttr->AeAttrValue = 70;
@@ -498,10 +498,10 @@ PtrDocument         pDoc;
 /* utilise pColonne comme valeur pour la reference */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrCellule (PtrElement pCell, PtrElement pCol, PtrDocument pDoc)
+static void         Tableau_MetAttrCellule (PtrElement pCell, PtrElement pCol, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrCellule (pCell, pCol, pDoc)
+static void         Tableau_MetAttrCellule (pCell, pCol, pDoc)
 PtrElement          pCell;
 PtrElement          pCol;
 PtrDocument         pDoc;
@@ -517,17 +517,17 @@ PtrDocument         pDoc;
 /* MetAttributLesColonnes met l'attribut Filet_Gauche */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrLesColonnes (PtrElement pLesCol, PtrDocument pDoc)
+static void         Tableau_MetAttrLesColonnes (PtrElement pLesCol, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrLesColonnes (pLesCol, pDoc)
+static void         Tableau_MetAttrLesColonnes (pLesCol, pDoc)
 PtrElement          pLesCol;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pAttr = AttachAttrByExceptNum (EXC_ID_Filet_Gauche_LesCol, pLesCol, NULL, pDoc);
    pAttr->AeAttrValue = 2;
@@ -537,17 +537,17 @@ PtrDocument         pDoc;
 /* Tableau_MetAttrEnTetes met l'attribut Filet_Inferieur */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrEnTetes (PtrElement pEnTetes, PtrDocument pDoc)
+static void         Tableau_MetAttrEnTetes (PtrElement pEnTetes, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrEnTetes (pEnTetes, pDoc)
+static void         Tableau_MetAttrEnTetes (pEnTetes, pDoc)
 PtrElement          pEnTetes;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pAttr = AttachAttrByExceptNum (EXC_ID_Filet_Inf_EnTetes, pEnTetes, NULL, pDoc);
    pAttr->AeAttrValue = 2;
@@ -556,17 +556,17 @@ PtrDocument         pDoc;
 /* MetAttributTable */
 
 #ifdef __STDC__
-static void                Tableau_MetAttrTable (PtrElement pTable, PtrDocument pDoc)
+static void         Tableau_MetAttrTable (PtrElement pTable, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_MetAttrTable (pTable, pDoc)
+static void         Tableau_MetAttrTable (pTable, pDoc)
 PtrElement          pTable;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pAttr = AttachAttrByExceptNum (EXC_ID_Cadre_Tableau, pTable, NULL, pDoc);
    pAttr->AeAttrValue = 2;
@@ -580,10 +580,10 @@ PtrDocument         pDoc;
 /* La_colonne qui pointe sur la colonne simple. */
 
 #ifdef __STDC__
-static void                Tableau_CreeColSimple (PtrElement pEl, PtrDocument pDoc)
+static void         Tableau_CreeColSimple (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_CreeColSimple (pEl, pDoc)
+static void         Tableau_CreeColSimple (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -592,7 +592,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pE, pCol, pLigne, pLesLignes, pCell, pNCell;
    int                 NType, TypeCell;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    PtrElement          pElRef;
    int                 attr;
    boolean             PremCol, attrtrouve;
@@ -639,7 +639,7 @@ PtrDocument         pDoc;
 		pCell = pLigne->ElFirstChild->ElNext->ElFirstChild;
 		/* on cree une nouvelle cellule */
 		pNCell = NewSubtree (TypeCell, pEl->ElStructSchema, pDoc,
-			 pLigne->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+				pLigne->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		/* on insere cette nouvelle cellule dans l'arbre */
 		if (pCell == NULL)
 		   /* la ligne n'avait pas encore de cellules */
@@ -717,10 +717,10 @@ PtrDocument         pDoc;
 /* correspondante */
 
 #ifdef __STDC__
-static void                Tableau_CreeLigneSimple (PtrElement pEl, PtrDocument pDoc)
+static void         Tableau_CreeLigneSimple (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_CreeLigneSimple (pEl, pDoc)
+static void         Tableau_CreeLigneSimple (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -748,7 +748,7 @@ PtrDocument         pDoc;
    TypeCol = GetElemWithException (EXC_ID_Colonne_Simple, pEl->ElStructSchema);
 
    /* cherche la premiere cellule dans la nouvelle ligne */
-   pCell = pEl->ElFirstChild->ElNext->ElFirstChild; 
+   pCell = pEl->ElFirstChild->ElNext->ElFirstChild;
    /* parcourt toutes les colonnes simples du tableau */
    pCol = pLesCol;
    while (pCol != NULL)
@@ -796,10 +796,10 @@ PtrDocument         pDoc;
 /* Table. */
 
 #ifdef __STDC__
-static void                Cree_Tableau (PtrElement pEl, PtrDocument pDoc)
+static void         Cree_Tableau (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Cree_Tableau (pEl, pDoc)
+static void         Cree_Tableau (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -808,7 +808,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pE, pL, pC, pNouv;
    int                 NType;
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
 
 
    pSS = pEl->ElStructSchema;
@@ -823,7 +823,7 @@ PtrDocument         pDoc;
 	/* met les attributs sur Titre_Tableau */
 	Tableau_MetAttrTitreTableau (pE->ElFirstChild, pDoc);
 
-	pC = pE->ElFirstChild->ElNext;		/* element Les_colonnes */
+	pC = pE->ElFirstChild->ElNext;	/* element Les_colonnes */
 	/* met les attributs sur Les colonnes */
 	Tableau_MetAttrLesColonnes (pC, pDoc);
 
@@ -876,7 +876,7 @@ PtrDocument         pDoc;
 			      {
 				 /* transforme la Line en Ligne_simple */
 				 pNouv = NewSubtree (NType, pSS, pDoc, pE->ElAssocNum,
-					      TRUE, TRUE, TRUE, TRUE);
+						     TRUE, TRUE, TRUE, TRUE);
 				 InsertOption (pE, &pNouv, pDoc);
 				 /* traite les attributs requis */
 				 AttachMandatoryAttributes (pE, pDoc);
@@ -898,10 +898,10 @@ PtrDocument         pDoc;
 /* la boite de presentation Filet_Bas de la ligne pLigne. */
 
 #ifdef __STDC__
-static void                Tableau_CreeFiletLigne (PtrElement pLigne, PtrElement pBasPage, PtrDocument pDoc)
+static void         Tableau_CreeFiletLigne (PtrElement pLigne, PtrElement pBasPage, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_CreeFiletLigne (pLigne, pBasPage, pDoc)
+static void         Tableau_CreeFiletLigne (pLigne, pBasPage, pDoc)
 PtrElement          pLigne;
 PtrElement          pBasPage;
 PtrDocument         pDoc;
@@ -910,7 +910,7 @@ PtrDocument         pDoc;
 
 {
    int                 attr;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    boolean             trouve;
 
    if (pBasPage != NULL && pLigne != NULL)
@@ -950,10 +950,10 @@ PtrDocument         pDoc;
 /* nombre d'elements */
 
 #ifdef __STDC__
-static void                Tableau_Creation_DoIt (PtrElement pEl, PtrDocument pDoc)
+static void         Tableau_Creation_DoIt (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_Creation_DoIt (pEl, pDoc)
+static void         Tableau_Creation_DoIt (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -1058,10 +1058,10 @@ PtrDocument         pDoc;
 /* nombre d'elements */
 
 #ifdef __STDC__
-static void                Tableau_Creation (PtrElement pEl, PtrDocument pDoc)
+static void         Tableau_Creation (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_Creation (pEl, pDoc)
+static void         Tableau_Creation (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -1092,17 +1092,17 @@ PtrDocument         pDoc;
 /* a la colonne simple pointe' par pEl. */
 
 #ifdef __STDC__
-static void                Tableau_SelectColSimple (PtrElement pEl)
+static void         Tableau_SelectColSimple (PtrElement pEl)
 
 #else  /* __STDC__ */
-static void                Tableau_SelectColSimple (pEl)
+static void         Tableau_SelectColSimple (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pLigne, pLigneSuiv, pE, pLesLignes, pCell;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    int                 NType, attr;
 
    if (pEl != NULL)
@@ -1180,14 +1180,14 @@ PtrElement          pEl;
 /* colonne a la fois). */
 
 #ifdef __STDC__
-static void         Tableau_Selection(PtrElement pEl, PtrDocument pDoc, boolean Ext, boolean *ret)
+static void         Tableau_Selection (PtrElement pEl, PtrDocument pDoc, boolean Ext, boolean * ret)
 
 #else  /* __STDC__ */
-static void         Tableau_Selection(pEl, pDoc, Ext, ret)
+static void         Tableau_Selection (pEl, pDoc, Ext, ret)
 PtrElement          pEl;
 PtrDocument         pDoc;
 boolean             Ext;
-boolean             *ret;
+boolean            *ret;
 
 #endif /* __STDC__ */
 
@@ -1265,12 +1265,12 @@ boolean             *ret;
 /* suivi de cellules, qui sont considerees comme lui appartenant. */
 
 #ifdef __STDC__
-static void        Tableau_DernierSauve(PtrElement pElSv, boolean *ret)
+static void         Tableau_DernierSauve (PtrElement pElSv, boolean * ret)
 
 #else  /* __STDC__ */
-static void         Tableau_DernierSauve(pElSv, ret)
+static void         Tableau_DernierSauve (pElSv, ret)
 PtrElement          pElSv;
-boolean             *ret;
+boolean            *ret;
 
 #endif /* __STDC__ */
 
@@ -1295,10 +1295,10 @@ boolean             *ret;
 /* collee. */
 
 #ifdef __STDC__
-static void                Tableau_ColleCellules (PtrElement pCol, int NbPreced, int NbCell, PtrElement * pSvCell, PtrDocument pDoc)
+static void         Tableau_ColleCellules (PtrElement pCol, int NbPreced, int NbCell, PtrElement * pSvCell, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_ColleCellules (pCol, NbPreced, NbCell, pSvCell, pDoc)
+static void         Tableau_ColleCellules (pCol, NbPreced, NbCell, pSvCell, pDoc)
 PtrElement          pCol;
 int                 NbPreced;
 int                 NbCell;
@@ -1315,7 +1315,7 @@ PtrDocument         pDoc;
    NbCellCollees = 0;
    TypeCell = GetElemWithException (EXC_ID_Cellule, pCol->ElStructSchema);	/* numero du type Cellule */
    TypeLigne = GetElemWithException (EXC_ID_Les_Lignes, pCol->ElStructSchema);	/* numero du type Les_lignes */
-   pLesLignes = FwdSearchTypedElem (pCol, TypeLigne, pCol->ElStructSchema);		/* cherche l'element Les_lignes */
+   pLesLignes = FwdSearchTypedElem (pCol, TypeLigne, pCol->ElStructSchema);	/* cherche l'element Les_lignes */
    TypeLigne = GetElemWithException (EXC_ID_Ligne_Simple, pCol->ElStructSchema);	/* numero du type Ligne_simple */
 
    /* parcourt les lignes simples du tableau */
@@ -1336,7 +1336,7 @@ PtrDocument         pDoc;
 		  {
 		     /* on cree une copie de la cellule a coller */
 		     pNCell = CopyTree (*pSvCell, DocOfSavedElements, pCol->ElAssocNum,
-				pCol->ElStructSchema, pDoc, pPere, TRUE, TRUE);
+			     pCol->ElStructSchema, pDoc, pPere, TRUE, TRUE);
 		     NbCellCollees++;
 		     *pSvCell = (*pSvCell)->ElNext;
 		  }
@@ -1345,7 +1345,7 @@ PtrDocument         pDoc;
 		     /* on a deja colle' le nombre de cellules voulu, on cree une
 		        cellule vide pour completer la colonne */
 		     pNCell = NewSubtree (TypeCell, pPere->ElStructSchema, pDoc,
-				 pPere->ElAssocNum, TRUE, TRUE, TRUE,
+					pPere->ElAssocNum, TRUE, TRUE, TRUE,
 					  TRUE);
 		     /* on met les attributs a la nouvelle cellule */
 		     Tableau_MetAttrCellule (pNCell, pCol, pDoc);
@@ -1388,10 +1388,10 @@ PtrDocument         pDoc;
 /* pCell sur la prochaine a traiter. */
 
 #ifdef __STDC__
-static void                Tableau_VerifColCell (PtrElement pCol, PtrElement * pCell, PtrElement * pCellPrec, PtrDocument pDoc)
+static void         Tableau_VerifColCell (PtrElement pCol, PtrElement * pCell, PtrElement * pCellPrec, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_VerifColCell (pCol, pCell, pCellPrec, pDoc)
+static void         Tableau_VerifColCell (pCol, pCell, pCellPrec, pDoc)
 PtrElement          pCol;
 PtrElement         *pCell;
 PtrElement         *pCellPrec;
@@ -1415,7 +1415,7 @@ PtrDocument         pDoc;
 	     /* cree une cellule */
 	     pEl1 = *pCellPrec;
 	     *pCell = NewSubtree (pEl1->ElTypeNumber, pEl1->ElStructSchema, pDoc,
-			   pEl1->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+				  pEl1->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	     /* insere cette cellule a la suite de la cellule precedente */
 	     InsertElementAfter (*pCellPrec, *pCell);
 	  }
@@ -1425,7 +1425,7 @@ PtrDocument         pDoc;
 	     /* traite les attributs requis */
 	     AttachMandatoryAttributes (*pCell, pDoc);
 	     *pCellPrec = *pCell;
-	     *pCell = (*pCell)->ElNext;	/* passe a la cellule suivante */
+	     *pCell = (*pCell)->ElNext;		/* passe a la cellule suivante */
 	  }
      }
 
@@ -1451,10 +1451,10 @@ PtrDocument         pDoc;
 /* l'element pointe' par pLigne */
 
 #ifdef __STDC__
-static void                Tableau_VerifieLigne (PtrElement pLigne, PtrElement pLesCol, PtrDocument pDoc)
+static void         Tableau_VerifieLigne (PtrElement pLigne, PtrElement pLesCol, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_VerifieLigne (pLigne, pLesCol, pDoc)
+static void         Tableau_VerifieLigne (pLigne, pLesCol, pDoc)
 PtrElement          pLigne;
 PtrElement          pLesCol;
 PtrDocument         pDoc;
@@ -1473,7 +1473,7 @@ PtrDocument         pDoc;
       Tableau_MetAttrTitreLigne (pTitreL, pDoc);
 
    TypeLigneSimple = GetElemWithException (EXC_ID_Ligne_Simple, pLigne->ElStructSchema);
-   if (pLigne->ElTypeNumber == TypeLigneSimple)	/* c'est une ligne simple on la traite */
+   if (pLigne->ElTypeNumber == TypeLigneSimple)		/* c'est une ligne simple on la traite */
      {
 	pCell = pLigne->ElFirstChild;	/* accede a la premiere cellule */
 	while (pCell->ElNext != NULL)
@@ -1521,10 +1521,10 @@ PtrDocument         pDoc;
 /* a coller ensuite. */
 
 #ifdef __STDC__
-static void                Tableau_ColleVoisin (PtrElement pColle, PtrElement * pElSv, PtrDocument pDoc)
+static void         Tableau_ColleVoisin (PtrElement pColle, PtrElement * pElSv, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_ColleVoisin (pColle, pElSv, pDoc)
+static void         Tableau_ColleVoisin (pColle, pElSv, pDoc)
 PtrElement          pColle;
 PtrElement         *pElSv;
 PtrDocument         pDoc;
@@ -1657,10 +1657,10 @@ PtrDocument         pDoc;
 /* selectionne'). */
 
 #ifdef __STDC__
-static void                Exc_Page_Break_Couper (PtrElement * PremSel, PtrElement * DerSel, PtrDocument pDoc, boolean * Sauve, boolean * DetruirePage)
+static void         Exc_Page_Break_Couper (PtrElement * PremSel, PtrElement * DerSel, PtrDocument pDoc, boolean * Sauve, boolean * DetruirePage)
 
 #else  /* __STDC__ */
-static void                Exc_Page_Break_Couper (PremSel, DerSel, pDoc, Sauve, DetruirePage)
+static void         Exc_Page_Break_Couper (PremSel, DerSel, pDoc, Sauve, DetruirePage)
 PtrElement         *PremSel;
 PtrElement         *DerSel;
 PtrDocument         pDoc;
@@ -1688,7 +1688,7 @@ boolean            *DetruirePage;
 		   if (Prec == NULL)
 		      stop = TRUE;	/* pas d'autre element precedent */
 		   else if (!TypeHasException (ExcPageBreakRepBefore, Prec->ElTypeNumber,
-					     Prec->ElStructSchema))
+					       Prec->ElStructSchema))
 		      /* l'element precedent n'est pas une repetition */
 		      stop = TRUE;
 		   else if (Prec->ElSource == NULL)
@@ -1712,7 +1712,7 @@ boolean            *DetruirePage;
 		   if (Suiv == NULL)
 		      stop = TRUE;	/* pas d'autre element suivant */
 		   else if (!TypeHasException (ExcPageBreakRepetition, Suiv->ElTypeNumber,
-					     Suiv->ElStructSchema))
+					       Suiv->ElStructSchema))
 		      /* l'element suivant n'est pas une repetition */
 		      stop = TRUE;
 		   else if (Suiv->ElSource == NULL)
@@ -1736,10 +1736,10 @@ boolean            *DetruirePage;
 /* des filets verticaux engendre's par l'En_Tete qui precede */
 
 #ifdef __STDC__
-static void                Tableau_Couper (PtrElement pBasTableau, PtrDocument pDoc)
+static void         Tableau_Couper (PtrElement pBasTableau, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void                Tableau_Couper (pBasTableau, pDoc)
+static void         Tableau_Couper (pBasTableau, pDoc)
 PtrElement          pBasTableau;
 PtrDocument         pDoc;
 
@@ -1749,7 +1749,7 @@ PtrDocument         pDoc;
    int                 SauveType;
 
    if (TypeHasException (EXC_ID_BasTableau, pBasTableau->ElTypeNumber,
-		       pBasTableau->ElStructSchema))
+			 pBasTableau->ElStructSchema))
       /* c'est un element Bas_tableau */
      {
 	/* reapplique les regles de hauteur des filets */
@@ -1774,11 +1774,11 @@ PtrDocument         pDoc;
 
 
 #ifdef __STDC__
-static void                TableauVerifExtension (PtrAttribute pAttr, PtrElement PremEl, PtrElement DerEl, boolean SupprimeAttr)
+static void         TableauVerifExtension (PtrAttribute pAttr, PtrElement PremEl, PtrElement DerEl, boolean SupprimeAttr)
 
 #else  /* __STDC__ */
-static void                TableauVerifExtension (pAttr, PremEl, DerEl, SupprimeAttr)
-PtrAttribute         pAttr;
+static void         TableauVerifExtension (pAttr, PremEl, DerEl, SupprimeAttr)
+PtrAttribute        pAttr;
 PtrElement          PremEl;
 PtrElement          DerEl;
 boolean             SupprimeAttr;
@@ -1787,7 +1787,7 @@ boolean             SupprimeAttr;
 
 {
    PtrElement          pEl, pElRef;
-   DocumentIdentifier     IdentDoc;
+   DocumentIdentifier  IdentDoc;
    PtrDocument         pDoc;
    boolean             erreur, verif, stop;
 
@@ -1870,12 +1870,12 @@ boolean             SupprimeAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void Tableau_CanHolophrast(PtrElement pEl, boolean *ret)
+static void         Tableau_CanHolophrast (PtrElement pEl, boolean * ret)
 
 #else  /* __STDC__ */
-static void Tableau_CanHolophrast(pEl, ret)
+static void         Tableau_CanHolophrast (pEl, ret)
 PtrElement          pEl;
-boolean *ret;
+boolean            *ret;
 
 #endif /* __STDC__ */
 
@@ -1887,19 +1887,19 @@ boolean *ret;
       *ret = FALSE;
    /* on n'holophraste pas les colonnes composees */
    else if (TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber,
-			    pEl->ElStructSchema))
+			      pEl->ElStructSchema))
       *ret = FALSE;
    /* on n'holophraste pas les colonnes */
    else if (TypeHasException (EXC_ID_Les_Colonnes, pEl->ElTypeNumber,
-			    pEl->ElStructSchema))
+			      pEl->ElStructSchema))
       *ret = FALSE;
    /* on n'holophraste pas les colonnes simples */
    else if (TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber,
-			    pEl->ElStructSchema))
+			      pEl->ElStructSchema))
       *ret = FALSE;
    /* on n'holophraste pas les sous-colonnes */
    else if (TypeHasException (EXC_ID_Sous_Colonnes, pEl->ElTypeNumber,
-			    pEl->ElStructSchema))
+			      pEl->ElStructSchema))
       *ret = FALSE;
 }
 /** fin ajout */
@@ -1910,15 +1910,16 @@ boolean *ret;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void Tableau_Except(PtrElement pEl, boolean *ret)
-#else /* __STDC__ */
-static void Tableau_Except(pEl, ret)
-	PtrElement pEl;
-        boolean *ret;
+static void         Tableau_Except (PtrElement pEl, boolean * ret)
+#else  /* __STDC__ */
+static void         Tableau_Except (pEl, ret)
+PtrElement          pEl;
+boolean            *ret;
+
 #endif /* __STDC__ */
 {
-       *ret = (TypeHasException(EXC_ID_Tableau, pEl->ElTypeNumber,
-			  (pEl->ElStructSchema)));
+   *ret = (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber,
+			     (pEl->ElStructSchema)));
 }
 
 /*----------------------------------------------------------------------
@@ -1927,50 +1928,51 @@ static void Tableau_Except(pEl, ret)
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void Tableau_Except_CR(PtrElement pEl, boolean *ret)
-#else /* __STDC__ */
-static void Tableau_Except_CR(pEl, ret)
-	PtrElement pEl;
-        boolean *ret;
+static void         Tableau_Except_CR (PtrElement pEl, boolean * ret)
+#else  /* __STDC__ */
+static void         Tableau_Except_CR (pEl, ret)
+PtrElement          pEl;
+boolean            *ret;
+
 #endif /* __STDC__ */
 {
-       *ret = (TypeHasException(EXC_TR_Tableau_CREATION, pEl->ElTypeNumber,
-			  (pEl->ElStructSchema)));
+   *ret = (TypeHasException (EXC_TR_Tableau_CREATION, pEl->ElTypeNumber,
+			     (pEl->ElStructSchema)));
 }
 
 /*----------------------------------------------------------------------
    TableauLoadResources : connecte les ressources de traitement des  
    tableaux            	                                        
   ----------------------------------------------------------------------*/
-void TableauLoadResources()
+void                TableauLoadResources ()
 {
 
-  if (ThotLocalActions[T_createtable] == NULL)
-    { 
-      /* initialisations */
+   if (ThotLocalActions[T_createtable] == NULL)
+     {
+	/* initialisations */
 
-      /* connection des ressources */
-      TteConnectAction(T_createtable, (Proc)Tableau_Creation);
-      TteConnectAction(T_selecttable, (Proc)Tableau_Selection);
-      TteConnectAction(T_singlecell, (Proc)Tableau_OrphanCell);
-      TteConnectAction(T_attrtable, (Proc)TableauAttributSpecial);
-      TteConnectAction(T_lastsaved, (Proc)Tableau_DernierSauve);
-      TteConnectAction(T_condlast, (Proc)Tableau_Cond_Dernier);
-      TteConnectAction(T_pastesiblingtable, (Proc)Tableau_ColleVoisin);
-      TteConnectAction(T_refattr, (Proc)Tableau_AttributRef);
-      TteConnectAction(T_ruleattr, (Proc)Tableau_ApplRegleAttribut);
-      TteConnectAction(T_createhairline, (Proc)Tableau_CreeFiletLigne);
-      TteConnectAction(T_holotable, (Proc)Tableau_CanHolophrast);
-      TteConnectAction(T_checkextens, (Proc)TableauVerifExtension);
-      TteConnectAction(T_abref, (Proc)Tableau_PaveRef);
-      TteConnectAction(T_vertspan, (Proc)TableauDebordeVertical);
-      TteConnectAction(T_excepttable, (Proc)Tableau_Except);
-      TteConnectAction(T_entertable, (Proc)Tableau_Except_CR);
-      TteConnectAction(T_insertpage, (Proc)Exc_Page_Break_Inserer);
-      TteConnectAction(T_cutpage, (Proc)Exc_Page_Break_Couper);
-      TteConnectAction(T_deletepage, (Proc)Exc_Page_Break_Supprime);
-      TteConnectAction(T_deletepageab, (Proc)Exc_Page_Break_Detruit_Pave);
-    }
+	/* connection des ressources */
+	TteConnectAction (T_createtable, (Proc) Tableau_Creation);
+	TteConnectAction (T_selecttable, (Proc) Tableau_Selection);
+	TteConnectAction (T_singlecell, (Proc) Tableau_OrphanCell);
+	TteConnectAction (T_attrtable, (Proc) TableauAttributSpecial);
+	TteConnectAction (T_lastsaved, (Proc) Tableau_DernierSauve);
+	TteConnectAction (T_condlast, (Proc) Tableau_Cond_Dernier);
+	TteConnectAction (T_pastesiblingtable, (Proc) Tableau_ColleVoisin);
+	TteConnectAction (T_refattr, (Proc) Tableau_AttributRef);
+	TteConnectAction (T_ruleattr, (Proc) Tableau_ApplRegleAttribut);
+	TteConnectAction (T_createhairline, (Proc) Tableau_CreeFiletLigne);
+	TteConnectAction (T_holotable, (Proc) Tableau_CanHolophrast);
+	TteConnectAction (T_checkextens, (Proc) TableauVerifExtension);
+	TteConnectAction (T_abref, (Proc) Tableau_PaveRef);
+	TteConnectAction (T_vertspan, (Proc) TableauDebordeVertical);
+	TteConnectAction (T_excepttable, (Proc) Tableau_Except);
+	TteConnectAction (T_entertable, (Proc) Tableau_Except_CR);
+	TteConnectAction (T_insertpage, (Proc) Exc_Page_Break_Inserer);
+	TteConnectAction (T_cutpage, (Proc) Exc_Page_Break_Couper);
+	TteConnectAction (T_deletepage, (Proc) Exc_Page_Break_Supprime);
+	TteConnectAction (T_deletepageab, (Proc) Exc_Page_Break_Detruit_Pave);
+     }
 }
 
 /* End Of Module table */

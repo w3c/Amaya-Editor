@@ -4,7 +4,7 @@
 
 /*
    traitement des references
-*/
+ */
 
 #include "libmsg.h"
 #include "thot_sys.h"
@@ -83,7 +83,7 @@ PtrElement          ReferredElement (PtrReference pRef, DocumentIdentifier * doc
 #else  /* __STDC__ */
 PtrElement          ReferredElement (pRef, docIdent, pDoc)
 PtrReference        pRef;
-DocumentIdentifier    *docIdent;
+DocumentIdentifier *docIdent;
 PtrDocument        *pDoc;
 
 #endif /* __STDC__ */
@@ -94,7 +94,7 @@ PtrDocument        *pDoc;
    PtrElement          pElRef;
    PtrReferredDescr    pRefD;
    PtrReferredDescr    pRefD1;
-   PtrAttribute         pAttrRef;
+   PtrAttribute        pAttrRef;
    PtrDocument         pDocRef;
    int                 assoc;
    boolean             found;
@@ -233,7 +233,7 @@ PtrElement          pEl;
 PtrDocument         pDocEl;
 boolean             processNotLoaded;
 PtrDocument        *pDocRef;
-PtrExternalDoc      *pExtDoc;
+PtrExternalDoc     *pExtDoc;
 boolean             nextExtDoc;
 
 #endif /* __STDC__ */
@@ -362,7 +362,7 @@ PtrReferredDescr    pRefD;
 #endif /* __STDC__ */
 
 {
-   PtrExternalDoc       pExtDoc, pNextExtDoc;
+   PtrExternalDoc      pExtDoc, pNextExtDoc;
 
    if (pRefD != NULL)
       /* Le premier descripteur de la chaine des descripteurs du document */
@@ -483,7 +483,7 @@ PtrElement          pEl;
 
 {
    PtrElement          pAsc, pChild, pC1;
-   PtrTextBuffer      pTxtBuf, pNextTxtBuf;
+   PtrTextBuffer       pTxtBuf, pNextTxtBuf;
 
    if (pEl != NULL)
      {
@@ -506,7 +506,7 @@ PtrElement          pEl;
 			    if (pEl->ElText != NULL)
 			       /* annule le contenu d'un texte ou d'une image */
 			      {
-				 pTxtBuf = pEl->ElText;	/* vide le 1er buffer */
+				 pTxtBuf = pEl->ElText;		/* vide le 1er buffer */
 				 pEl->ElTextLength = 0;
 				 /* met a jour le volume des elements ascendants */
 				 pAsc = pEl->ElParent;
@@ -569,7 +569,7 @@ PtrElement          pEl;
 		  pEl->ElFirstChild = NULL;
 		  while (pChild != NULL)
 		    {
-		       pC1= pChild;
+		       pC1 = pChild;
 		       pChild = pC1->ElNext;
 		       DeleteElement (&pC1);
 		    }
@@ -733,7 +733,7 @@ boolean             new;
 #endif /* __STDC__ */
 
 {
-   PtrOutReference      pRefSort, pRefSortPrec;
+   PtrOutReference     pRefSort, pRefSortPrec;
    PtrReferredDescr    pDElemRef;
    boolean             found;
    PtrDocument         pDocRef;
@@ -865,7 +865,7 @@ boolean             new;
 {
    PtrReference        pRef;
    PtrElement          pChild;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    /* l'element traite' est-il une reference ? */
    if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
@@ -916,14 +916,14 @@ void                AddDocOfExternalRef (PtrElement pEl, DocumentIdentifier docI
 #else  /* __STDC__ */
 void                AddDocOfExternalRef (pEl, docIdent, pDoc2)
 PtrElement          pEl;
-DocumentIdentifier     docIdent;
+DocumentIdentifier  docIdent;
 PtrDocument         pDoc2;
 
 #endif /* __STDC__ */
 
 {
    boolean             found;
-   PtrExternalDoc       pExtDoc;
+   PtrExternalDoc      pExtDoc;
 
 
    if (pEl != NULL)
@@ -949,7 +949,7 @@ PtrDocument         pDoc2;
 		       found = TRUE;
 		    else if (pExtDoc->EdNext != NULL)
 		       pExtDoc = pExtDoc->EdNext;
-		 while (!found && pExtDoc->EdNext != NULL);
+		 while (!found && pExtDoc->EdNext != NULL) ;
 		 if (!found)
 		    found = SameDocIdent (pExtDoc->EdDocIdent, docIdent);
 		 if (!found)
@@ -985,7 +985,7 @@ boolean             SetReference (PtrElement pRefEl, PtrAttribute pRefAttr, PtrE
 #else  /* __STDC__ */
 boolean             SetReference (pRefEl, pRefAttr, pTargetEl, pDoc, pTargetDoc, ancestor, withAppEvent)
 PtrElement          pRefEl;
-PtrAttribute         pRefAttr;
+PtrAttribute        pRefAttr;
 PtrElement          pTargetEl;
 PtrDocument         pDoc;
 PtrDocument         pTargetDoc;
@@ -996,8 +996,8 @@ boolean             withAppEvent;
 
 {
    PtrElement          pEl, pAsc;
-   PtrSSchema        pSS;
-   int         typeNum;
+   PtrSSchema          pSS;
+   int                 typeNum;
    boolean             ret, stop;
    PtrReference        pRef;
    PtrReferredDescr    pRefD;
@@ -1202,12 +1202,12 @@ void                CopyDescrExtDoc (PtrElement pEl, PtrChangedReferredEl pChngR
 #else  /* __STDC__ */
 void                CopyDescrExtDoc (pEl, pChngRef)
 PtrElement          pEl;
-PtrChangedReferredEl      pChngRef;
+PtrChangedReferredEl pChngRef;
 
 #endif /* __STDC__ */
 
 {
-   PtrExternalDoc       pExtDocSrc, pExtDoc, pPrevExtDoc;
+   PtrExternalDoc      pExtDocSrc, pExtDoc, pPrevExtDoc;
 
    pExtDocSrc = pEl->ElReferredDescr->ReExtDocRef;
    pPrevExtDoc = NULL;
@@ -1245,7 +1245,7 @@ PtrDocument         pDoc;
 
 {
    PtrElement          pChild;
-   PtrChangedReferredEl      pChngRef;
+   PtrChangedReferredEl pChngRef;
 
    if (pEl->ElReferredDescr != NULL)
       if (pEl->ElReferredDescr->ReExtDocRef != NULL)

@@ -5,7 +5,7 @@
 /*
    This module implements the operations on the abstract trees used
    by the Thot editor.
-*/
+ */
 
 #include "libmsg.h"
 #include "thot_sys.h"
@@ -70,13 +70,13 @@ PtrElement          pEl;
 	if (pDoc != NULL)
 	  {
 	     if (pDoc->DocRootElement == pE)
-              /* it's the root of the principal tree */
+		/* it's the root of the principal tree */
 		return pDoc;
-             /* searchs among the associate elements */
+	     /* searchs among the associate elements */
 	     for (j = 0; j < MAX_ASSOC_DOC; j++)
 		if (pDoc->DocAssocRoot[j] == pE)
 		   return pDoc;
-             /* searchs among the parameters */
+	     /* searchs among the parameters */
 	     for (j = 0; j < MAX_PARAM_DOC; j++)
 		if (pDoc->DocParameters[j] == pE)
 		   return pDoc;
@@ -130,14 +130,14 @@ PtrElement          pEl;
 
 {
    PtrElement          pOther;
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
    int                 typeNum;
    boolean             found, begin;
 
    pOther = NULL;
    if (pEl != NULL)
       if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-	/* check if it's a pair element */
+	 /* check if it's a pair element */
 	 if (pEl->ElOtherPairedEl != NULL)
 	    /* the element already has a pointer to the other element of the
 	       pair */
@@ -159,15 +159,15 @@ PtrElement          pEl;
 	      while ((pOther != NULL) && (!found))
 		{
 		   if (begin)
-		     /* forward search */
+		      /* forward search */
 		      pOther = FwdSearchTypedElem (pOther, typeNum, pSS);
 		   else
-		     /* backward search */
+		      /* backward search */
 		      pOther = BackSearchTypedElem (pOther, typeNum, pSS);
 		   if (pOther != NULL)
-		     /* we found an element having the same type as that of
-			 the of the element we are searching */
-		     /* it's a hit, if it has the same identifier */
+		      /* we found an element having the same type as that of
+		         the of the element we are searching */
+		      /* it's a hit, if it has the same identifier */
 		      found = (pOther->ElPairIdent == pEl->ElPairIdent ||
 			       (pEl->ElPairIdent == 0 && pOther->ElOtherPairedEl == NULL));
 		}
@@ -272,8 +272,8 @@ char               *typeName;
    pRet = NULL;
    if (test)
       if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
-	/* got a hit on the element */
-	 pRet = pEl;		
+	 /* got a hit on the element */
+	 pRet = pEl;
    if (pRet == NULL && !pEl->ElTerminal)
       /* a recursive search among the sons of the element */
      {
@@ -324,7 +324,7 @@ char               *typeName;
 		  pCur = pCur->ElNext;
 	       }
 	     /* if not found, climbs up a level, then continues the search
-		with the next brother */
+	        with the next brother */
 	     if (pRet == NULL)
 	       {
 		  stop = FALSE;
@@ -340,13 +340,13 @@ char               *typeName;
 		  while (!stop);
 		  if (pAsc != NULL)
 		     /* verifies if this element is the one we're looking
-			for */
+		        for */
 		    {
 		       pAsc = pAsc->ElNext;
 		       if (pAsc != NULL)
 			  if (strcmp (typeName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
-			    /* found */
-			     pRet = pAsc; 
+			     /* found */
+			     pRet = pAsc;
 			  else
 			     pRet = FwdSearchElemByTypeName (pAsc, typeName);
 		    }
@@ -494,14 +494,14 @@ static boolean      AttrFound (PtrElement pEl, char *textVal, int val, int attrN
 static boolean      AttrFound (pEl, textVal, val, attrNum, pSS)
 PtrElement          pEl;
 char               *textVal;
-int      val;
-int     attrNum;
-PtrSSchema       pSS;
+int                 val;
+int                 attrNum;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    boolean             ret;
 
    ret = FALSE;
@@ -556,9 +556,9 @@ static PtrElement   FwdSearchAttrInSubtree (PtrElement pEl, boolean test, PtrSSc
 static PtrElement   FwdSearchAttrInSubtree (pEl, test, pSS, attrNum, val, textVal)
 PtrElement          pEl;
 boolean             test;
-PtrSSchema       pSS;
-int     attrNum;
-int      val;
+PtrSSchema          pSS;
+int                 attrNum;
+int                 val;
 char               *textVal;
 
 #endif /* __STDC__ */
@@ -595,15 +595,15 @@ static PtrElement   BackSearchAttrInSubtree (PtrElement pEl, char *textVal, int 
 static PtrElement   BackSearchAttrInSubtree (pEl, textVal, val, attrNum, pSS)
 PtrElement          pEl;
 char               *textVal;
-int       val;
-int      attrNum;
-PtrSSchema        pSS;
+int                 val;
+int                 attrNum;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pRet, pChild;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pRet = NULL;
    if (pEl->ElFirstAttr != NULL)
@@ -824,7 +824,7 @@ int                 Kind;
 		       if (pAsc != NULL)
 			 {
 			    if (ElemIsEmptyOrRefOrPair (pAsc, Kind))
-			       pRet = pAsc;		/* found */
+			       pRet = pAsc;	/* found */
 			    if (pRet == NULL)
 			       pRet = FwdSearchRefOrEmptyElem (pAsc, Kind);
 			 }
@@ -981,7 +981,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    PtrElement          pElAttr;
    Language            lang;
 
@@ -1066,8 +1066,8 @@ static PtrElement   CreateParameter (int elemType, PtrSSchema pSS, PtrDocument p
 
 #else  /* __STDC__ */
 static PtrElement   CreateParameter (elemType, pSS, pDoc, assocNum)
-int         elemType;
-PtrSSchema        pSS;
+int                 elemType;
+PtrSSchema          pSS;
 PtrDocument         pDoc;
 int                 assocNum;
 
@@ -1101,7 +1101,7 @@ int                 assocNum;
       /* on copie cet arbre. */
      {
 	pEl = CopyTree (pDoc->DocParameters[par - 1], pDoc, assocNum, pSS, pDoc,
-			  NULL, TRUE, FALSE);
+			NULL, TRUE, FALSE);
 
 	/* on rend la copie non modifiable */
 	if (pEl != NULL)
@@ -1167,7 +1167,7 @@ boolean             Check;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr1, pAttr2, pPrevAttr;
+   PtrAttribute        pAttr1, pAttr2, pPrevAttr;
    PtrElement          pAsc;
    boolean             found;
    PtrReference        rf;
@@ -1305,7 +1305,7 @@ PtrElement          pEl2;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRC1, pRC2, pRS;
+   PtrPRule            pRC1, pRC2, pRS;
 
 
    if (pEl->ElFirstPRule == NULL)
@@ -1367,8 +1367,8 @@ boolean             EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 #else  /* __STDC__ */
 boolean             EquivalentType (pEl, typeNum, pSS)
 PtrElement          pEl;
-int         typeNum;
-PtrSSchema        pSS;
+int                 typeNum;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -1647,8 +1647,8 @@ PtrElement          GetTypedAncestor (PtrElement pEl, int typeNum, PtrSSchema pS
 #else  /* __STDC__ */
 PtrElement          GetTypedAncestor (pEl, typeNum, pSS)
 PtrElement          pEl;
-int         typeNum;
-PtrSSchema        pSS;
+int                 typeNum;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -1669,7 +1669,7 @@ PtrSSchema        pSS;
 		   /* l'element courant est la racine d'une nature, l'element    */
 		   /* courant convient si ce sont les memes schemas de structure */
 		   found = (strcmp (pEl1->ElStructSchema->SsName,
-				 pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
+				  pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
 	     }
 	   else
 	      found = EquivalentSRules (typeNum, pSS, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl);
@@ -1706,10 +1706,10 @@ static PtrElement   FwdSearch2TypesInSubtree (PtrElement pEl, boolean test, int 
 static PtrElement   FwdSearch2TypesInSubtree (pEl, test, typeNum2, typeNum1, pSS2, pSS1)
 PtrElement          pEl;
 boolean             test;
-int         typeNum2;
-int         typeNum1;
-PtrSSchema        pSS2;
-PtrSSchema        pSS1;
+int                 typeNum2;
+int                 typeNum1;
+PtrSSchema          pSS2;
+PtrSSchema          pSS1;
 
 #endif /* __STDC__ */
 
@@ -1754,10 +1754,10 @@ PtrElement          FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeN
 #else  /* __STDC__ */
 PtrElement          FwdSearchElem2Types (pEl, typeNum1, typeNum2, pSS1, pSS2)
 PtrElement          pEl;
-int         typeNum1;
-int         typeNum2;
-PtrSSchema        pSS1;
-PtrSSchema        pSS2;
+int                 typeNum1;
+int                 typeNum2;
+PtrSSchema          pSS1;
+PtrSSchema          pSS2;
 
 #endif /* __STDC__ */
 {
@@ -1800,7 +1800,7 @@ PtrSSchema        pSS2;
 		       if (pAsc != NULL)
 			 {
 			    if (EquivalentType (pAsc, typeNum1, pSS1) || EquivalentType (pAsc, typeNum2, pSS2) || typeNum1 == 0)
-			       pRet = pAsc;		/* found */
+			       pRet = pAsc;	/* found */
 			    else
 			       pRet = FwdSearchElem2Types (pAsc, typeNum1, typeNum2, pSS1, pSS2);
 			 }
@@ -1826,8 +1826,8 @@ PtrElement          FwdSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema 
 #else  /* __STDC__ */
 PtrElement          FwdSearchTypedElem (pEl, typeNum, pSS)
 PtrElement          pEl;
-int         typeNum;
-PtrSSchema        pSS;
+int                 typeNum;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
@@ -1845,10 +1845,10 @@ static PtrElement   BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2, int
 #else  /* __STDC__ */
 static PtrElement   BackSearch2TypesInSubtree (pEl, typeNum2, typeNum1, pSS2, pSS1)
 PtrElement          pEl;
-int         typeNum2;
-int         typeNum1;
-PtrSSchema        pSS2;
-PtrSSchema        pSS1;
+int                 typeNum2;
+int                 typeNum1;
+PtrSSchema          pSS2;
+PtrSSchema          pSS1;
 
 #endif /* __STDC__ */
 
@@ -1896,10 +1896,10 @@ PtrElement          BackSearchElem2Types (PtrElement pEl, int typeNum1, int type
 #else  /* __STDC__ */
 PtrElement          BackSearchElem2Types (pEl, typeNum1, typeNum2, pSS1, pSS2)
 PtrElement          pEl;
-int         typeNum1;
-int         typeNum2;
-PtrSSchema        pSS1;
-PtrSSchema        pSS2;
+int                 typeNum1;
+int                 typeNum2;
+PtrSSchema          pSS1;
+PtrSSchema          pSS2;
 
 #endif /* __STDC__ */
 {
@@ -1945,8 +1945,8 @@ PtrElement          BackSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema
 #else  /* __STDC__ */
 PtrElement          BackSearchTypedElem (pEl, typeNum, pSS)
 PtrElement          pEl;
-int         typeNum;
-PtrSSchema        pSS;
+int                 typeNum;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
@@ -2007,10 +2007,10 @@ PtrElement          FwdSearchAttribute (PtrElement pEl, int attrNum, int val, ch
 #else  /* __STDC__ */
 PtrElement          FwdSearchAttribute (pEl, attrNum, val, textVal, pSS)
 PtrElement          pEl;
-int      attrNum;
-int       val;
+int                 attrNum;
+int                 val;
 char               *textVal;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
@@ -2081,10 +2081,10 @@ PtrElement          BackSearchAttribute (PtrElement pEl, int attNum, int val, ch
 #else  /* __STDC__ */
 PtrElement          BackSearchAttribute (pEl, attNum, val, textVal, pSS)
 PtrElement          pEl;
-int      attNum;
-int       val;
+int                 attNum;
+int                 val;
 char               *textVal;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -2503,9 +2503,9 @@ boolean             del;
 
 {
    boolean             replace;
-   PtrTextBuffer      pTB;
-   PtrAttribute         pAttr;
-   PtrSSchema        pSS;
+   PtrTextBuffer       pTB;
+   PtrAttribute        pAttr;
+   PtrSSchema          pSS;
    int                 T;
    PtrElement          pE;
    SRule              *pSRule;
@@ -2514,9 +2514,9 @@ boolean             del;
    replace = TRUE;
    if (pEl->ElParent != NULL)
       /* ...sauf si le choix est un element d'agregat */
-	if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
-	    pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
-	   replace = FALSE;
+      if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
+	  pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
+	 replace = FALSE;
    /* sauf si le choix porte des exceptions */
    pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
    if (pSRule->SrNInclusions > 0 || pSRule->SrNExclusions > 0)
@@ -2687,7 +2687,7 @@ void                AttachRequiredAttributes (PtrElement pEl, SRule * pSRule, Pt
 void                AttachRequiredAttributes (pEl, pSRule, pSS, withAttr, pDoc)
 PtrElement          pEl;
 SRule              *pSRule;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 boolean             withAttr;
 PtrDocument         pDoc;
 
@@ -2695,8 +2695,8 @@ PtrDocument         pDoc;
 
 {
    int                 i;
-   int      att;
-   PtrAttribute         pAttr;
+   int                 att;
+   PtrAttribute        pAttr;
    PtrReference        ref;
    int                 l;
 
@@ -2716,7 +2716,7 @@ PtrDocument         pDoc;
 	/* remplit le bloc attribut */
 	pAttr->AeAttrSSchema = pSS;
 	pAttr->AeAttrNum = att;
-	if (!pSRule->SrDefAttrModif[i])	/* attribut a valeur fixe */
+	if (!pSRule->SrDefAttrModif[i])		/* attribut a valeur fixe */
 	   pAttr->AeDefAttr = TRUE;
 	pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
 	switch (pAttr->AeAttrType)
@@ -2728,7 +2728,7 @@ PtrDocument         pDoc;
 		 case AtTextAttr:
 		    GetTextBuffer (&pAttr->AeAttrText);
 		    CopyStringToText (pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1,
-					  pAttr->AeAttrText, &l);
+				      pAttr->AeAttrText, &l);
 		    break;
 		 case AtReferenceAttr:
 		    /* acquiert un descripteur de reference */
@@ -2769,8 +2769,8 @@ PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc, i
 
 #else  /* __STDC__ */
 PtrElement          NewSubtree (typeNum, pSS, pDoc, assocNum, Desc, Root, withAttr, withLabel)
-int         typeNum;
-PtrSSchema        pSS;
+int                 typeNum;
+PtrSSchema          pSS;
 PtrDocument         pDoc;
 int                 assocNum;
 boolean             Desc;
@@ -2785,11 +2785,11 @@ boolean             withLabel;
    int                 i;
    boolean             gener, create, error;
    PtrReference        ref;
-   Name                 PSchName;
+   Name                PSchName;
    SRule              *pSRule;
-   PtrTextBuffer      pBu1;
+   PtrTextBuffer       pBu1;
    SRule              *pSRule2;
-   PtrSSchema        pExtSSch;
+   PtrSSchema          pExtSSch;
    SRule              *pExtRule;
 
    pEl = NULL;			/* on n'a pas (encore) cree d'element */
@@ -2969,13 +2969,13 @@ boolean             withLabel;
 		  create = FALSE;
 		  pSRule2 = &pSS->SsRule[pSRule->SrIdentRule - 1];
 		  if (pSRule2->SrParamElem || pSRule2->SrAssocElem || pSRule2->SrConstruct == CsBasicElement ||
-		      pSRule2->SrNInclusions > 0 || pSRule2->SrNExclusions > 0 ||
+		  pSRule2->SrNInclusions > 0 || pSRule2->SrNExclusions > 0 ||
 		      pSRule2->SrConstruct == CsConstant || pSRule2->SrConstruct == CsChoice ||
 		      pSRule2->SrConstruct == CsPairedElement ||
 		      pSRule2->SrConstruct == CsReference || pSRule2->SrConstruct == CsNatureSchema)
 		     create = TRUE;
 		  t1 = NewSubtree (pSRule->SrIdentRule, pSS, pDoc, assocNum, Desc,
-				 create, withAttr, withLabel);
+				   create, withAttr, withLabel);
 		  if (pEl == NULL)
 		     pEl = t1;
 		  else
@@ -2989,7 +2989,7 @@ boolean             withLabel;
 		  break;
 	       case CsList:
 		  t1 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
-				 TRUE, withAttr, withLabel);
+				   TRUE, withAttr, withLabel);
 		  if (pEl == NULL)
 		     pEl = t1;
 		  else
@@ -2998,7 +2998,7 @@ boolean             withLabel;
 		     for (i = 2; i <= pSRule->SrMinItems; i++)
 		       {
 			  t2 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
-				 TRUE, withAttr, withLabel);
+					   TRUE, withAttr, withLabel);
 			  if (t2 != NULL)
 			    {
 			       InsertElemAfterLastSibling (t1, t2);
@@ -3014,7 +3014,7 @@ boolean             withLabel;
 			/* on ne cree pas les composants optionnels */
 		       {
 			  t2 = NewSubtree (pSRule->SrComponent[i - 1], pSS, pDoc, assocNum, Desc, TRUE,
-				       withAttr, withLabel);
+					   withAttr, withLabel);
 			  if (t2 != NULL)
 			    {
 			       if (t1 != NULL)
@@ -3055,7 +3055,7 @@ PtrElement         *pEl;
    SRule              *pRule;
    SRule              *pRuleExcl;
    PtrElement          pAsc, pChild, pNextChild;
-   PtrSSchema        pSS, pExtSSch;
+   PtrSSchema          pSS, pExtSSch;
    int                 i;
    boolean             exclus;
 
@@ -3099,7 +3099,7 @@ PtrElement         *pEl;
 				     /* l'exclusion traitee est une nature, l'exclusion */
 				     /* s'applique si les noms de nature sont les memes */
 				     exclus = (strcmp ((*pEl)->ElStructSchema->SsName,
-						pRuleExcl->SrName) == 0);
+						   pRuleExcl->SrName) == 0);
 			       }
 			  /* le 2eme element d'une paire est exclus si le 1er est exclus */
 			  if (!exclus)
@@ -3204,12 +3204,12 @@ void                RemoveAttribute (PtrElement pEl, PtrAttribute pAttr)
 #else  /* __STDC__ */
 void                RemoveAttribute (pEl, pAttr)
 PtrElement          pEl;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pPrevAttr;
+   PtrAttribute        pPrevAttr;
    boolean             stop;
 
    if (pEl != NULL && pAttr != NULL)
@@ -3256,13 +3256,13 @@ void                DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
 #else  /* __STDC__ */
 void                DeleteAttribute (pEl, pAttr)
 PtrElement          pEl;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPR, pPRprev, pPRnext;
-   PtrTextBuffer      buf, nextbuf;
+   PtrPRule            pPR, pPRprev, pPRnext;
+   PtrTextBuffer       buf, nextbuf;
 
    if (pEl != NULL && pAttr != NULL)
       /* supprime les regles de presentation specifique attachees a */
@@ -3314,7 +3314,7 @@ PtrAttribute         pAttr;
 		  buf = nextbuf;
 	       }
 	  }
-	/* traitement particulier a la suppression des attributs dans un Draw*/
+	/* traitement particulier a la suppression des attributs dans un Draw */
 	DrawSupprAttr (pAttr, pEl);
 	/* libere le bloc attribut */
 	FreeAttr (pAttr);
@@ -3342,14 +3342,14 @@ PtrElement         *pEl;
 
 {
    PtrElement          pChild, pNextChild;
-   PtrTextBuffer      pBuf, pNextBuf;
+   PtrTextBuffer       pBuf, pNextBuf;
    int                 c, n, d;
-   PtrAttribute         pAttr, pNextAttr;
-   PtrPRule        pRule, pNextRule;
+   PtrAttribute        pAttr, pNextAttr;
+   PtrPRule            pRule, pNextRule;
    PtrElement          pEl1;
    PtrCopyDescr        pCD, pNextCD;
    PtrElement          pAsc;
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
    boolean             ok, stop;
    PtrDocument         pDoc;
 
@@ -3471,7 +3471,7 @@ PtrElement         *pEl;
 	   /* l'element est construit selon la regle racine de son schema */
 	  {
 	     pEl1->ElStructSchema->SsNObjects--;
-	     if (pEl1->ElStructSchema->SsNObjects == 0)	/* c'etait le dernier objet */
+	     if (pEl1->ElStructSchema->SsNObjects == 0)		/* c'etait le dernier objet */
 		/* libere la nature */
 	       {
 		  pAsc = pEl1->ElParent;
@@ -3568,7 +3568,7 @@ PtrElement          CopyTree (pSource, pDocSource, assocNum, pSSchema, pDocCopy,
 PtrElement          pSource;
 PtrDocument         pDocSource;
 int                 assocNum;
-PtrSSchema        pSSchema;
+PtrSSchema          pSSchema;
 PtrDocument         pDocCopy;
 PtrElement          pParent;
 boolean             checkAttr;
@@ -3579,11 +3579,11 @@ boolean             shareRef;
 {
    PtrElement          pEl, pS2, pC1, pC2, pSP;
    PtrReference        rf;
-   int         copyType, nR;
-   Name                 PSchName;
+   int                 copyType, nR;
+   Name                PSchName;
    SRule              *pSRule;
    PtrElement          pAsc;
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
    boolean             sameSSchema;
    boolean             doCopy;
 
@@ -3667,7 +3667,7 @@ boolean             shareRef;
 				/* Si on est en cours de restructuration on recherche */
 				/* une unite compatible */
 				GDRCompatibleUnit ((Element) pSource, (Element) pParent,
-					       &copyType, (int **) &pSSchema);
+					     &copyType, (int **) &pSSchema);
 			     else
 #endif
 				copyType = 0;
@@ -3706,14 +3706,14 @@ boolean             shareRef;
 		  pEl->ElParent = pParent;	/* pour CopyAttributes */
 		  CopyAttributes (pSource, pEl, checkAttr);	/* copie les attributs */
 		  /* copie les regles de presentation specifique */
-		  CopyPresRules (pSource, pEl);	/* copie les regles de presentation */
+		  CopyPresRules (pSource, pEl);		/* copie les regles de presentation */
 		  /* copie le commentaire associe a l'element */
 		  if (pSource->ElComment != NULL)
 		     pEl->ElComment = CopyText (pSource->ElComment, pEl);
 		  if (shareRef)
 		    {
 		       strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
-		       pEl->ElReferredDescr = pSource->ElReferredDescr;	/* partage (temporairement) */
+		       pEl->ElReferredDescr = pSource->ElReferredDescr;		/* partage (temporairement) */
 		       /* le descripteur d'element reference' entre l'element source */
 		       /*et l'element copie,pour que CopyCommand ou les procedure Coller */
 		       /* puissent relier les references copiees aux elements copies */
@@ -3795,7 +3795,7 @@ boolean             shareRef;
 			  do
 			    {
 			       pC2 = CopyTree (pS2, pDocSource, assocNum, pSSchema,
-				      pDocCopy, pEl, checkAttr, shareRef);
+					pDocCopy, pEl, checkAttr, shareRef);
 			       if (pC2 != NULL)
 				 {
 				    /* rompt le lien avec le futur pere pour que */
@@ -3814,7 +3814,7 @@ boolean             shareRef;
 			    }
 			  while (pS2 != NULL);
 		       }
-		  pEl->ElParent = NULL;	/* ElParent avait ete mis pour CopyAttributes */
+		  pEl->ElParent = NULL;		/* ElParent avait ete mis pour CopyAttributes */
 	       }
 	  }
      }
@@ -3832,8 +3832,8 @@ PtrElement          FirstAssocElem (PtrDocument pDoc, int typeNum, PtrSSchema pS
 #else  /* __STDC__ */
 PtrElement          FirstAssocElem (pDoc, typeNum, pSS)
 PtrDocument         pDoc;
-int         typeNum;
-PtrSSchema        pSS;
+int                 typeNum;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -3918,7 +3918,7 @@ PtrDocument         pDoc;
 {
    PtrReference        pRef;
    PtrElement          pSource, pS2, pC1, pC2, pE;
-   DocumentIdentifier     docIdent;
+   DocumentIdentifier  docIdent;
    PtrDocument         pDocSource;
    boolean             done;
 
@@ -4034,7 +4034,7 @@ PtrDocument         pDoc;
 			       pSource->ElStructSchema->SsCode))
 		    {
 		       pC1 = CopyTree (pSource, pDocSource, pEl->ElAssocNum, pEl
-				      ->ElStructSchema, pDoc, pEl, TRUE, TRUE);
+				   ->ElStructSchema, pDoc, pEl, TRUE, TRUE);
 		       if (pC1 != NULL)
 			 {
 			    pC1->ElReferredDescr = NULL;
@@ -4050,7 +4050,7 @@ PtrDocument         pDoc;
 		       do
 			 {
 			    pC2 = CopyTree (pS2, pDocSource, pEl->ElAssocNum,
-				   pEl->ElStructSchema, pDoc, pEl, TRUE, TRUE);
+				pEl->ElStructSchema, pDoc, pEl, TRUE, TRUE);
 			    if (pC2 != NULL)
 			      {
 				 if (pC1 == NULL)
@@ -4132,19 +4132,19 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAttribute         GetTypedAttrForElem (PtrElement pEl, int attrNum, PtrSSchema pSSattr)
+PtrAttribute        GetTypedAttrForElem (PtrElement pEl, int attrNum, PtrSSchema pSSattr)
 
 #else  /* __STDC__ */
-PtrAttribute         GetTypedAttrForElem (pEl, attrNum, pSSattr)
+PtrAttribute        GetTypedAttrForElem (pEl, attrNum, pSSattr)
 PtrElement          pEl;
 int                 attrNum;
-PtrSSchema        pSSattr;
+PtrSSchema          pSSattr;
 
 #endif /* __STDC__ */
 
 {
    boolean             found;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    found = FALSE;
    pAttr = pEl->ElFirstAttr;
@@ -4176,21 +4176,21 @@ PtrSSchema        pSSattr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAttribute         GetTypedAttrAncestor (PtrElement pEl, int attrNum,
-			       PtrSSchema pSSattr, PtrElement * pElAttr)
+PtrAttribute        GetTypedAttrAncestor (PtrElement pEl, int attrNum,
+				   PtrSSchema pSSattr, PtrElement * pElAttr)
 
 #else  /* __STDC__ */
-PtrAttribute         GetTypedAttrAncestor (pEl, attrNum, pSSattr, pElAttr)
+PtrAttribute        GetTypedAttrAncestor (pEl, attrNum, pSSattr, pElAttr)
 PtrElement          pEl;
 int                 attrNum;
-PtrSSchema        pSSattr;
+PtrSSchema          pSSattr;
 PtrElement         *pElAttr;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pElAtt;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    pAttr = NULL;
    *pElAttr = NULL;
@@ -4224,7 +4224,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr, pA;
+   PtrAttribute        pAttr, pA;
    int                 len;
    Language            lang;
 
@@ -4264,6 +4264,6 @@ PtrElement          pEl;
 		   pA = pA->AeNext;
 		pA->AeNext = pAttr;	/* chaine le nouvel attribut */
 	     }
-	   pAttr->AeNext = NULL;		/* c'est le dernier attribut */
+	   pAttr->AeNext = NULL;	/* c'est le dernier attribut */
 	}
 }

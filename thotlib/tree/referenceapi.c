@@ -111,7 +111,7 @@ Document            targetDocument;
 		  /* The element target will be referenced */
 		  if (((PtrElement) target)->ElReferredDescr == NULL)
 		     /* This element has not yet a referenced element descriptor.
-                        A descriptor is given to this element */
+		        A descriptor is given to this element */
 		    {
 		       ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 		       ((PtrElement) target)->ElReferredDescr->ReReferredElem =
@@ -216,14 +216,14 @@ Document            targetDocument;
 	/* The element target will be referenced */
 	if (((PtrElement) target)->ElReferredDescr == NULL)
 	   /* This element has not yet a referenced element descriptor.
-              A descriptor is given to this element */
+	      A descriptor is given to this element */
 	  {
 	     ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 	     ((PtrElement) target)->ElReferredDescr->ReReferredElem = (PtrElement) target;
 	  }
 	saveNbCar = LoadedDocument[document - 1]->DocNTypedChars;
 	if (SetReference (inclusion, NULL, (PtrElement) target,
-			  LoadedDocument[document - 1], pRefDoc, TRUE, FALSE))
+			LoadedDocument[document - 1], pRefDoc, TRUE, FALSE))
 	   CopyIncludedElem (inclusion, LoadedDocument[document - 1]);
 	else
 	  {
@@ -284,7 +284,7 @@ Element             source;
 	     if (((PtrElement) element)->ElReference == NULL)
 		GetReference (&((PtrElement) element)->ElReference);
 	     CopyReference (((PtrElement) element)->ElReference,
-		 ((PtrElement) source)->ElReference, (PtrElement *) & element);
+	      ((PtrElement) source)->ElReference, (PtrElement *) & element);
 	  }
      }
 }
@@ -391,8 +391,8 @@ Document            targetDocument;
 		       pRefDoc = LoadedDocument[targetDocument - 1];
 		       /* The element target will be referenced */
 		       if (((PtrElement) target)->ElReferredDescr == NULL)
-	                  /* This element has not yet a referenced element descriptor.
-                             A descriptor is given to this element */
+			  /* This element has not yet a referenced element descriptor.
+			     A descriptor is given to this element */
 			 {
 			    ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 			    ((PtrElement) target)->ElReferredDescr->ReReferredElem =
@@ -472,7 +472,7 @@ Attribute           source;
 	   GetReference (&((PtrAttribute) attribute)->AeAttrReference);
 	pEl = (PtrElement) element;
 	CopyReference (((PtrAttribute) attribute)->AeAttrReference,
-		  ((PtrAttribute) source)->AeAttrReference, &pEl);
+		       ((PtrAttribute) source)->AeAttrReference, &pEl);
      }
 }
 
@@ -528,7 +528,7 @@ Document           *targetDocument;
      {
 	if (((PtrElement) element)->ElReference != NULL)
 	   *target = (Element) ReferredElement (((PtrElement) element)->ElReference,
-					  &iDocExt, &pDocExt);
+						&iDocExt, &pDocExt);
 	if (!DocIdentIsNull (iDocExt))
 	  {
 	     strncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
@@ -705,7 +705,7 @@ Document           *targetDocument;
      {
 	if (((PtrAttribute) attribute)->AeAttrReference != NULL)
 	   *target = (Element) ReferredElement (((PtrAttribute) attribute)->AeAttrReference,
-					  &iDocExt, &pDocExt);
+						&iDocExt, &pDocExt);
 	if (!DocIdentIsNull (iDocExt))
 	  {
 	     strncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
@@ -904,15 +904,15 @@ Document           *referenceDocument;
 		  {
 		     pDE = NULL;
 		     pRef = SearchExternalReferenceToElem ((PtrElement) target,
-				    LoadedDocument[targetDocument - 1], FALSE,
-					 &pDocRef, &pDE, TRUE);
+				  LoadedDocument[targetDocument - 1], FALSE,
+						      &pDocRef, &pDE, TRUE);
 		     if (pRef != NULL)
 			/* There is an external reference into a loaded document */
 			*referenceDocument = IdentDocument (pDocRef);
 		  }
 	  }
 	else
-	   /* Other references were searched for this element o*/
+	   /* Other references were searched for this element o */
 	   /* Checks the parameter referenceDocument */
 	if (*referenceDocument < 1 || *referenceDocument > MAX_DOCUMENTS)
 	   TtaError (ERR_invalid_document_parameter);
@@ -946,18 +946,18 @@ Document           *referenceDocument;
 		  pRef = pRef->RdNext;
 		  if (pRef == NULL)
 		     /* The last reference of this document. Looking for the first 
-                        reference of another document relating to the same element. */
+		        reference of another document relating to the same element. */
 		    {
 		       pDE = NULL;
 		       if (((PtrElement) target)->ElReferredDescr != NULL)
 			 {
 			    pDE = ((PtrElement) target)->ElReferredDescr->ReExtDocRef;
 			    /* For the internal references, we consider the first descriptor
-                               of the referring document */
+			       of the referring document */
 			    if (targetDocument != *referenceDocument)
 			      {
 				 /* One search the descriptor of the referring document
-                                    corresponding to referenceDocument and we get the following one. */
+				    corresponding to referenceDocument and we get the following one. */
 				 found = FALSE;
 				 while (pDE != NULL && !found)
 				   {
@@ -972,7 +972,7 @@ Document           *referenceDocument;
 			 {
 			    /* One search the first reference into the holded referring document */
 			    pRef = SearchExternalReferenceToElem ((PtrElement) target,
-					   LoadedDocument[targetDocument - 1],
+					 LoadedDocument[targetDocument - 1],
 					      FALSE, &pDocRef, &pDE, FALSE);
 			    if (pRef != NULL)
 			       /* An external reference into a loaded document is found */
@@ -1059,7 +1059,7 @@ char               *referringDocumentName;
 	else
 	  {
 	     /* Looking for the descriptor of the referring document and corresponding 
-                to referringDocumentName, we get the following one */
+	        to referringDocumentName, we get the following one */
 	     found = FALSE;
 	     while (pDE != NULL && !found)
 	       {

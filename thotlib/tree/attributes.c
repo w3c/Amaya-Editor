@@ -4,7 +4,7 @@
 
 /*
    Module traitant les attributs
-*/
+ */
 
 #include "libmsg.h"
 #include "thot_sys.h"
@@ -55,7 +55,7 @@ static void         SetAttrReference (PtrAttribute pAttr, PtrElement pEl)
 #else  /* __STDC__ */
 static void         SetAttrReference (pAttr, pEl)
 PtrElement          pEl;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
@@ -91,10 +91,10 @@ PtrAttribute         pAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAttribute         AttachAttrByExceptNum (int ExceptNum, PtrElement pEl, PtrElement pReferredEl, PtrDocument pDoc)
+PtrAttribute        AttachAttrByExceptNum (int ExceptNum, PtrElement pEl, PtrElement pReferredEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-PtrAttribute         AttachAttrByExceptNum (ExceptNum, pEl, pReferredEl, pDoc)
+PtrAttribute        AttachAttrByExceptNum (ExceptNum, pEl, pReferredEl, pDoc)
 int                 ExceptNum;
 PtrElement          pEl;
 PtrElement          pReferredEl;
@@ -103,12 +103,12 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    int                 attrNum;
    boolean             found;
    PtrReference        pRef;
    PtrElement          pOldReferredEl;
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
 
    /* cherche d'abord le numero de l'attribut */
    pSS = pEl->ElStructSchema;
@@ -137,7 +137,7 @@ PtrDocument         pDoc;
    found = FALSE;
    while (!found && pAttr != NULL)
       if (pAttr->AeAttrNum == attrNum &&
-	  /* attrNum = 1: Langue, quel que soit le schema de structure */
+      /* attrNum = 1: Langue, quel que soit le schema de structure */
 	  (attrNum == 1 ||
 	   pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
 	 found = TRUE;
@@ -219,19 +219,19 @@ static void         RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum, PtrPSch
 
 #else  /* __STDC__ */
 static void         RedisplayAbsBox (pAbsBox, boxNum, pPSchema, view, pEl, pDoc, pAttr)
-PtrAbstractBox             pAbsBox;
+PtrAbstractBox      pAbsBox;
 int                 boxNum;
 PtrPSchema          pPSchema;
 int                 view;
 PtrElement          pEl;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
    int                 frame, height;
-   PtrAbstractBox             pAbChild;
+   PtrAbstractBox      pAbChild;
 
    if (pAbsBox->AbPresentationBox)
      {
@@ -240,7 +240,7 @@ PtrAttribute         pAttr;
 	   /* c'est bien un pave du type cherche' */
 	   /* recalcule la valeur de la variable de presentation */
 	   if (NewVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
-			     pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
+			    pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
 
 	      /* la variable de presentation a change' de valeur */
 	     {
@@ -291,7 +291,7 @@ void                RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrD
 
 #else  /* __STDC__ */
 void                RedisplayAttribute (pAttr, pEl, pDoc)
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -301,8 +301,8 @@ PtrDocument         pDoc;
    PtrPSchema          pPSchema;
    int                 varNum, item, presBox, view;
    boolean             found;
-   PtrAbstractBox             pAbsBox;
-   PresVariable            *pPresVar;
+   PtrAbstractBox      pAbsBox;
+   PresVariable       *pPresVar;
 
    /* l'attribut dont la valeur a ete modifie' apparait-il dans une */
    /* variable de presentation ? */
@@ -317,9 +317,9 @@ PtrDocument         pDoc;
 	   found = FALSE;
 	   /* examine les items de la variable */
 	   for (item = 0; item < pPresVar->PvNItems && !found; item++)
-	     if (pPresVar->PvItem[item].ViType == VarAttrValue)
-		if (pPresVar->PvItem[item].ViAttr == pAttr->AeAttrNum)
-		   found = TRUE;
+	      if (pPresVar->PvItem[item].ViType == VarAttrValue)
+		 if (pPresVar->PvItem[item].ViAttr == pAttr->AeAttrNum)
+		    found = TRUE;
 	   if (found)
 	      /* l'attribut est utilise' dans la variable */
 	      /* cherche les boites du schema de presentation qui utilisent */
@@ -327,23 +327,23 @@ PtrDocument         pDoc;
 	     {
 		for (presBox = 0; presBox < pPSchema->PsNPresentBoxes; presBox++)
 		   if (pPSchema->PsPresentBox[presBox].PbContent == ContVariable
-		       && pPSchema->PsPresentBox[presBox].PbContVariable == varNum+1)
-		     /* cette boite a la variable comme contenu */
-		     /* cherche dans toutes les vues du document les paves */
-		     /* de l'element auquel correspond l'attribut qui sont */
-		     /* des instannces de cette boite de presentation */
-		     for (view = 0; view < MAX_VIEW_DOC; view++)
+		       && pPSchema->PsPresentBox[presBox].PbContVariable == varNum + 1)
+		      /* cette boite a la variable comme contenu */
+		      /* cherche dans toutes les vues du document les paves */
+		      /* de l'element auquel correspond l'attribut qui sont */
+		      /* des instannces de cette boite de presentation */
+		      for (view = 0; view < MAX_VIEW_DOC; view++)
 			{
-			  pAbsBox = pEl->ElAbstractBox[view];
-			  while (pAbsBox != NULL)		/* parcourt les paves de l'element */
-			    if (pAbsBox->AbElement != pEl)
-			      pAbsBox = NULL;	/* on a traite' tous les paves de l'element */
-			    else
-			      /* c'est un pave' de l'element */
-			      {
-				RedisplayAbsBox (pAbsBox, presBox+1, pPSchema, view+1, pEl, pDoc, pAttr);
-				pAbsBox = pAbsBox->AbNext;
-			      }
+			   pAbsBox = pEl->ElAbstractBox[view];
+			   while (pAbsBox != NULL)	/* parcourt les paves de l'element */
+			      if (pAbsBox->AbElement != pEl)
+				 pAbsBox = NULL;	/* on a traite' tous les paves de l'element */
+			      else
+				 /* c'est un pave' de l'element */
+				{
+				   RedisplayAbsBox (pAbsBox, presBox + 1, pPSchema, view + 1, pEl, pDoc, pAttr);
+				   pAbsBox = pAbsBox->AbNext;
+				}
 			}
 	     }
 	}
@@ -381,15 +381,14 @@ int                *lastChar;
 
 	   /* prepare la creation des paves de la 2eme partie */
 	   for (view = 0; view < MAX_VIEW_DOC; view++)
-		if (!AssocView (*pFirstSel))
-		  {
-		     if (pDoc->DocView[view].DvPSchemaView > 0)
-			/* la vue est ouverte */
-			pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-		  }
-		else
-		     if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
-			pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
+	      if (!AssocView (*pFirstSel))
+		{
+		   if (pDoc->DocView[view].DvPSchemaView > 0)
+		      /* la vue est ouverte */
+		      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
+		}
+	      else if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
+		 pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
 	   /* cree les paves de la deuxieme partie */
 	   CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
 	   ApplDelayedRule (*pFirstSel, pDoc);
@@ -412,13 +411,13 @@ void                ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc, Ptr
 void                ApplyAttrPRulesToElem (pEl, pDoc, pAttr, inherit)
 PtrElement          pEl;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 boolean             inherit;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pOldAttr;
+   PtrAttribute        pOldAttr;
    boolean             doIt;
 
    /* on ne traite pas les marques de page */
@@ -429,17 +428,17 @@ boolean             inherit;
 	/* cherche la valeur de cet attribut pour l'element */
 	pOldAttr = GetAttributeOfElement (pEl, pAttr);
 	if (inherit)
-	  /* traitement de la presentation par heritage */
+	   /* traitement de la presentation par heritage */
 	  {
 	     if (pOldAttr == NULL || pOldAttr == pAttr)
 		doIt = TRUE;
 	  }
 	else
-	  /* presentation directe */
+	   /* presentation directe */
 	  {
 	     if (pOldAttr == NULL)
 		doIt = TRUE;
-	     /* si pour cet element, cet attribut a une valeur imposee par*/
+	     /* si pour cet element, cet attribut a une valeur imposee par */
 	     /* le schema de structure, on ne fait rien d'autre */
 	     else if (!pOldAttr->AeDefAttr)
 		doIt = TRUE;
@@ -492,14 +491,14 @@ void                ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc, 
 void                ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pChild;
-   PtrAttribute         pOldAttr;
-   InheritAttrTable     *inheritedAttr;
+   PtrAttribute        pOldAttr;
+   InheritAttrTable   *inheritedAttr;
 
    pOldAttr = GetAttributeOfElement (pEl, pAttr);
    if (pOldAttr == NULL || pOldAttr == pAttr)
@@ -548,15 +547,15 @@ void                ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttrib
 void                ApplyAttrPRules (pEl, pDoc, pAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pChild;
-   ComparAttrTable   *attrValComp;
+   ComparAttrTable    *attrValComp;
    int                 i;
-   PtrAttribute         pCompAttr;
+   PtrAttribute        pCompAttr;
 
    if (GetAttributeOfElement (pEl, pAttr) == NULL)
      {
@@ -636,7 +635,7 @@ boolean             force;
 {
    int                 view;
    PtrElement          pChild;
-   PtrAbstractBox             pAbsBox;
+   PtrAbstractBox      pAbsBox;
 
    if (!pEl->ElTerminal)
       /* l'element n'est pas une feuille, on traite son sous-arbre */
@@ -652,7 +651,7 @@ boolean             force;
      }
    else
       /* l'element est une feuille */
-     if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
+   if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
       /* c'est du texte dans une autre langue */
       if (force || TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
 	 /* cette langue s'ecrit dans le meme alphabet ou la langue est forcee */
@@ -700,7 +699,7 @@ void                UpdateCountersByAttr (PtrElement pEl, PtrAttribute pAttr, Pt
 #else  /* __STDC__ */
 void                UpdateCountersByAttr (pEl, pAttr, pDoc)
 PtrElement          pEl;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -708,7 +707,7 @@ PtrDocument         pDoc;
 {
    int                 counter;
    PtrPSchema          pPS;
-   Counter           *pCnt;
+   Counter            *pCnt;
 
    /* parcourt les compteurs definis dans le schema de presentation */
    /* correspondant a l'attribut pour trouver si l'attribut est la valeur */
@@ -736,7 +735,7 @@ PtrDocument         pDoc;
 		      ComputePageNum (pEl, pCnt->CnItem[1].CiViewNum);
 		   /* fait reafficher toutes les boites de presentation dependant */
 		   /* de la valeur de ce compteur */
-		   UpdateBoxesCounter (pEl, pDoc, counter+1, pPS, pEl->ElStructSchema);
+		   UpdateBoxesCounter (pEl, pDoc, counter + 1, pPS, pEl->ElStructSchema);
 		}
 	   }
    }
@@ -758,9 +757,9 @@ void                RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc, Pt
 void                RemoveAttrPresentation (pEl, pDoc, pAttr, inherit, pCompAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 boolean             inherit;
-PtrAttribute         pCompAttr;
+PtrAttribute        pCompAttr;
 
 #endif /* __STDC__ */
 
@@ -792,13 +791,13 @@ void                RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc
 void                RemoveInheritedAttrPresent (pEl, pDoc, pAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pChild;
-   InheritAttrTable     *inheritedAttr;
+   InheritAttrTable   *inheritedAttr;
 
    if (GetAttributeOfElement (pEl, pAttr) == NULL)
      {
@@ -845,15 +844,15 @@ void                RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, P
 void                RemoveComparAttrPresent (pEl, pDoc, pAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pChild;
-   ComparAttrTable   *attrValComp;
+   ComparAttrTable    *attrValComp;
    int                 i;
-   PtrAttribute         pCompAttr;
+   PtrAttribute        pCompAttr;
 
    if (GetAttributeOfElement (pEl, pAttr) == NULL)
      {
@@ -895,17 +894,17 @@ PtrAttribute         pAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAttribute         AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr)
+PtrAttribute        AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr)
 
 #else  /* __STDC__ */
-PtrAttribute         AddAttrToElem (pEl, pNewAttr)
+PtrAttribute        AddAttrToElem (pEl, pNewAttr)
 PtrElement          pEl;
-PtrAttribute         pNewAttr;
+PtrAttribute        pNewAttr;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr, pA;
+   PtrAttribute        pAttr, pA;
    PtrReference        pRef;
    int                 len;
 
@@ -978,12 +977,12 @@ void                AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAt
 #else  /* __STDC__ */
 void                AttachAttrWithValue (pEl, pDoc, pNewAttr)
 PtrElement          pEl;
-PtrdocumentA         pDoc;
-PtrAttribute         pNewAttr;
+PtrdocumentA        pDoc;
+PtrAttribute        pNewAttr;
 
 #endif /* __STDC__ */
 {
-   PtrAttribute         pAttr, pAttrAsc;
+   PtrAttribute        pAttr, pAttrAsc;
    PtrElement          pChild, pElAttr;
    boolean             suppress, compare, inherit, mandatory, create;
    NotifyAttribute     notifyAttr;
@@ -1036,7 +1035,7 @@ PtrAttribute         pNewAttr;
 	      if (pNewAttr->AeAttrNum == 1)
 		 mandatory = TRUE;
 	if (mandatory)
-	  /* suppression d'un attribut obligatoire. Interdit */
+	   /* suppression d'un attribut obligatoire. Interdit */
 	  {
 	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_LIB_ATTR_REQUIRED_NOT_DELETED);
 	     return;
@@ -1049,14 +1048,14 @@ PtrAttribute         pNewAttr;
    if (pNewAttr->AeAttrSSchema->SsPSchema != NULL)
      {
 	inherit = (pNewAttr->AeAttrSSchema->SsPSchema->
-		    PsNHeirElems[pNewAttr->AeAttrNum - 1] != 0);
+		   PsNHeirElems[pNewAttr->AeAttrNum - 1] != 0);
 	compare = (pNewAttr->AeAttrSSchema->SsPSchema->
-		       PsNComparAttrs[pNewAttr->AeAttrNum - 1] != 0);
+		   PsNComparAttrs[pNewAttr->AeAttrNum - 1] != 0);
      }
    if (inherit || compare)
       /* cherche le premier attribut de meme type sur un ascendant de pEl */
       pAttrAsc = GetTypedAttrAncestor (pEl, pNewAttr->AeAttrNum,
-				     pNewAttr->AeAttrSSchema, &pElAttr);
+				       pNewAttr->AeAttrSSchema, &pElAttr);
    else
       pAttrAsc = NULL;
    /* prepare et envoie l'evenement pour l'application */
@@ -1092,13 +1091,13 @@ PtrAttribute         pNewAttr;
 	     /* un changement d'attribut vaut dix caracteres saisis */
 	     pDoc->DocNTypedChars += 10;
 	     /* On supprime de pEl de son sous-arbre  la presentation venant
-		de l'heritage de cet attribut par le sous-arbre, s'il existe
-		des elements heritants de celui-ci */
+	        de l'heritage de cet attribut par le sous-arbre, s'il existe
+	        des elements heritants de celui-ci */
 	     if (inherit)
 		RemoveInheritedAttrPresent (pEl, pDoc, pAttr);
 	     /* On supprime des elements du sous arbre pEl la presentation
-		venant de la comparaison d'un attribut du sous-arbre avec ce
-		type d'attribut */
+	        venant de la comparaison d'un attribut du sous-arbre avec ce
+	        type d'attribut */
 	     if (!pEl->ElTerminal && compare)
 		for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
 		   RemoveComparAttrPresent (pChild, pDoc, pAttr);
@@ -1107,14 +1106,14 @@ PtrAttribute         pNewAttr;
 	else if (pAttrAsc)
 	  {
 	     /* heritage et comparaison sont dus a un attribut d'un ascendant
-		de pEl */
+	        de pEl */
 	     /* on supprime du sous arbre pEl la presentation venant de
-		l'heritage de cet attribut par le sous-arbre, s'il existe des
-		elements heritants de celui-ci */
+	        l'heritage de cet attribut par le sous-arbre, s'il existe des
+	        elements heritants de celui-ci */
 	     if (inherit)
 		RemoveInheritedAttrPresent (pEl, pDoc, pAttrAsc);
 	     /* on supprime du sous-arbre pEl la presentation venant de la
-		comparaison d'un attribut du sous-arbre avec ce type d'attribut */
+	        comparaison d'un attribut du sous-arbre avec ce type d'attribut */
 	     if (compare)
 		RemoveComparAttrPresent (pEl, pDoc, pAttrAsc);
 	  }
@@ -1122,7 +1121,7 @@ PtrAttribute         pNewAttr;
 	if (inherit || compare)
 	   /* cherche le premier attribut de meme type sur un ascendant de pEl */
 	   pAttrAsc = GetTypedAttrAncestor (pEl, pNewAttr->AeAttrNum,
-					  pNewAttr->AeAttrSSchema, &pElAttr);
+					 pNewAttr->AeAttrSSchema, &pElAttr);
 	else
 	   pAttrAsc = NULL;
 
@@ -1135,7 +1134,7 @@ PtrAttribute         pNewAttr;
 	     /* un changement d'attribut vaut dix caracteres saisis */
 	     pDoc->DocNTypedChars += 10;
 	     /* traitement special a l'ajout d'un attribut a un element d'un
-		objet Draw */
+	        objet Draw */
 	     DrawAjAttr (&pAttr, pEl);
 	  }
 
@@ -1143,10 +1142,10 @@ PtrAttribute         pNewAttr;
 	   /* suppression */
 	  {
 	     /* traitement special a la suppression d'un attribut a un element
-		d'un objet Draw */
+	        d'un objet Draw */
 	     DrawSupprAttr (pNewAttr, pEl);
 	     /* la suppression est maintenant prise en compte dans les
-		copies-inclusions de l'element */
+	        copies-inclusions de l'element */
 	     RedisplayCopies (pEl, pDoc, TRUE);
 	  }
 
@@ -1155,16 +1154,16 @@ PtrAttribute         pNewAttr;
 	  {
 	     /* applique les regles du nouvel attribut */
 	     /* applique d'abord les regles de presentation associees a
-		l'attribut sur l'element lui-meme */
+	        l'attribut sur l'element lui-meme */
 	     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, FALSE);
 	     /* applique les regles de presentation venant de l'heritage de
-		cet attribut par le sous-arbre s'il existe des elements qui
-		heritent */
+	        cet attribut par le sous-arbre s'il existe des elements qui
+	        heritent */
 	     if (inherit)
 		ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr);
 	     /* applique sur les elements du sous-arbre les regles de
-		presentation venant de la comparaison d'un attribut du
-		sous-arbre avec ce type d'attribut */
+	        presentation venant de la comparaison d'un attribut du
+	        sous-arbre avec ce type d'attribut */
 	     if (!pEl->ElTerminal && compare)
 		for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
 		   ApplyAttrPRules (pChild, pDoc, pAttr);
@@ -1180,14 +1179,14 @@ PtrAttribute         pNewAttr;
 	else if (pAttrAsc != NULL && suppress)
 	  {
 	     /* applique les regles venant de l'heritage ou de la comparaison
-		avec un ascendant */
+	        avec un ascendant */
 	     /* applique sur les elements du sous-arbre les regles de
-		presentation venant de l'heritage de cet attribut par le
-		sous-arbre, s'il existe des elements qui heritent */
+	        presentation venant de l'heritage de cet attribut par le
+	        sous-arbre, s'il existe des elements qui heritent */
 	     ApplyAttrPRulesToSubtree (pEl, pDoc, pAttrAsc);
 	     /* applique sur les elements du sous-arbre les regles de
-		presentation venant de la comparaison d'un attribut de
-		sous-arbre avec ce type d'attribut */
+	        presentation venant de la comparaison d'un attribut de
+	        sous-arbre avec ce type d'attribut */
 	     ApplyAttrPRules (pEl, pDoc, pAttrAsc);
 	  }
 	/* prepare et envoie a l'application l'evenement TteAttrCreate.Post */
@@ -1216,7 +1215,7 @@ PtrAttribute         pNewAttr;
 void                AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc)
 #else  /* __STDC__ */
 void                AttachAttrToRange (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc)
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 int                 lastChar;
 int                 firstChar;
 PtrElement          pLastSel;
@@ -1227,7 +1226,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pEl;
    Language            lang;
-   PtrAttribute         pAttrAsc;
+   PtrAttribute        pAttrAsc;
    PtrElement          pElAttr;
    int                 i;
 
@@ -1253,7 +1252,7 @@ PtrDocument         pDoc;
 		  else
 		     /* c'est une suppression de l'attribut Langue */
 		    {
-		       lang = TtaGetDefaultLanguage ();	/* langue par defaut */
+		       lang = TtaGetDefaultLanguage ();		/* langue par defaut */
 		       /* on cherche si un ascendant porte l'attribut Langue */
 		       pAttrAsc = GetTypedAttrAncestor (pEl, 1, NULL, &pElAttr);
 		       if (pAttrAsc != NULL)
@@ -1267,9 +1266,9 @@ PtrDocument         pDoc;
 	     /* met la nouvelle valeur de l'attribut dans l'element et */
 	     /* applique les regles de presentation de l'attribut a l'element */
 	     AttachAttrWithValue (pEl, pDoc, pAttr);
-	     if (ThotLocalActions[T_attrtable]!=NULL)
-	       (*ThotLocalActions[T_attrtable])	
-		 (pEl, pAttr, pDoc);	/* cas particulier des tableaux */
+	     if (ThotLocalActions[T_attrtable] != NULL)
+		(*ThotLocalActions[T_attrtable])
+		   (pEl, pAttr, pDoc);	/* cas particulier des tableaux */
 
 	  }
 	/* cherche l'element a traiter ensuite */
@@ -1284,11 +1283,11 @@ PtrDocument         pDoc;
 	   for (i = 1; i <= MAX_PARAM_DOC; i++)
 	      if (pDoc->DocParameters[i - 1] != NULL)
 		 AttachAttrToRange (pAttr, 0, 0, pDoc->DocParameters[i - 1],
-				pDoc->DocParameters[i - 1], pDoc);
+				    pDoc->DocParameters[i - 1], pDoc);
 	   for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	      if (pDoc->DocAssocRoot[i - 1] != NULL)
 		 AttachAttrToRange (pAttr, 0, 0, pDoc->DocAssocRoot[i - 1],
-				pDoc->DocAssocRoot[i - 1], pDoc);
+				    pDoc->DocAssocRoot[i - 1], pDoc);
 	}
    /* parcourt a nouveau les elements selectionnes pour fusionner les */
    /* elements voisins de meme type ayant les memes attributs, reaffiche */
@@ -1311,12 +1310,12 @@ static void         AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS)
 PtrElement          pEl;
 PtrDocument         pDoc;
 SRule              *pSRule;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
    PtrElement          pRefEl;
-   PtrAttribute         pAttr, pA;
+   PtrAttribute        pAttr, pA;
    int                 i, att;
    PtrReference        pRef;
    boolean             found;
@@ -1337,8 +1336,8 @@ PtrSSchema        pSS;
 	      found = FALSE;
 	      while (pAttr != NULL && !found)
 		 if (pAttr->AeAttrNum == att &&
-		     (att == 1 || pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
-		     /* att = 1: Langue, quel que soit le schema de structure */
+		  (att == 1 || pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
+		    /* att = 1: Langue, quel que soit le schema de structure */
 		    found = TRUE;
 		 else
 		    pAttr = pAttr->AeNext;
@@ -1410,8 +1409,8 @@ PtrSSchema        pSS;
 			     /* demande a l'utilisateur d'entrer une valeur */
 			     /* pour l'attribut */
 			     if (pAttr->AeAttrType == AtReferenceAttr)
-				  /* demande a l'utilisateur l'element reference' */
-				  MandatoryAttrOK = LinkReference (pEl, pAttr, pDoc, &pRefEl);
+				/* demande a l'utilisateur l'element reference' */
+				MandatoryAttrOK = LinkReference (pEl, pAttr, pDoc, &pRefEl);
 			     else
 			       {
 				  if (ThotLocalActions[T_attrreq] != NULL)
@@ -1487,7 +1486,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pChild;
    SRule              *pSRule;
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
 
    if (pEl != NULL)
      {
@@ -1544,18 +1543,18 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAttribute         GetAttrByExceptNum (PtrElement pEl, int ExceptNum)
+PtrAttribute        GetAttrByExceptNum (PtrElement pEl, int ExceptNum)
 
 #else  /* __STDC__ */
-PtrAttribute         GetAttrByExceptNum (pEl, ExceptNum)
+PtrAttribute        GetAttrByExceptNum (pEl, ExceptNum)
 PtrElement          pEl;
 int                 ExceptNum;
 
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        pSS;
-   PtrAttribute         pAttr;
+   PtrSSchema          pSS;
+   PtrAttribute        pAttr;
    boolean             found;
    int                 attrNum;
 
@@ -1568,14 +1567,14 @@ int                 ExceptNum;
 	pAttr = pEl->ElFirstAttr;
 	found = FALSE;
 	while (pAttr != NULL && !found)
-	     if (pAttr->AeAttrSSchema->SsCode == pSS->SsCode && pAttr->AeAttrNum == attrNum)
-		found = TRUE;
-	     else
-		pAttr = pAttr->AeNext;
+	   if (pAttr->AeAttrSSchema->SsCode == pSS->SsCode && pAttr->AeAttrNum == attrNum)
+	      found = TRUE;
+	   else
+	      pAttr = pAttr->AeNext;
 	return pAttr;
      }
    else
-	return NULL;
+      return NULL;
 }
 
 
@@ -1598,17 +1597,17 @@ int                 ExceptNum;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    GetAttr (&pAttr);
    if (pAttr != NULL)
      {
-       pAttr->AeAttrSSchema = pEl->ElStructSchema;
-       pAttr->AeAttrNum = GetAttrWithException (ExceptNum, pEl->ElStructSchema);
-       pAttr->AeDefAttr = FALSE;
-       pAttr->AeAttrType = AtEnumAttr;
-       pAttr->AeAttrValue = attrVal;
-       AttachAttrWithValue (pEl, pDoc, pAttr);
-       DeleteAttribute (NULL, pAttr);
+	pAttr->AeAttrSSchema = pEl->ElStructSchema;
+	pAttr->AeAttrNum = GetAttrWithException (ExceptNum, pEl->ElStructSchema);
+	pAttr->AeDefAttr = FALSE;
+	pAttr->AeAttrType = AtEnumAttr;
+	pAttr->AeAttrValue = attrVal;
+	AttachAttrWithValue (pEl, pDoc, pAttr);
+	DeleteAttribute (NULL, pAttr);
      }
 }

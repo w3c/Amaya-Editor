@@ -42,17 +42,17 @@ static void         AjouteAttr (PtrElement pEl, int NumExcept, PtrSSchema pSS, i
 static void         AjouteAttr (pEl, NumExcept, pSS, Val)
 PtrElement          pEl;
 int                 NumExcept;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 int                 Val;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    int                 attr;
    boolean             existe;
    PtrElement          pEl1;
-   PtrAttribute         pAt1;
+   PtrAttribute        pAt1;
 
    pEl1 = pEl;
    attr = GetAttrWithException (NumExcept, pSS);
@@ -121,17 +121,17 @@ static boolean      TraiteAjAttr_DrawAjAttr (Ensemble Except, PtrElement * pEl, 
 static boolean      TraiteAjAttr_DrawAjAttr (Except, pEl, pAttr)
 Ensemble            Except;
 PtrElement         *pEl;
-PtrAttribute        *pAttr;
+PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
 
 {
    boolean             trouve;
-   int           e, e1;
-   PtrAttribute         pA, pASuiv;
+   int                 e, e1;
+   PtrAttribute        pA, pASuiv;
    int                 i;
-   PtrAttribute         pAt1;
-   TtAttribute           *pAttr1;
+   PtrAttribute        pAt1;
+   TtAttribute        *pAttr1;
    boolean             ret;
 
    /* L'attribut ajoute' est-il associe' a une des exceptions de */
@@ -209,7 +209,7 @@ void                DrawAjAttr (PtrAttribute * pAttr, PtrElement pEl)
 
 #else  /* __STDC__ */
 void                DrawAjAttr (pAttr, pEl)
-PtrAttribute        *pAttr;
+PtrAttribute       *pAttr;
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -217,10 +217,10 @@ PtrElement          pEl;
 {
    boolean             ok;
    Ensemble            Ens;
-   int           ex;
-   PtrAttribute         pA, pAS;
-   PtrAttribute         pAt1;
-   TtAttribute           *pAttr1;
+   int                 ex;
+   PtrAttribute        pA, pAS;
+   PtrAttribute        pAt1;
+   TtAttribute        *pAttr1;
 
 
    if (pEl->ElParent != NULL)
@@ -326,17 +326,17 @@ static boolean      TraiteSupprAttr_DrawSupprAttr (Def, Except, pEl, pAttr)
 int                 Def;
 Ensemble            Except;
 PtrElement         *pEl;
-PtrAttribute        *pAttr;
+PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
 
 {
    boolean             trouve;
-   int           e, e1;
-   PtrAttribute         pA;
+   int                 e, e1;
+   PtrAttribute        pA;
    int                 i;
-   PtrAttribute         pAt1;
-   TtAttribute           *pAttr1;
+   PtrAttribute        pAt1;
+   TtAttribute        *pAttr1;
    boolean             ret;
 
 
@@ -412,7 +412,7 @@ void                DrawSupprAttr (PtrAttribute pAttr, PtrElement pEl)
 
 #else  /* __STDC__ */
 void                DrawSupprAttr (pAttr, pEl)
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 PtrElement          pEl;
 
 #endif /* __STDC__ */

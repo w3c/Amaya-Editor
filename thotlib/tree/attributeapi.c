@@ -30,7 +30,7 @@
 extern int          UserErrorCode;
 extern int          AvecControleStruct;
 
-static Name          bufferName;
+static Name         bufferName;
 
 /* ----------------------------------------------------------------------
    TtaNewAttribute
@@ -54,7 +54,7 @@ AttributeType       attributeType;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    UserErrorCode = 0;
    pAttr = NULL;
@@ -264,7 +264,7 @@ Document            document;
 	else
 	  {
 	     (void) CanAssociateAttr ((PtrElement) element, pAttr, pAttr,
-					 &obligatory);
+				      &obligatory);
 	     if (!obligatory)
 		/* We prohibit to suppress the attbibute language of an element */
 		/* which is the root of an abstract tree */
@@ -405,8 +405,8 @@ Document            document;
 
 {
    int                 lg;
-   PtrAttribute         pAttr;
-   PtrAttribute         pAttrNouv;
+   PtrAttribute        pAttr;
+   PtrAttribute        pAttrNouv;
 
    UserErrorCode = 0;
    pAttr = (PtrAttribute) attribute;
@@ -436,7 +436,7 @@ Document            document;
 	     GetTextBuffer (&pAttrNouv->AeAttrText);
 	     CopyStringToText (buffer, pAttrNouv->AeAttrText, &lg);
 	     AttachAttrToRange (pAttrNouv, 0, 0, (PtrElement) element, (PtrElement) element,
-			    LoadedDocument[document - 1]);
+				LoadedDocument[document - 1]);
 	  }
 #ifndef NODISPLAY
 	if (element != NULL)
@@ -470,7 +470,7 @@ Attribute          *attribute;
 
 #endif /* __STDC__ */
 {
-   PtrAttribute         nextAttribute;
+   PtrAttribute        nextAttribute;
 
    UserErrorCode = 0;
    nextAttribute = NULL;
@@ -544,7 +544,7 @@ AttributeType       attributeType;
 			/* The structure schema does not interest us */
 			found = TRUE;
 		     else if (pAttr->AeAttrSSchema->SsCode ==
-			      ((PtrSSchema) (attributeType.AttrSSchema))->SsCode)
+			 ((PtrSSchema) (attributeType.AttrSSchema))->SsCode)
 			/* Same schema of structure */
 			found = TRUE;
 		  if (found)
@@ -697,7 +697,7 @@ int                *attrKind;
 			 }
 		    }
 		  if (!found)
-		     /* Go to the next extension schema*/
+		     /* Go to the next extension schema */
 		     pSS = pSS->SsNextExtens;
 	       }
 	     while (pSS != NULL && !found);
@@ -726,7 +726,7 @@ int                *attrKind;
 		       /* looks in schema extension the extension rule for the element */
 		       if (pSS != NULL)
 			  pRe1 = ExtensionRule (((PtrElement) element)->ElStructSchema,
-				       ((PtrElement) element)->ElTypeNumber, pSS);
+				 ((PtrElement) element)->ElTypeNumber, pSS);
 		    }
 	       }
 	     while (pSS != NULL && !found);
@@ -916,8 +916,8 @@ Attribute           attribute;
 #endif /* __STDC__ */
 
 {
-   int                length;
-   PtrTextBuffer      pBT;
+   int                 length;
+   PtrTextBuffer       pBT;
 
    UserErrorCode = 0;
    length = 0;
@@ -976,7 +976,7 @@ int                *length;
    else
      {
 	CopyTextToString (((PtrAttribute) attribute)->AeAttrText, buffer,
-			      length);
+			  length);
      }
 }
 
@@ -1042,10 +1042,10 @@ Attribute          *attributeFound;
      {
 	if (scope == SearchBackward)
 	   pEl = BackSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, "",
-			    (PtrSSchema) (searchedAttribute.AttrSSchema));
+			      (PtrSSchema) (searchedAttribute.AttrSSchema));
 	else
 	   pEl = FwdSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, "",
-			    (PtrSSchema) (searchedAttribute.AttrSSchema));
+			      (PtrSSchema) (searchedAttribute.AttrSSchema));
 	if (pEl != NULL)
 	   if (scope == SearchInTree)
 	     {
@@ -1062,8 +1062,8 @@ Attribute          *attributeFound;
 		if (searchedAttribute.AttrSSchema != NULL)
 		   do
 		      if (pAttr->AeAttrSSchema->SsCode ==
-			  ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsCode
-			  && pAttr->AeAttrNum == searchedAttribute.AttrTypeNum)
+		      ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsCode
+		       && pAttr->AeAttrNum == searchedAttribute.AttrTypeNum)
 			 /* the expected attribute */
 			 *attributeFound = (Attribute) pAttr;
 		      else

@@ -48,9 +48,9 @@ extern void         CreateNewElement ();
 
 
 /* ----------------------------------------------------------------- 
-  SetAssocNumber: assign the number nAssoc of the associated element 
-  to all sub-tree which root is pEl.  
-  ------------------------------------------------------------------ */
+   SetAssocNumber: assign the number nAssoc of the associated element 
+   to all sub-tree which root is pEl.  
+   ------------------------------------------------------------------ */
 
 #ifdef __STDC__
 static void         SetAssocNumber (PtrElement pEl, int nAssoc)
@@ -125,14 +125,14 @@ ElementType         elementType;
    else
       /* Parameter document is ok */
       if (elementType.ElTypeNum < 1 ||
-	  elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
      {
 	TtaError (ERR_invalid_element_type);
      }
    else
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
-	     LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
+		  LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
 	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
@@ -191,14 +191,14 @@ char               *label;
    else
       /* Parameter document is ok */
       if (elementType.ElTypeNum < 1 ||
-	  elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
      {
 	TtaError (ERR_invalid_element_type);
      }
    else
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
-		     LoadedDocument[document - 1], 0, TRUE, TRUE, TRUE,
+			  LoadedDocument[document - 1], 0, TRUE, TRUE, TRUE,
 			      (*label) == '\0');
 	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
@@ -239,7 +239,7 @@ PtrDocument         pDoc;
       /* This element is referenced. CopyTree did not copy its referenced element descriptor
          which is shared by the source element.
          Deals with source element references which are into the sub-tree which root is pRoot */
-    {
+     {
 	pDescRef = pElem->ElReferredDescr;
 	/* references element descriptor */
 	pElem->ElReferredDescr = NULL;
@@ -252,7 +252,7 @@ PtrDocument         pDoc;
 	     pNextRef = pRef->RdNext;	/* prepare the next reference */
 	     if (ElemIsWithinSubtree (pRef->RdElement, pRoot))
 		/* The reference is into the sub-tree which root is pRoot. 
-                   It will refer the treated element (pElem) */
+		   It will refer the treated element (pElem) */
 	       {
 		  if (pElem->ElReferredDescr == NULL)
 		     /* The element has not a referenced element descriptor */
@@ -264,7 +264,7 @@ PtrDocument         pDoc;
 		    }
 		  strncpy (pElem->ElReferredDescr->ReReferredLabel, pElem->ElLabel, MAX_LABEL_LEN);
 		  /* bind the reference descriptor and the referenced element 
-                     descriptor of the treated element */
+		     descriptor of the treated element */
 		  pPR1 = pRef;
 		  /* unchain the descriptor from chain of references to the source element */
 		  if (pPR1->RdNext != NULL)
@@ -376,10 +376,10 @@ Element             parent;
 	  }
 	/* Copying */
 	element = CopyTree (((PtrElement) sourceElement),
-			      LoadedDocument[sourceDocument - 1], 0, pSS,
-			      LoadedDocument[destinationDocument - 1],
-			      (PtrElement) parent,
-			      TRUE, TRUE);
+			    LoadedDocument[sourceDocument - 1], 0, pSS,
+			    LoadedDocument[destinationDocument - 1],
+			    (PtrElement) parent,
+			    TRUE, TRUE);
 	TransRef (element, element, LoadedDocument[destinationDocument - 1]);
      }
    return ((Element) element);
@@ -387,23 +387,23 @@ Element             parent;
 
 
 /* ---------------------------------------------------------------------- *
-CreateDescent
+   CreateDescent
 
-CreateDescent creates a new element of a given type and inserts it in the
-tree as a descendant of a given element. All elements of the descent required
-by the structure schema are also created, as well as the content of the
-required element if parameter withContent is TRUE.
+   CreateDescent creates a new element of a given type and inserts it in the
+   tree as a descendant of a given element. All elements of the descent required
+   by the structure schema are also created, as well as the content of the
+   required element if parameter withContent is TRUE.
 
-Parameters:
-    document: the document for which the tree is created.
-    element: the element for which a descent will be created.
-    elementType: type of the element to be created as the last descendant.
-    withContent: if TRUE, the minimum content if that element must also
-	be created.
+   Parameters:
+   document: the document for which the tree is created.
+   element: the element for which a descent will be created.
+   elementType: type of the element to be created as the last descendant.
+   withContent: if TRUE, the minimum content if that element must also
+   be created.
 
-Return value:
-    the last descendant created or NULL if the element cannot be created.
----------------------------------------------------------------------- */
+   Return value:
+   the last descendant created or NULL if the element cannot be created.
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 static Element      CreateDescent (Document document, Element element, ElementType elementType, boolean withContent)
@@ -457,7 +457,7 @@ boolean             withContent;
    else
       /* Parameter document is ok */
       if (elementType.ElTypeNum < 1 ||
-	  elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
      {
 	TtaError (ERR_invalid_element_type);
      }
@@ -470,15 +470,15 @@ boolean             withContent;
 	   /* No sons for a copy */
 	   if (!pEl->ElIsCopy)
 	      firstCreated = CreateDescendant (pEl->ElTypeNumber, pEl->ElStructSchema,
-		  LoadedDocument[document - 1], &lastCreated, pEl->ElAssocNum,
-					  elementType.ElTypeNum,
-				    (PtrSSchema) (elementType.ElSSchema));
+		LoadedDocument[document - 1], &lastCreated, pEl->ElAssocNum,
+					       elementType.ElTypeNum,
+				      (PtrSSchema) (elementType.ElSSchema));
 	if (firstCreated != NULL)
 	  {
 	     if (firstCreated->ElNext != NULL &&
 		 pEl->ElFirstChild != NULL)
 		/* Too many trees created. One keep only the tree which contain the
-                   element to create */
+		   element to create */
 	       {
 		  /* Looking for the root of the tree to keep */
 		  pE = lastCreated;
@@ -516,8 +516,8 @@ boolean             withContent;
 	     else
 	       {
 		  if (AllowedFirstChild (pEl, LoadedDocument[document - 1],
-			    firstCreated->ElTypeNumber, firstCreated->ElStructSchema,
-					   FALSE, FALSE))
+		   firstCreated->ElTypeNumber, firstCreated->ElStructSchema,
+					 FALSE, FALSE))
 		    {
 		       pSon = pEl->ElFirstChild;
 		       if (pSon != NULL)
@@ -539,7 +539,7 @@ boolean             withContent;
 		       while (pSon != NULL && !ok)
 			 {
 			    if (AllowedSibling (pSon, LoadedDocument[document - 1],
-			    firstCreated->ElTypeNumber, firstCreated->ElStructSchema,
+						firstCreated->ElTypeNumber, firstCreated->ElStructSchema,
 						FALSE, FALSE, FALSE))
 			       /* One put the tree after pSon */
 			       if (pSon->ElNext == NULL)
@@ -547,9 +547,9 @@ boolean             withContent;
 			       else
 				  /* one verifies the tree can be placed before pSon's brother */
 				  ok = AllowedSibling (pSon->ElNext,
-						 LoadedDocument[document - 1],
-						       firstCreated->ElTypeNumber,
-						  firstCreated->ElStructSchema,
+					       LoadedDocument[document - 1],
+						 firstCreated->ElTypeNumber,
+					       firstCreated->ElStructSchema,
 						       TRUE, FALSE, FALSE);
 			    if (!ok)
 			       pSon = pSon->ElNext;
@@ -795,7 +795,7 @@ Document            document;
      {
 	pDoc = LoadedDocument[document - 1];
 	/* verifies that the tree type is defined into the document schema 
-           or into one of its extensions */
+	   or into one of its extensions */
 	found = FALSE;
 	if (pDoc->DocSSchema->SsCode == pRoot->ElStructSchema->SsCode)
 	   /* document schema */
@@ -972,9 +972,9 @@ Document            document;
    else
       /* Parameter document is ok */
       if (AvecControleStruct && !AllowedSibling ((PtrElement) sibling,
-						 LoadedDocument[document - 1],
-					  ((PtrElement) newElement)->ElTypeNumber,
-				     ((PtrElement) newElement)->ElStructSchema,
+					       LoadedDocument[document - 1],
+				    ((PtrElement) newElement)->ElTypeNumber,
+				  ((PtrElement) newElement)->ElStructSchema,
 						 before, FALSE, FALSE))
      {
 	TtaError (ERR_element_does_not_match_DTD);
@@ -997,7 +997,7 @@ Document            document;
 #endif
 	     InsertElementAfter ((PtrElement) sibling, (PtrElement) newElement);
 	  }
-	/* updates the associated element number*/
+	/* updates the associated element number */
 	SetAssocNumber ((PtrElement) newElement,
 			((PtrElement) sibling)->ElAssocNum);
 	/* treats the exclusions of the created element */
@@ -1008,7 +1008,7 @@ Document            document;
 	  {
 	     /* Dealing with exceptions */
 	     CreateWithException (pEl,
-				      LoadedDocument[document - 1]);
+				  LoadedDocument[document - 1]);
 	     /* If element pair, chain it with its homologue */
 	     if (((PtrElement) newElement)->ElStructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 		GetOtherPairedElement ((PtrElement) newElement);
@@ -1092,7 +1092,7 @@ Document            document;
 	     ((PtrElement) (*newElement))->ElAssocNum = ((PtrElement) parent)->ElAssocNum;
 #ifndef NODISPLAY
 	     InsertOption ((PtrElement) parent, (PtrElement *) newElement,
-			  LoadedDocument[document - 1]);
+			   LoadedDocument[document - 1]);
 #else
 	     InsertElemInChoice ((PtrElement) parent, (PtrElement *) newElement, FALSE);
 #endif
@@ -1100,7 +1100,7 @@ Document            document;
 	  }
 	else if (AvecControleStruct
 		 && !AllowedFirstChild ((PtrElement) parent, LoadedDocument[document - 1],
-					  ((PtrElement) (*newElement))->ElTypeNumber, ((PtrElement) (*newElement))->ElStructSchema, FALSE, FALSE))
+					((PtrElement) (*newElement))->ElTypeNumber, ((PtrElement) (*newElement))->ElStructSchema, FALSE, FALSE))
 	   TtaError (ERR_element_does_not_match_DTD);
 	else
 	  {
@@ -1136,7 +1136,7 @@ Document            document;
 	       {
 		  /* Dealing with exceptions */
 		  CreateWithException ((PtrElement) (*newElement),
-					   LoadedDocument[document - 1]);
+				       LoadedDocument[document - 1]);
 #ifndef NODISPLAY
 		  /* treats the required attibutes of the created elements */
 		  if (AvecControleStruct)
@@ -1185,7 +1185,7 @@ Document            document;
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else if (elementType.ElTypeNum < 1 ||
-	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       /* Parameter document is ok */
       TtaError (ERR_invalid_element_type);
    else
@@ -1227,7 +1227,7 @@ Document            document;
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else if (elementType.ElTypeNum < 1 ||
-	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       /* Parameter document is ok */
       TtaError (ERR_invalid_element_type);
    else
@@ -1236,7 +1236,7 @@ Document            document;
 			LoadedDocument[document - 1], TRUE);
 }
 
-#endif	/* NODISPLAY */
+#endif /* NODISPLAY */
 
 /* ----------------------------------------------------------------------
    TtaRemoveTree
@@ -1393,7 +1393,7 @@ Document            document;
 			 && (newAccessRight == AccessReadOnly ||
 			     newAccessRight == AccessReadWrite))
 			/* change AbCanBeModified in all abstract boxes except if it's
-                           without image calculation mode */
+			   without image calculation mode */
 		       {
 			  /* We set the deferred displaying mode */
 			  if (SaveDisplayMode != DeferredDisplay)
@@ -1435,7 +1435,7 @@ Document            document;
 
 #endif /* __STDC__ */
 {
-boolean             CanHolo;
+   boolean             CanHolo;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -1448,24 +1448,24 @@ boolean             CanHolo;
    else if (((PtrElement) element)->ElParent == NULL)
       /* Parameter document is ok */
       TtaError (ERR_cannot_holophrast_a_root);
-   else 
-    {
-      CanHolo = TRUE;
-      if (ThotLocalActions[T_holotable]!=NULL)
-          (*ThotLocalActions[T_holotable])(((PtrElement)element), &CanHolo);
-      if ((((PtrElement)element)->ElTerminal &&
-	    ((PtrElement)element)->ElLeafType == LtPageColBreak) ||
-	   !CanHolo)
-      /* No holophraste for page breaks or some arrays elements */
-      TtaError (ERR_cannot_holophrast_that_type);
-   else if (((PtrElement) element)->ElHolophrast != holophrast)
+   else
      {
-	((PtrElement) element)->ElHolophrast = holophrast;
+	CanHolo = TRUE;
+	if (ThotLocalActions[T_holotable] != NULL)
+	   (*ThotLocalActions[T_holotable]) (((PtrElement) element), &CanHolo);
+	if ((((PtrElement) element)->ElTerminal &&
+	     ((PtrElement) element)->ElLeafType == LtPageColBreak) ||
+	    !CanHolo)
+	   /* No holophraste for page breaks or some arrays elements */
+	   TtaError (ERR_cannot_holophrast_that_type);
+	else if (((PtrElement) element)->ElHolophrast != holophrast)
+	  {
+	     ((PtrElement) element)->ElHolophrast = holophrast;
 #ifndef NODISPLAY
-	DisplayHolophrasted ((PtrElement) element, document);
+	     DisplayHolophrasted ((PtrElement) element, document);
 #endif
+	  }
      }
-    }
 }
 
 /* ----------------------------------------------------------------------
@@ -1651,7 +1651,7 @@ Element            *root;
 	  {
 	     pDoc = LoadedDocument[document - 1];
 	     pEl = (PtrElement) (*root);
-	     /* Go to the root of the tree*/
+	     /* Go to the root of the tree */
 	     while (pEl->ElParent != NULL)
 		pEl = pEl->ElParent;
 	     if (pEl == pDoc->DocRootElement)
@@ -2044,8 +2044,8 @@ ElementType         ancestorType;
    else
      {
 	ancestor = GetTypedAncestor (((PtrElement) element)->ElParent,
-			      ancestorType.ElTypeNum,
-			      (PtrSSchema) (ancestorType.ElSSchema));
+				     ancestorType.ElTypeNum,
+				     (PtrSSchema) (ancestorType.ElSSchema));
      }
    return ((Element) ancestor);
 }
@@ -2905,7 +2905,7 @@ Document            document;
    if (elementType.ElSSchema == NULL)
       TtaError (ERR_invalid_parameter);
    else if (elementType.ElTypeNum < 1 ||
-	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else
       ret = AllowedSibling ((PtrElement) sibling, LoadedDocument[document - 1],
@@ -2959,13 +2959,13 @@ Document            document;
    if (elementType.ElSSchema == NULL)
       TtaError (ERR_invalid_parameter);
    else if (elementType.ElTypeNum < 1 ||
-	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else
       ret = AllowedFirstChild ((PtrElement) parent, LoadedDocument[document - 1],
-				 elementType.ElTypeNum,
-				 (PtrSSchema) (elementType.ElSSchema),
-				 FALSE, FALSE);
+			       elementType.ElTypeNum,
+			       (PtrSSchema) (elementType.ElSSchema),
+			       FALSE, FALSE);
    return ret;
 }
 
@@ -3040,7 +3040,7 @@ Element            *element;
 #endif /* __STDC__ */
 
 {
-   PtrPasteElem      next;
+   PtrPasteElem        next;
 
    UserErrorCode = 0;
    next = NULL;

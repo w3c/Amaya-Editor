@@ -32,10 +32,10 @@
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrPRule        GetPageRule (PtrElement pEl, int view, PtrPSchema * pSchP)
+PtrPRule            GetPageRule (PtrElement pEl, int view, PtrPSchema * pSchP)
 
 #else  /* __STDC__ */
-PtrPRule        GetPageRule (pEl, view, pSchP)
+PtrPRule            GetPageRule (pEl, view, pSchP)
 PtrElement          pEl;
 int                 view;
 PtrPSchema         *pSchP;
@@ -43,8 +43,8 @@ PtrPSchema         *pSchP;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRule, pRPage;
-   PtrSSchema        pSchS;
+   PtrPRule            pRule, pRPage;
+   PtrSSchema          pSchS;
    int                 entry;
    boolean             stop;
 
@@ -80,10 +80,10 @@ PtrPSchema         *pSchP;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrPRule        GetPRulePage (PRuleType TypeR, int b, PtrPSchema pSchP)
+PtrPRule            GetPRulePage (PRuleType TypeR, int b, PtrPSchema pSchP)
 
 #else  /* __STDC__ */
-PtrPRule        GetPRulePage (TypeR, b, pSchP)
+PtrPRule            GetPRulePage (TypeR, b, pSchP)
 PRuleType           TypeR;
 int                 b;
 PtrPSchema          pSchP;
@@ -92,7 +92,7 @@ PtrPSchema          pSchP;
 
 {
    boolean             stop, exist;
-   PtrPRule        pR;
+   PtrPRule            pR;
 
    pR = pSchP->PsPresentBox[b - 1].PbFirstPRule;
    stop = FALSE;
@@ -128,17 +128,17 @@ PtrPSchema          pSchP;
    procedure utilisee dans print et page           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrPRule        ReglePageDebut (PtrElement pElPage, PtrPSchema * pSchP)
+PtrPRule            ReglePageDebut (PtrElement pElPage, PtrPSchema * pSchP)
 
 #else  /* __STDC__ */
-PtrPRule        ReglePageDebut (pElPage, pSchP)
+PtrPRule            ReglePageDebut (pElPage, pSchP)
 PtrElement          pElPage;
 PtrPSchema         *pSchP;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pR;
+   PtrPRule            pR;
    PtrElement          pNext;
 
    pR = NULL;
@@ -167,7 +167,7 @@ PtrPSchema         *pSchP;
 	   /* si pSuiv ne portait pas de regle, */
 	   /* l'element englobant porte-t-il une regle page ? */
 	   pR = GetPageRule (pElPage->ElParent,
-			   pElPage->ElViewPSchema, pSchP);
+			     pElPage->ElViewPSchema, pSchP);
      }
    return pR;
 }
@@ -200,7 +200,7 @@ PtrPSchema         *pSchP;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pR;
+   PtrPRule            pR;
    PtrPSchema          pSP;
 
    *b = 0;
@@ -245,12 +245,12 @@ void                TagAbsBoxInPage (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 void                TagAbsBoxInPage (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox      pPa1;
 
 
    pPa1 = pAb;
@@ -274,11 +274,11 @@ void                KillAbsBoxAboveLimit (PtrAbstractBox pP, int limit, int view
 
 #else  /* __STDC__ */
 void                KillAbsBoxAboveLimit (pP, limit, viewNb, pDoc, RedispAbsBox)
-PtrAbstractBox             pP;
+PtrAbstractBox      pP;
 int                 limit;
 int                 viewNb;
 PtrDocument         pDoc;
-PtrAbstractBox            *RedispAbsBox;
+PtrAbstractBox     *RedispAbsBox;
 
 #endif /* __STDC__ */
 
@@ -335,7 +335,7 @@ boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDo
 
 #else  /* __STDC__ */
 boolean             KillAbsBoxBeforePage (pPage, frame, pDoc, viewNb)
-PtrAbstractBox             pPage;
+PtrAbstractBox      pPage;
 int                 frame;
 PtrDocument         pDoc;
 int                 viewNb;
@@ -343,7 +343,7 @@ int                 viewNb;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAb, RAbsBox, rootAbsBox;
+   PtrAbstractBox      pAb, RAbsBox, rootAbsBox;
    boolean             ret, det;
 
    ret = TRUE;			/* initialisation de ret, est-ce bon ? */
@@ -408,7 +408,7 @@ boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDo
 
 #else  /* __STDC__ */
 boolean             KillAbsBoxBeforePage (pPage, frame, pDoc, viewNb)
-PtrAbstractBox             pPage;
+PtrAbstractBox      pPage;
 int                 frame;
 PtrDocument         pDoc;
 int                 viewNb;
@@ -416,10 +416,10 @@ int                 viewNb;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAb, RedispAbsBox, rootAbsBox, pNext;
+   PtrAbstractBox      pAb, RedispAbsBox, rootAbsBox, pNext;
    boolean             stop, ret;
    int                 h, yTop, NbCar, yThread;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox      pPa1;
 
    /* cherche d'abord le pave racine de la vue */
    rootAbsBox = pPage;
