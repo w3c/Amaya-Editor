@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2003
+ *  (c) COPYRIGHT INRIA, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -700,7 +700,7 @@ void PasteCommand ()
 	      cellType.ElSSchema = (SSchema) pCell->ElStructSchema;
 	      if (!before)
 		{
-		  /* get the last column of the cell */
+		  /* get the last column spanned by the cell */
 		  GetCellSpans (pCell, &colspan, &rowspan);
 		  if (colspan == 0)
 		    return;
@@ -713,7 +713,7 @@ void PasteCommand ()
 	      /* current row */
 	      pRow = pCell->ElParent;
 	      if (pRow && pColHead)
-		/* look for the first row in the table */
+		/* get the first row in the table */
 		pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
 					   pRow->ElStructSchema);
 	      else
@@ -734,7 +734,7 @@ void PasteCommand ()
 	    }
 	  else if (firstChar == 0 && lastChar == 0 && firstSel == lastSel &&
 		   firstSel->ElVolume == 0 && !firstSel->ElTerminal)
-	    /* un element non terminal vide. On colle a l'interieur */
+	    /* an empty non terminal element is selected. Paste within it */
 	    {
 	      pEl = firstSel;
 	      within = TRUE;
@@ -744,9 +744,8 @@ void PasteCommand ()
 		     firstChar == 1) ||
 		    (firstSel->ElLeafType == LtText &&
 		     firstChar > firstSel->ElTextLength)))
-	    /* the right edge of an image is selected or
-	       the selection starts at the end of a text element.
-	       Paste after the selected element */
+	    /* the right edge of an image is selected or the selection starts
+	       at the end of a text element. Paste after the selected element*/
 	    {
 	      pEl = firstSel;
 	      within = FALSE;
@@ -754,30 +753,26 @@ void PasteCommand ()
 	      pNextEl = NextElement (pEl);
 	    }
 	  else if (firstChar < 2)
-	    /* on veut coller avant l'element firstSel */
+	    /* paste before element firstSel */
 	    {
 	      pEl = firstSel;
 	      within = FALSE;
 	      before = TRUE;
-	      /* l'element qui suivra la partie collee est le 1er element de */
-	      /* la selection courante */
+	      /* the element that will follow the pasted elements is the first
+		 one in the current selection */
 	      pNextEl = firstSel;
 	    }
 	  else
-	    /* on veut coller au milieu d'une feuille de texte */
-	    /* il faut couper cette feuille en deux */
+	    /* the user wants to paste in the middle of a text leaf. Split it*/
 	    {
-	      /* Si l'element a couper est le dernier, il ne le sera plus */
-	      /* apres la coupure. Teste si le dernier selectionne' est le */
-	      /* dernier fils de son pere, abstraction faite des marques */
-	      /* de page */
+	      /* if the element to be split is the last child of its parent,
+		 it will change status after the split */
 	      pClose = firstSel->ElNext;
-	      FwdSkipPageBreak (&pClose);
-	      /* coupe la feuille de texte */
+	      FwdSkipPageBreak (&pClose); /* skip page breaks */
 	      pSplitText = firstSel;
 	      SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollowing,
 				FALSE);
-	      /* met a jour la selection */
+	      /* update the current selection */
 	      if (firstSel == lastSel)
 		{
 		  lastSel = pFollowing;
@@ -788,18 +783,19 @@ void PasteCommand ()
 	      pEl = pSplitText;
 	      within = FALSE;
 	      before = FALSE;
-	      /* l'element qui suivra la partie collee est la deuxieme */
-	      /* partie de l'element qu'on vient de couper en deux */
+	      /* the element that will follow the pasted elements is the second
+		 part of the split text */
 	      pNextEl = pFollowing;
 	    }
-	
-	  NCreatedElements = 0;	
-	  /* boucle sur les elements a coller et les colle un a un */
+
+          /* take all elements to be pasted and paste them one after the
+	     other */
+	  NCreatedElements = 0;
 	  pPasteD = FirstSavedElement;
 	  first = TRUE;
 	  if (!within && before && pPasteD && !WholeColumnSaved)
-	    /* on colle devant un element. On commencera par coller le */
-	    /* dernier element a coller et on continuera en arriere */
+	    /* pasting before an existing element. We will start by pasting
+	       the last element and we will proceed backwards */
 	    while (pPasteD->PeNext)
 	      pPasteD = pPasteD->PeNext;
 	  ok = FALSE;
@@ -875,8 +871,9 @@ void PasteCommand ()
 				}
 			    }
 			  else
-			    /* no previous column. get the next one and
-			       paste before in the spanned rows */
+			    /* no previous column. get the next column that
+			       has a cell in the current row and paste before
+			       in the spanned rows */
 			    {
 			      pColHead = pRealCol;
 			      do
@@ -897,6 +894,11 @@ void PasteCommand ()
 				      savebefore = TRUE;
 				    }
 				}
+			      else
+				/* no cell in the spanned row */
+				{
+				  /* What sould we do? */;
+				} 
 			    }
 			}
 		    }
@@ -907,17 +909,17 @@ void PasteCommand ()
 		}
 	      if (pEl)
 		pPasted = PasteAnElement (pEl, pPasteD, within, before,
-					  &cancelled, pDoc, &cellChild, addedCell);
+				      &cancelled, pDoc, &cellChild, addedCell);
 	      else
 		pPasted = NULL;
 	      if (pPasted == NULL && !WholeColumnSaved && !cancelled &&
-		  /* echec, mais l'application n'a pas refusé */
+		  /* failure, but it's not on application's refusal */
 		  !within && !before && pNextEl)
-		/* on essayait de coller apres le dernier colle' */
-		/* on va essayer de coller le meme element avant l'element */
-		/* qui doit suivre la partie collee */
+		/* we were trying to paste after the last pasted element.
+		   We will try to paste the same element before the element
+		   that is supposed to follow the pasted elements */
 		pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,
-					  &cancelled, pDoc, &cellChild, addedCell);
+				      &cancelled, pDoc, &cellChild, addedCell);
 	      if (pPasted)
 		/* a copy of element pPasteD has been sucessfully pasted */
 		{
@@ -974,7 +976,7 @@ void PasteCommand ()
 
 	      pRow = pNextRow;
 	      if (pRow && pPasteD == NULL)
-		/* there are more rows than pasted cell */
+		/* there are more rows than pasted cell. Add empty cells */
 		addedCell = NewSubtree (cellType.ElTypeNum,
 					(PtrSSchema) cellType.ElSSchema, pDoc,
 					TRUE, TRUE, TRUE, TRUE);
@@ -991,31 +993,31 @@ void PasteCommand ()
 	  while (pPasteD || addedCell);
 
 	if (ok)
-	  /* on a effectivement colle' le contenu du buffer */
+	  /* we have successfully pasted the contents of the buffer */
 	  {
-	    /* il faudra changer les labels lors du prochain Coller */
+	    /* labels will have to be change if the same elements are pasted
+	       again later */
 	    ChangeLabel = TRUE;
 	    if (pSplitText != NULL)
-	      /* on avait coupe' en deux un element de texte */
+	      /* a text element was split to insert the pasted element */
 	      {
-		/* construit les paves du texte coupe' en deux */
+		/* build the abstract boxes of the split text */
 		BuildAbsBoxSpliText (pSplitText, pFollowing, pClose, pDoc);
 	      }
-	    /* traite dans les elements colle's toutes les references et les */
-	    /* elements reference's ainsi que les exclusions */
+	    /* process all references ans exclusions in the pasted elements,
+	       based on their new context */
 	    for (i = 0; i < NCreatedElements; i++)
 	      {
 		CheckReferences (CreatedElement[i], pDoc);
 		RemoveExcludedElem (&CreatedElement[i], pDoc);
 	      }
-	    /* affecte des identificateurs corrects a tous les elements
-	       de paire */
+	    /* set IDs to all paired elements */
 	    for (i = 0; i < NCreatedElements; i++)
 	      AssignPairIdentifiers (CreatedElement[i], pDoc);
 	    /* register the pasted elements in the editing history */
 	    OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
 				 lastChar-1);
-	    /* envoie l'evenement ElemPaste.Post */
+	    /* send event ElemPaste.Post */
 	    for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i])
 	        {
@@ -1060,10 +1062,9 @@ void PasteCommand ()
 	    for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i] != NULL)
 		{
-		  /* cree dans toutes les vues les paves du nouvel element */
+		  /* create the abstract boxes of the new elements in all views */
 		  CreateNewAbsBoxes (CreatedElement[i], pDoc, 0);
-		  /* calcule le volume que pourront prendre les paves des */
-		  /* autres elements a coller */
+		  /* compute the volume that the created abstract box can use*/
 		  for (view = 0; view < MAX_VIEW_DOC; view++)
 		    {
 		      if (CreatedElement[i]->ElAbstractBox[view] != NULL)
@@ -1071,30 +1072,28 @@ void PasteCommand ()
 			  CreatedElement[i]->ElAbstractBox[view]->AbVolume;
 		    }
 		}
-	    /* applique les regle de presentation retardees qui restent
-	       encore */
+	    /* Apply all delayed presentation rules if some are left */
 	    for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i] != NULL)
 		ApplDelayedRule (CreatedElement[i], pDoc);
 	    
 	    AbstractImageUpdated (pDoc);
-	    /* indique au Mediateur les modifications */
+	    /* display the new elements */
 	    RedisplayDocViews (pDoc);
 
 	    for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i] != NULL)
 		{
-		  /* refait la presentation des attributs-reference qui */
-		  /*  pointent les elements colle's */
+		  /* update the presentation of reference attributes that
+		     point at pasted elements */
 		  UpdateRefAttributes (CreatedElement[i], pDoc);
 		}
 	  }
 	else
-	  /* echec */
+	  /* failure */
 	  {
 	    if (pSplitText != NULL)
-	      /* On avait coupe' en deux un element de texte. */
-	      /* On recolle les deux morceaux */
+	      /* A text element was split. Merge the two pieces back. */
 	      {
 		MergeTextElements (pSplitText, &pFree, pDoc, TRUE, FALSE);
 		DeleteElement (&pFree, pDoc);
@@ -1135,7 +1134,7 @@ void PasteCommand ()
 	    
 	    SetDocumentModified (pDoc, TRUE, 20);
 	    
-	    /* Reaffiche les numeros suivants qui changent */
+	    /* update the counter values that follow the pasted elements */
 	    for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i] != NULL)
 		{
