@@ -4005,7 +4005,7 @@ char                c;
    /* if a single '/' or '?' has been read instead of an attribute name, ignore
       that character.  This is to accept the XML syntax for empty elements or
       processing instructions, such as <img src="SomeUrl" /> or
-      <?xmlversion="1.0" ?>  */
+      <?xml version="1.0"?>  */
    if (LgBuffer == 1 && (inputBuffer[0] == '/' || inputBuffer[0] == '?'))
       {
       InitBuffer ();
@@ -4018,15 +4018,26 @@ char                c;
       tableEntry = NULL;
    else
       tableEntry = MapAttr (inputBuffer, &schema);
+
    if (tableEntry == NULL)
-      /* the attribute is not in the table */
+      /* this attribute is not in the HTML mapping table */
      {
-	sprintf (msgBuffer, "Unknown attribute \"%s\"", inputBuffer);
-	ParseHTMLError (theDocument, msgBuffer);
-	/* attach an Invalid_attribute to the current element */
-	tableEntry = &HTMLAttributeMappingTable[0];
-	schema = HTMLSSchema;
-	IgnoreAttr = TRUE;
+	if (strcasecmp (inputBuffer, "xmlns") == 0 ||
+	    strncasecmp (inputBuffer, "xmlns:", 6) == 0)
+	   /* this is a namespace declaration */
+	   {
+	   lastAttrEntry = NULL;
+	   /**** register this namespace ****/;
+	   }
+	else
+	   {
+	   sprintf (msgBuffer, "Unknown attribute \"%s\"", inputBuffer);
+	   ParseHTMLError (theDocument, msgBuffer);
+	   /* attach an Invalid_attribute to the current element */
+	   tableEntry = &HTMLAttributeMappingTable[0];
+	   schema = HTMLSSchema;
+	   IgnoreAttr = TRUE;
+	   }
      }
    else
       IgnoreAttr = FALSE;
@@ -4308,6 +4319,12 @@ char                c;
 	 PutInBuffer (c);
    CloseBuffer ();
    /* inputBuffer contains the attribute value */
+
+   if (lastAttrEntry == NULL)
+      {
+      InitBuffer ();
+      return;
+      }
    done = FALSE;
    if (lastElementClosed && (lastElement == rootElement))
       /* an attribute after the tag </html>, ignore it */

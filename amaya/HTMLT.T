@@ -15,10 +15,12 @@ RULES
  HTML : BEGIN
 #ifdef XML
 	Create '<?xml version="1.0"?>\12';
+	Create '<html xmlns="http://www.w3.org/TR/REC-html40"\12';
 	Create Namespaces;
-#endif
+#else
 	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\12';
 	Create '<html';
+#endif
 	Create Attributes;
 	Create '>\12';
 	Create '</html>\12' After;
@@ -75,8 +77,9 @@ RULES
 	Create '<style';
 	IF Notation
 	   BEGIN
-	   Create ' type=';
+	   Create ' type="';
 	   Create Notation;
+	   Create DoubleQuote;
 	   END;
 	Create Attributes;
 	Create '>';

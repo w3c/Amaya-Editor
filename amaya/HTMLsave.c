@@ -406,11 +406,11 @@ Document            doc;
       buffer[0] = '\0';
       if (useMathML)
 	 {
-	 strcat (buffer, "<?xml:namespace ns=\"http://www.w3.org/TR/REC-MathML/\" prefix=\"m\" ?>\n");
+	 strcat (buffer, "      xmlns:m=\"http://www.w3.org/TR/REC-MathML/\"\n");
 	 }
       if (useGraphML)
 	 {
-	 strcat (buffer, "<?xml:namespace ns=\"http://www.w3.org/Graphics/SVG/Amaya2D\" prefix=\"g\" ?>\n");
+	 strcat (buffer, "      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\"\n");
 	 }
       /* set the value of attribute Namespaces */
       if (attr == NULL)
