@@ -174,7 +174,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	{
 	  /* clip on the enclosing box that changes the System origin */
 	  pAb = pBox->BxAbstractBox;
-	  if (pAb && strcmp (pAb->AbPSchema->PsStructName, "TextFile"))
+	  if (pAb && pAb->AbElement && pAb->AbElement->ElStructSchema &&
+	      strcmp (pAb->AbElement->ElStructSchema->SsName, "TextFile"))
 	    {
 	      pClipAb = pAb;
 	      /* the box could be included within a SVG element */
