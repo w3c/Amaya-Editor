@@ -22,12 +22,24 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="466"
+<p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="600"
 height="349">
   <image id="backgroundImage" x="0" y="0" width="466" height="349"
          xlink:href="amaya.png">
     <desc>Leading the Web to its full potential</desc>
   </image>
+  <text y="38px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
+  xlink:type="simple" xlink:href="http://www.w3.org"
+  style="fill:#dc5b53; font: bold 16px">W3C
+  </text>
+  <text y="66px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
+  xlink:type="simple" xlink:href="http://www.w3.org/Amaya"
+  style="fill:#dc5b53; font: bold 16px">Amaya au W3C
+  </text>
+  <text y="96px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
+  xlink:type="simple" xlink:href="../doc/amaya/Manual.html.fr"
+  style="fill:#dc5b53; font: bold 16px">Manual en ligne
+  </text>
   <defs>
     <symbol id="cube">
       <polygon points="0,1  5,6  5,21  0,16" stroke-width="1"/>
@@ -163,11 +175,6 @@ du droit de copie du MIT et de l'INRIA</a> apparaisse sur TOUTES les copies
 du logiciel et de sa documentation ou portions de celle-ci, incluant les
 modifications que vous effectuez.</p>
 </div>
-
-<p class="buttonbar"><span class="button"><a
-href="http://www.w3.org/">Serveur W3C</a></span> <span class="button"><a
-href="http://www.w3.org/Amaya/">Amaya</a></span> <span class="button"><a
-href="../doc/amaya/Manual.html.fr">Manuel en ligne</a></span></p>
 </div>
 </body>
 </html>

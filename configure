@@ -938,7 +938,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-g -O2"
+    CFLAGS="-O2"
   else
     CFLAGS="-g"
   fi
@@ -6189,11 +6189,12 @@ else
 
 
 
+
 motif_includes=NONE
 motif_libraries=NONE
 
 echo $ac_n "checking for Motif""... $ac_c" 1>&6
-echo "configure:6197: checking for Motif" >&5
+echo "configure:6198: checking for Motif" >&5
 if test "x$motif_includes" != xNONE && test "x$motif_libraries" != xNONE; then
     no_motif=
 else
@@ -6314,8 +6315,8 @@ else
     ac_cv_path_motif="no_motif= ac_motif_includes=$ac_motif_includes ac_motif_libraries=$ac_motif_libraries"
 fi
 fi
-  fi
-  eval "$ac_cv_path_motif"
+
+eval "$ac_cv_path_motif"
 fi
 
 if test "$no_motif" = yes; then
@@ -6344,6 +6345,7 @@ fi
 
 
 
+fi
 
 if test "${GCC}" = "yes"; then
    CPP="${CPP} -x c"
@@ -7051,7 +7053,7 @@ fi
 fi
 fi
 
-echo "Now start \"make all\" (GNU make preferably) to build the binaries"
+echo "Now start \"make all\" (GNU make preferably) to build the bianries"
 
 
 

@@ -384,7 +384,7 @@ LIBS="$ac_save_LIBS"
 ])
 
 AC_DEFUN(AC_PATH_MOTIF,
-[AC_REQUIRE_CPP()dnl
+[AC_REQUIRE_CPP()
 
 motif_includes=NONE
 motif_libraries=NONE
@@ -402,9 +402,8 @@ if test "$no_motif" = yes; then
     ac_cv_path_motif="no_motif=yes"
 else
     ac_cv_path_motif="no_motif= ac_motif_includes=$ac_motif_includes ac_motif_libraries=$ac_motif_libraries"
-fi])dnl
-  fi
-  eval "$ac_cv_path_motif"
+fi])
+eval "$ac_cv_path_motif"
 fi
 
 if test "$no_motif" = yes; then
@@ -435,6 +434,7 @@ AC_SUBST(MOTIF_LIBRARIES)
 ])
 
 AC_PATH_MOTIF
+fi
 
 if test "${GCC}" = "yes"; then
    CPP="${CPP} -x c"
@@ -761,7 +761,7 @@ fi
 fi
 fi
 
-echo "Now start \"make all\" (GNU make preferably) to build the binaries"
+echo "Now start \"make all\" (GNU make preferably) to build the bianries"
 
 
 
