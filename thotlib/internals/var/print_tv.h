@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #ifndef __PRINT_V_H__
 #define __PRINT_V_H__
 

@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define INTERMEDIATE_SYMBOL	               0  
 #define STRUCT_SCHEM_DOES_NOT_MATCH	       1 
 #define WORD_SIZE_OVERFLOW	               2

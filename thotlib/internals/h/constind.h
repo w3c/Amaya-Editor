@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 /* constind.h : Declaration des constantes d'index */
 /* H. Richy - Juin 91 - corrige Thot janvier 1996  */
 

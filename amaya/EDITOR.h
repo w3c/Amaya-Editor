@@ -1,10 +1,3 @@
-/*
- *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
- *  Please first read the full copyright statement in file COPYRIGHT.
- *
- */
-
 /* Basic types */
 #define TEXT_UNIT  1
 #define GRAPHICS_UNIT  2

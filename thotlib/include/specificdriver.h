@@ -1,4 +1,11 @@
 /*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
+/*
  * specificdriver.h : header file for the presentation driver used to
  *           manipulate presentation using presentation specific attributes.
  */

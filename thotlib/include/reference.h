@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #ifndef _REFERENCE_H_
 #define _REFERENCE_H_
 #include "tree.h"

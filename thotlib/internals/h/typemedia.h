@@ -1,4 +1,11 @@
 /*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
+/*
  * Declarations des types du Mediateur, pour la gestion du dialogue.  
  * typemedia.h : Declarations des types du Mediateur	
  *

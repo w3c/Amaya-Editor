@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 char *Name_patterns[] = {
  "nopattern", "foregroundcolor", "backgroundcolor","gray1",
  "gray2", "gray3", "gray4", "gray5",

@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 /*  Structure interne des documents, arbre abstrait, attribut, reference.
     Declarations de types pour la representation 
     interne des documents.

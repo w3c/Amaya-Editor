@@ -1,4 +1,11 @@
 /*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
+/*
  * thotpalette.var : contains the C structure declaration for
  *      the Thot color palette values and the associated names.
  *

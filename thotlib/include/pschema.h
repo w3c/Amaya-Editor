@@ -1,6 +1,10 @@
-
-/* -- Copyright (c) 1996 Inria  All rights reserved. -- */
-
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #ifndef _PSCHEMA_H_
 #define _PSCHEMA_H_
 

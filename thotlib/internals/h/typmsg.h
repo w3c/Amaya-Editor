@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define TYP_INCOR_TYPO_FILE                     0
 #define TYP_NAME_TOO_LONG                       1
 #define TYP_INTERMEDIATE_SYMBOL                 2

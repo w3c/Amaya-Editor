@@ -1,7 +1,10 @@
 /*
- * Copyright (c) 1996 INRIA, All rights reserved
+ *
+ *  (c) COPYRIGHT INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
  */
-
+ 
 /*
    gestion des regles de presentation de l'image abstraite.
    Ce module applique les regles de presentation aux paves.     

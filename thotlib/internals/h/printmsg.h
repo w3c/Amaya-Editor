@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define PRINT_MISSING_FILE		                0
 #define PRINT_UNABLE_TO_CREATE_FILE	                1
 #define PRINT_THE_DOC_DOES_NOT_BEGIN_WITH_A_PAGE_BREAK	2

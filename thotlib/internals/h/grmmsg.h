@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define BAD_KEYWORD	      0
 #define INVALID_RULE_SIZE	      1
 #define INVALID_STRING_SIZE	      2

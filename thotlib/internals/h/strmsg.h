@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define STR_INTERMEDIATE_SYMBOL	                      0 
 #define STR_FILE_NAME_AND_STRUCT_NAME_DIFFERENT	      1
 #define STR_WORD_TOO_LONG	                      2

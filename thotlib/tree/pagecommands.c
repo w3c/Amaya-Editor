@@ -1,7 +1,10 @@
 /*
- * Copyright (c) 1996 INRIA, All rights reserved
+ *
+ *  (c) COPYRIGHT INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
  */
-
+ 
 /* printpage.c : module de traitement des regles page
    ce module contient les procedures utilisees par le
    paginateur et l'imprimeur (extraites et modifiees

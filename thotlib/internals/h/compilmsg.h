@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define INVALID_CHAR	                0
 #define BAD_NUMBER	                        1
 #define BAD_WORD	                        2

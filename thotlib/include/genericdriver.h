@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 /**************************************************************************
  * genericdriver.h : header file for the presentation driver used to	  *
  *       modify the generic presentation description of a document.	  *

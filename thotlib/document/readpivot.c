@@ -1,7 +1,10 @@
 /*
- * Copyright (c) 1996 INRIA, All rights reserved
+ *
+ *  (c) COPYRIGHT INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
  */
-
+ 
 /*
    ce module charge un document depuis un fichier contenant une representation
    pivot et construit les arbres abstraits correspondants.

@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define RESDYN_SELECT_DEST_TYPE              0
 #define RESDYN_RESDYN                        1
 #define RESDYN_NO_DEST_DOC                   2

@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 /** typeind.h **/
 
 typedef int       *PtrTabInd;  /* pointeur sur une liste d entiers a trier */

@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define COMP_ALLOC_FAIL		 0
 #define COMP_OCTAL		 1
 #define COMP_OLD_READ_FAIL	 2

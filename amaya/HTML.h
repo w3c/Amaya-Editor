@@ -1,10 +1,3 @@
-/*
- *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
- *  Please first read the full copyright statement in file COPYRIGHT.
- *
- */
-
 /* Types and attributes for the document type HTML */
 
 /* Global attributes */

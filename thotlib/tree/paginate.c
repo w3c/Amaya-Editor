@@ -1,7 +1,10 @@
 /*
- * Copyright (c) 1996 INRIA, All rights reserved
+ *
+ *  (c) COPYRIGHT INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
  */
-
+ 
 /*
    page.c :  gestion de la pagination d'un arbre abstrait. Insere les diverses
    marques de saut de page dans l'AA. Les effets de bord sont nombreux.

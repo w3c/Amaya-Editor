@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #ifndef THOT_GUI_H
 #define THOT_GUI_H
 

@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #define INTERMEDIATE_SYMBOL	              0
 #define UNMATCHING_STRUCT_SCHEME              1
 #define MAX_LINE_SIZE_EXCEEDED	              2

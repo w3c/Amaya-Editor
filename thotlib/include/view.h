@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 #ifndef _VIEW_H_
 #define _VIEW_H_
 #include "tree.h"

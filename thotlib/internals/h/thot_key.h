@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 /* thot_key.h - key mappings for thot keys to native system keys
  * 
  * currently supports X11 and MSWindows
