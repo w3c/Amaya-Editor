@@ -1459,7 +1459,8 @@ boolean             save;
 			     if (pAncestor[i] == NULL)
 				i = MAX_ANCESTOR;
 			     else
-				if (DocumentOfElement (pAncestor[i]) == pSelDoc)
+				if (pAncestor[i]->ElStructSchema != NULL &&
+				    DocumentOfElement (pAncestor[i]) ==pSelDoc)
 				   pParent = pAncestor[i];
 			     }
 
@@ -1467,11 +1468,13 @@ boolean             save;
 			  for (i = 0; i < MAX_ANCESTOR && pNext == NULL; i++)
 			     {
 			     if (pAncestorNext[i] != NULL)
-				if (DocumentOfElement (pAncestorNext[i]) == pSelDoc)
+				if (pAncestorNext[i]->ElStructSchema != NULL &&
+				    DocumentOfElement (pAncestorNext[i]) == pSelDoc)
 				   pNext = pAncestorNext[i];
 				else
 				   if (pAncestorPrev[i] != NULL)
-				      if (DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
+				     if (pAncestorPrev[i]->ElStructSchema != NULL &&
+					 DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
 					if (pAncestorPrev[i]->ElNext != NULL)
 					   pNext = pAncestorPrev[i]->ElNext;
 			     }
@@ -1480,11 +1483,13 @@ boolean             save;
 			  for (i = 0; i < MAX_ANCESTOR && pPrev == NULL; i++)
 			     {
 			     if (pAncestorPrev[i] != NULL)
-				if (DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
+				if (pAncestorPrev[i]->ElStructSchema != NULL &&
+				    DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
 				   pPrev = pAncestorPrev[i];
 				else
 				   if (pAncestorNext[i] != NULL)
-				      if (DocumentOfElement (pAncestorNext[i]) == pSelDoc)
+				     if (pAncestorNext[i]->ElStructSchema != NULL &&
+					 DocumentOfElement (pAncestorNext[i]) == pSelDoc)
 					if (pAncestorNext[i]->ElPrevious != NULL)
 					   pPrev = pAncestorNext[i]->ElPrevious;
 			     }
