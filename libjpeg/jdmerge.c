@@ -1,7 +1,7 @@
 /*
  * jdmerge.c
  *
- * Copyright (C) 1994-1995, Thomas G. Lane.
+ * Copyright (C) 1994-1996, Thomas G. Lane.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -17,7 +17,7 @@
  *	R = Y           + K1 * Cr
  *	G = Y + K2 * Cb + K3 * Cr
  *	B = Y + K4 * Cb
- * only the Y frame.varies among the group of pixels corresponding to a pair
+ * only the Y term varies among the group of pixels corresponding to a pair
  * of chroma samples, so the rest of the terms can be calculated just once.
  * At typical sampling ratios, this eliminates half or three-quarters of the
  * multiplications needed for color conversion.
@@ -79,7 +79,7 @@ typedef my_upsampler * my_upsample_ptr;
  * This is taken directly from jdcolor.c; see that file for more info.
  */
 
-LOCAL void
+LOCAL(void)
 build_ycc_rgb_table (j_decompress_ptr cinfo)
 {
   my_upsample_ptr upsample = (my_upsample_ptr) cinfo->upsample;
@@ -122,7 +122,7 @@ build_ycc_rgb_table (j_decompress_ptr cinfo)
  * Initialize for an upsampling pass.
  */
 
-METHODDEF void
+METHODDEF(void)
 start_pass_merged_upsample (j_decompress_ptr cinfo)
 {
   my_upsample_ptr upsample = (my_upsample_ptr) cinfo->upsample;
@@ -140,7 +140,7 @@ start_pass_merged_upsample (j_decompress_ptr cinfo)
  * The control routine just handles the row buffering considerations.
  */
 
-METHODDEF void
+METHODDEF(void)
 merged_2v_upsample (j_decompress_ptr cinfo,
 		    JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
 		    JDIMENSION in_row_groups_avail,
@@ -189,7 +189,7 @@ merged_2v_upsample (j_decompress_ptr cinfo,
 }
 
 
-METHODDEF void
+METHODDEF(void)
 merged_1v_upsample (j_decompress_ptr cinfo,
 		    JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
 		    JDIMENSION in_row_groups_avail,
@@ -222,7 +222,7 @@ merged_1v_upsample (j_decompress_ptr cinfo,
  * Upsample and color convert for the case of 2:1 horizontal and 1:1 vertical.
  */
 
-METHODDEF void
+METHODDEF(void)
 h2v1_merged_upsample (j_decompress_ptr cinfo,
 		      JSAMPIMAGE input_buf, JDIMENSION in_row_group_ctr,
 		      JSAMPARRAY output_buf)
@@ -284,7 +284,7 @@ h2v1_merged_upsample (j_decompress_ptr cinfo,
  * Upsample and color convert for the case of 2:1 horizontal and 2:1 vertical.
  */
 
-METHODDEF void
+METHODDEF(void)
 h2v2_merged_upsample (j_decompress_ptr cinfo,
 		      JSAMPIMAGE input_buf, JDIMENSION in_row_group_ctr,
 		      JSAMPARRAY output_buf)
@@ -366,7 +366,7 @@ h2v2_merged_upsample (j_decompress_ptr cinfo,
  * of this module; no safety checks are made here.
  */
 
-GLOBAL void
+GLOBAL(void)
 jinit_merged_upsampler (j_decompress_ptr cinfo)
 {
   my_upsample_ptr upsample;

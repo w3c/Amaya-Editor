@@ -1,7 +1,7 @@
 /*
  * cderror.h
  *
- * Copyright (C) 1994, Thomas G. Lane.
+ * Copyright (C) 1994-1997, Thomas G. Lane.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -72,7 +72,7 @@ JMESSAGE(JWRN_GIF_NOMOREDATA, "Ran out of GIF bits")
 #ifdef PPM_SUPPORTED
 JMESSAGE(JERR_PPM_COLORSPACE, "PPM output must be grayscale or RGB")
 JMESSAGE(JERR_PPM_NONNUMERIC, "Nonnumeric data in PPM file")
-JMESSAGE(JERR_PPM_NOT, "Not a PPM file")
+JMESSAGE(JERR_PPM_NOT, "Not a PPM/PGM file")
 JMESSAGE(JTRC_PGM, "%ux%u PGM image")
 JMESSAGE(JTRC_PGM_TEXT, "%ux%u text PGM image")
 JMESSAGE(JTRC_PPM, "%ux%u PPM image")
@@ -82,7 +82,7 @@ JMESSAGE(JTRC_PPM_TEXT, "%ux%u text PPM image")
 #ifdef RLE_SUPPORTED
 JMESSAGE(JERR_RLE_BADERROR, "Bogus error code from RLE library")
 JMESSAGE(JERR_RLE_COLORSPACE, "RLE output must be grayscale or RGB")
-JMESSAGE(JERR_RLE_DIMENSIONS, "CNRSe dimensions (%ux%u) too large for RLE")
+JMESSAGE(JERR_RLE_DIMENSIONS, "Image dimensions (%ux%u) too large for RLE")
 JMESSAGE(JERR_RLE_EMPTY, "Empty RLE file")
 JMESSAGE(JERR_RLE_EOF, "Premature EOF in RLE header")
 JMESSAGE(JERR_RLE_MEM, "Insufficient memory for RLE header")

@@ -1,7 +1,7 @@
 /*
  * wrjpgcom.c
  *
- * Copyright (C) 1994-1995, Thomas G. Lane.
+ * Copyright (C) 1994-1997, Thomas G. Lane.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -26,7 +26,8 @@ extern void * malloc ();
 
 #ifdef USE_CCOMMAND		/* command-line reader for Macintosh */
 #ifdef __MWERKS__
-#include <SIOUX.h>              /* Metrowerks declares it here */
+#include <SIOUX.h>              /* Metrowerks needs this */
+#include <console.h>		/* ... and this */
 #endif
 #ifdef THINK_C
 #include <console.h>		/* Think declares it here */
@@ -37,8 +38,13 @@ extern void * malloc ();
 #define READ_BINARY	"r"
 #define WRITE_BINARY	"w"
 #else
+#ifdef VMS			/* VMS is very nonstandard */
+#define READ_BINARY	"rb", "ctx=stm"
+#define WRITE_BINARY	"wb", "ctx=stm"
+#else				/* standard ANSI-compliant case */
 #define READ_BINARY	"rb"
 #define WRITE_BINARY	"wb"
+#endif
 #endif
 
 #ifndef EXIT_FAILURE		/* define exit() codes if not provided */
@@ -57,7 +63,7 @@ extern void * malloc ();
  */
 
 #ifndef MAX_COM_LENGTH
-#define MAX_COM_LENGTH 65000	/* must be < 65534 in any case */
+#define MAX_COM_LENGTH 65000L	/* must be <= 65533 in any case */
 #endif
 
 
@@ -293,6 +299,9 @@ scan_JPEG_header (int keep_COM)
   for (;;) {
     marker = next_marker();
     switch (marker) {
+      /* Note that marker codes 0xC4, 0xC8, 0xCC are not, and must not be,
+       * treated as SOFn.  C4 in particular is actually DHT.
+       */
     case M_SOF0:		/* Baseline */
     case M_SOF1:		/* Extended sequential, Huffman */
     case M_SOF2:		/* Progressive, Huffman */
@@ -446,7 +455,7 @@ main (int argc, char **argv)
 	  ERREXIT("Insufficient memory");
 	strcpy(comment_arg, argv[argn]+1);
 	for (;;) {
-	  comment_length = strlen(comment_arg);
+	  comment_length = (unsigned int) strlen(comment_arg);
 	  if (comment_length > 0 && comment_arg[comment_length-1] == '"') {
 	    comment_arg[comment_length-1] = '\0'; /* zap terminating quote */
 	    break;
@@ -457,7 +466,7 @@ main (int argc, char **argv)
 	  strcat(comment_arg, argv[argn]);
 	}
       }
-      comment_length = strlen(comment_arg);
+      comment_length = (unsigned int) strlen(comment_arg);
     } else
       usage();
   }

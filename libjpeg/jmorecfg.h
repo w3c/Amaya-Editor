@@ -1,7 +1,7 @@
 /*
  * jmorecfg.h
  *
- * Copyright (C) 1991-1995, Thomas G. Lane.
+ * Copyright (C) 1991-1997, Thomas G. Lane.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -173,28 +173,33 @@ typedef unsigned int JDIMENSION;
 #define JPEG_MAX_DIMENSION  65500L  /* a tad under 64K to prevent overflows */
 
 
-/* These defines are used in all function definitions and extern declarations.
- * You could modify them if you need to change function linkage conventions.
+/* These macros are used in all function definitions and extern declarations.
+ * You could modify them if you need to change function linkage conventions;
+ * in particular, you'll need to do that to make the library a Windows DLL.
  * Another application is to make all functions global for use with debuggers
  * or code profilers that require it.
  */
 
-#ifdef _WINDOWS
-#define DLLXPRT __declspec(dllexport)
-#else
-#define DLLXPRT
-#endif
+/* a function called through method pointers: */
+#define METHODDEF(type)		static type
+/* a function used only in its module: */
+#define LOCAL(type)		static type
+/* a function referenced thru EXTERNs: */
+#define GLOBAL(type)		type
+/* a reference to a GLOBAL function: */
+#define EXTERN(type)		extern type
 
-#ifdef __GNUC__
-#define METHODDEF static	/* a function called through method pointers */
-#define LOCAL	  static	/* a function used only in its module */
-#define GLOBAL	         	/* a function referenced thru EXTERNs */
-#define EXTERN	  extern        /* a reference to a GLOBAL function */
-#else /* ! __GNUC__ */
-#define METHODDEF static	/* a function called through method pointers */
-#define LOCAL	  static	/* a function used only in its module */
-#define GLOBAL	  DLLXPRT	/* a function referenced thru EXTERNs */
-#define EXTERN	  extern DLLXPRT /* a reference to a GLOBAL function */
+
+/* This macro is used to declare a "method", that is, a function pointer.
+ * We want to supply prototype parameters if the compiler can cope.
+ * Note that the arglist parameter must be parenthesized!
+ * Again, you can customize this if you need special linkage keywords.
+ */
+
+#ifdef HAVE_PROTOTYPES
+#define JMETHOD(type,methodname,arglist)  type (*methodname) arglist
+#else
+#define JMETHOD(type,methodname,arglist)  type (*methodname) ()
 #endif
 
 
@@ -219,7 +224,7 @@ typedef unsigned int JDIMENSION;
  */
 
 #ifndef HAVE_BOOLEAN
-typedef unsigned char boolean;
+typedef int boolean;
 #endif
 #ifndef FALSE			/* in case these macros already exist */
 #define FALSE	0		/* values of boolean */
@@ -280,6 +285,7 @@ typedef unsigned char boolean;
 #undef  D_ARITH_CODING_SUPPORTED    /* Arithmetic coding back end? */
 #define D_MULTISCAN_FILES_SUPPORTED /* Multiple-scan JPEG files? */
 #define D_PROGRESSIVE_SUPPORTED	    /* Progressive JPEG? (Requires MULTISCAN)*/
+#define SAVE_MARKERS_SUPPORTED	    /* jpeg_save_markers() needed? */
 #define BLOCK_SMOOTHING_SUPPORTED   /* Block smoothing? (Progressive only) */
 #define IDCT_SCALING_SUPPORTED	    /* Output rescaling via IDCT? */
 #undef  UPSAMPLE_SCALING_SUPPORTED  /* Output rescaling at upsample stage? */
