@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /*
 
    This module writes in an output file the pivot representation of a
@@ -348,13 +339,13 @@ PtrTextBuffer       pBuf;
 
 
 /*----------------------------------------------------------------------
-   EcritNat ecrit une marque de nature suivie du numero du schema    
+   WriteNatureNumber ecrit une marque de nature suivie du numero du schema    
    de structure pointe par pSS.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                EcritNat (PtrSSchema pSS, BinFile pivFile, PtrDocument pDoc)
+void                WriteNatureNumber (PtrSSchema pSS, BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                EcritNat (pSS, pivFile, pDoc)
+void                WriteNatureNumber (pSS, pivFile, pDoc)
 PtrSSchema          pSS;
 BinFile             pivFile;
 PtrDocument         pDoc;
@@ -1203,7 +1194,8 @@ ThotBool            subTree;
 		      /* Ecrit d'abord le numero de la structure generique s'il y */
 		      /* a changement de schema de structure par rapport au pere */
 		      if (pEl1->ElStructSchema != pChild->ElStructSchema)
-			EcritNat (pChild->ElStructSchema, pivFile, pDoc);
+			WriteNatureNumber (pChild->ElStructSchema, pivFile,
+					   pDoc);
 		      /* Ecrit un element fils */
 		      Externalise (pivFile, &pChild, pDoc, subTree);
 		      /* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1245,14 +1237,14 @@ Name                N;
 }
 
 /*----------------------------------------------------------------------
-   WriteNomsSchemasDoc ecrit dans le fichier pivFile les noms de tous 
+   WriteSchemaNamesOfDoc ecrit dans le fichier pivFile les noms de tous 
    les schemas de structure et de presentation utilises par le     
    document pDoc.                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WriteNomsSchemasDoc (BinFile pivFile, PtrDocument pDoc)
+void                WriteSchemaNamesOfDoc (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                WriteNomsSchemasDoc (pivFile, pDoc)
+void                WriteSchemaNamesOfDoc (pivFile, pDoc)
 BinFile             pivFile;
 PtrDocument         pDoc;
 
@@ -1390,7 +1382,7 @@ PtrDocument         pDoc;
       PutComment (pivFile, pDoc->DocComment);
    /* ecrit les noms de tous les schemas de structure et de presentation */
    /* utilises par le document */
-   WriteNomsSchemasDoc (pivFile, pDoc);
+   WriteSchemaNamesOfDoc (pivFile, pDoc);
 
    /* ecrit la representation pivot de tous les parametres. */
    for (i = 0; i < MAX_PARAM_DOC; i++)
@@ -1464,7 +1456,8 @@ PtrDocument         pDoc;
 			  /* du schema de structure du document, on ecrit un */
 			  /* changement de nature */
 			  if (pEl->ElStructSchema != pDoc->DocSSchema)
-			     EcritNat (pEl->ElStructSchema, pivFile, pDoc);
+			     WriteNatureNumber (pEl->ElStructSchema, pivFile,
+						pDoc);
 			  /* Ecrit l'element */
 			  Externalise (pivFile, &pEl, pDoc, TRUE);
 			  /* envoie l'evenement ElemSave.Post a l'application, si */

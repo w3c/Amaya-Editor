@@ -881,14 +881,10 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   int                 rule, nat, nObjects;
+   int                 rule, nat;
    ThotBool            present;
    SRule              *pSRule;
    ThotBool            attrSchema;
-#ifndef NODISPLAY
-   PtrElement          pSaved;
-
-#endif
 
    for (rule = 0; rule < pSS->SsNRules; rule++)
       {
@@ -897,72 +893,39 @@ PtrDocument         pDoc;
 	 if (pSRule->SrSSchemaNat != NULL)
 	   /* the structure schema for this nature is loaded */
 	   {
-	    /* number of elements in this document that have been created
-	       following this schema */
-	    nObjects = pSRule->SrSSchemaNat->SsNObjects;
-	    /* if the schema defines only attribute, does not count its
-	       elements. Take it into account anyway */
-	    attrSchema = (pSRule->SrSSchemaNat->SsRootElem == 0);
-	    /* ignore a structure schema for which no elements have been
-               created in the document, except if it's a schema that
-               defines no element, only attributes */
-	    if (nObjects > 0 || attrSchema)
+	     /* Si les natures contiennent elles-memes des natures  */
+	     /* on pourrait ecrire plusieurs fois un nom de nature. */
+	     /* On verifie que ce nom n'est pas dans la table */
+	     nat = 0;
+	     present = FALSE;
+	     while (nat < pDoc->DocNNatures && !present)
+	       if (ustrcmp (pDoc->DocNatureName[nat],
+			    pSRule->SrSSchemaNat->SsName) == 0)
+		 present = TRUE;
+	       else
+		 nat++;
+	     if (!present)
+	       /* il n'est pas dans la table */
+	       /* met le schema dans la table */
 	       {
-#ifndef NODISPLAY
-	       /* Decompte les objets de cette nature qui sont dans */
-	       /* le buffer de Copier-Couper-Coller */
-	       if (!attrSchema && FirstSavedElement != NULL)
-		  {
-		  pSaved = FirstSavedElement->PeElement;
-		  do
-		     {
-		     if (pSaved->ElStructSchema == pSRule->SrSSchemaNat &&
-			 pSaved->ElTypeNumber == pSRule->SrSSchemaNat->SsRootElem)
-		        nObjects--;
-		     pSaved = FwdSearchTypedElem (pSaved,
-					     pSRule->SrSSchemaNat->SsRootElem,
-					     pSRule->SrSSchemaNat);
-		     }
-		  while (pSaved != NULL);
-		  }
-#endif
-	       if (attrSchema || nObjects > 0)
-		  {
-		  /* Si les natures contiennent elles-memes des natures  */
-		  /* on pourrait ecrire plusieurs fois un nom de nature. */
-		  /* On verifie que ce nom n'est pas dans la table */
-		  nat = 0;
-		  present = FALSE;
-		  while (nat < pDoc->DocNNatures && !present)
-		     if (ustrcmp (pDoc->DocNatureName[nat],
-				  pSRule->SrSSchemaNat->SsName) == 0)
-		        present = TRUE;
-		     else
-		        nat++;
-		  if (!present)
-		     /* il n'est pas dans la table */
-		     /* met le schema dans la table */
-		     {
-		     if (pDoc->DocNNatures < MAX_NATURES_DOC)
-		        {
-			ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures],
-				  pSRule->SrSSchemaNat->SsName,
-				  MAX_NAME_LENGTH);
-			ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
-				  pSRule->SrSSchemaNat->SsDefaultPSchema,
-				  MAX_NAME_LENGTH);
-			pDoc->DocNatureSSchema[pDoc->DocNNatures] =
-			          pSRule->SrSSchemaNat;
-				  pDoc->DocNNatures++;
-			}
-		     }
-		  /* cherche les natures utilisees par cette nature */
-		  /* meme si elle est deja dans la table : celle qui est */
-		  /* dans la table ne reference peut-etre pas des natures */
-		  /* qui sont referencees par celle-ci */
-		  AddNature (pSRule->SrSSchemaNat, pDoc);
-		  }
+		 if (pDoc->DocNNatures < MAX_NATURES_DOC)
+		   {
+		     ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures],
+			       pSRule->SrSSchemaNat->SsName,
+			       MAX_NAME_LENGTH);
+		     ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
+			       pSRule->SrSSchemaNat->SsDefaultPSchema,
+			       MAX_NAME_LENGTH);
+		     pDoc->DocNatureSSchema[pDoc->DocNNatures] =
+		       pSRule->SrSSchemaNat;
+		     pDoc->DocNNatures++;
+		   }
 	       }
+	     /* cherche les natures utilisees par cette nature */
+	     /* meme si elle est deja dans la table : celle qui est */
+	     /* dans la table ne reference peut-etre pas des natures */
+	     /* qui sont referencees par celle-ci */
+	     AddNature (pSRule->SrSSchemaNat, pDoc);
 	   }
       }
 }

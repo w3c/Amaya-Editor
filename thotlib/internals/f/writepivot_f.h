@@ -7,9 +7,9 @@
 #ifdef __STDC__
 
 extern void WriteVersionNumber ( BinFile pivFile );
-extern void EcritNat ( PtrSSchema pSS,
-                       BinFile pivFile,
-                       PtrDocument pDoc );
+extern void WriteNatureNumber ( PtrSSchema pSS,
+                                BinFile pivFile,
+                                PtrDocument pDoc );
 extern void PutLabel ( BinFile pivFile,
                        LabelString label );
 extern void PutAttribut ( BinFile pivFile,
@@ -19,8 +19,8 @@ extern void Externalise ( BinFile pivFile,
                           PtrElement * pEl,
                           PtrDocument pDoc,
                           ThotBool subTree );
-extern void WriteNomsSchemasDoc ( BinFile pivFile,
-                                  PtrDocument pDoc );
+extern void WriteSchemaNamesOfDoc ( BinFile pivFile,
+                                    PtrDocument pDoc );
 extern void WriteTableLangues ( BinFile pivFile,
                                 PtrDocument pDoc );
 extern void WritePivotHeader ( BinFile pivFile,
@@ -45,9 +45,9 @@ extern void ChangeNomRef ( PtrDocument pDoc,
 #else /* __STDC__ */
 
 extern void WriteVersionNumber (/* BinFile pivFile */);
-extern void EcritNat (/* PtrSSchema pSS,
-                         BinFile pivFile,
-                         PtrDocument pDoc */);
+extern void WriteNatureNumber (/* PtrSSchema pSS,
+                                  BinFile pivFile,
+                                  PtrDocument pDoc */);
 extern void PutLabel (/* BinFile pivFile,
                          LabelString label */);
 extern void PutAttribut (/* BinFile pivFile,
@@ -57,8 +57,8 @@ extern void Externalise (/* BinFile pivFile,
                             PtrElement * pEl,
                             PtrDocument pDoc,
                             ThotBool subTree */);
-extern void WriteNomsSchemasDoc (/* BinFile pivFile,
-                                    PtrDocument pDoc */);
+extern void WriteSchemaNamesOfDoc (/* BinFile pivFile,
+                                      PtrDocument pDoc */);
 extern void WriteTableLangues (/* BinFile pivFile,
                                   PtrDocument pDoc */);
 extern void WritePivotHeader (/* BinFile pivFile,

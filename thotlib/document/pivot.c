@@ -1,20 +1,11 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*                                                              */
 /*      Ce module implemente les fonctions de l'API Thot qui    */
 /*      permettent de lire ou d'ecrire certaines parties de     */
 /*      la forme pivot des documents.                           */
@@ -283,7 +274,7 @@ Document            document;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      WriteNomsSchemasDoc (pivotFile, LoadedDocument[document - 1]);
+      WriteSchemaNamesOfDoc (pivotFile, LoadedDocument[document - 1]);
 }
 
 
@@ -494,9 +485,11 @@ Element*            elementRead;
 	     NumAssoc = ((PtrElement) element)->ElAssocNum;
 	     pSS = ((PtrElement) element)->ElStructSchema;
 	  }
-	*elementRead = (Element) ReadTreePiv (pivotFile, pSS, LoadedDocument[document - 1], 
-                                          byte, NumAssoc, FALSE, TRUE, &TypeCont, &pSchStrCont, &TypeLu, 
-                                          &SchStrLu, TRUE, (PtrElement) element, TRUE);
+	*elementRead = (Element) ReadTreePiv (pivotFile, pSS,
+				    LoadedDocument[document - 1], 
+                                    byte, NumAssoc, FALSE, TRUE, &TypeCont,
+				    &pSchStrCont, &TypeLu, &SchStrLu, TRUE,
+                                    (PtrElement) element, TRUE);
 	if (*elementRead != NULL)
          SendEventAttrRead ((PtrElement)(*elementRead), 
                             LoadedDocument[document - 1]);
@@ -561,7 +554,8 @@ Document            document;
 	     /* a changement de schema de structure par rapport au pere */
 	     if (pEl->ElParent != NULL)
 		if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)
-		   EcritNat (pEl->ElStructSchema, pivotFile, LoadedDocument[document - 1]);
+		   WriteNatureNumber (pEl->ElStructSchema, pivotFile,
+				      LoadedDocument[document - 1]);
 	     Externalise (pivotFile, &pEl, LoadedDocument[document - 1], TRUE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
@@ -634,7 +628,8 @@ Document            document;
 	     /* a changement de schema de structure par rapport au pere */
 	     if (pEl->ElParent != NULL)
 		if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)
-		   EcritNat (pEl->ElStructSchema, pivotFile, LoadedDocument[document - 1]);
+		   WriteNatureNumber (pEl->ElStructSchema, pivotFile,
+				      LoadedDocument[document - 1]);
 	     Externalise (pivotFile, &pEl, LoadedDocument[document - 1], FALSE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
@@ -684,7 +679,8 @@ Document            document;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      UserErrorCode = ReadVersionNumberPiv (pivotFile, LoadedDocument[document - 1]);
+      UserErrorCode = ReadVersionNumberPiv (pivotFile,
+					    LoadedDocument[document - 1]);
 }
 
 
@@ -833,8 +829,10 @@ char*               label;
       TtaError (ERR_invalid_element_type);
    else
      {
-	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
-					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (ThotBool)(*label == EOS));
+	element = (Element) NewSubtree (elemType.ElTypeNum,
+					(PtrSSchema) (elemType.ElSSchema),
+					LoadedDocument[document - 1], 0, FALSE,
+					TRUE, TRUE, (ThotBool)(*label == EOS));
 	if (*label != EOS)
 	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }
