@@ -1100,15 +1100,16 @@ PtrDocument         pDoc;
    GetAttributePres allocates a attribute presentation.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetAttributePres (AttributePres **pAP)
+void                GetAttributePres (AttributePres **pAP, int n)
 #else  /* __STDC__ */
-void                GetAttributePres (pAP)
+void                GetAttributePres (pAP, n)
 AttributePres     **pAP;
+int                 n;
 #endif /* __STDC__ */
 
 {
   AttributePres          *pNewAP;
-  pNewAP = (AttributePres *) TtaGetMemory (sizeof (AttributePres));
+  pNewAP = (AttributePres *) TtaGetMemory (n * sizeof (AttributePres));
   if (pNewAP)
     memset (pNewAP, 0, sizeof (AttributePres));
   *pAP = pNewAP;

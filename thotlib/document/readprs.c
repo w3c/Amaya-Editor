@@ -1479,16 +1479,22 @@ PtrSSchema          pSS;
 		     if (!error)
 		       {
 			  /* lecture du nombre de paquet de regles differentes */
-			  TtaReadShort (file, &pPSch->PsNAttrPRule[i]);
-			  if (pPSch->PsNAttrPRule[i] > 0)
+			  TtaReadShort (file, &l);
+			  pPSch->PsNAttrPRule[i] = l;
+			  if (l > 0)
 			    {
 			       /* allocation des regles */
-			       GetAttributePres (&(pPSch->PsAttrPRule[i]));
-			       if ((pAttrP = pPSch->PsAttrPRule[i]) != NULL)
+			       GetAttributePres (&pAttrP, l);
+			       pPSch->PsAttrPRule[i] = pAttrP;
+			       if (pAttrP != NULL)
 				 {
 				    /* chainage des regles */
-				    for (l = pPSch->PsNAttrPRule[i]; --l > 0; pAttrP = pAttrP->ApNextAttrPres)
-				       pAttrP->ApNextAttrPres = pAttrP + 1;
+				    while (l > 1)
+				      {
+					pAttrP->ApNextAttrPres = pAttrP + 1;
+					pAttrP = pAttrP->ApNextAttrPres;
+					l--;
+				      }
 				    /* la derniere pointe sur NULL */
 				    pAttrP->ApNextAttrPres = NULL;
 				 }

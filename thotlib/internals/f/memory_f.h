@@ -38,7 +38,8 @@ extern void GetAbstractBox ( PtrAbstractBox *pAb );
 extern void FreeAbstractBox ( PtrAbstractBox pAb );
 extern void GetDocument ( PtrDocument * pDoc );
 extern void FreeDocument ( PtrDocument pDoc );
-extern void GetAttributePres (AttributePres **pAP);
+extern void GetAttributePres (AttributePres **pAP,
+			      int n);
 extern void FreeAttributePres (AttributePres *pAP);
 extern void GetSchPres ( PtrPSchema * pSP );
 extern void FreeSchPres ( PtrPSchema pSP );
@@ -109,7 +110,8 @@ extern void GetAbstractBox (/* PtrAbstractBox *pAb */);
 extern void FreeAbstractBox (/* PtrAbstractBox pAb */);
 extern void GetDocument (/* PtrDocument * pDoc */);
 extern void FreeDocument (/* PtrDocument pDoc */);
-extern void GetAttributePres (/* AttributePres **pAP */);
+extern void GetAttributePres (/* AttributePres **pAP,
+				 int n */);
 extern void FreeAttributePres (/* AttributePres *pAP */);
 extern void GetSchPres (/* PtrPSchema * pSP */);
 extern void FreeSchPres (/* PtrPSchema pSP */);
