@@ -1389,7 +1389,7 @@ void GL_Swap (int frame)
 int GL_MakeCurrent (int frame)
 {
 #ifdef _WINDOWS
- if (! wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+ if (!wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
     return 1;		
 #else
   if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
@@ -1629,6 +1629,7 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
     {
       if (GL_MakeCurrent (frame))
       	return;
+      
       if ((yf + height + FrameTable[frame].FrTopMargin) > (FrameTable[frame].FrHeight)) 
  	height += (yf + height + FrameTable[frame].FrTopMargin) - FrameTable[frame].FrHeight;
       if (xf < 0)
@@ -1647,11 +1648,13 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 	{
 	  /* Copy from backbuffer to backbuffer */
 	  glFinish ();
+	  glDisable (GL_BLEND);
 	  glRasterPos2i (xf, yf + height);
 	  glCopyPixels (xd,   
 			(FrameTable[frame].FrHeight)   
 			- (yd + height + FrameTable[frame].FrTopMargin),
 			width, height, GL_COLOR); 
+	  glEnable (GL_BLEND);
 	  /*copy from back to front */
 	  glFinish ();
 	}

@@ -374,7 +374,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 #ifndef _GL
 #else /*_GL*/
     GL_MakeCurrent (frame);	
-	GL_Swap (frame);
+    GL_Swap (frame);
 #endif /*_GL*/
    }
  }
@@ -2528,12 +2528,17 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	case 4:
 	  /* wheel mice up */
 	  FrameToView (frame, &document, &view); 
-	  TtcPageUp(document, view); 
+	  TtcLineUp(document, view); 
+	  TtcLineUp(document, view); 
+	  TtcLineUp(document, view); 
+	  
 	  break;
 	case 5:
            /* wheel mice down */
 	   FrameToView (frame, &document, &view); 
-	   TtcPageDown(document, view); 
+	   TtcLineDown (document, view); 
+	   TtcLineDown (document, view); 
+	   TtcLineDown (document, view); 
 	   break;
 	default:
 	  break;
@@ -3267,6 +3272,7 @@ void UpdateScrollbars (int frame)
    Arg                 args[MAX_ARGS];
    int                 n;
 #else /* _GTK */
+  GtkEntry           *textzone;
    GtkAdjustment      *tmpw;
 #endif /* _GTK */
 #else /* _WINDOWS */
@@ -3303,7 +3309,7 @@ void UpdateScrollbars (int frame)
        XtSetValues (vscroll, args, n);
      }
 #else /*_GTK*/
-   if (width == l && Xpos == 0)
+   if (width == l && Xpos == 0 && width > 60)
      gtk_widget_hide (GTK_WIDGET (hscroll));
    else
      if (width + Xpos <= l)
@@ -3341,7 +3347,7 @@ void UpdateScrollbars (int frame)
      else
        {
 	 gtk_widget_show (GTK_WIDGET (vscroll));
-       } 
+       }
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow);

@@ -556,7 +556,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   drawing_area = FrameTable[frame].WdFrame;
   /* Focus is on all the drawing frame : 
      Drawing area and his hiden text catcher (for multikey),
-     and the URLtext textzone, 
+     and the URL text textzone, 
      so we must now know where is the focus, 
      to analyse the meaning of the keypress
      and setting it on one of the  textfields*/
@@ -574,7 +574,6 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 	  gtk_widget_grab_focus (GTK_WIDGET(textzone));
 	}
     }
-
   status = 0;
   /* control, alt and mouse status bits of the state are ignored */
   state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);
@@ -599,7 +598,8 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   if (event->keyval == GDK_space)
     event->length = 1;
   ThotInput (frame, &string[0], event->length, PicMask, KS);
-  return FALSE;
+  gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -653,13 +653,12 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   int                 x, y;
   int                 height;
   static int          timer = None; 
-  int                 firstycheck = 0;
-
   GdkModifierType state;
+  GtkEntry           *textzone;
 
   frame = (int) data; 
   FrameToView (frame, &doc, &view);
-
+  textzone = 0;
   if (timer != None)
     {
       gtk_timeout_remove (timer);
@@ -698,13 +697,11 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 	}
 		 
     } 
-  /*
-    Code is here, but didn't manage to always catch those events..
+  /* Code is here, but didn't manage to always catch those events..
     But as CRTL + UP and CTRL + DOWN work like UP and DOWN should...
     The problem is that Key event are catched before, by the Main Window 
     In CharTranslation GTK... We need to redesign all Key catching if we 
-    wanna catch UP and DOWN... As we sadly cannot get mouse position in a key event..
-   */
+    wanna catch UP and DOWN... As we sadly cannot get mouse position in a key event... */
   else if (event->type == GDK_KEY_PRESS)
     {
       eventkey = (GdkEventKey*) event;
@@ -725,6 +722,7 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 	  return TRUE;
 	}
     }
+
   return FALSE;
 }
 #else /* _GTK */
