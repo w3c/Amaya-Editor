@@ -328,8 +328,14 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
 	    i++;
 	  if (i < txtLength)
 	    TextAttrValue[i] = EOS;
-	  ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, TextAttrValue);
-	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char *) 1);
+	  if (PtrReqAttr)
+	  {
+	    ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, TextAttrValue);
+	    ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char *) 1);
+	  }
+	  else
+	    ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 1);
+
 	  DestroyWindow (hwnd);
 	  break;
 	  
@@ -414,7 +420,6 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 	    i++;
 	  if (i < txtLength)
 	    TextAttrValue[i] = EOS;
-	  ThotCallback (NumMenuAttrText, STRING_DATA, TextAttrValue);
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 1);
 	  break;
 	  
@@ -764,7 +769,9 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
     case NumMenuAttrTextNeeded:
       /* zone de saisie du texte de l'attribut */
       if (PtrReqAttr == NULL)
+	  {
 	strncpy (TextAttrValue, txt, LgMaxAttrText);
+	  }
       else
 	{
 	  if (PtrReqAttr->AeAttrText == NULL)
@@ -1614,13 +1621,13 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 			/* the callback of required attribute should call
 			the standard callback attribute */
 			AttrFormExists = TRUE;
-		MenuValues (pAttr, mandatory, currAttr, SelDoc, view);
 		/* memorise l'attribut concerne' par le formulaire */
 		SchCurrentAttr = AttrStruct[att];
 		NumCurrentAttr = AttrNumber[att];
 		DocCurrentAttr = LoadedDocument[doc - 1];
 		/* register the current attribut */
 		CurrentAttr = att;
+		MenuValues (pAttr, mandatory, currAttr, SelDoc, view);
 		/* restore the toggle state */
 #if defined(_GTK) || defined(_WX)
 		if (ActiveAttr[item] == 0)

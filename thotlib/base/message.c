@@ -221,7 +221,12 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 	      TtaFreeMemory (s);
 	    }
 	  else
+	  {
+		  if (currenttable->TabMessages[num])
+        TtaFreeMemory (s);
+		  else
 	    currenttable->TabMessages[num] = s;
+	  }
 #endif /* _WX */
 #ifdef _WX
 	  /* now we convert every strings to UTF-8 (DialogCharset) */
