@@ -2616,16 +2616,15 @@ int main (int argc, char **argv)
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'a';
-          argv[argCounter][strlen (argv[argCounter]) - 1] = EOS;
-		  CSSName[cssCounter++] = TtaStrdup (&(argv[argCounter++][1]));
-
+	      argv[argCounter][strlen (argv[argCounter]) - 1] = EOS;
+	      CSSName[cssCounter++] = TtaStrdup (&(argv[argCounter++][1]));
 	    }
 	  else if (!strcmp (argv[argCounter], "-cssu"))
 	    {
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'u';
-          argv[argCounter][strlen (argv[argCounter]) - 1] = EOS;
+	      argv[argCounter][strlen (argv[argCounter]) - 1] = EOS;
 	      CSSName[cssCounter++] = TtaStrdup (&(argv[argCounter++][1]));
 	    }
 	  else if (!strcmp (argv[argCounter], "-npps"))

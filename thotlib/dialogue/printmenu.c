@@ -524,29 +524,30 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	   /* skip spaces after the flag */
        if (cssToPrint[i] == '"')
 	   {
-		 lg = 1;
+	     lg = 1;
 	     while (cssToPrint[i+lg] != '"' && cssToPrint[i+lg] != EOS)
-		   lg++;
-         if (cssToPrint[i+lg] != EOS)
-	     /* there is a file name after the flag */
-	     {
-		   lg++;
+	       lg++;
+	     if (cssToPrint[i+lg] != EOS)
+	       /* there is a file name after the flag */
+	       {
+		 lg++;
 #ifdef _WINDOWS
-	       printArgv[printArgc] = (char *)TtaGetMemory (lg + 1);
-		   j = 0;
-		   while (j < lg)
-             printArgv[printArgc][j++] = cssToPrint[i++];
-           printArgv[printArgc][j] =EOS;
-		   /* process next char */
-	       printArgc++;
+		 printArgv[printArgc] = (char *)TtaGetMemory (lg + 1);
+		 j = 0;
+		 while (j < lg)
+		   printArgv[printArgc][j++] = cssToPrint[i++];
+		 printArgv[printArgc][j] =EOS;
+		 /* process next char */
+		 printArgc++;
 #else /* _WINDOWS */
-		   lg += j;
-		   while (j < lg)
-             cmd[j++] = cssToPrint[i++];
+		 lg += j;
+		 while (j < lg)
+		   cmd[j++] = cssToPrint[i++];
+		 cmd[j] = EOS;
 #endif /* _WINDOWS */
-	     }
+	       }
 	   }
-	   }
+	 }
      }
    /* transmit the path or source file */
 #ifdef _WINDOWS
