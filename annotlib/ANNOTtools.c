@@ -738,10 +738,10 @@ char *AnnotList_searchAnnotURL (Document source_doc, char *body_url)
 }
 
 /*------------------------------------------------------------
-   AnnotList_delAnnot
-   Searches for annotation with URL url and, if found, deletes it
-   and returns TRUE. Returns FALSE otherwise.
-   ------------------------------------------------------------*/
+  AnnotList_delAnnot
+  Searches for annotation with URL url and, if found, deletes it
+  and returns TRUE. Returns FALSE otherwise.
+  ------------------------------------------------------------*/
 ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
 {
   List *item, *prev;
@@ -794,8 +794,8 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
 }
 
 /*------------------------------------------------------------
-   AnnotThread_UpdateReplyTo
-   ------------------------------------------------------------*/
+  AnnotThread_UpdateReplyTo
+  ------------------------------------------------------------*/
 int AnnotThread_UpdateReplyTo (List *thread_list,
 			       char *new_url,
 			       char *prev_url)
@@ -806,14 +806,58 @@ int AnnotThread_UpdateReplyTo (List *thread_list,
   int count;
 
   item = thread_list;
+  annot = (AnnotMeta *) item->object;
+
   count = 0;
   while (item)
     {
       annot = (AnnotMeta *) item->object;
-      if (annot->inReplyTo && strcasecmp (annot->inReplyTo, prev_url))
+      if (annot->inReplyTo)
 	{
-	  TtaFreeMemory (annot->inReplyTo);
-	  annot->inReplyTo = TtaStrdup (new_url);
+	  if (!strcasecmp (annot->rootOfThread, prev_url))
+	    {
+	      TtaFreeMemory (annot->rootOfThread);
+	      annot->rootOfThread = TtaStrdup (new_url);
+	      count++;
+	    }
+	  
+	  if (!strcasecmp (annot->inReplyTo, prev_url))
+	    {
+	      TtaFreeMemory (annot->inReplyTo);
+	      annot->inReplyTo = TtaStrdup (new_url);
+	      count++;
+	    }
+	}
+      item = item->next;
+    }
+  return (count);
+#endif /* ANNOT_ON_ANNOT */
+}
+
+/*------------------------------------------------------------
+  AnnotThread_UpdateAnnotates
+  ------------------------------------------------------------*/
+int AnnotThread_UpdateAnnotates (List *annot_list,
+			       char *new_url,
+			       char *prev_url)
+{
+#ifdef ANNOT_ON_ANNOT
+  AnnotMeta *annot;
+  List *item;
+  int count;
+  ThotBool updateRoot;
+
+  item = annot_list;
+  annot = (AnnotMeta *) item->object;
+
+  count = 0;
+  while (item)
+    {
+      annot = (AnnotMeta *) item->object;
+      if (!strcasecmp (annot->source_url, prev_url))
+	{
+	  TtaFreeMemory (annot->source_url);
+	  annot->source_url = TtaStrdup (new_url);
 	  count++;
 	}
       item = item->next;

@@ -58,6 +58,9 @@ extern ThotBool AnnotList_delAnnot ( List **list,
 extern int AnnotThread_UpdateReplyTo ( List *thread_list,
                                        char *new_url,
                                        char *prev_url );
+extern int AnnotThread_UpdateAnnotates ( List *annot_list,
+                                         char *new_url,
+                                         char *prev_url );
 extern Document AnnotThread_searchRoot ( char *root );
 extern Document AnnotThread_searchThreadDoc ( char *annot_url );
 extern void AnnotThread_sortThreadList ( List **thread_list );
@@ -162,6 +165,9 @@ extern ThotBool AnnotList_delAnnot (/* List **list,
 extern int AnnotThread_UpdateReplyTo (/* List *thread_list,
                                          char *new_url,
                                          char *prev_url */);
+extern int AnnotThread_UpdateAnnotates (/* List *annot_list,
+                                           char *new_url,
+                                           char *prev_url */);
 extern Document AnnotThread_searchRoot (/* char *root */);
 extern Document AnnotThread_searchThreadDoc (/* char *annot_url */);
 extern void AnnotThread_sortThreadList (/* List **thread_list */);

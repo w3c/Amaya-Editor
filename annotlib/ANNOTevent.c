@@ -975,9 +975,18 @@ void ANNOT_Post_callback (int doc, int status,
 #ifdef ANNOT_ON_ANNOT
 			   if (isReplyTo && AnnotMetaData[doc].thread->annotations 
 			       && previous_annot_url != AnnotMetaData[doc].annot_url)
-			     AnnotThread_UpdateReplyTo (AnnotMetaData[doc].thread->annotations,
-							AnnotMetaData[doc].annot_url,
-							previous_annot_url);
+			     {
+			       ThotBool updateRoot; /* tells if we posted the root of the thread */
+
+			       updateRoot = !strcasecmp (previous_annot_url, annot->rootOfThread);
+			       AnnotThread_UpdateReplyTo (AnnotMetaData[doc].thread->annotations,
+							  AnnotMetaData[doc].annot_url,
+							  previous_annot_url);
+			     }
+			   if (AnnotMetaData[doc].annotations)
+			     AnnotThread_UpdateAnnotates (AnnotMetaData[doc].annotations,
+							  AnnotMetaData[doc].annot_url,
+							  previous_annot_url);
 #endif /* ANNOT_ON_ANNOT */
 			   LINK_SaveLink (source_doc, isReplyTo);
 			 }
@@ -995,6 +1004,7 @@ void ANNOT_Post_callback (int doc, int status,
 		       else
 			 {
 			   char *annotIndex;
+
 			   annotIndex = LINK_GetAnnotationIndexFile (previous_annot_url);
 			   if (annotIndex && strcasecmp (previous_annot_url, AnnotMetaData[doc].annot_url))
 			     update_index_file = TRUE;
