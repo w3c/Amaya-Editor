@@ -4356,7 +4356,10 @@ static void Show_timeline_help (NotifyElement *event)
     {
       /* open a new window to display the new document */
       dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0,0, CE_ABSOLUTE,
-					 FALSE, FALSE, FALSE, TtaGetDefaultCharset ());
+					 FALSE, FALSE, FALSE,
+					 TtaGetDefaultCharset ());
+      /* set the document in Read Only mode */
+      TtaSetDocumentAccessMode (dt[basedoc].helpdoc, 0);
     }
   else 
     {
