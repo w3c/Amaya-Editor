@@ -1610,6 +1610,67 @@ IDC_WINCURSOR           CURSOR  DISCARDABLE     "wincurso.cur"
 /////////////////////////////////////////////////////////////////////////////
 
 
+/////////////////////////////////////////////////////////////////////////////
+// English (U.K.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+GENERALMENU DIALOG DISCARDABLE  0, 0, 219, 185
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "General Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,164,50,14
+    PUSHBUTTON      "Done",ID_DONE,162,164,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,83,164,50,14
+    LTEXT           "Home Page",IDC_STATIC,7,7,65,15
+    EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+    LTEXT           "Menu Font size (8..20)",IDC_STATIC,7,44,87,10
+    EDITTEXT        IDC_FONTMENUSIZE,7,59,83,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Zoom (0..10)",IDC_STATIC,96,44,116,10
+    EDITTEXT        IDC_ZOOM,98,59,41,12,ES_AUTOHSCROLL
+    LTEXT           "Dialogue language",IDC_STATIC,7,77,60,8
+    EDITTEXT        IDC_DIALOGUELANG,7,91,63,12,ES_AUTOHSCROLL
+    CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,113,66,8
+    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,126,98,10
+    CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,139,99,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    GENERALMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 212
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 178
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.K.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 #ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////

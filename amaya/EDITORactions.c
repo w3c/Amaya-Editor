@@ -2702,10 +2702,8 @@ View view;
 #endif /* __STDC__ */
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
-#ifndef _WINDOWS 
+#else 
    GeneralConfMenu (doc, view);
-#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2783,9 +2781,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
-#ifndef _WINDOWS
   TtaSaveAppRegistry ();
-#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 

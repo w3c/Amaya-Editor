@@ -40,6 +40,18 @@
 #include "MENUconf.h"
 #include "print.h"
 
+#ifdef _WINDOWS
+#include "resource.h"
+#include "wininclude.h"
+extern HINSTANCE hInstance;
+
+#ifdef __STDC__
+LRESULT CALLBACK ConfigDlgProc (HWND, UINT, WPARAM, LPARAM);
+#else
+LRESULT CALLBACK ConfigDlgProc (HWND, UINT, WPARAM, LPARAM);
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
+
 #define MAX_GEOMETRY_LENGTH 24
 
 static int CacheStatus;
@@ -800,6 +812,93 @@ View                view;
 ** General configuration menu
 ***********************/
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+void WIN_RefreshGeneralMenu (HWND hwnDlg)
+#else
+void WIN_RefreshGeneralMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+	SetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage);
+	SetDlgItemInt (hwnDlg, IDC_FONTMENUSIZE, FontMenuSize, FALSE);
+	CheckDlgButton (hwnDlg, IDC_MULTIKEY, (Multikey) ? BST_CHECKED : BST_UNCHECKED);
+	CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) ? BST_CHECKED : BST_UNCHECKED);
+	CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) ? BST_CHECKED : BST_UNCHECKED);
+	SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
+	SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, FALSE);
+}
+
+/*----------------------------------------------------------------------
+   Windows callback of the general menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK ConfigDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK ConfigDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{ 
+  switch (msg)
+    {
+     case WM_INITDIALOG:
+         GetGeneralConf ();
+	 	 WIN_RefreshGeneralMenu (hwnDlg);
+      break;
+      
+     case WM_COMMAND:
+		 if (HIWORD (wParam) == EN_UPDATE)
+		 {
+          switch (LOWORD (wParam))
+		  {
+           case IDC_HOMEPAGE:
+				GetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage, sizeof (HomePage) - 1);
+				break;
+		    case IDC_FONTMENUSIZE:
+				/* @@@ do we need to check the boolean variable? */
+				FontMenuSize = GetDlgItemInt (hwnDlg, IDC_FONTMENUSIZE, FALSE, FALSE);
+				break;
+			case IDC_DIALOGUELANG:
+				GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang, sizeof (DialogueLang) - 1);
+				break;
+			case IDC_ZOOM:
+				Zoom = GetDlgItemInt (hwnDlg, IDC_ZOOM, FALSE, FALSE);
+				break;	
+		  }
+		 }
+
+          switch (LOWORD (wParam))
+			{
+			case IDC_MULTIKEY:
+				Multikey = !Multikey;
+				break;
+			case IDC_BGIMAGES:
+				BgImages = !BgImages;
+				break;
+			case IDC_DOUBLECLICK:
+				DoubleClick = !DoubleClick;
+				break;
+		    case ID_APPLY:
+			    SetGeneralConf ();	  
+				break;
+			case ID_DONE:
+				EndDialog (hwnDlg, ID_DONE);
+				break;
+			case ID_DEFAULTS:
+				GetDefaultGeneralConf ();
+				WIN_RefreshGeneralMenu (hwnDlg);
+				break;
+			}
+		break;	     
+    default: return FALSE;
+    }
+  return TRUE ;
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    callback of the general menu
   ----------------------------------------------------------------------*/
@@ -1010,6 +1109,7 @@ STRING              pathname;
 
 #endif
 {
+#ifndef _WINDOWS 
    CHAR             s[MAX_LENGTH];
    int              i;
 
@@ -1082,6 +1182,9 @@ STRING              pathname;
    RefreshGeneralMenu ();
   /* display the menu */
   TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
+#else /* !_WINDOWS */
+  DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, (DLGPROC) ConfigDlgProc);
+#endif /* !_WINDOWS */
 }
 
 /**********************
