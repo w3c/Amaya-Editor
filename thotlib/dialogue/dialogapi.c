@@ -1877,11 +1877,12 @@ Display           **Dp;
    /* Initialisation des catalogues */
    NbOccCat = 0;
    NbLibCat = 0;
+#ifndef _WIN_PRINT
    PtrCatalogue = NewCatList ();
    NbOccE_List = 0;
    NbLibE_List = 0;
    PtrFreeE_List = NULL;
-
+#endif /* _WIN_PRINT */
    /* Initialisation des couleurs et des translations */
 #  ifndef _WINDOWS
    TextTranslations = NULL;

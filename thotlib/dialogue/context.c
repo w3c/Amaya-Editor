@@ -672,7 +672,9 @@ void InitDocContexts ()
    PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
    DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
    BoxCreating = FALSE;		/* no interractive creation yet */
+#ifndef _WIN_PRINT
    InitializeOtherThings ();
+#endif /* _WIN_PRINT */
 }
 
 #ifndef _WINDOWS
