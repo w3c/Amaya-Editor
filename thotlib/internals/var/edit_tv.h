@@ -21,3 +21,4 @@ THOT_EXPORT int         DocBackUpInterval; /* number of characters which
 THOT_EXPORT ThotBool	ChangeLabel;  /* Labels must be changed */
 THOT_EXPORT ThotBool    Printing;     /* TRUE for print, FALSE for amaya */
 THOT_EXPORT ThotBool    ShowOnePage;  /* TRUE when only a page is displayed */
+THOT_EXPORT ThotBool    UseDotForFloat; /* TRUE if floats take the form xx.yy */

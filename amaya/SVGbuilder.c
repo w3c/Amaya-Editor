@@ -1217,7 +1217,7 @@ static char *GetFloat (char *ptr, float* number)
   if (*ptr == '.')
     /* there is a decimal part */
     {
-      if (!UseDotForFloat)
+      if (!TtaUseDotForFloat ())
 	*ptr = ',';
       ptr++;
       decimal = TRUE;

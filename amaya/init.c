@@ -6702,9 +6702,6 @@ void InitAmaya (NotifyEvent * event)
    AmayaInitialized = 1;
    W3Loading = 0;
    BackupDocument = 0;
-   /* test if the system uses dot or comma in float syntax */
-   sscanf ("0.5", "%f", &val);
-   UseDotForFloat = (val == 0.5);
    /* initialize status */
    SelectionDoc = 0;
    ParsedDoc = 0;

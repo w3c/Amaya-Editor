@@ -62,6 +62,11 @@
 
 
 /*----------------------------------------------------------------------
+  TtaUseDotForFloat returns TRUE if floats take the form xx.yy
+ ----------------------------------------------------------------------*/
+extern ThotBool TtaUseDotForFloat ();
+
+/*----------------------------------------------------------------------
    TtaInitialize
    Initializes the Thot editing tool kit for an application. This function
    must be called before any other function of the tool kit.

@@ -14,6 +14,7 @@ extern ThotBool TtaIsPrinting ( void );
 extern ThotWidget TtaGetViewFrame ( Document document,
                                     View view );
 extern void InitErrorHandler ( void );
+extern ThotBool TtaUseDotForFloat ( void );
 extern void TtaInitialize ( char *applicationName );
 extern void TtaSetApplicationQuit ( Proc procedure );
 extern void TtaQuit ( void );
@@ -33,6 +34,7 @@ extern ThotBool TtaIsPrinting (/* void */);
 extern ThotWidget TtaGetViewFrame (/* Document document,
                                       View view */);
 extern void InitErrorHandler (/* void */);
+extern ThotBool TtaUseDotForFloat (/* void */);
 extern void TtaInitialize (/* char *applicationName */);
 extern void TtaSetApplicationQuit (/* Proc procedure */);
 extern void TtaQuit (/* void */);

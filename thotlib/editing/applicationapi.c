@@ -256,6 +256,14 @@ void InitErrorHandler ()
 }
 
 /*----------------------------------------------------------------------
+  TtaUseDotForFloat returns TRUE if floats take the form xx.yy
+ ----------------------------------------------------------------------*/
+ThotBool TtaUseDotForFloat ()
+{
+  return UseDotForFloat;
+}
+
+/*----------------------------------------------------------------------
    TtaInitialize
 
    Initializes the Thot editing tool kit for an application. This function must be
@@ -268,11 +276,17 @@ void InitErrorHandler ()
 void TtaInitialize (char *applicationName)
 {
    int                 i;
+   float               val;
 
    UserErrorCode = 0;
    strcpy (DefaultDocumentName, "");
    InitEditorMemory ();	      /* Initializes the memory managment of the editor */
    InitNatures ();	      /* Initializes the table of Natures */
+
+   /* test if the system uses dot or comma in the float syntax */
+   sscanf ("0.5", "%f", &val);
+   UseDotForFloat = (val == 0.5);
+
    FullStructureChecking = FALSE;
    ShowOnePage = FALSE;
    /* Initializes the table of documents */

@@ -518,6 +518,7 @@ void InitDocContexts ()
 
   /* Initialize the memory allocator */
   InitKernelMemory ();
+
   /* Initialisation de la table des frames */
   for (i = 0; i <= MAX_FRAME; i++)
     {

@@ -33,7 +33,7 @@
 /*#include "HTMLnames.h"*/
 /* maximum length of an output buffer */
 #define MAX_BUFFER_LEN 1000
-
+#define DATESTRLEN   80
 /* maximum number of output buffers */
 #define MAX_OUTPUT_FILES 10
 
@@ -471,6 +471,37 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
     }
 }
 
+
+/*----------------------------------------------------------------------
+  GetTime returns the current date in a formatted string.
+  Taken from the hypermail source code: hypermail/src/date.c
+  ----------------------------------------------------------------------*/
+static void GetTime (char *s)
+{
+  time_t     tp;
+  struct tm *tmptr;
+  ThotBool   set_gmtime, set_isodate;
+
+  time (&tp);
+  s[0] = EOS;
+  /* how to display dates */
+  TtaGetEnvBoolean ("GTM_TIME", &set_gmtime);
+  TtaGetEnvBoolean ("ISO_DATE", &set_isodate);
+  if (set_gmtime)
+    {
+      tmptr = gmtime (&tp);
+      strftime(s, DATESTRLEN, "%Y-%m-%dZ%H:%M:%S", tmptr);
+    }
+  else
+    {
+      tmptr =  localtime (&tp);
+      if (set_isodate)
+	strftime(s, DATESTRLEN, "%a %d %b %Y - %H:%M:%S", tmptr);
+      else
+	strftime(s, DATESTRLEN, "%Y-%m-%d %H:%M:%S", tmptr);
+    }
+}
+
 /*----------------------------------------------------------------------
   CheckDate checks if the current date should be generated
   Returns TRUE if the character must be skipped.
@@ -478,8 +509,7 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 			   PtrDocument pDoc)
 {
-  char    *tm;
-  time_t   t;
+  char     tm[DATESTRLEN];
   int      index;
 
   if (c == '$')
@@ -494,18 +524,17 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
     {
       if (c == ':')
 	{
-	  if (!StartDate && !strncasecmp ((char *)DateString, "Date", DateIndex))
+	  if (!StartDate &&
+	      !strncasecmp ((char *)DateString, "Date", DateIndex))
 	    {
 	      /* following characters will be skipped until the $ or EOL or EOS */
 	      StartDate = TRUE;
-
-	      /* generate the current date */
-	      time (&t);
 	      ExportChar ((wchar_t) c, fnum, outBuf, pDoc,
 			    FALSE, FALSE, FALSE);
 	      ExportChar ((wchar_t) SPACE, fnum, outBuf, pDoc,
 			    FALSE, FALSE, FALSE);
-	      tm = ctime (&t);
+	      /* generate the current date */
+	      GetTime (tm);
 	      for (index = 0; tm[index] != EOL; index++)
 		ExportChar ((wchar_t) tm[index], fnum, outBuf, pDoc,
 			    FALSE, FALSE, FALSE);
@@ -542,13 +571,11 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 		     ThotBool lineBreak, ThotBool translate,
 		     ThotBool entityName)
 {
-#ifdef _DATE
   /* detect if the generation of a date is requested */
   if (fnum > 0 && CheckDate ((unsigned char) c, fnum, outBuf, pDoc))
     /* remove the previous date */
     return;
   else
-#endif
     ExportChar (c, fnum, outBuf, pDoc, lineBreak, translate,
 		entityName);
 }
