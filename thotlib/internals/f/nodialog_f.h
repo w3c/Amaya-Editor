@@ -127,6 +127,7 @@ extern PtrElement CreateSibling ( PtrDocument pDoc,
                                   PtrSSchema pSS,
                                   ThotBool inclusion );
 extern void CloseAttributeDialogues ( PtrDocument pDoc );
+extern ThotBool OpenParsingErrors ( Document document );
 
 #else /* __STDC__ */
 
@@ -251,6 +252,7 @@ extern PtrElement CreateSibling (/* PtrDocument pDoc,
                                     PtrSSchema pSS,
                                     ThotBool inclusion */);
 extern void CloseAttributeDialogues (/* PtrDocument pDoc */);
+extern ThotBool OpenParsingErrors (/* Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

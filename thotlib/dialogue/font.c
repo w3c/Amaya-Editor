@@ -465,29 +465,37 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
      case UnPoint:
        /* take zoom into account */
        if (zoom != 0)
-	 val += (val * zoom / 10);
-#ifndef _WIN_PRINT
-       if (Printing)
-	 /* the basic unit is the point instead of the pixel */
-	 dist = val;
+	 {
+	   dist = val + (val * zoom / 10);
+	   if (dist == 0 && val > 0)
+	     dist = 1;
+	 }
        else
+	 dist = val;
+#ifndef _WIN_PRINT
+       if (!Printing)
+	 /* Postscript unit is the point instead of the pixel */
 #endif /* _WIN_PRINT */
-	 dist = PointToPixel (val);
+	 dist = PointToPixel (dist);
        break;
      case UnPixel:
        /* take zoom into account */
        if (zoom != 0)
-	 val += (val * zoom / 10);
-#ifdef _WIN_PRINT
-       if (TtPrinterDC && ScreenDPI)
-	 dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-#else /* _WIN_PRINT */
-       if (Printing)
-	 /* the basic unit is the point instead of the pixel */
-	 dist = PixelToPoint (val);
-#endif /* _WIN_PRINT */
+	 {
+	   dist = val + (val * zoom / 10);
+	   if (dist == 0 && val > 0)
+	     dist = 1;
+	 }
        else
 	 dist = val;
+#ifdef _WIN_PRINT
+       if (TtPrinterDC && ScreenDPI)
+	 dist = (dist * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+#else /* _WIN_PRINT */
+       if (Printing)
+	 /* Postscript unit is the point instead of the pixel */
+	 dist = PixelToPoint (dist);
+#endif /* _WIN_PRINT */
        break;
      case UnPercent:
        i = val * (int) pAb;
@@ -527,29 +535,37 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
      case UnPoint:
        /* take zoom into account */
        if (zoom != 0)
-	 val -= (val * zoom / 10);
-#ifndef _WIN_PRINT
-       if (Printing)
-	 /* the basic unit is the point instead of the pixel */
-	 dist = val;
+	 {
+	   dist = val - (val * zoom / 10);
+	   if (dist == 0 && val > 0)
+	     dist = 1;
+	 }
        else
+	 dist = val;
+#ifndef _WIN_PRINT
+       if (!Printing)
+	 /* Postscript unit is the point instead of the pixel */
 #endif /* _WIN_PRINT */
-	 dist = PixelToPoint (val);
+	 dist = PixelToPoint (dist);
        break;
      case UnPixel:
        /* take zoom into account */
        if (zoom != 0)
-	 val -= (val * zoom / 10);
-#ifdef _WIN_PRINT
-       if (TtPrinterDC && PrinterDPI)
-	 dist = (val * ScreenDPI + PrinterDPI / 2) / PrinterDPI;
-#else /* _WIN_PRINT */
-      if (Printing)
-	 /* the basic unit is the point instead of the pixel */
-	 dist = PixelToPoint (val);
-#endif /* _WIN_PRINT */
+	 {
+	   dist = val - (val * zoom / 10);
+	   if (dist == 0 && val > 0)
+	     dist = 1;
+	 }
        else
 	 dist = val;
+#ifdef _WIN_PRINT
+       if (TtPrinterDC && PrinterDPI)
+	 dist = (dist * ScreenDPI + PrinterDPI / 2) / PrinterDPI;
+#else /* _WIN_PRINT */
+      if (Printing)
+	 /* Postscript unit is the point instead of the pixel */
+	 dist = PixelToPoint (dist);
+#endif /* _WIN_PRINT */
         break;
      case UnPercent:
        if (pAb == NULL)
@@ -1030,11 +1046,19 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
 {
   if (unit == UnPixel)
     {
+      if (Printing)
+	{
 #ifdef _WIN_PRINT
-      if (TtPrinterDC && ScreenDPI)
-	size = (size * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+	  if (TtPrinterDC && ScreenDPI)
+	    size = (size * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+	  size = LogicalValue (size, UnPoint, NULL, 0);
+#else /* _WIN_PRINT */
+	  /* adjust the font size to the printer definition */
+	  size = (size * 83 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
-      size = LogicalValue (size, UnPoint, NULL, 0);
+	}
+      else
+	size = LogicalValue (size, UnPoint, NULL, 0);
       unit = UnPoint;
     }
   else if (unit == UnXHeight || unit == UnPercent)
@@ -1052,11 +1076,6 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
        else
 	 size = size + FontZoom;
      }
-#ifndef _WIN_PRINT
-   if (Printing && unit == UnPoint)
-     /* adjust the font size to the printer definition */
-     size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
-#endif /* _WIN_PRINT */
 
    /* the minimum size is 6 points */
    if (size < 6 && unit == UnPoint)
@@ -1098,7 +1117,7 @@ void InitDialogueFonts (char* name)
   MenuSize = 12;
   alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
   /* initialize the font zoom */
-  TtaGetEnvInt ("ZOOM",&FontZoom);
+  TtaGetEnvInt ("ZOOM", &FontZoom);
   value = TtaGetEnvString ("FontFamily");
   MaxNumberOfSizes = 10;
   if (value == NULL)
