@@ -36,6 +36,7 @@ extern void CreateAttrIntSize ( char *buffer,
                                 Element el,
                                 Document doc );
 extern void InitAutomaton ( void );
+extern void FreeHTMLParser ();
 extern char GetNextInputChar ( void );
 extern void HTMLparse ( FILE * infile,
                         char *HTMLbuf );
@@ -84,6 +85,7 @@ extern void CreateAttrIntSize (/* char *buffer,
                                   Element el,
                                   Document doc */);
 extern void InitAutomaton (/* void */);
+extern void FreeHTMLParser ();
 extern char GetNextInputChar (/* void */);
 extern void HTMLparse (/* FILE * infile,
                           char *HTMLbuf */);

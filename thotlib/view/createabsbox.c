@@ -2570,19 +2570,16 @@ boolean             completeCreator;
 			 FreePictInfo (pAb->AbPictInfo);
 		       pAb->AbPictInfo = NULL;
 		     }
-		   else if (pAb->AbLeafType == LtCompound &&
-			    pAb->AbPictBackground != NULL)
-		     {
-		       /* in this particular case we need to free filename */
-		       TtaFreeMemory (((PictInfo *)(pAb->AbPictBackground))->PicFileName);
-		       FreePictInfo (pAb->AbPictBackground);
-		       pAb->AbPictBackground = NULL;
-		     }
-		   
-		   FreeAbstractBox (pAb);
 		 }
-	       else if (pAb)
-		 FreeAbstractBox (pAb);
+
+	       if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground != NULL)
+		 {
+		   /* in this particular case we need to free filename */
+		   TtaFreeMemory (((PictInfo *)(pAb->AbPictBackground))->PicFileName);
+		   FreePictInfo (pAb->AbPictBackground);
+		   pAb->AbPictBackground = NULL;
+		 }
+	       FreeAbstractBox (pAb);
 	     }
 	   else
 	     /* rend non modifiable le pave de presentation */

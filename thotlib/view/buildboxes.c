@@ -1777,15 +1777,8 @@ int                 frame;
 	     /* Liberation des lignes et boites coupees */
 	     pCurrentBox = pAb->AbBox;
 	     if (pAb->AbLeafType == LtCompound)
-	       {
 		 /* unregister the box */
 		 RemoveFilledBox (pCurrentBox, ViewFrameTable[frame - 1].FrAbstractBox->AbBox, frame);
-		 if (pAb->AbPictBackground != NULL)
-		   {
-		     FreePictInfo (pAb->AbPictBackground);
-		     pAb->AbPictBackground = NULL;
-		   }
-	       }
 
 	     if (pCurrentBox->BxType == BoBlock)
 		RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);

@@ -6807,6 +6807,44 @@ void                InitAutomaton ()
      }
    while (theState < 1000);
 }
+/*----------------------------------------------------------------------
+   FreeHTMLParser
+   Frees all ressources associated with the HTML parser.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                FreeHTMLParser (void)
+#else
+void                FreeHTMLParser ()
+#endif
+{
+   PtrTransition       trans, nextTrans;
+   PtrClosedElement    pClose, nextClose;
+   int		       entry;
+
+   /* free the internal representation of the automaton */
+   for (entry = 0; entry < MaxState; entry++)
+      {
+      trans = automaton[entry].firstTransition;
+      while (trans != NULL)
+	 {
+	 nextTrans = trans->nextTransition;
+	 TtaFreeMemory (trans);
+	 trans = nextTrans;
+	 }
+      }
+
+   /* free descriptors of elements closed by a start tag */
+   for (entry = 0; HTMLGIMappingTable[entry].htmlGI[0] != EOS; entry++)
+      {
+      pClose = HTMLGIMappingTable[entry].firstClosedElem;
+      while (pClose != NULL)
+	 {
+	 nextClose = pClose->nextClosedElem;
+	 TtaFreeMemory (pClose);
+	 pClose = nextClose;
+	 }
+      }
+}
 
 /*----------------------------------------------------------------------
    GetNextInputChar        returns the next character in the imput

@@ -609,6 +609,7 @@ Document       doc;
 	  TtaFreeMemory (SaveImgsURL);
 	  TtaFreeMemory (SavingFile);
 	  TtaFreeMemory (AttrHREFvalue);
+	  FreeHTMLParser ();
 	  TtaQuit ();
 	}
     }

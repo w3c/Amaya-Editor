@@ -1182,10 +1182,6 @@ PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
 
-   if (pAb->AbLeafType == LtPicture)
-     {
-	/* FreePicture(pAb->AbBox, pAb->AbBox->BxPictInfo ); */
-     }
    pAb->AbElement = NULL;
    pAb->AbEnclosing = NULL;
    pAb->AbPrevious = NULL;
