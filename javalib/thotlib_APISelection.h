@@ -17,6 +17,7 @@ HandleTo(thotlib_APISelection);
 
 extern jint /* bool */ thotlib_APISelection_TtaIsDocumentSelected(struct Hthotlib_APISelection*, jint);
 extern void thotlib_APISelection_TtaSelectElement(struct Hthotlib_APISelection*, jint, jlong);
+extern jint thotlib_APISelection_TtaGetSelectedDocument(struct Hthotlib_APISelection*);
 extern void thotlib_APISelection_TtaSelectView(struct Hthotlib_APISelection*, jint, jint);
 extern void thotlib_APISelection_TtaSelectString(struct Hthotlib_APISelection*, jint, jlong, jint, jint);
 extern void thotlib_APISelection_TtaExtendSelection(struct Hthotlib_APISelection*, jint, jlong, jint);

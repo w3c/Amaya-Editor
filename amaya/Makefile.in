@@ -298,29 +298,33 @@ proto : ../bin/cextract
 	 done)
 
 
-xml: $(AMAYA)/MathML.STR $(AMAYA)//MathMLP.PRS $(AMAYA)//MathMLT.TRA
-
 #
-# Structure schema compilation.
+# This part has migrated in Makefile.xml included if needed at the
+# @xml_frag@ marker .
 #
-$(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str
-	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
-	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
-	$$STR $(ALL_AMAYA_OPTIONS) MathML ;\
-	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP ;\
-	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT
+#xml: $(AMAYA)/MathML.STR $(AMAYA)//MathMLP.PRS $(AMAYA)//MathMLT.TRA
 #
-# Presentation schemas compilation
+##
+## Structure schema compilation.
+##
+#$(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str
+#	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+#	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+#	$$STR $(ALL_AMAYA_OPTIONS) MathML ;\
+#	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP ;\
+#	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT
+##
+## Presentation schemas compilation
+##
+#$(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P
+#	PRS=`pwd`/../bin/prs ; \
+#	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+#	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP
 #
-$(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P
-	PRS=`pwd`/../bin/prs ; \
-	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
-	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP
-
-#
-# Traduction schemas compilation
-#
-$(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T
-	TRA=`pwd`/../bin/tra ; \
-	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR ;\
-	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT
+##
+## Traduction schemas compilation
+##
+#$(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T
+#	TRA=`pwd`/../bin/tra ; \
+#	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR ;\
+#	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT

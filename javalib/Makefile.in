@@ -123,8 +123,8 @@ thotlib_itf:
 	   include=`echo $$classe | gawk '{print tolower($$0)}'`.h ; \
 	   echo "Producing stubs and API class for $$classe from $$include" ; \
 	   $$DIR/$(JAVASTUB) -T JavaTypes.def -M thotlib_API$$classe \
-	               -J @top_srcdir@/classes/thotlib/API$$classe.java \
-		       @top_srcdir@/thotlib/include/$$include 2>> JavaTypes.err ; \
+	               -J ../classes/thotlib/API$$classe.java \
+		       ../thotlib/include/$$include 2>> JavaTypes.err ; \
 	   echo "Compiling new Java class API$$classe" ; \
 	   (cd ../classes ; $$DIR/$(JAVAC) thotlib/API$$classe.java) ; \
 	   echo "Producing header for class API$$classe" ; \
@@ -149,8 +149,8 @@ amaya_itf:
 	   include=`echo $$classe | gawk '{print tolower($$0)}'`.h ; \
 	   echo "Producing stubs and API class for $$classe from $$include" ; \
 	   $$DIR/$(JAVASTUB) -T JavaTypes.def -M amaya_API$$classe \
-	               -J @top_srcdir@/classes/amaya/API$$classe.java \
-		       @top_srcdir@/amaya/$$include 2>> JavaTypes.err ; \
+	               -J ../classes/amaya/API$$classe.java \
+		       ../amaya/$$include 2>> JavaTypes.err ; \
 	   echo "Compiling new Java class API$$classe" ; \
 	   (cd ../classes ; $$DIR/$(JAVAC) amaya/API$$classe.java) ; \
 	   echo "Producing header for class API$$classe" ; \
@@ -172,7 +172,7 @@ amaya_itf_up:
 	    include=`echo $$classe | gawk '{print toupper($$0)}'`.h ; \
 	    echo "Producing stubs and API class for $$classe from $$include" ; \
 	    $$DIR/$(JAVASTUB) -T JavaTypes.def -M amaya_API$$classe \
-			-J @top_srcdir@/classes/amaya/API$$classe.java \
+			-J ../classes/amaya/API$$classe.java \
 			$$DIR/../amaya/$$include 2>> JavaTypes.err ; \
 	    echo "Compiling new Java class API$$classe" ; \
 	    (cd ../classes ; $$DIR/$(JAVAC) amaya/API$$classe.java) ; \

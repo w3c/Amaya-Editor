@@ -33,6 +33,7 @@ extern jlong thotlib_Extra_TtaGetAttribute(struct Hthotlib_Extra*, jlong, struct
 extern void thotlib_Extra_TtaSearchAttribute(struct Hthotlib_Extra*, struct Hthotlib_AttributeType*, jint, jlong, struct Hthotlib_Element*, struct Hthotlib_Attribute*);
 extern jlong thotlib_Extra_TtaNewElement(struct Hthotlib_Extra*, jint, struct Hthotlib_ElementType*);
 extern jlong thotlib_Extra_TtaNewTree(struct Hthotlib_Extra*, jint, struct Hthotlib_ElementType*, struct Hjava_lang_String*);
+extern jlong thotlib_Extra_TtaSearchTypedElement(struct Hthotlib_Extra*, struct Hthotlib_ElementType*, jint, struct Hthotlib_Element*);
 extern jlong thotlib_Extra_TtaCreateDescent(struct Hthotlib_Extra*, jint, jlong, struct Hthotlib_ElementType*);
 extern jlong thotlib_Extra_TtaCreateDescentWithContent(struct Hthotlib_Extra*, jint, jlong, struct Hthotlib_ElementType*);
 
