@@ -2301,11 +2301,14 @@ void                QueryInit ()
 #endif /* _GTK */
 #endif /* !_WINDOWS */
 
+#ifdef HTDEBUG
+   /* an undocumented option for being able to generate an HTTP protocol trace */
    strptr = TtaGetEnvString ("ENABLE_LIBWWW_DEBUG");
    if (strptr && *strptr)
      WWW_TraceFlag = SHOW_PROTOCOL_TRACE;
    else
      WWW_TraceFlag = 0;
+#endif /* HTDEBUG */
 
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
