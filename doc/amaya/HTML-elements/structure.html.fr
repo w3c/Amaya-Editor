@@ -27,28 +27,29 @@
 </table>
 
 <div>
-<h1>HTML Document Structure</h1>
+<h1>Structure du document HTML</h1>
 
-<p>HTML documents are fairly flat in structure - rather than having sections
-that contain subsections, division of text is usually marked by different
-level <a href="headings.html">heading elements</a> which are alongside
-paragraph and other block elements. There is the <code>DIV</code> element
-which is provided to group together a section into a single division - to use
-it select the section (including its heading) you want to form part of the
-group and then select the option <strong>DIV</strong> from the
-<strong>Types</strong> menu (or use the keyboard shortcut <kbd>Ctrl-t,
-Ctrl-v</kbd> in unix).</p>
+<p>Les documents HTML ont une structure assez uniforme . S'il y a  des
+sections qui contiennent des sous-sections, la division du texte est
+ordinairement marquée par des<a href="headings.html"> éléments en-têtes </a>de
+différents niveaux, qui se trouvent sur le bord des paragraphes et autres
+blocs d'éléments. L'élément  <code>DIV</code> est là pour regrouper une
+section dans une division _ pour l'utiliser, sélectionnez la section que vous
+voulez assembler au groupe (en incluant son en-tête), puis sélectionnez
+l'option <strong>DIV</strong> du menu <strong>Eléments</strong>  (ou utilisez
+le raccourci-clavier  <kbd>Ctrl-t, Ctrl-v</kbd> en  unix).</p>
 
-<p>There is a special structure in HTML - the link, which makes the Web a web.
-Further information about <a href="../Links.html">how to create links</a>, and
-<a href="../Tables.html">how to create tables</a>, is provided in the <a
-href="../Manual.html">user manual section</a> of the documentation.</p>
+<p>Il y a une structure spéciale dans HTML _ le lien, qui fait du Web une
+toile. Les informations sur <a href="../Links.html">comment créer un lien</a>
+et  <a href="../Tables.html">comment créer des tables </a>sont fournies par 
+la documentation du <a href="../Manual.html">manuel d'utilisation. </a></p>
 
-<p>A normal HTML page should include <a href="../Creating.html#Changing">a
-title</a>, <a href="headings.html">a level one heading</a>, and <a
-href="address.html">an address or some information about the author</a>. It
-may also include  paragraphs, lists, images, tables, and content organised
-into subsections with different levels of headings.</p>
+<p>Une page normale  HTML devrait inclure <a
+href="../Creating.html#Changing">un titre,</a> <a href="headings.html">une
+en-tête de niveau un </a> et  <a href="address.html">une adresse ou une
+information sur l'auteur. </a>Elle devrait également inclure des paragraphes,
+des listes, des images, des tables, et un contenu organisé en sous-sections
+avec différents niveaux d'en-têtes.  </p>
 </div>
 
 <p align="right"><a href="infoTypes.html"><img alt="previous" border="0"

@@ -26,7 +26,7 @@
 </table>
 
 <div>
-<h1>Information types in HTML</h1>
+<h1>Informations types dans HTML</h1>
 
 <p>HTML 4.0 (Strict) fournit des éléments pour désigner certaines informations
 types. Bien qu'il existe une voie par défaut  où chaque élément type est
