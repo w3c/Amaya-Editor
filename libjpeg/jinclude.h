@@ -42,8 +42,10 @@
 #ifdef NEED_SYS_TYPES_H
 #include <sys/types.h>
 #endif
-
+#ifndef STDIO_H
 #include <stdio.h>
+#define STDIO_H
+#endif
 
 /*
  * We need memory copying and zeroing functions, plus strncpy().
