@@ -122,6 +122,6 @@ Pixmap TtaCreatePixmapLogo (char **d)
 	   XFreePixmap (TtDisplay, PicMask);
      }
    return (pixmap);
-}
 #endif /* _WINDOWS */
+}
 #endif /* _GTK */
