@@ -1548,52 +1548,50 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       tempname = TtaStrdup (pImage->localName);
     }
   res = 0;
-  if (confirm && with_images)
-    {
 #ifndef _WINDOWS
-      TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (doc, view), 
-		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-		  TRUE, 1, 'L', D_CANCEL);
-      TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave,
-		   TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+  TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (doc, view), 
+	      TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
+	      TRUE, 1, 'L', D_CANCEL);
+  TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave,
+	       TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
 #endif /* _WINDOWS */
-       
-      strcpy (&msg[index], url);
-      len = strlen (url);
-      len++;
-      remainder -= len;
-      index += len;
-      nb++;
-
-      pImage = ImageURLs;
-      while (pImage != NULL)
+  msg[0] = EOS;
+  len = 0;
+  pImage = ImageURLs;
+  while (pImage)
+    {
+      if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
 	{
-	  if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
+	  if (nb > 30)
 	    {
-	      if (nb > 30)
-		{
-		  strcpy (&msg[index], "...");
-		  len = strlen ("...");
-		  len++;
-		  remainder -= len;
-		  index += len;
-		  nb++;
-		  break;
-		}
-	      strcpy (&msg[index], pImage->originalName);
-	      len = strlen (pImage->originalName);
+	      strcpy (&msg[index], "...");
+	      len = strlen ("...");
 	      len++;
 	      remainder -= len;
 	      index += len;
 	      nb++;
+	      break;
 	    }
-	  pImage = pImage->nextImage;
+	  strcpy (&msg[index], pImage->originalName);
+	  len = strlen (pImage->originalName);
+	  len++;
+	  remainder -= len;
+	  index += len;
+	  nb++;
 	}
+      pImage = pImage->nextImage;
+    }
 
-#ifndef _WINDOWS 
-      TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
-		      "", nb, msg, 6, NULL, FALSE, TRUE);
-       
+  if (msg[0] != EOS)
+    {
+      /* there is almost an image to be saved */
+#ifndef _WINDOWS
+      if (nb < 6)
+	TtaNewSizedSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
+			"", nb, msg, 300, nb+1, NULL, FALSE, TRUE);
+      else
+	TtaNewSizedSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
+			"", nb, msg, 300, 6, NULL, FALSE, TRUE);
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
       /* wait for an answer */
@@ -1602,7 +1600,16 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg);
 #endif /* _WINDOWS */
       if (!UserAnswer)
+	/* do not continue */
 	res = -1;
+      else
+	pImage = ImageURLs;
+    }
+  else
+    {
+      /* only the document is saved */
+      res = 0;
+      pImage = NULL;
     }
 
   /*
@@ -1613,8 +1620,6 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
     {
       ActiveTransfer (doc);
       TtaHandlePendingEvents ();
-      pImage = NULL;
-
       if (DocumentMeta[doc])
 	content_type = DocumentMeta[doc]->content_type;
       else
@@ -1645,10 +1650,8 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 	  /* JK: to erase the last status message */
 	  TtaSetStatus (doc, view, "", NULL);	       
 	}
-      else if (with_images)
-	pImage = ImageURLs;
 
-      while (pImage != NULL)
+      while (pImage)
 	{
 	  if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
 	    {
@@ -2000,7 +2003,7 @@ void SaveDocument (Document doc, View view)
 					 FALSE, TRUE);
 	  else
 	    ok = SaveDocumentThroughNet (doc, view, DocumentURLs[doc],
-					 FALSE, TRUE, TRUE);
+					 TRUE, TRUE, TRUE);
 	}
     }
   else
@@ -3037,19 +3040,15 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	    UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
 	  toUndo = TtaCloseUndoSequence (doc);
 	  if (dst_is_local)
-	    {
-	      /* Local to Local or Remote to Local */
-	      /* save the local document */
-	      ok = SaveDocumentLocally (doc, SavePath, SaveName);
-	    }
+	    /* Local to Local or Remote to Local */
+	    /* save the local document */
+	    ok = SaveDocumentLocally (doc, SavePath, SaveName);
 	  else
-	    {
-	      /* Local to Remote or Remote to Remote */
-	      /* now save the file as through the normal process of saving */
-	      /* to a remote URL. */
-	      ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE,
-					   CopyImages, FALSE);
-	    }
+	    /* Local to Remote or Remote to Remote */
+	    /* now save the file as through the normal process of saving */
+	    /* to a remote URL. */
+	    ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE,
+					 CopyImages, FALSE);
 	}
 
       /* restore original display mode */

@@ -652,14 +652,8 @@
 	<message xml:lang="fi">CSS</message>
 </label>
 <label define="AM_WARNING_SAVE_OVERWRITE">
-	<message xml:lang="en">Saving will overwrite the following URLs:</message>
-	<message xml:lang="fr">La sauvegarde entraînera d'écraser les URLs suivantes :</message>
-	<message xml:lang="de">Speichern überschreibt die folgenden URIs:</message>
-	<message xml:lang="it">Il salvataggio sovrascriverà i seguenti URL:</message>
-	<message xml:lang="tr">Kaydetmek þu URL\'lerin üzerine yazacaktýr:</message>
-	<message xml:lang="es">Guardar sobrescibirá las siguientes URL:</message>
-	<message xml:lang="pt">Salvar vai gravar por cima das seguintes URLs:</message>
-	<message xml:lang="fi">Tallentaminen korvaa seuraavat URL:t:</message>
+	<message xml:lang="en">Saving will save following images too?</message>
+	<message xml:lang="fr">La sauvegarde sauvera aussi les images suivantes ?</message>
 </label>
 <label define="AM_URL_SAVE_FAILED">
 	<message xml:lang="en">Failed to save to URL</message>

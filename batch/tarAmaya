@@ -41,6 +41,13 @@ echo "Platform ------->" $MACH
    Amaya/config/en-amayamsg \
    Amaya/config/en-libdialogue \
    Amaya/config/en-corrdialogue \
+   Amaya/config/de-* \
+   Amaya/config/es-* \
+   Amaya/config/fi-* \
+   Amaya/config/fr-* \
+   Amaya/config/it-* \
+   Amaya/config/pt-* \
+   Amaya/config/tr-* \
    Amaya/config/*.rdf \
    Amaya/config/*thot.rc \
    Amaya/config/amaya.emacs \

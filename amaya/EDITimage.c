@@ -851,7 +851,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
     }
 
   /* get the absolute URL of the image */
-  NormalizeURL (text, doc, pathimage, imagename, NULL);
+  NormalizeURL (text, sourceDocument, pathimage, imagename, NULL);
   if (IsHTTPPath (DocumentURLs[doc]))
     {
       /* remote target document */
@@ -864,7 +864,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 	  AddLoadedImage (imagename, localname, doc, &desc);
 	  desc->status = IMAGE_MODIFIED;
 	  TtaFileCopy (pathimage, desc->localName);
-	  
+	  desc->tempfile = TtaStrdup (desc->localName);
 	  /* suppose that the image will be stored in the same directory */
 	  TtaSetAttributeText (attr, imagename, el, doc);
 
