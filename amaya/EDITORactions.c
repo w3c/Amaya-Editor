@@ -1858,7 +1858,7 @@ void CreateAddress (Document document, View view)
 void DoTableCreation (Document document)
 {
   ElementType         elType;
-  Element             el, new_, cell, row;
+  Element             el, new_, caption, cell, row;
   AttributeType       attrType;
   Attribute           attr;
   char                stylebuff[50];
@@ -1870,11 +1870,13 @@ void DoTableCreation (Document document)
   elType.ElSSchema = TtaGetSSchema ("HTML", document);
   elType.ElTypeNum = HTML_EL_Table_;
   TtaCreateElement (elType, document);
+  TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
+  elType.ElTypeNum = HTML_EL_CAPTION;
+  caption = TtaNewTree (document, elType, "");
+  TtaInsertFirstChild (&caption, el, document);
+  TtaSelectElement (document, TtaGetFirstLeaf (caption));
   /* close the undo sequence if it's still open */
   TtaCloseUndoSequence (document);
-  TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
-  if (el != NULL)
-    el = TtaGetTypedAncestor (el, elType);
   if (el != NULL)
     {
       attrType.AttrSSchema = elType.ElSSchema;

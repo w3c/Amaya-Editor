@@ -673,7 +673,7 @@ STRUCT
 	   datapagesize = Text; IntWidthPxl; IntWidthPercent) =
 	 { datapagesize }
 	BEGIN
-	CAPTION;						{ CAPTION }
+      ?	CAPTION;						{ CAPTION }
       ? Cols = LIST OF (Col_elem = CASE OF
 				COL;				{ COL }
 				COLGROUP;			{ COLGROUP }
