@@ -1556,7 +1556,8 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   TtaSetTextContent (el, type_name,
 		     TtaGetDefaultLanguage (), doc);
 
-  /* update the metadata */
+  /* update the metadata. We need to find the source document to find
+   the metadata */
   el = TtaGetRootElement (doc);
   elType.ElTypeNum = Annot_EL_SourceDoc;
   el = TtaSearchTypedElement (elType, SearchInTree, el);
@@ -1568,9 +1569,11 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   ptr = strchr (url, '#');
   if (ptr)
     *ptr = EOS;
-  for (i = 1; i <=DocumentTableLength; i++)
+  if (IsFilePath (url))
+    WWWToLocal (url);
+  for (i = 1; i <= DocumentTableLength; i++)
     {
-      if (!strcmp (url, DocumentURLs[i]))
+      if (DocumentURLs[i] && !strcmp (url, DocumentURLs[i]))
 	{
 	  /* we found the source document, we now search and update
 	     the annotation meta data */
@@ -1588,6 +1591,12 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
 	  annot = AnnotList_searchAnnot (AnnotMetaData[i].annotations,
 					 (ptr) ? ptr : DocumentURLs[doc],
 					 AM_BODY_URL);
+#ifdef ANNOT_ON_ANNOT
+	  if (!annot && AnnotMetaData[i].thread)
+	    annot = AnnotList_searchAnnot (AnnotMetaData[i].thread->annotations,
+					   (ptr) ? ptr : DocumentURLs[doc],
+					   AM_BODY_URL);
+#endif /* ANNOT_ON_ANNOT */
 	  if (ptr)
 	    TtaFreeMemory (ptr);
 	  if (annot)
