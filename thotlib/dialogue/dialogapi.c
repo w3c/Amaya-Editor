@@ -5824,7 +5824,8 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 #else /* _GTK */
 			    /* attribut active is set to the good value */
 			    if (catalogue->Cat_Type == CAT_TMENU)
-			      GTK_TOGGLE_BUTTON(w)->active = TRUE;
+			      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), TRUE);
+			      /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = TRUE; */
 			    else if (catalogue->Cat_Type == CAT_SCRPOPUP)
 			      {
 				/* catalogue = GTK_OBJECT(w)->userData; */
@@ -5850,7 +5851,8 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 #else /* _GTK */			    
 			    /* attribut active is set to the good value */
 			    if (catalogue->Cat_Type == CAT_TMENU)
-			      GTK_TOGGLE_BUTTON(w)->active = FALSE;
+			      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), FALSE);
+			    /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = FALSE; */
 			    else
 			      GTK_CHECK_MENU_ITEM(w)->active = FALSE;
 #endif /* _GTK */
