@@ -36,12 +36,12 @@
           </object>
         </object>
         <option>1</option>
-        <flag>wxALL|wxEXPAND</flag>
+        <flag>wxTOP|wxLEFT|wxRIGHT|wxEXPAND</flag>
         <border>10</border>
       </object>
       <object class="sizeritem">
         <option>0</option>
-        <flag>wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
         <border>10</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>

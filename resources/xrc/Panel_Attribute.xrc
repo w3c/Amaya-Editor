@@ -75,6 +75,7 @@
                                     <object class="wxBoxSizer">
                                       <orient>wxVERTICAL</orient>
                                     </object>
+                                    <style>wxTAB_TRAVERSAL</style>
                                   </object>
                                   <flag>wxALL|wxEXPAND</flag>
                                   <border>2</border>
@@ -83,7 +84,6 @@
                                   <object class="wxCheckBox" name="wxID_CHECK_AUTOREF">
                                     <label>Auto refresh</label>
                                     <checked>1</checked>
-                                    <style></style>
                                   </object>
                                   <option>0</option>
                                   <flag>wxALL|wxEXPAND</flag>
