@@ -10,6 +10,7 @@ presentation
 export
 
  HTMLT: HTML
+ HTMLTT: Texte
 
 translation
 

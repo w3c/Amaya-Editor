@@ -12,7 +12,7 @@ STRUCT
    MathML =	MROW;
 
    MROW = LIST OF (Construction = CASE OF
-		  TEXT;
+		  MTEXT = TEXT;
 		  MROOT =
 			BEGIN
 		  	Root_index = MN;
@@ -48,7 +48,22 @@ STRUCT
 			END;
 		  MFENCE = SYMBOL;
 		  MN = TEXT;
+		  MI = TEXT;
+		  MO = TEXT;
+		  MS = TEXT;
 		  SYMBOL;
 		  END);
+
+EXCEPT
+
+   MathML:	  Hidden;
+   Construction:  Hidden;
+   Root_index:	  Hidden;
+   Root_exp:	  Hidden;
+   Numerator:	  Hidden;
+   Denominator:	  Hidden;
+   Base:	  Hidden;
+   Sub_exp:	  Hidden;
+   Sup_exp:	  Hidden;
 
 END

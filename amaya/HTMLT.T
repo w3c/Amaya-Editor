@@ -336,10 +336,18 @@ RULES
 	Create '<xml';
 	Create Attributes;
 	Create '>\12';
+        indent +2;
+        indent -2 after;
 	Create '</xml>\12' After;	
 	END;
  MathML:
+        begin
 	Use MathMLT;	
+        create '<mrow>\12';
+        indent +2;
+        indent -2 after;
+        create '</mrow>\12' after;
+        end;
 #endif
 
  Paragraph: BEGIN

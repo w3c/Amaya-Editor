@@ -11,68 +11,107 @@ RULES
 
    MathML:
 	begin
-	create '<mrow>';
-	create '</mrow>' after;
+	create '<mrow>\12';
+	indent +2;
+	indent -2 after;
+	create '</mrow>\12' after;
 	end;
 
    MROW:
 	begin
-	create '<mrow>';
-	create '</mrow>' after;
+	create '<mrow>\12';
+	indent +2;
+	indent -2 after;
+	create '</mrow>\12' after;
 	end;
 
    MROOT :
         begin
-	create '<mroot>';
-	create '</mroot>' after;
+	create '<mroot>\12';
+	indent +2;
+	indent -2 after;
+	create '</mroot>\12' after;
   	end;
 
    MSQRT :
         begin
-	create '<msqrt>';
-	create '</msqrt>' after;
+	create '<msqrt>\12';
+	indent +2;
+	indent -2 after;
+	create '</msqrt>\12' after;
   	end;
 
-   MN :
-	begin
-	create '<mn>';
-	create '</mn>' after;
-	end;
-	
    MFRAC :
 	begin
-	create '<mfrac>';
-	create '</mfrac>' after;
+	create '<mfrac>\12';
+	indent +2;
+	indent -2 after;
+	create '</mfrac>\12' after;
 	end;
 
    MSUBSUP :
 	begin
-	create '<msubsup>';
-	create '</msubsup>' after;
+	create '<msubsup>\12';
+	indent +2;
+	indent -2 after;
+	create '</msubsup>\12' after;
 	end;
 
    MSUB :
 	begin
-	create '<msub>';
-	create '</msub>' after;
+	create '<msub>\12';
+	indent +2;
+	indent -2 after;
+	create '</msub>\12' after;
 	end;
 
    MSUP :
 	begin
-	create '<msup>';
-	create '</msup>' after;
+	create '<msup>\12';
+	indent +2;
+	indent -2 after;
+	create '</msup>\12' after;
 	end;
 
    MFENCE :
 	begin
 	create '<mf>';
-	create '</mf>' after;
+	create '</mf>\12' after;
 	end;
+
+   MI :
+	begin
+	create '<mi>';
+	create '</mi>\12' after;
+	end;
+
+   MO :
+	begin
+	create '<mo>';
+	create '</mo>\12' after;
+	end;
+
+   MN :
+	begin
+	create '<mn>';
+	create '</mn>\12' after;
+	end;
+
+   MS :
+	begin
+	create '<ms>';
+	create '</ms>\12' after;
+	end;
+
+   MTEXT :
+	begin
+	create '<mtext>';
+	create '</mtext>\12' after;
+	end;
+
 
    TEXT_UNIT :
 	begin
-	create '<mtext>';
-	create '</mtext>' after;
 	end;
 
    SYMBOL_UNIT :
@@ -80,7 +119,7 @@ RULES
 	if NOT Within MFENCE
 		begin
 		create '<mo>';
-		create '</mo>' after;
+		create '</mo>\12' after;
 		end;
 	end;
 

@@ -4615,9 +4615,8 @@ RULES
 		END;	
 	IN Alternate_view
 		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
 	END;
+
 #endif
 
  Paragraph: BEGIN

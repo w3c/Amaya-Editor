@@ -594,17 +594,18 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-   int                 xm, fh;
+   int                 xm, xp, fh;
 
    fh = FontHeight (font);
    xm = x + (fh / 2);
+   xp = x + (fh / 4);
    InitDrawing (0, 0, 0, RO, active, fg);
    /* vertical part */
-   DoDrawOneLine (frame, x, y + (2 * (h / 3)), xm - (thick / 2), y + h);
+   DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
 
    InitDrawing (0, 0, thick, RO, active, fg);
    /* Acending part */
-   DoDrawOneLine (frame, x + (fh / 2), y + h, xm, y);
+   DoDrawOneLine (frame, xp, y + h, xm, y);
    /* Upper part */
    DoDrawOneLine (frame, xm, y, x + l, y);
    FinishDrawing (0, RO, active);

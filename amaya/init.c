@@ -148,7 +148,8 @@ char               *data;
   Element            sibling, el, row;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
-  int                val, c1, i;
+  int                val, c1, i, len;
+  boolean	     before;
 
   val = (int) data;
   switch (ref - MathsDialogue)
@@ -162,41 +163,54 @@ char               *data;
       if (doc == 0)
 	/* no document selected */
 	return;
+      /* the new element will be inserted before the selected element */
+      before = TRUE;
       TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i);
       /* Check whether the selected element is a text element */
       elType = TtaGetElementType (sibling);
       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 	{
-	  /* split the text to insert the XML element */
-	  TtaSplitText (sibling, c1, doc);
-	  /* take the second part of the split text element */
-	  TtaNextSibling (&sibling);
+	  len = TtaGetTextLength (sibling);
+	  if (c1 > len)
+	    /* the caret is at the end of that character string */
+	    /* create the new element after the character string */
+	    before = FALSE;
+	  else
+	    {
+	      /* split the text to insert the XML element */
+	      TtaSplitText (sibling, c1, doc);
+	      /* take the second part of the split text element */
+	      TtaNextSibling (&sibling);
+	    }
 	}
 
       /* Check whether the selected element is a math element */
       docSchema = TtaGetDocumentSSchema (doc);
-      if (TtaSameSSchemas (docSchema, elType.ElSSchema))
+      if (!TtaSameSSchemas (docSchema, elType.ElSSchema))
+	mathSchema = elType.ElSSchema;
+      else
 	{
 	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
 	  /* the selection concerns an HTML element */
 	  if (elType.ElTypeNum == HTML_EL_XML)
 	    {
-	      /* search the enclosed element at lower level */
+	      /* search the enclosed element at the lowest level */
 	      do
 		{
 		  row = sibling;
 		  sibling = TtaGetFirstChild (row);
-		  elType = TtaGetElementType (sibling);		  
+		  if (sibling != NULL)
+		    elType = TtaGetElementType (sibling);		  
 		}
 	      while (sibling != NULL);
 	      sibling = row;
 	    }
 	  else
 	    {
-	      /* create the XML element before the sibling element */
+	      /* create the XML element before or after the sibling element */
 	      elType.ElTypeNum = HTML_EL_XML;
 	      el = TtaNewTree (doc, elType, "");
-	      TtaInsertSibling (el, sibling, TRUE, doc);
+	      TtaInsertSibling (el, sibling, before, doc);
 	      sibling = TtaGetFirstChild (el);
 	    }
 	}

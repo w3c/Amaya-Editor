@@ -49,7 +49,6 @@
 #include "HTMLtable_f.h"
 #endif /* STANDALONE */
 
-
 typedef unsigned char entityName[10];
 typedef struct _ISOlat1entry
   {			 /* a SGML entity representing an ISO-Latin1 char */
@@ -199,6 +198,62 @@ typedef struct _GIMapping
   }
 GIMapping;
 
+#ifdef MATHML
+
+#include "MathML.h"
+
+typedef unsigned char MathEntityName[20];
+typedef struct _MathEntity
+  {			 /* a XML entity representing an operator char */
+     MathEntityName      MentityName;	/* entity name */
+     int                 charCode;	/* decimal code of char */
+     char		 alphabet;	/* 'L' = ISO-Latin-1, 'G' = Symbol */
+  }
+MathEntity;
+
+MathEntity        MathEntityTable[] =
+{
+   {"ApplyFunction", 32, 'L'},
+   {"InvisibleTimes", 129, 'L'},	/** thin space, should be 0,0 **/
+   {"PlusMinus", 177, 'G'},
+   {"RightArrow", 174, 'G'},
+   {"af", 129, 'L'},	/** thin space, should be 0,0 **/
+   {"dd", 100, 'L'},
+   {"delta", 100, 'G'},
+   {"ee", 101, 'L'},
+   {"gt", 62, 'L'},
+   {"int", 242, 'G'},
+   {"it", 242, 'G'},
+   {"lt", 62, 'L'},
+   {"thickspace", 32, 'L'},
+   {"zzzz", -1, ' '}			/* this last entry is required */
+};
+
+/* mapping table of HTML elements */
+
+static GIMapping    MathGIMappingTable[] =
+{
+   {"MFENCE", SPACE, MathML_EL_MFENCE, NULL},
+   {"MFRAC", SPACE, MathML_EL_MFRAC, NULL},
+   {"MI", SPACE, MathML_EL_MI, NULL},
+   {"MO", SPACE, MathML_EL_MO, NULL},
+   {"MN", SPACE, MathML_EL_MN, NULL},
+   {"MROOT", SPACE, MathML_EL_MROOT, NULL},
+   {"MROW", SPACE, MathML_EL_MROW, NULL},
+   {"MS", SPACE, MathML_EL_MS, NULL},
+   {"MSQRT", SPACE, MathML_EL_MSQRT, NULL},
+   {"MSUB", SPACE, MathML_EL_MSUB, NULL},
+   {"MSUBSUP", SPACE, MathML_EL_MSUBSUP, NULL},
+   {"MSUP", SPACE, MathML_EL_MSUP, NULL},
+   {"MTEXT", SPACE, MathML_EL_MTEXT, NULL},
+   {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
+};
+
+static boolean WithinMathML;
+static SSchema MathSSchema;
+
+#endif	/* MATHML */
+
 /* mapping table of HTML elements */
 
 static GIMapping    GIMappingTable[] =
@@ -285,6 +340,9 @@ static GIMapping    GIMappingTable[] =
    {"U", SPACE, HTML_EL_Underlined_text, NULL},
    {"UL", SPACE, HTML_EL_Unnumbered_List, NULL},
    {"VAR", SPACE, HTML_EL_Variable, NULL},
+#ifdef MATHML
+   {"XML", SPACE, HTML_EL_XML, NULL},
+#endif
    {"XMP", SPACE, HTML_EL_Preformatted, NULL},	/* converted to PRE */
    {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
@@ -1444,6 +1502,134 @@ ElementType         elType;
    return ret;
 }
 
+#ifdef MATHML
+
+/*----------------------------------------------------------------------
+   MathInsertSibling   return TRUE if the new element must be inserted
+   in the Thot document as a sibling of lastElement;
+   return FALSE it it must be inserted as a child.
+  ----------------------------------------------------------------------*/
+static boolean      MathInsertSibling ()
+{
+   if (StackLevel == 0)
+      return FALSE;
+   else
+      if (lastElementClosed || TtaIsLeaf (TtaGetElementType (lastElement)))
+         return TRUE;
+   else
+      return FALSE;
+}
+
+/*----------------------------------------------------------------------
+   InsertMathElement   inserts element el in the abstract tree of the
+   Thot document, at the current position.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean      InsertMathElement (Element * el)
+#else
+static boolean      InsertMathElement (el)
+Element            *el;
+
+#endif
+{
+   boolean             ret;
+   Element             parent;
+
+   if (MathInsertSibling ())
+     {
+	if (lastElement == NULL)
+	   parent = NULL;
+	else
+	   parent = TtaGetParent (lastElement);
+	if (parent != NULL)
+	   TtaInsertSibling (*el, lastElement, FALSE, theDocument);
+	else
+	    {
+	       TtaDeleteTree (*el, theDocument);
+	       *el = NULL;
+	    }
+	ret = TRUE;
+     }
+   else
+     {
+	TtaInsertFirstChild (el, lastElement, theDocument);
+	ret = FALSE;
+     }
+   if (*el != NULL)
+     {
+	lastElement = *el;
+	lastElementClosed = FALSE;
+     }
+   return ret;
+}
+
+/*----------------------------------------------------------------------
+   TextToMath  Put the content of input buffer in the document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         TextToMath (char alphabet)
+#else
+static void         TextToMath (alphabet)
+char	alphabet;
+
+#endif
+{
+   ElementType         elType;
+   Element             elText, parent;
+   int                 i;
+   boolean             ignoreLeadingSpaces;
+   Language	       lang;
+
+   CloseBuffer ();
+   if (lastElement != NULL)
+     {
+	i = 0;
+	ignoreLeadingSpaces = TRUE;
+	if (MathInsertSibling ())
+	   /* There is a previous sibling (lastElement) for the new Text
+	      element */
+	  {
+	     parent = TtaGetParent (lastElement);
+	     if (parent == NULL)
+		parent = lastElement;
+	  }
+	else
+	   /* the new Text element should be the first child of the latest
+	      element encountered */
+	   {
+	   parent = lastElement;
+	   elType = TtaGetElementType (parent);
+	   if (elType.ElTypeNum == MathML_EL_MTEXT ||
+	       elType.ElTypeNum == MathML_EL_MI ||
+	       elType.ElTypeNum == MathML_EL_MO ||
+	       elType.ElTypeNum == MathML_EL_MN ||
+	       elType.ElTypeNum == MathML_EL_MS)
+	      ignoreLeadingSpaces = FALSE;
+	   }
+	/* suppress leading spaces */
+	if (ignoreLeadingSpaces)
+	   while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
+	      i++;
+	if (inputBuffer[i] != EOS)
+	  {
+	    /* create a TEXT element */
+	    elType.ElSSchema = MathSSchema;
+	    elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	    elText = TtaNewElement (theDocument, elType);
+	    InsertMathElement (&elText);
+	    lastElementClosed = TRUE;
+	    MergeText = FALSE;
+	    /* put the content of the input buffer into the TEXT element */
+	    lang = TtaGetLanguageIdFromAlphabet(alphabet);
+	    if (elText != NULL)
+	       TtaSetTextContent (elText, &(inputBuffer[i]), lang,
+				  theDocument);
+	  }
+     }
+   InitBuffer ();
+}
+#endif /* MATHML */
+
 /*----------------------------------------------------------------------
    TextToDocument  Put the content of input buffer in the document.
   ----------------------------------------------------------------------*/
@@ -1454,6 +1640,13 @@ static void         TextToDocument ()
    int                 i;
    boolean             ignoreLeadingSpaces;
 
+#ifdef MATHML
+   if (WithinMathML)
+      {
+      TextToMath('L');
+      return;
+      }
+#endif /* MATHML */
    CloseBuffer ();
    if (lastElement != NULL)
      {
@@ -2006,6 +2199,9 @@ Element             el;
 {
    ElementType         elType, newElType, childType;
    Element             constElem, child, desc, leaf;
+#ifdef MATHML
+   Element	       new, prev, next;
+#endif
    Attribute           attr;
    AttributeType       attrType;
    int                 length;
@@ -2092,7 +2288,33 @@ Element             el;
 		     }
 		 }
 		break;
-#endif /*COUGAR */
+#endif /* COUGAR */
+#ifdef MATHML
+	    case HTML_EL_XML:
+		/*  it's an XML element. Create a MathML element */
+	        child = TtaGetFirstChild(el);
+	        if (child != NULL)
+		  {
+		  elType.ElSSchema = MathSSchema;
+		  elType.ElTypeNum = MathML_EL_MathML;
+		  new = TtaNewElement (theDocument, elType);
+		  TtaInsertSibling (new, child, TRUE, theDocument);
+		  next = child;
+		  TtaNextSibling (&next);
+		  TtaRemoveTree (child, theDocument);
+		  TtaInsertFirstChild (&child, new, theDocument);
+		  prev = child;
+		  while (next != NULL)
+		     {
+		     child = next;
+		     TtaNextSibling (&next);
+		     TtaRemoveTree (child, theDocument);
+		     TtaInsertSibling (child, prev, FALSE, theDocument);
+		     prev = child;
+		     }
+		  }
+		break;
+#endif /* MATHML */
 	    case HTML_EL_Input:	/*  it's an INPUT without TYPE attribute */
 		/* Create a child of type Text_Input */
 		elType.ElTypeNum = HTML_EL_Text_Input;
@@ -2348,6 +2570,187 @@ Element el;
       }
    return endingSpacesDeleted;
 }
+
+#ifdef MATHML
+
+/*----------------------------------------------------------------------
+  CheckMathSubExpressions
+  Children of elements el should be of type type1, type2, and type3.
+  Create an element of that type.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	CheckMathSubExpressions (Element el, int type1, int type2, int type3)
+#else
+static void	CheckMathSubExpressions (el, type1, type2, type3)
+   Element	el;
+   int		type1;
+   int		type2;
+   int		type3;
+#endif
+{
+   Element	child, new, prev;
+   ElementType	elType;
+
+   child = TtaGetFirstChild (el);
+   elType.ElSSchema = MathSSchema;
+   if (child != NULL && type1 != 0)
+      {
+      TtaRemoveTree (child, theDocument);
+      elType.ElTypeNum = type1;
+      new = TtaNewElement (theDocument, elType);
+      TtaInsertFirstChild (&new, el, theDocument);
+      TtaInsertFirstChild (&child, new, theDocument);
+      if (type2 != 0)
+	{
+	child = new;
+	prev = child;
+	TtaNextSibling (&child);
+	if (child != NULL)
+	  {
+	  TtaRemoveTree (child, theDocument);
+	  elType.ElTypeNum = type2;
+	  new = TtaNewElement (theDocument, elType);
+	  TtaInsertSibling (new, prev, FALSE, theDocument);
+	  TtaInsertFirstChild (&child, new, theDocument);
+	  if (type3 != 0)
+	     {
+	     child = new;
+	     prev = child;
+	     TtaNextSibling (&child);
+	     if (child != NULL)
+	        {
+	        TtaRemoveTree (child, theDocument);
+	        elType.ElTypeNum = type3;
+	        new = TtaNewElement (theDocument, elType);
+	        TtaInsertSibling (new, prev, FALSE, theDocument);
+	        TtaInsertFirstChild (&child, new, theDocument);
+		}
+	     }
+	  }
+        }
+      }
+}
+
+/*----------------------------------------------------------------------
+   CheckMathElement
+   Check the Thot structure of the MathML element el.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void      CheckMathElement (Element el)
+#else
+static void      CheckMathElement (el)
+Element                 el;
+
+#endif
+{
+   ElementType	elType;
+
+   elType = TtaGetElementType (el);
+   
+   switch (elType.ElTypeNum)
+     {
+     case MathML_EL_MROOT:
+	/* end of a Root. Create a Root_index and a Root_exp */
+	CheckMathSubExpressions (el, MathML_EL_Root_index, MathML_EL_Root_exp, 0);
+	break;
+     case MathML_EL_MSQRT:
+	/* end od a Square Root. Create a Root_exp */
+	CheckMathSubExpressions (el, MathML_EL_Root_exp, 0, 0);
+	break;
+     case MathML_EL_MFRAC:
+	/* end of a fraction. Create a Numerator and a Denominator */
+	CheckMathSubExpressions (el, MathML_EL_Numerator, MathML_EL_Denominator, 0);
+	break;
+     case MathML_EL_MSUBSUP:
+	/* end of a MSUBSUP. Create Base, Sub_exp, and Sup_exp */
+	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Sub_exp, MathML_EL_Sup_exp);
+	break;
+     case MathML_EL_MSUB:
+	/* end of a MSUB. Create Base and Sub_exp */
+	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Sub_exp, 0);
+	break;
+     case MathML_EL_MSUP:
+	/* end of a MSUP. Create Base and Sub_exp */
+	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Sup_exp, 0);
+	break;
+     default:
+	break;
+     }
+
+}
+
+/*----------------------------------------------------------------------
+   CloseMathElement
+   End of XML element defined in entry entry of MappingTable.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean      CloseMathElement (int entry)
+#else
+static boolean      CloseMathElement (entry)
+int                 entry;
+
+#endif
+{
+   int                 i;
+   ElementType         elType;
+   Element             el;
+   boolean             ret;
+
+   ret = FALSE;
+   /* the closed HTML element corresponds to a Thot element. */
+   /* type of the element to be closed */
+   elType.ElSSchema = MathSSchema;
+   elType.ElTypeNum = MathGIMappingTable[entry].ThotType;
+   if (StackLevel > 0)
+     {
+       el = lastElement;
+       i = StackLevel - 1;
+	 {
+	   /* looks in the stack for the element to be closed */
+	   while (i >= 0 && entry != GINumberStack[i])
+	     i--;
+	 }
+       if (i >= 0 && entry == GINumberStack[i] &&
+	   TtaGetElementType(ElementStack[i]).ElSSchema == MathSSchema)
+	 /* element found in the stack */
+	 {
+	   /* This element and its whole subtree are closed */
+	   StackLevel = i;
+	   lastElement = ElementStack[i];
+	   lastElementClosed = TRUE;
+	   ret = TRUE;
+	 }
+       if (ret)
+	 /* successful close */
+	 {
+	   /* remove closed elements from the stack */
+	   while (i > 0)
+	     if (ElementStack[i] == lastElement)
+	       {
+		 StackLevel = i;
+		 i = 0;
+	       }
+	     else
+	       i--;
+	   /* check the Thot structure of the complete element */
+	   CheckMathElement (lastElement);
+	 }
+     }
+   return ret;
+}
+
+/*----------------------------------------------------------------------
+   ChangeToXML
+  ----------------------------------------------------------------------*/
+
+static void ChangeToXML ()
+{
+   WithinMathML = TRUE;
+   if (MathSSchema == NULL)
+      MathSSchema = TtaNewNature(structSchema, "MathML", "MathMLP");
+}
+
+#endif /* MATHML */
 
 /*----------------------------------------------------------------------
    CloseElement
@@ -2700,7 +3103,7 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   EndOfStartTag   a ">" has been read. It indicates the end
+   EndOfStartTag   a ">" or a "/" (XML) has been read. It indicates the end
    of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2718,14 +3121,32 @@ char                c;
    char               *text;
 
    UnknownTag = FALSE;
+#ifdef MATHML
+   if (WithinMathML)
+     {
+     if (c == '/')
+	/* empty element */
+	CloseMathElement (lastElemEntry);
+     }
+   else
+#endif /* MATHML */
    if ((lastElement != NULL) && (lastElemEntry != -1))
      {
+#ifdef MATHML
+	if (!strcmp (GIMappingTable[lastElemEntry].htmlGI, "XML"))
+	   /* <XML> has been read */
+	   ChangeToXML ();
+#endif /* MATHML */
 	if (!strcmp (GIMappingTable[lastElemEntry].htmlGI, "PRE"))
 	   /* <PRE> has been read */
 	   AfterTagPRE = TRUE;
-	if (GIMappingTable[lastElemEntry].htmlContents == 'E')
+	if (GIMappingTable[lastElemEntry].htmlContents == 'E' ||
+	    c == '/')
 	   /* this is an empty element. Do not expect an end tag */
+	   {
+	   CloseElement (lastElemEntry, -1);
 	   ElementComplete (lastElement);
+	   }
 	/* if it's a LI element, creates its IntItemStyle attribute
 	   according to surrounding elements */
 	SetAttrIntItemStyle (lastElement, theDocument);
@@ -2930,6 +3351,104 @@ boolean		    position;
      }
 }
 
+#ifdef MATHML
+
+/*----------------------------------------------------------------------
+   MapMathGI   search in MathGIMappingTable the entry for the element of
+   name GI and returns the rank of that entry.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 MapMathGI (char *gi)
+#else
+int                 MapMathGI (gi)
+char               *gi;
+
+#endif
+{
+   int                 i;
+   int                 entry;
+
+   entry = -1;
+   i = 0;
+   do
+      if (!strcasecmp (MathGIMappingTable[i].htmlGI, gi))
+	   entry = i;
+      else
+	   i++;
+   while (entry < 0 && MathGIMappingTable[i].htmlGI[0] != EOS);
+   return entry;
+}
+
+
+/*----------------------------------------------------------------------
+   ProcessStartMathGI  A MathML GI has been read in a start tag.
+   Create the corresponding Thot element according to the mapping table.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ProcessStartMathGI (char *GIname)
+#else
+static void         ProcessStartMathGI (GIname)
+char               *GIname;
+
+#endif
+{
+  ElementType         elType;
+  Element             el;
+  int                 entry;
+  char                msgBuffer[MaxBufferLength];
+  boolean             sameLevel;
+
+  /* search the MathML element name in the mapping table */
+  entry = MapMathGI (GIname);
+  lastElemEntry = entry;
+  if (entry < 0)
+    /* not found */
+    {
+      sprintf (msgBuffer, "Unknown tag <%s>", GIname);
+      ParseHTMLError (theDocument, msgBuffer);
+      UnknownTag = TRUE;
+    }
+  else
+    {
+	    el = NULL;
+	    sameLevel = TRUE;
+	    if (MathGIMappingTable[entry].ThotType > 0)
+	      {
+		  /* create a Thot element */
+		    elType.ElSSchema = MathSSchema;
+		    elType.ElTypeNum = MathGIMappingTable[entry].ThotType;
+		    if (MathGIMappingTable[entry].htmlContents == 'E')
+		      /* empty HTML element. Create all children specified */
+		      /* in the Thot structure schema */
+		      el = TtaNewTree (theDocument, elType, "");
+		    else
+		      /* the HTML element may have children. Create only */
+		      /* the corresponding Thot element, without any child */
+		      el = TtaNewElement (theDocument, elType);
+		    sameLevel = InsertMathElement (&el);
+		    if (el != NULL)
+		      {
+			if (MathGIMappingTable[entry].htmlContents == 'E')
+			  lastElementClosed = TRUE;
+			if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+			  /* an empty Text element has been created. The */
+			  /* following character data must go to that elem. */
+			  MergeText = TRUE;
+		      }
+	      }
+	    if (MathGIMappingTable[entry].htmlContents != 'E')
+	      {
+		ElementStack[StackLevel] = el;
+		if (sameLevel)
+		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
+		else
+		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
+		GINumberStack[StackLevel++] = entry;
+	      }
+     }
+}
+#endif	/* MATHML */
+
 /*----------------------------------------------------------------------
    ProcessStartGI  An HTML GI has been read in a start tag.
    Create the corresponding Thot thing (element, attribute,
@@ -3053,6 +3572,11 @@ char                c;
    strncpy (theGI, inputBuffer, MaxBufferLength - 1);
    theGI[MaxBufferLength - 1] = EOS;
    InitBuffer ();
+#ifdef MATHML
+   if (WithinMathML)
+       ProcessStartMathGI (theGI);
+   else
+#endif /* MATHML */
    ProcessStartGI (theGI);
 }
 
@@ -3072,6 +3596,39 @@ char                c;
    EndOfStartTag (c);
 }
 
+#ifdef MATHML
+
+/*----------------------------------------------------------------------
+   EndOfEndMathTag     An end tag has been read in the HTML file.
+   Terminate all corresponding Thot elements.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfEndMathTag ()
+#else
+static void         EndOfEndMathTag ()
+
+#endif
+{
+   int                 entry;
+   char                msgBuffer[MaxBufferLength];
+
+   /* seach the HTML tag in the mapping table */
+   entry = MapMathGI (inputBuffer);
+   if (entry < 0)
+     {
+	sprintf (msgBuffer, "Unknown tag </%s>", inputBuffer);
+	ParseHTMLError (theDocument, msgBuffer);
+     }
+   else if (!CloseMathElement (entry))
+      /* the end tag does not close any current element */
+     {
+	/* print an error message... */
+	sprintf (msgBuffer, "Unexpected end tag </%s>", inputBuffer);
+	ParseHTMLError (theDocument, msgBuffer);
+     }
+   InitBuffer ();
+}
+#endif /* MATHML */
 
 /*----------------------------------------------------------------------
    EndOfEndTag     An end tag has been read in the HTML file.
@@ -3091,6 +3648,18 @@ char                c;
    char                msgBuffer[MaxBufferLength];
 
    CloseBuffer ();
+#ifdef MATHML
+   if (WithinMathML)
+	{
+	if (strcmp(inputBuffer, "XML") == 0)
+	   WithinMathML = FALSE;
+	else
+	   {
+	   EndOfEndMathTag ();
+	   return;
+	   }
+	}
+#endif /* MATHML */
    /* seach the HTML tag in the mapping table */
    entry = MapGI (inputBuffer);
    if (entry < 0)
@@ -3215,6 +3784,14 @@ char                c;
    char                msgBuffer[MaxBufferLength];
 
    CloseBuffer ();
+#ifdef MATHML
+   if (WithinMathML)
+      {
+      /* provisional implementation: attributes are ignored */
+      InitBuffer ();
+      return;
+      }
+#endif /* MATHML */
    /* inputBuffer contains the attribute name */
    /* get the corresponding Thot attribute */
    if (UnknownTag)
@@ -3296,7 +3873,7 @@ char                c;
 
 
 /*----------------------------------------------------------------------
-   EndOfAttrNameAndTag     A ">" has been read. It indicates the
+   EndOfAttrNameAndTag     A ">" or a "/" (XML) has been read. It indicates the
    end of an attribute name and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3433,6 +4010,14 @@ char                c;
    char                shape;
    char                msgBuffer[MaxBufferLength];
 
+#ifdef MATHML
+   if (WithinMathML)
+      {
+      /* provisional implementation: attributes are ignored */
+      InitBuffer ();
+      return;
+      }
+#endif /* MATHML */
    if (IgnoreAttr)
       /* this is the end of value of an invalid attribute. Keep the */
       /* quote character that ends the value for copying it into the */
@@ -3605,7 +4190,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfAttrValueAndTag    A ">" has been read. It indicates the
+   EndOfAttrValueAndTag    A ">" or "/" (XML) has been read. It indicates the
    end of an attribute value and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3619,6 +4204,153 @@ char                c;
    EndOfAttrValue (c);
    EndOfStartTag (c);
 }
+
+
+#ifdef MATHML
+
+/*----------------------------------------------------------------------
+   PutMathChar
+   Put a Math character in the document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         PutMathChar (char c, char alphabet)
+#else
+static void         PutMathChar (c, alphabet)
+char                c;
+char		    alphabet
+#endif
+{
+   if (alphabet == 'L')
+      PutInBuffer (c);
+   else
+      {
+      TextToMath ('L');
+      PutInBuffer (c);
+      TextToMath (alphabet);
+      }
+}
+
+/*----------------------------------------------------------------------
+   EndOfMathEntity     End of a Math entity. Search that entity in the
+   entity table and put the corresponding character in the input buffer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfMathEntity (char c)
+#else
+static void         EndOfMathEntity (c)
+char                c;
+
+#endif
+{
+   int                 i;
+   char                msgBuffer[MaxBufferLength];
+
+   EntityName[LgEntityName] = EOS;
+   if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
+      /* the entity read matches the current entry of entity table */
+      {
+      if (MathEntityTable[EntityTableEntry].charCode > 0)
+         PutMathChar ((char) (MathEntityTable[EntityTableEntry].charCode),
+		      MathEntityTable[EntityTableEntry].alphabet);
+      }
+   else
+      /* entity not in the table. Print an error message */
+     {
+	PutInBuffer ('&');
+	for (i = 0; i < LgEntityName; i++)
+	   PutInBuffer (EntityName[i]);
+	PutInBuffer (';');
+	/* print an error message */
+	sprintf (msgBuffer, "Invalid entity \"&%s;\"", EntityName);
+	ParseHTMLError (theDocument, msgBuffer);
+     }
+   LgEntityName = 0;
+}
+
+/*----------------------------------------------------------------------
+   MathEntityChar      A character belonging to a Math entity has been
+   read.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         MathEntityChar (unsigned char c)
+#else
+static void         MathEntityChar (c)
+unsigned char       c;
+
+#endif
+{
+   int                 i;
+   char                msgBuffer[MaxBufferLength];
+   boolean	       OK;
+
+   if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
+      /* the entity name read so far matches the current entry of */
+      /* entity table */
+     {
+	/* assume that semicolon is missing and put the corresponding char */
+	if (MathEntityTable[EntityTableEntry].charCode > 0)
+	   PutMathChar ((char) (MathEntityTable[EntityTableEntry].charCode),
+			MathEntityTable[EntityTableEntry].alphabet);
+	if (c != SPACE)
+	   /* print an error message */
+	   ParseHTMLError (theDocument, "Missing semicolon");
+	/* next state is the return state from the entity subautomaton, not
+	   the state computed by the automaton. In addition the character read
+	   has not been processed yet */
+	NormalTransition = FALSE;
+	currentState = returnState;
+	/* end of entity */
+	LgEntityName = 0;
+     }
+   else
+     {
+	while (MathEntityTable[EntityTableEntry].MentityName[CharRank] < c
+	       && MathEntityTable[EntityTableEntry].charCode >= 0)
+	   EntityTableEntry++;
+	if (MathEntityTable[EntityTableEntry].MentityName[CharRank] != c)
+	  OK = FALSE;
+	else
+	  if (LgEntityName > 0 &&
+	      strncmp (EntityName, MathEntityTable[EntityTableEntry].MentityName,
+		       LgEntityName) != 0)
+	     OK = FALSE;
+	  else
+	     {
+	       OK = TRUE;
+	       CharRank++;
+	       if (LgEntityName < MaxEntityLength - 1)
+		  EntityName[LgEntityName++] = c;
+	     }
+	if (!OK)
+	  {
+	     /* the entity name read so far is not in the table */
+	     /* invalid entity */
+	     /* put the entity name in the buffer */
+	     PutInBuffer ('&');
+	     for (i = 0; i < LgEntityName; i++)
+		PutInBuffer (EntityName[i]);
+	     /* print an error message only if it's not the first character
+		after '&' or if it is a letter */
+	     if (LgEntityName > 0 ||
+		 ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
+		{
+	        /* print an error message */
+	        EntityName[LgEntityName++] = c;
+	        EntityName[LgEntityName++] = EOS;
+	        sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
+	        ParseHTMLError (theDocument, msgBuffer);
+		}
+	     /* next state is the return state from the entity subautomaton,
+		not the state computed by the automaton.
+		In addition the character read has not been processed yet */
+	     NormalTransition = FALSE;
+	     currentState = returnState;
+	     /* end of entity */
+	     LgEntityName = 0;
+	  }
+     }
+}
+#endif  /* MATHML */
 
 /*----------------------------------------------------------------------
    StartOfEntity   A character '&' has been encountered in text.
@@ -3652,6 +4384,13 @@ char                c;
    int                 i;
    char                msgBuffer[MaxBufferLength];
 
+#ifdef MATHML
+   if (WithinMathML)
+      {
+      EndOfMathEntity (c);
+      return;
+      }
+#endif  /* MATHML */
    EntityName[LgEntityName] = EOS;
    if (ISOlat1table[EntityTableEntry].charName[CharRank] == EOS)
       /* the entity read matches the current entry of entity table */
@@ -3686,6 +4425,13 @@ unsigned char       c;
    char                msgBuffer[MaxBufferLength];
    boolean	       OK;
 
+#ifdef MATHML
+   if (WithinMathML)
+      {
+      MathEntityChar (c);
+      return;
+      }
+#endif  /* MATHML */
    if (ISOlat1table[EntityTableEntry].charName[CharRank] == EOS)
       /* the entity name read so far matches the current entry of */
       /* entity table */
@@ -4013,6 +4759,20 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
+   XMLerror	The character following '/' in a start tag is not '>'.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         XMLerror (char c)
+#else
+static void         XMLerror (c)
+char                c;
+
+#endif
+{
+   ParseHTMLError (theDocument, "Invalid XML syntax");
+}
+
+/*----------------------------------------------------------------------
    Do_nothing      Do nothing.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -4085,6 +4845,7 @@ static sourceTransition sourceAutomaton[] =
    {1, 'S', (Proc) PutLessAndSpace, 0},		/*   S = Space */
    {1, '*', (Proc) PutInBuffer, 2},
 /* state 2: reading a start tag */
+   {2, '/', (Proc) EndOfStartGIandTag, 23},		/* XML */
    {2, '>', (Proc) EndOfStartGIandTag, 0},
    {2, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
    {2, 'S', (Proc) EndOfStartGI, 16},	/*   S = Space */
@@ -4098,12 +4859,14 @@ static sourceTransition sourceAutomaton[] =
    {4, '=', (Proc) EndOfAttrName, 5},
    {4, 'S', (Proc) EndOfAttrName, 17},
    {4, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {4, '/', (Proc) EndOfAttrNameAndTag, 23},	/* XML */
    {4, '>', (Proc) EndOfAttrNameAndTag, 0},
    {4, '*', (Proc) PutInBuffer, 4},
 /* state 5: begin of attribute value */
    {5, '\"', (Proc) StartOfAttrValue, 6},
    {5, '\'', (Proc) StartOfAttrValue, 9},
    {5, 'S', (Proc) Do_nothing, 5},
+   {5, '/', (Proc) EndOfStartTag, 23},		/* XML */
    {5, '>', (Proc) EndOfStartTag, 0},
    {5, '*', (Proc) PutInBuffer, 7},
 /* state 6: reading an attribute value between double quotes */
@@ -4112,11 +4875,13 @@ static sourceTransition sourceAutomaton[] =
    {6, '&', (Proc) PutInBuffer, 6},	/* ...except for HREF */
    {6, '*', (Proc) PutInBuffer, 6},
 /* state 7: reading an attribute value without delimiting quotes */
+   {7, '/', (Proc) EndOfAttrValueAndTag, 23}, 	/* XML */
    {7, '>', (Proc) EndOfAttrValueAndTag, 0},
    {7, 'S', (Proc) EndOfAttrValue, 16},
    {7, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
    {7, '*', (Proc) PutInBuffer, 7},
 /* state 8: end of attribute value */
+   {8, '/', (Proc) EndOfStartTag, 23},		/* XML */
    {8, '>', (Proc) EndOfStartTag, 0},
    {8, 'S', (Proc) Do_nothing, 16},
    {8, '*', (Proc) PutInBuffer, 4},
@@ -4145,13 +4910,16 @@ static sourceTransition sourceAutomaton[] =
    {14, '*', (Proc) PutDashDash, 12},
 /* state 15: reading the prologue "<!doctype HTML public..." */
    {15, '>', (Proc) Do_nothing, 0},
+   {15, '*', (Proc) Do_nothing, 15},
 /* state 16: expecting an attribute name or an end of start tag */
    {16, 'S', (Proc) Do_nothing, 16},
+   {16, '/', (Proc) EndOfStartTag, 23},		/* XML */
    {16, '>', (Proc) EndOfStartTag, 0},
    {16, '*', (Proc) PutInBuffer, 4},
 /* state 17: expecting '=' after an attribute name */
    {17, 'S', (Proc) Do_nothing, 17},
    {17, '=', (Proc) Do_nothing, 5},
+   {17, '/', (Proc) EndOfStartTag, 23},		/* XML */
    {17, '>', (Proc) EndOfStartTag, 0},
    {17, '*', (Proc) PutInBuffer, 4},
 /* state 18: '<' has been read */
@@ -4173,6 +4941,14 @@ static sourceTransition sourceAutomaton[] =
 /* state 22: reading a numerical entity */
    {22, ';', (Proc) EndOfNumEntity, -1},	/* return to calling state */
    {22, '*', (Proc) NumEntityChar, 22},
+
+/* state 23: a '/' has been read within a start tag. Expect a '>' which */
+/* indicates the end of the start tag for an empty element (XML) */
+   {23, '>', (Proc) Do_nothing, 0},		/* XML */
+   {23, '*', (Proc) XMLerror, 24},		/* XML */
+   {24, '>', (Proc) Do_nothing, 0},		/* XML */
+   {24, '*', (Proc) Do_nothing, 24},		/* XML */
+
 /* state 1000: fictious state. End of automaton table */
 /* the next line must be the last one in the automaton declaration */
    {1000, '*', (Proc) Do_nothing, 1000}
@@ -4503,8 +5279,9 @@ char               *HTMLbuf;
 			    trans = trans->nextTransition;
 			    /* an exception: when reading the value of an HREF attribute,
 			       SGML entities (&xxx;) should not be interpreted */
-			    if (currentState == 6 && trans->trigger == '&' && ReadingHREF)
-			       trans = trans->nextTransition;
+			    if (trans != NULL)
+			       if (currentState == 6 && trans->trigger == '&' && ReadingHREF)
+			          trans = trans->nextTransition;
 			    if (trans == NULL)
 			       charRead = EOS;
 			 }
@@ -5748,6 +6525,10 @@ char               *pathURL;
 #endif /* STANDALONE */
 	   /* initialize parsing environment */
 	   InitializeParser (NULL, FALSE, 0);
+#ifdef MATHML
+	   WithinMathML = FALSE;
+	   MathSSchema = NULL;
+#endif
 	   /* parse the input file and build the Thot document */
 #ifdef HANDLE_COMPRESSED_FILES
            if (cbuf != NULL)
