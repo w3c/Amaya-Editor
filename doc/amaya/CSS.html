@@ -1,19 +1,17 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-   "http://www.w3.org/TR/REC-html40/loose.dtd">
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<style>
-BODY { background-color : #FFFFFF }
-H1 { color : #00647F }
-H3 { color : #0050B2 }
-P { text-align: justify; line-height : 16pt; text-indent : 15pt }
-</style>
-<title>CSS support in Amaya</title>
-
-<!-- Changed by: Jose Kahan,  8-Jul-1996 -->
+  <title>CSS support in Amaya</title>
+  <style>
+    BODY { background-color : #FFFFFF }
+    H1 { color : #00647F }
+    H3 { color : #0050B2 }
+    P { text-align: justify; line-height : 16pt; text-indent : 15pt }
+  </style>
 </head>
-<body style="background : #FFFFFF" lang="en">
 
+<body lang="en" style="background : #FFFFFF">
 <p><a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"
 width="72"></a><a href="../"><img border="0" src="../Icons/amaya.gif"
 alt="Amaya"></a> <a href="Manual.html"><img border="0"
@@ -24,41 +22,34 @@ src="../Icons/doc48x.gif" alt="Doc"></a></p>
 <p>This document describes the current state of the <a
 href="../../Style">Cascading Style Sheet</a> support in Amaya. The
 implementation is based on the <a href="/TR/PR-CSS1">CSS2 proposal</a> . We
-focussed on providing as many features as possible and offering an easy to use
-and learn interface. Considering the second point we choosed a "learn by
+focused on providing as many features as possible while offering an
+easy-to-use and learn interface. To make learning easy  we choose a "learn by
 example" approach suitable for users not experienced with style sheets.</p>
 
 <p>This document contains the following sections:</p>
 <ol>
-<li>
-Section "<a href="#L392">Presentation</a>" gives a short overview of the CSS.
-</li>
-<li>
-Section  "<a href="#L393">Interface</a>" details the CSS specific areas of the
-Amaya interface.
-</li>
-<li>
-Section "<a href="#L394">Current State</a>" presents the CSS functionnalities
-that are currently implemented.
-</li>
-<li>
-Section "<a href="#L395">What's lacking</a>" explains the main points to be
-improved or added.
-</li>
+  <li>Section "<a href="#L392">Presentation</a>" gives a short overview of the
+    CSS.</li>
+  <li>Section  "<a href="#L393">Interface</a>" details the CSS specific areas
+    of the Amaya interface.</li>
+  <li>Section "<a href="#L394">Current State</a>" presents the CSS
+    functionalities that are currently implemented.</li>
+  <li>Section "<a href="#L395">What's lacking</a>" explains the main points to
+    be improved or added.</li>
 </ol>
 
 <h3><a name="L392">Presentation</a></h3>
 
 <p>CSS defines a syntax to describe presentation associated with elements as a
 set of properties (like colors, fonts, etc.). Associated to properties, a
-selector restrict the application of these rules to a set of element depending
-on their type (like H1, or LI), their context (like an EM in a H3) or classes
-applied  to an element. A set of rules defines which properties should be
+selector restricts the application of these rules to a set of elements
+depending on their type (like H1, or LI), their context (like an EM in a H3)
+or classes applied to an element. A set of rules defines which properties are
 applied when more than one selector match a given element. While this is
-relatively simple for someone used to handle structured documents, the
-experience has shown that a new user may have difficulties to modelize a
-document as a structured entity. This might be a problem when trying to
-introduce the CSS to a large audience.</p>
+relatively simple for someone accustomed to handling structured documents,
+experience has shown that a new user may have difficulties modeling a document
+as a structured entity. This might be a problem when trying to introduce the
+CSS to a large audience.</p>
 
 <p>Thus, the challenge is to build a tool simple enough so that inexperienced
 people can use styles when creating HTML pages with Amaya, while retaining all
@@ -70,7 +61,7 @@ to structured presentation design.</p>
 <p>One of the strongest features of CSS is the cascading model. Presentation
 rules can be fetched from different remote files, tied to the document or
 associated to one specific element in a page. This allows sharing and reuse of
-sets of rules whilst allowing specific presentation. It allows also the use of
+sets of rules while allowing specific presentation. It also allows  the use of
 an user defined set of rules to accommodate his preferences. We tried to give
 a complete and simple view of the cascading model, showing separately specific
 presentation (Structure View), document specific rules (Structure View and CSS
@@ -88,155 +79,107 @@ Amaya:</p>
 <p>The Amaya menu bar contains a <strong>Style</strong> menu containing all
 the actions related to presentation and style manipulation. Entries in that
 menu are ordered from the most specific to the most generic operations, except
-the two last ones, which are not related to CSS, but to HTML
+the last two entries, which are not related to CSS, but to HTML
 (<strong>Information type</strong> and <strong>Character
 element</strong>).</p>
 <ul>
-<li>
-Three entries call dialog boxes that associate presentation with the currently
-selected elements:
-<ul>
-<li>
-<strong>Character Style</strong> allows one to select font attributes (size,
-style, family and underline)
-</li>
-<li>
-<strong>Colors</strong> allows one to choose the  foreground and background
-colors from a palette.
-</li>
-<li>
-<strong>Format</strong> allows one to set  alignment, indentation,
-justification and linespacing.
-</li>
-<li>
-<strong>Background Image</strong> allows one to insert a background image and
-to select the repeat mode.
-</li>
-</ul>
-
-<p>All modifications made with these dialog boxes can be viewed immediately in
-the WYSIWYG view and the Structure view.</p>
-</li>
-<li>
-Two entries are related to classes:
-<ul>
-<li>
-<strong>Create Rule</strong> uses the style of the selected element to define
-a new class with the same. A list of the existing classes is proposed, the
-type of the current element being the default. This is the first step toward
-defining CSS rules. Presentation is moved from the selected element to the
-document header, defining a new CSS rule. All elements of the new class take
-the new style.
-</li>
-<li>
-<strong>Apply class</strong> uses one of the existing classes and applies it
-to the selected elements. These elements are then displayed with the style
-associated with class chosen.
-</li>
-</ul>
-</li>
-<li>
-<strong>Style sheets</strong> entries give access to external and User's
-preference CSS style sheets:
-<ul>
-<li>
-The entry <strong>Link</strong> allows one to link a new CSS style sheet to
-the current document. One can click directly the target style sheet if it is
-already displayed in a Amaya window. In other case the user should click in
-the current document to get a dialogue form and type the target style sheet
-URI. This command adds a link element into the document head.
-</li>
-<li>
-The entry <strong>Open</strong> allows one to open one of the external CSS
-style sheets applied to the current document.
-</li>
-<li>
-The entry <strong>Disable</strong> allows one to remove effects of one of the
-external CSS style sheets to the current document. This command doesn't affect
-the CSS link in the document.
-</li>
-<li>
-The entry <strong>Enable</strong> allows one to re-apply effects of one of the
-external CSS style sheets to the current document. This command doesn't affect
-the CSS link in the document.
-</li>
-<li>
-The entry <strong>Remove</strong> allows one to remove one of the  external
-CSS style sheets. This command acts as the Disable command but in addition to
-that the element link which attaches the external CSS style sheet is removed.
-</li>
-</ul>
-
-<p>Commands Open, Disable and Enable can be applied to the User's preference
-style sheet, but commands Link and Remove concern only linked CSS style
-sheets. The following figure shows the list of CSS style sheets proposed for
-the command Open. If no CSS style sheet is currently applied to a document, a
-dialog box explains that there is "No CSS file available".</p>
-
-<p></p>
-
-<p><img src="../Icons/css.gif"></p>
-
-<p></p>
-</li>
+  <li>Three entries call dialog boxes that associate presentation with the
+    currently selected elements:
+    <ul>
+      <li><strong>Character Style</strong> allows one to select font
+        attributes (size, style, family and underline)</li>
+      <li><strong>Colors</strong> allows one to choose the  foreground and
+        background colors from a palette.</li>
+      <li><strong>Format</strong> allows one to set  alignment, indentation,
+        justification and linespacing.</li>
+      <li><strong>Background Image</strong> allows one to insert a background
+        image and to select the repeat mode.</li>
+    </ul>
+    <p>All modifications made with these dialog boxes can be viewed
+    immediately in the WYSIWYG view and the Structure view.</p>
+  </li>
+  <li>Two entries are related to classes:
+    <ul>
+      <li><strong>Create Rule</strong> uses the style of the selected element
+        to define a new class with the same style. A list of the existing
+        classes is proposed, the type of the current element being the
+        default. This is the first step toward defining CSS rules.
+        Presentation is moved from the selected element to the document
+        header, defining a new CSS rule. All elements of the new class take
+        the new style.</li>
+      <li><strong>Apply class</strong> uses one of the existing classes and
+        applies it to the selected elements. These elements are then displayed
+        with the style associated with class chosen.</li>
+    </ul>
+  </li>
+  <li><strong>Style sheets</strong> entries give access to external and User's
+    preference CSS style sheets:
+    <ul>
+      <li>The entry <strong>Link</strong> allows one to link a new CSS style
+        sheet to the current document. One can directly click on the target
+        style sheet if it is already displayed in a Amaya window. In other
+        case the user should click in the current document to get a dialogue
+        form and type the target style sheet URI. This command adds a link
+        element into the document head.</li>
+      <li>The entry <strong>Open</strong> allows one to open one of the
+        external CSS style sheets applied to the current document.</li>
+      <li>The entry <strong>Disable</strong> allows one to remove effects of
+        one of the external CSS style sheets to the current document. This
+        command doesn't affect the CSS link in the document.</li>
+      <li>The entry <strong>Enable</strong> allows one to re-apply effects of
+        one of the external CSS style sheets to the current document. This
+        command doesn't affect the CSS link in the document.</li>
+      <li>The entry <strong>Remove</strong> allows one to remove one of the 
+        external CSS style sheets. This command acts as the Disable command
+        but in addition to that the element link which attaches the external
+        CSS style sheet is removed.</li>
+    </ul>
+    <p>The commands Open, Disable and Enable can be applied to the User's
+    preference style sheet, but the commands Link and Remove concern only
+    linked CSS style sheets. The following figure shows the list of CSS style
+    sheets proposed for the command Open. If no CSS style sheet is currently
+    applied to a document, a dialog box explains that there is "No CSS file
+    available".</p>
+    <p><img src="../Icons/css.gif" alt="css.gif"></p>
+  </li>
 </ul>
 
 <h3><a name="L394">Current State</a></h3>
 
 <p>Here, we focus on what is currently supported from the CSS2 proposal:</p>
 <ul>
-<li>
-Parsing:
-<ul>
-<li>
-all the basic:
-<ul>
-<li>
-grouping selectors in one rule
-</li>
-<li>
-grouping properties in one rule
-</li>
-<li>
-comments
-</li>
-</ul>
-</li>
-<li>
-classes and pseudoclasses
-</li>
-<li>
-context sensitive selector
-</li>
-<li>
-standard units
-</li>
-</ul>
-</li>
-<li>
-Cascading order should be fine.
-</li>
-<li>
-CSS properties: Everything should be parsed correctly, but the back-end may
-lack support for some attributes (see <a href="CSSStatus.html">CSSStatus</a>
-file for more details).
-<ul>
-<li>
-Text: text-align, text-decoration and text-indent.
-</li>
-<li>
-Fonts: Times, Helvetica and Courrier are available, with various character
-style and a set of prefefined size (from 6 to 60 points).
-</li>
-<li>
-Border, padding box properties are not supported in this version.
-</li>
-</ul>
-</li>
+  <li>Parsing:
+    <ul>
+      <li>all the basic:
+        <ul>
+          <li>grouping selectors in one rule</li>
+          <li>grouping properties in one rule</li>
+          <li>comments</li>
+        </ul>
+      </li>
+      <li>classes and pseudoclasses</li>
+      <li>context sensitive selector</li>
+      <li>standard units</li>
+    </ul>
+  </li>
+  <li>Cascading order should be fine.</li>
+  <li>CSS properties: Everything should be parsed correctly, but the back-end
+    may lack support for some attributes (see <a
+    href="CSSStatus.html">CSSStatus</a> file for more details).
+    <ul>
+      <li>Text: text-align, text-decoration and text-indent.</li>
+      <li>Fonts: Times, Helvetica and Courier are available, with various
+        character style and a set of predefined size (from 6 to 60
+      points).</li>
+      <li>Border, padding box properties are not supported in this
+      version.</li>
+    </ul>
+  </li>
 </ul>
 
-<p>There is support for user's preference which can be provided in
-<tt><code>$(HOME)/.amaya/amaya.css</code></tt> (Unix) or
+<p>There is support for user's preference which can be provided in</p>
+
+<p><tt><code>$(HOME)/.amaya/amaya.css</code></tt> (Unix) or
 <code>c:\.amaya/amaya.css</code> (Windows).</p>
 
 <h3><a name="L395">What's lacking</a></h3>
@@ -244,26 +187,19 @@ Border, padding box properties are not supported in this version.
 <p>First, considering the current draft compliance, the main issues for full
 CSS2 support are:</p>
 <ul>
-<li>
-The <strong>Print</strong> command does not currently render presentation
-defined in style sheets.
-</li>
-<li>
-The CSS2 formatting model for border and padding is not yet implemented.
-</li>
-<li>
-Pseudo elements are difficult to handle.
-</li>
-<li>
-The current implementation is a bit restrictive on fonts.
-</li>
+  <li>The <strong>Print</strong> command does not currently render
+    presentation defined in style sheets.</li>
+  <li>The CSS2 formatting model for border and padding is not yet
+  implemented.</li>
+  <li>Pseudo elements are difficult to handle.</li>
+  <li>The current implementation is a bit restrictive on fonts.</li>
 </ul>
-
-<p></p>
 <hr>
 
 <address>
-<a name="L511" href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
-$Date$ </address>
+  <p><a name="L511" href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+  $Date$</p>
+
+</address>
 </body>
 </html>

@@ -1,18 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<!-- Created by: Stephane Bonhomme, 22-Aug-1996 -->
 <title>
 Use of the file HTML.trans</title>
 </head>
-<body>
-<p>
-<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
-<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a
-href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
-alt="Doc"></a></p>
 
-<h1 align=center>Use of the file HTML.trans</h1>
+<body lang="en">
+<p><a href="../../">
+<img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
+<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a>
+<a href="Manual.html">
+<img border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
+
+<h1>Use of the file HTML.trans</h1>
 <p>
 This document is an introduction to the structure transformation mechanism
 provided by <strong>Amaya</strong>. It describes the syntax of the
@@ -174,8 +174,6 @@ matched elements, a new LI tag is created within an UL. When the rule is first
 applied, the resulting structure is empty, so there is no UL element in which
 the LI can be created. Therefore an UL is first created, then the rule can be
 applied.</p>
-<p>
-</p>
 <li>
 The second example transforms a definition list into a table.
 <pre>Table: DL{(DT|DD)+}; 
@@ -195,8 +193,6 @@ Each DT involves the creation of a new row (TR) in the table body.
 Each DD involves the creation of a new cell (TD) in the last existing row of
 the table.
 </ul>
-<p>
-</p>
 <li>
 The third example removes a table element, keeping its content unchanged but
 extracted from the table.
@@ -214,16 +210,15 @@ table (cell_content).</p>
 <p>
 The second rule expresses that the contents of each cell have to be moved to
 the place of the original table.</p>
-<p>
-</p>
 <li>
-see the file <code>amaya/HTML.trans</code> for more transformation examples.
+See the file <code>amaya/HTML.trans</code> for more transformation examples.
 </ul>
 <hr>
-<p>
-<a href="mailto:Stephane.Bonhomme@inrialpes.fr">St&eacute;phane
-Bonhomme</a></p>
-<p>
-$Date$</p>
+
+<address>
+<p><a href="mailto:Stephane.Bonhomme@inrialpes.fr">
+St&eacute;phane Bonhomme</a></p>
+<p>$Date$</p>
+</address>
 </body>
 </html>

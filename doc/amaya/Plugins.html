@@ -1,362 +1,276 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-Plug-ins support in Amaya</title>
-<meta name="GENERATOR" content="amaya V1.0 Alpha">
+  <title>Plug-ins support in Amaya</title>
+  <meta name="GENERATOR" content="amaya V2.1">
 </head>
-<body style="text-align: justify" lang="en">
-<p>
-<a href="../../"><img border="0" alt="W3C" src="../..//Icons/WWW/w3c_home">
-</a> <a href="../"><img border="0" alt="Amaya" src="../Icons/amaya.gif"></a> <a
-href="Manual.html"><img alt="Doc" border="0" src="../Icons/doc48x.gif"></a></p>
 
-<h1 align=center>Plug-ins Support in Amaya</h1>
-<p>
-Plug-ins allow Amaya to be extended by embedding external application. Two
+<body lang="en" style="text-align: justify">
+
+<p><a href="../../"><img alt="W3C" border="0" src="../..//Icons/WWW/w3c_home">
+</a> <a href="../"><img alt="Amaya" border="0" src="../Icons/amaya.gif"></a>
+<a href="Manual.html"><img alt="Doc" border="0"
+src="../Icons/doc48x.gif"></a></p>
+
+<h1 align="center">Plug-ins Support in Amaya</h1>
+
+<p>Plug-ins allow Amaya to be extended by embedding external application. Two
 main motivations lead us to add a support for plug-ins into <a
 href="../">Amaya</a>:</p>
 <ul>
-<li><p>
-To make new experiments with HTML Cougar especially with the OBJECT
-element,,</p>
-<li><p>
-To allow users to use new image formats, to support audio/video applications,
-to run some new web applications such as control applications (electronic
-payment for example), etc.</p>
+  <li><p>To make new experiments with HTML Cougar especially with the OBJECT
+    element,,</p>
+  </li>
+  <li><p>To allow users to use new image formats, to support audio/video
+    applications, to run some new web applications such as control
+    applications (electronic payment for example), etc.</p>
+  </li>
 </ul>
-<p>
-Amaya Plug-ins support is developed according to the Netscape <a
+
+<p>Amaya Plug-ins support is developed according to the Netscape <a
 href="http://home.netscape.com/eng/mozilla/3.0/handbook/plugins/pgtoc.htm">Plug-in
 API</a>.</p>
 
 <h2>Usage of Plug-ins</h2>
-<p>
-There is no difficulty for installing plug-ins for Amaya. One just have to
+
+<p>There is no difficulty for installing plug-ins for Amaya. One just have to
 create a plug-in directory, in which the dynamic code of plug-ins have to be
-stpred, and to define the environment variable AMAYA_PLUGIN_DIR that gives the
+stored, and to define the environment variable AMAYA_PLUGIN_DIR that gives the
 plug-in directory. For example:</p>
-<p>
-</p>
+
 <pre style="text-indent : 20pt"><span style="text-indent : 20pt">> mkdir /users/guetari/plugindir</span></pre>
 <pre style="text-indent : 20pt"><span style="text-indent : 20pt">> setenv AMAYA_PLUGIN_DIR /users/guetari/plugindir</span></pre>
-<p style="text-indent : 0pt">
-<span style="text-indent : 0pt">If the environment variable AMAYA_PLUGIN_DIR
-does not exist, Amaya uses the default directory $(HOME)/.amaya/plugins to
-look for dynamic code of plug-ins when it starts up.</span></p>
-<p>
-Some other files may need to be installed and/or other environment variables
-have to be set (according to plug-ins installation instructions).</p>
-<p>
-At the present time, plug-ins are developed for commercial web browser and may
-have assisted automatic installation procedures. These latter are not yet
+
+<p>If the environment variable AMAYA_PLUGIN_DIR does not exist, 
+Amaya uses the default directory $(HOME)/.amaya/plugins to look 
+for dynamic code of plug-ins when it starts up.</p>
+
+<p>Some other files may need to be installed and/or other environment
+variables have to be set (according to plug-ins installation
+instructions).</p>
+
+<p>At the present time, plug-ins are developed for commercial web browser and
+may have assisted automatic installation procedures. These latter are not yet
 valid for Amaya, only manual installation is right.</p>
-<p>
-The plug-in button <img src="../Icons/Plugin.gif"> when pressed shows the list of all
-installed plug-ins. For each of them we can see the Mime type it handles.</p>
-<p>
-There is a major difference between Amaya and other web browsers supporting
+
+<p>The plug-in button <img alt="Plugin.gif" src="../Icons/Plugin.gif"> when
+pressed shows the list of all installed plug-ins. For each of them we can see
+the Mime type it handles.</p>
+
+<p>There is a major difference between Amaya and other web browsers supporting
 plug-ins mechanism. Plug-ins are encapsulated in HTML pages using the OBJECT
-element and not the  EMBED element which is not recognized in ani <a
+element and not the  EMBED element which is not recognized in any <a
 href="http://www.w3.org">W3C</a> HTML DTD. OBJECT is a part of the <a
 href="../../MarkUp">HTML Cougar</a> norm.</p>
-<p>
-At least three parameters are required for each plug-in:</p>
+
+<p>At least three parameters are required for each plug-in:</p>
 <ul>
-<li><p>
-DATA which is a URL to the object's (plug-in) data,</p>
-<li><p>
-WIDTH which gives the suggested width of a box enclosing the visible area of
-the object (plug-in),</p>
-<li><p>
-HEIGHT which gives the suggested height of a box enclosing the visible area of
-the object (plug-in)</p>
+  <li><p>DATA which is a URL to the object's (plug-in) data,</p>
+  </li>
+  <li><p>WIDTH which gives the suggested width of a box enclosing the visible
+    area of the object (plug-in),</p>
+  </li>
+  <li><p>HEIGHT which gives the suggested height of a box enclosing the
+    visible area of the object (plug-in)</p>
+  </li>
 </ul>
-<p>
-</p>
 <pre>&lt;OBJECT DATA="http://www.location/plugindatadir/datafile.ext" HEIGHT=400, WIDTH=200></pre>
 <pre>&lt;/OBJECT></pre>
-<p>
-</p>
-<p>
-In addition to these three parameters, plug-ins may need other attributes to
-communicate information between the HTML page and its code. These private
+
+<p>In addition to these three parameters, plug-ins may need other attributes
+to communicate information between the HTML page and its code. These private
 attributes have to be introduced using the PARAM element of the OBJECT
 element.</p>
 
 <h2>Amaya Plug-in API</h2>
-<p>
-</p>
-<p>
-When Amaya starts up, it looks for all available plug-ins into the amaya
+
+<p>When Amaya starts up, it looks for all available plug-ins into the amaya
 plug-in directory. For each plug-in, it initializes a structure (PluginInfo)
 which indicates the path and the name of the dynamic code of the plug-in, its
 mime type, its identifier, and the functions supplied by Amaya. These
 functions allow the plug-in to communicate with Amaya:</p>
-<p>
-</p>
-<pre><span style="font-family : courrier">struct PluginInfo {</span></pre>
-<pre style="text-indent : 20pt, font-family : courrier"><span style="text-indent : 20pt">   char* pluginDL;       /* Location of the plug-in dynamic code */</span></pre>
-<pre style="text-indent : 20pt, font-family : courrier">   char* pluginMimeType; /*Mime type of the plug-in */</pre>
-<pre style="text-indent : 20pt, font-family : courrier">   char* pluginID;       /* plug-in identifier */</pre>
-<pre style="text-indent : 20pt, font-family : courrier">   char* pluginURL;      /* Where data needed by plug-in is stored */</pre>
-<pre style="text-indent : 20pt, font-family : courrier">   char* fileExt;        /* Suffix of files supported by the plug-in */</pre>
-<pre style="text-indent : 20pt, font-family : courrier">   void* pluginHandle ;  /* Address of the dynamic code of the plug-in when loaded */</pre>
-<pre style="text-indent : 20pt, font-family : courrier"><span style="text-indent : 20pt">   NPPluginFuncs* pluginFunctionTable; /* Functions supplied by the plug-in */</span></pre>
-<p>
-<span style="font-family : courrier">};</span></p>
-<p>
-</p>
-<p>
-For each plug-in a driver is added into the PictureHandlerTable. It indicates
-the coordinates, the height and the width of the box where the visible part of
-the plug-in will be displayed, the name of the data file needed by the
-plug-in, the pointer on the instance of the plug-in when created. An instance
-of a given plug-in is created when Amaya encounters in a HTML file data of a
-Mime type registered for the plug-in.</p>
-<p>
-</p>
 
-<h3>TtaBrowsePluginDirectory:</h3>
-<p>
-This function browses the amaya plug-in directory mentioned by the environment
-variable AMAYA_PLUGIN_DIR (or the directory $(HOME)/.amaya/plugins by
-default). For each plug-in, it initializes the structure PluginInfo and store
-it into the pluginTable. Then it calls the function InitPluginHandlers.
-TtaBrowsePluginDirectory requires no parameters:</p>
-<pre>TtaBrowsePluginDirectory ()</pre>
-<p>
-</p>
+<pre style="font-family : courier"><span style="font-family : courier">struct PluginInfo {</span></pre>
+<pre style="text-indent : 20pt, font-family : courier"><span style="text-indent : 20pt">   char* pluginDL;       /* Location of the plug-in dynamic code */</span></pre>
+<pre style="text-indent : 20pt, font-family : courier">   char* pluginMimeType; /*Mime type of the plug-in */</pre>
+<pre style="text-indent : 20pt, font-family : courier">   char* pluginID;       /* plug-in identifier */</pre>
+<pre style="text-indent : 20pt, font-family : courier">   char* pluginURL;      /* Where data needed by plug-in is stored */</pre>
+<pre style="text-indent : 20pt, font-family : courier">   char* fileExt;        /* Suffix of files supported by the plug-in */</pre>
+<pre style="text-indent : 20pt, font-family : courier">   void* pluginHandle ;  /* Address of the dynamic code of the plug-in when loaded */</pre>
+<pre style="text-indent : 20pt, font-family : courier"><span style="text-indent : 20pt">   NPPluginFuncs* pluginFunctionTable; /* Functions supplied by the plug-in */</span></pre>
 
-<h3>InitPluginHandlers:</h3>
-<p>
-This function initializes a driver for the plug-in and stores it in the table
-of the image drivers (PictureHandlerTable). This driver shows the coordinates,
-the height and the width of the box where the visible part of the plug-in will
-be displayed, a pointer to an instance of the plug-in, the data file name
-needed by the plug-in, etc. This function requires two parameters:</p>
-<pre>InitPluginHandlers (boolean printing, int indexHandler)</pre>
 <ul>
-<li><p>
-<tt>printing</tt> is a boolean variable which indicates if the driver supports
-printing. At the present time, it is always set to FALSE.</p>
-<li><p>
-<tt>indexHandler</tt> is the index of the plug-in in the pluginTable.</p>
+<li><tt>path</tt> indicates the directory of the dynamic code of the     
+    plug-in and the name of the library (for example:    
+    <tt>" /users/guetari/.amaya/plugins/mypluginlib.so"</tt>)
+<li><tt>indexHandler</tt> is the index of the plug-in in the
+    pluginTable.
 </ul>
-<p>
-</p>
-
-<h3>Ap_InitializePlugin:</h3>
-<p>
-This function loads the dynamic code of the plug-in, determines its Mime type
-and indicates to the plug-in the functions supplied by Amaya. These functions
-are needed by the plug-in to communicate with Amaya. This function requires
-two parameters:</p>
-<pre>Ap_InitializePlugin (char* path, int indexHandler)</pre>
-<ul>
-<li><p>
-<tt>path</tt> indicates the directory of the dynamic code of the plug-in and
-the name of the library (for example:
-<tt>"/users/guetari/.amaya/plugins/mypluginlib.so"</tt>)</p>
-<li><p>
-<tt>indexHandler</tt> is the index of the plug-in in the pluginTable.</p>
-</ul>
-<p>
-</p>
 
 <h2>Creating instances and displaying plug-ins</h2>
-<p>
-When Amaya encounters data of a Mime type registered for a given plug-in, it
-creates an instance of the plug-in, displays it and transmit the data to the
-plug-in.</p>
-<p>
-</p>
+
+<p>When Amaya encounters data of a Mime type registered for a given plug-in,
+it creates an instance of the plug-in, displays it and transmit the data to
+the plug-in.</p>
 
 <h3>Ap_CreatePluginInstance:</h3>
-<p>
-This functions creates an instance of the given plug-in and a stream with the
-data file. Then it calls the plug-in function NPP_NEW. This function requires
-three parameters:</p>
+
+<p>This functions creates an instance of the given plug-in and a stream with
+the data file. Then it calls the plug-in function NPP_NEW. This function
+requires three parameters:</p>
 <pre>void Ap_CreatePluginInstance (PictInfo* imageDesc, Display* display, int type)</pre>
 <ul>
-<li><p>
-<tt>imageDesc</tt> gives the information about the plug-in: X and Y
-coordinates, width and height of a box enclosing the visible area of the
-plug-in, the data file name and a pointer which will be set to the address of
-the instance,</p>
-<li><p>
-<tt>display</tt> (for unix platforms),</p>
-<li><p>
-<tt>type</tt> allows to determine the index of the plug-in in the
-pluginTable.</p>
+  <li><p><tt>imageDesc</tt> gives the information about the plug-in: X and Y
+    coordinates, width and height of a box enclosing the visible area of the
+    plug-in, the data file name and a pointer which will be set to the address
+    of the instance,</p>
+  </li>
+  <li><p><tt>display</tt> (for unix platforms),</p>
+  </li>
+  <li><p><tt>type</tt> allows to determine the index of the plug-in in the
+    pluginTable.</p>
+  </li>
 </ul>
-<p>
-</p>
-<p>
-When the instance is created, it interacts with Amaya: Amaya may call plug-in
-functions and vice versa. The Amaya functions called by the plug-in are:</p>
-<p>
-</p>
+
+<p>When the instance is created, it interacts with Amaya: Amaya may call
+plug-in functions and vice versa. The Amaya functions called by the plug-in
+are:</p>
 
 <h3>Ap_MemAlloc:</h3>
-<p>
-Allocates memory from Amaya side. It requires one parameters the size of block
-memory to be allocated.</p>
-<p>
-void* Ap_MemAlloc (uint32 size)</p>
-<p>
-</p>
+
+<p>Allocates memory from Amaya side. It requires one parameters the size of
+block memory to be allocated.</p>
+
+<p>void* Ap_MemAlloc (uint32 size)</p>
 
 <h3>Ap_MemFlush:</h3>
-<p>
-At the present time, <tt>Ap_MemFlush</tt> calls <tt>Ap_MemAlloc</tt> and does
-nothing else. It requires one parameter:</p>
+
+<p>At the present time, <tt>Ap_MemFlush</tt> calls <tt>Ap_MemAlloc</tt> and
+does nothing else. It requires one parameter:</p>
 <pre>void* Ap_MemFlush (uint32 size)</pre>
-<p>
-</p>
 
 <h3>Ap_MemFree:</h3>
-<p>
-Deallocate the block of memory specified by <tt>ptr</tt>. Its parameter is the
-pointer to deallocate:</p>
+
+<p>Deallocate the block of memory specified by <tt>ptr</tt>. Its parameter is
+the pointer to deallocate:</p>
 <pre>void Ap_MemFree (void* ptr).</pre>
-<p>
-</p>
 
 <h3>Ap_DestroyStream:</h3>
-<p>
-Closes and deletes a stream. It requires three parameters:</p>
+
+<p>Closes and deletes a stream. It requires three parameters:</p>
 <pre>NPError Ap_DestroyStream (NPP instance, NPStream* stream NPError reason)</pre>
 <ul>
-<li><p>
-<tt>instance</tt> is the instance of the plug-in concerned by the stream to be
-destroyed,</p>
-<li><p>
-<tt>stream</tt> is the stream to destroy</p>
-<li><p>
-<tt>reason</tt> indicates why the stream has to be destroyed</p>
+  <li><p><tt>instance</tt> is the instance of the plug-in concerned by the
+    stream to be destroyed,</p>
+  </li>
+  <li><p><tt>stream</tt> is the stream to destroy</p>
+  </li>
+  <li><p><tt>reason</tt> indicates why the stream has to be destroyed</p>
+  </li>
 </ul>
-<p>
-</p>
 
 <h3>Ap_GetJavaEnv:</h3>
-<p>
-Not yet implemented</p>
-<p>
-</p>
+
+<p>Not yet implemented</p>
 
 <h3>Ap_GetJavaPeer:</h3>
-<p>
-Not yet implemented</p>
-<p>
-</p>
+
+<p>Not yet implemented</p>
 
 <h3>Ap_URLNotify:</h3>
-<p>
-Notifies a plug-in instance of the completion of a URL request. It requires
+
+<p>Notifies a plug-in instance of the completion of a URL request. It requires
 four parameters:</p>
 <pre>void Ap_URLNotify (NPP instance, const char* url, NPReason reason, void* notifyData)</pre>
 <ul>
-<li><p>
-<tt>url</tt> is the location of the data needed by the stream,</p>
-<li><p>
-<tt>reason</tt> is the reason of the notification: the data is completely
-transmitted, the stop button is pushed, etc.</p>
-<li><p>
-<tt>notifyData</tt> is a plug-in private value used to uniquely identify the
-request.</p>
+  <li><p><tt>url</tt> is the location of the data needed by the stream,</p>
+  </li>
+  <li><p><tt>reason</tt> is the reason of the notification: the data is
+    completely transmitted, the stop button is pushed, etc.</p>
+  </li>
+  <li><p><tt>notifyData</tt> is a plug-in private value used to uniquely
+    identify the request.</p>
+  </li>
 </ul>
-<p>
-</p>
 
 <h3>Ap_GetURL:</h3>
-<p>
-Requests that a new stream be created with the contents of the given URL. It
-requires three parameters:</p>
+
+<p>Requests that a new stream be created with the contents of the given URL.
+It requires three parameters:</p>
 <pre>NPError Ap_GetURL (NPP instance instance, const char* url, const char* target)</pre>
 <ul>
-<li><p>
-<tt>instance</tt> is the plug-in instance which require the creation of the
-new stream,</p>
-<li><p>
-<tt>url</tt> is the location of the data needed by the created stream,</p>
-<li><p>
-<tt>target</tt> indicates the target of the stream. If target is non-NULL, the
-stream is sent to Amaya, otherwise, the stream is sent to the plug-in.</p>
+  <li><p><tt>instance</tt> is the plug-in instance which require the creation
+    of the new stream,</p>
+  </li>
+  <li><p><tt>url</tt> is the location of the data needed by the created
+    stream,</p>
+  </li>
+  <li><p><tt>target</tt> indicates the target of the stream. If target is
+    non-NULL, the stream is sent to Amaya, otherwise, the stream is sent to
+    the plug-in.</p>
+  </li>
 </ul>
-<p>
-</p>
 
 <h3>Ap_GetURLNotify:</h3>
-<p>
-Does the same thing then <tt>Ap_GetURL</tt> but notifies to the plug-in the
+
+<p>Does the same thing then <tt>Ap_GetURL</tt> but notifies to the plug-in the
 end of the stream by calling<tt> Ap_GetURLNotify</tt>. It requires a
 parameters more than <tt>Ap_GetURL</tt> which is <tt>notifyData</tt>. This
 latter is a plug-in private value used to uniquely identify the request.</p>
 <pre>NPError Ap_GetURLNotify (NPP instance instance, const char* url, const char* target, void* notifyData)</pre>
-<p>
-</p>
-<p>
-</p>
 
 <h3>Ap_NewStream:</h3>
-<p>
-Requests the creation of a new stream of data produced by the plug-in and
+
+<p>Requests the creation of a new stream of data produced by the plug-in and
 consumed by Amaya. This function is, at the present time partially implemented
 into Amaya. It requires four parameters:</p>
 <pre>Ap_NewStream (NPP instance, NPMIMEType type, const char* target, NPStream** stream_ptr)</pre>
 <ul>
-<li><p>
-<tt>type</tt> is the mime type of the stream to be created,</p>
-<li><p>
-<tt>target</tt> indicates the window or the frame where the result of the
-stream will be displayed,</p>
-<li><p>
-<tt>stream_ptr</tt> is a pointer on the stream which will be created.</p>
+  <li><p><tt>type</tt> is the mime type of the stream to be created,</p>
+  </li>
+  <li><p><tt>target</tt> indicates the window or the frame where the result of
+    the stream will be displayed,</p>
+  </li>
+  <li><p><tt>stream_ptr</tt> is a pointer on the stream which will be
+    created.</p>
+  </li>
 </ul>
-<p>
-</p>
 
 <h3>Ap_PostURL:</h3>
-<p>
-Post data from a file to a given URL. This function is partially implemented
-at the present time and requires six parameters:</p>
+
+<p>Post data from a file to a given URL. This function is partially
+implemented at the present time and requires six parameters:</p>
 <pre>Ap_PostURL (NPP instance, const char* url, const char* target, uint32 len, const char* buf, NPBool file)</pre>
 <ul>
-<li><p>
-<tt>buf</tt> contains the data to be posted,</p>
-<li><p>
-<tt>len</tt> is the length of the buffer to be posted,</p>
-<li><p>
-<tt>file</tt> is a boolean. If it is TRUE, the data is stored in a file else
-it is stored in a bloc memory.</p>
+  <li><p><tt>buf</tt> contains the data to be posted,</p>
+  </li>
+  <li><p><tt>len</tt> is the length of the buffer to be posted,</p>
+  </li>
+  <li><p><tt>file</tt> is a boolean. If it is TRUE, the data is stored in a
+    file else it is stored in a bloc memory.</p>
+  </li>
 </ul>
-<p>
-</p>
 
 <h3>Ap_PostURLNotify:</h3>
-<p>
-It behaves exactly like <tt>Ap_PostURL</tt> but notifies the plug-in at the
+
+<p>It behaves exactly like <tt>Ap_PostURL</tt> but notifies the plug-in at the
 end of the post operation (by calling <tt>Ap_URLNotify</tt>). In addition to
 the parameters of <tt>Ap_PostURL</tt>, it requires a parameter of type
 <tt>void*</tt> which is plug-in private value used to uniquely identify the
 request (<tt>notifyData</tt>).</p>
 <pre>Ap_PostURL (NPP instance, const char* url, const char* target, uint32 len, const char* buf, NPBool file, void* notifyData)</pre>
-<p>
-</p>
 
 <h3>Ap_RequestRead:</h3>
-<p>
-Request a range of bytes for a seekable stream. It requires two parameters a
-stream and list of types <tt>NPByteRange</tt> which is a linked list of
+
+<p>Request a range of bytes for a seekable stream. It requires two parameters
+a stream and list of types <tt>NPByteRange</tt> which is a linked list of
 objects, each of which indicates an offset and a length into the stream:</p>
 <pre>NPError Ap_RequestRead (NPStream* stream, NPByteRange list)</pre>
-<p>
-</p>
 
 <h3>Ap_GetValue:</h3>
-<p>
-Only for Unix platform. It requires three parameters: <tt>instance</tt> (of
+
+<p>Only for Unix platform. It requires three parameters: <tt>instance</tt> (of
 the plug-in), variable (of type <tt>NPNVariable</tt>) and <tt>r_value</tt> (of
 type <tt>void*</tt>). <tt>instance</tt> and <tt>variable</tt> are input
 parameters and <tt>r_value</tt> is an output parameter. If variable is set to
@@ -364,25 +278,25 @@ parameters and <tt>r_value</tt> is an output parameter. If variable is set to
 variable value is <tt>NPNVxtAppContext</tt>, <tt>r_value</tt> is set to the
 value of the application context.</p>
 <pre>void Ap_GetValue (NPP instance, NPNVariable var, void* r_value)</pre>
-<p>
-</p>
 
 <h2>Examples of plugins</h2>
 <ul>
-<li><p>
-Try the tcl plug-in here</p>
-<li><p>
-<a href="http://opera.inrialpes.fr/guetari/webxpresso.html">Here</a> you can
-play with the webxpresso plug-in</p>
-<li><p>
-Examples of vosaic plug-in are <a
-href="http://opera.inrialpes.fr/guetari/vosaic.html">here</a></p>
+  <li><p>Try the tcl plug-in here</p>
+  </li>
+  <li><p><a href="http://opera.inrialpes.fr/guetari/webxpresso.html">Here</a>
+    you can play with the webxpresso plug-in</p>
+  </li>
+  <li><p>Examples of vosaic plug-in are <a
+    href="http://opera.inrialpes.fr/guetari/vosaic.html">here</a></p>
+  </li>
 </ul>
+<hr>
 
-Your comments are welcome.
 <address>
-<a href="mailto:Ramzi.Guetari@w3.org">Ramzi Guetari</a><br>
-<a href="../../Help/Webmaster">Webmaster</a><br>
-$Date$</address>
+  <p><a href="mailto:Ramzi.Guetari@w3.org">Ramzi Guetari</a><br>
+  <a href="../../Help/Webmaster">Webmaster</a><br>
+  $Date$</p>
+
+</address>
 </body>
 </html>

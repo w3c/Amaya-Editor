@@ -1,717 +1,1186 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<TITLE>Entering ISO-Latin-1 characters in Amaya</TITLE>
-</HEAD>
-<BODY>
-<P><A href="../../"><IMG BORDER="0" ALT="W3C" SRC="../../Icons/WWW/w3c_home"></A> <A
-href="../"><IMG BORDER="0" SRC="../Icons/amaya.gif" ALT="Amaya"></A>
-<A href="Manual.html"><IMG BORDER="0" SRC="../Icons/doc48x.gif" ALT="Doc"></A> </P>
-<H1>Entering ISO-Latin-1 characters in Amaya</H1>
-<H2>Defining shortcuts</H2>
-<P>The file <CODE>Amaya/bin/amaya.keyboard</CODE> defines the current
-accelerators.</P>
-<H2>ISO-Latin-1 input support in Amaya</H2>
-<P>This document provides the complete list of keyboard input sequences
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Entering ISO-Latin-1 characters in Amaya</title>
+</head>
+
+<body lang="en">
+
+<p><a href="../../"><img border="0" alt="W3C"
+src="../../Icons/WWW/w3c_home"></a> <a href="../"> <img border="0"
+src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"> <img
+border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
+
+<h1>Entering ISO-Latin-1 characters in Amaya</h1>
+
+<h2>Defining shortcuts</h2>
+
+<p>The file <code>Amaya/bin/amaya.keyboard</code> defines the current
+accelerators.</p>
+
+<h2>ISO-Latin-1 input support in Amaya</h2>
+
+<p>This document provides the complete list of keyboard input sequences
 allowing to enter all ISO-Latin-1 characters with a standard (e.g. North
 American) keyboard. These sequences were extracted from the X-Windows 11 rel 6
-file describing the compose sequences for locale support of iso8859-1
-standard, and therefore are expected to follow the appropriate standard
-(available in the file
-<CODE>/usr/X11R6/lib/X11/locale/iso8859-1/Compose</CODE>).</P>
-<P>These input  sequences are based on a three key sequence beginning with a
+file describing the compose sequences for local support of ISO8859-1 standard,
+and therefore are expected to follow the appropriate standard (available in
+the file <code>/usr/X11R6/lib/X11/locale/ISO8859-1/Compose</code>).</p>
+
+<p>These input sequences are based on a three key sequence beginning with a
 modifier, the Alt key or the compose key depending on the keyboard type. For
 example, to obtain a `&aring;' first press the Compose or Alt key, then type
 `a' and `*'. This principle also applies to capital letters: `&Egrave;' is
 obtained by pressing Alt, then `e' with Shift pressed down, and the backquote
-key.</P>
-<P><STRONG>Notes</STRONG> :</P>
-<UL>
-<LI>with Western European keyboards (like the French one) the keys commonly
-used for such sequences (like backquote, tilda, @ and backslash) are themselve
-obtained using the AltGr key plus another key, but these should work fine.
-`&Egrave;' can be obtained on a French keyboard by entering the sequence
-&lt;Alt>, &lt;Shift> + `E', &lt;AltGr> + `&egrave;', since backquote is mapped
-on &lt;AltGr> `&egrave;'.
-<LI>When non-ascii characters are already mapped on the keyboard, this mapping
-should work fine with <STRONG>Amaya</STRONG>.
-<LI>The oelig (o and e ligature) and OElig (O and E ligature) are not part of
-the ISO-Latin-1, so <STRONG>Amaya</STRONG> cannot display them using the standard fonts.
-These characters are displayed as division sign for oelig and multiply sign
-for OElig.
-</UL>
-<H2>Rules for ISO-Latin-1 input</H2>
-<P>Most of the input sequences are based on the following rules:</P>
-<UL>
-<LI>the grave accent on a character is obtained by composing the character
-with a quote: &aacute; is obtained with &lt;Alt> a and quote.
-<LI>the acute accent on a character is obtained by composing the character
-with a backquote: &agrave; is obtained with &lt;Alt> a and backquote.
-<LI>the ring accent on a character is obtained by composing the character with
-a star: &aring; is obtained with &lt;Alt> a and star.
-<LI>the tilde accent on a character is obtained by composing the character
-with a tilda: &atilde; is obtained with &lt;Alt> a and tilda.
-<LI>the circumflex accent on a character is obtained by composing the
-character with a circumflex: &acirc; is obtained with &lt;Alt> a and
-circumflex.
-<LI>the cedilla on a character is obtained by composing the character with a
-comma: &ccedil; is obtained with &lt;Alt> c and comma.
-<LI>the umlaut on a character is obtained by composing the character with
-double quote: &auml; is obtained with &lt;Alt> a and double quote.
-<LI>slashed characters are obtained by composing them with a slash: &oslash;
-is obtained with &lt;Alt> o and slash.
-<LI>ligatures are obtained by composing the first letter with the second one:
-&aelig; is obtained with &lt;Alt> a and e.
-</UL>
-<H3>ISO-Latin-1 sequences table</H3>
+key.</p>
 
-<TABLE BORDER=1>
-<CAPTION></CAPTION>
-  <TR>
-<TD><P>name</P>
-<TD><P>number</P>
-<TD><P>first key</P>
-<TD><P>second key</P>
-<TD><P>Output</P>
-  </TR>
-  <TR>
-<TD><P>AElig</P>
-<TD><P>198</P>
-<TD><P>&lt;Shift> A</P>
-<TD><P>&lt;Shift> E</P>
-<TD><P>&AElig;</P>
-  </TR>
-  <TR>
-<TD><P>Aacute</P>
-<TD><P>193</P>
-<TD><P>&lt;Shift> A</P>
-<TD><P>quote</P>
-<TD><P>&Aacute;</P>
-  </TR>
-  <TR>
-<TD><P>Acirc</P>
-<TD><P>194</P>
-<TD><P>&lt;Shift> A</P>
-<TD><P>circumflex</P>
-<TD><P>&Acirc;</P>
-  </TR>
-  <TR>
-<TD><P>Agrave</P>
-<TD><P>192</P>
-<TD><P>&lt;Shift> A</P>
-<TD><P>backquote</P>
-<TD><P>&Agrave;</P>
-  </TR>
-  <TR>
-<TD><P>Aring</P>
-<TD><P>197</P>
-<TD><P>&lt;Shift> A</P>
-<TD><P>star</P>
-<TD><P>&Aring;</P>
-  </TR>
-  <TR>
-<TD><P>Atilde</P>
-<TD><P>195</P>
-<TD><P>&lt;Shift> A</P>
-<TD><P>tilda</P>
-<TD><P>&Atilde;</P>
-  </TR>
-  <TR>
-<TD><P>Auml</P>
-<TD><P>196</P>
-<TD><P>&lt;Shift> A</P>
-<TD><P>double quote</P>
-<TD><P>&Auml;</P>
-  </TR>
-  <TR>
-<TD><P>Ccedil</P>
-<TD><P>199</P>
-<TD><P>&lt;Shift> C</P>
-<TD><P>comma</P>
-<TD><P>&Ccedil;</P>
-  </TR>
-  <TR>
-<TD><P>Eth</P>
-<TD><P>222</P>
-<TD><P>-</P>
-<TD><P>D</P>
-<TD><P>&ETH;</P>
-  </TR>
-  <TR>
-<TD><P>Eacute</P>
-<TD><P>201</P>
-<TD><P>&lt;Shift> E</P>
-<TD><P>quote</P>
-<TD><P>&Eacute;</P>
-  </TR>
-  <TR>
-<TD><P>Ecirc</P>
-<TD><P>202</P>
-<TD><P>&lt;Shift> E</P>
-<TD><P>circumflex</P>
-<TD><P>&Ecirc;</P>
-  </TR>
-  <TR>
-<TD><P>Egrave</P>
-<TD><P>200</P>
-<TD><P>&lt;Shift> E</P>
-<TD><P>backquote</P>
-<TD><P>&Egrave;</P>
-  </TR>
-  <TR>
-<TD><P>Euml</P>
-<TD><P>203</P>
-<TD><P>&lt;Shift> E</P>
-<TD><P>double quote</P>
-<TD><P>&Euml;</P>
-  </TR>
-  <TR>
-<TD><P>Iacute</P>
-<TD><P>205</P>
-<TD><P>&lt;Shift> I</P>
-<TD><P>quote</P>
-<TD><P>&Iacute;</P>
-  </TR>
-  <TR>
-<TD><P>Icirc</P>
-<TD><P>206</P>
-<TD><P>&lt;Shift> I</P>
-<TD><P>circumflex</P>
-<TD><P>&Icirc;</P>
-  </TR>
-  <TR>
-<TD><P>Igrave</P>
-<TD><P>204</P>
-<TD><P>&lt;Shift> I</P>
-<TD><P>backquote</P>
-<TD><P>&Igrave;</P>
-  </TR>
-  <TR>
-<TD><P>Iuml</P>
-<TD><P>207</P>
-<TD><P>&lt;Shift> I</P>
-<TD><P>double quote</P>
-<TD><P>&Iuml;</P>
-  </TR>
-  <TR>
-<TD><P>Ntilde</P>
-<TD><P>209</P>
-<TD><P>&lt;Shift> N</P>
-<TD><P>tilda</P>
-<TD><P>&Ntilde;</P>
-  </TR>
-  <TR>
-<TD><P>Oacute</P>
-<TD><P>211</P>
-<TD><P>&lt;Shift> O</P>
-<TD><P>quote</P>
-<TD><P>&Oacute;</P>
-  </TR>
-  <TR>
-<TD><P>Ocirc</P>
-<TD><P>212</P>
-<TD><P>&lt;Shift> O</P>
-<TD><P>circumflex</P>
-<TD><P>&Ocirc;</P>
-  </TR>
-  <TR>
-<TD><P>Ograve</P>
-<TD><P>210</P>
-<TD><P>&lt;Shift> O</P>
-<TD><P>backquote</P>
-<TD><P>&Ograve;</P>
-  </TR>
-  <TR>
-<TD><P>Oslash</P>
-<TD><P>216</P>
-<TD><P>&lt;Shift> O</P>
-<TD><P>slash</P>
-<TD><P>&Oslash;</P>
-  </TR>
-  <TR>
-<TD><P>Otilde</P>
-<TD><P>213</P>
-<TD><P>&lt;Shift> O</P>
-<TD><P>tilda</P>
-<TD><P>&Otilde;</P>
-  </TR>
-  <TR>
-<TD><P>Ouml</P>
-<TD><P>214</P>
-<TD><P>&lt;Shift> O</P>
-<TD><P>double quote</P>
-<TD><P>&Ouml;</P>
-  </TR>
-  <TR>
-<TD><P>Thorn</P>
-<TD><P>222</P>
-<TD><P>&lt;Shift> T</P>
-<TD><P>&lt;Shift> H</P>
-<TD><P>&THORN;</P>
-  </TR>
-  <TR>
-<TD><P>Uacute</P>
-<TD><P>205</P>
-<TD><P>&lt;Shift> U</P>
-<TD><P>quote</P>
-<TD><P>&Uacute;</P>
-  </TR>
-  <TR>
-<TD><P>Ucirc</P>
-<TD><P>206</P>
-<TD><P>&lt;Shift> U</P>
-<TD><P>circumflex</P>
-<TD><P>&Ucirc;</P>
-  </TR>
-  <TR>
-<TD><P>Ugrave</P>
-<TD><P>204</P>
-<TD><P>&lt;Shift> U</P>
-<TD><P>backquote</P>
-<TD><P>&Ugrave;</P>
-  </TR>
-  <TR>
-<TD><P>Uuml</P>
-<TD><P>207</P>
-<TD><P>&lt;Shift> U</P>
-<TD><P>double quote</P>
-<TD><P>&Uuml;</P>
-  </TR>
-  <TR>
-<TD><P>Yacute</P>
-<TD><P>221</P>
-<TD><P>&lt;Shift> Y</P>
-<TD><P>quote</P>
-<TD><P>&Yacute;</P>
-  </TR>
-  <TR>
-<TD><P>aelig</P>
-<TD><P>230</P>
-<TD><P>a</P>
-<TD><P>e</P>
-<TD><P>&aelig;</P>
-  </TR>
-  <TR>
-<TD><P>aacute</P>
-<TD><P>225</P>
-<TD><P>a</P>
-<TD><P>quote</P>
-<TD><P>&aacute;</P>
-  </TR>
-  <TR>
-<TD><P>acirc</P>
-<TD><P>226</P>
-<TD><P>a</P>
-<TD><P>circumflex</P>
-<TD><P>&acirc;</P>
-  </TR>
-  <TR>
-<TD><P>agrave</P>
-<TD><P>224</P>
-<TD><P>a</P>
-<TD><P>backquote</P>
-<TD><P>&agrave;</P>
-  </TR>
-  <TR>
-<TD><P>aring</P>
-<TD><P>229</P>
-<TD><P>a</P>
-<TD><P>star</P>
-<TD><P>&aring;</P>
-  </TR>
-  <TR>
-<TD><P>atilde</P>
-<TD><P>227</P>
-<TD><P>a</P>
-<TD><P>tilda</P>
-<TD><P>&atilde;</P>
-  </TR>
-  <TR>
-<TD><P>auml</P>
-<TD><P>228</P>
-<TD><P>a</P>
-<TD><P>double quote</P>
-<TD><P>&auml;</P>
-  </TR>
-  <TR>
-<TD><P>brvbar</P>
-<TD><P>166</P>
-<TD><P>bar (pipe)</P>
-<TD><P>bar</P>
-<TD><P>&brvbar;</P>
-  </TR>
-  <TR>
-<TD><P>ccedil</P>
-<TD><P>231</P>
-<TD><P>c</P>
-<TD><P>comma</P>
-<TD><P>&ccedil;</P>
-  </TR>
-  <TR>
-<TD><P>cent</P>
-<TD><P>162</P>
-<TD><P>c</P>
-<TD><P>slash</P>
-<TD><P>&cent;</P>
-  </TR>
-  <TR>
-<TD><P>copy</P>
-<TD><P>169</P>
-<TD><P>c</P>
-<TD><P>o</P>
-<TD><P>&copy;</P>
-  </TR>
-  <TR>
-<TD><P>current</P>
-<TD><P>164</P>
-<TD><P>x</P>
-<TD><P>o</P>
-<TD><P>&curren;</P>
-  </TR>
-  <TR>
-<TD><P>deg</P>
-<TD><P>176</P>
-<TD><P>circumflex</P>
-<TD><P>0 (zero)</P>
-<TD><P>&deg;</P>
-  </TR>
-  <TR>
-<TD><P>eacute</P>
-<TD><P>233</P>
-<TD><P>e</P>
-<TD><P>quote</P>
-<TD><P>&eacute;</P>
-  </TR>
-  <TR>
-<TD><P>ecirc</P>
-<TD><P>234</P>
-<TD><P>e</P>
-<TD><P>circumflex</P>
-<TD><P>&ecirc;</P>
-  </TR>
-  <TR>
-<TD><P>egrave</P>
-<TD><P>232</P>
-<TD><P>e</P>
-<TD><P>backquote</P>
-<TD><P>&egrave;</P>
-  </TR>
-  <TR>
-<TD><P>euml</P>
-<TD><P>235</P>
-<TD><P>e</P>
-<TD><P>double quote</P>
-<TD><P>&euml;</P>
-  </TR>
-  <TR>
-<TD><P>eth</P>
-<TD><P>240</P>
-<TD><P>-</P>
-<TD><P>d</P>
-<TD><P>&eth;</P>
-  </TR>
-  <TR>
-<TD><P>frac12</P>
-<TD><P>189</P>
-<TD><P>/</P>
-<TD><P>2</P>
-<TD><P>&frac12;</P>
-  </TR>
-  <TR>
-<TD><P>frac14</P>
-<TD><P>188</P>
-<TD><P>/</P>
-<TD><P>4</P>
-<TD><P>&frac14;</P>
-  </TR>
-  <TR>
-<TD><P>frac34</P>
-<TD><P>190</P>
-<TD><P>/</P>
-<TD><P>3</P>
-<TD><P>&frac34;</P>
-  </TR>
-  <TR>
-<TD><P>hyphen</P>
-<TD><P>173</P>
-<TD><P>- (minus)</P>
-<TD><P>-</P>
-<TD><P>&hyphen;</P>
-  </TR>
-  <TR>
-<TD><P>iacute</P>
-<TD><P>237</P>
-<TD><P>i</P>
-<TD><P>quote</P>
-<TD><P>&iacute;</P>
-  </TR>
-  <TR>
-<TD><P>icirc</P>
-<TD><P>238</P>
-<TD><P>i</P>
-<TD><P>circumflex</P>
-<TD><P>&icirc;</P>
-  </TR>
-  <TR>
-<TD><P>igrave</P>
-<TD><P>236</P>
-<TD><P>i</P>
-<TD><P>backquote</P>
-<TD><P>&igrave;</P>
-  </TR>
-  <TR>
-<TD><P>iexcl</P>
-<TD><P>161</P>
-<TD><P>! (exclam)</P>
-<TD><P>!</P>
-<TD><P>&iexcl;</P>
-  </TR>
-  <TR>
-<TD><P>iquest</P>
-<TD><P>191</P>
-<TD><P>? (question)</P>
-<TD><P>?</P>
-<TD><P>&iquest;</P>
-  </TR>
-  <TR>
-<TD><P>laquo</P>
-<TD><P>171</P>
-<TD><P>&lt; (inferior)</P>
-<TD><P>&lt;</P>
-<TD><P>&laquo;</P>
-  </TR>
-  <TR>
-<TD><P>macr</P>
-<TD><P>175</P>
-<TD><P>- (minus)</P>
-<TD><P>circumflex</P>
-<TD><P>&macr;</P>
-  </TR>
-  <TR>
-<TD><P>micro</P>
-<TD><P>181</P>
-<TD><P>/</P>
-<TD><P>u</P>
-<TD><P>&micro;</P>
-  </TR>
-  <TR>
-<TD><P>middot</P>
-<TD><P>183</P>
-<TD><P>.</P>
-<TD><P>circumflex</P>
-<TD><P>&middot;</P>
-  </TR>
-  <TR>
-<TD><P>nbsp</P>
-<TD><P>160</P>
-<TD><P>&lt;Ctrl> space</P>
-<TD><P>(none)</P>
-<TD><P>&nbsp;</P>
-  </TR>
-  <TR>
-<TD><P>not</P>
-<TD><P>172</P>
-<TD><P>- (minus)</P>
-<TD><P>comma</P>
-<TD><P>&not;</P>
-  </TR>
-  <TR>
-<TD><P>ntilde</P>
-<TD><P>241</P>
-<TD><P>n</P>
-<TD><P>tilda</P>
-<TD><P>&ntilde;</P>
-  </TR>
-  <TR>
-<TD><P>oacute</P>
-<TD><P>243</P>
-<TD><P>o</P>
-<TD><P>quote</P>
-<TD><P>&oacute;</P>
-  </TR>
-  <TR>
-<TD><P>ocirc</P>
-<TD><P>244</P>
-<TD><P>o</P>
-<TD><P>circumflex</P>
-<TD><P>&ocirc;</P>
-  </TR>
-  <TR>
-<TD><P>ograve</P>
-<TD><P>242</P>
-<TD><P>o</P>
-<TD><P>backquote</P>
-<TD><P>&ograve;</P>
-  </TR>
-  <TR>
-<TD><P>oslash</P>
-<TD><P>248</P>
-<TD><P>o</P>
-<TD><P>slash</P>
-<TD><P>&oslash;</P>
-  </TR>
-  <TR>
-<TD><P>otilde</P>
-<TD><P>245</P>
-<TD><P>o</P>
-<TD><P>tilda</P>
-<TD><P>&otilde;</P>
-  </TR>
-  <TR>
-<TD><P>ouml</P>
-<TD><P>246</P>
-<TD><P>o</P>
-<TD><P>double quote</P>
-<TD><P>&ouml;</P>
-  </TR>
-  <TR>
-<TD><P>ordf</P>
-<TD><P>170</P>
-<TD><P>a</P>
-<TD><P>_ (underscore)</P>
-<TD><P>&ordf;</P>
-  </TR>
-  <TR>
-<TD><P>ordm</P>
-<TD><P>186</P>
-<TD><P>o</P>
-<TD><P>_ (underscore)</P>
-<TD><P>&ordm;</P>
-  </TR>
-  <TR>
-<TD><P>para</P>
-<TD><P>182</P>
-<TD><P>&lt;Shift> P</P>
-<TD><P>! (exclam)</P>
-<TD><P>&para;</P>
-  </TR>
-  <TR>
-<TD><P>plusmn</P>
-<TD><P>177</P>
-<TD><P>+</P>
-<TD><P>- (minus)</P>
-<TD><P>&plusmn;</P>
-  </TR>
-  <TR>
-<TD><P>pound</P>
-<TD><P>163</P>
-<TD><P>l</P>
-<TD><P>- (minus)</P>
-<TD><P>&pound;</P>
-  </TR>
-  <TR>
-<TD><P>raquo</P>
-<TD><P>187</P>
-<TD><P>> (superior)</P>
-<TD><P>></P>
-<TD><P>&raquo;</P>
-  </TR>
-  <TR>
-<TD><P>reg</P>
-<TD><P>174</P>
-<TD><P>&lt;Shift> R</P>
-<TD><P>&lt;Shift> O</P>
-<TD><P>&reg;</P>
-  </TR>
-  <TR>
-<TD><P>sec</P>
-<TD><P>167</P>
-<TD><P>s</P>
-<TD><P>! (exclam)</P>
-<TD><P>&sect;</P>
-  </TR>
-  <TR>
-<TD><P>sup1</P>
-<TD><P>185</P>
-<TD><P>s</P>
-<TD><P>1</P>
-<TD><P>&sup1;</P>
-  </TR>
-  <TR>
-<TD><P>sup2</P>
-<TD><P>178</P>
-<TD><P>s</P>
-<TD><P>2</P>
-<TD><P>&sup2;</P>
-  </TR>
-  <TR>
-<TD><P>sup3</P>
-<TD><P>179</P>
-<TD><P>s</P>
-<TD><P>3</P>
-<TD><P>&sup3;</P>
-  </TR>
-  <TR>
-<TD><P>szlig</P>
-<TD><P>223</P>
-<TD><P>s</P>
-<TD><P>s</P>
-<TD><P>&szlig;</P>
-  </TR>
-  <TR>
-<TD><P>thorn</P>
-<TD><P>254</P>
-<TD><P>t</P>
-<TD><P>h</P>
-<TD><P>&thorn;</P>
-  </TR>
-  <TR>
-<TD><P>uacute</P>
-<TD><P>250</P>
-<TD><P>u</P>
-<TD><P>quote</P>
-<TD><P>&uacute;</P>
-  </TR>
-  <TR>
-<TD><P>ucirc</P>
-<TD><P>251</P>
-<TD><P>u</P>
-<TD><P>circumflex</P>
-<TD><P>&ucirc;</P>
-  </TR>
-  <TR>
-<TD><P>ugrave</P>
-<TD><P>249</P>
-<TD><P>u</P>
-<TD><P>backquote</P>
-<TD><P>&ugrave;</P>
-  </TR>
-  <TR>
-<TD><P>uuml</P>
-<TD><P>252</P>
-<TD><P>u</P>
-<TD><P>double quote</P>
-<TD><P>&uuml;</P>
-  </TR>
-  <TR>
-<TD><P>yacute</P>
-<TD><P>253</P>
-<TD><P>y</P>
-<TD><P>quote</P>
-<TD><P>&yacute;</P>
-  </TR>
-  <TR>
-<TD><P>yen</P>
-<TD><P>165</P>
-<TD><P>y</P>
-<TD><P>- (minus)</P>
-<TD><P>&yen;</P>
-  </TR>
-  <TR>
-<TD><P>yuml</P>
-<TD><P>255</P>
-<TD><P>y</P>
-<TD><P>double quote</P>
-<TD><P>&yuml;</P>
-  </TR>
-</TABLE>
-<P></P>
+<p><strong>Notes</strong> :</p>
+<ul>
+  <li>with Western European keyboards (like the French one) the keys commonly
+    used for such sequences (like backquote, tilde, @ and backslash) are
+    themselves obtained using the AltGr key plus another key, but these should
+    work fine. `&Egrave;' can be obtained on a French keyboard by entering the
+    sequence &lt;Alt>, &lt;Shift> + `E', &lt;AltGr> + `&egrave;', since
+    backquote is mapped on &lt;AltGr> `&egrave;'.</li>
+  <li>When non&amp;&amp;endash-&amp;emdash&reg;regASCII characters are already
+    mapped on the keyboard, this mapping should work fine with
+    <strong>Amaya</strong>.</li>
+  <li>The oelig (o and e ligature) and OElig (O and E ligature) are not part
+    of the ISO-Latin-1, so <strong>Amaya</strong> cannot display them using
+    the standard fonts. These characters are displayed as division sign for
+    oelig and multiply sign for OElig.</li>
+</ul>
 
-<HR>
-<ADDRESS>
-<A href="mailto:daniel.veillard@w3.org">Daniel Veillard</A><BR>
-<A HREF="../../Help/Webmaster">Webmaster</A><BR>
-  $Date$
-</ADDRESS>
-</BODY>
-</HTML>
+<h2>Rules for ISO-Latin-1 input</h2>
+
+<p>Most of the input sequences are based on the following rules:</p>
+<ul>
+  <li>the grave accent on a character is obtained by composing the character
+    with a quote: &aacute; is obtained with &lt;Alt> a and quote.</li>
+  <li>the acute accent on a character is obtained by composing the character
+    with a backquote: &agrave; is obtained with &lt;Alt> a and backquote.</li>
+  <li>the ring accent on a character is obtained by composing the character
+    with a star: &aring; is obtained with &lt;Alt> a and star.</li>
+  <li>the tilde accent on a character is obtained by composing the character
+    with a tilde: &atilde; is obtained with &lt;Alt> a and tilde.</li>
+  <li>the circumflex accent on a character is obtained by composing the
+    character with a circumflex: &acirc; is obtained with &lt;Alt> a and
+    circumflex.</li>
+  <li>the cedilla on a character is obtained by composing the character with a
+    comma: &ccedil; is obtained with &lt;Alt> c and comma.</li>
+  <li>the umlaut on a character is obtained by composing the character with
+    double quote: &auml; is obtained with &lt;Alt> a and double quote.</li>
+  <li>slashed characters are obtained by composing them with a slash: &oslash;
+    is obtained with &lt;Alt> o and slash.</li>
+  <li>ligatures are obtained by composing the first letter with the second
+    one: &aelig; is obtained with &lt;Alt> a and e.</li>
+</ul>
+
+<h3>ISO-Latin-1 sequences table</h3>
+
+<table border="1" summary="Latin-1 sequences">
+  <tbody>
+    <tr>
+      <td><p>name</p>
+      </td>
+      <td><p>number</p>
+      </td>
+      <td><p>first key</p>
+      </td>
+      <td><p>second key</p>
+      </td>
+      <td><p>Output</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>AElig</p>
+      </td>
+      <td><p>198</p>
+      </td>
+      <td><p>&lt;Shift> A</p>
+      </td>
+      <td><p>&lt;Shift> E</p>
+      </td>
+      <td><p>&AElig;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Aacute</p>
+      </td>
+      <td><p>193</p>
+      </td>
+      <td><p>&lt;Shift> A</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&Aacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Acirc</p>
+      </td>
+      <td><p>194</p>
+      </td>
+      <td><p>&lt;Shift> A</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&Acirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Agrave</p>
+      </td>
+      <td><p>192</p>
+      </td>
+      <td><p>&lt;Shift> A</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&Agrave;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Aring</p>
+      </td>
+      <td><p>197</p>
+      </td>
+      <td><p>&lt;Shift> A</p>
+      </td>
+      <td><p>star</p>
+      </td>
+      <td><p>&Aring;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Atilde</p>
+      </td>
+      <td><p>195</p>
+      </td>
+      <td><p>&lt;Shift> A</p>
+      </td>
+      <td><p>tilde</p>
+      </td>
+      <td><p>&Atilde;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Auml</p>
+      </td>
+      <td><p>196</p>
+      </td>
+      <td><p>&lt;Shift> A</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&Auml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Ccedil</p>
+      </td>
+      <td><p>199</p>
+      </td>
+      <td><p>&lt;Shift> C</p>
+      </td>
+      <td><p>comma</p>
+      </td>
+      <td><p>&Ccedil;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Eth</p>
+      </td>
+      <td><p>222</p>
+      </td>
+      <td><p>-</p>
+      </td>
+      <td><p>D</p>
+      </td>
+      <td><p>&ETH;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Eacute</p>
+      </td>
+      <td><p>201</p>
+      </td>
+      <td><p>&lt;Shift> E</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&Eacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Ecirc</p>
+      </td>
+      <td><p>202</p>
+      </td>
+      <td><p>&lt;Shift> E</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&Ecirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Egrave</p>
+      </td>
+      <td><p>200</p>
+      </td>
+      <td><p>&lt;Shift> E</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&Egrave;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Euml</p>
+      </td>
+      <td><p>203</p>
+      </td>
+      <td><p>&lt;Shift> E</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&Euml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Iacute</p>
+      </td>
+      <td><p>205</p>
+      </td>
+      <td><p>&lt;Shift> I</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&Iacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Icirc</p>
+      </td>
+      <td><p>206</p>
+      </td>
+      <td><p>&lt;Shift> I</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&Icirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Igrave</p>
+      </td>
+      <td><p>204</p>
+      </td>
+      <td><p>&lt;Shift> I</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&Igrave;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Iuml</p>
+      </td>
+      <td><p>207</p>
+      </td>
+      <td><p>&lt;Shift> I</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&Iuml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Ntilde</p>
+      </td>
+      <td><p>209</p>
+      </td>
+      <td><p>&lt;Shift> N</p>
+      </td>
+      <td><p>tilde</p>
+      </td>
+      <td><p>&Ntilde;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Oacute</p>
+      </td>
+      <td><p>211</p>
+      </td>
+      <td><p>&lt;Shift> O</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&Oacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Ocirc</p>
+      </td>
+      <td><p>212</p>
+      </td>
+      <td><p>&lt;Shift> O</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&Ocirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Ograve</p>
+      </td>
+      <td><p>210</p>
+      </td>
+      <td><p>&lt;Shift> O</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&Ograve;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Oslash</p>
+      </td>
+      <td><p>216</p>
+      </td>
+      <td><p>&lt;Shift> O</p>
+      </td>
+      <td><p>slash</p>
+      </td>
+      <td><p>&Oslash;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Otilde</p>
+      </td>
+      <td><p>213</p>
+      </td>
+      <td><p>&lt;Shift> O</p>
+      </td>
+      <td><p>tilde</p>
+      </td>
+      <td><p>&Otilde;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Ouml</p>
+      </td>
+      <td><p>214</p>
+      </td>
+      <td><p>&lt;Shift> O</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&Ouml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Thorn</p>
+      </td>
+      <td><p>222</p>
+      </td>
+      <td><p>&lt;Shift> T</p>
+      </td>
+      <td><p>&lt;Shift> H</p>
+      </td>
+      <td><p>&THORN;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Uacute</p>
+      </td>
+      <td><p>205</p>
+      </td>
+      <td><p>&lt;Shift> U</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&Uacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Ucirc</p>
+      </td>
+      <td><p>206</p>
+      </td>
+      <td><p>&lt;Shift> U</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&Ucirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Ugrave</p>
+      </td>
+      <td><p>204</p>
+      </td>
+      <td><p>&lt;Shift> U</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&Ugrave;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Uuml</p>
+      </td>
+      <td><p>207</p>
+      </td>
+      <td><p>&lt;Shift> U</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&Uuml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>Yacute</p>
+      </td>
+      <td><p>221</p>
+      </td>
+      <td><p>&lt;Shift> Y</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&Yacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>aelig</p>
+      </td>
+      <td><p>230</p>
+      </td>
+      <td><p>a</p>
+      </td>
+      <td><p>e</p>
+      </td>
+      <td><p>&aelig;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>aacute</p>
+      </td>
+      <td><p>225</p>
+      </td>
+      <td><p>a</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&aacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>acirc</p>
+      </td>
+      <td><p>226</p>
+      </td>
+      <td><p>a</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&acirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>agrave</p>
+      </td>
+      <td><p>224</p>
+      </td>
+      <td><p>a</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&agrave;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>aring</p>
+      </td>
+      <td><p>229</p>
+      </td>
+      <td><p>a</p>
+      </td>
+      <td><p>star</p>
+      </td>
+      <td><p>&aring;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>atilde</p>
+      </td>
+      <td><p>227</p>
+      </td>
+      <td><p>a</p>
+      </td>
+      <td><p>tilde</p>
+      </td>
+      <td><p>&atilde;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>auml</p>
+      </td>
+      <td><p>228</p>
+      </td>
+      <td><p>a</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&auml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>brvbar</p>
+      </td>
+      <td><p>166</p>
+      </td>
+      <td><p>bar (pipe)</p>
+      </td>
+      <td><p>bar</p>
+      </td>
+      <td><p>&brvbar;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ccedil</p>
+      </td>
+      <td><p>231</p>
+      </td>
+      <td><p>c</p>
+      </td>
+      <td><p>comma</p>
+      </td>
+      <td><p>&ccedil;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>cent</p>
+      </td>
+      <td><p>162</p>
+      </td>
+      <td><p>c</p>
+      </td>
+      <td><p>slash</p>
+      </td>
+      <td><p>&cent;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>copy</p>
+      </td>
+      <td><p>169</p>
+      </td>
+      <td><p>c</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>&copy;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>current</p>
+      </td>
+      <td><p>164</p>
+      </td>
+      <td><p>x</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>&curren;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>deg</p>
+      </td>
+      <td><p>176</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>0 (zero)</p>
+      </td>
+      <td><p>&deg;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>eacute</p>
+      </td>
+      <td><p>233</p>
+      </td>
+      <td><p>e</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&eacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ecirc</p>
+      </td>
+      <td><p>234</p>
+      </td>
+      <td><p>e</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&ecirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>egrave</p>
+      </td>
+      <td><p>232</p>
+      </td>
+      <td><p>e</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&egrave;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>euml</p>
+      </td>
+      <td><p>235</p>
+      </td>
+      <td><p>e</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&euml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>eth</p>
+      </td>
+      <td><p>240</p>
+      </td>
+      <td><p>-</p>
+      </td>
+      <td><p>d</p>
+      </td>
+      <td><p>&eth;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>frac12</p>
+      </td>
+      <td><p>189</p>
+      </td>
+      <td><p>/</p>
+      </td>
+      <td><p>2</p>
+      </td>
+      <td><p>&frac12;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>frac14</p>
+      </td>
+      <td><p>188</p>
+      </td>
+      <td><p>/</p>
+      </td>
+      <td><p>4</p>
+      </td>
+      <td><p>&frac14;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>frac34</p>
+      </td>
+      <td><p>190</p>
+      </td>
+      <td><p>/</p>
+      </td>
+      <td><p>3</p>
+      </td>
+      <td><p>&frac34;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>hyphen</p>
+      </td>
+      <td><p>173</p>
+      </td>
+      <td><p>- (minus)</p>
+      </td>
+      <td><p>-</p>
+      </td>
+      <td><p>&173;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>iacute</p>
+      </td>
+      <td><p>237</p>
+      </td>
+      <td><p>i</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&iacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>icirc</p>
+      </td>
+      <td><p>238</p>
+      </td>
+      <td><p>i</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&icirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>igrave</p>
+      </td>
+      <td><p>236</p>
+      </td>
+      <td><p>i</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&igrave;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>iexcl</p>
+      </td>
+      <td><p>161</p>
+      </td>
+      <td><p>! (exclam)</p>
+      </td>
+      <td><p>!</p>
+      </td>
+      <td><p>&iexcl;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>iquest</p>
+      </td>
+      <td><p>191</p>
+      </td>
+      <td><p>? (question)</p>
+      </td>
+      <td><p>?</p>
+      </td>
+      <td><p>&iquest;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>laquo</p>
+      </td>
+      <td><p>171</p>
+      </td>
+      <td><p>&lt; (inferior)</p>
+      </td>
+      <td><p>&lt;</p>
+      </td>
+      <td><p>&laquo;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>macr</p>
+      </td>
+      <td><p>175</p>
+      </td>
+      <td><p>- (minus)</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&macr;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>micro</p>
+      </td>
+      <td><p>181</p>
+      </td>
+      <td><p>/</p>
+      </td>
+      <td><p>u</p>
+      </td>
+      <td><p>&micro;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>middot</p>
+      </td>
+      <td><p>183</p>
+      </td>
+      <td><p>.</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&middot;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>nbsp</p>
+      </td>
+      <td><p>160</p>
+      </td>
+      <td><p>&lt;Ctrl> space</p>
+      </td>
+      <td><p>(none)</p>
+      </td>
+      <td><p>&nbsp;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>not</p>
+      </td>
+      <td><p>172</p>
+      </td>
+      <td><p>- (minus)</p>
+      </td>
+      <td><p>comma</p>
+      </td>
+      <td><p>&not;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ntilde</p>
+      </td>
+      <td><p>241</p>
+      </td>
+      <td><p>n</p>
+      </td>
+      <td><p>tilde</p>
+      </td>
+      <td><p>&ntilde;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>oacute</p>
+      </td>
+      <td><p>243</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&oacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ocirc</p>
+      </td>
+      <td><p>244</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&ocirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ograve</p>
+      </td>
+      <td><p>242</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&ograve;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>oslash</p>
+      </td>
+      <td><p>248</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>slash</p>
+      </td>
+      <td><p>&oslash;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>otilde</p>
+      </td>
+      <td><p>245</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>tilde</p>
+      </td>
+      <td><p>&otilde;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ouml</p>
+      </td>
+      <td><p>246</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&ouml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ordf</p>
+      </td>
+      <td><p>170</p>
+      </td>
+      <td><p>a</p>
+      </td>
+      <td><p>_ (underscore)</p>
+      </td>
+      <td><p>&ordf;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ordm</p>
+      </td>
+      <td><p>186</p>
+      </td>
+      <td><p>o</p>
+      </td>
+      <td><p>_ (underscore)</p>
+      </td>
+      <td><p>&ordm;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>para</p>
+      </td>
+      <td><p>182</p>
+      </td>
+      <td><p>&lt;Shift> P</p>
+      </td>
+      <td><p>! (exclam)</p>
+      </td>
+      <td><p>&para;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>plusmn</p>
+      </td>
+      <td><p>177</p>
+      </td>
+      <td><p>+</p>
+      </td>
+      <td><p>- (minus)</p>
+      </td>
+      <td><p>&plusmn;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>pound</p>
+      </td>
+      <td><p>163</p>
+      </td>
+      <td><p>l</p>
+      </td>
+      <td><p>- (minus)</p>
+      </td>
+      <td><p>&pound;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>raquo</p>
+      </td>
+      <td><p>187</p>
+      </td>
+      <td><p>> (superior)</p>
+      </td>
+      <td><p>></p>
+      </td>
+      <td><p>&raquo;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>reg</p>
+      </td>
+      <td><p>174</p>
+      </td>
+      <td><p>&lt;Shift> R</p>
+      </td>
+      <td><p>&lt;Shift> O</p>
+      </td>
+      <td><p>&reg;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>sec</p>
+      </td>
+      <td><p>167</p>
+      </td>
+      <td><p>s</p>
+      </td>
+      <td><p>! (exclam)</p>
+      </td>
+      <td><p>&sect;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>sup1</p>
+      </td>
+      <td><p>185</p>
+      </td>
+      <td><p>s</p>
+      </td>
+      <td><p>1</p>
+      </td>
+      <td><p>&sup1;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>sup2</p>
+      </td>
+      <td><p>178</p>
+      </td>
+      <td><p>s</p>
+      </td>
+      <td><p>2</p>
+      </td>
+      <td><p>&sup2;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>sup3</p>
+      </td>
+      <td><p>179</p>
+      </td>
+      <td><p>s</p>
+      </td>
+      <td><p>3</p>
+      </td>
+      <td><p>&sup3;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>szlig</p>
+      </td>
+      <td><p>223</p>
+      </td>
+      <td><p>s</p>
+      </td>
+      <td><p>s</p>
+      </td>
+      <td><p>&szlig;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>thorn</p>
+      </td>
+      <td><p>254</p>
+      </td>
+      <td><p>t</p>
+      </td>
+      <td><p>h</p>
+      </td>
+      <td><p>&thorn;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>uacute</p>
+      </td>
+      <td><p>250</p>
+      </td>
+      <td><p>u</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&uacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ucirc</p>
+      </td>
+      <td><p>251</p>
+      </td>
+      <td><p>u</p>
+      </td>
+      <td><p>circumflex</p>
+      </td>
+      <td><p>&ucirc;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>ugrave</p>
+      </td>
+      <td><p>249</p>
+      </td>
+      <td><p>u</p>
+      </td>
+      <td><p>backquote</p>
+      </td>
+      <td><p>&ugrave;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>uuml</p>
+      </td>
+      <td><p>252</p>
+      </td>
+      <td><p>u</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&uuml;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>yacute</p>
+      </td>
+      <td><p>253</p>
+      </td>
+      <td><p>y</p>
+      </td>
+      <td><p>quote</p>
+      </td>
+      <td><p>&yacute;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>yen</p>
+      </td>
+      <td><p>165</p>
+      </td>
+      <td><p>y</p>
+      </td>
+      <td><p>- (minus)</p>
+      </td>
+      <td><p>&yen;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>yuml</p>
+      </td>
+      <td><p>255</p>
+      </td>
+      <td><p>y</p>
+      </td>
+      <td><p>double quote</p>
+      </td>
+      <td><p>&yuml;</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr>
+
+<address>
+  <a href="mailto:daniel.veillard@w3.org">Daniel Veillard</a><br>
+  <a href="../../Help/Webmaster">Webmaster</a><br>
+  $Date$ 
+</address>
+</body>
+</html>

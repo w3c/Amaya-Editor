@@ -1,124 +1,105 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-Spell checking</title>
-<meta name="GENERATOR" content="amaya V1.0a Beta">
+  <title>Spell checking</title>
+  <meta name="GENERATOR" content="amaya V2.1">
 </head>
+
 <body lang="en">
 
-<table border="0" width="100%">
-<tbody>
-<tr>
-<td><p>
-<img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img border="0"
-alt="Amaya" src="../Icons/amaya.gif"></p>
-</td>
-<td><p align="right">
-<a href="Attributes.html"><img alt="previous" border="0"
-src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif"></a> <a href="Publishing.html"><img alt="next"
-border="0" src="../Icons/right.gif"></a></p>
-</td>
-</tr>
-</tbody>
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif"></p>
+      </td>
+      <td><p align="right"><a href="Attributes.html"><img alt="previous"
+        border="0" src="../Icons/left.gif"></a> <a href="Manual.html"><img
+        alt="top" border="0" src="../Icons/up.gif"></a> <a
+        href="Publishing.html"><img alt="next" border="0"
+        src="../Icons/right.gif"></a></p>
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 <div id="Spell">
-
 <h2><a name="L1063">Spell checking</a></h2>
-<p>
-Amaya provides a multilingual spell checker. This tool is invoked by the
+
+<p>Amaya provides a multilingual spell checker. This tool is invoked by the
 <strong>Spell Check</strong> command from the <strong>Edit</strong> menu. It
 uses the <code>LANG</code> attribute to select the right dictionary. You can
 associate this attribute with any element in a document, even with a single
 word. Use the <strong>Language</strong> command in the <strong><a
 href="Attributes.html#L1073">Attributes</a></strong> menu  for that
 purpose.</p>
-<p>
-When the user wants to register a new word, the spell checker creates or
+
+<p>When the user wants to register a new word, the spell checker creates or
 updates  the "user's personal dictionary". By default, the "user's personal
 dictionary" is $HOME/.thot.DIC, but the user can define another file. Before
 starting Amaya, the user must set the  <code>parameter <a
 href="Configure.html#Personnal">"EXTENDDICT="</a></code> in the registry file
 ($HOME/.thotrc file) to change the default name . Thus, the checker will use,
 in addition to the dictionary specific to the language, this dictionary (in
-read-write mode) to control all documents.This dictionary is created and
+read-write mode) to control all documents.&ensp;This dictionary is created and
 automatically updated by the spelling checker when the commands ``Skip
 (+dic)'' and ``Replace (+dic)'' are issued (see below).</p>
-<p>
-The <strong>Spell Check</strong> command in <strong>Edit</strong> menu
+
+<p>The <strong>Spell Check</strong> command in <strong>Edit</strong> menu
 displays a form which enables you to choose the correction parameters and to
 interact with the checker:</p>
 <ul>
-<li>
-The maximum number of proposals is specified in the <strong>Number of
-proposal</strong>s area. This number can take any value between 1 and 10, the
-default value is 3. Once an error has been detected, any change made to this
-value immediately displays a new list of proposals.
-</li>
-<li>
-Several buttons in <strong>Ignore</strong> submenu allow you to ignore certain
-words: for example words that contain capital letters, digits, Roman numerals
-or special characters indicated in the list below. This list can be modified
-by the user.
-</li>
-<li>
-The <strong>Checking</strong> submenu, similar to that in the <strong><a
-href="Searching.html">Search</a></strong> form, allows you to specify the part
-of document on which the checker will work.
-</li>
-<li>
-The erroneous word is displayed in the area<strong> Spell
-checking....</strong> The list of proposals is displayed in the selector
-located below the incorrect word. By default, the first proposal of correction
-is selected. To select another proposal, simply click on it. The selected
-proposal is displayed below the selector. This proposal can be directly
-modified in the form. The correction is made once you have clicked on one of
-the buttons <strong>Replace and next</strong> or <strong>Replace
-(+dic)</strong>.
-</li>
-<li>
-The language in which the correction is made is specified in the top left
-corner of the form. To change the language, just apply an attribute  Language
-to the text concerned by using the <a
-href="Attributes.html#Attributes"><strong>Attributes</strong></a> menu and
-restart the correction procedure.
-</li>
+  <li>The maximum number of proposals is specified in the <strong>Number of
+    proposal</strong>s area. This number can take any value between 1 and 10,
+    the default value is 3. Once an error has been detected, any change made
+    to this value immediately displays a new list of proposals.</li>
+  <li>Several buttons in <strong>Ignore</strong> submenu allow you to ignore
+    certain words: for example words that contain capital letters, digits,
+    Roman numerals or special characters indicated in the list below. This
+    list can be modified by the user.</li>
+  <li>The <strong>Checking</strong> submenu, similar to that in the <strong><a
+    href="Searching.html">Search</a></strong> form, allows you to specify the
+    part of document on which the checker will work.</li>
+  <li>The erroneous word is displayed in the area<strong> Spell
+    checking....</strong> The list of proposals is displayed in the selector
+    located below the incorrect word. By default, the first proposal of
+    correction is selected. To select another proposal, simply click on it.
+    The selected proposal is displayed below the selector. This proposal can
+    be directly modified in the form. The correction is made once you have
+    clicked on one of the buttons <strong>Replace and next</strong> or
+    <strong>Replace (+dic)</strong>.</li>
+  <li>The language in which the correction is made is specified in the top
+    left corner of the form. To change the language, just apply an attribute 
+    Language to the text concerned by using the <a
+    href="Attributes.html#Attributes"><strong>Attributes</strong></a> menu and
+    restart the correction procedure.</li>
 </ul>
-<p>
-To start the correction, click on the <strong>Skip and next</strong> button
+
+<p>To start the correction, click on the <strong>Skip and next</strong> button
 bottom of the form. If an error has been found, the incorrect word is selected
 and highlighted in the document. If no error has been detected, the "Not
 found" message is displayed in the bottom right corner of the form.</p>
-<p>
-The user can then use one of the buttons placed at the bottom of the form to
-perform one of the following operations:</p>
+
+<p>The user can then use one of the buttons placed at the bottom of the form
+to perform one of the following operations:</p>
 <ul>
-<li>
-<strong>Done</strong>: the form disappears and checking is aborted. Previous
-corrections are not canceled.
-</li>
-<li>
-<strong>Skip and next:</strong> the word considered incorrect is acceptable.
-No change is made in the text nor in the dictionaries. The checker searches
-for the next error.
-</li>
-<li>
-<strong>Skip (+dic)</strong>: it is the same as ``Skip and next'' but the word
-considered incorrect is added to the spelling dictionary specific to the
-document, thus the checker will ignore any subsequent occurrence of this word.
-</li>
-<li>
-<strong>Replace and next</strong>: the word considered as erroneous is
-replaced by the correct word (changed or modified by the user, see above) and
-the checker searches for the next error.
-</li>
-<li><p>
-<strong>Replace (+dic)</strong>: it is the same as.<strong>Replace and
-next</strong>: except that the replacement word is added to the document
-dictionary.</p>
-</li>
+  <li><strong>Done</strong>: the form disappears and checking is aborted.
+    Previous corrections are not canceled.</li>
+  <li><strong>Skip and next:</strong> the word considered incorrect is
+    acceptable. No change is made in the text nor in the dictionaries. The
+    checker searches for the next error.</li>
+  <li><strong>Skip (+dic)</strong>: it is the same as ``Skip and next'' but
+    the word considered incorrect is added to the spelling dictionary specific
+    to the document, thus the checker will ignore any subsequent occurrence of
+    this word.</li>
+  <li><strong>Replace and next</strong>: the word considered as erroneous is
+    replaced by the correct word (changed or modified by the user, see above)
+    and the checker searches for the next error.</li>
+  <li><p><strong>Replace (+dic)</strong>: it is the same as.<strong>Replace
+    and next</strong>: except that the replacement word is added to the
+    document dictionary.</p>
+  </li>
 </ul>
 <hr>
 
