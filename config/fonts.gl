@@ -1,0 +1,92 @@
+###
+##
+#
+
+##
+
+
+#
+
+
+
+
+
+
+1;#Latin1 (West European)
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+
+
+
+2;#Latin2 (East European)
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+
+
+
+3;#Latin3 (South European)
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+
+
+
+4;#Latin4 (North European)
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+
+
+
+5;#Cyrillic
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+
+
+
+6;#Arabic
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+
+
+
+7;#Greek
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+
+
+
+8;#Hebrew
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+
+
+
+9;#Latin5 (Turkish)
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+
+
+
+10;#Latin6 (Nordic)
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+
+
+
+20;#Symbols (...)
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf;
+
+
+
+0;#Unicode (.or ... JAPANESe)
+1;1=/usr/local/share/fonts/msincho.ttc;2=/usr/local/share/fonts/msincho.ttc;3=/usr/local/share/fonts/msincho.ttc
+2;1=/usr/local/share/fonts/msincho.ttc;2=/usr/local/share/fonts/msgothic.ttc;3=/usr/local/share/fonts/msincho.ttc
+3;1=/usr/local/share/fonts/msincho.ttc;2=/usr/local/share/fonts/msgothic.ttc;3=/usr/local/share/fonts/msincho.ttc
+
+
+

@@ -1,0 +1,40 @@
+
+#font scripts 
+#        1-17 iso, then 
+#	50 unicode,
+#        51 symbol,stix...;
+#1 = serif;normale face;bold face;italic face  
+#2 = sans-serif;normale face;bold face;italic face  
+#3 = monospace;normale face;bold face;italic face  
+#4 = cursive;normale face;bold face;italic face  
+#5 = fantasy;normale face;bold face;italic face  
+
+
+1;#easteurope
+1;1=c:\winnt\fonts\times.ttf;2=c:\winnt\fonts\timesbd.ttf;3=c:\winnt\fonts\timesi.ttf
+2;1=c:\winnt\fonts\arial.ttf;
+3;1=c:\winnt\fonts\courrier.ttf;
+
+
+2;#baltic
+1;1=c:\winnt\fonts\times.ttf;
+2;1=c:\winnt\fonts\arial.ttf;
+3;1=c:\winnt\fonts\courrier.ttf;
+
+
+
+3;#russian
+
+
+
+6;#arabic
+
+
+
+7;#greek
+
+
+
+8;#hebrew;
+
+
