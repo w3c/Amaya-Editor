@@ -408,29 +408,29 @@ Document            doc;
 		 form_data = strchr (url, '?');
 		 if (form_data)
 		   *form_data++ = EOS;
-		  strncpy (documentURL, url, MAX_LENGTH - 1);
-		  documentURL[MAX_LENGTH - 1] = EOS;
-		  url[0] = EOS;
-		  /* is the source element an image map? */
-		  attrType.AttrSSchema = HTMLSSchema;
-		  attrType.AttrTypeNum = HTML_ATTR_ISMAP;
-		  attr = TtaGetAttribute (elSource, attrType);
-		  if (attr != NULL)
-		    /* it's an image map */
-		    {
-		      info = GetActiveImageInfo (doc, elSource);
-		      if (info != NULL)
-			{
-			  /* @@ what do we do with the precedent parameters? */
-			  form_data = &info[1];
-			}
-		    }
-		  /* get the referred document */
-		  targetDocument = GetHTMLDocument (documentURL, form_data,
+		 strncpy (documentURL, url, MAX_LENGTH - 1);
+		 documentURL[MAX_LENGTH - 1] = EOS;
+		 url[0] = EOS;
+		 /* is the source element an image map? */
+		 attrType.AttrSSchema = HTMLSSchema;
+		 attrType.AttrTypeNum = HTML_ATTR_ISMAP;
+		 attr = TtaGetAttribute (elSource, attrType);
+		 if (attr != NULL)
+		   /* it's an image map */
+		   {
+		     info = GetActiveImageInfo (doc, elSource);
+		     if (info != NULL)
+		       {
+			 /* @@ what do we do with the precedent parameters? */
+			 form_data = &info[1];
+		       }
+		   }
+		 /* get the referred document */
+		 targetDocument = GetHTMLDocument (documentURL, form_data,
 				   doc, doc, CE_TRUE, TRUE, 
 				   (void *) FollowTheLink_callback, (void *) ctx);
-		  if (info)
-		    TtaFreeMemory (info);
+		 if (info)
+		   TtaFreeMemory (info);
 	       }
 	return (TRUE);
 	  }
@@ -724,7 +724,7 @@ Document       doc;
       DocumentURLs[doc] = NULL;
       if (DocumentMeta[doc]->form_data)
 	TtaFreeMemory (DocumentMeta[doc]->form_data);
-      TtaFreeMemory (DocumentMeta);
+      TtaFreeMemory (DocumentMeta[doc]);
       DocumentMeta[doc] = NULL;
       RemoveDocCSSs (doc, TRUE);
       RemoveDocumentImages (doc);
