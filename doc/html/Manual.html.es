@@ -14,7 +14,7 @@
 <div id="page_body">
 <h1 style="text-align : center">Manual de Usuario de Amaya</h1>
 
-<h4 style="text-align:center">Versión 8.1 - Abril 2003<br />
+<h4 style="text-align:center">Versión 8.1 - Julio 2003<br />
 <br />
 <img src="../images/amaya.gif" alt="Amaya" />
 </h4>
@@ -473,6 +473,8 @@ bienvenida de Amaya.</p>
         rel="subdocument">Problemas conocidos con las anotaciones</a></li>
     </ul>
   </li>
+  <li><a href="bookmarks.html.es#page_body"
+  rel="subdocument">Marcadores</a></li>
   <li><a href="Configure.html.es#page_body" rel="subdocument">Configurar
     Amaya</a>
     <ul>

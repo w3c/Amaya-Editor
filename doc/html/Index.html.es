@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.0, see http://www.w3.org/Amaya/" />
   <title>Index</title>
   <link rel="stylesheet" href="index.css" />
 </head>
 
 <body xml:lang="es" lang="es">
-<a name="HTMLIndexerTop" id="HTMLIndexerTop"></a> 
+<a name="HTMLIndexerTop" id="HTMLIndexerTop"></a>
 
 <h1>Index</h1>
 
@@ -691,6 +690,9 @@ imágenes</a></div>
 <a href="ImageMaps.html.es#L1171">cambiar el tamaño de las áreas</a></div>
 
 <div class="level1">
+<a href="bookmarks.html.es">marcadores</a></div>
+
+<div class="level1">
 <a href="Math.html.es" name="mathematics"
 id="mathematics">matemáticas</a></div>
 
@@ -972,7 +974,7 @@ cambiar</a></div>
 <hr />
 
 <div class="letters">
-<a name="V" id="V">V</a> -  <a name="W" id="W">W</a></div>
+<a name="V" id="V">V</a> - <a name="W" id="W">W</a></div>
 
 <div class="level1">
 Ventanas</div>

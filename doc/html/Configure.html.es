@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurar Amaya</title>
@@ -16,7 +15,7 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Annotations.html.es" accesskey="p"><img
+      <td><p align="right"><a href="bookmarks.html.es" accesskey="p"><img
         alt="anterior" src="../images/left.gif" /></a> <a
         href="Manual.html.es" accesskey="t"><img alt="superior"
         src="../images/up.gif" /></a> <a href="ShortCuts.html.es"
