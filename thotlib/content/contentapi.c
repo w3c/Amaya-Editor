@@ -2422,7 +2422,6 @@ void ComputePathLength (void *info)
   path = (AnimPath *) info;
 #endif /* _GL */
 }
-
 /*----------------------------------------------------------------------
    TtaAddAnimPath
   ----------------------------------------------------------------------*/
@@ -2432,6 +2431,14 @@ void TtaAddAnimPath (void *info, void *anim)
   ComputePathLength (info);
 #endif /* _GL */
   ((Animated_Element *) anim)->from = info;
+}
+/*----------------------------------------------------------------------
+   TtaSetAnimReplace : If anim replace the precedent transformation
+   concering this attribute
+  ----------------------------------------------------------------------*/
+void TtaSetAnimReplace (void *anim, ThotBool is_replace)
+{    
+  ((Animated_Element *) anim)->replace = is_replace;
 }
 /*----------------------------------------------------------------------
    TtaAddAnimFrom

@@ -678,10 +678,16 @@ static ThotBool is_animated_now (Animated_Element *animated, AnimTime *current_t
 	{
 	  if (animated->repeatCount > 1)
 	    {
-	      if (animated->repeatCount > ((int)(*current_time/animated->duration)))
+	      if (((float)animated->repeatCount) > ((float)(*current_time/animated->duration)))
 		*current_time = fmod (*current_time, animated->duration);
 	      return TRUE;
 	    }
+	  if (animated->repeatCount == 11)
+	    {
+	      *current_time = fmod (*current_time, animated->duration);
+	      return TRUE;
+	    }
+
 	  else
 	    {
 	      switch (animated->Fill)

@@ -184,8 +184,9 @@ static void FreeAPicCache (int texbind, int frame)
   Cache = PicCache;
   while (Cache)
     {
-      if (Cache->texbind == texbind &&
-	  Cache->frame == frame)
+      if (Cache->texbind == texbind
+/*  && Cache->frame == frame */
+)
 	break;
       Before = Cache;
       Cache = Cache->next;      
@@ -283,9 +284,9 @@ void FreeGlTexture (void *ImageDesc)
   
   if (glIsTexture (Image->TextureBind))
     {      
+      glDeleteTextures (1,  &(Image->TextureBind));     
       FreeAPicCache (Image->TextureBind,
-		     ActiveFrame);      
-      glDeleteTextures (1,  &(Image->TextureBind));
+		     ActiveFrame); 
 #ifdef _PCLDEBUG
       g_print ("\n Image %s Freed", Image->PicFileName);      
 #endif /*_PCLDEBUG*/
@@ -647,6 +648,8 @@ void FreeAllPicCacheFromFrame (int frame)
   Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
   
+  return ;
+
  Before = NULL;  
  while (Cache)
    {

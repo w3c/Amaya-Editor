@@ -201,7 +201,8 @@ void register_animated_element (Element animated, Document doc)
   void *anim_info;
   ElementType elType;
   double start, duration;
-  int *repeatcount;  
+  char *repeatcount;  
+  int repeat;
 
   anim_info = TtaNewAnimation ();
   Read_time_info (animated, &start, &duration);
@@ -221,10 +222,29 @@ void register_animated_element (Element animated, Document doc)
       break;
     } 
 
-  repeatcount = get_intptr_attribute_from_el (animated, SVG_ATTR_repeatCount);
+  switch (get_int_attribute_from_el (animated, SVG_ATTR_additive))
+    {
+    case SVG_ATTR_additive_VAL_replace:
+      TtaSetAnimReplace (anim_info, TRUE);
+      break;
+    case SVG_ATTR_additive_VAL_sum:
+      TtaSetAnimReplace (anim_info, FALSE);
+      break;
+    default:
+      TtaSetAnimReplace (anim_info, TRUE);
+      break;
+    }
+
+  repeatcount = get_char_attribute_from_el  (animated, SVG_ATTR_repeatCount);
   if (repeatcount)
     {    
-      TtaAddAnimRepeatCount (*repeatcount, anim_info);
+      repeat = atoi (repeatcount);      
+      if (repeat)
+	TtaAddAnimRepeatCount (repeat, anim_info);
+      else
+	if (strlen (repeatcount) == 9 && 
+	    strcasecmp ("undefined", repeatcount))
+	  TtaAddAnimRepeatCount (-1, anim_info);
       TtaFreeMemory (repeatcount);
     }
   

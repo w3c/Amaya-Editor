@@ -464,6 +464,7 @@ typedef struct _Animated_Element
   Type_fill                 Fill;/*if anim continues forever... or not*/
   Type_Attribute            Attr;/*class of Attr*/
   char                      *AttrName;/*permits to select attr ie opacity*/
+  ThotBool                  replace;/*if animation replace precedent animation*/
   int                       repeatCount;
 } Animated_Element;
 

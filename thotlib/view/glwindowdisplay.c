@@ -459,6 +459,21 @@ static void GL_SetupPixelFormat (HDC hDC)
     };
   int pixelFormat;
 
+  /*
+    ----Switch to software opengl----
+    bool bSupportsgeneric_format = (pfd->dwFlags & PFD_GENERIC_FORMAT) ==
+    PFD_GENERIC_FORMAT;
+    bool bSupportsgeneric_accelerated = (pfd->dwFlags &
+    PFD_GENERIC_ACCELERATED) == PFD_GENERIC_ACCELERATED;
+    
+    bool bAccelerated = false;
+    
+    if(( bSupportsgeneric_format && bSupportsgeneric_accelerated ) ||
+    (!bSupportsgeneric_format && !bSupportsgeneric_accelerated)  )
+    {
+    bAccelerated = true;
+    }
+  */
   pixelFormat = ChoosePixelFormat (hDC, &pfd);
   if (pixelFormat == 0) 
     {

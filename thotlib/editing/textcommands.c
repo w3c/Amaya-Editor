@@ -830,7 +830,7 @@ static void MovingCommands (int code, Document doc, View view,
 	    {
 	      done = FALSE;
 #ifndef _GL
-	      y = pBoxBegin->BxYOrg + pFrame->FrYOrg;
+	      y = pBoxBegin->BxYOrg;
 	      if (SelPosition || RightExtended)
 		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
 	      else

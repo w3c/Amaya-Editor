@@ -38,9 +38,9 @@ void CleanPictInfo (PictInfo *imageDesc)
 {
   if (imageDesc)
     {
+#ifndef _GL
       if (imageDesc->PicPixmap != None)
 	{
-#ifndef _GL
 #ifndef _GTK
 	  FreePixmap (imageDesc->PicMask);
 	  FreePixmap (imageDesc->PicPixmap);
@@ -51,14 +51,12 @@ void CleanPictInfo (PictInfo *imageDesc)
 #endif /* _GTK */
 	  imageDesc->PicMask = None;
 	  imageDesc->PicPixmap = None;
-#else /*_GL*/
-	  FreeGlTexture (imageDesc);
-#endif /*_GL*/
 	}
-#ifndef _GL
 #ifdef _WINDOWS
 	imageDesc->PicBgMask = -1;
 #endif /* _WINDOWS */
+#else /*_GL*/
+    FreeGlTexture (imageDesc);
 #endif /*_GL*/
 	imageDesc->PicXArea = 0;
 	imageDesc->PicYArea = 0;
