@@ -602,7 +602,8 @@ AttributePres     **attrblock;
   elementType = ctxt->name[att];
   for (i = 0; i < nbrules && !ppRule && attrs; i++)
     {
-      if (att > 0 && attrs->ApElemType != ctxt->type)
+      if ((att > 0 && attrs->ApElemType != ctxt->type) ||
+	  (att == 0 && attrs->ApElemType != 0))
 	{
 	  if (ctxt->type == 0)
 	    /* this new rule is less specific and should be added before */
@@ -1031,7 +1032,6 @@ unsigned int        extra;
   int               elType;
   int               attrType;
   int               presBox;
-  int               i;
 
   /* Search presentation rule */
   cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);

@@ -3157,7 +3157,7 @@ FILE               *fileDescriptor;
 		       {
 			 pAt1 = &pSchemaStr->SsAttribute[Attr - 1];
 			 pRP1 = pSc1->PsAttrPRule[Attr - 1];
-			 if (pRP1 != NULL)
+			 while (pRP1 != NULL)
 			   {
 			     /* si cet attribut a une presentation */
 			     switch (pAt1->AttrType)
@@ -3287,6 +3287,7 @@ FILE               *fileDescriptor;
 			       default:;
 				 break;
 			       }
+			     pRP1 = pRP1->ApNextAttrPres;
 			   }
 		       }
 		   }
