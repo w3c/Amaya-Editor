@@ -63,9 +63,10 @@ STRING WIN_Home;
 
 typedef enum
   {
-     REGISTRY_INSTALL,		/* installation value e.g. THOTDIR, VERSION  */
+     REGISTRY_USER,		/* values which can be redefined by the user */
      REGISTRY_SYSTEM,		/* values fetched from the system config     */
-     REGISTRY_USER		/* values which can be redefined by the user */
+     REGISTRY_INSTALL,		/* installation value e.g. THOTDIR, VERSION  */
+     REGISTRY_MAX_CATEGORIES
   }
 RegistryLevel;
 
@@ -241,7 +242,7 @@ RegistryLevel       level;
 #endif
 {
    CHAR                resu[2000];
-   RegistryEntry       cour;
+   RegistryEntry       cour, ptr, previous;
 
    if (AppRegistryInitialized == 0)
       return (-1);
@@ -276,8 +277,51 @@ RegistryLevel       level;
    cour->orig = TtaStrdup (value);
    cour->value = TtaStrdup (resu);
    cour->level = level;
-   cour->next = AppRegistryEntry;
-   AppRegistryEntry = cour;
+
+   /*
+    * sort the new entry according to its level
+    */
+
+   if (!AppRegistryEntry)
+     /* it's the first entry */
+     {
+       cour->next = NULL;
+       AppRegistryEntry = cour;
+     }
+   else
+     {
+       /* find the first level entry */
+       ptr = AppRegistryEntry;
+       previous = AppRegistryEntry;
+       while (ptr && ptr->level < level)
+	 {
+	   previous = ptr;
+	   ptr = ptr->next;
+
+	 }
+       if (!ptr)
+	 /* insert it at the end*/
+	 {
+	   cour->next = NULL;
+	   previous->next = cour;
+	 }
+       else if (level <= ptr->level)
+	 /* insert cour before ptr */
+	 {
+	   cour->next = ptr;
+	   if (AppRegistryEntry == ptr)
+	     /* it's the first item in the list */
+	     AppRegistryEntry = cour;
+	   else
+	     previous->next = cour;
+	 }
+       else if (level > ptr->level)
+	 /* insert cour after ptr */
+	 {
+	   cour->next = ptr ->next;
+	   ptr->next = cour;
+	 }
+     }
    AppRegistryModified++;
    return (0);
 }
@@ -712,6 +756,29 @@ int                 overwrite;
 }
 
 /*----------------------------------------------------------------------
+ TtaSetDefString : set the defaul value associated to an environment string,
+                   for the current application.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetDefEnvString (STRING name, STRING value, 
+					int overwrite)
+#else  /* __STDC__ */
+void                TtaSetDefEnvString (name, value, overwrite)
+CONST STRING        name;
+CONST STRING        value;
+int                 overwrite;
+#endif
+{
+  STRING tmp = value;
+  
+  if (!tmp)
+    tmp = "";
+
+   AddRegisterEntry (AppRegistryEntryAppli, name, value,
+		     REGISTRY_SYSTEM, overwrite);
+}
+
+/*----------------------------------------------------------------------
   TtaGetDefEnvInt : read the default integer value associated to an 
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
@@ -1128,7 +1195,10 @@ static void         InitEnviron ()
    if (pT != NULL)
      DoubleClickDelay = atoi(pT);
    else
-     DoubleClickDelay = 500;
+     {
+       TtaSetDefEnvString ("DOUBLECLICKDELAY", "500", TRUE);
+       DoubleClickDelay = 500;
+     }
 #endif /* _WINDOWS */
 
    /* The base of the Thot directory */
@@ -1161,6 +1231,18 @@ static void         InitEnviron ()
    else
        SchemaPath[0] = EOS;
 
+   /* set up the default values common to all the thotlib applications */
+   TtaSetDefEnvString ("LANG", "en-us", FALSE);
+   TtaSetDefEnvString ("ZOOM", "5", FALSE);
+   TtaSetDefEnvString ("VISIBILITY", "5", FALSE);
+   TtaSetDefEnvString ("TOOLTIPDELAY", "500", FALSE);
+   TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
+   TtaSetDefEnvString ("ForegroundColor", "Black", FALSE);
+#ifdef _WINDOWS
+   TtaSetDefEnvString ("BackgroundColor", "gainsboro", FALSE);
+#else
+   TtaSetDefEnvString ("BackgroundColor", "LightGrey1", FALSE);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

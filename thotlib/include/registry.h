@@ -90,6 +90,12 @@ extern void         TtaSetEnvBoolean (char *name, boolean value, int overwrite);
 extern void         TtaSetEnvString (char *name, char *value, int overwrite);
 
 /*
+ * TtaSetDefEnvString : set the defaul value associated to an environment 
+ *                      string, for the current application.
+ */
+extern void         TtaSetDefEnvString (char *name, char *value, int overwrite);
+
+/*
  * TtaGetDefEnvInt : read the default integer value associated to an 
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
@@ -126,6 +132,8 @@ extern void         TtaClearEnvString ( /* char *name */ );
 extern void         TtaSetEnvInt ( /* char *name, int value, int overwrite */ );
 extern void         TtaSetEnvBoolean ( /* char *name, boolean value, int overwrite */ );
 extern void         TtaSetEnvString ( /* char *name, char *value, int overwrite */ );
+extern void         TtaSetDefEnvString ( /* char *name, char *value, int overwrite */ );
+
 extern boolean      TtaGetDefEnvBoolean ( /* char *name, boolean *value */ );
 extern boolean      TtaGetDefEnvInt ( /* char *name, int *value */ );
 extern char        *TtaGetDefEnvString ( /* char *name */ );
