@@ -18,6 +18,7 @@
  * searchmenu.c : diverse document search functions.
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari - Adaptation of code to windows platforms.
  *
  */
 

@@ -20,6 +20,7 @@
  * Authors: I. Vatton (INRIA)
  *          D. Veillard (INRIA) - Removed X remapping of keys,
  *                                lead to crash in some configurations
+ *          R. Guetari (W3C/INRIA) - Windows routines.
  *
  */
 

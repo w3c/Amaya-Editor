@@ -10,6 +10,7 @@
  *
  * Author: I. Vatton (INRIA)
  *         D. Veillard (W3C/INRIA) Multikey + Event rewrite
+ *         R. Guetari (W3C/INRIA) - Windows routines.
  *
  */
 

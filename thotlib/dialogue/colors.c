@@ -350,7 +350,7 @@ int                 y;
    co = (y - hcase) / hcase;
    color = co * COLORS_COL + li;
 
-#  else  /* _WINDOWS _WINDOWS _WINDOWS _WINDOWS _WINDOWS */
+#  else  /* _WINDOWS  */
 
    if (y < 45 || y > 330) {
 	  if (button == Button1) {

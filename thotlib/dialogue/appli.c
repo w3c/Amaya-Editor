@@ -952,7 +952,6 @@ View                view;
 	if (w != 0)
 	   XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #   else  /* _WINDOWS */
-    /* SetActiveWindow (FrMainRef [idwindow]); */
 	SetForegroundWindow (FrMainRef [idwindow]);
 #endif /* _WINDOWS */
      }
@@ -1147,8 +1146,6 @@ LPARAM      lParam;
 
 				 if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
                     WinErrorBox (NULL);
-                 /*  ToolBar_ButtonStructSize (hwnd);
-				  ToolBar_AddBitmap (hwnd, 1, &AmayaTBBitmap); */
 
 #                ifdef AMAYA_TOOLTIPS
                  ToolBar_AddString (ToolBar, 0, &szTbStrings [0]);
@@ -1454,7 +1451,6 @@ LPARAM lParam;
                return 0;
 
           case WM_MOUSEMOVE:
-               /* if (wParam & MK_LBUTTON) {  */
                if (fBlocking) { 
                   if (!WIN_UserGeometry) { 
                      if (((oldXPos <= LOWORD (lParam) -1) || (oldXPos >= LOWORD (lParam) +1)) && 

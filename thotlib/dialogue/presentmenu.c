@@ -18,6 +18,7 @@
  * presentmenu.c : Functions to modify the specific presentation
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA) - Windows routines.
  *
  */
 
@@ -1344,7 +1345,7 @@ View                view;
 		i = pAb->AbSize;
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
 
-#       else  /* _WINDOWS _WINDOWS _WINDOWS _WINDOWS */
+#       else  /* _WINDOWS */
 		CreateCharacterDlgWindow (TtaGetViewFrame (document, view));
 #       endif /* _WINDOWS */
 	  }

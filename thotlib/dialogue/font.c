@@ -65,7 +65,6 @@ static int  WIN_fdwStrikeOut;
 
 
 #ifdef _WINDOWS
-#ifdef _WINDOWS
 /*----------------------------------------------------------------------
  *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
  *                    characteristics.
@@ -156,7 +155,6 @@ TypeUnit unit;
 
    return (hFont);									   
 }
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
  *      WinLoadFont : Load a Windows font in a Device context.

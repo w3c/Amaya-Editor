@@ -2655,10 +2655,7 @@ char               *equiv;
 	/*** Cree le titre du menu ***/
 	if (title != NULL)
 	  {
-#            ifdef _WINDOWS
-	     /* win_title_str = TtaStrDup(title);
-	        ModifyMenu(....); */
-#            else  /* _WINDOWS */
+#            ifndef _WINDOWS
 	     n = 0;
 	     title_string = XmStringCreateSimple (title);
 	     XtSetArg (args[n], XmNlabelString, title_string);
@@ -3078,11 +3075,6 @@ char                button;
 	     /* Creation du Popup Shell pour contenir le menu */
 #            ifdef _WINDOWS
          menu = parent;
-		 /*
-         if (menu == 0) {
-            menu = CreatePopupMenu ();
-         }
-		 */
 #            else  /* _WINDOWS */
 	     n = 0;
 	     /*XtSetArg(args[n], XmNallowShellResize, TRUE); n++; */
@@ -3163,10 +3155,7 @@ char                button;
 /*** Cree le titre du menu ***/
 	if (title != NULL)
 	  {
-#            ifdef _WINDOWS
-	     /* win_title_str = TtaStrDup(title);
-	        ModifyMenu(....); !!!!!! */
-#            else  /* _WINDOWS */
+#            ifndef _WINDOWS
 	     n = 0;
 	     title_string = XmStringCreateSimple (title);
 	     XtSetArg (args[n], XmNlabelString, title_string);
@@ -4171,7 +4160,6 @@ boolean             react;
 			 /*________________________________________ Creation d'un bouton __*/
 			 {
 #                           ifdef _WINDOWS
-			     /* w = adbloc->E_ThotWidget[ent]; */
                             AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
 			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                             WIN_AddFrameCatalogue (w, catalogue) ;
@@ -4645,7 +4633,6 @@ boolean             on;
    register int        ent;
    boolean             visible;
    struct E_List      *adbloc;
-/* #  endif  _WINDOWS */
    struct Cat_Context *catalogue;
 
    catalogue = CatEntry (ref);
@@ -4671,7 +4658,6 @@ boolean             on;
 	     return;
 	  }
 	/* Est-ce que le sous-menu est actuellement affiche */
-/* #       ifndef _WINDOWS */
 	else if (XtIsManaged (catalogue->Cat_Widget))
 	   visible = TRUE;
 	else
@@ -4744,7 +4730,6 @@ boolean             on;
 
 	if (!visible)
 	   XtUnmanageChild (catalogue->Cat_Widget);
-/* #       endif _WINDOWS */
      }
 #  else /* _WINDOWS */
 #  endif /* _WINDOWS */

@@ -8,6 +8,7 @@
 /*
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari - Adaptation to Windows platforms.
  *
  */
  

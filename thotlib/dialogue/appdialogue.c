@@ -1449,10 +1449,6 @@ char               *info;
                          FrameTable[frame].Call_Button[i] = (Proc) procedure;
 
                          ToolBar_InsertButton (WinToolBar[frame], i, w);
-						 /*
-						 if (!SendMessage(WinToolBar[frame], TB_INSERTBUTTON, (WPARAM)i, (LPARAM)(LPTBBUTTON)w))
-                            WinErrorBox (NULL); */
-
                          SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
 					 }
                   } else {
@@ -1672,7 +1668,6 @@ Pixmap              picture;
 		  /* Insere le nouvel icone */
 #                 ifdef _WINDOWS
           SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (state, 0));
-          /* SendMessage (WinToolBar[frame], TB_CHANGEBITMAP, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (picture, 0)); */
 #                 else  /* !_WINDOWS */
 		  n = 0;
 		  XtSetArg (args[n], XmNlabelPixmap, picture);
