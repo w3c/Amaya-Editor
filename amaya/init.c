@@ -4150,10 +4150,26 @@ CHAR_T*             data;
        
      case AttrHREFForm:
        /* *********HREF Attribute*********** */
-       printf ("\nAttrHREFvalue = %s\n", AttrHREFvalue);
        if (val == 1)
-	 /* create an attribute HREF for the Link_Anchor */
-	 SetREFattribute (AttrHREFelement, AttrHREFdocument, AttrHREFvalue, NULL);
+	 {
+	   /* create an attribute HREF for the Link_Anchor */
+	   if (AttrHREFvalue[0] != WC_EOS)
+	     SetREFattribute (AttrHREFelement, AttrHREFdocument,
+			      AttrHREFvalue, NULL);
+	   else
+	     {
+	       /* load a local file */
+	       tempfile = TtaAllocString (MAX_LENGTH);
+	       memset (tempfile, WC_EOS, MAX_LENGTH);
+	       ustrcpy (tempfile, DirectoryName);
+	       ustrcat (tempfile, WC_DIR_STR);
+	       ustrcat (tempfile, DocumentName);
+	       SetREFattribute (AttrHREFelement, AttrHREFdocument,
+				tempfile, NULL);
+	       TtaFreeMemory (tempfile);
+	     }
+	   TtaDestroyDialogue (BaseDialog + AttrHREFForm);
+	 }
        else if (val == 2)
 	 /* Clear button */
 	 {
@@ -4192,7 +4208,6 @@ CHAR_T*             data;
 #ifdef _WINDOWS
        usprintf (DirectoryName, TEXT("%s"), data);
 #else  /* _WINDOWS */
-       printf ("\nHREFDirSelect DirectoryName = %s\n", DirectoryName);
        if (DirectoryName[0] != EOS)
 	 {
 	   if (!ustrcmp (data, ".."))
@@ -4210,7 +4225,8 @@ CHAR_T*             data;
 	       ustrcat (DirectoryName, DIR_STR);
 	       ustrcat (DirectoryName, data);
 	     }
-	   TtaSetTextForm (BaseDialog + AttrHREFText, DirectoryName);
+	   ustrcpy (AttrHREFvalue, DirectoryName);
+	   TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 	   TtaListDirectory (DirectoryName, BaseDialog + AttrHREFForm,
 			     TtaGetMessage (LIB, TMSG_DOC_DIR),
 			     BaseDialog + HREFDirSelect, ScanFilter,
@@ -4220,25 +4236,22 @@ CHAR_T*             data;
 	 }
 #endif /* _WINDOWS */
        break;
+
      case HREFDocSelect:
        if (DirectoryName[0] == EOS)
 	 /* set path on current directory */
 	 ugetcwd (DirectoryName, MAX_LENGTH);
-       
        /* Extract suffix from document name */
        ustrcpy (DocumentName, data);
-       printf ("\nHREFDirSelect DocumentName = %s\n", DocumentName);
-       LastURLName[0] = WC_EOS;
        /* construct the document full name */
-       tempfile = TtaAllocString (MAX_LENGTH);
-       ustrcpy (tempfile, DirectoryName);
-       ustrcat (tempfile, WC_DIR_STR);
-       ustrcat (tempfile, DocumentName);
+       ustrcpy (AttrHREFvalue, DirectoryName);
+       ustrcat (AttrHREFvalue, WC_DIR_STR);
+       ustrcat (AttrHREFvalue, DocumentName);
 #ifndef _WINDOWS
-       TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
+       TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 #endif /* !_WINDOWS */
-       TtaFreeMemory (tempfile);
        break;
+
      case HREFFilterText:
        /* Filter value */
        if (ustrlen(data) <= NAME_LENGTH)

@@ -557,6 +557,7 @@ ThotBool	    withUndo;
 	    attrType.AttrTypeNum = XLink_ATTR_href_;
 	  }
 	attr = TtaGetAttribute (el, attrType);
+	AttrHREFvalue[0] = WC_EOS;
 	if (attr != 0)
 	  {
 	     /* get a buffer for the attribute value */
@@ -569,7 +570,6 @@ ThotBool	    withUndo;
 	  }
 
 #ifndef _WINDOWS
-#ifdef LC
 	/* Dialogue form for open URL or local */
 	i = 0;
 	ustrcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -582,7 +582,7 @@ ThotBool	    withUndo;
 		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 3, bufMenu,
 		     TRUE, 2, 'L', D_CANCEL);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
-			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, TRUE);
+			TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
 	TtaNewLabel (BaseDialog + HREFLocalName,
 		     BaseDialog + AttrHREFForm, " ");
 	TtaListDirectory (DirectoryName, BaseDialog + AttrHREFForm,
@@ -594,22 +594,30 @@ ThotBool	    withUndo;
 			BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
 	/* initialise the text fields in the dialogue box */
-	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+	if (AttrHREFvalue[0] != WC_EOS)
+	  TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+	else
+	  {
+	    ustrcpy (bufMenu, DirectoryName);
+	    ustrcat (bufMenu, DIR_STR);
+	    ustrcat (bufMenu, DocumentName);
+	    TtaSetTextForm (BaseDialog + AttrHREFText, bufMenu);
+	  }
 	TtaSetTextForm (BaseDialog + HREFFilterText, ScanFilter);
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
-#else /* LC */
-	/* Dialogue form for open URL or local */
+
+	/* Old attribute form */
+	/*
 	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
 		    TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L',
 		    D_CANCEL);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
-	/* initialise the text field in the dialogue box */
 	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
-#endif /* LC */
+	*/
 #else  /* _WINDOWS */
 	CreateTextDlgWindow (currentWindow, AttrHREFvalue);
 #endif  /* _WINDOWS */
