@@ -1,7 +1,9 @@
 PRESENTATION Annot;
 
 VIEWS
-   Formatted_view, Links_view;
+   Formatted_view,
+   Structure_view merge with Structure_view,
+   Links_view merge with Links_view;
 
 #ifdef PAGE
 PRINT
@@ -257,6 +259,8 @@ RULES
 	Background:  LightCoral4;
 	FillPattern: backgroundcolor;
 	Foreground: DarkSkyBlue3;
+	IN Structure_view
+	   Visibility: 0;
 	END;
 
  Body:

@@ -1183,7 +1183,7 @@ void ANNOT_PrepareAnnotView (document)
 
     /* views */
     TtaSetItemOff (document, view, Views, TShowTextZone);
-    TtaSetItemOff (document, view, Views, BShowStructure);
+    /* TtaSetItemOff (document, view, Views, BShowStructure); */
     TtaSetItemOff (document, view, Views, BShowAlternate);
     TtaSetItemOff (document, view, Views, BShowSource);
     TtaSetItemOff (document, view, Views, BShowLinks);
