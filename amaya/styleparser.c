@@ -4262,7 +4262,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       ctxt->attrType[i] = 0;
       ctxt->attrLevel[i] = 0;
       ctxt->attrText[i] = NULL;
-      ctxt->attrMatch[1] = Txtmatch;
+      ctxt->attrMatch[i] = Txtmatch;
     }
   ctxt->box = 0;
   ctxt->type = 0;
@@ -4328,6 +4328,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    else
 	      {
 		classes[0] = deb;
+		/* a "class" attribute on an element may contain several
+		   words, one for each class it matches */
+		attrmatch[0] = Txtword;
 		specificity += 10;
 	      }
 	  }
