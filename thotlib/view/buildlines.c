@@ -926,7 +926,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
     /* the previous character is in the same buffer */
     charIndex--;
   /* Remove extra spaces just before the break */
-  still = ((pBuffer && dummySpaces != 0) || max >= pBox->BxWidth);
+  still = (pBuffer && (dummySpaces || max >= pBox->BxWidth));
   while (still && *boxLength > 0)
     {
       character = pBuffer->BuContent[charIndex];
