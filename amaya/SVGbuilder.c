@@ -1078,7 +1078,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
        case SVG_EL_foreignObject:
        case SVG_EL_SVG:
        case SVG_EL_symbol_:
-       /* case SVG_EL_view: */
+	 /* case SVG_EL_view: */
 	 TtaSetElCoordinateSystem (el);
 	 break;
 
@@ -1205,9 +1205,9 @@ static char *GetFloat (char *ptr, float* number)
   float     val = 0.;
   ThotBool negative, decimal, exponent, useDotForFloat;
 
-   /* test if the system uses dot or comma in the float syntax */
-   sscanf (".5", "%f", &val);
-   useDotForFloat = (val == 0.5);
+  /* test if the system uses dot or comma in the float syntax */
+  sscanf (".5", "%f", &val);
+  useDotForFloat = (val == 0.5);
   negative = FALSE;
   decimal = FALSE;
   exponent = FALSE;
@@ -1220,6 +1220,7 @@ static char *GetFloat (char *ptr, float* number)
       ptr++;
       negative = TRUE;
     }
+
   start = ptr;
   /* read the integer part */
   while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
@@ -1234,6 +1235,7 @@ static char *GetFloat (char *ptr, float* number)
       while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
 	ptr++;
     }
+
   if (*ptr == 'e' || *ptr == 'E')
     /* there is an exponent, parse it */
     {
@@ -1254,15 +1256,15 @@ static char *GetFloat (char *ptr, float* number)
   if (exponent)
     sscanf (start, "%e", number);
   else if (decimal)
-	sscanf (start, "%f", number);
+    sscanf (start, "%f", number);
   else
     {
       sscanf (start, "%d", &i);
       *number = (float)i;
     }
+
   if (negative)
     *number = - *number;
-
   /* restore extra characters */
   *ptr = c;
 
@@ -1280,7 +1282,7 @@ static char *GetFloat (char *ptr, float* number)
    Return the value of that number in number and moves ptr to the next
    token to be parsed.
   ----------------------------------------------------------------------*/
-static char* GetNumber (char *ptr, int* number)
+static char *GetNumber (char *ptr, int* number)
 {
   int      integer, nbdecimal, exponent, i;
   char     *decimal;
@@ -1299,6 +1301,7 @@ static char* GetNumber (char *ptr, int* number)
       ptr++;
       negative = TRUE;
     }
+
   /* read the integer part */
   while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
     {
@@ -1317,6 +1320,7 @@ static char* GetNumber (char *ptr, int* number)
 	  ptr++;
 	}
     }
+
   if (*ptr != 'e' && *ptr != 'E')
     /* no exponent */
     {
@@ -1343,6 +1347,7 @@ static char* GetNumber (char *ptr, int* number)
 	  negativeExp = TRUE;
 	}
       exponent = 0;
+
       while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
 	{
 	  exponent *= 10;
@@ -1370,6 +1375,7 @@ static char* GetNumber (char *ptr, int* number)
 	    }
 	}
     }
+
   if (negative)
     *number = - integer;
   else
@@ -2138,7 +2144,6 @@ void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
        TtaFreeMemory (text);
      }
 }
-#ifdef _GL
 /*----------------------------------------------------------------------
    ParseTransformAttribute
    Parse the value of a transform attribute
@@ -2146,528 +2151,300 @@ void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
 void ParseTransformAttribute (Attribute attr, Element el, Document doc,
  			      ThotBool delete_)
 {
-   int                  length;
-   float                scaleX, scaleY, x, y, a, b, c, d, e, f, angle;
-   char                *text, *ptr;
-   ThotBool             error;
-   Element              leaf;
-   
-   leaf = el;
-   length = TtaGetTextAttributeLength (attr) + 2;
-   text = (char *)TtaGetMemory (length);
-   if (text)
-     {
-       /* get the content of the transform attribute */
-       TtaGiveTextAttributeValue (attr, text, &length);
-       /* parse the attribute content */
-       ptr = text;
-       error = FALSE;
-       while (*ptr != EOS && !error)
-	 {
-	   /* skip space characters */
-	   ptr = TtaSkipBlanks (ptr);
-	   if (!strncmp (ptr, "matrix", 6))
-	     {
-	       ptr += 6;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetFloat (ptr, &a);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetFloat (ptr, &b);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetFloat (ptr, &c);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetFloat (ptr, &d);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetFloat (ptr, &e);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetFloat (ptr, &f);
-		   if (*ptr != ')')
-		     error = TRUE;
-		   else
-		     {
-		       ptr++;
-		       TtaReplaceTransform (leaf, 
+  int                  length;
+  float                scaleX, scaleY, x, y, a, b, c, d, e, f, angle;
+  char                *text, *ptr;
+  ThotBool             error;
+#ifndef _GL
+  PresentationValue    pval;
+  PresentationContext  ctxt;
+#endif /* _GL */
+
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = (char *)TtaGetMemory (length);
+  if (text)
+    {
+      /* get the content of the transform attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute content */
+      ptr = text;
+      error = FALSE;
+      while (*ptr != EOS && !error)
+	{
+	  /* skip space characters */
+	  ptr = TtaSkipBlanks (ptr);
+	  if (!strncmp (ptr, "matrix", 6))
+	    {
+	      ptr += 6;
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr != '(')
+		error = TRUE;
+	      else
+		{
+		  ptr++;
+		  ptr = TtaSkipBlanks (ptr);
+		  ptr = GetFloat (ptr, &a);
+		  if (*ptr == ',')
+		    {
+		      ptr++;
+		      ptr = TtaSkipBlanks (ptr);
+		    }
+		  ptr = GetFloat (ptr, &b);
+		  if (*ptr == ',')
+		    {
+		      ptr++;
+		      ptr = TtaSkipBlanks (ptr);
+		    }
+		  ptr = GetFloat (ptr, &c);
+		  if (*ptr == ',')
+		    {
+		      ptr++;
+		      ptr = TtaSkipBlanks (ptr);
+		    }
+		  ptr = GetFloat (ptr, &d);
+		  if (*ptr == ',')
+		    {
+		      ptr++;
+		      ptr = TtaSkipBlanks (ptr);
+		    }
+		  ptr = GetFloat (ptr, &e);
+		  if (*ptr == ',')
+		    {
+		      ptr++;
+		      ptr = TtaSkipBlanks (ptr);
+		    }
+		  ptr = GetFloat (ptr, &f);
+		  if (*ptr != ')')
+		    error = TRUE;
+		  else
+		    {
+		      ptr++;
+#ifdef _GL
+		      TtaReplaceTransform (el, 
 					   TtaNewTransformMatrix (a, b, c,
 								  d, e, f),
 					   doc);
-		     }
-		 }
-	     }
-	   else if (!strncmp (ptr, "translate", 9))
-	     {
-	       x = 0;  y = 0;
-	       ptr += 9;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetFloat (ptr, &x);
-		   /* New Version */
-		   if (*ptr != ')')
-		     {
-		       if (*ptr == ',')
-			 {
-			   ptr++;
-			   ptr = TtaSkipBlanks (ptr);
-			 }
-		       ptr = GetFloat (ptr, &y);
-		     }
-		   if (*ptr == ')')
-		     ptr++;
-		   else
-		     error = TRUE;
-		   TtaReplaceTransform (leaf, 
+#else /* _GL */
+		      pval.typed_data.value = 0;
+		      pval.typed_data.unit = UNIT_PX;
+		      pval.typed_data.real = FALSE;
+		      pval.typed_data.mainValue = TRUE;
+		      ctxt = TtaGetSpecificStyleContext (doc);
+		      ctxt->cssSpecificity = 0; /* this is not a CSS rule */
+		      ctxt->destroy = delete_;
+		      /****** process values a, b, c, d *****/
+		      /* value e specifies an horizontal translation */
+		      if (e != 0)
+			{
+			  pval.typed_data.value = (int)e;
+			  TtaSetStylePresentation (PRHorizPos, el, NULL,
+						   ctxt, pval);
+			}
+		      /* value f specifies a vertical translation */
+		      if (f != 0)
+			{
+			  pval.typed_data.value = (int)f;
+			  TtaSetStylePresentation (PRVertPos, el, NULL,
+						   ctxt, pval);
+			}
+		      TtaFreeMemory (ctxt);
+#endif /* _GL */
+		    }
+		}
+	    }
+	  else if (!strncmp (ptr, "translate", 9))
+	    {
+	      x = 0;  y = 0;
+	      ptr += 9;
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr != '(')
+		error = TRUE;
+	      else
+		{
+		  ptr++;
+		  ptr = TtaSkipBlanks (ptr);
+		  ptr = GetFloat (ptr, &x);
+#ifndef _GL
+		  pval.typed_data.value = 0;
+		  pval.typed_data.unit = UNIT_PX;
+		  pval.typed_data.real = FALSE;
+		  pval.typed_data.value = (int)x;
+		  pval.typed_data.mainValue = TRUE;
+		  ctxt = TtaGetSpecificStyleContext (doc);
+		  ctxt->cssSpecificity = 0;     /* this is not a CSS rule */
+		  ctxt->destroy = delete_;
+		  TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
+#endif /* _GL */
+		  /* New Version */
+		  if (*ptr != ')')
+		    {
+		      if (*ptr == ',')
+			{
+			  ptr++;
+			  ptr = TtaSkipBlanks (ptr);
+			}
+		      ptr = GetFloat (ptr, &y);
+		    }
+		  if (*ptr == ')')
+		    ptr++;
+		  else
+		    error = TRUE;
+#ifdef _GL
+		  TtaReplaceTransform (el, 
 				       TtaNewTransformTranslate (x, y, FALSE),
 				       doc);
-		 }
-	     }
-	   else if (!strncmp (ptr, "scale", 5))
-	     {
-	       ptr += 5;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetFloat (ptr, &scaleX);
-		   if (*ptr == ')')
-		     scaleY = scaleX;
-		   else
-		     {
-		       if (*ptr == ',')
-			 {
-			   ptr++;
-			   ptr = TtaSkipBlanks (ptr);
-			 }
-		       ptr = GetFloat (ptr, &scaleY);
-		     }
-		   if (*ptr == ')')
-		     {
-		       ptr++;
-		       TtaReplaceTransform (leaf, 
+#else /* _GL */
+		  pval.typed_data.value = (int)y;
+		  TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
+		  TtaFreeMemory (ctxt);
+#endif /* _GL */
+		}
+	    }
+	  else if (!strncmp (ptr, "scale", 5))
+	    {
+	      ptr += 5;
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr != '(')
+		error = TRUE;
+	      else
+		{
+		  ptr++;
+		  ptr = TtaSkipBlanks (ptr);
+		  ptr = GetFloat (ptr, &scaleX);
+		  if (*ptr == ')')
+		    scaleY = scaleX;
+		  else
+		    {
+		      if (*ptr == ',')
+			{
+			  ptr++;
+			  ptr = TtaSkipBlanks (ptr);
+			}
+		      ptr = GetFloat (ptr, &scaleY);
+		    }
+		  if (*ptr == ')')
+		    {
+		      ptr++;
+#ifdef _GL
+		      TtaReplaceTransform (el, 
 					   TtaNewTransformScale (scaleX, 
 								 scaleY,
 								 FALSE),
 					   doc);
-		     }
-		   else
-		     error = TRUE;
-		 }
-	     }
-	   else if (!strncmp (ptr, "rotate", 6))
-	     {
-	       ptr += 6;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetFloat (ptr, &angle);
-		   if (*ptr == ')')
-		     {
-		       x = 0;
-		       y = 0;
-		     }
-		   else
-		     {
-		       if (*ptr == ',')
-			 {
-			   ptr++;
-			   ptr = TtaSkipBlanks (ptr);
-			 }
-		       ptr = GetFloat (ptr, &x);
-		       if (*ptr == ',')
-			 {
-			   ptr++;
-			   ptr = TtaSkipBlanks (ptr);
-			 }
-		       ptr = GetFloat (ptr, &y);
-		     }
-		   if (*ptr == ')')
-		     {
-		       ptr++;
-		       TtaReplaceTransform (leaf, 
+#endif /* _GL */
+		    }
+		  else
+		    error = TRUE;
+		}
+	    }
+	  else if (!strncmp (ptr, "rotate", 6))
+	    {
+	      ptr += 6;
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr != '(')
+		error = TRUE;
+	      else
+		{
+		  ptr++;
+		  ptr = TtaSkipBlanks (ptr);
+		  ptr = GetFloat (ptr, &angle);
+		  if (*ptr == ')')
+		    {
+		      x = 0;
+		      y = 0;
+		    }
+		  else
+		    {
+		      if (*ptr == ',')
+			{
+			  ptr++;
+			  ptr = TtaSkipBlanks (ptr);
+			}
+		      ptr = GetFloat (ptr, &x);
+		      if (*ptr == ',')
+			{
+			  ptr++;
+			  ptr = TtaSkipBlanks (ptr);
+			}
+		      ptr = GetFloat (ptr, &y);
+		    }
+		  if (*ptr == ')')
+		    {
+		      ptr++;
+#ifdef _GL
+		      TtaReplaceTransform (el, 
 					   TtaNewTransformRotate (angle, x, y),
 					   doc);
-		     }
-		   else
-		     error = TRUE;
-		 }
-	     }
-	   else if (!strncmp (ptr, "skewX", 5))
-	     {
-	       ptr += 5;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetFloat (ptr, &x);
-		   if (*ptr == ')')
-		     {
-		       ptr++;
-		       TtaReplaceTransform (leaf, 
+#endif /* _GL */
+		    }
+		  else
+		    error = TRUE;
+		}
+	    }
+	  else if (!strncmp (ptr, "skewX", 5))
+	    {
+	      ptr += 5;
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr != '(')
+		error = TRUE;
+	      else
+		{
+		  ptr++;
+		  ptr = TtaSkipBlanks (ptr);
+		  ptr = GetFloat (ptr, &x);
+		  if (*ptr == ')')
+		    {
+		      ptr++;
+#ifdef _GL
+		      TtaReplaceTransform (el, 
 					   TtaNewTransformSkewX (x),
 					   doc);
-		     }
-		   else
-		     error = TRUE;
-		 }
-	     }
-	   else if (!strncmp (ptr, "skewY", 5))
-	     {
-	       ptr += 5;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetFloat (ptr, &y);
-		   if (*ptr == ')')
-		     {
-		       ptr++;
-		       TtaReplaceTransform (leaf, 
+#endif /* _GL */
+		    }
+		  else
+		    error = TRUE;
+		}
+	    }
+	  else if (!strncmp (ptr, "skewY", 5))
+	    {
+	      ptr += 5;
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr != '(')
+		error = TRUE;
+	      else
+		{
+		  ptr++;
+		  ptr = TtaSkipBlanks (ptr);
+		  ptr = GetFloat (ptr, &y);
+		  if (*ptr == ')')
+		    {
+		      ptr++;
+#ifdef _GL
+		      TtaReplaceTransform (el, 
 					   TtaNewTransformSkewY (y),
 					   doc);
-		     }
-		   else
-		     error = TRUE;
-		 }
-	     }
-	   else
-	     /* unexpected token, ignore the rest */
-	     error = TRUE;
-
-	   if (!error)
-	     {
-	       /* skip spaces and the optional comma */
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr == ',')
-		 ptr++;
-	     }
-         }
-       TtaFreeMemory (text);
-     }
-}
-#else /* _GL */
-void ParseTransformAttribute (Attribute attr, Element el, Document doc,
-			      ThotBool delete_)
-{
-   int                  length, a, b, c, d, e, f, x, y, angle;
-   float                scaleX, scaleY;
-   char                *text, *ptr;
-   PresentationValue    pval;
-   PresentationContext  ctxt;
-   ThotBool             error;
-
-   length = TtaGetTextAttributeLength (attr) + 2;
-   text = (char *)TtaGetMemory (length);
-   if (text)
-     {
-       /* get the content of the transform attribute */
-       TtaGiveTextAttributeValue (attr, text, &length);
-       /* parse the attribute content */
-       ptr = text;
-       error = FALSE;
-       while (*ptr != EOS && !error)
-	 {
-	   /* skip space characters */
-	   ptr = TtaSkipBlanks (ptr);
-	   if (!strncmp (ptr, "matrix", 6))
-	     {
-	       ptr += 6;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetNumber (ptr, &a);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetNumber (ptr, &b);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetNumber (ptr, &c);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetNumber (ptr, &d);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetNumber (ptr, &e);
-		   if (*ptr == ',')
-		     {
-		       ptr++;
-		       ptr = TtaSkipBlanks (ptr);
-		     }
-		   ptr = GetNumber (ptr, &f);
-		   if (*ptr != ')')
-		     error = TRUE;
-		   else
-		     {
-		       ptr++;
-		       pval.typed_data.value = 0;
-		       pval.typed_data.unit = UNIT_PX;
-		       pval.typed_data.real = FALSE;
-		       pval.typed_data.mainValue = TRUE;
-		       ctxt = TtaGetSpecificStyleContext (doc);
-		       ctxt->cssSpecificity = 0; /* this is not a CSS rule */
-		       ctxt->destroy = delete_;
-		       /****** process values a, b, c, d *****/
-		       /* value e specifies an horizontal translation */
-		       if (e != 0)
-			 {
-			   pval.typed_data.value = e;
-			   TtaSetStylePresentation (PRHorizPos, el, NULL,
-						    ctxt, pval);
-			 }
-		       /* value f specifies a vertical translation */
-		       if (f != 0)
-			 {
-			   pval.typed_data.value = f;
-			   TtaSetStylePresentation (PRVertPos, el, NULL,
-						    ctxt, pval);
-			 }
-		       TtaFreeMemory (ctxt);
-
-		     }
-		 }
-	     }
-	   else if (!strncmp (ptr, "translate", 9))
-	     {
-	       x = 0;  y = 0;
-	       ptr += 9;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetNumber (ptr, &x);
-		   pval.typed_data.value = 0;
-		   pval.typed_data.unit = UNIT_PX;
-		   pval.typed_data.real = FALSE;
-		   pval.typed_data.value = x;
-		   pval.typed_data.mainValue = TRUE;
-		   ctxt = TtaGetSpecificStyleContext (doc);
-		   ctxt->cssSpecificity = 0;     /* this is not a CSS rule */
-		   ctxt->destroy = delete_;
-		   TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
-		   if (*ptr == ')')
-		     pval.typed_data.value = 0;
-		   else
-		     {
-		       if (*ptr == ',')
-			 {
-			   ptr++;
-			   ptr = TtaSkipBlanks (ptr);
-			 }
-		       ptr = GetNumber (ptr, &y);
-		       pval.typed_data.value = y;
-		     }
-		   TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
-		   if (*ptr == ')')
-		     ptr++;
-		   else
-		     error = TRUE;
-		   TtaFreeMemory (ctxt);
-
-		 }
-	     }
-	   else if (!strncmp (ptr, "scale", 5))
-	     {
-	       ptr += 5;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetFloat (ptr, &scaleX);
-		   if (*ptr == ')')
-		     scaleY = scaleX;
-		   else
-		     {
-		       if (*ptr == ',')
-			 {
-			   ptr++;
-			   ptr = TtaSkipBlanks (ptr);
-			 }
-		       ptr = GetFloat (ptr, &scaleY);
-		     }
-		   if (*ptr == ')')
-		     {
-		       ptr++;
-		       if (scaleX != 1)
-			 /* process scaleX */
-			 {
-			   /**********/;
-			 }
-		       if (scaleY != 1)
-			 /* process scaley */
-			 {
-			   /**********/;
-			 }
-		     }
-		   else
-		     error = TRUE;
-		 }
-	     }
-	   else if (!strncmp (ptr, "rotate", 6))
-	     {
-	       ptr += 6;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetNumber (ptr, &angle);
-		   if (*ptr == ')')
-		     {
-		       x = 0;
-		       y = 0;
-		     }
-		   else
-		     {
-		       if (*ptr == ',')
-			 {
-			   ptr++;
-			   ptr = TtaSkipBlanks (ptr);
-			 }
-		       ptr = GetNumber (ptr, &x);
-		       if (*ptr == ',')
-			 {
-			   ptr++;
-			   ptr = TtaSkipBlanks (ptr);
-			 }
-		       ptr = GetNumber (ptr, &y);
-		     }
-		   if (*ptr == ')')
-		     {
-		       ptr++;
-		       /****** process angle, x and y ******/
-
-
-		     }
-		   else
-		     error = TRUE;
-		 }
-	     }
-	   else if (!strncmp (ptr, "skewX", 5))
-	     {
-	       ptr += 5;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetNumber (ptr, &x);
-		   if (*ptr == ')')
-		     {
-		       ptr++;
-		       /****** process x ******/
-
-
-		     }
-		   else
-		     error = TRUE;
-		 }
-	     }
-	   else if (!strncmp (ptr, "skewY", 5))
-	     {
-	       ptr += 5;
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr != '(')
-		 error = TRUE;
-	       else
-		 {
-		   ptr++;
-		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetNumber (ptr, &y);
-		   if (*ptr == ')')
-		     {
-		       ptr++;
-		       /****** process y ******/
-
-
-		     }
-		   else
-		     error = TRUE;
-		 }
-	     }
-	   else
-	     /* unexpected token, ignore the rest */
-	     error = TRUE;
-
-	   if (!error)
-	     {
-	       /* skip spaces and the optional comma */
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr == ',')
-		 ptr++;
-	     }
-         }
-       TtaFreeMemory (text);
-     }
-}
-
 #endif /* _GL */
+		    }
+		  else
+		    error = TRUE;
+		}
+	    }
+	  else
+	    /* unexpected token, ignore the rest */
+	    error = TRUE;
+
+	  if (!error)
+	    {
+	      /* skip spaces and the optional comma */
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr == ',')
+		ptr++;
+	    }
+	}
+      TtaFreeMemory (text);
+    }
+}
+
 /*----------------------------------------------------------------------
    ParsePathDataAttribute
    Parse the value of a path data attribute
@@ -2785,7 +2562,6 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
        leaf = el;
        anim_seg = TtaNewAnimPath (doc);
      }
-   
    
    /* get a buffer for reading the attribute value */
    length = TtaGetTextAttributeLength (attr) + 2;
@@ -3316,8 +3092,6 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	break;
      }
 }
-
-/* end of module */
 
 
 

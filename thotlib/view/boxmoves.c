@@ -1139,9 +1139,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #ifdef _GL 
 	      if (pBox->BxXOrg && FrameTable[frame].FrView == 1 &&
 		  pBox->BxAbstractBox->AbElement->ElSystemOrigin)
-		{
-		    delta = 0;
-		}
+		delta = 0;
 #endif /* _GL */
 
 	      /* Move inclused boxes which depend on it */
@@ -1318,9 +1316,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #ifdef _GL 
 	      if (pBox->BxYOrg && FrameTable[frame].FrView == 1 &&
 		  pBox->BxAbstractBox->AbElement->ElSystemOrigin)
-		{ 
-		    delta = 0;
-		}	      
+		delta = 0;
 #endif /* _GL */
 
 	      /* Move inclused boxes which depend on it */

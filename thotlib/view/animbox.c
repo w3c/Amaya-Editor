@@ -366,17 +366,14 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
   int           doc, view;
 
   while (pAb != NULL)
-    {   
+    {
       pBox = pAb->AbBox;
       pBox->VisibleModification = TRUE;
-      if (pAb->AbElement->ElSystemOrigin
-	  /* || isgroup () */
-	  )
+      if (pAb->AbElement->ElSystemOrigin)
 	{
 	  El = pAb->AbElement;
 	  if (El->ElTransform)
-	    Trans = GetTransformation (El->ElTransform, 
-				       PtElTranslate); 	  
+	    Trans = GetTransformation (El->ElTransform, PtElTranslate); 	  
 	  if (Trans == NULL)
 	    {
 	      Trans = (PtrTransform)TtaNewTransformTranslate (result, 0, FALSE);
@@ -387,7 +384,7 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
 	}
       else
 	{
-	  pBox->BxXOrg = result;
+	  pBox->BxXOrg = (int)result;
 	  ApplyXToAllBoxes (pAb->AbFirstEnclosed, result);
 	}
       pAb = pAb->AbNext;
@@ -408,14 +405,11 @@ static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
     {   
       pBox = pAb->AbBox;
       pBox->VisibleModification = TRUE;
-      if (pAb->AbElement->ElSystemOrigin
-	  /* || isgroup () */
-	  )
+      if (pAb->AbElement->ElSystemOrigin)
 	{
 	  El = pAb->AbElement;
 	  if (El->ElTransform)
-	    Trans = GetTransformation (El->ElTransform, 
-				       PtElTranslate); 	  
+	    Trans = GetTransformation (El->ElTransform, PtElTranslate); 	  
 	  if (Trans == NULL)
 	    {
 	      Trans = (PtrTransform)TtaNewTransformTranslate (0, result, FALSE);
@@ -428,7 +422,7 @@ static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
 	{
 	  if (pAb->AbLeafType == LtText)
 	    result -= BoxFontBase (pBox->BxFont);
-	  pBox->BxYOrg = result;
+	  pBox->BxYOrg = (int)result;
 	  ApplyYToAllBoxes (pAb->AbFirstEnclosed, result);
 	}
       pAb = pAb->AbNext;
@@ -443,7 +437,7 @@ static void ApplyWidthToAllBoxes (PtrAbstractBox pAb, float result)
   while (pAb != NULL)
     {      
       pAb->AbBox->VisibleModification = TRUE;
-      pAb->AbBox->BxW = result;     
+      pAb->AbBox->BxW = (int)result;     
       ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
@@ -457,7 +451,7 @@ static void ApplyHeightToAllBoxes (PtrAbstractBox pAb, float result)
   while (pAb != NULL)
     {      
       pAb->AbBox->VisibleModification = TRUE;
-      pAb->AbBox->BxH = result;
+      pAb->AbBox->BxH = (int)result;
       ApplyHeightToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
@@ -532,9 +526,9 @@ static void animate_box_set (PtrElement El,
 			     Animated_Element *animated,
 			     AnimTime current_time)
 {
-  int doc, view;
+  int            doc, view;
   PtrAbstractBox pAb = NULL;
-  double result;
+  double         result;
   
   if (animated->AttrName == NULL)
     return;
@@ -547,8 +541,8 @@ static void animate_box_set (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {	  
-	    result = 1000*atof ((char *) animated->to);
-	    pAb->AbOpacity = result;
+	    result = 1000 * atof ((char *) animated->to);
+	    pAb->AbOpacity = (int)result;
 	    /*If it's an opaque group manage the opacity*/
 	    if (!TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
 				   pAb->AbElement->ElStructSchema))
@@ -647,7 +641,7 @@ static void animate_box_animate (PtrElement El,
 						      current_time,
 						      animated->duration);
 
-	    pAb->AbOpacity = result;
+	    pAb->AbOpacity = (int) result;
 	    /*If it's an opaque group manage the opacity*/
 	    if (!TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
 				   pAb->AbElement->ElStructSchema))
