@@ -724,6 +724,12 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	SetDlgItemInt (hwnDlg, IDC_BORDEREDIT, tBorder, FALSE);
       break;
 
+    case WM_CLOSE:
+    case WM_DESTROY:
+	  ThotCallback (BaseDialog + TableForm, INTEGER_DATA, (char*) 0);
+      EndDialog (hwnDlg, IDCANCEL);
+	  break;
+
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE)
 	{
@@ -755,7 +761,7 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	case IDCANCEL:
 	  ThotCallback (BaseDialog + TableForm, INTEGER_DATA, (char*) 0);
-      EndDialog (hwnDlg, ID_CONFIRM);
+      EndDialog (hwnDlg, IDCANCEL);
 	  break;
 	}
       break;
