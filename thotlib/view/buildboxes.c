@@ -81,6 +81,8 @@ static int             BiwIndex = 0;
 #define M_PI   3.14159265358979323846
 #define M_PI_2 1.57079632679489661923
 #endif /* _WINGUI */
+static ThotBool EmbeddedScript = FALSE;
+
 
 #include "stix.h"
 
@@ -373,6 +375,7 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
   the requested value.
   dir gives the main direction (override, embed, or previous).
   bidi says 'O' for override, 'E' for embed, etc.
+  embedded is TRUE when it's a embedded Script
   Returns:
   The script of the box.
   pBuffer points to the next buffer.
@@ -382,9 +385,9 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
   ----------------------------------------------------------------------*/
 char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		     SpecFont font, int *width, int *nSpaces,
-		     char dir, char bidi, int *em, char prevscript)
+		     char dir, char bidi, ThotBool *embedded, char prevscript)
 {
-  char                script,sc;
+  char                script, sc;
   char                newscript, embed = '*';
   int                 oldind = 0;
   int                 oldpos = 0;
@@ -431,7 +434,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	    {
 	      if (script == '*' && *ind == 0)
 		{
-		  if (*em == 0)
+		  if (!(*embedded))
 		    script = prevscript;
 		  else if (prevscript == 'A')
 		    script = 'L';
@@ -446,7 +449,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		    charWidth = BoxCharacterWidth (car, font);
 		  *width += charWidth;
 		  if (car == 0x28 || car == 0x29 )
-		    *em = 1;
+		    *embedded = TRUE;
 		  if (car != EOS)
 		    pos++;
 		  /* next character */
@@ -454,7 +457,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		}
 	      else if (script == 'L')
 		{
-		  if (*em == 1)  /* embedded script compute the next*/
+		  if (*embedded)  /* embedded script compute the next */
 		    {
 		      if (*ind == *nChars && (*pBuffer)->BuNext)
 			ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]);
@@ -479,10 +482,10 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 			}
 		    }
 		}
-	      if (script == '*' && *em == 1)
+	      if (script == '*' && *embedded)
 		{
 		  script = newscript = 'A';
-		  *em = 0;
+		  *embedded = FALSE;
 		}
 	    }
   
@@ -912,14 +915,15 @@ static void FreePath (PtrBox box)
   ----------------------------------------------------------------------*/
 PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
 		       int width, int height, int spaces, int ind,
-		       PtrTextBuffer pBuffer, PtrBox pMainBox)
+		       PtrTextBuffer pBuffer, int frame)
 {
-  PtrBox              ibox1, ibox2;
+  PtrBox              ibox1, ibox2, pMainBox;
   PtrBox              pPreviousBox, pNextBox;
   int                 l, v;
 
   pPreviousBox = box->BxPrevious;
   pNextBox = box->BxNext;
+  pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
   if (box->BxType == BoComplete)
     {
       l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
@@ -989,13 +993,13 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox2->BxNSpaces = box->BxNSpaces - spaces;
       if (pAb->AbDirection == 'L')
         {
-          ibox1->BxXOrg = box->BxXOrg;
-          ibox2->BxXOrg = ibox1->BxXOrg + ibox1->BxWidth;
+	  XMove (ibox1, ibox1, box->BxXOrg - ibox1->BxXOrg, frame);
+          XMove (ibox2, ibox2, ibox1->BxXOrg + ibox1->BxWidth - ibox2->BxXOrg, frame);
         }
       else
         {
-          ibox2->BxXOrg = box->BxXOrg;
-          ibox1->BxXOrg = ibox2->BxXOrg + ibox2->BxWidth;
+	  XMove (ibox2, ibox2, box->BxXOrg - ibox2->BxXOrg, frame);
+          XMove (ibox1, ibox1, ibox2->BxXOrg + ibox2->BxWidth - ibox1->BxXOrg, frame);
         }
       ibox2->BxYOrg = box->BxYOrg;
       /* update the chain of leaf boxes */
@@ -1061,11 +1065,11 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       box->BxNChars = lg;
       box->BxNSpaces = spaces;
       if (pAb->AbDirection == 'L')
-        ibox2->BxXOrg = box->BxXOrg + box->BxWidth;
+	XMove (ibox2, ibox2, box->BxXOrg + box->BxWidth - ibox2->BxXOrg, frame);
       else
         {
-          ibox2->BxXOrg = box->BxXOrg;
-          box->BxXOrg = box->BxXOrg + ibox2->BxWidth;
+          XMove (ibox2, ibox2, box->BxXOrg - ibox2->BxXOrg, frame);
+	  XMove (box, box, ibox2->BxWidth, frame);
         }
 
       /* update the chain of leaf boxes */
@@ -1085,10 +1089,7 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
 /*----------------------------------------------------------------------
   GiveTextSize gives the internal width and height of a text box.
   ----------------------------------------------------------------------*/
-/* variable globale*/
-static int em = 0;
-
-static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
+static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
 			  int *height, int *nSpaces)
 {
   PtrTextBuffer       pBuffer;
@@ -1131,14 +1132,14 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
 	  if (box->BxPrevious && box->BxPrevious->BxScript != EOS)
 	    prevscript = box->BxPrevious->BxScript;
 	  script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
-				   dir, pAb->AbUnicodeBidi,&em, prevscript);
+				   dir, pAb->AbUnicodeBidi, &EmbeddedScript, prevscript);
 	  box->BxScript = script;
 	  *width += bwidth;
 	  *nSpaces += spaces;
 	  lg -= nChars;
 	  if (nChars > 0)
 	    box = SplitForScript (box, pAb, script, lg, bwidth, *height, spaces,
-				  ind, pBuffer, pMainBox);
+				  ind, pBuffer, frame);
 	  else if (box->BxType == BoScript)
 	    {
 	      box->BxW = bwidth;
@@ -2131,7 +2132,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	  pCurrentBox->BxSpaceWidth = 0;
 	  /* get the default script */
 	  pCurrentBox->BxScript = script;
-	  GiveTextSize (pAb, pMainBox, &width, &height, &i);
+	  GiveTextSize (pAb, frame, &width, &height, &i);
 	  pCurrentBox->BxNSpaces = i;
 	  break;
 	case LtPicture:
@@ -3658,7 +3659,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  height = 0;
 		  break;
 		case LtText:
-		  GiveTextSize (pAb, pMainBox, &width, &height, &nSpaces);
+		  GiveTextSize (pAb, frame, &width, &height, &nSpaces);
 		  
 		  /* Si la boite est justifiee */
 		  if (pBox->BxSpaceWidth != 0)
@@ -3882,7 +3883,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      switch (pAb->AbLeafType)
 		{
 		case LtText:
-		  GiveTextSize (pAb, pMainBox, &width, &height, &i);
+		  GiveTextSize (pAb, frame, &width, &height, &i);
 		  break;
 		case LtPicture:
 		  imageDesc = (PictInfo *) pBox->BxPictInfo;
@@ -3967,7 +3968,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      switch (pAb->AbLeafType)
 		{
 		case LtText:
-		  GiveTextSize (pAb, pMainBox, &width, &height, &i);
+		  GiveTextSize (pAb, frame, &width, &height, &i);
 		  break;
 		case LtPicture:
 		  imageDesc = (PictInfo *) pBox->BxPictInfo;

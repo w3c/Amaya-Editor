@@ -2795,12 +2795,12 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	  else if (c == SPACE)
 	    charWidth = spaceWidth;
 	  else
-	  {
-		if ( c >= 0x060C && c <= 0x06B0 ) /*arabic char*/
-			charWidth = BoxArabicCharacterWidth (c, pBuffer, &ind, font);
-		else
-			charWidth = BoxCharacterWidth (c, font);
-	  }
+	    {
+	      if ( c >= 0x060C && c <= 0x06B0 ) /*arabic char*/
+		charWidth = BoxArabicCharacterWidth (c, pBuffer, &ind, font);
+	      else
+		charWidth = BoxCharacterWidth (c, font);
+	    }
 	  if (extend)
 	    notfound = (dx + charWidth < *x);
 	  else
@@ -2836,7 +2836,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	}
 
       /* character found, manage extensions */
-      if (dx < *x && *x < pBox->BxW)
+      if (length == 0 && *x < pBox->BxW)
 	{
 	  /* get the ending position of the character */
 	  if (rtl)
@@ -2868,3 +2868,4 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
   *x = dx;
   *index = ind;
 }
+

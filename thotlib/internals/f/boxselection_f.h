@@ -12,7 +12,8 @@ extern void TtaClearViewSelections ( void );
 extern void UpdateViewSelMarks ( int frame,
                                  int xDelta,
                                  int spaceDelta,
-                                 int charDelta );
+                                 int charDelta,
+                                 ThotBool rtl );
 extern PtrTextBuffer DeleteBuffer ( PtrTextBuffer pBuffer,
                                     int frame );
 extern void ComputeViewSelMarks ( ViewSelection *selMark,
@@ -35,7 +36,8 @@ extern void TtaClearViewSelections ( void );
 extern void UpdateViewSelMarks ( int frame,
                                    int xDelta,
                                    int spaceDelta,
-                                   int charDelta );
+                                   int charDelta,
+                                   ThotBool rtl );
 extern PtrTextBuffer DeleteBuffer ( PtrTextBuffer pBuffer,
                                       int frame );
 extern void ComputeViewSelMarks ( ViewSelection *selMark,

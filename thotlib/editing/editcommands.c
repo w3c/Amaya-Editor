@@ -2606,8 +2606,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
-  PtrBox              pBox, pSelBox;
-  PtrBox              box;
+  PtrBox              pBox, pSelBox, box;
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
   ViewFrame          *pFrame;
@@ -2620,12 +2619,12 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   int                 charsDelta, pix;
   int                 visib, zoom;
   int                 ind;
-  int                 previousChars;
+  int                 previousChars, previousInd, previousPos;
   char                script;
   ThotBool            beginOfBox;
   ThotBool            toDelete;
   ThotBool            toSplit, toSplitForScript = FALSE;
-  ThotBool            saveinsert;
+  ThotBool            saveinsert, rtl;
   ThotBool            notification = FALSE;
 
   toDelete = (c == 127);
@@ -2688,6 +2687,17 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		  /* Look for the insert point */
 		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer,
 				   &ind, &xx, &previousChars);
+		  /* keep in mind previous information about the insert point */
+		  previousPos = pViewSel->VsXPos;
+		  
+		  /* width of the old split box */
+		  if (pAb->AbUnicodeBidi == 'O')
+		    rtl = (pAb->AbDirection == 'R');
+		  else
+		    rtl = (pSelBox->BxScript == 'A' || pSelBox->BxScript == 'H');
+		  if (rtl)
+		    previousPos = - previousPos + pSelBox->BxW;
+		  previousInd = ind;
 		  if (pAb)
 		    {
 		      /* keyboard ni Symbol ni Graphique */
@@ -2708,10 +2718,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			{
 			  pBuffer = pBuffer->BuPrevious;
 			  ind = pBuffer->BuLength;
+			  previousInd = ind;
 			}
 #ifndef _GL
-		      /* prepare le reaffichage */
-		      /* point d'insertion en x */
+		      /* initial clipping */
 		      xx += pSelBox->BxXOrg;
 		      /* point d'insertion superieur en y */
 		      topY = pSelBox->BxYOrg;
@@ -3002,9 +3012,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  pFrame->FrClipXBegin += xDelta;
 				  /* update selection marks */
 				  if (adjust)
-				    UpdateViewSelMarks (frame, adjust + pix, spacesDelta, charsDelta);
+				    UpdateViewSelMarks (frame, adjust + pix, spacesDelta,
+							charsDelta, rtl);
 				  else
-				    UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
+				    UpdateViewSelMarks (frame, xDelta, spacesDelta,
+							charsDelta, rtl);
 				}
 			    }
 			}
@@ -3021,7 +3033,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  toSplit = FALSE;
 			  toDelete = FALSE;
 			  script = TtaGetCharacterScript (c);
-			  toSplitForScript = (script != ' ' && script != 'D' &&
+			  toSplitForScript = (pAb->AbUnicodeBidi != 'O' &&
+					      script != ' ' && script != 'D' &&
 					      pSelBox && pSelBox->BxScript != EOS &&
 					      pSelBox->BxScript != script);
 			  
@@ -3099,7 +3112,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				{
 				  /* Reevaluation of the whole split box */
 				  pSelBox = pAb->AbBox;
-				  UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
+				  UpdateViewSelMarks (frame, xDelta, spacesDelta,
+						      charsDelta, pSelBox->BxScript);
 				}
 			      else if (previousChars == 0)
 				{
@@ -3111,7 +3125,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				    pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
 				}
 			      else
-				UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
+				UpdateViewSelMarks (frame, xDelta, spacesDelta,
+						    charsDelta, pSelBox->BxScript);
 			      
 			    }
 			  /* ==> Les autres cas d'insertion */
@@ -3149,15 +3164,18 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				}
 			      
 			      /* Mise a jour de la selection dans la boite */
-			      if (adjust != 0)
-				UpdateViewSelMarks (frame, adjust + pix, spacesDelta, charsDelta);
+			      if (adjust)
+				UpdateViewSelMarks (frame, adjust + pix, spacesDelta,
+						    charsDelta, pSelBox->BxScript);
 			      else
-				UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
+				UpdateViewSelMarks (frame, xDelta, spacesDelta,
+						    charsDelta, pSelBox->BxScript);
 			    }
 			}
 		      
 		      /* Mise a jour de la boite */
-		      if (IsLineBreakInside (pSelBox->BxBuffer, pSelBox->BxIndChar, pSelBox->BxNChars))
+		      if (IsLineBreakInside (pSelBox->BxBuffer, pSelBox->BxIndChar,
+					     pSelBox->BxNChars))
 			toSplit = TRUE;
 		      BoxUpdate (pSelBox, pViewSel->VsLine, charsDelta,
 				 spacesDelta, xDelta, adjust, 0, frame, toSplit);
@@ -3166,25 +3184,46 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      /* check now if the script changes */
 		      if  (toSplitForScript)
 			{
-			  /* split before the new character */
 			  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
-#ifdef IV
-			  pBox = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
+			  /* split before the new character */
+			  box = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
 						 previousChars,
-						 pViewSel->VsXPos, pSelBox->BxH,
+						 previousPos, pSelBox->BxH,
 						 pViewSel->VsNSpaces,
-						 ind, pBuffer,
-						 ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
+						 previousInd, pBuffer,
+						 frame);
 			  /* split after the new character */
-			  pBox = SplitForScript (pBox, pAb, script,
-						 1,
-						 pViewSelEnd->VsXPos - pViewSel->VsXPos,
-						 pSelBox->BxH,
-						 0,
-						 0, pBuffer->BuNext,
-						 ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
+			  if (pBuffer->BuNext)
+			    pBox = SplitForScript (box, pAb, script,
+						   1,
+						   xDelta,
+						   pSelBox->BxH,
+						   spacesDelta, 
+						   0, pBuffer->BuNext,
+						   frame);
+			  else
+			    pBox = SplitForScript (box, pAb, script,
+						   1,
+						   previousPos,
+						   pSelBox->BxH,
+						   0,
+						   previousInd, pBuffer,
+						   frame);
+
 			  pBox->BxScript = pSelBox->BxScript;
-#endif
+			  /* update the selection position */
+			  pViewSel->VsBox = box;
+			  pViewSelEnd->VsBox = box;
+			  if (script == 'A' || script == 'H')
+			    /* reverse order */
+			    pViewSel->VsXPos = 0;
+			  else
+			    pViewSel->VsXPos = xDelta;
+			  pViewSelEnd->VsXPos = pViewSel->VsXPos + 2;
+			  pViewSel->VsIndBox = 0;
+			  pViewSelEnd->VsIndBox = 0;
+			  pViewSel->VsNSpaces = 0;
+			  pViewSelEnd->VsNSpaces = 0;
 			}
 		      
 		      /* Check enclosing cell */

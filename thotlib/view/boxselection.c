@@ -369,14 +369,19 @@ void TtaClearViewSelections ()
 }
 
 /*----------------------------------------------------------------------
-   UpdateViewSelMarks met a jour les marques de selection de frame   
-   apres insertion ou destruction de caracteres.           
+  UpdateViewSelMarks updates selection marks of the frame after characters
+  edits.
+  The parameter rtl is TRUE when the box is displayed right to left.
   ----------------------------------------------------------------------*/
-void UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta)
+void UpdateViewSelMarks (int frame, int xDelta, int spaceDelta,
+			 int charDelta, ThotBool rtl)
 {
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
 
+   if (rtl)
+     /* reverse order */
+     xDelta = - xDelta;
    pFrame = &ViewFrameTable[frame - 1];
    pViewSel = &pFrame->FrSelectionBegin;
    pViewSel->VsXPos += xDelta;
@@ -470,25 +475,37 @@ void ComputeViewSelMarks (ViewSelection *selMark, int frame)
 {
   PtrTextBuffer       pBuffer;
   PtrBox              pBox;
+  PtrAbstractBox      pAb;
   int                 x;
   int                 t, b, l, r;
   int                 spaces;
   int                 ind, pos;
+  ThotBool            embedded = FALSE, rtl;
 
   if (selMark->VsBox->BxAbstractBox->AbLeafType == LtText)
     {
       /* get the current selection info */
       pos = selMark->VsIndBox;
       pBox = selMark->VsBox;
+      pAb = pBox->BxAbstractBox;
       if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	/* select the first child */
 	pBox = pBox->BxNexChild;
       /* look for the right box */
-      while (pBox->BxNexChild && pBox->BxNexChild->BxFirstChar <= pos)
+      while (pBox->BxNexChild &&
+	     (pBox->BxNexChild->BxFirstChar < pos ||
+	      ((pBox->BxNexChild->BxFirstChar == pos &&
+		pBox->BxNexChild->BxScript != 'A' &&
+		pBox->BxNexChild->BxScript != 'H'))))
 	pBox = pBox->BxNexChild;
+
       pos -= pBox->BxFirstChar;
       selMark->VsIndBox = pos;
       selMark->VsBox = pBox;
+      if (pAb->AbUnicodeBidi == 'O')
+	rtl = (pAb->AbDirection == 'R');
+      else
+	rtl = (pBox->BxScript == 'A' || pBox->BxScript == 'H');
 
       /* look for the rigth buffer and the right index */
       pBuffer = pBox->BxBuffer;
@@ -506,10 +523,7 @@ void ComputeViewSelMarks (ViewSelection *selMark, int frame)
       if (pos >= pBox->BxNChars)
 	{
 	  /* selection at the end of the box? */
-	  if (pBox->BxScript == 'A' || pBox->BxScript == 'H')
-	    x = 0;
-	  else
-	    x = pBox->BxW;
+	  x = pBox->BxW;
 	  spaces = pBox->BxNSpaces;
 	}
       else
@@ -518,9 +532,8 @@ void ComputeViewSelMarks (ViewSelection *selMark, int frame)
 	  pBuffer = pBox->BxBuffer;
 	  ind = pBox->BxIndChar;
 	  /* Only the width is requested: Override and Latin */
-	  GiveTextParams (&pBuffer, &ind, &pos, pBox->BxFont, &x, &spaces, 'L', 'O',0,'*');
-	  if (pBox->BxScript == 'A' || pBox->BxScript == 'H')
-	    x = - x + pBox->BxW;
+	  GiveTextParams (&pBuffer, &ind, &pos, pBox->BxFont, &x, &spaces, 'L',
+			  'O', &embedded,'*');
 	  if (pBox->BxSpaceWidth)
 	    {
 	      /* treatment of justified lines */
@@ -531,6 +544,8 @@ void ComputeViewSelMarks (ViewSelection *selMark, int frame)
 	    }
 	}
 
+      if (rtl)
+	x = - x + pBox->BxW;
       GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
       selMark->VsXPos = x + l + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       selMark->VsNSpaces = spaces;
@@ -571,7 +586,10 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	{
 	  pBox = pAb->AbBox;
 	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-	  rtl = (pBox->BxScript == 'A' || pBox->BxScript == 'H');
+	  if (pBox->BxAbstractBox->AbUnicodeBidi == 'O')
+	    rtl = (pBox->BxAbstractBox->AbDirection == 'R');
+	  else
+	    rtl = (pBox->BxScript == 'A' || pBox->BxScript == 'H');
 	  adline = SearchLine (pBox, frame);
 	  graphSel = (pAb->AbLeafType == LtPolyLine ||
 		      pAb->AbLeafType == LtPath ||
