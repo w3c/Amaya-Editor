@@ -4010,7 +4010,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      else if (pAb->AbDisplay != 'U')
 		{
 		  /* display: block */
-		  pAb->AbNotInLine = TRUE;
+		  if (pAb->AbFloat != 'N')
+		    pAb->AbNotInLine = FALSE;
 		  pAb->AbAcceptLineBreak = FALSE;
 		}
 	    }
@@ -4065,6 +4066,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		    }
 		  pAb->AbAcceptLineBreak = FALSE;
 		  pAb->AbBuildAll = TRUE;
+		  pAb->AbNotInLine = FALSE;
 		}
 	    }
 	  break;

@@ -61,6 +61,7 @@ PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
 	loop = TRUE;
 	while (loop)
 	   if (pNextAb == NULL)
+	     {
 	      /* Est-ce la derniere boite fille d'une boite eclatee */
 	      if (pAb->AbEnclosing &&
 		  pAb->AbEnclosing->AbBox &&
@@ -73,6 +74,7 @@ PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
 		}
 	      else
 		 loop = FALSE;
+	     }
 	   else if (pNextAb->AbDead ||
 		    pNextAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
 	      pNextAb = pNextAb->AbNext;
@@ -1612,9 +1614,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   if (pBox)
     {
       pAb = pBox->BxAbstractBox;
-      if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility /*||
-	  pAb->AbFloat != 'N' |
-	  pBox->BxType == BoFloatGhost*/)
+      if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
 	{
 	  /* ignore invisible or floated boxes */
 	  while (pAb &&
@@ -1632,6 +1632,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	  if (box)
 	    pBox = box;
 	}
+
       GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
       /* border, margin, and padding of the current box */
       lbmp = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
@@ -1664,11 +1665,11 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	      pBox->BxType != BoFloatGhost &&
 	      (pAb->AbLeafType == LtText ||
 	       (pAb->AbLeafType == LtCompound &&
-		((pAbRef == NULL && pAb->AbWidth.DimUnit == UnPercent) ||
-		(pAbRef &&
-		 (pAbRef == pBlock->BxAbstractBox ||
-		  pAbRef->AbBox->BxType == BoGhost ||
-		  pAbRef->AbBox->BxType == BoFloatGhost))))));
+		(pAb->AbWidth.DimUnit == UnPercent ||
+		 (pAbRef &&
+		  (pAbRef == pBlock->BxAbstractBox ||
+		   pAbRef->AbBox->BxType == BoGhost/* ||
+		   pAbRef->AbBox->BxType == BoFloatGhost*/))))));
   if (!variable && pBox && pAb &&
       pBlock->BxType == BoFloatBlock && pBox->BxType == BoBlock &&
       pAbRef == NULL && pAb->AbWidth.DimValue == -1)

@@ -1864,7 +1864,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      pBox->BxContentHeight = FALSE;
 	    }
 
-	  /* check if the relative box is not already dead */
 	  if (pDimAb->DimAbRef && IsDead (pDimAb->DimAbRef))
 	    {
 	      /* the dimension refers a dead box */
@@ -1893,6 +1892,30 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      else
 		pDimAb->DimUnit = UnPixel;
 	    }
+	  else if (pAb->AbLeafType == LtCompound &&
+		   horizRef && pDimAb->DimAbRef &&
+		   pDimAb->DimUnit != UnAuto &&
+		   pDimAb->DimAbRef == pAb->AbEnclosing &&
+		   pAb->AbEnclosing->AbWidth.DimAbRef == NULL &&
+		   pAb->AbEnclosing->AbWidth.DimValue == -1)
+	    {
+	      /* the boxe width depends on the parent
+		 and the parent width depends on the contents */
+	      pDimAb->DimAbRef = NULL;
+	      pDimAb->DimValue = -1;
+	    }
+	  else if (pAb->AbLeafType == LtCompound &&
+		   !horizRef && pDimAb->DimAbRef &&
+		   pDimAb->DimUnit != UnAuto &&
+		   pDimAb->DimAbRef == pAb->AbEnclosing &&
+		   pAb->AbEnclosing->AbHeight.DimAbRef == NULL &&
+		   pAb->AbEnclosing->AbHeight.DimValue == -1)
+	    {
+	      /* the boxe height depends on the parent
+		 and the parent height depends on the contents */
+	      pDimAb->DimAbRef = NULL;
+	      pDimAb->DimValue = -1;
+	    }
 
 	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
 	  dx = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding + l + r;
@@ -1903,7 +1926,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      inLine = FALSE;
 	      if (horizRef)
 		{
-		  if (pDimAb->DimValue == 0)
+		  if (pDimAb->DimValue == 0 && pDimAb->DimUnit != UnAuto)
 		    /* inherited from the contents */
 		    pBox->BxContentWidth = TRUE;
 		  else
@@ -1915,10 +1938,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		      else if (pDimAb->DimUnit == UnPercent)
 			val = PixelValue (pDimAb->DimValue, UnPercent,
 					  (PtrAbstractBox) val, 0);
+		      else if (pDimAb->DimUnit == UnAuto)
+			val = PixelValue (100, UnPercent,
+					  (PtrAbstractBox) val, 0);
 		      else
 			val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
 					  ViewFrameTable[frame - 1].FrMagnification);
-		      if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
+		      if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent ||
+			  pDimAb->DimUnit == UnAuto)
 			/* the rule gives the outside value */
 			val = val - dx;
 		      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
@@ -1926,7 +1953,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		}
 	      else
 		{
-		  if (pDimAb->DimValue == 0)
+		  if (pDimAb->DimValue == 0 || pDimAb->DimUnit == UnAuto)
 		    /* inherited from the contents */
 		    pBox->BxContentHeight = TRUE;
 		  else
@@ -1952,8 +1979,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	  else
 	    {
 	      /* it's not the root box */
-	      inLine = (pAb->AbFloat == 'N' && !pAb->AbNotInLine &&
-			(pParentAb->AbBox->BxType == BoBlock ||
+	      inLine = (/*pAb->AbFloat == 'N' &&*/!pAb->AbNotInLine &&
+			(pAb->AbDisplay == 'I' ||
+			 pParentAb->AbBox->BxType == BoBlock ||
 			 pParentAb->AbBox->BxType == BoFloatBlock ||
 			 pParentAb->AbBox->BxType == BoGhost ||
 			 pParentAb->AbBox->BxType == BoFloatGhost));
@@ -1977,11 +2005,28 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  else
 		    {
 		      pColumn = NULL;
-		      if (!inLine && pDimAb->DimUnit == UnAuto)
+		      /* check if the relative box is not already dead */
+		      if (pDimAb->DimUnit == UnAuto)
 			{
-			  /* in other cases takes the parent width */
-			  pDimAb->DimAbRef = pParentAb;
-			  pDimAb->DimValue = 0;
+			  if (pAb->AbFloat != 'N' ||
+			      pAb->AbNotInLine ||
+			      pAb->AbDisplay == 'I' ||
+			      /* coherence of rules */
+			      (!pParentAb->AbWidthChange &&
+			       pParentAb->AbWidth.DimUnit == UnAuto &&
+			       pParentAb->AbWidth.DimAbRef != pParentAb->AbEnclosing &&
+			       pParentAb->AbWidth.DimValue == -1))
+			    {
+			      /* inherit from contents */
+			      pDimAb->DimAbRef = NULL;
+			      pDimAb->DimValue = -1;		  
+			    }
+			  else
+			    {
+			      /* inherit from the parent box */
+			      pDimAb->DimAbRef = pAb->AbEnclosing;
+			      pDimAb->DimValue = 0;		  
+			    }
 			}
 		    }
 
@@ -1991,10 +2036,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		    pBox->BxContentWidth = TRUE;
 		  else if (pDimAb->DimAbRef == NULL ||
 			   (pDimAb->DimAbRef == pParentAb &&
-			    pDimAb->DimUnit == UnPercent))
+			    (pDimAb->DimUnit == UnPercent || pDimAb->DimUnit == UnAuto)))
 		    {
 		      /* percentage or explicit value */
-		      if (pDimAb->DimUnit == UnPercent)
+		      if (pDimAb->DimUnit == UnPercent || pDimAb->DimUnit == UnAuto)
 			{
 			  if (pBox->BxType != BoCell)
 			    {
@@ -2003,16 +2048,17 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				     pParentAb->AbWidth.DimValue < 0 &&
 				     pParentAb->AbWidth.DimAbRef == NULL)
 				pParentAb = pParentAb->AbEnclosing;
-				/* inherited from the parent */
+			      /* inherited from the parent */
 			      if (pParentAb)
-				val = PixelValue (pDimAb->DimValue, UnPercent, 
-						  (PtrAbstractBox) (pParentAb->AbBox->BxW), 0);
+				i = pParentAb->AbBox->BxW;
 			      else
-				{
-				  GetSizesFrame (frame, &i, &val);
-				  val = PixelValue (pDimAb->DimValue, UnPercent, 
-						    (PtrAbstractBox) i, 0);
-				}
+				GetSizesFrame (frame, &i, &val);
+			      if (pDimAb->DimUnit == UnPercent)
+				val = PixelValue (pDimAb->DimValue, UnPercent,
+						  (PtrAbstractBox) i, 0);
+			      else /* UnAuto */
+				val = PixelValue (100, UnPercent, 
+						  (PtrAbstractBox) i, 0);
 			      /* the rule gives the outside value */
 			      val = val - dx;
 			      if (pParentAb)
@@ -2108,6 +2154,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      /* Convert the distance value */
 			      if (pDimAb->DimUnit == UnPercent)
 				val = PixelValue (pDimAb->DimValue, UnPercent,
+						  (PtrAbstractBox) val, 0);
+			      else if (pDimAb->DimUnit == UnAuto)
+				val = PixelValue (100, UnPercent,
 						  (PtrAbstractBox) val, 0);
 			      else
 				val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,

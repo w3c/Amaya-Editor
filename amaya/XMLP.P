@@ -302,7 +302,6 @@ RULES
    Document:
 	BEGIN
 	Page(ThePage);
-	Width: Enclosing . Width;
 	Depth: 0;
 	Adjust: Left;
 	Indent: 0;
@@ -329,7 +328,6 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Width: Enclosing . Width;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		Width: Enclosing . Width - STRUCT_INDENT;

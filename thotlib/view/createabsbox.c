@@ -480,7 +480,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbFloatChange = FALSE;
    pAb->AbChange = FALSE;
 
-   pAb->AbInLine = TRUE;
+   pAb->AbInLine = FALSE/*TRUE*/;
    pAb->AbText = NULL;
 
    if (pEl->ElTerminal && pEl->ElLeafType == LtText)

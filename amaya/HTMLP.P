@@ -1938,7 +1938,8 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H1Margin;
 	MarginBottom: H1Margin;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	Size: Enclosing + 6 pt;
 	Weight: Bold;
 	Hyphenate: No;
@@ -1990,7 +1991,8 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H2Margin;
 	MarginBottom: H2Margin;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	Size: Enclosing + 4 pt;
 	Weight: Bold;
 	IN Structure_view BEGIN
@@ -2040,7 +2042,8 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H3Margin;
 	MarginBottom: H3Margin;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	Size: Enclosing + 2 pt;
 	Weight: Bold;
 	IN Structure_view BEGIN
@@ -2090,7 +2093,8 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	Size: Enclosing =;
 	Weight: Bold;
 	IN Structure_view BEGIN
@@ -2139,7 +2143,8 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H5Margin;
 	MarginBottom: H5Margin;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	Size: Enclosing - 2 pt;
 	Weight: Bold;
 	IN Structure_view BEGIN
@@ -2184,7 +2189,8 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H6Margin;
 	MarginBottom: H6Margin;
@@ -2743,7 +2749,8 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: PMargin;
 	MarginBottom: PMargin;
@@ -2784,7 +2791,8 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
@@ -2833,7 +2841,8 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	MarginLeft: LIST_INDENT;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
 		MarginLeft: 0;
@@ -2852,7 +2861,8 @@ RULES
 	if within > 1 Unnumbered_List
 	   ListStyleType: Square;
 	LineBreak: No;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
@@ -2878,7 +2888,8 @@ RULES
 	CreateWith(VerticalLine);
 	ListStyleType: Decimal;
 	LineBreak: No;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
@@ -2905,7 +2916,8 @@ RULES
 	Line;
 	LineBreak: No;
 	Style: Italics;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.5;
 	HorizPos: Left = Enclosing . Left;
@@ -2927,7 +2939,8 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
@@ -2973,7 +2986,7 @@ RULES
 	VertRef: * . Left;
 	MarginLeft: 0;
 	HorizPos: Left = Enclosing . Left;
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
 	VertPos: Top = Previous AnyElem . Bottom;
 	IN Structure_view
 		BEGIN
@@ -2992,7 +3005,8 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	VertPos: Top = Previous not MAP . Bottom;
-	Width: Enclosed . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	if within Center
 	   HorizPos: VMiddle = Enclosing . VMiddle;
 	Adjust: Left;
@@ -3052,7 +3066,8 @@ RULES
  Form:	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	Gather: Yes;
 	MarginTop: H4Margin;
@@ -3228,7 +3243,8 @@ RULES
  FIELDSET: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom + 0.6;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
@@ -4482,7 +4498,8 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
         MarginTop: 0;
 	IN Structure_view BEGIN
@@ -4501,7 +4518,8 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom + 0.4;
 	Adjust: VMiddle;
 	IN Structure_view BEGIN

@@ -942,6 +942,8 @@ static void wrdim (AbDimension *pDim, ThotBool racine, ThotBool larg,
 {
 
    fprintf (fileDescriptor, " ");
+   if (pDim->DimUnit == UnAuto)
+      fprintf (fileDescriptor, "auto {");
    if (pDim->DimAbRef == NULL && pDim->DimValue == -1)
       fprintf (fileDescriptor, "default");
    else
@@ -975,6 +977,8 @@ static void wrdim (AbDimension *pDim, ThotBool racine, ThotBool larg,
 	if (pDim->DimMinimum)
 	   fprintf (fileDescriptor, " Min");
      }
+   if (pDim->DimUnit == UnAuto)
+      fprintf (fileDescriptor, "}");
 }
 
 /*----------------------------------------------------------------------

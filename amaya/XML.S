@@ -33,7 +33,7 @@ STRUCT
 
 EXCEPT
 
-   XML:                 MoveResize, NoShowBox, NoMove;
+   XML:                 MoveResize, NoMove;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
    Highlight:	        Invisible;
