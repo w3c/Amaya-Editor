@@ -47,6 +47,7 @@
 #endif /* _WX */
 
 static char     NameOfElementToBeCreated[MAX_TXT_LEN];
+#define MAX_MENU_LENGTH  5000
 
 /*----------------------------------------------------------------------
   BuildElementSelector
@@ -55,7 +56,7 @@ static char     NameOfElementToBeCreated[MAX_TXT_LEN];
   Return the number of entries in the selector created.
   ----------------------------------------------------------------------*/
 static int BuildElementSelector (PtrDocument pDoc, PtrSSchema pSS,
-				 char menuBuf[MAX_TXT_LEN])
+				 char menuBuf[MAX_MENU_LENGTH])
 {
   int            menuInd;
   int            nbItem, len, typeNum;
@@ -70,7 +71,8 @@ static int BuildElementSelector (PtrDocument pDoc, PtrSSchema pSS,
     if (!TypeHasException (ExcIsPlaceholder, typeNum, pSS) &&
 	!TypeHasException (ExcNoCreate, typeNum, pSS) &&
 	!TypeHasException (ExcHidden, typeNum, pSS) &&
-	pSS->SsRule->SrElem[typeNum - 1]->SrName[0] != EOS)
+	pSS->SsRule->SrElem[typeNum - 1]->SrName[0] != EOS &&
+	pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsNatureSchema)
       {
 	/* send event ElemMenu.Pre to ask the application whether this
 	   element type should appear or not */
@@ -85,7 +87,7 @@ static int BuildElementSelector (PtrDocument pDoc, PtrSSchema pSS,
 	  /* the application agrees */
 	  {
 	    len = strlen (pSS->SsRule->SrElem[typeNum - 1]->SrName) + 1;
-	    if (len + menuInd < MAX_TXT_LEN)
+	    if (len + menuInd < MAX_MENU_LENGTH)
 	      {
 		strcpy (menuBuf + menuInd,
 			pSS->SsRule->SrElem[typeNum - 1]->SrName);
@@ -107,7 +109,7 @@ void TtaShowElementMenu (Document doc, View view)
   PtrDocument    pSelDoc, pDoc;
   PtrElement     firstSel, lastSel;
   PtrSSchema     pSS;
-  char           menuBuf[MAX_TXT_LEN];
+  char           menuBuf[MAX_MENU_LENGTH];
   int            nbItem, height, firstChar, lastChar;
   ThotBool       withTextInput = FALSE;
 
@@ -197,7 +199,7 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
   PtrElement   firstSel, lastSel;
   PtrSSchema   pSS;
   char*        mappedName = NULL;
-  char         menuBuf[MAX_TXT_LEN];
+  char         menuBuf[MAX_MENU_LENGTH];
   int          firstChar, lastChar, typeNum, height, nbItem;
 
   doit = FALSE;

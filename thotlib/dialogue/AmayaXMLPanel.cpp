@@ -97,7 +97,7 @@ int AmayaXMLPanel::GetPanelType()
  */
 void AmayaXMLPanel::RefreshToolTips()
 {  
-  XRCCTRL(*m_pPanelContentDetach,"wxID_LIST_XML",wxListBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL_CLASS)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_LIST_XML",wxListBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
   XRCCTRL(*m_pPanelContentDetach,"wxID_REFRESH",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
   XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
 }

@@ -62,8 +62,8 @@
                                     <object class="sizeritem">
                                       <object class="wxListBox" name="wxID_LIST_XML">
                                         <content/>
-                                        <size>100,-1</size>
-                                        <tooltip>*Select a class or a pseudo-class*</tooltip>
+                                        <size>100,100</size>
+                                        <tooltip>*Select*</tooltip>
                                       </object>
                                       <option>1</option>
                                       <flag>wxEXPAND</flag>
