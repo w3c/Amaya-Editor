@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -71,7 +67,7 @@ Document            targetDocument;
      }
    else
      {
-	/* verifie le parametre document */
+	/* checks the parameter document */
 	if (document < 1 || document > MAX_DOCUMENTS)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
@@ -81,18 +77,18 @@ Document            targetDocument;
 	     TtaError (ERR_invalid_document_parameter);
 	  }
 	else
-	   /* parametre document correct */
+	   /* parameter document is ok */
 	  {
 	     ok = FALSE;
 	     if (target == NULL)
-		/* annulation de la reference */
+		/* Abort the reference */
 	       {
 		  if (((PtrElement) element)->ElReference != NULL)
 		     DeleteReference (((PtrElement) element)->ElReference);
 		  ok = TRUE;
 	       }
 	     else
-		/* verifie le parametre targetDocument */
+		/* checks the parameter targetDocument */
 	     if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
 	       {
 		  TtaError (ERR_invalid_document_parameter);
@@ -102,13 +98,13 @@ Document            targetDocument;
 		  TtaError (ERR_invalid_document_parameter);
 	       }
 	     else
-		/* parametre targetDocument correct */
+		/* parameter targetDocument is correct */
 	       {
 		  pRefDoc = LoadedDocument[targetDocument - 1];
-		  /* l'element pointe' par target va etre reference' */
+		  /* The element target will be referenced */
 		  if (((PtrElement) target)->ElReferredDescr == NULL)
-		     /* cet element n'a pas encore de descripteur */
-		     /* d'element reference', on lui en associe un */
+		     /* This element has not yet a referenced element descriptor.
+                        A descriptor is given to this element */
 		    {
 		       ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 		       ((PtrElement) target)->ElReferredDescr->ReReferredElem =
@@ -174,7 +170,7 @@ Document            targetDocument;
 
    UserErrorCode = 0;
    inclusion = NULL;
-   /* verifie le parametre document */
+   /* checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -184,13 +180,13 @@ Document            targetDocument;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is ok */
    if (target == NULL)
      {
 	TtaError (ERR_invalid_parameter);
      }
    else
-      /* verifie le parametre targetDocument */
+      /* checks the parameter targetDocument */
    if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -200,7 +196,7 @@ Document            targetDocument;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre targetDocument correct */
+      /* parameter targetDocument is ok */
      {
 	inclusion = NewSubtree (((PtrElement) target)->ElTypeNumber,
 				((PtrElement) target)->ElStructSchema,
@@ -210,10 +206,10 @@ Document            targetDocument;
 	inclusion->ElSource->RdElement = inclusion;
 	inclusion->ElSource->RdTypeRef = RefInclusion;
 	pRefDoc = LoadedDocument[targetDocument - 1];
-	/* l'element pointe' par target va etre reference' */
+	/* The element target will be referenced */
 	if (((PtrElement) target)->ElReferredDescr == NULL)
-	   /* cet element n'a pas encore de descripteur */
-	   /* d'element reference', on lui en associe un */
+	   /* This element has not yet a referenced element descriptor.
+              A descriptor is given to this element */
 	  {
 	     ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 	     ((PtrElement) target)->ElReferredDescr->ReReferredElem = (PtrElement) target;
@@ -317,7 +313,7 @@ Document            targetDocument;
 {
    PtrDocument         pDoc, pRefDoc;
    PtrReference        ref;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    int                 saveNbCar;
    boolean             ok;
 
@@ -332,7 +328,7 @@ Document            targetDocument;
      }
    else
      {
-	/* verifie le parametre document */
+	/* checks the parameter document */
 	if (document < 1 || document > MAX_DOCUMENTS)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
@@ -342,10 +338,10 @@ Document            targetDocument;
 	     TtaError (ERR_invalid_document_parameter);
 	  }
 	else
-	   /* parametre document correct */
+	   /* parameter document is ok */
 	  {
 	     pDoc = LoadedDocument[document - 1];
-	     /* verifie que l'attribut appartient bien a l'element */
+	     /* verifies that the attribut belongs to the element */
 	     pAttr = ((PtrElement) element)->ElFirstAttr;
 	     ok = FALSE;
 	     while (pAttr != NULL)
@@ -359,7 +355,7 @@ Document            targetDocument;
 	     if (!ok)
 		TtaError (ERR_attribute_element_mismatch);
 	     else if (target == NULL)
-		/* annulation de la reference */
+		/* The reference is aborted */
 	       {
 		  if (((PtrAttribute) attribute)->AeAttrReference != NULL)
 		     DeleteReference (((PtrAttribute) attribute)->AeAttrReference);
@@ -367,7 +363,7 @@ Document            targetDocument;
 	       }
 	     else
 	       {
-		  /* verifie le parametre targetDocument */
+		  /* checks the parameter targetDocument */
 		  ok = FALSE;
 		  if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
 		    {
@@ -378,7 +374,7 @@ Document            targetDocument;
 		       TtaError (ERR_invalid_document_parameter);
 		    }
 		  else
-		     /* parametre targetDocument correct */
+		     /* parameter targetDocument is ok */
 		    {
 #ifndef NODISPLAY
 		       UndisplayHeritAttr ((PtrElement) element,
@@ -386,10 +382,10 @@ Document            targetDocument;
 					   document, FALSE);
 #endif
 		       pRefDoc = LoadedDocument[targetDocument - 1];
-		       /* l'element pointe' par target va etre reference' */
+		       /* The element target will be referenced */
 		       if (((PtrElement) target)->ElReferredDescr == NULL)
-			  /* cet element n'a pas encore de descripteur */
-			  /* d'element reference', on lui en associe un */
+	                  /* This element has not yet a referenced element descriptor.
+                             A descriptor is given to this element */
 			 {
 			    ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 			    ((PtrElement) target)->ElReferredDescr->ReReferredElem =
@@ -508,7 +504,7 @@ Document           *targetDocument;
 #endif /* __STDC__ */
 
 {
-   DocumentIdentifier     iDocExt;
+   DocumentIdentifier  iDocExt;
    PtrDocument         pDocExt;
 
    UserErrorCode = 0;
@@ -519,7 +515,7 @@ Document           *targetDocument;
       TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal ||
 	    ((PtrElement) element)->ElLeafType != LtReference)
-      /* ce n'est pas une reference */
+      /* It is not a reference */
       TtaError (ERR_invalid_element_type);
    else
      {
@@ -637,14 +633,14 @@ Element             element2;
 			result = 1;
 		  }
 		else if (!pRef1->ReExternalRef)
-		   /* references internes */
+		   /* Internal references */
 		  {
 		     if (pRef1->ReReferredElem != NULL && pRef2->ReReferredElem != NULL)
 			if (strcmp (pRef1->ReReferredElem->ElLabel, pRef2->ReReferredElem->ElLabel) == 0)
 			   result = 1;
 		  }
 		else
-		   /* references externes */
+		   /* external references */
 		if (strcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
 		   if (strcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
 		      result = 1;
@@ -687,7 +683,7 @@ Document           *targetDocument;
 #endif /* __STDC__ */
 
 {
-   DocumentIdentifier     iDocExt;
+   DocumentIdentifier  iDocExt;
    PtrDocument         pDocExt;
 
    UserErrorCode = 0;
@@ -748,10 +744,10 @@ Element             element;
    else
      {
 	if (((PtrElement) element)->ElReferredDescr != NULL)
-	   /* l'element a un descripteur d'element reference' */
+	   /* The element has a referenced element descriptor */
 	   if (((PtrElement) element)->ElReferredDescr->ReFirstReference != NULL ||
 	       ((PtrElement) element)->ElReferredDescr->ReExtDocRef != NULL)
-	      /* l'element est effectivement reference' */
+	      /* The element is well referenced */
 	      result = 1;
      }
    return result;
@@ -806,14 +802,14 @@ Attribute           attribute2;
 		pRef1 = ((PtrAttribute) attribute1)->AeAttrReference->RdReferred;
 		pRef2 = ((PtrAttribute) attribute2)->AeAttrReference->RdReferred;
 		if (!pRef1->ReExternalRef)
-		   /* references internes */
+		   /* Internal references */
 		  {
 		     if (pRef1->ReReferredElem != NULL && pRef2->ReReferredElem != NULL)
 			if (strcmp (pRef1->ReReferredElem->ElLabel, pRef1->ReReferredElem->ElLabel) == 0)
 			   result = 1;
 		  }
 		else
-		   /* references externes */
+		   /* External references */
 		if (strcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
 		   if (strcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
 		      result = 1;
@@ -867,116 +863,112 @@ Document           *referenceDocument;
 
 {
    PtrReference        pRef;
-   PtrExternalDoc       pDE;
+   PtrExternalDoc      pDE;
    PtrDocument         pDocRef;
-   boolean             trouve;
+   boolean             found;
 
    UserErrorCode = 0;
    pRef = NULL;
    if (target == NULL)
       TtaError (ERR_invalid_parameter);
    else
-      /* verifie le parametre targetDocument */
+      /* checks the parameter targetDocument */
    if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[targetDocument - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre targetDocument correct */
+      /* parameter targetDocument is ok */
      {
 	if (*referenceElement == NULL && *referenceAttribute == NULL)
-	   /* recherche de la premiere reference */
+	   /* Looks for the first reference */
 	  {
 	     *referenceDocument = 0;
 	     if (((PtrElement) target)->ElReferredDescr != NULL)
-		/*  l'element a un descripteur d'element reference' */
+		/*  The element has a referenced element descriptor */
 		if (((PtrElement) target)->ElReferredDescr->ReFirstReference != NULL)
-		   /* l'element est reference' en interne */
+		   /* The element has an internal reference */
 		  {
 		     pRef = ((PtrElement) target)->ElReferredDescr->ReFirstReference;
 		     *referenceDocument = targetDocument;
 		  }
 		else if (((PtrElement) target)->ElReferredDescr->ReExtDocRef != NULL)
-		   /* l'element est reference' en externe */
+		   /* The element has an external reference */
 		  {
 		     pDE = NULL;
 		     pRef = SearchExternalReferenceToElem ((PtrElement) target,
 				    LoadedDocument[targetDocument - 1], FALSE,
 					 &pDocRef, &pDE, TRUE);
 		     if (pRef != NULL)
-			/*il y a une reference externe dans un document charge' */
+			/* There is an external reference into a loaded document */
 			*referenceDocument = IdentDocument (pDocRef);
 		  }
 	  }
 	else
-	   /* on a deja cherche' d'autres references a cet element */
-	   /* verifie le parametre referenceDocument */
+	   /* Other references were searched for this element o*/
+	   /* Checks the parameter referenceDocument */
 	if (*referenceDocument < 1 || *referenceDocument > MAX_DOCUMENTS)
 	   TtaError (ERR_invalid_document_parameter);
 	else if (LoadedDocument[*referenceDocument - 1] == NULL)
 	   TtaError (ERR_invalid_document_parameter);
 	else
-	   /* parametre referenceDocument correct */
+	   /* parameter referenceDocument is correct */
 	  {
 	     if (*referenceAttribute != NULL)
-		/* la reference precedente doit etre un attribut reference */
+		/* The previous reference must be a reference attribut */
 		if (((PtrAttribute) (*referenceAttribute))->AeAttrType !=
 		    AtReferenceAttr)
-		   /* ce n'est pas un attribut reference, erreur */
+		   /* Error: it is not a reference attribut */
 		   TtaError (ERR_invalid_parameter);
 		else
 		   pRef = ((PtrAttribute) (*referenceAttribute))->AeAttrReference;
 	     else
-		/* la reference precedente doit etre un element reference */
+		/* The previous reference must be a reference element */
 	     if (!((PtrElement) (*referenceElement))->ElTerminal)
-		/* ce n'est pas une feuille, erreur */
+		/* Error: not a leaf */
 		TtaError (ERR_invalid_parameter);
 	     else if (((PtrElement) (*referenceElement))->ElLeafType !=
 		      LtReference)
-		/* ce n'est pas une reference */
+		/* Not a reference */
 		TtaError (ERR_invalid_parameter);
 	     else
 		pRef = ((PtrElement) (*referenceElement))->ElReference;
 	     if (pRef != NULL)
 	       {
-		  /* passe a la reference suivante */
+		  /* Go to the next reference */
 		  pRef = pRef->RdNext;
 		  if (pRef == NULL)
-		     /* c'etait la derniere reference dans ce document, */
-		     /* cherche dans un autre document la 1ere reference */
-		     /* au meme element */
+		     /* The last reference of this document. Looking for the first 
+                        reference of another document relating to the same element. */
 		    {
 		       pDE = NULL;
 		       if (((PtrElement) target)->ElReferredDescr != NULL)
 			 {
 			    pDE = ((PtrElement) target)->ElReferredDescr->ReExtDocRef;
-			    /* si on etait sur les references internes,on prend */
-			    /* le premier descripteur de document referencant */
+			    /* For the internal references, we consider the first descriptor
+                               of the referring document */
 			    if (targetDocument != *referenceDocument)
 			      {
-				 /* sinon, on cherche le descripteur de document */
-				 /* referencant qui correspond a referenceDocument */
-				 /* et on prend le suivant */
-				 trouve = FALSE;
-				 while (pDE != NULL && !trouve)
+				 /* One search the descriptor of the referring document
+                                    corresponding to referenceDocument and we get the following one. */
+				 found = FALSE;
+				 while (pDE != NULL && !found)
 				   {
 				      if (MemeIdentDoc (pDE->EdDocIdent,
 							LoadedDocument[*referenceDocument - 1]->DocIdent))
-					 trouve = TRUE;
+					 found = TRUE;
 				      pDE = pDE->EdNext;
 				   }
 			      }
 			 }
 		       if (pDE != NULL)
 			 {
-			    /* on cherche la 1ere reference dans le document */
-			    /* referencant retenu */
+			    /* One search the first reference into the holded referring document */
 			    pRef = SearchExternalReferenceToElem ((PtrElement) target,
 					   LoadedDocument[targetDocument - 1],
 					      FALSE, &pDocRef, &pDE, FALSE);
 			    if (pRef != NULL)
-			       /* on a trouve' une reference externe dans un */
-			       /* document charge' */
+			       /* An external reference into a loaded document is found */
 			       *referenceDocument = IdentDocument (pDocRef);
 			 }
 		    }
@@ -984,19 +976,18 @@ Document           *referenceDocument;
 	  }
      }
    if (pRef == NULL)
-      /* on n'a pas trouve' de reference a l'element */
+      /* There is no a reference to this element */
      {
 	*referenceElement = NULL;
 	*referenceAttribute = NULL;
 	*referenceDocument = 0;
      }
    else
-      /* on a trouve' une reference a l'element */
+      /* There is a reference to the element */
      {
 	*referenceElement = (Element) (pRef->RdElement);
 	*referenceAttribute = (Attribute) (pRef->RdAttribute);
-	/* si la reference trouve'e est dans le tampon copier-coller, on */
-	/* cherche la suivante */
+	/* If the reference is into the Copy/paste buffer, one search the following one */
 	if (DansTampon ((PtrElement) * referenceElement))
 	   TtaNextLoadedReference (target, targetDocument, referenceElement,
 				   referenceAttribute, referenceDocument);
@@ -1034,54 +1025,53 @@ char               *referringDocumentName;
 #endif /* __STDC__ */
 
 {
-   PtrExternalDoc       pDE;
-   boolean             trouve;
-   boolean             charge;
+   PtrExternalDoc      pDE;
+   boolean             found;
+   boolean             loaded;
 
    UserErrorCode = 0;
    if (target == NULL)
       TtaError (ERR_invalid_parameter);
    else
-      /* verifie le parametre targetDocument */
+      /* checks the parameter targetDocument */
    if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[targetDocument - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre targetDocument correct */
+      /* parameter targetDocument is ok */
    if (((PtrElement) target)->ElReferredDescr == NULL)
-      /* element non reference' */
+      /* element not referenced */
       referringDocumentName[0] = '\0';
    else
      {
 	pDE = ((PtrElement) target)->ElReferredDescr->ReExtDocRef;
 	if (referringDocumentName[0] == '\0')
-	   /* premier appel, on traite le premier document referencant */
-	   trouve = TRUE;
+	   /* First call, the first referring document is treated */
+	   found = TRUE;
 	else
 	  {
-	     /* on cherche le descripteur de document referencant qui */
-	     /* correspond a referringDocumentName et on prend le suivant */
-	     trouve = FALSE;
-	     while (pDE != NULL && !trouve)
+	     /* Looking for the descriptor of the referring document and corresponding 
+                to referringDocumentName, we get the following one */
+	     found = FALSE;
+	     while (pDE != NULL && !found)
 	       {
 		  if (strcmp (pDE->EdDocIdent, referringDocumentName) == 0)
-		     trouve = TRUE;
-		  /* passe au document suivant */
+		     found = TRUE;
+		  /* Go to the next document */
 		  pDE = pDE->EdNext;
 	       }
 	  }
-	if (trouve)
-	   /* on a trouve' un document referencant, on saute les */
-	   /* documents charge's */
+	if (found)
+	   /* The referring document is found, we ignore the loaded documents */
 	  {
-	     charge = TRUE;
-	     while (charge && pDE != NULL)
+	     loaded = TRUE;
+	     while (loaded && pDE != NULL)
 	       {
-		  /* verifie si le document est charge' */
-		  charge = (GetPtrDocument (pDE->EdDocIdent) != NULL);
-		  if (charge)
-		     /* document charge', on le saute */
+		  /* verifies if the document is loaded */
+		  loaded = (GetPtrDocument (pDE->EdDocIdent) != NULL);
+		  if (loaded)
+		     /* document loaded, ignore */
 		     pDE = pDE->EdNext;
 	       }
 	  }
@@ -1149,4 +1139,4 @@ Element             element;
    return ((Element) elementFound);
 }
 
-/* fin du module */
+/* End of module */
