@@ -274,7 +274,7 @@ void *context;
 
   prev = ctx->prevnext;
   doc = ctx->doc;
-  if (DocHistoryIndex[doc] == prev)
+  if (doc == newdoc && DocHistoryIndex[doc] == prev)
     {
       /* we are still working on the same document */
       /* show the document at the position stored in the history */
@@ -282,7 +282,7 @@ void *context;
       TtaShowElement (doc, 1, el, DocHistory[doc][prev].HistDistance);
 
       /* set the Forward button on if it was the last document in the history */
-      if (!ctx->next_doc_loaded && ctx->last)
+      if (ctx->last)
 	SetArrowButton (doc, FALSE, TRUE);
     }
   TtaFreeMemory (ctx);
@@ -451,14 +451,14 @@ void *context;
 
   next = ctx->prevnext;
   doc = ctx->doc;
-  if (DocHistoryIndex[doc] == next)
+  if (doc == newdoc && DocHistoryIndex[doc] == next)
     {
       /* we are still working on the same document */
       /* show the document at the position stored in the history */
       el = ElementAtPosition (doc, DocHistory[doc][next].HistPosition);
       TtaShowElement (doc, 1, el, DocHistory[doc][next].HistDistance);
     }
-   TtaFreeMemory (ctx);
+  TtaFreeMemory (ctx);
 }
 
 /*----------------------------------------------------------------------
