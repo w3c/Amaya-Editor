@@ -549,7 +549,7 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 			    FALSE, FALSE, FALSE);
 	      DateIndex = 0;
 	    }
-	  else
+	  else if (!StartDate)
 	    ExportChar ((wchar_t) c, fnum, outBuf, pDoc,
 			FALSE, FALSE, FALSE);
 	  return TRUE;
