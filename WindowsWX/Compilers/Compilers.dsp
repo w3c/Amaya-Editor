@@ -53,11 +53,11 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 wxbase25u.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc" /libpath:"..\..\..\wxWidgets\lib\vc_dll"
+# ADD LINK32 wxbase25u.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib:"libc" /libpath:"..\..\..\wxWidgets\lib\vc_dll"
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy    ..\..\..\wxWidgets\lib\vc_dll\*.dll    ..\bin\ 
+PreLink_Cmds=copy     ..\..\..\wxWidgets\lib\vc_dll\*.dll     ..\bin\ 
 PostBuild_Cmds=echo "Before running Compilers.exe"	..\bin\Compilers.exe	echo "After running Compilers.exe"
 # End Special Build Tool
 
@@ -89,7 +89,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy    ..\..\..\wxWidgets\lib\vc_dll\*.dll    ..\bin\ 
+PreLink_Cmds=copy     ..\..\..\wxWidgets\lib\vc_dll\*.dll     ..\bin\ 
 PostBuild_Cmds=echo "Before running Compilers.exe"	..\bin\Compilers.exe	echo "After running Compilers.exe"
 # End Special Build Tool
 
