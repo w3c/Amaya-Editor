@@ -898,11 +898,11 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
 
   /******* check buffer overflow ********/
   sprintf (txt, "background-image: url(%s); background-repeat: ", image);
-  if (repeat == STYLE_REPEAT)
+  if (repeat == REPEAT)
     strcat (txt, "repeat");
-  else if (repeat == STYLE_HREPEAT)
+  else if (repeat == HREPEAT)
     strcat (txt, "repeat-x");
-  else if (repeat == STYLE_VREPEAT)
+  else if (repeat == VREPEAT)
     strcat (txt, "repeat-y");
   else
     strcat (txt, "no-repeat");

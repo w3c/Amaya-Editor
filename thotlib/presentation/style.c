@@ -1318,7 +1318,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
   int_unit = UnRelative;
   switch (unit)
     {
-    case STYLE_UNIT_REL:
+    case UNIT_REL:
       int_unit = UnRelative;
       if (type == PtHeight ||            type == PtWidth ||
 	  type == PtVertPos ||           type == PtHorizPos ||
@@ -1334,43 +1334,43 @@ static void PresentationValueToPRule (PresentationValue val, int type,
           type == PtXRadius ||           type == PtYRadius)
 	value *= 10;
       break;
-    case STYLE_UNIT_EM:
+    case UNIT_EM:
       int_unit = UnRelative;
       value *= 10;
       break;
-    case STYLE_UNIT_PT:
+    case UNIT_PT:
       int_unit = UnPoint;
       break;
-    case STYLE_UNIT_PC:
+    case UNIT_PC:
       int_unit = UnPoint;
       value *= 12;
       break;
-    case STYLE_UNIT_IN:
+    case UNIT_IN:
       int_unit = UnPoint;
       value *= 72;
       break;
-    case STYLE_UNIT_CM:
+    case UNIT_CM:
       int_unit = UnPoint;
       value *= 28;
       break;
-    case STYLE_UNIT_MM:
+    case UNIT_MM:
       int_unit = UnPoint;
       value *= 28;
       value /= 10;
       break;
-    case STYLE_UNIT_PX:
+    case UNIT_PX:
       int_unit = UnPixel;
       break;
-    case STYLE_UNIT_PERCENT:
+    case UNIT_PERCENT:
       int_unit = UnPercent;
       break;
-    case STYLE_UNIT_XHEIGHT:
+    case UNIT_XHEIGHT:
       int_unit = UnXHeight;
       value *= 10;
       break;
-    case STYLE_UNIT_BOX:
+    case UNIT_BOX:
       break;
-    case STYLE_VALUE_AUTO:
+    case VALUE_AUTO:
       int_unit = UnAuto;
       break;
     default:
@@ -1407,18 +1407,18 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_FONT_HELVETICA:
+	case FontHelvetica:
 	  rule->PrChrValue = 'H';
 	  break;
-	case STYLE_FONT_TIMES:
+	case FontTimes:
 	  rule->PrChrValue = 'T';
 	  break;
-	case STYLE_FONT_COURIER:
+	case FontCourier:
 	  rule->PrChrValue = 'C';
 	  break;
 #ifdef _WINDOWS
 #ifdef _I18N_
-	case STYLE_FONT_OTHER:
+	case FontOther:
 	  rule->PrChrValue = -1;
 	  break;
 #endif /* _I18N_ */
@@ -1477,10 +1477,10 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_THINUNDERLINE:
+	case ThinUnderline:
 	  rule->PrChrValue = 'N';
 	  break;
-	case STYLE_THICKUNDERLINE:
+	case ThickUnderline:
 	  rule->PrChrValue = 'T';
 	  break;
 	}
@@ -1489,13 +1489,13 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_LINESOLID:
+	case SolidLine:
 	  rule->PrChrValue = 'S';
 	  break;
-	case STYLE_LINEDASHED:
+	case DashedLine:
 	  rule->PrChrValue = '-';
 	  break;
-	case STYLE_LINEDOTTED:
+	case DottedLine:
 	  rule->PrChrValue = '.';
 	  break;
 	}
@@ -1504,26 +1504,59 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_DISPLAYUNDEFINED:
+	case Undefined:
 	  rule->PrChrValue = 'U';
 	  break;
-	case STYLE_DISPLAYINLINE:
+	case Inline:
 	  rule->PrChrValue = 'I';
 	  break;
-	case STYLE_DISPLAYBLOCK:
+	case Block:
 	  rule->PrChrValue = 'B';
 	  break;
-	case STYLE_DISPLAYLISTITEM:
+	case ListItem:
 	  rule->PrChrValue = 'L';
 	  break;
-	case STYLE_DISPLAYRUNIN:
+	case RunIn:
 	  rule->PrChrValue = 'R';
 	  break;
-	case STYLE_DISPLAYCOMPACT:
+	case Compact:
 	  rule->PrChrValue = 'C';
 	  break;
-	case STYLE_DISPLAYMARKER:
+	case Marker:
 	  rule->PrChrValue = 'M';
+	  break;
+	}
+      break;
+    case PtFloat:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case FloatLeft:
+	  rule->PrChrValue = 'L';
+	  break;
+	case FloatRight:
+	  rule->PrChrValue = 'R';
+	  break;
+	default:
+	  rule->PrChrValue = 'N';
+	  break;
+	}
+      break;
+    case PtClear:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case ClearLeft:
+	  rule->PrChrValue = 'L';
+	  break;
+	case ClearRight:
+	  rule->PrChrValue = 'R';
+	  break;
+	case ClearBoth:
+	  rule->PrChrValue = 'B';
+	  break;
+	default:
+	  rule->PrChrValue = 'N';
 	  break;
 	}
       break;
@@ -1534,34 +1567,34 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_BORDERNONE:
+	case BorderStyleNone:
 	  rule->PrChrValue = '0';
 	  break;
-	case STYLE_BORDERHIDDEN:
+	case BorderStyleHidden:
 	  rule->PrChrValue = 'H';
 	  break;
-	case STYLE_BORDERDOTTED:
+	case BorderStyleDotted:
 	  rule->PrChrValue = '.';
 	  break;
-	case STYLE_BORDERDASHED:
+	case BorderStyleDashed:
 	  rule->PrChrValue = '-';
 	  break;
-	case STYLE_BORDERSOLID:
+	case BorderStyleSolid:
 	  rule->PrChrValue = 'S';
 	  break;
-	case STYLE_BORDERDOUBLE:
+	case BorderStyleDouble:
 	  rule->PrChrValue = 'D';
 	  break;
-	case STYLE_BORDERGROOVE:
+	case BorderStyleGroove:
 	  rule->PrChrValue = 'G';
 	  break;
-	case STYLE_BORDERRIDGE:
+	case BorderStyleRidge:
 	  rule->PrChrValue = 'R';
 	  break;
-	case STYLE_BORDERINSET:
+	case BorderStyleInset:
 	  rule->PrChrValue = 'I';
 	  break;
-	case STYLE_BORDEROUTSET:
+	case BorderStyleOutset:
 	  rule->PrChrValue = 'O';
 	  break;
 	}
@@ -1591,7 +1624,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtMarginBottom:
     case PtMarginRight:
       rule->PrPresMode = PresImmediate;
-      if (val.typed_data.unit == STYLE_VALUE_AUTO)
+      if (val.typed_data.unit == VALUE_AUTO)
 	{
 	  rule->PrMinUnit = UnAuto;
 	  rule->PrMinValue = 0;
@@ -1627,19 +1660,19 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_ADJUSTLEFT:
+	case AdjustLeft:
 	  rule->PrAdjust = AlignLeft;
 	  break;
-	case STYLE_ADJUSTRIGHT:
+	case AdjustRight:
 	  rule->PrAdjust = AlignRight;
 	  break;
-	case STYLE_ADJUSTCENTERED:
+	case Centered:
 	  rule->PrAdjust = AlignCenter;
 	  break;
-	case STYLE_ADJUSTLEFTWITHDOTS:
+	case LeftWithDots:
 	  rule->PrAdjust = AlignLeftDots;
 	  break;
-	case STYLE_ADJUSTJUSTIFY:
+	case Justify:
 	  rule->PrAdjust = AlignJustify;
 	  break;
 	default:
@@ -1651,10 +1684,10 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_LEFTTORIGHT:
+	case LeftToRight:
 	  rule->PrChrValue = 'L';
 	  break;
-	case STYLE_RIGHTTOLEFT:
+	case RightToLeft:
 	  rule->PrChrValue = 'R';
 	  break;
 	default:
@@ -1666,13 +1699,13 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_BIDINORMAL:
+	case Normal:
 	  rule->PrChrValue = 'N';
 	  break;
-	case STYLE_BIDIEMBED:
+	case Embed:
 	  rule->PrChrValue = 'E';
 	  break;
-	case STYLE_BIDIOVERRIDE:
+	case Override:
 	  rule->PrChrValue = 'O';
 	  break;
 	default:
@@ -1684,10 +1717,10 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case STYLE_HYPHENATE:
+	case Hyphenation:
 	  rule->PrBoolValue = TRUE;
 	  break;
-	case STYLE_NOHYPHENATE:
+	case NoHyphenation:
 	  rule->PrBoolValue = FALSE;
 	  break;
 	}
@@ -1803,7 +1836,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrAttr = FALSE;
 	  if (absolute)
 	    {
-	      if (val.typed_data.unit == STYLE_VALUE_AUTO)
+	      if (val.typed_data.unit == VALUE_AUTO)
 		/* it means "height: auto" */
 		{
 		  rule->PrDimRule.DrPosition = FALSE;
@@ -1849,7 +1882,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrAttr = FALSE;
 	  if (absolute)
 	    {
-	      if (val.typed_data.unit == STYLE_VALUE_AUTO)
+	      if (val.typed_data.unit == VALUE_AUTO)
 		/* it means "width: auto" */
 		{
 		  rule->PrDimRule.DrPosition = FALSE;
@@ -1903,19 +1936,21 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrNPresBoxes = 1;
 	  switch (value)
 	    {
-	    case STYLE_REALSIZE:
+	    case REALSIZE:
 	      rule->PrPresBox[0] = RealSize;
 	      break;
-	    case STYLE_SCALE:
+	    case SCALE:
 	      rule->PrPresBox[0] = ReScale;
 	      break;
-	    case STYLE_REPEAT:
+	    case REPEAT:
 	      rule->PrPresBox[0] = FillFrame;
 	      break;
-	    case STYLE_HREPEAT:
-	      rule->PrPresBox[0] = XRepeat; break;
-	    case STYLE_VREPEAT:
-	      rule->PrPresBox[0] = YRepeat; break;
+	    case HREPEAT:
+	      rule->PrPresBox[0] = XRepeat;
+	      break;
+	    case VREPEAT:
+	      rule->PrPresBox[0] = YRepeat;
+	      break;
 	    default:
 	      rule->PrPresBox[0] = RealSize;
 	    }
@@ -1968,18 +2003,18 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'H':
-	  value = STYLE_FONT_HELVETICA;
+	  value = FontHelvetica;
 	  break;
 	case 'T':
-	  value = STYLE_FONT_TIMES;
+	  value = FontTimes;
 	  break;
 	case 'C':
-	  value = STYLE_FONT_COURIER;
+	  value = FontCourier;
 	  break;
 #ifdef _WINDOWS
 #ifdef _I18N_
 	case -1:
-	  value = STYLE_FONT_OTHER;
+	  value = FontOther;
 	  break;
 #endif /* _I18N_ */
 #endif /* _WINDOWS */
@@ -1990,16 +2025,16 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'R':
-	  value = STYLE_FONT_ROMAN;
+	  value = StyleRoman;
 	  break;
 	case 'I':
-	  value = STYLE_FONT_ITALICS;
+	  value = StyleItalics;
 	  break;
 	case 'O':
-	  value = STYLE_FONT_OBLIQUE;
+	  value = StyleOblique;
 	  break;
 	default:
-	  value = STYLE_FONT_ROMAN;
+	  value = StyleRoman;
 	  break;
 	}
       break;
@@ -2008,13 +2043,13 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'B':
-	  value = STYLE_WEIGHT_BOLD;
+	  value = WeightBold;
 	  break;
 	case 'N':
-	  value = STYLE_WEIGHT_NORMAL;
+	  value = WeightNormal;
 	  break;
 	default:
-	  value = STYLE_WEIGHT_NORMAL;
+	  value = WeightNormal;
 	  break;
 	}
       break;
@@ -2023,16 +2058,16 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'N':
-	  value = STYLE_NOUNDERLINE;
+	  value = NoUnderline;
 	  break;
 	case 'U':
-	  value = STYLE_UNDERLINE;
+	  value = Underline;
 	  break;
 	case 'O':
-	  value = STYLE_OVERLINE;
+	  value = Overline;
 	  break;
 	case 'C':
-	  value = STYLE_CROSSOUT;
+	  value = CrossOut;
 	  break;
 	}
       break;
@@ -2041,10 +2076,10 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'N':
-	  value = STYLE_THINUNDERLINE;
+	  value = ThinUnderline;
 	  break;
 	case 'T':
-	  value = STYLE_THICKUNDERLINE;
+	  value = ThickUnderline;
 	  break;
 	}
       break;
@@ -2053,10 +2088,10 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'R':
-	  value = STYLE_RIGHTTOLEFT;
+	  value = RightToLeft;
 	  break;
 	case 'L':
-	  value = STYLE_LEFTTORIGHT;
+	  value = LeftToRight;
 	  break;
 	}
       break;
@@ -2065,13 +2100,13 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'N':
-	  value = STYLE_BIDINORMAL;
+	  value = Normal;
 	  break;
 	case 'E':
-	  value = STYLE_BIDIEMBED;
+	  value = Embed;
 	  break;
 	case 'O':
-	  value = STYLE_BIDIOVERRIDE;
+	  value = Override;
 	  break;
 	}
       break;
@@ -2080,13 +2115,13 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'S':
-	  value = STYLE_LINESOLID;
+	  value = SolidLine;
 	  break;
 	case '-':
-	  value = STYLE_LINEDASHED;
+	  value = DashedLine;
 	  break;
 	case '.':
-	  value = STYLE_LINEDOTTED;
+	  value = DottedLine;
 	  break;
 	}
       break;
@@ -2095,29 +2130,61 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case 'U':
-	  value = STYLE_DISPLAYUNDEFINED;
+	  value = Undefined;
 	  break;
 	case 'I':
-	  value = STYLE_DISPLAYINLINE;
+	  value = Inline;
 	  break;
 	case 'B':
-	  value = STYLE_DISPLAYBLOCK;
+	  value = Block;
 	  break;
 	case 'L':
-	  value = STYLE_DISPLAYLISTITEM;
+	  value = ListItem;
 	  break;
 	case 'R':
-	  value = STYLE_DISPLAYRUNIN;
+	  value = RunIn;
 	  break;
 	case 'C':
-	  value = STYLE_DISPLAYCOMPACT;
+	  value = Compact;
 	  break;
 	case 'M':
-	  value = STYLE_DISPLAYMARKER;
+	  value = Marker;
 	  break;
 	}
       break;
 
+    case PtFloat:
+       switch (rule->PrChrValue)
+	{
+	case 'L':
+	  value = FloatLeft;
+	  break;
+	case 'R':
+	  value = FloatRight;
+	  break;
+	default:
+	  value = FloatNone;
+	  break;
+	}
+      break;
+    case PtClear:
+      switch (rule->PrChrValue)
+	{
+	case 'L':
+	  value = ClearLeft;
+	  break;
+	case 'R':
+	  value = ClearRight;
+	  break;
+	case 'B':
+	  value = ClearBoth;
+	  break;
+	default:
+	  value = ClearNone;
+	  break;
+	}
+      break;
+ 
     case PtBorderTopStyle:
     case PtBorderRightStyle:
     case PtBorderBottomStyle:
@@ -2125,34 +2192,34 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrChrValue)
 	{
 	case '0':
-	  value = STYLE_BORDERNONE;
+	  value = BorderStyleNone;
 	  break;
 	case 'H':
-	  value = STYLE_BORDERHIDDEN;
+	  value = BorderStyleHidden;
 	  break;
 	case '.':
-	  value = STYLE_BORDERDOTTED;
+	  value = BorderStyleDotted;
 	  break;
 	case '-':
-	  value = STYLE_BORDERDASHED;
+	  value = BorderStyleDashed;
 	  break;
 	case 'S':
-	  value = STYLE_BORDERSOLID;
+	  value = BorderStyleSolid;
 	  break;
 	case 'D':
-	  value = STYLE_BORDERDOUBLE;
+	  value = BorderStyleDouble;
 	  break;
 	case 'G':
-	  value = STYLE_BORDERGROOVE;
+	  value = BorderStyleGroove;
 	  break;
 	case 'R':
-	  value = STYLE_BORDERRIDGE;
+	  value = BorderStyleRidge;
 	  break;
 	case 'I':
-	  value = STYLE_BORDERINSET;
+	  value = BorderStyleInset;
 	  break;
 	case 'O':
-	  value = STYLE_BORDEROUTSET;
+	  value = BorderStyleOutset;
 	  break;
 	}
       break;
@@ -2212,9 +2279,9 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 
     case PtHyphenate:
       if (rule->PrBoolValue)
-	value = STYLE_HYPHENATE;
+	value = Hyphenation;
       else
-	value = STYLE_NOHYPHENATE;
+	value = NoHyphenation;
       break;
 
     case PtPictInfo:
@@ -2229,22 +2296,22 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       switch (rule->PrAdjust)
 	{
 	case AlignLeft:
-	  value = STYLE_ADJUSTLEFT;
+	  value = AdjustLeft;
 	  break;
 	case AlignRight:
-	  value = STYLE_ADJUSTRIGHT;
+	  value = AdjustRight;
 	  break;
 	case AlignCenter:
-	  value = STYLE_ADJUSTCENTERED;
+	  value = Centered;
 	  break;
 	case AlignLeftDots:
-	  value = STYLE_ADJUSTLEFTWITHDOTS;
+	  value = LeftWithDots;
 	  break;
 	case AlignJustify:
-	  value = STYLE_ADJUSTJUSTIFY;
+	  value = Justify;
 	  break;
 	default:
-	  value = STYLE_ADJUSTLEFT;
+	  value = AdjustLeft;
 	  break;
 	}
       break;
@@ -2259,39 +2326,43 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	case FnCreateAfter:
 	case FnCreateEnclosing:
 	  value = rule->PrNPresBoxes;
-	  unit = STYLE_UNIT_BOX;
+	  unit = UNIT_BOX;
 	  break;
 	case FnShowBox:
 	  value = rule->PrNPresBoxes;
-	  unit = STYLE_UNIT_REL;
+	  unit = UNIT_REL;
 	  break;
 	case FnBackgroundPicture:
 	  value = rule->PrPresBox[0];
-	  unit = STYLE_UNIT_REL;
+	  unit = UNIT_REL;
 	  break;
 	case FnPictureMode:
-	  unit = STYLE_UNIT_REL;
-	  value = STYLE_REALSIZE;
+	  unit = UNIT_REL;
+	  value = REALSIZE;
 	  switch (rule->PrPresBox[0])
 	    {
 	    case RealSize:
-	      value = STYLE_REALSIZE; break;
+	      value = REALSIZE;
+	      break;
 	    case ReScale:
-	      value = STYLE_SCALE; break;
+	      value = SCALE;
+	      break;
 	    case FillFrame:
-	      value = STYLE_REPEAT; break;
+	      value = REPEAT;
+	      break;
 	    case XRepeat:
-	      value = STYLE_HREPEAT; break;
+	      value = HREPEAT;
+	      break;
 	    case YRepeat:
-	      value = STYLE_VREPEAT; break;
+	      value = VREPEAT;
 	      break;
 	    default:
-	      unit = STYLE_UNIT_INVALID;
+	      unit = UNIT_INVALID;
 	      value = 0;
 	    }
 	case FnPage:
-	  value = STYLE_ALWAYS;
-	  unit = STYLE_UNIT_REL;
+	  value = PageAlways;
+	  unit = UNIT_REL;
 	  break;
 	default:
 	  break;
@@ -2309,30 +2380,30 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	  type == PtIndent ||
 	  type == PtLineSpacing ||
 	  type == PtLineWeight)
-	unit = STYLE_UNIT_REL;
+	unit = UNIT_REL;
       else
-	unit = STYLE_UNIT_EM;
+	unit = UNIT_EM;
       value /= 10;
       break;
     case UnXHeight:
       value /= 10;
-      unit = STYLE_UNIT_XHEIGHT;
+      unit = UNIT_XHEIGHT;
       break;
     case UnPoint:
-      unit = STYLE_UNIT_PT;
+      unit = UNIT_PT;
       break;
     case UnPixel:
-      unit = STYLE_UNIT_PX;
+      unit = UNIT_PX;
       break;
     case UnPercent:
-      unit = STYLE_UNIT_PERCENT;
+      unit = UNIT_PERCENT;
       break;
     default:
-      unit = STYLE_UNIT_INVALID;
+      unit = UNIT_INVALID;
       break;
     }
 
-  if (value % 10 && unit != STYLE_UNIT_INVALID)
+  if (value % 10 && unit != UNIT_INVALID)
     {
       real = TRUE;
       value *= 1000;
@@ -2533,6 +2604,12 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRDisplay:
       *intRule = PtDisplay;
       break;
+    case PRFloat:
+      *intRule = PtFloat;
+      break;
+    case PRClear:
+      *intRule = PtClear;
+      break;
     default:
       *intRule = PtFunction;
     }
@@ -2607,7 +2684,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      if (!generic)
 		tsch = (PSchema) PresentationSchema (LoadedDocument[doc - 1]->DocSSchema, LoadedDocument[doc - 1]);
 	      cst = PresConstInsert (tsch, v.pointer);
-	      v.typed_data.unit = STYLE_UNIT_REL;
+	      v.typed_data.unit = UNIT_REL;
 	      v.typed_data.value = cst;
 	      v.typed_data.real = FALSE;
 	    }
@@ -2751,6 +2828,12 @@ static void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setti
       break;
     case PtDisplay:
       setting->type = PRDisplay;
+      break;
+    case PtFloat:
+      setting->type = PRFloat;
+      break;
+    case PtClear:
+      setting->type = PRClear;
       break;
     case PtSize:
       setting->type = PRSize;

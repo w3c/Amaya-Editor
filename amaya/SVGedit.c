@@ -856,7 +856,7 @@ ThotBool AttrDxDyDelete (NotifyAttribute *event)
   ctxt->cssSpecificity = 0;
   ctxt->destroy = TRUE;
   pval.typed_data.value = 0;
-  pval.typed_data.unit = STYLE_UNIT_PX;
+  pval.typed_data.unit = UNIT_PX;
   TtaSetStylePresentation (ruleType, event->element, NULL, ctxt, pval);
   TtaFreeMemory (ctxt);
   return FALSE; /* let Thot perform normal operation */

@@ -2109,7 +2109,7 @@ void      CheckLargeOp (Element el, Document doc)
 	     ctxt->destroy = FALSE;
 	     /* the specific presentation to be created is not a CSS rule */
 	     ctxt->cssSpecificity = 0;
-	     pval.typed_data.unit = STYLE_UNIT_PERCENT;
+	     pval.typed_data.unit = UNIT_PERCENT;
 	     pval.typed_data.real = FALSE;
 	     pval.typed_data.value = 180;
 	     }
@@ -2510,10 +2510,10 @@ void MathMLScriptShift (Document doc, Element el, char *value, int attr)
        /* parse the attribute value (a number followed by a unit) */
        value = TtaSkipBlanks (value);
        value = ParseCSSUnit (value, &pval);
-       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+       if (pval.typed_data.unit != UNIT_INVALID)
 	  {
-	    if (pval.typed_data.unit == STYLE_UNIT_BOX)
-	      pval.typed_data.unit = STYLE_UNIT_EM;
+	    if (pval.typed_data.unit == UNIT_BOX)
+	      pval.typed_data.unit = UNIT_EM;
 	    /* the specific presentation to be created is not a CSS rule */
 	    ctxt->cssSpecificity = 0;
 	    if (attr == MathML_ATTR_superscriptshift)
@@ -2978,7 +2978,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
   /* check all rows within the table */
   firstRow = TRUE;
   bottomVal = 0;
-  bottomValUnit = STYLE_UNIT_PT;
+  bottomValUnit = UNIT_PT;
   elType.ElTypeNum = MathML_EL_TableRow;
   row = TtaSearchTypedElement (elType, SearchInTree, el);
   while (row)
@@ -3014,7 +3014,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 	{
 	  if (!value)
 	    {
-	      pval.typed_data.unit = STYLE_UNIT_PT;
+	      pval.typed_data.unit = UNIT_PT;
 	      pval.typed_data.value = 0;
 	      pval.typed_data.real = FALSE;
 	    }
@@ -3026,10 +3026,10 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 	      if (*ptr != EOS)
 		{
 		  ptr = ParseCSSUnit (ptr, &pval);
-		  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+		  if (pval.typed_data.unit != UNIT_INVALID)
 		    {
-		      if (pval.typed_data.unit == STYLE_UNIT_BOX)
-			pval.typed_data.unit = STYLE_UNIT_EM;
+		      if (pval.typed_data.unit == UNIT_BOX)
+			pval.typed_data.unit = UNIT_EM;
 		      /* if the value is an integer, make it a real to avoid
 			 errors in dividing small integers, such as "1cm" */
 		      if (!pval.typed_data.real)
@@ -3097,16 +3097,16 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 			      spanPtr = TtaSkipBlanks (spanPtr);
 			      spanPtr = ParseCSSUnit (spanPtr, &pval);
 			    }
-			  if (pval.typed_data.unit == STYLE_UNIT_INVALID)
+			  if (pval.typed_data.unit == UNIT_INVALID)
 			    {
 			      val = 0;
 			      cellBottomVal = 0;
-			      bottomValUnit = STYLE_UNIT_PT;
+			      bottomValUnit = UNIT_PT;
 			    }
 			  else
 			    {
-			      if (pval.typed_data.unit == STYLE_UNIT_BOX)
-				pval.typed_data.unit = STYLE_UNIT_EM;
+			      if (pval.typed_data.unit == UNIT_BOX)
+				pval.typed_data.unit = UNIT_EM;
 			      /* if the value is an integer, make it a real to
 				 avoid errors in dividing small integers,
 				 such as "1cm" */
@@ -3262,7 +3262,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 	  firstCell = TRUE;
 	  rightVal = 0;
           val = 0;
-	  valUnit = STYLE_UNIT_PT;
+	  valUnit = UNIT_PT;
 	  ptr = value;
 	  /* get the first cell of that row (ignoring Label cells) */
 	  elType.ElTypeNum = MathML_EL_MTD;
@@ -3276,17 +3276,17 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 		{
 		  pval.typed_data.value = 0;
 		  val = 0;
-		  valUnit = STYLE_UNIT_PT;
+		  valUnit = UNIT_PT;
 		}
 	      else
 		{
 		  if (!value)
 		    {
-		      pval.typed_data.unit = STYLE_UNIT_PT;
+		      pval.typed_data.unit = UNIT_PT;
 		      pval.typed_data.value = 0;
 		      pval.typed_data.real = FALSE;
 		      val = 0;
-		      valUnit = STYLE_UNIT_PT;
+		      valUnit = UNIT_PT;
 		    }
 		  else
 		    {
@@ -3311,15 +3311,15 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 				ptr = ParseCSSUnit (valueOfNamedSpace, &pval);
 			      else
 				ptr = ParseCSSUnit (ptr, &pval);
-			      if (pval.typed_data.unit == STYLE_UNIT_INVALID)
+			      if (pval.typed_data.unit == UNIT_INVALID)
 				{
 				  val = 0;
-				  valUnit = STYLE_UNIT_PT;
+				  valUnit = UNIT_PT;
 				}
 			      else
 				{
-				  if (pval.typed_data.unit == STYLE_UNIT_BOX)
-				    pval.typed_data.unit = STYLE_UNIT_EM;
+				  if (pval.typed_data.unit == UNIT_BOX)
+				    pval.typed_data.unit = UNIT_EM;
 				  /* if the value is an integer, make it a real
 				     to avoid errors in dividing small
 				     integers, such as "1cm" */
@@ -3368,7 +3368,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 		   padding on the right */
 		{
 		  rightVal = 0;
-		  rightValUnit = STYLE_UNIT_PT;
+		  rightValUnit = UNIT_PT;
 		}
 	      else
 		{
@@ -3795,8 +3795,8 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
   ctxt->cssSpecificity = 0;
   vertPadding = 0;
   horizPadding = 0;
-  vertPaddingUnit = STYLE_UNIT_PT;
-  horizPaddingUnit = STYLE_UNIT_PT;
+  vertPaddingUnit = UNIT_PT;
+  horizPaddingUnit = UNIT_PT;
   vertPaddingReal = FALSE;
   horizPaddingReal = FALSE;
   /* is there a frame attribute? */
@@ -3816,10 +3816,10 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
 	    ptr = ParseCSSUnit (valueOfNamedSpace, &pval);
 	  else
 	    ptr = ParseCSSUnit (ptr, &pval);
-	  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+	  if (pval.typed_data.unit != UNIT_INVALID)
 	    {
-	      if (pval.typed_data.unit == STYLE_UNIT_BOX)
-		pval.typed_data.unit = STYLE_UNIT_EM;
+	      if (pval.typed_data.unit == UNIT_BOX)
+		pval.typed_data.unit = UNIT_EM;
 	      horizPadding = pval.typed_data.value;
 	      horizPaddingUnit = pval.typed_data.unit;
 	      horizPaddingReal = pval.typed_data.real;
@@ -3838,10 +3838,10 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
 		    ptr = ParseCSSUnit (valueOfNamedSpace, &pval);
 		  else
 		    ptr = ParseCSSUnit (ptr, &pval);
-		  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+		  if (pval.typed_data.unit != UNIT_INVALID)
 		    {
-		      if (pval.typed_data.unit == STYLE_UNIT_BOX)
-			pval.typed_data.unit = STYLE_UNIT_EM;
+		      if (pval.typed_data.unit == UNIT_BOX)
+			pval.typed_data.unit = UNIT_EM;
 		      vertPadding = pval.typed_data.value;
 		      vertPaddingUnit = pval.typed_data.unit;
 		      vertPaddingReal = pval.typed_data.real;
@@ -4375,7 +4375,7 @@ void MathMLSetScriptLevel (Document doc, Element el, char *value)
      value = TtaSkipBlanks (value);
      relative = (value[0] == '-' || value[0] == '+');
      value = ParseCSSUnit (value, &pval);
-     if (pval.typed_data.unit != STYLE_UNIT_REL &&
+     if (pval.typed_data.unit != UNIT_REL &&
 	 pval.typed_data.real)
        /* this is an error: it should be an integer without any unit name */
        /* error */;
@@ -4406,7 +4406,7 @@ void MathMLSetScriptLevel (Document doc, Element el, char *value)
 	   /* scriptlevel="-3" or less */
 	   percentage = 282;
 	 pval.typed_data.value = percentage;
-	 pval.typed_data.unit = STYLE_UNIT_PERCENT;
+	 pval.typed_data.unit = UNIT_PERCENT;
 	 /* the specific presentation to be created is not a CSS rule */
 	 ctxt->cssSpecificity = 0;
 	 TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);       
@@ -4471,10 +4471,10 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
       value = TtaSkipBlanks (value);
       value = ParseCSSUnit (value, &pval);
       /***** we should accept namedspace for width *****/
-      if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+      if (pval.typed_data.unit != UNIT_INVALID)
 	{
-	  if (pval.typed_data.unit == STYLE_UNIT_BOX)
-	    pval.typed_data.unit = STYLE_UNIT_PX;
+	  if (pval.typed_data.unit == UNIT_BOX)
+	    pval.typed_data.unit = UNIT_PX;
 	  /* the specific presentation to be created is not a CSS rule */
 	  ctxt->cssSpecificity = 0;
 	  TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);

@@ -1347,6 +1347,9 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   char             *verify_publish;
   int               res;
   int               mode = 0;
+#ifdef AMAYA_DEBUG
+  unsigned long     file_size = 0;
+#endif
 
   verify_publish = TtaGetEnvString("VERIFY_PUBLISH");
   /* verify the PUT by default */
@@ -1355,7 +1358,9 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   
   
 #ifdef AMAYA_DEBUG
-  fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %s\n", localfile, remotefile, content_type);
+  fprintf(stderr, "Save %s to %s type=%s", localfile, remotefile, content_type);
+  AM_GetFileSize (localfile, &file_size);
+  fprintf(stderr, " size=%u\n", file_size);
 #endif
 
   /* Save */
@@ -1376,7 +1381,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
 
   /* Refetch */
 #ifdef AMAYA_DEBUG
-  fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);
+  fprintf(stderr, "Refetch %s \n", remotefile);
 #endif
 
   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), NULL);
@@ -1397,7 +1402,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
     {
       /* Compare content. */
 #ifdef AMAYA_DEBUG
-      fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile, localfile);
+      fprintf(stderr, "Compare %s and %s \n", remotefile, localfile);
 #endif
       if (! TtaCompareFiles(tempfile, localfile))
 	{

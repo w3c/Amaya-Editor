@@ -67,21 +67,6 @@ typedef struct struct_SpecificContext
   }
 PresentationContextBlock, *PresentationContext;
 
-/* Units */
-#define STYLE_UNIT_INVALID	0	/* invalid unit : for parsing   */
-#define STYLE_UNIT_REL		1	/* relative : e.g. to font size */
-#define STYLE_UNIT_PT		2	/* typo points : 1/72 inches    */
-#define STYLE_UNIT_PC		3	/* typo points : 1/6 inches     */
-#define STYLE_UNIT_IN		4	/* inches                       */
-#define STYLE_UNIT_CM		5	/* centimeters                  */
-#define STYLE_UNIT_MM		6	/* millimeters                  */
-#define STYLE_UNIT_EM		7	/* defined / size of char m     */
-#define STYLE_UNIT_PX		8	/* defined in pixels            */
-#define STYLE_UNIT_PERCENT	9	/* a relative size in percent   */
-#define STYLE_UNIT_XHEIGHT	10	/* defined / size of x char     */
-#define STYLE_UNIT_BOX	        11	/* this is a box number         */
-#define STYLE_VALUE_AUTO        12      /* not a unit: value = auto     */
-
 typedef union _PresentationValue
  {
    int                 data;          /* some data without unit */
@@ -107,124 +92,6 @@ typedef struct _PresentationSetting
   }
                    *PresentationSetting, PresentationSettingBlock;
 
-/*
- * A bunch of constants describing the most common values for presentation
- * attributes, like font families, styles, etc ...
- */
-
-#define STYLE_FONT_TIMES		FontTimes
-#define STYLE_FONT_HELVETICA		FontHelvetica
-#define STYLE_FONT_COURIER		FontCourier
-
-#ifdef _WINDOWS
-#      ifdef _I18N_ 
-#            define STYLE_FONT_OTHER 1000
-#      endif /* _I18N_ */
-#endif /* _WINDOWS */
-
-#define STYLE_FONT_ROMAN		StyleRoman
-#define STYLE_FONT_ITALICS		StyleItalics
-#define STYLE_FONT_OBLIQUE		StyleOblique
-
-#define STYLE_WEIGHT_BOLD		WeightBold
-#define STYLE_WEIGHT_NORMAL		WeightNormal
-
-#define STYLE_NOUNDERLINE		1
-#define STYLE_UNDERLINE			2
-#define STYLE_OVERLINE			3
-#define STYLE_CROSSOUT			4
-
-#define STYLE_THINUNDERLINE		1
-#define STYLE_THICKUNDERLINE		2
-
-#define STYLE_LINESOLID			1
-#define STYLE_LINEDASHED		2
-#define STYLE_LINEDOTTED		3
-
-#define STYLE_LEFTTORIGHT               1
-#define STYLE_RIGHTTOLEFT               2
-
-#define STYLE_BIDINORMAL                1
-#define STYLE_BIDIEMBED                 2
-#define STYLE_BIDIOVERRIDE              3
-
-#define STYLE_BORDERNONE		1
-#define STYLE_BORDERHIDDEN		2
-#define STYLE_BORDERDOTTED		3
-#define STYLE_BORDERDASHED		4
-#define STYLE_BORDERSOLID		5
-#define STYLE_BORDERDOUBLE		6
-#define STYLE_BORDERGROOVE		7
-#define STYLE_BORDERRIDGE		8
-#define STYLE_BORDERINSET		9
-#define STYLE_BORDEROUTSET		10
-
-#define STYLE_HYPHENATE			1
-#define STYLE_NOHYPHENATE		2
-
-#define STYLE_ADJUSTLEFT		1
-#define STYLE_ADJUSTRIGHT		2
-#define STYLE_ADJUSTCENTERED		3
-#define STYLE_ADJUSTJUSTIFY		4
-#define STYLE_ADJUSTLEFTWITHDOTS	5
-
-#define STYLE_INLINE			1
-#define STYLE_BLOCK			2
-
-#define STYLE_DISPLAYUNDEFINED          1
-#define STYLE_DISPLAYINLINE             2
-#define STYLE_DISPLAYBLOCK              3
-#define STYLE_DISPLAYLISTITEM           4
-#define STYLE_DISPLAYRUNIN              5
-#define STYLE_DISPLAYCOMPACT            6
-#define STYLE_DISPLAYMARKER             7
-
-#define STYLE_REALSIZE			1
-#define STYLE_SCALE			2
-#define STYLE_REPEAT			3
-#define STYLE_VREPEAT			4
-#define STYLE_HREPEAT			5
-
-#define STYLE_AUTO			0
-#define STYLE_ALWAYS			1
-#define STYLE_AVOID			2
-#define STYLE_PAGELEFT			3
-#define STYLE_PAGERIGHT			4
-#define STYLE_INHERIT			5
-
-/* keep this in sync with $THOTDIR/config/thot.pattern */
-#define STYLE_PATTERN_NONE		0
-#define STYLE_PATTERN_FOREGROUND	1
-#define STYLE_PATTERN_BACKGROUND	2
-#define STYLE_PATTERN_GRAY0		3
-#define STYLE_PATTERN_GRAY1		4
-#define STYLE_PATTERN_GRAY2		5
-#define STYLE_PATTERN_GRAY3		6
-#define STYLE_PATTERN_GRAY4		7
-#define STYLE_PATTERN_GRAY5		8
-#define STYLE_PATTERN_GRAY6		9
-#define STYLE_PATTERN_GRAY7		10
-#define STYLE_PATTERN_GRAY8		11
-#define STYLE_PATTERN_HORIZ1		12
-#define STYLE_PATTERN_HORIZ2		13
-#define STYLE_PATTERN_HORIZ3		14
-#define STYLE_PATTERN_VERT1		15
-#define STYLE_PATTERN_VERT2		16
-#define STYLE_PATTERN_VERT3		17
-#define STYLE_PATTERN_LEFT1		18
-#define STYLE_PATTERN_LEFT2		19
-#define STYLE_PATTERN_LEFT3		20
-#define STYLE_PATTERN_RIGHT1		21
-#define STYLE_PATTERN_RIGHT2		22
-#define STYLE_PATTERN_RIGHT3		23
-#define STYLE_PATTERN_SQUARE1		24
-#define STYLE_PATTERN_SQUARE2		25
-#define STYLE_PATTERN_SQUARE3		26
-#define STYLE_PATTERN_LOZENGE		27
-#define STYLE_PATTERN_BRICK		28
-#define STYLE_PATTERN_TILE		29
-#define STYLE_PATTERN_SEA		30
-
 typedef void (*SettingsApplyHandler) (Element element,
 				      Document doc,
 				      PresentationSetting setting,
@@ -240,7 +107,7 @@ extern GenericContext TtaGetGenericStyleContext (Document doc);
 /*----------------------------------------------------------------------
   GetSpecificStyleContext : user level function needed to allocate and
   initialize a SpecificContext.
-  ----------------------------------------------------------------------*/
+  ---------------------------------------------------------------------*/
 extern PresentationContext TtaGetSpecificStyleContext (Document doc);
 
 /*----------------------------------------------------------------------

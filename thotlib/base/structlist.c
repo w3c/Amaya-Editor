@@ -285,6 +285,12 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtDisplay:
       fprintf (fileDescriptor, "Display");
       break;
+    case PtFloat:
+      fprintf (fileDescriptor, "Float");
+      break;
+    case PtClear:
+      fprintf (fileDescriptor, "Clear");
+      break;
     case PtBreak1:
       fprintf (fileDescriptor, "NoBr1");
       break;
@@ -2413,197 +2419,226 @@ static void wrsize (PtrPRule pR, FILE *fileDescriptor)
   ----------------------------------------------------------------------*/
 static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 {
-   if (pR->PrPresMode == PresInherit)
-     {
-	wrModeHerit (pR->PrInheritMode, fileDescriptor);
-	if (pR->PrInhDelta == 0 && !pR->PrInhPercent)
-	   fprintf (fileDescriptor, " =");
-	else
-	   fprintf (fileDescriptor, "??????");
-     }
-   else if (pR->PrPresMode == PresImmediate)
-     {
+  if (pR->PrPresMode == PresInherit)
+    {
+      wrModeHerit (pR->PrInheritMode, fileDescriptor);
+      if (pR->PrInhDelta == 0 && !pR->PrInhPercent)
+	fprintf (fileDescriptor, " =");
+      else
+	fprintf (fileDescriptor, "??????");
+    }
+  else if (pR->PrPresMode == PresImmediate)
+    {
       if (pR->PrType == PtFont)
-	 switch (pR->PrChrValue)
-	       {
-		  case 'C':
-		     fprintf (fileDescriptor, "Courrier");
-		     break;
-		  case 'H':
-		     fprintf (fileDescriptor, "Helvetica");
-		     break;
-		  case 'T':
-		     fprintf (fileDescriptor, "Times");
-		     break;
-		  case 'c':
-		     fprintf (fileDescriptor, "courrier");
-		     break;
-		  case 'h':
-		     fprintf (fileDescriptor, "helvetica");
-		     break;
-		  case 't':
-		     fprintf (fileDescriptor, "times");
-		     break;
-		  default:
-		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case 'C':
+	    fprintf (fileDescriptor, "Courrier");
+	    break;
+	  case 'H':
+	    fprintf (fileDescriptor, "Helvetica");
+	    break;
+	  case 'T':
+	    fprintf (fileDescriptor, "Times");
+	    break;
+	  case 'c':
+	    fprintf (fileDescriptor, "courrier");
+	    break;
+	  case 'h':
+	    fprintf (fileDescriptor, "helvetica");
+	    break;
+	  case 't':
+	    fprintf (fileDescriptor, "times");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pR->PrChrValue);
+	    break;
+	  }
       else if (pR->PrType == PtStyle)
-	 switch (pR->PrChrValue)
-	       {
-		  case 'I':
-		     fprintf (fileDescriptor, "Italics");
-		     break;
-		  case 'R':
-		     fprintf (fileDescriptor, "Roman");
-		     break;
-		  case 'O':
-		     fprintf (fileDescriptor, "Oblique");
-		     break;
-		  default:
-		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case 'I':
+	    fprintf (fileDescriptor, "Italics");
+	    break;
+	  case 'R':
+	    fprintf (fileDescriptor, "Roman");
+	    break;
+	  case 'O':
+	    fprintf (fileDescriptor, "Oblique");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pR->PrChrValue);
+	    break;
+	  }
       else if (pR->PrType == PtWeight)
-	 switch (pR->PrChrValue)
-	       {
-		  case 'B':
-		     fprintf (fileDescriptor, "Bold");
-		     break;
-		  case 'N':
-		     fprintf (fileDescriptor, "Normal");
-		     break;
-		  default:
-		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case 'B':
+	    fprintf (fileDescriptor, "Bold");
+	    break;
+	  case 'N':
+	    fprintf (fileDescriptor, "Normal");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pR->PrChrValue);
+	    break;
+	  }
       else if (pR->PrType == PtUnderline)
-	 switch (pR->PrChrValue)
-	       {
-		  case 'N':
-		     fprintf (fileDescriptor, "NoUnderline");
-		     break;
-		  case 'U':
-		     fprintf (fileDescriptor, "Underlined");
-		     break;
-		  case 'O':
-		     fprintf (fileDescriptor, "Overlined");
-		     break;
-		  case 'C':
-		     fprintf (fileDescriptor, "CrossedOut");
-		     break;
-		  default:
-		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case 'N':
+	    fprintf (fileDescriptor, "NoUnderline");
+	    break;
+	  case 'U':
+	    fprintf (fileDescriptor, "Underlined");
+	    break;
+	  case 'O':
+	    fprintf (fileDescriptor, "Overlined");
+	    break;
+	  case 'C':
+	    fprintf (fileDescriptor, "CrossedOut");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pR->PrChrValue);
+	    break;
+	  }
       else if (pR->PrType == PtThickness)
-	 switch (pR->PrChrValue)
-	       {
-		  case 'T':
-		     fprintf (fileDescriptor, "Thick");
-		     break;
-		  case 'N':
-		     fprintf (fileDescriptor, "Thin");
-		     break;
-		  default:
-		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case 'T':
+	    fprintf (fileDescriptor, "Thick");
+	    break;
+	  case 'N':
+	    fprintf (fileDescriptor, "Thin");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pR->PrChrValue);
+	    break;
+	  }
       else if (pR->PrType == PtDirection)
-	 switch (pR->PrChrValue)
-	       {
-		  case 'L':
-		     fprintf (fileDescriptor, "ltr");
-		     break;
-		  case 'R':
-		     fprintf (fileDescriptor, "rtl");
-		     break;
-		  default:
-		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case 'L':
+	    fprintf (fileDescriptor, "ltr");
+	    break;
+	  case 'R':
+	    fprintf (fileDescriptor, "rtl");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pR->PrChrValue);
+	    break;
+	  }
       else if (pR->PrType == PtUnicodeBidi)
-	 switch (pR->PrChrValue)
-	       {
-		  case 'N':
-		     fprintf (fileDescriptor, "normal");
-		     break;
-		  case 'E':
-		     fprintf (fileDescriptor, "embed");
-		     break;
-		  case 'O':
-		     fprintf (fileDescriptor, "override");
-		     break;
-	          default:
-		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case 'N':
+	    fprintf (fileDescriptor, "normal");
+	    break;
+	  case 'E':
+	    fprintf (fileDescriptor, "embed");
+	    break;
+	  case 'O':
+	    fprintf (fileDescriptor, "override");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pR->PrChrValue);
+	    break;
+	  }
       else if (pR->PrType == PtDisplay)
-	 switch (pR->PrChrValue)
-	       {
-		  case 'I':
-		     fprintf (fileDescriptor, "inline");
-		     break;
-		  case 'B':
-		     fprintf (fileDescriptor, "block");
-		     break;
-		  case 'L':
-		     fprintf (fileDescriptor, "listItem");
-		     break;
-		  case 'R':
-		     fprintf (fileDescriptor, "runIn");
-		     break;
-		  case 'C':
-		     fprintf (fileDescriptor, "compact");
-		     break;
-		  case 'M':
-		     fprintf (fileDescriptor, "marker");
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case 'I':
+	    fprintf (fileDescriptor, "inline");
+	    break;
+	  case 'B':
+	    fprintf (fileDescriptor, "block");
+	    break;
+	  case 'L':
+	    fprintf (fileDescriptor, "listItem");
+	    break;
+	  case 'R':
+	    fprintf (fileDescriptor, "runIn");
+	    break;
+	  case 'C':
+	    fprintf (fileDescriptor, "compact");
+	    break;
+	  case 'M':
+	    fprintf (fileDescriptor, "marker");
+	    break;
+	  }
+      else if (pR->PrType == PtFloat)
+	switch (pR->PrChrValue)
+	  {
+	  case 'L':
+	    fprintf (fileDescriptor, "left");
+	    break;
+	  case 'R':
+	    fprintf (fileDescriptor, "right");
+	    break;
+	  case 'N':
+	    fprintf (fileDescriptor, "none");
+	    break;
+	  }
+      else if (pR->PrType == PtClear)
+	switch (pR->PrChrValue)
+	  {
+	  case 'L':
+	    fprintf (fileDescriptor, "left");
+	    break;
+	  case 'R':
+	    fprintf (fileDescriptor, "right");
+	    break;
+	  case 'B':
+	    fprintf (fileDescriptor, "both");
+	    break;
+	  case 'N':
+	    fprintf (fileDescriptor, "none");
+	    break;
+	  }
       else if (pR->PrType == PtLineStyle ||
 	       pR->PrType == PtBorderTopStyle ||
 	       pR->PrType == PtBorderRightStyle ||
 	       pR->PrType == PtBorderBottomStyle ||
 	       pR->PrType == PtBorderLeftStyle)
-	 switch (pR->PrChrValue)
-	       {
-		  case '0':
-		     fprintf (fileDescriptor, "None");
-		     break;
-		  case 'H':
-		     fprintf (fileDescriptor, "Hidden");
-		     break;
-		  case '.':
-		     fprintf (fileDescriptor, "Dotted");
-		     break;
-		  case '-':
-		     fprintf (fileDescriptor, "Dashed");
-		     break;
-		  case 'S':
-		     fprintf (fileDescriptor, "Solid");
-		     break;
-		  case 'D':
-		     fprintf (fileDescriptor, "Double");
-		     break;
-		  case 'G':
-		     fprintf (fileDescriptor, "Groove");
-		     break;
-		  case 'R':
-		     fprintf (fileDescriptor, "Ridge");
-		     break;
-		  case 'I':
-		     fprintf (fileDescriptor, "Inset");
-		     break;
-		  case 'O':
-		     fprintf (fileDescriptor, "Outset");
-		     break;
-	       }
+	switch (pR->PrChrValue)
+	  {
+	  case '0':
+	    fprintf (fileDescriptor, "None");
+	    break;
+	  case 'H':
+	    fprintf (fileDescriptor, "Hidden");
+	    break;
+	  case '.':
+	    fprintf (fileDescriptor, "Dotted");
+	    break;
+	  case '-':
+	    fprintf (fileDescriptor, "Dashed");
+	    break;
+	  case 'S':
+	    fprintf (fileDescriptor, "Solid");
+	    break;
+	  case 'D':
+	    fprintf (fileDescriptor, "Double");
+	    break;
+	  case 'G':
+	    fprintf (fileDescriptor, "Groove");
+	    break;
+	  case 'R':
+	    fprintf (fileDescriptor, "Ridge");
+	    break;
+	  case 'I':
+	    fprintf (fileDescriptor, "Inset");
+	    break;
+	  case 'O':
+	    fprintf (fileDescriptor, "Outset");
+	    break;
+	  }
       else
-	 fprintf (fileDescriptor, "%c", pR->PrChrValue);
+	fprintf (fileDescriptor, "%c", pR->PrChrValue);
     }
-   else
-      fprintf (fileDescriptor, "??????");
-   fprintf (fileDescriptor, ";");
+  else
+    fprintf (fileDescriptor, "??????");
+  fprintf (fileDescriptor, ";");
 }
 
 
@@ -3406,6 +3441,14 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
                     break;
 	         case PtDisplay:
 		    fprintf (fileDescriptor, "Display: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+	         case PtFloat:
+		    fprintf (fileDescriptor, "Float: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+	         case PtClear:
+		    fprintf (fileDescriptor, "Clear: ");
 		    wrfontstyle (RP, fileDescriptor);
 		    break;
 		 case PtBreak1:

@@ -1450,6 +1450,12 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_DISPLAY:
       TypeRP = PtDisplay;
       break;
+    case C_PR_FLOAT:
+      TypeRP = PtFloat;
+      break;
+    case C_PR_CLEAR:
+      TypeRP = PtClear;
+      break;
     case C_PR_VISIBILITY:
       TypeRP = PtVisibility;
       break;
@@ -1566,6 +1572,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtUnicodeBidi:
       case PtLineStyle:
       case PtDisplay:
+      case PtFloat:
+      case PtClear:
       case PtVisibility:
       case PtBorderTopStyle:
       case PtBorderRightStyle:
@@ -1788,6 +1796,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  case PtUnicodeBidi:
 	  case PtLineStyle:
 	  case PtDisplay:
+	  case PtFloat:
+	  case PtClear:
  	  case PtVisibility:
 	  case PtBorderTopStyle:
           case PtBorderRightStyle:

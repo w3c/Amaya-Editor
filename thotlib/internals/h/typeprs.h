@@ -216,7 +216,7 @@ typedef enum
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, 
   PtOpacity, PtFillOpacity, PtStrokeOpacity,
   PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
-  PtXRadius, PtYRadius, PtDisplay,
+  PtXRadius, PtYRadius, PtDisplay, PtFloat, PtClear,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;

@@ -784,10 +784,10 @@ static void TimelineParseCoordAttribute (Attribute attr, Element el, Document do
       ptr = text;
       ptr = TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
-      if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+      if (pval.typed_data.unit != UNIT_INVALID)
 	{
-	  if (pval.typed_data.unit == STYLE_UNIT_BOX)
-	    pval.typed_data.unit = STYLE_UNIT_PX;
+	  if (pval.typed_data.unit == UNIT_BOX)
+	    pval.typed_data.unit = UNIT_PX;
 	  /* decide of the presentation rule to be created or updated */
 	  TtaGiveAttributeType (attr, &attrType, &attrKind);
 	  if (attrType.AttrTypeNum == Timeline_ATTR_x)
@@ -873,7 +873,7 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el, D
 	       TtaGetElementType(child).ElTypeNum != GRAPHICS_UNIT)
 	  TtaNextSibling (&child);
 	pval.typed_data.value = 0;
-	pval.typed_data.unit = STYLE_UNIT_PX;
+	pval.typed_data.unit = UNIT_PX;
 	ctxt->destroy = FALSE;
 	TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
 	ctxt->destroy = TRUE;
@@ -889,10 +889,10 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el, D
       ptr = text;
       ptr = TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
-      if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+      if (pval.typed_data.unit != UNIT_INVALID)
 	{
-	  if (pval.typed_data.unit == STYLE_UNIT_BOX)
-	    pval.typed_data.unit = STYLE_UNIT_PX;
+	  if (pval.typed_data.unit == UNIT_BOX)
+	    pval.typed_data.unit = UNIT_PX;
 	  if (ruleType != PRXRadius && ruleType != PRYRadius)
 	    /* it's not attribute ry or ry for a rectangle */
 	    {

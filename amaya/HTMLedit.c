@@ -2675,7 +2675,7 @@ void AttrColorCreated (NotifyAttribute * event)
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
       HTMLSetBackgroundColor (event->document, event->element, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_background_)
-      HTMLSetBackgroundImage (event->document, event->element, STYLE_REPEAT,
+      HTMLSetBackgroundImage (event->document, event->element, REPEAT,
 			      value, FALSE);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_color ||
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)

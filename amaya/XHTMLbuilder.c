@@ -372,7 +372,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       /* the presentation rule to be set is not a CSS rule */
 	       ctxt->cssSpecificity = 0;
 	       ctxt->destroy = FALSE;
-	       pval.typed_data.unit = STYLE_UNIT_PX;
+	       pval.typed_data.unit = UNIT_PX;
 	       pval.typed_data.value = 0;
 	       pval.typed_data.real = FALSE;
 	       TtaSetStylePresentation (PRVisibility, content, NULL, ctxt, pval);
@@ -1548,7 +1548,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	      if (strlen (attrValue) > MaxMsgLength - 30)
 		attrValue[MaxMsgLength - 30] = EOS;
 	      HTMLSetBackgroundImage (context->doc, context->lastElement,
-				      STYLE_REPEAT, attrValue, FALSE);
+				      REPEAT, attrValue, FALSE);
 	    }
 	  else if (!strcmp (lastMappedAttr->XMLattribute, "bgcolor"))
 	    HTMLSetBackgroundColor (context->doc, context->lastElement,

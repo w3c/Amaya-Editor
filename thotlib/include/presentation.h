@@ -81,9 +81,32 @@ typedef int        *PRule;
 #define PROpacity 67
 #define PRFillOpacity 68
 #define PRStrokeOpacity 69
-#define LAST_PRES_RULE_TYPE 69
+#define PRFloat 70
+#define PRClear 71
+#define LAST_PRES_RULE_TYPE 71
 
-/* values for rules PRBorder*Style */
+
+/*
+ * A bunch of constants describing the most common values for presentation
+ * attributes, like font families, styles, etc ...
+ */
+
+/* Units */
+#define UNIT_INVALID	0	/* invalid unit : for parsing   */
+#define UNIT_REL		1	/* relative : e.g. to font size */
+#define UNIT_PT		2	/* typo points : 1/72 inches    */
+#define UNIT_PC		3	/* typo points : 1/6 inches     */
+#define UNIT_IN		4	/* inches                       */
+#define UNIT_CM		5	/* centimeters                  */
+#define UNIT_MM		6	/* millimeters                  */
+#define UNIT_EM		7	/* defined / size of char m     */
+#define UNIT_PX		8	/* defined in pixels            */
+#define UNIT_PERCENT	9	/* a relative size in percent   */
+#define UNIT_XHEIGHT	10	/* defined / size of x char     */
+#define UNIT_BOX	        11	/* this is a box number         */
+#define VALUE_AUTO        12      /* not a unit: value = auto     */
+
+/* values for rules PRBorderStyle */
 #define BorderStyleNone 1
 #define BorderStyleHidden 2
 #define BorderStyleDotted 3
@@ -94,6 +117,17 @@ typedef int        *PRule;
 #define BorderStyleRidge 8
 #define BorderStyleInset 9
 #define BorderStyleOutset 10
+
+/* values for rules PRFloat */
+#define FloatNone          1
+#define FloatLeft          2
+#define FloatRight	   3
+
+/* values for rules PRClear */
+#define ClearNone          1
+#define ClearLeft          2
+#define ClearRight	   3
+#define ClearBoth	   4
 
 /* values for PRHorizPos and PRVertPos */
 #define PositionTop 1
@@ -118,6 +152,13 @@ typedef int        *PRule;
 #define FontTimes 1
 #define FontHelvetica 2
 #define FontCourier 3
+#define FontOther 4
+
+#define REALSIZE		1
+#define SCALE			2
+#define REPEAT			3
+#define VREPEAT			4
+#define HREPEAT			5
 
 /* values for rule PRUnderline */
 #define NoUnderline 1
@@ -162,6 +203,17 @@ typedef int        *PRule;
 /* values for rule PRHyphenate */
 #define Hyphenation 1
 #define NoHyphenation 2
+
+#define PageAuto			0
+#define PageAlways			1
+#define PageAvoid			2
+#define PageLeft			3
+#define PageRight			4
+#define PageInherit			5
+
+/* keep this in sync with $THOTDIR/config/thot.pattern */
+#define PATTERN_NONE		0
+#define PATTERN_BACKGROUND	2
 
 #ifndef __CEXTRACT__
 

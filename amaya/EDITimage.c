@@ -206,13 +206,13 @@ void CallbackImage (int ref, int typedata, char *data)
 	  else
 	    {
 	      if (RepeatValue == 0)
-		i = STYLE_REPEAT;
+		i = REPEAT;
 	      else if (RepeatValue == 1)
-		i = STYLE_HREPEAT;
+		i = HREPEAT;
 	      else if (RepeatValue == 2)
-		i = STYLE_VREPEAT;
+		i = VREPEAT;
 	      else
-		i = STYLE_SCALE;
+		i = SCALE;
 	      if (IsHTTPPath (DocumentURLs[document]) &&
 		  !IsHTTPPath (LastURLImage))
 		{

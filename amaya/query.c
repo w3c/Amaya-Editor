@@ -3259,7 +3259,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    AHTReqContext      *me;
    CHARSET             charset;
    int                 status;
-   unsigned long       file_size;
+   unsigned long       file_size = 0;
    char               *fileURL;
    char               *etag = NULL;
    HTParentAnchor     *dest_anc_parent;

@@ -360,7 +360,7 @@ static void     CreateEnclosingElement (Element el, ElementType elType, Document
 /*----------------------------------------------------------------------
   SetGraphicDepths forces a depth to each SVG child.
  -----------------------------------------------------------------------*/
-void             SetGraphicDepths (Document doc, Element el)
+void  SetGraphicDepths (Document doc, Element el)
 {
 #ifdef IV
   Element              child;
@@ -384,7 +384,7 @@ void             SetGraphicDepths (Document doc, Element el)
   ctxt->cssSpecificity = 0;
   ctxt->destroy = FALSE;
   pval.typed_data.value = 0; /*TtaGetDepth (el, doc, 1)*/
-  pval.typed_data.unit = STYLE_UNIT_REL;
+  pval.typed_data.unit = UNIT_REL;
   pval.typed_data.real = FALSE;
   child = TtaGetLastChild (el);
   while (child)
@@ -743,7 +743,7 @@ void EvaluateTestAttrs (Element el, Document doc)
   attrType.AttrSSchema = TtaGetElementType (el).ElSSchema;
   ctxt = TtaGetSpecificStyleContext (doc);
   ctxt->cssSpecificity = 0;   /* the presentation rule to be set is not a CSS rule */
-  pval.typed_data.unit = STYLE_UNIT_PX;
+  pval.typed_data.unit = UNIT_PX;
   pval.typed_data.value = 0;
   pval.typed_data.real = FALSE;
   SVGSSchema = TtaGetElementType(el).ElSSchema;
@@ -1622,7 +1622,8 @@ void TranslateElement (Element el, Document doc, int delta, TypeUnit unit,
  Set position, width and height for an element polyline or polygon.
  Change coords of control points accordingly.
  -----------------------------------------------------------------------*/
-void   UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int maxX, int maxY)
+void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
+			   int maxX, int maxY)
 {
    PRule                pRule;
    Element              leaf;
@@ -1639,7 +1640,7 @@ void   UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int m
    /* the specific presentation is not a CSS rule */
    ctxt->cssSpecificity = 0;
    ctxt->destroy = FALSE;
-   pval.typed_data.unit = STYLE_UNIT_PX;
+   pval.typed_data.unit = UNIT_PX;
 
    /* translate all coordinates by (-minX, -minY), both in the Thot
       Graphic leaf element and in the "points" attribute */
@@ -1733,9 +1734,9 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
       ptr = text;
       ptr = TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
-      if (pval.typed_data.unit == STYLE_UNIT_BOX)
-	pval.typed_data.unit = STYLE_UNIT_PX;
-      if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+      if (pval.typed_data.unit == UNIT_BOX)
+	pval.typed_data.unit = UNIT_PX;
+      if (pval.typed_data.unit != UNIT_INVALID)
 	{
 	  /* decide of the presentation rule to be created or updated */
 	  TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -1837,7 +1838,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
 		 TtaGetElementType(child).ElTypeNum != GRAPHICS_UNIT)
 	    TtaNextSibling (&child);
 	  pval.typed_data.value = 0;
-          pval.typed_data.unit = STYLE_UNIT_PX;
+          pval.typed_data.unit = UNIT_PX;
 	  ctxt->destroy = FALSE;
 	  TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
 	  ctxt->destroy = TRUE;
@@ -1853,9 +1854,9 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
       ptr = text;
       ptr = TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
-      if (pval.typed_data.unit == STYLE_UNIT_BOX)
-	pval.typed_data.unit = STYLE_UNIT_PX;
-      if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+      if (pval.typed_data.unit == UNIT_BOX)
+	pval.typed_data.unit = UNIT_PX;
+      if (pval.typed_data.unit != UNIT_INVALID)
 	 {
 	 if (ruleType != PRXRadius && ruleType != PRYRadius)
 	   /* it's not attribute ry or ry for a rectangle */
@@ -1927,38 +1928,38 @@ void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
        if (!strncmp (ptr, "baseline", 8))
 	 {
 	   pval.typed_data.value = 0;
-	   pval.typed_data.unit = STYLE_UNIT_REL;
+	   pval.typed_data.unit = UNIT_REL;
 	   pval.typed_data.real = FALSE;
 	 }
        else if (!strncmp (ptr, "sub", 3))
 	 {
 	   pval.typed_data.value = -3;
-	   pval.typed_data.unit = STYLE_UNIT_REL;
+	   pval.typed_data.unit = UNIT_REL;
 	   pval.typed_data.real = FALSE;
 	 }
        else if (!strncmp (ptr, "super", 5))
 	 {
 	   pval.typed_data.value = 4;
-	   pval.typed_data.unit = STYLE_UNIT_REL;
+	   pval.typed_data.unit = UNIT_REL;
 	   pval.typed_data.real = FALSE;
 	 }
        else if (!strncmp (ptr, "inherit", 7))
 	 {
 	   pval.typed_data.value = 0;
-	   pval.typed_data.unit = STYLE_UNIT_REL;
+	   pval.typed_data.unit = UNIT_REL;
 	   pval.typed_data.real = FALSE;
 	 }
        else
 	 {
 	   /* parse <percentage> or <length> */
 	   ptr = ParseCSSUnit (ptr, &pval);
-	   if (pval.typed_data.unit == STYLE_UNIT_BOX)
-	     pval.typed_data.unit = STYLE_UNIT_EM;
-	   else if (pval.typed_data.unit == STYLE_UNIT_PERCENT)
+	   if (pval.typed_data.unit == UNIT_BOX)
+	     pval.typed_data.unit = UNIT_EM;
+	   else if (pval.typed_data.unit == UNIT_PERCENT)
 	     /* it's a percentage */
 	     {
 	       /* convert it into a relative size */
-	       pval.typed_data.unit = STYLE_UNIT_REL;
+	       pval.typed_data.unit = UNIT_REL;
 	       pval.typed_data.value /= 10;
 	     }
 	 }
@@ -2403,7 +2404,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		     {
 		       ptr++;
 		       pval.typed_data.value = 0;
-		       pval.typed_data.unit = STYLE_UNIT_PX;
+		       pval.typed_data.unit = UNIT_PX;
 		       pval.typed_data.real = FALSE;
 		       ctxt = TtaGetSpecificStyleContext (doc);
 		       ctxt->cssSpecificity = 0; /* this is not a CSS rule */
@@ -2441,7 +2442,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   ptr = TtaSkipBlanks (ptr);
 		   ptr = GetNumber (ptr, &x);
 		   pval.typed_data.value = 0;
-		   pval.typed_data.unit = STYLE_UNIT_PX;
+		   pval.typed_data.unit = UNIT_PX;
 		   pval.typed_data.real = FALSE;
 		   pval.typed_data.value = x;
 		   ctxt = TtaGetSpecificStyleContext (doc);
