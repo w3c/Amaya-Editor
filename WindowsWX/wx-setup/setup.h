@@ -129,7 +129,7 @@
 // Default is 1 if supported by the compiler.
 //
 // Recommended setting: 1, set to 0 if your programs never crash
-#define wxUSE_STACKWALKER 0
+#define wxUSE_STACKWALKER 1
 
 // ----------------------------------------------------------------------------
 // Unicode support
@@ -384,6 +384,9 @@
 
 // Set to 1 to enable virtual Internet filesystem (requires wxUSE_FILESYSTEM)
 #define wxUSE_FS_INET       0
+
+// wxArchive classes for accessing archives such as zip and tar
+#define wxUSE_ARCHIVE_STREAMS     1
 
 // Set to 1 to compile wxZipInput/OutputStream classes.
 #define wxUSE_ZIPSTREAM     1
@@ -1126,21 +1129,6 @@
 //
 // Recommended setting: 1, set to 0 if your programs never crash
 #define wxUSE_CRASHREPORT 1
-
-
-// all of the settings below require SEH support (__try/__catch) and can't work
-// without it
-#if !defined(_MSC_VER) && \
-    (!defined(__BORLANDC__) || __BORLANDC__ < 0x0550)
-    #undef wxUSE_ON_FATAL_EXCEPTION
-    #define wxUSE_ON_FATAL_EXCEPTION 0
-
-    #undef wxUSE_CRASHREPORT
-    #define wxUSE_CRASHREPORT 0
-
-    #undef wxUSE_STACKWALKER
-    #define wxUSE_STACKWALKER 0
-#endif // compiler doesn't support SEH
 
 // ----------------------------------------------------------------------------
 // obsolete settings
