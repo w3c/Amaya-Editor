@@ -3757,7 +3757,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
 
   if (rule == NULL)
     return;
-  if (rule->PrSpecificity != 100 && rule->PrCSSLine == 0)
+  if (rule->PrSpecificity != 200 && rule->PrCSSLine == 0)
     return;
 
   PRuleToPresentationSetting (rule, &setting, pSchP);
@@ -3777,7 +3777,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
       fprintf (fileDescriptor, " ");
       l++;
     }
-  if (rule->PrSpecificity == 100)
+  if (rule->PrSpecificity == 200)
     fprintf (fileDescriptor, " line %d, Style Attribute\n", rule->PrCSSLine);
   else if (rule->PrCSSURL)
     fprintf (fileDescriptor, " line %d, File %s\n", rule->PrCSSLine, rule->PrCSSURL);

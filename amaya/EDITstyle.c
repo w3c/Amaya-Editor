@@ -228,7 +228,7 @@ ThotBool UpdateStyleDelete (NotifyAttribute * event)
       TtaGiveTextAttributeValue (event->attribute, style, &len);
       style[len] = EOS;
       el = event->element;
-      ParseHTMLSpecificStyle (el, style, event->document, 100, TRUE);
+      ParseHTMLSpecificStyle (el, style, event->document, 200, TRUE);
       /* if it's the body element and the style attribute contains some
 	 background properties, the corresponding presentation rules have
 	 to be removed to the (parent) <html> element */
@@ -237,7 +237,7 @@ ThotBool UpdateStyleDelete (NotifyAttribute * event)
 	  strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	{
 	  el = TtaGetParent (el);
-	  ParseHTMLSpecificStyle (el, style, event->document, 100, TRUE);
+	  ParseHTMLSpecificStyle (el, style, event->document, 200, TRUE);
 	}
       TtaFreeMemory (style);
     }
@@ -538,7 +538,7 @@ void UpdateStylePost (NotifyAttribute * event)
 	    el = newParent;
 	    TtaSetElementLineNumber (el, TtaGetElementLineNumber (oldParent));
 	  }
-	ParseHTMLSpecificStyle (el, style, doc, 100, FALSE);
+	ParseHTMLSpecificStyle (el, style, doc, 200, FALSE);
 	if (CSSErrorsFound)
 	  {
 	    /* the CSS parser detected an error */
