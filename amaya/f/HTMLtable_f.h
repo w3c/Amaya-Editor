@@ -30,10 +30,18 @@ extern void TableCreated ( NotifyElement * event );
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement * event );
 extern void RowPasted ( NotifyElement * event );
+extern void ChangeColspan ( Element cell,
+                            int oldspan,
+                            int newspan,
+                            Document doc );
 extern void ColspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterColspan ( NotifyAttribute * event );
 extern void ColspanModified ( NotifyAttribute * event );
 extern void ColspanDeleted ( NotifyAttribute * event );
+extern void ChangeRowspan ( Element cell,
+                            int oldspan,
+                            int newspan,
+                            Document doc );
 extern void RowspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterRowspan ( NotifyAttribute * event );
 extern void RowspanModified ( NotifyAttribute * event );
@@ -65,10 +73,18 @@ extern void TableCreated (/* NotifyElement * event */);
 extern void TablebodyDeleted (/* NotifyElement * event */);
 extern void RowCreated (/* NotifyElement * event */);
 extern void RowPasted (/* NotifyElement * event */);
+extern void ChangeColspan (/* Element cell,
+                              int oldspan,
+                              int newspan,
+                              Document doc */);
 extern void ColspanCreated (/* NotifyAttribute * event */);
 extern ThotBool RegisterColspan (/* NotifyAttribute * event */);
 extern void ColspanModified (/* NotifyAttribute * event */);
 extern void ColspanDeleted (/* NotifyAttribute * event */);
+extern void ChangeRowspan (/* Element cell,
+                              int oldspan,
+                              int newspan,
+                              Document doc */);
 extern void RowspanCreated (/* NotifyAttribute * event */);
 extern ThotBool RegisterRowspan (/* NotifyAttribute * event */);
 extern void RowspanModified (/* NotifyAttribute * event */);

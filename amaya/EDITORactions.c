@@ -1973,54 +1973,30 @@ void ChangeToHeadingCell (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  CellVertExtend
+  GetEnclosingCell
+  Return the table cell element that contains the beginning of the
+  current selection in document doc.
   ----------------------------------------------------------------------*/
-void CellVertExtend (Document doc, View view)
+static Element GetEnclosingCell (Document doc)
 {
-}
-
-/*----------------------------------------------------------------------
-  CellHorizExtend
-  ----------------------------------------------------------------------*/
-void CellHorizExtend (Document doc, View view)
-{
-}
-
-/*----------------------------------------------------------------------
-  CellVertShrink
-  ----------------------------------------------------------------------*/
-void CellVertShrink (Document doc, View view)
-{
-}
-
-/*----------------------------------------------------------------------
-  CellHorizExtend
-  ----------------------------------------------------------------------*/
-void CellHorizShrink (Document doc, View view)
-{
-}
-
-/*----------------------------------------------------------------------
-  SelectRow
-  ----------------------------------------------------------------------*/
-void SelectRow (Document doc, View view)
-{
-  Element             el;
+  Element             el, firstSel, lastSel;
   ElementType         elType;
   char               *s;
-  int                 firstchar, lastchar;
+  int                 firstchar, lastchar, i;
 
   /* get the first selected element */
-  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-  if (el)
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstchar, &i);
+  if (firstSel)
     {
+      el = firstSel;
       elType = TtaGetElementType (el);
       s = TtaGetSSchemaName (elType.ElSSchema);
       while (el &&
-	     (strcmp (s, "HTML") ||
-	      elType.ElTypeNum != HTML_EL_Table_row) &&
 	     (strcmp (s, "MathML") ||
-	      elType.ElTypeNum != MathML_EL_MTR))
+	      elType.ElTypeNum != MathML_EL_MTD) &&
+	     (strcmp (s, "HTML") ||
+	      (elType.ElTypeNum != HTML_EL_Data_cell &&
+	       elType.ElTypeNum != HTML_EL_Heading_cell)))
 	{
 	  el = TtaGetParent (el);
 	  if (el)
@@ -2028,21 +2004,206 @@ void SelectRow (Document doc, View view)
 	      elType = TtaGetElementType (el);
 	      s = TtaGetSSchemaName (elType.ElSSchema);
 	    }
-	  TtaGetSSchemaName (elType.ElSSchema);
 	}
       if (el)
-	TtaSelectElement (doc, el);
+	{
+	  TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastchar);
+	  TtaOpenUndoSequence (doc, firstSel, lastSel, firstchar, lastchar);
+	}
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
+  CellVertExtend
+  Extend the current table cell to the next row.
+  ----------------------------------------------------------------------*/
+void CellVertExtend (Document doc, View view)
+{
+  Element       cell;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+  int           span;
+  ThotBool      inMath;
+
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      elType = TtaGetElementType (cell);
+      inMath = !TtaSameSSchemas (elType.ElSSchema,
+				 TtaGetSSchema ("HTML", doc));
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (inMath)
+	attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+	{
+	  span = TtaGetAttributeValue (attr);
+	  if (span < 1)
+	    span = 1;
+	  TtaRegisterAttributeReplace (attr, cell, doc);
+	  TtaSetAttributeValue (attr, span+1, cell, doc);
+	}
+      else
+	{
+	  span = 1;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (cell, attr, doc);
+	  TtaSetAttributeValue (attr, span+1, cell, doc);
+	  TtaRegisterAttributeCreate (attr, cell, doc);
+	}
+      ChangeRowspan (cell, span, span+1, doc);
+      TtaCloseUndoSequence (doc);
     }
 }
 
 /*----------------------------------------------------------------------
-  CreateRow
+  CellHorizExtend
   ----------------------------------------------------------------------*/
-static void CreateRow (Document doc, View view, ThotBool before)
+void CellHorizExtend (Document doc, View view)
 {
-  Element             el, elNew;
+  Element       cell;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+  int           span;
+  ThotBool      inMath;
+
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      elType = TtaGetElementType (cell);
+      inMath = !TtaSameSSchemas (elType.ElSSchema,
+				 TtaGetSSchema ("HTML", doc));
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (inMath)
+	attrType.AttrTypeNum = MathML_ATTR_columnspan;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_colspan_;
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+	{
+	  span = TtaGetAttributeValue (attr);
+	  if (span < 1)
+	    span = 1;
+	  TtaRegisterAttributeReplace (attr, cell, doc);
+	  TtaSetAttributeValue (attr, span+1, cell, doc);
+	}
+      else
+	{
+	  span = 1;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (cell, attr, doc);
+	  TtaSetAttributeValue (attr, span+1, cell, doc);
+	  TtaRegisterAttributeCreate (attr, cell, doc);
+	}
+      ChangeColspan (cell, span, span+1, doc);
+      TtaCloseUndoSequence (doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  CellVertShrink
+  ----------------------------------------------------------------------*/
+void CellVertShrink (Document doc, View view)
+{
+  Element       cell;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+  int           span;
+  ThotBool      inMath;
+
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      elType = TtaGetElementType (cell);
+      inMath = !TtaSameSSchemas (elType.ElSSchema,
+				 TtaGetSSchema ("HTML", doc));
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (inMath)
+	attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+	{
+	  span = TtaGetAttributeValue (attr);
+	  if (span < 2)
+	    return;
+	  if (span == 2)
+	    {
+	      TtaRegisterAttributeDelete (attr, cell, doc);
+	      TtaRemoveAttribute (cell, attr, doc);
+	    }
+	  else
+	    {
+	      TtaRegisterAttributeReplace (attr, cell, doc);
+	      TtaSetAttributeValue (attr, span-1, cell, doc);
+	    }
+	  ChangeRowspan (cell, span, span-1, doc);
+	}
+      TtaCloseUndoSequence (doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  CellHorizShrink
+  ----------------------------------------------------------------------*/
+void CellHorizShrink (Document doc, View view)
+{
+  Element       cell;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+  int           span;
+  ThotBool      inMath;
+
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      elType = TtaGetElementType (cell);
+      inMath = !TtaSameSSchemas (elType.ElSSchema,
+				 TtaGetSSchema ("HTML", doc));
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (inMath)
+	attrType.AttrTypeNum = MathML_ATTR_columnspan;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_colspan_;
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+	{
+	  span = TtaGetAttributeValue (attr);
+	  if (span < 2)
+	    return;
+	  if (span == 2)
+	    {
+	      TtaRegisterAttributeDelete (attr, cell, doc);
+	      TtaRemoveAttribute (cell, attr, doc);
+	    }
+	  else
+	    {
+	      TtaRegisterAttributeReplace (attr, cell, doc);
+	      TtaSetAttributeValue (attr, span-1, cell, doc);
+	    }
+	  ChangeColspan (cell, span, span-1, doc);
+	}
+      TtaCloseUndoSequence (doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  GetEnclosingRow
+  Return the table row element that contains the beginning of the
+  current selection in document doc.
+  ----------------------------------------------------------------------*/
+static Element GetEnclosingRow (Document doc)
+{
+  Element             el;
   ElementType         elType;
-  NotifyElement       event;
   char               *s;
   int                 firstchar, lastchar;
 
@@ -2065,22 +2226,48 @@ static void CreateRow (Document doc, View view, ThotBool before)
 	      elType = TtaGetElementType (el);
 	      s = TtaGetSSchemaName (elType.ElSSchema);
 	    }
-	  TtaGetSSchemaName (elType.ElSSchema);
 	}
-      if (el)
-	{
-	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-	  elNew = TtaNewTree (doc, elType, "");
-	  if (before)
-	    TtaInsertSibling (elNew, el, TRUE, doc);
-	  else
-	    TtaInsertSibling (elNew, el, FALSE, doc);
-	  TtaRegisterElementCreate (elNew, doc);
-	  event.element = elNew;
-	  event.document = doc;
-	  RowCreated (&event);
-	  TtaCloseUndoSequence (doc);
-	}
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
+  SelectRow
+  ----------------------------------------------------------------------*/
+void SelectRow (Document doc, View view)
+{
+  Element     el;
+
+  el = GetEnclosingRow (doc);
+  if (el)
+    TtaSelectElement (doc, el);
+}
+
+/*----------------------------------------------------------------------
+  CreateRow
+  ----------------------------------------------------------------------*/
+static void CreateRow (Document doc, View view, ThotBool before)
+{
+  Element             el, elNew;
+  ElementType         elType;
+  NotifyElement       event;
+
+  el = GetEnclosingRow (doc);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+      elNew = TtaNewTree (doc, elType, "");
+      if (before)
+	TtaInsertSibling (elNew, el, TRUE, doc);
+      else
+	TtaInsertSibling (elNew, el, FALSE, doc);
+      TtaRegisterElementCreate (elNew, doc);
+      event.element = elNew;
+      event.document = doc;
+      RowCreated (&event);
+      TtaCloseUndoSequence (doc);
+      TtaSelectElement (doc, TtaGetFirstLeaf (elNew));
     }
 }
 

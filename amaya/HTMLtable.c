@@ -344,55 +344,76 @@ static Element NewColumnHead (Element lastcolhead, ThotBool before,
 
 /*----------------------------------------------------------------------
    SetRowExt       Sets the attribute RowExt of cell "cell" in row 
-   "row", according to span. Return the row which is the   
-   bottom of the spanning cell.                            
+   "row", according to span.
   ----------------------------------------------------------------------*/
-static Element SetRowExt (Element cell, Element row, int span, Document doc,
-			  ThotBool inMath)
+static void SetRowExt (Element cell, Element row, int span, Document doc,
+		       ThotBool inMath)
 {
-   Element             spannedrow, nextspannedrow, ret;
+   Element             spannedrow, nextspannedrow;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
+   ThotBool            newAttr;
 
-   spannedrow = row;
-   ret = NULL;
-   while (span > 0 && spannedrow != NULL)
+   elType = TtaGetElementType (row);
+   attrType.AttrSSchema = elType.ElSSchema;
+   if (inMath)
+     attrType.AttrTypeNum = MathML_ATTR_MRowExt;
+   else
+     attrType.AttrTypeNum = HTML_ATTR_RowExt;
+
+   if (span <= 1)
+     /* remove attribute ColExt if it is attached to the cell */
      {
-       nextspannedrow = spannedrow;
-       TtaNextSibling (&nextspannedrow);
-       elType = TtaGetElementType (spannedrow);
-       /* process only Table_row elements */
-       if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
-	   (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
-		       elType.ElTypeNum == MathML_EL_MLABELEDTR)))
+       attr = TtaGetAttribute (cell, attrType);
+       if (attr)
 	 {
-	   if (span == 1 || nextspannedrow == NULL)
-	     if (spannedrow != row)
-	       {
-		 attrType.AttrSSchema = elType.ElSSchema;
-		 if (inMath)
-		   attrType.AttrTypeNum = MathML_ATTR_MRowExt;
-		 else
-		   attrType.AttrTypeNum = HTML_ATTR_RowExt;
-		 attr = TtaGetAttribute (cell, attrType);
-		 if (attr == NULL)
-		   {
-		     attr = TtaNewAttribute (attrType);
-		     if (attr != NULL)
-		       TtaAttachAttribute (cell, attr, doc);
-		   }
-		 if (attr != NULL)
-		   TtaSetAttributeReference (attr, cell, doc, spannedrow, doc);
-		 ret = spannedrow;
-	       }
-	   span--;
+	   TtaRegisterAttributeDelete (attr, cell, doc);
+	   TtaRemoveAttribute (cell, attr, doc);
 	 }
-       spannedrow = nextspannedrow;
      }
-   return ret;
+   else
+     {
+       spannedrow = row;
+       while (span > 0 && spannedrow != NULL)
+	 {
+	   nextspannedrow = spannedrow;
+	   TtaNextSibling (&nextspannedrow);
+	   elType = TtaGetElementType (spannedrow);
+	   /* process only Table_row elements */
+	   if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
+	       (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
+			   elType.ElTypeNum == MathML_EL_MLABELEDTR)))
+	     {
+	       if (span == 1 || nextspannedrow == NULL)
+		 if (spannedrow != row)
+		   {
+		     attr = TtaGetAttribute (cell, attrType);
+		     if (attr == NULL)
+		       {
+			 newAttr = TRUE;
+			 attr = TtaNewAttribute (attrType);
+			 if (attr != NULL)
+			   TtaAttachAttribute (cell, attr, doc);
+		       }
+		     else
+		       newAttr = FALSE;
+		     if (attr)
+		       {
+			 if (!newAttr)
+			   TtaRegisterAttributeReplace (attr, cell, doc);
+			 TtaSetAttributeReference (attr, cell, doc, spannedrow,
+						   doc);
+			 if (newAttr)
+			   TtaRegisterAttributeCreate (attr, cell, doc);
+		       }
+		   }
+	       span--;
+	     }
+	   spannedrow = nextspannedrow;
+	 }
+     }
 }
-
 
 /*----------------------------------------------------------------------
    MaximumRowSpan                                                  
@@ -752,16 +773,19 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	      RelateCellWithColumnHead (cell, colElement[cRef], doc, inMath);
 	      /* is there an attribute rowspan for that cell ? */
 	      attr = TtaGetAttribute (cell, attrTypeVSpan);
-	      if (attr != NULL)
+	      if (attr == NULL)
+		span = 1;
+	      else
 		{
 		span = TtaGetAttributeValue (attr);
 		if (span > 1)
 		  {
 		  /* Set the attribute RowExt if row span > 1*/
 		  colVSpan[cRef] = span - 1;
-		  SetRowExt (cell, row, span, doc, inMath);
 		  }
 		}
+	      SetRowExt (cell, row, span, doc, inMath);
+	      
 	      /* if there an attribute colspan for that cell,
 		 update attribute ColExt */
 	      if (inMath)
@@ -813,12 +837,12 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		      newAttr = FALSE;
 		    if (attr)
 		      {
-			if (newAttr)
-			  TtaRegisterAttributeCreate (attr, cell, doc);
-			TtaSetAttributeReference (attr, cell, doc,
-						  colElement[cRef], doc);
 			if (!newAttr)
 			  TtaRegisterAttributeReplace (attr, cell, doc);
+			TtaSetAttributeReference (attr, cell, doc,
+						  colElement[cRef], doc);
+			if (newAttr)
+			  TtaRegisterAttributeCreate (attr, cell, doc);
 		      }
 		    }
 		  }
@@ -1700,117 +1724,136 @@ void RowPasted (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
-   ChangeColspan                                           
+   MoveCellContents
+   Move all children of element nextCell as siblings of element previous
+   (if it is not NULL) or as children of element cell (if previous is NULL),
+   and delete element nextCell.
+   When returning, previous is the latest element moved.
   ----------------------------------------------------------------------*/
-static void ChangeColspan (Element cell, int oldspan, int newspan,
-			   Document doc)
+static void MoveCellContents (Element nextCell, Element cell,
+			      Element* previous, Document doc, ThotBool inMath)
 {
-   Element             table, nextCell, previous, child, nextChild, next;
-   ElementType         elType, tableType;
-   int                 i;
-   ThotBool            inMath;
+  Element             child, nextChild;
+  ElementType         elType;
 
-   if (cell == NULL)
-      return;
+  TtaRegisterElementDelete (nextCell, doc);
+  if (TtaGetElementVolume (nextCell) == 0)
+    /* empty cell */
+    child = NULL;
+  else
+    {
+      child = TtaGetFirstChild (nextCell);
+      if (inMath)
+	/* get the first element contained in the CellWrapper */
+	child = TtaGetFirstChild (child);
+    }
+  /* move the contents of this cell to the cell whose
+     attribute colspan has changed */
+  while (child)
+    {
+      nextChild = child;  TtaNextSibling (&nextChild);
+      TtaRemoveTree (child, doc);
+      if (!inMath && *previous)
+	/* if it's a pseudo-paragraph, change it into a
+	   paragraph */
+	{
+	  elType = TtaGetElementType (child);
+	  if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	    TtaChangeElementType (child, HTML_EL_Paragraph);
+	}
+      if (*previous)
+	TtaInsertSibling (child, *previous, FALSE, doc);
+      else
+	TtaInsertFirstChild (&child, cell, doc);
+      TtaRegisterElementCreate (child, doc);
+      *previous = child;
+      child = nextChild;
+    }
+  /* delete the cell */
+  TtaDeleteTree (nextCell, doc);
+}
 
-   tableType = TtaGetElementType (cell);
-   inMath = !TtaSameSSchemas (tableType.ElSSchema,
-			      TtaGetSSchema ("HTML", doc));
-   if (inMath)
-     tableType.ElTypeNum = MathML_EL_MTABLE;
-   else
-     tableType.ElTypeNum = HTML_EL_Table;
-   table = TtaGetTypedAncestor (cell, tableType);
+/*----------------------------------------------------------------------
+   ChangeColspan
+   The value of the colspan attribute has changed from oldspan to newspan
+   for the given cell. Add new empty cells (if newspan < oldspan) after
+   element cell or merge the following cells (if oldspan > newspan).
+  ----------------------------------------------------------------------*/
+void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
+{
+  Element             table, nextCell, previous, next;
+  ElementType         elType, tableType;
+  int                 i;
+  ThotBool            inMath;
 
-   if (newspan > oldspan)
-     /* merging cells */
-     {
-       i = 0;
-       nextCell = cell;  TtaNextSibling (&nextCell);
-       previous = TtaGetLastChild (cell);
-       if (inMath)
-	 /* get the last element contained in the CellWrapper */
-	 previous = TtaGetLastChild (previous);
-       while (nextCell && i < newspan - oldspan)
-	 {
-	     next = nextCell; TtaNextSibling (&next);
-	     TtaRegisterElementDelete (nextCell, doc);
-	     elType = TtaGetElementType (nextCell);
-	     if (elType.ElSSchema == tableType.ElSSchema &&
-		 ((inMath && elType.ElTypeNum == MathML_EL_MTD) ||
-		  (!inMath && (elType.ElTypeNum == HTML_EL_Data_cell ||
-			       elType.ElTypeNum == HTML_EL_Heading_cell))))
-	       /* it is a cell */
-	       {
-		 i++;
-		 if (TtaGetElementVolume (nextCell) == 0)
-		   /* empty cell */
-		   child = NULL;
-		 else
-		   {
-		     child = TtaGetFirstChild (nextCell);
-		     if (inMath)
-		       /* get the first element contained in the CellWrapper */
-		       child = TtaGetFirstChild (child);
-		   }
-		 /* move the contents of this cell to the cell whose
-		    attribute colspan has changed */
-		 while (child)
-		   {
-		     nextChild = child;  TtaNextSibling (&nextChild);
-		     TtaRemoveTree (child, doc);
-		     if (!inMath && previous)
-		       /* if it's a pseudo-paragraph, change it into a
-			  paragraph */
-		       {
-			 elType = TtaGetElementType (child);
-			 if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-			   TtaChangeElementType (child, HTML_EL_Paragraph);
-		       }
-		     if (previous)
-		       TtaInsertSibling (child, previous, FALSE, doc);
-		     else
-		       TtaInsertFirstChild (&child, cell, doc);
-		     TtaRegisterElementCreate (child, doc);
-		     previous = child;
-		     child = nextChild;
-		   }
-		 /* delete the cell */
-		 TtaDeleteTree (nextCell, doc);
-	       }
-	     else
-	       /* it is not a cell */
-	       {
-		 TtaRemoveTree (nextCell, doc);
-		 if (previous)
-		   TtaInsertSibling (nextCell, previous, FALSE, doc);
-		 else
-		   TtaInsertFirstChild (&nextCell, cell, doc);
-		 TtaRegisterElementCreate (nextCell, doc);
-		 previous = nextCell;
-	       }
-	     nextCell = next;
-	 }
-     }
-   else if (newspan < oldspan)
-     /* generate empty cells */
-     {
-       previous = cell;
-       for (i = 0; i < oldspan - newspan; i++)
-	 {
-	   elType.ElSSchema = tableType.ElSSchema;
-	   if (inMath)
-	     elType.ElTypeNum = MathML_EL_MTD;
-	   else
-	     elType.ElTypeNum = HTML_EL_Data_cell;
-	   nextCell = TtaNewTree (doc, elType, "");
-	   TtaInsertSibling (nextCell, previous, FALSE, doc);
-	   TtaRegisterElementCreate (nextCell, doc);
-	   previous = next;
-	 }
-     }
-   CheckAllRows (table, doc, FALSE, TRUE);
-   CheckTableAfterCellUpdate = TRUE;
+  if (cell == NULL)
+    return;
+
+  tableType = TtaGetElementType (cell);
+  inMath = !TtaSameSSchemas (tableType.ElSSchema,
+			     TtaGetSSchema ("HTML", doc));
+  if (inMath)
+    tableType.ElTypeNum = MathML_EL_MTABLE;
+  else
+    tableType.ElTypeNum = HTML_EL_Table;
+  table = TtaGetTypedAncestor (cell, tableType);
+
+  if (newspan > oldspan)
+    /* merge with following cells */
+    {
+      i = 0;
+      nextCell = cell;  TtaNextSibling (&nextCell);
+      previous = TtaGetLastChild (cell);
+      if (inMath)
+	/* get the last element contained in the CellWrapper */
+	previous = TtaGetLastChild (previous);
+      while (nextCell && i < newspan - oldspan)
+	{
+	  next = nextCell; TtaNextSibling (&next);
+	  elType = TtaGetElementType (nextCell);
+	  if (elType.ElSSchema == tableType.ElSSchema &&
+	      ((inMath && elType.ElTypeNum == MathML_EL_MTD) ||
+	       (!inMath && (elType.ElTypeNum == HTML_EL_Data_cell ||
+			    elType.ElTypeNum == HTML_EL_Heading_cell))))
+	    /* it is a cell */
+	    {
+	      i++;
+	      MoveCellContents (nextCell, cell, &previous, doc, inMath);
+	    }
+	  else
+	    /* it is not a cell */
+	    {
+	      TtaRegisterElementDelete (nextCell, doc);
+	      TtaRemoveTree (nextCell, doc);
+	      if (previous)
+		TtaInsertSibling (nextCell, previous, FALSE, doc);
+	      else
+		TtaInsertFirstChild (&nextCell, cell, doc);
+	      TtaRegisterElementCreate (nextCell, doc);
+	      previous = nextCell;
+	    }
+	  nextCell = next;
+	}
+    }
+  else if (newspan < oldspan)
+    /* generate empty cells */
+    {
+      previous = cell;
+      for (i = 0; i < oldspan - newspan; i++)
+	{
+	  elType.ElSSchema = tableType.ElSSchema;
+	  if (inMath)
+	    elType.ElTypeNum = MathML_EL_MTD;
+	  else
+	    elType.ElTypeNum = HTML_EL_Data_cell;
+	  nextCell = TtaNewTree (doc, elType, "");
+	  TtaInsertSibling (nextCell, previous, FALSE, doc);
+	  TtaRegisterElementCreate (nextCell, doc);
+	  previous = nextCell;
+	}
+    }
+  CheckAllRows (table, doc, FALSE, TRUE);
+  CheckTableAfterCellUpdate = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1874,28 +1917,120 @@ void ColspanDeleted (NotifyAttribute * event)
 
 /*----------------------------------------------------------------------
    ChangeRowspan
+   The value of the rowspan attribute has changed from oldspan to newspan
+   for the given cell. Add new empty cells (if newspan < oldspan) below
+   element cell or merge the following cells (if oldspan > newspan).
   ----------------------------------------------------------------------*/
-static void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
+void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
 {
-   Element             table;
-   ElementType         elType;
-   ThotBool            inMath;
+  Element             table, row, previous, nextCell, colHead, prevCell,
+                      siblingColhead;
+  ElementType         elType, tableType;
+  AttributeType       attrType;
+  Attribute           attr;
+  Document            refDoc;
+  char                name[50];
+  int                 i;
+  ThotBool            inMath, before;
 
-   if (oldspan == newspan)
-      return;
-   if (cell == NULL)
-      return;
+  if (oldspan == newspan)
+    return;
+  if (cell == NULL)
+    return;
 
-   elType = TtaGetElementType (cell);
-   inMath = !TtaSameSSchemas (elType.ElSSchema,
-			      TtaGetSSchema ("HTML", doc));
-   if (inMath)
-     elType.ElTypeNum = MathML_EL_MTABLE;
-   else
-     elType.ElTypeNum = HTML_EL_Table;
-   table = TtaGetTypedAncestor (cell, elType);
-   CheckAllRows (table, doc, FALSE, TRUE);
-   CheckTableAfterCellUpdate = TRUE;
+  tableType = TtaGetElementType (cell);
+  attrType.AttrSSchema = tableType.ElSSchema;
+  inMath = !TtaSameSSchemas (tableType.ElSSchema,
+			     TtaGetSSchema ("HTML", doc));
+  if (inMath)
+    {
+      tableType.ElTypeNum = MathML_EL_MTABLE;
+      attrType.AttrTypeNum = MathML_ATTR_MRef_column;
+    }
+  else
+    {
+      tableType.ElTypeNum = HTML_EL_Table;
+      attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+    }
+  table = TtaGetTypedAncestor (cell, tableType);
+  row = TtaGetParent (cell);
+
+  /* get current column */
+  attr = TtaGetAttribute (cell, attrType);
+  if (attr)
+    TtaGiveReferenceAttributeValue (attr, &colHead, name, &refDoc);
+  else
+    return;
+
+  i = 0;
+  if (newspan > oldspan)
+    /* merge with following cells */
+    {
+      previous = TtaGetLastChild (cell);
+      if (inMath)
+	/* get the last element contained in the CellWrapper */
+	previous = TtaGetLastChild (previous);
+      while (row && i < newspan)
+	{
+	  elType = TtaGetElementType (row);
+	  if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
+	      (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
+			  elType.ElTypeNum == MathML_EL_MLABELEDTR)))
+	    /* it's a row (skip comments) */
+	    {
+	      i++;
+	      if (i > oldspan)
+		{
+		  nextCell = GetCellFromColumnHead (row, colHead, inMath);
+		  if (nextCell)
+		    MoveCellContents (nextCell, cell, &previous, doc, inMath);
+		}
+	    }
+	  TtaNextSibling (&row);
+	}
+    }
+  else if (newspan < oldspan)
+    /* generate empty cells */
+    {
+      while (row && i < oldspan)
+	{
+	  elType = TtaGetElementType (row);
+	  if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
+	      (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
+			  elType.ElTypeNum == MathML_EL_MLABELEDTR)))
+	    /* it's a row (skip comments) */
+	    {
+	      i++;
+	      if (i > newspan)
+		{
+		  elType.ElSSchema = tableType.ElSSchema;
+		  if (inMath)
+		    elType.ElTypeNum = MathML_EL_MTD;
+		  else
+		    elType.ElTypeNum = HTML_EL_Data_cell;
+		  nextCell = TtaNewTree (doc, elType, "");
+		  siblingColhead = colHead;
+		  TtaPreviousSibling (&siblingColhead);
+		  if (siblingColhead)
+		    before = FALSE;
+		  else
+		    {
+		      before = TRUE;
+		      siblingColhead = colHead;
+		      TtaNextSibling (&siblingColhead);
+		    }
+		  prevCell = GetCloseCellFromColumnHead (row, siblingColhead,
+							 before, inMath);
+		  AddEmptyCellInRow (row, colHead, prevCell, before, doc,
+				     inMath, FALSE);
+		  TtaRegisterElementCreate (nextCell, doc);
+		}
+	    }
+	  TtaNextSibling (&row);
+	}
+    }
+  CheckAllRows (table, doc, FALSE, TRUE);
+  CheckTableAfterCellUpdate = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1909,7 +2044,7 @@ void RowspanCreated (NotifyAttribute * event)
    if (span <= 1)
       /* invalid value */
       TtaRemoveAttribute (event->element, event->attribute, event->document);
-   else
+   else if (event->info != 1)
       ChangeRowspan (event->element, 1, span, event->document);
 }
 
@@ -1939,7 +2074,7 @@ void RowspanModified (NotifyAttribute * event)
    if (span < 1)
       /* invalid value */
       span = 1;
-   if (span != PreviousRowSpan)
+   if (span != PreviousRowSpan && event->info != 1)
       ChangeRowspan (cell, PreviousRowSpan, span, doc);
    if (span <= 1)
       /* invalid value */
@@ -1951,6 +2086,6 @@ void RowspanModified (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 void RowspanDeleted (NotifyAttribute * event)
 {
-   if (PreviousRowSpan > 1)
+   if (PreviousRowSpan > 1 && event->info != 1)
       ChangeRowspan (event->element, PreviousRowSpan, 1, event->document);
 }
