@@ -5,7 +5,8 @@
 #
 
 @VPATHOPT@= @srcdir@
-THOTDIR = @top_srcdir@
+THOTDIR= @top_srcdir@
+ANNOTLIB= $(THOTDIR)/annotlib
 
 include ../Options
 
@@ -25,11 +26,13 @@ libdir = @libdir@
 .c.o :
 	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $< -o $@
 
-all : libAnnot.a
+all : libAnnot
 
 clean :
 	$(RM) libAnnot.a
 	$(RM) *.o
+	$(RM) $(ANNOTLIB)/AnnotP.PRS
+	$(RM) $(ANNOTLIB)/Annot.STR
 
 install :
 
@@ -49,13 +52,34 @@ include .depends
 #									#
 #########################################################################
 
+#
+# Structure schema compilation
+#
+compANNOT: $(ANNOTLIB)/Annot.STR
+$(ANNOTLIB)/Annot.STR : ../../annotlib/Annot.S ../bin/str ../bin/prs ../bin/tra
+	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) Annot ; \
+	$$PRS $(ALL_AMAYA_OPTIONS) AnnotP
+
+#
+# Presentation schemas compilation
+#
+compANNOTP: $(ANNOTLIB)/AnnotP.PRS
+$(ANNOTLIB)/AnnotP.PRS : ../../annotlib/AnnotP.P ../bin/prs
+	PRS=`pwd`/../bin/prs;\
+	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$PRS $(ALL_AMAYA_OPTIONS) AnnotP
+
+amaya_annot_schema: compANNOT compANNOTP
+
 AMAYA_ANNOT_OBJ = \
 	ANNOTevent.o \
 	ANNOTfiles.o \
 	ANNOTlink.o \
 	ANNOTtools.o
 
-libAnnot : libAnnot.a
+libAnnot : amaya_annot_schema libAnnot.a
 
 libAnnot.a : $(AMAYA_ANNOT_OBJ)
 	$(AR) libAnnot.a $(AMAYA_ANNOT_OBJ)

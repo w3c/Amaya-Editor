@@ -1,5 +1,5 @@
 #
-# Makefile.libwww
+# Makefile.annotlib
 # Autoconf Fragment when using annotations
 # Jose Kahan, Sep 1999
 #
@@ -16,7 +16,7 @@ AMAYA_ANNOT_LIBS= ../annotlib/libAnnot.a
 
 AMAYA_ANNOT_EXTRA_LIBS=
 
-AMAYA_ANNOT_SCHEMAS=
+AMAYA_ANNOT_SCHEMAS= ../annotlib/AnnotP ../annotlib/Annot
 
 AMAYA_ANNOT_INSTALL=
 
@@ -26,13 +26,4 @@ annot_force :
 
 amaya_comp_annot :  ../annotlib/libAnnot.a
 ../annotlib/libAnnot.a : annot_force
-	@(cd ../annotlib ; $(MAKE) libAnnot.a)
-
-
-
-
-
-
-
-
-
+	@(cd ../annotlib ; $(MAKE) libAnnot)

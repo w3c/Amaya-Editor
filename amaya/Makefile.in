@@ -41,6 +41,7 @@ libdir = @libdir@
 bindir = @bindir@
 math_schema: $(amaya_math_schema)
 graph_schema: $(amaya_graph_schema)
+annot_schema: $(amaya_annot_schema)
 comp_plugin: $(amaya_comp_plugin)
 comp_annot: $(amaya_comp_annot)
 
@@ -167,7 +168,7 @@ AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
 
 HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
-amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT graph_schema math_schema
+amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT graph_schema math_schema annot_schema
 
 amaya_src :  HTML.h $(AMAYA_SRC)
 
