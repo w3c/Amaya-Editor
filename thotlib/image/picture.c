@@ -2992,7 +2992,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 
   GL_TextureBind (imageDesc, TRUE);
   /*frame or ActiveFrame*/
-  if (strcmp (imageDesc->PicFileName, TtaStrdup (LostPicturePath)) == 0 ||
+  if (strcmp (imageDesc->PicFileName, LostPicturePath) == 0 ||
 	      strcasecmp ("AmayaSrcSyncIndex.gif", imageDesc->PicFileName) == 0)
     AddInPicCache (imageDesc, frame, TRUE); 
   else

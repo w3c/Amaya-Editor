@@ -221,6 +221,7 @@ void SetBadCard (ThotBool badbuffer)
 {
   BadGLCard = badbuffer;
 }
+
 /*----------------------------------------------------------------------
   GetBadCard :  handle video cards that flush backbuffer after each
   buffer swap
@@ -229,6 +230,7 @@ ThotBool GetBadCard ()
 {
   return BadGLCard;
 }
+
 /*----------------------------------------------------------------------
   GL_DrawAll : Really Draws opengl !!
   This Function is called after any event any window receive,
@@ -272,50 +274,43 @@ ThotBool GL_DrawAll ()
 			  glEnable (GL_SCISSOR_TEST);
 			}
 		      else
-			{
-			  current_time = FrameTable[frame].LastTime;
-			}
-		    }	  
+			current_time = FrameTable[frame].LastTime;
+		    }
 		  else
+		    current_time = FrameTable[frame].LastTime;
+
+		  if (FrameTable[frame].DblBuffNeedSwap &&
+		      FrameTable[frame].FrDoc &&
+		      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 		    {
-		      current_time = FrameTable[frame].LastTime;
-		    }  
-		  if (FrameTable[frame].DblBuffNeedSwap)
-		    {
-		      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
-			  != NoComputedDisplay)
+		      if (GL_prepare (frame))
 			{
-			  if (GL_prepare (frame))
+			  if (BadGLCard)
+			    DefClip (frame, -1, -1, -1, -1);
+			  
+			  RedrawFrameBottom (frame, 0, NULL); 
+			  if (was_animation)
 			    {
-			      if (BadGLCard)
-				     DefClip (frame, -1, -1, -1, -1);
-
-			         RedrawFrameBottom (frame, 0, NULL); 
-
-			      if (was_animation)
+			      lastime = current_time - lastime;
+			      if (IS_ZERO(lastime))
 				{
-				  lastime = current_time - lastime;
-				  if (IS_ZERO(lastime))
-				    {
-				      sprintf (out, "t: %2.3f s - %2.0f fps", 
-					       current_time, 
-					       (double) 1 / lastime);
-
-				      i = 0;
-				      TtaSetStatus (FrameTable[frame].FrDoc, 
-						    FrameTable[frame].FrView, 
-						    out, 
-						    NULL);
-				      lastime = current_time;
-				    }
+				  sprintf (out, "t: %2.3f s - %2.0f fps", 
+					   current_time, 
+					   (double) 1 / lastime);
+				  
+				  i = 0;
+				  TtaSetStatus (FrameTable[frame].FrDoc, 
+						FrameTable[frame].FrView, 
+						out, NULL);
+				  lastime = current_time;
 				}
-			      GL_Swap (frame);  
 			    }
-			  GL_Err ();
+			  GL_Swap (frame);  
 			}
+		      GL_Err ();
 		    }
 		}
-	    }	
+	    }
 #ifdef _GTK
 	  if (was_animation)
 	    while (gtk_events_pending ())

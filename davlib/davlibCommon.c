@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.9  2002-07-01 10:34:16  kahan
+ ** Revision 1.10  2003-11-04 13:07:42  vatton
+ ** Fix warnings reported by insure.
+ ** Irene
+ **
+ ** Revision 1.9  2002/07/01 10:34:16  kahan
  ** JK: Enabling/Disabling DAV support by means of the new DAV_Enable
  ** registry entry.
  ** Removed the DAV menu from the standard profile.
@@ -250,24 +254,21 @@ char * DAVCopyFile (char * filename, int size)
   ----------------------------------------------------------------------*/
 BOOL DAVAllowResource (char *davlist, char *url)  
 {
-    HTList * entries = NULL;
-    char *davurls =  NULL;
-    BOOL match = NO;
-    char *host, *rel, *next, *ptr;
+    HTList  *entries = NULL;
+    char    *davurls =  NULL;
+    BOOL     match = NO;
+    char    *host, *rel, *next, *ptr;
 
     host = rel = next = NULL;
-
     if (!(url && *url))
         return NO;
-    
     /* verifies the server list */
     if (davlist && *davlist)
-     {            
+     {
         davurls = TtaStrdup (davlist);          
         ptr = davurls;
         while (ptr && *ptr && !match && (next = HTNextLWSToken (&davurls))!=NULL)
-            match = matchURI (url, next);            
-
+            match = matchURI (url, next);
         davurls = ptr;       
      }
  
@@ -275,24 +276,25 @@ BOOL DAVAllowResource (char *davlist, char *url)
      * verifies if it is in the lock base
      */ 
     if (!match && separateUri (url, DAVFullHostName, &host, &rel)) 
-     {
+      {
         entries = searchLockBase (host, rel);
-        if (entries && !HTList_isEmpty(entries))
-            match = YES;
-     }   
+        if (entries && !HTList_isEmpty (entries))
+	  match = YES;
+      }
 
     /* free everything */
     if (davurls)
-        TtaFreeMemory (davurls);
-    if (entries) {
+      TtaFreeMemory (davurls);
+    if (entries)
+      {
         while ((next = (char *) HTList_nextObject (entries)))
-            HT_FREE (next);
+	  HT_FREE (next);
         HT_FREE (entries);
-    }
-
+      }
+    if (rel)
+      HT_FREE (rel);
     return match;
 }
-
 
 
 /*----------------------------------------------------------------------

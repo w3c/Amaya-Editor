@@ -1552,7 +1552,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   int                 i;
   int                 ncolors, cpp;
 #ifdef _GL
-  unsigned char *ptr;
+  unsigned char      *ptr, *cols;
   int   x,y;
 #endif /*_GL*/
 
@@ -1608,11 +1608,12 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     return ((Drawable) NULL);	
 
 #ifdef _GL
-  ptr = TtaGetMemory (w * h * 4);
+  cols = TtaGetMemory (w * h * 4);
+  ptr = cols;
   y = h;
   while (y--)
     {
-      buffer2 = buffer + y*w;
+      buffer2 = buffer + y * w;
       for (x = 0; x < w; x++)
 	{		
 	  i = *buffer2++;
@@ -1630,9 +1631,8 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	    }
 	}
     }
-  ptr -= w*h*4;
   TtaFreeMemory (buffer);
-  buffer = ptr;
+  buffer = cols;
   pixmap = (Pixmap) buffer;
 #else /* _GL */
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE, FALSE);

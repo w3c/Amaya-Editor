@@ -644,8 +644,6 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
     
     /* make a copy of URI to change it */
     StrAllocCopy (address, URI);
-    StrAllocCopy (fqdn, localFQDN);
-
     /* we search these pointer positions :
      *  address ->  http://host.domaine:port/relative 
      *                     ^   ^        ^   ^
@@ -653,20 +651,21 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
      *                   host dom     port rel
      */                 
     host = HTStrCaseStr (address, "://");
-    status = (host)?YES:NO;
-    host = (host)?host+3:host;
-
-    port = (status)?HTStrCaseStr(host,":"):NULL;
-    rel  = (status)?HTStrCaseStr(host,"/"):NULL;
+    status = (host) ? YES:NO;
+    host = (host) ? host+3:host;
+    port = (status) ? HTStrCaseStr (host, ":"):NULL;
+    rel  = (status) ? HTStrCaseStr (host, "/"):NULL;
     
     /* if port is pointing for somewhere after the first "/" (rel),
      * so it's not indicating the port number */
-    if (port && rel && port>rel) port = NULL;
-    
+    if (port && rel && port>rel)
+      port = NULL;
     /* if we didn't find the positions, return NO */
-    if (status==NO) return NO;
-
-
+    if (status == NO)
+      {
+	HT_FREE (address);
+	return NO;
+      }
     /* copy the ":port_number" from port to pnumber */
     for (i=0; port && *(port+i) && *(port+i)!='/'; i++) 
         pnumber[i]=*(port+i);
@@ -680,10 +679,10 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
     
     /* copy the relativeURI in "rel" to relUri, or
      * define it as "/" */
-    if (rel) StrAllocCopy (relUri,rel);
-    else StrAllocCopy (relUri,"/");
-
-
+    if (rel)
+      StrAllocCopy (relUri, rel);
+    else
+      StrAllocCopy (relUri, "/");
     /* end the host string at the port number or at 
      * the relative URI part */
     if (port)
@@ -692,10 +691,7 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
         port++;
      }
     else if (rel) 
-     {
-        (*rel) = '\0';
-     }
-
+      (*rel) = '\0';
     /* try to find the domain name in the host */
     StrAllocCopy (filename, host);
     dom = HTStrCaseStr (host, ".");
@@ -704,11 +700,13 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
      {
         /* if it isn't localhost, then we try to set the domain 
          * name looking at the local domain name in localFQDN */ 
-        if (strcasecomp(host,"localhost")!=0) 
+       StrAllocCopy (fqdn, localFQDN);
+        if (strcasecomp (host,"localhost") != 0) 
          {
-            dom = HTStrCaseStr (fqdn,".");
+            dom = HTStrCaseStr (fqdn, ".");
             if (dom) 
-	      StrAllocCat(filename, dom);
+	      StrAllocCat (filename, dom);
+            HT_FREE (fqdn);
          }
         else
          {/* if it is localhost, use FQDN insteed */
@@ -724,7 +722,7 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
     /* returning */
     (*hostname) = filename;
     (*relative) = relUri;
-    HT_FREE(address);
+    HT_FREE (address);
     return status;
 }
 

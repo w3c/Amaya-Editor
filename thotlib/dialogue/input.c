@@ -638,7 +638,10 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 	}
     }
 #endif /* _I18N_ */
-  value = (unsigned char) event->string[0];
+  if (event->string)
+    value = (unsigned char) event->string[0];
+  else
+    value = EOS;
   ThotInput (frame, (unsigned int)value, 0, PicMask, key);
   gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
   return TRUE;

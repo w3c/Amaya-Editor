@@ -925,55 +925,56 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
    UpdateSRCattribute  creates or updates the SRC attribute value	
    		when the contents of element IMG is set.		
   ----------------------------------------------------------------------*/
-void UpdateSRCattribute (NotifyElement *event)
+void UpdateSRCattribute (NotifyOnTarget *event)
 {
   AttributeType    attrType;
   Attribute        attr;
   Element          elSRC, el;
+  ElementType        elType;
   Document         doc;
   char*            text;
   char*            pathimage;
   char*            tmp;
   ThotBool         newAttr;
 
-   el = event->element;
-   doc = event->document;
+  el = event->element;
+  doc = event->document;
+  elType = TtaGetElementType (el);
+  /* if it's not an HTML picture (it could be an SVG image for instance),
+     ignore */
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    return;
 
-   /* if it's not an HTML picture (it could be an SVG image for instance),
-      ignore */
-   if (strcmp(TtaGetSSchemaName (event->elementType.ElSSchema), "HTML"))
-     return;
-
-   /* Select an image name */
-   text = GetImageURL (doc, 1);
-   if (text == NULL || text[0] == EOS)
-     /* The user has cancelled */
-     {
-       if (CreateNewImage)
-	 /* We were creating a new image. Delete the empty PICTURE element */
-	 TtaDeleteTree (el, doc);
-       return;
-     }
-   elSRC = TtaGetParent (el);
-   if (elSRC != NULL)
-      elSRC = el;
-   /* add the ALT attribute */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_ALT;
-   attr = TtaGetAttribute (elSRC, attrType);
-   if (attr == 0)
-     {
-       newAttr = TRUE;
-       attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (elSRC, attr, doc);
-     }
-   else
-     {
-       newAttr = FALSE;
-       if (!CreateNewImage)
-	 /* we are just updating attributes. Register the change */
-	 TtaRegisterAttributeReplace (attr, elSRC, doc);
-     }
+  /* Select an image name */
+  text = GetImageURL (doc, 1);
+  if (text == NULL || text[0] == EOS)
+    /* The user has cancelled */
+    {
+      if (CreateNewImage)
+	/* We were creating a new image. Delete the empty PICTURE element */
+	TtaDeleteTree (el, doc);
+      return;
+    }
+  elSRC = TtaGetParent (el);
+  if (elSRC != NULL)
+    elSRC = el;
+  /* add the ALT attribute */
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrTypeNum = HTML_ATTR_ALT;
+  attr = TtaGetAttribute (elSRC, attrType);
+  if (attr == 0)
+    {
+      newAttr = TRUE;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (elSRC, attr, doc);
+    }
+  else
+    {
+      newAttr = FALSE;
+      if (!CreateNewImage)
+	/* we are just updating attributes. Register the change */
+	TtaRegisterAttributeReplace (attr, elSRC, doc);
+    }
    /* copy image name in ALT attribute */
    if (ImgAlt[0] == EOS)
      {

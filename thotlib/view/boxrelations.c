@@ -1973,6 +1973,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			  pDimAb->DimAbRef = NULL;
 			  pDimAb->DimValue = -1;
 			  pDimAb->DimUnit = UnRelative;
+			  val = pBox->BxH;
 			}
 		      else if (pDimAb->DimUnit == UnPercent)
 			{
