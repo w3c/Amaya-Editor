@@ -1690,7 +1690,6 @@ RULES
 #endif
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
-	PaddingBottom: 2 cm;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
@@ -1746,6 +1745,7 @@ RULES
 	if not within NOFRAMES BEGIN
 	        MarginLeft: 0.5;
 	        MarginRight: 0.5;
+	        MarginBottom: 2 cm;
 		VertPos: Top = Previous AnyElem . Bottom;
 		END;
 	if within NOFRAMES BEGIN
