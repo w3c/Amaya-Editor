@@ -19,8 +19,7 @@ TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
 
 cd $THOTDIR
-rm solaris2 LINUX-ELF
-ln -s solaris-www solaris2
+rm LINUX-ELF
 ln -s LINUX-ELF-www LINUX-ELF
 cd ..
 
