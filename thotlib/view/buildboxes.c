@@ -19,7 +19,6 @@
  *
  * Authors: I. Vatton (INRIA)
  *          C. Roisin (INRIA) - Columns and pages
- *          R. Guetari (INRIA) - Plugins
  *
  */
 
@@ -659,10 +658,10 @@ int                *height;
 		else if (pFirstAb->AbBox->BxType == BoGhost)
 		   /* On descend dans la hierarchie */
 		   pFirstAb = pFirstAb->AbFirstEnclosed;
-	     /* Sinon c'est la boite du pave */
 		else
 		  {
-		     pBox = pFirstAb->AbBox;
+		    /* Sinon c'est la boite du pave */
+		    pBox = pFirstAb->AbBox;
 		     still = FALSE;
 		  }
 
@@ -712,7 +711,7 @@ int                *height;
 	     else
 		*width = pCurrentBox->BxWidth;
 	  }
-     }				/* FnLine */
+     }
    /* La boite est une composition geometrique */
    else
      {
@@ -2346,6 +2345,7 @@ boolean             horizRef;
    /* Faut-il creer un nouveau bloc de relations ? */
    if (toCreate)
      {
+        i = 0;
 	GetDimBlock (&pDimRel);
 	if (pPreviousDimRel == NULL)
 	   DifferedPackBlocks = pDimRel;
@@ -2379,17 +2379,17 @@ int                 frame;
    while (pDimRel != NULL)
      {
 	/* On traite toutes les boites enregistrees */
-	i = 1;
-	while (i <= MAX_RELAT_DIM)
+	i = 0;
+	while (i < MAX_RELAT_DIM)
 	  {
-	     if (pDimRel->DimRTable[i - 1] == NULL)
+	     if (pDimRel->DimRTable[i] == NULL)
 		i = MAX_RELAT_DIM;
-	     else if (pDimRel->DimRTable[i - 1]->BxAbstractBox == NULL)
+	     else if (pDimRel->DimRTable[i]->BxAbstractBox == NULL)
 		;		/* le pave n'existe plus */
-	     else if (pDimRel->DimRSame[i - 1])
-		WidthPack (pDimRel->DimRTable[i - 1]->BxAbstractBox, NULL, frame);
+	     else if (pDimRel->DimRSame[i])
+		WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
 	     else
-		HeightPack (pDimRel->DimRTable[i - 1]->BxAbstractBox, NULL, frame);
+		HeightPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
 	     /* Entree suivante */
 	     i++;
 	  }
