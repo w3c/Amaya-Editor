@@ -317,14 +317,19 @@ static void WIN_AnnotFilterNewSelector (Document doc, CHAR_T *entries, int nb_en
 #ifdef __STDC__
 static void BuildAnnotFilterSelector (Document doc, SelType selector)
 #else
-static void BuildAnnotFilterSelector (doc)
+static void BuildAnnotFilterSelector (doc, selector)
 Document doc;
+SelType  selector;
 #endif /* __STDC__ */
 {
   int                   nb_entries;
   int                   i;
   List                  *list_item;
   AnnotFilterData       *filter;
+  CHAR_T                *name;
+  CHAR_T                 status_char;
+  int                    status;
+	   
 
    /* count and copy the entries that we're interested in */
   switch (selector)
@@ -339,6 +344,7 @@ Document doc;
       list_item = AnnotMetaData[doc].servers;
       break;
     }
+
   nb_entries = 0;
   ustrcpy (s, TEXT(""));
   i = 0;
@@ -347,15 +353,31 @@ Document doc;
        filter = (AnnotFilterData *) list_item->object;
        if (filter)
 	 {
-	   CHAR_T *name;
+	   /* do we need to show it? */
+	   /* we have a type (or name)... now search all the
+	      annotations for this type and see if it must be shown */
+	   status = AnnotFilter_status (doc, selector, filter->object);
+	   
+	   switch (status)
+	     {
+	     case 2: /* partial */
+	       status_char = TEXT('-');
+	       break;
+
+	     case 1: /* show */
+	       status_char = TEXT(' ');
+	       break;
+
+	     case 0: /* hide */
+	       status_char = TEXT('*');
+	       break;
+	     }
 	   if (selector == BY_TYPE)
 	     name = ANNOT_GetLabel (&annot_schema_list,
 				    (RDFResourceP) filter->object);
 	   else
 	     name = (CHAR_T *) filter->object;
-	   usprintf (&s[i], TEXT("%c%s"), 
-		     (filter->show) ? TEXT(' ') : TEXT('*'),
-		     name);
+	   usprintf (&s[i], TEXT("%c%s"), status_char, name);
 	   i += ustrlen (&s[i]) + 1;
 	   nb_entries++;
 	 }
@@ -406,6 +428,8 @@ ThotBool show;
   Attribute           attr;
   AttributeType       attrType;
 
+  DisplayMode         dispMode;
+
   if (AnnotSelItem[0] == WC_EOS)
     return;
 
@@ -446,21 +470,13 @@ ThotBool show;
       list_item = list_item->next;
     }
 
-  /* then redraw the selector */
-  BuildAnnotFilterSelector (doc, selector);
-  /* update the selector text */
-  if (show)
-    AnnotSelItem[0] = TEXT(' ');
-  else
-    AnnotSelItem[0] = TEXT('*');
-#ifndef _WINDOWS
-  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, AnnotSelItem);
-#endif /* _WINDOWS */
-
-  /* and show/hide it on the document :) */
+  /* show/hide it on the document :) */
 
   /* avoid refreshing the document while we're constructing it */
-  TtaSetDisplayMode (doc, NoComputedDisplay);
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, NoComputedDisplay);
+
   /* initialize */
   el = TtaGetMainRoot (doc);
   elType.ElSSchema = XLinkSchema;
@@ -511,7 +527,10 @@ ThotBool show;
 	{
 	  /* erase the attribute */
 	  if (attr)
-	    TtaRemoveAttribute (el, attr, doc);  
+	    {
+	      TtaRemoveAttribute (el, attr, doc);  
+	      annot->is_visible = TRUE;
+	    }
 	}
       else
 	{
@@ -520,50 +539,24 @@ ThotBool show;
 	    {
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (el, attr, doc);  
+	      annot->is_visible = FALSE;
 	    }
 	}
     }
   /* show the document */
-  TtaSetDisplayMode (doc, DisplayImmediately);
-}
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 
-/*---------------------------------------------------------------
-  ChangeAllAnnotVisibility
-------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ChangeAllAnnotVisibility (Document doc, SelType selector, ThotBool show)
-#else
-static void ChangeAllAnnotVisibility (doc, selector, show)
-Document doc;
-SelType selector;
-ThotBool show;
-
-#endif /* __STDC__ */
-{
-  List *list_item;
-  AnnotFilterData *filter;
-
-  /* change the filter metadata first */
-  switch (selector)
-    {
-    case BY_AUTHOR:
-      list_item = AnnotMetaData[doc].authors;
-      break;
-    case BY_TYPE:
-      list_item = AnnotMetaData[doc].types;
-      break;
-    case BY_SERVER:
-      list_item = AnnotMetaData[doc].servers;
-      break;
-    }
-  
-  while (list_item)
-    {
-      filter = (AnnotFilterData *) list_item->object;
-      if (filter)
-	filter->show = show;
-      list_item = list_item->next;
-    }
+  /* finally, redraw the selector */
+  BuildAnnotFilterSelector (doc, selector);
+  /* update the selector text */
+  if (show)
+    AnnotSelItem[0] = TEXT(' ');
+  else
+    AnnotSelItem[0] = TEXT(' ');
+#ifndef _WINDOWS
+  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, AnnotSelItem);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -580,36 +573,45 @@ View view;
 ThotBool show;
 #endif /* __STDC__ */
 {
-  ElementType elType;
-  Element     el;
+  ElementType         elType;
+  Element             el;
   Attribute           attr;
   AttributeType       attrType;
   SSchema             XLinkSchema;
+  DisplayMode         dispMode;
+  List                *list_item;
+  AnnotMeta           *annot;
 
   XLinkSchema = TtaGetSSchema (TEXT("XLink"), document);
   if (!XLinkSchema)
     /* there are no xlinks in this document */
     return;
 
-  /* change the selectors */
-  ChangeAllAnnotVisibility (document, BY_AUTHOR, show);
-  ChangeAllAnnotVisibility (document, BY_TYPE, show);
-  ChangeAllAnnotVisibility (document, BY_SERVER, show);
+  /* change the filter's visibility status */
+  AnnotFilter_toggleAll (document, BY_AUTHOR, show);
+  AnnotFilter_toggleAll (document, BY_TYPE, show);
+  AnnotFilter_toggleAll (document, BY_SERVER, show);
 
-  /* and redisplay the current selector */
-  BuildAnnotFilterSelector (document, AnnotSelType);
-  /* and clear the selector text */
-  AnnotSelItem[0] = WC_EOS;
-#ifndef _WINDOWS
-  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
-#endif /* !_WINDOWS */
+  /*
+   * Change the annotations metadata for the document
+   */
+
+  list_item = AnnotMetaData[document].annotations;
+  for (; list_item; list_item = list_item->next)
+    {
+      AnnotMeta *annot = list_item->object;
+      if (annot && !(annot->is_orphan))
+	annot->is_visible = show;
+    }
 
   /*
    * Do the visible change on the document
    */
 
   /* avoid refreshing the document while we're constructing it */
-  TtaSetDisplayMode (document, NoComputedDisplay);
+  dispMode = TtaGetDisplayMode (document);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (document, NoComputedDisplay);
 
   /* initialize */
   el = TtaGetMainRoot (document);
@@ -626,7 +628,7 @@ ThotBool show;
 	{
 	  /* erase the attribute */
 	  if (attr)
-	    TtaRemoveAttribute (el, attr, document);  
+	      TtaRemoveAttribute (el, attr, document);  
 	}
       else
 	{
@@ -640,7 +642,16 @@ ThotBool show;
     }
 
   /* show the document */
-  TtaSetDisplayMode (document, DisplayImmediately);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (document, dispMode);
+
+  /* redisplay the current selector */
+  BuildAnnotFilterSelector (document, AnnotSelType);
+  /* and clear the selector text */
+  AnnotSelItem[0] = WC_EOS;
+#ifndef _WINDOWS
+  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
+#endif /* !_WINDOWS */
 }
 
 #ifdef _WINDOWS
@@ -672,103 +683,102 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOWALL), "Show all");
 	  SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDEALL), "Hide all");
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-	  /* display the by author items */
+      /* display the by author items */
       BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
-  	  /* select the by author radio button */
-	  i = CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYAUTHOR, IDC_FILTERBYAUTHOR);
-    break;
-    
+      /* select the by author radio button */
+      i = CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYAUTHOR, IDC_FILTERBYAUTHOR);
+      break;
+      
     case WM_CLOSE:
     case WM_DESTROY:
-	  FilterHwnd = NULL;
-	  /* the filter select window is destroyed automatically when we kill
-		  the parent window */
+      FilterHwnd = NULL;
+      /* the filter select window is destroyed automatically when we kill
+	 the parent window */
       EndDialog (hwnDlg, ID_DONE);
       break;
 
     case WM_COMMAND:
 
     switch (LOWORD (wParam))
-	{
-
+      {
 	/* list box (filter select) */
-	case IDC_FILTERSEL:
-	  if (HIWORD (wParam) == LBN_SELCHANGE)
-	    {
-		  /* get the index of the selected item */
-	      itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-				LB_GETCURSEL, 0, 0);
-		  /* get the text of this item */
-	      SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+      case IDC_FILTERSEL:
+	if (HIWORD (wParam) == LBN_SELCHANGE)
+	  {
+	    /* get the index of the selected item */
+	    itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+					    LB_GETCURSEL, 0, 0);
+	    /* get the text of this item */
+	    SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
 				LB_GETTEXT, itemIndex, (LPARAM) AnnotSelItem);
-		  break;
+	    break;
 	  }
-		break;
-
-	  /* radio buttons */
-	case IDC_FILTERBYAUTHOR:
-	  if (AnnotSelType != 0)
+	break;
+	
+	/* radio buttons */
+      case IDC_FILTERBYAUTHOR:
+	if (AnnotSelType != 0)
 	  {
 	    AnnotSelType = 0;
-		CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYAUTHOR);
-        BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+	    CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYAUTHOR);
+	    BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
 	  }
-	  break;
-
-	case IDC_FILTERBYTYPE:
-	  if (AnnotSelType != 1)
+	break;
+	
+      case IDC_FILTERBYTYPE:
+	if (AnnotSelType != 1)
 	  {
 	    AnnotSelType = 1;
-		CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYTYPE);
-        BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+	    CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYTYPE);
+	    BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
 	  }
-	  break;
-
-	case IDC_FILTERBYSERVER:
+	break;
+	
+      case IDC_FILTERBYSERVER:
 	if (AnnotSelType != 2)
-	{
-	  AnnotSelType = 2;
-	  CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYSERVER);
-	  BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
-	}
-	  break;
+	  {
+	    AnnotSelType = 2;
+	    CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYSERVER);
+	    BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+	  }
+	break;
+	
+	/* action buttons */
+      case ID_ANNOTSHOW:
+	/* memorize the last selection */
+	itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+					LB_GETCURSEL, 0, 0);
+	ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+			       AnnotSelItem, TRUE);
+	/* select it again (as the selection gets deselected automatically */
+	SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+			    LB_SETCURSEL, itemIndex, 0);
+	break;
+	
+      case ID_ANNOTHIDE:
+	/* memorize the last selection */
+	itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+					LB_GETCURSEL, 0, 0);
+	ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+			       AnnotSelItem, FALSE);
+	/* select it again (as the selection gets deselected automatically */
+	SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+			    LB_SETCURSEL, itemIndex, 0);
+	break;
 
-	 /* action buttons */
-	case ID_ANNOTSHOW:
-	  /* memorize the last selection */
-	  itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-	 			  LB_GETCURSEL, 0, 0);
-	  ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
-				 AnnotSelItem, TRUE);
-		/* select it again (as the selection gets deselected automatically */
-	  SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-			LB_SETCURSEL, itemIndex, 0);
-	  break;
-	  
-	case ID_ANNOTHIDE:
-	  /* memorize the last selection */
-	  itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-	 			  LB_GETCURSEL, 0, 0);
-	  ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
-				 AnnotSelItem, FALSE);
-		/* select it again (as the selection gets deselected automatically */
-	  SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-			LB_SETCURSEL, itemIndex, 0);
-	  break;
-
-	case ID_ANNOTSHOWALL:
-	  DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
-	  break;
-
-	case ID_ANNOTHIDEALL:
-	  DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
-	  break;
-
-	case ID_DONE:
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	}
-	break;	     
+      case ID_ANNOTSHOWALL:
+	DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
+	break;
+	
+      case ID_ANNOTHIDEALL:
+	DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
+	break;
+	
+      case ID_DONE:
+	EndDialog (hwnDlg, ID_DONE);
+	break;
+      }
+    break;	     
     default: return FALSE;
     }
   return TRUE;
@@ -875,6 +885,10 @@ View                view;
   int              i;
 #endif /* !_WINDOWS */
 
+  /* build the filter structures from the downloaded 
+     annotation info */
+  AnnotFilter_build (document);
+
 #ifndef _WINDOWS
   /* initialize the base if it hasn't yet been done */
   if (AnnotFilterBase == 0)
@@ -957,83 +971,8 @@ View                view;
  **  AnnotTypes menu
  ***************************************************/
 
-#if 0
 /*---------------------------------------------------------------
   BuildAnnotTypesSelector
-  builds the list showing the different annotation types
-------------------------------------------------------------------*/
-#ifdef __STDC__
-static void BuildAnnotTypesSelector (void)
-#else
-static void BuildAnnotTypesSelector ()
-#endif /* __STDC__ */
-{
-  int                   nb_entries;
-  int                   i;
-  RDFClassP		annotClass;
-
-  nb_entries = 0;
-  if (typesList)
-    List_delAll (&typesList, List_delCharObj);
-  ustrcpy (s, TEXT(""));
-  i = 0;
-
-  annotClass = ANNOTATION_CLASS;
-
-  if (annotClass && annotClass->class)
-    {
-      List *item = annotClass->class->subClasses;
-
-      if (item)
-	{
-	  for (; item; item=item->next)
-	    {
-	      RDFClassP subType = (RDFClassP)item->object;
-	      TypeSelector *t = (TypeSelector *) TtaGetMemory (sizeof(TypeSelector));
-
-	      t->type = subType;
-	      t->name = ANNOT_GetLabel(&annot_schema_list, subType);
-	      List_add (&typesList, (void *) t);
-
-	      ustrcpy (&s[i], t->name);
-	      i += ustrlen (&s[i]);
-	      s[i] = WC_EOS;
-	      i++;
-	      nb_entries++;
-	    }
-	}
-      else
-	{
-	  TypeSelector *t = (TypeSelector*)TtaGetMemory (sizeof(TypeSelector));
-
-	  t->type = annotClass;
-	  t->name = ANNOT_GetLabel(&annot_schema_list, annotClass);
-	  List_add (&typesList, (void *) t);
-
-	  ustrcpy (s, t->name);
-	  i = ustrlen (s);
-	  s[i] = WC_EOS;
-	  nb_entries = 1;
-	}
-    }
-
-#ifndef _WINDOWS
-   /* Fill in the form  */
-  TtaNewSelector (AnnotTypesBase + mAnnotTypesSel,
-		  AnnotTypesBase + AnnotTypesMenu,
-		  NULL,
-		  nb_entries,
-		  s,
-		  (nb_entries > 5) ? 5 : nb_entries,
-		  NULL,
-		  TRUE,
-		  TRUE);
-#endif /* !_WINDOWS */
-}
-#endif 
-
-/*---------------------------------------------------------------
-  BuildAnnotTypesSelector2
   builds the list showing the different annotation types.
   Returns the number of entries in the menu.
 ------------------------------------------------------------------*/
@@ -1097,114 +1036,6 @@ Document doc;
   
   return nb_entries;
 }
-
-/*----------------------------------------------------------------------
-   callback of the AnnotTypes menu
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AnnotTypesCallbackDialog (int ref, int typedata, CHAR_T * data)
-#else
-static void         AnnotTypesCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-CHAR_T             *data;
-#endif /* __STDC__ */
-{
-  int val;
-
-  if (ref == -1)
-    {
-      /* removes the AnnotTypes conf menu */
-      TtaDestroyDialogue (AnnotTypesBase + AnnotTypesMenu);
-    }
-  else
-    {
-      /* has the user changed the options? */
-      val = (int) data;
-      switch (ref - AnnotTypesBase)
-	{
-	case AnnotTypesMenu:
-	  switch (val) 
-	    {
-	      /** @@ I need to add a case for cancel */
-	    case 0:
-	      AnnotTypesSelItem[0] = WC_EOS;
-	      List_delAll (&typesList, List_delCharObj);
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 1:
-	      List_delAll (&typesList, List_delCharObj);
-	      TtaDestroyDialogue (ref);
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
-
-	case mAnnotTypesSel:
-	  /* copy what was selected */
-	  if (data)
-	    ustrcpy (AnnotTypesSelItem, data);
-	  else
-	    AnnotTypesSelItem[0] = WC_EOS;
-	  break;
-	  
-	default:
-	  break;
-	}
-    }
-}
-
-#if 0 
-/*----------------------------------------------------------------------
-  AnnotTypes
-  Returns the RDF Resource pointer that represents the type selection
-  of the user. It is NULL if the user doesn't select a type.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-RDFResourceP AnnotTypes (Document document, View view)
-#else
-RDFResourceP AnnotTypes (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__*/
-{
-#ifndef _WINDOWS
-  /* initialize the base if it hasn't yet been done */
-  if (AnnotTypesBase == 0)
-    AnnotTypesBase =  TtaSetCallback (AnnotTypesCallbackDialog,
-				      MAX_ANNOTTYPES_DLG);
-
-  /* make a copy of the current document and view, so that we can
-     find this info in the callback */
-  AnnotTypesSelItem[0] = WC_EOS;
-  
-  /* Create the dialogue form */
-  TtaNewForm (AnnotTypesBase + AnnotTypesMenu, 
-	      TtaGetViewFrame (document, view),
-	      TEXT("Annotation Type"), TRUE, 1, 'L', D_CANCEL);
-  
-  /* display the selectors */
-  BuildAnnotTypesSelector ();
-  
-  /* display the menu */
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (AnnotTypesBase + AnnotTypesMenu, FALSE);
-  TtaWaitShowDialogue ();
-
-  {
-    List *item;
-    for (item = typesList; item; item=item->next)
-      {
-	TypeSelector *t = (TypeSelector *) item->object;
-	if (!ustrcmp(t->name, AnnotTypesSelItem))
-	  return t->type;
-      }
-  }
-#endif /* _WINDOWS */
-  return NULL;
-}
-#endif
 
 /*----------------------------------------------------------------------
   AnnotTypes

@@ -157,15 +157,55 @@ int AnnotList_localCount (List *annot_list)
   return (count);
 }
 
+/*---------------------------------------------------------------
+  AnnotFilter_toggleAll
+  Changes the show settings for all the filters of 
+  a given type.
+------------------------------------------------------------------*/
+#ifdef __STDC__
+void AnnotFilter_toggleAll (Document doc, SelType selector, ThotBool show)
+#else
+void AnnotFilter_toggleAll (doc, selector, show)
+Document doc;
+SelType selector;
+ThotBool show;
+
+#endif /* __STDC__ */
+{
+  List *list_item;
+  AnnotFilterData *filter;
+
+  /* change the filter metadata first */
+  switch (selector)
+    {
+    case BY_AUTHOR:
+      list_item = AnnotMetaData[doc].authors;
+      break;
+    case BY_TYPE:
+      list_item = AnnotMetaData[doc].types;
+      break;
+    case BY_SERVER:
+      list_item = AnnotMetaData[doc].servers;
+      break;
+    }
+  
+  while (list_item)
+    {
+      filter = (AnnotFilterData *) list_item->object;
+      if (filter)
+	filter->show = show;
+      list_item = list_item->next;
+    }
+}
 
 /*-----------------------------------------------------------------------
   AnnotFilter_update
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void AnnotFilter_update (Document source_doc, AnnotMeta *annot)
+static void AnnotFilter_update (Document source_doc, AnnotMeta *annot)
 #else /* __STDC__*/
-void AnnotFilter_update (source_doc, annot)
+static void AnnotFilter_update (source_doc, annot)
      Document source_doc;
      AnnotMeta *annot;
 #endif /* __STDC__*/
@@ -238,7 +278,6 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
   filter = TtaGetMemory (sizeof (AnnotFilterData));
   filter->object = isString ? TtaStrdup ((CHAR_T*)object) : object;
   filter->show = TRUE;
-  filter->annot = annot;
 
   /* and now add it to the list */
   new = (List *) malloc (sizeof (List));
@@ -250,7 +289,6 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
   *me = new;
 }
 
-
 /*------------------------------------------------------------
    AnnotFilter_delete
    Deletes an annotation from a filter list. The object 
@@ -260,6 +298,7 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
    ------------------------------------------------------------*/
 ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot, ThotBool (*del_function)(void *))
 {
+#if 0
   ThotBool result;
 
   List *list_item, *prev;
@@ -296,6 +335,8 @@ ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot, ThotBool (*del_funct
     result = FALSE;
 
   return (result);
+#endif
+  return FALSE;
 }
 
 /*------------------------------------------------------------
@@ -324,6 +365,69 @@ List *AnnotFilter_search (List *list, void *object, ThotBool isString)
     }
 
   return (list_item);
+}
+
+/*------------------------------------------------------------
+   AnnotFilter_status
+   Verifies the visibility of  all the annotations related to
+   docid doc, and that are related to the selector object.
+
+   Returns 0 if all annotations are hidden.
+   Returns 1 if all the annotatios are visible.
+   Returns 2 if some annotations are visible
+   ------------------------------------------------------------*/
+int AnnotFilter_status (Document doc, SelType selector, void *object)
+{
+  List *list_item;
+  int show;
+  ThotBool compare;
+  AnnotMeta *annot;
+  CHAR_T server[MAX_LENGTH];
+  CHAR_T *tmp;
+
+  if (!object)
+    return 0;
+
+  show = -1;
+  list_item = AnnotMetaData[doc].annotations;
+  for (; list_item; list_item = list_item->next)
+    {
+      annot = list_item->object;
+      if (annot->is_orphan)
+	continue;
+      switch (selector)
+	{
+	case BY_TYPE:
+	  compare = (annot->type == object);
+	  break;
+	case BY_AUTHOR:
+	  compare = (ustrncmp (annot->author, (char *) object,
+			       ustrlen (annot->author)) == 0);
+	  break;
+	case BY_SERVER:
+	  if (annot->annot_url)
+	    tmp = annot->annot_url;
+	  else
+	    tmp = annot->body_url;
+	  GetServerName (tmp, server);
+	  compare = !ustrcmp (server, (char *) object);
+	  break;
+	}
+      if (compare)  /* update the status */
+	{
+	  if (show == -1)
+	    /* it's the first one we compare */
+	    show = (annot->is_visible) ? 1 : 0;
+	  else if ((annot->is_visible && show == 0)
+		   || (!(annot->is_visible) && show == 1))
+	    /* different status */
+	    {
+	      show = 2;
+	      break;
+	    }
+	}
+    }
+  return ((show == -1) ? 1 : show);
 }
 
 /*------------------------------------------------------------
@@ -412,6 +516,46 @@ ThotBool AnnotFilter_showAuthor (List *list, CHAR_T *author, CHAR_T *url)
   TtaFreeMemory (tmp);
 
   return result;
+}
+
+/*------------------------------------------------------------
+   AnnotFilter_deleteAll
+   Deletes allannotation filter lists for a given source
+   document.
+   ------------------------------------------------------------*/
+void AnnotFilter_deleteAll (Document doc)
+{
+  if (AnnotMetaData[doc].authors)
+    AnnotFilter_free (AnnotMetaData[doc].authors, List_delCharObj);
+  AnnotMetaData[doc].authors = NULL;
+  if (AnnotMetaData[doc].types)
+    AnnotFilter_free (AnnotMetaData[doc].types, NULL);
+  AnnotMetaData[doc].types = NULL;
+  if (AnnotMetaData[doc].servers)
+    AnnotFilter_free (AnnotMetaData[doc].servers, List_delCharObj);
+  AnnotMetaData[doc].servers = NULL;
+}
+
+/*------------------------------------------------------------
+   AnnotFilter_build
+   Builds the annotation filter list for a given source
+   document.
+   ------------------------------------------------------------*/
+void AnnotFilter_build (Document doc)
+{
+  List *item;
+  AnnotMeta *annot;
+
+  /* delete any previous filters */
+  AnnotFilter_deleteAll (doc);
+
+  item = AnnotMetaData[doc].annotations;
+  while (item)
+    {
+      annot = (AnnotMeta *) item->object;
+      AnnotFilter_update (doc, annot);
+      item = item->next;
+    }
 }
 
 /*------------------------------------------------------------

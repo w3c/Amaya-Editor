@@ -16,8 +16,9 @@ extern void List_delObject ( List **list,
                              char *object );
 extern int List_count ( List *list );
 extern int AnnotList_localCount ( List *annot_list );
-extern void AnnotFilter_update ( Document source_doc,
-                                 AnnotMeta *annot );
+extern void AnnotFilter_toggleAll ( Document doc,
+                                    SelType selector,
+                                    ThotBool show );
 extern void AnnotFilter_add ( AnnotMetaDataList *annotMeta,
                               SelType type,
                               void *object,
@@ -28,6 +29,9 @@ extern ThotBool AnnotFilter_delete ( List **list,
 extern List *AnnotFilter_search ( List *list,
                                   void *object,
                                   ThotBool isString );
+extern int AnnotFilter_status ( Document doc,
+                                SelType selector,
+                                void *object );
 extern ThotBool AnnotFilter_show ( List *list,
                                    void *object );
 extern ThotBool AnnotFilter_showServer ( List *list,
@@ -35,6 +39,8 @@ extern ThotBool AnnotFilter_showServer ( List *list,
 extern ThotBool AnnotFilter_showAuthor ( List *list,
                                          CHAR_T *author,
                                          CHAR_T *url );
+extern void AnnotFilter_deleteAll ( Document doc );
+extern void AnnotFilter_build ( Document doc );
 extern List *AnnotList_search ( List *list,
                                 CHAR_T *object );
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
@@ -89,8 +95,9 @@ extern void List_delObject (/* List **list,
                                char *object */);
 extern int List_count (/* List *list */);
 extern int AnnotList_localCount (/* List *annot_list */);
-extern void AnnotFilter_update (/* Document source_doc,
-                                   AnnotMeta *annot */);
+extern void AnnotFilter_toggleAll (/* Document doc,
+                                      SelType selector,
+                                      ThotBool show */);
 extern void AnnotFilter_add (/* AnnotMetaDataList *annotMeta,
                                 SelType type,
                                 void *object,
@@ -101,6 +108,9 @@ extern ThotBool AnnotFilter_delete (/* List **list,
 extern List *AnnotFilter_search (/* List *list,
                                     void *object,
                                     ThotBool isString */);
+extern int AnnotFilter_status (/* Document doc,
+                                  SelType selector,
+                                  void *object */);
 extern ThotBool AnnotFilter_show (/* List *list,
                                      void *object */);
 extern ThotBool AnnotFilter_showServer (/* List *list,
@@ -108,6 +118,8 @@ extern ThotBool AnnotFilter_showServer (/* List *list,
 extern ThotBool AnnotFilter_showAuthor (/* List *list,
                                            CHAR_T *author,
                                            CHAR_T *url */);
+extern void AnnotFilter_deleteAll (/* Document doc */);
+extern void AnnotFilter_build (/* Document doc */);
 extern List *AnnotList_search (/* List *list,
                                   CHAR_T *object */);
 extern AnnotMeta *AnnotList_searchAnnot (/* List *list,

@@ -16,7 +16,9 @@ INCLUDES= -DHAVE_CONFIG_H -DANNOTATIONS \
 	  -I.. -I../amaya  -I@srcdir@/f -I@top_srcdir@/amaya \
 	  -I@top_srcdir@/amaya/f -I../libwww \
 	  -I@top_srcdir@/../libwww/Library/src \
-	  -I@top_srcdir@/../expat/xmlparse @THOTINCLUDES@ $(X_FLAGS)
+	  -I@top_srcdir@/../libwww/modules/expat/xmlparse \
+	  -I@top_srcdir@/../libwww/modules/expat/xmltok \
+	   @THOTINCLUDES@ $(X_FLAGS)
 
 
 OPTIONS	= @AMAYA_OPTIONS@ @AMAYA_ANNOT_OPTIONS@ 
@@ -120,11 +122,13 @@ AMAYA_ANNOT_OBJ= \
 	ANNOTschemas.o
 
 # special case for generation Annot.h and AnnotAPP.c
-Annot.h : Annot.A
+AnnotAPP.c : Annot.A
 	@(APP=`pwd`/../bin/app;\
 	THOTDIR=`pwd`/../.. ;export THOTDIR; \
 	cd `dirname $<`; \
 	$$APP $(ALL_AMAYA_OPTIONS) `basename $<`)
+
+Annot.h: AnnotAPP.c
 
 #
 # dependencies
@@ -139,7 +143,7 @@ $(AMAYA_ANNOT_OBJ) : Annot.h annotlib.h ../amaya/EDITOR.h
 # recompile ANNOTmenu if the menu definitions change
 ANNOTmenu.o : ANNOTmenu.h
 
-libAnnot : $(AMAYA_ANNOT_SCHEMA) ../amaya/HTML.h ../amaya/TextFile.h libAnnot.a
+libAnnot : $(AMAYA_ANNOT_SCHEMA) ../amaya/HTML.h ../amaya/XLink.h ../amaya/TextFile.h libAnnot.a
 
 libAnnotSchemas : $(AMAYA_ANNOT_SCHEMA) 
 

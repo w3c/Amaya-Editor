@@ -168,7 +168,6 @@ typedef struct _AnnotMetaDataList {
 typedef struct _AnnotFilter {
   CHAR_T *object;
   ThotBool show;
-  AnnotMeta *annot;
 } AnnotFilterData;
 
 AnnotMetaDataList AnnotMetaData[DocumentTableLength];

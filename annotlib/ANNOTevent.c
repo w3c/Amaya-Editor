@@ -424,12 +424,14 @@ AnnottMeta *annot;
   /* remove the annotation link in the source document */
   if (annotEl)
     LINK_RemoveLinkFromSource (source_doc, annotEl);
+#if 0
   /* remove the annotation from the filters */
   AnnotFilter_delete (&(AnnotMetaData[source_doc].authors), annot, 
 		      List_delCharObj);
   AnnotFilter_delete (&(AnnotMetaData[source_doc].types), annot, NULL);
   AnnotFilter_delete (&(AnnotMetaData[source_doc].servers), annot,
 		      List_delCharObj);
+#endif
 }
 
 
@@ -858,8 +860,6 @@ void *context;
 			 LINK_SaveLink (source_doc);
 		       else
 			 LINK_DeleteLink (source_doc);
-
-		       AnnotFilter_update (source_doc, annot);
 		     }
 
 		   /* update the annotation body_url */

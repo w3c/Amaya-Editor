@@ -349,10 +349,6 @@ AnnotMeta *annot;
   /* set the ID value (anchor endpoint) */
   TtaSetAttributeText (attr, annot->name, anchor, source_doc);
 
-  /* @@ JK: maybe add a role so that we know the annotation type */
-
-  /* add the annotation to the filter list */
-  AnnotFilter_update (source_doc, annot);
   return (!(annot->is_orphan));
 }
 
@@ -571,12 +567,8 @@ void LINK_DelMetaFromMemory (Document doc)
 
   AnnotList_free (AnnotMetaData[doc].annotations);
   AnnotMetaData[doc].annotations = NULL;
-  AnnotFilter_free (AnnotMetaData[doc].authors, List_delCharObj);
-  AnnotMetaData[doc].authors = NULL;
-  AnnotFilter_free (AnnotMetaData[doc].types, NULL);
-  AnnotMetaData[doc].types = NULL;
-  AnnotFilter_free (AnnotMetaData[doc].servers, List_delCharObj);
-  AnnotMetaData[doc].servers = NULL;
+  /* delete any previous filters */
+  AnnotFilter_deleteAll (doc);
   /* we no longer need this part of the RDF model; it holds only
      for the annotations of this document */
   SCHEMA_FreeRDFModel (&AnnotMetaData[doc].rdf_model);
@@ -664,7 +656,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
   /* show the document */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
-  
+
   if (orphan_count)
     {
       /* warn the user there were some orphan annotations */
@@ -717,14 +709,18 @@ Element LINK_SelectSourceDoc (doc, annot_url, return_el)
 		XPointer_select (xptr_ctx);
 		selected = TRUE;
 	      }
+#ifdef JK_DEBUG
 	    else
 	      fprintf (stderr, 
 		       "LINK_SelectSource: impossible to set XPointer\n");
+#endif
 	    XPointer_free (xptr_ctx);
 	  }
       }
+#ifdef JK_DEBUG
     else
       fprintf (stderr, "LINK_SelectSourceDoc: couldn't find annotation metadata\n");
+#endif 
 
     /* search the element corresponding to the anchor in the source
        document */
