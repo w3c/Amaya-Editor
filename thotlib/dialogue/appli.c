@@ -516,7 +516,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
    }
    }
    EndPaint (w, &ps);
-
+FrameTable[frame].DblBuffNeedSwap = TRUE;
 #endif /*_GL*/
  }
 }
@@ -2097,11 +2097,10 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       /*Make sure Win32 doesn't draw in our buffer...*/
       return TRUE;
 	  
-    case WM_NCPAINT: 
     case WM_PAINT: 
       /* Some part of the Client Area has to be repaint. */
       WIN_HandleExpose (hwnd, frame, wParam, lParam);
-      return TRUE;
+      return 0;
 
     case WM_SIZE:
       cx         = LOWORD (lParam);
