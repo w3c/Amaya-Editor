@@ -215,9 +215,18 @@ Section "Amaya" SecAmaya
   DetailPrint "Installing Amaya resources : icons, dialogues"
   SetDetailsPrint listonly
 
-  SetOutPath "$INSTDIR\resources\icons"
-  File resources\icons\*.png
-  File resources\icons\*.gif
+  SetOutPath "$INSTDIR\resources\icons\misc"
+  File resources\icons\misc\*.png
+  File resources\icons\misc\*.gif
+  File resources\icons\misc\*.ico
+  SetOutPath "$INSTDIR\resources\icons\16x16"
+  File resources\icons\16x16\*.png
+  File resources\icons\16x16\*.gif
+  File resources\icons\16x16\*.ico
+  SetOutPath "$INSTDIR\resources\icons\22x22"
+  File resources\icons\22x22\*.png
+  File resources\icons\22x22\*.gif
+  File resources\icons\22x22\*.ico
   SetOutPath "$INSTDIR\resources\xrc"
   File resources\xrc\*.xrc
   SetOutPath "$INSTDIR\amaya\wxdialog"
