@@ -223,6 +223,10 @@ int                 docid;
    me->read_ops = 0;
    me->write_ops = 0;
    me->except_ops = 0;
+   /* experimental */
+   me->read_sock = INVSOC;
+   me->write_sock = INVSOC;
+   me->except_sock = INVSOC;
 
    /* Update the global context */
    HTList_appendObject (Amaya->reqlist, (void *) me);
@@ -941,12 +945,11 @@ static void         AHTProtocolInit (void)
    /*   HTProtocol_add ("http", "tcp", NO, HTLoadHTTP, NULL); */
    HTProtocol_add ("file", "local", NO, HTLoadFile, NULL);
    HTProtocol_add ("cache", "local", NO, HTLoadCache, NULL);
+   HTProtocol_add ("ftp", "tcp", NO, HTLoadFTP, NULL);
 #if 0 /* experimental code */
    HTProtocol_add ("telnet", "", YES, HTLoadTelnet, NULL);
    HTProtocol_add ("tn3270", "", YES, HTLoadTelnet, NULL);
    HTProtocol_add ("rlogin", "", YES, HTLoadTelnet, NULL);
-
-   HTProtocol_add ("ftp", "tcp", NO, HTLoadFTP, NULL);
    HTProtocol_add ("nntp", "tcp", NO, HTLoadNews, NULL);
    HTProtocol_add ("news", "tcp", NO, HTLoadNews, NULL);
 #endif
