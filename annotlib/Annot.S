@@ -39,8 +39,8 @@ STRUCT
   Thread  = LIST OF (Thread_item); 
 
   { a thread item contains a description and may contain other thread items }
-  Thread_item (ATTR  HREF_; Annot_HREF_ = Text; ) =                   { link to the annotation }
-		{ HREF_ = body URL;  Annot_HREF_ = Annot Meta URL }
+  Thread_item (ATTR  HREF_; Annot_HREF_ = Text; Orphan_item = Yes_) =                   { link to the annotation }
+		{ HREF_ = body URL;  Annot_HREF_ = Annot Meta URL; Orphan_item  = no parent t }
                 BEGIN
 	        TI_desc;
 	        ? TI_content = LIST OF (Thread_item);
@@ -80,5 +80,6 @@ EXCEPT
 	TI_desc:        NoCut;
 	TI_content:	NoCut;
         Annot_HREF_:	Invisible; 
+	Orphan_item:	Invisible;
 END
 
