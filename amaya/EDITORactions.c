@@ -2057,6 +2057,7 @@ void CellVertExtend (Document doc, View view)
 	}
       ChangeRowspan (cell, span, span+1, doc);
       TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
     }
 }
 
@@ -2102,6 +2103,7 @@ void CellHorizExtend (Document doc, View view)
 	}
       ChangeColspan (cell, span, span+1, doc);
       TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
     }
 }
 
@@ -2147,6 +2149,7 @@ void CellVertShrink (Document doc, View view)
 	  ChangeRowspan (cell, span, span-1, doc);
 	}
       TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
     }
 }
 
@@ -2192,6 +2195,7 @@ void CellHorizShrink (Document doc, View view)
 	  ChangeColspan (cell, span, span-1, doc);
 	}
       TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
     }
 }
 
@@ -2268,6 +2272,7 @@ static void CreateRow (Document doc, View view, ThotBool before)
       RowCreated (&event);
       TtaCloseUndoSequence (doc);
       TtaSelectElement (doc, TtaGetFirstLeaf (elNew));
+      TtaSetDocumentModified (doc);
     }
 }
 

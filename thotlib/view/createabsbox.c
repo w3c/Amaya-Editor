@@ -2080,7 +2080,8 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       return (NULL);
     }
 
-  if (strcmp (pAttr->AeAttrSSchema->SsName, pSchP->PsStructName))
+  if (!pAttr || !pAttr->AeAttrSSchema ||
+      strcmp (pAttr->AeAttrSSchema->SsName, pSchP->PsStructName))
     {
       *valueNum = 0;
       return (NULL);

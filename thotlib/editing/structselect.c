@@ -3399,7 +3399,7 @@ ThotBool SelectPairInterval ()
 static void SelectColumn (PtrElement column)
 {
   PtrElement          pNextRow, pCell;
-  PtrElement          pFirst, pLast, firstParent, lastParent, pRow, pTable;
+  PtrElement          pFirst, pLast, pRow, pTable;
   int                 rowType;
   
   /* get the table ancestor first */
@@ -3485,9 +3485,7 @@ void TtaSelectEnclosingColumn (Element el)
   ----------------------------------------------------------------------*/
 void SelectAround (int val)
 {
-  PtrElement          pEl, pParent, pNextRow, pCell;
-  PtrElement          pFirst, pLast, firstParent, lastParent, pRow, pTable;
-  int                 rowType;
+  PtrElement          pEl, pParent, pFirst, pLast, firstParent, lastParent;
   ThotBool            done;
 
   pEl = NULL;
