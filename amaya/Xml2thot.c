@@ -4637,7 +4637,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
       /* We are parsing an external reference for a 'use' svg element */
       extUseUri = TtaGetMemory (strlen (fileName) + 1);
       strcpy (extUseUri, fileName);
-      /* Is that element refers to an ID ? */
+      /* Extract the ID target */
       if ((ptr = strrchr (extUseUri, '#')) != NULL)
 	{
 	  *ptr = EOS;
@@ -4645,14 +4645,23 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	  extUseId = TtaGetMemory ((strlen (ptr) + 1));
 	  strcpy (extUseId, ptr);
 	}
-      strcpy (docURL, extUseUri);
-      s = TtaStrdup (docURL);
-      if (DocumentURLs[externalDoc] != NULL)
+      if (TtaFileExist (fileName))
+	strcpy (docURL, fileName);
+      else
+	if (TtaFileExist (extUseUri))
+	  strcpy (docURL, extUseUri);
+      else
+	docURL = NULL;
+      if (docURL != NULL)
 	{
-	  TtaFreeMemory (DocumentURLs[externalDoc]);
-	  DocumentURLs[externalDoc] = NULL;
+	  s = TtaStrdup (docURL);
+	  if (DocumentURLs[externalDoc] != NULL)
+	    {
+	      TtaFreeMemory (DocumentURLs[externalDoc]);
+	      DocumentURLs[externalDoc] = NULL;
+	    }
+	  DocumentURLs[externalDoc] = s;
 	}
-      DocumentURLs[externalDoc] = s;
     }
   else
     strcpy (docURL, fileName);

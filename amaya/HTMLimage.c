@@ -720,10 +720,15 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	    elType = TtaGetElementType (ctxEl->currentElement);
 
 	    /* the image may be included using either an SRC, an EMBED,
-	       or an OBJECT element */
-	    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT 
-		|| elType.ElTypeNum == HTML_EL_Embed_
-		|| elType.ElTypeNum == HTML_EL_Object)
+	       an OBJECT, a use or a tref element */
+	    if (((strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
+		 (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+		  elType.ElTypeNum == HTML_EL_Embed_ ||
+		  elType.ElTypeNum == HTML_EL_Object)) ||
+		((strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0) &&
+		 (elType.ElTypeNum == SVG_EL_PICTURE_UNIT ||
+		  elType.ElTypeNum == SVG_EL_use_ ||
+		  elType.ElTypeNum == SVG_EL_tref)))
 	      DisplayImage (doc, ctxEl->currentElement, tempfile, ptr);
 	    else if (ctxEl->callback != NULL)
 	      ctxEl->callback(doc, ctxEl->currentElement, tempfile, ctxEl->extra);
