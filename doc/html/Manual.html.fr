@@ -18,7 +18,7 @@ href="Manual.html.fr"><img src="../images/doc48x.gif" alt="Doc" /></a></p>
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 <hr />
 
-<p><strong>Version :</strong> 5.4 - février 2002</p>
+<p><strong>Version :</strong> 6.0 - avril 2002</p>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
