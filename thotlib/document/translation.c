@@ -218,9 +218,9 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
       else
 	{
 	  /* other encodings */
-#ifdef _I18N_
 	  nb_bytes2write = 1;
-	  mbc[0] = TtaGetCharFromWC (c, pDoc->DocCharset);
+#ifdef _I18N_
+	  mbc[0] = TtaGetCharFromWC ((wchar_t) c, pDoc->DocCharset);
 	  if (mbc[0] == EOS && c != EOS)
 	    {
 	      /* generate an entity */
@@ -244,7 +244,6 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	      mbc[nb_bytes2write++] = ';';
 	    }
 #else  /* _I18N_ */
-	  nb_bytes2write = 1;
 	  mbc[0] = (unsigned char) c;
 #endif /* _I18N_ */
 	}
@@ -285,10 +284,10 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	      /* no line length, write into the file directly */
 	      for (index = 0; index < nb_bytes2write; index++)
 		putc (mbc[index], fileDesc);
-	      if (nb_bytes2write == 1 &&  mbc[0] == pTSch->TsEOL[0])
+	      if (c == NEW_LINE)
 		OutFile[fnum].OfLineNumber++;
 	    }
-	  else if (nb_bytes2write == 1 &&  mbc[0] == pTSch->TsEOL[0])
+	  else if (c == NEW_LINE)
 	    {
 	      /* end of line, write the buffer into the file */
 	      for (i = 0; i < OutFile[fnum].OfBufferLen; i++)
