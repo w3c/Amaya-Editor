@@ -1300,7 +1300,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	lgspace = whitespace;
       
       /* Do we need to draw a background */
-      if (pAb->AbPresentationBox && pAb->AbFillBox && bg >= 0)
+      if (pAb->AbPresentationBox && pAb->AbFillPattern && bg >= 0)
 	DrawRectangle (frame, 0, 0,
 		       x - pBox->BxLPadding, y - pBox->BxTPadding,
 		       width + pBox->BxLPadding + pBox->BxRPadding,
