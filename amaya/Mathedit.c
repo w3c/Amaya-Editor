@@ -239,7 +239,12 @@ char               *data;
     case MenuMaths:
       /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
-      if (doc == 0)
+      if (val == 11)
+	{
+	  TtcDisplayGreekKeyboard (doc, 1);
+	  return;
+	}
+      else if (doc == 0)
 	/* no document selected */
 	return;
       /* the new element will be inserted before the selected element */
@@ -441,10 +446,6 @@ char               *data;
 	  break;
 	case 10:
 	  newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
-	  break;
-	case 11:
-	  TtcDisplayGreekKeyboard (doc, 1);
-	  return;
 	  break;
 	default:
 	  return;
