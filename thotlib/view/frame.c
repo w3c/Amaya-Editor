@@ -1179,7 +1179,6 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   PtrBox              pBox, box;
   PtrBox              topBox;
   ViewFrame          *pFrame;
-  PictInfo           *imageDesc;
   int                 plane;
   int                 nextplane;
   int                 winTop, winBottom;
