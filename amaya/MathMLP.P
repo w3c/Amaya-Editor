@@ -653,8 +653,8 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + 1;
-		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Previous . Right + 1;
+		VertPos: HRef = Previous . HRef;
 		Font: Helvetica;
 		END;
 	END;

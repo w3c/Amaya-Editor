@@ -315,7 +315,7 @@ Element             elem;
 /*----------------------------------------------------------------------
   ChangePRule
   A specific PRule has been created, modified or deleted by the user for
-  a given element.
+  a given element. (pre-event)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ChangePRule (NotifyPresentation * event)
@@ -402,12 +402,26 @@ NotifyPresentation *event;
 	    }
 	}
     }
-  
-  /* set the Style_ attribute ? */
-  SetStyleAttribute (doc, elem);
   return (ret);
 }
 
+
+/*----------------------------------------------------------------------
+  SetStyle
+  A specific PRule has been created, modified or deleted by the user for
+  a given element. (post-event)
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             SetStyle (NotifyPresentation * event)
+#else  /* __STDC__ */
+void             SetStyle (event)
+NotifyPresentation *event;
+
+#endif /* __STDC__ */
+{
+  /* set the Style_ attribute ? */
+  SetStyleAttribute (event->document, event->element);
+}
 
 /*----------------------------------------------------------------------
  AttrLangDeleted

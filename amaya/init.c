@@ -817,10 +817,10 @@ char               *text;
 	   strcpy (LastURLName, text);
 	else
 	  {
-	     /* It is not a valid URL */
-	     TtaSetTextZone (document, view, 1, DocumentURLs[document]);
-	     TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
-	     return;
+	    /* It is not a valid URL */
+	    /*TtaSetTextZone (document, view, 1, DocumentURLs[document]);*/
+	    TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
+	    return;
 	  }
      }
    if (TtaIsDocumentModified (document))
@@ -1231,7 +1231,7 @@ char               *documentname;
    char                tempdir[MAX_LENGTH];
    int                 i;
    char               *s;
-   Document            newdoc;
+   Document            newdoc = 0;
    FILE               *tmp_fp;
 
    if (!IsTextName (pathname) && tempfile[0] != EOS)
