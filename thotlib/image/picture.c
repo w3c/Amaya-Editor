@@ -284,11 +284,11 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
    HBITMAP  pBitmapDest;
    COLORREF crColor;
    COLORREF crOldBkColor;
-   int      red, green, blue;
+   short      red, green, blue;
 
    /* give the RGB of the background color */
    TtaGiveThotRGB (bg, &red, &green, &blue);
-   crColor = RGB (red, green, blue);
+   crColor = RGB ((int)red, (int)green, (int)blue);
    hMemDC = CreateCompatibleDC (TtDisplay);
    bitmap = SelectObject (hMemDC, pixmap);
    SetMapMode (hMemDC, GetMapMode (TtDisplay));

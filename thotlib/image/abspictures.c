@@ -115,7 +115,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
       else
 	{
 	  len = strlen (filename) + 1;
-	  if (ptr == NULL || len > strlen (ptr) + 1)
+	  if (ptr == NULL || len > (int) strlen (ptr) + 1)
 	    {
 	      TtaFreeMemory (ptr);
 	      ptr = TtaGetMemory (len);

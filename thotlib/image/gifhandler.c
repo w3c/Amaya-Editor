@@ -1371,7 +1371,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       /* register the Thot color index of the transparent color */
       i = TtaGetThotColor (colrs[GifTransparent].red, colrs[GifTransparent].green,
 			   colrs[GifTransparent].blue);
-      imageDesc->PicMask = GifTransparent;
+      imageDesc->PicMask = i;
 #else  /* _WINDOWS */
       /* register the transparent mask */
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, GifTransparent, 1);
