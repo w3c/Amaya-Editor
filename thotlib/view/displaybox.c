@@ -401,6 +401,8 @@ int                 frame;
 	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 4);
 	    break;
 	  case '0':
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
+	    break;
 	  case '1':
 	  case '2':
 	  case '3':

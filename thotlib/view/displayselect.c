@@ -393,8 +393,7 @@ PtrBox              pBox;
 
 
 /*----------------------------------------------------------------------
-   DisplayCurrentSelection visualise ou efface la selection courante 
-   dans le frame.                                         
+   DisplayCurrentSelection shows or hides the current selection.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayCurrentSelection (int frame, ThotBool status)
@@ -413,85 +412,88 @@ ThotBool            status;
   ViewSelection      *pViewSelEnd;
 
   /* On ne visualise la selection que si la selection est coherente */
-  pFrame = &ViewFrameTable[frame - 1];
-  pViewSel = &pFrame->FrSelectionBegin;
-  if (pViewSel->VsBox != NULL && pFrame->FrSelectionEnd.VsBox != NULL)
+  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
     {
-      /* Est-ce que les marques de selection sont dans la meme boite ? */
-      if (pFrame->FrSelectionEnd.VsBox == pViewSel->VsBox)
-	if (pFrame->FrSelectOnePosition)
-	  {
-	    /* on ne visualise qu'une position position */
-	    if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPolyLine)
+      pFrame = &ViewFrameTable[frame - 1];
+      pViewSel = &pFrame->FrSelectionBegin;
+      if (pViewSel->VsBox != NULL && pFrame->FrSelectionEnd.VsBox != NULL)
+	{
+	  /* Est-ce que les marques de selection sont dans la meme boite ? */
+	  if (pFrame->FrSelectionEnd.VsBox == pViewSel->VsBox)
+	    if (pFrame->FrSelectOnePosition)
+	      {
+		/* on ne visualise qu'une position position */
+		if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPolyLine)
+		  DisplayBoxSelection (frame, pViewSel->VsBox, pViewSel->VsIndBox);
+		else
+		  DisplayStringSelection (frame, pViewSel->VsXPos, pViewSel->VsXPos + 2, pViewSel->VsBox);
+	      }
+	    else if (pViewSel->VsBuffer == NULL
+		     || (pViewSel->VsBox->BxNChars == 0
+			 && (pViewSel->VsBox->BxType != BoSplit
+			     || pViewSel->VsBox->BxType != BoPiece)))
 	      DisplayBoxSelection (frame, pViewSel->VsBox, pViewSel->VsIndBox);
 	    else
-	      DisplayStringSelection (frame, pViewSel->VsXPos, pViewSel->VsXPos + 2, pViewSel->VsBox);
-	  }
-	else if (pViewSel->VsBuffer == NULL
-		 || (pViewSel->VsBox->BxNChars == 0
-		     && (pViewSel->VsBox->BxType != BoSplit
-			 || pViewSel->VsBox->BxType != BoPiece)))
-	  DisplayBoxSelection (frame, pViewSel->VsBox, pViewSel->VsIndBox);
-	else
-	  DisplayStringSelection (frame, pViewSel->VsXPos, pFrame->FrSelectionEnd.VsXPos, pViewSel->VsBox);
-      else
-	/* Les marques de selection sont dans deux boites differentes */
-	/* Si les deux bornes de la selection sont compatibles */
-	{
-	  pAb = NULL;
-	  pSelBox = pViewSel->VsBox;
-	  if (pViewSel->VsBuffer == NULL || pSelBox->BxNChars == 0)
-	    DisplayBoxSelection (frame, pViewSel->VsBox, 0);
+	      DisplayStringSelection (frame, pViewSel->VsXPos, pFrame->FrSelectionEnd.VsXPos, pViewSel->VsBox);
 	  else
+	    /* Les marques de selection sont dans deux boites differentes */
+	    /* Si les deux bornes de la selection sont compatibles */
 	    {
-	      pAb = pSelBox->BxAbstractBox;
-	      /* Est-ce que la selection debute en fin de boite ? */
-	      if (pViewSel->VsXPos == pSelBox->BxWidth)
-		DisplayStringSelection (frame, pViewSel->VsXPos,
-					pSelBox->BxWidth + 2, pViewSel->VsBox);
+	      pAb = NULL;
+	      pSelBox = pViewSel->VsBox;
+	      if (pViewSel->VsBuffer == NULL || pSelBox->BxNChars == 0)
+		DisplayBoxSelection (frame, pViewSel->VsBox, 0);
 	      else
-		DisplayStringSelection (frame, pViewSel->VsXPos, pSelBox->BxWidth,
-					pViewSel->VsBox);
-	      /* Parcours les boites coupees soeurs */
-	      if (pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
 		{
-		  pBox = pSelBox->BxNexChild;
-		  while (pBox != NULL &&
-			 pBox != pFrame->FrSelectionEnd.VsBox)
+		  pAb = pSelBox->BxAbstractBox;
+		  /* Est-ce que la selection debute en fin de boite ? */
+		  if (pViewSel->VsXPos == pSelBox->BxWidth)
+		    DisplayStringSelection (frame, pViewSel->VsXPos,
+					    pSelBox->BxWidth + 2, pViewSel->VsBox);
+		  else
+		    DisplayStringSelection (frame, pViewSel->VsXPos, pSelBox->BxWidth,
+					    pViewSel->VsBox);
+		  /* Parcours les boites coupees soeurs */
+		  if (pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
 		    {
-		      if (pBox->BxNChars > 0)
-			DisplayBoxSelection (frame, pBox, 0);
-		      pBox = pBox->BxNexChild;
+		      pBox = pSelBox->BxNexChild;
+		      while (pBox != NULL &&
+			     pBox != pFrame->FrSelectionEnd.VsBox)
+			{
+			  if (pBox->BxNChars > 0)
+			    DisplayBoxSelection (frame, pBox, 0);
+			  pBox = pBox->BxNexChild;
+			}
 		    }
 		}
-	    }
-	  pViewSelEnd = &pFrame->FrSelectionEnd;
-	  pSelBox = pViewSelEnd->VsBox;
-	  if (pViewSelEnd->VsBuffer == NULL || pSelBox->BxNChars == 0)
-	    DisplayBoxSelection (frame, pViewSelEnd->VsBox, 0);
-	  else
-	    {
-	      /* Parcours les boites coupees soeurs */
-	      if ((pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
-		  && pSelBox->BxAbstractBox != pAb)
+	      pViewSelEnd = &pFrame->FrSelectionEnd;
+	      pSelBox = pViewSelEnd->VsBox;
+	      if (pViewSelEnd->VsBuffer == NULL || pSelBox->BxNChars == 0)
+		DisplayBoxSelection (frame, pViewSelEnd->VsBox, 0);
+	      else
 		{
-		  pBox = pSelBox->BxAbstractBox->AbBox->BxNexChild;
-		  while (pBox != NULL &&
-			 pBox != pViewSelEnd->VsBox)
+		  /* Parcours les boites coupees soeurs */
+		  if ((pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
+		      && pSelBox->BxAbstractBox != pAb)
 		    {
-		      DisplayBoxSelection (frame, pBox, 0);
-		      pBox = pBox->BxNexChild;
+		      pBox = pSelBox->BxAbstractBox->AbBox->BxNexChild;
+		      while (pBox != NULL &&
+			     pBox != pViewSelEnd->VsBox)
+			{
+			  DisplayBoxSelection (frame, pBox, 0);
+			  pBox = pBox->BxNexChild;
+			}
 		    }
+		  DisplayStringSelection (frame, 0, pViewSelEnd->VsXPos, pViewSelEnd->VsBox);
 		}
-	      DisplayStringSelection (frame, 0, pViewSelEnd->VsXPos, pViewSelEnd->VsBox);
 	    }
+	  /* Bascule l'indicateur de la selection allumee */
+	  pFrame->FrSelectShown = !pFrame->FrSelectShown;
+	  
+	  SetNewSelectionStatus (frame, pFrame->FrAbstractBox, status);
 	}
-      /* Bascule l'indicateur de la selection allumee */
-      pFrame->FrSelectShown = !pFrame->FrSelectShown;
-      
-      SetNewSelectionStatus (frame, pFrame->FrAbstractBox, status);
+      else if (status == FALSE)
+	/* Annule la selection meme s'il n'y a plus de boite selectionnee */
+	pFrame->FrSelectShown = FALSE;
     }
-  else if (status == FALSE)
-    /* Annule la selection meme s'il n'y a plus de boite selectionnee */
-    pFrame->FrSelectShown = FALSE;
 }

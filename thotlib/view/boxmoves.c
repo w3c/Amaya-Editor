@@ -149,30 +149,30 @@ PtrBox              pBox;
 
 
 /*----------------------------------------------------------------------
-   IsParentBox returns TRUE when pBox is an ancestor of pRefBox or
-   pRefBox itself.
+   IsParentBox returns TRUE when pAncestor is an ancestor of pChild or
+   pChild itself.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsParentBox (PtrBox pBox, PtrBox pRefBox)
+ThotBool            IsParentBox (PtrBox pAncestor, PtrBox pChild)
 #else  /* __STDC__ */
-ThotBool            IsParentBox (pBox, pRefBox)
-PtrBox              pBox;
-PtrBox              pRefBox;
+ThotBool            IsParentBox (pAncestor, pChild)
+PtrBox              pAncestor;
+PtrBox              pChild;
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pAb;
   ThotBool            equal;
 
-  if (pRefBox == NULL || pBox == NULL)
+  if (pChild == NULL || pAncestor == NULL)
     return (FALSE);
   else
     {
-      /* Look for pRefBox ancestors including itself */
-      pAb = pRefBox->BxAbstractBox;
+      /* Look for pChild ancestors including itself */
+      pAb = pChild->BxAbstractBox;
       equal = FALSE;
       while (!equal && pAb != NULL)
 	{
-	  equal = pAb->AbBox == pBox;
+	  equal = pAb->AbBox == pAncestor;
 	  pAb = pAb->AbEnclosing;
 	}
       return (equal);
@@ -2189,21 +2189,24 @@ int                 frame;
 		      UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
 		    }
 		  /* if the inclusion is not checked at the end */
-		  else if (pAb->AbBox != PackBoxRoot &&
-			   !IsParentBox (pAb->AbBox, PackBoxRoot))
-		    /* Differ the checking of the inclusion */
-		    /* when the update has an external origin  */
-		    if (Propagate != ToAll)
-		      RecordEnclosing (pAb->AbBox, TRUE);
-		  /* Don't check the inclusion more than 2 times */
-		    else if (pAb->AbBox->BxCycles <= 1)
-		      {
-			if (pAb->AbBox->BxType == BoCell &&
-			    ThotLocalActions[T_checkcolumn])
-			  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
-			else
-			  WidthPack (pAb, pSourceBox, frame);
-		      }
+		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot))
+		    {
+		      /* Differ the checking of the inclusion */
+		      /* when the update has an external origin  */
+		      if (Propagate != ToAll)
+			RecordEnclosing (pAb->AbBox, TRUE);
+		      /* Don't check the inclusion more than 2 times */
+		      else if (pAb->AbBox->BxCycles <= 1)
+			{
+			  if (pAb->AbBox->BxType == BoCell &&
+			      ThotLocalActions[T_checkcolumn])
+			    (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+			  else
+			    WidthPack (pAb, pSourceBox, frame);
+			}
+		    }
+		  else if (pAb->AbBox->BxCycles <= 1)
+		    WidthPack (pAb, pSourceBox, frame);
 		}
 	      else if (!pCurrentAb->AbNew
 		       && Propagate == ToSiblings
@@ -2695,15 +2698,19 @@ int                 frame;
 		    /* Within a block of line */
 		    EncloseInLine (pBox, frame, pAb);
 		  /* if the inclusion is not checked at the end */
-		  else if (pAb->AbBox != PackBoxRoot &&
-			   !IsParentBox (pAb->AbBox, PackBoxRoot))
-		    /* Differ the checking of the inclusion */
-		    /* when the update has an external origin  */
-		    if (Propagate != ToAll && pAb->AbBox->BxType != BoCell)
-		      RecordEnclosing (pAb->AbBox, FALSE);
+		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot))
+		    {
+		      /* Differ the checking of the inclusion */
+		      /* when the update has an external origin  */
+		      if (Propagate != ToAll && pAb->AbBox->BxType != BoCell)
+			RecordEnclosing (pAb->AbBox, FALSE);
+		      /* Don't check the inclusion more than 2 times */
+		      else if (pAb->AbBox->BxPacking <= 1)
+			HeightPack (pAb, pSourceBox, frame);
+		    }
 		  /* Don't check the inclusion more than 2 times */
-		    else if (pAb->AbBox->BxPacking <= 1)
-		      HeightPack (pAb, pSourceBox, frame);
+		  else if (pAb->AbBox->BxPacking <= 1)
+		    HeightPack (pAb, pSourceBox, frame);
 		}
 	    }
 	}

@@ -1099,15 +1099,16 @@ PtrAbstractBox      pRefAb;
       /* don't take care of dead abstract boxes and not compound filled boxes */
       while (pAb != NULL && !found)
 	{
-	  if (pAb->AbDead || pAb->AbLeafType != LtCompound)
+	  if (pAb->AbDead || pAb->AbLeafType != LtCompound ||
+	      (pAb->AbBox && pAb->AbBox->BxType == BoCell))
 	    pAb = pAb->AbPrevious;
 	  else if (pAb->AbFillBox)
 	    found = TRUE;
-	  /*else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
+	  else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
 		   (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
 		   (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
 		   (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
-		   found = TRUE;*/
+		   found = TRUE;
 	  else
 	    pAb = pAb->AbPrevious;
 	}
@@ -1116,13 +1117,15 @@ PtrAbstractBox      pRefAb;
         {
 	  /* search at parent level */
           pAb = pRefAb->AbEnclosing;
-          if (pAb->AbFillBox )
+	  if (pAb->AbBox && pAb->AbBox->BxType == BoCell)
+	    pAb = SearchPreviousFilledBox (pAb);
+          else if (pAb->AbFillBox)
 	    return (pAb);
-	  /*else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
+	  else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
 		   (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
 		   (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
 		   (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
-		   return (pAb);*/
+	    return (pAb);
 	  else
 	    pAb = SearchPreviousFilledBox (pAb);
         }
@@ -1519,13 +1522,14 @@ int                *carIndex;
 			LoadPicture (frame, pCurrentBox, (PictInfo *) pAb->AbPictBackground);
 		      }
 		    /* Is it a filled box ? */
-		    if (pAb->AbFillBox/* ||
+		    if (pAb->AbFillBox ||
 			(pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
 			(pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
 			(pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
-			(pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2)*/)
-		      /* register the box */
-		      AddFilledBox (pCurrentBox, pMainBox, frame);
+			(pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
+		      if (pCurrentBox->BxType != BoCell)
+			/* register the box */
+			AddFilledBox (pCurrentBox, pMainBox, frame);
 
 		    /* Il faut creer les boites des paves inclus */
 		    pChildAb = pAb->AbFirstEnclosed;
@@ -2070,9 +2074,20 @@ ThotBool            horizRef;
       pPreviousDimRel = pDimRel;
       while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
 	{
-	  if (pDimRel->DimRSame[i] == horizRef && pDimRel->DimRTable[i] == pBox)
-	    /* The box is already registered */
-	    return;
+	  if (pDimRel->DimRSame[i] == horizRef)
+	    {
+	      if (pDimRel->DimRTable[i] == pBox)
+		/* The box is already registered */
+		return;
+	      else if (IsParentBox (pDimRel->DimRTable[i], pBox))
+		{
+		  /* store the child pBox instead of the parent */
+		  pDimRel->DimRTable[i] = pBox;
+		  return;
+		}
+	      else
+		i++;
+	    }
 	  else
 	    i++;
 	}
@@ -2479,19 +2494,20 @@ int                 frame;
 		     if (pAb->AbFillPattern == 2)
 		       /* change "backgroundcolor" into "nopattern" */
 		       pAb->AbFillPattern = 0;
-		     /* force filling
-			pAb->AbFillBox = TRUE; */
+		     /* force filling */
+		     pAb->AbFillBox = TRUE;
 		     /* load the picture */
 		     LoadPicture (frame, pBox, (PictInfo *) pAb->AbPictBackground);
 		   }
 		 
-		 if (pAb->AbFillBox/* ||
+		 if (pAb->AbFillBox ||
 		     (pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
 		     (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
 		     (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
-		     (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2)*/)
-		   /* register the box in filled list */
-		   AddFilledBox (pBox, pMainBox, frame);
+		     (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
+		      if (pBox->BxType != BoCell)
+			/* register the box in filled list */
+			AddFilledBox (pBox, pMainBox, frame);
 		 else
 		   /* unregister the box in filled list */
 		   RemoveFilledBox (pBox, pMainBox, frame);
@@ -2685,7 +2701,8 @@ int                 frame;
 				{
 				  RecomputeLines (pBlock, NULL, NULL, frame);
 				  /* we will have to pack enclosing box */
-				  RecordEnclosing (pBlock->AbBox, FALSE);
+				  if (pBlock->AbEnclosing)
+				    RecordEnclosing (pBlock->AbEnclosing->AbBox, FALSE);
 				}
 			    }
 			  (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
