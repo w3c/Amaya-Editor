@@ -2206,6 +2206,11 @@ NotifyAttribute    *event;
 	     elType.ElTypeNum == HTML_EL_HTML ||
 	     elType.ElTypeNum == HTML_EL_ISINDEX)
 	   return TRUE;
+       /* xml:space attribute */
+       if (event->attributeType.AttrTypeNum == HTML_ATTR_xml_space)
+	 if (DocumentMeta[event->document]->xmlformat == FALSE)
+	   return TRUE;	 
+
        return FALSE;
      }
    return TRUE;	/* don't put an invalid attribute in the menu */
