@@ -41,10 +41,6 @@
 #include "amaya.h"
 #include "MENUconf.h"
 #include "print.h"
-#include "init_f.h"
-#ifndef AMAYA_JAVA
-#include "query_f.h"
-#endif
 #include "fileaccess.h"
 
 #ifdef _WINDOWS
@@ -136,15 +132,16 @@ static HWND LanNegHwnd = NULL;
 static int LanNegBase;
 static CHAR_T LanNeg [MAX_LENGTH+1];
 
-
 /* Profile menu options */
 #ifdef _WINDOWS
 static HWND ProfileHwnd = NULL;
+static HWND wndProfilesList;
+static HWND wndProfile;
 #endif /* _WINDOWS */
 static int ProfileBase;
 static CHAR_T Profile [MAX_LENGTH+1];
 static CHAR_T Profiles_File [MAX_LENGTH+1];
-static STRING MenuText[MAX_PRO];
+static STRING MenuText[MAX_PRO + 1];
 
 /* Templates menu option */
 #ifdef _WINDOWS
@@ -175,6 +172,7 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshLanNegMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_ProfileDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshProfileMenu (HWND hwnDlg);
+static void BuildProfileList(void);
 LRESULT CALLBACK WIN_TemplatesDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshTemplatesMenu (HWND hwnDlg);
 #else
@@ -193,6 +191,7 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshLanNegMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_ProfileDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshProfileMenu (/* HWND hwnDlg */);
+static void BuildProfileList(/*void*/);
 LRESULT CALLBACK WIN_TemplatesDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshTemplatesMenu (/* HWND hwnDlg */);
 
@@ -254,8 +253,9 @@ static void         GetLanNegConf (void);
 static void         GetDefaultLanNegConf (void);
 static void         SetLanNegConf (void);
 #ifndef _WINDOWS
-static void         ProfileCallbackDialog(int ref, int typedata, STRING data);
+static void         ProfilesCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshProfileMenu (void);
+static void         BuildProfileSelector(void);
 #endif /* !_WINDOWS */
 static void         GetProfileConf (void);
 static void         GetDefaultProfileConf (void);
@@ -324,19 +324,29 @@ static void         GetDefaultLanNegConf (/* void */);
 static void         SetLanNegConf (/* void */);
 #ifndef _WINDOWS
 static void         ProfileCallbackDialog(/* int ref, int typedata, STRING data */);
+static void         BuildProfileSelector(/*void*/);
+static void         RefreshProfileMenu (/*void*/);
 #endif /* !_WINDOWS */
-static void         RefreshProfileMenu (/* void */);
 static void         GetProfileConf (/* void */);
 static void         GetDefaultProfileConf (/* void */);
 static void         SetProfileConf (/* void */);
 #ifndef _WINDOWS
-static void         LanNegCallbackDialog(/* int ref, int typedata, STRING data */);
+static void         TemplatesCallbackDialog(/* int ref, int typedata, STRING data */);
 #endif /* !_WINDOWS */
 static void         RefreshTemplatesMenu (/* void */);
 static void         GetTemplatesConf (/* void */);
 static void         GetDefaultTemplatesConf (/* void */);
 static void         SetTemplatesConf (/* void */);
 #endif
+
+
+#include "constmedia.h"
+#include "appdialogue.h"
+#include "profiles_f.h"
+#ifndef AMAYA_JAVA
+#include "query_f.h"
+#endif
+#include "init_f.h"
 
 
 /*
@@ -3291,9 +3301,6 @@ static void SetLanNegConf ()
 }
 
 
-
-
-
 /**********************
 ** Profile Menu
 **********************/
@@ -3312,12 +3319,81 @@ HWND   hwndParent;
 UINT   msg; 
 WPARAM wParam; 
 LPARAM lParam;
+
 #endif /* __STDC__ */
 {
- 
+
+   int  itemIndex = 0;
+   	
+
+   switch (msg)
+    {
+    case WM_INITDIALOG:
+      ProfileHwnd = hwnDlg; 
+	       wndProfilesList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				  10, 90, 200, 90, hwnDlg, (HMENU) 1, 
+				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	  SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
+	  SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+
+		/* reset the status flag */
+      ProfileHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      switch (LOWORD (wParam)) 
+	  {
+	    case IDC_PROFILESLOCATION:
+				GetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File,
+			                     sizeof (Profiles_File) - 1);
+				/* if the text entry changed */
+				if (HIWORD(wParam) == EN_UPDATE)
+				{	
+				    if (ustrlen(Profiles_File))
+					{
+					    Prof_RebuildProTable(Profiles_File);
+						BuildProfileList();
+					}
+				}
+		break;		
+		/* action buttons */
+	    case ID_APPLY:
+	          SetProfileConf ();	  
+	          /* reset the status flag */
+	          EndDialog (hwnDlg, ID_DONE);
+	          break;
+	    case ID_DONE:
+	          /* reset the status flag */
+	          ProfileHwnd = NULL;
+	          EndDialog (hwnDlg, ID_DONE);
+	          break;
+	    case ID_DEFAULTS:
+	          /* always signal this as modified */
+	          GetDefaultProfileConf ();
+			  WIN_RefreshProfileMenu (ProfileHwnd);
+	          break;
+	  }
+	  switch (HIWORD (wParam))
+	  {
+		case LBN_SELCHANGE:
+			  	itemIndex = SendMessage (wndProfilesList, LB_GETCURSEL, 0, 0);
+	            itemIndex = SendMessage (wndProfilesList, LB_GETTEXT, itemIndex, (LPARAM) Profile);
+				SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
+		        break;		 
+	  }
+      break;
+	     
+    default: return FALSE;
+   }	     
+
+  return TRUE; 
 }
 #endif /* _WINDOWS */
-
 
 
 
@@ -3384,9 +3460,10 @@ STRING              data;
 	case mProfiles_File:
 	  if (data)
 	    { 
-	   
+		   /* did the profile file change ? */
 	      if (ustrcmp(data, Profiles_File) !=0 ) 
 		{
+		   /* Yes : rescan the file and display the profiles */
 		  ustrcpy (Profiles_File, data);
 		  Prof_RebuildProTable(Profiles_File);
 
@@ -3406,15 +3483,42 @@ STRING              data;
     }
 }
 #endif /* !_WINDOWS */
+ 
 
+
+#ifdef _WINDOWS
+/*----------------------------------------------------
+  BuildProfileList : Builds the list allowing 
+  to select a profile (for windows)
+-------------------------------------------------------*/
+
+static void BuildProfileList(void)
+{
+   int                   nbprofiles = 0;	
+   int                   i = 0;      
+
+   /* Get the propositions of the list */ 
+   SendMessage (wndProfilesList, LB_RESETCONTENT, 0, 0);
+   nbprofiles = Prof_GetProfilesItems (MenuText);
+   while (i < nbprofiles && MenuText[i] != '\0')
+   {
+	 SendMessage (wndProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);  
+	 i++;
+   }
+}
+#endif /* WINDOWS */
+
+
+
+#ifndef _WINDOWS
 /*---------------------------------------------------
   BuildProfileSelector : Builds the selector allowing 
-  to select a profile
+  to select a profile (for unix)
 -----------------------------------------------------*/
 
 static void BuildProfileSelector()
 {
-  int                   i,j;
+  int                   i;
   int                   nbprofiles = 0;
   int                   indx, length;
   STRING                entry;
@@ -3451,7 +3555,7 @@ static void BuildProfileSelector()
    else
      TtaSetSelector (ProfileBase + mProfileSelector, -1, "");
 }
-
+#endif /* WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -3472,8 +3576,7 @@ STRING              pathname;
 #ifndef _WINDOWS
 
    int                   i;
-   
-  
+    
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
@@ -3511,22 +3614,22 @@ STRING              pathname;
    if (!ProfileHwnd)
     /* only activate the menu if it isn't active already */
     {
-/*
+
       switch (app_lang)
 	{
 	case FR_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (FR_LANNEGMENU), NULL, 
+	  DialogBox (hInstance, MAKEINTRESOURCE (FR_PROFILEMENU), NULL, 
 		     (DLGPROC) WIN_ProfileDlgProc);
 	  break;
 	case DE_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (DE_LANNEGMENU), NULL, 
+	  DialogBox (hInstance, MAKEINTRESOURCE (DE_PROFILEMENU), NULL, 
 		     (DLGPROC) WIN_ProfileDlgProc);
 	  break;
 	default:
-	  DialogBox (hInstance, MAKEINTRESOURCE (EN_LANNEGMENU), NULL, 
+	  DialogBox (hInstance, MAKEINTRESOURCE (EN_PROFILEMENU), NULL, 
 		     (DLGPROC) WIN_ProfileDlgProc);
 	}
-*/
+
     }
    else
      SetFocus (ProfileHwnd);
@@ -3546,10 +3649,13 @@ void WIN_RefreshProfileMenu (HWND hwnDlg)
 void WIN_RefreshProfileMenu (hwnDlg)
 HWND hwnDlg;
 #endif /* __STDC__ */
-{
- /* SetDlgItemText (hwnDlg, IDC_LANNEG, Profile); */
+{		
+  SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
+  SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
+  SendMessage (wndProfilesList, LB_RESETCONTENT, 0, 0);
 }
 #endif /* WINDOWS */
+
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -3613,9 +3719,6 @@ static void SetProfileConf ()
   TtaSetEnvString (TEXT("Profiles_File"), Profiles_File,TRUE);
   TtaSetEnvString (TEXT("Profile"), Profile,TRUE);
   TtaSaveAppRegistry ();
-
-  /* change the current settings */
- /* libwww_updateNetworkConf (AMAYA_LANNEG_RESTART); */
 }
 
 
@@ -3849,7 +3952,7 @@ static void GetTemplatesConf (void)
 static void GetTemplatesConf ()
 #endif /* __STDC__ */
 {
-  GetEnvString (TEXT("URL_TEMPLATE"), TemplatesUrl);
+  GetEnvString (TEXT("TEMPLATE_URL"), TemplatesUrl);
 }
 
 /*----------------------------------------------------------------------
@@ -3862,7 +3965,7 @@ static void GetDefaultTemplatesConf (void)
 static void GetDefaultTemplatesConf ()
 #endif /* __STDC__ */
 {
-  GetDefEnvString (TEXT("URL_TEMPLATE"), TemplatesUrl);
+  GetDefEnvString (TEXT("TEMPLATE_URL"), TemplatesUrl);
 }
 
 
@@ -3876,6 +3979,6 @@ static void SetTemplatesConf (void)
 static void SetTemplatesConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString (TEXT("URL_TEMPLATE"), TemplatesUrl, TRUE);
+  TtaSetEnvString (TEXT("TEMPLATE_URL"), TemplatesUrl, TRUE);
   TtaSaveAppRegistry ();
 }

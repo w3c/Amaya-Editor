@@ -349,6 +349,8 @@
 #define FR_TEMPLATESMENU                514
 #define DE_TEMPLATESMENU                515
 #define FR_PROFILEMENU                  518
+#define EN_PROFILEMENU                  519
+#define DE_PROFILEMENU                  520
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -733,6 +735,7 @@
 #define IDC_DEFAULTBOLD                 1459
 #define IDC_TEMPLATESURL                1460
 #define IDC_PROFILESLOCATION            1462
+#define IDC_PROFILENAME                 1463
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -771,9 +774,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        519
+#define _APS_NEXT_RESOURCE_VALUE        521
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1463
+#define _APS_NEXT_CONTROL_VALUE         1464
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

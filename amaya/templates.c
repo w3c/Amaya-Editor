@@ -47,7 +47,7 @@ View view;
 
 {
    STRING    URLform;
-   Document  templateSelect;
+ //  Document  templateSelect;
 
    URLform = TtaGetEnvString (TEXT("URL_TEMPLATE"));
    if (URLform != NULL)

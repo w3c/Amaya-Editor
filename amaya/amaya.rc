@@ -1219,6 +1219,24 @@ BEGIN
                     WS_TABSTOP
 END
 
+DE_PROFILEMENU DIALOG DISCARDABLE  100, 100, 214, 167
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Profile Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Location of profiles definition file",-1,7,7,200,11
+    EDITTEXT        IDC_PROFILESLOCATION,7,22,168,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "Appy",ID_APPLY,7,146,50,14
+    PUSHBUTTON      "Done",ID_DONE,123,146,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,65,146,50,14
+    LTEXT           "These changes won't be effective until Amaya is restarted",
+                    -1,7,130,200,11
+    LTEXT           "Profile selection",-1,7,42,200,11
+    EDITTEXT        IDC_PROFILENAME,7,111,131,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1495,6 +1513,14 @@ BEGIN
         RIGHTMARGIN, 191
         TOPMARGIN, 7
         BOTTOMMARGIN, 61
+    END
+
+    DE_PROFILEMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 207
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 160
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2710,6 +2736,24 @@ BEGIN
                     WS_TABSTOP
 END
 
+EN_PROFILEMENU DIALOG DISCARDABLE  100, 100, 214, 167
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Profile Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Location of profiles definition file",-1,7,7,200,11
+    EDITTEXT        IDC_PROFILESLOCATION,7,22,168,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,146,50,14
+    PUSHBUTTON      "Done",ID_DONE,123,146,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,65,146,50,14
+    LTEXT           "These changes won't be effective until Amaya is restarted",
+                    -1,7,130,200,11
+    EDITTEXT        IDC_PROFILENAME,7,111,131,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+    LTEXT           "Profile selection",-1,7,42,200,11
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2985,6 +3029,14 @@ BEGIN
         RIGHTMARGIN, 191
         TOPMARGIN, 7
         BOTTOMMARGIN, 61
+    END
+
+    EN_PROFILEMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 207
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 160
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -4316,6 +4368,25 @@ BEGIN
     PUSHBUTTON      "Défaut",ID_DEFAULTS,76,47,50,14
 END
 
+FR_PROFILEMENU DIALOG DISCARDABLE  100, 100, 214, 167
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Configuration du profile"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Emplacement du fichier de définition de profiles",-1,7,
+                    7,200,11
+    EDITTEXT        IDC_PROFILESLOCATION,7,22,168,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "Appliquer",ID_APPLY,7,146,50,14
+    PUSHBUTTON      "Terminer",ID_DONE,123,146,50,14
+    PUSHBUTTON      "Défaut",ID_DEFAULTS,65,146,50,14
+    LTEXT           "Ces changements seront effectifs lors du prochain redémarrage.",
+                    -1,7,130,200,11
+    LTEXT           "Sélection du profile",-1,7,42,200,11
+    EDITTEXT        IDC_PROFILENAME,7,111,131,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -4601,6 +4672,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 61
     END
+
+    FR_PROFILEMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 207
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 160
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -4792,6 +4871,52 @@ IDB_GKEY160             BITMAP  DISCARDABLE     "gkey160.bmp"
 //
 
 IDC_WINCURSOR           CURSOR  DISCARDABLE     "wincurso.cur"
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x7L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040c04b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "W3C INRIA""è\0"
+            VALUE "FileDescription", "libwww\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "libwww\0"
+            VALUE "LegalCopyright", "Copyright © 1999\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "libwww.lib\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "W3C INRIA""è libwww\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x40c, 1200
+    END
+END
+
+#endif    // !_MAC
+
 #endif    // French (France) resources
 /////////////////////////////////////////////////////////////////////////////
 
