@@ -34,7 +34,6 @@
  /* Identification des messages */
 ThotBool            PrintErrorMessages;
 
-#include "viewcommands_f.h"
 
 /*----------------------------------------------------------------------
    TtaError affiche les messsges d'erreur de l'API.                

@@ -190,7 +190,6 @@ EDITOR_OBJ = \
 	dialogue/closedoc.o \
 	dialogue/colors.o \
 	dialogue/context.o \
-	dialogue/createdoc.o \
 	dialogue/creationmenu.o \
 	dialogue/dialogapi.o \
 	dialogue/geom.o \
@@ -198,20 +197,15 @@ EDITOR_OBJ = \
 	dialogue/interface.o \
 	dialogue/keyboards.o \
 	dialogue/modiftype.o \
-	dialogue/opendoc.o \
 	dialogue/openview.o \
-	dialogue/picturemenu.o \
 	dialogue/profiles.o \
 	dialogue/presentmenu.o \
 	dialogue/printmenu.o \
 	dialogue/extprintmenu.o \
 	dialogue/quit.o \
-	dialogue/savedoc.o \
 	dialogue/searchmenu.o \
 	dialogue/searchmenustr.o \
 	dialogue/selectmenu.o \
-	dialogue/visibility.o \
-	dialogue/zoom.o \
 	document/pivot.o \
 	document/docs.o \
 	document/views.o \
@@ -231,7 +225,6 @@ EDITOR_OBJ = \
 	editing/undo.o \
 	editing/undoapi.o \
 	editing/unstructchange.o\
-	editing/viewcommands.o \
 	image/pictureapi.o \
 	presentation/presentationapi.o \
 	tree/attributeapi.o \

@@ -39,7 +39,6 @@
 #include "structselect_f.h"
 #include "tree_f.h"
 #include "ustring_f.h"
-#include "viewcommands_f.h"
 #include "views_f.h"
 
 

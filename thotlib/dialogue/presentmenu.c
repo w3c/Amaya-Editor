@@ -53,7 +53,6 @@
 #include "undo_f.h"
 #include "units_f.h"
 #include "unstructchange_f.h"
-#include "viewcommands_f.h"
 
 #ifdef _WINDOWS 
 #include "wininclude.h"

@@ -72,7 +72,6 @@
 #include "tree_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
-#include "viewcommands_f.h"
 #include "writepivot_f.h"
 
 #ifdef _WINDOWS

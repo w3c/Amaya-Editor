@@ -3128,11 +3128,6 @@ void                DestroyFrame (int frame)
 	     i++;
 	  }
 
-	/* Annule eventuellement les formulaires attaches a la fenetre */
-	if (ThotLocalActions[T_rszoom] != NULL)
-	   (*ThotLocalActions[T_rszoom]) (frame);
-	if (ThotLocalActions[T_rsvisibility] != NULL)
-	   (*ThotLocalActions[T_rsvisibility]) (frame);
 	if (ThotLocalActions[T_rsindex] != NULL)
 	   (*ThotLocalActions[T_rsindex]) (frame);
 
@@ -3977,17 +3972,9 @@ void      ThotCallback (int ref, int typedata, char *data)
       case NumSelectNatureName:
 	(*ThotLocalActions[T_rchoice]) (0, data);
 	break;
-      case NumMenuCreateReferenceElem:
-	/* Pop-up menu 'Creation element reference'' */
-	(*ThotLocalActions[T_raskfornew]) ((int) data);
-	break;
       case NumMenuChangeType:
 	/* Pop-up menu 'ChangeType' */
 	(*ThotLocalActions[T_rchangetype]) ((int)data);
-	break;
-      case NumMenuSurround:
-	/* Pop-up menu 'Surround' */
-	(*ThotLocalActions[T_rsurround]) ((int)data);
 	break;
 	
       case NumMenuAttrRequired:
@@ -4011,40 +3998,6 @@ void      ThotCallback (int ref, int typedata, char *data)
 	(*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
 	break;
 	
-      case NumFormCreateDoc:
-      case NumZoneDocNameToCreate:
-      case NumZoneDocDirToCreate:
-      case NumSelDocClassToCreate:
-	(*ThotLocalActions[T_createdoc]) (ref, typedata, data);
-	break;
-      case NumFormConfirm:
-	(*ThotLocalActions[T_confirmcreate]) (ref, typedata, data);
-	break;
-      case NumFormOpenDoc:
-      case NumZoneDirOpenDoc:
-      case NumSelDoc:
-      case NumZoneDocNameToOpen:
-      case NumToggleDocTypeToOpen:
-	(*ThotLocalActions[T_opendoc]) (ref, typedata, data);
-	break;
-      case NumSelectImportClass:
-      case NumFormImportClass:
-	(*ThotLocalActions[T_import]) (ref, typedata, data);
-	break;
-      case NumFormPresentationSchema:
-      case NumZonePresentationSchema:
-	(*ThotLocalActions[T_presentation]) (ref, typedata, data);
-	break;
-      case NumFormClose:
-	(*ThotLocalActions[T_rconfirmclose]) (ref, typedata, data);
-	break;
-	
-      case NumMenuZoom:
-	(*ThotLocalActions[T_chzoom]) (ref, typedata, data);
-	break;
-      case NumMenuVisibility:
-	(*ThotLocalActions[T_chvisibility]) (ref, typedata, data);
-	break;
       case NumMenuViewsToOpen:
 	(*ThotLocalActions[T_openview]) (ref, typedata, data);
 	break;
@@ -4067,13 +4020,6 @@ void      ThotCallback (int ref, int typedata, char *data)
 	(*ThotLocalActions[T_rprint]) (ref, 0, data);
 	break;
 	
-      case NumZoneDocNameTooSave:
-      case NumZoneDirDocToSave:
-      case NumMenuFormatDocToSave:
-      case NumMenuCopyOrRename:
-      case NumFormSaveAs:
-	(*ThotLocalActions[T_rsavedoc]) (ref, typedata, data);
-	break;
       case NumFormPresChar:
       case NumFormPresFormat:
       case NumFormPresGraphics:
@@ -4108,18 +4054,6 @@ void      ThotCallback (int ref, int typedata, char *data)
 	(*ThotLocalActions[T_presentstd]) (ref, (int) data);
 	break;
       case NumZoneSearchPage:
-      case NumFormSearchPage:
-	(*ThotLocalActions[T_searchpage]) (ref, (int) data);
-	break;
-      case NumFormSearchEmptyElement:
-	(*ThotLocalActions[T_searchemptyelt]) (ref, (int) data);
-	break;
-      case NumFormSearchReference:
-	(*ThotLocalActions[T_searchrefto]) (ref, (int) data);
-	break;
-      case NumFormSearchEmptyReference:
-	(*ThotLocalActions[T_searchemptyref]) (ref, (int) data);
-	break;
       case NumFormSearchText:
       case NumMenuReplaceMode:
       case NumToggleUpperEqualLower:
@@ -4148,10 +4082,6 @@ void      ThotCallback (int ref, int typedata, char *data)
 #endif /* !_WINDOWS */
 	    (*ThotLocalActions[T_rattr]) (ref, (int) data, ActiveFrame);
 	  }
-	if (ref >= NumMenuPresNature && ref <= NumMenuPresNature + NbMaxMenuPresNature)
-	  /* retour des menus de changement de schema de presentation */
-	  if (ThotLocalActions[T_rchangepres] != NULL)
-	    (*ThotLocalActions[T_rchangepres]) (ref, (int)data);
 	break;
       }
   else

@@ -38,7 +38,6 @@ static ThotBool     SaveBeforeClosing;
 #include "displayview_f.h"
 #include "documentapi_f.h"
 #include "docs_f.h"
-#include "viewcommands_f.h"
 #include "views_f.h"
 
 #ifdef _WINDOWS

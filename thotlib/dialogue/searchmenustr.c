@@ -35,8 +35,6 @@
 #include "structcreation_f.h"
 #include "references_f.h"
 #include "structmodif_f.h"
-#include "viewcommands_f.h"
-
 #include "absboxes_f.h"
 #include "changeabsbox_f.h"
 #include "schemas_f.h"

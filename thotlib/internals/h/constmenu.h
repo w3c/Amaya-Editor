@@ -10,25 +10,6 @@
 
 /* ALLOCATION DES NUMEROS DE CATALOGUES					*/
 /* Catalogues reserves aux fonctions standards de l'editeur Thot	*/
-#define NumFormCreateDoc	22
-#define NumZoneDocNameToCreate	1
-#define NumZoneDocDirToCreate	2
-#define NumSelDocClassToCreate	3
-#define NumFormOpenDoc	4
-#define NumZoneDirOpenDoc	5
-#define NumSelDoc		6
-#define NumZoneDocNameToOpen	7
-#define NumFormImportClass	8
-#define NumSelectImportClass	9
-#define NumFormConfirm		10
-#define NumLabelConfirm		11
-#define NumMenuImportFormat	12
-#define NumFormImportFormat	13
-
-#define NumFormDirSchemas	14
-#define NumZoneDirSchemas	15
-#define NumFormDirDocuments	16
-#define NumZoneDirDocuments	17
 
 #define NumFormSpace		18
 #define NumMenuInputSpace	19
@@ -44,22 +25,6 @@
 #define NumFormNature		29
 #define NumSelectNatureName	30
 
-#define NumFormList		31
-#define NumZoneFileNameList	32
-#define NumMenuTypeList	33
-
-#define NumFormPresentationSchema 34
-#define NumZonePresentationSchema 35
-#define NumMenuCreateReferenceElem 37
-#define NumFormImage		38
-
-#define NumFormSaveAs	40
-#define NumZoneDirDocToSave	41
-#define NumMenuFormatDocToSave 42
-#define NumMenuCopyOrRename 43
-#define NumZoneDocNameTooSave	44
-#define NumFormAutoSave		45
-#define NumZoneAutoSave		46
 #define NumFormPrint		47
 #define NumZoneScrollUp      	48
 #define NumZoneScrollLeft  	49

@@ -216,7 +216,6 @@ ThotBool InitToolTip (HWND hwndToolBar)
 #include "textcommands_f.h"
 #include "thotmsg_f.h"
 #include "views_f.h"
-#include "viewcommands_f.h"
 #include "viewapi_f.h"
 #include "xwindowdisplay_f.h"
 

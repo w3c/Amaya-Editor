@@ -46,7 +46,6 @@
 #include "views_f.h"
 #include "appdialogue_f.h"
 #include "actions_f.h"
-#include "viewcommands_f.h"
 #include "input_f.h"
 #include "keyboards_f.h"
 #include "structmodif_f.h"

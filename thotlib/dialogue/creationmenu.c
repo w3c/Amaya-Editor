@@ -32,68 +32,19 @@ static ThotBool     AnswerMenuAskForNew;
 /* answer AnswerCreateAskForNew to the create/designate menu */ 
 static ThotBool     AnswerCreateAskForNew;
 
+#include "config_f.h"
 #include "structcreation_f.h"
-extern int ConfigMakeDocTypeMenu (CHAR_T*, int*, ThotBool);
-
-/*----------------------------------------------------------------------
-   AskForNew_RemplRefer
-   After setting up  a reference, this function asks the user if he wants
-   to create at the same time the referenced element or if he just wants
-   to designate an existing element.
-   It returns FALSE if the user aborts the command. Otherwise
-   generate is TRUE if the user wants to create the referenced
-   element, FALSE if he only wants to designate it.
-  ----------------------------------------------------------------------*/
-ThotBool AskForNew_RemplRefer (ThotBool * generate, Name typeName)
-{
-   int                 i;
-   CHAR_T                bufMenu[MAX_TXT_LEN];
-
-   /* creates and activates the menu */
-   i = 0;
-   usprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
-   i += ustrlen (&bufMenu[i]) + 1;
-   usprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
-   TtaNewPopup (NumMenuCreateReferenceElem, 0, TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
-#ifndef _WINDOWS
-   TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
-   /* waits until the user replies to the menu */
-   TtaWaitShowDialogue ();
-#endif /* !_WINDOWS */
-   *generate = AnswerCreateAskForNew;
-   return AnswerMenuAskForNew;
-}
-
-/*----------------------------------------------------------------------
-   CallbackAskForNew
-   handles the callback of the menu which asks the user if he wants
-   to designate a referenced element or if if he prefers to create
-   a new element.
-  ----------------------------------------------------------------------*/
-void CallbackAskForNew (int Val)
-{
-   if (Val == 0)
-     {
-	AnswerMenuAskForNew = TRUE;
-	AnswerCreateAskForNew = TRUE;
-     }
-   if (Val == 1)
-     {
-	AnswerMenuAskForNew = TRUE;
-	AnswerCreateAskForNew = FALSE;
-     }
-}
 
 
 /*----------------------------------------------------------------------
   BuildChoiceMenu
   ----------------------------------------------------------------------*/
-void BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool natureChoice)
+void BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntries,
+		      ThotBool natureChoice)
 {
    int                 menu;
-   CHAR_T              bufMenuB[MAX_TXT_LEN];
-   STRING              src;
-   STRING              dest;
+   char                bufMenuB[MAX_TXT_LEN];
+   char               *src, *dest;
    int                 k, l, nbitem, length;
 
    if (natureChoice)
@@ -137,10 +88,10 @@ void BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool na
 	src = &bufMenu[0];
 	for (k = 1; k <= nbEntries; k++)
 	  {
-	     ustrcpy (dest, "B");
+	     strcpy (dest, "B");
 	     dest++;
-	     l = ustrlen (src);
-	     ustrcpy (dest, src);
+	     l = strlen (src);
+	     strcpy (dest, src);
 	     dest += l + 1;
 	     src += l + 1;
 	  }
@@ -160,7 +111,7 @@ void BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool na
    Inserts a separator in the menu Insert/Paste/Include
   ----------------------------------------------------------------------*/
 void InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd,
-			    STRING bufMenu)
+			    char *bufMenu)
 {
    *prevMenuInd = *menuInd;
    /* indicates if it's a separator */
@@ -174,12 +125,11 @@ void InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd,
 /*----------------------------------------------------------------------
   BuildPasteMenu
   ----------------------------------------------------------------------*/
-void BuildPasteMenu (int RefMenu, STRING bufMenu, Name title,
+void BuildPasteMenu (int RefMenu, char *bufMenu, Name title,
 		     int nbEntries, char button)
 {
-   CHAR_T                bufMenuB[MAX_TXT_LEN];
-   STRING              src;
-   STRING              dest;
+   char                bufMenuB[MAX_TXT_LEN];
+   char               *src, *dest;
    int                 k, l;
 
    /* adds 'B' to the beginning of each entry of the menu */
@@ -187,14 +137,14 @@ void BuildPasteMenu (int RefMenu, STRING bufMenu, Name title,
    src = &bufMenu[0];
    for (k = 1; k <= nbEntries; k++)
      {
-	l = ustrlen (src);
+	l = strlen (src);
 	/* don't add 'B' to the beginning of separators */
 	if (*src != 'S' || l != 1)
 	  {
-	     ustrcpy (dest, "B");
+	     strcpy (dest, "B");
 	     dest++;
 	  }
-	ustrcpy (dest, src);
+	strcpy (dest, src);
 	dest += l + 1;
 	src += l + 1;
      }

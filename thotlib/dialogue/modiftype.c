@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /*
  * Type modification commands
  *
@@ -47,7 +38,6 @@
 #include "views_f.h"
 #include "appdialogue_f.h"
 #include "actions_f.h"
-#include "viewcommands_f.h"
 #include "exceptions_f.h"
 #include "input_f.h"
 #include "keyboards_f.h"
@@ -62,13 +52,7 @@
    Composes in the BufItemSplit buffer the name of the Split item of
    the Edit menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ComposeItemSplit (STRING bufItemSplit)
-#else  /* __STDC__ */
-static void         ComposeItemSplit (bufItemSplit)
-STRING              bufItemSplit;
-
-#endif /* __STDC__ */
+static void         ComposeItemSplit (char *bufItemSplit)
 {
    PtrElement          pFirstEl, pLastEl, pList, pPointDiv, pElToDuplicate,
                        pEl;
@@ -105,15 +89,9 @@ STRING              bufItemSplit;
    updates the title of the Split item of the Edit menu in all the frames
    of document pDoc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateSplitItem (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                UpdateSplitItem (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void UpdateSplitItem (PtrDocument pDoc)
 {
-   CHAR_T              bufItemSplit[MAX_TXT_LEN];
+   char              bufItemSplit[MAX_TXT_LEN];
 
    bufItemSplit[0] = EOS;
    if (pDoc == NULL || pDoc != SelectedDocument)
@@ -130,14 +108,7 @@ PtrDocument         pDoc;
    TtcSplit
    splits an element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcSplit (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSplit (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void TtcSplit (Document document, View view)
 {
    /* on essaie d'abord de faire comme la touche Return */
    if (BreakElement (NULL, NULL, 0, TRUE, TRUE))
@@ -151,7 +122,7 @@ View                view;
    StructEditingingLoadResources
    connects editing structure functions.
   ----------------------------------------------------------------------*/
-void                StructEditingLoadResources ()
+void StructEditingLoadResources ()
 {
    if (ThotLocalActions[T_chsplit] == NULL)
      {
@@ -160,7 +131,6 @@ void                StructEditingLoadResources ()
 	TteConnectAction (T_insertpaste, (Proc) CreatePasteIncludeCmd);
 	TteConnectAction (T_rcinsertpaste, (Proc) CreatePasteIncludeMenuCallback);
 	TteConnectAction (T_rchoice, (Proc) ChoiceMenuCallback);
-	TteConnectAction (T_raskfornew, (Proc) CallbackAskForNew);
 	EditingLoadResources ();
 	ImageMenuLoadResources ();
      }

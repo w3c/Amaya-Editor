@@ -96,7 +96,6 @@ static ThotBool     createPasteMenuOK;
 #include "structschema_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
-#include "viewcommands_f.h"
 #include "views_f.h"
 
 
@@ -1448,9 +1447,7 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
      }
    else
      {
-	if (assoc)
-	   again = AskForNew_RemplRefer (&new, typeName);
-	else
+	if (!assoc)
 	  {
 	     new = FALSE;
 	     again = TRUE;

@@ -78,7 +78,6 @@ extern HWND         WIN_Main_Wd;
 #include "structschema_f.h"
 #include "tree_f.h"
 #include "units_f.h"
-#include "viewcommands_f.h"
 
 /*----------------------------------------------------------------------
   SetImageRule updates or creates the picture descriptor of an element.

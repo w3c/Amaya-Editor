@@ -36,7 +36,6 @@
 #include "createabsbox_f.h"
 #include "createpages_f.h"
 #include "appdialogue_f.h"
-#include "viewcommands_f.h"
 #include "exceptions_f.h"
 #include "fileaccess_f.h"
 #include "absboxes_f.h"

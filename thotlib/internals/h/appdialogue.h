@@ -75,30 +75,30 @@ typedef struct _SchemaMenu_Ctl
 #define T_stopinsert	4
 #define T_pasteclipboard	5
 #define T_chsplit	6
-#define T_chvisibility	8
-#define T_rsvisibility	9
-#define T_chzoom	10
-#define T_rszoom	11
-#define T_chselect	12
-#define T_chattr	13
-#define T_insertchar	14
-#define T_editfunc	15
-#define T_presentation	16
-#define T_presentchoice	17
-#define T_rsavedoc	18
-#define T_savedoc	19
-#define T_openview	20
-
-#define T_createdoc	21
-#define T_opendoc	22
-#define T_import	23
-#define T_confirmcreate	24
-#define T_confirmclose	25
-#define T_rconfirmclose	26
-#define T_buildpathdocbuffer	27
-#define T_insertpaste	28
-#define T_rcinsertpaste	29
-#define T_raskfornew	30
+#define T_chselect	7
+#define T_chattr	8
+#define T_insertchar	9
+#define T_editfunc	10
+#define T_confirmclose	11
+#define T_rconfirmclose	12
+#define T_insertpaste	13
+#define T_rcinsertpaste	14
+#define T_clearhistory                  15
+#define T_openhistory                   16
+#define T_addhistory                    17
+#define T_attraddhistory                18
+#define T_cancelhistory                 19
+#define T_closehistory                  20
+#define T_lock                          21
+#define T_unlock                        22
+#define T_islock                        23
+#define T_backuponfatal			24
+#define T_switchsel                     25
+#define T_checksel                      26
+#define T_resetsel                      27
+#define T_selstring                     28
+#define T_extendsel                     29
+#define T_showbox                       30
 #define T_searchtext	31
 #define T_locatesearch	32
 #define T_searchpage	33
@@ -112,9 +112,8 @@ typedef struct _SchemaMenu_Ctl
 #define T_rattrlang	41
 #define T_rselect	42
 #define T_emptybox	43
-#define T_cancelhistory        44
-#define T_closehistory         45
-
+#define T_freesavedel   44
+#define T_docmodified   45
 #define T_indexcopy	46
 #define T_indexnew	47
 #define T_indexverif	48
@@ -122,7 +121,6 @@ typedef struct _SchemaMenu_Ctl
 #define T_rsindex	50
 #define T_rprint	51
 #define T_rextprint	52
-
 #define T_cancopyorcut	53
 #define T_selectsiblings 54
 #define T_selecbox	55
@@ -131,7 +129,6 @@ typedef struct _SchemaMenu_Ctl
 #define T_enter	        58
 #define T_cmdpaste	59
 #define T_deletenextchar 60
-
 #define T_strsearchconstmenu	61
 #define T_strsearchgetparams	62
 #define T_strsearchonly		63
@@ -158,16 +155,13 @@ typedef struct _SchemaMenu_Ctl
 #define T_cutpage               84
 #define T_deletepage            85
 #define T_deletepageab          86
-#define T_searchemptyelt        87
-#define T_searchemptyref        88
-#define T_searchrefto           89
-
+#define T_redisplay		87
+#define T_writedocument         88
+#define T_openview	        89
 #define T_checkHiddenElement		90
 #define T_checkReadOnlyElement		91
 #define T_checkInsertNearElement	92
 #define T_rchangetype			93
-#define T_rsurround			94
-#define T_rchangepres			95
 #define T_initevents			96
 #define T_checktable                    97
 #define T_cleartable			98
@@ -176,28 +170,9 @@ typedef struct _SchemaMenu_Ctl
 #define T_checkcolumn			101
 #define T_checktableheight              102
 #define T_AIupdate			103
-#define T_redisplay			104
-#define T_writedocument                 105
-#define T_setwritedirectory             106
-#define T_transformintotype		108
-#define T_docmodified                   109
-#define T_switchsel                     110
-#define T_checksel                      111
-#define T_resetsel                      112
-#define T_selstring                     113
-#define T_extendsel                     114
-#define T_showbox                       115
-#define T_freesavedel                   116
-#define T_clearhistory                  117
-#define T_openhistory                   118
-#define T_addhistory                    119
-#define T_attraddhistory                120
-
-#define T_lock                          121
-#define T_unlock                        122
-#define T_islock                        123
-#define T_backuponfatal			124
-#define MAX_LOCAL_ACTIONS               125
+#define T_setwritedirectory             104
+#define T_transformintotype		105
+#define MAX_LOCAL_ACTIONS               106
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

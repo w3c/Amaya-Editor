@@ -73,7 +73,6 @@
 #include "thotmsg_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
-#include "viewcommands_f.h"
 #include "views_f.h"
  
 /* descriptor of the selection to do after redosplaying */

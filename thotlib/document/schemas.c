@@ -289,11 +289,7 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule)
 				      schName))
 	    /* le fichier .conf ne donne pas de schema de presentation pour */
 	    /* cette nature, on le demande a l'utilisateur */
-	    {
 	    strncpy (schName, pNatureSS->SsDefaultPSchema, MAX_NAME_LENGTH);
-	    if (ThotLocalActions[T_presentchoice] != NULL)
-	       (*ThotLocalActions[T_presentchoice]) (pNatureSS, schName);
-	    }
 	 /* cree un nouveau schema de presentation et le charge depuis le
 	    fichier */
 	 pNatureSS->SsPSchema = LoadPresentationSchema (schName, pNatureSS);
@@ -493,15 +489,11 @@ void LoadSchemas (char *SSchName, char *PSchName,
 	    inaccessible */
 	 /* on consulte le fichier de configuration */
 	 if (!ConfigDefaultPSchema ((*pSS)->SsName, schName))
-	    {
             /* le fichier de configuration ne dit rien, on demande a
 	       l'utilisateur */
             /* propose la presentation par defaut definie dans le schema de
 	       structure */
 	    strncpy (schName, (*pSS)->SsDefaultPSchema, MAX_NAME_LENGTH);
-	    if (ThotLocalActions[T_presentchoice] != NULL)
-	       (*ThotLocalActions[T_presentchoice]) (*pSS, schName);
-	    }
 	 /* charge le schema de presentation depuis le fichier */
 	 (*pSS)->SsPSchema = LoadPresentationSchema (schName, *pSS);
 	 }
