@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -60,13 +60,7 @@ static ThotBool AttrHREFundoable = FALSE;
 /*----------------------------------------------------------------------
    SetTargetContent sets the new value of Target.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetTargetContent (Document doc, Attribute attrNAME)
-#else  /* __STDC__ */
-void                SetTargetContent (doc, attrNAME)
-Document            doc;
-Attribute           attrNAME;
-#endif /* __STDC__ */
 {
    int                 length;
 
@@ -101,14 +95,7 @@ Attribute           attrNAME;
    If current selection is within an anchor, change that link, otherwise
    create a link.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LinkToPreviousTarget (Document doc, View view)
-#else  /* __STDC__ */
-void                LinkToPreviousTarget (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
    Element             el;
    int                 firstSelectedChar, i;
@@ -150,16 +137,41 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void AddAccessKey (NotifyAttribute *event)
+{
+   CHAR_T              buffer[2];
+   int                 length;
+
+   /* get the access key */
+   length = 2;
+   TtaGiveTextAttributeValue (event->attribute, buffer, &length);
+   if (length > 0)
+     TtaAddAccessKey (event->document, (int)buffer[0], event->element);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+ThotBool RemoveAccessKey (NotifyAttribute *event)
+{
+   CHAR_T              buffer[2];
+   int                 length;
+
+   /* get the access key */
+   length = 2;
+   TtaGiveTextAttributeValue (event->attribute, buffer, &length);
+   if (length > 0)
+     TtaRemoveAccessKey (event->document, (int)buffer[0]);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+
+/*----------------------------------------------------------------------
    RemoveLink: destroy the link element and remove CSS rules when the
    link points to a CSS file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RemoveLink (Element el, Document doc)
-#else
-void                RemoveLink (el, doc)
-Element             el;
-Document            doc;
-#endif
 {
    ElementType	       elType;
    AttributeType       attrType;
@@ -198,32 +210,18 @@ Document            doc;
 /*----------------------------------------------------------------------
    DeleteLink                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            DeleteLink (NotifyElement * event)
-#else
-ThotBool            DeleteLink (event)
-NotifyElement      *event;
-
-#endif
 {
   RemoveLink (event->element, event->document);
   return FALSE;		/* let Thot perform normal operation */
 }
 
+
 /*----------------------------------------------------------------------
    SetREFattribute  sets the HREF or CITE attribue of the element to      
    the concatenation of targetURL and targetName.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetREFattribute (Element element, Document doc, STRING targetURL, STRING targetName)
-#else  /* __STDC__ */
-void                SetREFattribute (element, doc, targetURL, targetName)
-Element             element;
-Document            doc;
-STRING              targetURL;
-STRING              targetName;
-
-#endif /* __STDC__ */
 {
    ElementType	       elType;
    AttributeType       attrType;
@@ -380,13 +378,7 @@ STRING              targetName;
    ChangeTitle
    Update the TITLE for the document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ChangeTitle (Document doc, View view)
-#else
-void                ChangeTitle (doc, view)
-Document            doc;
-View                view;
-#endif
 {
    ElementType         elType;
    Element             el, child;
@@ -435,12 +427,7 @@ View                view;
    SetNewTitle
    Update the TITLE for the document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetNewTitle (Document doc)
-#else
-void                SetNewTitle (doc)
-Document            doc;
-#endif
 {
    ElementType         elType;
    Element             el, child;
@@ -475,15 +462,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    SelectDestination selects the destination of the el Anchor.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectDestination (Document doc, Element el, ThotBool withUndo)
-#else  /* __STDC__ */
-void                SelectDestination (doc, el, withUndo)
-Document            doc;
-Element             el;
-ThotBool	    withUndo;
-
-#endif /* __STDC__ */
 {
    Element             targetEl;
    ElementType	       elType;
@@ -606,14 +585,7 @@ ThotBool	    withUndo;
    element or the ID attribute of (an ascendant of) the selected element
    or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Attribute           GetNameAttr (Document doc, Element selectedElement)
-#else  /* __STDC__ */
-Attribute           GetNameAttr (doc, selectedElement)
-Document            doc;
-Element             selectedElement;
-
-#endif /* __STDC__ */
 {
    Element             el;
    ElementType         elType;
@@ -683,15 +655,7 @@ Element             selectedElement;
    If the forceID parameter, we'll always use an ID attribute, rather
    than a NAME one in some cases.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTargetAnchor (Document doc, Element el, ThotBool forceID, ThotBool withUndo)
-#else  /* __STDC__ */
-void                CreateTargetAnchor (doc, el, forceID, withUndo)
-Document            doc;
-Element             el;
-ThotBool            forceID;
-ThotBool	    withUndo;
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -840,15 +804,7 @@ ThotBool	    withUndo;
 /*----------------------------------------------------------------------
    CreateAnchor creates a link or target element.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateAnchor (Document doc, View view, ThotBool createLink)
-#else  /* __STDC__ */
-void                CreateAnchor (doc, view, createLink)
-Document            doc;
-View                view;
-ThotBool            createLink;
-
-#endif /* __STDC__ */
 {
   Element             first, last, el, next, parent;
   Element             parag, prev, child, anchor;
@@ -1120,14 +1076,7 @@ ThotBool            createLink;
    in the document.
    If the NAME or ID is already used, add a number at the end of the value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         MakeUniqueName (Element el, Document doc)
-#else  /* __STDC__ */
-void         MakeUniqueName (el, doc)
-Element	     el;
-Document     doc;
-
-#endif /* __STDC__ */
 {
   ElementType	    elType;
   AttributeType     attrType;
@@ -1248,14 +1197,7 @@ Document     doc;
   GetNextNode
   Returns the next node in the tree, using a complete traversal algorithm.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element    GetNextNode (Element curr)
-#else  /* __STDC__ */
-static Element    GetNExtNode (curr)
-Element curr;
-Element last;
-
-#endif /* __STDC__ */
 {
   Element el;
 
@@ -1278,15 +1220,7 @@ Element last;
   Searchs for a typed element and stops when it finds it or if the
   search reaches the last element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element    SearchTypedElementForward (ElementType elType_search, Element curr, Element last)
-#else  /* __STDC__ */
-static Element    SearchTypedElementForward (elType_search, curr, last)
-ElementType elType_search;
-Element curr;
-Element last;
-
-#endif /* __STDC__ */
 {
   ElementType elType;
   Element el;
@@ -1318,16 +1252,7 @@ Element last;
   If an element already has an ID attribute, a new one won't be created.
   TO DO: Use the thotmsg functions for the dialogs.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool createID, ThotBool inSelection)
-#else  /* __STDC__ */
-void         CreateRemoveIDdAttribute (elName, doc, createID, inSelection)
-CHAR_T         *elNamel
-Document	doc;
-int             createID;
-ThotBool        inSelection;
-
-#endif /* __STDC__ */
 {
   Element             el, lastEl;
   ElementType         elType;
@@ -1466,14 +1391,7 @@ ThotBool        inSelection;
    an ordinary Paragraph.
    Rule: only the first child of any element can be a Pseudo_paragraph.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CheckPseudoParagraph (Element el, Document doc)
-#else  /* __STDC__ */
-static void         CheckPseudoParagraph (el, doc)
-Element		el;
-Document	doc;
-
-#endif /* __STDC__ */
 {
   Element		prev, next, parent;
   Attribute             attr;
@@ -1550,13 +1468,7 @@ Document	doc;
    ElementCreated
    An element has been created in a HTML document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ElementCreated (NotifyElement * event)
-#else  /* __STDC__ */
-void                ElementCreated (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
   CheckPseudoParagraph (event->element, event->document);
 }
@@ -1566,12 +1478,7 @@ NotifyElement      *event;
  An element has been deleted. If it was the only child of element
  BODY, create a first paragraph.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ElementDeleted (NotifyElement *event)
-#else /* __STDC__*/
-void ElementDeleted(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
 {
   Element	child, el;
   ElementType	elType, childType;
@@ -1637,17 +1544,8 @@ void ElementDeleted(event)
    namespace) that has to be updated. Update it according to the new
    context.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void    ChangeURI (Element el, Attribute attr,
 		   Document originDocument, Document doc)
-#else  /* __STDC__ */
-void    ChangeURI (el, attr, originDocument, doc)
-Element el;
-Attribute attr;
-Document originDocument;
-Document doc;
-#endif /* __STDC__ */
-
 {
   int      length, i, iName;
   STRING   value, base, documentURI, tempURI, path;
@@ -1732,13 +1630,7 @@ Document doc;
    If it's within the TITLE element, update the corresponding field in
    the Formatted window.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ElementPasted (NotifyElement * event)
-#else  /* __STDC__ */
-void                ElementPasted (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
   Document            originDocument, doc;
   Language            lang;
@@ -1888,12 +1780,7 @@ NotifyElement      *event;
    Some new text has been pasted or typed in a text element. Check the
    NewLine characters and replace them by spaces, except in a PRE
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CheckNewLines (NotifyOnTarget *event)
-#else /* __STDC__*/
-void CheckNewLines(event)
-     NotifyOnTarget *event;
-#endif /* __STDC__*/
 {
   Element     ancestor;
   ElementType elType;
@@ -1946,14 +1833,7 @@ void CheckNewLines(event)
 /*----------------------------------------------------------------------
    CreateTarget creates a target element.                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTarget (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateTarget (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateAnchor (doc, view, FALSE);
 }
@@ -1967,13 +1847,7 @@ View                view;
    If it's a deletion for a SPAN element, remove that element if it's
    not needed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateAttrID (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                UpdateAttrID (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    Element	firstChild, lastChild;
 
@@ -1998,13 +1872,7 @@ NotifyAttribute    *event;
    CoordsModified  updates x_ccord, y_coord, width, height or      
    polyline according to the new coords value.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CoordsModified (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                CoordsModified (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    ParseAreaCoords (event->element, event->document);
 }
@@ -2014,13 +1882,7 @@ NotifyAttribute    *event;
    GraphicsModified        updates coords attribute value          
    according to the new coord value.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GraphicsModified (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                GraphicsModified (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    Element             el;
    ElementType         elType;
@@ -2069,13 +1931,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    StoreWidth IntWidthPxl will be changed, store the old value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            StoreWidth (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            StoreWidth (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
   ElementType	     elType;
   int                h;
@@ -2091,13 +1947,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    StoreHeight height_ will be changed, store the old value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            StoreHeight (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            StoreHeight (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
   ElementType	     elType;
   int                w;
@@ -2116,13 +1966,7 @@ NotifyAttribute    *event;
    Delete the corresponding attribute IntWidthPercent or   
    IntWidthPxl.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            AttrWidthDelete (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            AttrWidthDelete (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -2146,13 +1990,7 @@ NotifyAttribute    *event;
    AttrWidthModifed  An attribute Width__ has been created or modified.
    Create the corresponding attribute IntWidthPercent or IntWidthPxl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AttrWidthModified (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                AttrWidthModifed (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
   STRING              buffer;
   int                 length;
@@ -2169,13 +2007,7 @@ NotifyAttribute    *event;
    an HTML attribute "size" has been created for a Font element.   
    Create the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AttrFontSizeCreated (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                AttrFontSizeCreated (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    STRING               buffer = TtaAllocString (buflen);
    int                 length;
@@ -2196,13 +2028,7 @@ NotifyAttribute    *event;
    an HTML attribute "size" has been deleted for a Font element.   
    Delete the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            AttrFontSizeDelete (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            AttrFontSizeDelete (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -2229,13 +2055,7 @@ NotifyAttribute    *event;
    an attribute color, TextColor or BackgroundColor has been       
    created or modified.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AttrColorCreated (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                AttrColorCreated (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    STRING           value = TtaAllocString (buflen);
    int              length;
@@ -2269,13 +2089,7 @@ NotifyAttribute    *event;
    an attribute color, TextColor or BackgroundColor is being       
    deleted.                                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            AttrColorDelete (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            AttrColorDelete (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
       HTMLResetBackgroundColor (event->document, event->element);
@@ -2297,13 +2111,7 @@ NotifyAttribute    *event;
    An element List_Item has been created or pasted. Set its        
    IntItemStyle attribute according to its surrounding elements.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ListItemCreated (NotifyElement * event)
-#else  /* __STDC__ */
-void                ListItemCreated (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
    SetAttrIntItemStyle (event->element, event->document);
 }
@@ -2312,14 +2120,7 @@ NotifyElement      *event;
    Set the IntItemStyle attribute of all List_Item elements in the 
    el subtree.                                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetItemStyleSubtree (Element el, Document doc)
-#else  /* __STDC__ */
-static void         SetItemStyleSubtree (el, doc)
-Element             el;
-Document            doc;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             child;
@@ -2339,13 +2140,7 @@ Document            doc;
    An element Unnumbered_List or Numbered_List has changed type.   
    Set the IntItemStyle attribute for all enclosed List_Items      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ListChangedType (NotifyElement * event)
-#else  /* __STDC__ */
-void                ListChangedType (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
    SetItemStyleSubtree (event->element, event->document);
 }
@@ -2355,13 +2150,7 @@ NotifyElement      *event;
    deleted or modified for a list. Create or updated the           
    corresponding IntItemStyle attribute for all items of the list. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateAttrIntItemStyle (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                UpdateAttrIntItemStyle (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    Element             child;
 
@@ -2377,13 +2166,7 @@ NotifyAttribute    *event;
    An attribute ItemStyle has been created, updated or deleted.    
    Create or update the corresponding IntItemStyle attribute.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AttrItemStyle (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                AttrItemStyle (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    Element             el;
 
@@ -2401,13 +2184,7 @@ NotifyAttribute    *event;
    Prevent Thot from including a global attribute in the menu if the selected
    element do not accept this attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            GlobalAttrInMenu (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    SSchema	       HTMLSSchema;
@@ -2503,13 +2280,7 @@ NotifyAttribute    *event;
    AttrNAMEinMenu
    doesn't display NAME in Reset_Input and Submit_Input
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            AttrNAMEinMenu (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            AttrNAMEinMenu (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -2539,14 +2310,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   The Emphasis button or menu item has been clicked
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffEmphasis (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffEmphasis (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element             selectedEl;
   ElementType         elType;
@@ -2569,14 +2333,7 @@ View                view;
 /*----------------------------------------------------------------------
   The Strong button or menu item has been clicked
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffStrong (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffStrong (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */ 
 {
   Element             selectedEl;
   ElementType         elType;
@@ -2599,14 +2356,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffCite
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffCite (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffCite (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   SetCharFontOrPhrase (document, HTML_EL_Cite);
 }
@@ -2615,14 +2365,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffDefinition
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffDefinition (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffDefinition (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   SetCharFontOrPhrase (document, HTML_EL_Def);
 }
@@ -2631,14 +2374,7 @@ View                view;
 /*----------------------------------------------------------------------
   The Code button or menu item has been clicked
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffCode (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffCode (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element             selectedEl;
   ElementType         elType;
@@ -2662,14 +2398,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffVariable
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffVariable (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffVariable (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Variable);
 }
@@ -2678,14 +2407,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffSample
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffSample (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffSample (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Sample);
 }
@@ -2694,14 +2416,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffKeyboard
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffKeyboard (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffKeyboard (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Keyboard);
 }
@@ -2710,14 +2425,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffAbbr
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffAbbr (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffAbbr (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_ABBR);
 }
@@ -2726,14 +2434,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffAcronym
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffAcronym (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffAcronym (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_ACRONYM);
 }
@@ -2742,14 +2443,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffINS
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffINS (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffINS (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_INS);
 }
@@ -2758,14 +2452,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffDEL
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffDEL (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffDEL (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_DEL);
 }
@@ -2774,14 +2461,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffItalic
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffItalic (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffItalic (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Italic_text);
 }
@@ -2790,14 +2470,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffBold
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffBold (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffBold (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Bold_text);
 }
@@ -2806,14 +2479,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffTeletype
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffTeletype (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffTeletype (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Teletype_text);
 }
@@ -2822,14 +2488,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffBig
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffBig (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffBig (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Big_text);
 }
@@ -2838,14 +2497,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffSmall
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffSmall (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffSmall (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Small_text);
 }
@@ -2854,14 +2506,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffSub
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffSub (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffSub (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Subscript);
 }
@@ -2870,14 +2515,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffSup
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffSup (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffSup (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Superscript);
 }
@@ -2886,14 +2524,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffQuotation
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffQuotation (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffQuotation (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Quotation);
 }
@@ -2902,14 +2533,7 @@ View                view;
 /*----------------------------------------------------------------------
   SetOnOffBDO
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetOnOffBDO (Document document, View view)
-#else  /* __STDC__ */
-void                SetOnOffBDO (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_BDO);
 }
@@ -2920,15 +2544,7 @@ View                view;
   - a HREF attribute if link is TRUE
   - a NAME attribute if name is TRUE
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Element    SearchAnchor (Document doc, Element element, ThotBool link, ThotBool name)
-#else  /* __STDC__ */
-Element    SearchAnchor (doc, element, link, name)
-Document   doc;
-Element    element;
-ThotBool   link;
-ThotBool   name;
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -2980,16 +2596,7 @@ ThotBool   name;
    BROWSER_HISTORY_INFO with title and url of current doc  
    c.f: http://zenon.inria.fr/koala/colas/browser-history/       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                UpdateAtom (Document doc, STRING url, STRING title)
-#else  /* __STDC__ */
-void                UpdateAtom (doc, url, title)
-Document            doc;
-STRING              url;
-STRING              title;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -3021,13 +2628,7 @@ STRING              title;
    The user has modified the contents of element TITLE. Update the    
    the Title field on top of the window.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TitleModified (NotifyOnTarget * event)
-#else  /* __STDC__ */
-void                TitleModified (event)
-NotifyOnTarget     *event;
-
-#endif /* __STDC__ */
 {
    UpdateTitle (event->element, event->document);
 }

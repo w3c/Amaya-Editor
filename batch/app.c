@@ -9,7 +9,6 @@
  * Compiler of language A.
  *
  * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA): Windows & Unicode.
  *
  */
 
@@ -83,10 +82,7 @@ static ThotBool     SecondInPair = False;/* keyword "Second" found           */
 static int          typeNum;
 static int          attrNum;
 static int          curEvent;		/* the current event                 */
-#ifdef _I18N_
-static char         EvtAction[MAX_TXT_LEN] ; /* the action linked with the event  */
-#endif /* !_I18N_ */
-static char*        eventAction;	/* the action linked with the event  */
+static char        *eventAction;	/* the action linked with the event  */
 static ThotBool     PreEvent;
 static ThotBool     DefaultSection;	/* within the section DEFAULT        */
 static ThotBool     ElementsSection;	/* within the section ELEMENTS       */
@@ -94,62 +90,62 @@ static ThotBool     AttributesSection;	/* within the section ATTRIBUTES     */
 static ThotBool     FunctionsSection;	/* within the section FUNCTIONS      */
 static PtrAppMenu  *MenuList;
 static int          ViewNumber;
-static CHAR_T       MenuName[100];
-static CHAR_T       SubmenuName[100];
-static CHAR_T       ItemName[100];
+static char         MenuName[100];
+static char         SubmenuName[100];
+static char         ItemName[100];
 static char         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
 
 				     	/* 'S' = Separator, 'D' = Dynamic.   */
-static CHAR_T       ActionName[100];
+static char         ActionName[100];
 
 /* the list RegisteredAppEvents have to be conform to the type enum APPevent
    defined into appaction.h */
-CHAR_T*            RegisteredAppEvents[] =
+char               *RegisteredAppEvents[] =
 {
-   TEXT("AttrMenu"),
-   TEXT("AttrCreate"),
-   TEXT("AttrModify"),
-   TEXT("AttrRead"),
-   TEXT("AttrSave"),
-   TEXT("AttrExport"),
-   TEXT("AttrDelete"),
-   TEXT("ElemMenu"),
-   TEXT("ElemNew"),
-   TEXT("ElemRead"),
-   TEXT("ElemSave"),
-   TEXT("ElemExport"),
-   TEXT("ElemDelete"),
-   TEXT("ElemSelect"),
-   TEXT("ElemExtendSelect"),
-   TEXT("ElemClick"),
-   TEXT("ElemActivate"),
-   TEXT("ElemSetReference"),
-   TEXT("ElemInclude"),
-   TEXT("ElemFetchInclude"),
-   TEXT("ElemCopy"),
-   TEXT("ElemPaste"),
-   TEXT("ElemChange"),
-   TEXT("ElemMove"),
-   TEXT("ElemTextModify"),
-   TEXT("ElemGraphModify"),
-   TEXT("ElemMouseOver"),
-   TEXT("ElemMouseOut"),
-   TEXT("PRuleCreate"),
-   TEXT("PRuleModify"),
-   TEXT("PRuleDelete"),
-   TEXT("DocOpen"),
-   TEXT("DocTmpOpen"),
-   TEXT("DocCreate"),
-   TEXT("DocClose"),
-   TEXT("DocSave"),
-   TEXT("DocExport"),
-   TEXT("DocNatPresent"),
-   TEXT("ViewOpen"),
-   TEXT("ViewClose"),
-   TEXT("ViewResize"),
-   TEXT("ViewScroll"),
-   TEXT("Init"),
-   TEXT("Exit")
+   "AttrMenu",
+   "AttrCreate",
+   "AttrModify",
+   "AttrRead",
+   "AttrSave",
+   "AttrExport",
+   "AttrDelete",
+   "ElemMenu",
+   "ElemNew",
+   "ElemRead",
+   "ElemSave",
+   "ElemExport",
+   "ElemDelete",
+   "ElemSelect",
+   "ElemExtendSelect",
+   "ElemClick",
+   "ElemActivate",
+   "ElemSetReference",
+   "ElemInclude",
+   "ElemFetchInclude",
+   "ElemCopy",
+   "ElemPaste",
+   "ElemChange",
+   "ElemMove",
+   "ElemTextModify",
+   "ElemGraphModify",
+   "ElemMouseOver",
+   "ElemMouseOut",
+   "PRuleCreate",
+   "PRuleModify",
+   "PRuleDelete",
+   "DocOpen",
+   "DocTmpOpen",
+   "DocCreate",
+   "DocClose",
+   "DocSave",
+   "DocExport",
+   "DocNatPresent",
+   "ViewOpen",
+   "ViewClose",
+   "ViewResize",
+   "ViewScroll",
+   "Init",
+   "Exit"
 };
 
 #ifdef _WINDOWS
@@ -166,15 +162,7 @@ CHAR_T*            RegisteredAppEvents[] =
    In the same way this function adds menu names used in the set into the
    list MenusUsed and item names into the list ItemsUsed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         MenuActionList (PtrAppMenu firstMenu)
-
-#else  /* __STDC__ */
-static void         MenuActionList (firstMenu)
-PtrAppMenu          firstMenu;
-
-#endif /* __STDC__ */
-
 {
    PtrAppName          curAction, prevAction;
    PtrAppName          curMenu, prevMenu;
@@ -194,7 +182,7 @@ PtrAppMenu          firstMenu;
 	while (!found && curMenu != NULL)
 	  {
 	     if (curMenu->AppNameValue != NULL &&
-		 ustrcmp (curMenu->AppNameValue, menu->AppMenuName) == 0)
+		 strcmp (curMenu->AppNameValue, menu->AppMenuName) == 0)
 		/* the menu name is already in the list */
 		found = True;
 	     else
@@ -211,7 +199,7 @@ PtrAppMenu          firstMenu;
 	     if (menu->AppMenuName == NULL)
 		curMenu->AppNameValue = NULL;
 	     else
-		curMenu->AppNameValue = TtaWCSdup (menu->AppMenuName);
+		curMenu->AppNameValue = TtaStrdup (menu->AppMenuName);
 	     curMenu->AppNextName = NULL;
 	     if (prevMenu == NULL)
 		MenusUsed = curMenu;
@@ -225,7 +213,7 @@ PtrAppMenu          firstMenu;
 	while (item != NULL)
 	  {
 	     /* skip menu separators */
-	     if (item->AppItemType != TEXT('S'))
+	     if (item->AppItemType != 'S')
 	       {
 		  /* look at if the item name is already in the list ItemsUsed */
 		  curItem = ItemsUsed;
@@ -234,7 +222,7 @@ PtrAppMenu          firstMenu;
 		  while (!found && curItem != NULL)
 		    {
 		       if (curItem->AppNameValue != NULL && item->AppItemName != NULL &&
-			   ustrcmp (curItem->AppNameValue, item->AppItemName) == 0)
+			   strcmp (curItem->AppNameValue, item->AppItemName) == 0)
 			  /* the item name is already in the list */
 			  found = True;
 		       else
@@ -248,7 +236,7 @@ PtrAppMenu          firstMenu;
 		     /* le nom de l'item n'est pas in the list, on l'y met */
 		    {
 		       curItem = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curItem->AppNameValue = TtaWCSdup (item->AppItemName);
+		       curItem->AppNameValue = TtaStrdup (item->AppItemName);
 		       curItem->AppNextName = NULL;
 		       if (prevItem == NULL)
 			  ItemsUsed = curItem;
@@ -266,7 +254,7 @@ PtrAppMenu          firstMenu;
 		  while (!found && curAction != NULL)
 		    {
 		       if (curAction->AppNameValue != NULL &&
-			   ustrcmp (curAction->AppNameValue, item->AppItemActionName) == 0)
+			   strcmp (curAction->AppNameValue, item->AppItemActionName) == 0)
 			  /* l'action de l'item est in the list */
 			  found = True;
 		       else
@@ -280,7 +268,7 @@ PtrAppMenu          firstMenu;
 		     /* l'action de l'item n'est pas in the list, on l'y met */
 		    {
 		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curAction->AppNameValue = TtaWCSdup (item->AppItemActionName);
+		       curAction->AppNameValue = TtaStrdup (item->AppItemActionName);
 		       curAction->AppFunction = False;
 		       curAction->AppStandardName = item->AppStandardAction;
 		       curAction->AppNextName = NULL;
@@ -343,14 +331,7 @@ static void         MakeMenusAndActionList ()
    registered events and returns True if yes, and the rank of the  
    event in the list (rank).                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool      RegisteredEvent (CHAR_T* eventName, int *rank)
-#else  /* __STDC__ */
-static ThotBool      RegisteredEvent (eventName, rank)
-CHAR_T*              eventName;
-int                 *rank;
-
-#endif /* __STDC__ */
+static ThotBool      RegisteredEvent (char* eventName, int *rank)
 {
    int                 evtNum, evt;
    ThotBool             found;
@@ -360,7 +341,7 @@ int                 *rank;
 
    found = False;
    for (evt = 0; evt < evtNum && !found; (evt)++)
-      if (ustrcmp (eventName, RegisteredAppEvents[evt]) == 0)
+      if (strcmp (eventName, RegisteredAppEvents[evt]) == 0)
 	{
 	   found = True;
 	   *rank = evt;
@@ -380,12 +361,12 @@ static PtrSSchema   ConstructAbstractSchStruct ()
    pSS->SsCode = 0;
 
    /* initialise les types de base */
-   ustrcpy (pSS->SsRule[CharString].SrName, TEXT("TEXT_UNIT"));
-   ustrcpy (pSS->SsRule[GraphicElem].SrName, TEXT("GRAPHICS_UNIT"));
-   ustrcpy (pSS->SsRule[Symbol].SrName, TEXT("SYMBOL_UNIT"));
-   ustrcpy (pSS->SsRule[Picture].SrName, TEXT("PICTURE_UNIT"));
-   ustrcpy (pSS->SsRule[Refer].SrName, TEXT("REFERENCE_UNIT"));
-   ustrcpy (pSS->SsRule[PageBreak].SrName, TEXT("PAGE_BREAK"));
+   strcpy (pSS->SsRule[CharString].SrName, "TEXT_UNIT");
+   strcpy (pSS->SsRule[GraphicElem].SrName, "GRAPHICS_UNIT");
+   strcpy (pSS->SsRule[Symbol].SrName, "SYMBOL_UNIT");
+   strcpy (pSS->SsRule[Picture].SrName, "PICTURE_UNIT");
+   strcpy (pSS->SsRule[Refer].SrName, "REFERENCE_UNIT");
+   strcpy (pSS->SsRule[PageBreak].SrName, "PAGE_BREAK");
    pSS->SsNRules = MAX_BASIC_TYPE - 1;
    pSS->SsNAttributes = 0;
    return pSS;
@@ -411,7 +392,7 @@ static void         NewMenuComplete ()
    Menu = NULL;
    while (Menu == NULL && CurMenu != NULL)
       if (CurMenu->AppMenuName != NULL &&
-	  ustrcmp (MenuName, CurMenu->AppMenuName) == 0)
+	  strcmp (MenuName, CurMenu->AppMenuName) == 0)
 	 Menu = CurMenu;
       else
 	 CurMenu = CurMenu->AppNextMenu;
@@ -420,7 +401,7 @@ static void         NewMenuComplete ()
       /* creation d'un nouveau menu */
      {
 	NewMenu = (PtrAppMenu) TtaGetMemory (sizeof (AppMenu));
-	NewMenu->AppMenuName = TtaWCSdup (MenuName);
+	NewMenu->AppMenuName = TtaStrdup (MenuName);
 	NewMenu->AppMenuView = ViewNumber;	/* la vue concenee */
 	NewMenu->AppMenuItems = NULL;
 	NewMenu->AppNextMenu = NULL;
@@ -440,14 +421,14 @@ static void         NewMenuComplete ()
 
    SubMenu = NULL;
    Item = NULL;
-   if (SubmenuName[0] != TEXT('\0'))
+   if (SubmenuName[0] != '\0')
       /* il y a un sous-menu. On cherche son entree dans le menu */
      {
 	found = False;
 	Item = Menu->AppMenuItems;
 	while (Item != NULL && !found)
 	   if (Item->AppItemName != NULL &&
-	       ustrcmp (Item->AppItemName, SubmenuName) == 0)
+	       strcmp (Item->AppItemName, SubmenuName) == 0)
 	      found = True;
 	   else
 	      Item = Item->AppNextItem;
@@ -456,10 +437,10 @@ static void         NewMenuComplete ()
 	  {
 	     /* cree un nouvel item  */
 	     NewItem = (PtrAppMenuItem) TtaGetMemory (sizeof (AppMenuItem));
-	     NewItem->AppItemName = TtaWCSdup (SubmenuName);
+	     NewItem->AppItemName = TtaStrdup (SubmenuName);
 	     NewItem->AppItemActionName = NULL;
 	     NewItem->AppSubMenu = NULL;
-	     NewItem->AppItemType = TEXT(' ');
+	     NewItem->AppItemType = ' ';
 	     NewItem->AppStandardAction = False;
 	     NewItem->AppNextItem = NULL;
 	     /* chaine le nouvel item en fin de liste d'items du menu */
@@ -491,7 +472,7 @@ static void         NewMenuComplete ()
 	  {
 	   while (Item != NULL && !found)
 	      if (Item->AppItemName != NULL &&
-		  ustrcmp (Item->AppItemName, ItemName) == 0)
+		  strcmp (Item->AppItemName, ItemName) == 0)
 		 found = True;
 	      else
 		 Item = Item->AppNextItem;
@@ -504,10 +485,10 @@ static void         NewMenuComplete ()
 	  {
 	     /* cree un nouvel item  */
 	     NewItem = (PtrAppMenuItem) TtaGetMemory (sizeof (AppMenuItem));
-	     if (ItemName[0] == TEXT('\0'))
+	     if (ItemName[0] == '\0')
 		NewItem->AppItemName = NULL;
 	     else
-		NewItem->AppItemName = TtaWCSdup (ItemName);
+		NewItem->AppItemName = TtaStrdup (ItemName);
 	     NewItem->AppItemActionName = NULL;
 	     NewItem->AppSubMenu = NULL;
 	     NewItem->AppItemType = ItemType;
@@ -538,11 +519,11 @@ static void         NewMenuComplete ()
 	       }
 	     /* on met l'action, sauf si c'est un separateur ou un */
 	     /* sous-menu dynamique */
-	     if (ActionName[0] != TEXT('\0'))
+	     if (ActionName[0] != '\0')
 	       {
-		  NewItem->AppItemActionName = TtaWCSdup (ActionName);
+		  NewItem->AppItemActionName = TtaStrdup (ActionName);
 		  /* Il faut tester s'il s'agit d'une action standard */
-		  NewItem->AppStandardAction = (ustrncmp (ActionName, TEXT("Ttc"), 3) == 0);
+		  NewItem->AppStandardAction = (strncmp (ActionName, "Ttc", 3) == 0);
 	       }
 	  }
      }
@@ -555,27 +536,18 @@ static void         NewMenuComplete ()
 static void         InitMenu ()
 {
    ViewNumber = 0;
-   MenuName[0] = TEXT('\0');
-   SubmenuName[0] = TEXT('\0');
-   ItemName[0] = TEXT('\0');
+   MenuName[0] = '\0';
+   SubmenuName[0] = '\0';
+   ItemName[0] = '\0';
    ItemType = ' ';
-   ActionName[0] = TEXT('\0');
+   ActionName[0] = '\0';
 }
 
 
 /*----------------------------------------------------------------------
    ProcessShortKeyWord traite un mot-cle court.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode pr)
-
-#else  /* __STDC__ */
-static void         ProcessShortKeyWord (x, r, pr)
-int                 x;
-SyntacticCode       r;
-SyntacticCode       pr;
-
-#endif /* __STDC__ */
 {
    int                 typeId;
 
@@ -631,17 +603,7 @@ SyntacticCode       pr;
 /*----------------------------------------------------------------------
    ProcessLongKeyWord traite un mot-cle long.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
-
-#else  /* __STDC__ */
-static void         ProcessLongKeyWord (x, r, wi)
-int                 x;
-SyntacticCode       r;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    switch (x)
 	 {
@@ -655,7 +617,7 @@ indLine             wi;
 
 	    case KWD_USES:
 	       /* le mot-cle' USES */
-	       if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
+	       if (strcmp (fileName, "EDITOR"))
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
@@ -685,7 +647,7 @@ indLine             wi;
 	       DefaultSection = False;	/* la section DEFAULT est donc finie */
 	       ElementsSection = False;
 	       AttributesSection = False;
-	       if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
+	       if (strcmp (fileName, "EDITOR"))
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
@@ -697,7 +659,7 @@ indLine             wi;
 	       DefaultSection = False;	/* la section DEFAULT est donc finie */
 	       ElementsSection = False;
 	       AttributesSection = False;
-	       if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
+	       if (strcmp (fileName, "EDITOR"))
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
@@ -746,8 +708,8 @@ indLine             wi;
 
 	    case KWD_Separator:
 	       ItemType = 'S';
-	       ItemName[0] = TEXT('\0');
-	       ActionName[0] = TEXT('\0');
+	       ItemName[0] = '\0';
+	       ActionName[0] = '\0';
 	       break;
 
 	    case KWD_Button:
@@ -760,7 +722,7 @@ indLine             wi;
 
 	    case KWD_Dynamic:
 	       ItemType = 'D';
-	       ActionName[0] = TEXT('\0');
+	       ActionName[0] = '\0';
 	       break;
 
 	    default:
@@ -771,16 +733,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    ProcessName processes a name.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine wi)
-#else  /* __STDC__ */
-static void         ProcessName (r, pr, wl, wi)
-SyntacticCode       r;
-SyntacticCode       pr;
-indLine             wl;
-indLine             wi;
-
-#endif /* __STDC__ */
 {
    PtrAppName          curAction, prevAction;
    int                 i;
@@ -793,7 +746,7 @@ indLine             wi;
       CompilerMessage (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
    else
      {
-	ustrncpy (name, &inputLine[wi - 1], wl);
+	strncpy (name, &inputLine[wi - 1], wl);
 	name[wl] = '\0';
      }
    switch (r)
@@ -804,7 +757,7 @@ indLine             wi;
 	       typeNum = 0;
 	       if (pr == RULE_AppliModel)
 		 {
-		    if (ustrcmp (fileName, TEXT("EDITOR")) == 0)
+		    if (!strcmp (fileName, "EDITOR"))
 		      {
 			 /* construct an abstract schemas structure */
 			 pSSchema = ConstructAbstractSchStruct ();
@@ -821,7 +774,7 @@ indLine             wi;
 			 if (!ReadStructureSchema (name, pSSchema))
 			    CompilerMessage (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
 					   inputLine, LineNum);
-			 else if (ustrcmp (name, pSSchema->SsName) != 0)
+			 else if (strcmp (name, pSSchema->SsName) != 0)
 			    CompilerMessage (wi, APP, FATAL,
 					   UNMATCHING_STRUCT_SCHEME,
 					   inputLine, LineNum);
@@ -836,7 +789,7 @@ indLine             wi;
 		    if (pr == RULE_ElemActions)
 		      {
 			 i = 0;
-			 while (ustrcmp (name, pSSchema->SsRule[i].SrName) != 0
+			 while (strcmp (name, pSSchema->SsRule[i].SrName) != 0
 				&& i < pSSchema->SsNRules)
 			    i++;
 			 if (i < pSSchema->SsNRules)
@@ -863,9 +816,9 @@ indLine             wi;
 			   }
 			 else
 			   {
-			      if (ustrcmp (fileName, TEXT("EDITOR")) == 0)
+			      if (!strcmp (fileName, "EDITOR"))
 				{
-				   ustrcpy (pSSchema->SsRule[i].SrName, name);
+				   strcpy (pSSchema->SsRule[i].SrName, name);
 				   pSSchema->SsNRules++;
 				   typeNum = i + 1;
 				}
@@ -886,7 +839,7 @@ indLine             wi;
 		    /* acquiert un descripteur de schema A utilise' */
 		    newSchUsed = (PtrAppName) TtaGetMemory (sizeof (AppName));
 		    /* met le nom du schema A utilise' dans le descripteur */
-		    newSchUsed->AppNameValue = TtaWCSdup (name);
+		    newSchUsed->AppNameValue = TtaStrdup (name);
 		    newSchUsed->AppStandardName = False;
 		    /* chaine ce nouveau descripteur en fin de liste */
 		    newSchUsed->AppNextName = NULL;
@@ -909,7 +862,7 @@ indLine             wi;
 		    /* alloue un descripteur de type de document */
 		    newDocType = (PtrAppDocType) TtaGetMemory (sizeof (AppDocType));
 		    /* initialise ce descripteur */
-		    newDocType->AppDocTypeName = TtaWCSdup (name);
+		    newDocType->AppDocTypeName = TtaStrdup (name);
 		    newDocType->AppDocTypeMenus = NULL;
 		    newDocType->AppNextDocType = NULL;
 		    if (DocTypeMenus == NULL)
@@ -947,7 +900,7 @@ indLine             wi;
 		    if (curEvent >= TteInit)
 		       /* c'est un evenement pour l'application */
 		      {
-			 if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
+			 if (strcmp (fileName, "EDITOR"))
 			    /* ce n'est pas EDITOR.A qu'on compile, refus */
 			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I, inputLine,
 					   LineNum);
@@ -970,16 +923,11 @@ indLine             wi;
 	    case RULE_ActionIdent:
 	       if (pr == RULE_ItemAction)
 		  /* action associee a un item de menu */
-		  ustrcpy (ActionName, name);
+		  strcpy (ActionName, name);
 	       else if (pr == RULE_EvtAction)
 		 {
 		    /* action associee a un evenement */
-#           ifdef _I18N_
-            wcstombs (EvtAction, name, MAX_TXT_LEN);
-            eventAction = TtaStrdup (EvtAction);
-#           else  /* !_I18N_ */
 		    eventAction = TtaStrdup (name);
-#           endif /* !_I18N_ */
 		    TteAddAction (eventAction, 0);
 		 }
 	       else
@@ -991,7 +939,7 @@ indLine             wi;
 		  while (!found && curAction != NULL)
 		    {
 		       if (curAction->AppNameValue != NULL &&
-			   ustrcmp (curAction->AppNameValue, name) == 0)
+			   strcmp (curAction->AppNameValue, name) == 0)
 			  /* the action is already in the list */
 			  found = True;
 		       else
@@ -1005,7 +953,7 @@ indLine             wi;
 		     /* l'action de l'item n'est pas in the list, on l'y met */
 		    {
 		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curAction->AppNameValue = TtaWCSdup (name);
+		       curAction->AppNameValue = TtaStrdup (name);
 		       curAction->AppStandardName = False;
 		       curAction->AppFunction = FunctionsSection;
 		       curAction->AppNextName = NULL;
@@ -1020,7 +968,7 @@ indLine             wi;
 
 	    case RULE_AttrIdent:
 	       attrNum = 0;
-	       if (ustrcmp (fileName, TEXT("EDITOR")) == 0 && pSSchema == NULL)
+	       if (!strcmp (fileName, "EDITOR") && pSSchema == NULL)
 		 {
 		    pSSchema = ConstructAbstractSchStruct ();
 		    pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
@@ -1028,17 +976,17 @@ indLine             wi;
 	       if (pr == RULE_AttrActions)
 		 {
 		    i = 1;
-		    while (ustrcmp (name, pSSchema->SsAttribute[i - 1].AttrOrigName) != 0
+		    while (strcmp (name, pSSchema->SsAttribute[i - 1].AttrOrigName) != 0
 			   && i <= pSSchema->SsNAttributes)
 		       i++;
 		    if (i <= pSSchema->SsNAttributes)
 		       attrNum = i;
 		    else
 		      {
-			 if (ustrcmp (fileName, TEXT("EDITOR")) == 0)
+			 if (!strcmp (fileName, "EDITOR"))
 			   {
 			      /* the file .A is a EDITOR.A */
-			      ustrcpy (pSSchema->SsAttribute[i - 1].AttrOrigName, name);
+			      strcpy (pSSchema->SsAttribute[i - 1].AttrOrigName, name);
 			      pSSchema->SsNAttributes = pSSchema->SsNAttributes + 1;
 			      attrNum = i;
 			   }
@@ -1050,21 +998,21 @@ indLine             wi;
 
 	    case RULE_MenuIdent:
 	       /* un nom de menu */
-	       ustrcpy (MenuName, name);
-	       SubmenuName[0] = TEXT('\0');
-	       ItemName[0] = TEXT('\0');
+	       strcpy (MenuName, name);
+	       SubmenuName[0] = '\0';
+	       ItemName[0] = '\0';
 	       ItemType = ' ';
-	       ActionName[0] = TEXT('\0');
+	       ActionName[0] = '\0';
 	       break;
 
 	    case RULE_SubmenuIdent:
 	       /* un nom de sous-menu dans une definition de menu */
-	       ustrcpy (SubmenuName, name);
+	       strcpy (SubmenuName, name);
 	       break;
 
 	    case RULE_ItemIdent:
 	       /* un nom d'item de menu dans une definition de menu */
-	       ustrcpy (ItemName, name);
+	       strcpy (ItemName, name);
 	       break;
 
 	    default:
@@ -1075,15 +1023,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    ProcessInteger genere un nombre.                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ProcessInteger (SyntacticCode r, indLine wl, indLine wi)
-#else  /* __STDC__ */
-static void         ProcessInteger (r, wl, wi)
-SyntacticCode       r;
-indLine             wl;
-indLine             wi;
-
-#endif /* __STDC__ */
 {
    int                 n;
 
@@ -1107,17 +1047,7 @@ indLine             wi;
    laquelle apparait ce mot, pr est le numero de la regle  
    precedente, celle qui a appele la regle r.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, SyntacticCode pr)
-#else  /* __STDC__ */
-static void         ProcessToken (wi, wl, c, r, pr)
-indLine             wi;
-indLine             wl;
-SyntacticCode       c;
-SyntacticCode       r;
-SyntacticCode       pr;
-
-#endif /* __STDC__ */
 {
    if (c < 1000)
      {
@@ -1150,21 +1080,11 @@ SyntacticCode       pr;
 /*----------------------------------------------------------------------
    WriteChar write a single character.                            
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         WriteChar (FILE * Hfile, UCHAR_T ch)
-
-#else  /* __STDC__ */
-static void         WriteChar (Hfile, ch)
-FILE               *Hfile;
-UCHAR_T       ch;
-
-#endif /* __STDC__ */
-
+static void         WriteChar (FILE * Hfile, unsigned char ch)
 {
    int                 code;
 
-   if (ch < TEXT(' ') || ch > TEXT('~'))
+   if (ch < ' ' || ch > '~')
       /* non ASCII character. Replace it by an ASCII character or its octal code */
      {
 	code = (int) ch;
@@ -1235,17 +1155,7 @@ UCHAR_T       ch;
 /*----------------------------------------------------------------------
    WriteName                                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         WriteName (FILE * Hfile, Name n)
-
-#else  /* __STDC__ */
-static void         WriteName (Hfile, n)
-FILE               *Hfile;
-Name                n;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -1260,17 +1170,7 @@ Name                n;
 /*----------------------------------------------------------------------
    WriteRuleName                                                   
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         WriteRuleName (FILE * Hfile, int r)
-
-#else  /* __STDC__ */
-static void         WriteRuleName (Hfile, r)
-FILE               *Hfile;
-int                 r;
-
-#endif /* __STDC__ */
-
 {
    if (pSSchema->SsRule[r].SrName[0] == '\0')
       fprintf (Hfile, "ID%d", r+1);
@@ -1281,17 +1181,7 @@ int                 r;
 /*----------------------------------------------------------------------
    WriteAttribute                                                  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         WriteAttribute (FILE * Hfile, int a)
-
-#else  /* __STDC__ */
-static void         WriteAttribute (Hfile, a)
-FILE               *Hfile;
-int                 a;
-
-#endif /* __STDC__ */
-
 {
    int                 j;
    TtAttribute        *pAttr;
@@ -1321,16 +1211,7 @@ int                 a;
 /*----------------------------------------------------------------------
    WriteBasicElements                                              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         WriteBasicElements (FILE * Hfile)
-
-#else  /* __STDC__ */
-static void         WriteBasicElements (Hfile)
-FILE               *Hfile;
-
-#endif /* __STDC__ */
-
 {
    int                 r;
 
@@ -1374,18 +1255,7 @@ FILE               *Hfile;
    WriteRule                                                       
    si pExtensRule est non nul, il s'agit d'une regle d'extension  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
-
-#else  /* __STDC__ */
-static void         WriteRule (Hfile, r, pExtensRule)
-FILE               *Hfile;
-int                 r;
-SRule              *pExtensRule;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
    SRule              *pRule;
@@ -1423,15 +1293,7 @@ SRule              *pExtensRule;
 /*----------------------------------------------------------------------
    WriteDefineFile                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteDefineFile (STRING fname)
-
-#else  /* __STDC__ */
-static void         WriteDefineFile (fname)
-STRING              fname;
-
-#endif /* __STDC__ */
-
 {
    ThotBool             firstLocalAttribute;
    ThotBool             first;
@@ -1442,8 +1304,8 @@ STRING              fname;
    Name                HFileName;
    FILE               *Hfile;
 
-   usprintf (HFileName, TEXT("%s.h"), fname);
-   Hfile = ufopen (HFileName, TEXT("w"));
+   sprintf (HFileName, "%s.h", fname);
+   Hfile = fopen (HFileName, "w");
    if (Hfile != NULL)
      {
         fprintf (Hfile, "/* File generated by app - do not edit! */\n");
@@ -1574,29 +1436,14 @@ STRING              fname;
    Main pour le compilateur A.                                     
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-#ifdef __STDC__
-int                 APPmain (HWND hwnd, HWND statusBar, int argc, CHAR_T** argv, int* Y)
-#else  /* __STDC__ */
-int                 APPmain (hwnd, statusBar, argc, argv, Y)
-HWND                hwnd;
-HWND                statusBar;
-int                 argc;
-CHAR_T**            argv;
-int*                Y;
-#endif /* __STDC__ */
+int       APPmain (HWND hwnd, HWND statusBar, int argc, char** argv, int* Y)
 #else  /* !_WINDOWS */
-#ifdef __STDC__
-int                main (int argc, char **argv)
-#else  /* __STDC__ */
-int                main (argc, argv)
-int                 argc;
-char              **argv;
-#endif /* __STDC__ */
+int       main (int argc, char **argv)
 #endif /* _WINDOWS */
 {
    FILE               *filedesc;
    ThotBool            fileOK;
-   CHAR_T              buffer[200];
+   char                buffer[200];
    STRING              pwd, ptr;
    Name                srceFileName;
    int                 i;
@@ -1609,28 +1456,28 @@ char              **argv;
    int                 idNum;	/* indice dans Identifier du mot trouve, si */
    int                 nb;
    int                 param;
-#  ifdef _WINDOWS
-   char*               cmd [100];
+#ifdef _WINDOWS
+   char               *cmd [100];
    int                 ndx, pIndex = 0;
-   CHAR_T              msg [800];
+   char                msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    char                cmd[800];
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   ustrcpy (msg, TEXT("Executing app "));
-   for (ndx = 1; ndx < argc; ndx++) {
-       ustrcat (msg, argv [ndx]);
-       ustrcat (msg, TEXT(" "));
-   }
+   strcpy (msg, "Executing app ");
+   for (ndx = 1; ndx < argc; ndx++)
+     {
+       strcat (msg, argv [ndx]);
+       strcat (msg, " ");
+     }
        
    TtaDisplayMessage (INFO, msg);
-
    SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
    SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #  endif /* _WINDOWS */
@@ -1638,204 +1485,222 @@ char              **argv;
    TtaInitializeAppRegistry (argv[0]);
    /* no external action declared at that time */
    ActionList = NULL;
-   APP = TtaGetMessageTable (TEXT("appdialogue"), MSG_MAX_APP);
-   COMPIL = TtaGetMessageTable (TEXT("compildialogue"), COMP_MSG_MAX);
+   APP = TtaGetMessageTable ("appdialogue", MSG_MAX_APP);
+   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    error = False;
    /* initialize the parser */
    InitParser ();
-   InitSyntax (TEXT("APP.GRM"));
-   if (!error) {
+   InitSyntax ("APP.GRM");
+   if (!error)
+     {
       /* prepare the cpp command */
-#     ifdef _WINDOWS
+#ifdef _WINDOWS
       cmd [pIndex] = TtaGetMemory (4);
       strcpy (cmd [pIndex++], "cpp");
-#     else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
       strcpy (cmd, CPP " ");
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
       param = 1;
-      while (param < argc && argv[param][0] == '-') {
-            /* keep cpp params */
-#           ifdef _WINDOWS
-            cmd [pIndex] = TtaGetMemory (ustrlen (argv[param]) + 1);
-            wc2iso_strcpy (cmd [pIndex++], argv[param]);
-#           else  /* !_WINDOWS */
-            strcat (cmd, argv[param]);
-            strcat (cmd, " ");
-#           endif /* _WINDOWS */
-            param++;
-	  }
+      while (param < argc && argv[param][0] == '-')
+	{
+	  /* keep cpp params */
+#ifdef _WINDOWS
+	  cmd [pIndex] = TtaGetMemory (strlen (argv[param]) + 1);
+	  strcpy (cmd [pIndex++], argv[param]);
+#else  /* !_WINDOWS */
+	  strcat (cmd, argv[param]);
+	  strcat (cmd, " ");
+#endif /* _WINDOWS */
+	  param++;
+	}
       /* keep the name of the schema to be compile */
-      if (param >= argc) {
-	     TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
-#        ifdef _WINDOWS 
+      if (param >= argc)
+	{
+	  TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
+#ifdef _WINDOWS 
          ReleaseDC (hwnd, compilersDC);
          return FATAL_EXIT_CODE;
-#        else  /* _WINDOWS */
+#else  /* _WINDOWS */
          exit (1);
-#        endif /* _WINDOWS */
-	  } else {
-             /* get the name of the file to be compiled */
-             ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
-             srceFileName[MAX_NAME_LENGTH - 1] = '\0';
-             param++;
-             ustrcpy (fileName, srceFileName);
-             /* check if the name contains a suffix */
-             ptr = ustrrchr(fileName, '.');
-             nb = ustrlen (srceFileName);
-             if (!ptr) /* there is no suffix */
-                ustrcat (srceFileName, TEXT(".A"));
-             else if (ustrcmp (ptr, TEXT(".A"))) {
-                  /* it's not the valid suffix */
-                  TtaDisplayMessage (FATAL, TtaGetMessage(APP, INVALID_FILE), srceFileName);
-#                 ifdef _WINDOWS
-                  ReleaseDC (hwnd, compilersDC);
-                  return FATAL_EXIT_CODE;
-#                 else  /* !_WINDOWS */
-                  exit (1);
-#                 endif /* _WINDOWS */
-			 } else {
-                    /* it's the valid suffix, cut the srcFileName here */
-                    ptr[0] = '\0';
-                    nb -= 2; /* length without the suffix */
-			 } 
-
-             /* add the suffix .SCH in srceFileName */
-             ustrcat (fileName, TEXT(".SCH"));
-	     
-             /* does the file to compile exist */
-             if (TtaFileExist (srceFileName) == 0)
-                TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
-             else {
-                  /* provide the real source file */
-                  TtaFileUnlink (fileName);
-                  pwd = TtaGetEnvString ("PWD");
-#                 ifndef _WINDOWS
-                  i = strlen (cmd);
-#                 endif /* _WINDOWS */
-                  if (pwd != NULL) {
-#                    ifdef _WINDOWS
-                     CHAR_T* CMD;
-                     CMD = TtaAllocString (3 + ustrlen (pwd));
-                     usprintf (CMD, TEXT("-I%s"), pwd);
-                     cmd [pIndex] = TtaGetMemory (3 + ustrlen (pwd));
-                     wc2iso_strcpy (cmd [pIndex++], CMD);
-                     cmd [pIndex] = TtaGetMemory (3);
-                     strcpy (cmd [pIndex++], "-C");
-                     cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
-                     wc2iso_strcpy (cmd [pIndex++], srceFileName);
-                     cmd [pIndex] = TtaGetMemory (ustrlen (fileName) + 1);
-                     wc2iso_strcpy (cmd [pIndex++], fileName);
-#                    else  /* !_WINDOWS */
-                     sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
-#                    endif /* _WINDOWS */
-                  } else {
-#                        ifdef _WINDOWS
-                         cmd [pIndex] = TtaGetMemory (3);
-                         strcpy (cmd [pIndex++], "-C");
-                         cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
-                         wc2iso_strcpy (cmd [pIndex++], srceFileName);
-                         cmd [pIndex] = TtaGetMemory (ustrlen (fileName) + 1);
-                         wc2iso_strcpy (cmd [pIndex++], fileName);
-#                        else  /* !_WINDOWS */
-                         sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
-#                        endif /* _WINDOWS */
-				  }
-#                 ifdef _WINDOWS
-                  cppLib = LoadLibrary (TEXT("cpp"));
-                  ptrMainProc = GetProcAddress (cppLib, "CPPmain");
-                  i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
-                  FreeLibrary (cppLib);
-                  for (ndx = 0; ndx < pIndex; ndx++) {
-                      free (cmd [ndx]);
-                      cmd [ndx] = (char*) 0;
-				  }
-#                 else  /* !_WINDOWS */
-                  i = system (cmd);
-#                 endif /* _WINDOWS */
-                  if (i == FATAL_EXIT_CODE) {
-                     /* cpp is not available, copy directely the file */
-                     TtaDisplaySimpleMessage (INFO, APP, APP_CPP_NOT_FOUND);
-                     TtaFileCopy (srceFileName, fileName);
-				  } 
-
-                  /* open the resulting file */
-                  filedesc = TtaReadOpen (fileName);
-                  /* ouvre le fichier a compiler */
-                  if (filedesc == 0)
-                     TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
-                  else {
-                       /* suppress the suffix ".SCH" */
-                       srceFileName[nb] = '\0';
-                       fileName[nb] = '\0';
-                       /* le fichier a compiler est ouvert */
-                       NIdentifiers = 0;
-                       /* table des identificateurs vide */
-                       LineNum = 0;
-                       /* encore aucune ligne lue */
-                       pSSchema = NULL;
-                       /* pas (encore) de schema de structure */
-                       fileOK = True;
-                       /* lit tout le fichier et fait l'analyse */
-                       while (fileOK && !error) {
-                             /* lit une ligne */
-                             i = 0;
-                             do
-                                /* fileOK = TtaReadByte (filedesc, &inputLine[i++]); */
-                                fileOK = TtaReadWideChar (filedesc, &inputLine[i++], ISO_8859_1);
-                             while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
-                             /* marque la fin reelle de la ligne */
-                             inputLine[i - 1] = TEXT('\0');
-                             /* incremente le compteur de lignes lues */
-                             LineNum++;
-                             if (i >= LINE_LENGTH) /* ligne trop longue */
-                                CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
-                             else if (inputLine[0] == TEXT('#')) {
-                                  /* cette ligne contient une directive du preprocesseur cpp */
-                                  usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
-                                  LineNum--;
-							 } else {
-                                    /* traduit tous les caracteres de la ligne */
-                                    OctalToChar ();
-                                    /* analyse la ligne */
-                                    wi = 1;
-                                    wl = 0;
-                                    /* analyse tous les mots de la ligne courante */
-                                    do {
-                                       i = wi + wl;
-                                       GetNextToken (i, &wi, &wl, &wn);
-                                       /* mot suivant */
-                                       if (wi > 0) {
-                                          /* on a trouve un mot */
-                                          AnalyzeToken (wi, wl, wn, &c, &r, &idNum, &pr);
-                                          /* on analyse le mot */
-                                          if (!error) /* on le traite */
-                                             ProcessToken (wi, wl, c, r, pr);
-									   } 
-									} while (wi != 0 && !error);
-                                    /* il n'y a plus de mots a analyser dans la ligne */
-							 } 
-					   } 
-                       /* fin du fichier */
-                       if (!error)
-                          ParserEnd ();
-                       /* fin d'analyse */
-                       if (!error) {
-                          MakeMenusAndActionList ();
-                          /* ecrit le schema compile' dans le fichier de sortie     */
-                          /* le directory des schemas est le directory courant      */
-#ifndef _WINDOWS 
-                          SchemaPath[0] = '\0';
 #endif /* _WINDOWS */
-                         ustrcpy (srceFileName, fileName);
-                          GenerateApplication (srceFileName, pAppli);
-                          ustrcpy (srceFileName, fileName);
-                          if (ustrcmp (srceFileName, TEXT("EDITOR")) != 0)
-                          WriteDefineFile (srceFileName);
-					   } 
-				  }  
-			 } 
-      }  
-   } 
+	}
+      else
+	{
+	  /* get the name of the file to be compiled */
+	  strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	  srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+	  param++;
+	  strcpy (fileName, srceFileName);
+	  /* check if the name contains a suffix */
+	  ptr = strrchr(fileName, '.');
+	  nb = strlen (srceFileName);
+	  if (!ptr) /* there is no suffix */
+	    strcat (srceFileName, ".A");
+	  else if (strcmp (ptr, ".A"))
+	    {
+	      /* it's not the valid suffix */
+	      TtaDisplayMessage (FATAL, TtaGetMessage(APP, INVALID_FILE), srceFileName);
+#ifdef _WINDOWS
+	      ReleaseDC (hwnd, compilersDC);
+	      return FATAL_EXIT_CODE;
+#else  /* !_WINDOWS */
+	      exit (1);
+#endif /* _WINDOWS */
+	    }
+	  else
+	    {
+	      /* it's the valid suffix, cut the srcFileName here */
+	      ptr[0] = '\0';
+	      nb -= 2; /* length without the suffix */
+	    } 
+	  
+	  /* add the suffix .SCH in srceFileName */
+	  strcat (fileName, ".SCH");
+	  
+	  /* does the file to compile exist */
+	  if (TtaFileExist (srceFileName) == 0)
+	    TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
+	  else
+	    {
+	      /* provide the real source file */
+	      TtaFileUnlink (fileName);
+	      pwd = TtaGetEnvString ("PWD");
+#ifndef _WINDOWS
+	      i = strlen (cmd);
+#endif /* _WINDOWS */
+	      if (pwd != NULL)
+		{
+#ifdef _WINDOWS
+		  cmd [pIndex] = TtaGetMemory (3 + strlen (pwd));
+		  sprintf (cmd [pIndex++], "-I%s", pwd);
+		  cmd [pIndex] = TtaGetMemory (3);
+		  strcpy (cmd [pIndex++], "-C");
+		  cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
+		  strcpy (cmd [pIndex++], srceFileName);
+		  cmd [pIndex] = TtaGetMemory (strlen (fileName) + 1);
+		  strcpy (cmd [pIndex++], fileName);
+#else  /* !_WINDOWS */
+		  sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
+#endif /* _WINDOWS */
+		}
+	      else
+		{
+#ifdef _WINDOWS
+		  cmd [pIndex] = TtaGetMemory (3);
+		  strcpy (cmd [pIndex++], "-C");
+		  cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
+		  strcpy (cmd [pIndex++], srceFileName);
+		  cmd [pIndex] = TtaGetMemory (strlen (fileName) + 1);
+		  strcpy (cmd [pIndex++], fileName);
+#else  /* !_WINDOWS */
+		  sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
+#endif /* _WINDOWS */
+		}
+#ifdef _WINDOWS
+	      cppLib = LoadLibrary ("cpp");
+	      ptrMainProc = GetProcAddress (cppLib, "CPPmain");
+	      i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
+	      FreeLibrary (cppLib);
+	      for (ndx = 0; ndx < pIndex; ndx++)
+		{
+		  free (cmd [ndx]);
+		  cmd [ndx] = (char*) 0;
+		}
+#else  /* !_WINDOWS */
+	      i = system (cmd);
+#endif /* _WINDOWS */
+	      if (i == FATAL_EXIT_CODE)
+		{
+		  /* cpp is not available, copy directely the file */
+		  TtaDisplaySimpleMessage (INFO, APP, APP_CPP_NOT_FOUND);
+		  TtaFileCopy (srceFileName, fileName);
+		} 
+
+	      /* open the resulting file */
+	      filedesc = TtaReadOpen (fileName);
+	      /* ouvre le fichier a compiler */
+	      if (filedesc == 0)
+		TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
+	      else
+		{
+		  /* suppress the suffix ".SCH" */
+		  srceFileName[nb] = '\0';
+		  fileName[nb] = '\0';
+		  /* le fichier a compiler est ouvert */
+		  NIdentifiers = 0;
+		  /* table des identificateurs vide */
+		  LineNum = 0;
+		  /* encore aucune ligne lue */
+		  pSSchema = NULL;
+		  /* pas (encore) de schema de structure */
+		  fileOK = True;
+		  /* lit tout le fichier et fait l'analyse */
+		  while (fileOK && !error)
+		    {
+		      /* lit une ligne */
+		      i = 0;
+		      do
+			fileOK = TtaReadByte (filedesc, &inputLine[i++]);
+		      while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
+		      /* marque la fin reelle de la ligne */
+		      inputLine[i - 1] = '\0';
+		      /* incremente le compteur de lignes lues */
+		      LineNum++;
+		      if (i >= LINE_LENGTH) /* ligne trop longue */
+			CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
+		      else if (inputLine[0] == '#')
+			{
+			  /* cette ligne contient une directive du preprocesseur cpp */
+			  sscanf (inputLine, "# %d %s", &LineNum, buffer);
+			  LineNum--;
+			}
+		      else
+			{
+			  /* traduit tous les caracteres de la ligne */
+			  OctalToChar ();
+			  /* analyse la ligne */
+			  wi = 1;
+			  wl = 0;
+			  /* analyse tous les mots de la ligne courante */
+			  do
+			    {
+			      i = wi + wl;
+			      GetNextToken (i, &wi, &wl, &wn);
+			      /* mot suivant */
+			      if (wi > 0)
+				{
+				  /* on a trouve un mot */
+				  AnalyzeToken (wi, wl, wn, &c, &r, &idNum, &pr);
+				  /* on analyse le mot */
+				  if (!error) /* on le traite */
+				    ProcessToken (wi, wl, c, r, pr);
+				} 
+			    } while (wi != 0 && !error);
+			  /* il n'y a plus de mots a analyser dans la ligne */
+			} 
+		    } 
+		  /* fin du fichier */
+		  if (!error)
+		    ParserEnd ();
+		  /* fin d'analyse */
+		  if (!error)
+		    {
+		      MakeMenusAndActionList ();
+		      /* ecrit le schema compile' dans le fichier de sortie     */
+		      /* le directory des schemas est le directory courant      */
+#ifndef _WINDOWS 
+		      SchemaPath[0] = '\0';
+#endif /* _WINDOWS */
+		      strcpy (srceFileName, fileName);
+		      GenerateApplication (srceFileName, pAppli);
+		      strcpy (srceFileName, fileName);
+		      if (strcmp (srceFileName, "EDITOR"))
+			WriteDefineFile (srceFileName);
+		    } 
+		}  
+	    } 
+	}  
+     } 
    TtaSaveAppRegistry ();
 #ifdef _WINDOWS 
    *Y = _CY_;

@@ -394,4 +394,12 @@ ATTRIBUTES
 	AttrExport.Post -> GenerateQuoteAfter;	
 	END;
 
+   accesskey:
+	BEGIN
+	AttrCreate.Post -> AddAccessKey;
+	AttrModify.Pre -> RemoveAccessKey;
+	AttrModify.Post -> AddAccessKey;
+	AttrDelete.Pre -> RemoveAccessKey;	
+	END;
+
 END

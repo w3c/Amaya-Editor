@@ -715,9 +715,9 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 	  else if (modtype == THOT_MOD_ALT)
 	    {
 	      /* check if it's an access key */
-	      if (AccessKeyFunction && document && DocAccessKey[document])
+	      if (AccessKeyFunction && document && DocAccessKey[document - 1])
 		{
-		  ptr = DocAccessKey[document];
+		  ptr = DocAccessKey[document - 1];
 		  while (ptr != NULL && ptr->K_EntryCode != key)
 		    ptr = ptr->K_Other;
 		  if (ptr)
@@ -990,8 +990,8 @@ void FreeTranslations ()
    int                 i;
 
    /* free all document access keys */
-   for (i = 0; i < MAX_DOCUMENTS; i++)
-     TtaRemoveDocAccessKeys (i + 1);
+   for (i = 1; i <= MAX_DOCUMENTS; i++)
+     TtaRemoveDocAccessKeys (i);
 
    while (Automata_current != NULL)
      {
@@ -1097,7 +1097,7 @@ void      TtaAddAccessKey (Document doc, int key, void *param)
   if (doc)
     {
       /* looks for the current access key in the table */
-      next = DocAccessKey[doc];
+      next = DocAccessKey[doc - 1];
       ptr = NULL;
       while (next != NULL && next->K_EntryCode != key)
 	{
@@ -1112,7 +1112,7 @@ void      TtaAddAccessKey (Document doc, int key, void *param)
 	    ptr->K_Other = next;
 	  else
 	    /* the first entry */
-	    DocAccessKey[doc] = next;
+	    DocAccessKey[doc - 1] = next;
 	  next->K_EntryCode = key;
 	  next->K_Special = FALSE;
 	  next->K_Other = NULL;
@@ -1140,7 +1140,7 @@ void      TtaRemoveDocAccessKeys (Document doc)
 	  next = ptr->K_Other;
 	  TtaFreeMemory (ptr);
 	}
-      DocAccessKey[doc] = NULL;
+      DocAccessKey[doc - 1] = NULL;
     }
 }
 
@@ -1155,7 +1155,7 @@ void      TtaRemoveAccessKey (Document doc, int key)
   if (doc)
     {
       /* looks for the current access key in the table */
-      next = DocAccessKey[doc];
+      next = DocAccessKey[doc - 1];
       ptr = NULL;
       while (next != NULL && next->K_EntryCode != key)
 	{
@@ -1169,7 +1169,7 @@ void      TtaRemoveAccessKey (Document doc, int key)
 	    ptr->K_Other = next->K_Other;
 	  else
 	    /* the first entry */
-	    DocAccessKey[doc] = next->K_Other;
+	    DocAccessKey[doc - 1] = next->K_Other;
 	  TtaFreeMemory (next);
 	}
     }
@@ -1201,7 +1201,7 @@ ThotTranslations      InitTranslations (char *appliname)
   ThotBool            isSpecialKey1, isSpecialKey2;
 
   /* clean up the access key table */
-  for (i = 0; i < MAX_DOCUMENTS; i++)
+  for (i = 1; i <= MAX_DOCUMENTS; i++)
     DocAccessKey[i] = NULL;
 
   appHome = TtaGetEnvString ("APP_HOME");

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2000
+ *  (c) COPYRIGHT INRIA 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -39,7 +39,6 @@ ParserStackItem;
 #include "compilmsg_f.h"
 
 extern int          LineNum;	/* Numero de la ligne courante dans le fichier
-
 				   en cours de compilation */
 
 static ThotBool      Comment;	/* on est dans un commentaire */
@@ -52,43 +51,11 @@ static ParserStackItem Stack[STACKSIZE];	/* pile d'analyse */
 #include "parser_f.h"
 #include "registry_f.h"
 
-#if 0
-#ifdef _WINDOWS
-#ifdef __STD__
-int strncasecmp (const STRING s1, const STRING s2, size_t n)
-#else  /* __STDC__ */
-strncasecmp (s1, s2, n)
-const STRING s1;
-const STRING s2;
-size_t      n;
-#endif /* __STDC__ */
-{
-   if (n == 0)
-      return 0;
-
-   while (n-- != 0 && toupper (*s1) == toupper (*s2))
-     {
-       if (n == 0 || *s1 == EOS || *s2 == EOS)
-	 break;
-       s1++;
-       s2++;
-     }
-   return (toupper (*s1) - toupper (*s2));
-}
-#endif /* _WINDOWS */
-#endif /* 000 */
 
 /*----------------------------------------------------------------------
    InitParser initialise les donnees de l'analyseur syntaxique.     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                InitParser ()
-
-#else  /* __STDC__ */
-void                InitParser ()
-#endif				/* __STDC__ */
-
 {
    Comment = False;		/* pas de commentaire en cours */
    level = 0;			/* initialise la pile */
@@ -103,17 +70,7 @@ void                InitParser ()
    Retourne dans ret le code de ce mot-cle ou 0 si ce	
    n'est pas un mot-cle court.				
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         CheckShortKeyword (indLine index, SyntacticCode * ret)
-
-#else  /* __STDC__ */
-static void         CheckShortKeyword (index, ret)
-indLine             index;
-SyntacticCode      *ret;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -135,18 +92,7 @@ SyntacticCode      *ret;
    long. Rend dans ret le code de ce mot-cle' ou 0 si ce   
    n'est pas un mot cle long.                              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         CheckLongKeyword (indLine index, indLine len, SyntacticCode * ret)
-
-#else  /* __STDC__ */
-static void         CheckLongKeyword (index, len, ret)
-indLine             index;
-indLine             len;
-SyntacticCode      *ret;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -171,19 +117,7 @@ SyntacticCode      *ret;
    pas dans la table. Rend dans rank le rang de              
    l'identificateur dans la table Identifier.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         CheckIdent (indLine index, indLine len, SyntacticCode * ret, int *rank)
-
-#else  /* __STDC__ */
-static void         CheckIdent (index, len, ret, rank)
-indLine             index;
-indLine             len;
-SyntacticCode      *ret;
-int                *rank;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -211,19 +145,7 @@ int                *rank;
    Rend dans rank le rang de cet identificateur dans la    
    table Identifier.                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         NewIdent (indLine index, indLine len, SyntacticCode code, int *rank)
-
-#else  /* __STDC__ */
-static void         NewIdent (index, len, code, rank)
-indLine             index;
-indLine             len;
-SyntacticCode       code;
-int                *rank;
-
-#endif /* __STDC__ */
-
 {
   indLine             i;
 
@@ -252,17 +174,7 @@ int                *rank;
    position index de la ligne courante et qui est de       
    longueur len.                                            
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 AsciiToInt (indLine index, indLine len)
-
-#else  /* __STDC__ */
-int                 AsciiToInt (index, len)
-indLine             index;
-indLine             len;
-
-#endif /* __STDC__ */
-
 {
   int                 num;
 
@@ -281,14 +193,7 @@ indLine             len;
    sequences \nn par le caractere dont le code octal est   
    nn. Remplace aussi \\ par \.                            
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                OctalToChar ()
-
-#else  /* __STDC__ */
-void                OctalToChar ()
-#endif				/* __STDC__ */
-
 {
   int                 i, shift, k, n;
 
@@ -346,19 +251,7 @@ void                OctalToChar ()
    si wn=SynString).                                           
    - wn: SyntacticType du mot trouve, ou SynError si pas trouve.       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                GetNextToken (indLine start, indLine * wi, indLine * wl, SyntacticType * wn)
-
-#else  /* __STDC__ */
-void                GetNextToken (start, wi, wl, wn)
-indLine             start;
-indLine            *wi;
-indLine            *wl;
-SyntacticType      *wn;
-
-#endif /* __STDC__ */
-
 {
   indLine             j, k;
   ThotBool             stop;
@@ -538,21 +431,7 @@ SyntacticType      *wn;
    regle r de la grammaire. Rend dans rank le rang du mot  
    dans la table Identifier si c'est un identificateur.    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool      TokenMatch (indLine wi, indLine wl, SyntacticType wn, SyntacticCode c, SyntacticCode r, int *rank)
-
-#else  /* __STDC__ */
-static ThotBool      TokenMatch (wi, wl, wn, c, r, rank)
-indLine             wi;
-indLine             wl;
-SyntacticType       wn;
-SyntacticCode       c;
-SyntacticCode       r;
-int                *rank;
-
-#endif /* __STDC__ */
-
 {
   SyntacticCode       code;
   ThotBool             match;
@@ -639,22 +518,7 @@ int                *rank;
    identificateur. Dans pr se trouve le numero de l'avant  
    derniere regle appliquee.                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                AnalyzeToken (indLine wi, indLine wl, SyntacticType wn, SyntacticCode * c, SyntRuleNum * r, int *rank, SyntRuleNum * pr)
-
-#else  /* __STDC__ */
-void                AnalyzeToken (wi, wl, wn, c, r, rank, pr)
-indLine             wi;
-indLine             wl;
-SyntacticType       wn;
-SyntacticCode      *c;
-SyntRuleNum        *r;
-int                *rank;
-SyntRuleNum        *pr;
-
-#endif /* __STDC__ */
-
 {
   ThotBool             stop;
   ThotBool             st1;
@@ -925,14 +789,7 @@ SyntRuleNum        *pr;
    ParserEnd verifie, en fin de fichier source, que tout est correct
    du point de vue syntaxique.                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                ParserEnd ()
-
-#else  /* __STDC__ */
-void                ParserEnd ()
-#endif				/* __STDC__ */
-
 {
   if (level >= 0)
     /* la pile n'est pas vide */
@@ -952,16 +809,7 @@ void                ParserEnd ()
    regles a` partir d'un fichier grammaire de type GRM.		
    fileName est le nom du fichier grammaire, avec le suffixe .GRM.	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                InitSyntax (STRING fileName)
-
-#else  /* __STDC__ */
-void                InitSyntax (fileName)
-STRING              fileName;
-
-#endif /* __STDC__ */
-
 {
   indLine             j, wind, wlen;
   SyntacticType       wnat;
