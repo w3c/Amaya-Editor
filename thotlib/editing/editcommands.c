@@ -2078,20 +2078,11 @@ static void         ContentEditing (int editType)
 
       if (pAb != NULL)
 	{
-	  pLastAb = NULL;
 	  /*-- Les commandes sont traitees dans l'application */
 	  /* si la selection ne porte que sur un pave */
 	  pBox = ViewFrameTable[frame - 1].FrSelectionEnd.VsBox;
 	  if (pBox == NULL)
 	    pAb = NULL;
-	  else
-	    {
-	      pLastAb = pBox->BxAbstractBox;
-	      /* saute les paves de presentation selectionnes */
-	      while (pLastAb != pAb && pLastAb->AbPresentationBox)
-		pLastAb = pLastAb->AbPrevious;
-	    }
-	  
 	  /* Recherche le point d'insertion (&i non utilise) */
 	  GiveInsertPoint (pAb, frame, &pBox, &pBuffer, &i, &x, &charsDelta);
 	  if (pBox == NULL)
@@ -2113,10 +2104,13 @@ static void         ContentEditing (int editType)
 	  
 	  if (pAb != NULL)
 	    {
-	      if (pAb != pLastAb	/* il y a plus d'un pave */
-		  || (pAb->AbLeafType == LtText && editType == TEXT_INSERT)
-		  || pAb->AbLeafType == LtCompound    /* le pave est compose */
-		  || pAb->AbLeafType == LtPageColBreak)	/* c'est une marque de page */
+	      if (FirstSelectedElement != LastSelectedElement)
+		/* more than one element */
+		pAb = NULL;
+	      else if (pAb->AbElement != FirstSelectedElement ||
+		       (pAb->AbLeafType == LtText && editType == TEXT_INSERT) ||
+		       pAb->AbLeafType == LtCompound  ||  /* le pave est compose */
+		       pAb->AbLeafType == LtPageColBreak) /* c'est une marque de page */
 		pAb = NULL;
 	      else if ((editType == TEXT_CUT || editType == TEXT_DEL ||
 			editType == TEXT_SUP || editType == TEXT_COPY) &&
