@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ChangeElementType ( Element element,
-                                int typeNum );
+extern void TtaChangeElementType ( Element element,
+                                   int typeNum );
 extern Element TtaNewElement ( Document document,
                                ElementType elementType );
 extern Element TtaNewTree ( Document document,
@@ -45,8 +45,6 @@ extern void TtaAskFirstCreation ( void );
 extern void TtaInsertFirstChild ( Element *newElement,
                                   Element parent,
                                   Document document );
-extern void TtaInsertElement ( ElementType elementType,
-                               Document document );
 extern void TtaRemoveTree ( Element element,
                             Document document );
 extern void TtaSetElementLineNumber ( Element element,
@@ -136,8 +134,8 @@ extern ThotBool TtaHasReturnCreateNLException ( ElementType elType );
 
 #else /* __STDC__ */
 
-extern void ChangeElementType (/* Element element,
-                                  int typeNum */);
+extern void TtaChangeElementType (/* Element element,
+                                     int typeNum */);
 extern Element TtaNewElement (/* Document document,
                                  ElementType elementType */);
 extern Element TtaNewTree (/* Document document,
@@ -175,8 +173,6 @@ extern void TtaAskFirstCreation (/* void */);
 extern void TtaInsertFirstChild (/* Element *newElement,
                                     Element parent,
                                     Document document */);
-extern void TtaInsertElement (/* ElementType elementType,
-                                 Document document */);
 extern void TtaRemoveTree (/* Element element,
                               Document document */);
 extern void TtaSetElementLineNumber (/* Element element,

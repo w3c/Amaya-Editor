@@ -53,7 +53,7 @@
 static char        nameBuffer[ELEM_NAME_LENGTH];
 
 /* ----------------------------------------------------------------------
-   ChangeElementType
+   TtaChangeElementType
 
    Change the type of a given element.
    CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
@@ -61,16 +61,15 @@ static char        nameBuffer[ELEM_NAME_LENGTH];
    element: the concerned element
    typeNum: new type for the element
    ---------------------------------------------------------------------- */
-void ChangeElementType (Element element, int typeNum)
+void TtaChangeElementType (Element element, int typeNum)
 {
    UserErrorCode = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
+   else if (typeNum < 1 || typeNum > ((PtrElement)element)->ElStructSchema->SsNRules)
+     TtaError (ERR_invalid_element_type);
    else
-      if (typeNum < 1 || typeNum > ((PtrElement)element)->ElStructSchema->SsNRules)
-	 TtaError (ERR_invalid_element_type);
-      else
-	 ((PtrElement)element)->ElTypeNumber = typeNum;
+     ((PtrElement)element)->ElTypeNumber = typeNum;
 }
 
 /* ----------------------------------------------------------------------
@@ -290,16 +289,13 @@ static void TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
    TtaCopyTree
 
    Creates a deep copy of a tree.
-
    Parameters:
    sourceElement: root of the tree to be copied.
    sourceDocument: the document containing the tree to be copied.
    destinationDocument: the document for which the copy must be created.
    parent: element that will become the parent of the created tree.
-
    Return value:
    the root element of the created tree.
-
    ---------------------------------------------------------------------- */
 Element TtaCopyTree (Element sourceElement, Document sourceDocument,
 		     Document destinationDocument, Element parent)
@@ -374,16 +370,13 @@ Element TtaCopyTree (Element sourceElement, Document sourceDocument,
    TtaCopyElement
 
    Creates a copy of an element (does not copy the descendants).
-
    Parameters:
    sourceElement: element to be copied.
    sourceDocument: the document containing the element to be copied.
    destinationDocument: the document for which the copy must be created.
    parent: element that will become the parent of the created element.
-
    Return value:
    An element whic is a copy of the sourceElement.
-
    ---------------------------------------------------------------------- */
 Element TtaCopyElement (Element sourceElement, Document sourceDocument,
 		        Document destinationDocument, Element parent)
@@ -461,14 +454,12 @@ Element TtaCopyElement (Element sourceElement, Document sourceDocument,
    tree as a descendant of a given element. All elements of the descent required
    by the structure schema are also created, as well as the content of the
    required element if parameter withContent is TRUE.
-
    Parameters:
    document: the document for which the tree is created.
    element: the element for which a descent will be created.
    elementType: type of the element to be created as the last descendant.
    withContent: if TRUE, the minimum content if that element must also
    be created.
-
    Return value:
    the last descendant created or NULL if the element cannot be created.
    ---------------------------------------------------------------------- */
@@ -656,18 +647,16 @@ static Element    CreateDescent (Document document, Element element,
    Creates a new element of a given type and inserts it in the tree as a
    descendant of a given element. All elements of the descent required by the
    structure schema are also created.
-
    Parameters:
    document: the document for which the tree is created.
    element: the element for which a descent will be created.
    elementType: type of the element to be created as the last descendant.
-
    Return value:
    the last descendant created or NULL if the element cannot be created.
    This element is empty.
    ---------------------------------------------------------------------- */
-Element             TtaCreateDescent (Document document, Element element,
-				      ElementType elementType)
+Element TtaCreateDescent (Document document, Element element,
+			  ElementType elementType)
 {
    return CreateDescent (document, element, elementType, FALSE);
 }
@@ -678,19 +667,16 @@ Element             TtaCreateDescent (Document document, Element element,
    Creates a new element of a given type and inserts it in the tree as a
    descendant of a given element. All elements of the descent required by the
    structure schema are created, as well as the content of the requested element.
-
    Parameters:
    document: the document for which the tree is created.
    element: the element for which a descent will be created.
    elementType: type of the element to be created as the last descendant.
-
    Return value:
    the last descendant created or NULL if the element cannot be created.
    If not NULL, the minimum content of that element has been created.
-
    ---------------------------------------------------------------------- */
-Element        TtaCreateDescentWithContent (Document document, Element element,
-					    ElementType elementType)
+Element TtaCreateDescentWithContent (Document document, Element element,
+				     ElementType elementType)
 {
    return CreateDescent (document, element, elementType, TRUE);
 }
@@ -707,58 +693,50 @@ Element        TtaCreateDescentWithContent (Document document, Element element,
    element: the element (or root of the tree) to be deleted.
    document: the document containing the element to be deleted.
    ---------------------------------------------------------------------- */
-void                TtaDeleteTree (Element element, Document document)
+void TtaDeleteTree (Element element, Document document)
 {
-   PtrDocument         pDoc;
-   ThotBool            root;
-   PtrElement          pEl;
+  PtrDocument         pDoc;
+  ThotBool            root;
+  PtrElement          pEl;
 
-   UserErrorCode = 0;
-   if (element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-     {
-	/* Checks the parameter document */
-	if (document < 1 || document > MAX_DOCUMENTS)
-	  {
-	     TtaError (ERR_invalid_document_parameter);
-	  }
-	else if (LoadedDocument[document - 1] == NULL)
-	  {
-	     TtaError (ERR_invalid_document_parameter);
-	  }
-	else
-	   /* Parameter document is ok */
-	  {
-	     pDoc = LoadedDocument[document - 1];
-	     pEl = (PtrElement) element;
-	     root = (pEl->ElParent == NULL);
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      /* Checks the parameter document */
+      if (document < 1 || document > MAX_DOCUMENTS)
+	TtaError (ERR_invalid_document_parameter);
+      else if (LoadedDocument[document - 1] == NULL)
+	TtaError (ERR_invalid_document_parameter);
+      else
+	/* Parameter document is ok */
+	{
+	  pDoc = LoadedDocument[document - 1];
+	  pEl = (PtrElement) element;
+	  root = (pEl->ElParent == NULL);
 #ifndef NODISPLAY
-	     UndisplayElement (pEl, document);
+	  UndisplayElement (pEl, document);
 #endif
-	     if (root)
-		if (pDoc->DocDocElement == pEl)
-		   /* The whole main tree is destroyed */
-		   pDoc->DocDocElement = NULL;
-
-	     DeleteElement (&pEl, pDoc);
-	  }
-     }
+	  if (root && pDoc->DocDocElement == pEl)
+	    /* The whole main tree is destroyed */
+	    pDoc->DocDocElement = NULL;
+	  
+	  DeleteElement (&pEl, pDoc);
+	}
+    }
 }
 
 /* ----------------------------------------------------------------------
    TtaAttachNewTree
 
    Attaches an entire tree to a document.
-
    Parameter:
    tree: root of the tree to be attached. This tree
    must be a valid main tree according to the document structure schema.
    document: the document to which the tree is to be attached.
    ---------------------------------------------------------------------- */
-void                TtaAttachNewTree (Element tree, Document document)
+void TtaAttachNewTree (Element tree, Document document)
 {
    PtrDocument         pDoc;
    PtrElement          pRoot;
@@ -829,9 +807,7 @@ void                TtaAttachNewTree (Element tree, Document document)
 	       ok = TRUE;
 	     }
 	   else
-	     {
-	       TtaError (ERR_element_does_not_match_DTD);
-	     }
+	     TtaError (ERR_element_does_not_match_DTD);
 	   if (ok)
 	     {
 	       pRoot->ElAccess = AccessReadWrite;
@@ -850,7 +826,6 @@ void                TtaAttachNewTree (Element tree, Document document)
  
    Saves an abstract tree into a file in a particular format. The output
    format is specified by a translation schema.
- 
    Parameters:
    element: the root of the tree to be exported.
    document: the document containing the tree to be exported.
@@ -882,7 +857,6 @@ void TtaExportTree (Element element, Document document,
 
    Inserts an element in a tree, as an immediate sibling of a given element.
    The element to be inserted must not yet be part of a document.
-
    Parameters:
    newElement: the element (or root of the tree) to be inserted.
    sibling: an element belonging to a tree. This element
@@ -1085,41 +1059,6 @@ void TtaInsertFirstChild (Element *newElement, Element parent, Document document
 }
 
 /* ----------------------------------------------------------------------
-   TtaInsertElement
-
-   Create an element of a given type and insert it at the current position within
-   a given document. The current position is defined by the current selection.
-   If the current position is a single position (insertion point) the new element
-   is simply inserted at that position. If one or several characters and/or
-   elements are selected, the new element is created before the first selected
-   character/element and the selected characters/elements are not changed.
-   Parameters:
-   elementType: type of the element to be created.
-   document: the document for which the element is created.
-   ---------------------------------------------------------------------- */
-void TtaInsertElement (ElementType elementType, Document document)
-{
-#ifndef NODISPLAY
-   UserErrorCode = 0;
-   if (elementType.ElSSchema == NULL)
-      TtaError (ERR_invalid_parameter);
-   else if (document < 1 || document > MAX_DOCUMENTS)
-      /* Checks the parameter document */
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else if (elementType.ElTypeNum < 1 ||
-   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
-      /* Parameter document is ok */
-      TtaError (ERR_invalid_element_type);
-   else
-      CreateNewElement (elementType.ElTypeNum,
-			(PtrSSchema) (elementType.ElSSchema),
-			LoadedDocument[document - 1], TRUE);
-#endif
-}
-
-/* ----------------------------------------------------------------------
    TtaRemoveTree
 
    Removes a tree (or a single element) from its tree, without freeing it.
@@ -1299,8 +1238,8 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
    FALSE: if the element is holphrasted, it gets expanded.
    document: the document to which the element belongs.
    ---------------------------------------------------------------------- */
-void                TtaHolophrastElement (Element element, ThotBool holophrast,
-					  Document document)
+void TtaHolophrastElement (Element element, ThotBool holophrast,
+			   Document document)
 {
    ThotBool            CanHolo;
 

@@ -1741,7 +1741,7 @@ void ChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
 	parent = TtaGetParent (elem);
     }
   TtaRemoveTree (elem, doc);
-  ChangeElementType (elem, newTypeNum);
+  TtaChangeElementType (elem, newTypeNum);
   if (prev != NULL)
     TtaInsertSibling (elem, prev, FALSE, doc);
   else if (next != NULL)

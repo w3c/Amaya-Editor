@@ -32,6 +32,8 @@ extern void CreateNewElement ( int typeNum,
                                ThotBool Before );
 extern void TtaCreateElement ( ElementType elementType,
                                Document document );
+extern void TtaInsertElement ( ElementType elementType,
+                               Document document );
 extern void TtaSetTransformCallback ( Func callbackFunc );
 
 #else /* __STDC__ */
@@ -61,6 +63,8 @@ extern void CreateNewElement (/* int typeNum,
                                  PtrDocument pDoc,
                                  ThotBool Before */);
 extern void TtaCreateElement (/* ElementType elementType,
+                                 Document document */);
+extern void TtaInsertElement (/* ElementType elementType,
                                  Document document */);
 extern void TtaSetTransformCallback (/* Func callbackFunc */);
 

@@ -98,7 +98,7 @@
 96 repeat-y
 97 Entrer le nom utilisateur :
 98 Il y a %d requêtes en cours
-99 Pas de CSS
+99 Pas de fichier CSS possible
 100 Interrompre le chargement
 101 Document précédent
 102 Document suivant
@@ -186,7 +186,7 @@
 184 Numéroter les sections
 185 Exporter CR/LF
 186 Configuration de navigation
-187 Charger les images
+187 Charger les images (img, object, embed)
 188 Cliquer deux fois pour suivre un lien
 189 Configuration de la publication
 190 Utiliser les ETAGS et les pré-conditions

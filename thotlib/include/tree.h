@@ -71,30 +71,25 @@ Construct;
 #ifndef __CEXTRACT__
 
 /* ----------------------------------------------------------------------
-   ChangeElementType
+   TtaChangeElementType
  
    Change the type of a given element.
    CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
- 
    Parameters:
    element: the concerned element
    typeNum: new type for the element
- 
    ---------------------------------------------------------------------- */
-extern void ChangeElementType (Element element, int typeNum);
+extern void TtaChangeElementType (Element element, int typeNum);
 
 /* ----------------------------------------------------------------------
    TtaNewElement
 
    Creates a new element of a given type.
-
    Parameters:
    document: the document for which the element is created.
    elementType: type of the element to be created.
-
    Return value:
    the created element.
-
    ---------------------------------------------------------------------- */
 extern Element TtaNewElement (Document document, ElementType elementType);
 
@@ -103,16 +98,13 @@ extern Element TtaNewElement (Document document, ElementType elementType);
 
    Creates a new element of a given type and all its descendants, according
    to the structure schema.
-
    Parameters:
    document: the document for which the tree is created.
    elementType: type of the root element of the tree to be created.
    label: label of the root element to be created. Empty string if the value
    of the label is undefined.
-
    Return value:
    the root element of the created tree.
-
    ---------------------------------------------------------------------- */
 extern Element TtaNewTree (Document document, ElementType elementType,
 			   char* label);
@@ -121,14 +113,11 @@ extern Element TtaNewTree (Document document, ElementType elementType,
    TtaNewTranscludedElement
 
    Creates a new element that is a dynamic copy of another element.
-
    Parameters:
    document: the document for which the element is created.
    orig:     the element that is copied.
-
    Return value:
    the created element.
-
    ---------------------------------------------------------------------- */
 extern Element TtaNewTranscludedElement (Document document, Element orig);
 
@@ -136,16 +125,13 @@ extern Element TtaNewTranscludedElement (Document document, Element orig);
    TtaCopyTree
 
    Creates a deep copy of a tree.
-
    Parameters:
    sourceElement: root of the tree to be copied.
    sourceDocument: the document containing the tree to be copied.
    destinationDocument: the document for which the copy must be created.
    parent: element that will become the parent of the created tree.
-
    Return value:
    the root element of the created tree.
-
    ---------------------------------------------------------------------- */
 extern Element TtaCopyTree (Element sourceElement, Document sourceDocument,
 			    Document destinationDocument, Element parent);
@@ -154,16 +140,13 @@ extern Element TtaCopyTree (Element sourceElement, Document sourceDocument,
    TtaCopyElement
 
    Creates a copy of an element (does not copy the descendants).
-
    Parameters:
    sourceElement: element to be copied.
    sourceDocument: the document containing the element to be copied.
    destinationDocument: the document for which the copy must be created.
    parent: element that will become the parent of the created element.
-
    Return value:
    An element whic is a copy of the sourceElement.
-
    ---------------------------------------------------------------------- */
 extern Element TtaCopyElement (Element sourceElement, Document sourceDocument,
 		               Document destinationDocument, Element parent);
@@ -174,16 +157,13 @@ extern Element TtaCopyElement (Element sourceElement, Document sourceDocument,
    Creates a new element of a given type and inserts it in the tree as a
    descendant of a given element. All elements of the descent required by the
    structure schema are also created.
-
    Parameters:
    document: the document for which the tree is created.
    element: the element for which a descent will be created.
    elementType: type of the element to be created as the last descendant.
-
    Return value:
    the last descendant created or NULL if the element cannot be created.
    This element is empty.
-
    ---------------------------------------------------------------------- */
 extern Element TtaCreateDescent (Document document, Element element,
 				 ElementType elementType);
@@ -194,16 +174,13 @@ extern Element TtaCreateDescent (Document document, Element element,
    Creates a new element of a given type and inserts it in the tree as a
    descendant of a given element. All elements of the descent required by the
    structure schema are created, as well as the content of the requested element.
-
    Parameters:
    document: the document for which the tree is created.
    element: the element for which a descent will be created.
    elementType: type of the element to be created as the last descendant.
-
    Return value:
    the last descendant created or NULL if the element cannot be created.
    If not NULL, the minimum content of that element has been created.
-
    ---------------------------------------------------------------------- */
 extern Element TtaCreateDescentWithContent (Document document,Element element,
 					    ElementType elementType);
@@ -215,11 +192,9 @@ extern Element TtaCreateDescentWithContent (Document document,Element element,
    All references that points at any element of that tree are
    cancelled.
    The deleted element must not be used later.
-
    Parameters:
    element: the element (or root of the tree) to be deleted.
    document: the document containing the element to be deleted.
-
    ---------------------------------------------------------------------- */
 extern void TtaDeleteTree (Element element, Document document);
 
@@ -248,7 +223,6 @@ extern void TtaAttachNewTree (Element tree, Document document);
    TSchemaName: name of the translation schema to be used. The directory
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
-
   ----------------------------------------------------------------------*/
 extern void TtaExportTree (Element element, Document document, char *fileName,
 			   char *TSchemaName);

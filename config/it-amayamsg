@@ -98,7 +98,7 @@
 96 repeat-y
 97 Digita lo username:
 98 %d richieste inevase
-99 Nessun CSS
+99 Non è disponibile nessun file CSS
 100 Interrompi trasferimento
 101 Documento precedente
 102 Documento successivo
@@ -186,7 +186,7 @@
 184 Numerazione delle sezioni
 185 Esprotare CR/LF
 186 Preferenze per la visualizzazione
-187 Caricare immagini
+187 Caricare immagini (img, object, embed)
 188 Il doppio click attiva il collegamento
 189 Preferenze per la pubblicazione
 190 Usa gli ETAGS e le precondizioni

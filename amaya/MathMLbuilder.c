@@ -1378,7 +1378,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 				    {
 				      TtaRegisterElementDelete (sibling, doc);
 				      TtaRemoveTree (sibling, doc);
-				      ChangeElementType (sibling,
+				      TtaChangeElementType (sibling,
 							 MathML_EL_Construct1);
 				      TtaInsertSibling (sibling, parent,
 							FALSE, doc);
@@ -1692,7 +1692,7 @@ void CheckMTable (Element elMTABLE, Document doc, ThotBool placeholder)
 		  /* if it's a MTD change its type into LabelCell */
 		  if (elType.ElTypeNum == MathML_EL_MTD &&
 		      elType.ElSSchema == MathMLSSchema)
-		     ChangeElementType (cell, MathML_EL_LabelCell);
+		     TtaChangeElementType (cell, MathML_EL_LabelCell);
 		  /* wrap this element in a RowLabel element */
 		  /* This will allow the P schema to specify the horizontal
 		     position of the label */

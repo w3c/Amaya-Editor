@@ -1477,6 +1477,9 @@ void CellDeleted (NotifyElement * event)
   ThotBool            inMath;
   ThotBool            before;
 
+  if (event->info == 1)
+    /* the delete is already done by undo */
+    return;
   doc = event->document;
   span = CurrentSpan;
   CurrentSpan = 0;

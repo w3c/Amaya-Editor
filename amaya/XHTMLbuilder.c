@@ -692,7 +692,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	   newElType = TtaGetElementType (parent);
 	   if (newElType.ElSSchema == elType.ElSSchema &&
 	       newElType.ElTypeNum == HTML_EL_simple_ruby)
-	      ChangeElementType (parent, HTML_EL_complex_ruby);
+	      TtaChangeElementType (parent, HTML_EL_complex_ruby);
 	 }
        break;
 
@@ -709,7 +709,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       if (newElType.ElSSchema == elType.ElSSchema &&
 		   newElType.ElTypeNum == HTML_EL_rtc1)
 		 {
-		   ChangeElementType (el, HTML_EL_rtc2);
+		   TtaChangeElementType (el, HTML_EL_rtc2);
 		   prev = NULL;
 		 }
 	     }

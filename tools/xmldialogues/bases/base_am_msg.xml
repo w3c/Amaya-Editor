@@ -998,14 +998,14 @@
 	<message xml:lang="fi">%d selvittämätön pyyntö</message>
 </label>
 <label define="AM_NO_CSS">
-	<message xml:lang="en">No CSS</message>
-	<message xml:lang="fr">Pas de CSS</message>
-	<message xml:lang="de">Keine CSS</message>
-	<message xml:lang="it">Nessun CSS</message>
-	<message xml:lang="es">No CSS</message>
-	<message xml:lang="pt">Não CSS</message>
-	<message xml:lang="fi">Ei CSS saatavilla</message>
-	<message xml:lang="tr">Olumlu CSS yoktur</message>
+	<message xml:lang="en">No CSS file available</message>
+	<message xml:lang="fr">Pas de fichier CSS possible</message>
+	<message xml:lang="de">Keine Formatvorlage vorhanden</message>
+	<message xml:lang="it">Non è disponibile nessun file CSS</message>
+	<message xml:lang="es">No hay archivo CSS disponible</message>
+	<message xml:lang="pt">Não há arquivo CSS disponível</message>
+	<message xml:lang="fi">Ei CSS-tiedostoa saatavilla</message>
+	<message xml:lang="tr">Olumlu CSS dosyası yoktur</message>
 </label>
 <label define="AM_BUTTON_INTERRUPT">
 	<message xml:lang="en">Interrupt transfer</message>
@@ -1874,13 +1874,13 @@
 	<message xml:lang="tr">Tarayıcı ayarları</message>
 </label>
 <label define="AM_LOAD_IMAGES">
-	<message xml:lang="en">Load images</message>
-	<message xml:lang="fr">Charger les images</message>
-	<message xml:lang="de">Bilder laden</message>
-	<message xml:lang="fi">Lataa kuvat</message>
-	<message xml:lang="it">Caricare immagini</message>
-	<message xml:lang="es">Cargar imágenes</message>
-	<message xml:lang="tr">Görüntüyü yükle</message>
+	<message xml:lang="en">Load images (img, object, embed)</message>
+	<message xml:lang="fr">Charger les images (img, object, embed)</message>
+	<message xml:lang="de">Bilder laden (img, object, embed)</message>
+	<message xml:lang="fi">Lataa kuvat (img, object, embed)</message>
+	<message xml:lang="it">Caricare immagini (img, object, embed)</message>
+	<message xml:lang="es">Cargar imágenes (img, object, embed)</message>
+	<message xml:lang="tr">Görüntüyü yükle (img, object, embed)</message>
 </label>
 <label define="AM_ENABLE_DOUBLECLICK">
 	<message xml:lang="en">Double click activates link</message>

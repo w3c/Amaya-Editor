@@ -98,7 +98,7 @@
 96 toista-y
 97 Syöttäkää kayttäjätunnus:
 98 %d selvittämätön pyyntö
-99 Ei CSS saatavilla
+99 Ei CSS-tiedostoa saatavilla
 100 Keskeytä tiedonsiirto
 101 Edellinen dokumentti
 102 Seuraava dokumentti
@@ -186,7 +186,7 @@
 184 Osien numerointi
 185 Vienti CR/LF
 186 Selaus asetukset
-187 Lataa kuvat
+187 Lataa kuvat (img, object, embed)
 188 Kaksoisklikkaus aktivoi linkin
 189 Julkaisu asetukset
 190 Käytä ETAGS:ia ja ennakkoehtoja

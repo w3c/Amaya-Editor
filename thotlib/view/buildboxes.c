@@ -2299,8 +2299,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
     + pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
   pCurrentBox->BxClipY = pCurrentBox->BxYOrg + pCurrentBox->BxTMargin 
     + pCurrentBox->BxTBorder + pCurrentBox->BxTPadding;
-  pCurrentBox->BxClipW = pCurrentBox->BxWidth;/*  - pCurrentBox->BxLMargin - pCurrentBox->BxRMargin; */
-  pCurrentBox->BxClipH = pCurrentBox->BxHeight; /* - pCurrentBox->BxTMargin - pCurrentBox->BxBMargin; */
+  pCurrentBox->BxClipW = pCurrentBox->BxWidth;
+  pCurrentBox->BxClipH = pCurrentBox->BxHeight;
 #endif /* _GL */
   return (pCurrentBox);
 }
@@ -3301,6 +3301,11 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      Propagate = ToChildren;
 	      RecomputeLines (pBlock, NULL, NULL, frame);
 	    }
+	  else if (pBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
+	    {
+	      Propagate = ToChildren;
+	      (*ThotLocalActions[T_checkcolumn]) (pBox, NULL, frame);
+	    }
 	  /* check enclosing cell */
 	  pCell = GetParentCell (pBox);
 	  if (pCell && ThotLocalActions[T_checkcolumn])
@@ -3326,7 +3331,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
     }
   /* AbstractBox DEAD */
   else if (pAb->AbDead)
-      {
+    {
       AnyWidthUpdate = TRUE;
       if (pAb->AbLeafType == LtPolyLine)
 	FreePolyline (pBox);	/* libere la liste des buffers de la boite */

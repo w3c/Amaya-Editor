@@ -98,7 +98,7 @@
 96 repeat-y
 97 Please enter username:
 98 %d outstanding requests
-99 No CSS
+99 No CSS file available
 100 Interrupt transfer
 101 Previous document
 102 Next document
@@ -186,7 +186,7 @@
 184 Section numbering
 185 Export CR/LF
 186 Browsing Preferences
-187 Load images
+187 Load images (img, object, embed)
 188 Double click activates link
 189 Publishing Preferences
 190 Use ETAGS and preconditions

@@ -98,7 +98,7 @@
 96 Wiederholung y
 97 Bitte Benutzernamen eingeben:
 98 %d offene Anfrage(n)
-99 Keine CSS
+99 Keine Formatvorlage vorhanden
 100 Stop
 101 Zurück
 102 Vorwärts
@@ -186,7 +186,7 @@
 184 Abschnitte numerieren
 185 CR/LF exportieren
 186 Browser
-187 Bilder laden
+187 Bilder laden (img, object, embed)
 188 Doppelklick aktiviert Verweis
 189 Veröffentlichen
 190 ETAGS und Preconditions verwenden

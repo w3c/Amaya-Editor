@@ -407,7 +407,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 	      }
 	    
 	    TtaRemoveTree (el, doc);
-	    ChangeElementType (el, HTML_EL_MAP);
+	    TtaChangeElementType (el, HTML_EL_MAP);
 	    /* create the attribute */
 	    attr = TtaNewAttribute (attrType);
 	    TtaAttachAttribute (el, attr, doc);

@@ -3057,6 +3057,39 @@ void TtaCreateElement (ElementType elementType, Document document)
 }
 
 
+/* ----------------------------------------------------------------------
+   TtaInsertElement
+
+   Create an element of a given type and insert it at the current position within
+   a given document. The current position is defined by the current selection.
+   If the current position is a single position (insertion point) the new element
+   is simply inserted at that position. If one or several characters and/or
+   elements are selected, the new element is created before the first selected
+   character/element and the selected characters/elements are not changed.
+   Parameters:
+   elementType: type of the element to be created.
+   document: the document for which the element is created.
+   ---------------------------------------------------------------------- */
+void TtaInsertElement (ElementType elementType, Document document)
+{
+   UserErrorCode = 0;
+   if (elementType.ElSSchema == NULL)
+      TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+      /* Checks the parameter document */
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else if (elementType.ElTypeNum < 1 ||
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+      /* Parameter document is ok */
+      TtaError (ERR_invalid_element_type);
+   else
+      CreateNewElement (elementType.ElTypeNum,
+			(PtrSSchema) (elementType.ElSSchema),
+			LoadedDocument[document - 1], TRUE);
+}
+
 /*----------------------------------------------------------------------
    TtaSetTransformCallback permet de connecter une fonction de l'application
    au changement de type d'element

@@ -98,7 +98,7 @@
 96 y\'de tekrar
 97 Kullanıcı ismini girin:
 98 %d istek var sırada
-99 Olumlu CSS yoktur
+99 Olumlu CSS dosyası yoktur
 100 Aktarımı kes
 101 Önceki belge
 102 Sonraki belge
@@ -186,7 +186,7 @@
 184 Bölüm numaralandırması
 185 CR/LF ihraç et
 186 Tarayıcı ayarları
-187 Görüntüyü yükle
+187 Görüntüyü yükle (img, object, embed)
 188 Bağlantıyı izlemek için iki kere tuşlayın
 189 Dağıtım ayarları
 190 ETAGS\'ları ve ön-şartları kullanının

@@ -98,7 +98,7 @@
 96 Repetir-y
 97 Por favor insira nome de usuário:
 98 %d requisições pendentes
-99 Não CSS
+99 Não há arquivo CSS disponível
 100 Interromper transferência
 101 Documento precedente
 102 Documento seguinte
@@ -186,7 +186,7 @@
 184 Numeração de seção
 185 Exportar CR/LF
 186 **Browsing Preferences
-187 **Load images
+187 **Load images (img, object, embed)
 188 Duplo clique ativa enlace
 189 Preferências de publicação
 190 Usar ETAGS e pré-condições

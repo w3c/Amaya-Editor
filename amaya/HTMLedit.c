@@ -1809,7 +1809,7 @@ static void CheckPseudoParagraph (Element el, Document doc)
       if (prev || attr)
         /* the Pseudo-paragraph is not the first element among its sibling */
         /* or it has attributes: turn it into an ordinary paragraph */
-        ChangeElementType (el, HTML_EL_Paragraph);
+        TtaChangeElementType (el, HTML_EL_Paragraph);
     }
   else if (elType.ElTypeNum == HTML_EL_Paragraph)
     /* the element is a Paragraph */
@@ -1832,7 +1832,7 @@ static void CheckPseudoParagraph (Element el, Document doc)
 		elType.ElTypeNum == HTML_EL_Definition ||
 		elType.ElTypeNum == HTML_EL_Data_cell ||
 		elType.ElTypeNum == HTML_EL_Heading_cell)
-		ChangeElementType (el, HTML_EL_Pseudo_paragraph);
+		TtaChangeElementType (el, HTML_EL_Pseudo_paragraph);
 	    }
 	 }
     }
@@ -1847,7 +1847,7 @@ static void CheckPseudoParagraph (Element el, Document doc)
 	{
 	  TtaRegisterElementReplace (next, doc);
 	  TtaRemoveTree (next, doc);
-	  ChangeElementType (next, HTML_EL_Paragraph);
+	  TtaChangeElementType (next, HTML_EL_Paragraph);
 	  TtaInsertSibling (next, el, FALSE, doc);
 	}
     }
@@ -1935,7 +1935,7 @@ void ElementDeleted (NotifyElement *event)
 		{
 		  TtaRegisterElementReplace (child, event->document);
 		  TtaRemoveTree (child, event->document);
-		  ChangeElementType (child, HTML_EL_Pseudo_paragraph);
+		  TtaChangeElementType (child, HTML_EL_Pseudo_paragraph);
 		  TtaInsertFirstChild (&child, event->element, event->document);
 		}
 	    }
@@ -2469,7 +2469,7 @@ void CheckNewLines (NotifyOnTarget *event)
 		      el = TtaCopyElement (orig, doc, doc, TtaGetParent(orig));
 		      elType = TtaGetElementType (orig);
 		      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-			ChangeElementType (el, HTML_EL_Paragraph);
+			TtaChangeElementType (el, HTML_EL_Paragraph);
 		      if (orig == leaf)
 			newLeaf = el;
 		      if (prev)
