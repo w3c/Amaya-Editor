@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.11  2003-12-16 12:10:08  cvs
+ ** Revision 1.12  2004-07-21 14:33:02  cvs
+ ** New workspace to compile wxWidgets version.
+ ** S. GULLY
+ **
+ ** Revision 1.11  2003/12/16 12:10:08  cvs
  ** Rename flags _WINDOWS by _WINGUI
  ** + the flag _WINDOWS must be used only for windows specific code.
  ** + the flag _WINGUI must be used only for old windows gui stuff.
@@ -1108,13 +1112,13 @@ void DAVShowPreferencesDlg (Document document)
     sprintf (buf, "B0%cB%s%c", EOS,TtaGetMessage (AMAYA, AM_DAV_DEPTH_INFINITY), EOS);
     TtaNewSubmenu (DAVPreferencesBase + DAVradioDepth,
 		  DAVPreferencesBase + DAVPreferencesDlg,
-		  0, TtaGetMessage (AMAYA, AM_DAV_DEPTH), 2, buf, NULL, FALSE);               
+		  0, TtaGetMessage (AMAYA, AM_DAV_DEPTH), 2, buf, NULL, 0, FALSE);               
 
     sprintf (buf, "B%s%cB%s%c",TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_INFINITE),EOS,
                                TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_OTHER), EOS);
     TtaNewSubmenu (DAVPreferencesBase + DAVradioTimeout,
 		  DAVPreferencesBase + DAVPreferencesDlg,
-		  0,TtaGetMessage (AMAYA, AM_DAV_TIMEOUT), 2, buf, NULL, FALSE);               
+		  0,TtaGetMessage (AMAYA, AM_DAV_TIMEOUT), 2, buf, NULL, 0,FALSE);               
 
     TtaNewNumberForm (DAVPreferencesBase + DAVnumberTimeout,
 		      DAVPreferencesBase + DAVPreferencesDlg,
@@ -1126,7 +1130,7 @@ void DAVShowPreferencesDlg (Document document)
                                TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_SHARED), EOS);
     TtaNewSubmenu (DAVPreferencesBase + DAVradioLockScope,
 		   DAVPreferencesBase + DAVPreferencesDlg,
-		   0, TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE), 2, buf, NULL, FALSE);               
+		   0, TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE), 2, buf, NULL, 0, FALSE);               
 
     TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty3,DAVPreferencesBase + DAVPreferencesDlg, " ");
     TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty4,DAVPreferencesBase + DAVPreferencesDlg, " ");

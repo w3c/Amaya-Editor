@@ -178,6 +178,8 @@ bool AmayaSimpleWindow::AttachFrame( AmayaFrame * p_frame )
   Layout();
 
   SetAutoLayout(TRUE);
+
+  return true;
 }
 
 /*

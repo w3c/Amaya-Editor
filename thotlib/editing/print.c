@@ -2318,6 +2318,7 @@ void gtk_print_dialog ()
 #endif /* _GTK */	    
 
 #ifdef _GLPRINT
+#ifdef _WINGUI
 #include "commdlg.h"
 static PRINTDLG     Pdlg;
 static ThotWindow   PrintForm = NULL;
@@ -2325,7 +2326,7 @@ static ThotBool     LpInitialized = FALSE;
 
 /*----------------------------------------------------------------------
   TtaGetPrinterDC()
-  Call the Windows print dialogue and returns TRUE is the printer is
+  Call the Windows print dialogue and returns TRUE if the printer is
   available. Reuses the previous defined printer when the parameter 
   reuse is TRUE.
   Returns the orientation (0 = portrait, 1 = landscape), and the paper
@@ -2412,6 +2413,8 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
       return FALSE;
     }
 }
+#endif /* #ifdef _WINGUI */
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
@@ -2482,9 +2485,16 @@ int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
    Main program                                                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
+#ifdef _WX
+/* TODO: integrer ceci avec l appel de la dll dans printmenu.c */
+void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
+			 ThotBool isTrueColors, int depth, char *tmpDocName,
+			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
+#else /* _WX */
 DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 			 ThotBool isTrueColors, int depth, char *tmpDocName,
 			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
+#endif /* _WX */
 #else  /* _WINDOWS */
 #ifdef _WX
 int amaya_main (int argc, char **argv)
@@ -2793,6 +2803,7 @@ int main (int argc, char **argv)
 
   FirstFrame (server);
 #ifdef _WINDOWS
+#ifndef _WX
   if (PrinterDC)
     TtPrinterDC = PrinterDC;
   TtIsTrueColor = isTrueColors;
@@ -2810,6 +2821,9 @@ int main (int argc, char **argv)
   else 
      DOT_PER_INCH = PrinterDPI;
   WIN_Main_Wd = hWnd;
+#else /* _WX */
+/* TODO: ecrire le code d impression avec WX */
+#endif /* _WX */
 #else /* _WINDOWS */
   DOT_PER_INCH = 90;
 #endif /* _WINDOWS */
@@ -2871,8 +2885,12 @@ int main (int argc, char **argv)
 	  if (!strcmp (destination, "PSFILE"))
 	    {
 #ifdef _WINDOWS
-	      sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
+#ifndef _WX
+		  sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
 	      CopyFile (cmd, printer, FALSE);
+#else /* _WX */
+		  /* TODO */
+#endif /* _WX */
 #else  /* _WINDOWS */
 	      sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
 	      system (cmd);
@@ -2893,11 +2911,21 @@ int main (int argc, char **argv)
     {
 #ifdef _WINDOWS
       if (!strcmp (destination, "PSFILE"))
-	DeleteFile (cmd);
+	  {
+#ifndef _WX
+	    DeleteFile (cmd);
+#else /* _WX */
+		  /* TODO */
+#endif /* _WX */
+	  }
       else
 	{
 	  sprintf (name, "%s\\%s.PIV", tmpDir, tmpDocName); 
+#ifndef _WX
 	  DeleteFile (name);
+#else /* _WX */
+		  /* TODO */
+#endif /* _WX */
 	  if (tmpDir)
 	    {
 	      length = strlen (tmpDir);
@@ -2906,12 +2934,24 @@ int main (int argc, char **argv)
 		{
 		  if (CSSName[i] && TtaFileExist (CSSName[i]) &&
 		      strncmp(CSSName[i], tmpDir, length) == 0)
+		  {
+#ifndef _WX
 		    DeleteFile (CSSName[i]);
+#else /* _WX */
+		  /* TODO */
+#endif /* _WX */
+		  }
 		  TtaFreeMemory (CSSName[i]);
 		  CSSName[i] = NULL;
 		}
 	      if (rmdir (tempDir))
-		WinErrorBox (NULL, "PrintDoc (4)");
+		  {
+#ifndef _WX
+			  WinErrorBox (NULL, "PrintDoc (4)");
+#else /* _WX */
+		  /* TODO: ... */
+#endif /* _WX */
+		  }
 	    }
 	}
 #else  /* _WINDOWS */

@@ -2,6 +2,7 @@
 
 #include "wx/wx.h"
 #include "wx/clipbrd.h"
+#include "wx/image.h"
 #ifndef _GLPRINT
   #include "wx/xrc/xmlres.h"          // XRC XML resouces
 #endif /* _GLPRINT */
@@ -34,12 +35,12 @@
 
 IMPLEMENT_APP(AmayaApp)
 
-#ifdef _WINDOWS
-  // TODO
-#else /* _WINDOWS */
-  // defined into EDITORAPP.c or print.c
-  extern int amaya_main (int argc, char** argv);
-#endif /* _WINDOWS */
+#ifndef _GLPRINT
+// defined into EDITORAPP.c or print.c
+extern int amaya_main (int argc, char** argv);
+#else /* _GLPRINT */
+/* TODO */
+#endif /* #ifndef _GLPRINT */
 
 #ifdef _GL
 /*
@@ -118,6 +119,7 @@ bool AmayaApp::OnInit()
   /* initialize the Registry */
   TtaInitializeAppRegistry (amaya_argv[0]);
 
+#ifndef _GLPRINT
   // Initialize all the XRC handlers. Always required (unless you feel like
   // going through and initializing a handler of each control type you will
   // be using (ie initialize the spinctrl handler, initialize the textctrl
@@ -146,6 +148,8 @@ bool AmayaApp::OnInit()
   /* when a socket is active, check every 100 ms if something happend on the socket */
   m_SocketEventLoop = new wxAmayaSocketEventLoop( 100 );
   wxAmayaSocketEvent::InitSocketEvent( m_SocketEventLoop );
+
+#endif /* _GLPRINT */
 
   return true;
 }
@@ -224,8 +228,12 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
   if (!m_AmayaIsLaunched)
     {
       m_AmayaIsLaunched = TRUE;
-      // just call amaya main from EDITORAPP.c or print.c
+#ifndef _GLPRINT
+	  // just call amaya main from EDITORAPP.c or print.c
       amaya_main( amaya_argc, amaya_argv );
+#else /* _GLPRINT */
+	  /* TODO */
+#endif /* _GLPRINT */
     }
 
 #if DEBUG_FOCUS
@@ -248,6 +256,5 @@ int * AmayaApp::GetGL_AttrList()
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
 END_EVENT_TABLE()
-
 
 #endif /* #ifdef _WX */

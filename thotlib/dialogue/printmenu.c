@@ -114,15 +114,15 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #ifdef _WINDOWS
    for (i = 0; i < 100; i++)
      printArgv[i] = NULL;
-   printArgv[printArgc] = TtaGetMemory (strlen (BinariesDirectory) + 7);
+   printArgv[printArgc] = (char *)TtaGetMemory (strlen (BinariesDirectory) + 7);
    strcpy (printArgv[printArgc], BinariesDirectory);
    strcat (printArgv[printArgc], DIR_STR);
    strcat (printArgv[printArgc], "print");
    printArgc++;   
-   printArgv[printArgc] = TtaGetMemory (6) ;
+   printArgv[printArgc] = (char *)TtaGetMemory (6) ;
    strcpy (printArgv[printArgc], "-lang");
    printArgc++;
-   printArgv[printArgc] = TtaGetMemory (strlen (ptr) + 1);
+   printArgv[printArgc] = (char *)TtaGetMemory (strlen (ptr) + 1);
    strcpy (printArgv[printArgc], ptr);
    printArgc++;
 #else /* _WINDOWS */
@@ -134,16 +134,16 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (thotSch != NULL && thotSch[0] != EOS)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (5) ;
+       printArgv[printArgc] = (char *)TtaGetMemory (5) ;
        strcpy (printArgv[printArgc], "-sch");
        printArgc++;
-       printArgv[printArgc] = TtaGetMemory (strlen (thotSch) + 1);
+       printArgv[printArgc] = (char *)TtaGetMemory (strlen (thotSch) + 1);
        strcpy (printArgv[printArgc], thotSch);
        printArgc++;
-       printArgv[printArgc] = TtaGetMemory (5);
+       printArgv[printArgc] = (char *)TtaGetMemory (5);
        strcpy (printArgv[printArgc], "-doc");
        printArgc++;
-       printArgv[printArgc] = TtaGetMemory (strlen (thotDoc) + 1);
+       printArgv[printArgc] = (char *)TtaGetMemory (strlen (thotDoc) + 1);
        strcpy (printArgv[printArgc], thotDoc);
        printArgc++;
 #else /* _WINDOWS */
@@ -158,10 +158,10 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (servername && servername[0] != EOS)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (9);
+       printArgv[printArgc] = (char *)TtaGetMemory (9);
        strcpy (printArgv[printArgc], "-display");
        printArgc++;
-       printArgv[printArgc] = TtaGetMemory (strlen (servername) + 1);
+       printArgv[printArgc] = (char *)TtaGetMemory (strlen (servername) + 1);
        strcpy (printArgv[printArgc], servername);
        printArgc++;
 #else /* _WINDOWS */
@@ -178,10 +178,10 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        if (ptr)
 	 *ptr = EOS;
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (6);
+       printArgv[printArgc] = (char *)TtaGetMemory (6);
        strcpy (printArgv[printArgc], "-name");
        printArgc++;
-       printArgv[printArgc] = TtaGetMemory (strlen (realName) + 10);
+       printArgv[printArgc] = (char *)TtaGetMemory (strlen (realName) + 10);
        strcpy (printArgv[printArgc], realName);
        printArgc++;
 #else /* _WINDOWS */
@@ -197,7 +197,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (userOrientation != 0)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (11);
+       printArgv[printArgc] = (char *)TtaGetMemory (11);
        strcpy (printArgv[printArgc], "-landscape");
        printArgc++;
 #else /* _WINDOWS */
@@ -209,7 +209,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (PaperPrint)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (5);
+       printArgv[printArgc] = (char *)TtaGetMemory (5);
        strcpy (printArgv[printArgc], "-out");
        printArgc++;
 #else /* _WINDOWS */
@@ -219,7 +219,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    else
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (4);
+       printArgv[printArgc] = (char *)TtaGetMemory (4);
        strcpy (printArgv[printArgc], "-ps");
        printArgc++;
 #else /* _WINDOWS */
@@ -230,7 +230,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (output[0] != EOS)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (strlen (output) + 1);
+       printArgv[printArgc] = (char *)TtaGetMemory (strlen (output) + 1);
        strcpy (printArgv[printArgc], output);
        printArgc++;
 #else /* _WINDOWS */
@@ -241,7 +241,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    else
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (3);
+       printArgv[printArgc] = (char *)TtaGetMemory (3);
        strcpy (printArgv[printArgc], "lp");
        printArgc++;
 #else /* _WINDOWS */
@@ -254,7 +254,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (suppFrame == 0)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (10);
+       printArgv[printArgc] = (char *)TtaGetMemory (10);
        strcpy (printArgv[printArgc], "-emptybox");
        printArgc++;
 #else /* _WINDOWS */
@@ -266,7 +266,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (blackAndWhite != 0)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (4);
+       printArgv[printArgc] = (char *)TtaGetMemory (4);
        strcpy (printArgv[printArgc], "-bw");
        printArgc++;
 #else /* _WINDOWS */
@@ -278,7 +278,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (manualFeed != 0)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (12);
+       printArgv[printArgc] = (char *)TtaGetMemory (12);
        strcpy (printArgv[printArgc], "-manualfeed");
        printArgc++;
 #else /* _WINDOWS */
@@ -290,7 +290,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (repaginate != 0)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (10);
+       printArgv[printArgc] = (char *)TtaGetMemory (10);
        strcpy (printArgv[printArgc], "-paginate");
        printArgc++;
 #else /* _WINDOWS */
@@ -303,7 +303,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
      {
 #ifdef _WINDOWS
        sprintf (tmp, "-P%s", PageSize);
-       printArgv[printArgc] = TtaGetMemory (strlen (PageSize) + 3);
+       printArgv[printArgc] = (char *)TtaGetMemory (strlen (PageSize) + 3);
        strcpy (printArgv[printArgc], tmp);
        printArgc++;
 #else /* _WINDOWS */
@@ -323,8 +323,12 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (frame <= MAX_FRAME)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (20);
+       printArgv[printArgc] = (char *)TtaGetMemory (20);
+#ifndef _WX
        sprintf (printArgv[printArgc], "-w%ld", FrRef[frame]);
+#else /* _WX */
+	   sprintf (printArgv[printArgc], "-w%ld", FrameTable[0].WdFrame);
+#endif /* _WX */
        printArgc++;
 #else /* _WINDOWS */
 #ifndef _WX
@@ -339,10 +343,10 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (nbPagesPerSheet != 1)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (6);
+       printArgv[printArgc] = (char *)TtaGetMemory (6);
        strcpy (printArgv[printArgc], "-npps");
        printArgc++;
-       printArgv[printArgc] = TtaGetMemory (5);
+       printArgv[printArgc] = (char *)TtaGetMemory (5);
        sprintf (printArgv[printArgc], "%d", nbPagesPerSheet);
        printArgc++;
 #else /* _WINDOWS */
@@ -354,10 +358,10 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (firstPage > 1 || lastPage < 999)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (7);
+       printArgv[printArgc] = (char *)TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-F%d", firstPage);
        printArgc++;
-       printArgv[printArgc] = TtaGetMemory (7);
+       printArgv[printArgc] = (char *)TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-L%d", lastPage);
        printArgc++;
 #else /* _WINDOWS */
@@ -369,7 +373,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (nCopies > 1)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (8);
+       printArgv[printArgc] = (char *)TtaGetMemory (8);
        sprintf (printArgv[printArgc], "-#%d", nCopies);
        printArgc++;
 #else /* _WINDOWS */
@@ -381,7 +385,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (hShift != 0)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (7);
+       printArgv[printArgc] = (char *)TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-H%d", hShift);
        printArgc++;
 #else /* _WINDOWS */
@@ -393,7 +397,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (vShift != 0)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (7);
+       printArgv[printArgc] = (char *)TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-V%d", vShift);
        printArgc++;
 #else /* _WINDOWS */
@@ -405,7 +409,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (reduction != 100)
      {
 #ifdef _WINDOWS
-       printArgv[printArgc] = TtaGetMemory (7);
+       printArgv[printArgc] = (char *)TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-%%%d", reduction);
        printArgc++;
 #else /* _WINDOWS */
@@ -426,7 +430,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #ifdef _WINDOWS
        printArgv[printArgc] = TtaStrdup ("-v");
        printArgc++;
-       printArgv[printArgc] = TtaGetMemory (50);
+       printArgv[printArgc] = (char *)TtaGetMemory (50);
        j = 0;
 #else /* _WINDOWS */
        j = strlen (cmd);
@@ -451,7 +455,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		   printArgc++;
 		   printArgv[printArgc] = TtaStrdup ("-v");
 		   printArgc++;
-		   printArgv[printArgc] = TtaGetMemory (50);
+		   printArgv[printArgc] = (char *)TtaGetMemory (50);
 		   j = 0;
 #else /* _WINDOWS */
 		   j = strlen (cmd);
@@ -520,7 +524,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	     /* there is a file name after the flag */
 	     {
 #ifdef _WINDOWS
-	       printArgv[printArgc] = TtaGetMemory (99);
+	       printArgv[printArgc] = (char *)TtaGetMemory (99);
 		   j = 0;
 	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
 		 {
@@ -546,9 +550,10 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
      }
    /* transmit the path or source file */
 #ifdef _WINDOWS
+#ifndef _WX
    printArgv[printArgc] = TtaStrdup ("-removedir");
    printArgc++;
-   printArgv[printArgc] = TtaGetMemory (strlen (dir) + strlen (name) + 6);
+   printArgv[printArgc] = (char *)TtaGetMemory (strlen (dir) + strlen (name) + 6);
    sprintf  (printArgv[printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
    /*WIN_ReleaseDeviceContext ();*/
@@ -580,6 +585,9 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        DeleteDC (TtPrinterDC);
        TtPrinterDC = (HDC) 0;
      }
+#else /* _WX */
+   /* TODO : ecrire le code wx qui permet de charger une DLL et executer le code du print */
+#endif /* !_WX */
 #else /*_WINDOWS*/
    cmd[j] = EOS;
    i = strlen (cmd);

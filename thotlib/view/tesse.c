@@ -18,13 +18,15 @@
   #include <windows.h>
 #endif /* _WINGUI */
 
-#ifdef _GL
-  #include <GL/gl.h>
-#endif /* _GL */
-
-#ifdef _GL
+#ifdef _WX
+  #include "wx/wx.h"
+  #include <GL/glu.h>
+#else /* _WX */
+  #ifdef _GL
+    #include <GL/gl.h>
     #include <GL/glu.h>
-#endif
+  #endif
+#endif /* _WX */
 
 /*win32 GLU special*/
 #ifndef CALLBACK

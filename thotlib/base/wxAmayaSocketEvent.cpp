@@ -6,8 +6,10 @@
 #include "wxAmayaSocketEventLoop.h"
 
 #include <sys/types.h>
-#include <sys/time.h>
-#include <unistd.h>
+#ifndef _WINDOWS
+  #include <sys/time.h>
+  #include <unistd.h>
+#endif /* _WINDOWS */
 
 /* at begining m_RegistredSocket must be initialized */
 bool wxAmayaSocketEvent::m_IsInitialized = false;

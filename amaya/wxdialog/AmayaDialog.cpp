@@ -18,7 +18,7 @@ END_EVENT_TABLE()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 AmayaDialog::AmayaDialog( wxWindow * p_parent, int ref ) :
-  wxDialog( p_parent, -1, _T("") ),
+  wxDialog( p_parent, _T(""), false /* modal */ ),
   m_Ref(ref)
 {
   wxLogDebug( _T("AmayaDialog::AmayaDialog - ref=%d"), ref );
