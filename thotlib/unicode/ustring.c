@@ -105,7 +105,7 @@ wchar_t Ttowlower(wchar_t wc)
   else return wc;
 }
 
-#if !defined(_WINDOWS) && !defined(_AIX)
+#if defined(_UNIX) && !defined(_AIX)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 wchar_t *wcstok(wchar_t *s, const wchar_t *delim, wchar_t **last)
