@@ -495,9 +495,10 @@ int           value;
 ThotBool      update;
 #endif /* __STDC__*/
 {
-  CHAR_T		buffer[32], unit[32];
+  CHAR_T		buffer[32], unit[32], *ptr;
   Attribute             attr;
-  int                   length;
+  int                   v, e;
+  int                   pval, pe, i;
 
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
@@ -514,25 +515,66 @@ ThotBool      update;
   else
     {
       /* get the current unit */
-      length = 32;
-      TtaGiveTextAttributeValue (attr, buffer, &length);
+      i = 32;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      /* check if the value includes decimals */
+      i = 0;
+      v = 0;
+      while (buffer[i] != WC_EOS && !v)
+	{
+	  if (buffer[i] == TEXT('.'))
+	    {
+	      buffer[i] = WC_EOS;
+	      usscanf (buffer, TEXT("%d"), &pval);	      
+	      v = i + 1;
+	    }
+	  i++;
+	}
       unit[0] = WC_EOS;
-
-      usscanf (buffer, TEXT("%d%s"), &length, unit);
+      if (v)
+	usscanf (&buffer[v], TEXT("%d%s"), &pe, unit);
+      else
+	usscanf (buffer, TEXT("%d%s"), &pval, unit);
       /* convert the value according to the current unit */
       if (!ustrcmp (unit, "em") || !ustrcmp (unit, "ex"))
-	value = (value + 9) / 10;
+	{
+	  v = value / 10;
+	  e = value - (v * 10);
+	}
       else if (!ustrcmp (unit, "pc"))
-	value = (value + 11) / 12;
+	{
+	  v = value / 12;
+	  e = value - (v * 12);
+	}
       else if (!ustrcmp (unit, "in"))
-	value = (value + 71) / 72;
+	{
+	  v = value / 72;
+	  e = value - (v * 72);
+	}
       else if (!ustrcmp (unit, "cm"))
-	value = (value + 27) / 28;
+	{
+	  v = value / 28;
+	  e = value - (v * 28);
+	}
       else if (!ustrcmp (unit, "mm"))
-	value = ((value * 10) + 27) / 28;
+	{
+	  v = (value * 10) / 28;
+	  e = value - (v * 28 / 10);
+	}
+      else
+	{
+	  v = value;
+	  e = 0;
+	}
       if (update)
-	value = value + length;
-      usprintf (buffer, TEXT("%d%s"), value, unit);
+	{
+	  v = v + pval;
+	  e = e + pe;
+	}
+      if (e)
+	usprintf (buffer, TEXT("%d.%d%s"), v, e, unit);
+      else
+	usprintf (buffer, TEXT("%d%s"), v, unit);
       TtaRegisterAttributeReplace (attr, el, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
     }

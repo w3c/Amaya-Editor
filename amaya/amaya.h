@@ -154,20 +154,20 @@ typedef enum _ClickEvent {
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
 #define MAX_SUBMENUS    400
-#define About1		435
-#define About2		436
-#define About3		437
-#define Version		438
-#define AboutForm      	439
-#define TableForm       440
-#define TableRows       441
-#define TableCols       442
-#define TableBorder     443
-#define MathEntityForm  444
-#define MathEntityText  445
-#define TitleForm       446
-#define TitleText       447
-#define MAX_REF         448
+#define About1		450
+#define About2		451
+#define About3		452
+#define Version		453
+#define AboutForm      	454
+#define TableForm       455
+#define TableRows       456
+#define TableCols       457
+#define TableBorder     458
+#define MathEntityForm  459
+#define MathEntityText  460
+#define TitleForm       461
+#define TitleText       462
+#define MAX_REF         463
 
 #define FormPrint        1
 #define PrintOptions     2
