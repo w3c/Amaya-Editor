@@ -711,20 +711,20 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	 case 10:	/* Next word (^->) */
 	   WordSearchContext.SDocument =  LoadedDocument[doc - 1];
 	   WordSearchContext.SStartToEnd = TRUE;
-	   if (RightExtended)
-	     {
-	       /* extend the current selection */
-	       last = LastSelectedChar;
-	       pEl = LastSelectedElement;
-	     }
-	   else
+	   if (LeftExtended)
 	     {
 	       /* shrink the current selection */
 	       last = FirstSelectedChar;
 	       pEl = FirstSelectedElement;
 	     }
+	   else
+	     {
+	       /* extend the current selection */
+	       last = LastSelectedChar;
+	       pEl = LastSelectedElement;
+	     }
 	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if ((RightExtended && first == LastSelectedChar) ||
+	   if ((!LeftExtended && first == LastSelectedChar) ||
 	       (LeftExtended && first >= FirstSelectedChar))
 	     /* It was not the beginning of the next word */
 	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);

@@ -259,7 +259,9 @@ int CharacterWidth (UCHAR_T c, ptrfont font)
     return (0);
   else
     {
-      if (c == NEW_LINE)
+      if (c == START_ENTITY)
+	c = '&';
+      else if (c == NEW_LINE)
 	/* characters NEW_LINE and BREAK_LINE are equivalent */
 	c = BREAK_LINE;
       else if (c == TAB)
