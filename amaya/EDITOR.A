@@ -168,4 +168,5 @@ MENUS
 	view:1 Help_ button:BHelpMakeBook -> HelpMakeBook;
 
 	END;
+
 END

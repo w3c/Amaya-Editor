@@ -145,8 +145,8 @@ char               *data;
 #endif
 {
   Document           doc;
-  Element            first, el;
-  ElementType        elType;
+  Element            sibling, el, row;
+  ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
   int                val, c1, i;
 
@@ -162,69 +162,112 @@ char               *data;
       if (doc == 0)
 	/* no document selected */
 	return;
-      TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+      TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i);
+      /* Check whether the selected element is a text element */
+      elType = TtaGetElementType (sibling);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
+	{
+	  /* split the text to insert the XML element */
+	  TtaSplitText (sibling, c1, doc);
+	  /* take the second part of the split text element */
+	  TtaNextSibling (&sibling);
+	}
+
       /* Check whether the selected element is a math element */
-      elType = TtaGetElementType (first);
       docSchema = TtaGetDocumentSSchema (doc);
       if (TtaSameSSchemas (docSchema, elType.ElSSchema))
 	{
+	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
 	  /* the selection concerns an HTML element */
 	  if (elType.ElTypeNum == HTML_EL_XML)
 	    {
+	      /* search the enclosed element at lower level */
 	      do
 		{
-		  el = first;
-		  first = TtaGetFirstChild (el);
+		  row = sibling;
+		  sibling = TtaGetFirstChild (row);
+		  elType = TtaGetElementType (sibling);		  
 		}
-	      while (first != NULL);
+	      while (sibling != NULL);
+	      sibling = row;
 	    }
 	  else
 	    {
-	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 < 1)
-		{
-		  /* split the text to insert the XML element */
-		  TtaSplitText (first, c1, doc);
-		  /* take the second part of the split text element */
-		  TtaNextSibling (&first);
-		}
-	      mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
-	      /* create the XML element before the first element */
+	      /* create the XML element before the sibling element */
 	      elType.ElTypeNum = HTML_EL_XML;
 	      el = TtaNewTree (doc, elType, "");
-	      TtaInsertSibling (el, first, TRUE, doc);
-	      el = TtaGetFirstChild (el);
+	      TtaInsertSibling (el, sibling, TRUE, doc);
+	      sibling = TtaGetFirstChild (el);
 	    }
 	}
+
+      elType = TtaGetElementType (sibling);
+      newType.ElSSchema = mathSchema;
       switch (val)
 	{
 	case 0:
-	  elType.ElTypeNum = MathML_EL_MROOT;
+	  newType.ElTypeNum = MathML_EL_MROOT;
 	  break;
 	case 1:
-	  elType.ElTypeNum = MathML_EL_MSQRT;
+	  newType.ElTypeNum = MathML_EL_MSQRT;
 	  break;
 	case 2:
-	  elType.ElTypeNum = MathML_EL_MFRAC;
+	  newType.ElTypeNum = MathML_EL_MFRAC;
 	  break;
 	case 3:
-	  elType.ElTypeNum = MathML_EL_MSUBSUP;
+	  newType.ElTypeNum = MathML_EL_MSUBSUP;
 	  break;
 	case 4:
-	  elType.ElTypeNum = MathML_EL_MSUB;
+	  newType.ElTypeNum = MathML_EL_MSUB;
 	  break;
 	case 5:
-	  elType.ElTypeNum = MathML_EL_MSUP;
+	  newType.ElTypeNum = MathML_EL_MSUP;
 	  break;
 	case 6:
-	  elType.ElTypeNum = MathML_EL_MFENCE;
+	  newType.ElTypeNum = MathML_EL_MFENCE;
 	  break;
 	case 7:
-	  elType.ElTypeNum = MathML_EL_MN;
+	  newType.ElTypeNum = MathML_EL_MN;
 	  break;
 	default:
 	  return;
 	}
-      TtaCreateElement (elType, doc);
+      el = TtaNewTree (doc, newType, "");
+
+      if (elType.ElTypeNum != MathML_EL_MathML
+	  && elType.ElTypeNum != MathML_EL_MROW)
+	{
+	  /* the selected element is not a MROW */
+	  row = TtaGetParent (sibling);
+	  elType = TtaGetElementType (row);
+	  if (elType.ElTypeNum != MathML_EL_MathML
+	      && elType.ElTypeNum != MathML_EL_MROW)
+	    {
+	      /* generates a new row element to include both elements */
+	      elType.ElTypeNum = MathML_EL_MROW;
+	      row = TtaNewElement (doc, elType);
+	      TtaInsertSibling (row, sibling, TRUE, doc);
+	      /* move the old element into the new MROW */
+	      TtaRemoveTree (sibling, doc);
+	      TtaInsertFirstChild (&sibling, row, doc);
+	    }
+	  /* insert the new element */
+	  TtaInsertSibling (el, sibling, TRUE, doc);
+	}
+      else
+	{
+	/* the selected element is not a MROW */
+	  row = sibling;
+	  sibling = TtaGetFirstChild (row);
+	  if (sibling == NULL)
+	    {
+	      /* the MROW is empty -. remove the empty MROW */
+	      TtaInsertSibling (el, row, TRUE, doc);
+	      TtaRemoveTree (row, doc);
+	    }
+	  else
+	    TtaInsertFirstChild (&el, row, doc);
+	}
       break;
     default:
       break;
@@ -271,7 +314,7 @@ View                view;
       i += strlen (&s[i]) + 1;
       sprintf (&s[i], "%s", "BMN");
       TtaNewSubmenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-		     TtaGetMessage (AMAYA, AM_REPEAT_MODE), 8, s, NULL, TRUE);
+		     NULL, 8, s, NULL, TRUE);
       TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
       TtaSetDialoguePosition ();
     }

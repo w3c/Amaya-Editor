@@ -4,6 +4,52 @@
 
 
 PRESENTATION MathML;
+VIEWS
+   Formatted_view, Structure_view;
+
+#define STRUCT_INDENT 1.5
+#define TAG_FONTSIZE 10 pt
+#define DOC_FONTSIZE 12 pt
+#define TAG_Style Bold
+#define TAG_Visibility 7
+
+#ifdef BLACK_WHITE
+#define TAG_Color Black
+#define ATTR_Color Black
+#define ATTRVALUE_Color Black
+#define INVALID_Color Black
+#define UNKNOWNTAG_Color Black
+#else
+#define TAG_Color Blue
+#define ATTR_Color Blue
+#define ATTRVALUE_Color Black
+#define INVALID_Color Red
+#define UNKNOWNTAG_Color Red
+#define LINK_Color DarkIndigo1
+#define TARGET_Color DarkGreen2
+#endif
+
+#define TAG_Font Helvetica
+#define ATTR_Style Bold
+#define ATTR_Style_Links_view Italics
+#define ATTR_Visibility 6
+#define INPUT_Font Courier
+#define COMMENT_Visibility 5
+#define COMMENT_Font Helvetica
+#define COMMENT_Style Italics
+#define INVALID_Style Bold
+#define INVALID_Visibility 5
+#define INVALID_Font Helvetica
+#define TableSimpleHSpace 4 pt
+#define TableDoubleHSpace 8 pt
+#define TableSimpleVSpace 0.4
+#define VSpaceBeforeH1 1
+#define VSpaceBeforeH2 0.5
+#define VSpaceBeforeH3 0.5
+#define VSpaceBeforeH4 0.5
+#define VSpaceBeforeH5 0.5
+#define VSpaceBeforeH6 0.5
+#define VSpaceInToC 0.2
 
 DEFAULT
 
@@ -35,14 +81,145 @@ DEFAULT
 
 BOXES
 
+ MROW_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MROOT_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MSQRT_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MFRAC_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MSUBSUP_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MSUB_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MSUP_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MFENCE_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MN_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MTEXT_S: BEGIN
+	Content: Text 'HTML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ VerticalLine: BEGIN
+	Content: Graphics 'W';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Creator . Top;
+		Height: Creator . Height;
+		Width: 1.1;
+		LineWeight: 2 pt;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
    Bar:	{ barre de fraction }
 	BEGIN
 	Size: 1;
 	Height: 0.3;
         Width: Enclosing . Width ;
 	HorizPos: Left = Enclosing . Left;
-	Content: Graphics 'h';	{ trait horizontal }
-	LineStyle: Solid;		{ trait continu }
+	Content: Graphics 'h';	{ horizontal bar }
+	LineStyle: Solid;
 	END;
 
    SymbRadical:
@@ -51,7 +228,7 @@ BOXES
 	Width: Enclosing . Width;
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = Enclosing . Left;
-	Content: Symbol 'r';		{ symbole racine }
+	Content: Symbol 'r';		{ root symbol }
 	Depth: Enclosing + 1;
 	END;
 
@@ -66,11 +243,31 @@ RULES
 	HorizPos: VMiddle = Previous . VMiddle;
 	END;
 
+   MROW:
+	BEGIN
+	CreateFirst(MROW_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
+  	END;
+
    MROOT:
         BEGIN
 	CreateFirst(SymbRadical);
 	HorizRef: Enclosed Root_exp . HRef ;
 	Gather: Yes;
+	CreateFirst(MROOT_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
   	END;
 
    MSQRT:
@@ -78,6 +275,14 @@ RULES
 	CreateFirst(SymbRadical);
 	HorizRef: Enclosed Root_exp . HRef ;
 	Gather: Yes;
+	CreateFirst(MSQRT_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
   	END;
 
    Root_index:
@@ -86,12 +291,20 @@ RULES
    	HorizPos: Left = Enclosing.Left;
    	VertPos: Top = Enclosing.Top;
    	Size: Enclosing -2 min 0;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
    	END;
 	
    Root_exp:	
         BEGIN
 	HorizPos: Left = Enclosing . Left + 1;
 	VertPos: Top = Enclosing . Top + 0.3;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
   	END;
 
    MFRAC:
@@ -99,6 +312,14 @@ RULES
 	CreateFirst(Bar);
 	HorizRef: Enclosed Bar . Bottom + 0.1;
 	Gather: Yes;
+	CreateFirst(MFRAC_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
 	END;
 
    Numerator:
@@ -106,6 +327,10 @@ RULES
 	HorizRef: * . Top;
 	VertPos: Bottom = Bar . Top;
 	HorizPos: VMiddle = Bar . VMiddle;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
 	END;
 
    Denominator:
@@ -113,30 +338,62 @@ RULES
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Bar . VMiddle;
 	VertPos: Top = Bar . Bottom + 0.2;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
 	END;
 
    MSUBSUP:
         BEGIN
 	Gather: Yes;
 	HorizRef: Enclosed  Base. HRef;
+	CreateFirst(MSUBSUP_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
 	END;
 
    MSUB:
         BEGIN
 	Gather: Yes;
 	HorizRef: Enclosed  Base. HRef;
+	CreateFirst(MSUB_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
 	END;
 
    MSUP:
         BEGIN
 	Gather: Yes;
 	HorizRef: Enclosed  Base. HRef;
+	CreateFirst(MSUP_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
 	END;
 
    Base:
 	BEGIN
 	VertPos: NIL;
 	HorizPos: Left = Enclosing . Left;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
 	END;
 
    Sup_exp:
@@ -145,6 +402,10 @@ RULES
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Bottom = Base . Top + 0.5;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
 	END;
 
    Sub_exp:
@@ -153,6 +414,10 @@ RULES
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Top = Base . Bottom - 0.5;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
 	END;
 
    MFENCE:
@@ -161,6 +426,26 @@ RULES
 	Height: Enclosing . Height;
 	HorizPos: Left = Enclosing . Left + 0.1;
 	VertPos: Top =  Enclosing . Top;
+	CreateFirst(MFENCE_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
+	END;
+
+   MN:
+	BEGIN
+	CreateFirst(MN_S);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
 	END;
 
    SYMBOL_UNIT:
@@ -175,6 +460,18 @@ RULES
 	BEGIN
 	VertRef: Enclosed . VRef;
 	LineBreak: Yes;
+	if NOT within MFENCE AND NOT within MN
+	   CreateFirst(MTEXT_S);
+	IN Structure_view BEGIN
+	   if NOT within MFENCE AND NOT within MN
+	   BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		Font: Helvetica;
+		END;
+	   END;
 	END;
 
 END
