@@ -1631,6 +1631,14 @@
 	<message xml:lang="en">Selection</message>
 	<message xml:lang="fr">Sélection</message>
 </label>
+<label define="AM_UNDEFINED_ENCODING">
+	<message xml:lang="en">The encoding of this document is not defined. If you edit it, you may loose some information</message>
+	<message xml:lang="fr">L'encodage de ce document n'est pas défini. Si vous l'éditez, vous pouvez perdre des informations.</message>
+</label>
+<label define="AM_ENCODING_WARNING">
+	<message xml:lang="en">Document encoding unknown or undefined - see the log file</message>
+	<message xml:lang="fr">Encodage non supporté ou non défini - voir le fichier log</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
