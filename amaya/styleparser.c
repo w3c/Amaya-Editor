@@ -4213,21 +4213,21 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 			  MapXMLElementType (XHTML_TYPE, names[i], &elType,
 					     &mappedName, &c, &level, doc);
 			  if (elType.ElSSchema)
-			    GetXHTMLSSchema (doc);
+			    elType.ElSSchema = GetXHTMLSSchema (doc);
 			}
 		      if (elType.ElSSchema == NULL && xmlType != MATH_TYPE)
 			{
 			  MapXMLElementType (MATH_TYPE, names[i], &elType,
 					     &mappedName, &c, &level, doc);
 			  if (elType.ElSSchema)
-			    GetMathMLSSchema (doc);
+			    elType.ElSSchema = GetMathMLSSchema (doc);
 			}
 		      if (elType.ElSSchema == NULL && xmlType != SVG_TYPE)
 			{
 			  MapXMLElementType (SVG_TYPE, names[i], &elType,
 					     &mappedName, &c, &level, doc);
 			  if (elType.ElSSchema)
-			    GetSVGSSchema (doc);
+			    elType.ElSSchema = GetSVGSSchema (doc);
 			}
 		    }
 		}

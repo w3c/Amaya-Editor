@@ -2717,7 +2717,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	  /* it's a simple button not a pull-down */
 	  if (parent)
 	    {
-	      XtManagechild (parent);
+	      XtManageChild (parent);
 	      XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
 	    }
 	  return;
