@@ -967,7 +967,7 @@ static void LayoutPicture (Pixmap pixmap,
       switch (picPresent)
 	{
 	case ReScale:
-	  GL_TextureMap (imageDesc, xFrame, yFrame, w ,h);
+	  GL_TextureMap (imageDesc, xFrame, yFrame, w, h);
 	  break;
 	case RealSize:
 	  GL_TextureMap (imageDesc, xFrame, yFrame,
