@@ -244,7 +244,7 @@ boolean            *assoc;
 	  }
      }
    if (*nv == 0)
-      TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_NOT_FOUND);
+      TtaDisplaySimpleMessage (INFO, LIB, MISSING_VIEW);
    else
       *pD = pDoc;
 }
@@ -1110,7 +1110,7 @@ char               *extension;
      }
    else
      {
-	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_WRITE), texte);
+	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP), texte);
 	return FALSE;
      }
 }
@@ -1173,7 +1173,7 @@ boolean             SauveDocAvecMove;
 	     ok = OuvrEcr (NomTemporaire) == 0;
 	     if (ok)
 	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, LIB_WRITING);
+		  TtaDisplaySimpleMessage (INFO, LIB, WRITING);
 		  ok = simpleSave (pDoc, NomTemporaire, FALSE);
 	       }
 	     if (ok)
@@ -1183,7 +1183,7 @@ boolean             SauveDocAvecMove;
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
 	     DoFileName (NomDuDocument, "PIV", NomDirectory, texte, &i);
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_WRITE),
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP),
 					    texte);
 	     status = FALSE;
 	  }
@@ -1311,9 +1311,9 @@ boolean             ask;
    status = FALSE;
    if (pDoc->DocReadOnly)
       /* on ne sauve pas les documents qui sont en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, LIB_NOT_ALLOWED_READ_ONLY_DOC);
+      TtaDisplaySimpleMessage (INFO, LIB, RO_DOC_FORBIDDEN);
    else if (pDoc->DocSSchema == NULL)
-      TtaDisplaySimpleMessage (INFO, LIB, LIB_EMPTY_DOC_NOT_WRITTEN);
+      TtaDisplaySimpleMessage (INFO, LIB, EMPTY_DOC_NOT_WRITTEN);
    else
      {
 	strncpy (nomdoc, pDoc->DocDName, MAX_NAME_LENGTH);
@@ -1548,7 +1548,7 @@ PtrDocument         pDoc;
       /* echec creation frame */
      {
 	LibDocument (&pDoc);
-	TtaDisplaySimpleMessage (INFO, LIB, LIB_IMPOSSIBLE_TO_OPEN_NEW_WINDOW);
+	TtaDisplaySimpleMessage (INFO, LIB, OPENING_NEW_FRAME_IMP);
      }
    else
      {
@@ -1682,14 +1682,14 @@ char               *nomfichier;
      {
 	/* on ouvre le document en chargeant temporairement les documents */
 	/* externes qui contiennent les elements inclus dans notre document */
-	TtaDisplaySimpleMessage (INFO, LIB, LIB_READING_THE_DOC);
+	TtaDisplaySimpleMessage (INFO, LIB, READING_DOC);
 	ok = OpenDocument (NomDocument, *pDoc, TRUE, FALSE, NULL, TRUE);
 	/* restaure le path des documents s'il a ete ecrase */
 	if (SaveDirDoc[0] != '\0')
 	   strncpy (DirectoryDoc, SaveDirDoc, MAX_PATH);
 	if (!ok)
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_OPEN_DOC), NomDocument);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OPEN_DOC_IMP), NomDocument);
 	     LibDocument (pDoc);
 	     *pDoc = NULL;
 	  }
@@ -1779,7 +1779,7 @@ PathBuffer          nomdir;
 	     {
 		strncpy (BufNomFichier, NomClasse, MAX_NAME_LENGTH);
 		strcat (BufNomFichier, ".STR");
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_FIND_SCHEM), BufNomFichier);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), BufNomFichier);
 	     }
 	   else
 	     {
@@ -1893,7 +1893,7 @@ PtrBuffer           nomsch;
 
    CreateDocument (&pDoc);
    if (pDoc != NULL)
-      NewDocument (&pDoc, nomsch, TtaGetMessage (LIB, LIB_NO_NAME), "");
+      NewDocument (&pDoc, nomsch, TtaGetMessage (LIB, NO_NAME), "");
 }
 
 /* ---------------------------------------------------------------------- */

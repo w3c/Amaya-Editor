@@ -120,7 +120,7 @@ indLine               wi;
 
 {
    if (ref->NRuleRefs >= MAX_RULE_REF)
-      CompilerError (wi, GRM, FATAL, GRM_REF_TABLE_FULL, inputLine, LineNum);
+      CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_REF_TABLL, inputLine, LineNum);
    else
 	ref->RuleRef[ref->NRuleRefs++] = curRule;
 }
@@ -142,7 +142,7 @@ indLine               wi;
 
 {
    if (curIndx >= maxlgrule)
-      CompilerError (wi, GRM, FATAL, GRM_RULE_TOO_LONG, inputLine, LineNum);
+      CompilerError (wi, GRM, FATAL, INVALID_RULE_SIZE, inputLine, LineNum);
    else
       SyntRule[curRule - 1][curIndx++] = code;
 }
@@ -231,14 +231,14 @@ int                 rank;
 	      if (curRule <= MAX_RULE_GRM)
 		 NSyntRules = curRule;
 	      else
-		 CompilerError (wi, GRM, FATAL, GRM_RULES_TABLE_FULL, inputLine, LineNum);
+		 CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_RULES_TABLE, inputLine, LineNum);
 	   identtable[rank - 1].SrcIdentDefRule = rank;
 	}
       else
 	{
 	   /* la regle est en cours */
 	   if (rank == curRule)
-	      CompilerError (wi, GRM, FATAL, GRM_RULES_TABLE_FULL, inputLine, LineNum);
+	      CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_RULES_TABLE, inputLine, LineNum);
 	   else
 	      PutToken (rank, wi);
 	   identtable[rank - 1].SrcIdentRefRule = rank;
@@ -250,7 +250,7 @@ int                 rank;
 	i = 0;
 	known = False;
 	if (wl - 1 > identlen)
-	   CompilerError (wi, GRM, FATAL, GRM_STRING_TOO_LONG, inputLine, LineNum);
+	   CompilerError (wi, GRM, FATAL, INVALID_STRING_SIZE, inputLine, LineNum);
 	/* est-elle deja dans la table ? */
 	else
 	  {
@@ -275,7 +275,7 @@ int                 rank;
 		AddRefToTable (&kwRef[i - 1], wi);
 	     /* elle n'est pas dans la table, on la met */
 	     else if (Nstrings >= MAX_STRING_GRM)
-		CompilerError (wi, GRM, FATAL, GRM_STRING_TABLE_FULL, inputLine, LineNum);
+		CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_STRING_TABLE, inputLine, LineNum);
 	     else
 	       {
 		  strng[Nstrings].SrcIdentLen = wl - 1;
@@ -445,7 +445,7 @@ static void         WriteFiles ()
    Hfile = fopen (fileName, "w");
    if (Hfile == NULL)
      {
-	TtaDisplayMessage (FATAL, TtaGetMessage(GRM, GRM_CAN_T_CREATE_HEADER_FILE), fileName);
+	TtaDisplayMessage (FATAL, TtaGetMessage(GRM, CANT_CREATE_HEADER_FILE), fileName);
 	exit (1);
      }
    else
@@ -679,10 +679,10 @@ indLine               wl;
 						    && inputLine[wi - 1] <= '`') || inputLine[wi - 1] == '|' || inputLine[wi - 1] == '~')
 	  {
 	     if (inputLine[wi - 1] == '\'')
-		CompilerError (wi, GRM, FATAL, GRM_INCOR_KEY_WORD, inputLine, LineNum);
+		CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
 	  }
 	else
-	   CompilerError (wi, GRM, FATAL, GRM_INCOR_KEY_WORD, inputLine, LineNum);
+	   CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
      }
    else
      {
@@ -701,13 +701,13 @@ indLine               wl;
 			     && inputLine[j] <= 'z') || (inputLine[j] >= '0'
 		    && inputLine[j] <= '9') || (((int)inputLine[wi - 1]) >= 1
 				&& inputLine[wi - 1] < ' ')))
-		     CompilerError (wi, GRM, FATAL, GRM_INCOR_KEY_WORD, inputLine, LineNum);
+		     CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
 		  j++;
 	       }
 	     while (!error && j < wi + wl - 2);
 	  }
 	else
-	   CompilerError (wi, GRM, FATAL, GRM_INCOR_KEY_WORD, inputLine, LineNum);
+	   CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
      }
 }
 
@@ -733,13 +733,13 @@ static boolean      CheckDefAndRef ()
      {
 	if (identtable[ic].SrcIdentDefRule == 0)
 	  {
-	     TtaDisplayMessage (FATAL, TtaGetMessage(GRM, GRM_UNDEFINED_SYMBOL), identtable[ic].SrcIdentifier);
+	     TtaDisplayMessage (FATAL, TtaGetMessage(GRM, UNDEFINED_SYMBOL), identtable[ic].SrcIdentifier);
 	     ok = False;
 	  }
 	if (identtable[ic].SrcIdentRefRule == 0)
 	   if (ic > 0)
 	     {
-		TtaDisplayMessage (FATAL, TtaGetMessage(GRM, GRM_UNREFERENCED_SYMBOL), identtable[ic].SrcIdentifier);
+		TtaDisplayMessage (FATAL, TtaGetMessage(GRM, UNREFERENCED_SYMBOL), identtable[ic].SrcIdentifier);
 		ok = False;
 	     }
      }
@@ -777,10 +777,10 @@ char              **argv;
 
    TtaInitializeAppRegistry (argv[0]);
    GRM = TtaGetMessageTable ("grmdialogue", GRM_MSG_MAX);
-   COMPIL = TtaGetMessageTable ("compildialogue", COMPIL_MSG_MAX);
+   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
 
    if (argc != 2)
-      TtaDisplaySimpleMessage (FATAL, GRM, GRM_NO_SUCH_FILE);
+      TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);
    else
      {
 	strncpy (fileName, argv[1], MAX_NAME_LENGTH - 1);
@@ -789,7 +789,7 @@ char              **argv;
 	strcat (fileName, ".LAN");
 
 	if (FileExist (fileName) == 0)
-	   TtaDisplaySimpleMessage (FATAL, GRM, GRM_NO_SUCH_FILE);
+	   TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);
 	else
 	   /* le fichier d'entree existe, on l'ouvre */
 	  {
@@ -867,7 +867,7 @@ char              **argv;
 	     if (!error)
 		if (CheckDefAndRef ())
 		  {
-		     TtaDisplaySimpleMessage (INFO, GRM, GRM_CREATING_GRAMMAR_FILE);
+		     TtaDisplaySimpleMessage (INFO, GRM, NEW_GRAMMAR_FILE);
 		     WriteFiles ();	/* ecrit les tables dans le fichier */
 		  }
 	     fclose (infile);

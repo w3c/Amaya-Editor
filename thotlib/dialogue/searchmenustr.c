@@ -135,7 +135,7 @@ PtrDocument         pDoc;
       /* il y a des attributs declares */
      {
 	/* met l'entree 'Quelconque' au debut de la liste des attributs */
-	strcpy (ListeAttr, TtaGetMessage (LIB, LIB_ANY));
+	strcpy (ListeAttr, TtaGetMessage (LIB, ANY));
 	nbitem = 1;
 	lgmenu = strlen (ListeAttr) + 1;
 	for (entree = 0; entree < nbentrees &&
@@ -159,7 +159,7 @@ PtrDocument         pDoc;
 	  }
 	/* cree le selecteur des attributs a chercher */
 	TtaNewSelector (NumSelAttributAChercher, NumFormChercheTexte,
-			TtaGetMessage (LIB, LIB_ATTRIBUTE_TO_SEARCH), nbitem, ListeAttr, 5, NULL, TRUE, FALSE);
+			TtaGetMessage (LIB, ATTR_TO_SEARCH), nbitem, ListeAttr, 5, NULL, TRUE, FALSE);
 	/* initialise le selecteur (rien n'est selectionne') */
 	TtaSetSelector (NumSelAttributAChercher, -1, "");
      }
@@ -217,10 +217,10 @@ static void         ConstruitSelecteurTypes ()
    /* cree le selecteur des types disponibles */
    if (nbitem == 0)
       TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
-      TtaGetMessage (LIB, LIB_TYPE_TO_SEARCH), 1, " ", 5, NULL, TRUE, FALSE);
+      TtaGetMessage (LIB, TYPE_TO_SEARCH), 1, " ", 5, NULL, TRUE, FALSE);
    else
       TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
-		      TtaGetMessage (LIB, LIB_TYPE_TO_SEARCH), nbitem, ListeTypes, 5, NULL, TRUE, FALSE);
+		      TtaGetMessage (LIB, TYPE_TO_SEARCH), nbitem, ListeTypes, 5, NULL, TRUE, FALSE);
    /* initialise le selecteur (rien n'est selectionne') */
    TtaSetSelector (NumSelTypeAChercher, -1, "");
 }
@@ -487,7 +487,7 @@ PtrDocument         pDoc;
 	     nbitem++;
 	  }
 	TtaNewToggleMenu (NumMenuChercherNature, NumFormChercheTexte,
-	  TtaGetMessage (LIB, LIB_NATURES), nbitem, ListeTypes, NULL, TRUE);
+	  TtaGetMessage (LIB, NATURES), nbitem, ListeTypes, NULL, TRUE);
 	TtaSetToggleMenu (NumMenuChercherNature, 0, TRUE);
 	TtaAttachForm (NumMenuChercherNature);
      }
@@ -503,20 +503,20 @@ void                ConstStrMenuCherche (pDoc)
    /* menu des natures utilisees dans le document */
    /* NumMenuChercherNature, cree' dynamiquement par cherche.c */
    TtaNewToggleMenu (NumMenuChercherNature, NumFormChercheTexte,
-	  TtaGetMessage (LIB, LIB_NATURES), 1, TtaGetMessage (LIB, LIB_ANY),
+	  TtaGetMessage (LIB, NATURES), 1, TtaGetMessage (LIB, ANY),
 		     NULL, TRUE);
 
    /* selecteur pour la saisie du type de l'element a chercher */
    /* NumSelTypeAChercher, cree' dynamiquement par cherche.c */
    TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
-		   TtaGetMessage (LIB, LIB_TYPE_TO_SEARCH), 1,
-		   TtaGetMessage (LIB, LIB_ANY), 5, NULL, TRUE, FALSE);
+		   TtaGetMessage (LIB, TYPE_TO_SEARCH), 1,
+		   TtaGetMessage (LIB, ANY), 5, NULL, TRUE, FALSE);
 
    /* selecteur de choix de l'attribut a chercher */
    /* NumSelAttributAChercher, cree' dynamiquement par ChercherAttribut */
    TtaNewSelector (NumSelAttributAChercher, NumFormChercheTexte,
-		   TtaGetMessage (LIB, LIB_ATTRIBUTE_TO_SEARCH), 1,
-		   TtaGetMessage (LIB, LIB_ANY), 5, NULL, TRUE, FALSE);
+		   TtaGetMessage (LIB, ATTR_TO_SEARCH), 1,
+		   TtaGetMessage (LIB, ANY), 5, NULL, TRUE, FALSE);
 
    /* label indiquant la valeur de l'attribut trouve' */
    TtaNewLabel (NumLabelValeurAttribut, NumFormChercheTexte, " ");
@@ -754,7 +754,7 @@ PtrSearchContext           DomaineCherche;
 	     /* message 'Type inconnu' dans la feuille de saisie */
 	     TtaNewLabel (NumLabelValeurAttribut,
 			  NumFormChercheTexte,
-			  TtaGetMessage (LIB, LIB_UNKNOWN_TYPE));
+			  TtaGetMessage (LIB, UNKNOWN_TYPE));
 	     NomTypeAChercher[0] = '\0';
 	     *erreur = TRUE;
 	  }
@@ -765,7 +765,7 @@ PtrSearchContext           DomaineCherche;
    SchAttrCherche = NULL;
    if (NomAttrAChercher[0] != '\0')
       /* il y a bien un attribut a chercher */
-      if (strcmp (NomAttrAChercher, TtaGetMessage (LIB, LIB_ANY)) != 0)
+      if (strcmp (NomAttrAChercher, TtaGetMessage (LIB, ANY)) != 0)
 	{
 	   /* cherche le nom de l'attribut dans la table */
 	   trouve = FALSE;
@@ -790,7 +790,7 @@ PtrSearchContext           DomaineCherche;
 		/* message 'TtAttribute inconnu' dans la feuille */
 		TtaNewLabel (NumLabelValeurAttribut,
 			     NumFormChercheTexte,
-			     TtaGetMessage (LIB, LIB_UNKNOWN_ATTRIBUT));
+			     TtaGetMessage (LIB, UNKNOWN_ATTR));
 		NomAttrAChercher[0] = '\0';
 		*erreur = TRUE;
 	     }
@@ -924,7 +924,7 @@ void                ChercheResValAttr ()
 	   else
 	      sprintf (NomAtt, "%s = ", pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
 	else
-	   strcpy (NomAtt, TtaGetMessage (LIB, LIB_VALUE_OF_ATTRIBUT));
+	   strcpy (NomAtt, TtaGetMessage (LIB, VALUE_OF_ATTR));
 	switch (pAttrTrouve->AeAttrType)
 	      {
 		 case AtReferenceAttr:

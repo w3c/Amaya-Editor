@@ -118,7 +118,7 @@ void                TraiteSauverDoc ()
 	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	   /* l'application accepte que Thot exporte le document */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_EXPORTING), DocumentASauver->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, EXPORTING), DocumentASauver->DocDName);
 	     DoFileName (NomFichierSauver, "", NomDirectorySauver, NomFichierSortie, &i);
 	     ExportDocument (DocumentASauver, NomFichierSortie, NomSchemaTraduction);
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN), NomFichierSortie);
@@ -200,7 +200,7 @@ char               *txt;
 				 strcat (DirectoryDoc, NomDirectorySauver);
 				 BuildPathDocBuffer (BufDir, '\0', &nbitem);
 				 TtaNewSelector (NumZoneDirDocASauver, NumFormSauverComme,
-						 TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES),
+						 TtaGetMessage (LIB, DOC_DIR),
 				      nbitem, BufDir, 6, NULL, FALSE, TRUE);
 			      }
 			 }
@@ -268,7 +268,7 @@ char               *txt;
 			  /* le document a sauver n'a pas ete ferme' entre temps */
 			  if (!TtaCheckDirectory (NomDirectorySauver))
 			    {	/* le repertoire est invalide : affiche un message et detruit les dialogues */
-			       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_DIRECTORY_NOT_FOUND), NomDirectorySauver);
+			       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, MISSING_DIR), NomDirectorySauver);
 			       if (ThotLocalActions[T_confirmcreate] != NULL)
 				  (*ThotLocalActions[T_confirmcreate])
 				     (0, 1, (char *) 1);
@@ -290,7 +290,7 @@ char               *txt;
 			       if (FileExist (ptNomTrad))
 				 {
 				    /* demande confirmation */
-				    sprintf (BufDir, TtaGetMessage (LIB, LIB_FILE_EXIST), ptNomTrad);
+				    sprintf (BufDir, TtaGetMessage (LIB, FILE_EXIST), ptNomTrad);
 				    TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
 				    TtaShowDialogue (NumFormConfirm, FALSE);
 				 }
@@ -334,14 +334,14 @@ PtrDocument         pDoc;
 	      DocumentASauver = pDoc;
 	      /* cree le formaulaire Sauver comme */
 	      TtaNewSheet (NumFormSauverComme, 0, 0, 0,
-			   TtaGetMessage (LIB, LIB_SAVE_AS),
-		  1, TtaGetMessage (LIB, LIB_SAVE), TRUE, 3, 'L', D_CANCEL);
+			   TtaGetMessage (LIB, SAVE_AS),
+		  1, TtaGetMessage (LIB, SAVE), TRUE, 3, 'L', D_CANCEL);
 
 	      /* cree et */
 	      /* initialise le selecteur sur aucune entree */
 	      BuildPathDocBuffer (BufDir, '\0', &nbitem);
 	      TtaNewSelector (NumZoneDirDocASauver, NumFormSauverComme,
-			      TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES),
+			      TtaGetMessage (LIB, DOC_DIR),
 			      nbitem, BufDir, 6, NULL, FALSE, TRUE);
 
 	      TtaSetSelector (NumZoneDirDocASauver, -1, "");
@@ -353,8 +353,8 @@ PtrDocument         pDoc;
 	      nbitem = ConfigMakeMenuExport (pDoc->DocSSchema->SsName, BufMenu);
 	      /* met le format Thot en tete */
 	      BufMenuB[0] = 'B';
-	      strcpy (&BufMenuB[1], TtaGetMessage (LIB, LIB_THOT));
-	      l = strlen (TtaGetMessage (LIB, LIB_THOT)) + 2;
+	      strcpy (&BufMenuB[1], TtaGetMessage (LIB, THOT_APP));
+	      l = strlen (TtaGetMessage (LIB, THOT_APP)) + 2;
 	      /* ajoute 'B' au debut de chaque entree */
 	      dest = &BufMenuB[l];
 	      src = &BufMenu[0];
@@ -369,18 +369,18 @@ PtrDocument         pDoc;
 		}
 	      nbitem++;
 	      TtaNewSubmenu (NumMenuFormatDocASauver, NumFormSauverComme, 0,
-			     TtaGetMessage (LIB, LIB_DOC_FORMAT), nbitem, BufMenuB, NULL, TRUE);
+			     TtaGetMessage (LIB, DOC_FORMAT), nbitem, BufMenuB, NULL, TRUE);
 	      TtaSetMenuForm (NumMenuFormatDocASauver, 0);
 	      /* sous-menu copier/renommer un document */
 	      Indx = 0;
-	      sprintf (&BufMenu[Indx], "%s%s", "B", TtaGetMessage (LIB, LIB_COPY));
+	      sprintf (&BufMenu[Indx], "%s%s", "B", TtaGetMessage (LIB, COPY));
 	      Indx += strlen (&BufMenu[Indx]) + 1;
-	      sprintf (&BufMenu[Indx], "%s%s", "B", TtaGetMessage (LIB, LIB_RENAME));
+	      sprintf (&BufMenu[Indx], "%s%s", "B", TtaGetMessage (LIB, RENAME));
 	      TtaNewSubmenu (NumMenuCopierOuRenommer, NumFormSauverComme, 0,
-		    TtaGetMessage (LIB, LIB_SAVE), 2, BufMenu, NULL, FALSE);
+		    TtaGetMessage (LIB, SAVE), 2, BufMenu, NULL, FALSE);
 	      TtaSetMenuForm (NumMenuCopierOuRenommer, 0);
 	      /* initialise le  nom de document propose */
-	      strcpy (BufMenu, TtaGetMessage (LIB, LIB_SAVE));
+	      strcpy (BufMenu, TtaGetMessage (LIB, SAVE));
 	      strcat (BufMenu, " ");
 	      strcat (BufMenu, pDoc->DocDName);
 	      TtaChangeFormTitle (NumFormSauverComme, BufMenu);
@@ -390,7 +390,7 @@ PtrDocument         pDoc;
 	      strcat (BufMenu, ".PIV");
 	      /* nom de document propose' */
 	      TtaNewTextForm (NumZoneNomDocASauver, NumFormSauverComme,
-		       TtaGetMessage (LIB, LIB_DOCUMENT_NAME), 50, 1, TRUE);
+		       TtaGetMessage (LIB, DOCUMENT_NAME), 50, 1, TRUE);
 	      TtaSetTextForm (NumZoneNomDocASauver, BufMenu);
 
 /*        ActiveEntree(NumMenuCopierOuRenommer, 0); */
@@ -402,7 +402,7 @@ PtrDocument         pDoc;
 	      SauveDocAvecMove = FALSE;
 	      /* Formulaire Confirmation creation */
 	      /* ++++++++++++++++++++++++++++++++ */
-	      strcpy (BufMenu, TtaGetMessage (LIB, LIB_SAVE_AS));
+	      strcpy (BufMenu, TtaGetMessage (LIB, SAVE_AS));
 	      i = strlen (BufMenu) + 1;
 	      strcpy (&BufMenu[i], TtaGetMessage (LIB, LIB_CONFIRM));
 	      TtaNewDialogSheet (NumFormConfirm, 0, 0, 0, NULL, 2, BufMenu, FALSE, 1, 'L', D_CANCEL);

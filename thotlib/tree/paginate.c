@@ -542,12 +542,12 @@ static	void AffMsgPage (pDoc, pElRacine, pEl, VueSch, Assoc, prempage)
   if (*prempage)
     {
       /* Affiche un message normal pour la 1ere fois */
-      TtaDisplayMessage(INFO, TtaGetMessage(LIB, LIB_PAGE), name, (char *) pEl->ElPageNumber);
+      TtaDisplayMessage(INFO, TtaGetMessage(LIB, PAGE), name, (char *) pEl->ElPageNumber);
       *prempage = FALSE;
     }
   else
     /* Sinon ecrase le message precedent */
-    TtaDisplayMessage(OVERHEAD, TtaGetMessage(LIB, LIB_PAGE), name, (char *) pEl->ElPageNumber);
+    TtaDisplayMessage(OVERHEAD, TtaGetMessage(LIB, PAGE), name, (char *) pEl->ElPageNumber);
 }
 #endif /* PAGINEETIMPRIME */
 

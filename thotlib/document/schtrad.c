@@ -251,7 +251,7 @@ Name                 fname;
    if (!trouve)
      {
 	/* on n'a pas trouve' de regle USE pour cette nature */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_ELEMENTS_NOT_TRANSLATED), fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, EL_NOT_TRANSLATED), fname);
 	fname[0] = '\0';
      }
 }

@@ -416,16 +416,16 @@ char               *name;
    if (XWhitePixel (TtDisplay, TtScreen) == 0)
      {
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
      }
    else
      {
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
      }
 
    /* Initialise les couleurs de l'application */

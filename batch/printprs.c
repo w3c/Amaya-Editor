@@ -1277,7 +1277,7 @@ char              **argv;
 
    TtaInitializeAppRegistry (argv[0]);
 
-   i = TtaGetMessageTable ("libdialogue", LIB_MSG_MAX);
+   i = TtaGetMessageTable ("libdialogue", MSG_MAX);
    PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
    /* recupere d'abord le nom du schema a lister */
    filename[0] = '\0';

@@ -323,7 +323,7 @@ int         r;
    if (!RdSchStruct (fname, PtrStrNat))
       /* echec */
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_FIND_SCHEM), fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
 	FreeSStruct (PtrStrNat);
 	PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
      }
@@ -359,7 +359,7 @@ int         r;
 	if (PtrStrNat->SsPSchema == NULL)
 	   /* echec chargement schema */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_FIND_SCHEM), fname);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
 	     FreeSStruct (PtrStrNat);
 	     PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
 	  }
@@ -532,7 +532,7 @@ boolean             Extension;
 	GetSchStruct (pSS);
 	if (!RdSchStruct (fname, *pSS))
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_FIND_SCHEM), fname);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
 	     FreeSStruct (*pSS);
 	     *pSS = NULL;
 	  }
@@ -583,7 +583,7 @@ boolean             Extension;
 	if ((*pSS)->SsPSchema == NULL)
 	   /* echec chargement schema */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_FIND_SCHEM), fname);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
 	     FreeSStruct (*pSS);
 	     *pSS = NULL;
 	  }

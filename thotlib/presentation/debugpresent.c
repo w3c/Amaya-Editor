@@ -1269,7 +1269,7 @@ char              **argv;
 #endif /* __STDC__ */
 {
 
-   PRS = TtaGetMessageTable ("libdialogue", LIB_MSG_MAX);
+   PRS = TtaGetMessageTable ("libdialogue", MSG_MAX);
    PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
    /* recupere d'abord le nom du schema a lister */
    filename[0] = '\0';

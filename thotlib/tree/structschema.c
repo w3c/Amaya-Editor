@@ -52,7 +52,7 @@ PtrDocument        *pDoc;
       doc++;
    if (TabDocuments[doc] != NULL)
      {
-	TtaDisplaySimpleMessage (INFO, LIB, LIB_TOO_MANY_DOCS);
+	TtaDisplaySimpleMessage (INFO, LIB, TOO_MANY_DOCS);
 	*pDoc = NULL;
      }
    else
@@ -2424,7 +2424,7 @@ boolean            *mandatory;
 	 if (pAttr->AeAttrType != AtReferenceAttr)
 	   {
 	      requested = TRUE;
-	      TtaDisplaySimpleMessage (INFO, LIB, LIB_IMPOSED_ATTR);
+	      TtaDisplaySimpleMessage (INFO, LIB, MANDATORY_ATTR);
 	   }
 
    /* si c'est un attribut local, il ne s'applique que s'il correspond au */

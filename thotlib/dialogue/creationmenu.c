@@ -70,11 +70,11 @@ Name                 NomType;
 
    /* cree et active le menu */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_CREATE_ELEM_REF));
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, CREATE_EL_REF));
    i += strlen (&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_SHOW_ELEM_REF));
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, SHOW_EL_REF));
    TtaNewPopup (NumMenuCreerElemReference, 0,
-		TtaGetMessage (LIB, LIB_MODE_INSERT), 2, BufMenu, NULL, 'L');
+		TtaGetMessage (LIB, MODE_INSERT), 2, BufMenu, NULL, 'L');
    TtaShowDialogue (NumMenuCreerElemReference, FALSE);
    /* attend que l'utilisateur aie repondu au menu */
    TtaWaitShowDialogue ();
@@ -133,7 +133,7 @@ boolean             ChoixElemNature;
 	/* selecteur de saisie de la nature de l'element a creer (ou zone de saisie */
 	/* s'il n'y a pas de natures definies dans les fichiers de config.). */
 	TtaNewForm (NumFormNature, 0, 0, 0,
-		TtaGetMessage (LIB, LIB_OBJECT_TYPE), TRUE, 1, 'L', D_DONE);
+		TtaGetMessage (LIB, OBJECT_TYPE), TRUE, 1, 'L', D_DONE);
 	nbitem = ConfigMakeDocTypeMenu (BufMenuB, &longueur, FALSE);
 	if (nbitem > 0)
 	   /* le fichier Start Up definit des natures */
@@ -145,7 +145,7 @@ boolean             ChoixElemNature;
 		longueur = 5;
 	     /* cree le selecteur */
 	     TtaNewSelector (NumSelectNomNature, NumFormNature,
-			     TtaGetMessage (LIB, LIB_OBJECT_TYPE), nbitem, BufMenuB, longueur, NULL, TRUE, FALSE);
+			     TtaGetMessage (LIB, OBJECT_TYPE), nbitem, BufMenuB, longueur, NULL, TRUE, FALSE);
 	     /* initialise le selecteur sur sa premiere entree */
 	     TtaSetSelector (NumSelectNomNature, 0, "");
 	  }
@@ -153,7 +153,7 @@ boolean             ChoixElemNature;
 	   /* on n'a pas cree' de selecteur, on cree une zone de saisie */
 	   /* zone de saisie de la nature de l'element a creer */
 	   TtaNewTextForm (NumSelectNomNature, NumFormNature,
-			TtaGetMessage (LIB, LIB_OBJECT_TYPE), 30, 1, FALSE);
+			TtaGetMessage (LIB, OBJECT_TYPE), 30, 1, FALSE);
      }
    else
      {

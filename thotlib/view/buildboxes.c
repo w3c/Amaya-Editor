@@ -2900,10 +2900,10 @@ PtrAbstractBox             Pv;
    adligne = NULL;
    /* Pas de pave en parametre */
    if (Pv == NULL)
-      TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_IS_EMPTY);
+      TtaDisplaySimpleMessage (INFO, LIB, EMPTY_VIEW);
    /* Le numero de frame est erronne */
    else if (frame < 1 || frame > MAX_FRAME)
-      TtaDisplaySimpleMessage (INFO, LIB, LIB_INCOR_WINDOW_NUMBER);
+      TtaDisplaySimpleMessage (INFO, LIB, BAD_FRAME_NB);
    else
      {
 	pFrame = &FntrTable[frame - 1];
@@ -2911,19 +2911,19 @@ PtrAbstractBox             Pv;
 	/* La vue n'est pas cree a la racine */
 	if (pFrame->FrAbstractBox == NULL && (pAbbox1->AbEnclosing != NULL
 		 || pAbbox1->AbPrevious != NULL || pAbbox1->AbNext != NULL))
-	   TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_IS_MODIFIED_BEFORE_CREA);
+	   TtaDisplaySimpleMessage (INFO, LIB, VIEW_MODIFIED_BEFORE_CREATION);
 	/* On detruit toute la vue */
 	else if (pAbbox1->AbEnclosing == NULL && pAbbox1->AbDead)
 	  {
 	     if (pAbbox1 == pFrame->FrAbstractBox)
 		RazVue (frame);
 	     else
-		TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_IS_MODIFIED_BEFORE_CREA);
+		TtaDisplaySimpleMessage (INFO, LIB, VIEW_MODIFIED_BEFORE_CREATION);
 	  }
 	/* La vue est deja cree */
 	else if (pFrame->FrAbstractBox != NULL && pAbbox1->AbEnclosing == NULL
 		 && pAbbox1->AbNew)
-	   TtaDisplaySimpleMessage (INFO, LIB, LIB_NEW_VIEW_CANNOT_REPLACE_THE_OLD_ONE);
+	   TtaDisplaySimpleMessage (INFO, LIB, OLD_VIEW_NOT_REPLACED);
 	/* Dans les autres cas */
 	else
 	  {

@@ -378,22 +378,22 @@ View                view;
 
    /* formulaire presentation standard */
    TtaNewSheet (NumFormPresentStandard, TtaGetViewFrame (document, view), 0, 0,
-		TtaGetMessage (LIB, LIB_STANDARD_PRESENTATION),
-		1, TtaGetMessage (LIB, LIB_APPLY), TRUE, 1, 'L', D_DONE);
+		TtaGetMessage (LIB, STD_PRES),
+		1, TtaGetMessage (LIB, APPLY), TRUE, 1, 'L', D_DONE);
 
    /* choix multiple presentation standard */
    i = 0;
-   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_STANDARD_CHARACTERS));
+   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, STD_CHAR));
    i += strlen (&chaine[i]) + 1;
-   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_STANDARD_GRAPHICS));
+   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, STD_GRAPHICS));
    i += strlen (&chaine[i]) + 1;
-   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_STANDARD_COLORS));
+   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, STD_COLORS));
    i += strlen (&chaine[i]) + 1;
-   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_STANDARD_FORMAT));
+   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, STD_FORMAT));
    i += strlen (&chaine[i]) + 1;
-   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_STANDARD_GEOMETRY));
+   sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, STD_GEOMETRY));
    TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
-    TtaGetMessage (LIB, LIB_STANDARD_PRESENTATION), 5, chaine, NULL, FALSE);
+    TtaGetMessage (LIB, STD_PRES), 5, chaine, NULL, FALSE);
    /* annule toutes les options du choix multiple Presentation standard */
    TtaSetToggleMenu (NumMenuPresentStandard, -1, FALSE);
    /* active le formulaire "Presentation standard" */
@@ -777,8 +777,8 @@ View                view;
 
 	     /* formulaire Presentation Caracteres */
 	     TtaNewSheet (NumFormPresCaract, TtaGetViewFrame (document, view), 0, 0,
-			  TtaGetMessage (LIB, LIB_CHARACTERS),
-		  1, TtaGetMessage (LIB, LIB_APPLY), FALSE, 2, 'L', D_DONE);
+			  TtaGetMessage (LIB, CHAR),
+		  1, TtaGetMessage (LIB, APPLY), FALSE, 2, 'L', D_DONE);
 	     /* sous-menu Famille de caracteres */
 	     i = 0;
 	     sprintf (&chaine[i], "%s", "BTimes");
@@ -787,45 +787,45 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s", "BCourier");
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewSubmenu (NumMenuFamilleCaract, NumFormPresCaract, 0,
-	      TtaGetMessage (LIB, LIB_FONT_FAMILY), 4, chaine, NULL, FALSE);
+	      TtaGetMessage (LIB, FONT_FAMILY), 4, chaine, NULL, FALSE);
 
 	     /* sous-menu style de caracteres */
 	     i = 0;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_ROMAN));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, ROMAN));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_BOLD));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, BOLD));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_ITALIC));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, ITALIC));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_OBLIQUE));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, OBLIQUE));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_BOLD_ITALIC));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, BOLD_ITALIC));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_BOLD_OBLIQUE));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, BOLD_OBLIQUE));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewSubmenu (NumMenuStyleCaract, NumFormPresCaract, 0,
-		    TtaGetMessage (LIB, LIB_STYLE), 7, chaine, NULL, FALSE);
+		    TtaGetMessage (LIB, STYLE), 7, chaine, NULL, FALSE);
 
 	     /* sous-menu type de Souligne */
 	     i = 0;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_NORMAL));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, NORMAL));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNDERLINE));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNDERLINE));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_CROSS_OUT));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, CROSS_OUT));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewSubmenu (NumMenuTypeSouligne, NumFormPresCaract, 0,
-		     TtaGetMessage (LIB, LIB_LINE), 4, chaine, NULL, FALSE);
+		     TtaGetMessage (LIB, LINE), 4, chaine, NULL, FALSE);
 	     TtaNewLabel (NumMenuEpaisSouligne, NumFormPresCaract, " ");
 	     /* sous-menus des corps disponibles, en points typographiques */
 	     nbitem = 0;
 	     i = 0;
 	     max = NumberOfFonts ();
-	     s = TtaGetMessage (LIB, LIB_TYPOGRAPHIC_POINTS);
+	     s = TtaGetMessage (LIB, TYPOGRAPHIC_POINTS);
 	     /* demande au mediateur la valeur en points typographiques de tous */
 	     /* les corps relatifs successivement */
 	     for (CorpsRelat = 0; CorpsRelat < max && i < MAX_TXT_LEN - 30; CorpsRelat++)
@@ -836,10 +836,10 @@ View                view;
 		  i += strlen (&chaine[i]) + 1;
 		  nbitem++;
 	       }
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     nbitem++;
 	     TtaNewSubmenu (NumMenuCorpsCaract, NumFormPresCaract, 0,
-			    TtaGetMessage (LIB, LIB_BODY_SIZE_PTS), nbitem, chaine, NULL, FALSE);
+			    TtaGetMessage (LIB, BODY_SIZE_PTS), nbitem, chaine, NULL, FALSE);
 	     /* initialise la zone 'Famille de caracteres' */
 	     switch (pAb->AbFont)
 		   {
@@ -932,8 +932,8 @@ View                view;
 
 	     /* feuille de dialogue Presentation Graphiques */
 	     TtaNewSheet (NumFormPresGraphiques, TtaGetViewFrame (document, view), 0, 0,
-			  TtaGetMessage (LIB, LIB_GRAPHICS_PRESENTATION),
-		  1, TtaGetMessage (LIB, LIB_APPLY), FALSE, 3, 'L', D_DONE);
+			  TtaGetMessage (LIB, GRAPHICS_PRES),
+		  1, TtaGetMessage (LIB, APPLY), FALSE, 3, 'L', D_DONE);
 
 	     /* sous-menu style des traits */
 	     i = 0;
@@ -943,9 +943,9 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s", "Buuuuu");	/* Traits_pointilles */
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewSubmenu (NumMenuStyleTraits, NumFormPresGraphiques, 0,
-	       TtaGetMessage (LIB, LIB_LINE_STYLE), 4, chaine, NULL, FALSE);
+	       TtaGetMessage (LIB, LINE_STYLE), 4, chaine, NULL, FALSE);
 	     /* change la police des 3 premieres entrees du style des traits */
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuStyleTraits, i, "icones", ThotColorNone, -1);
@@ -969,10 +969,10 @@ View                view;
 
 	     /* zone de saisie epaisseur des traits */
 	     TtaNewNumberForm (NumZoneEpaisseurTraits, NumFormPresGraphiques,
-			TtaGetMessage (LIB, LIB_LINE_WEIGHT), 0, 72, FALSE);
+			TtaGetMessage (LIB, LINE_WEIGHT), 0, 72, FALSE);
 	     TtaSetNumberForm (NumZoneEpaisseurTraits, 1);
 	     /* Toggle button Epaisseur des traits inchange'e */
-	     sprintf (chaine, "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (chaine, "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewToggleMenu (NumToggleEpaisseurInchangee, NumFormPresGraphiques,
 			       NULL, 1, chaine, NULL, FALSE);
 	     /* initialise la zone de saisie epaisseur des traits */
@@ -1001,14 +1001,14 @@ View                view;
 		  else
 		     i = nbitem;
 		  TtaNewSelector (NumSelectPattern, NumFormPresGraphiques,
-				  TtaGetMessage (LIB, LIB_FILL_PATTERN),
+				  TtaGetMessage (LIB, FILL_PATTERN),
 				  nbitem, chaine, i, NULL, TRUE, FALSE);
 		  /* initialise le selecteur sur sa premiere entree */
 		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, "");
 	       }
 	     /* Toggle button Motif de remplissage inchange' */
 	     i = 0;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternInchange, NumFormPresGraphiques,
 			       NULL, 1, chaine, NULL, FALSE);
 	     DocModPresent = pDoc;
@@ -1072,8 +1072,8 @@ View                view;
 	     RazRetoursMenus ();
 	     /* formulaire Presentation Format */
 	     TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 0, 0,
-			  TtaGetMessage (LIB, LIB_FORMAT),
-		   1, TtaGetMessage (LIB, LIB_APPLY), TRUE, 3, 'L', D_DONE);
+			  TtaGetMessage (LIB, FORMAT),
+		   1, TtaGetMessage (LIB, APPLY), TRUE, 3, 'L', D_DONE);
 
 	     /* sous-menu Alignement */
 	     i = 0;
@@ -1083,9 +1083,9 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s", "Bmfogn");	/* Centrer */
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));	/* Inchange */
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));	/* Inchange */
 	     TtaNewSubmenu (NumMenuAlignement, NumFormPresFormat, 0,
-		    TtaGetMessage (LIB, LIB_ALIGN), 4, chaine, NULL, FALSE);
+		    TtaGetMessage (LIB, ALIGN), 4, chaine, NULL, FALSE);
 	     /* change la police des 3 premieres entrees */
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuAlignement, i, "icones", ThotColorNone, -1);
@@ -1109,7 +1109,7 @@ View                view;
 
 	     /* zone de saisie du renfoncement en points typo */
 	     TtaNewNumberForm (NumZoneRenfoncement, NumFormPresFormat,
-			 TtaGetMessage (LIB, LIB_INDENT_PTS), 0, 300, TRUE);
+			 TtaGetMessage (LIB, INDENT_PTS), 0, 300, TRUE);
 	     /* initialise la valeur du renfoncement */
 	     if (pAb->AbSizeUnit == UnPoint)
 		CorpsCourant = pAb->AbSize;
@@ -1131,9 +1131,9 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s", "Bmb`an");
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewSubmenu (NumMenuSensRenfoncement, NumFormPresFormat, 0,
-		    TtaGetMessage (LIB, LIB_INDENT), 3, chaine, NULL, TRUE);
+		    TtaGetMessage (LIB, INDENT), 3, chaine, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du sous-menu */
 	     for (i = 0; i < 2; i++)
 		TtaRedrawMenuEntry (NumMenuSensRenfoncement, i, "icones", ThotColorNone, -1);
@@ -1150,9 +1150,9 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_NO));
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewSubmenu (NumMenuJustification, NumFormPresFormat, 0,
-	     TtaGetMessage (LIB, LIB_JUSTIFICATION), 3, chaine, NULL, FALSE);
+	     TtaGetMessage (LIB, JUSTIFY), 3, chaine, NULL, FALSE);
 	     /* menu de justification */
 	     if (pAb->AbJustify)
 		i = 1;		/* avec justification */
@@ -1162,7 +1162,7 @@ View                view;
 
 	     /* zone de saisie de l'interligne en points typo */
 	     TtaNewNumberForm (NumZoneInterligne, NumFormPresFormat,
-		   TtaGetMessage (LIB, LIB_LINE_SPACING_PTS), 1, 200, TRUE);
+		   TtaGetMessage (LIB, LINE_SPACING_PTS), 1, 200, TRUE);
 
 	     /* sous-menu Interligne (Grandeur) */
 	     i = 0;
@@ -1172,9 +1172,9 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s", "BmZZZn");	/* 'Triple%' */
 	     i += strlen (&chaine[i]) + 1;
-	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
+	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, UNCHANGED));
 	     TtaNewSubmenu (NumMenuInterligne, NumFormPresFormat, 0,
-	      TtaGetMessage (LIB, LIB_LINE_SPACING), 4, chaine, NULL, TRUE);
+	      TtaGetMessage (LIB, LINE_SPACING), 4, chaine, NULL, TRUE);
 	     /* change la police des 3 premieres entrees */
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuInterligne, i, "icones", ThotColorNone, -1);

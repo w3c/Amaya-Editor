@@ -112,7 +112,7 @@ char               *data;
 	       /* le formulaire "Creer un document" lui-meme */
 	       if (NomDocACreer[0] == '\0')
 		  /* le nom par defaut */
-		  strcpy (NomDocACreer, TtaGetMessage (LIB, LIB_NO_NAME));
+		  strcpy (NomDocACreer, TtaGetMessage (LIB, NO_NAME));
 	       CurrentDialog = NumFormCreerDoc;
 	       if (ClasseDocACreer[0] != '\0' && ((int) data) == 1)
 		 {
@@ -124,13 +124,13 @@ char               *data;
 		    strcat (nomdoc, ".PIV");
 
 		    if (!TtaCheckDirectory (DirectoryDocACreer))
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DIRECTORY_NOT_FOUND), DirectoryDocACreer);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, MISSING_DIR), DirectoryDocACreer);
 		    else
 		      {
 			 if (FileExist (nomdoc))
 			   {
 			      /* demande confirmation */
-			      sprintf (BufDir, TtaGetMessage (LIB, LIB_FILE_EXIST), nomdoc);
+			      sprintf (BufDir, TtaGetMessage (LIB, FILE_EXIST), nomdoc);
 			      TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
 /*           ClasseDocACreer[0] = '\0'; */
 			      TtaSetDialoguePosition ();
@@ -178,7 +178,7 @@ char               *data;
 				 strcat (DirectoryDoc, PATH_STR);
 				 strcat (DirectoryDoc, DirectoryDocACreer);
 				 BuildPathDocBuffer (BufDir, '\0', &i);
-				 TtaNewSelector (NumZoneDirDocACreer, NumFormCreerDoc, TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES), i, BufDir, 9, NULL, FALSE, TRUE);
+				 TtaNewSelector (NumZoneDirDocACreer, NumFormCreerDoc, TtaGetMessage (LIB, DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
 			      }
 			 }
 		 }
@@ -228,11 +228,11 @@ View                view;
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
    TtaNewForm (NumFormCreerDoc, 0, 0, 0,
-	  TtaGetMessage (LIB, LIB_CREATE_A_DOCUMENT), TRUE, 2, 'L', D_DONE);
+	  TtaGetMessage (LIB, CREATE_DOC), TRUE, 2, 'L', D_DONE);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, '\0', &nbitem);
    TtaNewSelector (NumZoneDirDocACreer, NumFormCreerDoc,
-		   TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES), nbitem, BufDir, 9, NULL, FALSE, TRUE);
+		   TtaGetMessage (LIB, DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
    if (nbitem >= 1)
       TtaSetSelector (NumZoneDirDocACreer, 0, NULL);
    /* nom du document a creer */
@@ -250,7 +250,7 @@ View                view;
 	     DirectoryDocACreer[i] = '\0';
 	  }
      }
-   strcpy (NomDocACreer, TtaGetMessage (LIB, LIB_NO_NAME));
+   strcpy (NomDocACreer, TtaGetMessage (LIB, NO_NAME));
    strcpy (nomdoc, DirectoryDocACreer);
    strcat (nomdoc, DIR_STR);
    strcat (nomdoc, NomDocACreer);
@@ -267,23 +267,23 @@ View                view;
 	   longueur = 5;
 	/* cree le selecteur */
 	TtaNewSelector (NumSelClasseDocACreer, NumFormCreerDoc,
-			TtaGetMessage (LIB, LIB_DOCUMENT_TYPE), nbitem, BufMenu, longueur, NULL, TRUE, FALSE);
+			TtaGetMessage (LIB, DOC_TYPE), nbitem, BufMenu, longueur, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	TtaSetSelector (NumSelClasseDocACreer, 0, "");
      }
    else
       /* on n'a pas cree' de selecteur, on cree une zone de saisie */
       TtaNewTextForm (NumSelClasseDocACreer, NumFormCreerDoc,
-		      TtaGetMessage (LIB, LIB_DOCUMENT_TYPE), 30, 1, FALSE);
+		      TtaGetMessage (LIB, DOC_TYPE), 30, 1, FALSE);
 
    /* zone de saisie du nom du document a creer */
    TtaNewTextForm (NumZoneNomDocACreer, NumFormCreerDoc,
-		   TtaGetMessage (LIB, LIB_DOCUMENT_NAME), 50, 1, TRUE);
+		   TtaGetMessage (LIB, DOCUMENT_NAME), 50, 1, TRUE);
    TtaSetTextForm (NumZoneNomDocACreer, nomdoc);
 
    /* Formulaire Confirmation creation */
    /* ++++++++++++++++++++++++++++++++ */
-   strcpy (BufMenu, TtaGetMessage (LIB, LIB_RENAME));
+   strcpy (BufMenu, TtaGetMessage (LIB, RENAME));
    i = strlen (BufMenu) + 1;
    strcpy (&BufMenu[i], TtaGetMessage (LIB, LIB_CONFIRM));
    TtaNewDialogSheet (NumFormConfirm, 0, 0, 0, NULL, 2, BufMenu, FALSE, 1, 'L', D_DONE);

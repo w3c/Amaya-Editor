@@ -212,7 +212,7 @@ CreerPaletteFormeRectangle (Menu, Pere, Langue)
   int len;
 
   PereFormeRectangle = Menu;
-  strcpy(BufMenu,TtaGetMessage(LIB,LIB_APPLY));
+  strcpy(BufMenu,TtaGetMessage(LIB,APPLY));
   len = strlen(BufMenu)+1;
   sprintf(&BufMenu[len],"%s",TtaGetMessage(DrawMsgTable,DRW_PREFER));
   TtaNewSheet (FEUILLE_RECTANGLE, Pere, 0, 0, 
@@ -442,7 +442,7 @@ CreerPaletteTrait (Menu, Pere, Langue)
 
   PereFormeTrait = Menu;
  
-  strcpy(BufMenu,TtaGetMessage(LIB,LIB_APPLY));
+  strcpy(BufMenu,TtaGetMessage(LIB,APPLY));
   len = strlen(BufMenu)+1;
   sprintf(&BufMenu[len],"%s",TtaGetMessage(DrawMsgTable,DRW_PREFER));
 

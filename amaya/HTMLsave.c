@@ -219,7 +219,7 @@ char               *pathname;
    /* Dialogue form for saving in local */
    TtaNewForm (BaseDialog + FormSauver, TtaGetViewFrame (document, view), 0, 0,
 	       TtaGetMessage (AMAYA, AM_SAVE_LOCAL), TRUE, 3, 'L', D_DONE);
-   /* TtaGetMessage(LIB, LIB_DOCUMENT_NAME) */
+   /* TtaGetMessage(LIB, DOCUMENT_NAME) */
    sprintf (buffer, "%s%c%s", TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
    TtaNewToggleMenu (BaseDialog + SauvToggle, BaseDialog + FormSauver,
@@ -227,7 +227,7 @@ char               *pathname;
    TtaSetToggleMenu (BaseDialog + SauvToggle, 0, CopyImages);
    TtaSetToggleMenu (BaseDialog + SauvToggle, 1, UpdateURLs);
    TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
-		     TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES),	/* std thot msg */
+		     TtaGetMessage (LIB, DOC_DIR),	/* std thot msg */
 		     BaseDialog + SauvDir, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
    TtaNewTextForm (BaseDialog + SauvNom, BaseDialog + FormSauver,
@@ -550,7 +550,7 @@ void                DoSaveAs ()
       strcat (tempfile, DocumentName);
       if (FileExist (tempfile)) {
 	 /* ask confirmation */
-	 sprintf (tempname, TtaGetMessage (LIB, LIB_FILE_EXIST), tempfile);
+	 sprintf (tempname, TtaGetMessage (LIB, FILE_EXIST), tempfile);
 	 InitConfirm (SavingDocument, 1, tempname);
 	 if (!UserAnswer) {
 	    /* the user has to change the name of the saving file */
@@ -583,7 +583,7 @@ void                DoSaveAs ()
       strcat (tempfile, DocumentName);
       if (FileExist (tempfile)) {
 	 /* ask confirmation */
-	 sprintf (tempname, TtaGetMessage (LIB, LIB_FILE_EXIST), tempfile);
+	 sprintf (tempname, TtaGetMessage (LIB, FILE_EXIST), tempfile);
 	 InitConfirm (SavingDocument, 1, tempname);
 	 if (!UserAnswer) {
 	    /* the user has to change the name of the saving file */
@@ -863,10 +863,10 @@ char               *pathname;
    TtaNewForm (BaseDialog + FormSauver, TtaGetViewFrame (document, view), 0, 0,
 	       TtaGetMessage (AMAYA, AM_SAVE_LOCAL), TRUE, 2, 'L', D_DONE);
    TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
-		     TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES),	/* std thot msg */
+		     TtaGetMessage (LIB, DOC_DIR),	/* std thot msg */
 		     BaseDialog + SauvDir, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
-   /* TtaGetMessage(LIB, LIB_DOCUMENT_NAME) */
+   /* TtaGetMessage(LIB, DOCUMENT_NAME) */
    TtaNewTextForm (BaseDialog + SauvNom, BaseDialog + FormSauver,
 		   TtaGetMessage (AMAYA, AM_OBJECT_LOCATION), 50, 1, TRUE);
    TtaSetTextForm (BaseDialog + SauvNom, pathname);
@@ -909,7 +909,7 @@ void                DoSaveObjectAs ()
    }
    if (FileExist (tempfile)) {
       /* ask confirmation */
-      sprintf (msg, TtaGetMessage (LIB, LIB_FILE_EXIST), tempfile);
+      sprintf (msg, TtaGetMessage (LIB, FILE_EXIST), tempfile);
       InitConfirm (SavingObject, 1, msg);
       if (!UserAnswer) {
 	 /* the user has to change the name of the saving file */

@@ -617,7 +617,7 @@ boolean  PavResizable(pAb, Horiz)
   pDoc = DocumentOfElement(pEl); /* le document auquel appartient le pave */
   if (pDoc->DocReadOnly)
     {
-      TtaDisplaySimpleMessage (INFO, LIB,LIB_NOT_ALLOWED_READ_ONLY_DOC);
+      TtaDisplaySimpleMessage (INFO, LIB,RO_DOC_FORBIDDEN);
       result = FALSE;
     }
   else
@@ -664,7 +664,7 @@ boolean PavMovable(pAb, Horiz)
      return FALSE;
   if (pDoc->DocReadOnly)
     {
-      TtaDisplaySimpleMessage (INFO, LIB, LIB_NOT_ALLOWED_READ_ONLY_DOC);
+      TtaDisplaySimpleMessage (INFO, LIB, RO_DOC_FORBIDDEN);
       result = FALSE;
     }
   else
@@ -2003,9 +2003,9 @@ void ChangeCouleur(numCouleur, Fond)
   selok = SelEditeur(&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
   if (!selok)
     /* rien n'est selectionne' */
-    TtaDisplaySimpleMessage (INFO, LIB,LIB_SELECT_AN_ELEM);
+    TtaDisplaySimpleMessage (INFO, LIB,SEL_EL);
   else if (SelDoc->DocReadOnly)
-    TtaDisplaySimpleMessage (INFO, LIB,LIB_NOT_ALLOWED_READ_ONLY_DOC);
+    TtaDisplaySimpleMessage (INFO, LIB,RO_DOC_FORBIDDEN);
   else
     {
       RazSelect();

@@ -87,7 +87,7 @@ int                 lineNum;
    char                buffer[linelen];
    int                 i;
 
-   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_ERR_LINE), lineNum);
+   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, ERR_LINE), lineNum);
    if (index != 0)
      {
 	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
@@ -128,7 +128,7 @@ char               *string;
    char                buffer[linelen];
    int                 i;
 
-   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_ERR_LINE), lineNum);
+   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, ERR_LINE), lineNum);
    if (index != 0)
      {
 	for (i = 0; i < index - 1; buffer[i++] = ' ') ;

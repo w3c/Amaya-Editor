@@ -80,7 +80,7 @@ char          *data;
 		   LastURLImage[0] = EOS;
 		   /* reinitialize directories and document lists */
 		   TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-				     TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES), BaseImage + ImageDir,
+				     TtaGetMessage (LIB, DOC_DIR), BaseImage + ImageDir,
 				     "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
 		} else
 		   TtaExtractName (LastURLImage, DirectoryImage, ImageName);
@@ -97,7 +97,7 @@ char          *data;
 	     }
 	     TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
 	     TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-			       TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES), BaseImage + ImageDir,
+			       TtaGetMessage (LIB, DOC_DIR), BaseImage + ImageDir,
 		 "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
 	     ImageName[0] = EOS;
 	     break;
@@ -161,7 +161,7 @@ View           view;
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
    TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormImage, " ");
    TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-		     TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES),	/* std thot msg */
+		     TtaGetMessage (LIB, DOC_DIR),	/* std thot msg */
 		     BaseImage + ImageDir, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
    if (LastURLImage[0] != EOS)

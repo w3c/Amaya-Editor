@@ -61,7 +61,7 @@ char               *data;
      {
 	/* Augmente le zoom */
 	valzoom++;
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_ZOOM), valzoom);
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
 	ModVisu (Fenzoomview, valvisib, valzoom);
      }
@@ -69,18 +69,18 @@ char               *data;
      {
 	/* Diminue le zoom */
 	valzoom--;
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_ZOOM), valzoom);
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
 	ModVisu (Fenzoomview, valvisib, valzoom);
      }
    else if (bouton == 4)
      {
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_ZOOM), valzoom);
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
      }
    else
      {
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_VALUE_NOT_CHANGED), valzoom);
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, VALUE_NOT_CHANGED), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
      }
 }
@@ -133,9 +133,9 @@ View                view;
      }
 
    /* Creation du formulaire */
-   strcpy (chaine, TtaGetMessage (LIB, LIB_INCREASE));
+   strcpy (chaine, TtaGetMessage (LIB, INCREASE));
    i = strlen (chaine) + 1;
-   strcpy (&chaine[i], TtaGetMessage (LIB, LIB_DECREASE));
+   strcpy (&chaine[i], TtaGetMessage (LIB, DECREASE));
    TtaNewSheet (NumMenuZoom, 0, 0, 0, TtaGetMessage (LIB, LIB_ZOOM),
 		2, chaine, FALSE, 4, 'L', D_DONE);
 

@@ -93,19 +93,19 @@ boolean            *sauver;
    /* le document a ete modifie', on propose de le sauver */
    /* initialise le label du formulaire "Fermer" en y mettant le nom */
    /* du document */
-   strcpy (buftext, TtaGetMessage (LIB, LIB_SAVE_DOCUMENT));
+   strcpy (buftext, TtaGetMessage (LIB, SAVE_DOC));
    strcat (buftext, " ");
    strcat (buftext, pDoc->DocDName);
    strcat (buftext, " ");
-   strcat (buftext, TtaGetMessage (LIB, LIB_BEFORE_CLOSING_IT));
+   strcat (buftext, TtaGetMessage (LIB, BEFORE_CLOSING));
 
    /* Feuille de dialogue Fermer */
    /* ++++++++++++++++++++++++++ */
-   strcpy (bufbutton, TtaGetMessage (LIB, LIB_SAVE_DOCUMENT));
-   i = strlen (TtaGetMessage (LIB, LIB_SAVE_DOCUMENT)) + 1;
-   strcpy (bufbutton + i, TtaGetMessage (LIB, LIB_CLOSE_DON_T_SAVE));
+   strcpy (bufbutton, TtaGetMessage (LIB, SAVE_DOC));
+   i = strlen (TtaGetMessage (LIB, SAVE_DOC)) + 1;
+   strcpy (bufbutton + i, TtaGetMessage (LIB, CLOSE_DON_T_SAVE));
    TtaNewSheet (NumFormFermer, TtaGetViewFrame (document, view), 0, 0,
-		TtaGetMessage (LIB, LIB_CLOSE_A_DOCUMENT), 2, bufbutton, TRUE, 1, 'L', D_CANCEL);
+		TtaGetMessage (LIB, CLOSE_DOC), 2, bufbutton, TRUE, 1, 'L', D_CANCEL);
    /* label indiquant le nom du document a sauver avant de fermer */
    TtaNewLabel (NumLabelSauverAvantFermer, NumFormFermer, buftext);
    /* active le formulaire "Fermer" */

@@ -385,7 +385,7 @@ BinFile             fich;
 	       rdTypePage = ColComputed;
 #else  /* __COLPAGE__ */
 	       rdTypePage = PgComputed;
-	       TtaDisplaySimpleMessage (INFO, LIB, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
+	       TtaDisplaySimpleMessage (INFO, LIB, COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_START_COL:
@@ -393,7 +393,7 @@ BinFile             fich;
 	       rdTypePage = ColBegin;
 #else  /* __COLPAGE__ */
 	       rdTypePage = PgComputed;
-	       TtaDisplaySimpleMessage (INFO, LIB, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
+	       TtaDisplaySimpleMessage (INFO, LIB, COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_USER_COL:
@@ -401,7 +401,7 @@ BinFile             fich;
 	       rdTypePage = ColUser;
 #else  /* __COLPAGE__ */
 	       rdTypePage = PgComputed;
-	       TtaDisplaySimpleMessage (INFO, LIB, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
+	       TtaDisplaySimpleMessage (INFO, LIB, COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_COL_GROUP:
@@ -409,7 +409,7 @@ BinFile             fich;
 	       rdTypePage = ColGroup;
 #else  /* __COLPAGE__ */
 	       rdTypePage = PgComputed;
-	       TtaDisplaySimpleMessage (INFO, LIB, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
+	       TtaDisplaySimpleMessage (INFO, LIB, COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_REPEAT_PAGE:
@@ -743,7 +743,7 @@ BinFile             fich;
 	if (msgAncienFormat)
 	  {
 	     PivotError (fich);
-	     TtaDisplaySimpleMessage (INFO, LIB, LIB_OLD_PIV_FORMAT_SAVE_THE_DOC_WITH_THOT);
+	     TtaDisplaySimpleMessage (INFO, LIB, OLD_PIV_FORMAT_SAVE_DOC_WITH_THOT);
 	     msgAncienFormat = FALSE;	/* c'est fait */
 	  }
 	if (c == MOldRefInterne || c == MOldRefExterne || c == MOldRefInclusion)
@@ -1174,7 +1174,7 @@ PtrSSchema        pSS;
 	    pAttr = pAttr->AeNext;
 	if (!trouve)
 	  /* l'element ne possede pas cet attribut requis */
-	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, LIB_ATTR_REQUIRED_FOR_ELEM), pSS->SsAttribute[att - 1].AttrName, pRegle->SrName);
+	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, ATTR_REQUIRED_FOR_EL), pSS->SsAttribute[att - 1].AttrName, pRegle->SrName);
       }
 }
 
@@ -2718,7 +2718,7 @@ PtrDocument         pDoc;
 			       pEl->ElSructSchema, FALSE, FALSE, TRUE))
 	    {
 	      ok = FALSE;
-	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, LIB_X_INVALID_SIBLING_FOR_Y),
+	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, INVALID_SIBLING),
 				 pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 				 pEl->ElPrevious->ElSructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
 				 pEl->ElLabel);
@@ -2730,7 +2730,7 @@ PtrDocument         pDoc;
 				    pEl->ElSructSchema, FALSE, TRUE))
 	    {
 	      ok = FALSE;
-	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, LIB_X_INVALID_CHILD_FOR_Y),
+	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, INVALID_CHILD),
 				 pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 				 pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
 				 pEl->ElLabel);
@@ -2968,7 +2968,7 @@ PtrSSchema        pSCharge;
 	   if (pDoc->DocSSchema->SsCode != versionSchema)
 	     {
 		pDoc->DocToBeChecked = TRUE;
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_SCHEMA_X_CHANGED), pDoc->DocSSchema->SsName);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, STR_SCH_CHANGED), pDoc->DocSSchema->SsName);
 	     }
      }
    if (pDoc->DocNatureSSchema[rangNature - 1] == NULL)
@@ -3046,7 +3046,7 @@ PtrSSchema        pSCharge;
 		if (pSS->SsCode != versionSchema)
 		  {
 		     pDoc->DocToBeChecked = TRUE;
-		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_SCHEMA_X_CHANGED), pSS->SsName);
+		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, STR_SCH_CHANGED), pSS->SsName);
 		  }
 	     pDoc->DocNatureSSchema[rangNature - 1] = pSS;
 	     strncpy (pDoc->DocNaturePresName[rangNature - 1], NomSchPrs, MAX_NAME_LENGTH);
@@ -3563,10 +3563,10 @@ boolean             WithAPPEvent;
 	   /* Le document n'est pas correct */
 	  {
 	     /* on previent l'utilisateur */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_OF_DOCUMENT_X_INVALID), pDoc->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_DOC_STRUCTURE), pDoc->DocDName);
 	     /* on met le document en Read-Only */
 	     pDoc->DocReadOnly = TRUE;
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOCUMENT_X_LOCKED), pDoc->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LOCKED_DOC), pDoc->DocDName);
 	  }
 	/* libere les labels des elements reference's par d'autres */
 	/* documents */

@@ -1327,7 +1327,7 @@ PtrSSchema        SS;
      }
    if (erreurTra)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_TRA_FILE), fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TRA_FILE_INCORRECT), fname);
 	schematrad = NULL;
      }
    else

@@ -738,7 +738,7 @@ indLine               wi;
    PtrAppName          schUsed, newSchUsed;
 
    if (wl > MAX_NAME_LENGTH - 1)
-      CompilerError (wi, COMPIL, FATAL, COMPIL_WORD_TOO_LONG, inputLine, LineNum);
+      CompilerError (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
    else
      {
 	strncpy (name, &inputLine[wi - 1], wl);
@@ -1519,7 +1519,7 @@ char              **argv;
 
    TtaInitializeAppRegistry (argv[0]);
    APP = TtaGetMessageTable ("appdialogue", MSG_MAX_APP);
-   COMPIL = TtaGetMessageTable ("compildialogue", COMPIL_MSG_MAX);
+   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    error = False;
    /* initialise l'analyseur syntaxique */
    InitParser ();

@@ -73,7 +73,7 @@ char               *BufItemSplit;
 	     if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
 		if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
 		   pEl = pEl->ElFirstChild;
-	     sprintf (BufItemSplit, "%s %s", TtaGetMessage (LIB, LIB_SPLIT),
+	     sprintf (BufItemSplit, "%s %s", TtaGetMessage (LIB, SPLIT),
 		    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	  }
      }

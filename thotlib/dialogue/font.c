@@ -845,7 +845,7 @@ boolean             Croissant;
      {
 	/* Est-ce que la table des fontes est pleine */
 	if (i >= MAX_FONT)
-	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_MORE_PLACE_FOR_THE_FONT), texteX);
+	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, NO_PLACE_FOR_FONT), texteX);
 	else
 	  {
 	     strcpy (&TtFontName[i * MAX_NFONT], texte);
@@ -1072,7 +1072,7 @@ char               *name;
      {
 	FontMenu = ChargeFonte ('L', 'l', 0, MenuSize, UnPoint, 0);
 	if (FontMenu == NULL)
-	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_FONT_NOT_FOUND);
+	   TtaDisplaySimpleMessage (FATAL, LIB, MISSING_FONT);
      }
    /*deuxieme fonte chargee */
    FontMenu2 = ChargeFonte ('L', 't', 2, 12, UnPoint, 0);

@@ -503,7 +503,7 @@ View                view;
 		  TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
   TtaNewLabel (BaseDialog + NomLocal, BaseDialog + FormOuvrir, " ");
   TtaListDirectory (DirectoryName, BaseDialog + FormOuvrir,
-		    TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES),	/* std thot msg */
+		    TtaGetMessage (LIB, DOC_DIR),	/* std thot msg */
 		    BaseDialog + SelDir, ".html*",
 		    TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SelDoc);
   if (LastURLName[0] != EOS)
@@ -1256,7 +1256,7 @@ char               *data;
 		     DocumentName[0] = EOS;
 		     /* reinitialize directories and document lists */
 		     TtaListDirectory (DirectoryName, BaseDialog + FormOuvrir,
-				       TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES), BaseDialog + SelDir,
+				       TtaGetMessage (LIB, DOC_DIR), BaseDialog + SelDir,
 				       ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SelDoc);
 		   }
 		 else
@@ -1278,7 +1278,7 @@ char               *data;
 	       }
 	     TtaSetTextForm (BaseDialog + NomURL, DirectoryName);
 	     TtaListDirectory (DirectoryName, BaseDialog + FormOuvrir,
-			       TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES), BaseDialog + SelDir,
+			       TtaGetMessage (LIB, DOC_DIR), BaseDialog + SelDir,
 	     ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SelDoc);
 	     DocumentName[0] = EOS;
 	     break;
@@ -1391,7 +1391,7 @@ char               *data;
 		 DocumentName[0] = EOS;
 		 /* reinitialize directories and document lists */
 		 TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
-				   TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES), BaseDialog + SauvDir,
+				   TtaGetMessage (LIB, DOC_DIR), BaseDialog + SauvDir,
 				   ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
 	       }
 	     else
@@ -1426,7 +1426,7 @@ char               *data;
 	       strcat (tempfile, ObjectName);
 	     TtaSetTextForm (BaseDialog + SauvNom, DirectoryName);
 	     TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
-			       TtaGetMessage (LIB, LIB_DOCUMENT_DIRECTORIES), BaseDialog + SauvDir,
+			       TtaGetMessage (LIB, DOC_DIR), BaseDialog + SauvDir,
 			       ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
 	     break;
 	     /* *********SaveConfirm********* */

@@ -3096,7 +3096,7 @@ char              **argv;
 
    TtaInitializeAppRegistry (argv[0]);
    i = TtaGetMessageTable ("libdialogue", LIB_MSG_MAX);
-   COMPIL = TtaGetMessageTable ("compildialogue", COMPIL_MSG_MAX);
+   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    TRA = TtaGetMessageTable ("tradialogue", TRA_MSG_MAX);
 
    error = False;

@@ -214,7 +214,7 @@ static void         ColorsExpose ()
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (0));
    XFillRectangle (TtDisplay, Color_Window, TtLineGC, 0, 0, w, hcase - 2);
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
-   ptr = TtaGetMessage (LIB, LIB_STANDARD_COLORS);
+   ptr = TtaGetMessage (LIB, STD_COLORS);
    WChaine (Color_Window, ptr,
    (w / 2) - (XTextWidth ((XFontStruct *) FonteLeg, ptr, strlen (ptr)) / 2),
 	    0, FontMenu, TtLineGC);
@@ -380,7 +380,7 @@ int                 y;
    n++;
    XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
    n++;
-   Color_Palette = XtCreatePopupShell (TtaGetMessage (LIB, LIB_COLORS),
+   Color_Palette = XtCreatePopupShell (TtaGetMessage (LIB, COLORS),
 			   applicationShellWidgetClass, RootShell, args, n);
 /*** Cree la palette dans sa frame ***/
    n = 0;
@@ -390,7 +390,7 @@ int                 y;
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
-   title_string = XmStringCreateSimple (TtaGetMessage (LIB, LIB_COLORS));
+   title_string = XmStringCreateSimple (TtaGetMessage (LIB, COLORS));
    XtSetArg (args[n], XmNdialogTitle, title_string);
    n++;
    XtSetArg (args[n], XmNautoUnmanage, FALSE);
@@ -442,7 +442,7 @@ int                 y;
    n++;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
-   title_string = XmStringCreateSimple (TtaGetMessage (LIB, LIB_BUTTON_1));
+   title_string = XmStringCreateSimple (TtaGetMessage (LIB, BUTTON_1));
    XtSetArg (args[n], XmNlabelString, title_string);
    n++;
    w = XmCreateLabel (row, "Thot_MSG", args, n);
@@ -457,7 +457,7 @@ int                 y;
    n++;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
-   title_string = XmStringCreateSimple (TtaGetMessage (LIB, LIB_BUTTON_2));
+   title_string = XmStringCreateSimple (TtaGetMessage (LIB, BUTTON_2));
    XtSetArg (args[n], XmNlabelString, title_string);
    n++;
    w = XmCreateLabel (row, "Thot_MSG", args, n);
@@ -547,7 +547,7 @@ int                 y;
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
-   w = XmCreatePushButton (row, TtaGetMessage (LIB, LIB_DONE), args, n);
+   w = XmCreatePushButton (row, TtaGetMessage (LIB, DONE), args, n);
    XtManageChild (w);
    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) FinPalette, NULL);
 

@@ -60,25 +60,25 @@ char               *data;
    else if (bouton == 1 && valvisib > 0)
      {
 	valvisib--;
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_FILTER), 10 - valvisib);
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_FILTER), 10 - valvisib);
 	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
 	ModVisu (Fenvisibilityview, valvisib, valzoom);
      }
    else if (bouton == 2 && valvisib < 10)
      {
 	valvisib++;
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_FILTER), 10 - valvisib);
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_FILTER), 10 - valvisib);
 	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
 	ModVisu (Fenvisibilityview, valvisib, valzoom);
      }
    else if (bouton == 4)
      {
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_FILTER), 10 - valvisib);
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_FILTER), 10 - valvisib);
 	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
      }
    else
      {
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_VALUE_NOT_CHANGED), 10 - valvisib);
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, VALUE_NOT_CHANGED), 10 - valvisib);
 	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
      }
 
@@ -132,10 +132,10 @@ View                view;
    /* Creation du formulaire */
 
 
-   strcpy (chaine, TtaGetMessage (LIB, LIB_INCREASE));
+   strcpy (chaine, TtaGetMessage (LIB, INCREASE));
    i = strlen (chaine) + 1;
-   strcpy (&chaine[i], TtaGetMessage (LIB, LIB_DECREASE));
-   TtaNewSheet (NumMenuVisibilite, 0, 0, 0, TtaGetMessage (LIB, LIB_VISIBILITY),
+   strcpy (&chaine[i], TtaGetMessage (LIB, DECREASE));
+   TtaNewSheet (NumMenuVisibilite, 0, 0, 0, TtaGetMessage (LIB, VISIB),
 		2, chaine, FALSE, 4, 'L', D_DONE);
 
 

@@ -240,7 +240,7 @@ PtrDocument         document;
 	/* vider ce dictionnaire FICHIER  */
       if (d < MaxDicos)	
 	{
-	  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_LOAD_DICO_ERROR),
+	  TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_LOADING_DICO),
 			     TabDicos[d]->DicoNom);
 	  LibDictionnaire (&TabDicos[d]);
 	  
@@ -427,7 +427,7 @@ PtrDico             dict;
 	else if (nblu != -1)	/* ce n'est pas la fin du dico */
 	      {
 		/* impossible de charger ce dictionnaire */
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_LOAD_DICO_ERROR),
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_LOADING_DICO),
 				   dict->DicoNom);
 		/* liberer le dico */
 		LibDictionnaire (&dict);	/* => dict = nil */
@@ -492,13 +492,13 @@ boolean             atraiter;
 	if (FileExist (tempbuffer) != 0)
 	  {
 	     fichdico = fopen (tempbuffer, "rw");	/* maj de dictionnaire */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DICO), diconame);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, DICO), diconame);
 	  }
 	else
 	  {
 	     nouveau = TRUE;
 	     fichdico = fopen (tempbuffer, "w+");	/* nouveau dictionnaire */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NOUV_DIC), diconame);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, NEW_DICO), diconame);
 	  }
      }
    else
@@ -508,7 +508,7 @@ boolean             atraiter;
 	   fichdico = BIOreadOpen (tempbuffer);
 	else
 	   fichdico = fopen (tempbuffer, "r");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DICO), diconame);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, DICO), diconame);
      }
 
    if (fichdico == NULL)
@@ -566,7 +566,7 @@ boolean             atraiter;
 		       /* -> on se replace au debut du fichier */
 		       /* fseek(fichdico, 0L, 0); */
 		       /* impossible de charger ce dictionnaire */
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_LOAD_DICO_ERROR), diconame);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_LOADING_DICO), diconame);
 		       /* liberer le dictionnaire alloue */
 		       LibDictionnaire (pDico);
 		       *pDico = NULL;
@@ -773,11 +773,11 @@ void                Dico_Init ()
    if (dicopath == NULL)
      {
 	/* la variable d'environnement DICOPAR n'existe pas */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_DICOPAR), "DICOPAR");
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, MISSING_DICOPAR), "DICOPAR");
      }
    Alphabet_charge = Corr_alphabet ();
    if (Alphabet_charge == FALSE)
-      TtaDisplaySimpleMessage (INFO, LIB, LIB_NO_ALPHABET);
+      TtaDisplaySimpleMessage (INFO, LIB, MISSING_ALPHABET);
 }				/* end proc Dico_Init */
 
 

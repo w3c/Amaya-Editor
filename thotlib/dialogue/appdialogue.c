@@ -164,10 +164,10 @@ int                 number;
      }
 #ifdef NEW_WILLOWS
    TtaInitDialogueWindows (servername, TtaGetMessage (LIB, LIB_CONFIRM),
-		    TtaGetMessage (LIB, LIB_CANCEL));
+		    TtaGetMessage (LIB, CANCEL));
 #else  /* NEW_WILLOWS */
    TtaInitDialogue (servername, TtaGetMessage (LIB, LIB_CONFIRM),
-		    TtaGetMessage (LIB, LIB_CANCEL), TtaGetMessage (LIB, LIB_DONE), &app_cont, &Dp);
+		    TtaGetMessage (LIB, CANCEL), TtaGetMessage (LIB, DONE), &app_cont, &Dp);
    if (!RootShell)
      {
 	/* Connection au serveur X impossible */

@@ -508,7 +508,7 @@ PtrSSchema        SS;
 	  {
 	     TtaFreeMemory (pSchT);
 	     /* Schemas incompatibles */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOMPAT_SCHEMS_RECOMPILE), texte);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OLD_SCH_TO_RECOMP), texte);
 	     erreurTypo (1);
 	  }
 	else
@@ -553,7 +553,7 @@ PtrSSchema        SS;
      }
    if (erreurSchema)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CANNOT_FIND_SCHEM), fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
 	return NULL;
      }
    else

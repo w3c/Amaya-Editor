@@ -93,7 +93,7 @@ FILE               *ifd;
 	i = getc (ifd);
 	if (i == EOF)
 	  {
-	     TtaDisplaySimpleMessage (INFO, LIB, EPSF_PREMAT_EOF);
+	     TtaDisplaySimpleMessage (INFO, LIB, PREMAT_EOF);
 	  }
 	c = (char) i;
 	if (c >= '0' && c <= '9')

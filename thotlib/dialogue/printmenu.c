@@ -202,7 +202,7 @@ char               *vuesaimprimer;
 
    res = system (cmd);
    if (res == -1)
-      TtaDisplaySimpleMessage (CONFIRM, LIB, LIB_ERROR_POSTSCRIPT_TRANSLATION);
+      TtaDisplaySimpleMessage (CONFIRM, LIB, ERROR_PS_TRANSLATION);
 #endif /* NEW_WILLOWS */
 }
 
@@ -268,7 +268,7 @@ char               *vuesaimprimer;
 
    res = system (cmd);
    if (res == -1)
-      TtaDisplaySimpleMessage (CONFIRM, LIB, LIB_ERROR_POSTSCRIPT_TRANSLATION);
+      TtaDisplaySimpleMessage (CONFIRM, LIB, ERROR_PS_TRANSLATION);
 }
 
 
@@ -479,19 +479,19 @@ View                view;
 		TtaGetMessage (LIB, LIB_PRINT),
 		1, TtaGetMessage (LIB, LIB_CONFIRM), FALSE, 2, 'L', D_DONE);
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_MANUAL_FEED));
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, MANUAL_FEED));
    TtaNewToggleMenu (NumMenuOptions, NumFormImprimer,
-		 TtaGetMessage (LIB, LIB_OPTIONS), 1, BufMenu, NULL, FALSE);
+		 TtaGetMessage (LIB, OPTIONS), 1, BufMenu, NULL, FALSE);
    if (AlimentationManuelle)
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
 
    /* sous-menu format papier */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_A4));
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, A4));
    i += strlen (&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_US));
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, US));
    TtaNewSubmenu (NumMenuFormatPapier, NumFormImprimer, 0,
-	    TtaGetMessage (LIB, LIB_PAPER_FORMAT), 2, BufMenu, NULL, FALSE);
+	    TtaGetMessage (LIB, PAPER_SIZE), 2, BufMenu, NULL, FALSE);
    if (!strcmp (page_size, "US"))
       TtaSetMenuForm (NumMenuFormatPapier, 1);
    else
@@ -499,11 +499,11 @@ View                view;
 
    /* sous-menu imprimer papier / sauver PostScript */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_PRINTER));
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, PRINTER));
    i += strlen (&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_POSTSCRIPT_FILE));
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormImprimer, 0,
-		  TtaGetMessage (LIB, LIB_OUTPUT), 2, BufMenu, NULL, TRUE);
+		  TtaGetMessage (LIB, OUTPUT), 2, BufMenu, NULL, TRUE);
    /* zone de saisie du nom de l'imprimante */
    TtaNewTextForm (NumZoneNomImprimante, NumFormImprimer, NULL, 30, 1, FALSE);
 

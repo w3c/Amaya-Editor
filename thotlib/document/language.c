@@ -594,7 +594,7 @@ Language            langageId;
    if (dicopath == NULL)
      {
 	/* la variable d'environnement DICOPAR n'existe pas */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_DICOPAR), "DICOPAR");
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, MISSING_DICOPAR), "DICOPAR");
 	return (FALSE);
      }
 
@@ -605,10 +605,10 @@ Language            langageId;
    strcat (nom_fichier_pattern, ptPattern);
    if ((in = fopen (nom_fichier_pattern, "r")) == NULL)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
 	return (FALSE);
      }
-   TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HYPHEN_FILE_OPEN), ptPattern);
+   TtaDisplayMessage (INFO, TtaGetMessage(LIB, HYPHEN_FILE_OPEN), ptPattern);
    indice_courant = 0;
    taille_prec = 0;
    i = 0;
@@ -693,7 +693,7 @@ char                mot_a_couper[MAX_CHAR];
    lgmot = strlen (mot_a_couper) + 2;
    if (lgmot > MAX_CHAR)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HYPHEN_WORD_TOO_LONG), mot_a_couper);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, HYPHEN_WORD_TOO_LONG), mot_a_couper);
 	return;
      }
    for (i = 0; i < MAX_CHAR; i++)

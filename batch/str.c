@@ -2893,7 +2893,7 @@ char              **argv;
 				   c'est un identificateur */
 
    TtaInitializeAppRegistry (argv[0]);
-   COMPIL = TtaGetMessageTable ("compildialogue", COMPIL_MSG_MAX);
+   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);
    error = False;
    /* initialise l'analyseur syntaxique */

@@ -1465,7 +1465,7 @@ int                 ym;
 		       /* Deplacement d'un point de la polyline */
 		       x = pBox->BxXOrg - pFrame->FrXOrg;
 		       y = pBox->BxYOrg - pFrame->FrYOrg;
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MOVING_THE_BOX), AbsBoxType (pBox->BxAbstractBox));
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
 		       /* Note si le trace est ouvert ou ferme */
 		       encore = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
 		       PolyLineModification (frame, x, y, pAb->AbPolyLineBuffer, pBox->BxBuffer, pBox->BxNChars, pointselect, encore);
@@ -1525,7 +1525,7 @@ int                 ym;
 			      break;
 			}
 
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MOVING_THE_BOX), AbsBoxType (pBox->BxAbstractBox));
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
 		  /* On retablit les positions par rapport a la fenetre */
 		  Xmin -= pFrame->FrXOrg;
 		  Xmax -= pFrame->FrXOrg;
@@ -1542,7 +1542,7 @@ int                 ym;
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
-	   TtaDisplaySimpleMessage (INFO, LIB, LIB_YOU_CANNOT_MODIFY_A_BOX_HERE);
+	   TtaDisplaySimpleMessage (INFO, LIB, MODIFYING_BOX_IMP);
      }
 }
 
@@ -1767,7 +1767,7 @@ int                 ym;
 			 break;
 		   }
 
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CHANGING_THE_BOX), AbsBoxType (pBox->BxAbstractBox));
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, MODIFYING_BOX), AbsBoxType (pBox->BxAbstractBox));
 	     /* On retablit les positions par rapport a la fenetre */
 	     Xmin -= pFrame->FrXOrg;
 	     if (okH)
@@ -1789,7 +1789,7 @@ int                 ym;
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
-	   TtaDisplaySimpleMessage (INFO, LIB, LIB_YOU_CANNOT_MODIFY_A_BOX_HERE);
+	   TtaDisplaySimpleMessage (INFO, LIB, MODIFYING_BOX_IMP);
      }
 }
 
@@ -1901,7 +1901,7 @@ int                 frame;
 	/* Determine les limites de deplacement de la boite */
 	DepZone (pAb, frame, TRUE, &Xmin, &Xmax);
 	DepZone (pAb, frame, FALSE, &Ymin, &Ymax);
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CREATING_THE_BOX), AbsBoxType (pAb));
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, CREATING_BOX), AbsBoxType (pAb));
 	/* On retablit les positions par rapport a la fenetre */
 	Xmin -= pFrame->FrXOrg;
 	Xmax -= pFrame->FrXOrg;

@@ -405,7 +405,7 @@ void ObjetsAligner (Plan, Axe, Doc)
   if (PcFirst == NULL)
     {
       TtaSetStatus (Doc, VuePrincipale, 
-		    TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+		    TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
   while (ExistAttribute (PcFirst, Draw3_ATTR_PositionH, Doc) == NULL)
@@ -472,7 +472,7 @@ void ObjetsGrouper (Doc)
   if (Courant == NULL)
     {
       TtaSetStatus (Doc, VuePrincipale,
-		    TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+		    TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
   TabSelectObjet[0] = TabSelectLien[0] = NULL;
@@ -655,7 +655,7 @@ void ObjetsDegrouper (Doc)
   if (Courant == NULL)
     {
       TtaSetStatus (Doc, VuePrincipale, 
-		    TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+		    TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
 
@@ -749,7 +749,7 @@ void ObjetsHorsGroupe (Doc)
   Courant = Selected;
   if (Courant == NULL)
     {
-      TtaSetStatus (Doc, VuePrincipale, TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+      TtaSetStatus (Doc, VuePrincipale, TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
 
@@ -839,7 +839,7 @@ ObjetsMemeGroupe (Doc)
   if (Courant == NULL)
     {
       TtaSetStatus (Doc, VuePrincipale,
-		    TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+		    TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
 
@@ -944,7 +944,7 @@ ObjetsMemeTaille (Doc)
   PcFirst = Selected;
   if (PcFirst == NULL)
     {
-      TtaSetStatus (Doc, VuePrincipale, TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+      TtaSetStatus (Doc, VuePrincipale, TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
   while (ExistAttribute (PcFirst, Draw3_ATTR_PositionH, Doc) == NULL)
@@ -998,7 +998,7 @@ void ObjetsDupliquer (Doc)
   Courant = Selected;
   if (Courant == NULL)
     {
-      TtaSetStatus (Doc, VuePrincipale, TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+      TtaSetStatus (Doc, VuePrincipale, TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
 
@@ -1051,7 +1051,7 @@ void ObjetsEquidistants (Doc)
   if (PcFirst == NULL)
     {
       TtaSetStatus (Doc, VuePrincipale,
-		    TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+		    TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
   while (ExistAttribute (PcFirst, Draw3_ATTR_PositionH, Doc) == NULL)
@@ -1129,7 +1129,7 @@ void ObjetsModifierPlan (Plan, Doc)
   if (Courant == NULL)
     {
       TtaSetStatus (Doc, VuePrincipale,
-		    TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+		    TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
 
@@ -1217,7 +1217,7 @@ CopieVersPalette (Doc)
   if (Courant == NULL)
     {
       TtaSetStatus (Doc, VuePrincipale,
-		    TtaGetMessage(LIB,LIB_DEBUG_NO_SELECTION), NULL);
+		    TtaGetMessage(LIB,DEBUG_NO_SEL), NULL);
       return;
     }
 

@@ -640,7 +640,7 @@ int                 nbitem;
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
-   w = XmCreatePushButton (w, TtaGetMessage (LIB, LIB_CANCEL), args, n);
+   w = XmCreatePushButton (w, TtaGetMessage (LIB, CANCEL), args, n);
    XtManageChild (w);
    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) FinKbd, (XtPointer) number);
    XmFontListFree (xfont);
@@ -731,12 +731,12 @@ int                 number;
 	 {
 	    case 0:		/* Symboles */
 	       KbFonts[number] = FontIS;	/* Symboles */
-	       CreateKeyboard (number, TtaGetMessage (LIB, LIB_MATH_SYMBOLS), FontIS, 3,
+	       CreateKeyboard (number, TtaGetMessage (LIB, MATH_SYMBOLS), FontIS, 3,
 		 KbX, KbY, Items_Symb, sizeof (Items_Symb) / sizeof (ITEM));
 	       break;
 	    case 1:		/* Graphiques */
 	       KbFonts[number] = FontIGr;	/* Graphique */
-	       CreateKeyboard (number, TtaGetMessage (LIB, LIB_GRAPHICS), FontIGr, 6,
+	       CreateKeyboard (number, TtaGetMessage (LIB, GRAPHICS), FontIGr, 6,
 	       KbX, KbY, Items_Graph, sizeof (Items_Graph) / sizeof (ITEM));
 	       break;
 	    case 2:		/* ISO latin 1 */
@@ -745,7 +745,7 @@ int                 number;
 		  FonteAc = FontMenu;
 	       KbFonts[number] = FonteAc;	/* Latin */
 	       if (FonteAc != NULL)
-		  CreateKeyboard (number, TtaGetMessage (LIB, LIB_LATIN_ALPHABET), FonteAc, 13,
+		  CreateKeyboard (number, TtaGetMessage (LIB, LATIN_ALPHABET), FonteAc, 13,
 		  KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
 	       break;
 	    case 3:		/* Grec */
@@ -754,7 +754,7 @@ int                 number;
 		  FontIg = FontMenu;
 	       if (FontIg != NULL)
 		  KbFonts[number] = FontIg;	/* Grec */
-	       CreateKeyboard (number, TtaGetMessage (LIB, LIB_GREEK_ALPHABET), FontIg, 16,
+	       CreateKeyboard (number, TtaGetMessage (LIB, GREEK_ALPHABET), FontIg, 16,
 		 KbX, KbY, Items_Grec, sizeof (Items_Grec) / sizeof (ITEM));
 	       break;
 	 }

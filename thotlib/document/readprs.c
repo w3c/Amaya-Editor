@@ -1321,7 +1321,7 @@ PtrSSchema        SS;
 	     nextr = NULL;
 	     pSchP = NULL;
 	     /* Schemas incompatibles */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOMPAT_SCHEMS_RECOMPILE), texte);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OLD_SCH_TO_RECOMP), texte);
 	  }
 
 	else
@@ -1656,7 +1656,7 @@ PtrSSchema        SS;
    if (erreur)
      {
 	/* message 'Schema incorrect' */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_PRS_FILE), fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_PRS_FILE), fname);
 	return NULL;
      }
 
