@@ -1050,15 +1050,15 @@ UCHAR_T       c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfNumEntity
-   End of a numerical entity.
+   EndOfDecEntity
+   End of a decimal entity.
    Convert the string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfNumEntity (CHAR_T c)
+static void         EndOfDecEntity (CHAR_T c)
 #else
-static void         EndOfNumEntity (c)
+static void         EndOfDecEntity (c)
 CHAR_T                c;
 
 #endif
@@ -1072,34 +1072,101 @@ CHAR_T                c;
 }
 
 /*----------------------------------------------------------------------
-   NumEntityChar
-   A character belonging to a XML numerical entity has been read.
+   DecEntityChar
+   A character belonging to a decimal entity has been read.
    Put that character in the entity buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NumEntityChar (CHAR_T c)
+static void         DecEntityChar (CHAR_T c)
 #else
-static void         NumEntityChar (c)
+static void         DecEntityChar (c)
 CHAR_T                c;
 
 #endif
 {
+   int		i;
+
    if (entityNameLength < MAX_ENTITY_LENGTH - 1)
       /* the entity buffer is not full */
       if (c >= '0' && c <= '9')
 	 /* the character is a decimal digit */
 	 entityName[entityNameLength++] = c;
       else
-	 /* not a decimal digit. assume end of entity */
+	 /* ERROR: not a decimal digit. */
 	 {
-	 EndOfNumEntity (c);
+	 PutInBuffer ('&');
+	 PutInBuffer ('#');
+	 for (i = 0; i < entityNameLength; i++)
+	     PutInBuffer (entityName[i]);
+	 entityNameLength = 0;
 	 /* next state is state 0, not the state computed by the automaton */
 	 /* and the character read has not been processed yet */
 	 normalTransition = FALSE;
 	 currentState = 0;
-	 if (c != SPACE)
-	    /* error message */
-	    ParseHTMLError (currentDocument, TEXT("Missing semicolon in XML entity"));
+	 /* error message */
+	 ParseHTMLError (currentDocument, TEXT("Invalid decimal entity"));
+	 }
+}
+
+/*----------------------------------------------------------------------
+   EndOfHexEntity
+   End of a decimal entity.
+   Convert the string read into a number and put the character
+   having that code in the input buffer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfHexEntity (CHAR_T c)
+#else
+static void         EndOfHexEntity (c)
+CHAR_T                c;
+
+#endif
+{
+   int                 code;
+
+   entityName[entityNameLength] = EOS;
+   usscanf (entityName, TEXT("%x"), &code);
+   PutInBuffer ((CHAR_T) code);
+   entityNameLength = 0;
+}
+
+/*----------------------------------------------------------------------
+   HexEntityChar
+   A character belonging to a decimal entity has been read.
+   Put that character in the entity buffer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         HexEntityChar (CHAR_T c)
+#else
+static void         HexEntityChar (c)
+CHAR_T                c;
+
+#endif
+{
+   int		i;
+
+   if (entityNameLength < MAX_ENTITY_LENGTH - 1)
+      /* the entity buffer is not full */
+      if ((c >= '0' && c <= '9') ||
+          (c >= 'a' && c <= 'f') ||
+          (c >= 'A' && c <= 'F'))
+         /* the character is a valid hexadecimal digit */
+	 entityName[entityNameLength++] = c;
+      else
+	 /* ERROR: not an hexadecimal digit */
+	 {
+	 PutInBuffer ('&');
+	 PutInBuffer ('#');
+	 PutInBuffer ('x');
+	 for (i = 0; i < entityNameLength; i++)
+	     PutInBuffer (entityName[i]);
+	 entityNameLength = 0;
+	 /* next state is state 0, not the state computed by the automaton */
+	 /* and the character read has not been processed yet */
+	 normalTransition = FALSE;
+	 currentState = 0;
+	 /* error message */
+	 ParseHTMLError (currentDocument, TEXT("Invalid hexadecimal entity"));
 	 }
 }
 
@@ -1482,12 +1549,19 @@ static sourceTransition sourceAutomaton[] =
    {30, 'S', (Proc) PutAmpersandSpace, -1},	/* return to calling state */
    {30, '*', (Proc) EntityChar, 31},
 /* state 31: reading an name entity */
-   {31, ';', (Proc) EndOfEntity, -1},	/* return to calling state */
+   {31, ';', (Proc) EndOfEntity, -1},		/* return to calling state */
    {31, '*', (Proc) EntityChar, 31},
-/* state 32: reading a numerical entity */
-   {32, ';', (Proc) EndOfNumEntity, -1},	/* return to calling state */
-   {32, '*', (Proc) NumEntityChar, 32},
-
+/* state 32: "&#" has been read: reading a numerical entity */
+   {32, 'x', (Proc) Do_nothing, 34},
+   {32, 'X', (Proc) Do_nothing, 34},
+   {32, '*', (Proc) DecEntityChar, 33},
+/* state 33: "&#x" has been read: reading a decimal value */
+   {33, ';', (Proc) EndOfDecEntity, -1},        /* return to calling state */
+   {33, '*', (Proc) DecEntityChar, 33},
+/* state 34: "&#x" has been read: reading an hexadecimal value */
+   {34, ';', (Proc) EndOfHexEntity, -1},        /* return to calling state */
+   {34, '*', (Proc) HexEntityChar, 34},
+ 
 /* state 1000: fake state. End of automaton table */
 /* the next line must be the last one in the automaton declaration */
    {1000, '*', (Proc) Do_nothing, 1000}

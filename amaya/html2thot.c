@@ -2763,11 +2763,13 @@ USTRING             msg;
 #endif
 {
    HTMLErrorsFound = TRUE;
-   if (!ErrFile) {
-      usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-     if ((ErrFile = ufopen (ErrFileName, _WriteMODE_)) == NULL)
-        return;
-   }
+   if (!ErrFile)
+      {
+      usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory,
+		DIR_SEP, doc, DIR_SEP);
+      if ((ErrFile = ufopen (ErrFileName, _WriteMODE_)) == NULL)
+         return;
+      }
 
    if (doc == theDocument)
       /* the error message is related to the document being parsed */
@@ -5665,7 +5667,7 @@ CHAR_T                c;
 }
 
 /*----------------------------------------------------------------------
-   StartOfEntity   A character '&' has been encountered in text.
+   StartOfEntity   A character '&' has been encountered in the text.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         StartOfEntity (CHAR_T c)
@@ -5903,14 +5905,14 @@ UCHAR_T       c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfNumEntity  End of a numerical entity. Convert the
+   EndOfDecEntity  End of a decimal entity. Convert the
    string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfNumEntity (CHAR_T c)
+static void         EndOfDecEntity (CHAR_T c)
 #else
-static void         EndOfNumEntity (c)
+static void         EndOfDecEntity (c)
 CHAR_T                c;
 
 #endif
@@ -5927,18 +5929,19 @@ CHAR_T                c;
 }
 
 /*----------------------------------------------------------------------
-   NumEntityChar   A character belonging to a HTML numerical
-   entity has been read. Put that character in
-   the entity buffer.
+   DecEntityChar   A character belonging to a decimal entity has been read.
+   Put that character in the entity buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NumEntityChar (CHAR_T c)
+static void         DecEntityChar (CHAR_T c)
 #else
-static void         NumEntityChar (c)
+static void         DecEntityChar (c)
 CHAR_T                c;
 
 #endif
 {
+   int		i;
+
    if (LgEntityName < MaxEntityLength - 1)
       /* the entity buffer is not full */
       if (c >= '0' && c <= '9')
@@ -5947,14 +5950,80 @@ CHAR_T                c;
       else
 	 /* not a decimal digit. assume end of entity */
 	{
-	   EndOfNumEntity (c);
+           PutInBuffer ('&');
+	   PutInBuffer ('#');
+	   for (i = 0; i < LgEntityName; i++)
+	      PutInBuffer (EntityName[i]);
+	   LgEntityName = 0;
 	   /* next state is state 0, not the state computed by the automaton */
 	   /* and the character read has not been processed yet */
 	   NormalTransition = FALSE;
 	   currentState = 0;
-	   if (c != SPACE)
-	      /* error message */
-	      ParseHTMLError (theDocument, TEXT("Missing semicolon"));
+	   /* error message */
+	   ParseHTMLError (theDocument, TEXT("Invalid decimal entity"));
+	}
+}
+
+/*----------------------------------------------------------------------
+   EndOfHexEntity  End of an hexadecimal entity. Convert the
+   string read into a number and put the character
+   having that code in the input buffer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfHexEntity (CHAR_T c)
+#else
+static void         EndOfHexEntity (c)
+CHAR_T                c;
+
+#endif
+{
+   int                 code;
+
+   EntityName[LgEntityName] = EOS;
+   usscanf (EntityName, TEXT("%x"), &code);
+   if (code > 255)
+      PutNonISOlatin1Char (code);
+   else
+      PutInBuffer ((CHAR_T) code);
+   LgEntityName = 0;
+}
+
+/*----------------------------------------------------------------------
+   HexEntityChar   A character belonging to an hexadecimal entity has been
+   read. Put that character in the entity buffer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         HexEntityChar (CHAR_T c)
+#else
+static void         HexEntityChar (c)
+CHAR_T                c;
+
+#endif
+{
+   int		i;
+
+   if (LgEntityName < MaxEntityLength - 1)
+      /* the entity buffer is not full */
+      if ((c >= '0' && c <= '9') ||
+	  (c >= 'a' && c <= 'f') ||
+	  (c >= 'A' && c <= 'F'))
+	 /* the character is a valid hexadecimal digit */
+	 EntityName[LgEntityName++] = c;
+      else
+	 /* not an hexadecimal digit. Assume end of entity */
+	{
+           PutInBuffer ('&');
+	   PutInBuffer ('#');
+	   PutInBuffer ('x');
+	   for (i = 0; i < LgEntityName; i++)
+	      PutInBuffer (EntityName[i]);
+	   LgEntityName = 0;
+	   /* next state is state 0, not the state computed by the automaton */
+	   /* and the character read has not been processed yet */
+	   NormalTransition = FALSE;
+	   currentState = 0;
+	   /* error message */
+	   ParseHTMLError (theDocument, TEXT("Invalid hexadecimal entity"));
 	}
 }
 
@@ -6392,12 +6461,19 @@ static sourceTransition sourceAutomaton[] =
    {30, '#', (Proc) Do_nothing, 32},
    {30, 'S', (Proc) PutAmpersandSpace, -1},	/* return to calling state */
    {30, '*', (Proc) EntityChar, 31},
-/* state 31: reading an name entity */
+/* state 31: reading a string entity */
    {31, ';', (Proc) EndOfEntity, -1},	/* return to calling state */
    {31, '*', (Proc) EntityChar, 31},
-/* state 32: reading a numerical entity */
-   {32, ';', (Proc) EndOfNumEntity, -1},	/* return to calling state */
-   {32, '*', (Proc) NumEntityChar, 32},
+/* state 32: "&#" has been read: reading a numerical entity */
+   {32, 'x', (Proc) Do_nothing, 34},
+   {32, 'X', (Proc) Do_nothing, 34},
+   {32, '*', (Proc) DecEntityChar, 33},
+/* state 33: "&#x" has been read: reading a decimal value */
+   {33, ';', (Proc) EndOfDecEntity, -1},	/* return to calling state */
+   {33, '*', (Proc) DecEntityChar, 33},
+/* state 34: "&#x" has been read: reading an hexadecimal value */
+   {34, ';', (Proc) EndOfHexEntity, -1},	/* return to calling state */
+   {34, '*', (Proc) HexEntityChar, 34},
 
 /* state 1000: fake state. End of automaton table */
 /* the next line must be the last one in the automaton declaration */
