@@ -136,7 +136,11 @@ SSchema GetGenericXMLSSchemaByUri (char *uriName, Document doc, ThotBool *isnew)
 {
   SSchema	XMLSSchema;
 
-  XMLSSchema = TtaGetSSchemaByUri (uriName, doc);
+  if (uriName == NULL)
+    XMLSSchema = NULL;
+  else
+    XMLSSchema = TtaGetSSchemaByUri (uriName, doc);
+
   if (XMLSSchema == NULL)
     {
       XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), uriName,

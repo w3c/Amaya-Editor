@@ -1331,8 +1331,6 @@ static ThotBool     XmlCloseElement (char *mappedName)
 static void  NsDeclarationStart (char *ns_prefix, char *ns_uri)
 
 {  
-  int  i = 0;
-
   if (Ns_Level >= MAX_NS_TABLE)
     {
       XmlParseError (errorNotWellFormed,
@@ -1427,25 +1425,24 @@ static void  NsStartProcessing (Element newElement, ThotBool declare)
   GetDefaultNsUri
   Return the default NS uri
   ----------------------------------------------------------------------*/
-static void  GetDefaultNsUri ()
+static char*  GetDefaultNsUri (ThotBool *def_uri)
 
 {  
-  int  i;
+  int    i;
+  char  *uri;
 
-  for (i = 0; i < Ns_Level; i++)
+  *def_uri = FALSE;
+  uri = NULL;
+  for (i = Ns_Level-1; i > 0; i--)
     {
-      printf ("\n");
-      printf ("i=%d; ", i);
-      if (Ns_Prefix[i] != NULL)
-	printf ("Ns_Prefix=%s; ", Ns_Prefix[i]);
-      else
-	printf ("Ns_Prefix=''; ");
-      if (Ns_Uri[i] != NULL)
-	printf ("Ns_Uri=%s", Ns_Uri[i]);
-      else
-	printf ("Ns_Uri='';");
-      printf ("\n");
+      if (Ns_Prefix[i] == NULL)
+	{
+	  uri = Ns_Uri[i];
+	  *def_uri = TRUE;
+	  i = 0;
+	}
     } 
+  return (uri);
 }
 
 /*----------------------------------------------------------------------
@@ -1742,11 +1739,16 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 		{
 		  if (strcmp ((char *)s, "XML") == 0)
 		    {
-		      ns_name = NsGetPrefix (ns_uri);
-		      if (ns_name != NULL)
-			TtaChangeGenericSchemaNames (ns_uri, ns_name, XMLcontext.doc);
+		      if (ns_uri != NULL)
+			{
+			  ns_name = NsGetPrefix (ns_uri);
+			  if (ns_name != NULL)
+			    TtaChangeGenericSchemaNames (ns_uri, ns_name, XMLcontext.doc);
+			  else
+			    TtaChangeGenericSchemaNames (ns_uri, elementName, XMLcontext.doc);
+			}
 		      else
-			TtaChangeGenericSchemaNames (ns_uri, elementName, XMLcontext.doc);
+			TtaChangeGenericSchemaNames ("Default_Uri", elementName, XMLcontext.doc);
 		    }
 		}
 	    }
@@ -1766,7 +1768,15 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 		    }
 		}
 	      else
-		  *elType = TtaGetElementType (RootElement);
+		{
+		  /* *elType = TtaGetElementType (RootElement); */
+		  isnew = FALSE;
+		  elType->ElSSchema = GetGenericXMLSSchemaByUri ("Default_Uri",
+								 XMLcontext.doc, &isnew);
+		  if (isnew)
+		    TtaChangeGenericSchemaNames ("Default_Uri", elementName,
+						 XMLcontext.doc);
+		}
 	      *level = TRUE;
 	      *content = SPACE;
 	    }
@@ -1806,11 +1816,12 @@ static void StartOfXmlStartElement (char *name)
   char            msgBuffer[MaxMsgLength];
   char            schemaName[NAME_LENGTH];
   char           *mappedName = NULL;
-  char           *buffer, *ptr, *elementName, *nsURI;
+  char           *buffer, *ptr, *elementName, *nsURI, *nsDefUri;
   int             profile;
   ThotBool        elInStack = FALSE;
   ThotBool        highEnoughLevel = TRUE;
   ThotBool        isAllowed = TRUE;
+  ThotBool        def_uri = FALSE;
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
@@ -1858,15 +1869,24 @@ static void StartOfXmlStartElement (char *name)
     }
   else
     {
+      /* No namespace declaration */
       if ((ptr = strrchr (buffer, NS_COLON)) != NULL)
 	{
-	  *ptr = EOS;
+	  /* there is an undefined prefix */
 	  sprintf ((char *)msgBuffer, 
 		   "Undefined prefix for the element <%s>", ptr+1);
-	  *ptr = NS_COLON;
 	  XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
-	} 
-      /* No namespace declaration, use the current context */
+	  currentParserCtxt = NULL;
+	}
+      else
+	{
+	  nsDefUri = GetDefaultNsUri (&def_uri);
+	  if ((def_uri == TRUE) && (nsDefUri == NULL))
+	    {
+	      /* Default namespace without uri */
+	      currentParserCtxt = NULL;
+	    }
+	}
       elementName = (char *)TtaStrdup ((char *)buffer);
     }
   
@@ -1998,9 +2018,12 @@ static void StartOfXmlStartElement (char *name)
 	}
     }
   
-  TtaFreeMemory (buffer);
-  TtaFreeMemory (elementName);
-  TtaFreeMemory (nsURI);
+  if (buffer != NULL)
+    TtaFreeMemory (buffer);
+  if (elementName != NULL)
+    TtaFreeMemory (elementName);
+  if (nsURI != NULL)
+    TtaFreeMemory (nsURI);
 }
 
 /*----------------------------------------------------------------------
