@@ -4177,7 +4177,8 @@ ThotBool            react;
                          n++;
                          XtSetValues (w, args, n);
                          XtManageChild (w);
-                         XtManageChild (menu);
+                         /* not supported in solaris 2.6
+			    XtManageChild (menu);*/
 #endif /* _GTK */
 #                        endif /* !_WINDOWS */
                          adbloc->E_Free[ent] = TEXT('N');
