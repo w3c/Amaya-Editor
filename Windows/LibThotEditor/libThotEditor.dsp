@@ -458,6 +458,10 @@ SOURCE=..\..\thotlib\editing\spellchecker.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\stix.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\editing\structchange.c
 # End Source File
 # Begin Source File
