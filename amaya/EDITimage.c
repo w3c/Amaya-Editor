@@ -13,6 +13,10 @@
  *         R. Guetari Unicode and Windows version.
  *
  */
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
  
 /* Included headerfiles */
 #define THOT_EXPORT extern
@@ -35,11 +39,14 @@ static ThotBool   CreateNewImage;
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 #include "XHTMLbuilder_f.h"
+
 #ifdef _WX
-#include "wxdialogapi_f.h"
+  #include "wxdialogapi_f.h"
+  #include "message_wx.h"
 #endif /* _WX */
+
 #ifdef _WINGUI
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINGUI */
 
 static int RefFormImage = 0;
@@ -405,6 +412,14 @@ static void GetAlt (Document document, View view)
   ----------------------------------------------------------------------*/
 static void CreateAreaMap (Document doc, View view, char *shape)
 {
+#ifdef _WX
+  /* TODO: WX ... */
+  wxMessageDialog messagedialog( NULL,
+				 TtaConvMessageToWX("Not implemented yet"), 
+				 _T("Warning"),
+				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+  messagedialog.ShowModal();
+#else /* defined(_WX) */
    Element             el, map, parent, image, child;
    Element             newMap, newElem;
    ElementType         elType;
@@ -654,6 +669,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    if (attrRefimg)
       TtaRegisterAttributeCreate (attrRefimg, map, doc);
    TtaCloseUndoSequence (doc);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -667,14 +683,14 @@ void CreateAreaRect (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateAreaCircle (Document doc, View view)
 {
-   CreateAreaMap (doc, view, "a");
+  CreateAreaMap (doc, view, "a");
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void CreateAreaPoly (Document doc, View view)
 {
-   CreateAreaMap (doc, view, "p");
+  CreateAreaMap (doc, view, "p");
 }
 
 /*----------------------------------------------------------------------

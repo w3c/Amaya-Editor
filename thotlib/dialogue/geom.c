@@ -13,6 +13,9 @@
  *          R. Guetari (W3C/INRIA) - Unicode, Windows version and Plug-ins
  *
  */
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -52,6 +55,10 @@ static int          GridSize = 1;
   #include <gdk/gdkx.h>
   #include <gtk/gtkprivate.h>
 #endif /*_GTK*/
+
+#ifdef _WX
+  #include "message_wx.h"
+#endif /* _WX */
 
 #ifdef _WINGUI
 #include "wininclude.h"
@@ -325,7 +332,15 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		       int *nbpoints, int maxPoints, int width, int height,
 		       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 {
-#if defined(_WINGUI) || defined(_GTK) /* TODO : _WX */
+#ifdef _WX
+  /* TODO: WX ... */
+  wxMessageDialog messagedialog( NULL,
+				 TtaConvMessageToWX("Not implemented yet"), 
+				 _T("Warning"),
+				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+  messagedialog.ShowModal();
+#else /* defined(_WX) */
+#if defined(_WINGUI) || defined(_GTK)
   ThotWindow          w;
 #ifdef _GTK
    ThotEvent         *event;
@@ -686,6 +701,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
 #endif /* !_GTK */
 #endif /* #if defined(_WINGUI) || defined(_GTK) */
+#endif /* _WX */
 }
 
 
@@ -771,10 +787,15 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   /* take into account release button events that follow a press button event */
   input = FALSE;
   wrap = FALSE;
-#ifndef _WX
-  // TODO: gerer les thotgrab/ungrab etc ...
+#ifdef _WX
+  /* TODO: WX ... */
+  wxMessageDialog messagedialog( NULL,
+				 TtaConvMessageToWX("Not implemented yet"), 
+				 _T("Warning"),
+				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+  messagedialog.ShowModal();
+#else /* defined(_WX) */
   while (ret == 0)
-#endif /* _WX */
     {
 #ifdef _WINGUI
       /* current pointer position */
@@ -1046,6 +1067,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 	}
 #endif /* _GTK */
     }
+#endif /* _WX */
 
 #ifdef _WINGUI
   SetCursor (LoadCursor (NULL, IDC_ARROW));
@@ -1420,29 +1442,29 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
       break;
     default: break;
     }
-
-/* The first point is the box bottom right point */
-pBuffer->BuPoints[0].XCoord = LogicalValue (pBox->BxWidth, UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification);
-pBuffer->BuPoints[0].YCoord = LogicalValue (pBox->BxHeight, UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification);
-/* The second point is the selected one (x,y) */
-pBuffer->BuPoints[1].XCoord = LogicalValue (x, UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification);
-pBuffer->BuPoints[1].YCoord = LogicalValue (y, UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification);
-/* The last point is the line end point (x1,y1) */
-pBuffer->BuPoints[2].XCoord = LogicalValue (x1, UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification);
-pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification);
-/* 3 points in the buffer */
-pBuffer->BuLength = 3;
+  
+  /* The first point is the box bottom right point */
+  pBuffer->BuPoints[0].XCoord = LogicalValue (pBox->BxWidth, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  pBuffer->BuPoints[0].YCoord = LogicalValue (pBox->BxHeight, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  /* The second point is the selected one (x,y) */
+  pBuffer->BuPoints[1].XCoord = LogicalValue (x, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  pBuffer->BuPoints[1].YCoord = LogicalValue (y, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  /* The last point is the line end point (x1,y1) */
+  pBuffer->BuPoints[2].XCoord = LogicalValue (x1, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  /* 3 points in the buffer */
+  pBuffer->BuLength = 3;
   
 #if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINGUI */
-
+  
   /* get draw limits */
   draw = GetParentDraw (pBox);
   if (draw)
@@ -1640,6 +1662,14 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
   else
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
   ret = 0;
+#ifdef _WX
+  /* TODO: WX ... */
+  wxMessageDialog messagedialog( NULL,
+				 TtaConvMessageToWX("Not implemented yet"), 
+				 _T("Warning"),
+				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+  messagedialog.ShowModal();
+#else /* defined(_WX) */
   while (ret == 0)
     {
 
@@ -2115,6 +2145,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 	}
 #endif /* _GTK */
     }
+#endif /* _WX */
 
 #ifndef _GL
   /* Erase the box drawing */
@@ -2700,6 +2731,14 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
   /* Loop on user input to keep the first point */
   ret = 0;
+#ifdef _WX
+  /* TODO: WX ... */
+  wxMessageDialog messagedialog( NULL,
+				 TtaConvMessageToWX("Not implemented yet"), 
+				 _T("Warning"),
+				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+  messagedialog.ShowModal();
+#else /* defined(_WX) */
   while (ret == 0)
     {
 #ifdef _WINGUI
@@ -2887,6 +2926,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 	}
 #endif /* _GTK */
     }
+#endif /* _WX */
 
   /* switch off the old box geometry */
   if (isEllipse)
