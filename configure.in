@@ -254,18 +254,6 @@ if test "$with_gl" = "" ; then
   fi
 fi  
 
-#GTK_OPTIONS=
-#AC_ARG_WITH(gtk, [  --without-gtk              use Motif instead of GTK])
-#if test "$withval" = "no" ; then
-#  if test "$with_gl" = "yes" ; then
-#    with_gtk="yes"
-#  else
-#    with_gtk="no"
-#  fi
-#else
-#  with_gtk="yes"
-#fi
-
 # check if gtk gui should be used
 AC_ARG_WITH(gtk, [  --with-gtk              use GTK GUI toolkit ])
 if test "$with_gtk" = "yes" -o "$enable_gtk" = "yes" ; then
@@ -276,13 +264,6 @@ if test "$with_gtk" = "yes" -o "$enable_gtk" = "yes" ; then
   fi
 fi
 
-# check if motif gui should be used
-AC_ARG_WITH(motif, [  --with-motif            use MOTIF GUI toolkit ])
-if test "$with_motif" = "yes" -o "$enable_motif" = "yes" ; then
-  with_motif="yes"
-  no_motif=no
-fi
-
 # check if wxWindows gui should be used
 AC_ARG_WITH(wx, [  --with-wx               use wxWindows GUI toolkit (experimental)])
 if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
@@ -290,19 +271,17 @@ if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
     with_wx="no"
   else
     with_wx="yes"
+    # force opengl with wxWidgets
+    with_gl="yes"
   fi
 fi
 
-# Check if a GUI toolkit is enabled
-if test "$with_motif" = "no" -o "$with_motif" = "" ; then
-  if test "$with_wx" = "no" -o "$with_wx" = "" ; then
-    if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
-      # Default GUI toolkits
-      with_motif="no"
-      with_wx="no"
-      no_motif=yes
-      with_gtk="yes"
-    fi
+# Check if iat least one GUI toolkit is enabled
+if test "$with_wx" = "no" -o "$with_wx" = "" ; then
+  if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
+    # Nothing is enable so force the default GUI toolkit (GTK)
+    with_wx="no"
+    with_gtk="yes"
   fi
 fi
 
@@ -310,13 +289,12 @@ fi
 AC_ARG_WITH(nogui, [  --with-nogui            do not use GUI toolkit ])
 if test "$with_nogui" = "yes" -o "$enable_nogui" = "yes" ; then
   with_nogui="yes"
-  with_motif="no"
-  no_motif=yes
   with_gtk="no"
+  with_wx="no"
   NOGUI_OPTIONS="-D_NOGUI"
 fi
 
-if test "$with_motif" = "yes" ; then
+if test "$with_wx" = "yes" ; then
   if test "$with_gtk" = "yes" ; then
     echo 
     echo "****************************************************************"
@@ -324,55 +302,69 @@ if test "$with_motif" = "yes" ; then
     echo " More than one GUI toolkit is enable"
     echo " Only one GUI toolkit should be enable (turn off one)"
     echo " exemple ok :  ../configure --with-gtk "
-    echo " exemple !ok : ../configure --with-gtk --with-motif"
-    echo "****************************************************************"
-    echo 
-    exit 1
-  fi
-  if test "$with_gl" = "yes" ; then
-    echo 
-    echo "****************************************************************"
-    echo " ERROR: "
-    echo " MOTIF GUI doesn't support OpenGL canvas (turn off --with-gl)"
+    echo " exemple !ok : ../configure --with-gtk --with-wx"
     echo "****************************************************************"
     echo 
     exit 1
   fi
 fi
-  
+
 if test "$with_gtk" = "yes" ; then
   # SG : lookingfor gtkimlib includes
   #      because not found with gtk-config on macosx 
+  gdkimlib_h_found="no"
   for ac_dir in               \
     /sw/include/              \
     /sw/local/include         \
-    /usr/include              \
     /usr/include              \
     /usr/local/include        \
     ; \
   do
     if test -r "$ac_dir/gdk_imlib.h"; then
       echo "found gdk_imlib.h"
+      gdkimlib_h_found="yes"
       GTK_INCLUDES="${GTK_INCLUDES} -I$ac_dir"
       break
     fi
   done
 
+  # check that gtk-config exists
+  AC_CHECK_PROG(GTKCONFIG_FOUND,gtk-config,yes,no)
+  if test "$GTKCONFIG_FOUND" = no ; then
+    AC_MSG_ERROR(Cannot find gtk-config. Please install gtk development library.)
+  fi
+		    
   GTK_INCLUDES="${GTK_INCLUDES} `gtk-config --cflags`"
   AC_SUBST(GTK_INCLUDES)
   GTK_LIBRARIES="`gtk-config --libs`"
-  dnl GL doesn't need the imlib
+  # GL doesn't need the imlib
   if test "${with_gl}" != "yes" ; then
-   GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
+    GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
+  else
+    gdkimlib_h_found="yes"
   fi
 
   AC_SUBST(GTK_LIBRARIES)
   GTK_OPTIONS="-D_GTK"
-  no_motif=yes
   no_graphic=yes
+
+  if test "$gdkimlib_h_found" = "no" ; then
+    echo
+    echo "****************************************************************"
+    echo " ERROR: gdk_imlib.h not found -"
+    echo " [please install imlib developpement package (libimlib1-devel on mandrake)]"
+    echo "****************************************************************"
+    exit 1
+  fi											      
 fi
 
 if test "$with_wx" = "yes" ; then
+  # check that wx-config exists
+  AC_CHECK_PROG(WXCONFIG_FOUND,wx-config,yes,no)
+  if test "$WXCONFIG_FOUND" = no ; then
+    AC_MSG_ERROR(Cannot find wx-config. Please install wxWidgets (http://www.wxwidgets.org/) )
+  fi
+  
   WX_INCLUDES="`wx-config --cxxflags`"
   AC_SUBST(WX_INCLUDES)
 
@@ -394,180 +386,7 @@ if test "$with_wx" = "yes" ; then
   AC_SUBST(WX_LIBRARIES)
   WX_OPTIONS="-D_WX"
 
-  no_motif=yes
   no_graphic=yes
-fi
-
-if test "$with_motif" = "yes" ; then
-dnl
-dnl Checking for Motif libraries and includes
-dnl
-dnl Borrowed from Lesstif configure.in
-dnl Lesstif is a Great Project (TM)
-dnl
-
-AC_DEFUN(AC_PATH_MOTIF_DIRECT,
-[test -z "$motif_direct_test_library" && motif_direct_test_library=Xm
-test -z "$motif_direct_test_function" && motif_direct_test_function=XmCreatePushButton
-test -z "$motif_direct_test_include" && motif_direct_test_include=Xm/Xm.h
-  for ac_dir in               \
-    /usr/include/Motif1.2     \
-    /usr/Motif1.2/include     \
-    /sw/Lesstif/Motif2.0/include \
-                              \
-    /usr/motif/include        \
-                              \
-    /usr/X11R6/include        \
-    /usr/X11R5/include        \
-                              \
-    /usr/include/X11R6        \
-    /usr/include/X11R5        \
-                              \
-    /usr/local/X11R6/include  \
-    /usr/local/X11R5/include  \
-                              \
-    /usr/local/include/X11R6  \
-    /usr/local/include/X11R5  \
-                              \
-    /usr/X11/include          \
-    /usr/include/X11          \
-    /usr/local/X11/include    \
-    /usr/local/include/X11    \
-                              \
-    /usr/X386/include         \
-    /usr/x386/include         \
-    /usr/XFree86/include/X11  \
-                              \
-    /usr/dt/include           \
-                              \
-    /usr/include              \
-    /usr/local/include        \
-    /usr/unsupported/include  \
-    /usr/athena/include       \
-    /usr/local/x11r5/include  \
-    /usr/lpp/Xamples/include  \
-                              \
-    /usr/lesstif/include      \
-    /usr/local/lesstif/include\
-    /usr/gnu/lesstif/include  \
-    $HOME/lesstif/include     \
-    ; \
-  do
-    if test -r "$ac_dir/$motif_direct_test_include"; then
-      no_motif= ac_motif_includes=$ac_dir
-      break
-    fi
-  done
-
-# Check for the libraries.
-# See if we find them without any special options.
-# Don't add to $LIBS permanently.
-ac_save_LIBS="$LIBS"
-LIBS="-l$motif_direct_test_library $LIBS"
-# First see if replacing the include by lib works.
-for ac_dir in `echo "$ac_motif_includes" | sed s/include/lib/` \
-    /usr/lib/Motif1.2     \
-    /usr/Motif1.2/lib     \
-    /sw/Lesstif/Motif2.0/lib \
-                          \
-    /usr/motif/lib        \
-                          \
-    /usr/X11R6/lib        \
-    /usr/X11R5/lib        \
-                          \
-    /usr/lib/X11R6        \
-    /usr/lib/X11R5        \
-                          \
-    /usr/local/X11R6/lib  \
-    /usr/local/X11R5/lib  \
-                          \
-    /usr/local/lib/X11R6  \
-    /usr/local/lib/X11R5  \
-                          \
-    /usr/X11/lib          \
-    /usr/lib/X11          \
-    /usr/local/X11/lib    \
-                          \
-    /usr/X386/lib         \
-    /usr/x386/lib         \
-    /usr/XFree86/lib/X11  \
-                          \
-    /usr/lib              \
-    /usr/local/lib        \
-    /usr/unsupported/lib  \
-    /usr/athena/lib       \
-    /usr/local/x11r5/lib  \
-    /usr/lpp/Xamples/lib  \
-                          \
-    /usr/lesstif/lib      \
-    /usr/local/lesstif/lib\
-    /usr/gnu/lesstif/lib  \
-    $HOME/lesstif/lib     \
-    ; \
-do
-  for ac_extension in a so sl la; do
-    if test -r $ac_dir/lib${motif_direct_test_library}.$ac_extension; then
-      no_motif= ac_motif_libraries=$ac_dir
-      break 2
-    fi
-  done
-done
-LIBS="$ac_save_LIBS"
-])
-
-AC_DEFUN(AC_PATH_MOTIF,
-[AC_REQUIRE_CPP()
-
-motif_includes=NONE
-motif_libraries=NONE
-
-AC_MSG_CHECKING(for Motif)
-if test "x$motif_includes" != xNONE && test "x$motif_libraries" != xNONE; then
-    no_motif=
-else
-AC_CACHE_VAL(ac_cv_path_motif,
-[# One or both of these vars are not set, and there is no cached value.
-  no_motif=yes
-AC_PATH_MOTIF_DIRECT
-
-if test "$no_motif" = yes; then
-    ac_cv_path_motif="no_motif=yes"
-else
-    ac_cv_path_motif="no_motif= ac_motif_includes=$ac_motif_includes ac_motif_libraries=$ac_motif_libraries"
-fi])
-eval "$ac_cv_path_motif"
-fi
-
-if test "$no_motif" = yes; then
-  AC_MSG_RESULT(no)
-  MOTIF_INCLUDES=
-  MOTIF_LIBRARIES=
-else
-  test "x$motif_includes" = xNONE && motif_includes=$ac_motif_includes
-  test "x$motif_libraries" = xNONE && motif_libraries=$ac_motif_libraries
-  ac_cv_path_motif="no_motif= ac_motif_includes=$motif_includes ac_motif_libraries=$motif_libraries"
-  AC_MSG_RESULT([libraries $motif_libraries, headers $motif_includes])
-  if test "$motif_includes" != "/usr/include" ; then
-    MOTIF_INCLUDES="-I$motif_includes"
-  fi
-  if test "$motif_libraries" != "/usr/lib" ; then
-    MOTIF_LIBRARIES="-L$motif_libraries -lXm"
-    case "${host}" in
-        *-*sun-solaris* )
-         MOTIF_LIBRARIES="${MOTIF_LIBRARIES} -R$motif_libraries"
-        ;;
-    esac
-  else
-  MOTIF_LIBRARIES="-lXm"
-  fi
-fi
-AC_SUBST(MOTIF_INCLUDES)
-AC_SUBST(MOTIF_LIBRARIES)
-])
-
-MOTIF_OPTIONS="-D_MOTIF"
-
-AC_PATH_MOTIF
 fi
 
 if test "${GCC}" = "yes"; then
@@ -883,7 +702,6 @@ if test "$with_gl" = "yes" ; then
 					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib  -lXmu -lXft -lfreetype -lGL -lGLU ${GTKGL_LIBS}"
 					fi				
 					GL_OPTIONS="-D_GL"
-	  				no_motif=yes
 				fi
 			    fi
 			fi
@@ -1222,8 +1040,8 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$OS_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
-AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+THOT_OPTIONS="$OS_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS"
 
@@ -1462,27 +1280,6 @@ fi
 
 if test "$with_gtk" = "yes" ; then
     echo "Amaya configured with GTK"
-fi
-
-if test "$with_motif" = "yes" ; then
-  if test "$no_motif" = "yes" ; then
-      echo "Motif seems not installed on this machine"
-      echo "Amaya need Motif 1.2 or 2.0"
-  else
-    if test "$motif_includes" = "" ; then
-      echo "Motif includes were not found"
-      echo "Amaya might not compile"
-      echo "Edit your Option file"
-    else
-      if test "$motif_libraries" = "" ; then
-        echo "Motif libraries were not found"
-        echo "Amaya might not compile"
-        echo "Edit your Option file"
-      else
-        echo "Amaya configured with MOTIF"
-      fi
-    fi
-  fi
 fi
 
 if test "$with_wx" = "yes" ; then
