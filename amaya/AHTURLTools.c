@@ -557,7 +557,8 @@ const STRING       url;
 #endif /* __STDC__ */
 {
    if (!ustrncmp (url, TEXT("http:"), 5)
-      || !ustrncmp (url, TEXT("internal:"), 9))
+      || !ustrncmp (url, TEXT("internal:"), 9)
+      || !strncmp (url, "ftp:", 4))
        /* experimental */
       /***  || !strncmp (url, "ftp:", 4) ***/
      /*** || !strncmp (path, "news:", 5)***/ 
@@ -723,7 +724,12 @@ STRING     url;
       n = ustrchr (documentname, TEXT(':'));
       if (n != NULL)
 	*n = EOS;
-      ustrcat (ptr, documentname);
+      /* if after all this operations document name
+	 is empty, let's use noname.html instead */
+      if (documentname[0] == EOS)
+	ustrcat (ptr, TEXT("noname.html"));
+      else
+	ustrcat (ptr, documentname);
       TtaFreeMemory (documentname);
       /* restore the url */
       if (noFile)
