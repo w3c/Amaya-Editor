@@ -494,10 +494,9 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 		  rect.top + pFrame->FrYOrg,
 		  rect.right + pFrame->FrXOrg,
 		  rect.bottom + pFrame->FrYOrg);
-	 EndPaint (w, &ps);
 	 DisplayFrame (frame);
+	 EndPaint (w, &ps);
 	 /* restore the previous clipping */
-	 pFrame = &ViewFrameTable[frame - 1];
 	 pFrame->FrClipXBegin = xmin;
 	 pFrame->FrClipXEnd = xmax;
 	 pFrame->FrClipYBegin = ymin;
