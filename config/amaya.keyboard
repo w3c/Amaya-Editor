@@ -1,4 +1,3 @@
-trL
 # These functions are loosely based on emacs keys.
 # You have to distinguish between <Alt/Control><Key> sequences and
 # <Shift><Alt/Control><Key> sequences.
