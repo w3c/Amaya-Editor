@@ -2387,40 +2387,215 @@ void PasteBefore (Document doc, View view)
   ----------------------------------------------------------------------*/
 void PasteAfter (Document doc, View view)
 {
-  Element             cell;
+  Element             cell, el, child;
+  ElementType         elType;
+  int                 len;
 
   /* get the enclosing cell */
   cell = GetEnclosingCell (doc);
   if (cell)
     {
-      TtaSelectElement (doc, cell);
+      /* move the selection at the beginning of the cell */
+      child = cell;
+      while (child)
+	{
+	  el = child;
+	  child = TtaGetLastChild (el);
+	}
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	{
+	  len = TtaGetElementVolume (el);
+	  TtaSelectString (doc, el, len, len-1);
+	}
+      else
+	TtaSelectElement (doc, el);
       TtcPaste (doc, view);
       TtaCloseUndoSequence (doc);
     }
 }
 
 /*----------------------------------------------------------------------
+  IsBeforeRow returns TRUE if there is an enclosing tbody and updates
+  the selection.
+  Parameters head or foot is TRUE when the iserted element is a THead of
+  a Tfoot.
+  ----------------------------------------------------------------------*/
+static ThotBool BeginningOrEndOfTBody (Element cell, Document doc,
+				       ThotBool head, ThotBool foot)
+{
+  Element             tbody, el, child;
+  ElementType         elType;
+  int                 len;
+
+  if (cell)
+    {
+      elType = TtaGetElementType (cell);
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	/* not an HTML Cell */
+	return FALSE;
+      /* get the enclosing tbody */
+      tbody = cell;
+      do
+	{
+	  tbody = TtaGetParent (tbody);
+	  if (tbody)
+	    elType = TtaGetElementType (tbody);
+	}
+      while (tbody &&
+	     (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
+	      elType.ElTypeNum != HTML_EL_tbody));
+      if (tbody == NULL)
+	return FALSE;
+
+      if (head)
+	{
+	  /* look for the first tbody */
+	  el = tbody;
+	  do
+	    {
+	      tbody = el;
+	      TtaPreviousSibling (&el);
+	      if (el)
+		elType = TtaGetElementType (el);
+	    }
+	  while (el &&
+		 (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
+		  elType.ElTypeNum != HTML_EL_tbody));
+	  cell = NULL;
+	}
+      else if (foot)
+	{
+	  /* look for the last tbody */
+	  el = tbody;
+	  do
+	    {
+	      tbody = el;
+	      TtaNextSibling (&el);
+	      if (el)
+		elType = TtaGetElementType (el);
+	    }
+	  while (el &&
+		 (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
+		  elType.ElTypeNum != HTML_EL_tbody));
+	}
+      else
+	{
+	  do
+	    {
+	      TtaPreviousSibling (&cell);
+	      if (cell)
+		elType = TtaGetElementType (cell);
+	    }
+	  while (cell &&
+		 (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
+		  (elType.ElTypeNum != HTML_EL_Data_cell &&
+		   elType.ElTypeNum != HTML_EL_Heading_cell)));
+	}
+
+      if (cell)
+	{
+	  /* there is a previous cell:
+	     move the selection at the end of the row */
+	  child = tbody;
+	  while (child)
+	    {
+	      el = child;
+	      child = TtaGetFirstChild (el);
+	    }
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	    TtaSelectString (doc, el, 1, 0);
+	  else
+	    TtaSelectElement (doc, el);
+	}
+      else
+	{
+	  /* there is no previous cell:
+	     move the selection at the beginnining of the row */
+	  child = tbody;
+	  while (child)
+	    {
+	      el = child;
+	      child = TtaGetLastChild (el);
+	    }
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	    {
+	      len = TtaGetElementVolume (el);
+	      TtaSelectString (doc, el, len, len-1);
+	    }
+	  else
+	    TtaSelectElement (doc, el);
+	}
+      return TRUE;
+    }
+  return FALSE;
+}
+ 
+/*----------------------------------------------------------------------
   CreateTHead
   ----------------------------------------------------------------------*/
-void CreateTHead (Document document, View view)
+void CreateTHead (Document doc, View view)
 {
-   CreateHTMLelement (HTML_EL_thead, document);
+  Element             cell, elNew;
+  ElementType         elType;
+
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      if (BeginningOrEndOfTBody (cell, doc, TRUE, FALSE))
+	/*{
+	  elType = TtaGetElementType (cell);
+	  elType.ElTypeNum = HTML_EL_thead;
+	  elNew = TtaNewElement (doc, elType);
+	  TtaInsertSibling (elNew, el, before, doc);
+	  TtaRegisterElementCreate (elNew, doc);
+	  }*/
+      CreateHTMLelement (HTML_EL_thead, doc);
+      TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
+    }
 }
 
 /*----------------------------------------------------------------------
   CreateTBody
   ----------------------------------------------------------------------*/
-void CreateTBody (Document document, View view)
+void CreateTBody (Document doc, View view)
 {
-   CreateHTMLelement (HTML_EL_tbody, document);
+  Element             cell, elNew;
+  ElementType         elType;
+
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      if (BeginningOrEndOfTBody (cell, doc, FALSE, FALSE))
+	{
+	}
+      CreateHTMLelement (HTML_EL_tbody, doc);
+      TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
+    }
 }
 
 /*----------------------------------------------------------------------
   CreateTFoot
   ----------------------------------------------------------------------*/
-void CreateTFoot (Document document, View view)
+void CreateTFoot (Document doc, View view)
 {
-   CreateHTMLelement (HTML_EL_tfoot, document);
+  Element             cell, elNew;
+  ElementType         elType;
+
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      if (BeginningOrEndOfTBody (cell, doc, FALSE, TRUE))
+	{
+	}
+      CreateHTMLelement (HTML_EL_tfoot, doc);
+      TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
+    }
 }
 
 /*----------------------------------------------------------------------
