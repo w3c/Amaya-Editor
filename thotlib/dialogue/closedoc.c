@@ -50,7 +50,6 @@ static ThotBool     SaveBeforeClosing;
   ----------------------------------------------------------------------*/
 void CallbackCloseDocMenu (int ref, int typedata, char *data)
 {
-#if defined(_GTK) || defined(_MOTIF)
   switch ((int) data)
     {
     case 0:
@@ -66,7 +65,8 @@ void CallbackCloseDocMenu (int ref, int typedata, char *data)
       CloseDontSave = FALSE;
       break;
     }
-  TtaDestroyDialogue (NumFormClose);
+#if defined(_GTK) || defined(_MOTIF)
+   TtaDestroyDialogue (NumFormClose);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 }
 
@@ -113,8 +113,7 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 
 #ifdef _WINDOWS
-  CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), buftext,
-			   &SaveBeforeClosing, &CloseDontSave);
+  CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), buftext);
 #endif /* _WINDOWS */
   *save = SaveBeforeClosing;
   *confirmation = !CloseDontSave;
