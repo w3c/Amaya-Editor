@@ -129,6 +129,7 @@ static PtrParserCtxt    XLinkParserCtxt = NULL;
 #define MathML_URI           TEXT("http://www.w3.org/1998/Math/MathML")
 #define GraphML_URI          TEXT("http://www.w3.org/2000/svg")
 #define XLink_URI            TEXT("http://www.w3.org/1999/xlink")
+#define NAMESPACE_URI        TEXT("http://www.w3.org/XML/1998/namespace")
 
 
 /* parser stack */
@@ -1585,7 +1586,6 @@ CHAR_T     *GIname;
 {
    CHAR_T         msgBuffer[MaxMsgLength];
    ElementType    elType;
-   STRING         elSchemaName;
    STRING         mappedName = NULL;
 
    /* Remove a line break immediately before an end tag */ 
@@ -2080,14 +2080,14 @@ Document    doc;
 }
 
 /*----------------------------------------------------------------------
-   EndOfAttrName   
+   EndOfAttributeName   
    A XML attribute has been read. 
    Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      EndOfAttrName (CHAR_T *attrName)
+static void      EndOfAttributeName (CHAR_T *attrName)
 #else
-static void      EndOfAttrName (attrName)
+static void      EndOfAttributeName (attrName)
 CHAR_T         *attrName;
 
 #endif
@@ -2113,12 +2113,23 @@ CHAR_T         *attrName;
      {
        *ptr = WC_EOS;
        ptr++;
-       bufName = TtaGetMemory (strlen (ptr) + 1);
-       ustrcpy (bufName, ptr);
-       
-       if (currentParserCtxt != NULL &&
-	   ustrcmp (buffer, currentParserCtxt->UriName))
-	   ChangeXmlParserContextUri (buffer);
+
+       /* Specific treatment to get round a bug in EXPAT parser */
+       /* This one replaces first "xml:" prefix by the namespaces URI */
+       if (ustrcmp (buffer, NAMESPACE_URI) == 0)
+	 {
+	   bufName = TtaGetMemory (strlen (ptr) + 5);
+	   ustrcpy (bufName, TEXT("xml:"));
+	   ustrcat (bufName, ptr);
+	 }
+       else
+	 {
+	   bufName = TtaGetMemory (strlen (ptr) + 1);
+	   ustrcpy (bufName, ptr);
+	   if (currentParserCtxt != NULL &&
+	       ustrcmp (buffer, currentParserCtxt->UriName))
+	     ChangeXmlParserContextUri (buffer);
+	 }
      }
    else
      {
@@ -2137,11 +2148,16 @@ CHAR_T         *attrName;
        /* Is it a xml:space attribute */
        if (ustrncmp (bufName, TEXT("xml:space"), 9) == 0)
 	 XMLSpaceAttribute = TRUE;
-
-       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-	 XhtmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
        else
-	 XmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
+	 {
+	   /* the attribute xml:lang is replaced by the attribute "lang" */
+	   if (ustrncmp (bufName, TEXT("xml:lang"), 8) == 0)
+	     ustrcpy (bufName, TEXT("lang"));
+	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	     XhtmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
+	   else
+	     XmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
+	 }
      }
    
    TtaFreeMemory (buffer);
@@ -2575,14 +2591,14 @@ CHAR_T     *attrValue;
 }
 
 /*----------------------------------------------------------------------
-   EndOfAttrValue
+   EndOfAttributeValue
    An attribute value has been read from the HTML file.
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    EndOfAttrValue (CHAR_T *attrValue)
+static void    EndOfAttributeValue (CHAR_T *attrValue)
 #else
-static void    EndOfAttrValue (attrValue)
+static void    EndOfAttributeValue (attrValue)
 CHAR_T     *attrValue;
 
 #endif
@@ -3180,7 +3196,7 @@ const XML_Char **attlist;
 #ifdef LC
 	   printf ("\n  attr %s :", bufAttr);
 #endif /* LC */
-	   EndOfAttrName (bufAttr);
+	   EndOfAttributeName (bufAttr);
 	   TtaFreeMemory (bufAttr);
 
 	   /* Element context if attribute name is unknown */
@@ -3196,7 +3212,7 @@ const XML_Char **attlist;
 #ifdef LC
 	       printf (" value=%s ", bufAttr);
 #endif /* LC */
-	       EndOfAttrValue (bufAttr);
+	       EndOfAttributeValue (bufAttr);
 	       TtaFreeMemory (bufAttr);
 	     }
 	   attlist++;
@@ -3593,7 +3609,7 @@ static void         InitializeExpatParser ()
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
 
   /* Construct a new parser with namespace processing */
-  parser = XML_ParserCreateNS (NULL, NS_SEP);
+  parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
  
   /* Define the user data pointer that gets passed to handlers */
   /* (not use  Amaya actually) */

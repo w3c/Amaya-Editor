@@ -5193,12 +5193,14 @@ ThotBool*     endOfFile;
   else 
     {
       charRead = GetNextChar (infile, InputText, index, endOfFile);
-      NumberOfCharRead++;
+      if (InputText == NULL)
+	NumberOfCharRead++;
       /* skip null characters*/
       while (charRead == WC_EOS && !*endOfFile)
 	{
 	charRead = GetNextChar (infile, InputText, index, endOfFile);
-	NumberOfCharRead++;
+	if (InputText == NULL)
+	  NumberOfCharRead++;
 	}
     }
   if (*endOfFile == FALSE)
@@ -5219,7 +5221,8 @@ ThotBool*     endOfFile;
       if ((int) charRead == WC_EOL || (int) charRead == WC_CR)
 	/* new line in HTML file */
 	{
-	  NumberOfLinesRead++;
+	  if (InputText == NULL)
+	    NumberOfLinesRead++;
 	  NumberOfCharRead = 0;
 	}
     }
@@ -5627,7 +5630,7 @@ DocumentType   *thotType;
 {
   gzFile        stream;
   char          file_name[MAX_LENGTH];
-  char         *ptr, *end, *org;
+  char         *ptr, *end;
   char          charsetname[MAX_LENGTH];
   int           res, i, j, k;
   ThotBool      endOfSniffedFile, beginning;
@@ -5719,28 +5722,27 @@ DocumentType   *thotType;
 		      end = strstr (&FileBuffer[i], ">");
 		      /* check the current DOCTYPE */
 		      ptr = strstr (&FileBuffer[i], "HTML");
-		      if (!ptr)
+		      if (!ptr || (ptr && ptr > end))
 			ptr = strstr (&FileBuffer[i], "html");
 		      if (ptr && ptr < end)
 			{
 			  /* by default all HTML tags are accepted */
 			  *parsingLevel = L_Transitional;
-			  org = ptr;
-			  ptr = strstr (org, "XHTML");
-			  if (!ptr)
-			  ptr = strstr (org, "xhtml");
+			  ptr = strstr (&FileBuffer[i], "XHTML");
+			  if (!ptr || (ptr && ptr > end))
+			  ptr = strstr (&FileBuffer[i], "xhtml");
 			  if (ptr && ptr < end)
 			    *isXML = TRUE;
-			  ptr = strstr (org, "Basic");
-			  if (!ptr)
-			    ptr = strstr (org, "basic");
+			  ptr = strstr (&FileBuffer[i], "Basic");
+			  if (!ptr || (ptr && ptr > end))
+			    ptr = strstr (&FileBuffer[i], "basic");
 			  if (ptr && ptr < end)
 			    *parsingLevel = L_Basic;
 			  else
 			    {
-			      ptr = strstr (org, "Strict");
-			      if (!ptr)
-				ptr = strstr (org, "strict");
+			      ptr = strstr (&FileBuffer[i], "Strict");
+			      if (!ptr || (ptr && ptr > end))
+				ptr = strstr (&FileBuffer[i], "strict");
 			      if (ptr && ptr < end)
 				*parsingLevel = L_Strict;
 			    }
@@ -5749,7 +5751,7 @@ DocumentType   *thotType;
 			{
 			  /* Look for svg tag */
 			  ptr = strstr (&FileBuffer[i], "SVG");
-			  if (!ptr)
+			  if (!ptr || (ptr && ptr > end))
 			    ptr = strstr (&FileBuffer[i], "svg");
 			  if (ptr && ptr < end)
 			    {
@@ -5760,7 +5762,7 @@ DocumentType   *thotType;
 			    {
 			      /* Look for math tag */
 			      ptr = strstr (&FileBuffer[i], "MATH");
-			      if (!ptr)
+			      if (!ptr || (ptr && ptr > end))
 				ptr = strstr (&FileBuffer[i], "math");
 			      if (ptr && ptr < end)
 				{
@@ -5781,12 +5783,12 @@ DocumentType   *thotType;
 		      *parsingLevel = L_Transitional;
 		      end = strstr (&FileBuffer[i], ">");
 		      ptr = strstr (&FileBuffer[i], "XHTML");
-		      if (!ptr)
+		      if (!ptr || (ptr && ptr > end))
 			ptr = strstr (&FileBuffer[i], "xhtml");
 		      if (ptr && ptr < end)
 			*isXML = TRUE;
 		      ptr = strstr (&FileBuffer[i], "Strict");
-		      if (!ptr)
+		      if (!ptr || (ptr && ptr > end))
 			ptr = strstr (&FileBuffer[i], "strict");
 		      if (ptr && ptr < end)
 			*parsingLevel = L_Strict;
@@ -6974,11 +6976,11 @@ Document   doc;
      /* parse an HTML subtree */
      {
        InitializeHTMLParser (lastelem, isclosed, doc);
+       /* We set number line with 0 when we are parsing a sub-tree */
+       NumberOfLinesRead = 0;
        HTMLparse (NULL, html_buff);
-       /* HTMLparse (NULL, HTMLbuf); */
      }
    else
-     /* parse an XML subtree */
      {
        InputText = html_buff; 
        /* InputText = HTMLbuf; */
