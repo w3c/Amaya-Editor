@@ -417,7 +417,7 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
 {
    CHAR_T              car;
    ThotWidget          wp;
-   int                 i;
+   int                 i, kbd;
 
    /* Recupere la table des items */
    car = (CHAR_T) (param % 256);
@@ -439,15 +439,24 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
        if (Keyboards[i] == wp)
          KeyboardMode = i;
      }
+   kbd = KeyboardMode;
    /* Insert the selected character */
 #ifdef _I18N_
    if (KeyboardMode == 3)
-      /* give the unicode value instead of the symbol index */
-      car = TtaGetWCFromChar ((unsigned char) car, ISO_SYMBOL);
+     /* character entered through the Symbol/Greek palette */
+     {
+       /* give the unicode value instead of the Symbol index */
+       car = TtaGetWCFromChar ((unsigned char) car, ISO_SYMBOL);
+       if (car < 256)
+	 /* the character entered is an ISO-Latin 1 character. It's the
+	    same as entering the character using the real keyboard */
+	 kbd = -1;
+     }
 #endif /* _I18N_ */
    if (ThotLocalActions[T_insertchar] != NULL)
-      (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, KeyboardMode);
+      (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, kbd);
    if (KeyboardMode == 3)
+     /* character entered through the Symbol/Greek palette */
      CloseTextInsertion();
 }
 

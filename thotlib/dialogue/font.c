@@ -1678,7 +1678,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	  *font = fontset->FontIso_1;
 	  car = (int) c;
 	}
-      else if (c <= 0xFF && c != 0xAC)
+      else if (c <= 0xFF)
 	{
 	  /* 0 -> FF */
 	  *font = fontset->FontIso_1;
@@ -1693,7 +1693,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	car =  INVISIBLE_CHAR;
       else
 	{
-	  if (c == 0xAC || (c >= 0x370 && c < 0x3FF))
+	  if (c >= 0x370 && c < 0x3FF)
 	    {
 	      /* Greek characters */
 	      code = GreekFontScript;
@@ -1701,7 +1701,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		  c == 0x3D2 || c == 0x3D5 ||
 		  c == 0x3D6)
 		/* final sigma, thetasym, upsih, phi, piv */
+		/* use the Symbol font */
 		{
+		  code = 'G';
 		  pfont = &(fontset->FontSymbol);
 		  encoding = ISO_SYMBOL;		  
 		}
