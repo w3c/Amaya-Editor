@@ -244,17 +244,13 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
 #endif /* __STDC__*/
 {
   AnnotMeta   *annot;
-  List        *annot_list;
   CHAR_T      *annot_user;
 
   /*
   **  Make a new annotation entry, add it to annotlist, and initialize it.
   */
   annot =  AnnotMeta_new ();
-  annot_list = AnnotMetaDataList[source_doc];
-  List_add (&annot_list, (void *) annot);
-  if (! AnnotMetaDataList[source_doc])
-    AnnotMetaDataList[source_doc] = annot_list;
+  List_add (&AnnotMetaDataList[source_doc], (void *) annot);
 
   annot->source_url = TtaStrdup (DocumentURLs[source_doc]);
 
