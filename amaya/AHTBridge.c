@@ -287,7 +287,6 @@ AHTReqContext *me;
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
 	  TtaFileUnlink (me->outputfile);
-	  TtaFileUnlink (me->outputfile);
 	  me->outputfile[0] = EOS;
 	}
     }
