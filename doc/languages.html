@@ -32,12 +32,13 @@ documents.</P>
 
 <P>
 The document model of Thot is primarily designed to allow the user to operate
-on those entities which he has in mind when he works on a document. The model
-makes no assumptions about the nature of these entities. It is essentially
-these logical entities, such as paragraphs, sections, chapters, notes, titles,
-and cross-references which give a document its logical structure.</P>
+on those entities which s/he has in mind when s/he works on a document. The
+model makes no assumptions about the nature of these entities. It is
+essentially these logical entities, such as paragraphs, sections, chapters,
+notes, titles, and cross-references which give a document its logical
+structure.</P>
 <P>
-Because of this model, the author can divide his document into chapters,
+Because of this model, the author can divide the document into chapters,
 giving each one a title.  The content of these chapters can be further divided
 into sections, subsections, etc.  The text is organized into successive
 paragraphs, according to the content. In the writing phase, the lines, pages,
@@ -508,7 +509,7 @@ environment into which they are inserted.</P>
 <H4>Reference and Inclusion</H4>
 
 <P>
-The <EM>reference</EM> is the last constructor.  It is used to define document
+The <EM>reference</EM> is used to define document
 elements that are cross-references to other elements, such as a section, a
 chapter, a bibliographic citation, or a figure.  The reference is
 bi-directional.  It can be used to access both the element being
@@ -737,7 +738,7 @@ of the ``author'' type.</P>
 <P>
 Attributes can be assigned to the elements which make up the document in many
 different ways.  The author can freely and dynamically place them on any part
-of the document in order to attach supplementary information of his choice.
+of the document in order to attach supplementary information of his/her choice.
 However, attributes may only be assigned in accordance with the rules of the
 generic structure; in particular, local attributes can only be assigned to
 those element types for which they are defined.</P>
@@ -903,7 +904,7 @@ integers:</P>
 <DD>represents an identifier, a sequence of letters (upper or lower-case),
 digits, and underline characters (`_'), beginning with a letter.  Also
 considered a letter is the sequence of characters `<TT>\nnn</TT>' where the
-letter <TT>n</TT> represents the ISOLatin 1 code of the letter in octal.  It
+letter <TT>n</TT> represents the ISO Latin-1 code of the letter in octal.  It
 is thus possible to use accented letters in identifiers.  The maximum length
 of identifiers is fixed by the compiler.  It is normally 31 characters.
 <P>
@@ -1047,7 +1048,7 @@ specific language, P, presented <A href="#langp">later</A> in this document.
 The name appearing after the keyword <TT>DEFPRES</TT> is the name of the
 default presentation schema.  When a new document is created, Thot will use
 this presentation schema by default, but the user remains free to choose
-another if he wishes.</P>
+another if s/he wishes.</P>
 <PRE>
      PresID = NAME .
 </PRE>
@@ -1280,7 +1281,7 @@ A unit represents one of the two following categories:</P>
 <UL>
 <LI>a base type: text, graphical element, symbol, picture,
 <LI>an element whose type is chosen from among the types defined as units in
-the <TT>UNITS</TT>section of the document's structure schema.  It can also be
+the <TT>UNITS</TT> section of the document's structure schema.  It can also be
 chosen from among the types defined as <A href="#schemasandunits">units</A> in
 the <A href="#units"><TT>UNITS</TT> section</A> of the structure schemas that
 defines the ancestors of the element to which the rule is applied.
@@ -1426,7 +1427,7 @@ separated by semicolons and terminated by the <TT>END</TT> keyword.</P>
 <P>
 Before the creation of an element defined as a choice, the Thot editor
 presents the list of possible types for the element to the user.  The user has
-only to select the element type that he wants to create from this list.</P>
+only to select the element type that s/he wants to create from this list.</P>
 <P>
 The order of the type declarations is important.  It determines the order of
 the list presented to the user before the creation of the element.  Also, when
@@ -1653,12 +1654,11 @@ UNITS
 </PRE>
 <P>
 then it is possible to use references to notes in a cell of a table, even when
-<TT>Table</TT> is an external structure schema.  The <TT>Table<TT> schema must
+<TT>Table</TT> is an external structure schema.  The <TT>Table</TT> schema must
 declare a cell to be a sequence of units, which can then be base element types
 (text, for example) or references to notes in the document. <PRE>
 Cell = LIST OF (UNITS);
 </PRE>
-</TT></TT></P>
 </BLOCKQUOTE>
 </DIV>
 
@@ -1712,7 +1712,7 @@ Article_title, Figure, Section, Paragraph, and Biblio should appear in the
 skeleton form in order to make it easier to create external references to them
 from other documents.  When loading an article in its skeleton form, all of
 these element types will be loaded except for paragraphs, but only the article
-title will be loaded in its entirety.  For figures, the legend will be loaded,
+title will be loaded in its entirety.  For figures, the caption will be loaded,
 while for sections, the title will be loaded, and for bibliographic entries,
 only the title that they contain will be loaded.  Note that
 bibliographic elements are defined in another structure schema, RefBib.  To
@@ -1721,7 +1721,7 @@ Article structure schema:</P>
 <PRE>
 EXPORT
    Article_title,
-   Figure With Legend,
+   Figure With Caption,
    Section With Section_title,
    Paragraph With Nothing,
    Biblio With Biblio_title(RefBib);
@@ -1797,7 +1797,7 @@ which this exception is applied cannot be moved horizontally with the mouse.
 </DD>
 <DT><TT>NoVMove</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
-which this exception is applied canno tbe moved vertically with the mouse.
+which this exception is applied cannot be moved vertically with the mouse.
 </DD>
 <DT><TT>NoMove</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
@@ -1847,7 +1847,7 @@ value of the new vertical position will be assigned to the attribute.
 <DD>This exception can only be applied to attributes, but can be applied to all
 attribute types.  It indicates that the attribute must not be seen by the user
 and that its value must not be changed directly.  This exception is usually
-used whenanother exception manipulates the value of an attribute.
+used when another exception manipulates the value of an attribute.
 </DD>
 <DT><TT>Hidden</TT></DT>
 <DD>This exception can only be applied to element types.  It indicates that
@@ -1911,14 +1911,14 @@ the following qualities:</P>
 <LI>Whenever the width or height of an object is changed using the mouse, the
 new values are stored in the object's Width and Height attributes.
 <LI>The user should not be able to change the values of the Width and Height
-attributes via the Attributes menu ofthe Thot editor.
+attributes via the Attributes menu of the Thot editor.
 </UL>
 <P>
 The following exceptions will produce this effect.</P>
 <PRE>
 STRUCT
 ...
-   Objet_graphique (ATTR Height = Integer; Width = Integer)
+   Graphics_object (ATTR Height = Integer; Width = Integer)
        = GRAPHICS with Height ?= 10, Width ?= 10;
 ...
 EXCEPT
@@ -2016,7 +2016,7 @@ STRUCT              { Definition of the generic structure }
 ASSOC         { Associated elements definitions }
 
    Figure = BEGIN
-            Figure_legend  = Text;
+            Figure_caption  = Text;
             Illustration   = NATURE;
             END;
 
@@ -2050,7 +2050,7 @@ UNITS      { Elements which can be used in objects }
 EXPORT     { Skeleton elements }
 
    Title,
-   Figure with Figure_legend,
+   Figure with Figure_caption,
    Section With Section_title;
 
 END           { End of the structure schema }
@@ -2182,10 +2182,10 @@ Because of the model adopted for Thot, the presentation of documents is
 clearly separated from their structure and content.  After having presented
 the logical structure of documents, we now detail the principles implemented
 for their presentation.  The concept of <EM>presentation</EM> encompasses what
-typographers call the page layout, the composition, and the model of the
-document.  It is the set of operations which display the document on the
-screen or print it on paper.  Like logical structure, document presentation is
-defined generically with the help of a language, called P.</P>
+is often called the page layout, the composition, or the document style.  It
+is the set of operations which display the document on the screen or print
+it on paper.  Like logical structure, document presentation is defined
+generically with the help of a language, called P.</P>
 
 <DIV class="subsection">
 <H3>Two levels of presentation</H3>
@@ -2309,8 +2309,9 @@ There are three types of boxes:</P>
 <STRONG>Boxes corresponding to structural elements of the document</STRONG>
 are those which linked to each of the elements (base or structured) of the
 logical structure of the document.  Such a box contains all the contents of
-the element to which it corresponds (there is an exception: see rules
-<TT>VertOverflow</TT> and <TT>HorizOverflow</TT>).  These boxes form a
+the element to which it corresponds (there is an exception: see
+<A href="#overflow">rules <TT>VertOverflow</TT> and
+<TT>HorizOverflow</TT></A>).  These boxes form a
 tree-like structure, identical to that of the structural elements to which
 they correspond.  This tree expresses the inclusion relationships between the
 boxes: a box includes all the boxes of its subtree.  On the other hand, there
@@ -2342,7 +2343,7 @@ boxes cannot be modified by the user.</P>
 layout rules.  These rules indicate how the contents of a structured element
 must be broken into lines and pages.  In contrast to presentation boxes, these
 line and page boxes do not depend on the logical structure of the document,
-but rather on the physical constraints of the reproduction services: character
+but rather on the physical constraints of the output devices: character
 size, height and width of the window on the screen or of the sheet of
 paper.</P>
 </DIV>
@@ -2448,19 +2449,19 @@ least two chapters:</P>
 Body = LIST [2..*] OF Chapter ;
 </PRE>
 <P>
-the sequence defined by the list constructor is ordered and eachchapter can be
-assigned a number based on its rank in the Body list.Therefore, all elements
-contained in lists a the structure of adocument can be numbered, but they are
-not the only ones.  The treestructure induced by the aggregate, list, and
-choice constructors(excluding references) defines a total order on the
-elements of thedocument's primary structure.  So, it is possible to define
-anumbering which uses this order, filtering elements according to theirtype so
-that only certain element types are taken into account in thenumbering.  In
-this way, it possible to number all the theorems andlemmas of a chapter in the
-same sequence of numbers, even when theyare not part of the same list
-constructor and appear at differentlevels of the document's tree.  By changing
-the filter, they can benumbered separately: one sequence of numbers for
-theorems, another forthe lemmas.</P>
+the sequence defined by the list constructor is ordered and each chapter can be
+assigned a number based on its rank in the Body list.  Therefore, all elements
+contained in lists a the structure of a document can be numbered, but they are
+not the only ones.  The tree structure induced by the aggregate, list, and
+choice constructors (excluding references) defines a total order on the
+elements of the document's primary structure.  So, it is possible to define
+a numbering which uses this order, filtering elements according to their type
+so that only certain element types are taken into account in the numbering.  In
+this way, it possible to number all the theorems and lemmas of a chapter in the
+same sequence of numbers, even when they are not part of the same list
+constructor and appear at different levels of the document's tree.  By changing
+the filter, they can be numbered separately: one sequence of numbers for
+theorems, another for the lemmas.</P>
 <P>
 Associated elements pose a special problem, since they are not part of the
 document's primary structure, but are attached only by references, which
@@ -2727,11 +2728,11 @@ RANK OF ElemID [ LevelAsc ] [ INIT AttrID ]
         [ 'REINIT' AttrID ]
 </PRE>
 <P>
-indicates that when an element creates, by a creation rule (see the<A
-href="#creation"><TT>Create</TT> instructions</A>), a presentationbox
-containing  the counter value, this value is the rank of thecreating element,
-if it is of type <TT>ElemID</TT>, otherwise the rank ofthe first element of
-type <TT>ElemID</TT>which encloses the creatingelement in the logical
+indicates that when an element creates, by a creation rule (see the <A
+href="#creation"><TT>Create</TT> instructions</A>), a presentation box
+containing  the counter value, this value is the rank of the creating element,
+if it is of type <TT>ElemID</TT>, otherwise the rank of the first element of
+type <TT>ElemID</TT> which encloses the creating element in the logical
 structure of the document.</P>
 <P>
 The type name can be preceded by a star in the special case where the
@@ -2768,18 +2769,18 @@ When the <TT>RANK</TT> function is written</P>
 RANK OF Page [ ViewID ] [ INIT AttrID ]
 </PRE>
 <P>
-(<TT>Page</TT>is a keyword of the P language), the counter takes as itsvalue
-the number of the page on which the element which creates thepresentation box
-containing the number appears.  This is done as ifthe pages of the document
-form a list for each view.  The counter onlytakes into account the pages of
-the relevant view, that is the viewdisplaying the presentation box whose
-contents take the value of thenumber.  However, if the keyword <TT>Page</TT>is
-followed by the name of aview (between parentheses), it is the pages of that
-view that aretaken into account.  As in the preceding form, the
-<TT>RANK</TT>functionapplied to pages can end with the <TT>INIT</TT>keyword
-followed the nameof a numeric attribute which sets the value of the first
-page'snumber.  This attribute must be a local attribute of the documentitself,
-and not of one of its components.</P>
+(<TT>Page</TT>is a keyword of the P language), the counter takes as its value
+the number of the page on which the element which creates the presentation box
+containing the number appears.  This is done as if the pages of the document
+form a list for each view.  The counter only takes into account the pages of
+the relevant view, that is the view displaying the presentation box whose
+contents take the value of the number.  However, if the keyword <TT>Page</TT>
+is followed by the name of a view (between parentheses), it is the pages of
+that view that are taken into account.  As in the preceding form, the
+<TT>RANK</TT> function applied to pages can end with the <TT>INIT</TT> keyword
+followed by the name of a numeric attribute which sets the value of the first
+page's number.  This attribute must be a local attribute of the document
+itself, and not of one of its components.</P>
 <P>
 The second counting function is used to count the occurrences of a certain
 element type in a specified context.  The instruction</P>
@@ -2787,11 +2788,11 @@ element type in a specified context.  The instruction</P>
 SET n ON Type1 ADD m ON Type2 [ INIT AttrID ]
 </PRE>
 <P>
-says that when the document is traversed from beginning to end (in theorder
-induced by the logical structure), the counter is assigned thevalue
-<TT>n</TT>each time an element of type <TT>Type1</TT>is encountered, nomatter
-what the current value of the counter, and the value <TT>m</TT>isadded to the
-current value of the counter each time an element of type<TT>Type2</TT>is
+says that when the document is traversed from beginning to end (in the order
+induced by the logical structure), the counter is assigned the value <TT>n</TT>
+each time an element of type <TT>Type1</TT> is encountered, no matter
+what the current value of the counter, and the value <TT>m</TT> is added to the
+current value of the counter each time an element of type <TT>Type2</TT> is
 encountered.</P>
 <P>
 As with the <TT>RANK</TT> function, the type names can be preceded by a star
@@ -2822,7 +2823,7 @@ That function is written</P>
 RLEVEL OF Type
 </PRE>
 <P>
-where <TT>Type</TT>represents the type of the elements to be counted.</P>
+where <TT>Type</TT> represents the type of the elements to be counted.</P>
 <P>
 The formal definition of counter declarations is:</P>
 <PRE>
@@ -2899,7 +2900,7 @@ Content : (VALUE(ChapterCtr, URoman) TEXT '-'
            VALUE(ChapterPageCtr, Arabic));
 </PRE>
 <P>
-Thus, the presentation box contains the number of the chapter inupper-case
+Thus, the presentation box contains the number of the chapter in upper-case
 roman numerals followed by a hyphen and the number of the page within
 the chapter in arabic numerals.</P>
 </BLOCKQUOTE>
@@ -2959,7 +2960,7 @@ versions of Thot, only the Greek and Latin alphabets are available.</P>
      Alphabet   = NAME .
 </PRE>
 <P>
-For character strings in the Latin alphabet (ISO-Latin 1 character set),
+For character strings in the Latin alphabet (ISO Latin-1 character set),
 characters having codes higher than 127 (decimal) are represented by their
 code in octal.</P>
 <P>
@@ -3434,7 +3435,7 @@ its value is</P>
 <LI>the value of the Importance attribute when the value is between 2 and 4
 (inclusive),
 <LI>1, when the value of the Importance attribute is less than 2,
-<LI>4, when the value of the Importance attribute is greater than4,
+<LI>4, when the value of the Importance attribute is greater than 4,
 <LI>5, when the value of the Importance attribute is 10.
 </UL>
 <P>
@@ -3873,27 +3874,27 @@ The list of possible conditions on counters is:</P>
 <DD>the box is created only the counter's value is 1.
 </DD>
 <DT><TT>NOT One (Counter)</TT></DT>
-<DD>the box is created, unless thecounter's value is 1.
+<DD>the box is created, unless the counter's value is 1.
 </DD>
 <DT><TT>(Counter &lt; Value)</TT></DT>
-<DD>the box is created only if thecounter's value is less than Value.
+<DD>the box is created only if the counter's value is less than Value.
 </DD>
 <DT><TT>(Counter > Value)</TT></DT>
-<DD>the box is created only if thecounter's value is greater than Value.
+<DD>the box is created only if the counter's value is greater than Value.
 </DD>
 <DT><TT>(Counter = Value)</TT></DT>
-<DD>the box is created only if thecounter's value is equal to Value.
+<DD>the box is created only if the counter's value is equal to Value.
 </DD>
 <DT><TT>NOT (Counter = Value)</TT></DT>
-<DD>the is created only if thecounter's value is different than Value.
+<DD>the is created only if the counter's value is different than Value.
 </DD>
 <DT><TT>(Counter IN [MinValue..MaxValue])</TT></DT>
-<DD>the box is createdonly if the counter's value falls in the range bounded
-by MinValue andMaxValue (inclusive).
+<DD>the box is created only if the counter's value falls in the range bounded
+by MinValue and MaxValue (inclusive).
 </DD>
 <DT><TT>NOT (Counter IN [MinValue..MaxValue])</TT></DT>
-<DD>the box iscreated only if the value of the counter does not fall in the
-range boundedby MinValue and MaxValue (inclusive).
+<DD>the box is created only if the value of the counter does not fall in the
+range bounded by MinValue and MaxValue (inclusive).
 </DD>
 </DL>
 <P>
@@ -4070,8 +4071,8 @@ the current font: height of the element's font or height of the letter 'x',
 pica or pixel.
 </UL>
 <P>
-Units can be chosen freely.  Thus, it is possible to use relative units inone
-rule, centimeters in the next rule, and typographer's points inanother.</P>
+Units can be chosen freely.  Thus, it is possible to use relative units in one
+rule, centimeters in the next rule, and typographer's points in another.</P>
 <P>
 Absolute units are used to set rigid rules for the appearance of documents. In
 contrast, relative units allow changes of scale.  The editor lets the value of
@@ -4251,7 +4252,7 @@ rule, the horizontal position rule, or both.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-If a <A name="expos1">report</A>is defined by by the following
+If a <A name="expos1">report</A> is defined by the following
 structure schema:</P>
 <PRE>
 Report = BEGIN
@@ -4421,9 +4422,9 @@ or</P>
 Width  : Enclosed . Width;
 </PRE>
 <P>
-which specifies that the box has a height (or width) such that itencloses all
-the boxes which it contains, excluding boxes having  a rule<TT>VertOverflow:
-Yes;</TT>ou <TT>HorizOverflow:Yes;</TT>.</P>
+which specifies that the box has a height (or width) such that it encloses all
+the boxes which it contains, excluding boxes having a rule <TT>VertOverflow:
+Yes;</TT> or <TT>HorizOverflow: Yes;</TT>.</P>
 <P>
 <STRONG>Note:</STRONG> character strings (type <TT>TEXT_UNIT</TT>) generally
 must use the sum of the widths of the characters which compose them as their
@@ -4433,9 +4434,9 @@ TEXT_UNIT :
    Width  : Enclosed . Width;
 </PRE>
 <P>
-If this rule is not the default <TT>Width</TT>rule, it must be givenexplicitly
-in the <TT>RULES</TT>section which defines the presentationrules of the
-logical elements.</P>
+If this rule is not the default <TT>Width</TT> rule, it must be given
+explicitly in the <TT>RULES</TT> section which defines the presentation rules
+of the logical elements.</P>
 <PRE>
                   'Height' ':' Extent
                   'Width' ':' Extent
@@ -4475,7 +4476,7 @@ Title :   BEGIN
           END;
 </PRE>
 <P>
-The summary occupy the entire width of the window, with the exceptionof a 2 cm
+The summary occupy the entire width of the window, with the exception of a 2 cm
 margin reserved by the horizontal position rule:</P>
 <PRE>
 Summary : BEGIN
@@ -4593,7 +4594,7 @@ SectionTitle :
 </DIV>
 
 <DIV class="subsection">
-<H3>Overflow</H3>
+<H3><A name="overflow">Overflow</A></H3>
 
 <P>
 A boxes corresponding to a structural element normally contain all boxes
@@ -4841,7 +4842,7 @@ Paragraph :
    END;
 </PRE>
 <P>
-If the alignment, justification, and line spacing of the Sectionand Summary
+If the alignment, justification, and line spacing of the Section and Summary
 elements is fixed:</P>
 <PRE>
 Section :
@@ -4913,8 +4914,8 @@ schema.</P>
 <P>
 Suppose the structure schema defines a logical attribute
 called <TT>New</TT> which is used to identify the passages in a document which
-were recently modified.  It would be nice to have the presentation schema make a
-bar appear in the left margin next to each passage having
+were recently modified.  It would be nice to have the presentation schema make
+a bar appear in the left margin next to each passage having
 the <TT>New</TT> attribute.  A new passage can be an entire element, such as a
 paragraph or section, or it can be some words in the middle of a paragraph.  To
 produce the desired effect, the <TT>New</TT> attribute is given a creation rule
@@ -5293,7 +5294,8 @@ attribute.</P>
 <STRONG>Example:</STRONG></P>
 <P>
 For a purely textual document, in which overlapping never poses a problem, a
-single default <TT>Depth</TT>rule in the presentation schema is sufficient:</P>
+single default <TT>Depth</TT> rule in the presentation schema is
+sufficient:</P>
 <PRE>
 DEFAULT
     Depth : 0;
@@ -5326,8 +5328,8 @@ RULES
 </PRE>
 <P>
 In this way, the text of an example (if it inherits its depth from
-itsancestor) will be superimposed on a light blue background, and not
-thereverse).</P>
+its ancestor) will be superimposed on a light blue background, and not
+the reverse).</P>
 </BLOCKQUOTE>
 </DIV>
 
@@ -5483,7 +5485,7 @@ href="#pattern">fill pattern</A> does not prevent the use of color.</P>
 <STRONG>Example:</STRONG></P>
 <P>
 To specify that, in Figures, everything must be drawn in blue on a background
-of yellow, the Figure element isgiven these rules:</P>
+of yellow, the Figure element is given these rules:</P>
 <PRE>
 Figure :
    BEGIN
@@ -5566,7 +5568,7 @@ BOXES
           END;
 </PRE>
 <P>
-if the <TT>NumSection</TT>variable has been defined in the variable definition
+if the <TT>NumSection</TT> variable has been defined in the variable definition
 section of the presentation schema.  Otherwise the <TT>Content</TT> would be
 written:</P>
 <PRE>
@@ -5590,7 +5592,7 @@ BOXES
           END;
 </PRE>
 <P>
-<TT>Note</TT>is defined as an associated element in the structure schema and
+<TT>Note</TT> is defined as an associated element in the structure schema and
 NotesFooterBox is created by a page box of the primary view.</P>
 </BLOCKQUOTE>
 </DIV>
@@ -5671,8 +5673,8 @@ vertical lines.  There is a line to the left of the first column and one to the
 right of the last.  Each column has a variable number of cells, placed one on
 top of the other and separated by horizontal lines.  There are no horizontal
 lines above the first cell or below the last cell.  The text contained in
-each cell is  broken into lines and these lines are centered horizontally in the
-cell. The logical structure of this object is defined by:</P>
+each cell is  broken into lines and these lines are centered horizontally in
+the cell. The logical structure of this object is defined by:</P>
 <PRE>
 Table   = LIST OF (Column);
 Column  = LIST OF (Cell = Text);
@@ -6191,35 +6193,35 @@ The counting function indicates how the counter's value will be computed.
 Three functions are available: <TT>Rank</TT>, <TT>Rlevel</TT>, and
 <TT>Set</TT>.</P>
 <UL>
-<LI><TT>Rank of ElemID</TT>indicates that the counter's value is the rank of
-the element of type <TT>ElemID</TT>which encloses the element for which the
+<LI><TT>Rank of ElemID</TT> indicates that the counter's value is the rank of
+the element of type <TT>ElemID</TT> which encloses the element for which the
 counter is being evaluated.  For the purposes of this function, an element of
-type <TT>ElemID</TT>is considered to enclose itself.  This function is
-primarily used  when the element of type <TT>ElemID</TT>is part of an
+type <TT>ElemID</TT> is considered to enclose itself.  This function is
+primarily used  when the element of type <TT>ElemID</TT> is part of an
 aggregate or list, in which case the counter's value is the element's rank in
-its list or aggregate.  Note that, unlike the<TT>Rank</TT>function for
-presentation schemas, the <TT>Page</TT>keyword cannot be used in place of the
+its list or aggregate.  Note that, unlike the <TT>Rank</TT> function for
+presentation schemas, the <TT>Page</TT> keyword cannot be used in place of the
 <TT>ElemID</TT>.
 <P>
 The type name <TT>ElemID</TT> can be followed by an integer.  That number
 represents the relative level, among the ancestors of the concerned element,
 of the element whose rank is asked.  If that relative level <I>n</I> is
-unsigned, the $n^th$ element of type <TT>ElemID</TT> encountered when
-travelling the logical structure from the root to the concerned element is
+unsigned, the <I>n<SUP>th</SUP></I> element of type <TT>ElemID</TT> encountered
+when travelling the logical structure from the root to the concerned element is
 taken into account.  If the relative level is negative, the logical structure
 is travelled in the other direction, from the concerned element to the
 root.</P>
-<LI><TT>Rlevel of ElemID</TT>indicates that the counter's values is the
+<LI><TT>Rlevel of ElemID</TT> indicates that the counter's values is the
 relative level in the tree of the element for which the counter is being
 evaluated.  The counter counts the number of elements of type <TT>ElemID</TT>
 which are found on the path between the root of the document's logical
 structure tree and the element (inclusive).
-<LI><TT>Set n on Type1 Add m on Type2</TT>indicates that the counter's value
+<LI><TT>Set n on Type1 Add m on Type2</TT> indicates that the counter's value
 is calculated as follows:  in traversing the document from the beginning to
 the element for which the counter is being evaluated, the counter is set to
-the value <TT>n</TT>each time a <TT>Type1</TT>element is encountered and is
-incremented by the amount <TT>m</TT>each time a<TT>Type2</TT>element is
-encountered.  The initial value <TT>n</TT>and the increment <TT>m</TT>are
+the value <TT>n</TT> each time a <TT>Type1</TT> element is encountered and is
+incremented by the amount <TT>m</TT> each time a <TT>Type2</TT> element is
+encountered.  The initial value <TT>n</TT> and the increment <TT>m</TT> are
 integers.
 </UL>
 <P>
@@ -6278,7 +6280,7 @@ A counter holding the hierarchic level of a section:</P>
    SectionLevel : Rlevel of Section;
 </PRE>
 <P>
-A <A name="uniquenum">counter</A>which sequentially numbers all the document's
+A <A name="uniquenum">counter</A> which sequentially numbers all the document's
 sections, whatever their hierarchic level:</P>
 <PRE>
    UniqueSectNum : Set 0 on Document Add 1 on Section;
@@ -6313,7 +6315,7 @@ declaration is terminated by a semicolon.</P>
 <P>
 <STRONG><A name="levelexample">Example:</A></STRONG></P>
 <P>
-The following rule assigns the name <TT>TxtLevel</TT>to the character string
+The following rule assigns the name <TT>TxtLevel</TT> to the character string
 ``Level'':</P>
 <PRE>
 CONST
@@ -6346,12 +6348,12 @@ of functions of each type.</P>
 <LI>The function <TT>Value(Counter)</TT>returns a string representing the
 value taken by the counter when it is evaluated for the element in whose rule
 the variable is used.  The counter must have been declared in the
-<TT>COUNTERS</TT>section of the translation schema.  When thecounter is
+<TT>COUNTERS</TT> section of the translation schema.  When the counter is
 expressed in arabic numerals, the counter name can be followed by a colon and
 an integer indicating a minimum length (number of characters) for the string;
 if the counter's value is normally expressed with fewer characters than the
 required minimum, zeroes are added to the front of the string to achieve the
-minimumlength.
+minimum length.
 <P>
 By default, the counter value is written in arabic digits. If another
 representation of that value is needed, the counter name must be followed by a
@@ -6417,7 +6419,7 @@ function is the empty string.
 <P>
 To create, at the beginning of each section of the translated document, text
 composed of the string ``Section'' followed by the section number, the
-following <A name="varsectexample">variable definition</A>might be used:</P>
+following <A name="varsectexample">variable definition</A> might be used:</P>
 <PRE>
 VAR
      SectionVar : 'Section' Value(SectionNumber);
@@ -6432,11 +6434,11 @@ section. It used the constant defined above.</P>
      LevelVar : TxtLevel Value(SectionLevel);
 </PRE>
 <P>
-(see the definitions of <A href="#sectnum"><TT>SectionLevel</TT></A>and of <A
-href="#levelexample"><TT>TxtLevel</TT></A>).</P>
+(see the definitions of <A href="#sectnum"><TT>SectionLevel</TT></A> and of
+<A href="#levelexample"><TT>TxtLevel</TT></A>).</P>
 <P>
-To generate the translation of each section in a different file (see <A
-href="#changemainfile">rule <TT>ChangeMainFile</TT></A>), the name of these
+To generate the translation of each section in a different file (see
+<A href="#changemainfile">rule <TT>ChangeMainFile</TT></A>), the name of these
 files might be defined by the following variable:</P>
 <PRE>
      VarOutpuFile : FileName Value(SectionNumber)
@@ -6519,7 +6521,7 @@ that purpose.  It must appear before the keyword defining the condition
 type.</P>
 <P>
 Depending on their type, some conditions may apply either to the element with
-which they are associated, or to one of its ancestor.  In the case od an
+which they are associated, or to one of its ancestor.  In the case of an
 ancestor, the key word <TT>Ancestor</TT> must be used, followed by</P>
 <UL>
 <LI>either an integer which represents the number of levels in the tree
@@ -6530,7 +6532,7 @@ parentheses.
 </UL>
 <P>
 There is a special case for the parent element, which can be simply written
-<TT>Parent</TT>instead of <TT>Ancestor 1</TT>.</P>
+<TT>Parent</TT> instead of <TT>Ancestor 1</TT>.</P>
 <P>
 Only conditions <TT>First</TT>, <TT>Last</TT>, <TT>Referred</TT>,
 <TT>Within</TT>, <TT>Attributes</TT>, <TT>Presentation</TT>, <TT>Comment</TT>
@@ -6542,9 +6544,9 @@ ancestor. Conditions <TT>Defined</TT>, <TT>FirstRef</TT>, <TT>LastRef</TT>,
 keywords <TT>Parent</TT> or <TT>Ancestor</TT>.</P>
 <P>
 In condition <TT>Referred</TT> and in the condition that applies to a named
-attribute, a symbol <TT>*</TT> can indicate that the condition is related only
-to the element itself. If this symbol is not present, not only the element is
-considered, but also its ancestor, at any level.</P>
+attribute, a symbol '<TT>*</TT>' can indicate that the condition is related
+only to the element itself. If this symbol is not present, not only the
+element is considered, but also its ancestor, at any level.</P>
 <P>
 The form of an elementary condition varies according to the type of
 condition.</P>
@@ -6840,8 +6842,7 @@ document.  The following conditional rule produces this effect:</P>
 RULES
   Section_Title :
     IF Referred
-      Create ('\label{Sect' Value(UniqueSectNum)
-              '}\12') After;
+      Create ('\label{Sect' Value(UniqueSectNum) '}\12') After;
 </PRE>
 <P>
 (the declaration of the <A href="#prestrans"><TT>UniqueSectNum</TT>
@@ -6965,10 +6966,10 @@ file. These files are closed when the translation is finished.</P>
 The object to be generated can be:</P>
 <UL>
 <LI>a constant string, specified by its name if it is declared in the schema's
-<TT>CONST</TT>section, or given directly as a value between apostrophes;
+<TT>CONST</TT> section, or given directly as a value between apostrophes;
 <LI>the contents of a buffer, designated by the name of the buffer;
 <LI>a variable, designated by its name if it is declared in the translation
-schema's <TT>VAR</TT>section, or given directly between parentheses.  The text
+schema's <TT>VAR</TT> section, or given directly between parentheses.  The text
 generated is the value of that variable evaluated for the element to which the
 rule applies.
 <LI>the value of an attribute, if the element being translated has this
@@ -6988,7 +6989,7 @@ the element type).  This is specified by the <TT>Attributes</TT> keyword.
 is primarily used to apply the translation rules for the specific presentation
 rules <A href="#order">before</A> those of the element or its attributes). 
 This option is specified by the <TT>Presentation</TT> keyword;
-<LI>The value of the reference's identifier.<BR>Thot associatesa unique
+<LI>The value of the reference's identifier.<BR>Thot associates a unique
 identifier with each element in a document.  This identifier (called
 <EM>reference's identifier</EM> or <EM>label</EM>) is a character string
 containing the letter `L' followed by digits.  Thot uses it in references for
@@ -7091,7 +7092,7 @@ the <TT>Create</TT> and <TT>Write</TT> rules, by a keyword indicating if the
 read operation must be performed <TT>Before</TT> or <TT>After</TT> the
 translation of the element's content.  If this keyword is absent, the read
 operation is done beforehand.  The text is read into the buffer and remains
-there until a rule using the same buffer --- possibly the same rule --- is
+there until a rule using the same buffer - possibly the same rule - is
 applied.</P>
 <PRE>
                'Read' BufferID [ Position ] ';'
@@ -7112,7 +7113,7 @@ Create DestName;
 END;
 </PRE>
 <P>
-(see <A href="#destname">above</A>the definition of <TT>DestName</TT>).</P>
+(see <A href="#destname">above</A> the definition of <TT>DestName</TT>).</P>
 </BLOCKQUOTE>
 </DIV>
 
@@ -7619,9 +7620,9 @@ preceded by an equals sign.  Value ranges can be specified in one of three
 ways:</P>
 <UL>
 <LI>all values less than a given value (this value is preceded by a ``less
-than'' sign (<TT>&lt;</TT>),
+than'' sign '<TT>&lt;</TT>'),
 <LI>all values greater than a given value (this value is preceded by a`
-`greater than'' sign (<TT>></TT>),
+`greater than'' sign '<TT>></TT>'),
 <LI>all values falling in an interval, bounds included.  The range of values
 is then specified <TT>IN [</TT>Minimum<TT>..</TT>Maximum<TT>]</TT>, where
 Minimum and Maximum are integers.
@@ -8483,12 +8484,12 @@ Target         = STRING .
 
 <P>
 The characters of the Latin alphabet follow the encoding defined in the ISO
-8859-1 (ISO Latin 1) standard.  The characters of the Greek alphabet follow
+8859-1 (ISO Latin-1) standard.  The characters of the Greek alphabet follow
 the encoding defined by Adobe for its Symbol font (Adobe FontSpecific).</P>
 <P>
 Characters whose octal code is greater than 0200 are written in the form of
 their octal code preceded by a backslash character (``\'').  For example, the
-French word R&eacute;sum&eacute; is written <TT>R\351sum\351</TT>.</P>
+French word 'R&eacute;sum&eacute;' is written <TT>R\351sum\351</TT>.</P>
 <P>
 To the ISO 8859-1 encoding four characters with the following codes have been
 added:<BR><TT>212</TT>: line break<BR><TT>240</TT>: sticky
@@ -8580,6 +8581,7 @@ at the bottom
 <LI><TT>A</TT>: an open curve with an arrow head at the end
 <LI><TT>D</TT>: an open curve with two arrow heads
 </UL>
+<HR>
 </DIV>
 </DIV>
 </BODY>
