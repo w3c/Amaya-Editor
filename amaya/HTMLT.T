@@ -1590,9 +1590,9 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- dir = ltr :
+ dir = ltr_ :
 	Create ' dir="ltr"';
- dir = rtl :
+ dir = rtl_ :
 	Create ' dir="rtl"';
 
  onclick: BEGIN

@@ -12,7 +12,7 @@ ATTR
    Style\240 = Text;		{ style }
    Title = Text;		{ title }
 			{ i18n }
-   dir = ltr, rtl;		{ dir }
+   dir = ltr_, rtl_;		{ dir }
 			{ events }
    onclick = Text;		{ onclick }
    ondblclick = Text;		{ ondblclick }

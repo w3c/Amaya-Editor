@@ -6384,8 +6384,16 @@ ATTRIBUTES
 	   END;
 	END;
 
-  dir:
+  dir = ltr_:
+	BEGIN
 	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  dir = rtl_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
 
   onclick:
 	BEGIN
