@@ -14,7 +14,7 @@
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
-                  <object class="wxPanel" name="wxID_PADDING">
+                  <object class="wxPanel" name="">
                     <object class="wxBoxSizer">
                       <orient>wxVERTICAL</orient>
                       <object class="sizeritem">
@@ -128,7 +128,6 @@
                                 <item>fr</item>
                                 <item>en</item>
                               </content>
-                              <selection>0</selection>
                             </object>
                           </object>
                         </object>
@@ -192,7 +191,7 @@
                                 <item>Ctrl</item>
                                 <item>Ignorer</item>
                               </content>
-                              <dimension>3</dimension>
+                              <style>wxRA_SPECIFY_COLS</style>
                             </object>
                             <option>1</option>
                             <flag>wxALL</flag>
@@ -212,6 +211,93 @@
               <style></style>
             </object>
             <selected>1</selected>
+          </object>
+          <object class="notebookpage">
+            <label>BROWSE</label>
+            <object class="wxPanel" name="wxID_PAGE_BROWSE">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxPanel" name="">
+                    <object class="wxBoxSizer">
+                      <orient>wxVERTICAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxBoxSizer">
+                          <orient>wxVERTICAL</orient>
+                          <object class="sizeritem">
+                            <object class="wxCheckBox" name="wxID_CHECK_LOADIMG">
+                              <label>Charger les images (img)</label>
+                            </object>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxCheckBox" name="wxID_CHECK_LOADOBJ">
+                              <label>Charger les objets (object, embed, iframe)</label>
+                            </object>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxCheckBox" name="wxID_CHECK_SHOWBACKGROUND">
+                              <label>Montrer les images de fond</label>
+                            </object>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxCheckBox" name="wxID_CHECK_APPLYCSS">
+                              <label>Appliquer CSS</label>
+                            </object>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxCheckBox" name="wxID_CHECK_LINKDBCLICK">
+                              <label>Cliquer deux fois pour suivre un lien</label>
+                            </object>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxCheckBox" name="wxID_CHECK_ENABLEFTP">
+                              <label>Support FTP</label>
+                            </object>
+                          </object>
+                        </object>
+                        <option>0</option>
+                        <flag>wxALL|wxEXPAND</flag>
+                        <border>5</border>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBoxSizer">
+                          <orient>wxHORIZONTAL</orient>
+                          <object class="sizeritem">
+                            <object class="wxStaticText" name="wxID_LABEL_SCREEN">
+                              <label>Type d ecran courant</label>
+                            </object>
+                            <option>0</option>
+                            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                          </object>
+                          <object class="spacer">
+                            <size>10,0</size>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxChoice" name="wxID_CHOICE_SCREEN">
+                              <content>
+                                <item>handheld</item>
+                                <item>print</item>
+                                <item>projection</item>
+                                <item>screen</item>
+                                <item>tty</item>
+                                <item>tv</item>
+                              </content>
+                            </object>
+                          </object>
+                        </object>
+                        <option>0</option>
+                        <flag>wxALL|wxEXPAND</flag>
+                        <border>5</border>
+                      </object>
+                    </object>
+                  </object>
+                  <option>1</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                </object>
+              </object>
+              <style></style>
+            </object>
           </object>
           <usenotebooksizer>1</usenotebooksizer>
           <style>wxNB_FIXEDWIDTH</style>
