@@ -388,7 +388,28 @@ STRING              pathname;
    CHAR_T             buffer[3000];
    CHAR_T             s[MAX_LENGTH];
    int              i;
+#endif /* WINDOWS */
 
+  if (TextFormat)
+     {
+       SaveAsHTML = FALSE;
+       SaveAsXHTML = FALSE;
+       SaveAsText = TRUE;
+     }
+   else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat)
+     {
+       SaveAsHTML = FALSE;
+       SaveAsXHTML = TRUE;
+       SaveAsText = FALSE;
+     }
+   else
+     {
+       SaveAsHTML = TRUE;
+       SaveAsXHTML = FALSE;
+       SaveAsText = FALSE;
+     }
+
+#ifndef _WINDOWS
    /* Dialogue form for saving a document */
    i = 0;
    ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -408,25 +429,7 @@ STRING              pathname;
    TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 6, buffer,
 		     NULL, TRUE);
-   if (TextFormat)
-     {
-       SaveAsHTML = FALSE;
-       SaveAsXHTML = FALSE;
-       SaveAsText = TRUE;
-     }
-   else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat)
-     {
-       SaveAsHTML = FALSE;
-       SaveAsXHTML = TRUE;
-       SaveAsText = FALSE;
-     }
-   else
-     {
-       SaveAsHTML = TRUE;
-       SaveAsXHTML = FALSE;
-       SaveAsText = FALSE;
-     }
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+    TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 4, CopyImages);
