@@ -66,6 +66,7 @@ typedef long ThotFileOffset;
 #ifdef __STDC__
 
 extern int TtaFileExist ( CONST STRING filename );
+extern int TtaDirExist ( CONST STRING dirname );
 extern int TtaFileUnlink ( CONST STRING filename );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileClose ( ThotFileHandle handle );
@@ -111,6 +112,7 @@ extern boolean TtaCheckDirectory ( STRING directory );
 #else /* __STDC__ */
 
 extern int TtaFileExist (/* CONST char *filename */);
+extern int TtaDirExist (/* CONST STRING dirname */);
 extern int TtaFileUnlink (/* CONST char *filename */);
 extern ThotFileHandle TtaFileOpen (/* CONST char *name,
                                       ThotFileMode mode */);

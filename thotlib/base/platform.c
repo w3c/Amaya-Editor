@@ -79,6 +79,57 @@ CONST STRING        filename;
 }
 
 /*----------------------------------------------------------------------
+   TtaDirExist tests if a directory exists.
+   Returns 1 if the directory exists or 0 otherwise.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaDirExist (CONST STRING dirname)
+#else  /* __STDC__ */
+int                 TtaDirExist (dirname)
+CONST STRING        dirname;
+
+#endif /* __STDC__ */
+{
+   int                 status = 0;
+
+#if defined(_WINDOWS) && !defined(__GNUC__)
+   DWORD               attribs;
+
+   attribs = GetFileAttributes (dirname);
+   if (attribs == 0xFFFFFFFF)
+      status = 0;
+   else if (attribs & FILE_ATTRIBUTE_DIRECTORY)
+      status = 1;
+   else
+      status = 0;
+#else /* _WINDOWS && !__GNUC__ */
+   int                 filedes;
+   struct stat         statinfo;
+
+#ifdef _WINDOWS
+   filedes = open (dirname, _O_RDONLY | O_BINARY);
+#else /* _WINDOWS */
+   filedes = open (dirname, O_RDONLY);
+#endif /* _WINDOWS */
+   if (filedes < 0)
+      status = 0;
+   else
+     {
+       /* on ne veut pas de directory */
+       if (fstat (filedes, &statinfo) != -1)
+	 {
+	   if (statinfo.st_mode & S_IFDIR)
+	     status = 1;
+	   else
+	     status = 0;
+	 }
+       close (filedes);
+     }
+#endif /* _WINDOWS && !__GNUC__ */
+   return status;
+}
+
+/*----------------------------------------------------------------------
    TtaFileUnlink : remove a file.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
