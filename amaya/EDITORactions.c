@@ -2630,6 +2630,26 @@ View view;
 }
 
 /*----------------------------------------------------------------------
+  ConfigPrinter
+  A frontend to the Printer configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigPrinter (Document doc, View view)
+#else 
+void ConfigPrinter (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+#ifndef _WINDOWS 
+   PrinterConfMenu (doc, view);
+#endif /* _WINDOWS */
+#endif /* AMAYA_JAVA */
+}
+
+/*----------------------------------------------------------------------
   ConfigColor
   A frontend to the Color configuration menu
   ----------------------------------------------------------------------*/

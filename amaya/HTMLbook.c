@@ -530,10 +530,13 @@ STRING              data;
 	  TtaSetPrintParameter (PP_PaperSize, PageSize);
 	  TtaSetPrintCommand (pPrinter);
 	  TtaSetPsFile (PSdir);
+	  /* update the environment variable */
+	  TtaSetEnvString ("THOTPRINT", pPrinter, TRUE);
+	  TtaSetEnvInt ("PAPERSIZE", PageSize, TRUE);
 	  PrintAs (docPrint, 1);
 	  break;
 	case 0:
-	  PaperPrint = TtaGetPrintParameter (PP_Destination);
+	  PaperPrint = (TtaGetPrintParameter (PP_Destination)) ? PP_PRINTER : PP_PS;
 	  ManualFeed = TtaGetPrintParameter (PP_ManualFeed);
 	  PageSize = TtaGetPrintParameter (PP_PaperSize);	  
 	  TtaGetPrintCommand (pPrinter);
@@ -601,8 +604,8 @@ STRING              data;
     case NumZonePrinterName:
       if (data[0] != '\0')
 	if (PaperPrint == PP_PRINTER)
-	  /* text capture zone for the printer name */
-	  ustrncpy (pPrinter, data, MAX_PATH);
+	    /* text capture zone for the printer name */
+	    ustrncpy (pPrinter, data, MAX_PATH);
 	else
 	  /* text capture zone for the name of the PostScript file */
 	  ustrncpy (PSdir, data, MAX_PATH);
@@ -630,8 +633,7 @@ void                InitPrint ()
      ustrcpy (pPrinter, "");
    else
      ustrcpy (pPrinter, ptr);
-
-   PageSize = PP_A4;
+   TtaGetEnvInt ("PAPERSIZE", &PageSize);
    PaperPrint = PP_PRINTER;
    printURL = TRUE;
    TtaSetPrintParameter (PP_Destination, PaperPrint);
@@ -663,6 +665,11 @@ View                view;
 
    /* Print form */
    CheckPrintingDocument (doc);
+
+   /* read the values that the user may have changed thru
+      the configuration menu */
+   TtaGetPrintCommand (pPrinter);
+   PageSize = TtaGetPrintParameter (PP_PaperSize);	  
 
 #  ifndef _WINDOWS
    TtaNewSheet (basePrint+NumFormPrint, TtaGetViewFrame (doc, view), 

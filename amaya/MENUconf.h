@@ -33,25 +33,29 @@
 #define mDoubleClickDelay    3
 #define mZoom                4
 #define mHomePage            5
-#define mThotPrint           6
-#define mDialogueLang        7
-#define mFontMenuSize        8
-#define mGeneralEmpty1       9
-#define mGeneralEmpty2       10
-#define mGeneralEmpty3       11
-#define mToggleGeneral       12
-#define MAX_GENERALMENU_DLG  13
+#define mDialogueLang        6
+#define mFontMenuSize        7
+#define mGeneralEmpty1       8
+#define mGeneralEmpty2       9
+#define mGeneralEmpty3       10
+#define mToggleGeneral       11
+#define MAX_GENERALMENU_DLG  12
 
 #define PublishMenu         1
 #define mTogglePublish      2
 #define mDefaultName        3
 #define MAX_PUBLISHMENU_DLG 4
 
+#define PrintMenu           1
+#define mPaperSize          2
+#define mThotPrint          3
+#define MAX_PRINTMENU_DLG   4
+
 #define ColorMenu           1
-#define mForegroundColor    2
-#define mBackgrounColor     3
-#define mButtonColor        4
-#define mScrollColor        5
+#define mFgColor            2
+#define mBgColor            3
+#define mMenuFgColor        4
+#define mMenuBgColor        5
 #define MAX_COLORMENU_DLG   6
 
 #define GeometryMenu         1

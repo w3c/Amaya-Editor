@@ -38,6 +38,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "MENUconf.h"
+#include "print.h"
 
 #define MAX_GEOMETRY_LENGTH 24
 
@@ -65,7 +66,6 @@ static int ToolTipDelay;
 static int DoubleClickDelay;
 static int Zoom;
 static boolean Multikey;
-static CHAR ThotPrint [MAX_LENGTH+1];
 static CHAR DefaultName [MAX_LENGTH+1];
 static boolean BgImages;
 static boolean DoubleClick;
@@ -78,9 +78,17 @@ static boolean LostUpdateCheck;
 static boolean VerifyPublish;
 static CHAR HomePage [MAX_LENGTH+1];
 
+/* Print menu options */
+static int PrintBase;
+static CHAR ThotPrint [MAX_LENGTH+1];
+static int  PaperSize;
+
 /* Color menu options */
 static int ColorBase;
-static CHAR ForegroundColor [MAX_LENGTH+1];
+static CHAR FgColor [MAX_LENGTH+1];
+static CHAR BgColor [MAX_LENGTH+1];
+static CHAR MenuFgColor [MAX_LENGTH+1];
+static CHAR MenuBgColor [MAX_LENGTH+1];
 
 /* Geometry menu options */
 static int GeometryBase;
@@ -119,6 +127,11 @@ static void         RefreshPublishMenu (void);
 static void         GetPublishConf (void);
 static void         GetDefaultPublishConf (void);
 static void         SetPublishConf (void);
+static void         PrintCallbackDialog(int ref, int typedata, STRING data);
+static void         RefreshPrintMenu (void);
+static void         GetPrintConf (void);
+static void         GetDefaultPrintConf (void);
+static void         SetPrintConf (void);
 static void         ColorCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshColorMenu (void);
 static void         GetColorConf (void);
@@ -153,6 +166,11 @@ static void         RefreshPublishMenu (/* void */);
 static void         GetPublishConf (/* void */);
 static void         GetDefaultPublishConf (/* void */);
 static void         SetPublishConf (/* void */);
+static void         PrintCallbackDialog(/* int ref, int typedata, STRING data */);
+static void         RefreshPrintMenu (/* void */);
+static void         GetPrintConf (/* void */);
+static void         GetDefaultPrintConf (/* void */);
+static void         SetPrintConf (/* void */);
 static void         ColorCallbackDialog(/* int ref, int typedata, STRING data */);
 static void         RefreshColorMenu (/* void */);
 static void         GetColorConf (/* void */);
@@ -202,7 +220,12 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
   TtaSetDefEnvString ("DEFAULTNAME", "Overview.html", FALSE);
   TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
-
+  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", "yes", FALSE);
+#ifndef _WINDOWS
+  TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
+  /* A4 size */
+  TtaSetDefEnvString ("PAPERSIZE", "0", FALSE);
+#endif
   /* network configuration */
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
   TtaSetDefEnvString ("ENABLE_PIPELINING", "yes", FALSE);
@@ -241,6 +264,8 @@ void                InitConfMenu ()
   ProxyBase = TtaSetCallback (ProxyCallbackDialog, MAX_PROXYMENU_DLG);
   GeneralBase = TtaSetCallback (GeneralCallbackDialog, MAX_GENERALMENU_DLG);
   PublishBase = TtaSetCallback (PublishCallbackDialog, MAX_PUBLISHMENU_DLG);
+  PrintBase = TtaSetCallback (PrintCallbackDialog,
+			      MAX_PRINTMENU_DLG);
   ColorBase = TtaSetCallback (ColorCallbackDialog,
 			      MAX_COLORMENU_DLG);
   GeometryBase = TtaSetCallback (GeometryCallbackDialog,
@@ -838,13 +863,6 @@ STRING              data;
 	    HomePage [0] = EOS;
 	  break;
 
-	case mThotPrint:
-	  if (data)
-	    ustrcpy (ThotPrint, data);
-	  else
-	    ThotPrint [0] = EOS;
-	  break;
-
 	case mToggleGeneral:
 	  switch (val) 
 	    {
@@ -894,10 +912,8 @@ static void GetGeneralConf ()
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   GetEnvString ("HOME_PAGE", HomePage);
-  GetEnvString ("THOTPRINT", ThotPrint);
   GetEnvString ("LANG", DialogueLang);
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
-
 }
 
 /*----------------------------------------------------------------------
@@ -927,7 +943,6 @@ static void SetGeneralConf ()
   TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
   TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
-  TtaSetEnvString ("THOTPRINT", ThotPrint, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
 }
@@ -952,7 +967,6 @@ static void GetDefaultGeneralConf ()
   GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
 		       GeneralBase + mToggleGeneral, 2);
   GetDefEnvString ("HOME_PAGE", HomePage);
-  GetDefEnvString ("THOTPRINT", ThotPrint);
   GetDefEnvString ("LANG", DialogueLang);
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
 
@@ -977,7 +991,6 @@ static void RefreshGeneralMenu ()
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, DoubleClick);
 #endif /* _WINDOWS */
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
-  TtaSetTextForm (GeneralBase + mThotPrint, ThotPrint);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
 }
@@ -1045,14 +1058,6 @@ STRING              pathname;
 		     10,
 		     FALSE);   
    /* fourth line */
-   TtaNewTextForm (GeneralBase + mThotPrint,
-		   GeneralBase + GeneralMenu,
-		   "Printer command",
-		   20,
-		   1,
-		   FALSE);
-   TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, "");   
-   /* fifth line */
    TtaNewTextForm (GeneralBase + mDialogueLang,
 		   GeneralBase + GeneralMenu,
 		   "Dialogue language",
@@ -1060,7 +1065,7 @@ STRING              pathname;
 		   1,
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, "");   
-   /* sixth line */
+   /* fifth line */
    sprintf (s, "B%s%cB%s%cB%s", 
 	    "Enable Multikey", EOS, 
 	    "Show background images", EOS,
@@ -1267,6 +1272,187 @@ STRING              pathname;
 }
 
 /**********************
+** Print Menu
+**********************/
+
+/*----------------------------------------------------------------------
+   callback of the print configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         PrintCallbackDialog (int ref, int typedata, STRING data)
+#else
+static void         PrintCallbackDialog (ref, typedata, data)
+int                 ref;
+int                 typedata;
+STRING              data;
+
+#endif
+{
+  int val;
+
+  if (ref == -1)
+    {
+      /* removes the print conf menu */
+      TtaDestroyDialogue (PrintBase + PrintMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - PrintBase)
+	{
+	case PrintMenu:
+	  switch (val) 
+	    {
+	    case 0:
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1:
+	      SetPrintConf ();
+	      break;
+	    case 2:
+	      GetDefaultPrintConf ();
+	      RefreshPrintMenu ();
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+
+	case mThotPrint:
+	  if (data)
+	    ustrcpy (ThotPrint, data);
+	  else
+	    ThotPrint [0] = EOS;
+	  break;  
+
+	case mPaperSize:
+	   switch (val)
+	     {
+	     case 0:
+	       PaperSize = PP_A4;
+	       break;
+	     case 1:
+	       PaperSize = PP_US;
+	       break;
+	     }
+	   break;
+
+	default:
+	  break;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  PrinterConfMenu
+  Build and display the Conf Menu dialog box and prepare for input.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         PrinterConfMenu (Document document, View view)
+#else
+void         PrinterConfMenu (document, view)
+Document            document;
+View                view;
+STRING              pathname;
+
+#endif
+{
+   CHAR             s[MAX_LENGTH];
+   int              i;
+
+   /* Create the dialogue form */
+   i = 0;
+   strcpy (&s[i], "Apply");
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], "Defaults");
+   TtaNewSheet (PrintBase + PrintMenu, 
+		TtaGetViewFrame (document, view),
+	       "Printer Configuration", 2, s, FALSE, 2, 'L', D_DONE);
+   TtaNewTextForm (PrintBase + mThotPrint,
+		   PrintBase + PrintMenu,
+		   "Printer command",
+		   20,
+		   1,
+		   FALSE);
+   /* Paper format submenu */
+   i = 0;
+   sprintf (&s[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
+   i += ustrlen (&s[i]) + 1;
+   sprintf (&s[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
+   TtaNewSubmenu (PrintBase+ mPaperSize, PrintBase+PrintMenu, 0,
+		  TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, s, NULL, FALSE);
+   /* load and display the current values */
+   GetPrintConf ();
+   RefreshPrintMenu ();
+   /* display the menu */
+   TtaShowDialogue (PrintBase + PrintMenu, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  RefreshPrintMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RefreshPrintMenu ()
+#else
+static void RefreshPrintMenu ()
+#endif /* __STDC__ */
+{
+  TtaSetTextForm (PrintBase + mThotPrint, ThotPrint);
+  if (PaperSize == PP_US)
+    TtaSetMenuForm (PrintBase+ mPaperSize, 1);
+  else
+    TtaSetMenuForm (PrintBase+ mPaperSize, 0);
+}
+
+/*----------------------------------------------------------------------
+  GetPrintConf
+  Makes a copy of the current registry print values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetPrintConf (void)
+#else
+static void GetPrintConf ()
+#endif /* __STDC__ */
+{
+  GetEnvString ("THOTPRINT", ThotPrint);
+  TtaGetEnvInt ("PAPERSIZE", &PaperSize);
+}
+
+/*----------------------------------------------------------------------
+  GetDefaultPrintConf
+  Makes a copy of the default registry print values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetDefaultPrintConf (void)
+#else
+static void GetDefaultPrintConf ()
+#endif /* __STDC__ */
+{
+  GetDefEnvString ("THOTPRINT", ThotPrint);
+  TtaGetDefEnvInt ("PAPERSIZE", &PaperSize);
+}
+
+
+/*----------------------------------------------------------------------
+  SetPrintConf
+  Updates the registry Print values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetPrintConf (void)
+#else
+static void SetPrintConf ()
+#endif /* __STDC__ */
+{
+  TtaSetEnvString ("THOTPRINT", ThotPrint, TRUE);
+  TtaSetEnvInt ("PAPERSIZE", &PaperSize, TRUE);
+  /* update the print environment */
+  TtaSetPrintCommand (ThotPrint);
+  TtaSetPrintParameter (PP_PaperSize, PaperSize);
+}
+
+/**********************
 ** Color Menu
 **********************/
 
@@ -1287,7 +1473,7 @@ STRING              data;
 
   if (ref == -1)
     {
-      /* removes the appareance conf menu */
+      /* removes the color conf menu */
       TtaDestroyDialogue (ColorBase + ColorMenu);
     }
   else
@@ -1314,6 +1500,31 @@ STRING              data;
 	    }
 	  break;
 	  
+	case mFgColor:
+	  if (data)
+	    ustrcpy (FgColor, data);
+	  else
+	    FgColor [0] = EOS;
+	  break;
+	case mBgColor:
+	  if (data)
+	    ustrcpy (BgColor, data);
+	  else
+	    BgColor [0] = EOS;
+	  break;
+	case mMenuFgColor:
+	  if (data)
+	    ustrcpy (MenuFgColor, data);
+	  else
+	    MenuFgColor [0] = EOS;
+	  break;
+	case mMenuBgColor:
+	  if (data)
+	    ustrcpy (MenuBgColor, data);
+	  else
+	    MenuBgColor [0] = EOS;
+	  break;
+
 	default:
 	  break;
 	}
@@ -1344,14 +1555,33 @@ STRING              pathname;
    strcpy (&s[i], "Defaults");
    TtaNewSheet (ColorBase + ColorMenu, 
 		TtaGetViewFrame (document, view),
-	       "Color Configuration", 2, s, TRUE, 3, 'L', D_DONE);
-   TtaNewTextForm (ColorBase + mForegroundColor,
+	       "Color Configuration", 2, s, TRUE, 2, 'L', D_DONE);
+   /* first line */
+   TtaNewTextForm (ColorBase + mFgColor,
 		   ColorBase + ColorMenu,
-		   "Foreground color",
+		   "Document foreground color",
 		   20,
 		   1,
 		   FALSE);   
-
+   TtaNewTextForm (ColorBase + mBgColor,
+		   ColorBase + ColorMenu,
+		   "Document background color",
+		   20,
+		   1,
+		   FALSE);   
+   /* second line */
+   TtaNewTextForm (ColorBase + mMenuFgColor,
+		   ColorBase + ColorMenu,
+		   "Menu foreground color",
+		   20,
+		   1,
+		   FALSE);   
+   TtaNewTextForm (ColorBase + mMenuBgColor,
+		   ColorBase + ColorMenu,
+		   "Menu background color",
+		   20,
+		   1,
+		   FALSE);   
    /* load and display the current values */
    GetColorConf ();
    RefreshColorMenu ();
@@ -1369,7 +1599,10 @@ static void RefreshColorMenu ()
 static void RefreshColorMenu ()
 #endif /* __STDC__ */
 {
-  TtaSetTextForm (ColorBase + mForegroundColor, ForegroundColor);
+  TtaSetTextForm (ColorBase + mFgColor, FgColor);
+  TtaSetTextForm (ColorBase + mBgColor, BgColor);
+  TtaSetTextForm (ColorBase + mMenuFgColor, MenuFgColor);
+  TtaSetTextForm (ColorBase + mMenuBgColor, MenuBgColor);
 }
 
 /*----------------------------------------------------------------------
@@ -1382,7 +1615,10 @@ static void GetColorConf (void)
 static void GetColorConf ()
 #endif /* __STDC__ */
 {
-  GetEnvString ("ForegroundColor", ForegroundColor);
+  GetEnvString ("ForegroundColor", FgColor);
+  GetEnvString ("BackgroundColor", BgColor);
+  GetEnvString ("MenuFgColor", MenuFgColor);
+  GetEnvString ("MenuBgColor", MenuBgColor);
 }
 
 /*----------------------------------------------------------------------
@@ -1395,7 +1631,10 @@ static void GetDefaultColorConf (void)
 static void GetDefaultColorConf ()
 #endif /* __STDC__ */
 {
-  GetDefEnvString ("ForegroundColor", ForegroundColor);
+  GetDefEnvString ("ForegroundColor", FgColor);
+  GetDefEnvString ("BackgroundColor", BgColor);
+  GetDefEnvString ("MenuFgColor", MenuFgColor);
+  GetDefEnvString ("MenuBgColor", MenuBgColor);
 }
 
 
@@ -1409,7 +1648,10 @@ static void SetColorConf (void)
 static void SetColorConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString ("ForegroundColor", ForegroundColor, TRUE);
+  TtaSetEnvString ("ForegroundColor", FgColor, TRUE);
+  TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
+  TtaSetEnvString ("MenuFgColor", MenuFgColor, TRUE);
+  TtaSetEnvString ("MenuBgColor", MenuBgColor, TRUE);
 }
 
 
@@ -1434,7 +1676,7 @@ STRING              data;
 
   if (ref == -1)
     {
-      /* removes the appareance conf menu */
+      /* removes the geometry conf menu */
       TtaDestroyDialogue (GeometryBase + GeometryMenu);
     }
   else
