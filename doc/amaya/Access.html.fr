@@ -13,7 +13,11 @@
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+      <td>
+
+        <p></p>
+
+        <p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /><img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Configure.html"><img alt="previous"
