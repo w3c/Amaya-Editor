@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Jul  4 18:11:00 CEST 2001" version="34">
+<base last_update="Tue Jul 10 17:56:35 CEST 2001" version="35">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1568,7 +1568,7 @@
 <label define="AM_ANNOT_RAUTOLOAD_RST">
 	<message xml:lang="en">Disable remote autoload at each startup (for off-line work)</message>
 	<message xml:lang="fr">Désactiver le chargement automatique des annotations distantes au démarrage</message>
-	<message xml:lang="es">Desactivar la autocargada de las anotaciones</message>
+	<message xml:lang="es">Deshabilitar autorecarga remota en cada inicio (para trabajo off line)</message>
 	<message xml:lang="it">Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)</message>
 	<message xml:lang="de">Kein automatisches Laden vom Remote Server beim Programmstart (Off-line Arbeitsmodus)</message>
 </label>
@@ -1626,6 +1626,7 @@
 	<message xml:lang="fr">Certains caractères ne sont pas supportés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">Alcuni caratteri non sono supportati - vedi Viste/Mostra gli errori di parsificazione</message>
 	<message xml:lang="de">Einige Zeichen werden nicht unterstützt - siehe Ansicht/Parsefehler anzeigen</message>
+	<message xml:lang="es">Algunos caracteres no están soportados - vea análisis de errores Ver/Mostrar</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">In the current Amaya profile:</message>
@@ -1807,29 +1808,33 @@
 	<message xml:lang="fr">Sélectionner un Charset</message>
 	<message xml:lang="it">Seleziona un charset</message>
 	<message xml:lang="de">Charset auswählen</message>
+	<message xml:lang="es">Seleccionar un Charset</message>
 </label>
 <label define="AM_SELECT_MIMETYPE">
 	<message xml:lang="en">Select a MIME type</message>
 	<message xml:lang="fr">Sélectionner un type MIME</message>
 	<message xml:lang="it">Seleziona un tipo MIME</message>
 	<message xml:lang="de">MIME type auswählen</message>
+	<message xml:lang="es">Seleccionar un tipo MIME</message>
 </label>
 <label define="AM_CHANGE_CHARSET">
 	<message xml:lang="en">Change Charset</message>
 	<message xml:lang="fr">Changer Charset</message>
 	<message xml:lang="it">Cambia charset</message>
 	<message xml:lang="de">Anderen Charset auswählen</message>
+	<message xml:lang="es">Cambiar Charset</message>
 </label>
 <label define="AM_CHANGE_MIME_TYPE">
 	<message xml:lang="en">Change MIME type</message>
 	<message xml:lang="fr">Changer le type MIME</message>
 	<message xml:lang="it">Cambia tipo MIME</message>
 	<message xml:lang="de">Anderen MIME type auswählen</message>
+	<message xml:lang="es">Cambiar tipo MIME</message>
 </label>
 <label define="AM_CHANGE">
 	<message xml:lang="en">Change</message>
 	<message xml:lang="fr">Changer</message>
-	<message xml:lang="es">Modificar</message>
+	<message xml:lang="es">Cambiar</message>
 	<message xml:lang="it">Cambia</message>
 	<message xml:lang="de">Wechseln</message>
 </label>
@@ -1838,39 +1843,45 @@
 	<message xml:lang="fr">Ce type de document n'a pas de charset</message>
 	<message xml:lang="it">Questo tipo di documento non supporta i charset</message>
 	<message xml:lang="de">Dieser Dokumenttyp unterstützt keine Charsets</message>
+	<message xml:lang="es">Este tipo de documento no soporta charsets</message>
 </label>
 <label define="AM_NOMIMETYPE_SUPPORT">
 	<message xml:lang="en">The target must be an HTTP URL to use this option</message>
 	<message xml:lang="fr">L'URL doit être de type HTTP pour utiliser</message>
 	<message xml:lang="it">Per usare questa opzione, il target deve essere un'URL HTTP</message>
 	<message xml:lang="de">Diese Option kann nur mit einem HTTP URL Ziel verwendet werden</message>
+	<message xml:lang="es">Para usar esta opción el destino tiene que ser una URL HTTP</message>
 </label>
 <label define="AM_INVALID_MIMETYPE">
 	<message xml:lang="en">Error: invalid MIME type</message>
 	<message xml:lang="fr">Erreur: type MIME incorrect</message>
 	<message xml:lang="it">Errore: MIME type non valido</message>
 	<message xml:lang="de">Fehler: ungültiger MIME type</message>
+	<message xml:lang="es">Error: tipo MIME inválido</message>
 </label>
 <label define="AM_UNKNOWN">
 	<message xml:lang="en">Unknown</message>
 	<message xml:lang="fr">Inconnu</message>
 	<message xml:lang="it">Sconosciuto</message>
 	<message xml:lang="de">Unbekannt</message>
+	<message xml:lang="es">Desconocido</message>
 </label>
 <label define="AM_CSS_ERROR">
 	<message xml:lang="en">Styles are ignored - see Views/Show parsing errors</message>
 	<message xml:lang="fr">Styles ignorés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">I stili sono ignorati - vedi Viste/Mostra le errore</message>
 	<message xml:lang="de">Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen</message>
-	<message xml:lang="es">>Se ignoran estili - vea Vistas/Mostrar fichero log</message>
+	<message xml:lang="es">Se ignoran estili - vea Vistas/Mostrar fichero log</message>
 </label>
 <label define="AM_DOUBLE_LOAD">
 	<message xml:lang="en">This document is already loaded in another Window</message>
 	<message xml:lang="fr">Ce document est déjà affiché dans une autre fenêtre.</message>
+	<message xml:lang="es">Este documento esta abierto en una otra ventana</message>
 </label>
 <label define="AM_UNSAVE">
 	<message xml:lang="en">Saving that instance may cause a lost update problem</message>
 	<message xml:lang="fr">Sauver cette instance peut provoquer des problèmes de mise à jour.</message>
+	<message xml:lang="es">Salvar esta instancia puede provar un problema de sincronización</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

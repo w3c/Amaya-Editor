@@ -204,7 +204,7 @@
 202 Servidores de annotaciones
 203 Autocargar anotaciones locales
 204 Autocargar anotaciones remotas
-205 Desactivar la autocargada de las anotaciones
+205 Deshabilitar autorecarga remota en cada inicio (para trabajo off line)
 206 Seleccion de color
 207 Caret color
 208 Orientacion
@@ -212,7 +212,7 @@
 210 Apaisado
 211 Activar FTP (experimental)
 212 El document ha sido truncado. No lo salve - Vea Vistas/Mostrar fichero log
-213 **Some characters are not supported - see Views/Show parsing errors
+213 Algunos caracteres no están soportados - vea análisis de errores Ver/Mostrar
 214 En el perfil actual de Amaya:
 215 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
 216 La codificación de este documento no está soportada por Amaya
@@ -238,15 +238,15 @@
 236 No puedo crear un XPointer
 237 No se a donde mover la annotación
 238 No puedo mover la annotación a un otro documento
-239 **Select a Charset
-240 **Select a MIME type
-241 **Change Charset
-242 **Change MIME type
-243 Modificar
-244 **This type of document doesn't support charsets
-245 **The target must be an HTTP URL to use this option
-246 **Error: invalid MIME type
-247 **Unknown
-248 >Se ignoran estili - vea Vistas/Mostrar fichero log
-249 **This document is already loaded in another Window
-250 **Saving that instance may cause a lost update problem
+239 Seleccionar un Charset
+240 Seleccionar un tipo MIME
+241 Cambiar Charset
+242 Cambiar tipo MIME
+243 Cambiar
+244 Este tipo de documento no soporta charsets
+245 Para usar esta opción el destino tiene que ser una URL HTTP
+246 Error: tipo MIME inválido
+247 Desconocido
+248 Se ignoran estili - vea Vistas/Mostrar fichero log
+249 Este documento esta abierto en una otra ventana
+250 Salvar esta instancia puede provar un problema de sincronización

@@ -139,7 +139,7 @@
 137 Crear o cambiar enlace...
 138 Crear destino
 139 Borrar ancla
-140 Guardar la selección como XPointer
+140 Guardar selección como XPointer
 141 Mostar barra de botones
 142 Mostrar dirección
 143 Mostrar áreas de mapas
@@ -202,9 +202,9 @@
 200 Plantillas...
 201 Anotar selección
 202 Anotar documento
-203 **Reply to annotation
-204 Mover a la selección
-205 Mover al XPointer memorizado
+203 Responder a anotación
+204 Mover a selección
+205 Mover a XPointer guardado
 206 Post anotacion
 207 Borrar anotación
 208 Cargar anotaciones
@@ -213,7 +213,7 @@
 211 Configurar...
 212 Sobre Amaya
 213 Sobre Amaya en W3C
-214 **Index
+214 Índice
 215 Hojear
 216 Seleccionar
 217 Buscar
