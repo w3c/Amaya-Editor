@@ -37,7 +37,6 @@ static Time         T1, T2, T3;
 static XmString     null_string;
 #else /* _GTK */
 static gchar       *null_string;
-static ThotBool     drag = FALSE;
 #endif /*_GTK*/
 #endif /* _WINDOWS */
 
@@ -1903,6 +1902,40 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
+
+#ifdef _GTK
+/*----------------------------------------------------------------------
+   GtkLiningSelection 
+
+   When user hold clicked a mouse button in order to extend a selection
+   and scroll in the meantime,
+   those functions are called by a timer each 100 ms
+   in order to repeat user action until he released the button
+   or move away from the widget.
+----------------------------------------------------------------------*/
+static int Motion_y = 0;
+static int Motion_x = 0;
+
+gboolean GtkLiningSelection(gpointer data)
+{
+  int       frame;
+  Document  doc; 
+  int       view;
+  
+   frame = (int) data; 
+   FrameToView (frame, &doc, &view);
+   if (Motion_y > FrameTable[frame].FrHeight) 
+       TtcLineDown (doc, view); 
+   else if (Motion_y < 0)
+      TtcLineUp (doc, view); 
+   LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
+   TtcCopyToClipboard (doc, view);
+   /* As this is a timeout function, return TRUE so that it
+     continues to get called */
+   return TRUE;
+}
+#endif /* _GTK */
+
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                              
    D.V. equivalent de la fontion MS-Windows ci dessus !        
@@ -1925,6 +1958,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   int                 l;*/
   int                 frame;
   GtkEntry           *textzone;
+  static int          timer = None;
 #endif /* _GTK */
   Document            document;
   View                view;
@@ -2183,7 +2217,11 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       /* Termine l'insertion courante s'il y en a une */
       CloseInsertion ();
       /* drag is finished */
-      drag = FALSE;
+      if (timer != None)
+	{
+	  gtk_timeout_remove (timer);
+	  timer = None;
+	} 
       switch (event->button)
 	{
 	case 1:
@@ -2218,10 +2256,17 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  else
 	    {
 	      ClickFrame = frame;
-	      ActiveFrame = frame;
 	      ClickX = event->x;
-	      ClickY = event->y;
-	      LocateSelectionInView (frame, ClickX, ClickY, 5);
+	      ClickY = event->y; 
+	      if (frame != ActiveFrame)
+		{
+		  LocateSelectionInView (frame, ClickX, ClickY, 2);
+		  FrameToView (frame, &document, &view);
+		  TtcPaste (document, view); 
+		  ActiveFrame = frame;
+		}
+	      else
+		LocateSelectionInView (frame, ClickX, ClickY, 5);	     
 	    }
 	  break;
 	case 3:
@@ -2282,26 +2327,23 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       break;
     case GDK_MOTION_NOTIFY:
       /* extend the current selection */
-      drag = TRUE;
-      /* events GDK_BUTTON_RELEASE and GDK_BUTTON_PRESS stop the drag */
-      while (drag)
-	{
-	  if (event->y > FrameTable[frame].FrHeight)
-	    TtcLineDown (document, view);
-	  else if (event->y < 0)
-	    TtcLineUp (document, view);
-	  LocateSelectionInView (frame, event->x, event->y, 0);
-	  FrameToView (frame, &document, &view);
-	  TtcCopyToClipboard (document, view);
-	  TtaFetchOrWaitEvent ((ThotEvent *)event);
-	  event = (GdkEventButton *) gtk_get_current_event ();
-	  gtk_main_iteration_do (TRUE);
-	}
+      Motion_y = event->y;
+      Motion_x = event->x;
+      /* We add a callback timer caller */
+      if (timer == None)
+	timer = gtk_timeout_add (100, 
+				 GtkLiningSelection, 
+				 (gpointer) frame);
       break;
     case GDK_BUTTON_RELEASE:
       /* if a button release, we save the selection in the clipboard */
       /* drag is finished */
-      drag = FALSE;
+      /* we stop the callback calling timer */
+      if (timer != None)
+	{
+	  gtk_timeout_remove (timer);
+	  timer = None;
+	} 
       if (event->button == 1)
 	{
 	  ClickFrame = frame;
