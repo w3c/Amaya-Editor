@@ -1390,7 +1390,7 @@ boolean		    history;
 	{
 	  /* concatenate the URL and its form_data and then
 	     display it on the amaya URL box */
-	  i = strlen (pathname) + 1;
+	  i = strlen (pathname) + 5;
 	  if (form_data && method != CE_FORM_POST)
 	    i += strlen (form_data);
 	  s = TtaGetMemory (i);
