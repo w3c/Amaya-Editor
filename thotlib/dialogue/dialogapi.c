@@ -8239,6 +8239,7 @@ ThotWidget TtaAddSubTree (ThotWidget parent)
   
   gtk_tree_item_set_subtree (GTK_TREE_ITEM(parent),
 			    subtree);
+  gtk_widget_show_all (subtree);
 #endif
   return (subtree);
 
@@ -8259,29 +8260,15 @@ ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label,
   ThotWidget tree_item = NULL;
 
 #ifdef _GTK
-  GtkWidget *hbox = NULL;
-  GtkWidget *label = NULL;
-
-  tree_item = gtk_tree_item_new ();
-  hbox = gtk_hbox_new(FALSE, 5);
-  gtk_container_add(GTK_CONTAINER(tree_item), hbox);
-  /* a test to find the correct item */
+  tree_item = gtk_tree_item_new_with_label ((item_label) ? item_label : "");
+  /* connect the signals we're interested in */
   ConnectSignalGTK (GTK_OBJECT(tree_item), "select", GTK_SIGNAL_FUNC(TreeItemSelect), 
 		    (gpointer) TRUE);
   ConnectSignalGTK (GTK_OBJECT(tree_item), "deselect", GTK_SIGNAL_FUNC(TreeItemSelect), 
 		    (gpointer) FALSE);
-  if (item_label)
-    label = gtk_label_new (item_label);
-  else
-    label = gtk_label_new ("");
-
-  gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
-
+  
   if (selected)
     gtk_tree_item_select (GTK_TREE_ITEM (tree_item));
-
-  if (!collapsed)
-    gtk_tree_item_expand (GTK_TREE_ITEM (tree_item));
 
   /* memorize callback function and client data */
   gtk_object_set_data (GTK_OBJECT(tree_item), 
@@ -8292,12 +8279,13 @@ ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label,
 		       (gpointer) user_data);
   gtk_tree_append(GTK_TREE(parent), tree_item);
 
-  gtk_widget_show_all(tree_item);	  
+  if (!collapsed)
+    gtk_tree_item_expand (GTK_TREE_ITEM(parent));
 
+  gtk_widget_show_all (tree_item);
 #endif /* _GTK */
 
   return (tree_item);
-
 }
 
 /*----------------------------------------------------------------------
@@ -8327,7 +8315,7 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 	TtaError (ERR_invalid_reference);
 	return NULL;
      }
-   /*   title_string = 0;*/
+
    catalogue = CatEntry (ref);
    rebuilded = 0;
    if (catalogue == NULL)
@@ -8339,7 +8327,7 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
      {
 	/* Modification du catalogue */
 	w = catalogue->Cat_Widget;
-	gtk_widget_show (w);
+	gtk_widget_show_all (w);
 	gtk_label_set_text (GTK_LABEL (w), label);	
      }
    else
@@ -8377,7 +8365,6 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 	tmpw = gtk_label_new (label);
 	gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
-	gtk_widget_show (GTK_WIDGET(tmpw));
 	tmpw->style->font=DefaultFont;
 	gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
 	gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
@@ -8400,10 +8387,11 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 	  gtk_tree_set_view_lines (GTK_TREE(tree), TRUE);
 	  gtk_tree_set_selection_mode (GTK_TREE(tree),
 				       (multiple) ? GTK_SELECTION_MULTIPLE :
-				       GTK_SELECTION_BROWSE);
+				       GTK_SELECTION_SINGLE);
 	  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(scrolled_window), 
 						 tree);
 	}
+	gtk_widget_show_all (w);
 	  
 	catalogue->Cat_Widget = w;
 	catalogue->Cat_Ref = ref;
