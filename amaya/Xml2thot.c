@@ -1519,8 +1519,8 @@ static void       StartOfXmlStartElement (char *name)
   char           *buffer, *ptr, *elementName;
   char           *nsName = NULL;
   int             nslevel;
-  static int      old_nslevel;
   PtrParserCtxt   savParserCtxt = NULL;
+  char           *s;
 
   elementName = NULL;
   buffer = NULL;
@@ -1549,13 +1549,25 @@ static void       StartOfXmlStartElement (char *name)
 	   strcmp (nsName, currentParserCtxt->UriName)) ||
 	  (currentParserCtxt == NULL))
 	nslevel = ChangeXmlParserContextUri (nsName);
-#ifndef XML_GENERIC
       if (currentParserCtxt == NULL)
 	{
-	  UnknownNS = TRUE;
+#ifdef XML_GENERIC
+	  /* Select root context */
+	  s = TtaGetSSchemaName (DocumentSSchema);
+	  if ((strcmp (s, "HTML") == 0) ||
+	      (strcmp (s, "SVG") == 0) ||
+	      (strcmp (s, "MathML") == 0) ||
+	      (strcmp (s, "Annot") == 0))
+	    {
+	      /* It is not a generic xml document; just ignore the namespace */
+	      currentParserCtxt = savParserCtxt;
+	      UnknownNS = TRUE;
+	    }
+#else XML_GENERIC
 	  currentParserCtxt = savParserCtxt;
-	}
+	  UnknownNS = TRUE;
 #endif /* XML_GENERIC */
+	}
     }
   else
     {
@@ -1596,7 +1608,8 @@ static void       StartOfXmlStartElement (char *name)
 	  sprintf (msgBuffer, 
 		   "Namespace not supported for the element :\"%s\"", name);
 	  XmlParseError (errorParsing, msgBuffer, 0);
-	  if (nslevel != old_nslevel)
+	  if (1)
+	    /* TODO compare with its parent namespace */
 	    {
 	      if (Ns_Prefix[nslevel] != NULL)
 		sprintf (msgBuffer, "<%s xmlns:%s=\"%s\"", elementName,
@@ -1604,7 +1617,6 @@ static void       StartOfXmlStartElement (char *name)
 	      else
 		sprintf (msgBuffer, "<%s xmlns=\"%s\"",
 			 elementName, Ns_Uri[nslevel]);
-	      old_nslevel = nslevel;
  	    }
 	  else
 	    {
@@ -1801,6 +1813,7 @@ static void       EndOfXmlElement (char *name)
    ThotBool       highEnoughLevel = TRUE;
    PtrParserCtxt  savParserCtxt = NULL;
    int            nslevel;
+   char          *s;
 
    /* Look for the context associated with that element */
    savParserCtxt = currentParserCtxt;
@@ -1818,13 +1831,25 @@ static void       EndOfXmlElement (char *name)
 	    strcmp (buffer, currentParserCtxt->UriName)) ||
 	   (currentParserCtxt == NULL))
 	 nslevel = ChangeXmlParserContextUri (buffer);
-#ifndef XML_GENERIC
-      if (currentParserCtxt == NULL)
-	{
-	  UnknownNS = TRUE;
-	  currentParserCtxt = savParserCtxt;
-	}
+       if (currentParserCtxt == NULL)
+	 {
+#ifdef XML_GENERIC
+	   /* Select root context */
+	   s = TtaGetSSchemaName (DocumentSSchema);
+	   if ((strcmp (s, "HTML") == 0) ||
+	       (strcmp (s, "SVG") == 0) ||
+	       (strcmp (s, "MathML") == 0) ||
+	       (strcmp (s, "Annot") == 0))
+	     {
+	       /* It is not a generic xml document; just ignore the namespace */
+	       currentParserCtxt = savParserCtxt;
+	       UnknownNS = TRUE;
+	     }
+#else XML_GENERIC
+	   currentParserCtxt = savParserCtxt;
+	   UnknownNS = TRUE;
 #endif /* XML_GENERIC */
+	 }
      }
    else
      {
@@ -2554,6 +2579,7 @@ static void      EndOfAttributeName (char *xmlName)
    char         *buffer;
    char         *attrName;
    char         *ptr = NULL;
+   char         *s = NULL;
    int           nslevel;
    PtrParserCtxt savParserCtxt = NULL;
    unsigned char msgBuffer[MaxMsgLength];
@@ -2565,7 +2591,7 @@ static void      EndOfAttributeName (char *xmlName)
    XMLSpaceAttribute = FALSE;
  
    if (UnknownElement)
-     /* The corresponding element id unknown in the current DTD */ 
+     /* The corresponding element doesn't belong to the current DTD */ 
      return;
 
    /* look for a NS_SEP in the tag name (namespaces) */ 
@@ -2597,17 +2623,38 @@ static void      EndOfAttributeName (char *xmlName)
 	   if (currentParserCtxt == NULL)
 	     {
 #ifdef XML_GENERIC
-	       /* We assign the generic XML context by default */ 
-	       currentParserCtxt = XmlGenericParserCtxt;
+	       /* Select root context */
+	       s = TtaGetSSchemaName (DocumentSSchema);
+	       if ((strcmp (s, "HTML") == 0) ||
+		   (strcmp (s, "SVG") == 0) ||
+		   (strcmp (s, "MathML") == 0) ||
+		   (strcmp (s, "Annot") == 0))
+		   /* It is not a generic xml document, just ignore the namespace */
+		 {
+		   currentParserCtxt = savParserCtxt;
+		   sprintf (msgBuffer, 
+			    "Namespace not supported for the attribute :\"%s\"",
+			    xmlName);
+		   XmlParseError (errorParsing, msgBuffer, 0);
+		   /* Create an unknown attribute  */
+		   if (nslevel != Ns_Level)
+		     {
+		   if (Ns_Prefix[nslevel] != NULL)
+		       sprintf (msgBuffer, "xmlns:%s=\"%s\" %s:%s",
+				Ns_Prefix[nslevel], Ns_Uri[nslevel],
+				Ns_Prefix[nslevel],attrName);
+		   else
+		       sprintf (msgBuffer, "xmlns=\"%s\":%s",
+				Ns_Uri[nslevel], attrName);
+		     }
+		   UnknownXmlAttribute (msgBuffer);
+		   UnknownAttr = TRUE;
+		 }
+	       else
+		 /* We assign the generic XML context by default */ 
+		 currentParserCtxt = XmlGenericParserCtxt;
 #else /* XML_GENERIC */
 	       currentParserCtxt = savParserCtxt;
-#endif /* XML_GENERIC */  
-	     }
-	   if (UnknownNS)
-	     {
-	       currentParserCtxt = savParserCtxt;
-	       /* This attribute is related to an element that */
-	       /* belongs to a no-supported namespace */
 	       sprintf (msgBuffer, 
 			"Namespace not supported for the attribute :\"%s\"",
 			xmlName);
@@ -2616,20 +2663,22 @@ static void      EndOfAttributeName (char *xmlName)
 	       if (nslevel != Ns_Level)
 		 {
 		   if (Ns_Prefix[nslevel] != NULL)
-		     sprintf (msgBuffer, "%s:%s",
-			      Ns_Prefix[nslevel], attrName);
+		       sprintf (msgBuffer, "xmlns:%s=\"%s\" %s:%s",
+				Ns_Prefix[nslevel], Ns_Uri[nslevel],
+				Ns_Prefix[nslevel],attrName);
 		   else
-		     sprintf (msgBuffer, "<\"%s\":%s",
-			      Ns_Uri[nslevel], attrName);
+		       sprintf (msgBuffer, "xmlns=\"%s\":%s",
+				Ns_Uri[nslevel], attrName);
 		 }
 	       UnknownXmlAttribute (msgBuffer);
 	       UnknownAttr = TRUE;
+#endif /* XML_GENERIC */  
 	     }
 	 }
      }
    else
      {
-       /* This attribute belongs to a same namespace as the element */
+       /* This attribute belongs to a same namespace that the element */
        attrName = TtaGetMemory (strlen (buffer) + 1);
        strcpy (attrName, buffer);
        if (UnknownNS)
@@ -2836,7 +2885,7 @@ static void       CreateXmlComment (char *commentValue)
    ExtraPI = FALSE;
    ptrComment = NULL;
    ptrComment = strstr (bufferComment, "generated by Amaya");
-   if (ptr)
+   if (ptrComment)
      {
        ExtraPI = TRUE;
        TtaFreeMemory (bufferComment);
@@ -3070,7 +3119,7 @@ static void CreateXmlPi (char *piTarget, char *piData)
    bufferPi = TtaGetMemory (length + 1);
    ptrPi = NULL;
    ptrPi = strstr (bufferPi, "pmathmlxsl.xml");
-   if (ptr && ExtraPI)
+   if (ptrPi && ExtraPI)
      {
        TtaFreeMemory (bufferPi);
        ExtraPI = FALSE;
