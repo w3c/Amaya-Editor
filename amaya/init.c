@@ -1258,13 +1258,14 @@ void CheckParsingErrors (Document doc)
 	  else
 	    {
 	      /* The document is not well-formed */
-		      if (reload)
+	      if (reload)
 		ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
 	      else
 		ptr = TtaGetMessage (AMAYA, AM_XML_ERROR);
 	    }
 	  CleanUpParsingErrors ();
-	  ConfirmError (doc, 1, ptr, reload);
+	  ConfirmError (doc, 1, ptr, reload,
+			TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
 	  if (UserAnswer && reload)
 	    ParseAsHTML (doc, 1);
 	  else
@@ -1546,7 +1547,8 @@ void InitInfo (char *label, char *info)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void ConfirmError (Document document, View view, char *label, char *extrabutton)
+void ConfirmError (Document document, View view, char *label,
+		   char *extrabutton, char *confirmbutton)
 {
 #ifndef _WINDOWS
    char      s[MAX_LENGTH];
@@ -1561,7 +1563,7 @@ void ConfirmError (Document document, View view, char *label, char *extrabutton)
        n++;
        i += strlen (&s[i]) + 1;
      }
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
+   strcpy (&s[i], confirmbutton);
    TtaNewSheet (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
 		TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 		n, s, TRUE, 2, 'L', D_CANCEL);
@@ -3821,6 +3823,8 @@ void ShowSource (Document document, View view)
 	 TtaSetItemOff (sourceDoc, 1, Views, TShowTextZone);
 	 TtaSetMenuOff (sourceDoc, 1, Special);
 	 TtaSetMenuOff (sourceDoc, 1, Help_);
+	 /* Update the doctype menu */
+	 UpdateDoctypeMenu (sourceDoc);
 #ifdef ANNOTATIONS
 	 TtaSetMenuOff (sourceDoc, 1, Annotations_);
 #endif /* ANNOTATIONS */
@@ -5675,7 +5679,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
   newdoc = InitDocAndView (doc, DocumentName, docType, 0, FALSE, L_Other);
-  if (newdoc != 0)
+   if (newdoc != 0)
     {
       /* load the saved file */
       W3Loading = newdoc;
@@ -5727,6 +5731,8 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
       CheckParsingErrors (newdoc);
       /* unlink this saved file */
       TtaFileUnlink (tempdoc);
+      /* Update the doctype menu */
+      UpdateDoctypeMenu (newdoc);
     }
   BackupDocument = 0;
   return (newdoc);

@@ -265,4 +265,5 @@
 #define AM_CSS_ERROR		262
 #define AM_DOUBLE_LOAD		263
 #define AM_UNSAVE		264
-#define AMAYA_MSG_MAX		265
+#define AM_CHANGE_DOCTYPE		265
+#define AMAYA_MSG_MAX		266

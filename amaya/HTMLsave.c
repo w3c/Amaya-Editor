@@ -2099,7 +2099,6 @@ void SaveDocument (Document doc, View view)
      when we have a xhtml profile */
     if (!SaveAsXML &&
 	(TtaGetDocumentProfile(doc) == L_Basic ||
-	 TtaGetDocumentProfile(doc) == L_Strict ||
 	 TtaGetDocumentProfile(doc) == L_Xhtml11))
       SaveAsXML = TRUE;
 

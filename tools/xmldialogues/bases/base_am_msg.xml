@@ -2252,6 +2252,10 @@
 	<message xml:lang="de">Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)</message>
 	<message xml:lang="pt">Salvar esta instância pode causar um problema de perda de atualização</message>
 </label>
+<label define="AM_CHANGE_DOCTYPE">
+	<message xml:lang="en">Create or Change the DOCTYPE causes the document to be reparsed. Pending modifications won't be undone.</message>
+	<message xml:lang="fr">Le document sera réanalysé pour prendre en compte le DOCTYPE. Les modifications en cours ne pourront être défaites</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

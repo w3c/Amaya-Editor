@@ -287,13 +287,8 @@
 	<message xml:lang="pt">Sincronizar</message>
 </label>
 <label define="Doctype1">
-	<message xml:lang="en">Doctype</message>
-	<message xml:lang="fr">Doctype</message>
-	<message xml:lang="de">Doctype</message>
-	<message xml:lang="it">Doctype</message>
-	<message xml:lang="tr">Doctype</message>
-	<message xml:lang="es">Doctype</message>
-	<message xml:lang="pt">Doctype</message>
+	<message xml:lang="en">Modify doctype</message>
+	<message xml:lang="fr">Modifier le doctype</message>
 </label>
 <label define="BRemoveDoctype">
 	<message xml:lang="en">Remove doctype</message>

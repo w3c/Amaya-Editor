@@ -524,9 +524,16 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   char            documentname[MAX_LENGTH];
   char            tempdir[MAX_LENGTH];
 
+  /* Ask confirmation */
+  if (TtaIsDocumentModified (doc))
+    {
+      ConfirmError (doc, 1, TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE), 0, "Confirm");
+      if (!UserAnswer)
+	return;
+    } 
+  
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
-
   /* Search the doctype declaration according to the main schema */
   if ((profile == L_Basic) || (profile == L_Strict) ||
       (profile == L_Xhtml11) || (profile == L_Transitional))
@@ -595,7 +602,7 @@ void CreateDoctypeHtml11 (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeHtmlTransitional (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_Transitional);
+    CreateOrChangeDoctype (document, view, L_Transitional);
 }
 
 /*--------------------------------------------------------------------------
