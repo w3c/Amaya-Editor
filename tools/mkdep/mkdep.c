@@ -8,9 +8,113 @@
 #include <sys/fcntl.h>
 #include <sys/mman.h>
 
+/* #define DEBUG_HASH */
+
 #define MAX_PATH	100
 #define MAX_PATH_LENGHT	256
 #define MAX_INCLUDE	200
+#define MAX_SUB_INCLUDE 30
+
+/*
+ * include tree + hash table access 
+ */
+
+typedef struct include_dep {
+    struct include_dep *next; /* hash table link */
+    char *name;               /* complete absolute filename */
+    int nb_includes;          /* number of sub_includes or -1 if not filled */
+    char *includes[MAX_SUB_INCLUDE]; /* full name of dependancies */
+} *inc_dep;
+
+inc_dep inc_hash[256];
+int nb_include_in_hash = 0;
+
+int get_hash(char *filename)
+{
+    char idx;
+    char *cour = &filename[strlen(filename)];
+
+    do {
+        idx = *cour;
+        cour--;
+        if (*cour == '/') return((int) idx);
+    } while (cour > filename);
+    return((int) idx);
+}
+
+void init_dep(dep)
+{
+    int i;
+
+#ifdef DEBUG_HASH
+    fprintf(stderr,"Init_dep\n");
+#endif
+
+    for (i = 0;i < 256;i++) inc_hash[i] = NULL;
+    nb_include_in_hash = 0;
+}
+
+inc_dep add_inc(char *filename)
+{
+    inc_dep prev = NULL, cour;
+    int res;
+    int hash = get_hash(filename);
+
+    cour = inc_hash[hash];
+
+    /*
+     * go through the list looking for the include.
+     */
+    while (cour != NULL) {
+        res = strcmp(cour->name, filename);
+        if (res == 0) return(cour);
+        if (res < 0) break;
+        prev = cour;
+        cour = cour->next;
+    }
+
+#ifdef DEBUG_HASH
+    fprintf(stderr,"Adding in slot %d : %s\n", hash, filename);
+#endif
+
+    /*
+     * not found, allocate and fill a new one.
+     */
+    nb_include_in_hash++;
+    cour = (inc_dep) malloc(sizeof(struct include_dep));
+    cour->name = strdup(filename);
+    cour->nb_includes = -1;
+
+    /*
+     * not found, allocate and fill a new one.
+     */
+    if (prev == NULL) {
+        /*
+         * add at the head of the hash list.
+         */
+        cour->next = inc_hash[hash];
+        inc_hash[hash] = cour;
+    } else {
+        /*
+         * add if after prev.
+         */
+        cour->next = prev->next;
+        prev->next = cour;
+    }
+    return(cour);
+}
+
+void add_inc_dep(inc_dep cour, char *filename)
+{
+    if (cour->nb_includes < 0)
+        cour->nb_includes = 0;
+    if (cour->nb_includes == MAX_SUB_INCLUDE) {
+	fprintf(stderr,"increase MAX_SUB_INCLUDE : %d not sufficient\n",
+                MAX_SUB_INCLUDE);
+        return;
+    }
+    cour->includes[cour->nb_includes++] = strdup(filename);
+}
 
 char *filename, *command, __depname[MAX_PATH_LENGHT] = "\n\t@touch ";
 
@@ -31,9 +135,17 @@ include_name include_list[MAX_INCLUDE];
 
 int nb_include = 0;
 
+int handling_includes = 0;
+inc_dep current_include = NULL;
+
 static void add_local_include(char *name)
 {
 	int i = 0;
+
+        add_inc(name);
+        if ((handling_includes != 0) &&
+            (current_include != NULL))
+            add_inc_dep(current_include, name);
 
         for (i = 0;i < nb_include;i++) {
 	    if (!strcmp(include_list[i], name)) return;
@@ -242,6 +354,7 @@ int main(int argc, char **argv)
 	char pwd[MAX_PATH_LENGHT];
 	char buffer[MAX_PATH_LENGHT];
 
+        init_dep();
         getcwd(pwd, sizeof(pwd));
 
 	while (--my_argc > 0) {
@@ -302,14 +415,36 @@ int main(int argc, char **argv)
 		/*
 		 * do basic dependancies on the C source file.
 		 */
+                handling_includes = 0;
 		do_depend();
 
 		/*
 		 * recurse dependancies on the included files.
 		 * Warning, nb_include will grow over the loop.
 		 */
+                handling_includes = 1;
 		for (i = 0;i < nb_include;i++) {
 		    filename = include_list[i];
+		    /*
+		     * check the hash for existing dependencies.
+		     * !!!
+		     */
+		    if (handling_includes) {
+		        current_include = add_inc(filename);
+		        if (current_include->nb_includes >= 0) {
+                            int i;
+
+			    /*
+			     * do not load and parse the file,
+                             * dump the cache instead.
+			     */
+                            for (i = 0;i < current_include->nb_includes;i++)
+                                add_local_include(current_include->includes[i]);
+
+                            continue;
+		        }
+		    }
+		    current_include = NULL;
 		    do_depend();
 		}
 
@@ -320,5 +455,8 @@ int main(int argc, char **argv)
 		    printf(" \\\n   %s", include_list[i]);
 		printf("\n\n");
 	}
+#ifdef DEBUG_HASH
+        fprintf(stderr,"total %d includes in hash\n", nb_include_in_hash);
+#endif
 	return 0;
 }
