@@ -1071,8 +1071,9 @@ void ANNOT_SaveDocument (Document doc_annot, View view)
   If the user clicked on an annotation link in the source document,
   it highlights the annotated text.
   -----------------------------------------------------------------------*/
-void ANNOT_SelectSourceDoc (int doc, Element el)
+void ANNOT_SelectSourceDoc (int doc, Element sel)
 {
+  Element          el;
   ElementType      elType;
   AttributeType    attrType;
   Attribute	   attr;
@@ -1083,9 +1084,19 @@ void ANNOT_SelectSourceDoc (int doc, Element el)
   last_selected_annotation[doc] = NULL;
 
   /* is it an annotation link? */
-  elType = TtaGetElementType (el);
-  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink")
-      || (elType.ElTypeNum != XLink_EL_XLink))
+  elType = TtaGetElementType (sel);
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink"))
+    return;
+
+  /* if the user selected the annotation icon, jump to the 
+     parent */
+  if (elType.ElTypeNum == XLink_EL_PICTURE_UNIT)
+    {
+      el = TtaGetParent (sel);
+      elType = TtaGetElementType (el);
+    }
+
+  if (elType.ElTypeNum != XLink_EL_XLink)
     return;
 
   /* get the URL of the annotation body */
