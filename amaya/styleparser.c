@@ -4556,7 +4556,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		if (!strcmp (deb, "first-letter") ||
 		    !strcmp (deb, "first-line") ||
 		    !strcmp (deb, "before") ||
-		    !strcmp (deb, "after"))
+		    !strcmp (deb, "after") ||
+		    !strcmp (deb, "hover") ||
+		    !strcmp (deb, "focus"))
 		  /* not supported */
 		  DoApply = FALSE;
 		else
