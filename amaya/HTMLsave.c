@@ -9,7 +9,7 @@
  * Amaya saving functions.
  *
  * Authors: I. Vatton, D. Veillard
- *          R. Guetari: Unicode and Windows version
+ *          R. Guetari: Unicode
  *
  */
 
@@ -739,6 +739,8 @@ View                view;
 
 	   /* add the suffix .html for HTML documents */
 	   if (!TextFormat &&
+	       DocumentTypes[SavingDocument] != docMath &&
+	       DocumentTypes[SavingDocument] != docSVG &&
 	       !IsHTMLName (SaveName) &&
 	       !IsXMLName (SaveName))
 	     {
