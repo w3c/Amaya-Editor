@@ -1334,28 +1334,24 @@ void TtaSelectWord (Element element, int pos, Document doc, View view)
 	  i = pos;
 	  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
+	      /* look for the right box */
 	      pBox = pBox->BxNexChild;
 	      while (pBox && pBox->BxNexChild && i >= pBox->BxNexChild->BxFirstChar)
-		{
-		  /* i = i - pBox->BxNChars;
-		  i = i - pBox->BxNexChild->BxFirstChar + pBox->BxNChars + pBox->BxFirstChar; */
-		  pBox = pBox->BxNexChild;
-		}
-	      i -= pBox->BxFirstChar;
+		pBox = pBox->BxNexChild;
 	    }
+	  i -= pBox->BxFirstChar;
+	  /* now look for the right position in buffers */
 	  pBuffer = pBox->BxBuffer;
-	  index =  pBox->BxIndChar;
-	  while (pBuffer && (i > pBuffer->BuLength - index))
+	  index = pBox->BxIndChar + i;
+	  while (pBuffer && (index > pBuffer->BuLength))
 	    {
-	      i = i - pBuffer->BuLength + index;
-	      index = 0;
-
+	      index = index - pBuffer->BuLength;
 	      pBuffer = pBuffer->BuNext;
 	    }
 	  if (pBuffer)
 	    {
 	      frame = GetWindowNumber (doc, view);
-	      SelectCurrentWord (frame, pBox, pos, i, pBuffer, FALSE);
+	      SelectCurrentWord (frame, pBox, pos, index, pBuffer, FALSE);
 	    }
 	}
     }
