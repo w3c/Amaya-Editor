@@ -372,7 +372,7 @@ static oneLine      EquivEndingElem[] =
 {
    "DT DD LI OPTION",
    "H1 H2 H3 H4 H5 H6",
-   "UL OL MENU DIR ADDRESS PRE LISTING XMP",
+   "OL MENU DIR ADDRESS PRE LISTING XMP",
    ""};
 /* acording the HTML DTD, HR should be added to the 2nd line above, as it */
 /* is not allowed within a H1, H2, H3, etc. But we should tolerate that case */
@@ -394,17 +394,17 @@ static oneLine      StartTagEndingElem[] =
    "H5 closes P P* HEAD",
    "H6 closes P P* HEAD",
    "DIR closes P P* HEAD",
-   "ADDRESS closes P P* HEAD",
-   "PRE closes P P* HEAD",
+   "ADDRESS closes P P* HEAD UL",
+   "PRE closes P P* HEAD UL",
    "LISTING closes P P* HEAD",
    "XMP closes P P* HEAD",
    "BLOCKQUOTE closes P P* HEAD",
    "DL closes P P* DT MENU DIR ADDRESS PRE LISTING XMP HEAD",
    "DT closes P P* MENU DIR ADDRESS PRE LISTING XMP HEAD",
    "DD closes P P* MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "UL closes P P* HEAD",
-   "OL closes P P* HEAD",
-   "MENU closes P P* HEAD",
+   "UL closes P P* HEAD OL MENU DIR ADDRESS PRE LISTING XMP",
+   "OL closes P P* HEAD UL",
+   "MENU closes P P* HEAD UL",
    "P closes P P* HEAD H1 H2 H3 H4 H5 H6",
    "P* closes P P* HEAD",
    "DIV closes P P* HEAD",

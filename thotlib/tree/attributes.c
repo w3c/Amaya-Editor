@@ -941,7 +941,7 @@ PtrAttribute        pAttr;
 
 
 /*----------------------------------------------------------------------
-   Ajoute un attribut pNewAttr a l'element pEl apres l'attribut pAttrNext
+   Ajoute un attribut pNewAttr a l'element pEl avant l'attribut pAttrNext
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAttribute        AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr, PtrAttribute pAttrNext)
@@ -966,7 +966,7 @@ PtrAttribute        pAttrNext;
     }
   else
     {
-      /* cherche le dernier attr */
+      /* cherche l'attribut qui doit etre le suivant */
       pA = pEl->ElFirstAttr;
       while (pA->AeNext != pAttrNext)
 	pA = pA->AeNext;
