@@ -69,7 +69,7 @@ AmayaToolBar::~AmayaToolBar()
  */
 void AmayaToolBar::AddTool( wxWindow * p_tool, bool expand, int border )
 {
-  int flag = wxEXPAND;
+  int flag = wxEXPAND | wxALIGN_CENTER;
   int proportion = 0;
 
   if ( border > 0 )

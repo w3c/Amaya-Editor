@@ -48,7 +48,7 @@ AmayaURLBar::AmayaURLBar ( wxWindow *     parent
   // create the sizer to contains these widgets (combo)
   // it's possible to add others widgets here - exemple : validate button
   wxBoxSizer * p_sizer = new wxBoxSizer ( wxHORIZONTAL );
-  p_sizer->Add( m_pComboBox, 1, wxEXPAND );
+  p_sizer->Add( m_pComboBox, 1, wxALIGN_CENTER );
   SetSizer(p_sizer);
 }
 
