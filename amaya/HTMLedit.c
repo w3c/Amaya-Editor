@@ -26,6 +26,7 @@
 static char        *TargetDocumentURL = NULL;
 static int          OldWidth;
 static int          OldHeight;
+static Element      ElemAfterPastedElement = NULL;
 #define buflen 50
 
 #include "AHTURLTools_f.h"
@@ -1850,6 +1851,26 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
 }
 
 /*----------------------------------------------------------------------
+  ElementWillBePasted
+  This function is called by Thot before an element is pasted.
+  ----------------------------------------------------------------------*/
+ThotBool ElementWillBePasted (NotifyOnValue *event)
+{
+  ElementType   elType;
+  Element       next;
+  int           i;
+
+      next = TtaGetFirstChild (event->element);
+      for (i = 0; i < event->value; i++)
+	TtaNextSibling (&next);
+      elType = TtaGetElementType (next);
+      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph &&
+	  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	ElemAfterPastedElement = next;
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
    CheckPseudoParagraph
    Element el has been created or pasted. If its a Pseudo_paragraph,
    it is turned into an ordinary Paragraph if it's not the first child
@@ -1908,7 +1929,7 @@ static void CheckPseudoParagraph (Element el, Document doc)
     }
   next = el;
   TtaNextSibling (&next);
-  if (next)
+  if (next && next == ElemAfterPastedElement)
     {
       elType = TtaGetElementType (next);
       if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
@@ -1920,6 +1941,7 @@ static void CheckPseudoParagraph (Element el, Document doc)
 	  TtaChangeElementType (next, HTML_EL_Paragraph);
 	  TtaInsertSibling (next, el, FALSE, doc);
 	}
+      ElemAfterPastedElement = NULL;
     }
 }
 

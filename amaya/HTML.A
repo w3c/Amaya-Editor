@@ -6,6 +6,7 @@ DEFAULT
 	ElemClick.Pre -> SimpleClick;
 	ElemRClick.Pre -> SimpleRClick;
 	ElemLClick.Pre -> SimpleLClick;
+	ElemPaste.Pre -> ElementWillBePasted;
 	ElemPaste.Post -> ElementPasted;
 	ElemNew.Post -> ElementCreated;
 	ElemDelete.Post -> ElementDeleted;
