@@ -799,6 +799,8 @@ RULES
 	BorderLeftWidth: 1 pt;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
+	BorderTopColor: Foreground;
+	BorderLeftColor: Foreground;
 	PaddingLeft: 0.2;
 	MarginLeft: 0.2;
 	IN Structure_view BEGIN
@@ -2266,8 +2268,11 @@ ATTRIBUTES
 	CreateBefore(AttrNameAndValue);
 	BorderTopWidth: 1 pt;
 	BorderLeftWidth: 1 pt;
+	BorderRightWidth: 0;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
+	BorderTopColor: Foreground;
+	BorderLeftColor: Foreground;
 	PaddingRight: 0;
 	MarginRight: 0;
 	PaddingLeft: 0.2;
@@ -2288,6 +2293,8 @@ ATTRIBUTES
 	BorderLeftWidth: 0 pt;
 	BorderTopStyle: Solid;
 	BorderRightStyle: Solid;
+	BorderTopColor: Foreground;
+	BorderRightColor: Foreground;
 	PaddingRight: 0.2;
 	MarginRight: 0.2;
 	PaddingLeft: 0;

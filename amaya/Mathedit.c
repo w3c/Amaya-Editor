@@ -2223,38 +2223,43 @@ void MathSelectionChanged (NotifyElement *event)
   Attribute        attr;
   ElementType      elType;
   AttributeType    attrType;
+  ThotBool         drawFrame;
 
   CheckSynchronize (event);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
 
-  el = event->element;
-  elType = TtaGetElementType (el);
-  if (elType.ElTypeNum != MathML_EL_MathML)
-    /* get the ancestor <math> element */
+  TtaGetEnvBoolean ("ENABLE_MATHFRAME", &drawFrame);
+  if (drawFrame)
     {
-      elType.ElTypeNum = MathML_EL_MathML;
-      el = TtaGetTypedAncestor (el, elType);
-    }
-  if (el)
-    {
-      /* if another formula is already highlighted, remove its frame and
-         frame the new one */
-      if (el != MathElementSelected)
+      el = event->element;
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum != MathML_EL_MathML)
+	/* get the ancestor <math> element */
 	{
-	  UnFrameMath ();
-	  /* associate an attribute IntSelected with the new <math> element */
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = MathML_ATTR_IntSelected;
-	  attr = TtaNewAttribute (attrType);
-	  if (attr)
+	  elType.ElTypeNum = MathML_EL_MathML;
+	  el = TtaGetTypedAncestor (el, elType);
+	}
+      if (el)
+	{
+	  /* if another formula is already highlighted, remove its frame and
+	     frame the new one */
+	  if (el != MathElementSelected)
 	    {
-	      TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
-				    el, event->document);
-	      TtaAttachAttribute (el, attr, event->document);
+	      UnFrameMath ();
+	      /* associate an attribute IntSelected with the new <math> elem */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = MathML_ATTR_IntSelected;
+	      attr = TtaNewAttribute (attrType);
+	      if (attr)
+		{
+		  TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
+					el, event->document);
+		  TtaAttachAttribute (el, attr, event->document);
+		}
+	      MathElementSelected = el;
+	      DocMathElementSelected = event->document;
 	    }
-	  MathElementSelected = el;
-	  DocMathElementSelected = event->document;
 	}
     }
 }
