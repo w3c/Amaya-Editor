@@ -87,9 +87,11 @@ public:
 
   void SetWindowURL(const wxString & window_url);
   void SetWindowEnableURL( bool urlenabled );
+  void SetWindowEnableToolBarButtons( int frame_id );
 
   void SetPageId( int page_id );
-  int GetPageId();
+  int  GetPageId();
+
   void RaisePage();
 
   AmayaFrame * GetFrame( int frame_position ) const;

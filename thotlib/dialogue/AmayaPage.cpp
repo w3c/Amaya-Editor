@@ -10,12 +10,12 @@
 #include "typemedia.h"
 #include "appdialogue.h"
 #include "dialog.h"
-
 #include "application.h"
 #include "dialog.h"
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
+#include "frame.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -500,7 +500,7 @@ void AmayaPage::OnClose(wxCloseEvent& event)
       p_AmayaFrame->OnClose( event );
       
       // if the user don't want to close then just reattach the frame
-      if ( TtaFrameIsClosed (frame_id) )
+      if ( !TtaFrameIsClosed (frame_id) )
 	{
 	  // if the frame didnt die, just re-attach it
 	  AttachFrame(p_AmayaFrame, 1);
@@ -517,7 +517,7 @@ void AmayaPage::OnClose(wxCloseEvent& event)
       p_AmayaFrame->OnClose( event );
       
       // if the user don't want to close then just reattach the frame
-      if ( TtaFrameIsClosed (frame_id) )
+      if ( !TtaFrameIsClosed (frame_id) )
 	{
 	  // if the frame didnt die, just re-attach it
 	  AttachFrame(p_AmayaFrame, 2);
@@ -652,10 +652,6 @@ void AmayaPage::SetSelected( bool isSelected )
       {
 	// activate it : setup the corresponding menu and update internal boolean
 	GetActiveFrame()->SetActive( TRUE );
-	// setup the right frame url into the main window urlbar
-	SetWindowURL(GetActiveFrame()->GetFrameURL());
-	// setup the enable/disable state of urlbar
-	SetWindowEnableURL( GetActiveFrame()->GetFrameEnableURL() );
       }
   }
 }
@@ -698,30 +694,50 @@ void AmayaPage::SetWindowEnableURL( bool urlenabled )
     }
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetWindowEnableToolBarButtons
+ * Description:  setup the enable/disable state of the toolbar buttons
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::SetWindowEnableToolBarButtons( int frame_id )
+{
+  int window_id          = 0;
+  int button_id          = 1;
+  AmayaWindow * p_window = GetWindowParent();
+  if (!p_window)
+    return;
+  window_id = p_window->GetWindowId();
+  wxASSERT( window_id > 0 );
+  wxASSERT( frame_id > 0 );
+  
+  while (button_id < MAX_BUTTON)
+    {
+      if ( WindowTable[window_id].Button[button_id] )
+	WindowTable[window_id].Button[button_id]->Enable( FrameTable[frame_id].EnabledButton[button_id] );
+      button_id++;
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetPageId
+ * Description:  update the page id (page position in the notebook)
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaPage::SetPageId( int page_id )
 {
   m_PageId = page_id;
-  /*
-  if (m_pTopFrame)
-    m_pTopFrame->SetPageId( page_id );
-
-  if (m_pBottomFrame)
-  m_pBottomFrame->SetPageId( page_id );*/
-
-  // update the document's page id
-/*  int frame_id = 0;
-  if (m_pTopFrame)
-    {
-      frame_id = m_pTopFrame->GetFrameId();
-      TtaSetPageId( FrameTable[frame_id].FrDoc, page_id );
-    }
-  if (m_pBottomFrame)
-    {
-      frame_id = m_pBottomFrame->GetFrameId();
-      TtaSetPageId( FrameTable[frame_id].FrDoc, page_id );
-    }
-    */
 }
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  GetPageId
+ * Description:  return the page position relatively to other window pages
+ *--------------------------------------------------------------------------------------
+ */
 int AmayaPage::GetPageId()
 {
   return m_PageId;
