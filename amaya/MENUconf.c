@@ -1750,6 +1750,7 @@ static void ValidateGeneralConf ()
     {
       AmCopyFile (old_AppHome, AppHome, "amaya.css");
       AmCopyFile (old_AppHome, AppHome, "amaya.kbd");
+      AmCopyFile (old_AppHome, AppHome, "dictionary.DCT");
 	  /* copy the cache if it was under apphome */
 	  usprintf (s, "%s%clibwww-cache", old_AppHome, DIR_SEP); 
 	  if (TtaCheckDirectory (s))

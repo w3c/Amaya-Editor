@@ -16,6 +16,7 @@
 /* Included headerfiles */
 #define THOT_EXPORT
 #include "amaya.h"
+#include "AHTURLTools_f.h"
 #include "print.h"
 
 #define NumFormPrint       1
@@ -388,24 +389,16 @@ Document            document;
        /* define the new default PS file */
        ptr = TtaGetEnvString ("TMPDIR");
        if (ptr != NULL && TtaCheckDirectory (ptr))
-	 {
-	   ustrcpy(PSdir,ptr);
+	     ustrcpy(PSdir,ptr);
+       else
+	     ustrcpy (PSdir, TtaGetDefEnvString ("TMPDIR"));
 	   lg = ustrlen(PSdir);
 	   if (PSdir[lg - 1] == DIR_SEP)
-	     PSdir[--lg] = '\0';
-	 }
-       else
-	 {
-	   ustrcpy (PSdir, TtaGetEnvString ("TMPDIR"));
-	   lg = ustrlen (PSdir);
-	 }
+	     PSdir[--lg] = EOS;
+
        ustrcpy (docName, TtaGetDocumentName (document));
        ExtractSuffix (docName, suffix);
-#      ifdef _WINDOWS
-       sprintf (&PSdir[lg], "\\%s.ps", docName);
-#      else /* !_WINDOWS */
-       sprintf (&PSdir[lg], "/%s.ps", docName);
-#      endif /* !_WINDOWS */
+       sprintf (&PSdir[lg], "%c%s.ps", DIR_SEP, docName);
        TtaSetPsFile (PSdir);
        /* define the new default PrintSchema */
        numberLinks = FALSE;
@@ -652,7 +645,7 @@ View                view;
    CHAR_T             bufMenu[MAX_LENGTH];
    int              i;
 #  endif /* !_WINDOWS */
-   boolean            status, textFile;
+   boolean            textFile;
 
    textFile = (DocumentTypes[doc] == docText ||
 	       DocumentTypes[doc] == docTextRO ||

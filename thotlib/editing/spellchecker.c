@@ -99,12 +99,12 @@ boolean             ToCreate;
     {
       TtaExtractName (extenddic, path, dictname);
       if (dictname[0] == EOS)
-	ustrcpy (dictname, "dictionary");
+	ustrcpy (dictname, "dictionary.DCT");
     }
   else
     {
       path[0] = EOS;
-      ustrcpy (dictname, "dictionary");
+      ustrcpy (dictname, "dictionary.DCT");
     }
 
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
