@@ -71,7 +71,7 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
 #ifdef _I18N_
   int           nbBytesToRead, i;
   unsigned char car;
-  unsigned char res;
+  wchar_t       res;
 
   if (TtaReadByte (file, &car) == 0)
     {
@@ -96,34 +96,41 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
   /* See how many bytes to read to build a wide character */
   switch (nbBytesToRead)
     {        /** WARNING: There is not break statement between cases */
-    case 6: res += car;
+    case 6:
+      res += car;
       res <<= 6;
       TtaReadByte (file, &car);
-    case 5: res += car;
+    case 5:
+      res += car;
       res <<= 6;
       TtaReadByte (file, &car);
     case 4: res += car;
       res <<= 6;
       TtaReadByte (file, &car);
-    case 3: res += car;
+    case 3:
+      res += car;
       res <<= 6;
       TtaReadByte (file, &car);
-    case 2: res += car;
+    case 2:
+      res += car;
       res <<= 6;
       TtaReadByte (file, &car);
     case 1: res += car;
     }
-  i = offset[nbBytesToRead - 1];
-  res -= (unsigned char) i;
 
+  /* Leading bits in each byte are not masked or checked, but
+     accounted for by subtracting the appropriate offset value.
+     This assumes that the input is correct :-(. */
+   i = offset[nbBytesToRead - 1];
+  res -= (wchar_t) i;
   if (res <= 0xFFFF)
     *bval = res;
   else 
     *bval = '?';    
   return (TRUE);
-#else  /* !_I18N_ */
+#else  /* _I18N_ */
   return TtaReadByte (file, bval);
-#endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------

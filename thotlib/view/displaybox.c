@@ -962,7 +962,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 lgspace, whitespace;
   int                 fg, bg;
   int                 shadow;
-  int                 width;
+  int                 width, org;
   int                 left, right;
   ThotBool            blockbegin;
   ThotBool            withbackground;
@@ -1186,6 +1186,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       /* allocate a buffer to store converted characters */
       buffer = TtaGetMemory (pBox->BxNChars + 1);
       nbcar = 0;
+      org = x;
       while (charleft > 0)
 	{
 	  /* handle each char in the buffer */
@@ -1194,67 +1195,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	    {
 	      bchar = adbuff->BuContent[indbuff];
 	      car = GetFontAndIndexFromSpec (bchar, font, &nextfont);
-	      if (bchar == SPACE || bchar == THIN_SPACE ||
-		  bchar == HALF_EM || bchar == UNBREAKABLE_SPACE || bchar == TAB ||
-		  bchar == EOL)
-		{
-		  /* display previous chars handled */
-		  if (nbcar > 0)
-		    {
-		      y1 = y + BoxFontBase (pBox->BxFont);
-
-                      x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
-				       0, bl, 0, blockbegin, fg, shadow); 
-
-
-		      /* all previous spaces are declared */
-		      bl = 0;
-		    }
-		  
-		  if (shadow)
-		    {
-		      y1 = y + BoxFontBase (pBox->BxFont);
-		      DrawChar ('*', frame, x, y1, nextfont, fg);
-		    }
-		  else if (!ShowSpace)
-		    {
-		      /* Show the space chars */
-		      if (car == SPACE || car == TAB) 
-			DrawChar ((char) SHOWN_SPACE, frame, x, y, nextfont, fg);
-		      else if (car == THIN_SPACE)
-			DrawChar ((char) SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
-		      else if (car == HALF_EM)
-			DrawChar ((char) SHOWN_HALF_EM, frame, x, y, nextfont, fg);
-		      else if (car == UNBREAKABLE_SPACE)
-			DrawChar ((char) SHOWN_UNBREAKABLE_SPACE, frame, x, y,
-				  nextfont, fg);
-		    }
-		 
-		  nbcar = 0;
-#ifdef _WINDOWS
-		  if (car != EOS)
-#else /* _WINDOWS */
-		  if (!Printing)
-#endif /* _WINDOWS */
-		    {
-		      if (car == SPACE)
-			{
-			  if (restbl > 0)
-			    {
-			      /* Pixel space splitting */
-			      x = x + lgspace + 1;
-			      restbl--;
-			    }
-			  else
-			    x += lgspace;
-			}
-		      else
-			x += CharacterWidth (car, nextfont);
-		    }
-		  /* a new space is handled */
-		  bl++;
-		}
-	      else if (car == INVISIBLE_CHAR)
+	      if (car == INVISIBLE_CHAR)
 		/* do nothing */;
 	      else if (nextfont == NULL && car == UNDISPLAYED_UNICODE)
 		{
@@ -1262,8 +1203,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  if (nbcar > 0)
 		    {
 		      y1 = y + BoxFontBase (pBox->BxFont);
+		      width = width + org;
+		      org -= x;
+		      if (org == 0)
+			org = -1;
 		       x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-				       0, bl, x, blockbegin, fg, shadow);
+					org, bl, x, blockbegin, fg, shadow);
+		      width = width - x;
 		    }
 		  nbcar = 0;
 		  /* all previous spaces are declared */
@@ -1271,26 +1217,94 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  prevfont = nextfont;
 		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
 		  x += 6;
+		  org = x;
 		}
 	      else
 		{
 		  if (prevfont != nextfont)
 		    {
 		      /* display previous chars handled */
+#ifdef _WINDOWS
 		      if (nbcar > 0)
+#else /* WINDOWS */
+		      if (nbcar > 0 || Printing)
+#endif /* WINDOWS */
 			{
 		          y1 = y + BoxFontBase (pBox->BxFont);
+			  width = width + org;
+			  org -= x;
+			  if (org == 0)
+			    org = -1;
                           x += DrawString (buffer, nbcar, frame, x, y1,
-					   prevfont, 0, bl, 0, blockbegin,
+					   prevfont, org, bl, 0, blockbegin,
 					   fg, shadow);
+			  width = width - x;
+			  org = x;
 			  /* all previous spaces are declared */
 			  bl = 0;
 			}
 		      nbcar = 0;
 		      prevfont = nextfont;
 		    }
-		  /* add the new char */
-		  buffer[nbcar++] = car;
+		  if (bchar == SPACE || bchar == THIN_SPACE ||
+		      bchar == HALF_EM || bchar == UNBREAKABLE_SPACE || bchar == TAB ||
+		      bchar == EOL)
+		    {
+		      /* display previous chars handled */
+		      if (nbcar > 0)
+			{
+			  y1 = y + BoxFontBase (pBox->BxFont);
+			  x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
+					   0, bl, 0, blockbegin, fg, shadow); 
+			  /* all previous spaces are declared */
+			  bl = 0;
+			}
+		  
+		      if (shadow)
+			{
+			  y1 = y + BoxFontBase (pBox->BxFont);
+			  DrawChar ('*', frame, x, y1, nextfont, fg);
+			}
+		      else if (!ShowSpace)
+			{
+			  /* Show the space chars */
+			  if (car == SPACE || car == TAB) 
+			    DrawChar ((char) SHOWN_SPACE, frame, x, y, nextfont, fg);
+			  else if (car == THIN_SPACE)
+			    DrawChar ((char) SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
+			  else if (car == HALF_EM)
+			    DrawChar ((char) SHOWN_HALF_EM, frame, x, y, nextfont, fg);
+			  else if (car == UNBREAKABLE_SPACE)
+			    DrawChar ((char) SHOWN_UNBREAKABLE_SPACE, frame, x, y,
+				      nextfont, fg);
+			}
+		 
+		      nbcar = 0;
+		      if (car == SPACE)
+			{
+			  if (restbl > 0)
+			    {
+			      /* Pixel space splitting */
+			      lg = lgspace + 1;
+			      restbl--;
+			    }
+			  else
+			    lg = lgspace;
+			}
+		      else if (car != EOS)
+			lg = CharacterWidth (car, nextfont);
+#ifndef _WINDOWS
+		      if (Printing)
+			org -= lg;
+		      else
+			x += lg;
+#endif /* _WINDOWS */
+		      /* a new space is handled */
+		      bl++;
+		    }
+		  else
+		    /* add the new char */
+		    buffer[nbcar++] = car;
 		}
 	      /* Skip to next char */
 	      if (rtl)

@@ -290,7 +290,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
       /* Is this a new box ? */
       if (SameBox == 0)
 	{
-	  /* store the start postion for the justified box */
+	  /* store the start position for the justified box */
 	  SameBox = 1;
 	  X = x;
 	  Y = y;
@@ -367,10 +367,12 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   if (hyphen && fg >= 0)
     Transcode (fout, encoding, '\255');
   /* is this the end of the box */
-  if (boxWidth && SameBox == 1)
+  if (boxWidth != 0 && SameBox == 1)
     {
       /* now let Postscript justify the text with the right width */
-      if (boxWidth < width)
+      if (boxWidth < 0)
+	boxWidth = - boxWidth + width;
+      else if (boxWidth < width)
 	/* not enough space to display the last piece of text */
 	boxWidth = width;
       /* Is justification needed ? */

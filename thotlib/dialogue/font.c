@@ -1198,15 +1198,20 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    {
 	      /* Greek characters */
 	      car = GreekFontScript;
-	      pfont = &(fontset->FontIso_7);
 	      if (GreekFontScript == '7')
+		{
+		  pfont = &(fontset->FontIso_7);
 #ifdef _WINDOWS
-		encoding = WINDOWS_1253;
+		  encoding = WINDOWS_1253;
 #else /* _WINDOWS */
-	        encoding = ISO_8859_7;
+		  encoding = ISO_8859_7;
 #endif /* _WINDOWS */
+		}
 	      else
-		encoding = ISO_SYMBOL;
+		{
+		  pfont = &(fontset->FontSymbol);
+		  encoding = ISO_SYMBOL;
+		}
 	    }
 	  else if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
 		   c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/ ||
@@ -1224,9 +1229,26 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	      if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
 		  c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/)
 		{
-		  car = 'F'; /* Extended Latin */
-		  pfont = &(fontset->FontIso_15);
-		  encoding = ISO_8859_15;
+		  if (Printing)
+		    {
+		      car = '1'; /* Extended Latin */
+		      pfont = &(fontset->FontIso_1);
+		      encoding = ISO_8859_1;
+		      if (c == 0x152)
+			c = 75;
+		      else if (c == 0x153)
+			c = 76;
+		      else if (c == 0x178)
+			c = 255;
+		      else
+			c = 128;
+		    }
+		  else
+		    {
+		      car = 'F'; /* Extended Latin */
+		      pfont = &(fontset->FontIso_15);
+		      encoding = ISO_8859_15;
+		    }
 		}
 	      else
 		{
@@ -1624,7 +1646,7 @@ void InitDialogueFonts (char *name)
 #endif /* _WINDOWS */
   char           **dirlist = NULL;
   char           **currentlist = NULL;
-#endif /* !_GTK */
+#endif /* _GTK */
   char            *value;
   char             script;
   int              f3;
@@ -1644,7 +1666,15 @@ void InitDialogueFonts (char *name)
     }
    value = TtaGetEnvString ("FontFamily");
   MaxNumberOfSizes = 10;
+#ifdef _WINDOWS
   GreekFontScript = '7';
+#else /* _WINDOWS */
+  if (Printing)
+    /* Only the sysmbol font is available in Postscript */
+    GreekFontScript = 'G';
+  else
+    GreekFontScript = '7';
+#endif /* _WINDOWS */
   if (value == NULL)
     {
       FontFamily = TtaGetMemory (8);

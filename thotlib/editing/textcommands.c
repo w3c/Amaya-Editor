@@ -1290,13 +1290,13 @@ void TtaSelectWord (Element element, int pos, Document doc, View view)
 	  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
 	      pBox = pBox->BxNexChild;
-	      while (pBox && pBox->BxNChars < i && pBox->BxNexChild)
+	      while (pBox && pBox->BxNexChild && i >= pBox->BxNexChild->BxFirstChar)
 		{
-		  i = i - pBox->BxNChars;
-		  /* remove the delta between two boxes */
-		  i = i - pBox->BxNexChild->BxFirstChar + pBox->BxNChars + pBox->BxFirstChar;
+		  /* i = i - pBox->BxNChars;
+		  i = i - pBox->BxNexChild->BxFirstChar + pBox->BxNChars + pBox->BxFirstChar; */
 		  pBox = pBox->BxNexChild;
 		}
+	      i -= pBox->BxFirstChar;
 	    }
 	  pBuffer = pBox->BxBuffer;
 	  index =  pBox->BxIndChar;
