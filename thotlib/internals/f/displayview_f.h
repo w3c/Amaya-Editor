@@ -8,6 +8,8 @@
 
 extern void RedisplayDocViews ( PtrDocument pDoc );
 extern void AbstractImageUpdated ( PtrDocument pDoc );
+extern void BuildAbstractBoxes ( PtrElement pEl,
+                                 PtrDocument pDoc );
 extern void RedisplayNewElement ( Document document,
                                   PtrElement newElement,
                                   PtrElement sibling,
@@ -61,6 +63,8 @@ extern DisplayMode TtaGetDisplayMode ( Document document );
 
 extern void RedisplayDocViews (/* PtrDocument pDoc */);
 extern void AbstractImageUpdated (/* PtrDocument pDoc */);
+extern void BuildAbstractBoxes (/* PtrElement pEl,
+                                   PtrDocument pDoc */);
 extern void RedisplayNewElement (/* Document document,
                                     PtrElement newElement,
                                     PtrElement sibling,

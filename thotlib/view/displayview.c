@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * This module handles Abstract Views
  *
  * Author: I. Vatton (INRIA)
@@ -187,6 +178,196 @@ PtrDocument         pDoc;
       }
 }
 
+/*----------------------------------------------------------------------
+   EnclosingAbsBoxesBreakable
+   Returns TRUE if all abstract boxes in view v corresponding to
+   ancestors of element pEl are allowed to be incomplete.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool	EnclosingAbsBoxesBreakable (PtrElement pEl, int v)
+#else  /* __STDC__ */
+static ThotBool	EnclosingAbsBoxesBreakable (pEl, v)
+PtrElement	pEl;
+int		v;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox	pAb;
+
+   pAb = NULL;
+   while (pEl && !pAb)
+     {
+     pEl = pEl->ElParent;
+     if (pEl)
+        pAb = pEl->ElAbstractBox[v - 1];
+     }
+   return (IsBreakable (pAb));
+}
+
+/*----------------------------------------------------------------------
+   SupprFollowingAbsBoxes
+   Delete from a given view all abstract boxes associated with elements
+   that follow pEl (following siblings of pEl and its ancestors).
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SupprFollowingAbsBoxes (PtrElement pEl, PtrDocument pDoc, int view)
+#else  /* __STDC__ */
+static void SupprFollowingAbsBoxes (pEl, pDoc, view)
+PtrElement	pEl;
+PtrDocument	pDoc;
+int		view;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox	pAb, pNextAb, pParentAb, pAbbRedisp, pAbbR;
+   int			h;
+
+   pAbbRedisp = NULL;
+   /* look for the first abstract box (pAb) corresponding to a following
+      sibling of pEl or to a following sibling of its ancestors */
+   pAb = NULL;
+   while (!pAb && pEl)
+      {
+      if (pEl->ElNext)
+	 {
+         pAb = pEl->ElNext->ElAbstractBox[view - 1];
+         if (!pAb)
+	    pEl = pEl->ElNext;
+	 }
+      else
+	 pEl = pEl->ElParent;
+      }
+   /* now, delete the abstract box we have found and all following abstract
+      boxes */
+   if (pAb)
+      {
+      /* we will have to redisplay at least pAb */
+      pAbbRedisp = pAb;
+      do
+	{
+        pParentAb = pAb->AbEnclosing;
+	/* kill pAb and all its following siblings */
+	while (pAb)
+	   {
+	   pNextAb = pAb->AbNext;
+           SetDeadAbsBox (pAb);
+	   ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
+	   pAbbRedisp = Enclosing (pAbbRedisp, pAbbR);
+	   pAb = pNextAb;
+	   }
+        /* look for the first ancestor abstract box that has a next sibling */
+	pAb = pParentAb;
+	if (pAb)
+	   if (pAb->AbNext)
+	      pAb = pAb->AbNext;
+	   else
+	      {
+	      pNextAb = NULL;
+	      while (pAb && !pNextAb)
+		 {
+	         pAb = pAb->AbEnclosing;
+		 if (pAb)
+		    {
+		    pNextAb = pAb->AbNext;
+		    if (pNextAb)
+		       pAb = pNextAb;
+		    }
+	         }
+	      }
+	}
+      while (pAb);
+      }
+   /* remember the abstract box that has to be redisplayed */
+   if (pAbbRedisp)
+      {
+      pDoc->DocViewModifiedAb[view - 1] =
+		Enclosing (pAbbRedisp, pDoc->DocViewModifiedAb[view - 1]);
+      }
+}
+
+/*----------------------------------------------------------------------
+   BuildAbstractBoxes
+   Cree dans toutes les vues ouvertes du document pDoc les paves qui
+   correspondent a l'element pEl, dans la limite de la capacite' des vues.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
+#else  /* __STDC__ */
+void BuildAbstractBoxes (pEl, pDoc)
+PtrElement pEl;
+PtrDocument pDoc;
+#endif /* __STDC__ */
+
+{
+   int                 view;
+
+   /* on ne cree les paves que s'ils tombent dans la partie de l'image */
+   /* du document deja construite */
+   if (!AssocView (pEl))
+      /* traite toutes les vues du document */
+      for (view = 1; view <= MAX_VIEW_DOC; view++)
+	 {
+	 if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+	    /* la vue est ouverte */
+	    if (ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view-1], pDoc))
+	       /* l'element est a l'interieur de l'image deja construite */
+	       {
+	       if (!EnclosingAbsBoxesBreakable (pEl, view) ||
+		    pEl->ElVolume + pDoc->DocViewRootAb[view - 1]->AbVolume
+					< 2 * pDoc->DocViewVolume[view - 1])
+	          /* on cree tous les paves du nouvel element */
+	          pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+	       else
+		  /* le volume du nouvel element ajoute' au volume existant
+		     de la vue est tres superieur a ce que la fenetre peut
+		     montrer d'un coup */
+		  {
+		  /* on detruit la partie de l'image abstraite qui suit le
+		     nouvel element */
+		  SupprFollowingAbsBoxes (pEl, pDoc, view);
+		  /* on creera seulement une partie des paves du nouvel
+		    element */
+		  pDoc->DocViewFreeVolume[view - 1] =
+			pDoc->DocViewVolume[view - 1] - pDoc->DocViewRootAb[view - 1]->AbVolume;
+		  }
+	       /* cree effectivement les paves du nouvel element dans la vue */
+	       if (pDoc->DocViewFreeVolume[view - 1] > 0)
+	          CreateNewAbsBoxes (pEl, pDoc, view);
+	       }
+	 }
+   else
+      /* View of associated elements */
+      if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0)
+         /* la vue est ouverte */
+         if (ElemWithinImage (pEl, 1,
+	      pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
+	    /* l'element se trouve a l'interieur de l'image deja construite */
+	    {
+	       if (!EnclosingAbsBoxesBreakable (pEl, 1) ||
+		    pEl->ElVolume + pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0]->AbVolume
+			  < 2 * pDoc->DocAssocVolume[pEl->ElAssocNum - 1])
+	          /* on cree tous les paves du nouvel element */
+	          pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
+	       else
+		  /* le volume du nouvel element ajoute' au volume existant
+		     de la vue est tres superieur a ce que la fenetre peut
+		     montrer d'un coup */
+		  {
+		  /* on detruit la partie de l'image abstraite qui suit le
+		     nouvel element */
+		  SupprFollowingAbsBoxes (pEl, pDoc, 1);
+		  /* on creera seulement une partie des paves du nouvel
+		    element */
+		  pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
+			pDoc->DocAssocVolume[pEl->ElAssocNum - 1]
+			- pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0]->AbVolume;
+		  }
+	       /* cree effectivement les paves du nouvel element dans la vue */
+	       if (pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] > 0)
+	          CreateNewAbsBoxes (pEl, pDoc, 0);
+	    }
+   /* applique les regles retardees concernant les paves cree's */
+   ApplDelayedRule (pEl, pDoc);
+   AbstractImageUpdated (pDoc);
+}
 
 /*----------------------------------------------------------------------
    RedisplayNewElement affiche un element qui vient d'etre ajoute'    
@@ -204,12 +385,11 @@ ThotBool            creation;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   int                 view;
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
-   /* If the document has not a presentation schema, we do nothing */
+   /* If the document doesn't have any presentation schema, do nothing */
    if (pDoc->DocSSchema->SsPSchema == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
@@ -218,45 +398,18 @@ ThotBool            creation;
    if (sibling != NULL)
       /* l'element sibling n'est plus le dernier (ou premier) fils de son pere */
       ChangeFirstLast (sibling, pDoc, first, TRUE);
-   /* on ne cree les paves que s'ils tombent dans la partie de l'image */
-   /* du document deja construite */
-   if (!AssocView (newElement))
-      /* nombre de vues du document */
-      for (view = 1; view <= MAX_VIEW_DOC; view++)
-	{
-	   if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	      /* la vue est ouverte */
-	      if (ElemWithinImage (newElement, view, pDoc->DocViewRootAb[view - 1], pDoc))
-		 /* l'element se trouve a l'interieur de l'image deja construite */
-		{
-		   /* indique qu'il faut creer les paves sans limite de volume */
-		   pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-		   /* cree effectivement les paves du nouvel element dans la vue */
-		   CreateNewAbsBoxes (newElement, pDoc, view);
-		}
-	}
-   else
-      /* View of associated elements */
-   if (pDoc->DocAssocFrame[newElement->ElAssocNum - 1] != 0)
-      /* la vue est ouverte */
-      if (ElemWithinImage (newElement, 1, pDoc->DocAssocRoot[newElement->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
-	 /* l'element se trouve a l'interieur de l'image deja construite */
-	{
-	   /* indique qu'il faut creer les paves sans limite de volume */
-	   pDoc->DocAssocFreeVolume[newElement->ElAssocNum - 1] = THOT_MAXINT;
-	   /* cree effectivement les paves du nouvel element dans la vue */
-	   CreateNewAbsBoxes (newElement, pDoc, 0);
-	}
-   /* applique les regles retardees concernant les paves cree's */
-   ApplDelayedRule (newElement, pDoc);
-   AbstractImageUpdated (pDoc);
+   /* cree les paves de l'element dans la limite de la capacite' des vues
+      ouvertes */
+   BuildAbstractBoxes (newElement, pDoc);
+   /* reaffiche */
    RedisplayCommand (document);
    if (creation)
      {
 	/* reaffiche les paves qui copient le nouvel element */
 	RedisplayCopies (newElement, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 	/* reaffiche les numeros suivants qui changent */
-	UpdateNumbers (newElement, newElement, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
+	UpdateNumbers (newElement, newElement, pDoc,
+	  (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
      }
 }
 

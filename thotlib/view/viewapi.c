@@ -1071,37 +1071,11 @@ Document            document;
    DestroyAbsBoxes (pEl, pDoc, TRUE);
    /* reevalue l'image de toutes les vues */
    AbstractImageUpdated (pDoc);
-   /* on ne cree les paves que s'ils tombent dans la partie de l'image */
-   /* du document deja construite */
-   if (!AssocView (pEl))
-      /* nombre de vues du document */
-      for (view = 1; view <= MAX_VIEW_DOC; view++)
-	{
-	   if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	      /* la vue est ouverte */
-	      if (ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view - 1], pDoc))
-		 /* l'element se trouve a l'interieur de l'image deja construite */
-		{
-		   /* indique qu'il faut creer les paves sans limite de volume */
-		   pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-		   /* cree effectivement les paves du nouvel element dans la vue */
-		   CreateNewAbsBoxes (pEl, pDoc, view);
-		}
-	}
-   else
-      /* View of associated elements */
-   if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0)
-      /* la vue est ouverte */
-      if (ElemWithinImage (pEl, 1, pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
-	 /* l'element se trouve a l'interieur de l'image deja construite */
-	{
-	   /* indique qu'il faut creer les paves sans limite de volume */
-	   pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
-	   /* cree effectivement les paves du nouvel element dans la vue */
-	   CreateNewAbsBoxes (pEl, pDoc, 0);
-	}
-   AbstractImageUpdated (pDoc);
+   /* cree les paves de l'element dans la limite de la capacite' des vues
+      ouvertes */
+   BuildAbstractBoxes (pEl, pDoc);
    /* pas d'operation de reaffichage secondaires */
+   /* reaffiche les paves construits */
    RedisplayCommand (document);
 }
 

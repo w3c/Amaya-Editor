@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * Module de manipulations des images abstraites.
  *
  * Authors: V. Quint (INRIA)
@@ -509,33 +500,33 @@ ThotBool            IsBreakable (pAb)
 PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
-   ThotBool            result;
+   ThotBool            unbreakable;
    int                 index;
    PtrPSchema          pSchP;
    PtrSSchema          pSchS;
 
-   result = FALSE;
+   unbreakable = FALSE;
    /* boucle sur les paves englobants */
-   while (pAb != NULL && !result)
+   while (pAb != NULL && !unbreakable)
      {
 	if (pAb->AbLeafType == LtCompound)
 	   /* pave' compose' */
 	   if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
 	      /* c'est une marque de saut de page, non-secable */
-	      result = TRUE;
+	      unbreakable = TRUE;
 	   else
 	      /* un pave compose' est non-secable s'il est mis en lignes */
-	      result = pAb->AbInLine;
+	      unbreakable = pAb->AbInLine;
 	/* regarde dans le schema de presentation du pave s'il est secable */
-	if (!result)
+	if (!unbreakable)
 	  {
 	     SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS);
-	     result = (pSchP->PsBuildAll[index - 1]);
+	     unbreakable = (pSchP->PsBuildAll[index - 1]);
 	  }
 	pAb = pAb->AbEnclosing;
 	/* passe a l'englobant */
      }
-   return (!result);
+   return (!unbreakable);
 }
 
 
@@ -1060,9 +1051,7 @@ int                 frame;
   /* met a jour la nouvelle capacite de la vue, indique dans le contexte */
   /* du document le volume des paves a creer et cherche le pave racine de */
   /* la vue */
-  if (pDoc == NULL)
-    printf ("\nError IncreaseVolume: bad frame\n");
-  else
+  if (pDoc != NULL)
     {
       if (assoc)
 	{
@@ -1137,9 +1126,7 @@ int                 frame;
   GetDocAndView (frame, &pDoc, &view, &assoc);
   /* met a jour la nouvelle capacite de la vue et cherche le pave racine */
   /* de la vue */
-  if (pDoc == NULL)
-    printf ("\nErreur DecreaseVolume: frame incorrecte\n");
-  else
+  if (pDoc != NULL)
     {
       if (assoc)
 	{
@@ -1155,9 +1142,6 @@ int                 frame;
 	  pDoc->DocViewVolume[view - 1] = pAb->AbVolume - dVol;
 	}
 
-      if (pAb != NULL)
-	if (dVol >= pAb->AbVolume)
-	  printf ("Erreur DecreaseVolume: dVol=%3d volume view=%3d\n", dVol, pAb->AbVolume);
       /* supprime les paves */
       SupprAbsBoxes (pAb, pDoc, head, &dVol);
       /* signale au Mediateur les paves modifies */

@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * -- Modifications des images abstraites.
  * Ce module effectue les modifications des images abstraites des documents
  * et demande au Mediateur le reaffichage incremental. 
@@ -4187,21 +4178,22 @@ PtrDocument         pDoc;
 
    result = TRUE;
    finished = FALSE;
-   /* Has the element close to this one an abstract box in the view */
+   /* Is there an abstract box in this view for the element next to this one */
    if (pEl->ElPrevious != NULL)
      {
 	pAb = pEl->ElPrevious->ElAbstractBox[view - 1];
 	if (pAb != NULL)
 	   /* The previous element has an abstract box in the view */
-	  {
-	     finished = TRUE;
-	     /* If the abstract box of the previous element is complete in queue,
-	        the element will have its abstract box in the existing image */
-	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
-		result = TRUE;
-	     else
-		result = !pAb->AbTruncatedTail;
-	  }
+	   {
+	   finished = TRUE;
+	   /* If the abstract box of the previous element is complete at the
+	      end, the element will have its abstract box in the existing
+              image */
+	   if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
+	      result = TRUE;
+	   else
+	      result = !pAb->AbTruncatedTail;
+	   }
      }
    else if (pEl->ElNext != NULL)
       /* There is a next element */
