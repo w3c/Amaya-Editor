@@ -1,5 +1,5 @@
 #
-# spec file for package amaya (Version 4.2)
+# spec file for package amaya (Version 4.3)
 # 
 # Copyright  (c)  1998  S.u.S.E. GmbH  Fuerth, Germany.
 #
@@ -8,17 +8,17 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 4.2.1
+%define version 4.3
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya
 Release:      1
-Copyright:    Copyright 1995-2000 (MIT) (INRIA), (L)GPL compatible
+Copyright:    Copyright 1995-2001 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
-Packager:     Daniel.Veillard@w3.org
+Packager:     Irene.Vatton@w3.org
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
@@ -40,10 +40,12 @@ need to know the HTML or CSS languages.
 
 Authors:
 --------
-    Irene.Vatton@w3.org,Jose.Kahan@w3.org,
-    Vincent.Quint@w3.org
+    Irene.Vatton@w3.org, Jose.Kahan@w3.org,
+    Vincent.Quint@w3.org, Laurent.Carcone@w3.org
 
 %changelog
+* Mon Feb 28 2001 Irene Vatton <Irene.Vatton@w3.org>
+- updated for amaya-4.2.1
 * Mon Jan 8 2001 Irene Vatton <Irene.Vatton@w3.org>
 - updated for amaya-4.1
 * Sat Nov 11 2000 Daniel Veillard <Daniel.Veillard@w3.org>
