@@ -4466,6 +4466,639 @@ PtrAbstractBox             pNewAbbox;
      }
 }
 
+#ifdef __COLPAGE__
+/* ---------------------------------------------------------------------- */
+/* |	Chaine	chaine et remplit le pave pointe par pAb, correspondant| */
+/* |		a l'element pointe par pEl dans la vue nv du document	| */
+/* |		dont le contexte est pointe par pDoc.			| */
+/* |    forward dit si la creation se fait en avant ou non		| */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void Chaine(PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv, int viewSch, PtrDocument pDoc, boolean forward)
+#else /* __STDC__ */
+static void Chaine(pAb, pEl, nv, viewSch, pDoc, forward)
+	PtrAbstractBox pAb;
+	PtrElement pEl;
+	DocViewNumber nv;
+	int viewSch;
+	PtrDocument pDoc;
+	boolean forward;
+#endif /* __STDC__ */
+{
+  PtrElement      pE;
+  PtrAbstractBox         pP;
+  boolean         stop;
+  PtrAbstractBox         pPa1;
+  PtrElement      pEl1;
+  PtrAbstractBox  pPage, pPEnglobant;
+  boolean found, peretrouve;
+
+  pPage = NULL;
+  pPa1 = pAb;
+  pE = pEl;
+  pP = NULL;
+  peretrouve = FALSE;
+  if (forward)
+    /* cas simples de chainage si on insere un pave au milieu de l'i.a.  */
+    {
+    /* si l'element a un frere precedent (non MP) qui a un pave */
+    /* et qui ne contient pas d'element MP de cette vue, */
+    /* alors le nouveau pave a pour pere le pere du dernier dup precedent */
+      if (pEl->ElPrevious != NULL
+          && !((pEl->ElPrevious->ElTypeNumber == PageBreak + 1)
+                && pEl->ElPrevious->ElViewPSchema == viewSch))
+        {
+          pE = pEl->ElPrevious;
+          /* on cherche si pE contient une MP de la vue */
+          /* pour cela on recherche le pave marque page precedent et */
+          /* on regarde si l'element correspondant a pour ascendant pE */
+          pP = RechPavPage(pE, nv, viewSch, FALSE);
+          if (pP != NULL) /* document pagine */
+            {
+              pEl1 = pP->AbElement;
+              found = FALSE;
+              while (!found && pEl1 != NULL)
+                if (pEl1->ElParent == pE)
+                  found = TRUE;
+                else
+                  pEl1 = pEl1->ElParent;
+              if (!found) /* si la derniere MP n'est pas fils de pE */
+                           /* on peut chainer pAb au pave pere de pP */
+                {
+                  pP = pE->ElAbstractBox[nv - 1];
+                  if (pP != NULL)
+                    {
+                      while (pP->AbPresentationBox
+                             && pP->AbElement == pE && pP->AbNext !=NULL)
+                        pP = pP->AbNext;
+                      /* on va a la fin de la chaine des dupliques */
+                      /* de l'element precedent */
+                      while (pP->AbNextRepeated != NULL)
+                        pP = pP->AbNextRepeated;
+                      /* on prend le pere de ce pave : ce sera le pere de */
+                      /* de pAb */
+                      pP = pP->AbEnclosing;
+                      peretrouve = TRUE;
+                    }
+                  
+                  /* dans tous les autres cas, on revient au cas general */
+                }
+            }
+        }
+      else
+    /* sinon, si l'element a un frere suivant (non MP) qui a un pave, */
+    /* le pere du pave sera le premier pave du pere du frere */
+    /* de l'element suivant */
+        if (pEl->ElNext != NULL
+            && !((pEl->ElNext->ElTypeNumber == PageBreak + 1)
+                 && pEl->ElNext->ElViewPSchema == viewSch))
+          {
+            pE = pEl->ElNext;
+            pP = pE->ElAbstractBox[nv - 1];
+            if (pP != NULL)
+              {
+              /* on prend le pere de ce pave : ce sera le pere de pAb */
+                pP = pP->AbEnclosing;
+                peretrouve = TRUE;
+              }
+          }
+        
+       /* dans les autres cas (!peretrouve), c'est la panique si */
+       /* l'insersion se fait au milieu de l'i.a. ! */
+       /* il faut recreer l'image abstraite des pages concernees */
+       /* pour l'instant on applique le code general */
+    }
+  if (!peretrouve)
+    {
+    /* cherche dans cette vue le premier pave d'un element ascendant */
+    pP = NULL;
+    pE = pEl;
+    while (pE->ElParent != NULL && pP == NULL)
+      {
+      pE = pE->ElParent;
+      pP = pE->ElAbstractBox[nv - 1];
+      }
+    }
+  if (pP == NULL)
+    /* il n'y a pas de pave englobant pAb */ 
+    {
+      if (pEl->ElAbstractBox[nv - 1] == NULL)
+        pEl->ElAbstractBox[nv - 1] = pAb;
+    }
+  else			
+    /* pAb n'est pas le pave le plus englobant pour cette vue */
+    /*  pP: 1er pave de l'element ascendant pour cette vue */
+    {
+     if (!peretrouve)
+     {
+       /* le premier pave qui n'est pas de presentation est l'englobant */
+       /* sauf si le pere est la racine : dans ce cas, l'englobant est */
+       /* le pave de la marque de page precedente */
+       if ((!AssocView(pEl) && (pE == pDoc->DocRootElement))
+            || (AssocView(pEl)
+            && (pE == pDoc->DocAssocRoot[pEl->ElAssocNum - 1])))
+         /* cas ou le pere est la racine */
+         /* recherche du pave page ou le pave pAb doit etre inclus */
+         pPage = RechPavPage(pEl, nv, viewSch, TRUE);
+       if (pPage == NULL) /* le pere n'est pas la racine */
+         /* ou le document est sans pagination */
+         {
+           /* saute les paves de presentation que l'ascendant a crees par la */
+           /* regle CreateBefore */
+           while (pP->AbPresentationBox && pP->AbElement == pE &&
+                  pP->AbNext != NULL)
+             pP = pP->AbNext;	
+           if (forward)
+             while (pP->AbNextRepeated!=NULL) /* on se positionne sur le */
+               /* dernier pave duplique */
+               /* cas en avant */
+               pP = pP->AbNextRepeated;
+           /* cas ou l'on fonctionne en arriere : on est sur le bon pave */
+         }
+       else
+        {
+          /* il faut descendre la hierarchie des pages et colonnes */
+          /* pPage est le pave corps de page de plus haut niveau */
+          found = FALSE;
+          while (!found)
+            {
+              if (pPage->AbFirstEnclosed != NULL
+                  && pPage->AbFirstEnclosed->AbElement->ElTypeNumber == 
+                              PageBreak+1)
+                pPage = pPage->AbFirstEnclosed; 
+              else
+                found = TRUE;
+              if (!found)
+                while (pPage->AbPresentationBox)
+                  pPage = pPage->AbNext;
+	      /* si forward on se place sur la derniere colonne */
+	      if (!found && forward) /* TODO et cas !forward ??? */
+                {
+                  while (pPage->AbNext != NULL)
+                    pPage = pPage->AbNext;
+                  while (pPage->AbPresentationBox)
+                    pPage = pPage->AbPrevious;
+  	        } 
+            }
+           pP = pPage;
+        }
+      } /* fin du cas ou !peretrouve */
+      pPa1->AbEnclosing = pP;
+      if (pPa1->AbEnclosing->AbFirstEnclosed == NULL)
+	/* c'est le premier pave englobe */
+	{
+	  pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+	  if (pEl->ElAbstractBox[nv - 1] == NULL)
+	    pEl->ElAbstractBox[nv - 1] = pAb;
+	  /* 1er pave de l'element */
+	}
+      else
+	/* il y a deja des paves englobes */
+	/* cas retire : les paves de corps, haut, bas et filet */
+	/* ne sont pas chaines avec la procedure Chaine */
+	/* test sur marque de page supprime */
+	  {
+	    if (pEl->ElAbstractBox[nv - 1] != NULL)
+	      /* cet element a deja des paves dans cette vue */
+	      /* saute les paves de l'element */
+	      /* en tenant compte des eventuels paves dupliques de l'element */
+	      {
+		pP = pEl->ElAbstractBox[nv - 1];
+		stop = FALSE;
+		do
+	          if (pP->AbNext == NULL && pP->AbNextRepeated == NULL)
+                    stop = TRUE;
+	          else if (pP->AbNext != NULL)
+	            if (pP->AbNext->AbElement != pEl)
+                      stop = TRUE;
+                    else
+                      pP = pP->AbNext;
+	          else /* pP->AbNext == NULL et pP->AbNextRepeated != NULL*/
+	             pP = pP->AbNextRepeated;
+		while (!(stop));
+		/* insere le nouveau pave apres */
+		pPa1->AbPrevious = pP;
+		pPa1->AbNext = pP->AbNext;
+	      } 
+	    else	
+	      /* cet element n'a pas encore de paves dans cette vue */
+	      {
+		pEl->ElAbstractBox[nv - 1] = pAb;	
+		/* 1er pave de l'element */
+		/* cherche l'element precedent ayant un pave dans la vue */
+	        /* et qui soit dans le sous-arbre defini par l'element */
+	        /* du pave pere */
+	        /* on saute des les elements marque de page */
+	        /* dans le cas ou le pave pere est un pave corps de page, */
+	        /* on ne found jamais d'element precedent (ok) */
+	        pE = pEl;
+	        do
+	          pE = BackSearchVisibleElem(pPa1->AbEnclosing->AbElement, pE, nv);
+	        while ((pE != NULL) && (pE->ElTypeNumber == PageBreak + 1));
+                /* verifie si le pave found pour un element precedent */
+                /* est bien inclus dans le meme pave englobant. */
+	        /* il faut parcourir la suite des paves de l'element */
+	        /* precedent (il peut avoir plusieurs paves dup) */
+                /* Par exemple deux notes de bas de page successives */
+                /* peuvent avoir leurs paves dans des boites de bas de */
+                /* page differentes */ 
+	        /* ce dernier cas n'est plus un cas particulier car les */
+	        /* paves relatifs a l'element Notes sont chaines avec dup */
+ 	        if (pE != NULL)
+                  {
+                    /* pave de l'element precedent */
+                    pP = pE->ElAbstractBox[nv - 1];
+	            /* on saute les paves de presentation */
+	            while (pP->AbPresentationBox)
+	               pP = pP->AbNext;
+	            found = FALSE;
+	            while (!found && pP != NULL)
+	              {
+	              /* boucle de recherche dans les ascendants */
+	              /* pourquoi ne pas rester au niveau du pere ? */
+	              pPEnglobant = pP->AbEnclosing;
+	              while (pPEnglobant != pPa1->AbEnclosing &&
+	                     pPEnglobant != NULL)
+	                pPEnglobant = pPEnglobant->AbEnclosing;
+	              /*  si pPEnglobant=NULL, pas found, on passe au pave */
+	              /* duplique suivant de l'element precedent */
+	              if (pPEnglobant == NULL)
+	                pP = pP->AbNextRepeated;
+ 	              else
+	                found = TRUE;
+	              }
+	            if (!found)
+		      /* ils n'ont pas le meme pave englobant, on ne */
+		      /* chainera pas le pave au pave de l'element precedent */
+		      pE = NULL;
+		  }
+	        /* cas particulier ou pE = PageBreak Debut supprime */
+		if (pE == NULL)
+	          /* pas de pave d'element (hors marque de page) precedent */
+                  {
+                  pP = pPa1->AbEnclosing->AbFirstEnclosed;
+                  if (pP != NULL)
+	            /* on saute les paves de presentation de l'englobant (ou */
+	            /* de la racine si l'englobant est une marque de page ) */
+	            if ((pP->AbElement == pPa1->AbEnclosing->AbElement) ||
+                        ((pPa1->AbEnclosing->AbElement->ElTypeNumber
+                          == PageBreak + 1)
+                         && (pP->AbElement
+                          == pPa1->AbEnclosing->AbEnclosing->AbElement)))
+		      if (RegleCree(pDoc, pPa1->AbEnclosing, pP) == FnCreateLast)
+			/* le pave existant doit etre le dernier, on insere */
+			/* le nouveau pave devant lui */
+			{
+			pPa1->AbNext = pP;
+			pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+			} 
+		      else	
+			/* on saute les paves crees par une regle Create de */
+                        /* l'englobant (ou de la racine si marque de page) */
+			{
+			stop = FALSE;
+			do
+			  if (pP->AbNext == NULL)
+			    stop = TRUE;
+                          else
+			    if (pPa1->AbEnclosing->AbElement->ElTypeNumber ==
+				PageBreak + 1)
+                              if (pP->AbNext->AbElement !=
+                                  pPa1->AbEnclosing->AbEnclosing->AbElement)
+                                stop = TRUE;
+                              else
+                                pP = pP->AbNext;
+                            else
+			      if (pP->AbNext->AbElement !=
+                                  pPa1->AbEnclosing->AbElement)
+			        stop = TRUE;
+			      else
+				if (RegleCree(pDoc, pPa1->AbEnclosing, pP->AbNext) == 
+				    FnCreateLast)
+				  /* le pave suivant doit etre le dernier */
+				  stop = TRUE;
+			        else
+				  pP = pP->AbNext;
+			while (!stop);
+			/* on insere le nouveau pave apres */
+			pPa1->AbPrevious = pP;
+			pPa1->AbNext = pP->AbNext;
+			}
+		      else	
+			/* insere le nouveau pave en tete */
+			{
+			pPa1->AbNext = pP;
+			pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+			}
+		  } 
+		else	
+		  /* il y a un pave d'un element precedent */
+	          /* qui a le meme englobant */
+		  /* on cherche le dernier pave de l'element precedent */
+		  {
+	          /* pP est le premier pave du precedent qui a le meme pere */
+	          /* on insere le nouveau pave apres le dernier pave de pP */
+	          /* tout en restant dans le meme sous arbre (meme pere) */
+		  /*	    pP = pE->ElAbstractBox[nv - 1]; */
+		    stop = FALSE;
+		    do
+		      if (pP->AbNext == NULL)
+			stop = TRUE;
+		      else if (pP->AbNext->AbElement != pE)
+			stop = TRUE;
+		      else
+			pP = pP->AbNext;
+		    while (!(stop));
+		    /* insere le nouveau pave apres pP */
+		    pPa1->AbPrevious = pP;
+		    pPa1->AbNext = pP->AbNext;
+		  }
+	      }
+	    if (pPa1->AbPrevious != NULL)
+	      pPa1->AbPrevious->AbNext = pAb;
+	    if (pPa1->AbNext != NULL)
+	      pPa1->AbNext->AbPrevious = pAb;
+	  }
+    }
+  if (pEl->ElHolophrast || (pEl->ElTerminal && pEl->ElLeafType != LtPageColBreak))
+    /* met le contenu de l'element dans le pave, sauf si c'est un */
+    /* element de haut ou de bas de page */
+    {
+      Contenu(pEl, pAb, pDoc);
+      /* ajoute le volume du pave a celui de tous ses englobants */
+      if (pPa1->AbVolume > 0)
+	{
+	  pP = pPa1->AbEnclosing;
+	  while (pP != NULL)
+	    {
+	      pP->AbVolume += pPa1->AbVolume;
+	      pP = pP->AbEnclosing;
+	    }
+	}
+    }
+  else
+    {
+      pPa1->AbLeafType = LtCompound;
+      pPa1->AbVolume = 0;
+      pPa1->AbInLine = FALSE;
+      pPa1->AbTruncatedHead = TRUE;
+      pPa1->AbTruncatedTail = TRUE;
+    }
+}
+
+#else /* __COLPAGE__ */
+
+/* ---------------------------------------------------------------------- */
+/* |	Attach	chaine et remplit le pave pointe par pAb, correspondant| */
+/* |		a l'element pointe par pEl dans la vue nv du document	| */
+/* |		dont le contexte est pointe par pDoc.			| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void Attach(PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv, PtrDocument pDoc)
+
+#else /* __STDC__ */
+static void Attach(pAb, pEl, nv, pDoc)
+	PtrAbstractBox pAb;
+	PtrElement pEl;
+	DocViewNumber nv;
+	PtrDocument pDoc;
+#endif /* __STDC__ */
+
+{
+  PtrElement      pE;
+  PtrAbstractBox         pP;
+  boolean         stop;
+  PtrAbstractBox         pPa1;
+  PtrElement      pEl1;
+  
+  pPa1 = pAb;
+  /* cherche dans cette vue le premier element ascendant qui ait un pave' */
+  pP = NULL;
+  pE = pEl;
+  while (pE->ElParent != NULL && pP == NULL)
+    {
+      pE = pE->ElParent;
+      pP = pE->ElAbstractBox[nv - 1];
+    }
+  if (pP == NULL)
+    /* il n'y a pas de pave englobant pAb */ 
+    {
+      if (pEl->ElAbstractBox[nv - 1] == NULL)
+        pEl->ElAbstractBox[nv - 1] = pAb;
+    }
+  else			
+    /* pAb n'est pas le pave le plus englobant pour cette vue */
+    /*  pP: 1er pave de l'element ascendant pour cette vue */
+    /* saute les paves de presentation que l'ascendant a crees par la */
+    /* regle CreateBefore */
+    {
+      while (pP->AbPresentationBox && pP->AbElement == pE && pP->AbNext != NULL)
+	pP = pP->AbNext;	
+      /* le premier pave qui n'est pas de presentation est l'englobant */
+      pPa1->AbEnclosing = pP;
+      if (pPa1->AbEnclosing->AbFirstEnclosed == NULL)
+	/* c'est le premier pave englobe */
+	{
+	  pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+	  if (pEl->ElAbstractBox[nv - 1] == NULL)
+	    pEl->ElAbstractBox[nv - 1] = pAb;
+	  /* 1er pave de l'element */
+	}
+      else
+	/* il y a deja des paves englobes */
+	if (pEl->ElTypeNumber == PageBreak + 1 
+	    && pEl->ElPageType == PgBegin)
+	  /* c'est une marque de page de debut d'element, on la chaine */
+	  /* en tete */
+	  {
+	    pPa1->AbNext = pPa1->AbEnclosing->AbFirstEnclosed;
+	    if (pPa1->AbNext != NULL)
+	      pPa1->AbNext->AbPrevious = pAb;
+	    pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+	  }
+	else
+	  {
+	    if (pEl->ElAbstractBox[nv - 1] != NULL)
+	      /* cet element a deja des paves dans cette vue */
+	      /* saute les paves de l'element */
+	      {
+		pP = pEl->ElAbstractBox[nv - 1];
+		stop = FALSE;
+		do
+		  if (pP->AbNext == NULL)
+		    stop = TRUE;
+		  else if (pP->AbNext->AbElement != pEl)
+		    stop = TRUE;
+		  else
+		    pP = pP->AbNext;
+		while (!(stop));
+		/* insere le nouveau pave apres */
+		pPa1->AbPrevious = pP;
+		pPa1->AbNext = pP->AbNext;
+	      } 
+	    else	
+	      /* cet element n'a pas encore de paves dans cette vue */
+	      {
+		pEl->ElAbstractBox[nv - 1] = pAb;	
+		/* 1er pave de l'element */
+		/* cherche l'element precedent ayant un pave dans la vue */
+		pE = BackSearchVisibleElem(pPa1->AbEnclosing->AbElement, pEl, nv);
+		if (pE != NULL)
+		  /* verifie si le pave found pour un element precedent */
+		  /* est bien inclus dans le meme pave englobant. */
+		  /* Par exemple deux notes de bas de page successives */
+		  /* peuvent avoir leurs paves dans des boites de bas de */
+		  /* page differentes */
+		  {
+		    pP = pE->ElAbstractBox[nv - 1];	
+		    /* pave de l'element precedent */
+		    do
+		      pP = pP->AbEnclosing;
+		    while (!(pP == pPa1->AbEnclosing || pP == NULL));
+		    if (pP == NULL)
+		      /* ils n'ont pas le meme pave englobant, on ne */
+		      /* chainera pas le pave au pave de l'element precedent */
+		      pE = NULL;
+		  }
+		if (pE != NULL)
+		  if (pE->ElTypeNumber == PageBreak + 1 
+		      && pE->ElPageType == PgBegin)
+		    /* le precedent est une marque de page de debut */
+		    /* d'element, on verifie si elle est suivie par des */
+		    /* paves de presentation de l'englobant */
+		    {
+		      pP = pE->ElAbstractBox[nv - 1];	
+		      /* pave de l'element precedent */
+		      if (pP->AbNext != NULL)
+			if (pP->AbNext->AbElement == 
+			    pPa1->AbEnclosing->AbElement)
+			  /* la marque de page est suivie par un pave cree */
+			  /* par l'englobant */
+			  pE = NULL;
+		    }
+		if (pE == NULL)
+		  /* pas de pave d'element precedent */
+		  {
+		    pP = pPa1->AbEnclosing->AbFirstEnclosed;
+		    /* saute les eventuelles marques de page de debut */
+		    /* d'element */
+		    stop = FALSE;
+		    do
+		      if (pP == NULL)
+			stop = TRUE;
+		      else
+			{
+			  pEl1 = pP->AbElement;
+			  if (pEl1->ElTypeNumber == PageBreak + 1 &&
+			      pEl1->ElPageType == PgBegin)
+			    pP = pP->AbNext;
+			  else
+			    stop = TRUE;
+			}
+		    while (!stop);
+		    if (pP != NULL)
+		      if (pP->AbElement == pPa1->AbEnclosing->AbElement)
+			if (RegleCree(pDoc, pPa1->AbEnclosing, pP) == FnCreateLast)
+			  /* le pave existant doit etre le dernier, on insere */
+			  /* le nouveau pave devant lui */
+			  {
+			    pPa1->AbNext = pP;
+			    pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+			  } 
+			else	
+			  /* on saute les paves crees par une regle */
+			  /* CreateFirst de l'englobant */
+			  {
+			    stop = FALSE;
+			    do
+			      if (pP->AbNext == NULL)
+				stop = TRUE;
+			      else if (pP->AbNext->AbElement != 
+				       pPa1->AbEnclosing->AbElement)
+				stop = TRUE;
+			      else if (RegleCree(pDoc, pPa1->AbEnclosing, pP->AbNext) == 
+				       FnCreateLast)
+				/* le pave suivant doit etre le dernier */
+				stop = TRUE;
+			      else
+				pP = pP->AbNext;
+			    while (!(stop));
+			    /* on insere le nouveau pave apres */
+			    pPa1->AbPrevious = pP;
+			    pPa1->AbNext = pP->AbNext;
+			  }
+		      else	
+			/* insere le nouveau pave en tete */
+			{
+			  pPa1->AbNext = pP;
+			  pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+			}
+		  } 
+		else	
+		  /* il y a un pave d'un element precedent */
+		  {
+		    pP = pE->ElAbstractBox[nv - 1];
+		    if (pP->AbEnclosing != NULL &&
+			pP->AbEnclosing->AbPresentationBox &&
+			pP->AbEnclosing->AbElement == pE)
+		       /* cet element a cree' un pave englobant par la regle */
+		       /* FnCreateEnclosing, on se place au niveau de ce pave' */
+		       /* englobant */
+		       pP = pP->AbEnclosing;
+		    else
+		       {
+		       /* on cherche le dernier pave de l'element precedent */
+		       stop = FALSE;
+		       do
+		         if (pP->AbNext == NULL)
+			   stop = TRUE;
+		         else if (pP->AbNext->AbElement != pE)
+			   stop = TRUE;
+		         else
+			   pP = pP->AbNext;
+		       while (!(stop));
+		       }
+		    /* insere le nouveau pave apres pP */
+		    pPa1->AbPrevious = pP;
+		    pPa1->AbNext = pP->AbNext;
+		  }
+	      }
+	    if (pPa1->AbPrevious != NULL)
+	      pPa1->AbPrevious->AbNext = pAb;
+	    if (pPa1->AbNext != NULL)
+	      pPa1->AbNext->AbPrevious = pAb;
+	  }
+    }
+  if (pEl->ElHolophrast || (pEl->ElTerminal && pEl->ElLeafType != LtPageColBreak))
+    /* met le contenu de l'element dans le pave, sauf si c'est un */
+    /* element de haut ou de bas de page */
+    {
+      Contenu(pEl, pAb, pDoc);
+      /* ajoute le volume du pave a celui de tous ses englobants */
+      if (pPa1->AbVolume > 0)
+	{
+	  pP = pPa1->AbEnclosing;
+	  while (pP != NULL)
+	    {
+	      pP->AbVolume += pPa1->AbVolume;
+	      pP = pP->AbEnclosing;
+	    }
+	}
+    }
+  else
+    {
+      pPa1->AbLeafType = LtCompound;
+      pPa1->AbVolume = 0;
+      pPa1->AbInLine = FALSE;
+      pPa1->AbTruncatedHead = TRUE;
+      pPa1->AbTruncatedTail = TRUE;
+    }
+}
+#endif /* __COLPAGE__ */
+
+
+
 
 /* ---------------------------------------------------------------------- */
 /* |    AbsBoxesCreate cree les paves correspondant au sous-arbre de         | */
@@ -4698,7 +5331,7 @@ boolean            *complete;
 		     else
 			/* chaine le nouveau pave dans l'arbre de l'image abstraite */
 
-			Chaine (pNewAbbox, pEl, viewNb, viewSch, pDoc, forward);
+			Attach (pNewAbbox, pEl, viewNb, viewSch, pDoc, forward);
 
 		     /* si ce pave modifie la position de paves voisins, on applique */
 		     /* les regles correspondantes : appel de NouvRfPave */
@@ -4717,7 +5350,7 @@ boolean            *complete;
 			pAbbRoot = pNewAbbox;
 #else  /* __COLPAGE__ */
 		     /* chaine le nouveau pave dans l'arbre de l'image abstraite */
-		     Chaine (pNewAbbox, pEl, viewNb, pDoc);
+		     Attach (pNewAbbox, pEl, viewNb, pDoc);
 #endif /* __COLPAGE__ */
 		     pAbbReturn = pNewAbbox;
 		     if (descent)	/* on va creer les paves inclus */
@@ -4861,7 +5494,7 @@ boolean            *complete;
 			pAbb = pAbb->AbNext;
 		     else
 			stop = TRUE;
-		  while (!(stop));
+		  while (!stop);
 		  notBreakable = !(IsBreakable (pAbb));
 		  /* determine le 1er pave fils a creer */
 		  pElChild = pEl->ElFirstChild;	/* premier fils de l'element */
@@ -5204,7 +5837,7 @@ boolean            *complete;
 					       pElParent = pElParent->ElParent;
 					    else
 					       pElParent = NULL;
-				      while (!(stop || pElParent == NULL)) ;
+				      while (!stop && pElParent != NULL) ;
 				      if (pElParent != NULL)
 					{
 					   pAbb = pElParent->ElAbstractBox[viewNb - 1];

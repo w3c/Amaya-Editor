@@ -689,16 +689,16 @@ PtrAbstractBox             pAb;
 #endif /* __STDC__ */
 
 {
-   boolean             retour;
-   int                 Entree;
+   boolean             result;
+   int                 index;
    PtrPSchema          pSchP;
    PtrSSchema        pSchS;
    PtrAbstractBox             pAbbox1;
 
-   retour = FALSE;
+   result = FALSE;
    
    /* boucle sur les paves englobants */
-   while (pAb != NULL && !retour)
+   while (pAb != NULL && !result)
      {
 	pAbbox1 = pAb;
 #ifndef __COLPAGE__
@@ -706,21 +706,21 @@ PtrAbstractBox             pAb;
 	   /* pave' compose' */
 	   if (pAbbox1->AbElement->ElTypeNumber == PageBreak + 1)
 	      /* c'est une marque de saut de page, non-secable */
-	      retour = TRUE;
+	      result = TRUE;
 	   else
 	      /* un pave compose' est non-secable s'il est mis en lignes */
-	      retour = pAbbox1->AbInLine;
+	      result = pAbbox1->AbInLine;
 	/* regarde dans le schema de presentation du pave s'il est secable */
-	if (!retour)
+	if (!result)
 #endif /* __COLPAGE__ */
 	  {
-	     ChSchemaPres (pAbbox1->AbElement, &pSchP, &Entree, &pSchS);
-	     retour = (pSchP->PsBuildAll[Entree - 1]);
+	     ChSchemaPres (pAbbox1->AbElement, &pSchP, &index, &pSchS);
+	     result = (pSchP->PsBuildAll[index - 1]);
 	  }
 	pAb = pAbbox1->AbEnclosing;
 	/* passe a l'englobant */
      }
-   return (!retour);
+   return (!result);
 }
 
 #ifdef __COLPAGE__
@@ -1859,7 +1859,6 @@ int                 frame;
    PtrElement          pElRoot, pEl;
    int                 nb, viewSch;
    PtrPSchema          pSchPage;
-   FILE               *list;
 
 #endif /* __COLPAGE__ */
 
@@ -1943,17 +1942,6 @@ int                 frame;
 	       }
 	     else if (pDoc->DocViewModifiedAb[vue - 1] != NULL)
 	       {
-#ifdef __COLPAGE__
-		  list = fopen ("/perles/roisin/debug/volaug", "w");
-		  if (list != NULL)
-		    {
-		       NumPav (pDoc->DocViewRootAb[vue - 1]);
-		       AffPaves (pDoc->DocViewRootAb[0], 2, list);
-		       fclose (list);
-		    }
-		  /* appel de modifVue depuis la racine car de nouvelles */
-		  /* pages ont pu etre creees TODO incoherent ??? */
-#endif /* __COLPAGE__ */
 		  (void) ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
 		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[vue - 1]);
 		  pDoc->DocViewModifiedAb[vue - 1] = NULL;
@@ -1992,7 +1980,6 @@ int                 frame;
    PtrAbstractBox             pAb;
 
 #ifdef __COLPAGE__
-   FILE               *list;
 
 #endif /* __COLPAGE__ */
 
@@ -2105,7 +2092,6 @@ int                 frame;
       PtrElement          pElRoot, pFils, pElRef;
       boolean             trouve, VuePaginee, vueassoc, acreer;
       PtrPSchema          pSchPage;
-      FILE               *list;
 
       VuePaginee = FALSE;
       pElPage = NULL;
@@ -2396,14 +2382,6 @@ int                 frame;
 		     if (display && !begin && pEl->ElAbstractBox[Vue - 1] != NULL)
 			/* TODO : que faire dans les autres cas */
 			MontrerBoite (frame, pEl->ElAbstractBox[Vue - 1]->AbBox, 1, 0);
-		     /* sauvegarde de l'image abstraite pour tests */
-		     list = fopen ("/perles/roisin/debug/verifpav", "w");
-		     if (list != NULL)
-		       {
-			  NumPav (pAbbRoot);
-			  AffPaves (pAbbRoot, 2, list);
-			  fclose (list);
-		       }
 
 		     if (display)
 			DisplayFrame (frame);
@@ -3209,4 +3187,3 @@ int                 frame;
 /** fin ajout */
 #endif /* __COLPAGE__ */
 
-/* End Of Module imabs */

@@ -326,10 +326,10 @@ boolean             Maximum;
 	     /* englobant l'element a numeroter */
 	     pEl = GetTypedAncestor (pElNum, TypeRank, pSS);
 	     if (pEl == NULL)
-		val = 0;	/* pas trouve' */
+		val = 0;	/* pas found' */
 	     else
 	       {
-		  /* Cherche le rang de l'element trouve' parmi ses freres */
+		  /* Cherche le rang de l'element found' parmi ses freres */
 		  if (initattr)
 		     val = valinitattr;
 		  else
@@ -381,7 +381,7 @@ boolean             Maximum;
 	if (pEl == NULL)
 	   pEl = pElNum;
 
-	/* l'element trouve' est celui qui reinitialise le compteur 
+	/* l'element found' est celui qui reinitialise le compteur 
 	   Sa valeur est la valeur minimale du compteur */
 	if (initattr)
 	   val = valinitattr;
@@ -400,13 +400,13 @@ boolean             Maximum;
 	     if (pEl == NULL)
 		pEl = pElNum;
 
-	     /* l'element trouve' est celui qui reinitialise le compteur */
+	     /* l'element found' est celui qui reinitialise le compteur */
 	     if (initattr)
 		val = valinitattr;
 	     else
 		val = GetCptElemVal (pCo1, pEl, CntrSet, pSS);
 
-	     /* a partir de l'element trouve', cherche en avant tous les */
+	     /* a partir de l'element found', cherche en avant tous les */
 	     /* elements ayant le type qui incremente le compteur, */
 	     /* jusqu'a rencontrer un autre element qui reset le compteur */
 	     if (TypeIncr <= MAX_BASIC_TYPE)
@@ -421,7 +421,7 @@ boolean             Maximum;
 				       pElNum->ElStructSchema);
 		     if (pEl != NULL)
 			if (EquivalentType (pEl, TypeIncr, pSchIncr))
-			   /* on a trouve' un element du type qui incremente */
+			   /* on a found' un element du type qui incremente */
 			   val += GetCptElemVal (pCo1, pEl, CntrAdd, pSS);
 		  }
 		while (pEl != NULL && !EquivalentType (pEl, TypeSet, pSS));
@@ -617,7 +617,7 @@ int                 Vue;
 	     val = 0;
 	     if (pEl != NULL)
 	       {
-		  /* Cherche le rang de l'element trouve' parmi ses freres */
+		  /* Cherche le rang de l'element found' parmi ses freres */
 		  if (pEl->ElPrevious == NULL && pEl->ElNext == NULL)
 		     /* l'element dont on veut le rang n'a pas de frere... */
 		     if (pEl->ElParent != NULL)
@@ -686,13 +686,13 @@ int                 Vue;
 	if (pEl == NULL)
 	   pEl = pElNum;
 
-	/* l'element trouve' est celui qui reinitialise le compteur */
+	/* l'element found' est celui qui reinitialise le compteur */
 	if (initattr)
 	   val = valinitattr;
 	else
 	   val = GetCptElemVal (pCo1, pEl, CntrSet, pSS);
 
-	/* a partir de l'element trouve', cherche en avant tous les */
+	/* a partir de l'element found', cherche en avant tous les */
 	/* elements ayant le type qui incremente le compteur, */
 	/* jusqu'a rencontrer l'element qui a cree la boite compteur. */
 	if (TypeIncr <= MAX_BASIC_TYPE)
@@ -707,7 +707,7 @@ int                 Vue;
 				  pElNum->ElStructSchema);
 		if (pEl != NULL)
 		   if (EquivalentType (pEl, TypeIncr, pSchIncr))
-		      /* on a trouve' un element du type qui incremente */
+		      /* on a found' un element du type qui incremente */
 		      val += GetCptElemVal (pCo1, pEl, CntrAdd, pSS);
 	     }
 	   while (!(pEl == NULL || pEl == pElNum));
@@ -800,7 +800,7 @@ PtrDocument         pDoc;
    struct tm          *ptm;
    PtrTextBuffer      Ancien, Nouveau;
    PtrAttribute         pAttr;
-   boolean             trouve;
+   boolean             found;
    boolean             egal;
    PresVariable            *pPr1;
    PresVarItem            *pVa1;
@@ -840,21 +840,21 @@ PtrDocument         pDoc;
 		    /* cherche si l'element auquel se rapporte le pave (ou l'un de */
 		    /* ses ascendants) possede cet attribut */
 		    pEl = pAb->AbElement;
-		    trouve = FALSE;
-		    while (!trouve && pEl != NULL)
+		    found = FALSE;
+		    while (!found && pEl != NULL)
 		      {
 			 pAttr = pEl->ElFirstAttr;	/* premier attribut */
-			 while (!trouve && pAttr != NULL)
+			 while (!found && pAttr != NULL)
 			    if (pAttr->AeAttrNum == pVa1->ViAttr &&
 				pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-			       trouve = TRUE;
+			       found = TRUE;
 			    else
 			       pAttr = pAttr->AeNext;
-			 if (!trouve)
+			 if (!found)
 			    /* passe a l'element ascendant */
 			    pEl = pEl->ElParent;
 		      }
-		    if (trouve)
+		    if (found)
 		       /* l'element possede l'attribut */
 		      {
 			 switch (pAttr->AeAttrType)
@@ -993,18 +993,18 @@ PtrDocument         pDoc;
 		    /* vue ViView */
 		    /* cherche en arriere la premiere marque de page de cette vue */
 		    pEl = pAb->AbElement;
-		    trouve = FALSE;
+		    found = FALSE;
 		    do
 		      {
 			 pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
 			 if (pEl != NULL)
 			    /* on ignore les pages qui ne concernent pas la vue */
 			    if (pEl->ElViewPSchema == pVa1->ViView)
-			       trouve = TRUE;
+			       found = TRUE;
 		      }
-		    while ((!trouve) && (pEl != NULL));
+		    while ((!found) && (pEl != NULL));
 		    if (pEl == NULL)
-		       i = 1;	/* pas trouve', on considere que c'est la page 1 */
+		       i = 1;	/* pas found', on considere que c'est la page 1 */
 		    else
 		       i = pEl->ElPageNumber;	/* numero de la page trouvee */
 		    /* traduit le numero de page en ASCII selon le style voulu */

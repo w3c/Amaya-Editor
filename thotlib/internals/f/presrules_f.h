@@ -16,13 +16,12 @@ extern int valintregle ( PtrPRule pRegle,
 extern void GetBufConst ( PtrAbstractBox pAb );
 extern void MajVolLibre ( PtrAbstractBox pAb,
                           PtrDocument pDoc );
+extern void Contenu( PtrElement pEl, 
+		     PtrAbstractBox pAb, 
+		     PtrDocument pDoc);
 extern FunctionType RegleCree ( PtrDocument pDoc,
                                 PtrAbstractBox pCreateur,
                                 PtrAbstractBox pCree );
-extern void Chaine ( PtrAbstractBox pAb,
-                     PtrElement pEl,
-                     DocViewNumber nv,
-                     PtrDocument pDoc );
 extern void ChSchemaPres ( PtrElement pEl,
                            PtrPSchema *pSchP,
                            int *NumEntree,
@@ -57,13 +56,12 @@ extern int valintregle (/* PtrPRule pRegle,
 extern void GetBufConst (/* PtrAbstractBox pAb */);
 extern void MajVolLibre (/* PtrAbstractBox pAb,
                             PtrDocument pDoc */);
+extern void Contenu (/* PtrElement pEl, 
+		     PtrAbstractBox pAb, 
+		     PtrDocument pDoc */);
 extern FunctionType RegleCree (/* PtrDocument pDoc,
                                   PtrAbstractBox pCreateur,
                                   PtrAbstractBox pCree */);
-extern void Chaine (/* PtrAbstractBox pAb,
-                       PtrElement pEl,
-                       DocViewNumber nv,
-                       PtrDocument pDoc */);
 extern void ChSchemaPres (/* PtrElement pEl,
                              PtrPSchema *pSchP,
                              int *NumEntree,
