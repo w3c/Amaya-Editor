@@ -350,6 +350,7 @@ const STRING        path;
    if (!ustrcmp (nsuffix, TEXT("html")) ||
        !ustrcmp (nsuffix, TEXT("htm")) ||
        !ustrcmp (nsuffix, TEXT("shtml")) ||
+       !ustrcmp (nsuffix, TEXT("jsp")) ||
        !ustrcmp (nsuffix, TEXT("xht")) ||
        !ustrcmp (nsuffix, TEXT("xhtm")) ||
        !ustrcmp (nsuffix, TEXT("xhtml")))
@@ -369,6 +370,7 @@ const STRING        path;
        if (!ustrcmp (nsuffix, TEXT("html")) ||
 	   !ustrcmp (nsuffix, TEXT("htm")) ||
 	   !ustrcmp (nsuffix, TEXT("shtml")) ||
+	   !ustrcmp (nsuffix, TEXT("jsp")) ||
 	   !ustrcmp (nsuffix, TEXT("xht")) ||
 	   !ustrcmp (nsuffix, TEXT("xhtm")) ||
 	   !ustrcmp (nsuffix, TEXT("xhtml")))
