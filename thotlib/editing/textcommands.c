@@ -1109,6 +1109,10 @@ static void MovingCommands (int code, Document doc, View view,
 	   break;
 	}
       Moving = FALSE;
+#ifdef _UNIX
+      if (extendSel)
+  TtcCopyToClipboard (doc, view);
+#endif /* _UNIX */
     }
 }
 

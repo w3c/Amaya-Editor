@@ -393,7 +393,7 @@ void InitAmayaDefEnv (void)
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &GProp_Browse.DoubleClick);
   /* @@@ */
-  TtaSetDefEnvString ("ENABLE_FTP", "no", FALSE);
+  TtaSetDefEnvString ("ENABLE_FTP", "yes", FALSE);
   TtaSetDefEnvString ("SCREEN_TYPE", "screen", FALSE);
 #ifndef _WINGUI
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
