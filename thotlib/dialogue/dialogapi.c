@@ -233,16 +233,16 @@ ThotWindow win;
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int GetClientFen (ThotWindow win)
+int GetMainFen (ThotWindow win)
 #else  /* !__STDC__ */
-int GetClientFen (win)
+int GetMainFen (win)
 ThotWindow win ;
 #endif /* __STDC__ */
 {
    int frame;
 
    for (frame = 0; frame <= MAX_FRAME; frame++)
-      if (FrClientRef[frame] == win)
+      if (FrMainRef[frame] == win)
 	 return (frame);
 
    fprintf (stderr, "Could not get MS-Windows number for %X\n", win);
@@ -270,7 +270,7 @@ int frame;
       if (WIN_curHdc != 0)
 	 return;
       for (frame = 0; frame <= MAX_FRAME; frame++)
-	  if (FrClientRef[frame] != 0)
+	  if (FrRef[frame] != 0)
 	     break;
    }
    if ((frame < 0) || (frame > MAX_FRAME)) {
@@ -278,7 +278,7 @@ int frame;
       return;
    }
    
-   win = FrClientRef[frame];
+   win = FrRef[frame];
    
    if (win == 0)
      {
@@ -1260,7 +1260,7 @@ Display           **Dp;
    RootShell.lpfnWndProc   = WndProc ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hIcon         = LoadIcon (hInstance, IDI_APPLICATION) ;
-   RootShell.lpszMenuName  = NULL ;
+   RootShell.lpszMenuName  = "AmayaMain" ;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
    RootShell.style         = 0 ;
    RootShell.cbClsExtra    = 0 ;
@@ -1453,7 +1453,7 @@ char               *textmenu;
 
    FrRef[0] = 0;
 #ifdef _WINDOWS
-   FrClientRef[0] = 0;
+   FrMainRef[0] = 0;
 #endif /* _WINDOWS */
    FrameTable[0].WdStatus = 0;
    MainShell = 0;
@@ -6696,7 +6696,14 @@ void                TtaAbortShowDialogue ()
 /*----------------------------------------------------------------------
    Callback pour un bouton du menu                                    
   ----------------------------------------------------------------------*/
-void                WinThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
+#ifdef __STDC__
+void WinThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+void WinThotCallBack (hWnd, wParam, lParam)
+HWND   hWnd; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
 {
    struct Cat_Context *catalogue;
    int                 no = 0;

@@ -153,7 +153,7 @@ int                 number;
    /* Initialisation du  contexte serveur */
    FrRef[0] = 0;
 #ifdef _WINDOWS
-   FrClientRef [0] = 0 ;
+   FrMainRef [0] = 0 ;
 #endif /* _WINDOWS */
    InitDocContexts ();
 
@@ -1919,8 +1919,8 @@ int                 doc;
 		  /*
 		   * store everything.
 		   */
-                   FrRef[frame]               = Main_Wd;
-                   FrClientRef[frame]         = hwndClient ;
+                   FrMainRef[frame]           = Main_Wd; 
+                   FrRef[frame]               = hwndClient ;
                    WinToolBar[frame]          = ToolBar ;
                    FrameTable[frame].WdStatus = StatusBar ;
 		  /*
@@ -1928,9 +1928,10 @@ int                 doc;
 		   */
                   
                   menu_bar = CreateMenu ();
-                  if (menu_bar)
-                     SetMenu (Main_Wd, menu_bar);
-		  WinMenus[frame] = menu_bar;
+                  if (!menu_bar) 
+                     WinErrorBox ();
+                  else 
+		       WinMenus[frame] = menu_bar;
 		  /*
 		  ShowWindow (Main_Wd, SW_SHOWNORMAL);
 		  UpdateWindow (Main_Wd);
@@ -2341,6 +2342,7 @@ int                 doc;
 	FrameTable[frame].FrView = view;
 	InitializeFrameParams (frame, 5, 0);	/* Initialise la visibilite et le zoom de la fenetre */
 #ifdef _WINDOWS
+        SetMenu (Main_Wd, menu_bar);
 	ShowWindow (Main_Wd, SW_SHOWNORMAL);
 	UpdateWindow (Main_Wd);
         InitCommonControls ();
@@ -2422,7 +2424,7 @@ int                 frame;
 #endif /* _WINDOWS */
 	FrRef[frame] = 0;
 #ifdef _WINDOWS
-        FrClientRef [0] = 0 ;
+        FrMainRef [0] = 0 ;
 #endif /* _WINDOWS */
 	FrameTable[frame].WdFrame = 0;
 	FrameTable[frame].FrDoc = 0;

@@ -669,7 +669,7 @@ void                InitDocContexts ()
    for (i = 0; i <= MAX_FRAME; i++) {
        FrRef[i] = 0;
 #ifdef _WINDOWS
-       FrClientRef[i] = 0;
+       FrMainRef[i] = 0;
 #endif /* _WINDOWS */
    }
    PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */

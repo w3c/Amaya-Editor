@@ -1236,6 +1236,7 @@ char               *imageFile;
 #endif /* __STDC__ */
 
 {
+#ifndef _WINDOWS
    char            fileName[MAX_PATH];
    int             typeImage;
    Drawable        myDrawable = None;
@@ -1246,13 +1247,13 @@ char               *imageFile;
    ThotWindow      frame;
    int             vue;
 
-   GetPictureFileName(imageFile, fileName);
+   GetPictureFileName (imageFile, fileName);
    typeImage = GetPictureFormat(fileName);
-   myDrawable = (*(PictureHandlerTable[typeImage].
-   Produce_Picture))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,
-   &PicMask );
-   XSetWindowBackgroundPixmap(TtDisplay,w,myDrawable);
+   myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture))
+                  (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask );
+   XSetWindowBackgroundPixmap (TtDisplay, w, myDrawable);
    FreePixmap(myDrawable);
    FreePixmap(PicMask);
+#endif /* _WINDOWS */
    return (0);
 }

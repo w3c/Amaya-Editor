@@ -69,6 +69,7 @@ extern HWND        StatusBar ;
 extern HINSTANCE   hInstance ;
 
 int    cyToolBar ;
+BOOL   bComboBox = FALSE ;
 HWND   hwndTB ;
 HWND   hwndCombo ;
 DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER /*| TBSTYLE_TOOLTIPS */ ;
@@ -276,11 +277,9 @@ void                MSChangeTaille (int frame, int width, int height, int top_de
    FrameToView (frame, &doc, &view);
    FrameTable[frame].FrTopMargin = top_delta;
    FrameTable[frame].FrLeftMargin = 0;
-#ifdef RAMZI
+
+   /* FrameTable[frame].FrWidth = (int) width - bottom_delta; */
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
-   FrameTable[frame].FrHeight = (int) height;
-#endif /* RAMZI */
-   FrameTable[frame].FrWidth = (int) width;
    FrameTable[frame].FrHeight = (int) height;
 
    /* need to recompute the content of the window */
@@ -369,7 +368,7 @@ int                *info;
 		   */
 		  i++;
 	       }
-#endif
+#endif /* IV */
 	  }
      }
 }				/*FrameResized */
@@ -800,7 +799,7 @@ void                InitializeOtherThings ()
    /* message de selection vide */
 #ifndef _WINDOWS
    null_string = XmStringCreateSimple ("");
-#endif
+#endif /* _WINDOWS */
 }				/*InitializeOtherThings */
 
 
@@ -956,8 +955,48 @@ char               *name;
 }
 
 
-
 #ifdef _WINDOWS
+/* -------------------------------------------------------------------
+   DisplayNotificationDetails
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+void DisplayNotificationDetails (WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+void DisplayNotificationDetails (wParam, lParam)
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+#ifdef RAMZI
+     LPNMHDR pnmh ;
+     LPSTR   pName ;
+
+     if (hwndNotify == NULL)
+        return ;
+
+     pnmh = (LPNMHDR) lParam ;
+     QueryNotifyText (pnmh->code, &pName) ;
+     DisplayText (pName) ;
+#endif /* RAMZI */
+}
+
+/* -------------------------------------------------------------------
+   MenuCheckMark
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+void MenuCheckMark (HMENU hmenu, int id, BOOL bCheck)
+#else  /* !__STDC__ */
+void MenuCheckMark (hmenu, id, bCheck)
+HMENU hmenu; 
+int   id; 
+BOOL  bCheck;
+#endif /* __STDC__ */
+{
+     int iState ;
+     iState = (bCheck) ? MF_CHECKED : MF_UNCHECKED ;
+     CheckMenuItem (hmenu, id, iState) ;
+}
+
 /* -------------------------------------------------------------------
    InitToolBar
    ------------------------------------------------------------------- */
@@ -981,6 +1020,43 @@ HWND hwndParent;
                                HINST_COMMCTRL, IDB_STD_SMALL_COLOR, ptbb, iNumButtons,
                                0, 0, 0, 0, sizeof (TBBUTTON)) ;
 
+     /* If requested, add to string list */
+     /*     if (bStrings)
+        ToolBar_AddString (hwndTB, 0, szTbStrings) ;*/
+
+     /* Store handle to tooltip control */
+     /*hwndToolTip = ToolBar_GetToolTips (hwndTB) ;*/
+
+     /* Insert combo box into toolbar */
+     if (bComboBox) {
+         /* Calculate coordinates for combo box */
+         ToolBar_GetItemRect (hwndTB, 0, &r) ;
+         x  = r.left ;
+         y  = r.top ;
+         cy = 100 ;
+         ToolBar_GetItemRect (hwndTB, 18, &r) ;
+         cx = r.right - x + 1 ;
+
+         hwndCombo = CreateWindow ("combobox", NULL, WS_CHILD | WS_VISIBLE |
+                                   CBS_DROPDOWN, x, y, cx, cy, hwndParent,
+                                   (HMENU) IDC_TB_COMBOBOX, hInstance, 0) ;
+
+         /* Set toolbar as combo box window parent */
+         SetParent (hwndCombo, hwndTB) ;
+
+         SendMessage (hwndCombo, CB_ADDSTRING, 0, (LPARAM) "One") ;
+         SendMessage (hwndCombo, CB_ADDSTRING, 0, (LPARAM) "Two") ;
+         SendMessage (hwndCombo, CB_ADDSTRING, 0, (LPARAM) "Three") ;
+
+         /* Calculate toolbar height */
+         GetWindowRect (hwndCombo, &r) ;
+         cyToolBar = r.bottom - r.top + 1 ;
+         cyToolBar += y ;
+         cyToolBar += (2 * GetSystemMetrics (SM_CYBORDER)) ;
+         ToolBar_GetItemRect (hwndTB, 0, &r) ;
+         cyToolBar = max (cyToolBar, r.bottom+5) ;
+     }
+
      return hwndTB ;
 }
 
@@ -995,7 +1071,8 @@ HWND HWND hwndParent;
 #endif /* __STDC__ */
 {
      HWND hwndSB ;
-     
+
+     /* Initialize values for WM_MENUSELECT message handling */
      hwndSB = CreateStatusWindow (dwStatusBarStyles, "", hwndParent, 2) ;
      return hwndSB ;
 }
@@ -1016,23 +1093,37 @@ LPARAM      lParam;
 {
      int frame;
 
-     frame = GetFen (hwnd);
+     frame = GetMainFen (hwnd);
 
      switch (mMsg) {
             case WM_CREATE: {
 	         /* Create toolbar (source resides in toolbar.c). */
                  ToolBar = InitToolBar (hwnd) ;
+                 ShowWindow (ToolBar, SW_SHOWNORMAL);
+                 UpdateWindow (ToolBar);
 
                  /* Create status bar (source resides in statbar.c). */
                  StatusBar = InitStatusBar (hwnd) ;
+                 ShowWindow (StatusBar, SW_SHOWNORMAL);
+                 UpdateWindow (StatusBar);
 
                  /* Create client window (contains notify list). */
                  hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
-                                              WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL, 0, 0, 0, 0,
+                                              WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_BORDER | 
+                                              WS_VSCROLL, 0, 0, 0, 0,
                                               hwnd, (HMENU) 1, hInstance, NULL) ;
-
+                 ShowWindow (hwndClient, SW_SHOWNORMAL);
+                 UpdateWindow (hwndClient);
                  return 0 ;
 	    }
+
+	    case WM_KEYDOWN:
+                 SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
+                 return 0;
+
+	    case WM_CHAR:
+                 SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
+                 return 0;
 
             case WM_COMMAND:
 	         WinThotCallBack (hwnd, wParam, lParam);
@@ -1079,7 +1170,7 @@ LPARAM      lParam;
                  x = 0 ;
                  y = cyTB ;
                  cy = cy - (cyStatus + cyTB) ;
-                 MoveWindow (FrClientRef [frame], x, y, cx, cy, TRUE) ;
+                 MoveWindow (FrRef [frame], x, y, cx, cy, TRUE) ;
                  return 0;
 	    }
 
@@ -1102,10 +1193,13 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-     HDC saveHdc;	/* Used to save WIN_curHdc during current event processing */
-     int frame;
+     int         comm;
+     HDC         saveHdc;	/* Used to save WIN_curHdc during current event processing */
+     int         frame;
+     PAINTSTRUCT ps;
+     RECT        rect;
 
-     frame = GetClientFen (hwnd);
+     frame = GetFen (hwnd);
 
      /* do not handle events if the Document is in NoComputedDisplay mode. */
 
@@ -1141,11 +1235,15 @@ LPARAM lParam;
                HWND hwndNotify = GetWindow (hwnd, GW_CHILD) ;
                int  cx         = LOWORD (lParam) ;
                int  cy         = HIWORD (lParam) ;
+               int  cyStatus ;
+               int  cyToolBar;
 
                /* Ignore if notification window is absent. */
-               if (hwndNotify != NULL)
-                   MoveWindow (hwndNotify, 0, 0, cx, cy, TRUE) ;
+               /* if (hwndNotify != NULL)
+		    MoveWindow (hwndNotify, 0, 0, cx, cy, TRUE) ; */
+               MSChangeTaille (frame, cx, cy, 0, 0) ;
 
+	       WIN_ReleaseDeviceContext ();
                return 0 ;
 	  }
 
@@ -1157,7 +1255,7 @@ LPARAM lParam;
 	  case WM_KEYDOWN:
 	  case WM_CHAR:
 	       TtaAbortShowDialogue ();
-	       MSCharTranslation (hwnd, frame, mMsg, wParam, lParam);
+	       MSCharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
 	       return 0;
 
 	  case WM_LBUTTONDOWN:
@@ -1484,14 +1582,14 @@ int                 frame;
 
 #ifdef _WINDOWS
 #ifdef __STDC__
-ThotWindow          TtaGetThotClientWindow (int frame)
+ThotWindow          TtaGetThotWinMainWindow (int frame)
 #else  /* __STDC__ */
-ThotWindow          TtaGetThotClientWindow (frame)
+ThotWindow          TtaGetThotWinMainWindow (frame)
 int                 frame;
 
 #endif /* __STDC__ */
 {
-   return FrClientRef[frame];
+   return FrMainRef[frame];
 }
 #endif /* _WINDOWS */
 
@@ -1765,9 +1863,9 @@ ThotWindow          w;
 
 #ifdef _WINDOWS
 #ifdef __STDC__
-int                 GetWindowClientFrame (ThotWindow w)
+int                 GetWindowWinMainFrame (ThotWindow w)
 #else  /* __STDC__ */
-int                 GetWindowClientFrame (w)
+int                 GetWindowWinMainFrame (w)
 ThotWindow          w;
 
 #endif /* __STDC__ */
@@ -1777,7 +1875,7 @@ ThotWindow          w;
    /* On recherche l'indice de la fenetre */
    for (f = 0; f <= MAX_FRAME; f++)
      {
-	if (FrClientRef[f] != 0 && FrClientRef[f] == w)
+	if (FrMainRef[f] != 0 && FrMainRef[f] == w)
 	   break;
      }
    return (f);
@@ -1960,8 +2058,6 @@ int                 frame;
 	n++;
 	XtSetValues (vscroll, args, n);
      }
-#ifdef _WINDOWS
-#endif /* _WINDOWS */
 #endif /* _WINDOWS */
 }				/*UpdateScrollbars */
 
