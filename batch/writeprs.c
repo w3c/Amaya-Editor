@@ -1030,6 +1030,8 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 			     case PtUnicodeBidi:
 			     case PtLineStyle:
 			     case PtDisplay:
+			     case PtFloat:
+			     case PtClear:
 			     case PtBorderTopStyle:
 			     case PtBorderRightStyle:
 			     case PtBorderBottomStyle:
