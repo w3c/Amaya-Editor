@@ -539,11 +539,12 @@ static void FontBBox (GL_font *font,
 		      float *llz, float *urx, 
 		      float *ury, float *urz)
 {
-  unsigned int left, right, i;
+  int left, right, i;
   wchar_t *c; 
   FT_BBox bbox;
   GL_glyph *glyph;
 
+  glyph = NULL;
   *llx = *lly = *llz = *urx = *ury = *urz = 0;
   c = string;
   left = FT_Get_Char_Index (*(font->face), c[0]);
@@ -560,10 +561,13 @@ static void FontBBox (GL_font *font,
       else
 	{
 	  glyph = MakeBitmapGlyph (font, left);
-	  bbox = glyph->bbox;
-	  if (glyph->data != NULL)
-	    free (glyph->data);
-	  free (glyph);	  
+	  if (glyph)
+	    {
+	      bbox = glyph->bbox;
+	      if (glyph->data != NULL)
+		free (glyph->data);
+	      free (glyph); 
+	    }  
 	}
       bbox.yMin = bbox.yMin >> 6;
       bbox.yMax = bbox.yMax >> 6;
@@ -586,7 +590,8 @@ static void FontBBox (GL_font *font,
   else
     {
       glyph = MakeBitmapGlyph (font, left);
-      bbox = glyph->bbox;
+      if (glyph)
+	bbox = glyph->bbox;
     }
   *llx = (float) (bbox.xMin >> 6);
   if (font->kerning)
@@ -876,8 +881,9 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
   left = FT_Get_Char_Index (*(font->face), string[0]); 
   Xpos = 0;
   XWidth = 0;
+  glyph = NULL;
 
-
+ 
   /* First We conmpute all character size (width and height)
    and their respective placement in the string */
   while (i < size)
