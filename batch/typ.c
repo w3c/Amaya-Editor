@@ -1581,7 +1581,7 @@ char              **argv;
 				      /* on le traite */
 				   }
 			      }
-			    while (!(wi == 0 || error));
+			    while (wi != 0 && !error);
 			 }	/* il n'y a plus de mots dans la ligne */
 		    }
 		  BIOreadClose (infile);

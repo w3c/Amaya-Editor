@@ -790,7 +790,7 @@ PtrSSchema        pSS;
 				     found = True;
 			    }
 		    }
-		  while (!(j >= pSS->SsNRules || found));
+		  while (j < pSS->SsNRules && !found);
 		  if (found)
 		     CurTRule->TrRelPosition = RpAssoc;
 	       }
@@ -3177,7 +3177,7 @@ char              **argv;
 				      /* on le traite */
 				   }
 			      }
-			    while (!(wi == 0 || error));
+			    while (wi != 0 && !error);
 			 }	/* il n'y a plus de mots dans la ligne */
 		    }
 		  BIOreadClose (infile);

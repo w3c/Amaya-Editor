@@ -1,14 +1,9 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* ======================================================================= */
 /* |                                                                    | */
-/* |                           Projet THOT                              | */
 /* |                                                                    | */
 /* |    Ce module sauve un schema de traduction compile'.               | */
 /* |                                                                    | */
-/* |                                                                    | */
-/* |                    V. Quint        Janvier 1988                    | */
 /* |                                                                    | */
 /* ======================================================================= */
 
@@ -73,11 +68,8 @@ Name                 n;
 
    i = 0;
    do
-     {
-	i++;
-	BIOwriteByte (outfile, n[i - 1]);
-     }
-   while (!(n[i - 1] == '\0'));
+	BIOwriteByte (outfile, n[i++]);
+   while (n[i - 1] != '\0');
 }
 
 
@@ -968,28 +960,19 @@ PtrSSchema        pSchStr;
 	pTradCa6 = &pSc1->TsCharTransl[i - 1];
 	j = 0;
 	do
-	  {
-	     BIOwriteByte (outfile, pTradCa6->StSource[j]);
-	     j++;
-	  }
-	while (!(pTradCa6->StSource[j - 1] == '\0'));
+	     BIOwriteByte (outfile, pTradCa6->StSource[j++]);
+	while (pTradCa6->StSource[j - 1] != '\0');
 	j = 0;
 	do
-	  {
-	     BIOwriteByte (outfile, pTradCa6->StTarget[j]);
-	     j++;
-	  }
-	while (!(pTradCa6->StTarget[j - 1] == '\0'));
+	     BIOwriteByte (outfile, pTradCa6->StTarget[j++]);
+	while (pTradCa6->StTarget[j - 1] != '\0');
      }
    for (i = 0; i < pSc1->TsNConstants; i++)
      {
 	j = pSc1->TsConstBegin[i] - 1;
 	do
-	  {
-	     j++;
-	     BIOwriteByte (outfile, pSc1->TsConstant[j - 1]);
-	  }
-	while (!(pSc1->TsConstant[j - 1] == '\0'));
+	     BIOwriteByte (outfile, pSc1->TsConstant[j++]);
+	while (pSc1->TsConstant[j - 1] != '\0');
      }
    for (i = 0; i < pSchStr->SsNRules; i++)
       WriteBlocs (pSc1->TsElemTRule[i], pSchStr);
@@ -1000,4 +983,4 @@ PtrSSchema        pSchStr;
    BIOwriteClose (outfile);
    return True;
 }
-/* End Of Module wrschtra */
+

@@ -946,7 +946,7 @@ PtrDocument         pDoc2;
 		       found = TRUE;
 		    else if (pExtDoc->EdNext != NULL)
 		       pExtDoc = pExtDoc->EdNext;
-		 while (!(found || pExtDoc->EdNext == NULL)) ;
+		 while (!found && pExtDoc->EdNext != NULL);
 		 if (!found)
 		    found = MemeIdentDoc (pExtDoc->EdDocIdent, docIdent);
 		 if (!found)
@@ -1132,7 +1132,7 @@ boolean             withAppEvent;
 			    if (!stop)
 			       pRefD = pRefD->ReNext;
 			 }
-		       while (!(stop));
+		       while (!stop);
 		       if (pRefD == NULL)
 			  /* l'element reference' n'est pas encore represente'. */
 			  /* on lui ajoute un descripteur dans le document de la */

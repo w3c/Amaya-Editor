@@ -1,12 +1,9 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* 
- * variables exportees par le module modif.p
+ * variables representing elements saved by commands Cut or Copy
  */
 
-/* pointeur sur le descripteur du premier element sauve' par Couper ou Copier*/
+/* descriptor of first element saved */
 EXPORT PtrPasteElem ElemSauve;
 
-/* pointeur sur le document auquel appartient la partie sauvee */
+/* the document from which saved elements have been copied or cut */
 EXPORT PtrDocument DocDeSauve;

@@ -1,11 +1,7 @@
 
-/* -- Copyright (c) 1996 Inria -- All rights reserved -- */
-
 /*
    attrherit.c : gestion de l'heritage des attributs.
 
-   V. Quint     Janvier 1986
-   IV : Septembre 92 adaptation Tool Kit
  */
 
 

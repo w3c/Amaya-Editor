@@ -3,17 +3,16 @@
  */
 
 EXPORT int	CORR;	/* identifier for messages issued by the checker  */
-EXPORT int	NC;	/* max. number of corrections */
-EXPORT char	tab_c[NbCorrMax+1][MAX_WORD_LEN];  /* Tab. corrections */
-EXPORT char	tab_e[MAX_WORD_LEN];               /* Tab. des mots errones */
-EXPORT PtrElement CorrElTrouve;	     /* Element a corriger */
-EXPORT int	IdxCarTrouve; /* Index dans l'element trouve */
-EXPORT Language CorrLangue;     /* Langue de la correction */
-EXPORT PtrSearchContext CorrSearch;      /* Contexte du correcteur */
-EXPORT PtrDico   dicofichier;     /* dictionnaire du document en cours */
-
+EXPORT int	NC;	/* maximum number of corrections */
+EXPORT char	tab_c[NbCorrMax+1][MAX_WORD_LEN];  /* corrections */
+EXPORT char	tab_e[MAX_WORD_LEN];               /* erroneous words */
+EXPORT PtrElement CorrElTrouve;	     /* Element to be corrected */
+EXPORT int	IdxCarTrouve;	/* index of erroneous word */
+EXPORT Language CorrLangue;     /* current language */
+EXPORT PtrSearchContext CorrSearch;      /* range to be checked */
+EXPORT PtrDico   dicofichier;     /* dictionary for current document */
 EXPORT char      RefuseCar[NbRefuseCarMax];
-EXPORT boolean   CorrCap;  /* ignorer les mots contenant une capitale */
-EXPORT boolean   CorrArab;  /* ignorer les mots contenant ch. arabe */
-EXPORT boolean   CorrRomain;  /* ignorer les mots contenant ch. romain */
-EXPORT boolean   CorrSpec;  /* ignorer les mots contenant car. speciaux */
+EXPORT boolean   CorrCap;  /* ignore words containing an uppercase char. */
+EXPORT boolean   CorrArab;  /* ignore words containing arabic digits */
+EXPORT boolean   CorrRomain;  /* ignore words containing roman digits */
+EXPORT boolean   CorrSpec;  /* ignore words containing special characters */

@@ -320,4 +320,3 @@ char *Name_colors[] ={
 };
 
 #endif /* THOT_PALETTE_VAR */
-

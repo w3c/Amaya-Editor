@@ -1598,7 +1598,7 @@ char              **argv;
 					 ProcessToken (wi, wl, c, r, pr);	/* on le traite */
 				   }
 			      }
-			    while (!(wi == 0 || error));
+			    while (wi != 0 && !error);
 			    /* il n'y a plus de mots a analyser dans la ligne */
 			 }
 		    }

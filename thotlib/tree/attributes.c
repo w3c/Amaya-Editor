@@ -1,12 +1,5 @@
-
-/* -- Copyright (c) 1996 INRIA -- All rights reserved -- */
-
 /*
    Module traitant les attributs
-
-   V. Quint     Janvier 1986
-
-   IV : Septembre 92 adaptation Tool Kit
 */
 
 #include "libmsg.h"

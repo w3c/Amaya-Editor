@@ -1836,7 +1836,7 @@ indLine               wi;
 		     }
 		i++;
 	     }
-	   while (!(stop));
+	   while (!stop);
 	   if (i > nbident)
 	      /*erreur dans la declaration FORWARD */
 	      CompilerError (wi, PRS, FATAL, BAD_USE_OF_KEYWORD_FORWARD, inputLine, LineNum);
@@ -3445,7 +3445,7 @@ indLine               wl;
 			if (pSRule->SrReferredType == pPSchema->PsPresentBox[CurPresBox - 1].PbContElem)
 			   found = True;
 		  }
-		while (!(found || i >= pSSchema->SsNRules));
+		while (!found && i < pSSchema->SsNRules);
 		if (found)
 		   pPSchema->PsPresentBox[CurPresBox - 1].PbContRefElem = i;
 		else
@@ -5179,7 +5179,7 @@ int                 view;
 	     pR = pR->PrNextPRule;
 	  }
      }
-   while (!(stop));
+   while (!stop);
    stop = False;
    do
      {
@@ -5193,7 +5193,7 @@ int                 view;
 	     pR = pR->PrNextPRule;
 	  }
      }
-   while (!(stop));
+   while (!stop);
    if (pR == NULL)
       cree = True;
    else if (pR->PrType > ruleType || pR->PrViewNum > view)
@@ -5319,7 +5319,7 @@ static void         CheckPageBoxes ()
 			    if (!stop1)
 			       pRule = pRule->PrNextPRule;
 			 }
-		       while (!(stop1));
+		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de hauteur, erreur */
 			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
@@ -5346,7 +5346,7 @@ static void         CheckPageBoxes ()
 			    if (!stop1)
 			       pRule = pRule->PrNextPRule;
 			 }
-		       while (!(stop1));
+		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de largeur, erreur */
 			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
@@ -5385,7 +5385,7 @@ static void         CheckPageBoxes ()
 			    if (!stop1)
 			       pRule = pRule->PrNextPRule;
 			 }
-		       while (!(stop1));
+		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de position verticale, erreur */
 			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
@@ -5430,7 +5430,7 @@ static void         CheckPageBoxes ()
 			    if (!stop1)
 			       pRule = pRule->PrNextPRule;
 			 }
-		       while (!(stop1));
+		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de position horiz., erreur */
 			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
@@ -5452,7 +5452,7 @@ static void         CheckPageBoxes ()
 		  /* passe a la regle suivante */
 	       }
 	  }
-	while (!(stop));
+	while (!stop);
      }
    /* Toutes les boites pages sont maintenant marquees */
    /* Cherche les boites creees par les boites pages (ce sont les */
@@ -5524,7 +5524,7 @@ static void         CheckPageBoxes ()
 				  if (!stop1)
 				     pPRule = pPRule->PrNextPRule;
 			       }
-			     while (!(stop1));
+			     while (!stop1);
 			     if (!exist)
 				/* pas de regle de positionnement vertical, erreur */
 				TtaDisplayMessage (FATAL, TtaGetMessage(PRS, MISSING_VERTIC_POS_IN_THE_PAGE), pPSchema->PsPresentBox[hfB].PbName);
@@ -5580,7 +5580,7 @@ static void         CheckPageBoxes ()
 					    if (!stop1)
 					       pHeadR = pHeadR->PrNextPRule;
 					 }
-				       while (!(stop1));
+				       while (!stop1);
 				       /* si pas de regle de hauteur, pas d'erreur */
 				       if (exist)
 					  if (pHeadR->PrDimRule.DrPosition)
@@ -5656,7 +5656,7 @@ static void         CheckPageBoxes ()
 					    if (!stop1)
 					       pHeadR = pHeadR->PrNextPRule;
 					 }
-				       while (!(stop1));
+				       while (!stop1);
 #ifdef __COLPAGE__
 				       /* si pas de regle de hauteur, pas d'erreur */
 				       if (exist)
@@ -5858,7 +5858,7 @@ static void         CheckPageBoxes ()
 		     /* passe a la regle suivante de b */
 		  }
 	     }
-	   while (!(stop));
+	   while (!stop);
 	   /* on a traite' toutes les boites de haut et de bas de page de */
 	   /* cette boite page */
 	   pPSchema->PsPresentBox[b].PbFooterHeight = footHeight;
@@ -5910,7 +5910,7 @@ static void         CheckPageBoxes ()
 		  /* passe a la regle suivante */
 	       }
 	  }
-	while (!(stop));
+	while (!stop);
      }
    /* verifie les regles de l'element PAGE_UNIT */
    for (view = 1; view <= pPSchema->PsNViews; view++)
@@ -6025,7 +6025,7 @@ boolean             usedBox[MAX_PRES_BOX];
 	     /* passe a la regle suivante */
 	  }
      }
-   while (!(stop));
+   while (!stop);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -6210,7 +6210,7 @@ char              **argv;
 				    ProcessToken (wi, wl, c, r, nb - 1, pr);	/* on le traite */
 			      }
 			 }
-		       while (!(wi == 0 || error));
+		       while (wi != 0 && !error);
 		       /* il n'y a plus de mots a analyser dans la ligne */
 		    }
 	       }

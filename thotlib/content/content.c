@@ -1,9 +1,6 @@
-
-/* -- Copyright (c) 1996 Inria --  All rights reserved  -- */
-
 /*
    This module handles document contents: text and graphics
-   IV : Septembre 92 adaptation Tool Kit
+
 */
 
 #include "thot_sys.h"
@@ -22,7 +19,7 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |	NewTextBuffer  acquiert un nouveau buffer de texte, l'initialise,	| */
+/* |	NewTextBuffer acquiert un nouveau buffer de texte, l'initialise	| */
 /* |	le chaine apres le buffer pBuf et le rattache au meme element	| */
 /* |	feuille.							| */
 /* |	Retourne un pointeur sur le nouveau buffer.			| */
@@ -50,8 +47,8 @@ PtrTextBuffer      pBuf;
 
 
 /* ---------------------------------------------------------------------- */
-/* |	CreateTextBuffer  cree un premier buffer de texte pour un element	| */
-/* |	feuille.							| */
+/* |	CreateTextBuffer  cree un premier buffer de texte pour un 	| */
+/* |	element feuille							| */
 /* |	pEl est l'element feuille qui doit etre de type texte.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -207,7 +204,7 @@ boolean             withAppEvent;
 		  pBuf1->BuContent[i] = pBuf->BuContent[len + i - 1];
 		  i++;
 	       }
-	     while (!(pBuf1->BuContent[i - 1] == '\0'));
+	     while (pBuf1->BuContent[i - 1] != '\0');
 	     pBuf1->BuLength = i - 1;
 	     pBuf1 = pBuf;
 	     /* met a jour le dernier buffer de la premiere partie */
@@ -364,7 +361,7 @@ boolean             withAppEvent;
 					   pBuf1->BuContent[pBuf1->BuLength + i - 1] = pBuf2->BuContent
 					      [i - 1];
 					}
-				      while (!(pBuf2->BuContent[i - 1] == '\0'));
+				      while (pBuf2->BuContent[i - 1] != '\0');
 				      pBuf1->BuLength += pBuf2->BuLength;
 				      /* libere le buffer vide */
 				      pBuf1->BuNext = pBuf2->BuNext;

@@ -44,7 +44,7 @@
 
 #define INTERLGN_SIMPLE 11
 
-
+static PtrDocument  DocModPresent;
 /* Les choix effectues par l'utilisateur */
 static boolean      ChngFamille;	/* l'utilisateur demande a modifier la famille */
 static char         Famille;	/* famille de police demandee par l'utilisateur */

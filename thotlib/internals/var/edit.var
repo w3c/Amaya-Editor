@@ -1,30 +1,14 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/*
- * edit.var --<description>
- * Variables exportees par le module edit
- */
 
 
+EXPORT Name     	NomDocument; /* Name of default document to be loaded*/
 
-/* Name par defaut du document a charger */
-EXPORT Name     	NomDocument; 
-EXPORT char		ptImprimante[MAX_NAME_LENGTH];
-EXPORT PtrDocument	pDocPrint;
-EXPORT PtrDocument	DocumentASauver;
-EXPORT PtrDocument	DocAttrRequis;
-EXPORT PtrDocument	DocAutoSave;
-EXPORT PtrDocument	DocModPresent;
-EXPORT PtrDocument	pDocLister;
-EXPORT PtrDocument	CorrDocument;
-EXPORT PtrDocument	pDocCherche;
-EXPORT int		BaseAppli;
-
-/* Table des pointeurs sur les descripteurs de documents */
+/* Documents currently loaded */
 EXPORT PtrDocument 	TabDocuments[MAX_DOCUMENTS];
 EXPORT DisplayMode	documentDisplayMode[MAX_DOCUMENTS];
 
-EXPORT int		InputSpace; /* Mode de saisie des espaces (0 ou 1) */
-EXPORT int		ShowSpace;  /* Mode d'affichage des espaces (0 ou 1) */
-EXPORT boolean		ChangerLabel; /* Indicateur de modif.c */
-EXPORT boolean 	StructSelectionMode; /* Indicateur du mode selection */
+EXPORT PtrDocument	DocAutoSave;	/* document to be saved autoimatically */
+EXPORT PtrDocument	pDocPrint;	/* document to be printed */
+EXPORT int		InputSpace;	/* Spaces imput mode (0 or 1) */
+EXPORT int		ShowSpace;	/* Spaces display mode (0 or 1) */
+EXPORT boolean		ChangerLabel;	/* Labels must be changed */
+EXPORT boolean 	StructSelectionMode;	/* Current selection mode */

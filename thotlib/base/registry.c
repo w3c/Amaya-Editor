@@ -872,7 +872,6 @@ static void         InitEnviron ()
 
    /* default values for various global variables */
    FirstCreation = FALSE;
-   EnchaineChoix = TRUE;
    CurSaveInterval = DEF_SAVE_INTVL;
    HardMsgAff = FALSE;
    NiveauxInsertion = 4;

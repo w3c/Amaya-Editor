@@ -1,55 +1,47 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 /*
- * variable exportee par le module select.c
+ * variables used for selecting logical elements and contents
  */
 
-EXPORT int Kbmode;	/* clavier courant */
+EXPORT int Kbmode;	/* current keyboard */
 
-/* le document auquel appartient la partie   */
-/* selectionnee, nil si rien n'est selectionne*/
+/* the document containing the current selection, */
+/* NULL if there is no selection at all */
 EXPORT PtrDocument SelDocument;
 
-/* numero de la vue ou l'utilisateur a selectionne' */
+/* number of the view from which the user has selected */
 EXPORT int     SelVue;
 
-/* pointeur sur le premier element selectionne' */
+/* first selected element */
 EXPORT PtrElement SelPremier;
 
-/* pointeur sur le dernier element selectionne' */
+/* last selected element */
 EXPORT PtrElement SelDernier;
 
-/* index du premier caractere selectionne'   */
-/* dans le 1er element selectionne'          */
-/* (seulement si texte)                      */
+/* index of first selected character in the the first selected element */
+/* Zero if the selection starts at the beginning of the element */
 EXPORT int SelPremCar;
 
-/* index du dernier caractere selectionne'   */
-/* dans le dernier element selectionne'      */
-/* (seulement si texte)                      */
+/* index of last selected character in the last selected element */
+/* Zero if the selection ends at the end of the element */
 EXPORT int SelDerCar;
 
-/* la selection est une position d'insertion (sans contenu) */
-/* ou une partie du contenu du document */
+/* The current selection is simply a caret */
 EXPORT boolean SelPosition;
 
-/* Synchronisation des vues d'un meme document */
+/* Views belonging to the same document are synchronized */
 EXPORT boolean SynchroVues;
 
-/* On recalcule ou pas les menus qui dependent de la selection */
+/* Context sensitive menus must be computed when selection changes */
 EXPORT boolean SelAvecMajMenus;
 
-/* mode de selection */
+/* selection mode */
+/* If TRUE the selection is represented by variables SelPremier,
+SelDernier, SelPremCar, SelDerCar */
+/* If FALSE the selection is represented by table SelElement */
 EXPORT boolean SelContinue;
 
-/* NOTE:
-	la selection est formee des elements
-	consecutifs de l'arbre abstrait compris entre SelPremier et 
-	SelDernier inclus. Si faux, les elements selectionnes sont 
-	ceux pointe's par le tableau SelElement
- */
-
-/* les elements qui figurent dans le menu selection */
+/* elements corresponding to the items of Selection menu */
 EXPORT PtrElement MenuSelElPere;
 EXPORT PtrElement MenuSelElPredecent;
 EXPORT PtrElement MenuSelElSuivant;

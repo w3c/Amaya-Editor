@@ -52,7 +52,7 @@ PtrSSchema        pSS;
 		   ret = TRUE;
 		else
 		   e++;
-	     while (!(ret || e > pSRule->SrLastExcept));
+	     while (!ret && e <= pSRule->SrLastExcept);
 	  }
 	if (!ret)
 	   /* on n'a pas trouve', on cherche dans les extensions du schema */
@@ -74,7 +74,7 @@ PtrSSchema        pSS;
 				ret = TRUE;
 			     else
 				e++;
-			  while (!(ret || e > pSRule->SrLastExcept));
+			  while (!ret && e <= pSRule->SrLastExcept);
 		       }
 		  /* passe a l'extension de schema suivante */
 		  pExtSS = pExtSS->SsNextExtens;
@@ -122,7 +122,7 @@ PtrSSchema        pSS;
 		else
 		   e++;
 	     /* exception suivante pour ce type d'element */
-	     while (!(ret || e > pAtt->AttrLastExcept));
+	     while (!ret && e <= pAtt->AttrLastExcept);
 	  }
      }
    return ret;

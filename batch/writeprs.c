@@ -68,11 +68,8 @@ Name                 n;
 
    i = 0;
    do
-     {
-	i++;
-	BIOwriteByte (outfile, n[i - 1]);
-     }
-   while (!(n[i - 1] == '\0'));
+	BIOwriteByte (outfile, n[i++]);
+   while (n[i - 1] != '\0');
 }
 
 
@@ -1163,7 +1160,7 @@ PtrSSchema        pSchStr;
 	     j++;
 	     BIOwriteByte (outfile, pPr1->PdString[j - 1]);
 	  }
-	while (!(pPr1->PdString[j - 1] == '\0'));
+	while (pPr1->PdString[j - 1] != '\0');
      }
 
    /* ecrit les variables de presentation */

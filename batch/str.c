@@ -1189,7 +1189,7 @@ SyntRuleNum                 pr;
 			  /* pas de valeur definie */
 			  CompilerError (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE, inputLine, LineNum);
 		    }
-		  if (!(CompilAttr || CompilLocAttr))
+		  if (!CompilAttr && !CompilLocAttr)
 		     if (r == RULE_RuleList || r == RULE_OptDefList || r == RULE_DefList)
 			/* fin de regle de structure */
 		       {
@@ -2977,8 +2977,9 @@ char              **argv;
 					 ProcessToken (wi, wl, c, r, nb, pr);
 				   }
 			      }
-			    while (!(wi == 0 || error));
-			 }	/* il n'y a plus de mots */
+			    while (wi != 0 && !error);
+			/* il n'y a plus de mots a traiter dans la ligne */
+			 }
 		    }
 		  if (!error)
 		     ParserEnd ();	/* fin d'analyse */

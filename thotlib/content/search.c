@@ -213,7 +213,7 @@ boolean             select;
 		  pAb->AbVolume -= dvol;
 		  pAb = pAb->AbEnclosing;
 	       }
-	     while (!(pAb == NULL));
+	     while (pAb != NULL);
 	  }
      }
    /* reaffiche toutes les views */
@@ -416,17 +416,17 @@ char                strng[MAX_CHAR];
 		  ind = 0;
 		  do
 		     if (pBuf->BuLength > 0)
+		        /* buffer non vide */
 			ind = 1;
-		  /* buffer non vide */
 		     else
 			/* buffer vide */
 		       {
-			  pBuf = pBuf->BuNext;
 			  /* buffer suivant */
-			  stop = pBuf == NULL;
+			  pBuf = pBuf->BuNext;
 			  /* fin si dernier buffer */
+			  stop = pBuf == NULL;
 		       }
-		  while (!(stop || ind == 1));
+		  while (!stop && ind != 1);
 	       }
 	     else
 		stop = TRUE;
@@ -465,7 +465,7 @@ char                strng[MAX_CHAR];
 		(*firstChar)++;
 	     }
      }
-   while (!(stop));
+   while (!stop);
 }
 
 
@@ -545,7 +545,7 @@ int                 strngLen;
 		(*firstChar)--;
 	     }
      }
-   while (!(stop));
+   while (!stop);
 }
 
 

@@ -1,9 +1,8 @@
-/* constcorr.h : Declaration des constantes du correcteur */
-/* H. Richy - Avril 91                                     */
+/*
+ *	Constants for spelling checker
+ */
 
-/* Constantes pour les menus de correction  */
-
-#define NbCorrMax  10  /* Nb max de propositions du correcteur */
-#define limit      15  /* valeur max des coeff ki, ko, kp */
-#define max_score 200  /* seuil max accepte */
-#define NbRefuseCarMax 15 /* nb max de car speciaux refuses */
+#define NbCorrMax	10	/* Maximum number of proposed corrections */
+#define limit		15	/* Maximum value of ki, ko, kp */
+#define max_score	200	/* Maximum threshold */
+#define NbRefuseCarMax	15	/* Max. number of special characters */

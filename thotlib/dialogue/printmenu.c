@@ -54,6 +54,10 @@ static PathBuffer   psdir;
 static boolean      ImprimerPapier;
 static boolean      AlimentationManuelle;
 static boolean      NewImprimerPapier;
+static char	    ptImprimante[MAX_NAME_LENGTH];
+static PtrDocument  pDocPrint;
+static char	    page_size[MAX_NAME_LENGTH];
+static char	    orientation[MAX_NAME_LENGTH];
 
 static ThotFileHandle msgfile_fid = ThotFile_BADHANDLE;		/* le fichier temporaire des messages */
 static char         msgfile_name[40];	/* son nom */

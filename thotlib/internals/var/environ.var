@@ -1,36 +1,25 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/*
- * environ.var --<description>
- *
- */
-
-/* directory courant des documents */
+/* current path for documents */
 EXPORT PathBuffer  DirectoryDoc;	
 
-/* directory courant des schemas */
+/* current path for schemas */
 EXPORT PathBuffer  DirectorySchemas;
 
 /* directory for binaries of current architecture */
 EXPORT PathBuffer  DirectoryBinaries;
 
-/* nombre de niveaux en remontant pour les menus d'insertion */
+/* maximum levels for building Insert menu */
 EXPORT int     NiveauxInsertion;
 
+/* abstract image errors are highlighted */
 EXPORT boolean HardMsgAff;
 
-/* mode de creation des choix */
-EXPORT boolean 	EnchaineChoix;
-
-/* mode de controle de la structure logique des documents */
+/* the logical structure of a document must strictly conform ist structure
+schema */
 EXPORT boolean	FullStructureChecking;
 
-/* nombre de carateres saisis entre deux sauvegardes automatiques */
+/* number of typed characters that triggers an automatic save */
 EXPORT int     	CurSaveInterval;
 
-/* on cree des paves pour des elements qui viennent d'etre crees par l'utilisateur */
+/* abstract boxes must be created for newly created elements */
 EXPORT	boolean	FirstCreation;
-
-/* variables pour l'impression */
-EXPORT char page_size[MAX_NAME_LENGTH], orientation[MAX_NAME_LENGTH];

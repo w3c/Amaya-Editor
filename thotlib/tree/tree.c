@@ -331,7 +331,7 @@ char               *typeName;
 		       else if (pAsc->ElNext != NULL)
 			  stop = TRUE;
 		    }
-		  while (!(stop));
+		  while (!stop);
 		  if (pAsc != NULL)
 		     /* verifies if this element is the one we're looking
 			for */
@@ -810,7 +810,7 @@ int                 Kind;
 		       else if (pAsc->ElNext != NULL)
 			  stop = TRUE;
 		    }
-		  while (!(stop));
+		  while (!stop);
 		  if (pAsc != NULL)
 		     /* cherche si cet element est celui cherche */
 		    {
@@ -1089,7 +1089,7 @@ int                 assocNum;
 	  }
 	par++;
      }
-   while (!(found || par >= MAX_PARAM_DOC));
+   while (!found && par < MAX_PARAM_DOC);
    if (found)
       /* le parametre a une valeur: l'arbre pointe par DocParameters[par]. */
       /* on copie cet arbre. */
@@ -1120,7 +1120,7 @@ int                 assocNum;
 		  i++;
 		  pEl->ElText->BuContent[i - 1] = pR->SrName[i - 2];
 	       }
-	     while (!(pEl->ElText->BuContent[i - 1] == '\0' || i == MAX_CHAR));
+	     while (pEl->ElText->BuContent[i - 1] != '\0' && i != MAX_CHAR);
 	     if (i < MAX_CHAR)
 	       {
 		  pEl->ElText->BuContent[i - 1] = '$';
@@ -1198,7 +1198,7 @@ boolean             Check;
 			found = TRUE;
 		     else
 			pAsc = pAsc->ElParent;
-		  while (!(pAsc == NULL || found));
+		  while (pAsc != NULL && !found);
 		  if (!found)
 		     /* cherche un schema de structure de meme nom ou une */
 		     /* extension de schema de structure dans les */
@@ -1222,7 +1222,7 @@ boolean             Check;
 			       if (!found)
 				  pAsc = pAsc->ElParent;
 			    }
-		       while (!(pAsc == NULL || found));
+		       while (pAsc != NULL && !found);
 		    }
 		  if (found)
 		     found = CanAssociateAttr (pEl2, NULL, pAttr1, &bool);
@@ -1276,7 +1276,7 @@ boolean             Check;
 	     /* passe a l'attribut suivant de l'original */
 	     pAttr1 = pAttr1->AeNext;
 	  }
-	while (!(pAttr1 == NULL));
+	while (pAttr1 != NULL);
 	if (pAttr2 != NULL)
 	   FreeAttr (pAttr2);
      }
@@ -1591,7 +1591,7 @@ PtrElement          pEl;
 	     else
 		pE = pEl1->ElFirstChild;
 	  }
-	while (!(stop));
+	while (!stop);
      }
    return pE;
 }
@@ -1670,7 +1670,7 @@ PtrSSchema        pSS;
 	   if (!found)
 	      pEl = pEl->ElParent;	/* passe au niveau superieur */
 	}
-      while (!(pEl == NULL || found));
+      while (pEl != NULL && !found);
 
    if (found)
      {
@@ -1786,7 +1786,7 @@ PtrSSchema        pSS2;
 		       else if (pAsc->ElNext != NULL)
 			  stop = TRUE;
 		    }
-		  while (!(stop));
+		  while (!stop);
 		  if (pAsc != NULL)
 		     /* cherche si cet element est celui cherche */
 		    {
@@ -2039,7 +2039,7 @@ PtrSSchema        pSS;
 		       else if (pAsc->ElNext != NULL)
 			  stop = TRUE;
 		    }
-		  while (!(stop));
+		  while (!stop);
 		  if (pAsc != NULL)
 		     /* cherche si cet element est celui cherche */
 		    {
@@ -2136,7 +2136,7 @@ PtrElement         *pEl;
 	if (!stop)
 	   *pEl = (*pEl)->ElNext;
      }
-   while (!(stop));
+   while (!stop);
 }
 
 
@@ -2178,7 +2178,7 @@ PtrElement         *pEl;
 	     *pEl = (*pEl)->ElNext;
 	  }
      }
-   while (!(stop));
+   while (!stop);
    *pEl = pPrev;
 }
 
@@ -2217,7 +2217,7 @@ PtrElement         *pEl;
 	if (!stop)
 	   *pEl = (*pEl)->ElPrevious;
      }
-   while (!(stop));
+   while (!stop);
 }
 
 
@@ -2921,7 +2921,7 @@ boolean             withLabel;
 			      pBu1->BuContent[i] = pSS->SsConstBuffer[i + pSRule->SrIndexConst - 1];
 			      i++;
 			   }
-			 while (!(pBu1->BuContent[i - 1] == '\0' || i == MAX_CHAR));
+			 while (pBu1->BuContent[i - 1] != '\0' && i < MAX_CHAR);
 			 pBu1->BuContent[i - 1] = '\0';
 			 pEl->ElTextLength = i - 1;
 			 pEl->ElVolume = pEl->ElTextLength;
@@ -3366,7 +3366,7 @@ PtrElement         *pEl;
 		       DeleteTextBuffer (&pBuf);
 		       pBuf = pNextBuf;
 		    }
-		  while (!(c >= pEl1->ElTextLength || pBuf == NULL));
+		  while (c < pEl1->ElTextLength && pBuf != NULL);
 		  pEl1->ElText = NULL;
 		  pEl1->ElTextLength = 0;
 
@@ -3806,7 +3806,7 @@ boolean             shareRef;
 				 }
 			       pS2 = pS2->ElNext;
 			    }
-			  while (!(pS2 == NULL));
+			  while (pS2 != NULL);
 		       }
 		  pEl->ElParent = NULL;	/* ElParent avait ete mis pour CopyAttributes */
 	       }
@@ -3856,7 +3856,7 @@ PtrSSchema        pSS;
 	     }
 	a++;
      }
-   while (!(stop || a >= MAX_ASSOC_DOC));
+   while (!stop && a < MAX_ASSOC_DOC);
    return pEl;
 }
 
@@ -4055,7 +4055,7 @@ PtrDocument         pDoc;
 			      }
 			    pS2 = pS2->ElNext;
 			 }
-		       while (!(pS2 == NULL));
+		       while (pS2 != NULL);
 		    }
 	       }
 	  }

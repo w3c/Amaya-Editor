@@ -367,7 +367,7 @@ SyntacticType             *wn;
 	     }
 	j++;
      }
-   while (!(stop));
+   while (!stop);
 
    /* analyse les caracteres significatifs */
    if (*wi > 0 && !error)
@@ -409,7 +409,7 @@ SyntacticType             *wn;
 		     switch (*wn)
 			   {
 			      case SynInteger:
-				 if (!(inputLine[j] >= '0' && inputLine[j] <= '9'))
+				 if (inputLine[j] < '0' || inputLine[j] > '9')
 				   {
 				      CompilerError (j + 1, COMPIL, FATAL, BAD_NUMBER,
 						     inputLine, LineNum);
@@ -441,7 +441,7 @@ SyntacticType             *wn;
 		  }
 		j++;
 	     }
-	   while (!(stop));
+	   while (!stop);
 	else if (*wn == SynString)
 	   /* chaine de caracteres */
 	  {
@@ -470,7 +470,7 @@ SyntacticType             *wn;
 				  k++;
 				  inputLine[k] = inputLine[k + 1];
 			       }
-			     while (!(inputLine[k] == '\0'));
+			     while (inputLine[k] != '\0');
 			     j++;
 			  }
 			else
@@ -479,7 +479,7 @@ SyntacticType             *wn;
 			j++;
 		     (*wl)++;
 		  }
-	     while (!(stop));
+	     while (!stop);
 	  }
      }
 }
@@ -662,8 +662,8 @@ SyntRuleNum                *pr;
 					{
 					   do
 					      Stack[level].StRuleInd++;
-					   while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003
-						    || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000));
+					   while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+						  && ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
 					   if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 					      Stack[level].StRuleInd++;
 					}
@@ -689,7 +689,7 @@ SyntRuleNum                *pr;
 				   {
 				      do
 					 Stack[level].StRuleInd--;
-				      while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2004));
+				      while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
 				      Stack[level].StRuleInd++;
 				      Stack[level].Option = True;
 				      Stack[level].Tested = True;
@@ -766,7 +766,7 @@ SyntRuleNum                *pr;
 					      /* fin de repetition */
 					      do
 						 Stack[level].StRuleInd--;
-					      while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2004));
+					      while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
 					      Stack[level].StRuleInd++;
 					      Stack[level].Option = True;
 					      stop = True;
@@ -786,8 +786,8 @@ SyntRuleNum                *pr;
 			 {
 			    do
 			       Stack[level].StRuleInd++;
-			    while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2002
-				     || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2005));
+			    while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2002
+				   && ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
 			    Stack[level].StRuleInd++;
 			    Stack[level].Option = False;
 			    if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000
@@ -810,8 +810,8 @@ SyntRuleNum                *pr;
 			      {
 				 do
 				    Stack[level].StRuleInd++;
-				 while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003
-					  || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000));
+				 while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+					&& ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
 				 if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 				    /* une alternative dans la regle */
 				   {
@@ -838,8 +838,8 @@ SyntRuleNum                *pr;
 						  {
 						     do
 							Stack[level].StRuleInd++;
-						     while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2002
-							      || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2005));
+						     while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2002
+							    && ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
 						     Stack[level].StRuleInd++;
 						     Stack[level].Option = False;
 						     st1 = True;
@@ -849,8 +849,8 @@ SyntRuleNum                *pr;
 						  {
 						     do
 							Stack[level].StRuleInd++;
-						     while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003
-							      || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000));
+						     while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+							    && ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
 						     if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 						       {
 							  Stack[level].StRuleInd++;
@@ -862,7 +862,7 @@ SyntRuleNum                *pr;
 				      st1 = True;
 				   }
 			      }
-			    while (!(st1));
+			    while (!st1);
 			 }
 		    }
 	       }

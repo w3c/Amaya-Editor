@@ -1351,7 +1351,7 @@ char              **argv;
 			printf ("%3d ", nb);
 		     min = nb;
 		  }
-		while (!(nb == THOT_MAXINT));
+		while (nb != THOT_MAXINT);
 		printf ("}\n");
 	     }
 	if (!optionh)

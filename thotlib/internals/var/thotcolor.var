@@ -1,6 +1,5 @@
 /*
- * thotcolor.var : definition and export of variables associated to the
- *       handling of colors in Thot.
+ * definition of variables associated to the management of colors in Thot
  */
 
 #ifndef THOT_COLOR_VAR

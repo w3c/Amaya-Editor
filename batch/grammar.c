@@ -261,15 +261,15 @@ int                 rank;
 		       j = 0;
 		       do
 			  j++;
-		       while (!(inputLine[wi + j - 2] != strng[i].SrcIdentifier[j - 1] || j
-				== wl - 1));
+		       while (inputLine[wi + j - 2] == strng[i].SrcIdentifier[j - 1] &&
+				j < wl - 1);
 		       if (j == wl - 1)
 			  if (inputLine[wi + j - 2] == strng[i].SrcIdentifier[j - 1])
 			     known = True;
 		    }
 		  i++;
 	       }
-	     while (!(known || i >= Nstrings));
+	     while (!known && i < Nstrings);
 	     if (known)
 		/* deja dans la table */
 		AddRefToTable (&kwRef[i - 1], wi);
@@ -639,7 +639,7 @@ static void         WriteFiles ()
 		       lineLength = 0;
 		    }
 	       }
-	     while (!(SyntRule[r][i] == 2000));
+	     while (SyntRule[r][i] != 2000);
 	     /* 2000 = Fin de la regle */
 	     if (lineLength > 0)
 	       {

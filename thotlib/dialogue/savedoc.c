@@ -28,6 +28,7 @@ static PathBuffer   NomFichierSauver;
 static PathBuffer   NomSchemaTraduction;
 static boolean      SauveDocAvecCopie;
 static boolean      SauveDocAvecMove;
+static PtrDocument  DocumentASauver;
 
 #ifdef __STDC__
 extern void         NomFonte (char, char, int, int, TypeUnit, char[], char[]);

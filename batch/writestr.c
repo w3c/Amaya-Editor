@@ -95,11 +95,8 @@ Name                 n;
 
    k = 0;
    do
-     {
-	k++;
-	BIOwriteByte (outfile, n[k - 1]);
-     }
-   while (!(n[k - 1] == '\0'));
+	BIOwriteByte (outfile, n[k++]);
+   while (n[k - 1] != '\0');
 }
 
 
@@ -390,7 +387,7 @@ int                 Code;
 	i++;
 	BIOwriteByte (outfile, pSc1->SsConstBuffer[i - 1]);
      }
-   while (!(pSc1->SsConstBuffer[i - 1] == '\0' && pSc1->SsConstBuffer[i] == '\0'));
+   while (pSc1->SsConstBuffer[i - 1] != '\0' || pSc1->SsConstBuffer[i] != '\0');
    BIOwriteByte (outfile, '\0');	/* SsFirstDynNature */
    /* ecrit les attributs */
    for (i = 1; i <= pSc1->SsNAttributes; i++)
