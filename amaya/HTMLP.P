@@ -2131,7 +2131,8 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	if not within NOFRAMES BEGIN
-		PaddingTop: 0.2;
+	        MarginLeft: 0.5;
+	        MarginRight: 0.5;
 		VertPos: Top = Previous AnyElem . Bottom;
 		END;
 	if within NOFRAMES BEGIN
@@ -2150,7 +2151,6 @@ RULES
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		PaddingTop: 0;
 #ifdef PAGE
 		Adjust: Left;
 #else
