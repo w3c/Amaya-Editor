@@ -238,5 +238,12 @@
 236 No posso create un XPointer
 237 Non trovo dove muovere l'annotazione
 238 Non posso muovere l'annotazione su un diverso documento
-239 **Change Charset
-240 **Change MIME type
+239 **Select a Charset
+240 **Select a MIME type
+241 **Change Charset
+242 **Change MIME type
+243 **Change
+244 **This type of document doesn't support charsets
+245 **The target must be an HTTP URL to use this option
+246 **Error: invalid MIME type
+247 **Unknown

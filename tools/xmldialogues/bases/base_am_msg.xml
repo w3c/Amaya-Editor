@@ -1798,14 +1798,44 @@
 	<message xml:lang="de">Die Anmerkung kann nicht in ein anderes Dokument verschoben werden</message>
 	<message xml:lang="it">Non posso muovere l'annotazione su un diverso documento</message>
 </label>
-<label define="AM_CANGE_CHARSET">
+<label define="AM_SELECT_CHARSET">
+	<message xml:lang="en">Select a Charset</message>
+	<message xml:lang="fr">Sélectionner un Charset</message>
+</label>
+<label define="AM_SELECT_MIMETYPE">
+	<message xml:lang="en">Select a MIME type</message>
+	<message xml:lang="fr">Sélectionner un type MIME</message>
+</label>
+<label define="AM_CHANGE_CHARSET">
 	<message xml:lang="en">Change Charset</message>
 	<message xml:lang="fr">Changer Charset</message>
 </label>
 <label define="AM_CHANGE_MIME_TYPE">
 	<message xml:lang="en">Change MIME type</message>
+	<message xml:lang="fr">Changer le type MIME</message>
 </label>
-
+<label define="AM_CHANGE">
+	<message xml:lang="en">Change</message>
+	<message xml:lang="fr">Changer</message>
+	<message xml:lang="es">Modificar</message>
+</label>
+<label define="AM_NOCHARSET_SUPPORT">
+	<message xml:lang="en">This type of document doesn't support charsets</message>
+	<message xml:lang="fr">Ce type de document n'a pas de charset</message>
+</label>
+<label define="AM_NOMIMETYPE_SUPPORT">
+	<message xml:lang="en">The target must be an HTTP URL to use this option</message>
+	<message xml:lang="fr">L'URL doit être de type HTTP pour utiliser
+	cette option</message>
+</label>
+<label define="AM_INVALID_MIMETYPE">
+	<message xml:lang="en">Error: invalid MIME type</message>
+	<message xml:lang="fr">Erreur: type MIME incorrect</message>
+</label>
+<label define="AM_UNKNOWN">
+	<message xml:lang="en">Unknown</message>
+	<message xml:lang="fr">Inconnu</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
