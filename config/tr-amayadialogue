@@ -104,59 +104,62 @@
 103 Tuþlarý göster
 104 Adres ve baþlýðý göster
 105 Yakýnlaþtýr
-106 Uzaklaþtýr
-107 Harita alanlarýný göster
-108 Yapýyý göster
-109 Alternatif gösterim
-110 Baðlantýlarý göster
-111 Ýçindekileri göster
-112 Karakter tarzý...
-113 Renkler...
-114 Biçim...
-115 Arkaplan görüntüsü...
-116 Kural yarat...
-117 \'class\' uygula...
-118 Tarzý tanýmlarý
-119 Bilgi türü
-120 Vurgu
-121 Kuvvetli
-122 Cite
-123 Taným
-124 Kod
-125 Deðiþken
-126 Örnek
-127 Tuþtakýmý
-128 **Abbreviation
-129 **Acronym
-130 **Insertion
-131 **Deletion
-132 Karakter birimi
-133 Ýtalik
-134 Kalýn
-135 Teletype
-136 Büyük
-137 Küçük
-138 Alt
-139 Üst
-140 **Quotation
-141 **BDO
-142 Dönüþtür
-143 Bölüm numaralandýrmasý
-144 Kitap yap
-145 Amaya hakkýnda
-146 Tarama
-147 Seçme
-148 Arama
-149 Görünümler
-150 Birim yaratma
-151 Baðlantýlar
-152 Yeniden yapýlandýrma
-153 Tablolar
-154 Matematik
-155 Görüntü haritalarý
-156 Tarz tanýmlarý
-157 Özellikler
-158 Sayfa yerleþtirme
-159 Bastýrma
-160 Kitap oluþturma
-161 Amaya yapýlandýrmasý
+106 **Show Targets
+107 Uzaklaþtýr
+108 Harita alanlarýný göster
+109 Yapýyý göster
+110 Alternatif gösterim
+111 Baðlantýlarý göster
+112 Ýçindekileri göster
+113 Karakter tarzý...
+114 Renkler...
+115 Biçim...
+116 Arkaplan görüntüsü...
+117 Kural yarat...
+118 \'class\' uygula...
+119 Tarzý tanýmlarý
+120 Bilgi türü
+121 Vurgu
+122 Kuvvetli
+123 Cite
+124 Taným
+125 Kod
+126 Deðiþken
+127 Örnek
+128 Tuþtakýmý
+129 **Abbreviation
+130 **Acronym
+131 **Insertion
+132 **Deletion
+133 Karakter birimi
+134 Ýtalik
+135 Kalýn
+136 Teletype
+137 Büyük
+138 Küçük
+139 Alt
+140 Üst
+141 **Quotation
+142 **BDO
+143 Dönüþtür
+144 Bölüm numaralandýrmasý
+145 Kitap yap
+146 Amaya hakkýnda
+147 Tarama
+148 Seçme
+149 Arama
+150 Görünümler
+151 Birim yaratma
+152 Baðlantýlar
+153 Yeniden yapýlandýrma
+154 Tablolar
+155 Matematik
+156 Görüntü haritalarý
+157 Tarz tanýmlarý
+158 Özellikler
+159 Yazým hatalarý aranýyor
+160 Sayfa yerleþtirme
+161 Bastýrma
+162 Numaralandýrmasý
+163 Kitap oluþturma
+164 Amaya yapýlandýrmasý

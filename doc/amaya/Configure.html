@@ -14,7 +14,7 @@ Configuring Amaya</title>
 alt="Amaya" src="../Icons/amaya.gif"></p>
 </td>
 <td><p align="right">
-<a href="Printing.html"><img alt="previous" border="0"
+<a href="MakeBook.html"><img alt="previous" border="0"
 src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
 src="../Icons/up.gif"></a></p>
 </td>
@@ -38,11 +38,12 @@ or <strong>Thot/config/thot.rc</strong> (Windows)
 This file  is used to define global parameters of Thot applications (Amaya is
 a Thot application). Inside this file, there's a section called
 <code>[amaya]</code> where are specified the configuration options concerning:
-<a href="#L138">the default home page</a>, <a
-href="#Specifying">proxies</a>,<a href="#L139"> default colors</a>, <a
-href="#Default">default zoom</a>,<a href="#L140"> the colors palette</a>, <a
-href="#L141">the dialogue language</a>, the path to the personall dictionary,
-and<a href="#L242"> the default printer command</a>.</p>
+<a href="#L138">the default home page</a>, <a href="#Multi-key">control the
+multi-key support</a>, <a href="#Specifying">proxies</a>,<a href="#L139">
+default colors</a>, <a href="#Default">the default zoom-factor</a>,<a
+href="#L140"> the colors palette</a>, <a href="#L141">the dialogue
+language</a>, <a href="#Personnal">the personall dictionary</a>, and<a
+href="#L242"> the default printer command</a>.</p>
 </li>
 <li>
 The <a name="keyboard">keyboard file</a> <strong>$HOME/amaya.keyboard</strong>
@@ -174,7 +175,7 @@ document windows, menus, dialogue boxes.
 To take into account any change to these options, you need to restart
 <strong>Amaya</strong>.</p>
 
-<h3><a name="Default">Default Zoom</a></h3>
+<h3><a name="Default">Default Zoom-factor</a></h3>
 <p>
 It's now possible to zoom in and zoom out document window by document window,
 so each document displayed within a zoomed window will be displayed larger or
@@ -241,6 +242,22 @@ same directory <strong>Thot/config,</strong> and must use the right ISO 639
 code as a prefix (it- for Italian, de- for German, etc.). The specific
 HTML.code file also has to be created.</p>
 
+<h3><a name="Personnal">Personnal dictionary</a></h3>
+<p>
+Amaya provides a <a href="SpellChecking.html#Spell">multilingual spell
+checker</a>. By default the spell checker works with  two dictionaries: the
+English dictionary and the French dictionary (these two dictionaries can be
+downloaded from <a href="http://www.w3.org/Amaya/User/BinDist.html">W3C servers
+</a>). When the user wants to register a new word, the
+spell checker creates or updates  the "user's personal dictionary". By
+default, this "user's personal dictionary" is <code>$HOME/.thot.DIC</code>,
+but the user can define another file. This other dictionary file path is
+defined by the parameter <code>"EXTENDDICT="</code> in the registry file.</p>
+<p>
+By default the "user's personal dictionary" is registered within the file
+<code>$HOME/.amaya/.thot.DIC</code>, but the user can change its file name by
+setting a different name value in<a href="#registry"> registry file</a> .</p>
+
 <h3><a name="L242">Printer command</a></h3>
 <p>
 The standard printer command is defined by the <code>THOTPRINTER</code> <a
@@ -248,6 +265,230 @@ href="#registry">registry file</a>  variable. If this command is not well
 adapted of the current system, the user have to update it before printing
 using the "Print Setup" command or change this variable in the <a
 href="#registry">registry file</a>.</p>
+
+<h3><a name="Multi-key">Multi-key support</a></h3>
+<p>
+The optional input method (Multi-Key) is based on a two key sequence beginning
+with the "accent" followed by the "letter". For example to obtain a '&atilde;'
+first press '~' then type 'a'. To obtain a '~' you have to press '~' twice.
+The table below gives available key sequences:</p>
+
+<table border="1">
+<caption></caption>
+<tbody>
+<tr>
+<td>
+accent-letter
+</td>
+<td>
+~
+</td>
+<td>
+`
+</td>
+<td>
+'
+</td>
+<td>
+"
+</td>
+<td>
+*
+</td>
+<td>
+^
+</td>
+</tr>
+<tr>
+<td>
+a A
+</td>
+<td>
+&atilde; &Atilde;
+</td>
+<td>
+&agrave; &Agrave;
+</td>
+<td>
+&aacute; &Aacute;
+</td>
+<td>
+&auml; &Auml;
+</td>
+<td>
+&aring; &Aring;
+</td>
+<td>
+&acirc; &Acirc;
+</td>
+</tr>
+<tr>
+<td>
+c C
+</td>
+<td>
+
+</td>
+<td>
+&ccedil; &Ccedil;
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+e E
+</td>
+<td>
+
+</td>
+<td>
+&egrave; &Egrave;
+</td>
+<td>
+&eacute; &Eacute;
+</td>
+<td>
+&euml; &Euml;
+</td>
+<td>
+
+</td>
+<td>
+&ecirc; &Ecirc;
+</td>
+</tr>
+<tr>
+<td>
+i I
+</td>
+<td>
+
+</td>
+<td>
+&igrave; &Igrave;
+</td>
+<td>
+&iacute; &Iacute;
+</td>
+<td>
+&iuml; &Iuml;
+</td>
+<td>
+
+</td>
+<td>
+&icirc; &Icirc;
+</td>
+</tr>
+<tr>
+<td>
+n N
+</td>
+<td>
+&ntilde; &Ntilde;
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+o O
+</td>
+<td>
+&otilde; &Otilde;
+</td>
+<td>
+&ograve; &Ograve;
+</td>
+<td>
+&oslash; &Oslash;
+</td>
+<td>
+&ouml; &Ouml;
+</td>
+<td>
+
+</td>
+<td>
+&ocirc; &Ocirc;
+</td>
+</tr>
+<tr>
+<td>
+u U
+</td>
+<td>
+
+</td>
+<td>
+&ugrave; &Ugrave;
+</td>
+<td>
+&uacute; &Uacute;
+</td>
+<td>
+&uuml; &Uuml;
+</td>
+<td>
+
+</td>
+<td>
+&ucirc; &Ucirc;
+</td>
+</tr>
+<tr>
+<td>
+y Y
+</td>
+<td>
+
+</td>
+<td>
+&Yacute;
+</td>
+<td>
+&yacute; &Yacute;
+</td>
+<td>
+&yuml;
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+</tr>
+</tbody>
+</table>
+<p>
+By default, this input method is disabled. To active it the user has to edit
+his/her <a href="#Configuring">registry file</a> <code>$HOME/.thotrc</code> to
+set the parameter value "<code>ENABLE_MULTIKEY=yes</code>".</p>
 
 <h3><a name="L236">Keyboard Shortcuts</a></h3>
 <p>
@@ -320,9 +561,12 @@ CreateDefinitionTerm, CreateDefinitionDef, CreateHorizontalRule,
 CreateBlockQuote, CreatePreformatted, CreateAddress, CreateTable,
 CreateCaption, CreateTHead, CreateTBody, CreateTFoot, CreateRow,
 CreateDataCell, CreateHeadingCell, CreateToggle, CreateRadio, CreateOption,
-CreateTextInput, CreateTextArea, CreateCommandLine, CreateAreaRect,
-CreateAreaPoly, CreateDivision, CreateApplet, CreateParameter,
-TransformType.</p>
+CreateTextInput, CreateTextArea, CreateSubmit, CreateReset, CreateAreaRect,
+CreateAreaCircle, CreateAreaPoly, CreateDivision, CreateNOSCRIPT,
+CreateObject, CreateParameter, CreateIFrame, CreateInlineMath, CreateDisplayMath,
+CreateMROOT, CreateMSQRT, CreateMFRAC, CreateMSUBSUP, CreateMSUB, CreateMSUP,
+CreateMUNDEROVER, CreateMUNDER, CreateMOVER, CreateMROW, CreateMMULTISCRIPTS,
+CreateMTABLE.</p>
 </li>
 <li>
 In <code>Links</code> menu:
@@ -330,28 +574,32 @@ In <code>Links</code> menu:
 CreateLink, CreateTarget, ChangeLink, DeleteAnchor.</p>
 </li>
 <li>
-In Views menu:
+In <code>Views</code> menu:
 <p>
-TtcSwitchButtonBar, TtcSwitchCommands, ShowStructure, ShowAlternate,
-ShowMapAreas.</p>
+TtcSwitchButtonBar, TtcSwitchCommands, ShowMapAreas, ShowTargets, ZoomIn,
+ZoomOut, ShowStructure, ShowAlternate, ShowLinks, ShowToC.</p>
 </li>
 <li>
 In <code>Style</code> menu:
 <p>
-TtcChangeCharacters, TtcChangeColors, TtcChangeFormat, ChangeClass,
-ApplyClass, InitCSSDialog, CreateElemEmphasis, CreateElemStrong,
+TtcChangeCharacters, TtcChangeColors, TtcChangeFormat, ChangeBackgroundImage,
+CreateClass, ApplyClass, InitCSSDialog, CreateElemEmphasis, CreateElemStrong,
 CreateElemCite, CreateElemDefinition, CreateElemCode, CreateElemVariable,
-CreateElemSample, CreateElemItalic, CreateElemBold, CreateElemTeletype,
-CreateElemStrikeOut, CreateElemBig, CreateElemSmall, CreateSub, CreateSup,
-CreateElemFont.</p>
+CreateElemSample, CreateElemKeyboard, CreateElemAbbr, CreateElemAcronym,
+CreateElemINS, CreateElemDEL, CreateElemItalic, CreateElemBold, CreateElemTeletype,
+CreateElemBig, CreateElemSmall, CreateSub, CreateSup, CreateQuotation, CreateBDO.</p>
 </li>
+<li>
+In <code>Special</code> menu:
+<p>
+TransformType, SectionNumbering, MakeBook.</p>
 <li>
 In <code>Help</code> menu:
 <p>
 HelpAmaya, HelpBrowsing, HelpSelecting, HelpSearching, HelpViews,
-HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpImageMaps,
+HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpMath, HelpImageMaps,
 HelpStyleSheets, HelpAttributes, HelpPublishing, HelpPrinting,
-HelpMakeBook.</p>
+HelpNumbering, HelpMakeBook, HelpConfigure.</p>
 </li>
 </ul>
 <p>

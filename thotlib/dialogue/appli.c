@@ -1732,6 +1732,9 @@ void               *event;
 		 {
 		   if (event.type == MotionNotify ||
 		       (event.type != ConfigureNotify &&
+			event.type != MapNotify &&
+			event.type != UnmapNotify &&
+			event.type != DestroyNotify &&
 			(event.xmotion.y > h || event.xmotion.y < 0)))
 		     {
 		       dx = event.xmotion.x - ClickX;

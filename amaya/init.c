@@ -88,8 +88,10 @@ static char        *Manual[] = {
 "ImageMaps.html",
 "StyleSheets.html",
 "Attributes.html",
+"SpellChecking.html",
 "Publishing.html",
 "Printing.html",
+"Numbering.html",
 "MakeBook.html",
 "Configure.html"
 };
@@ -1497,6 +1499,34 @@ View                view;
    
    TtaHandlePendingEvents ();
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ShowTargets (Document document, View view)
+#else
+void                ShowTargets (document, view)
+Document            document;
+View                view;
+#endif
+{
+  int               visibility, zoomVal;
+  char             *zoomStr;
+
+  visibility = TtaGetSensibility (document, view);
+  if (visibility == 4)
+    {
+      visibility = 5;
+      TtaSetToggleItem (document, 1, Views, TShowTargets, FALSE);
+    }
+  else
+    {
+      visibility = 4;
+      TtaSetToggleItem (document, 1, Views, TShowTargets, TRUE);
+    }
+  TtaSetSensibility (document, view, visibility);
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -3452,6 +3482,19 @@ void HelpAttributes (document, view)
   DisplayHelp (11);
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpSpellChecking (Document document, View view)
+#else /* __STDC__*/
+void HelpSpellChecking (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+  DisplayHelp (12);
+}
+
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
@@ -3463,7 +3506,7 @@ void HelpPublishing (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (12);
+  DisplayHelp (13);
 }
 
 
@@ -3477,7 +3520,21 @@ void HelpPrinting (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (13);
+  DisplayHelp (14);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpNumbering (Document document, View view)
+#else /* __STDC__*/
+void HelpNumbering (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+  DisplayHelp (15);
 }
 
 
@@ -3491,7 +3548,7 @@ void HelpMakeBook (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (14);
+  DisplayHelp (16);
 }
 
 
@@ -3505,7 +3562,7 @@ void HelpConfigure (document, view)
      View view;
 #endif /* __STDC__*/
 {
-  DisplayHelp (15);
+  DisplayHelp (17);
 }
 
 

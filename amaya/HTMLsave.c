@@ -888,6 +888,8 @@ DBG(fprintf(stderr, "SaveDocument : local saving\n");)
 void                   BackUpDocs ()
 {
   Document             doc;
+  ElementType          elType;
+  Element              el, parent;
   char                 pathname[MAX_LENGTH];
   char                 docname[MAX_LENGTH];
   char                *ptr;
@@ -906,6 +908,32 @@ void                   BackUpDocs ()
 	    ptr[l] = EOS;
 	    l = 0;
 	  }
+	elType.ElSSchema = TtaGetDocumentSSchema (doc);
+	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	  {
+	    /* add a Comment to register the previous URL */
+	    parent = TtaGetMainRoot (doc);
+	    elType.ElTypeNum = HTML_EL_HEAD;
+	    parent = TtaSearchTypedElement (elType, SearchForward, parent);
+	    if (parent != NULL)
+	      {
+		elType.ElTypeNum = HTML_EL_Comment_;
+		el = TtaNewElement (doc, elType);
+		TtaInsertFirstChild (&el, parent, doc);
+		/* create the Comment_line within the Comment */
+		elType.ElTypeNum = HTML_EL_Comment_line;
+		parent = el;
+		el = TtaNewElement (doc, elType);
+		TtaInsertFirstChild (&el, parent, doc);
+		/* create the text within the Comment_line */
+		elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		parent = el;
+		el = TtaNewElement (doc, elType);
+		TtaInsertFirstChild (&el, parent, doc);
+		TtaSetTextContent (el, DocumentURLs[doc], TtaGetDefaultLanguage (), doc);
+	      }
+	  }
+
 	TtaExtractName (DocumentURLs[doc], pathname, docname);
 	if (l == 0)
 	  sprintf (pathname, "%s%c%%%s.html", TempFileDirectory, DIR_SEP, docname);

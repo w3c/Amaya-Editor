@@ -104,59 +104,62 @@
 103 Show buttonbar
 104 Show address & title
 105 Show map areas
-106 Zoom In
-107 Zoom Out
-108 Show structure
-109 Show alternate
-110 Show links
-111 Show table of contents
-112 Character style...
-113 Colors...
-114 Format...
-115 Background image...
-116 Create rule...
-117 Apply class...
-118 Style sheets
-119 Information type
-120 Emphasis
-121 Strong
-122 Cite
-123 Definition
-124 Code
-125 Variable
-126 Sample
-127 Keyboard
-128 Abbreviation
-129 Acronym
-130 Insertion
-131 Deletion
-132 Character element
-133 Italic
-134 Bold
-135 Teletype
-136 Big
-137 Small
-138 Subscript
-139 Superscript
-140 Quotation
-141 BiDi override
-142 Transform...
-143 Section numbering
-144 Make book
-145 About Amaya
-146 Browsing
-147 Selecting
-148 Searching
-149 Views
-150 Creating elements
-151 Links
-152 Restructuring
-153 Tables
-154 Math
-155 Image maps
-156 Style sheets
-157 Attributes
-158 Publishing
-159 Printing
-160 Making books
-161 Configuring Amaya
+106 Show targets
+107 Zoom in
+108 Zoom out
+109 Show structure
+110 Show alternate
+111 Show links
+112 Show table of contents
+113 Character style...
+114 Colors...
+115 Format...
+116 Background image...
+117 Create rule...
+118 Apply class...
+119 Style sheets
+120 Information type
+121 Emphasis
+122 Strong
+123 Cite
+124 Definition
+125 Code
+126 Variable
+127 Sample
+128 Keyboard
+129 Abbreviation
+130 Acronym
+131 Insertion
+132 Deletion
+133 Character element
+134 Italic
+135 Bold
+136 Teletype
+137 Big
+138 Small
+139 Subscript
+140 Superscript
+141 Quotation
+142 BiDi override
+143 Transform...
+144 Section numbering
+145 Make book
+146 About Amaya
+147 Browsing
+148 Selecting
+149 Searching
+150 Views
+151 Creating elements
+152 Links
+153 Restructuring
+154 Tables
+155 Math
+156 Image maps
+157 Style sheets
+158 Attributes
+159 Spell Checking
+160 Publishing
+161 Printing
+162 Numbering
+163 Making books
+164 Configuring Amaya

@@ -167,28 +167,28 @@ Element             selectedElement;
    attr = NULL;		/* no NAME attribute yet */
    if (selectedElement != NULL)
      {
-	elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-	elType.ElTypeNum = HTML_EL_Anchor;
-	attrType.AttrSSchema = elType.ElSSchema;
-	el = TtaGetTypedAncestor (selectedElement, elType);
-	if (el != NULL)
-	  {
-	     /* the ascending Anchor element has been found */
-	     /* get the NAME attribute of element Anchor */
-	     attrType.AttrTypeNum = HTML_ATTR_NAME;
-	     attr = TtaGetAttribute (el, attrType);
-	  }
+       elType = TtaGetElementType (selectedElement);
+       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	   elType.ElTypeNum == HTML_EL_Anchor)
+	 {
+	   /* the target is an anchor element */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   /* get the NAME attribute of element Anchor */
+	   attrType.AttrTypeNum = HTML_ATTR_NAME;
+	   attr = TtaGetAttribute (selectedElement, attrType);
+	 }
 	else
 	  {
-	     /* no ascending Anchor element */
-	     /* get the ID attribute of the selected element */
-	     attrType.AttrTypeNum = HTML_ATTR_ID;
-	     el = selectedElement;
-	     while (attr == NULL && el != NULL)
-	       {
-		 attr = TtaGetAttribute (el, attrType);
-		 el = TtaGetParent(el);
-	       }
+	    /* no ascending Anchor element */
+	    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);;
+	    /* get the ID attribute of the selected element */
+	    attrType.AttrTypeNum = HTML_ATTR_ID;
+	    el = selectedElement;
+	    while (attr == NULL && el != NULL)
+	      {
+		attr = TtaGetAttribute (el, attrType);
+		el = TtaGetParent(el);
+	      }
 	  }
      }
    return (attr);

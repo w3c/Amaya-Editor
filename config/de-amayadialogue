@@ -104,59 +104,62 @@
 103 Symbolleiste
 104 Dokumentadresse und -titel 
 105 Aktive Grafikbereiche markieren
-106 **Zoom In
-107 **Zoom Out
-108 Strukturfenster
-109 Textbrowserfenster
-110 Verknüpfungsfenster
-111 Inhaltsverzeichnisfenster
-112 Zeichen...
-113 Farben...
-114 Ausrichtung...
-115 Hintergrundbild...
-116 Format in Stylesheet übernehmen...
-117 Klasse anwenden...
-118 Stylesheets bearbeiten
-119 logische Formate
-120 Betont (EM)
-121 Hervorgehoben (STRONG)
-122 Zitat (CITE)
-123 Definition (DFN)
-124 Programmtext (CODE)
-125 Variablenwert (VAR)
-126 Beispiel (SAMP)
-127 Tastatureingabe (KBD)
-128 ** (ABBR)
-129 ** (ACRONYM)
-130 ** (INS)
-131 ** (DEL)
-132 direkte Zeichenformate
-133 kursiv (I)
-134 fett (B)
-135 Schreibmaschinenschrift (TT)
-136 größer (BIG)
-137 kleiner (SMALL)
-138 tiefgestellt (SUB)
-139 hochgestellt (SUP)
-140 ** (Q)
-141 ** (BDO)
-142 Umformatieren...
-143 Abschnittsnummern
-144 Buch zusammenfügen
-145 Info
-146 Verknüpfungen folgen/Dokumente öffnen
-147 Auswählen
-148 Suchen
-149 Ansichten
-150 Einfügen von Elementen
-151 Verknüpfungen bearbeiten
-152 Umformatieren
-153 Tabellen
-154 Formeln
-155 Aktive Grafikbereiche
-156 Formate/Stylesheets
-157 Attribute
-158 Speichern/Publizieren
-159 Drucken
-160 Buch zusammenfügen
-161 Konfiguration
+106 **Show Targets
+107 **Zoom In
+108 **Zoom Out
+109 Strukturfenster
+110 Textbrowserfenster
+111 Verknüpfungsfenster
+112 Inhaltsverzeichnisfenster
+113 Zeichen...
+114 Farben...
+115 Ausrichtung...
+116 Hintergrundbild...
+117 Format in Stylesheet übernehmen...
+118 Klasse anwenden...
+119 Stylesheets bearbeiten
+120 logische Formate
+121 Betont (EM)
+122 Hervorgehoben (STRONG)
+123 Zitat (CITE)
+124 Definition (DFN)
+125 Programmtext (CODE)
+126 Variablenwert (VAR)
+127 Beispiel (SAMP)
+128 Tastatureingabe (KBD)
+129 ** (ABBR)
+130 ** (ACRONYM)
+131 ** (INS)
+132 ** (DEL)
+133 direkte Zeichenformate
+134 kursiv (I)
+135 fett (B)
+136 Schreibmaschinenschrift (TT)
+137 größer (BIG)
+138 kleiner (SMALL)
+139 tiefgestellt (SUB)
+140 hochgestellt (SUP)
+141 ** (Q)
+142 ** (BDO)
+143 Umformatieren...
+144 Abschnittsnummern
+145 Buch zusammenfügen
+146 Info
+147 Verknüpfungen folgen/Dokumente öffnen
+148 Auswählen
+149 Suchen
+150 Ansichten
+151 Einfügen von Elementen
+152 Verknüpfungen bearbeiten
+153 Umformatieren
+154 Tabellen
+155 Formeln
+156 Aktive Grafikbereiche
+157 Formate/Stylesheets
+158 Attribute
+159 Rechtschreibung
+160 Speichern/Publizieren
+161 Drucken
+162 Abschnittsnummern
+163 Buch zusammenfügen
+164 Konfiguration

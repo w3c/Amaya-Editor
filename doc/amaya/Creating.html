@@ -33,11 +33,10 @@ src="../Icons/right.gif"></a></p>
 On Unix version only, some characters can be combined to provide  ISO-Latin-1
 characters with a standard (e.g. North American) keyboard.</p>
 <p>
-The input method is based on a two key sequence beginning with the "accent" 
-followed by the "letter". For example to obtain a '&atilde;' first press '~'
-then type 'a'. To obtain a '~' you have to press '~' twice.</p>
-<p>
-This is the table of inputs:</p>
+The optional input method (Multi-Key) is based on a two key sequence beginning
+with the "accent" followed by the "letter". For example to obtain a '&atilde;'
+first press '~' then type 'a'. To obtain a '~' you have to press '~' twice.
+The table below gives available key sequences:</p>
 
 <table border="1">
 <caption></caption>
@@ -92,14 +91,24 @@ a A
 <td>
 c C
 </td>
-<td></td>
+<td>
+
+</td>
 <td>
 &ccedil; &Ccedil;
 </td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
 </tr>
 <tr>
 <td>
@@ -140,7 +149,9 @@ i I
 <td>
 &iuml; &Iuml;
 </td>
-<td></td>
+<td>
+
+</td>
 <td>
 &icirc; &Icirc;
 </td>
@@ -158,9 +169,15 @@ n N
 <td>
 
 </td>
-<td></td>
-<td></td>
-<td></td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
 </tr>
 <tr>
 <td>
@@ -222,15 +239,22 @@ y Y
 &yacute; &Yacute;
 </td>
 <td>
-&yuml; 
+&yuml;
 </td>
-<td></td>
+<td>
+
+</td>
 <td>
 
 </td>
 </tr>
 </tbody>
 </table>
+<p>
+By default, this input method is disabled. To active it the user has to edit
+his/her <a href="Configure.html#Configuring">registry file</a>
+<code>$HOME/.thotrc</code> to set the parameter value
+"<code>ENABLE_MULTIKEY=yes</code>".</p>
 
 <h3>Buttons and <strong>Types</strong> menu</h3>
 <p>
@@ -305,16 +329,21 @@ As an example, consider the following structure:</p>
 The first item in the highest level list.
 <p>
 A paragraph in the first item.</p>
+</li>
 <li>
 The second item.
 <ol type="a">
 <li>
 First item in the nested list.
+</li>
 <li>
 Second item in the nested list.
+</li>
 </ol>
+</li>
 <li>
 Last item in the list.
+</li>
 </ol>
 <p>
 To create that structure, create first a numbered list with a first item by
@@ -362,6 +391,7 @@ You can edit the document title (TITLE element) in the Title field of the main
 window. When the new title is OK, you <span style="color :
 #FF0000">must</span> validate it by hitting the Retun key.</p>
 <hr>
+
 </div>
 </body>
 </html>

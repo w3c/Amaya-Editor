@@ -104,59 +104,62 @@
 103 Montrer boutons
 104 Montrer adresse et titre
 105 Montrer les zones actives
-106 Grossir
-107 R\351duire
-108 Montrer la structure
-109 Montrer la vue altern\351e
-110 Montrer les liens
-111 Montrer la table des mati\350res
-112 Style de caract\350res...
-113 Couleurs...
-114 Format...
-115 Image de fond...
-116 Cr\351er une r\350gle...
-117 Appliquer une classe...
-118 Feuilles de style
-119 Types information
-120 Emphase
-121 Strong
-122 Cite
-123 D\351finition
-124 Code
-125 Variable
-126 Sample
-127 Keyboard
-128 Abr\351viation
-129 Acronyme
-130 Insertion
-131 Suppression
-132 El\351ments caract\350res
-133 Italique
-134 Gras
-135 T\351l\351type
-136 Gros
-137 Petit
-138 Indice
-139 Exposant
-140 Citation (Q)
-141 BiDi (BDO)
-142 Transformer...
-143 Num\351roter les sections
-144 Construire un livre
-145 A propos de Amaya
-146 Naviguation
-147 S\351lection
-148 Chercher
-149 Vues
-150 Cr\351ation
-151 Liens
-152 Transformer
-153 Tables
-154 Math
-155 Zones actives
-156 Feuilles de style
-157 Attributs
-158 Publier
-159 Imprimer
-160 Construire un livre
-161 Configurer Amaya
+106 Montrer les cibles
+107 Grossir
+108 R\351duire
+109 Montrer la structure
+110 Montrer la vue altern\351e
+111 Montrer les liens
+112 Montrer la table des mati\350res
+113 Style de caract\350res...
+114 Couleurs...
+115 Format...
+116 Image de fond...
+117 Cr\351er une r\350gle...
+118 Appliquer une classe...
+119 Feuilles de style
+120 Types information
+121 Emphase
+122 Strong
+123 Cite
+124 D\351finition
+125 Code
+126 Variable
+127 Sample
+128 Keyboard
+129 Abr\351viation
+130 Acronyme
+131 Insertion
+132 Suppression
+133 El\351ments caract\350res
+134 Italique
+135 Gras
+136 T\351l\351type
+137 Gros
+138 Petit
+139 Indice
+140 Exposant
+141 Citation (Q)
+142 BiDi (BDO)
+143 Transformer...
+144 Num\351roter les sections
+145 Construire un livre
+146 A propos de Amaya
+147 Naviguation
+148 S\351lection
+149 Chercher
+150 Vues
+151 Cr\351ation
+152 Liens
+153 Transformer
+154 Tables
+155 Math
+156 Zones actives
+157 Feuilles de style
+158 Attributs
+159 Corriger
+160 Publier
+161 Imprimer
+162 Num\351roter
+163 Construire un livre
+164 Configurer Amaya

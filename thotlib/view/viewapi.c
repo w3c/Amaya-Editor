@@ -688,21 +688,20 @@ int                 value;
    int                 valvisib, valzoom;
 
    UserErrorCode = 0;
-   frame = GetWindowNumber (document, view);
-   if (frame != 0)
-     {
-       GetFrameParams (frame, &valvisib, &valzoom);
-       if (valvisib < 0 || valvisib > 10)
-	 TtaError (ERR_invalid_parameter);
-       else
-	 {
-	   /* Translation of the sensibility into threshold */
-	   valvisib = 10 - value;
-	   SetFrameParams (frame, valvisib, valzoom);
-	 }
-     }
-   else
+   if (value < 1 || value > 10)
      TtaError (ERR_invalid_parameter);
+   else
+     {
+       frame = GetWindowNumber (document, view);
+       if (frame != 0)
+	 {
+	   GetFrameParams (frame, &valvisib, &valzoom);
+	   /* Translation of the sensibility into threshold */
+	   SetFrameParams (frame, value, valzoom);
+	 }
+       else
+	 TtaError (ERR_invalid_parameter);
+     }
 }
 
 
@@ -899,11 +898,7 @@ View                view;
    value = 0;
    frame = GetWindowNumber (document, view);
    if (frame != 0)
-     {
-	GetFrameParams (frame, &valvisib, &valzoom);
-	/* Translation of the sensibility into threshold */
-	value = 10 - valvisib;
-     }
+     GetFrameParams (frame, &value, &valzoom);
    return value;
 }				/*TtaGetSensibility */
 
@@ -936,11 +931,10 @@ View                view;
    int                 value;
 
    UserErrorCode = 0;
+   value = 0;
    frame = GetWindowNumber (document, view);
    if (frame != 0)
-     {
-	GetFrameParams (frame, &valvisib, &value);
-     }
+     GetFrameParams (frame, &valvisib, &value);
    return value;
 }				/*TtaGetZoom */
 
