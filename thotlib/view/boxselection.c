@@ -553,6 +553,10 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		      (pAb->AbLeafType == LtSymbol && firstChar == 0))
 		    /* select the right side of the picture or symbol */
 		    pViewSelEnd->VsXPos = pBox->BxW + l;
+		  else if (!SelPosition && (pAb->AbLeafType == LtPicture ||
+					    pAb->AbLeafType == LtSymbol))
+		    /* select the right side of the picture or symbol */
+		    pViewSelEnd->VsXPos = pBox->BxW;
 		  else if (pAb->AbLeafType == LtCompound)
 		    {
 		      /* select the whole box */
