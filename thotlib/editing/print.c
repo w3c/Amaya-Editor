@@ -669,9 +669,9 @@ STRING server;
    TtCmap = XDefaultColormap (TtDisplay, TtScreen);
    Black_Color = BlackPixel (TtDisplay, TtScreen);
    White_Color = WhitePixel (TtDisplay, TtScreen);
+#  endif /* ! _WINDOWS */
    DefaultBColor = 0;
    DefaultFColor = 1;
-#  endif /* ! _WINDOWS */
    InitDocColors ("thot");
    /* Initialisation des polices de caracteres */
 #  ifdef _WINDOWS 
