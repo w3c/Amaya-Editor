@@ -174,19 +174,7 @@ AnnotMeta *annot;
   /* if it's a remote URL, normalize the url_body, by making a real
      link */
   if (annot->annot_url && IsW3Path (annot->annot_url))
-    {
-      /* @@ possible memory bug */
-      tmp = TtaGetMemory (ustrlen (GetAnnotServer ()) 
-			  + ustrlen (annot->annot_url) 
-			  + sizeof ("?w3c_annotation=")
-			  + 20);
-      usprintf (tmp,
-		TEXT("%s?w3c_annotation=%s"),
-		GetAnnotServer (),
-		annot->annot_url);
-      TtaSetAttributeText (attr, tmp, anchor, source_doc);
-      TtaFreeMemory (tmp);
-    }
+      TtaSetAttributeText (attr, annot->annot_url, anchor, source_doc);
   else
     TtaSetAttributeText (attr, annot->body_url, anchor, source_doc);
   

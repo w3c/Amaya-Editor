@@ -124,8 +124,10 @@ Document doc;
   while (ptr)
     {
       annot = (AnnotMeta *) ptr->object;
-      if (ustrcasecmp (DocumentURLs[doc_annot], annot->body_url) ||
-	  ustrcasecmp (DocumentURLs[doc_annot], annot->body_url + 5))
+      if ((annot->annot_url && !ustrcasecmp (DocumentURLs[doc_annot],
+					     annot->annot_url)) ||
+	  !ustrcasecmp (DocumentURLs[doc_annot], annot->body_url) ||
+	  !ustrcasecmp (DocumentURLs[doc_annot], annot->body_url + 5))
 	break;
       ptr = ptr->next;
     }
@@ -134,6 +136,30 @@ Document doc;
     return annot;
   else
     return NULL;
+}
+
+/*-----------------------------------------------------------------------
+  AnnotURI
+  Recomputes the real URI for an annotation.  @@ This is bogus; the
+  annotation server should tell us the truth from the start.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+char* AnnotURI (char* givenURI)
+#else /* __STDC__*/
+char* AnnotURI (givenURI)
+    char* givenURI;
+#endif /* __STDC__*/
+{
+  char *realURI  = TtaGetMemory (ustrlen (GetAnnotServer ()) 
+				 + ustrlen (givenURI) 
+				 + sizeof ("?w3c_annotation=")
+				 + 20);
+  usprintf (realURI,
+	    TEXT("%s?w3c_annotation=%s"),
+	    GetAnnotServer (),
+	    givenURI);
+
+  return realURI;
 }
 
 /*-----------------------------------------------------------------------
@@ -154,7 +180,8 @@ void ANNOT_LoadAnnotation (doc, annotDoc)
   /* if it's a new annotation, we compute the stuff, otherwise,
      we copy it from the existing metadata */
   annot = GetMetaData (doc, docAnnot);
-  ANNOT_InitDocumentStructure (doc, docAnnot, annot);
+  if (annot)
+    ANNOT_InitDocumentStructure (doc, docAnnot, annot);
 }
 
 /*-----------------------------------------------------------------------

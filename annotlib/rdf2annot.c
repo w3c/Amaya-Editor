@@ -135,7 +135,7 @@ static void start_hndl(void *data, const char *el, const char **attr)
       annot =  AnnotMeta_new ();
       List_add (&annot_list, (void *) annot);
       if (attr[0] && !strcmp (attr[0], "about"))
-	  annot->annot_url = strdup ((char *) attr[1]);
+	annot->annot_url = AnnotURI ((char*)attr[1]);
     }
 
   if (!annot /* @@ */ && strcmp (el, "r:RDF"))

@@ -10,6 +10,7 @@ extern void ANNOT_SetPath ( Document document );
 extern Document ANNOT_NewDocument ( Document doc );
 extern AnnotMeta *GetMetaData ( Document doc,
                                 Document doc_annot );
+extern char* AnnotURI ( char* givenURI );
 extern void ANNOT_LoadAnnotation ( Document doc,
                                    Document docAnnot );
 extern void ANNOT_InitDocumentMeta ( Document doc,
@@ -29,6 +30,7 @@ extern void ANNOT_SetPath (/* Document document */);
 extern Document ANNOT_NewDocument (/* Document doc */);
 extern AnnotMeta *GetMetaData (/* Document doc,
                                   Document doc_annot */);
+extern char* AnnotURI (/* char* givenURI */);
 extern void ANNOT_LoadAnnotation (/* Document doc,
                                      Document docAnnot */);
 extern void ANNOT_InitDocumentMeta (/* Document doc,
