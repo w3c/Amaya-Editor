@@ -2321,9 +2321,10 @@ UCHAR_T               c;
 	  LgBuffer = 0;
 	}
 
-      if (len == 1)
+      if (len == 1) {
 	inputBuffer[LgBuffer++] = c;
-      else
+	inputBuffer[LgBuffer + 1] = EOS;
+      }else
 	/* HT */
 	do
 	  {
