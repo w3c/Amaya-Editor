@@ -220,7 +220,6 @@ EDITOR_OBJ = \
 	dialogue/printmenu.o \
 	dialogue/searchmenu.o \
 	dialogue/selectmenu.o \
-	dialogue/AmayaAttributePanel.o \
 	dialogue/AmayaDialog.o \
 	dialogue/AmayaWindow.o \
 	dialogue/AmayaSimpleWindow.o \
@@ -232,6 +231,8 @@ EDITOR_OBJ = \
 	dialogue/AmayaSubPanelManager.o \
 	dialogue/AmayaFloatingPanel.o \
 	dialogue/AmayaXHTMLPanel.o \
+	dialogue/AmayaAttributePanel.o \
+	dialogue/AmayaColorsPanel.o \
 	dialogue/AmayaPage.o \
 	dialogue/AmayaFrame.o \
 	dialogue/AmayaCanvas.o \

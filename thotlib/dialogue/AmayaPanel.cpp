@@ -32,6 +32,7 @@
 #include "AmayaPanel.h"
 #include "AmayaXHTMLPanel.h"
 #include "AmayaAttributePanel.h"
+#include "AmayaColorsPanel.h"
 #include "AmayaNormalWindow.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPanel, wxPanel)
@@ -65,6 +66,7 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   // load static sub-panels  
   m_pPanel_xhtml     = new AmayaXHTMLPanel( this, p_parent_nwindow );
   m_pPanel_attribute = new AmayaAttributePanel( this, p_parent_nwindow );
+  m_pPanel_colors    = new AmayaColorsPanel( this, p_parent_nwindow );
 
   // attach subpanels & title to the panel
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
@@ -72,6 +74,7 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   p_TopSizer->Add( m_pTitlePanel, 0, wxALL | wxEXPAND , 5 );
   p_TopSizer->Add( m_pPanel_xhtml, 0, wxALL | wxEXPAND , 5 );
   p_TopSizer->Add( m_pPanel_attribute, 0, wxALL | wxEXPAND , 5 );
+  p_TopSizer->Add( m_pPanel_colors, 0, wxALL | wxEXPAND , 5 );
   
   // setup labels
   XRCCTRL(*this, "wxID_LABEL_TOOLS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TOOLS)));

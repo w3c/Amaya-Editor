@@ -116,19 +116,20 @@
                                         <default>1</default>
                                       </object>
                                       <option>1</option>
-                                      <flag>wxALL|wxEXPAND</flag>
+                                      <flag>wxALL|wxALIGN_CENTRE</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxButton" name="wxID_GET">
                                         <label>_Get_</label>
                                       </object>
                                       <option>1</option>
-                                      <flag>wxALL|wxEXPAND</flag>
+                                      <flag>wxALL|wxALIGN_RIGHT</flag>
+                                      <border>2</border>
                                     </object>
                                   </object>
                                   <option>0</option>
-                                  <flag>wxALL|wxEXPAND</flag>
-                                  <border>2</border>
+                                  <flag>wxEXPAND</flag>
                                 </object>
                               </object>
                             </object>

@@ -3,16 +3,12 @@
 #ifndef __AMAYAPANEL_H__
 #define __AMAYAPANEL_H__
 
-#include "wx/wxprec.h"
-
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/panel.h"
-#endif
-
+#include "wx/wx.h"
+#include "wx/panel.h"
 
 class AmayaXHTMLPanel;
 class AmayaAttributePanel;
+class AmayaColorsPanel;
 class AmayaNormalWindow;
 
 /*
@@ -90,6 +86,7 @@ class AmayaPanel : public wxPanel
 
   AmayaXHTMLPanel *      m_pPanel_xhtml;
   AmayaAttributePanel *  m_pPanel_attribute;
+  AmayaColorsPanel *     m_pPanel_colors;
 
   wxPanel *        m_pTitlePanel;
 };
