@@ -209,6 +209,8 @@ extern void TtaSetBufferContent ( Element element,
                                   CHAR_T *content,
                                   Language language,
                                   Document document );
+extern CHAR_T TtaGetFirstBufferContent ( Element element );
+extern CHAR_T TtaGetLastBufferContent ( Element element );
 extern void TtaGiveSubString ( Element element,
                                unsigned char *buffer,
                                int position,
@@ -428,6 +430,8 @@ extern void TtaSetBufferContent (/* Element element,
                                     CHAR_T *content,
                                     Language language,
                                     Document document */);
+extern CHAR_T TtaGetFirstBufferContent (/* Element element */);
+extern CHAR_T TtaGetLastBufferContent (/* Element element */);
 extern void TtaGiveSubString (/* Element element,
                                  unsigned char *buffer,
                                  int position,

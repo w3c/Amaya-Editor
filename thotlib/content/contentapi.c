@@ -2947,6 +2947,79 @@ void TtaSetBufferContent (Element element, CHAR_T *content,
     }
 }
 
+
+/*----------------------------------------------------------------------
+   TtaGetFirstBufferContent
+
+   Returns the first CHAR_T character of the string.
+   Parameters:
+   element: the element of interest. This element must be a basic
+   element of type Text.
+   Return parameter:
+   buffer: the first character.
+  ----------------------------------------------------------------------*/
+CHAR_T TtaGetFirstBufferContent (Element element)
+{
+  PtrTextBuffer       pBuf;
+  PtrElement          pEl;
+
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  if (pEl == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!pEl->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      pBuf = pEl->ElText;
+      return pBuf->BuContent[0];
+    }
+  return EOS;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGetLastBufferContent
+
+   Returns the last CHAR_T character of the string.
+   Parameters:
+   element: the element of interest. This element must be a basic
+   element of type Text.
+   Return parameter:
+   buffer: the last character.
+  ----------------------------------------------------------------------*/
+CHAR_T TtaGetLastBufferContent (Element element)
+{
+  PtrTextBuffer       pBuf;
+  PtrElement          pEl;
+  int                 length;
+
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  if (pEl == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!pEl->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      length = pEl->ElVolume - 1;
+      pBuf = pEl->ElText;
+      while (pBuf && pBuf->BuLength < length)
+	{
+	  length -= pBuf->BuLength;
+	  pBuf = pBuf->BuNext;
+	}
+      if (pBuf)
+	return pBuf->BuContent[length];
+    }
+  return EOS;
+}
+
+
 /*----------------------------------------------------------------------
    TtaGiveSubString
 

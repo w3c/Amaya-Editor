@@ -1825,7 +1825,7 @@ void ElementCreated (NotifyElement *event)
 ThotBool ElementWillBeDeleted (NotifyElement *event)
 {
   ElementType	elType;
-  
+
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum != 1)
     TtaFreeElemNamespaceDeclarations (event->document, event->element);
@@ -1839,61 +1839,63 @@ ThotBool ElementWillBeDeleted (NotifyElement *event)
  -----------------------------------------------------------------------*/
 void ElementDeleted (NotifyElement *event)
 {
-  Element	child, el;
-  ElementType	elType, childType;
-  ThotBool	empty;
+  Element	 child, el;
+  ElementType	 elType, childType;
+  ThotBool	 empty;
 
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == HTML_EL_BODY)
-     {
-     child = TtaGetFirstChild (event->element);
-     empty = TRUE;
-     while (empty && child)
+    {
+      child = TtaGetFirstChild (event->element);
+      empty = TRUE;
+      while (empty && child)
 	{
-        elType = TtaGetElementType (child);
-	if (elType.ElTypeNum != HTML_EL_Comment_ &&
-	    elType.ElTypeNum != HTML_EL_Invalid_element)
-	   empty = FALSE;
-        else
-	   TtaNextSibling (&child);
+	  elType = TtaGetElementType (child);
+	  if (elType.ElTypeNum != HTML_EL_Comment_ &&
+	      elType.ElTypeNum != HTML_EL_Invalid_element)
+	    empty = FALSE;
+	  else
+	    TtaNextSibling (&child);
 	}
-     if (empty)
+      if (empty)
 	{
-	elType.ElTypeNum = HTML_EL_Paragraph;
-	child = TtaNewTree (event->document, elType, "");
-	TtaInsertFirstChild (&child, event->element, event->document);
-	TtaRegisterElementCreate (child, event->document);
-	do
-	   {
-	   el = TtaGetFirstChild (child);
-	   if (el)
-	      child = el;
-	   }
-	while (el);
-	TtaSelectElement (event->document, child);
+	  elType.ElTypeNum = HTML_EL_Paragraph;
+	  child = TtaNewTree (event->document, elType, "");
+	  TtaInsertFirstChild (&child, event->element, event->document);
+	  TtaRegisterElementCreate (child, event->document);
+	  do
+	    {
+	      el = TtaGetFirstChild (child);
+	      if (el)
+		child = el;
+	    }
+	  while (el);
+	  TtaSelectElement (event->document, child);
 	}
-     }
-   /* if the deleted element was the first child of a LI, transform
-      the new first child into a Pseudo-Paragraph if it's a Paragraph */
-   else if (elType.ElTypeNum == HTML_EL_List_Item)
-     /* the parent element is a List_Item */
-     if (event->position == 0)
-        /* the deleted element was the first child */
-        {
-        child = TtaGetFirstChild (event->element);
-        if (child)
-	   {
-	   childType = TtaGetElementType (child);
-	   if (childType.ElTypeNum == HTML_EL_Paragraph)
-	      /* the new first child is a Paragraph */
-	      {
-	      TtaRegisterElementReplace (child, event->document);
-	      TtaRemoveTree (child, event->document);
-	      ChangeElementType (child, HTML_EL_Pseudo_paragraph);
-	      TtaInsertFirstChild (&child, event->element, event->document);
-	      }
-	   }
-        }
+    }
+  /* if the deleted element was the first child of a LI, transform
+     the new first child into a Pseudo-Paragraph if it's a Paragraph */
+  else if (elType.ElTypeNum == HTML_EL_List_Item)
+    {
+      /* the parent element is a List_Item */
+      if (event->position == 0)
+	/* the deleted element was the first child */
+	{
+	  child = TtaGetFirstChild (event->element);
+	  if (child)
+	    {
+	      childType = TtaGetElementType (child);
+	      if (childType.ElTypeNum == HTML_EL_Paragraph)
+		/* the new first child is a Paragraph */
+		{
+		  TtaRegisterElementReplace (child, event->document);
+		  TtaRemoveTree (child, event->document);
+		  ChangeElementType (child, HTML_EL_Pseudo_paragraph);
+		  TtaInsertFirstChild (&child, event->element, event->document);
+		}
+	    }
+	}
+    }
 }
 
 
@@ -2394,6 +2396,9 @@ void CheckNewLines (NotifyOnTarget *event)
   changed = FALSE;
   selChanged = FALSE;
   prevCharEOL = FALSE;
+  /* is there a previous sibling element? */
+  prev = leaf;
+  TtaPreviousSibling (&prev);
   j = 0;
   for (i = 0; i < length; i++)
     {
@@ -2495,7 +2500,8 @@ void CheckNewLines (NotifyOnTarget *event)
 	    /* beginning of the text element */
 	    {
 	      /* if this space is after a newline, remove it */
-	      if (prevCharEOL)
+	      if (prevCharEOL ||
+		  (!prev || TtaGetLastBufferContent (prev) == SPACE))
 		{
 		  changed = TRUE;
 		  if (selEl)
@@ -2552,10 +2558,14 @@ void CheckNewLines (NotifyOnTarget *event)
     }
 
   /* all the content of the modified element has been processed */
-  if (j > 0 && content[j-1] == SPACE)
+  next = leaf;
+  TtaNextSibling (&next);
+  if (j > 0 && content[j-1] == SPACE &&
+      (!next || TtaGetFirstBufferContent (next) == SPACE))
     /* remove trailing space */
     {
       j--;
+      changed = TRUE;
       if (selEl)
 	if (firstSelChar >= j)
 	  /* The selection is after the current position.
@@ -2588,7 +2598,8 @@ void CheckNewLines (NotifyOnTarget *event)
 	  TtaNextSibling (&el);
 	  while (el)
 	    {
-	      next = el; TtaNextSibling (&next);
+	      next = el;
+	      TtaNextSibling (&next);
 	      TtaRegisterElementDelete (el, doc);
 	      TtaRemoveTree (el, doc);
 	      TtaInsertSibling (el, prev, FALSE, doc);

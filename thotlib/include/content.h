@@ -541,6 +541,30 @@ extern void TtaSetBufferContent (Element element, CHAR_T *content,
 				 Language language, Document document);
 
 /*----------------------------------------------------------------------
+   TtaGetFirstBufferContent
+
+   Returns the first CHAR_T character of the string.
+   Parameters:
+   element: the element of interest. This element must be a basic
+   element of type Text.
+   Return parameter:
+   buffer: the first character.
+  ----------------------------------------------------------------------*/
+extern CHAR_T TtaGetFirstBufferContent (Element element);
+
+/*----------------------------------------------------------------------
+   TtaGetLastBufferContent
+
+   Returns the last CHAR_T character of the string.
+   Parameters:
+   element: the element of interest. This element must be a basic
+   element of type Text.
+   Return parameter:
+   buffer: the last character.
+  ----------------------------------------------------------------------*/
+extern CHAR_T TtaGetLastBufferContent (Element element);
+
+/*----------------------------------------------------------------------
    TtaGiveSubString
 
    Returns a substring from a Text basic element.
