@@ -3849,22 +3849,20 @@ boolean            *ret;
 	separatorBefore = separatorAfter;
 	separatorAfter = FALSE;
 	/* entrees suivantes : inclusions avant 1er selectionne' */
-	pEl = firstSel->ElParent;
 	protectedElem = FALSE;
 	if (firstSel->ElTypeNumber == (CharString + 1) && firstChar > 1)
 	   /* la selection commence a l'interieur d'une chaine de */
 	   /* caracteres, on ne peut pas inserer si la chaine est protegee */
 	   protectedElem = ElementIsReadOnly (firstSel);
-	else if (IgnoreReadOnlyParent)
-	   /* la selection commence au debut de l'element, on ne peut pas */
-	   /* inserer si le pere est protege' */
-	   protectedElem = ElementIsHidden (pEl);
 	else
-	   protectedElem = ElementIsReadOnly (pEl);
+           /* la selection commence au debut de l'element */
+           protectedElem = CannotInsertNearElement (firstSel,
+                                                    TRUE); /* Before eleement */
 
 	if (!protectedElem)
 	   /* l'element n'est pas protege' */
 	   /* examine les inclusions de tous les ascendants */
+	   pEl = firstSel->ElParent;
 	   while (pEl != NULL)
 	     {
 		/* regle de structure de l'ascendant courant */
@@ -3995,12 +3993,8 @@ boolean            *ret;
 				/* caracteres, on ne peut pas inserer si elle est protegee */
 				ok = !ElementIsReadOnly (firstSel);
 			     else
-				/* la selection commence au debut de l'element, on ne */
-				/* peut pas inserer si le pere est protege' */
-			     if (IgnoreReadOnlyParent)
-				ok = !ElementIsHidden (pEl->ElParent);
-			     else
-				ok = !ElementIsReadOnly (pEl->ElParent);
+                                ok = !CannotInsertNearElement (pEl,
+                                                               TRUE); /* Before element. */
 			     if (ok)
 				/* on ne propose les elements de paire que pour une */
 				/* creation et si la selection n'est pas vide */
@@ -4132,22 +4126,19 @@ boolean            *ret;
 	/* entrees suivantes : inclusions apres dernier selectionne' */
 	separatorBefore = separatorAfter;
 	separatorAfter = FALSE;
-	pEl = (lastSel)->ElParent;
 	protectedElem = FALSE;
 	if ((lastSel)->ElTypeNumber == (CharString + 1) && lastChar <= (lastSel)->ElTextLength)
 	   /* la selection finit a l'interieur d'une chaine de caracteres, */
 	   /* on ne peut pas inserer si la chaine est protegee */
 	   protectedElem = ElementIsReadOnly (lastSel);
 	else
-	   /* la selection finit a la fin de l'element, on ne peut pas */
-	   /* inserer si le pere est protege' */
-	if (IgnoreReadOnlyParent)
-	   protectedElem = ElementIsHidden (pEl);
-	else
-	   protectedElem = ElementIsReadOnly (pEl);
+	   /* la selection finit a la fin de l'element */
+           protectedElem = CannotInsertNearElement (lastSel,
+                                                    FALSE); /* After element */
 	if (!protectedElem)
 	   /* l'element n'est pas protege' */
 	   /* examine les inclusions de tous les ascendants */
+	   pEl = lastSel->ElParent;
 	   while (pEl != NULL)	/* boucle sur les ascendants */
 	     {
 		/* regle de structuration de l'ascendant courant */
@@ -4160,7 +4151,7 @@ boolean            *ret;
 		     if (pSRule != NULL)
 			for (i = 0; i < pSRule->SrNInclusions; i++)
 			  {
-			     if (!ExcludedType ((lastSel)->ElParent, pSRule->SrInclusion[i], pAncestSS))
+			     if (!ExcludedType (lastSel->ElParent, pSRule->SrInclusion[i], pAncestSS))
 				/* cette extension n'est pas une exclusion */
 				if (!TypeHasException (ExcNoCreate, pSRule->SrInclusion[i],
 						       pAncestSS)
@@ -4249,12 +4240,9 @@ boolean            *ret;
 			     /* on ne peut pas inserer si la chaine est protegee */
 			     protectedElem = ElementIsReadOnly (lastSel);
 			  else
-			     /* la selection finit a la fin de l'element, on ne peut pas */
-			     /* inserer si le pere est protege' */
-			  if (IgnoreReadOnlyParent)
-			     protectedElem = ElementIsHidden (pEl->ElParent);
-			  else
-			     protectedElem = ElementIsReadOnly (pEl->ElParent);
+			     /* la selection finit a la fin de l'element */
+                             protectedElem = CannotInsertNearElement (pEl,
+                                                                      FALSE); /* After element */
 			  if (!protectedElem)
 			     /* l'element n'est pas protege' */
 			     /* si inclusion, on ne propose pas les references */

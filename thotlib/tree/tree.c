@@ -251,23 +251,24 @@ boolean isRO;
 }
 
 /*----------------------------------------------------------------------
-   CanInsertNearElement
-   returns TRUE if a new element may be inserted near the element
+   CannotInsertNearElement
+   returns TRUE if a new element cannot be inserted near the element
    pointed by pEl.
+   returns FALSE if insertion is authorized.
    If beforeElement = TRUE, it is an insertion before the element.
-   Id FALSE,  it is an insertion after the element.
+   If FALSE,  it is an insertion after the element.
    if it belongs to a hidden tree.
    Rules to authorize or not such insertion depends of the
    application criteria.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             CanInsertNearElement (PtrElement pEl,
-                                          boolean beforeElement)
+boolean             CannotInsertNearElement (PtrElement pEl,
+                                             boolean beforeElement)
 
 #else  /* __STDC__ */
-boolean             CanInsertNearElement (pEl,
-                                          beforeElement)
+boolean             CannotInsertNearElement (pEl,
+                                             beforeElement)
 PtrElement          pEl;
 boolean beforeElement;
 
@@ -280,10 +281,10 @@ register Proc InsertNearFunction;
      return FALSE; /* No function => Insertion is authorized! */
    else
      {
-boolean isOK;
+boolean isForbidden;
 
-       (*InsertNearFunction) (pEl, beforeElement, &isOK);
-       return isOK;
+       (*InsertNearFunction) (pEl, beforeElement, &isForbidden);
+       return isForbidden;
      }
 
 }

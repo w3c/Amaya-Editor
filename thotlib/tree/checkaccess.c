@@ -5,9 +5,12 @@
  */
 
 /*
- * This module implements the operations on the abstract trees used by Thot.
+ * This module implements:
+ *   - basic functions to valid and connect access control
+ *     functions,
+ *   - default Thot access control functions.
  * 
- * Author: V. Quint (INRIA)
+ * Author: D. Decouchant
  * 
  */
 
@@ -118,11 +121,14 @@ boolean   testRO;
 
 /*--------------------------------------------------------------
     HierarchicalCheckInsertNearElement
-    returns TRUE in the mayInsert variable if a new element may
-    be inserted before or after the element.
+    returns TRUE in the cannotInsert variable if a new element
+    cannot be inserted before or after the element.
+    returns FALSE if insertion is authorized.
+
     If TRUE, the variable beforeElement indicates if insertion is
     planned before the element, FALSE for an insertion after the
     element.
+
     Rules by with this procedure decides to authorize or not such
     insertion are Thot default ones.
 --------------------------------------------------------------*/
@@ -130,21 +136,21 @@ boolean   testRO;
 #ifdef __STDC__
 void      HierarchicalCheckInsertNearElement (PtrElement pEl,
                                               boolean beforeElement,
-					      boolean * mayInsert)
+					      boolean * cannotInsert)
 #else  /* __STDC__ */
 void      HierarchicalCheckInsertNearElement (pEl,
                                               beforeElement,
-					      mayInsert)
+					      cannotInsert)
 PtrElement pEl;
 boolean   beforeElement;
-boolean  *mayInsert;
+boolean  *cannotInsert;
 #endif /* __STDC__ */
 
 {
 
-   *mayInsert = FALSE;
+   *cannotInsert = FALSE;
    if (pEl != NULL)
-     HierarchicalCheckReadOnlyAccess (pEl->ElParent, mayInsert);
+       HierarchicalCheckReadOnlyAccess (pEl->ElParent, cannotInsert);
 
 }
 

@@ -9,8 +9,10 @@
 extern PtrDocument DocumentOfElement ( PtrElement pEl );
 extern void ProtectElement ( PtrElement pEl );
 extern PtrElement GetOtherPairedElement ( PtrElement pEl );
-extern boolean ElementIsReadOnly ( PtrElement pEl );
 extern boolean ElementIsHidden ( PtrElement pEl );
+extern boolean ElementIsReadOnly ( PtrElement pEl );
+extern boolean CannotInsertNearElement ( PtrElement pEl,
+                                         boolean beforeElement );
 extern PtrElement FwdSearchElemByTypeName ( PtrElement pEl,
                                             char *typeName );
 extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
@@ -131,8 +133,10 @@ extern void CheckLanguageAttr ( PtrDocument pDoc,
 extern PtrDocument DocumentOfElement (/* PtrElement pEl */);
 extern void ProtectElement (/* PtrElement pEl */);
 extern PtrElement GetOtherPairedElement (/* PtrElement pEl */);
-extern boolean ElementIsReadOnly (/* PtrElement pEl */);
 extern boolean ElementIsHidden (/* PtrElement pEl */);
+extern boolean ElementIsReadOnly (/* PtrElement pEl */);
+extern boolean CannotInsertNearElement (/* PtrElement pEl,
+                                           boolean beforeElement */);
 extern PtrElement FwdSearchElemByTypeName (/* PtrElement pEl,
                                               char *typeName */);
 extern PtrElement BackSearchElemByTypeName (/* PtrElement pEl,
