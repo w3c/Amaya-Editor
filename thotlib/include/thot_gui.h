@@ -80,6 +80,7 @@ typedef UINT        ThotComposeStatus;
 typedef void       *ThotAppContext;
 typedef void       *ThotTranslations;
 
+#define TBBUTTONS_BASE 10000
 #define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
 

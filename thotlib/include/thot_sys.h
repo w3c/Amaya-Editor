@@ -30,7 +30,8 @@
 #if defined(_WINDOWS) || defined(_CONSOLE)
 #include <errno.h>
 #include <limits.h>
-/*
+#include <fcntl.h>
+ /*
  * MS-Windows platform.
  */
 #ifndef WWW_MSWINDOWS
