@@ -378,13 +378,16 @@ Prop_Publish PreferenceDlgWX::GetValueDialog_Publish()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 {
-  SetProp_General(GetValueDialog_General());
+  Prop_General prop_gen = GetValueDialog_General();
+  SetProp_General( &prop_gen );
   ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 1);
 
-  SetProp_Browse(GetValueDialog_Browse());
+  Prop_Browse prop_brw = GetValueDialog_Browse();
+  SetProp_Browse( &prop_brw );
   ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 1);
 
-  SetProp_Publish(GetValueDialog_Publish());
+  Prop_Publish prop_pub = GetValueDialog_Publish();
+  SetProp_Publish( &prop_pub );
   ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 1);
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);

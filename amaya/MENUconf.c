@@ -5017,10 +5017,10 @@ int GetPrefAnnotBase()
 /*----------------------------------------------------------------------
   Use to set the Amaya global variables (General preferences)
   ----------------------------------------------------------------------*/
-void SetProp_General( const Prop_General & prop )
+void SetProp_General( const Prop_General * prop )
 {
 #ifdef _WX
-  GProp_General = prop;
+  GProp_General = *prop;
 #endif /* _WX */
 }
 
@@ -5037,10 +5037,10 @@ Prop_General GetProp_General()
 /*----------------------------------------------------------------------
   Use to set the Amaya global variables (Browse preferences)
   ----------------------------------------------------------------------*/
-void SetProp_Browse( const Prop_Browse & prop )
+void SetProp_Browse( const Prop_Browse * prop )
 {
 #ifdef _WX
-  GProp_Browse = prop;
+  GProp_Browse = *prop;
 #endif /* _WX */
 }
 
@@ -5057,10 +5057,10 @@ Prop_Browse GetProp_Browse()
 /*----------------------------------------------------------------------
   Use to set the Amaya global variables (Publish preferences)
   ----------------------------------------------------------------------*/
-void SetProp_Publish( const Prop_Publish & prop )
+void SetProp_Publish( const Prop_Publish * prop )
 {
 #ifdef _WX
-  GProp_Publish = prop;
+  GProp_Publish = *prop;
 #endif /* _WX */
 }
 
