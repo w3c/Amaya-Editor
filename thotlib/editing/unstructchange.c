@@ -129,56 +129,6 @@ static void InsertPastedElement (PtrElement pEl, ThotBool within,
 }
 
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static void NotifyHExtension (PtrElement pCell, Document doc)
-{
-  PtrSSchema          pSS;
-  PtrAttribute        pAttr;
-  NotifyAttribute     notifyAttr;
-  int                 attrHSpan;
-
-  if (pCell)
-    {
-      pSS = pCell->ElStructSchema;
-      attrHSpan = GetAttrWithException (ExcColSpan, pSS);
-      if (attrHSpan)
-	{
-	  /* is this attribute attached to the cell */
-	  pAttr = pCell->ElFirstAttr;
-	  while (pAttr)
-	    {
-	      if (pAttr->AeAttrNum == attrHSpan && pAttr->AeAttrSSchema == pSS)
-		{
-		  notifyAttr.event = TteAttrModify;
-		  notifyAttr.document = doc;
-		  notifyAttr.element = (Element) pCell;
-		  notifyAttr.info = 0; /* not sent by undo */
-		  notifyAttr.attribute = (Attribute) pAttr;
-		  notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-		  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-		  /* notify .PRE */
-		  if (!CallEventAttribute (&notifyAttr, TRUE))
-		    {
-		      if (pAttr->AeAttrValue > 1)
-			{
-			  AddAttrEditOpInHistory (pAttr, pCell,
-						  LoadedDocument[doc -1],
-						  TRUE, TRUE);
-			  pAttr->AeAttrValue++;
-			}
-		      /* notify .POST */
-		      CallEventAttribute (&notifyAttr, FALSE);
-		    }
-		  pAttr = NULL;
-		}
-	      else
-		pAttr = pAttr->AeNext;
-	    }
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
   PasteAnElement  Paste element decribed by pSavedEl within (if within
   is TRUE), before (if before is TRUE) or after (if before is FALSE)
   element pEl in document pDoc.
@@ -649,19 +599,19 @@ void PasteCommand ()
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, pasteOrig;
-  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable,
-                      pRealCol, addedCell, pCell, extendedCell[500];
+  PtrElement          pColHead, pNextCol, pNewCol, pRow, pNextRow, pTable,
+                      pRealCol, addedCell, pCell, pBlock;
   PtrPasteElem        pPasteD;
+  PtrAttribute        colspanAttr;
   ElementType         cellType;
   DisplayMode         dispMode;
   Document            doc;
   int                 firstChar, lastChar, view, i, nRowsTempCol, info = 0;
-  int                 colspan, rowspan, back, nbextended;
+  int                 colspan, rowspan, back;
   ThotBool            ok, before, within, lock, cancelled, first, beginning;
   ThotBool            savebefore, withinTable;
 
   before = FALSE;
-  nbextended = 0;
   withinTable = FALSE;
   pColHead = pRow = pNextRow = pTable = pRealCol = NULL;
   if (FirstSavedElement == NULL)
@@ -678,6 +628,7 @@ void PasteCommand ()
 		pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
 	    }
 
+	  NCreatedElements = 0;
 	  pSplitText = NULL;
 	  pNextEl = NULL;
 	  doc = IdentDocument (pDoc);
@@ -695,6 +646,8 @@ void PasteCommand ()
 		}
 	    }
 
+	  OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
+			       lastChar-1);
 	  pCell = NULL;
 	  if (WholeColumnSaved || TableRowsSaved)
 	    {
@@ -736,15 +689,51 @@ void PasteCommand ()
 	      if (!before)
 		{
 		  /* get the last column spanned by the cell */
-		  GetCellSpans (pCell, &colspan, &rowspan);
+		  GetCellSpans (pCell, &colspan, &rowspan, &colspanAttr);
 		  if (colspan == 0)
-		    return;
-		  while (colspan > 1 && pColHead)
+		    /* the cell spans up to the last column of the table */
 		    {
-		      pColHead = NextColumnInTable (pColHead, pTable);
-		      colspan--;
+		      colspan = 1;
+		      do
+			{
+			  pNextCol = NextColumnInTable (pColHead, pTable);
+			  if (pNextCol)
+			    {
+			      colspan++;
+			      pColHead = pNextCol;
+			    }
+			}
+		      while (pNextCol);
+		      /* pColHead is now the last column head of the table */
+		      if (colspanAttr)
+			/* change the value of the colspan attribute to match
+			   the actual spanning of the cell */
+			{
+			  AddAttrEditOpInHistory (colspanAttr, pCell, pDoc,
+						  TRUE, TRUE);
+			  colspanAttr->AeAttrValue = colspan;
+			}
 		    }
+		  else
+		    while (colspan > 1 && pColHead)
+		      {
+			pColHead = NextColumnInTable (pColHead, pTable);
+			colspan--;
+		      }
 		}
+	      /* create and insert a column head for the pasted column */
+	      pNewCol = NewSubtree (pColHead->ElTypeNumber,
+		       pColHead->ElStructSchema, pDoc, TRUE, TRUE, TRUE, TRUE);
+	      if (before)
+		InsertElementBefore (pColHead, pNewCol);
+	      else
+		InsertElementAfter (pColHead, pNewCol);
+	      CreatedElement[NCreatedElements] = pNewCol;
+	      /* create the box of the new column head to allow a cell with
+		 colspan=0 to refer to it and to be displayed correctly */
+	      CreateNewAbsBoxes (pNewCol, pDoc, 0);
+	      NCreatedElements++;
+
 	      /* current row */
 	      pRow = pCell->ElParent;
 	      if (pRow && pColHead)
@@ -825,7 +814,6 @@ void PasteCommand ()
 
           /* take all elements to be pasted and paste them one after the
 	     other */
-	  NCreatedElements = 0;
 	  pPasteD = FirstSavedElement;
 	  first = TRUE;
 	  if (!within && before && pPasteD && !WholeColumnSaved)
@@ -864,32 +852,35 @@ void PasteCommand ()
 		    }
 		  else
 		    {
-		      GetCellSpans (pEl, &colspan, &rowspan);
-		      if (colspan > 1 &&
-			  ((back > 0 && (colspan - back > 1 || before)) ||
-			   (back == 0 && !before)))
+		      GetCellSpans (pEl, &colspan, &rowspan, &colspanAttr);
+		      if ((colspan == 0 && (back > 0 || !before)) ||
+			  (colspan > 1 &&
+			   ((back > 0 && (colspan - back > 1 || before)) ||
+			    (back == 0 && !before))))
 			/* extend this previous cell instead of pasting the
 			   new cell */
 			{
-			  extendedCell[nbextended] = pEl;
-			  nbextended++;
 			  pEl = NULL;
-			  /* move to the bottom of this cell */
-			  if (rowspan == 0)
+			  /* move to the bottom of this cell, but stay in
+			     the same block of rows */
+			  pBlock = pRow->ElParent;
+			  while (pRow && (rowspan > 1 || rowspan == 0))
 			    {
-			      /* infinite vertical spanning. Skip all remaining
-				 rows in this block of rows */
-			      while (pRow->ElNext)
-				pRow = pRow->ElNext;
+			      pNextRow = NextRowInTable (pRow, pTable);
+			      if (pNextRow->ElParent != pBlock)
+				/* the next row is in a different block. Stop*/
+				rowspan = 1;
+			      else
+				/* skip the next row and the next cell from the
+				   clipboard */
+				{
+				  pRow = pNextRow;
+				  if (pPasteD)
+				    pPasteD = pPasteD->PeNext;
+				  if (rowspan > 0)
+				    rowspan--;
+				}
 			    }
-			  else
-			    while (pRow && rowspan > 1)
-			      {
-				pRow = NextRowInTable (pRow, pTable);
-				if (pPasteD)
-				  pPasteD = pPasteD->PeNext;
-				rowspan--;
-			      }
 			}
 		    }
 		  if (pRow)
@@ -926,7 +917,7 @@ void PasteCommand ()
 		  else if (WholeColumnSaved && pNextRow)
 		    {
 		      /* get the last row of the pasted cell */
-		      GetCellSpans (pPasted, &colspan, &rowspan);
+		      GetCellSpans (pPasted, &colspan, &rowspan, &colspanAttr);
 		      if (rowspan == 0)
 			{
 			  /* infinite vertical spanning. Skip all remaining
@@ -971,7 +962,8 @@ void PasteCommand ()
 			/* remove this generated cell */
 			DeleteElement (&addedCell, pDoc);
 		      else
-			pPasteD = pPasteD->PeNext;
+			if (pPasteD)
+			  pPasteD = pPasteD->PeNext;
 		    }
 		}
 
@@ -993,158 +985,142 @@ void PasteCommand ()
 	    }
 	  while (pPasteD || addedCell);
 
-	if (ok)
-	  /* we have successfully pasted the contents of the buffer */
-	  {
-	    /* labels will have to be change if the same elements are pasted
-	       again later */
-	    ChangeLabel = TRUE;
-	    if (pSplitText != NULL)
-	      /* a text element was split to insert the pasted element */
-	      {
-		/* build the abstract boxes of the split text */
-		BuildAbsBoxSpliText (pSplitText, pFollowing, pClose, pDoc);
-	      }
-	    /* process all references ans exclusions in the pasted elements,
-	       based on their new context */
-	    for (i = 0; i < NCreatedElements; i++)
-	      {
-		CheckReferences (CreatedElement[i], pDoc);
-		RemoveExcludedElem (&CreatedElement[i], pDoc);
-	      }
-	    /* set IDs to all paired elements */
-	    for (i = 0; i < NCreatedElements; i++)
-	      AssignPairIdentifiers (CreatedElement[i], pDoc);
-	    /* register the pasted elements in the editing history */
-	    OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
-				 lastChar-1);
-	    /* send event ElemPaste.Post */
-	    for (i = 0; i < NCreatedElements; i++)
-	      if (CreatedElement[i])
-	        {
-		  if (WholeColumnSaved)
-		    {
-		      /* change the value of "info" in the latest cell
-			 deletion recorded in the Undo queue.
-			 The goal is to allow procedure CellPasted
-			 to regenerate only one column head when
-			 undoing the operation */
-		      if (first)
-			{
-			  info = 4;
-			  first = FALSE;
-			}
-		      else
+	  if (ok)
+	    /* we have successfully pasted the contents of the buffer */
+	    {
+	      /* labels will have to be change if the same elements are pasted
+		 again later */
+	      ChangeLabel = TRUE;
+	      if (pSplitText != NULL)
+		/* a text element was split to insert the pasted element */
+		{
+		  /* build the abstract boxes of the split text */
+		  BuildAbsBoxSpliText (pSplitText, pFollowing, pClose, pDoc);
+		}
+	      /* process all references ans exclusions in the pasted elements,
+		 based on their new context */
+	      for (i = 0; i < NCreatedElements; i++)
+		{
+		  CheckReferences (CreatedElement[i], pDoc);
+		  RemoveExcludedElem (&CreatedElement[i], pDoc);
+		}
+	      /* set IDs to all paired elements */
+	      for (i = 0; i < NCreatedElements; i++)
+		AssignPairIdentifiers (CreatedElement[i], pDoc);
+	      /* register the pasted elements in the editing history */
+	      /* and send event ElemPaste.Post */
+	      for (i = 0; i < NCreatedElements; i++)
+		if (CreatedElement[i])
+		  {
+		    if (WholeColumnSaved)
+		      {
+			/* change the value of "info" in the latest cell
+			   deletion recorded in the Undo queue */
 			info = 3;
-		      TtaChangeInfoLastRegisteredElem (doc, info);
-		    }
-		  NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
-				 IdentDocument (DocOfSavedElements), info,
-				 FALSE, FALSE);
-		  if (CreatedElement[i]->ElStructSchema == NULL)
-		    /* application has deleted that element */
-		    CreatedElement[i] = NULL;
-		  else
-		    AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
-		}
+			TtaChangeInfoLastRegisteredElem (doc, info);
+		      }
+		    NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
+				   IdentDocument (DocOfSavedElements), info,
+				   FALSE, FALSE);
+		    if (CreatedElement[i]->ElStructSchema == NULL)
+		      /* application has deleted that element */
+		      CreatedElement[i] = NULL;
+		    else
+		      AddEditOpInHistory (CreatedElement[i], pDoc, FALSE,TRUE);
+		  }
 
-	    for (i = 0; i < nbextended; i++)
-	      if (extendedCell[i])
-	        {
-		  NotifyHExtension (extendedCell[i], doc);
-		  extendedCell[i] = NULL;
-		}
+	      TtaClearViewSelections ();
+	      for (i = 0; i < NCreatedElements; i++)
+		if (CreatedElement[i] != NULL)
+		  {
+		    /* create the abstract boxes of the new elements in all
+		       views */
+		    CreateNewAbsBoxes (CreatedElement[i], pDoc, 0);
+		    /* compute the volume that the created abstract box can
+		       use*/
+		    for (view = 0; view < MAX_VIEW_DOC; view++)
+		      {
+			if (CreatedElement[i]->ElAbstractBox[view] != NULL)
+			  pDoc->DocViewFreeVolume[view] -=
+			    CreatedElement[i]->ElAbstractBox[view]->AbVolume;
+		      }
+		  }
+	      /* Apply all delayed presentation rules if some are left */
+	      for (i = 0; i < NCreatedElements; i++)
+		if (CreatedElement[i] != NULL)
+		  ApplDelayedRule (CreatedElement[i], pDoc);
 
-	    /* close the history sequence after applications have possibly
-	       registered more changes to the pasted elements */
-	    CloseHistorySequence (pDoc);
-	    
-	    TtaClearViewSelections ();
-	    for (i = 0; i < NCreatedElements; i++)
-	      if (CreatedElement[i] != NULL)
+	      AbstractImageUpdated (pDoc);
+	      /* display the new elements */
+	      RedisplayDocViews (pDoc);
+
+	      for (i = 0; i < NCreatedElements; i++)
+		if (CreatedElement[i] != NULL)
+		  {
+		    /* update the presentation of reference attributes that
+		       point at pasted elements */
+		    UpdateRefAttributes (CreatedElement[i], pDoc);
+		  }
+	    }
+	  else
+	    /* failure */
+	    {
+	      if (pSplitText != NULL)
+		/* A text element was split. Merge the two pieces back. */
 		{
-		  /* create the abstract boxes of the new elements in all views */
-		  CreateNewAbsBoxes (CreatedElement[i], pDoc, 0);
-		  /* compute the volume that the created abstract box can use*/
-		  for (view = 0; view < MAX_VIEW_DOC; view++)
-		    {
-		      if (CreatedElement[i]->ElAbstractBox[view] != NULL)
-			pDoc->DocViewFreeVolume[view] -=
-			  CreatedElement[i]->ElAbstractBox[view]->AbVolume;
-		    }
+		  MergeTextElements (pSplitText, &pFree, pDoc, TRUE, FALSE);
+		  DeleteElement (&pFree, pDoc);
+		  pFree = NULL;
 		}
-	    /* Apply all delayed presentation rules if some are left */
-	    for (i = 0; i < NCreatedElements; i++)
-	      if (CreatedElement[i] != NULL)
-		ApplDelayedRule (CreatedElement[i], pDoc);
-	    
-	    AbstractImageUpdated (pDoc);
-	    /* display the new elements */
-	    RedisplayDocViews (pDoc);
+	    }
 
-	    for (i = 0; i < NCreatedElements; i++)
-	      if (CreatedElement[i] != NULL)
+	  /* close the history sequence after applications have possibly
+	     registered more changes to the pasted elements */
+	  CloseHistorySequence (pDoc);
+
+	  if (!lock)
+	    {
+	      /* unlock table formatting */
+	      (*ThotLocalActions[T_unlock]) ();
+	      if (dispMode == DisplayImmediately)
+		TtaSetDisplayMode (doc, DisplayImmediately);
+	    }
+
+	  /* set the selection at the end of the pasted elements */
+	  if (NCreatedElements > 0)
+	    {
+	      pSel = NULL;
+	      if (savebefore)
 		{
-		  /* update the presentation of reference attributes that
-		     point at pasted elements */
-		  UpdateRefAttributes (CreatedElement[i], pDoc);
+		  for (i = 0; i < NCreatedElements && !pSel; i++)
+		    if (CreatedElement[i] != NULL)
+		      pSel = CreatedElement[i];
 		}
-	  }
-	else
-	  /* failure */
-	  {
-	    if (pSplitText != NULL)
-	      /* A text element was split. Merge the two pieces back. */
-	      {
-		MergeTextElements (pSplitText, &pFree, pDoc, TRUE, FALSE);
-		DeleteElement (&pFree, pDoc);
-		pFree = NULL;
-	      }
-	  }
-
-	if (!lock)
-	  {
-	    /* unlock table formatting */
-	    (*ThotLocalActions[T_unlock]) ();
-	    if (dispMode == DisplayImmediately)
-	      TtaSetDisplayMode (doc, DisplayImmediately);
-	  }
-
-	/* set the selection at the end of the pasted elements */
-	if (NCreatedElements > 0)
-	  {
-	    pSel = NULL;
-	    if (savebefore)
-	      {
-		for (i = 0; i < NCreatedElements && !pSel; i++)
-		  if (CreatedElement[i] != NULL)
-		    pSel = CreatedElement[i];
-	      }
-	    else
-	      {
-		for (i = NCreatedElements - 1; i >= 0 && !pSel; i--)
-		  if (CreatedElement[i] != NULL)
-		    pSel = CreatedElement[i];
-	      }
-	    if (pSel)
-	      if (!pSel->ElTerminal)
-		pSel = LastLeaf (pSel);
-	    if (pSel)
-	      SelectString (pDoc, pSel, pSel->ElTextLength + 1,
-			    pSel->ElTextLength);
-	    
-	    SetDocumentModified (pDoc, TRUE, 20);
-	    
-	    /* update the counter values that follow the pasted elements */
-	    for (i = 0; i < NCreatedElements; i++)
-	      if (CreatedElement[i] != NULL)
+	      else
 		{
-		  RedisplayCopies (CreatedElement[i], pDoc, TRUE);
-		  UpdateNumbers (CreatedElement[i], CreatedElement[i], pDoc,
-				 TRUE);
+		  for (i = NCreatedElements - 1; i >= 0 && !pSel; i--)
+		    if (CreatedElement[i] != NULL)
+		      pSel = CreatedElement[i];
 		}
-	  }
-      }
+	      if (pSel)
+		if (!pSel->ElTerminal)
+		  pSel = LastLeaf (pSel);
+	      if (pSel)
+		SelectString (pDoc, pSel, pSel->ElTextLength + 1,
+			      pSel->ElTextLength);
+
+	      SetDocumentModified (pDoc, TRUE, 20);
+
+	      /* update the counter values that follow the pasted elements */
+	      for (i = 0; i < NCreatedElements; i++)
+		if (CreatedElement[i] != NULL)
+		  {
+		    RedisplayCopies (CreatedElement[i], pDoc, TRUE);
+		    UpdateNumbers (CreatedElement[i], CreatedElement[i], pDoc,
+				   TRUE);
+		  }
+	    }
+	}
     }
 }
 

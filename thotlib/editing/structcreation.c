@@ -2799,7 +2799,7 @@ static void AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
 	   }
 }
 
-
+#ifdef IV
 /*----------------------------------------------------------------------
    PageBreakSiblingAllowed indique s'il est possible de creer un	
    saut de page comme frere de l'element pEl appartenant au	
@@ -2842,7 +2842,7 @@ static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
       }
   return allowed;
 }
-
+#endif
 
 /*----------------------------------------------------------------------
    CreationExceptions						

@@ -1176,8 +1176,10 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 /*----------------------------------------------------------------------
   GetCellSpans
   Return the colspan (1 if no span) and rowspan (1 if no span) of a cell.
+  If colspanAttr is not NULL, it returns the colspan Attrinute of the cell.
   ----------------------------------------------------------------------*/
-void GetCellSpans (PtrElement cell, int *colspan, int *rowspan)
+void GetCellSpans (PtrElement cell, int *colspan, int *rowspan,
+		   PtrAttribute *colspanAttr)
 {
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
@@ -1196,14 +1198,18 @@ void GetCellSpans (PtrElement cell, int *colspan, int *rowspan)
 	  pAttr = cell->ElFirstAttr;
 	  while (pAttr)
 	    {
-	      if (pAttr->AeAttrNum == attrVSpan && pAttr->AeAttrSSchema == pSS)
+	      if (pAttr->AeAttrNum == attrVSpan &&
+		  pAttr->AeAttrSSchema == pSS)
 		{
 		  /* rowspan on this cell */
 		  if (pAttr->AeAttrValue != 1)
 		    *rowspan = pAttr->AeAttrValue;
 		}
-	      else if (pAttr->AeAttrNum == attrHSpan && pAttr->AeAttrSSchema == pSS)
+	      else if (pAttr->AeAttrNum == attrHSpan &&
+		       pAttr->AeAttrSSchema == pSS)
 		{
+		  if (colspanAttr)
+		    *colspanAttr = pAttr;
 		  if (pAttr->AeAttrValue != 1)
 		    *colspan = pAttr->AeAttrValue;
 		}

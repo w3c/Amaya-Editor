@@ -8,7 +8,8 @@
 
 extern void GetCellSpans ( PtrElement cell,
                            int *colspan,
-                           int *rowspan );
+                           int *rowspan,
+			   PtrAttribute *colspanAttr );
 extern void TtaLockTableFormatting ( void );
 extern void TtaUnlockTableFormatting ( void );
 extern void TtaGiveTableFormattingLock ( ThotBool *lock );
@@ -18,7 +19,8 @@ extern void TableHLoadResources ( void );
 
 extern void GetCellSpans ( PtrElement cell,
                              int *colspan,
-                             int *rowspan );
+                             int *rowspan,
+                             PtrAttribute *colspanAttr );
 extern void TtaLockTableFormatting ( void );
 extern void TtaUnlockTableFormatting ( void );
 extern void TtaGiveTableFormattingLock ( ThotBool *lock );

@@ -523,7 +523,6 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 	pNextRow = pNextRow->ElNext;
       if (!pNextRow)
 	{
-	  /***** attention, 2 types de rows en MathML *****/
 	  rowType = GetElemWithException (ExcIsRow, pRow->ElStructSchema);
 	  pAsc = pRow->ElParent;
 	  while (pAsc && pAsc != pTable && !pAsc->ElNext)
@@ -3452,7 +3451,6 @@ static void SelColumn (PtrElement column)
 			    pTable->ElStructSchema))
     pTable = pTable->ElParent;
   /* get the first row of the table */
-  /* ********* TODO: there are several types of rows in MathML */
   rowType = GetElemWithException (ExcIsRow, column->ElStructSchema);
   pRow = FwdSearchTypedElem (column, rowType, column->ElStructSchema, NULL);
   /* get the relevant cell in the first row */

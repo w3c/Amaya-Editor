@@ -382,7 +382,6 @@ static Element GetCloseCell (Element row, Element colhead,
 		if (!add && colspan == 2)
 		  {
 		    colspan--;
-		    TtaRegisterAttributeDelete (attr, cell, doc);
 		    TtaRemoveAttribute (cell, attr, doc);
 		    attr = TtaGetAttribute (cell, attrTypeRef);
 		    if (attr)
@@ -394,8 +393,6 @@ static Element GetCloseCell (Element row, Element colhead,
 		      colspan++;
 		    else
 		      colspan--;
-		    if (!add)
-		      TtaRegisterAttributeReplace (attr, cell, doc);
 		    TtaSetAttributeValue (attr, colspan, cell, doc);
 		  }
 	      if ((!add && colspan > 0 && colspan - pos == 0) ||
@@ -2010,13 +2007,7 @@ void CellPasted (NotifyElement * event)
      undo for reinserting the cells deleted by a "Delete Column"
      command (only the first reinserted cell has to create a ColumnHead)
      See function RemoveColumn above */
-  if (event->info == 4)
-    /* undoing the deletion of the last cell in a "delete column" command,
-       or pasting the first cell in a "paste column" command.
-       Regenerate the corresponding ColumnHead and link the restored cell
-       with that ColumnHead, but do not generate empty cells in other rows */
-    NewCell (cell, doc, TRUE, FALSE, FALSE);
-  else if (event->info == 3)
+  if (event->info == 3)
     {
       /* undoing the deletion of any other cell in a "delete column" command,
 	 or pasting any other cell.
@@ -2307,8 +2298,8 @@ static void ClearColumn (Element colhead, Document doc)
 	  while (prev && row == NULL)
 	    {
 	      TtaNextSibling (&prev);
-	      row = TtaSearchTypedElementInTree (elType, SearchForward,
-						 prev, prev);
+	      row = TtaSearchTypedElementInTree (elType, SearchForward, prev,
+						 prev);
 	    }
 	}
     }
@@ -2326,79 +2317,59 @@ ThotBool DeleteColumn (NotifyElement * event)
 
 /*----------------------------------------------------------------------
   ColumnPasted
-  This function is called when undoing the creation of a column in a table.
-  
+  This function is called when pasting a column or undoing the creation of a
+  column in a table.
   ----------------------------------------------------------------------*/
 void ColumnPasted (NotifyElement * event)
 {
-  Element         nextColhead, row, cell, table;
+  Element         prevColhead, row, prev, table, prevCell;
   ElementType     elType;
-  Attribute       attr;
-  AttributeType   attrTypeC;
   Document        doc;
-  SSchema         tableSS;
-  int             colspan;
-  ThotBool        inMath;
+  int             rowspan;
+  ThotBool        inMath, span;
 
   CurrentColumn = event->element;
-  nextColhead = CurrentColumn;
-  TtaNextSibling (&nextColhead);
-  if (!nextColhead)
-    /* we are pasting the last column of the table. Check the last
-       cell of all rows. Those with an attribute colspan = 0 have
-       to refer to the new colhead through their attribute ColExt. */
+  prevColhead = CurrentColumn;
+  TtaPreviousSibling (&prevColhead);
+  if (prevColhead)
     {
       doc = event->document;
       elType = TtaGetElementType (CurrentColumn);
-      tableSS = elType.ElSSchema;
       elType.ElTypeNum = HTML_EL_Table;
       table = TtaGetTypedAncestor (CurrentColumn, elType);
-      attrTypeC.AttrSSchema = tableSS;      
       inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema("MathML",doc));
       if (inMath)
-	{
-	  elType.ElTypeNum = MathML_EL_TableRow;
-	  attrTypeC.AttrTypeNum = MathML_ATTR_columnspan;
-	}
+	elType.ElTypeNum = MathML_EL_TableRow;
       else
-	{
-	  elType.ElTypeNum = HTML_EL_Table_row;
-	  attrTypeC.AttrTypeNum = HTML_ATTR_colspan_;
-	}
+	elType.ElTypeNum = HTML_EL_Table_row;
       /* get the first row in the table */
       row = TtaSearchTypedElement (elType, SearchInTree, table);
-      /* check all rows */
+      /* check all rows of the table */
       while (row)
 	{
-	  cell = TtaGetLastChild (row);
-	  /* process only cell elements */
-	  if (cell)
-	    elType = TtaGetElementType (cell);
-	  while (cell &&
-		 (elType.ElSSchema != tableSS ||
-		  (inMath && elType.ElTypeNum != MathML_EL_MTD) ||
-		  (!inMath && (elType.ElTypeNum != HTML_EL_Data_cell &&
-			       elType.ElTypeNum != HTML_EL_Heading_cell))))
+	  prevCell = GetCloseCell (row, prevColhead, doc, TRUE, TRUE, inMath,
+				   &span, &rowspan, FALSE);
+	  prev = row;
+	  if (rowspan == 0)
+	    rowspan = THOT_MAXINT;
+	  while (rowspan >= 1 && row)
 	    {
-	      TtaPreviousSibling (&cell);
-	      if (cell)
-		elType = TtaGetElementType (cell);
+	      row = GetSiblingRow (row, FALSE, inMath);
+	      if (row && rowspan < THOT_MAXINT)
+		rowspan--;
 	    }
-	  if (cell)
-	    /* this is the last cell in the row */
+	  if (!row)
+	    /* last row of the current block. Get the first row in the next
+	       block, if any */
 	    {
-	      attr = TtaGetAttribute (cell, attrTypeC);
-	      if (attr)
-		/* this cell has a colspan attribute */
+	      prev = TtaGetParent (prev);
+	      while (prev && row == NULL)
 		{
-		  colspan = TtaGetAttributeValue (attr);
-		  if (colspan == 0)
-		    /* this cell spans up to the last column. Update its
-		       ColExt attribute */
-		    SetColExt (cell, 0, doc, inMath, FALSE);
+		  TtaNextSibling (&prev);
+		  row = TtaSearchTypedElementInTree (elType, SearchForward,
+						     prev, prev);
 		}
 	    }
-	  row = GetSiblingRow (row, FALSE, inMath);
 	}
     }
 }
@@ -3481,7 +3452,7 @@ void ColspanModified (NotifyAttribute * event)
 	     registration of the creation or deletion of cells done by
              ChangeColspan. That way, when undoing the attribute modification,
 	     the deletion or creation of cells can be undone correctly */
-          TtaCancelLastRegisteredAttrOperation (doc);
+	  TtaCancelLastRegisteredAttrOperation (doc);
 	  ChangeColspan (cell, PreviousColspan, &span, doc);
 	  TtaSetAttributeValue (attr, PreviousColspan, cell, doc);
 	  TtaRegisterAttributeReplace (attr, cell, doc);

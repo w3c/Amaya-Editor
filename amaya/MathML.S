@@ -486,6 +486,7 @@ EXCEPT
    MColumn_head:	IsColHead, NoCut, Hidden, NoSelect, NoBreakByReturn;
    MC_Head:		Hidden, NoSelect;
    MTable_body:		Hidden, NoBreakByReturn;
+   TableRow:	        IsRow;
    MTR:			IsRow, NoBreakByReturn;
    MLABELEDTR:          IsRow, NoBreakByReturn;
    RowLabel:	        Hidden, NoMove, NoResize, NoBreakByReturn;
