@@ -1606,12 +1606,15 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
       else if (!horizontal && (i || j))
 	{
 	  /* add left and rigth */
+	  if (i)
+	    /* update the box base line before reformatting the block */
+	    pBox->BxHorizRef += i;
 	  if (i || j)
 	    {
 	      if (pAb->AbHeight.DimIsPosition || pAb->AbHeight.DimAbRef)
 		/* the outside height is constrained */
 		ResizeHeight (pBox, pBox, NULL, -i-j, 0, 0, frame);
-	      else if (pAb->AbHeight.DimValue != -1)
+	      else
 		/* the inside height is constrained */
 		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
 	    }
@@ -1890,7 +1893,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   PictInfo           *picture;
   BoxType             tableType;
   char                script = 'L';
-  int                 width, i, j;
+  int                 width, i;
   int                 height;
   ThotBool            enclosedWidth;
   ThotBool            enclosedHeight, uniqueChild;
@@ -2268,19 +2271,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	      pBox = CreateBox (pChildAb, frame, inlineChildren, inlineFloatC, carIndex);
 	      pChildAb = pChildAb->AbNext;
 	    }
-#ifdef IV
-	  /* 12/03/2004 extra margins are already transmitted */
-	  if (pCurrentBox->BxType == BoGhost || pCurrentBox->BxType == BoFloatGhost)
-	    {
-	      /* transmit margins, borders and paddings */
-	      i = pCurrentBox->BxLMargin + pCurrentBox->BxLPadding + pCurrentBox->BxLBorder;
-	      j = pCurrentBox->BxRMargin + pCurrentBox->BxRPadding + pCurrentBox->BxRBorder;
-	      TransmitMBP (pCurrentBox, pCurrentBox, frame, i, j, TRUE, inLineFloat, TRUE, TRUE);
-	      i = pCurrentBox->BxTMargin + pCurrentBox->BxTPadding + pCurrentBox->BxTBorder;
-	      j = pCurrentBox->BxBMargin + pCurrentBox->BxBPadding + pCurrentBox->BxBBorder;
-	      TransmitMBP (pCurrentBox, pCurrentBox, frame, i, j, FALSE, inLineFloat, TRUE, TRUE);
-	    }
-#endif
 	  GiveEnclosureSize (pAb, frame, &width, &height);
 	  /* Position of box axis */
 	  ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
