@@ -237,13 +237,17 @@ boolean             error_html;
         case 203:
         case 204:
 	    /* Success */
-            javaString2CString(unhand(request)->urlName, &url[0], MAX_PATH);
-            javaString2CString(unhand(request)->filename, &outputfile[0], MAX_PATH);
+            javaString2CString(Get_HTTPRequest_Str_urlName(request),
+	                       &url[0], MAX_PATH);
+            javaString2CString(Get_HTTPRequest_Str_filename(request),
+	                       &outputfile[0], MAX_PATH);
 	    break;
 	case 404:
 	    /* Not found error */
-            javaString2CString(unhand(request)->urlName, &url[0], MAX_PATH);
-            javaString2CString(unhand(request)->filename, &outputfile[0], MAX_PATH);
+            javaString2CString(Get_HTTPRequest_Str_urlName(request),
+	                       &url[0], MAX_PATH);
+            javaString2CString(Get_HTTPRequest_Str_filename(request),
+	                       &outputfile[0], MAX_PATH);
 	    break;
 	default:
 	    /* Some kind of error or strange behaviour occured */
@@ -317,9 +321,6 @@ void               *context_tcbf;
     struct Hjava_lang_String* filename = NULL;
     struct Hjava_lang_String* mimetype = NULL;
     int type;
-    jlong callback = 0;
-    jlong callback_f = 0;
-    jlong callback_arg = 0;
     int result;
     int flag = 0;
     char *mimeType;
@@ -367,7 +368,6 @@ void               *context_tcbf;
      * Call the Java WWW access implementation.
      * Release the Thot library lock in the interval.
      */
-    JavaThotlibRelease();
     switch (mode) {
         case AMAYA_SYNC:
 	    type = amaya_HTTPRequest_PUT_REQUEST;
@@ -376,16 +376,28 @@ void               *context_tcbf;
 	    fprintf(stderr,"PutObjectWWW : unsupported mode %d\n", mode);
 	    exit(1);
     }
-    request = do_execute_java_class_method("amaya/HTTPRequest", "StartHTTPRequest",
-"(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJJJ)Lamaya/HTTPRequest;",
-		type, doc, urlName, mimetype, NULL, filename,
-                flag, callback, callback_f, callback_arg);
+    JavaThotlibRelease();
+
+    request = (struct Hamaya_HTTPRequest*)
+              do_execute_java_class_method("amaya/HTTPRequest",
+                "newHTTPRequest", "(I)Lamaya/HTTPRequest;", type);
+
+    Set_HTTPRequest_Int_doc(doc, request);
+    Set_HTTPRequest_Str_urlName(urlName, request);
+    if (filename != NULL) 
+	Set_HTTPRequest_Str_filename(filename, request);
+    if (mimetype != NULL) 
+	Set_HTTPRequest_Str_mimeType(mimetype, request);
+
+    result = do_execute_java_method(0, (Hjava_lang_Object*) request,
+                    "Start", "(I)I", 0, 0, flag);
+
     JavaThotlibLock();
 
     /*
      * Check the result.
      */
-    result = FetchIntFromJavaVM(&(unhand(request)->status));
+    result = Get_HTTPRequest_Int_status(request);
     switch (result) {
         case 200:
         case 201:
@@ -393,7 +405,8 @@ void               *context_tcbf;
         case 203:
         case 204:
 	    /* Success */
-            javaString2CString(unhand(request)->urlName, url, MAX_PATH);
+            javaString2CString(Get_HTTPRequest_Str_urlName(request),
+	                       &url[0], MAX_PATH);
 	    break;
 	default:
 	    /* Some kind of error or strange behaviour occured */

@@ -25,7 +25,7 @@ amaya_HTTPRequest_Callback(struct Hamaya_HTTPRequest* none,
                            struct Hamaya_HTTPRequest* arg)
 {
     Java2CCallback callback_func = (Java2CCallback)
-                        FetchPtrFromJavaVM(&(unhand(arg)->callback));
+                        Get_HTTPRequest_Ptr_callback(arg);
 
     JavaThotlibLock();
     callback_func((void *) arg);
