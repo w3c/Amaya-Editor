@@ -420,11 +420,11 @@ BOXES
 	Content: Text '>';
 	Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
-		Visibility: INVALID_Visibility;
 		Foreground: Creator =;
 		END;
 	END;
@@ -611,7 +611,7 @@ RULES
         BEGIN
         Visibility: 0;
         IN Structure_view BEGIN
-                Visibility: 10;
+		Visibility: Enclosing =;
                 Width: Enclosing . Width ;
                 END;
         END;
@@ -631,7 +631,7 @@ RULES
         BEGIN
         Visibility: 0;
         IN Structure_view BEGIN
-                Visibility: 10;
+		Height: 0;
                 Width: Enclosing . Width ;
                 END;
         END;
@@ -692,8 +692,8 @@ RULES
 	if NOT AnyAttributes
 	  CreateAfter(Unknown_End);
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: TAG_FONTSIZE;
-		Visibility: INVALID_Visibility;
 		Style: INVALID_Style;
 		Weight: INVALID_Weight;
 		Foreground: INVALID_Color;

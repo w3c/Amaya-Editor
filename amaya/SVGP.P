@@ -240,11 +240,11 @@ BOXES
 	Content: Text '>';
 	Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
-		Visibility: INVALID_Visibility;
 		Foreground: Creator =;
 		END;
 	END;
@@ -891,7 +891,7 @@ RULES
 	BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Visibility: 10;
+		Visibility: Enclosing =;
 		Width: Enclosing . Width ;
 		Height: Enclosed . Height;
 		END;
@@ -902,6 +902,7 @@ RULES
         IF First CreateFirst(Comment_Start);
         IF Last CreateLast(Comment_End);
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 	        HorizPos: Left = Enclosing . Left;
 	        VertPos: Top = Previous . Bottom + 0.2;
 	        Width: Enclosed . Width;
@@ -912,7 +913,7 @@ RULES
 	BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Visibility: 10;
+		Visibility: Enclosing =;
 		Width: Enclosing . Width ;
 		END;
 	END;
@@ -922,6 +923,7 @@ RULES
         IF First CreateFirst(PI_Start);
         IF Last CreateLast(PI_End);
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 	        HorizPos: Left = Enclosing . Left;
 	        VertPos: Top = Previous . Bottom + 0.2;
 	        Width: Enclosed . Width;
@@ -954,8 +956,8 @@ RULES
 	if NOT AnyAttributes
 	  CreateAfter(Unknown_End);
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: TAG_FONTSIZE;
-		Visibility: INVALID_Visibility;
 		Style: INVALID_Style;
 		Weight: INVALID_Weight;
 		Foreground: INVALID_Color;
