@@ -19,6 +19,7 @@ RM	= @RM@ -f
 LN_S	= @LN_S@
 MKDIR	= @MKDIR@
 ECHO	= @ECHO@
+SED	= @SED@
 AR	= @AR@ rc
 RANLIB	= @RANLIB@
 DIFF	= @DIFF@
