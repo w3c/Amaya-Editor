@@ -931,9 +931,6 @@ ContentType         typ;
 	    case ContConst:
 	       TtaWriteByte (outfile, C_CONT_CONST);
 	       break;
-	    case ContElement:
-	       TtaWriteByte (outfile, C_CONT_ELEM);
-	       break;
 	    default:
 	       fprintf (stderr, "Invalid content %X\n", typ);
 	       break;
@@ -1284,10 +1281,7 @@ PtrSSchema          pSS;
       WriteBoolean (pPSch->PsColumnView[i]);
    WriteShort (pPSch->PsNPrintedViews);
    for (i = 0; i < pPSch->PsNPrintedViews; i++)
-     {
-	WriteBoolean (pPSch->PsPrintedView[i].VpAssoc);
-	WriteShort (pPSch->PsPrintedView[i].VpNumber);
-     }
+     WriteShort (pPSch->PsPrintedView[i].VpNumber);
    for (i = 0; i < pPSch->PsNViews; i++)
       WriteBoolean (pPSch->PsExportView[i]);
    WriteShort (pPSch->PsNCounters);
@@ -1413,10 +1407,6 @@ PtrSSchema          pSS;
 		 case ContConst:
 		    WriteShort (pBox->PbContConstant);
 		    break;
-		 case ContElement:
-		    WriteShort (pBox->PbContElem);
-		    WriteShort (pBox->PbContRefElem);
-		    break;
 		 default:
 		    break;
 	      }
@@ -1523,11 +1513,6 @@ PtrSSchema          pSS;
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBoolean (pPSch->PsBuildAll[i]);
 
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteBoolean (pPSch->PsInPageHeaderOrFooter[i]);
-
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteBoolean (pPSch->PsAssocPaginated[i]);
    for (i = 0; i < pSS->SsNRules; i++)
       WriteShort (pPSch->PsElemTransmit[i]);
    WriteShort (pPSch->PsNTransmElems);

@@ -14,7 +14,6 @@
  */
 
 #define C_PIV_ATTR 1		/* attribute mark */
-#define C_PIV_ASSOC 2		/* associated element mark */
 #define C_PIV_BEGIN 4		/* contents beginning mark */
 #define C_PIV_END 6		/* contents ending mark */	
 #define C_PIV_PRESENT 7		/* presentation rule mark */

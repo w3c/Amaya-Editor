@@ -261,75 +261,6 @@ void TtaSetFocus ()
 }
 
 /*----------------------------------------------------------------------
-   VisibleDescendant
-
-   returns the first element in the descendants of element pEl which has
-   an abstract box in the view.
-  ----------------------------------------------------------------------*/
-static PtrElement VisibleDescendant (PtrElement pEl, int view)
-{
-   PtrElement          pChild, pVisible;
-
-   if (pEl->ElAbstractBox[view - 1] != NULL)
-      pVisible = pEl;
-   else
-     {
-	pVisible = NULL;
-	if (!pEl->ElTerminal)
-	  {
-	     pChild = pEl->ElFirstChild;
-	     while (pVisible == NULL && pChild != NULL)
-	       {
-		  pVisible = VisibleDescendant (pChild, view);
-		  pChild = pChild->ElNext;
-	       }
-	  }
-     }
-   return pVisible;
-}
-
-
-/*----------------------------------------------------------------------
-  EnclosingAssocAbsBox
-
-  Restore in all views the enclosing abstract boxes for associated element
-  pEl, if this associated element is displayed in a page footer or header.
-  ----------------------------------------------------------------------*/
-static void EnclosingAssocAbsBox (PtrElement pEl)
-{
-   int                 view;
-   PtrElement          pDesc;
-   ThotBool            stop;
-
-   if (!AssocView (pEl))
-     {
-	/* search the enclosing associated element */
-	stop = FALSE;
-	do
-	   if (pEl == NULL)
-	      stop = TRUE;
-	   else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
-	      stop = TRUE;
-	   else
-	      pEl = pEl->ElParent;
-	while (!stop);
-	if (pEl != NULL && pEl->ElParent != NULL)
-	  for (view = 0; view < MAX_VIEW_DOC; view++)
-	    /* Restore the abstract box pointer for the root element of
-	       the associated elements tree */
-	    if (SelectedDocument->DocView[view].DvPSchemaView > 0)
-	      /* search the first descendant having an abstract box in
-		 the view */
-	      {
-		pDesc = VisibleDescendant (pEl, view + 1);
-		if (pDesc != NULL)
-		  pEl->ElParent->ElAbstractBox[view] =
-		    pDesc->ElAbstractBox[view]->AbEnclosing;
-	      }
-     }
-}
-
-/*----------------------------------------------------------------------
    GetCurrentSelection
 
    returns the current selection.
@@ -2611,9 +2542,6 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		FirstSelectedChar = 0;
 	      }
 	  }
-      if (FirstSelectedElement && FirstSelectedElement->ElAssocNum != 0)
-	/* reset enclosing abstract boxes for associated elements */
-	EnclosingAssocAbsBox (FirstSelectedElement);
     }
   return result;
 }

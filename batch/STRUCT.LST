@@ -21,7 +21,6 @@ number
 			 [ 'CONST' ConstList ]
 			 [ 'STRUCT' RuleList ]
 			 [ 'EXTENS' ExtensList ]
-			 [ 'ASSOC' RuleList ]
 			 [ 'UNITS' RuleList ]
 			 [ 'EXPORT' ExpList ]
 			 [ 'EXCEPT' ExceptList ]
@@ -184,84 +183,83 @@ code  key-word      numbers of rules using the key-word
 1105  CONST                 1
 1106  STRUCT                1
 1107  EXTENS                1
-1108  ASSOC                 1
-1109  UNITS                 1
-1110  EXPORT                1
-1111  EXCEPT                1
-1112  END                   1  32  32  32
-1113  INTEGER              12
-1114  TEXT                 12  21
-1115  REFERENCE            12  32
-1116  ANY                  13
-1117  First                15
-1118  Second               15
-1119  GRAPHICS             21
-1120  SYMBOL               21
-1121  PICTURE              21
-1122  UNIT                 21
-1123  NATURE               21
-1124  WITH                 24  46  53
-1125  EXTERN               34  49
-1126  INCLUDED             34
-1127  LIST                 32
-1128  OF                   32  32
-1129  BEGIN                32
-1130  AGGREGATE            32
-1131  CASE                 32
-1132  CONSTANT             32
-1133  PAIR                 32
-1134  Nothing              47
-1135  NoCut                51
-1136  NoCreate             51
-1137  NoHMove              51
-1138  NoVMove              51
-1139  NoHResize            51
-1140  NoVResize            51
-1141  NewWidth             51
-1142  NewHeight            51
-1143  NewHPos              51
-1144  NewVPos              51
-1145  Invisible            51
-1146  GraphCreation        51
-1147  Hidden               51
-1148  IsDraw               51
-1149  NoMove               51
-1150  NoResize             51
-1151  MoveResize           51
-1152  NoSelect             51
-1153  NoSpellCheck         51
-1154  PageBreak            51
-1155  PageBreakAllowed     51
-1156  PageBreakPlace       51
-1157  PageBreakRepetition  51
-1158  PageBreakRepBefore   51
-1159  ActiveRef            51
-1160  NoPaginate           51
-1161  ImportLine           51
-1162  ImportParagraph      51
-1163  ParagraphBreak       51
-1164  SelectParent         51
-1165  HighlightChildren    51
-1166  ExtendedSelection    51
-1167  ClickableSurface     51
-1168  ReturnCreateNL       51
-1169  ReturnCreateWithin   51
-1170  IsTable              51
-1171  IsRow                51
-1172  IsColHead            51
-1173  IsCell               51
-1174  NewPercentWidth      51
-1175  ColRef               51
-1176  ColSpan              51
-1177  RowSpan              51
-1178  Shadow               51
-1179  CssBackground        51
-1180  CssClass             51
-1181  CssId                51
-1182  CssPseudoClass       51
-1183  EventAttr            51
-1184  NoShowBox            51
-1185  Root                 54
+1108  UNITS                 1
+1109  EXPORT                1
+1110  EXCEPT                1
+1111  END                   1  32  32  32
+1112  INTEGER              12
+1113  TEXT                 12  21
+1114  REFERENCE            12  32
+1115  ANY                  13
+1116  First                15
+1117  Second               15
+1118  GRAPHICS             21
+1119  SYMBOL               21
+1120  PICTURE              21
+1121  UNIT                 21
+1122  NATURE               21
+1123  WITH                 24  46  53
+1124  EXTERN               34  49
+1125  INCLUDED             34
+1126  LIST                 32
+1127  OF                   32  32
+1128  BEGIN                32
+1129  AGGREGATE            32
+1130  CASE                 32
+1131  CONSTANT             32
+1132  PAIR                 32
+1133  Nothing              47
+1134  NoCut                51
+1135  NoCreate             51
+1136  NoHMove              51
+1137  NoVMove              51
+1138  NoHResize            51
+1139  NoVResize            51
+1140  NewWidth             51
+1141  NewHeight            51
+1142  NewHPos              51
+1143  NewVPos              51
+1144  Invisible            51
+1145  GraphCreation        51
+1146  Hidden               51
+1147  IsDraw               51
+1148  NoMove               51
+1149  NoResize             51
+1150  MoveResize           51
+1151  NoSelect             51
+1152  NoSpellCheck         51
+1153  PageBreak            51
+1154  PageBreakAllowed     51
+1155  PageBreakPlace       51
+1156  PageBreakRepetition  51
+1157  PageBreakRepBefore   51
+1158  ActiveRef            51
+1159  NoPaginate           51
+1160  ImportLine           51
+1161  ImportParagraph      51
+1162  ParagraphBreak       51
+1163  SelectParent         51
+1164  HighlightChildren    51
+1165  ExtendedSelection    51
+1166  ClickableSurface     51
+1167  ReturnCreateNL       51
+1168  ReturnCreateWithin   51
+1169  IsTable              51
+1170  IsRow                51
+1171  IsColHead            51
+1172  IsCell               51
+1173  NewPercentWidth      51
+1174  ColRef               51
+1175  ColSpan              51
+1176  RowSpan              51
+1177  Shadow               51
+1178  CssBackground        51
+1179  CssClass             51
+1180  CssId                51
+1181  CssPseudoClass       51
+1182  EventAttr            51
+1183  NoShowBox            51
+1184  Root                 54
 
 
 
@@ -279,7 +277,7 @@ their right part.
     3  PresentName     1
     4  AttrList        1
     5  ConstList       1
-    6  RuleList        1   1   1
+    6  RuleList        1   1
     7  ExtensList      1
     8  ExpList         1
     9  ExceptList      1

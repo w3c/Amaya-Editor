@@ -1225,9 +1225,7 @@ void WritePivotHeader (BinFile pivFile, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void SauveDoc (BinFile pivFile, PtrDocument pDoc)
 {
-   int                 i;
-   PtrElement          pEl, pNextEl;
-   ThotBool            stop;
+   PtrElement          pEl;
    NotifyElement       notifyEl;
 
    /* ecrit l'entete du fichier pivot */
@@ -1236,63 +1234,6 @@ void SauveDoc (BinFile pivFile, PtrDocument pDoc)
    /* utilises par le document */
    WriteSchemaNamesOfDoc (pivFile, pDoc);
 
-   /* ecrit la representation pivot de tous les arbres d'elements */
-   /* associes qui ne sont pas vides */
-   for (i = 0; i < MAX_ASSOC_DOC; i++)
-      if (pDoc->DocAssocRoot[i] != NULL)
-	{
-	   pEl = pDoc->DocAssocRoot[i]->ElFirstChild;
-	   if (pEl != NULL)
-	      /* y a-t-il autre chose que des sauts de page ? */
-	     {
-		pNextEl = pEl;
-		stop = FALSE;
-		do
-		   if (pNextEl == NULL)
-		      stop = TRUE;
-		   else if (pNextEl->ElTypeNumber == PageBreak + 1)
-		      pNextEl = pNextEl->ElNext;
-		   else
-		      stop = TRUE;
-		while (!stop);
-		if (pNextEl != NULL)
-		   /* il n'y a pas que des sauts de pages */
-		  {
-		     pEl = pDoc->DocAssocRoot[i];
-		     /* envoie l'evenement ElemSave.Pre a l'application, si */
-		     /* elle le demande */
-		     notifyEl.event = TteElemSave;
-		     notifyEl.document = (Document) IdentDocument (pDoc);
-		     notifyEl.element = (Element) pEl;
-		     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-		     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-		     notifyEl.position = 0;
-		     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-			/* l'application accepte que Thot sauve l'element */
-		       {
-			  /* ecrit une marque d'element associe' */
-			  TtaWriteByte (pivFile, (char) C_PIV_ASSOC);
-			  /* si ces elements associes sont definis dans une
-			     extension du schema de structure du document,
-			     on ecrit un changement de nature */
-			  if (pEl->ElStructSchema != pDoc->DocSSchema)
-			     WriteNatureNumber (pEl->ElStructSchema, pivFile,
-						pDoc);
-			  /* Ecrit l'element */
-			  Externalise (pivFile, &pEl, pDoc, TRUE);
-			  /* envoie l'evenement ElemSave.Post a l'application,
-			     si elle le demande */
-			  notifyEl.event = TteElemSave;
-			  notifyEl.document = (Document) IdentDocument (pDoc);
-			  notifyEl.element = (Element) pEl;
-			  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-			  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-			  notifyEl.position = 0;
-			  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		       }
-		  }
-	     }
-	}
    /* ecrit la representation pivot de tout le corps du document */
    pEl = pDoc->DocDocElement;
    if (pEl != NULL)

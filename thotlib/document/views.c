@@ -88,20 +88,10 @@ static int          ViewMenuItem[MAX_VIEW_OPEN];
 ThotBool            PaginatedView (PtrDocument pDoc, int view, ThotBool assoc)
 {
    ThotBool            paginate;
-   PtrElement          pEl;
    PtrPSchema          pPS;
 
    if (assoc)
-     {
-	pEl = pDoc->DocAssocRoot[view - 1];
-	if (pEl == NULL)
-	   paginate = FALSE;
-	else
-	  {
-	    pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
-	    paginate = pPS->PsAssocPaginated[pEl->ElTypeNumber - 1];
-	  }
-     }
+     paginate = FALSE;
    else
      {
 	if (pDoc->DocView[view - 1].DvSSchema != pDoc->DocSSchema)
@@ -260,152 +250,23 @@ static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
 }
 
 /*----------------------------------------------------------------------
-  BuildNatureList cree la liste des natures du schema
-  de structure pSS.
-  ----------------------------------------------------------------------*/
-static void BuildNatureList (PtrSSchema pSS, int *nViews,
-                             AvailableView viewList, PtrDocument pDoc)
-{
-   SRule              *pSRule;
-   int                 rule;
-
-   /* parcourt les regles de structure */
-   for (rule = 0; rule < pSS->SsNRules; rule++)
-      {
-      pSRule = &pSS->SsRule[rule];
-      if (pSRule->SrConstruct == CsNatureSchema)
-	/* c'est une regle de nature */
-	if (pSRule->SrSSchemaNat != NULL)
-	  /* la nature est chargee */
-	  if (pSRule->SrSSchemaNat->SsNObjects > 0)
-	     {
-	     /* Il existe au moins un objet de cette nature dans le document */
-
-	     /* les vues non principales de cette nature */
-	     BuildSSchemaViewList (pDoc, pSRule->SrSSchemaNat, viewList,
-				   nViews, TRUE);
-
-	     /* les vues des natures contenues dans cette nature */
-	     BuildNatureList (pSRule->SrSSchemaNat, nViews, viewList, pDoc);
-	     }
-      }
-}
-
-/*----------------------------------------------------------------------
    BuildDocumentViewList construit la liste des vues definies pour
-   le document pDoc: vues de l'arbre principal, vues des elements
-   assoocies et vues des natures.
+   le document pDoc: vues de l'arbre principal et vues des natures.
   ----------------------------------------------------------------------*/
 int BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
 {
-   PtrSSchema          pSS;
-   PtrPSchema          pPS;
-   SRule              *pSRule;
-   int                 a, rule, nViews;
-   ThotBool            assocPres, present;
+   int                 i, nViews;
 
    nViews = 0;
    if (pDoc->DocSSchema != NULL)
       {
-      /* vues du schema de presentation de l'arbre principal */
-      BuildSSchemaViewList (pDoc, pDoc->DocSSchema, viewList, &nViews, FALSE);
-      /* vues definies pour les extensions du schema du document */
-      pSS = pDoc->DocSSchema->SsNextExtens;
-      while (pSS != NULL)
-	 {
-	 BuildSSchemaViewList (pDoc, pSS, viewList, &nViews, FALSE);
-	 pSS = pSS->SsNextExtens;
-	 }
-      /* vues des natures contenues dans le document */
-      BuildNatureList (pDoc->DocSSchema, &nViews, viewList, pDoc);
-      /* vues des natures contenues dans les natures contenues dans le */
-      /* document */
-      pSS = pDoc->DocSSchema;
-      /* parcourt les regles de structure du schema du document */
-      for (rule = 0; rule < pSS->SsNRules; rule++)
-	 {
-	 pSRule = &pSS->SsRule[rule];
-	 if (pSRule->SrConstruct == CsNatureSchema)
-	   /* c'est une regle de nature */
-	   if (pSRule->SrSSchemaNat != NULL)
-	     /* la nature est chargee */
-	     if (pSRule->SrSSchemaNat->SsNObjects > 0)
-	       /* il existe au moins un objet de cette nature dans
-		  le document */
-	       BuildSSchemaViewList (pDoc, pSRule->SrSSchemaNat, viewList,
-				     &nViews, TRUE);
-	 }
-
-      /* vues des elements associes */
-      /* On prend d'abord les elements associes definis dans le schema de */
-      /* structure du document, puis ceux definis dans les extensions de */
-      /* ce schema */
-      pSS = pDoc->DocSSchema;
-      do
-	 {
-	 pPS = PresentationSchema (pSS, pDoc);
-	 if (pSS->SsFirstDynNature == 0)
-	    /* rule: derniere regle qui pourrait etre une liste d'element
-	       associe' */
-	    rule = pSS->SsNRules;
-	 else
-	    rule = pSS->SsFirstDynNature - 1;
-	 do
-	    {
-	    rule--;
-	    if (pSS->SsRule[rule].SrConstruct == CsList)
-	      if (pSS->SsRule[pSS->SsRule[rule].SrListItem - 1].SrAssocElem)
-		/* c'est une regle liste d'elements associes */
-		if (!pPS->
-		    PsInPageHeaderOrFooter[pSS->SsRule[rule].SrListItem - 1])
-		   /* ces elements associes ne sont pas affiches dans une */
-		   /* boite de haut ou de bas de page */
-		   {
-		   /* cherche s'il existe dans le document des elements */
-		   /* associes de ce type et si leur vue est deja ouverte */
-		   assocPres = FALSE;
-		   present = FALSE;
-		   a = 0;
-		   do
-		      {
-		      if (pDoc->DocAssocRoot[a] != NULL)
-			if (pDoc->DocAssocRoot[a]->ElTypeNumber == rule + 1)
-			  if (pDoc->DocAssocRoot[a]->ElStructSchema == pSS)
-			     /* il existe des elements associes de ce type */
-			     {
-			     assocPres = TRUE;
-			     if (pDoc->DocAssocFrame[a] != 0)
-			       /* la vue est ouverte */
-			       present = TRUE;
-			     }
-		      a++;
-		      }
-		   while (!assocPres && a < MAX_ASSOC_DOC);
-		   
-		   if (present)
-		      viewList[nViews].VdView = a;
-		   else
-                      viewList[nViews].VdView = 0;
-		   viewList[nViews].VdAssocNum = rule + 1;
-		   strncpy (viewList[nViews].VdViewName, pSS->SsRule[rule].SrName, MAX_NAME_LENGTH);
-		   viewList[nViews].VdSSchema = pSS;
-		   viewList[nViews].VdOpen = present;
-		   viewList[nViews].VdAssoc = TRUE;
-		   viewList[nViews].VdExist = assocPres;
-		   viewList[nViews].VdNature = FALSE;
-		   viewList[nViews].VdPaginated = pPS->PsAssocPaginated[rule+1];
-		   nViews++;
-		   }
-	    }
-	 while (rule > 1);
-	 /* passe a l'extension de schema suivante */
-	 pSS = pSS->SsNextExtens;
-	 }
-      while (pSS != NULL);
+      BuildDocNatureTable (pDoc);
+      for (i = 0; i < pDoc->DocNNatures; i++)
+        BuildSSchemaViewList (pDoc, pDoc->DocNatureSSchema[i], viewList,
+			      &nViews, FALSE);
       }
    return nViews;
 }
-
 
 /*----------------------------------------------------------------------
    ChangeDocumentName change le nom d'un document pDoc en newName	
@@ -934,13 +795,11 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
    GetViewByName cherche la vue de nom viewName.                   
   ----------------------------------------------------------------------*/
 static ThotBool GetViewByName (PtrDocument pDoc, Name viewName, int *view,
-                               ThotBool *assoc, PtrSSchema *pSS)
+                               PtrSSchema *pSS)
 {
    PtrPSchema          pPSch;
-   PtrSSchema          pSSch;
-   SRule              *pSRule;
-   int                 viewSch, viewDoc, rule, ass;
-   ThotBool            open, present, ret;
+   int                 viewSch, viewDoc;
+   ThotBool            open, ret;
 
    ret = FALSE;
    /* cherche parmi les vues declarees dans le schema de presentation et
@@ -956,71 +815,12 @@ static ThotBool GetViewByName (PtrDocument pDoc, Name viewName, int *view,
 	 if (strcmp (pPSch->PsView[viewSch - 1], viewName) == 0)
 	    {
 	    *view = viewSch;
-	    *assoc = FALSE;
 	    *pSS = pDoc->DocSSchema;
 	    ret = TRUE;
 	    }
       }
-   if (!ret)
-      {
-      /* cherche parmi les vues des elements associes non ouvertes */
-      /* examine les elements associes definis dans le schema de */
-      /* structure du document et dans toutes ses extensions */
-      pSSch = pDoc->DocSSchema;
-      do
-	 {
-	 /* rule: derniere regle qui pourrait etre une liste d'elements
-	    associes */
-	 if (pSSch->SsFirstDynNature == 0)
-	    rule = pSSch->SsNRules;
-	 else
-	    rule = pSSch->SsFirstDynNature - 1;
-	 pPSch = PresentationSchema (pSSch, pDoc);
-	 /* boucle sur les regles a la recherche des listes d'elements
-	    associes */
-	 while (rule > 1 && !ret)
-	    {
-	    rule--;
-	    if (pSSch->SsRule[rule].SrConstruct == CsList)
-	      if (pSSch->SsRule[pSSch->SsRule[rule].SrListItem - 1].SrAssocElem)
-		if (!pPSch->
-		    PsInPageHeaderOrFooter[pSSch->SsRule[rule].SrListItem - 1])
-		   /* ces elements associes ne sont pas affiches dans une */
-		   /* boite de haut ou de bas de page */
-		   /* cherche si la vue existe deja */
-		   {
-		   present = FALSE;
-		   ass = 0;
-		   do
-		      {
-		      if (pDoc->DocAssocRoot[ass] != NULL)
-			if (pDoc->DocAssocRoot[ass]->ElTypeNumber == rule + 1)
-			  if (pDoc->DocAssocFrame[ass] > 0)
-			     present = TRUE;
-		      ass++;
-		      }
-		   while (!present && ass < MAX_ASSOC_DOC);
-		   if (!present)
-		      {
-		      pSRule = &pSSch->SsRule[rule];
-		      if (strcmp (pSRule->SrName, viewName) == 0)
-			 {
-			 *view = rule + 1;
-			 *assoc = TRUE;
-			 *pSS = pSSch;
-			 ret = TRUE;
-			 }
-		      }
-		   }
-	    }
-	 /* next schema extension */
-	 pSSch = pSSch->SsNextExtens;
-	 }
-      while (pSSch != NULL && !ret);
-      }
    return ret;
 }
-
 
 /*----------------------------------------------------------------------
    OpenViewByName ouvre la vue de nom viewName			
@@ -1030,7 +830,6 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, in
    PtrSSchema          pSS;
    NotifyDialog        notifyDoc;
    int                 view, freeView, ret;
-   ThotBool            assoc;
 
    freeView = 0;
    view = 1;
@@ -1043,7 +842,7 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, in
 	 view++;
    if (freeView > 0)
      {
-	if (!GetViewByName (pDoc, viewName, &view, &assoc, &pSS))
+	if (!GetViewByName (pDoc, viewName, &view, &pSS))
 	   ret = 0;
 	else
 	  {
@@ -1052,14 +851,11 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, in
 	     notifyDoc.view = 0;
 	     if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	        {
-		ret = CreateAbstractImage (pDoc, view, 0, pSS, 1, assoc, NULL);
-		OpenCreatedView (pDoc, ret, assoc, X, Y, width, height);
+		ret = CreateAbstractImage (pDoc, view, 0, pSS, 1, FALSE, NULL);
+		OpenCreatedView (pDoc, ret, FALSE, X, Y, width, height);
 		notifyDoc.event = TteViewOpen;
 		notifyDoc.document = (Document) IdentDocument (pDoc);
-		if (assoc)
-		   notifyDoc.view = ret + 100;
-		else
-		   notifyDoc.view = ret;
+		notifyDoc.view = ret;
 		CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 		}
 	  }

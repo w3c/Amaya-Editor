@@ -1126,14 +1126,13 @@ void                DecreaseVolume (ThotBool head, int dVol, int frame)
 void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, ThotBool display)
 {
   ThotBool            openedView, creation, stop;
-  PtrElement          pElAscent, pElPage, pEl1;
+  PtrElement          pElAscent, pEl1;
   PtrElement          pAsc[MaxAsc];
-  int                 NumAsc, i, volsupp, frame, nAssoc, boxType, h;
+  int                 NumAsc, i, volsupp, frame, nAssoc, h;
   PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr,
                       pAbbFirstEmptyCr, pAbbReDisp, pAbbRoot, pPrevious;
   PtrPSchema          pPS;
   ThotBool            complete;
-  int                 nR;
 
   pAbbLastEmptyCr = NULL;
   pAbbRoot = NULL;
@@ -1148,19 +1147,6 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 	openedView = pDoc->DocAssocFrame[nAssoc - 1] != 0 && view == 1;
       else
 	openedView = pDoc->DocView[view - 1].DvPSchemaView > 0;
-
-      /* est-ce l'element racine d'un arbre d'elements associes ? */
-      pEl1 = pEl;
-      if (pEl1->ElParent == NULL && nAssoc != 0)
-	/* c'est un element associe */
-	/* nR: type des elements associes */
-	{
-	  nR = pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrListItem;
-	  /* si les elements associes s'affichent en haut ou en bas de */
-	  /* page, la racine n'a jamais de pave */
-	  pPS = PresentationSchema (pEl1->ElStructSchema, pDoc);
-	  openedView = !pPS->PsInPageHeaderOrFooter[nR - 1];
-	}
 
       /* si la vue n'est pas creee, il n'y a rien a faire */
       if (openedView)
@@ -1186,46 +1172,7 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		    NumAsc++;
 		  }
 		/* passe a l'ascendant */
-		pEl1 = pElAscent;
-		if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrAssocElem)
-		  /* on vient de traiter un element associe' */
-		  /* Serait-ce un element qui s'affiche dans une boite de */
-		  /* haut ou de bas de page ? */
-		  {
-		    pElPage = GetPageBreakForAssoc (pElAscent, pDoc->DocView[view - 1].DvPSchemaView, &boxType, pDoc);
-		    if (pElPage != NULL)
-		      /* Il s'affiche dans une haut ou bas de page, c'est la */
-		      /* marque de page a laquelle il est associe qu'il faut */
-		      /* creer */
-		      {
-			NumAsc = 1;
-			pAsc[0] = pElPage;
-			pElAscent = pElPage->ElParent;
-			/* ce n'est pas une vue d'elements associes */
-			nAssoc = 0;
-		      }
-		    else if (boxType == 0)
-		      /* il ne s'affiche pas dans une boite de haut ou de */
-		      /* bas de page */
-		      if (view == 1)
-			pElAscent = pEl1->ElParent;
-		      else
-			/* ce n'est pas la vue 1, l'element (associe') */
-			/* n'a pas d'image dans cette vue */
-			{
-			  stop = TRUE;
-			  openedView = FALSE;
-			}
-		    else
-		      /* il devrait s'afficher dans une boite de haut ou */
-		      /* de bas de page, mais il n'y a pas de page */
-		      {
-			stop = TRUE;
-			openedView = FALSE;
-		      }
-		  }
-		else
-		  pElAscent = pEl1->ElParent;
+		pElAscent = pElAscent->ElParent;
 	      }
 	  while (!stop);
 

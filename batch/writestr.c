@@ -208,7 +208,6 @@ static void         WriteRule (SRule * pSRule)
       WriteShort (pSRule->SrLocalAttr[j]);
    for (j = 0; j < pSRule->SrNLocalAttrs; j++)
       WriteBoolean (pSRule->SrRequiredAttr[j]);
-   WriteBoolean (pSRule->SrAssocElem);
    WriteBoolean (pSRule->SrUnitElem);
    WriteBoolean (pSRule->SrRecursive);
    WriteBoolean (pSRule->SrExportedElem);

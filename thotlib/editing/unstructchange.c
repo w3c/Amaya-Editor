@@ -379,7 +379,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				   if (pE->ElTypeNumber == pE->ElStructSchema->SsRootElem)
 				     /* root element in a different structure schema */
 				     /* Put number of elements in the "position" field */
-				     notifyEl.position = pE->ElStructSchema->SsNObjects;
+				     notifyEl.position = 0;
 				   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 				   /* passe au niveau inferieur */
 				   pParent = pE;

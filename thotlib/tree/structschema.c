@@ -315,9 +315,7 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
 	ret = FALSE;
 	test = TRUE;
 	pSRule = &pSS1->SsRule[typeNum1 - 1];
-	if (pSRule->SrAssocElem)
-	   test = FALSE;
-	else if (pSRule->SrRecursive)
+	if (pSRule->SrRecursive)
 	  {
 	   if (pSRule->SrRecursDone)
 	      test = FALSE;
@@ -2227,11 +2225,9 @@ SRule              *ExtensionRule (PtrSSchema pSS, int typeNum,
 	      /* on n'a pas trouve' de regle de meme nom */
 	     {
 		Rule = &pSS->SsRule[typeNum - 1];
-		if (typeNum == pSS->SsRootElem ||
-		    (Rule->SrConstruct == CsList &&
-		     pSS->SsRule[Rule->SrListItem - 1].SrAssocElem))
-		   /* il s'agit d'une racine de document ou d'une racine */
-		   /* d'arbre associe. On cherche une regle d'extension qui */
+		if (typeNum == pSS->SsRootElem)
+		   /* il s'agit d'une racine de document. */
+		   /* On cherche une regle d'extension qui */
 		   /* s'applique aux racines (regle avec SrName vide). */
 		  {
 		     r = 0;

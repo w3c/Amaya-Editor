@@ -219,7 +219,6 @@ static ThotBool     ReadSRule (BinFile file, SRule * pSRule)
    for (j = 0; j < pSRule->SrNLocalAttrs; j++)
       TtaReadBool (file, &pSRule->SrRequiredAttr[j]);
 
-   TtaReadBool (file, &pSRule->SrAssocElem);
    TtaReadBool (file, &pSRule->SrUnitElem);
    TtaReadBool (file, &pSRule->SrRecursive);
    pSRule->SrRecursDone = FALSE;
@@ -393,7 +392,6 @@ ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
 	pSS->SsExtensBlock = NULL;
 	TtaReadShort (file, &pSS->SsDocument);
 	TtaReadShort (file, &pSS->SsRootElem);
-	pSS->SsNObjects = 0;
 	TtaReadShort (file, &pSS->SsNAttributes);
 	TtaReadShort (file, &pSS->SsNRules);
 	TtaReadBool (file, &pSS->SsExport);

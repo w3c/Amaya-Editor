@@ -33,6 +33,7 @@ static CHAR_T sepcar[] =
  TEXT('\202')
 };
 
+#include "memory_f.h"
 #include "font_f.h"
 #include "ustring_f.h"
 

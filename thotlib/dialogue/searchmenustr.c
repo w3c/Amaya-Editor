@@ -434,13 +434,11 @@ static void         InitMenuNatures (PtrDocument pDoc)
 
    /* met d'abord le schema de structure du document dans la table des */
    /* natures utilisees dans le document */
-   TableNaturesDoc[0] = pDoc->DocSSchema;
-   LgTableNaturesDoc = 1;
    /* cherche tous les schemas de structure utilise's dans le document */
-   SearchNatures (pDoc->DocSSchema, TableNaturesDoc, &LgTableNaturesDoc, TRUE);
+   SearchNatures (pDoc, TableNaturesDoc, &LgTableNaturesDoc);
    if (LgTableNaturesDoc == 1)
-      /* une seule nature dans le document, on ne met pas le menu des */
-      /* natures */
+      /* une seule nature dans le document (le schema de structure du
+	 document), on ne met pas le menu des natures */
       TtaDetachForm (NumMenuSearchNature);
    else
      {

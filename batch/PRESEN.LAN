@@ -29,7 +29,7 @@ ViewName =	  NAME .
 MergeViews =      ViewName < ViewName > .
 
 PrintViewList =	  PrintView < ',' PrintView > ';' .
-PrintView =	  ViewName / TypeName .
+PrintView =	  ViewName .
 
 CounterList =	  Counter < Counter > .
 Counter =	  CounterName ':' CountFunction ';' .
@@ -183,7 +183,7 @@ RefHPosition =	  'Refering' [ '*' ] TypeName '.' VertAxis [ Distance ] /
 		  HorizPosition .
 
 VarConst =	  '(' FunctList ')' / ConstType ConstValue /
-		  VarName / ConstName / TypeName .
+		  VarName / ConstName .
 
 PresentList =	  Present < Present > .
 Present =	  [ '*' ] [ FirstSec ] TypeName ':' ViewRuleList .

@@ -63,8 +63,6 @@ PtrSSchema          pSchStr;
    ustrcpy (NewAlias->SrName, "Counter alias");
    NewAlias->SrNDefAttrs = 0;
    NewAlias->SrNLocalAttrs = 0;
-   NewAlias->SrAssocElem = FALSE;
-   NewAlias->SrAssocElem = FALSE;
    NewAlias->SrUnitElem = FALSE;
    NewAlias->SrRecursive = FALSE;
    NewAlias->SrExportedElem = FALSE;
@@ -948,11 +946,7 @@ PtrAbstractBox      pAb;
 	{
 	   /* cherche la boite de presentation correspondant au pave' */
 	   pBo = &pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1];
-	   if (pBo->PbContent == ContElement)
-	      /* une boite qui regroupe des elements associes */
-	      /* son contenu est modifiable */
-	      result = TRUE;
-	   else if (pBo->PbContent == ContVariable)
+	   if (pBo->PbContent == ContVariable)
 	      /* une boite dont le contenu est une variable de presentation */
 	     {
 		pPr = &pAb->AbPSchema->PsVariable[pBo->PbContVariable - 1];

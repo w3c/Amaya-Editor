@@ -478,8 +478,7 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   box->PbHeaderHeight = 0;
   box->PbPageCounter = 0;
   box->PbContent = FreeContent;
-  box->PbContElem = 0;
-  box->PbContRefElem = 0;
+  box->PbContVariable = 0;
 
   return (&tsch->PsPresentBox[tsch->PsNPresentBoxes - 1].PbFirstPRule);
 }

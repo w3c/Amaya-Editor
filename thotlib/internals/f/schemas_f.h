@@ -57,7 +57,9 @@ extern void AddSchemaGuestViews ( PtrDocument pDoc,
 extern void CreateGuestViewList ( PtrDocument pDoc,
                                   int view );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
-
+extern void SearchNatures ( PtrDocument pDoc,
+                            PtrSSchema natureTable[10 ],
+                            int *natureTableLen );
 #else /* __STDC__ */
 
 extern void InitNatures (/* void */);
@@ -111,6 +113,8 @@ extern void AddSchemaGuestViews (/* PtrDocument pDoc,
 extern void CreateGuestViewList (/* PtrDocument pDoc,
                                     int view */);
 extern void BuildDocNatureTable (/* PtrDocument pDoc */);
-
+extern void SearchNatures (/* PtrDocument pDoc,
+                              PtrSSchema natureTable[10 ],
+                              int *natureTableLen */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

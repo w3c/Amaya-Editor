@@ -1580,14 +1580,7 @@ int                 main (int argc, char **argv)
 				   printf ("Cste");
 				   wrnb (pBo1->PbContConstant);
 				   break;
-				case ContElement:
-				   wrnomregle (pBo1->PbContElem);
-				   printf (" {referenced by ");
-				   wrnomregle (pBo1->PbContRefElem);
-				   printf ("}");
-				   break;
 				case FreeContent:
-				   ;
 				   break;
 			     }
 
@@ -1643,10 +1636,6 @@ int                 main (int argc, char **argv)
 		printf ("Yes;\n");
 	     else
 		printf ("No;\n");
-	     if (pSc1->PsInPageHeaderOrFooter[El - 1])
-		printf ("   { displayed in top or bottom of page }\n");
-	     if (pSc1->PsAssocPaginated[El - 1])
-		printf ("   { with pages }\n");
 	     if (pSc1->PsElemPRule[El - 1] != NULL)
 		printf ("   END;\n");
 	     printf ("\n");

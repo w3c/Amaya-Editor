@@ -140,8 +140,8 @@ static PtrDocSchemasDescr PresForStructSchema (PtrDocument pDoc,
 #ifndef NODISPLAY
 
 /*----------------------------------------------------------------------
-   FreePRuleList  libere la liste de regles de presentation dont   
-   l'ancre est firstPRule.                         
+   FreePRuleList
+   libere la liste de regles de presentation dont l'ancre est firstPRule.
   ----------------------------------------------------------------------*/
 static void         FreePRuleList (PtrPRule * firstPRule)
 {
@@ -551,11 +551,20 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
      if (!pPfS)
        {
 	 GetDocSchemasDescr (&pPfS);
-	 pPfS->PfNext = pDoc->DocFirstSchDescr;
-         pDoc->DocFirstSchDescr = pPfS;
+	 pPfS->PfNext = NULL;
 	 pPfS->PfSSchema = pSSchema;
 	 pPfS->PfPSchema = NULL;
 	 pPfS->PfFirstPSchemaExtens = NULL;
+	 /* append the new schema descriptor */
+	 if (pDoc->DocFirstSchDescr == NULL)
+	   pDoc->DocFirstSchDescr = pPfS;
+	 else
+	   {
+	     pPrevPfS = pDoc->DocFirstSchDescr;
+	     while (pPrevPfS->PfNext)
+	       pPrevPfS = pPrevPfS->PfNext;
+	     pPrevPfS->PfNext = pPfS;
+	   }
        }
      }
    return pSSchema;
@@ -614,11 +623,11 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   LoadNatureSchema charge la nature definie dans la regle rule du	
-   schema de structure pSS. Si le 1er octet de PSchName est nul on	
-   propose a l'utilisateur le schema de presentation par defaut	
-   defini dans le schema de structure, sinon on propose le schema de  
-   presentation de nom PSchName.					
+   LoadNatureSchema
+   Charge la nature definie dans la regle rule du schema de structure pSS.
+   Si le 1er octet de PSchName est nul on propose a l'utilisateur le schema
+   de presentation par defaut defini dans le schema de structure, sinon on
+   propose le schema de presentation de nom PSchName.			       
   ----------------------------------------------------------------------*/
 void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 		       PtrDocument pDoc)
@@ -679,8 +688,8 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 }
 
 /*----------------------------------------------------------------------
-   AppendSRule     ajoute une nouvelle regle a la fin de la table  
-   des regles.                                     
+   AppendSRule
+   Ajoute une nouvelle regle a la fin de la table des regles.
   ----------------------------------------------------------------------*/
 static void         AppendSRule (int *ret, PtrSSchema pSS)
 {
@@ -762,7 +771,6 @@ int          CreateNature (char *SSchName, char *PSchName, PtrSSchema pSS,
 	 pRule = &pSS->SsRule[ret - 1];
 	 strncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
 	 strncpy (pRule->SrName, SSchName, MAX_NAME_LENGTH);
-	 pRule->SrAssocElem = FALSE;
 	 pRule->SrNDefAttrs = 0;
 	 pRule->SrConstruct = CsNatureSchema;
 	 pRule->SrSSchemaNat = NULL;
@@ -809,7 +817,7 @@ int          CreateNature (char *SSchName, char *PSchName, PtrSSchema pSS,
 
 /*----------------------------------------------------------------------
    LoadSchemas
-   charge en memoire le schema de structure de nom SSchName ainsi que
+   Charge en memoire le schema de structure de nom SSchName ainsi que
    son schema de presentation. Si PSchName est une chaine vide, on charge
    le schema de presentation par defaut defini dans le schema de      
    structure, sinon on charge le schema de presentation de nom        
@@ -890,9 +898,9 @@ void LoadSchemas (char *SSchName, char *PSchName, PtrSSchema *pSS,
 }
 
 /*----------------------------------------------------------------------
-   LoadExtension charge en memoire, pour le document pDoc, le schema  
-   d'extension de nom SSchName et son schema de presentation de    
-   nom PSchName.                                                   
+   LoadExtension
+   Charge en memoire, pour le document pDoc, le schema d'extension de nom
+   SSchName et son schema de presentation de nom PSchName.
   ----------------------------------------------------------------------*/
 PtrSSchema LoadExtension (char *SSchName, char *PSchName, PtrDocument pDoc)
 {
@@ -944,11 +952,11 @@ PtrSSchema LoadExtension (char *SSchName, char *PSchName, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   FreeNatureRules	cherche dans le schema de structure pointe'	
-   par pSS les regles de nature qui font reference au schema	
-   pointe par pNatureSS. S'il y en a, retourne Vrai, annule ces	
-   regles et traite de meme les autres natures. S'il n'y en a pas,	
-   retourne Faux.                                                  
+   FreeNatureRules
+   Cherche dans le schema de structure pointe' par pSS les regles de
+   nature qui font reference au schema	pointe par pNatureSS.
+   S'il y en a, retourne Vrai, annule ces regles et traite de meme les
+   autres natures. S'il n'y en a pas, retourne Faux.
   ----------------------------------------------------------------------*/
 static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 {
@@ -983,11 +991,12 @@ static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 }
 
 /*----------------------------------------------------------------------
-   FreeNature    Si le schema de structure pointe' par pSS contient	
+   FreeNature
+   Si le schema de structure pointe' par pSS contient	
    une regle de nature pour le schema pointe' par pNatureSS,		
    retourne Vrai et libere le schema de structure pointe par		
    pNatureSS et son schema de presentation.            		
-   Retourne faux sinon.                                              
+   Retourne faux sinon.
   ----------------------------------------------------------------------*/
 ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS,
 				PtrDocument pDoc)
@@ -1014,9 +1023,9 @@ ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS,
 }
 
 /*----------------------------------------------------------------------
-   FreeDocumentSchemas libere tous les schemas de structure et de	
-   presentation utilises par le document dont le descripteur est   
-   pointe par pDoc.                                                
+   FreeDocumentSchemas
+   Libere tous les schemas de structure et de presentation utilises par
+   le document dont le descripteur est pointe par pDoc.
    Pour les schemas de presentation, la liberation n'est effective 
    que s'ils ne sont pas utilises par d'autres documents.          
   ----------------------------------------------------------------------*/
@@ -1050,7 +1059,7 @@ void             FreeDocumentSchemas (PtrDocument pDoc)
 #ifndef NODISPLAY
 /*----------------------------------------------------------------------
    AddGuestViews
-   add the guest views defined in presentation schema assosicated with pSS
+   Add the guest views defined in presentation schema assosicated with pSS
    to the list of guest views of document view pViewDescr.
   ----------------------------------------------------------------------*/
 static void  AddGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr,
@@ -1113,7 +1122,7 @@ void         AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
 
 /*----------------------------------------------------------------------
    AddAllGuestViews
-   add the guest views of presentation schema attached to pSS to the list
+   Add the guest views of presentation schema attached to pSS to the list
    of guest views of document view pViewDescr.
    Add also the guest views of presentation schemas attached to all
    natures used in pSS.
@@ -1143,7 +1152,7 @@ static void      AddAllGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr,
 
 /*----------------------------------------------------------------------
    CreateGuestViewList
-   create the guest view list for view view of document pDoc
+   Create the guest view list for view view of document pDoc
   ----------------------------------------------------------------------*/
 void         CreateGuestViewList (PtrDocument pDoc, int view)
 {
@@ -1153,131 +1162,78 @@ void         CreateGuestViewList (PtrDocument pDoc, int view)
 }
 
 /*----------------------------------------------------------------------
-   AddNature  met dans la table des natures du document pDoc          
-   les schemas references par le schema de structure pSS       
-  ----------------------------------------------------------------------*/
-static void         AddNature (PtrSSchema pSS, PtrDocument pDoc)
-{
-   int                 rule, nat, nObjects;
-   ThotBool            present;
-   SRule              *pSRule;
-   ThotBool            attrSchema;
-   PtrElement          pSaved;
-
-   for (rule = 0; rule < pSS->SsNRules; rule++)
-      {
-      pSRule = &pSS->SsRule[rule];
-      if (pSRule->SrConstruct == CsNatureSchema)
-	 if (pSRule->SrSSchemaNat != NULL)
-	   /* the structure schema for this nature is loaded */
-	   {
-	    /* number of elements in this document that have been created
-	       following this schema */
-	    nObjects = pSRule->SrSSchemaNat->SsNObjects;
-	    /* if the schema defines only attribute, does not count its
-	       elements. Take it into account anyway */
-	    attrSchema = (pSRule->SrSSchemaNat->SsRootElem ==
-			  pSRule->SrSSchemaNat->SsNRules);
-	    /* ignore a structure schema for which no elements have been
-               created in the document, except if it's a schema that
-               defines no element, only attributes */
-	    if (nObjects > 0 || attrSchema)
-	       {
-	       /* Decompte les objets de cette nature qui sont dans */
-	       /* le buffer de Copier-Couper-Coller */
-	       if (!attrSchema && FirstSavedElement != NULL)
-		  {
-		  pSaved = FirstSavedElement->PeElement;
-		  do
-		     {
-		     if (pSaved->ElStructSchema == pSRule->SrSSchemaNat &&
-			 pSaved->ElTypeNumber == pSRule->SrSSchemaNat->SsRootElem)
-		        nObjects--;
-		     pSaved = FwdSearchTypedElem (pSaved,
-					     pSRule->SrSSchemaNat->SsRootElem,
-					     pSRule->SrSSchemaNat);
-		     }
-		  while (pSaved != NULL);
-		  }
-	       if (attrSchema || nObjects > 0)
-		  {
-		    /* Si les natures contiennent elles-memes des natures  */
-		    /* on pourrait ecrire plusieurs fois un nom de nature. */
-		    /* On verifie que ce nom n'est pas dans la table */
-		    nat = 0;
-		    present = FALSE;
-		    while (nat < pDoc->DocNNatures && !present)
-		      if (strcmp (pDoc->DocNatureName[nat],
-				   pSRule->SrSSchemaNat->SsName) == 0)
-			present = TRUE;
-		      else
-			nat++;
-		    if (!present)
-		      /* il n'est pas dans la table */
-		      /* met le schema dans la table */
-		      {
-			if (pDoc->DocNNatures < MAX_NATURES_DOC)
-			  {
-			    strncpy (pDoc->DocNatureName[pDoc->DocNNatures],
-				      pSRule->SrSSchemaNat->SsName,
-				      MAX_NAME_LENGTH);
-			    strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
-				      pSRule->SrSSchemaNat->SsDefaultPSchema,
-				      MAX_NAME_LENGTH);
-			    pDoc->DocNatureSSchema[pDoc->DocNNatures] =
-			      pSRule->SrSSchemaNat;
-			    pDoc->DocNNatures++;
-			  }
-		      }
-		    /* cherche les natures utilisees par cette nature */
-		    /* meme si elle est deja dans la table : celle qui est */
-		    /* dans la table ne reference peut-etre pas des natures */
-		    /* qui sont referencees par celle-ci */
-		    AddNature (pSRule->SrSSchemaNat, pDoc);
-		  }
-	       }
-	   }
-      }
-}
-
-/*----------------------------------------------------------------------
-   BuildDocNatureTable remplit la table des schemas utilises          
-   par le document pDoc.                                   
+   BuildDocNatureTable
+   Remplit la table des schemas utilises par le document pDoc.
   ----------------------------------------------------------------------*/
 void                BuildDocNatureTable (PtrDocument pDoc)
 {
-   PtrSSchema          pSSExtens;
+  PtrDocSchemasDescr pPfS;
+  PtrSSchema         pSS;
 
-   /* met le schema de structure du document en tete de la table des */
-   /* natures utilisees */
-   pDoc->DocNatureSSchema[0] = pDoc->DocSSchema;
-   strncpy (pDoc->DocNatureName[0], pDoc->DocSSchema->SsName,
-	     MAX_NAME_LENGTH);
-   strncpy (pDoc->DocNaturePresName[0], pDoc->DocSSchema->SsDefaultPSchema,
-	     MAX_NAME_LENGTH);
-   pDoc->DocNNatures = 1;
-   /* met dans la table des natures du document les */
-   /* extensions du schema de structure du document */
-   pSSExtens = pDoc->DocSSchema->SsNextExtens;
-   while (pSSExtens != NULL)
-      {
-      /* met ce schema d'extension dans la table des natures */
-      if (pDoc->DocNNatures < MAX_NATURES_DOC)
-	 {
-	 strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSSExtens->SsName,
+  if (pDoc)
+    {
+      pDoc->DocNNatures = 0;
+      pPfS = pDoc->DocFirstSchDescr;
+      while (pPfS && pDoc->DocNNatures < MAX_NATURES_DOC)
+	{
+	  pSS = pPfS->PfSSchema;
+	  pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSS;
+	  strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSS->SsName,
 		   MAX_NAME_LENGTH);
-	 strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
-		   pSSExtens->SsDefaultPSchema, MAX_NAME_LENGTH);
-	 pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSSExtens;
-	 pDoc->DocNNatures++;
-	 }
-      /* met dans la table les natures utilises par cette extension */
-      AddNature (pSSExtens, pDoc);
-      /* passe au schema d'extension suivant */
-      pSSExtens = pSSExtens->SsNextExtens;
-      }
-   /* met dans la table des natures les schemas de structure */
-   /* reference's par le schema de structure du document. */
-   AddNature (pDoc->DocSSchema, pDoc);
+	  strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
+		   pSS->SsDefaultPSchema, MAX_NAME_LENGTH);
+	  pDoc->DocNNatures++;
+	  /* met les extensions du schema dans la table */
+	  while (pSS->SsNextExtens && pDoc->DocNNatures < MAX_NATURES_DOC)
+	    {
+	      pSS = pSS->SsNextExtens;
+	      pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSS;
+	      strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSS->SsName,
+		       MAX_NAME_LENGTH);
+	      strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
+		       pSS->SsDefaultPSchema, MAX_NAME_LENGTH);
+	      pDoc->DocNNatures++;
+	    }
+	  pPfS = pPfS->PfNext;
+	}
+    }
+}
+
+#define MAX_NAT_TABLE 10
+/*----------------------------------------------------------------------
+   SearchNatures
+   Met dans la table natureTable tous les schemas de structure utilise's
+   par le document pDoc et leurs extensions et retourne dans natureTableLen
+   le nombre d'entrees de la table.
+  ----------------------------------------------------------------------*/
+void SearchNatures (PtrDocument pDoc, PtrSSchema natureTable[MAX_NAT_TABLE],
+		    int *natureTableLen)
+{
+  PtrDocSchemasDescr pPfS;
+  PtrSSchema         pSS;
+
+  *natureTableLen = 0;
+  pPfS = NULL;
+  if (pDoc && natureTable)
+    {
+      pPfS = pDoc->DocFirstSchDescr;
+      while (pPfS)
+	{
+	  /* met le schema dans la table si elle n'est pas pleine */
+	  if (*natureTableLen < MAX_NAT_TABLE)
+	    {
+              pSS = pPfS->PfSSchema;
+	      natureTable[(*natureTableLen)++] = pSS;
+	      /* met les extensions du schema dans la table */
+	      while (pSS->SsNextExtens != NULL)
+		{
+		  pSS = pSS->SsNextExtens;
+		  if (*natureTableLen < MAX_NAT_TABLE)
+		    natureTable[(*natureTableLen)++] = pSS;
+		}
+	    }
+	  pPfS = pPfS->PfNext;
+	}
+    }
 }
 #endif   /* NODISPLAY */

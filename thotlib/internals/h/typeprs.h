@@ -145,7 +145,7 @@ typedef struct _DimensionRule
 /* type of the content of a presentation box */
 typedef enum
 {
-    FreeContent, ContVariable, ContConst, ContElement
+    FreeContent, ContVariable, ContConst
 }	ContentType;
 
 /* a presentation box */
@@ -179,24 +179,16 @@ typedef struct _PresentationBox
     {
       int	_PbContConstant_; /* number of the constant */
     } s1;
-    struct			  /* PbContent = ContElement */
-    {
-      int	_PbContElem_;	  /* number of the element type */
-      int	_PbContRefElem_;  /* number of the type of reference to this
-				     element */
-    } s2;
     struct			  /* PbContent = FreeContent */
     {
-      CHAR_T	_PbContFree_;     /* to make the compiler happy */
-    } s3;
+      int	_PbContFree_;     /* to make the compiler happy */
+    } s2;
   } u;
 } PresentationBox;
 
 #define PbContVariable u.s0._PbContVariable_
 #define PbContConstant u.s1._PbContConstant_
-#define PbContElem u.s2._PbContElem_
-#define PbContRefElem u.s2._PbContRefElem_
-#define PbContFree u.s3._PbContFree_
+#define PbContFree u.s2._PbContFree_
 
 /* Alignment of the lines in an abstract box */
 typedef enum
@@ -658,9 +650,9 @@ typedef struct _AttributePres
     struct
     {
       PtrPRule    _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* for each value of
-			   the attribute, in the order of the table AttrEnumValue,
-			   address of the first presentation rule associated
-			   with this value */
+			   the attribute, in the order of the table
+			   AttrEnumValue, address of the first presentation
+			   rule associated with this value */
     } s3;
   } u;
 } AttributePres;
@@ -688,9 +680,7 @@ typedef struct _HostView
 /* description of a view to print */
 typedef struct _PrintedView
 {
-    ThotBool    VpAssoc;	/* it is a view of associated elements */
-    int	 	VpNumber;    	/* number of the view, or of the type of the
-				   associated elements list if VpAssoc. */
+  int	 	VpNumber;    	/* view number */
 } PrintedView;
 
 typedef PtrPRule PtrPRuleTable[MAX_RULES_SSCHEMA];  /* Table of the addresses
@@ -809,17 +799,6 @@ typedef struct _PresentSchema
 					  table StructSchema.SsRule, if the
 					  image of the box must be built in one
 					  piece or if it can be divided */
-  ThotBool    PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA]; /* indicates for each
-					  element type, in the same order as
-					  in table StructSchema.SsRule, if
-					  the element is displayed in the body
-					  of the pages (false) or in a footer
-					  or header box (true) */
-  ThotBool    PsAssocPaginated[MAX_RULES_SSCHEMA];/* indicates for each element
-					  type, in the same order as in the
-					  table StructSchema.SsRule, if the
-					  element is paginated (meaningful only
-					  for the associated elements lists) */
   int	      PsElemTransmit[MAX_RULES_SSCHEMA]; /* for each element type,
 					  in the same order as in table
 					  StructSchema.SsRule, index in the

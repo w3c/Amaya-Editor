@@ -899,9 +899,6 @@ ContentType         ReadContentType (BinFile file)
 	    case C_CONT_CONST:
 	       conttype = ContConst;
 	       break;
-	    case C_CONT_ELEM:
-	       conttype = ContElement;
-	       break;
 	    default:
 	       error = True;
 	       conttype = FreeContent;
@@ -1301,10 +1298,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	error = !TtaReadShort (file, &pPSch->PsNPrintedViews);
 	if (!error)
 	   for (i = 0; i < pPSch->PsNPrintedViews; i++)
-	     {
-		TtaReadBool (file, &pPSch->PsPrintedView[i].VpAssoc);
-		error = !TtaReadShort (file, &pPSch->PsPrintedView[i].VpNumber);
-	     }
+	     error = !TtaReadShort (file, &pPSch->PsPrintedView[i].VpNumber);
 	if (!error)
 	   for (i = 0; i < pPSch->PsNViews; i++)
 	      TtaReadBool (file, &pPSch->PsExportView[i]);
@@ -1455,10 +1449,6 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 				    break;
 				 case ContConst:
 				    TtaReadShort (file, &pBox->PbContConstant);
-				    break;
-				 case ContElement:
-				    TtaReadShort (file, &pBox->PbContElem);
-				    TtaReadShort (file, &pBox->PbContRefElem);
 				    break;
 				 default:
 				    break;
@@ -1621,13 +1611,6 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 		for (i = 0; i < InitialNElems; i++)
 		   TtaReadBool (file, &pPSch->PsBuildAll[i]);
 
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   TtaReadBool (file, &pPSch->PsInPageHeaderOrFooter[i]);
-
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   TtaReadBool (file, &pPSch->PsAssocPaginated[i]);
 	     if (!error)
 		for (i = 0; i < InitialNElems; i++)
 		   TtaReadShort (file, &pPSch->PsElemTransmit[i]);

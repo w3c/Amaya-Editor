@@ -3273,10 +3273,6 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			 fprintf (fileDescriptor, ":\n");
 			 fprintf (fileDescriptor, "   BEGIN\n");
 			 wrsuiteregles (pSc1->PsElemPRule[El - 1], fileDescriptor);
-			 if (pSc1->PsInPageHeaderOrFooter[El - 1])
-			   fprintf (fileDescriptor, "   { displayed in top or bottom of page }\n");
-			 if (pSc1->PsAssocPaginated[El - 1])
-			   fprintf (fileDescriptor, "   { with pages }\n");
 			 fprintf (fileDescriptor, "   END;\n");
 			 fprintf (fileDescriptor, "\n");
 		       }

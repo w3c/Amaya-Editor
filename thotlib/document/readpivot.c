@@ -3285,15 +3285,14 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		      ThotBool skeleton, PtrSSchema pLoadedSS,
 		      ThotBool withEvent, ThotBool removeExclusions)
 {
-   PtrElement          s, p, d, pFirst;
-   PtrSSchema          pSS, pNat, pSchS1;
+   PtrElement          s, p, d;
+   PtrSSchema          pSS, pNat;
    PtrPSchema          pPSchema;
    PtrReferredDescr    pRefD, pNextRefD;
-   SRule              *pSRule;
    NotifyDialog        notifyDoc;
-   int                 i, j, assoc, rule, typeRead;
+   int                 i, assoc, rule, typeRead;
    char                tag;
-   ThotBool            structureOK, createPages, found, ok;
+   ThotBool            structureOK, createPages, ok;
 
 /*    pDoc->DocToBeChecked = FALSE; */
    pDoc->DocCheckingMode &= ~PIV_CHECK_MASK;
@@ -3351,151 +3350,8 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
        pDoc->DocLabels = NULL;
        /* lit le fichier .PIV */
        
-       /* lit les elements associes */
        for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
 	 pDoc->DocAssocRoot[assoc] = NULL;
-       assoc = 0;
-       while (tag == (char) C_PIV_ASSOC && !error)
-	 /* debut d'un nouveau type d'element associe */
-	 {
-	   assoc++;
-	   if (!TtaReadByte (file, &tag))
-	     PivotError (file, "PivotError: Assoc");
-	   /* lit et cree le premier element associe de ce type */
-	   rule = 0;
-	   pNat = NULL;
-	   p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-			    (ThotBool)(!pDoc->DocExportStructure), &rule,
-			    &pNat, &typeRead, &pSS, createPages, NULL, TRUE);
-	   if (withEvent && pDoc->DocSSchema != NULL && !error)
-	     SendEventAttrRead (p, pDoc);
-	   pSRule = &pSS->SsRule[typeRead - 1];
-
-	   if (pSRule->SrConstruct == CsList &&
-	       pSS->SsRule[pSRule->SrListItem - 1].SrAssocElem)
-	     /* l'element lu est la racine d'un arbre d'elements associe'.*/
-	     /* L'arbre a ete lu entierement */
-	     {
-	       pDoc->DocAssocRoot[assoc - 1] = p;
-	       /* retire les elements exclus */
-	       if (p != NULL)
-		 {
-		   if (removeExclusions)
-		     RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1], pDoc);
-		   /* accouple les paires */
-		   AssociatePairs (p);
-		 }
-	     }
-	   else
-	     {
-	       /* c'est sans doute l'ancienne forme pivot, ou` la racine de
-		  l'arbre d'elements associes, n'est pas presente, mais
-		  seulement ses fils */
-	       pFirst = p;
-	       /* on lit les tags de page jusqu'au premier element
-		  associe' */
-	       if (!error && typeRead == PageBreak + 1)
-		 while (typeRead == PageBreak + 1)
-		   {
-		     rule = 0;
-		     pNat = NULL;
-		     s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag,assoc,
-				      (ThotBool)(!pDoc->DocExportStructure),
-				      &rule, &pNat, &typeRead, &pSS,
-				      createPages, NULL, TRUE);
-		     if (withEvent && pDoc->DocSSchema != NULL && !error)
-		       SendEventAttrRead (s, pDoc);
-		     if (s != NULL)
-		       {
-			 if (pFirst == NULL)
-			   pFirst = s;
-			 if (p != NULL)
-			   InsertElementAfter (p, s);
-			 p = s;
-		       }
-		   }
-	       if (p != NULL)
-		 /* cherche la regle liste de ce type d'element */
-		 {
-		   pSchS1 = pDoc->DocSSchema;
-		   /* on cherche dans le schema du document et dans les */
-		   /* extensions de ce schema */
-		   do
-		     {
-		       j = pSchS1->SsNRules;
-		       found = FALSE;
-		       do
-			 {
-			   if (pSchS1->SsRule[j - 1].SrConstruct == CsList)
-			     if (EquivalentSRules (pSchS1->SsRule[j - 1].SrListItem,
-						  pSchS1, typeRead, pSS, NULL))
-			       found = TRUE;
-			   if (!found)
-			     j--;
-			 }
-		       while (!found && j != 1);
-		       if (!found)
-			 /* pas trouve', on cherche dans l'extension suivante*/
-			 /* du schema de structure du document */
-			 pSchS1 = pSchS1->SsNextExtens;
-		     }
-		   while (!found && pSchS1 != NULL);
-		   if (!found)
-		     PivotError (file, "Schema extend");
-		   else
-		     /* cree l'element liste pour ce type d'elements associes*/
-		     {
-		       pDoc->DocAssocRoot[assoc - 1] = NewSubtree (j, pSchS1,
-				        pDoc, assoc, FALSE, TRUE, FALSE, TRUE);
-		       if (pFirst != NULL)
-			 {
-			   /* chaine le 1er elem. associe dans cette liste */
-			   InsertFirstChild (pDoc->DocAssocRoot[assoc - 1],
-					     pFirst);
-			   /* retire les elements exclus */
-			   if (removeExclusions)
-			     RemoveExcludedElem (&pDoc->DocAssocRoot[assoc-1],
-						 pDoc);
-			   /* accouple les paires */
-			   AssociatePairs (pDoc->DocAssocRoot[assoc - 1]);
-			 }
-		     }
-		 }
-	       /* lit les elements associes suivants de meme type */
-	       while (!error && (tag == (char) C_PIV_TYPE ||
-				 tag == (char) C_PIV_NATURE))
-		 {
-		   rule = 0;
-		   pNat = NULL;
-		   s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-				 (ThotBool)(!pDoc->DocExportStructure),
-				 &rule, &pNat,&typeRead, &pSS, createPages,
-				 pDoc->DocAssocRoot[assoc - 1], TRUE);
-		   if (withEvent && pDoc->DocSSchema != NULL && !error)
-		     SendEventAttrRead (s, pDoc);
-		   if (s != NULL)
-		     {
-		       if (p == NULL)
-			 InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], s);
-		       else
-			 InsertElementAfter (p, s);
-		       /* retire les elements exclus */
-		       if (removeExclusions)
-			 RemoveExcludedElem (&s, pDoc);
-		       /* accouple les paires */
-		       AssociatePairs (s);
-		       if (s != NULL)
-			 p = s;
-		     }
-		 }
-	     }
-	   if (!error && (pDoc->DocCheckingMode & PIV_CHECK_MASK))
-	     /* verifie que cet arbre est correct */
-	     {
-	       ok = AbstractTreeOK (pDoc->DocAssocRoot[assoc - 1], pDoc);
-	       structureOK = structureOK && ok;
-	     }
-	 }
 
        /* lit le corps du document */
        if (!error &&

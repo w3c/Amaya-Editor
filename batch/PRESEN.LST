@@ -35,7 +35,7 @@ number
    15	MergeViews =      ViewName < ViewName > .
 	
     4	PrintViewList =	  PrintView < ',' PrintView > ';' .
-   16	PrintView =	  ViewName / TypeName .
+   16	PrintView =	  ViewName .
 	
     5	CounterList =	  Counter < Counter > .
    17	Counter =	  CounterName ':' CountFunction ';' .
@@ -189,7 +189,7 @@ number
 			  HorizPosition .
 	
    73	VarConst =	  '(' FunctList ')' / ConstType ConstValue /
-			  VarName / ConstName / TypeName .
+			  VarName / ConstName .
 	
    10	PresentList =	  Present < Present > .
    95	Present =	  [ '*' ] [ FirstSec ] TypeName ':' ViewRuleList .
@@ -599,8 +599,7 @@ their right part.
  code  symbol        rule numbers
 
     1  PresentModel     
-    2  TypeName            1  16  19  20  76  90  92  94  73  95  99 136 148 148
-                           159 160
+    2  TypeName            1  19  20  76  90  92  94  95  99 136 148 148 159 160
     3  ViewList            1
     4  PrintViewList       1
     5  CounterList         1

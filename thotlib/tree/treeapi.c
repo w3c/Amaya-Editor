@@ -52,27 +52,6 @@
 
 static Name         nameBuffer;
 
-/* ----------------------------------------------------------------- 
-   SetAssocNumber: assign the number nAssoc of the associated element 
-   to all sub-tree which root is pEl.  
-   ------------------------------------------------------------------ */
-static void         SetAssocNumber (PtrElement pEl, int nAssoc)
-{
-   if (pEl != NULL)
-     {
-	pEl->ElAssocNum = nAssoc;
-	if (!pEl->ElTerminal)
-	  {
-	     pEl = pEl->ElFirstChild;
-	     while (pEl != NULL)
-	       {
-		  SetAssocNumber (pEl, nAssoc);
-		  pEl = pEl->ElNext;
-	       }
-	  }
-     }
-}
-
 /* ----------------------------------------------------------------------
    ChangeElementType
 
@@ -724,14 +703,9 @@ void                TtaDeleteTree (Element element, Document document)
 	     UndisplayElement (pEl, document);
 #endif
 	     if (root)
-	       {
 		if (pDoc->DocDocElement == pEl)
 		   /* The whole main tree is destroyed */
 		   pDoc->DocDocElement = NULL;
-		else if (pEl->ElAssocNum > 0 &&
-			 pDoc->DocAssocRoot[pEl->ElAssocNum - 1] == pEl)
-		   pDoc->DocAssocRoot[pEl->ElAssocNum - 1] = NULL;
-	       }
 
 	     DeleteElement (&pEl, pDoc);
 	  }
@@ -741,26 +715,22 @@ void                TtaDeleteTree (Element element, Document document)
 /* ----------------------------------------------------------------------
    TtaAttachNewTree
 
-   Attaches an entire tree (main tree or associated tree) to a document.
+   Attaches an entire tree to a document.
 
    Parameter:
    tree: root of the tree to be attached. This tree
-   must be a valid main tree or associated tree according to the
-   document structure schema.
+   must be a valid main tree according to the document structure schema.
    document: the document to which the tree is to be attached.
    ---------------------------------------------------------------------- */
 void                TtaAttachNewTree (Element tree, Document document)
 {
    PtrDocument         pDoc;
-   SRule              *pRule;
    PtrElement          pRoot;
    PtrSSchema          curExtension;
-   int                 numAssoc, numAssocLibre;
    ThotBool            found;
    ThotBool            ok;
 
    UserErrorCode = 0;
-   numAssocLibre = 0;
    pRoot = (PtrElement) tree;
    ok = FALSE;
    if (tree == NULL)
@@ -808,7 +778,6 @@ void                TtaAttachNewTree (Element tree, Document document)
 #endif
 	       DeleteElement (&pDoc->DocDocElement, pDoc);
 	       pDoc->DocDocElement = pRoot;
-	       numAssocLibre = 0;
 	       ok = TRUE;
 	     }
 	   else if (pRoot->ElTypeNumber == pRoot->ElStructSchema->SsRootElem &&
@@ -821,75 +790,16 @@ void                TtaAttachNewTree (Element tree, Document document)
 #endif
 	       DeleteElement (&pRoot, pDoc);
 	       InsertFirstChild (pDoc->DocDocElement, pRoot);
-	       numAssocLibre = 0;
 	       ok = TRUE;
 	     }
-	   else if (pRoot->ElTerminal)
-	     /* Is it a right associated tree ? */
-	     TtaError (ERR_element_does_not_match_DTD);
 	   else
 	     {
-	       /* One access to the rule which defines the root of the tree */
-	       pRule = &pRoot->ElStructSchema->SsRule[pRoot->ElTypeNumber - 1];
-	       if (pRule->SrConstruct != CsList)
-		 /* Error: not a list */
-		 TtaError (ERR_element_does_not_match_DTD);
-	       else
-		 /* It is a list */
-		 {
-		   /* one access to rules defining the elements of the list */
-		   pRule = &pRoot->ElStructSchema->SsRule[pRule->SrListItem - 1];
-		   if (!pRule->SrAssocElem)
-		     /* Error: elements of the list are not associated elements */
-		     TtaError (ERR_element_does_not_match_DTD);
-		   else
-		     ok = TRUE;
-		 }
-	       if (ok)
-		 {
-		   /* Verifies if some associated elements of this type already exist into the document */
-		   numAssocLibre = 0;
-		   numAssoc = 1;
-		   found = FALSE;
-		   while (!found && numAssoc <= MAX_ASSOC_DOC)
-		     {
-		       if (pDoc->DocAssocRoot[numAssoc - 1] == NULL)
-			 {
-			   if (numAssocLibre == 0)
-			     numAssocLibre = numAssoc;
-			 }
-		       else if (pRoot->ElTypeNumber == pDoc->DocAssocRoot[numAssoc - 1]->ElTypeNumber)
-			 found = TRUE;
-		       if (!found)
-			 numAssoc++;
-		     }
-		   if (found)
-		     /* Associated elements of this type already exist */
-		     {
-#ifndef NODISPLAY
-		       if (pDoc->DocAssocRoot[numAssoc - 1] != NULL)
-			 UndisplayElement (pDoc->DocAssocRoot[numAssoc - 1],
-					   document);
-#endif
-		       DeleteElement (&pDoc->DocAssocRoot[numAssoc - 1], pDoc);
-		       if (numAssocLibre == 0)
-			 numAssocLibre = numAssoc;
-		     }
-		   if (numAssocLibre == 0)
-		     /* All associated elements of the document are busy */
-		     {
-		       TtaError (ERR_invalid_parameter);
-		       ok = FALSE;
-		     }
-		   else
-		     pDoc->DocAssocRoot[numAssocLibre - 1] = pRoot;
-		 }
+	       TtaError (ERR_element_does_not_match_DTD);
 	     }
 	   /* change the associated element number of the whole tree */
 	   if (ok)
 	     {
 	       pRoot->ElAccess = AccessReadWrite;
-	       SetAssocNumber (pRoot, numAssocLibre);
 	       /* verifies if the new root has an attribut language */
 	       CheckLanguageAttr (pDoc, pRoot);
 #ifndef NODISPLAY
@@ -1002,9 +912,6 @@ void                TtaInsertSibling (Element newElement, Element sibling,
 #endif
 	     InsertElementAfter ((PtrElement) sibling, (PtrElement) newElement);
 	  }
-	/* updates the associated element number */
-	SetAssocNumber ((PtrElement) newElement,
-			((PtrElement) sibling)->ElAssocNum);
 	/* treats the exclusions of the created element */
 	pEl = (PtrElement) newElement;
 	if ((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
@@ -1086,7 +993,6 @@ void                TtaInsertFirstChild (Element * newElement, Element parent,
      {
 	if (((PtrElement) parent)->ElStructSchema->SsRule[((PtrElement) parent)->ElTypeNumber - 1].SrConstruct == CsChoice)
 	  {
-	     ((PtrElement) (*newElement))->ElAssocNum = ((PtrElement) parent)->ElAssocNum;
 #ifndef NODISPLAY
 	     InsertOption ((PtrElement) parent, (PtrElement *) newElement,
 			   LoadedDocument[document - 1]);
@@ -1128,9 +1034,6 @@ void                TtaInsertFirstChild (Element * newElement, Element parent,
 	     /* ignore the following page marks */
 	     FwdSkipPageBreak (&pNeighbour);
 #endif
-	     /* updates the associated element number */
-	     SetAssocNumber ((PtrElement) (*newElement),
-			     ((PtrElement) parent)->ElAssocNum);
 	     /* Treats the exclusions in the created element */
 	     if ((LoadedDocument [document - 1])->DocCheckingMode & STR_CHECK_MASK)
 		RemoveExcludedElem ((PtrElement *) newElement, LoadedDocument[document - 1]);
@@ -1220,14 +1123,9 @@ void                TtaRemoveTree (Element element, Document document)
 	RemoveElement ((PtrElement) element);
 #endif
 	if (root)
-	  {
 	   if (pDoc->DocDocElement == (PtrElement) element)
 	      /* The main tree is cleared */
 	      pDoc->DocDocElement = NULL;
-	   else if (pDoc->DocAssocRoot[((PtrElement) element)->ElAssocNum - 1] == (PtrElement) element)
-	      /* Verifies if it is the root of an associated tree */
-	      pDoc->DocAssocRoot[((PtrElement) element)->ElAssocNum - 1] = NULL;
-	  }
      }
 }
 

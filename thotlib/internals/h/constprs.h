@@ -94,7 +94,6 @@
 #define C_CONT_FREE           L'L'
 #define C_CONT_VAR            L'V'
 #define C_CONT_CONST          L'C'
-#define C_CONT_ELEM           L'E'
 
 /* alignment */
 /*    Defined in constpiv.h */

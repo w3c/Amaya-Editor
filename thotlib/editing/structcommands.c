@@ -2017,10 +2017,6 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 	     notifyEl.elementType.ElTypeNum = pElSurround->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pElSurround->ElStructSchema);
 	     notifyEl.position = 0;
-	     if (pElSurround->ElTypeNumber == pElSurround->ElStructSchema->SsRootElem)
-		/* root element in a different structure schema */
-		/* Put number of elements in the "position" field */
-		notifyEl.position = pElSurround->ElStructSchema->SsNObjects;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	     /* cree les paves du nouvel element et reaffiche */
 	     CreateAllAbsBoxesOfEl (pRoot, pDoc);

@@ -2309,7 +2309,6 @@ static ThotBool      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
 static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 {
    int                 i;
-   ThotBool             assoc;
    Counter            *pCntr;
    PresVariable       *pPresVar;
 
@@ -2511,19 +2510,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	  {
 	    if (x == KWD_Page)
 	      LayoutRule (FnPage, wi);
-	    /* la regle Page s'applique-t-elle a une vue d'elements associes?*/
-	    assoc = False;
-	    if (pSSchema->SsRule[CurType - 1].SrConstruct == CsList)
-	      /* la regle s'applique a un element liste */
-	      {
-		i = pSSchema->SsRule[CurType - 1].SrListItem;
-		/* les elements de la liste sont-ils des elements associes ? */
-		assoc = pSSchema->SsRule[i - 1].SrAssocElem;
-	      }
-	    if (assoc)
-	      pPSchema->PsAssocPaginated[CurType - 1] = True;
-	    else
-	      pPSchema->PsPaginatedView[CurView - 1] = True;
+	    pPSchema->PsPaginatedView[CurView - 1] = True;
 	  }
 	break;
       case KWD_With:
@@ -3605,8 +3592,6 @@ static void ProcessTypeName (SyntacticCode prevRule, Name typeName,
 			     indLine wi, indLine wl)
 {
    int                 i;
-   ThotBool             found;
-   SRule              *pSRule;
    Counter            *pCntr;
 
    i = GetTypeNumber (wl, wi, typeName);
@@ -3636,35 +3621,6 @@ static void ProcessTypeName (SyntacticCode prevRule, Name typeName,
 	   /* un nom de type d'element, avant les regles */
 	   /* de presentation d'un attribut */
 	   CurElemHeritAttr = i;
-	else if (prevRule == RULE_PrintView)
-	   /* dans la liste des vues a imprimer */
-	  {
-	     pSRule = &pSSchema->SsRule[i - 1];
-	     /* on n'accepte que les listes d'elements associes */
-	     if (pSRule->SrConstruct != CsList)
-		CompilerMessage (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine,
-				 LineNum);
-	     /* ce n'est pas une liste, erreur */
-	     else if (!pSSchema->SsRule[pSRule->SrListItem - 1].SrAssocElem)
-		CompilerMessage (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine,
-				 LineNum);
-	     /* les constituants de la liste ne sont */
-	     /* pas des elements associes */
-	     else
-	       {
-		  if (pPSchema->PsNPrintedViews >= MAX_PRINT_VIEW)
-		     CompilerMessage (wi, PRS, FATAL,
-				      MAX_VIEWS_TO_BE_PRINTED_OVERFLOW,
-				      inputLine, LineNum);
-		  /* table des vues a imprimee saturee */
-		  else
-		    {
-		       pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpAssoc = True;
-		       pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpNumber = i;
-		       pPSchema->PsNPrintedViews++;
-		    }
-	       }
-	  }
 	else if (prevRule == RULE_TypeOrCounter)
 	   /* un nom de type au debut d'une regle Transmit */
 	  {
@@ -3698,45 +3654,6 @@ static void ProcessTypeName (SyntacticCode prevRule, Name typeName,
 		/* contenu d'element */
 		pPSchema->PsTransmElem[pPSchema->PsNTransmElems - 1].TeTargetDoc = i;
 	  }
-	else if (prevRule == RULE_VarConst)
-	   /* dans une regle "Content" */
-	   if (!PresBoxDef)
-	      /* on est dans une regle Content d'un element reference ou paire */
-	      /* refus: seules les constantes sont acceptees dans cette regle*/
-	      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine,
-			       LineNum);
-	   else
-	      /* contenu d'une boite de presentation */
-	   if (!pSSchema->SsRule[i - 1].SrAssocElem)
-	      /* ce n'est pas un element associe, erreur */
-	      CompilerMessage (wi, PRS, FATAL, NOT_AN_ASSOC_ELEM, inputLine,
-			       LineNum);
-	   else
-	     {
-		pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContElement;
-		pPSchema->PsPresentBox[CurPresBox - 1].PbContElem = i;
-		/* ces elements associes sont affiches dans des boites de */
-		/* haut ou bas de page */
-		pPSchema->PsInPageHeaderOrFooter[i - 1] = True;
-		/* cherche dans le schema de structure le type d'element */
-		/* qui reference ce type d'element associe */
-		i = MAX_BASIC_TYPE;
-		found = False;
-		do
-		  {
-		     pSRule = &pSSchema->SsRule[i++];
-		     if (pSRule->SrConstruct == CsReference)
-			if (pSRule->SrReferredType == pPSchema->PsPresentBox[CurPresBox - 1].PbContElem)
-			   found = True;
-		  }
-		while (!found && i < pSSchema->SsNRules);
-		if (found)
-		   pPSchema->PsPresentBox[CurPresBox - 1].PbContRefElem = i;
-		else
-		   CompilerMessage (wi, PRS, FATAL, MISSING_REF_TO_ELEM,
-				    inputLine, LineNum);
-		/* pas de reference dans le schema, erreur */
-	     }
 	else if (CounterDef)
 	   /* dans une definition de compteur */
 	  {
@@ -4199,14 +4116,9 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
        else if (prevRule == RULE_PrintView)
 	  /* dans la liste des vues a imprimer */
 	  if (Identifier[identnum].SrcIdentDefRule == 0)
-	     /* ce nom n'a pas ete declare comme nom de vue, voyons */
-	     /* si ce n'est pas un identificateur de type */
-	     {
-	     ProcessTypeName (prevRule, n, wi, wl);
-	     Identifier[identnum].SrcIdentCode = RULE_TypeName;
-	     /* changement de type, c'est */
-	     /* maintenant un identificateur de type structure */
-	     }
+	     /* ce nom n'a pas ete declare comme nom de vue */
+	     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+			      inputLine, LineNum);
 	  else
 	     /* ce nom a ete declare comme nom de vue */
 	     {
@@ -4217,7 +4129,6 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 				 inputLine, LineNum);
 	     else
 	        {
-		pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpAssoc = False;
 		pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpNumber =
 			       Identifier[identnum].SrcIdentDefRule;
 		pPSchema->PsNPrintedViews++;
@@ -6119,27 +6030,10 @@ static void         CheckPageBoxes ()
   /* les boites de haut et de bas de page sont maintenant marquees */
   /* verifie que seules les boites pages et les boites de haut et de */
   /* bas de page creent d'autres boites */
-  /* verifie egalement les regles Content de toutes les boites */
   for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
     {
     /* examine chaque boite */
     pPresBox = &pPSchema->PsPresentBox[b];
-    if (!(pPresBox->PbPageHeader || pPresBox->PbPageFooter))
-      /* ce n'est pas une boite de haut ou bas de page, */
-      /* verifie sa regle Content */
-      if (pPresBox->PbContent == ContElement)
-	/* le contenu est un type d'element, erreur */
-	TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_CONTENT_RULE),
-			   pPSchema->PsPresentBox[b].PbName);
-    if (pPresBox->PbPageHeader || pPresBox->PbPageFooter)
-      /* c'est une boite de haut ou bas de page, */
-      if (pPresBox->PbContent == ContElement)
-	/* son contenu est un type d'element */
-	if (viewOfBox[b] != 1)
-	  /* elle n'est pas creee par une page de la vue 1 */
-	  TtaDisplayMessage (FATAL,
-			  TtaGetMessage (PRS, FORBIDDEN_OUTSIDE_OF_MAIN_VIEW),
-			  pPSchema->PsPresentBox[b].PbName);
     /* cherche les regles de creation de la boite */
     pR = pPresBox->PbFirstPRule;
     /* 1ere regle de presentation */

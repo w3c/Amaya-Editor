@@ -81,16 +81,10 @@ static void ComposePrintMenu (PtrDocument pDoc, CHAR_T* buffer, int *nbEntry)
        while (i < NbVuesImprimables && !trouve)
 	 {
 	   i++;
-	   if (pVueImp->VpAssoc)
-	     /* c'est une vue d'elements associes */
-	     trouve = (LesVuesImprimables[i - 1].VdAssocNum == pVueImp->VpNumber) &&
-	       (!ustrcmp (LesVuesImprimables[i - 1].VdSSchema->SsName,
-			  pDoc->DocSSchema->SsName));
-	   else
-	     /* c'est une vue de l'arbre principal */
-	     trouve = LesVuesImprimables[i - 1].VdView == pVueImp->VpNumber &&
-	       !ustrcmp (LesVuesImprimables[i - 1].VdSSchema->SsName,
-			 pDoc->DocSSchema->SsName);
+	   /* c'est une vue de l'arbre principal */
+	   trouve = LesVuesImprimables[i - 1].VdView == pVueImp->VpNumber &&
+	            !ustrcmp (LesVuesImprimables[i - 1].VdSSchema->SsName,
+			      pDoc->DocSSchema->SsName);
 	 }
        if (trouve)
 	 {

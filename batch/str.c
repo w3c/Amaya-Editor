@@ -61,7 +61,6 @@ static int          TextConstPtr;  /* current index in constants buffer */
 static SRule       *CurExtensRule; /* current extension rule */
 static ThotBool     CompilAttr;    /* we are parsing global attributes */
 static ThotBool     CompilLocAttr; /* we are parsing local attributes */
-static ThotBool     CompilAssoc;   /* we are parsing associed elements */
 static ThotBool     CompilUnits;   /* we are parsing exported units */
 static ThotBool     RootRule;	   /* we are waiting for the root rule */
 static ThotBool     Rules;	   /* we are parsing rules */
@@ -84,8 +83,6 @@ static int          CurLocAttr[MAX_LOCAL_ATTR]; /* local attributes attached
 static ThotBool     CurReqAttr[MAX_LOCAL_ATTR];/* 'Required' booleans of
 						   local attributes associated
 						   to CurName */
-static ThotBool     CurAssoc;	   /* the last met rule is a associated
-				      element */
 static ThotBool     CurUnit;	   /* the last met rule is a exported unit */
 static ThotBool     Equal;	   /* it is the equality rule*/
 static ThotBool     Option;	   /* it is an aggregate optional component */
@@ -147,7 +144,6 @@ static void InitBasicType (SRule *pRule, char *name, BasicType typ)
    strncpy (pRule->SrName, name, MAX_NAME_LENGTH);
    pRule->SrConstruct = CsBasicElement;
    pRule->SrBasicType = typ;
-   pRule->SrAssocElem = False;
    pRule->SrUnitElem = False;
    pRule->SrExportedElem = False;
    pRule->SrFirstExcept = 0;
@@ -226,7 +222,6 @@ static void         Initialize ()
    pSSchema->SsDocument = pSSchema->SsNRules;
    strcpy (pRule->SrName, "Document");
    pRule->SrConstruct = CsDocument;
-   pRule->SrAssocElem = False;
    pRule->SrUnitElem = False;
    pRule->SrExportedElem = False;
    pRule->SrFirstExcept = 0;
@@ -245,7 +240,6 @@ static void         Initialize ()
    TextConstPtr = 1;
    CompilAttr = False;
    CompilLocAttr = False;
-   CompilAssoc = False;
    CompilUnits = False;
    RootRule = False;
    Rules = False;
@@ -259,7 +253,6 @@ static void         Initialize ()
    CurName[0] = '\0';
    CurNum = 0;
    CurNLocAttr = 0;
-   CurAssoc = False;
    CurUnit = False;
    Equal = False;
    Sign = 1;
@@ -335,7 +328,6 @@ static void         Undefined (int n)
 	     pRule->SrNExclusions = 0;
 	     pRule->SrRefImportedDoc = False;
 	     pRule->SrNDefAttrs = 0;
-	     pRule->SrAssocElem = False;
 	     pRule->SrUnitElem = False;
 	     pRule->SrConstruct = CsNatureSchema;
 	     pRule->SrSSchemaNat = NULL;
@@ -352,7 +344,6 @@ static void         Undefined (int n)
 /*----------------------------------------------------------------------
    ChangeOneRule sets the rigth number of one rule instead of its identifier.
    Undefined elements are considered as external structures (natures).	
-   Unreferred elements are considered as errors if they are associated elements.
   ----------------------------------------------------------------------*/
 static void         ChangeOneRule (SRule * pRule)
 {
@@ -488,8 +479,6 @@ static void         ChangeOneRule (SRule * pRule)
 /*----------------------------------------------------------------------
    ChangeRules sets the rigth number of rules instead of their indentifiers.
    Undefined elements are considered as external structures (natures).	
-   Unreferred elements are considered as errors if they are associated
-   elements.
   ----------------------------------------------------------------------*/
 static void         ChangeRules ()
 {
@@ -666,7 +655,6 @@ static void         NewRule (indLine wi)
 	     pRule->SrLocalAttr[i] = CurLocAttr[i];
 	     pRule->SrRequiredAttr[i] = CurReqAttr[i];
 	  }
-	pRule->SrAssocElem = CurAssoc;
 	pRule->SrUnitElem = CurUnit;
 	pRule->SrRecursive = False;
 	pRule->SrExportedElem = False;
@@ -694,7 +682,6 @@ static void         NewRule (indLine wi)
 	CurName[0] = '\0';
 	CurNum = 0;
 	CurNLocAttr = 0;
-	CurAssoc = False;
 	CurUnit = False;
      }
 }
@@ -904,7 +891,6 @@ static void         InitRule (SRule * pRule)
    pRule->SrName[0] = '\0';
    pRule->SrNDefAttrs = 0;
    pRule->SrNLocalAttrs = 0;
-   pRule->SrAssocElem = False;
    pRule->SrUnitElem = False;
    pRule->SrRecursive = False;
    pRule->SrExportedElem = False;
@@ -1062,7 +1048,6 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   CurNum = 0;
 		   CurName[0] = '\0';
 		   CurNLocAttr = 0;
-		   CurAssoc = False;
 		   CurUnit = False;
 		 }
 	       /* end of the rigth part of the rule */
@@ -1175,7 +1160,6 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		       CurNum = 0;
 		       CurName[0] = '\0';
 		       CurNLocAttr = 0;
-		       CurAssoc = False;
 		       CurUnit = False;
 		     }
 		   DuplicatePairRule ();
@@ -1332,20 +1316,8 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     CompilExtens = True;
 	   }
 	 break;
-       case KWD_ASSOC:
-	 if (pSSchema->SsRootElem == 0 && !pSSchema->SsExtension)
-	   CompilerMessage (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING,
-			    inputLine, LineNum);
-	 else
-	   {
-	     CompilAttr = False;
-	     CompilAssoc = True;
-	     CompilExtens = False;
-	   }
-	 break;
        case KWD_UNITS:
 	 CompilUnits = True;
-	 CompilAssoc = False;
 	 CompilAttr = False;
 	 CompilExtens = False;
 	 break;
@@ -1360,7 +1332,6 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	   {
 	     CompilAttr = False;
 	     CompilExtens = False;
-	     CompilAssoc = False;
 	     CompilUnits = False;
 	     ChangeRules ();
 	     /* set the right rule numbers */
@@ -1370,7 +1341,6 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_EXCEPT:
 	 CompilAttr = False;
 	 CompilExtens = False;
-	 CompilAssoc = False;
 	 CompilUnits = False;
 	 CurExtensRule = NULL;
 	 CompilExcept = True;
@@ -1386,7 +1356,6 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		 CurNum = 0;
 		 CurName[0] = '\0';
 		 CurNLocAttr = 0;
-		 CurAssoc = False;
 		 CurUnit = False;
 	       }
 	   }
@@ -1511,7 +1480,6 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   strncpy (pRule->SrName, PreviousIdent, MAX_NAME_LENGTH);
 		   pRule->SrNLocalAttrs = 0;
 		   pRule->SrNDefAttrs = 0;
-		   pRule->SrAssocElem = False;
 		   pRule->SrUnitElem = False;
 		   pRule->SrConstruct = CsNatureSchema;
 		   pRule->SrSSchemaNat = NULL;
@@ -1808,10 +1776,6 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	       {
 		 CopyWord (CurName, wi, wl);
 		 CurNum = nb;
-		 if (CompilAssoc)
-		   CurAssoc = True;
-		 else
-		   CurAssoc = False;
 		 if (CompilUnits)
 		   CurUnit = True;
 		 else
@@ -2347,7 +2311,6 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	       {
 		 CopyWord (CurName, wi, wl);
 		 CurNum = nb;
-		 CurAssoc = False;
 		 CurUnit = False;
 		 NewRule (wi);
 		 /* cree une regle */
@@ -2600,91 +2563,41 @@ static void         ChkRecurs ()
 }
 
 /*----------------------------------------------------------------------
-   ListAssocElem       liste les elements consideres comme		
-   elements associes                         
+   ListAliases
+   Liste les elements consideres comme des alias et verifie les paires.
   ----------------------------------------------------------------------*/
-static void         ListAssocElem ()
+static void         ListAliases ()
 {
    int                 i;
-   SRule              *pRule;
 
    /* go through all rules table */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
      {
-       if (pSSchema->SsRule[i].SrAssocElem)
-	 if (!pSSchema->SsRule[i].SrRecursDone)
-	   /* the associated element associe is used within another rule */
+       if (pSSchema->SsRule[i].SrRecursDone)
+	 if (i + 1 != pSSchema->SsRootElem &&
+	     i + 1 != pSSchema->SsDocument &&
+	     !pSSchema->SsRule[i].SrUnitElem)
 	   {
-	     CompilerMessageString (0, STR, INFO,
-				    STR_THE_ASSOC_ELEM_IS_USED_IN_ANOTHER_RULE,
-				    inputLine, LineNum,
+	     if (pSSchema->SsRule[i].SrConstruct == CsChoice)
+	       /* it's a choice that defines an alias */
+	       /* insert the element in table of aliases */
+	       {
+		 NAlias++;
+		 Alias[NAlias - 1] = i + 1;
+		 TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS),
 				    pSSchema->SsRule[i].SrName);
-	     error = True;
-	   }
-	 else
-	   /* create a new list rule at the end of rules table */
-	   {
-	     if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
-	       TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
-	     /* table of rules is full */
+	       }
 	     else
-	       pSSchema->SsNRules++;
-	     pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
-	     /* the new list rule takes the name of its elements... */
-	     strncpy (pRule->SrName, pSSchema->SsRule[i].SrName,
-		       MAX_NAME_LENGTH - 2);
-	     /* ... followed by 's' */
-	     pRule->SrName[MAX_NAME_LENGTH - 2] = '\0';
-	     strcat (pRule->SrName, "s");
-	     pRule->SrNDefAttrs = 0;
-	     pRule->SrNLocalAttrs = 0;
-	     pRule->SrNInclusions = 0;
-	     pRule->SrNExclusions = 0;
-	     pRule->SrRefImportedDoc = False;
-	     pRule->SrAssocElem = False;
-	     pRule->SrUnitElem = False;
-	     pRule->SrRecursive = False;
-	     pRule->SrExportedElem = False;
-	     pRule->SrFirstExcept = 0;
-	     pRule->SrLastExcept = 0;
-	     pRule->SrConstruct = CsList;
-	     pRule->SrListItem = i + 1;
-	     pRule->SrMinItems = 0;
-	     pRule->SrMaxItems = 32000;
-	     /* write a message */
-	     TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ASSOC_ELEMS),
-				pRule->SrName);
-	     if (RuleNameExist ())
-	       TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
+	       /* the second elements of a CsPairedElement are never
+		  referenced */
+	       if (pSSchema->SsRule[i].SrConstruct != CsPairedElement ||
+		   pSSchema->SsRule[i].SrFirstOfPair)
+		 /* unnecessary definition */
+		 TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED),
+				    pSSchema->SsRule[i].SrName);
 	   }
-       else
-	 /* it's not a associated element */
-	 if (pSSchema->SsRule[i].SrRecursDone)
-	   if (i + 1 != pSSchema->SsRootElem &&
-	       i + 1 != pSSchema->SsDocument &&
-	       !pSSchema->SsRule[i].SrUnitElem)
-	     {
-	       if (pSSchema->SsRule[i].SrConstruct == CsChoice)
-		 /* it's a choice that defines an alias */
-		 /* insert the element in table of aliases */
-		 {
-		   NAlias++;
-		   Alias[NAlias - 1] = i + 1;
-		   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS),
-				      pSSchema->SsRule[i].SrName);
-		 }
-	       else
-		 /* the second elements of a CsPairedElement are never
-		    referenced */
-		 if (pSSchema->SsRule[i].SrConstruct != CsPairedElement ||
-		     pSSchema->SsRule[i].SrFirstOfPair)
-		   /* unnecessary definition */
-		   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED),
-				      pSSchema->SsRule[i].SrName);
-	     }
      }
 }
-
 
 /*----------------------------------------------------------------------
    ListNotCreated lists elements which will not be created by the editor.
@@ -2738,9 +2651,6 @@ static void         ListNotCreated ()
 	 case CsList:
 	   /* list elements will be created */
 	   pSSchema->SsRule[pRule->SrListItem - 1].SrRecursDone = True;
-	   /* associated list elements will be created */
-	   if (pSSchema->SsRule[pRule->SrListItem - 1].SrAssocElem)
-	     pRule->SrRecursDone = True;
 	   break;
 	 case CsChoice:
 	   /* choice elements will be created */
@@ -3102,8 +3012,8 @@ int main (int argc, char **argv)
            if (!error) {
               /* list recursive rules */
               ChkRecurs ();
-              /* list associated elements */
-              ListAssocElem ();
+              /* list aliases */
+              ListAliases ();
               /* list elements which will not be created by the editor */
               ListNotCreated ();
 		

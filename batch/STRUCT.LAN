@@ -15,7 +15,6 @@ StructModel =	   'STRUCTURE' [ 'EXTENSION' ] ElemName ';'
 		 [ 'CONST' ConstList ]
 		 [ 'STRUCT' RuleList ]
 		 [ 'EXTENS' ExtensList ]
-		 [ 'ASSOC' RuleList ]
 		 [ 'UNITS' RuleList ]
 		 [ 'EXPORT' ExpList ]
 		 [ 'EXCEPT' ExceptList ]

@@ -149,7 +149,6 @@ typedef struct _SRule
 	int        SrLocalAttr[MAX_LOCAL_ATTR];  
         /* the local attribute of same rank is mandatory */
 	ThotBool   SrRequiredAttr[MAX_LOCAL_ATTR];
-	ThotBool   SrAssocElem;     /* it is an associated element */
 	ThotBool   SrUnitElem;      /* it is an exported unit */
 	ThotBool   SrRecursive;     /* recursive rule */
 	ThotBool   SrRecursDone;    /* already applied recursive rule */
@@ -264,14 +263,12 @@ typedef struct _ExtensBlock
 /*
   A structure schema (for a document or a nature) in core memory.
 
-  All the elements, whatever their category is (composed,
-  associated, parameters) are defined in the rule table SsRule. In this
-  table rules are grouped by category. The first rule defines the root
+  All the elements are defined in the rule table SsRule. In this
+  table rules are grouped by category. The first rules define the
+  basic types, then the root rule defines the root
   element of the structure, then all the rules defining the composed
-  elements. Then come the rules defining the associative elements, as well
-  as those defining the parameters. The number of the first and last rule
-  is available for each of these groups of rules. The schema attributes
-  are stored in the array SsAttribute.
+  elements.
+  Attributes are stored in the array SsAttribute.
  */
 
 typedef struct _StructSchema
@@ -296,8 +293,6 @@ typedef struct _StructSchema
 					    schema extension */
    int              SsDocument;          /* number of the document rule */
    int              SsRootElem;          /* number of the root rule */
-   int              SsNObjects;          /* number of existing elements with
-					    the root rule type */
    int              SsNAttributes;       /* number of attributes in the
 					    schema */
    int              SsNRules;            /* current number of rules defining

@@ -600,10 +600,10 @@ static void ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName,
 	if (pDoc->DocAssocRoot[assoc] != NULL)
 	  RemovePagesBeginTree (pDoc->DocAssocRoot[assoc], pDoc);
       /* etablit la liste des natures utilisees dans le document */
-      NnaturePSchemas = 0;
-      SearchNatures (pDoc->DocSSchema, naturePSchema, &NnaturePSchemas, FALSE);
-      /* change de schema de presentation pour chaque nature */
-      for (nat = 0; nat < NnaturePSchemas; nat++)
+      SearchNatures (pDoc, naturePSchema, &NnaturePSchemas);
+      /* change de schema de presentation pour chaque nature
+       (on saute la premiere entree: schema du document) */
+      for (nat = 1; nat < NnaturePSchemas; nat++)
 	if (ConfigGetPSchemaNature (pDoc->DocSSchema,
 				    naturePSchema[nat]->SsName, nomPres))
 	  /* le fichier .conf donne un schema de presentation pour la */
@@ -769,12 +769,10 @@ static void  ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema,
      {
 	AddSchemaGuestViews (pDoc, pNatSSchema);
 	/* etablit la liste de toutes les natures utilisees dans le document */
-	NnaturePSchemas = 0;
-	SearchNatures (pDoc->DocSSchema, naturePSchema, &NnaturePSchemas,
-		       FALSE);
+	SearchNatures (pDoc, naturePSchema, &NnaturePSchemas);
 	/* change de schema de presentation pour chaque occurence de */
-	/* la nature concernee */
-	for (nat = 0; nat < NnaturePSchemas; nat++)
+	/* la nature concernee. On saute la 1ere entree: schema du document */
+	for (nat = 1; nat < NnaturePSchemas; nat++)
 	   if (!ustrcmp (naturePSchema[nat]->SsName, pNatSSchema->SsName))
 	      /* c'est la nature concernee */
 	      if (naturePSchema[nat] != pNatSSchema)
@@ -928,12 +926,8 @@ void                TtcChangePresentation (Document document, View view)
    /* conserve un pointeur sur le contexte du document dont on veut */
    /* changer le schema de presentation */
    pDocChangeSchPresent = pDoc;
-   /* met d'abord le schema de structure du document dans la table */
-   /* des natures du document */
-   TableNatures[0] = pDoc->DocSSchema;
-   LgTableNatures = 1;
-   /* met ensuite la liste des natures utilisees dans le document */
-   SearchNatures (pDoc->DocSSchema, TableNatures, &LgTableNatures, True);
+   /* etablit la liste des natures utilisees dans le document */
+   SearchNatures (pDoc, TableNatures, &LgTableNatures);
    /* construit un pop-up menu pour la liste des natures dont on */
    /* peut changer le schema de presentation */
    ptrBufNat = &BufMenuNatures[0];

@@ -2026,9 +2026,6 @@ void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
   /* except if it's the root of the structure scheme */
   if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
     replace = FALSE;
-  /* except if it's the root of an associated element */
-  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
-    replace = FALSE;
   if (!replace &&
       pEl->ElTypeNumber == (*pNew)->ElTypeNumber &&
       !ustrcmp (pEl->ElStructSchema->SsName, (*pNew)->ElStructSchema->SsName))
@@ -2338,13 +2335,9 @@ PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	GetElement (&pEl);
       if (pEl != NULL)
 	{
-	  if (typeNum == pSS->SsRootElem)
-	    /* we create an element and build it up according to the root
-	       rule of its structure scheme, we increment the counter */
-	    pSS->SsNObjects++;
 	  pEl->ElStructSchema = pSS;
 	  pEl->ElTypeNumber = typeNum;
-	  pEl->ElAssocNum = assocNum;
+	  pEl->ElAssocNum = 0;
 	  if (withLabel)
 	    /* compute the value of the label */
 	    ConvertIntToLabel (NewLabel (pDoc), pEl->ElLabel);
@@ -2483,8 +2476,7 @@ PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	/* same scheme */
 	create = FALSE;
 	pSRule2 = &pSS->SsRule[pSRule->SrIdentRule - 1];
-	if (pSRule2->SrAssocElem ||
-	    pSRule2->SrConstruct == CsBasicElement ||
+	if (pSRule2->SrConstruct == CsBasicElement ||
 	    pSRule2->SrNInclusions > 0 ||
 	    pSRule2->SrNExclusions > 0 ||
 	    pSRule2->SrConstruct == CsConstant ||
@@ -3114,11 +3106,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	    /* fills the copy */
 	    pEl->ElStructSchema = pSSchema;
 	    pEl->ElTypeNumber = copyType;
-	    if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
-	      /* we create an element and build it according to the root rule
-		 of its structure scheme. We then increment the counter */
-	      pSSchema->SsNObjects++;
-	    pEl->ElAssocNum = assocNum;
+	    pEl->ElAssocNum = 0;
 	    /* copies the attributes */
 	    CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr);
 	    /* copies the specific presentation rules */
@@ -3494,10 +3482,6 @@ PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
 
    GetElement (&pNew);
    *pNew = *pEl;
-   if (pNew->ElTypeNumber == pNew->ElStructSchema->SsRootElem)
-     /* we create an element according to the root rule of its
-	 structure scheme, we incremeent the counter */
-     pNew->ElStructSchema->SsNObjects++;
    /* computes the label's value */
    ConvertIntToLabel (NewLabel (pDoc), pNew->ElLabel);
    /* copies the attributes without verifying because we don't change 

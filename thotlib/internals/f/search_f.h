@@ -29,10 +29,6 @@ extern ThotBool SearchText ( PtrDocument pDoc,
                              ThotBool caseEquiv,
                              CHAR_T strng[THOT_MAX_CHAR],
                              int strngLen );
-extern void SearchNatures ( PtrSSchema pSS,
-                            PtrSSchema natureTable[10 ],
-                            int *natureTableLen,
-                            ThotBool onlyOne );
 extern PtrElement SearchPageBreak ( PtrElement pEl,
                                     int view,
                                     int pageNum,
@@ -66,10 +62,6 @@ extern ThotBool SearchText (/* PtrDocument pDoc,
                                ThotBool caseEquiv,
                                CHAR_T strng[THOT_MAX_CHAR],
                                int strngLen */);
-extern void SearchNatures (/* PtrSSchema pSS,
-                              PtrSSchema natureTable[10 ],
-                              int *natureTableLen,
-                              ThotBool onlyOne */);
 extern PtrElement SearchPageBreak (/* PtrElement pEl,
                                       int view,
                                       int pageNum,

@@ -132,11 +132,6 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
       notifyEl.position = origDoc;
       notifyEl.info = 0;
       }
-   if (appEvent == TteElemNew)
-      if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
-	 /* root element in a different structure schema */
-	 /* Put number of elements in the "position" field */
-	 notifyEl.position = pEl->ElStructSchema->SsNObjects;
    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
    if (pDoc->DocNotifyAll)
       /* the document needs an event for each element in the subtree */
@@ -1398,144 +1393,114 @@ PtrElement CreateFirstAssocElement (PtrDocument pDoc, int typeNum, PtrSSchema pS
 ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
 		       PtrElement *pSelEl)
 {
-   PtrElement          pModifiedElem, pCreatedElem;
-   PtrDocument         pSelDoc;
-   PtrSSchema          pSS;
-   PtrReference        pRef;
-   PtrAbstractBox      pAb;
-   int                 assocNum, referredTypeNum, frame;
-   Name                typeName;
-   ThotBool            again, assoc, new, ret;
+  PtrElement          pModifiedElem, pCreatedElem;
+  PtrDocument         pSelDoc;
+  PtrSSchema          pSS;
+  PtrReference        pRef;
+  PtrAbstractBox      pAb;
+  int                 assocNum, referredTypeNum, frame;
+  Name                typeName;
+  ThotBool            again, assoc, new, ret;
 
-   ret = FALSE;
-   assoc = FALSE;
-   pModifiedElem = NULL;
-   pCreatedElem = NULL;
-   pRef = NULL;
+  ret = FALSE;
+  assoc = FALSE;
+  pModifiedElem = NULL;
+  pCreatedElem = NULL;
+  pRef = NULL;
 
-   /* cherche le type d'element reference' */
-   referredTypeNum = 0;
-   if (pAttr == NULL)
-      ReferredType (pEl, NULL, &pSS, &referredTypeNum, pDoc);
-   else
-      ReferredType (NULL, pAttr, &pSS, &referredTypeNum, pDoc);
-   if (pSS == NULL || referredTypeNum == 0)
-      typeName[0] = EOS;
-   else
-     {
-	strncpy (typeName, pSS->SsRule[referredTypeNum - 1].SrName, MAX_NAME_LENGTH);
-	assoc = pSS->SsRule[referredTypeNum - 1].SrAssocElem;
-     }
-   if (assoc && FirstAssociatedElement (pDoc, referredTypeNum, pSS) == NULL)
-      /* on cree un element associe' */
-     {
-	pModifiedElem = pEl;
-	if (pAttr != NULL)
-	   pEl = NULL;
-	*pSelEl = CreateFirstAssocElement (pDoc, referredTypeNum, pSS);
-	if (*pSelEl != NULL)
-	  {
-	  if (SetReference (pEl, pAttr, *pSelEl, pDoc, pDoc, TRUE, TRUE))
-            /* une reference modifiee vaut 10 caracteres saisis */
-            SetDocumentModified (pDoc, TRUE, 10);
-	  }
-	pCreatedElem = *pSelEl;
-	ret = TRUE;
-     }
-   else
-     {
-	if (!assoc)
-	  {
-	     new = FALSE;
-	     again = TRUE;
-	  }
-	if (!new && again)
+  /* cherche le type d'element reference' */
+  referredTypeNum = 0;
+  if (pAttr == NULL)
+    ReferredType (pEl, NULL, &pSS, &referredTypeNum, pDoc);
+  else
+    ReferredType (NULL, pAttr, &pSS, &referredTypeNum, pDoc);
+  if (pSS == NULL || referredTypeNum == 0)
+    typeName[0] = EOS;
+  else
+    strncpy (typeName, pSS->SsRule[referredTypeNum - 1].SrName, MAX_NAME_LENGTH);
+  new = FALSE;
+  again = TRUE;
+  if (!new && again)
 
-	  {
-	     if (pAttr != NULL)
-		pEl = NULL;
-	     /* Pour designer la cible, l'utilisateur peut faire defiler le */
-	     /* document et ainsi faire afficher des graphiques "UserSpecified" */
-	     /* qui ne doivent pas etre traite's comme tels (ils ont ete cree's */
-	     /* pre'alablement). Il faut donc annuler FirstCreation */
-	     FirstCreation = FALSE;
-	     /* demande la selection d'un pave de la cible */
-	     GiveClickedAbsBox (&frame, &pAb);
-	     if (pAb != NULL)
-		/* une selection de pave a bien ete faite */
-	       {
-		  if (pEl != NULL)
+    {
+      if (pAttr != NULL)
+	pEl = NULL;
+      /* Pour designer la cible, l'utilisateur peut faire defiler le */
+      /* document et ainsi faire afficher des graphiques "UserSpecified" */
+      /* qui ne doivent pas etre traite's comme tels (ils ont ete cree's */
+      /* pre'alablement). Il faut donc annuler FirstCreation */
+      FirstCreation = FALSE;
+      /* demande la selection d'un pave de la cible */
+      GiveClickedAbsBox (&frame, &pAb);
+      if (pAb != NULL)
+	/* une selection de pave a bien ete faite */
+	{
+	  if (pEl != NULL)
+	    {
+	      if (pEl->ElSource != NULL)
+		/* c'est une inclusion d'element */
+		/* pRef : pointeur sur le descripteur de reference */
+		pRef = pEl->ElSource;
+	      else
+		/* c'est un element reference */
+		/* pRef : pointeur sur le descripteur de reference */
+		pRef = pEl->ElReference;
+	    }
+	  if (pAttr != NULL)
+	    /* c'est un attribut reference */
+	    /* pRef : pointeur sur le descripteur de reference */
+	    pRef = pAttr->AeAttrReference;
+	  if (pRef != NULL)
+	    {
+	      /* si l'utilisateur n'a pas selectionne de pave, */
+	      /* on abandonne */
+	      if (pAb != NULL)
+		/* un pave a ete selectionne' */
+		/* par l'utilisateur */
+		{
+		  /* cherche le document (pointeur pSelDoc) auquel */
+		  /* appartient la fenetre ou l'utilisateur a designe' */
+		  /* un pave. */
+		  GetDocAndView (frame, &pSelDoc, &assocNum, &assoc);
+		  /* pSelEl: pointeur sur l'element designe' */
+		  *pSelEl = pAb->AbElement;
+		  ret = SetReference (pEl, pAttr, *pSelEl, pDoc,
+				      pSelDoc, TRUE, TRUE);
+		  if (ret)
 		    {
-		       if (pEl->ElSource != NULL)
-			 /* c'est une inclusion d'element */
-			 /* pRef : pointeur sur le descripteur de reference */
-			 pRef = pEl->ElSource;
-		       else
-			  /* c'est un element reference */
-
-			  /* pRef : pointeur sur le descripteur de reference */
-			  pRef = pEl->ElReference;
-
+		      /* une reference modifiee vaut 10 caracteres saisis */
+		      SetDocumentModified (pDoc, TRUE, 10);
+		      if (pEl != NULL)
+			/* si le lien est une inclusion de document */
+			/* externe, applique les regles de transmission */
+			/* des compteurs et des contenus d'elements */
+			{
+			  ApplyTransmitRules (pEl, pDoc);
+			  RepApplyTransmitRules (pEl, pEl, pDoc);
+			}
 		    }
-		  if (pAttr != NULL)
-
-		     /* c'est un attribut reference */
-		     /* pRef : pointeur sur le descripteur de reference */
-		     pRef = pAttr->AeAttrReference;
-
-		  if (pRef != NULL)
-		    {
-
-		       /* si l'utilisateur n'a pas selectionne de pave, */
-		       /* on abandonne */
-		       if (pAb != NULL)
-			  /* un pave a ete selectionne' */
-			  /* par l'utilisateur */
-			 {
-			    /* cherche le document (pointeur pSelDoc) auquel */
-			    /* appartient la fenetre ou l'utilisateur a designe' */
-			    /* un pave. */
-			    GetDocAndView (frame, &pSelDoc, &assocNum, &assoc);
-			    /* pSelEl: pointeur sur l'element designe' */
-			    *pSelEl = pAb->AbElement;
-			    ret = SetReference (pEl, pAttr, *pSelEl, pDoc,
-						pSelDoc, TRUE, TRUE);
-			    if (ret)
-			      {
-		                 /* une reference modifiee vaut 10 caracteres saisis */
-		                 SetDocumentModified (pDoc, TRUE, 10);
-				 if (pEl != NULL)
-				    /* si le lien est une inclusion de document */
-				    /* externe, applique les regles de transmission */
-				    /* des compteurs et des contenus d'elements */
-				   {
-				      ApplyTransmitRules (pEl, pDoc);
-				      RepApplyTransmitRules (pEl, pEl, pDoc);
-				   }
-			      }
-			 }
-		    }
-	       }
-	  }
-	else if (new && again)
-	  {
-	     /* Cree un nouvel element associe reference' */
-	     pCreatedElem = CreateReferredAssocElem (pDoc, pEl, pAttr, referredTypeNum, pSS);
-	     ret = TRUE;
-	  }
-     }
-   if (pModifiedElem != NULL)
-     {
-	/* c'est trop tot pour creer les paves : la reference n'est */
-	/* pas encore insereree dans l'arbre abstrait */
-	/* garde le pointeur sur le sous arbre cree */
-	NCreatedElements++;
-	CreatedElement[NCreatedElements - 1] = pModifiedElem;
-     }
-   *pSelEl = pCreatedElem;
-   return ret;
+		}
+	    }
+	}
+    }
+  else if (new && again)
+    {
+      /* Cree un nouvel element associe reference' */
+      pCreatedElem = CreateReferredAssocElem (pDoc, pEl, pAttr,
+					      referredTypeNum, pSS);
+      ret = TRUE;
+    }
+  if (pModifiedElem != NULL)
+    {
+      /* c'est trop tot pour creer les paves : la reference n'est */
+      /* pas encore insereree dans l'arbre abstrait */
+      /* garde le pointeur sur le sous arbre cree */
+      NCreatedElements++;
+      CreatedElement[NCreatedElements - 1] = pModifiedElem;
+    }
+  *pSelEl = pCreatedElem;
+  return ret;
 }
-
 
 /*----------------------------------------------------------------------
    AddChoiceMenuItem ajoute le nom item comme nouvelle entree dans le	
@@ -3214,53 +3179,39 @@ static void AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
   ----------------------------------------------------------------------*/
 static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 {
-   ThotBool            allowed, withPages;
-   PtrElement          pE;
-   PtrPSchema          pPS;
+  ThotBool            allowed, withPages;
+  PtrElement          pE;
+  PtrPSchema          pPS;
 
-   allowed = FALSE;
-   if (pEl->ElParent != NULL)
-      /* l'element a un pere (ce n'est pas une racine) */
-      if (!ElementIsReadOnly (pEl->ElParent))
-	 /* le pere n'est pas en Read-Only */
-	{
-	   /* verifie si le schema de presentation definit des pages pour */
-	   /* la vue selectionnee */
-	   if (pEl->ElAssocNum == 0)
-	      /* on n'est pas dans un element associe' */
-	     {
-	      pPS = PresentationSchema (pDoc->DocSSchema, pDoc);
-	      withPages = pPS->PsPaginatedView[pDoc->DocView[SelectedView - 1].DvPSchemaView - 1];
-	     }
-	   else
-	      /* on est dans un element associe' */
-	     {
-		/* on remonte a la racine de l'arbre */
-		pE = pEl;
-		while (pE->ElParent != NULL)
-		   pE = pE->ElParent;
-		/* l'element racine de l'arbre associe' est-il mis en page ? */
+  allowed = FALSE;
+  if (pEl->ElParent != NULL)
+    /* l'element a un pere (ce n'est pas une racine) */
+    if (!ElementIsReadOnly (pEl->ElParent))
+      /* le pere n'est pas en Read-Only */
+      {
+	/* verifie si le schema de presentation definit des pages pour */
+	/* la vue selectionnee */
+	pPS = PresentationSchema (pDoc->DocSSchema, pDoc);
+	withPages = pPS->PsPaginatedView[pDoc->DocView[SelectedView - 1].
+					 DvPSchemaView - 1];
+	if (withPages)
+	  /* le schema de presentation du document definit bien */
+	  /* des pages pour la vue ou` l'utilisateur a selectionne' */
+	  {
+	    allowed = TRUE;
+	    /* verifie si un ascendant a la regle PageBreak: No */
+	    pE = pEl->ElParent;
+	    while (pE != NULL && allowed)
+	      {
 		pPS = PresentationSchema (pE->ElStructSchema, pDoc);
-		withPages = pPS->PsAssocPaginated[pE->ElTypeNumber - 1];
-	     }
-	   if (withPages)
-	      /* le schema de presentation du document definit bien */
-	      /* des pages pour la vue ou` l'utilisateur a selectionne' */
-	     {
-		allowed = TRUE;
-		/* verifie si un ascendant a la regle PageBreak: No */
-		pE = pEl->ElParent;
-		while (pE != NULL && allowed)
-		  {
-		    pPS = PresentationSchema (pE->ElStructSchema, pDoc);
-		    if (!pPS->PsAcceptPageBreak[pE->ElTypeNumber - 1])
-		      allowed = FALSE;
-		    else
-		      pE = pE->ElParent;
-		  }
-	     }
-	}
-   return allowed;
+		if (!pPS->PsAcceptPageBreak[pE->ElTypeNumber - 1])
+		  allowed = FALSE;
+		else
+		  pE = pE->ElParent;
+	      }
+	  }
+      }
+  return allowed;
 }
 
 
@@ -3426,26 +3377,6 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 			/* type de l'element reference' prevu par le schema */
 			/* de structure */
 			refTypeNum = firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrReferredType;
-			if (refTypeNum != 0)
-			   if (firstSel->ElStructSchema->SsRule[refTypeNum - 1].SrAssocElem)
-			      if (!TypeHasException (ExcNoCreate, refTypeNum, firstSel->ElStructSchema))
-				 /* pas d'exception interdisant a l'utilisateur de creer */
-				 /* ce type d'element */
-
-				 /* on ajoute une entree pour creer l'element associe */
-				 if (AddInsertMenuItem (firstSel->ElStructSchema->
-							SsRule[refTypeNum - 1].SrName, TtaGetMessage (LIB, TMSG_TO_CREATE), "",
-				  &prevMenuInd, &nItems, &menuInd, menuBuf))
-				   {
-				      Action[nItems - 1] = ReferredElem;
-				      UserAction[nItems - 1] = ReferredElem;
-				      ElemAction[nItems - 1] = firstSel;
-				      ElemTypeAction[nItems - 1] = refTypeNum;
-				      SSchemaAction[nItems - 1] = firstSel->ElStructSchema;
-				      /* il faudra mettre un separateur apres cette */
-				      /* entree s'il y a d'autres entrees apres */
-				      separatorAfter = TRUE;
-				   }
 		     }
 	     }
 
