@@ -26,6 +26,7 @@ extern boolean IsSameHost ( char *url1,
                             char *url2 );
 extern char *AHTMakeRelativeName ( char *url,
                                    char *base_url );
+extern boolean HasKnownFileSuffix ( char *path );
 
 #else /* __STDC__ */
 
@@ -49,6 +50,7 @@ extern boolean IsSameHost (/* char *url1,
                               char *url2 */);
 extern char *AHTMakeRelativeName (/* char *url,
                                      char *base_url */);
+extern boolean HasKnownFileSuffix (/* char *path */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
