@@ -390,6 +390,9 @@ static HTMLStyleAttribute HTMLStyleAttributes[] =
 #define TODO { fprintf(stderr, "code incomplete file %s line %d\n",\
                        __FILE__,__LINE__); };
 #define MSG(msg) fprintf(stderr, msg)
+#else /* AMAYA_DEBUG */
+#define TODO
+#define MSG(msg)
 #endif
 
 
