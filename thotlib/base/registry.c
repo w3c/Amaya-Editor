@@ -1330,8 +1330,8 @@ STRING  appArgv0;
   TCHAR       windir[MAX_PATH+1];
   DWORD       dwSize;
 #ifndef __CYGWIN32__
-extern int    _fmode = _O_BINARY;
-#endif
+extern int    _fmode;
+#endif /* __CYGWIN32__ */
   ThotBool    status;
 #else /* ! _WINDOWS */
   struct stat stat_buf;
@@ -1340,6 +1340,11 @@ extern int    _fmode = _O_BINARY;
   int         len, round;
   ThotBool    found, ok;
   
+#ifdef _WINDOWS
+#ifndef __CYGWIN32__
+  _fmode = _O_BINARY;
+#endif /* __CYGWIN32__ */
+#endif /* _WINDOWS */
   if (AppRegistryInitialized != 0)
     return;
   AppRegistryInitialized++;
