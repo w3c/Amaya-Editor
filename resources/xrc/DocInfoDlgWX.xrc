@@ -117,7 +117,9 @@
             <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
+          <growablecols>1</growablecols>
         </object>
+        <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
       </object>
