@@ -467,7 +467,7 @@ ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
    the entry with code entityValue and give the corresponding name.
    Returns FALSE if entityValue is not found.
   ----------------------------------------------------------------------*/
-CHAR_T*   MapEntityByCode (int XMLtype, int entityValue)
+void MapEntityByCode (int entityValue, char **entityName)
 
 {
   XmlEntity  *ptr;
@@ -475,27 +475,23 @@ CHAR_T*   MapEntityByCode (int XMLtype, int entityValue)
   int         i;
 
   /* Select the right table */
-  if (XMLtype == XHTML_TYPE)
-      ptr = XhtmlEntityTable;
-  else if (XMLtype == MATH_TYPE)
-      ptr = MathEntityTable;
-  else
-    ptr = NULL;
-  
-  if (ptr == NULL)
-    return ptr;
-
-  /* look for the first concerned entry in the table */
-  found = FALSE;
-  for (i = 0; ptr[i].charCode >= 0 && !found; i++)
-    found = (ptr[i].charCode == entityValue);
-  
-  if (found)
+  ptr = XhtmlEntityTable;
+  if (ptr)
     {
-      /* entity value found */
-       i--;
-       return ptr[i].charName;
-   }
+      /* look for the first concerned entry in the table */
+      found = FALSE;
+      for (i = 0; ptr[i].charCode >= 0 && !found; i++)
+	found = (ptr[i].charCode == entityValue);
+  
+      if (found)
+	{
+	  /* entity value found */
+	  i--;
+	  *entityName = (char *) (ptr[i].charName);
+	}
+      else
+	*entityName = NULL;
+    }
   else
-    return NULL;
+    *entityName = NULL;
 }

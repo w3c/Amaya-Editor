@@ -56,23 +56,18 @@ AnOutputFile;
 
 /* number of output files in use */
 static int          NOutputFiles = 0;
-
 /* the output files */
 static AnOutputFile OutputFile[MAX_OUTPUT_FILES];
-
-	/* entry 0: stdout    */
-	/* entry 1: main output file */
-	/* other entries: secondary output files */
-
+/* entry 0: stdout    */
+/* entry 1: main output file */
+/* other entries: secondary output files */
 /* directory of output files */
-static CHAR_T         fileDirectory[MAX_PATH];
-
+static CHAR_T       fileDirectory[MAX_PATH];
 /* name of main output file */
-static CHAR_T         fileName[MAX_PATH];
-
+static CHAR_T       fileName[MAX_PATH];
 /* file extension */
-static CHAR_T         fileExtension[MAX_PATH];
-
+static CHAR_T       fileExtension[MAX_PATH];
+static Proc         GetEntityFunction = NULL;
 
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
@@ -89,6 +84,16 @@ static CHAR_T         fileExtension[MAX_PATH];
 #include "translation_f.h"
 #include "tree_f.h"
 #include "thotmsg_f.h"
+
+
+/*----------------------------------------------------------------------
+  TtaSetEntityFunction registers the function that gives entity names:
+  procedure (int entityValue, char **entityName)
+  ----------------------------------------------------------------------*/
+void TtaSetEntityFunction (Proc procedure)
+{
+  GetEntityFunction = procedure;
+}
 
 
 /*----------------------------------------------------------------------
@@ -160,13 +165,39 @@ static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
   PtrTSchema          pTSch;
   FILE               *fileDesc;
   UCHAR_T             tmp[2];
+  char               *entity;
   int                 i, j, indent;
   int                 nb_bytes2write, index;
-  unsigned char       mbc [MAX_BYTES];
+  unsigned char       mbc [50];
 
   if (translate)
     {
       /* translate the input character */
+      if (GetEntityFunction && c > 127 && pDoc->DocCharset == US_ASCII)
+	{
+	  (*GetEntityFunction) (c, &(entity));
+	  if (entity)
+	    {
+	      mbc[0] = '&';
+	      strncpy (&mbc[1], entity, 40);
+	      mbc[42] = EOS;
+	      nb_bytes2write = strlen (mbc);
+	      mbc[nb_bytes2write++] = ';';
+	    }
+	}
+      else if (GetEntityFunction && c > 255 && pDoc->DocCharset == ISO_8859_1)
+	{
+	  (*GetEntityFunction) (c, &(entity));
+	  if (entity)
+	    {
+	      mbc[0] = '&';
+	      strncpy (&mbc[1], entity, 40);
+	      mbc[42] = EOS;
+	      nb_bytes2write = strlen (mbc);
+	      mbc[nb_bytes2write++] = ';';
+	    }
+	}
+      else
 #ifdef _I18N_ 
       nb_bytes2write = TtaWC2MB (c, mbc, pDoc->DocCharset);
 #else  /* !_I18N_ */

@@ -34,8 +34,8 @@ extern CHAR_T* GetXMLAttributeName ( AttributeType attrType,
 extern ThotBool MapXMLEntity ( int XMLtype,
                                STRING entityName,
                                int *entityValue );
-extern CHAR_T* MapEntityByCode ( int XMLtype,
-                                 int entityValue );
+extern void MapEntityByCode ( int entityValue,
+                              char **entityName );
 
 #else /* __STDC__ */
 
@@ -67,8 +67,8 @@ extern CHAR_T* GetXMLAttributeName (/* AttributeType attrType,
 extern ThotBool MapXMLEntity (/* int XMLtype,
                                  STRING entityName,
                                  int *entityValue */);
-extern CHAR_T* MapEntityByCode (/* int XMLtype,
-                                   int entityValue */);
+extern void MapEntityByCode (/* int entityValue,
+                                char **entityName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
