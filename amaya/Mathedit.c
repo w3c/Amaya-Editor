@@ -46,34 +46,50 @@ static boolean      InitMaths;
 
 
 /*----------------------------------------------------------------------
-   SplitTextInMathML: split the element el and the enclosing element (MO,
-   MI, MN or MTEXT).
-   The parameter index gives the point where the text has to be cut.
+   SplitTextInMathML
+   Split element el and the enclosing element (MO, MI, MN or MTEXT).
+   Parameter index gindicats the position where the text has to be split.
    Return the next created text within the next enclosing element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element             SplitTextInMathML (Document doc, Element el, int index)
+static Element      SplitTextInMathML (Document doc, Element el, int index)
 #else
-Element             SplitTextInMathML (doc, el, index)
+static Element      SplitTextInMathML (doc, el, index)
 Document            doc;
 Element             el;
 int                 index;
 #endif
 {
-  Element            new, parent;
+  Element            new, parent, row;
   ElementType        elType;
 
   /* do not check the Thot abstract tree against the structure */
   /* schema while changing the structure */
   TtaSetStructureChecking (0, doc);
-  /* split the text to insert the XML element */
+  /* split the text to be inserted */
   TtaSplitText (el, index-1, doc);
-  /* duplicate the parent (MO, MN, MI or MTEXT) */
+  /* get the parent element (MO, MN, MI or MTEXT) */
   parent = TtaGetParent (el);
+
+  /* check whether the parent is a child of a MROW */
+  row = TtaGetParent (parent);
+  elType = TtaGetElementType (row);
+  if (elType.ElTypeNum != MathML_EL_MROW)
+    {
+      /* generates a new row element */
+      elType.ElTypeNum = MathML_EL_MROW;
+      row = TtaNewElement (doc, elType);
+      TtaInsertSibling (row, parent, TRUE, doc);
+      TtaRemoveTree (parent, doc);
+      /* move the parent into the new MROW */
+      TtaInsertFirstChild (&parent, row, doc);
+    }
+
+  /* duplicate the parent element (MO, MN, MI or MTEXT) */
   elType = TtaGetElementType (parent);
   new = TtaNewElement (doc, elType);
   TtaInsertSibling (new, parent, FALSE, doc);
-  /* take the second part of the split text element */
+  /* take the second part of the split text */
   TtaNextSibling (&el);
   TtaRemoveTree (el, doc);
   /* move the old element into the new MROW */
@@ -107,10 +123,12 @@ char               *data;
   switch (ref - MathsDialogue)
     {
     case FormMaths:
+      /* the user has clicked the DONE button in the Math dialog box */
       InitMaths = FALSE;
       TtaDestroyDialogue (ref);	   
       break;
     case MenuMaths:
+      /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
       if (doc == 0)
 	/* no document selected */
@@ -434,8 +452,8 @@ void                InitMathML ()
 
 /*----------------------------------------------------------------------
    SetFontslantAttr
-   The content of a MI element has been modified.
-   Change attribute fontslant accordingly.
+   The content of a MI element has been created or modified.
+   Create or change attribute fontslant for that element accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void SetFontslantAttr (Element el, Document doc)
@@ -481,24 +499,9 @@ void SetFontslantAttr (el, doc)
 }
 
 /*----------------------------------------------------------------------
-   MImodified
-   The content of a MI element has been modified.
-   Change attribute fontslant accordingly.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void MImodified (NotifyOnTarget *event)
-#else /* __STDC__*/
-void MImodified(event)
-     NotifyOnTarget *event;
-#endif /* __STDC__*/
-{
-  SetFontslantAttr (event->element, event->document);
-}
-
-/*----------------------------------------------------------------------
    SetAddspaceAttr
-   The content of a MO element has been modified.
-   Change attribute addspace accordingly.
+   The content of a MO element has been created or modified.
+   Create or change attribute addspace for that element accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void SetAddspaceAttr (Element el, Document doc)
@@ -508,7 +511,7 @@ void SetAddspaceAttr (el, doc)
   Document	doc;
 #endif /* __STDC__*/
 {
-  Element	textEl;
+  Element	textEl, previous;
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr;
@@ -540,21 +543,42 @@ void SetAddspaceAttr (el, doc)
 	alphabet = TtaGetAlphabet (lang);
 	if (len == 1)
 	   if (alphabet == 'L')
+	     /* ISO-Latin 1 character */
 	     {
-	     if (text[0] == '+' ||
-	         text[0] == '-' ||
+	     if (text[0] == '-')
+		/* unary or binary operator? */
+		{
+		previous = el;
+		TtaPreviousSibling (&previous);
+		if (previous == NULL)
+		   /* no previous sibling => unary operator */
+		   val = MathML_ATTR_addspace_VAL_nospace;
+		else
+		   {
+		   elType = TtaGetElementType (previous);
+		   if (elType.ElTypeNum == MathML_EL_MO)
+		      /* after an operator => unary operator */
+		      val = MathML_ATTR_addspace_VAL_nospace;
+		   else
+		      /* binary operator */
+		      val = MathML_ATTR_addspace_VAL_both;
+		   }
+		}
+	     else if (text[0] == '+' ||
 	         text[0] == '&' ||
 	         text[0] == '*' ||
 	         text[0] == '<' ||
 	         text[0] == '=' ||
 	         text[0] == '>' ||
 	         text[0] == '^')
+		 /* binary operator */
 	         val = MathML_ATTR_addspace_VAL_both;
 	     else if (text[0] == ',' ||
 		      text[0] == ';')
 	         val = MathML_ATTR_addspace_VAL_spaceafter;
 	     }
 	   else if (alphabet == 'G')
+	     /* Symbol character set */
 	     if ((int)text[0] == 177)	/* PlusMinus */
 		val = MathML_ATTR_addspace_VAL_both;
 	/**** to be completed *****/
@@ -564,18 +588,195 @@ void SetAddspaceAttr (el, doc)
 }
 
 /*----------------------------------------------------------------------
-   MOmodified
-   The content of a MO element has been modified.
-   Change attribute addspace accordingly.
+   GetCharType
+   returns the type of character c (MN, MI or MO).
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void MOmodified (NotifyOnTarget *event)
+static int GetCharType (unsigned char c)
 #else /* __STDC__*/
-void MOmodified(event)
+static int GetCharType (c)
+     unsigned char c;
+#endif /* __STDC__*/
+{
+  int	ret;
+
+  if (c >= '0' && c <= '9')
+     ret = MathML_EL_MN;
+  else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+     ret = MathML_EL_MI;
+  else
+     ret = MathML_EL_MO;
+  return ret;
+}
+
+/*----------------------------------------------------------------------
+   MathSetAttributes
+   Set attributes of element el according to its content.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MathSetAttributes (Element el, Document doc)
+#else /* __STDC__*/
+static void MathSetAttributes (el, doc)
+     Element el;
+     Document doc;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_MI)
+     /* is it really an identifier? */
+     {
+     /* try to separate function names, identifier and plain text */
+     /* TO DO ******/
+     }
+  if (elType.ElTypeNum == MathML_EL_MO)
+     SetAddspaceAttr (el, doc);
+  else if (elType.ElTypeNum == MathML_EL_MI)
+     SetFontslantAttr (el, doc);		
+}
+
+/*----------------------------------------------------------------------
+   ParseMathString
+   The content of an element MTEXT, MI, MO, MN, or MS has been modified.
+   Parse the new content and create the appropriate MI, MO, MN elements.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ParseMathString (NotifyOnTarget *event)
+#else /* __STDC__*/
+void ParseMathString (event)
      NotifyOnTarget *event;
 #endif /* __STDC__*/
 {
-  SetAddspaceAttr (event->element, event->document);
+
+  Element	el, textEl, prevEl, curEl, sibling, row, firstEl, nextEl;
+  Document	doc;
+  ElementType	elType;
+  int		len, i, charType, curElType, curLen;
+  char		newChar[3];
+#define TXTBUFLEN 200
+  unsigned char	text[TXTBUFLEN];
+  Language	lang;
+  char		alphabet;
+  boolean	single, spaceBefore;
+
+  el = event->element;	/* the element whose content has been changed */
+  doc = event->document;
+  textEl = TtaGetFirstChild (el);	/* the content of that element */
+  if (textEl != NULL)
+     {
+     len = TtaGetTextLength (textEl);
+     if (len > 0)
+	{
+	/* Is this element the only child of its parent? */
+	single = FALSE;
+	sibling = el;
+	TtaPreviousSibling (&sibling);
+	if (sibling == NULL)
+	   /* no previous sibling */
+	   {
+	   sibling = el;
+	   TtaNextSibling (&sibling);
+	   if (sibling == NULL)
+	      /* the element to be replaced has no sibling */
+	      single = TRUE;
+	   }
+	/* get the content */
+	len = TXTBUFLEN;
+	TtaGiveTextContent (textEl, text, &len, &lang);
+	alphabet = TtaGetAlphabet (lang);
+	/* some initializations */
+        elType = TtaGetElementType (el);
+	curElType = 0;
+	curEl = NULL;
+	prevEl = el;
+	firstEl = NULL;
+	spaceBefore = FALSE;
+	curLen = 0;
+	TtaSetDisplayMode (doc, DeferredDisplay);
+	TtaSetStructureChecking (0, doc);
+	/* parse the content */
+	for (i = 0; i < len; i++)
+	  {
+	  if (text[i] == ' ')
+	    spaceBefore = TRUE;
+	  else
+	    {
+	    charType = GetCharType (text[i]);
+	    if (firstEl == NULL || charType != curElType)
+	      /* create a new element */
+	      {
+	      if (prevEl != el)
+		MathSetAttributes (prevEl, doc);
+	      elType.ElTypeNum = charType;
+	      curElType = charType;
+	      curEl = TtaNewElement (doc, elType);
+	      TtaInsertSibling (curEl, prevEl, FALSE, doc);
+	      if (firstEl == NULL)
+		 firstEl = curEl;
+	      elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+	      textEl = TtaNewElement (doc, elType);
+	      TtaInsertFirstChild (&textEl, curEl, doc);
+	      curLen = 0;
+	      spaceBefore = FALSE;
+	      prevEl = curEl;
+	      }
+	    if (spaceBefore && curLen > 0)
+	      {
+	      newChar[0] = ' '; newChar[1] = text[i]; newChar[2] = '\0';
+	      curLen+= 2;
+	      spaceBefore = FALSE;
+	      }
+	    else
+	      {
+	      newChar[0] = text[i]; newChar[1] = '\0';
+	      curLen++;
+	      }
+	    TtaAppendTextContent (textEl, newChar, doc);
+	    }
+	  }
+	/* end of parsing */
+	/* the last element created is now complete. Associate the
+	   attribute that fits with its content */
+	if (curEl != NULL)
+	  MathSetAttributes (curEl, doc);
+	/* create a MROW element that encompasses the new elements
+	   if necessary */
+	if (single && (curEl != firstEl))
+	  /* the element to be replaced had no sibling */
+	  /* and several elements have been created */
+	  {
+	  elType = TtaGetElementType (TtaGetParent (el));
+	  if (elType.ElTypeNum != MathML_EL_MROW)
+	     /* the parent element is not a MROW */
+	     {
+	     /* create a MROW element */
+	     elType.ElTypeNum = MathML_EL_MROW;
+	     row = TtaNewElement (doc, elType);
+	     TtaInsertSibling (row, el, FALSE, doc);
+	     /* move the created elements as children of this MROW element */
+	     curEl = firstEl;
+	     prevEl = NULL;
+	     while (curEl != NULL)
+		{
+		nextEl = curEl;
+		TtaNextSibling (&nextEl);
+		TtaRemoveTree (curEl, doc);
+		if (prevEl == NULL)
+	           TtaInsertFirstChild (&curEl, row, doc);
+		else
+		   TtaInsertSibling (curEl, prevEl, FALSE, doc);
+		prevEl = curEl;
+		curEl = nextEl;
+		}
+	     }
+	  }
+	/* remove the element that has been processed */
+	TtaDeleteTree (el, doc);
+	TtaSetStructureChecking (1, doc);
+	TtaSetDisplayMode (doc, DisplayImmediately);
+	}
+     }
 }
 
 #endif /* MATHML */

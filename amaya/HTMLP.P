@@ -1754,7 +1754,7 @@ BOXES
 
  Toggle_gif: BEGIN
 	Content: Picture 'toggle.gif';
-	HorizPos: Left = Previous . Right + 1;
+	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
 		Visibility: 0;
@@ -1762,7 +1762,7 @@ BOXES
 
  ToggleS_gif: BEGIN
 	Content: Picture 'toggle-s.gif';
-	HorizPos: Left = Previous . Right + 1;
+	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
 		Visibility: 0;
@@ -1770,15 +1770,16 @@ BOXES
 
  Radio_gif: BEGIN
 	Content: Picture 'radio.gif';
-	HorizPos: Left = Previous . Right + 1;
+	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
+	
 	IN Structure_view
 		Visibility: 0;
 	END;
 
  RadioS_gif: BEGIN
 	Content: Picture 'radio-s.gif';
-	HorizPos: Left = Previous . Right + 1;
+	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
 		Visibility: 0;
@@ -5108,7 +5109,6 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Checkbox);
 	CreateBefore(Text_Space);
-	CreateAfter(Text_Space);
 	LineBreak: No;
 	Visibility: 1;
 	In Structure_view
@@ -5119,7 +5119,6 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Radio);
 	CreateBefore(Text_Space);
-	CreateAfter(Text_Space);
 	LineBreak: No;
 	Visibility: 1;
 	In Structure_view
@@ -5157,9 +5156,20 @@ RULES
  Password_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Password);
+	Width: 20 ex Min;
+	Height: 2 Min;
+	Font: INPUT_Font;
+	Depth: 4;
+	LineBreak: No;
+	Adjust: Left;
 #ifndef BLACK_WHITE
-	Background : Grey;
+	Background : LightRed4;
 #endif
+	IN Structure_view BEGIN
+		Width: 1 pt;
+		Height: 1 pt;
+		Size: Enclosing =;
+		END;
 	END;
 
  Reset_Input: BEGIN

@@ -2,10 +2,15 @@ APPLICATION MathML;
 
 ELEMENTS
 
+   MTEXT:
+	ElemTextModify.Post -> ParseMathString;
    MI:
-	ElemTextModify.Post -> MImodified;
-
+	ElemTextModify.Post -> ParseMathString;
    MO:
-	ElemTextModify.Post -> MOmodified;
+	ElemTextModify.Post -> ParseMathString;
+   MN:
+	ElemTextModify.Post -> ParseMathString;
+   MS:
+	ElemTextModify.Post -> ParseMathString;
 
 END

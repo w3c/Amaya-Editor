@@ -37,6 +37,13 @@ ELEMENTS
 	ElemSelect.Pre -> SelectIncludedText;
 	END;
 
+   Password_Input:
+	BEGIN
+	ElemTextModify.Pre -> SaveDocumentStatus;
+	ElemTextModify.Post -> RestoreDocumentStatus;
+	ElemSelect.Pre -> SelectIncludedText;
+	END;
+
    Text_Area:
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
