@@ -80,14 +80,14 @@ char                BufMenu[MAX_TXT_LEN];
    i = 0;
    strcpy (&BufMenu[i], "B^ ");
    pEl = SelMenuParentEl;
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema != NULL)
       strcat (&BufMenu[i], pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
    i += strlen (&BufMenu[i]) + 1;
 
    /* element selectionable precedent */
    strcpy (&BufMenu[i], "B< ");
    pEl = SelMenuPreviousEl;
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 #ifdef __COLPAGE__
 	if (pEl->ElTypeNumber == PageBreak + 1)
@@ -103,7 +103,7 @@ char                BufMenu[MAX_TXT_LEN];
    /* element selectionable suivant */
    strcpy (&BufMenu[i], "B> ");
    pEl = SelMenuNextEl;
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 #ifdef __COLPAGE__
 	if (pEl->ElTypeNumber == PageBreak + 1)
@@ -119,7 +119,7 @@ char                BufMenu[MAX_TXT_LEN];
    /* cherche le type du 1er element englobe' selectionable */
    strcpy (&BufMenu[i], "B_ ");
    pEl = SelMenuChildEl;
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 #ifdef __COLPAGE__
 	if (pEl->ElTypeNumber == PageBreak + 1)
