@@ -80,6 +80,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name libraptor
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name librdf
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -103,6 +106,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name libraptor
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name librdf
     End Project Dependency
 }}}
 
