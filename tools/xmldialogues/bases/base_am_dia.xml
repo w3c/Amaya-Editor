@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="32" last_update="Mon Nov 20 17:14:35 CET 2000">
+<base version="33" last_update="Mon Dec 11 17:17:49 CET 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -139,21 +139,21 @@
 <label define="BHtml">
 	<message xml:lang="en">New XHTML document...</message>
 	<message xml:lang="fr">Nouveau document XHTML...</message>
-	<message xml:lang="de">Leer...</message>
+	<message xml:lang="de">XHTML-Dokument...</message>
 	<message xml:lang="it">Nuovo documento XHTML...</message>
 	<message xml:lang="es">Documento XHTML nuevo...</message>
 </label>
 <label define="BMathml">
 	<message xml:lang="en">New MathML document...</message>
 	<message xml:lang="fr">Nouveau document MathML...</message>
-	<message xml:lang="de">Leer...</message>
+	<message xml:lang="de">MathML-Dokument...</message>
 	<message xml:lang="it">Nuovo documento MathML...</message>
 	<message xml:lang="es">Documento MathML nuevo...</message>
 </label>
 <label define="BSvg">
 	<message xml:lang="en">New SVG document...</message>
 	<message xml:lang="fr">Nouveau document SVG...</message>
-	<message xml:lang="de">Leer...</message>
+	<message xml:lang="de">SVG-Dokument...</message>
 	<message xml:lang="it">Nuovo documento SVG...</message>
 	<message xml:lang="es">Documento SVG nuevo...</message>
 </label>
@@ -167,7 +167,7 @@
 <label define="BCss">
 	<message xml:lang="en">New CSS style sheet...</message>
 	<message xml:lang="fr">Nouvelle feuille de style...</message>
-	<message xml:lang="de">CSS...</message>
+	<message xml:lang="de">CSS Style Sheet...</message>
 	<message xml:lang="it">Nuovo stile CSS...</message>
 	<message xml:lang="es">Nueva hoja de estilo CSS...</message>
 </label>
