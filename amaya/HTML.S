@@ -46,7 +46,7 @@ CONST
 STRUCT
 
   HTML								{ HTML }
-     (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
+     (ATTR ShowAreas = Yes_;
 	   PrintURL = Yes_; PI = Text;
 	   Namespaces = Text; RealLang = Yes_; Charset = Text) =
 	BEGIN
@@ -942,7 +942,6 @@ EXCEPT
 	DefaultSelected:Invisible;
 	ShowMe:         Invisible;
 	DefaultChecked:	Invisible;
-	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
 	PrintURL:       Invisible;
 	NoImages:       Invisible;

@@ -3619,7 +3619,7 @@ PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
       pNew->ElAbstractBox[view] = NULL;
    /* keep same values for ElStructSchema and TypeNumber (/
    pNew->ElVolume = 0;
-   pNew->ElCopyDescr = NULL;
+   pNew->ElCopyDescr = NULL;*/
    /* computes the label's value */
    ConvertIntToLabel (NewLabel (pDoc), pNew->ElLabel);
    pNew->ElCopy = NULL;

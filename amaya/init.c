@@ -2819,7 +2819,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     /* hide the address */
 	     TtcSwitchCommands (doc, 1);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
-	   TtaSetToggleItem (doc, 1, Types, TSectionNumber, SNumbering[doc]);
 	   TtaGetEnvBoolean ("SHOW_TARGET", &show);
 	   if (show)
 	     ShowTargets (doc, 1);
@@ -6857,7 +6856,7 @@ void InitAmaya (NotifyEvent * event)
    char               *ptr;
    int                 i;
    ThotBool            restoredDoc;
-   ThotBool            numbering, map, add, bt;
+   ThotBool            map, add, bt;
 
    if (AmayaInitialized)
       return;
@@ -7047,7 +7046,6 @@ void InitAmaya (NotifyEvent * event)
    TtaSetEnvBoolean ("LOAD_CSS", TRUE, FALSE);
    TtaSetEnvBoolean ("SEND_REFERER", FALSE, FALSE);
    /* get current value */
-   TtaGetEnvBoolean ("SECTION_NUMBERING", &numbering);
    TtaGetEnvBoolean ("SHOW_BUTTONS", &bt);
    TtaGetEnvBoolean ("SHOW_ADDRESS", &add);
    TtaGetEnvBoolean ("SHOW_MAP_AREAS", &map);
@@ -7061,7 +7059,6 @@ void InitAmaya (NotifyEvent * event)
        DocumentSource[i] = 0;
        DocumentMeta[i] = NULL;
        ReadOnlyDocument[i] = FALSE;
-       SNumbering[i] = numbering;
        MapAreas[i] = map;
        SButtons[i] = bt;
        SAddress[i] = add;
@@ -7415,43 +7412,6 @@ void ShowAddress (Document doc, View view)
   
   TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);
   TtcSwitchCommands (doc, view);
-}
-
-/*----------------------------------------------------------------------
-  SectionNumbering
-  Execute the "Section Numbering" command
-  ----------------------------------------------------------------------*/
-void SectionNumbering (Document doc, View view)
-{
-  
-#ifdef _WINGUI
-  int frame = GetWindowNumber (doc, view);
-
-  if (frame == 0 || frame > 10)
-    TtaError (ERR_invalid_parameter);
-  else
-    {
-      HMENU hmenu = WIN_GetMenu (frame); 
-      if (!SNumbering[doc])
-	{
-          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-          SNumbering[doc] = TRUE;
-	}
-      else
-	{
-	  hmenu = WIN_GetMenu (frame); 
-	  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-	  SNumbering[doc] = FALSE;
-	}
-   }
-#endif /* _WINGUI */
-  
-#if defined(_GTK) || defined(_WX)  
-  SNumbering[doc] = !SNumbering[doc];
-  TtaSetToggleItem (doc, 1, Types, TSectionNumber, SNumbering[doc]);
-#endif /* #if defined(_GTK) || defined(_WX) */
-  
-  ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 }
 
 /*----------------------------------------------------------------------

@@ -2057,17 +2057,6 @@
 	<message xml:lang="tr">Hedefi göster</message>
 	<message xml:lang="ru">Показывать цели</message>
 </label>
-<label define="AM_SECTION_NUMBER">
-	<message xml:lang="en">Section numbering</message>
-	<message xml:lang="fr">Numéroter les sections</message>
-	<message xml:lang="de">Abschnitte numerieren</message>
-	<message xml:lang="it">Numerazione delle sezioni</message>
-	<message xml:lang="tr">Bölüm numaralandırması</message>
-	<message xml:lang="es">Numeración de sección</message>
-	<message xml:lang="pt">Numeração de seção</message>
-	<message xml:lang="fi">Osien numerointi</message>
-	<message xml:lang="ru">Нумеровать разделы</message>
-</label>
 <label define="AM_EXPORT_CRLF">
 	<message xml:lang="en">Export CR/LF</message>
 	<message xml:lang="fr">Exporter CR/LF</message>
@@ -4045,8 +4034,8 @@
 	<message xml:lang="ru">К этому элементу не применяются никакие правила стиля</message>
 </label>
 <label define="AM_NO_INSERT_POINT">
-	<message xml:lang="en">Please select a position first</message>
-	<message xml:lang="fr">Sélectionnez une position d'abord</message>
+	<message xml:lang="en">No insert position defined. Please select first</message>
+	<message xml:lang="fr">Pas de position d'insertion définie. Sélectionnez d'abord</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

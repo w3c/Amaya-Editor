@@ -197,246 +197,6 @@ BOXES
 	END;
 #endif
 
- H2_section_number:
-	BEGIN
-	Content: (Value(H2Counter, Arabic) Text '  ');
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H2_section_number_right:
-	BEGIN
-	Content: (Text '  ' Value(H2Counter, Arabic));
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H3_section_number:
-	BEGIN
-	Content: (Value(H2Counter, Arabic) Text '.'
-		  Value(H3Counter, Arabic) Text '  ');
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H3_section_number_right:
-	BEGIN
-	Content: (Text '  ' Value(H2Counter, Arabic) Text '.'
-		  Value(H3Counter, Arabic));
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H4_section_number:
-	BEGIN
-	Content: (Value(H2Counter, Arabic) Text '.'
-		  Value(H3Counter, Arabic) Text '.'
-		  Value(H4Counter, Arabic) Text '  ');
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H4_section_number_right:
-	BEGIN
-	Content: (Text '  ' Value(H2Counter, Arabic) Text '.'
-		  Value(H3Counter, Arabic) Text '.'
-		  Value(H4Counter, Arabic));
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H5_section_number:
-	BEGIN
-	Content: (Value(H2Counter, Arabic) Text '.'
-		  Value(H3Counter, Arabic) Text '.'
-		  Value(H4Counter, Arabic) Text '.'
-		  Value(H5Counter, Arabic) Text '  ');
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H5_section_number_right:
-	BEGIN
-	Content: (Text '  ' Value(H2Counter, Arabic) Text '.'
-		  Value(H3Counter, Arabic) Text '.'
-		  Value(H4Counter, Arabic) Text '.'
-		  Value(H5Counter, Arabic));
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H6_section_number:
-	BEGIN
-	Content: (Value(H2Counter, Arabic) Text '.'
-		  Value(H3Counter, Arabic) Text '.'
-		  Value(H4Counter, Arabic) Text '.'
-		  Value(H5Counter, Arabic) Text '.'
-		  Value(H6Counter, Arabic) Text '  ');
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- H6_section_number_right:
-	BEGIN
-	Content: (Text '  ' Value(H2Counter, Arabic) Text '.'
-		  Value(H3Counter, Arabic) Text '.'
-		  Value(H4Counter, Arabic) Text '.'
-		  Value(H5Counter, Arabic) Text '.'
-		  Value(H6Counter, Arabic));
-	Visibility: Creator =;
-	Font: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-#ifdef PAGE
-	Foreground: Creator =;
-#else
-	Foreground: ATTR_Color;
-#endif
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
  ElementName: BEGIN
         Content: (ElemName);
 	Visibility: 0;
@@ -7551,8 +7311,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
 #endif
-	if inherited SectionNumbering
-	   CreateFirst(H2_section_number);
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7571,8 +7329,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
 #endif
-	if inherited SectionNumbering
-	   CreateLast(H2_section_number_right);
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7590,8 +7346,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
 #endif
-	if inherited SectionNumbering
-	   CreateFirst(H3_section_number);
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7610,8 +7364,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
 #endif
-	if inherited SectionNumbering
-	   CreateLast(H3_section_number_right);
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7629,8 +7381,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
 #endif
-	if inherited SectionNumbering
-	   CreateFirst(H4_section_number);
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7649,8 +7399,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
 #endif
-	if inherited SectionNumbering
-	   CreateLast(H4_section_number_right);
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7668,8 +7416,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
 #endif
-	if inherited SectionNumbering
-	   CreateFirst(H5_section_number);
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7688,8 +7434,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
 #endif
-	if inherited SectionNumbering
-	   CreateLast(H5_section_number_right);
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7707,8 +7451,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
 #endif
-	if inherited SectionNumbering
-	   CreateFirst(H6_section_number);
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7727,8 +7469,6 @@ ATTRIBUTES
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
 #endif
-	if inherited SectionNumbering
-	   CreateLast(H6_section_number_right);
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;

@@ -73,6 +73,8 @@ extern void ReadAsEUC_JP ( Document doc,
                            View view );
 extern void ReadAsSHIFT_JIS ( Document doc,
                               View view );
+extern void SectionNumbering ( Document doc,
+                               View view );
 extern void MakeToc ( Document doc,
                       View view );
 
@@ -145,6 +147,8 @@ extern void ReadAsEUC_JP ( Document doc,
                              View view );
 extern void ReadAsSHIFT_JIS ( Document doc,
                                 View view );
+extern void SectionNumbering ( Document doc,
+                                 View view );
 extern void MakeToc ( Document doc,
                         View view );
 

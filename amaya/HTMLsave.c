@@ -1454,9 +1454,6 @@ void RestartParser (Document doc, char *localFile,
   else
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE, FALSE);
 
-  /* Activate the section numbering */
-  if (DocumentTypes[doc] == docHTML && SNumbering[doc])
-    ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
   /* Restore the Display Mode */
   TtaSetDisplayMode (doc, DisplayImmediately);
 

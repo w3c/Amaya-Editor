@@ -5663,8 +5663,6 @@ void StartXmlParser (Document doc, char *fileName,
       if (isXHTML)
 	{
 	  CheckAbstractTree (XMLcontext.doc);
-	  if (SNumbering[doc])
-	    ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 	  if (MapAreas[doc])
 	    ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
 	}

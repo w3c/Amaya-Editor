@@ -1413,6 +1413,14 @@ void ReadAsSHIFT_JIS (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  SectionNumbering generates numbers for all HTML Hi elements after
+  the current position.
+  ----------------------------------------------------------------------*/
+void SectionNumbering (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
   MakeToC generates a Table of Contents at the current position.
   Looks for all HTML Hi elements after the current position.
   ----------------------------------------------------------------------*/

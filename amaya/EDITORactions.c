@@ -451,9 +451,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 	UpdateContextSensitiveMenus (SelectionDoc);
       SelectionDoc = doc;
       UpdateContextSensitiveMenus (doc);
-      /* Activate the section numbering */
-      if (SNumbering[doc])
-	ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
       /* Activate show areas */
       if (MapAreas[doc])
 	ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);

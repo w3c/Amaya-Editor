@@ -215,7 +215,6 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_CHECK_SHOWBUTTONS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SHOW_BUTTONBAR)) );
   XRCCTRL(*this, "wxID_CHECK_SHOWADDR", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SHOW_TEXTZONE)) );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SHOW_TARGETS)) );
-  XRCCTRL(*this, "wxID_CHECK_NBSECTIONS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SECTION_NUMBER)) );
 
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ACCESSKEY)) );
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetString(2,TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NONE)) );
@@ -250,7 +249,6 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   XRCCTRL(*this, "wxID_CHECK_SHOWBUTTONS", wxCheckBox)->SetValue( prop.S_Buttons );
   XRCCTRL(*this, "wxID_CHECK_SHOWADDR",    wxCheckBox)->SetValue( prop.S_Address );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetValue( prop.S_Targets );
-  XRCCTRL(*this, "wxID_CHECK_NBSECTIONS",  wxCheckBox)->SetValue( prop.S_Numbers );
 
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX",    wxRadioBox)->SetSelection( prop.AccesskeyMod );
   
@@ -283,7 +281,6 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   prop.S_Buttons       = XRCCTRL(*this, "wxID_CHECK_SHOWBUTTONS", wxCheckBox)->GetValue();
   prop.S_Address       = XRCCTRL(*this, "wxID_CHECK_SHOWADDR",    wxCheckBox)->GetValue();
   prop.S_Targets       = XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->GetValue();
-  prop.S_Numbers       = XRCCTRL(*this, "wxID_CHECK_NBSECTIONS",  wxCheckBox)->GetValue();
 
   prop.AccesskeyMod    = XRCCTRL(*this, "wxID_RADIO_QUICKAXX",    wxRadioBox)->GetSelection();
 

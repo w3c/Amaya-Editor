@@ -1280,9 +1280,6 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
     UpdateContextSensitiveMenus (SelectionDoc);
   SelectionDoc = newLibraryDoc;
   UpdateContextSensitiveMenus (newLibraryDoc);
-  /* Activate the section numbering */
-  if (SNumbering[newLibraryDoc])
-    ChangeAttrOnRoot (newLibraryDoc, HTML_ATTR_SectionNumbering);
   /* Activate show areas */
   if (MapAreas[newLibraryDoc])
     ChangeAttrOnRoot (newLibraryDoc, HTML_ATTR_ShowAreas);

@@ -79,7 +79,6 @@
 #define mProfileEmpty2        4
 #define mProfileSelector      5
 #define MAX_PROFILEMENU_DLG   6
-static void BuildProfileSelector();
 
 #define TemplatesMenu           1
 #define mTemplates              2
@@ -107,7 +106,6 @@ typedef struct Prop_General_t
   ThotBool S_Buttons;
   ThotBool S_Address;
   ThotBool S_Targets;
-  ThotBool S_Numbers;
   ThotBool S_AutoSave;
   ThotBool S_Geometry;
 } Prop_General;

@@ -191,7 +191,6 @@ static ThotBool & PasteLineByLine = GProp_General.PasteLineByLine;
 static ThotBool & S_Buttons       = GProp_General.S_Buttons;
 static ThotBool & S_Address       = GProp_General.S_Address;
 static ThotBool & S_Targets       = GProp_General.S_Targets;
-static ThotBool & S_Numbers       = GProp_General.S_Numbers;
 #define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
 				   automatic saving */
 static ThotBool & S_AutoSave      = GProp_General.S_AutoSave;
@@ -207,7 +206,6 @@ static ThotBool PasteLineByLine;
 static ThotBool S_Buttons;
 static ThotBool S_Address;
 static ThotBool S_Targets;
-static ThotBool S_Numbers;
 #define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
 				   automatic saving */
 static ThotBool S_AutoSave;
@@ -1711,7 +1709,6 @@ void GetGeneralConf (void)
   TtaGetEnvBoolean ("SHOW_BUTTONS", &S_Buttons);
   TtaGetEnvBoolean ("SHOW_ADDRESS", &S_Address);
   TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
-  TtaGetEnvBoolean ("SECTION_NUMBERING", &S_Numbers);
   TtaGetEnvBoolean ("SAVE_GEOMETRY", &S_Geometry);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("LANG", DialogueLang);
@@ -1940,27 +1937,6 @@ static void UpdateShowAddress ()
 
 
 /*----------------------------------------------------------------------
-  UpdateSectionNumbering
-  Sets the section numbering on all documents
-  ----------------------------------------------------------------------*/
-static void UpdateSectionNumbering ()
-{
-  int               doc;
-
-  for (doc = 1; doc < DocumentTableLength; doc++)
-    {
-      if (DocumentURLs[doc] &&
-	  SNumbering[doc] != S_Numbers &&
-	  DocumentTypes[doc] == docHTML)
-	/* generate numbers */
-	SectionNumbering (doc, 1);
-      else
-	/* update only the indicator */
-	SNumbering[doc] = S_Numbers;
-    }
-}
-
-/*----------------------------------------------------------------------
   SetGeneralConf
   Updates the registry General values and calls the General functions
   to take into account the changes
@@ -2006,10 +1982,6 @@ void SetGeneralConf (void)
   TtaSetEnvBoolean ("SHOW_TARGET", S_Targets, TRUE);
   if (old != S_Targets)
     UpdateShowTargets ();
-  TtaGetEnvBoolean ("SECTION_NUMBERING", &old);
-  TtaSetEnvBoolean ("SECTION_NUMBERING", S_Numbers, TRUE);
-  if (old != S_Numbers)
-    UpdateSectionNumbering ();
 
   /* Save view geometry on exit */
   TtaSetEnvBoolean ("SAVE_GEOMETRY", S_Geometry, TRUE);
@@ -2057,8 +2029,6 @@ void GetDefaultGeneralConf ()
 		   GeneralBase + mToggleGeneral, 4);
   GetDefEnvToggle ("SHOW_TARGET", &S_Targets,
 		   GeneralBase + mToggleGeneral, 5);
-  GetDefEnvToggle ("SECTION_NUMBERING", &S_Numbers,
-		   GeneralBase + mToggleGeneral, 6);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
   GetDefEnvString ("ACCESSKEY_MOD", ptr);
@@ -2094,8 +2064,6 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_SHOWADDRESS, (S_Address) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_SHOWTARGET, (S_Targets) 
-		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_NUMBER, (S_Numbers) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   switch (AccesskeyMod)
@@ -2138,8 +2106,6 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 		     TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWTARGET),
 		     TtaGetMessage (AMAYA, AM_SHOW_TARGETS));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBER),
-		     TtaGetMessage (AMAYA, AM_SECTION_NUMBER));
       /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
@@ -2210,9 +2176,6 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_SHOWTARGET:
 	  S_Targets = !S_Targets;
 	  break;
-	case IDC_NUMBER:
-	  S_Numbers = !S_Numbers;
-	  break;
 
 	  /* action buttons */
 	case ID_APPLY:
@@ -2250,7 +2213,6 @@ static void RefreshGeneralMenu ()
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Buttons);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Address);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, S_Targets);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 6, S_Numbers);
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetMenuForm (GeneralBase + mGeneralAccessKey, AccesskeyMod);
@@ -2333,9 +2295,6 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	    case 5:
 	      S_Targets = !S_Targets;
 	      break;
-	    case 6:
-	      S_Numbers = !S_Numbers;
-	      break;
 	    }
 	  break;
 
@@ -2414,19 +2373,18 @@ void GeneralConfMenu (Document document, View view)
    TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, " ");
    /*TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");*/
    /* second line */
-   sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
+   sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s%c", 
 	     TtaGetMessage (AMAYA, AM_PASTE_LINE_BY_LINE), EOS, 
 	     TtaGetMessage (AMAYA, AM_AUTO_SAVE), EOS, 
 	     TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY_ON_EXIT), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR), EOS,
 	     TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE), EOS,
-	     TtaGetMessage (AMAYA, AM_SHOW_TARGETS), EOS,
-	     TtaGetMessage (AMAYA, AM_SECTION_NUMBER));
+	    TtaGetMessage (AMAYA, AM_SHOW_TARGETS), EOS);
 
    TtaNewToggleMenu (GeneralBase + mToggleGeneral,
 		     GeneralBase + GeneralMenu,
 		     NULL,
-		     7,
+		     6,
 		     s,
 		     NULL,
 		     FALSE);
