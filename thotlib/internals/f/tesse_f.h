@@ -12,8 +12,8 @@ extern void MeshNewPoint ( float x,
                            void *v_path );
 extern void CountourCountAdd ( void *v_path );
 extern void FreeMesh ( void *v_path );
-extern void MakeMesh ( void *v_path );
 extern void MakeMeshLines ( void *v_path );
+extern void MakeMesh ( void *v_path );
 extern void MakefloatMesh ( ThotPoint *points,
                             int npoints );
 
@@ -25,8 +25,8 @@ extern void MeshNewPoint (/* float x,
                              void *v_path */);
 extern void CountourCountAdd (/* void *v_path */);
 extern void FreeMesh (/* void *v_path */);
-extern void MakeMesh (/* void *v_path */);
 extern void MakeMeshLines (/* void *v_path */);
+extern void MakeMesh (/* void *v_path */);
 extern void MakefloatMesh (/* ThotPoint *points,
                               int npoints */);
 

@@ -972,8 +972,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #ifdef _GL
 	  x = box->BxXOrg - box->BxLMargin - pFrame->FrXOrg;
 	  y = box->BxYOrg - box->BxTMargin - pFrame->FrYOrg;
- 	  clipWidth  = pFrame->FrClipXEnd; 
- 	  clipHeight = pFrame->FrClipYEnd; 
+ 	  clipWidth  = pFrame->FrClipXEnd - x; 
+ 	  clipHeight = pFrame->FrClipYEnd - y; 
 	  if (pAb &&
 	      !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 				 pAb->AbElement->ElStructSchema))
@@ -1008,8 +1008,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  y = yFrame - picYOrg + pFrame->FrYOrg;
 	  if (y < dy)
 	    y = dy;
-	  clipWidth  = pFrame->FrClipXEnd;
-	  clipHeight = pFrame->FrClipYEnd;
+	  clipWidth  = pFrame->FrClipXEnd - x;
+	  clipHeight = pFrame->FrClipYEnd - y;
 	  /* compute the shift in the source image */
 	  dx = x;
 	  dy = y;
