@@ -21,22 +21,6 @@
 #define NOERROR 1
 
 
-/* --- Thot Picture Drivers Interface --- */
-
-typedef enum 
-{ 
-  	NoError, 
-	Info, 
-	Warning, 
-	Grave, 
-	Fatal 
-} ErrorLevel;
-
-typedef struct 
-{
-  	int 	version; /* version number of this struct */
-} ImageInfo;
-
 /* Penser a synchroniser cette structure avec la regle de presentation */
 typedef struct 
 {

@@ -17,21 +17,19 @@
 #include "interface.h"
 
 typedef enum
-  {
-     ExisteTypeOK,
-     MauvaisType,
-     ExistePas
-  }
-FileStatus;
+{
+  ExisteTypeOK,
+  MauvaisType,
+  ExistePas
+} FileStatus;
 
 typedef struct
-  {
-     char                menuName[MAXFORMATNAMELENGHT];
-                         Drawable (*CreateImage) ();
-     void                (*PrintImage) ();
-                         boolean (*IsFormat) ();
-  }
-PictureHandler;
+{
+     char     menuName[MAXFORMATNAMELENGHT];
+     Drawable (*CreateImage) ();
+     void     (*PrintImage) ();
+     boolean  (*IsFormat) ();
+} PictureHandler;
 
 #define EXPORT extern
 #include "img.var"
@@ -39,18 +37,14 @@ PictureHandler;
 #include "font.var"
 #include "environ.var"
 
-boolean             Printing;
-ThotGC              GCpicture;	/* for bitmap */
-
+static boolean      Printing;
+ThotGC       GCpicture;	/* for bitmap */
 char               *SuffixImage[] =
 {".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"};
-
 THOT_VInfo          THOT_vInfo;
-
 #ifndef NEW_WILLOWS
 XVisualInfo        *vptr;
 Visual             *theVisual;
-
 #endif
 
 static PictureHandler  PictureHandlerTable[MAXNBDRIVER];
@@ -833,94 +827,81 @@ int                 frame;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
-   int                 typeImage;
-   char                fileName[1023];
-   PictureScaling           pres;
-   int                 xif, yif, wif, hif;
-   int                 xcf, ycf, wcf, hcf;
-   int                 xtranslate, ytranslate, pxorig, pyorig;
-   int                 presW, presH;
-   Drawable            myDrawable;
-   Drawable            drawable;
-   int                 XOrg, YOrg;
-   XImage             *maskImage;
-   int                 xpix, ypix, bdw;
-   unsigned long       BackGroundPixel;
+  int                 typeImage;
+  char                fileName[1023];
+  PictureScaling           pres;
+  int                 xif, yif, wif, hif;
+  int                 xcf, ycf, wcf, hcf;
+  int                 xtranslate, ytranslate, pxorig, pyorig;
+  Drawable            myDrawable;
+  Drawable            drawable;
+  int                 XOrg, YOrg;
+  unsigned long       BackGroundPixel;
 
-   xtranslate = 0;
-   ytranslate = 0;
-   pxorig = 0;
-   pyorig = 0;
-   drawable = TtaGetThotWindow (frame);
-   GetXYOrg (frame, &XOrg, &YOrg);
-   typeImage = imageDesc->imageType;
-   GetImageFileName (imageDesc->imageFileName, fileName);
+  xtranslate = 0;
+  ytranslate = 0;
+  pxorig = 0;
+  pyorig = 0;
+  drawable = TtaGetThotWindow (frame);
+  GetXYOrg (frame, &XOrg, &YOrg);
+  typeImage = imageDesc->imageType;
+  GetImageFileName (imageDesc->imageFileName, fileName);
 
-   pres = imageDesc->imagePres;
-   xif = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
-   yif = box->BxYOrg + FrameTable[frame].FrTopMargin - YOrg;
-   wif = box->BxWidth;
-   hif = box->BxHeight;
-   xcf = imageDesc->xcf;
-   ycf = imageDesc->ycf;
-   wcf = imageDesc->wcf;
-   hcf = imageDesc->hcf;
-   BackGroundPixel = box->BxAbstractBox->AbBackground;
+  pres = imageDesc->imagePres;
+  xif = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
+  yif = box->BxYOrg + FrameTable[frame].FrTopMargin - YOrg;
+  wif = box->BxWidth;
+  hif = box->BxHeight;
+  xcf = imageDesc->xcf;
+  ycf = imageDesc->ycf;
+  wcf = imageDesc->wcf;
+  hcf = imageDesc->hcf;
+  BackGroundPixel = box->BxAbstractBox->AbBackground;
 
+  IsCropOk (&wcf, &hcf, wif, hif, imageDesc);
+  if (!Printing)
+    {
+      SetCursorWatch (frame);
+      if (imageDesc->imagePixmap == ImageEPSFPixmapID)
+	DrawImageBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
+      else
+	{
+	  if (!PixmapIsOk (box, imageDesc))
+	    {
+	      ReadImage (frame, box, imageDesc);
+	      myDrawable = imageDesc->imagePixmap;
+	    }
+	  else
+	    {
+	      /* affichage de l'image dans la boite */
+	      if (imageDesc->imagePres != FillFrame)
+		CentreImage (wcf, hcf, wif, hif, pres, &xtranslate, &ytranslate, &pxorig, &pyorig);
 
-   IsCropOk (&wcf, &hcf, wif, hif, imageDesc);
-   if (!Printing)
-     {
-	SetCursorWatch (frame);
-	if (imageDesc->imagePixmap == ImageEPSFPixmapID)
-	  {
-	     DrawImageBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
-	  }
-	else
-	  {
-	     if (!PixmapIsOk (box, imageDesc))
-	       {
-		  ReadImage (frame, box, imageDesc);
-		  myDrawable = imageDesc->imagePixmap;
-	       }
-	     else
-	       {
-
-		  /* affichage de l'image dans la boite */
-
-		  if (imageDesc->imagePres != FillFrame)
-		     CentreImage (wcf, hcf, wif, hif, pres,
-				&xtranslate, &ytranslate, &pxorig, &pyorig);
-		  if (imageDesc->mask)
-		    {
-		       XSetClipOrigin (GDp (0), graphicGC (0), xif - pxorig + xtranslate, yif - pyorig + ytranslate);
-		       XSetClipMask (GDp (0), graphicGC (0), imageDesc->mask);
-		    }
-		  if (wcf < wif)
-		     wif = wcf;
-		  if (hcf < hif)
-		     hif = hcf;
-		  CopyOnScreen (imageDesc->imagePixmap, drawable, pxorig, pyorig,
-			      wif, hif, xif + xtranslate, yif + ytranslate);
-		  if (imageDesc->mask)
-		    {
-
-		       XSetClipMask (GDp (0), graphicGC (0), None);
-		       XSetClipOrigin (GDp (0), graphicGC (0), 0, 0);
-		    }
-
-	       }
-	  }
-	ResetCursorWatch (frame);
-     }
-   else
-     {
-	if (typeImage < ImageDrvrCount && typeImage > -1)
-	   (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf,
-					(FILE *) drawable, BackGroundPixel);
-     }
+	      if (imageDesc->mask)
+		{
+		  XSetClipOrigin (GDp (0), graphicGC (0), xif - pxorig + xtranslate, yif - pyorig + ytranslate);
+		  XSetClipMask (GDp (0), graphicGC (0), imageDesc->mask);
+		}
+	      if (wcf < wif)
+		wif = wcf;
+	      if (hcf < hif)
+		hif = hcf;
+	      CopyOnScreen (imageDesc->imagePixmap, drawable, pxorig, pyorig,
+			    wif, hif, xif + xtranslate, yif + ytranslate);
+	      if (imageDesc->mask)
+		{
+		  XSetClipMask (GDp (0), graphicGC (0), None);
+		  XSetClipOrigin (GDp (0), graphicGC (0), 0, 0);
+		}
+	    }
+	}
+      ResetCursorWatch (frame);
+    }
+  else if (typeImage < ImageDrvrCount && typeImage > -1)
+    (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf,
+						    (FILE *) drawable, BackGroundPixel);
 #endif /* NEW_WILLOWS */
-}				/*DrawImage */
+}
 
 
 /* ---------------------------------------------------------------------- */
