@@ -17,6 +17,12 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#ifdef MATHML
+#include "MathML.h"
+#endif
+#ifdef GRAPHML
+#include "GraphML.h"
+#endif
 
 static STRING       TargetDocumentURL = NULL;
 static int          OldWidth;
@@ -178,7 +184,7 @@ ThotBool		    withUndo;
   else
 #endif
 #ifdef GRAPHML
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
      {
      MapGraphMLAttribute ("link", &attrType, "", doc);
      MapGraphMLAttributeValue ("simple", attrType, &val);
@@ -485,7 +491,8 @@ Element             selectedElement;
         elType = TtaGetElementType (selectedElement);
 	HTMLSSchema = TtaGetSSchema ("HTML", doc);
 	attrType.AttrSSchema = HTMLSSchema;
-	if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == HTML_EL_Anchor)
+	if (elType.ElSSchema == HTMLSSchema &&
+	    elType.ElTypeNum == HTML_EL_Anchor)
 	  el = selectedElement;
 	else
 	  {
@@ -507,6 +514,28 @@ Element             selectedElement;
 	    /* get the ID attribute of the selected element */
 	    attrType.AttrTypeNum = HTML_ATTR_ID;
 	    attr = TtaGetAttribute (selectedElement, attrType);
+#ifdef MATHML
+	    if (!attr)
+	       {
+	       attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
+	       if (attrType.AttrSSchema)
+		 {
+		 attrType.AttrTypeNum = MathML_ATTR_id;
+		 attr = TtaGetAttribute (selectedElement, attrType);
+		 }
+	       }
+#endif
+#ifdef GRAPHML
+	    if (!attr)
+	       {
+	       attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
+	       if (attrType.AttrSSchema)
+		 {
+		 attrType.AttrTypeNum = GraphML_ATTR_id;
+		 attr = TtaGetAttribute (selectedElement, attrType);
+		 }
+	       }
+#endif
 	  }
      }
    return (attr);
@@ -550,7 +579,25 @@ Boolean		    withUndo;
 		      elType.ElTypeNum == HTML_EL_MAP))
      attrType.AttrTypeNum = HTML_ATTR_NAME;
    else
-     attrType.AttrTypeNum = HTML_ATTR_ID;
+     {
+#ifdef MATHML
+     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+       {
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = MathML_ATTR_id;
+       }
+     else
+#endif
+#ifdef GRAPHML
+     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+       {
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = GraphML_ATTR_id;
+       }
+     else
+#endif
+       attrType.AttrTypeNum = HTML_ATTR_ID;
+     }
    attr = TtaGetAttribute (el, attrType);
 
    if (attr == 0)
@@ -929,7 +976,25 @@ Document     doc;
        (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
      attrType.AttrTypeNum = HTML_ATTR_NAME;
    else
-     attrType.AttrTypeNum = HTML_ATTR_ID;
+     {
+#ifdef MATHML
+     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+       {
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = MathML_ATTR_id;
+       }
+     else
+#endif
+#ifdef GRAPHML
+     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+       {
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = GraphML_ATTR_id;
+       }
+     else
+#endif
+       attrType.AttrTypeNum = HTML_ATTR_ID;
+     }
    attr = TtaGetAttribute (el, attrType);
 
    if (attr != 0)

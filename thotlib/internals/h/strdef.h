@@ -95,8 +95,12 @@
 #define KWD_ColSpan 	1174
 #define KWD_RowSpan 	1175
 #define KWD_Shadow 	1176
-#define KWD_EventAttr 	1177
-#define KWD_Root 	1178
+#define KWD_CssBackground 	1177
+#define KWD_CssClass 	1178
+#define KWD_CssId 	1179
+#define KWD_CssPseudoClass 	1180
+#define KWD_EventAttr 	1181
+#define KWD_Root 	1182
 
 /*  RULES  */
 

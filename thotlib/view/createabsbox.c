@@ -3085,6 +3085,7 @@ ThotBool            inheritRule;
    PtrPRule            pR, pRuleView1, pRuleToApply;
    int                 view, i;
    PtrPSchema          pSchP;
+   PtrSSchema	       pSS;
    PtrHandlePSchema    pHd;
    ThotBool            apply;
 
@@ -3098,7 +3099,8 @@ ThotBool            inheritRule;
 	view = AppliedView (pEl, pAttr, pDoc, viewNb);
 	/* on cherchera d'abord dans le schema de presentation principal de */
 	/* l'attribut */
-	pSchP = pAttr->AeAttrSSchema->SsPSchema;
+	pSS = pAttr->AeAttrSSchema;
+	pSchP = pSS->SsPSchema;
 	pHd = NULL;
 	/* on examine le schema de presentation principal, puis les schemas */
 	/* additionnels */
@@ -3114,7 +3116,7 @@ ThotBool            inheritRule;
 	       {
 		  /* verifie si c'est une regle de creation et si oui applique */
 		  /* la regle de creation */
-		  if (!ApplCrRule (pR, pAttr->AeAttrSSchema, pSchP, pAttr, pAbbReturn,
+		  if (!ApplCrRule (pR, pSS, pSchP, pAttr, pAbbReturn,
 				viewNb, pDoc, pEl, forward, lqueue, queuePR,
 				   queuePP, queuePS, queuePA, pNewAbbox))
 		    {
@@ -3210,7 +3212,17 @@ ThotBool            inheritRule;
 		     On prend le premier schema additionnel si on travaille pour la vue
 		     principale, sinon on ignore les schemas additionnels. */
 		  if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1)
-		     pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+		     {
+		     /* si c'est ID ou CLASS, on prend les extensions du schema
+			de presentation associe' au schema de structure du
+			document */
+	             if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+	                                   pAttr->AeAttrSSchema) ||
+	                 AttrHasException (ExcCssId, pAttr->AeAttrNum,
+	                                   pAttr->AeAttrSSchema))
+			pSS = pDoc->DocSSchema;
+		     pHd = pSS->SsFirstPSchemaExtens;
+		     }
 	       }
 	     else
 		/* passe au schema additionnel suivant */

@@ -475,6 +475,38 @@ RULES
 
 ATTRIBUTES
 
+   class:
+	begin
+	create SAN;
+	create 'class="';
+	create class;
+	create '"';
+	end;
+  
+   style\240:
+	begin
+	create SAN;
+	create 'style="';
+	create style\240;
+	create '"';
+	end;
+  
+   id:
+	begin
+	create SAN;
+	create 'id="';
+	create id;
+	create '"';
+	end;
+  
+   other:
+	begin
+	create SAN;
+	create 'other="';
+	create other;
+	create '"';
+	end;
+  
   link = simple:
 	create ' xml:link="simple"';
   link = extended:

@@ -4736,7 +4736,16 @@ PtrAttribute        pAttrComp;
 	else
 	   /* on cherchait dans le schema de presentation principal */
            /* on prend le premier schema de presentation additionnel */
+	   {
 	   pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+           /* mais si c'est ID ou CLASS, on prend les extensions du schema
+              de presentation associe' au schema de structure du document */
+	   if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+				 pAttr->AeAttrSSchema) ||
+	       AttrHasException (ExcCssId, pAttr->AeAttrNum,
+				 pAttr->AeAttrSSchema))
+              pHd = pDoc->DocSSchema->SsFirstPSchemaExtens;
+	   }
 	if (pHd)
 	   pSchP = pHd->HdPSchema;
 	else

@@ -17,6 +17,12 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#ifdef MATHML
+#include "MathML.h"
+#endif
+#ifdef GRAPHML
+#include "GraphML.h"
+#endif
 #include "presentation.h"
 
 #include "EDITstyle_f.h"
@@ -343,14 +349,37 @@ Element             elem;
 {
    AttributeType       attrType;
    Attribute           styleAttr;
+#ifdef MATHML
+   ElementType         elType;
+#endif
    Element	       firstChild, lastChild;
 #define STYLELEN 1000
-   STRING               style;
+   STRING              style;
    int                 len;
 
    /* does the element have a Style_ attribute ? */
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-   attrType.AttrTypeNum = HTML_ATTR_Style_;
+#ifdef MATHML
+   elType = TtaGetElementType (elem);
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+      {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_style_;
+      }
+   else
+#endif
+#ifdef GRAPHML
+   elType = TtaGetElementType (elem);
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+      {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = GraphML_ATTR_style_;
+      }
+   else
+#endif
+      {
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+      attrType.AttrTypeNum = HTML_ATTR_Style_;
+      }
    styleAttr = TtaGetAttribute (elem, attrType);
    /* keep the new style string */
    len = STYLELEN;

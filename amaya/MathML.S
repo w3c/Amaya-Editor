@@ -8,11 +8,19 @@ STRUCTURE MathML;
 DEFPRES MathMLP;
 
 ATTR
+
+   { att-globalatts }
+   id = TEXT;
+   class = TEXT;
+   style\240 = TEXT;
+   other = TEXT;
+
+   { xml:link }
+   link = simple, extended, locator, group, document;
+
    { generic attributes for Amaya and XML }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
-
-   link = simple, extended, locator, group, document;	{ xml:link }
 
 CONST
    C_Empty = ' ';
@@ -184,4 +192,7 @@ EXCEPT
    horizstretch:  	Invisible;
    vertstretch:	  	Invisible;
    MRef_column:		ColRef, Invisible;
+   id:			CssId;
+   class:		CssClass;
+
 END

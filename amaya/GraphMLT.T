@@ -225,6 +225,30 @@ RULES
 
 ATTRIBUTES
 
+   class:
+        begin
+        create SAN;
+        create 'class="';
+        create class;
+        create DoubleQuote;
+        end;
+ 
+   style\240:
+        begin
+        create SAN;
+        create 'style="';
+        create style\240;
+        create DoubleQuote;
+        end;
+ 
+   id:
+        begin
+        create SAN;
+        create 'id="';
+        create id;
+        create DoubleQuote;
+        end;
+ 
    link = simple:
         create ' xml:link="simple"';
    link = extended:
@@ -258,14 +282,6 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'linestyle="dotted"';
-	END;
-
-   lid:
-	BEGIN
-	create SAN;
-	create 'lid="';
-	create lid;
-	create DoubleQuote;
 	END;
 
    align = left_:

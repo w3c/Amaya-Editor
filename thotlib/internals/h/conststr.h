@@ -76,6 +76,7 @@
 #define ExcExtendedSelection 312
 #define ExcIsDraw 313
 #define ExcMoveResize 314
+/* Table exceptions */
 #define ExcIsTable 315
 #define ExcIsRow 316
 #define ExcIsColHead 317
@@ -86,6 +87,11 @@
 #define ExcRowSpan 322
 #define ExcShadow 323
 #define ExcEventAttr 324
+/* CSS exceptions */
+#define ExcCssBackground 340
+#define ExcCssClass 341
+#define ExcCssId 342
+#define ExcCssPseudoClass 343
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400
 

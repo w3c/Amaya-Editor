@@ -17,6 +17,12 @@
 #include "amaya.h"
 #include "css.h"
 #include "undo.h"
+#ifdef MATHML
+#include "MathML.h"
+#endif
+#ifdef GRAPHML
+#include "GraphML.h"
+#endif
  
 #include "css_f.h"
 #include "html2thot_f.h"
@@ -49,15 +55,42 @@ Document          doc;
 ThotBool          removeSpan;
 #endif
 {
+#ifdef MATHML
+   ElementType		elType;
+#endif
    Attribute            attr;
    AttributeType        attrType;
    Element		firstChild, lastChild;
 
    if (el == NULL)
       return;
-
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-   attrType.AttrTypeNum = HTML_ATTR_Style_;
+   elType = TtaGetElementType (el);
+#ifdef MATHML
+   /* if it's a MathML element, remove the style attribute defined in the
+      MathML DTD, otherwise, remove the style attribute defined in the
+      HTML DTD */
+   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+      {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_style_;
+      }
+   else
+#endif
+#ifdef GRAPHML
+   /* if it's a GraphML element, remove the style attribute defined in the
+      GraphML DTD, otherwise, remove the style attribute defined in the
+      HTML DTD */
+   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+      {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = GraphML_ATTR_style_;
+      }
+   else
+#endif
+      {
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+      attrType.AttrTypeNum = HTML_ATTR_Style_;
+      }
    attr = TtaGetAttribute (el, attrType);
    if (attr != NULL)
       {
@@ -309,6 +342,9 @@ NotifyAttribute    *event;
 #endif
 {
    Element             el, firstChild, lastChild, oldParent, newParent;
+#ifdef MATHML
+   ElementType	       elType;
+#endif
    Document            doc;
    Attribute           at;
    AttributeType       atType;
@@ -327,9 +363,33 @@ NotifyAttribute    *event;
    if (len == 0)
      {
 	/* empty Style attribute. Delete it */
-	atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-	atType.AttrTypeNum = HTML_ATTR_Style_;
-
+	elType = TtaGetElementType (el);
+#ifdef MATHML
+        /* if it's a MathML element, delete the style attribute defined in the
+           MathML DTD, otherwise, delete the style attribute defined in the
+           HTML DTD */
+	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	   {
+	   atType.AttrSSchema = elType.ElSSchema;
+	   atType.AttrTypeNum = MathML_ATTR_style_;
+	   }
+	else
+#endif
+#ifdef GRAPHML
+        /* if it's a GraphML element, delete the style attribute defined in the
+           GraphML DTD, otherwise, delete the style attribute defined in the
+           HTML DTD */
+	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	   {
+	   atType.AttrSSchema = elType.ElSSchema;
+	   atType.AttrTypeNum = GraphML_ATTR_style_;
+	   }
+	else
+#endif
+	   {
+	   atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+	   atType.AttrTypeNum = HTML_ATTR_Style_;
+	   }
 	at = TtaGetAttribute (el, atType);
 	if (at != NULL)
 	  {
@@ -379,7 +439,7 @@ Document            doc;
 
 #endif /* __STDC__ */
 {
-  Element             firstSelectedEl, lastSelectedEl, cour, el, span, next,
+  Element             firstSelectedEl, lastSelectedEl, curEl, el, span, next,
 		      firstChild, lastChild, parent;
   ElementType	      elType;
   Attribute           attr;
@@ -409,11 +469,7 @@ Document            doc;
 
   if (ustrcmp (CurrentClass, "default") &&
       !IsImplicitClassName (CurrentClass, doc))
-     {
      setClassAttr = TRUE;
-     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-     attrType.AttrTypeNum = HTML_ATTR_Class;
-     }
   else
      setClassAttr = FALSE;
 
@@ -491,69 +547,94 @@ Document            doc;
 
   TtaOpenUndoSequence (doc, firstSelectedEl, lastSelectedEl, 0, 0);
   /* process all selected elements */
-  cour = firstSelectedEl;
-  while (cour != NULL)
+  curEl = firstSelectedEl;
+  while (curEl != NULL)
      {
       /* The current element may be deleted by DeleteSpanIfNoAttr. So, get
 	 first the next element to be processed */
-      if (cour == lastSelectedEl)
+      if (curEl == lastSelectedEl)
          next = NULL;
       else
 	 {
-         next = cour;
+         next = curEl;
          TtaGiveNextElement (doc, &next, lastSelectedEl);
 	 }
 
       if (!setClassAttr)
 	 {
-	 DeleteSpanIfNoAttr (cour, doc, &firstChild, &lastChild);
+	 DeleteSpanIfNoAttr (curEl, doc, &firstChild, &lastChild);
 	 if (firstChild)
 	    {
-	    if (cour == firstSelectedEl)
+	    if (curEl == firstSelectedEl)
 	        firstSelectedEl = firstChild;
-	    if (cour == lastSelectedEl)
+	    if (curEl == lastSelectedEl)
 		lastSelectedEl = lastChild;
 	    }
 	 }
       else
 	 {
-	  elType = TtaGetElementType (cour);
+	  elType = TtaGetElementType (curEl);
 	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	     /* that's a text element. Create an enclosing SPAN element */
-	     {
-	     MakeASpan (cour, &span, doc);
-	     if (span)
-		/* a SPAN element was created */
-		{
-		if (cour == firstSelectedEl)
+	     /* that's a text element */
+	     if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		/* not a HTML element, move to the parent element */
+		curEl = TtaGetParent (curEl);
+	     else
+	        /* we are in a HTML element. Create an enclosing SPAN element*/
+	        {
+	        MakeASpan (curEl, &span, doc);
+	        if (span)
+		   /* a SPAN element was created */
 		   {
-		   firstSelectedEl = span;
-		   if (firstSelectedEl == lastSelectedEl)
+		   if (curEl == firstSelectedEl)
+		      {
+		      firstSelectedEl = span;
+		      if (firstSelectedEl == lastSelectedEl)
+		         lastSelectedEl = span;
+		      }
+		   else if (curEl == lastSelectedEl)
 		      lastSelectedEl = span;
+		   curEl = span;
 		   }
-		else if (cour == lastSelectedEl)
-		   lastSelectedEl = span;
-		cour = span;
-		}
+	        }
+#ifdef MATHML
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	     {
+	     attrType.AttrSSchema = elType.ElSSchema;
+	     attrType.AttrTypeNum = MathML_ATTR_class;
+	     }
+	  else
+#endif
+#ifdef GRAPHML
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	     {
+	     attrType.AttrSSchema = elType.ElSSchema;
+	     attrType.AttrTypeNum = GraphML_ATTR_class;
+	     }
+	  else
+#endif
+	     {
+	     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+	     attrType.AttrTypeNum = HTML_ATTR_Class;
 	     }
 	  /* set the Class attribute of the element */
-	  attr = TtaGetAttribute (cour, attrType);
+	  attr = TtaGetAttribute (curEl, attrType);
 	  if (!attr)
 	     {
 	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (cour, attr, doc);
-	      TtaSetAttributeText (attr, a_class, cour, doc);
-	      TtaRegisterAttributeCreate (attr, cour, doc);
+	      TtaAttachAttribute (curEl, attr, doc);
+	      TtaSetAttributeText (attr, a_class, curEl, doc);
+	      TtaRegisterAttributeCreate (attr, curEl, doc);
 	     }
 	  else
 	     {
-	     TtaRegisterAttributeReplace (attr, cour, doc);
-	     TtaSetAttributeText (attr, a_class, cour, doc);
+	     TtaRegisterAttributeReplace (attr, curEl, doc);
+	     TtaSetAttributeText (attr, a_class, curEl, doc);
 	     }
 	  TtaSetDocumentModified (doc);
 	 }
       /* jump to the next element */
-      cour = next;
+      curEl = next;
      }
   TtaCloseUndoSequence (doc);
 
@@ -566,8 +647,8 @@ Document            doc;
 
 /*----------------------------------------------------------------------
    UpdateClass
-   Change or create a class to reflect the Style attribute of the
-   selected element.
+   Change or create a class attribute to reflect the Style attribute
+   of the selected element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         UpdateClass (Document doc)
@@ -611,13 +692,31 @@ Document            doc;
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
 
   /* create the class attribute */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   if (stylestring[1] == '.')
     {
       a_class = &CurrentClass[0];
       if (*a_class == '.')
-	a_class++;
-      attrType.AttrTypeNum = HTML_ATTR_Class;
+	 a_class++;
+#ifdef MATHML
+      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	 {
+	 attrType.AttrSSchema = elType.ElSSchema;
+	 attrType.AttrTypeNum = MathML_ATTR_class;
+	 }
+      else
+#endif
+#ifdef GRAPHML
+      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	 {
+	 attrType.AttrSSchema = elType.ElSSchema;
+	 attrType.AttrTypeNum = GraphML_ATTR_class;
+	 }
+      else
+#endif
+	 {
+         attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+         attrType.AttrTypeNum = HTML_ATTR_Class;
+	 }
       attr = TtaGetAttribute (ClassReference, attrType);
       if (!attr)
 	{
@@ -643,8 +742,58 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   BuildClassList : Build the whole list of HTML class names in use
-   after the first name.
+   PutClassName
+   Put the value of attribute attr at the end of the buff buffer if
+   it's not there already.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void PutClassName (Attribute attr, STRING buf, int* index, int* free,
+			  int* nb)
+#else  /* __STDC__ */
+static void PutClassName (attr, buf, index, free, nb)
+Attribute	attr;
+STRING		buf;
+int*		index;
+int*		free;
+int*		nb;
+
+#endif /* __STDC__ */
+{
+  int		len, cur, i;
+  CHAR_T        selector[100];
+  ThotBool      found;
+
+  len = 99;
+  TtaGiveTextAttributeValue (attr, selector, &len);
+  /* compare with all already known class names */
+  cur = 0;
+  found = FALSE;
+  for (i = 0; i < *nb && !found; i++)
+    {
+      if (buf[cur] == '.')
+	cur++;
+      len = ustrlen (&buf[cur]) + 1;
+      found = !ustrcmp (selector, &buf[cur]);
+      cur += len;
+    }
+  if (!found)
+    {
+      len = ustrlen (selector);
+      if (len > *free)
+	return;
+      /* add this new class name and the dot */
+      buf[(*index)++] = '.';
+      ustrcpy (&buf[*index], selector);
+      len++; /* add the \0 */
+      *free -= len;
+      *index += len;
+      (*nb)++;
+    }
+}
+
+/*----------------------------------------------------------------------
+   BuildClassList
+   Build the whole list of class names in use after the first name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          BuildClassList (Document doc, STRING buf, int size, STRING first)
@@ -657,74 +806,75 @@ STRING              first;
 
 #endif /* __STDC__ */
 {
-  ElementType         elType;
   Element             el;
   Attribute           attr;
   AttributeType       attrType;
-  CHAR_T                selector[100];
-  int                 Free;
+  int                 free;
   int                 len;
-  int                 nb, i;
-  int                 index, cur;
-  ThotBool            found;
+  int                 nb;
+  int                 index;
 
   /* add the first element if specified */
   buf[0] = EOS;
   nb = 0;
   index = 0;
-  Free = size;
+  free = size;
   if (first)
     {
       ustrcpy (&buf[index], first);
       len = ustrlen (first);
       len++;
-      Free -= len;
+      free -= len;
       index += len;
       nb++;
     }
 
   /* list all class values */
-  el = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
+  /* looks first for the Class attribute defined in the HTML DTD */
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Class;
+  el = TtaGetMainRoot (doc);
   while (el != NULL)
-    {
-      TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-      if (attr != NULL)
-	{
-	  len = 99;
-	  TtaGiveTextAttributeValue (attr, selector, &len);
-	  /* compare with all already known class names */
-	  cur = 0;
-	  found = FALSE;
-	  for (i = 0; i < nb && !found; i++)
-	    {
-	      if (buf[cur] == '.')
-		cur++;
-	      len = ustrlen (&buf[cur]) + 1;
-	      found = !ustrcmp (selector, &buf[cur]);
-	      cur += len;
-	    }
-
-	  if (!found)
-	    {
-	      len = ustrlen (selector);
-	      if (len > Free)
-		return (nb);
-	      /* add this new class name + the dot */
-	      buf[index++] = '.';
-	      ustrcpy (&buf[index], selector);
-              len++; /* add the \0 */
-              Free -= len;
-              index += len;
-              nb++;
-	    }
-	}
-    }
+     {
+     TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+     if (attr != NULL)
+	PutClassName (attr, buf, &index, &free, &nb);
+     }
+#ifdef MATHML
+  /* looks for the class attribute defined in the MathML DTD */
+  attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
+  if (attrType.AttrSSchema)
+     /* there are some MathML elements in this document */
+     {
+     attrType.AttrTypeNum = MathML_ATTR_class;
+     el = TtaGetMainRoot (doc);
+     while (el != NULL)
+        {
+        TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+        if (attr != NULL)
+	   PutClassName (attr, buf, &index, &free, &nb);
+        }
+     }
+#endif
+#ifdef GRAPHML
+  /* looks for the class attribute defined in the GraphML DTD */
+  attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
+  if (attrType.AttrSSchema)
+     /* there are some GraphML elements in this document */
+     {
+     attrType.AttrTypeNum = GraphML_ATTR_class;
+     el = TtaGetMainRoot (doc);
+     while (el != NULL)
+        {
+        TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+        if (attr != NULL)
+	   PutClassName (attr, buf, &index, &free, &nb);
+        }
+     }
+#endif
   return (nb);
 }
-
+	    
 /*----------------------------------------------------------------------
    CreateClass
    creates a class from the Style attribute of the selected element
@@ -742,7 +892,7 @@ View                view;
   AttributeType       attrType;
   Element             last_elem;
   ElementType         elType;
-  CHAR_T                a_class[50];
+  CHAR_T              a_class[50];
   STRING              elHtmlName;
   int                 len, i, j;
   int                 firstSelectedChar, lastSelectedChar;
@@ -778,9 +928,26 @@ View                view;
 #  endif /* !_WINDOWS */
   
   /* preselect the entry corresponding to the class of the element. */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-  attrType.AttrTypeNum = HTML_ATTR_Class;
-  
+#ifdef MATHML
+  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+     {
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_class;
+     }
+  else
+#endif
+#ifdef GRAPHML
+  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+     {
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = GraphML_ATTR_class;
+     }
+  else
+#endif
+     {
+     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+     attrType.AttrTypeNum = HTML_ATTR_Class;
+     }
   attr = TtaGetAttribute (ClassReference, attrType);
   if (attr)
     {
@@ -823,7 +990,10 @@ View                view;
   Attribute           attr;
   AttributeType       attrType;
   Element             firstSelectedEl;
-  CHAR_T                a_class[50];
+#ifdef MATHML
+  ElementType	      elType;
+#endif
+  CHAR_T              a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
 
@@ -848,8 +1018,28 @@ View                view;
 
   /* preselect the entry corresponding to the class of the first selected
      element. */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-  attrType.AttrTypeNum = HTML_ATTR_Class;
+#ifdef MATHML
+  elType = TtaGetElementType (firstSelectedEl);
+  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+     {
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_class;
+     }
+  else
+#endif
+#ifdef GRAPHML
+  elType = TtaGetElementType (firstSelectedEl);
+  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+     {
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = GraphML_ATTR_class;
+     }
+  else
+#endif
+     {
+     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+     attrType.AttrTypeNum = HTML_ATTR_Class;
+     }
   attr = TtaGetAttribute (firstSelectedEl, attrType);
   if (attr)
     {

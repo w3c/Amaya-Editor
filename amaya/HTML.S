@@ -786,7 +786,7 @@ STRUCT
 
 EXCEPT
 	HTML:           NoMove, NoResize;
-	BODY:		NoCut;
+	BODY:		NoCut, CssBackground;
 	HEAD:		NoCut;
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck;
@@ -842,7 +842,7 @@ EXCEPT
 	Ref_IMG:	Invisible;
 	AreaRef_IMG:	Invisible;
 	Invalid_attribute: Invisible;
-	PseudoClass:	Invisible;
+	PseudoClass:	Invisible, CssPseudoClass;
 	Default_Value:	Invisible;
 	DefaultSelected:Invisible;
 	DefaultChecked:	Invisible;
@@ -880,5 +880,7 @@ EXCEPT
 	onkeypress:	EventAttr;
 	onkeydown:	EventAttr;
 	onkeyup:	EventAttr;
+	ID :		CssId;
+	Class:		CssClass;
 
 END

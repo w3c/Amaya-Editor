@@ -199,6 +199,76 @@ BOXES
 		END;
 	END;
 
+
+  ATTR_class: BEGIN
+        Content: Text ' class=';
+        Visibility: 0;
+        IN Graph_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_class: BEGIN
+        Content: (class);
+        Visibility: 0;
+        IN Graph_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+ 
+  ATTR_style: BEGIN
+        Content: Text ' style=';
+        Visibility: 0;
+        IN Graph_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_style: BEGIN
+        Content: (style\240);
+        Visibility: 0;
+        IN Graph_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+  ATTR_id: BEGIN
+        Content: Text ' id=';
+        Visibility: 0;
+        IN Graph_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_id: BEGIN
+        Content: (id);
+        Visibility: 0;
+        IN Graph_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
   ATTR_link_simple: BEGIN
         Content: Text ' xml:link=simple';
         Visibility: 0;
@@ -918,6 +988,24 @@ RULES
 
 ATTRIBUTES
 
+  class:
+        BEGIN
+        CreateBefore(ATTR_class);
+        CreateBefore(VALUE_class);
+        END;
+ 
+  style\240:
+        BEGIN
+        CreateBefore(ATTR_style);
+        CreateBefore(VALUE_style);
+        END;
+ 
+  id:
+        BEGIN
+        CreateBefore(ATTR_id);
+        CreateBefore(VALUE_id);
+        END;
+
   link = simple:
         CreateBefore(ATTR_link_simple);
   link = extended:
@@ -1003,10 +1091,6 @@ ATTRIBUTES
 	IN Graph_Structure_view
 		VertPos: Top = Previous . Bottom;
 	END;
-
-{******
-   lid:
- ******}
 
    arrowhead = none:
 	CreateBefore (ATTR_arrowhead_none);

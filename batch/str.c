@@ -763,9 +763,9 @@ indLine             wi;
 
 /*----------------------------------------------------------------------
    ExceptionNum manages the exception num.
-   If checkType is TRUE, the exception has to rest on the element type.
-   If checkAttr is TRUE, the exception has to rest on one attribute.
-   If checkIntAttr is TRUE, the exception has to rest on one numeric attribute.
+   If checkType is TRUE, the exception has to rest on an element type.
+   If checkAttr is TRUE, the exception has to rest on an attribute.
+   If checkIntAttr is TRUE, the exception has to rest on a numeric attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr, ThotBool CheckIntAttr, indLine wi)
@@ -1811,6 +1811,18 @@ SyntRuleNum         pr;
 		  break;
 	       case KWD_ParagraphBreak:
 		  ExceptionNum (ExcParagraphBreak, True, False, False, wi);
+		  break;
+	       case KWD_CssBackground:
+		  ExceptionNum (ExcCssBackground, True, False, False, wi);
+		  break;
+	       case KWD_CssClass:
+		  ExceptionNum (ExcCssClass, False, True, False, wi);
+		  break;
+	       case KWD_CssId:
+		  ExceptionNum (ExcCssId, False, True, False, wi);
+		  break;
+	       case KWD_CssPseudoClass:
+		  ExceptionNum (ExcCssPseudoClass, False, True, False, wi);
 		  break;
 	       case KWD_Root:
 		  CurExtensRule = NewExtensionRule (wi, 0);

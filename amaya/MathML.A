@@ -44,6 +44,27 @@ ELEMENTS
 
 ATTRIBUTES
 
+   class:
+        BEGIN
+        AttrCreate.Post -> AttrClassChanged;
+        AttrModify.Post -> AttrClassChanged;
+        AttrDelete.Post -> AttrClassChanged;
+        END;
+
+   style\240:
+	BEGIN
+        AttrCreate.Post -> UpdateStylePost;
+        AttrModify.Post -> UpdateStylePost;
+        AttrDelete.Pre ->  UpdateStyleDelete;
+	END;
+
+   id:
+        BEGIN
+        AttrCreate.Post -> UpdateAttrID;
+        AttrModify.Post -> UpdateAttrID;
+        AttrDelete.Post -> UpdateAttrID;
+        END;
+ 
    open:
 	BEGIN
 	AttrCreate.Post -> AttrOpenCloseChanged;

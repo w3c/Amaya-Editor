@@ -6,13 +6,18 @@ STRUCTURE GraphML;
 DEFPRES GraphMLP;
 
 ATTR
+
+   { global attributes for all GraphML elements }
+   id = text;
+   class = text;
+   style\240 = text;
+
+   { xml:link }
+   link = simple, extended, locator, group, document;
+
    { generic attributes for Amaya and XML }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
-   link = simple, extended, locator, group, document;	{ xml:link }
-
-   { global attributes for all GraphML elements }
-   lid = text;
 
 STRUCT
 
@@ -262,6 +267,8 @@ EXCEPT
    PICTURE:		MoveResize;
    TEXT:		NoMove, NoResize;
 
+   id:			CssId;
+   class:		CssClass;
    Invalid_attribute:	Invisible;
    Ghost_restruct:	Invisible;
    IntPosX:		Invisible, NewHPos; 

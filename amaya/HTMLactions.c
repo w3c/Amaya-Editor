@@ -18,7 +18,12 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-
+#ifdef MATHML
+#include "MathML.h"
+#endif
+#ifdef GRAPHML
+#include "GraphML.h"
+#endif
 
 #include "css_f.h"
 #include "init_f.h"
@@ -341,36 +346,36 @@ ThotBool            remove;
     }
 }
 
-
 /*----------------------------------------------------------------------
-   SearchNAMEattribute: search in document doc an element having an      
-   attribut NAME or ID whose value is nameVal.         
-   Return that element or NULL if not found.               
+   SearchNAMEattribute
+   Search in document doc an element having an attribut of type attrType
+   whose value is nameVal.
+   Return that element or NULL if not found.
    If ignore is not NULL, it is an attribute that should be ignored when
-   comparing NAME attributes.              
+   comparing attributes.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute ignore)
+static Element GetElemWithAttr (Document doc, AttributeType attrType,
+				STRING nameVal, Attribute ignore)
 #else  /* __STDC__ */
-Element             SearchNAMEattribute (doc, nameVal, ignore)
+static Element GetElemWithAttr (doc, attrType, nameVal, Attribute ignore)
 Document            doc;
+AttributeType	    attrType;
 STRING              nameVal;
 Attribute           ignore;
 
 #endif /* __STDC__ */
+
 {
    Element             el, elFound;
-   AttributeType       attrType;
    Attribute           nameAttr;
    ThotBool            found;
    int                 length;
    STRING              name;
 
+   elFound = NULL;
    el = TtaGetMainRoot (doc);
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-   attrType.AttrTypeNum = HTML_ATTR_NAME;
    found = FALSE;
-   /* search all elements having an attribute NAME */
    do
      {
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &nameAttr);
@@ -392,39 +397,72 @@ Attribute           ignore;
 	   el = elFound;
      }
    while (!found && elFound != NULL);
-
    if (!found)
+      elFound = NULL;
+   return elFound;
+}
+
+/*----------------------------------------------------------------------
+   SearchNAMEattribute
+   search in document doc an element having an attribut NAME or ID (defined
+   in DTD HTML, MathML or GraphML) whose value is nameVal.         
+   Return that element or NULL if not found.               
+   If ignore is not NULL, it is an attribute that should be ignored when
+   comparing NAME attributes.              
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute ignore)
+#else  /* __STDC__ */
+Element             SearchNAMEattribute (doc, nameVal, ignore)
+Document            doc;
+STRING              nameVal;
+Attribute           ignore;
+
+#endif /* __STDC__ */
+{
+   Element             elFound;
+   AttributeType       attrType;
+
+   /* search all elements having an attribute NAME */
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrTypeNum = HTML_ATTR_NAME;
+   elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+
+   if (!elFound)
      {
        /* search all elements having an attribute ID */
-       el = TtaGetMainRoot (doc);
        attrType.AttrTypeNum = HTML_ATTR_ID;
-       found = FALSE;
-       do
-	 {
-	   TtaSearchAttribute (attrType, SearchForward, el, &elFound, &nameAttr);
-	   if (nameAttr != NULL && elFound != NULL)
-	     if (nameAttr != ignore)
-	       {
-		 length = TtaGetTextAttributeLength (nameAttr);
-		 length++;
-		 name = TtaGetMemory (length);
-		 if (name != NULL)
-		   {
-		     TtaGiveTextAttributeValue (nameAttr, name, &length);
-		     /* compare the NAME attribute */
-		     found = (ustrcmp (name, nameVal) == 0);
-		     TtaFreeMemory (name);
-		   }
-	       }
-	   if (!found)
-	     el = elFound;
-	 }
-       while (!found && elFound != NULL);
+       elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
      }
-   if (found)
-      return (elFound);
-   else
-      return (NULL);
+#ifdef MATHML
+   if (!elFound)
+     {
+       /* search all elements having an attribute ID (defined in the
+	  MathML DTD) */
+       attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
+       if (attrType.AttrSSchema)
+	  /* this document uses the MathML DTD */
+	  {
+          attrType.AttrTypeNum = MathML_ATTR_id;
+          elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+	  }
+     }
+#endif
+#ifdef GRAPHML
+   if (!elFound)
+     {
+       /* search all elements having an attribute ID (defined in the
+	  GraphML DTD) */
+       attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
+       if (attrType.AttrSSchema)
+	  /* this document uses the GraphML DTD */
+	  {
+          attrType.AttrTypeNum = GraphML_ATTR_id;
+          elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+	  }
+     }
+#endif
+   return (elFound);
 }
 
 

@@ -137,6 +137,7 @@ number
 			 'ReturnCreateNL' / 'IsTable' / 'IsRow' /
 			 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
 			 'ColRef' / 'ColSpan' / 'RowSpan' / 'Shadow' /
+			 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
 			 'EventAttr' /
 			 ExceptNum .
    52	ExceptNum =	 NUMBER .
@@ -252,8 +253,12 @@ code  key-word      numbers of rules using the key-word
 1174  ColSpan              51
 1175  RowSpan              51
 1176  Shadow               51
-1177  EventAttr            51
-1178  Root                 54
+1177  CssBackground        51
+1178  CssClass             51
+1179  CssId                51
+1180  CssPseudoClass       51
+1181  EventAttr            51
+1182  Root                 54
 
 
 

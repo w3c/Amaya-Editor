@@ -804,14 +804,10 @@ CHAR_T                c;
 					      currentDocument);
 	}
      if (attrType.AttrTypeNum <= 0)
-        /* not found. Is it a HTML attribute? */
-	{
+        /* not found. Is it a HTML attribute (style, class, id for instance) */
 	MapHTMLAttribute (&inputBuffer[i], &attrType,
 			  XMLelementType[stackLevel-1], currentDocument);
-	if (attrType.AttrTypeNum > 0)
-	   if (ustrcasecmp (&inputBuffer[i], "style") == 0)
-	      HTMLStyleAttribute = TRUE;
-	}
+
      if (attrType.AttrTypeNum <= 0)
         {
         sprintf (msgBuffer, "Unknown XML attribute %s", inputBuffer);
@@ -819,6 +815,8 @@ CHAR_T                c;
         }
      else
         {
+	if (ustrcasecmp (&inputBuffer[i], "style") == 0)
+	   HTMLStyleAttribute = TRUE;
         oldAttr = TtaGetAttribute (currentElement, attrType);
         if (oldAttr != NULL)
 	   {

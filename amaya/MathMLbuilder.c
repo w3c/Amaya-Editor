@@ -285,12 +285,16 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {"unknown_attr", "", 'A', MathML_ATTR_Invalid_attribute},
    {"ZZGHOST", "", 'A', MathML_ATTR_Ghost_restruct},
 
+   {"class", "", 'A', MathML_ATTR_class},
    {"close", "mfenced", 'A', MathML_ATTR_close},
    {"fence", "mo", 'A', MathML_ATTR_fence},
    {"fontstyle", "mi", 'A', MathML_ATTR_fontstyle},
+   {"id", "", 'A', MathML_ATTR_id},
    {"link", "", 'A', MathML_ATTR_link},
    {"open", "mfenced", 'A', MathML_ATTR_open},
+   {"other", "", 'A', MathML_ATTR_other},
    {"separators", "mfenced", 'A', MathML_ATTR_separators},
+   {"style", "", 'A', MathML_ATTR_style_},
 
    {"", "", EOS, 0}		/* Last entry. Mandatory */
 };
