@@ -672,12 +672,15 @@ void AddDocHistory (Document doc, char *url, char *initial_url,
    SetArrowButton (doc, FALSE, FALSE);
 }
 
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void HelpAmaya (Document document, View view)
 {
    char                  localname[MAX_LENGTH];
+#ifdef AMAYA_CRASH
+   /* force amaya to crash : activate AMAYA_CRASH flag only for debug */
+   memset(0,0,10);
+#endif /* AMAYA_CRASH */
 #ifdef AMAYA_DEBUG
    Element             el;
    View                structView, altView, linksView, tocView;
