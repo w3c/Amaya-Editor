@@ -12,8 +12,8 @@ Extensions 1.5:
 
 * WAI comments on Image and Maps.
 
-* COLGROUP and COL elements are accepted and can be created within TABLE elements,
-  but the rendering is not implemented yet.
+* COLGROUP and COL elements are accepted and can be created within TABLE
+  elements, but the rendering is not implemented yet.
 
 * CSS left margin and top margin are now interpreted as positionning into 
   enclosing element.
@@ -44,3 +44,6 @@ Fixed bugs 1.5:
 * Some attributes values appeared with strange names in the
   Attribute menu.
 
+* When the current position was in a sequence of empty blocks (paragraphs, for
+  instance), the Backspace key deleted two of these blocks at once and did not
+  select anything.

@@ -265,9 +265,9 @@ int              elementT;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el, head, parent, new, title;
+   Element             el, firstSel, lastSel, head, parent, new, title;
    SSchema             docSchema;
-   int                 i, j;
+   int                 j, firstChar, lastChar;
    boolean             before;
 
    docSchema = TtaGetDocumentSSchema (document);
@@ -282,8 +282,10 @@ int              elementT;
        head = TtaSearchTypedElement (elType, SearchForward, parent);
        
        /* give current position */
-       TtaGiveFirstSelectedElement (document, &el, &i, &j);
-       if (el == NULL || el == head || !TtaIsAncestor (el, head))
+       TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &j);
+       TtaGiveLastSelectedElement (document, &lastSel, &j, &lastChar);
+       el = firstSel;
+       if (firstSel == NULL || firstSel == head || !TtaIsAncestor (firstSel, head))
 	 {
 	   /* the current selection is not within the head */
 	   el = TtaGetLastChild (head);
@@ -326,14 +328,18 @@ int              elementT;
        /* now insert the new element after el */
        elType.ElTypeNum = elementT;
        if (elementT == HTML_EL_BASE)
+	 /* the element to be created is BASE */
 	 {
-	   /* look at if this element already exists */
-	   new = TtaSearchTypedElement (elType, SearchInTree, head);
-	   if (new != NULL)
+	   /* return if this element already exists */
+	   if (TtaSearchTypedElement (elType, SearchInTree, head))
 	     return (NULL);
 	 }
        new = TtaNewTree (document, elType, "");
        TtaInsertSibling (new, el, before, document);
+       /* register this element in the editing history */
+       TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
+       TtaRegisterElementCreate (document, new);
+       TtaCloseUndoSequence (document);
        return (new);
      }
 }

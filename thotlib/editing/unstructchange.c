@@ -79,6 +79,7 @@
 #include "structschema_f.h"
 #include "content_f.h"
 #include "searchref_f.h"
+#include "undo_f.h"
 #include "unstructlocate_f.h"
 #include "structcommands_f.h"
 #include "actions_f.h"
@@ -1533,9 +1534,10 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
    DeleteNextChar  If before, the current selection is at the      
    beginning of element pEl and the user has hit the       
-   BackSpace key.                                          
+   BackSpace key. Merging with previous element.
    If not before, the current selection is at the end of   
-   element pEl and the user has hit the Delete key.        
+   element pEl and the user has hit the Delete key.  Merging with
+   next element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DeleteNextChar (int frame, PtrElement pEl, boolean before)
@@ -1555,11 +1557,12 @@ boolean             before;
    NotifyOnValue       notifyVal;
    Document            doc;
    int                 nSiblings;
-   int                 nbEl, i, j;
+   int                 nbEl, j, firstChar, lastChar;
    boolean             stop, ok, isRow;
 
    if (pEl == NULL)
       return;
+   /* pSel: element to be selected at the end */
    if (before)
       pSel = NULL;
    else
@@ -1567,6 +1570,7 @@ boolean             before;
    pElem = NULL;
    pDoc = DocumentOfElement (pEl);
 
+   /* look for the first ancestor with a sibling: pParent */
    pParent = pEl;
    do
      {
@@ -1581,8 +1585,35 @@ boolean             before;
 	 }
      }
    while (pParent != NULL && pSibling == NULL);
+
    if (pParent == NULL || pSibling == NULL)
      return;
+
+   doc = IdentDocument (pDoc);
+   /* determine the current selection */
+       firstChar = 0;  lastChar= 0;
+       if (pEl->ElTerminal)
+	  if (pEl->ElLeafType == LtText)
+	    {
+	    if (before)
+	      firstChar = 1;
+	    else
+	      firstChar = pEl->ElVolume + 1;
+	    lastChar = firstChar -1;
+	    }
+
+   if (before && pSibling->ElVolume == 0 && pParent->ElVolume > 0)
+     /* BackSpace at the beginning of a non empty element (pParent) whose
+        previous sibling is empty (pSibling).  Delete the empty sibling */
+     {
+       OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
+       /* record the element to be deleted in the history */
+       AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
+       TtaDeleteTree (pSibling, doc);
+       CloseHistorySequence (pDoc);
+       return;
+     }
+
    if (pSibling != NULL && pParent != pEl && pElem != NULL)
      if (pSibling->ElTerminal)
        pSibling = NULL;
@@ -1605,6 +1636,7 @@ boolean             before;
 	       pSibling = NULL;
 	   }
        }
+
    if (pSibling == NULL || pParent == pEl)
      {
        stop = FALSE;
@@ -1660,10 +1692,13 @@ boolean             before;
 	   if (!pSibling->ElTerminal)
 	     {
 	       if (pSibling->ElFirstChild == NULL)
+		 /* pSibling is empty. Delete it */
 		 {
-		   /* pSibling is empty. Delete it */
-		   SelectElement (pDoc, pSibling, TRUE, TRUE);
-		   CutCommand (FALSE);
+		   OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
+		   /* record the element to be deleted in the history */
+		   AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
+		   TtaDeleteTree (pSibling, doc);
+		   CloseHistorySequence (pDoc);
 		 }
 	     }
 	   else
@@ -1727,21 +1762,9 @@ boolean             before;
 	 }
        pParent = pElem->ElParent;
        isRow = TypeHasException (ExcIsRow, pParent->ElTypeNumber, pParent->ElStructSchema);
-       doc = IdentDocument (pDoc);
 
        /* start history sequence */
-       /* first, determine the current selection */
-       i = 0;  j= 0;
-       if (pEl->ElTerminal)
-	  if (pEl->ElLeafType == LtText)
-	    {
-	    if (before)
-	      i = 1;
-	    else
-	      i = pEl->ElVolume + 1;
-	    j = i -1;
-	    }
-       OpenHistorySequence (pDoc, pEl, pEl, i, j);
+       OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
 
        j = 0;
        while (pElem != NULL)
@@ -1803,8 +1826,9 @@ boolean             before;
 		 }
 	       else
 		 ok = FALSE;
-	       if (ok)
-		 /* the application refuses the paste, free this element */
+	       if (ok || (pElem->ElVolume == 0))
+		 /* the application refuses to paste this element or this
+		    element is empty, free it */
 		 DeleteElement (&pElem, pDoc);
 	       else
 		 {
@@ -1842,110 +1866,116 @@ boolean             before;
 	   /* l'application si elle est d'accord pour detruire l'elem. */
 	   if (!SendEventSubTree (TteElemDelete, pDoc, pE, TTE_STANDARD_DELETE_LAST_ITEM))
 	     {
-		     /* cherche l'element qui precede l'element a detruire */
-		     pPrev = PreviousNotPage (pE);
-		     DestroyAbsBoxes (pE, pDoc, TRUE);
-		     AbstractImageUpdated (pDoc);
-		     pNext = NextElement (pE);
-		     /* prepare l'evenement ElemDelete.Post */
-		     notifyEl.event = TteElemDelete;
-		     notifyEl.document = doc;
-		     notifyEl.element = (Element) pParent;
-		     notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
-		     notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);
-		     nSiblings = 0;
-		     pS = pE;
-		     while (pS->ElPrevious != NULL)
-		       {
-			  nSiblings++;
-			  pS = pS->ElPrevious;
-		       }
-		     notifyEl.position = nSiblings;
-		     /* record the element the element that will be deleted */
-		     AddEditOpInHistory (pE, pDoc, TRUE, FALSE);
-		     /* retire l'element courant de l'arbre */
-		     RemoveElement (pE);
-		     UpdateNumbers (pNext, pE, pDoc, TRUE);
-		     DeleteElement (&pE, pDoc);
-		     /* envoie l'evenement ElemDelete.Post */
-		     CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-		  }
-	     }
-	   /* reaffiche ce qui doit l'etre */
-	   pE = pSibling->ElParent;
-	   CreateAllAbsBoxesOfEl (pE, pDoc);
-	   if (pPrev != NULL)
-	      /* verifie si l'element precedent devient dernier parmi */
-	      /* ses freres */
-	      ProcessFirstLast (pPrev, NULL, pDoc);
-	   AbstractImageUpdated (pDoc);
-	   RedisplayDocViews (pDoc);
-	   /* si on est dans un element copie' par inclusion, on met a jour
-	      les copies de cet element. */
-	   RedisplayCopies (pE, pDoc, TRUE);
-	   /* indique que le document est modifie' */
-	   pDoc->DocModified = TRUE;
-	   pDoc->DocNTypedChars += 30;
-	   /* selectionne */
-	   if (pSel != NULL)
+	     /* cherche l'element qui precede l'element a detruire */
+	     pPrev = PreviousNotPage (pE);
+	     DestroyAbsBoxes (pE, pDoc, TRUE);
+	     AbstractImageUpdated (pDoc);
+	     pNext = NextElement (pE);
+     	     /* prepare l'evenement ElemDelete.Post */
+       	     notifyEl.event = TteElemDelete;
+       	     notifyEl.document = doc;
+       	     notifyEl.element = (Element) pParent;
+       	     notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
+       	     notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);
+       	     nSiblings = 0;
+       	     pS = pE;
+       	     while (pS->ElPrevious != NULL)
+       	       {
+       		  nSiblings++;
+       		  pS = pS->ElPrevious;
+       	       }
+       	     notifyEl.position = nSiblings;
+       	     /* record the element the element that will be deleted */
+       	     AddEditOpInHistory (pE, pDoc, TRUE, FALSE);
+       	     /* retire l'element courant de l'arbre */
+       	     RemoveElement (pE);
+       	     UpdateNumbers (pNext, pE, pDoc, TRUE);
+       	     DeleteElement (&pE, pDoc);
+       	     /* envoie l'evenement ElemDelete.Post */
+       	     CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+             }
+         }
+       /* reaffiche ce qui doit l'etre */
+       pE = pSibling->ElParent;
+       CreateAllAbsBoxesOfEl (pE, pDoc);
+       if (pPrev != NULL)
+	  /* verifie si l'element precedent devient dernier parmi */
+	  /* ses freres */
+	  ProcessFirstLast (pPrev, NULL, pDoc);
+       AbstractImageUpdated (pDoc);
+       RedisplayDocViews (pDoc);
+       /* si on est dans un element copie' par inclusion, on met a jour
+          les copies de cet element. */
+       RedisplayCopies (pE, pDoc, TRUE);
+       /* indique que le document est modifie' */
+       pDoc->DocModified = TRUE;
+       pDoc->DocNTypedChars += 30;
+
+       /* selectionne */
+       if (!pSel)
+          {
+          pSel = pSibling;
+          before = !before;
+          }
+       if (pSel != NULL)
+          {
+          if (pSel->ElVolume > 0)
+             /* the first element moved is not empty. Select its first
+	        or last character, depending on "before" */
 	     {
-	     if (pSel->ElVolume > 0)
-		/* the first element moved is not empty. Select its first
-		   or last character, depending on "before" */
-		{
-		pSel = FirstLeaf (pSel);
-		if (!pSel->ElTerminal)
-		   SelectElement (pDoc, pSel, TRUE, TRUE);
-		else if (pSel->ElLeafType == LtText)
-		   if (before)
-		      MoveCaret (pDoc, pSel, 1);
-		   else
-		      MoveCaret (pDoc, pSel, pSel->ElTextLength + 1);
-		else if (pSel->ElLeafType != LtPairedElem)
-		   SelectElement (pDoc, pSel, TRUE, TRUE);
-		else if (pSel->ElPrevious != NULL)
-		   if (pSel->ElPrevious->ElTerminal &&
-		       pSel->ElPrevious->ElLeafType == LtText)
-		      MoveCaret (pDoc, pSel->ElPrevious,
-				 pSel->ElPrevious->ElTextLength + 1);
-		   else
-		      SelectElement (pDoc, pSel->ElPrevious, TRUE, TRUE);
-		else if (pSel->ElNext != NULL)
-		   if (pSel->ElNext->ElTerminal &&
-		       pSel->ElNext->ElLeafType == LtText)
-		      MoveCaret (pDoc, pSel->ElNext, 1);
-		   else
-		      SelectElement (pDoc, pSel->ElNext, TRUE, TRUE);
+	     pSel = FirstLeaf (pSel);
+	     if (!pSel->ElTerminal)
+	        SelectElement (pDoc, pSel, TRUE, TRUE);
+	     else if (pSel->ElLeafType == LtText)
+	        if (before)
+	           MoveCaret (pDoc, pSel, 1);
+	        else
+	           MoveCaret (pDoc, pSel, pSel->ElTextLength + 1);
+	     else if (pSel->ElLeafType != LtPairedElem)
+	        SelectElement (pDoc, pSel, TRUE, TRUE);
+	     else if (pSel->ElPrevious != NULL)
+	        if (pSel->ElPrevious->ElTerminal &&
+	            pSel->ElPrevious->ElLeafType == LtText)
+	           MoveCaret (pDoc, pSel->ElPrevious,
+	                      pSel->ElPrevious->ElTextLength + 1);
+	        else
+		   SelectElement (pDoc, pSel->ElPrevious, TRUE, TRUE);
+	     else if (pSel->ElNext != NULL)
+		if (pSel->ElNext->ElTerminal &&
+		    pSel->ElNext->ElLeafType == LtText)
+		   MoveCaret (pDoc, pSel->ElNext, 1);
 		else
-		   SelectElement (pDoc, pSel->ElParent, TRUE, TRUE);
-		}
+		   SelectElement (pDoc, pSel->ElNext, TRUE, TRUE);
 	     else
-		/* the first element moved is empty. Select the closest
-		   character */
-		{
-		if (pSel->ElPrevious != NULL)
-		   {
-		   pSel = LastLeaf (pSel->ElPrevious);
-		   if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-		      MoveCaret (pDoc, pSel, pSel->ElTextLength + 1);
-		   else
-		      SelectElement (pDoc, pSel, TRUE, TRUE);
-		   }
-		else if (pSel->ElNext != NULL)
-		   {
-		   pSel = FirstLeaf (pSel->ElPrevious);
-		   if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-		      MoveCaret (pDoc, pSel, 1);
-		   else
-		      SelectElement (pDoc, pSel, TRUE, TRUE);
-		   }
-		else
-		   SelectElement (pDoc, pSel->ElParent, TRUE, TRUE);
-		}
+		SelectElement (pDoc, pSel->ElParent, TRUE, TRUE);
 	     }
-	}
+	  else
+	     /* the first element moved is empty. Select the closest
+	        character */
+	     {
+	     if (pSel->ElPrevious != NULL)
+	        {
+	        pSel = LastLeaf (pSel->ElPrevious);
+	        if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+	           MoveCaret (pDoc, pSel, pSel->ElTextLength + 1);
+	        else
+	           SelectElement (pDoc, pSel, TRUE, TRUE);
+	        }
+	     else if (pSel->ElNext != NULL)
+	        {
+	        pSel = FirstLeaf (pSel->ElPrevious);
+	        if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+	           MoveCaret (pDoc, pSel, 1);
+	        else
+	           SelectElement (pDoc, pSel, TRUE, TRUE);
+	        }
+	     else
+	        SelectElement (pDoc, pSel, TRUE, TRUE);
+	     }
+	  }
        /* end of command: close history sequence */
        CloseHistorySequence (pDoc);
+     }
 }
 
 /*----------------------------------------------------------------------

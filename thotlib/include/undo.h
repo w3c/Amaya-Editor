@@ -10,16 +10,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-/* ----------------------------------------------------------------------
-   TtaUndo
-
-   Undo the latest sequence of editing operations recorded in the history and
-   remove it from the history.
- 
-   Parameters:
-   document: the concerned document
-   ---------------------------------------------------------------------- */
-extern void          TtaUndo (Document doc);
 
 /* ----------------------------------------------------------------------
    TtaOpenUndoSequence
@@ -99,7 +89,6 @@ extern void        TtaRegisterElementReplace (Document document, Element element
 extern void         TtaClearHistory (Document document);
 
 #else  /* __STDC__ */
-extern void          TtaUndo (/* Document doc */);
 extern void          TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
 extern void          TtaCloseUndoSequence (/* Document document */);
 extern void         TtaRegisterElementCreate (/* Document document, Element element */);

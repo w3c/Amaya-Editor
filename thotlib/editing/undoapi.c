@@ -27,34 +27,6 @@
 #undef THOT_EXPORT
 
 /* ----------------------------------------------------------------------
-   TtaUndo
-
-   Undo the latest sequence of editing operations recorded in the history and
-   remove it from the history.
- 
-   Parameters:
-   document: the concerned document
-   ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void          TtaUndo (Document document)
-#else  /* __STDC__ */
-void          TtaUndo (document)
-Document doc;
-
-#endif /* __STDC__ */
-{
-  if (document < 1 || document > MAX_DOCUMENTS)
-    {
-      TtaError (ERR_invalid_document_parameter);
-    }
-  else
-    {
-      TtcUndo (document, 0);
-    }
-}
-
-
-/* ----------------------------------------------------------------------
    TtaOpenUndoSequence
 
    Open a sequence of editing operations in the history.

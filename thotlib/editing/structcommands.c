@@ -1191,7 +1191,7 @@ boolean             save;
 			       firstSel->ElNext == NULL &&
 			       firstSel->ElParent != NULL &&
 			       CanCutElement (firstSel->ElParent, pSelDoc, NULL))
-			  firstSel = firstSel->ElParent;
+			firstSel = firstSel->ElParent;
 			lastSel = firstSel;
 			/* l'element est entierement selectionne' */
 			firstChar = 0;
@@ -1303,7 +1303,7 @@ boolean             save;
 		      }
 
 		    /* open the sequence of editing operations for the history */
-		    OpenHistorySequence (pSelDoc, firstSel, lastSel,
+		    OpenHistorySequence (pSelDoc, firstSelInit, lastSelInit,
 					 firstCharInit, lastCharInit);
 		    pEl = firstSel;
 		    pE = lastSel;
@@ -2617,7 +2617,11 @@ boolean             Before;
 	  RedisplayDocViews (pSelDoc);
 	  if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
 	      lastChar >= lastSel->ElTextLength)
+	    {
 	    lastChar = 0;
+	    if (firstSel == lastSel && firstChar == 1)
+	       firstChar = 0; 
+	    }
 	  if (Before)
 	    InsertionPoint = TRUE;
 	  else if (firstChar <= 1 && lastChar == 0)

@@ -618,7 +618,7 @@ int firstSelChar;
 int lastSelChar;
 #endif /* __STDC__ */
 {
-   PtrEditOperation	editOp, nextOp;
+  PtrEditOperation	editOp, nextOp;
 
   /* can not open a sequence if a sequence is already open */
   if (EditSequence)
@@ -732,6 +732,8 @@ View                view;
      /* current history is not related to the document issuing the Undo
 	command */
       return;
+
+   TtaSetDisplayMode (doc, DeferredDisplay);
 
    /* Undo all operations belonging to a sequence of editing operations */
    doit = TRUE;
@@ -847,4 +849,6 @@ View                view;
          Remove it from the history */
       CancelAnEdit (LastEdit, pDoc);
       }
+
+   TtaSetDisplayMode (doc, DisplayImmediately);
 }
