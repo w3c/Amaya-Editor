@@ -2509,7 +2509,7 @@ static void         ChkRecurs ()
    boolean             busy[MAX_RULES_SSCHEMA + 1], done[MAX_RULES_SSCHEMA + 1];
    SRule              *pRule;
 
-   for (i = MAX_BASIC_TYPE; i <= pSSchema->SsNRules; i++)
+   for (i = 0; i <= pSSchema->SsNRules; i++)
       busy[i] = done[i] = False;
 
    for (i = MAX_BASIC_TYPE + 1; i <= pSSchema->SsNRules; i++)
