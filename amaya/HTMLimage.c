@@ -317,8 +317,8 @@ void               *extra;
   boolean             newImage;
   ElemImage          *ctxEl;
 
-  pathname[0] = '\0';
-  tempfile[0] = '\0';
+  pathname[0] = EOS;
+  tempfile[0] = EOS;
   imageName = NULL;
   attr = NULL;
   if (el != NULL && DocumentURLs[doc] != NULL)
@@ -365,7 +365,7 @@ void               *extra;
 	      update = FALSE;	/* the image is not loaded yet */
 #ifdef AMAYA_JAVA
 	      FilesLoading[doc]++;
-	      i = GetObjectWWW (doc, &pathname[0], NULL, &tempfile[0],
+	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) HandleImageLoaded,
 				(void *) desc, NO);

@@ -36,6 +36,9 @@
 #define HTAppName "amaya"
 #define HTAppVersion "V1.1 Beta"
 
+#define URL_SEP '/'
+#define URL_STR "/"
+
 /* How are Network accesses provided ? */
 #ifdef AMAYA_JAVA
 #include "libjava.h"

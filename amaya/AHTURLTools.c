@@ -66,16 +66,13 @@ char              **file;
 
 #endif
 {
-   char               *curr, *temp;
-   char                my_dir_sep;
+   char            *curr, *temp;
+   char             used_sep;
 
-   if (url && strchr (url, '/'))
-	{ 
-		my_dir_sep = '/';
-    } else {
-	  my_dir_sep = DIR_SEP;
-	}
-
+   if (url && strchr (url, URL_SEP))
+     used_sep = URL_SEP;
+   else
+     used_sep = DIR_SEP;
 
    if ((url == NULL) || (proto == NULL) || (host == NULL) ||
        (dir == NULL) || (file == NULL))
@@ -105,7 +102,7 @@ char              **file;
    /* search the next DIR_SEP indicating the beginning of the file name */
    do
      curr--;
-   while ((curr >= url) && (*curr != my_dir_sep));
+   while ((curr >= url) && (*curr != used_sep));
 
    if (curr < url)
       goto finished;
@@ -118,16 +115,16 @@ char              **file;
       goto finished;
 
    /* search for the DIR_STR indicating the host name start */
-   while ((curr > url) && ((*curr != my_dir_sep) || (*(curr + 1) != my_dir_sep)))
+   while ((curr > url) && ((*curr != used_sep) || (*(curr + 1) != used_sep)))
       curr--;
 
    /* if we found it, separate the host name from the directory */
-   if ((*curr == DIR_SEP) && (*(curr + 1) == my_dir_sep))
+   if ((*curr == DIR_SEP) && (*(curr + 1) == used_sep))
      {
 	*host = temp = curr + 2;
-	while ((*temp != 0) && (*temp != my_dir_sep))
+	while ((*temp != 0) && (*temp != used_sep))
 	   temp++;
-	if (*temp == my_dir_sep)
+	if (*temp == used_sep)
 	  {
 	     *temp = EOS;
 	     *dir = temp + 1;
@@ -434,8 +431,8 @@ Document            doc;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  char                my_dir_sep;
-  char               *my_dir_str;
+  char                used_sep;
+  char               *used_str;
   char               *ptr, *basename;
   int                 length;
 
@@ -461,49 +458,48 @@ Document            doc;
 	  /* base and orgName have to be separated by a DIR_SEP */
 	  length--;
 
-        if (basename [0] != EOS && strchr (basename, '/'))
-		{
-			my_dir_str = "/";
-			my_dir_sep = '/';
-		}
-		  else
-		{
-			my_dir_str = DIR_STR;
-			my_dir_sep = DIR_SEP;
-		}
+	  if (basename [0] != EOS && strchr (basename, URL_SEP))
+	    {
+	      used_str = URL_STR;
+	      used_sep = URL_SEP;
+	    }
+	  else
+	    {
+	      used_str = DIR_STR;
+	      used_sep = DIR_SEP;
+	    }
 
-
-	 	if (basename[0] != EOS && basename[length] != my_dir_sep) 
+	  if (basename[0] != EOS && basename[length] != used_sep) 
 	    /* verify if the base has the form "protocol://server:port" */
 	    {
-	      ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST |
-				   AMAYA_PARSE_PUNCTUATION);
+	      ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS |
+				                 AMAYA_PARSE_HOST |
+				                 AMAYA_PARSE_PUNCTUATION);
 	      if (ptr && !strcmp (ptr, basename))
 		{
 		  /* it has this form, we complete it by adding a DIR_STR  */
-		  strcat (basename, my_dir_str);
+		  strcat (basename, used_str);
 		  length++;
 		}
 	      if (ptr)
 		TtaFreeMemory (ptr);
 	    }
 	}
-    } 
+      }
     else
-	{
-     if (basename [0] != EOS && strchr (basename, '/'))
-		{
-			my_dir_str = "/";
-			my_dir_sep = '/';
-		}
-		  else
-		{
-			my_dir_str = DIR_STR;
-			my_dir_sep = DIR_SEP;
-		}
-
-   }
-
+      {
+	if (basename [0] != EOS && strchr (basename, URL_SEP))
+	  {
+	    used_str = URL_STR;
+	    used_sep = URL_SEP;
+	  }
+	else
+	  {
+	    used_str = DIR_STR;
+	    used_sep = DIR_SEP;
+	  }
+      }
+  
   /* Remove anything after the last DIR_SEP char. If no such char is found,
    * then search for the first ":" char, hoping that what's before that is a
    * protocol. If found, end the string there. If neither char is found,
@@ -511,7 +507,7 @@ Document            doc;
    */
   length = strlen (basename) - 1;
   /* search for the last DIR_SEP char */
-  while (length >= 0  && basename[length] != my_dir_sep)
+  while (length >= 0  && basename[length] != used_sep)
     length--;
   if (length >= 0)
     /* found the last DIR_SEP char, end the string there */
@@ -555,26 +551,27 @@ char               *docName;
    char                tempOrgName[MAX_LENGTH];
    char               *ptr;
    int                 length;
-   char                my_dir_sep;
-   char               *my_dir_str;
+   char                used_sep;
+   char               *used_str;
 
    if (!newName || !docName)
       return;
 
    if (doc != 0)
-	   basename = GetBaseURL (doc);
+     basename = GetBaseURL (doc);
    else
-	   basename = (char *) NULL;
+     basename = (char *) NULL;
 
-   if (strchr (orgName, '/') || (basename && strchr (basename, '/')))
-	{ 
-		my_dir_str = "/";
-		my_dir_sep = '/';
-    } else {
-	  my_dir_str = DIR_STR;
-	  my_dir_sep = DIR_SEP;
-	}
-
+   if (strchr (orgName, URL_SEP) || (basename && strchr (basename, URL_SEP)))
+     { 
+       used_str = URL_STR;
+       used_sep = URL_SEP;
+     }
+   else
+     {
+       used_str = DIR_STR;
+       used_sep = DIR_SEP;
+     }
 
    /*
     * Clean orgName
@@ -615,7 +612,7 @@ char               *docName;
        if (ptr && !strcmp (ptr, newName))
 	 {
 	   /* it has this form, we complete it by adding a DIR_STR  */
-	   strcat (newName, my_dir_str);
+	   strcat (newName, used_str);
 	 }
        if (ptr)
 	 TtaFreeMemory (ptr);
@@ -648,7 +645,7 @@ char               *docName;
    if (newName[0] != EOS)
      {
        length = strlen (newName) - 1;
-       if (newName[length] == my_dir_sep)
+       if (newName[length] == used_sep)
 	 {
 	   /* docname was not comprised inside the URL, so let's */
 	   /* assign the default ressource name */
@@ -659,7 +656,7 @@ char               *docName;
        else
 	 {
 	   /* docname is comprised inside the URL */
-	   while (length >= 0  && newName[length] != my_dir_sep)
+	   while (length >= 0  && newName[length] != used_sep)
 	     length--;
 	   if (length < 0)
 	     strcpy (docName, newName);
@@ -821,18 +818,19 @@ HTURI               *parts;
 {
   char * p;
   char * after_access = name;
-
-  char       my_dir_sep;
+  char       used_sep;
   char       my_path_sep;
 
-     if (name && strchr (name, '/')) {
-	     my_dir_sep = '/';
-	     my_path_sep = ':';
-     } else {
-	     my_dir_sep = DIR_SEP;
-		 my_path_sep = ':';
-     }
-
+  if (name && strchr (name, URL_SEP))
+    {
+      used_sep = URL_SEP;
+      my_path_sep = ':';
+    }
+  else
+    {
+      used_sep = DIR_SEP;
+      my_path_sep = ':';
+    }
 
   memset(parts, '\0', sizeof(HTURI));
   /* Look for fragment identifier */
@@ -844,7 +842,7 @@ HTURI               *parts;
     
   for (p=name; *p; p++)
     {
-      if (*p==my_dir_sep || *p=='#' || *p=='?')
+      if (*p==used_sep || *p=='#' || *p=='?')
 	break;
       if (*p==':')
 	{
@@ -868,14 +866,14 @@ HTURI               *parts;
     }
     
     p = after_access;
-    if (*p==my_dir_sep)
+    if (*p==used_sep)
       {
-	if (p[1]==my_dir_sep)
+	if (p[1]==used_sep)
 	  {
 	    parts->host = p+2;		/* host has been specified 	*/
 	    *p = 0;			/* Terminate access 		*/
 	    /* look for end of host name if any */
-	    p = strchr(parts->host,my_dir_sep);
+	    p = strchr(parts->host,used_sep);
 	    if (p)
 	      {
 	        *p=0;			/* Terminate host */
@@ -925,20 +923,19 @@ int            wanted;
   char      *p, *access;
   HTURI      given, related;
   int        len;
-  char       my_dir_sep;
-  char      *my_dir_str;
+  char       used_sep;
+  char      *used_str;
 
-  if (strchr (aName, '/') || strchr (relatedName, '/') )
- {
-	my_dir_str = "/";
-	my_dir_sep = '/';
- }
+  if (strchr (aName, URL_SEP) || strchr (relatedName, URL_SEP) )
+    {
+      used_str = URL_STR;
+      used_sep = URL_SEP;
+    }
   else
- {
-	my_dir_str = DIR_STR;
-	my_dir_sep = DIR_SEP;
- }
-
+    {
+      used_str = DIR_STR;
+      used_sep = DIR_SEP;
+    }
 
   /* Make working copies of input strings to cut up: */
   return_value = NULL;
@@ -993,13 +990,13 @@ int            wanted;
 	{
 	  /* All is given */
 	  if (wanted & AMAYA_PARSE_PUNCTUATION)
-	    strcat (result, my_dir_str);
+	    strcat (result, used_str);
 	  strcat (result, given.absolute);
 	}
       else if (related.absolute)
 	{
 	  /* Adopt path not name */
-	  strcat (result, my_dir_str);
+	  strcat (result, used_str);
 	  strcat (result, related.absolute);
 	  if (given.relative)
 	    {
@@ -1007,7 +1004,7 @@ int            wanted;
 	      p = strchr (result, '?');
 	      if (!p)
 		p=result+strlen(result)-1;
-	      for (; *p!=my_dir_sep; p--);	/* last / */
+	      for (; *p!=used_sep; p--);	/* last / */
 	      /* Remove filename */
 	      p[1]=0;
 	      /* Add given one */
@@ -1022,7 +1019,7 @@ int            wanted;
 	strcat (result, related.relative);
       else
 	/* No inheritance */
-	strcat (result, my_dir_str);
+	strcat (result, used_str);
     }
   
   if (wanted & AMAYA_PARSE_ANCHOR)
@@ -1075,23 +1072,24 @@ char        *host;
     char *strptr;
     char *path;
     char *access = host-3;
-
-    char       my_dir_sep;
-    char      *my_dir_str;
+    char       used_sep;
+    char      *used_str;
 
   
-     if (*filename && strchr (*filename, '/')) {
-		my_dir_str = "/";
-		my_dir_sep = '/';
-	}
-	else {
-		my_dir_str = DIR_STR;
-		my_dir_sep = DIR_SEP;
-	}
+     if (*filename && strchr (*filename, URL_SEP))
+       {
+	 used_str = URL_STR;
+	 used_sep = URL_SEP;
+       }
+     else
+       {
+	 used_str = DIR_STR;
+	 used_sep = DIR_SEP;
+       }
   
-    while (access>*filename && *(access-1)!= my_dir_sep)       /* Find access method */
+    while (access>*filename && *(access-1)!= used_sep)       /* Find access method */
 	access--;
-    if ((path = strchr(host, my_dir_sep)) == NULL)			/* Find path */
+    if ((path = strchr(host, used_sep)) == NULL)			/* Find path */
 	path = host + strlen(host);
     if ((strptr = strchr(host, '@')) != NULL && strptr<path)	   /* UserId */
 	host = strptr;
@@ -1099,54 +1097,63 @@ char        *host;
 	port = NULL;
 
     strptr = host;				    /* Convert to lower-case */
-    while (strptr<path) {
+    while (strptr<path)
+      {
 	*strptr = tolower(*strptr);
 	strptr++;
-    }
+      }
     
     /* Does the URL contain a full domain name? This also works for a
        numerical host name. The domain name is already made lower-case
        and without a trailing dot. */
     {
-	char *dot = port ? port : path;
-	if (dot > *filename && *--dot=='.') {
-	    char *orig=dot, *dest=dot+1;
-	    while((*orig++ = *dest++));
-	    if (port) port--;
-	    path--;
+      char *dot = port ? port : path;
+      if (dot > *filename && *--dot=='.')
+	{
+	  char *orig=dot, *dest=dot+1;
+	  while((*orig++ = *dest++));
+	  if (port) port--;
+	  path--;
 	}
     }
     /* Chop off port if `:', `:80' (http), `:70' (gopher), or `:21' (ftp) */
-    if (port) {
-	if (!*(port+1) || *(port+1)==my_dir_sep) {
-	    if (!newname) {
+    if (port)
+      {
+	if (!*(port+1) || *(port+1)==used_sep)
+	  {
+	    if (!newname)
+	      {
 		char *orig=port, *dest=port+1;
 		while((*orig++ = *dest++));
+	      }
+	  }
+	else if ((!strncmp(access, "http", 4) &&
+		  (*(port+1)=='8'&&*(port+2)=='0'&&(*(port+3)==used_sep||!*(port+3)))) ||
+		 (!strncmp(access, "gopher", 6) &&
+		  (*(port+1)=='7'&&*(port+2)=='0'&&(*(port+3)==used_sep||!*(port+3)))) ||
+		 (!strncmp(access, "ftp", 3) &&
+		  (*(port+1)=='2'&&*(port+2)=='1'&&(*(port+3)==used_sep||!*(port+3))))) {
+	  if (!newname)
+	    {
+	      char *orig=port, *dest=port+3;
+	      while((*orig++ = *dest++));
+	      /* Update path position, Henry Minsky */
+	      path -= 3;
 	    }
-	} else if ((!strncmp(access, "http", 4) &&
-	     (*(port+1)=='8'&&*(port+2)=='0'&&(*(port+3)==my_dir_sep||!*(port+3)))) ||
-	    (!strncmp(access, "gopher", 6) &&
-	     (*(port+1)=='7'&&*(port+2)=='0'&&(*(port+3)==my_dir_sep||!*(port+3)))) ||
-	    (!strncmp(access, "ftp", 3) &&
-	     (*(port+1)=='2'&&*(port+2)=='1'&&(*(port+3)==my_dir_sep||!*(port+3))))) {
-	    if (!newname) {
-		char *orig=port, *dest=port+3;
-		while((*orig++ = *dest++));
-		/* Update path position, Henry Minsky */
-		path -= 3;
-	    }
-	} else if (newname)
-	    strncat(newname, port, (int) (path-port));
-    }
+	}
+	else if (newname)
+	  strncat(newname, port, (int) (path-port));
+      }
 
-    if (newname) {
+    if (newname)
+      {
 	char *newpath = newname+strlen(newname);
 	strcat(newname, path);
 	path = newpath;
 	/* Free old copy */
 	TtaFreeMemory(*filename);
 	*filename = newname;
-    }
+      }
     return path;
 }
 
@@ -1187,28 +1194,28 @@ char        **url;
   char *newptr, *access;
   char *orig, *dest, *end;
 
-  char       my_dir_sep;
-  char      *my_dir_str;
+  char       used_sep;
+  char      *used_str;
 
 
   if (!url || !*url)
     return;
 
-    if (strchr (*url, '/'))
- {
-	my_dir_str = "/";
-	my_dir_sep = '/';
- }
+  if (strchr (*url, URL_SEP))
+    {
+      used_str = URL_STR;
+      used_sep = URL_SEP;
+    }
   else
- {
-	my_dir_str = DIR_STR;
-	my_dir_sep = DIR_SEP;
- }
-
+    {
+      used_str = DIR_STR;
+      used_sep = DIR_SEP;
+    }
 
   /* Find any scheme name */
   if ((path = strstr(*url, "://")) != NULL)
-    {		   /* Find host name */
+    {
+      /* Find host name */
       access = *url;
       while (access<path && (*access=tolower(*access)))
 	access++;
@@ -1224,7 +1231,7 @@ char        **url;
   else
     path = *url;
 
-  if (*path == my_dir_sep && *(path+1)==my_dir_sep)
+  if (*path == used_sep && *(path+1)==used_sep)
     /* Some URLs start //<foo> */
     path += 1;
   else if (!strncmp(path, "news:", 5))
@@ -1252,23 +1259,23 @@ char        **url;
       p = path;
       while (p < end)
 	{
-	  if (*p==my_dir_sep)
+	  if (*p==used_sep)
 	    {
-	      if (p > *url && *(p+1) == '.' && (*(p+2) == my_dir_sep || !*(p+2)))
+	      if (p > *url && *(p+1) == '.' && (*(p+2) == used_sep || !*(p+2)))
 		{
 		  orig = p + 1;
-		  dest = (*(p+2)!=my_dir_sep) ? p+2 : p+3;
+		  dest = (*(p+2)!=used_sep) ? p+2 : p+3;
 		  while ((*orig++ = *dest++)); /* Remove a slash and a dot */
 		  end = orig - 1;
 		}
-	      else if (*(p+1)=='.' && *(p+2)=='.' && (*(p+3)==my_dir_sep || !*(p+3)))
+	      else if (*(p+1)=='.' && *(p+2)=='.' && (*(p+3)==used_sep || !*(p+3)))
 		{
 		  newptr = p;
-		  while (newptr>path && *--newptr!=my_dir_sep); /* prev slash */
+		  while (newptr>path && *--newptr!=used_sep); /* prev slash */
 		  if (strncmp(newptr, "/../", 4))
 		    {
 		      orig = newptr + 1;
-		      dest = (*(p+3)!=my_dir_sep) ? p+3 : p+4;
+		      dest = (*(p+3)!=used_sep) ? p+3 : p+4;
 		      while ((*orig++ = *dest++)); /* Remove /xxx/.. */
 		      end = orig-1;
 		      /* Start again with prev slash */
@@ -1277,9 +1284,9 @@ char        **url;
 		  else
 		    p++;
 		}
-	      else if (*(p+1) == my_dir_sep)
+	      else if (*(p+1) == used_sep)
 		{
-		  while (*(p+1) == my_dir_sep)
+		  while (*(p+1) == used_sep)
 		    {
 		      orig = p;
 		      dest = p + 1;
