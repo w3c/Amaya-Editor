@@ -606,7 +606,7 @@ int CharacterWidth (int c, ThotFont font)
 	{
 	  l = gl_font_char_width ((void *) font, (CHAR_T) c);
 	  if (l == 0)
-	    l = gl_font_char_width ((void *) font, 32);
+	    l = 7/*gl_font_char_width ((void *) font, 32)*/;
 	}
       else
 	l = gl_font_char_width ((void *) font, (CHAR_T) c);
