@@ -52,11 +52,11 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
   ,m_NbAttr_evt(0)
   ,m_pRBEnum(NULL)
 {
-  m_pVPanelParent       = XRCCTRL(*m_pPanel, "wxID_PANEL_ATTRVALUE", wxPanel);
+  m_pVPanelParent       = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
   m_pVPanelSizer  = m_pVPanelParent->GetSizer();
 
-  m_pAttrList     = XRCCTRL(*m_pPanel, "wxID_CLIST_ATTR", wxCheckListBox);      
-  m_pAutoRefresh  = XRCCTRL(*m_pPanel, "wxID_CHECK_AUTOREF", wxCheckBox);
+  m_pAttrList     = XRCCTRL(*this, "wxID_CLIST_ATTR", wxCheckListBox);      
+  m_pAutoRefresh  = XRCCTRL(*this, "wxID_CHECK_AUTOREF", wxCheckBox);
   m_pPanel_Lang   = XRCCTRL(*m_pVPanelParent, "wxID_ATTRIBUTE_LANG", wxPanel);
   m_pPanel_Text   = XRCCTRL(*m_pVPanelParent, "wxID_ATTRIBUTE_TEXT", wxPanel);
   m_pPanel_Enum   = XRCCTRL(*m_pVPanelParent, "wxID_ATTRIBUTE_ENUM", wxPanel);
@@ -700,9 +700,9 @@ void AmayaAttributePanel::SetMandatoryState( bool is_mandatory )
 {
   m_CurrentAttMandatory = is_mandatory;
   if (is_mandatory)
-    XRCCTRL(*m_pPanel, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->Disable();
+    XRCCTRL(*this, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->Disable();
   else
-    XRCCTRL(*m_pPanel, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->Enable();
+    XRCCTRL(*this, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->Enable();
 }
 
 /*----------------------------------------------------------------------

@@ -54,8 +54,7 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
 			      ,const wxSize&  size
 			      ,long style
 			      )
-  :  wxPanel( p_parent_window, id, pos, size, style )
-     ,m_pPanel(NULL)
+  :  wxPanel()
      ,m_State( (wxAMAYA_SPANEL_EXPANDED & ~wxAMAYA_SPANEL_FLOATING) )
      ,m_DoUnfloat_Lock(false)
      ,m_pParentNWindow(p_parent_nwindow)
@@ -66,11 +65,7 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
   m_pManager = AmayaSubPanelManager::GetInstance();
 
   // load resource
-  m_pPanel = wxXmlResource::Get()->LoadPanel(this, panel_xrcid);
-  m_pTopSizer = new wxBoxSizer( wxVERTICAL );
-  SetSizer(m_pTopSizer);
-  m_pTopSizer->Add( m_pPanel, 1, wxALL | wxEXPAND , 0 );
-  m_pTopSizer->Fit(this);
+  wxXmlResource::Get()->LoadPanel(this, p_parent_window, panel_xrcid);
   GetParent()->Layout();
   
   // get reference of these usefull childs

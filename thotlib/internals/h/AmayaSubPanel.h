@@ -80,11 +80,9 @@ class AmayaSubPanel : public wxPanel
 
  protected:
   AmayaNormalWindow * m_pParentNWindow;
-  wxBoxSizer *        m_pTopSizer;
   AmayaSubPanelManager * m_pManager;
 
   wxString             m_PanelType;
-  wxPanel *            m_pPanel;
   wxPanel *            m_pPanelContent;
   wxPanel *            m_pPanelContentDetach;
   wxPanel *            m_pPanelTitle;
