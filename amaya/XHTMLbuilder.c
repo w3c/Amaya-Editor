@@ -1662,15 +1662,15 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	      if (strlen (attrValue) > MaxMsgLength - 30)
 		attrValue[MaxMsgLength - 30] = EOS;
 	      HTMLSetBackgroundImage (context->doc, context->lastElement,
-				      REPEAT, attrValue, FALSE);
+				      REPEAT, 0, attrValue, FALSE);
 	    }
 	  else if (!strcmp (lastMappedAttr->XMLattribute, "bgcolor"))
 	    HTMLSetBackgroundColor (context->doc, context->lastElement,
-				    attrValue);
+				    0, attrValue);
 	  else if (!strcmp (lastMappedAttr->XMLattribute, "text") ||
 		   !strcmp (lastMappedAttr->XMLattribute, "color"))
-	    HTMLSetForegroundColor (context->doc,
-				    context->lastElement, attrValue);
+	    HTMLSetForegroundColor (context->doc, context->lastElement,
+				    0, attrValue);
 	}
     }
 }

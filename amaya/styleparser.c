@@ -5256,23 +5256,25 @@ int IsImplicitClassName (char *class_, Document doc)
 /*----------------------------------------------------------------------
    HTMLSetBackgroundColor:
   ----------------------------------------------------------------------*/
-void    HTMLSetBackgroundColor (Document doc, Element el, char *color)
+void HTMLSetBackgroundColor (Document doc, Element el, int specificity,
+			     char *color)
 {
    char             css_command[100];
 
    sprintf (css_command, "background-color: %s", color);
-   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
+   ParseHTMLSpecificStyle (el, css_command, doc, specificity, FALSE);
 }
 
 /*----------------------------------------------------------------------
    HTMLSetForegroundColor:                                        
   ----------------------------------------------------------------------*/
-void HTMLSetForegroundColor (Document doc, Element el, char *color)
+void HTMLSetForegroundColor (Document doc, Element el, int specificity,
+			     char *color)
 {
    char           css_command[100];
 
    sprintf (css_command, "color: %s", color);
-   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
+   ParseHTMLSpecificStyle (el, css_command, doc, specificity, FALSE);
 }
 
 /*----------------------------------------------------------------------

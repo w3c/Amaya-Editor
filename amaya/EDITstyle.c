@@ -937,7 +937,7 @@ void GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
    generate is TRUE when the style attribute must be generated.
   ----------------------------------------------------------------------*/
 void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
-			     char *image, ThotBool generate)
+			     int specificity, char *image, ThotBool generate)
 {
   Attribute           attr;
   AttributeType       attrType;
@@ -948,6 +948,9 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
 
   /* First remove a previous value */
   HTMLResetBackgroundImage (doc, el);
+  if (el && generate)
+    /* update the style attribute */
+    SetStyleAttribute (doc, el);
   sprintf (txt, "background-image: url(%s); background-repeat: ", image);
   if (repeat == REPEAT)
     strcat (txt, "repeat");

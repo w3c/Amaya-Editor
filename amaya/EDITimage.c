@@ -260,9 +260,9 @@ void CallbackImage (int ref, int typedata, char *data)
 		      HTMLResetBackgroundImage (document, el);
 		    else if (IsHTTPPath (DocumentURLs[document]) &&
 			     !IsHTTPPath (LastURLImage))
-		      HTMLSetBackgroundImage (document, el, i, tempname, TRUE);
+		      HTMLSetBackgroundImage (document, el, i, 200, tempname, TRUE);
 		    else
-		      HTMLSetBackgroundImage (document, el, i, LastURLImage,
+		      HTMLSetBackgroundImage (document, el, i, 200, LastURLImage,
 					      TRUE);
 		    if (last == NULL || el == last)
 		      el = NULL;

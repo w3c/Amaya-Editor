@@ -1783,9 +1783,8 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
 static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 {
   PtrBox              pBox, box;
-  PtrAbstractBox      pParent, pChildAb;
+  PtrAbstractBox      pParent;
   PtrFloat            previous, new_;
-  ThotBool            uniqueChild;
 
   if (pAb && !pAb->AbDead)
     {

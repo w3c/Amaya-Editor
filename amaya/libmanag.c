@@ -1828,7 +1828,7 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
   /* there is no Background Color attribute attach to this element */
   color = (char *) TtaGetMemory (strlen ("#FFD8C1") + 1);
   strcpy (color, "#FFD8C1");
-  HTMLSetBackgroundColor (doc, prev, color);
+  HTMLSetBackgroundColor (doc, prev, 200, color);
   TtaFreeMemory (color);
 #endif /* _SVG */
 }

@@ -28,9 +28,11 @@ extern int IsImplicitClassName ( char *class_,
                                  Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element el,
+                                     int specificity,
                                      char *color );
 extern void HTMLSetForegroundColor ( Document doc,
                                      Element el,
+                                     int specificity,
                                      char *color );
 extern void HTMLResetBackgroundColor ( Document doc,
                                        Element el );
@@ -89,9 +91,11 @@ extern int IsImplicitClassName ( char *class_,
                                    Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
                                        Element el,
+                                       int specificity,
                                        char *color );
 extern void HTMLSetForegroundColor ( Document doc,
                                        Element el,
+                                       int specificity,
                                        char *color );
 extern void HTMLResetBackgroundColor ( Document doc,
                                          Element el );

@@ -4619,10 +4619,10 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 	       depAttrType.AttrSSchema = attrType.AttrSSchema ;
 	       depAttrType.AttrTypeNum = MathML_ATTR_mathcolor;
 	       if (!TtaGetAttribute (el, depAttrType))
-                  HTMLSetForegroundColor (doc, el, value);
+                  HTMLSetForegroundColor (doc, el, 0, value);
 	       break;
 	     case MathML_ATTR_mathcolor:
-               HTMLSetForegroundColor (doc, el, value);
+               HTMLSetForegroundColor (doc, el, 0, value);
 	       break;
 	     case MathML_ATTR_background_:
 	       /* deprecated attribute */
@@ -4631,10 +4631,10 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 	       depAttrType.AttrSSchema = attrType.AttrSSchema;
 	       depAttrType.AttrTypeNum = MathML_ATTR_mathbackground;
 	       if (!TtaGetAttribute (el, depAttrType))
-                  HTMLSetBackgroundColor (doc, el, value);
+                  HTMLSetBackgroundColor (doc, el, 0, value);
 	       break;
 	     case MathML_ATTR_mathbackground:
-               HTMLSetBackgroundColor (doc, el, value);
+               HTMLSetBackgroundColor (doc, el, 0, value);
 	       break;
 	     case MathML_ATTR_fontfamily:
 	       SetFontfamily (doc, el, value);

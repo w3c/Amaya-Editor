@@ -805,7 +805,6 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	   (pRefAb->AbBox->BxType == BoGhost ||
 	    pRefAb->AbBox->BxType == BoFloatGhost))
     {
-printf ("Related to a ghost box \n");
       /* the box position is computed by the line formatter */
       if (horizRef)
 	pAb->AbHorizPosChange = FALSE;

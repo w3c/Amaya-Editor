@@ -3803,6 +3803,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			    (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
 					       pAttr->AeAttrSSchema) ||
 			     AttrHasException (ExcCssId, pAttr->AeAttrNum,
+					       pAttr->AeAttrSSchema) ||
+			     AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
 					       pAttr->AeAttrSSchema)))
 			  pSSattr = pDoc->DocSSchema;
 			/* process all values of the attribute, in case of a
@@ -3874,6 +3876,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			  !(AttrHasException (ExcCssClass, pAttr->AeAttrNum,
 					      pAttr->AeAttrSSchema) ||
 			    AttrHasException (ExcCssId, pAttr->AeAttrNum,
+					      pAttr->AeAttrSSchema) ||
+			    AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
 					      pAttr->AeAttrSSchema)))
 			pAttr = NULL;
 		      }
@@ -3905,6 +3909,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		    (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
 				       pAttr->AeAttrSSchema) ||
 		     AttrHasException (ExcCssId, pAttr->AeAttrNum,
+				       pAttr->AeAttrSSchema) ||
+		     AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
 				       pAttr->AeAttrSSchema)))
 		    pSSattr = pDoc->DocSSchema;
 		  /* process all values of the attribute, in case of a text
@@ -3927,7 +3933,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                                    pNewAbbox, fileDescriptor))
 			    /* not a creation rule, get the right rule */
 			    pRule = GetNextAttrPresRule (&pR,
-					          pAttr->AeAttrSSchema, pAttr,
+					          pSSattr, pAttr,
                                                   pEl, pDoc, pEl, view);
 			  if (pRule && DoesViewExist (pEl, pDoc, viewNb))
 			    /* this rule applies to the element */

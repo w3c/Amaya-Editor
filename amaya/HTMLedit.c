@@ -3319,13 +3319,13 @@ void AttrColorCreated (NotifyAttribute * event)
       TtaGiveTextAttributeValue (event->attribute, value, &length);
 
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
-      HTMLSetBackgroundColor (event->document, event->element, value);
+      HTMLSetBackgroundColor (event->document, event->element, 0, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_background_)
       HTMLSetBackgroundImage (event->document, event->element, REPEAT,
-			      value, FALSE);
+			      0, value, FALSE);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_color ||
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
-      HTMLSetForegroundColor (event->document, event->element, value);
+      HTMLSetForegroundColor (event->document, event->element, 0, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_LinkColor)
       HTMLSetAlinkColor (event->document, event->element, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_VisitedLinkColor)
