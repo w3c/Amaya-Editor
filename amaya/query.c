@@ -2203,8 +2203,6 @@ char 	     *content_type;
 
    if (mode & AMAYA_NOCACHE) 
       HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
-   else
-     HTRequest_setReloadMode (me->request, HT_CACHE_OK);
 
    /* prepare the query string and format for POST */
    if (mode & AMAYA_FORM_POST)
@@ -2503,10 +2501,15 @@ int                 docid;
 		"before kill: %d\n", Amaya->open_requests);
 #endif /* DEBUG_LIBWWW */
        
-	   /* delete all timers first */
-	   HTTimer_deleteAll ();
-       HTNet_killAll();
-       EventOrder_deleteAll();
+       /* delete the libwww request status */
+       HTTimer_deleteAll ();
+       EventOrder_deleteAll ();
+       HTNet_killAll ();
+       /* Delete remaining channels */
+	 HTChannel_deleteAll();
+       /* again delete all the timers which the above operations may have
+	set up */
+       HTTimer_deleteAll ();
 
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
@@ -2529,8 +2532,6 @@ int                 docid;
 #endif /* WWW_XWINDOWS */
 #endif /* !_WINDOWS */
 	 }
-       /* Delete remaining channels */
-       HTChannel_deleteAll();
        
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "StopRequest: number of Amaya requests "
