@@ -269,9 +269,9 @@ static HWND     AnnotHwnd = NULL;
 static AM_WIN_MenuText WIN_AnnotMenuText[] = 
 {
 	{AM_INIT_ALL, AM_ANNOT_CONF_MENU},
-	{IDC_ANNOTUSER, AM_ANNOT_USER},
-	{IDC_ANNOTPOSTSERVER, AM_ANNOT_POST_SERVER},
-	{IDC_ANNOTSERVERS, AM_ANNOT_SERVERS},
+	{IDC_TANNOTUSER, AM_ANNOT_USER},
+	{IDC_TANNOTPOSTSERVER, AM_ANNOT_POST_SERVER},
+	{IDC_TANNOTSERVERS, AM_ANNOT_SERVERS},
 	{IDC_ANNOTAUTOLOAD, AM_ANNOT_AUTOLOAD},
 	{0, 0}
 };
@@ -4076,7 +4076,7 @@ HWND hwnDlg;
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
-  RefreshAnnotyMenu
+  RefreshAnnotMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -4164,7 +4164,6 @@ LPARAM lParam;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
-	  /* always signal this as modified */
 	  GetDefaultAnnotConf ();
 	  WIN_RefreshAnnotMenu (hwnDlg);
 	  break;
