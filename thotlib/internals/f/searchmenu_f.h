@@ -14,11 +14,6 @@ extern void TtcSearchText ( Document document,
 extern void CallbackTextReplace ( int ref,
                                   int val,
                                   char *txt );
-extern void BuildGoToPageMenu ( PtrDocument pDoc,
-                                int docView,
-                                int schView );
-extern void CallbackGoToPageMenu ( int ref,
-                                   int val );
 extern void SearchLoadResources ( void );
 
 #else /* __STDC__ */
@@ -31,11 +26,6 @@ extern void TtcSearchText (/* Document document,
 extern void CallbackTextReplace (/* int ref,
                                     int val,
                                     char *txt */);
-extern void BuildGoToPageMenu (/* PtrDocument pDoc,
-                                  int docView,
-                                  int schView */);
-extern void CallbackGoToPageMenu (/* int ref,
-                                     int val */);
 extern void SearchLoadResources (/* void */);
 
 #endif /* __STDC__ */

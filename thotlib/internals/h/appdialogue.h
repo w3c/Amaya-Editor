@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2002.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -30,7 +30,6 @@ typedef struct _Item_Ctl
     struct
     {
       int	_ItemAction;	/* ID of the linked action		*/
-
     } s0;
     struct
     {
@@ -101,7 +100,7 @@ typedef struct _SchemaMenu_Ctl
 #define T_showbox                       30
 #define T_searchtext	31
 #define T_locatesearch	32
-#define T_searchpage	33
+#define T_freesearch	33
 #define T_rchoice	34
 #define T_present	35
 #define T_presentstd	36

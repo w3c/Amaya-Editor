@@ -367,6 +367,9 @@ void TtaQuit ()
   /* remove the contents of the cut buffer related to the document */
   if (ThotLocalActions[T_freesavedel])
     (*ThotLocalActions[T_freesavedel]) ();
+  /* free all context related to search commands */
+  if (ThotLocalActions[T_freesearch])
+    (*ThotLocalActions[T_freesearch]) ();
   FreeDocColors ();
   FreeAllMessages ();
   Prof_FreeTable ();

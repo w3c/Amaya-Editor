@@ -95,19 +95,16 @@
 #define NumMenuAttrEnumNeeded 95 /* numero du menu des valeurs d'un */
 #define NumMenuCharacters	96
 #define NumFormPrint		97
-#define NumFormSearchPage	98
-#define NumZoneSearchPage	99
 #define NumZoneRecess		100
 #define NumMenuRecessSense	101
 #define NumZoneLineSpacing	102
 #define NumMenuLineSpacing	103
-#define NumMenuWordBreak	104
-#define NumFormPresGraphics	155
-#define NumMenuStrokeStyle	106
-#define NumZoneStrokeWeight	107
-#define NumSelectPattern	108
+#define NumFormPresGraphics	104
+#define NumMenuStrokeStyle	105
+#define NumZoneStrokeWeight	106
+#define NumSelectPattern	107
 
-#define MAX_LocalMenu		109
+#define MAX_LocalMenu		108
 
 /* Number of references reserved by Thot       				*/
 /* MAX_ITEM >= MAX_FRAME for X-Windows applications			*/

@@ -1686,20 +1686,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	}
       ApplyPresentMod (Apply_Align);
       break;
-    case NumMenuWordBreak:	/* coupure des mots */
-      if (val == 2)	/* entree 2: Standard */
-	{
-	  ChngHyphen = FALSE;
-	  StdHyphen = TRUE;
-	}
-      else
-	{
-	  ChngHyphen = TRUE;
-	  StdHyphen = FALSE;
-	  Hyphenate = (val == 0);
-	}
-      ApplyPresentMod (Apply_Hyphen);
-      break;
     case NumZoneRecess:	/* renfoncement de la premiere ligne */
       ChngIndent = TRUE;
       IndentValue = val;

@@ -4368,7 +4368,6 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumMenuUnderlineType:
       case NumMenuUnderlineWeight:
       case NumMenuAlignment:
-      case NumMenuWordBreak:
       case NumZoneRecess:
       case NumMenuRecessSense:
       case NumZoneLineSpacing:
@@ -4388,7 +4387,6 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumMenuPresentStandard:
 	(*ThotLocalActions[T_presentstd]) (ref, (int) data);
 	break;
-      case NumZoneSearchPage:
       case NumFormSearchText:
       case NumMenuReplaceMode:
       case NumToggleUpperEqualLower:
@@ -4399,7 +4397,6 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumZoneTextSearch:
       case NumZoneTextReplace:
       case NumSelTypeToSearch:
-	
       case NumSelAttributeToSearch:
 	/* zone de saisie du texte de remplacement */
 	(*ThotLocalActions[T_searchtext]) (ref, 0, data);

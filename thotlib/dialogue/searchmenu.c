@@ -35,24 +35,12 @@
 
 /* pointer to the search domain for the the current command */
 static PtrSearchContext SearchingD = NULL;
-/* document where we are searching a page */
-static PtrDocument   SearchedPageDoc;
 /* document to which the CurrRef belongs */
 static PtrDocument   CurrRefDoc;
 static PtrDocument   DocTextOK;
-
-/* root of the tree where we are searching a page */
-static PtrElement    SearchedPageRoot;
 /* element whose references we are looking for */
 static PtrElement    CurrRefElem;
 static PtrElement    ElemTextOK;
-
-/* document view for which we are searching a page */
-static int           ViewSearchedPageDoc;
-/* presentation scheme view for which we are searching a page */
-static int           SearchedPageSchView;
-/* number of the searched page */
-static int           SearchedPageNumber;
 /* precedent searched string */
 static unsigned char pPrecedentString[THOT_MAX_CHAR];
 /* searched string */
@@ -522,6 +510,17 @@ void TtcSearchText (Document document, View view)
 #endif /* _WINDOWS */
 }
 
+/*----------------------------------------------------------------------
+  CleanSearchContext free all context related to search commands.
+  ----------------------------------------------------------------------*/
+static void CleanSearchContext ()
+{
+  FreeSearchContext (&SearchingD);
+  TtaFreeMemory (SString);
+  SString = NULL;
+  TtaFreeMemory (RString);
+  RString = NULL;
+}
 
 /*----------------------------------------------------------------------
   CallbackTextReplace
@@ -622,14 +621,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
       if (val == 2 && WithReplace && !StartSearch)
 	DoReplace = FALSE;
       else if (val == 0)
-	{
-	  /* Abandon de la recherche */
-	  TtaFreeMemory (SString);
-	  SString = NULL;
-	  TtaFreeMemory (RString);
-	  RString = NULL;
-	  return;
-	}
+	return;
 
       selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
 					 &pLastSel, &firstChar, &lastChar);
@@ -642,7 +634,11 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	  selectionOK = FALSE;
 	  StartSearch = TRUE;
 	}
-
+      else if (firstChar == 0 && lastChar == 0 && pFirstSel == pLastSel)
+	{
+	  firstChar = 1;
+	  lastChar = pFirstSel->ElVolume + 1;
+	}
       if (StartSearch)
 	pCurrEl = NULL;
       else if (SearchingD->SStartToEnd)
@@ -717,6 +713,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
 					   (ThotBool)(!AutoReplace));
 			    ReplaceDone = TRUE;
 			    StartSearch = FALSE;
+			    if (AutoReplace)
+			      lastChar += RStringLen - SStringLen;
 			    /* met eventuellement a jour la borne de */
 			    /* fin du domaine de recherche */
 			    if (pFirstSel == SearchingD->SEndElement &&
@@ -776,9 +774,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
 					  &lastChar, SearchingD->SStartToEnd,
 					  UpperLower, SString,
 					  SStringLen);
-		      /*if (found)
-			lastChar--;*/
-		      
 		      foundString = found;
 		      if (found)
 			/* on a trouve' la chaine cherchee */
@@ -803,7 +798,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
 						 lastChar);
 			  /* arrete la boucle de recherche */
 			  stop = TRUE;
-			  /*lastChar++;*/
 			}
 		      TextOK = TRUE;
 		      DocTextOK = SearchingD->SDocument;
@@ -881,73 +875,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
     }
 }
 
-/*----------------------------------------------------------------------
-  BuildGoToPageMenu
-  handles the Goto Page number command.
-  ----------------------------------------------------------------------*/
-void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView)
-{
-   char                  buffTitle[200];
-
-   if (ThotLocalActions[T_searchpage] == NULL)
-      TteConnectAction (T_searchpage, (Proc) CallbackGoToPageMenu);
-
-   /* garde le pointeur sur le document concerne' par la commande */
-   SearchedPageDoc = pDoc;
-   /* garde le  numero de vue (dans le document) de la vue concernee */
-   ViewSearchedPageDoc = docView;
-   /* garde la racine de l'arbre ou on va chercher une page, ainsi que */
-   /* le numero (dans le schema de presentation) de la vue concernee */
-   /* cherche le numero de vue dans le schema de presentation */
-   /* applique' au document */
-   SearchedPageSchView = AppliedView (pDoc->DocDocElement, NULL, pDoc,
-				      docView);
-   SearchedPageRoot = pDoc->DocDocElement;
-   /* compose le titre "Recherche dans le document..." */
-   strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
-   strcat (buffTitle, pDoc->DocDName);
-#ifndef _WINDOWS 
-   /* cree formulaire de saisie du numero de la page cherchee */
-   TtaNewSheet (NumFormSearchPage,  0, buffTitle, 1,
-		TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L',
-		D_CANCEL);
-
-   /* cree zone de saisie du numero de la page cherchee */
-   TtaNewNumberForm (NumZoneSearchPage, NumFormSearchPage, TtaGetMessage (LIB, TMSG_GOTO_PAGE), 0, 9999, FALSE);
-   /* affiche le formulaire */
-   TtaShowDialogue (NumFormSearchPage, FALSE);
-#endif /* _WINDOWS */
-}
-
-/*----------------------------------------------------------------------
-  CallbackGoToPageMenu
-  callback handler for the GotoPage menu.
-  ----------------------------------------------------------------------*/
-void CallbackGoToPageMenu (int ref, int val)
-{
-   PtrElement          pPage;
-
-   if (SearchedPageDoc && SearchedPageDoc->DocSSchema)
-     /* le document concerne' est toujours la */
-     switch (ref)
-       {
-       case NumZoneSearchPage:
-	 /* zone de saisie du numero de la page cherchee */
-	 SearchedPageNumber = val;
-	 break;
-       case NumFormSearchPage:
-	 /* formulaire de saisie du numero de la page cherchee */
-	 /* cherche la page */
-	 pPage = SearchPageBreak (SearchedPageRoot,
-				  SearchedPageSchView,
-				  SearchedPageNumber, FALSE);
-	 /* fait afficher la page trouvee en haut de sa frame */
-	 ScrollPageToTop (pPage, ViewSearchedPageDoc,
-			  SearchedPageDoc);
-	 TtaDestroyDialogue (NumFormSearchPage);
-	 break;
-       }
-}
 
 /*----------------------------------------------------------------------
   SearchLoadResources
@@ -960,10 +887,7 @@ void SearchLoadResources (void)
 	/* Connecte les actions liees au traitement du search */
 	TteConnectAction (T_searchtext, (Proc) CallbackTextReplace);
 	TteConnectAction (T_locatesearch, (Proc) CallbackWhereToSearch);
-        
-	/*TteConnectAction (T_searchemptyref, (Proc) CallbackSearchEmptyref);
-	  TteConnectAction (T_searchemptyelt, (Proc) CallbackSearchEmptyEl);
-	  TteConnectAction (T_searchrefto, (Proc) CallbackReferenceTo);*/
+	TteConnectAction (T_freesearch, (Proc) CleanSearchContext);
 	CurrRef = NULL;
 	CurrRefDoc = NULL;
 	CurrRefElem = NULL;
