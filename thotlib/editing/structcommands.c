@@ -2353,7 +2353,8 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 	/* d'etre cree', et on lui met les attributs obligatoires */
 	CompleteElement (pElSurround, pDoc);
 	RemoveExcludedElem (&pRoot, pDoc);
-	if (FullStructureChecking)
+	if (pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
+	/*if (FullStructureChecking)*/
 	  AttachMandatoryAttributes (pElSurround, pDoc);
 	if (pDoc->DocSSchema != NULL)
 	   /* le document n'a pas ete ferme' pendant que l'utilisateur avait */
@@ -3292,7 +3293,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		      /* traite les exclusions des elements crees */
 		      RemoveExcludedElem (&pNew, pSelDoc);
 		      /* traite les attributs requis des elements crees */
-		      if (FullStructureChecking)
+		      if (pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
+		      /*if (FullStructureChecking)*/
 			AttachMandatoryAttributes (pNew, pSelDoc);
 		      if (pSelDoc->DocSSchema != NULL)
 			/* le document n'a pas ete ferme' entre temps */
@@ -3588,7 +3590,8 @@ void TtaInsertAnyElement (Document document, ThotBool before)
 	    }
 	  /* remove exclusions from the created element */
 	  RemoveExcludedElem (&pNew, pDoc);
-	  if (FullStructureChecking)
+	  if (pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
+	    /*if (FullStructureChecking)*/
 	    AttachMandatoryAttributes (pNew, pDoc);
 	  if (pDoc->DocSSchema != NULL)
 	    /* the document has not been closed while waiting for mandatory

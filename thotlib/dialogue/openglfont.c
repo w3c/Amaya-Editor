@@ -1029,7 +1029,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   if (Height <= 0 || Width <= 0 || fabs (miny - 10000) < 0.0001)
     return 0;
   
-  bitmap_alloc = sizeof (unsigned char)*Height*Width;
+  bitmap_alloc = sizeof (unsigned char) * Height * Width;
   if (bitmap_alloc >= MAX_BITMAP_ALLOC)
     {
       data = (unsigned char *)TtaGetMemory (bitmap_alloc); 

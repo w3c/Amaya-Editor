@@ -498,7 +498,8 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	}
 
       oldStructureChecking = TtaGetStructureChecking (doc);
-      TtaSetStructureChecking (FALSE, doc);
+      if (oldStructureChecking)
+	TtaSetStructureChecking (FALSE, doc);
 
       if (isUse)
 	/* it's a use element. Copy the source element itself */
@@ -520,7 +521,8 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	/* it's a tref element. Copy all the contents of the source element */
 	CopyTRefContent (source, el, doc);
 
-      TtaSetStructureChecking (oldStructureChecking, doc);
+      if (oldStructureChecking)
+	TtaSetStructureChecking (oldStructureChecking, doc);
     }
 }
 

@@ -1268,7 +1268,8 @@ ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
 				 pEl->ElStructSchema))
 	 /* l'exception NoCut est associee au type de l'element */
 	ret = FALSE;
-      else if (FullStructureChecking)
+      else if (pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
+	/*else if (FullStructureChecking)*/
 	 /* on est en mode de controle strict de la structure */
 	 if (pEl->ElParent != NULL)
 	   {
@@ -1558,19 +1559,24 @@ ThotBool AllowedSibling (PtrElement pEl, PtrDocument pDoc,
 					  !strcmp (pAscSS->SsName, pSS->SsName))
 					ok = TRUE;
 				      else
-					optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
+					optional = (pRule->SrOptComponent[i - 1] ||
+						    !(pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
+						    /*!FullStructureChecking*/);
 				    }
 				else if (compNum < pRule->SrNComponents)
 				  /* on veut inserer apres pEl */
 				  {
 				    /* pas de composant apres le dernier */
-				    for (i = compNum + 1; i <= pRule->SrNComponents && optional && !ok; i++)
+				    for (i = compNum + 1; i <= pRule->SrNComponents &&
+					   optional && !ok; i++)
 				      {
 					if (pRule->SrComponent[i-1] == typeNum &&
 					    !strcmp (pAscSS->SsName, pSS->SsName))
 					  ok = TRUE;
 					else
-					  optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
+					  optional = (pRule->SrOptComponent[i - 1] ||
+						      !(pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
+						      /*!FullStructureChecking*/);
 				      }
 				  }
 			      }

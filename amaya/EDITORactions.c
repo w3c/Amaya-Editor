@@ -3137,7 +3137,7 @@ Element GetEnclosingForm (Document document, View view)
 /*----------------------------------------------------------------------
   PrepareFormControl 
   
-  Return the selected element and meke sure there is at least a space
+  Return the selected element and make sure there is at least a space
   character before the insertion point.
   withinP is TRUE if the current selection is within a paragraph or
   a pseudo-paragraph.
@@ -3210,6 +3210,7 @@ void CreateForm (Document doc, View view)
   Element           el;
   int               firstchar, lastchar;
   ElementType       elType;
+  ThotBool          oldStructureChecking;
 
   /* get the first selected element */
   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
@@ -3225,8 +3226,13 @@ void CreateForm (Document doc, View view)
 	/* the selection is within some HTML document or fragment */
 	{
 	  /* create the form element */
+	  oldStructureChecking = TtaGetStructureChecking (doc);
+	  if (!oldStructureChecking)
+	    TtaSetStructureChecking (TRUE, doc);
 	  elType.ElTypeNum = HTML_EL_Form;
 	  TtaCreateElement (elType, doc);
+	  if (!oldStructureChecking)
+	    TtaSetStructureChecking (FALSE, doc);
 	}
     }
 }
