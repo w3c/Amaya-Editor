@@ -352,8 +352,7 @@ PtrEventsSet        pAppli;
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
 	fprintf (AppFile, "Pixmap icon;   /* icon pixmap */\n\n");
      }
-   fprintf (AppFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/ 
-\n");
+   fprintf (AppFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/\n");
    fprintf (AppFile, "void %sApplicationInitialise ()\n", fname);
    fprintf (AppFile, "{\n PtrEventsSet appliActions;\n\n");
    fprintf (AppFile, "  /* Create the new application context*/\n");
@@ -410,8 +409,7 @@ char               *fname;
    fprintf (AppFile, "#ifdef __STDC__\n");
    while (action != NULL)
      {
-	fprintf (actionFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/ 
-\n");
+	fprintf (actionFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/\n");
 	fprintf (actionFile, "#ifdef __STDC__\n");
 	strcpy (s, "#else /* __STDC__*/\n");
 	fprintf (AppFile, "extern ");
@@ -739,8 +737,7 @@ char               *fname;
 	     if (!menuAction->AppStandardName)
 		/* ecrit les fonctions non standard des menus dans XXXaction.c */
 	       {
-		  fprintf (actionFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/ 
-\n");
+		  fprintf (actionFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/\n");
 		  fprintf (actionFile, "#ifdef __STDC__\n");
 		  fprintf (actionFile, "void %s (Document document, View view)\n",
 			   menuAction->AppNameValue);
