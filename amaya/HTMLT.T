@@ -1199,7 +1199,6 @@ RULES
  Invalid_element:
 	BEGIN
 	Remove;
-#endif
 	END;
 
  Unknown_namespace:
