@@ -1638,130 +1638,73 @@ void         CreateGraphicElement (int entry)
   ----------------------------------------------------------------------*/
 static void         CreateGroup ()
 {
-   Document	doc;
-   Element	el, prevSel, prevChild, group;
-   ElementType	elType;
-   AttributeType	attrType;
-   int		c1, i, minX, minY;
-   /******
-   Attribute	attr;
-   int          posX, poxY;
-   *********/
-   DisplayMode	dispMode;
-   ThotBool	position;
+  Document	doc;
+  Element	el, prevSel, prevChild, group;
+  ElementType	elType;
+  AttributeType	attrType;
+  int		c1, i, minX, minY;
+  DisplayMode	dispMode;
+  ThotBool	position;
 
-   doc = TtaGetSelectedDocument ();
-   if (doc == 0)
-      /* there is no selection. Nothing to do */
-      return;
-   TtaGiveFirstSelectedElement (doc, &el, &c1, &i);
-   if (el == NULL)
-      /* no selection. Return */
-      return;
+  doc = TtaGetSelectedDocument ();
+  if (doc == 0)
+    /* there is no selection. Nothing to do */
+    return;
+  TtaGiveFirstSelectedElement (doc, &el, &c1, &i);
+  if (el == NULL)
+    /* no selection. Return */
+    return;
 
-   dispMode = TtaGetDisplayMode (doc);
-   /* ask Thot to stop displaying changes made in the document */
-   if (dispMode == DisplayImmediately)
-      TtaSetDisplayMode (doc, DeferredDisplay);
+  dispMode = TtaGetDisplayMode (doc);
+  /* ask Thot to stop displaying changes made in the document */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
 
-   prevSel = NULL;
-   prevChild = NULL;
-   /* Create a Group element */
-   elType = TtaGetElementType (el);
-   elType.ElTypeNum = GraphML_EL_g;
-   group = TtaNewElement (doc, elType);
-   /* insert the new group element */
-   TtaInsertSibling (group, el, TRUE, doc);
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  prevSel = NULL;
+  prevChild = NULL;
+  /* Create a Group element */
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = GraphML_EL_g;
+  group = TtaNewElement (doc, elType);
+  /* insert the new group element */
+  TtaInsertSibling (group, el, TRUE, doc);
+  TtaRegisterElementCreate (group, doc);
 
-   attrType.AttrSSchema = elType.ElSSchema;
-   minX = minY = 32000;
-   position = FALSE;
-   while (el != NULL)
-      {
-/***************
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr == NULL)
-         posX = 0;
-      else
-	 {
-         posX = TtaGetAttributeValue (attr);
-	 position = TRUE;
-	 }
-      if (posX < minX)
-	 minX = posX;
-
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr == NULL)
-         posY = 0;
-      else
-	 {
-         posY = TtaGetAttributeValue (attr);
-	 position = TRUE;
-	 }
-      if (posY < minY)
-	 minY = posY;
-******************/
-
+  attrType.AttrSSchema = elType.ElSSchema;
+  minX = minY = 32000;
+  position = FALSE;
+  while (el != NULL)
+    {
       if (prevSel != NULL)
-	 {
-	 TtaRemoveTree (prevSel, doc);
-	 if (prevChild == NULL)
+	{
+	  TtaRegisterElementDelete (prevSel, doc);
+	  TtaRemoveTree (prevSel, doc);
+	  if (prevChild == NULL)
 	    TtaInsertFirstChild (&prevSel, group, doc);
-	 else
+	  else
 	    TtaInsertSibling (prevSel, prevChild, FALSE, doc);
-	 prevChild = prevSel;
-	 }
+	  TtaRegisterElementCreate (prevSel, doc);
+	  prevChild = prevSel;
+	}
       prevSel = el;
       TtaGiveNextSelectedElement (doc, &el, &c1, &i);
-      }
-   if (prevSel != NULL)
-      {
+    }
+  if (prevSel != NULL)
+    {
+      TtaRegisterElementDelete (prevSel, doc);
       TtaRemoveTree (prevSel, doc);
       if (prevChild == NULL)
-	 TtaInsertFirstChild (&prevSel, group, doc);
+	TtaInsertFirstChild (&prevSel, group, doc);
       else
-         TtaInsertSibling (prevSel, prevChild, FALSE, doc);      
-      }
+	TtaInsertSibling (prevSel, prevChild, FALSE, doc);      
+      TtaRegisterElementCreate (prevSel, doc);
+    }
 
-/****************
-   if (position)
-     {
-     attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-     attr = TtaNewAttribute (attrType);
-     TtaAttachAttribute (group, attr, doc);
-     TtaSetAttributeValue (attr, minX, group, doc);
-     attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-     attr = TtaNewAttribute (attrType);
-     TtaAttachAttribute (group, attr, doc);
-     TtaSetAttributeValue (attr, minY, group, doc);
-
-     UpdatePositionAttribute (attr, group, doc);
-     el = TtaGetFirstChild (group);
-     while (el != NULL)
-        {
-        attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-        attr = TtaGetAttribute (el, attrType);
-        if (attr != NULL)
-	   {
-           posX = TtaGetAttributeValue (attr);
-	   TtaSetAttributeValue (attr, posX - minX, el, doc);
-	   }
-        attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-        attr = TtaGetAttribute (el, attrType);
-        if (attr != NULL)
-	   {
-           posY = TtaGetAttributeValue (attr);
-	   TtaSetAttributeValue (attr, posY - minY, el, doc);
-	   }
-        UpdatePositionAttribute (attr, el, doc);
-        TtaNextSibling (&el);
-        }
-     }
-*******************/
-   /* ask Thot to display changes made in the document */
-   TtaSetDisplayMode (doc, dispMode);
+  TtaCloseUndoSequence (doc);
+  /* ask Thot to display changes made in the document */
+  TtaSetDisplayMode (doc, dispMode);
+  TtaSelectElement (doc, group);
 }
 
 

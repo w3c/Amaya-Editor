@@ -838,6 +838,8 @@ ThotBool reverse;
    newPreviousSibling = NULL;
    newCreatedElement = NULL;
    newSavedElement = NULL;
+   SavedAttribute = NULL;
+   CreatedAttribute = NULL;
    pDoc = LoadedDocument [doc - 1];
    if (undo)
       editOp = pDoc->DocLastEdit;
