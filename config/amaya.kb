@@ -171,7 +171,7 @@ Ctrl <Key>m , Ctrl <Key>x:         CreateMTEXT()
 
 #Structure 
 Shift Ctrl <Key>!:                 CreateComment() 
-Ctrl <Key>s , Ctrl <Key>s:         CreateStyle()
+Ctrl <Key>t , Ctrl <Key>s:         CreateStyle()
  
 #Links
 Shift Alt <Key>L:                  LinkToPreviousTarget() 
