@@ -167,15 +167,14 @@ void BM_FreeConf ()
   -----------------------------------------------------------------------*/
 void BM_Quit (void)
 {
+  if (GetBookmarksEnabledConfirm (FALSE))
+    {
+      /* save the bookmark file */
+      BM_save (LocalBookmarksFile);
+      BM_FreeConf ();
+    }
   /* we always initialize and close redland, because raptor depends on it */
   redland_free ();
-
-  if (!GetBookmarksEnabledConfirm (FALSE))
-    return;
-
-  /* save the bookmark file */
-  BM_save (LocalBookmarksFile);
-  BM_FreeConf ();
 }
 
 /*-----------------------------------------------------------------------
