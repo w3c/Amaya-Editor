@@ -8,8 +8,10 @@ STRUCTURE MathML;
 DEFPRES MathMLP;
 
 ATTR
+   { generic attributes for Amaya and XML }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
+   link = simple, extended, locator, group, document;	{ xml:link }
 
 CONST
    C_Empty = ' ';

@@ -36,6 +36,12 @@ static int          OldHeight;
 #include "HTMLpresentation_f.h"
 #include "HTMLstyle_f.h"
 #include "HTMLimage_f.h"
+#ifdef MATHML
+#include "MathMLbuilder_f.h"
+#endif
+#ifdef GRAPHML
+#include "GraphMLbuilder_f.h"
+#endif
 #include "tree.h"
 
 /*----------------------------------------------------------------------
@@ -140,7 +146,8 @@ Document            targetDoc;
 
 /*----------------------------------------------------------------------
    GetNameAttr return the NAME attribute of the enclosing Anchor   
-   element or the ID attribute of the selected element or NULL.
+   element or the ID attribute of (an ascendant of) the selected element
+   or NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Attribute           GetNameAttr (Document doc, Element selectedElement)
@@ -160,7 +167,7 @@ Element             selectedElement;
    attr = NULL;		/* no NAME attribute yet */
    if (selectedElement != NULL)
      {
-	elType = TtaGetElementType (selectedElement);
+	elType.ElSSchema = TtaGetSSchema ("HTML", doc);
 	elType.ElTypeNum = HTML_EL_Anchor;
 	attrType.AttrSSchema = elType.ElSSchema;
 	el = TtaGetTypedAncestor (selectedElement, elType);
@@ -190,8 +197,8 @@ Element             selectedElement;
 
 
 /*----------------------------------------------------------------------
-   CreateTargetAnchor creates the NAME attribute with a default    
-   value (Label of the element).                           
+   CreateTargetAnchor creates a NAME or ID attribute with a default    
+   value for element el.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTargetAnchor (Document doc, Element el)
@@ -206,6 +213,7 @@ Element             el;
    Attribute           attr;
    ElementType         elType;
    Element             elText;
+   SSchema	       HTMLSSchema;
    Language            lang;
    char               *text;
    char*               url = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
@@ -215,9 +223,12 @@ Element             el;
 
    elType = TtaGetElementType (el);
    withinHTML = (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
-   /* get the NAME or ID attribute */
-   attrType.AttrSSchema = elType.ElSSchema;
-   if (withinHTML && (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
+
+   /* get a NAME or ID attribute */
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrSSchema = HTMLSSchema;
+   if (withinHTML && (elType.ElTypeNum == HTML_EL_Anchor ||
+		      elType.ElTypeNum == HTML_EL_MAP))
      attrType.AttrTypeNum = HTML_ATTR_NAME;
    else
      attrType.AttrTypeNum = HTML_ATTR_ID;
@@ -229,7 +240,7 @@ Element             el;
 	TtaAttachAttribute (el, attr, doc);
      }
 
-   /* get the Label text to build the name value */
+   /* build a value for the new attribute */
    if (withinHTML && elType.ElTypeNum == HTML_EL_MAP)
      {
        /* mapxxx for a map element */
@@ -237,10 +248,11 @@ Element             el;
      }
    else if (withinHTML && elType.ElTypeNum == HTML_EL_LINK)
      {
-       /* mapxxx for a map element */
+       /* linkxxx for a link element */
        strcpy (url, "link");
      }
    else
+       /* get the content for other elements */
      {
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	elText = TtaSearchTypedElement (elType, SearchInTree, el);
@@ -284,19 +296,65 @@ Element             el;
 	  }
 	else
 	  {
-	    /* label of the element */
+	    /* get the element's label if there is no text */
 	    text = TtaGetElementLabel (el);
 	    strcpy (url, text);
 	  }
      }
    /* copie the text into the NAME attribute */
    TtaSetAttributeText (attr, url, el, doc);
-   /* Check attribute NAME in order to make sure that its value unique */
-   /* in the document */
+   /* Check the attribute value to make sure that it's unique within */
+   /* the document */
    MakeUniqueName (el, doc);
    /* set this new end-anchor as the new target */
    SetTargetContent (doc, attr);
    TtaFreeMemory (url);
+}
+
+/*----------------------------------------------------------------------
+   SetXMLlinkAttr attach an xml:link="simple" attribute to element el
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SetXMLlinkAttr (Element el, Document doc)
+#else  /* __STDC__ */
+static void         SetXMLlinkAttr (el, doc)
+Element		    el;
+Document            doc;
+
+#endif /* __STDC__ */
+{
+  AttributeType	attrType;
+  ElementType	elType;
+  Attribute	attr;
+  int		val;
+
+  attrType.AttrTypeNum = 0;
+  elType = TtaGetElementType (el);
+#ifdef MATHML
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+     {
+     MapMathMLAttribute ("link", &attrType, "", doc);
+     MapMathMLAttributeValue ("simple", attrType, &val);
+     }
+  else
+#endif
+#ifdef GRAPHML
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+     {
+     MapGraphMLAttribute ("link", &attrType, "", doc);
+     MapGraphMLAttributeValue ("simple", attrType, &val);
+     }
+#endif
+  if (attrType.AttrTypeNum > 0)
+     {
+     attr = TtaGetAttribute (el, attrType);
+     if (attr == NULL)
+        {
+        attr = TtaNewAttribute (attrType);
+        TtaAttachAttribute (el, attr, doc);
+        }
+     TtaSetAttributeValue (attr, val, el, doc);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -305,8 +363,8 @@ Element             el;
 #ifdef __STDC__
 static void         CreateAnchor (Document doc, View view, boolean createLink)
 #else  /* __STDC__ */
-static void         CreateAnchor (document, view, createLink)
-Document            document;
+static void         CreateAnchor (doc, view, createLink)
+Document            doc;
 View                view;
 boolean             createLink;
 
@@ -314,30 +372,31 @@ boolean             createLink;
 {
   Element             first, last, el, next;
   Element             parag, prev, child, anchor;
-  SSchema            docSchema;
+  SSchema             HTMLSSchema;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
   DisplayMode         dispMode;
   int                 c1, cN, lg, i;
-  boolean             noAnchor;
+  boolean             noAnchor, oldStructureChecking;
 
+  HTMLSSchema = TtaGetSSchema ("HTML", doc);
   dispMode = TtaGetDisplayMode (doc);
   /* get the first and last selected element */
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
   TtaGiveLastSelectedElement (doc, &last, &i, &cN);
-  docSchema = TtaGetDocumentSSchema (doc);
 
   /* Check whether the selected elements are a valid content for an anchor */
   elType = TtaGetElementType (first);
-  if (elType.ElTypeNum == HTML_EL_Anchor && elType.ElSSchema == docSchema
-      && first == last)
+  if (elType.ElTypeNum == HTML_EL_Anchor &&
+      TtaSameSSchemas (elType.ElSSchema, HTMLSSchema) &&
+      first == last)
     /* add an attribute on the current anchor */
     anchor = first;
   else
     {
-      /* search if the selection is included into an anchor */
-      if (elType.ElSSchema == docSchema)
+      /* search if the selection is within an anchor */
+      if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
 	el = SearchAnchor (doc, first, !createLink);
       else
 	el = NULL;
@@ -352,7 +411,7 @@ boolean             createLink;
 	  while (!noAnchor && el != NULL)
 	    {
 	      elType = TtaGetElementType (el);
-	      if (elType.ElSSchema != docSchema)
+	      if (!TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
 		noAnchor = TRUE;
 	      else if (elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
 		  elType.ElTypeNum != HTML_EL_Teletype_text &&
@@ -396,14 +455,38 @@ boolean             createLink;
 	  if (noAnchor)
 	    {
 	      if (createLink || el != NULL)
-		/* cannot create an anchor here */
-		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1), NULL);
-	      else
 		{
+		elType = TtaGetElementType (first);
+		if (first == last && c1 == 0 && cN == 0 && createLink &&
+		    !TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+		   /* a single element is selected and it's not a HTML elem
+		      neither a character string */
+		   {
+	           /* create an attributeHREF for the selected element */
+	           attrType.AttrSSchema = HTMLSSchema;
+	           attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	           attr = TtaGetAttribute (first, attrType);
+	           if (attr == NULL)
+		     {
+		       attr = TtaNewAttribute (attrType);
+		       oldStructureChecking = TtaGetStructureChecking (doc);
+		       TtaSetStructureChecking (0, doc);
+		       TtaAttachAttribute (first, attr, doc);
+		       TtaSetStructureChecking (oldStructureChecking, doc);
+		     }
+		   SelectDestination (doc, first);
+		   /* create a xml:link attribute */
+		   SetXMLlinkAttr (first, doc);
+		   TtaSetDocumentModified (doc);
+		   }
+		else
+		  /* cannot create an anchor here */
+		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1), NULL);
+		}
+	      else
 		  /* create an ID for target element */
 		  CreateTargetAnchor (doc, first);
-		}
-	      return;	      
+	      return;
 	    }
 	  /* check if the anchor to be created is within an anchor element */
 	  else if (SearchAnchor (doc, first, TRUE) != NULL ||
@@ -543,17 +626,19 @@ Document     doc;
   Element	    image;
   ElementType	    elType;
   AttributeType     attrType;
+  SSchema	    HTMLSSchema;
   Attribute         attr;
   char             *value;
   char              url[MAX_LENGTH];
   int               length, i;
-  boolean           change;
+  boolean           change, isHTML;
 
+  HTMLSSchema = TtaGetSSchema ("HTML", doc);
   elType = TtaGetElementType (el);
-  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
-    return;
-  attrType.AttrSSchema = elType.ElSSchema;
-   if (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP)
+  isHTML = (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+  attrType.AttrSSchema = HTMLSSchema;
+   if (isHTML &&
+       (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
      attrType.AttrTypeNum = HTML_ATTR_NAME;
    else
      attrType.AttrTypeNum = HTML_ATTR_ID;
@@ -562,7 +647,7 @@ Document     doc;
    if (attr != 0)
      {
        /* the element has an attribute NAME or ID */
-       length = TtaGetTextAttributeLength (attr) + 10; /* reverve of 9 chars */
+       length = TtaGetTextAttributeLength (attr) + 10;
        value = TtaGetMemory (length);
        change = FALSE;
        if (value != NULL)
@@ -581,7 +666,7 @@ Document     doc;
 	     {
 	       /* copy the element Label into the NAME attribute */
 	       TtaSetAttributeText (attr, value, el, doc);
-	       if (elType.ElTypeNum == HTML_EL_MAP)
+	       if (isHTML && elType.ElTypeNum == HTML_EL_MAP)
 		 {
 		   /* Search backward the refered image */
 		   attrType.AttrTypeNum = HTML_ATTR_USEMAP;

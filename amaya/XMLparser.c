@@ -758,9 +758,16 @@ char                c;
   HTMLStyleAttribute = FALSE;
   if (XMLelementType[stackLevel-1] != NULL)
      {
-     (*(currentParserCtxt->MapAttribute)) (inputBuffer, &attrType,
-					   XMLelementType[stackLevel-1],
-					   currentDocument);
+     attrType.AttrTypeNum = 0;
+     if (strncmp (inputBuffer, "xml:", 4) == 0)
+        /* special xml attributes */
+        (*(currentParserCtxt->MapAttribute)) (&inputBuffer[4], &attrType,
+					      XMLelementType[stackLevel-1],
+					      currentDocument);
+     else
+        (*(currentParserCtxt->MapAttribute)) (inputBuffer, &attrType,
+					      XMLelementType[stackLevel-1],
+					      currentDocument);
      if (attrType.AttrTypeNum <= 0)
         /* not found. Is it a HTML attribute? */
 	{

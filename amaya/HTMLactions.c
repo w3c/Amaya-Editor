@@ -134,7 +134,7 @@ Attribute           ignore;
    char               *name;
 
    el = TtaGetMainRoot (doc);
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrTypeNum = HTML_ATTR_NAME;
    found = FALSE;
    /* search all elements having an attribute NAME */
@@ -316,31 +316,30 @@ Document            doc;
    Attribute           HrefAttr, PseudoAttr, attr;
    ElementType         elType;
    Document            targetDocument;
-   SSchema             docSchema;
+   SSchema             HTMLSSchema;
    char                documentURL[MAX_LENGTH];
    char               *url, *info, *sourceDocUrl;
    int                 length;
    FollowTheLink_context *ctx;
 
    HrefAttr = NULL;
-   docSchema = TtaGetDocumentSSchema (doc);
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
+
    if (anchor != NULL)
-      {
-      elType = TtaGetElementType (anchor);
-      if (elType.ElSSchema == docSchema)
-         {
-	 /* search the HREF or CITE attribute */
-         if (elType.ElTypeNum == HTML_EL_Quotation ||
-		  elType.ElTypeNum == HTML_EL_Block_Quote ||
-		  elType.ElTypeNum == HTML_EL_INS ||
-		  elType.ElTypeNum == HTML_EL_DEL)
-	    attrType.AttrTypeNum = HTML_ATTR_cite;
-	 else
-	    attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	 attrType.AttrSSchema = docSchema;
-	 HrefAttr = TtaGetAttribute (anchor, attrType);
-	 }
-      }
+     {
+        elType = TtaGetElementType (anchor);
+	/* search the HREF or CITE attribute */
+        if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema) &&
+		(elType.ElTypeNum == HTML_EL_Quotation ||
+		 elType.ElTypeNum == HTML_EL_Block_Quote ||
+		 elType.ElTypeNum == HTML_EL_INS ||
+		 elType.ElTypeNum == HTML_EL_DEL))
+	   attrType.AttrTypeNum = HTML_ATTR_cite;
+	else
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	attrType.AttrSSchema = HTMLSSchema;
+	HrefAttr = TtaGetAttribute (anchor, attrType);
+     }
 
    if (HrefAttr != NULL)
      {
@@ -354,10 +353,10 @@ Document            doc;
 	  {
 	     elType = TtaGetElementType (anchor);
 	     if (elType.ElTypeNum == HTML_EL_Anchor &&
-		 elType.ElSSchema == docSchema)
+		 elType.ElSSchema == HTMLSSchema)
 	       {
 		  /* attach an attribute PseudoClass = active */
-		  attrType.AttrSSchema = docSchema;
+		  attrType.AttrSSchema = HTMLSSchema;
 		  attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
 		  PseudoAttr = TtaGetAttribute (anchor, attrType);
 		  if (PseudoAttr == NULL)
@@ -405,7 +404,7 @@ Document            doc;
 		  strcpy (documentURL, url);
 		  url[0] = EOS;
 		  /* is the source element an image map? */
-		  attrType.AttrSSchema = docSchema;
+		  attrType.AttrSSchema = HTMLSSchema;
 		  attrType.AttrTypeNum = HTML_ATTR_ISMAP;
 		  attr = TtaGetAttribute (elSource, attrType);
 		  if (attr != NULL)
@@ -444,22 +443,22 @@ NotifyElement      *event;
    AttributeType       attrType;
    Attribute           attr;
    Element             anchor, elFound, ancestor;
-   ElementType         elType;
-   SSchema             docSchema;
-   boolean	       ok;
+   ElementType         elType, elType1;
+   boolean	       ok, isHTML;
 
-   docSchema = TtaGetDocumentSSchema (event->document);
+   elType = TtaGetElementType (event->element);
+   isHTML = (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
 
    /* Check if the current element is interested in double click */
    ok = FALSE;
-   elType = TtaGetElementType (event->element);
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
        elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
        elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
        elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
+     /* it's a basic element */
      ok = TRUE;
    else
-     if (elType.ElSSchema == docSchema)
+     if (isHTML)
 	if (elType.ElTypeNum == HTML_EL_LINK ||
 	    elType.ElTypeNum == HTML_EL_C_Empty ||
 	    elType.ElTypeNum == HTML_EL_Radio_Input ||
@@ -470,34 +469,35 @@ NotifyElement      *event;
 	    elType.ElTypeNum == HTML_EL_Reset_Input)
 	   ok = TRUE;
    if (!ok)
-      /* DoubleClick is disabled */
+      /* DoubleClick is disabled for this element type */
       return (FALSE);
 
    if (W3Loading)
-      /* suspend current loading */
+      /* interrupt current transfer */
       StopTransfer (W3Loading, 1);
 
-   if (elType.ElTypeNum == HTML_EL_Frame
-       || elType.ElTypeNum == HTML_EL_Submit_Input
-       || elType.ElTypeNum == HTML_EL_Reset_Input)
+   if (isHTML && (elType.ElTypeNum == HTML_EL_Frame ||
+		  elType.ElTypeNum == HTML_EL_Submit_Input ||
+		  elType.ElTypeNum == HTML_EL_Reset_Input))
      {
 	if (elType.ElTypeNum == HTML_EL_Frame)
-	   elType = TtaGetElementType (TtaGetParent (event->element));
-	if (elType.ElTypeNum == HTML_EL_Submit_Input
-	    || elType.ElTypeNum == HTML_EL_Reset_Input)
-	   /* it is a double click on submit element */
+	   elType1 = TtaGetElementType (TtaGetParent (event->element));
+	else
+	   elType1.ElTypeNum = elType.ElTypeNum;
+	if (elType1.ElTypeNum == HTML_EL_Submit_Input ||
+	    elType1.ElTypeNum == HTML_EL_Reset_Input)
+	   /* it is a double click on submit or reset element */
 	   SubmitForm (event->document, event->element);
 	return (TRUE);
      }
-   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+   else if (isHTML && elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
-       /* is it a double click on graphic submit element? */
-       elType = TtaGetElementType (TtaGetParent (event->element));
+       /* is it a double click on a graphic submit element? */
        elType.ElTypeNum = HTML_EL_Form;
        elFound = TtaGetTypedAncestor (event->element, elType);
        if (elFound != NULL)
 	 {
-	   attrType.AttrSSchema = docSchema;
+	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = HTML_ATTR_NAME;
 	   attr = TtaGetAttribute (event->element, attrType);
 	   if (attr)
@@ -508,38 +508,34 @@ NotifyElement      *event;
 	     }
 	 }
      }
-   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+   else if (isHTML && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
 	/* is it an option menu ? */
 	elFound = TtaGetParent (event->element);
-	elType = TtaGetElementType (elFound);
-	if (elType.ElTypeNum == HTML_EL_Option &&
-	    elType.ElSSchema == docSchema)
+	elType1 = TtaGetElementType (elFound);
+	if (elType1.ElTypeNum == HTML_EL_Option)
 	  {
 	     SelectOneOption (event->document, elFound);
 	     return (TRUE);
 	  }
      }
-   else if (elType.ElTypeNum == HTML_EL_Option_Menu &&
-	    elType.ElSSchema == docSchema)
+   else if (isHTML && elType.ElTypeNum == HTML_EL_Option_Menu)
      {
 	/* it is an option menu */
 	elFound = TtaGetFirstChild (event->element);
-	elType = TtaGetElementType (elFound);
-	if (elType.ElTypeNum == HTML_EL_Option)
+	elType1 = TtaGetElementType (elFound);
+	if (elType1.ElTypeNum == HTML_EL_Option)
 	  {
 	     SelectOneOption (event->document, elFound);
 	     return (TRUE);
 	  }
      }
-   else if (elType.ElTypeNum == HTML_EL_Checkbox_Input &&
-	    elType.ElSSchema == docSchema)
+   else if (isHTML && elType.ElTypeNum == HTML_EL_Checkbox_Input)
      {
 	SelectCheckbox (event->document, event->element);
 	return (TRUE);
      }
-   else if (elType.ElTypeNum == HTML_EL_Radio_Input &&
-	    elType.ElSSchema == docSchema)
+   else if (isHTML && elType.ElTypeNum == HTML_EL_Radio_Input)
      {
 	SelectOneRadio (event->document, event->element);
 	return (TRUE);
@@ -548,24 +544,28 @@ NotifyElement      *event;
    /* Search the anchor or LINK element */
    anchor = SearchAnchor (event->document, event->element, TRUE);
    if (anchor == NULL)
-      if (elType.ElTypeNum == HTML_EL_LINK &&
-	  elType.ElSSchema == docSchema)
-	 anchor = event->element;
+      if (isHTML && elType.ElTypeNum == HTML_EL_LINK)
+	   anchor = event->element;
       else
 	{
-	   elType.ElTypeNum = HTML_EL_LINK;
-	   elType.ElSSchema = docSchema;
-	   anchor = TtaGetTypedAncestor (event->element, elType);
+	   elType1.ElTypeNum = HTML_EL_LINK;
+	   elType1.ElSSchema = TtaGetSSchema ("HTML", event->document);
+	   anchor = TtaGetTypedAncestor (event->element, elType1);
 	}
-   /* if not found, search a cite attribute on an ancestor */
+   /* if not found, search a cite or href attribute on an ancestor */
    if (anchor == NULL)
       {
 	ancestor = event->element;
-	attrType.AttrSSchema = docSchema;
-	attrType.AttrTypeNum = HTML_ATTR_cite;
+	attrType.AttrSSchema = TtaGetSSchema ("HTML", event->document);
 	do
 	   {
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
 	   attr = TtaGetAttribute (ancestor, attrType);
+	   if (!attr)
+	      {
+	      attrType.AttrTypeNum = HTML_ATTR_cite;
+	      attr = TtaGetAttribute (ancestor, attrType);
+	      }
 	   if (attr)
 	      anchor = ancestor;
 	   else

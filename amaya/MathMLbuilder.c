@@ -240,6 +240,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {"close", "mfenced", 'A', MathML_ATTR_close},
    {"fence", "mo", 'A', MathML_ATTR_fence},
    {"fontstyle", "mi", 'A', MathML_ATTR_fontstyle},
+   {"link", "", 'A', MathML_ATTR_link},
    {"open", "mfenced", 'A', MathML_ATTR_open},
    {"separators", "mfenced", 'A', MathML_ATTR_separators},
 
@@ -254,6 +255,11 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    {MathML_ATTR_fence, "false", MathML_ATTR_fence_VAL_false},
    {MathML_ATTR_fontstyle, "italic", MathML_ATTR_fontstyle_VAL_italic},
    {MathML_ATTR_fontstyle, "normal", MathML_ATTR_fontstyle_VAL_normal},
+   {MathML_ATTR_link, "document", MathML_ATTR_link_VAL_document},
+   {MathML_ATTR_link, "extended", MathML_ATTR_link_VAL_extended},
+   {MathML_ATTR_link, "group", MathML_ATTR_link_VAL_group},
+   {MathML_ATTR_link, "locator", MathML_ATTR_link_VAL_locator},
+   {MathML_ATTR_link, "simple", MathML_ATTR_link_VAL_simple},
 
    {0, "", 0}			/* Last entry. Mandatory */
 };

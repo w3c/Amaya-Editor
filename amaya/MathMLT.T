@@ -339,6 +339,17 @@ RULES
 
 ATTRIBUTES
 
+  link = simple:
+	create ' xml:link="simple"';
+  link = extended:
+	create ' xml:link="extended"';
+  link = locator:
+	create ' xml:link="locator"';
+  link = group:
+	create ' xml:link="group"';
+  link = document:
+	create ' xml:link="document"';
+
    entity:
 	begin
 	notranslation;	{ do not translate & into &amp; }

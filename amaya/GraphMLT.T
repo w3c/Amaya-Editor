@@ -162,7 +162,7 @@ RULES
 	BEGIN
 	create '<text';
 	create attributes;
-	create CloseTagNL;
+	create '>';
 	indent +2;
 	indent -2 after;
 	create '</text>\12' after;
@@ -192,6 +192,17 @@ RULES
 	    Remove;
 
 ATTRIBUTES
+
+   link = simple:
+        create ' xml:link="simple"';
+   link = extended:
+        create ' xml:link="extended"';
+   link = locator:
+        create ' xml:link="locator"';
+   link = group:
+        create ' xml:link="group"';
+   link = document:
+        create ' xml:link="document"';
 
    linewidth:
 	BEGIN

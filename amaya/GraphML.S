@@ -6,9 +6,13 @@ STRUCTURE GraphML;
 DEFPRES GraphMLP;
 
 ATTR
-   lid = text;
+   { generic attributes for Amaya and XML }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
+   link = simple, extended, locator, group, document;	{ xml:link }
+
+   { global attributes for all GraphML elements }
+   lid = text;
 
 STRUCT
 
