@@ -65,7 +65,6 @@ typedef struct CSSProperty
 CSSProperty;
 
 static char         *DocURL = NULL; /* The parsed CSS file */
-static Document      ParsedDoc; /* The document to which CSS are to be applied */
 static int           LineNumber = -1; /* The line where the error occurs */
 static int           NewLineSkipped = 0;
 static ThotBool      DoApply = TRUE;
@@ -174,7 +173,7 @@ static void CSSPrintError (char *msg, char *value)
 
       if (DocURL)
 	{
-	  fprintf (ErrFile, "*** Errors/warnings in %s\n", DocURL);
+	  fprintf (ErrFile, "\n*** Errors/warnings in %s\n", DocURL);
 	  /* set to NULL as long as the CSS file doesn't change */
 	  DocURL = NULL;
 	}

@@ -6762,6 +6762,7 @@ void InitAmaya (NotifyEvent * event)
    BackupDocument = 0;
    /* initialize status */
    SelectionDoc = 0;
+   ParsedDoc = 0;
    SelectionInPRE = FALSE;
    SelectionInComment = FALSE;
    SelectionInEM = FALSE;

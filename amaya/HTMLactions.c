@@ -1632,7 +1632,9 @@ void FreeDocumentResource (Document doc)
   TtaSetItemOff (doc, 1, Views, BShowLogFile);
   /* unmap the Save as form */
   TtaDestroyDialogue (BaseDialog + SaveForm);
-
+  if (doc == ParsedDoc)
+    /* The document to which CSS are to be applied */
+    ParsedDoc = 0;
   if (DocumentURLs[doc] != NULL)
     {
       if (DocumentTypes[doc] != docLog)

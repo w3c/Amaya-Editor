@@ -384,6 +384,7 @@ THOT_EXPORT Document   SavingObject;
 THOT_EXPORT Document   AttrHREFdocument;
 THOT_EXPORT Document   DocBook;
 THOT_EXPORT Document   IncludedDocument;
+THOT_EXPORT Document   ParsedDoc; /* The document to which CSS are to be applied */
 THOT_EXPORT Element    AttrHREFelement;
 THOT_EXPORT char      *AttrHREFvalue;
 THOT_EXPORT Document   SelectionDoc;
