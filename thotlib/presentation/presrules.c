@@ -3125,6 +3125,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      pAb->AbVisibility = 10;
 	      appl = TRUE;
 	    }
+	  if (appl && pAb->AbVisibility == 0)
+	    pAb->AbDead = TRUE;
 	  break;
 	case PtFunction:
 	  switch (pPRule->PrPresFunction)
@@ -3927,7 +3929,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		{
 		  if (pAb->AbElement->ElParent)
 		    /* the root element must be visible */
-		    pAb->AbVisibility = 0;
+		    {
+		      pAb->AbVisibility = 0;
+		      pAb->AbDead = TRUE;
+		    }
 		}
 	      else if (pAb->AbDisplay == 'I')
 		/* display: inline */

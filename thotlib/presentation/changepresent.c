@@ -814,7 +814,7 @@ static PtrAbstractBox     NextAbstractBox (PtrAbstractBox pAb)
   PtrAbstractBox      pNextAb;
 
   /* Il y a un premier fils different du pave reference ? */
-  if (pAb->AbFirstEnclosed != NULL)
+  if (pAb->AbFirstEnclosed != NULL && !pAb->AbDead)
     pNextAb = pAb->AbFirstEnclosed;
   /* Il y a un frere different du pave reference ? */
   else if (pAb->AbNext != NULL)
@@ -1003,7 +1003,7 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
   PtrAttribute    pAttr;
   PtrDocument     pDoc, pSelDoc;
   PtrElement      pFirstSel, pLastSel;
-  PtrAbstractBox  pAb;
+  PtrAbstractBox  pAb, pAbRedisp;
   PRuleType       ruleType;
   int             firstChar, lastChar;
   int             viewSch;
@@ -1025,12 +1025,15 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
       viewSch = pDoc->DocView[view].DvPSchemaView;
       while (pAb != NULL)
 	{
-	  /* there is probably a problem with visibility rules: pAb doesn't exists */
+	  /* there is probably a problem with visibility rules: pAb doesn't
+	     exists */
 	  found = FALSE;
+	  pAbRedisp = NULL;
 	  if (elType > 0)
 	    /* presentation rules are associated with an element type */
 	    found = (pAb->AbElement->ElTypeNumber == elType &&
-	             !strcmp (pAb->AbElement->ElStructSchema->SsName, pSS->SsName));
+	             !strcmp (pAb->AbElement->ElStructSchema->SsName,
+			      pSS->SsName));
 	  else if (attrType > 0)
 	    {
 	      /* presentation rules are associated with an attribute type */
@@ -1079,26 +1082,23 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
 			}
 		    }
 		}
-	      /* redisplay the element if needed */
-	      if (found)
-		{
-		  /* update abstract image and redisplay */
-		  AbstractImageUpdated (pDoc);
-		  RedisplayDocViews (pDoc);
-		}
 	    }
 	  /* get the next abstract box */
 	  pAb = NextAbstractBox (pAb);
 	  if (pAb != NULL)
 	    if ((presBox == 0 && pAb->AbPresentationBox) ||
-		(presBox > 0  && !pAb->AbPresentationBox))
+		(presBox > 0  && !pAb->AbPresentationBox) ||
+		pAb->AbDead)
 	      pAb = NextAbstractBox (pAb);
+	  /* redisplay the element if needed */
+	  if (found)
+	    {
+	      /* update abstract image and redisplay */
+	      AbstractImageUpdated (pDoc);
+	      RedisplayDocViews (pDoc);
+	    }
 	}
     }
-  /* tente de fusionner les elements voisins et reaffiche les paves */
-  /* modifie's et la selection */
-  if (pDoc && pSelDoc == pDoc)
-    SelectRange (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
 }
 
 /*----------------------------------------------------------------------
