@@ -129,6 +129,8 @@ DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 
 /* XML parser includes */
 #ifdef RAPTOR_XML_EXPAT
+/* JK: Force to always use the latest expat */
+#define HAVE_EXPAT_H
 #ifdef HAVE_EXPAT_H
 #include <expat.h>
 #endif
