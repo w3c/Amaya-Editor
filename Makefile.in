@@ -291,6 +291,9 @@ libraptor_config: @MAKERAPTOR@ force
 libraptor_make: @MAKERAPTOR@ force
 	@(localdir=`pwd`; \
 	  cd $(LIBRAPTOR) ; \
+	  if [ ! -e .libs/libraptor.a -a -e libraptor.la ] ; then \
+             $(RM) libraptor.la ; \
+          fi ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="-I$$localdir/../$(LIBRAPTOR)/expat/xmlparse $(CFLAGS)" \
 		  CPPFLAGS="$(CPPFLAGS)" \
 	)

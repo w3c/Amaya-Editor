@@ -6765,7 +6765,7 @@ if test "$build_amaya" = "yes" ; then
 	  with_raptor="no"
        else
 	   AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/libraptor"
- 	   AMAYA_RAPTOR_LIBS="-L../libraptor/.libs -lraptor"
+ 	   AMAYA_RAPTOR_LIBS="../libraptor/.libs/libraptor.a"
 	   AMAYA_RAPTOR_SRC="amaya_comp_libraptor"
 	   AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/libraptor"
        fi

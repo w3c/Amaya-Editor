@@ -95,7 +95,8 @@ force :
 ../tools/mkdep/mkdep : 
 	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O")
 
-amaya_comp_libraptor : @MAKERAPTOR@ force
+../libraptor/.libs/libraptor.a \
+amaya_comp_libraptor: @MAKERAPTOR@ force
 	@(cd .. ; $(MAKE) libraptor CC="$(CC)" CFLAGS="-O2")
 
 .depends depend : ../tools/mkdep/mkdep
@@ -153,7 +154,7 @@ AMAYA_SRC= $(AMAYA_PLUGIN_SRC) \
 
 AMAYA_OPTION_LIBS= $(AMAYA_PLUGIN_LIBS) \
          $(AMAYA_LIBWWW_OPTION_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
-         $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS)
+         $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) @AMAYA_RAPTOR_LIBS@
 
 AMAYA_OPTION_EXTRA_LIBS= $(AMAYA_PLUGIN_EXTRA_LIBS) \
          $(AMAYA_LIBWWW_EXTRA_LIBS) $(AMAYA_MATH_EXTRA_LIBS) \
