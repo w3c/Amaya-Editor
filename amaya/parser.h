@@ -11,6 +11,7 @@
 #define MATH_TYPE 1
 #define GRAPH_TYPE 2
 #define XLINK_TYPE 3
+#define XHTML_TYPE 4
 
 #define MaxTypeNameLength 16
 typedef CHAR_T typeName[MaxTypeNameLength];
@@ -27,21 +28,21 @@ ElemMapping;
 
 typedef struct _AttributeMapping
   {		/* mapping of a XML attribute */
-     CHAR_T   XMLattribute[30];	/* name of XML attribute */
-     typeName XMLelement;		/* name of XML element type */
-     char     AttrOrContent;		/* info about the corresponding Thot
+     CHAR_T     XMLattribute[30];	/* name of XML attribute */
+     typeName   XMLelement;      	/* name of XML element type */
+     char       AttrOrContent;   	/* info about the corresponding Thot
 					   thing: 'A'=Attribute, 'C'=Content
-						  SPACE= Nothing */
-     int	ThotAttribute;		/* Thot attribute */
+					   SPACE= Nothing */
+     int        ThotAttribute;	        /* Thot attribute */
   }
 AttributeMapping;
 
 typedef struct _AttrValueMapping
   {		/* mapping of a XML attribute value */
-     int        ThotAttr;	/* corresponding Thot attribute */
+     int        ThotAttr;	        /* corresponding Thot attribute */
      CHAR_T     XMLattrValue[20];	/* XML value */
      int        ThotAttrValue;		/* corresponding value of the Thot
-						   attribute */
+					   attribute */
   }
 AttrValueMapping;
 
