@@ -134,7 +134,8 @@ int                 selection;
 			  /* On reallume eventuellement une selection cachee */
 		       }
 
-		  /* Mise a jour des ascenseurs */
+		  /* recompute scrolls */
+		  CheckScrollingWidth (frame);
 		  UpdateScrollbars (frame);
 
 		  if (selection != 0)

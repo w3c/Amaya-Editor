@@ -1713,8 +1713,11 @@ View                view;
 	if (htmlDoc)
 	   {
 	   TtaExtractName (localFile, tempdir, documentname);
-	   StartParser (htmlDoc, localFile, documentname, tempdir, localFile,
-			FALSE);
+	   StartParser (htmlDoc, localFile, documentname, tempdir, localFile, FALSE);
+	   /* fetch and display all images referred by the document */
+	   DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
+	   FetchAndDisplayImages (htmlDoc, AMAYA_LOAD_IMAGE);
+	   DocNetworkStatus[htmlDoc] = AMAYA_NET_INACTIVE;
 	   TtaSetDocumentUnmodified (htmlDoc);
 	   /* Synchronize selections */
 	   event.document = doc;

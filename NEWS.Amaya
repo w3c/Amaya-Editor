@@ -39,6 +39,7 @@ Extensions 2.3:
     optional port (no need to prefix it with the http:// string as before)
   - Improved the Accept: string for doing for doing image and css content
     negotiation.
+
 * Building Amaya:
   - There are new make files for the Windows platforms.
 
@@ -64,6 +65,10 @@ Fixed bugs 2.3:
   - added more explicit messages related to the failure of PUT operation.
   - the authentication dialogue now displays the authentication and
     server realm (both data were previously displayed in the status field).
+  - When Amaya pasted a text form another application newline characters
+    where lost.
+  - After a Synchronization or a Save from the Source view images were lost
+    in the formatted view.
 
 * HTML:
   - The <input type=image> was not well supported.

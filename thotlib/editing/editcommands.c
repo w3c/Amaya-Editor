@@ -3283,131 +3283,76 @@ int                 nbytes;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer       clipboard;
-   PtrAbstractBox      pAb;
-   PtrBox              pSelBox;
-   PtrTextBuffer       pBuffer;
-   PtrDocument         pDoc;
-   PtrElement          pEl;
-   int                 i, j, ind;
-   int                 b, previousChars;
-   int                 frame, lg;
-   ThotBool            wasCRbefore;
+  PtrTextBuffer       clipboard;
+  PtrAbstractBox      pAb;
+  PtrBox              pSelBox;
+  PtrTextBuffer       pBuffer;
+  PtrDocument         pDoc;
+  PtrElement          pEl;
+  int                 i, j, ind;
+  int                 b, previousChars;
+  int                 frame, lg;
 
-   /* Juste pour recuperer le document selectionne */
-   if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &b, &b))
-     {
-	/* Impossible d'inserer dans le document */
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
-	return;
-     }
-   frame = ActiveFrame;
-   SetInsert (&pAb, &frame, LtText, FALSE);
-   /* S'il n'y a pas de selection courante dans le document */
-   if (pAb == NULL)
-     {
-	/* Impossible d'inserer ici */
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
-	return;
-     }
+  /* check the current selection */
+  if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &b, &b))
+    {
+      /* cannot insert */
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
+      return;
+    }
+  frame = ActiveFrame;
+  SetInsert (&pAb, &frame, LtText, FALSE);
+  if (pAb == NULL)
+    {
+      /* invalid selection */
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
+      return;
+    }
 
-   /* Calcule la position du debut de la selection courante */
-   /* l'index dans le buffer, le decalage x ne sont pas utilises */
-   GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &b, &previousChars);
-   /* initialise l'insertion */
-   previousChars += pSelBox->BxIndChar + 1;
+  /* Calcule la position du debut de la selection courante */
+  /* l'index dans le buffer, le decalage x ne sont pas utilises */
+  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &b, &previousChars);
+  /* initialise l'insertion */
+  previousChars += pSelBox->BxIndChar + 1;
 
-   wasCRbefore = FALSE;
-
-   /* Vide le clipboard X */
-   clipboard = &XClipboard;
-   ClearClipboard (clipboard);
-
-   /* nombre de caracteres dans le dernier buffer du clipboard X */
-   j = 0;
-   /* nombre de caracteres dans le clipboard X */
-   lg = 0;
-   /* Enclipboard les caracteres lus */
-   if (Xbuffer != NULL)
-     {
-	for (i = 0; i < nbytes; i++)
-	  {
-	     if (wasCRbefore && (Xbuffer[i] == EOL))
-	       {
-		  /* Note la longueur courante du dernier buffer du clipboard X */
-		  clipboard->BuLength = j;
-		  lg += j;
-		  /* Colle le contenu du clipboard X */
-		  ContentEditing (TEXT_X_PASTE);
-
-		  /* Deplacement de la selection a la fin du texte insere */
-		  /* Efface la selection precedente */
-		  if (ThotLocalActions[T_switchsel])
-		    (*ThotLocalActions[T_switchsel]) (frame, FALSE);
-		  lg += previousChars;
-		  SelectString (pDoc, pAb->AbElement, lg, lg);
-		  /* Affiche la nouvelle selection */
-		  if (ThotLocalActions[T_switchsel])
-		    (*ThotLocalActions[T_switchsel]) (frame, TRUE);
-		  /* Cree un nouvel element */
-		  if (ThotLocalActions[T_enter] != NULL)
-		     (*ThotLocalActions[T_enter]) ();
-		  /* Calcule la position du debut de la selection courante */
-		  SetInsert (&pAb, &frame, LtText, FALSE);
-		  /* l'index dans le buffer, le decalage x ne sont pas utilises */
-		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &b, &previousChars);
-		  previousChars += pSelBox->BxIndChar + 1;
-
-		  /* Vide le clipboard X */
-		  clipboard = &XClipboard;
-		  ClearClipboard (clipboard);
-		  j = 0;
-		  lg = 0;
-		  wasCRbefore = FALSE;
-	       }
-	     else
-	       {
-		  /* Insere le blanc precedent si necessaire */
-		  if (wasCRbefore)
-		    {
-		       /* Regarde s'il faut changer de buffer */
-		       if (j == FULL_BUFFER)
-			 {
-			    /* Alloue un nouveau buffer */
-			    clipboard->BuLength = j;
-			    clipboard = GetNewBuffer (clipboard, ActiveFrame);
-			    j = 0;
-			 }
-		       clipboard->BuContent[j++] = SPACE;
-		    }
-		  b = (int) Xbuffer[i];
-		  wasCRbefore = (b == 10);	/* \n */
-		  if (!wasCRbefore)
-		    {
-		       /* Regarde s'il faut changer de buffer */
-		       if (j == FULL_BUFFER)
-			 {
-			    /* Alloue un nouveau buffer */
-			    clipboard->BuLength = j;
-			    lg += j;
-			    clipboard = GetNewBuffer (clipboard, ActiveFrame);
-			    j = 0;
-			 }
-
-		       /* Traduit le BS, FF et blanc dur en espace */
-		       if (b == 8 || b == 12 || b == 160)
-			  clipboard->BuContent[j++] = SPACE;
-		       /* Sinon on filtre que les caracteres imprimables */
-		       else if ((b >= 32 && b < 127)
-				|| (b >= 177 && b < 254))
-			  clipboard->BuContent[j++] = Xbuffer[i];
-		    }
-	       }
-	  }
-	/* Note la longueur courante du dernier buffer du clipboard X */
-	clipboard->BuLength = j;
-	ContentEditing (TEXT_X_PASTE);
-     }
+  /* clean up the X clipboard */
+  clipboard = &XClipboard;
+  ClearClipboard (clipboard);
+  
+  /* number of characters in the last buffer of the clipboard X */
+  j = 0;
+  /* number of characters in the whole X clipboard */
+  lg = 0;
+  if (Xbuffer != NULL)
+    {
+      for (i = 0; i < nbytes; i++)
+	{
+	  if (j == FULL_BUFFER)
+	    {
+	      /* Allocate a new buffer */
+	      clipboard->BuLength = j;
+	      clipboard = GetNewBuffer (clipboard, ActiveFrame);
+	      j = 0;
+	    }
+	  
+	  b = (int) Xbuffer[i];
+	  /* Traduit le BS, FF et blanc dur en espace */
+	  if (b == 8 || b == 12 || b == 160)
+	    clipboard->BuContent[j++] = SPACE;
+	  if (b == EOL)
+	    clipboard->BuContent[j++] = EOL;
+	  /* Sinon on filtre que les caracteres imprimables */
+	  else if ((b >= 32 && b < 127)
+		   || (b >= 177 && b < 254))
+	    clipboard->BuContent[j++] = Xbuffer[i];
+	}
+      /* Paste the last X clipboard buffer */
+      if (j > 0)
+	{
+	  clipboard->BuLength = j;
+	  ContentEditing (TEXT_X_PASTE);
+	}
+    }
 }
 
 

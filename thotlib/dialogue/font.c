@@ -270,9 +270,12 @@ ptrfont             font;
       return (0);
    else
      {
-        /* characters NEW_LINE and BREAK_LINE are equivalent */
         if (c == NEW_LINE)
+	  /* characters NEW_LINE and BREAK_LINE are equivalent */
            c = BREAK_LINE;
+	else if (c == _TABULATION_)
+	  /* we use the SPACE width for the character _TABULATION_ */
+	  c = _SPACE_;
 #ifdef _WINDOWS
         l = font->FiWidths[c];
 #else  /* _WINDOWS */

@@ -196,19 +196,31 @@ ThotBool            extendSel;
        TtcScrollLeft (doc, 1);
    else if (xDelta > 0 && x + xDelta > pFrame->FrXOrg + w)
        TtcScrollRight (doc, 1);
-   else if (yDelta < 0 && pFrame->FrYOrg > 0 && y + yDelta < 0)
+   else if (yDelta < 0 && pFrame->FrYOrg > 0 && y + yDelta < pFrame->FrYOrg)
      {
-       org = pLastBox->BxYOrg;
-       TtcLineUp (doc, 1);
-       /* update the new position */
-       y = y + org - pLastBox->BxYOrg;
+       do
+	 {
+	   org = pLastBox->BxYOrg;
+	   TtcLineUp (doc, 1);
+	   /* update the new position */
+	   if (org != pLastBox->BxYOrg)
+	     y = y + org - pLastBox->BxYOrg;
+	 }
+       while (pFrame->FrYOrg > 0 && y + yDelta < pFrame->FrYOrg &&
+	      (y > 0 || pFrame->FrAbstractBox->AbTruncatedHead));
      }
    else if (yDelta > 0 && y + yDelta > pFrame->FrYOrg + h)
      {
-       org = pLastBox->BxYOrg;
-       TtcLineDown (doc, 1);
-       /* update the new position */
-       y = y + org - pLastBox->BxYOrg;
+       do
+	 {
+	   org = pLastBox->BxYOrg;
+	   TtcLineDown (doc, 1);
+	   /* update the new position */
+	   if (org != pLastBox->BxYOrg)
+	     y = y + org - pLastBox->BxYOrg;
+	 }
+       while (y + yDelta > pFrame->FrYOrg + h &&
+	      (y < pFrame->FrAbstractBox->AbBox->BxHeight || pFrame->FrAbstractBox->AbTruncatedTail));
      }
 
    pBox = GetLeafBox (pLastBox, frame, &x, &y, xDelta, yDelta);
@@ -306,20 +318,23 @@ ThotBool            extendSel;
 
        /* Check if boxed are visible */
        GetSizesFrame (frame, &w, &h);
-       if (pBoxBegin != NULL &&
-	   (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
-	    pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
+       if (!RightExtended && !LeftExtended)
 	 {
-	   /* the element is not displayed within the window */
-	   top = pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg;
-	   pBoxBegin = NULL;
-	 }
-       if (pBoxEnd != NULL &&
-	   (pBoxEnd->BxYOrg + pBoxEnd->BxHeight <= pFrame->FrYOrg ||
-	    pBoxEnd->BxYOrg >= pFrame->FrYOrg + h))
-	 {
-	   /* the element is not displayed within the window */
-	   pBoxEnd = NULL;
+	   if (pBoxBegin != NULL &&
+	       (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
+		pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
+	     {
+	       /* the element is not displayed within the window */
+	       top = pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg;
+	       pBoxBegin = NULL;
+	     }
+	   if (pBoxEnd != NULL &&
+	       (pBoxEnd->BxYOrg + pBoxEnd->BxHeight <= pFrame->FrYOrg ||
+		pBoxEnd->BxYOrg >= pFrame->FrYOrg + h))
+	     {
+	       /* the element is not displayed within the window */
+	       pBoxEnd = NULL;
+	     }
 	 }
        if (pBoxBegin == NULL && pBoxEnd != NULL)
 	 pBoxBegin = pBoxEnd;
@@ -535,6 +550,7 @@ ThotBool            extendSel;
 		       /* just decrease the current extension */
 		       y = pBoxBegin->BxYOrg;
 		       x = ClickX + pFrame->FrXOrg;
+		       pBox = pBoxBegin;
 		     }
 		 }
 	       /* there was a drag, but it's finished now */
@@ -552,7 +568,7 @@ ThotBool            extendSel;
 	       else
 		 RightExtended = TRUE;
 
-	       LocateLeafBox (frame, x, y, 0, yDelta, NULL, extendSel);
+	       LocateLeafBox (frame, x, y, 0, yDelta, pBox, extendSel);
 	     }
 	   break;
 	   
@@ -576,12 +592,13 @@ ThotBool            extendSel;
 		       /* just decrease the curent extension */
 		       y = pBoxEnd->BxYOrg;
 		       x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
+		       pBox = pBoxEnd;
 		     }
 		 }
 	       else if (extendSel)
 		 LeftExtended = TRUE;
 
-	       LocateLeafBox (frame, x, y, 0, yDelta, NULL, extendSel);
+	       LocateLeafBox (frame, x, y, 0, yDelta, pBox, extendSel);
 	     }
 	   break;
 	 }

@@ -837,9 +837,8 @@ static void         DisplayJustifiedText (PtrBox pBox, int frame)
 static void         DisplayJustifiedText (pBox, frame)
 PtrBox              pBox;
 int                 frame;
-
 #endif /* __STDC__ */
- {
+{
    PtrTextBuffer       adbuff;
    PtrTextBuffer       newbuff;
    PtrAbstractBox      pAbbox1;
@@ -914,164 +913,164 @@ int                 frame;
    if (pBox->BxNChars > 0)
       if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
          if (mbox->BxXOrg + mbox->BxWidth > pBox->BxXOrg && mbox->BxYOrg + mbox->BxHeight > pBox->BxYOrg) {
-            /* Initialization */
-            /* -------------- */
-            pFrame = &ViewFrameTable[frame - 1];
-            x = pBox->BxXOrg - pFrame->FrXOrg;
-            y = pBox->BxYOrg - pFrame->FrYOrg;
-            bl = 0;
-            newind = pBox->BxFirstChar;
-            newbuff = pBox->BxBuffer;
-            charleft = pBox->BxNChars;
-            newbl = pBox->BxNPixels;
-            lg = 0;
-            if (pBox->BxAbstractBox->AbSensitive)
-               op = 1;
-            else
-                op = 0;
-            if (pBox->BxAbstractBox->AbReadOnly)
-               RO = 1;
-            else
-                RO = 0;
+	   /* Initialization */
+	   /* -------------- */
+	   pFrame = &ViewFrameTable[frame - 1];
+	   x = pBox->BxXOrg - pFrame->FrXOrg;
+	   y = pBox->BxYOrg - pFrame->FrYOrg;
+	   bl = 0;
+	   newind = pBox->BxFirstChar;
+	   newbuff = pBox->BxBuffer;
+	   charleft = pBox->BxNChars;
+	   newbl = pBox->BxNPixels;
+	   lg = 0;
+	   if (pBox->BxAbstractBox->AbSensitive)
+	     op = 1;
+	   else
+	     op = 0;
+	   if (pBox->BxAbstractBox->AbReadOnly)
+	     RO = 1;
+	   else
+	     RO = 0;
+	   
+	   /* box sizes have to be positive */
+	   width = pBox->BxWidth;
+	   if (width < 0)
+	     width = 0;
 
-            /* box sizes have to be positive */
-            width = pBox->BxWidth;
-            if (width < 0)
-               width = 0;
+	   lgspace = pBox->BxSpaceWidth;
+	   if (lgspace == 0)
+	     lgspace = CharacterWidth (_SPACE_, pBox->BxFont);
 
-            lgspace = pBox->BxSpaceWidth;
-            if (lgspace == 0)
-               lgspace = CharacterWidth (_SPACE_, pBox->BxFont);
-
-            /* Search the first displayable char */
-            /* --------------------------------- */
-            if (charleft > 0)
-               do {
-                  adbuff = newbuff;
-                  indbuff = newind;
-                  restbl = newbl;
-                  x += lg;
-                  car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
-                  if (car == _SPACE_) {
-                     lg = lgspace;
-                     if (newbl > 0) {
-                        newbl--;
-                        lg++;
-					 } 
-				  } else
-                         lg = CharacterWidth (car, pBox->BxFont);
-
-                  charleft--;
-                  /* Skip to next char */
-                  if (indbuff < adbuff->BuLength)
-                     newind = indbuff + 1;
-                  else {
-                       if (adbuff->BuNext == NULL && charleft > 0)
-                          charleft = 0;
-                       newind = 1;
-                       newbuff = adbuff->BuNext;
-				  } 
-			   } while (!(x + lg > 0 || charleft <= 0));
-
-               /* Display the list of text buffers pointed by adbuff */
-               /* beginning at indbuff and of lenght charleft.       */
-               /* -------------------------------------------------- */
-               if (x + lg > 0)
-                  charleft++;
-               nbcar = 0;
-               if (adbuff == NULL)
-                  charleft = 0;
-               else {
-                    buffleft = adbuff->BuLength - indbuff + 1;
-                    if (charleft > buffleft)
-                       indmax = adbuff->BuLength;
-                    else
-                        indmax = indbuff - 1 + charleft;
-			   } 
-
-               /* Do we need to draw a background */
-               if (withbackground)
-                  DrawRectangle (frame, 0, 0, x, y, width + pBox->BxXOrg - pFrame->FrXOrg - x, FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
-               while (charleft > 0) {
-                     /* handle each char in the buffer */
-                     while (indbuff <= indmax) {
-                           car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
-
-                           if (car == _SPACE_ || car == THIN_SPACE || car == HALF_EM || car == UNBREAKABLE_SPACE) {
-                              /* display the last chars handled */
-                              dc = indbuff - nbcar;
-                              x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
-  
-                              if (shadow && (car == _SPACE_ || car == THIN_SPACE || car == HALF_EM || UNBREAKABLE_SPACE))
-                                 DrawChar ('*', frame, x, y, pBox->BxFont, RO, op, fg);
-                              else if (!ShowSpace) {
-                                   /* Show the space chars */
-                                   if (car == _SPACE_) 
-                                      DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
-                                   else if (car == THIN_SPACE)
-                                        DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
-                                   else if (car == HALF_EM)
-                                        DrawChar (SHOWN_HALF_EM, frame, x, y, pBox->BxFont, RO, op, fg);
-                                   else if (car == UNBREAKABLE_SPACE)
-                                        DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
-							  }    
-
-                              nbcar = 0;
-                              if (car == _SPACE_)
-                                 if (restbl > 0) {
-                                    /* Pixel space splitting */
-                                    x = x + lgspace + 1;
-                                    restbl--;
-								 } else
-                                        x += lgspace;
-                              else
-                                   x += CharacterWidth (car, pBox->BxFont);
-
-                              bl = 1;
-						   } else /* Just add the next char */
-                                  nbcar++;
-
-                           indbuff++; /* Skip to next char */
-					 } 
-
-                     /* Draw the last chars from buffer */
-                     dc = indbuff - nbcar;
-                     charleft -= buffleft;
-                     if (charleft <= 0) { /* Finished */
-                        x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, width, bl, withline, blockbegin, RO, op, fg, shadow);
-                        if (pBox->BxUnderline != 0)
-                           DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline, pBox->BxThickness, pBox->BxWidth, RO, op, fg);
-                        /* Next char lookup */
-                        if (((UCHAR_T) adbuff->BuContent[indbuff - 1] == BREAK_LINE || (UCHAR_T) adbuff->BuContent[indbuff - 1] == NEW_LINE) && !ShowSpace)
-                           DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
-					 } else {
-                            x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
-                            bl = 0;
-                            /* Skip to next buffer */
-                           if (adbuff->BuNext == NULL)
-                              charleft = 0;
-                           else {
-                                indbuff = 1;
-                                adbuff = adbuff->BuNext;
-                                buffleft = adbuff->BuLength;
-                                if (charleft < buffleft)
-                                   indmax = charleft;
-                                else
-                                    indmax = buffleft;
-						   }  
-					 }  
-                     nbcar = 0;
-			   }  
-
-               /* Should the end of de line be filled with dots */
-               if (pBox->BxEndOfBloc > 0) {
-                  pFrame = &ViewFrameTable[frame - 1];
-                  /* Compute the origin alignment */
-                  y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-                  DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y, pBox->BxEndOfBloc, RO, op, fg);
-			   }
+	   /* Search the first displayable char */
+	   /* --------------------------------- */
+	   if (charleft > 0)
+	     do {
+	       adbuff = newbuff;
+	       indbuff = newind;
+	       restbl = newbl;
+	       x += lg;
+	       car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
+	       if (car == _SPACE_) {
+		 lg = lgspace;
+		 if (newbl > 0) {
+		   newbl--;
+		   lg++;
+		 } 
+	       } else
+		 lg = CharacterWidth (car, pBox->BxFont);
+	       
+	       charleft--;
+	       /* Skip to next char */
+	       if (indbuff < adbuff->BuLength)
+		 newind = indbuff + 1;
+	       else {
+		 if (adbuff->BuNext == NULL && charleft > 0)
+		   charleft = 0;
+		 newind = 1;
+		 newbuff = adbuff->BuNext;
+	       } 
+	     } while (!(x + lg > 0 || charleft <= 0));
+	   
+	   /* Display the list of text buffers pointed by adbuff */
+	   /* beginning at indbuff and of lenght charleft.       */
+	   /* -------------------------------------------------- */
+	   if (x + lg > 0)
+	     charleft++;
+	   nbcar = 0;
+	   if (adbuff == NULL)
+	     charleft = 0;
+	   else {
+	     buffleft = adbuff->BuLength - indbuff + 1;
+	     if (charleft > buffleft)
+	       indmax = adbuff->BuLength;
+	     else
+	       indmax = indbuff - 1 + charleft;
 	   } 
-} 
+	   
+	   /* Do we need to draw a background */
+	   if (withbackground)
+	     DrawRectangle (frame, 0, 0, x, y, width + pBox->BxXOrg - pFrame->FrXOrg - x, FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
+	   while (charleft > 0) {
+	     /* handle each char in the buffer */
+	     while (indbuff <= indmax) {
+	       car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
+	       
+	       if (car == _SPACE_ || car == THIN_SPACE || car == HALF_EM || car == UNBREAKABLE_SPACE || car == _TABULATION_) {
+		 /* display the last chars handled */
+		 dc = indbuff - nbcar;
+		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
+		 
+		 if (shadow && (car == _SPACE_ || car == THIN_SPACE || car == HALF_EM || UNBREAKABLE_SPACE || car == _TABULATION_))
+		   DrawChar ('*', frame, x, y, pBox->BxFont, RO, op, fg);
+		 else if (!ShowSpace) {
+		   /* Show the space chars */
+		   if (car == _SPACE_ || car == _TABULATION_) 
+		     DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+		   else if (car == THIN_SPACE)
+		     DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+		   else if (car == HALF_EM)
+		     DrawChar (SHOWN_HALF_EM, frame, x, y, pBox->BxFont, RO, op, fg);
+		   else if (car == UNBREAKABLE_SPACE)
+		     DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+		 }    
+		 
+		 nbcar = 0;
+		 if (car == _SPACE_)
+		   if (restbl > 0) {
+		     /* Pixel space splitting */
+		     x = x + lgspace + 1;
+		     restbl--;
+		   } else
+		     x += lgspace;
+		 else
+		   x += CharacterWidth (car, pBox->BxFont);
+		 
+		 bl = 1;
+	       } else /* Just add the next char */
+		 nbcar++;
+	       
+	       indbuff++; /* Skip to next char */
+	     } 
+	     
+	     /* Draw the last chars from buffer */
+	     dc = indbuff - nbcar;
+	     charleft -= buffleft;
+	     if (charleft <= 0) { /* Finished */
+	       x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, width, bl, withline, blockbegin, RO, op, fg, shadow);
+	       if (pBox->BxUnderline != 0)
+		 DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline, pBox->BxThickness, pBox->BxWidth, RO, op, fg);
+	       /* Next char lookup */
+	       if (((UCHAR_T) adbuff->BuContent[indbuff - 1] == BREAK_LINE || (UCHAR_T) adbuff->BuContent[indbuff - 1] == NEW_LINE) && !ShowSpace)
+		 DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
+	     } else {
+	       x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
+	       bl = 0;
+	       /* Skip to next buffer */
+	       if (adbuff->BuNext == NULL)
+		 charleft = 0;
+	       else {
+		 indbuff = 1;
+		 adbuff = adbuff->BuNext;
+		 buffleft = adbuff->BuLength;
+		 if (charleft < buffleft)
+		   indmax = charleft;
+		 else
+		   indmax = buffleft;
+	       }  
+	     }  
+	     nbcar = 0;
+	   }  
+	   
+	   /* Should the end of de line be filled with dots */
+	   if (pBox->BxEndOfBloc > 0) {
+	     pFrame = &ViewFrameTable[frame - 1];
+	     /* Compute the origin alignment */
+	     y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+	     DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y, pBox->BxEndOfBloc, RO, op, fg);
+	   }
+	 }
+}
 
 
 /*----------------------------------------------------------------------

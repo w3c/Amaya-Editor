@@ -55,33 +55,33 @@ do
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
    Amaya/dicopar/clavier \
-   Amaya/doc/amaya/Creating.html \
-   Amaya/doc/amaya/MakeBook.html \
-   Amaya/doc/amaya/StyleSheets.html \
-   Amaya/doc/amaya/Manual.html \
-   Amaya/doc/amaya/Tables.html \
-   Amaya/doc/amaya/AmayaArchi.html \
-   Amaya/doc/amaya/Math.html \
-   Amaya/doc/amaya/Registry.html \
-   Amaya/doc/amaya/Transform.html \
+   Amaya/doc/amaya/Access.html \
    Amaya/doc/amaya/Attributes.html \
-   Amaya/doc/amaya/Views.html \
-   Amaya/doc/amaya/Publishing.html \
-   Amaya/doc/amaya/Put.html \
-   Amaya/doc/amaya/ImageMaps.html \
-   Amaya/doc/amaya/Numbering.html \
-   Amaya/doc/amaya/Searching.html \
-   Amaya/doc/amaya/Selecting.html \
    Amaya/doc/amaya/Browsing.html \
-   Amaya/doc/amaya/CSS.html \
-   Amaya/doc/amaya/Plugins.html \
-   Amaya/doc/amaya/Keyboard.html \
-   Amaya/doc/amaya/Printing.html \
    Amaya/doc/amaya/Changing.html \
    Amaya/doc/amaya/Configure.html \
+   Amaya/doc/amaya/Creating.html \
+   Amaya/doc/amaya/CSS.html \
+   Amaya/doc/amaya/HTML.html \
+   Amaya/doc/amaya/HTML-elements/*.html \
+   Amaya/doc/amaya/ImageMaps.html \
+   Amaya/doc/amaya/Keyboard.html \
    Amaya/doc/amaya/Links.html \
+   Amaya/doc/amaya/MakeBook.html \
+   Amaya/doc/amaya/Manual.html \
+   Amaya/doc/amaya/Math.html \
+   Amaya/doc/amaya/Numbering.html \
+   Amaya/doc/amaya/Printing.html \
+   Amaya/doc/amaya/Publishing.html \
    Amaya/doc/amaya/Put.html \
+   Amaya/doc/amaya/Registry.html \
+   Amaya/doc/amaya/Searching.html \
+   Amaya/doc/amaya/Selecting.html \
    Amaya/doc/amaya/SpellChecking.html \
+   Amaya/doc/amaya/StyleSheets.html \
+   Amaya/doc/amaya/Tables.html \
+   Amaya/doc/amaya/Transform.html \
+   Amaya/doc/amaya/Views.html \
    Amaya/doc/Icons/*.gif \
    Amaya/Icons/WWW/activity_48x48 \
    Amaya/Icons/WWW/guide48x \
