@@ -893,7 +893,12 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 		      (elType.ElTypeNum == SVG_EL_PICTURE_UNIT ||
 		       elType.ElTypeNum == SVG_EL_use_ ||
 		       elType.ElTypeNum == SVG_EL_tref)))
-		  DisplayImage (doc, ctxEl->currentElement, desc, NULL, ptr);
+		  {
+		    /* do not check mandatory attributes */
+		    TtaSetStructureChecking (0, doc);
+		    DisplayImage (doc, ctxEl->currentElement, desc, NULL, ptr);
+		    TtaSetStructureChecking (1, doc);
+		  }
 	      }
 	    ctxPrev = ctxEl;
 	    ctxEl = ctxEl->nextElement;
