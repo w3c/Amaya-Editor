@@ -169,7 +169,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* real     */ {8476, 194}, /* blackletter capital R = real part symbol,  U+211C ISOamso */
 /* trade    */ {8482, 212}, /* trade mark sign, U+2122 ISOnum */
 /* alefsym  */ {8501, 192}, /* alef symbol = first transfinite cardinal,  U+2135 NEW */
-/*DifferentialD*/{8518, 100}, /* U+2146 */
+/*DifferentialD*/{8518, 1100}, /* U+2146 */
 /*ExponentialE*/{8519, 1101},/* */
 /*ImaginaryI*/ {8520, 1105},/* */
 /* larr     */ {8592, 172}, /* leftwards arrow, U+2190 ISOnum */
