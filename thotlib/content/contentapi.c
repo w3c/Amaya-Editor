@@ -529,8 +529,9 @@ void TtaRemoveInitialSpaces (Element element, Document document)
 	    TtaDeleteTree (element, document);
 	  else
 	    {
-	      /* Updates the volumes of the ancestors */
-	      pElAsc = pEl->ElParent;
+	      pEl->ElTextLength -= delta;
+	      /* Updates the volume of the element and its ancestors */
+	      pElAsc = pEl;
 	      while (pElAsc)
 		{
 		  pElAsc->ElVolume -= delta;
@@ -623,8 +624,9 @@ void TtaRemoveFinalSpaces (Element element, Document document,
 	    TtaDeleteTree (element, document);
 	  else
 	    {
-	      /* Updates the volumes of the ancestors */
-	      pElAsc = pEl->ElParent;
+	      pEl->ElTextLength -= delta;
+	      /* Updates the volume of the element and its ancestors */
+	      pElAsc = pEl;
 	      while (pElAsc)
 		{
 		  pElAsc->ElVolume -= delta;
