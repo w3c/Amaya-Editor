@@ -83,15 +83,19 @@ public:
   bool DetachPage( int position );
   AmayaPage * GetPage( int position );
   int GetPageCount() const;
+  bool IsClosing();
   
+  void DesactivateMenuBar();
+  void ActivateMenuBar();
+
   void AppendMenu ( wxMenu * p_menu, const wxString & label );
   void AppendMenuItem ( 
 	wxMenu * 		p_menu_parent,
-	long 		id,
+	long                    id,
 	const wxString & 	label,
 	const wxString & 	help,
 	wxItemKind 		kind,
-	const AmayaCParam & callback );
+	const AmayaCParam &     callback );
  
   void OnClose( wxCloseEvent& event );
   void OnToolBarTool( wxCommandEvent& event );
@@ -123,7 +127,7 @@ public:
 
  protected:
   DECLARE_EVENT_TABLE()
-   
+ 
   int               m_WindowId;          // amaya window id
   int               m_DocsId[MAX_DOC];    // documents contained by this window
   
@@ -131,7 +135,8 @@ public:
   AmayaPanel *      m_pCurrentPanel;     // current selected panel
   AmayaNotebook *   m_pNotebook;         // tabs container
   float             m_SlashRatio; // 0.5 => page is half splitted  
-  
+  bool              m_IsClosing;
+
   bool         m_IsFullScreenEnable;
   bool         m_IsToolTipEnable;
   wxMenuItem * m_pMenuItemToggleFullScreen;
@@ -145,6 +150,7 @@ public:
   wxSplitterWindow * m_pSplitterWindow;
   
   wxComboBox *		m_pURLBar;
+  
 
  public:
   enum

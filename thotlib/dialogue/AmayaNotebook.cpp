@@ -1,10 +1,15 @@
 #ifdef _WX
 
+#include "wx/app.h"
+DECLARE_APP(wxApp)
+
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
+#include "AmayaWindow.h"
 
-AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window, AmayaWindow * p_amaya_window )
-	:  wxNotebook( p_parent_window,
+AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
+			      AmayaWindow * p_amaya_window )
+	:  wxNotebook( wxDynamicCast(p_parent_window, wxWindow),
 		       -1,
 		       wxDefaultPosition, wxDefaultSize,
 		       wxNB_FIXEDWIDTH )
@@ -41,20 +46,27 @@ void AmayaNotebook::OnClose(wxCloseEvent& event)
     /* really delete the page if the document has been closed */
     if (p_page->IsClosed())
       {
+	//RemovePage(page_id);
 	DeletePage(page_id);
+
+	// maybe something has been removed so update the ids
+	UpdatePageId();
+
+	/* wait for pending events :
+	   if a page is deleted, it throws notebookevent */
+	wxApp & app = wxGetApp();
+	while ( app.Pending() )
+	  app.Dispatch();
       }
     else
       page_id++;
   }
   
-  // maybe something has been removed so update the ids
-  UpdatePageId();
-
   /* there is still open pages ? */
   if (close_window)
-    event.Skip(); /* everything is closed => close the window */
+      event.Skip(); /* everything is closed => close the window */
   else
-    event.Veto(); /* still an opened page => keep the window open */
+      event.Veto(); /* still an opened page => keep the window open */
 }
 
 /*
@@ -99,7 +111,7 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
 
   // do not change the page if this is the same as old one
   // this case can occure when notebook's pages are deleted ...
-  if ( event.GetOldSelection() == event.GetSelection() )
+  if ( event.GetOldSelection() == event.GetSelection() || m_pAmayaWindow->IsClosing() )
     {
       event.Skip();
       return;

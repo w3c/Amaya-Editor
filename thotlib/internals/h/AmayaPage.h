@@ -65,12 +65,15 @@ public:
 
   AmayaFrame * AttachTopFrame( AmayaFrame * p_frame );
   AmayaFrame * AttachBottomFrame( AmayaFrame * p_frame );
-  AmayaFrame * DetachTopFrame( AmayaFrame * p_frame );
-  AmayaFrame * DetachBottomFrame( AmayaFrame * p_frame );
+  AmayaFrame * DetachTopFrame();
+  AmayaFrame * DetachBottomFrame();
   
   bool IsClosed();
   bool IsSelected();
   void SetSelected( bool isSelected );
+
+  void         SetActiveFrame( const AmayaFrame * p_frame );
+  AmayaFrame * GetActiveFrame() const;
 //  wxString GetPageTitle();
   
   void SetNotebookParent( AmayaNotebook * p_notebook );
@@ -81,6 +84,10 @@ public:
   
   void SetPageId( int page_id );
   int GetPageId();
+
+  AmayaFrame * GetFrame( int frame_position ) const;
+
+  void DeletedFrame( AmayaFrame * p_frame );
 
   void OnSplitterPosChanged( wxSplitterEvent& event );
   void OnSplitterDClick( wxSplitterEvent& event );
@@ -103,6 +110,7 @@ public:
 
   int                m_PageId;
   bool               m_IsClosed;
+  int                m_ActiveFrame; // 1 first frame / 2 second frame
 //  bool               m_IsSelected;
 };
 

@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern struct Cat_Context *CatEntry ( int ref );
 extern ThotWidget CatWidget ( int ref );
 extern ThotWidget TtaCatWidget ( int ref );
 extern void MyWarningHandler ( char *s );
@@ -16,7 +17,7 @@ extern int TtaGetReferencesBase ( int number );
 extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
-extern void TtaDefineDialogueCallback ( void (*procedure) () );
+extern int DestContenuMenu ( struct Cat_Context *catalogue );
 extern void TtaNewPulldown ( int ref,
                              ThotMenu parent,
                              char *title,
@@ -189,6 +190,7 @@ extern void TtaFreeAllCatalogs ( void );
 
 #else /* __STDC__ */
 
+extern struct Cat_Context *CatEntry ( int ref );
 extern ThotWidget CatWidget ( int ref );
 extern ThotWidget TtaCatWidget ( int ref );
 extern void MyWarningHandler ( char *s );
@@ -199,7 +201,7 @@ extern int TtaGetReferencesBase ( int number );
 extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
                                int msgType );
-extern void TtaDefineDialogueCallback ( void (*procedure) () );
+extern int DestContenuMenu ( struct Cat_Context *catalogue );
 extern void TtaNewPulldown ( int ref,
                                ThotMenu parent,
                                char *title,

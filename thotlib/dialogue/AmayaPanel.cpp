@@ -18,7 +18,8 @@ AmayaPanel::AmayaPanel(
 	        ,const wxSize&  size
 		,long style
 	      )
-	:  wxPanel( p_parent_window, id, pos, size, style )
+  :  wxPanel( wxDynamicCast(p_parent_window, wxWindow),
+	      id, pos, size, style )
 //          ,m_PanelId( panel_id )
 {
   SetBackgroundColour( wxColour(_T("RED")) );

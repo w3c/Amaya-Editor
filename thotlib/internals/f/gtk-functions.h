@@ -137,3 +137,23 @@ gboolean ColorsPressGTK (GtkWidget *widget, gpointer data);
 gboolean CreateExtendedColorSelectionGTK (GtkWidget *widget, gpointer data);
 gboolean CloseExtendedColorSelectionGTK (GtkWidget *widget, gpointer data);
 void gtk_claim_selection();
+
+ThotBool formKillGTK (GtkWidget *w, GdkEvent *ev, struct Cat_Context *catalogue);
+ThotBool scr_popup_button_press (GtkWidget *w, GdkEventButton *ev, 
+				 struct Cat_Context *catalogue);
+ThotBool scr_popup_key_press (GtkWidget *w, GdkEventKey *ev,
+			      struct Cat_Context *catalogue);
+ThotBool ListEventGTK (GtkWidget *w, GdkEventButton *ev, 
+		       struct Cat_Context *catalogue);
+gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue);
+ThotBool CallListGTK (ThotWidget w, struct Cat_Context *catalogue);
+gboolean DeletePopShell (ThotWidget w, GdkEventButton *bu, gpointer data);
+gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data);
+ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue);
+ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue);
+ThotBool CallIconButtonGTK (ThotWidget w, struct Cat_Context *catalogue);
+void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d);
+ThotBool CallToggleGTK (ThotWidget w, struct Cat_Context *catalogue);
+ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d);
+ThotBool ComboBoxGTK (ThotWidget w, struct Cat_Context *catalogue, 
+		      caddr_t call_d);

@@ -63,7 +63,8 @@ class AmayaCanvas : public wxPanel
 #endif // #ifdef _GL
 {
 public:
-  AmayaCanvas( AmayaFrame * p_parent_window );
+  AmayaCanvas( AmayaFrame * p_parent_window,
+	       AmayaCanvas * p_shared_canvas = NULL );
   virtual ~AmayaCanvas( );
 
   bool IsParentPageActive();
@@ -85,6 +86,9 @@ protected:
   DECLARE_EVENT_TABLE()
   
   AmayaFrame *  m_pAmayaFrame;  // amaya frame reference (parent)
+
+
+  static int AttrList[];
 
   ThotBool m_Selecting; 
 

@@ -12,6 +12,8 @@
 
 class AmayaCanvas;
 class AmayaPage;
+class AmayaWindow;
+class AmayaContext;
 
 /*
  *  Description:  - AmayaFrame is contained by a AmayaPage
@@ -72,6 +74,8 @@ public:
   void ShowScrollbar( int scrollbar_id );
   void HideScrollbar( int scrollbar_id );  
 
+  void SetStatusBarText( const wxString & text );
+
   void     SetWindowTitle( const wxString & window_name );
   wxString GetWindowTitle();
   
@@ -80,7 +84,26 @@ public:
 
   void        SetPageParent( AmayaPage * p_page );
   AmayaPage * GetPageParent();
-  
+
+  AmayaWindow * GetWindowParent();
+
+  AmayaCanvas * GetCanvas();
+
+  wxMenuBar * GetMenuBar();
+  static wxMenuItem * AppendMenuItem ( wxMenu * 		p_menu_parent,
+				       long 		        id,
+				       const wxString & 	label,
+				       const wxString & 	help,
+				       wxItemKind 		kind,
+				       const AmayaContext &    context );
+  static wxMenuItem * AppendSubMenu ( wxMenu * 		p_menu_parent,
+				  long                 id,
+				  const wxString & 	label,
+				  const wxString & 	help );
+
+  void SetActive( bool active = TRUE );
+  bool IsActive();
+
 #ifdef _GL
   void SetCurrent();
   void SwapBuffers();
@@ -89,16 +112,19 @@ public:
   void OnScroll( wxScrollEvent& event );
   void OnMouse( wxMouseEvent& event );
   void OnSize( wxSizeEvent& event );
+  void OnClose(wxCloseEvent& event);
+  void OnMenuItem( wxCommandEvent& event );
 
 protected:
   DECLARE_EVENT_TABLE()
   
   int          m_FrameId;        // amaya frame id
+  bool         m_IsActive;
   wxString     m_PageTitle;
   wxString     m_WindowTitle;
- 
-  AmayaPage *  m_pPageParent;
+  wxString     m_StatusBarText;
   
+  AmayaPage *     m_pPageParent;  
   AmayaCanvas *   m_pCanvas;
 
   //wxFlexGridSizer * m_pFlexSizer;
@@ -107,6 +133,8 @@ protected:
   
   wxScrollBar *   m_pScrollBarH;
   wxScrollBar *   m_pScrollBarV;
+
+  wxMenuBar *     m_pMenuBar;
 };
 
 #endif // __AMAYAFRAME_H__

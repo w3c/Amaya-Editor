@@ -58,12 +58,12 @@ extern void TtaNewPulldown (int ref, ThotMenu parent, char *title,
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
-extern void TtaSetPulldownOff (int ref, ThotWidget parent);
+extern void TtaSetPulldownOff (int ref, ThotMenu parent);
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOn reactive le pulldown                           
   ----------------------------------------------------------------------*/
-extern void TtaSetPulldownOn (int ref, ThotWidget parent);
+extern void TtaSetPulldownOn (int ref, ThotMenu parent);
 
 /*----------------------------------------------------------------------
    TtaNewPopup cre'e un pop-up menu :                                 

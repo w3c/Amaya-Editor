@@ -9,17 +9,20 @@
 extern void TtaShowWindow ( int window_id,
                             ThotBool show );
 extern int TtaMakeWindow ( void );
-extern int TtaMakeFrame ( Document doc,
-                          int view,
+extern int TtaMakeFrame ( const char * schema_name,
+                          int schView,
+                          Document doc_id,
                           const char * doc_name,
                           int width,
                           int height,
                           int * volume );
 extern ThotBool TtaAttachFrame ( int frame_id,
                                  int window_id,
-                                 int page_id );
-extern ThotBool TtaDetachFrame ( int frame_id,
-                                 int window_id );
+                                 int page_id,
+                                 int position );
+extern ThotBool TtaDetachFrame ( int window_id,
+                                 int page_id,
+                                 int position );
 extern int TtaGetFreePageId ( int window_id );
 extern int TtaMakePanel ( const char * panel_title );
 extern int TtaAttachPanel ( int window_id );
@@ -32,17 +35,20 @@ extern ThotBool TtaFrameIsActive ( int frame_id );
 extern void TtaShowWindow ( int window_id,
                               ThotBool show );
 extern int TtaMakeWindow ( void );
-extern int TtaMakeFrame ( Document doc,
-                            int view,
+extern int TtaMakeFrame ( const char * schema_name,
+                            int schView,
+                            Document doc_id,
                             const char * doc_name,
                             int width,
                             int height,
                             int * volume );
 extern ThotBool TtaAttachFrame ( int frame_id,
                                    int window_id,
-                                   int page_id );
-extern ThotBool TtaDetachFrame ( int frame_id,
-                                   int window_id );
+                                   int page_id,
+                                   int position );
+extern ThotBool TtaDetachFrame ( int window_id,
+                                   int page_id,
+                                   int position );
 extern int TtaGetFreePageId ( int window_id );
 extern int TtaMakePanel ( const char * panel_title );
 extern int TtaAttachPanel ( int window_id );

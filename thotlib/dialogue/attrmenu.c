@@ -22,6 +22,8 @@
 #include "message.h"
 #include "constmenu.h"
 #include "appdialogue.h"
+#include "dialogapi.h"
+
 #ifdef _WINGUI
   #include "winsys.h"
   #include "resource.h"
@@ -113,6 +115,7 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "structschema_f.h"
 #include "tree_f.h"
 #include "uconvert_f.h"
+#include "dialogapi_f.h"
 
 /*----------------------------------------------------------------------
   InitFormLangue
@@ -736,10 +739,10 @@ void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
    pRuleAttr = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1];
    /* toujours lie a la vue 1 du document */
    MenuValues (pRuleAttr, TRUE, NULL, pDoc, 1);
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
    TtaShowDialogue (NumMenuAttrRequired, FALSE);
    TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1036,7 +1039,6 @@ void UpdateAttrMenu (PtrDocument pDoc)
   for (view = 1; view <= MAX_VIEW_DOC; view++)
   {
   frame = pDoc->DocViewFrame[view - 1];
-#ifndef _WX // TODO
   if (frame != 0 && FrameTable[frame].MenuAttr != -1)
 	  {
 #ifdef _WINGUI 
@@ -1090,6 +1092,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		  EventMenu[frame - 1] = (nbItemAttr * MAX_MENU * MAX_ITEM) + ref;
 		  TtaNewSubmenu (EventMenu[frame - 1], ref, nbItemAttr - 1,
 				 NULL, nbEvent, bufEventAttr, NULL, FALSE);
+
 		  /* post active attributes */
 #ifdef _WINGUI
 		  for (i = 0; i < nbEvent; i++)
@@ -1097,10 +1100,10 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		       (ThotBool) (ActiveEventAttr[i] == 1), FrMainRef[frame]);
 #endif /* _WINGUI */
 
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 		  for (i = 0; i < nbEvent; i++)
         TtaSetToggleMenu (EventMenu[frame - 1], i, (ActiveEventAttr[i] == 1));
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 		}
 
 	      /* post active attributes */
@@ -1113,13 +1116,12 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		WIN_TtaSetToggleMenu (ref, i, (ThotBool) (ActiveAttr[i] == 1), FrMainRef[frame]);
 #endif /* _WINGUI */
         
-#if defined(_GTK) || defined(_MOTIF)        
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 	      TtaSetMenuOn (document, view, menuID);
   	  }
 	}
-#endif //#ifndef _WX // TODO
   
   }
 }
@@ -1461,12 +1463,12 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 					 (int)WIN_Language);
 #endif /* _WINGUI */
 
-#if defined(_GTK) || defined(_MOTIF)            
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 	      }
 	    else if (pAttr->AttrType == AtEnumAttr &&
 		     pAttr->AttrNEnumValues == 1)
@@ -1495,7 +1497,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		/* register the current attribut */
 		CurrentAttr = att;
 		/* restore the toggle state */
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 		/*#ifndef _GTK*/
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
@@ -1504,7 +1506,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		/*#endif*/
 		/* display the form */
 		TtaShowDialogue (NumMenuAttr, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 
 #ifdef _WINGUI 
 		if (WIN_AtNumAttr) 

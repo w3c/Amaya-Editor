@@ -1,6 +1,7 @@
 #ifdef _WX
 
 #include "wx/wx.h"
+#include "wx/menu.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -13,17 +14,26 @@
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
+#include "frame.h"
+
+#ifdef _GL
+  #include "glwindowdisplay.h"
+#endif /* _GL */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "frame_tv.h"
+#include "select_tv.h"
 #include "appli_f.h"
+#include "views_f.h"
+#include "structselect_f.h"
 
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
-
+#include "AmayaCallback.h"
 #include "wx/log.h"
 
 
@@ -38,48 +48,46 @@ AmayaFrame::AmayaFrame(
                 int             frame_id
       	       ,wxWindow *      p_parent_window
 	      )
-	:  wxPanel( p_parent_window )
-          ,m_FrameId( frame_id )
-          ,m_PageTitle()
-          ,m_WindowTitle()
-          ,m_pPageParent( NULL )
+  :  wxPanel( p_parent_window )
+     ,m_FrameId( frame_id )
+     ,m_PageTitle()
+     ,m_WindowTitle()
+     ,m_pPageParent( NULL )
+     ,m_pMenuBar( NULL )
+     ,m_IsActive( FALSE )
 {
-#if 0
-  // Create drawing area
+  // Create the empty menu bar
+  m_pMenuBar =  new wxMenuBar( wxMB_DOCKABLE );
+
+  // Create the drawing area
+  m_pCanvas = NULL;
+#ifdef _GL
+  // If opengl is used then try to share the context
+#ifndef _NOSHARELIST
+  if (GetSharedContext () == -1)
+    {
+#endif /*_NOSHARELIST*/
+      m_pCanvas = new AmayaCanvas( this );
+#ifdef _NOSHARELIST
+      wxPrintf( _T("Warning: upgrade your Opengl implementation (ie: Mesa) to get group opacity!\n") );
+#else /*_NOSHARELIST*/
+      SetSharedContext( m_FrameId );
+    }
+  else
+    {
+      int shared_frame_id = GetSharedContext();
+      wxASSERT( FrameTable[shared_frame_id].WdFrame != 0 );
+      AmayaCanvas * p_shared_canvas = FrameTable[shared_frame_id].WdFrame->GetCanvas();
+      m_pCanvas = new AmayaCanvas( this, p_shared_canvas );
+    }
+#endif /*_NOSHARELIST*/
+#else /* _GL */
   m_pCanvas = new AmayaCanvas( this );
-  
-  // Create vertical and horizontal scrollbars
-  m_pScrollBarH = new wxScrollBar( this,
-				   -1,
-				   wxDefaultPosition,
-				   wxDefaultSize,
-				   wxSB_HORIZONTAL );
-  m_pScrollBarV = new wxScrollBar( this,
-				   -1,
-				   wxDefaultPosition,
-				   wxDefaultSize,
-				   wxSB_VERTICAL );
+#endif /* _GL */
 
-  // Create a flexible sizer (first col and first row should be extensible)
-  m_pFlexSizer = new wxFlexGridSizer(2,2);
-  m_pFlexSizer->AddGrowableCol(0);
-  m_pFlexSizer->AddGrowableRow(0);
-
-  // Insert elements into sizer
-  m_pFlexSizer->Add( m_pCanvas, 1, wxEXPAND );
-  m_pFlexSizer->Add( m_pScrollBarV, 1, wxEXPAND );
-  m_pFlexSizer->Add( m_pScrollBarH, 1, wxEXPAND );    
-
-  SetSizer(m_pFlexSizer);
-
-  Layout();
-#endif
-  // Create drawing area
-  m_pCanvas = new AmayaCanvas( this );
-  
   m_pScrollBarV = NULL; 
   m_pScrollBarH = NULL;
-  
+
   m_pHSizer = new wxBoxSizer ( wxHORIZONTAL );
   m_pVSizer = new wxBoxSizer ( wxVERTICAL );
   m_pHSizer->Add( m_pCanvas, 1, wxEXPAND );
@@ -107,6 +115,12 @@ AmayaFrame::AmayaFrame(
  */
 AmayaFrame::~AmayaFrame()
 {
+  // notifie the page that this frame has die
+  if ( GetPageParent() )
+    GetPageParent()->DeletedFrame( this );
+
+  // destroy the menu bar
+  m_pMenuBar->Destroy();
 }
 
 /*
@@ -126,6 +140,10 @@ wxScrollBar * AmayaFrame::GetScrollbarV()
 {
   return m_pScrollBarV;
 }
+AmayaCanvas * AmayaFrame::GetCanvas()
+{
+  return m_pCanvas;
+}
 
 /*
  *--------------------------------------------------------------------------------------
@@ -140,6 +158,39 @@ wxScrollBar * AmayaFrame::GetScrollbarV()
  */
 void AmayaFrame::HideScrollbar( int scrollbar_id )
 {
+  switch( scrollbar_id )
+   {
+    case 1:
+       {
+	 // do not remove the scrollbar if it doesnt exist
+	 if (!m_pScrollBarV) return;
+
+	 //         m_pHSizer->Detach(m_pScrollBarV);
+	 //m_pScrollBarV = NULL;
+	 //	 m_pScrollBarV->Hide();
+	 m_pHSizer->SetItemMinSize( m_pScrollBarV,
+				    wxSize( 0, m_pScrollBarV->GetSize().GetHeight() ) );
+       }
+      break;
+    case 2:
+       {
+	 // do not remove the scrollbar if it doesnt exist
+	 if (!m_pScrollBarH) return;
+
+	 //	 m_pVSizer->Detach(m_pScrollBarH);
+	 //	 m_pScrollBarH = NULL;
+	 m_pVSizer->SetItemMinSize( m_pScrollBarH,
+				    wxSize( m_pScrollBarV->GetSize().GetWidth(), 0 ) );
+	 // m_pScrollBarH->Hide();
+       }
+      break;
+   }
+  m_pHSizer->Layout();
+  m_pVSizer->Layout();
+  //  GetSizer()->SetSizeHints(this);
+  //GetSizer()->Fit(this);
+
+#if 0
   switch( scrollbar_id )
    {
     case 1:
@@ -163,7 +214,8 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
        }
       break;
    }
-  
+#endif /* 0 */
+
 /*  m_pHSizer->Layout();
   m_pVSizer->Layout();
   Layout();
@@ -183,6 +235,61 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
  */
 void AmayaFrame::ShowScrollbar( int scrollbar_id )
 {
+  switch( scrollbar_id )
+   {
+    case 1:
+       {
+	 // do not create the scrollbar if it always exist
+	 if (!m_pScrollBarV)
+	   {
+        
+	     // Create vertical scrollbar
+	     m_pScrollBarV = new wxScrollBar( this,
+					      -1,
+					      wxDefaultPosition,
+					      wxDefaultSize,
+					      wxSB_VERTICAL );
+	     m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
+	   }
+	 else
+	   {
+	     m_pHSizer->SetItemMinSize( m_pScrollBarV,
+					wxSize( 15, m_pScrollBarV->GetSize().GetHeight() ) );
+	   }
+	 
+	 m_pScrollBarV->Show();
+       }
+      break;
+    case 2:
+       {
+	 // do not create the scrollbar if it always exist
+	 if (!m_pScrollBarH)
+	   {
+	     // Create vertical and horizontal scrollbars
+	     m_pScrollBarH = new wxScrollBar( this,
+					      -1,
+					      wxDefaultPosition,
+					      wxDefaultSize,
+					      wxSB_HORIZONTAL );
+	     m_pVSizer->Add( m_pScrollBarH, 0, wxEXPAND );
+	   }
+	 else
+	   {
+	     m_pVSizer->SetItemMinSize( m_pScrollBarH,
+					wxSize( 15, m_pScrollBarV->GetSize().GetWidth() ) );
+	     //	     m_pVSizer->SetItemMinSize( m_pScrollBarH,
+	     //					wxSize( 15, m_pScrollBarV->GetSize().GetHeight() ) );
+	   }
+	 m_pScrollBarH->Show();
+      }
+      break;
+   }
+  //  m_pHSizer->Layout();
+  //  m_pVSizer->Layout();
+  //  GetSizer()->SetSizeHints(this);
+  //GetSizer()->Fit(this);
+
+#if 0
   switch( scrollbar_id )
    {
     case 1:
@@ -219,6 +326,8 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
        }
       break;
    }
+#endif /* 0 */
+
 /*  m_pVSizer->Fit(this);
   m_pVSizer->Layout();
   SetAutoLayout(TRUE);*/
@@ -332,12 +441,57 @@ void AmayaFrame::OnMouse( wxMouseEvent& event )
  */
 void AmayaFrame::OnSize( wxSizeEvent& event )
 {
-  wxLogDebug(_T("AmayaFrame::OnSize: frame=%d w=%d h=%d"),
+  wxLogDebug(_T("AmayaFrame::OnSize: frame=%d w=%d h=%d wc=%d, hc=%d"),
         m_FrameId,
 	event.GetSize().GetWidth(),
-	event.GetSize().GetHeight() );
+	event.GetSize().GetHeight(),
+	m_pHSizer->GetSize().GetWidth(),
+	m_pHSizer->GetSize().GetHeight() );
+ 
+  int w;
+  int h;
+  if (m_pScrollBarH && m_pScrollBarH->IsShown())
+    {
+      //       h = event.GetSize().GetHeight() - m_pScrollBarH->GetSize().GetHeight();
+      //      m_pVSizer->SetItemMinSize( m_pScrollBarH, wxSize(10, m_pScrollBarH->GetSize().GetHeight() ) );
+    }
+  else
+    {
+      //      m_pVSizer->SetItemMinSize( m_pScrollBarH, wxSize(0,0) );
+      //      h = event.GetSize().GetHeight();
+    }
 
-//  Layout();
+  if (m_pScrollBarV && m_pScrollBarV->IsShown())
+    {
+      // w = event.GetSize().GetWidth() - m_pScrollBarV->GetSize().GetWidth();
+    }
+  else
+    {
+      //m_pHSizer->SetItemMinSize( m_pScrollBarV, wxSize(0,0) );
+      // w = event.GetSize().GetWidth();
+    }
+
+  /*  m_pHSizer->SetItemMinSize( m_pCanvas,
+			     wxSize( m_pScrollBarV->IsShown() ? event.GetSize().GetWidth() - m_pScrollBarV->GetSize().GetWidth() : event.GetSize().GetWidth(),
+			     m_pScrollBarH->IsShown() ? event.GetSize().GetHeight() - m_pScrollBarH->GetSize().GetWidth() : event.GetSize().GetHeight() ) );*/
+  //  m_pHSizer->SetMinSize( wxSize(w,h) );
+  //  m_pVSizer->SetMinSize( wxSize(w,h) );
+  //  m_pHSizer->SetDimension(0, 0, 200, 200);
+  /*
+  wxLogDebug(_T("AmayaFrame::OnSize: frame=%d w=%d h=%d wc=%d, hc=%d"),
+        m_FrameId,
+	event.GetSize().GetWidth(),
+	event.GetSize().GetHeight(),
+	m_pHSizer->GetSize().GetWidth(),
+	m_pHSizer->GetSize().GetHeight() );
+  */
+  //  GetSizer()->SetSizeHints(this);
+  //  GetSizer()->Fit(this);
+
+  /*  m_pHSizer->Layout();
+  m_pVSizer->Layout();
+  Layout();
+  */
 
   // forward current event to parent widgets
   event.Skip();
@@ -437,6 +591,170 @@ AmayaPage * AmayaFrame::GetPageParent()
   return m_pPageParent;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetWindowParent
+ * Description:  return the window parent
+ *--------------------------------------------------------------------------------------
+ */
+AmayaWindow * AmayaFrame::GetWindowParent()
+{
+  AmayaPage * p_page = GetPageParent();
+  if (p_page)
+  {
+    return p_page->GetWindowParent();
+  }
+  else
+    return NULL;
+}
+
+
+void AmayaFrame::OnClose(wxCloseEvent& event)
+{
+  wxLogDebug( _T("AmayaFrame::OnClose: frame=%d"), m_FrameId );
+  
+
+  PtrDocument         pDoc;
+  int                 view;
+  GetDocAndView (m_FrameId, &pDoc, &view);
+  CloseView (pDoc, view);
+  
+  //  DestroyChildren();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  AppendSubMenu
+ * Description:  TODO
+ *--------------------------------------------------------------------------------------
+ */
+wxMenuItem * AmayaFrame::AppendSubMenu (
+    wxMenu * 		p_menu_parent,
+    long                id,
+    const wxString & 	label,
+    const wxString & 	help )
+{
+  wxMenu * p_submenu = new wxMenu( );
+  
+  p_menu_parent->Append( id, label, p_submenu, help );
+
+  return p_menu_parent->FindItem( id );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  AppendMenuItem
+ * Description:  TODO
+ *--------------------------------------------------------------------------------------
+ */
+wxMenuItem * AmayaFrame::AppendMenuItem ( 
+    wxMenu * 		p_menu_parent,
+    long 		id,
+    const wxString & 	label,
+    const wxString & 	help,
+    wxItemKind 		kind,
+    const AmayaContext & context )
+{
+  /*  if ( kind != wxITEM_SEPARATOR )
+  {
+    wxASSERT( id+MENU_ITEM_START < MENU_ITEM_END );
+    id += MENU_ITEM_START;
+    }*/
+  wxMenuItem * p_menu_item = new wxMenuItem( p_menu_parent,
+					     id,
+					     label,
+					     help,
+					     kind );
+  p_menu_item->SetRefData( new AmayaContext(context) );
+
+  p_menu_parent->Append( p_menu_item );
+
+  // TODO : call callbacks
+  if ( kind == wxITEM_SEPARATOR )
+  {
+    // do not call callback if it's a separator
+  }
+  return p_menu_item;
+}
+
+wxMenuBar * AmayaFrame::GetMenuBar()
+{
+  return m_pMenuBar;
+}
+
+void AmayaFrame::OnMenuItem( wxCommandEvent& event )
+{
+  wxMenu * p_menu = (wxMenu *)event.GetEventObject();
+  long     id     = event.GetId();
+  wxLogDebug( _T("AmayaFrame::OnMenuItem : p_menu = 0x%x\tmenuid = %d"), p_menu, id );
+}
+
+void AmayaFrame::SetActive( bool active )
+{
+  // Update the m_IsActive atribute
+  m_IsActive = active;  
+  if ( !IsActive() )
+    return;
+  
+  // the window's menubar must be updated with the new active frame's one
+  AmayaWindow * p_window = GetWindowParent();
+  if ( !p_window )
+    return;
+
+  // the main menubar is replaced by the current frame one
+  p_window->SetMenuBar( GetMenuBar() );
+
+  // the main statusbar text is replaced by the current frame one
+  wxStatusBar * p_statusbar = p_window->GetStatusBar();
+  if ( p_statusbar )
+    {
+      p_statusbar->SetStatusText( m_StatusBarText );
+    }
+
+  // update the page title
+  SetWindowTitle( GetWindowTitle() );
+
+  // this frame is active update its page
+  AmayaPage * p_page = GetPageParent();
+  if (p_page)
+    p_page->SetActiveFrame( this );
+  
+  // update internal amaya global variables
+  /* search the document and the view corresponding to the window */
+  //int view;
+  //GetDocAndView( GetFrameId(), &SelectedDocument, &view);
+  //  SetActiveView( view );
+}
+
+bool AmayaFrame::IsActive()
+{
+  return m_IsActive;
+}
+
+void AmayaFrame::SetStatusBarText( const wxString & text )
+{
+  // the new text is assigned
+  m_StatusBarText = text;
+
+  if ( IsActive() )
+    {
+      // the window's menubar must be updated with the new active frame's one
+      AmayaWindow * p_window = GetWindowParent();
+      if ( !p_window )
+	return;
+      
+      // the main statusbar text is replaced by the current frame one
+      wxStatusBar * p_statusbar = p_window->GetStatusBar();
+      if ( p_statusbar )
+	{
+	  p_statusbar->SetStatusText( m_StatusBarText );
+	}
+    }
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -445,7 +763,10 @@ AmayaPage * AmayaFrame::GetPageParent()
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
   EVT_SCROLL( 		AmayaFrame::OnScroll ) // all scroll events
-  EVT_MOUSEWHEEL(	AmayaFrame::OnMouse) // Process a wxEVT_MOUSEWHEEL event. 
+  EVT_MOUSEWHEEL(	AmayaFrame::OnMouse) // Process a wxEVT_MOUSEWHEEL event.
+  EVT_CLOSE( 		AmayaFrame::OnClose )
+  EVT_MENU( -1,         AmayaFrame::OnMenuItem )
+
   EVT_SIZE( 		AmayaFrame::OnSize )
 END_EVENT_TABLE()
 

@@ -359,13 +359,18 @@ extern int TtaMakeWindow( );
   TtaMakeFrame create a frame (view container)
   notice : a frame need to be attached to a window
   params:
-    + doc : the document id
+    + Document doc : the document id
+    + int schView : the view to attach (schema view)
+    + const char * doc_name : 
+    + int width, height :
   returns:
+    + int * volume : Window volume in characters
     + the frame id
-    + -1 if too much created views
-  ----------------------------------------------------------------------*/
-extern int TtaMakeFrame( Document doc,
-                  int view,
+    + 0 if too much created views 
+ ----------------------------------------------------------------------*/
+extern int TtaMakeFrame( const char * schema_name,
+                  int schView,
+		  Document doc_id,
 		  const char * doc_name,
 		  int width,
 		  int height,

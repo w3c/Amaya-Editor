@@ -36,6 +36,7 @@
 #include "AmayaFrame.h"
 #include "AmayaPage.h"
 #include "AmayaNotebook.h"
+#include "AmayaCanvas.h"
 
 
 
@@ -55,13 +56,13 @@
  *--------------------------------------------------------------------------------------
  */
 AmayaPage::AmayaPage( wxWindow * p_parent_window )
-	:  wxPanel( p_parent_window, -1 )
-	   ,m_SlashRatio( 0.5 )
-	   ,m_IsClosed( FALSE )
-//           ,m_IsSelected( FALSE )
-           ,m_pNoteBookParent( NULL )
-           ,m_pWindowParent( NULL )
-	   ,m_PageId(-1)
+  :  wxPanel( wxDynamicCast(p_parent_window, wxWindow), -1 )
+     ,m_SlashRatio( 0.5 )
+     ,m_IsClosed( FALSE )
+     ,m_pNoteBookParent( NULL )
+     ,m_pWindowParent( NULL )
+     ,m_PageId(-1)
+     ,m_ActiveFrame(0)
 {
   // Insert a forground sizer
   wxBoxSizer * p_SizerTop = new wxBoxSizer ( wxVERTICAL );
@@ -110,7 +111,7 @@ AmayaFrame * AmayaPage::AttachTopFrame( AmayaFrame * p_frame )
 {
   AmayaFrame * oldframe = m_pTopFrame;
 
-  if (p_frame == NULL)
+  if (p_frame == NULL || p_frame == oldframe )
     return NULL;
 
   /* p_frame is the new top frame */  
@@ -118,11 +119,15 @@ AmayaFrame * AmayaPage::AttachTopFrame( AmayaFrame * p_frame )
 
   /* the frame needs a new parent ! */
   m_pTopFrame->Reparent( m_pSplitterWindow );
-  
+
   if (oldframe != NULL)
     m_pSplitterWindow->ReplaceWindow( oldframe, m_pTopFrame );
-  else
+  else if (m_pBottomFrame == NULL)
     m_pSplitterWindow->Initialize( m_pTopFrame );
+  else
+    m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+  
+  m_pTopFrame->Show();
 
   SetAutoLayout(TRUE);
 
@@ -136,6 +141,10 @@ AmayaFrame * AmayaPage::AttachTopFrame( AmayaFrame * p_frame )
   if (p_frame)
     p_frame->SetPageTitle(p_frame->GetPageTitle());
   
+  // update the window menubar with the current frame
+  if (p_frame && GetWindowParent())
+    GetWindowParent()->SetMenuBar( p_frame->GetMenuBar() );
+
   /* return the old topframe : needs to be manualy deleted .. */
   return oldframe;
 }
@@ -151,7 +160,7 @@ AmayaFrame * AmayaPage::AttachBottomFrame( AmayaFrame * p_frame )
 {
   AmayaFrame * oldframe = m_pBottomFrame;
 
-  if (p_frame == NULL)
+  if (p_frame == NULL || p_frame == oldframe)
     return NULL;
 
   /* p_frame is the new top frame */  
@@ -166,6 +175,8 @@ AmayaFrame * AmayaPage::AttachBottomFrame( AmayaFrame * p_frame )
     m_pSplitterWindow->Initialize( m_pBottomFrame );
   else
     m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+
+  m_pBottomFrame->Show();
 
   SetAutoLayout(TRUE);
   Layout();
@@ -188,26 +199,51 @@ AmayaFrame * AmayaPage::AttachBottomFrame( AmayaFrame * p_frame )
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  DetachTopFrame
- * Description:  TODO
+ * Description:  detache the top frame (hide it but don't delete it)
  *--------------------------------------------------------------------------------------
  */
-AmayaFrame * AmayaPage::DetachTopFrame( AmayaFrame * p_frame )
+AmayaFrame * AmayaPage::DetachTopFrame()
 {
-  return NULL;
+  AmayaFrame * oldframe = m_pTopFrame;
+
+  if (oldframe == NULL)
+    return NULL;
+
+  m_pSplitterWindow->Unsplit( oldframe );
+
+  // update old and new AmayaFrame parents
+  if (oldframe)
+    oldframe->SetPageParent( NULL ); // no more parent
+
+  m_pTopFrame = NULL;
+
+  return oldframe;
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  DetachBottomFrame
- * Description:  TODO
+ * Description:  detache the bottom frame (hide it but don't delete it)
  *--------------------------------------------------------------------------------------
  */
-AmayaFrame * AmayaPage::DetachBottomFrame( AmayaFrame * p_frame )
+AmayaFrame * AmayaPage::DetachBottomFrame()
 {
-  return NULL;
-}
+  AmayaFrame * oldframe = m_pBottomFrame;
 
+  if (oldframe == NULL)
+    return NULL;
+
+  m_pSplitterWindow->Unsplit( oldframe );
+
+  // update old and new AmayaFrame parents
+  if (oldframe)
+    oldframe->SetPageParent( NULL ); // no more parent
+
+  m_pBottomFrame = NULL;
+
+  return oldframe;
+}
 
 /*
  *--------------------------------------------------------------------------------------
@@ -316,30 +352,50 @@ void AmayaPage::OnClose(wxCloseEvent& event)
   wxLogDebug( _T("AmayaPage::OnClose topframe=%d bottomframe=%d"),
 		m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
 		m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
-  
-  // ret indicats if the current frame is still open or not
-  bool ret = false;
-  
+
+  // Detach the window menu bar to avoid  probleme when
+  // AmayaWindow will be deleted.
+  // (because the menu bar is owned by AmayaFrame)
+  GetWindowParent()->DesactivateMenuBar();
+
+  /* I suppose the page will be closed */
+  /* but it can be override to FALSE if the top or bottom frame has been modified */
+  m_IsClosed = TRUE;
+
+  int frame_id = 0;
+  AmayaFrame * p_AmayaFrame = NULL;
   // Kill top frame
   if ( m_pTopFrame )
     {
-      // map this callback to generic one : really kill amaya frames
-      KillFrameCallback( m_pTopFrame->GetFrameId() );
-      ret |= (FrameTable[m_pTopFrame->GetFrameId()].WdFrame != 0);
+      p_AmayaFrame = m_pTopFrame;
+      frame_id     = m_pTopFrame->GetFrameId();
+      DetachTopFrame();
+      p_AmayaFrame->OnClose( event );
+      if ( FrameTable[frame_id].WdFrame != 0)
+	{
+	  // if the frame didnt die, just re-attach it
+	  AttachTopFrame(p_AmayaFrame);
+	  m_IsClosed = FALSE;
+	}
     }
 
   // Kill bottom frame
   if ( m_pBottomFrame )
     { 
-      // map this callback to generic one : really kill amaya frames
-      KillFrameCallback( m_pBottomFrame->GetFrameId() );
-      ret |= (FrameTable[m_pBottomFrame->GetFrameId()].WdFrame != 0);
+      p_AmayaFrame = m_pBottomFrame;
+      frame_id     = m_pBottomFrame->GetFrameId();
+      DetachBottomFrame();
+      p_AmayaFrame->OnClose( event );
+      if (FrameTable[frame_id].WdFrame != 0)
+	{
+	  // if the frame didnt die, just re-attach it
+	  AttachBottomFrame(p_AmayaFrame);
+	  m_IsClosed = FALSE;
+	}
     }
 
-  if (ret)
-    m_IsClosed = false; // the page is closed (there is still open frame)
-  else
-    m_IsClosed = true; // the page is closed
+  // Reactivate the menu bar (nothing is done if the window is goind to die)
+  GetWindowParent()->ActivateMenuBar();
 }
 
 /*
@@ -445,11 +501,27 @@ void AmayaPage::SetSelected( bool isSelected )
 {
   if (isSelected)
   {
-    // update the page title
-    if (m_pTopFrame)
-      m_pTopFrame->SetWindowTitle(m_pTopFrame->GetWindowTitle());
+    for ( int frame_pos = 1; frame_pos<=2; frame_pos++ )
+      {
+	if (GetFrame(frame_pos))
+	  {
+	    // post a size event to force frame refresh
+	    // to canvas
+	    wxSizeEvent event_canvas( GetFrame(frame_pos)->GetCanvas()->GetSize() );
+	    wxPostEvent( GetFrame(frame_pos)->GetCanvas(), event_canvas );
+	    // to page
+	    wxSizeEvent event_page( GetSize() );
+	    wxPostEvent( this, event_page );
+	  }
+      }
+    if ( GetActiveFrame() )
+      {
+	GetActiveFrame()->SetActive( TRUE );
+
+	// update the page title
+	//	GetActiveFrame()->SetWindowTitle(m_pTopFrame->GetWindowTitle());
+      }
   }
-//  m_IsSelected = isSelected;
 }
 
 void AmayaPage::SetPageId( int page_id )
@@ -478,6 +550,60 @@ void AmayaPage::SetPageId( int page_id )
 int AmayaPage::GetPageId()
 {
   return m_PageId;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  GetFrame
+ * Description:  return the first or second page frame
+ *--------------------------------------------------------------------------------------
+ */
+AmayaFrame * AmayaPage::GetFrame( int frame_position ) const
+{
+  if (frame_position == 1)
+    {
+      return m_pTopFrame;
+    }
+  else if (frame_position == 2)
+    {
+      return m_pBottomFrame;
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  DeletedFrame
+ * Description:  force the frame to be detached from the page when the frame
+ *               is deleted by itself
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::DeletedFrame( AmayaFrame * p_frame )
+{
+  if ( p_frame == GetFrame(1) )
+    {
+      DetachTopFrame();
+    }
+  if ( p_frame == GetFrame(2) )
+    {
+      DetachBottomFrame();
+    }
+}
+
+void AmayaPage::SetActiveFrame( const AmayaFrame * p_frame )
+{
+  if ( p_frame == GetFrame(1) )
+    m_ActiveFrame = 1;
+  else if ( p_frame == GetFrame(2) )
+    m_ActiveFrame = 2;
+  else
+    m_ActiveFrame = 0;
+}
+
+AmayaFrame * AmayaPage::GetActiveFrame() const
+{
+  return GetFrame( m_ActiveFrame );
 }
 
 

@@ -17,6 +17,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
 #include "boxlocate_f.h"
@@ -24,6 +25,7 @@
 #include "frame_tv.h"
 #include "scroll_f.h"
 #include "input_f.h"
+#include "views_f.h"
 
 #ifdef _GL
   #include "glwindowdisplay.h"
@@ -34,17 +36,52 @@
 #include "AmayaPage.h"
 
 /*
+  WX_GL_RGBA 	        Use true colour
+  WX_GL_BUFFER_SIZE 	Bits for buffer if not WX_GL_RGBA
+  WX_GL_LEVEL 	        0 for main buffer, >0 for overlay, <0 for underlay
+  WX_GL_DOUBLEBUFFER 	Use doublebuffer
+  WX_GL_STEREO 	        Use stereoscopic display
+  WX_GL_AUX_BUFFERS 	Number of auxiliary buffers (not all implementation support this option)
+  WX_GL_MIN_RED 	Use red buffer with most bits (> MIN_RED bits)
+  WX_GL_MIN_GREEN 	Use green buffer with most bits (> MIN_GREEN bits)
+  WX_GL_MIN_BLUE 	Use blue buffer with most bits (> MIN_BLUE bits)
+  WX_GL_MIN_ALPHA 	Use alpha buffer with most bits (> MIN_ALPHA bits)
+  WX_GL_DEPTH_SIZE 	Bits for Z-buffer (0,16,32)
+  WX_GL_STENCIL_SIZE 	Bits for stencil buffer
+  WX_GL_MIN_ACCUM_RED 	Use red accum buffer with most bits (> MIN_ACCUM_RED bits)
+  WX_GL_MIN_ACCUM_GREEN Use green buffer with most bits (> MIN_ACCUM_GREEN bits)
+  WX_GL_MIN_ACCUM_BLUE 	Use blue buffer with most bits (> MIN_ACCUM_BLUE bits)
+  WX_GL_MIN_ACCUM_ALPHA Use blue buffer with most bits (> MIN_ACCUM_ALPHA bits
+*/
+int AmayaCanvas::AttrList[] =
+{
+  WX_GL_RGBA,
+  WX_GL_MIN_RED, 1,
+  WX_GL_MIN_GREEN , 1,
+  WX_GL_MIN_BLUE, 1,
+  WX_GL_MIN_ALPHA, 1, /* don't change the position of the entry (8) */
+  WX_GL_STENCIL_SIZE, 1,
+  WX_GL_DOUBLEBUFFER,
+  0
+};
+
+/*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaCanvas
  *      Method:  AmayaCanvas
  * Description:  construct the canvas : its a wxGLCanvas if opengl is used or a wxPanel if not
  *--------------------------------------------------------------------------------------
  */
-AmayaCanvas::AmayaCanvas( AmayaFrame * p_parent_window )
+AmayaCanvas::AmayaCanvas( AmayaFrame * p_parent_window,
+			  AmayaCanvas * p_shared_canvas )
 #ifdef _GL
-  : wxGLCanvas( (wxWindow*)p_parent_window, (wxGLCanvas*)NULL, -1, wxDefaultPosition, wxDefaultSize ),
+  : wxGLCanvas( wxDynamicCast(p_parent_window, wxWindow),
+		wxDynamicCast(p_shared_canvas, wxGLCanvas),
+		-1,
+		wxDefaultPosition, wxDefaultSize, 0, _T("AmayaCanvas"),
+		AttrList ),
 #else // #ifdef _GL  
-  : wxPanel( p_parent_window ),
+  : wxPanel( wxDynamicCast(p_parent_window,wxWindow) ),
 #endif // #ifdef _GL
   m_pAmayaFrame( p_parent_window ),
   m_Init( false )
@@ -110,6 +147,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
 
   // resize the frame sizer to take into account scrollbar show/hide
   m_pAmayaFrame->Layout();
+  Layout();
 
   //  forward the event to parents
   event.Skip();
@@ -125,6 +163,14 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
  */
 void AmayaCanvas::OnPaint( wxPaintEvent& event )
 {
+  /*
+   * Note that In a paint event handler, the application must
+   * always create a wxPaintDC object, even if you do not use it.
+   * Otherwise, under MS Windows, refreshing for this and
+   * other windows will go wrong.
+   */
+  wxPaintDC dc(this);
+
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentPageActive())
   {
@@ -134,14 +180,6 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
 
   wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d"),
      m_pAmayaFrame->GetFrameId() );
-
-  /*
-   * Note that In a paint event handler, the application must
-   * always create a wxPaintDC object, even if you do not use it.
-   * Otherwise, under MS Windows, refreshing for this and
-   * other windows will go wrong.
-   */
-  wxPaintDC dc(this);
 
   // get the current frame id
   int frame = m_pAmayaFrame->GetFrameId();
@@ -186,6 +224,17 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
     thot_mod_mask |= THOT_MOD_ALT;
   if (event.ShiftDown())
     thot_mod_mask |= THOT_MOD_SHIFT;
+
+  // if a click is done into the canvas then activate the frame
+  if ( ( event.GetEventType() == wxEVT_LEFT_DOWN ||
+	 event.GetEventType() == wxEVT_MIDDLE_DOWN ||
+	 event.GetEventType() == wxEVT_RIGHT_DOWN ) ||
+       ( event.GetEventType() == wxEVT_LEFT_DCLICK ||
+	 event.GetEventType() == wxEVT_MIDDLE_DCLICK ||
+	 event.GetEventType() == wxEVT_RIGHT_DCLICK ) )
+    {
+      m_pAmayaFrame->SetActive( TRUE );
+    }
  
   // BUTTON DOWN 
   if ( event.GetEventType() == wxEVT_LEFT_DOWN ||
@@ -512,10 +561,32 @@ void AmayaCanvas::Init()
   
   SetCurrent();
   SetGlPipelineState ();
- 
+
+  /* 
+  // now the frame is initialized, show it
+  int frame_id     = m_pAmayaFrame->GetFrameId();
+  int view         = FrameTable[frame_id].FrView;
+  PtrDocument pDoc = LoadedDocument[FrameTable[frame_id].FrDoc - 1];;
+  ShowFrameData( frame_id, pDoc, view );
+  */
+  
   // simulate a size event to refresh the canvas 
   wxSizeEvent event( GetSize() );
   wxPostEvent(this, event );
+  /*
+  // followed by a paint event
+  wxPaintEvent event2;
+  wxPostEvent(this, event2 );
+  // simulate a size event to refresh the canvas 
+  wxSizeEvent event3( GetSize() );
+  wxPostEvent(this, event3 );
+  // followed by a paint event
+  wxPaintEvent event4;
+  wxPostEvent(this, event4 );
+  // simulate a size event to refresh the canvas 
+  wxSizeEvent event5( GetSize() );
+  wxPostEvent(this, event5 );
+  */
 }
 
 /*
