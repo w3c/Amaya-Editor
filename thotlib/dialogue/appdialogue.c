@@ -196,7 +196,15 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
       switch (wParam)
 	{ 
 	case VK_RETURN:
-	  SendMessage(GetParent (hwnd), WM_ENTER, 0, 0); 
+	  if (GetParent (hwnd))
+	    if (GetParent (GetParent (hwnd)))
+	      {
+		SendMessage(GetParent (GetParent (hwnd)), 
+			    WM_ENTER, 0, 0); 
+		return 0;
+	      }
+	  SendMessage (GetParent (hwnd), 
+		       WM_ENTER, 0, 0); 
 	  return 0;
 	case VK_BACK:
 	case VK_DELETE:
