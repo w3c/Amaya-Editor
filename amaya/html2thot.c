@@ -1991,21 +1991,22 @@ Element             el;
 #ifdef COUGAR
 	    case HTML_EL_Object:	/*  it's an object */
 	       /* create Object_Content */
-	       elType.ElTypeNum = HTML_EL_Object_Content;
-	       desc = TtaNewTree (theDocument, elType, "");
-	       TtaInsertFirstChild (&desc, el, theDocument);
-	       /* move previous existing children into Object_Content */
-	       child = TtaGetLastChild(el);
-	       while (child != desc)
+	       child = TtaGetFirstChild(el);
+	       if (child != NULL)
+		 elType = TtaGetElementType (child);
+		 
+	       /* is it the PICTURE element ? */
+	       if (child == NULL || elType.ElTypeNum != HTML_EL_PICTURE_UNIT)
 		 {
-		   TtaRemoveTree (child, theDocument);
-		   TtaInsertFirstChild (&child, desc, theDocument);
-		   child = TtaGetLastChild(el);
+		   desc = child;
+		   /* create the PICTURE element */
+		   elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+		   child = TtaNewTree (theDocument, elType, "");
+		   if (desc == NULL)
+		     TtaInsertFirstChild (&child, el, theDocument);
+		   else
+		     TtaInsertSibling (child, desc, TRUE, theDocument);
 		 }
-	       /* create Object_Image */
-	       elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	       child = TtaNewTree (theDocument, elType, "");
-	       TtaInsertSibling (child, desc, TRUE, theDocument);
 	       /* copy attribute data into SRC attribute of Object_Image */
 	       attrType.AttrSSchema = structSchema;
 	       attrType.AttrTypeNum = HTML_ATTR_data;
@@ -2018,11 +2019,38 @@ Element             el;
 			name1 = TtaGetMemory (length + 1);
 			TtaGiveTextAttributeValue (attr, name1, &length);
 			attrType.AttrTypeNum = HTML_ATTR_SRC;
-			attr = TtaNewAttribute (attrType);
-			TtaAttachAttribute (child, attr, theDocument);
+			attr = TtaGetAttribute (child, attrType);
+			if (attr == NULL)
+			  {
+			    attr = TtaNewAttribute (attrType);
+			    TtaAttachAttribute (child, attr, theDocument);
+			  }
 			TtaSetAttributeText (attr, name1, child, theDocument);
 			TtaFreeMemory (name1);
 		      }
+		 }
+	       /* is the Object_Content element already created ? */
+	       desc = child;
+	       TtaNextSibling(&desc);
+	       if (desc != NULL)
+		 elType = TtaGetElementType (desc);
+		 
+	       /* is it the Object_Content element ? */
+	       if (desc == NULL || elType.ElTypeNum != HTML_EL_Object_Content)
+		 {
+		   /* create Object_Content */
+		   elType = TtaGetElementType (desc);
+		   elType.ElTypeNum = HTML_EL_Object_Content;
+		   desc = TtaNewTree (theDocument, elType, "");
+		   TtaInsertSibling (desc, child, FALSE, theDocument);
+		   /* move previous existing children into Object_Content */
+		   child = TtaGetLastChild(el);
+		   while (child != desc)
+		     {
+		       TtaRemoveTree (child, theDocument);
+		       TtaInsertFirstChild (&child, desc, theDocument);
+		       child = TtaGetLastChild(el);
+		     }
 		 }
 		break;
 #endif /*COUGAR */

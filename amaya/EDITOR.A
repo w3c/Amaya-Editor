@@ -93,7 +93,9 @@ MENUS
 	Types.AreaMap button:BPoly -> CreateAreaPoly;
 
 	Types button:BDivision -> CreateDivision;
-
+#ifdef COUGAR
+	Types button:BObject -> CreateObject;
+#endif /* COUGAR */
 	Types.Applet button:BApplet -> CreateApplet;
 	Types.Applet button:BParameter -> CreateParameter;
 

@@ -1365,6 +1365,55 @@ View                view;
    TtaCreateElement (elType, document);
 }
 
+#ifdef COUGAR
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateObject (Document document, View view)
+#else  /* __STDC__ */
+void                CreateObject (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+   Element             child, el;
+   Attribute           attr;
+   AttributeType       attrType;
+   char               *name1;
+   int                 length;
+   int                 firstchar, lastchar;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElTypeNum = HTML_EL_Object;
+   TtaCreateElement (elType, document);
+
+   /* get the first selected element */
+   TtaGiveFirstSelectedElement (document, &child, &firstchar, &lastchar);
+
+   /* copy SRC attribute of Object_Image into data attribute of Object */
+   el = TtaGetParent(child);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_SRC;
+   attr = TtaGetAttribute (child, attrType);
+   if (attr != NULL)
+     {
+       length = TtaGetTextAttributeLength (attr);
+       if (length > 0)
+	 {
+	   name1 = TtaGetMemory (length + 1);
+	   TtaGiveTextAttributeValue (attr, name1, &length);
+	   attrType.AttrTypeNum = HTML_ATTR_data;
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, attr, document);
+	   TtaSetAttributeText (attr, name1, el, document);
+	   TtaFreeMemory (name1);
+	 }
+     }
+}
+#endif /* COUGAR */
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

@@ -4141,16 +4141,6 @@ RULES
 		Height: Enclosed . Height;
 	END;
 
- Object_Image: BEGIN
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	VertPos: Top = Enclosing . Top;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
  Object_Content: BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
@@ -4677,6 +4667,7 @@ RULES
 	if Immediately within Object BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosing . Height;
+		VertPos: Top = Enclosing . Top;
 		END;
 #endif
 	HorizRef: * . Bottom;

@@ -305,9 +305,6 @@ RULES
 	Create '>\12';
 	Create '</OBJECT>\12' After;	
 	END;
- Object_Image: BEGIN
-	Remove;
-	END;
 #endif
  Paragraph: BEGIN
 	if not firstwithin List_Item and not firstwithin Definition
@@ -541,11 +538,23 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
+#ifdef COUGAR
+	if Immediately within Object
+		Remove;
+	if NOT Immediately within Object BEGIN
+		Create '<IMG';
+		Create Attributes;
+		Create '>' After;
+		END;
+	if NOT within Paragraph AND NOT Immediately within Object
+		Create '\12' After;
+#else
 	Create '<IMG';
 	Create Attributes;
 	Create '>' After;
 	if NOT within Paragraph
 		Create '\12' After;
+#endif
 	END;
 
  Anchor: BEGIN

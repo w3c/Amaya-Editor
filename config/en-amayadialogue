@@ -77,43 +77,44 @@
 76 Circle
 77 Polygon
 78 Division
-79 Applet
+79 Object
 80 Applet
-81 Parameter
-82 Transform
-83 Create Link
-84 Create Target
-85 Change Link
-86 Delete Anchor
-87 Show Buttonbar
-88 Show Address & Title
-89 Show Structure
-90 Show Alternate
-91 Show Map Areas
-92 Character Style
-93 Colors
-94 Format
-95 Create Class
-96 Apply Class
-97 Style sheets
-98 Information Type
-99 Emphasis
-100 Strong
-101 Cite
-102 Definition
-103 Code
-104 Variable
-105 Sample
-106 Keyboard
-107 Character Element
-108 Italic
-109 Bold
-110 Teletype
-111 Underline
-112 StrikeOut
-113 Big
-114 Small
-115 Sub
-116 Sup
-117 Font
-118 Amaya version 0.95b Beta
+81 Applet
+82 Parameter
+83 Transform
+84 Create Link
+85 Create Target
+86 Change Link
+87 Delete Anchor
+88 Show Buttonbar
+89 Show Address & Title
+90 Show Structure
+91 Show Alternate
+92 Show Map Areas
+93 Character Style
+94 Colors
+95 Format
+96 Create Class
+97 Apply Class
+98 Style sheets
+99 Information Type
+100 Emphasis
+101 Strong
+102 Cite
+103 Definition
+104 Code
+105 Variable
+106 Sample
+107 Keyboard
+108 Character Element
+109 Italic
+110 Bold
+111 Teletype
+112 Underline
+113 StrikeOut
+114 Big
+115 Small
+116 Sub
+117 Sup
+118 Font
+119 Amaya version 0.95b Beta
