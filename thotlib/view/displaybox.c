@@ -8,8 +8,8 @@
 /*
  * displaybox.c : all the stuff needed to display boxes in frames.
  *
- * Author: I. Vatton (INRIA)
- *
+ * Authors: I. Vatton (INRIA)
+ *          P. Cheyrou-lagreze (INRIA)
  */
  
 #include "ustring.h"
@@ -24,8 +24,7 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
-#include "picture_tv.h"
-
+#include "picture_tv.h" 
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
 #include "displayselect_f.h"
@@ -39,6 +38,7 @@
 #include <GL/gl.h>
 #include "glwindowdisplay.h"
 #include "frame_f.h"
+#include "glgradient_f.h"
 #endif /*_GL*/
 
 #include "stix.h"
@@ -429,8 +429,7 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected)
       
     }
 }
-
-
+#ifdef _GL
 /*----------------------------------------------------------------------
   DisplayGraph display a graphic.
   The parameter selected is TRUE when the graphic is selected.
@@ -439,7 +438,252 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
-  int                 i, xd, yd;
+  int                 i;
+  float               xd, yd;
+  int                 fg, bg;
+  int                 pat;
+  int                 style;
+  int                 width, height;
+
+  pAb = pBox->BxAbstractBox;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pAb->AbVisibility >= pFrame->FrVisibility)
+    {
+      bg = pAb->AbBackground;
+      pat = pAb->AbFillPattern;
+      fg = pAb->AbForeground;
+      xd = pBox->BxXOrg + (float) (pBox->BxLMargin + pBox->BxLBorder +
+	pBox->BxLPadding - pFrame->FrXOrg);
+      yd = pBox->BxYOrg + (float) (pBox->BxTMargin + pBox->BxTBorder +
+	pBox->BxTPadding - pFrame->FrYOrg);
+      width = pBox->BxW;
+      height = pBox->BxH;
+      if (Printing)
+	{
+	  /* clip the origin */
+	  if (xd < 0)
+	    {
+	      width += xd;
+	      xd = 0;
+	    }
+	  if (yd < 0)
+	    {
+	      height += yd;
+	      yd = 0;
+	    }
+	  /* clip the width */
+	  if (xd + width > pFrame->FrClipXEnd - pFrame->FrXOrg)
+	    width = pFrame->FrClipXEnd - pFrame->FrXOrg - xd;
+	  /* limite la hauteur a la valeur du clipping */
+	  if (yd + height > pFrame->FrClipYEnd - pFrame->FrYOrg)
+	    height = pFrame->FrClipYEnd - pFrame->FrYOrg - yd;
+	}
+      /* box sizes have to be positive */
+      if (width < 0)
+	width = 0;
+      if (height < 0)
+	height = 0;
+      /* Style and thickness of drawing */
+      i = GetLineWeight (pAb, frame);
+      switch (pAb->AbLineStyle)
+	{
+	case 'S':
+	  style = 5; /* solid */
+	  break;
+	case '-':
+	  style = 4; /* dashed */
+	  break;
+	case '.':
+	  style = 3; /* dotted */
+	  break;
+	default:
+	  style = 5; /* solid */
+	}
+
+      switch (pAb->AbRealShape)
+	{
+	case '\260':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 2);
+	  break;
+	case '\261':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 5);
+	  break;
+	case '\262':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 6);
+	  break;
+	case '\263':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 7);
+	  break;
+	case '\264':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 8);
+	  break;
+	case '\265':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 9);
+	  break;
+	case '\266':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 1);
+	  break;
+	case '\267':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 0);
+	  break;
+	case '\270':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 4);
+	  break;
+	case '0':
+	  FDrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, pat);
+	  break;
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case 'R':
+	  FDrawRectangle (frame, i, style, xd, yd, width, height,
+			 fg, bg, pat);
+	  break;
+	case 'g':
+	  /* Coords of the line are given by the enclosing box */
+	  pAb = pAb->AbEnclosing;
+	  if ((pAb->AbHorizPos.PosEdge == Left &&
+	       pAb->AbVertPos.PosEdge == Top) ||
+	      (pAb->AbHorizPos.PosEdge == Right &&
+	       pAb->AbVertPos.PosEdge == Bottom))
+	    /* draw a \ */
+	    DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
+	  else
+	    /* draw a / */
+	    DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'C':
+	  if (pBox->BxRx == 0 && pBox->BxRy == 0)	    
+	    FDrawRectangle (frame, i, style, xd, yd, width, height, fg, bg, pat);
+	  else
+	    DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
+		      pBox->BxRy, fg, bg, pat);
+	  break;
+	case 'L':
+	  DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
+	  break;
+	case 'a':
+	case 'c':
+	  DrawEllips (frame, i, style, xd, yd, width, height, fg, bg, pat);
+	  break;
+	case 'h':
+	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, fg);
+	  break;
+	case 't':
+	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'b':
+	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2, fg);
+	  break;
+	case 'v':
+	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 1, fg);
+	  break;
+	case 'l':
+	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'r':
+	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, fg);
+	  break;
+	case '/':
+	  DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case '\\':
+	  DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
+	  break;
+	case '>':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'E':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 45, fg);
+	  break;
+	case '^':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 90, fg);
+	  break;
+	case 'O':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 135, fg);
+	  break;
+	case '<':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 180, fg);
+	  break;
+	case 'o':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 225, fg);
+	  break;
+	case 'V':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 270, fg);
+	  break;
+	case 'e':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 315, fg);
+	  break;
+	    
+	case 'P':
+	  DrawRectangleFrame (frame, i, style, xd, yd, width,
+			      height, fg, bg, pat);
+	  break;
+	case 'Q':
+	  DrawEllipsFrame (frame, i, style, xd, yd, width,
+			   height, fg, bg, pat);
+	  break;
+	case 'W':
+	  DrawCorner (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'X':
+	  DrawCorner (frame, i, style, xd, yd, width, height, 1, fg);
+	  break;
+	case 'Y':
+	  DrawCorner (frame, i, style, xd, yd, width, height, 2, fg);
+	  break;
+	case 'Z':
+	  DrawCorner (frame, i, style, xd, yd, width, height, 3, fg);
+	  break;
+	    
+	default:
+	  break;
+	}
+	
+      if (pBox->BxEndOfBloc > 0)
+	{
+	  /* fill the end of the line with dots */
+	  yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
+	}
+
+      /* show the selection on the whole image */
+      if (selected)
+	{
+	  if (pFrame->FrSelectOnePosition)
+	    DisplayPointSelection (frame, pBox,
+				   pFrame->FrSelectionBegin.VsIndBox);
+	  else
+	    DisplayPointSelection (frame, pBox, 0);
+	}
+    }
+}
+#else /* _GL */
+/*----------------------------------------------------------------------
+  DisplayGraph display a graphic.
+  The parameter selected is TRUE when the graphic is selected.
+  ----------------------------------------------------------------------*/
+void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
+{
+  ViewFrame          *pFrame;
+  PtrAbstractBox      pAb;
+  int                 i;  
+  int                 xd,yd; 
   int                 fg, bg;
   int                 pat;
   int                 style;
@@ -453,230 +697,229 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
       pat = pAb->AbFillPattern;
       fg = pAb->AbForeground;
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-	   pBox->BxLPadding - pFrame->FrXOrg;
+	pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-	   pBox->BxTPadding - pFrame->FrYOrg;
-
+	pBox->BxTPadding - pFrame->FrYOrg;
       width = pBox->BxW;
       height = pBox->BxH;
       if (Printing)
-	  {
-	    /* clip the origin */
-	    if (xd < 0)
-	      {
-		width += xd;
-		xd = 0;
-	      }
-	    if (yd < 0)
-	      {
-		height += yd;
-		yd = 0;
-	      }
-	    /* clip the width */
-	    if (xd + width > pFrame->FrClipXEnd - pFrame->FrXOrg)
-	      width = pFrame->FrClipXEnd - pFrame->FrXOrg - xd;
-	    /* limite la hauteur a la valeur du clipping */
-	    if (yd + height > pFrame->FrClipYEnd - pFrame->FrYOrg)
-	      height = pFrame->FrClipYEnd - pFrame->FrYOrg - yd;
-	  }
-	/* box sizes have to be positive */
-	if (width < 0)
-	  width = 0;
-	if (height < 0)
-	  height = 0;
+	{
+	  /* clip the origin */
+	  if (xd < 0)
+	    {
+	      width += xd;
+	      xd = 0;
+	    }
+	  if (yd < 0)
+	    {
+	      height += yd;
+	      yd = 0;
+	    }
+	  /* clip the width */
+	  if (xd + width > pFrame->FrClipXEnd - pFrame->FrXOrg)
+	    width = pFrame->FrClipXEnd - pFrame->FrXOrg - xd;
+	  /* limite la hauteur a la valeur du clipping */
+	  if (yd + height > pFrame->FrClipYEnd - pFrame->FrYOrg)
+	    height = pFrame->FrClipYEnd - pFrame->FrYOrg - yd;
+	}
+      /* box sizes have to be positive */
+      if (width < 0)
+	width = 0;
+      if (height < 0)
+	height = 0;
 
-	/* Style and thickness of drawing */
+      /* Style and thickness of drawing */
 
-	i = GetLineWeight (pAb, frame);
-	switch (pAb->AbLineStyle)
-	  {
-	  case 'S':
-	    style = 5; /* solid */
-	    break;
-	  case '-':
-	    style = 4; /* dashed */
-	    break;
-	  case '.':
-	    style = 3; /* dotted */
-	    break;
-	  default:
-	    style = 5; /* solid */
-	  }
+      i = GetLineWeight (pAb, frame);
+      switch (pAb->AbLineStyle)
+	{
+	case 'S':
+	  style = 5; /* solid */
+	  break;
+	case '-':
+	  style = 4; /* dashed */
+	  break;
+	case '.':
+	  style = 3; /* dotted */
+	  break;
+	default:
+	  style = 5; /* solid */
+	}
 
-	switch (pAb->AbRealShape)
-	  {
-	  case '\260':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 2);
-	    break;
-	  case '\261':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 5);
-	    break;
-	  case '\262':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 6);
-	    break;
-	  case '\263':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 7);
-	    break;
-	  case '\264':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 8);
-	    break;
-	  case '\265':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 9);
-	    break;
-	  case '\266':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 1);
-	    break;
-	  case '\267':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 0);
-	    break;
-	  case '\270':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, 4);
-	    break;
-	  case '0':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			   bg, pat);
-	    break;
-	  case '1':
-	  case '2':
-	  case '3':
-	  case '4':
-	  case '5':
-	  case '6':
-	  case '7':
-	  case '8':
-	  case 'R':
-	    DrawRectangle (frame, i, style, xd, yd, width, height,
-			   fg, bg, pat);
-	    break;
-	  case 'g':
-	    /* Coords of the line are given by the enclosing box */
-	    pAb = pAb->AbEnclosing;
-	    if ((pAb->AbHorizPos.PosEdge == Left &&
-		 pAb->AbVertPos.PosEdge == Top) ||
-		(pAb->AbHorizPos.PosEdge == Right &&
-		 pAb->AbVertPos.PosEdge == Bottom))
-	      /* draw a \ */
-	      DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
-	    else
-	      /* draw a / */
-	      DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
-	    break;
-	  case 'C':
-	    if (pBox->BxRx == 0 && pBox->BxRy == 0)
-	      DrawRectangle (frame, i, style, xd, yd, width, height, fg, bg, pat);
-	    else
-	      DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
-			pBox->BxRy, fg, bg, pat);
-	    break;
-	  case 'L':
-	    DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
-	    break;
-	  case 'a':
-	  case 'c':
-	    DrawEllips (frame, i, style, xd, yd, width, height, fg, bg, pat);
-	    break;
-	  case 'h':
-	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, fg);
-	    break;
-	  case 't':
-	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0, fg);
-	    break;
-	  case 'b':
-	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2, fg);
-	    break;
-	  case 'v':
-	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 1, fg);
-	    break;
-	  case 'l':
-	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 0, fg);
-	    break;
-	  case 'r':
-	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, fg);
-	    break;
-	  case '/':
-	    DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
-	    break;
-	  case '\\':
+      switch (pAb->AbRealShape)
+	{
+	case '\260':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 2);
+	  break;
+	case '\261':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 5);
+	  break;
+	case '\262':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 6);
+	  break;
+	case '\263':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 7);
+	  break;
+	case '\264':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 8);
+	  break;
+	case '\265':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 9);
+	  break;
+	case '\266':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 1);
+	  break;
+	case '\267':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 0);
+	  break;
+	case '\270':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, 4);
+	  break;
+	case '0':
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			 bg, pat);
+	  break;
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case 'R':
+	  DrawRectangle (frame, i, style, xd, yd, width, height,
+			 fg, bg, pat);
+	  break;
+	case 'g':
+	  /* Coords of the line are given by the enclosing box */
+	  pAb = pAb->AbEnclosing;
+	  if ((pAb->AbHorizPos.PosEdge == Left &&
+	       pAb->AbVertPos.PosEdge == Top) ||
+	      (pAb->AbHorizPos.PosEdge == Right &&
+	       pAb->AbVertPos.PosEdge == Bottom))
+	    /* draw a \ */
 	    DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
-	    break;
-	  case '>':
-	     DrawArrow (frame, i, style, xd, yd, width, height, 0, fg);
-	     break;
-	  case 'E':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 45, fg);
-	    break;
-	  case '^':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 90, fg);
-	    break;
-	  case 'O':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 135, fg);
-	    break;
-	  case '<':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 180, fg);
-	    break;
-	  case 'o':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 225, fg);
-	    break;
-	  case 'V':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 270, fg);
-	    break;
-	  case 'e':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 315, fg);
-	    break;
+	  else
+	    /* draw a / */
+	    DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'C':
+	  if (pBox->BxRx == 0 && pBox->BxRy == 0)
+	    DrawRectangle (frame, i, style, xd, yd, width, height, fg, bg, pat);
+	  else
+	    DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
+		      pBox->BxRy, fg, bg, pat);
+	  break;
+	case 'L':
+	  DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
+	  break;
+	case 'a':
+	case 'c':
+	  DrawEllips (frame, i, style, xd, yd, width, height, fg, bg, pat);
+	  break;
+	case 'h':
+	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, fg);
+	  break;
+	case 't':
+	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'b':
+	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2, fg);
+	  break;
+	case 'v':
+	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 1, fg);
+	  break;
+	case 'l':
+	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'r':
+	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, fg);
+	  break;
+	case '/':
+	  DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case '\\':
+	  DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
+	  break;
+	case '>':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'E':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 45, fg);
+	  break;
+	case '^':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 90, fg);
+	  break;
+	case 'O':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 135, fg);
+	  break;
+	case '<':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 180, fg);
+	  break;
+	case 'o':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 225, fg);
+	  break;
+	case 'V':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 270, fg);
+	  break;
+	case 'e':
+	  DrawArrow (frame, i, style, xd, yd, width, height, 315, fg);
+	  break;
 	    
-	  case 'P':
-	    DrawRectangleFrame (frame, i, style, xd, yd, width,
-				height, fg, bg, pat);
-	    break;
-	  case 'Q':
-	    DrawEllipsFrame (frame, i, style, xd, yd, width,
-			     height, fg, bg, pat);
-	    break;
-	  case 'W':
-	    DrawCorner (frame, i, style, xd, yd, width, height, 0, fg);
-	    break;
-	  case 'X':
-	    DrawCorner (frame, i, style, xd, yd, width, height, 1, fg);
-	    break;
-	  case 'Y':
-	    DrawCorner (frame, i, style, xd, yd, width, height, 2, fg);
-	    break;
-	  case 'Z':
-	    DrawCorner (frame, i, style, xd, yd, width, height, 3, fg);
-	    break;
+	case 'P':
+	  DrawRectangleFrame (frame, i, style, xd, yd, width,
+			      height, fg, bg, pat);
+	  break;
+	case 'Q':
+	  DrawEllipsFrame (frame, i, style, xd, yd, width,
+			   height, fg, bg, pat);
+	  break;
+	case 'W':
+	  DrawCorner (frame, i, style, xd, yd, width, height, 0, fg);
+	  break;
+	case 'X':
+	  DrawCorner (frame, i, style, xd, yd, width, height, 1, fg);
+	  break;
+	case 'Y':
+	  DrawCorner (frame, i, style, xd, yd, width, height, 2, fg);
+	  break;
+	case 'Z':
+	  DrawCorner (frame, i, style, xd, yd, width, height, 3, fg);
+	  break;
 	    
-	  default:
-	    break;
-	  }
+	default:
+	  break;
+	}
 	
-	if (pBox->BxEndOfBloc > 0)
-	  {
-	    /* fill the end of the line with dots */
-	    yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-	    DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
-	  }
+      if (pBox->BxEndOfBloc > 0)
+	{
+	  /* fill the end of the line with dots */
+	  yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
+	}
 
-	/* show the selection on the whole image */
-	if (selected)
-	  {
+      /* show the selection on the whole image */
+      if (selected)
+	{
 	  if (pFrame->FrSelectOnePosition)
 	    DisplayPointSelection (frame, pBox,
 				   pFrame->FrSelectionBegin.VsIndBox);
 	  else
 	    DisplayPointSelection (frame, pBox, 0);
-	  }
-     }
+	}
+    }
 }
-
+#endif /* _GL */
 
 /*----------------------------------------------------------------------
   PolyTransform checks whether a polyline Box need to be transformed
@@ -784,9 +1027,9 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
       pat = pAb->AbFillPattern;
       fg = pAb->AbForeground;
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-	   pBox->BxLPadding - pFrame->FrXOrg;
+	pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-	   pBox->BxTPadding - pFrame->FrYOrg;
+	pBox->BxTPadding - pFrame->FrYOrg;
       
       /* box sizes have to be positive */
       width = pBox->BxW;
@@ -846,10 +1089,10 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
 	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer,
-		    pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
+							     pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
 	  DrawCurve (frame, i, style, xd, yd, pBox->BxBuffer,
-		    pBox->BxNChars, fg, arrow,
-                    (C_points *) pBox->BxPictInfo);
+		     pBox->BxNChars, fg, arrow,
+		     (C_points *) pBox->BxPictInfo);
 	  break;
 	case 'p':	/* polygon */
 	  DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
@@ -859,7 +1102,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
 	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, 
-                    pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
+							     pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
 	  DrawSpline (frame, i, style, xd, yd, pBox->BxBuffer,
 		      pBox->BxNChars, fg, bg, pat,
 		      (C_points *) pBox->BxPictInfo);
@@ -878,11 +1121,11 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
       /* show the selection on the whole image */
       if (selected)
 	{
-	if (pFrame->FrSelectOnePosition)
-	  DisplayPointSelection (frame, pBox,
-				 pFrame->FrSelectionBegin.VsIndBox);
-	else if (pBox->BxNChars > 1)
-	  DisplayPointSelection (frame, pBox, 0);
+	  if (pFrame->FrSelectOnePosition)
+	    DisplayPointSelection (frame, pBox,
+				   pFrame->FrSelectionBegin.VsIndBox);
+	  else if (pBox->BxNChars > 1)
+	    DisplayPointSelection (frame, pBox, 0);
 	}
     }
 }
@@ -913,9 +1156,9 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
       pat = pAb->AbFillPattern;
       fg = pAb->AbForeground;
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-	   pBox->BxLPadding - pFrame->FrXOrg;
+	pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-	   pBox->BxTPadding - pFrame->FrYOrg;
+	pBox->BxTPadding - pFrame->FrYOrg;
       
       /* Style and thickness of the line */
       i = GetLineWeight (pAb, frame);
@@ -951,11 +1194,11 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
       /* show the selection on the whole image */
       if (selected)
 	{
-	if (pFrame->FrSelectOnePosition)
-	  DisplayPointSelection (frame, pBox,
-				 pFrame->FrSelectionBegin.VsIndBox);
-	else if (pBox->BxNChars > 1)
-	  DisplayPointSelection (frame, pBox, 0);
+	  if (pFrame->FrSelectOnePosition)
+	    DisplayPointSelection (frame, pBox,
+				   pFrame->FrSelectionBegin.VsIndBox);
+	  else if (pBox->BxNChars > 1)
+	    DisplayPointSelection (frame, pBox, 0);
 	}
     }
 }
@@ -991,10 +1234,10 @@ void LocateFirstChar (PtrBox pBox, ThotBool rtl, PtrTextBuffer *adbuff, int *ind
     }
   else
     while (*adbuff && ((*adbuff)->BuLength == 0) && (*adbuff)->BuNext)
-    {
-      *adbuff = (*adbuff)->BuNext;
-      *ind = 0;
-    }
+      {
+	*adbuff = (*adbuff)->BuNext;
+	*ind = 0;
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -1848,7 +2091,8 @@ void OpaqueGroupTextureFree (PtrAbstractBox     pAb, int frame)
 /*----------------------------------------------------------------------
   DisplayOpaqueGroup display a translucent Group
   ----------------------------------------------------------------------*/
-void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame, int xmin, int xmax, int ymin, int ymax)
+void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame, int xmin, int xmax, int ymin, int ymax,
+                           ThotBool Is_Pre)
 {
 }
 #else /*_GL*/
@@ -1892,19 +2136,47 @@ static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y, int *wid
 		    *y = yprime;
 		  }
 	    }
-
 	  w = box->BxXOrg + box->BxWidth - box->BxLMargin - box->BxRMargin;
 	  h = box->BxYOrg + box->BxHeight - box->BxTMargin - box->BxBMargin;
 	  if ((*x + *width) < w)
 	    *width = w - *x;
 	  if ((*y + *height) < h)
 	    *height = h - *y;
-	}
-      
+	}      
       GetRelativeBoundingBox (pAb->AbFirstEnclosed, x, y, width, height);
       pAb = pAb->AbNext;
     }
 }
+/*----------------------------------------------------------------------
+  LimitBoundingBoxToClip : prevent accessing out of screen memory
+  ----------------------------------------------------------------------*/
+static ThotBool LimitBoundingBoxToClip (int *x, int *y,
+                               int *width, int *height, 
+			       int Clipx, int Clipy,
+			       int ClipW, int ClipH)
+{
+  if (*x < Clipx)
+    {
+      *width += Clipx - *x;
+      *x = Clipx; 
+    }
+  if (*y < Clipy)
+    {
+      *height += Clipy - *y;
+      *y = Clipy;
+    }  
+  if ((*x + *width) > (Clipx+ClipW))
+      *width = (Clipx+ClipW) - *x;
+  if ((*y + *height) > (Clipy+ClipH))
+      *height = (Clipy+ClipH) - *y;  
+
+  if (*x >= 0 && *y >= 0 && 
+      *width > 0 && *height > 0)      
+      return TRUE;    
+  else
+    return FALSE;  
+}
+
 /*----------------------------------------------------------------------
   GetBoundingBox : Get Bounding box of a group in absolute coord
   ----------------------------------------------------------------------*/
@@ -1916,20 +2188,42 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
 {
   ViewFrame          *pFrame;
 
+  pFrame = &ViewFrameTable[frame - 1];
+
+#ifdef _GLTRANSFORMATION
+
+  *x = pAb->AbBox->BxClipX;
+  *y = pAb->AbBox->BxClipY;
+  *width = pAb->AbBox->BxClipW;
+  *height = pAb->AbBox->BxClipH;
+
+  if (LimitBoundingBoxToClip (x, y,
+			      width, height, 
+			      0, 0,
+			      FrameTable[frame].FrWidth, FrameTable[frame].FrHeight))
+    return LimitBoundingBoxToClip (x, y,
+				   width, height, 
+				   xmin - pFrame->FrXOrg, ymin - pFrame->FrYOrg,
+				   xmax - xmin, ymax - ymin);
+  return FALSE;    
+
+#else /* _GLTRANSFORMATION */
+
+  pAb = pAb->AbFirstEnclosed;
   *x = -1;
   *y = -1;  
   *width = 0;  
   *height = 0;  
-  pFrame = &ViewFrameTable[frame - 1];
-  GetRelativeBoundingBox (pAb, x, y, width, height);
-
+  GetRelativeBoundingBox (pAb, x, y, width, height);   
   if (!((*x+*width) >= xmin && *x <= xmax && 
 	(*y+*height) >= ymin && *y <= ymax))
-    return FALSE;
-  
+    return FALSE;  
   *x -= pFrame->FrXOrg;
   *y -= pFrame->FrYOrg;
-
+  xmin -= pFrame->FrXOrg;
+  xmax -= pFrame->FrXOrg;
+  ymin -= pFrame->FrYOrg;
+  ymax -= pFrame->FrYOrg;
   if (*x < 0)
     {
       *width += *x;
@@ -1940,13 +2234,10 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
       *height += *y;
       *y = 0;
     }
-
   if (*x > FrameTable[frame].FrWidth)
-    return FALSE;
-      
+    return FALSE;      
   if (*y > FrameTable[frame].FrHeight)
     return FALSE;
-
   if ((*x + *width) > FrameTable[frame].FrWidth)
     {
       *width = FrameTable[frame].FrWidth - *x;
@@ -1955,15 +2246,9 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
     {
       *height = FrameTable[frame].FrHeight - *y;  
     }
-
   if (*x >= 0 && *y >= 0 && 
       *width > 0 && *height > 0)
-    {
-      xmin -= pFrame->FrXOrg;
-      xmax -= pFrame->FrXOrg;
-      ymin -= pFrame->FrYOrg;
-      ymax -= pFrame->FrYOrg;
-      
+    {      
       if (*x < xmin)
 	{
 	  *width += *x - xmin; 
@@ -1976,7 +2261,6 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
 	  *y = ymin;
 	  /* 	  *height = ymax; */
 	}
-
       if ((*x + *width) > xmax)
 	{
 	  *width = xmax - *x;
@@ -1985,11 +2269,11 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
 	{
 	  *height = ymax - *y;  
 	}
-      return TRUE;  
+      return FALSE;  
     }  
   else 
     return FALSE;
- 
+#endif /* _GLTRANSFORMATION */
 }
 
 /*----------------------------------------------------------------------
@@ -1999,19 +2283,24 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
 			 int xmin, int xmax, int ymin, int ymax)
 {
   int x, y, width, height; 
- 
-  if (GetAbsoluteBoundingBox (pAb->AbFirstEnclosed, 
-			      &x, &y, &width, &height, frame,
-			      xmin, xmax, ymin, ymax))  
-    {
-     
+  double *m;
+  
+  if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
+			      frame, xmin, xmax, ymin, ymax))  
+    {     
+      m = TtaGetMemory (16 * sizeof (double));      
+      glGetDoublev (GL_MODELVIEW_MATRIX, m);
+      glLoadIdentity ();      
+      GL_TextureMap (pAb->AbBox->Pre_computed_Pic, 
+		     x, y, width, height);
       GL_SetFillOpacity (pAb->AbOpacity);
       GL_SetOpacity (pAb->AbOpacity);
-      GL_TextureMap (pAb->AbBox->Pre_computed_Pic, 
+      GL_TextureMap (pAb->AbBox->Post_computed_Pic, 
 		     x, y, width, height);
       GL_SetFillOpacity (1000);
       GL_SetOpacity (1000);
-
+      glLoadMatrixd (m);      
+      TtaFreeMemory (m);      
     }
 }
 /*----------------------------------------------------------------------
@@ -2019,19 +2308,19 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
   ----------------------------------------------------------------------*/
 void OpaqueGroupTextureFree (PtrAbstractBox     pAb, int frame)
 {
-  /* Unless we can know when 
-     a box gets its picture or 
-     when changes are efffectives..*/
   if (GL_prepare (frame))
-    FreeGlTexture (pAb->AbBox->Pre_computed_Pic);
-
+    {
+      FreeGlTexture (pAb->AbBox->Pre_computed_Pic);
+      FreeGlTexture (pAb->AbBox->Post_computed_Pic);
+    }  
   TtaFreeMemory (pAb->AbBox->Pre_computed_Pic);
+  TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
   pAb->AbBox->Pre_computed_Pic = NULL; 
-
+  pAb->AbBox->Post_computed_Pic = NULL; 
 }
 
 /*----------------------------------------------------------------------
-  ClearOpaqueGroup clear before display a translucent Group
+  ClearOpaqueGroup clear an area before displaying a non-opaque Group
   ----------------------------------------------------------------------*/
 void ClearOpaqueGroup (PtrAbstractBox pAb, int frame, 
 		       int xmin, int xmax, int ymin, int ymax)
@@ -2039,69 +2328,132 @@ void ClearOpaqueGroup (PtrAbstractBox pAb, int frame,
   int x, y, width, height;
   int xprevclip, yprevclip, heightprevclip, widthprevclip;  
  
-  if (GetAbsoluteBoundingBox (pAb->AbFirstEnclosed, 
-			      &x, &y, &width, &height, frame,
-			      xmin, xmax, ymin, ymax))
+  if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
+			      frame, xmin, xmax, ymin, ymax))
     {
       y = FrameTable[frame].FrHeight
 	+ FrameTable[frame].FrTopMargin
 	- (y + height);
-
       GL_GetCurrentClipping (&xprevclip, &yprevclip, 
-			     &heightprevclip, &widthprevclip);
+			     &widthprevclip, &heightprevclip);
       GL_SetClipping (x, y, width, height);  
-      glClearColor (1, 1, 1, 0);
+      /* glClearColor (1, 1, 1, 0); */
       glClear (GL_COLOR_BUFFER_BIT); 
       GL_UnsetClipping (xprevclip, yprevclip, 
-			heightprevclip, widthprevclip);
+			widthprevclip, heightprevclip);
     }
 }
 /*----------------------------------------------------------------------
   OpaqueGroupTexturize display an non-opaque Group
   ----------------------------------------------------------------------*/
-void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame,
-			   int xmin, int xmax, int ymin, int ymax)
+void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
+			   int xmin, int xmax, int ymin, int ymax,
+                           ThotBool Is_Pre)
 {
   int x, y, width, height;
-  int t, b;
-  int xprevclip, yprevclip, heightprevclip, widthprevclip;  
-  ViewFrame          *pFrame;
-
-  if (GetAbsoluteBoundingBox (pAb->AbFirstEnclosed, 
-			      &x, &y, &width, &height, frame,
-			      xmin, xmax, ymin, ymax))
+  
+  if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
+			      frame, xmin, xmax, ymin, ymax))
     {
       y = FrameTable[frame].FrHeight
 	+ FrameTable[frame].FrTopMargin
 	- (y + height);
-      
-      pAb->AbBox->Pre_computed_Pic = Group_shot (x, y,
-						 width,
-						 height,
-						 frame);
-      GL_GetCurrentClipping (&xprevclip, &yprevclip, 
-			     &heightprevclip, &widthprevclip);
-      GL_SetClipping (x, y, width, height); 
- 
-      ResetMainWindowBackgroundColor (frame);     
-      glClear (GL_COLOR_BUFFER_BIT);
-
-      pFrame = &ViewFrameTable[frame - 1];
-      DisplayAllBoxes (frame,
-		       x + pFrame->FrXOrg,
-		       x + width + pFrame->FrXOrg ,
-		       FrameTable[frame].FrHeight
-		       + FrameTable[frame].FrTopMargin - (y + height + pFrame->FrYOrg ),
-		       FrameTable[frame].FrHeight
-		       + FrameTable[frame].FrTopMargin - (y + pFrame->FrYOrg),
-		       NULL, &t, &b);
-
-      GL_UnsetClipping (xprevclip, yprevclip, 
-			heightprevclip, widthprevclip);
-      OpaqueGroupTextureFree (pAb, frame);  
-      FrameTable[frame].DblBuffNeedSwap = TRUE; 
+      if (Is_Pre)
+	pAb->AbBox->Pre_computed_Pic = Group_shot (x, y,
+						   width,
+						   height,
+						   frame);
+      else
+	pAb->AbBox->Post_computed_Pic = Group_shot (x, y,
+						   width,
+						   height,
+						   frame);
     }
 }
+
+
+static ThotBool DisplayGradient (PtrAbstractBox pAb,
+				 PtrBox box,
+				 int frame, 
+				 ThotBool selected)
+{
+  GradDef *gradient;
+  int x, y, width, height;
+  unsigned char *pattern;
+  
+  gradient = pAb->AbElement->ElParent->gradient;
+  if (gradient->next == NULL)
+    return FALSE;
+ 
+  x = box->BxXOrg;
+  y = box->BxYOrg;
+  width = box->BxWidth;
+  height = box->BxHeight;
+  
+  /* if gradient pict not computed*/
+  if (box->Pre_computed_Pic == NULL)
+  {
+    /*create the gradient pattern and put it on a texture*/
+    pattern = fill_linear_gradient_image (gradient->next, width, height);
+    box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, width, height);    
+  }
+    
+  /* GL_GetCurrentClipping (&clipx, &clipy, &clipw, &cliph); */
+  /* if (box->BxClipW && box->BxClipH) */
+  /*     GL_SetClipping (box->BxClipX, box->BxClipY, box->BxClipW, box->BxClipH); */
+  /*   else */
+  /*     GL_SetClipping (box->BxXOrg, box->BxYOrg, box->BxWidth, box->BxHeight); */
+  
+  /* Activate stenciling */
+  glEnable (GL_STENCIL_TEST);
+  glClear(GL_STENCIL_BUFFER_BIT);
+  glStencilFunc (GL_ALWAYS, 1, 1);
+  glStencilOp (GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+  /* draw the geometric shape to get boundings in the 
+     stencil buffer*/
+
+  if (pAb->AbLeafType == LtGraphics)
+    /* Graphics */
+    DisplayGraph (box, frame, selected);
+  else if (pAb->AbLeafType == LtPolyLine)
+    /* Polyline */
+    DisplayPolyLine (box, frame, selected);
+  else if (pAb->AbLeafType == LtPath)
+    /* Path */
+    DisplayPath (box, frame, selected);
+
+  /*Activate zone where gradient will be drawn*/
+  glClear (GL_DEPTH_BUFFER_BIT);
+  glStencilFunc (GL_EQUAL, 1, 1);
+  glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+
+  /*then draw the gradient*/
+  GL_TextureMap (box->Pre_computed_Pic, 
+		 x, y, 
+		 width, height);
+
+  /* disable stenciling, */
+  glStencilFunc (GL_NOTEQUAL, 1, 1);
+  glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+  
+  /*then draw the shape 
+    (again, but really, this time)*/
+  if (pAb->AbLeafType == LtGraphics)
+    /* Graphics */
+    DisplayGraph (box, frame, selected);
+  else if (pAb->AbLeafType == LtPolyLine)
+    /* Polyline */
+    DisplayPolyLine (box, frame, selected);
+  else if (pAb->AbLeafType == LtPath)
+    /* Path */
+    DisplayPath (box, frame, selected);  
+
+  glDisable (GL_STENCIL_TEST);
+  /* GL_UnsetClipping (clipx, clipy, clipw, cliph); */
+  return TRUE;
+}
+
 #endif /*_GL*/
 
 /*----------------------------------------------------------------------
@@ -2115,19 +2467,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   int                x, y;
   int                xd, yd, width, height;
   ThotBool           selected;
-#ifdef _GL
-#ifdef _GLLIST
-  ThotBool           AbstractBoxModified;
-#endif /* _GLLIST */
-#endif /*_GL*/
-  
-
-#ifdef _GL
-  if (box->BxBoundinBoxComputed == FALSE)
-    {
-      ComputeBoundingBox (box, frame, xmin, xmax, ymin, ymax);       
-    }
-#endif /* _GL */
+ 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
   x = ViewFrameTable[frame - 1].FrXOrg;
@@ -2136,6 +2476,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   yd = box->BxYOrg + box->BxTMargin;
   width = box->BxWidth - box->BxLMargin - box->BxRMargin;
   height = box->BxHeight - box->BxTMargin - box->BxBMargin;
+
   if (Printing)
     {
       /* clipping on the origin */
@@ -2175,48 +2516,43 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 		(mbox->BxType == BoGhost && mbox->BxAbstractBox->AbSelected);
 	    }
 	}
-    } 
-    
-#ifdef _GL
-#ifdef _GLLIST
-  AbstractBoxModified =
-    
-      pAb->AbNew ||
-      pAb->AbDead ||
-      pAb->AbWidthChange ||
-      pAb->AbHeightChange ||
-      pAb->AbHorizPosChange ||
-      pAb->AbVertPosChange ||
-      pAb->AbHorizRefChange ||
-      pAb->AbVertRefChange ||
-      pAb->AbSizeChange ||
-      pAb->AbAspectChange ||
-      pAb->AbMBPChange ||
-      pAb->AbChange 
-    ;
-  
+    }     
+#ifdef _GL 
   /*does box need to be recomputed 
     in a new display list*/
-
-  if (!AbstractBoxModified &&
-      !selected)
+  if (pAb->AbLeafType == LtPolyLine ||
+      pAb->AbLeafType == LtGraphics ||
+      pAb->AbLeafType == LtPath)
     {
-      if (glIsList (box->DisplayList))
+      if ( box->VisibleModification &&
+	   !selected &&
+	   glIsList (box->DisplayList))
 	{
 	  glCallList (box->DisplayList);
-	  return; 
+	  return;
+	}
+      else
+	{      
+	  if (glIsList (box->DisplayList))
+	    {
+	      glDeleteLists (box->DisplayList, 1);
+	    }
+	  box->DisplayList = glGenLists (1);
+	  glNewList(box->DisplayList,
+		    GL_COMPILE_AND_EXECUTE);
 	}
     }
-  if (glIsList (box->DisplayList))
-    {
-      glDeleteLists (box->DisplayList, 1);
-    }
-  box->DisplayList = glGenLists (1);
-  glNewList(box->DisplayList,
-	    GL_COMPILE_AND_EXECUTE);
-#endif /*_GLLIST*/
   GL_SetFillOpacity (pAb->AbFillOpacity);
   GL_SetStrokeOpacity (pAb->AbStrokeOpacity);
+  if ((pAb->AbLeafType == LtPolyLine ||
+       pAb->AbLeafType == LtGraphics ||
+       pAb->AbLeafType == LtGraphics) &&
+      (pAb->AbElement->ElParent) &&
+      (pAb->AbElement->ElParent->gradient))
+    {
+      if (DisplayGradient (pAb, box, frame, selected))
+	return;          
+    }
 #endif /*_GL*/
       
   if (pAb->AbVolume == 0 ||
@@ -2265,11 +2601,13 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     DisplayPath (box, frame, selected);
 
 #ifdef _GL
-      GL_SetFillOpacity (1000);
-      GL_SetStrokeOpacity (1000);
-#ifdef _GLLIST
-      glEndList ();   
-#endif /*_GLLIST*/      
+  GL_SetFillOpacity (1000);
+  GL_SetStrokeOpacity (1000);
+  box->VisibleModification = FALSE;  
+  if (pAb->AbLeafType == LtPolyLine ||
+      pAb->AbLeafType == LtGraphics ||
+      pAb->AbLeafType == LtPath)
+    glEndList ();
 #endif /*_GL*/
 
   /* then display borders */

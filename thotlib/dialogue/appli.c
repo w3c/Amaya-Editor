@@ -1212,7 +1212,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   TtcLineUp scrolls one line up.                                    
+  TtcLineUp scrolls one line up.                                    
   ----------------------------------------------------------------------*/
 void TtcLineUp (Document document, View view)
 {
@@ -1238,7 +1238,7 @@ void TtcLineUp (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   TtcLineDown scrolls one line down.                                
+  TtcLineDown scrolls one line down.                                
   ----------------------------------------------------------------------*/
 void TtcLineDown (Document document, View view)
 {
@@ -1264,7 +1264,7 @@ void TtcLineDown (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   TtcScrollLeft scrolls one position left.                                    
+  TtcScrollLeft scrolls one position left.                                    
   ----------------------------------------------------------------------*/
 void TtcScrollLeft (Document document, View view)
 {
@@ -1290,7 +1290,7 @@ void TtcScrollLeft (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   TtcScrollRight scrolls one position right.                                
+  TtcScrollRight scrolls one position right.                                
   ----------------------------------------------------------------------*/
 void TtcScrollRight (Document document, View view)
 {
@@ -1316,63 +1316,63 @@ void TtcScrollRight (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   PageUp scrolls one screen up.                                    
+  PageUp scrolls one screen up.                                    
   ----------------------------------------------------------------------*/
 void TtcPageUp (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
-   XmScrollBarCallbackStruct infos;
+  XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS && GTK */
-   int                       delta;
+  int                       delta;
 #endif  /* _WINDOWS && GTK */
-   int                       frame;
+  int                       frame;
 
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
+  if (document != 0)
+    frame = GetWindowNumber (document, view);
+  else
+    frame = 0;
 #if !defined(_WINDOWS) && !defined(_GTK)
-   infos.reason = XmCR_PAGE_DECREMENT;
-   FrameVScrolled (0, frame, (int *) &infos);
+  infos.reason = XmCR_PAGE_DECREMENT;
+  FrameVScrolled (0, frame, (int *) &infos);
 #else  /* _WINDOWS && GTK */
-   delta = -FrameTable[frame].FrHeight;
-   VerticalScroll (frame, delta, 1);
+  delta = -FrameTable[frame].FrHeight;
+  VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS && GTK */
 }
 
 /*----------------------------------------------------------------------
-   PageDown scrolls one screen down.                                
+  PageDown scrolls one screen down.                                
   ----------------------------------------------------------------------*/
 void TtcPageDown (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
-   XmScrollBarCallbackStruct infos;
+  XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS && GTK */
-   int                       delta;
+  int                       delta;
 #endif  /* _WINDOWS && GTK */
   int                        frame;
 
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
+  if (document != 0)
+    frame = GetWindowNumber (document, view);
+  else
+    frame = 0;
 #if !defined(_WINDOWS) && !defined(_GTK)
-   infos.reason = XmCR_PAGE_INCREMENT;
-   FrameVScrolled (0, frame, (int *) &infos);
+  infos.reason = XmCR_PAGE_INCREMENT;
+  FrameVScrolled (0, frame, (int *) &infos);
 #else  /* _WINDOWS && GTK */
-   delta = FrameTable[frame].FrHeight;
-   VerticalScroll (frame, delta, 1);
+  delta = FrameTable[frame].FrHeight;
+  VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS && GTK */
 }
 
 
 /*----------------------------------------------------------------------
-   PageTop goes to the document top.                                
+  PageTop goes to the document top.                                
   ----------------------------------------------------------------------*/
 void TtcPageTop (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
-   XmScrollBarCallbackStruct infos;
+  XmScrollBarCallbackStruct infos;
 #endif  /* _WINDOWS && GTK */
   int                        frame;
 
@@ -1382,33 +1382,33 @@ void TtcPageTop (Document document, View view)
     frame = 0;
 
 #if !defined(_WINDOWS) && !defined(_GTK)
-   infos.reason = XmCR_TO_TOP;
-   FrameVScrolled (0, frame, (int *) &infos);
+  infos.reason = XmCR_TO_TOP;
+  FrameVScrolled (0, frame, (int *) &infos);
 #else   /* _WINDOWS && GTK */
   JumpIntoView (frame, 0);
 #endif /* _WINDOWS && GTK */
 }
 
 /*----------------------------------------------------------------------
-   PageEnd goes to the document end.                                
+  PageEnd goes to the document end.                                
   ----------------------------------------------------------------------*/
 void TtcPageEnd (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
-   XmScrollBarCallbackStruct infos;
+  XmScrollBarCallbackStruct infos;
 #endif  /* _WINDOWS && GTK */
   int                        frame;
 
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
+  if (document != 0)
+    frame = GetWindowNumber (document, view);
+  else
+    frame = 0;
 
 #if !defined(_WINDOWS) && !defined(_GTK)
-   infos.reason = XmCR_TO_BOTTOM;
-   FrameVScrolled (0, frame, (int *) &infos);
+  infos.reason = XmCR_TO_BOTTOM;
+  FrameVScrolled (0, frame, (int *) &infos);
 #else /* _WINDOWS && _GTK */
-   JumpIntoView (frame, 100);
+  JumpIntoView (frame, 100);
 #endif /* _WINDOWS && _GTK */
 }
 
@@ -1416,165 +1416,165 @@ void TtcPageEnd (Document document, View view)
 
 
 /*----------------------------------------------------------------------
-   InitializeOtherThings initialise les contextes complementaires.     
+  InitializeOtherThings initialise les contextes complementaires.     
   ----------------------------------------------------------------------*/
 void InitializeOtherThings ()
 {
-   int                 i;
+  int                 i;
 
-   /* Initialisation de la table des widgets de frames */
-   for (i = 0; i <= MAX_FRAME; i++)
-     {
-	FrameTable[i].WdFrame = 0;
-	FrameTable[i].FrDoc = 0;
-     }
+  /* Initialisation de la table des widgets de frames */
+  for (i = 0; i <= MAX_FRAME; i++)
+    {
+      FrameTable[i].WdFrame = 0;
+      FrameTable[i].FrDoc = 0;
+    }
 
-   ClickIsDone = 0;
-   ClickFrame = 0;
-   ClickX = 0;
-   ClickY = 0;
-   /* message de selection vide */
+  ClickIsDone = 0;
+  ClickFrame = 0;
+  ClickX = 0;
+  ClickY = 0;
+  /* message de selection vide */
 #ifndef _WINDOWS
 #ifndef _GTK
-   null_string = XmStringCreateSimple ("");
+  null_string = XmStringCreateSimple ("");
 #else /* _GTK */
-   null_string = (gchar *)"";
+  null_string = (gchar *)"";
 #endif /* _GTK */
 #endif /* _WINDOWS */
-   OldMsgSelect[0] = EOS;
-   OldDocMsgSelect = NULL;
+  OldMsgSelect[0] = EOS;
+  OldDocMsgSelect = NULL;
 }
 
 /*----------------------------------------------------------------------
-   Map and raise the corresponding window.                          
+  Map and raise the corresponding window.                          
   ----------------------------------------------------------------------*/
 void TtaRaiseView (Document document, View view)
 {
-   int                 idwindow;
-   ThotWidget          w;
+  int                 idwindow;
+  ThotWidget          w;
 
-   UserErrorCode = 0;
-   idwindow = GetWindowNumber (document, view);
-   if (idwindow != 0)
-     {
-	w = FrameTable[idwindow].WdFrame;
+  UserErrorCode = 0;
+  idwindow = GetWindowNumber (document, view);
+  if (idwindow != 0)
+    {
+      w = FrameTable[idwindow].WdFrame;
 #ifndef _WINDOWS
 #ifndef _GTK
-	if (w != 0)
-	   XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+      if (w != 0)
+	XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
-	if (w != 0)
-	  gdk_window_show (gtk_widget_get_parent_window(GTK_WIDGET(w)));
+      if (w != 0)
+	gdk_window_show (gtk_widget_get_parent_window(GTK_WIDGET(w)));
 #endif /* _GTK */
 #else  /* _WINDOWS */
-	{
-	  OpenIcon (FrMainRef[idwindow]);
-	  SetForegroundWindow (FrMainRef[idwindow]);
-	}
+      {
+	OpenIcon (FrMainRef[idwindow]);
+	SetForegroundWindow (FrMainRef[idwindow]);
+      }
 #endif /* _WINDOWS */
-     }
+    }
 }
 
 /*----------------------------------------------------------------------
-   DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
-   la fenetre active.                                            
+  DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
+  la fenetre active.                                            
   ----------------------------------------------------------------------*/
 void DisplaySelMessage (char *text, PtrDocument pDoc)
 {
-   int                 doc;
-   int                 view;
+  int                 doc;
+  int                 view;
 
 
-   if (ActiveFrame != 0 &&
-       (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect))
-     {
-	/* recupere le document concerne */
-	doc = FrameTable[ActiveFrame].FrDoc;
-	for (view = 1; view <= MAX_VIEW_DOC; view++)
-	  TtaSetStatus ((Document) doc, view, text, NULL);
-	/* sel old message */
-	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
-	OldDocMsgSelect = pDoc;
-     }
+  if (ActiveFrame != 0 &&
+      (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect))
+    {
+      /* recupere le document concerne */
+      doc = FrameTable[ActiveFrame].FrDoc;
+      for (view = 1; view <= MAX_VIEW_DOC; view++)
+	TtaSetStatus ((Document) doc, view, text, NULL);
+      /* sel old message */
+      strncpy (OldMsgSelect, text, MAX_TXT_LEN);
+      OldDocMsgSelect = pDoc;
+    }
 }
 
 /*----------------------------------------------------------------------
-   TtaSetStatus displays a status message into a document window.
+  TtaSetStatus displays a status message into a document window.
   ----------------------------------------------------------------------*/
 void TtaSetStatus (Document document, View view, char *text, char *name)
 {
-   int                 frame, length;
-   char                *s;
+  int                 frame, length;
+  char                *s;
 #ifndef _WINDOWS
 #ifndef _GTK
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
+  Arg                 args[MAX_ARGS];
+  XmString            title_string;
 #else /* _GTK */
-   gchar * title_string;
+  gchar * title_string;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
-   if (document == 0)
-      return;
-   else
-     {
-       /* clean up old message */
-       OldMsgSelect[0] = EOS;
+  if (document == 0)
+    return;
+  else
+    {
+      /* clean up old message */
+      OldMsgSelect[0] = EOS;
 
-	frame = GetWindowNumber (document, view);
-	if (frame == 0)
-	  /* try to display in document 1 */
-	  frame = GetWindowNumber (1, view);
-	if (frame != 0)
-	  if (FrameTable[frame].WdStatus != 0)
-	    {
-	     length = strlen (text) + 1;
-	     if (name)
-	       length += strlen (name);
-	     s = TtaGetMemory (length);
+      frame = GetWindowNumber (document, view);
+      if (frame == 0)
+	/* try to display in document 1 */
+	frame = GetWindowNumber (1, view);
+      if (frame != 0)
+	if (FrameTable[frame].WdStatus != 0)
+	  {
+	    length = strlen (text) + 1;
+	    if (name)
+	      length += strlen (name);
+	    s = TtaGetMemory (length);
 #ifdef _WINDOWS
-	     if (name)
-	       /* text est un format */
-	       sprintf (s, text, name);
-	     else
-	       strncpy (s, text, length);
+	    if (name)
+	      /* text est un format */
+	      sprintf (s, text, name);
+	    else
+	      strncpy (s, text, length);
 
-	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
-	     SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
+	    SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
+	    SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #else  /* _WINDOWS */
 #ifndef _GTK
-	     if (name)
-	       {
-		  /* text est un format */
-		  sprintf (s, text, name);
-		  title_string = XmStringCreateSimple (s);
-	       }
-	     else
-		title_string = XmStringCreateSimple (text);
-	     XtSetArg (args[0], XmNlabelString, title_string);
-	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
-	     XtManageChild (FrameTable[frame].WdStatus);
-	     XmStringFree (title_string);
+	    if (name)
+	      {
+		/* text est un format */
+		sprintf (s, text, name);
+		title_string = XmStringCreateSimple (s);
+	      }
+	    else
+	      title_string = XmStringCreateSimple (text);
+	    XtSetArg (args[0], XmNlabelString, title_string);
+	    XtSetValues (FrameTable[frame].WdStatus, args, 1);
+	    XtManageChild (FrameTable[frame].WdStatus);
+	    XmStringFree (title_string);
 #else /* _GTK */
-	     if (name)
-	       {
-		  /* text est un format */
-		  sprintf (s, text, name);
-		  title_string = s;
-	       }
-	     else
-	       title_string = text;
-	     gtk_statusbar_pop (GTK_STATUSBAR(FrameTable[frame].WdStatus),
-				(guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
-	     gtk_statusbar_push (GTK_STATUSBAR(FrameTable[frame].WdStatus),
-				 (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
+	    if (name)
+	      {
+		/* text est un format */
+		sprintf (s, text, name);
+		title_string = s;
+	      }
+	    else
+	      title_string = text;
+	    gtk_statusbar_pop (GTK_STATUSBAR(FrameTable[frame].WdStatus),
+			       (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
+	    gtk_statusbar_push (GTK_STATUSBAR(FrameTable[frame].WdStatus),
+				(guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
 				title_string);
-	     gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
+	    gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
 #endif /* _GTK */
 #endif /* _WINDOWS */
-	     TtaFreeMemory (s);
-	    }
-     }
+	    TtaFreeMemory (s);
+	  }
+    }
 }
 
 
@@ -1591,7 +1591,7 @@ void CheckTtCmap ()
   if (TtCmap == NULL)
     {
       ptrLogPal = (PLOGPALETTE) LocalAlloc (LMEM_FIXED,
-		   sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
+					    sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
 	  
       ptrLogPal->palVersion    = 0x300;
       ptrLogPal->palNumEntries = MAX_COLOR;
@@ -1621,73 +1621,73 @@ static void Wnd_ResizeContent (HWND hwnd, int cx, int cy, int frame)
 
   FRWidth[frame] = cx;
   FRHeight[frame] = cy;
- /* Adjust toolbar size. */
-    if (IsWindowVisible (WinToolBar[frame]))
-      {
-	dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
-	if (dwStyle & CCS_NORESIZE)
-	  MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
-	else
-	  ToolBar_AutoSize (WinToolBar[frame]);
+  /* Adjust toolbar size. */
+  if (IsWindowVisible (WinToolBar[frame]))
+    {
+      dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
+      if (dwStyle & CCS_NORESIZE)
+	MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
+      else
+	ToolBar_AutoSize (WinToolBar[frame]);
 
-	InvalidateRect (WinToolBar[frame], NULL, TRUE);
-	GetWindowRect (WinToolBar[frame], &rWindow);
-	ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
-	ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
-	cyTB = rWindow.bottom - rWindow.top;
-      }
-    else 
-      cyTB = 0;
+      InvalidateRect (WinToolBar[frame], NULL, TRUE);
+      GetWindowRect (WinToolBar[frame], &rWindow);
+      ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
+      ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
+      cyTB = rWindow.bottom - rWindow.top;
+    }
+  else 
+    cyTB = 0;
     
-    cyTxtZone = cyTB;
-    /* Adjust text zones */
-	if (FrameTable[frame].Text_Zone &&
-	    IsWindowVisible (FrameTable[frame].Text_Zone))
-	  {
-	    MoveWindow (FrameTable[frame].Label, 15, cyTxtZone + 5, 70, 20, TRUE);
-	    MoveWindow (FrameTable[frame].Text_Zone, 85, cyTxtZone + 5, cx - 85, 20, TRUE);
-	    cyTxtZone += 28;
-	  }
+  cyTxtZone = cyTB;
+  /* Adjust text zones */
+  if (FrameTable[frame].Text_Zone &&
+      IsWindowVisible (FrameTable[frame].Text_Zone))
+    {
+      MoveWindow (FrameTable[frame].Label, 15, cyTxtZone + 5, 70, 20, TRUE);
+      MoveWindow (FrameTable[frame].Text_Zone, 85, cyTxtZone + 5, cx - 85, 20, TRUE);
+      cyTxtZone += 28;
+    }
 
-    /* Adjust status bar size. */
-    if (IsWindowVisible (FrameTable[frame].WdStatus))
-      {
-	GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
-	cyStatus = rWindow.bottom - rWindow.top;
-	MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE);
-      }
-    else
-      cyStatus = 0;
+  /* Adjust status bar size. */
+  if (IsWindowVisible (FrameTable[frame].WdStatus))
+    {
+      GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
+      cyStatus = rWindow.bottom - rWindow.top;
+      MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE);
+    }
+  else
+    cyStatus = 0;
 
 
-    if (Win_Scroll_visible (FrameTable[frame].WdScrollV)) 
-      {
-	/* Adjust Vertical scroll bar */
-	MoveWindow (FrameTable[frame].WdScrollV, cx - 15,
-		    cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE);
-	/* Adjust client window size. */
-	GetWindowRect (FrameTable[frame].WdScrollV, &rWindow);
-	cxVSB = rWindow.right - rWindow.left;
-      }
-    else
-      cxVSB = 0;
+  if (Win_Scroll_visible (FrameTable[frame].WdScrollV)) 
+    {
+      /* Adjust Vertical scroll bar */
+      MoveWindow (FrameTable[frame].WdScrollV, cx - 15,
+		  cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE);
+      /* Adjust client window size. */
+      GetWindowRect (FrameTable[frame].WdScrollV, &rWindow);
+      cxVSB = rWindow.right - rWindow.left;
+    }
+  else
+    cxVSB = 0;
 
-    if (Win_Scroll_visible (FrameTable[frame].WdScrollH)) 
-      {
-	/* Adjust Hoizontal scroll bar */
-	MoveWindow (FrameTable[frame].WdScrollH, 0,
-		    cy - (cyStatus + 15), cx - 15, 15, TRUE);
-	GetWindowRect (FrameTable[frame].WdScrollH, &rWindow);
-	cyHSB = rWindow.bottom - rWindow.top;
-      }   
-    else
-      cyHSB = 0;
+  if (Win_Scroll_visible (FrameTable[frame].WdScrollH)) 
+    {
+      /* Adjust Hoizontal scroll bar */
+      MoveWindow (FrameTable[frame].WdScrollH, 0,
+		  cy - (cyStatus + 15), cx - 15, 15, TRUE);
+      GetWindowRect (FrameTable[frame].WdScrollH, &rWindow);
+      cyHSB = rWindow.bottom - rWindow.top;
+    }   
+  else
+    cyHSB = 0;
 
-    x = 0;
-    y = cyTxtZone;
-    cx = cx - cxVSB;
-    cy = cy - (cyStatus + cyTxtZone + cyHSB);
-	MoveWindow (FrRef [frame], x, y, cx, cy, TRUE);
+  x = 0;
+  y = cyTxtZone;
+  cx = cx - cxVSB;
+  cy = cy - (cyStatus + cyTxtZone + cyHSB);
+  MoveWindow (FrRef [frame], x, y, cx, cy, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1712,205 +1712,205 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   frame = GetMainFrameNumber (hwnd);
   GetWindowRect (hwnd, &rect);
   switch (mMsg)
-  {
-  case WM_CREATE:
-    /* Create toolbar  */
-    ThotTBBitmap.hInst = hInstance;
-    ThotTBBitmap.nID  = IDR_TOOLBAR;
+    {
+    case WM_CREATE:
+      /* Create toolbar  */
+      ThotTBBitmap.hInst = hInstance;
+      ThotTBBitmap.nID  = IDR_TOOLBAR;
 	
-    dwToolBarStyles = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
-    dwToolBarStyles = dwToolBarStyles | TBSTYLE_FLAT;
-	ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
-			    0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
+      dwToolBarStyles = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
+      dwToolBarStyles = dwToolBarStyles | TBSTYLE_FLAT;
+      ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
+			      0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
 
-    SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
-    if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON,
-		      (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
-      WinErrorBox (NULL, "WndProc: WM_CREATE cannot create toolbar");
+      SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
+      if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON,
+			(LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
+	WinErrorBox (NULL, "WndProc: WM_CREATE cannot create toolbar");
     
-    hwndToolTip = ToolBar_GetToolTips (ToolBar);
-    if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
-      InitToolTip (ToolBar);	
+      hwndToolTip = ToolBar_GetToolTips (ToolBar);
+      if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
+	InitToolTip (ToolBar);	
     
-    /* Create status bar  */
-    dwStatusBarStyles = WS_CHILD | WS_VISIBLE | CCS_BOTTOM | SBARS_SIZEGRIP;
-    StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
-    ShowWindow (StatusBar, SW_SHOWNORMAL);
-    UpdateWindow (StatusBar); 
-    hwndClient = 0;
-    hwndClient = CreateWindowEx (WS_EX_ACCEPTFILES, "ClientWndProc", NULL,
-				 WS_CHILD | WS_BORDER,
-				 0, 0, 0, 0, hwnd, (HMENU) 2, hInstance, NULL);
+      /* Create status bar  */
+      dwStatusBarStyles = WS_CHILD | WS_VISIBLE | CCS_BOTTOM | SBARS_SIZEGRIP;
+      StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
+      ShowWindow (StatusBar, SW_SHOWNORMAL);
+      UpdateWindow (StatusBar); 
+      hwndClient = 0;
+      hwndClient = CreateWindowEx (WS_EX_ACCEPTFILES, "ClientWndProc", NULL,
+				   WS_CHILD | WS_BORDER,
+				   0, 0, 0, 0, hwnd, (HMENU) 2, hInstance, NULL);
 #ifdef _GL
-	if (!hwndClient) 
+      if (!hwndClient) 
 	{      
-		MessageBox(NULL, "ERROR!", "Failed to create new client window in function WndProc()", MB_OK); 
-		return 0;    
+	  MessageBox(NULL, "ERROR!", "Failed to create new client window in function WndProc()", MB_OK); 
+	  return 0;    
 	}
-     /* initialize OpenGL rendering */
-     GL_Win32ContextInit (hwndClient, frame);
+      /* initialize OpenGL rendering */
+      GL_Win32ContextInit (hwndClient, frame);
 #endif /*_GL*/
-    ShowWindow (hwndClient, SW_SHOWNORMAL);
-    UpdateWindow (hwndClient);
-    SetWindowText (hwnd, wTitle);
-    DragAcceptFiles (hwnd, TRUE);
-    return 0L;
+      ShowWindow (hwndClient, SW_SHOWNORMAL);
+      UpdateWindow (hwndClient);
+      SetWindowText (hwnd, wTitle);
+      DragAcceptFiles (hwnd, TRUE);
+      return 0L;
 
-  case WM_PALETTECHANGED: 
+    case WM_PALETTECHANGED: 
 #ifndef _GL
-    if ((HWND) wParam != hwnd)
-      {
-	HDC hDC = GetDC (hwnd);
-	SelectPalette (hDC, TtCmap, FALSE);
-	if (RealizePalette (hDC))
-	  UpdateColors (hDC);
-	ReleaseDC (hwnd, hDC);
-      }
-    return 0L;
+      if ((HWND) wParam != hwnd)
+	{
+	  HDC hDC = GetDC (hwnd);
+	  SelectPalette (hDC, TtCmap, FALSE);
+	  if (RealizePalette (hDC))
+	    UpdateColors (hDC);
+	  ReleaseDC (hwnd, hDC);
+	}
+      return 0L;
 #endif /*_GL*/
 #ifdef WM_MOUSEWHEEL
-  case WM_MOUSEWHEEL:
-    {
-      short int ydelta;
+    case WM_MOUSEWHEEL:
+      {
+	short int ydelta;
       
-      ydelta = - (HIWORD (wParam));
-      VerticalScroll (frame, ydelta, 1);
-    }
-    return 0L;
+	ydelta = - (HIWORD (wParam));
+	VerticalScroll (frame, ydelta, 1);
+      }
+      return 0L;
 #endif /*WM_MOUSEWHEEL*/
 
-   case WM_VSCROLL:
-    WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
-    return 0L;
+    case WM_VSCROLL:
+      WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
+      return 0L;
 
-  case WM_HSCROLL:
-    WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
-    return 0L;
+    case WM_HSCROLL:
+      WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
+      return 0L;
 
-  case WM_ENTER:
-    hwndTextEdit = GetFocus ();
-    if (frame != -1)
-      {
-      ActiveFrame = frame;
-      APP_TextCallback (hwndTextEdit, frame, NULL);
-      SetFocus (FrRef [frame]);
+    case WM_ENTER:
+      hwndTextEdit = GetFocus ();
+      if (frame != -1)
+	{
+	  ActiveFrame = frame;
+	  APP_TextCallback (hwndTextEdit, frame, NULL);
+	  SetFocus (FrRef [frame]);
 	}
-    return 0L;
+      return 0L;
 
-  case WM_SYSKEYDOWN:
-  case WM_KEYDOWN:
-    if (frame != -1)
-      {
-        SetFocus (FrRef [frame]);
-	SendMessage (FrRef [frame], mMsg, wParam, lParam);
-      }
-    return 0L;
-
-  case WM_DROPFILES:
-    if (frame != -1)
+    case WM_SYSKEYDOWN:
+    case WM_KEYDOWN:
+      if (frame != -1)
 	{
 	  SetFocus (FrRef [frame]);
 	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
 	}
-    return 0L;
+      return 0L;
+
+    case WM_DROPFILES:
+      if (frame != -1)
+	{
+	  SetFocus (FrRef [frame]);
+	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
+	}
+      return 0L;
 	
-  case WM_IME_CHAR:
-  case WM_SYSCHAR:
-  case WM_CHAR:
-    if (frame != -1)
-      {
-	SetFocus (FrRef [frame]);
-	ActiveFrame = frame;
-	SendMessage (FrRef [frame], mMsg, wParam, lParam);
-      }
-  return 0L;
+    case WM_IME_CHAR:
+    case WM_SYSCHAR:
+    case WM_CHAR:
+      if (frame != -1)
+	{
+	  SetFocus (FrRef [frame]);
+	  ActiveFrame = frame;
+	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
+	}
+      return 0L;
 
-  case WM_NOTIFY:
-    pnmh = (LPNMHDR) lParam;
-    idCtrl = (int) wParam;
-    /*Toolbar notifications */
-    if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
-      return ToolBarNotify (frame, hwnd, wParam, lParam);
-    /* Fetch tooltip text */
-    if (pnmh->code == TTN_NEEDTEXT)
-      {
-        LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam;
-        CopyToolTipText (frame, lpttt);
-      }
-    return 0L;
+    case WM_NOTIFY:
+      pnmh = (LPNMHDR) lParam;
+      idCtrl = (int) wParam;
+      /*Toolbar notifications */
+      if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
+	return ToolBarNotify (frame, hwnd, wParam, lParam);
+      /* Fetch tooltip text */
+      if (pnmh->code == TTN_NEEDTEXT)
+	{
+	  LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam;
+	  CopyToolTipText (frame, lpttt);
+	}
+      return 0L;
 
-  case WM_COMMAND:
+    case WM_COMMAND:
 
-	switch (HIWORD(wParam))
+      switch (HIWORD(wParam))
 	{
 	case CBN_SELENDOK:
-	 case CBN_SELENDCANCEL:
-     case CBN_KILLFOCUS:
-	 case CBN_CLOSEUP:
-	 case CBN_DROPDOWN:
-		 SendMessage (FrameTable[frame].Text_Zone, mMsg, wParam, lParam);
-		 break;
+	case CBN_SELENDCANCEL:
+	case CBN_KILLFOCUS:
+	case CBN_CLOSEUP:
+	case CBN_DROPDOWN:
+	  SendMessage (FrameTable[frame].Text_Zone, mMsg, wParam, lParam);
+	  break;
 	}
-    if (LOWORD (wParam) >= TBBUTTONS_BASE)
-      {
-        buttonCommand = TRUE;
-        APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
-      }
-    else
-      {
-	buttonCommand = FALSE;
-	WIN_ThotCallBack (hwnd, wParam, lParam);
-      }
-    return 0L;
-
-  case WM_CLOSE:
-  case WM_DESTROY:
-    if (frame >= 0 && frame <= MAX_FRAME)
-      {
-#ifdef _GL 
-	GL_DestroyFrame (frame);	
-	GL_Win32ContextClose (frame, hwnd);
-#endif /*_GL*/
-	GetDocAndView (frame, &pDoc, &view);
-	if (pDoc && view)
-	  CloseView (pDoc, view);
-	if (FrameTable[frame].FrDoc == 0)
+      if (LOWORD (wParam) >= TBBUTTONS_BASE)
 	{
-	  FrMainRef[frame] = 0;
-	  DestroyWindow (hwnd);
+	  buttonCommand = TRUE;
+	  APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
 	}
-	if (mMsg == WM_DESTROY)
-	  {
-	    for (frameNDX = 1; frameNDX <= MAX_FRAME; frameNDX++)
-	      if (FrMainRef[frameNDX] != 0)
+      else
+	{
+	  buttonCommand = FALSE;
+	  WIN_ThotCallBack (hwnd, wParam, lParam);
+	}
+      return 0L;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      if (frame >= 0 && frame <= MAX_FRAME)
+	{
+#ifdef _GL 
+	  GL_DestroyFrame (frame);	
+	  GL_Win32ContextClose (frame, hwnd);
+#endif /*_GL*/
+	  GetDocAndView (frame, &pDoc, &view);
+	  if (pDoc && view)
+	    CloseView (pDoc, view);
+	  if (FrameTable[frame].FrDoc == 0)
+	    {
+	      FrMainRef[frame] = 0;
+	      DestroyWindow (hwnd);
+	    }
+	  if (mMsg == WM_DESTROY)
+	    {
+	      for (frameNDX = 1; frameNDX <= MAX_FRAME; frameNDX++)
+		if (FrMainRef[frameNDX] != 0)
 		  /* there is still an active frame */
 		  break;
-		if (frameNDX > MAX_FRAME || FrMainRef[frameNDX] == 0)
+	      if (frameNDX > MAX_FRAME || FrMainRef[frameNDX] == 0)
 		{
 		  UnregisterClass ("Amaya",hInstance);
 		  UnregisterClass ("ClientWndProc",hInstance);
 		  UnregisterClass ("WNDIALOGBOX",hInstance);
-          if (mMsg == WM_DESTROY)
-            PostQuitMessage (0);
-	      TtaQuit();
+		  if (mMsg == WM_DESTROY)
+		    PostQuitMessage (0);
+		  TtaQuit();
 		}
-	  }
-      }
-    if (mMsg == WM_DESTROY)
-      PostQuitMessage (0);
-    return 0L;
+	    }
+	}
+      if (mMsg == WM_DESTROY)
+	PostQuitMessage (0);
+      return 0L;
         
-  case WM_SIZE:
-    cx = LOWORD (lParam);
-    cy = HIWORD (lParam);
-    Wnd_ResizeContent (hwnd, cx, cy, frame);
-	SetFocus (FrRef [frame]);
-	ActiveFrame = frame;
-    return 1;
+    case WM_SIZE:
+      cx = LOWORD (lParam);
+      cy = HIWORD (lParam);
+      Wnd_ResizeContent (hwnd, cx, cy, frame);
+      SetFocus (FrRef [frame]);
+      ActiveFrame = frame;
+      return 1;
 
-  default: 
-    return (DefWindowProc (hwnd, mMsg, wParam, lParam));
-  }
+    default: 
+      return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+    }
 }
 /* -------------------------------------------------------------------
    ClientWndProc
@@ -1931,7 +1931,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   RECT         cRect;
   ThotBool     isSpecial;
   /* Used to limit selection extension
-	on mouse move  */
+     on mouse move  */
   static int       oldXPos;
   static int       oldYPos;
 
@@ -1958,64 +1958,64 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  ClickY = HIWORD (lParam);
 	  return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 	}
-   } 
+    } 
 
   /* Handle the Scroll Drag */
   if (wParam & MK_LBUTTON && frame != -1)
     {
-	  /* if scroll concerns this window*/
+      /* if scroll concerns this window*/
       if (GetCapture () == hwnd)
 	{
 	  GetWindowRect (hwnd, &rect);
 	  GetCursorPos (&ptCursor);	  
 	  /* generate a scroll if necessary 
-	  (cursor position outside client bounds)*/
+	     (cursor position outside client bounds)*/
 	  if (ptCursor.y > rect.bottom ||
 	      ptCursor.y < rect.top ||
 	      ptCursor.x > rect.right ||
 	      ptCursor.x < rect.left)
-	  {
-	  GetClientRect (hwnd, &cRect);
-	  if (ptCursor.y > rect.bottom)
 	    {
-	      Y_Pos = cRect.bottom;
-	      TtcLineDown (document, view);
+	      GetClientRect (hwnd, &cRect);
+	      if (ptCursor.y > rect.bottom)
+		{
+		  Y_Pos = cRect.bottom;
+		  TtcLineDown (document, view);
+		}
+	      else if (ptCursor.y < rect.top)
+		{
+		  Y_Pos = 0;
+		  TtcLineUp (document, view);
+		}
+	      if (ptCursor.x > rect.right)
+		{
+		  X_Pos = cRect.right;
+		  TtcScrollRight (document, view);
+		}
+	      else if (ptCursor.x < rect.left)
+		{
+		  X_Pos = 0;
+		  TtcScrollLeft (document, view);
+		}
+	      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
 	    }
-	  else if (ptCursor.y < rect.top)
-	    {
-	      Y_Pos = 0;
-	      TtcLineUp (document, view);
-	    }
-	  if (ptCursor.x > rect.right)
-	    {
-	      X_Pos = cRect.right;
-	      TtcScrollRight (document, view);
-	    }
-	  else if (ptCursor.x < rect.left)
-	    {
-	      X_Pos = 0;
-	      TtcScrollLeft (document, view);
-	    }
- 	  LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-	  }
 	  else
-	  {
-		  /* Just Extending Selection*/
-		  if (mMsg == WM_MOUSEMOVE)
-		  {	
-			X_Pos = LOWORD (lParam);
-			Y_Pos = HIWORD (lParam);
-			if ((oldXPos <= X_Pos - 1 || oldXPos >= X_Pos + 1) ||  
-				  (oldYPos <= Y_Pos - 1 || oldYPos >= Y_Pos + 1))
-			{
-					LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-					oldXPos = X_Pos;
-					oldYPos = Y_Pos;
-			 }
-		  }
-	  }
-	 }
-  }
+	    {
+	      /* Just Extending Selection*/
+	      if (mMsg == WM_MOUSEMOVE)
+		{	
+		  X_Pos = LOWORD (lParam);
+		  Y_Pos = HIWORD (lParam);
+		  if ((oldXPos <= X_Pos - 1 || oldXPos >= X_Pos + 1) ||  
+		      (oldYPos <= Y_Pos - 1 || oldYPos >= Y_Pos + 1))
+		    {
+		      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+		      oldXPos = X_Pos;
+		      oldYPos = Y_Pos;
+		    }
+		}
+	    }
+	}
+    }
     
   switch (mMsg)
     {
@@ -2077,19 +2077,19 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	{
 	  if (wParam >= 48 && wParam <= 57)
 	    {
-	    /* handling Ctrl 0-9 or Alt 0-9 */
+	      /* handling Ctrl 0-9 or Alt 0-9 */
 	      key_menu = GetKeyState (VK_MENU);
   	      key = GetKeyState (VK_CONTROL);
-		  /* is it an Alt-GR modifier? (WIN32 interprets this
-		     as having both a control + menu key pressed down) */
+	      /* is it an Alt-GR modifier? (WIN32 interprets this
+		 as having both a control + menu key pressed down) */
 	      if (HIBYTE (key_menu) && HIBYTE (key))
-			return 0;
-		  /* is a control key pressed? */
+		return 0;
+	      /* is a control key pressed? */
 	      if (HIBYTE (key))
-		    isSpecial = FALSE;
+		isSpecial = FALSE;
 	      else
 		{
-          /* is a menu key pressed? */
+		  /* is a menu key pressed? */
 		  if (HIBYTE (key_menu))
 		    isSpecial = FALSE;
 		  else
@@ -2102,7 +2102,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  key = (int) wParam;
 	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
 	    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
-                             lParam, isSpecial);
+				 lParam, isSpecial);
 	  if (wParam != VK_MENU)
 	    return 0;
 	}
@@ -2118,38 +2118,38 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 
 #ifdef IME_INPUT
     case WM_IME_COMPOSITION:
-	{
-	  HIMC hIMC = ImmGetContext(hwnd);
-	  if (lParam & GCS_RESULTSTR)
-	    {
-	      CHAR_T str[128];
-	      int len, i;
+      {
+	HIMC hIMC = ImmGetContext(hwnd);
+	if (lParam & GCS_RESULTSTR)
+	  {
+	    CHAR_T str[128];
+	    int len, i;
 
-	      len = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);
-	      /* need to check (len/2) < 128; len is strangely in bytes rather than wchars */
-	      ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, str, len);
-	      ImmReleaseContext(hwnd, hIMC);
-	      len /= 2;
-	      /* actually move the characters to the document */
-	      for (i=0; i<len; i++)
-		InsertChar(frame, str[i], -1);
-	      return 0;
-	    }
-	}
+	    len = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);
+	    /* need to check (len/2) < 128; len is strangely in bytes rather than wchars */
+	    ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, str, len);
+	    ImmReleaseContext(hwnd, hIMC);
+	    len /= 2;
+	    /* actually move the characters to the document */
+	    for (i=0; i<len; i++)
+	      InsertChar(frame, str[i], -1);
+	    return 0;
+	  }
+      }
       break;
 #endif /* IME_INPUT */
     case WM_LBUTTONDOWN:
       /* Activate the client window */
       SetFocus (FrRef[frame]);
-	  SetCapture (hwnd);
-	  /* stop any current insertion of text in the old frame */
+      SetCapture (hwnd);
+      /* stop any current insertion of text in the old frame */
       ActiveFrame = ClickFrame;
       CloseInsertion ();
       ClickFrame = frame;
       ActiveFrame = frame;
       oldXPos = ClickX = LOWORD (lParam);
       oldYPos = ClickY = HIWORD (lParam);
-     status = GetKeyState (VK_SHIFT);
+      status = GetKeyState (VK_SHIFT);
       if (HIBYTE (status))
 	LocateSelectionInView (frame, ClickX, ClickY, 0);
       else
@@ -2167,13 +2167,13 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_LBUTTONUP:
       X_Pos = LOWORD (lParam);
       Y_Pos = HIWORD (lParam);
-	  if (GetCapture () == hwnd)
-		{
-			ReleaseCapture ();
-			/*End Selection*/
-			LocateSelectionInView (frame, ClickX, ClickY, 4);
-		}
-     return 0;
+      if (GetCapture () == hwnd)
+	{
+	  ReleaseCapture ();
+	  /*End Selection*/
+	  LocateSelectionInView (frame, ClickX, ClickY, 4);
+	}
+      return 0;
 
     case WM_LBUTTONDBLCLK:
       /* left double click handling */
@@ -2231,10 +2231,10 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 
 
     case WM_NCMOUSEMOVE:
-		/* Mouse move outside client area*/
+      /* Mouse move outside client area*/
       return 0;
     case WM_MOUSEMOVE:
-		/* Mouse move inside client area*/
+      /* Mouse move inside client area*/
       return 0;
 
     default:
@@ -2248,14 +2248,14 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 #else /* _WINDOWS */
 #ifdef _GTK
 /*----------------------------------------------------------------------
-   GtkLiningSelection 
+  GtkLiningSelection 
 
-   When user hold clicked a mouse button in order to extend a selection
-   and scroll in the meantime,
-   those functions are called by a timer each 100 ms
-   in order to repeat user action until he released the button
-   or move away from the widget.
-----------------------------------------------------------------------*/
+  When user hold clicked a mouse button in order to extend a selection
+  and scroll in the meantime,
+  those functions are called by a timer each 100 ms
+  in order to repeat user action until he released the button
+  or move away from the widget.
+  ----------------------------------------------------------------------*/
 static ThotBool     Selecting = FALSE;
 
 gboolean GtkLiningSelection (gpointer data)
@@ -2287,16 +2287,22 @@ gboolean GtkLiningSelection (gpointer data)
       /* generate a scroll if necessary */
       if (Motion_y > FrameTable[frame].FrHeight)
 	{
+#ifndef _GLTRANSFORMATION
 	  if (pFrame->FrAbstractBox &&
 	      pFrame->FrAbstractBox->AbBox &&
 	      pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxHeight)
-	    TtcLineDown (doc, view);
-	  else
-	    {
-	      /* stop the scrolling */
-	      Selecting = FALSE;
-	      Motion_y = FrameTable[frame].FrHeight;
-	    }
+#else /* _GLTRANSFORMATION */
+	    if (pFrame->FrAbstractBox &&
+		pFrame->FrAbstractBox->AbBox &&
+		pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxClipH)
+#endif /* _GLTRANSFORMATION */
+	      TtcLineDown (doc, view);
+	    else
+	      {
+		/* stop the scrolling */
+		Selecting = FALSE;
+		Motion_y = FrameTable[frame].FrHeight;
+	      }
        
 	}
       else if (Motion_y < 0)
@@ -2349,14 +2355,14 @@ gboolean GtkLiningSelection (gpointer data)
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
-   Evenement sur une frame document.                              
-   D.V. equivalent de la fontion MS-Windows ci dessus !        
-   GTK: fonction qui traite les click de la souris sauf la selection   
+  Evenement sur une frame document.                              
+  D.V. equivalent de la fontion MS-Windows ci dessus !        
+  GTK: fonction qui traite les click de la souris sauf la selection   
   ----------------------------------------------------------------------*/
 #ifndef _GTK
 void FrameCallback (int frame, void *evnt)
 #else /* _GTK */
-gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
+     gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
 #endif /* _GTK */
 {
 #ifndef _GTK
@@ -2389,7 +2395,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   else if (ClickIsDone == 1 &&
 	   (ev->type == ButtonPress || ev->type == KeyPress))
 #else /* _GTK */
-  frame = (int )data;
+    frame = (int )data;
   /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -2399,19 +2405,19 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
 #endif /* _GTK */
     /* Amaya is waiting for a selection */
-      {
-	ClickIsDone = 0;
-	ClickFrame = frame;
+    {
+      ClickIsDone = 0;
+      ClickFrame = frame;
 #ifndef _GTK
-	ClickX = ev->xbutton.x;
-	ClickY = ev->xbutton.y;
-	return;
+      ClickX = ev->xbutton.x;
+      ClickY = ev->xbutton.y;
+      return;
 #else /* _GTK */
-	ClickX = event->x;
-        ClickY = event->y;
-        return FALSE;
+      ClickX = event->x;
+      ClickY = event->y;
+      return FALSE;
 #endif /* _GTK */
-      }
+    }
 
   /* S'il y a un TtaWaitShowDialogue en cours on n'autorise pas de changer */
   /* la selection courante. */
@@ -2649,7 +2655,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	} 
       switch (event->button)
 	{
-	   /* ==========LEFT BUTTON========== */
+	  /* ==========LEFT BUTTON========== */
 	case 1:
 	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
@@ -2683,7 +2689,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y; 
-		  LocateSelectionInView (frame, ClickX, ClickY, 5);	     
+	      LocateSelectionInView (frame, ClickX, ClickY, 5);	     
 	    }
 	  break;
 	case 3:
@@ -2809,7 +2815,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 #ifdef _GTK
 /*----------------------------------------------------------------------
   DragCallbackGTK handles drag and drop                     
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 gboolean DragCallbackGTK (GtkWidget *widget, GdkDragContext *drag_context,
 			  gint x, gint y, guint time, gpointer user_data)
 {
@@ -2818,16 +2824,16 @@ gboolean DragCallbackGTK (GtkWidget *widget, GdkDragContext *drag_context,
 }
   
 /*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 gboolean FocusInCallbackGTK (GtkWidget *widget, GdkEventFocus *event,
-			 gpointer user_data)
+			     gpointer user_data)
 {
   gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
   return FALSE;
 }
 
 /*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 gboolean FocusOutCallbackGTK (GtkWidget *widget, GdkEventFocus *event,
 			      gpointer user_data)
 {
@@ -2836,7 +2842,7 @@ gboolean FocusOutCallbackGTK (GtkWidget *widget, GdkEventFocus *event,
 }
 
 /*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 gboolean ButtonPressCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 				 gpointer user_data)
 {
@@ -2845,7 +2851,7 @@ gboolean ButtonPressCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 }
 
 /*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 gboolean ButtonReleaseCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 				   gpointer user_data)
 {
@@ -2857,7 +2863,7 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 
 
 /*----------------------------------------------------------------------
-   ThotGrab fait un XGrabPointer.                                  
+  ThotGrab fait un XGrabPointer.                                  
   ----------------------------------------------------------------------*/
 void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 {
@@ -2873,7 +2879,7 @@ void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 
 
 /*----------------------------------------------------------------------
-   ThotUngrab est une fonction d'interface pour UnGrab.            
+  ThotUngrab est une fonction d'interface pour UnGrab.            
   ----------------------------------------------------------------------*/
 void ThotUngrab ()
 {
@@ -2887,7 +2893,7 @@ void ThotUngrab ()
 }
 
 /*----------------------------------------------------------------------
-   TtaGetThotWindow recupere le numero de la fenetre.           
+  TtaGetThotWindow recupere le numero de la fenetre.           
   ----------------------------------------------------------------------*/
 ThotWindow TtaGetThotWindow (int frame)
 {
@@ -2895,63 +2901,63 @@ ThotWindow TtaGetThotWindow (int frame)
 }
 
 /*----------------------------------------------------------------------
-   SetCursorWatch affiche le curseur "montre".                  
+  SetCursorWatch affiche le curseur "montre".                  
   ----------------------------------------------------------------------*/
 void SetCursorWatch (int thotThotWindowid)
 {
 #ifndef _WINDOWS
-   Drawable            drawable;
+  Drawable            drawable;
 #ifdef _GTK   
-   int                 frame;
-   ThotWidget          w;
+  int                 frame;
+  ThotWidget          w;
 #endif /* _GTK */
 
   
-   drawable = (Drawable)TtaGetThotWindow (thotThotWindowid);
+  drawable = (Drawable)TtaGetThotWindow (thotThotWindowid);
 #ifndef _GTK
-   XDefineCursor (TtDisplay, drawable, WaitCurs);
+  XDefineCursor (TtDisplay, drawable, WaitCurs);
 #else /*_GTK */
-    for (frame = 1; frame <= MAX_FRAME; frame++)
-	{
-	    w = FrameTable[frame].WdFrame;
-	    if (w != NULL)
-		if (w->window != NULL)
-		    gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
-	}
+  for (frame = 1; frame <= MAX_FRAME; frame++)
+    {
+      w = FrameTable[frame].WdFrame;
+      if (w != NULL)
+	if (w->window != NULL)
+	  gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
+    }
 #endif /* _GTK */
 #else  /* _WINDOWS */
-   SetCursor (LoadCursor (NULL, IDC_WAIT));
-   ShowCursor (TRUE);
+  SetCursor (LoadCursor (NULL, IDC_WAIT));
+  ShowCursor (TRUE);
 #endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
-   ResetCursorWatch enleve le curseur "montre".                 
+  ResetCursorWatch enleve le curseur "montre".                 
   ----------------------------------------------------------------------*/
 void ResetCursorWatch (int thotThotWindowid)
 {  
 #ifndef _WINDOWS
-   Drawable            drawable;
+  Drawable            drawable;
 #ifdef _GTK
-   int                 frame;
-   ThotWidget          w;
+  int                 frame;
+  ThotWidget          w;
 #endif /* _GTK */
 
-   drawable = (Drawable) TtaGetThotWindow (thotThotWindowid);
+  drawable = (Drawable) TtaGetThotWindow (thotThotWindowid);
 #ifndef _GTK
-   XUndefineCursor (TtDisplay, drawable);
+  XUndefineCursor (TtDisplay, drawable);
 #else /* GTK */
-    for (frame = 1; frame <= MAX_FRAME; frame++)
-	{
-	    w = FrameTable[frame].WdFrame;
-	    if (w != NULL)
-		if (w->window != NULL)
-		    gdk_window_set_cursor (GTK_WIDGET(w)->window, ArrowCurs);
-	}
+  for (frame = 1; frame <= MAX_FRAME; frame++)
+    {
+      w = FrameTable[frame].WdFrame;
+      if (w != NULL)
+	if (w->window != NULL)
+	  gdk_window_set_cursor (GTK_WIDGET(w)->window, ArrowCurs);
+    }
 #endif /* _GTK */
 #  else  /* _WINDOWS */
-   ShowCursor (FALSE);
-   SetCursor (LoadCursor (NULL, IDC_ARROW));
+  ShowCursor (FALSE);
+  SetCursor (LoadCursor (NULL, IDC_ARROW));
 #  endif /* _WINDOWS */
 }
 
@@ -2959,102 +2965,102 @@ void ResetCursorWatch (int thotThotWindowid)
   ----------------------------------------------------------------------*/
 void TtaSetCursorWatch (Document document, View view)
 {
-   int                 frame;
+  int                 frame;
 #  ifndef _WINDOWS
-   Drawable            drawable;
+  Drawable            drawable;
 #ifdef _GTK
-   ThotWidget          w;
+  ThotWidget          w;
 #endif /* _GTK */
 #  endif  /* _WINDOWS */
 
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-     {
-	for (frame = 1; frame <= MAX_FRAME; frame++)
-	  {
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (document == 0 && view == 0)
+    {
+      for (frame = 1; frame <= MAX_FRAME; frame++)
+	{
 #ifndef _WINDOWS
-	     drawable = (Drawable)TtaGetThotWindow (frame);
-	     if (drawable != 0)
+	  drawable = (Drawable)TtaGetThotWindow (frame);
+	  if (drawable != 0)
 #ifndef _GTK
-		XDefineCursor (TtDisplay, drawable, WaitCurs);
+	    XDefineCursor (TtDisplay, drawable, WaitCurs);
 #else /* _GTK */
-		 {
-		     w = FrameTable[frame].WdFrame;
-		     gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
-		 }
+	  {
+	    w = FrameTable[frame].WdFrame;
+	    gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
+	  }
 #endif /* _GTK */
 #endif /* _WINDOWS */
-	  }
-     }
-   else
-   {
-       frame = GetWindowNumber (document, view);
+	}
+    }
+  else
+    {
+      frame = GetWindowNumber (document, view);
 #   ifndef _WINDOWS
-       if (frame != 0)
+      if (frame != 0)
 #ifndef _GTK
-	   XDefineCursor (TtDisplay, TtaGetThotWindow (frame), WaitCurs);
+	XDefineCursor (TtDisplay, TtaGetThotWindow (frame), WaitCurs);
 #else /* _GTK */
-	   {
-		w = FrameTable[frame].WdFrame;
-		gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
-	   }
+      {
+	w = FrameTable[frame].WdFrame;
+	gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
+      }
 #endif /* _GTK */
 #   endif /* _WINDOWS */
-     }
+    }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtaResetCursor (Document document, View view)
 {
-   int                 frame;
+  int                 frame;
 #ifndef _WINDOWS
-   Drawable            drawable;
+  Drawable            drawable;
 #ifdef _GTK
-   ThotWidget          w;
+  ThotWidget          w;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-     {
-	for (frame = 1; frame <= MAX_FRAME; frame++)
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (document == 0 && view == 0)
+    {
+      for (frame = 1; frame <= MAX_FRAME; frame++)
+	{
+#ifndef _WINDOWS
+	  drawable = (Drawable)TtaGetThotWindow (frame);
+	  if (drawable != 0)
+#ifndef _GTK
+	    XUndefineCursor (TtDisplay, drawable);
+#else /* _GTK */
 	  {
-#ifndef _WINDOWS
-	     drawable = (Drawable)TtaGetThotWindow (frame);
-	     if (drawable != 0)
-#ifndef _GTK
-		XUndefineCursor (TtDisplay, drawable);
-#else /* _GTK */
-	    {
-		w = FrameTable[frame].WdFrame;
-		if (w != NULL)
-		    if (w->window != NULL)
-			gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
-	    }  
+	    w = FrameTable[frame].WdFrame;
+	    if (w != NULL)
+	      if (w->window != NULL)
+		gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
+	  }  
 #endif /* _GTK */
 #endif /* _WINDOWS */
-	  }
-     }
-   else
-     {
-	frame = GetWindowNumber (document, view);
+	}
+    }
+  else
+    {
+      frame = GetWindowNumber (document, view);
 #ifndef _WINDOWS
-	if (frame != 0)
+      if (frame != 0)
 #ifndef _GTK
-	   XUndefineCursor (TtDisplay, TtaGetThotWindow (frame));
+	XUndefineCursor (TtDisplay, TtaGetThotWindow (frame));
 #else /* _GTK */
-	    {
-		w = FrameTable[frame].WdFrame;
-		if (w != NULL)
-		    if (w->window != NULL)
-			gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
-	    }  
+      {
+	w = FrameTable[frame].WdFrame;
+	if (w != NULL)
+	  if (w->window != NULL)
+	    gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
+      }  
 #endif /* _GTK */
 #endif /* _WINDOWS */
-     }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3184,8 +3190,8 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   if (w)
     {
 #ifdef _GTK
-       w = gtk_widget_get_toplevel (w);
-       gtk_window_set_title (GTK_WINDOW(w), title);
+      w = gtk_widget_get_toplevel (w);
+      gtk_window_set_title (GTK_WINDOW(w), title);
 #else /* _GTK */
       w = XtParent (XtParent (XtParent (w)));
       n = 0;
@@ -3202,53 +3208,53 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 }
 
 /*----------------------------------------------------------------------
-   La frame d'indice frame devient la fenetre active.               
+  La frame d'indice frame devient la fenetre active.               
   ----------------------------------------------------------------------*/
 void ChangeSelFrame (int frame)
 {
-   ThotWidget          w;
-   Document            doc;
+  ThotWidget          w;
+  Document            doc;
 
-   if (ActiveFrame != frame)
-     {
-       /* check if a new document is selected */
-       if (ActiveFrame == 0)
-	 doc = 0;
-       else
-	 doc = FrameTable[frame].FrDoc;
-       ActiveFrame = frame;
-       if (frame != 0 && FrameTable[frame].FrDoc != doc)
-	  {
-	    /* raise the new document */
-	     w = FrameTable[frame].WdFrame;
+  if (ActiveFrame != frame)
+    {
+      /* check if a new document is selected */
+      if (ActiveFrame == 0)
+	doc = 0;
+      else
+	doc = FrameTable[frame].FrDoc;
+      ActiveFrame = frame;
+      if (frame != 0 && FrameTable[frame].FrDoc != doc)
+	{
+	  /* raise the new document */
+	  w = FrameTable[frame].WdFrame;
 #ifndef _WINDOWS
 #ifndef _GTK
-	     if (w != 0)
-	       XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+	  if (w != 0)
+	    XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
 
 #endif /* _GTK */
 #endif /* _WINDOWS */
-	  }
-     }
+	}
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   GetWindowFrame retourne l'indice de la table des Cadres associe'    
-   a` la fenetre w.                                        
+  GetWindowFrame retourne l'indice de la table des Cadres associe'    
+  a` la fenetre w.                                        
   ----------------------------------------------------------------------*/
 int GetWindowFrame (ThotWindow w)
 {
-   int                 f;
+  int                 f;
 
-   /* On recherche l'indice de la fenetre */
-   for (f = 0; f <= MAX_FRAME; f++)
-     {
-	if (FrRef[f] != 0 && FrRef[f] == w)
-	   break;
-     }
-   return (f);
+  /* On recherche l'indice de la fenetre */
+  for (f = 0; f <= MAX_FRAME; f++)
+    {
+      if (FrRef[f] != 0 && FrRef[f] == w)
+	break;
+    }
+  return (f);
 }
 
 #ifdef _WINDOWS
@@ -3256,42 +3262,42 @@ int GetWindowFrame (ThotWindow w)
   ----------------------------------------------------------------------*/
 int GetWindowWinMainFrame (ThotWindow w)
 {
-   int                 f;
+  int                 f;
 
-   /* On recherche l'indice de la fenetre */
-   for (f = 0; f <= MAX_FRAME; f++) {
-       if (FrMainRef[f] != 0 && FrMainRef[f] == w)
-	  break;
-   }
-   return (f);
+  /* On recherche l'indice de la fenetre */
+  for (f = 0; f <= MAX_FRAME; f++) {
+    if (FrMainRef[f] != 0 && FrMainRef[f] == w)
+      break;
+  }
+  return (f);
 }
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        
+  GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        
   ----------------------------------------------------------------------*/
 void GetSizesFrame (int frame, int *width, int *height)
 {
 #ifdef _GL
-   *width = FrameTable[frame].FrWidth;
-   *height = FrameTable[frame].FrHeight;
+  *width = FrameTable[frame].FrWidth;
+  *height = FrameTable[frame].FrHeight;
 #else /*_GL*/
 #ifndef _WINDOWS
-   *width = FrameTable[frame].FrWidth;
-   *height = FrameTable[frame].FrHeight;
+  *width = FrameTable[frame].FrWidth;
+  *height = FrameTable[frame].FrHeight;
 #else  /* _WINDOWS */
-   RECT rWindow;
+  RECT rWindow;
 
-   if (GetClientRect (FrRef[frame], &rWindow) != 0)
-     {
-       *height = rWindow.bottom - rWindow.top;
-       *width  = rWindow.right - rWindow.left;
-     }
-   else
-     {
-       *height = 0;
-       *width = 0;
-     }
+  if (GetClientRect (FrRef[frame], &rWindow) != 0)
+    {
+      *height = rWindow.bottom - rWindow.top;
+      *width  = rWindow.right - rWindow.left;
+    }
+  else
+    {
+      *height = 0;
+      *width = 0;
+    }
 #endif /* _WINDOWS */
 #endif /*_GL*/
 }
@@ -3315,7 +3321,8 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 #endif /* _WINDOWS */
 #endif /* _GL */
 
-  if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {
+  if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) 
+{
     /* compute the clipping area in the window */
     clipx = *xd - orgx;
     if (clipx < 0)

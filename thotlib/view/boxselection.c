@@ -138,13 +138,23 @@ void ClearViewSelection (int frame)
 			pAb1->AbLeafType == LtPath)
 		      {
 			/* the whole box is selected */
+#ifndef _GLTRANSFORMATION
 			x1 = pBox1->BxXOrg;
 			x2 = pBox1->BxXOrg + pBox1->BxWidth;
+#else /* _GLTRANSFORMATION */
+			x1 = pBox1->BxClipX;
+			x2 = pBox1->BxClipX + pBox1->BxClipW;
+#endif /* _GLTRANSFORMATION */
 		      }
 		    else
 		      {
+#ifndef _GLTRANSFORMATION
 			x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 			x2 = pBox1->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
+#else /* _GLTRANSFORMATION */
+			x1 = pBox1->BxClipX + pFrame->FrSelectionBegin.VsXPos;
+			x2 = pBox1->BxClipX + pFrame->FrSelectionEnd.VsXPos;
+#endif /* _GLTRANSFORMATION */
 		      }
 		    if (x1 == x2)
 		      /* removing the caret at the end of a text */
@@ -164,12 +174,14 @@ void ClearViewSelection (int frame)
 	      {
 		/* several pieces of a split box are selected */
 		/* the first one */
+#ifndef _GLTRANSFORMATION
 		x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 		x2 = pBox1->BxXOrg + pBox1->BxWidth;
-#ifndef _GLTRANSFORMATION
 		DefClip (frame, x1, pBox1->BxYOrg, x2,
 			 pBox1->BxYOrg + pBox1->BxHeight);
 #else /* _GLTRANSFORMATION */
+		x1 = pBox1->BxClipX + pFrame->FrSelectionBegin.VsXPos;
+		x2 = pBox1->BxClipX + pBox1->BxClipW;
 		DefClip (frame, x1, pBox1->BxClipY, x2,
 			 pBox1->BxClipY + pBox1->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -190,12 +202,14 @@ void ClearViewSelection (int frame)
 		    pBox1 = pBox1->BxNexChild;
 		  }
 		/* the last one */
+#ifndef _GLTRANSFORMATION
 		x1 = pBox2->BxXOrg;
 		x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
-#ifndef _GLTRANSFORMATION
 		DefClip (frame, x1, pBox2->BxYOrg, x2,
 			 pBox2->BxYOrg + pBox2->BxHeight);
 #else /* _GLTRANSFORMATION */
+		x1 = pBox2->BxClipX;
+		x2 = pBox2->BxClipX + pFrame->FrSelectionEnd.VsXPos;
 		DefClip (frame, x1, pBox2->BxClipY, x2,
 			 pBox2->BxClipY + pBox2->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -216,13 +230,23 @@ void ClearViewSelection (int frame)
 		    if (pFrame->FrSelectionBegin.VsIndBox == 0)
 		      {
 			/* the whole box is selected */
+#ifndef _GLTRANSFORMATION
 			x1 = pBox1->BxXOrg;
 			x2 = pBox1->BxXOrg + pBox1->BxWidth;
+#else /* _GLTRANSFORMATION */
+			x1 = pBox1->BxClipX;
+			x2 = pBox1->BxClipX + pBox1->BxClipW;
+#endif /* _GLTRANSFORMATION */
 		      }
 		    else
 		      {
+#ifndef _GLTRANSFORMATION
 			x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 			x2 = pBox1->BxXOrg + pBox1->BxWidth;
+#else /* _GLTRANSFORMATION */
+			x1 = pBox1->BxClipX + pFrame->FrSelectionBegin.VsXPos;
+			x2 = pBox1->BxClipX + pBox1->BxClipW;
+#endif /* _GLTRANSFORMATION */
 		      }
 #ifndef _GLTRANSFORMATION
 		    DefClip (frame, x1, pBox1->BxYOrg, x2,
@@ -249,8 +273,6 @@ void ClearViewSelection (int frame)
 				     pBox->BxClipX + pBox->BxClipW,
 				     pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
-
-
 			    pBox = pBox->BxNexChild;
 			  }
 		      }
@@ -270,13 +292,23 @@ void ClearViewSelection (int frame)
 		    if (pFrame->FrSelectionEnd.VsIndBox == 0)
 		      {
 			/* the whole box is selected */
+#ifndef _GLTRANSFORMATION
 			x1 = pBox2->BxXOrg;
 			x2 = pBox2->BxXOrg + pBox2->BxWidth;
+#else /* _GLTRANSFORMATION */
+			x1 = pBox2->BxClipX;
+			x2 = pBox2->BxClipX + pBox2->BxClipW;
+#endif /* _GLTRANSFORMATION */
 		      }
 		    else
 		      {
+#ifndef _GLTRANSFORMATION
 			x1 = pBox2->BxXOrg;
 			x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
+#else /* _GLTRANSFORMATION */
+			x1 = pBox2->BxClipX;
+			x2 = pBox2->BxClipX + pFrame->FrSelectionEnd.VsXPos;
+#endif /* _GLTRANSFORMATION */
 		      }
 #ifndef _GLTRANSFORMATION
 		    DefClip (frame, x1, pBox2->BxYOrg, x2,

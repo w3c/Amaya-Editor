@@ -20,6 +20,12 @@ extern void DefRegion ( int frame,
                         int xf,
                         int yf );
 extern void TtaRefresh ( void );
+extern void DrawFilledBox ( PtrAbstractBox pAb,
+                            int frame,
+                            int xmin,
+                            int xmax,
+                            int ymin,
+                            int ymax );
 extern PtrBox DisplayAllBoxes ( int frame,
                                 int xmin,
                                 int xmax,
@@ -51,6 +57,12 @@ extern void DefRegion (/* int frame,
                           int xf,
                           int yf */);
 extern void TtaRefresh (/* void */);
+extern void DrawFilledBox (/* PtrAbstractBox pAb,
+                              int frame,
+                              int xmin,
+                              int xmax,
+                              int ymin,
+                              int ymax */);
 extern PtrBox DisplayAllBoxes (/* int frame,
                                   int xmin,
                                   int xmax,

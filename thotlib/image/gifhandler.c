@@ -725,6 +725,7 @@ static int nbbits (unsigned long ul)
 }
 #endif /* !_GTK */
 #ifndef _WINDOWS
+#ifndef _GL
 /*----------------------------------------------------------------------
   Make a shape  of depth 1 for display from image data.
   The parameter bperpix gives the number of bytes per pixel.
@@ -927,7 +928,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 #endif /* _GTK */
   return (pmask);
 }
-
+#endif /* _GL */
 
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.

@@ -375,6 +375,11 @@ extern void TtaFreeTransform (void *transform);
 extern void TtaSetElCoordinateSystem (Element element);
 
 extern void TtaPlay (Document doc, View view);
+/*----------------------------------------------------------------------
+   TtaAppendTransform
+   Copy a Linked List of transform into another struct
+  ----------------------------------------------------------------------*/
+void *TtaCopyTransform(void *pPa);
 
 
 /*----------------------------------------------------------------------
@@ -383,6 +388,7 @@ extern void TtaPlay (Document doc, View view);
 
 extern void *TtaNewAnimInfo ();
 
+extern void *TtaCopyTransform ( void *pPa );
 extern void TtaAppendAnim (Element element, void *anim);
 
 extern void TtaSetAnimationTime (void *anim_info, double start, double duration);
@@ -397,6 +403,24 @@ extern void TtaSetAnimTypetoColor (void *anim);
 extern void TtaSetAnimTypetoAnimate (void *anim);
 extern void TtaSetAnimTypetoTransform (void *anim);
 extern void TtaSetAnimTypetoMotion (void *anim);
+
+extern void TtaFreeAnimation (void *anim);
+/*----------------------------------------------------------------------
+   TtaCopyAnim : Copy anim linked list 
+  ----------------------------------------------------------------------*/
+void *TtaCopyAnim (void *src);
+
+/*----------------------------------------------------------------------
+   TtaSetLinearGradient
+   ----------------------------------------------------------------------*/
+void TtaSetLinearGradient (Element el);
+void TtaSetLinearx1Gradient (int value, Element el);
+void TtaSetLineary1Gradient (int value, Element el);
+void TtaSetLinearx2Gradient (int value, Element el);
+void TtaSetLineary2Gradient (int value, Element el);
+void TtaSetStopColorGradient (unsigned short red, unsigned short green,
+			      unsigned short blue, Element el);
+void TtaSetStopOffsetColorGradient (int offset, Element el);
      
 /*----------------------------------------------------------------------
    TtaCopyPage

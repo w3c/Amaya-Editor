@@ -423,16 +423,19 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   pBox = pAb->AbBox;
 
 #ifdef _GLTRANSFORMATION 
+  pBox->BxClipX = pBox->BxXOrg;
+  pBox->BxClipY = pBox->BxYOrg;
+  pBox->BxClipW = pBox->BxW;
+  pBox->BxClipH = pBox->BxH;
   if ((pBox->BxXOrg || pBox->BxYOrg) &&
       pAb->AbElement->ElSystemOrigin)
-    {
+    {	
       CoordinateSystemUpdate (pAb, frame,
 			      pBox->BxXOrg, pBox->BxYOrg);
       pBox->BxXOrg = 0;
-      pBox->BxYOrg = 0;
+      pBox->BxYOrg = 0;	 
     }
 #endif /* _GLTRANSFORMATION */
-
   x = pBox->BxXOrg;
   y = pBox->BxYOrg;
   width = pBox->BxW;
@@ -464,9 +467,19 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		while (box1 != NULL)
 		  {
 		    if (horizRef)
+		      {
 		      box1->BxXOrg += x;
+#ifdef _GLTRANSFORMATION
+		      box1->BxClipX = box1->BxXOrg;
+#endif /* _GLTRANSFORMATION */
+		      }
 		    if (vertRef)
+		      {
 		      box1->BxYOrg += y;
+#ifdef _GLTRANSFORMATION
+		      box1->BxClipY = box1->BxYOrg;
+#endif /* _GLTRANSFORMATION */
+		      }
 		    box1 = box1->BxNexChild;
 		  }
 	      }
@@ -734,6 +747,16 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		  AddBoxTranslations (pChildAb, visibility, frame, placeenX, placeenY);
 	      }
 	  }
+#ifdef _GLTRANSFORMATION
+	/*if no transformation, make clipx, clipy OK*/
+	pChildBox->BxClipX = pChildBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+           pBox->BxLPadding;
+	pChildBox->BxClipY = pChildBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+           pBox->BxTPadding;
+	pChildBox->BxClipW = pChildBox->BxW;
+	pChildBox->BxClipH = pChildBox->BxH;
+#endif /* _GLTRANSFORMATION */
+
 	/* passe au suivant */
 	pChildAb = pChildAb->AbNext;
       }
@@ -742,7 +765,6 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   /* --> il faut reevaluer la dimension correspondante.            */
   if (reenglobx && pBox->BxContentWidth)
     RecordEnclosing (pBox, TRUE);
-
   if (reengloby && pBox->BxContentHeight)
     RecordEnclosing (pBox, FALSE);
 }

@@ -11,9 +11,6 @@
  * Authors: P. Cheyrou (INRIA)
  *
  */
-
-#ifdef _GLANIM
-
 #include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -63,6 +60,7 @@
 #endif /* _GL */
 #include <math.h>
 
+#ifdef _GLANIM
 static int Animated_Frame = 0;
 static int Clipx, Clipy, ClipxMax, ClipyMax;
 
@@ -112,8 +110,8 @@ static void UpdateClipping (PtrAbstractBox pAb)
 }
 
 static double interpolate_double_value (int from, int to, 
-				     AnimTime current_time,
-				     AnimTime duration)
+					AnimTime current_time,
+					AnimTime duration)
 {
   return (from + ((fmod (current_time, duration) * (to - from)) / duration));
 }
@@ -128,22 +126,24 @@ static void ApplyOpacityToAllBoxes (PtrAbstractBox pAb, int result)
     }
 }
 
-static void ApplyXToAllBoxes (PtrAbstractBox pAb, int result)
+static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
 {
   while (pAb != NULL)
     {      
       pAb->AbBox->BxXOrg = result;
       pAb->AbBox->BxClipX = result;
+      pAb->AbHorizPosChange = TRUE;      
       ApplyXToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
 }
-static void ApplyYToAllBoxes (PtrAbstractBox pAb, int result)
+static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
 {
   while (pAb != NULL)
     {      
       pAb->AbBox->BxYOrg = result;
       pAb->AbBox->BxClipY = result;
+      pAb->AbVertPosChange = TRUE;
       ApplyYToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
@@ -169,9 +169,9 @@ static void animate_box_animate (PtrElement El,
 	  {	  
 	    
 	    result = interpolate_double_value (atof ((char *) animated->from), 
-									    atof ((char *) animated->to),
-									    current_time,
-									    animated->duration);
+					       atof ((char *) animated->to),
+					       current_time,
+					       animated->duration);
 	    ApplyOpacityToAllBoxes (pAb->AbFirstEnclosed, (int) (result*1000));
 	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }      
@@ -187,10 +187,10 @@ static void animate_box_animate (PtrElement El,
 	    /* UpdateClipping (pAb->AbFirstEnclosed); */
 
 	    result = interpolate_double_value (atof ((char *) animated->from), 
-						   atof ((char *) animated->to),
-						   current_time,
-						   animated->duration);
-	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, result);
+					       atof ((char *) animated->to),
+					       current_time,
+					       animated->duration);
+	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	   
 	    UpdateClipping (pAb->AbFirstEnclosed);
 	    
@@ -208,10 +208,10 @@ static void animate_box_animate (PtrElement El,
 	    /* 	    UpdateClipping (pAb->AbFirstEnclosed); */
 	    
 	    result = interpolate_double_value (atof ((char *) animated->from), 
-						   atof ((char *) animated->to),
-						   current_time,
-						   animated->duration);
-	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, result);
+					       atof ((char *) animated->to),
+					       current_time,
+					       animated->duration);
+	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	   
 	    UpdateClipping (pAb->AbFirstEnclosed);
 	    
@@ -224,7 +224,8 @@ static PtrTransform GetTransformation (PtrTransform Trans,
 				       TransformType _trans_type)
 {
   ThotBool not_found;
-  
+
+  not_found = TRUE;
   while (not_found && Trans)
     {
       if (Trans->TransType != _trans_type)
@@ -254,12 +255,12 @@ static void animate_box_transformation (PtrElement El,
   /*translate, scale, rotate_, skewX, skewY*/
   switch (trans_type)
     {
-    case 1 :
+    case 1 : /*TRANSLATE*/
       FrameToView (Animated_Frame, &doc, &view);
-      result = (float)interpolate_double_value (atof ((char *) animated->from), 
-				      atof ((char *) animated->to),
-				      current_time,
-				      animated->duration);
+      result = (float) interpolate_double_value (atof ((char *) animated->from), 
+						 atof ((char *) animated->to),
+						 current_time,
+						 animated->duration);
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
 				   PtElTranslate); 
@@ -289,12 +290,12 @@ static void animate_box_transformation (PtrElement El,
       
       break;
 
-    case 2 :
+    case 2 : /*SCALE*/
       FrameToView (Animated_Frame, &doc, &view);
       result = (float)interpolate_double_value (atof ((char *) animated->from), 
-				      atof ((char *) animated->to),
-				      current_time,
-				      animated->duration);
+						atof ((char *) animated->to),
+						current_time,
+						animated->duration);
       
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
@@ -321,16 +322,16 @@ static void animate_box_transformation (PtrElement El,
       
       break;
 
-    case 3 :
+    case 3 :/*Rotate*/
       FrameToView (Animated_Frame, &doc, &view);
       result = (float)interpolate_double_value (atof ((char *) animated->from), 
-				      atof ((char *) animated->to),
-				      current_time,
-				      animated->duration);
+						atof ((char *) animated->to),
+						current_time,
+						animated->duration);
       
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
-				 PtElRotate); 
+				   PtElRotate); 
       
       if (Trans == NULL)
 	{
@@ -353,12 +354,12 @@ static void animate_box_transformation (PtrElement El,
       
       break;
       
-    case 4 :
+    case 4 :/*skewX*/
       FrameToView (Animated_Frame, &doc, &view);
       result = (float)interpolate_double_value (atof ((char *) animated->from), 
-				      atof ((char *) animated->to),
-				      current_time,
-				      animated->duration);
+						atof ((char *) animated->to),
+						current_time,
+						animated->duration);
       
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
@@ -385,12 +386,12 @@ static void animate_box_transformation (PtrElement El,
       
       break;
      
-    case 5 :
+    case 5 :/*SKEWY*/
       FrameToView (Animated_Frame, &doc, &view);
       result = (float)interpolate_double_value (atof ((char *) animated->from), 
-				      atof ((char *) animated->to),
-				      current_time,
-				      animated->duration);
+						atof ((char *) animated->to),
+						current_time,
+						animated->duration);
       
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
@@ -431,8 +432,8 @@ static void animate_box_motion ()
 static ThotBool is_animated_now (Animated_Element *animated, AnimTime current_time)
 {
   if (current_time > animated->start) 
-      /* && */
-/*       current_time < animated->start + animated->duration) */
+    /* && */
+    /*       current_time < animated->start + animated->duration) */
     {
       return TRUE;
     }
@@ -446,52 +447,54 @@ static void animate_box (PtrElement El,
 {
   Animated_Element *animated = NULL;
  
-    if (El)
-      if (El->animation)
-	{      
-	  animated = (Animated_Element *) El->animation;
-	  while (animated)
-	    {
+  if (El)
+    if (El->animation)
+      {      
+	animated = (Animated_Element *) El->animation;
+	while (animated)
+	  {
 	      
-	      if (is_animated_now(animated, current_time))
-		{
-		  switch (animated->AnimType)
-		    {
-		    case Color:
-		      animate_box_color ();
-		      break;
+	    if (is_animated_now(animated, current_time))
+	      {
+		switch (animated->AnimType)
+		  {
+		  case Color:
+		    animate_box_color ();
+		    break;
 		  
-		    case Transformation:
-		      animate_box_transformation (El, animated, current_time);
-		      break;
+		  case Transformation:
+		    animate_box_transformation (El, animated, current_time);
+		    break;
 		  
-		    case Motion:
-		      animate_box_motion ();
-		      break;
+		  case Motion:
+		    animate_box_motion ();
+		    break;
 		  
-		    case Set:
-		      break;
+		  case Set:
+		    break;
 		  
-		    case Animate:
-		      animate_box_animate (El, animated, current_time);
-		      break;
+		  case Animate:
+		    animate_box_animate (El, animated, current_time);
+		    break;
 		  
-		    case OtherAnim:
-		      break;
+		  case OtherAnim:
+		    break;
 		  
-		    default:
-		      break;      
-		    }
-		}
-	      animated = animated->next;	      
-	    }
-	}
+		  default:
+		    break;      
+		  }
+	      }
+	    animated = animated->next;	      
+	  }
+      }
     
 }
+#endif /* _GLANIM */
 
 
 void AnimatedBoxAdd (PtrElement element)
 {
+#ifdef _GLANIM 
   Animated_Cell *current;
 
   if (FrameTable[ActiveFrame].Animated_Boxes == NULL)
@@ -513,13 +516,16 @@ void AnimatedBoxAdd (PtrElement element)
       current = current->Next;
     }
   current->Next = NULL;
-  current->El = element->ElParent;
+  current->El = element;
+  /* current->El = element->ElParent; */
+#endif /* _GLANIM */
 }
 
 void AnimatedBoxDel (PtrElement element)
 {
+#ifdef _GLANIM 
   Animated_Cell *current, *previous;
-  ThotBool not_found = FALSE;
+  ThotBool not_found = TRUE;
   
   if (element->animation)
     {
@@ -530,7 +536,7 @@ void AnimatedBoxDel (PtrElement element)
 	  while (current && not_found)
 	    {
 	      if (current->El == element)
-		not_found = TRUE;
+		not_found = FALSE;
 	      else
 		{
 		  previous = current;	  
@@ -540,21 +546,29 @@ void AnimatedBoxDel (PtrElement element)
 	  
 	  if (not_found)
 	    return;
-	  
+
 	  if (previous)
-	    previous->Next = current->Next;
+	    {	      
+	      if (previous && current && current->Next)
+		previous->Next = current->Next;
+	      else
+		previous->Next = NULL;
+	    }	  
 	  else
 	    FrameTable[ActiveFrame].Animated_Boxes = NULL;
 	  TtaFreeMemory (current);
 	}
     }
+#endif /* _GLANIM */
 }
 
-static void FreeAnimatedBox (Animated_Cell *current)
+void FreeAnimatedBox (Animated_Cell *current)
 {
+#ifdef _GLANIM 
   if (current->Next)
     FreeAnimatedBox (current->Next);
   TtaFreeMemory (current);  
+#endif /* _GLANIM */
 }
 
 
@@ -562,6 +576,7 @@ static void FreeAnimatedBox (Animated_Cell *current)
 void Animate_boxes (int frame, 
 		    AnimTime current_time)
 {
+#ifdef _GLANIM 
   Animated_Cell *current = FrameTable[frame].Animated_Boxes;
 
   /* Time update
@@ -578,7 +593,7 @@ void Animate_boxes (int frame,
       animate_box (current->El, current_time);
       current = current->Next;
     }
-  
   DefRegion (frame, Clipx, Clipy, ClipxMax, ClipyMax);
-}
+  FrameTable[frame].DblBuffNeedSwap = TRUE;
 #endif /* _GLANIM */
+}

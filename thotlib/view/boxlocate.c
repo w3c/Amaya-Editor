@@ -60,6 +60,10 @@
 #include "views_f.h"
 #include "word_f.h"
 
+#ifdef _GL
+#include "tesse_f.h"
+#endif /* _GL */
+
 /*
  * Math Macros conversion from
  * degrees to radians and so on...
@@ -248,8 +252,10 @@ void LocateSelectionInView (int frame, int x, int y, int button)
       /* check if a leaf box is selected */
       pFrame = &ViewFrameTable[frame - 1];
       pViewSel = &pFrame->FrSelectionBegin;
+#ifndef _GLTRANSFORMATION
       x += pFrame->FrXOrg;
       y += pFrame->FrYOrg;
+#endif /*_GLTRANSFORMATION*/
       pAb = pFrame->FrAbstractBox;
       nChars = 0;
       if (button == 6 && SelectedPointInPolyline != 0 &&
@@ -375,7 +381,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 #endif /* _GLTRANSFORMATION */
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
-		    {
+		    {		      
 		      /* send event TteElemClick.Pre to the application */
 		      el = pAb->AbElement;
 		      if (NotifyClick (TteElemClick, TRUE, el, doc))
@@ -560,6 +566,219 @@ static ThotBool PopStack (float *x1, float *y1, float *x2, float *y2,
    *y4 = stack_ptr->y4;
    return (TRUE);
 }
+
+
+/*----------------------------------------------------------------------
+  PolySplit2 : split a polyline and push the results on the stack.
+  ----------------------------------------------------------------------*/
+void PolySplit2 (float a1, float b1, float a2, float b2,
+		float a3, float b3, float a4, float b4,
+		void *mesh)
+{
+#ifdef _GL
+   register float      tx, ty;
+   float               x1, y1, x2, y2, x3, y3, x4, y4;
+   float               sx1, sy1, sx2, sy2;
+   float               tx1, ty1, tx2, ty2, xmid, ymid;
+
+   stack_deep = 0;
+   PushStack (a1, b1, a2, b2, a3, b3, a4, b4);
+
+   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
+     {
+	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
+	   MeshNewPoint (x1, y1, mesh);
+	else
+	  {
+	     tx   = (float) MIDDLE_OF (x2, x3);
+	     ty   = (float) MIDDLE_OF (y2, y3);
+	     sx1  = (float) MIDDLE_OF (x1, x2);
+	     sy1  = (float) MIDDLE_OF (y1, y2);
+	     sx2  = (float) MIDDLE_OF (sx1, tx);
+	     sy2  = (float) MIDDLE_OF (sy1, ty);
+	     tx2  = (float) MIDDLE_OF (x3, x4);
+	     ty2  = (float) MIDDLE_OF (y3, y4);
+	     tx1  = (float) MIDDLE_OF (tx2, tx);
+	     ty1  = (float) MIDDLE_OF (ty2, ty);
+	     xmid = (float) MIDDLE_OF (sx2, tx1);
+	     ymid = (float) MIDDLE_OF (sy2, ty1);
+
+	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
+	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
+	  }
+     }
+#endif/*  _GL */
+}
+/*----------------------------------------------------------------------
+  EllipticSplit2 : creates points on the given elliptic arc 
+  (using endpoint parameterization)
+  see http://www.w3.org/TR/SVG/implnote.html for implementations notes
+  ----------------------------------------------------------------------*/
+void  EllipticSplit2 (int frame, int x, int y,
+		     double x1, double y1, 
+		     double x2, double y2, 
+		     double xradius, double yradius, 
+		     int Phi, int large, int sweep, 
+		     void *mesh)
+{
+#ifdef _GL
+  double xmid, ymid, 
+    Phicos, Phisin, 
+    rx_p2, ry_p2, 
+    translate, xprim, yprim,
+    cprim, cxprim, cyprim,
+    Rxcos, Rysin, cX, cY,
+    xtheta, ytheta, xthetaprim, ythetaprim,
+    x3, y3, theta, deltatheta, inveangle,
+    thetabegin;
+
+  if (xradius == 0 || yradius == 0)
+      return;
+  xradius = (xradius<0)? fabs (xradius):xradius;
+  yradius = (yradius<0)? fabs (yradius):yradius;
+  
+  /*local var init*/
+ 
+  Phicos = cos (DEG_TO_RAD(Phi));
+  Phisin = sin (DEG_TO_RAD(Phi));
+  
+  /* Math Recall : dot matrix multiplication => 
+     V . D = (Vx * Dx) + (Vy * Dy) + (Vz * Dz) 
+     and dot product =>
+     (a b) (I) = aI + bS;
+     (c d) (S) = cI + bS;
+     and vector scalar product =>
+     A.B = |A||B|cos (theta)
+     (where |A| = sqrt (x_p2 + y_p2))
+  */
+  
+  /* Step 1: Compute (x1', y1')*/
+  xmid = ((x1 - x2) / 2);
+  ymid = ((y1 - y2) / 2);
+  xprim = Phicos*xmid + Phisin*ymid;
+  yprim = -Phisin*xmid + Phicos*ymid;
+  
+  /* step 1bis:  verify & correct radius 
+   to get at least one solution */
+  rx_p2 = (double) P2 (xradius);
+  ry_p2 = (double) P2 (yradius);
+  translate = (double) P2 (xprim)/rx_p2 + P2 (yprim) / ry_p2;
+  if ( translate > 1 )
+    {
+      translate = (double) sqrt (translate);
+      xradius = (double) translate*xradius;
+      yradius = (double) translate*yradius; 
+      rx_p2 = (double) P2 (xradius);
+      ry_p2 = (double) P2 (yradius);
+    }
+
+  /* Step 2: Compute (cX ', cY ') */ 
+  cprim = (large ==  sweep) ? -1 : 1;
+  translate = (double)( rx_p2*P2 (yprim) + ry_p2*P2 (xprim));
+  if (translate == 0)
+    {
+      /*cannot happen... 'a priori' !!
+       (according to math demonstration 
+       (mainly caus'of the radius correction))*/
+      return;
+    }
+  /*   Original formulae :
+       cprim =  (double) cprim * sqrt ((rx_p2*ry_p2 - translate) / translate); 
+       But double precision is no sufficent so I've made a math simplification 
+       that works well */
+  translate = ((rx_p2*ry_p2 / translate) - 1);
+  translate = (translate > 0)?translate:-translate;
+  cprim = (double) cprim * sqrt (translate);
+  cxprim = cprim * ((xradius*yprim)/yradius);
+  cyprim = -cprim * ((yradius*xprim)/xradius);
+  
+  /* Step3: Compute (cX, Cy) from (cX ', cY ') */
+  xmid = ((x1 + x2) / 2);
+  ymid = ((y1 + y2) / 2);
+  cX = Phicos * cxprim - Phisin * cyprim + xmid;
+  cY = Phisin * cxprim + Phicos * cyprim + ymid;
+  
+  /* Step 4: Compute theta and delta_theta */
+  xtheta = (xprim - cxprim) / xradius;
+  ytheta = (yprim - cyprim) / yradius;
+  /*could also use hypot(x,y) = sqrt(x*x+y*Y),
+   but further optimisation could be harder..*/
+  inveangle = (double) (xtheta) /  (double) sqrt (P2 (xtheta) + P2 (ytheta));
+  cprim = 1;
+  cprim = ( ytheta < 0) ?-1 : 1;
+  theta = cprim * DACOS (inveangle);
+  xthetaprim = (double) (-xprim - cxprim) / xradius;
+  ythetaprim = (double) (-yprim - cyprim) / yradius;
+  inveangle =  (double) (xtheta*xthetaprim + ytheta*ythetaprim) /  
+    (double) (sqrt (P2 (xtheta) + P2 (ytheta))* sqrt (P2 (xthetaprim) + P2 (ythetaprim)) );
+  cprim = ( xtheta*ythetaprim - ytheta*xthetaprim < 0) ? -1 : 1;
+  deltatheta = fmod (cprim * DACOS (inveangle), M_PI_DOUBLE);
+  if (sweep && deltatheta < 0)
+    deltatheta += M_PI_DOUBLE;
+  else
+    if (sweep == 0 && deltatheta > 0)
+      deltatheta -= M_PI_DOUBLE;
+ /* Step 5: NOW that we have the center and the angles
+     we can at least and at last 
+     compute the points. */
+  thetabegin = theta;
+  translate = 0;  
+  theta = 0;
+  if (sweep)
+    cprim = A_DEGREE;
+  else
+    cprim = -1 * A_DEGREE;
+  deltatheta = fabs (deltatheta);
+  while (fabs (theta) < deltatheta)
+    {
+      Rxcos = xradius * cos (thetabegin + theta);
+      Rysin = yradius * sin (thetabegin + theta);
+      x3 = Phicos*Rxcos - Phisin*Rysin + cX;
+      y3 = Phisin*Rxcos + Phicos*Rysin + cY;       
+      x3 += x;
+      y3 += y;  
+      MeshNewPoint ((float) x3, (float) y3, mesh); 
+      theta += cprim;
+    }  
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
+  ----------------------------------------------------------------------*/
+void QuadraticSplit2 (float a1, float b1, float a2, float b2,
+		     float a3, float b3,
+		     void *mesh)
+{
+#ifdef _GL
+   register float      tx, ty;
+   float               x1, y1, x2, y2, x3, y3, i, j;
+   float               sx, sy;
+   float               xmid, ymid;
+
+   stack_deep = 0;
+   PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
+
+   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
+     {
+	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
+	   MeshNewPoint (x1, y1, mesh);
+	else
+	  {
+	     tx   = (float) MIDDLE_OF (x2, x3);
+	     ty   = (float) MIDDLE_OF (y2, y3);
+	     sx   = (float) MIDDLE_OF (x1, x2);
+	     sy   = (float) MIDDLE_OF (y1, y2);
+	     xmid = (float) MIDDLE_OF (sx, tx);
+	     ymid = (float) MIDDLE_OF (sy, ty);
+
+	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
+	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
+	  }
+     }
+#endif /* _GL */
+}
+
 
 /*----------------------------------------------------------------------
   PolySplit : split a polyline and push the results on the stack.
@@ -1646,8 +1865,13 @@ PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
   pFrame = &ViewFrameTable[frame - 1];
   pBox = NULL;
   if (pFrame->FrAbstractBox != NULL)
+#ifndef _GLTRANSFORMATION
     GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
 		   yRef + pFrame->FrYOrg, Y_RATIO, &pointselect);
+#else/*  _GLTRANSFORMATION */
+    GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef,
+		   yRef, Y_RATIO, &pointselect);
+#endif /*  _GLTRANSFORMATION */
   if (pBox == NULL)
     return (NULL);
   else
@@ -1681,12 +1905,21 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	{
 	  for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
 	    {
+#ifndef _GLTRANSFORMATION
 	      if (pBox->BxNChars > 0 &&
 		  pBox->BxXOrg <= lowerX &&
 		  pBox->BxXOrg + pBox->BxWidth >= higherX &&
 		  pBox->BxYOrg <= y &&
 		  pBox->BxYOrg + pBox->BxHeight >= y)
+#else /*  _GLTRANSFORMATION */
+		if (pBox->BxNChars > 0 &&
+		    pBox->BxClipX <= lowerX &&
+		    pBox->BxClipX + pBox->BxClipW >= higherX &&
+		    pBox->BxClipY <= y &&
+		    pBox->BxClipY + pBox->BxClipH >= y)
+#endif  /* _GLTRANSFORMATION */
 		return (pBox);
+
 	    }
 	  return (NULL);
 	}
@@ -1703,10 +1936,17 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
       else if (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath ||
 	       /* If the box is not a polyline or a path, it must include
 		  the point */
+#ifndef _GLTRANSFORMATION
 	       (pBox->BxXOrg <= lowerX &&
 		pBox->BxXOrg + pBox->BxWidth >= higherX &&
 		pBox->BxYOrg <= y &&
 		pBox->BxYOrg + pBox->BxHeight >= y))
+#else /*  _GLTRANSFORMATION */ 
+	(pBox->BxClipX <= lowerX &&
+	 pBox->BxClipX + pBox->BxClipW >= higherX &&
+	 pBox->BxClipY <= y &&
+	 pBox->BxClipY + pBox->BxClipH >= y))
+#endif  /* _GLTRANSFORMATION */
 	{
 	  pParent = pAb->AbElement->ElParent;
 	  if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
@@ -1972,10 +2212,17 @@ int GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
   int                 x, y, width, height;
 
   /* centrer la boite */
+#ifndef _GLTRANSFORMATION
   width = pBox->BxWidth / 2;
   x = pBox->BxXOrg + width;
   height = pBox->BxHeight / 2;
   y = pBox->BxYOrg + height;
+#else /* _GLTRANSFORMATION */
+  width = pBox->BxClipW / 2;
+  x = pBox->BxClipX + width;
+  height = pBox->BxClipH / 2;
+  y = pBox->BxClipY + height;
+#endif/* _GLTRANSFORMATION */
   distance = 1000;
 
   switch (value)

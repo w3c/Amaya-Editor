@@ -56,6 +56,7 @@
 
 #ifdef _GL
 #include "animbox_f.h"
+#include "glgradient_f.h"
 #endif /* _GL */
 
 
@@ -1779,6 +1780,216 @@ void *TtaNewTransformMatrix (float a, float b, float c,
    pPa->FMatrix = f;
    return (pPa);
 }
+
+
+#ifdef _GL
+
+
+static RgbaDef *NewRgbaDef (Element el)
+{
+  RgbaDef *seek;
+ 
+  seek = TtaGetMemory (sizeof (RgbaDef));
+  seek->el = el;
+  seek->next = NULL;
+
+  return seek;
+}
+
+static GradDef *NewGradDef ()
+{
+  GradDef *grad;
+ 
+  grad = TtaGetMemory (sizeof (GradDef));
+  grad->x1 = 0;
+  grad->x2 = 0;
+  grad->y1 = 0;
+  grad->y2 = 0;
+  grad->next = NULL;
+  
+ return grad;
+}
+
+static GradDef *GetGradientRef (PtrElement father)
+{  
+  GradDef *grad;
+  
+  if (father->gradient == NULL)
+    father->gradient = NewGradDef ();
+  grad = (GradDef *) father->gradient;
+  return grad;
+}
+
+static RgbaDef *GetStopRef (Element el, PtrElement father)
+{
+  RgbaDef *previous = NULL;
+  RgbaDef *seek;
+  GradDef *grad;
+
+  if (father->gradient == NULL)
+    father->gradient = NewGradDef ();
+  grad = (GradDef *) father->gradient;
+  
+  seek = grad->next;
+  while (seek)
+    {
+      if (seek->el == el)
+	return seek;
+      previous = seek;
+      seek = seek->next;
+    }
+  seek = NewRgbaDef (el);
+  if (previous)
+    previous->next = seek;
+  else
+    grad->next = seek;
+  
+  return seek;
+}
+#endif /*_GL*/
+
+
+void AddStopColor (Element el, PtrElement Father, 
+		   unsigned short red, unsigned short green, unsigned short blue)
+{
+#ifdef _GL
+  RgbaDef *stop_grad;
+  
+  stop_grad = GetStopRef (el, Father);
+  stop_grad->r = red;
+  stop_grad->g = green;
+  stop_grad->b = blue;
+  stop_grad->a = 255;
+#endif /* _GL */
+}
+
+void AddOffset (Element el, PtrElement Father, int offset)
+{
+#ifdef _GL
+  RgbaDef *Stop;
+  
+  Stop = GetStopRef (el, Father);
+  Stop->length = offset;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+   TtaSetLinearx1Gradient
+   ----------------------------------------------------------------------*/
+void TtaSetLinearx1Gradient (int value, Element el)
+{
+#ifdef _GL
+  GradDef *grad;
+  
+  grad = GetGradientRef ((PtrElement) TtaGetParent (el));
+  grad->x1 = value;
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+   TtaSetLineary1Gradient
+   ----------------------------------------------------------------------*/
+void TtaSetLineary1Gradient (int value, Element el)
+{
+#ifdef _GL
+  GradDef *grad;
+  
+  grad = GetGradientRef ((PtrElement) TtaGetParent (el));
+  grad->y1 = value;
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+   TtaSetLinearx2Gradient
+   ----------------------------------------------------------------------*/
+void TtaSetLinearx2Gradient (int value, Element el)
+{
+#ifdef _GL
+  GradDef *grad;
+  
+  grad = GetGradientRef ((PtrElement) TtaGetParent (el));
+  grad->x2 = value;
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+   TtaSetLineary2Gradient
+   ----------------------------------------------------------------------*/
+void TtaSetLineary2Gradient (int value, Element el)
+{
+#ifdef _GL
+  GradDef *grad;
+  
+  grad = GetGradientRef ((PtrElement) TtaGetParent (el));
+  grad->y2 = value;
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+   TtaSetStopColorGradient
+   ----------------------------------------------------------------------*/
+void TtaSetStopColorGradient (unsigned short red, unsigned short green,
+			      unsigned short blue, Element el)
+{
+#ifdef _GL
+  AddStopColor (el, (PtrElement) (TtaGetParent(TtaGetParent(el))), red, green, blue);  
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+   TtaSetStopOffsetColorGradient
+   ----------------------------------------------------------------------*/
+void TtaSetStopOffsetColorGradient (int offset, Element el)
+{
+#ifdef _GL
+  AddOffset (el, (PtrElement)(TtaGetParent(TtaGetParent (el))), offset);  
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+   TtaAppendTransform
+   Copy a Linked List of transform into another struct
+  ----------------------------------------------------------------------*/
+void *TtaCopyTransform(void *void_pPa)
+{
+  PtrTransform result_first, current;  
+  PtrTransform pPa = (PtrTransform) void_pPa;
+  
+  result_first = TtaGetMemory (sizeof (Transform));
+  current = result_first;      
+  while (pPa)
+    {      
+      current->TransType = pPa->TransType;    
+      switch (pPa->TransType)
+	{
+	case PtElRotate:
+	  current->XRotate = pPa->XRotate;	  
+	  current->YRotate = pPa->YRotate;	  
+	  current->Angle = pPa->Angle;
+	  break;  
+	case PtElMatrix:
+	  current->AMatrix = pPa->AMatrix;
+	  current->BMatrix = pPa->BMatrix;
+	  current->CMatrix = pPa->CMatrix;
+	  current->DMatrix = pPa->DMatrix;
+	  current->EMatrix = pPa->EMatrix;
+	  current->FMatrix = pPa->FMatrix;
+	  break;	  
+	case PtElSkewX:
+	case PtElSkewY:
+	  current->Factor = pPa->Factor;
+	  break;	  
+	default:
+	  current->XScale = pPa->XScale;	  
+	  current->YScale = pPa->YScale;	  
+	  break;
+	}	       
+	if (pPa->Next)
+	  {
+	    current->Next = TtaGetMemory (sizeof (Transform));
+	    current = current->Next;
+	  }
+	else
+	  current->Next = NULL;
+      pPa = pPa->Next;
+    }
+  return (void *) result_first;  
+}
+
 /*----------------------------------------------------------------------
    TtaAppendTransform
 
@@ -1822,8 +2033,8 @@ void TtaAppendTransform (Element element, void *transform,
 	       pPrevPa->Next = (PtrTransform) transform;
 	     }
 #ifndef NODISPLAY
-	   RedisplayLeaf ((PtrElement) element, document, 1);
-#endif
+	   /* RedisplayLeaf ((PtrElement) element, document, 1); */
+#endif /* NODISPLAY */
 	 }
      }
 }
@@ -1868,10 +2079,7 @@ void TtaReplaceTransform (Element element, void *transform,
 		   else
 		     pPrevPa->Next = (PtrTransform) transform;
 		   ((PtrTransform) transform)->Next = pPa->Next;
-		   TtaFreeMemory (pPa);		   
-#ifndef NODISPLAY
-		   RedisplayLeaf ((PtrElement) element, document, 1);
-#endif /* NODISPLAY */
+		   TtaFreeMemory (pPa);	
 		  return;
 		 }	       
 	       pPrevPa = pPa;
@@ -1881,9 +2089,6 @@ void TtaReplaceTransform (Element element, void *transform,
 	     ((PtrElement) element)->ElTransform = (PtrTransform) transform;
 	   else
 	     pPrevPa->Next = (PtrTransform) transform;
-#ifndef NODISPLAY
-	   RedisplayLeaf ((PtrElement) element, document, 1);
-#endif /* NODISPLAY */
 	 }
      }
 }
@@ -1966,8 +2171,7 @@ void TtaAddTransform (Element element, void *transform,
 	       if (pPa->TransType == ((PtrTransform)transform)->TransType)
 		 {
 		   TransformAddition (pPa, transform);
-		   TtaFreeMemory (transform);		   
-		
+		   TtaFreeMemory (transform);
 		  return;
 		 }	       
 	       pPrevPa = pPa;
@@ -1979,6 +2183,51 @@ void TtaAddTransform (Element element, void *transform,
 	   else
 	     pPrevPa->Next = (PtrTransform) transform;
 
+	 }
+     }
+}
+/*----------------------------------------------------------------------
+   TtaResetXBoxTransform
+
+   Insert or Add a Transform at the beginning of a Graphics basic element
+   if a transformation of the same type exists in the list, it is replaced
+   with old_value + delta
+
+   Parameters:
+   element: the Graphics element to be modified.
+   transform: the transformation to be inserted.
+   document: the document containing the element.
+  ----------------------------------------------------------------------*/
+void TtaResetXBoxTransform (Element element, Document document)
+{
+   PtrTransform       pPa, pPrevPa;
+     
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+     /* verifies the parameter document */
+     if (document < 1 || document > MAX_DOCUMENTS)
+       TtaError (ERR_invalid_document_parameter);
+     else if (LoadedDocument[document - 1] == NULL)
+       TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameter document is correct */
+     {
+       if (element)
+	 {
+	  pPa = ((PtrElement) element)->ElTransform;
+	   pPrevPa = NULL;
+	   while (pPa)
+	     {
+	       if (pPa->TransType == PtElBoxTranslate)
+		 {
+		   pPa->XScale = 0;		
+		  return;
+		 }	       
+	       pPrevPa = pPa;
+	       pPa = pPa->Next;
+	     }
 	 }
      }
 }
@@ -2014,9 +2263,6 @@ void TtaInsertTransform (Element element, void *transform,
 	   pPa = ((PtrElement) element)->ElTransform;
 	   ((PtrTransform) transform)->Next = pPa;
 	   ((PtrElement) element)->ElTransform = (PtrTransform) transform;
-#ifndef NODISPLAY
-	   RedisplayLeaf ((PtrElement) element, document, 1);
-#endif
 	 }
      }
 }
@@ -2042,8 +2288,10 @@ void TtaSetElCoordinateSystem (Element element)
 /*----------------------------------------------------------------------
    TtaFreeAnimation
   ----------------------------------------------------------------------*/
-void TtaFreeAnimation (Animated_Element *a_list)
+void TtaFreeAnimation (void *void_a_list)
 {  
+    Animated_Element *a_list = (Animated_Element *)void_a_list;
+    
   if (a_list->next)
     TtaFreeAnimation (a_list->next);
   if (a_list->from)
@@ -2070,11 +2318,63 @@ void TtaAppendAnim (Element element, void *anim)
     }
   else
     ((PtrElement)element)->ElParent->animation = anim; 
-#ifndef NODISPLAY
-#ifdef _GLANIM
-  AnimatedBoxAdd ((PtrElement)element);
-#endif /* _GLANIM */
-#endif /* _NODISPLAY */
+}
+/*----------------------------------------------------------------------
+   TtaCopyAnim : Copy anim linked list 
+  ----------------------------------------------------------------------*/
+void *TtaCopyAnim (void *void_src)
+{
+  Animated_Element *dest, *current;
+  Animated_Element *src = (Animated_Element *) void_src;
+  
+  dest = TtaGetMemory (sizeof (Animated_Element));
+  current = dest;
+ 
+ while (src)
+   {
+     current->duration = src->duration;
+     current->start = src->start;
+     current->action_time = src->action_time;
+     current->AnimType = src->AnimType;
+     if (src->from)
+       {	 
+	 current->from = TtaGetMemory (strlen (src->from) + 1);     
+	 strcpy (current->from, src->from); 
+       }
+     if (src->to)
+       {
+	 current->to = TtaGetMemory (strlen (src->to) + 1);     
+	 strcpy (current->to, src->to);
+       }
+      if (src->AttrName)
+	switch (current->AnimType)
+	  {
+	  case Motion:
+	  case Color:
+	  case Set:
+	    break;
+	  case Transformation:
+	    current->AttrName = TtaGetMemory (sizeof (int));      
+	    *(current->AttrName) = *(src->AttrName);      
+	    break; 
+	  case Animate:
+	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
+	    strcpy (current->AttrName, src->AttrName);
+	    break;
+	  default:
+	    break; 
+	  } 
+       if (src->next)
+	 {
+	   current->next = TtaGetMemory (sizeof (Animated_Element));
+	   current = current->next; 
+	 }
+       else
+	 current->next = NULL;
+     
+     src = src->next;
+   } 
+  return (void *) dest;
 }
 /*----------------------------------------------------------------------
    TtaNewAniminfo

@@ -48,6 +48,7 @@
 #include "frame_f.h"
 #include "animbox_f.h"
 #include "picture_f.h"
+#include "tesse_f.h"
 
 #define ALLOC_POINTS    300
 
@@ -106,6 +107,10 @@
 /*for int  => (((int)N)<<1)*/
 #define P2(N) (N*N)
 
+/* Arc Precision Drawings */
+#define SLICES 360
+#define SLICES_SIZE 361
+
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
 /* Unix timer */
@@ -134,17 +139,7 @@
 
 static ThotBool Software_Mode = TRUE;
 static ThotBool NotFeedBackMode = TRUE;
-/* Vertex list when tesselation is called 
-   This list is filled with all new vertex 
-   created by the tesselation 
-   (all the list must stay in 
-   memory until tesselation is finished)*/
-typedef struct listmem {
-  ThotPoint *data;
-  struct listmem *next;
-} ListMem;
 
-static ListMem SAddedVertex;
 
 ThotBool GL_Err() 
 {
@@ -250,7 +245,7 @@ void Clear (int frame, int width, int height, int x, int y)
 {
   if (GL_prepare (frame))
     { 
-      FrameTable[frame].DblBuffNeedSwap = TRUE; 
+      /* FrameTable[frame].DblBuffNeedSwap = TRUE;  */
       y = y + FrameTable[frame].FrTopMargin;
       GL_SetForeground (GL_Background[frame]); 
       glBegin (GL_QUADS);
@@ -577,8 +572,7 @@ void GL_UnsetClipping  (int x, int y, int width, int height)
   glDisable (GL_SCISSOR_TEST);
   if (width && height)
     {       
-      GL_SetClipping (x, y, 
-		      width, height);
+      GL_SetClipping (x, y, width, height);
     }
   else
     { 
@@ -735,6 +729,31 @@ void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
   
 }
 /*----------------------------------------------------------------------
+  GL_DrawEmptyRectangle Outlined rectangle
+  ----------------------------------------------------------------------*/
+void  GL_DrawEmptyRectanglef (int fg, float x, float y, int width, int height)
+{ 
+  Fill_style = FALSE;	
+  GL_SetForeground (fg);
+  if (S_thick > 1 && 0)
+    {
+      glBegin (GL_POINTS);/*joining angles*/
+      glVertex2f (x, y );
+      glVertex2f (x, y + height);
+      glVertex2f (x + width, y + height);
+      glVertex2f (x + width, y);
+      glVertex2f (x, y );
+      glEnd ();
+    }  
+  glBegin (GL_LINE_LOOP);
+  glVertex2f (x, y );
+  glVertex2f (x + width, y);
+  glVertex2f (x +  width, y + height);
+  glVertex2f (x, y + height);
+  /* glVertex2i (x, y ); */
+  glEnd ();   
+}
+/*----------------------------------------------------------------------
   GL_DrawRectangle
   (don't use glrect because it's exactly the same but require opengl 1.2)
   ----------------------------------------------------------------------*/
@@ -746,6 +765,20 @@ void GL_DrawRectangle (int fg, int x, int y, int width, int height)
   glVertex2i (x + width, y);
   glVertex2i (x +  width, y + height);
   glVertex2i (x, y + height);
+  glEnd ();
+}
+/*----------------------------------------------------------------------
+  GL_DrawRectangle
+  (don't use glrect because it's exactly the same but require opengl 1.2)
+  ----------------------------------------------------------------------*/
+void GL_DrawRectanglef (int fg, float x, float y, int width, int height)
+{
+  GL_SetForeground (fg);
+  glBegin (GL_QUADS);
+  glVertex2f (x, y );
+  glVertex2f (x + width, y);
+  glVertex2f (x +  width, y + height);
+  glVertex2f (x, y + height);
   glEnd ();
 }
 /*----------------------------------------------------------------------
@@ -796,148 +829,6 @@ void GL_DrawSegments (XSegment *point, int npoints)
     }    
   glEnd ();
 }
-/*----------------------------------------------------------------------
-  combineCallback :  used to create a new vertex when edges
-  intersect.  coordinate location is trivial to calculate,
-  but weight[4] may be used to average color, normal, or texture 
-  coordinate data. 
-  Here we add generated vertex to our list (so we can free it after tesselation)
-  and give it to the tesselation engine. (dataout)
-  ----------------------------------------------------------------------*/
-static void CALLBACK myCombine (GLdouble coords[3], void *vertex_data[4], 
-				GLfloat weight[4], void **dataOut)
-{
-  ListMem *ptr = &SAddedVertex;
-  
-  while (ptr->next) 
-    ptr = ptr->next;
-  ptr->next = TtaGetMemory (sizeof (ListMem));
-  ptr = ptr->next;
-  ptr->next = NULL;
-  ptr->data = TtaGetMemory (sizeof (ThotPoint));
-  ptr->data->x = (GLfloat) coords[0];
-  ptr->data->y = (GLfloat) coords[1];
-  *dataOut = ptr->data;
-}
-/*----------------------------------------------------------------------
-  my_error : Displays GLU error 
-  (VERY useful on 50000000000 vertex polygon... 
-  see jasc webdraw butterfly sample )
-  ----------------------------------------------------------------------*/
-static void CALLBACK my_error (GLenum err)
-{
-#ifdef _GTK
-  g_print ("%s \n", gluErrorString(err));
-#else /*_GTK*/
-  WinErrorBox (NULL, gluErrorString(err));;
-#endif /*_GTK*/
-}
-/* To be malloc'ed !!!!!!!!!! 
-   just don't when and how many... */
-static int tab[100000];
-/* Number of contour in the 
-   polygon that must be tesselated
-   also used in draw path 
-   (ORDER and place of new countour 
-   are the key of tesselation)*/ 
-static int n_polygon;
-
-static void FreeAddedVertexes (ListMem  *tmp)
-{
- if (tmp)
-	{
-	 if (tmp->next)
-		FreeAddedVertexes (tmp->next);
-	 TtaFreeMemory (tmp->data);
-	 TtaFreeMemory (tmp);
-	}
-}
-
-/*----------------------------------------------------------------------
-  tesse :  Tesselation that use GLU library tesselation 
-  (triangulations based on Delaunay algorythms)
-  Compute a polygon,
-  handles 'holes' in the polygon,
-  And create new point (Vertex) that 
-  permits to display the polygon with simpler shape
-  as it calls mycombine to create them
-  (in this case triangles...)
-  ----------------------------------------------------------------------*/
-static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
-{ 
-  int                i;
-  GLdouble           data[3];
-  int                n_poly_count = 0;
-  GLUtesselator      *tobj = NULL;
-
-  tobj = gluNewTess();
-  if (tobj == NULL)
-	  return;
-
-  /* Winding possibilities are :
-     GLU_TESS_WINDING_ODD = Classique
-     GLU_TESS_WINDING_NONZERO
-     GLU_TESS_WINDING_POSITIVE
-     GLU_TESS_WINDING_NEGATIVE
-     GLU_TESS_WINDING_ABS_GEQ_TWO */ 
-  gluTessProperty (tobj,
-		   GLU_TESS_WINDING_RULE, 
-		   GLU_TESS_WINDING_ODD);
-  gluTessProperty (tobj,
-		   GLU_TESS_BOUNDARY_ONLY,
-		   only_countour);
-  gluTessProperty (tobj,
-		   GLU_TESS_TOLERANCE, 
-		   0);
-  if (tobj != NULL) 
-    {
-      gluTessCallback (tobj, GLU_BEGIN, 
-		       (void (CALLBACK*)()) glBegin);
-      gluTessCallback (tobj, GLU_END, 
-		       (void (CALLBACK*)()) glEnd);
-      gluTessCallback (tobj, GLU_ERROR, 
-		       (void (CALLBACK*)()) my_error); 
-      gluTessCallback (tobj, GLU_VERTEX, 
-		       (void (CALLBACK*)()) glVertex2fv);
-      SAddedVertex.data = 0;
-      SAddedVertex.next = 0;
-      gluTessCallback (tobj, GLU_TESS_COMBINE, 
-		       (void (CALLBACK*)()) myCombine);
-      gluTessBeginPolygon (tobj, NULL);
-      gluTessBeginContour (tobj);
-      for (i = 0; i < contour_cnt; i++) 
-	{ 
-	  if (i == tab[n_poly_count] 
-	      &&  n_poly_count < n_polygon)
-	    {
-	      n_poly_count++;
-	      gluTessEndContour (tobj);
-	      /* maybe calculation if not a new polygon...
-		 if it's not inside this one,
-		 but must calculate it for all the next polygon
-	      */ 
-	      glEdgeFlag(GL_TRUE);
-	      gluTessBeginContour (tobj);
-	    }
-	  else
-	    glEdgeFlag(GL_FALSE);
-	  data[0] = (GLdouble) (contours[i].x);
-	  data[1] = (GLdouble) (contours[i].y);
-	  data[2] = 0.0;
-	  gluTessVertex (tobj, data, (GLfloat *) &contours[i]);
-	} 
-      gluTessEndContour (tobj);
-      gluTessEndPolygon (tobj);
-	  FreeAddedVertexes (SAddedVertex.next);
-      gluDeleteTess(tobj);
-    }
-}
-
-
-#define SLICES 360
-#define SLICES_SIZE 361
-
-
 
 /*----------------------------------------------------------------------
   GL_DrawArc : Draw an arc
@@ -1050,37 +941,23 @@ void GL_DrawLines (ThotPoint *point, int npoints)
     }
   k = 0;
   glBegin (GL_LINE_STRIP);
-  for (i=0; i < npoints; i++)
-    {
-      if (i == tab[k] &&  k < n_polygon)
-	{
-	  glEnd ();
-	  glBegin (GL_LINE_STRIP);
-	  k++; 
-	}
-      
+  for (i = 0; i < npoints; i++)
+    { 
       glVertex2fv ((GLfloat *) (point+i));
     }
   glEnd ();
   
 }
+
 /*----------------------------------------------------------------------
   GL_DrawPolygon : tesselation handles 
   convex, concave and polygon with holes
   ----------------------------------------------------------------------*/
 void GL_DrawPolygon (ThotPoint *points, int npoints)
 {
-  tesse (points, npoints, FALSE);
+  MakefloatMesh (points, npoints);
 }
 
-void CountourCountReset ()
-{
-  n_polygon = 0;
-}
-void CountourCountAdd (int npoints)
-{
-  tab[n_polygon++] = npoints;
-}
 
 /*------------------------------------------
   GL_Point :
@@ -1315,27 +1192,72 @@ int CharacterWidth (int c, PtrFont font)
     }
   return l;
 }
-#ifdef _GLTRANSFORMATION
-/*---------------------------------------------------
-  DisplayBoxTransformation :
-  ----------------------------------------------------*/
-static void DisplayBoxTransformation (PtrTransform Trans)
+
+ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
 {
-  
+  PtrTransform Trans = (PtrTransform) v_trans;
+
   while (Trans)
     {
       switch (Trans->TransType)
 	{
 	case  PtElBoxTranslate:
-	  glTranslatef (Trans->XScale, 
-			Trans->YScale, 
-			0);
-	  break;
+	  *x = Trans->XScale;
+	  *y = Trans->YScale;
+          return TRUE;
 	default:
 	  break;	  
 	}
       Trans = Trans->Next;
     }
+  *x = 0;
+  *y = 0;
+  return FALSE;
+}
+ThotBool IsTransformed (void *v_trans)
+{
+  PtrTransform Trans = (PtrTransform) v_trans;
+
+  while (Trans)
+    {
+      switch (Trans->TransType)
+	{
+	case  PtElBoxTranslate:
+          /*result = FALSE;*/
+	  break;
+	default:
+	  return TRUE;
+	  break;	  
+	}
+      Trans = Trans->Next;
+    }
+  return FALSE;
+}
+
+#ifdef _GLTRANSFORMATION
+/*---------------------------------------------------
+  DisplayBoxTransformation :
+  ----------------------------------------------------*/
+void DisplayBoxTransformation (void *v_trans, int x, int y)
+{
+  PtrTransform Trans = (PtrTransform) v_trans;
+
+  glPushMatrix ();
+  while (Trans)
+    {
+      switch (Trans->TransType)
+	{
+	case  PtElBoxTranslate:
+	  glTranslatef (Trans->XScale - ((float) x), 
+			Trans->YScale- ((float) y), 
+			0);
+	  return;
+	default:
+	  break;	  
+	}
+      Trans = Trans->Next;
+    }
+  glTranslatef (- ((float) x), - ((float) y), 0);
 }
 /*---------------------------------------------------
   DisplayViewBoxTransformation
@@ -1380,119 +1302,117 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 {
 #ifdef _GLTRANSFORMATION
   double trans_matrix[16];
-  
-  
-  glPushMatrix ();
-  DisplayBoxTransformation (Trans);
-  DisplayViewBoxTransformation (Trans, Width, Height);
-  while (Trans)
+    
+  if (IsTransformed (Trans))
     {
-      switch (Trans->TransType)
+      glPushMatrix ();
+      DisplayViewBoxTransformation (Trans, Width, Height);
+      while (Trans)
 	{
-	case  PtElScale:
-	  glScalef (Trans->XScale, 
-		    Trans->YScale, 
-		    0);
-	  break;
-	case PtElTranslate:
-	  glTranslatef (Trans->XScale, 
+	  switch (Trans->TransType)
+	    {
+	    case  PtElScale:
+	      glScalef (Trans->XScale, 
 			Trans->YScale, 
 			0);
-	  break;
-	case PtElRotate:
-	  glTranslatef (Trans->XRotate, 
-			Trans->YRotate, 
-			0);
-	  glRotatef (Trans->Angle, 0, 0, 1);
-	  glTranslatef (-Trans->XRotate, 
-			-Trans->YRotate, 
-			0);
-	  break;
-	case PtElMatrix:
-	  /* Matrix 
-	     GlMatrix is 4*4
-	     Svg is 3*3 but 
-	     only 2*3 is specified */
-	  trans_matrix[0] = Trans->AMatrix;
-	  trans_matrix[1] = Trans->BMatrix;
-	  trans_matrix[2] = 0;
-	  trans_matrix[3] = 0;
+	      break;
+	    case PtElTranslate:
+	      glTranslatef (Trans->XScale, 
+			    Trans->YScale, 
+			    0);
+	      break;
+	    case PtElRotate:
+	      glTranslatef (Trans->XRotate, 
+			    Trans->YRotate, 
+			    0);
+	      glRotatef (Trans->Angle, 0, 0, 1);
+	      glTranslatef (-Trans->XRotate, 
+			    -Trans->YRotate, 
+			    0);
+	      break;
+	    case PtElMatrix:
+	      /* Matrix 
+		 GlMatrix is 4*4
+		 Svg is 3*3 but 
+		 only 2*3 is specified */
+	      trans_matrix[0] = Trans->AMatrix;
+	      trans_matrix[1] = Trans->BMatrix;
+	      trans_matrix[2] = 0;
+	      trans_matrix[3] = 0;
 
-	  trans_matrix[4] = Trans->CMatrix;
-	  trans_matrix[5] = Trans->DMatrix;
-	  trans_matrix[6] = 0;
-	  trans_matrix[7] = 0;
+	      trans_matrix[4] = Trans->CMatrix;
+	      trans_matrix[5] = Trans->DMatrix;
+	      trans_matrix[6] = 0;
+	      trans_matrix[7] = 0;
 
-	  trans_matrix[8] = Trans->EMatrix;
-	  trans_matrix[9] = Trans->FMatrix;
-	  trans_matrix[10] = 1;
-	  trans_matrix[11] = 0;
+	      trans_matrix[8] = 0;
+	      trans_matrix[9] = 0;
+	      trans_matrix[10] = 1;
+	      trans_matrix[11] = 0;
 
-	  trans_matrix[12] = 0;
-	  trans_matrix[13] = 0;
-	  trans_matrix[14] = 0;
-	  trans_matrix[15] = 1;
+	      trans_matrix[12] = Trans->EMatrix;
+	      trans_matrix[13] = Trans->FMatrix;	  
+	      trans_matrix[14] = 0;
+	      trans_matrix[15] = 1;
 
-	  glMultMatrixd (trans_matrix);
-	  break;
-	case PtElSkewX:
-	  /* SkewX */
-	  trans_matrix[0] = 1;
-	  trans_matrix[1] = 0;
-	  trans_matrix[2] = 0;
-	  trans_matrix[3] = 0;
+	      glMultMatrixd (trans_matrix);
+	      break;
+	    case PtElSkewX:
+	      /* SkewX */
+	      trans_matrix[0] = 1;
+	      trans_matrix[1] = 0;
+	      trans_matrix[2] = 0;
+	      trans_matrix[3] = 0;
 
-	  trans_matrix[4] = DTAN (DEG_TO_RAD(Trans->Factor));
-	  trans_matrix[5] = 1;
-	  trans_matrix[6] = 0;
-	  trans_matrix[7] = 0;
+	      trans_matrix[4] = DTAN (DEG_TO_RAD(Trans->Factor));
+	      trans_matrix[5] = 1;
+	      trans_matrix[6] = 0;
+	      trans_matrix[7] = 0;
 
-	  trans_matrix[8] = 0;
-	  trans_matrix[9] = 0;
-	  trans_matrix[10] = 1;
-	  trans_matrix[11] = 0;
+	      trans_matrix[8] = 0;
+	      trans_matrix[9] = 0;
+	      trans_matrix[10] = 1;
+	      trans_matrix[11] = 0;
 
-	  trans_matrix[12] = 0;
-	  trans_matrix[13] = 0;
-	  trans_matrix[14] = 0;
-	  trans_matrix[15] = 1;
+	      trans_matrix[12] = 0;
+	      trans_matrix[13] = 0;
+	      trans_matrix[14] = 0;
+	      trans_matrix[15] = 1;
 
-	  glMultMatrixd (trans_matrix);
-	  break;
-	case PtElSkewY:
-	  /* SkewY */
-	  trans_matrix[0] = 1;
-	  trans_matrix[1] = DTAN (DEG_TO_RAD(Trans->Factor));
-	  trans_matrix[2] = 0;
-	  trans_matrix[3] = 0;
+	      glMultMatrixd (trans_matrix);
+	      break;
+	    case PtElSkewY:
+	      /* SkewY */
+	      trans_matrix[0] = 1;
+	      trans_matrix[1] = DTAN (DEG_TO_RAD(Trans->Factor));
+	      trans_matrix[2] = 0;
+	      trans_matrix[3] = 0;
 
-	  trans_matrix[4] = 0;
-	  trans_matrix[5] = 1;
-	  trans_matrix[6] = 0;
-	  trans_matrix[7] = 0;
+	      trans_matrix[4] = 0;
+	      trans_matrix[5] = 1;
+	      trans_matrix[6] = 0;
+	      trans_matrix[7] = 0;
 
-	  trans_matrix[8] = 0;
-	  trans_matrix[9] = 0;
-	  trans_matrix[10] = 1;
-	  trans_matrix[11] = 0;
+	      trans_matrix[8] = 0;
+	      trans_matrix[9] = 0;
+	      trans_matrix[10] = 1;
+	      trans_matrix[11] = 0;
 
-	  trans_matrix[12] = 0;
-	  trans_matrix[13] = 0;
-	  trans_matrix[14] = 0;
-	  trans_matrix[15] = 1;
+	      trans_matrix[12] = 0;
+	      trans_matrix[13] = 0;
+	      trans_matrix[14] = 0;
+	      trans_matrix[15] = 1;
 
-	  glMultMatrixd (trans_matrix);
-	  break;	  
-	default:
-	  break;
+	      glMultMatrixd (trans_matrix);
+	      break;	  
+	    default:
+	      break;
+	    }
+	  Trans = Trans->Next;
 	}
-      Trans = Trans->Next;
     }
 #endif /* _GLTRANSFORMATION */
 }
-
-
-
 /*---------------------------------------------------
   DisplayTransformationExit :
   ----------------------------------------------------*/
@@ -1502,10 +1422,6 @@ void DisplayTransformationExit ()
   glPopMatrix ();
 #endif /* _GLTRANSFORMATION */
 }
-
-
-
-
 /* Write contents of one vertex to stdout.	*/
 void print2DVertex (GLint size,
 		    GLint *count, 
@@ -1521,7 +1437,6 @@ void print2DVertex (GLint size,
     }
   printf ("\t");
 }
-
 /*  Write contents of entire buffer.  (Parse tokens!)	*/
 void printBuffer(GLint size, GLfloat *buffer)
 {
@@ -1580,21 +1495,17 @@ void printBuffer(GLint size, GLfloat *buffer)
 	}
     }
 }
-
 static void computeisminmax (double number, double *min, double *max)
 {
   if (*min < 0)
     *min = number;
   if (*max < 0)
     *min = number;
-
   if (number < *min)
     *min = number;
   else if (number > *max)
     *max = number;
 }
-
-
 static void getboundingbox (GLint size, GLfloat *buffer, int frame,
 			    int *xorig, int *yorig, 
 			    int *worig, int *horig)
@@ -1605,10 +1516,8 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
   x = (double) *xorig;
   y = (double) *yorig;
   w = (double) *xorig + *worig;
-  h = (double) *yorig + *horig;
-  
-  TotalHeight = (double) FrameTable[frame].FrHeight;
-  
+  h = (double) *yorig + *horig;  
+  TotalHeight = (double) FrameTable[frame].FrHeight;  
   count = size;
   while (count) 
     {
@@ -1646,13 +1555,14 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
 	  break;
 	}
     }
-
-
-
   *xorig = (int) x;
   *yorig = (int) y;
-  *worig = (int) (w - x);
-  *horig = (int) (h - y);
+  *worig = (int) (w - x) + 1;
+  *horig = (int) (h - y) + 1;
+  if (*xorig > 0)
+    *xorig += 1;
+  if (*yorig > 0)
+    *yorig += 1;
 }
 
 
@@ -1664,30 +1574,55 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
 void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
   GLfloat feedBuffer[4096];
-  GLint size;
+  GLint   size;
   
-  box->BxBoundinBoxComputed = TRUE; 
   glFeedbackBuffer (2048, GL_2D, feedBuffer);
-
-  NotFeedBackMode = FALSE;
-  
+  NotFeedBackMode = FALSE;  
   glRenderMode (GL_FEEDBACK);
   DisplayBox (box, frame, xmin, xmax, ymin, ymax);
   size = glRenderMode (GL_RENDER);
-
   NotFeedBackMode = TRUE;
-
   if (size > 0)
     {
       box->BxClipX = -1;
       box->BxClipY = -1;
-
       getboundingbox (size, feedBuffer, frame,
 		      &box->BxClipX,
 		      &box->BxClipY,
 		      &box->BxClipW,
-		      &box->BxClipH);
-      
+		      &box->BxClipH);      
+      /* printBuffer (size, feedBuffer); */
+      box->BxBoundinBoxComputed = TRUE; 
+    }
+}
+
+/*---------------------------------------------------
+  ComputeBoundingBox :
+  Modify Bounding Box according to opengl feedback mechanism
+  (after transformation, coordinates may have changed)			    
+  ----------------------------------------------------*/
+void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+{
+  GLfloat feedBuffer[4096];
+  GLint size;
+  
+  box->BxBoundinBoxComputed = TRUE; 
+  glFeedbackBuffer (2048, GL_2D, feedBuffer);
+  NotFeedBackMode = FALSE;
+  glRenderMode (GL_FEEDBACK);
+  DrawFilledBox (box->BxAbstractBox, frame, xmin, xmax, ymin, ymax);
+  size = glRenderMode (GL_RENDER);
+  NotFeedBackMode = TRUE;
+  if (size > 0)
+    {
+      box->BxClipX = -1;
+      box->BxClipY = -1;
+      getboundingbox (size, feedBuffer, frame,
+		      &box->BxClipX,
+		      &box->BxClipY,
+		      &box->BxClipW,
+		      &box->BxClipH);     
+      box->BxBoundinBoxComputed = TRUE; 
       /* printBuffer (size, feedBuffer); */
     }
 }
@@ -1701,6 +1636,9 @@ void GL_Swap (int frame)
       gl_synchronize (); 
       glFinish ();
       glFlush ();
+
+      glDisable (GL_SCISSOR_TEST);
+
 #ifdef _WINDOWS
       if (GL_Windows[frame])
 	SwapBuffers (GL_Windows[frame]);
@@ -1708,6 +1646,9 @@ void GL_Swap (int frame)
       if (FrameTable[frame].WdFrame)
 	gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
 #endif /*_WINDOWS*/
+
+      glEnable (GL_SCISSOR_TEST);
+
     }
   
 }
@@ -1720,7 +1661,9 @@ ThotBool GL_prepare (int frame)
 
   if (frame < MAX_FRAME && NotFeedBackMode)
     {
+#ifdef _TESTSWAP
       FrameTable[frame].DblBuffNeedSwap = TRUE;
+#endif /*_TESTSWAP*/
       if (FrRef[frame])
 #ifdef _WINDOWS
 	if (GL_Windows[frame])
@@ -1744,9 +1687,9 @@ void GL_realize (int frame)
 #ifdef _TESTSWAP
   GL_Swap (frame);
   FrameTable[frame].DblBuffNeedSwap = FALSE;
-#else
+#else /*_TESTSWAP*/
   FrameTable[frame].DblBuffNeedSwap = TRUE;
-#endif /*_WINDOWS*/
+#endif /*_TESTSWAP*/
   return;
 }
 /*----------------------------------------------------------------------
@@ -1758,35 +1701,40 @@ void GL_ActivateDrawing(int frame)
     FrameTable[frame].DblBuffNeedSwap = TRUE;
 }
 
+#define FPS 25 /*Frame Per Second*/
+#define FPS_INTERVAL 0.030 /* FPS_INTERVAL*/
+#define FRAME_TIME 25 /* milliseconds */
+
 /*----------------------------------------------------------------------
   TtaPlay : Activate Animation
   ----------------------------------------------------------------------*/
 void TtaPlay (Document doc, View view)
 {
-  int frame = 0;
-  
-  for (frame = 0; frame <= MAX_FRAME; frame++)
-    if (FrameTable[frame].FrDoc && 
-	FrameTable[frame].Animated_Boxes)
-      {
-	FrameTable[frame].Anim_play = !FrameTable[frame].Anim_play;
+ int frame;
+
+ 
+ for (frame = 0; frame <= MAX_FRAME; frame++)
+   if (FrameTable[frame].Animated_Boxes)
+     {
+       FrameTable[frame].Anim_play = (FrameTable[frame].Anim_play ? FALSE : TRUE);
 #ifdef _GTK
-	if (FrameTable[frame].Anim_play)
-	  {
-	    if (FrameTable[frame].Timer == 0)
-	      FrameTable[frame].Timer = gtk_timeout_add (50, 
-							 (gpointer) GL_DrawAll, 
-							 (gpointer)   NULL); 	      
-	    FrameTable[frame].BeginTime = 0;
-	  }
-	else
-	  if (FrameTable[frame].Timer)
-	    {
-	      gtk_timeout_remove (FrameTable[frame].Timer);
-	      FrameTable[frame].Timer = 0;
-	    }	
+       if (FrameTable[frame].Anim_play)
+	 {
+	   /* if (FrameTable[frame].Timer == 0) */
+	   FrameTable[frame].Timer = gtk_timeout_add (FRAME_TIME,
+						      (gpointer) GL_DrawAll, 
+						      (gpointer)   NULL); 	      
+	   FrameTable[frame].BeginTime = 0;
+	   FrameTable[frame].LastTime = 0;
+	 }
+       else
+	 if (FrameTable[frame].Timer)
+	   {
+	     gtk_timeout_remove (FrameTable[frame].Timer);
+	     FrameTable[frame].Timer = 0;
+	   }	
 #endif /*_GTK*/
-      }  
+     }  
 }
 
 
@@ -1811,29 +1759,35 @@ ThotBool GL_DrawAll ()
       FrameUpdating = TRUE;     
       if (!frame_animating)
 	{	
-	  frame_animating = TRUE;      
+	  frame_animating = TRUE; 
 #ifdef _GTK
 	  gl_synchronize ();
 #endif /* _GTK */
-	  for (frame = 1 ; frame < MAX_FRAME; frame++)
+	  for (frame = 0 ; frame < MAX_FRAME; frame++)
 	    {
 	      if (FrRef[frame] != 0)
 		{
 #ifdef _GLANIM
 		  if (FrameTable[frame].Anim_play &&
 		      FrameTable[frame].Animated_Boxes)
-		    {
-		      
+		    {		      
 #ifdef _GTK
+
+		      while (gtk_events_pending ())
+			gtk_main_iteration ();     
+
 		      ftime (&after);
 		      current_time = after.time + (((double)after.millitm)/1000);
 		      
 		      if (FrameTable[frame].BeginTime == 0)
 			FrameTable[frame].BeginTime = current_time;
-		      current_time -= FrameTable[frame].BeginTime;		      
+		      current_time -= FrameTable[frame].BeginTime;   
 #endif /*_GTK*/
-	    
-		      Animate_boxes (frame, current_time);
+		      if ((FrameTable[frame].LastTime - current_time) < FPS_INTERVAL)
+			{		  		   
+			  Animate_boxes (frame, current_time);
+			  FrameTable[frame].LastTime = current_time;
+			}		      
 		    }
 #endif /* _GLANIM */		    
 		  if (FrameTable[frame].DblBuffNeedSwap)
@@ -1842,8 +1796,7 @@ ThotBool GL_DrawAll ()
 			  != NoComputedDisplay)
 			{
 			  if (GL_prepare (frame))
-			    {			      
-			      /* testing_gradient (); */			      
+			    {			      			      
 			      RedrawFrameBottom (frame, 0, NULL);
 			      GL_Swap (frame);  
 			      /* All transformation resetted*/   
@@ -2031,13 +1984,8 @@ void GL_window_copy_area (int frame,
 			  int width, 
 			  int height)
 {
-
   if (GL_prepare (frame) == FALSE)
     return;  
-  /*  If not in software mode,
-      glcopypixels is 1000x slower than a redraw	*/
-      
-
   /* Horizontal Scroll problems...*/
   if (xf < 0)
     {
@@ -2094,14 +2042,15 @@ void GL_window_copy_area (int frame,
 	(here glcopypixels)*/
       if (glMatroxBUG (frame, xf, yf, width, height))
 	{
-	  FrameTable[frame].DblBuffNeedSwap = TRUE;
+	  /* FrameTable[frame].DblBuffNeedSwap = TRUE; */
 	  return;
 	}
-
 
       /* Copy from backbuffer to backbuffer */
       glFinish ();
       glDisable (GL_BLEND);
+
+      GL_UnsetClipping  (0, 0, 0, 0);
 
       glRasterPos2i (xf, yf+height);	  
       /*IF Rasterpos is outside canvas...
@@ -2190,20 +2139,14 @@ void gl_window_resize (int frame, int width, int height)
 
   gdk_gl_wait_gdk (); 
   gdk_gl_wait_gl (); 
-
+return;
 #endif /*_GTK*/
 
   if (GL_prepare (frame))
     {
 #ifdef _GTK
       DefClip (frame, -1, -1, -1, -1);
-      FrameTable[frame].DblBuffNeedSwap = TRUE;
       return;
-
-      /* GLResize (widget->allocation.width+width,  */
-      /* 	    widget->allocation.height+height,  */
-      /* 	    0, 0); */
-
 #endif /*_GTK*/
 	DefRegion (frame, 
  		   0, 0,

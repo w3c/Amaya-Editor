@@ -118,6 +118,29 @@ extern void *TtaNewTransformMatrix ( float a,
                                      float d,
                                      float e,
                                      float f );
+extern void AddStopColor ( Element el,
+                           PtrElement Father,
+                           unsigned short red,
+                           unsigned short green,
+                           unsigned short blue );
+extern void AddOffset ( Element el,
+                        PtrElement Father,
+                        int offset );
+extern void TtaSetLinearx1Gradient ( int value,
+                                     Element el );
+extern void TtaSetLineary1Gradient ( int value,
+                                     Element el );
+extern void TtaSetLinearx2Gradient ( int value,
+                                     Element el );
+extern void TtaSetLineary2Gradient ( int value,
+                                     Element el );
+extern void TtaSetStopColorGradient ( unsigned short red,
+                                      unsigned short green,
+                                      unsigned short blue,
+                                      Element el );
+extern void TtaSetStopOffsetColorGradient ( int offset,
+                                            Element el );
+extern void *TtaCopyTransform ( void *void_pPa );
 extern void TtaAppendTransform ( Element element,
                                  void *transform,
                                  Document document );
@@ -127,14 +150,17 @@ extern void TtaReplaceTransform ( Element element,
 extern void TtaAddTransform ( Element element,
                               void *transform,
                               Document document );
+extern void TtaResetXBoxTransform ( Element element,
+                                    Document document );
 extern void TtaInsertTransform ( Element element,
                                  void *transform,
                                  Document document );
 extern void TtaFreeTransform ( void *transform );
 extern void TtaSetElCoordinateSystem ( Element element );
-extern void TtaFreeAnimation ( Animated_Element *a_list );
+extern void TtaFreeAnimation ( void *void_a_list );
 extern void TtaAppendAnim ( Element element,
                             void *anim );
+extern void *TtaCopyAnim ( void *void_src );
 extern void *TtaNewAnimInfo ( void );
 extern void TtaSetAnimTypetoMotion ( void *anim );
 extern void TtaSetAnimTypetoTransform ( void *anim );
@@ -291,6 +317,29 @@ extern void *TtaNewTransformMatrix (/* float a,
                                        float d,
                                        float e,
                                        float f */);
+extern void AddStopColor (/* Element el,
+                             PtrElement Father,
+                             unsigned short red,
+                             unsigned short green,
+                             unsigned short blue */);
+extern void AddOffset (/* Element el,
+                          PtrElement Father,
+                          int offset */);
+extern void TtaSetLinearx1Gradient (/* int value,
+                                       Element el */);
+extern void TtaSetLineary1Gradient (/* int value,
+                                       Element el */);
+extern void TtaSetLinearx2Gradient (/* int value,
+                                       Element el */);
+extern void TtaSetLineary2Gradient (/* int value,
+                                       Element el */);
+extern void TtaSetStopColorGradient (/* unsigned short red,
+                                        unsigned short green,
+                                        unsigned short blue,
+                                        Element el */);
+extern void TtaSetStopOffsetColorGradient (/* int offset,
+                                              Element el */);
+extern void *TtaCopyTransform (/* void *void_pPa */);
 extern void TtaAppendTransform (/* Element element,
                                    void *transform,
                                    Document document */);
@@ -300,14 +349,17 @@ extern void TtaReplaceTransform (/* Element element,
 extern void TtaAddTransform (/* Element element,
                                 void *transform,
                                 Document document */);
+extern void TtaResetXBoxTransform (/* Element element,
+                                      Document document */);
 extern void TtaInsertTransform (/* Element element,
                                    void *transform,
                                    Document document */);
 extern void TtaFreeTransform (/* void *transform */);
 extern void TtaSetElCoordinateSystem (/* Element element */);
-extern void TtaFreeAnimation (/* Animated_Element *a_list */);
+extern void TtaFreeAnimation (/* void *void_a_list */);
 extern void TtaAppendAnim (/* Element element,
                               void *anim */);
+extern void *TtaCopyAnim (/* void *void_src */);
 extern void *TtaNewAnimInfo (/* void */);
 extern void TtaSetAnimTypetoMotion (/* void *anim */);
 extern void TtaSetAnimTypetoTransform (/* void *anim */);

@@ -104,6 +104,7 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 			/* or an empty compound box */
 			(pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
 		 {
+#ifndef _GLTRANSFORMATION
 		   if (pAb->AbLeafType == LtPicture)
 		     {
 		       /* check if the right side of the picture is selected */
@@ -116,6 +117,20 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 		   else
 		     d = GetBoxDistance (x, y, ratio, pBox->BxXOrg, pBox->BxYOrg,
 					 pBox->BxWidth, pBox->BxHeight);
+#else /*_GLTRANSFORMATION */
+		   if (pAb->AbLeafType == LtPicture)
+		     {
+		       /* check if the right side of the picture is selected */
+		       d = pBox->BxClipX + (pBox->BxClipW / 2);
+		       if (x > d)
+			 pointIndex = 1;
+		       d = GetBoxDistance (x, y, ratio, pBox->BxClipX, pBox->BxClipY,
+					   pBox->BxClipW, pBox->BxClipH);
+		     }
+		   else
+		     d = GetBoxDistance (x, y, ratio, pBox->BxClipX, pBox->BxClipY,
+					 pBox->BxClipW, pBox->BxClipH);
+#endif /*_GLTRANSFORMATION */
 		   if (d > dist && dist == MAX_DISTANCE)
 		     /* it's the first box selected */
 		     dist = d;

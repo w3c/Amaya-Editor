@@ -551,6 +551,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 		pParentBox = pAb->AbEnclosing->AbBox;
 	    }
 	}
+#ifndef _GLTRANSFORMATION
       /* clipped by the enclosing box */
       height = pParentBox->BxYOrg + pParentBox->BxHeight - pFrame->FrYOrg;
       /* and the scrolling zone */
@@ -564,9 +565,24 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 	h = 0;
       else if (topY + h > height)
 	h = height - topY;
-      
       /* don't take into account margins and borders */
       l = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+#else /* _GLTRANSFORMATION */
+/* clipped by the enclosing box */
+      height = pParentBox->BxClipY + pParentBox->BxClipH;
+      /* and the scrolling zone */
+      width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth
+	      - pFrame->FrXOrg;
+      /* don't take into account margins and borders */
+      topY = pBox->BxClipY;
+      h = pBox->BxClipH;
+      if (topY > height)
+	h = 0;
+      else if (topY + h > height)
+	h = height - topY;
+      /* don't take into account margins and borders */
+      l = pBox->BxClipX;
+#endif /* _GLTRANSFORMATION */
       leftX = leftX + l - pFrame->FrXOrg;
       if (leftX > width)
 	width = 0;

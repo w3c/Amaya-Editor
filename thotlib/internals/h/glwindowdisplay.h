@@ -50,25 +50,35 @@ int glMatroxBUG (int frame, int x, int y, int width, int height);
 /* Drawing */
 void InitDrawing (int style, int thick, int fg);
 
+
 void GL_Point (int fg, float width, float x, float y);
+
 void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool Round);
 void GL_DrawLines (ThotPoint *point, int npoints);
 
+void FDrawRectangle (int frame, int thick, int style, float x, float y, int width,
+		     int height, int fg, int bg, int pattern);
 
 void GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height);
 void GL_DrawRectangle (int fg, int x, int y, int width, int height);
+
+void GL_DrawEmptyRectanglef (int fg, float x, float y, int width, int height);
+void GL_DrawRectanglef (int fg, float x, float y, int width, int height);
+
 void GL_DrawSegments (XSegment *point, int npoints);
 void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled);
+
 void GL_DrawPolygon (ThotPoint *points, int npoints);
+
 void GL_VideoInvert (int width, int height, int x, int y);
-void CountourCountReset ();
-void CountourCountAdd (int npoints);
+
 
 /*Transformations...*/
 void DisplayTransformation (PtrTransform Trans, int Width, int Height);
 void DisplayTransformationExit ();
 
 void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
+void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
 
 /*Text rendering*/
 void TranslateChars (CHAR_T *text);
@@ -116,6 +126,9 @@ void GL_UnsetClippingRestore (ThotBool Restore);
 void GL_SetClipping (int x, int y, int width, int height);
 void GL_GetCurrentClipping (int *x, int *y, int *width, int *height);
 
+void DisplayBoxTransformation (void *v_trans, int x, int y);
+ThotBool IsTransformed (void *v_trans);
+ThotBool GetBoxTransformed (void *v_trans, int *x, int *y);
 
 void gl_synchronize ();
 

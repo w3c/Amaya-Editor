@@ -143,7 +143,8 @@ void VerticalScroll (int frame, int delta, int selection)
 			      Scroll (frame, width, height, 0, y, 0, 0);
 			      height = pFrame->FrYOrg + hframe;
 			      DefClip (frame, pFrame->FrXOrg, height,
-				       pFrame->FrXOrg + lframe, height + delta);
+				       pFrame->FrXOrg + lframe, 
+				       height + delta);
 			    }
 			  add = RedrawFrameBottom (frame, delta, NULL);
 		       }

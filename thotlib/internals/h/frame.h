@@ -62,6 +62,7 @@ typedef struct _Frame_Ctl {
   ThotBool   DblBuffNeedSwap;
   void       *Animated_Boxes;
   double     BeginTime;
+  double     LastTime;
   ThotBool   Anim_play;  
   int        Timer;  
 #endif /*_GL*/

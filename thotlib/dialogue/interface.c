@@ -1247,7 +1247,7 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
      XtAppProcessEvent (app_cont, XtIMAll);
 #endif /* _WINDOWS */
 #else /* _GTK */
-   if (gtk_events_pending())
+   if (gtk_events_pending ())
      {
        ev = gtk_get_current_event ();
        return TRUE;
@@ -1560,8 +1560,13 @@ void TtaGiveSelectPosition (Document document, Element element, View view,
 	       {
 		  while (pAb->AbPresentationBox && pAb->AbNext != NULL)
 		     pAb = pAb->AbNext;
+#ifndef _GLTRANSFORMATION
 		  *X = ClickX + pFrame->FrXOrg - pAb->AbBox->BxXOrg;
 		  *Y = ClickY + pFrame->FrYOrg - pAb->AbBox->BxYOrg;
+#else /* _GLTRANSFORMATION */
+		  *X = ClickX - pAb->AbBox->BxClipX;
+		  *Y = ClickY - pAb->AbBox->BxClipY;
+#endif /* _GLTRANSFORMATION */
 	       }
 	  }
      }

@@ -305,6 +305,24 @@ typedef struct _PathSeg
 #define LargeArc u.s1._LargeArc_
 #define Sweep u.s1._Sweep_
 
+
+/* Typedef of SVG gradient part*/
+typedef struct _RgbaDef 
+{
+  unsigned short  r, g, b, a;   	/* color def */
+  float           length;               /* length til next color */  
+  Element         el;                   /* identify stop reference */  
+  struct _RgbaDef *next;  
+} RgbaDef;
+
+/* Typedef of SVG gradient part*/
+typedef struct _GradDef 
+{
+  int            x1, x2, y1, y2;
+  RgbaDef        *next;  
+} GradDef;
+
+
 /* type of a SVG Transform */
 typedef enum
 {
@@ -489,7 +507,8 @@ typedef struct _ElementDescr
  
   PtrTransform          ElTransform;    /* the element is transformed */
   void                  *animation;
- 
+  void                  *gradient;
+  
   union
   {
     struct		      /* ElTerminal = False */

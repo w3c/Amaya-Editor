@@ -655,6 +655,8 @@ void FreeElement (PtrElement pEl)
 #ifdef _GL
    if (pEl->ElTransform)
      TtaFreeTransform (pEl->ElTransform);
+   if (pEl->animation)
+     TtaFreeAnimation (pEl->animation);
 #endif /*_GL*/
    if (pEl->ElLeafType == LtText && pEl->ElText)
      {

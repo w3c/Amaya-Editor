@@ -195,8 +195,6 @@ static GL_glyph *Char_index_lookup_cache (GL_font *font,
       font->Cache = TtaGetMemory (sizeof (Char_Cache_index));
       Cache = font->Cache;      
     }
-  FT_Get_Char_Index (font->face, 
-				       idx);
   Cache->index = idx;
   Cache->character = FT_Get_Char_Index (font->face, 
 				       idx);

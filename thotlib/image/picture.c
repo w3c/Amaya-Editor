@@ -139,17 +139,17 @@ static unsigned char MirrorBytes[0x100] = {
 #undef MESA
 
 typedef struct _PicCache {
-  int width;
-  int height;
-  float TexCoordW;
-  float TexCoordH;
-  char *filename;
-  int texbind;
-  int frame;  
+  int              width;
+  int              height;
+  float            TexCoordW;
+  float            TexCoordH;
+  char             *filename;
+  int              texbind;
+  int              frame;  
   struct _PicCache *next;  
 } Pic_Cache;
 
-/*
+/*             
   static linked list containing all
   pictures in video card memory
 */
@@ -265,41 +265,9 @@ static int LookupInPicCache (PictInfo *Image, int frame)
 	}      
       Cache = Cache->next; 
     }
-  FreeGlTexture (Image);  
+  FreeGlTexture (Image);
   return 0;  
 }
-#ifdef PCL_BDUG
-/*----------------------------------------------------------------------
- CacheLookupHeightAndWidth :
-Get Height and Width based on cache info on this 
- Image (frame and Texture id)
-  ----------------------------------------------------------------------*/
-static void CacheLookupHeightAndWidth (PictInfo *Image,
-				       int *width,
-				       int *height,
-				       int frame)
-{
-  Pic_Cache *Cache = PicCache;
-  int TextureBind = Image->TextureBind;
-  
-  while (Cache)
-    {
-      if (TextureBind == Cache->texbind &&
-	  frame == Cache->frame)
-	{
-	  *width = (int) Cache->width;
-	  *height = (int) Cache->height;
-	  Image->TexCoordW = Cache->TexCoordW;
-	  Image->TexCoordH = Cache->TexCoordH;
-	  return;	  
-	}     
-      Cache = Cache->next; 
-    }
-  *width = 0;
-  *height = 0;
-  return;  
-}
-#endif /*BUG*/
 /*----------------------------------------------------------------------
  Free video card memory from this texture.
   ----------------------------------------------------------------------*/
@@ -311,8 +279,9 @@ void FreeGlTexture (void *ImageDesc)
   
   if (glIsTexture (Image->TextureBind))
     {      
-      FreeAPicCache (Image->TextureBind,  ActiveFrame);  
-      glDeleteTextures (1, &(Image->TextureBind));
+      FreeAPicCache (Image->TextureBind,
+		     ActiveFrame);      
+      glDeleteTextures (1,  &(Image->TextureBind));
 #ifdef _PCLDEBUG
       g_print ("\n Image %s Freed", Image->PicFileName);      
 #endif /*_PCLDEBUG*/
@@ -420,36 +389,22 @@ static void GL_TextureBind (PictInfo *Image)
       /* Another way is to split texture in 256x256 
 	 pieces and render them on different quads
 	 Declared to be the faster  */
-      
-      
       p2_w = p2 (Image->PicWidth);
       p2_h = p2 (Image->PicHeight);
-      
       /* We have resized the picture to match a power of 2
 	 We don't want to see all the picture, just the w and h 
 	 portion*/
-      
       GL_w = (GLfloat) Image->PicWidth/p2_w;
-      GL_h = (GLfloat) Image->PicHeight/p2_h; 
-      
+      GL_h = (GLfloat) Image->PicHeight/p2_h;
       /* We give te texture to opengl Pipeline system */	    
       Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
       GL_MakeTextureSize (Image, p2_w, p2_h);
-      glGenTextures (1, 
-		     &(Image->TextureBind));
-      glBindTexture (GL_TEXTURE_2D, 
-		     Image->TextureBind);       	
-      glTexImage2D (GL_TEXTURE_2D, 
-		    0, 
-		    Mode, 
-		    p2_w, 
-		    p2_h, 
-		    0,
-		    Mode, 
-		    GL_UNSIGNED_BYTE, 
+      glGenTextures (1, &(Image->TextureBind));
+      glBindTexture (GL_TEXTURE_2D, Image->TextureBind);       	
+      glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 
+		    0, Mode, GL_UNSIGNED_BYTE, 
 		    (GLvoid *) Image->PicPixmap);
       TtaFreeMemory (Image->PicPixmap);
-
       Image->PicPixmap = None;
       Image->TexCoordW = GL_w;
       Image->TexCoordH = GL_h;
@@ -589,68 +544,6 @@ void GL_TextureMap (void *ImagePt,
 
 }
 
-void GL_StencilMap (PictInfo *Image, 
-		    int xFrame, int yFrame, 
-		    int w, int h)
-{
-  glEnable (GL_SCISSOR_TEST);
-  glScissor (xFrame,
-	     FrameTable[1].FrHeight
-	     + FrameTable[1].FrTopMargin 
-	     - (yFrame+h),
-	     w,
-	     h);
-
-  glEnable (GL_STENCIL_TEST);
-  glClear(GL_STENCIL_BUFFER_BIT);
-  
-  glStencilFunc (GL_ALWAYS, 1, 1);
-  glStencilOp (GL_REPLACE, GL_REPLACE, GL_REPLACE);
-  /* 
-     The Geometric svg figure that determine the clip
-     should be in a display list
-  */
-  glBegin (GL_TRIANGLE_STRIP);
-  glVertex2i (xFrame,     yFrame + h);
-  glVertex2i (xFrame + w/2+5,     yFrame + h/2 + 5);
-
-  glVertex2i (xFrame + w, yFrame + h);
-  glVertex2i (xFrame + w,     yFrame + h/2 + 5);
-
-  glVertex2i (xFrame + w, yFrame); 
-  glVertex2i (xFrame + w/2 +5, yFrame); 
-
-  glVertex2i (xFrame,     yFrame); 
-  
-  glEnd ();
-	
-  glClear (GL_DEPTH_BUFFER_BIT);
-  glStencilFunc (GL_EQUAL, 1, 1);
-  glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
-
-  GL_TextureMap (Image, 
-		 xFrame, yFrame, 
-		 w, h);
- 
-  glStencilFunc (GL_NOTEQUAL, 1, 1);
-  glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
-
-  glBegin (GL_TRIANGLE_STRIP);
-  glVertex2i (xFrame,     yFrame + h);
-  glVertex2i (xFrame + w/2+5,     yFrame + h/2 + 5);
-
-  glVertex2i (xFrame + w, yFrame + h);
-  glVertex2i (xFrame + w,     yFrame + h/2 + 5);
-
-  glVertex2i (xFrame + w, yFrame); 
-  glVertex2i (xFrame + w/2 +5, yFrame); 
-
-  glVertex2i (xFrame,     yFrame); 
-  
-  glEnd ();
-  glDisable (GL_STENCIL_TEST);
-  glDisable (GL_SCISSOR_TEST);
-}
 
 #endif /* _GL */
 
@@ -937,7 +830,7 @@ static void LayoutPicture (Pixmap pixmap,
   ViewFrame*        pFrame;
   PictureScaling    picPresent;
   int               x, y, clipWidth, clipHeight;
-  int               /* delta, */ i, j;
+  int               i, j;
   
   if (picXOrg < 0)
     {
@@ -1000,12 +893,6 @@ static void LayoutPicture (Pixmap pixmap,
 	      clipHeight = imageDesc->PicHeight;
 	      if (clipHeight > h)
 		clipHeight = h;
-	      /* clipping height is done by the image height */
-	      /*  delta = yFrame + imageDesc->PicHArea - y; */
-	      /* 	      if (delta <= 0) */
-	      /* 		clipHeight = 0; */
-	      /* 	      else */
-	      /* 		clipHeight = delta; */
 	    }	  
 
           if (picPresent == FillFrame || picPresent == XRepeat)
@@ -1025,15 +912,11 @@ static void LayoutPicture (Pixmap pixmap,
 	      clipWidth = imageDesc->PicWidth;
 	      if (clipWidth > w)
 		clipWidth = w;
-	      /* clipping width is done by the image width */
-	      /* delta = xFrame + imageDesc->PicWArea - x; */
-	      /* 	      if (delta <= 0) */
-	      /* 		clipWidth = 0; */
-	      /* 	      else */
-	      /* 		clipWidth = delta; */
 	    }
+
 	  if (w > clipWidth)
 	    {
+	      
 	      if (clipWidth < imageDesc->PicWidth)
 		w = clipWidth;
 	      else
@@ -1041,12 +924,14 @@ static void LayoutPicture (Pixmap pixmap,
 	    }
 	  if (h > clipHeight)
 	    {
+	      
 	      if (clipHeight < imageDesc->PicHeight) 
 		h = clipHeight;
 	      else
 		h = imageDesc->PicHeight;
 	    }
- 
+	  
+
 	  j = 0;
 	  do
 	    {	      
@@ -2214,6 +2099,27 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
   return (epic);
 }
 
+void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
+{
+#ifdef _GL
+  PictInfo *imageDesc = NULL;
+
+  imageDesc = malloc (sizeof (PictInfo));  
+  imageDesc->PicFileName = "testinggrad";
+  imageDesc->RGBA = TRUE;
+  imageDesc->PicWidth = width;
+  imageDesc->PicHeight = height;
+  imageDesc->PicXArea = 0;
+  imageDesc->PicYArea = 0;
+  imageDesc->PicWArea = width;
+  imageDesc->PicHArea = height;
+  imageDesc->PicPixmap = pattern;   
+  GL_TextureBind (imageDesc);
+  return (imageDesc);  
+#endif /* _GL */
+  return NULL;
+}
+
 /*----------------------------------------------------------------------
    Ratio_Calculate : if one picture dimension is null
     make sure we keep the aspect ratio
@@ -2222,6 +2128,7 @@ static ThotBool Ratio_Calculate (PtrAbstractBox pAb,
 				 int *width, int *height, 
 				 int imgwidth, int imgheight)
 {  
+
   ThotBool Constrained_Width, Constrained_Height;
   int      initialw, initialh;
   
@@ -2358,6 +2265,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     return;
   pres = DefaultPres;
   GetPictureFileName (imageDesc->PicFileName, fileName);
+
  /* For the Sync Image*/
  if (frame != ActiveFrame)
      GL_prepare (frame); 
@@ -2405,9 +2313,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    xBox = w;
 	  if(box->BxH != 0)
 	    yBox = h;
-
-
-
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
       width = imageDesc->PicWidth;
@@ -2502,9 +2407,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	}
       else
 	{
-	  /* draw within the inside box */
 	  w = box->BxW;
 	  h = box->BxH;
+	  /* draw within the inside box */
 	}
       
       if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
@@ -2539,26 +2444,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yBox = h;
 		}
-	      if (imageDesc->TextureBind != 0)
-		imageDesc->TextureBind = 0;
-	      
-		/* if (glIsTexture (Image->TextureBind)) */
-/* 		  glDeleteTextures (1,  */
-/* 				    &(Image->TextureBind)); */
-
-		  /* if (imageDesc->TextureBind == 0)*/
-		imageDesc->PicPixmap = (unsigned char *) 
+	      imageDesc->PicPixmap = (unsigned char *) 
 		  (*(PictureHandlerTable[typeImage].Produce_Picture))
 		  (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
 		   Bgcolor, &width, &height,
 		   ViewFrameTable[frame - 1].FrMagnification);
-
-	      /* else */
-/* 		CacheLookupHeightAndWidth (imageDesc, */
-/* 					   &width, */
-/* 					   &height, */
-/* 					   frame); */
-
 	      if  (width == 0 && height == 0)
 		{
 		  imageDesc->PicPixmap = (unsigned char *) 
@@ -2568,15 +2458,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		     ViewFrameTable[frame - 1].FrMagnification);
 		  imageDesc->TextureBind = 0;
 		}     
+
 	    }
 	  /* intrinsic width and height */
 	  imageDesc->PicWidth  = width;
 	  imageDesc->PicHeight = height;
-
-
 	  imageDesc->PicWArea = w;
 	  imageDesc->PicHArea = h;
-
 	  if (Ratio_Calculate (pAb, &w, &h,
 			       width, height))
 	    {
@@ -2589,6 +2477,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			      box, NULL,
 			      h + top + bottom + top + bottom, frame);
 	    }
+
 	}
     }
 
@@ -2617,7 +2506,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       */
       wBox = w = 40;
       hBox = h = 40;
-	  imageDesc->PicWidth = w;
+      imageDesc->PicWidth = w;
       imageDesc->PicHeight = h;
     }
   else if (w == 0 || h == 0)
@@ -2682,11 +2571,16 @@ void *Group_shot (int x, int y, int width, int height, int frame)
       glFlush ();
       glFinish ();
       glReadBuffer (GL_BACK);  
-
+ 
       glReadPixels (x, y, width, height, 
 		    GL_RGBA, 
 		    GL_UNSIGNED_BYTE, 
 		    imageDesc->PicPixmap);
+
+/* SavePng ("/home/cheyroul/test.png", */
+/* 	   imageDesc->PicPixmap, */
+/* 	   (unsigned int) width, */
+/* 	   (unsigned int) height); */
 
       GL_TextureBind (imageDesc);
 
@@ -2698,35 +2592,8 @@ void *Group_shot (int x, int y, int width, int height, int frame)
   
 }
 
-void testing_gradient ()
-{
-  static PictInfo *imageDesc = NULL;
 
-  if (imageDesc == NULL)
-    {
-      imageDesc = malloc (sizeof (PictInfo));  
-      imageDesc->PicFileName = "testing";
-      imageDesc->RGBA = TRUE;
-      imageDesc->PicWidth = 100;
-      imageDesc->PicHeight = 100;
-      imageDesc->PicXArea = 0;
-      imageDesc->PicYArea = 0;
-      imageDesc->PicWArea = 100;
-      imageDesc->PicHArea = 100;
-      imageDesc->PicPixmap = test_gradien_linear ();   
- 
-      GL_TextureBind (imageDesc);
-    }
-  
-  GL_StencilMap (imageDesc, 
-		 0, 
-		 0,
-		 imageDesc->PicWidth, 
-		 imageDesc->PicHeight);
-}
-
-
-#else /* _GL */ 
+#else /* _GL */    
 
 
 /*----------------------------------------------------------------------
@@ -2849,7 +2716,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  w = box->BxW;
 	  h = box->BxH;
 	}
-      if (imageDesc->PicWidth && imageDesc->PicHeight)
+      if(imageDesc->PicWidth && imageDesc->PicHeight)
 	{
 	  imageDesc->PicWArea = w;
 	  imageDesc->PicHArea = h;
@@ -2869,9 +2736,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      
 	      DefClip (frame, box->BxXOrg, box->BxYOrg,
 		       box->BxXOrg + w, box->BxYOrg + h);
-	    }	      
+	    }
 	}
-      
       if (!Printing)
 	{
 #ifndef _WINDOWS
@@ -2925,6 +2791,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
 	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
+
 #else /* _GTK2 */
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
 #endif /* _GTK2 */
@@ -2969,21 +2836,29 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		      /* if it's a background, dont rescale the picture */
 		      wBox = im->rgb_width;
 		      hBox = im->rgb_height;
+		      /*if only one info interpolate 
+			the other with a correct ratio*/
 		      if (xBox == 0)
-			xBox = im->rgb_width;
+			  xBox = im->rgb_width;
+
 		      if (yBox == 0)
-			yBox = im->rgb_height;
+			  yBox = im->rgb_height;
 		    }
 		  else
 		    {
 		      if (wBox == 0)
-			wBox = im->rgb_width;
+			  wBox = im->rgb_width;
+		      
 		      if (hBox == 0)
-			hBox = im->rgb_height;
+			  hBox = im->rgb_height;
+		      
+		      /*if only one info interpolate 
+			the other with a correct ratio*/
 		      if (xBox == 0)
-			xBox = im->rgb_width;
+			  xBox = im->rgb_width;
+
 		      if (yBox == 0)
-			yBox = im->rgb_height;
+			  yBox = im->rgb_height;
 		    }
 
 		  gdk_imlib_render(im,
@@ -2997,7 +2872,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      height = (gint) hBox;
 #endif /* _GTK */
 	      /* intrinsic width and height */
-	      imageDesc->PicWidth  = width;
+	      imageDesc->PicWidth = width;
 	      imageDesc->PicHeight = height;
 	      imageDesc->PicWArea = w;
 	      imageDesc->PicHArea = h;
@@ -3019,7 +2894,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  /* Force Image rescaling by making box 
 		     size different of image info size*/
 		  w = w / 2;
-		  h = h / 2;		 
+		  h = h / 2;
 		}
 	    }
 #ifndef _GTK
@@ -3064,13 +2939,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	{
 	  /* one of box size is unknown, keep the image size */
 	  if (w == 0)
-	    w = wBox;
+	      w = wBox;
 	  if (h == 0)
 	    h = hBox;
+
 	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
+
 	}
     }
-
   if (pres != ReScale || Printing)
     {
       imageDesc->PicXArea = xBox;
@@ -3260,8 +3136,10 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
 	   (unsigned int) widthb,
 	   (unsigned int) heightb);
   return screenshot;
+
 #endif /* _WINDOWS */
 #endif /* _GTK */
   return NULL;
 #endif /*_GL*/
 }
+

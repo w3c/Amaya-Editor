@@ -43,6 +43,7 @@
 #include "structschema_f.h"
 #include "thotmsg_f.h"
 #include "tree_f.h"
+#include "content.h"
 
 /*----------------------------------------------------------------------
    DocumentOfElement
@@ -3136,6 +3137,14 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		pEl->ElAccess = AccessInherited;
 	      pEl->ElHolophrast = pSource->ElHolophrast;
 	      pEl->ElSystemOrigin = pSource->ElSystemOrigin;
+#ifdef _GL
+	      if (pSource->ElTransform)
+		pEl->ElTransform = TtaCopyTransform (pSource->ElTransform);
+	      if (pSource->animation)
+		pEl->animation = TtaCopyAnim (pSource->animation);
+	      /* if (pSource->gradient) */
+/* 		pEl->gradient = TtaCopyGradient (pSource->gradient); */
+#endif /* _GL */
 	      pEl->ElTerminal = pSource->ElTerminal;
 	      if (!pEl->ElTerminal)
 		pEl->ElFirstChild = NULL;

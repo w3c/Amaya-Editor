@@ -2675,7 +2675,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  pBuffer = pBuffer->BuPrevious;
 			  ind = pBuffer->BuLength;
 			}
-		      
+#ifndef _GLTRANSFORMATION
 		      /* prepare le reaffichage */
 		      /* point d'insertion en x */
 		      xx += pSelBox->BxXOrg;
@@ -2683,12 +2683,15 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      topY = pSelBox->BxYOrg;
 		      /* point d'insertion inferieur en y */
 		      bottomY = topY + pSelBox->BxHeight;
-#ifdef _GL
-		      if (xx)
-			xx = xx - 1;
-		      if (bottomY + 1 < FrameTable[frame].FrHeight)
-			bottomY = bottomY + 1;
-#endif /*_GL*/
+#else /* _GLTRANSFORMATION */
+		      /* prepare le reaffichage */
+		      /* point d'insertion en x */
+		      xx += pSelBox->BxClipX;
+		      /* point d'insertion superieur en y */
+		      topY = pSelBox->BxClipY;
+		      /* point d'insertion inferieur en y */
+		      bottomY = topY + pSelBox->BxClipH;
+#endif /*  _GLTRANSFORMATION */
 		      DefClip (frame, xx, topY, xx, bottomY);
 		      /* Est-on au debut d'une boite entiere ou coupee ? */
 		      pBox = pAb->AbBox->BxNexChild;
@@ -2852,7 +2855,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				    {
 				      /* the box becomes empty */
 				      xDelta = BoxCharacterWidth (109, font);
+#ifndef _GLTRANSFORMATION
 				      pFrame->FrClipXBegin = pSelBox->BxXOrg;
+#else /* _GLTRANSFORMATION */
+				      pFrame->FrClipXBegin = pSelBox->BxClipX;
+#endif  /* _GLTRANSFORMATION */
 				      /* update selection marks */
 				      pSelBox = pAb->AbBox;
 				      pViewSel->VsXPos = 0;
@@ -3011,6 +3018,18 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      box->BxHorizRef = pBox->BxHorizRef;
 			      box->BxH = pBox->BxH;
 			      box->BxHeight = pBox->BxHeight;
+#ifdef _GL
+			      box->BxClipH = pBox->BxClipH;
+			      box->BxClipY = pBox->BxClipY;
+			      box->BxClipW = 0;
+			      if (pAb->AbDirection == 'L')
+				/* insert after the first box */
+				box->BxClipX = pBox->BxClipX;
+			      else
+				/* insert before the first box */
+				box->BxClipX = pSelBox->BxClipX;
+
+#endif /* _GL */
 			      box->BxW = 0;
 			      box->BxWidth = 0;
 			      box->BxTMargin = pBox->BxTMargin;

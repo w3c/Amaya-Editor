@@ -50,9 +50,11 @@
 #include "memory_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
+#include "tesse_f.h"
 
 #include "glwindowdisplay.h"
 #include "stix.h"
+
 /*
  * Math Macros conversion from
  * degrees to radians and so on...
@@ -150,7 +152,7 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
       return;
    
    y = y + FrameTable[frame].FrTopMargin;
-   GL_DrawUnicodeChar ((CHAR_T) car, x, y, font, fg);
+   GL_DrawUnicodeChar ((CHAR_T) car, (float) x, (float) y, font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -193,7 +195,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	}
       if (fg >= 0)
 	  width = GL_UnicodeDrawString (fg, (CHAR_T *) buff, 
-					x, y, hyphen, font, lg);
+					(float) x, (float) y, hyphen, font, lg);
     }
   return (width);
 }
@@ -304,7 +306,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
-	    xcour += GL_UnicodeDrawString (fg, (CHAR_T *) ptcar, xcour, y, 0, font, 2);
+	    xcour += GL_UnicodeDrawString (fg, (CHAR_T *) ptcar, (float) xcour, (float) y, 0, font, 2);
 	    nb--;
 	  }
      }
@@ -1030,7 +1032,41 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
       glDisable (GL_POLYGON_STIPPLE);      
     }
 }
+/*----------------------------------------------------------------------
+  DrawRectangle draw a rectangle located at (x, y) in frame,
+  of geometry width x height.
+  thick indicates the thickness of the lines.
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
+void FDrawRectangle (int frame, int thick, int style, float x, float y, int width,
+		    int height, int fg, int bg, int pattern)
+{
+  Pixmap              pat;
 
+  if (width <= 0 || height <= 0)
+    return;
+  if (thick == 0 && pattern == 0)
+    return;
+  y += FrameTable[frame].FrTopMargin;
+  pat = (Pixmap) CreatePattern (0, fg, bg, pattern); 
+  if (pat != 0) 
+    {
+      GL_DrawRectanglef (bg, x, y, width, height);
+    }
+  /* Draw the border */
+  if (thick > 0 && fg >= 0)
+    {
+      if (width > thick)
+	width = width - thick;
+      if (height > thick)
+	height = height - thick;
+      x = x + thick/2;
+      y = y + thick/2;
+      InitDrawing (style, thick, fg); 
+      GL_DrawEmptyRectanglef (fg, x,  y, width, height);
+    }
+}
 /*----------------------------------------------------------------------
   DrawDiamond draw a diamond.
   Parameters fg, bg, and pattern are for drawing
@@ -1476,6 +1512,58 @@ static void  DrawCurrent (int frame, int thick, int style,
     }
 }
 
+
+void PolySplit2 (float a1, float b1, float a2, float b2,
+		float a3, float b3, float a4, float b4,
+		 void *mesh);
+
+void  EllipticSplit2 (int frame, int x, int y,
+		     double x1, double y1, 
+		     double x2, double y2, 
+		     double xradius, double yradius, 
+		     int Phi, int large, int sweep, 
+		      void *mesh);
+
+void QuadraticSplit2 (float a1, float b1, float a2, float b2,
+		     float a3, float b3,
+		      void *mesh);
+
+/*----------------------------------------------------------------------
+  DoDrawMesh : Draw Path as lines or polygons
+  ----------------------------------------------------------------------*/
+static void DoDrawMesh (int frame, int thick, int style,
+			void *mesh, int fg, int bg,
+			int pattern)
+{
+  Pixmap              pat;
+
+  /* Fill in the polygon */
+  pat = CreatePattern (0, fg, bg, pattern);
+  if (pat != 0) 
+    {
+      /*  InitDrawing (style, thick, bg); */
+      GL_SetForeground (bg); 
+      MakeMesh (mesh);  
+    }
+  /* Draw the border */
+  if (thick > 0 && fg >= 0)
+    {
+      InitDrawing (style, thick, fg);
+      MakeMeshLines (mesh);
+    }
+}
+
+/*----------------------------------------------------------------------
+  PixelValueDble : check if we need calculation
+  ----------------------------------------------------------------------*/
+float PixelValueDble (int nb, int real_nb, int frame)
+{
+  if (ViewFrameTable[frame - 1].FrMagnification)
+    return (float) (nb + PixelValue ((int)real_nb, UnPixel, NULL,
+				     ViewFrameTable[frame - 1].FrMagnification));
+  else
+    return (float) (nb + real_nb);
+}
 /*----------------------------------------------------------------------
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
@@ -1484,125 +1572,79 @@ static void  DrawCurrent (int frame, int thick, int style,
 void DrawPath (int frame, int thick, int style, int x, int y,
 	       PtrPathSeg path, int fg, int bg, int pattern)
 {
-  ThotPoint           *points;
-  int                 npoints, maxpoints;
-  PtrPathSeg          pPa;
-  float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+  PtrPathSeg  pPa;
+  float       x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+  void        *mesh;  
 
   if (thick > 0 || fg >= 0)
     {
       y += FrameTable[frame].FrTopMargin;
-      /* alloue la liste des points */
-      maxpoints = ALLOC_POINTS;
-      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * maxpoints);
-      npoints = 0;
+      mesh = GetNewMesh ();
       pPa = path;
-      /* counts how many countours there are in Path
-       (countours is M or m, known or similar as a
-       hand leverage when drawing)*/
-      CountourCountReset ();
       while (pPa)
 	{
 	  if (pPa->PaNewSubpath)
-	    /* this path segment starts a new subpath 
-	       (M or m attribute parameter)
-	       if some points are already stored, display the line
-	       they represent */
-	    {
-	      /* We get here the contour separation nedded
-		     for the tesselation 
-		     that handles polygon with holes) */
-	      CountourCountAdd (npoints);
-	    } 
+	    CountourCountAdd (mesh);
 	  switch (pPa->PaShape)
 	    {
 	    case PtLine:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      PolyNewPoint ((int) x1, (int) y1, &points, &npoints, &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      x1 = PixelValueDble (x, pPa->XStart, frame);	      
+	      y1 = PixelValueDble (y, pPa->YStart, frame);
+	      x2 = PixelValueDble (x, pPa->XEnd, frame);
+	      y2 = PixelValueDble (y, pPa->YEnd, frame);
+	      MeshNewPoint (x1, y1, mesh);
+	      MeshNewPoint (x2, y2, mesh);
 	      break;
 
 	    case PtCubicBezier:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx2 = (float) (x + PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy2 = (float) (y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints,
-			 &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      x1 = PixelValueDble (x, pPa->XStart, frame);
+	      y1 = PixelValueDble (y, pPa->YStart, frame);
+	      x2 = PixelValueDble (x, pPa->XEnd, frame);
+	      y2 = PixelValueDble (y, pPa->YEnd, frame);
+	      cx1 = PixelValueDble (x, pPa->XCtrlStart, frame);
+	      cy1 = PixelValueDble (y, pPa->YCtrlStart, frame);
+	      cx2 = PixelValueDble (x, pPa->XCtrlEnd, frame);
+	      cy2 = PixelValueDble (y, pPa->YCtrlEnd, frame);
+	      PolySplit2 (x1, y1, cx1, cy1, cx2, cy2, x2, y2, mesh);
+	      MeshNewPoint (x2, y2, mesh);
 	      break;
 
 	    case PtQuadraticBezier:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      QuadraticSplit (x1, y1, cx1, cy1, x2, y2, &points, &npoints,
-			      &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      x1 = PixelValueDble (x, pPa->XStart, frame);
+	      y1 = PixelValueDble (y, pPa->YStart, frame);
+	      x2 = PixelValueDble (x, pPa->XEnd, frame);
+	      y2 = PixelValueDble (y, pPa->YEnd, frame);
+	      cx1 = PixelValueDble (x, pPa->XCtrlStart, frame);
+	      cy1 = PixelValueDble (y, pPa->YCtrlStart, frame);
+	      QuadraticSplit2 (x1, y1, cx1, cy1, x2, y2, mesh);
+	      MeshNewPoint (x2, y2, mesh);
 	      break;
 
 	    case PtEllipticalArc:
-	      x1 = pPa->XStart;
-	      y1 = pPa->YStart;
-	      x2 = pPa->XEnd;
-	      y2 = pPa->YEnd;		
-	      cx1 = pPa->XRadius; 
-	      cy1 = pPa->YRadius; 
-	      EllipticSplit ( frame, x, y,
-			     (double) x1, (double) y1, 
-			     (double) x2, (double) y2, 
-			     (double) cx1, (double) cy1,
-			     fmod(pPa->XAxisRotation, 360), 
-			     pPa->LargeArc, pPa->Sweep,
-			     &points, &npoints, &maxpoints);
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-					    ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-					    ViewFrameTable[frame - 1].FrMagnification));
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, 
- 			    &maxpoints);
+	      x1 = PixelValueDble (x, pPa->XStart, frame);
+	      y1 = PixelValueDble (y, pPa->YStart, frame);
+	      x2 = PixelValueDble (x, pPa->XEnd, frame);
+	      y2 = PixelValueDble (y, pPa->YEnd, frame);
+	      cx1 = (float) pPa->XRadius; 
+	      cy1 = (float) pPa->YRadius; 
+	      EllipticSplit2 (frame, x, y,
+			      x1, y1, 
+			      x2, y2, 
+			      cx1, cy1,
+			      fmod (pPa->XAxisRotation, 360), 
+			      pPa->LargeArc, pPa->Sweep,
+			      mesh);
+	      MeshNewPoint (x2, y2, mesh);
 	      break;
 	    }
 	  pPa = pPa->PaNext;
 	}
-      /* if some points are left in the buffer, display the line they
-	 represent */
-    if (npoints > 1)
-	   DrawCurrent (frame, thick, style, points, npoints, fg, bg, pattern);
+      CountourCountAdd (mesh);
+      DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern);     
       /* free the table of points */
-    free (points);
+    FreeMesh (mesh);
     }  
-  CountourCountReset ();
 }
-
 /*----------------------------------------------------------------------
   DrawOval draw a rectangle with rounded corners.
   Parameters fg, bg, and pattern are for drawing
@@ -1767,7 +1809,6 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 		 int height, int fg, int bg, int pattern)
 {
    Pixmap              pat;
-
    
    width -= thick + 1;
    height -= thick + 1;

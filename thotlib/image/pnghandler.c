@@ -111,6 +111,8 @@ char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
 			"undefined type", "RGB+alpha"};
 
 #ifdef _GL
+
+
 /*----------------------------------------------------------------------
   ReadPng : reads from a file pointer a png file into a RGBA buffer
   All png specifications is supported : http://www.w3.org/Graphics/PNG/

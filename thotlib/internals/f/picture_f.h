@@ -28,6 +28,9 @@ extern unsigned char *ZoomPicture ( unsigned char *cpic,
                                     int eWIDE,
                                     int eHIGH,
                                     int bperpix );
+extern void *PutTextureOnImageDesc ( unsigned char *pattern,
+                                     int width,
+                                     int height );
 extern void LoadPicture ( int frame,
                           PtrBox box,
                           PictInfo *imageDesc );
@@ -65,6 +68,9 @@ extern unsigned char *ZoomPicture (/* unsigned char *cpic,
                                       int eWIDE,
                                       int eHIGH,
                                       int bperpix */);
+extern void *PutTextureOnImageDesc (/* unsigned char *pattern,
+                                       int width,
+                                       int height */);
 extern void LoadPicture (/* int frame,
                             PtrBox box,
                             PictInfo *imageDesc */);

@@ -197,8 +197,9 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
   int                 len, lineLen;
   Name                tsEOL, tsTranslEOL;
 
+  nb_bytes2write = 0;  
   if (translate)
-    {
+    {  
       if (c == START_ENTITY)
 	{
 	  mbc[0] = '&';

@@ -78,24 +78,24 @@ typedef enum
    Ref(H, V) -> the box is bound to a reference axis
    Dim(H, V) -> the box modifies the elastic dimension of the other box */
 typedef enum
-{
-  OpHorizDep, 
-  OpVertDep,
-  OpHorizInc,
-  OpVertInc,
-  OpHorizRef,
-  OpVertRef,
-  OpWidth,
-  OpHeight
-} OpRelation;
+  {
+    OpHorizDep, 
+    OpVertDep,
+    OpHorizInc,
+    OpVertInc,
+    OpHorizRef,
+    OpVertRef,
+    OpWidth,
+    OpHeight
+  } OpRelation;
 
 /* Domain of propagation of the modifications between boxes */
 typedef enum
-{
-  ToSiblings,
-  ToChildren,
-  ToAll
-} Propagation;
+  {
+    ToSiblings,
+    ToChildren,
+    ToAll
+  } Propagation;
 
 typedef struct _ViewSelection
 {
@@ -196,8 +196,8 @@ typedef struct _Box
   PtrBox          BxNext;	/* Next displayable box */
   int	          BxNChars;	/* Total number of characters in the box */
   int             BxIndChar;	/* 0 or position of the split box */
-  int             BxXOrg;	/* X origin from the root */
-  int             BxYOrg;	/* Y origin from the root */
+  float             BxXOrg;	/* X origin from the root */
+  float             BxYOrg;	/* Y origin from the root */
 #ifdef _GL
   int             BxClipX; 
   int             BxClipY; 
@@ -206,8 +206,8 @@ typedef struct _Box
   int             BxClipH;
 
 #endif /* _GL */
-  int             BxHeight;	        /* Box height including margins */
-  int             BxWidth;	        /* Box width including margins */
+  float             BxHeight;	        /* Box height including margins */
+  float             BxWidth;	        /* Box width including margins */
 
   int             BxH;	        	/* Inner height */
   int             BxW;	        	/* Inner Width including spaces */
@@ -228,6 +228,8 @@ typedef struct _Box
   int             DisplayList;          /*Video Memory index
 					  of precomputed visual*/
   void            *Pre_computed_Pic;    /*Pic of the rendered content, used
+					  for group, for example*/
+  void            *Post_computed_Pic;    /*Pic of the rendered content, used
 					  for group, for example*/
   
 #endif /*_GL*/
@@ -265,12 +267,13 @@ typedef struct _Box
   ThotBool        BxFill;	        /* The box has borders or background */
   ThotBool        BxDisplay;	        /* The box has borders or
 					   background */
-  
+    
 #ifdef _GL
-  ThotBool        BxEditable;           /* If Box is Rotated or Scaled,
-					   prevents edition*/
-  ThotBool        BxBoundinBoxComputed;
-  ThotBool        BxTransformationComputed;
+    ThotBool        BxEditable;           /* If Box is Rotated or Scaled,
+					     prevents edition*/
+    ThotBool        BxBoundinBoxComputed;
+    ThotBool        BxTransformationComputed;
+    ThotBool        VisibleModification;    
 #endif /* _GL */
   int		  BxRuleHeigth;         /* Content height or minimum */
   int		  BxRuleWidth;	        /* Content width or minimum */

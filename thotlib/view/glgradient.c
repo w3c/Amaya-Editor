@@ -12,16 +12,20 @@
  * Author:  P. Cheyrou-lagreze (INRIA)
  *
  */
-#ifdef _GL
 
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
-#else /*WINDOWS*/
-#include <windows.h>
-#endif /*_GTK*/
-
 #include <GL/gl.h>
 #include <GL/glu.h>
+
+#else /*WINDOWS*/
+#ifdef _WINDOWS
+#include <windows.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif /* _WINDOWS */
+#endif /*_GTK*/
+
 
 #include "ustring.h"
 #include "math.h"
@@ -58,20 +62,13 @@
 #include "animbox_f.h"
 #include "picture_f.h"
 
-
 #define EPSILON 1e-10
 
-typedef struct _RgbaDef {
-  double          r, g, b, a;   	/* color def */
-  float           length;               /*length til next color*/  
-  struct _RgbaDef *next;  
-} RgbaDef;
-
-
-static unsigned char *fill_linear_gradient_image (RgbaDef *First, 
-						  int width, 
-						  int height)
+unsigned char *fill_linear_gradient_image (RgbaDef *First, 
+					   int width, 
+					   int height)
 {
+#ifdef _GL
   RgbaDef *current_gradient;
   unsigned char *p0, *pixel;
   int     x, y;
@@ -81,20 +78,23 @@ static unsigned char *fill_linear_gradient_image (RgbaDef *First,
   int     int_grad_width;
 
   int_grad_width = 4 * width * height * sizeof (unsigned char);
-  
   pixel = malloc (int_grad_width);
   memset (pixel, 0, int_grad_width);
   current_gradient = First;
   x = 0;
   p0 = pixel;
-  
+
+
+  curr_r = current_gradient->r;
+  curr_g = current_gradient->g;
+  curr_b = current_gradient->b;
+  curr_a = current_gradient->a;
+
   while (current_gradient->next)
     {
-
       /* (current_gradient->len - 1) ? */
-      grad_width = current_gradient->length * width;
+      grad_width = current_gradient->next->length * width;
       int_grad_width = (int) grad_width;
-      
       if (current_gradient->next->r - current_gradient->r)
 	delta_r = (current_gradient->next->r - current_gradient->r) / grad_width;
       else
@@ -116,19 +116,12 @@ static unsigned char *fill_linear_gradient_image (RgbaDef *First,
 	delta_a = 0;
       
       
-      /* Create a unique gradient line 
-       that will be copied height times*/
-      x = 0;
-      curr_r = current_gradient->r;
-      curr_g = current_gradient->g;
-      curr_b = current_gradient->b;
-      curr_a = current_gradient->a;
       while (x < int_grad_width) 
 	{
-	  *p0++ = curr_r * 255.0;
-	  *p0++ = curr_g * 255.0;
-	  *p0++ = curr_b * 255.0;
-	  *p0++ = curr_a * 255.0;
+	  *p0++ = curr_r;
+	  *p0++ = curr_g;
+	  *p0++ = curr_b;
+	  *p0++ = curr_a;
 
 	  curr_r += delta_r;
 	  curr_g += delta_g;
@@ -137,7 +130,14 @@ static unsigned char *fill_linear_gradient_image (RgbaDef *First,
 
 	  x++;
 	}
+      /* Create a unique gradient line 
+       that will be copied height times*/
+      x = 0;
       current_gradient = current_gradient->next;
+      curr_r = current_gradient->r;
+      curr_g = current_gradient->g;
+      curr_b = current_gradient->b;
+      curr_a = current_gradient->a;
     }
   /* Fill all row's image */
   p0 = pixel;
@@ -148,42 +148,9 @@ static unsigned char *fill_linear_gradient_image (RgbaDef *First,
       memcpy (p0, pixel, width);
     }
 
-  return pixel;  
+  return pixel; 
+#else
+  return NULL; 
+#endif/*  _GL */
 } 
 
-unsigned char *test_gradien_linear ()
-{
-  RgbaDef *First;
-  unsigned char *image;
-  
-  First = malloc (sizeof (RgbaDef));
-  
-  First->r = 1.00;
-  First->g = 0.00;
-  First->b = 0.00;
-  First->a = 1.0;
-  First->length = 0.3;
-
-  First->next = malloc (sizeof (RgbaDef));
-  
-  First->next->r = 0.0;
-  First->next->g = 1.0;
-  First->next->b = 0.0;
-  First->next->a = 1.0;
-  First->next->length = 0.7;
-
-  First->next->next = malloc (sizeof (RgbaDef));
-  
-  First->next->next->r = 0.0;
-  First->next->next->g = 0.0;
-  First->next->next->b = 1.0;
-  First->next->next->a = 1.0;
-  First->next->next->length = 0.0;
-
-  First->next->next->next = NULL;
-  
-  image = fill_linear_gradient_image (First, 100, 100);
-  
-  return image;  
-}
-#endif /* _GL */

@@ -1775,6 +1775,10 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	       }
 	     
 #endif /* _GLTRANSFORMATION */
+#ifdef _GL
+	     if (pAb->AbElement->gradient)
+	       fprintf (fileDescriptor, " Holding Gradient");
+#endif /* _GL */
 	     fprintf (fileDescriptor, " Base:");
 	     wrnumber (pBox->BxHorizRef, fileDescriptor);
 	     fprintf (fileDescriptor, " Axis:");
