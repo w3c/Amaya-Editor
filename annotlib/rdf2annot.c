@@ -125,13 +125,24 @@ static void start_hndl(void *data, const char *el, const char **attr)
   int set_literal = 0;
   char *char_p;
 
-  if (!strcmp (el, "r:Description"))
+  if (!strcmp (el, "r:RDF"))
+    /* @@ need to pick up namespace declarations here */
+    {
+    }
+  else if (!strcmp (el, "r:Description"))
     /* the start of a new annotation, we add it to the list */
     {
       annot =  AnnotMeta_new ();
       List_add (&annot_list, (void *) annot);
       if (attr[0] && !strcmp (attr[0], "about"))
 	  annot->annot_url = strdup ((char *) attr[1]);
+    }
+
+  if (!annot /* @@ */ && strcmp (el, "r:RDF"))
+    {
+      fprintf (stderr, "Got start tag %s before RDF:Description; ignoring\n",
+	       el);
+      return;
     }
   else if (!strcmp (el, "a:annotates")) 
     {
