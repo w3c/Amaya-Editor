@@ -212,7 +212,8 @@ kaffe_clean :
 
 kaffe_config :
 	@(localdir=`pwd` ; kaffedir="$(THOTDIR)/$(KAFFE)" ; cd $(KAFFE) ; \
-	  unset LANG; if [ -x $$kaffedir/configure ] ; then \
+	  unset LANG; unset CC; unset CFLAGS; \
+	  if [ -x $$kaffedir/configure ] ; then \
 	      $$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
 	      --bindir=$$localdir/bin --enable-staticlib --with-x \
 	      @KAFFE_ENGINE@ ; \
@@ -223,7 +224,7 @@ kaffe_config :
 	  fi)
 
 kaffe_make :
-	@(cd $(KAFFE) ; $(MAKE))
+	@(cd $(KAFFE) ; unset CC ; unset CFLAGS; $(MAKE))
 
 kaffe_install:
 	@(cd $(KAFFE) ; $(MAKE) install)
