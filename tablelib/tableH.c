@@ -46,6 +46,7 @@ static ThotBool          Lock = FALSE;
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
 #include "createabsbox_f.h"
+#include "font_f.h"
 #include "exceptions_f.h"
 #include "frame_f.h"
 #include "memory_f.h"
@@ -382,7 +383,8 @@ static void      BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
   The parameter percent returns the value of the attribute which has
   exception ExcNewPercentWidth or 0
   ----------------------------------------------------------------------*/
-static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int *width, int *percent)
+static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int zoom,
+								int *width, int *percent)
 {
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
@@ -406,7 +408,7 @@ static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int *width, int *percent)
 	    (pAttr->AeAttrType == AtNumAttr || pAttr->AeAttrType == AtEnumAttr))
 	  {
 	    found = TRUE;
-            *width = pAttr->AeAttrValue;
+            *width = PixelValue (pAttr->AeAttrValue, UnPixel, NULL, zoom);
 	  }
 	else if (pAttr->AeAttrNum == attrPercent &&
 	    pAttr->AeAttrSSchema->SsCode == pSS->SsCode &&
@@ -538,7 +540,8 @@ static void     CheckRowHeights (PtrAbstractBox table, int frame)
 			   pAttr->AeAttrSSchema = pSS;
 			   pAttr->AeAttrNum = attrHeight;
 			   pAttr->AeAttrType = AtNumAttr;
-			   pAttr->AeAttrValue = rowList[k]->AbBox->BxH + height;
+			   pAttr->AeAttrValue = LogicalValue (rowList[k]->AbBox->BxH + height,
+				   UnPixel, NULL, ViewFrameTable[frame - 1].FrMagnification);
 			   AttachAttrWithValue (rowList[k]->AbElement, pDoc, pAttr);
 			   DeleteAttribute (NULL, pAttr);
 			   /* update the row box */
@@ -611,7 +614,7 @@ static void     CheckTableWidths (PtrAbstractBox table, int frame, ThotBool free
   pCell = GetParentCell (pBox);
 
   /* get the inside table width */
-  constraint = GiveAttrWidth (table, &width, &percent);
+  constraint = GiveAttrWidth (table, ViewFrameTable[frame - 1].FrMagnification, &width, &percent);
   if (!constraint)
     /* limit given by available space */
     width = table->AbEnclosing->AbBox->BxW - mbp;
@@ -915,7 +918,8 @@ static void     ChangeTableWidth (PtrAbstractBox table, int frame)
   GiveCellWidths returns the minimum width, the maximum width, the
   constrained width and the percent width of a specific cell.
   ----------------------------------------------------------------------*/
-static void GiveCellWidths (PtrAbstractBox cell, int *min, int *max, int *width, int *percent)
+static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
+							int *width, int *percent)
 {
   PtrAbstractBox      pAb;
   PtrBox              box;
@@ -988,7 +992,7 @@ static void GiveCellWidths (PtrAbstractBox cell, int *min, int *max, int *width,
   mbp += box->BxRMargin + box->BxRBorder + box->BxRPadding;
   *min = *min + mbp;
   *max = *max + mbp;
-  GiveAttrWidth (cell, width, percent);
+  GiveAttrWidth (cell, ViewFrameTable[frame - 1].FrMagnification, width, percent);
   if (*width)
     *width = *width + mbp;
 }
@@ -1034,6 +1038,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   cNumber = 0;
   change = FALSE;
   span = 1;
+  width = 0;
   while (pTabRel != NULL)
     {
       for (i = 0; i < MAX_RELAT_DIM &&
@@ -1181,7 +1186,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 		      cell = pAb;
 		      box = cell->AbBox;
 		      /* get the min and max and constrained widths */
-		      GiveCellWidths (cell, &min, &max, &cellWidth, &percent);
+		      GiveCellWidths (cell, frame, &min, &max, &cellWidth, &percent);
 		      if (box->BxMinWidth != min)
 			box->BxMinWidth = min;
 		      if (box->BxMaxWidth != max)
@@ -1291,7 +1296,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 	}
     }
 
-  GiveAttrWidth (table, &width, &percent);
+  GiveAttrWidth (table, ViewFrameTable[frame - 1].FrMagnification, &width, &percent);
   /* now update column boxes */
   pTabRel = pBox->BxColumns;
   cRef = 0;
@@ -1406,7 +1411,7 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int fr
   ThotBool            reformat;
 
   box = cell->AbBox;
-  GiveCellWidths (cell, &min, &max, &width, &percent);
+  GiveCellWidths (cell, frame, &min, &max, &width, &percent);
   if (width && width < min)
     /* a constrained width it must be greater than the minimum */
     width = min;
@@ -1457,7 +1462,7 @@ static void      UpdateCellHeight (PtrAbstractBox cell, int frame)
 
   The column width changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-static void      UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
+static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
 {
   PtrAbstractBox      table;
   PtrAbstractBox      row;
@@ -1506,7 +1511,8 @@ static void      UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int
    - a column (table == NULL && col != NULL)
    - a row (table == NULL && row != NULL)
   ----------------------------------------------------------------------*/
-static void  UpdateTable (PtrAbstractBox table, PtrAbstractBox col, PtrAbstractBox row, int frame)
+static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
+						 PtrAbstractBox row, int frame)
 {
   PtrAbstractBox      pAb;
 
@@ -1594,7 +1600,7 @@ static void      ClearTable (PtrAbstractBox table)
 /*----------------------------------------------------------------------
    ClearTable removes table information
   ----------------------------------------------------------------------*/
-static void  IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table, ThotBool *result)
+static void IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table, ThotBool *result)
 {
   PtrAbstractBox      col, firstcol;
   PtrAttribute        pAttr;
