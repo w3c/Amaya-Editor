@@ -147,6 +147,7 @@ static ThotBool     WithCancel;
 static ThotBool     WithBorder;
 static ThotBool     HTMLFormat;
 static ThotBool     ReleaseFocus;
+static ThotBool     RequiredAttr;
 
 static OPENFILENAME OpenFileName;
 static char        *SzFilter;
@@ -895,8 +896,11 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_ATTR));
       SetWindowText (GetDlgItem (hwnDlg, ID_APPLY),
 		     TtaGetMessage (LIB, TMSG_APPLY));
-      SetWindowText (GetDlgItem (hwnDlg, ID_DELETE),
-		     TtaGetMessage (LIB, TMSG_DEL_ATTR));
+	  if (RequiredAttr)
+		  DestroyWindow (GetDlgItem (hwnDlg, ID_DELETE));
+	  else
+        SetWindowText (GetDlgItem (hwnDlg, ID_DELETE),
+		       TtaGetMessage (LIB, TMSG_DEL_ATTR));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
 		     TtaGetMessage (LIB, TMSG_DONE));
       radio1 = CreateWindow ("BUTTON", &ItemList[ndx],
@@ -1023,13 +1027,21 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 	  break;
 	}
       break;
-	
+	      
     case WM_CLOSE:
     case WM_DESTROY:
       AttrForm = NULL;
+	  if (RequiredAttr)
+	  {
+	    iLocation = 0;
+	    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	    ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+	  }
+	  else
+	    ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
       EndDialog (hwnDlg, IDCANCEL);
       break;
-      
+
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
@@ -1073,24 +1085,25 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
 	  break;
 	case ID_DELETE:
-	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) -1);
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
 	  AttrForm = NULL;
 	  break;
-	
+      
 	case ID_DONE:
-	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
-	  AttrForm = NULL;
-	  EndDialog (hwnDlg, IDCANCEL);
-	  break;
- 
-	case IDCANCEL:
-	  AttrForm = NULL;
-	  EndDialog (hwnDlg, IDCANCEL);
-	  break;	  
+      AttrForm = NULL;
+	  if (RequiredAttr)
+	  {
+	    iLocation = 0;
+	    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	    ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+	  }
+	  else
+	    ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+      EndDialog (hwnDlg, IDCANCEL);
+      break;
 	}
       break;
-      
     default:
       return FALSE;
     }
@@ -3967,7 +3980,7 @@ void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style,
  CreateAttributeDlgWindow
  ------------------------------------------------------------------------*/
 void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items,
-			       char *item_list) 
+			       char *item_list, ThotBool required) 
 {
   /* destroy the precent attribute menu */
   if (AttrForm)
@@ -3979,6 +3992,7 @@ void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items,
   ItemList = item_list;
   currAttrVal = curr_val;
   attDlgNbItems = nb_items;
+  RequiredAttr = required;
   switch (attDlgNbItems)
     {
     case 2:

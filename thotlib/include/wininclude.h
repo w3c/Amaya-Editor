@@ -83,7 +83,7 @@ extern void   CreateLanguageDlgWindow (ThotWindow parent, int nb_item,
 					 char *lang_list, char *msg, int lang_value);
 extern void   CreateCharacterDlgWindow (ThotWindow, int, int, int, int, int);
 extern void   CreateAttributeDlgWindow (char *title, int curr_val, int nb_items,
-					  char *item_list);
+					  char *item_list, ThotBool required);
 extern void   CreateRuleDlgWindow (ThotWindow parent, int nb_class,
 				   char *class_list);
 extern void   CreateApplyClassDlgWindow (ThotWindow parent, int nb_class,

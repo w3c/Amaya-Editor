@@ -86,14 +86,10 @@ static char         WIN_Lab[200];
 static char         formRange[100];
 static char        *szAppName;
 static ThotWindow   hwnEdit;
-static TtAttribute *WIN_pAttr1;
+static TtAttribute *WIN_pAttr;
 static ThotBool     wndRegistered;
 static ThotBool     wndSheetRegistered;
 static ThotBool     wndNumAttrRegistered;
-static ThotBool     WIN_AtNumAttr  = FALSE;
-static ThotBool     WIN_AtTextAttr = FALSE;
-static ThotBool     WIN_AtEnumAttr = FALSE;
-static ThotBool     isForm         = FALSE;
 static int          WIN_nbItem;
 static int          formValue;
 static int          nbDlgItems;
@@ -289,7 +285,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
       SetWindowText (hwnd, TtaGetMessage (LIB, TMSG_ATTR));
       WIN_SetDialogfont (hwnd);
       hwnTitle = GetDlgItem (hwnd, IDC_ATTRNAME);
-	  SetWindowText (hwnTitle, WIN_pAttr1->AttrName);
+	  SetWindowText (hwnTitle, WIN_pAttr->AttrName);
       WIN_SetDialogfont (hwnTitle);
 
       hwnEdit = GetDlgItem (hwnd, ID_EDITVALUE);
@@ -370,7 +366,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
       SetWindowText (hwnd, TtaGetMessage (LIB, TMSG_ATTR));
       WIN_SetDialogfont (hwnd);
       hwnTitle = GetDlgItem (hwnd, IDC_ATTRNAME);
-	  SetWindowText (hwnTitle, WIN_pAttr1->AttrName);
+	  SetWindowText (hwnTitle, WIN_pAttr->AttrName);
       WIN_SetDialogfont (hwnTitle);
 
       hwnEdit = GetDlgItem (hwnd, ID_EDITVALUE);
@@ -458,7 +454,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
     case WM_INITDIALOG:
       SetWindowText (hwnd, TtaGetMessage (LIB, TMSG_ATTR));
 	  hwnTitle = GetDlgItem (hwnd, IDC_ATTRNAME);
-	  SetWindowText (hwnTitle, WIN_pAttr1->AttrName);
+	  SetWindowText (hwnTitle, WIN_pAttr->AttrName);
       WIN_SetDialogfont (hwnTitle);
 
       hwnEdit = GetDlgItem (hwnd, ID_EDITVALUE);
@@ -534,11 +530,11 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
 /*----------------------------------------------------------------------
    MenuValues
    builds the dialog box for capturing the values of the attribute defined
-   by the pAttr1 rule.
+   by the pAttr rule.
    required specifies if it's a required attribute
    currAttr gives the current value of the attribute
   ----------------------------------------------------------------------*/
-static void MenuValues (TtAttribute * pAttr1, ThotBool required,
+static void MenuValues (TtAttribute * pAttr, ThotBool required,
 			PtrAttribute currAttr, PtrDocument pDoc, int view)
 {
    Document          doc;
@@ -549,7 +545,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
    int               form, subform;
 
 #ifdef _WINGUI
-   WIN_pAttr1 = pAttr1;
+   WIN_pAttr = pAttr;
 #endif /* _WINGUI */
    doc = (Document) IdentDocument (pDoc);
    buttons = 0;
@@ -561,11 +557,6 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        if (MandatoryAttrFormExists)
 	 TtaDestroyDialogue (NumMenuAttrRequired);
        MandatoryAttrFormExists = TRUE;
-#ifdef _WINGUI
-       isForm = TRUE;
-       DialogBox (hInstance, MAKEINTRESOURCE (REQATTRDIALOG), NULL, 
-		         (DLGPROC) InitFormDialogWndProc);
-#endif /* _WINGUI */
       }
    else
      {
@@ -582,13 +573,10 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 		TtaGetMessage (LIB, TMSG_ATTR), buttons, bufMenu, FALSE, 2,
 		'L', D_DONE);
 #endif /* _GTK */
-#ifdef _WINGUI
-       isForm = FALSE;
-#endif /* _WINGUI */
 
-   title = (char *)TtaGetMemory (strlen (pAttr1->AttrName) + 2);
-   strcpy (title, pAttr1->AttrName);
-   switch (pAttr1->AttrType)
+   title = (char *)TtaGetMemory (strlen (pAttr->AttrName) + 2);
+   strcpy (title, pAttr->AttrName);
+   switch (pAttr->AttrType)
      {
      case AtNumAttr: /* attribut a valeur numerique */
        {
@@ -608,11 +596,10 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	   TtaSetNumberForm (subform, i);
 #endif /* _GTK */
 #ifdef _WINGUI
-	 WIN_AtNumAttr  = TRUE;
-	 WIN_AtTextAttr = FALSE;
-	 WIN_AtEnumAttr = FALSE;
 	 sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
 	 formValue = i;
+     DialogBox (hInstance, MAKEINTRESOURCE (NUMATTRDIALOG), NULL, 
+		   (DLGPROC) InitNumAttrDialogWndProc);
 #endif /* _WINGUI */
 #ifdef _WX
 	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
@@ -649,9 +636,12 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 TtaSetTextForm (subform, TextAttrValue);       
 #endif /* _GTK */
 #ifdef _WINGUI
-	 WIN_AtNumAttr  = FALSE;
-	 WIN_AtTextAttr = TRUE;
-	 WIN_AtEnumAttr = FALSE;
+     if (required)
+       DialogBox (hInstance, MAKEINTRESOURCE (REQATTRDIALOG), NULL, 
+		         (DLGPROC) InitFormDialogWndProc);
+	  else
+	   DialogBox (hInstance, MAKEINTRESOURCE (TEXTATTRDIALOG), NULL, 
+		         (DLGPROC) InitSheetDialogWndProc);
 #endif /* _WINGUI */
        }
        break;
@@ -663,67 +653,62 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 lgmenu = 0;
 	 val = 0;
 	 /* boucle sur les valeurs possibles de l'attribut */
-	 while (val < pAttr1->AttrNEnumValues)
+	 while (val < pAttr->AttrNEnumValues)
 	   {
 #if defined(_WINGUI)
-	     i = strlen (pAttr1->AttrEnumValue[val]) + 1; /* for EOS */
+	     i = strlen (pAttr->AttrEnumValue[val]) + 1; /* for EOS */
 	     if (lgmenu + i < MAX_TXT_LEN)
 	       {
-		 strcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+		 strcpy (&WIN_buffMenu[lgmenu], pAttr->AttrEnumValue[val]);
 		 val++;
 	       } 
 #endif /* _WINGUI */
 #ifdef _GTK
-	     i = strlen (pAttr1->AttrEnumValue[val]) + 2; /* for 'B' and EOS */
+	     i = strlen (pAttr->AttrEnumValue[val]) + 2; /* for 'B' and EOS */
 	     if (lgmenu + i < MAX_TXT_LEN)
 	       {
 		 bufMenu[lgmenu] = 'B';
-		 strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
+		 strcpy (&bufMenu[lgmenu + 1], pAttr->AttrEnumValue[val]);
 		 val++;
 	       } 
 #endif /* _GTK */
 #if defined(_WX)
-	     i = strlen (pAttr1->AttrEnumValue[val]) + 1; /* for EOS */
+	     i = strlen (pAttr->AttrEnumValue[val]) + 1; /* for EOS */
 	     if (lgmenu + i < MAX_TXT_LEN)
 	       {
-		 strcpy (&bufMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+		 strcpy (&bufMenu[lgmenu], pAttr->AttrEnumValue[val]);
 		 val++;
 	       } 
 #endif /* _WX */
 	     lgmenu += i;
 	   }
+	 /* current value */
+	 i = -1;
+	 if (currAttr != NULL)
+	   i = currAttr->AeAttrValue - 1;
 #ifdef _WX
 	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
-	 p_dlg->SetupEnumValue( bufMenu, val, currAttr ? (currAttr->AeAttrValue-1) : -1 );
+	 p_dlg->SetupEnumValue( bufMenu, val, i );
 	 p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_ENUM );
 #endif /* _WX */
 #ifdef _GTK
 	 /* cree le menu des valeurs de l'attribut */
 	 TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, 0, TRUE);
 	 TtaAttachForm (subform);
-	 /* initialise le menu avec la valeur courante */
-	 val = -1;
-	 if (currAttr != NULL)
-	   val = currAttr->AeAttrValue - 1;
-	 TtaSetMenuForm (subform, val);
+	 TtaSetMenuForm (subform, i);
 #endif /* _GTK */
 #ifdef _WINGUI
 	 nbDlgItems = val;
-	 WIN_AtNumAttr  = FALSE;
-	 WIN_AtTextAttr = FALSE;
-	 WIN_AtEnumAttr = TRUE;
+	 if (i = -1)
+		 i = 1;
+     CreateAttributeDlgWindow (pAttr->AttrName, i, nbDlgItems,
+		        WIN_buffMenu, required);
 #endif /* _WINGUI */
        }
        break;
-       
-     case AtReferenceAttr: /* attribut reference, on ne fait rien */
-       {
-       }
-       break;
-       
      default: break;
    }
-       
+
    if (title != NULL)
      TtaFreeMemory (title);
 }
@@ -1486,9 +1471,6 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
   View                view;
   int                 item, i;
   int                 firstChar, lastChar;
-#ifdef _WINGUI
-  int                 currAttrVal = -1;
-#endif /* _WINGUI */
   ThotBool            mandatory;
 
   FrameToView (frame, &doc, &view);
@@ -1542,12 +1524,6 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 	    /* cherche la valeur de cet attribut pour le premier element */
 	    /* selectionne' */
 	    currAttr = AttributeValue (firstSel, pAttrNew);
-#ifdef _WINGUI
-	    if (currAttr == NULL)
-	      currAttrVal = -1;
-	    else 
-	      currAttrVal = currAttr->AeAttrValue;
-#endif /* _WINGUI */
 	    if (pAttrNew->AeAttrNum == 1)
 	      /* that's the language attribute */
 	      {
@@ -1622,17 +1598,6 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		else
 		  TtaShowDialogue (NumMenuAttr, TRUE);
 #endif /* #if defined(_GTK) || defined(_WX) */
-#ifdef _WINGUI
-		if (WIN_AtNumAttr)
-		   DialogBox (hInstance, MAKEINTRESOURCE (NUMATTRDIALOG), NULL, 
-		   (DLGPROC) InitNumAttrDialogWndProc);
-		else if (WIN_AtTextAttr && !isForm)
-		   DialogBox (hInstance, MAKEINTRESOURCE (TEXTATTRDIALOG), NULL, 
-		   (DLGPROC) InitSheetDialogWndProc);
-		else if (WIN_AtEnumAttr) 
-                  CreateAttributeDlgWindow (pAttr->AttrName, currAttrVal,
-					    nbDlgItems, WIN_buffMenu);
-#endif /* _WINGUI */
 	      }
 	    DeleteAttribute (NULL, pAttrNew);
 	  }
