@@ -96,6 +96,59 @@ Attribute           attrNAME;
 
 
 /*----------------------------------------------------------------------
+   LinkToPreviousTarget
+   If current selection is within an anchor, change that link, otherwise
+   create a link.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                LinkToPreviousTarget (Document doc, View view)
+#else  /* __STDC__ */
+void                LinkToPreviousTarget (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+   Element             el;
+   int                 firstSelectedChar, i;
+
+   if (!TtaGetDocumentAccessMode (doc))
+     /* the document is in ReadOnly mode */
+     return;
+   if ((TargetName == NULL || TargetName[0] == EOS) &&
+       (TargetDocumentURL == NULL || TargetDocumentURL[0] == EOS))
+     /* no target available */
+     return;
+   if ((TargetName == NULL || TargetName[0] == EOS) &&
+       !ustrcmp (TargetDocumentURL, DocumentURLs[doc]))
+     /* it's not a valid target */
+     return;
+
+   UseLastTarget = TRUE;
+   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
+   if (el != NULL)
+     {
+       /* Search the anchor element */
+       el = SearchAnchor (doc, el, TRUE);
+       if (el == NULL)
+	 {
+	   /* The link element is a new created one */
+	   IsNewAnchor = TRUE;
+	   /* no anchor element, create a new link */
+	   CreateAnchor (doc, view, TRUE);
+	 }
+       else
+	 {
+	   /* The link element already exists */
+	   IsNewAnchor = FALSE;
+	   /* There is an anchor. Just points to the last created target */
+	   SetREFattribute (el, doc, TargetDocumentURL, TargetName);
+	 }
+     }
+}
+
+
+/*----------------------------------------------------------------------
    RemoveLink: destroy the link element and remove CSS rules when the
    link points to a CSS file.
   ----------------------------------------------------------------------*/
@@ -584,16 +637,16 @@ Boolean		    withUndo;
 #ifdef MATHML
      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
        {
-       attrType.AttrSSchema = elType.ElSSchema;
-       attrType.AttrTypeNum = MathML_ATTR_id;
+	 attrType.AttrSSchema = elType.ElSSchema;
+	 attrType.AttrTypeNum = MathML_ATTR_id;
        }
      else
 #endif
 #ifdef GRAPHML
      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
        {
-       attrType.AttrSSchema = elType.ElSSchema;
-       attrType.AttrTypeNum = GraphML_ATTR_id;
+	 attrType.AttrSSchema = elType.ElSSchema;
+	 attrType.AttrTypeNum = GraphML_ATTR_id;
        }
      else
 #endif
@@ -792,7 +845,14 @@ ThotBool            createLink;
 		    !TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
 		   /* a single element is selected and it's not a HTML elem
 		      neither a character string */
-		   SelectDestination (doc, first, TRUE);
+		  {
+		    if (UseLastTarget)
+		      /* points to the last created target */
+		      SetREFattribute (el, doc, TargetDocumentURL, TargetName);
+		    else
+		      /* select the destination */
+		      SelectDestination (doc, first, TRUE);
+		  }
 		else
 		  /* cannot create an anchor here */
 		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1), NULL);
@@ -921,10 +981,15 @@ ThotBool            createLink;
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
   TtaSelectElement (doc, anchor);
-  if (createLink)
+  if (createLink )
     {
-      /* Select the destination. The anchor element must have an HREF attribute */
-      SelectDestination (doc, anchor, FALSE);
+      if (UseLastTarget)
+	/* points to the last created target */
+	SetREFattribute (anchor, doc, TargetDocumentURL, TargetName);
+      else
+	/* Select the destination */
+	SelectDestination (doc, anchor, FALSE);
+      /* The anchor element must have an HREF attribute */
       /* create an attribute PseudoClass = link */
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_PseudoClass;

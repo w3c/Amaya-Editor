@@ -482,6 +482,7 @@ View                view;
   if (el != NULL)
     {
       /* The link element is a new created one */
+      UseLastTarget = FALSE;
       IsNewAnchor = TRUE;
       /* Select a new destination */
       SelectDestination (document, el, FALSE);
@@ -2161,6 +2162,7 @@ View                view;
      /* the document is in ReadOnly mode */
      return;
 
+   UseLastTarget = FALSE;
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
    if (el != NULL)
      {
@@ -2182,6 +2184,7 @@ View                view;
 	 }
      }
 }
+
 
 /*----------------------------------------------------------------------
    DeleteAnchor

@@ -19,6 +19,10 @@ extern void DeleteTempObjectFile ( void );
 extern void DoSaveObjectAs ( void );
 extern void SaveDocumentAs ( Document doc,
                              View view );
+extern void SetNamespacesAndDTD ( Document doc );
+extern Document GetHTMLdocFromSource ( Document sourceDoc );
+extern void Synchronize ( Document document,
+                          View view );
 extern void SaveDocument ( Document doc,
                            View view );
 extern void BackUpDocs ( void );
@@ -40,6 +44,10 @@ extern void DeleteTempObjectFile (/* void */);
 extern void DoSaveObjectAs (/* void */);
 extern void SaveDocumentAs (/* Document doc,
                                View view */);
+extern void SetNamespacesAndDTD (/* Document doc */);
+extern Document GetHTMLdocFromSource (/* Document sourceDoc */);
+extern void Synchronize (/* Document document,
+                            View view */);
 extern void SaveDocument (/* Document doc,
                              View view */);
 extern void BackUpDocs (/* void */);

@@ -466,9 +466,8 @@ ThotBool        removed;
 	}
       if (!used)
 	{
-	  if (css->category == CSS_EXTERNAL_STYLE && IsW3Path (css->url))
-	    /* remove the file */
-	    TtaFileUnlink (css->localName);
+	  /* remove the local copy */
+	  TtaFileUnlink (css->localName);
 	  TtaFreeMemory (css->localName);
 	  TtaFreeMemory (css->url);
 	  if (CSSList == css)
@@ -674,8 +673,6 @@ CSSInfoPtr          css;
 	  if (res == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	      if (!local)
-		TtaFileUnlink (tempfile);
 	      return;
 	    }
 
@@ -687,8 +684,6 @@ CSSInfoPtr          css;
 	      {
 		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 		fclose (res);
-		if (!local)
-		  TtaFileUnlink (tempfile);
 		return;
 	      }
 
@@ -697,8 +692,6 @@ CSSInfoPtr          css;
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	      fclose (res);
-	      if (!local)
-		TtaFileUnlink (tempfile);
 	      return;
 	    }
 	  len = fread (buffer, buf.st_size, 1, res);
@@ -706,8 +699,6 @@ CSSInfoPtr          css;
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	      fclose (res);
-	      if (!local)
-		TtaFileUnlink (tempfile);
 	      TtaFreeMemory (buffer);
 	      return;
 	    }

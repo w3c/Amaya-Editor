@@ -25,21 +25,11 @@
 static CHAR_T       currentDocToSave[MAX_LENGTH];
 static CHAR_T       currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
-
-#ifdef __STDC__
-LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
-#else  /* !__STDC__ */
-LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
-#endif /* __STDC__ */
 #endif /* _WINDOWS */
 
 
+#define StdDefaultName TEXT("Overview.html")
 static STRING       DefaultName;
-#if defined(_I18N_) || defined(__JIS__)
-#   define StdDefaultName L"Overview.html"
-#else  /* defined(_I18N_) || defined(__JIS__) */
-#      define StdDefaultName "Overview.html"
-#endif /* defined(_I18N_) || defined(__JIS__) */
 static CHAR_T       tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
@@ -71,21 +61,6 @@ static STRING       QuotedText;
 
 #ifdef _WINDOWS
 #include "wininclude.h"
-
-/*-----------------------------------------------------------------------
- CreateGetSaveDlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateGetSaveDlgWindow (HWND parent, STRING path_name)
-#else  /* !__STDC__ */
-void CreateGetSaveDlgWindow (parent, path_name)
-HWND  parent;
-STRING path_name;
-#endif /* __STDC__ */
-{  
-  usprintf (currentPathName, path_name);
-  DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent, (DLGPROC) GetSaveDlgProc);
-}
 
 /*-----------------------------------------------------------------------
  SaveAsDlgProc
@@ -138,6 +113,21 @@ LPARAM lParam;
     default: return FALSE;
     }
   return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ CreateGetSaveDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateGetSaveDlgWindow (HWND parent, STRING path_name)
+#else  /* !__STDC__ */
+void CreateGetSaveDlgWindow (parent, path_name)
+HWND  parent;
+STRING path_name;
+#endif /* __STDC__ */
+{  
+  usprintf (currentPathName, path_name);
+  DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent, (DLGPROC) GetSaveDlgProc);
 }
 #endif /* _WINDOWS */
 
@@ -680,10 +670,10 @@ View                view;
    Set the HtmlDTD attribute to Frameset if the document uses Frames.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetNamespacesAndDTD (Document doc)
+void         SetNamespacesAndDTD (Document doc)
 #else
-static void         SetNamespacesAndDTD (doc)
-Document            doc;
+void         SetNamespacesAndDTD (doc)
+Document     doc;
 
 #endif
 {
@@ -777,21 +767,17 @@ Document          doc;
     if (DocumentSource[doc])
        /* The source code of this document is currently displayed */
        {
-       localFile = TtaAllocString (MAX_LENGTH);   
-       if (IsW3Path (DocumentURLs[doc]))
-          /* it's a remote document. Get its local copy */
+	 /* Get its local copy */
           localFile = GetLocalPath (doc, DocumentURLs[doc]);
-       else
-          /* it's a local document */
-          ustrcpy (localFile, DocumentURLs[doc]);
-       TtaExtractName (localFile, tempdir, documentname);
-       /* parse and display the new version */
-       StartParser (DocumentSource[doc], localFile, documentname, tempdir,
-		    localFile, TRUE);
-       event.document = doc;
-       SynchronizeSourceView (&event);
-       TtaSetDocumentName (DocumentSource[doc], documentname);
-       TtaFreeMemory (localFile);
+	  TtaExtractName (localFile, tempdir, documentname);
+	  /* parse and display the new version */
+	  StartParser (DocumentSource[doc], localFile, documentname, tempdir,
+		       localFile, TRUE);
+	  TtaSetDocumentUnmodified (DocumentSource[doc]);
+	  event.document = doc;
+	  SynchronizeSourceView (&event);
+	  TtaSetDocumentName (DocumentSource[doc], documentname);
+	  TtaFreeMemory (localFile);
        }
     }
 }
@@ -1316,10 +1302,10 @@ ThotBool         use_preconditions;
    If sourceDoc is a source file, return the corresponding HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document       GetHTMLdocFromSource (Document sourceDoc)
+Document       GetHTMLdocFromSource (Document sourceDoc)
 #else
-static Document       GetHTMLdocFromSource (sourceDoc)
-Document          sourceDoc;
+Document       GetHTMLdocFromSource (sourceDoc)
+Document       sourceDoc;
 
 #endif
 {
@@ -1337,6 +1323,63 @@ Document          sourceDoc;
   return htmlDoc;
 }
 
+
+/*----------------------------------------------------------------------
+   Synchronize saves locally the current view (source/html) and updates
+   the other view (html/source).      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                Synchronize (Document document, View view)
+#else  /* __STDC__ */
+void                Synchronize (document, view)
+Document            document;
+View                view;
+#endif /* __STDC__ */
+{
+   NotifyElement       event;
+   STRING              tempdocument;
+   CHAR_T              documentname[MAX_LENGTH];
+   CHAR_T              tempdir[MAX_LENGTH];
+   Document            htmlDoc;
+
+   if (!DocumentURLs[document])
+     /* the document is not loaded yet */
+     return;
+   if (!TtaIsDocumentModified (document))
+     return;
+
+   if (DocumentTypes[document] == docHTML ||
+       DocumentTypes[document] == docHTMLRO)
+     {
+       /* save the current state of the document into the temporary file */
+       tempdocument = GetLocalPath (document, DocumentURLs[document]);
+       SetNamespacesAndDTD (document);
+       TtaExportDocumentWithNewLineNumbers (document, tempdocument, TEXT("HTMLT"));
+       RedisplaySourceFile (document);
+       /* the source is now up to date */
+       TtaSetDocumentUnmodified (DocumentSource[document]);
+     }
+   else if (DocumentTypes[document] == docSource ||
+       DocumentTypes[document] == docSourceRO)
+     {
+       htmlDoc = GetHTMLdocFromSource (document);
+       /* save the current state of the document into the temporary file */
+       tempdocument = GetLocalPath (htmlDoc, DocumentURLs[htmlDoc]);
+       TtaExportDocumentWithNewLineNumbers (document, tempdocument, TEXT("TextFileT"));
+       TtaExtractName (tempdocument, tempdir, documentname);
+       StartParser (htmlDoc, tempdocument, documentname, tempdir, tempdocument,
+		    FALSE);
+       TtaSetDocumentModified (htmlDoc);
+       /* the source is now up to date */
+       TtaSetDocumentUnmodified (document);
+     }
+
+   /* Synchronize selections */
+   event.document = document;
+   SynchronizeSourceView (&event);
+   TtaFreeMemory (tempdocument);
+}
+
 /*----------------------------------------------------------------------
   SaveDocument
   Entry point called when the user selects the Save menu entry or
@@ -1351,6 +1394,7 @@ View                view;
 
 #endif
 {
+  NotifyElement       event;
   CHAR_T              tempname[MAX_LENGTH];
   CHAR_T              localFile[MAX_LENGTH];
   CHAR_T              documentname[MAX_LENGTH];
@@ -1506,7 +1550,7 @@ View                view;
      if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
         /* It's a HTML document. If the source view is open, redisplay the
 	   source. */
-        RedisplaySourceFile (doc);
+       RedisplaySourceFile (doc);
      else if (DocumentTypes[doc] == docSource ||
 	      DocumentTypes[doc] == docSourceRO)
 	/* It's a source document. Reparse the corresponding HTML document */
@@ -1515,6 +1559,10 @@ View                view;
 	   TtaExtractName (localFile, tempdir, documentname);
 	   StartParser (htmlDoc, localFile, documentname, tempdir, localFile,
 			FALSE);
+	   TtaSetDocumentUnmodified (htmlDoc);
+	   /* Synchronize selections */
+	   event.document = doc;
+	   SynchronizeSourceView (&event);
 	   }
   if (ok)
     {

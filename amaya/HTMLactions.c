@@ -1139,11 +1139,13 @@ Document       doc;
 
   if (DocumentURLs[doc] != NULL)
     {
+      /* remove the temporary copy of the file */
+      tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
+      TtaFileUnlink (tempdocument);
+      TtaFreeMemory (tempdocument);
+
       if (IsHTTPPath (DocumentURLs[doc]))
 	{
-	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-	  TtaFileUnlink (tempdocument);
-	  TtaFreeMemory (tempdocument);
 	  usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP, doc, DIR_SEP);
 	  if (TtaFileExist (htmlErrFile))
 	    TtaFileUnlink (htmlErrFile);
@@ -1901,6 +1903,7 @@ NotifyElement* event;
 	 attribute */
       ResetHighlightedElement ();
 }
+
 
 /*----------------------------------------------------------------------
    A new element has been selected. Update menus accordingly.      

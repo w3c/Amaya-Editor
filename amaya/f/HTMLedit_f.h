@@ -8,6 +8,8 @@
 
 extern void SetTargetContent ( Document doc,
                                Attribute attrNAME );
+extern void LinkToPreviousTarget ( Document doc,
+                                   View view );
 extern void RemoveLink ( Element el,
                          Document doc );
 extern ThotBool DeleteLink ( NotifyElement * event );
@@ -104,6 +106,8 @@ extern void TitleModified ( NotifyOnTarget * event );
 
 extern void SetTargetContent (/* Document doc,
                                  Attribute attrNAME */);
+extern void LinkToPreviousTarget (/* Document doc,
+                                     View view */);
 extern void RemoveLink (/* Element el,
                            Document doc */);
 extern ThotBool DeleteLink (/* NotifyElement * event */);

@@ -784,7 +784,6 @@ STRING     url;
   STRING   documentname;
   CHAR_T   url_sep;
   int      len;
-  STRING   tmpDir, tmpName;
   ThotBool  noFile;
 
   if (url != NULL)
@@ -798,14 +797,9 @@ STRING     url;
       noFile = (url[len] == url_sep);
       if (noFile)
 	url[len] = EOS;
-      /* ptr = TtaAllocString (MAX_LENGTH);
-      documentname = TtaAllocString (MAX_LENGTH); */
-	  tmpDir = TtaAllocString (MAX_LENGTH );
-	  tmpName = TtaAllocString(MAX_LENGTH );
-      TtaExtractName (url, tmpDir, tmpName);
-	  ptr = tmpDir;
-      documentname = tmpName;
-
+      ptr = TtaAllocString (MAX_LENGTH);
+      documentname = TtaAllocString (MAX_LENGTH);
+      TtaExtractName (url, ptr, documentname);
       usprintf (ptr, TEXT("%s%s%d%s"), TempFileDirectory, DIR_STR, doc, DIR_STR);
       if (!TtaCheckDirectory (ptr))
 	/* directory did not exist */

@@ -35,6 +35,7 @@ MENUS
 	view:1 File button:BForward -> GotoNextHTML;
 	view:1 File button:BSave -> SaveDocument;
 	view:1 File button:BSaveAs -> SaveDocumentAs;
+	view:1 File button:BSynchro -> Synchronize;
 	view:1 File Separator;
 	view:1 File button:BSetUpandPrint -> SetupAndPrint;
 	view:1 File button:BPrint -> PrintAs;
@@ -155,6 +156,7 @@ MENUS
 	Types.Table Separator;
 	Types.Table button:BDeleteColumn -> DeleteColumn;
 
+	view:1 Links button:BLinkTarget -> LinkToPreviousTarget;
 	view:1 Links button:BCreateLink -> CreateOrChangeLink;
 	view:1 Links button:BCreateTarget -> CreateTarget;
 	view:1 Links button:BDeleteAnchor -> DeleteAnchor;

@@ -118,6 +118,7 @@ SetBrowserEditor
 &TtcPaste
 &TtcUndo
 &TtcRedo
+&Synchronize
 
 ######### VIEWS
 [source-view]
@@ -174,6 +175,7 @@ HelpImageMaps
 &CreateTarget
 &DeleteAnchor
 HelpLinks
+&LinkToPreviousTarget
 ShowTargets
 
 [areas]

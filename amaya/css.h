@@ -20,6 +20,13 @@ typedef enum
   CSS_EXTERNAL_STYLE,	/* external CSS */
 } CSSCategory;
 
+typedef enum
+{
+  CSS_SCREEN,	/* screen only */
+  CSS_PRINT,	/* print only */
+  CSS_ALL,	/* screen and print */
+} CSSmedia;
+
 typedef struct _PISchema
 {
   struct _PISchema   *PiSNext;
@@ -44,7 +51,9 @@ typedef struct _CSSInfo
   CSSCategory         category;
   PInfoPtr            infos; /* the document Presentation Schemas */
   /* documents using this CSS */
-  ThotBool            documents[DocumentTableLength];
+  ThotBool            documents[DocumentTableLength]; /* document concerned */
+  ThotBool            enabled[DocumentTableLength];   /* enabled/disabled */
+  CSSmedia            media[DocumentTableLength];     /* for what media */
 } CSSInfo , *CSSInfoPtr;
 
 THOT_EXPORT CSSInfoPtr   CSSList;

@@ -21,8 +21,8 @@ Extensions 2.2:
   the main view, an index points at the corresponding markup in the
   source view and conversely.
   You can edit the source code.  Every time you save the source code or
-  you press the "Apply Changes" button, the other views are updated to
-  reflect the latest changes.
+  you activate the Synchronize entry of the Files menu, the other views
+  are updated to reflect the latest changes.
 
 * Four different Amaya profiles are proposed: editor, mini-editor, browser,
   mini-browser. Amaya menus and buttons are displayed according to the
@@ -32,7 +32,12 @@ Extensions 2.2:
   of domains where a PUT may be redirected, and thus avoid having a popup
   asking a user to confirm each redirection.
 
-* A mechanism of templates
+* A mechanism of templates 
+
+* It's now possible to define a shortcut to follow a link or activate a
+  form element (menu, submit, reset): the name of the function is DoAction.
+
+* A new entry LinkTarget allows one to link the latest created target.
 
 Fixed bugs 2.2:
 ---------------

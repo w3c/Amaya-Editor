@@ -19,8 +19,8 @@
 #include "css.h"
 #include "trans.h"
 #include "zlib.h"
+#include "profiles.h"
 #ifdef _GTK
-#include <gtk/gtk.h>
 #include "gtkdialogue_box.h"
 #endif /* _GTK */
 
@@ -369,11 +369,16 @@ View		view;
    ThotBool	ret;
 
    ret = TRUE;
-   if (TtaIsDocumentModified (document))
+   if (TtaIsDocumentModified (document) ||
+       (DocumentSource[document] && TtaIsDocumentModified (DocumentSource[document])))
      {
 	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
 	if (UserAnswer)
-	   TtaSetDocumentUnmodified (document);
+	  {
+	    TtaSetDocumentUnmodified (document);
+	    if (DocumentSource[document])
+	      TtaSetDocumentUnmodified (DocumentSource[document]);
+	  }
 	else
 	   ret = FALSE;
      }
@@ -678,15 +683,35 @@ Document            doc;
 ThotBool            modified;
 #endif
 {
+  Document    otherDoc;
+
   if (modified && TtaGetDocumentAccessMode (document))
     {
        TtaSetItemOn (document, 1, File, BSave);
        TtaChangeButton (document, 1, iSave, iconSave, TRUE);
+       /* if we have a couple source/html documents allow synchronization */
+       otherDoc = DocumentSource[document];
+       if (!otherDoc)
+	 otherDoc = GetHTMLdocFromSource (document);
+       if (otherDoc)
+	 {
+	   TtaSetItemOn (document, 1, File, BSynchro);
+	   TtaSetItemOn (otherDoc, 1, File, BSynchro);
+	 }
     }
   else
     {
        TtaSetItemOff (document, 1, File, BSave);
        TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
+       /* if we have a couple source/html documents allow synchronization */
+       otherDoc = DocumentSource[document];
+       if (!otherDoc)
+	 otherDoc = GetHTMLdocFromSource (document);
+       if (otherDoc)
+	 {
+	   TtaSetItemOff (document, 1, File, BSynchro);
+	   TtaSetItemOff (otherDoc, 1, File, BSynchro);
+	 }
     }
 }
 
@@ -730,6 +755,7 @@ Document            doc;
 
        /* update windows menus */
        TtaSetItemOff (document, 1, File, BSave);
+       TtaSetItemOff (document, 1, File, BSynchro);
        TtaSetItemOff (document, 1, Edit_, BUndo);
        TtaSetItemOff (document, 1, Edit_, BRedo);
        TtaSetItemOff (document, 1, Edit_, BCut);
@@ -840,10 +866,7 @@ Document            doc;
        /* =============> The document is in Read-Write mode now */
        TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
        if (TtaIsDocumentModified (document))
-	 {
-	   TtaSetItemOn (document, 1, File, BSave);
-	   TtaChangeButton (document, 1, iSave, iconSave, TRUE);
-	 }
+	 DocStatusUpdate (document, TRUE);
 #ifdef _WINDOWS 
        WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE, FALSE);
 #else  /* _WINDOWS */
@@ -1639,6 +1662,7 @@ ThotBool     logFile;
 	   TtaSetItemOff (doc, 1, File, BBack);
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
+	   TtaSetItemOff (doc, 1, File, BSynchro);
 	   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
@@ -2273,44 +2297,34 @@ ThotBool	    history;
 	  else
 	    /* now we can rename the local name of a remote document */
 	    urename (tempfile, tempdocument);
-
-	  if (DocumentTypes[newdoc] == docCSS ||
-	      DocumentTypes[newdoc] == docCSSRO)
-	    { 
-	      css = SearchCSS (0, pathname);
-	      if (css == NULL)
-		{
-		  /* store a copy of this new CSS context in .amaya/0 */
-		  s = GetLocalPath (0, pathname);
-		  TtaFileCopy (tempdocument, s);
-		  /* initialize a new CSS context */
-		  AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, s);
-		  TtaFreeMemory (s);
-		}
-	      else
-		css->doc = newdoc;
-	    }
 	}
       else
 	{
 	  /* It is a local document */
-	  tempdocument = TtaAllocString (MAX_LENGTH);
-	  ustrcpy (tempdocument, pathname);
-	  if (DocumentTypes[newdoc] == docCSS ||
-	      DocumentTypes[newdoc] == docCSSRO)
-	    { 
-	      css = SearchCSS (0, pathname);
-	      if (css == NULL)
-		{
-		  /* initialize a new CSS context */
-		  if (UserCSS && !ustrcmp (pathname, UserCSS))
-		    AddCSS (newdoc, 0, CSS_USER_STYLE, NULL, UserCSS);
-		  else
-		    AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, pathname);
-		}
+	  /* allocate and initialize tempdocument */
+	  tempdocument = GetLocalPath (newdoc, pathname);
+	  TtaFileCopy (pathname, tempdocument);
+	}
+
+      /* store a copy of CSS files in the directory 0 */
+      if (DocumentTypes[newdoc] == docCSS ||
+	  DocumentTypes[newdoc] == docCSSRO)
+	{ 
+	  css = SearchCSS (0, pathname);
+	  if (css == NULL)
+	    {
+	      /* store a copy of this new CSS context in .amaya/0 */
+	      s = GetLocalPath (0, pathname);
+	      TtaFileCopy (tempdocument, s);
+	      /* initialize a new CSS context */
+	      if (UserCSS && !ustrcmp (pathname, UserCSS))
+		AddCSS (newdoc, 0, CSS_USER_STYLE, NULL, s);
 	      else
-		css->doc = newdoc;
+		AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, s);
+	      TtaFreeMemory (s);
 	    }
+	  else
+	    css->doc = newdoc;
 	}
       
       /* save the document name into the document table */
@@ -2764,14 +2778,17 @@ Document            document;
 View                view;
 #endif
 {
-   STRING       tempdocument, s;
-   CHAR_T	documentname[MAX_LENGTH];
-   CHAR_T	tempdir[MAX_LENGTH];
-   Document	sourceDoc;
+   STRING        tempdocument, s;
+   CHAR_T	 documentname[MAX_LENGTH];
+   CHAR_T	 tempdir[MAX_LENGTH];
+   Document	 sourceDoc;
    NotifyElement event;
 
    if (!DocumentURLs[document])
      /* the document is not loaded yet */
+     return;
+   if (DocumentTypes[document] != docHTML &&
+       DocumentTypes[document] != docHTMLRO)
      return;
    if (DocumentSource[document])
      /* the source code of this document is already shown */
@@ -2779,13 +2796,13 @@ View                view;
      TtaRaiseView (DocumentSource[document], 1);
    else
      {
-     tempdocument = TtaAllocString (MAX_LENGTH);   
-     if (IsW3Path (DocumentURLs[document]))
-        /* it's a remote document. Get its local copy */
-        tempdocument = GetLocalPath (document, DocumentURLs[document]);
-     else
-        /* it's a local document */
-        ustrcpy (tempdocument, DocumentURLs[document]);
+     /* save the current state of the document into the temporary file */
+     tempdocument = GetLocalPath (document, DocumentURLs[document]);
+     if (TtaIsDocumentModified (document))
+       {
+	  SetNamespacesAndDTD (document);
+	  TtaExportDocumentWithNewLineNumbers (document, tempdocument, TEXT("HTMLT"));
+       }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
      sourceDoc = InitDocView (0, documentname, docSource, FALSE);   
@@ -2801,7 +2818,6 @@ View                view;
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
 		      tempdocument, TRUE);
-	 event.document = document;
 
 	 /* Set the document read-only when needed */
 	 if (DocumentTypes[document] == docHTMLRO)
@@ -2809,6 +2825,7 @@ View                view;
 	     DocumentTypes[sourceDoc] = docSourceRO;
 	     SetDocumentReadOnly (sourceDoc);
 	   }
+	 TtcSwitchButtonBar (sourceDoc, 1); /* no button bar */	 
 	 TtcSwitchCommands (sourceDoc, 1); /* no command filed */	 
 	 TtaSetItemOff (sourceDoc, 1, File, New1);
 	 TtaSetItemOff (sourceDoc, 1, File, BHtml);
@@ -2819,10 +2836,16 @@ View                view;
 	 TtaSetItemOff (sourceDoc, 1, File, BOpenInNewWindow);
 	 TtaSetItemOff (sourceDoc, 1, Edit_, BSpellCheck);
 	 TtaSetItemOff (sourceDoc, 1, Edit_, BTransform);
+	 TtaSetItemOff (sourceDoc, 1, Views, TShowButtonbar);
 	 TtaSetItemOff (sourceDoc, 1, Views, TShowTextZone);
 	 TtaSetMenuOff (sourceDoc, 1, Special);
 	 TtaSetMenuOff (sourceDoc, 1, Help_);
 
+	 /* Switch the synchronization entry */
+	 if (TtaIsDocumentModified (document))
+	   DocStatusUpdate (document, TRUE);
+	 /* Synchronize selections */
+	 event.document = document;
 	 SynchronizeSourceView (&event);
        }
      TtaFreeMemory (tempdocument);
