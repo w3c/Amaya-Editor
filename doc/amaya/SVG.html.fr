@@ -23,7 +23,7 @@
   </tbody>
 </table>
 
-<div>
+<div id="Edition">
 <h2>Edition des graphiques</h2>
 
 <p>Amaya vous permet d'inclure des graphiques vectoriels dans des pages Web,
@@ -36,7 +36,7 @@ le texte sont aussi disponibles pour éditer le graphique. Il y a aussi
 quelques fonctions de contrôle supplémentaires pour créer des éléments
 SVG.</p>
 
-<h2>Création de graphiques avec la palette</h2>
+<h3><a name="L288">Création de graphiques avec la palette</a></h3>
 
 <p>Pour créer un nouvel élément SVG dans un document, vous devez juste placer
 le point d'insertion (caret) à la position où vous voulez l'insérer, et
@@ -80,7 +80,7 @@ sont :</p>
   <li>Une polyligne, <code>polyline</code> en SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
       <polyline points="4,16 23,0 37,16 55,6" stroke="1"
-                style="stroke: #0000B2; fill: orange"/>
+                style="stroke: #0000B2; fill: #FFBC95"/>
     </svg>
   </li>
   <li>Un polygone, <code>polygon</code> en SVG, <svg
@@ -159,7 +159,7 @@ href="ImageMaps.html.fr#Adding">comme dans une page HTML</a>.</p>
 juste cliquer dans la palette Math alors que la sélection est dans le dessin
 SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
 
-<h2>Déplacer les graphiques</h2>
+<h3><a name="L292">Déplacer les graphiques</a></h3>
 <ul>
   <li>Par manipulation directe - en combinant la <strong>touche
     Control</strong> et le <strong>bouton gauche</strong> de la souris dans la
@@ -167,7 +167,7 @@ SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
   <li>En éditant les attributs.</li>
 </ul>
 
-<h2>Retailler les graphiques</h2>
+<h3><a name="Retailler">Retailler les graphiques</a></h3>
 <ul>
   <li>Par manipulation directe - en combinant la <strong>touche
     Control</strong> et le <strong>bouton du milieu</strong> ou le
@@ -176,7 +176,7 @@ SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
   <li>En éditant les attributs.</li>
 </ul>
 
-<h2>Peindre les graphiques</h2>
+<h3><a name="Peindre">Peindre les graphiques</a></h3>
 
 <p>Avec Amaya, vous pouvez peindre (c.a.d., remplir ou tracer le contour) des
 éléments SVG avec une couleur simple. La couleur de remplissage par défaut est

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "DTD/xhtml1-1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Manuel d'utilisation d'Amaya</title>
@@ -19,12 +19,13 @@ alt="Doc" /></a></p>
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 <hr />
 
-<p><strong>Version :</strong> 4 - octobre 2000</p>
+<p><strong>Version :</strong> 4.2 - décembre 2000</p>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
   <dt><strong>Collaborateurs :</strong></dt>
-    <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen</dd>
+    <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen, Laurent
+      Carcone</dd>
   <dt><strong>Traductrices :</strong></dt>
     <dd>Valentine Giordani, Magali Vatton</dd>
 </dl>
@@ -46,7 +47,7 @@ décrits.</p>
 <h1>Table des matières</h1>
 <ul>
   <li><a href="#L920">Démarrer Amaya</a></li>
-  <li><a href="#L932">Editer des pages Web avec Amaya</a> 
+  <li><a href="#Parcourir">Parcourir des pages Web avec Amaya</a> 
     <ul>
       <li><a href="Browsing.html.fr#Browsing">Naviguer avec Amaya</a> 
         <ul>
@@ -76,14 +77,21 @@ décrits.</p>
           <li><a href="Views.html.fr#Using">Utiliser les vues</a></li>
         </ul>
       </li>
-      <li><a href="Creating.html.fr#Creating">Créer de nouveaux éléments</a> 
+    </ul>
+  </li>
+  <li><a href="#L932">Editer des pages Web avec Amaya</a> 
+    <ul>
+      <li><a href="Keyboard.html.fr#Keyboard">Entrer des caractères
+        ISO-Latin-1</a> 
         <ul>
-          <li><a href="Keyboard.html.fr#Keyboard">Entrer des caractères
-            ISO-Latin-1</a></li>
           <li><a href="Keyboard.html.fr#Standard">Le support multi-touches
             standard</a></li>
           <li><a href="Keyboard.html.fr#Optional">Le support multi-touches
             optionnel</a></li>
+        </ul>
+      </li>
+      <li><a href="Creating.html.fr#Creating">Créer de nouveaux éléments</a> 
+        <ul>
           <li><a href="Creating.html.fr#Types">Boutons et menu
           Eléments</a></li>
           <li><a href="Creating.html.fr#Structure">menu Structure</a></li>
@@ -144,6 +152,16 @@ décrits.</p>
           <li><a href="Math.html.fr#Math_Struc">La Vue Math_Structure</a></li>
           <li><a href="Math.html.fr#Links">Les liens dans MathML</a></li>
           <li><a href="Math.html.fr#Current">Limites courantes</a></li>
+        </ul>
+      </li>
+      <li><a href="SVG.html.fr">Edition des graphiques</a> 
+        <ul>
+          <li><a href="SVG.html.fr#L288">Création de graphiques avec la
+            palette</a></li>
+          <li><a href="SVG.html.fr#L292">Déplacer les graphiques</a></li>
+          <li><a href="SVG.html.fr#Retailler">Retailler les
+          graphiques</a></li>
+          <li><a href="SVG.html.fr#Peindre">Peindre les graphiques</a></li>
         </ul>
       </li>
       <li><a href="ImageMaps.html.fr#Client-sid">Créer et utiliser des zones
@@ -258,6 +276,22 @@ présenté. Le document par défaut pourrait être votre <em>home page</em> (voir
 <a href="Configure.html.fr#L138">comment configurer votre Home Page</a>) ou la
 page de bienvenue d'Amaya.</p>
 
+<h2><a name="Parcourir" id="Parcourir">Parcourir des pages Web avec
+Amaya</a></h2>
+
+<p><strong>Amaya</strong> peut être utilisé pour parcourir des documents Web
+locaux ou distants.</p>
+
+<p>Chaque section suivante décrit brièvement comment utiliser une fonction
+spécifique d'Amaya :</p>
+<ul>
+  <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
+    Amaya</a></li>
+  <li><a rel="Chapter"
+  href="Selecting.html.fr#Selecting">Sélectionner</a></li>
+  <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
+</ul>
+
 <h2><a name="L932" id="L932">Editer des pages Web avec Amaya</a></h2>
 
 <p><strong>Amaya</strong> ne vous permet pas seulement de naviguer des
@@ -274,13 +308,10 @@ de sauvegarde est automatiquement proposée.</p>
 <p>Chaque section suivante décrit brièvement comment utiliser une fonction
 spécifique d'Amaya :</p>
 <ul>
-  <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
-    Amaya</a></li>
-  <li><a rel="Chapter"
-  href="Selecting.html.fr#Selecting">Sélectionner</a></li>
   <li><a rel="Chapter" href="Searching.html.fr#Searching">Rechercher et
     remplacer du texte</a></li>
-  <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
+  <li><a href="Keyboard.html.fr#Keyboard" rel="Chapter">Entrer des caractères
+    ISO-Latin-1</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>
   <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
@@ -291,6 +322,7 @@ spécifique d'Amaya :</p>
   tables</a></li>
   <li><a href="Math.html.fr#Math" rel="Chapter">Editer des
   mathématiques</a></li>
+  <li><a href="SVG.html.fr" rel="Chapter">Edition des graphiques</a></li>
   <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser
     des zones actives</a></li>
   <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Les feuilles de

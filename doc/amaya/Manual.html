@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Using Amaya</title>
@@ -20,12 +18,12 @@ alt="Doc" /></a></p>
 style="font-size: 30pt"></span></h1>
 <hr />
 
-<p><strong>Version:</strong> 3 - November 2000</p>
+<p><strong>Version:</strong> 4.2 - December 2000</p>
 <dl>
   <dt><strong>Authors:</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
   <dt><strong>Contributors:</strong></dt>
-    <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen, Larent
+    <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen, Laurent
       Carcone</dd>
 </dl>
 
@@ -44,6 +42,36 @@ common word processors and editors. They are not presented here. Only
 <h1>Table of contents</h1>
 <ul>
   <li><a href="#L920">Starting Amaya</a></li>
+  <li><a href="#Browsing">Browsing Web pages with Amaya</a>
+    <ul>
+      <li><a href="Browsing.html#Browsing">Browsing with Amaya</a> 
+        <ul>
+          <li><a href="Browsing.html#Activating">Activating a link</a></li>
+          <li><a href="Browsing.html#L515">Target anchors</a></li>
+          <li><a href="Browsing.html#Opening">Opening documents</a></li>
+          <li><a href="Browsing.html#New">New documents</a></li>
+          <li><a href="Browsing.html#Moving">Moving backward and
+          forward</a></li>
+          <li><a href="Browsing.html#Reloading">Reloading a page</a></li>
+          <li><a href="Browsing.html#Keyboard">Keyboard control</a></li>
+        </ul>
+      </li>
+      <li><a href="Selecting.html#Selecting">Selecting</a> 
+        <ul>
+          <li><a href="Selecting.html#Selecting1">Selecting by
+          Structure</a></li>
+          <li><a href="Selecting.html#Selecting2">Selecting images</a></li>
+        </ul>
+      </li>
+      <li><a href="Views.html#Views">Displaying Views</a> 
+        <ul>
+          <li><a href="Views.html#Opening">Opening a view</a></li>
+          <li><a href="Views.html#Closing">Closing a view</a></li>
+          <li><a href="Views.html#Using">Using views</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
   <li><a href="#L932">Editing Web pages with Amaya</a> 
     <ul>
       <li><a href="Browsing.html#Browsing">Browsing with Amaya</a> 
@@ -65,8 +93,6 @@ common word processors and editors. They are not presented here. Only
           <li><a href="Selecting.html#Selecting2">Selecting images</a></li>
         </ul>
       </li>
-      <li><a href="Searching.html#Searching">Searching and replacing
-      text</a></li>
       <li><a href="Views.html#Views">Displaying Views</a> 
         <ul>
           <li><a href="Views.html#Opening">Opening a view</a></li>
@@ -74,14 +100,19 @@ common word processors and editors. They are not presented here. Only
           <li><a href="Views.html#Using">Using views</a></li>
         </ul>
       </li>
-      <li><a href="Creating.html#Creating">Creating new elements</a> 
+      <li><a href="Searching.html#Searching">Searching and replacing
+      text</a></li>
+      <li><a href="Keyboard.html#Keyboard">Entering ISO-Latin-1 characters</a>
+        
         <ul>
-          <li><a href="Keyboard.html#Keyboard">Entering ISO-Latin-1
-            characters</a></li>
           <li><a href="Keyboard.html#Standard">Standard multi-key
           support</a></li>
           <li><a href="Keyboard.html#Optional">Optional Multi-key
           support</a></li>
+        </ul>
+      </li>
+      <li><a href="Creating.html#Creating">Creating new elements</a> 
+        <ul>
           <li><a href="Creating.html#Types">Buttons and types menu</a></li>
           <li><a href="Creating.html#Structure">Structure menu</a></li>
           <li><a href="Creating.html#L906">The Enter (or Return) key</a></li>
@@ -132,6 +163,15 @@ common word processors and editors. They are not presented here. Only
           <li><a href="Math.html#Math_Struc">Math_Structure view</a></li>
           <li><a href="Math.html#Links">Links in MathML</a></li>
           <li><a href="Math.html#Current">Current limitations</a></li>
+        </ul>
+      </li>
+      <li><a href="SVG.html">Editing graphics</a> 
+        <ul>
+          <li><a href="SVG.html#Creating">Creating graphics with the
+            palette</a></li>
+          <li><a href="SVG.html#Moving">Moving graphics</a></li>
+          <li><a href="SVG.html#Resizing">Resizing graphics</a></li>
+          <li><a href="SVG.html#Painting">Painting graphics</a></li>
         </ul>
       </li>
       <li><a href="ImageMaps.html#Client-sid">Creating and using client-side
@@ -239,6 +279,19 @@ document could be your <em>home page</em> (see how to <a
 href="Configure.html#L138">configure your Home Page</a>) or the Amaya Welcome
 page.</p>
 
+<h2><a name="Browsing" id="Browsing">Browsing Web pages with Amaya</a></h2>
+
+<p>Amaya can be used to browse local and remote Web documents.</p>
+
+<p>Each following section gives a short description of how to use a specific
+Amaya functionality.</p>
+<ul>
+  <li><a rel="Chapter" href="Browsing.html#Browsing">Browsing with
+  Amaya</a></li>
+  <li><a rel="Chapter" href="Selecting.html#Selecting">Selecting</a></li>
+  <li><a rel="Chapter" href="Views.html#Views">Displaying Views</a></li>
+</ul>
+
 <h2><a name="L932" id="L932">Editing Web pages with Amaya</a></h2>
 
 <p><strong>Amaya</strong> not only allows you to browse documents on the Web,
@@ -253,12 +306,10 @@ backup files is automatically proposed.</p>
 <p>Each following section gives a short description of how to use a specific
 Amaya functionality.</p>
 <ul>
-  <li><a rel="Chapter" href="Browsing.html#Browsing">Browsing with
-  Amaya</a></li>
-  <li><a rel="Chapter" href="Selecting.html#Selecting">Selecting</a></li>
   <li><a rel="Chapter" href="Searching.html#Searching">Searching and replacing
     text</a></li>
-  <li><a rel="Chapter" href="Views.html#Views">Displaying Views</a></li>
+  <li><a href="Keyboard.html#Keyboard" rel="Chapter">Entering ISO-Latin-1
+    characters</a></li>
   <li><a rel="Chapter" href="Creating.html#Creating">Creating new
   elements</a></li>
   <li><a rel="Chapter" href="Links.html#Creating">Creating and changing links
@@ -267,6 +318,7 @@ Amaya functionality.</p>
     structure</a></li>
   <li><a rel="Chapter" href="Tables.html#Editing">Editing tables</a></li>
   <li><a href="Math.html#Math" rel="Chapter">Editing mathematics</a></li>
+  <li><a href="SVG.html" rel="Chapter">Editing graphics</a></li>
   <li><a rel="Chapter" href="ImageMaps.html#Client-sid">Creating and using
     client-side image maps</a></li>
   <li><a rel="Chapter" href="StyleSheets.html#Style">Style Sheets</a></li>
