@@ -917,7 +917,8 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 			   PRuleType pres, unsigned int att)
 {
   PtrCondition        firstCond, cond;
-  int                 i, nbcond, nbCtxtCond;
+  int                 nbcond, nbCtxtCond;
+  unsigned            i;
 
   /* test the number and type of the rule */
   if (rule->PrViewNum != 1)
