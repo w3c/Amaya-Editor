@@ -1262,6 +1262,7 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 			    PresentationContext context, char *cssRule,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
+  DisplayMode         dispMode;
   PresentationValue   pval;
 
   pval.typed_data.value = 0;
@@ -1285,6 +1286,15 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
     {
       if (DoApply)
 	{
+	  dispMode = TtaGetDisplayMode (context->doc);
+	  if (dispMode != NoComputedDisplay)
+	    {
+	    /* force a redisplay of the whole document */
+	    TtaSetDisplayMode (context->doc, NoComputedDisplay);
+#ifdef AMAYA_DEBUG
+	    /*printf ("Force NoComputedDisplay doc=%d\n", context->doc);*/
+#endif /* AMAYA_DEBUG */
+	    }
 	  if (tsch)
 	    cssRule = CheckImportantRule (cssRule, context);
 	  TtaSetStylePresentation (PRFloat, element, tsch, context, pval);
@@ -4275,6 +4285,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
 			      int specificity, ThotBool destroy)
 {
+  DisplayMode         dispMode;
   PresentationContext ctxt;
   ElementType         elType;
   ThotBool            isHTML;
@@ -4304,8 +4315,12 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
   ctxt->destroy = destroy;
   /* first use of the context */
   ctxt->uses = 1;
+  /* save the current display mode */
+  dispMode = TtaGetDisplayMode (doc);
   /* Call the parser */
   ParseCSSRule (el, NULL, (PresentationContext) ctxt, cssRule, NULL, isHTML);
+  /* restore the display mode if necessary */
+  TtaSetDisplayMode (doc, dispMode);
   /* check if the context can be freed */
   ctxt->uses -= 1;
   if (ctxt->uses == 0)
