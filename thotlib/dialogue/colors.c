@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-/* I. Vatton    Septembre 1994 */
 /* Module de visualisation des claviers. */
 
 
@@ -259,16 +256,16 @@ static void         ColorsExpose ()
 /* |    ColorsPress traite un clic dans la palette des couleurs.        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ColorsPress (int bouton, int x, int y)
+static void         ColorsPress (int button, int x, int y)
 #else  /* __STDC__ */
-static void         ColorsPress (bouton, x, y)
-int                 bouton;
+static void         ColorsPress (button, x, y)
+int                 button;
 int                 x;
 int                 y;
 
 #endif /* __STDC__ */
 {
-   int                 couleur, li, co;
+   int                 color, li, co;
    int                 wcase, hcase;
 
    if (TtWDepth == 1)
@@ -285,7 +282,7 @@ int                 y;
 #ifdef NEW_WILLOWS
 #define Button1 1		/* MSWindows will probably use same model */
 #endif
-	if (bouton == Button1)
+	if (button == Button1)
 	  {
 	     /* couleur de trace' standard */
 	     ChangeCouleur (-1, FALSE);
@@ -302,18 +299,18 @@ int                 y;
 
    li = x / wcase;
    co = (y - hcase) / hcase;
-   couleur = co * COLORS_COL + li;
-   if (bouton == Button1)
+   color = co * COLORS_COL + li;
+   if (button == Button1)
      {
 	/* selectionne la couleur de trace' */
-	ChangeCouleur (couleur, FALSE);
-	ThotSelectPalette (lastBg, couleur);
+	ChangeCouleur (color, FALSE);
+	ThotSelectPalette (lastBg, color);
      }
    else
      {
 	/* selectionne la couleur de fond */
-	ChangeCouleur (couleur, TRUE);
-	ThotSelectPalette (couleur, lastFg);
+	ChangeCouleur (color, TRUE);
+	ThotSelectPalette (color, lastFg);
      }
 
 }
@@ -364,14 +361,14 @@ int                 y;
    XmString            title_string;
    XmFontList          xfont;
    XGCValues           GCmodel;
-   char                chaine[10];
+   char                string[10];
 
    xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
    if (SmallFontDialogue == NULL)
       SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
 
    n = 0;
-   sprintf (chaine, "+%d+%d", x, y);
+   sprintf (string, "+%d+%d", x, y);
    XtSetArg (args[n], XmNx, (Position) x);
    n++;
    XtSetArg (args[n], XmNy, (Position) y);
@@ -592,10 +589,10 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   PtrDocument         SelDoc;
-   PtrElement          PremSel, DerSel;
-   int                 premcar, dercar;
-   boolean             selok;
+   PtrDocument         pSelDoc;
+   PtrElement          pFirstSel, pLastSel;
+   int                 firstChar, lastChar;
+   boolean             selectionOK;
    PtrAbstractBox             pAb;
    PtrDocument         pDoc;
 
@@ -609,16 +606,16 @@ View                view;
 
    pDoc = LoadedDocument[document - 1];
    /* demande quelle est la selection courante */
-   selok = GetCurrentSelection (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
-   if (!selok)
+   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+   if (!selectionOK)
      {
 	/* par defaut la racine du document */
-	SelDoc = pDoc;
-	PremSel = pDoc->DocRootElement;
-	selok = TRUE;
+	pSelDoc = pDoc;
+	pFirstSel = pDoc->DocRootElement;
+	selectionOK = TRUE;
      }
 
-   if (selok && SelDoc == pDoc && NumberOfColors () > 0)
+   if (selectionOK && pSelDoc == pDoc && NumberOfColors () > 0)
       /* il y a effectivement des couleurs disponibles */
      {
 	/* Cree la palette si elle n'existe pas */
@@ -631,9 +628,9 @@ View                view;
 
 	/* recherche le pave concerne */
 	if (view > 100)
-	   pAb = PaveDeElem (PremSel, 1);
+	   pAb = PaveDeElem (pFirstSel, 1);
 	else
-	   pAb = PaveDeElem (PremSel, view);
+	   pAb = PaveDeElem (pFirstSel, view);
 
 	if (pAb != NULL)
 	   ThotSelectPalette (pAb->AbBackground, pAb->AbForeground);
