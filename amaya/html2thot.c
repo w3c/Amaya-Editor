@@ -1935,6 +1935,9 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
 	   while (el != NULL)
 	     {
 	       XhtmlElementComplete (&HTMLcontext, el, &error);
+	       elType = TtaGetElementType (el);
+	       if (elType.ElTypeNum == HTML_EL_Table)
+		 HTMLcontext.withinTable--;
 	       if (!spacesDeleted)
 	          /* If the element closed is a block-element, remove */
 	          /* spaces contained at the end of that element */
@@ -2171,7 +2174,7 @@ static void           EndOfStartTag (char c)
 	  CloseElement (lastElemEntry, -1, TRUE);
 	  XhtmlElementComplete (&HTMLcontext, HTMLcontext.lastElement, &error);
 	}
-      
+
       /* if it's a LI element, creates its IntItemStyle attribute
 	 according to surrounding elements */
       SetAttrIntItemStyle (HTMLcontext.lastElement, HTMLcontext.doc);
@@ -2445,6 +2448,19 @@ static void ProcessStartGI (char* GIname)
 	}
       else
 	{
+	  if (HTMLcontext.withinTable == 0 &&
+	       (!strcmp (pHTMLGIMapping[entry].XMLname, "td") ||
+		!strcmp (pHTMLGIMapping[entry].XMLname, "th")))
+	    {
+	      /* generate mandatory parent elements */ 
+	      ProcessStartGI ("table");
+	      HTMLcontext.withinTable = 1;
+	      ProcessStartGI ("tr");
+	    }
+	  else if (HTMLcontext.withinTable == 0 &&
+		   !strcmp (pHTMLGIMapping[entry].XMLname, "tr"))
+	      /* generate mandatory parent elements */ 
+	    ProcessStartGI ("table");
 	  /* does this start tag also imply the end tag of some current elements?*/
 	  pClose = FirstClosedElem[entry];
 	  while (pClose != NULL)
