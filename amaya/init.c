@@ -1284,8 +1284,10 @@ void CleanUpParsingErrors ()
 void CheckParsingErrors (Document doc)
 {
   char      *ptr, *reload;
+#ifndef _PARSING
   char       profile [200];
   int        prof;
+#endif /*_PARSING*/
 
   if (ErrFile)
     {
@@ -1330,8 +1332,10 @@ void CheckParsingErrors (Document doc)
 		}
 	    }
 	}
+#ifndef _PARSING
       else if (XMLErrorsFoundInProfile)
 	{
+
 	  /* Some elements or attributes are not supported */
 	  /* in the current document profile */
 	  prof = TtaGetDocumentProfile (doc);
@@ -1377,6 +1381,7 @@ void CheckParsingErrors (Document doc)
 	      ShowSource (doc, 1);
 	    }
 	}
+#endif /*_PARSING*/
       CleanUpParsingErrors ();
     }
   else
@@ -4885,6 +4890,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* _GTK */
   ThotBool          change;
 
+  tmp = NULL;
   if (typedata == STRING_DATA && data && strchr (data, '/'))
     sep = URL_SEP;
   else
