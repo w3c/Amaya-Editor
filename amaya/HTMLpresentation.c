@@ -335,25 +335,22 @@ Element             elem;
    Attribute           styleAttr;
    ElementType         elType;
    Element	       firstChild, lastChild;
-#define STYLELEN 1000
+   STRING              schName;
    STRING              style;
    int                 len;
+#define STYLELEN 1000
 
    /* does the element have a Style_ attribute ? */
    elType = TtaGetElementType (elem);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
-      {
-	attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrSSchema = elType.ElSSchema;
+   schName = TtaGetSSchemaName (elType.ElSSchema);
+   if (ustrcmp (schName, TEXT("MathML")) == 0)
 	attrType.AttrTypeNum = MathML_ATTR_style_;
-      }
    else
 #ifdef GRAPHML
    elType = TtaGetElementType (elem);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
-      {
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = GraphML_ATTR_style_;
-      }
+   if (ustrcmp (schName, TEXT("GraphML")) == 0)
+     attrType.AttrTypeNum = GraphML_ATTR_style_;
    else
 #endif
       {
