@@ -3684,6 +3684,7 @@ LPARAM lParam;
     switch (LOWORD (wParam)) {
     case IDCANCEL:
       EndDialog (hwnDlg, IDCANCEL);
+      return FALSE;
       break;
       
     case IDC_GKEY001:

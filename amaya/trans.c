@@ -172,6 +172,7 @@ void                InitTransform ()
 #endif
 {
    TransBaseDialog = TtaSetCallback (TransCallbackDialog, MAX_TRANS_DLG);
+   ppInitAutomaton ();
 }
 
 /*----------------------------------------------------------------------

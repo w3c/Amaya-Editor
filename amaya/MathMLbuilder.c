@@ -2302,7 +2302,7 @@ Document	doc;
    AttributeType     attrType;
    int		     attrKind;
 #define buflen 50
-   STRING            value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+   STRING            value;
    int               length;
  
    TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -2311,28 +2311,30 @@ Document	doc;
        attrType.AttrTypeNum == MathML_ATTR_fontsize ||
        attrType.AttrTypeNum == MathML_ATTR_fontfamily)
       {
-      value[0] = EOS;
       length = TtaGetTextAttributeLength (attr);
       if (length >= buflen)
          length = buflen - 1;
       if (length > 0)
 	 {
-         TtaGiveTextAttributeValue (attr, value, &length);
-	 switch (attrType.AttrTypeNum)
-	    {
-	    case MathML_ATTR_color:
+	   value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+	   value[0] = EOS;
+	   TtaGiveTextAttributeValue (attr, value, &length);
+	   switch (attrType.AttrTypeNum)
+	     {
+	     case MathML_ATTR_color:
                HTMLSetForegroundColor (doc, el, value);
 	       break;
-	    case MathML_ATTR_background_:
+	     case MathML_ATTR_background_:
                HTMLSetBackgroundColor (doc, el, value);
 	       break;
-	    case MathML_ATTR_fontsize:
+	     case MathML_ATTR_fontsize:
 	       SetFontsize (doc, el, value);
 	       break;
-	    case MathML_ATTR_fontfamily:
+	     case MathML_ATTR_fontfamily:
 	       SetFontfamily (doc, el, value);
 	       break;
-	    }
+	     }
+	   TtaFreeMemory (value);
 	 }
       }
 }

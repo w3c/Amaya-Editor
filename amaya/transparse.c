@@ -1663,6 +1663,7 @@ UCHAR_T       c;
 	ppNode->Next = NULL;
      }
 }
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1670,7 +1671,6 @@ static void         EndOptNodes (UCHAR_T c)
 #else
 static void         EndOptNodes (c)
 UCHAR_T       c;
-
 #endif
 {
    strAttrDesc		*ad, *ad2;
@@ -2150,9 +2150,9 @@ static sourceTransition ppsourceAutomaton[] =
    			build the "executable" form.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppInitAutomaton (void)
+void         ppInitAutomaton (void)
 #else
-static void         ppInitAutomaton ()
+void         ppInitAutomaton ()
 #endif
 {
    int                 entry;
@@ -2161,6 +2161,8 @@ static void         ppInitAutomaton ()
    PtrTransition       trans;
    PtrTransition       prevTrans;
 
+   for (entry = 0; entry < MaxState; entry++)
+       automaton[entry].firstTransition = NULL;
    entry = 0;
    curState = 1000;
    prevTrans = NULL;
@@ -2194,6 +2196,32 @@ static void         ppInitAutomaton ()
 }
 
 /*----------------------------------------------------------------------
+   	FreeTransform	free the automaton.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         FreeTransform (void)
+#else
+void         FreeTransform ()
+#endif
+{
+   PtrTransition       trans, nextTrans;
+   PtrClosedElement    pClose, nextClose;
+   int		       entry;
+
+   /* free the internal representation of the automaton */
+   for (entry = 0; entry < MaxState; entry++)
+      {
+      trans = automaton[entry].firstTransition;
+      while (trans != NULL)
+	 {
+	 nextTrans = trans->nextTransition;
+	 TtaFreeMemory (trans);
+	 trans = nextTrans;
+	 }
+      }  
+}
+
+/*----------------------------------------------------------------------
    	TRANSparse	parses the transformation file infile and builds the	
    			equivalent matching environment.			
   ----------------------------------------------------------------------*/
@@ -2223,7 +2251,6 @@ BinFile               infile;
    numberOfCharRead = 0;
    numberOfLinesRead = 1;
    currentState = 0;
-   ppInitAutomaton ();
    charRead = EOS;
    readOk = FALSE;
    /* read the file sequentially */

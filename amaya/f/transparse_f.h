@@ -7,6 +7,8 @@
 #ifdef __STDC__
 
 extern void FreeList ( strListSymb * pl );
+extern void ppInitAutomaton ( void );
+extern void FreeTransform ( void );
 extern int ppStartParser ( STRING name,
                            SSchema tStrSchema,
                            strTransSet **resTrSet );
@@ -14,6 +16,8 @@ extern int ppStartParser ( STRING name,
 #else /* __STDC__ */
 
 extern void FreeList (/* strListSymb * pl */);
+extern void ppInitAutomaton (/* void */);
+extern void FreeTransform (/* void */);
 extern int ppStartParser (/* STRING name,
                              SSchema tStrSchema,
                              strTransSet **resTrSet */);

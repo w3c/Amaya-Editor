@@ -38,10 +38,10 @@
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "html2thot_f.h"
-#include "XMLparser_f.h"
-#include "trans_f.h"
 #include "selection.h"
 #include "styleparser_f.h"
+#include "trans_f.h"
+#include "XMLparser_f.h"
 
 #ifdef ANNOTATIONS
 #include "ANNOTevent_f.h"
@@ -1107,6 +1107,7 @@ void                CheckAmayaClosed ()
       FreeHTMLParser ();
       FreeXMLParser ();
       FreeDocHistory ();
+      FreeTransform ();
       TtaQuit ();
     }
 }
