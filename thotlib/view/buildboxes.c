@@ -381,7 +381,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
   int                 pos, max;
   int                 charWidth;
   int                 spaceWidth;
-
+  
   /* space width */
   if (*nSpaces == 0)
     spaceWidth = BoxCharacterWidth (SPACE, font);
@@ -512,7 +512,19 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	  charWidth = spaceWidth;
 	}
       else
+
+   
+	if (( car >= 0x060C )&&( car <= 0x066A ))
+	  {
+	  charWidth = BoxArabicCharacterWidth(car, pBuffer,ind, font);
+	  }
+	else
+	  {
+
 	charWidth = BoxCharacterWidth (car, font);
+
+	  }
+
       *width += charWidth;
       if (car != EOS)
 	pos++;
@@ -533,7 +545,7 @@ static void GivePictureSize (PtrAbstractBox pAb, int zoom, int *width,
 {
   PictInfo           *picture;
   PtrBox              box;
-
+ 
   box = pAb->AbBox;
   picture = (PictInfo *) box->BxPictInfo;
   if (pAb->AbVolume == 0 || picture == NULL)
@@ -2867,9 +2879,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      else
 #ifndef _GL
 		if (pCurrentBox->BxLMargin < 0)
-		  DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin,
+		  DefClip (frame, pCurrentBox->BxXOrg + pBox->BxLMargin,
 			   pCurrentBox->BxYOrg,
-			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pCurrentBox->BxLMargin,
+			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pBox->BxLMargin,
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
 		else
 		  DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,

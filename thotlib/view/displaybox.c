@@ -45,6 +45,42 @@
 #include "stix.h"
 #include "fileaccess.h"
 
+
+
+
+
+  /*-------------------------------------------------------------------------
+    NextChar returns the previous character of the same buffer according
+    to the index given by ind and according to the orientation.it returns 
+    space if it pass to another buffer
+    -------------------------------------------------------------------------*/
+CHAR_T Previous_Char(PtrTextBuffer *adbuff,int *ind )
+{
+  if (*ind < ( (*adbuff)->BuLength-1))
+    return ((*adbuff)->BuContent[(*ind)+1]);
+  else return (0x0020);/*SPACE*/
+}
+
+  /*------------------------------------------------------------------------
+    PreviousChar do the same as NextChar but in the opposite way.It gives
+    the previous Character.
+    ------------------------------------------------------------------------*/
+CHAR_T Next_Char(PtrTextBuffer *adbuff, int *ind )
+  {
+    if (*ind > 0)
+      return ((*adbuff)->BuContent[(*ind)-1]);
+    else return (0x0020);/*SPACE*/
+  }
+  
+
+
+
+
+
+
+
+
+
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
   ----------------------------------------------------------------------*/
@@ -1310,6 +1346,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ThotBool            blockbegin;
   ThotBool            withbackground;
   ThotBool            hyphen, rtl;
+  CHAR_T CurrentChar ,prevChar,nextChar;
 
 
   indmax = 0;
@@ -1402,8 +1439,21 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      /* skip invisible characters */
 	      restbl = newbl;
 	      x += lg;
-	      val = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
+
+
+  CurrentChar = adbuff->BuContent[indbuff];
+if ((( CurrentChar >= 0x0600 )&&( CurrentChar < 0x066E ))||(CurrentChar==0x06AF))
+
+{
+  prevChar=Previous_Char(&adbuff,&indbuff);
+  nextChar=Next_Char(&adbuff,&indbuff);
+  val=GetArabFontAndIndex(CurrentChar,prevChar,nextChar,font,&nextfont);
+}
+else
+  {
+	val = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
 					     font, &nextfont);
+  }
 	      if (val == SPACE)
 		{
 		  lg = lgspace;
@@ -1532,6 +1582,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       if (script == 'Z')
 	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
       else
+
 	buffer = TtaGetMemory (pBox->BxNChars + 1);
 #else /*_GL*/
       wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
@@ -1546,7 +1597,20 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		 (!rtl && indbuff <= indmax))
 	    {
 	      c = adbuff->BuContent[indbuff];
-	      val = GetFontAndIndexFromSpec (c, font, &nextfont);
+
+ if ((( c >= 0x0600 )&&( c < 0x066E ))||( c ==0x06AF))
+{/*plage des val arabes*/
+  nextChar=Previous_Char(&adbuff,&indbuff);/*caractere precedant*/
+  prevChar=Next_Char(&adbuff,&indbuff);/*caractere suivant*/
+  val=GetArabFontAndIndex( c ,prevChar,nextChar,font,&nextfont);
+}
+else
+  {
+	
+      val = GetFontAndIndexFromSpec( c, font, &nextfont);
+		
+  }
+
 	      if (val == INVISIBLE_CHAR || c == ZERO_SPACE ||
 		  c == EOL || c == BREAK_LINE)
 		/* do nothing */;
@@ -1565,6 +1629,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
 					 org, bl, x, blockbegin, fg, shadow);
 		      else
+
 			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
 					 org, bl, x, blockbegin, fg, shadow);
 #else /*_GL*/
@@ -1604,6 +1669,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 					      prevfont, org, bl, 0, blockbegin,
 					      fg, shadow);
 			  else
+
+			     if ( prevfont== NULL )
+			      prevfont = nextfont;
+
 			    x += DrawString (buffer, nbcar, frame, x, y1,
 					     prevfont, org, bl, 0, blockbegin,
 					     fg, shadow);
@@ -1755,6 +1824,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    }
 		}
 	    }
+
 	  if (charleft <= 0)
 	    {
 	      /*
@@ -1768,6 +1838,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
 				 bl, hyphen, blockbegin, fg, shadow);
 	      else
+	     
 		x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
 				 bl, hyphen, blockbegin, fg, shadow);
 #else /*_GL*/
@@ -1798,6 +1869,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       TtaFreeMemory (buffer);
     }
 }
+
+
+
+
 /*----------------------------------------------------------------------
   DisplayBorders displays the box borders.
   Parameters x, y, w, h give the clipping region.
@@ -2601,3 +2676,311 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 		    xd - x, yd - y,
 		    width, height);
 }
+
+
+
+#define Unicode_length sizeof(Unicode_Map) / sizeof(wchar_t)
+
+CHAR_T Unicode_Map[]={  
+  /* valeurs unicodes des caracteres arabes a traiter*/
+    0x0621 , 0x0623 , 0x0624 , 0x0625 , 0x0626 , 0x0627 , 
+    0x0628 , 0x0629 , 0x062A , 0x062B , 0x062C , 0x062D ,
+    0x062E , 0x062F , 0x0630 , 0x0631 , 0x0632 , 0x0633 ,
+    0x0634 , 0x0635 , 0x0636 , 0x0637 , 0x0638 , 0x0639 ,
+    0x063A , 0x0640 , 0x0641 , 0x0642 , 0x0643 , 0x0644 , 
+    0x0645 , 0x0646 , 0x0647 , 0x0648 , 0x0649 , 0x064A , 
+    0x064B , 0x064C , 0x064D , 0x064E , 0x064F , 0x0650 , 
+    0x0651 , 0x0652 , 0x0653 , 0x0654 , 0x0655 , 0x06A4 
+      };
+
+
+#define Arab_length 51
+CHAR_T Arab_Map[500][500]={
+  /* codes en ArabicWeb des caracteres avec leurs possibilite 
+   *  de jointure avec leurs suivants 0 ou non 1 */
+{0x00F4 , 0x00F4 , 0x00F4 , 0x00F4 , 1 },   /*hamza */
+{0x0045 , 0x0045 , 0x0046 , 0x0046 , 1 },   /*hamza sur alif en dessus*/ 
+{0x00E2 , 0x00E2 , 0x00E3 , 0x00E3 , 1 },   /*hamza sur waw*/
+{0x0047 , 0x0047 , 0x0048 , 0x0048 , 1 },   /*hamza sur alif en dessous*/
+{0x00EE , 0x00EF , 0x00F0 , 0x00F1 , 0 },   /*hamza sur ya*/
+{0x0043 , 0x0043 , 0x0044 , 0x0044 , 1 },   /*alif*/
+{0x004B , 0x004C , 0x004D , 0x004E , 0 },   /*Ba*/    
+{0x00F5 , 0x00F5 , 0x00F5 , 0x00F6 , 1 },   /*ta marbouta*/
+{0x004F , 0x0050 , 0x0051 , 0x0052 , 0 },   /*Ta*/
+{0x0053 , 0x0054 , 0x0055 , 0x0056 , 0 },   /*THa*/
+{0x0057 , 0x0058 , 0x0059 , 0x005A , 0 },   /*jim*/ 
+{0x0061 , 0x0062 , 0x0063 , 0x0064 , 0 },   /*ha*/
+{0x0065 , 0x0066 , 0x0067 , 0x0068 , 0 },   /*kha*/
+{0x0069 , 0x0069 , 0x006A , 0x006A , 1 },   /*dal*/
+{0x006B , 0x006B , 0x006C , 0x006C , 1 },   /*dhal*/
+{0x006D , 0x006D , 0x006E , 0x006E , 1 },   /*ra*/
+{0x006F , 0x006F , 0x0070 , 0x0070 , 1 },   /*zay*/
+{0x0071 , 0x0072 , 0x0073 , 0x0074 , 0 },   /*sin*/
+{0x0075 , 0x0076 , 0x0077 , 0x0078 , 0 },   /*chin*/
+{0x0079 , 0x007A , 0x00A1 , 0x00A2 , 0 },   /*sad*/
+{0x00A3 , 0x00A4 , 0x00A5 , 0x00A6 , 0 },   /*dad*/
+{0x00A7 , 0x00A8 , 0x00A9 , 0x00AA , 0 },   /*ta :forcé*/
+{0x00AB , 0x00AC , 0x00AE , 0x00AF , 0 },   /*zha*/
+{0x00B0 , 0x00B1 , 0x00B2 , 0x00B3 , 0 },   /*ain*/
+{0x00B4 , 0x00B5 , 0x00B7 , 0x00B8 , 0 },   /*rhain*/   
+{0x0040 , 0x0040 , 0x0040 , 0x0040 , 0 },   
+{0x00B9 , 0x00BA , 0x00BB , 0x00BC , 0 },   /*faa*/
+{0x00BD , 0x00BE , 0x00BF , 0x00C0 , 0 },   /*kaf:forcé*/
+{0x00C1 , 0x00C2 , 0x00C3 , 0x00C4 , 0 },   /*kaf*/
+{0x00C5 , 0x00C6 , 0x00C7 , 0x00C8 , 0 },   /*lam*/
+{0x00D4 , 0x00D5 , 0x00D6 , 0x00D7 , 0 },   /*mim*/
+{0x00D8 , 0x00D9 , 0x00DA , 0x00DB , 0 },   /*noun*/
+{0x00E4 , 0x00E5 , 0x00E6 , 0x00E7 , 0 },   /*ha*/
+{0x00DC , 0x00DC , 0x00DD , 0x00DD , 1 },   /*waw*/
+{0x00E8 , 0x00E8 , 0x00EB , 0x00EB , 1 },   /*alif maksoura*/
+{0x00EC , 0x00E9 , 0x00EA , 0x00ED , 0 },   /*ya*/
+{0x00FA , 0x00FA , 0x00FA , 0x00FA , 0 },   /*fathatan*/
+{0x00FE , 0x00FE , 0x00FE , 0x00FE , 0 },   /*dammatan*/
+{0x005C , 0x005C , 0x005C , 0x005C , 0 },   /*kasratan*/
+{0x00F7 , 0x00F7 , 0x00F7 , 0x00F7 , 0 },   /*fatha*/
+{0x00F8 , 0x00F8 , 0x00F8 , 0x00F8 , 0 },   /*damma*/
+{0x00F9 , 0x00F9 , 0x00F9 , 0x00F9 , 0 },   /*kasra*/
+{0x00FB , 0x00FB , 0x00FB , 0x00FB , 0 },   /*chadda*/
+{0x00FC , 0x00FC , 0x00FC , 0x00FC , 0 },   /*soukoun*/
+{0x00FF , 0x00FF , 0x00FF , 0x00FF , 0 },   /*madda*/
+{0x00FD , 0x00FD , 0x00FD , 0x00FD , 0 },   /*hamza dessous*/
+{0x007E , 0x007E , 0x007E , 0x007E , 0 },   /*hamza dessus*/
+{0x00DE , 0x00DF , 0x00E0 , 0x00E1 , 0 },    /*va */
+{0x00CB , 0x00CB , 0x00CC , 0x00CC , 1 },   /*lam+alif*/
+{0x00CD , 0x00CD , 0x00CE , 0x00CE , 1 },   /*lam+hamza sur alif en dessus*/
+{0x00CF , 0x00CF , 0x00D0 , 0x00D0 , 1 }    /*lam+hamza sur alif en dessous*/
+
+
+};
+
+
+  /*---------------------------------------------------------------------
+    GetArabFontAndIndex returns the glyph corresponding to the character
+    given un and it's load the arab font "arabweb".                       
+    ---------------------------------------------------------------------*/
+
+int GetArabFontAndIndex(CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,PtrFont *font)
+{
+  int i,j,k; 
+
+  /*le caractere 'arabe' ga n'a pas de glyphs*/
+  if ( un == 0x06AF  ) un=0x0643;
+  if (prec == 0x06AF ) prec=0x0643;
+  if (suiv == 0x06AF ) suiv=0x0643;
+
+  *font=NULL;
+  
+  /*CAS PARTICULIERS :a ne pas chercher l'entourage*/
+  if ((un == 0x060C)||(un == 0x066B)) 
+    {LoadingArabicFont ( fontset , font );return(0x002C);}/*vergule*/
+    if(un == 0x061F )
+      {LoadingArabicFont ( fontset , font );return (0x003F);}
+  if (un == 0x061B) 
+   {LoadingArabicFont ( fontset , font );return(0x003B);}/*point-vergule*/
+  if ((un >= 0x0660)&&(un <= 0x0669 ))
+  {LoadingArabicFont ( fontset , font );return((int)un -1584);}/*chiffres*/
+
+
+
+  i=recherche_dicoto(un,0,Unicode_length-1); 
+
+  if (i==-1)
+    {
+      return(-1);
+    }
+  else {
+    k=recherche_dicoto(prec,0,Unicode_length-1);
+    j=recherche_dicoto(suiv,0,Unicode_length-1);
+    if((j==-1)&&(k==-1)) 
+      {
+	LoadingArabicFont ( fontset , font );
+
+	return (Arab_Map[i][0]);  /* caractere isolé */
+      }
+    else if(k==-1) {   /*pas de precedant arabe*/
+      if (j==0) /*hamza*/ 
+	{
+	  LoadingArabicFont ( fontset , font );
+	  return (Arab_Map[i][0]);
+	}
+      else 
+	{
+	 
+	  if ( i == 29 )
+	    {
+	      switch (j){
+	      case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][0]);}
+	      case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][0]);}
+	      case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][0]);}
+	      default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][1]);}
+	      }
+	    }
+	  else 
+	    if (((i==1)||(i==3)||(i==5))&&(k==29))
+	      {LoadingArabicFont( fontset ,font );return(0x0020);}
+	    else 
+	    LoadingArabicFont ( fontset , font );
+	  return (Arab_Map[i][1]);
+	}
+    }
+    else if(j==-1){
+      if(Arab_Map[k][4])
+	{
+	  LoadingArabicFont ( fontset , font );
+	  return(Arab_Map[i][0]);
+	}
+      else 
+	{
+	  if (((i==1)||(i==3)||(i==5))&&(k==29))
+	    { 
+	      LoadingArabicFont ( fontset , font );
+	      return (0x0020);
+	    }
+	  else 
+	    {
+	      LoadingArabicFont ( fontset , font );
+	  return (Arab_Map[i][3]);
+	    }
+	}
+    }
+    else
+      {
+	if (!Arab_Map[k][4]) 
+	  {
+	    if( (k==29) && ((i==1)||(i==3)||(i==5)))
+	      {LoadingArabicFont ( fontset, font ); return(0x0020);}
+	    if ( i==29 ){
+		  switch ( j ) {
+		  case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][2]);}
+		  case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][2]);}
+		  case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][2]);}
+		  default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][2]);}
+		  }
+	    }
+	    LoadingArabicFont ( fontset , font );      
+	    return (Arab_Map[i][2]);
+	    }
+	else 
+	  {
+	    if(Arab_Map[k][4])
+	      {
+		if ( i==29 ){
+		  switch ( j ) {
+		  case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][0]);}
+		  case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][0]);}
+		  case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][0]);}
+		  default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][1]);}
+		  }
+		}
+		LoadingArabicFont ( fontset , font );
+		return (Arab_Map[i][1]);
+	      }
+	    else  
+	      {
+		if ( i == 29 ){
+
+		  switch ( j ) {
+		    case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][2]);}
+		    case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][2]);}
+		    case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][2]);}
+		    default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][3]);}
+		  }
+		}
+	       LoadingArabicFont ( fontset , font );
+		return(Arab_Map[i][3]);
+	      }
+	  }
+      }
+  }
+}
+
+
+
+int recherche_dicoto(CHAR_T elmt,int p,int q){
+  int q1=(int)(p+q)/2;
+  wchar_t res=Unicode_Map[q1];
+  if(p>=q1)return(-1);
+  if(res == elmt) return(q1);
+  else if(res< elmt) recherche_dicoto(elmt,q1,q);
+  else recherche_dicoto(elmt,p,q1);
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

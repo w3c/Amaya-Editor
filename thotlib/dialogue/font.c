@@ -61,14 +61,15 @@ static SpecFont   FirstFontSel = NULL;
 #endif /* _I18N_ */
 
 #include "buildlines_f.h"
-#include "dialogapi_f.h"
-#include "font_f.h"
+#include "registry_f.h"
 #include "language_f.h"
+#include "font_f.h"
 #include "memory_f.h"
-#include "platform_f.h"
 #include "registry_f.h"
 #include "units_f.h"
 #include "windowdisplay_f.h"
+#include "windowdisplay_f.h"
+#include "platform_f.h"
 
 #include "stix.h"
 
@@ -1116,8 +1117,8 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 			    TypeUnit unit, char r_name[10], char r_nameX[100])
 {
   char        *wght, *slant, *ffamily;
-  char         encoding[3];
-
+  char        encoding[3];
+  PtrFont     ptfont;
   /* apply the current font zoom */
   if (unit == UnRelative)
     {
@@ -1132,7 +1133,25 @@ static void FontIdentifier (char script, int family, int highlight, int size,
   if (script == '1')
     script = 'L';
 
+
+  if ((script == '6')||(script == 'A'))
+    {
+      ffamily = "-macromedia-arabic web";
+      wght="medium";
+      slant="r";
+      size = 24;
+      highlight=4;
+      sprintf (r_nameX, "%s-%s-%s-normal-*-%d-*-100-100-p-0-iso8859-1",
+		 ffamily, wght, slant, size);
+   GeneratePoscriptFont (r_name, script, family, highlight, size);
+   ptfont=LoadFont(r_nameX);
+
+ }   
+  else
+    { 
+
   if (script != 'L' && script != 'G' && script != 'Z' && script != 'E')
+
     {
       if (script == 'F')
 	strcpy (encoding, "15");
@@ -1265,6 +1284,10 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 	       ffamily, wght, slant, size);
     }
   GeneratePoscriptFont (r_name, script, family, highlight, size);
+  
+    }
+
+
 }
 
 /*----------------------------------------------------------------------
@@ -1611,6 +1634,8 @@ void *LoadStixFont (int family, int size)
 				    size, ActiveFrame,
 				    FALSE, FALSE));
 }
+
+
 /*----------------------------------------------------------------------
   ChangeFontsetSize : Change fontset size
   ----------------------------------------------------------------------*/
@@ -1926,7 +1951,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		    {
 		      lfont = LoadNearestFont (code, fontset->FontFamily,
 					       fontset->FontHighlight,
-					       fontset->FontSize, fontset->FontSize,
+				   fontset->FontSize, fontset->FontSize,
 					       frame, TRUE, TRUE);
 		      if (code == '7' && GreekFontScript == 'G')
 			/* use the font Symbol instead of a greek font */
@@ -2227,7 +2252,6 @@ void InitDialogueFonts (char *name)
   index = 0;
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
-
   FontDialogue =  ReadFont (script, 2, 0, index, UnRelative);
   if (FontDialogue == NULL)
     {
@@ -2414,5 +2438,62 @@ void ThotFreeAllFonts (void)
   /*Free the font config structure
     build upon the config file*/
   FreeFontConfig ();
+}
+
+
+/*---------------------------------------------------
+  LoadingArabicFont is a special function which load
+  only arabic font "arabweb.ttf"                       
+  ---------------------------------------------------*/
+
+void LoadingArabicFont(SpecFont fontset ,PtrFont *font)
+{
+
+  PtrFont      lfont, *pfont;
+  char         *ffamily;
+  char         r_nameX[100];
+  char         r_name[10];  
+  int          family,highlight;
+  int          encoding;
+  int          frame;
+  unsigned int mask;
+
+  *font = NULL;
+  *font = fontset->FontIso_6;
+  pfont = &(fontset->FontIso_1);
+  encoding = ISO_8859_1;
+  lfont = *pfont;
+  for (frame = 1 ; frame <= MAX_FRAME ; frame++)
+    {
+      mask = 1 << (frame - 1);
+      if (fontset->FontMask & mask)
+  lfont = LoadNearestFont ('6',fontset->FontFamily,fontset->FontHighlight,fontset->FontSize, fontset->FontSize, frame, TRUE, TRUE);
+
+    }
+}
+
+
+int BoxArabicCharacterWidth ( CHAR_T c, PtrTextBuffer *adbuff, int *ind, SpecFont specfont)
+{
+  PtrFont      font; 
+  int          car;
+  CHAR_T       prevChar,nextChar; 
+  if ( c != (*adbuff)->BuContent[*ind] ) return 6;
+  if ( (*ind) > 0 )
+    prevChar=(*adbuff)->BuContent[(*ind) - 1 ];/*caractere precedant*/
+  else prevChar=0x0020;
+  if ( (*ind) < (*adbuff)->BuLength - 1 )
+    nextChar=(*adbuff)->BuContent[(*ind) + 1 ];/*caractere suivant*/
+  else nextChar=0x0020;
+  car=GetArabFontAndIndex(c ,prevChar ,nextChar ,specfont ,&font);
+  if ( font == NULL )
+    return 6;
+  else
+#ifdef _I18N_
+
+    return CharacterWidth (car, font);
+#else /* _I18N_ */
+  return CharacterWidth (c, specfont);
+#endif /* _I18N_ */ 
 }
 
