@@ -2180,7 +2180,7 @@ void                AttrItemStyle (NotifyAttribute * event)
 
 /*----------------------------------------------------------------------
    GlobalAttrInMenu
-   Called by Thot when building the Attribute menu.
+   Called by Thot when building the Attributes menu.
    Prevent Thot from including a global attribute in the menu if the selected
    element do not accept this attribute.
   ----------------------------------------------------------------------*/
@@ -2194,6 +2194,26 @@ ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
    attr = GetXMLAttributeName (event->attributeType, elType, event->document);
    if (attr[0] == WC_EOS)
       return TRUE;	/* don't put an invalid attribute in the menu */
+
+   /* handle only Global attributes */
+   if (event->attributeType.AttrTypeNum != HTML_ATTR_ID &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_Class &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_Style_ &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_Title &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_dir &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onclick &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_ondblclick &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onmousedown &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onmouseup &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onmouseover &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onmousemove &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onmouseout &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onkeypress &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onkeydown &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_onkeyup &&
+       event->attributeType.AttrTypeNum != HTML_ATTR_xml_space)
+     /* it's not a global attribute. Accept it */
+     return FALSE;
 
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
    if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
@@ -2221,6 +2241,7 @@ ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
 	     elType.ElTypeNum == HTML_EL_META ||
 	     elType.ElTypeNum == HTML_EL_STYLE_ ||
 	     elType.ElTypeNum == HTML_EL_HTML)
+	   /* HEAD, TITLE, META, STYLE and HTML don't accept coreattrs */
 	   return TRUE;
 	 else
 	   return FALSE; /* let Thot perform normal operation */
