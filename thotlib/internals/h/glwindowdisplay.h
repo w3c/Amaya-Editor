@@ -64,7 +64,11 @@ void GL_VideoInvert (int width, int height, int x, int y);
 void CountourCountReset ();
 void CountourCountAdd (int npoints);
 
+/*Transformations...*/
+void DisplayTransformation (PtrTransform Trans, int Width, int Height);
+void DisplayTransformationExit ();
 
+void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
 
 /*Text rendering*/
 void TranslateChars (CHAR_T *text);
@@ -93,7 +97,8 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
 void GL_SetOpacity (int opacity);
 
 void GL_ActivateDrawing();
-void GL_DrawAll (ThotWidget widget, int frame);
+
+ThotBool GL_DrawAll ();
 
 
 ThotBool GL_prepare (int frame);
@@ -104,6 +109,8 @@ ThotBool SavePng (const char *filename,
 		 unsigned int m_width,
 		  unsigned int m_height);
 
-void saveBuffer (int width, int height);
+void saveBuffer (char *filename, int width, int height);
+
+void  GL_DestroyFrame (int frame);
 
 #endif /*_GLWINDOWDISPLAY_H_*/
