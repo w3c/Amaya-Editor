@@ -2880,12 +2880,24 @@ CHAR_T     *commentValue;
 
 #endif
 {
-   ElementType   elType, elTypeTxt;
-   Element  	 commentEl, commentLineEl, commentText;
-   STRING        mappedName;
-   CHAR_T        cont;
-   int           start, i, error;
-   ThotBool      level = TRUE;
+   ElementType    elType, elTypeLeaf;
+   Element  	  commentEl, commentLineEl, commentLeaf, lastChild;
+   STRING         mappedName;
+   CHAR_T         cont;
+   int            length, i, j,error;
+   ThotBool       level = TRUE;
+   unsigned char *buffer;
+   unsigned char *srcbuf;
+   wchar_t        wcharRead;
+   int            nbBytesRead = 0;
+   Language       lang;
+   char           fallback[5];
+
+   length = strlen (commentValue);
+   buffer = TtaAllocString (length + 1);
+   j = 0;
+   i = 0;
+   buffer[j] = WC_EOS;
 
    /* Create a Thot element for the comment */
    elType.ElSSchema = NULL;
@@ -2897,7 +2909,6 @@ CHAR_T     *commentValue;
        commentEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (commentEl);
        InsertXmlElement (&commentEl);
-
        /* Create a XMLcomment_line element as the first child of */
        /* Element XMLcomment */
        elType.ElSSchema = NULL;
@@ -2907,55 +2918,137 @@ CHAR_T     *commentValue;
        commentLineEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (commentLineEl);
        TtaInsertFirstChild (&commentLineEl, commentEl, XMLcontext.doc);
-
-       /* Create a TEXT element as the first child of element XMLcomment_line*/
-       elTypeTxt.ElSSchema = elType.ElSSchema;
-       elTypeTxt.ElTypeNum = 1;
-       commentText = TtaNewElement (XMLcontext.doc, elTypeTxt);
-       XmlSetElemLineNumber (commentText);
-       TtaInsertFirstChild (&commentText, commentLineEl, XMLcontext.doc);
-       TtaSetTextContent (commentText, TEXT(""),
-			  XMLcontext.language, XMLcontext.doc);
-       /* Look for line break in the comment and create as many */
-       /* XMLcomment_line elements as needed */
-       i = 0; start = 0;
-       do
+   
+       while (i < length)
 	 {
-	   if ((int)commentValue[i] == EOL || (int)commentValue[i] == __CR__)
-	     /* New line */
+	   srcbuf = (unsigned char *) &commentValue[i];
+	   nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
+								&srcbuf, UTF_8);
+	   i += nbBytesRead;
+	   
+	   if (wcharRead < 0x100)
 	     {
-	       commentValue[i] = EOS;
-	       TtaAppendTextContent (commentText, &commentValue[start],
-				     XMLcontext.doc);
-	       /* Create a new XMLcomment_line element */
-	       commentLineEl = TtaNewElement (XMLcontext.doc, elType);
-	       XmlSetElemLineNumber (commentLineEl);
-	       /* Inserts the new XMLcomment_line after the previous one */
-	       TtaInsertSibling (commentLineEl, TtaGetParent (commentText),
-				 FALSE, XMLcontext.doc);
-	       /* Create a TEXT element as the first child of */
-	       /* the new XMLcomment_line element */
-	       commentText = TtaNewElement (XMLcontext.doc, elTypeTxt);
-	       XmlSetElemLineNumber (commentText);
-	       TtaInsertFirstChild (&commentText, commentLineEl,
-				    XMLcontext.doc);
-	       TtaSetTextContent (commentText, TEXT(""),
-				  XMLcontext.language, XMLcontext.doc);
-	       i++;
-	       start = i;   /* Start of next comment line */
+	       /* Look for line break in the comment and create as many */
+	       /* XMLcomment_line elements as needed */
+	       if ((int)wcharRead == EOL || (int)wcharRead == __CR__)
+		 /* New line */
+		 {
+		   /* Put the current content into a text comment line */
+		   buffer[j] = WC_EOS;
+		   elTypeLeaf.ElSSchema = elType.ElSSchema;
+		   elTypeLeaf.ElTypeNum = 1;
+		   commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		   XmlSetElemLineNumber (commentLeaf);
+		   if ((lastChild = TtaGetLastChild (commentLineEl)) == NULL)
+		     TtaInsertFirstChild (&commentLeaf, commentLineEl,
+					  XMLcontext.doc);
+		   else
+		     TtaInsertSibling (commentLeaf, lastChild,
+				       FALSE, XMLcontext.doc);	     
+		   TtaSetTextContent (commentLeaf, &buffer[0],
+				      XMLcontext.language, XMLcontext.doc);
+		   j = 0;
+		   buffer[j] = WC_EOS;
+		   /* Create a new XMLcomment_line element */
+		   commentLineEl = TtaNewElement (XMLcontext.doc, elType);
+		   XmlSetElemLineNumber (commentLineEl);
+		   /* Inserts the new XMLcomment_line after the previous one */
+		   TtaInsertSibling (commentLineEl, TtaGetParent (commentLeaf),
+				     FALSE, XMLcontext.doc);
+		 }
+	       else
+		   buffer[j++] = (char) wcharRead;
 	     }
-	   else if (commentValue[i] != EOS)
-	     i++;
+	   else
+	     {
+	       /* It's not an 8bits character */
+	       if (buffer[0] != WC_EOS)
+		 {
+		   /* Put the current content into a text comment line */
+		   buffer[j] = WC_EOS;
+		   /* Create a text element as child of element XMLcomment_line */
+		   elTypeLeaf.ElSSchema = elType.ElSSchema;
+		   elTypeLeaf.ElTypeNum = 1;
+		   commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		   XmlSetElemLineNumber (commentLeaf);
+		   if ((lastChild = TtaGetLastChild (commentLineEl)) == NULL)
+		     TtaInsertFirstChild (&commentLeaf, commentLineEl,
+					  XMLcontext.doc);
+		   else
+		     TtaInsertSibling (commentLeaf, lastChild,
+				       FALSE, XMLcontext.doc);	     
+		   TtaSetTextContent (commentLeaf, &buffer[0],
+				      XMLcontext.language, XMLcontext.doc);
+		   j = 0;
+		   buffer[j] = WC_EOS;
+		 }
+	       /* Try to find a fallback character */
+	       GetFallbackCharacter ((int) wcharRead, fallback, &lang);
+	       if (fallback[0] == '?')
+		 {
+		   /* The character is not found in the fallback table */
+		   /* Create a symbol leaf */
+		   elTypeLeaf.ElSSchema = elType.ElSSchema;
+		   elTypeLeaf.ElTypeNum = 3;
+		   commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		   XmlSetElemLineNumber (commentLeaf);
+		   if ((lastChild = TtaGetLastChild (commentLineEl)) == NULL)
+		     TtaInsertFirstChild (&commentLeaf, commentLineEl,
+					  XMLcontext.doc);
+		   else
+		     TtaInsertSibling (commentLeaf, lastChild,
+				       FALSE, XMLcontext.doc);	     
+		   /* Put the symbol '?' into the new symbol leaf */
+		   TtaSetGraphicsShape (commentLeaf, fallback[0], XMLcontext.doc);
+		   /* Changes the wide char code associated with that symbol */
+		   TtaSetSymbolCode (commentLeaf, wcharRead, XMLcontext.doc);
+		   /* Make that leaf read-only */
+		   TtaSetAccessRight (commentLeaf, ReadOnly, XMLcontext.doc);
+		 }
+	       else
+		 {
+		   /* The character is not found in the fallback table */
+		   /* Create a new text leaf */
+		   elTypeLeaf.ElSSchema = elType.ElSSchema;
+		   elTypeLeaf.ElTypeNum = 1;
+		   commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		   XmlSetElemLineNumber (commentLeaf);
+		   if ((lastChild = TtaGetLastChild (commentLineEl)) == NULL)
+		     TtaInsertFirstChild (&commentLeaf, commentLineEl,
+					  XMLcontext.doc);
+		   else
+		     TtaInsertSibling (commentLeaf, lastChild,
+				       FALSE, XMLcontext.doc);	     
+		   /* Put the fallback character into the new text leaf */
+		   TtaSetTextContent (commentLeaf, fallback, lang, XMLcontext.doc);
+		 }
+	     }
 	 }
-       while (commentValue[i] != EOS);
+
        /* Process last line */
-       if (i > start + 1)
-	 TtaAppendTextContent (commentText, &commentValue[start],
-			       XMLcontext.doc);
-       (*(currentParserCtxt->ElementComplete)) (commentEl, XMLcontext.doc, &error);
+       if (buffer[0] != WC_EOS)
+	 {
+	   buffer[j] = WC_EOS;
+	   elTypeLeaf.ElSSchema = elType.ElSSchema;
+	   elTypeLeaf.ElTypeNum = 1;
+	   commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+	   XmlSetElemLineNumber (commentLeaf);
+	   if ((lastChild = TtaGetLastChild (commentLineEl)) == NULL)
+	     TtaInsertFirstChild (&commentLeaf, commentLineEl, XMLcontext.doc);
+	   else
+	     TtaInsertSibling (commentLeaf, lastChild, FALSE, XMLcontext.doc);	     
+	   TtaSetTextContent (commentLeaf, &buffer[0],
+			      XMLcontext.language, XMLcontext.doc);
+	 }
+       
+       (*(currentParserCtxt->ElementComplete)) (commentEl,
+						XMLcontext.doc, &error);
        XMLcontext.lastElementClosed = TRUE;
+       
+       TtaFreeMemory (buffer);
      }
 }
+
 /*--------------------  Comments  (end)  ------------------------------*/
 
 /*--------------------  PI  (start)  ----------------------------------*/
