@@ -87,9 +87,11 @@ static const HTEventType ExceptBits = HTEvent_OOB;
   } SocketStatus;
 #endif /* #ifdef _NOGUI */
 
-#define SOCK_TABLE_SIZE 67
-#define HASH(s) ((s) % SOCK_TABLE_SIZE)
-static SocketStatus persSockets[SOCK_TABLE_SIZE];
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+  #define SOCK_TABLE_SIZE 67
+  #define HASH(s) ((s) % SOCK_TABLE_SIZE)
+  static SocketStatus persSockets[SOCK_TABLE_SIZE];
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 
 /*--------------------------------------------------------------------
   AHTCallback_bridge
