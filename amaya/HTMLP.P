@@ -2836,16 +2836,14 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	Size: Enclosing + 1;
-	Weight: Bold;
+	Style: Italics;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
-		Size: Enclosing =;
-		Weight: Enclosing =;
+		Style: Enclosing =;
 		END;
 	END;
  Code:
