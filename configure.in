@@ -725,17 +725,20 @@ if test "$with_java" = "yes" ; then
 	AC_SUBST_FILE(javanosrc_frag)
 	javanosrc_frag=$srcdir/javalib/Makefile.javanosrc
     fi
-else if test "$with_ilu" = "yes" ; then
-    AC_SUBST_FILE(java_frag)
-    java_frag=/dev/null
-    AC_SUBST_FILE(www_frag)
-    www_frag=/dev/null
 else
-    AC_SUBST_FILE(java_frag)
     java_frag=/dev/null
-    AC_SUBST_FILE(www_frag)dnl
-    www_frag=$srcdir/amaya/Makefile.libwww
-fi
+    javasrc_frag=/dev/null
+    javanosrc_frag=/dev/null
+
+    if test "$with_ilu" = "yes" ; then
+       AC_SUBST_FILE(java_frag)
+       AC_SUBST_FILE(www_frag)
+       www_frag=/dev/null
+    else
+       AC_SUBST_FILE(java_frag)
+       AC_SUBST_FILE(www_frag)dnl
+       www_frag=$srcdir/amaya/Makefile.libwww
+    fi
 fi
 
 if test "$with_math" = "yes" ; then
