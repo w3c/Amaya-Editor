@@ -114,7 +114,7 @@ static ThotBool  AutoScroll = FALSE;
 int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
-DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
+DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
