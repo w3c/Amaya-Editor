@@ -908,10 +908,6 @@ void FontIdentifier (char script, int family, int highlight, int size,
   
       switch (highlight)
 	{
-	case 0:
-	  wght = "medium";
-	  slant = "r";
-	  break;
 	case 1:
 	  if (UseLucidaFamily && family == 1)
 	    wght = "demibold";
@@ -944,6 +940,10 @@ void FontIdentifier (char script, int family, int highlight, int size,
 	    wght = "bold";
 	    slant = "i";
 	    }
+	  break;
+	default:
+	  wght = "medium";
+	  slant = "r";
 	  break;
 	}
       sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
@@ -1363,7 +1363,11 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 #endif /* _WINDOWS */
 	    }
 	  else
-	    pfont = NULL;
+	    {
+	      pfont = NULL;
+	      encoding = ISO_8859_1;
+	      car = '1';
+	    }
 	  if (pfont)
 	  {
 	  if (*pfont == NULL)
