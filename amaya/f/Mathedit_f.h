@@ -51,6 +51,7 @@ extern void CreateMSPACE ( Document document,
                            View view );
 extern void MathSelectionChanged ( NotifyElement *event );
 extern ThotBool GlobalMathAttrInMenu ( NotifyAttribute *event );
+extern void FreeMathML ( void );
 extern void InitMathML ( void );
 extern void SetAttrParseMe ( Element el,
                              Document doc );
@@ -170,6 +171,7 @@ extern void CreateMSPACE ( Document document,
                              View view );
 extern void MathSelectionChanged ( NotifyElement *event );
 extern ThotBool GlobalMathAttrInMenu ( NotifyAttribute *event );
+extern void FreeMathML ( void );
 extern void InitMathML ( void );
 extern void SetAttrParseMe ( Element el,
                                Document doc );

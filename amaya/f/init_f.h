@@ -137,6 +137,7 @@ extern void CallbackDialogue ( int ref,
                                char *data );
 extern ThotBool CheckMakeDirectory ( char *name,
                                      ThotBool recursive );
+extern void FreeAmayaIcons ( void );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document doc,
@@ -301,6 +302,7 @@ extern void CallbackDialogue ( int ref,
                                  char *data );
 extern ThotBool CheckMakeDirectory ( char *name,
                                        ThotBool recursive );
+extern void FreeAmayaIcons ( void );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document doc,

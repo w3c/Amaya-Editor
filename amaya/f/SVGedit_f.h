@@ -8,6 +8,7 @@
 
 extern void CheckSVGRoot ( Document doc,
                            Element el );
+extern void FreeSVG ( void );
 extern void InitSVG ( void );
 extern void AddGraphicsButton ( Document doc,
                                 View view );
@@ -27,6 +28,7 @@ extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
 
 extern void CheckSVGRoot ( Document doc,
                              Element el );
+extern void FreeSVG ( void );
 extern void InitSVG ( void );
 extern void AddGraphicsButton ( Document doc,
                                   View view );
