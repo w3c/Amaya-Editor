@@ -1106,20 +1106,19 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		       cell. Create additional Column_heads for the spanning
 		       cell, except if spanning is "infinite". */
 		    {
-		      if (span < THOT_MAXINT)
-			while (i < span)
+		    if (span < THOT_MAXINT)
+		      while (i < span)
+			{
+			if (cRef + 1 < MAX_COLS)
 			  {
-			    if (cRef + 1 < MAX_COLS)
-			      {
-				cRef++;
-				colElement[cRef] = NewColumnHead (colElement[cRef-1],
-								  FALSE, TRUE, row,
-								  doc, inMath, TRUE);
-				cNumber++;
-			      }
-			    colVSpan[cRef] = colVSpan[cRef-1];
-			    i++;
+			  cRef++;
+			  colElement[cRef] = NewColumnHead (colElement[cRef-1],
+					  FALSE, TRUE, row, doc, inMath, TRUE);
+			  cNumber++;
 			  }
+			colVSpan[cRef] = colVSpan[cRef-1];
+			i++;
+			}
 		    }
 		  else if (i < span)
 		    {
@@ -1235,22 +1234,28 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		TtaDeleteTree (prevGroup, doc);
 	      if (group)
 		elType = TtaGetElementType (group);
-	      }
-	    if (group)
-	      {
+	    }
+	  if (group)
+	    {
 	      elType = TtaGetElementType (group);
 	      if (elType.ElTypeNum == HTML_EL_Table_foot)
 		/* don't look for rows in the Table_foot! */
 		row = NULL;
 	      else
 		row = TtaGetFirstChild (group);
-	      }
-	    else
-	      row = NULL;
 	    }
 	  else
 	    row = NULL;
 	  }
+	else
+	  /* no more group */
+	  row = NULL;
+	if (row)
+	  /* we are starting with a new group of rows. Ignore vertical 
+	     spanning from previous group */
+	  for (i = 0; i < cNumber; i++)
+	    colVSpan[i] = 0;
+	}
       }
     }
 
