@@ -441,7 +441,9 @@ char*               shape;
    STRING              url;
    int                 length, w, h;
    int                 firstchar, lastchar;
+   int                 docModified;
    DisplayMode         dispMode;
+   ThotBool            newMap;
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
@@ -454,6 +456,7 @@ char*               shape;
      /* not within an HTML element. Nothing to do */
      return;
 
+   docModified = TtaIsDocumentModified (doc);
    /* ask Thot to stop displaying changes made in the document */
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
@@ -462,7 +465,7 @@ char*               shape;
    TtaOpenUndoSequence (doc, el, el, 0, 0);
    newElem = NULL;
    attrRefimg = NULL;
-
+   newMap = FALSE;
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      /* an image is selected. Create an area for it */
      {
@@ -486,6 +489,7 @@ char*               shape;
 	     /* create the MAP element */
 	     elType.ElTypeNum = HTML_EL_MAP;
 	     map = TtaNewElement (doc, elType);
+	     newMap = TRUE;
 	     newElem = map;
 	     parent = image;
 	     do
@@ -617,7 +621,22 @@ char*               shape;
 	TtaSetDisplayMode (doc, dispMode);
 	TtaSelectElement (doc, child);
 	if (shape[0] == 'p')
-	   TtcInsertGraph (doc, 1, 'p');
+	  {
+	    TtcInsertGraph (doc, 1, 'p');
+	    if (TtaGetVolume (el) < 3)
+	      {
+		/* the polyline doesn't have enough points */
+		if (newMap)
+		  TtaDeleteTree (map, doc);
+		else
+		  TtaDeleteTree (el, doc);
+		TtaCancelLastRegisteredSequence (doc);
+		if (!docModified)
+		  TtaSetDocumentUnmodified (doc);
+		TtaSelectElement (doc, image);
+		return;
+	      }
+	  }
 	/* Compute coords attribute */
 	SetAreaCoords (doc, el, 0);
 

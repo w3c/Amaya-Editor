@@ -959,8 +959,8 @@ RULES
 	BEGIN
 	CreateBefore(SVG_S);
         CreateWith(VerticalLine);
-        Width: Enclosed . Width;
-        Height: Enclosed . Height;
+        Width: 10 cm UserSpecified;
+        Height: 5 cm UserSpecified;
         if NOT within GraphML
            VertPos: Top = Previous . Bottom;
 	PageBreak: No;
@@ -1212,6 +1212,8 @@ RULES
 	BEGIN
 	CreateBefore (IMAGE_S);
 	CreateWith (VerticalLine);
+   	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
 	IN Graph_Structure_view BEGIN
@@ -1265,6 +1267,8 @@ RULES
 	BEGIN
 	CreateBefore (FOREIGNOBJECT_S);
 	CreateWith (VerticalLine);
+   	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
 	IN Graph_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;

@@ -1014,6 +1014,7 @@ int                 construct;
    STRING           name;
    int		    c1, c2, i, j, w, h;
    int	            oldStructureChecking;
+   int              docModified;
    ThotBool	    found;
 
    doc = TtaGetSelectedDocument ();
@@ -1025,7 +1026,7 @@ int                 construct;
    selEl = first;
    newEl = NULL;
    child = NULL;
-
+   docModified = TtaIsDocumentModified (doc);
    /* Are we in a drawing? */
    docSchema = TtaGetDocumentSSchema (doc);
    graphSchema = GetGraphMLSSchema (doc);
@@ -1224,12 +1225,18 @@ int                 construct;
        /* ask Thot to stop displaying changes made in the document */
        if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
-       /************
-       UpdatePointsAttribute (newEl, doc, &minX, &minY, &maxX, &maxY);
-       UpdatePositionOfPoly (newEl, child, doc, minX, minY, maxX, maxY);
-       *************/
        /* ask Thot to display changes made in the document */
        TtaSetDisplayMode (doc, dispMode);
+       if (TtaGetVolume (selEl) < 3)
+	 {
+	   /* the polyline doesn't have enough points */
+	   TtaDeleteTree (selEl, doc);
+	   TtaCancelLastRegisteredSequence (doc);
+	   if (!docModified)
+	     TtaSetDocumentUnmodified (doc);
+	   TtaSelectElement (doc, first);
+	   return;
+	 }
      }
    TtaCloseUndoSequence (doc);
    TtaSetDocumentModified (doc);
