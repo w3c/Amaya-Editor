@@ -6013,6 +6013,12 @@ static void         CheckPageBoxes ()
 	pR->PrDimRule.DrRefElement = True;
 	pR->PrDimRule.DrUserSpecified = False;
 	pR->PrDimRule.DrTypeRefElem = 0;
+       /* modifie la regle: HorizOverflow: True; */
+	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHorizOverflow, view);
+	pR->PrType = PtHorizOverflow;
+	pR->PrPresMode = PresImmediate;
+        pR->PrJustify = True;
+
      }
 }
 
