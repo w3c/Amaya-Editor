@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V3.9" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -38,12 +38,12 @@ le menu Eléments, ou les boutons correspondant aux éléments les plus communs
 correspondant à la position courante.</p>
 
 <p>Dans certains cas, l'élément désiré ne peut pas être créé exactement dans
-la position choisie à cause des contraintes imposées par la HTML DTD.
+la position choisie à cause des contraintes imposées par la DTD HTML.
 <strong>Amaya</strong> tente alors de créer l'élément à l'endroit le plus
 proche possible. Par exemple, si le point d'insertion se trouve à la fin de la
 dernière ligne d'un paragraphe quand vous cliquez sur le bouton <img
 src="../Icons/H2.gif" alt="H2" /> , <strong>Amaya</strong> ne crée pas la
-nouvelle en-tête à cette position (elle serait invalide) mais aprés le
+nouvelle en-tête à cette position (elle serait invalide) mais après le
 paragraphe.</p>
 
 <p>Dans d'autres cas, <strong>Amaya</strong> modifie la structure existante
@@ -51,21 +51,21 @@ pour créer l'élément désiré. Si le point d'insertion est quelque part dans
 l'item de liste (LI) quand vous créez une en-tête de second niveau (par
 exemple avec le bouton <img src="../Icons/H2.gif" alt="H2" /> ou à partir du
 menu), l'item de liste et sa liste incluse sont automatiquement divisés afin
-de créer l'en-tête demandé et de se conformer au HTML DTD.</p>
+de créer l'en-tête demandé et de se conformer à la DTD HTML.</p>
 
 <p>Quand vous créez de nouveaux éléments, il est important de sélectionner un
-<em> point d'insertion</em>, et non du texte ou un caractère unique : si la
+<em>point d'insertion</em>, et non du texte ou un caractère unique : si la
 sélection courante n'est pas vide, <strong>Amaya</strong> tente de <a
 href="Changing.html.fr#L631"><em>transformer</em></a> la partie sélectionnée
 dans le type de l'élément choisi.</p>
 
 <p>De la documentation sur <a href="HTML-elements/infoTypes.html.fr">comment
-utiliser les types d'éléments </a> est disponible, ainsi que les brèves notes
+utiliser les types d'éléments</a> est disponible, ainsi que les brèves notes
 de la <a href="HTML.html.fr">liste de tous les éléments HTML 4.0.</a></p>
 
 <h3><a name="Structure">Menu Structure</a></h3>
 
-<p>Le <a href="#Types">menu Eléments </a>vous permet seulement de créer des
+<p>Le <a href="#Types">menu Eléments</a> vous permet seulement de créer des
 éléments qui font partie du document BODY. Pour créer des éléments dans la
 partie HEAD du document, utilisez le menu <strong>Structure</strong> à partir
 de la <a href="Views.html.fr#Structure">vue structure</a>. Ce menu fonctionne
@@ -100,7 +100,7 @@ document, vous êtes souvent amenés à créer de nouveaux élément. Pour cela, il
 suffit de presser la touche Enter (ou Return). L'élément courant est clos et
 un nouveau est créé juste aprés. Ceci s'applique évidemment aux paragraphes,
 mais aussi à d'autres types d'éléments, comme les en-têtes ou les <a
-href="Tables.html.fr#Editing">cellules de table </a> par exemple.</p>
+href="Tables.html.fr#Editing">cellules de table</a> par exemple.</p>
 
 <p>Le plus souvent, le nouvel élément créé est simplement un paragraphe, quel
 que soit le type de l'élément précédent. Si vous avez besoin d'un autre type
@@ -112,16 +112,16 @@ href="Changing.html.fr#L653">changer le type</a> plus tard.</p>
 <h4>Plusieurs pressions sur la touche Entrée à la fin d'un élément</h4>
 
 <p>Quand le point d'insertion est dans un élément vide, une pression sur la
-touche "Entrée" <em>remplace </em> cet élément dans un autre élément vide au
+touche "Entrée" <em>remplace</em> cet élément dans un autre élément vide au
 niveau supérieur de la structure du document. Cette caractéristique vous
 permet de créer trés rapidement des structures complexes emboitées.</p>
 
 <p>Considérez par exemple la structure suivante :</p>
 <ol>
-  <li>Le premier item dans le plus haut niveau de la liste.
+  <li>Le premier item dans le plus haut niveau de la liste. 
     <p>Un paragraphe dans le premier item.</p>
   </li>
-  <li>Le second item.
+  <li>Le second item. 
     <ol type="a">
       <li>Le premier item dans la liste emboitée.</li>
       <li>Le second item dans la liste emboitée.</li>
@@ -199,19 +199,24 @@ fin de ce nouveau terme, presser une fois la touche "Enter" vous permet de
 créer encore un nouveau terme (<code>dt</code>). La presser deux fois crée une
 nouvelle définition (<code>dd</code>).</p>
 
-<p>Si vous voulez créer un nouveau terme avec sa définition <em> avant</em> le
+<p>Si vous voulez créer un nouveau terme avec sa définition <em>avant</em> le
 Terme 1, mettez le point d'insertion au début du terme 1 et appuyez sur
 "Enter". Tapez le nouveau terme (<code>dt</code>), puis pressez "Enter" deux
 fois : une nouvelle définition (<code>dd</code>) est créée directement aprés
 le nouveau terme.</p>
 
-<h4><a name="Changing">Changer le titre du document</a></h4>
+<h3><a name="Changing">Changer le titre du document</a></h3>
 
 <p>Vous pouvez éditer le titre du document (élément TITRE) en utilisant le
-menu <strong>Eléments/changer le titre.</strong></p>
+menu <strong>Eléments/changer le titre.</strong> Vous pouvez aussi éditer le
+titre du document dans la <a href="Views.html.fr#Structure">vue
+structure</a>.</p>
+</div>
 
-<p>Vous pouvez aussi éditer le titre du document dans la <a
-href="Views.html.fr#Structure">vue structure</a>.</p>
+<div id="Creating1">
+<h3><a>Traitement des blancs</a></h3>
+
+<p></p>
 </div>
 
 <p align="right"><a href="Views.html.fr"><img alt="previous" border="0"

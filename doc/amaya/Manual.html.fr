@@ -91,6 +91,8 @@ décrits.</p>
           return)</a></li>
           <li><a href="Creating.html.fr#Changing">Changer le titre du
             document</a></li>
+          <li><a href="Creating.html.fr#Creating1">Traitement des
+          blancs</a></li>
         </ul>
       </li>
       <li><a href="Links.html.fr#Creating">Créer et modifier des liens et des
