@@ -131,42 +131,45 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 	  ptr++;
 	  ptr = TtaSkipBlanks (ptr);
 	  failed = FALSE;
+	  /* encoded as rgb(red, green, blue) or rgb(red%, green%, blue%) */
+	  sscanf (ptr, "%d", &r);
+	  while (*ptr != EOS && *ptr != ',' && *ptr != '%')
+	    ptr++;
 	  if (*ptr == '%')
 	    {
-	      /* encoded as rgb(%red,%green,&blue) */
-	      sscanf (ptr, "%%%d", &r);
-	      while (*ptr != EOS && *ptr != ',')
-		ptr++;
-	      ptr++;
-	      sscanf (ptr, "%%%d", &g);
-	      while (*ptr != EOS && *ptr != ',')
-		ptr++;
-	      ptr++;
-	      sscanf (ptr, "%%%d", &b);
 	      *red = (unsigned short)(r * 255 / 100);
-	      *green = (unsigned short)(g * 255 / 100);
-	      *blue = (unsigned short)(b * 255 / 100);
+	      while (*ptr != EOS && *ptr != ',')
+		ptr++;
 	    }
 	  else
-	    {
-	      /* encoded as rgb(red,green,blue) */
-	      sscanf (ptr, "%d", &r);
-	      while (*ptr != EOS && *ptr != ',')
-		ptr++;
-	      ptr++;
-	      sscanf (ptr, "%d", &g);
-	      while (*ptr != EOS && *ptr != ',')
-		ptr++;
-	      ptr++;
-	      sscanf (ptr, "%d", &b);
-	      *red = (unsigned short)r;
-	      *green = (unsigned short)g;
-	      *blue = (unsigned short)b;
-	    }
-	  /* search the rgb end */
-	  while (*ptr != EOS && *ptr != ')')
-	    ptr++;
+	    *red = (unsigned short)r;
 	  ptr++;
+	  sscanf (ptr, "%d", &g);
+	  while (*ptr != EOS && *ptr != ',' && *ptr != '%')
+	    ptr++;
+	  if (*ptr == '%')
+	    {
+	      *green = (unsigned short)(g * 255 / 100);
+	      while (*ptr != EOS && *ptr != ',')
+		ptr++;
+	    }
+	  else
+	    *green = (unsigned short)g;
+	  ptr++;
+	  sscanf (ptr, "%d", &b);
+	  while (*ptr != EOS && *ptr != ')' && *ptr != '%')
+	    ptr++;
+	  if (*ptr == '%')
+	    {
+	      *blue = (unsigned short)(b * 255 / 100);
+	      while (*ptr != EOS && *ptr != ')')
+		ptr++;
+	    }
+	  else
+	    *blue = (unsigned short)b;
+	  /* search the rgb end */
+	  if (*ptr == ')')
+	    ptr++;
 	}
     }
   else if (isalpha (*ptr))
