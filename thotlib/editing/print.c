@@ -2013,9 +2013,9 @@ int                 lastPage;
    PrintDocument							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PrintDocument (PtrDocument pDoc)
+static int         PrintDocument (PtrDocument pDoc)
 #else  /* __STDC__ */
-static void         PrintDocument (pDoc)
+static int         PrintDocument (pDoc)
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
@@ -2206,7 +2206,12 @@ PtrDocument         pDoc;
 	  }
      }
    if (firstFrame != 0)
-      ClosePSFile (firstFrame);
+     {
+       ClosePSFile (firstFrame);
+       return (0); /** The .ps file was generated **/
+     }
+   else
+      return (-1); /** The .ps file was not generated for any raison **/
 }
 
 
@@ -2606,6 +2611,7 @@ char              **argv;
    char               *destination = (char*) NULL;
    char                cmd[800];
    char                tempDir [MAX_PATH];
+   char		       tempFile [MAX_PATH];
    char                name [MAX_PATH];             
    int                 i, l, result;
    int                 argCounter;
@@ -2845,27 +2851,33 @@ char              **argv;
    NPrintViews = viewsCounter;
    /* Imprime le document */
    if (MainDocument != NULL)
-     PrintDocument (MainDocument);
-
-   if (!strcmp (destination, "PSFILE"))
-     {
-       sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
-       result = system (cmd);
-       if (result != 0)
-	 ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
-       else
-	 ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
-     }
-   else
-     {
-       sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
-       result = system (cmd);
-       if (result != 0)
-	 ClientSend (thotWindow, cmd, TMSG_UNKNOWN_PRINTER);
-       else
-	 ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
-     }
-
+     if (PrintDocument (MainDocument) == 0)
+       {
+         if (!strcmp (destination, "PSFILE"))
+           {
+             sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
+             result = system (cmd);
+             if (result != 0)
+	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
+             else
+	         ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
+           }
+         else
+           {
+             sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
+             result = system (cmd);
+             if (result != 0)
+	       ClientSend (thotWindow, cmd, TMSG_UNKNOWN_PRINTER);
+             else
+	       ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
+           }
+       }
+     else
+       {
+           sprintf(tempFile, "%s/%s.ps", tempDir, name);
+           fprintf(stderr, "Impossible to create temporal file : %s", tempFile);
+       }
+   
    /* if the request comes from the Thotlib we have to remove the directory */
    if (removeDirectory)
      {
