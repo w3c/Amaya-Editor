@@ -18,6 +18,9 @@
 #include "annotlib.h"
 #include "AHTURLTools_f.h"
 #include "ANNOTtools_f.h"
+#include "XPointer.h"
+#include "XPointer_f.h"
+#include "XPointerparse_f.h"
 
 #define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 
@@ -37,7 +40,7 @@ static CHAR_T *annotAlgaeText;    /* the custom algae query text */
    Annot_Raisesourcedoc_callback function */
 typedef struct _RAISESOURCEDOC_context {
   CHAR_T *url;
-  Document annot_doc;
+  Document doc_annot;
 } RAISESOURCEDOC_context;
 
 /* the structure used for storing the context of the 
@@ -45,13 +48,8 @@ typedef struct _RAISESOURCEDOC_context {
 typedef struct _REMOTELOAD_context {
   CHAR_T *rdf_file;
   char *remoteAnnotIndex;
+  char *localfile;
 } REMOTELOAD_context;
-
-/* the structure used for storing the context of the 
-   RemoteSave_callback function */
-typedef struct _REMOTESAVE_context {
-  char *remoteAnnotIndex;
-} REMOTESAVE_context;
 
 /*-----------------------------------------------------------------------
    GetAnnotCustomQuery
@@ -676,6 +674,13 @@ void *context;
 	       AnnotList_free (listP);
 	     }
 	 }
+       /* if we were posting a localfile, remove this file (and update the
+	indexes */
+       if (ctx->localfile)
+	 {
+	   TtaFileUnlink (ctx->localfile);
+	   TtaFreeMemory (ctx->localfile);
+	 }
        TtaFileUnlink (ctx->remoteAnnotIndex);
      }
 
@@ -726,6 +731,12 @@ View view;
   ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
   /* store the temporary filename */
   ctx->rdf_file = rdf_file;
+  /* copy the name of the localfile if it's a local document */
+  if (!IsFilePath (DocumentURLs[doc]))
+      ctx->localfile = TtaStrdup (DocumentURLs[doc]);
+  else
+    ctx->localfile = NULL;
+
   /* launch the request */
   res = GetObjectWWW (doc,
 		      annotPostServer,
@@ -741,14 +752,14 @@ View view;
   /* @@ here we should delete the context or call the callback in case of
      error */
   if (res)
-    fprintf (stderr, "Failed to post the annotation!\n");
+    fprintf (stderr, "ANNOT_Post: Failed to post the annotation!\n");
 }
 
 /*----------------------------------------------------------------------
   ANNOT_Save
-  Decides if an annotation should be saved and if it should be saved
-  remotely or locally. It then calls the appropriate function to do this
-  operation.
+  Frontend function that decides if an annotation should be saved and if
+  it should be saved remotely or locally. It then calls the appropriate 
+  function to do this operation.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ANNOT_SaveDocument (Document doc_annot, View view)
@@ -760,9 +771,6 @@ View                view;
 #endif /* __STDC__ */
 {
   CHAR_T *filename;
-  Element el;
-  ElementType elType;
-  AnnotMeta *annot;
 
   if (!TtaIsDocumentModified (doc_annot))
     return; /* prevent Thot from performing normal save operation */
@@ -813,9 +821,27 @@ void *context;
    if (!ctx)
      return;
 
-   TtaFreeMemory (ctx->url);
-   /* unselect the selection */
+   /* select the source of the annotation */
+   if (ctx->doc_annot)
+     {
+       XPointerContextPtr xptr_ctx;
+       AnnotMeta *annot;
 
+       annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
+				      DocumentURLs[ctx->doc_annot], FALSE);
+       if (annot)
+	 {
+	   xptr_ctx = XPointer_parse (doc, annot->xptr);
+	   if (!xptr_ctx->error)
+	     XPointer_select (xptr_ctx);
+	   else
+	     fprintf (stderr, "RaiseSourceDoc: impossible to set XPointer\n");
+	   XPointer_free (xptr_ctx);
+	 }
+       else
+	 fprintf (stderr, "RaiseSourceDoc: couldn't find annotation metadata\n");
+     }
+   TtaFreeMemory (ctx->url);
    TtaFreeMemory (ctx);
 }
 
@@ -864,19 +890,20 @@ NotifyElement *event;
       TtaSetDocumentUnmodified (doc_annot);
       DocStatusUpdate (doc_annot, docModified);
     }
-  /* don't let Thot perform the normal operation */
   
   /* @@ and now jump to the annotated document and put it on top,
      jump to the anchor... and if the document isn't there, download it? */
   ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
   ctx->url = url;
-  ctx->annot_doc = doc_annot;
+  ctx->doc_annot = doc_annot;
   targetDocument = GetHTMLDocument (url, NULL,
 				    doc_annot, 
 				    doc_annot, 
 				    CE_ABSOLUTE, FALSE, 
 				    (void *) Annot_RaiseSourceDoc_callback,
 				    (void *) ctx);
+
+  /* don't let Thot perform the normal operation */
   return TRUE;
 }
 

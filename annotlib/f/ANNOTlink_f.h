@@ -25,9 +25,6 @@ extern void LINK_Remove ( Document document,
                           CHAR_T *annotName );
 extern void LINK_RemoveLink ( Document document,
                               CHAR_T *annotName );
-extern void LINK_HideAnnotations ( Document document );
-extern void LINK_ParcoursAnchor ( Document document );
-extern void LINK_UpdateAnnotations ( Document document );
 
 #else /* __STDC__ */
 
@@ -50,9 +47,6 @@ extern void LINK_Remove (/* Document document,
                             CHAR_T *annotName */);
 extern void LINK_RemoveLink (/* Document document,
                                 CHAR_T *annotName */);
-extern void LINK_HideAnnotations (/* Document document */);
-extern void LINK_ParcoursAnchor (/* Document document */);
-extern void LINK_UpdateAnnotations (/* Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
