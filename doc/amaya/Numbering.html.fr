@@ -27,28 +27,30 @@
 </table>
 
 <div id="Section">
-<h2><a name="L1064">Section numbering</a></h2>
+<h2><a name="L1064">Numéroter les sections</a></h2>
 
-<p>Section headings (<code>Hn</code> elements) can be automatically numbered
-to reflect the document structure. Element <code>H1</code> is supposed to be
-the document title and is not numbered, but, when this function is on, all
-other headings (<code>H2</code> to <code>H6</code>) receive a number that is
-computed according to their type and their position in the document structure.
-These numbers are displayed in blue and cannot be edited directly, but they
-are updated automatically whenever a heading is created or deleted. They
-appear not only in the main view, but also in the Table of contents view.</p>
+<p>Les en-têtes de section (éléments <code>Hn</code>) peuvent être
+automatiquement numérotées pour refléter la structure du document. L'élément 
+<code>H1</code> est supposé être le titre du document et il n'est pas
+numéroté, mais, quand la fonction est enclenchée, toutes les autres en-têtes
+(<code>H2</code> à <code>H6</code>) reçoivent un numéro estimé suivant leur
+type et leur position dans la structure du document. Ces numéros sont affichés
+en bleu et ne peuvent pas être édités directement, mais ils sont
+automatiquement mis à jour toutes les fois qu'une en-tête est créée ou
+effacée. Ils n'apparaissent pas seulement dans la vue principale, mais aussi 
+dans la Table des contenus de la vue. </p>
 
-<p>When the document is <a href="Printing.html#L1062">printed</a>, section
-numbers appear in the printed document only if the numbering function is on at
-that time.</p>
+<p>Quand le document est  <a href="Printing.html#L1062">imprimé</a>, les
+numéros de section apparaissent dans le document imprimé seulement si la
+fonction "numéroter"est enclenchée à ce moment là. </p>
 
-<p>When the document is saved, section numbers are not saved in the <a
-href="Publishing.html#L1104">HTML form</a>, but they are generated in the <a
-href="Publishing.html#L1105">text form</a>.</p>
+<p>Quand le document est sauvé, les numéros de section ne sont pas sauvés dans
+<a href="Publishing.html#L1104">la forme HTML</a>, mais ils sont engendrés
+dans la  <a href="Publishing.html#L1105">forme du texte.</a></p>
 
-<p>The <strong>Section Numbering</strong> command from the
-<strong>Special</strong> menu is a toggle that allows you to switch the
-numbering function on or off.</p>
+<p>La commande  <strong>Numéroter les sections </strong> du menu 
+<strong>Spécial</strong> vous permet d'allumer ou d'éteindre la fonction
+numérotation. </p>
 </div>
 
 <p align="right"><a href="Printing.html"><img alt="previous" border="0"
