@@ -1348,6 +1348,9 @@ int                *max;
    /* Dans les autres cas */
    else if (horizRef)
      {
+       *min = -50;
+       *max = 100000;
+#ifdef IV
 	/* Si le pave est englobe depend de son englobant direct */
 	if (pAb->AbHorizEnclosing)
 	   pParentAb = pAb->AbEnclosing;
@@ -1374,9 +1377,13 @@ int                *max;
 		       *max = 100000;
 		       break;
 		 }
+#endif /* IV */
      }
    else
      {
+       *min = -50;
+       *max = 100000;
+#ifdef IV
 	/* Si le pave est englobe depend de son englobant direct */
 	if (pAb->AbVertEnclosing && pAb->AbEnclosing != NULL)
 	  {
@@ -1407,6 +1414,7 @@ int                *max;
 		       *max = 100000;
 		       break;
 		 }
+#endif /* IV */
      }
 }
 
@@ -1836,7 +1844,7 @@ int                *max;
 	    && (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
      /* text box displayed in block of lines */
       ok = FALSE;
-   /* Il est impossible de modifier si la dimension du contenu */
+   /* Il est impossible de modifier la dimension du contenu */
    /* d'une boite construite ou de type texte                  */
    else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
      {

@@ -1565,14 +1565,12 @@ static void Cacheinit ()
   else
     cache_enabled = YES;
 
-#if 0 /* temp inhibed to compile under INSURE */
   /* cache protected documents? */
   strptr = (char *) TtaGetEnvString ("CACHE_PROTECTED_DOCS");
   if (strptr && *strptr && !strcasecmp (strptr, "yes" ))
     HTCacheMode_setProtected (YES);
   else
     HTCacheMode_setProtected (NO);
-#endif
 
   /* get the cache dir (or use a default one) */
   strptr = (char *) TtaGetEnvString ("CACHE_DIR");

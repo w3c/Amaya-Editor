@@ -151,8 +151,8 @@
 150 Document directories
 151 Document name
 152 The document %s already exists. Do you want to overwrite it?
-153 Button 1 sets the text color
-154 Button 2 sets the background color
+153 Left button sets the text color
+154 Middle or Right button sets the background color
 155 Font family
 156 Roman
 157 Bold

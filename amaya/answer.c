@@ -72,6 +72,8 @@ void               *input, HTAlertPar * reply;
 
    switch (op)
 	 {
+	    case HT_PROG_TIMEOUT:
+	      break;
 	    case HT_PROG_DNS:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), (char *) input);
 	       break;
@@ -274,28 +276,29 @@ HTAlertPar         *reply;
 {
    AHTReqContext      *me = HTRequest_context (request);
    
-   /* Update the status bar */
-     TtaSetStatus (me->docid, 1,
-		   TtaGetMessage (AMAYA, AM_PLEASE_AUTHENTICATE), me->urlName);
-
-   /* initialise */
-   Answer_name[0] = EOS;
-   Lg_password = 0;
-   Answer_password[0] = EOS;
-
-   InitFormAnswer (me->docid, 1);
-
-   /* handle the user's answers back to the library */
-   if (Answer_name[0] != EOS)
+   if (reply && msgnum >= 0)
      {
-	HTAlert_setReplyMessage (reply, Answer_name);
-
-	if (Answer_password[0] != EOS)
-	  {
-	     /* give password back to the request */
-	     HTAlert_setReplySecret (reply, Answer_password);
-	     return YES;
-	  }
+       /* Update the status bar */
+       TtaSetStatus (me->docid, 1,
+		     TtaGetMessage (AMAYA, AM_PLEASE_AUTHENTICATE), me->urlName);
+	
+       /* initialise */
+       Answer_name[0] = EOS;
+       Lg_password = 0;
+       Answer_password[0] = EOS;
+	
+       InitFormAnswer (me->docid, 1);
+       /* handle the user's answers back to the library */
+       if (Answer_name[0] != EOS)
+	 {
+	   HTAlert_setReplyMessage (reply, Answer_name);
+	   if (Answer_password[0] != EOS)
+	     {
+	       /* give password back to the request */
+	       HTAlert_setReplySecret (reply, Answer_password);
+	       return YES;
+	     }
+	 }
      }
    return NO;
 }
