@@ -30,6 +30,7 @@
 #define MAX_ARGS	30
 #define MAX_FUNCTION	250
 #define MAX_CONSTANT	500
+#define MAX_ENUM	50
 
 /*
  * Registered type definition.
@@ -53,6 +54,15 @@ Type tabType[1000] = {
 { 0, "int",	"int",		"jint",			NULL},
 { 1, "char",	"String",	"struct Hjava_lang_String*", "java_lang_String"},
 };
+
+/*
+ * Parsed enum val definition.
+ */
+typedef struct _EnumVal {
+    struct _EnumVal *next;
+    char *name;   /* name of the value */
+    int  value;  /* value associated */
+} EnumVal, *Enum;
 
 /*
  * Parsed arg definition.
@@ -92,6 +102,9 @@ Function tabFunctions[MAX_FUNCTION];
 
 int nbConstants = 0;
 Constant tabConstants[MAX_CONSTANT];
+
+int nbEnum = 0;
+Enum tabEnum[MAX_ENUM];
 
 char *javaOutputFile = NULL;
 char *stubCOutputFile = NULL;
@@ -497,11 +510,110 @@ cleanup:
     return;
 }
 
+static void parse_enum(char **next)
+{
+    char *name;
+    char *p = *next;
+    Enum first = NULL;
+    Enum prev = NULL;
+    Enum cour = NULL;
+    int value = 0;
+
+    if (p >= mmap_map + filesize) {
+	goto cleanup;
+    }
+    if (strncmp(p, "enum", 4)) {
+	goto cleanup;
+    }
+    p += 4;
+    SKIP_BLANK(p);
+    if (IS_ALPHA(*p)) {
+	name = parse_identifier(&p);
+	SKIP_BLANK(p);
+    }
+    if (*p != '{') goto cleanup;
+    p++;
+
+    while (1) {
+	SKIP_BLANK(p);
+	if (*p == '}') break;
+	name = parse_identifier(&p);
+
+	if (name == NULL) {
+	    goto cleanup;
+	}
+	SKIP_BLANK(p);
+	if (*p == '=') {
+	    p++;
+	    SKIP_BLANK(p);
+
+	    /*
+	     * This should be a number.
+	     */
+	    if ((*p == '0') && ((*(p + 1) == 'x') || (*(p + 1) == 'X'))) {
+		/*
+		 * Read an hexadecimal number.
+		 */
+		p++;
+		p++;
+		value = 0;
+		while (((*p >= '0') && (*p <= '9')) ||
+		       ((*p >= 'A') && (*p <= 'F')) ||
+		       ((*p >= 'a') && (*p <= 'f'))) {
+		    if ((*p >= '0') && (*p <= '9'))
+		        value = value * 16 + *p++ - '0';
+		    else if ((*p >= 'A') && (*p <= 'F'))
+		        value = value * 16 + *p++ - 'A' + 10;
+		    else if ((*p >= 'a') && (*p <= 'f'))
+		        value = value * 16 + *p++ - 'a' + 10;
+		}
+	    } else {
+		/*
+		 * Read a decimal number.
+		 */
+		value = 0;
+		while ((*p >= '0') && (*p <= '9'))
+		    value = value * 10 + *p++ - '0';
+	    }
+	} else if (prev != NULL) {
+	    value = prev->value + 1;
+	} else
+	    value = 0;
+	/*
+	 * allocate a new element.
+	 */
+	cour = (Enum) malloc(sizeof(EnumVal));
+	if (cour == NULL) goto cleanup;
+	cour->name = strdup(name);
+	cour->value = value;
+	cour->next = NULL;
+	if (first == NULL) first = cour;
+	if (prev != NULL) prev->next = cour;
+
+	SKIP_BLANK(p);
+	if (*p == ',') p++;
+
+	SKIP_BLANK(p);
+	if (*p == '}') break;
+
+	prev = cour;
+    }
+    tabEnum[nbEnum] = first;
+    nbEnum++;
+
+        
+cleanup:
+    *next = p;
+    return;
+}
+
 static void parse(char *next)
 {
     while (1) {
         if (next >= mmap_map + filesize) return;
+	SKIP_BLANK(next);
 	if (*next == '#') parse_constant(&next);
+	else if (!strncmp(next, "enum", 4)) parse_enum(&next);
         else parse_function(&next);
     }
 }
@@ -570,6 +682,7 @@ void dump_java(FILE *out) {
     Constant *c;
     Arg *a;
     Type *t;
+    Enum e;
     char package[256];
     int idx;
     int is_package = 0;
@@ -600,6 +713,7 @@ void dump_java(FILE *out) {
            classname);
     fprintf(out," */\n\n");
     fprintf(out,"public class %s {\n", class_name);
+
     /*
      * Dump each constant.
      */
@@ -610,6 +724,20 @@ void dump_java(FILE *out) {
                 t->jname, c->name, c->string);
     }
     if (nbConstants > 0) fprintf(out,"\n");
+
+    /*
+     * Dump each enum values.
+     */
+    for (i = 0;i < nbEnum;i++) {
+        e = tabEnum[i];
+	while (e != NULL) {
+	    fprintf(out,"\tpublic static final int %s = %d;\n",
+		    e->name, e->value);
+	    e = e->next;
+	}
+	fprintf(out,"\n");
+    }
+
 
     for (i = 0;i < nbFunctions;i++) {
         f = &tabFunctions[i];

@@ -7,9 +7,6 @@ CFLAGS=-g -Wall
 # CFLAGS=-pg -O -Wall
 # CFLAGS= -O -Wall
 
-CLASSTEST=thotlib_APIInterface
-
-
 all : javastub
 
 javastub : javastub.o
@@ -26,5 +23,6 @@ install : all
 	cp javastub ../../`../../batch/MachineType`/bin
 
 test: all
-	./javastub -T types.lst -M $(CLASSTEST) ../../thotlib/include/interface.h 
+	./javastub -T types.lst -M thotlib_APIInterface ../../thotlib/include/interface.h 
+	./javastub -T types.lst -M thotlib_APITree ../../thotlib/include/tree.h 
 
