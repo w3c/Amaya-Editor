@@ -444,7 +444,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	rType == PtIndent || rType == PtLineSpacing ||
 	rType == PtDepth ||
 	rType == PtAdjust ||
-	rType == PtDirection || PtUnicodeBidi ||
+	rType == PtDirection || rType == PtUnicodeBidi ||
 	rType == PtLineStyle || rType == PtLineWeight ||
 	rType == PtFillPattern ||
 	rType == PtBackground || rType == PtForeground ||
