@@ -69,7 +69,8 @@ typedef enum
   BoRow,
   BoColumn,
   BoCell,
-  BoFloatBlock
+  BoFloatBlock,
+  BoFloatGhost
 } BoxType;
 
 /* Type of relation between boxes:
@@ -547,6 +548,7 @@ typedef struct _AbstractBox
   ThotBool        AbAspectChange;     /* Change the graphical aspect: plane,
 				         color, pattern, line style */
   ThotBool        AbMBPChange;	      /* Change margins, borders, paddings */
+  ThotBool        AbFloatChange;      /* Change the floatting information */
   ThotBool        AbChange;	      /* Change of another type */
   LeafType        AbLeafType;
   union

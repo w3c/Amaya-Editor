@@ -3077,6 +3077,10 @@ void SetChange (PtrAbstractBox pAb, PRuleType typeRule, FunctionType func)
     case PtYRadius:
       pAb->AbAspectChange = TRUE;
       break;
+    case PtFloat:
+    case PtClear:
+      pAb->AbFloatChange = TRUE;
+      break;
     default:
       pAb->AbChange = TRUE;
       break;

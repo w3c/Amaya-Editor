@@ -2692,6 +2692,73 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
 
 
 /*----------------------------------------------------------------------
+  UpdateFloat updates floatting information of the abstract box pAb
+  within pParent.
+  The parameter inLine is TRUE is the parent was previously a block.
+  ----------------------------------------------------------------------*/
+static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
+			 ThotBool inLine, int frame)
+{
+  PtrBox              pBox, pBlock;
+  PtrFloat            pfloat;
+
+  pBox = pAb->AbBox;
+  if (pBox->BxType == BoRow ||
+      pBox->BxType == BoColumn ||
+      pBox->BxType == BoCell)
+    pAb->AbFloat = 'N';
+  if (pAb->AbFloat == 'L' || pAb->AbFloat == 'R')
+    {
+      if (pAb->AbFloat == 'L')
+	AddFloatingBox (pAb, TRUE);
+      else if (pAb->AbFloat == 'R')
+	AddFloatingBox (pAb, FALSE);
+      inLine = TRUE;
+    }
+  else if (inLine)
+    {
+      /* check if the float property is removed */
+      while (pParent && pParent->AbBox &&
+	     pParent->AbBox->BxType == BoFloatGhost)
+	pParent->AbBox->BxType == BoComplete;
+      if (pParent && pParent->AbBox)
+	{
+	  pBlock = pParent->AbBox;
+	  pfloat = pBlock->BxLeftFloat;
+	  while (pfloat && pfloat->FlBox != pBox)
+	    pfloat = pfloat->FlNext;
+	  if (pfloat == NULL)
+	    {
+	      pfloat = pBlock->BxRightFloat;
+	      while (pfloat && pfloat->FlBox != pBox)
+		pfloat = pfloat->FlNext;
+	    }
+	  if (pfloat)
+	    {
+	      /* the float is removed */
+	      if (pfloat->FlNext)
+		pfloat->FlNext->FlPrevious = pfloat->FlPrevious;
+	      if (pfloat == pBlock->BxLeftFloat)
+		pBlock->BxLeftFloat->FlNext = pfloat->FlNext;
+	      else if (pfloat == pBlock->BxRightFloat)
+		pBlock->BxRightFloat->FlNext = pfloat->FlNext;
+	      else
+		pfloat->FlPrevious->FlNext = pfloat->FlNext;
+	      TtaFreeMemory (pfloat);
+	      pfloat = NULL;
+	    }
+	  if (pBlock->BxType == BoFloatBlock &&
+	      pBlock->BxLeftFloat == NULL &&
+	      pBlock->BxRightFloat == NULL)
+	    {
+	      inLine = FALSE;
+	      pParent->AbBox->BxType == BoComplete;
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   ComputeUpdates checks what is changing in the current Abstract Box.
   Return TRUE if there is at least one change.
   ----------------------------------------------------------------------*/
@@ -2740,7 +2807,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   else if (pParent->AbBox &&
 	   (pParent->AbBox->BxType == BoBlock ||
 	    pParent->AbBox->BxType == BoFloatBlock ||
-	    pParent->AbBox->BxType == BoGhost))
+	    pParent->AbBox->BxType == BoGhost ||
+	    pParent->AbBox->BxType == BoFloatBlock))
     /* within a block */
     inLine = TRUE;
   else
@@ -2808,6 +2876,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
 #else /* _GL */  
+
+	      /* Compute Bounding Box*/
+	      ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
 
 	      DefRegion (frame, pCurrentBox->BxClipX - k,
 			 pCurrentBox->BxClipY - k,
@@ -2938,9 +3009,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 #endif /* _GL */
 	    }
 	  
-	  /* On verifie la coherence des positions par defaut */
-	  /***CheckDefaultPositions(pAb, frame);***/
 	  pAb->AbChange = FALSE;
+	  pAb->AbFloatChange = FALSE;
 	  /* check enclosing cell */
 	  pCell = GetParentCell (pBox);
 	  if (pCell && ThotLocalActions[T_checkcolumn])
@@ -3196,6 +3266,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pBox->VisibleModification = TRUE;   
 #endif /* _GL */
 	}
+      /* CHANGE FLOAT/CLEAR */
+      if (pAb->AbFloatChange)
+	{
+	  UpdateFloat (pAb, pParent, inLine, frame);
+	  pAb->AbFloatChange = FALSE;
+	  pAb->AbChange = TRUE;	  
+	}
       /* CHANGE THE CONTENTS */
       if (pAb->AbChange || pAb->AbSizeChange)
 	{
@@ -3224,9 +3301,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  /* transmit underline and thickness */
 	  pBox->BxUnderline = pAb->AbUnderline;
 	  pBox->BxThickness = pAb->AbThickness;
-	  /* On teste le type du pave pour mettre a jour la boite */
 	  if (pAb->AbLeafType == LtCompound)
 	    {
+	      /* update a compound element */
 	      if (pBox->BxType == BoBlock ||
 		  pBox->BxType == BoFloatBlock)
 		/* update the current block of lines */
@@ -3234,6 +3311,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 	  else
 	    {
+	      /* update a leaf element */
 	      switch (pAb->AbLeafType)
 		{
 		case LtPageColBreak:

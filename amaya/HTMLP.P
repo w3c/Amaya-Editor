@@ -3148,7 +3148,6 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Line;
-	{LineBreak: Yes;}
 	LineBreak: No;
 #ifdef PAGE
 	NoBreak1 : 2;
@@ -3418,6 +3417,7 @@ RULES
 	MarginTop: 0.2;
 	LineWeight: 1 px;
 	Foreground: Black;
+	LineBreak: No;
 	IN Alternate_view
 		BEGIN
 		Height: 1;

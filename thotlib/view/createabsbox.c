@@ -463,6 +463,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbSizeChange = FALSE;
    pAb->AbAspectChange = FALSE;
    pAb->AbMBPChange = FALSE;
+   pAb->AbFloatChange = FALSE;
    pAb->AbChange = FALSE;
 
    pAb->AbInLine = TRUE;

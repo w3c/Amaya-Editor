@@ -767,6 +767,8 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       else
 	{
 	  /* explicite rule */
+	  while (pRefAb && pRefAb->AbBox && pRefAb->AbBox->BxType == BoGhost)
+	    pRefAb = pRefAb->AbEnclosing;
 	  if (pAb->AbEnclosing == pRefAb && !pBox->BxHorizFlex)
 	    /* it's not a stretchable box and it depends on its enclosing */
 	    op = OpHorizInc;
@@ -783,7 +785,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 		  pBox->BxXOutOfStruct = TRUE;
 		  PropagateXOutOfStruct (pAb, TRUE, pAb->AbHorizEnclosing);
 		}
-	      else if (pRefAb->AbBox != NULL)
+	      else if (pRefAb->AbBox)
 		{
 		  /* depend on a sibling box */
 		  sibling = TRUE;
