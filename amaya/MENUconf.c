@@ -375,7 +375,7 @@ static ThotBool _GetSysUserName (char *username)
   wxString loginname = wxGetUserId();
   if ( !loginname.IsEmpty() )
   {
-    sprintf(username,"%s", (const char*)loginname.mb_str(AmayaApp::conv_ascii));
+    sprintf(username,"%s", (const char*)loginname.mb_str(*wxConvCurrent));
     return TRUE;
   }
   else

@@ -30,9 +30,6 @@ public:
   static int * GetGL_AttrList();
 #endif /* _GL */
 
- public:
-  static wxCSConv conv_ascii;
-
 protected:
   DECLARE_EVENT_TABLE()
 

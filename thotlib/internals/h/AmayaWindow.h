@@ -132,10 +132,6 @@ public:
 
  public:
 
- public:
-  static wxCSConv conv_ascii;
-
-
  protected:
 //    AmayaCallback menuCallback;
 //    AmayaCallback toolbarCallback;

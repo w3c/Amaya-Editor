@@ -1983,7 +1983,7 @@ static void RecCleanCache (char *dirname)
   wxString separator = _T("/");
 #endif /* _WINDOWS */
 
-  wxString wx_dir_name = wxString(dirname, AmayaApp::conv_ascii);
+  wxString wx_dir_name = wxString(dirname, *wxConvCurrent);
   
   /* try to delete the current directory */
   wxRmdir(wx_dir_name);
@@ -2003,7 +2003,7 @@ static void RecCleanCache (char *dirname)
 	  {
 	    name = name+separator;
 	    /* it's a sub-directory */
-	    sprintf(buftmp, "%s", (const char *)name.mb_str(AmayaApp::conv_ascii) );
+	    sprintf(buftmp, "%s", (const char *)name.mb_str(*wxConvCurrent) );
 	    /* delete it recursively */
 	    RecCleanCache(buftmp);
 	  }

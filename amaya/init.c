@@ -6863,7 +6863,7 @@ void InitAmaya (NotifyEvent * event)
 #endif /* #ifdef _NOGUI */
 
 #ifdef _WX
-   wxString amaya_directory( TtaGetEnvString ("THOTDIR"), AmayaApp::conv_ascii );
+   wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
 
    stopR         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.png") );
    stopN         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.png") );
