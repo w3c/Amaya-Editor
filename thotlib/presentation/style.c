@@ -846,7 +846,7 @@ PRuleType       pres;
 #endif /* !__STDC__ */
 {
    PtrCondition        cond;
-   int                 i, j;
+   int                 i;
    int                 nb_names;
 
    /* first sort the rule condition list ... */

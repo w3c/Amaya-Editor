@@ -3157,12 +3157,12 @@ CSSInfoPtr      css;
   ctxt->type = 0;
   
   selector = SkipBlanksAndComments (selector);
-  deb = cur = &sel[0];
+  cur = &sel[0];
   max = 0; /* number of loops */
   while (1)
     {
+      deb = cur;
       /* copy an item of the selector into sel[] */
-      cur = deb;
       /* put one word in the sel buffer */
       while (*selector != EOS && *selector != ',' &&
 	     *selector != '.' && *selector != ':' &&
@@ -3170,26 +3170,26 @@ CSSInfoPtr      css;
 	*cur++ = *selector++;
       *cur++ = EOS; /* close the first string  in sel[] */
       if (deb[0] != EOS)
-	names[max] = deb;
+	names[0] = deb;
       else
-	names[max] = NULL;
-      classes[max] = NULL;
-      pseudoclasses[max] = NULL;
-      ids[max] = NULL;
-      attrs[max] = NULL;
-      attrvals[max] = NULL;
+	names[0] = NULL;
+      classes[0] = NULL;
+      pseudoclasses[0] = NULL;
+      ids[0] = NULL;
+      attrs[0] = NULL;
+      attrvals[0] = NULL;
 
-      /* now names[max] points to the beginning of the parsed item
+      /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
       if (*selector == ':' || *selector == '.' || *selector == '#')
 	/* keep the element name which precedes the id or
 	 pseudo class or the class */
-      deb = cur;
+	deb = cur;
 
       if (*selector == '.')
 	{
 	  /* copy into sel[] the class */
-	  classes[max] = cur;
+	  classes[0] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
 		 *selector != '.' && *selector != ':' &&
@@ -3200,31 +3200,29 @@ CSSInfoPtr      css;
       else if (*selector == ':')
 	{
 	  /* copy into sel[] the pseudoclass */
-	  pseudoclasses[max]= cur;
+	  pseudoclasses[0]= cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
 		 *selector != '.' && *selector != ':' &&
 		 !TtaIsBlank (selector))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
-	  cur = deb;
 	}
       else if (*selector == '#')
 	{
 	  /* copy into sel[] the attribute */
-	  ids[max] = cur;
+	  ids[0] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
 		 *selector != '.' && *selector != ':' &&
 		 !TtaIsBlank (selector))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
-	  cur = deb;
 	}
       else if (*selector == '[')
 	{
 	  /* copy into sel[] the attribute */
-	  attrs[max] = cur;
+	  attrs[0] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ']' && *selector != '=')
 	    *cur++ = *selector++;
@@ -3237,7 +3235,7 @@ CSSInfoPtr      css;
 	      if (*selector != EOS)
 		{
 		  /* we are now parsing the attribute value */
-		  attrvals[max] = cur;
+		  attrvals[0] = cur;
 		  selector++;
 		  while (*selector != EOS && *selector != '"')
 		    *cur++ = *selector++;
@@ -3246,15 +3244,9 @@ CSSInfoPtr      css;
 		}
 	    }
 	  *cur++ = EOS;
-	  cur = deb;
 	}
 
-      if (TtaIsBlank (selector))
-	{
-	  selector = SkipBlanksAndComments (selector);
-	  while (*selector != EOS && *selector != ',')
-	    selector++;
-	}
+      selector = SkipBlanksAndComments (selector);
 
       /* is it a multi-level selector? */
       if (*selector == EOS)
@@ -3300,6 +3292,7 @@ CSSInfoPtr      css;
 	      /* Store the element type */
 	      ctxt->type = elType.ElTypeNum;
 	      ctxt->schema = elType.ElSSchema;
+	      k++;
 	    }
 	  else if (elType.ElTypeNum != 0)
 	    {
