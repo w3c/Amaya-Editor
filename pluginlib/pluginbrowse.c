@@ -65,7 +65,7 @@ void TtaBrowsePluginDirectory ()
        /* the envoronment variable AMAYA_PLUGIN_DIR is not positioned */
        /* One use the defauly directory $(HOME)/.amaya/plugins        */
       char* homeDir = TtaGetEnvString ("HOME") ;
-      amayaPluginDir = (char*) malloc (strlen (homeDir) + 15) ;
+      amayaPluginDir = (char*) malloc (strlen (homeDir) + 20) ;
       sprintf (amayaPluginDir, "%s/.amaya/plugins", homeDir) ;
    }
 
