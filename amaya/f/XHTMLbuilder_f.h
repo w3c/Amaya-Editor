@@ -20,12 +20,11 @@ extern void XhtmlMapAttributeValue ( CHAR_T* AttrVal,
                                      int* value );
 extern void XhtmlMapEntity ( STRING entityName,
                              int *entityValue,
-                             int valueLength,
                              STRING alphabet );
 extern void XhtmlEntityCreated ( int entityVal,
                                  Language lang,
                                  STRING entityName,
-                                 Document doc );
+                                 ParserData *context );
 
 #else /* __STDC__ */
 
@@ -43,12 +42,11 @@ extern void XhtmlMapAttributeValue (/* CHAR_T* AttrVal,
                                        int* value */);
 extern void XhtmlMapEntity (/* STRING entityName,
                                int *entityValue,
-                               int valueLength,
                                STRING alphabet */);
 extern void XhtmlEntityCreated (/* int entityVal,
                                    Language lang,
                                    STRING entityName,
-                                   Document doc */);
+                                   ParserData *context */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

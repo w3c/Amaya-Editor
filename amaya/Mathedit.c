@@ -2914,7 +2914,7 @@ void CreateMCHAR (document, view)
 	 TtaInsertSibling (el, sibling, before, document);
          TtaRegisterElementCreate (el, document);
        }
-     MapMathMLEntity (MathMLEntityName, value, 8, &alphabet);
+     MapMathMLEntity (MathMLEntityName, value, &alphabet);
      if (alphabet == EOS)
        /* unknown entity */
        {

@@ -15,7 +15,6 @@ extern void MapMathMLAttributeValue ( STRING AttrVal,
                                       int *value );
 extern void MapMathMLEntity ( STRING entityName,
                               STRING entityValue,
-                              int valueLength,
                               STRING alphabet );
 extern void MathMLEntityCreated ( USTRING entityValue,
                                   Language lang,
@@ -83,7 +82,6 @@ extern void MapMathMLAttributeValue (/* STRING AttrVal,
                                         int *value */);
 extern void MapMathMLEntity (/* STRING entityName,
                                 STRING entityValue,
-                                int valueLength,
                                 STRING alphabet */);
 extern void MathMLEntityCreated (/* USTRING entityValue,
                                     Language lang,

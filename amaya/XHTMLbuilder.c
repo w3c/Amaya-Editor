@@ -20,29 +20,20 @@
 #include "parser.h"
 #include "HTML.h"
 
+#include "css_f.h"
+#include "fetchXMLname_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLimage_f.h"
 #include "UIcss_f.h"
-#include "XHTMLbuilder_f.h"
-#include "fetchXMLname_f.h"
 #include "styleparser_f.h"
-#include "css_f.h"
+#include "XHTMLbuilder_f.h"
+#include "Xml2thot_f.h"
 
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
-
-#ifdef EXPAT_PARSER
-
-typedef CHAR_T XhtmlEntityName[10];
-typedef struct _XhtmlEntity
-{
-  XhtmlEntityName  charName;  /* entity name */
-  int              charCode;  /* decimal code of ISO-Latin1 char */
-}
-XhtmlEntity;
 
 XhtmlEntity        XhtmlEntityTable[] =
 {
@@ -696,6 +687,7 @@ static AttrValueMapping XhtmlAttrValueMappingTable[] =
    {HTML_ATTR_no_resize, TEXT("noresize"), HTML_ATTR_no_resize_VAL_Yes_},
    {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
+#ifdef EXPAT_PARSER
 
 extern CHARSET  CharEncoding;
 extern ThotBool charset_undefined;
@@ -1310,33 +1302,26 @@ int*            value;
    Search that entity in the entity table and return the corresponding value.
   ---------------------------------------------------------------------------*/
 #ifdef __STDC__
-void	XhtmlMapEntity (STRING entityName,
-			int *entityValue,
-			int valueLength,
-			STRING alphabet)
+void	XhtmlMapEntity (STRING entityName, int *entityValue, STRING alphabet)
 #else
-void	XhtmlMapEntity (entityName,
-			entityValue,
-			valueLength,
-			alphabet)
-STRING    entityName;
-int      *entityValue;
-int       valueLength;
-STRING    alphabet;
-
+void	XhtmlMapEntity (entityName, entityValue, alphabet)
+STRING  entityName;
+int    *entityValue;
+STRING  alphabet;
 #endif
-
 {
 #ifdef EXPAT_PARSER
   int            i;
+  ThotBool       found;
 
-  for (i = 0; XhtmlEntityTable[i].charCode >= 0 &&
-	 ustrcmp (XhtmlEntityTable[i].charName, entityName);
-       i++);
+  found = FALSE;
+  for (i = 0; XhtmlEntityTable[i].charCode >= 0 && ! found; i++)
+     found = !ustrcmp (XhtmlEntityTable[i].charName, entityName);
 
-  if (!ustrcmp (XhtmlEntityTable[i].charName, entityName))
+  if (found)
     {
       /* entity found */
+      i--;
       *entityValue = XhtmlEntityTable[i].charCode;
       *alphabet = 'L';
     }
@@ -1345,32 +1330,104 @@ STRING    alphabet;
 #endif /* EXPAT_PARSER */
 }
 
+#ifdef EXPAT_PARSER
+/*----------------------------------------------------------------------
+  PutNonISOlatin1Char     
+  Put a Unicode character in the input buffer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void    PutNonISOlatin1Char (int code, STRING prefix, STRING entityName, ParserData *context)
+#else
+static void    PutNonISOlatin1Char (code, prefix, entityName, context)
+int            code;
+STRING         prefix;
+STRING         entityName;
+ParserData    *context;
+#endif
+{
+   Language	 lang, l;
+   ElementType	 elType;
+   Element	 elText;
+   AttributeType attrType;
+   Attribute	 attr;
+   CHAR_T	 buffer[MaxEntityLength+10];
+
+   if (context->readingAnAttrValue)
+     /* this entity belongs to an attribute value */
+     {
+       /* Thot can't mix different languages in the same attribute value */
+       /* just discard that character */
+       ;
+     }
+   else
+     /* this entity belongs to the element contents */
+     {
+       /* create a new text leaf */
+       elType.ElSSchema = TtaGetDocumentSSchema (context->doc);
+       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+       elText = TtaNewElement (context->doc, elType);
+       XmlSetElemLineNumber (elText);
+       XhtmlInsertElement (&elText);
+       context->lastElement = elText;
+       context->lastElementClosed = FALSE;
+       context->lastElementClosed = TRUE;
+
+       /* try to find a fallback character */
+       l = context->language;
+       GetFallbackCharacter (code, buffer, &lang);
+
+       /* put that fallback character in the new text leaf */
+       TtaSetTextContent (elText, buffer, lang, context->doc);
+       context->language = l;
+
+       /* make that text leaf read-only */
+       TtaSetAccessRight (elText, ReadOnly, context->doc);
+
+       /* associate an attribute EntityName with the new text leaf */
+       attrType.AttrSSchema = TtaGetDocumentSSchema (context->doc);
+       attrType.AttrTypeNum = HTML_ATTR_EntityName;
+       attr = TtaNewAttribute (attrType);
+       TtaAttachAttribute (elText, attr, context->doc);
+       ustrcpy (buffer, prefix);
+       ustrcat (buffer, entityName);
+       TtaSetAttributeText (attr, buffer, elText, context->doc);
+       context->mergeText = FALSE;
+     }
+}
+#endif /* EXPAT_PARSER */
+
 /*----------------------------------------------------------------------
    XhtmlEntityCreated
    A XTHML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      XhtmlEntityCreated (int entityVal, Language lang, STRING entityName, Document doc)
+void        XhtmlEntityCreated (int entityVal, Language lang, STRING entityName, ParserData *context)
 #else
-void      XhtmlEntityCreated (entityVal, lang, entityName, doc)
-int       entityVal;
-Language  lang;
-STRING    entityName;
-Document  doc;
+void        XhtmlEntityCreated (entityVal, lang, entityName, context)
+int         entityVal;
+Language    lang;
+STRING      entityName;
+ParserData *context;
 #endif
 { 
 #ifdef EXPAT_PARSER
+  CHAR_T	 buffer[2];
+
   if (lang < 0)
-      PutInXmlElement (entityName);
+    PutInXmlElement (entityName);
   else
     {
 #ifdef LC
       printf (" \n code=%d", entityVal);
 #endif /* LC */
       if (entityVal < 255)
-	  PutInXmlElement ((STRING) entityVal);
+	{
+	  buffer[0] = TEXT(entityVal);
+	  buffer[1] = WC_EOS;
+	  PutInXmlElement (buffer);
+	}
       else
-	  PutNonISOlatin1Char (entityVal, TEXT(""), entityName, doc);
+	PutNonISOlatin1Char (entityVal, TEXT(""), entityName, context);
     }
 #endif /* EXPAT_PARSER */
 }

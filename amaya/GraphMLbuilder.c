@@ -185,14 +185,12 @@ int		   *value;
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	MapGraphMLEntity (STRING entityName, STRING entityValue, int valueLength, STRING alphabet)
+void	MapGraphMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
 #else
-void	MapGraphMLEntity (entityName, entityValue, valueLength, alphabet)
-STRING entityName;
-STRING entityValue;
-int valueLength;
-STRING alphabet;
-
+void	MapGraphMLEntity (entityName, entityValue, alphabet)
+STRING  entityName;
+STRING  entityValue;
+STRING  alphabet;
 #endif
 {
    entityValue[0] = EOS;
@@ -207,11 +205,10 @@ STRING alphabet;
 void        GraphMLEntityCreated (USTRING entityValue, Language lang, STRING entityName, Document doc)
 #else
 void        GraphMLEntityCreated (entityValue, lang, entityName, doc)
-USTRING entityValue;
-Language lang;
-STRING entityName;
-Document doc;
-
+USTRING     entityValue;
+Language    lang;
+STRING      entityName;
+Document    doc;
 #endif
 {
 

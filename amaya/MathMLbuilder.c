@@ -509,32 +509,34 @@ int		   *value;
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	MapMathMLEntity (STRING entityName, STRING entityValue, int valueLength, STRING alphabet)
+void	MapMathMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
 #else
-void	MapMathMLEntity (entityName, entityValue, valueLength, alphabet)
+void	MapMathMLEntity (entityName, entityValue, alphabet)
 STRING  entityName;
 STRING  entityValue;
-int     valueLength;
 STRING  alphabet;
 #endif
 {
    int	i;
+  ThotBool       found;
 
-   for (i = 0; MathEntityTable[i].charCode >= 0 &&
-	       ustrcmp (MathEntityTable[i].MentityName, entityName);
-	       i++);
-   if (!ustrcmp (MathEntityTable[i].MentityName, entityName))
-      /* entity found */
-      {
+  found = FALSE;
+  for (i = 0; MathEntityTable[i].charCode >= 0 && !found; i++)
+    found = !ustrcmp (MathEntityTable[i].MentityName, entityName);
+
+  if (found)
+    /* entity found */
+    {
+      i--;
       entityValue[0] = (UCHAR_T) MathEntityTable[i].charCode;
       entityValue[1] = EOS;
       *alphabet = MathEntityTable[i].alphabet;
-      }
-   else
-      {
+    }
+  else
+    {
       entityValue[0] = EOS;
       *alphabet = EOS;
-      }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1610,7 +1612,7 @@ void SetMcharContent (el, doc)
 	  }
         length = MAX_ENTITY_LENGTH - 1;
         TtaGiveTextAttributeValue (attr, name, &length);
-	MapMathMLEntity (name, value, MAX_ENTITY_LENGTH - 1, &alphabet);
+	MapMathMLEntity (name, value, &alphabet);
 	if (alphabet == EOS)
 	   /* unknown name */
 	   {

@@ -17,7 +17,6 @@ extern void MapGraphMLAttributeValue ( CHAR_T* AttrVal,
                                        int *value );
 extern void MapGraphMLEntity ( STRING entityName,
                                STRING entityValue,
-                               int valueLength,
                                STRING alphabet );
 extern void GraphMLEntityCreated ( USTRING entityValue,
                                    Language lang,
@@ -75,7 +74,6 @@ extern void MapGraphMLAttributeValue (/* CHAR_T* AttrVal,
                                          int *value */);
 extern void MapGraphMLEntity (/* STRING entityName,
                                  STRING entityValue,
-                                 int valueLength,
                                  STRING alphabet */);
 extern void GraphMLEntityCreated (/* USTRING entityValue,
                                      Language lang,
