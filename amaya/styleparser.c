@@ -4380,7 +4380,7 @@ boolean             withUndo;
 			  while (*cssRule != EOS && *cssRule != ')')
 			    cssRule++;
 			  *cssRule = EOS;
-			  LoadStyleSheet (base, docRef, css);
+			  LoadStyleSheet (base, docRef, NULL, css);
 			}
 		    }
 		  /*** Caution: Strings can either be written with double quotes or
@@ -4393,7 +4393,7 @@ boolean             withUndo;
 		      while (*cssRule != EOS && *cssRule != '"')
 			cssRule++;
 		      *cssRule = EOS;
-		      LoadStyleSheet (base, docRef, css);
+		      LoadStyleSheet (base, docRef, NULL, css);
 		    }
 		  import = MAX_CSS_LENGTH;
 		}

@@ -3160,7 +3160,7 @@ Element             el;
 		      name2 = TtaGetMemory (length + 1);
 		      TtaGiveTextAttributeValue (attr, name2, &length);
 		      /* load the stylesheet file found here ! */
-		      LoadStyleSheet (name2, theDocument, NULL);
+		      LoadStyleSheet (name2, theDocument, el, NULL);
 		      TtaFreeMemory (name2);
 		   }
 	      }		/* other kind of Links ... */

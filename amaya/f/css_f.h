@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern PSchema GetPExtension ( Document doc,
+                               SSchema sSchema,
+                               CSSInfoPtr css );
 extern CSSInfoPtr AddCSS ( Document doc,
                            Document docRef,
                            CSSCategory category,
@@ -17,16 +20,17 @@ extern void RemoveDocCSSs ( Document doc,
                             boolean removeFile );
 extern void RemoveStyleSheet ( STRING URL,
                                Document doc );
-extern PSchema GetPExtension ( Document doc,
-                               SSchema sSchema,
-                               CSSInfoPtr css );
 extern void LoadStyleSheet ( STRING URL,
                              Document doc,
+                             Element el,
                              CSSInfoPtr css );
 extern void LoadUserStyleSheet ( Document doc );
 
 #else /* __STDC__ */
 
+extern PSchema GetPExtension (/* Document doc,
+                                 SSchema sSchema,
+                                 CSSInfoPtr css */);
 extern CSSInfoPtr AddCSS (/* Document doc,
                              Document docRef,
                              CSSCategory category,
@@ -38,11 +42,9 @@ extern void RemoveDocCSSs (/* Document doc,
                               boolean removeFile */);
 extern void RemoveStyleSheet (/* STRING URL,
                                  Document doc */);
-extern PSchema GetPExtension (/* Document doc,
-                                 SSchema sSchema,
-                                 CSSInfoPtr css */);
 extern void LoadStyleSheet (/* STRING URL,
                                Document doc,
+                               Element el,
                                CSSInfoPtr css */);
 extern void LoadUserStyleSheet (/* Document doc */);
 

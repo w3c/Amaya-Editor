@@ -267,26 +267,28 @@ HTAlertPar         *reply;
 
 #endif
 {
+   AHTReqContext      *me = HTRequest_context (request);
    char               *result = NULL;
 
-   TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
+#  ifndef _WINDOWS
+   TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (me->docid, 1), 
+      TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION), TRUE, 1, 'L', D_CANCEL);
 
    if (input)
       TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) input);
 
-   if (dfault)
+   else if (dfault)
       TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) dfault);
-
+   else
+     TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
+   TtaNewTextForm (BaseDialog + AnswerText, BaseDialog + FormAnswer,
+		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
+   
    if (reply && msgnum >= 0)
      {
-	TtaDetachForm (BaseDialog + NameText);
-	TtaDetachForm (BaseDialog + PasswordText);
-	TtaSetTextForm (BaseDialog + AnswerText, "");
-	TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
-	TtaWaitShowDialogue ();
-	/* come back from dialogue */
-	TtaAttachForm (BaseDialog + NameText);
-	TtaAttachForm (BaseDialog + PasswordText);
+       TtaSetTextForm (BaseDialog + AnswerText, "");
+       TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
+       TtaWaitShowDialogue ();
 
 	/* give back the reply to the libwww */
 	if (*Answer_name)
@@ -296,6 +298,10 @@ HTAlertPar         *reply;
 	     return YES;
 	  }
      }
+#  else /* _WINDOWS */
+   /* it could be a problem to use this form */
+   CreateAuthenticationDlgWindow (TtaGetViewFrame (me->docid, 1));
+#  endif /* _WINDOWS */
    return NO;
 }
 

@@ -2452,7 +2452,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      {
        elType.ElTypeNum = HTML_EL_Parameter;
        TtaInsertElement (elType, document);

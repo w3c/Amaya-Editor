@@ -26,6 +26,7 @@ typedef struct _PInfo
   SSchema             PiSSchema; /* the Structure Schem */
   Document            PiDoc;
   PSchema             PiPSchema; /* the Presentation Schema */
+  Element             PiLink; /* the element whcih links this CSS */
 } PInfo , *PInfoPtr;
 
 typedef struct _CSSInfo
@@ -35,11 +36,9 @@ typedef struct _CSSInfo
   char               *url;
   char               *localName;
   CSSCategory         category;
-  PInfoPtr            pschemas; /* the document Presentation Schemas */
+  PInfoPtr            infos; /* the document Presentation Schemas */
   /* documents using this CSS */
   boolean             documents[DocumentTableLength];
-  /* The original CSS text. Needed for the Dismiss function */
-  char               *css_rule;
 } CSSInfo , *CSSInfoPtr;
 
 THOT_EXPORT CSSInfoPtr   CSSList;

@@ -98,7 +98,8 @@ Document            doc;
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
-   STRING              buffer;
+   CHAR                buffer[MAX_LENGTH];
+   CHAR                pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
    int                 length;
 
    /* Search the refered image */
@@ -109,12 +110,14 @@ Document            doc;
    if (attr != 0)
      {
        /* get a buffer for the attribute value */
-       length = TtaGetTextAttributeLength (attr);
-       buffer = TtaGetMemory (length + 1);
+       length = MAX_LENGTH;
        /* copy the HREF attribute into the buffer */
        TtaGiveTextAttributeValue (attr, buffer, &length);
        if (IsCSSName (buffer))
-	 RemoveStyleSheet (buffer, doc);
+	 {
+	   NormalizeURL (buffer, doc, pathname, documentname, NULL);
+	   RemoveStyleSheet (pathname, doc);
+	 }
      }
 }
 /*----------------------------------------------------------------------
@@ -206,7 +209,7 @@ STRING              targetName;
        /* is it a link toward a CSS file */
        if (elType.ElTypeNum == HTML_EL_LINK && IsCSSName (targetURL))
 	 {
-	   LoadStyleSheet (targetURL, doc, NULL);
+	   LoadStyleSheet (targetURL, doc, element, NULL);
 	   attrType.AttrTypeNum = HTML_ATTR_REL;
 	   attr = TtaGetAttribute (element, attrType);
 	   if (attr == 0)

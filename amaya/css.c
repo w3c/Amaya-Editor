@@ -33,6 +33,67 @@
 extern STRING WIN_Home;
 #endif /* _WINDOWS */
 
+
+/*----------------------------------------------------------------------
+  GetPExtension returns the Presentation Extension Schema associated with
+  the document doc and the structure sSchema
+  At the same time, this funciton updates the css context.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
+#else
+PSchema         GetPExtension (doc, sSchema, css)
+Document        doc;
+SSchema         sSchema;
+CSSInfoPtr      css;
+#endif
+{
+  PInfoPtr            pInfo;
+  PSchema             pSchema, nSchema, prevS;
+  boolean             found;
+
+  if (sSchema == NULL)
+    sSchema = TtaGetDocumentSSchema (doc);
+  pInfo = css->infos;
+  found = FALSE;
+  while (pInfo != NULL && !found)
+    {
+      if (sSchema == pInfo->PiSSchema)
+	/* the pschema is already known */
+	return (pInfo->PiPSchema);
+      else if (pInfo->PiDoc == doc)
+	found = TRUE;
+      else
+	/* next info context */
+	pInfo = pInfo->PiNext;
+    }
+
+  if (pInfo == NULL)
+    {
+      /* add the presentation info block */
+      pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
+      pInfo->PiNext = css->infos;
+      css->infos = pInfo;
+      pInfo->PiLink = NULL;
+      pInfo->PiDoc = doc;
+    }
+
+  /* create the presentation schema for this structure */
+  nSchema = TtaNewPSchema ();
+  pSchema = TtaGetFirstPSchema (doc, sSchema);
+  prevS = NULL;
+  while (pSchema != NULL)
+    {
+      prevS = pSchema;
+      TtaNextPSchema (&pSchema, doc, NULL);
+    }
+  TtaAddPSchema (nSchema, prevS, TRUE, doc, sSchema);
+
+  pInfo->PiSSchema = sSchema;
+  pInfo->PiPSchema = nSchema;
+  return (nSchema);
+}
+
 /*----------------------------------------------------------------------
    AddCSS adds a new CSS context in the list.
   ----------------------------------------------------------------------*/
@@ -57,12 +118,15 @@ STRING          localName;
       css->localName = TtaStrdup (localName);
       css->url = TtaStrdup (url);
       css->category = category;
-      css->pschemas = NULL;
       for (i = 0; i < DocumentTableLength; i++)
 	css->documents[i] = FALSE;
+
+      /* store information about this docRef */
       css->documents[docRef] = TRUE;
-      css->css_rule = NULL;
+      css->infos = NULL;
       css->NextCSS = NULL;
+
+      /* chain to the CSS list */
       if (CSSList == NULL)
 	CSSList = css;
       else
@@ -92,15 +156,12 @@ STRING               url;
  
   while (css != NULL)
     {
-      if (doc != 0 && css->doc == doc)
-	/* a document CSS */
-	return css;
-      else if (doc == 0 && url != NULL &&
+      if (url && ((css->url && !ustrcmp (url, css->url)) ||
+		  (css->localName && !ustrcmp (url, css->localName))))
 	/* an external CSS */
-	       css->url != NULL && !ustrcmp(css->url, url))
 	return css;
-      else if (css->documents[doc] && css->category == CSS_DOCUMENT_STYLE)
-	/* the style element of the document */
+      else if (doc != 0 && css->doc == doc)
+	/* a document CSS */
 	return css;
       else
 	css = css->NextCSS;
@@ -135,7 +196,7 @@ boolean         removeFile;
       TtaFreeMemory (css->localName);
       TtaFreeMemory (css->url);
       /* remove presentation schemas and P descriptors in the css */
-      pInfo = css->pschemas;
+      pInfo = css->infos;
       while (pInfo != NULL)
 	{
 	  /* remove presentation schemas */
@@ -145,7 +206,7 @@ boolean         removeFile;
 	  TtaFreeMemory (pInfo);
 	  pInfo = nextInfo;
 	}
-      css->pschemas = NULL;
+      css->infos = NULL;
 
       if (CSSList == css)
 	CSSList = css->NextCSS;
@@ -207,7 +268,7 @@ boolean             removeFile;
 	  else
 	    {
 	      /* look for the specific P descriptors in the css */
-	      pInfo = css->pschemas;
+	      pInfo = css->infos;
 	      prevInfo = NULL;
 	      while (pInfo != NULL && pInfo->PiDoc != doc)
 		{
@@ -218,7 +279,7 @@ boolean             removeFile;
 		{
 		  /* update the the list of  P descriptors in the css */
 		  if (prevInfo == NULL)
-		    css->pschemas = pInfo->PiNext;
+		    css->infos = pInfo->PiNext;
 		  else
 		    prevInfo->PiNext = pInfo->PiNext;
 		  /* remove presentation schemas */
@@ -235,28 +296,40 @@ boolean             removeFile;
 
 /*----------------------------------------------------------------------
    RemoveStyleSheet removes a style sheet.
-   It could be an external CSS file linked with the document (URL not NULL)
+   It could be an external CSS file linked with the document (url not NULL)
    or the document Style element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RemoveStyleSheet (STRING URL, Document doc)
+void                RemoveStyleSheet (STRING url, Document doc)
 #else
-void                RemoveStyleSheet (URL, doc)
-STRING              URL;
+void                RemoveStyleSheet (url, doc)
+STRING              url;
 Document            doc;
 #endif
 {
-  CSSInfoPtr          css, next;
+  CSSInfoPtr          css, prev;
   PInfoPtr            pInfo, prevInfo;
   int                 i;
   boolean             used;
 
-  if (URL != NULL)
-    css = SearchCSS (0, URL);
-  else if (doc != 0)
-    css = SearchCSS (doc, NULL);
-  else
-    css = NULL;
+  css = CSSList;
+  prev = NULL;
+  used = FALSE;
+  while (css != NULL && !used)
+    {
+      if (url && ((css->url && !ustrcmp (url, css->url)) ||
+		  (css->localName && !ustrcmp (url, css->localName))))
+	/* an external CSS */
+	used = TRUE;
+      else if (!url && css->doc == doc)
+	/* a document CSS */
+	used = TRUE;
+      else
+	{
+	  prev = css;
+	  css = css->NextCSS;
+	}
+    }
 
   if (css != NULL)
     {
@@ -272,114 +345,59 @@ Document            doc;
 	      i++;
 	    }
 	}
-	  /* look for the specific P descriptors in the css */
-	  pInfo = css->pschemas;
-	  prevInfo = NULL;
-	  while (pInfo != NULL && pInfo->PiDoc != doc)
-	    {
-	      prevInfo = pInfo;
-	      pInfo = pInfo->PiNext;
-	    }
-	  if (pInfo != NULL)
-	    {
-	      /* update the the list of  P descriptors in the css */
-	      if (prevInfo == NULL)
-		css->pschemas = pInfo->PiNext;
-	      else
-		prevInfo->PiNext = pInfo->PiNext;
-	      TtaCleanStylePresentation (NULL, pInfo->PiPSchema, pInfo->PiDoc);
-	      /* remove presentation schemas */
-	      TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
-	      /* remove P descriptors in the css structure */
-	      TtaFreeMemory (pInfo);
-	    }
+
+      /* look for the specific P descriptors in the css */
+      pInfo = css->infos;
+      prevInfo = NULL;
+      while (pInfo != NULL && pInfo->PiDoc != doc)
+	{
+	  prevInfo = pInfo;
+	  pInfo = pInfo->PiNext;
+	}
+      if (pInfo != NULL)
+	{
+	  /* update the the list of  P descriptors in the css */
+	  if (prevInfo == NULL)
+	    css->infos = pInfo->PiNext;
+	  else
+	    prevInfo->PiNext = pInfo->PiNext;
+	  TtaCleanStylePresentation (NULL, pInfo->PiPSchema, pInfo->PiDoc);
+	  /* remove presentation schemas */
+	  TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
+	  /* remove P descriptors in the css structure */
+	  TtaFreeMemory (pInfo);
+	}
 
       if (!used)
 	{
 	  /* remove this css file */
-	  next = css->NextCSS;
+	  if (prev)
+	    prev->NextCSS = css->NextCSS;
+	  else
+	    CSSList = css->NextCSS;
 	  RemoveCSS (css, TRUE);
-	  css = next;
 	}
     }
-}
-
-
-/*----------------------------------------------------------------------
-  GetPExtension returns the Presentation Extension Schema associated with
-  the document doc and the structure sSchema
-  At the same time, this funciton updates the css context.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
-#else
-PSchema         GetPExtension (doc, sSchema)
-Document        doc;
-SSchema         sSchema;
-CSSInfoPtr      css;
-#endif
-{
-  PInfoPtr            pInfo, prevInfo;
-  PSchema             pSchema, nSchema, prevS;
-
-  if (sSchema == NULL)
-    sSchema = TtaGetDocumentSSchema (doc);
-  pInfo = css->pschemas;
-  prevInfo = NULL;
-  while (pInfo != NULL)
-    {
-      if (sSchema == pInfo->PiSSchema)
-	return (pInfo->PiPSchema);
-      else
-	{
-	  /* next pschema info */
-	  prevInfo = pInfo;
-	  pInfo = pInfo->PiNext;
-	}
-    }
-
-  if (pInfo == NULL)
-    {
-      /* create the presentation schema for this structure */
-      nSchema = TtaNewPSchema ();
-      pSchema = TtaGetFirstPSchema (doc, sSchema);
-      prevS = NULL;
-      while (pSchema != NULL)
-	{
-	  prevS = pSchema;
-	  TtaNextPSchema (&pSchema, doc, NULL);
-	}
-      TtaAddPSchema (nSchema, prevS, TRUE, doc, sSchema);
-      /* add the presentation info block */
-      pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
-      if (prevInfo == NULL)
-	css->pschemas = pInfo;
-      else
-	prevInfo->PiNext = pInfo;
-      pInfo->PiSSchema = sSchema;
-      pInfo->PiDoc = doc;
-      pInfo->PiPSchema = nSchema;
-      pInfo->PiNext = NULL;
-      return (nSchema);
-    }
-  return (NULL);
 }
 
 /*----------------------------------------------------------------------
    LoadStyleSheet loads the external Style Sheet found at the given
-   URL.
+   url.
+   The parameter el gives the element which links the CSS or NULL.
    The parameter CSS gives the CSS context which imports this CSS file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadStyleSheet (STRING URL, Document doc, CSSInfoPtr css)
+void                LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css)
 #else
-void                LoadStyleSheet (URL, doc, css)
-STRING               URL;
+void                LoadStyleSheet (url, doc, el, css)
+STRING              url;
 Document            doc;
+Element             el;
 CSSInfoPtr          css;
 #endif
 {
   CSSInfoPtr          oldcss;
+  PInfoPtr            pInfo;
   struct stat         buf;
   FILE               *res;
   CHAR                tempfile[MAX_LENGTH];
@@ -395,7 +413,7 @@ CSSInfoPtr          css;
     {
       /* this document is displayed -> load the CSS */
       tempfile[0] = EOS;
-      NormalizeURL (URL, doc, tempURL, tempname, NULL);
+      NormalizeURL (url, doc, tempURL, tempname, NULL);
       
       if (IsW3Path (tempURL))
 	{
@@ -489,8 +507,11 @@ CSSInfoPtr          css;
       fclose (res);
 
       if (oldcss == NULL)
-	/* It's a new CSS file: allocate a new Presentation structure */
-	css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
+	{
+	  /* It's a new CSS file: allocate a new Presentation structure */
+	  css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
+	  oldcss = css;
+	}
 
       if (css != NULL)
 	/* apply CSS rules in current Presentation structure (import) */
@@ -501,7 +522,24 @@ CSSInfoPtr          css;
 	  oldcss->documents[doc] = TRUE;
 	  ReadCSSRules (oldcss->doc, doc, oldcss, buffer, FALSE);
 	}
-	
+      /* store the element which links the CSS */
+      pInfo = css->infos;
+      while (pInfo != NULL && pInfo->PiDoc != doc)
+	/* next info context */
+	pInfo = pInfo->PiNext;
+      if (pInfo == NULL)
+	{
+	  /* add the presentation info block */
+	  pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
+	  pInfo->PiNext = css->infos;
+	  css->infos = pInfo;
+	  pInfo->PiDoc = doc;
+	  pInfo->PiSSchema = NULL;
+	  pInfo->PiPSchema = NULL;
+	  css->infos = pInfo;
+	}
+      pInfo->PiLink = el;
+
       TtaFreeMemory (buffer);
     }
 }

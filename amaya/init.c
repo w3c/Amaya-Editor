@@ -640,15 +640,18 @@ Document        doc;
   TtaSetDocumentAccessMode (doc, 0);
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
-  elType.ElTypeNum = HTML_EL_Form;
-  elForm = TtaSearchTypedElement (elType, SearchForward, el);
-  while (elForm != NULL)
+  if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     {
-      /* there is a form */
-      el = TtaGetFirstChild (elForm);
-      if (el != NULL)
-	SetFormReadWrite (el, doc);
-      elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
+      elType.ElTypeNum = HTML_EL_Form;
+      elForm = TtaSearchTypedElement (elType, SearchForward, el);
+      while (elForm != NULL)
+	{
+	  /* there is a form */
+	  el = TtaGetFirstChild (elForm);
+	  if (el != NULL)
+	    SetFormReadWrite (el, doc);
+	  elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
+	}
     }
 }
 
@@ -1105,27 +1108,33 @@ STRING              text;
    /* search the Title element */
    el = TtaGetMainRoot (document);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_TITLE;
-   el = TtaSearchTypedElement (elType, SearchForward, el);
-   if (!TtaGetDocumentAccessMode (document))
-     /* the document is in ReadOnly mode */
-     UpdateTitle (el, document);
-   else
+   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      {
-       TtaOpenUndoSequence (document, NULL, NULL, 0, 0);
-       TtaRegisterElementReplace (el, document);
-       child = TtaGetFirstChild (el);
-       if (child == NULL)
+       elType.ElTypeNum = HTML_EL_TITLE;
+       el = TtaSearchTypedElement (elType, SearchForward, el);
+       if (!TtaGetDocumentAccessMode (document))
+	 /* the document is in ReadOnly mode */
+	 UpdateTitle (el, document);
+       else
 	 {
-	   /* insert the text element */
-	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	   child = TtaNewElement (document, elType);
-	   TtaInsertFirstChild  (&child, el, document);
+	   TtaOpenUndoSequence (document, NULL, NULL, 0, 0);
+	   TtaRegisterElementReplace (el, document);
+	   child = TtaGetFirstChild (el);
+	   if (child == NULL)
+	     {
+	       /* insert the text element */
+	       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	       child = TtaNewElement (document, elType);
+	       TtaInsertFirstChild  (&child, el, document);
+	     }
+	   TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
+	   TtaCloseUndoSequence (document);
+	   TtaSetDocumentModified (document);
 	 }
-       TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
-       TtaCloseUndoSequence (document);
-       TtaSetDocumentModified (document);
      }
+   else
+     /* the document title cannot be changed */
+     TtaSetTextZone (document, 1, 2, "");
 }
 
 /*----------------------------------------------------------------------
@@ -2262,7 +2271,7 @@ View                view;
    /* reload the document */
    pathname = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
-   NormalizeURL (DocumentURLs[(int) doc], 0, pathname, documentname, NULL);
+   NormalizeURL (DocumentURLs[doc], 0, pathname, documentname, NULL);
    if (DocumentMeta[doc]->form_data)
      form_data = TtaStrdup (DocumentMeta[doc]->form_data);
    else

@@ -26,7 +26,7 @@
 
 static int         BaseCSS;
 static STRING      CSSpath;
-static Document    DocCSS;
+static Document    CSSdocument;
 
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
@@ -47,7 +47,10 @@ int                 typedata;
 STRING              data;
 #endif
 {
+  CSSInfoPtr          css;
+  PInfoPtr            pInfo;
   int                 val, length;
+  boolean             found;
 
   val = (int) data;
   switch (ref - BaseCSS)
@@ -60,14 +63,37 @@ STRING              data;
       else if (val == 2)
 	/* re-parse the CSS file */
 	  ;
-      else if (val == 3)
+      else if (val == 3 && CSSpath)
 	{
 	  /* remove the link to this file */
-	  /* RemoveLink (el, docCSS); */
+	  css = CSSList;
+	  found = FALSE;
+	  while (css != NULL && !found)
+	    {
+	      if (css->category != CSS_DOCUMENT_STYLE &&
+		  css->documents[CSSdocument] &&
+		  ((css->url && !ustrcmp (CSSpath, css->url)) ||
+		   (css->localName && !ustrcmp (CSSpath, css->localName))))
+		{
+		  /* we found out the CSS */
+		  found = TRUE;
+		  if (css->category == CSS_EXTERNAL_STYLE)
+		    {
+		      /* look for the element LINK */
+		      pInfo = css->infos;
+		      while (pInfo != NULL && pInfo->PiDoc != CSSdocument)
+			/* next info context */
+			pInfo = pInfo->PiNext;
+		      if (pInfo != NULL)
+			RemoveLink (pInfo->PiLink, CSSdocument);
+		    }
+		}
+	      css = css->NextCSS;
+	    }
 	}
       else if (val == 4)
 	/* add a new link to a CSS file */
-	CreateLinkInHead (DocCSS, 1);
+	CreateLinkInHead (CSSdocument, 1);
       /* clean CSSpath */
       TtaFreeMemory (CSSpath);
       CSSpath = NULL;
@@ -111,11 +137,11 @@ View                view;
   CHAR                buf[400];
   STRING              ptr;
   CHAR                s[MAX_LENGTH];
-  int                 i;
+  int                 i, select;
   int                 len, nb;
   int                 index, size;
 
-  DocCSS = doc;
+  CSSdocument = doc;
   css = CSSList;
   buf[0] = 0;
   index = 0;
@@ -133,6 +159,8 @@ View                view;
   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_ADD));
   TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), TtaGetMessage (AMAYA, AM_CSS), 4, s, TRUE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
+  select = -1;
+  i = 0;
   while (css != NULL)
     {
       if (css->category != CSS_DOCUMENT_STYLE && css->documents[doc])
@@ -150,6 +178,16 @@ View                view;
 	  index += len;
 	  nb++;
 	  size -= len;
+	  if (select == -1 && css->category == CSS_EXTERNAL_STYLE)
+	    {
+	      if (CSSpath != NULL)
+		TtaFreeMemory (CSSpath);
+	      len = ustrlen (css->url);
+	      CSSpath = TtaGetMemory (len + 1);
+	      ustrcpy (CSSpath, css->url);
+	      select = i;
+	    }
+	  i++;
 	}	
       css = css->NextCSS;
     }
@@ -163,5 +201,6 @@ View                view;
 		    TtaGetMessage (AMAYA, AM_CSS_FILE),
 		    nb, buf, 5, NULL, FALSE, TRUE);
   TtaShowDialogue (BaseCSS + CSSForm, TRUE);
+  TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
 #  endif /* !_WINDOWS */
 }

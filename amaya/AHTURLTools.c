@@ -250,8 +250,10 @@ const char         *path;
    nsuffix[i] = EOS;
    if (!strcmp (nsuffix, "html") ||
        !strcmp (nsuffix, "htm") ||
-       !strcmp (nsuffix, "xhtl") ||
-       !strcmp (nsuffix, "shtml"))
+       !strcmp (nsuffix, "shtml") ||
+       !strcmp (nsuffix, "xht") ||
+       !strcmp (nsuffix, "xhtm") ||
+       !strcmp (nsuffix, "xhtml"))
      return (TRUE);
    else if (!strcmp (nsuffix, "gz"))
      {
@@ -267,8 +269,11 @@ const char         *path;
        nsuffix[i] = EOS;
        if (!strcmp (nsuffix, "html") ||
 	   !strcmp (nsuffix, "htm") ||
-	   !strcmp (nsuffix, "xhtl") ||
-	   !strcmp (nsuffix, "shtml"))
+	   !strcmp (nsuffix, "shtml") ||
+	   !strcmp (nsuffix, "xht") ||
+	   !strcmp (nsuffix, "xhtm") ||
+	   !strcmp (nsuffix, "xhtml"))
+ 
 	 return (TRUE);
        else
 	 return (FALSE);
@@ -957,15 +962,26 @@ const char         *path;
          ConvertToLowerCase (suffix);
 	 }
 
-       if ((strcmp (suffix, "gif")) && (strcmp (suffix, "xbm")) &&
-	   (strcmp (suffix, "xpm")) && (strcmp (suffix, "jpg")) &&
-	   (strcmp (suffix, "pdf")) && (strcmp (suffix, "png")) &&
-	   (strcmp (suffix, "tgz")) && (strcmp (suffix, "xpg")) &&
-	   (strcmp (suffix, "xpd")) && (strcmp (suffix, "ps")) &&
-	   (strcmp (suffix, "au"))  && (strcmp (suffix, "html")) &&
-	   (strcmp (suffix, "htm")) && (strcmp (suffix, "shtml")) &&
-	   (strcmp (suffix, "txt")) && (strcmp (suffix, "css")) &&
-	   (strcmp (suffix, "eps")))
+       if (strcmp (suffix, "gif") &&
+	   strcmp (suffix, "xbm") &&
+	   strcmp (suffix, "xpm") &&
+	   strcmp (suffix, "jpg") &&
+	   strcmp (suffix, "pdf") &&
+	   strcmp (suffix, "png") &&
+	   strcmp (suffix, "tgz") &&
+	   strcmp (suffix, "xpg") &&
+	   strcmp (suffix, "xpd") &&
+	   strcmp (suffix, "ps") &&
+	   strcmp (suffix, "au") &&
+	   strcmp (suffix, "html") &&
+	   strcmp (suffix, "htm") &&
+	   strcmp (suffix, "shtml") &&
+	   strcmp (suffix, "xht") &&
+	   strcmp (suffix, "xhtm") &&
+	   strcmp (suffix, "xhtml") &&
+	   strcmp (suffix, "txt") &&
+	   strcmp (suffix, "css") &&
+	   strcmp (suffix, "eps"))
 	 return (FALSE);
        else
 	 return (TRUE);

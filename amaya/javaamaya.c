@@ -221,7 +221,7 @@ int document;
     char URL[MAX_LENGTH];
 
     strcpy (URL, url);
-    LoadStyleSheet (&URL[0], document, NULL);
+    LoadStyleSheet (&URL[0], document, NULL, NULL);
 }
 
 /*----------------------------------------------------------------------

@@ -549,7 +549,7 @@ View                view;
 
        entry = SearchStringInBuffer(bufDir, DirectoryName, nbItems);
        if(entry != -1)
-	 TtaSetSelector (NumZoneDirOpenDoc,entry,NULL);
+	 TtaSetSelector (NumZoneDirOpenDoc, entry, NULL);
        ustrcpy (docName, DirectoryName);
        length = ustrlen (docName);
        docName[length] = URL_DIR_SEP;
