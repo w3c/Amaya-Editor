@@ -1895,10 +1895,6 @@ void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value,
 void TtaSetPositionPRuleDelta (Element element, PRule pRule, int delta,
 			       TypeUnit unit, Document document)
 {
-#ifndef NODISPLAY
-   ThotBool            done;
-#endif
-
    UserErrorCode = 0;
    if (element == NULL || pRule == NULL)
      TtaError (ERR_invalid_parameter);
