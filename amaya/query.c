@@ -482,11 +482,7 @@ AHTReqContext      *me;
 	   if (me->outputfile)
 	     TtaFreeMemory (me->outputfile);
 	 }
-
-       /* temp change for the %esc conversion */
-       if (me->method == METHOD_PUT && me->urlName)
-	 TtaFreeMemory (me->urlName);
-
+       
        if (me->content_type)
 	 TtaFreeMemory (me->content_type);
        
@@ -654,7 +650,6 @@ int                 status;
    AHTReqContext      *me = HTRequest_context (request);
    HTMethod            method = HTRequest_method (request);
    STRING              ref;
-   STRING              escape_src, escape_dst;
    char               *tmp;
 
    if (!me)
@@ -714,18 +709,9 @@ int                 status;
    	if (IsValidProtocol (ISO2WideChar (new_anchor->parent->address)))
 	  {
 	    /* if it's a valid URL, we try to normalize it */
-	    /* We use the pre-redirection anchor as a base name */
-	    escape_dst = EscapeURL (ISO2WideChar (new_anchor->parent->address));
-	    escape_src = EscapeURL (ISO2WideChar (me->urlName));
-	    if (escape_dst && escape_src)
-	      ref = AmayaParseUrl (escape_dst, escape_src, AMAYA_PARSE_ALL);
-	    else
-	      ref = NULL;
-	    if (escape_dst)
-	      TtaFreeMemory (escape_dst);
-	    if (escape_src)
-	      TtaFreeMemory (escape_src);
-
+	     /* We use the pre-redirection anchor as a base name */
+	     ref = AmayaParseUrl (ISO2WideChar (new_anchor->parent->address), 
+				  ISO2WideChar (me->urlName), AMAYA_PARSE_ALL);
 	     if (ref)
 	       {
 		 HT_FREE (new_anchor->parent->address);
@@ -2537,7 +2523,6 @@ STRING        content_type;
 {
    AHTReqContext      *me;
    STRING              ref;
-   STRING              esc_url;
    int                 status, l;
    int                 tempsubdir;
    ThotBool            bool_tmp;
@@ -2592,15 +2577,7 @@ STRING        content_type;
    object_counter++;
    
    /* normalize the URL */
-   esc_url = EscapeURL (urlName);
-   if (esc_url) 
-     {
-       ref = AmayaParseUrl (esc_url, _EMPTYSTR_, AMAYA_PARSE_ALL);
-       TtaFreeMemory (esc_url);
-     }
-   else
-     ref = NULL;
-
+   ref = AmayaParseUrl (urlName, _EMPTYSTR_, AMAYA_PARSE_ALL);
    /* should we abort the request if we could not normalize the url? */
    if (ref == NULL || ref[0] == EOS) {
       /*error */
@@ -2847,7 +2824,6 @@ void               *context_tcbf;
    char               *etag = NULL;
    HTParentAnchor     *dest_anc_parent;
    STRING              tmp;
-   STRING              esc_url;
    int                 UsePreconditions;
    ThotBool            lost_update_check = TRUE;
 
@@ -2916,9 +2892,7 @@ void               *context_tcbf;
    me->context_icbf = (void *) NULL;
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
-   esc_url = EscapeURL (urlName);
-   me->urlName = TtaStrdup (WideChar2ISO (esc_url));
-   TtaFreeMemory (esc_url);
+   me->urlName = WideChar2ISO (urlName);
    me->block_size =  file_stat.st_size;
    /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
@@ -2937,7 +2911,7 @@ void               *context_tcbf;
 #endif /* _WINDOWS */
    me->source = HTAnchor_findAddress (fileURL);
    HT_FREE (fileURL);
-   me->dest = HTAnchor_findAddress (me->urlName);
+   me->dest = HTAnchor_findAddress (WideChar2ISO (urlName));
    /* we memorize the anchor's parent @ as we use it a number of times
       in the following lines */
    dest_anc_parent = HTAnchor_parent (me->dest);
