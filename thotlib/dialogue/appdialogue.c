@@ -1895,6 +1895,8 @@ XmTextVerifyCallbackStruct *call_d;
    STRING              text;
 #  else  /* _WINDOWS */
    static CHAR_T text [1024];
+   STRING        title;
+   int           len, ndx;
 #  endif /* _WINDOWS */
 
    CloseInsertion ();
