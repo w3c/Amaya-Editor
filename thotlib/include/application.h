@@ -141,8 +141,7 @@ extern void TtaExtractName (char *text, char *aDirectory, char *aName);
   ----------------------------------------------------------------------*/
 extern ThotBool TtaIsPrinting ();
 
-
-#ifndef _DEBUG
+#ifndef IV_DEBUG
 
 extern void  *TtaGetMemory ( unsigned int n );
 extern void  TtaFreeMemory ( void *ptr );
