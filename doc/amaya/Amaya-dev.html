@@ -177,24 +177,217 @@ Element             el;
 
 <h2>Adding a new dialogue</h2>
 
-<p>Adding a new dialogue entry in any Amaya menus is by by several steps:</p>
+<p>Adding a new dialogue entry in any Amaya menu is by by several steps:</p>
 <ol>
   <li>Editing the file Amaya/amaya/EDITOR.A</li>
   <li>Writing the called function with the right signature: (the Document
     parameter and the View parameter).</li>
   <li>Compile the Amaya code and check the position of the new dialogue in the
-    generated file Amaya/obj/amaya/EDIROR.h</li>
-  <li>Add the corresponding entry at the right place in dialogue files
-    Amaya/config/*-amayadialogue (one by supported languages). It's not
-    necessary to renumber all following entries in these dialogue files. We
-    have a tool to do that.</li>
-  <li>Go into the directory Amaya/config/ and start the process rescandialogue
-    on each edited dialogue files to recompute entry number.</li>
-  <li>Update the file of Amaya profiles Amaya/config/ProfileDefs to make that
-    function available in right profiles.</li>
+    generated file Amaya/obj/amaya/EDITOR.h</li>
+  <li>Add the corresponding entry at the right place in dialogue files<code>
+    Amaya/config/*-amayadialogue</code> (one for each supported languages).
+    It's not necessary to renumber all following entries in these dialogue
+    files. We have a tool to do that (step 5).</li>
+  <li>Go into the directory<code> Amaya/config/</code> and execute the command
+    <code>rescandialogue</code> on each edited dialogue files to recompute
+    entry number. This command is compiled and installed in your
+    <code>Amaya/obj/bin directory</code>.</li>
+  <li>Update the file of Amaya profiles <code>Amaya/config/ProfileDefs</code>
+    to make that function available in right profiles.</li>
   <li>Update the section <strong>Keyboard Shortcuts</strong> in the file
-    Amaya/doc/amaya/Configure.html because that function should be acceded by
-    a shortcut.</li>
+    <code>Amaya/doc/amaya/Configure.html</code> if that function should be
+    acceded by a shortcut.</li>
 </ol>
+
+<h2>Translating Amaya into other languages</h2>
+
+<h3>Background</h3>
+
+<p>In Amaya, we distinguish the following types of dialogues:</p>
+<dl>
+  <dt>Menu dialogues (MD)</dt>
+    <dd>These are the messages shown in the Menu bar and in the submenus.</dd>
+  <dt>Message box dialogues (MBD)</dt>
+    <dd>These are the dialogues that are shown in the pop up windows</dd>
+  <dt>Status bar messages (SBM)</dt>
+    <dd>These are the messages that are shown in the Amaya status bar (bottom
+      of the screen)</dd>
+  <dt>Thot tools messages (TTM)</dt>
+    <dd>These are the messages displayed on the standard output while
+      compiling Amaya with the thot tools.</dd>
+</dl>
+
+<p>Under Unix, all these messages are stored in files found in the
+<code>Amaya/config</code> directory. Under Windows, the Message box dialogues
+are stored in a resource file and must be edited directly using the Visual C++
+resource editor.</p>
+
+<p>Each line in a message file has the following message:</p>
+
+<p><code>message-num space message-text</code></p>
+
+<p><code>message-num </code>is the number used in the Amaya source code to
+reference the message. Another file in the <code>Amaya/amaya</code> directory
+makes a relationship between the message-num and a symbolic name. It is thru
+this symbolic name that a message dialogue is actually referenced in the Amaya
+source code.<br>
+<code>message-text </code>is the text itself. Note that the text should be a
+single line. In particular, carry returns in the message text are not
+tolerated. The message-text may be used asis, or it may be used as the format
+argument for the  C <code>language sprintf</code> function.</p>
+
+<p>The following table lists all the amaya dialogue files, their type, and
+cites any related file.</p>
+
+<table border="1">
+  <caption></caption>
+  <tbody>
+    <tr>
+      <td>filename (<code>Amaya/config</code> dir)</td>
+      <td>type</td>
+      <td>related files (<code>Amaya/amaya</code> dir)</td>
+    </tr>
+    <tr>
+      <td>*-amayadialogue</td>
+      <td>MD</td>
+      <td>EDITOR.A, </td>
+    </tr>
+    <tr>
+      <td>*-amayamsg</td>
+      <td>MBD</td>
+      <td>amayamsg.h</td>
+    </tr>
+    <tr>
+      <td>*-appdialogue</td>
+      <td>TTM</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-compildialogue</td>
+      <td>TTM</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-corrdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-drawdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-grmdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-inddialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-javamsg</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-libdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-printdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-prsdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-strdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-thotdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-tradialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>*-transdialogue</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>where * represents a language, such as en for English, fr for French, de
+for German, and so on.</p>
+
+<h3>Adding a new language</h3>
+<ol>
+  <li>cd to the <code>Amaya/config</code> directory.</li>
+  <li>Copy all the files named <code>en-* </code>into your own language code,
+    for example,<code> </code><code>de-*</code> for German, .<code>it-*</code>
+    for Italian, ....</li>
+  <li>Open your new files and translate each message to the new language. Be
+    careful of respecting the sense of the text (whether it is a C sprintf
+    format string or a text message. If the original message has three
+    trailing points, for example, Setup and Print..., this means that this is
+    a menu entry which will open up a PopUp window. You need to keep those
+    trailing points in your translation</li>
+</ol>
+
+<p>TIP: In order to be able to place the context of each dialogue message,
+it's useful to look at the related files and have AmayaOne thing that is
+useful is look at the related files and have Amaya running.</p>
+
+<h1>Adding a new Help menu entry</h1>
+
+<p>Help menu entries are handled as dialogue entries. Therefore, you'll have
+to add a new dialogue entry, a callback procedure, connect this procedure to
+the dialogue entry, and make this procedure open the related manual page </p>
+
+<p>Follow the instructions for adding a new dialogue entry, inspiring yourself
+from the existing help menu entries. For example, the Help/Configure entry is
+defined as follows in the EDITOR.A file:</p>
+<pre>      view:1 Help_ button:BHelpConfigure -> HelpConfigure;</pre>
+
+<p>The callback procedure and the definition of the manual pages are done in
+the <code>init.c</code> file. To associate a manual page to the procedure, you
+first need to declare it in the helpmenu.h file. In this find, you'll find an
+array called Manual and some macro definitions to associate a names with the
+Manual entries. For HelpConfigure, the macro is called
+<code>CONFIGURE</code>.</p>
+
+<p>Once you've done this, open the init file, search for the Help* procedures
+and add your new procedure. For example, HelpConfigure is specified as
+follows:</p>
+<pre>/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+ #ifdef __STDC__ 
+void HelpConfigure (Document document, View view)
+#else /* __STDC__*/
+void HelpConfigure (document, view)
+      Document document;
+      View view;
+#endif /* __STDC__*/
+{
+   DisplayHelp (document, CONFIGURE);
+}</pre>
+
+<p>The DisplayHelp function will open a new document window and show the
+document specified in the Manual index (file <code>helpmenu.h</code>). Note
+that we use the macro rather than the index number to refer to the index
+entry.</p>
 </body>
 </html>
