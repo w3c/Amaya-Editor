@@ -4,8 +4,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Mit Formaten und Formatvorlagen arbeiten</title>
   <style type="text/css">
  </style>
@@ -19,8 +18,8 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a href="../StyleSheets.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up.gif" /></a> <a
+      <td><a href="../StyleSheets.html.de" accesskey="t"><img
+        alt="erste Seite" src="../../images/up.gif" /></a> <a
         href="creating_and_updating_a_style_attribute.html.de"
         accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
         /></a></td>
@@ -32,17 +31,12 @@
 <h1>Mit Formaten und Formatvorlagen arbeiten</h1>
 
 <p>Mit Hilfe des Menüs <strong>Formate</strong> kann man das Erscheinungsbild
-eines Dokuments auf zwei Arten veränderen:</p>
-<ul>
-  <li>Durch die Verwendung von Formatvorlagen (Cascading Style Sheets
-  (CSS))</li>
-  <li>Durch die Verwendung von Elementen und Attributen aus HTML</li>
-</ul>
+eines Dokuments durch die Verwendung von Formatvorlagen (Cascading Style
+Sheets (CSS)) veränderen.</p>
 
 <p>Die oberen Einträge des Menüs <strong>Formate</strong> erzeugen
-Formatattribute zu einem Element, die mittleren werden bei den
-Formatvorlagenangewendet und die unteren beiden öffnen ein weiteres Menü, aus
-denen man Formatelemente in den Text einfügen kann.</p>
+Formatattribute zu einem Element und die unteren werden bei den
+Formatvorlagen angewendet.</p>
 
 <p>Weitere Informationen erhält man unter:</p>
 <ul>
@@ -54,8 +48,8 @@ denen man Formatelemente in den Text einfügen kann.</p>
   <li><a
     href="about_linking_external_and_user_style_sheets.html.de#page_body">Über
     die Verknüpfung externer und benutzerdefinierter Formatvorlagen</a></li>
-  <li><a href="handling_external_css.html.de#page_body">Externe Formatvorlagen
-    handhaben</a></li>
+  <li><a href="handling_external_css.html.de#page_body">Externe
+    Formatvorlagen handhaben</a></li>
   <li><a
     href="about_applying_style_using_html_elements.html.de#page_body">Zeichenketten
     formatieren</a></li>

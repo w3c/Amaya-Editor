@@ -3,9 +3,8 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Trabajar con estilos</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,10 +15,11 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../StyleSheets.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a
+      <td><p><a href="../StyleSheets.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a> <a
         href="creating_and_updating_a_style_attribute.html.es"
-        accesskey="n"><img alt="siguiente" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -29,14 +29,7 @@
 <h1>Trabajar con estilos</h1>
 
 <p>El menú <strong>Estilo</strong> te permite modificar el aspecto de tus
-documentos de dos maneras distintas:</p>
-<ul>
-  <li>utilizando Hojas de estilo en cascada (CSS)</li>
-  <li>utilizando elementos y atributos HTML</li>
-</ul>
-
-<p>Las primeras opciones del menú <strong>Estilo</strong> corresponden a CSS,
-mientras que los dos últimos submenús corresponden a elementos HTML.</p>
+documentos utilizando Hojas de estilo en cascada (CSS).</p>
 
 <p>Para obtener más información sobre hojas de estilo o elementos de estilo
 HTML, ver:</p>
