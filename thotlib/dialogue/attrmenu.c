@@ -19,28 +19,28 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-/* indicateur d'existence des formulaires TtAttribute */
+/* flags to show the existence of the TtAttribute forms*/
 static boolean      AttrFormExists = FALSE;
 static boolean      MandatoryAttrFormExists = FALSE;
 
-/* les attributs figurant dans le menu */
+/* the menu attributes */
 static PtrSSchema   AttrStruct[LgMaxAttributeMenu];
 static int          AttrNumber[LgMaxAttributeMenu];
 static boolean      AttrOblig[LgMaxAttributeMenu];
 
-/* l'attribut concerne' par le formulaire de saisie affiche' */
+/* the attribute concerning the displayed input form */
 static PtrSSchema   SchCurrentAttr = NULL;
 static int          NumCurrentAttr = 0;
 static int          ActiveAttr[100];
 static int          CurrentAttr;
 
-/* valeur de retour du formulaire de saisie */
+/* return value of the input form */
 static int          NumAttrValue;
 
 #define LgMaxAttrText 500
 static char         TextAttrValue[LgMaxAttrText];
 
-/* contexte des attributs requis */
+/* required attributs context */
 static PtrAttribute PtrReqAttr;
 
 #include "appli_f.h"
@@ -60,22 +60,22 @@ static PtrAttribute PtrReqAttr;
 #include "applicationapi_f.h"
 
 /*----------------------------------------------------------------------
-   InitFormLangue intialise le formulaire pour la saisie des       
-   valeurs de l'attribut Langue.                           
+  InitFormLangue
+  initializes a form for capturing the values of the Language attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitFormLanguage (Document doc, View view, PtrElement firstSel, PtrAttribute CurrAttr)
+static void         InitFormLanguage (Document doc, View view, PtrElement firstSel, PtrAttribute currAttr)
 #else  /* __STDC__ */
-static void         InitFormLanguage (doc, view, firstSel, CurrAttr)
+static void         InitFormLanguage (doc, view, firstSel, currAttr)
 Document            doc;
 View                view;
 PtrElement          firstSel;
-PtrAttribute        CurrAttr;
+PtrAttribute        currAttr;
 
 #endif /* __STDC__ */
 {
    int                 i, nbItem, nbLanguages, length;
-   char                BufMenu[MAX_TXT_LEN];
+   char                bufMenu[MAX_TXT_LEN];
    char                string[MAX_TXT_LEN];
    char               *ptr;
    Language            language;
@@ -86,19 +86,19 @@ PtrAttribute        CurrAttr;
 
    /* c'est l'attribut Langue, on initialise le formulaire Langue */
    languageValue[0] = '\0';
-   if (CurrAttr != NULL)
-      if (CurrAttr->AeAttrText != NULL)
-	 strncpy (languageValue, CurrAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
+   if (currAttr != NULL)
+      if (currAttr->AeAttrText != NULL)
+	 strncpy (languageValue, currAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
 
    /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
-   strcpy (BufMenu, TtaGetMessage (LIB, TMSG_APPLY));
-   i = strlen (BufMenu) + 1;
-   strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
+   strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+   i = strlen (bufMenu) + 1;
+   strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
    TtaNewSheet (NumFormLanguage, 0, 0, 0,
-     TtaGetMessage (LIB, TMSG_LANGUAGE), 2, BufMenu, FALSE, 2, 'L', D_DONE);
+     TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
    nbItem = 0;
-   ptr = &BufMenu[0];
+   ptr = &bufMenu[0];
    language = '\0';
    nbLanguages = TtaGetNumberOfLanguages ();
    for (nbItem = 0; nbItem < nbLanguages; nbItem++)
@@ -128,7 +128,7 @@ PtrAttribute        CurrAttr;
 	else
 	   length = nbItem;
 	TtaNewSelector (NumSelectLanguage, NumFormLanguage,
-		      TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, BufMenu,
+		      TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu,
 			length, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	if (languageValue[0] == '\0')
@@ -154,19 +154,20 @@ PtrAttribute        CurrAttr;
 
 
 /*----------------------------------------------------------------------
-   MenuValues construit la feuille de saisie des valeurs de       
-   l'attribut defini par la regle pAttr1.                  
-   required indique s'il s'agit d'un attribut obligatoire.   
-   CurrAttr donne la valeur courante de l'attribut.         
+   MenuValues
+   builds the sheet for capturing the values of the attribute defined
+   by the pAttr1 rule.
+   required specifies if it's a required attribute
+   currAttr gives the current value of the attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MenuValues (TtAttribute * pAttr1, boolean required, PtrAttribute CurrAttr,
+static void         MenuValues (TtAttribute * pAttr1, boolean required, PtrAttribute currAttr,
 				PtrDocument pDoc, int view)
 #else  /* __STDC__ */
-static void         MenuValues (pAttr1, required, CurrAttr, pDoc, view)
+static void         MenuValues (pAttr1, required, currAttr, pDoc, view)
 TtAttribute        *pAttr1;
 boolean             required;
-PtrAttribute        CurrAttr;
+PtrAttribute        currAttr;
 PtrDocument         pDoc;
 int                 view;
 
@@ -176,14 +177,14 @@ int                 view;
    int                 i, lgmenu, val;
    int                 form, subform;
    char                title[MAX_NAME_LENGTH + 2];
-   char                BufMenu[MAX_TXT_LEN];
+   char                bufMenu[MAX_TXT_LEN];
    Document            doc;
 
    doc = (Document) IdentDocument (pDoc);
    /* detruit la feuille de dialogue et la recree */
-   strcpy (BufMenu, TtaGetMessage (LIB, TMSG_APPLY));
-   i = strlen (BufMenu) + 1;
-   strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
+   strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+   i = strlen (bufMenu) + 1;
+   strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
    if (required)
      {
 	form = NumMenuAttrRequired;
@@ -205,7 +206,7 @@ int                 view;
 	     TtaDestroyDialogue (NumMenuAttr);
 	  }
 	TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 0, 0,
-	 TtaGetMessage (LIB, TMSG_ATTR), 2, BufMenu, FALSE, 2, 'L', D_DONE);
+	 TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
 	AttrFormExists = TRUE;
      }
 
@@ -217,10 +218,10 @@ int                 view;
 	       subform = form + 1;
 	       TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL, FALSE);
 	       TtaAttachForm (subform);
-	       if (CurrAttr == NULL)
+	       if (currAttr == NULL)
 		  i = 0;
 	       else
-		  i = CurrAttr->AeAttrValue;
+		  i = currAttr->AeAttrValue;
 	       TtaSetNumberForm (subform, i);
 	       break;
 
@@ -229,12 +230,12 @@ int                 view;
 	       subform = form + 2;
 	       TtaNewTextForm (subform, form, title, 40, 3, FALSE);
 	       TtaAttachForm (subform);
-	       if (CurrAttr == NULL)
+	       if (currAttr == NULL)
 		  TtaSetTextForm (subform, "");
-	       else if (CurrAttr->AeAttrText == NULL)
+	       else if (currAttr->AeAttrText == NULL)
 		  TtaSetTextForm (subform, "");
 	       else
-		  TtaSetTextForm (subform, CurrAttr->AeAttrText->BuContent);
+		  TtaSetTextForm (subform, currAttr->AeAttrText->BuContent);
 	       break;
 
 	    case AtEnumAttr:
@@ -249,19 +250,19 @@ int                 view;
 		    i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and '\0' */
 		    if (lgmenu + i < MAX_TXT_LEN)
 		      {
-			 BufMenu[lgmenu] = 'B';
-			 strcpy (&BufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
+			 bufMenu[lgmenu] = 'B';
+			 strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
 			 val++;
 		      }
 		    lgmenu += i;
 		 }
 	       /* cree le menu des valeurs de l'attribut */
-	       TtaNewSubmenu (subform, form, 0, title, val, BufMenu, NULL, FALSE);
+	       TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, FALSE);
 	       TtaAttachForm (subform);
 	       /* initialise le menu avec la valeur courante */
 	       val = -1;
-	       if (CurrAttr != NULL)
-		  val = CurrAttr->AeAttrValue - 1;
+	       if (currAttr != NULL)
+		  val = currAttr->AeAttrValue - 1;
 	       TtaSetMenuForm (subform, val);
 	       break;
 
@@ -276,8 +277,8 @@ int                 view;
 
 
 /*----------------------------------------------------------------------
-   CallbackReqAttrMenu traite le retour du menu de saisie des           
-   attributs obligatoires.                                         
+   CallbackReqAttrMenu
+   handles the callback of the menu which captures the required attributes.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackReqAttrMenu (int ref, int val, char *txt)
@@ -329,8 +330,9 @@ char               *txt;
 }
 
 /*----------------------------------------------------------------------
-   BuildReqAttrMenu construit le menu de saisie de la valeur
-   de l'attribut requis defini par la regle pRuleAttr.    
+   BuildReqAttrMenu
+   builds the form for capturing the value of the required
+   attribute as defined by the pRuleAttr rule.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
@@ -353,11 +355,11 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   TteItemMenuAttr         envoie le message AttrMenu.Pre qui      
-   indique que l'editeur va mettre dans le menu Attributs  
-   l'item pour la creation d'un attribut de type           
-   (pSS, att) pour l'element pEl et retourne               
-   la reponse de l'application.                            
+   TteItemMenuAttr 
+   sends the AttrMenu.Pre message which indicates that the editor
+   is going to add to the Attributes menu an item for the creation
+   of an attribute of type (pSS, att) for the pEl element. It 
+   returns the answer from the application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl, PtrDocument pDoc)
@@ -385,14 +387,15 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   BuildAttrMenu construit le menu Attributs et               
-   retourne le nombre d'attributs mis dans le menu compose'.         
+   BuildAttrMenu
+   builds the Attributes menu and returns the number of
+   attributes added to the composite menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 BuildAttrMenu (char *BufMenu, PtrDocument pDoc, int ActiveAttr[])
+int                 BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int ActiveAttr[])
 #else  /* __STDC__ */
-int                 BuildAttrMenu (BufMenu, pDoc, ActiveAttr)
-char               *BufMenu;
+int                 BuildAttrMenu (bufMenu, pDoc, ActiveAttr)
+char               *bufMenu;
 PtrDocument         pDoc;
 int                 ActiveAttr[];
 
@@ -402,7 +405,7 @@ int                 ActiveAttr[];
    PtrDocument         SelDoc;
    PtrElement          firstSel, lastSel, pEl;
    int                 firstChar, lastChar;
-   boolean             selok, nouveau;
+   boolean             selectionOK, new;
    int                 lgmenu;
    PtrSSchema          pSS;
    PtrAttribute        pAttrNew;
@@ -414,8 +417,8 @@ int                 ActiveAttr[];
 
    nbOfEntries = 0;
    /* demande quelle est la selection courante */
-   selok = GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
-   if (selok && SelDoc == pDoc)
+   selectionOK = GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+   if (selectionOK && SelDoc == pDoc)
       /* il y a une selection et elle est dans le document traite' */
      {
 	/* cherche les attributs definis dans les differents schemas de */
@@ -431,11 +434,11 @@ int                 ActiveAttr[];
 	     do
 	       {
 		  /* on a deja traite' ce schema de structure ? */
-		  nouveau = TRUE;
+		  new = TRUE;
 		  for (i = 1; i <= nbOfEntries; i++)	/* parcourt la table */
 		     if (pSS == AttrStruct[i - 1])	/* deja dans la table */
-			nouveau = FALSE;
-		  if (nouveau)
+			new = FALSE;
+		  if (new)
 		     /* l'element utilise un schema de structure pas encore */
 		     /* rencontre' */
 		     /* met tous les attributs globaux de ce schema dans la table */
@@ -531,7 +534,7 @@ int                 ActiveAttr[];
 		     ActiveAttr[att] = 0;
 		  i = strlen (tempBuffer) + 1;
 		  if (lgmenu + i < MAX_TXT_LEN)
-		     strcpy (&BufMenu[lgmenu], tempBuffer);
+		     strcpy (&bufMenu[lgmenu], tempBuffer);
 		  lgmenu += i;
 	       }
 	  }
@@ -543,8 +546,8 @@ int                 ActiveAttr[];
 
 /*----------------------------------------------------------------------
    UpdateAttrMenu                                                       
-   Met a jour le menu des Attributs                                  
-   - de toutes les frames ouvertes du document pDoc.               
+   Updates the Attributes menu of all open frames belonging to document
+   pDoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateAttrMenu (PtrDocument pDoc)
@@ -554,18 +557,18 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   int                 NbItemAttr, i;
-   char                BufMenuAttr[MAX_TXT_LEN];
+   int                 nbItemAttr, i;
+   char                bufMenuAttr[MAX_TXT_LEN];
    int                 view, menu, menuID;
    int                 frame, ref;
    Document            document;
-   Menu_Ctl           *ptrmenu;
+   Menu_Ctl           *pMenu;
 
    /* Compose le menu des attributs */
    if (pDoc == SelectedDocument)
-      NbItemAttr = BuildAttrMenu (BufMenuAttr, pDoc, ActiveAttr);
+      nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, ActiveAttr);
    else
-      NbItemAttr = 0;
+      nbItemAttr = 0;
 
    document = (Document) IdentDocument (pDoc);
    /* Traite toutes les vues de l'arbre principal */
@@ -575,9 +578,9 @@ PtrDocument         pDoc;
 	if (frame != 0 && FrameTable[frame].MenuAttr != -1)
 	  {
 	     menuID = FrameTable[frame].MenuAttr;
-	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
+	     menu = FindMenu (frame, menuID, &pMenu) - 1;
 	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
-	     if (pDoc != SelectedDocument || NbItemAttr == 0)
+	     if (pDoc != SelectedDocument || nbItemAttr == 0)
 	       {
 		  /* le menu Attributs contient au moins un attribut */
 		  TtaSetMenuOff (document, view, menuID);
@@ -586,9 +589,9 @@ PtrDocument         pDoc;
 	     else
 	       {
 		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
-				  NbItemAttr, BufMenuAttr, NULL);
+				  nbItemAttr, bufMenuAttr, NULL);
 		  /* marque les attributs actifs */
-		  for (i = 0; i < NbItemAttr; i++)
+		  for (i = 0; i < nbItemAttr; i++)
 		     if (ActiveAttr[i] == 1)
 			TtaSetToggleMenu (ref, i, TRUE);
 		  TtaSetMenuOn (document, view, menuID);
@@ -603,9 +606,9 @@ PtrDocument         pDoc;
 	if (frame != 0 && FrameTable[frame].MenuAttr != -1)
 	  {
 	     menuID = FrameTable[frame].MenuAttr;
-	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
+	     menu = FindMenu (frame, menuID, &pMenu) - 1;
 	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
-	     if (pDoc != SelectedDocument || NbItemAttr == 0)
+	     if (pDoc != SelectedDocument || nbItemAttr == 0)
 	       {
 		  /* le menu Attributs contient au moins un attribut */
 		  TtaSetMenuOff (document, view, menu);
@@ -614,9 +617,9 @@ PtrDocument         pDoc;
 	     else
 	       {
 		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu - 1], NULL,
-				  NbItemAttr, BufMenuAttr, NULL);
+				  nbItemAttr, bufMenuAttr, NULL);
 		  /* marque les attributs actifs */
-		  for (i = 0; i < NbItemAttr; i++)
+		  for (i = 0; i < nbItemAttr; i++)
 		     if (ActiveAttr[i] == 1)
 			TtaSetToggleMenu (ref, i, TRUE);
 		  TtaSetMenuOn (document, view, menu);
@@ -626,12 +629,12 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
-   CallbackValAttrMenu traite le retour du formulaire de saisie des        
-   valeurs d'attribut : applique aux elements selectionne's les    
-   attributs choisis par l'utilisateur.                            
-   ref: reference de l'element de dialogue dont on traite le retour
-   valmenu: valeur choisie ou saisie dans cet element de dialogue. 
-   valtexte: pointeur sur le texte saisi dans cet element de dialogue 
+   CallbackValAttrMenu
+   handles the callback of the form which captures the attribute values.
+   Applies to the selected elements the attributes chosen by the user.
+   ref: reference to the dialogue element who called back this function
+   valmenu: selected or captured value in this dialogue element
+   valtexte: pointer to the captured text in this dialogue element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackValAttrMenu (int ref, int valmenu, char *valtext)
@@ -749,8 +752,9 @@ char               *valtext;
 
 
 /*----------------------------------------------------------------------
-   CallbackAttrMenu traite les retours du menu 'Attributs':        
-   cree un formulaire pour saisir la valeur de l'attribut choisi.  
+   CallbackAttrMenu 
+   handles the callbacks of the "Attributes" menu: creates a
+   form to capture the value of the chosen attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackAttrMenu (int refmenu, int att, int frame)
@@ -763,7 +767,7 @@ int                 frame;
 #endif /* __STDC__ */
 {
    TtAttribute        *pAttr;
-   PtrAttribute        pAttrNew, CurrAttr;
+   PtrAttribute        pAttrNew, currAttr;
    PtrDocument         SelDoc;
    PtrElement          firstSel, lastSel, AssocCreated;
    int                 firstChar, lastChar;
@@ -809,10 +813,10 @@ int                 frame;
 	     {
 		/* cherche la valeur de cet attribut pour le premier element */
 		/* selectionne' */
-		CurrAttr = AttributeValue (firstSel, pAttrNew);
+		currAttr = AttributeValue (firstSel, pAttrNew);
 		if (pAttrNew->AeAttrNum == 1)
 		  {
-		     InitFormLanguage (doc, view, firstSel, CurrAttr);
+		     InitFormLanguage (doc, view, firstSel, currAttr);
 		     /* memorise l'attribut concerne' par le formulaire */
 		     SchCurrentAttr = pAttrNew->AeAttrSSchema;
 		     NumCurrentAttr = 1;
@@ -820,7 +824,7 @@ int                 frame;
 		else if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 1)
 		   /* attribut enumere' a une seule valeur(attribut booleen) */
 		  {
-		     if (CurrAttr == NULL)
+		     if (currAttr == NULL)
 			/* le premier element selectionne' n'a pas cet */
 			/* attribut. On le lui met */
 			pAttrNew->AeAttrValue = 1;
@@ -835,7 +839,7 @@ int                 frame;
 		  {
 		     /* construit le formulaire de saisie de la valeur de */
 		     /* l'attribut */
-		     MenuValues (pAttr, FALSE, CurrAttr, SelDoc, view);
+		     MenuValues (pAttr, FALSE, currAttr, SelDoc, view);
 		     /* memorise l'attribut concerne' par le formulaire */
 		     SchCurrentAttr = AttrStruct[att];
 		     NumCurrentAttr = AttrNumber[att];
@@ -855,7 +859,8 @@ int                 frame;
 }
 
 /*----------------------------------------------------------------------
-   CallbackLanguageMenu traite les retours du formulaire Langue.             
+   CallbackLanguageMenu
+   handles the callbacks of the Language form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackLanguageMenu (int ref, int val, char *txt)
@@ -895,7 +900,8 @@ char               *txt;
 }
 
 /*----------------------------------------------------------------------
-   AttributeMenuLoadResources connecte les fonctions d'edition        
+   AttributeMenuLoadResources
+   connects the local actions.
   ----------------------------------------------------------------------*/
 void                AttributeMenuLoadResources ()
 {
