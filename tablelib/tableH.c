@@ -744,6 +744,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 		/* colPercent[cRef] = - new min */
 		colPercent[cRef] = - delta * colPercent[cRef] / 100;
 		min -= colPercent[cRef];
+		if (- colPercent[cRef] > colBox[cRef]->AbBox->BxMaxWidth)
+		  colBox[cRef]->AbBox->BxMaxWidth = - colPercent[cRef];
 		max += colBox[cRef]->AbBox->BxMaxWidth;
 		n++;
 	      }
@@ -774,6 +776,8 @@ printf ("Maximum Widths ...\n");
 	  box = colBox[cRef]->AbBox;
 	  if (colPercent[cRef] > 0)
 	    delta = ((width - mbp) * colPercent[cRef] / 100);
+	  else if (colPercent[cRef] < 0)
+	    delta = - colPercent[cRef];
 	  else if (colWidth[cRef] > 0)
 	    delta = colWidth[cRef];
 	  else
@@ -802,6 +806,8 @@ printf ("Minimum Widths ...\n");
 	  box = colBox[cRef]->AbBox;
 	  if (colPercent[cRef] > 0)
 	    delta = ((width - mbp) * colPercent[cRef] / 100);
+	  else if (colPercent[cRef] < 0)
+	    delta = - colPercent[cRef];
 	  else if (colWidth[cRef] > 0)
 	    delta = colWidth[cRef];
 	  else
