@@ -2660,8 +2660,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
        /* do we have to redraw buttons and menus? */
        reinitialized = (docType != DocumentTypes[doc]);
-       if (docType == docBookmark || docType == docLog ||
-	   docType == docLibrary || docType == docSource)
+       if (docType == docLog || docType == docLibrary || docType == docSource)
 	 {
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   if (docType != docLibrary)
@@ -2820,20 +2819,15 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /*_GL*/
 #endif /* _SVG */
 #endif /* _WX */
-	   if (docType == docAnnot)
-	     /* turn off the menus that don't make sense in the annotation view */
-	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			     TRUE, (Proc)TextURL, NULL);
-	   else
-	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			     TRUE, (Proc)TextURL, URL_list);
+	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+			   TRUE, (Proc)TextURL, URL_list);
 
 	   /* initial state for menu entries */
 	   TtaSetItemOff (doc, 1, File, BBack);
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   if (SButtons[doc])
+	   if (SButtons[doc] && docType != docBookmark)
 	     TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
 	   else
 	     /* hide buttons */
@@ -2886,10 +2880,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   
   /* now be sure that the urlbar is setup */
   /* TODO : changer peutetre les types de documents qui auront des urls */
-  if ( docType != docSource &&
-       docType != docCSS &&
-       docType != docText &&
-       docType != docMath )
+  if ( docType != docSource && docType != docCSS &&
+       docType != docText && docType != docMath )
     {
       TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
 		       TRUE, (Proc)TextURL, URL_list );
@@ -2913,19 +2905,36 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   DocumentTypes[doc] == docLibrary ||
 	   DocumentTypes[doc] == docBookmark)
 	 {
-	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
-	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
-	   TtaSetItemOff (doc, 1, File, BHtml11);
-	   TtaSetItemOff (doc, 1, File, BHtmlTransitional);
-	   TtaSetItemOff (doc, 1, File, BMathml);
-	   TtaSetItemOff (doc, 1, File, BSvg);
-	   TtaSetItemOff (doc, 1, File, BTemplate);
-	   TtaSetItemOff (doc, 1, File, BCss);
-	   TtaSetItemOff (doc, 1, File, BOpenDoc);
-	   TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
-	   TtaSetItemOff (doc, 1, File, BReload);
-	   TtaSetItemOff (doc, 1, File, BBack);
-	   TtaSetItemOff (doc, 1, File, BForward);
+	   if (DocumentTypes[doc] == docBookmark)
+	     {
+#ifdef BOOKMARKS
+	       TtaSetItemOn (doc, 1, Bookmarks_, BMoveItem);
+	       TtaSetItemOff (doc, 1, Bookmarks_, BViewBookmarks);
+	       TtaSetItemOn (doc, 1, Bookmarks_, BAddSeparator);
+#endif /* BOOKMARKS */
+	     }
+	   else
+	     {
+	       TtaSetItemOff (doc, 1, File, BHtmlBasic);
+	       TtaSetItemOff (doc, 1, File, BHtmlStrict);
+	       TtaSetItemOff (doc, 1, File, BHtml11);
+	       TtaSetItemOff (doc, 1, File, BHtmlTransitional);
+	       TtaSetItemOff (doc, 1, File, BMathml);
+	       TtaSetItemOff (doc, 1, File, BSvg);
+	       TtaSetItemOff (doc, 1, File, BTemplate);
+	       TtaSetItemOff (doc, 1, File, BCss);
+	       TtaSetItemOff (doc, 1, File, BOpenDoc);
+	       TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
+	       TtaSetItemOff (doc, 1, File, BReload);
+	       TtaSetItemOff (doc, 1, File, BBack);
+	       TtaSetItemOff (doc, 1, File, BForward);
+#ifdef ANNOTATIONS
+	       TtaSetMenuOff (doc, 1, Annotations_);
+#endif /* ANNOTATIONS */
+#ifdef BOOKMARKS
+	       TtaSetMenuOff (doc, 1, Bookmarks_);
+#endif /* BOOKMARKS */
+	     }
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
 	   TtaSetItemOff (doc, 1, File, BDocInfo);
@@ -2948,16 +2957,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaSetMenuOff (doc, 1, Views);
 	   TtaSetMenuOff (doc, 1, Style);
 	   TtaSetMenuOff (doc, 1, Attributes_);
-#ifdef ANNOTATIONS
-	   TtaSetMenuOff (doc, 1, Annotations_);
-#endif /* ANNOTATIONS */
-#ifdef BOOKMARKS
-	   if (docType == docBookmark)
-	     /* make it be possible to bookmark a bookmark file */
-	     TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
-	   else 
-	     TtaSetMenuOff (doc, 1, Bookmarks_);
-#endif /* BOOKMARKS */
 	   TtaSetMenuOff (doc, 1, Help_);
 	   if (docType != docBookmark)
 	     {
@@ -3036,7 +3035,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	 {
 #ifdef BOOKMARKS
 	   TtaSetItemOff (doc, 1, Bookmarks_, BMoveItem);
-	   TtaSetItemOff (doc, 1, Bookmarks_, BEditTopics);
+	   TtaSetItemOn (doc, 1, Bookmarks_, BViewBookmarks);
 	   TtaSetItemOff (doc, 1, Bookmarks_, BAddSeparator);
 #endif /* BOOKMARKS */
 	   TtaSetMenuOn (doc, 1, Views);

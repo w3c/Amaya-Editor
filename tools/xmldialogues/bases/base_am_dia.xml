@@ -2705,6 +2705,14 @@
 	<message xml:lang="es">Configurar...</message>
 	<message xml:lang="pt">Configurar...</message>
 </label>
+<label define="BViewBookmarks">
+	<message xml:lang="en">View Bookmarks</message>
+	<message xml:lang="fr">Visualiser les signets</message>
+	<message xml:lang="it">Visualizza favorites</message>
+	<message xml:lang="de">Lesezeichen ansehen</message>
+	<message xml:lang="tr">kilitli bilgileri kopyala</message>
+	<message xml:lang="es">Ver marcadores</message>
+</label>
 <label define="BBookmarkFile">
 	<message xml:lang="en">New Bookmark</message>
 	<message xml:lang="fr">Nouveau signet</message>
@@ -2721,14 +2729,6 @@
 </label>
 <label define="BAddSeparator">
 	<message xml:lang="en">New Separator</message>
-</label>
-<label define="BViewBookmarks">
-	<message xml:lang="en">View Bookmarks</message>
-	<message xml:lang="fr">Visualiser les signets</message>
-	<message xml:lang="it">Visualizza favorites</message>
-	<message xml:lang="de">Lesezeichen ansehen</message>
-	<message xml:lang="tr">kilitli bilgileri kopyala</message>
-	<message xml:lang="es">Ver marcadores</message>
 </label>
 <label define="BMoveItem">
 	<message xml:lang="en">Move Item</message>

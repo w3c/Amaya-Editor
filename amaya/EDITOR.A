@@ -314,25 +314,26 @@ MENUS
 
 	view:1 Annotations_ button:BAnnotateSelection -> AnnotateSelection;
 	view:1 Annotations_ button:BAnnotateDocument -> AnnotateDocument;
-	Annotations_ Separator;
+	view:1 Annotations_ Separator;
 	view:1 Annotations_ button:BMoveAnnotSel -> MoveAnnotationSel;
 	view:1 Annotations_ button:BMemorizeXPtr -> XPointer_bufferStore;
 	view:1 Annotations_ button:BMoveAnnotXPtr -> MoveAnnotationXPtr;
-	Annotations_ Separator;
+	view:1 Annotations_ Separator;
 	view:1 Annotations_ button:BReplyToAnnotation -> ReplyToAnnotation;
-	Annotations_ Separator;
+	view:1 Annotations_ Separator;
 	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;
 	view:1 Annotations_ button:BDeleteAnnot -> DeleteAnnotation;
 	view:1 Annotations_ button:BLoadAnnotations -> LoadAnnotations;
-	Annotations_ Separator;
+	view:1 Annotations_ Separator;
 	view:1 Annotations_ button:BCustomQuery -> CustomQuery;
 	view:1 Annotations_ button:BFilterAnnotations -> FilterAnnot;
 	view:1 Annotations_ button:BConfigAnnotations -> ConfigAnnot;
 
+	view:1 Bookmarks_ button:BViewBookmarks -> ViewBookmarks;
 	view:1 Bookmarks_ button:BBookmarkFile -> BookmarkFile;
 	view:1 Bookmarks_ button:BEditTopics -> EditTopics;
+        view:1 Bookmarks_ Separator;
 	view:1 Bookmarks_ button:BAddSeparator -> AddSeparator;
-	view:1 Bookmarks_ button:BViewBookmarks -> ViewBookmarks;
 	view:1 Bookmarks_ button:BMoveItem -> MoveItem;
 
 	view:1 Cooperation_ button:BLock -> LockDocument;
