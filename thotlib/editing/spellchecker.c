@@ -299,72 +299,61 @@ int WordInDictionary (unsigned char *word, PtrDict dict)
   ----------------------------------------------------------------------*/
 int CheckWord (unsigned char *word, Language language, PtrDict dict)
 {
-   ThotBool            present = TRUE;
-   int                 res;
-   unsigned char       word1[MAX_WORD_LEN];
-   unsigned char       wordmin[MAX_WORD_LEN];
-   PtrDict             globalDict;
-   PtrDict             personalDict;
-   PtrDict             dictsigle;
-   PtrDict             dictname;
+  PtrDict             globalDict;
+  PtrDict             personalDict;
+  PtrDict             dictsigle;
+  PtrDict             dictname;
+  int                 res;
+  unsigned char       word1[MAX_WORD_LEN];
 
-   /* On refuse de corriger l'ISOlatin-1 */
-   if (language == 0)
-      return (-1);
-
-   if (word[0] == EOS)
-      return (0);		/* mot vide */
-
-   if (strlen (word) >= 2)
-     {
-	strcpy (word1, word);
-	SmallLettering (word1);
-	strcpy (wordmin, word1);
-	Asci2Code (word1);
-
-	globalDict = (PtrDict) TtaGetPrincipalDictionary (language);
-	personalDict = (PtrDict) TtaGetSecondaryDictionary (language);
-	res = WordInDictionary (word1, dict);
-
-	if (res != -3 || res == -2)
-	   /* mot absent de dict ou dict vide ou pas de dict */
-	  {
-	     res = WordInDictionary (word1, globalDict);
-	     if (res == -2)
-		return (-1);	/* PAS de globalDict */
-	     else
-	       {
-		  if (res != -3)	/* mot absent de globalDict */
-		    {		/* word1 n'appartient pas a ces 2 dicts obligatoires */
-		       present = FALSE;
-		       dictsigle = (PtrDict) TtaGetPrincipalDictionary (0);
-		       dictname = (PtrDict) TtaGetSecondaryDictionary (0);
-		       if (WordInDictionary (word1, personalDict) == -3
-			   || WordInDictionary (word1, dictsigle) == -3
-			   || WordInDictionary (word1, dictname) == -3)
-			  /* word1 appartient a l'un de ces dict facultatifs */
-			  present = TRUE;
-		    }
-	       }
-	  }
-
-	if (present == FALSE)
-	  {			/* calculer le type du mot errone' */
-	     if (IsUpperCase (word) == TRUE)
-		type_err = 3;	/* MAJ */
-	     else
-	       {
-		  if (IsCapital (word) == TRUE)
-		     type_err = 2;	/* Capitale */
-		  else
-		     type_err = 1;	/* SmallLettering ou melange */
-	       }
-	     /* recopier ce mot errone' dans ChkrErrWord */
-	     strcpy (ChkrErrWord, word);
-	  }
-     }
-   res = (present == TRUE) ? 1 : 0;
-   return (res);
+  /* On refuse de corriger l'ISOlatin-1 */
+  if (language == 0)
+    return -1;
+  if (word[0] == EOS)
+    return 0;
+  if (strlen (word) < 2)
+    return 1;
+  else
+    {
+      strcpy (word1, word);
+      SmallLettering (word1);
+      Asci2Code (word1);
+      globalDict = (PtrDict) TtaGetPrincipalDictionary (language);
+      personalDict = (PtrDict) TtaGetSecondaryDictionary (language);
+      res = WordInDictionary (word1, dict);
+      if (res != -3)
+	{
+	  /* not found */
+	  res = WordInDictionary (word1, globalDict);
+	  if (res == -2)
+	    return (-1);	/* PAS de globalDict */
+	  else if (res != -3)
+	    {
+	      /* check extra dictionaries */
+	      dictsigle = (PtrDict) TtaGetPrincipalDictionary (0);
+	      dictname = (PtrDict) TtaGetSecondaryDictionary (0);
+	      if (WordInDictionary (word1, personalDict) == -3 ||
+		  WordInDictionary (word1, dictsigle) == -3 ||
+		  WordInDictionary (word1, dictname) == -3)
+		/* found */
+		res = -3;
+	    }
+	}
+      if (res != -3)
+	{			/* calculer le type du mot errone' */
+	  if (IsUpperCase (word))
+	    type_err = 3;	/* MAJ */
+	  else if (IsCapital (word))
+	    type_err = 2;	/* Capitale */
+	  else
+	    type_err = 1;	/* SmallLettering ou melange */
+	  /* recopier ce mot errone' dans ChkrErrWord */
+	  strcpy (ChkrErrWord, word);
+	  return 0;
+	}
+      else
+	return 1;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -530,7 +519,7 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 	    }
 	  
 	  /* parcours du dictionnaire */
-	  while (idx < sup)
+	  while (idx < sup && idx < dict->DictNbChars)
 	    {
 	      pWord = idx;
 	      k = dict->DictCommon[word++];

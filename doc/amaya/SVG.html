@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Graphics</title>
-  <meta name="GENERATOR" content="amaya V4.3" />
+  <meta name="GENERATOR" content="amaya 5.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -11,13 +11,13 @@
 <table summary="toc">
   <tbody>
     <tr>
-      <td><img src="../../Icons/WWW/w3c_home" /><img 
-        alt="Amaya" src="../Icons/amaya.gif" /></td>
-      <td><p><a href="Math.html" accesskey="p"><img
-        alt="previous" src="../Icons/left.gif" /></a> <a
-        href="Manual.html" accesskey="t"><img alt="top" 
-        src="../Icons/up.gif" /></a> <a href="ImageMaps.html"
-        accesskey="n"><img src="../Icons/right.gif" /></a></p>
+      <td><img src="../../Icons/WWW/w3c_home" /><img alt="Amaya"
+        src="../Icons/amaya.gif" /></td>
+      <td><p><a href="Math.html" accesskey="p"><img alt="previous"
+        src="../Icons/left.gif" /></a> <a href="Manual.html"
+        accesskey="t"><img alt="top" src="../Icons/up.gif" /></a> <a
+        href="ImageMaps.html" accesskey="n"><img src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -31,15 +31,15 @@ Scalable Vector Graphics (<a href="http://www.w3.org/TR/svg/">SVG</a>)
 specification. SVG elements are handled as structured components, in the same
 way as HTML elements. Therefore, you can manipulate SVG graphics in the same
 way you manipulate other parts of HTML documents. All editing commands
-provided by Amaya for handling text are also available for graphics. There are
-also some additional controls for entering SVG elements.</p>
+provided by Amaya for handling text are also available for graphics. There
+are also some additional controls for entering SVG elements.</p>
 
 <h3><a name="Creating">Creating graphics with the palette</a></h3>
 
 <p>To create a new SVG element in a document, just move the insertion point
 (the caret) to the position where you want to insert it, and then click the
-<strong>Graphics</strong> button <img src="../Icons/Graph.gif" alt="Graph" />.
-The Graphics button displays a palette that stays on the screen until you
+<strong>Graphics</strong> button <img src="../Icons/Graph.gif" alt="Graph"
+/>. The Graphics button displays a palette that stays on the screen until you
 click the <code>Done</code> button. Just choose the element you want to
 create. The available graphics elements are:</p>
 <ul>
@@ -120,7 +120,7 @@ create. The available graphics elements are:</p>
   <li>A SVG text, <code>text</code> in SVG<svg
     xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="1.2cm">
       <text y="33px" x="13px"
-      style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A
+            style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A
         character string in SVG
       </text>
     </svg>
@@ -134,7 +134,7 @@ structure of the document, Amaya creates a new SVG element just at the
 beginning of the current selection and the selected shape into this new SVG.
 Amaya generates SVG drawings as blocks, between paragraphs. If you wish to
 display a drawing inline, today you have let Amaya creates it between
-paragrahs then edit the source code to move it.</p>
+paragraphs then edit the source code to move it.</p>
 
 <p>When the current selected element is a SVG element, the new shape is added
 to the current SVG drawing. The new created shape is added after and then can
@@ -143,21 +143,21 @@ overlap previous ones.</p>
 <p>The creation of a shape needs some direct interactions with the user:</p>
 <ul>
   <li>To create a rectangle, you must first select the position of the left
-    corner by pressing the left mouse button. Keep the button pressed down and
-    move to the position of the opposite corner, then release the button. The
-    shape is now defined.</li>
+    corner by pressing the left mouse button. Keep the button pressed down
+    and move to the position of the opposite corner, then release the button.
+    The shape is now defined.</li>
   <li>To create a circle or an ellipse, you must first select the position of
-    the center by pressing the left mouse button. Keep the button pressed down
-    and move right and/or bottom, then release the button. The shape is now
-    defined.</li>
+    the center by pressing the left mouse button. Keep the button pressed
+    down and move right and/or bottom, then release the button. The shape is
+    now defined.</li>
   <li>For a polyline and polygon, enter each point by clicking the
     corresponding position with the left mouse button. To indicate the last
     point, click with the middle or right button.</li>
 </ul>
 
-<p>You can insert an image within a SVG drawing. Choose <strong>Image</strong>
-from the <strong>Types</strong> menu or click on the image <img alt="Image "
-src="../Icons/Image.gif" longdesc="longdesc.htm" />
+<p>You can insert an image within a SVG drawing. Choose
+<strong>Image</strong> from the <strong>Types</strong> menu or click on the
+image <img alt="Image " src="../Icons/Image.gif" longdesc="longdesc.htm" />
 button from the button bar and proceed in the <a
 href="ImageMaps.html#Adding">same way as in HTML</a>.</p>
 
@@ -168,30 +168,30 @@ markup.</p>
 
 <h3><a name="Moving">Moving graphics</a></h3>
 <ul>
-  <li>By direct manipulation - combining the <strong>Control key</strong> with
-    the <strong>Left button</strong> of the mouse within a shape allows you to
-    move this shape.</li>
+  <li>By direct manipulation - combining the <strong>Control key</strong>
+    with the <strong>Left button</strong> of the mouse within a shape allows
+    you to move this shape.</li>
   <li>By editing attributes.</li>
 </ul>
 
 <h3><a name="Resizing">Resizing graphics</a></h3>
 <ul>
-  <li>By direct manipulation - combining the <strong>Control key</strong> with
-    the <strong>Middle</strong> or the <strong>Right button</strong> of the
-    mouse within a shape allows you to resize this shape.</li>
+  <li>By direct manipulation - combining the <strong>Control key</strong>
+    with the <strong>Middle</strong> or the <strong>Right button</strong> of
+    the mouse within a shape allows you to resize this shape.</li>
   <li>By editing attributes.</li>
 </ul>
 
 <h3><a name="Painting">Painting graphics</a></h3>
 
-<p>With Amaya, you can paint (i.e., fill or stroke) SVG elements with a single
-color. The default <code>fill</code> color is <code>black</code> and the
-default <code>stroke</code> color is <code>transparent</code>. But you can
-change these values:</p>
+<p>With Amaya, you can paint (i.e., fill or stroke) SVG elements with a
+single color. The default <code>fill</code> color is <code>black</code> and
+the default <code>stroke</code> color is <code>transparent</code>. But you
+can change these values:</p>
 <ul type="square">
   <li>Either by editing SVG attributes <code>fill</code> and
-    <code>stroke</code> (<span style="color: #E55500">example, fill=" #C8FF95"
-    stroke=" #000000"</span>),</li>
+    <code>stroke</code> (<span style="color: #E55500">example, fill="
+    #C8FF95" stroke=" #000000"</span>),</li>
   <li>Or by editing the SVG attribute <code>style</code> with CSS properties
     <code>fill</code> and <code>stroke</code> (<span
     style="color: #E55500">example, style="fill: #C8FF95; stroke:
@@ -207,18 +207,17 @@ a click with the middle or right mouse button generates the fill property.</p>
 <code>fill</code> property paints the character contents and the
 <code>stroke</code> property paints the character border. Amaya applies the
 fill property to characters, but not the stroke property. That explains why a
-click with the left mouse button has no immediate effect, and a click with the
-middle or right mouse button paints the <code>text</code> element.</p>
+click with the left mouse button has no immediate effect, and a click with
+the middle or right mouse button paints the <code>text</code> element.</p>
 
 <p></p>
 
 <p></p>
 </div>
 
-<p><a href="Math.html"><img alt="previous"
-src="../Icons/left.gif" /></a><a href="Manual.html"><img alt="top"
-src="../Icons/up.gif" /></a><a href="ImageMaps.html"><img alt="next"
-src="../Icons/right.gif" /></a></p>
+<p><a href="Math.html"><img alt="previous" src="../Icons/left.gif" /></a><a
+href="Manual.html"><img alt="top" src="../Icons/up.gif" /></a><a
+href="ImageMaps.html"><img alt="next" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

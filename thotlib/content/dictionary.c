@@ -267,18 +267,10 @@ static void ReadDictionary (FILE *dictFile, PtrDict dict)
   if (!dict->DictLoaded)
     {
       /* Loading ... */
-      i = 0;
-      while (i < dict->DictNbChars)
-	{
-	  TtaReadByte (dictFile, &(dict->DictString[i]));
-	  i++;
-	}
-      i = 0;
-      while (i < dict->DictNbWords)
-	{
-	  TtaReadByte (dictFile, &(dict->DictCommon[i]));
-	  i++;
-	}
+      for (i = 0; i < dict->DictNbChars; i++)
+	TtaReadByte (dictFile, &(dict->DictString[i]));
+      for (i = 0; i < dict->DictNbWords; i++)
+	TtaReadByte (dictFile, &(dict->DictCommon[i]));
       for (i = 0; i < dict->DictNbWords; i++)
 	TtaReadInteger (dictFile, &dict->DictWords[i]);
       for (i = 0; i < MAX_WORD_LEN; i++)
@@ -401,7 +393,7 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
   else
     {
       /* READONLY dictionary (generally pre-treated) */
-      if (treated == TRUE)
+      if (treated)
 	dictFile = TtaReadOpen (tempbuffer);
       else
 	dictFile = fopen (tempbuffer, "r");
@@ -430,13 +422,13 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
   pdict->DictReadOnly = readonly;
   
   /* calculation of the memory size needed by the dictionary */
-  if (new == FALSE)
+  if (!new)
     {
       if (treated)
 	/* dictionary already treated */
 	{
 	  ret = TtaReadInteger (dictFile, &i);
-	  if (ret == FALSE)
+	  if (!ret)
 	    {
 	      TtaReadClose (dictFile);
 	      /* no memory */
@@ -494,7 +486,7 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
       ReleaseDictionary (pDictionary);
       *pDictionary = NULL;
     }
-  else if (treated == TRUE)
+  else if (treated)
     /* Read the pre-treated file */
     ReadDictionary (dictFile, pdict);
   else if (!pdict->DictLoaded)
