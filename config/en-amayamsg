@@ -181,4 +181,6 @@
 180 Location of profiles definition file 
 181 Profile Selection
 182 These changes won't be effective until Amaya is retarted
-183 Enter the URL of the script called for templates feature
+183 Profiles Preferences
+184 Enter the URL of the templates server
+185 Templates Preferences

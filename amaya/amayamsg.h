@@ -192,5 +192,7 @@ int                 AMAYA;
 #define AM_PROFILES_FILE              180
 #define AM_PROFILE_SELECT             181
 #define AM_PROFILE_CHANGE             182
-#define AM_TEMPLATES                  183
-#define AMAYA_MSG_MAX                 184
+#define AM_PROFILE_MENU               183
+#define AM_TEMPLATES_SERVER           184
+#define AM_TEMPLATES_MENU             185
+#define AMAYA_MSG_MAX                 186

@@ -178,8 +178,10 @@
 177 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
 178 Page personelle
 179 Liste des langues pr\351f\351r\351es comme "fr, en" :
-180 Location du fichier de définition de profiles
+180 Emplacement du fichier de définition de profiles
 181 Sélection du profile
 182 Ces changements seront effectifs lors du prochain démarrage.
-183 Entrez l'URL du script appelé pour les modèles de page
+183 Configuration du profile
+184 Entrer l'URL du serveur de modèles
+185 Configration des modèles de pages
 

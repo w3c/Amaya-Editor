@@ -3585,7 +3585,7 @@ STRING              pathname;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
-		TtaGetMessage (1, BConfigProfile), 2, s, TRUE, 1, 'L', D_DONE);
+		TtaGetMessage(AMAYA, AM_PROFILE_MENU), 2, s, TRUE, 1, 'L', D_DONE);
 
   
    TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
@@ -3873,10 +3873,10 @@ STRING              pathname;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (TemplatesBase + TemplatesMenu, TtaGetViewFrame (document, view),
-		TtaGetMessage (1, BConfigTemplates), 2, s, TRUE, 1, 'L', D_DONE);
+		TtaGetMessage(AMAYA, AM_TEMPLATES_MENU), 2, s, TRUE, 1, 'L', D_DONE);
    
    TtaNewTextForm (TemplatesBase + mTemplates, TemplatesBase + TemplatesMenu,
-		   TtaGetMessage (AMAYA, AM_TEMPLATES),
+		   TtaGetMessage (AMAYA, AM_TEMPLATES_SERVER),
 		   20, 1, FALSE);
   
 #endif   /* !_WINDOWS */
