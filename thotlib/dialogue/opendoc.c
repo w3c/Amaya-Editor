@@ -440,7 +440,7 @@ char               *data;
 		  /* le fichier PIV existe, on ouvre le document */
 		 {
 		   /* charge le document */
-		   LoadDocument (&pDoc, DefaultDocumentName);
+		   LoadDocument (&pDoc, docName);
 		   if (pDoc != NULL)
 		     strcpy (pDoc->DocDirectory, DirectoryName);
 		 }
