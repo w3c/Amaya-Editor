@@ -45,7 +45,7 @@ int                 value;
    if (DOT_PER_INCHE == 0)
       DOT_PER_INCHE = 72;
 #  endif /* _WINDOWS */
-   return ((value * DOT_PER_INCHE + 36) / 72);
+   return (int)(((float)(value * DOT_PER_INCHE)) / 72.);
 }
 
 
@@ -64,6 +64,6 @@ int                 value;
    if (DOT_PER_INCHE == 0)
       DOT_PER_INCHE = 72;
 #  endif /* _WINDOWS */
-   return ((value * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
+   return (int)(((float)(value * 72)) / (float)DOT_PER_INCHE);
 }
 

@@ -2513,30 +2513,30 @@ int                 pattern;
    points[nb - 1].x = points[0].x;
    points[nb - 1].y = points[0].y;
 
-
+   if (fg < 0)
+	 thick = 0;
 #ifdef _WIN_PRINT
    /* Draw the border */
-   if (thick > 0 && fg >= 0)
-     {
-     t = PixelToPoint (thick);
-
-     if (t <= 1)
-       {
-	 switch (style)
-	   {
-	   case 3:
-	     hPen = CreatePen (PS_DOT, 1, ColorPixel (fg));
-	     break;
-	   case 4:
-	     hPen = CreatePen (PS_DASH, 1, ColorPixel (fg)); 
-	     break;
-	   default:
-	     hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));   
-	     break;
-	   }
-       }
-     else
-       {
+   t = PixelToPoint (thick);
+   if (thick == 0)
+     hPen = CreatePen (PS_NULL, 1, ColorPixel (fg));
+   else if (t == 1)
+   {
+     switch (style)
+	 {
+	 case 3:
+	   hPen = CreatePen (PS_DOT, 1, ColorPixel (fg));
+	   break;
+	 case 4:
+	   hPen = CreatePen (PS_DASH, 1, ColorPixel (fg)); 
+	   break;
+	 default:
+	   hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));   
+	   break;
+	 }
+   }
+   else
+   {
 	 logBrush.lbStyle = BS_SOLID;
 	 logBrush.lbColor = ColorPixel (fg);
 
@@ -2552,43 +2552,41 @@ int                 pattern;
 	     hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
 	     break;
 	   }
-       } 
-     hOldPen = SelectObject (TtPrinterDC, hPen);
+   } 
+   hOldPen = SelectObject (TtPrinterDC, hPen);
+   if (thick > 0)
      Polyline (TtPrinterDC, points, nb);
-     SelectObject (TtPrinterDC, hOldPen);
-     if (!DeleteObject (hPen))
-       WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon"));
-     hPen = (HPEN) 0;
-   }
+   SelectObject (TtPrinterDC, hOldPen);
+   if (!DeleteObject (hPen))
+     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon"));
+   hPen = (HPEN) 0;
 #else  /* _WIN_PRINT */
    /* Fill in the polygone */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
    /* Draw the border */
-   if (thick > 0 && fg >= 0)
-     {
-       WIN_GetDeviceContext (frame);
-       result = SelectClipRgn (TtDisplay, clipRgn);  
-       if (result == ERROR)
-         ClipError (frame);
-       WinLoadGC (TtDisplay, fg, RO);
-       if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (1)"));
-       hOldPen = SelectObject (TtDisplay, hPen);
-       InitDrawing (0, style, thick, RO, active, fg);
-       if (pat != (Pixmap)0)
+   WIN_GetDeviceContext (frame);
+   result = SelectClipRgn (TtDisplay, clipRgn);  
+   if (result == ERROR)
+     ClipError (frame);
+   WinLoadGC (TtDisplay, fg, RO);
+   if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
+     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (1)"));
+   hOldPen = SelectObject (TtDisplay, hPen);
+   InitDrawing (0, style, thick, RO, active, fg);
+   if (pat != (Pixmap)0)
 	 {
 	   hBrush = CreateSolidBrush (ColorPixel (bg));
 	   hOldBrush = SelectObject (TtDisplay, hBrush);
 	   Polygon (TtDisplay, points, nb);
 	 }
-       Polyline (TtDisplay, points, nb);
-       SelectObject (TtDisplay, hOldPen);
-       WIN_ReleaseDeviceContext ();
-       if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (2)"));
-       hPen = (HPEN) 0;
-     }
+   if (thick > 0)
+     Polyline (TtDisplay, points, nb);
+   SelectObject (TtDisplay, hOldPen);
+   WIN_ReleaseDeviceContext ();
+   if (!DeleteObject (hPen))
+     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (2)"));
+   hPen = (HPEN) 0;
 
    if (hBrush)
      {
@@ -2996,44 +2994,43 @@ C_points           *controls;
   /* close the polyline */
   PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
   PolyNewPoint ((int) x2, (int) y2);
-
+  if (fg < 0)
+    thick = 0;
 #ifdef _WIN_PRINT
 #else /* _WIN_PRINT */
   /* Fill in the polygone */
   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
   /* Draw the border */
-  if (thick > 0 && fg >= 0)
-    {
-      InitDrawing (0, style, thick, RO, active, fg);
-      WIN_GetDeviceContext (frame);
-      result = SelectClipRgn (TtDisplay, clipRgn);  
-      if (result == ERROR)
+  InitDrawing (0, style, thick, RO, active, fg);
+  WIN_GetDeviceContext (frame);
+  result = SelectClipRgn (TtDisplay, clipRgn);  
+  if (result == ERROR)
 	ClipError (frame);
-      WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
+  WinLoadGC (TtDisplay, fg, RO);
+  if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
 	WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawSpline (1)"));
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-      InitDrawing (0, style, thick, RO, active, fg);
-      if (pat != (Pixmap)0)
+  hOldPen = SelectObject (TtDisplay, hPen) ;
+  InitDrawing (0, style, thick, RO, active, fg);
+  if (pat != (Pixmap)0)
 	{
 	  hBrush = CreateSolidBrush (ColorPixel (bg));
 	  hOldBrush = SelectObject (TtDisplay, hBrush);
 	  Polygon (TtDisplay, points, npoints);
 	}
-      Polyline (TtDisplay, points, npoints);
-      SelectObject (TtDisplay, hOldPen);
-      WIN_ReleaseDeviceContext ();
-      if (!DeleteObject (hPen))
+  if (thick > 0)
+    Polyline (TtDisplay, points, npoints);
+  SelectObject (TtDisplay, hOldPen);
+  WIN_ReleaseDeviceContext ();
+  if (!DeleteObject (hPen))
 	WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawSpline (2)"));
-      hPen = (HPEN) 0;
-    }
-
+  hPen = (HPEN) 0;
+ 
   if (hBrush)
     {
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
-	WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
+        WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
     }
 
   if (pat != (Pixmap)0)

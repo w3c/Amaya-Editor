@@ -435,7 +435,7 @@ PtrProCtl   ctxt;
 
 
 /*----------------------------------------------------------------------
-  SortFunctionTable generates a sorted the function table in ascending
+  SortFunctionTable generates the function table in ascending
   order.
   ----------------------------------------------------------------------*/
 static void SortFunctionTable ()

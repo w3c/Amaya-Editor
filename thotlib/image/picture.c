@@ -851,14 +851,20 @@ PtrBox       box;
 	      SetMapMode (hMemDC, GetMapMode (TtDisplay));
 
 	      GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
-	      ptSize.x = bm.bmWidth;
-	      ptSize.y = bm.bmHeight;
-	      DPtoLP (TtDisplay, &ptSize, 1);
-	      ptOrg.x = 0;
-	      ptOrg.y = 0;
-	      DPtoLP (hMemDC, &ptOrg, 1);
+	      /*DPtoLP (TtDisplay, &ptSize, 1);*/
+		  /* shift in the source image */
+	      ptOrg.x = pFrame->FrClipXBegin + pFrame->FrXOrg - box->BxXOrg;
+	      ptOrg.y = pFrame->FrClipYBegin + pFrame->FrYOrg - box->BxYOrg;
+		  /* size of the copied zone */
+	      ptSize.x = pFrame->FrClipXEnd - pFrame->FrClipXBegin - ptOrg.x;
+	      ptSize.y = pFrame->FrClipYEnd - pFrame->FrClipYBegin - ptOrg.y;
+		  if (ptSize.x > bm.bmWidth - ptOrg.x)
+	        ptSize.x = bm.bmWidth - ptOrg.x;
+		  if (ptSize.y > bm.bmHeight - ptOrg.y)
+	        ptSize.y = bm.bmHeight - ptOrg.y;
+	      /*DPtoLP (hMemDC, &ptOrg, 1);*/
 	    
-	      if (!BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY))
+	      if (!BitBlt (TtDisplay, xFrame + ptOrg.x, yFrame + ptOrg.y, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY))
 		WinErrorBox (NULL, TEXT("LayoutPicture (1)"));
 	      SelectObject (hMemDC, bitmap);
 	      if (hMemDC && !DeleteDC (hMemDC))
