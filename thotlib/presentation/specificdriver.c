@@ -139,6 +139,7 @@ Document            doc;
    PtrPRule            rule = (PtrPRule) pRule;
 
    PresentationValueToPRule (val, rule->PrType, pRule, 0);
+   RedisplayNewPRule (doc, el, pRule);
    return (0);
 }
 

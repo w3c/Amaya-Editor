@@ -63,7 +63,7 @@ NotifyPresentation *event;
 	     styleAttr = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (event->element, styleAttr, event->document);
 	  }
-	/* copie the style string into the style attribute */
+	/* copy the style string into the style attribute */
 	TtaSetAttributeText (styleAttr, style, event->element, event->document);
      }
 }

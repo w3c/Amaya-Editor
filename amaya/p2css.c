@@ -489,8 +489,18 @@ void               *param;
 	    case DRIVERP_FILL_PATTERN:
 	       break;
 	    case DRIVERP_VERTICAL_POSITION:
+	       if (real)
+		  sprintf (string, "marging-top : %g", fval);
+	       else
+		  sprintf (string, "marging-top : %d", settings->value.value);
+	       add_unit = 1;
 	       break;
 	    case DRIVERP_HORIZONTAL_POSITION:
+	       if (real)
+		  sprintf (string, "margin-left : %g", fval);
+	       else
+		  sprintf (string, "margin-left : %d", settings->value.value);
+	       add_unit = 1;
 	       break;
 	    case DRIVERP_HEIGHT:
 	       if (real)

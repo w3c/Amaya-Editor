@@ -337,7 +337,7 @@ View                view;
    Attribute           at;
    AttributeType       atType;
    int                 firstSelectedChar, lastSelectedChar, i, j;
-   Element             cour;
+   Element             cour, parent;
    char                class[50];
    int                 len;
 
@@ -361,6 +361,7 @@ View                view;
      }
    while (cour != NULL);
 
+
    /* Case of a substring : need to split the original text. */
    if ((AClassFirstReference == AClassLastReference) &&
        (firstSelectedChar != 0))
@@ -381,6 +382,32 @@ View                view;
      }
    if (AClassFirstReference == NULL)
       return;
+
+   /* Case of all child of an element are selected, select the parent instead */
+   parent = TtaGetParent(AClassFirstReference);
+   if ((parent == TtaGetParent(AClassLastReference)) &&
+       (AClassFirstReference == TtaGetFirstChild(parent)) &&
+       (AClassLastReference == TtaGetLastChild(parent))) { 
+       int select_parent = TRUE;
+       ElementType elType;
+       int len;
+
+       elType = TtaGetElementType(AClassFirstReference);
+       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT) {
+          if (firstSelectedChar > 1) select_parent = FALSE;
+       }
+
+       elType = TtaGetElementType(AClassLastReference);
+       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT) {
+	  len = TtaGetTextLength (AClassLastReference);
+          if (lastSelectedChar < len) select_parent = FALSE;
+       }
+
+       if (select_parent) {
+           AClassFirstReference = AClassLastReference = parent;
+	   firstSelectedChar = lastSelectedChar = 0;
+       }
+   }
 
    /* updating the class name selector. */
    TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 0, 0,

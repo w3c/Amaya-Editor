@@ -1400,6 +1400,12 @@ GenericContext      ctxt;
 	    case PtHyphenate:
 	       setting->type = DRIVERP_HYPHENATION;
 	       break;
+	    case PtVertPos:
+	       setting->type = DRIVERP_VERTICAL_POSITION;
+	       break;
+	    case PtHorizPos:
+	       setting->type = DRIVERP_HORIZONTAL_POSITION;
+	       break;
 	    default:
 	       /*
 	        * not yet supported by the driver.

@@ -10,37 +10,6 @@
 #include "amaya.h"
 #include "css.h"
 
-/*----------------------------------------------------------------------
-
-             GESTION des styles : suivant CSS de Hakon Lie
-
-
- Postit :
-
-[X] Faire la coupure pour element de texte
-
-[X] maintien de l'attribut style .
-
-[X] probleme d'attributs class qui entrent en conflit avec
-    de la presentation.
-    http://praslin/tests/bug.html
- R: oubli de desactivage checking en sortie des parsing de classe
-    si non trouvee !
-
-[X] Gestion de l'export des couleurs sous forme hexa
-
-[ ] Parsing de font: ..... attribut de style condense
-
-[ ] Gestion des boites et du positionnement
-
-[X] gestion de style contextuels
-
-[ ] chargement des background par include ...
-
-[X] chargement de feuille de style externe (c.f. css.c)
-
-  ----------------------------------------------------------------------*/
-
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "HTMLstyle_f.h"
@@ -167,7 +136,15 @@ Document            doc;
 			    buffer[index++] = '-';
 			 continue;
 		      }
-		    /* skip the -- sequence, basically -(-(1)) == 1 */
+		    cour = readfunc ();
+		    if (cour != '>')
+		      {
+			 CSS_CHECK_BUFFER
+			    buffer[index++] = '-';
+			 CSS_CHECK_BUFFER
+			    buffer[index++] = '-';
+			 continue;
+		      }
 		    cour = readfunc ();
 		    continue;
 	      }
@@ -884,6 +861,7 @@ NotifyAttribute    *event;
 	style[len] = EOS;
 
 	ParseHTMLSpecificStyle (el, style, doc);
+	TtaFreeMemory(style);
      }
 }
 
