@@ -1001,8 +1001,8 @@ void ANNOT_Post_callback (int doc, int status,
 	       /* update the Document metadata to point to the new
 		  body too */
 	       
-	       /* replace the body only if it changed.  This means that a local annot was just made a 
-		  shared annot. We update the metadata stored in memory and update the
+	       /* replace the body only if it changed.  This means that a local annot was just 
+		  made a shared annot. We update the metadata stored in memory and update the
 		  annotations indexes as needed */
 	       if (previous_body_url != annot->body_url)
 		 {

@@ -807,6 +807,7 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
   LINK_CreateMeta
   -----------------------------------------------------------------------*/
 AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode mode)
+
 {
   AnnotMeta   *annot;
   char      *annot_user;
@@ -818,7 +819,14 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
 
 #ifdef ANNOT_ON_ANNOT
   if (DocumentTypes[source_doc] == docAnnot && AnnotMetaData[source_doc].annot_url)
-    source_doc_url = AnnotMetaData[source_doc].annot_url;
+    {
+      /* we reply to an annotation (using it's metadata). However, we annotate the
+	 body of an annotation, not its metadata */
+      if (mode & ANNOT_isReplyTo)
+	source_doc_url = AnnotMetaData[source_doc].annot_url;
+      else
+	source_doc_url = DocumentURLs[source_doc];
+    }
   else
 #endif /* ANNOT_ON_ANNOT */
     source_doc_url = DocumentURLs[source_doc];
