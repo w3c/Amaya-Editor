@@ -1613,7 +1613,6 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_IMG));
       SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE),
 		     TtaGetMessage (AMAYA, AM_LOCATION));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE), TtaGetMessage (AMAYA, AM_ALT));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
@@ -1621,7 +1620,17 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       
       SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
       UrlToOpen[0] = EOS;
-      SetDlgItemText (hwnDlg, IDC_GETALT, ImgAlt);
+      if (RequiredAttr)
+	{
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE),
+			 TtaGetMessage (AMAYA, AM_ALT));
+	  SetDlgItemText (hwnDlg, IDC_GETALT, ImgAlt);
+	}
+      else
+	{
+	  DestroyWindow (GetDlgItem (hwnDlg, IDC_ALTMESSAGE));
+	  DestroyWindow (GetDlgItem (hwnDlg, IDC_GETALT));
+	}
       break;
       
     case WM_COMMAND:
@@ -1629,17 +1638,21 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{
 	case ID_CONFIRM:
 	  GetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen, sizeof (UrlToOpen) - 1);
-	  GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
-	  if (!AltText || AltText[0] == 0)
-	    MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
-			TtaGetMessage (AMAYA, AM_BUTTON_IMG),
-			MB_OK | MB_ICONERROR);
-	  else 
+	  if (RequiredAttr)
 	    {
-	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
-	      ThotCallback (BaseImage + ImageURL, STRING_DATA, UrlToOpen);
-	      ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 1);
-	      EndDialog (hwnDlg, ID_CONFIRM);
+	      /* ALT attribute required */
+	      GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
+	      if (!AltText || AltText[0] == 0)
+		MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
+			    TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+			    MB_OK | MB_ICONERROR);
+	      else 
+		{
+		  ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
+		  ThotCallback (BaseImage + ImageURL, STRING_DATA, UrlToOpen);
+		  ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 1);
+		  EndDialog (hwnDlg, ID_CONFIRM);
+		}
 	    }
 	  break;
 	    
@@ -3888,9 +3901,10 @@ void CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *url,
 
 /*-----------------------------------------------------------------------
  CreateOPenImgDlgWindow
+ The parameter getAlt is tRUE when the ALT attribute is required.
  ------------------------------------------------------------------------*/
 void CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select,
-			     int dir_select, int doc_type)
+			     int dir_select, int doc_type, ThotBool getAlt)
 {  
   docSelect = doc_select;
   dirSelect = dir_select;
@@ -3899,7 +3913,13 @@ void CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select,
     SzFilter = APPIMAGENAMEFILTER;
   else 
     SzFilter = APPALLFILESFILTER;
-  strcpy (AltText, ImgAlt);
+  if (getAlt)
+    {
+      RequiredAttr = TRUE;
+      strcpy (AltText, ImgAlt);
+    }
+  else
+    RequiredAttr = FALSE;
   DialogBox (hInstance, MAKEINTRESOURCE (OPENIMAGEDIALOG), parent,
 	  (DLGPROC) OpenImgDlgProc);
 }

@@ -3832,9 +3832,9 @@ RULES
 	IN Structure_view BEGIN
 		Height: 0;
 		Width: 0;
-		if not within Object
+		if not Immediately within Object
 		   Visibility: 1;
-		if within Object
+		if Immediately within Object
 		   Visibility: 0;
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
@@ -5059,7 +5059,7 @@ ATTRIBUTES
 
  NoObjects(PICTURE_UNIT*):
 	BEGIN
-	if within Object
+	if Immediately within Object
 	    Visibility: 0;
 	if within Embed_
 	    Visibility: 0;

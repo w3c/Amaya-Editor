@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -181,6 +182,7 @@ extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 
 #else /* __STDC__ */
+
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );

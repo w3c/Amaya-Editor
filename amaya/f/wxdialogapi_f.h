@@ -28,6 +28,11 @@ extern ThotBool CreateImageDlgWX ( int ref,
                                    const char *title,
                                    const char *urlToOpen,
                                    const char *alt );
+extern ThotBool CreateObjectDlgWX ( int ref,
+                                    ThotWindow parent,
+                                    const char *title,
+                                    const char *urlToOpen,
+                                    const char *type );
 extern ThotBool CreateTitleDlgWX ( int ref,
                                    ThotWindow parent,
                                    char *doc_title );
@@ -110,6 +115,11 @@ extern ThotBool CreateImageDlgWX ( int ref,
                                      const char *title,
                                      const char *urlToOpen,
                                      const char *alt );
+extern ThotBool CreateObjectDlgWX ( int ref,
+                                      ThotWindow parent,
+                                      const char *title,
+                                      const char *urlToOpen,
+                                      const char *type );
 extern ThotBool CreateTitleDlgWX ( int ref,
                                      ThotWindow parent,
                                      char *doc_title );

@@ -3633,30 +3633,6 @@ void  CreateObject (Document document, View view)
 	      TtaFreeMemory (text);
 	    }
 	}
-      /* get the alt attribute of the Image and use its contents to make
-	 the Object_Content element */
-      attrType.AttrTypeNum = HTML_ATTR_ALT;
-      attr = TtaGetAttribute (image, attrType);
-      if (attr != NULL)
-	{
-	  length = TtaGetTextAttributeLength (attr);
-	  if (length > 0)
-	    {
-	      oldStructureChecking = TtaGetStructureChecking (document);
-	      TtaSetStructureChecking (FALSE, document);
-	      text = (char *)TtaGetMemory (length + 1);
-	      TtaGiveTextAttributeValue (attr, text, &length);
-	      elType.ElTypeNum = HTML_EL_Object_Content;
-	      content = TtaNewElement (document, elType);
-	      TtaInsertSibling (content, image, FALSE, document);
-	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	      textEl = TtaNewElement (document, elType);
-	      TtaInsertFirstChild (&textEl, content, document);
-	      TtaSetTextContent (textEl, (unsigned char*)text, Latin_Script, document);
-	      TtaFreeMemory (text);
-	      TtaSetStructureChecking (oldStructureChecking, document);
-	    }
-	}
     }
 }
 

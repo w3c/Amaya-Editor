@@ -1743,6 +1743,7 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
       TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
+      TtaDestroyDialogue (BaseDialog + ConfirmForm);   
     }
 #endif /* _WX */
 #ifdef _WINGUI

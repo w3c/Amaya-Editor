@@ -46,27 +46,32 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   // update dialog labels with given ones
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( label );
-  XRCCTRL(*this, "wxID_LABEL_2", wxStaticText)->SetLabel( label2 );
-  XRCCTRL(*this, "wxID_LABEL_3", wxStaticText)->SetLabel( label3 );
-  XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton)->SetLabel( extrabutton );
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( confirmbutton );
-  XRCCTRL(*this, "wxID_CANCELBUTTON",  wxButton)->SetLabel( cancelbutton );
   
   // now hide unused field and buttons (destroy it)
   wxSizer * p_sizer = XRCCTRL(*this, "wxID_LABEL", wxStaticText)->GetContainingSizer();
   if (label2.IsEmpty())
     XRCCTRL(*this, "wxID_LABEL_2", wxStaticText)->Hide();
+  else
+    XRCCTRL(*this, "wxID_LABEL_2", wxStaticText)->SetLabel( label2 );
   if (label3.IsEmpty())
     XRCCTRL(*this, "wxID_LABEL_3", wxStaticText)->Hide();
+  else
+    XRCCTRL(*this, "wxID_LABEL_3", wxStaticText)->SetLabel( label3 );
   p_sizer->Layout();
 
   p_sizer = XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton)->GetContainingSizer();
   if (extrabutton.IsEmpty())
     p_sizer->Show(XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton), false);
+  else
+    XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton)->SetLabel( extrabutton );
   if (confirmbutton.IsEmpty())
     p_sizer->Show(XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton), false);
+  else
+    XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( confirmbutton );
   if (cancelbutton.IsEmpty())
     p_sizer->Show(XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton), false);
+  else
+    XRCCTRL(*this, "wxID_CANCELBUTTON",  wxButton)->SetLabel( cancelbutton );
   p_sizer->Layout();
   
   // give default focus to ... 

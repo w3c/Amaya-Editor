@@ -4026,6 +4026,10 @@
 	<message xml:lang="tr">Karakter (&amp;xxx;)</message>
 	<message xml:lang="ru">Символ (&amp;xxx;)</message>
 </label>
+<label define="AM_NEWOBJECT">
+	<message xml:lang="en">Create Object</message>
+	<message xml:lang="fr">Création d'un objet</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

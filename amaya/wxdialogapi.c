@@ -18,6 +18,7 @@
   #include "wxdialog/HRefDlgWX.h"
   #include "wxdialog/ImageDlgWX.h"
   #include "wxdialog/InitConfirmDlgWX.h"
+  #include "wxdialog/ObjectDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
   #include "wxdialog/PrintDlgWX.h"
@@ -83,17 +84,15 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
   wxString wx_confirmbutton;
 
   if (extrabutton && extrabutton[0] != EOS)
-    {
     /* a message with 3 buttons */
     wx_extrabutton = TtaConvMessageToWX( extrabutton );
-    if (confirmbutton && confirmbutton[0] != EOS)
-      wx_confirmbutton = TtaConvMessageToWX( confirmbutton );
-    else
-      wx_confirmbutton = TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) );
-    }
   else
     /* just 2 buttons */
-    wx_extrabutton = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) );
+    wx_extrabutton = TtaConvMessageToWX( "" );
+  if (confirmbutton && confirmbutton[0] != EOS)
+    wx_confirmbutton = TtaConvMessageToWX( confirmbutton );
+  else
+    wx_confirmbutton = TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) );
 
   InitConfirmDlgWX * p_dlg = new InitConfirmDlgWX(
       ref, /* thotlib catalog reference */
@@ -246,6 +245,56 @@ ThotBool CreateImageDlgWX ( int ref, ThotWindow parent,
 				       wx_urlToOpen,
 				       wx_alt,
 				       wx_filter );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (ref, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateObjectDlgWX create the dialog for creating new object
+  params:
+    + parent : parent window
+    + title : dialog title
+    + urlToOpen : suggested url
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateObjectDlgWX ( int ref, ThotWindow parent,
+			     const char *title,
+			     const char *urlToOpen,
+			     const char *type)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  wxString wx_title   = TtaConvMessageToWX( title );
+  wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
+  wxString wx_type = TtaConvMessageToWX( type );
+  wxString wx_filter = APPIMAGENAMEFILTER;
+
+  ObjectDlgWX * p_dlg = new ObjectDlgWX( ref,
+					 parent,
+					 wx_title,
+					 wx_urlToOpen,
+					 wx_type,
+					 wx_filter );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {

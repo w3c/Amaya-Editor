@@ -36,8 +36,8 @@ extern LRESULT  ToolBarNotify (int, ThotWindow, WPARAM, LPARAM);
 extern LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 extern int    GetFrameNumber (ThotWindow);
 extern void   TtaHandleOneWindowEvent (MSG*);
-extern void   CreateOpenImgDlgWindow (ThotWindow parent, char *imgName,
-					  int doc_select, int dir_select, int doc_type);
+extern void   CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select,
+				      int dir_select, int doc_type, ThotBool getAlt);
 extern void   WIN_ListSaveDirectory (ThotWindow hwnDlg, char *s, char *url);
 extern void   ThotCallback (int, int, char *data);
 extern void   SwitchIconMath (Document, View, ThotBool);

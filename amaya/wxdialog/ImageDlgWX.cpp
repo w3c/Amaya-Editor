@@ -13,8 +13,6 @@
 #include "message_wx.h"
 
 static int      MyRef;
-static char     Buffer[512];
-static char     Alt[512];
 
 
 //-----------------------------------------------------------------------------
@@ -78,6 +76,9 @@ ImageDlgWX::~ImageDlgWX()
   ----------------------------------------------------------------------*/
 void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
 {
+  char     Buffer[512];
+  char     Alt[512];
+
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
   wxASSERT( url.Len() < 512 );

@@ -234,6 +234,7 @@ AMAYA_OBJ = \
 	wxdialog/HRefDlgWX.o \
 	wxdialog/ImageDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \
+	wxdialog/ObjectDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \
 	wxdialog/PreferenceDlgWX.o \
 	wxdialog/PrintDlgWX.o \

@@ -330,25 +330,12 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 /* the object represents an image. We need a PICTURE element as
 	    child of the object to hold the image */
 	 {
+	   elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	   picture = TtaNewTree (doc, elType, "");
 	   if (child)
-	     {
-	       elType = TtaGetElementType (child);
-	       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-		 /* there is already a PICTURE element */
-		 picture = child;
-	     }
-	   /* if the object element has no PICTURE element as its first child
-	      create one */
-	   if (!picture)
-	     {
-	       elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	       picture = TtaNewTree (doc, elType, "");
-	       if (child)
-		 TtaInsertSibling (picture, child, TRUE, doc);
-	       else
-		 TtaInsertFirstChild (&picture, el, doc);
-	       child = picture;
-	     }
+	     TtaInsertSibling (picture, child, TRUE, doc);
+	   else
+	     TtaInsertFirstChild (&picture, el, doc);
 	   /* copy attribute data of the object into the SRC attribute of
 	      the PICTURE element */
 	   if (data)

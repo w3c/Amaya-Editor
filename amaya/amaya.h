@@ -248,7 +248,9 @@ typedef enum _ClickEvent {
 #define FormBackground 11
 #define ImageAlt       12
 #define FormAlt        13
-#define IMAGE_MAX_REF  14
+#define FormObject     14
+#define ImageType      15
+#define IMAGE_MAX_REF  16
 
 #define CSSForm         0
 #define CSSSelect       1
