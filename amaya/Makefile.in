@@ -113,7 +113,7 @@ amaya_comp_redland: @MAKEREDLAND@ force
 	@(cd .. ; $(MAKE) redland CC="$(CC)" CFLAGS="-O2")
 
 .depends depend : ../tools/mkdep/mkdep
-	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c $(VPATH)/*.cpp > .depends
 
 #########################################################################
 #									#

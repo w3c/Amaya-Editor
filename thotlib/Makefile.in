@@ -69,7 +69,7 @@ include .depends
 	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" )
 
 .depends depend : ../tools/mkdep/mkdep
-	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*/*.c  > .depends
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*/*.c $(VPATH)/*/*.cpp  > .depends
 
 #########################################################################
 #									#
@@ -212,7 +212,6 @@ EDITOR_OBJ = \
 	dialogue/printmenu.o \
 	dialogue/searchmenu.o \
 	dialogue/selectmenu.o \
-	dialogue/AmayaCallback.o \
 	dialogue/AmayaWindow.o \
 	dialogue/AmayaPanel.o \
 	dialogue/AmayaPage.o \
