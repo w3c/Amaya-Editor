@@ -6,7 +6,9 @@
 PRESENTATION MathML;
 
 VIEWS
-   Formatted_view, Math_Structure_view;
+   Formatted_view,
+   Math_Structure_view merge with Structure_view
+                                  Graph_Structure_view;
 
 #define SCRIPTSIZEMULTIPLIER 70 %
 #define OPERATOR_SPACE 0.27

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996.
+ *  (c) COPYRIGHT INRIA 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -254,10 +254,7 @@ typedef struct _PasteElemDescr
 	PtrElement	PeAscend[MAX_PASTE_LEVEL]; /* former ancestor element*/
 } PasteElemDescr;
 
-/* Document view number */
-typedef int		DocViewNumber;
-
-/* An element of an abstract tree */
+/* an element of an abstract tree */
 typedef struct _ElementDescr
 {
     PtrElement		ElParent;	/* Parent in the abstract tree */
@@ -470,16 +467,35 @@ typedef struct _ReferenceChange
 	PathBuffer		RcFileName;	/* complete name of the .REF
 						   file */
 } ReferenceChange;
-	
+
+/* identifier of a document view */
+typedef int		DocViewNumber;
+
+typedef struct _GuestViewDescr *PtrGuestViewDescr;
+
+/* descriptor of a guest view, i.e. a view (defined in a presentation schema)
+   that can be hosted by a document view (see clause MERGE in language P) */
+typedef struct _GuestViewDescr
+{
+        PtrSSchema        GvSSchema;       /* structure schema of the present.
+					      schema that defines the view */
+        int               GvPSchemaView;   /* number of the view in the present
+					      schema that defines it */
+        PtrGuestViewDescr GvNextGuestView; /* next guest view for the same
+					      document view */
+} GuestViewDescr;
+
 /* descriptor of a document view */
 typedef struct _DocViewDescr
 {
-	PtrSSchema	DvSSchema;	/* structure schema of the presentation
+	PtrSSchema	  DvSSchema;    /* structure schema of the presentation
 					   schema that defines the view */
-	int		DvPSchemaView;	/* Number of the view in the
+	int		  DvPSchemaView;/* number of the view in the
 					   presentation schema */
-	ThotBool        DvSync;		/* this view must be synchronized with
+	ThotBool          DvSync;	/* this view must be synchronized with
 					   the active view */
+        PtrGuestViewDescr DvFirstGuestView; /* list of guest views for that
+					   document view */
 } DocViewDescr;
 
 /* type of an editing operation recorded in the history */
@@ -596,7 +612,7 @@ typedef struct _DocumentDescr
 	PtrElement	DocViewSubTree[MAX_VIEW_DOC];	/* root of the subtree
 					   of the main tree to display in the
 					   view, null by default */
-	int		DocViewFrame[MAX_VIEW_DOC];	/* number of the window
+	int		DocViewFrame[MAX_VIEW_DOC];	/* ident. of the window
 					   corresponding to the view */
 	int		DocViewVolume[MAX_VIEW_DOC];   /* volume of the view */
 	int             DocViewFreeVolume[MAX_VIEW_DOC]; /* free volume of the

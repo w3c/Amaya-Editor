@@ -24,8 +24,9 @@ PresentModel =	  'PRESENTATION' TypeName ';'
 TypeName =	  NAME .
 
 ViewList =	  DclView < ',' DclView > ';' .
-DclView =	  ViewName [ 'EXPORT' ] .
+DclView =	  ViewName [ 'EXPORT' ] [ 'MERGE' 'With' MergeViews ] .
 ViewName =	  NAME .
+MergeViews =      ViewName < ViewName > .
 
 PrintViewList =	  PrintView < ',' PrintView > ';' .
 PrintView =	  ViewName / TypeName .

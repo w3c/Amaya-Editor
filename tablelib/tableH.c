@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1997.
+ *  (c) COPYRIGHT INRIA 1997-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -713,7 +713,7 @@ ThotBool         force;
 {
   PtrAbstractBox      pCell;
   PtrAbstractBox     *colBox;
-  PtrBox              pBox, box;
+  PtrBox              pBox, box = NULL;
   PtrTabRelations     pTabRel;
   int                *colWidth, *colPercent;
   int                 cNumber, cRef;
@@ -1192,6 +1192,7 @@ int             frame;
   pTabRel = pBox->BxColumns;
   cNumber = 0;
   change = FALSE;
+  span = 1;
   while (pTabRel != NULL)
     {
       for (i = 0; i < MAX_RELAT_DIM &&

@@ -1,21 +1,12 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
- * This module saves into PostScript format thot documents
+ * This module saves Thot documents in PostScript
  *
  * Authors: I. Vatton (INRIA)
  *          C. Roisin (INRIA) - Pagination at printing time
@@ -210,21 +201,23 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC __ */
 {
-   switch (msg) {
-          case WM_INITDIALOG: ghwndAbort = hwnd;
-                              EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
-                              break;
+   switch (msg)
+     {
+     case WM_INITDIALOG: ghwndAbort = hwnd;
+       EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
+       break;
 
-          case WM_COMMAND:
-               switch (LOWORD (wParam)) {
-                       case IDCANCEL: gbAbort = TRUE;
-                                      AbortDoc (TtPrinterDC);
-                                      EnableWindow  (ghwndMain, TRUE);
-                                      DestroyWindow (hwnd);
-                                      return TRUE;
-			   }
-               break;
-   }
+     case WM_COMMAND:
+       switch (LOWORD (wParam))
+	 {
+	 case IDCANCEL: gbAbort = TRUE;
+	   AbortDoc (TtPrinterDC);
+	   EnableWindow  (ghwndMain, TRUE);
+	   DestroyWindow (hwnd);
+	   return TRUE;
+	 }
+       break;
+     }
    return 0;
 }
 
@@ -246,11 +239,11 @@ int error;
    MSG msg;
 
    while (!gbAbort && PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
-         if (!ghwndAbort || !IsDialogMessage (ghwndAbort, &msg)) {
-            TranslateMessage (&msg);
-            DispatchMessage (&msg);
-		 }
-
+       if (!ghwndAbort || !IsDialogMessage (ghwndAbort, &msg))
+	  {
+          TranslateMessage (&msg);
+          DispatchMessage (&msg);
+	  }
    return !gbAbort;
 }
 
@@ -280,7 +273,8 @@ LPSTR  msg;
     gbAbort    = FALSE;     /* user hasn't aborted */
 
 
-   if (!(ghwndAbort = CreateDialog (hInst, TEXT("Printinprogress"), ghwndMain, (DLGPROC) AbortDlgProc)))
+   if (!(ghwndAbort = CreateDialog (hInst, TEXT("Printinprogress"), ghwndMain,
+				    (DLGPROC) AbortDlgProc)))
       WinErrorBox (ghwndMain, TEXT("InitPrinting: DE_LANG"));
 
     EnableWindow (ghwndMain, FALSE);
@@ -291,10 +285,11 @@ LPSTR  msg;
     DocInfo.lpszDocName = (LPTSTR) msg;
     DocInfo.lpszOutput  = NULL;
 
-    if (StartDoc (hDC, &DocInfo) <= 0) {
+    if (StartDoc (hDC, &DocInfo) <= 0)
+      {
         bError = TRUE;
         return FALSE;
-    }
+      }
 
     /* might want to call the abort proc here to allow the user to
      * abort just before printing begins */
@@ -472,23 +467,26 @@ FILE               *fout;
 #endif /* __STDC__ */
 {
   NumberOfPages++;
-# ifdef _WINDOWS 
-  if (TtPrinterDC) {
-    EndPage (TtPrinterDC);
-  } else {
-    fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
-    fflush (fout);
-    /* Enforce loading the font when starting a new page */
-    PoscriptFont = NULL;
-    ColorPs = -1;
-  }
-# else  /* _WINDOWS */
-  fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
+#ifdef _WINDOWS 
+  if (TtPrinterDC)
+     EndPage (TtPrinterDC);
+  else
+     {
+     fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber,
+	      LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
+     fflush (fout);
+     /* Enforce loading the font when starting a new page */
+     PoscriptFont = NULL;
+     ColorPs = -1;
+     }
+#else  /* _WINDOWS */
+  fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber,
+	   LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
   fflush (fout);
   /* Enforce loading the font when starting a new page */
   PoscriptFont = NULL;
   ColorPs = -1;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 #ifndef _WINDOWS
@@ -653,7 +651,7 @@ STRING server;
 	FrRef[i] = 0;
    /* Ouverture du serveur X-ThotWindow */
       /*Connexion au serveur X impossible */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtDisplay = XOpenDisplay (server);
    if (!TtDisplay)
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
@@ -665,16 +663,16 @@ STRING server;
    TtCmap = XDefaultColormap (TtDisplay, TtScreen);
    Black_Color = BlackPixel (TtDisplay, TtScreen);
    White_Color = WhitePixel (TtDisplay, TtScreen);
-#  endif /* ! _WINDOWS */
+#endif /* ! _WINDOWS */
    DefaultBColor = 0;
    DefaultFColor = 1;
    InitDocColors (TEXT("thot"));
    /* Initialisation des polices de caracteres */
-#  ifdef _WINDOWS 
+#ifdef _WINDOWS 
    WIN_InitDialogueFonts (TtPrinterDC, TEXT("thot"));
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    InitDialogueFonts ("thot");
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------------*/
@@ -806,7 +804,8 @@ int                *volume;
     i++;
 
 #ifdef _WINDOWS
-  if (TtPrinterDC) {
+  if (TtPrinterDC)
+    {
     FrRef[i] = (ThotWindow)i;
     /* initialiser visibilite et zoom de la fenetre */
     /* cf. procedure InitializeFrameParams */
@@ -819,7 +818,7 @@ int                *volume;
     RemoveClipping(i);
     *volume = 16000;
     return (i);
-  }
+    }
 #endif /* _WINDOWS */
 
   if (i == 1)
@@ -1798,8 +1797,9 @@ PtrDocument         pDoc;
      /* on traite une vue d'elements associes */
      {
        pEl = pDoc->DocAssocRoot[CurAssocNum - 1];
-       ustrncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-		MAX_NAME_LENGTH);
+       ustrncpy (viewName,
+		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+		 MAX_NAME_LENGTH);
        rootAbsBox = pDoc->DocAssocRoot[CurAssocNum - 1]->ElAbstractBox[0];
        /* les numeros de pages a imprimer ne sont significatifs que pour la 
 	  vue principale de l'arbre principal */
@@ -1811,7 +1811,9 @@ PtrDocument         pDoc;
      {
        pEl = pDoc->DocRootElement;
        pViewD = &pDoc->DocView[CurrentView - 1];
-       ustrncpy (viewName, pViewD->DvSSchema->SsPSchema->PsView[pViewD->DvPSchemaView - 1], MAX_NAME_LENGTH);
+       ustrncpy (viewName,
+		 pViewD->DvSSchema->SsPSchema->PsView[pViewD->DvPSchemaView-1],
+		 MAX_NAME_LENGTH);
        pDoc->DocViewRootAb[CurrentView - 1] = AbsBoxesCreate (pEl, pDoc,
 			 CurrentView, TRUE, TRUE, &full);
        rootAbsBox = pEl->ElAbstractBox[CurrentView - 1];
@@ -1860,7 +1862,7 @@ PtrDocument         pDoc;
        SetMargins (NULL, NULL);
        /* Document sans marques de pages */
        /* probablement un graphique: il ne faut pas clipper */
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
        if (gbAbort)
 	 return;
        if (TtPrinterDC)
@@ -1869,7 +1871,7 @@ PtrDocument         pDoc;
 	     WinErrorBox (NULL, TEXT("PrintView (1)"));
 	 }
        else
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	 PSfile = (FILE *) FrRef[CurrentFrame];
        DisplayFrame (CurrentFrame);
        DrawPage (PSfile);
@@ -1953,12 +1955,12 @@ int                viewsCounter;
   DocViewNumber       docView;
   int                 schView, rule, v, assocNum, firstFrame;
   ThotBool            present, found, withPages;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
   /* static DOCINFO docInfo = {sizeof (DOCINFO), TEXT("Amaya"), NULL}; */
   int    i;
   int    xRes, yRes, xSize, ySize;
   RECT   Rect;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   TopMargin = 0;
   LeftMargin = 0;
@@ -1970,10 +1972,12 @@ int                viewsCounter;
   firstFrame = 0;
   withPages = FALSE;
 
-#  ifdef _WINDOWS
-  if (TtPrinterDC) {
+#ifdef _WINDOWS
+  if (TtPrinterDC)
+    {
     for (i = 0; i < MAX_COLOR; i++) 
-      Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
+      Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green,
+			  RGB_Table[i].blue);
     
     xSize = GetDeviceCaps (TtPrinterDC, HORZRES);
     ySize = GetDeviceCaps (TtPrinterDC, VERTRES);
@@ -1991,8 +1995,8 @@ int                viewsCounter;
     
     if (!InitPrinting (TtPrinterDC, ghwndMain, hCurrentInstance, NULL))
       WinErrorBox (NULL, TEXT("PrintDocument (1)"));
-  }
-   #  endif /* _WINDOWS */
+    }
+#endif /* _WINDOWS */
 
   /* imprime l'une apres l'autre les vues a imprimer indiquees dans */
   /* les parametres d'appel du programme print */
@@ -2023,12 +2027,17 @@ int                viewsCounter;
 	  withPages = pPSchema->PsPaginatedView[schView];
 	  /* c'est une vue de l'arbre principal, on cherche un */
 	  /* descripteur de vue libre */
-	  for (docView = 0; docView < MAX_VIEW_DOC && CurrentView == 0; docView++)
+	  for (docView = 0; docView < MAX_VIEW_DOC && CurrentView == 0;
+	       docView++)
 	    if (pDoc->DocView[docView].DvPSchemaView == 0)
 	      /* on prend ce descripteur libre */
 	      {
-		pDoc->DocView[docView].DvPSchemaView = schView + 1;
 		pDoc->DocView[docView].DvSSchema = pSS;
+		pDoc->DocView[docView].DvPSchemaView = schView + 1;
+		pDoc->DocView[docView].DvSync = FALSE;
+		pDoc->DocView[docView].DvFirstGuestView = NULL;
+		/* create the guest view list for that view */
+		CreateGuestViewList (pDoc, docView+1);
 		CurrentView = docView + 1;
 	      }
 	}
@@ -2145,29 +2154,36 @@ int                viewsCounter;
 	}
     }
 
-#  ifdef _WINDOWS
-  if (TtPrinterDC) {
+#ifdef _WINDOWS
+  if (TtPrinterDC)
+    {
     if ((EndDoc (TtPrinterDC)) <= 0)
       WinErrorBox (NULL, TEXT("PrintDocument (2)"));
     
     DeleteDC (TtPrinterDC);
     TtPrinterDC = NULL;
     
-    if (!gbAbort) {
+    if (!gbAbort)
+      {
       EnableWindow  (ghwndMain, TRUE);
       DestroyWindow (ghwndAbort);
-    }
+      }
     return 0;
-  } else {
-    if (firstFrame != 0) {
+    }
+  else
+    {
+    if (firstFrame != 0)
+      {
       ClosePSFile (firstFrame);
       return (0); /** The .ps file was generated **/
-    } else {
+      }
+    else
+      {
       TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_MISSING_VIEW));
       return (-1); /** The .ps file was not generated for any raison **/
+      }
     }
-  }
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
   if (firstFrame != 0)
     {
       ClosePSFile (firstFrame);
@@ -2178,7 +2194,7 @@ int                viewsCounter;
       TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_MISSING_VIEW));
       return (-1); /** The .ps file was not generated for any raison **/
     }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -2222,7 +2238,7 @@ static int       n = 1;
    fclose (list);
 #endif
 
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   if (gbAbort)
     return;
   if (TtPrinterDC)
@@ -2231,7 +2247,7 @@ static int       n = 1;
         WinErrorBox (NULL, TEXT("PrintOnePage (1)"));
     }
   else
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
     PSfile = (FILE *) FrRef[CurrentFrame];
 
   if (pPageAb != NULL &&
@@ -2430,9 +2446,9 @@ int                 msgType;
 
 #endif /* __STDC__ */
 {
-# ifndef _WINDOWS
+#ifndef _WINDOWS
   CHAR_T              cmd[800];
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   if (msgType == FATAL)
     {
@@ -2440,13 +2456,13 @@ int                 msgType;
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
 	{
-#     ifdef _WINDOWS
+#ifdef _WINDOWS
       if ((uunlink (tempDir)) == -1)
          fprintf (stderr, "Cannot remove directory %s\n", tempDir);
-#     else  /* !_WINDOWS */
-	  sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
+#else  /* !_WINDOWS */
+	 sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
 	  system (cmd);
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	}
       exit (1);
     }
@@ -2542,9 +2558,9 @@ char              **argv;
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
-  STRING              realName;
+  STRING              realName = (STRING) NULL;
   STRING              server = (STRING) NULL;
-  STRING              pChar;
+  STRING              pChar = (STRING) NULL;
   STRING              destination = (STRING) NULL;
   CHAR_T              option [100];
   CHAR_T              name [MAX_PATH];             
@@ -2560,7 +2576,7 @@ char              **argv;
   ThotBool            realNameFound = FALSE;
   ThotBool            viewFound = FALSE;
   ThotBool            done;
-# ifndef _WINDOWS
+#ifndef _WINDOWS
   int                 result;
 #endif /* _WINDOWS */
 
@@ -2792,23 +2808,27 @@ char              **argv;
       else
 	{
 	  /* the argument is the filename */
+	  /* does it exist ?? */
 	  if (TtaFileExist (argv[argCounter]))
+	    /* Yes, it does, split the string into two parts: directory
+	       and filename */
 	    {
-	      /* does it exist ?? */
-	      TtaExtractName (argv[argCounter], tempDir, name); /* Yes, it does, split the string into two parts: directory and filename */  
+	      TtaExtractName (argv[argCounter], tempDir, name);
 	      argCounter++;
 	    }
 	  else
 	    /* The file does not exist */
-	    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), argv[argCounter]);
+	    TtaDisplayMessage (FATAL,
+			       TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE),
+			       argv[argCounter]);
         }
     }
   
   /* At least one view is mandatory */
-# ifndef _WINDOWS 
+#ifndef _WINDOWS 
   if (!viewFound)
     usage (argv[0]);
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
   
   length = ustrlen (name);
   if (!realNameFound)
@@ -2949,7 +2969,7 @@ char              **argv;
 #endif /* _WINDOWS */
     }
    TtaFreeMemory (realName);
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    exit (0);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 }

@@ -688,9 +688,10 @@ PtrDict            *pDictionary;
    if (*pDictionary == NULL)
       return (FALSE);
 
+   dictDirectory = NULL;
    pdict = *pDictionary;
    if (pdict != NULL)
-      /* Looks for the descriptor of the dictionary to release into the table */
+     /* Looks for the descriptor of the dictionary to release into the table */
      {
 	d = 0;
 	while (d < MaxDictionaries && dictTable[d] != pdict)
@@ -710,7 +711,8 @@ PtrDict            *pDictionary;
 	  }
      }
 
-   d = LoadTreatedDict (pDictionary, 0, document, dictName, dictDirectory, FALSE, TRUE);
+   d = LoadTreatedDict (pDictionary, 0, document, dictName, dictDirectory,
+			FALSE, TRUE);
    TtaFreeMemory (dictDirectory);
 
    if (d == -1)

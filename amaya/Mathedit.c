@@ -703,7 +703,7 @@ int                 construct;
 	{
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
-	  mathSchema = TtaNewNature (docSchema, TEXT("MathML"),
+	  mathSchema = TtaNewNature (doc, docSchema, TEXT("MathML"),
 				     TEXT("MathMLP"));
 	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) &&
 	      elType.ElTypeNum != HTML_EL_Math)

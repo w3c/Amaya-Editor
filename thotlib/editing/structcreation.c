@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * This module handles creation commands
  *
@@ -1250,9 +1241,9 @@ PtrSSchema          StructEl;
      }
    /* demande le type d'element reference' prevu par le schema de structure */
    if (pAttr == NULL)
-      ReferredType (pEl, NULL, &pSS, &referredType);
+      ReferredType (pEl, NULL, &pSS, &referredType, pDoc);
    else
-      ReferredType (NULL, pAttr, &pSS, &referredType);
+      ReferredType (NULL, pAttr, &pSS, &referredType, pDoc);
    if (pF != NULL)
       /* cree un voisin pour l'element dont on a trouve la */
       /* reference, (c'est une reference interne) */
@@ -1510,9 +1501,9 @@ PtrElement         *pSelEl;
    /* cherche le type d'element reference' */
    referredTypeNum = 0;
    if (pAttr == NULL)
-      ReferredType (pEl, NULL, &pSS, &referredTypeNum);
+      ReferredType (pEl, NULL, &pSS, &referredTypeNum, pDoc);
    else
-      ReferredType (NULL, pAttr, &pSS, &referredTypeNum);
+      ReferredType (NULL, pAttr, &pSS, &referredTypeNum, pDoc);
    if (pSS == NULL || referredTypeNum == 0)
       typeName[0] = EOS;
    else
@@ -1799,6 +1790,7 @@ PtrDocument         pDoc;
 
    NatureChoice = FALSE;
    nItems = 0;
+   ChoiceMenuDocument = pDoc;
    /* la regle definissant le type de l'element */
    pSRule = &pSS->SsRule[rule - 1];
    /* Si ce n'est pas une regle de choix, on ne fait rien */
@@ -1961,7 +1953,7 @@ STRING              natureName;
 
 #endif /* __STDC__ */
 {
-   Name                SSchemaName;
+   Name             SSchemaName;
 
    if (natureName != NULL)
       /* le CsChoice etait une regle NATURE */
@@ -1977,8 +1969,11 @@ STRING              natureName;
 		/* prend tel quel */
 		ustrncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
 	     /* cree une nouvelle nature */
-	     ChosenTypeNum = CreateNature (SSchemaName, NULL, ChoiceMenuSSchema[0]);
+	     ChosenTypeNum = CreateNature (SSchemaName, NULL,
+					   ChoiceMenuSSchema[0]);
 	     ChosenTypeSSchema = ChoiceMenuSSchema[0];
+	     AddSchemaGuestViews (ChoiceMenuDocument,
+				  ChosenTypeSSchema->SsRule[ChosenTypeNum - 1].SrSSchemaNat);
 	  }
      }
    else
@@ -2015,7 +2010,7 @@ ThotBool            desc;
 {
    PtrElement          pNewEl, pChild, pRet;
    int                 choiceTypeNum;
-   CHAR_T                menuBuf[MAX_TXT_LEN];
+   CHAR_T              menuBuf[MAX_TXT_LEN];
    Name                menuTitle;
    int                 nItems;
    ThotBool            ret, ok, stop;
@@ -2051,6 +2046,7 @@ ThotBool            desc;
 		     menu = TRUE;
 		     NatureChoice = TRUE;
 		     ChoiceMenuSSchema[1] = (*pEl)->ElStructSchema;
+		     ChoiceMenuDocument = pDoc;
 		  }
 		else
 		  {

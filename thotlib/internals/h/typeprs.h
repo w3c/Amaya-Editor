@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -150,43 +150,43 @@ typedef enum
 /* a presentation box */
 typedef struct _PresentationBox
 {
-  Name      PbName;		/* box name */	
-  PtrPRule	PbFirstPRule;	/* first presentation rule defining the box */
-  ThotBool	PbAcceptPageBreak;	/* indicates whether the box may be
-					   broken at the bottom of a page */
-  ThotBool	PbAcceptLineBreak;	/* indicates whether the box may be
-					   broken at the end of a line */
-  ThotBool	PbBuildAll;	/* indicates if the box image must be built
-				   in one piece or if it can be partial */
-  ThotBool	PbPageFooter;	/* it is a footer box */
-  ThotBool	PbPageHeader;	/* it is a header box */
-  ThotBool	PbPageBox;	/* it is a page box */
-  int	 	PbFooterHeight;	/* if it is a page box, size of the footer
-				   in picas */
-  int		PbHeaderHeight;	/* if it is a page box, size of the header
-				   in picas */
-  int		PbPageCounter;	/* number of the page counter, only if
-				   PbPageBox is true */
-  ContentType	PbContent;	/* compulsory box content */
+  Name      PbName;		  /* box name */	
+  PtrPRule	PbFirstPRule;	  /* first presentation rule defining the box*/
+  ThotBool	PbAcceptPageBreak;/* indicates whether the box may be
+				     broken at the bottom of a page */
+  ThotBool	PbAcceptLineBreak;/* indicates whether the box may be
+				     broken at the end of a line */
+  ThotBool	PbBuildAll;	  /* indicates if the box image must be built
+				     in one piece or if it can be partial */
+  ThotBool	PbPageFooter;	  /* it is a footer box */
+  ThotBool	PbPageHeader;	  /* it is a header box */
+  ThotBool	PbPageBox;	  /* it is a page box */
+  int	 	PbFooterHeight;	  /* if it is a page box, size of the footer
+				     in picas */
+  int		PbHeaderHeight;	  /* if it is a page box, size of the header
+				     in picas */
+  int		PbPageCounter;	  /* number of the page counter, only if
+				     PbPageBox is true */
+  ContentType	PbContent;	  /* compulsory box content */
   union
   {
-    struct			/* PbContent = ContVariable */
+    struct			  /* PbContent = ContVariable */
     {
-      int	_PbContVariable_;	/* number of the variable */
+      int	_PbContVariable_; /* number of the variable */
     }   s0;
-    struct			/* PbContent = ContConst */
+    struct			  /* PbContent = ContConst */
     {
-      int	_PbContConstant_;	/* number of the constant */
+      int	_PbContConstant_; /* number of the constant */
     } s1;
-    struct			/* PbContent = ContElement */
+    struct			  /* PbContent = ContElement */
     {
-      int	_PbContElem_;	/* number of the element type */
-      int	_PbContRefElem_;	/* number of the type of reference
-					   to this element */
+      int	_PbContElem_;	  /* number of the element type */
+      int	_PbContRefElem_;  /* number of the type of reference to this
+				     element */
     } s2;
-    struct			/* PbContent = FreeContent */
+    struct			  /* PbContent = FreeContent */
     {
-      CHAR_T	_PbContFree_; /* to make the compiler happy */
+      CHAR_T	_PbContFree_;     /* to make the compiler happy */
     } s3;
   } u;
 } PresentationBox;
@@ -295,7 +295,7 @@ typedef struct _PresVarItem
     } s3;
     struct			    /* ViType = VarPageNumber */
     {
-      int	     _ViView_;	/* number of the view in which the pages are
+      int	     _ViView_;	/* number of the view in which pages are
 				   counted */
     } s4;
   } u;
@@ -555,41 +555,42 @@ typedef struct _CntrItem
 /* a counter */
 typedef struct _Counter
 {
-  int		 CnNItems;	/* number of operations on this counter */
-  CntrItem        CnItem[MAX_PRES_COUNT_ITEM];	/* the operations */
-  int		 CnNPresBoxes;	/* Number of elements in CnPresBox */
-  int   CnPresBox[MAX_PRES_COUNT_USER];  /* list of the type numbers of the
-					    presentation boxes using the
-					    counter in their content */
-  ThotBool	 CnMinMaxPresBox[MAX_PRES_COUNT_USER];
-  int		 CnNTransmAttrs; /* number of external attributes to which
-				    the counter value is transmitted */ 
-  Name       CnTransmAttr[MAX_TRANSM_ATTR]; /* names of the attributes
-					   to which the counter value is transmitted */
-  int		 CnTransmSSchemaAttr[MAX_TRANSM_ATTR]; 	/* type number of
-					   the external documents where the
-					   CnTransmAttr are defined */
-  int		 CnNCreators;	/* Number of elements in CnCreator */
-  int   CnCreator[MAX_PRES_COUNT_USER];	/* list of type numbers of the box
+  int	   CnNItems;	         /* number of operations on this counter */
+  CntrItem CnItem[MAX_PRES_COUNT_ITEM];	   /* the operations */
+  int	   CnNPresBoxes;         /* Number of elements in CnPresBox */
+  int      CnPresBox[MAX_PRES_COUNT_USER]; /* list of the type numbers of the
+				    presentation boxes using the counter in
+				    their content */
+  ThotBool CnMinMaxPresBox[MAX_PRES_COUNT_USER];
+  int	   CnNTransmAttrs;       /* number of external attributes to which the
+				counter value is transmitted */ 
+  Name     CnTransmAttr[MAX_TRANSM_ATTR];  /* names of the attributes to which
+				   the counter value is transmitted */
+  int	   CnTransmSSchemaAttr[MAX_TRANSM_ATTR]; 	/* type number of
+				   the external documents where the
+				   CnTransmAttr are defined */
+  int	   CnNCreators;	        /* Number of elements in CnCreator */
+  int      CnCreator[MAX_PRES_COUNT_USER];  /* list of type numbers of the box
 				   that create other boxes depending on the
 				   counter value */
-  ThotBool	 CnMinMaxCreator[MAX_PRES_COUNT_USER];
-  ThotBool       CnPresBoxCreator[MAX_PRES_COUNT_USER];	/* indicates whether the
+  ThotBool CnMinMaxCreator[MAX_PRES_COUNT_USER];
+  ThotBool CnPresBoxCreator[MAX_PRES_COUNT_USER]; /* indicates whether the
 				   box corresponding of CnCreator is a presentation box */
-  int		 CnNCreatedBoxes; /* Number of elements in CnCreatedBox */
-  int   CnCreatedBox[MAX_PRES_COUNT_USER];	/* list of type numbers of
-				   the presentation boxes created in regards to the
-				   counter value */
-  ThotBool	 CnMinMaxCreatedBox[MAX_PRES_COUNT_USER];
-  ThotBool       CnPageFooter;	/* this counter is used in a footer */
+  int	   CnNCreatedBoxes;     /* Number of elements in CnCreatedBox */
+  int      CnCreatedBox[MAX_PRES_COUNT_USER]; /* list of type numbers of
+				   the presentation boxes created in regards
+				   to the counter value */
+  ThotBool CnMinMaxCreatedBox[MAX_PRES_COUNT_USER];
+  ThotBool CnPageFooter;	/* this counter is used in a footer */
 } Counter;
 
 /* a presentation constant */
 typedef struct _PresConstant
 {
-  BasicType PdType;                       /* type of the constant                                        */
-  char      PdAlphabet;                   /* alphabet of the constant                                    */
-  CHAR_T    PdString[MAX_PRES_CONST_LEN]; /* constant presentation string, terminated by a NUL character */
+  BasicType PdType;                       /* type of the constant */
+  char      PdAlphabet;                   /* alphabet of the constant */
+  CHAR_T    PdString[MAX_PRES_CONST_LEN]; /* constant presentation string,
+					     terminated by a NUL character */
 } PresConstant;
 
 /* a presentation variable is the concatenation of the results of various
@@ -597,7 +598,7 @@ typedef struct _PresConstant
 typedef struct _PresVariable
 {
     int		 PvNItems;	/* effective number of elements */
-    PresVarItem      PvItem[MAX_PRES_VAR_ITEM]; /* list of the elements */  
+    PresVarItem  PvItem[MAX_PRES_VAR_ITEM]; /* list of the elements */  
 } PresVariable;
 
 typedef enum 
@@ -610,13 +611,13 @@ typedef enum
    attribute */
 typedef struct _NumAttrCase
 {
-  AttrComparType  CaComparType;	/* type of the comparison elements */
-  int	 	  CaLowerBound; 	/* minimum value of the attribute such that
-					   the presentation rules are applied */
-  int	 	  CaUpperBound;	/* maximum value of the attribute such that
-				   the presentation rules are applied */
-  PtrPRule    CaFirstPRule;	/* first rule of the chain of rules to apply
-				   when the attribute value is in the interval */
+  AttrComparType CaComparType; /* type of the comparison elements */
+  int	 	 CaLowerBound; /* minimum value of the attribute such that
+				  the presentation rules are applied */
+  int	 	 CaUpperBound; /* maximum value of the attribute such that
+				  the presentation rules are applied */
+  PtrPRule       CaFirstPRule; /* first rule of the chain of rules to apply
+				  when the attribute value is in the interval*/
 } NumAttrCase;
 
 /* presentation of a logical attribute, according to its type */
@@ -631,27 +632,27 @@ typedef struct _AttributePres
   {
     struct
     {
-      int	  _ApNCases_; /* number of application cases for the presentation
-			   rules */
-      NumAttrCase  _ApCase_[MAX_PRES_ATTR_CASE]; /* the cases of application
+      int	  _ApNCases_; /* number of application cases for the
+			   presentation rules */
+      NumAttrCase _ApCase_[MAX_PRES_ATTR_CASE]; /* the cases of application
 			   of the presentation rules */
     } s0;
     struct
     {
-      PtrPRule _ApRefFirstPRule_; /* first rule in the string of rules
+      PtrPRule    _ApRefFirstPRule_; /* first rule in the string of rules
 			   to apply for the attribute */
     } s1;
     struct
     {
-      Name  	   _ApString_;	/* the value triggering the application of the
+      Name  	  _ApString_;	/* the value triggering the application of the
 			   presentation rules */
-      PtrPRule _ApTextFirstPRule_;    /* first rule in the string of rules
+      PtrPRule    _ApTextFirstPRule_;    /* first rule in the string of rules
 			   to apply for this value */
     } s2;
     struct
     {
-      PtrPRule _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* for each value of the
-			   attribute, in the order of the table AttrEnumValue,
+      PtrPRule    _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* for each value of
+			   the attribute, in the order of the table AttrEnumValue,
 			   address of the first presentation rule associated
 			   with this value */
     } s3;
@@ -666,7 +667,17 @@ typedef struct _AttributePres
 #define ApEnumFirstPRule u.s3._ApEnumFirstPRule_
 
 /* view names table */
-typedef Name       ViewTable[MAX_VIEW]; 
+typedef Name        ViewTable[MAX_VIEW];
+
+typedef struct _HostView *PtrHostView;
+
+/* a host view, i.e. a view whose name follows "MERGE With" in section VIEWS
+   of the presentation schema */
+typedef struct _HostView
+{
+    Name            HostViewName;  /* name of this host view */
+    PtrHostView     NextHostView;  /* next host view for the same view */
+} HostView;
 
 /* description of a view to print */
 typedef struct _PrintedView
@@ -685,7 +696,7 @@ typedef struct _TransmitElem
 {
     int		TeTargetDoc;	/* index of the structure rule defining
 				   the included document type */
-    Name 		TeTargetAttr;  /* name of the included document
+    Name 	TeTargetAttr;   /* name of the included document
 				   attribute to which the element value
 				   is transmitted */
 } TransmitElem;
@@ -709,14 +720,16 @@ typedef struct _PresentSchema
   int	 	PsStructCode;    	/* code identifying the version of this
 					   structure schema */
   int		PsNViews;	    	/* number of views */
-  ViewTable       PsView;    		/* definition of the views */
+  ViewTable     PsView;    		/* definition of the views */
+  PtrHostView   PsHostViewList[MAX_VIEW]; /* for each view defined in ViewTable
+				           pointer to its first host view */
   ThotBool      PsPaginatedView[MAX_VIEW]; /* indicates the paginated views */
   ThotBool      PsColumnView[MAX_VIEW];	/* indicates the views separated in
 					   columns */
-  int		PsNPrintedViews;		/* number of views to print */
-  PrintedView    PsPrintedView[MAX_PRINT_VIEW];/* the views to print */
-  ThotBool      PsExportView[MAX_VIEW];    /* indicates the views that display
-					      only the exported elements */
+  int		PsNPrintedViews;	/* number of views to print */
+  PrintedView   PsPrintedView[MAX_PRINT_VIEW];/* the views to print */
+  ThotBool      PsExportView[MAX_VIEW]; /* indicates the views that display
+					   only the exported elements */
   int		PsNCounters;		/* number of counters */
   int		PsNConstants;		/* number of presentation constants */
   int		PsNVariables;		/* number of presentation variables */
@@ -724,13 +737,12 @@ typedef struct _PresentSchema
 					   boxes */
   PtrPRule  PsFirstDefaultPRule;	/* beginning of the default rules
 					   string */
-  Counter      PsCounter[MAX_PRES_COUNTER]; /* counters */
-  PresConstant     PsConstant[MAX_PRES_CONST];	/* presentation constants */
-  PresVariable       PsVariable[MAX_PRES_VARIABLE]; /* presentation variables*/
-  PresentationBox        PsPresentBox[MAX_PRES_BOX]; /* descriptions of the
-							presentation and layout
-							boxes */
-        /* For the columns layout, box number 0 contains the Column group box
+  Counter       PsCounter[MAX_PRES_COUNTER];  /* counters */
+  PresConstant  PsConstant[MAX_PRES_CONST];   /* presentation constants */
+  PresVariable  PsVariable[MAX_PRES_VARIABLE];/* presentation variables*/
+  PresentationBox PsPresentBox[MAX_PRES_BOX]; /* descriptions of the
+					   presentation and layout boxes */
+        /* For columns layout, box number 0 contains the Column group box,
 	   box number 1 contains the left-hand column, etc. */
   AttributePres *PsAttrPRule[MAX_ATTR_SSCHEMA];/* pointers on the presentation
 					   rules of the logical attributes,
@@ -739,15 +751,15 @@ typedef struct _PresentSchema
   int		PsNAttrPRule[MAX_ATTR_SSCHEMA]; /* number of presentation rules
 					   packets for each logical attribute,
 					   i.e. size of the strings of
-					   AttributePres in the table PsAttrPRule
+					   AttributePres in table PsAttrPRule
 					   in the same order as in the table
 					   StructSchema.SsAttribute */
   PtrPRuleTable	PsElemPRule;    	/* pointers on the beginning of the
-					   string of presentation rules relating
+					   string of presentation rules related
 					   to each type of element, in the same
 					   order as in tha table
 					   StructSchema.SsRule */
-  int    	PsNHeirElems[MAX_ATTR_SSCHEMA]; /* indicates for each attribute,
+  int    	PsNHeirElems[MAX_ATTR_SSCHEMA];/* indicates for each attribute,
 					  in the same order as in the table
 					  StructSchema.AsAttribute, the number
 					  of elements that can inherit from the
@@ -760,40 +772,38 @@ typedef struct _PresentSchema
   InheritAttrTable *PsInheritedAttr[MAX_RULES_SSCHEMA]; /* points for each type
 					  of element, in the same order as in
 					  the table StructSchema.SsRule, on the
-					  table indicating what are the attributes
-					  inherited by the element */
-  int    	PsNComparAttrs[MAX_ATTR_SSCHEMA]; /* indicates for each attribute,
-					  in the same order as in the table
-					  StructSchema.SsRule, the number of
-					  attributes comparing themselves to
-					  the attribute in order to deduce the
-					  presentation */
-  ComparAttrTable *PsComparAttr[MAX_ATTR_SSCHEMA]; /* points for each attribute,
+					  table indicating what are the
+					  attributes inherited by the element*/
+  int    	PsNComparAttrs[MAX_ATTR_SSCHEMA]; /* indicates for each
+					  attribute, in the same order as in
+					  the table StructSchema.SsRule, the
+					  number of attributes comparing
+					  themselves to the attribute in order
+					  to deduce the presentation */
+  ComparAttrTable *PsComparAttr[MAX_ATTR_SSCHEMA];/* points for each attribute,
 					  in the same order as in the table
 					  StructSchema.SsRule, on the table
 					  indicating which attribute compare
-					  themselves to the attribute in order to
-					  deduce a presentation */
-  ThotBool    PsAcceptPageBreak[MAX_RULES_SSCHEMA]; /* indicates for each 
-element
-					  type, in the same order as in the
+					  themselves to the attribute in order
+					  to deduce a presentation */
+  ThotBool    PsAcceptPageBreak[MAX_RULES_SSCHEMA]; /* indicates for each
+					  element type, in the same order as in
 					  table StructSchema.SsRule, if the
 					  element can be broken at the bottom
 					  of a page */
-  ThotBool    PsAcceptLineBreak[MAX_RULES_SSCHEMA];	/* indicates for each 
-element
-					  type, in the same order as in the
+  ThotBool    PsAcceptLineBreak[MAX_RULES_SSCHEMA]; /* indicates for each 
+					  element type, in the same order as in
 					  table StructSchema.SsRule, if the
 					  element can be broken at the end of a
 					  line */
   ThotBool    PsBuildAll[MAX_RULES_SSCHEMA];    /* indicates for each element
-					  type, in the same order as in the
+					  type, in the same order as in
 					  table StructSchema.SsRule, if the
 					  image of the box must be built in one
 					  piece or if it can be divided */
   ThotBool    PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA]; /* indicates for each
 					  element type, in the same order as
-					  in the table StructSchema.SsRule, if
+					  in table StructSchema.SsRule, if
 					  the element is displayed in the body
 					  of the pages (false) or in a footer
 					  or header box (true) */
@@ -802,13 +812,13 @@ element
 					  table StructSchema.SsRule, if the
 					  element is paginated (meaningful only
 					  for the associated elements lists) */
-  int	      PsElemTransmit[MAX_RULES_SSCHEMA];/* for each element
-					  type, in the same order as in the
-					  table StructSchema.SsRule, index in the
+  int	      PsElemTransmit[MAX_RULES_SSCHEMA]; /* for each element type,
+					  in the same order as in table
+					  StructSchema.SsRule, index in the
 					  table SPTransmit of the entry giving
-					  the transmission of the element values
-					  to the attributes of the included
-					  documents */
+					  the transmission of the element
+					  values to the attributes of the
+					  included documents */
   int	      PsNTransmElems;		  /* number of entries in the table
 					  PsTransmElem */
   TransmitElem	PsTransmElem[MAX_TRANSM_ELEM];/* table of the transmissions of

@@ -30,73 +30,74 @@ number
     2	TypeName =	  NAME .
 	
     3	ViewList =	  DclView < ',' DclView > ';' .
-   13	DclView =	  ViewName [ 'EXPORT' ] .
+   13	DclView =	  ViewName [ 'EXPORT' ] [ 'MERGE' 'With' MergeViews ] .
    14	ViewName =	  NAME .
+   15	MergeViews =      ViewName < ViewName > .
 	
     4	PrintViewList =	  PrintView < ',' PrintView > ';' .
-   15	PrintView =	  ViewName / TypeName .
+   16	PrintView =	  ViewName / TypeName .
 	
     5	CounterList =	  Counter < Counter > .
-   16	Counter =	  CounterName ':' CountFunction ';' .
-   17	CounterName =	  NAME . 
+   17	Counter =	  CounterName ':' CountFunction ';' .
+   18	CounterName =	  NAME . 
 	
-   18	CountFunction =	  'RANK' 'OF' TypeOrPage [ RelAncestorLevel ]
+   19	CountFunction =	  'RANK' 'OF' TypeOrPage [ RelAncestorLevel ]
 				[ 'INIT' AttrName ] [ 'REINIT' AttrName ] /
 			  SetRule < SetRule > AddRule < AddRule >
 				[ 'INIT' AttrName ] /
 			  'RLevel' 'OF' TypeName [ CondAttr ] .
-   20	RelAncestorLevel = [ '-' ] AncestorLevel .
-   25	AncestorLevel =	  NUMBER .
-   22	SetRule =	  'SET' CountValue 'ON' TypeOrPage .
-   23	AddRule =	  'ADD' CountValue 'ON' TypeOrPage .
-   19	TypeOrPage =	  'Page' [ '(' ViewName ')' ] / [ '*' ] TypeName [ CondAttr ] .
-   24	CondAttr =	  'With' AttrName / 'Without' AttrName .
-   26	CountValue =	  NUMBER .
+   21	RelAncestorLevel = [ '-' ] AncestorLevel .
+   26	AncestorLevel =	  NUMBER .
+   23	SetRule =	  'SET' CountValue 'ON' TypeOrPage .
+   24	AddRule =	  'ADD' CountValue 'ON' TypeOrPage .
+   20	TypeOrPage =	  'Page' [ '(' ViewName ')' ] / [ '*' ] TypeName [ CondAttr ] .
+   25	CondAttr =	  'With' AttrName / 'Without' AttrName .
+   27	CountValue =	  NUMBER .
 	
     6	ConstList =	  Const < Const > .
-   27	Const =		  ConstName '=' ConstType ConstValue ';' .
-   28	ConstName =	  NAME .
-   29	ConstType =	  'TEXT' [ AlphabetName ] /
+   28	Const =		  ConstName '=' ConstType ConstValue ';' .
+   29	ConstName =	  NAME .
+   30	ConstType =	  'TEXT' [ AlphabetName ] /
 			  'SYMBOL' / 'GRAPHICS' / 
 			  'PICTURE' [ ImageType ] .
-   31	AlphabetName =	  NAME .
-   32	ImageType = 	  NUMBER .
-   30	ConstValue =	  STRING .
+   32	AlphabetName =	  NAME .
+   33	ImageType = 	  NUMBER .
+   31	ConstValue =	  STRING .
 	
     7	VarList =	  Variable < Variable > .
-   33	Variable =	  VarName ':' FunctList ';' .
-   34	VarName =	  NAME .
-   35	FunctList =	  Function < Function > .
-   36	Function =	  'DATE' / 'FDATE' /
+   34	Variable =	  VarName ':' FunctList ';' .
+   35	VarName =	  NAME .
+   36	FunctList =	  Function < Function > .
+   37	Function =	  'DATE' / 'FDATE' /
 			  'DocName' / 'DirName' /
 			  'ElemName' / 'AttributeName' /
 			  'VALUE' '(' CounterAttrPage ',' CounterStyle ')' /
 			  ConstType ConstValue /
 			  ConstName / AttrName .
-   37	CounterAttrPage = 'PageNumber' [ '(' ViewName ')' ] /
+   38	CounterAttrPage = 'PageNumber' [ '(' ViewName ')' ] /
 			  [ MaxMinValue ] CounterName / AttrName .
-   38	CounterStyle =	  'ARABIC' / 'UROMAN' / 'LROMAN' / 'UPPERCASE' /
+   39	CounterStyle =	  'ARABIC' / 'UROMAN' / 'LROMAN' / 'UPPERCASE' /
 			  'LOWERCASE' .
 	
     9	BoxList =	  Box < Box > .
-   40	Box =		  'FORWARD' BoxName ';' /
+   41	Box =		  'FORWARD' BoxName ';' /
 			  BoxName ':' ViewRuleList .
-   41	BoxName =	  NAME .
+   42	BoxName =	  NAME .
 	
     8	ViewRuleList =	  'BEGIN' < RulesAndCondRules > < ViewRules > 'END' ';' /
 			   ViewRules / CondRules / Rule .
-   42	RulesAndCondRules = CondRules / Rule .
+   43	RulesAndCondRules = CondRules / Rule .
 	
-   43	ViewRules =	  'IN' ViewName CondRuleList .
-   46	CondRuleList =	  'BEGIN' < RulesAndCondRules > 'END' ';' /
+   44	ViewRules =	  'IN' ViewName CondRuleList .
+   47	CondRuleList =	  'BEGIN' < RulesAndCondRules > 'END' ';' /
 			  CondRules / Rule .
-   44	CondRules =	  CondRule  < CondRule > [ 'Otherwise' RuleList ] .
-   47	CondRule =	  'IF' SeqCondition RuleList .
+   45	CondRules =	  CondRule  < CondRule > [ 'Otherwise' RuleList ] .
+   48	CondRule =	  'IF' SeqCondition RuleList .
 	
-   48	RuleList =	  'BEGIN' Rule < Rule > 'END' ';' / Rule .
+   49	RuleList =	  'BEGIN' Rule < Rule > 'END' ';' / Rule .
 	
-   45	Rule =		  Rule1 ';' / Rule2 ';' / Rule3 ';' / Rule4 ';' / Rule5 ';' .
-   50	Rule1 =	  	  'VertRef' ':' HorizPosition /
+   46	Rule =		  Rule1 ';' / Rule2 ';' / Rule3 ';' / Rule4 ';' / Rule5 ';' .
+   51	Rule1 =	  	  'VertRef' ':' HorizPosition /
 			  'HorizRef' ':' VertPosition /
 			  'Height' ':' Dimension /
 			  'Width' ':' Dimension /
@@ -107,7 +108,7 @@ number
 			  'Justify' ':' BoolInherit /
 			  'Hyphenate' ':' BoolInherit /
 			  'LineSpacing' ':' DistInherit .
-   51	Rule2 =		  'Break' ':' Boolean /
+   52	Rule2 =		  'Break' ':' Boolean /
 			  { Break is obsolete; replaced by PageBreak }
 			  'LineBreak' ':' Boolean /
 			  'PageBreak' ':' Boolean /
@@ -125,14 +126,14 @@ number
 			  'NoBreak2' ':' AbsDist /
 			  'Content' ':' VarConst /
 			  'Gather' ':' Boolean .
-   52	Rule3 =		  Creation '(' BoxName ')' /
+   53	Rule3 =		  Creation '(' BoxName ')' /
 			  'Line' /
 			  'NoLine' /
 			  'Page' '(' BoxName ')' /
 			  [ 'Included' ] 'Column' '(' BoxNameList ')' /
 			  'Copy' '(' BoxTypeCopied ')' /
 			  'Depth' ':' NbInherit .
-   53	Rule4 =		  'LineStyle' ':' LineStyleInherit /
+   54	Rule4 =		  'LineStyle' ':' LineStyleInherit /
 			  'LineWeight' ':' DistInherit /
 			  'FillPattern' ':' NameInherit /
 			  'Background' ':' NameInherit /
@@ -141,7 +142,7 @@ number
 			  'BackgroundPicture' ':' FileName /
 			  'PictureMode' ':' PictMode .
 	
-   54	Rule5 =           'MarginTop' ':' MarginWidth /
+   55	Rule5 =           'MarginTop' ':' MarginWidth /
 	                  'MarginRight' ':' MarginWidth /
 	                  'MarginBottom' ':' MarginWidth /
 	                  'MarginLeft' ':' MarginWidth /
@@ -162,42 +163,42 @@ number
 	                  'BorderBottomStyle' ':' BorderStyle /
 	                  'BorderLeftStyle' ':' BorderStyle .
 	
-   79	MarginWidth =     InheritParent / 'Auto' / Distance .
-   80	PaddingWidth =    InheritParent / Distance .
-   81	BorderWidth =     InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
-   82	BorderColor =     InheritParent / 'Transparent' / 'Foreground' /
+   80	MarginWidth =     InheritParent / 'Auto' / Distance .
+   81	PaddingWidth =    InheritParent / Distance .
+   82	BorderWidth =     InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
+   83	BorderColor =     InheritParent / 'Transparent' / 'Foreground' /
 	                  FontColorName .
-   83	BorderStyle =     InheritParent /
+   84	BorderStyle =     InheritParent /
 	                  'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
 	                  'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
-   84	InheritParent =   'Enclosing' '=' / 'Creator' '=' .
-   86	FontColorName =   NAME .
+   85	InheritParent =   'Enclosing' '=' / 'Creator' '=' .
+   87	FontColorName =   NAME .
 	
-   77	FileName =	  STRING .
-   78	PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
+   78	FileName =	  STRING .
+   79	PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
 	
-   76	LineStyleInherit = Link '=' / 'Solid' / 'Dashed' / 'Dotted' .
+   77	LineStyleInherit = Link '=' / 'Solid' / 'Dashed' / 'Dotted' .
 	
-   75	BoxTypeCopied =	  BoxName [ ExtStruct ] / TypeName [ ExtStruct ] .
-   88	ExtStruct =	  '(' TypeName ')' .
+   76	BoxTypeCopied =	  BoxName [ ExtStruct ] / TypeName [ ExtStruct ] .
+   89	ExtStruct =	  '(' TypeName ')' .
 	
-   58	PosH =		  'nil' / HorizAxis '=' RefVPosition [ 'UserSpecified' ] .
-   59	PosV =		  'nil' / VertAxis '=' RefHPosition [ 'UserSpecified' ] .
-   90	RefVPosition =	  'Refering' [ '*' ] TypeName '.' HorizAxis [ Distance ] /
+   59	PosH =		  'nil' / HorizAxis '=' RefVPosition [ 'UserSpecified' ] .
+   60	PosV =		  'nil' / VertAxis '=' RefHPosition [ 'UserSpecified' ] .
+   91	RefVPosition =	  'Refering' [ '*' ] TypeName '.' HorizAxis [ Distance ] /
 			  VertPosition .
-   92	RefHPosition =	  'Refering' [ '*' ] TypeName '.' VertAxis [ Distance ] /
+   93	RefHPosition =	  'Refering' [ '*' ] TypeName '.' VertAxis [ Distance ] /
 			  HorizPosition .
 	
-   72	VarConst =	  '(' FunctList ')' / ConstType ConstValue /
+   73	VarConst =	  '(' FunctList ')' / ConstType ConstValue /
 			  VarName / ConstName / TypeName .
 	
    10	PresentList =	  Present < Present > .
-   93	Present =	  [ '*' ] [ FirstSec ] TypeName ':' ViewRuleList .
-   94	FirstSec =	  'First' / 'Second' .
+   94	Present =	  [ '*' ] [ FirstSec ] TypeName ':' ViewRuleList .
+   95	FirstSec =	  'First' / 'Second' .
 	
-   56	VertPosition =	  Reference '.' HorizAxis [ Distance ] .
-   55	HorizPosition =	  Reference '.' VertAxis [ Distance ] .
-   95	Reference =	  'Enclosing' [ NBoxType ] /
+   57	VertPosition =	  Reference '.' HorizAxis [ Distance ] .
+   56	HorizPosition =	  Reference '.' VertAxis [ Distance ] .
+   96	Reference =	  'Enclosing' [ NBoxType ] /
 			  'Enclosed' [ NBoxType ] /
 			  'Previous' [ NBoxType ] /
 			  'Next' [ NBoxType ] /
@@ -207,103 +208,103 @@ number
 			  'Root' /
 			  '*' /
 			  BoxType .
-   96	NBoxType =	  [ 'NOT' ] BoxType .
-   97	BoxType =	  BoxName / [ '*' ] [ FirstSec ] TypeName /
+   97	NBoxType =	  [ 'NOT' ] BoxType .
+   98	BoxType =	  BoxName / [ '*' ] [ FirstSec ] TypeName /
 			  'AnyElem' / 'AnyBox' / 'ElemWithAttr' AttrName .
-   91	VertAxis =	  'Left' / 'VMiddle' / 'VRef' / 'Right' . 
-   89	HorizAxis =	  'Top' / 'HMiddle' /'HRef' / 'Bottom' .
+   92	VertAxis =	  'Left' / 'VMiddle' / 'VRef' / 'Right' . 
+   90	HorizAxis =	  'Top' / 'HMiddle' /'HRef' / 'Bottom' .
 	
-   57	Dimension =	  Reference '.' HeightWidth [ Ratio ] [ 'Min' ] / 
+   58	Dimension =	  Reference '.' HeightWidth [ Ratio ] [ 'Min' ] / 
 			  AbsDist [ 'UserSpecified' ] [ 'Min' ] /
 			  PosH / PosV .
-   98	HeightWidth =	  'Height' / 'Width' .
-   99	Ratio =		  '*' DimRatioA '%' / Distance .
-  100	DimRatioA =	  DimRatio / AttrName .
-  101	DimRatio =	  NUMBER .
-   71	AbsDist =	  IntPartA [ '.' DecimPart ] [ Unit ] .
-  102	IntPartA =	  IntPart / AttrName .
-  105	IntPart =	  NUMBER .
-  103	DecimPart =	  NUMBER .
-  104	Unit =		  'CM' / 'MM' / 'PT' / 'PC' / 'IN' / 'PX' / 'EM' / 'EX' / '%' .
+   99	HeightWidth =	  'Height' / 'Width' .
+  100	Ratio =		  '*' DimRatioA '%' / Distance .
+  101	DimRatioA =	  DimRatio / AttrName .
+  102	DimRatio =	  NUMBER .
+   72	AbsDist =	  IntPartA [ '.' DecimPart ] [ Unit ] .
+  103	IntPartA =	  IntPart / AttrName .
+  106	IntPart =	  NUMBER .
+  104	DecimPart =	  NUMBER .
+  105	Unit =		  'CM' / 'MM' / 'PT' / 'PC' / 'IN' / 'PX' / 'EM' / 'EX' / '%' .
 	
-   85	Distance =	  [ Sign ] AbsDist .
-  106	Sign =		  '+' / '-' .
+   86	Distance =	  [ Sign ] AbsDist .
+  107	Sign =		  '+' / '-' .
 	
-  107	Inheritage =	  Link  InheritVal .
-   87	Link =		  'Enclosing' / 'Enclosed' / 'Previous' / 'Creator' /
+  108	Inheritage =	  Link  InheritVal .
+   88	Link =		  'Enclosing' / 'Enclosed' / 'Previous' / 'Creator' /
 			  'GrandFather' .
-  108	InheritVal =	  '+' PosIntegerA [ 'Max' maximumA ] /
+  109	InheritVal =	  '+' PosIntegerA [ 'Max' maximumA ] /
 			  '-' NegIntegerA [ 'Min' minimumA ] /
 			  '=' .
-  109	PosIntegerA =	  PosInteger / AttrName .
-  113	PosInteger =	  NUMBER .
-  111	NegIntegerA =	  NegInteger / AttrName .
-  114	NegInteger =	  NUMBER .
-  110	maximumA =	  maximum / AttrName .
-  115	maximum =	  NUMBER .
-  112	minimumA =	  minimum / AttrName .
-  116	minimum =	  NUMBER .
+  110	PosIntegerA =	  PosInteger / AttrName .
+  114	PosInteger =	  NUMBER .
+  112	NegIntegerA =	  NegInteger / AttrName .
+  115	NegInteger =	  NUMBER .
+  111	maximumA =	  maximum / AttrName .
+  116	maximum =	  NUMBER .
+  113	minimumA =	  minimum / AttrName .
+  117	minimum =	  NUMBER .
 	
-   64	NbInherit =	  Integer / AttrName / Inheritage .
-  117	Integer =	  NUMBER .
-   60	Boolean =	  'Yes' / 'No' .
+   65	NbInherit =	  Integer / AttrName / Inheritage .
+  118	Integer =	  NUMBER .
+   61	Boolean =	  'Yes' / 'No' .
 	
-   62	DistInherit =	  Link InheritDist / Distance .
-  118	InheritDist =	  '=' / '+' AbsDist / '-' AbsDist .
+   63	DistInherit =	  Link InheritDist / Distance .
+  119	InheritDist =	  '=' / '+' AbsDist / '-' AbsDist .
 	
-   61	BoolInherit =	  Boolean / Link '=' .
+   62	BoolInherit =	  Boolean / Link '=' .
 	
-   70	AdjustInherit =	  Adjustment / Link '=' .
-  119	Adjustment =	  'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
+   71	AdjustInherit =	  Adjustment / Link '=' .
+  120	Adjustment =	  'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
 	
-   63	SizeInherit =	  SizeA [ 'PT' ] / Link  InheritSize .
-  121	InheritSize =	  '+' PosSizeA [ 'PT' ] [ 'Max' MaxSizeA ] /
+   64	SizeInherit =	  SizeA [ 'PT' ] / Link  InheritSize .
+  122	InheritSize =	  '+' PosSizeA [ 'PT' ] [ 'Max' MaxSizeA ] /
 			  '-' NegSizeA [ 'PT' ] [ 'Min' MinSizeA ] /
 			  '*' PercentSizeA '%' /
 			  '=' .
-  120	SizeA =		  Size / AttrName .
-  127	Size =		  NUMBER .
-  122	PosSizeA =	  PosSize / AttrName .
-  128	PosSize =	  NUMBER .
-  124	NegSizeA =	  NegSize / AttrName .
-  129	NegSize =	  NUMBER .
-  123	MaxSizeA =	  MaxSize / AttrName .
-  130	MaxSize =	  NUMBER .
-  125	MinSizeA =	  MinSize / AttrName .
-  131	MinSize =	  NUMBER .
-  126	PercentSizeA =	  PercentSize / AttrName .
-  132	PercentSize =	  NUMBER .
+  121	SizeA =		  Size / AttrName .
+  128	Size =		  NUMBER .
+  123	PosSizeA =	  PosSize / AttrName .
+  129	PosSize =	  NUMBER .
+  125	NegSizeA =	  NegSize / AttrName .
+  130	NegSize =	  NUMBER .
+  124	MaxSizeA =	  MaxSize / AttrName .
+  131	MaxSize =	  NUMBER .
+  126	MinSizeA =	  MinSize / AttrName .
+  132	MinSize =	  NUMBER .
+  127	PercentSizeA =	  PercentSize / AttrName .
+  133	PercentSize =	  NUMBER .
 	
-   65	NameInherit =	  Link '=' / FontColorName .
-   68	StyleInherit =	  Link '=' / 'Roman' / 'Italics' / 'Oblique' /
+   66	NameInherit =	  Link '=' / FontColorName .
+   69	StyleInherit =	  Link '=' / 'Roman' / 'Italics' / 'Oblique' /
 			  { the next three values are obsolete }
 			  'Bold' / 'BoldItalics' / 'BoldOblique' .
-   69	WeightInherit =	  Link '=' / 'Normal' / 'Bold' .
-   66	UnderLineInherit = Link '=' / 'NoUnderline' / 'Underlined' / 'Overlined' /
+   70	WeightInherit =	  Link '=' / 'Normal' / 'Bold' .
+   67	UnderLineInherit = Link '=' / 'NoUnderline' / 'Underlined' / 'Overlined' /
 			  'CrossedOut' .
-   67	ThicknessInherit = Link '=' / 'Thick' / 'Thin' .
+   68	ThicknessInherit = Link '=' / 'Thick' / 'Thin' .
 	
    11	AttrList =	  Attr < Attr > .
-  133	Attr =		  AttrName [ '(' FSTypeName ')' ] [ AttrRelat ] ':'
+  134	Attr =		  AttrName [ '(' FSTypeName ')' ] [ AttrRelat ] ':'
 			  ViewRuleList .
-   21	AttrName =	  NAME .
-  134	FSTypeName =	  [ FirstSec ] TypeName .
-  135	AttrRelat =	  '=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
+   22	AttrName =	  NAME .
+  135	FSTypeName =	  [ FirstSec ] TypeName .
+  136	AttrRelat =	  '=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
 			  'IN' '[' ['-'] MinInterval '.' '.' ['-'] MaxInterval ']' /
 			  'GREATER' AttrName / 'LESS' AttrName / 'EQUAL' AttrName .
-  136	AttrValue =	  [ '-' ] ValEqual / TextEqual / AttrVal .
-  137	MinVal =	  NUMBER .
-  138	MaxVal =	  NUMBER .
-  139	MinInterval =	  NUMBER .
-  140	MaxInterval =	  NUMBER .
-  141	ValEqual =	  NUMBER .
-  142	TextEqual =	  STRING .
-  143	AttrVal =	  NAME .
+  137	AttrValue =	  [ '-' ] ValEqual / TextEqual / AttrVal .
+  138	MinVal =	  NUMBER .
+  139	MaxVal =	  NUMBER .
+  140	MinInterval =	  NUMBER .
+  141	MaxInterval =	  NUMBER .
+  142	ValEqual =	  NUMBER .
+  143	TextEqual =	  STRING .
+  144	AttrVal =	  NAME .
 	
-   73	Creation =	  Create [ 'Repeated' ] .
-   49	SeqCondition =	  Condition < 'AND' Condition > .
-  145	Condition =	  [ 'NOT' ] [ 'Target' ] ElemCondition .
-  146	ElemCondition =	  'First' / 'Last' /
+   74	Creation =	  Create [ 'Repeated' ] .
+   50	SeqCondition =	  Condition < 'AND' Condition > .
+  146	Condition =	  [ 'NOT' ] [ 'Target' ] ElemCondition .
+  147	ElemCondition =	  'First' / 'Last' /
 			  'Referred' / 'FirstRef' / 'LastRef' /
 			  'ExternalRef' / 'InternalRef' / 'CopyRef' /
 			  'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
@@ -315,29 +316,29 @@ number
 			  [ ExtStruct ] /
 			  TypeName / AttrName .
 	
-  149	ParentLevel =	  [ GreaterLess ] RelLevel .
-  150	GreaterLess =	  '>' / '<' .
-  151	RelLevel =	  NUMBER.
-   39	MaxMinValue =	  'MaxRangeVal' / 'MinRangeVal' .
-  147	CounterCond =	  '<' MaxCounterVal / '>' MinCounterVal / '=' CounterValEqual / 
+  150	ParentLevel =	  [ GreaterLess ] RelLevel .
+  151	GreaterLess =	  '>' / '<' .
+  152	RelLevel =	  NUMBER.
+   40	MaxMinValue =	  'MaxRangeVal' / 'MinRangeVal' .
+  148	CounterCond =	  '<' MaxCounterVal / '>' MinCounterVal / '=' CounterValEqual / 
 	                  'IN' '[' ['-'] MinCounterInter '.' '.' ['-'] MaxCounterInter ']' .
-  148	CondPage =	  'Even' / 'Odd' / 'One' .
-  144	Create =	  'Create' / 'CreateBefore' / 'CreateAfter' /
+  149	CondPage =	  'Even' / 'Odd' / 'One' .
+  145	Create =	  'Create' / 'CreateBefore' / 'CreateAfter' /
 			  'CreateLast' / 'CreateFirst' / 'CreateWith' /
 			  'CreateEnclosing'.
 			  { Create is obsolete; replaced by CreateFirst }
-  152	MaxCounterVal =	  NUMBER .
-  153	MinCounterVal =	  NUMBER .
-  154	CounterValEqual = NUMBER .
-  156	MaxCounterInter = NUMBER .
-  155	MinCounterInter = NUMBER .
+  153	MaxCounterVal =	  NUMBER .
+  154	MinCounterVal =	  NUMBER .
+  155	CounterValEqual = NUMBER .
+  157	MaxCounterInter = NUMBER .
+  156	MinCounterInter = NUMBER .
 	
-   74	BoxNameList =	  BoxName < ',' BoxName > .
+   75	BoxNameList =	  BoxName < ',' BoxName > .
 	
    12	TransmitList =	  Transmit < Transmit > .
-  157	Transmit =	  TypeOrCounter 'To' ExternalAttr '(' TypeName ')' ';' .
-  158	TypeOrCounter =	  CounterName / TypeName .
-  159	ExternalAttr =	  NAME .
+  158	Transmit =	  TypeOrCounter 'To' ExternalAttr '(' TypeName ')' ';' .
+  159	TypeOrCounter =	  CounterName / TypeName .
+  160	ExternalAttr =	  NAME .
 	
 	END
 	
@@ -347,25 +348,25 @@ number
 
 code  character  numbers of rules using the key-word
 
-1001      ;       1   3   4  16  27  33  40   8  46  48  45  45  45  45  45 157
-1002      ,       3   4  36  74
-1003      :      16  33  40  50  50  50  50  50  50  50  50  50  50  50  51  51
-                 51  51  51  51  51  51  51  51  51  51  51  51  51  51  51  52
-                 53  53  53  53  53  53  53  54  54  54  54  54  54  54  54  54
-                 54  54  54  54  54  54  54  54  54  54  54  93 133
-1004      -      20 106 108 118 121 135 135 135 135 136 147 147
-1005      (      19  36  37  52  52  52  52  88  72 133 146 146 157
-1006      )      19  36  37  52  52  52  52  88  72 133 146 146 157
-1007      *      19  90  92  93  95  97  99 121
-1008      =      27  84  84  76  58  59 108 118  61  70 121  65  68  69  66  67
-                135 147
-1009      .      90  92  56  55  57  71 135 135 147 147
-1010      %      99 104 121
-1011      +     106 108 118 121
-1012      >     135 150 147
-1013      <     135 150 147
-1014      [     135 147
-1015      ]     135 147
+1001      ;       1   3   4  17  28  34  41   8  47  49  46  46  46  46  46 158
+1002      ,       3   4  37  75
+1003      :      17  34  41  51  51  51  51  51  51  51  51  51  51  51  52  52
+                 52  52  52  52  52  52  52  52  52  52  52  52  52  52  52  53
+                 54  54  54  54  54  54  54  55  55  55  55  55  55  55  55  55
+                 55  55  55  55  55  55  55  55  55  55  55  94 134
+1004      -      21 107 109 119 122 136 136 136 136 137 148 148
+1005      (      20  37  38  53  53  53  53  89  73 134 147 147 158
+1006      )      20  37  38  53  53  53  53  89  73 134 147 147 158
+1007      *      20  91  93  94  96  98 100 122
+1008      =      28  85  85  77  59  60 109 119  62  71 122  66  69  70  67  68
+                136 148
+1009      .      91  93  57  56  58  72 136 136 148 148
+1010      %     100 105 122
+1011      +     107 109 119 122
+1012      >     136 151 148
+1013      <     136 151 148
+1014      [     136 148
+1015      ]     136 148
 
 
 
@@ -384,206 +385,207 @@ code  key-word      numbers of rules using the key-word
 1109  RULES               1
 1110  ATTRIBUTES          1
 1111  TRANSMIT            1
-1112  END                 1   8  46  48
+1112  END                 1   8  47  49
 1113  EXPORT             13
-1114  RANK               18
-1115  OF                 18  18
-1116  INIT               18  18
-1117  REINIT             18
-1118  RLevel             18
-1119  SET                22
-1120  ON                 22  23
-1121  ADD                23
-1122  Page               19  52
-1123  With               24
-1124  Without            24
-1125  TEXT               29
-1126  SYMBOL             29
-1127  GRAPHICS           29
-1128  PICTURE            29
-1129  DATE               36
-1130  FDATE              36
-1131  DocName            36
-1132  DirName            36
-1133  ElemName           36
-1134  AttributeName      36
-1135  VALUE              36
-1136  PageNumber         37
-1137  ARABIC             38
-1138  UROMAN             38
-1139  LROMAN             38
-1140  UPPERCASE          38
-1141  LOWERCASE          38
-1142  FORWARD            40
-1143  BEGIN               8  46  48
-1144  IN                 43 104 135 147
-1145  Otherwise          44
-1146  IF                 47
-1147  VertRef            50
-1148  HorizRef           50
-1149  Height             50  98
-1150  Width              50  98
-1151  VertPos            50
-1152  HorizPos           50
-1153  VertOverflow       50
-1154  HorizOverflow      50
-1155  Justify            50
-1156  Hyphenate          50
-1157  LineSpacing        50
-1158  Break              51
-1159  LineBreak          51
-1160  PageBreak          51
-1161  InLine             51
-1162  Size               51
-1163  Visibility         51
-1164  Font               51
-1165  Underline          51
-1166  Thickness          51
-1167  Style              51
-1168  Weight             51
-1169  Indent             51
-1170  Adjust             51
-1171  NoBreak1           51
-1172  NoBreak2           51
-1173  Content            51
-1174  Gather             51
-1175  Line               52
-1176  NoLine             52
-1177  Included           52
-1178  Column             52
-1179  Copy               52
-1180  Depth              52
-1181  LineStyle          53
-1182  LineWeight         53
-1183  FillPattern        53
-1184  Background         53
-1185  Foreground         53  82
-1186  ShowBox            53
-1187  BackgroundPicture  53
-1188  PictureMode        53
-1189  MarginTop          54
-1190  MarginRight        54
-1191  MarginBottom       54
-1192  MarginLeft         54
-1193  PaddingTop         54
-1194  PaddingRight       54
-1195  PaddingBottom      54
-1196  PaddingLeft        54
-1197  BorderTopWidth     54
-1198  BorderRightWidth   54
-1199  BorderBottomWidth  54
-1200  BorderLeftWidth    54
-1201  BorderTopColor     54
-1202  BorderRightColor   54
-1203  BorderBottomColor  54
-1204  BorderLeftColor    54
-1205  BorderTopStyle     54
-1206  BorderRightStyle   54
-1207  BorderBottomStyle  54
-1208  BorderLeftStyle    54
-1209  Auto               79
-1210  Thin               81  67
-1211  Medium             81
-1212  Thick              81  67
-1213  Transparent        82
-1214  None               83
-1215  Hidden             83
-1216  Dotted             83  76
-1217  Dashed             83  76
-1218  Solid              83  76
-1219  Double             83
-1220  Groove             83
-1221  Ridge              83
-1222  Inset              83
-1223  Outset             83
-1224  Enclosing          84  95  87
-1225  Creator            84  95  87
-1226  NormalSize         78
-1227  Scale              78
-1228  RepeatXY           78
-1229  RepeatX            78
-1230  RepeatY            78
-1231  nil                58  59
-1232  UserSpecified      58  59  57
-1233  Refering           90  92
-1234  First              94 146
-1235  Second             94
-1236  Enclosed           95  87
-1237  Previous           95  87
-1238  Next               95
-1239  Refered            95
-1240  Referred           95 146
-1241  Root               95
-1242  NOT                96 145
-1243  AnyElem            97
-1244  AnyBox             97
-1245  ElemWithAttr       97
-1246  Left               91 119
-1247  VMiddle            91 119
-1248  VRef               91
-1249  Right              91 119
-1250  Top                89
-1251  HMiddle            89
-1252  HRef               89
-1253  Bottom             89
-1254  Min                57  57 108 121
-1255  CM                104
-1256  MM                104
-1257  PT                104  63 121 121
-1258  PC                104
-1259  PX                104
-1260  EM                104
-1261  EX                104
-1262  GrandFather        87
-1263  Max               108 121
-1264  Yes                60
-1265  No                 60
-1266  LeftWithDots      119
-1267  Roman              68
-1268  Italics            68
-1269  Oblique            68
-1270  Bold               68  69
-1271  BoldItalics        68
-1272  BoldOblique        68
-1273  Normal             69
-1274  NoUnderline        66
-1275  Underlined         66
-1276  Overlined          66
-1277  CrossedOut         66
-1278  GREATER           135
-1279  LESS              135
-1280  EQUAL             135
-1281  Repeated           73
-1282  AND                49
-1283  Target            145
-1284  Last              146
-1285  FirstRef          146
-1286  LastRef           146
-1287  ExternalRef       146
-1288  InternalRef       146
-1289  CopyRef           146
-1290  AnyAttributes     146
-1291  FirstAttr         146
-1292  LastAttr          146
-1293  UserPage          146
-1294  StartPage         146
-1295  ComputedPage      146
-1296  Empty             146
-1297  Immediately       146
-1298  Within            146
-1299  MaxRangeVal        39
-1300  MinRangeVal        39
-1301  Even              148
-1302  Odd               148
-1303  One               148
-1304  Create            144
-1305  CreateBefore      144
-1306  CreateAfter       144
-1307  CreateLast        144
-1308  CreateFirst       144
-1309  CreateWith        144
-1310  CreateEnclosing   144
-1311  To                157
+1114  MERGE              13
+1115  With               13  25
+1116  RANK               19
+1117  OF                 19  19
+1118  INIT               19  19
+1119  REINIT             19
+1120  RLevel             19
+1121  SET                23
+1122  ON                 23  24
+1123  ADD                24
+1124  Page               20  53
+1125  Without            25
+1126  TEXT               30
+1127  SYMBOL             30
+1128  GRAPHICS           30
+1129  PICTURE            30
+1130  DATE               37
+1131  FDATE              37
+1132  DocName            37
+1133  DirName            37
+1134  ElemName           37
+1135  AttributeName      37
+1136  VALUE              37
+1137  PageNumber         38
+1138  ARABIC             39
+1139  UROMAN             39
+1140  LROMAN             39
+1141  UPPERCASE          39
+1142  LOWERCASE          39
+1143  FORWARD            41
+1144  BEGIN               8  47  49
+1145  IN                 44 105 136 148
+1146  Otherwise          45
+1147  IF                 48
+1148  VertRef            51
+1149  HorizRef           51
+1150  Height             51  99
+1151  Width              51  99
+1152  VertPos            51
+1153  HorizPos           51
+1154  VertOverflow       51
+1155  HorizOverflow      51
+1156  Justify            51
+1157  Hyphenate          51
+1158  LineSpacing        51
+1159  Break              52
+1160  LineBreak          52
+1161  PageBreak          52
+1162  InLine             52
+1163  Size               52
+1164  Visibility         52
+1165  Font               52
+1166  Underline          52
+1167  Thickness          52
+1168  Style              52
+1169  Weight             52
+1170  Indent             52
+1171  Adjust             52
+1172  NoBreak1           52
+1173  NoBreak2           52
+1174  Content            52
+1175  Gather             52
+1176  Line               53
+1177  NoLine             53
+1178  Included           53
+1179  Column             53
+1180  Copy               53
+1181  Depth              53
+1182  LineStyle          54
+1183  LineWeight         54
+1184  FillPattern        54
+1185  Background         54
+1186  Foreground         54  83
+1187  ShowBox            54
+1188  BackgroundPicture  54
+1189  PictureMode        54
+1190  MarginTop          55
+1191  MarginRight        55
+1192  MarginBottom       55
+1193  MarginLeft         55
+1194  PaddingTop         55
+1195  PaddingRight       55
+1196  PaddingBottom      55
+1197  PaddingLeft        55
+1198  BorderTopWidth     55
+1199  BorderRightWidth   55
+1200  BorderBottomWidth  55
+1201  BorderLeftWidth    55
+1202  BorderTopColor     55
+1203  BorderRightColor   55
+1204  BorderBottomColor  55
+1205  BorderLeftColor    55
+1206  BorderTopStyle     55
+1207  BorderRightStyle   55
+1208  BorderBottomStyle  55
+1209  BorderLeftStyle    55
+1210  Auto               80
+1211  Thin               82  68
+1212  Medium             82
+1213  Thick              82  68
+1214  Transparent        83
+1215  None               84
+1216  Hidden             84
+1217  Dotted             84  77
+1218  Dashed             84  77
+1219  Solid              84  77
+1220  Double             84
+1221  Groove             84
+1222  Ridge              84
+1223  Inset              84
+1224  Outset             84
+1225  Enclosing          85  96  88
+1226  Creator            85  96  88
+1227  NormalSize         79
+1228  Scale              79
+1229  RepeatXY           79
+1230  RepeatX            79
+1231  RepeatY            79
+1232  nil                59  60
+1233  UserSpecified      59  60  58
+1234  Refering           91  93
+1235  First              95 147
+1236  Second             95
+1237  Enclosed           96  88
+1238  Previous           96  88
+1239  Next               96
+1240  Refered            96
+1241  Referred           96 147
+1242  Root               96
+1243  NOT                97 146
+1244  AnyElem            98
+1245  AnyBox             98
+1246  ElemWithAttr       98
+1247  Left               92 120
+1248  VMiddle            92 120
+1249  VRef               92
+1250  Right              92 120
+1251  Top                90
+1252  HMiddle            90
+1253  HRef               90
+1254  Bottom             90
+1255  Min                58  58 109 122
+1256  CM                105
+1257  MM                105
+1258  PT                105  64 122 122
+1259  PC                105
+1260  PX                105
+1261  EM                105
+1262  EX                105
+1263  GrandFather        88
+1264  Max               109 122
+1265  Yes                61
+1266  No                 61
+1267  LeftWithDots      120
+1268  Roman              69
+1269  Italics            69
+1270  Oblique            69
+1271  Bold               69  70
+1272  BoldItalics        69
+1273  BoldOblique        69
+1274  Normal             70
+1275  NoUnderline        67
+1276  Underlined         67
+1277  Overlined          67
+1278  CrossedOut         67
+1279  GREATER           136
+1280  LESS              136
+1281  EQUAL             136
+1282  Repeated           74
+1283  AND                50
+1284  Target            146
+1285  Last              147
+1286  FirstRef          147
+1287  LastRef           147
+1288  ExternalRef       147
+1289  InternalRef       147
+1290  CopyRef           147
+1291  AnyAttributes     147
+1292  FirstAttr         147
+1293  LastAttr          147
+1294  UserPage          147
+1295  StartPage         147
+1296  ComputedPage      147
+1297  Empty             147
+1298  Immediately       147
+1299  Within            147
+1300  MaxRangeVal        40
+1301  MinRangeVal        40
+1302  Even              149
+1303  Odd               149
+1304  One               149
+1305  Create            145
+1306  CreateBefore      145
+1307  CreateAfter       145
+1308  CreateLast        145
+1309  CreateFirst       145
+1310  CreateWith        145
+1311  CreateEnclosing   145
+1312  To                158
 
 
 
@@ -597,177 +599,178 @@ their right part.
  code  symbol        rule numbers
 
     1  PresentModel     
-    2  TypeName            1  15  18  19  75  88  90  92  72  93  97 134 146 146
-                           157 158
+    2  TypeName            1  16  19  20  76  89  91  93  73  94  98 135 147 147
+                           158 159
     3  ViewList            1
     4  PrintViewList       1
     5  CounterList         1
     6  ConstList           1
     7  VarList             1
-    8  ViewRuleList        1  40  93 133
+    8  ViewRuleList        1  41  94 134
     9  BoxList             1
    10  PresentList         1
    11  AttrList            1
    12  TransmitList        1
    13  DclView             3   3
-   14  ViewName           13  15  19  37  43
-   15  PrintView           4   4
-   16  Counter             5   5
-   17  CounterName        16  37 146 146 158
-   18  CountFunction      16
-   19  TypeOrPage         18  22  23
-   20  RelAncestorLevel   18
-   21  AttrName           18  18  18  24  24  36  37  97 100 102 109 111 110 112
-                            64 120 122 124 123 125 126 133 135 135 135 146
-   22  SetRule            18  18
-   23  AddRule            18  18
-   24  CondAttr           18  19
-   25  AncestorLevel      20
-   26  CountValue         22  23
-   27  Const               6   6
-   28  ConstName          27  36  72
-   29  ConstType          27  36  72
-   30  ConstValue         27  36  72
-   31  AlphabetName       29
-   32  ImageType          29
-   33  Variable            7   7
-   34  VarName            33  72
-   35  FunctList          33  72
-   36  Function           35  35
-   37  CounterAttrPage    36
-   38  CounterStyle       36
-   39  MaxMinValue        37 146
-   40  Box                 9   9
-   41  BoxName            40  40  52  52  75  97  74  74
-   42  RulesAndCondRules   8  46
-   43  ViewRules           8   8
-   44  CondRules           8  42  46
-   45  Rule                8  42  46  48  48  48
-   46  CondRuleList       43
-   47  CondRule           44  44
-   48  RuleList           44  47
-   49  SeqCondition       47
-   50  Rule1              45
-   51  Rule2              45
-   52  Rule3              45
-   53  Rule4              45
-   54  Rule5              45
-   55  HorizPosition      50  92
-   56  VertPosition       50  90
-   57  Dimension          50  50
-   58  PosH               50  57
-   59  PosV               50  57
-   60  Boolean            50  50  51  51  51  51  51  61
-   61  BoolInherit        50  50
-   62  DistInherit        50  51  53
-   63  SizeInherit        51
-   64  NbInherit          51  52
-   65  NameInherit        51  53  53  53
-   66  UnderLineInherit   51
-   67  ThicknessInherit   51
-   68  StyleInherit       51
-   69  WeightInherit      51
-   70  AdjustInherit      51
-   71  AbsDist            51  51  57  85 118 118
-   72  VarConst           51
-   73  Creation           52
-   74  BoxNameList        52
-   75  BoxTypeCopied      52
-   76  LineStyleInherit   53
-   77  FileName           53
-   78  PictMode           53
-   79  MarginWidth        54  54  54  54
-   80  PaddingWidth       54  54  54  54
-   81  BorderWidth        54  54  54  54
-   82  BorderColor        54  54  54  54
-   83  BorderStyle        54  54  54  54
-   84  InheritParent      79  80  81  82  83
-   85  Distance           79  80  81  90  92  56  55  99  62
-   86  FontColorName      82  65
-   87  Link               76 107  62  61  70  63  65  68  69  66  67
-   88  ExtStruct          75  75 146
-   89  HorizAxis          58  90  56
-   90  RefVPosition       58
-   91  VertAxis           59  92  55
-   92  RefHPosition       59
-   93  Present            10  10
-   94  FirstSec           93  97 134
-   95  Reference          56  55  57
-   96  NBoxType           95  95  95  95  95  95
-   97  BoxType            95  96
-   98  HeightWidth        57
-   99  Ratio              57
-  100  DimRatioA          99
-  101  DimRatio          100
-  102  IntPartA           71
-  103  DecimPart          71
-  104  Unit               71
-  105  IntPart           102
-  106  Sign               85
-  107  Inheritage         64
-  108  InheritVal        107
-  109  PosIntegerA       108
-  110  maximumA          108
-  111  NegIntegerA       108
-  112  minimumA          108
-  113  PosInteger        109
-  114  NegInteger        111
-  115  maximum           110
-  116  minimum           112
-  117  Integer            64
-  118  InheritDist        62
-  119  Adjustment         70
-  120  SizeA              63
-  121  InheritSize        63
-  122  PosSizeA          121
-  123  MaxSizeA          121
-  124  NegSizeA          121
-  125  MinSizeA          121
-  126  PercentSizeA      121
-  127  Size              120
-  128  PosSize           122
-  129  NegSize           124
-  130  MaxSize           123
-  131  MinSize           125
-  132  PercentSize       126
-  133  Attr               11  11
-  134  FSTypeName        133
-  135  AttrRelat         133
-  136  AttrValue         135
-  137  MinVal            135
-  138  MaxVal            135
-  139  MinInterval       135
-  140  MaxInterval       135
-  141  ValEqual          136
-  142  TextEqual         136
-  143  AttrVal           136
-  144  Create             73
-  145  Condition          49  49
-  146  ElemCondition     145
-  147  CounterCond       146
-  148  CondPage          146
-  149  ParentLevel       146
-  150  GreaterLess       149
-  151  RelLevel          149
-  152  MaxCounterVal     147
-  153  MinCounterVal     147
-  154  CounterValEqual   147
-  155  MinCounterInter   147
-  156  MaxCounterInter   147
-  157  Transmit           12  12
-  158  TypeOrCounter     157
-  159  ExternalAttr      157
+   14  ViewName           13  15  15  16  20  38  44
+   15  MergeViews         13
+   16  PrintView           4   4
+   17  Counter             5   5
+   18  CounterName        17  38 147 147 159
+   19  CountFunction      17
+   20  TypeOrPage         19  23  24
+   21  RelAncestorLevel   19
+   22  AttrName           19  19  19  25  25  37  38  98 101 103 110 112 111 113
+                            65 121 123 125 124 126 127 134 136 136 136 147
+   23  SetRule            19  19
+   24  AddRule            19  19
+   25  CondAttr           19  20
+   26  AncestorLevel      21
+   27  CountValue         23  24
+   28  Const               6   6
+   29  ConstName          28  37  73
+   30  ConstType          28  37  73
+   31  ConstValue         28  37  73
+   32  AlphabetName       30
+   33  ImageType          30
+   34  Variable            7   7
+   35  VarName            34  73
+   36  FunctList          34  73
+   37  Function           36  36
+   38  CounterAttrPage    37
+   39  CounterStyle       37
+   40  MaxMinValue        38 147
+   41  Box                 9   9
+   42  BoxName            41  41  53  53  76  98  75  75
+   43  RulesAndCondRules   8  47
+   44  ViewRules           8   8
+   45  CondRules           8  43  47
+   46  Rule                8  43  47  49  49  49
+   47  CondRuleList       44
+   48  CondRule           45  45
+   49  RuleList           45  48
+   50  SeqCondition       48
+   51  Rule1              46
+   52  Rule2              46
+   53  Rule3              46
+   54  Rule4              46
+   55  Rule5              46
+   56  HorizPosition      51  93
+   57  VertPosition       51  91
+   58  Dimension          51  51
+   59  PosH               51  58
+   60  PosV               51  58
+   61  Boolean            51  51  52  52  52  52  52  62
+   62  BoolInherit        51  51
+   63  DistInherit        51  52  54
+   64  SizeInherit        52
+   65  NbInherit          52  53
+   66  NameInherit        52  54  54  54
+   67  UnderLineInherit   52
+   68  ThicknessInherit   52
+   69  StyleInherit       52
+   70  WeightInherit      52
+   71  AdjustInherit      52
+   72  AbsDist            52  52  58  86 119 119
+   73  VarConst           52
+   74  Creation           53
+   75  BoxNameList        53
+   76  BoxTypeCopied      53
+   77  LineStyleInherit   54
+   78  FileName           54
+   79  PictMode           54
+   80  MarginWidth        55  55  55  55
+   81  PaddingWidth       55  55  55  55
+   82  BorderWidth        55  55  55  55
+   83  BorderColor        55  55  55  55
+   84  BorderStyle        55  55  55  55
+   85  InheritParent      80  81  82  83  84
+   86  Distance           80  81  82  91  93  57  56 100  63
+   87  FontColorName      83  66
+   88  Link               77 108  63  62  71  64  66  69  70  67  68
+   89  ExtStruct          76  76 147
+   90  HorizAxis          59  91  57
+   91  RefVPosition       59
+   92  VertAxis           60  93  56
+   93  RefHPosition       60
+   94  Present            10  10
+   95  FirstSec           94  98 135
+   96  Reference          57  56  58
+   97  NBoxType           96  96  96  96  96  96
+   98  BoxType            96  97
+   99  HeightWidth        58
+  100  Ratio              58
+  101  DimRatioA         100
+  102  DimRatio          101
+  103  IntPartA           72
+  104  DecimPart          72
+  105  Unit               72
+  106  IntPart           103
+  107  Sign               86
+  108  Inheritage         65
+  109  InheritVal        108
+  110  PosIntegerA       109
+  111  maximumA          109
+  112  NegIntegerA       109
+  113  minimumA          109
+  114  PosInteger        110
+  115  NegInteger        112
+  116  maximum           111
+  117  minimum           113
+  118  Integer            65
+  119  InheritDist        63
+  120  Adjustment         71
+  121  SizeA              64
+  122  InheritSize        64
+  123  PosSizeA          122
+  124  MaxSizeA          122
+  125  NegSizeA          122
+  126  MinSizeA          122
+  127  PercentSizeA      122
+  128  Size              121
+  129  PosSize           123
+  130  NegSize           125
+  131  MaxSize           124
+  132  MinSize           126
+  133  PercentSize       127
+  134  Attr               11  11
+  135  FSTypeName        134
+  136  AttrRelat         134
+  137  AttrValue         136
+  138  MinVal            136
+  139  MaxVal            136
+  140  MinInterval       136
+  141  MaxInterval       136
+  142  ValEqual          137
+  143  TextEqual         137
+  144  AttrVal           137
+  145  Create             74
+  146  Condition          50  50
+  147  ElemCondition     146
+  148  CounterCond       147
+  149  CondPage          147
+  150  ParentLevel       147
+  151  GreaterLess       150
+  152  RelLevel          150
+  153  MaxCounterVal     148
+  154  MinCounterVal     148
+  155  CounterValEqual   148
+  156  MinCounterInter   148
+  157  MaxCounterInter   148
+  158  Transmit           12  12
+  159  TypeOrCounter     158
+  160  ExternalAttr      158
 
 
 
 *** REFERENCES TO BASIC TYPES ***
 
 Numbers of the rules using NAME
-   2  14  17  28  31  34  41  86  21 143 159
+   2  14  18  29  32  35  42  87  22 144 160
 
 Numbers of the rules using NUMBER
-  25  26  32 101 105 103 113 114 115 116 117 127 128 129 130 131 132 137 138 139
- 140 141 151 152 153 154 156 155
+  26  27  33 102 106 104 114 115 116 117 118 128 129 130 131 132 133 138 139 140
+ 141 142 152 153 154 155 157 156
 
 Numbers of the rules using STRING
-  30  77 142
+  31  78 143

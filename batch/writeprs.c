@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA  1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -20,7 +11,7 @@
  *
  * Authors: V. Quint (INRIA)
  *          C. Roisin (INRIA) - Columns and pages
- *          R. GUetari (W3C/INRIA): Unicode routines.
+ *          R. Guetari (W3C/INRIA): Unicode routines.
  *
  */
 
@@ -1245,6 +1236,7 @@ PtrSSchema          pSS;
    AttributePres      *pAttPres;
    NumAttrCase        *pCase;
    int                 i, j, k;
+   PtrHostView         pHostView;
 
    /* cree le fichier */
    outfile = TtaWriteOpen (fileName);
@@ -1260,6 +1252,27 @@ PtrSSchema          pSS;
    WriteShort (pPSch->PsNViews);
    for (i = 0; i < pPSch->PsNViews; i++)
       WriteName (pPSch->PsView[i]);
+   /* write the host views for each declared view */
+   for (i = 0; i < pPSch->PsNViews; i++)
+      {
+      /* count the number of host views for the current view */
+      j = 0;
+      pHostView = pPSch->PsHostViewList[i];
+      while (pHostView)
+	 {
+	 j++;
+	 pHostView = pHostView->NextHostView;
+	 }
+      /* write the number of host views for the current view */
+      WriteShort (j);
+      /* write the name of each host view */
+      pHostView = pPSch->PsHostViewList[i];
+      while (pHostView)
+	 {
+         WriteName (pHostView->HostViewName);
+	 pHostView = pHostView->NextHostView;
+	 }
+      }
    for (i = 0; i < pPSch->PsNViews; i++)
       WriteBoolean (pPSch->PsPaginatedView[i]);
    /* significatif uniquement dans la V4 */

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * traitement des references
  *
@@ -1027,7 +1018,7 @@ ThotBool            withAppEvent;
 	   /* cherche le type de l'element reference' prevu */
 	  {
 	     typeNum = 0;
-	     ReferredType (pRefEl, pRefAttr, &pSS, &typeNum);
+	     ReferredType (pRefEl, pRefAttr, &pSS, &typeNum, NULL);
 	     /* cherche un element englobant du type prevu pour la reference */
 	     if (typeNum == 0)
 		/* pas de type precise' pour l'element reference' */

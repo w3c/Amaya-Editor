@@ -58,7 +58,8 @@ extern void SRuleForSibling ( PtrDocument pDoc,
 extern void ReferredType ( PtrElement pRefEl,
                            PtrAttribute pRefAttr,
                            PtrSSchema * pSS,
-                           int *typeNum );
+                           int *typeNum,
+			   PtrDocument pDoc );
 extern ThotBool CanCutElement ( PtrElement pEl,
                                 PtrDocument pDoc,
                                 PtrElement pElCut );
@@ -166,7 +167,8 @@ extern void SRuleForSibling (/* PtrDocument pDoc,
 extern void ReferredType (/* PtrElement pRefEl,
                              PtrAttribute pRefAttr,
                              PtrSSchema * pSS,
-                             int *typeNum */);
+                             int *typeNum,
+			     PtrDocument pDoc */);
 extern ThotBool CanCutElement (/* PtrElement pEl,
                                   PtrDocument pDoc,
                                   PtrElement pElCut */);

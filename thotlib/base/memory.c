@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Manage free-lists and memory allocation.
  *
@@ -584,10 +575,10 @@ unsigned int        n;
    if (n == 0)
       n++;
    res = realloc (ptr, (size_t) n);
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    if (!res)
      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    return res;
 }
 
@@ -1462,6 +1453,9 @@ PtrDocument         pDoc;
    for (i = 0; i < MAX_VIEW_DOC; i++)
      {
        pDoc->DocView[i].DvSSchema = NULL;
+       pDoc->DocView[i].DvPSchemaView = 0;
+       pDoc->DocView[i].DvSync = FALSE;
+       pDoc->DocView[i].DvFirstGuestView = NULL;
        pDoc->DocViewRootAb[i] = NULL;
        pDoc->DocViewSubTree[i] = NULL;
        pDoc->DocViewModifiedAb[i] = NULL;
@@ -1470,9 +1464,8 @@ PtrDocument         pDoc;
    pDoc->DocDeadOutRef = NULL;
    pDoc->DocChangedReferredEl = NULL;
    pDoc->DocLabels = NULL;
-
 #ifdef DEBUG_MEMORY
-       TtaFreeMemory (pDoc);
+   TtaFreeMemory (pDoc);
 #else
    pDoc->DocNext = PtFree_Document;
    PtFree_Document = pDoc;
@@ -1568,6 +1561,7 @@ PtrPSchema          pSP;
 {
   AttributePres      *pAP, *pNextAP;
   int                 i;
+  PtrHostView         pHostView, pNextHostView;
 
   pSP->PsNext = NULL;
   pSP->PsFirstDefaultPRule = NULL;
@@ -1595,15 +1589,25 @@ PtrPSchema          pSP;
           TtaFreeMemory (pSP->PsInheritedAttr[i]);
       pSP->PsInheritedAttr[i] = NULL;
     }
-  
+  for (i = 0; i < MAX_VIEW; i++)
+    {
+      pHostView = pSP->PsHostViewList[i];
+      pSP->PsHostViewList[i] = 0;
+      while (pHostView)
+	{
+	  pNextHostView = pHostView->NextHostView;
+	  TtaFreeMemory (pHostView);
+	  pHostView = pNextHostView;
+	}
+    }
 #ifdef DEBUG_MEMORY
-       TtaFreeMemory (pSP);
+  TtaFreeMemory (pSP);
 #else
-   pSP->PsNext = PtFree_SchPres;
-   PtFree_SchPres = pSP;
-   NbFree_SchPres++;
+  pSP->PsNext = PtFree_SchPres;
+  PtFree_SchPres = pSP;
+  NbFree_SchPres++;
 #endif
-   NbUsed_SchPres--;
+  NbUsed_SchPres--;
 }
 
 /*----------------------------------------------------------------------

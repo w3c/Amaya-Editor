@@ -1183,9 +1183,12 @@ ThotBool            Check;
 		  copy this attribute */
 	       ok = FALSE;
 	    else
+	       {
 	       /* schema is loaded, changes the structure scheme of the copy */
 	       pAttr2->AeAttrSSchema = pTargetDoc->DocSSchema->SsRule[nR - 1].
 		                             SrSSchemaNat;
+	       AddSchemaGuestViews (pTargetDoc, pAttr2->AeAttrSSchema);
+	       }
 	    }
 	 if (ok)
 	    {
@@ -2786,6 +2789,7 @@ ThotBool            withLabel;
 	       {
 		  PSchName[0] = EOS;
 		  LoadNatureSchema (pSS, PSchName, typeNum);
+		  AddSchemaGuestViews (pDoc, pSRule->SrSSchemaNat);
 	       }
 	     if (pSRule->SrSSchemaNat == NULL)
 		/* could not load the scheme */
@@ -3671,6 +3675,7 @@ ThotBool            shareRef;
 		  {
 		  pSRule = &pSSchema->SsRule[nR - 1];
 		  pSSchema = pSRule->SrSSchemaNat;
+		  AddSchemaGuestViews (pDocCopy, pSSchema);
 		  }
 	       }
 	 if (copyType != 0)

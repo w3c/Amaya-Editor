@@ -6938,18 +6938,18 @@ RULES
 	END;
 
  Math: BEGIN
-	if NOT within XMLGraphics
+	if NOT within XMLGraphics BEGIN
 	   CreateBefore(Math_S);
+	   CreateWith(VerticalLine);
+	   END;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	IF Immediately within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
 	LineBreak: No;
         IN Structure_view BEGIN
-                Width: 1 pt;
-                Height: 1 pt;
-                HorizPos: Left = Enclosing . Left;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 VertPos: Top = Previous . Bottom;
-                Visibility: 1;
                 END;
 	IN Alternate_view
 		Visibility: 0;
@@ -6962,7 +6962,6 @@ RULES
         LineWeight: 1 pt;
 	IN Structure_view
 		BEGIN
-		Visibility: 0;
 		{***** Next rule specifies the width of a MathML in
 		Math_structure_view.  Thot is confusing the Structure_view
 		defined in the present schema and the Math_structure_view
@@ -6975,6 +6974,7 @@ RULES
 
  XMLGraphics: BEGIN
 	CreateBefore(Graph_S);
+        CreateWith(VerticalLine);
 	VertPos: Top = Previous NOT MAP . Bottom;
 	Gather: Yes;
 	MarginTop: 0.4;
@@ -6983,11 +6983,9 @@ RULES
 	Justify: No;
 	Hyphenate: No;
         IN Structure_view BEGIN
-                Width: 1 pt;
-                Height: 1 pt;
-                HorizPos: Left = Enclosing . Left;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 VertPos: Top = Previous . Bottom;
-                Visibility: 1;
                 END;
 	IN Alternate_view
 		Visibility: 0;

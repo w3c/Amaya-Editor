@@ -6,7 +6,10 @@
 PRESENTATION XLink;
 
 VIEWS
-   Formatted_view, Structure_view;
+   Formatted_view,
+   Structure_view merge with Math_Structure_view
+                             Graph_Structure_view
+                             Structure_view;
 
 #define TAG_FONTSIZE 12 pt
 #define ATTR_Style Roman

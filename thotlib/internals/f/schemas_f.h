@@ -28,6 +28,10 @@ extern PtrSSchema LoadExtension ( CHAR_T* SSchName,
 extern ThotBool FreeNature ( PtrSSchema pSS,
                              PtrSSchema pNatureSS );
 extern void FreeDocumentSchemas ( PtrDocument pDoc );
+extern void AddSchemaGuestViews ( PtrDocument pDoc,
+				  PtrSSchema pSS);
+extern void CreateGuestViewList ( PtrDocument pDoc,
+				  int view );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
 
 #else /* __STDC__ */
@@ -54,6 +58,10 @@ extern PtrSSchema LoadExtension (/* CHAR_T* SSchName,
 extern ThotBool FreeNature (/* PtrSSchema pSS,
                                PtrSSchema pNatureSS */);
 extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
+extern void AddSchemaGuestViews (/* PtrDocument pDoc,
+				    PtrSSchema pSS */);
+extern void CreateGuestViewList (/* PtrDocument pDoc,
+				    int view */);
 extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 
 #endif /* __STDC__ */

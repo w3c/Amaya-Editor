@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996.
+ *  (c) COPYRIGHT INRIA 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -53,10 +44,10 @@
 
 
 #ifdef _WINDOWS
-#      define FATAL_EXIT_CODE 33
-#      define COMP_SUCCESS     0
+#define FATAL_EXIT_CODE 33
+#define COMP_SUCCESS     0
 #else  /* !_WINDOWS */
-#      define FATAL_EXIT_CODE -1
+#define FATAL_EXIT_CODE -1
 #endif /* _WINDOWS */
 
 int                 LineNum;	/* compteur de lignes dans le fichier source */
@@ -174,9 +165,9 @@ static ThotBool      AttrInitCounter;	/* on a rencontre' "Init" dans une definit
 
 #ifdef _WINDOWS
 #include "compilers_f.h"
-#      ifndef DLLEXPORT
-#      define DLLEXPORT __declspec (dllexport)
-#      endif  /* DLLEXPORT */
+#ifndef DLLEXPORT
+#define DLLEXPORT __declspec (dllexport)
+#endif  /* DLLEXPORT */
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -255,7 +246,8 @@ static void         Initialize ()
 	   GetPresentRule (&NextRule);
 	   if (NextRule == NULL)
 	     /* memoire insuffisante */
-	     CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+	     CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine,
+			      LineNum);
 	   Conditions = NULL;
 	   InclusionRefName = False;
 	   CopyType[0] = '\0';
@@ -310,10 +302,12 @@ indLine             wi;
 
    pCond = Conditions;
    while (pCond != NULL)
-      if (pCond->CoCondition != PcWithin && pCond->CoCondition != PcDefaultCond
-	  && pCond->CoCondition != PcElemType)
+      if (pCond->CoCondition != PcWithin &&
+	  pCond->CoCondition != PcDefaultCond &&
+	  pCond->CoCondition != PcElemType)
 	{
-	   CompilerMessage (wi, PRS, FATAL, ONLY_CONDITION_WITHIN, inputLine, LineNum);
+	   CompilerMessage (wi, PRS, FATAL, ONLY_CONDITION_WITHIN, inputLine,
+			    LineNum);
 	   pCond = NULL;
 	}
       else
@@ -330,7 +324,8 @@ static void         ConditionEnd ()
       /* on n'a pas encore traite' le nom de type suppose' externe */
       /* ce nom de type est donc erronne' */
      {
-	CompilerMessage (BeginCopyType, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+	CompilerMessage (BeginCopyType, PRS, FATAL, UNDECLARED_IDENTIFIER,
+			 inputLine, LineNum);
 	CopyType[0] = '\0';
 	BeginCopyType = 0;
      }
@@ -465,15 +460,16 @@ indLine             wi;
    pPRuleV = FirstRule;
    while (pPRuleV != NULL && pPRuleV != CurRule)
      {
-	if (pPRuleV->PrViewNum == CurView)
-	   if (pPRuleV->PrType == t)
-	      if (t != PtFunction)
-		 /* seules les fonctions peuvent etre en plusieurs exemplaires */
-		 if (CurRule->PrCond == NULL)
-		    /* les regles sans condition ne peuvent pas figurer en
-		       plusieurs exemplaires */
-		    CompilerMessage (wi, PRS, FATAL, RULE_ALREADY_DEFINED, inputLine, LineNum);
-	pPRuleV = pPRuleV->PrNextPRule;
+      if (pPRuleV->PrViewNum == CurView)
+	 if (pPRuleV->PrType == t)
+	    if (t != PtFunction)
+	       /* seules les fonctions peuvent etre en plusieurs exemplaires */
+	       if (CurRule->PrCond == NULL)
+		  /* les regles sans condition ne peuvent pas figurer en
+		     plusieurs exemplaires */
+		  CompilerMessage (wi, PRS, FATAL, RULE_ALREADY_DEFINED,
+				   inputLine, LineNum);
+      pPRuleV = pPRuleV->PrNextPRule;
      }
 }
 
@@ -494,10 +490,13 @@ indLine             wi;
 {
    if ((CurRule->PrType == PtVertRef || CurRule->PrType == PtHorizRef) &&
        !(lev == RlEnclosed || lev == RlSelf))
-      CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
-   else if (lev == RlEnclosed && (CurRule->PrType == PtVertPos || CurRule->PrType == PtHorizPos))
+      CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED,
+		       inputLine, LineNum);
+   else if (lev == RlEnclosed && (CurRule->PrType == PtVertPos ||
+				  CurRule->PrType == PtHorizPos))
       /* position par rapport au contenu, erreur */
-      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_POSITION, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_POSITION, inputLine,
+		       LineNum);
    else
       switch (CurRule->PrType)
 	    {
@@ -563,7 +562,8 @@ static void         EndOfRulesForType ()
    else if (AttributeDef)
      {
 	pPRuleA = pPSchema->PsAttrPRule[CurAttrNum - 1];
-	for (l = pPSchema->PsNAttrPRule[CurAttrNum - 1]; --l > 0; pPRuleA = pPRuleA->ApNextAttrPres)
+	for (l = pPSchema->PsNAttrPRule[CurAttrNum - 1]; --l > 0;
+	     pPRuleA = pPRuleA->ApNextAttrPres)
 	   if (pPRuleA->ApElemType == CurElemHeritAttr)
 	      break;
 
@@ -614,10 +614,14 @@ indLine             wi;
       /* si le 1er element n'est pas du texte, on n'accepte pas le */
       /* nouvel element */
       if (pVar->PvItem[0].ViType == VarText)
-	 if (pPSchema->PsConstant[pVar->PvItem[0].ViConstant - 1].PdType != CharString)
-	    CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
+	 if (pPSchema->PsConstant[pVar->PvItem[0].ViConstant - 1].PdType !=
+	                                                          CharString)
+	    CompilerMessage (wi, PRS, FATAL,
+			     MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine,
+			     LineNum);
    if (pVar->PvNItems >= MAX_PRES_VAR_ITEM)
-      CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW,
+		       inputLine, LineNum);
    else
       pVar->PvNItems++;
 }
@@ -694,7 +698,8 @@ indLine             wi;
 
 {
    if (pPSchema->PsNVariables >= MAX_PRES_VARIABLE)
-      CompilerMessage (wi, PRS, FATAL, MAX_VARIABLES_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, MAX_VARIABLES_OVERFLOW, inputLine,
+		       LineNum);
    else
       pPSchema->PsVariable[pPSchema->PsNVariables++].PvNItems = 0;
 }
@@ -734,150 +739,149 @@ static void         EndOfNumber ()
    unit = UnRelative;
    if (LatestNumber != 0)
      {
-	if (LatestNumberAttr)
-	   /* on ne convertit pas les numeros d'attribut */
-	   switch (CurUnit)
-		 {
-		    case Centimeter:
-		    case Millimeter:
-		    case Point:
-		    case Pica:
-		    case Inch:
-		       unit = UnPoint;
-		       break;
-		    case ScreenPixel:
-		       unit = UnPixel;
-		       break;
-		    case FontHeight:
-		       unit = UnRelative;
-		       break;
-		    case XHeight:
-		       unit = UnXHeight;
-		       break;
-		    case Percent:
-		       unit = UnPercent;
-		       break;
-		    default:
-		       fprintf (stderr, "Invalid distance unit %X\n", CurUnit);
-		       break;
-		 }
-	else
-	   /* convertit les unite's de longueur */
-	   switch (CurUnit)
-		 {
-		    case Centimeter:
-		       /* convertit les centimetres en points typo */
-		       LatestNumber = Round ((float) (LatestNumber * 72) / 2540);
-		       unit = UnPoint;
-		       break;
-		    case Millimeter:
-		       /* convertit les millimetres en points typo */
-		       LatestNumber = Round ((float) (LatestNumber * 72) / 25400);
-		       unit = UnPoint;
-		       break;
-		    case Point:
-		       /* arrondit en points typo */
-		       LatestNumber = Round ((float) LatestNumber / 1000);
-		       unit = UnPoint;
-		       break;
-		    case Pica:
-		       /* convertit les picas en points typo */
-		       LatestNumber = Round ((float) (LatestNumber * 12) / 1000);
-		       unit = UnPoint;
-		       break;
-		    case Inch:
-		       /* convertit les pouces en points typo */
-		       LatestNumber = Round ((float) (LatestNumber * 72) / 1000);
-		       unit = UnPoint;
-		       break;
-		    case ScreenPixel:
-		       /* arrondit en pixels */
-		       LatestNumber = Round ((float) LatestNumber / 1000);
-		       unit = UnPixel;
-		       break;
-		    case FontHeight:
-		       /* convertit en 1/10 */
-		       LatestNumber = Round ((float) LatestNumber / 100);
-		       unit = UnRelative;
-		       break;
-		    case XHeight:
-		       /* convertit en 1/10 */
-		       LatestNumber = Round ((float) LatestNumber / 100);
-		       unit = UnXHeight;
-		       break;
-		    case Percent:
-		       LatestNumber = Round ((float) LatestNumber / 1000);
-		       unit = UnPercent;
-		       break;
-		    default:
-		       fprintf (stderr, "Invalid distance unit %X\n", CurUnit);
-		       break;
-		 }
-
-	LatestNumber = LatestNumber * PrevSign;
-	if (CurRule->PrPresMode == PresInherit)
+     if (LatestNumberAttr)
+	/* on ne convertit pas les numeros d'attribut */
+	switch (CurUnit)
+	   {
+	   case Centimeter:
+	   case Millimeter:
+	   case Point:
+	   case Pica:
+	   case Inch:
+	     unit = UnPoint;
+	     break;
+	   case ScreenPixel:
+	     unit = UnPixel;
+	     break;
+	   case FontHeight:
+	     unit = UnRelative;
+	     break;
+	   case XHeight:
+	     unit = UnXHeight;
+	     break;
+	   case Percent:
+	     unit = UnPercent;
+	     break;
+	   default:
+	     fprintf (stderr, "Invalid distance unit %X\n", CurUnit);
+	     break;
+	   }
+     else
+        /* convertit les unite's de longueur */
+        switch (CurUnit)
+	   {
+	   case Centimeter:
+	     /* convertit les centimetres en points typo */
+	     LatestNumber = Round ((float) (LatestNumber * 72) / 2540);
+	     unit = UnPoint;
+	     break;
+	   case Millimeter:
+	     /* convertit les millimetres en points typo */
+	     LatestNumber = Round ((float) (LatestNumber * 72) / 25400);
+	     unit = UnPoint;
+	     break;
+	   case Point:
+	     /* arrondit en points typo */
+	     LatestNumber = Round ((float) LatestNumber / 1000);
+	     unit = UnPoint;
+	     break;
+	   case Pica:
+	     /* convertit les picas en points typo */
+	     LatestNumber = Round ((float) (LatestNumber * 12) / 1000);
+	     unit = UnPoint;
+	     break;
+	   case Inch:
+	     /* convertit les pouces en points typo */
+	     LatestNumber = Round ((float) (LatestNumber * 72) / 1000);
+	     unit = UnPoint;
+	     break;
+	   case ScreenPixel:
+	     /* arrondit en pixels */
+	     LatestNumber = Round ((float) LatestNumber / 1000);
+	     unit = UnPixel;
+	     break;
+	   case FontHeight:
+	     /* convertit en 1/10 */
+	     LatestNumber = Round ((float) LatestNumber / 100);
+	     unit = UnRelative;
+	     break;
+	   case XHeight:
+	     /* convertit en 1/10 */
+	     LatestNumber = Round ((float) LatestNumber / 100);
+	     unit = UnXHeight;
+	     break;
+	   case Percent:
+	     LatestNumber = Round ((float) LatestNumber / 1000);
+	     unit = UnPercent;
+	     break;
+	   default:
+	     fprintf (stderr, "Invalid distance unit %X\n", CurUnit);
+	     break;
+	   }
+     
+     LatestNumber = LatestNumber * PrevSign;
+     if (CurRule->PrPresMode == PresInherit)
+       {
+	 if (CurRule->PrType == PtIndent ||
+	     CurRule->PrType == PtLineSpacing ||
+	     CurRule->PrType == PtLineWeight)
+	   {
+	     CurRule->PrInhDelta = LatestNumber;
+	     CurRule->PrInhAttr = LatestNumberAttr;
+	     CurRule->PrInhUnit = unit;
+	   }
+       }
+     else
+       switch (CurRule->PrType)
 	  {
-	     if (CurRule->PrType == PtIndent ||
-		 CurRule->PrType == PtLineSpacing ||
-		 CurRule->PrType == PtLineWeight)
-	       {
-		  CurRule->PrInhDelta = LatestNumber;
-		  CurRule->PrInhAttr = LatestNumberAttr;
-		  CurRule->PrInhUnit = unit;
-	       }
+	  case PtBreak1:
+	  case PtBreak2:
+	  case PtIndent:
+	  case PtSize:
+	  case PtLineSpacing:
+	  case PtLineWeight:
+	  case PtMarginTop:
+	  case PtMarginRight:
+	  case PtMarginBottom:
+	  case PtMarginLeft:
+	  case PtPaddingTop:
+	  case PtPaddingRight:
+	  case PtPaddingBottom:
+	  case PtPaddingLeft:
+	  case PtBorderTopWidth:
+	  case PtBorderRightWidth:
+	  case PtBorderBottomWidth:
+	  case PtBorderLeftWidth:
+	    CurRule->PrMinUnit = unit;
+	    CurRule->PrMinAttr = LatestNumberAttr;
+	    CurRule->PrMinValue = LatestNumber;
+	    break;
+	  case PtVertRef:
+	  case PtHorizRef:
+	  case PtVertPos:
+	  case PtHorizPos:
+	    CurRule->PrPosRule.PoDistUnit = unit;
+	    CurRule->PrPosRule.PoDistAttr = LatestNumberAttr;
+	    CurRule->PrPosRule.PoDistance = LatestNumber;
+	    break;
+	  case PtHeight:
+	  case PtWidth:
+	    if (CurRule->PrDimRule.DrPosition)
+	      {
+		CurRule->PrDimRule.DrPosRule.PoDistUnit = unit;
+		CurRule->PrDimRule.DrPosRule.PoDistAttr = LatestNumberAttr;
+		CurRule->PrDimRule.DrPosRule.PoDistance = LatestNumber;
+	      }
+	    else
+	      {
+		CurRule->PrDimRule.DrUnit = unit;
+		CurRule->PrDimRule.DrAttr = LatestNumberAttr;
+		CurRule->PrDimRule.DrValue = LatestNumber;
+	      }
+	    break;
+	  default:
+	    break;
 	  }
-	else
-	   switch (CurRule->PrType)
-		 {
-		    case PtBreak1:
-		    case PtBreak2:
-		    case PtIndent:
-		    case PtSize:
-		    case PtLineSpacing:
-		    case PtLineWeight:
-		    case PtMarginTop:
-		    case PtMarginRight:
-		    case PtMarginBottom:
-		    case PtMarginLeft:
-		    case PtPaddingTop:
-		    case PtPaddingRight:
-		    case PtPaddingBottom:
-		    case PtPaddingLeft:
-		    case PtBorderTopWidth:
-		    case PtBorderRightWidth:
-		    case PtBorderBottomWidth:
-		    case PtBorderLeftWidth:
-		       CurRule->PrMinUnit = unit;
-		       CurRule->PrMinAttr = LatestNumberAttr;
-		       CurRule->PrMinValue = LatestNumber;
-		       break;
-		    case PtVertRef:
-		    case PtHorizRef:
-		    case PtVertPos:
-		    case PtHorizPos:
-		       CurRule->PrPosRule.PoDistUnit = unit;
-		       CurRule->PrPosRule.PoDistAttr = LatestNumberAttr;
-		       CurRule->PrPosRule.PoDistance = LatestNumber;
-		       break;
-		    case PtHeight:
-		    case PtWidth:
-		       if (CurRule->PrDimRule.DrPosition)
-			 {
-			    CurRule->PrDimRule.DrPosRule.PoDistUnit = unit;
-			    CurRule->PrDimRule.DrPosRule.PoDistAttr = LatestNumberAttr;
-			    CurRule->PrDimRule.DrPosRule.PoDistance = LatestNumber;
-			 }
-		       else
-			 {
-			    CurRule->PrDimRule.DrUnit = unit;
-			    CurRule->PrDimRule.DrAttr = LatestNumberAttr;
-			    CurRule->PrDimRule.DrValue = LatestNumber;
-			 }
-		       break;
-		    default:
-		       break;
-		 }
-
      }
    LatestNumber = 0;
    LatestNumberAttr = False;
@@ -975,7 +979,8 @@ indLine             wi;
          de l'element CurElemHeritAttr */
      {
 	pPRuleA = pPSchema->PsAttrPRule[CurAttrNum - 1];
-	for (l = pPSchema->PsNAttrPRule[CurAttrNum - 1]; --l > 0; pPRuleA = pPRuleA->ApNextAttrPres)
+	for (l = pPSchema->PsNAttrPRule[CurAttrNum - 1]; --l > 0;
+	     pPRuleA = pPRuleA->ApNextAttrPres)
 	   if (CurTextEqual[0] == '\0')
 	      if (pPRuleA->ApElemType == CurElemHeritAttr)
 		 break;
@@ -1001,7 +1006,8 @@ indLine             wi;
 	       /* c'est un attribut a valeur numerique */
 	       if (pPRuleA->ApNCases >= MAX_PRES_ATTR_CASE)
 		  /* trop de cas pour cet attribut */
-		  CompilerMessage (wi, PRS, FATAL, MAX_CASES_IN_ATTR_OVERFLOW, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, MAX_CASES_IN_ATTR_OVERFLOW,
+				   inputLine, LineNum);
 	       else
 		 {
 		    pAttrCase = &pPRuleA->ApCase[pPRuleA->ApNCases++];
@@ -1017,9 +1023,9 @@ indLine             wi;
 		      {
 			 if (CurElemHeritAttr == 0)
 			    pPSchema->PsNComparAttrs[CurComparAttr - 1] += 1;
-			 /* ATTENTION
-			    ce n'est donc pas le vrai nombre d'attributs se comparant
-			    a CurComparAttr puisqu'on fait +1 a chaque fois */
+			 /* ATTENTION ce n'est donc pas le vrai nombre
+			    d'attributs se comparant a CurComparAttr
+			    puisqu'on fait +1 a chaque fois */
 			 pAttrCase->CaComparType = ComparAttr;
 			 if (VCondGreater)
 			    /* attr GREATER MinValAttrName  */
@@ -1055,7 +1061,8 @@ indLine             wi;
 	    case AtReferenceAttr:
 	       if (pPRuleA->ApRefFirstPRule != NULL)
 		  /* attribut deja rencontre' */
-		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine,
+				   LineNum);
 	       else
 		 {
 		    pPRuleA->ApRefFirstPRule = NextRule;
@@ -1066,7 +1073,8 @@ indLine             wi;
 	    case AtEnumAttr:
 	       if (pPRuleA->ApEnumFirstPRule[CurAttrVal] != NULL)
 		  /* attribut deja rencontre' */
-		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine,
+				   LineNum);
 	       else
 		 {
 		    pPRuleA->ApEnumFirstPRule[CurAttrVal] = NextRule;
@@ -1133,235 +1141,254 @@ SyntacticCode       gCode;
 #endif /* __STDC__ */
 
 {
-   PresVariable       *pPresVar;
+  PresVariable       *pPresVar;
 
-   /* traitement selon le code du mot-cle court */
-   switch (x)
+  /* traitement selon le code du mot-cle court */
+  switch (x)
+     {
+     case CHR_59:
+       /*  ;  */
+       if (gCode == RULE_Rule)
+	 /* fin d'une regle */
 	 {
-	    case CHR_59:
-	       /*  ;  */
-	       if (gCode == RULE_Rule)
-		 /* fin d'une regle */
-		 {
-		   if (CurRule != NULL)
-		     if (CurRule->PrType == PtBreak1 ||
-		         CurRule->PrType == PtBreak2 ||
-			 CurRule->PrType == PtIndent ||
-			 CurRule->PrType == PtVertRef ||
-			 CurRule->PrType == PtHorizRef ||
-			 CurRule->PrType == PtVertPos ||
-			 CurRule->PrType == PtHorizPos ||
-			 CurRule->PrType == PtHeight ||
-			 CurRule->PrType == PtWidth ||
-			 CurRule->PrType == PtLineSpacing ||
-			 CurRule->PrType == PtLineWeight ||
-			 CurRule->PrType == PtMarginTop ||
-			 CurRule->PrType == PtMarginRight ||
-			 CurRule->PrType == PtMarginBottom ||
-			 CurRule->PrType == PtMarginLeft ||
-			 CurRule->PrType == PtPaddingTop ||
-			 CurRule->PrType == PtPaddingRight ||
-			 CurRule->PrType == PtPaddingBottom ||
-			 CurRule->PrType == PtPaddingLeft ||
-			 CurRule->PrType == PtBorderTopWidth ||
-			 CurRule->PrType == PtBorderRightWidth ||
-			 CurRule->PrType == PtBorderBottomWidth ||
-			 CurRule->PrType == PtBorderLeftWidth)
-		        EndOfNumber ();
-		    InBreakRule = False;
-		    InPageBreakRule = False;
-		    InLineBreakRule = False;
-		    InGatherRule = False;
-		    InInLineRule = False;
-		    /* verifie la validite des regles de dimensionnement relatif */
-		    /* au contenu */
-		    if (CurRule != NULL)
-		       if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
-			  if (!CurRule->PrDimRule.DrPosition)
-			     if (!CurRule->PrDimRule.DrAbsolute)
-				if (CurRule->PrDimRule.DrRelation == RlEnclosed)
-				   if (CurRule->PrDimRule.DrRefIdent != 0 || CurRule->PrDimRule.DrValue != 0)
-				      CompilerMessage (wi, PRS, FATAL, BAD_DIM_RULE, inputLine, LineNum);
-		    InRule = False;
-		    if (RulesForView && !RuleBlock && !CondBlock)
-		      {
-			 RulesForView = False;
-			 CurView = 1;
-		      }
-		    if (!ViewBlock)
-		       CheckBoxEnd ();
-		    if (!RuleBlock)
-		       Conditions = NULL;
-		 }
-	       else if (gCode == RULE_Transmit)
-		  /* fin d'une regle transmit */
-		 {
-		    TransmittedCounter = 0;
-		    TransmittedElem = 0;
-		 }
-	       break;
-	    case CHR_44:
-	       /*  ,  */
-	       if (gCode == RULE_Function)
-		 {
-		    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-		    if (pPresVar->PvItem[pPresVar->PvNItems - 1].ViType == VarPageNumber)
-		       /* c'est la fin d'un PageNumber dans une variable. On connait */
-		       /* la vue concernee */
-		      {
-			 if (NewVariableDef)
-			    /* definition de variable dans une regle Content */
-			    /* Cherche les compteurs de page pour la vue concernee */
-			    /* et indique dans ces compteurs que la boite courante */
-			    /* peut etre modifiee par ces compteurs */
-			    PageCounterChangeBox (CurPresBox, pPresVar->PvItem[pPresVar->PvNItems - 1].ViView);
-		      }
-		 }
-	       break;
-	    case CHR_58:
-	       /*  :  */
-	       if (gCode == RULE_Rule1 || gCode == RULE_Rule2 ||
-		   gCode == RULE_Rule3 || gCode == RULE_Rule4 ||
-		   gCode == RULE_Rule5)
-		  InRule = True;
-	       if (gCode == RULE_Attr && NewAttributeDef)
-		  GenerateRPresAttribut (wi);
-	       break;
-	    case CHR_40:
-	       /*  (  */
-	       if (gCode == RULE_VarConst)
-		  /* dans une regle VarConst */
-		  if (PresBoxDef)
-		    /* dans la regle Content d'une boite de presentation */
-		    {
-		       NewVar (wi);	/* cree une nouvelle variable */
-		       pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContVariable;
-		       pPSchema->PsPresentBox[CurPresBox - 1].PbContVariable = pPSchema->PsNVariables;
-		       NewVariableDef = True;
-		    }
-		  else
-		     /* dans une regle Content d'une paire ou d'une reference,
-		        on refuse: seules les constantes sont acceptees dans
-			cette regle */
-		     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
-	       else if (gCode == RULE_Rule3)
-		  /* dans Rule3 */
-		  InRule = True;
-	       else if (gCode == RULE_ElemCondition && !InCondPage)
-		  /* on s'occupe de la construction ``if (compteur < cste)'' (resp >, =, IN [*..*]
-		     et pas des construction ``if One (compteur)'' (resp Even, Odd) */
-		 {
-		    Conditions->CoCondition = PcInterval;
-		    Conditions->CoCounter = 0;
-		    Conditions->CoMinCounter = MIN_COUNTER_VAL;
-		    Conditions->CoMaxCounter = MAX_COUNTER_VAL;
-		    Conditions->CoValCounter = CntCurVal;
-		 }
-	       break;
-	    case CHR_41:
-	       /*  )  */
-	       if (gCode == RULE_VarConst)
-		  /* dans une regle VarConst */
-		  NewVariableDef = False;	/* fin de definition de variable */
-	       if (gCode == RULE_Rule3)
-		  if (CurRule->PrType == PtFunction && CurRule->PrPresFunction == FnCopy)
-		     /* fin d'une regle Copy */
-		     if (CopyType[0] != '\0')
-			/* on n'a pas encore traite' le nom de type a copier */
-			/* ce nom de type est donc erronne' */
-		       {
-			  CompilerMessage (BeginCopyType, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
-			  CopyType[0] = '\0';
-			  BeginCopyType = 0;
-		       }
-	       break;
-	    case CHR_61:
-	       /*  =  */
-	       if (gCode == RULE_InheritVal || gCode == RULE_NameInherit ||
-		   gCode == RULE_BoolInherit || gCode == RULE_InheritDist ||
-		   gCode == RULE_InheritSize || gCode == RULE_AdjustInherit ||
-		   gCode == RULE_LineStyleInherit ||
-		   gCode == RULE_StyleInherit || gCode == RULE_InheritParent)
-		  /* PresInherit */
-		 {
-		    CurRule->PrInhPercent = False;
-		    CurRule->PrInhAttr = False;
-		    CurRule->PrInhDelta = 0;
-		    CurRule->PrInhUnit = UnRelative;
-		 }
-	       if (gCode == RULE_InheritDist)
-		 {
-		    PrevSign = 1;
-		    LatestNumberAttr = False;
-		    LatestNumber = 0;
-		    CurUnit = FontHeight;
-		 }
-	       break;
-	    case CHR_46:
-	       /*  .  */
-	       if (gCode == RULE_Dimension)	/* dimension relative */
-		 {
-		    if (!CurRule->PrDimRule.DrPosition)
-		       CurRule->PrDimRule.DrAbsolute = False;
-		 }
-	       else if (gCode == RULE_AbsDist)	/* introduit une partie decimale */
-		  if (LatestNumberAttr)		/* interdit apres un attribut */
-		     CompilerMessage (wi, PRS, FATAL, NO_DECIMAL_PART_AFTER_AN_ATTR, inputLine, LineNum);
-	       break;
-	    case CHR_42:
-	       /*  *  */
-	       if (gCode == RULE_TypeOrPage || gCode == RULE_RefVPosition ||
-		   gCode == RULE_RefHPosition || gCode == RULE_Present ||
-		   gCode == RULE_BoxType)
-		  InclusionRefName = True;
-	       else if (gCode == RULE_Reference)
-		  SetLevel (RlSelf, wi);
-	       break;
-	    case CHR_43:
-	       /*  +  */
-	       if (gCode == RULE_Sign || gCode == RULE_InheritDist)
-		  /* dans une distance */
-		  PrevSign = 1;
-	       break;
-	    case CHR_45:
-	       /*  -  */
-	       if (gCode == RULE_Sign || gCode == RULE_InheritDist)
-		  /* dans une distance */
-		  PrevSign = -1;
-	       else if (gCode == RULE_AttrRelat || gCode == RULE_AttrValue)
-		  /* devant une valeur d'attribut numerique, dans une condition */
-		  /* d'application de regles associees a un attribut */
-		  AttrValSign = -1;
-	       else if (gCode == RULE_ElemCondition)
-		  CurCondCntSign = -1;
-	       else if (gCode == RULE_RelAncestorLevel)
-		  AncestorSign = -1;
-	       break;
-	    case CHR_62:
-	       /*  >  */
-	       if (gCode == RULE_GreaterLess)
-		 {
-		    Conditions->CoAncestorRel = CondGreater;
-		    SignGreaterOrLess = True;
-		 }
-	       break;
-	    case CHR_60:
-	       /*  <  */
-	       if (gCode == RULE_GreaterLess)
-		 {
-		    Conditions->CoAncestorRel = CondLess;
-		    SignGreaterOrLess = True;
-		 }
-	       break;
-	    case CHR_37:
-	       /*  %  */
-	       if (gCode == RULE_Unit)
-		  CurUnit = Percent;
-	       break;
-	    default:
-	       break;
+	   if (CurRule != NULL)
+	     if (CurRule->PrType == PtBreak1 ||
+		 CurRule->PrType == PtBreak2 ||
+		 CurRule->PrType == PtIndent ||
+		 CurRule->PrType == PtVertRef ||
+		 CurRule->PrType == PtHorizRef ||
+		 CurRule->PrType == PtVertPos ||
+		 CurRule->PrType == PtHorizPos ||
+		 CurRule->PrType == PtHeight ||
+		 CurRule->PrType == PtWidth ||
+		 CurRule->PrType == PtLineSpacing ||
+		 CurRule->PrType == PtLineWeight ||
+		 CurRule->PrType == PtMarginTop ||
+		 CurRule->PrType == PtMarginRight ||
+		 CurRule->PrType == PtMarginBottom ||
+		 CurRule->PrType == PtMarginLeft ||
+		 CurRule->PrType == PtPaddingTop ||
+		 CurRule->PrType == PtPaddingRight ||
+		 CurRule->PrType == PtPaddingBottom ||
+		 CurRule->PrType == PtPaddingLeft ||
+		 CurRule->PrType == PtBorderTopWidth ||
+		 CurRule->PrType == PtBorderRightWidth ||
+		 CurRule->PrType == PtBorderBottomWidth ||
+		 CurRule->PrType == PtBorderLeftWidth)
+	       EndOfNumber ();
+	   InBreakRule = False;
+	   InPageBreakRule = False;
+	   InLineBreakRule = False;
+	   InGatherRule = False;
+	   InInLineRule = False;
+	   /* verifie la validite des regles de dimensionnement relatif */
+	   /* au contenu */
+	   if (CurRule != NULL)
+	     if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
+	       if (!CurRule->PrDimRule.DrPosition)
+		 if (!CurRule->PrDimRule.DrAbsolute)
+		   if (CurRule->PrDimRule.DrRelation == RlEnclosed)
+		     if (CurRule->PrDimRule.DrRefIdent != 0 ||
+			 CurRule->PrDimRule.DrValue != 0)
+		       CompilerMessage (wi, PRS, FATAL, BAD_DIM_RULE,
+					inputLine, LineNum);
+	   InRule = False;
+	   if (RulesForView && !RuleBlock && !CondBlock)
+	     {
+	       RulesForView = False;
+	       CurView = 1;
+	     }
+	   if (!ViewBlock)
+	     CheckBoxEnd ();
+	   if (!RuleBlock)
+	     Conditions = NULL;
 	 }
+       else if (gCode == RULE_Transmit)
+	 /* fin d'une regle transmit */
+	 {
+	   TransmittedCounter = 0;
+	   TransmittedElem = 0;
+	 }
+       break;
 
+     case CHR_44:
+       /*  ,  */
+       if (gCode == RULE_Function)
+	 {
+	   pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	   if (pPresVar->PvItem[pPresVar->PvNItems -1].ViType == VarPageNumber)
+	     /* c'est la fin d'un PageNumber dans une variable. On connait */
+	     /* la vue concernee */
+	     {
+	       if (NewVariableDef)
+		 /* definition de variable dans une regle Content */
+		 /* Cherche les compteurs de page pour la vue concernee */
+		 /* et indique dans ces compteurs que la boite courante */
+		 /* peut etre modifiee par ces compteurs */
+		 PageCounterChangeBox (CurPresBox,
+			     pPresVar->PvItem[pPresVar->PvNItems - 1].ViView);
+	     }
+	 }
+       break;
+
+     case CHR_58:
+       /*  :  */
+       if (gCode == RULE_Rule1 || gCode == RULE_Rule2 ||
+	   gCode == RULE_Rule3 || gCode == RULE_Rule4 ||
+	   gCode == RULE_Rule5)
+	 InRule = True;
+       if (gCode == RULE_Attr && NewAttributeDef)
+	 GenerateRPresAttribut (wi);
+       break;
+
+     case CHR_40:
+       /*  (  */
+       if (gCode == RULE_VarConst)
+	 /* dans une regle VarConst */
+	 if (PresBoxDef)
+	   /* dans la regle Content d'une boite de presentation */
+	   {
+	     NewVar (wi);	/* cree une nouvelle variable */
+	     pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContVariable;
+	     pPSchema->PsPresentBox[CurPresBox - 1].PbContVariable =
+	                                              pPSchema->PsNVariables;
+	     NewVariableDef = True;
+	   }
+	 else
+	   /* dans une regle Content d'une paire ou d'une reference,
+	      on refuse: seules les constantes sont acceptees dans
+	      cette regle */
+	   CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine,
+			    LineNum);
+       else if (gCode == RULE_Rule3)
+	 /* dans Rule3 */
+	 InRule = True;
+       else if (gCode == RULE_ElemCondition && !InCondPage)
+	 /* on s'occupe de la construction ``if (compteur < cste)''
+	    (resp >, =, IN [*..*] et pas des construction ``if One (compteur)''
+	    (resp Even, Odd) */
+	 {
+	   Conditions->CoCondition = PcInterval;
+	   Conditions->CoCounter = 0;
+	   Conditions->CoMinCounter = MIN_COUNTER_VAL;
+	   Conditions->CoMaxCounter = MAX_COUNTER_VAL;
+	   Conditions->CoValCounter = CntCurVal;
+	 }
+       break;
+
+     case CHR_41:
+       /*  )  */
+       if (gCode == RULE_VarConst)
+	 /* dans une regle VarConst */
+	 NewVariableDef = False;	/* fin de definition de variable */
+       if (gCode == RULE_Rule3)
+	 if (CurRule->PrType == PtFunction &&
+	     CurRule->PrPresFunction == FnCopy)
+	   /* fin d'une regle Copy */
+	   if (CopyType[0] != '\0')
+	     /* on n'a pas encore traite' le nom de type a copier */
+	     /* ce nom de type est donc erronne' */
+	     {
+	       CompilerMessage (BeginCopyType, PRS, FATAL,
+				UNDECLARED_IDENTIFIER, inputLine, LineNum);
+	       CopyType[0] = '\0';
+	       BeginCopyType = 0;
+	     }
+       break;
+
+     case CHR_61:
+       /*  =  */
+       if (gCode == RULE_InheritVal || gCode == RULE_NameInherit ||
+	   gCode == RULE_BoolInherit || gCode == RULE_InheritDist ||
+	   gCode == RULE_InheritSize || gCode == RULE_AdjustInherit ||
+	   gCode == RULE_LineStyleInherit ||
+	   gCode == RULE_StyleInherit || gCode == RULE_InheritParent)
+	 /* PresInherit */
+	 {
+	   CurRule->PrInhPercent = False;
+	   CurRule->PrInhAttr = False;
+	   CurRule->PrInhDelta = 0;
+	   CurRule->PrInhUnit = UnRelative;
+	 }
+       if (gCode == RULE_InheritDist)
+	 {
+	   PrevSign = 1;
+	   LatestNumberAttr = False;
+	   LatestNumber = 0;
+	   CurUnit = FontHeight;
+	 }
+       break;
+
+     case CHR_46:
+       /*  .  */
+       if (gCode == RULE_Dimension)	/* dimension relative */
+	 {
+	   if (!CurRule->PrDimRule.DrPosition)
+	     CurRule->PrDimRule.DrAbsolute = False;
+	 }
+       else if (gCode == RULE_AbsDist)	/* introduit une partie decimale */
+	 if (LatestNumberAttr)		/* interdit apres un attribut */
+	   CompilerMessage (wi, PRS, FATAL, NO_DECIMAL_PART_AFTER_AN_ATTR,
+			    inputLine, LineNum);
+       break;
+
+     case CHR_42:
+       /*  *  */
+       if (gCode == RULE_TypeOrPage || gCode == RULE_RefVPosition ||
+	   gCode == RULE_RefHPosition || gCode == RULE_Present ||
+	   gCode == RULE_BoxType)
+	 InclusionRefName = True;
+       else if (gCode == RULE_Reference)
+	 SetLevel (RlSelf, wi);
+       break;
+
+     case CHR_43:
+       /*  +  */
+       if (gCode == RULE_Sign || gCode == RULE_InheritDist)
+	 /* dans une distance */
+	 PrevSign = 1;
+       break;
+
+     case CHR_45:
+       /*  -  */
+       if (gCode == RULE_Sign || gCode == RULE_InheritDist)
+	 /* dans une distance */
+	 PrevSign = -1;
+       else if (gCode == RULE_AttrRelat || gCode == RULE_AttrValue)
+	 /* devant une valeur d'attribut numerique, dans une condition */
+	 /* d'application de regles associees a un attribut */
+	 AttrValSign = -1;
+       else if (gCode == RULE_ElemCondition)
+	 CurCondCntSign = -1;
+       else if (gCode == RULE_RelAncestorLevel)
+	 AncestorSign = -1;
+       break;
+
+     case CHR_62:
+       /*  >  */
+       if (gCode == RULE_GreaterLess)
+	 {
+	   Conditions->CoAncestorRel = CondGreater;
+	   SignGreaterOrLess = True;
+	 }
+       break;
+
+     case CHR_60:
+       /*  <  */
+       if (gCode == RULE_GreaterLess)
+	 {
+	   Conditions->CoAncestorRel = CondLess;
+	   SignGreaterOrLess = True;
+	 }
+       break;
+     case CHR_37:
+       /*  %  */
+       if (gCode == RULE_Unit)
+	 CurUnit = Percent;
+       break;
+     default:
+       break;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1378,50 +1405,51 @@ indLine             wi;
 #endif /* __STDC__ */
 
 {
-   switch (CurRule->PrType)
+  switch (CurRule->PrType)
+     {
+     case PtVertRef:
+     case PtHorizRef:
+       CurRule->PrPosRule.PoPosRef = axis;
+       break;
+     case PtVertPos:
+     case PtHorizPos:
+       if (AxisDef)
 	 {
-	    case PtVertRef:
-	    case PtHorizRef:
-	       CurRule->PrPosRule.PoPosRef = axis;
-	       break;
-	    case PtVertPos:
-	    case PtHorizPos:
-	       if (AxisDef)
-		 {
-		    AxisDef = False;
-		    CurRule->PrPosRule.PoPosDef = axis;
-		 }
-	       else
-		  CurRule->PrPosRule.PoPosRef = axis;
-	       break;
-	    case PtHeight:
-	    case PtWidth:
-	       if (!CurRule->PrDimRule.DrPosition)
-		  if ((CurRule->PrType == PtHeight && !(axis == Top || axis == Bottom))
-		      || (CurRule->PrType == PtWidth && !(axis == Left || axis == Right)))
-		     CompilerMessage (wi, PRS, FATAL, BROKEN_RULE, inputLine, LineNum);
-		  else
-		    {
-		       CurRule->PrDimRule.DrPosition = True;
-		       CurRule->PrDimRule.DrPosRule.PoPosDef = axis;
-		       CurRule->PrDimRule.DrPosRule.PoPosRef = NoEdge;
-		       CurRule->PrDimRule.DrPosRule.PoDistUnit = UnRelative;
-		       CurRule->PrDimRule.DrPosRule.PoDistAttr = False;
-		       CurRule->PrDimRule.DrPosRule.PoDistance = 0;
-		       CurRule->PrDimRule.DrPosRule.PoRelation = RlSameLevel;
-		       CurRule->PrDimRule.DrPosRule.PoNotRel = False;
-		       CurRule->PrDimRule.DrPosRule.PoRefKind = RkPresBox;
-		       CurRule->PrDimRule.DrPosRule.PoRefIdent = 0;
-		       AxisDef = False;
-		    }
-	       else
-		  /* 2eme repere d'un dimensionnement elastique */
-		  CurRule->PrDimRule.DrPosRule.PoPosRef = axis;
-	       break;
-	    default:
-	       break;
+	   AxisDef = False;
+	   CurRule->PrPosRule.PoPosDef = axis;
 	 }
-
+       else
+	 CurRule->PrPosRule.PoPosRef = axis;
+       break;
+     case PtHeight:
+     case PtWidth:
+       if (!CurRule->PrDimRule.DrPosition)
+	 if ((CurRule->PrType == PtHeight &&
+	      !(axis == Top || axis == Bottom)) ||
+	     (CurRule->PrType == PtWidth &&
+	      !(axis == Left || axis == Right)))
+	   CompilerMessage (wi, PRS, FATAL, BROKEN_RULE, inputLine, LineNum);
+	 else
+	   {
+	     CurRule->PrDimRule.DrPosition = True;
+	     CurRule->PrDimRule.DrPosRule.PoPosDef = axis;
+	     CurRule->PrDimRule.DrPosRule.PoPosRef = NoEdge;
+	     CurRule->PrDimRule.DrPosRule.PoDistUnit = UnRelative;
+	     CurRule->PrDimRule.DrPosRule.PoDistAttr = False;
+	     CurRule->PrDimRule.DrPosRule.PoDistance = 0;
+	     CurRule->PrDimRule.DrPosRule.PoRelation = RlSameLevel;
+	     CurRule->PrDimRule.DrPosRule.PoNotRel = False;
+	     CurRule->PrDimRule.DrPosRule.PoRefKind = RkPresBox;
+	     CurRule->PrDimRule.DrPosRule.PoRefIdent = 0;
+	     AxisDef = False;
+	   }
+       else
+	 /* 2eme repere d'un dimensionnement elastique */
+	 CurRule->PrDimRule.DrPosRule.PoPosRef = axis;
+       break;
+     default:
+       break;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1490,7 +1518,8 @@ indLine             wi;
 
    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
    if (pCntr->CnNItems >= MAX_PRES_COUNT_ITEM)
-      CompilerMessage (wi, PRS, FATAL, MAX_OPS_ON_A_COUNTER_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, MAX_OPS_ON_A_COUNTER_OVERFLOW,
+		       inputLine, LineNum);
    else
      {
 	pCntr->CnItem[pCntr->CnNItems].CiCntrOp = oper;
@@ -2148,14 +2177,17 @@ indLine             wi;
 
    ConditionEnd ();
    if (DefaultRuleDef)
-      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine,
+		       LineNum);
    else if (RuleDef && CurType <= MAX_BASIC_TYPE)
-      CompilerMessage (wi, PRS, FATAL, BAD_RULE_FOR_A_TERMINAL_ELEM, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, BAD_RULE_FOR_A_TERMINAL_ELEM,
+		       inputLine, LineNum);
    else if (layoutFonct != FnLine &&
 	    layoutFonct != FnNoLine &&
 	    layoutFonct != FnShowBox &&
 	    pSSchema->SsRule[CurType - 1].SrConstruct == CsChoice)
-      CompilerMessage (wi, PRS, FATAL, CANT_USE_RULE_FOR_A_CHOICE, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, CANT_USE_RULE_FOR_A_CHOICE, inputLine,
+		       LineNum);
    else
      {
 	/* verifie qu'il n'y a que des conditions Within parmi les
@@ -2191,7 +2223,9 @@ indLine             wi;
 			   if (!((layoutFonct == FnColumn && pPRule->PrPresFunction == FnPage) ||
 				 (layoutFonct == FnSubColumn && pPRule->PrPresFunction == FnColumn)))
 #endif /* __COLPAGE__ */
-			      CompilerMessage (wi, PRS, FATAL, ONLY_ONE_PAGE_RULE, inputLine, LineNum);
+			     CompilerMessage (wi, PRS, FATAL,
+					      ONLY_ONE_PAGE_RULE, inputLine,
+					      LineNum);
 		  pPRule = pPRule->PrNextPRule;
 	       }
 	  }
@@ -2329,15 +2363,18 @@ indLine             wi;
 {
    if (DefaultRuleDef)
       /* pas de creation dans les regles par defaut */
-      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine,
+		       LineNum);
    else if (CurView != 1)
       /* regles de creation seulement dans la vue principale */
-      CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
-   else if ((creatFonct == FnCreateBefore || creatFonct == FnCreateAfter || creatFonct == FnCreateWith ||
-	     creatFonct == FnCreateEnclosing) &&
+      CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine,
+		       LineNum);
+   else if ((creatFonct == FnCreateBefore || creatFonct == FnCreateAfter ||
+	     creatFonct == FnCreateWith || creatFonct == FnCreateEnclosing) &&
 	    CurType == pSSchema->SsRootElem)
       /* pas de creation avant, apres ou au-dessus de la racine */
-      CompilerMessage (wi, PRS, FATAL, PRS_INVALID_RULE_FOR_ROOT_ELEM, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, PRS_INVALID_RULE_FOR_ROOT_ELEM,
+		       inputLine, LineNum);
    else
      {
 	CreatePRule (PtFunction, wi);
@@ -2382,16 +2419,18 @@ indLine             wi;
    /* deja une regle Copy ou Content sans condition pour cette vue */
    if (Conditions != NULL)
      {
-	R = FirstRule;
-	while (R != CurRule)
-	  {
-	     if (R->PrViewNum == CurView)
-		if (R->PrType == PtFunction)
-		   if (R->PrPresFunction == FnContentRef || R->PrPresFunction == FnCopy)
-		      if (R->PrCond == NULL)
-			 CompilerMessage (wi, PRS, FATAL, ONLY_ONE_COPY_CONTENT_RULE, inputLine, LineNum);
-	     R = R->PrNextPRule;
-	  }
+       R = FirstRule;
+       while (R != CurRule)
+	 {
+	   if (R->PrViewNum == CurView)
+	     if (R->PrType == PtFunction)
+	       if (R->PrPresFunction == FnContentRef ||
+		   R->PrPresFunction == FnCopy)
+		 if (R->PrCond == NULL)
+		   CompilerMessage (wi, PRS, FATAL, ONLY_ONE_COPY_CONTENT_RULE,
+				    inputLine, LineNum);
+	   R = R->PrNextPRule;
+	 }
      }
 }
 
@@ -2457,8 +2496,9 @@ PtrCondition        pCond2;
 		       else if (curCond1->CoCondition == PcInterval)
 			  if (curCond1->CoMinCounter != curCond2->CoMinCounter)
 			     sameRules = False;
-			  else if (curCond1->CoMaxCounter != curCond2->CoMaxCounter)
-			     sameRules = False;
+			  else
+			     if (curCond1->CoMaxCounter != curCond2->CoMaxCounter)
+			       sameRules = False;
 		    }
 		  else if (curCond1->CoCondition == PcElemType)
 		    {
@@ -2515,1229 +2555,1259 @@ indLine             wi;
    PresVariable       *pPresVar;
 
    switch (x)
-	 {
-	       /* traitement selon le code du mot-cle */
-	    case KWD_PRESENTATION:
-	       /* PRESENTATION */
-	       break;
-	    case KWD_VIEWS:
-	       /* VIEWS */
-	       ViewDef = True;
-	       break;
-	    case KWD_PRINT:
-	       /* PRINT */
-	       ViewDef = False;
-	       break;
-	    case KWD_COUNTERS:
-	       /* COUNTERS */
-	       ViewDef = False;
-	       CounterDef = True;
-	       break;
-	    case KWD_CONST:
-	       /* CONST */
-	       ViewDef = False;
-	       CounterDef = False;
-	       ConstantDef = True;
-	       break;
-	    case KWD_VAR:
-	       /* VAR */
-	       ViewDef = False;
-	       CounterDef = False;
-	       ConstantDef = False;
-	       VariableDef = True;
-	       break;
-	    case KWD_DEFAULT:
-	       /* DEFAULT */
-	       ViewDef = False;
-	       CounterDef = False;
-	       ConstantDef = False;
-	       VariableDef = False;
-	       DefaultRuleDef = True;
-	       pPSchema->PsFirstDefaultPRule = NextRule;
-	       FirstRule = NextRule;
-	       break;
-	    case KWD_BOXES:
-	       /* BOXES */
-	       /* verifie que toutes les regles par defaut sont presentes pour la */
-	       /* vue 1. */
-	       CheckDefaultRules ();
-	       ViewDef = False;
-	       CounterDef = False;
-	       ConstantDef = False;
-	       VariableDef = False;
-	       DefaultRuleDef = False;
-	       PresBoxDef = True;
-	       break;
-	    case KWD_RULES:
-	       /* RULES */
-	       ViewDef = False;
-	       CounterDef = False;
-	       ConstantDef = False;
-	       VariableDef = False;
-	       DefaultRuleDef = False;
-	       CheckForwardRef (wi);
-	       if (PresBoxDef)
-		 {
-		    CheckForwardRef (wi);
-		    /* verifie les references en avant de boites */
-		    PresBoxDef = False;
-		 }
-	       else
-		  /* verifie que toutes les regles par defaut sont presentes pour */
-		  /* la vue 1 */
-		  CheckDefaultRules ();
-	       CurRule->PrNextPRule = NULL;
-	       RuleDef = True;
-	       break;
-	    case KWD_ATTRIBUTES:
-	       /* ATTRIBUTES */
-	       CheckDefaultRules ();
-	       ViewDef = False;
-	       CounterDef = False;
-	       ConstantDef = False;
-	       VariableDef = False;
-	       DefaultRuleDef = False;
-	       PresBoxDef = False;
-	       RuleDef = False;
-	       AttributeDef = True;
-	       break;
-	    case KWD_TRANSMIT:
-	       /* TRANSMIT */
-	       CheckDefaultRules ();
-	       ViewDef = False;
-	       CounterDef = False;
-	       ConstantDef = False;
-	       VariableDef = False;
-	       DefaultRuleDef = False;
-	       PresBoxDef = False;
-	       RuleDef = False;
-	       AttributeDef = False;
-	       TransmittedCounter = 0;
-	       TransmittedElem = 0;
-	       EndOfRulesForType ();
-	       CurRule->PrNextPRule = NULL;
-	       if (NextRule != NULL)
-		  free (NextRule);
-	       NextRule = NULL;
-	       break;
-	    case KWD_END:
-	       /* END */
-	       switch (gCode)
-		     {
-			   /* r= numero de la regle ou apparait END */
-			case RULE_PresentModel:
-			   /* fin du progamme */
-			   EndOfRulesForType ();
-			   CurRule->PrNextPRule = NULL;
-			   if (NextRule != NULL)
-			      free (NextRule);
-			   NextRule = NULL;
-			   break;
-			case RULE_ViewRuleList:
-			   /* fin ViewRuleList */
-			   ViewBlock = False;
-			   CheckBoxEnd ();
-			   EndOfRulesForType ();
-			   break;
-			case RULE_CondRuleList:
-			   /* fin CondRuleList */
-			   CurView = 1;		/* la vue par defaut est la premiere */
-			   RulesForView = False;
-			   CondBlock = False;
-			   if (!ViewBlock)
-			     {
-				CheckBoxEnd ();
-				EndOfRulesForType ();
-			     }
-			   break;
-			case RULE_RuleList:
-			   RuleBlock = False;
-			   Conditions = NULL;
-			   if (!ViewBlock && !CondBlock)
-			     {
-				CheckBoxEnd ();
-				EndOfRulesForType ();
-			     }
-			   break;
-		     }
-
-	       break;
-	    case KWD_EXPORT /* THOT_EXPORT */ :
-	       /* verifie qu'il n'y a pas deja une vue THOT_EXPORT */
-	       i = 1;
-	       while (i < pPSchema->PsNViews && !pPSchema->PsExportView[i - 1])
-		  i++;
-	       if (pPSchema->PsExportView[i - 1])
-		  CompilerMessage (wi, PRS, FATAL, ONLY_ONE_EXPORT_VIEW_ALLOWED, inputLine, LineNum);	/* deja une vue THOT_EXPORT */
-	       else
-		  pPSchema->PsExportView[pPSchema->PsNViews - 1] = True;
-	       break;
-	    case KWD_RANK:
-	       /* RANK */
-	       NewCounterOper (CntrRank, wi);
-	       AncestorSign = 1;
-	       AttrInitCounter = False;
-	       break;
-	    case KWD_RLevel:
-	       /* CntrRLevel */
-	       NewCounterOper (CntrRLevel, wi);
-	       break;
-	    case KWD_INIT /* INIT */ :
-	       AttrInitCounter = True;
-	       break;
-	    case KWD_REINIT /* REINIT */ :
-	       AttrInitCounter = False;
-	       break;
-	    case KWD_SET:
-	       /* SET */
-	       NewCounterOper (CntrSet, wi);
-	       break;
-	    case KWD_ADD:
-	       /* ADD */
-	       NewCounterOper (CntrAdd, wi);
-	       break;
-	    case KWD_Page:
-	       if (gCode == RULE_TypeOrPage)	/* dans un compteur */
-		 {
-		    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-		    pCntr->CnItem[pCntr->CnNItems - 1].CiElemType = PageBreak + 1;
-		    pCntr->CnItem[pCntr->CnNItems - 1].CiViewNum = 0;
-		 }
-	       else
-		  /* regle de mise en pages */
-		 {
-		    if (x == KWD_Page)
-		       LayoutRule (FnPage, wi);
-		    /* la regle Page s'applique-t-elle a une vue d'elements associes? */
-		    assoc = False;
-		    if (pSSchema->SsRule[CurType - 1].SrConstruct == CsList)
-		       /* la regle s'applique a un element liste */
-		      {
-			 i = pSSchema->SsRule[CurType - 1].SrListItem;
-			 /* les elements de la liste sont-ils des elements associes ? */
-			 assoc = pSSchema->SsRule[i - 1].SrAssocElem;
-		      }
-		    if (assoc)
-		       pPSchema->PsAssocPaginated[CurType - 1] = True;
-		    else
-		       pPSchema->PsPaginatedView[CurView - 1] = True;
-		 }
-	       break;
-	    case KWD_With:
-	       /* With */
-	       pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-	       pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttrPresent = TRUE;
-	       break;
-	    case KWD_Without:
-	       /* Without */
-	       pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-	       pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttrPresent = FALSE;
-	       break;
-	    case KWD_TEXT:
-	       /* TEXT */
-	       CreateConstant (CharString, wi);
-	       break;
-	    case KWD_SYMBOL:
-	       /* SYMBOL */
-	       CreateConstant (Symbol, wi);
-	       break;
-	    case KWD_GRAPHICS:
-	       /* GRAPHICS */
-	       CreateConstant (GraphicElem, wi);
-	       break;
-	    case KWD_PICTURE:
-	       /* PICTURE */
-	       CreateConstant (Picture, wi);
-	       break;
-	    case KWD_DATE:
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       NewVarListItem (pPresVar, wi);
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDate;
-	       break;
-	    case KWD_FDATE:
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       NewVarListItem (pPresVar, wi);
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarFDate;
-	       break;
-	    case KWD_DocName:
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       NewVarListItem (pPresVar, wi);
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDocName;
-	       break;
-	    case KWD_DirName:
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       NewVarListItem (pPresVar, wi);
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDirName;
-	       break;
-	    case KWD_ElemName:
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       NewVarListItem (pPresVar, wi);
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarElemName;
-	       break;
-	    case KWD_AttributeName:
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       NewVarListItem (pPresVar, wi);
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrName;
-	       break;
-	    case KWD_VALUE:
-	       break;
-	    case KWD_PageNumber:
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       NewVarListItem (pPresVar, wi);
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarPageNumber;
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViView = 1;
-	       break;
-	    case KWD_ARABIC /* ARABIC */ :
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
-	       break;
-	    case KWD_UROMAN /* UROMAN */ :
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntURoman;
-	       break;
-	    case KWD_LROMAN /* LROMAN */ :
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLRoman;
-	       break;
-	    case KWD_UPPERCASE /* UPPERCASE */ :
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntUppercase;
-	       break;
-	    case KWD_LOWERCASE /* LOWERCASE */ :
-	       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLowercase;
-	       break;
-	    case KWD_FORWARD:
-	       /* forward */
-	       Forward = True;
-	       break;
-	    case KWD_BEGIN /* BEGIN */ :
-	       if (gCode == RULE_ViewRuleList)
-		  ViewBlock = True;
-	       if (gCode == RULE_RuleList)
-		 {
-		    RuleBlock = True;
-		    ConditionEnd ();
-		 }
-	       if (gCode == RULE_CondRuleList)
-		  CondBlock = True;
-	       break;
-	    case KWD_Otherwise:
-	       /* Otherwise */
-	       Conditions = NULL;
-	       NewCondition (wi);
-	       Conditions->CoCondition = PcDefaultCond;
-	       break;
-	    case KWD_VertRef:
-	       /* VertRef */
-	       CreatePRule (PtVertRef, wi);
-	       CurRule->PrPosRule.PoPosDef = VertRef;
-	       break;
-	    case KWD_HorizRef:
-	       /* HorizRef */
-	       CreatePRule (PtHorizRef, wi);
-	       CurRule->PrPosRule.PoPosDef = HorizRef;
-	       break;
-	    case KWD_Height /* Height */ :
-	       if (InRule)
-		  if (CurRule->PrType == PtHeight)
-		     CurRule->PrDimRule.DrSameDimens = True;
-		  else
-		     CurRule->PrDimRule.DrSameDimens = False;
-	       else
-		  CreatePRule (PtHeight, wi);
-	       break;
-	    case KWD_Width /* Width */ :
-	       if (InRule)
-		  if (CurRule->PrType == PtWidth)
-		     CurRule->PrDimRule.DrSameDimens = True;
-		  else
-		     CurRule->PrDimRule.DrSameDimens = False;
-	       else
-		  CreatePRule (PtWidth, wi);
-	       break;
-	    case KWD_VertPos:
-	       /* VertPos */
-	       CreatePRule (PtVertPos, wi);
-	       AxisDef = True;	/* le prochain repere boite est une definition */
-	       break;
-	    case KWD_HorizPos:
-	       /* HorizPos */
-	       CreatePRule (PtHorizPos, wi);
-	       AxisDef = True;	/* le prochain repere boite est une definition */
-	       break;
-	    case KWD_Justify:
-	       /* Justify */
-	       CreatePRule (PtJustify, wi);
-	       break;
-	    case KWD_Hyphenate:
-	       /* Hyphenate */
-	       CreatePRule (PtHyphenate, wi);
-	       break;
-	    case KWD_VertOverflow:
-	       /* VertOverflow */
-	       CreatePRule (PtVertOverflow, wi);
-	       break;
-	    case KWD_HorizOverflow:
-	       /* HorizOverflow */
-	       CreatePRule (PtHorizOverflow, wi);
-	       break;
-	    case KWD_LineSpacing:
-	       /* LineSpacing */
-	       CreatePRule (PtLineSpacing, wi);
-	       break;
-	    case KWD_Break /* Break */ :
-	       CompilerMessage (wi, PRS, INFO, USE_PAGEBREAK, inputLine, LineNum);
-	       if (Conditions != NULL)
-		  /* un IF precede la regle Break. Erreur */
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-				 inputLine, LineNum);
-	       else if (CurView != 1)
-		  /* interdit dans une vue non-principale */
-		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
-				 inputLine, LineNum);
-	       else
-		 {
-		    InBreakRule = True;
-		    ConditionEnd ();
-		 }
-	       break;
-	    case KWD_PageBreak /* PageBreak */ :
-	       if (Conditions != NULL)
-		  /* un IF precede la regle Break. Erreur */
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-				 inputLine, LineNum);
-	       else if (CurView != 1)
-		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
-				 inputLine, LineNum);
-	       else
-		 {
-		    InPageBreakRule = True;
-		    ConditionEnd ();
-		 }
-	       break;
-	    case KWD_LineBreak /* LineBreak */ :
-	       if (Conditions != NULL)
-		  /* un IF precede la regle Break. Erreur */
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-				 inputLine, LineNum);
-	       else if (CurView != 1)
-		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
-				 inputLine, LineNum);
-	       else
-		 {
-		    InLineBreakRule = True;
-		    ConditionEnd ();
-		 }
-	       break;
-	    case KWD_InLine:
-	       if (DefaultRuleDef)
-		  /* pas de regle InLine dans les regles par defaut */
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
-				   inputLine, LineNum);
-	       else
-		  InInLineRule = True;
-	       break;
-	    case KWD_Size:
-	       /* Size */
-	       CreatePRule (PtSize, wi);
-	       break;
-	    case KWD_Visibility:
-	       /* Visibility */
-	       CreatePRule (PtVisibility, wi);
-	       break;
-	    case KWD_Font:
-	       /* Font */
-	       CreatePRule (PtFont, wi);
-	       break;
-	    case KWD_Roman:
-	       /* Style roman */
-	       CurRule->PrChrValue = 'R';
-	       break;
-	    case KWD_Italics:
-	       /* Style Italics */
-	       CurRule->PrChrValue = 'I';
-	       break;
-	    case KWD_Oblique:
-	       /* Style Oblique */
-	       CurRule->PrChrValue = 'O';
-	       break;
-            case KWD_Bold:
-	       /* Weight Bold */
-	       CurRule->PrChrValue = 'B';
-	       if (CurRule->PrType == PtStyle)
-                  /* OBSOLETE rule "Style: Bold"
-		     turn it into "Weight: Bold" */
-                  CurRule->PrType = PtWeight;
-               break;
-            case KWD_BoldItalics:
-               /* Style BoldItalics -- OBSOLETE -- */
-               CurRule->PrChrValue = 'I';	/* Style: Italics; */
-	       CreatePRule (PtWeight, wi);
-	       CurRule->PrChrValue = 'B';	/* Weight; Bold */
-               break;
-            case KWD_BoldOblique:
-               /* Style BoldOblique -- OBSOLETE -- */
-               CurRule->PrChrValue = 'O';	/* Style: Oblique; */
-	       CreatePRule (PtWeight, wi);
-	       CurRule->PrChrValue = 'B';	/* Weight; Bold */
-               break;
-	    case KWD_Normal:
-	       /* Weight Normal */
-	       CurRule->PrChrValue = 'N';
-	       break;
-	    case KWD_Underline:
-	       /* Souligne */
-	       CreatePRule (PtUnderline, wi);
-	       break;
-	    case KWD_NoUnderline:
-	       /* pas de soulignement */
-	       CurRule->PrChrValue = 'N';
-	       break;
-	    case KWD_Underlined:
-	       /* soulignement */
-	       CurRule->PrChrValue = 'U';
-	       break;
-	    case KWD_Overlined:
-	       /* surlignement */
-	       CurRule->PrChrValue = 'O';
-	       break;
-	    case KWD_CrossedOut:
-	       CurRule->PrChrValue = 'C';
-	       break;
-	    case KWD_Thickness:
-	       /* epaisseur du soulignement */
-	       CreatePRule (PtThickness, wi);
-	       break;
-	    case KWD_Style:
-	       /* Style */
-	       CreatePRule (PtStyle, wi);
-	       break;
-	    case KWD_Weight:
-	       /* Weight */
-	       CreatePRule (PtWeight, wi);
-	       break;
-	    case KWD_Indent:
-	       /* Indent */
-	       CreatePRule (PtIndent, wi);
-	       break;
-	    case KWD_Adjust:
-	       /* Adjust */
-	       CreatePRule (PtAdjust, wi);
-	       break;
-	    case KWD_NoBreak1 /* NoBreak1 */ :
-	       if (DefaultRuleDef)
-	          /* pas de regle NoBreak1 dans les regles par defaut */
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
-	       else
-		  CreatePRule (PtBreak1, wi);
-	       break;
-	    case KWD_NoBreak2 /* NoBreak2 */ :
-	       if (DefaultRuleDef)
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle NoBreak2
-													   * dans les regles par
-													   * defaut */
-	       else
-		  CreatePRule (PtBreak2, wi);
-	       break;
-	    case KWD_Content /* Content */ :
-	       /* autorise' seulement pour les boites de presentation et les */
-	       /* elements reference ou paire */
-	       if (PresBoxDef)
-		 {
-		    if (Conditions != NULL)
-		       /* un IF precede la regle Content d'une boite de presentation */
-		       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-				      inputLine, LineNum);
-		 }
-	       else
-		  /* on n'est pas dans une boite de presentation */
-		  if (!(RuleDef &&
-			(pSSchema->SsRule[CurType - 1].SrConstruct == CsReference ||
-			 pSSchema->SsRule[CurType - 1].SrConstruct == CsPairedElement)))
-		  /* on n'est pas dans les regles d'un element reference */
-		  /* ni dans celles d'un element CsPairedElement */
-		  CompilerMessage (wi, PRS, FATAL, AUTHORIZED_ONLY_FOR_BOXES_AND_REFS, inputLine, LineNum);
-	       else
-		  /* cree une regle "Content" pour le type courant */
-		 {
-		    GenerateCopyRule (FnContentRef, wi);
-		    ConditionEnd ();
-		 }
-	       break;
-	    case KWD_Gather /* Gather */ :
-	       if (DefaultRuleDef)
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle Gather
-													   * dans les regles par defaut */
-	       else if (Conditions != NULL)
-		  /* un IF precede la regle Break. Erreur */
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-				 inputLine, LineNum);
-	       else if (CurView != 1)
-		  /* interdit dans une vue non-principale */
-		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
-	       else
-		 {
-		    InGatherRule = True;
-		    ConditionEnd ();
-		 }
-	       break;
-	    case KWD_Line:
-	       /* Line */
-	       LayoutRule (FnLine, wi);
-	       break;
-	    case KWD_NoLine:
-	       /* NoLine */
-	       LayoutRule (FnNoLine, wi);
-	       break;
-	    case KWD_Included:
-	       IncludedColumn = True;
-	       break;
-	    case KWD_Column:
-	       /* Column */
-	       if (IncludedColumn)
-		  LayoutRule (FnSubColumn, wi);
-	       else
-		  LayoutRule (FnColumn, wi);
-	       IncludedColumn = False;
+      {
+      /* traitement selon le code du mot-cle */
+      case KWD_PRESENTATION:
+	/* PRESENTATION */
+	break;
+      case KWD_VIEWS:
+	/* VIEWS */
+	ViewDef = True;
+	break;
+      case KWD_PRINT:
+	/* PRINT */
+	ViewDef = False;
+	break;
+      case KWD_COUNTERS:
+	/* COUNTERS */
+	ViewDef = False;
+	CounterDef = True;
+	break;
+      case KWD_CONST:
+	/* CONST */
+	ViewDef = False;
+	CounterDef = False;
+	ConstantDef = True;
+	break;
+      case KWD_VAR:
+	/* VAR */
+	ViewDef = False;
+	CounterDef = False;
+	ConstantDef = False;
+	VariableDef = True;
+	break;
+      case KWD_DEFAULT:
+	/* DEFAULT */
+	ViewDef = False;
+	CounterDef = False;
+	ConstantDef = False;
+	VariableDef = False;
+	DefaultRuleDef = True;
+	pPSchema->PsFirstDefaultPRule = NextRule;
+	FirstRule = NextRule;
+	break;
+      case KWD_BOXES:
+	/* BOXES */
+	/* verifie que toutes les regles par defaut sont presentes pour la */
+	/* vue 1. */
+	CheckDefaultRules ();
+	ViewDef = False;
+	CounterDef = False;
+	ConstantDef = False;
+	VariableDef = False;
+	DefaultRuleDef = False;
+	PresBoxDef = True;
+	break;
+      case KWD_RULES:
+	/* RULES */
+	ViewDef = False;
+	CounterDef = False;
+	ConstantDef = False;
+	VariableDef = False;
+	DefaultRuleDef = False;
+	CheckForwardRef (wi);
+	if (PresBoxDef)
+	  {
+	    CheckForwardRef (wi);
+	    /* verifie les references en avant de boites */
+	    PresBoxDef = False;
+	  }
+	else
+	  /* verifie que toutes les regles par defaut sont presentes pour */
+	  /* la vue 1 */
+	  CheckDefaultRules ();
+	CurRule->PrNextPRule = NULL;
+	RuleDef = True;
+	break;
+      case KWD_ATTRIBUTES:
+	/* ATTRIBUTES */
+	CheckDefaultRules ();
+	ViewDef = False;
+	CounterDef = False;
+	ConstantDef = False;
+	VariableDef = False;
+	DefaultRuleDef = False;
+	PresBoxDef = False;
+	RuleDef = False;
+	AttributeDef = True;
+	break;
+      case KWD_TRANSMIT:
+	/* TRANSMIT */
+	CheckDefaultRules ();
+	ViewDef = False;
+	CounterDef = False;
+	ConstantDef = False;
+	VariableDef = False;
+	DefaultRuleDef = False;
+	PresBoxDef = False;
+	RuleDef = False;
+	AttributeDef = False;
+	TransmittedCounter = 0;
+	TransmittedElem = 0;
+	EndOfRulesForType ();
+	CurRule->PrNextPRule = NULL;
+	if (NextRule != NULL)
+	  free (NextRule);
+	NextRule = NULL;
+	break;
+      case KWD_END:
+	/* END */
+	switch (gCode)
+	   {
+	   /* r= numero de la regle ou apparait END */
+	   case RULE_PresentModel:
+	     /* fin du progamme */
+	     EndOfRulesForType ();
+	     CurRule->PrNextPRule = NULL;
+	     if (NextRule != NULL)
+	       free (NextRule);
+	     NextRule = NULL;
+	     break;
+	   case RULE_ViewRuleList:
+	     /* fin ViewRuleList */
+	     ViewBlock = False;
+	     CheckBoxEnd ();
+	     EndOfRulesForType ();
+	     break;
+	   case RULE_CondRuleList:
+	     /* fin CondRuleList */
+	     /* la vue par defaut est la premiere */
+	     CurView = 1;
+	     RulesForView = False;
+	     CondBlock = False;
+	     if (!ViewBlock)
+	       {
+		 CheckBoxEnd ();
+		 EndOfRulesForType ();
+	       }
+	     break;
+	   case RULE_RuleList:
+	     RuleBlock = False;
+	     Conditions = NULL;
+	     if (!ViewBlock && !CondBlock)
+	       {
+		 CheckBoxEnd ();
+		 EndOfRulesForType ();
+	       }
+	     break;
+	   }
+	break;
+      case KWD_EXPORT /* THOT_EXPORT */ :
+	/* verifie qu'il n'y a pas deja une vue THOT_EXPORT */
+	i = 1;
+	while (i < pPSchema->PsNViews && !pPSchema->PsExportView[i - 1])
+	  i++;
+	if (pPSchema->PsExportView[i - 1])
+	  CompilerMessage (wi, PRS, FATAL,
+			   ONLY_ONE_EXPORT_VIEW_ALLOWED, inputLine,
+			   LineNum);	/* deja une vue THOT_EXPORT */
+	else
+	  pPSchema->PsExportView[pPSchema->PsNViews - 1] = True;
+	break;
+      case KWD_MERGE:
+	break;
+      case KWD_RANK:
+	/* RANK */
+	NewCounterOper (CntrRank, wi);
+	AncestorSign = 1;
+	AttrInitCounter = False;
+	break;
+      case KWD_RLevel:
+	/* CntrRLevel */
+	NewCounterOper (CntrRLevel, wi);
+	break;
+      case KWD_INIT /* INIT */ :
+	AttrInitCounter = True;
+	break;
+      case KWD_REINIT /* REINIT */ :
+	AttrInitCounter = False;
+	break;
+      case KWD_SET:
+	/* SET */
+	NewCounterOper (CntrSet, wi);
+	break;
+      case KWD_ADD:
+	/* ADD */
+	NewCounterOper (CntrAdd, wi);
+	break;
+      case KWD_Page:
+	if (gCode == RULE_TypeOrPage)	/* dans un compteur */
+	  {
+	    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	    pCntr->CnItem[pCntr->CnNItems - 1].CiElemType = PageBreak + 1;
+	    pCntr->CnItem[pCntr->CnNItems - 1].CiViewNum = 0;
+	  }
+	else
+	  /* regle de mise en pages */
+	  {
+	    if (x == KWD_Page)
+	      LayoutRule (FnPage, wi);
+	    /* la regle Page s'applique-t-elle a une vue d'elements associes?*/
+	    assoc = False;
+	    if (pSSchema->SsRule[CurType - 1].SrConstruct == CsList)
+	      /* la regle s'applique a un element liste */
+	      {
+		i = pSSchema->SsRule[CurType - 1].SrListItem;
+		/* les elements de la liste sont-ils des elements associes ? */
+		assoc = pSSchema->SsRule[i - 1].SrAssocElem;
+	      }
+	    if (assoc)
+	      pPSchema->PsAssocPaginated[CurType - 1] = True;
+	    else
+	      pPSchema->PsPaginatedView[CurView - 1] = True;
+	  }
+	break;
+      case KWD_With:
+	/* With */
+	if (gCode == RULE_CondAttr)
+	  {
+	    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	    pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttrPresent = TRUE;
+	  }
+	break;
+      case KWD_Without:
+	/* Without */
+	pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttrPresent = FALSE;
+	break;
+      case KWD_TEXT:
+	/* TEXT */
+	CreateConstant (CharString, wi);
+	break;
+      case KWD_SYMBOL:
+	/* SYMBOL */
+	CreateConstant (Symbol, wi);
+	break;
+      case KWD_GRAPHICS:
+	/* GRAPHICS */
+	CreateConstant (GraphicElem, wi);
+	break;
+      case KWD_PICTURE:
+	/* PICTURE */
+	CreateConstant (Picture, wi);
+	break;
+      case KWD_DATE:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	NewVarListItem (pPresVar, wi);
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDate;
+	break;
+      case KWD_FDATE:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	NewVarListItem (pPresVar, wi);
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarFDate;
+	break;
+      case KWD_DocName:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	NewVarListItem (pPresVar, wi);
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDocName;
+	break;
+      case KWD_DirName:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	NewVarListItem (pPresVar, wi);
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDirName;
+	break;
+      case KWD_ElemName:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	NewVarListItem (pPresVar, wi);
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarElemName;
+	break;
+      case KWD_AttributeName:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	NewVarListItem (pPresVar, wi);
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrName;
+	break;
+      case KWD_VALUE:
+	break;
+      case KWD_PageNumber:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	NewVarListItem (pPresVar, wi);
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarPageNumber;
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViView = 1;
+	break;
+      case KWD_ARABIC /* ARABIC */ :
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+	break;
+      case KWD_UROMAN /* UROMAN */ :
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntURoman;
+	break;
+      case KWD_LROMAN /* LROMAN */ :
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLRoman;
+	break;
+      case KWD_UPPERCASE /* UPPERCASE */ :
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntUppercase;
+	break;
+      case KWD_LOWERCASE /* LOWERCASE */ :
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLowercase;
+	break;
+      case KWD_FORWARD:
+	/* forward */
+	Forward = True;
+	break;
+      case KWD_BEGIN /* BEGIN */ :
+	if (gCode == RULE_ViewRuleList)
+	  ViewBlock = True;
+	if (gCode == RULE_RuleList)
+	  {
+	    RuleBlock = True;
+	    ConditionEnd ();
+	  }
+	if (gCode == RULE_CondRuleList)
+	  CondBlock = True;
+	break;
+      case KWD_Otherwise:
+	/* Otherwise */
+	Conditions = NULL;
+	NewCondition (wi);
+	Conditions->CoCondition = PcDefaultCond;
+	break;
+      case KWD_VertRef:
+	/* VertRef */
+	CreatePRule (PtVertRef, wi);
+	CurRule->PrPosRule.PoPosDef = VertRef;
+	break;
+      case KWD_HorizRef:
+	/* HorizRef */
+	CreatePRule (PtHorizRef, wi);
+	CurRule->PrPosRule.PoPosDef = HorizRef;
+	break;
+      case KWD_Height /* Height */ :
+	if (InRule)
+	  if (CurRule->PrType == PtHeight)
+	    CurRule->PrDimRule.DrSameDimens = True;
+	  else
+	    CurRule->PrDimRule.DrSameDimens = False;
+	else
+	  CreatePRule (PtHeight, wi);
+	break;
+      case KWD_Width /* Width */ :
+	if (InRule)
+	  if (CurRule->PrType == PtWidth)
+	    CurRule->PrDimRule.DrSameDimens = True;
+	  else
+	    CurRule->PrDimRule.DrSameDimens = False;
+	else
+	  CreatePRule (PtWidth, wi);
+	break;
+      case KWD_VertPos:
+	/* VertPos */
+	CreatePRule (PtVertPos, wi);
+	AxisDef = True;	/* le prochain repere boite est une definition */
+	break;
+      case KWD_HorizPos:
+	/* HorizPos */
+	CreatePRule (PtHorizPos, wi);
+	AxisDef = True;	/* le prochain repere boite est une definition */
+	break;
+      case KWD_Justify:
+	/* Justify */
+	CreatePRule (PtJustify, wi);
+	break;
+      case KWD_Hyphenate:
+	/* Hyphenate */
+	CreatePRule (PtHyphenate, wi);
+	break;
+      case KWD_VertOverflow:
+	/* VertOverflow */
+	CreatePRule (PtVertOverflow, wi);
+	break;
+      case KWD_HorizOverflow:
+	/* HorizOverflow */
+	CreatePRule (PtHorizOverflow, wi);
+	break;
+      case KWD_LineSpacing:
+	/* LineSpacing */
+	CreatePRule (PtLineSpacing, wi);
+	break;
+      case KWD_Break /* Break */ :
+	CompilerMessage (wi, PRS, INFO, USE_PAGEBREAK, inputLine, LineNum);
+	if (Conditions != NULL)
+	  /* un IF precede la regle Break. Erreur */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+			   inputLine, LineNum);
+	else if (CurView != 1)
+	  /* interdit dans une vue non-principale */
+	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+			   inputLine, LineNum);
+	else
+	  {
+	    InBreakRule = True;
+	    ConditionEnd ();
+	  }
+	break;
+      case KWD_PageBreak /* PageBreak */ :
+	if (Conditions != NULL)
+	  /* un IF precede la regle Break. Erreur */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+			   inputLine, LineNum);
+	else if (CurView != 1)
+	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+			   inputLine, LineNum);
+	else
+	  {
+	    InPageBreakRule = True;
+	    ConditionEnd ();
+	  }
+	break;
+      case KWD_LineBreak /* LineBreak */ :
+	if (Conditions != NULL)
+	  /* un IF precede la regle Break. Erreur */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+			   inputLine, LineNum);
+	else if (CurView != 1)
+	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+			   inputLine, LineNum);
+	else
+	  {
+	    InLineBreakRule = True;
+	    ConditionEnd ();
+	  }
+	break;
+      case KWD_InLine:
+	if (DefaultRuleDef)
+	  /* pas de regle InLine dans les regles par defaut */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
+			   inputLine, LineNum);
+	else
+	  InInLineRule = True;
+	break;
+      case KWD_Size:
+	/* Size */
+	CreatePRule (PtSize, wi);
+	break;
+      case KWD_Visibility:
+	/* Visibility */
+	CreatePRule (PtVisibility, wi);
+	break;
+      case KWD_Font:
+	/* Font */
+	CreatePRule (PtFont, wi);
+	break;
+      case KWD_Roman:
+	/* Style roman */
+	CurRule->PrChrValue = 'R';
+	break;
+      case KWD_Italics:
+	/* Style Italics */
+	CurRule->PrChrValue = 'I';
+	break;
+      case KWD_Oblique:
+	/* Style Oblique */
+	CurRule->PrChrValue = 'O';
+	break;
+      case KWD_Bold:
+	/* Weight Bold */
+	CurRule->PrChrValue = 'B';
+	if (CurRule->PrType == PtStyle)
+	  /* OBSOLETE rule "Style: Bold"
+	     turn it into "Weight: Bold" */
+	  CurRule->PrType = PtWeight;
+	break;
+      case KWD_BoldItalics:
+	/* Style BoldItalics -- OBSOLETE -- */
+	CurRule->PrChrValue = 'I';	/* Style: Italics; */
+	CreatePRule (PtWeight, wi);
+	CurRule->PrChrValue = 'B';	/* Weight; Bold */
+	break;
+      case KWD_BoldOblique:
+	/* Style BoldOblique -- OBSOLETE -- */
+	CurRule->PrChrValue = 'O';	/* Style: Oblique; */
+	CreatePRule (PtWeight, wi);
+	CurRule->PrChrValue = 'B';	/* Weight; Bold */
+	break;
+      case KWD_Normal:
+	/* Weight Normal */
+	CurRule->PrChrValue = 'N';
+	break;
+      case KWD_Underline:
+	/* Souligne */
+	CreatePRule (PtUnderline, wi);
+	break;
+      case KWD_NoUnderline:
+	/* pas de soulignement */
+	CurRule->PrChrValue = 'N';
+	break;
+      case KWD_Underlined:
+	/* soulignement */
+	CurRule->PrChrValue = 'U';
+	break;
+      case KWD_Overlined:
+	/* surlignement */
+	CurRule->PrChrValue = 'O';
+	break;
+      case KWD_CrossedOut:
+	CurRule->PrChrValue = 'C';
+	break;
+      case KWD_Thickness:
+	/* epaisseur du soulignement */
+	CreatePRule (PtThickness, wi);
+	break;
+      case KWD_Style:
+	/* Style */
+	CreatePRule (PtStyle, wi);
+	break;
+      case KWD_Weight:
+	/* Weight */
+	CreatePRule (PtWeight, wi);
+	break;
+      case KWD_Indent:
+	/* Indent */
+	CreatePRule (PtIndent, wi);
+	break;
+      case KWD_Adjust:
+	/* Adjust */
+	CreatePRule (PtAdjust, wi);
+	break;
+      case KWD_NoBreak1 /* NoBreak1 */ :
+	if (DefaultRuleDef)
+	  /* pas de regle NoBreak1 dans les regles par defaut */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
+			   inputLine, LineNum);
+	else
+	  CreatePRule (PtBreak1, wi);
+	break;
+      case KWD_NoBreak2 /* NoBreak2 */ :
+	if (DefaultRuleDef)
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
+			   inputLine, LineNum);	/* pas de regle NoBreak2
+						 * dans les regles par
+						 * defaut */
+	else
+	  CreatePRule (PtBreak2, wi);
+	break;
+      case KWD_Content /* Content */ :
+	/* autorise' seulement pour les boites de presentation et les */
+	/* elements reference ou paire */
+	if (PresBoxDef)
+	  {
+	    if (Conditions != NULL)
+	      /* un IF precede la regle Content d'une boite de presentation */
+	      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+			       inputLine, LineNum);
+	  }
+	else
+	  /* on n'est pas dans une boite de presentation */
+	  if (!(RuleDef &&
+		(pSSchema->SsRule[CurType -1].SrConstruct == CsReference ||
+		 pSSchema->SsRule[CurType -1].SrConstruct == CsPairedElement)))
+	    /* on n'est pas dans les regles d'un element reference */
+	    /* ni dans celles d'un element CsPairedElement */
+	    CompilerMessage (wi, PRS, FATAL,
+			     AUTHORIZED_ONLY_FOR_BOXES_AND_REFS, inputLine,
+			     LineNum);
+	  else
+	    /* cree une regle "Content" pour le type courant */
+	    {
+	      GenerateCopyRule (FnContentRef, wi);
+	      ConditionEnd ();
+	    }
+	break;
+      case KWD_Gather /* Gather */ :
+	if (DefaultRuleDef)
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
+			   inputLine, LineNum);	/* pas de regle Gather dans
+						 * les regles par defaut */
+	else if (Conditions != NULL)
+	  /* un IF precede la regle Break. Erreur */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+			   inputLine, LineNum);
+	else if (CurView != 1)
+	  /* interdit dans une vue non-principale */
+	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+			   inputLine, LineNum);
+	else
+	  {
+	    InGatherRule = True;
+	    ConditionEnd ();
+	  }
+	break;
+      case KWD_Line:
+	/* Line */
+	LayoutRule (FnLine, wi);
+	break;
+      case KWD_NoLine:
+	/* NoLine */
+	LayoutRule (FnNoLine, wi);
+	break;
+      case KWD_Included:
+	IncludedColumn = True;
+	break;
+      case KWD_Column:
+	/* Column */
+	if (IncludedColumn)
+	  LayoutRule (FnSubColumn, wi);
+	else
+	  LayoutRule (FnColumn, wi);
+	IncludedColumn = False;
 #ifdef __COLPAGE__
-	       /* la regle Colonne s'applique-t-elle a une vue d'elements associes? */
-	       assoc = False;
-	       if (pSSchema->SsRule[CurType - 1].SrConstruct == CsList)
-		  /* la regle s'applique a un element liste */
-		 {
-		    i = pSSchema->SsRule[CurType - 1].SrListItem;
-		    /* les elements de la liste sont-ils des elements associes ? */
-		    assoc = pSSchema->SsRule[i - 1].SrAssocElem;
-		 }
-	       if (assoc)
-		  ;		/*        pPSchema->SPVueAssocAvecCol[CurType - 1] = True; */
-	       else
-		  pPSchema->PsColumnView[CurView - 1] = True;
+	/* la regle Colonne s'applique-t-elle a une vue d'elements associes? */
+	assoc = False;
+	if (pSSchema->SsRule[CurType - 1].SrConstruct == CsList)
+	  /* la regle s'applique a un element liste */
+	  {
+	    i = pSSchema->SsRule[CurType - 1].SrListItem;
+	    /* les elements de la liste sont-ils des elements associes ? */
+	    assoc = pSSchema->SsRule[i - 1].SrAssocElem;
+	  }
+	if (assoc)
+	  ;	    /*  pPSchema->SPVueAssocAvecCol[CurType - 1] = True; */
+	else
+	  pPSchema->PsColumnView[CurView - 1] = True;
 #endif /* __COLPAGE__ */
-	       break;
-	    case KWD_Copy /* Copy */ :
-	       if (DefaultRuleDef)
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
-	       else if (CurView != 1)
-		  /* regle autorisee seulement dans la vue principale */
-		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
-	       else if (RuleDef && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)
-		  /* reserve' aux references */
-		  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
-	       else
-		 {
-		    GenerateCopyRule (FnCopy, wi);
-		    ConditionEnd ();
-		 }
-	       break;
-	    case KWD_Depth:
-	       /* Depth */
-	       CreatePRule (PtDepth, wi);
-	       break;
-	    case KWD_LineStyle:
-	       CreatePRule (PtLineStyle, wi);
-	       break;
-	    case KWD_LineWeight:
-	       CreatePRule (PtLineWeight, wi);
-	       break;
-	    case KWD_FillPattern:
-	       CreatePRule (PtFillPattern, wi);
-	       break;
-	    case KWD_Background:
-	       CreatePRule (PtBackground, wi);
-	       break;
-	    case KWD_Foreground:
-	       if (gCode == RULE_Rule4)
-	          CreatePRule (PtForeground, wi);
-	       else if (gCode == RULE_BorderColor)
-		  {
-	          CurRule->PrPresMode = PresImmediate;
-		  CurRule->PrAttrValue = False;
-		  CurRule->PrIntValue = -1;   /* -1 means Foreground color */
-		  }
-	       break;
-	    case KWD_ShowBox:
-	       LayoutRule (FnShowBox, wi);
-	       break;
-	    case KWD_BackgroundPicture:
-	       /* create a new constant */
-	       NewConst (wi);
-	       LayoutRule (FnBackgroundPicture, wi);
-	       CurRule->PrNPresBoxes = 1;
-	       CurRule->PrPresBox[0] = pPSchema->PsNConstants;
-	       break;
-	    case KWD_PictureMode:
-	       LayoutRule (FnPictureMode, wi);
-	       CurRule->PrNPresBoxes = 1;
-	       CurRule->PrPresBox[0] = RealSize;
-	       break;
-	    case KWD_MarginTop:
-	       CreatePRule (PtMarginTop, wi);
-	       break;
-	    case KWD_MarginRight:
-	       CreatePRule (PtMarginRight, wi);
-	       break;
-	    case KWD_MarginBottom:
-	       CreatePRule (PtMarginBottom, wi);
-	       break;
-	    case KWD_MarginLeft:
-	       CreatePRule (PtMarginLeft, wi);
-	       break;
-	    case KWD_PaddingTop:
-	       CreatePRule (PtPaddingTop, wi);
-	       break;
-	    case KWD_PaddingRight:
-	       CreatePRule (PtPaddingRight, wi);
-	       break;
-	    case KWD_PaddingBottom:
-	       CreatePRule (PtPaddingBottom, wi);
-	       break;
-	    case KWD_PaddingLeft:
-	       CreatePRule (PtPaddingLeft, wi);
-	       break;
-	    case KWD_BorderTopWidth:
-	       CreatePRule (PtBorderTopWidth, wi);
-	       break;
-	    case KWD_BorderRightWidth:
-	       CreatePRule (PtBorderRightWidth, wi);
-	       break;
-	    case KWD_BorderBottomWidth:
-	       CreatePRule (PtBorderBottomWidth, wi);
-	       break;
-	    case KWD_BorderLeftWidth:
-	       CreatePRule (PtBorderLeftWidth, wi);
-	       break;
-	    case KWD_BorderTopColor:
-	       CreatePRule (PtBorderTopColor, wi);
-	       break;
-	    case KWD_BorderRightColor:
-	       CreatePRule (PtBorderRightColor, wi);
-	       break;
-	    case KWD_BorderBottomColor:
-	       CreatePRule (PtBorderBottomColor, wi);
-	       break;
-	    case KWD_BorderLeftColor:
-	       CreatePRule (PtBorderLeftColor, wi);
-	       break;
-	    case KWD_BorderTopStyle:
-	       CreatePRule (PtBorderTopStyle, wi);
-	       break;
-	    case KWD_BorderRightStyle:
-	       CreatePRule (PtBorderRightStyle, wi);
-	       break;
-	    case KWD_BorderBottomStyle:
-	       CreatePRule (PtBorderBottomStyle, wi);
-	       break;
-	    case KWD_BorderLeftStyle:
-	       CreatePRule (PtBorderLeftStyle, wi);
-	       break;
-	    case KWD_Auto:
-	       CurRule->PrMinUnit = UnAuto;
-	       CurRule->PrMinAttr = FALSE;
-	       CurRule->PrMinValue = 0;
-	       break;
-	    case KWD_Thin:
-	       /* underline or border */
-	       if (CurRule->PrType == PtThickness)
-	          CurRule->PrChrValue = 'N';
-	       else
-		  /* border */
-		  {
-		  CurRule->PrMinAttr = FALSE;
-                  CurRule->PrMinUnit = UnPoint;
-                  CurRule->PrMinValue = 1;
-                  }
-	       break;
-	    case KWD_Medium:
-	       /* border */
-	       CurRule->PrMinAttr = FALSE;
-               CurRule->PrMinUnit = UnPoint;
-               CurRule->PrMinValue = 2;
-               break;
-	    case KWD_Thick:
-	       /* underline or border */
-	       if (CurRule->PrType == PtThickness)
-	          CurRule->PrChrValue = 'T';
-	       else
-		  /* border */
-		  {
-		  CurRule->PrMinAttr = FALSE;
-                  CurRule->PrMinUnit = UnPoint;
-                  CurRule->PrMinValue = 3;
-                  }
-	       break;
-	    case KWD_Transparent:
-	       CurRule->PrPresMode = PresImmediate;
-	       CurRule->PrAttrValue = False;
-	       CurRule->PrIntValue = -2;   /* -2 means Transparent */
-	       break;
-	    case KWD_None:
-	       /* border style */
-               CurRule->PrChrValue = '0';
-               break;
-	    case KWD_Hidden:
-	       /* border style */
-               CurRule->PrChrValue = 'H';
-               break;
-	    case KWD_Dotted:
-	       /* border style or line style */
-	       CurRule->PrChrValue = '.';
-	       break;
-	    case KWD_Dashed:
-	       /* border style or line style */
-	       CurRule->PrChrValue = '-';
-	       break;
-	    case KWD_Solid:
-	       /* border style or line style */
-	       CurRule->PrChrValue = 'S';
-	       break;
-	    case KWD_Double:
-	       /* border style */
-               CurRule->PrChrValue = 'D';
-               break;
-	    case KWD_Groove:
-	       /* border style */
-               CurRule->PrChrValue = 'G';
-               break;
-	    case KWD_Ridge:
-	       /* border style */
-               CurRule->PrChrValue = 'R';
-               break;
-	    case KWD_Inset:
-	       /* border style */
-               CurRule->PrChrValue = 'I';
-               break;
-	    case KWD_Outset:
-	       /* border style */
-               CurRule->PrChrValue = 'O';
-               break;
-	    case KWD_NormalSize:
-	       CurRule->PrPresBox[0] = RealSize;
-	       break;
-	    case KWD_Scale:
-	       CurRule->PrPresBox[0] = ReScale;
-	       break;
-	    case KWD_RepeatXY:
-	       CurRule->PrPresBox[0] = FillFrame;
-	       break;
-	    case KWD_RepeatX:
-	       CurRule->PrPresBox[0] = XRepeat;
-	       break;
-	    case KWD_RepeatY:
-	       CurRule->PrPresBox[0] = YRepeat;
-	       break;
-	    case KWD_nil /* NULL */ :
-	       if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
-		  CompilerMessage (wi, PRS, FATAL, FORDBIDDEN_IN_HEIGHT_AND_WIDTH, inputLine, LineNum);
-	       else
-		 {
-		    CurRule->PrPosRule.PoPosDef = NoEdge;
-		    AxisDef = True;
-		 }
-	       break;
-	    case KWD_UserSpecified:
-	       if (!(RuleDef || AttributeDef))
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_PRES_BOX, inputLine, LineNum);	/* interdit pour les boites de presentation */
-	       else if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
-		  CurRule->PrDimRule.DrUserSpecified = True;
-	       else if (CurRule->PrType == PtVertPos || CurRule->PrType == PtHorizPos)
-		  CurRule->PrPosRule.PoUserSpecified = True;
-	       break;
-	    case KWD_Refering:
-	       /* Refering */
-	       SetLevel (RlContainsRef, wi);
-	       break;
-	    case KWD_Enclosing /* Enclosing */ :
-	       if (gCode == RULE_Reference)
-		  SetLevel (RlEnclosing, wi);
-	       else
-		  InheritRule (InheritParent);
-	       break;
-	    case KWD_Enclosed /* Enclosed */ :
-	       if (gCode == RULE_Reference)
-		  SetLevel (RlEnclosed, wi);
-	       else if (CurRule->PrType == PtVisibility)
-		  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_ENCLOSED, inputLine, LineNum);
-	       else
-		  InheritRule (InheritChild);
-	       break;
-	    case KWD_Creator:
-	       if (!PresBoxDef)
-		  /* on n'est pas dans une boite de presentation, erreur */
-		  CompilerMessage (BeginCopyType, PRS, FATAL, VALID_ONLY_FOR_PRES_BOX, inputLine, LineNum);
-	       else if (gCode == RULE_Reference)
-		  SetLevel (RlCreator, wi);
-	       else
-		  InheritRule (InheritCreator);
-	       break;
-	    case KWD_Previous /* Previous */ :
-	       if (gCode == RULE_Reference)
-		  SetLevel (RlPrevious, wi);
-	       else if (CurRule->PrType == PtVisibility)
-		  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_PREVIOUS, inputLine, LineNum);
-	       else
-		  InheritRule (InheritPrevious);
-	       break;
-	    case KWD_GrandFather:
-	       InheritRule (InheritGrandFather);
-	       break;
-	    case KWD_Next:
-	       /* Next */
-	       SetLevel (RlNext, wi);
-	       break;
-
-	    case KWD_Root:
-	       /* Root */
-	       SetLevel (RlRoot, wi);
-	       break;
-	    case KWD_Refered /* Refered */ :
-	    case KWD_Referred /* Referred */ :
-	       if (gCode == RULE_ElemCondition)
-		  /* dans une condition "IF Referred" */
-		  Conditions->CoCondition = PcReferred;
-	       else if (!AttributeDef && !PresBoxDef)
-		  /* autorise' seulement pour les attributs */
-		  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
-	       else if (AttributeDef && pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtReferenceAttr)
-		  /* seulement pour les attributs reference */
-		  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
-	       else
-		  SetLevel (RlReferred, wi);
-	       break;
-	    case KWD_AnyElem:
-	       CurRule->PrPosRule.PoRefKind = RkElType;
-	       CurRule->PrPosRule.PoRefIdent = MAX_RULES_SSCHEMA + 1;
-	       break;
-	    case KWD_AnyBox:
-	       CurRule->PrPosRule.PoRefKind = RkPresBox;
-	       CurRule->PrPosRule.PoRefIdent = MAX_PRES_BOX + 1;
-	       break;
-	    case KWD_ElemWithAttr:
-	       break;
-	    case KWD_NOT /* NOT */ :
-	       if (gCode == RULE_Condition)
-		  /* dans une Condition */
-		  Conditions->CoNotNegative = False;
-	       else
-		  /* Not dans  NBoxType */
-		 {
-		    switch (CurRule->PrType)
-			  {
-			     case PtVertRef:
-			     case PtHorizRef:
-			     case PtVertPos:
-			     case PtHorizPos:
-				CurRule->PrPosRule.PoNotRel = True;
-				break;
-			     case PtHeight:
-			     case PtWidth:
-				if (CurRule->PrDimRule.DrPosition)
-				   CurRule->PrDimRule.DrPosRule.PoNotRel = True;
-				else
-				   CurRule->PrDimRule.DrNotRelat = True;
-				break;
-			     default:
-				break;
-			  }
-		 }
-	       break;
-	    case KWD_Left /* Left */ :
-	       if (gCode == RULE_Adjustment)
-		  /* mode d'alignement des lignes */
-		  CurRule->PrAdjust = AlignLeft;
-	       else
-		  ProcessAxis (Left, wi);
-	       break;
-	    case KWD_VMiddle /* VMiddle */ :
-	       if (gCode == RULE_Adjustment)
-		  /* mode d'alignement des lignes */
-		  CurRule->PrAdjust = AlignCenter;
-	       else
-		  ProcessAxis (VertMiddle, wi);
-	       break;
-	    case KWD_VRef:
-	       /* VRef */
-	       ProcessAxis (VertRef, wi);
-	       break;
-	    case KWD_Right /* Right */ :
-	       if (gCode == RULE_Adjustment)
-		  /* mode d'alignement des lignes */
-		  CurRule->PrAdjust = AlignRight;
-	       else
-		  ProcessAxis (Right, wi);
-	       break;
-	    case KWD_Top:
-	       /* Top */
-	       ProcessAxis (Top, wi);
-	       break;
-	    case KWD_HMiddle:
-	       /* HMiddle */
-	       ProcessAxis (HorizMiddle, wi);
-	       break;
-	    case KWD_HRef:
-	       /* HRef */
-	       ProcessAxis (HorizRef, wi);
-	       break;
-	    case KWD_Bottom:
-	       /* Bottom */
-	       ProcessAxis (Bottom, wi);
-	       break;
-	    case KWD_CM /* cm */ :
-	       if (LatestNumberAttr)
-		  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
-				 inputLine, LineNum);
-	       else
-		  CurUnit = Centimeter;
-	       break;
-	    case KWD_MM /* mm */ :
-	       if (LatestNumberAttr)
-		  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
-				 inputLine, LineNum);
-	       else
-		  CurUnit = Millimeter;
-	       break;
-	    case KWD_PT /* pt */ :
-	       if (gCode == RULE_Unit)
-		  CurUnit = Point;
-	       else if (gCode == RULE_SizeInherit)
-		  CurRule->PrMinUnit = UnPoint;
-	       else if (gCode == RULE_InheritSize)
-		  CurRule->PrInhUnit = UnPoint;
-	       break;
-	    case KWD_PC /* pc */ :
-	       if (LatestNumberAttr)
-		  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
-				 inputLine, LineNum);
-	       else
-		  CurUnit = Pica;
-	       break;
-	    case KWD_IN /* in */ :
-	       if (gCode == RULE_Unit)
-		  if (LatestNumberAttr)
-		     CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
-				    inputLine, LineNum);
-		  else
-		     CurUnit = Inch;
-	       break;
-	    case KWD_PX /* px */ :
-	       CurUnit = ScreenPixel;
-	       break;
-	    case KWD_EM /* em */ :
-	       CurUnit = FontHeight;
-	       break;
-	    case KWD_EX /* ex */ :
-	       CurUnit = XHeight;
-	       break;
-	    case KWD_Min:
-	       if (gCode == RULE_Dimension)
-		  CurRule->PrDimRule.DrMin = True;
-	       break;
-	    case KWD_Yes:
-	       /* Yes */
-	       BooleanValue (True, wi);
-	       break;
-	    case KWD_No:
-	       /* No */
-	       BooleanValue (False, wi);
-	       break;
-	    case KWD_LeftWithDots:
-	       /* LeftWithDots */
-	       CurRule->PrAdjust = AlignLeftDots;
-	       break;
-	    case KWD_IF:
-	       /* IF */
-	       if (DefaultRuleDef)
-		  /* pas de condition dans les regles par defaut */
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
-	       else
-		 {
-		    Conditions = NULL;
-		    NewCondition (wi);
-		 }
-	       break;
-	    case KWD_AND /* AND */ :
-	       ConditionEnd ();
-	       NewCondition (wi);
-	       break;
-	    case KWD_Target:
-	       /* Target */
-	       if (RuleDef && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)
-		  /* reserve' aux elements references */
-		  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
-	       else if (AttributeDef && pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtReferenceAttr)
-		  /* seulement pour les attributs reference */
-		  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
-	       else
-		  Conditions->CoTarget = True;
-	       break;
-	    case KWD_First:
-	       /* First */
-	       if (gCode == RULE_FirstSec)
-		  FirstInPair = True;
-	       else
-		  Conditions->CoCondition = PcFirst;
-	       break;
-	    case KWD_Second:
-	       /* Second */
-	       SecondInPair = True;
-	       break;
-	    case KWD_Last:
-	       /* Last */
-	       Conditions->CoCondition = PcLast;
-	       break;
-
-	    case KWD_FirstRef:
-	       /* FirstRef */
-	       Conditions->CoCondition = PcFirstRef;
-	       break;
-
-	    case KWD_LastRef:
-	       /* LastRef */
-	       Conditions->CoCondition = PcLastRef;
-	       break;
-
-	    case KWD_ExternalRef:
-	       /* ExternalRef */
-	       Conditions->CoCondition = PcExternalRef;
-	       break;
-
-	    case KWD_InternalRef:
-	       /* InternalRef */
-	       Conditions->CoCondition = PcInternalRef;
-	       break;
-
-	    case KWD_CopyRef:
-	       /* PcCopyRef */
-	       Conditions->CoCondition = PcCopyRef;
-	       break;
-
-	    case KWD_AnyAttributes:
-	       /* AnyAttributs */
-	       Conditions->CoCondition = PcAnyAttributes;
-	       break;
-	    case KWD_FirstAttr:
-	       /* FirstAttr */
-	       Conditions->CoCondition = PcFirstAttr;
-	       break;
-
-	    case KWD_LastAttr:
-	       /* LastAttr */
-	       Conditions->CoCondition = PcLastAttr;
-	       break;
-
-	    case KWD_UserPage:
-	       /* UserPage */
-	       Conditions->CoCondition = PcUserPage;
-	       break;
-
-	    case KWD_StartPage:
-	       /* StartPage */
-	       Conditions->CoCondition = PcStartPage;
-	       break;
-
-	    case KWD_ComputedPage:
-	       /* ComputedPage */
-	       Conditions->CoCondition = PcComputedPage;
-	       break;
-
-	    case KWD_Empty:
-	       /* PcEmpty */
-	       Conditions->CoCondition = PcEmpty;
-	       break;
-
-	    case KWD_MaxRangeVal:
-	       /* MaxRangeVal */
-	       if (Conditions != NULL)
-		  Conditions->CoValCounter = CntMaxVal;
-	       CurMinMax = CntMaxVal;
-	       break;
-	    case KWD_MinRangeVal:
-	       /* MinRangeVal */
-	       if (Conditions != NULL)
-		  Conditions->CoValCounter = CntMinVal;
-	       CurMinMax = CntMinVal;
-	       break;
-	    case KWD_Even:
-	       /* Even */
-	       Conditions->CoCondition = PcEven;
-	       Conditions->CoCounter = 0;
-	       InCondPage = True;
-	       break;
-	    case KWD_Odd:
-	       /* Odd */
-	       Conditions->CoCondition = PcOdd;
-	       Conditions->CoCounter = 0;
-	       InCondPage = True;
-	       break;
-	    case KWD_One:
-	       /* One */
-	       Conditions->CoCondition = PcOne;
-	       Conditions->CoCounter = 0;
-	       InCondPage = True;
-	       break;
-	    case KWD_Immediately:
-	       Immediately = True;
-	       break;
-	    case KWD_Within:
-	       Conditions->CoCondition = PcWithin;
-	       Conditions->CoImmediate = Immediately;
-	       SignGreaterOrLess = False;
-	       /* a priori, il n'y a pas de nombre d'ancetres indique' */
-	       /* On considere "If Within Type" comme "If Within >0 Type" */
-	       Conditions->CoAncestorRel = CondGreater;
-	       Conditions->CoRelation = 0;
-	       Conditions->CoTypeAncestor = 0;
-	       Conditions->CoAncestorName[0] = '\0';
-	       Conditions->CoSSchemaName[0] = '\0';
-	       InWithinCond = True;
-	       break;
-	    case KWD_Create:
-	       /* Create */
-	       CreationRule (FnCreateFirst, wi);
-	       CompilerMessage (wi, PRS, INFO, USE_CREATEFIRST, inputLine, LineNum);
-	       break;
-	    case KWD_CreateBefore:
-	       /* CreateBefore */
-	       CreationRule (FnCreateBefore, wi);
-	       break;
-	    case KWD_CreateAfter:
-	       /* CreateAfter */
-	       CreationRule (FnCreateAfter, wi);
-	       break;
-	    case KWD_CreateLast:
-	       /* CreateLast */
-	       CreationRule (FnCreateLast, wi);
-	       break;
-	    case KWD_CreateFirst:
-	       /* CreateFirst */
-	       CreationRule (FnCreateFirst, wi);
-	       break;
-	    case KWD_CreateWith:
-	       /* CreateWith */
-	       CreationRule (FnCreateWith, wi);
-	       break;
-	    case KWD_CreateEnclosing:
-	       /* CreateEnclosing */
-	       CreationRule (FnCreateEnclosing, wi);
-	       break;
-	    case KWD_Repeated:
-	       /* Repeated */
-	       CurRule->PrPresBoxRepeat = True;
-	       break;
-	    case KWD_LESS:
-	       VCondLess = True;
-	       break;
-	    case KWD_GREATER:
-	       VCondGreater = True;
-	       break;
-	    case KWD_EQUAL:
-	       CondEqual = True;
-	       break;
-	    default:
-	       break;
-	 }
+	break;
+      case KWD_Copy /* Copy */ :
+	if (DefaultRuleDef)
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
+			   inputLine, LineNum);
+	else if (CurView != 1)
+	  /* regle autorisee seulement dans la vue principale */
+	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+			   inputLine, LineNum);
+	else if (RuleDef &&
+		 pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)
+	  /* reserve' aux references */
+	  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine,
+			   LineNum);
+	else
+	  {
+	    GenerateCopyRule (FnCopy, wi);
+	    ConditionEnd ();
+	  }
+	break;
+      case KWD_Depth:
+	/* Depth */
+	CreatePRule (PtDepth, wi);
+	break;
+      case KWD_LineStyle:
+	CreatePRule (PtLineStyle, wi);
+	break;
+      case KWD_LineWeight:
+	CreatePRule (PtLineWeight, wi);
+	break;
+      case KWD_FillPattern:
+	CreatePRule (PtFillPattern, wi);
+	break;
+      case KWD_Background:
+	CreatePRule (PtBackground, wi);
+	break;
+      case KWD_Foreground:
+	if (gCode == RULE_Rule4)
+	  CreatePRule (PtForeground, wi);
+	else if (gCode == RULE_BorderColor)
+	  {
+	    CurRule->PrPresMode = PresImmediate;
+	    CurRule->PrAttrValue = False;
+	    CurRule->PrIntValue = -1;   /* -1 means Foreground color */
+	  }
+	break;
+      case KWD_ShowBox:
+	LayoutRule (FnShowBox, wi);
+	break;
+      case KWD_BackgroundPicture:
+	/* create a new constant */
+	NewConst (wi);
+	LayoutRule (FnBackgroundPicture, wi);
+	CurRule->PrNPresBoxes = 1;
+	CurRule->PrPresBox[0] = pPSchema->PsNConstants;
+	break;
+      case KWD_PictureMode:
+	LayoutRule (FnPictureMode, wi);
+	CurRule->PrNPresBoxes = 1;
+	CurRule->PrPresBox[0] = RealSize;
+	break;
+      case KWD_MarginTop:
+	CreatePRule (PtMarginTop, wi);
+	break;
+      case KWD_MarginRight:
+	CreatePRule (PtMarginRight, wi);
+	break;
+      case KWD_MarginBottom:
+	CreatePRule (PtMarginBottom, wi);
+	break;
+      case KWD_MarginLeft:
+	CreatePRule (PtMarginLeft, wi);
+	break;
+      case KWD_PaddingTop:
+	CreatePRule (PtPaddingTop, wi);
+	break;
+      case KWD_PaddingRight:
+	CreatePRule (PtPaddingRight, wi);
+	break;
+      case KWD_PaddingBottom:
+	CreatePRule (PtPaddingBottom, wi);
+	break;
+      case KWD_PaddingLeft:
+	CreatePRule (PtPaddingLeft, wi);
+	break;
+      case KWD_BorderTopWidth:
+	CreatePRule (PtBorderTopWidth, wi);
+	break;
+      case KWD_BorderRightWidth:
+	CreatePRule (PtBorderRightWidth, wi);
+	break;
+      case KWD_BorderBottomWidth:
+	CreatePRule (PtBorderBottomWidth, wi);
+	break;
+      case KWD_BorderLeftWidth:
+	CreatePRule (PtBorderLeftWidth, wi);
+	break;
+      case KWD_BorderTopColor:
+	CreatePRule (PtBorderTopColor, wi);
+	break;
+      case KWD_BorderRightColor:
+	CreatePRule (PtBorderRightColor, wi);
+	break;
+      case KWD_BorderBottomColor:
+	CreatePRule (PtBorderBottomColor, wi);
+	break;
+      case KWD_BorderLeftColor:
+	CreatePRule (PtBorderLeftColor, wi);
+	break;
+      case KWD_BorderTopStyle:
+	CreatePRule (PtBorderTopStyle, wi);
+	break;
+      case KWD_BorderRightStyle:
+	CreatePRule (PtBorderRightStyle, wi);
+	break;
+      case KWD_BorderBottomStyle:
+	CreatePRule (PtBorderBottomStyle, wi);
+	break;
+      case KWD_BorderLeftStyle:
+	CreatePRule (PtBorderLeftStyle, wi);
+	break;
+      case KWD_Auto:
+	CurRule->PrMinUnit = UnAuto;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+	break;
+      case KWD_Thin:
+	/* underline or border */
+	if (CurRule->PrType == PtThickness)
+	  CurRule->PrChrValue = 'N';
+	else
+	  /* border */
+	  {
+	    CurRule->PrMinAttr = FALSE;
+	    CurRule->PrMinUnit = UnPoint;
+	    CurRule->PrMinValue = 1;
+	  }
+	break;
+      case KWD_Medium:
+	/* border */
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinUnit = UnPoint;
+	CurRule->PrMinValue = 2;
+	break;
+      case KWD_Thick:
+	/* underline or border */
+	if (CurRule->PrType == PtThickness)
+	  CurRule->PrChrValue = 'T';
+	else
+	  /* border */
+	  {
+	    CurRule->PrMinAttr = FALSE;
+	    CurRule->PrMinUnit = UnPoint;
+	    CurRule->PrMinValue = 3;
+	  }
+	break;
+      case KWD_Transparent:
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrAttrValue = False;
+	CurRule->PrIntValue = -2;   /* -2 means Transparent */
+	break;
+      case KWD_None:
+	/* border style */
+	CurRule->PrChrValue = '0';
+	break;
+      case KWD_Hidden:
+	/* border style */
+	CurRule->PrChrValue = 'H';
+	break;
+      case KWD_Dotted:
+	/* border style or line style */
+	CurRule->PrChrValue = '.';
+	break;
+      case KWD_Dashed:
+	/* border style or line style */
+	CurRule->PrChrValue = '-';
+	break;
+      case KWD_Solid:
+	/* border style or line style */
+	CurRule->PrChrValue = 'S';
+	break;
+      case KWD_Double:
+	/* border style */
+	CurRule->PrChrValue = 'D';
+	break;
+      case KWD_Groove:
+	/* border style */
+	CurRule->PrChrValue = 'G';
+	break;
+      case KWD_Ridge:
+	/* border style */
+	CurRule->PrChrValue = 'R';
+	break;
+      case KWD_Inset:
+	/* border style */
+	CurRule->PrChrValue = 'I';
+	break;
+      case KWD_Outset:
+	/* border style */
+	CurRule->PrChrValue = 'O';
+	break;
+      case KWD_NormalSize:
+	CurRule->PrPresBox[0] = RealSize;
+	break;
+      case KWD_Scale:
+	CurRule->PrPresBox[0] = ReScale;
+	break;
+      case KWD_RepeatXY:
+	CurRule->PrPresBox[0] = FillFrame;
+	break;
+      case KWD_RepeatX:
+	CurRule->PrPresBox[0] = XRepeat;
+	break;
+      case KWD_RepeatY:
+	CurRule->PrPresBox[0] = YRepeat;
+	break;
+      case KWD_nil /* NULL */ :
+	if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
+	  CompilerMessage (wi, PRS, FATAL, FORDBIDDEN_IN_HEIGHT_AND_WIDTH,
+			   inputLine, LineNum);
+	else
+	  {
+	    CurRule->PrPosRule.PoPosDef = NoEdge;
+	    AxisDef = True;
+	  }
+	break;
+      case KWD_UserSpecified:
+	if (!(RuleDef || AttributeDef))
+	  /* interdit pour les boites de presentation */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_PRES_BOX, inputLine,
+			   LineNum);
+	else if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
+	  CurRule->PrDimRule.DrUserSpecified = True;
+	else if (CurRule->PrType == PtVertPos || CurRule->PrType == PtHorizPos)
+	  CurRule->PrPosRule.PoUserSpecified = True;
+	break;
+      case KWD_Refering:
+	/* Refering */
+	SetLevel (RlContainsRef, wi);
+	break;
+      case KWD_Enclosing /* Enclosing */ :
+	if (gCode == RULE_Reference)
+	  SetLevel (RlEnclosing, wi);
+	else
+	  InheritRule (InheritParent);
+	break;
+      case KWD_Enclosed /* Enclosed */ :
+	if (gCode == RULE_Reference)
+	  SetLevel (RlEnclosed, wi);
+	else if (CurRule->PrType == PtVisibility)
+	  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_ENCLOSED,
+			   inputLine, LineNum);
+	else
+	  InheritRule (InheritChild);
+	break;
+      case KWD_Creator:
+	if (!PresBoxDef)
+	  /* on n'est pas dans une boite de presentation, erreur */
+	  CompilerMessage (BeginCopyType, PRS, FATAL, VALID_ONLY_FOR_PRES_BOX,
+			   inputLine, LineNum);
+	else if (gCode == RULE_Reference)
+	  SetLevel (RlCreator, wi);
+	else
+	  InheritRule (InheritCreator);
+	break;
+      case KWD_Previous /* Previous */ :
+	if (gCode == RULE_Reference)
+	  SetLevel (RlPrevious, wi);
+	else if (CurRule->PrType == PtVisibility)
+	  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_PREVIOUS,
+			   inputLine, LineNum);
+	else
+	  InheritRule (InheritPrevious);
+	break;
+      case KWD_GrandFather:
+	InheritRule (InheritGrandFather);
+	break;
+      case KWD_Next:
+	/* Next */
+	SetLevel (RlNext, wi);
+	break;
+      case KWD_Root:
+	/* Root */
+	SetLevel (RlRoot, wi);
+	break;
+      case KWD_Refered /* Refered */ :
+      case KWD_Referred /* Referred */ :
+	if (gCode == RULE_ElemCondition)
+	  /* dans une condition "IF Referred" */
+	  Conditions->CoCondition = PcReferred;
+	else if (!AttributeDef && !PresBoxDef)
+	  /* autorise' seulement pour les attributs */
+	  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR,
+			   inputLine, LineNum);
+	else if (AttributeDef &&
+		 pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtReferenceAttr)
+	  /* seulement pour les attributs reference */
+	  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR,
+			   inputLine, LineNum);
+	else
+	  SetLevel (RlReferred, wi);
+	break;
+      case KWD_AnyElem:
+	CurRule->PrPosRule.PoRefKind = RkElType;
+	CurRule->PrPosRule.PoRefIdent = MAX_RULES_SSCHEMA + 1;
+	break;
+      case KWD_AnyBox:
+	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefIdent = MAX_PRES_BOX + 1;
+	break;
+      case KWD_ElemWithAttr:
+	break;
+      case KWD_NOT /* NOT */ :
+	if (gCode == RULE_Condition)
+	  /* dans une Condition */
+	  Conditions->CoNotNegative = False;
+	else
+	  /* Not dans  NBoxType */
+	  {
+	    switch (CurRule->PrType)
+	      {
+	      case PtVertRef:
+	      case PtHorizRef:
+	      case PtVertPos:
+	      case PtHorizPos:
+		CurRule->PrPosRule.PoNotRel = True;
+		break;
+	      case PtHeight:
+	      case PtWidth:
+		if (CurRule->PrDimRule.DrPosition)
+		  CurRule->PrDimRule.DrPosRule.PoNotRel = True;
+		else
+		  CurRule->PrDimRule.DrNotRelat = True;
+		break;
+	      default:
+		break;
+	      }
+	  }
+	break;
+      case KWD_Left /* Left */ :
+	if (gCode == RULE_Adjustment)
+	  /* mode d'alignement des lignes */
+	  CurRule->PrAdjust = AlignLeft;
+	else
+	  ProcessAxis (Left, wi);
+	break;
+      case KWD_VMiddle /* VMiddle */ :
+	if (gCode == RULE_Adjustment)
+	  /* mode d'alignement des lignes */
+	  CurRule->PrAdjust = AlignCenter;
+	else
+	  ProcessAxis (VertMiddle, wi);
+	break;
+      case KWD_VRef:
+	/* VRef */
+	ProcessAxis (VertRef, wi);
+	break;
+      case KWD_Right /* Right */ :
+	if (gCode == RULE_Adjustment)
+	  /* mode d'alignement des lignes */
+	  CurRule->PrAdjust = AlignRight;
+	else
+	  ProcessAxis (Right, wi);
+	break;
+      case KWD_Top:
+	/* Top */
+	ProcessAxis (Top, wi);
+	break;
+      case KWD_HMiddle:
+	/* HMiddle */
+	ProcessAxis (HorizMiddle, wi);
+	break;
+      case KWD_HRef:
+	/* HRef */
+	ProcessAxis (HorizRef, wi);
+	break;
+      case KWD_Bottom:
+	/* Bottom */
+	ProcessAxis (Bottom, wi);
+	break;
+      case KWD_CM /* cm */ :
+	if (LatestNumberAttr)
+	  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
+			   inputLine, LineNum);
+	else
+	  CurUnit = Centimeter;
+	break;
+      case KWD_MM /* mm */ :
+	if (LatestNumberAttr)
+	  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
+			   inputLine, LineNum);
+	else
+	  CurUnit = Millimeter;
+	break;
+      case KWD_PT /* pt */ :
+	if (gCode == RULE_Unit)
+	  CurUnit = Point;
+	else if (gCode == RULE_SizeInherit)
+	  CurRule->PrMinUnit = UnPoint;
+	else if (gCode == RULE_InheritSize)
+	  CurRule->PrInhUnit = UnPoint;
+	break;
+      case KWD_PC /* pc */ :
+	if (LatestNumberAttr)
+	  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
+			   inputLine, LineNum);
+	else
+	  CurUnit = Pica;
+	break;
+      case KWD_IN /* in */ :
+	if (gCode == RULE_Unit)
+	  if (LatestNumberAttr)
+	    CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
+			     inputLine, LineNum);
+	  else
+	    CurUnit = Inch;
+	break;
+      case KWD_PX /* px */ :
+	CurUnit = ScreenPixel;
+	break;
+      case KWD_EM /* em */ :
+	CurUnit = FontHeight;
+	break;
+      case KWD_EX /* ex */ :
+	CurUnit = XHeight;
+	break;
+      case KWD_Min:
+	if (gCode == RULE_Dimension)
+	  CurRule->PrDimRule.DrMin = True;
+	break;
+      case KWD_Yes:
+	/* Yes */
+	BooleanValue (True, wi);
+	break;
+      case KWD_No:
+	/* No */
+	BooleanValue (False, wi);
+	break;
+      case KWD_LeftWithDots:
+	/* LeftWithDots */
+	CurRule->PrAdjust = AlignLeftDots;
+	break;
+      case KWD_IF:
+	/* IF */
+	if (DefaultRuleDef)
+	  /* pas de condition dans les regles par defaut */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
+			   inputLine, LineNum);
+	else
+	  {
+	    Conditions = NULL;
+	    NewCondition (wi);
+	  }
+	break;
+      case KWD_AND /* AND */ :
+	ConditionEnd ();
+	NewCondition (wi);
+	break;
+      case KWD_Target:
+	/* Target */
+	if (RuleDef &&
+	    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)
+	  /* reserve' aux elements references */
+	  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine,
+			   LineNum);
+	else if (AttributeDef &&
+		 pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtReferenceAttr)
+	  /* seulement pour les attributs reference */
+	  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR,
+			   inputLine, LineNum);
+	else
+	  Conditions->CoTarget = True;
+	break;
+      case KWD_First:
+	/* First */
+	if (gCode == RULE_FirstSec)
+	  FirstInPair = True;
+	else
+	  Conditions->CoCondition = PcFirst;
+	break;
+      case KWD_Second:
+	/* Second */
+	SecondInPair = True;
+	break;
+      case KWD_Last:
+	/* Last */
+	Conditions->CoCondition = PcLast;
+	break;
+	
+      case KWD_FirstRef:
+	/* FirstRef */
+	Conditions->CoCondition = PcFirstRef;
+	break;
+	
+      case KWD_LastRef:
+	/* LastRef */
+	Conditions->CoCondition = PcLastRef;
+	break;
+	
+      case KWD_ExternalRef:
+	/* ExternalRef */
+	Conditions->CoCondition = PcExternalRef;
+	break;
+	
+      case KWD_InternalRef:
+	/* InternalRef */
+	Conditions->CoCondition = PcInternalRef;
+	break;
+	
+      case KWD_CopyRef:
+	/* PcCopyRef */
+	Conditions->CoCondition = PcCopyRef;
+	break;
+	
+      case KWD_AnyAttributes:
+	/* AnyAttributs */
+	Conditions->CoCondition = PcAnyAttributes;
+	break;
+      case KWD_FirstAttr:
+	/* FirstAttr */
+	Conditions->CoCondition = PcFirstAttr;
+	break;
+	
+      case KWD_LastAttr:
+	/* LastAttr */
+	Conditions->CoCondition = PcLastAttr;
+	break;
+	
+      case KWD_UserPage:
+	/* UserPage */
+	Conditions->CoCondition = PcUserPage;
+	break;
+	
+      case KWD_StartPage:
+	/* StartPage */
+	Conditions->CoCondition = PcStartPage;
+	break;
+	
+      case KWD_ComputedPage:
+	/* ComputedPage */
+	Conditions->CoCondition = PcComputedPage;
+	break;
+	
+      case KWD_Empty:
+	/* PcEmpty */
+	Conditions->CoCondition = PcEmpty;
+	break;
+	
+      case KWD_MaxRangeVal:
+	/* MaxRangeVal */
+	if (Conditions != NULL)
+	  Conditions->CoValCounter = CntMaxVal;
+	CurMinMax = CntMaxVal;
+	break;
+      case KWD_MinRangeVal:
+	/* MinRangeVal */
+	if (Conditions != NULL)
+	  Conditions->CoValCounter = CntMinVal;
+	CurMinMax = CntMinVal;
+	break;
+      case KWD_Even:
+	/* Even */
+	Conditions->CoCondition = PcEven;
+	Conditions->CoCounter = 0;
+	InCondPage = True;
+	break;
+      case KWD_Odd:
+	/* Odd */
+	Conditions->CoCondition = PcOdd;
+	Conditions->CoCounter = 0;
+	InCondPage = True;
+	break;
+      case KWD_One:
+	/* One */
+	Conditions->CoCondition = PcOne;
+	Conditions->CoCounter = 0;
+	InCondPage = True;
+	break;
+      case KWD_Immediately:
+	Immediately = True;
+	break;
+      case KWD_Within:
+	Conditions->CoCondition = PcWithin;
+	Conditions->CoImmediate = Immediately;
+	SignGreaterOrLess = False;
+	/* a priori, il n'y a pas de nombre d'ancetres indique' */
+	/* On considere "If Within Type" comme "If Within >0 Type" */
+	Conditions->CoAncestorRel = CondGreater;
+	Conditions->CoRelation = 0;
+	Conditions->CoTypeAncestor = 0;
+	Conditions->CoAncestorName[0] = '\0';
+	Conditions->CoSSchemaName[0] = '\0';
+	InWithinCond = True;
+	break;
+      case KWD_Create:
+	/* Create */
+	CreationRule (FnCreateFirst, wi);
+	CompilerMessage (wi, PRS, INFO, USE_CREATEFIRST, inputLine, LineNum);
+	break;
+      case KWD_CreateBefore:
+	/* CreateBefore */
+	CreationRule (FnCreateBefore, wi);
+	break;
+      case KWD_CreateAfter:
+	/* CreateAfter */
+	CreationRule (FnCreateAfter, wi);
+	break;
+      case KWD_CreateLast:
+	/* CreateLast */
+	CreationRule (FnCreateLast, wi);
+	break;
+      case KWD_CreateFirst:
+	/* CreateFirst */
+	CreationRule (FnCreateFirst, wi);
+	break;
+      case KWD_CreateWith:
+	/* CreateWith */
+	CreationRule (FnCreateWith, wi);
+	break;
+      case KWD_CreateEnclosing:
+	/* CreateEnclosing */
+	CreationRule (FnCreateEnclosing, wi);
+	break;
+      case KWD_Repeated:
+	/* Repeated */
+	CurRule->PrPresBoxRepeat = True;
+	break;
+      case KWD_LESS:
+	VCondLess = True;
+	break;
+      case KWD_GREATER:
+	VCondGreater = True;
+	break;
+      case KWD_EQUAL:
+	CondEqual = True;
+	break;
+      default:
+	break;
+      }
 }
 
 
@@ -3841,16 +3911,20 @@ indLine             wl;
 	     pSRule = &pSSchema->SsRule[i - 1];
 	     /* on n'accepte que les listes d'elements associes */
 	     if (pSRule->SrConstruct != CsList)
-		CompilerMessage (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine, LineNum);
+		CompilerMessage (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine,
+				 LineNum);
 	     /* ce n'est pas une liste, erreur */
 	     else if (!pSSchema->SsRule[pSRule->SrListItem - 1].SrAssocElem)
-		CompilerMessage (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine, LineNum);
+		CompilerMessage (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine,
+				 LineNum);
 	     /* les constituants de la liste ne sont */
 	     /* pas des elements associes */
 	     else
 	       {
 		  if (pPSchema->PsNPrintedViews >= MAX_PRINT_VIEW)
-		     CompilerMessage (wi, PRS, FATAL, MAX_VIEWS_TO_BE_PRINTED_OVERFLOW, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL,
+				      MAX_VIEWS_TO_BE_PRINTED_OVERFLOW,
+				      inputLine, LineNum);
 		  /* table des vues a imprimee saturee */
 		  else
 		    {
@@ -3867,7 +3941,9 @@ indLine             wl;
 	     if (pPSchema->PsNTransmElems >= MAX_TRANSM_ELEM)
 		CompilerMessage (wi, PRS, FATAL, MAX_MANY_TRANSMIT_RULES_FOR_ELEMS_OVERFLOW, inputLine, LineNum);		/* table PsTransmElem saturee */
 	     else if (pPSchema->PsElemTransmit[i - 1] > 0)
-		CompilerMessage (wi, PRS, FATAL, ELEM_HAS_A_TRANSMIT_RULE, inputLine, LineNum);	/* deja une regle transmit pout l'element */
+	       /* deja une regle transmit pout l'element */
+	       CompilerMessage (wi, PRS, FATAL, ELEM_HAS_A_TRANSMIT_RULE,
+				inputLine, LineNum);
 	     else
 	       {
 		  pPSchema->PsNTransmElems++;
@@ -3878,7 +3954,8 @@ indLine             wl;
 	  {
 	     /* un nom de type a la fin d'une regle Transmit */
 	     if (!pSSchema->SsRule[i - 1].SrRefImportedDoc)
-		CompilerMessage (wi, PRS, FATAL, NOT_AN_INCLUDED_DOC, inputLine, LineNum);	/* ce n'est pas un document inclus */
+		CompilerMessage (wi, PRS, FATAL, NOT_AN_INCLUDED_DOC,
+				 inputLine, LineNum);
 	     else if (TransmittedCounter > 0)
 		/* c'est une regle Transmit pour un compteur */
 	       {
@@ -3894,13 +3971,15 @@ indLine             wl;
 	   /* dans une regle "Content" */
 	   if (!PresBoxDef)
 	      /* on est dans une regle Content d'un element reference ou paire */
-	      /* refus: seules les constantes sont acceptees dans cette regle */
-	      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
+	      /* refus: seules les constantes sont acceptees dans cette regle*/
+	      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine,
+			       LineNum);
 	   else
 	      /* contenu d'une boite de presentation */
 	   if (!pSSchema->SsRule[i - 1].SrAssocElem)
 	      /* ce n'est pas un element associe, erreur */
-	      CompilerMessage (wi, PRS, FATAL, NOT_AN_ASSOC_ELEM, inputLine, LineNum);
+	      CompilerMessage (wi, PRS, FATAL, NOT_AN_ASSOC_ELEM, inputLine,
+			       LineNum);
 	   else
 	     {
 		pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContElement;
@@ -3923,7 +4002,8 @@ indLine             wl;
 		if (found)
 		   pPSchema->PsPresentBox[CurPresBox - 1].PbContRefElem = i;
 		else
-		   CompilerMessage (wi, PRS, FATAL, MISSING_REF_TO_ELEM, inputLine, LineNum);
+		   CompilerMessage (wi, PRS, FATAL, MISSING_REF_TO_ELEM,
+				    inputLine, LineNum);
 		/* pas de reference dans le schema, erreur */
 	     }
 	else if (CounterDef)
@@ -3956,42 +4036,43 @@ indLine             wl;
 	     if ((CurRule->PrType == PtVertRef
 		  || CurRule->PrType == PtHorizRef)
 		 && CurRule->PrPosRule.PoRelation != RlEnclosed)
-		CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
+		CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED,
+				 inputLine, LineNum);
 	     else
 		switch (CurRule->PrType)
-		      {
-			 case PtVertRef:
-			 case PtHorizRef:
-			 case PtVertPos:
-			 case PtHorizPos:
-			    CurRule->PrPosRule.PoRefKind = RkElType;
-			    CurRule->PrPosRule.PoRefIdent = i;
-			    break;
-			 case PtHeight:
-			 case PtWidth:
-			    if (CurRule->PrDimRule.DrPosition)
-			      {
-				 CurRule->PrDimRule.DrPosRule.PoRefKind = RkElType;
-				 CurRule->PrDimRule.DrPosRule.PoRefIdent = i;
-			      }
-			    else
-			      {
-				 CurRule->PrDimRule.DrRefKind = RkElType;
-				 CurRule->PrDimRule.DrRefIdent = i;
-			      }
-			    break;
-			 case PtFunction:
-			    if (CurRule->PrPresFunction == FnCopy)
-			      {
-				 CurRule->PrElement = True;
-				 CurRule->PrExternal = False;
-				 CurRule->PrNPresBoxes = 1;
-				 CurRule->PrPresBox[0] = i;
-			      }
-			    break;
-			 default:
-			    break;
-		      }
+		   {
+		   case PtVertRef:
+		   case PtHorizRef:
+		   case PtVertPos:
+		   case PtHorizPos:
+		     CurRule->PrPosRule.PoRefKind = RkElType;
+		     CurRule->PrPosRule.PoRefIdent = i;
+		     break;
+		   case PtHeight:
+		   case PtWidth:
+		     if (CurRule->PrDimRule.DrPosition)
+		       {
+			 CurRule->PrDimRule.DrPosRule.PoRefKind = RkElType;
+			 CurRule->PrDimRule.DrPosRule.PoRefIdent = i;
+		       }
+		     else
+		       {
+			 CurRule->PrDimRule.DrRefKind = RkElType;
+			 CurRule->PrDimRule.DrRefIdent = i;
+		       }
+		     break;
+		   case PtFunction:
+		     if (CurRule->PrPresFunction == FnCopy)
+		       {
+			 CurRule->PrElement = True;
+			 CurRule->PrExternal = False;
+			 CurRule->PrNPresBoxes = 1;
+			 CurRule->PrPresBox[0] = i;
+		       }
+		     break;
+		   default:
+		     break;
+		   }
 	  }
      }
    FirstInPair = False;
@@ -4191,921 +4272,1002 @@ indLine             wi;
    PtrPRule            pPRule;
    PtrCondition        pCond;
    TtAttribute        *pAttr;
+   PtrHostView         pHostView, prevHostView;
 
+   /* gCode = numero de la regle ou apparait le nom */
    switch (gCode)
-	 {
-	       /* gCode = numero de la regle ou apparait le nom */
-	    case RULE_TypeName /* TypeName */ :
-	       if (prevRule == RULE_PresentModel)
-		  /* nom de la structure generique */
-		 {
-		    CopyName (n, wi, wl);
-		    /* lit le schema de structure compile' */
-		    GetSchStruct (&pSSchema);
-		    if (pSSchema == NULL)
-		       TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);	/* memoire insuffisante */
-		    if (!ReadStructureSchema (n, pSSchema))
-		       TtaDisplaySimpleMessage (FATAL, PRS, MISSING_STRUCT_SCHEM);
-		    /* echec lecture du schema de structure */
-		    else if (ustrcmp (n, pSSchema->SsName))
-		       CompilerMessage (wi, PRS, FATAL, STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);
-		    else
-		      {
-			 Initialize ();
-			 ustrncpy (pPSchema->PsStructName, n, MAX_NAME_LENGTH);
-		      }
-		 }
-	       else if (prevRule == RULE_ExtStruct)
-		 {
-		    /* verifier que ce schema de structure externe existe et qu'il */
-		    /* contient bien le type CopyType */
-		    CopyName (n, wi, wl);
-		    if (!ReadStructureSchema (n, pExternalSS))
-		       /* echec lecture du schema de structure */
-		       CompilerMessage (wi, PRS, FATAL, CANT_LOAD_SCHEMA, inputLine, LineNum);
-		    else
-		       /* le schema de structure externe a ete charge' */
-		      {
-			 i = 1;
-			 while (ustrcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0
-				&& i < pExternalSS->SsNRules)
-			    i++;
-			 if (ustrcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0)
-			    /* type inconnu */
-			    if (PresBoxDef || InWithinCond)
-			       /* on est dans une boite de presentation, erreur */
-			       CompilerMessage (BeginCopyType, PRS, FATAL, NOT_FOR_PRES_BOX, inputLine, LineNum);
-			    else
-			      {
-				 /* on suppose que c'est un nom de boite de presentation */
-				 /* definie dans un autre schema de presentation (pour */
-				 /* la presentation des references externes) */
-				 if ((RuleDef && pSSchema->SsRule[CurType - 1].SrRefTypeNat[0] == '\0') ||
-				     (AttributeDef && pSSchema->SsAttribute[CurAttrNum - 1].AttrTypeRefNature[0] == '\0'))
-				    /* la regle ne s'applique pas a` une reference externe */
-				    CompilerMessage (BeginCopyType, PRS, FATAL, AUTHORIZED_ONLY_FOR_EXT_REFS, inputLine, LineNum);
-				 else
-				    /* la regle s'applique a` une reference externe */
-				 if (CurRule->PrNPresBoxes != 0)
-				    /* deja une boite dans la regle, on refuse */
-				    CompilerMessage (wi, PRS, FATAL, REDEFINITION_OF_CONTENT, inputLine, LineNum);
-				 else
-				   {
-				      ustrncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
-				      /* indique qu'on copie une boite de presentation et non un element */
-				      CurRule->PrElement = False;
-				   }
-			      }
-			 else if (InWithinCond)
-			   {
-			      ustrncpy (Conditions->CoAncestorName, CopyType, MAX_NAME_LENGTH);
-			      CopyName (Conditions->CoSSchemaName, wi, wl);
-			      Conditions->CoTypeAncestor = 0;
-			   }
-			 else
-			    /* le type a copier existe, il a le numero i */
-			   {
-			      /* indique qu'on copie un element et non une boite de presentation */
-			      CurRule->PrElement = True;
-			      /* nom du type d'element a copier */
-			      ustrncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
-			      /* indique que PrPresBoxName est un nom de type defini */
-			      /* dans un autre schema */
-			      CurRule->PrExternal = True;
-			   }
-			 /* marque que ce nom externe est traite' */
-			 CopyType[0] = '\0';
-			 BeginCopyType = 0;
-		      }
-		 }
-	       else if (prevRule == RULE_ElemCondition)
-		 {
-		    /* On est dans une condition */
-		    CopyName (n, wi, wl);
-		    /* verifie si le type existe dans le schema de structure */
-		    i = 1;
-		    while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName)
-			   && i < pSSchema->SsNRules)
-		       i++;
-		    if (InWithinCond)
-		       /* un nom de type d'element dans une condition Within */
-		      {
-			 if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
-			    /* type inconnu */
-			   {
-			      /* c'est peut-etre un type defini dans un autre schema */
-			      CopyName (CopyType, wi, wl);
-			      BeginCopyType = wi;
-			   }
-			 else
-			    /* le type existe, il a le numero i */
-			    Conditions->CoTypeAncestor = i;
-			 /* On remet Immediately a faux seulement ici */
-			 Immediately = False;
-		      }
-		    else
-		       /* on est dans une condition, mais pas apres Within */
-		      {
-			 if (!ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
-			    /* c'est bien un nom de type d'element */
-			   {
-			      /* la regle est-elle bien pour un attribut ? */
-			      if (!AttributeDef)
-				 CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_ATTRIBUTES,
-						inputLine, LineNum);
-			      else
-				{
-				   Conditions->CoCondition = PcElemType;
-				   Conditions->CoTypeElAttr = i;
-				}
-			   }
-			 else
-			    /* peut-etre est-ce un nom d'attribut */
-			   {
-			      /* cherche ce nom parmi les attributs du schema de structure */
-			      i = 1;
-			      while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
-				     && i < pSSchema->SsNAttributes)
-				 i++;
-			      if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
-				 /* on ne l'a pas trouve, erreur */
-				 CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
-						inputLine, LineNum);
-			      else
-				 /* c'est un nom d'attribut dans une condition */
-				{
-				   /* change le type de ce nom qui devient un nom d'attribut */
-				   Identifier[identnum].SrcIdentCode = RULE_AttrName;
-				   /* traite ce nom d'attribut */
-				   Conditions->CoCondition = PcAttribute;
-				   Conditions->CoTypeElAttr = i;
-				}
-			   }
-		      }
-		 }
-	       else if (prevRule == RULE_CountFunction)
-		 {
-		    /* On est dans un CntrRLevel */
-		    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-		    CopyName (n, wi, wl);
-		    /* verifie si le type existe dans le schema de structure */
-		    i = 1;
-		    while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName)
-			   && i < pSSchema->SsNRules)
-		       i++;
-		    if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
-		       /* type inconnu */
-		       CompilerMessage (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine, LineNum);
-		    else
-		       /* le type existe, il a le numero i */
-		       pCntr->CnItem[0].CiElemType = i;
-		 }
-	       else
-		  ProcessTypeName (prevRule, n, wi, wl);
-	       break;
-
-	    case RULE_ViewName:
-	       /* ViewName */
-	       if (ViewDef)
-		  /* declaration de vue */
-		 {
-		    if (pPSchema->PsNViews >= MAX_VIEW)
-		       CompilerMessage (wi, PRS, FATAL, MAX_VIEWS_OVERFLOW, inputLine, LineNum);
-		    /* Trop de vues */
-		    else if (Identifier[identnum].SrcIdentDefRule != 0)
-		       CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
-		    /* Vue deja declaree */
-		    else
-		       /* ajoute une vue dans la table des vues */
-		      {
-			 CopyName (pPSchema->PsView[pPSchema->PsNViews], wi, wl);
-			 pPSchema->PsNViews++;
-			 Identifier[identnum].SrcIdentDefRule = pPSchema->PsNViews;
-		      }
-		 }
-	       else if (prevRule == RULE_PrintView)
-		  /* dans la liste des vues a imprimer */
-		  if (Identifier[identnum].SrcIdentDefRule == 0)
-		     /* ce nom n'a pas ete declare comme nom de vue, voyons si */
-		     /* ce n'est pas un identificateur de type */
-		    {
-		       ProcessTypeName (prevRule, n, wi, wl);
-		       Identifier[identnum].SrcIdentCode = RULE_TypeName;
-		       /* changement de type, c'est */
-		       /* maintenant un identificateur de type structure */
-		    }
-		  else
-		     /* ce nom a ete declare comme nom de vue */
-		    {
-		       if (pPSchema->PsNPrintedViews >= MAX_PRINT_VIEW)
-			  CompilerMessage (wi, PRS, FATAL, MAX_VIEWS_TO_BE_PRINTED_OVERFLOW, inputLine, LineNum);
-		       /* table des vues a imprimee saturee */
-		       else
+     {
+     case RULE_TypeName /* TypeName */ :
+       if (prevRule == RULE_PresentModel)
+	  /* nom de la structure generique */
+	  {
+	  CopyName (n, wi, wl);
+	  /* lit le schema de structure compile' */
+	  GetSchStruct (&pSSchema);
+	  if (pSSchema == NULL)
+	     /* memoire insuffisante */
+	     TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);
+	  if (!ReadStructureSchema (n, pSSchema))
+	     TtaDisplaySimpleMessage (FATAL, PRS, MISSING_STRUCT_SCHEM);
+	  /* echec lecture du schema de structure */
+	  else if (ustrcmp (n, pSSchema->SsName))
+	     CompilerMessage (wi, PRS, FATAL, STRUCT_SCHEM_DOES_NOT_MATCH,
+			      inputLine, LineNum);
+	  else
+	     {
+	     Initialize ();
+	     ustrncpy (pPSchema->PsStructName, n, MAX_NAME_LENGTH);
+	     }
+	  }
+       else if (prevRule == RULE_ExtStruct)
+	  {
+	  /* verifier que ce schema de structure externe existe et qu'il
+	     contient bien le type CopyType */
+	  CopyName (n, wi, wl);
+	  if (!ReadStructureSchema (n, pExternalSS))
+	     /* echec lecture du schema de structure */
+	     CompilerMessage (wi, PRS, FATAL, CANT_LOAD_SCHEMA, inputLine,
+			      LineNum);
+	  else
+	     /* le schema de structure externe a ete charge' */
+	     {
+	     i = 1;
+	     while (ustrcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0
+		    && i < pExternalSS->SsNRules)
+	        i++;
+	     if (ustrcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0)
+	        /* type inconnu */
+	        if (PresBoxDef || InWithinCond)
+		   /* on est dans une boite de presentation, erreur */
+		   CompilerMessage (BeginCopyType, PRS, FATAL,
+				    NOT_FOR_PRES_BOX, inputLine, LineNum);
+		else
+		   {
+		   /* on suppose que c'est un nom de boite de presentation
+		      definie dans un autre schema de presentation (pour
+		      la presentation des references externes) */
+		   if ((RuleDef && pSSchema->SsRule[CurType - 1].SrRefTypeNat[0] == '\0') ||
+		       (AttributeDef && pSSchema->SsAttribute[CurAttrNum - 1].AttrTypeRefNature[0] == '\0'))
+		      /* la regle ne s'applique pas a` une reference externe */
+		      CompilerMessage (BeginCopyType, PRS, FATAL,
+				       AUTHORIZED_ONLY_FOR_EXT_REFS,
+				       inputLine, LineNum);
+		   else
+		      /* la regle s'applique a` une reference externe */
+		      if (CurRule->PrNPresBoxes != 0)
+			 /* deja une boite dans la regle, on refuse */
+			 CompilerMessage (wi, PRS, FATAL,
+					  REDEFINITION_OF_CONTENT,
+					  inputLine, LineNum);
+		      else
 			 {
-			    pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpAssoc = False;
-			    pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpNumber =
-			       Identifier[identnum].SrcIdentDefRule;
-			    pPSchema->PsNPrintedViews++;
+			 ustrncpy (CurRule->PrPresBoxName, CopyType,
+				   MAX_NAME_LENGTH);
+			 /* indique qu'on copie une boite de presentation
+			    et non un element */
+			 CurRule->PrElement = False;
 			 }
-		    }
-	       else if (CounterDef)
-		 {
-		    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-		    pCntr->CnItem[pCntr->CnNItems - 1].CiViewNum =
-		       Identifier[identnum].SrcIdentDefRule;
-		 }
-	       else if (prevRule == RULE_CounterAttrPage)
-		  if (Identifier[identnum].SrcIdentDefRule == 0)
-		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);		/* Vue non declaree */
-		  else
-		    {
-		       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-		       pPresVar->PvItem[pPresVar->PvNItems - 1].ViView =
-			  Identifier[identnum].SrcIdentDefRule;
-		    }
-	       else if (prevRule == RULE_ViewRules)
-		  /* dans une instruction 'in ViewName ...' */
-		  if (Identifier[identnum].SrcIdentDefRule == 0)
-		     /* Vue non declaree */
-		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
-		  else if (Identifier[identnum].SrcIdentDefRule == 1)
-		     /* C'est la vue* principale, erreur */
-		     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_THE_MAIN_VIEW, inputLine, LineNum);
-		  else
-		    {
-		       CurView = Identifier[identnum].SrcIdentDefRule;
-		       RulesForView = True;
-		    }
-	       break;
-	    case RULE_CounterName:
-	       /* CounterName */
-	       if (CounterDef)
-		  /* declaration de compteur */
-		 {
-		    if (pPSchema->PsNCounters >= MAX_PRES_COUNTER)
-		       CompilerMessage (wi, PRS, FATAL, MAX_COUNTERS_OVERFLOW, inputLine, LineNum);
-		    else if (Identifier[identnum].SrcIdentDefRule != 0)
-		       CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
-		    else
-		      {
-			 pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters];
-			 pPSchema->PsNCounters++;
-			 pCntr->CnNItems = 0;
-			 pCntr->CnNTransmAttrs = 0;
-			 pCntr->CnNPresBoxes = 0;
-			 pCntr->CnNCreators = 0;
-			 pCntr->CnNCreatedBoxes = 0;
-			 Identifier[identnum].SrcIdentDefRule = pPSchema->PsNCounters;
-		      }
-		 }
-	       else if (Identifier[identnum].SrcIdentDefRule == 0)
-		  /* on n'a pas encore rencontre' ce nom */
-		  if (prevRule != RULE_CounterAttrPage)
-		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);		/* compteur non declare' */
-		  else
-		     /* on vient de la regle CounterAttrPage; peut-etre est-ce un */
-		     /* nom d'attribut */
-		    {
-		       /* cherche ce nom parmi les attributs du schema de structure */
-		       CopyName (n, wi, wl);
-		       i = 1;
-		       while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
-			      && i < pSSchema->SsNAttributes)
-			  i++;
-		       if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
-			  CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);	/* on ne l'a pas trouve, erreur */
-		       else
-			  /* c'est un nom d'attribut apres VALUE */
-			 {
-			    /* change le type de ce nom qui devient un nom d'attribut */
-			    Identifier[identnum].SrcIdentCode = RULE_AttrName;
-			    /* traite ce nom d'attribut */
-			    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-			    NewVarListItem (pPresVar, wi);
-			    pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
-			    pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
-			    pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = i;
-			 }
-		    }
+		   }
+	     else if (InWithinCond)
+	        {
+	        ustrncpy (Conditions->CoAncestorName, CopyType,
+			  MAX_NAME_LENGTH);
+		CopyName (Conditions->CoSSchemaName, wi, wl);
+		Conditions->CoTypeAncestor = 0;
+		}
+	     else
+	        /* le type a copier existe, il a le numero i */
+	        {
+		/* indique qu'on copie un element et non une boite de
+		   presentation */
+		CurRule->PrElement = True;
+		/* nom du type d'element a copier */
+		ustrncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
+		/* indique que PrPresBoxName est un nom de type defini */
+		/* dans un autre schema */
+		CurRule->PrExternal = True;
+		}
+	     /* marque que ce nom externe est traite' */
+	     CopyType[0] = '\0';
+	     BeginCopyType = 0;
+	     }
+	  }
+       else if (prevRule == RULE_ElemCondition)
+	  {
+	  /* On est dans une condition */
+	  CopyName (n, wi, wl);
+	  /* verifie si le type existe dans le schema de structure */
+	  i = 1;
+	  while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName) &&
+		 i < pSSchema->SsNRules)
+	     i++;
+	  if (InWithinCond)
+	     /* un nom de type d'element dans une condition Within */
+	     {
+	     if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
+	        /* type inconnu */
+	        {
+		/* c'est peut-etre un type defini dans un autre schema */
+		CopyName (CopyType, wi, wl);
+		BeginCopyType = wi;
+		}
+	     else
+	        /* le type existe, il a le numero i */
+	        Conditions->CoTypeAncestor = i;
+	     /* On remet Immediately a faux seulement ici */
+	     Immediately = False;
+	     }
+	  else
+	     /* on est dans une condition, mais pas apres Within */
+	     {
+	     if (!ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
+	        /* c'est bien un nom de type d'element */
+	        {
+		/* la regle est-elle bien pour un attribut ? */
+		if (!AttributeDef)
+		   CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_ATTRIBUTES,
+				    inputLine, LineNum);
+		else
+		   {
+		   Conditions->CoCondition = PcElemType;
+		   Conditions->CoTypeElAttr = i;
+		   }
+		}
+	     else
+	        /* peut-etre est-ce un nom d'attribut */
+	        {
+		/* cherche ce nom parmi les attributs du schema de structure */
+		i = 1;
+		while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+		       i < pSSchema->SsNAttributes)
+		   i++;
+		if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+		   /* on ne l'a pas trouve, erreur */
+		   CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+				    inputLine, LineNum);
+		else
+		   /* c'est un nom d'attribut dans une condition*/
+		   {
+		   /* change le type de ce nom qui devient un nom d'attribut */
+		   Identifier[identnum].SrcIdentCode = RULE_AttrName;
+		   /* traite ce nom d'attribut */
+		   Conditions->CoCondition = PcAttribute;
+		   Conditions->CoTypeElAttr = i;
+		   }
+		}
+	     }
+	  }
+       else if (prevRule == RULE_CountFunction)
+	  {
+	  /* On est dans un CntrRLevel */
+	  pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	  CopyName (n, wi, wl);
+	  /* verifie si le type existe dans le schema de structure */
+	  i = 1;
+	  while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName) &&
+		 i < pSSchema->SsNRules)
+	     i++;
+	  if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
+	     /* type inconnu */
+	     CompilerMessage (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine,LineNum);
+	  else
+	     /* le type existe, il a le numero i */
+	     pCntr->CnItem[0].CiElemType = i;
+	  }
+       else
+	  ProcessTypeName (prevRule, n, wi, wl);
+       break;
 
-	       else if (prevRule == RULE_CounterAttrPage)
-		  /* un compteur dans une definition de variable */
-		 {
-		    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-		    pPresVar->PvItem[pPresVar->PvNItems].ViType = VarCounter;
-		    pPresVar->PvItem[pPresVar->PvNItems].ViCounter =
-		       Identifier[identnum].SrcIdentDefRule;
-		    pPresVar->PvItem[pPresVar->PvNItems].ViCounterVal = CurMinMax;
-		    pPresVar->PvNItems++;
-		    if (NewVariableDef)
-		       /* definition de var. dans une regle Content */
-		      {
-			 pCntr = &pPSchema->PsCounter[Identifier[identnum].SrcIdentDefRule - 1];
-			 /* ce compteur est utilise' dans la boite de presentation */
-			 if (pCntr->CnNPresBoxes < MAX_PRES_COUNT_USER)
-			   {
-			      pCntr->CnPresBox[pCntr->CnNPresBoxes] = CurPresBox;
-			      if (CurMinMax == CntMaxVal || CurMinMax == CntMinVal)
-				 pCntr->CnMinMaxPresBox[pCntr->CnNPresBoxes] = True;
-			      else
-				 pCntr->CnMinMaxPresBox[pCntr->CnNPresBoxes] = False;
-			      pCntr->CnNPresBoxes++;
-			   }
-		      }
-		    CurMinMax = CntCurVal;
-		 }
-	       else if (prevRule == RULE_ElemCondition)
-		  /* dans une condition */
-		 {
-		    Conditions->CoCounter = Identifier[identnum].SrcIdentDefRule;
-		    pCntr = &pPSchema->PsCounter[Identifier[identnum].SrcIdentDefRule - 1];
-		    /* ce compteur est-il deja utilise' par la boite courante */
-		    /* comme condition de creation ? */
-		    if (PresBoxDef)
-		       j = CurPresBox;
-		    else
-		       j = CurType;
-		    new = True;
-		    for (i = 0; i < pCntr->CnNCreators; i++)
-		       if (pCntr->CnCreator[i] == j
-			   && pCntr->CnPresBoxCreator[i] == PresBoxDef)
-			  new = False;
-		    if (new)
-		       /* ce compteur n'est pas encore utilise' par la boite */
-		       /* courante dans ses regles de creation, on le marque. */
-		      {
-			 pCntr->CnCreator[pCntr->CnNCreators] = j;
-			 pCntr->CnPresBoxCreator[pCntr->CnNCreators] = PresBoxDef;
-			 if (CurMinMax == CntMaxVal || CurMinMax == CntMinVal)
-			    pCntr->CnMinMaxCreator[pCntr->CnNCreators] = True;
-			 else
-			    pCntr->CnMinMaxCreator[pCntr->CnNCreators] = False;
-			 CurMinMax = CntCurVal;
-			 pCntr->CnNCreators++;
-		      }
-		 }
-	       else if (prevRule == RULE_TypeOrCounter)
-		  /* un compteur au debut d'une regle Transmit */
-		 {
-		    TransmittedCounter = Identifier[identnum].SrcIdentDefRule;
-		    pCntr = &pPSchema->PsCounter[TransmittedCounter - 1];
-		    if (pCntr->CnNTransmAttrs >= MAX_TRANSM_ATTR)
-		      {
-			 CompilerMessage (wi, PRS, FATAL, MAX_TRANSMIT_RULES_FOR_COUNTER_OVERFLOW, inputLine, LineNum);	/* trop de regles transmit pour ce compteur */
-			 TransmittedCounter = 0;
-		      }
-		    else
-		       pCntr->CnNTransmAttrs++;
-		 }
-	       break;
-	    case RULE_AttrName:
-	       /* AttrName */
-	       /* cherche ce nom d'attribut dans le schema de structure */
-	       CopyName (n, wi, wl);
-	       i = 1;
-	       while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
-		      && i < pSSchema->SsNAttributes)
-		  i++;
-	       if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
-		  CompilerMessage (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
-	       /* on ne l'a pas trouve, erreur */
-
-	       else if (!(prevRule == RULE_Attr
-			  || prevRule == RULE_CountFunction
-			  || prevRule == RULE_CondAttr
-			  || prevRule == RULE_Function
-			  || prevRule == RULE_AttrValue
-			  || prevRule == RULE_AttrRelat
-			  || prevRule == RULE_ElemCondition
-			  || prevRule == RULE_CounterAttrPage
-			  || prevRule == RULE_BoxType))
-		  /* c'est un nom d'attribut a la place d'une valeur numerique */
-		  IntAttribute (i, prevRule, wi);
-
-	       else if (prevRule == RULE_Function || prevRule == RULE_CounterAttrPage)
-		  /* c'est un nom d'attribut dans une variable */
-		 {
-		    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-		    if (pPresVar->PvNItems > 0)
-		       /* ce n'est pas le premier element de la variable */
-		       /* si le 1er element n'est pas du texte, on n'accepte pas */
-		       /* le nouvel element */
-		       if (pPresVar->PvItem[0].ViType == VarText)
-			  if (pPSchema->PsConstant[pPresVar->PvItem[0].ViConstant - 1].PdType != CharString)
-			     CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
-
-		    if (pPresVar->PvNItems >= MAX_PRES_VAR_ITEM)
-		       CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
-		    /* variable trop longue */
-		    else
-		      {
-			 pPresVar->PvItem[pPresVar->PvNItems].ViType = VarAttrValue;
-			 pPresVar->PvItem[pPresVar->PvNItems].ViStyle = CntArabic;
-			 pPresVar->PvItem[pPresVar->PvNItems].ViAttr = i;
-			 pPresVar->PvNItems++;
-		      }
-		 }
-
-	       else if (prevRule == RULE_Attr)
-		  /* c'est un nom d'attribut auquel on va associer des regles de */
-		  /* presentation */
-		 {
-		    CurAttrNum = i;
-		    /* on se souvient de son numero */
-
-		    /* on effectue un certain nombre d'initialisations */
-		    NewAttributeDef = True;
-		    VCondLess = False;
-		    VCondGreater = False;
-		    CondEqual = False;
-		    CurAttrVal = 0;
-		    /* on n'a pas encore rencontre' de valeur */
-		    CurComparAttr = 0;
-		    /* a priori on ne compare pas  avec un attribut */
-		    CurElemHeritAttr = 0;
-		    /* a priori ce n'est pas de l'heritage */
-		    CurAttrLowerBound = -MAX_INT_ATTR_VAL - 1;
-		    /* - infini */
-		    CurAttrUpperBound = MAX_INT_ATTR_VAL + 1;
-		    /* + infini */
-		    CurTextEqual[0] = '\0';
-		    /* string vide */
-		 }
-	       else if (prevRule == RULE_CountFunction)
-		 {
-		    /* c'est un nom d'attribut apres le mot INIT ou REINIT dans */
-		    /* une definition de compteur */
-		    /* seuls les attributs numeriques sont accepte's */
-		    if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr)
-		       /* ce n'est pas un attribut numerique, erreur */
-		       CompilerMessage (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine,
-				      LineNum);
-		    else
-		      {
-			 pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-			 if (AttrInitCounter)
-			    /* le compteur courant prendra cet attribut comme */
-			    /* valeur initiale */
-			    pCntr->CnItem[0].CiInitAttr = i;
-			 else
-			    pCntr->CnItem[0].CiReinitAttr = i;
-		      }
-		 }
-	       else if (prevRule == RULE_CondAttr)
-		 {
-		    /* c'est un nom d'attribut apres le mot WITH ou WITHOUT
-		       dans une definition de compteur */
-		    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-		    pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttr = i;
-		 }
-	       else if (prevRule == RULE_AttrRelat)
-		 {
-		    /* c'est un nom d'attribut a la place d'une valeur numerique */
-		    /* pour comparer la valeur de l'attribut a un attribut pose  */
-		    /* sur un element englobant */
-		    if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr)
-		       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR, inputLine, LineNum);
-		    /* interdit pour un attribut non numerique */
-		    else if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr)
-		       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR, inputLine, LineNum);
-		    /* l'attribut n'est pas un attribut numerique */
-		    else
-		       CurComparAttr = i;
-		 }
-	       else if (prevRule == RULE_ElemCondition)
-		  /* c'est un nom d'attribut dans une condition */
-		 {
-		    Conditions->CoCondition = PcAttribute;
-		    Conditions->CoTypeElAttr = i;
-		 }
-	       else if (prevRule == RULE_BoxType)
-		  /* c'est un nom d'attribut dans une regle BoxType */
-		 {
-		    if ((CurRule->PrType == PtVertRef ||
-			 CurRule->PrType == PtHorizRef) &&
-			CurRule->PrPosRule.PoRelation != RlEnclosed)
-		       CompilerMessage (wi, PRS, FATAL,
-				 ONLY_ENCLOSED_AND_ARE_ALLOWED,
+     case RULE_ViewName:
+       /* ViewName */
+       if (ViewDef)
+	  {
+	  if (prevRule == RULE_DclView)
+	     /* declaration de vue */
+	     {
+	     if (pPSchema->PsNViews >= MAX_VIEW)
+	        /* Trop de vues */
+	        CompilerMessage (wi, PRS, FATAL, MAX_VIEWS_OVERFLOW,
 				 inputLine, LineNum);
-		    else
-		      switch (CurRule->PrType)
-			{
-			case PtVertRef:
-			case PtHorizRef:
-			case PtVertPos:
-			case PtHorizPos:
-			   CurRule->PrPosRule.PoRefKind = RkAttr;
-			   CurRule->PrPosRule.PoRefIdent = i;
-			   break;
-			case PtWidth:
-			case PtHeight:
-			   if (CurRule->PrDimRule.DrPosition)
-			     {
-			     CurRule->PrDimRule.DrPosRule.PoRefKind = RkAttr;
-			     CurRule->PrDimRule.DrPosRule.PoRefIdent = i;
-			     }
-			   else
-			     {
-			     CurRule->PrDimRule.DrRefKind = RkAttr;
-			     CurRule->PrDimRule.DrRefIdent = i;
-			     }
-			   break;
-			default: break;
-			}
-		 }
-	       break;
+	     else if (Identifier[identnum].SrcIdentDefRule != 0)
+	        /* Vue deja declaree */
+	        CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME,
+				 inputLine, LineNum);
+	     else
+	        /* ajoute une vue dans la table des vues */
+	        {
+		CopyName (pPSchema->PsView[pPSchema->PsNViews], wi, wl);
+		pPSchema->PsHostViewList[pPSchema->PsNViews] = NULL;
+		pPSchema->PsNViews++;
+		Identifier[identnum].SrcIdentDefRule = pPSchema->PsNViews;
+		}
+	     }
+	  else if (prevRule == RULE_MergeViews)
+	     /* a view name after "merge with" in the VIEWS section.
+		Add this name to the host view list of the current view */
+	     {
+	     pHostView = (PtrHostView) TtaGetMemory (sizeof (HostView));
+	     CopyName (pHostView->HostViewName, wi, wl);
+	     pHostView->NextHostView = NULL;
+	     if (!pPSchema->PsHostViewList[pPSchema->PsNViews - 1])
+	        pPSchema->PsHostViewList[pPSchema->PsNViews - 1] = pHostView;
+	     else
+	        {
+		prevHostView = pPSchema->PsHostViewList[pPSchema->PsNViews-1];
+		while (prevHostView->NextHostView)
+		   prevHostView = prevHostView->NextHostView;
+		prevHostView->NextHostView = pHostView;
+		}
+	     }
+	  }
+       else if (prevRule == RULE_PrintView)
+	  /* dans la liste des vues a imprimer */
+	  if (Identifier[identnum].SrcIdentDefRule == 0)
+	     /* ce nom n'a pas ete declare comme nom de vue, voyons */
+	     /* si ce n'est pas un identificateur de type */
+	     {
+	     ProcessTypeName (prevRule, n, wi, wl);
+	     Identifier[identnum].SrcIdentCode = RULE_TypeName;
+	     /* changement de type, c'est */
+	     /* maintenant un identificateur de type structure */
+	     }
+	  else
+	     /* ce nom a ete declare comme nom de vue */
+	     {
+	     if (pPSchema->PsNPrintedViews >= MAX_PRINT_VIEW)
+	        /* table des vues a imprimee saturee */
+	        CompilerMessage (wi, PRS, FATAL,
+				 MAX_VIEWS_TO_BE_PRINTED_OVERFLOW,
+				 inputLine, LineNum);
+	     else
+	        {
+		pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpAssoc = False;
+		pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpNumber =
+			       Identifier[identnum].SrcIdentDefRule;
+		pPSchema->PsNPrintedViews++;
+		}
+	     }
+       else if (CounterDef)
+	  {
+	  pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	  pCntr->CnItem[pCntr->CnNItems - 1].CiViewNum =
+	                           Identifier[identnum].SrcIdentDefRule;
+	  }
+       else if (prevRule == RULE_CounterAttrPage)
+	  if (Identifier[identnum].SrcIdentDefRule == 0)
+	     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+			      inputLine, LineNum);
+	  else
+	     {
+	     pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	     pPresVar->PvItem[pPresVar->PvNItems - 1].ViView =
+			  Identifier[identnum].SrcIdentDefRule;
+	     }
+       else if (prevRule == RULE_ViewRules)
+	  /* dans une instruction 'in ViewName ...' */
+	  if (Identifier[identnum].SrcIdentDefRule == 0)
+	     /* Vue non declaree */
+	     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+			      inputLine, LineNum);
+	  else if (Identifier[identnum].SrcIdentDefRule == 1)
+	     /* C'est la vue* principale, erreur */
+	     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_THE_MAIN_VIEW,
+			      inputLine, LineNum);
+	  else
+	     {
+	      CurView = Identifier[identnum].SrcIdentDefRule;
+	      RulesForView = True;
+	     }
+       break;
 
-	    case RULE_ConstName:
-	       /* ConstName */
-	       if (ConstantDef)
-		  /* definition de constante */
-		  if (Identifier[identnum].SrcIdentDefRule != 0)
-		     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
-		  else
+     case RULE_CounterName:
+       /* CounterName */
+       if (CounterDef)
+	  /* declaration de compteur */
+	  {
+	  if (pPSchema->PsNCounters >= MAX_PRES_COUNTER)
+	     CompilerMessage (wi, PRS, FATAL, MAX_COUNTERS_OVERFLOW,
+			      inputLine, LineNum);
+	  else if (Identifier[identnum].SrcIdentDefRule != 0)
+	     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME,
+			      inputLine, LineNum);
+	  else
+	     {
+	     pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters];
+	     pPSchema->PsNCounters++;
+	     pCntr->CnNItems = 0;
+	     pCntr->CnNTransmAttrs = 0;
+	     pCntr->CnNPresBoxes = 0;
+	     pCntr->CnNCreators = 0;
+	     pCntr->CnNCreatedBoxes = 0;
+	     Identifier[identnum].SrcIdentDefRule = pPSchema->PsNCounters;
+	     }
+	  }
+       else if (Identifier[identnum].SrcIdentDefRule == 0)
+	  /* on n'a pas encore rencontre' ce nom */
+	  if (prevRule != RULE_CounterAttrPage)
+	     /* compteur non declare' */
+	     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+			      inputLine, LineNum);
+	  else
+	     /* on vient de la regle CounterAttrPage; peut-etre est-ce
+		un nom d'attribut */
+	     {
+	     /* cherche ce nom parmi les attributs du schema de structure */
+	     CopyName (n, wi, wl);
+	     i = 1;
+	     while (ustrcmp (n, pSSchema->SsAttribute[i -1].AttrName) &&
+		    i < pSSchema->SsNAttributes)
+	        i++;
+	     if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+	        /* on ne l'a pas trouve, erreur */
+	        CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+				 inputLine, LineNum);
+	     else
+	        /* c'est un nom d'attribut apres VALUE */
+	        {
+		/* change le type de ce nom qui devient un nom d'attribut */
+		Identifier[identnum].SrcIdentCode = RULE_AttrName;
+		/* traite ce nom d'attribut */
+		pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+		NewVarListItem (pPresVar, wi);
+		pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
+		pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+		pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = i;
+		}
+	     }
+       else if (prevRule == RULE_CounterAttrPage)
+	  /* un compteur dans une definition de variable */
+	  {
+	  pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	  pPresVar->PvItem[pPresVar->PvNItems].ViType = VarCounter;
+	  pPresVar->PvItem[pPresVar->PvNItems].ViCounter =
+	                                 Identifier[identnum].SrcIdentDefRule;
+	  pPresVar->PvItem[pPresVar->PvNItems].ViCounterVal = CurMinMax;
+	  pPresVar->PvNItems++;
+	  if (NewVariableDef)
+	     /* definition de var. dans une regle Content */
+	     {
+	     pCntr = &pPSchema->PsCounter[Identifier[identnum].SrcIdentDefRule - 1];
+	     /* ce compteur est utilise' dans la boite de presentation */
+	     if (pCntr->CnNPresBoxes < MAX_PRES_COUNT_USER)
+	        {
+		pCntr->CnPresBox[pCntr->CnNPresBoxes] = CurPresBox;
+		if (CurMinMax == CntMaxVal || CurMinMax == CntMinVal)
+		   pCntr->CnMinMaxPresBox[pCntr->CnNPresBoxes] = True;
+		else
+		   pCntr->CnMinMaxPresBox[pCntr->CnNPresBoxes] = False;
+		pCntr->CnNPresBoxes++;
+		}
+	     }
+	  CurMinMax = CntCurVal;
+	  }
+       else if (prevRule == RULE_ElemCondition)
+	  /* dans une condition */
+	  {
+	  Conditions->CoCounter = Identifier[identnum].SrcIdentDefRule;
+	  pCntr = &pPSchema->PsCounter[Identifier[identnum].SrcIdentDefRule-1];
+	  /* ce compteur est-il deja utilise' par la boite courante */
+	  /* comme condition de creation ? */
+	  if (PresBoxDef)
+	     j = CurPresBox;
+	  else
+	     j = CurType;
+	  new = True;
+	  for (i = 0; i < pCntr->CnNCreators; i++)
+	     if (pCntr->CnCreator[i] == j &&
+		 pCntr->CnPresBoxCreator[i] == PresBoxDef)
+	        new = False;
+	  if (new)
+	     /* ce compteur n'est pas encore utilise' par la boite */
+	     /* courante dans ses regles de creation, on le marque. */
+	     {
+	     pCntr->CnCreator[pCntr->CnNCreators] = j;
+	     pCntr->CnPresBoxCreator[pCntr->CnNCreators] = PresBoxDef;
+	     if (CurMinMax == CntMaxVal || CurMinMax == CntMinVal)
+	        pCntr->CnMinMaxCreator[pCntr->CnNCreators] = True;
+	     else
+	        pCntr->CnMinMaxCreator[pCntr->CnNCreators] = False;
+	     CurMinMax = CntCurVal;
+	     pCntr->CnNCreators++;
+	     }
+	  }
+       else if (prevRule == RULE_TypeOrCounter)
+	  /* un compteur au debut d'une regle Transmit */
+	  {
+	  TransmittedCounter = Identifier[identnum].SrcIdentDefRule;
+	  pCntr = &pPSchema->PsCounter[TransmittedCounter - 1];
+	  if (pCntr->CnNTransmAttrs >= MAX_TRANSM_ATTR)
+	     {
+	     /* trop de regles transmit pour ce compteur */
+	     CompilerMessage (wi, PRS, FATAL,
+			      MAX_TRANSMIT_RULES_FOR_COUNTER_OVERFLOW,
+			      inputLine, LineNum);
+	     TransmittedCounter = 0;
+	     }
+	  else
+	     pCntr->CnNTransmAttrs++;
+	  }
+       break;
+
+     case RULE_AttrName:
+       /* AttrName */
+       /* cherche ce nom d'attribut dans le schema de structure */
+       CopyName (n, wi, wl);
+       i = 1;
+       while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+	      i < pSSchema->SsNAttributes)
+	  i++;
+       if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+	  /* on ne l'a pas trouve, erreur */
+	  CompilerMessage (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
+       else if (!(prevRule == RULE_Attr
+		  || prevRule == RULE_CountFunction
+		  || prevRule == RULE_CondAttr
+		  || prevRule == RULE_Function
+		  || prevRule == RULE_AttrValue
+		  || prevRule == RULE_AttrRelat
+		  || prevRule == RULE_ElemCondition
+		  || prevRule == RULE_CounterAttrPage
+		  || prevRule == RULE_BoxType))
+	  /* c'est un nom d'attribut a la place d'une valeur numerique */
+	  IntAttribute (i, prevRule, wi);
+       else if (prevRule == RULE_Function || prevRule == RULE_CounterAttrPage)
+	  /* c'est un nom d'attribut dans une variable */
+	  {
+	  pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	  if (pPresVar->PvNItems > 0)
+	     /* ce n'est pas le premier element de la variable */
+	     /* si le 1er element n'est pas du texte, on n'accepte pas */
+	     /* le nouvel element */
+	     if (pPresVar->PvItem[0].ViType == VarText)
+	        if (pPSchema->PsConstant[pPresVar->PvItem[0].ViConstant - 1].PdType != CharString)
+		   CompilerMessage (wi, PRS, FATAL,
+				    MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW,
+				    inputLine, LineNum);
+	  if (pPresVar->PvNItems >= MAX_PRES_VAR_ITEM)
+	     /* variable trop longue */
+	     CompilerMessage (wi, PRS, FATAL,
+			      MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, 
+			      LineNum);
+	  else
+	     {
+	     pPresVar->PvItem[pPresVar->PvNItems].ViType = VarAttrValue;
+	     pPresVar->PvItem[pPresVar->PvNItems].ViStyle = CntArabic;
+	     pPresVar->PvItem[pPresVar->PvNItems].ViAttr = i;
+	     pPresVar->PvNItems++;
+	     }
+	  }
+       else if (prevRule == RULE_Attr)
+	  /* c'est un nom d'attribut auquel on va associer des regles de */
+	  /* presentation */
+	  {
+	  /* on se souvient de son numero */
+	  CurAttrNum = i;
+	  /* on effectue un certain nombre d'initialisations */
+	  NewAttributeDef = True;
+	  VCondLess = False;
+	  VCondGreater = False;
+	  CondEqual = False;
+	  CurAttrVal = 0;
+	  /* on n'a pas encore rencontre' de valeur */
+	  CurComparAttr = 0;
+	  /* a priori on ne compare pas  avec un attribut */
+	  CurElemHeritAttr = 0;
+	  /* a priori ce n'est pas de l'heritage */
+	  CurAttrLowerBound = -MAX_INT_ATTR_VAL - 1;
+	  /* - infini */
+	  CurAttrUpperBound = MAX_INT_ATTR_VAL + 1;
+	  /* + infini */
+	  CurTextEqual[0] = '\0';
+	  /* string vide */
+	  }
+       else if (prevRule == RULE_CountFunction)
+	  {
+	  /* c'est un nom d'attribut apres le mot INIT ou REINIT dans */
+	  /* une definition de compteur */
+	  /* seuls les attributs numeriques sont accepte's */
+	  if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr)
+	     /* ce n'est pas un attribut numerique, erreur */
+	     CompilerMessage (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine,
+			      LineNum);
+	  else
+	     {
+	     pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	     if (AttrInitCounter)
+	        /* le compteur courant prendra cet attribut comme */
+	        /* valeur initiale */
+	        pCntr->CnItem[0].CiInitAttr = i;
+	     else
+	        pCntr->CnItem[0].CiReinitAttr = i;
+	     }
+	  }
+       else if (prevRule == RULE_CondAttr)
+	  {
+	  /* c'est un nom d'attribut apres le mot WITH ou WITHOUT
+	     dans une definition de compteur */
+	  pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	  pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttr = i;
+	  }
+       else if (prevRule == RULE_AttrRelat)
+	  {
+	  /* c'est un nom d'attribut a la place d'une valeur numerique */
+	  /* pour comparer la valeur de l'attribut a un attribut pose  */
+	  /* sur un element englobant */
+	  if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr)
+	     /* interdit pour un attribut non numerique */
+	     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR,
+			      inputLine, LineNum);
+	  else if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr)
+	     /* l'attribut n'est pas un attribut numerique */
+	     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR,
+			      inputLine, LineNum);
+	  else
+	     CurComparAttr = i;
+	  }
+       else if (prevRule == RULE_ElemCondition)
+	  /* c'est un nom d'attribut dans une condition */
+	  {
+	  Conditions->CoCondition = PcAttribute;
+	  Conditions->CoTypeElAttr = i;
+	  }
+       else if (prevRule == RULE_BoxType)
+	  /* c'est un nom d'attribut dans une regle BoxType */
+	  {
+	  if ((CurRule->PrType == PtVertRef ||
+	       CurRule->PrType == PtHorizRef) &&
+	      CurRule->PrPosRule.PoRelation != RlEnclosed)
+	     CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED,
+			      inputLine, LineNum);
+	  else
+	     switch (CurRule->PrType)
+	       {
+	       case PtVertRef:
+	       case PtHorizRef:
+	       case PtVertPos:
+	       case PtHorizPos:
+		 CurRule->PrPosRule.PoRefKind = RkAttr;
+		 CurRule->PrPosRule.PoRefIdent = i;
+		 break;
+	       case PtWidth:
+	       case PtHeight:
+		 if (CurRule->PrDimRule.DrPosition)
 		    {
-		       NewConst (wi);
-		       Identifier[identnum].SrcIdentDefRule = pPSchema->PsNConstants;
+		    CurRule->PrDimRule.DrPosRule.PoRefKind = RkAttr;
+		    CurRule->PrDimRule.DrPosRule.PoRefIdent = i;
 		    }
-	       else if (Identifier[identnum].SrcIdentDefRule == 0)
-		  /* utilisation d'une constante */
-		  /* on n'a pas encore rencontre' ce nom */
-		  if (prevRule == RULE_Function)
-		     /* peut-etre est-ce un nom d'attribut */
-		     /* cherche ce nom parmi les attributs du schema de structure */
+		 else
 		    {
-		       CopyName (n, wi, wl);
-		       i = 1;
-		       while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName)
-			      && i < pSSchema->SsNAttributes)
-			  i++;
-		       if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
-			  CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
-		       /* on ne l'a pas trouve, erreur */
-		       else
-			  /* c'est un nom d'attribut dans une variable */
-			  /* change le type de ce nom qui devient un nom d'attribut */
-			 {
-			    Identifier[identnum].SrcIdentCode = RULE_AttrName;
-			    /* r=19 */
-			    /* traite ce nom d'attribut */
-			    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-			    NewVarListItem (pPresVar, wi);
-			    pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
-			    pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = i;
-			 }
+		    CurRule->PrDimRule.DrRefKind = RkAttr;
+		    CurRule->PrDimRule.DrRefIdent = i;
 		    }
-		  else
-		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
-	       /* nom de constante inconnu */
-	       else
+		 break;
+	       default: break;
+	       }
+	  }
+       break;
+       
+     case RULE_ConstName:
+       /* ConstName */
+       if (ConstantDef)
+	  /* definition de constante */
+	  if (Identifier[identnum].SrcIdentDefRule != 0)
+	     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine,
+			      LineNum);
+	  else
+	     {
+	     NewConst (wi);
+	     Identifier[identnum].SrcIdentDefRule = pPSchema->PsNConstants;
+	     }
+       else if (Identifier[identnum].SrcIdentDefRule == 0)
+	  /* utilisation d'une constante */
+	  /* on n'a pas encore rencontre' ce nom */
+	  if (prevRule == RULE_Function)
+	     /* peut-etre est-ce un nom d'attribut */
+	     /* cherche ce nom parmi les attributs du schema de structure */
+	     {
+	     CopyName (n, wi, wl);
+	     i = 1;
+	     while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+		    i < pSSchema->SsNAttributes)
+	        i++;
+	     if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+	        /* on ne l'a pas trouve, erreur */
+	        CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+				 inputLine, LineNum);
+	     else
+	        /* c'est un nom d'attribut dans une variable */
+	        /* change le type de ce nom qui devient un nom d'attribut */
+	        {
+		Identifier[identnum].SrcIdentCode = RULE_AttrName;
+		/* traite ce nom d'attribut */
+		pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+		NewVarListItem (pPresVar, wi);
+		pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
+		pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = i;
+		}
+	     }
+	  else
+	     /* nom de constante inconnu */
+	     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+			      inputLine, LineNum);
+       else
+	  {
+	  if (PresBoxDef && !NewVariableDef)
+	     /* dans une regle 'Content : Nom_Constante;' d'une boite de
+		presentation */
+	     {
+	     pPresBox = &pPSchema->PsPresentBox[CurPresBox - 1];
+	     pPresBox->PbContent = ContConst;
+	     pPresBox->PbContConstant = Identifier[identnum].SrcIdentDefRule;
+	     }
+	  if (VariableDef || NewVariableDef)
+	     /* dans une definition de variable */
+	     {
+	     pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	     NewVarListItem (pPresVar, wi);
+	     pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarText;
+	     pPresVar->PvItem[pPresVar->PvNItems - 1].ViConstant =
+	                                 Identifier[identnum].SrcIdentDefRule;
+	     }
+	  if (RuleDef)
+	     if (CurRule->PrPresMode == PresFunction &&
+		 CurRule->PrPresFunction == FnContentRef)
+	        /* un nom de constante dans une regle Content d'un element
+		   reference ou paire */
+	        {
+		CurRule->PrNPresBoxes = 1;
+		CurRule->PrPresBox[0] = Identifier[identnum].SrcIdentDefRule;
+		}
+	  }
+       break;
+
+     case RULE_AlphabetName:
+       /* AlphabetName */
+       /* c'est l'alphabet d'une constante, on ne garde que le premier */
+       /* caractere */
+       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdAlphabet =
+	                                           (char) inputLine[wi - 1];
+       break;
+
+     case RULE_VarName /* VarName */ :
+       if (VariableDef)
+	  /* definition de variable */
+	  if (Identifier[identnum].SrcIdentDefRule != 0)
+	     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine,
+			      LineNum);
+	  else
+	     {
+	     NewVar (wi);
+	     Identifier[identnum].SrcIdentDefRule = pPSchema->PsNVariables;
+	     }
+       else if (Identifier[identnum].SrcIdentDefRule == 0)
+	  /* utilisation d'une variable */
+	  /* ce nom n'a pas ete declare comme identificateur de variable */
+	  if (prevRule == RULE_VarConst)
+	     /* s'il vient de la regle VarConst, voyons */
+	     /* si ce n'est pas un identificateur de type */
+	     {
+	     ProcessTypeName (prevRule, n, wi, wl);
+	     Identifier[identnum].SrcIdentCode = RULE_TypeName;
+	     /* changement de type, c'est */
+	     /* maintenant un identificateur de type structure' */
+	     }
+	  else
+	     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+			      inputLine, LineNum);
+       else
+	  {
+	  if (PresBoxDef)
+	     {
+	     pPresBox = &pPSchema->PsPresentBox[CurPresBox - 1];
+	     pPresBox->PbContent = ContVariable;
+	     pPresBox->PbContVariable = Identifier[identnum].SrcIdentDefRule;
+	     /* cherche tous les compteurs reference's par cette variable */
+	     /* et marque que la boite de presentation courante les utilise */
+	     pPresVar = &pPSchema->PsVariable[Identifier[identnum].SrcIdentDefRule - 1];
+	     for (i = 0; i < pPresVar->PvNItems; i++)
+	        {
+		pVarElem = &pPresVar->PvItem[i];
+		if (pVarElem->ViType == VarCounter)
+		   {
+		   pCntr = &pPSchema->PsCounter[pVarElem->ViCounter - 1];
+		   if (pCntr->CnNPresBoxes < MAX_PRES_COUNT_USER)
+		      {
+		      pCntr->CnPresBox[pCntr->CnNPresBoxes] = CurPresBox;
+		      if (pPresVar->PvItem[pPresVar->PvNItems - 1].ViCounterVal == CntMinVal ||
+			  pPresVar->PvItem[pPresVar->PvNItems - 1].ViCounterVal == CntMaxVal)
+			 pCntr->CnMinMaxPresBox[pCntr->CnNPresBoxes] = True;
+		      pCntr->CnNPresBoxes++;
+		      }
+		   }
+		else if (pVarElem->ViType == VarPageNumber)
+		   PageCounterChangeBox (CurPresBox, pVarElem->ViView);
+		}
+	     }
+	  else
+	     /* on est dans une regle Content d'un element reference ou */
+	     /* paire, on refuse: seules les constantes sont acceptees dans */
+	     /* cette regle */
+	     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine,
+			      LineNum);
+	  }
+       break;
+
+     case RULE_BoxName:
+       /* BoxName */
+       if (PresBoxDef && !InRule)
+	  /* definition de boite */
+	  {
+	  if (pPSchema->PsNPresentBoxes >= MAX_PRES_BOX)
+	     CompilerMessage (wi, PRS, FATAL, MAX_BOXES_OVERFLOW, inputLine,
+			      LineNum);
+	  else if (GetTypeNumber (wl, wi, n) != 0)
+	     /* ce nom de boite de presentation est deja un nom de type */
+	     /* d'element, erreur */
+	     CompilerMessage (wi, PRS, FATAL, CANT_USE_TYPE_NAME_FOR_A_BOX,
+			      inputLine, LineNum);
+	  else if (Identifier[identnum].SrcIdentDefRule == 0)
+	     NewBoxName (wl, wi, identnum);
+	  else if (pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1].PbName[0] != ' ')
+	     /* nom deja rencontre' dans une declaration de vue, de */
+	     /* compteur ou dans une instruction Forward */
+	     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine,
+			      LineNum);
+	  else
+	     {
+	     pPresBox = &pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1];
+	     CopyName (pPresBox->PbName, wi, wl);
+	     pPresBox->PbFirstPRule = NextRule;
+	     FirstRule = NextRule;
+	     CurPresBox = Identifier[identnum].SrcIdentDefRule;
+	     }
+	  }
+       else
+	  /* utilisation d'une boite */
+	  {
+	  if (Identifier[identnum].SrcIdentDefRule == 0)
+	     /* ce nom n'a pas ete declare comme identificateur de boite */
+	     {
+	     i = 1;
+	     if (CurRule->PrType == PtFunction &&
+		 CurRule->PrPresFunction == FnCopy)
+	        /* on est dans une regle Copy */
+	        {
+		i = GetTypeNumber (wl, wi, n);
+		if (i == 0)
+		   /* ce n'est pas un identificateur de type d'element */
+		   /* defini dans le schema de structure */
+		   {
+		   /* il s'agit peut-etre d'un type externe, ou d'une */
+		   /* boite de presentation externe; on garde ce nom */
+		   /* en attendant le nom de la structure externe */
+		   CopyName (CopyType, wi, wl);
+		   BeginCopyType = wi;
+		   }
+		}
+	     if ((prevRule == RULE_BoxType ||
+		  prevRule == RULE_BoxTypeCopied) && i != 0)
+	        /* si on vient de la regle BoxType ou BoxTypeCopied, */
+	        /* voyons si ce n'est pas un identificateur de type */
+	        {
+		ProcessTypeName (prevRule, n, wi, wl);
+		/* changement de type, c'est maintenant un
+		   identificateur de type d'element */
+		Identifier[identnum].SrcIdentCode = RULE_TypeName;
+		}
+	     else if (i != 0)
+	        CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+				 inputLine, LineNum);
+	     }
+	  else
+	    /* c'est une boite declaree */
+	    if ((CurRule->PrType == PtVertRef ||
+		 CurRule->PrType == PtHorizRef) &&
+		CurRule->PrPosRule.PoRelation != RlEnclosed)
+	       CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED,
+				inputLine, LineNum);
+	    else
+	       switch (CurRule->PrType)
 		 {
-		    if (PresBoxDef && !NewVariableDef)
-		       /* dans une regle 'Content : Nom_Constante;' d'une boite de presentation */
+		 case PtVertRef:
+		 case PtHorizRef:
+		 case PtVertPos:
+		 case PtHorizPos:
+		   CurRule->PrPosRule.PoRefKind = RkPresBox;
+		   CurRule->PrPosRule.PoRefIdent = Identifier[identnum].SrcIdentDefRule;
+		   break;
+		 case PtWidth:
+		 case PtHeight:
+		   if (CurRule->PrDimRule.DrPosition)
 		      {
-			 pPresBox = &pPSchema->PsPresentBox[CurPresBox - 1];
-			 pPresBox->PbContent = ContConst;
-			 pPresBox->PbContConstant = Identifier[identnum].SrcIdentDefRule;
+		      CurRule->PrDimRule.DrPosRule.PoRefKind = RkPresBox;
+		      CurRule->PrDimRule.DrPosRule.PoRefIdent =
+			Identifier[identnum].SrcIdentDefRule;
 		      }
-		    if (VariableDef || NewVariableDef)
-		       /* dans une definition de variable */
+		   else
 		      {
-			 pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-			 NewVarListItem (pPresVar, wi);
-			 pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarText;
-			 pPresVar->PvItem[pPresVar->PvNItems - 1].ViConstant =
-			    Identifier[identnum].SrcIdentDefRule;
+		      CurRule->PrDimRule.DrRefKind = RkPresBox;
+		      CurRule->PrDimRule.DrRefIdent =
+					 Identifier[identnum].SrcIdentDefRule;
 		      }
-		    if (RuleDef)
-		       if (CurRule->PrPresMode == PresFunction && CurRule->PrPresFunction == FnContentRef)
-			  /* un nom de constante dans une regle Content d'un element reference ou paire */
-			 {
-			    CurRule->PrNPresBoxes = 1;
-			    CurRule->PrPresBox[0] = Identifier[identnum].SrcIdentDefRule;
-			 }
-		 }
-	       break;
-	    case RULE_AlphabetName:
-	       /* AlphabetName */
-	       /* c'est l'alphabet d'une constante, on ne garde que le premier */
-	       /* caractere */
-	       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdAlphabet = (char) inputLine[wi - 1];
-	       break;
-	    case RULE_VarName /* VarName */ :
-	       if (VariableDef)
-		  /* definition de variable */
-		  if (Identifier[identnum].SrcIdentDefRule != 0)
-		     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
-		  else
-		    {
-		       NewVar (wi);
-		       Identifier[identnum].SrcIdentDefRule = pPSchema->PsNVariables;
-		    }
-	       else if (Identifier[identnum].SrcIdentDefRule == 0)
-		  /* utilisation d'une variable */
-		  /* ce nom n'a pas ete declare comme identificateur de variable */
-		  if (prevRule == RULE_VarConst)
-		     /* s'il vient de la regle VarConst, voyons */
-		     /* si ce n'est pas un identificateur de type */
-		    {
-		       ProcessTypeName (prevRule, n, wi, wl);
-		       Identifier[identnum].SrcIdentCode = RULE_TypeName;
-		       /* changement de type, c'est */
-		       /* maintenant un identificateur de type structure' */
-		    }
-		  else
-		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
-	       else
-		 {
-		    if (PresBoxDef)
-		      {
-			 pPresBox = &pPSchema->PsPresentBox[CurPresBox - 1];
-			 pPresBox->PbContent = ContVariable;
-			 pPresBox->PbContVariable = Identifier[identnum].SrcIdentDefRule;
-			 /* cherche tous les compteurs reference's par cette variable */
-			 /* et marque que la boite de presentation courante les utilise */
-			 pPresVar = &pPSchema->PsVariable[Identifier[identnum].SrcIdentDefRule - 1];
-			 for (i = 0; i < pPresVar->PvNItems; i++)
-			   {
-			      pVarElem = &pPresVar->PvItem[i];
-			      if (pVarElem->ViType == VarCounter)
-				{
-				   pCntr = &pPSchema->PsCounter[pVarElem->ViCounter - 1];
-				   if (pCntr->CnNPresBoxes < MAX_PRES_COUNT_USER)
-				     {
-					pCntr->CnPresBox[pCntr->CnNPresBoxes] = CurPresBox;
-					if (pPresVar->PvItem[pPresVar->PvNItems - 1].ViCounterVal == CntMinVal ||
-					    pPresVar->PvItem[pPresVar->PvNItems - 1].ViCounterVal == CntMaxVal)
-					   pCntr->CnMinMaxPresBox[pCntr->CnNPresBoxes] = True;
-					pCntr->CnNPresBoxes++;
-				     }
-				}
-			      else if (pVarElem->ViType == VarPageNumber)
-				 PageCounterChangeBox (CurPresBox, pVarElem->ViView);
-			   }
-		      }
-		    else
-		       /* on est dans une regle Content d'un element reference ou paire, on */
-		       /* refuse: seules les constantes sont acceptees dans cette regle */
-		       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
-		 }
-	       break;
-	    case RULE_BoxName:
-	       /* BoxName */
-	       if (PresBoxDef && !InRule)
-		  /* definition de boite */
-		 {
-		    if (pPSchema->PsNPresentBoxes >= MAX_PRES_BOX)
-		       CompilerMessage (wi, PRS, FATAL, MAX_BOXES_OVERFLOW, inputLine, LineNum);
-		    else if (GetTypeNumber (wl, wi, n) != 0)
-		       /* ce nom de boite de presentation est deja un nom de type */
-		       /* d'element, erreur */
-		       CompilerMessage (wi, PRS, FATAL, CANT_USE_TYPE_NAME_FOR_A_BOX,
-				      inputLine, LineNum);
-		    else if (Identifier[identnum].SrcIdentDefRule == 0)
-		       NewBoxName (wl, wi, identnum);
-		    else if (pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1].PbName[0] != ' ')
-		       CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
-		    /* nom deja rencontre' dans une declaration de vue, de */
-		    /* compteur ou dans une instruction Forward */
-		    else
-		      {
-			 pPresBox = &pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1];
-			 CopyName (pPresBox->PbName, wi, wl);
-			 pPresBox->PbFirstPRule = NextRule;
-			 FirstRule = NextRule;
-			 CurPresBox = Identifier[identnum].SrcIdentDefRule;
-		      }
-		 }
-	       else
-		  /* utilisation d'une boite */
-		 {
-		    if (Identifier[identnum].SrcIdentDefRule == 0)
-		       /* ce nom n'a pas ete declare comme identificateur de boite */
-		      {
-			 i = 1;
-			 if (CurRule->PrType == PtFunction && CurRule->PrPresFunction == FnCopy)
-			    /* on est dans une regle Copy */
-			   {
-			      i = GetTypeNumber (wl, wi, n);
-			      if (i == 0)
-				 /* ce n'est pas un identificateur de type d'element */
-				 /* defini dans le schema de structure */
-				{
-				   /* il s'agit peut-etre d'un type externe, ou d'une */
-				   /* boite de presentation externe; on garde ce nom */
-				   /* en attendant le nom de la structure externe */
-				   CopyName (CopyType, wi, wl);
-				   BeginCopyType = wi;
-				}
-			   }
-			 if ((prevRule == RULE_BoxType ||
-			      prevRule == RULE_BoxTypeCopied) && i != 0)
-			    /* si on vient de la regle BoxType ou BoxTypeCopied, */
-			    /* voyons si ce n'est pas un identificateur de type */
-			   {
-			      ProcessTypeName (prevRule, n, wi, wl);
-			      /* changement de type, c'est maintenant un
-				 identificateur de type d'element */
-			      Identifier[identnum].SrcIdentCode = RULE_TypeName;
-			   }
-			 else if (i != 0)
-			    CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
-		      }
-		    else
-		       /* c'est une boite declaree */
-		       if ((CurRule->PrType == PtVertRef
-			    || CurRule->PrType == PtHorizRef)
-			   && CurRule->PrPosRule.PoRelation != RlEnclosed)
-		           CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
-		       else
-		          switch (CurRule->PrType)
-			     {
-				case PtVertRef:
-				case PtHorizRef:
-				case PtVertPos:
-				case PtHorizPos:
-				   CurRule->PrPosRule.PoRefKind = RkPresBox;
-				   CurRule->PrPosRule.PoRefIdent = Identifier[identnum].SrcIdentDefRule;
-				   break;
-				case PtWidth:
-				case PtHeight:
-				   if (CurRule->PrDimRule.DrPosition)
-				     {
-					CurRule->PrDimRule.DrPosRule.PoRefKind = RkPresBox;
-					CurRule->PrDimRule.DrPosRule.PoRefIdent =
-					   Identifier[identnum].SrcIdentDefRule;
-				     }
-				   else
-				     {
-					CurRule->PrDimRule.DrRefKind = RkPresBox;
-					CurRule->PrDimRule.DrRefIdent =
-					   Identifier[identnum].SrcIdentDefRule;
-				     }
-				   break;
-				case PtFunction:
-				   if (CurRule->PrNPresBoxes >= MAX_COLUMN_PAGE)
-				      CompilerMessage (wi, PRS, FATAL, MAX_COLUMNS_OVERFLOW, inputLine, LineNum);
-				   else if (CurRule->PrPresFunction == FnCopy
-					    && pSSchema->SsRule[CurType - 1].SrConstruct ==
+		   break;
+		 case PtFunction:
+		   if (CurRule->PrNPresBoxes >= MAX_COLUMN_PAGE)
+		      CompilerMessage (wi, PRS, FATAL, MAX_COLUMNS_OVERFLOW,
+				       inputLine, LineNum);
+		   else if (CurRule->PrPresFunction == FnCopy &&
+			    pSSchema->SsRule[CurType - 1].SrConstruct ==
 					    CsReference)
-				      /* on est dans une regle FnCopy pour une reference */
-				      if (CurRule->PrNPresBoxes != 0)
-					 /* deja une boite dans la regle, on refuse */
-					 CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
-				      else
-					{
-					   CurRule->PrNPresBoxes = 1;
-					   CurRule->PrPresBox[0] = Identifier[identnum].SrcIdentDefRule;
-					}
-				   else
-				     {
-					CurRule->PrPresBox[CurRule->PrNPresBoxes] =
-					   Identifier[identnum].SrcIdentDefRule;
-					CurRule->PrNPresBoxes++;
-					if (CurRule->PrPresFunction == FnCreateFirst
-					    || CurRule->PrPresFunction == FnCreateLast
-					    || CurRule->PrPresFunction == FnCreateBefore
-					    || CurRule->PrPresFunction == FnCreateWith
-					    || CurRule->PrPresFunction == FnCreateAfter)
-					  {
-					     /* on est dans une regle de creation */
-					     /* teste si on a deja cette regle de creation dans */
-					     /* la chaine de regles courante */
-					     pPRule = FirstRule;
-					     while (pPRule != NULL && pPRule != CurRule)
-					       {
-						  if (pPRule->PrViewNum == CurRule->PrViewNum)
-						     /* la regle concerne la meme vue */
-						     if (pPRule->PrType == PtFunction)
-							if (pPRule->PrPresFunction == CurRule->PrPresFunction)
-							   /* meme operation de creation */
-							   if (pPRule->PrPresBox[0] == CurRule->PrPresBox[0])
-							      /* meme boite creee */
-							      if (SameConditions (pPRule->PrCond, CurRule->PrCond))
-								 CompilerMessage (wi, PRS, FATAL, RULE_ALREADY_DEFINED, inputLine, LineNum);
-						  /* regle suivante dans la chaine */
-						  pPRule = pPRule->PrNextPRule;
-					       }
-					     /* cherche les compteurs qui controlent la */
-					     /* creation de cette boite */
-					     pCond = CurRule->PrCond;
-					     while (pCond != NULL)
-						/* teste toutes les conditions de creation */
-					       {
-						  if (pCond->CoCondition == PcEven
-						      || pCond->CoCondition == PcOdd
-						      || pCond->CoCondition == PcOne
-						      || pCond->CoCondition == PcInterval)
-						     /* c'est une condition sur un compteur, */
-						     /* indique dans le compteur qu'il controle la */
-						     /* creation de ce type de boite, si ce n'est */
-						     /* deja fait. */
-						    {
-						       pCntr = &pPSchema->PsCounter[pCond->CoCounter - 1];
-						       new = True;
-						       for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
-							  if (pCntr->CnCreatedBox[j] ==
-							      Identifier[identnum].SrcIdentDefRule)
-							     new = False;
-						       if (new)
-							 {
-							    /* Si la boite est creee sur une condition
-							       de min ou de max, on le note */
-							    if (pCond->CoValCounter == CntMinVal ||
-								pCond->CoValCounter == CntMaxVal)
-							       pCntr->CnMinMaxCreatedBox[pCntr->CnNCreatedBoxes] = True;
-							    else
-							       pCntr->CnMinMaxCreatedBox[pCntr->CnNCreatedBoxes] = False;
-							    pCntr->CnCreatedBox[pCntr->CnNCreatedBoxes] =
-							       Identifier[identnum].SrcIdentDefRule;
-							    pCntr->CnNCreatedBoxes++;
-							 }
-						    }
-						  pCond = pCond->CoNextCondition;
-					       }
-					  }
-				     }
-				   break;
-				default:
-				   break;
-			     }
-		    /* le cas AttrName a ete deplace' plus haut (cas 19:) */
-		 }
-	       break;
-
-	    case RULE_FontColorName:
-	       if (CurRule->PrType == PtFillPattern)
-		 /* Pattern name */
-		 {
-		    /* cherche le nom dans le tableau des trames Thot */
-		    CopyName (n, wi, wl);
-		    i = 0;
-		    ok = False;
-		    do
-		       if (ustrcmp (n, Name_patterns[i]) == 0)
-			  ok = True;
-		       else
-			  i++;
-		    while (!ok && (unsigned int)i <
-				   sizeof (Name_patterns) / sizeof (STRING));
-
-		    if (!ok)
-		       CompilerMessage (wi, PRS, FATAL, MISSING_PATTERN, inputLine, LineNum);
-		    else
-		       /* on met le rang du pattern dans la regle */
+		      /* on est dans une regle FnCopy pour une reference */
+		      if (CurRule->PrNPresBoxes != 0)
+			 /* deja une boite dans la regle, on refuse */
+			 CompilerMessage (wi, PRS, FATAL,
+					  UNDECLARED_IDENTIFIER, inputLine,
+					  LineNum);
+		      else
+			 {
+			 CurRule->PrNPresBoxes = 1;
+			 CurRule->PrPresBox[0] =
+                                         Identifier[identnum].SrcIdentDefRule;
+			 }
+		   else
 		      {
-			 CurRule->PrAttrValue = False;
-			 CurRule->PrIntValue = i;
+		      CurRule->PrPresBox[CurRule->PrNPresBoxes] =
+				   Identifier[identnum].SrcIdentDefRule;
+		      CurRule->PrNPresBoxes++;
+		      if (CurRule->PrPresFunction == FnCreateFirst
+			  || CurRule->PrPresFunction == FnCreateLast
+			  || CurRule->PrPresFunction == FnCreateBefore
+			  || CurRule->PrPresFunction == FnCreateWith
+			  || CurRule->PrPresFunction == FnCreateAfter)
+			 {
+			 /* on est dans une regle de creation */
+			 /* teste si on a deja cette regle de creation dans */
+			 /* la chaine de regles courante */
+			 pPRule = FirstRule;
+			 while (pPRule != NULL && pPRule != CurRule)
+			    {
+			    if (pPRule->PrViewNum == CurRule->PrViewNum)
+			       /* la regle concerne la meme vue */
+			       if (pPRule->PrType == PtFunction)
+				  if (pPRule->PrPresFunction == CurRule->PrPresFunction)
+				     /* meme operation de creation */
+				     if (pPRule->PrPresBox[0] == CurRule->PrPresBox[0])
+				        /* meme boite creee */
+				        if (SameConditions (pPRule->PrCond, CurRule->PrCond))
+					   CompilerMessage (wi, PRS, FATAL,
+					       RULE_ALREADY_DEFINED, inputLine,
+					       LineNum);
+			    /* regle suivante dans la chaine */
+			    pPRule = pPRule->PrNextPRule;
+			    }
+			 /* cherche les compteurs qui controlent la */
+			 /* creation de cette boite */
+			 pCond = CurRule->PrCond;
+			 while (pCond != NULL)
+			    /* teste toutes les conditions de creation */
+			    {
+			    if (pCond->CoCondition == PcEven
+				|| pCond->CoCondition == PcOdd
+				|| pCond->CoCondition == PcOne
+				|| pCond->CoCondition == PcInterval)
+			       /* c'est une condition sur un compteur, */
+			       /* indique dans le compteur qu'il controle la */
+			       /* creation de ce type de boite, si ce n'est */
+			       /* deja fait. */
+			       {
+			       pCntr = &pPSchema->PsCounter[pCond->CoCounter - 1];
+			       new = True;
+			       for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
+				  if (pCntr->CnCreatedBox[j] ==
+				      Identifier[identnum].SrcIdentDefRule)
+				     new = False;
+			       if (new)
+				  {
+				  /* Si la boite est creee sur une condition
+				     de min ou de max, on le note */
+				  if (pCond->CoValCounter == CntMinVal ||
+				      pCond->CoValCounter == CntMaxVal)
+				     pCntr->CnMinMaxCreatedBox[pCntr->CnNCreatedBoxes] = True;
+				  else
+				     pCntr->CnMinMaxCreatedBox[pCntr->CnNCreatedBoxes] = False;
+				  pCntr->CnCreatedBox[pCntr->CnNCreatedBoxes] =
+				        Identifier[identnum].SrcIdentDefRule;
+				  pCntr->CnNCreatedBoxes++;
+				  }
+			       }
+			    pCond = pCond->CoNextCondition;
+			    }
+			 }
 		      }
+		   break;
+		 default:
+		   break;
 		 }
-	       else if (CurRule->PrType == PtBackground ||
-			CurRule->PrType == PtForeground ||
-			CurRule->PrType == PtBorderTopColor ||
-			CurRule->PrType == PtBorderRightColor ||
-			CurRule->PrType == PtBorderBottomColor ||
-			CurRule->PrType == PtBorderLeftColor)
-		  /* color name */
-		  ColorName (wi, wl);
-	       else
-		  /* font name */
-		  CurRule->PrChrValue = (char) inputLine[wi - 1];
-	       break;
-	    case RULE_AttrVal:
-	       /* AttrVal */
-	       /* cherche cette valeur parmi celles de l'attribut */
-	       /* precedemment trouve */
-	       CopyName (n, wi, wl);
-	       pAttr = &pSSchema->SsAttribute[CurAttrNum - 1];
-	       if (pAttr->AttrType != AtEnumAttr)
-		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-	       /* ce n'est pas un attribut a valeur enumerees */
-	       else
-		 {
-		    i = 1;
-		    while (ustrcmp (n, pAttr->AttrEnumValue[i - 1]) && i < pAttr->AttrNEnumValues)
-		       i++;
-		    if (ustrcmp (n, pAttr->AttrEnumValue[i - 1]))
-		       CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-		    /* on ne trouve pas cette valeur, erreur */
-		    else
-		       CurAttrVal = i;	/* on garde le numero de cette valeur */
-		 }
-	       break;
-	    case RULE_ExternalAttr:
-	       /* un nom d'attribut externe dans une regle Transmit */
-	       if (TransmittedCounter > 0)
-		  /* c'est une regle transmit pour un compteur */
-		 {
-		    pCntr = &pPSchema->PsCounter[TransmittedCounter - 1];
-		    CopyName (pCntr->CnTransmAttr[pCntr->CnNTransmAttrs - 1], wi, wl);
-		 }
-	       else if (TransmittedElem > 0)
-		  /* c'est une regle transmit pour un contenu d'element */
-		  CopyName (pPSchema->PsTransmElem[pPSchema->PsNTransmElems - 1].TeTargetAttr, wi, wl);
-	       break;
-	    default:
-	       break;
-	 }
+	  /* le cas AttrName a ete deplace' plus haut (cas 19:) */
+	  }
+       break;
+
+     case RULE_FontColorName:
+       if (CurRule->PrType == PtFillPattern)
+	  /* Pattern name */
+	  {
+	  /* cherche le nom dans le tableau des trames Thot */
+	  CopyName (n, wi, wl);
+	  i = 0;
+	  ok = False;
+	  do
+	     if (ustrcmp (n, Name_patterns[i]) == 0)
+	        ok = True;
+	     else
+	        i++;
+	  while (!ok &&
+		 (unsigned int)i < sizeof (Name_patterns) / sizeof (STRING));
+	  if (!ok)
+	     CompilerMessage (wi, PRS, FATAL, MISSING_PATTERN, inputLine,
+			      LineNum);
+	  else
+	     /* on met le rang du pattern dans la regle */
+	     {
+	     CurRule->PrAttrValue = False;
+	     CurRule->PrIntValue = i;
+	     }
+	  }
+       else if (CurRule->PrType == PtBackground ||
+		CurRule->PrType == PtForeground ||
+		CurRule->PrType == PtBorderTopColor ||
+		CurRule->PrType == PtBorderRightColor ||
+		CurRule->PrType == PtBorderBottomColor ||
+		CurRule->PrType == PtBorderLeftColor)
+	  /* color name */
+	  ColorName (wi, wl);
+       else
+	  /* font name */
+	  CurRule->PrChrValue = (char) inputLine[wi - 1];
+       break;
+
+     case RULE_AttrVal:
+       /* AttrVal */
+       /* cherche cette valeur parmi celles de l'attribut */
+       /* precedemment trouve */
+       CopyName (n, wi, wl);
+       pAttr = &pSSchema->SsAttribute[CurAttrNum - 1];
+       if (pAttr->AttrType != AtEnumAttr)
+	  /* ce n'est pas un attribut a valeur enumerees */
+	  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			   LineNum);
+       else
+	  {
+	  i = 1;
+	  while (ustrcmp (n, pAttr->AttrEnumValue[i - 1]) &&
+		 i < pAttr->AttrNEnumValues)
+	     i++;
+	  if (ustrcmp (n, pAttr->AttrEnumValue[i - 1]))
+	     /* on ne trouve pas cette valeur, erreur */
+	     CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			      LineNum);
+	  else
+	     CurAttrVal = i;	/* on garde le numero de cette valeur */
+	  }
+       break;
+
+     case RULE_ExternalAttr:
+       /* un nom d'attribut externe dans une regle Transmit */
+       if (TransmittedCounter > 0)
+	  /* c'est une regle transmit pour un compteur */
+	  {
+	  pCntr = &pPSchema->PsCounter[TransmittedCounter - 1];
+	  CopyName (pCntr->CnTransmAttr[pCntr->CnNTransmAttrs - 1], wi, wl);
+	  }
+       else if (TransmittedElem > 0)
+	  /* c'est une regle transmit pour un contenu d'element */
+	  CopyName (pPSchema->PsTransmElem[pPSchema->PsNTransmElems - 1].TeTargetAttr, wi, wl);
+       break;
+
+     default:
+       break;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -6702,37 +6864,38 @@ char              **argv;
    indLine             wl;	/* longueur du mot courant */
    SyntacticType       wn;	/* SyntacticType grammaticale du mot courant */
    SyntRuleNum         r;	/* numero de regle de grammaire */
-   SyntRuleNum         pr;	/* numero de la regle de grammaire precedente */
+   SyntRuleNum         pr;	/* numero de la regle de grammaire precedente*/
    SyntacticCode       c;	/* code grammatical du mot trouve */
    int                 nb;	/* indice dans Identifier du mot trouve', si
 				   identificateur */
    int                 i;
    int                 param;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    char*               cmd [100];
    int                 ndx, pIndex = 0;
    CHAR_T                msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    char                cmd [800];
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
-#  ifdef _WINDOWS 
+#ifdef _WINDOWS 
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
    ustrcpy (msg, TEXT("Executing prs "));
-   for (ndx = 1; ndx < argc; ndx++) {
+   for (ndx = 1; ndx < argc; ndx++)
+     {
        ustrcat (msg, argv [ndx]);
        ustrcat (msg, TEXT(" "));
-   }
+     }
 
    TtaDisplayMessage (INFO, msg);
 
    SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
    SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
@@ -6743,211 +6906,236 @@ char              **argv;
    InitParser ();
    /* load the compiler grammar */
    InitSyntax (TEXT("PRESEN.GRM"));
-   if (!error) {
-      /* prepare the cpp command */
-#     ifdef _WINDOWS
-      cmd [pIndex] = TtaGetMemory (4);
-      strcpy (cmd [pIndex++], "cpp");
-#     else  /* !_WINDOWS */
-      strcpy (cmd, CPP " ");
-#     endif /* _WINDOWS */
-      param = 1;
-      while (param < argc && argv[param][0] == '-') {
-            /* keep cpp params */
-#           ifdef _WINDOWS
-            cmd [pIndex] = TtaGetMemory (ustrlen (argv[param]) + 1);
-            wc2iso_strcpy (cmd [pIndex++], argv[param]);
-#           else  /* !_WINDOWS */
-            strcat (cmd, argv[param]);
-            strcat (cmd, " ");
-#           endif /* _WINDOWS */
-            param++;
-	  } 
-
-      /* recupere d'abord le nom du schema a compiler */
-      if (param >= argc) {
-	     TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
-#        ifdef _WINDOWS
-         ReleaseDC (hwnd, compilersDC);
-         return FATAL_EXIT_CODE;
-#        else  /* _WINDOWS */
-	     exit (1);
-#        endif /* _WINDOWS */
-	  } 
-      ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
-      srceFileName[MAX_NAME_LENGTH - 1] = '\0';
-      param++;
-      ustrcpy (fname, srceFileName);
-      /* check if the name contains a suffix */
-      ptr = ustrrchr(fname, '.');
-      nb = ustrlen (srceFileName);
-      if (!ptr) /* there is no suffix */
+   if (!error)
+     {
+       /* prepare the cpp command */
+#ifdef _WINDOWS
+       cmd [pIndex] = TtaGetMemory (4);
+       strcpy (cmd [pIndex++], "cpp");
+#else  /* !_WINDOWS */
+       strcpy (cmd, CPP " ");
+#endif /* _WINDOWS */
+       param = 1;
+       while (param < argc && argv[param][0] == '-')
+	 {
+	   /* keep cpp params */
+#ifdef _WINDOWS
+	   cmd [pIndex] = TtaGetMemory (ustrlen (argv[param]) + 1);
+	   wc2iso_strcpy (cmd [pIndex++], argv[param]);
+#else  /* !_WINDOWS */
+	   strcat (cmd, argv[param]);
+	   strcat (cmd, " ");
+#endif /* _WINDOWS */
+	   param++;
+	 }
+       
+       /* recupere d'abord le nom du schema a compiler */
+       if (param >= argc)
+	 {
+	   TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
+#ifdef _WINDOWS
+	   ReleaseDC (hwnd, compilersDC);
+	   return FATAL_EXIT_CODE;
+#else  /* _WINDOWS */
+	   exit (1);
+#endif /* _WINDOWS */
+	 } 
+       ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+       srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+       param++;
+       ustrcpy (fname, srceFileName);
+       /* check if the name contains a suffix */
+       ptr = ustrrchr(fname, '.');
+       nb = ustrlen (srceFileName);
+       if (!ptr) /* there is no suffix */
          ustrcat (srceFileName, TEXT(".P"));
-      else if (ustrcmp(ptr, TEXT(".P"))) { /* it's not the valid suffix */
-           TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
-#          ifdef _WINDOWS 
-           ReleaseDC (hwnd, compilersDC);
-           return FATAL_EXIT_CODE;
-#          else  /* _WINDOWS */
-           exit (1);
-#          endif /* _WINDOWS */
-	  } else {
-             /* it's the valid suffix, cut the srcFileName here */
-             ptr[0] = '\0';
-             nb -= 2; /* length without the suffix */
-	  } 
-      /* add the suffix .SCH in srceFileName */
-      ustrcat (fname, TEXT(".SCH"));
-	
-      /* does the file to compile exist */
-      if (TtaFileExist (srceFileName) == 0)
+       else if (ustrcmp(ptr, TEXT(".P")))
+	 {
+	   /* it's not the valid suffix */
+	   TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
+#ifdef _WINDOWS 
+	   ReleaseDC (hwnd, compilersDC);
+	   return FATAL_EXIT_CODE;
+#else  /* _WINDOWS */
+	   exit (1);
+#endif /* _WINDOWS */
+	 }
+       else
+	 {
+	   /* it's the valid suffix, cut the srcFileName here */
+	   ptr[0] = '\0';
+	   nb -= 2; /* length without the suffix */
+	 } 
+       /* add the suffix .SCH in srceFileName */
+       ustrcat (fname, TEXT(".SCH"));
+       
+       /* does the file to compile exist */
+       if (TtaFileExist (srceFileName) == 0)
          TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
-      else {
+       else
+	 {
            /* provide the real source file */
            TtaFileUnlink (fname);
            pwd = TtaGetEnvString ("PWD");
-#          ifndef _WINDOWS
+#ifndef _WINDOWS
            i = strlen (cmd);
-#          endif /* _WINDOWS */
-           if (pwd != NULL) {
-#             ifdef _WINDOWS
-              CHAR_T* CMD;
-              CMD = TtaAllocString (3 + ustrlen (pwd));
-              usprintf (CMD, TEXT("-I%s"), pwd);
-              cmd [pIndex] = TtaGetMemory (3 + ustrlen (pwd));
-              wc2iso_strcpy (cmd [pIndex++], CMD);
-              cmd [pIndex] = TtaGetMemory (3);
-              strcpy (cmd [pIndex++], "-C");
-              cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
-              wc2iso_strcpy (cmd [pIndex++], srceFileName);
-              cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
-              wc2iso_strcpy (cmd [pIndex++], fname);
-#             else  /* !_WINDOWS */
-              sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
-#             endif /* _WINDOWS */
-           } else {
-#                 ifdef _WINDOWS
-                  cmd [pIndex] = TtaGetMemory (3);
-                  strcpy (cmd [pIndex++], "-C");
-                  cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
-                  wc2iso_strcpy (cmd [pIndex++], srceFileName);
-                  cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
-                  wc2iso_strcpy (cmd [pIndex++], fname);
-#                 else  /* !_WINDOWS */
-                  sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
-#                 endif /* _WINDOWS */
-		   }
-#          ifdef _WINDOWS
+#endif /* _WINDOWS */
+           if (pwd != NULL)
+	     {
+#ifdef _WINDOWS
+	       CHAR_T* CMD;
+	       CMD = TtaAllocString (3 + ustrlen (pwd));
+	       usprintf (CMD, TEXT("-I%s"), pwd);
+	       cmd [pIndex] = TtaGetMemory (3 + ustrlen (pwd));
+	       wc2iso_strcpy (cmd [pIndex++], CMD);
+	       cmd [pIndex] = TtaGetMemory (3);
+	       strcpy (cmd [pIndex++], "-C");
+	       cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+	       wc2iso_strcpy (cmd [pIndex++], srceFileName);
+	       cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
+	       wc2iso_strcpy (cmd [pIndex++], fname);
+#else  /* !_WINDOWS */
+	       sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
+#endif /* _WINDOWS */
+	     }
+	   else
+	     {
+#ifdef _WINDOWS
+	       cmd [pIndex] = TtaGetMemory (3);
+	       strcpy (cmd [pIndex++], "-C");
+	       cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+	       wc2iso_strcpy (cmd [pIndex++], srceFileName);
+	       cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
+	       wc2iso_strcpy (cmd [pIndex++], fname);
+#else  /* !_WINDOWS */
+	       sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
+#endif /* _WINDOWS */
+	     }
+#ifdef _WINDOWS
            cppLib = LoadLibrary (TEXT("cpp"));
            ptrMainProc = GetProcAddress (cppLib, "CPPmain");
            i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
            FreeLibrary (cppLib);
-           for (ndx = 0; ndx < pIndex; ndx++) {
+           for (ndx = 0; ndx < pIndex; ndx++)
+	     {
                free (cmd [ndx]);
                cmd [ndx] = (char*) 0;
-		   }
-#          else  /* _WINDOWS */
+	     }
+#else  /* _WINDOWS */
            i = system (cmd);
-#          endif /* _WINDOWS */
-           if (i == FATAL_EXIT_CODE) {
-              /* cpp is not available, copy directely the file */
-              TtaDisplaySimpleMessage (INFO, PRS, CPP_NOT_FOUND);
-              TtaFileCopy (srceFileName, fname);
-		   } 
-
+#endif /* _WINDOWS */
+           if (i == FATAL_EXIT_CODE)
+	     {
+	       /* cpp is not available, copy directely the file */
+	       TtaDisplaySimpleMessage (INFO, PRS, CPP_NOT_FOUND);
+	       TtaFileCopy (srceFileName, fname);
+	     } 
+	   
            infile = TtaReadOpen (fname);
            if (param == argc)
-              /* the output name is equal to the input name */
-              /*suppress the suffix ".SCH" */
-              srceFileName[nb] = '\0';
+	     /* the output name is equal to the input name */
+	     /*suppress the suffix ".SCH" */
+	     srceFileName[nb] = '\0';
            else
-              /* read the output name */
-              ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	     /* read the output name */
+	     ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
            /* le fichier a compiler est ouvert */
            NIdentifiers = 0;	/* table des identificateurs vide */
            LineNum = 0;	/* encore aucune ligne lue */
            pSSchema = NULL;	/* pas (encore) de schema de structure */
            /* lit tout le fichier et fait l'analyse */
            fileOK = True;
-           while (fileOK && !error) {
-                 /* lit une ligne */
-                 LineNum++;	/* incremente le compteur de lignes lues */
-                 i = 0;
-                 do {
-                    /* fileOK = TtaReadByte (infile, &inputLine[i]); */
-                    fileOK = TtaReadWideChar (infile, &inputLine[i], ISO_8859_1);
+           while (fileOK && !error)
+	     {
+	       /* lit une ligne */
+	       LineNum++;	/* incremente le compteur de lignes lues */
+	       i = 0;
+	       do
+		 {
+		   /* fileOK = TtaReadByte (infile, &inputLine[i]); */
+		   fileOK = TtaReadWideChar (infile, &inputLine[i], ISO_8859_1);
                    i++;
-				 } while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
-                 /* marque la fin reelle de la ligne */
-                 inputLine[i - 1] = TEXT('\0');
-                 if (i >= LINE_LENGTH) /* ligne trop longue */
-                    CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine, LineNum);
-                 else if (inputLine[0] == TEXT('#')) {
-                      /* cette ligne contient une directive du preprocesseur cpp */
-                      usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
-                      LineNum--;
-				 } else {
-                        /* traduit tous les caracteres de la ligne */
-                        OctalToChar ();
-                        /* analyse la ligne */
-                        wi = 1;
-                        wl = 0;
-                        /* analyse tous les mots de la ligne courante */
-                        do {
-                           i = wi + wl;
-                           GetNextToken (i, &wi, &wl, &wn);
-                           /* mot suivant */
-                           if (wi > 0) {
-                              /* word found */
-                              AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
-                              /* analyze the word */
-                              if (!error)
-                                 ProcessToken (wi, wl, c, r, nb - 1, pr);	/* on le traite */
-						   } 
-						} while (wi != 0 && !error);
-                        /* il n'y a plus de mots a analyser dans la ligne */
-				 } 
-		   } 
-
+		 }
+	       while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
+	       /* marque la fin reelle de la ligne */
+	       inputLine[i - 1] = TEXT('\0');
+	       if (i >= LINE_LENGTH) /* ligne trop longue */
+		 CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine, LineNum);
+	       else if (inputLine[0] == TEXT('#'))
+		 {
+		   /* cette ligne contient une directive du preprocesseur cpp */
+		   usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
+		   LineNum--;
+		 }
+	       else
+		 {
+		   /* traduit tous les caracteres de la ligne */
+		   OctalToChar ();
+		   /* analyse la ligne */
+		   wi = 1;
+		   wl = 0;
+		   /* analyse tous les mots de la ligne courante */
+		   do
+		     {
+		       i = wi + wl;
+		       GetNextToken (i, &wi, &wl, &wn);
+		       /* mot suivant */
+		       if (wi > 0)
+			 {
+			   /* word found */
+			   AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
+			   /* analyze the word */
+			   if (!error)
+			     ProcessToken (wi, wl, c, r, nb - 1, pr);	/* on le traite */
+			 } 
+		     }
+		   while (wi != 0 && !error);
+		   /* il n'y a plus de mots a analyser dans la ligne */
+		 } 
+	     } 
+	   
            /* end of file */
            TtaReadClose (infile);
            if (!error)
               ParserEnd ();
            /* fin d'analyse */
-           if (!error) {
-              SortAllPRules ();
-              /* met les regles de presentation dans le bon ordre. */
-              /* si aucune vue n'est definie, cree la vue par defaut avec un nom */
-              /* standard */
-              if (pPSchema->PsNViews == 0) {
-                 pPSchema->PsNViews = 1;
-                 ustrcpy (pPSchema->PsView[0], TtaGetMessage (PRS, SINGLE_VIEW));
-			  }
-              /* verifie que toutes les boites de presentation declarees pour les */
-              /* pages sont bien utilisees et adapte les regles. */
-              /* cela ne peut se faire qu'apres avoir ajoute' la vue par defaut */
-              CheckPageBoxes ();
-              /* verifie que toutes les boites de presentation sont bien utilisees */
-              CheckAllBoxesUsed ();
-              /* write the compiled schema into the output file */
-              /* remove temporary file */
-              TtaFileUnlink (fname);
-              ustrcat (srceFileName, TEXT(".PRS"));
-              fileOK = WritePresentationSchema (srceFileName, pPSchema, pSSchema);
-              if (!fileOK)
+           if (!error)
+	     {
+	       SortAllPRules ();
+	       /* met les regles de presentation dans le bon ordre. */
+	       /* si aucune vue n'est definie, cree la vue par defaut avec un nom */
+	       /* standard */
+	       if (pPSchema->PsNViews == 0)
+		 {
+		   pPSchema->PsNViews = 1;
+		   ustrcpy (pPSchema->PsView[0], TtaGetMessage (PRS, SINGLE_VIEW));
+		   pPSchema->PsHostViewList[0] = NULL;
+		 }
+	       /* verifie que toutes les boites de presentation declarees pour les */
+	       /* pages sont bien utilisees et adapte les regles. */
+	       /* cela ne peut se faire qu'apres avoir ajoute' la vue par defaut */
+	       CheckPageBoxes ();
+	       /* verifie que toutes les boites de presentation sont bien utilisees */
+	       CheckAllBoxesUsed ();
+	       /* write the compiled schema into the output file */
+	       /* remove temporary file */
+	       TtaFileUnlink (fname);
+	       ustrcat (srceFileName, TEXT(".PRS"));
+	       fileOK = WritePresentationSchema (srceFileName, pPSchema, pSSchema);
+	       if (!fileOK)
                  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), srceFileName);
-		   } 
-	  } 
-   } 
+	     } 
+	 } 
+     } 
    fflush (stdout);
    TtaSaveAppRegistry ();
-#  ifdef _WINDOWS 
+#ifdef _WINDOWS 
    *Y = _CY_ ;
    ReleaseDC (hwnd, compilersDC);
    if (error)
-      return FATAL_EXIT_CODE ;
+     return FATAL_EXIT_CODE ;
    return COMP_SUCCESS;
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    exit (0);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }

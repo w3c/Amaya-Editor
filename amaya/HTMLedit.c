@@ -255,8 +255,8 @@ STRING              targetName;
        /* create a XLink link */
        attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
        if (!attrType.AttrSSchema)
-	  attrType.AttrSSchema = TtaNewNature (TtaGetDocumentSSchema (doc),
-					       TEXT("XLink"), TEXT("XLinkP"));
+	 attrType.AttrSSchema = TtaNewNature (doc, TtaGetDocumentSSchema (doc),
+					      TEXT("XLink"), TEXT("XLinkP"));
        attrType.AttrTypeNum = XLink_ATTR_href_;
        /* create a xlink:type attribute with value "simple" */
        SetXLinkTypeSimple (element, doc, AttrHREFundoable);

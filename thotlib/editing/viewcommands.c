@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * This module handles document views
  *
@@ -85,8 +76,6 @@ static PtrDocument      pDocChangeSchPresent;
 static PtrSSchema       TableNaturesSchPresent[NbMaxMenuPresNature];
 static int              nbNatures;
 
-
-
 /*----------------------------------------------------------------------
    CreateWindowWithTitle creates the frame for the current view view of
    the current document pDoc.
@@ -121,7 +110,8 @@ int                 height;
 	ustrcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
-   createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y, width, height, vol, IdentDocument (pDoc));
+   createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y,
+			     width, height, vol, IdentDocument (pDoc));
    return createdFrame;
    return -1;
 }
@@ -203,27 +193,27 @@ PtrDocument         pDoc;
    else
       /* on cherche parmi les descendants de pEl */
    if (!pEl->ElTerminal)
-     {
-	/* on cherche d'abord si les fils de pEl sont des listes comme on veut */
-	pChild = pEl->ElFirstChild;
-	while (pChild != NULL && pListEl == NULL)
-	   if (ListWithText (pChild, pDoc))
-	      pListEl = pChild;
-	   else
-	      pChild = pChild->ElNext;
-	if (pListEl == NULL)
-	   /* on n'a pas trouve' parmi les fils, on cherche parmi les */
-	   /* descendants des fils */
-	  {
-	     pChild = pEl->ElFirstChild;
-	     while (pChild != NULL && pListEl == NULL)
-	       {
-		  pListEl = ListDescent (pChild, pDoc);
-		  if (pListEl == NULL)
-		     pChild = pChild->ElNext;
-	       }
-	  }
-     }
+      {
+      /* on cherche d'abord si les fils de pEl sont des listes comme on veut */
+      pChild = pEl->ElFirstChild;
+      while (pChild != NULL && pListEl == NULL)
+	 if (ListWithText (pChild, pDoc))
+	    pListEl = pChild;
+	 else
+	    pChild = pChild->ElNext;
+      if (pListEl == NULL)
+	 /* on n'a pas trouve' parmi les fils, on cherche parmi les */
+	 /* descendants des fils */
+	 {
+	 pChild = pEl->ElFirstChild;
+	 while (pChild != NULL && pListEl == NULL)
+	    {
+	    pListEl = ListDescent (pChild, pDoc);
+	    if (pListEl == NULL)
+	       pChild = pChild->ElNext;
+	    }
+	 }
+      }
    return pListEl;
 }
 
@@ -297,102 +287,106 @@ PtrDocument         pDoc;
    if (typeNum != 0)
       /* une des deux exceptions est definie dans le schema du document */
       /* on procede a l'importation. Sinon, on ne fait rien. */
-     {
-	/* on cherche le premier element qui porte cette exception */
-	pEl = SearchElemWithExcept (exceptNum, pDoc->DocRootElement, pDoc->DocSSchema);
-	if (pEl != NULL)
-	  {
-	     /* on cherche si l'element ou l'un de ses descendants est une liste */
-	     /* dont les elements puissent contenir du texte */
-	     pListEl = ListDescent (pEl, pDoc);
-	     if (pListEl != NULL)
-		/* on a trouve' un tel element liste, qui va accueillir le contenu */
-		/* du fichier a importer */
+      {
+      /* on cherche le premier element qui porte cette exception */
+      pEl = SearchElemWithExcept (exceptNum, pDoc->DocRootElement,
+				  pDoc->DocSSchema);
+      if (pEl != NULL)
+	 {
+	 /* on cherche si l'element ou l'un de ses descendants est une liste */
+	 /* dont les elements puissent contenir du texte */
+	 pListEl = ListDescent (pEl, pDoc);
+	 if (pListEl != NULL)
+	    /* on a trouve' un tel element liste, qui va accueillir le */
+	    /* contenu du fichier a importer */
+	    {
+	    pPrev = NULL;
+	    pTextEl = NULL;
+	    ok = TRUE;
+	    /* lit tout le fichier d'entree, ligne par ligne */
+	    while (ok && ufgets (line, MAX_TXT_LEN - 1, file) != NULL)
 	       {
-		  pPrev = NULL;
+	       /* une ligne a ete lue dans line */
+	       /* traite le caractere '\n' en fin de ligne */
+	       len = ustrlen (line);
+	       if (line[len - 1] == EOL)
+		  {
+		  if (paragraph)
+		     /* en mode paragraphe, on garde le '\n' qui sera */
+		     /*  remplace' par un blanc */
+		     len++;
+		  line[len - 1] = EOS;
+		  len--;
+		  }
+	       /* remplace les caracteres non imprimables par des blancs */
+	       /* et teste si la ligne est vide */
+	       emptyLine = TRUE;
+	       for (i = 0; i < len; i++)
+		  if (line[i] <= SPACE ||
+		      ((int) line[i] >= 127 && (int) line[i] < 160))
+		     /* transforme les caracteres non imprimables en espace */
+		     line[i] = SPACE;
+		  else
+		     emptyLine = FALSE;
+	       /* traite la ligne lue */
+	       if (paragraph && emptyLine)
+		  /* on est en mode paragraphe et la ligne est vide. */
+		  /* L'element en cours de remplissage est termine'. */
 		  pTextEl = NULL;
-		  ok = TRUE;
-		  /* lit tout le fichier d'entree, ligne par ligne */
-		  while (ok && ufgets (line, MAX_TXT_LEN - 1, file) != NULL)
-		    {
-		       /* une ligne a ete lue dans line */
-		       /* traite le caractere '\n' en fin de ligne */
-		       len = ustrlen (line);
-		       if (line[len - 1] == EOL)
-			 {
-			    if (paragraph)
-			       /* en mode paragraphe, on garde le '\n' qui sera remplace' */
-			       /* par un blanc */
-			       len++;
-			    line[len - 1] = EOS;
-			    len--;
-			 }
-		       /* remplace les caracteres non imprimables par des blancs */
-		       /* et teste si la ligne est vide */
-		       emptyLine = TRUE;
-		       for (i = 0; i < len; i++)
-			  if (line[i] <= SPACE || ((int) line[i] >= 127 && (int) line[i] < 160))
-			     /* transforme les caracteres non imprimables en espace */
-			     line[i] = SPACE;
-			  else
-			     emptyLine = FALSE;
-		       /* traite la ligne lue */
-		       if (paragraph && emptyLine)
-			  /* on est en mode paragraphe et la ligne est vide. L'element */
-			  /* en cours de remplissage est termine'. */
-			  pTextEl = NULL;
-		       else
-			 {
-			    if (pTextEl == NULL)
-			       /* il n'y a pas d'element en cours de remplissage */
-			      {
-				 /* on cree un element de la liste, avec sa descendance */
-				 /* jusqu'a une feuille de texte */
-				 pDesc = CreateDescendant (pListEl->ElTypeNumber, pListEl->ElStructSchema, pDoc,
-							   &pTextEl, pListEl->ElAssocNum, CharString + 1,
-						   pListEl->ElStructSchema);
-				 if (pDesc == NULL || pTextEl == NULL)
-				    /* la creation a echoue'. On arrete tout */
-				   {
-				      ok = FALSE;
-				      if (pDesc != NULL)
-					 DeleteElement (&pDesc, pDoc);
-				   }
-				 else
-				    /* on insere dans l'arbre abstrait l'element cree'  */
-				   {
-				      if (pPrev == NULL)
-					 /* c'est le premier element, on le met comme fils de */
-					 /* l'element liste */
-					 InsertFirstChild (pListEl, pDesc);
-				      else
-					 /* on le met comme frere de l'element cree' precedemment */
-					 InsertElementAfter (pPrev, pDesc);
-				      pPrev = pDesc;
-				   }
-			      }
-			    if (pTextEl != NULL && ok)
-			      {
-				 /* on copie la ligne dans l'element de texte courant */
-				 CopyStringToText (line, pTextEl->ElText, &len);
-				 pTextEl->ElTextLength += len;
-				 /* met a jour le volume des elements ascendants */
-				 pAncest = pEl;
-				 while (pAncest != NULL)
-				   {
-				      pAncest->ElVolume += len;
-				      pAncest = pAncest->ElParent;
-				   }
-				 if (!paragraph)
-				    /* on est en mode ligne. L'element en cours de remplissage */
-				    /* est termine' */
-				    pTextEl = NULL;
-			      }
-			 }
-		    }
+	       else
+		  {
+		  if (pTextEl == NULL)
+		     /* il n'y a pas d'element en cours de remplissage */
+		     {
+		     /* on cree un element de la liste, avec sa descendance */
+		     /* jusqu'a une feuille de texte */
+		     pDesc = CreateDescendant (pListEl->ElTypeNumber,
+			        pListEl->ElStructSchema, pDoc, &pTextEl,
+				pListEl->ElAssocNum, CharString + 1,
+				pListEl->ElStructSchema);
+		     if (pDesc == NULL || pTextEl == NULL)
+		        /* la creation a echoue'. On arrete tout */
+		        {
+			ok = FALSE;
+			if (pDesc != NULL)
+			   DeleteElement (&pDesc, pDoc);
+			}
+		     else
+		        /* on insere dans l'arbre abstrait l'element cree'  */
+		        {
+			if (pPrev == NULL)
+			   /* c'est le premier element, on le met comme fils */
+			   /* de l'element liste */
+			   InsertFirstChild (pListEl, pDesc);
+			else
+			   /* on le met comme frere de l'element cree'
+			      precedemment */
+			   InsertElementAfter (pPrev, pDesc);
+			pPrev = pDesc;
+			}
+		     }
+		  if (pTextEl != NULL && ok)
+		     {
+		     /* on copie la ligne dans l'element de texte courant */
+		     CopyStringToText (line, pTextEl->ElText, &len);
+		     pTextEl->ElTextLength += len;
+		     /* met a jour le volume des elements ascendants */
+		     pAncest = pEl;
+		     while (pAncest != NULL)
+		        {
+			pAncest->ElVolume += len;
+			pAncest = pAncest->ElParent;
+			}
+		     if (!paragraph)
+		        /* on est en mode ligne. L'element en cours de */
+		        /* remplissage est termine' */
+		        pTextEl = NULL;
+		     }
+		  }
 	       }
-	  }
-     }
+	    }
+	 }
+      }
    return ok;
 }
 
@@ -421,84 +415,87 @@ CHAR_T*             fileName;
 
    if (fileName[0] != WC_EOS && SSchemaName[0] != WC_EOS)
       /* les parametres d'entree sont valides */
-     {
-	if (directory[0] == WC_EOS)
-	   /* pas de directory precise'. On prend le path des documents */
-	   ustrncpy (directory, DocumentPath, MAX_PATH);
-	/* construit le nom complet du fichier a importer */
-	MakeCompleteName (fileName, TEXT(""), directory, fullName, &i);
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
-	/* ouvre le fichier a importer */
-	file = ufopen (fullName, TEXT("r"));
-	if (file != NULL)
-	   /* le fichier a importer est ouvert */
-	  {
-	     /* on cree un descripteur de document */
-	     CreateDocument (&pDoc);
-	     if (pDoc != NULL)
+      {
+      if (directory[0] == WC_EOS)
+	 /* pas de directory precise'. On prend le path des documents */
+	 ustrncpy (directory, DocumentPath, MAX_PATH);
+      /* construit le nom complet du fichier a importer */
+      MakeCompleteName (fileName, TEXT(""), directory, fullName, &i);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
+      /* ouvre le fichier a importer */
+      file = ufopen (fullName, TEXT("r"));
+      if (file != NULL)
+	 /* le fichier a importer est ouvert */
+	 {
+	 /* on cree un descripteur de document */
+	 CreateDocument (&pDoc);
+	 if (pDoc != NULL)
+	    {
+	    /* pas de preference pour un schema de presentation particulier */
+	    PSchemaName[0] = EOS;
+	    /* charge le schema de structure et le schema de presentation */
+	    LoadSchemas (SSchemaName, PSchemaName, &pDoc->DocSSchema, NULL,
+			 FALSE);
+	    if (pDoc->DocSSchema != NULL)
 	       {
-		  /* pas de preference pour un schema de presentation particulier */
-		  PSchemaName[0] = EOS;
-		  /* charge le schema de structure et le schema de presentation */
-		  LoadSchemas (SSchemaName, PSchemaName, &pDoc->DocSSchema, NULL, FALSE);
-		  if (pDoc->DocSSchema != NULL)
-		    {
-		       /* envoie l'evenement de creation a l'application qui le demande */
-		       notifyDoc.event = TteDocCreate;
-		       notifyDoc.document = (Document) IdentDocument (pDoc);
-		       notifyDoc.view = 0;
-		       if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-			 {
-			    /* cree la representation interne d'un document minimum */
-			    pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
-							       pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
-			    /* supprime les elements exclus */
-			    RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
-			 }
-		    }
-		  if (pDoc->DocRootElement == NULL)
-		     /* on n'a pas pu charger les schemas ou l'application a refuse' */
-		     UnloadDocument (&pDoc);
-		  else
-		    {
-		       /* complete le descripteur du document */
-		       pDoc->DocRootElement->ElAccess = AccessReadWrite;
-		       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
-		       ustrncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
-		       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		       ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
-		       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-		       ustrncpy (pDoc->DocDirectory, directory, MAX_PATH);
-		       /* conserve le path actuel des schemas dans le contexte du doc. */
-		       ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
-		       /* lit le fichier a importer et met son contenu dans le document */
-		       ok = ReadImportFile (file, pDoc);
-		       if (!ok)
-			  /* echec */
-			  TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORT_FILE_IMP);
-		       /* indique a l'application interessee qu'un document a ete cree' */
-		       notifyDoc.event = TteDocCreate;
-		       notifyDoc.document = (Document) IdentDocument (pDoc);
-		       notifyDoc.view = 0;
-		       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		       /* traitement des attributs requis */
-		       AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
-		       if (pDoc->DocSSchema != NULL)
-			  /* le document n'a pas ete ferme' pendant l'attente des */
-			  /* attributs requis */
-			 {
-			    /* traitement des exceptions */
-			    if (ThotLocalActions[T_createtable] != NULL)
-			       (*ThotLocalActions[T_createtable]) (pDoc->DocRootElement, pDoc);
-			    /* ouvre les vues du document cree' */
-			    OpenDefaultViews (pDoc);
-			 }
-		    }
+	       /* envoie l'evenement de creation a l'application qui le demande */
+	       notifyDoc.event = TteDocCreate;
+	       notifyDoc.document = (Document) IdentDocument (pDoc);
+	       notifyDoc.view = 0;
+	       if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+		  {
+		  /* cree la representation interne d'un document minimum */
+		  pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
+					     pDoc->DocSSchema, pDoc, 0, TRUE,
+					     TRUE, TRUE, TRUE);
+		  /* supprime les elements exclus */
+		  RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
+		  }
 	       }
-	     /* fermeture du fichier imnporte' */
-	     fclose (file);
-	  }
-     }
+	    if (pDoc->DocRootElement == NULL)
+	       /* on n'a pas pu charger les schemas ou l'application a refuse'*/
+	       UnloadDocument (&pDoc);
+	    else
+	       {
+	       /* complete le descripteur du document */
+	       pDoc->DocRootElement->ElAccess = AccessReadWrite;
+	       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
+	       ustrncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
+	       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+	       ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
+	       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
+	       ustrncpy (pDoc->DocDirectory, directory, MAX_PATH);
+	       /* conserve le path actuel des schemas dans le contexte du doc. */
+	       ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+	       /* lit le fichier a importer et met son contenu dans le document */
+	       ok = ReadImportFile (file, pDoc);
+	       if (!ok)
+		  /* echec */
+		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORT_FILE_IMP);
+	       /* indique a l'application interessee qu'un document a ete cree' */
+	       notifyDoc.event = TteDocCreate;
+	       notifyDoc.document = (Document) IdentDocument (pDoc);
+	       notifyDoc.view = 0;
+	       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	       /* traitement des attributs requis */
+	       AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
+	       if (pDoc->DocSSchema != NULL)
+		  /* le document n'a pas ete ferme' pendant l'attente des */
+		  /* attributs requis */
+		  {
+		  /* traitement des exceptions */
+		  if (ThotLocalActions[T_createtable] != NULL)
+		     (*ThotLocalActions[T_createtable]) (pDoc->DocRootElement,
+							 pDoc);
+		  /* ouvre les vues du document cree' */
+		  OpenDefaultViews (pDoc);
+		  }
+	       }
+	    }
+	 /* fermeture du fichier imnporte' */
+	 fclose (file);
+	 }
+      }
 }
 
 
@@ -518,64 +515,70 @@ PtrDocument         pDoc;
    ThotBool            complete;
 
    /* demande la creation d'une fenetre pour la 1ere vue du document */
-   ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[0], &X, &Y, &width, &height);
+   ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[0],
+			  &X, &Y, &width, &height);
    notifyDoc.event = TteViewOpen;
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;
    if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-     {
-	pDoc->DocViewFrame[0] =
-	   CreateWindowWithTitle (pDoc, 1,
-				  pDoc->DocSSchema->SsPSchema->PsView[0], &pDoc->DocViewVolume[0], X, Y, width, height);
-	if (pDoc->DocViewFrame[0] != 0)
-	  {
-	    /* Update Paste entry in menu */
-	    if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
-		pDoc->DocReadOnly)
-	      SwitchPaste(pDoc, FALSE);
-	    else
-	      SwitchPaste(pDoc, TRUE);
+      {
+      pDoc->DocViewFrame[0] = CreateWindowWithTitle (pDoc, 1,
+				 pDoc->DocSSchema->SsPSchema->PsView[0],
+				 &pDoc->DocViewVolume[0], X, Y, width, height);
+      if (pDoc->DocViewFrame[0] != 0)
+	 { 
+	 /* Update Paste entry in menu */
+	 if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
+	     pDoc->DocReadOnly)
+	    SwitchPaste(pDoc, FALSE);
+	 else
+	    SwitchPaste(pDoc, TRUE);
 
-	    /* check the Undo state of the document */
-	    if (pDoc->DocNbEditsInHistory == 0)
-	      SwitchUndo (pDoc, FALSE);
-	    else
-	      SwitchUndo (pDoc, TRUE);
+	 /* check the Undo state of the document */
+	 if (pDoc->DocNbEditsInHistory == 0)
+	    SwitchUndo (pDoc, FALSE);
+	 else
+	    SwitchUndo (pDoc, TRUE);
 
-	    /* check the Redo state of the document */
-	    if (pDoc->DocNbUndone == 0)
-	      SwitchRedo (pDoc, FALSE);
-	    else
-	      SwitchRedo (pDoc, TRUE);
+	 /* check the Redo state of the document */
+	 if (pDoc->DocNbUndone == 0)
+	    SwitchRedo (pDoc, FALSE);
+	 else
+	    SwitchRedo (pDoc, TRUE);
+	 
+	 pDoc->DocView[0].DvSSchema = pDoc->DocSSchema;
+	 pDoc->DocView[0].DvPSchemaView = 1;
+	 pDoc->DocView[0].DvSync = TRUE;
+	 pDoc->DocView[0].DvFirstGuestView = NULL;
+	 /* create the guest view list for that view */
+	 CreateGuestViewList (pDoc, 1);
 
-	    pDoc->DocView[0].DvSSchema = pDoc->DocSSchema;
-	    pDoc->DocView[0].DvPSchemaView = 1;
-	    pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
-	    pDoc->DocView[0].DvSync = TRUE;
-	    /* met a jour les menus variables de la fenetre */
-	    if (ThotLocalActions[T_chselect] != NULL)
-	      (*ThotLocalActions[T_chselect]) (pDoc);
-	    if (ThotLocalActions[T_chattr] != NULL)
-	      (*ThotLocalActions[T_chattr]) (pDoc);
-	    if (pDoc->DocRootElement != NULL)
-	      {
-		pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement, pDoc, 1, TRUE, TRUE, &complete);
-		/* on ne s'occupe pas de la hauteur de page */
-		i = 0;
-		ChangeConcreteImage (pDoc->DocViewFrame[0], &i,
-				     pDoc->DocViewRootAb[0]);
-		DisplayFrame (pDoc->DocViewFrame[0]);
-		ShowSelection (pDoc->DocViewRootAb[0], TRUE);
-		notifyDoc.event = TteViewOpen;
-		notifyDoc.document = (Document) IdentDocument (pDoc);
-		notifyDoc.view = 1;
-		CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		/* ouvre les vues specifiees dans la section open du */
-		/* fichier .conf */
-		ConfigOpenFirstViews (pDoc);
-	      }
-	  }
-     }
+	 pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
+	 /* met a jour les menus variables de la fenetre */
+	 if (ThotLocalActions[T_chselect] != NULL)
+	    (*ThotLocalActions[T_chselect]) (pDoc);
+	 if (ThotLocalActions[T_chattr] != NULL)
+	    (*ThotLocalActions[T_chattr]) (pDoc);
+	 if (pDoc->DocRootElement != NULL)
+	    {
+	    pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement,
+					       pDoc, 1, TRUE, TRUE, &complete);
+	    /* on ne s'occupe pas de la hauteur de page */
+	    i = 0;
+	    ChangeConcreteImage (pDoc->DocViewFrame[0], &i,
+				 pDoc->DocViewRootAb[0]);
+	    DisplayFrame (pDoc->DocViewFrame[0]);
+	    ShowSelection (pDoc->DocViewRootAb[0], TRUE);
+	    notifyDoc.event = TteViewOpen;
+	    notifyDoc.document = (Document) IdentDocument (pDoc);
+	    notifyDoc.view = 1;
+	    CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	    /* ouvre les vues specifiees dans la section open du */
+	    /* fichier .conf */
+	    ConfigOpenFirstViews (pDoc);
+	    }
+	 }
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -634,6 +637,7 @@ ThotBool            withEvent;
    PathBuffer          schemaPath;
    Name                nomPres;
    int                 NnaturePSchemas, nat, assoc;
+   NotifyNaturePresent notifyDoc;
 
    /* sauve le path courant des schemas */
    ustrncpy (schemaPath, SchemaPath, MAX_PATH);
@@ -647,54 +651,50 @@ ThotBool            withEvent;
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGE_PRES_IMP);
    else
      {
-	/* ferme toutes les vues du document */
-	CloseAllViewsDoc (pDoc);
-	/* detruit tous les sauts de page engendre's par le debut d'un
-	   element qui a la regle de presentation Page */
-	RemovePagesBeginTree (pDoc->DocRootElement, pDoc);
-	for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	   if (pDoc->DocAssocRoot[assoc] != NULL)
-	      RemovePagesBeginTree (pDoc->DocAssocRoot[assoc], pDoc);
-	/* libere l'ancien schema de presentation du document */
-	FreePresentationSchema (pDoc->DocSSchema->SsPSchema, pDoc->DocSSchema);
-	pDoc->DocSSchema->SsPSchema = pPSchema;
-	/* etablit la liste des natures utilisees dans le document */
-	NnaturePSchemas = 0;
-	SearchNatures (pDoc->DocSSchema, naturePSchema, &NnaturePSchemas, FALSE);
-	/* change de schema de presentation pour chaque nature */
-	for (nat = 0; nat < NnaturePSchemas; nat++)
-	   if (ConfigGetPSchemaNature (pDoc->DocSSchema,
-				       naturePSchema[nat]->SsName, nomPres))
-	      /* le fichier .conf donne un schema de presentation pour la */
-	      /* nature */
-	      if (ustrcmp (nomPres, naturePSchema[nat]->SsDefaultPSchema) != 0)
-		 /* c'est un schema different de celui qui est charge' */
-		{
-		   /* charge le nouveau schema de presentation */
-		   pPSchema = LoadPresentationSchema (nomPres, naturePSchema[nat]);
-		   if (pPSchema != NULL)
-		     {
-			/* libere l'ancien schema de presentation */
-			FreePresentationSchema (naturePSchema[nat]->SsPSchema,
-						naturePSchema[nat]);
-			/* prend le nouveau schema pour cette nature */
-			naturePSchema[nat]->SsPSchema = pPSchema;
-		     }
+      /* ferme toutes les vues du document */
+      CloseAllViewsDoc (pDoc);
+      /* detruit tous les sauts de page engendre's par le debut d'un
+	 element qui a la regle de presentation Page */
+      RemovePagesBeginTree (pDoc->DocRootElement, pDoc);
+      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+	if (pDoc->DocAssocRoot[assoc] != NULL)
+	  RemovePagesBeginTree (pDoc->DocAssocRoot[assoc], pDoc);
+      /* libere l'ancien schema de presentation du document */
+      FreePresentationSchema (pDoc->DocSSchema->SsPSchema, pDoc->DocSSchema);
+      pDoc->DocSSchema->SsPSchema = pPSchema;
+      /* etablit la liste des natures utilisees dans le document */
+      NnaturePSchemas = 0;
+      SearchNatures (pDoc->DocSSchema, naturePSchema, &NnaturePSchemas, FALSE);
+      /* change de schema de presentation pour chaque nature */
+      for (nat = 0; nat < NnaturePSchemas; nat++)
+	if (ConfigGetPSchemaNature (pDoc->DocSSchema,
+				    naturePSchema[nat]->SsName, nomPres))
+	  /* le fichier .conf donne un schema de presentation pour la */
+	  /* nature */
+	  if (ustrcmp (nomPres, naturePSchema[nat]->SsDefaultPSchema) != 0)
+	     /* c'est un schema different de celui qui est charge' */
+	     {
+	     /* charge le nouveau schema de presentation */
+	     pPSchema = LoadPresentationSchema (nomPres, naturePSchema[nat]);
+	     if (pPSchema != NULL)
+	        {
+		/* libere l'ancien schema de presentation */
+		FreePresentationSchema (naturePSchema[nat]->SsPSchema,
+					naturePSchema[nat]);
+		/* prend le nouveau schema pour cette nature */
+		naturePSchema[nat]->SsPSchema = pPSchema;
 		}
-	/* ouvre les vues definies pour le nouveau schema du document */
-	DisplayDoc (pDoc); 
-
-        if (withEvent) {
-NotifyNaturePresent notifyDoc;
-
-           notifyDoc.event = TteDocNatPresent;
-           notifyDoc.document = (Document) IdentDocument (pDoc);
-           notifyDoc.nature = (SSchema) pDoc->DocSSchema;
-
-           CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-
-        };
-
+	     }
+      /* ouvre les vues definies pour le nouveau schema du document */
+      DisplayDoc (pDoc); 
+      
+      if (withEvent)
+	 {
+         notifyDoc.event = TteDocNatPresent;
+	 notifyDoc.document = (Document) IdentDocument (pDoc);
+	 notifyDoc.nature = (SSchema) pDoc->DocSSchema;
+	 CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	 }
      }
    ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
    /* restaure le path courant des schemas */
@@ -744,7 +744,8 @@ int                 frame;
 		  if (RlNext != NULL)
 		    while (RlNext->AbPresentationBox && RlNext->AbNext != NULL)
 		      RlNext = RlNext->AbNext;
-		  bool = RedisplayNatureView (pDoc, pAb, pNatSSchema, view, frame);
+		  bool = RedisplayNatureView (pDoc, pAb, pNatSSchema, view,
+					      frame);
 		  result = result || bool;
 		  pAb = RlNext;
 		}
@@ -855,6 +856,7 @@ ThotBool            withEvent;
    PtrSSchema          naturePSchema[MAX_PRES_NATURE];
    PathBuffer          schemaPath;
    int                 NnaturePSchemas, nat;
+   NotifyNaturePresent notifyDoc;
 
    /* sauve le path courant des schemas */
    ustrncpy (schemaPath, SchemaPath, MAX_PATH);
@@ -872,6 +874,7 @@ ThotBool            withEvent;
 	FreePresentationSchema (pNatSSchema->SsPSchema, pNatSSchema);
 	/* prend le nouveau schema pour cette nature */
 	pNatSSchema->SsPSchema = pPSchema;
+	AddSchemaGuestViews (pDoc, pNatSSchema);
 	/*etablit la liste de toutes les natures utilisees dans le document */
 	NnaturePSchemas = 0;
 	SearchNatures (pDoc->DocSSchema, naturePSchema, &NnaturePSchemas, FALSE);
@@ -882,33 +885,33 @@ ThotBool            withEvent;
 	      /* c'est la nature concernee */
 	      if (naturePSchema[nat] != pNatSSchema)
 		 /* ce n'est pas celle qu'on a deja traite' */
-		 if (ustrcmp (newPSchemaName, naturePSchema[nat]->SsDefaultPSchema) != 0)
+		 if (ustrcmp (newPSchemaName,
+			      naturePSchema[nat]->SsDefaultPSchema) != 0)
 		    /* c'est un schema different de celui qui est charge' */
 		   {
 		      /* charge le nouveau schema de presentation */
-		      pPSchema = LoadPresentationSchema (newPSchemaName, naturePSchema[nat]);
+		      pPSchema = LoadPresentationSchema (newPSchemaName,
+							 naturePSchema[nat]);
 		      if (pPSchema != NULL)
-			{
-			   /* libere l'ancien schema de presentation */
-			   FreePresentationSchema (naturePSchema[nat]->SsPSchema,
-						   naturePSchema[nat]);
-			   /* prend le nouveau schema pour cette nature */
-			   naturePSchema[nat]->SsPSchema = pPSchema;
-			}
+			 {
+			 /* libere l'ancien schema de presentation */
+			 FreePresentationSchema (naturePSchema[nat]->SsPSchema,
+						 naturePSchema[nat]);
+			 /* prend le nouveau schema pour cette nature */
+			 naturePSchema[nat]->SsPSchema = pPSchema;
+			 AddSchemaGuestViews (pDoc, naturePSchema[nat]);
+			 }
 		   }
 	/* reaffiche les elements de la nature qui change de presentation */
 	RedisplayNature (pDoc, pNatSSchema);
 
-        if (withEvent) {
-NotifyNaturePresent notifyDoc;
-
+        if (withEvent)
+	   {
            notifyDoc.event = TteDocNatPresent;
            notifyDoc.document = (Document) IdentDocument (pDoc);
            notifyDoc.nature = (SSchema) pNatSSchema;
-
            CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-
-        };
+	   }
 
      }
    ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
@@ -1183,18 +1186,16 @@ View                view;
                      TableNaturesSchPresent[NumSousMenu - 1] = TableNatures[nat];
                      /* desactive l'entree de ce sous-menu qui correspond a la */
                      /* presentation actuelle */
-#                    ifndef _WINDOWS
+#ifndef _WINDOWS
                      if (entreeDesact[nat] > 0)
                         UnsetEntryMenu (NumMenuPresNature + NumSousMenu, entreeDesact[nat] - 1);
-#                    endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
                   }
              }
         /* active le pop-up menu */
-#       ifndef _WINDOWS
+#ifndef _WINDOWS
         TtaSetDialoguePosition ();
         TtaShowDialogue (MenuAActiver, False);
-#       endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
      }
 }
-
-

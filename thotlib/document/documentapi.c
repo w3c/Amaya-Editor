@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996 - 2000
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -18,8 +18,8 @@
 #include "fileaccess.h"
 
 #ifdef NODISPLAY
-/*** For the ThotKernel, variables FirstSelectedElement and
-     LastSelectedElement, are defined here, to be used at the end of
+/*** For ThotKernel, variables FirstSelectedElement and
+     LastSelectedElement are defined here, to be used at the end of
      function MergeTextElements  ***/
 #undef THOT_EXPORT
 #define THOT_EXPORT
@@ -589,6 +589,7 @@ STRING              path;
    the function simply returns the structure schema of that nature.
 
    Parameters:
+   document: the document of interest
    schema: the structure schema to which the nature is added.
    natureName: name of the nature to be added in the structure schema.
    presentationName: name of the presentation schema to be associated with
@@ -603,10 +604,11 @@ STRING              path;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-SSchema             TtaNewNature (SSchema schema, CHAR_T* natureName, CHAR_T* presentationName)
+SSchema             TtaNewNature (Document document, SSchema schema, CHAR_T* natureName, CHAR_T* presentationName)
 
 #else  /* __STDC__ */
-SSchema             TtaNewNature (schema, natureName, presentationName)
+SSchema             TtaNewNature (document, schema, natureName, presentationName)
+Document            document; 
 SSchema             schema;
 CHAR_T*             natureName;
 CHAR_T*             presentationName;
@@ -619,19 +621,34 @@ CHAR_T*             presentationName;
 
    UserErrorCode = 0;
    natureSchema = NULL;
-   if (schema == NULL || natureName[0] == EOS)
+   if (document < 0 || document > MAX_DOCUMENTS)
+     {
+	TtaError (ERR_invalid_document_parameter);
+     }
+   else if (document > 0 && LoadedDocument[document - 1] == NULL)
+     {
+	TtaError (ERR_invalid_document_parameter);
+     }
+   else if (schema == NULL || natureName[0] == EOS)
      {
 	TtaError (ERR_invalid_parameter);
      }
    else
      {
-	natureRule = CreateNature (natureName, presentationName, (PtrSSchema) schema);
+	natureRule = CreateNature (natureName, presentationName,
+				   (PtrSSchema) schema);
 	if (natureRule == 0)
-	  {
+	   {
 	     TtaError (ERR_invalid_parameter);
-	  }
+	   }
 	else
+	   {
 	   natureSchema = ((PtrSSchema) schema)->SsRule[natureRule - 1].SrSSchemaNat;
+#ifndef NODISPLAY
+	   if (document > 0)
+	      AddSchemaGuestViews (LoadedDocument[document - 1], natureSchema);
+#endif
+	   }
      }
    return ((SSchema) natureSchema);
 }
@@ -727,47 +744,51 @@ CHAR_T*             presentationName;
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-        TtaError (ERR_invalid_document_parameter);
+      TtaError (ERR_invalid_document_parameter);
    else
-       /* parameter document is correct */
-       {
-           pDoc = LoadedDocument[document - 1];
+      /* parameter document is correct */
+      {
+      pDoc = LoadedDocument[document - 1];
 #ifdef NODISPLAY
-           if (pDoc->DocSSchema != NULL)
-               ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName, MAX_NAME_LENGTH - 1);
+      if (pDoc->DocSSchema != NULL)
+	 ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName,
+		   MAX_NAME_LENGTH - 1);
 #else
-           /* verifies that there is no opened views */
-           ok = TRUE;
-           for (view = 1; view <= MAX_VIEW_DOC && ok; view++)
-               if (pDoc->DocView[view - 1].DvPSchemaView != 0)
-                  ok = FALSE;
-           if (ok)
-              for (Assoc = 1; Assoc <= MAX_ASSOC_DOC && ok; Assoc++)
-                  if (pDoc->DocAssocFrame[Assoc - 1] != 0)
-                     ok = FALSE;
-           if (!ok)
-              TtaError (ERR_there_are_open_views);
-           else
-               /* There is no opened views */
-               {
-                   Name pschemaName;
+      /* verifies that there is no open views */
+      ok = TRUE;
+      for (view = 1; view <= MAX_VIEW_DOC && ok; view++)
+	 if (pDoc->DocView[view - 1].DvPSchemaView != 0)
+	    ok = FALSE;
+      if (ok)
+	 for (Assoc = 1; Assoc <= MAX_ASSOC_DOC && ok; Assoc++)
+	    if (pDoc->DocAssocFrame[Assoc - 1] != 0)
+	       ok = FALSE;
+      if (!ok)
+	 TtaError (ERR_there_are_open_views);
+      else
+	 /* There is no opened views */
+	 {
+	 Name pschemaName;
 
-                   ustrncpy (pschemaName, presentationName, MAX_NAME_LENGTH);
-                   if (pDoc->DocSSchema->SsPSchema != NULL)
-                      /* a presentation schema already exist. One release it */
-                      {
-                         FreePresentationSchema (pDoc->DocSSchema->SsPSchema, pDoc->DocSSchema);
-                         pDoc->DocSSchema->SsPSchema = NULL;
-                      }
-                   /* Load the presentation schema */
-                   if (pDoc->DocSSchema->SsExtension)
-                      /* to avoid that ReadPresentationSchema reloades the structure schema */
-                      pDoc->DocSSchema->SsRootElem = 1;
-                   pDoc->DocSSchema->SsPSchema = LoadPresentationSchema (pschemaName, pDoc->DocSSchema);
-                   if (pDoc->DocSSchema->SsPSchema == NULL)
-                      /* Failure while loading schema */
-                      TtaError (ERR_cannot_load_pschema);
-               }
+	 ustrncpy (pschemaName, presentationName, MAX_NAME_LENGTH);
+	 if (pDoc->DocSSchema->SsPSchema != NULL)
+	    /* a presentation schema already exist. One release it */
+	    {
+	    FreePresentationSchema (pDoc->DocSSchema->SsPSchema,
+				    pDoc->DocSSchema);
+	    pDoc->DocSSchema->SsPSchema = NULL;
+	    }
+	 /* Load the presentation schema */
+	 if (pDoc->DocSSchema->SsExtension)
+	    /* to avoid that ReadPresentationSchema reloades the structure
+	       schema */
+	    pDoc->DocSSchema->SsRootElem = 1;
+	 pDoc->DocSSchema->SsPSchema = LoadPresentationSchema (pschemaName,
+							     pDoc->DocSSchema);
+	 if (pDoc->DocSSchema->SsPSchema == NULL)
+	    /* Failure while loading schema */
+	    TtaError (ERR_cannot_load_pschema);
+	 }
 #endif
       }
 }

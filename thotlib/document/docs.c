@@ -412,126 +412,129 @@ PathBuffer          directory;
 	 /* L'utilisateur n'a pas fourni de nom de schema */
 	 UnloadDocument (pDoc);
       else
-	{
-	   ustrncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
-	   /* si c'est un path, retient seulement le 1er directory */
-	   i = 0;
-	   while ((*pDoc)->DocDirectory[i] != EOS &&
-		  (*pDoc)->DocDirectory[i] != PATH_SEP && i < MAX_PATH - 1)
-	      i++;
-	   (*pDoc)->DocDirectory[i] = EOS;
-	   /* on suppose que le mon de schema est dans la langue de */
-	   /* l'utilisateur: on le traduit en nom interne */
-	   ConfigSSchemaInternalName (SSchemaName, docType, TRUE);
-	   if (docType[0] == WC_EOS)
-	      /* ce nom n'est pas dans le fichier langue, on le prend */
-	      /* tel quel */
-	      ustrncpy (docType, SSchemaName, MAX_NAME_LENGTH);
-	   /* compose le nom du fichier a ouvrir avec le nom du directory */
-	   /* des schemas... */
-	   ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
-	   MakeCompleteName (docType, TEXT("STR"), directoryBuffer, fileNameBuffer, &i);
-	   /* teste si le fichier '.STR' existe */
+	 {
+	 ustrncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
+	 /* si c'est un path, retient seulement le 1er directory */
+	 i = 0;
+	 while ((*pDoc)->DocDirectory[i] != EOS &&
+		(*pDoc)->DocDirectory[i] != PATH_SEP && i < MAX_PATH - 1)
+	    i++;
+	 (*pDoc)->DocDirectory[i] = EOS;
+	 /* on suppose que le mon de schema est dans la langue de */
+	 /* l'utilisateur: on le traduit en nom interne */
+	 ConfigSSchemaInternalName (SSchemaName, docType, TRUE);
+	 if (docType[0] == WC_EOS)
+	    /* ce nom n'est pas dans le fichier langue, on le prend */
+	    /* tel quel */
+	    ustrncpy (docType, SSchemaName, MAX_NAME_LENGTH);
+	 /* compose le nom du fichier a ouvrir avec le nom du directory */
+	 /* des schemas... */
+	 ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
+	 MakeCompleteName (docType, TEXT("STR"), directoryBuffer,
+			   fileNameBuffer, &i);
+	 /* teste si le fichier '.STR' existe */
 
-	   if (TtaFileExist (fileNameBuffer) == 0)
-	     {
-		ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
-		ustrcat (fileNameBuffer, TEXT(".STR"));
-		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
-	     }
-	   else
-	     {
-		/* charge le schema de structure et le schema de presentation */
-		PSchemaName[0] =WC_EOS;
-		/* pas de preference pour un schema de */
-		/* presentation particulier */
-		LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL, FALSE);
-		if (docName[0] != WC_EOS)
-		   ustrncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
-		else
+	 if (TtaFileExist (fileNameBuffer) == 0)
+	    {
+	    ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
+	    ustrcat (fileNameBuffer, TEXT(".STR"));
+	    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND),
+			       fileNameBuffer);
+	    }
+	 else
+	    {
+	    /* charge le schema de structure et le schema de presentation */
+	    PSchemaName[0] =WC_EOS;
+	    /* pas de preference pour un schema de */
+	    /* presentation particulier */
+	    LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL,
+			 FALSE);
+	    if (docName[0] != WC_EOS)
+	       ustrncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
+	    else
+	       {
+	       ustrncpy (docNameBuffer, SSchemaName, MAX_NAME_LENGTH);
+	       ustrcat (docNameBuffer, TEXT("X"));
+	       }
+	    if ((*pDoc)->DocSSchema != NULL)
+	       if ((*pDoc)->DocSSchema->SsPSchema != NULL)
 		  {
-		     ustrncpy (docNameBuffer, SSchemaName, MAX_NAME_LENGTH);
-		     ustrcat (docNameBuffer, TEXT("X"));
-		  }
-		if ((*pDoc)->DocSSchema != NULL)
-		   if ((*pDoc)->DocSSchema->SsPSchema != NULL)
+		  notifyDoc.event = TteDocCreate;
+		  notifyDoc.document = (Document) IdentDocument (*pDoc);
+		  notifyDoc.view = 0;
+		  if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 		     {
-			notifyDoc.event = TteDocCreate;
-			notifyDoc.document = (Document) IdentDocument (*pDoc);
-			notifyDoc.view = 0;
-			if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-			  {
-			     /* cree la representation interne d'un document vide */
-			     (*pDoc)->DocRootElement = NewSubtree ((*pDoc)->DocSSchema->SsRootElem,
-				  (*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE,
-								TRUE, TRUE);
-			     /* supprime les elements exclus */
-			     RemoveExcludedElem (&((*pDoc)->DocRootElement), *pDoc);
-			  }
+		     /* cree la representation interne d'un document vide */
+		     (*pDoc)->DocRootElement = NewSubtree ((*pDoc)->DocSSchema->SsRootElem,
+			(*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE, TRUE, TRUE);
+		     /* supprime les elements exclus */
+		     RemoveExcludedElem (&((*pDoc)->DocRootElement), *pDoc);
 		     }
-	     }
-	   if ((*pDoc)->DocRootElement == NULL)
-	      /* echec creation document */
-	      UnloadDocument (pDoc);
-	   else
-	     {
-
-		(*pDoc)->DocRootElement->ElAccess = AccessReadWrite;
-		CheckLanguageAttr (*pDoc, (*pDoc)->DocRootElement);
-		/* ajoute un saut de page a la fin de l'arbre principal */
-		/* pour toutes les vues qui sont mises en page */
-		/* schema de presentation du document */
-		pPSchema = (*pDoc)->DocSSchema->SsPSchema;
-		/* examine toutes les vues definies dans le schema */
-		for (view = 0; view < pPSchema->PsNViews; view++)
-		   if (pPSchema->PsPaginatedView[view])
-		      /* cette vue est mise en page */
-		      AddLastPageBreak ((*pDoc)->DocRootElement, view + 1, *pDoc, TRUE);
-		/* le document appartient au directory courant */
-		if (directory[0] != EOS)
-		   ustrncpy (directoryBuffer, directory, MAX_PATH);
-		else
-		  {
-		     ustrncpy (directoryBuffer, DocumentPath, MAX_PATH);
-		     /* si c'est un path, retient seulement le 1er directory */
-		     i = 0;
-		     while (directoryBuffer[i] != EOS &&
-			 directoryBuffer[i] != PATH_SEP && i < MAX_PATH - 1)
-			i++;
-		     directoryBuffer[i] = EOS;
 		  }
-		FindCompleteName (docNameBuffer, TEXT("PIV"), directoryBuffer, fileNameBuffer, &i);
-		ustrncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
-		(*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		ustrncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
-		(*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-		/* le document appartient au directory courant */
-		ustrncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);
-		/* conserve le path actuel des schemas dans le contexte du
-		   document */
-		ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
-		notifyDoc.event = TteDocCreate;
-		notifyDoc.document = (Document) IdentDocument (*pDoc);
-		notifyDoc.view = 0;
-		CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		/* traitement des attributs requis */
-		AttachMandatoryAttributes ((*pDoc)->DocRootElement, *pDoc);
-		if ((*pDoc)->DocSSchema != NULL)
-		   /* le document n'a pas ete ferme' pendant l'attente */
-		   /* des attributs requis */
-		  {
-		     /* traitement des exceptions */
-		     if (ThotLocalActions[T_createtable] != NULL)
-			(*ThotLocalActions[T_createtable])
-			   ((*pDoc)->DocRootElement, *pDoc);
-		     /* ouvre les vues du document cree' */
-		     OpenDefaultViews (*pDoc);
-		     /* selectionne la 1ere feuille */
-		     pEl = FirstLeaf ((*pDoc)->DocRootElement);
-		     SelectElement (*pDoc, pEl, TRUE, TRUE);
-		  }
-	     }
-	}
+	    }
+	 if ((*pDoc)->DocRootElement == NULL)
+	    /* echec creation document */
+	    UnloadDocument (pDoc);
+	 else
+	    {
+	    (*pDoc)->DocRootElement->ElAccess = AccessReadWrite;
+	    CheckLanguageAttr (*pDoc, (*pDoc)->DocRootElement);
+	    /* ajoute un saut de page a la fin de l'arbre principal */
+	    /* pour toutes les vues qui sont mises en page */
+	    /* schema de presentation du document */
+	    pPSchema = (*pDoc)->DocSSchema->SsPSchema;
+	    /* examine toutes les vues definies dans le schema */
+	    for (view = 0; view < pPSchema->PsNViews; view++)
+	       if (pPSchema->PsPaginatedView[view])
+		  /* cette vue est mise en page */
+		  AddLastPageBreak ((*pDoc)->DocRootElement, view + 1, *pDoc,
+				    TRUE);
+	    /* le document appartient au directory courant */
+	    if (directory[0] != EOS)
+	       ustrncpy (directoryBuffer, directory, MAX_PATH);
+	    else
+	       {
+	       ustrncpy (directoryBuffer, DocumentPath, MAX_PATH);
+	       /* si c'est un path, retient seulement le 1er directory */
+	       i = 0;
+	       while (directoryBuffer[i] != EOS &&
+		      directoryBuffer[i] != PATH_SEP && i < MAX_PATH - 1)
+		  i++;
+	       directoryBuffer[i] = EOS;
+	       }
+	    FindCompleteName (docNameBuffer, TEXT("PIV"), directoryBuffer,
+			      fileNameBuffer, &i);
+	    ustrncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
+	    (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+	    ustrncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
+	    (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
+	    /* le document appartient au directory courant */
+	    ustrncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);
+	    /* conserve le path actuel des schemas dans le contexte du
+	       document */
+	    ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+	    notifyDoc.event = TteDocCreate;
+	    notifyDoc.document = (Document) IdentDocument (*pDoc);
+	    notifyDoc.view = 0;
+	    CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	    /* traitement des attributs requis */
+	    AttachMandatoryAttributes ((*pDoc)->DocRootElement, *pDoc);
+	    if ((*pDoc)->DocSSchema != NULL)
+	       /* le document n'a pas ete ferme' pendant l'attente */
+	       /* des attributs requis */
+	       {
+	       /* traitement des exceptions */
+	       if (ThotLocalActions[T_createtable] != NULL)
+		  (*ThotLocalActions[T_createtable])
+		                  ((*pDoc)->DocRootElement, *pDoc);
+	       /* ouvre les vues du document cree' */
+	       OpenDefaultViews (*pDoc);
+	       /* selectionne la 1ere feuille */
+	       pEl = FirstLeaf ((*pDoc)->DocRootElement);
+	       SelectElement (*pDoc, pEl, TRUE, TRUE);
+	       }
+	    }
+	 }
 }
 
 

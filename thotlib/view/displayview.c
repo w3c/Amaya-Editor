@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -506,6 +506,8 @@ DocViewNumber       view;
 
 #endif /* __STDC__ */
 {
+   PtrGuestViewDescr  guestView, next;
+
    view--;
    if (pDoc->DocViewRootAb[view] != NULL)
       FreeAbView (pDoc->DocViewRootAb[view], pDoc->DocViewFrame[view]);
@@ -513,6 +515,17 @@ DocViewNumber       view;
    pDoc->DocView[view].DvSSchema = NULL;
    pDoc->DocView[view].DvPSchemaView = 0;
    pDoc->DocView[view].DvSync = FALSE;
+   if (pDoc->DocView[view].DvFirstGuestView)
+      {
+      guestView = pDoc->DocView[view].DvFirstGuestView;
+      pDoc->DocView[view].DvFirstGuestView = NULL;
+      while (guestView)
+	 {
+	 next = guestView->GvNextGuestView;
+	 TtaFreeMemory (guestView);
+	 guestView = next;
+	 }
+      }
    pDoc->DocViewFrame[view] = 0;
    pDoc->DocViewVolume[view] = 0;
    pDoc->DocViewFreeVolume[view] = 0;

@@ -266,7 +266,7 @@ Document	   doc;
 
    XHTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
    if (XHTMLSSchema == NULL)
-       XHTMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc),
+       XHTMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
 				    TEXT("HTML"), TEXT("HTMLP"));
    return (XHTMLSSchema);
 }
@@ -286,7 +286,8 @@ Document	   doc;
 
   MathMLSSchema = TtaGetSSchema (TEXT("MathML"), doc);
   if (MathMLSSchema == NULL)
-     MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("MathML"),
+     MathMLSSchema = TtaNewNature(doc, 
+				  TtaGetDocumentSSchema(doc), TEXT("MathML"),
 				  TEXT("MathMLP"));
   return (MathMLSSchema);
 }
@@ -306,7 +307,8 @@ Document	   doc;
 
   GraphMLSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
   if (GraphMLSSchema == NULL)
-    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("GraphML"),
+    GraphMLSSchema = TtaNewNature(doc,
+				  TtaGetDocumentSSchema(doc), TEXT("GraphML"),
 				  TEXT("GraphMLP"));
   return (GraphMLSSchema);
 }
@@ -326,7 +328,7 @@ Document	   doc;
 
   XLinkSSchema = TtaGetSSchema (TEXT("XLink"), doc);
   if (XLinkSSchema == NULL)
-    XLinkSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("XLink"),
+    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), TEXT("XLink"),
 				TEXT("XLinkP"));
   return (XLinkSSchema);
 }

@@ -837,6 +837,7 @@ ThotBool            selected;
   adbuff = NULL;
   indbuff = 0;
   restbl = 0;
+  nbcar = 0;
   pAb = pBox->BxAbstractBox;
   
   /* do we have to display stars instead of characters? */

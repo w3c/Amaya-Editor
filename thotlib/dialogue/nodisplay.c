@@ -144,3 +144,13 @@ PtrElement          pEl2;
       return FALSE;
 }
 
+#ifdef __STDC__
+void         AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
+#else  /* __STDC__ */
+void         AddSchemaGuestViews (pDoc, pSS)
+PtrDocument  pDoc;
+PtrSSchema   pSS;
+
+#endif /* __STDC__ */
+{
+}

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1463,6 +1463,7 @@ char              **argv;
 
 {
    int                 i, k;
+   PtrHostView         pHostView;
 
    TtaInitializeAppRegistry (argv[0]);
 
@@ -1494,25 +1495,36 @@ char              **argv;
 	printf ("PRESENTATION ");
 	wrnom (pSchemaStr->SsName);
 	printf (";\n");
-	/* ecrit au terminal les noms des  vues */
+	/* write the name of all declared views and their host views */
 	if (pSc1->PsNViews > 0 && pSc1->PsView[0][0] != ' ')
-	  {
-	     printf ("\n");
-	     printf ("VIEWS\n");
-	     printf ("   ");
-	     for (i = 1; i <= pSc1->PsNViews; i++)
-	       {
-		  wrnom (pSc1->PsView[i - 1]);
-		  if (pSc1->PsExportView[i - 1])
-		     printf (" THOT_EXPORT");
-		  if (pSc1->PsPaginatedView[i - 1])
-		     printf (" {with pages}");
-		  if (i < pSc1->PsNViews)
-		     printf (", ");
-		  else
-		     printf (";\n");
-	       }
-	  }
+	   {
+	   printf ("\n");
+	   printf ("VIEWS\n");
+	   for (i = 1; i <= pSc1->PsNViews; i++)
+	      {
+	      printf ("   ");
+	      wrnom (pSc1->PsView[i - 1]);
+	      if (pSc1->PsExportView[i - 1])
+		 printf (" EXPORT");
+	      if (pSc1->PsPaginatedView[i - 1])
+		 printf (" {with pages}");
+	      if (pSc1->PsHostViewList[i - 1])
+		 {
+		 printf (" MERGE With");
+		 pHostView = pSc1->PsHostViewList[i - 1];
+		 while (pHostView)
+		    {
+		    printf (" ");
+		    wrnom (pHostView->HostViewName);
+		    pHostView = pHostView->NextHostView;
+		    } 
+		 }
+	      if (i < pSc1->PsNViews)
+		 printf (",\n");
+	      else
+		 printf (";\n");
+	      }
+	   }
 	/* ecrit au terminal les compteurs declares */
 	if (pSc1->PsNCounters > 0)
 	  {

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * This module handles the Paste command in unstructured mode.
  *
@@ -307,8 +298,11 @@ PtrDocument         pDoc;
 			 /* no preference for the presentation scheme */
 			 nR = CreateNature (pSS->SsName, NULL, pDoc->DocSSchema);
 			 if (nR != 0)
+			   {
 			   /* schemes are loaded, changes the structure scheme of the copy */
 			   pSS = pDoc->DocSSchema->SsRule[nR - 1].SrSSchemaNat;
+			   AddSchemaGuestViews (pDoc, pSS);
+			   }
 		       }
 		   /* demande a l'application si on peut creer ce type
 		      d'element */
@@ -354,8 +348,11 @@ PtrDocument         pDoc;
 				     /* no preference for the presentation scheme */
 				     nR = CreateNature (pSS->SsName, NULL, pDoc->DocSSchema);
 				     if (nR != 0)
+				       {
 				       /* schemes are loaded, changes the structure scheme of the copy */
 				       pSS = pDoc->DocSSchema->SsRule[nR - 1].SrSSchemaNat;
+				       AddSchemaGuestViews (pDoc, pSS);
+				       }
 				   }
 			       /* demande a l'application si on peut creer ce type d'elem. */
 			       notifyEl.event = TteElemNew;
@@ -555,13 +552,13 @@ void                PasteCommand ()
 	pSplitText = NULL;
 	pNextEl = NULL;
 	doc = IdentDocument (pDoc);
+	dispMode = TtaGetDisplayMode (doc);
 	/* lock tables formatting */
 	if (ThotLocalActions[T_islock])
 	  {
 	    (*ThotLocalActions[T_islock]) (&lock);
 	    if (!lock)
 	      {
-		dispMode = TtaGetDisplayMode (doc);
 		if (dispMode == DisplayImmediately)
 		  TtaSetDisplayMode (doc, DeferredDisplay);
 		/* table formatting is not loked, lock it now */

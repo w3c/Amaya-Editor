@@ -234,6 +234,7 @@ extern void         TtaSetSchemaPath (STRING path);
    the function simply returns the structure schema of that nature.
 
    Parameters:
+   document: the document of interest
    schema: the structure schema to which the nature is added.
    natureName: name of the nature to be added in the structure schema.
    presentationName: name of the presentation schema to be associated with
@@ -246,7 +247,7 @@ extern void         TtaSetSchemaPath (STRING path);
    has not been loaded.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaNewNature (SSchema schema, CHAR_T* natureName, CHAR_T* presentationName);
+extern SSchema      TtaNewNature (Document document, SSchema schema, CHAR_T* natureName, CHAR_T* presentationName);
 
 /*----------------------------------------------------------------------
    TtaNewSchemaExtension
@@ -756,7 +757,7 @@ extern ThotBool     TtaCheckPath (/* char *path */);
 extern ThotBool     TtaIsInDocumentPath ( /*CHAR_T* aDirectory */ );
 extern void         TtaAppendDocumentPath ( /*CHAR_T* aDirectory */ );
 extern void         TtaSetSchemaPath ( /* char *path */ );
-extern SSchema      TtaNewNature ( /* SSchema schema, CHAR_T* natureName, CHAR_T* presentationName */ );
+extern SSchema      TtaNewNature ( /* Document document, SSchema schema, CHAR_T* natureName, CHAR_T* presentationName */ );
 extern SSchema      TtaNewSchemaExtension ( /* Document document, CHAR_T* extensionName, CHAR_T* presentationName */ );
 extern SSchema      TtaGetSchemaExtension ( /*Document document, char *NomExtension */ );
 extern void         TtaRemoveSchemaExtension ( /* Document document, SSchema extension, int *removedElements, int *removedAttributes */ );

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Ce module effectue la creation des images abstraites
  *
@@ -489,7 +480,8 @@ ThotBool            ro;
    /* modifiables par l'utilisateur */
    pAb->AbCanBeModified = !pEl->ElIsCopy;
    /* les constantes ne sont pas modifiables par l'utilisateur */
-   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+       CsConstant)
       pAb->AbCanBeModified = FALSE;
    pAb->AbSelected = FALSE;
    pAb->AbBox = NULL;
@@ -609,7 +601,8 @@ PtrAbstractBox      pAb;
 	       pAb->AbLeafType = LtText;
 	       if (pAb->AbText == NULL)
 		  GetConstantBuffer (pAb);
-	       ustrncpy (pAb->AbText->BuContent, pConst->PdString, THOT_MAX_CHAR - 1);
+	       ustrncpy (pAb->AbText->BuContent, pConst->PdString,
+			 THOT_MAX_CHAR - 1);
 	       pAb->AbText->BuContent[THOT_MAX_CHAR - 1] = EOS;
 	       pAb->AbText->BuLength = ustrlen (pAb->AbText->BuContent);
 	       pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pConst->PdAlphabet);
@@ -730,6 +723,42 @@ DocViewNumber       viewNb;
 }
 
 /*----------------------------------------------------------------------
+   GetGestView retourne le numero de la vue (numero dans le      
+   schema de presentation qui s'applique au schema de structure pSS)
+   dont il faut appliquer les regles de presentation aux elements
+   et attributs definis dans le schema pSS pour la vue de document
+   decrite par pView.  On tient compte de la clause "MERGE With"
+   du schema de presentation.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int    GetGestView (DocViewDescr *pView, PtrSSchema pSS)
+#else  /* __STDC__ */
+static int    GetGestView (pView, pSS)
+DocViewDescr *pView;
+PtrSSchema    pSS;
+#endif /* __STDC__ */
+{
+    PtrGuestViewDescr  pGuestView;
+    int                viewSch;
+    ThotBool           found;
+
+    /* par defaut, on applique les regles de presentation de la vue 1 */
+    viewSch = 1;
+    /* on cherche dans les guest views */
+    pGuestView = pView->DvFirstGuestView;
+    found = FALSE;
+    while (pGuestView && !found)
+       if (pGuestView->GvSSchema->SsCode == pSS->SsCode)
+	  {
+	  found = TRUE;
+	  viewSch = pGuestView->GvPSchemaView;
+	  }
+       else
+          pGuestView = pGuestView->GvNextGuestView;
+    return viewSch;
+}
+
+/*----------------------------------------------------------------------
    AppliedView retourne le numero de la vue (numero dans le      
    schema de presentation qui s'applique a` l'element pEl  
    ou a` l'attribut pAttr) dont il faut appliquer les      
@@ -737,8 +766,8 @@ DocViewNumber       viewNb;
    son image dans la vue viewNb du document pDoc.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 AppliedView (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
-				 DocViewNumber viewNb)
+int                 AppliedView (PtrElement pEl, PtrAttribute pAttr,
+				 PtrDocument pDoc, DocViewNumber viewNb)
 #else  /* __STDC__ */
 int                 AppliedView (pEl, pAttr, pDoc, viewNb)
 PtrElement          pEl;
@@ -755,61 +784,54 @@ DocViewNumber       viewNb;
 
    viewSch = 0;
    if (pEl->ElAssocNum != 0)
-     {
-	/* c'est un element associe', on applique */
-	/* toujours les regles de la vue 1. */
-	viewSch = 1;
-     }
+      /* c'est un element associe', on applique les regles de la vue 1. */
+      viewSch = 1;
    else if (pDoc->DocView[viewNb - 1].DvPSchemaView != 0)
-     {
-	if (pAttr != NULL)
-	   pSS = pAttr->AeAttrSSchema;
-	else if (pEl != NULL)
-	   pSS = pEl->ElStructSchema;
-	else
-	   pSS = NULL;
-	if (pSS != NULL)
-	  {
-	     pView = &pDoc->DocView[viewNb - 1];
-	     if (pView->DvSSchema == pDoc->DocSSchema)
-		if (pSS->SsCode == pDoc->DocSSchema->SsCode)
-		  {
-		     /* c'est une element du document lui-meme */
-		     viewSch = pView->DvPSchemaView;
-		     /* numero de la vue dans le schema de */
-		     /* presentation qui la definit */
-		  }
-		else
-		   /* c'est un element d'un objet d'une autre nature */
-		   viewSch = 1;
-	     /* c'est une vue propre a une nature d'objets */
-	     else if (pSS->SsPSchema == pView->DvSSchema->SsPSchema
-		      || pEl->ElParent == NULL)
-		/* c'est un objet de cette nature ou la racine du document */
-		/* numero de la vue dans le schema de */
-		/* presentation qui la definit */
-		viewSch = pView->DvPSchemaView;
-	     /* on applique les regles de presentation de la vue */
-	     /* 1 de cette nature pour toutes les vues du document */
-	     else
-		/* l'element est-il dans un objet de cette nature ? */
-		/* a priori non, donc l'element ne doit pas apparaitre dans */
-		/* cette vue */
+      {
+      if (pAttr != NULL)
+	 pSS = pAttr->AeAttrSSchema;
+      else if (pEl != NULL)
+	 pSS = pEl->ElStructSchema;
+      else
+	 pSS = NULL;
+      if (pSS != NULL)
+	 {
+	 pView = &pDoc->DocView[viewNb - 1];
+	 if (pView->DvSSchema == pDoc->DocSSchema)
+	    /* c'est une vue du document lui-me^me */
+	    if (pSS->SsCode == pDoc->DocSSchema->SsCode)
+	       /* c'est un element du document lui-meme. On prend le numero
+		  de la vue dans le schema de presentation qui la definit */
+	       viewSch = pView->DvPSchemaView;
+	    else
+	       /* c'est un element d'un objet d'une autre nature */
+	       viewSch = GetGestView (pView, pSS);
+	 else
+	    /* c'est une vue propre a une nature d'objets */
+	    if (pSS->SsPSchema == pView->DvSSchema->SsPSchema ||
+		pEl->ElParent == NULL)
+	       /* c'est un objet de cette nature ou la racine du document */
+	       /* numero de la vue dans le schema de presentation qui la
+		  definit*/
+	       viewSch = pView->DvPSchemaView;
+	    else
+	       /* l'element est-il dans un objet de cette nature ? */
+	       /* Si ce n'est pas le cas, il ne doit pas apparaitre dans */
+	       /* cette vue */
 	       {
-		  pAsc = pEl;
-		  while (pAsc != NULL && viewSch == 0)
-		     if (pAsc->ElStructSchema->SsPSchema == pView->DvSSchema->SsPSchema)
-			/* on est dans un objet de cette nature */
-			/* on applique les regles de la vue 1 */
-			viewSch = 1;
-		     else
-			pAsc = pAsc->ElParent;
+	       pAsc = pEl;
+	       while (pAsc != NULL && viewSch == 0)
+		  if (pAsc->ElStructSchema->SsPSchema ==
+		      pView->DvSSchema->SsPSchema)
+		     /* on est dans un objet de cette nature */
+		     viewSch = GetGestView (pView, pSS);
+		  else 
+		     pAsc = pAsc->ElParent;
 	       }
-	  }
-     }
+	 }
+      }
    return viewSch;
 }
-
 
 /*----------------------------------------------------------------------
    Delay met une regle de presentation en attente au niveau du   

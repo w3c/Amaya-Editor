@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -961,36 +952,39 @@ char*               viewName;
    PtrElement          pEl;
    DocViewDescr        dView;
    int                 aView;
+   CHAR_T              ViewName[MAX_LENGTH];
 
    UserErrorCode = 0;
    view = 0;
    /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS) {
+   if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   } else if (LoadedDocument[document - 1] == NULL) {
-          TtaError (ERR_invalid_document_parameter);
-   } else {
-          CHAR_T ViewName[MAX_LENGTH];
-          iso2wc_strcpy (ViewName, viewName);
-          /* parameter document is ok */
-          pDoc = LoadedDocument[document - 1];
-          /* search in the opened views of the main tree */
-          for (aView = 1; aView <= MAX_VIEW_DOC && view == 0; aView++) {
-              dView = pDoc->DocView[aView - 1];
-              if (dView.DvSSchema != NULL && dView.DvPSchemaView != 0)
-                 if (ustrcmp (ViewName, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1]) == 0)
-                    view = aView;
-		  }
-          if (view == 0)
-             /* If not found, searching in the views of associated elements */
-             for (aView = 1; aView <= MAX_ASSOC_DOC && view == 0; aView++) {
-                 pEl = pDoc->DocAssocRoot[aView - 1];
-                 if (pEl != NULL)
-                    if (pDoc->DocAssocFrame[aView - 1] != 0)
-                       if (ustrcmp (ViewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
-                          view = aView + 100;
-			 }
-   }
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else
+      {
+      iso2wc_strcpy (ViewName, viewName);
+      /* parameter document is ok */
+      pDoc = LoadedDocument[document - 1];
+      /* search in the opened views of the main tree */
+      for (aView = 1; aView <= MAX_VIEW_DOC && view == 0; aView++)
+	 {
+	 dView = pDoc->DocView[aView - 1];
+	 if (dView.DvSSchema != NULL && dView.DvPSchemaView != 0)
+	   if (ustrcmp (ViewName, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1]) == 0)
+	      view = aView;
+	 }
+      if (view == 0)
+	 /* If not found, searching in the views of associated elements */
+	 for (aView = 1; aView <= MAX_ASSOC_DOC && view == 0; aView++)
+	    {
+	    pEl = pDoc->DocAssocRoot[aView - 1];
+	    if (pEl != NULL)
+	       if (pDoc->DocAssocFrame[aView - 1] != 0)
+		  if (ustrcmp (ViewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		     view = aView + 100;
+	    }
+      }
    return view;
 }
 

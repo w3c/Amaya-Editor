@@ -5,7 +5,9 @@
 PRESENTATION GraphML;
 
 VIEWS
-   Formatted_view, Graph_Structure_view;
+   Formatted_view,
+   Graph_Structure_view merge with Structure_view
+                                   Math_Structure_view;
 
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 12 pt

@@ -1,22 +1,13 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
-   This module loads a presentation schema from a .PRS file
-
+ * This module loads a presentation schema from a .PRS file
+ *
  */
 
 #include "thot_sys.h"
@@ -31,7 +22,6 @@
 #include "platform_tv.h"
 
 static ThotBool     error;
-
 
 #include "fileaccess_f.h"
 #include "memory_f.h"
@@ -1392,7 +1382,8 @@ PtrSSchema          pSS;
    PathBuffer          dirBuffer;
    BinFile             file;
    CHAR_T              buf[MAX_TXT_LEN];
-   int                 InitialNElems, i, j, l;
+   int                 InitialNElems, i, j, k, l;
+   PtrHostView         pHostView, prevHostView;
    ThotBool            ret;
 
    error = FALSE;
@@ -1424,10 +1415,30 @@ PtrSSchema          pSS;
 	/* lit le nom du schema de structure correspondant */
 	TtaReadName (file, pPSch->PsStructName);
 	TtaReadShort (file, &pPSch->PsStructCode);
+	/* read the name of all declared views */
 	error = !TtaReadShort (file, &pPSch->PsNViews);
 	if (!error)
 	   for (i = 0; i < pPSch->PsNViews; i++)
 	      TtaReadName (file, pPSch->PsView[i]);
+        /* read the name of all host view for each declared view */
+	if (!error)
+	   for (i = 0; i < pPSch->PsNViews; i++)
+	      {
+	      TtaReadShort (file, &j);
+	      prevHostView = NULL;
+	      if (!error)
+	         for (k = 0; k < j; k++)
+		    {
+		    pHostView = TtaGetMemory (sizeof(HostView));
+		    TtaReadName (file, pHostView->HostViewName);
+		    pHostView->NextHostView = NULL;
+		    if (prevHostView)
+		      prevHostView->NextHostView = pHostView;
+		    else
+		      pPSch->PsHostViewList[i] = pHostView;
+		    prevHostView = pHostView;
+		    }
+	      }
 	if (!error)
 	   for (i = 0; i < pPSch->PsNViews; i++)
 	      TtaReadBool (file, &pPSch->PsPaginatedView[i]);
