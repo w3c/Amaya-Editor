@@ -135,7 +135,7 @@ AmayaFrame::~AmayaFrame()
   // it's possible to fall here if a frame is a child of a page but is not deleted
   // then if the page is closed, the frame is deleted by wxWidgets because the frame is a child of the page.
   // it's important to free the corresponding frame context
-  DestroyFrame( m_FrameId );
+  //DestroyFrame( m_FrameId );
   FrameTable[GetFrameId()].WdFrame = NULL;
 }
 
@@ -806,7 +806,7 @@ void AmayaFrame::FreeFrame()
   //  ReplaceDrawingArea( CreateDrawingArea() );
 
   // do not delete realy the frame because there is a strange bug
-  //  Destroy();
+  // Destroy();
 
   // Reactivate the menu bar (nothing is done if the window is goind to die)
   if (GetWindowParent())
