@@ -692,23 +692,18 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>If a table has no height= attribute, the height is computed by the
-        browser. If a table declares height= then ???? Most browsers will
-        check 'set' value against needed and use the maximum of the two.
-        Amaya uses the height setting to be consistent with the img height
-        attribute which normally scales image to the speced height but this
-        leaves problems if speced is less than needed TEXT. If there is no
-        specification on how to handle this conflict, it would be easy enough
-        to err in favor of the user by: a] setting height to default value b]
-        resetting height if height= attribute used c] computing what is
-        needed to prevent outside of border material (this routine is already
-        there for no height speced) d] comparing needed to height e] using
-        the maximum of the two values NEEDED and HEIGHT This routine would
-        work whether or not height was speced. and would prevent out of box
-        messages in most cases!</td>
+    <tr class="fixed">
+      <td>Wrong height of extended cells</td>
       <td></td>
       <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr class="fixed">
+      <td>Amaya gives a strangle result when the sum of percentage widths is
+        incorrect.</td>
+      <td></td>
+      <td></td>
       <td></td>
       <td></td>
     </tr>
