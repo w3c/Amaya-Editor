@@ -214,3 +214,13 @@ Alt <Key>t , Alt <Key>s:           SetOnOffSample()
 Alt <Key>t , Alt <Key>k:           SetOnOffKeyboard() 
 Alt <Key>t , Alt <Key>o:           SetOnOffBDO() 
 
+# Annotations
+
+Ctrl <Key>n , Ctrl <Key>s:	   AnnotateSelection()
+Ctrl <Key>n , Ctrl <Key>a:	   AnnotateDocument()
+Ctrl <Key>n , Ctrl <Key>p:	   PostAnnotation()
+Ctrl <Key>n , Ctrl <Key>d:	   DeleteAnnotation()
+Ctrl <Key>n , Ctrl <Key>l:	   LoadAnnotations()
+Ctrl <Key>n , Ctrl <Key>f:	   FilterAnnot()
+Ctrl <Key>n , Ctrl <Key>o:	   ConfigAnnot()
+
