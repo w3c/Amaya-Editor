@@ -499,6 +499,76 @@ CHAR_T*              str;
 }
 
 /*----------------------------------------------------------------------
+   TtaWC2ISOdup
+
+   Copy the WC string given in argument to a newly allocated piece of memory.
+
+   Parameters:
+   str: a zero terminated string.
+
+   See also:
+   TtaGetMemory.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char*              TtaWC2ISOdup (CHAR_T* str)
+#else  /* __STDC__ */
+char*              TtaWC2ISOdup (str)
+CHAR_T*            str;
+#endif /* __STDC__ */
+{
+   char*            res;
+   int              i, len = ustrlen (str);
+
+   if (str == NULL)
+      return (NULL);
+   res = TtaGetMemory (len + 1);
+   if (res == NULL)
+      return (res);
+
+   for (i = 0; i < len; i++)
+       res[i] = (char) str[i];
+
+   res[i] = 0;
+ 
+   return (res);
+}
+
+/*----------------------------------------------------------------------
+   TtaISO2WCdup
+
+   Copy the WC string given in argument to a newly allocated piece of memory.
+
+   Parameters:
+   str: a zero terminated string.
+
+   See also:
+   TtaGetMemory.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T*            TtaISO2WCdup (char* str)
+#else  /* __STDC__ */
+CHAR_T*            TtaISO2WCdup (str)
+char*              str;
+#endif /* __STDC__ */
+{
+   CHAR_T*          res;
+   int              i, len = strlen (str);
+
+   if (str == NULL)
+      return (NULL);
+   res = TtaAllocString (len + 1);
+   if (res == NULL)
+      return (res);
+
+   for (i = 0; i < len; i++)
+       res[i] = (CHAR_T) str[i];
+
+   res[i] = 0;
+ 
+   return (res);
+}
+
+/*----------------------------------------------------------------------
    TtaReAlloc increases the size of the memory block.                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
