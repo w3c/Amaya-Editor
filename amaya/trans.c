@@ -992,11 +992,14 @@ Document            doc;
    prevMatch = NULL;
    DMatch = sMatch;
    myFirstSelect = DMatch->MatchNode->Elem;
+   /* init an history sequence */
+   TtaOpenUndoSequence (doc, myFirstSelect, myLastSelect, 0, 0);
    selSch = (TtaGetElementType (myFirstSelect)).ElSSchema;
    courEl = myFirstSelect;
    /* PreviousHTMLSibling (&myFirstSelect);*/
    TtaPreviousSibling (&myFirstSelect);
    isClosed = TRUE;
+   
    while (myFirstSelect == NULL)
      {
        courEl = TtaGetParent (courEl);
@@ -1024,8 +1027,6 @@ Document            doc;
         isClosed = FALSE;
      }
     */
-
-   TtaOpenUndoSequence (doc, myFirstSelect, myLastSelect, 0, 0);
    
    while (DMatch != NULL)
      {
