@@ -1389,13 +1389,13 @@ boolean             generic;
     case PtHeight:
       rule->PrPresMode = PresImmediate;
       rule->PrDimRule.DrUnit = int_unit;
+      rule->PrDimRule.DrAttr = FALSE;
       if (generic)
 	{
 	  /* generate a complete rule Height=Enclosed.Height */
 	  rule->PrDimRule.DrPosition = FALSE;
 	  rule->PrDimRule.DrAbsolute = FALSE;
 	  rule->PrDimRule.DrSameDimens = TRUE;
-	  rule->PrDimRule.DrAttr = FALSE;
 	  rule->PrDimRule.DrRelation = RlEnclosed;
 	  rule->PrDimRule.DrNotRelat = FALSE;
 	  rule->PrDimRule.DrRefKind = RkElType;
@@ -1413,6 +1413,7 @@ boolean             generic;
     case PtWidth:
       rule->PrPresMode = PresImmediate;
       rule->PrDimRule.DrUnit = int_unit;
+      rule->PrDimRule.DrAttr = FALSE;
       if (generic)
 	{
 	  /* generate a complete rule Width=Enclosing.Width+value */
