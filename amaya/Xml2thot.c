@@ -4923,6 +4923,7 @@ void ParseExternalDocument (char     *fileName,
   ThotBool      xmlDec, docType, isXML, isKnown;
   ThotBool      savParsingError;
   ThotBool      use_ref = FALSE;
+  ThotBool      oldStructureChecking;
   char          charsetname[MAX_LENGTH];
   char          type[NAME_LENGTH];
   char         *extUseUri = NULL, *extUseId = NULL, *s = NULL, *htmlURL = NULL;
@@ -5085,6 +5086,9 @@ void ParseExternalDocument (char     *fileName,
 
   if (externalDoc != 0 && externalDoc != doc)
     {
+      /* Disable structure checking for the main document */
+      oldStructureChecking = TtaGetStructureChecking (doc);
+      TtaSetStructureChecking (FALSE, doc);
       if (use_ref)
 	{
 	  /* Move the target element of the external document
@@ -5159,6 +5163,8 @@ void ParseExternalDocument (char     *fileName,
 
       /* Remove the ParsingErrors file */
       RemoveParsingErrors (externalDoc);
+      /* Restore the structure checking for the main document*/
+      TtaSetStructureChecking (oldStructureChecking, doc);
     }
 
   /* Restore ParsingError indicator */
