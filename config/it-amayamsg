@@ -207,5 +207,5 @@
 205 Ritratto
 206 Paesaggio
 207 Abilita FTP (sperimentale)
-208 **In the current Amaya profile:
-209 **Tags/attributes are ignored - see the log file
+208 **Warning - in the current Amaya profile:
+209 **some tags/attributes have been discarded - see log file
