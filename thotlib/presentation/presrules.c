@@ -2550,18 +2550,22 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
 	  /* c'est la premiere fois qu'on applique la regle page a cet
 	     element. On cree pour cet element une regle de largeur qui
 	     lui donne la largeur de la boite page */
-          /* cherche d'abord la regle de largeur de l'element qui porte la
-	     regle Page */
-	  pRWidth = SearchPRule (&pSchP->PsElemPRule->ElemPres[pEl->ElTypeNumber-1],
-				 PtWidth, pPRule->PrViewNum);
-	  if (pRWidth)
+	  if (pPRule->PrPresBox[0] > 0)
+	    /* the Page rule refers to some Page box */
 	    {
-	      /* cherche la regle de largeur de la boite page referencee par la
+	      /* cherche d'abord la regle de largeur de l'element qui porte la
 		 regle Page */
-	      pPageWidthRule = SearchPRule (&pSchP->PsPresentBox->PresBox[pPRule->PrPresBox[0]-1]->PbFirstPRule, PtWidth, pPRule->PrViewNum);
-	      /* modifie la regle de largeur */
-	      pRWidth->PrPresMode = PresImmediate;
-	      pRWidth->PrDimRule = pPageWidthRule->PrDimRule;
+	      pRWidth = SearchPRule (&pSchP->PsElemPRule->ElemPres[pEl->ElTypeNumber-1],
+				     PtWidth, pPRule->PrViewNum);
+	      if (pRWidth)
+		{
+		  /* cherche la regle de largeur de la boite page referencee
+		     par la regle Page */
+		  pPageWidthRule = SearchPRule (&pSchP->PsPresentBox->PresBox[pPRule->PrPresBox[0]-1]->PbFirstPRule, PtWidth, pPRule->PrViewNum);
+		  /* modifie la regle de largeur */
+		  pRWidth->PrPresMode = PresImmediate;
+		  pRWidth->PrDimRule = pPageWidthRule->PrDimRule;
+		}
 	    }
 
 	  /* on cree une marque de page */
