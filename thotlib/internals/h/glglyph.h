@@ -21,6 +21,30 @@
 #include FT_GLYPH_H
 #include FT_TRUETYPE_IDS_H
 
+
+#indef FT_CURVE_TAG_CONIC
+#define FT_CURVE_TAG_CONIC FT_Curve_Tag_Conic
+#endif
+
+#indef FT_CURVE_TAG_ON
+#define FT_CURVE_TAG_ON FT_Curve_Tag_On
+#endif
+
+#indef FT_CURVE_TAG_CUBIC
+#define FT_CURVE_TAG_CUBIC FT_Curve_Tag_Cubic
+#endif
+
+#indef FT_OUTLINE_EVEN_ODD_FILL
+#define FT_OUTLINE_EVEN_ODD_FILL ft_outline_even_odd_fill
+#endif
+
+#indef FT_OUTLINE_REVERSE_FILL
+#define FT_OUTLINE_REVERSE_FILL ft_outline_reverse_fill
+#endif
+	
+#endif /* _GLPRINT */
+
+
 typedef struct _GL_glyph
 {
   FT_BBox   bbox;
