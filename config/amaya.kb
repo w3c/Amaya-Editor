@@ -75,10 +75,8 @@ Shift Ctrl <Key>S:                 SaveDocumentAs()
 Ctrl <Key>b , Ctrl <Key>b:         GotoPreviousHTML() 
 Ctrl <Key>b , Ctrl <Key>f:         GotoNextHTML() 
 <Key>F5:			   Reload() 
-Alt <Key>F4:	                   CloseDocument()
-Ctrl <Key>w:                       CloseDocument() 
+Ctrl <Key>w:                       AmayaCloseWindow() 
 Ctrl <Key>q:                       AmayaClose()
-Ctrl <Key>b , Ctrl <Key>v:         TtcCloseView()
 Ctrl <Key>b , Ctrl <Key>y:         Synchronize()
 
 #edit menu 
