@@ -17,6 +17,7 @@
 #include "trans.h"
 #include "html2thot_f.h"
 #include "transparse_f.h"
+#include "tree.h"
  
 /*
  * pattern matching stack associates a node of source structure tree to a 
@@ -1397,7 +1398,6 @@ strNode            *TN;
   char               *attrValue, *tag;
   strNode            *ancestor;
   boolean             found;
-  boolean             withZZGhost = FALSE;
   AttributeType       attrType;
   Attribute           attr;
   int                 l, attrKind;
@@ -2536,6 +2536,7 @@ Document            doc;
    if (CheckSelectionLevel (TransDoc))
      {
        nameSet = TtaGetMemory (NAME_LENGTH);
+       strcpy (nameSet, "");
        if (mySelect != NULL)
 	 {
 	   elType = TtaGetElementType (mySelect);
@@ -2547,8 +2548,6 @@ Document            doc;
 	       if (TtaSameSSchemas (elType.ElSSchema, resultType.ElSSchema))
 		 strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
 	     }
-	   else
-	     strcpy (nameSet, "");
 	 }
        else
 	 {
