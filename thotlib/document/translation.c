@@ -156,6 +156,7 @@ static int GetSecondaryFile (char *fName, PtrDocument pDoc, ThotBool open)
   The file buffer is written when the line limit is reatched.
   If the parameter translate is FALSE the character is written as this,
   in other case it will be translated according to the document encoding.
+  If the parameter entityName is TRUE
   ----------------------------------------------------------------------*/
 static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 		     ThotBool lineBreak, ThotBool translate,
@@ -184,6 +185,35 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	    mbc[nb_bytes2write++] = __CR__;
 	  mbc[nb_bytes2write++] = EOL;
 	  mbc[nb_bytes2write] = EOS;
+	}
+      else if (entityName &&
+	       (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
+	{
+	  if (c == 0X22) /* &quot; */
+	    {
+	      strcpy (&mbc[0], "&quot;");
+	      nb_bytes2write = 6;
+	    }
+	  else if (c == 0X26) /* &amp; */
+	    {
+	      strcpy (&mbc[0], "&amp;");
+	      nb_bytes2write = 5;
+	    }
+	  else if (c == 0X3C) /* &lt; */
+	    {
+	      strcpy (&mbc[0], "&lt;");
+	      nb_bytes2write = 4;
+	    }
+	  else if (c == 0X3E) /* &gt; */
+	    {
+	      strcpy (&mbc[0], "&gt;");
+	      nb_bytes2write = 4;
+	    }
+	  else if (c == 0XA0) /* &nbsp; */
+	    {
+	      strcpy (&mbc[0], "&nbsp;");
+	      nb_bytes2write = 6;
+	    }
 	}
       /* translate the input character */
       else if ((c > 127 && pDoc->DocCharset == US_ASCII) ||
@@ -527,7 +557,7 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
   TranslateText translate the text according to the current translation
   table.
   When the parameter attrVal is TRUE doublequotes are translated into
-  the entity &#34;.
+  the entity &quot;.
   ----------------------------------------------------------------------*/
 static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			   ScriptTransl *pTransAlph, ThotBool lineBreak,
@@ -645,20 +675,8 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	      while (pTSch->TsCharTransl[ft - 1].StTarget[j] != EOS)
 		{
 		  cs = pTSch->TsCharTransl[ft - 1].StTarget[j];
-		  if (attrVal && cs == 34)
-		    {
-		      /* write a numeric entity */
-		      PutChar ((wchar_t) '&', fnum, NULL, pDoc,
-			       FALSE, FALSE, FALSE);
-		      PutChar ((wchar_t) '#', fnum, NULL, pDoc,
-			       FALSE, FALSE, FALSE);
-		      PutInt (34, fnum, NULL, pDoc, FALSE);
-		      PutChar ((wchar_t) ';', fnum, NULL, pDoc,
-			       FALSE, FALSE, FALSE);
-		    }
-		  else
 		  PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak,
-			   TRUE, entityName);
+			   FALSE, entityName);
 		  j++;
 		}
 	      /* prepare la prochaine recherche dans la table */
@@ -692,18 +710,10 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	/* la table de traduction, on ne le traduit donc pas */
 	{
 	  ft = textTransBegin;
-	  if (attrVal && c == 34)
-	    {
-	      /* write a numeric entity */
-	      PutChar ((wchar_t) '&', fnum, NULL, pDoc,
-		       FALSE, FALSE, FALSE);
-	      PutChar ((wchar_t) '#', fnum, NULL, pDoc,
-		       FALSE, FALSE, FALSE);
-	      PutInt (34, fnum, NULL, pDoc, FALSE);
-	      PutChar ((wchar_t) ';', fnum, NULL, pDoc,
-		       FALSE, FALSE, FALSE);
-	    }
-	  else if (c != EOS)
+	  if (attrVal &&
+	      (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
+	    entityName = TRUE;
+	  if (c != EOS)
 	    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
 		     entityName);
 	}
@@ -728,20 +738,11 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	  if (c != EOS)
 	    {
 	      cs = (CHAR_T) pBufT->BuContent[i - 1];
-	      if (attrVal && cs == 34)
-		{
-		  /* write a numeric entity */
-		  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
-			   FALSE, FALSE, FALSE);
-		  PutChar ((wchar_t) '#', fnum, NULL, pDoc,
-			   FALSE, FALSE, FALSE);
-		  PutInt (34, fnum, NULL, pDoc, FALSE);
-		  PutChar ((wchar_t) ';', fnum, NULL, pDoc,
-			   FALSE, FALSE, FALSE);
-		}
-	      else
-		PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE,
-			 entityName);
+	      if (attrVal &&
+		  (cs == 0X22 || cs == 0X26 || cs == 0X3C || cs == 0X3E || cs == 0XA0))
+		entityName = TRUE;
+	      PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE,
+		       entityName);
 	    }
 	  b = 0;
 	  ft = textTransBegin;
@@ -767,16 +768,10 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
    for (i = 0; i <= b - 1; i++)
      {
        c = (CHAR_T) pTSch->TsCharTransl[ft - 1].StSource[i];
-       if (attrVal && c == 34)
-	 {
-	   /* write a numeric entity */
-	   PutChar ((wchar_t) '&', fnum, NULL, pDoc, FALSE, FALSE, FALSE);
-	   PutChar ((wchar_t) '#', fnum, NULL, pDoc, FALSE, FALSE, FALSE);
-	   PutInt (34, fnum, NULL, pDoc, FALSE);
-	   PutChar ((wchar_t) ';', fnum, NULL, pDoc, FALSE, FALSE, FALSE);
-	 }
-       else
-	 PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE, entityName);
+       if (attrVal &&
+	   (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
+	 entityName = TRUE;
+       PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE, entityName);
      }
 }
 
@@ -792,10 +787,11 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
   PtrTextBuffer       pBufT;
   ScriptTransl       *pTransAlph;
   StringTransl       *pTrans;
+  PtrElement          pParent;
   CHAR_T              c;
   char                ci;
   int                 i, j, b, ft, lt;
-  ThotBool            entityName;
+  ThotBool            entityName, encode;
 
   pTransAlph = NULL;
   lt = 0;
@@ -814,6 +810,14 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	/* la feuille n'est pas vide */
 	{
 	  pBufT = pEl->ElText;	/* 1er buffer a traiter */
+	  /* characters are encoded
+	     except for hidden (internal) elements */
+	  pParent = pEl->ElParent;
+	  if (pParent)
+	    encode = !TypeHasException (ExcHidden, pParent->ElTypeNumber,
+					pParent->ElStructSchema);
+	  else
+	    encode = TRUE;
 	  entityName = !strcmp (pEl->ElStructSchema->SsName, "MathML");
 	  if (!pTransAlph || !transChar)
 	    /* on ne traduit pas quand la table de traduction est vide */
@@ -824,8 +828,12 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 		while (pBufT->BuContent[i] != EOS)
 		  {
 		    c = pBufT->BuContent[i++];
-		    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
-			     entityName);
+		    if (encode)
+		      PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
+			       entityName);
+		    else
+		      PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, FALSE,
+			       entityName);
 		  }
 		pBufT = pBufT->BuNext;
 	      }
@@ -835,7 +843,6 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 			   pDoc, FALSE, entityName);
 	}
       break;
-
     case LtSymbol:
     case LtGraphics:
     case LtPolyLine:
@@ -965,12 +972,6 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	    }
 	}
       break;
-
-    case LtPath:
-    case LtPageColBreak:
-    case LtReference:
-      break;		/* On ne fait rien */
-
     default:
       break;
     }
@@ -980,7 +981,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
    PresRuleValue      retourne le code caractere de la valeur de la   
    regle de presentation specifique pointee par pPRule.            
   ----------------------------------------------------------------------*/
-static unsigned char  PresRuleValue (PtrPRule pPRule)
+static unsigned char PresRuleValue (PtrPRule pPRule)
 {
    unsigned char        val;
 
@@ -2492,7 +2493,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
   /* on applique la regle selon son type */
   switch (pTRule->TrType)
     {
-      
     case TCreate:
     case TWrite:
       /* regle d'ecriture dans un fichier de sortie ou au terminal */
@@ -2537,12 +2537,10 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		       NULL, pDoc, *lineBreak, TRUE, FALSE);
 	    }
 	  break;
-
 	case ToVariable:	/* creation d'une variable */
 	  PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrObjectNum,
 		       pTRule->TrReferredObj, NULL, fnum, pDoc, *lineBreak);
 	  break;
-
 	case ToAttr:
 	case ToTranslatedAttr:
 	  /* ecriture de la valeur d'un attribut */
@@ -2593,20 +2591,11 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			  while (i < pBuf->BuLength)
 			    {
 			      c = pBuf->BuContent[i++];
-			      if (encode && c == 34)
-				{
-				  /* write a numeric entity */
-				  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
-					   FALSE, FALSE, FALSE);
-				  PutChar ((wchar_t) '#', fnum, NULL, pDoc,
-					   FALSE, FALSE, FALSE);
-				  PutInt (34, fnum, NULL, pDoc, FALSE);
-				  PutChar ((wchar_t) ';', fnum, NULL, pDoc,
-					   FALSE, FALSE, FALSE);
-				}
-			      else
-				PutChar ((wchar_t) c, fnum, NULL, pDoc,
-					 FALSE, TRUE, FALSE);
+			      if (encode &&
+				  (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
+				entityName = TRUE;
+			      PutChar ((wchar_t) c, fnum, NULL, pDoc,
+				       FALSE, TRUE, entityName);
 			    }
 			  pBuf = pBuf->BuNext;
 			}
@@ -2634,12 +2623,10 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		break;
 	      }
 	  break;
-
 	case ToContent:
 	  /* produit le contenu des feuilles de l'element */
 	  PutContent (pEl, *transChar, *lineBreak, fnum, pDoc);
 	  break;
-
 	case ToPRuleValue:
 	  /* produit la valeur numerique de la presentation a laquelle */
 	  /* se rapporte la regle */
@@ -2656,7 +2643,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      case PtUnicodeBidi:
 	      case PtVisibility:
 	      case PtLineStyle:
-		PutChar ((wchar_t) (pRPres->PrChrValue), fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
+		PutChar ((wchar_t) (pRPres->PrChrValue), fnum, NULL, pDoc,
+			 *lineBreak, FALSE, FALSE);
 		break;
 	      case PtIndent:
 	      case PtSize:
@@ -2701,7 +2689,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		break;
 	      }
 	  break;
-
 	case ToAllAttr:
 	  /* produit la traduction de tous les attributs de l'element */
 	  ApplyAttrRules (pTRule->TrOrder, pEl, removeEl, ignoreEl, transChar,
@@ -2709,7 +2696,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  /* les regles des attributs ont ete appliquees */
 	  pEl->ElTransAttr = TRUE;
 	  break;
-	  
 	case ToAllPRules:
 	  /* produit la traduction de toutes les regles de presentation */
 	  /* specifique portees par l'element */
@@ -2718,7 +2704,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  /* marque dans l'element que sa presentation a ete traduite */
 	  pEl->ElTransPres = TRUE;
 	  break;
-	  
 	case ToPairId:
 	  /* traduit l'identificateur d'une paire */
 	  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber-1]->SrConstruct ==
@@ -2726,39 +2711,37 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	    /* l'element est bien une paire */
 	    PutInt (pEl->ElPairIdent, fnum, NULL, pDoc, *lineBreak);
 	  break;
-
 	case ToFileDir:
 	  /* produit le nom du directory */
 	  i = 0;
 	  while (fileDirectory[i] != EOS)
-	    PutChar ((wchar_t) fileDirectory[i++], fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) fileDirectory[i++], fnum, NULL, pDoc, *lineBreak,
+		     TRUE, FALSE);
 	  break;
-
 	case ToFileName:
 	  /* produit le nom de fichier */
 	  i = 0;
 	  while (fileName[i] != EOS)
-	    PutChar ((wchar_t) fileName[i++], fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) fileName[i++], fnum, NULL, pDoc, *lineBreak,
+		     TRUE, FALSE);
 	  break;
-
 	case ToExtension:
 	  i = 0;
 	  while (fileExtension[i] != EOS)
-	    PutChar ((wchar_t) fileExtension[i++], fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) fileExtension[i++], fnum, NULL, pDoc, *lineBreak,
+		     TRUE, FALSE);
 	  break;
-	  
 	case ToDocumentName:
 	  i = 0;
 	  while (pDoc->DocDName[i] != EOS)
-	    PutChar ((wchar_t) (pDoc->DocDName[i++]), fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) (pDoc->DocDName[i++]), fnum, NULL, pDoc, *lineBreak,
+		     TRUE, FALSE);
 	  break;
-
 	case ToDocumentDir:
 	  i = 0;
 	  while (pDoc->DocDirectory[i] != EOS)
 	    PutChar ((wchar_t) (pDoc->DocDirectory[i++]), fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 	  break;
-
 	case ToReferredDocumentName:
 	case ToReferredDocumentDir:
 	  pRef = NULL;
@@ -2818,7 +2801,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		  }
 	    }
 	  break;
-
 	case ToReferredElem:
 	  /* traduit l'element reference' de type pTRule->TrObjectNum */
 	  pRef = NULL;
@@ -2875,7 +2857,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		}
 	    }
 	  break;
-
 	case ToRefId:
 	case ToReferredRefId:
 	  pElGet = NULL;
@@ -3003,7 +2984,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  break;
 	}
       break;
-      
     case TChangeMainFile:
       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar, FALSE,
 		   currentFileName, 0, pDoc, *lineBreak);
@@ -3030,7 +3010,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	    }
 	}
       break;
-
     case TRemoveFile:
       /* unlink a secondary file */
       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar,
@@ -3041,15 +3020,12 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  unlink (fname);
 	}
       break;
-
     case TSetCounter:
       pTSch->TsCounter[pTRule->TrCounterNum - 1].TnParam1 = pTRule->TrCounterParam;
       break;
-       
     case TAddCounter:
       pTSch->TsCounter[pTRule->TrCounterNum - 1].TnParam1 += pTRule->TrCounterParam;
       break;
-
     case TIndent:
       if (pTRule->TrIndentFileNameVar == 0)
 	/* sortie sur le fichier principal courant */
@@ -3084,7 +3060,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	    OutFile[fnum].OfIndent = 0;
 	}
       break;
-
     case TGet:
     case TCopy:
       /* on traduit l'element indique' dans la regle Get */
@@ -3183,15 +3158,11 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       /* On ne fait rien. Cette regle est utilisee uniquement */
       /* lors du chargement des schemas de traduction, au debut */
       /* du chargement du document a traduire. */
-      break;
     case TRemove:
     case TIgnore:
     case TNoTranslation:
     case TNoLineBreak:
-      /* On ne fait rien */
-      break;
     case TRead:
-      /* lecture au terminal */
       break;
     case TInclude:
       /* include a secondary file */
