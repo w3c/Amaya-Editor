@@ -1457,38 +1457,43 @@ CHAR_T*             msg;
 
 #endif
 {
-#  ifdef _I18N_
+#ifdef _I18N_
    unsigned char   mbcsMsg [MAX_TXT_LEN * 2];
    unsigned char*  ptrMbcsMas = &mbcsMsg[0];
-#  else  /* !_I18N_ */
+#else  /* !_I18N_ */
    unsigned char*  mbcsMsg = msg;
-#  endif /* _I18N_ */
+#endif /* _I18N_ */
 
-#  ifdef _I18N_
+#ifdef _I18N_
    TtaWCS2MBS (&msg, &ptrMbcsMas, UTF_8 /* ISO_8859_1 */);
    /* wcstombs (mbcsMsg, msg, MAX_TXT_LEN * 2); */
-#  endif /* _I18N_ */
+#endif /* _I18N_ */
 
    HTMLErrorsFound = TRUE;
-   if (!ErrFile) {
+   if (!ErrFile)
+     {
       usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP, doc, DIR_SEP);
       if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
          return;
-   }
+     }
 
-   if (doc == theDocument) {
+   if (doc == theDocument)
+     {
       /* the error message is related to the document being parsed */
-      if (docURL != NULL) {
+      if (docURL != NULL)
+	{
          fprintf (ErrFile, "*** Errors in %s\n", docURL);
-#        ifndef STANDALONE
+#ifndef STANDALONE
          TtaFreeMemory (docURL);
-#        endif /* STANDALONE */
+#endif /* STANDALONE */
          docURL = NULL;
-	  }
+	}
       /* print the line number and character number before the message */
       fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead, NumberOfCharRead, mbcsMsg);
-   } else /* print only the error message */
-          fprintf (ErrFile, "%s\n", mbcsMsg);
+   }
+   else
+     /* print only the error message */
+     fprintf (ErrFile, "%s\n", mbcsMsg);
 }
 
 /*----------------------------------------------------------------------
@@ -3258,7 +3263,8 @@ static void         StopParsing ()
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
-  InitConfirm (theDocument, 1, TtaGetMessage (AMAYA, AM_XML_ERROR));
+  InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
+  CurrentBufChar = 0;
 }
 
 /*----------------------------------------------------------------------

@@ -2175,13 +2175,17 @@ void                (*procedure) ();
 		       title_string = XmStringCreateSimple (label);
 		       XtSetArg (args[n], XmNlabelString, title_string);
 		       n++;
-		       XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-		       n++;
-		       XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
-		       n++;
-		       XtSetArg (args[n], XmNwidth, (Dimension) 60);
+		       /*XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
 		       n++;
 		       XtSetArg (args[n], XmNalignment, XmALIGNMENT_BEGINNING);
+		       n++;
+		       XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
+		       n++;*/
+		       XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
+		       n++;
+		       XtSetArg (args[n], XmNy, (Dimension) 10);
+		       n++;
+		       XtSetArg (args[n], XmNwidth, (Dimension) 60);
 		       n++;
 		       w = XmCreateLabel (rowh, "Dialogue", args, n);
 		       XtManageChild (w);
@@ -2744,14 +2748,12 @@ int                 doc;
    ThotWidget          vbox3;
    ThotWidget          menu_item;
    ThotWidget          logo_pixmap;
-   ThotWidget          table2;
    ThotWidget          table3;
    ThotWidget          table4;
    ThotWidget          table5;
    ThotWidget          entry1;
    ThotWidget          entry2;
    ThotWidget          label1;
-   ThotWidget          label2;
    ThotWidget          statusbar;
    ThotWidget          toolbar;
    GdkPixmap          *amaya_pixmap;
@@ -3110,17 +3112,8 @@ int                 doc;
 	   table1 = gtk_table_new (2, 2, FALSE);
 	   gtk_widget_show (table1);
 	   gtk_box_pack_start (GTK_BOX (hbox1), table1, TRUE, TRUE, 0);
-	   
-	   table2 = gtk_table_new (1, 1, FALSE);
-	   gtk_widget_show (table2);
-	   gtk_table_attach (GTK_TABLE (table1), table2, 0, 1, 0, 1,
-			     (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) GTK_FILL, 0,0);
-
-	   label1 = gtk_label_new ("Adress");
+	   label1 = gtk_label_new ("URL");
 	   gtk_widget_show (label1);
-	   gtk_table_attach (GTK_TABLE (table2), label1, 0, 1, 0, 1,
-			     (GtkAttachOptions) GTK_EXPAND | GTK_FILL,
-			     (GtkAttachOptions)  GTK_EXPAND | GTK_FILL, 0,0);
 	   gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
 	   gtk_misc_set_padding (GTK_MISC (label1), 10, 5);
 
@@ -3128,14 +3121,6 @@ int                 doc;
 	   gtk_widget_show (table3);
 	   gtk_table_attach (GTK_TABLE (table1), table3, 0, 1, 1, 2,
 			     (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) GTK_FILL, 0,0);
-	   label2 = gtk_label_new ("Title ");
-	   gtk_widget_show (label2);
-	   gtk_table_attach (GTK_TABLE (table3), label2, 0, 1, 0, 1,
-			     (GtkAttachOptions) GTK_EXPAND | GTK_FILL,
-			     (GtkAttachOptions)  GTK_EXPAND | GTK_FILL, 0,0);
-	   gtk_label_set_justify (GTK_LABEL (label2), GTK_JUSTIFY_LEFT);
-	   gtk_misc_set_padding (GTK_MISC (label2), 10, 5);
-
 	   table4 = gtk_table_new (1, 1, FALSE);
 	   gtk_widget_show (table4);
 	   gtk_table_attach (GTK_TABLE (table1), table4, 1, 2, 0, 1,

@@ -15,7 +15,7 @@
 14 Finished!
 15 Select the target
 16 Invalid target
-17 URL
+17 Address
 18 Title
 19 Document modified. All changes will be lost. Do you want to continue ?
 20 Redirection fetching of %s
@@ -64,11 +64,11 @@
 63 Save to disk ?
 64 Copy Images
 65 Transform URLs
-66 URL
+66 Document location
 67 Images directory
 68 Object location
 69 CSS files
-70 Amaya - the W3C editor/browser for the Web
+70 the W3C editor/browser for the Web
 71 (mail issues to www-amaya@w3.org)
 72 Can't handle URLs having more than %s chars
 73 Only default type is allowed

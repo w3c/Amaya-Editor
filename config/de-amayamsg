@@ -15,7 +15,7 @@
 14 Laden beendet!
 15 Wähle Ziel
 16 Ungültiges Ziel
-17 URL
+17 Adresse
 18 Titel
 19 Alle Änderungen gehen verloren - Möchten Sie fortfahren ? 
 20 Lade Weiterleitung: %s
@@ -64,11 +64,11 @@
 63 Speichern auf Festplatte?
 64 Grafiken speichern
 65 Absolute Verknüpfungszieladressen
-66 URL
+66 Dokumentenadresse
 67 Grafik(unter)verzeichnis
 68 Objektadresse
 69 Stylesheetdatei wählen
-70 Amaya - der W3C Web-Browser und -Editor 
+70 der W3C Web-Browser und -Editor 
 71 ** (mail issues to www-amaya@w3.org))
 72 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
 73 Nur Standardtyp erlaubt

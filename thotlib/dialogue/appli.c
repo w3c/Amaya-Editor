@@ -405,7 +405,7 @@ void               *ev;
    if (frame > 0 && frame <= MAX_FRAME)
      {
        /* ne pas traiter si le document est en mode NoComputedDisplay */
-       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
+       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay/*DisplayImmediately*/)
 	 {
 	   DefRegion (frame, x, y, x + l, y + h);
 	   if (ThotLocalActions[T_switchsel])

@@ -689,9 +689,11 @@ CHAR_T                c;
          ustrcasecmp (&inputBuffer[i], XMLrootClosingTag))
 	/* wrong closing tag */
 	{
-        usprintf (msgBuffer, TEXT("Unexpected end tag </%s> instead of </%s>"),
-	         inputBuffer, XMLrootClosingTag);
-        ParseHTMLError (currentDocument, msgBuffer);
+	  usprintf (msgBuffer, TEXT("Unexpected end tag </%s> instead of </%s>"),
+		    inputBuffer, XMLrootClosingTag);
+	  ParseHTMLError (currentDocument, msgBuffer);
+	  normalTransition = FALSE;
+	  XMLabort = TRUE;
 	}
      }
   else
@@ -704,6 +706,8 @@ CHAR_T                c;
           usprintf (msgBuffer, TEXT("Unexpected XML end tag </%s> instead of </%s>"),
 	           inputBuffer, XMLelementType[stackLevel - 1]);
           ParseHTMLError (currentDocument, msgBuffer);
+	  normalTransition = FALSE;
+	  XMLabort = TRUE;
           }
  
   /* the input buffer is now empty */
@@ -790,6 +794,8 @@ CHAR_T                c;
            /* this attribute already exists for the current element */
            usprintf (msgBuffer, TEXT("Duplicate XML attribute %s"), inputBuffer);
            ParseHTMLError (currentDocument, msgBuffer);	
+	   normalTransition = FALSE;
+	   XMLabort = TRUE;
 	   }
         else
 	   {
@@ -1059,6 +1065,8 @@ CHAR_T                c;
 	 currentState = 0;
 	 /* error message */
 	 ParseHTMLError (currentDocument, TEXT("Invalid decimal entity"));
+	 normalTransition = FALSE;
+	 XMLabort = TRUE;
 	 }
 }
 
@@ -1134,6 +1142,8 @@ CHAR_T                c;
 	 currentState = 0;
 	 /* error message */
 	 ParseHTMLError (currentDocument, TEXT("Invalid hexadecimal entity"));
+	 normalTransition = FALSE;
+	 XMLabort = TRUE;
 	 }
 }
 
@@ -1150,6 +1160,9 @@ CHAR_T                c;
 #endif
 {
    ParseHTMLError (currentDocument, TEXT("Invalid XML syntax"));
+   normalTransition = FALSE;
+   XMLabort = TRUE;
+
 }
 
 /*----------------------------------------------------------------------
@@ -1361,7 +1374,11 @@ CHAR_T                c;
 {
    inputBuffer[bufferLength] = EOS;
    if (bufferLength < 1 || inputBuffer[bufferLength-1] != '?')
+     {
       ParseHTMLError (currentDocument, TEXT("Missing question mark"));
+      normalTransition = FALSE;
+      XMLabort = TRUE;
+     }
    else
       /* process the Processing Instruction available in inputBuffer */
       {
@@ -1704,7 +1721,7 @@ CHAR_T*   closingTag;
   oldlastTagRead = lastTagRead;
   lastTagRead = FALSE;
   oldStackLevel = stackLevel;
-
+  XMLabort = FALSE;
   inputBuffer[0] = EOS;
   bufferLength = 0;
   entityName[0] = EOS;
@@ -1863,7 +1880,7 @@ CHAR_T*   closingTag;
 			{
 			if (!error)
 			   {
-			   ParseHTMLError (currentDocument, TEXT("Invalid XML syntax"));
+			   XMLerror (charRead);
 			   error = TRUE;
 			   }
 			charRead = EOS;
