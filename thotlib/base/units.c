@@ -33,7 +33,7 @@ int                 value;
 
 #endif /* __STDC__ */
 {
-   return ((value * DOT_PER_INCHE) / DOT_PER_INCHE);
+   return ((value * 72 + 36) / DOT_PER_INCHE);
 }
 
 
@@ -48,7 +48,7 @@ int                 value;
 
 #endif /* __STDC__ */
 {
-   return ((value * DOT_PER_INCHE + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
+   return ((value * DOT_PER_INCHE + DOT_PER_INCHE / 2) / 72);
 }
 
 

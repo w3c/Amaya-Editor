@@ -450,7 +450,7 @@ NotifyPresentation *event;
 		 elType.ElTypeNum == HTML_EL_Heading_cell ||
 		 elType.ElTypeNum == HTML_EL_Object ||
 #ifdef GRAPHML
-		 elType.ElTypeNum == HTML_EL_XMLgraphics ||
+		 elType.ElTypeNum == HTML_EL_XMLGraphics ||
 #endif /* GRAPHML */
 		 elType.ElTypeNum == HTML_EL_Applet))
 	      {

@@ -186,7 +186,6 @@ EXCEPT
    Spline:		MoveResize, HighlightChildren;
    ClosedSpline:	MoveResize, HighlightChildren;
    Group:               MoveResize;
-   GRAPHICS:		NoMove, NoResize;
    PICTURE:		MoveResize;
 
    Invalid_attribute:	Invisible;

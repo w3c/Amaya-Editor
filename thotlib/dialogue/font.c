@@ -398,7 +398,7 @@ PtrAbstractBox      pAb;
 }
 
 /*----------------------------------------------------------------------
- *  PixelValue computes the logical value for a given pixel size.
+ *  LogicalValue computes the logical value for a given pixel size.
  *		pAb is the current Pave except for UnPercent unit
  *		here it hold the comparison value.
   ----------------------------------------------------------------------*/

@@ -1504,15 +1504,17 @@ int                *max;
 	   /* it's not the root box */
 	   if (horizRef
 	       /* et le pParentAb ne depend pas de son contenu */
-	       && (pParentAb->AbBox->BxContentWidth
-		   || (!pParentAb->AbWidth.DimIsPosition && pParentAb->AbWidth.DimMinimum))
+	       && pParentAb->AbBox->BxContentWidth
+	       && !pParentAb->AbWidth.DimIsPosition
+	       && !pParentAb->AbWidth.DimMinimum
 	       && pAb->AbHorizPos.PosAbRef == pParentAb
 	       && pAb->AbHorizPos.PosRefEdge != Left)
 	     ok = FALSE;
 	   else if (!horizRef
 		    /* et le pParentAb ne depend pas de son contenu */
-		    && (pParentAb->AbBox->BxContentHeight
-			|| (!pParentAb->AbHeight.DimIsPosition && pParentAb->AbHeight.DimMinimum))
+		    && pParentAb->AbBox->BxContentHeight
+		    && !pParentAb->AbHeight.DimIsPosition
+		    && !pParentAb->AbHeight.DimMinimum
 		    && pAb->AbVertPos.PosAbRef == pParentAb
 		    && pAb->AbVertPos.PosRefEdge != Top)
 	     ok = FALSE;
@@ -1838,13 +1840,9 @@ int                *max;
    /* d'une boite construite ou de type texte                  */
    else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
      {
-       if (horizRef
-	   && (pBox->BxContentWidth
-	       || (!pAb->AbWidth.DimIsPosition && !pAb->AbWidth.DimMinimum)))
+       if (horizRef && pBox->BxContentWidth && !pAb->AbWidth.DimMinimum)
 	 ok = FALSE;
-       else if (!horizRef
-		&& (pBox->BxContentHeight
-		    || (!pAb->AbHeight.DimIsPosition && !pAb->AbHeight.DimMinimum)))
+       else if (!horizRef && pBox->BxContentHeight && !pAb->AbHeight.DimMinimum)
 	 ok = FALSE;
      }
    else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
