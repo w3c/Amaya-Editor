@@ -181,7 +181,7 @@ char               *filename;
 #ifdef __STDC__
 static int          ThotDirBrowse_copyFile (ThotDirBrowse * me)
 #else  /* __STDC__ */
-static int          ThotDirBrowse_copyFileName (me)
+static int          ThotDirBrowse_copyFile (me)
 ThotDirBrowse      *me;
 
 #endif /* __STDC__ */
