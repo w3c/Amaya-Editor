@@ -1772,9 +1772,9 @@ void CreateAddress (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  CreateTable
+  DoTableCreation 
   ----------------------------------------------------------------------*/
-void CreateTable (Document document, View view)
+void DoTableCreation (Document document)
 {
   ElementType         elType;
   Element             el, new_, cell, row;
@@ -1783,129 +1783,132 @@ void CreateTable (Document document, View view)
   char                stylebuff[50];
   int                 firstChar, i;
 
-   if (!HTMLelementAllowed (document))
-      return;
+  /* get the new Table element */
+  TtaSetDisplayMode (document, SuspendDisplay);
+  TtaLockTableFormatting ();
+  elType.ElSSchema = TtaGetSSchema ("HTML", document);
+  elType.ElTypeNum = HTML_EL_Table;
+  TtaCreateElement (elType, document);
+  /* close the undo sequence if it's still open */
+  TtaCloseUndoSequence (document);
+  TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
+  if (el != NULL)
+    el = TtaGetTypedAncestor (el, elType);
+  if (el != NULL)
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_Border;
+      attr = TtaGetAttribute (el, attrType);
+      if (TtaGetDocumentProfile(document) == L_Basic)
+	{
+	  /* remove the Border attribute */
+	  if (attr != NULL)
+	    TtaRemoveAttribute (el, attr, document);
+	  /* generate a border style */
+	  attrType.AttrTypeNum = HTML_ATTR_Style_;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, document);
+	  sprintf (stylebuff, "border: solid %dpx", TBorder);
+	  TtaSetAttributeText (attr, stylebuff, el, document);	       
+	}
+      else if (attr && TBorder == 0)
+	/* the table has a Border attribute but the user don't want
+	   any border. Remove the attribute */
+	TtaRemoveAttribute (el, attr, document);
+      else
+	{
+	  if (attr == NULL)
+	    /* the Table has no Border attribute, create one */
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, document);
+	    }
+	  TtaSetAttributeValue (attr, TBorder, el, document);
+	}
+      
+      elType.ElTypeNum = HTML_EL_Table_cell;
+      cell = TtaSearchTypedElement (elType, SearchInTree, el);
+      elType.ElTypeNum = HTML_EL_Data_cell;
+      if (cell == NULL)
+	/* look for a data cell */
+	cell = TtaSearchTypedElement (elType, SearchInTree, el);
+      else
+	{
+	  /* replace the cell element by a data cell */
+	  new_ = TtaNewTree (document, elType, "");
+	  TtaInsertSibling (new_, cell, FALSE, document);
+	  TtaRemoveTree (cell, document);
+	  cell = new_;
+	}
+      
+      while (NumberCols > 1)
+	{
+	  new_ = TtaNewTree (document, elType, "");
+	  TtaInsertSibling (new_, cell, FALSE, document);
+	  NumberCols--;
+	}
+      
+      if (NumberRows > 1)
+	{
+	  elType.ElTypeNum = HTML_EL_Table_row;
+	  row = TtaSearchTypedElement (elType, SearchInTree, el);
+	  while (NumberRows > 1)
+	    {
+	      new_ = TtaNewElement (document, elType);
+	      TtaInsertSibling (new_, row, FALSE, document);
+	      NumberRows--;
+	    }
+	} 
+      CheckAllRows (el, document, FALSE, FALSE);
+    }
+  TtaUnlockTableFormatting ();
+  TtaSetDisplayMode (document, DisplayImmediately);
+}
 
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
-   if (elType.ElSSchema)
-     {
-       /* check the selection */
-       if (TtaIsSelectionEmpty ())
-	 /* selection empty.  Display the Table dialogue box */
-	 {
-	   NumberRows = 2;
-	   NumberCols = 2;
-	   TBorder = 1;
+/*----------------------------------------------------------------------
+  CreateTable
+  ----------------------------------------------------------------------*/
+void CreateTable (Document document, View view)
+{
+  ElementType         elType;
+
+  if (!HTMLelementAllowed (document))
+    return;
+  elType.ElSSchema = TtaGetSSchema ("HTML", document);
+  if (elType.ElSSchema)
+    {
+      /* check the selection */
+      if (TtaIsSelectionEmpty ())
+	/* selection empty.  Display the Table dialogue box */
+	{
+	  NumberRows = 2;
+	  NumberCols = 2;
+	  TBorder = 1;
 #ifdef _WINGUI
-	   CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
+	  CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
 #else  /* !_WINGUI */
-	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
-		       TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TRUE, 1, 'L', D_CANCEL);
-	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
-			     TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
-	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
-			     TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
-	   TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm,
-			     TtaGetMessage (AMAYA, AM_BORDER), 0, 50, TRUE);
-	   TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
-	   TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
-	   TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
-	   TtaSetDialoguePosition ();
-	   TtaShowDialogue (BaseDialog + TableForm, FALSE);
-	   /* wait for an answer */
-	   TtaWaitShowDialogue ();
+	  TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
+		      TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TRUE, 1, 'L', D_CANCEL);
+	  TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
+			    TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
+	  TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
+			    TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
+	  TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm,
+			    TtaGetMessage (AMAYA, AM_BORDER), 0, 50, TRUE);
+	  TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
+	  TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
+	  TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
+	  TtaSetDialoguePosition ();
+	  TtaShowDialogue (BaseDialog + TableForm, FALSE);
+	  /* wait for an answer */
+	  TtaWaitShowDialogue ();
 #endif /* !_WINGUI */
-	   if (!UserAnswer)
-	     return;
-	 }
-       else
-	 {
-	   NumberRows = 0;
-	   NumberCols = 0;
-	   TBorder = 1;
-	 } 
+	  if (!UserAnswer)
+	    return;
 
-       TtaSetDisplayMode (document, SuspendDisplay);
-       TtaLockTableFormatting ();
-       elType.ElTypeNum = HTML_EL_Table;
-       TtaCreateElement (elType, document);
-       /* close the undo sequence if it's still open */
-       TtaCloseUndoSequence (document);
-
-       /* get the new Table element */
-       TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
-       if (el != NULL)
-         el = TtaGetTypedAncestor (el, elType);
-       if (el != NULL)
-	 {
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_Border;
-	   attr = TtaGetAttribute (el, attrType);
-	   if (TtaGetDocumentProfile(document) == L_Basic)
-	     {
-	       /* remove the Border attribute */
-	       if (attr != NULL)
-		 TtaRemoveAttribute (el, attr, document);
-	       /* generate a border style */
-	       attrType.AttrTypeNum = HTML_ATTR_Style_;
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (el, attr, document);
-	       sprintf (stylebuff, "border: solid %dpx", TBorder);
-	       TtaSetAttributeText (attr, stylebuff, el, document);	       
-	     }
-	   else if (attr && TBorder == 0)
-	     /* the table has a Border attribute but the user don't want
-		any border. Remove the attribute */
-	     TtaRemoveAttribute (el, attr, document);
-	   else
-	     {
-	       if (attr == NULL)
-		 /* the Table has no Border attribute, create one */
-		 {
-		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (el, attr, document);
-		 }
-	       TtaSetAttributeValue (attr, TBorder, el, document);
-	     }
-
-	   elType.ElTypeNum = HTML_EL_Table_cell;
-	   cell = TtaSearchTypedElement (elType, SearchInTree, el);
-	   elType.ElTypeNum = HTML_EL_Data_cell;
-	   if (cell == NULL)
-	     /* look for a data cell */
-	     cell = TtaSearchTypedElement (elType, SearchInTree, el);
-	   else
-	     {
-	       /* replace the cell element by a data cell */
-	       new_ = TtaNewTree (document, elType, "");
-	       TtaInsertSibling (new_, cell, FALSE, document);
-	       TtaRemoveTree (cell, document);
-	       cell = new_;
-	     }
-
-	   while (NumberCols > 1)
-	     {
-	       new_ = TtaNewTree (document, elType, "");
-	       TtaInsertSibling (new_, cell, FALSE, document);
-	       NumberCols--;
-	     }
-
-	   if (NumberRows > 1)
-	     {
-	       elType.ElTypeNum = HTML_EL_Table_row;
-	       row = TtaSearchTypedElement (elType, SearchInTree, el);
-	       while (NumberRows > 1)
-		 {
-		   new_ = TtaNewElement (document, elType);
-		   TtaInsertSibling (new_, row, FALSE, document);
-		   NumberRows--;
-		 }
-	     } 
-	   CheckAllRows (el, document, FALSE, FALSE);
-	 }
-       TtaUnlockTableFormatting ();
-       TtaSetDisplayMode (document, DisplayImmediately);
-     }
+	  DoTableCreation (document);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -105,6 +105,7 @@ extern void CreateRuby ( Document document,
                          View view );
 extern void CreateAddress ( Document document,
                             View view );
+extern void DoTableCreation ( Document document );
 extern void CreateTable ( Document document,
                           View view );
 extern void CreateCaption ( Document document,
@@ -368,6 +369,7 @@ extern void CreateRuby ( Document document,
                            View view );
 extern void CreateAddress ( Document document,
                               View view );
+extern void DoTableCreation ( Document document );
 extern void CreateTable ( Document document,
                             View view );
 extern void CreateCaption ( Document document,

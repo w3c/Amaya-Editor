@@ -17,6 +17,8 @@
 #include "fetchXMLname_f.h"
 #include "undo.h"
 #include "MathML.h"
+
+#include "EDITORactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLtable_f.h"
 #include "MathMLbuilder_f.h"
@@ -2388,7 +2390,10 @@ void ColumnPasted (NotifyElement * event)
   ----------------------------------------------------------------------*/
 void TableCreated (NotifyElement * event)
 {
-  CurrentTable = event->element;
+  if (CurrentTable != event->element)
+    {
+      CurrentTable = event->element;
+    }
 }
 
 /*----------------------------------------------------------------------
