@@ -61,17 +61,16 @@ static SpecFont   FirstFontSel = NULL;
 #endif /* _I18N_ */
 
 #include "buildlines_f.h"
-#include "registry_f.h"
-#include "language_f.h"
+#include "dialogapi_f.h"
+#include "displaybox_f.h"
 #include "font_f.h"
+#include "language_f.h"
 #include "memory_f.h"
+#include "platform_f.h"
 #include "registry_f.h"
+#include "stix.h"
 #include "units_f.h"
 #include "windowdisplay_f.h"
-#include "windowdisplay_f.h"
-#include "platform_f.h"
-#include "displaybox_f.h"
-#include "stix.h"
 
 #ifdef _GTK
 #include <gdk/gdkx.h>
@@ -2451,7 +2450,7 @@ void ThotFreeAllFonts (void)
 void LoadingArabicFont (SpecFont fontset ,PtrFont *font)
 {
 #ifdef _I18N_
-  PtrFont      lfont, *pfont;
+  PtrFont      lfont;
   int          encoding;
   int          frame;
   unsigned int mask;
