@@ -377,6 +377,7 @@ void               *param;
 
    /*int                 new_rule = 0; */
    int                 exist;
+   ElementType	       elType;
 
    local.pschema = target;
    local.ctxt = ctxt;
@@ -446,6 +447,7 @@ void               *param;
     */
    if (new->selector == NULL)
      {
+	elType.ElSSchema = TtaGetDocumentSSchema (ctxt->doc); /*** should get the right SSchema ***/
 	string[0] = 0;
 	i = 0;
 	for (; i < MAX_ANCESTORS; i++)
@@ -455,7 +457,8 @@ void               *param;
 		  {
 		     if (string[0] != 0)
 			strcat (string, " ");
-		     strcat (string, GITagNameByType (new->ctxt->ancestors[i]));
+		     elType.ElTypeNum = new->ctxt->ancestors[i];
+		     strcat (string, GITagNameByType (elType));
 		  }
 	     }
 	if (new->ctxt->attr)
@@ -468,7 +471,8 @@ void               *param;
 	  {
 	     if (string[0] != 0)
 		strcat (string, " ");
-	     strcat (string, GITagNameByType (new->ctxt->type));
+	     elType.ElTypeNum = new->ctxt->type;
+	     strcat (string, GITagNameByType (elType));
 	  }
 	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_Class))
 	  {
@@ -476,7 +480,8 @@ void               *param;
 		strcat (string, " ");
 	     if (new->ctxt->attrelem)
 	       {
-		  strcat (string, GITagNameByType (new->ctxt->attrelem));
+		  elType.ElTypeNum = new->ctxt->attrelem;
+		  strcat (string, GITagNameByType (elType));
 	       }
 	     strcat (string, ".");
 	     strcat (string, new->ctxt->class);
@@ -487,7 +492,8 @@ void               *param;
 		strcat (string, " ");
 	     if (new->ctxt->attrelem)
 	       {
-		  strcat (string, GITagNameByType (new->ctxt->attrelem));
+		  elType.ElTypeNum = new->ctxt->attrelem;
+		  strcat (string, GITagNameByType (elType));
 	       }
 	     strcat (string, ":");
 	     strcat (string, new->ctxt->class);
@@ -498,7 +504,8 @@ void               *param;
 		strcat (string, " ");
 	     if (new->ctxt->attrelem)
 	       {
-		  strcat (string, GITagNameByType (new->ctxt->attrelem));
+		  elType.ElTypeNum = new->ctxt->attrelem;
+		  strcat (string, GITagNameByType (elType));
 	       }
 	     strcat (string, "#");
 	     strcat (string, new->ctxt->class);

@@ -1402,10 +1402,12 @@ PSchema             gPres;
   char               *deb = &sel[0];
   char               *elem = &sel[0];
   char               *cur = &sel[0];
-  int                 type, attr, attrval;
+  int                 attr, attrval;
+  ElementType         elType;
   char               *ancestors[MAX_ANCESTORS];
   int                 i, j;
   PresentationValue   unused;
+  SSchema	      HTMLschema;
 
   unused.data = 0;
   for (i = 0; i < MAX_ANCESTORS; i++)
@@ -1414,7 +1416,7 @@ PSchema             gPres;
       ctxt->ancestors[i] = 0;
       ctxt->ancestors_nb[i] = 0;
     }
-  
+
   /*
    * first format the first selector item, uniformizing blanks.
    */
@@ -1537,15 +1539,22 @@ PSchema             gPres;
       ctxt->class = NULL;
       ctxt->classattr = 0;
     }
-  
+
+  HTMLschema = TtaGetDocumentSSchema (doc);
   ctxt->type = ctxt->attr = ctxt->attrval = ctxt->attrelem = 0;
   if (attrelemname[0] != EOS) {
-    GIType (attrelemname, &ctxt->attrelem);
-    if (ctxt->attrelem == HTML_EL_BODY) ctxt->attrelem = HTML_EL_HTML;
+    GIType (attrelemname, &elType);
+    ctxt->attrelem = elType.ElTypeNum;
+    /*** what about elType.ElSSchema ?  ***/
+    if (ctxt->attrelem == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
+       ctxt->attrelem = HTML_EL_HTML;
   }
   
-  GIType (elem, &ctxt->type);
-  if (ctxt->type == HTML_EL_BODY) ctxt->type = HTML_EL_HTML;
+  GIType (elem, &elType);
+  ctxt->type = elType.ElTypeNum;
+  /*** what about elType.ElSSchema ?  ***/
+  if (ctxt->type == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
+     ctxt->type = HTML_EL_HTML;
   if ((ctxt->type == 0) && (ctxt->attr == 0) &&
       (ctxt->attrval == 0) && (ctxt->classattr == 0))
     {
@@ -1561,20 +1570,21 @@ PSchema             gPres;
     {
       if (ancestors[i] == NULL)
 	break;
-      type = attr = attrval = 0;
-      GIType (ancestors[i], &type);
-      if (type == HTML_EL_BODY) type = HTML_EL_HTML;
-      if (type == 0)
+      attr = attrval = 0;
+      GIType (ancestors[i], &elType);
+      if (elType.ElTypeNum == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
+	elType.ElTypeNum = HTML_EL_HTML;
+      if (elType.ElTypeNum == 0)
 	continue;
       for (j = 0; j < MAX_ANCESTORS; j++)
 	{
 	  if (ctxt->ancestors[j] == 0)
 	    {
-	      ctxt->ancestors[j] = type;
+	      ctxt->ancestors[j] = elType.ElTypeNum;
 	      ctxt->ancestors_nb[j] = 0;
 	      break;
 	    }
-	  if (ctxt->ancestors[j] == type)
+	  if (ctxt->ancestors[j] == elType.ElTypeNum)
 	    {
 	      ctxt->ancestors_nb[j]++;
 	      break;
@@ -4389,6 +4399,7 @@ Document            doc;
 {
    char                name[200];
    char               *cur = &name[0], *first, save;
+   SSchema	       schema;
 
    /* make a local copy */
    strncpy (name, class, 199);
@@ -4401,7 +4412,7 @@ Document            doc;
 	SKIP_WORD (cur);
 	save = *cur;
 	*cur = 0;
-	if (MapGI (first) == -1)
+	if (MapGI (first, &schema) == -1)
 	  {
 	     return (0);
 	  }

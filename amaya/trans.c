@@ -214,7 +214,7 @@ int                 depth;
       return;
    tag = TtaGetMemory (NAME_LENGTH);
    elemType = TtaGetElementType (elem);
-   strcpy (tag, GITagNameByType (elemType.ElTypeNum));
+   strcpy (tag, GITagNameByType (elemType));
    attr = NULL;
    TtaNextAttribute (elem, &attr);
    if (strcmp (tag, "???") && (TtaGetFirstChild (elem) != NULL || attr != NULL || TtaIsLeaf (elemType)))
@@ -1320,7 +1320,7 @@ strNode            *TN;
 	       {		/* searching for an ancestor of the source element which have the wanted attribute  */
 		  if (ancestor != NULL)
 		    {
-		       strcpy (tag, GITagNameByType ((int) (TtaGetElementType (ancestor->Elem).ElTypeNum)));
+		       strcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
 		       attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
 		    }
 		  attr = NULL;
@@ -1335,7 +1335,7 @@ strNode            *TN;
 			    ancestor = ancestor->Parent;
 			    if (ancestor != NULL)
 			      {
-				 strcpy (tag, GITagNameByType ((int) (TtaGetElementType (ancestor->Elem).ElTypeNum)));
+				 strcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
 				 attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
 			      }
 			 }
@@ -1856,8 +1856,8 @@ char               *prevtag;
 #endif
 {
 
-   ElementType         elemTypeChild;
-   int                 cardinal, prevTypeNum, typeNum, i;
+   ElementType         elemTypeChild, tagElType, prevElType;
+   int                 cardinal, i;
    ElementType 	      *subTypes;
    boolean             result, found;
    Construct           constOfType;
@@ -1868,55 +1868,55 @@ char               *prevtag;
    subTypes = (ElementType *)TtaGetMemory(cardinal * sizeof(ElementType));
    TtaGiveConstructorsOfType(&subTypes,&cardinal,elemType);
    constOfType = TtaGetConstructOfType(elemType);
-   GIType (tag, &typeNum);
-   if (typeNum == 0)
+   GIType (tag, &tagElType);
+   if (tagElType.ElTypeNum == 0)
       return FALSE;
    switch (constOfType)
       {
             case ConstructIdentity:
-               if (subTypes[0].ElTypeNum == typeNum)
+               if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 		  result = TRUE;
-	       else if (!strcmp (GITagNameByType (subTypes[0].ElTypeNum), "???"))
+	       else if (!strcmp (GITagNameByType (subTypes[0]), "???"))
 		  /* search if tag can beinserted as a child of the identity */
 		  result = IsValidHtmlChild (subTypes[0], tag, "");
 	       break;
 
 	    case ConstructList:
-	       if (subTypes[0].ElTypeNum == typeNum)
+	       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 		  result = TRUE;
-	       else if (!strcmp (GITagNameByType (subTypes[0].ElTypeNum), "???"))
+	       else if (!strcmp (GITagNameByType (subTypes[0]), "???"))
                   result = IsValidHtmlChild (subTypes[0], tag, "");
 	       break;
 
 	    case ConstructChoice:
 	       for (i = 0; !result && i < cardinal; i++)
 		 {
-		    if (subTypes[i].ElTypeNum == typeNum)
+		    if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
 		       result = TRUE;
-		    else if (!strcmp (GITagNameByType (subTypes[i].ElTypeNum),"???"))
+		    else if (!strcmp (GITagNameByType (subTypes[i]),"???"))
  		       result = IsValidHtmlChild (subTypes[i], tag, "");
 		 }
 	       break;
 
 	    case ConstructOrderedAggregate:
 	       found = (!strcmp (prevtag, ""));
-	       GIType (prevtag, &prevTypeNum);
-	       found = (prevTypeNum == 0);
+	       GIType (prevtag, &prevElType);
+	       found = (prevElType.ElTypeNum == 0);
 	       /* searches the rule of previous sibling */
 	       for (i = 0; !found && i < cardinal; i++)
 		 {
-		    if (prevTypeNum == subTypes[i].ElTypeNum)
+		    if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
 		       found = TRUE;
-		    else if (strcmp (GITagNameByType (subTypes[i].ElTypeNum),"???"))
+		    else if (strcmp (GITagNameByType (subTypes[i]),"???"))
 		       i = cardinal;
 		 }
 	       if (found)
 		 {
 		    while (!result && i < cardinal)
 		      {
-			 if (typeNum == subTypes[i].ElTypeNum)
+			 if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 			    result = TRUE;
-			 else if (!strcmp (GITagNameByType (subTypes[i].ElTypeNum), "???"))
+			 else if (!strcmp (GITagNameByType (subTypes[i]), "???"))
 			    result = IsValidHtmlChild (subTypes[i], tag, "");
 			 if (!result)
 			    if (TtaIsOptionalInAggregate(i,elemType)) 
@@ -1929,9 +1929,9 @@ char               *prevtag;
 	    case ConstructUnorderedAggregate:
 	       while (!result && i < cardinal)
 		 {
-		    if (typeNum == subTypes[i].ElTypeNum)
+		    if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 		       result = TRUE;
-		    else if (!strcmp (GITagNameByType (subTypes[i].ElTypeNum), "???"))
+		    else if (!strcmp (GITagNameByType (subTypes[i]), "???"))
 		       result = IsValidHtmlChild (subTypes[i], tag, "");
 		    if (!result)
 	               if (TtaIsOptionalInAggregate(i,elemType)) 
@@ -2240,7 +2240,7 @@ Document            doc;
    if (CheckSelectionLevel (TransDoc) && ppStartParser ("HTML"))
      {
 	ok = FALSE;
-	strcpy (DestTag, GITagNameByType (resultType.ElTypeNum));
+	strcpy (DestTag, GITagNameByType (resultType));
 	/* selects the transformation producing the given element type */
 	td = strMatchEnv.Transformations;
 	strMatchEnv.MaxDepth = 0;

@@ -449,8 +449,9 @@ static void         ProcessSymbol (void)
 static void         ProcessSymbol ()
 #endif
 {
-   strSymbDesc           *sd;
-   char                msgBuffer[MaxBufferLength];
+   strSymbDesc     *sd;
+   char             msgBuffer[MaxBufferLength];
+   SSchema	    schema;
 
    if (ppLgBuffer != 0)
      {		
@@ -492,7 +493,7 @@ static void         ProcessSymbol ()
 		sd = sd->Next;
 	     sd->Next = ppSymb;
 	  }
-	if (strcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag) == -1))
+	if (strcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag, &schema) == -1))
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppSymb->Tag);
@@ -1537,12 +1538,13 @@ unsigned char       c;
 #endif
 {
    char                msgBuffer[MaxBufferLength];
+   SSchema	       schema;
 
    if (ppLgBuffer != 0)
      {
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
-	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag) == -1))
+	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag, &schema) == -1))
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
@@ -1569,14 +1571,15 @@ unsigned char       c;
 
 #endif
 {
-   strAttrDesc           *ad, *ad2;
-   char                msgBuffer[MaxBufferLength];
+   strAttrDesc		*ad, *ad2;
+   char			msgBuffer[MaxBufferLength];
+   SSchema		schema;
 
    if (ppLgBuffer != 0)
      {
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
-	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag) == -1))
+	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag, &schema) == -1))
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
@@ -1630,12 +1633,13 @@ unsigned char       c;
    strNodeDesc           *pnode;
    strAttrDesc           *ad, *ad2;
    char                msgBuffer[MaxBufferLength];
+   SSchema		schema;
 
    if (ppLgBuffer != 0)
      {
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
-	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag) == -1))
+	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag, &schema) == -1))
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);

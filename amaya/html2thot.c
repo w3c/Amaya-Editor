@@ -241,7 +241,7 @@ MathEntity        MathEntityTable[] =
 
 /* mapping table of HTML elements */
 
-static GIMapping    MathGIMappingTable[] =
+static GIMapping    MathMLGIMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
    {"MF", SPACE, MathML_EL_MF, NULL},
@@ -271,7 +271,7 @@ static SSchema MathMLSSchema;
 
 /* mapping table of HTML elements */
 
-static GIMapping    GIMappingTable[] =
+static GIMapping    HTMLGIMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
    {"A", SPACE, HTML_EL_Anchor, NULL},
@@ -955,14 +955,18 @@ Document            document;
 
 
 /*----------------------------------------------------------------------
-   MapGI   search in GIMappingTable the entry for the element of
+   MapGI
+   search in the mapping tables the entry for the element of
    name GI and returns the rank of that entry.
+   When returning, schema contains the Thot SSchema that defines that element,
+   Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapGI (char *gi)
+int                 MapGI (char *gi, SSchema *schema)
 #else
-int                 MapGI (gi)
+int                 MapGI (gi, schema)
 char               *gi;
+SSchema		   *schema;
 
 #endif
 {
@@ -970,43 +974,80 @@ char               *gi;
    int                 entry;
 
    entry = -1;
+   *schema = NULL;
    i = 0;
    do
-      if (!strcasecmp (GIMappingTable[i].htmlGI, gi))
+      if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
+         {
 	 entry = i;
+	 *schema = HTMLSSchema;
+	 }
       else
 	 i++;
-   while (entry < 0 && GIMappingTable[i].htmlGI[0] != EOS);
+   while (entry < 0 && HTMLGIMappingTable[i].htmlGI[0] != EOS);
+#ifdef MATHML
+   if (entry < 0)
+      {
+      /* tagGIt found in HTMLGIMappingTable */
+      /* search in MathMLGIMappingTable */
+      i = 0;
+      do
+         if (!strcasecmp (MathMLGIMappingTable[i].htmlGI, gi))
+	    {
+	    entry = i;
+	    *schema = MathMLSSchema;
+	    }
+         else
+	    i++;
+      while (entry < 0 && MathMLGIMappingTable[i].htmlGI[0] != EOS);
+      }
+#endif /* MATHML */
    return entry;
 }
 
 /*----------------------------------------------------------------------
-   GIType  search in GIMappingTable the Element type associated to
+   GIType  search in mapping tables the Element type associated with
    a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GIType (char *gi, int *elem)
+void                GIType (char *gi, ElementType *elType)
 #else
-int                 GIType (gi, elem)
+void                GIType (gi, elType)
 char               *gi;
-int                *elem;
+ElementType        *elType;
 
 #endif
 {
    int                 i;
 
-   *elem = 0;
+   elType->ElSSchema = NULL;
+   elType->ElTypeNum = 0;
    i = 0;
    do
      {
-	if (!strcasecmp (GIMappingTable[i].htmlGI, gi))
+	if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
 	  {
-	    *elem = GIMappingTable[i].ThotType;
+	    elType->ElSSchema = HTMLSSchema;
+	    elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
 	    return;
 	  }
 	i++;
      }
-   while (GIMappingTable[i].htmlGI[0] != EOS);
+   while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
+#ifdef MATHML
+   i = 0;
+   do
+     {
+	if (!strcasecmp (MathMLGIMappingTable[i].htmlGI, gi))
+	  {
+	    elType->ElSSchema = MathMLSSchema;
+	    elType->ElTypeNum = MathMLGIMappingTable[i].ThotType;
+	    return;
+	  }
+	i++;
+     }
+   while (MathMLGIMappingTable[i].htmlGI[0] != EOS);
+#endif /* MATHML */
 }
 
 /*----------------------------------------------------------------------
@@ -1027,39 +1068,62 @@ Element             elem;
    i = 0;
    do
      {
-	if (GIMappingTable[i].ThotType == elType.ElTypeNum &&
-	    strcmp (GIMappingTable[i].htmlGI, "LISTING"))
-	   return (char *) GIMappingTable[i].htmlGI;
+	if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
+	    strcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))
+	   return (char *) HTMLGIMappingTable[i].htmlGI;
 	i++;
      }
-   while (GIMappingTable[i].htmlGI[0] != EOS);
+   while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
+#ifdef MATHML
+   /* tag name not found in HTMLGIMappingTable */
+   /* search in MathMLGIMappingTable */
+   i = 0;
+   do
+     {
+	if (MathMLGIMappingTable[i].ThotType == elType.ElTypeNum)
+	   return (char *) MathMLGIMappingTable[i].htmlGI;
+	i++;
+     }
+   while (MathMLGIMappingTable[i].htmlGI[0] != EOS);
+#endif /* MATHML */
    return NULL;
 }
 
 /*----------------------------------------------------------------------
-   GITagNameByType search in GIMappingTable the name for a given type
+   GITagNameByType search in the mapping tables the name for a given type
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *GITagNameByType (int type)
+char               *GITagNameByType (ElementType elType)
 #else
-char               *GITagNameByType (type)
-int                 type;
+char               *GITagNameByType (elType)
+ElementType elType;
 
 #endif
 {
    int                 i;
 
-   if (type)
+   if (elType.ElTypeNum > 0)
      {
 	i = 0;
-	do
-	  {
-	     if (GIMappingTable[i].ThotType == type &&
-		 strcmp (GIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
-		return (char *) GIMappingTable[i].htmlGI;
+	if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+	  do
+	    {
+	     if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
+		 strcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
+		return (char *) HTMLGIMappingTable[i].htmlGI;
 	     i++;
-	  }
-	while (GIMappingTable[i].htmlGI[0] != EOS);
+	    }
+	  while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
+#ifdef MATHML
+	else if (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
+	  do
+	    {
+	     if (MathMLGIMappingTable[i].ThotType == elType.ElTypeNum)
+		return (char *) MathMLGIMappingTable[i].htmlGI;
+	     i++;
+	    }
+	  while (MathMLGIMappingTable[i].htmlGI[0] != EOS);	  
+#endif /* MATHML */
      }
    return "???";
 }
@@ -1087,7 +1151,7 @@ char               *Attr;
 	 if (AttributeMappingTable[i].htmlElement[0] == EOS)
 	    entry = i;
 	 else if (!strcasecmp (AttributeMappingTable[i].htmlElement,
-			       GIMappingTable[lastElemEntry].htmlGI))
+			       HTMLGIMappingTable[lastElemEntry].htmlGI))
 	    entry = i;
 	 else
 	    i++;
@@ -1096,6 +1160,7 @@ char               *Attr;
    while (entry < 0 && AttributeMappingTable[i].AttrOrContent != EOS);
    return entry;
 }
+
 /*----------------------------------------------------------------------
    MapThotAttr     search in AttributeMappingTable the entry for
    the attribute of name Attr and returns the Thot Attribute
@@ -1112,9 +1177,10 @@ char               *tag;
 {
    int                 thotAttr;
    int                 entry;
+   SSchema	       schema;
 
    thotAttr = -1;
-   lastElemEntry = MapGI (tag);
+   lastElemEntry = MapGI (tag, &schema);
    if (lastElemEntry != -1)
      {
 	entry = MapAttr (Attr);
@@ -1219,6 +1285,7 @@ void                InitMapping ()
    int                 i;
    GI                  name;
    PtrClosedElement    newCE, lastCE, firstCE, curCE;
+   SSchema	       schema;
 
    /* read table EquivEndingElem */
    line = 0;
@@ -1239,7 +1306,7 @@ void                InitMapping ()
 	     if (i > 0)
 		/* a GI has been read */
 	       {
-		  entry = MapGI (name);
+		  entry = MapGI (name, &schema);
 #ifdef DEBUG
 		  if (entry < 0)
 		     fprintf (stderr, "error in EquivEndingElem: tag %s unknown in line\n%s\n", name, EquivEndingElem[line]);
@@ -1267,11 +1334,11 @@ void                InitMapping ()
 		newCE = firstCE;
 	     else
 		newCE = copyCEstring (firstCE);
-	     if (GIMappingTable[curCE->tagNum].firstClosedElem == NULL)
-		GIMappingTable[curCE->tagNum].firstClosedElem = newCE;
+	     if (HTMLGIMappingTable[curCE->tagNum].firstClosedElem == NULL)
+		HTMLGIMappingTable[curCE->tagNum].firstClosedElem = newCE;
 	     else
 	       {
-		  lastCE = GIMappingTable[curCE->tagNum].firstClosedElem;
+		  lastCE = HTMLGIMappingTable[curCE->tagNum].firstClosedElem;
 		  while (lastCE->nextClosedElem != NULL)
 		     lastCE = lastCE->nextClosedElem;
 		  lastCE->nextClosedElem = newCE;
@@ -1296,7 +1363,7 @@ void                InitMapping ()
 	name[i] = EOS;
 	i = 0;
 	ptr++;
-	entry = MapGI (name);
+	entry = MapGI (name, &schema);
 #ifdef DEBUG
 	if (entry < 0)
 	   fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
@@ -1311,7 +1378,7 @@ void                InitMapping ()
 	if (strcmp (name, "closes") != 0)
 	   fprintf (stderr, "error in StartTagEndingElem: \"%s\" instead of \"closes\" in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
-	lastCE = GIMappingTable[entry].firstClosedElem;
+	lastCE = HTMLGIMappingTable[entry].firstClosedElem;
 	if (lastCE != NULL)
 	   while (lastCE->nextClosedElem != NULL)
 	      lastCE = lastCE->nextClosedElem;
@@ -1326,13 +1393,13 @@ void                InitMapping ()
 		  i = 0;
 		  newCE = (PtrClosedElement) TtaGetMemory (sizeof (ClosedElement));
 		  newCE->nextClosedElem = NULL;
-		  newCE->tagNum = MapGI (name);
+		  newCE->tagNum = MapGI (name, &schema);
 #ifdef DEBUG
 		  if (newCE->tagNum < 0)
 		     fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
 		  if (lastCE == NULL)
-		     GIMappingTable[entry].firstClosedElem = newCE;
+		     HTMLGIMappingTable[entry].firstClosedElem = newCE;
 		  else
 		     lastCE->nextClosedElem = newCE;
 		  lastCE = newCE;
@@ -1441,7 +1508,7 @@ static boolean      InsertSibling ()
    else if (lastElementClosed ||
 	    TtaIsLeaf (TtaGetElementType (lastElement)) ||
 	    (GINumberStack[StackLevel - 1] >= 0 &&
-	     GIMappingTable[GINumberStack[StackLevel - 1]].htmlContents == 'E'))
+	     HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlContents == 'E'))
       return TRUE;
    else
       return FALSE;
@@ -3036,7 +3103,7 @@ int                 entry;
    /* the closed HTML element corresponds to a Thot element. */
    /* type of the element to be closed */
    elType.ElSSchema = MathMLSSchema;
-   elType.ElTypeNum = MathGIMappingTable[entry].ThotType;
+   elType.ElTypeNum = MathMLGIMappingTable[entry].ThotType;
    if (StackLevel > 0)
      {
        el = lastElement;
@@ -3090,13 +3157,13 @@ static void ChangeToMathML ()
 
 /*----------------------------------------------------------------------
    CloseElement
-   End of HTML element defined in entry entry of GIMappingTable.
+   End of HTML element defined in entry entry of HTMLGIMappingTable.
    Terminate all corresponding Thot elements.
    If start <0, an explicit end tag has been
    encountered in the HTML file, else the end
    of element is implied by the beginning of
    an element described by entry start of
-   GIMappingTable.
+   HTMLGIMappingTable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CloseElement (int entry, int start)
@@ -3117,7 +3184,7 @@ int                 start;
    stop = FALSE;
    /* type of the element to be closed */
    elType.ElSSchema = HTMLSSchema;
-   elType.ElTypeNum = GIMappingTable[entry].ThotType;
+   elType.ElTypeNum = HTMLGIMappingTable[entry].ThotType;
    if (StackLevel > 0)
      {
        el = lastElement;
@@ -3136,33 +3203,33 @@ int                 start;
 	      equivalent), looks for that element in the
 	      stack, but not at a higher level as the list (or
 	      equivalent) element */
-	   if (!strcmp (GIMappingTable[start].htmlGI, "LI"))
+	   if (!strcmp (HTMLGIMappingTable[start].htmlGI, "LI"))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "OL") ||
-		   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "UL") ||
-		   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "DIR") ||
-		   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "MENU"))
+	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "OL") ||
+		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "UL") ||
+		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "DIR") ||
+		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "MENU"))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (GIMappingTable[start].htmlGI, "OPTION"))
+	   else if (!strcmp (HTMLGIMappingTable[start].htmlGI, "OPTION"))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "SELECT"))
+	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "SELECT"))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (GIMappingTable[start].htmlGI, "DD") ||
-		    !strcmp (GIMappingTable[start].htmlGI, "DT"))
+	   else if (!strcmp (HTMLGIMappingTable[start].htmlGI, "DD") ||
+		    !strcmp (HTMLGIMappingTable[start].htmlGI, "DT"))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "DL"))
+	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "DL"))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (GIMappingTable[start].htmlGI, "TR") ||
-		    !strcmp (GIMappingTable[start].htmlGI, "TD") ||
-		    !strcmp (GIMappingTable[start].htmlGI, "TH"))
+	   else if (!strcmp (HTMLGIMappingTable[start].htmlGI, "TR") ||
+		    !strcmp (HTMLGIMappingTable[start].htmlGI, "TD") ||
+		    !strcmp (HTMLGIMappingTable[start].htmlGI, "TH"))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "TABLE"))
+	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TABLE"))
 		 stop = TRUE;
 	       else
 		 i--;
@@ -3469,15 +3536,15 @@ char                c;
    if ((lastElement != NULL) && (lastElemEntry != -1))
      {
 #ifdef MATHML
-	if (!strcmp (GIMappingTable[lastElemEntry].htmlGI, "MATH") ||
-	    !strcmp (GIMappingTable[lastElemEntry].htmlGI, "MATHDISP"))
+	if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "MATH") ||
+	    !strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "MATHDISP"))
 	   /* <MATH> or <MATHDISP> has been read */
 	   ChangeToMathML ();
 #endif /* MATHML */
-	if (!strcmp (GIMappingTable[lastElemEntry].htmlGI, "PRE"))
+	if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "PRE"))
 	   /* <PRE> has been read */
 	   AfterTagPRE = TRUE;
-	if (GIMappingTable[lastElemEntry].htmlContents == 'E' ||
+	if (HTMLGIMappingTable[lastElemEntry].htmlContents == 'E' ||
 	    c == '/')
 	   /* this is an empty element. Do not expect an end tag */
 	   {
@@ -3541,23 +3608,23 @@ int                 entry;
      {
        ok = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
-       if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TR"))
-	 if (strcmp (GIMappingTable[entry].htmlGI, "TH") &&
-	     strcmp (GIMappingTable[entry].htmlGI, "TD"))
+       if (!strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TR"))
+	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "TH") &&
+	     strcmp (HTMLGIMappingTable[entry].htmlGI, "TD"))
 	   ok = FALSE;
        if (ok)
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
-	 if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE"))
-	   if (strcmp (GIMappingTable[entry].htmlGI, "CAPTION") &&
-	       strcmp (GIMappingTable[entry].htmlGI, "THEAD") &&
-	       strcmp (GIMappingTable[entry].htmlGI, "TFOOT") &&
-	       strcmp (GIMappingTable[entry].htmlGI, "TBODY") &&
-	       strcmp (GIMappingTable[entry].htmlGI, "COLGROUP") &&
-	       strcmp (GIMappingTable[entry].htmlGI, "COL") &&
-	       strcmp (GIMappingTable[entry].htmlGI, "TR"))
-	     if (!strcmp (GIMappingTable[entry].htmlGI, "TD") ||
-		 !strcmp (GIMappingTable[entry].htmlGI, "TH"))
+	 if (!strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE"))
+	   if (strcmp (HTMLGIMappingTable[entry].htmlGI, "CAPTION") &&
+	       strcmp (HTMLGIMappingTable[entry].htmlGI, "THEAD") &&
+	       strcmp (HTMLGIMappingTable[entry].htmlGI, "TFOOT") &&
+	       strcmp (HTMLGIMappingTable[entry].htmlGI, "TBODY") &&
+	       strcmp (HTMLGIMappingTable[entry].htmlGI, "COLGROUP") &&
+	       strcmp (HTMLGIMappingTable[entry].htmlGI, "COL") &&
+	       strcmp (HTMLGIMappingTable[entry].htmlGI, "TR"))
+	     if (!strcmp (HTMLGIMappingTable[entry].htmlGI, "TD") ||
+		 !strcmp (HTMLGIMappingTable[entry].htmlGI, "TH"))
 	       /* Table cell within a TABLE, without a TR. Assume TR */
 	       {
 		/* save the last last GI read from the input file */
@@ -3571,12 +3638,12 @@ int                 entry;
 	       ok = FALSE;
        if (ok)
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "THEAD") ||
-	     !strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TFOOT") ||
-	     !strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TBODY"))
-	   if (strcmp (GIMappingTable[entry].htmlGI, "TR"))
-	     if (!strcmp (GIMappingTable[entry].htmlGI, "TD") ||
-		 !strcmp (GIMappingTable[entry].htmlGI, "TH"))
+	 if (!strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "THEAD") ||
+	     !strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TFOOT") ||
+	     !strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TBODY"))
+	   if (strcmp (HTMLGIMappingTable[entry].htmlGI, "TR"))
+	     if (!strcmp (HTMLGIMappingTable[entry].htmlGI, "TD") ||
+		 !strcmp (HTMLGIMappingTable[entry].htmlGI, "TH"))
 	       /* Table cell within a THEAD, TFOOT or TBODY without a TR. */
 	       /* Assume TR */
 	       {
@@ -3591,17 +3658,17 @@ int                 entry;
 	       ok = FALSE;
        if (ok)
 	 /* refuse BODY within BODY */
-	 if (strcmp (GIMappingTable[entry].htmlGI, "BODY") == 0)
+	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "BODY") == 0)
 	   if (Within (HTML_EL_BODY, HTMLSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
-	 if (strcmp (GIMappingTable[entry].htmlGI, "HEAD") == 0)
+	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "HEAD") == 0)
 	   if (Within (HTML_EL_HEAD, HTMLSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
-	 if (strcmp (GIMappingTable[entry].htmlGI, "STYLE") == 0)
+	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "STYLE") == 0)
 	   if (Within (HTML_EL_Styles, HTMLSSchema))
 	     ok = FALSE;
        return ok;
@@ -3623,10 +3690,10 @@ int                 entry;
 
    /* if current element is DD, Hn closes that DD only when there is */
    /* no enclosing DL */
-   if (GIMappingTable[entry].htmlGI[0] == 'H' &&
-       GIMappingTable[entry].htmlGI[1] >= '1' &&
-       GIMappingTable[entry].htmlGI[1] <= '6' &&
-       GIMappingTable[entry].htmlGI[2] == EOS)
+   if (HTMLGIMappingTable[entry].htmlGI[0] == 'H' &&
+       HTMLGIMappingTable[entry].htmlGI[1] >= '1' &&
+       HTMLGIMappingTable[entry].htmlGI[1] <= '6' &&
+       HTMLGIMappingTable[entry].htmlGI[2] == EOS)
       /* the new element is a Hn */
       if (StackLevel > 1)
 	 if (ElementStack[StackLevel - 1] != NULL)
@@ -3691,7 +3758,7 @@ boolean		    position;
 #ifdef MATHML
 
 /*----------------------------------------------------------------------
-   MapMathGI   search in MathGIMappingTable the entry for the element of
+   MapMathGI   search in MathMLGIMappingTable the entry for the element of
    name GI and returns the rank of that entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3708,11 +3775,11 @@ char               *gi;
    entry = -1;
    i = 0;
    do
-      if (!strcasecmp (MathGIMappingTable[i].htmlGI, gi))
+      if (!strcasecmp (MathMLGIMappingTable[i].htmlGI, gi))
 	   entry = i;
       else
 	   i++;
-   while (entry < 0 && MathGIMappingTable[i].htmlGI[0] != EOS);
+   while (entry < 0 && MathMLGIMappingTable[i].htmlGI[0] != EOS);
    return entry;
 }
 
@@ -3749,12 +3816,12 @@ char               *GIname;
     {
 	    el = NULL;
 	    sameLevel = TRUE;
-	    if (MathGIMappingTable[entry].ThotType > 0)
+	    if (MathMLGIMappingTable[entry].ThotType > 0)
 	      {
 		  /* create a Thot element */
 		    elType.ElSSchema = MathMLSSchema;
-		    elType.ElTypeNum = MathGIMappingTable[entry].ThotType;
-		    if (MathGIMappingTable[entry].htmlContents == 'E')
+		    elType.ElTypeNum = MathMLGIMappingTable[entry].ThotType;
+		    if (MathMLGIMappingTable[entry].htmlContents == 'E')
 		      /* empty HTML element. Create all children specified */
 		      /* in the Thot structure schema */
 		      el = TtaNewTree (theDocument, elType, "");
@@ -3765,7 +3832,7 @@ char               *GIname;
 		    sameLevel = InsertMathElement (&el);
 		    if (el != NULL)
 		      {
-			if (MathGIMappingTable[entry].htmlContents == 'E')
+			if (MathMLGIMappingTable[entry].htmlContents == 'E')
 			  lastElementClosed = TRUE;
 			if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 			  /* an empty Text element has been created. The */
@@ -3773,7 +3840,7 @@ char               *GIname;
 			  MergeText = TRUE;
 		      }
 	      }
-	    if (MathGIMappingTable[entry].htmlContents != 'E')
+	    if (MathMLGIMappingTable[entry].htmlContents != 'E')
 	      {
 		ElementStack[StackLevel] = el;
 		if (sameLevel)
@@ -3805,13 +3872,14 @@ char               *GIname;
   char                msgBuffer[MaxBufferLength];
   PtrClosedElement    pClose;
   boolean             sameLevel;
+  SSchema	      schema;
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, HTMLSSchema))
     if (strcasecmp (GIname, "P") == 0)
       return;
   /* search the HTML element name in the mapping table */
-  entry = MapGI (GIname);
+  entry = MapGI (GIname, &schema);
   lastElemEntry = entry;
   if (entry < 0)
     /* not found */
@@ -3826,7 +3894,7 @@ char               *GIname;
   else
     {
       /* does this start tag also imply the end tag of some current elements? */
-      pClose = GIMappingTable[entry].firstClosedElem;
+      pClose = HTMLGIMappingTable[entry].firstClosedElem;
       while (pClose != NULL)
 	{
 	  CloseElement (pClose->tagNum, entry);
@@ -3848,9 +3916,9 @@ char               *GIname;
 	  {
 	    el = NULL;
 	    sameLevel = TRUE;
-	    if (GIMappingTable[entry].ThotType > 0)
+	    if (HTMLGIMappingTable[entry].ThotType > 0)
 	      {
-		if (GIMappingTable[entry].ThotType == HTML_EL_HTML)
+		if (HTMLGIMappingTable[entry].ThotType == HTML_EL_HTML)
 		  /* the corresponding Thot element is the root of the
 		     abstract tree, which has been created at initialization */
 		  el = rootElement;
@@ -3858,8 +3926,8 @@ char               *GIname;
 		  /* create a Thot element */
 		  {
 		    elType.ElSSchema = HTMLSSchema;
-		    elType.ElTypeNum = GIMappingTable[entry].ThotType;
-		    if (GIMappingTable[entry].htmlContents == 'E')
+		    elType.ElTypeNum = HTMLGIMappingTable[entry].ThotType;
+		    if (HTMLGIMappingTable[entry].htmlContents == 'E')
 		      /* empty HTML element. Create all children specified */
 		      /* in the Thot structure schema */
 		      el = TtaNewTree (theDocument, elType, "");
@@ -3870,7 +3938,7 @@ char               *GIname;
 		    sameLevel = InsertElement (&el);
 		    if (el != NULL)
 		      {
-			if (GIMappingTable[entry].htmlContents == 'E')
+			if (HTMLGIMappingTable[entry].htmlContents == 'E')
 			  lastElementClosed = TRUE;
 			if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 			  /* an empty Text element has been created. The */
@@ -3879,7 +3947,7 @@ char               *GIname;
 		      }
 		  }
 	      }
-	    if (GIMappingTable[entry].htmlContents != 'E')
+	    if (HTMLGIMappingTable[entry].htmlContents != 'E')
 	      {
 		ElementStack[StackLevel] = el;
 		if (sameLevel)
@@ -3983,6 +4051,7 @@ char                c;
    int                 i;
    boolean             ok;
    char                msgBuffer[MaxBufferLength];
+   SSchema	       schema;
 
    CloseBuffer ();
 #ifdef MATHML
@@ -3999,7 +4068,7 @@ char                c;
 	}
 #endif /* MATHML */
    /* seach the HTML tag in the mapping table */
-   entry = MapGI (inputBuffer);
+   entry = MapGI (inputBuffer, &schema);
    if (entry < 0)
      {
 	sprintf (msgBuffer, "Unknown tag </%s>", inputBuffer);
@@ -4027,7 +4096,7 @@ char                c;
 	     i = 1;
 	     do
 	       {
-		  entry = MapGI (msgBuffer);
+		  entry = MapGI (msgBuffer, &schema);
 		  ok = CloseElement (entry, -1);
 		  msgBuffer[1]++;
 		  i++;
@@ -4043,10 +4112,10 @@ char                c;
 	      /* try to close another type of list */
 	     {
 		ok = TRUE;
-		if (!CloseElement (MapGI ("OL"), -1))
-		   if (!CloseElement (MapGI ("UL"), -1))
-		      if (!CloseElement (MapGI ("MENU"), -1))
-			 if (!CloseElement (MapGI ("DIR"), -1))
+		if (!CloseElement (MapGI ("OL", &schema), -1))
+		   if (!CloseElement (MapGI ("UL", &schema), -1))
+		      if (!CloseElement (MapGI ("MENU", &schema), -1))
+			 if (!CloseElement (MapGI ("DIR", &schema), -1))
 			    ok = FALSE;
 	     }
 	if (!ok)
@@ -6646,8 +6715,8 @@ Document            doc;
 {
    char                tag[20];
    Element             elem;
-   ElementType         eltype;
    int                 i;
+   SSchema	       schema;
 
    StackLevel = 1;
    if (lastelem != NULL && doc != 0)
@@ -6663,8 +6732,7 @@ Document            doc;
 	   elem = lastelem;
 	while (elem != NULL && elem != rootElement)
 	  {
-	     eltype = TtaGetElementType (elem);
-	     strcpy (tag, GITagNameByType (eltype.ElTypeNum));
+	     strcpy (tag, GITagNameByType (TtaGetElementType (elem)));
 	     if (strcmp (tag, "???"))
 	       {
 		  for (i = StackLevel; i > 0; i--)
@@ -6673,7 +6741,7 @@ Document            doc;
 		       ElementStack[i + 1] = ElementStack[i];
 		       ThotLevel[i + 1] = ThotLevel[i] + 1;
 		    }
-		  GINumberStack[1] = MapGI (tag);
+		  GINumberStack[1] = MapGI (tag, &schema);
 		  ElementStack[1] = elem;
 		  ThotLevel[1] = 1;
 		  StackLevel++;

@@ -144,23 +144,23 @@ char *tag;
 
 #endif
 {
-    int res;
-    GIType(tag, &res);
-    return(res);
+    ElementType	elType;
+    GIType(tag, &elType);
+    return(elType.ElTypeNum); /**** should return elType *****/
 }
 
 /*----------------------------------------------------------------------
-   GetHTMLTag return thot internal type number for an HTML tag
+   GetHTMLTag return the HTML tag for a given Thot type
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *GetHTMLTag(int type)
+char *GetHTMLTag(ElementType elType)
 #else
-char *GetHTMLTag(type)
-int type;
+char *GetHTMLTag(elType)
+ElementType elType;
 
 #endif
 {
-    return(GITagNameByType(type));
+    return(GITagNameByType(elType));
 }
 
 /*----------------------------------------------------------------------

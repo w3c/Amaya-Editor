@@ -8,11 +8,12 @@
 
 extern void ParseAreaCoords ( Element element,
                               Document document );
-extern int MapGI ( char *gi );
+extern int MapGI ( char *gi,
+                   SSchema *schema );
 extern void GIType ( char *gi,
-                     int *elem );
+                     ElementType *elType );
 extern char *GITagName ( Element elem );
-extern char *GITagNameByType ( int type );
+extern char *GITagNameByType ( ElementType elType );
 extern int MapThotAttr ( char *Attr,
                          char *tag );
 extern int MapAttrValue ( int ThotAtt,
@@ -55,11 +56,12 @@ extern void StartHTMLParser ( Document doc,
 
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
-extern int MapGI (/* char *gi */);
+extern int MapGI (/* char *gi,
+                     SSchema *schema */);
 extern void GIType (/* char *gi,
-                       int *elem */);
+                       ElementType *elType */);
 extern char *GITagName (/* Element elem */);
-extern char *GITagNameByType (/* int type */);
+extern char *GITagNameByType (/* ElementType elType */);
 extern int MapThotAttr (/* char *Attr,
                            char *tag */);
 extern int MapAttrValue (/* int ThotAtt,

@@ -216,7 +216,6 @@ char               *first;
    int                 index = 0;
    char                val[100];
    int                 valen;
-   int                 type;
    char               *ptr;
 
    /* ad the first element if specified. */
@@ -257,8 +256,8 @@ char               *first;
 		  * Type name are not class names, remove them.
 		  * Don't list the first field twice, too.
 		  */
-		 GIType(val, &type);
-		 if ((type == 0) && (strcmp (val, first)))
+		 GIType (val, &elType);
+		 if ((elType.ElTypeNum == 0) && (strcmp (val, first)))
 		   {
 		      len = free;
 		      TtaGiveTextAttributeValue (at, &buf[index], &len);
