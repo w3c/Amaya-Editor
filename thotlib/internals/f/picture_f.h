@@ -26,8 +26,8 @@ extern void LoadPicture ( int frame,
                           PictInfo * imageDesc );
 extern void FreePicture ( PictInfo * imageDesc );
 extern int GetPictureType ( int GUIIndex );
-extern int GetPictTypeIndex ( int PicType );
-extern int GetPictPresIndex ( PictureScaling PicPresent );
+extern int GetPictTypeIndex ( int picType );
+extern int GetPictPresIndex ( PictureScaling picPresent );
 extern void GetPictureHandlersList ( int *count,
                                      char *buffer );
 extern void LittleXBigEndian ( unsigned char *b,
@@ -57,8 +57,8 @@ extern void LoadPicture (/* int frame,
                             PictInfo * imageDesc */);
 extern void FreePicture (/* PictInfo * imageDesc */);
 extern int GetPictureType (/* int GUIIndex */);
-extern int GetPictTypeIndex (/* int PicType */);
-extern int GetPictPresIndex (/* PictureScaling PicPresent */);
+extern int GetPictTypeIndex (/* int picType */);
+extern int GetPictPresIndex (/* PictureScaling picPresent */);
 extern void GetPictureHandlersList (/* int *count,
                                        char *buffer */);
 extern void LittleXBigEndian (/* unsigned char *b,

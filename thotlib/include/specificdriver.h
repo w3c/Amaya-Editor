@@ -84,7 +84,7 @@ typedef void        (*SpecificSettingsApplyHandler)
 #ifdef __STDC__
 SpecificContext     GetSpecificContext (Document doc);
 void                FreeSpecificContext (SpecificContext ctxt);
-void                ApplyAllSpecificContext (SpecificTarget target,
+void                ApplyAllSpecificContext (Document doc, SpecificTarget target,
 			  SpecificContextApplyHandler handler, void *param);
 void                ApplyAllSpecificSettings (SpecificTarget target,
 		 SpecificContext cond, SpecificSettingsApplyHandler handler,
@@ -93,7 +93,7 @@ void                ApplyAllSpecificSettings (SpecificTarget target,
 #else  /* __STDC__ */
 SpecificContext     GetSpecificContext ( /* doc */ )
 void                FreeSpecificContext ( /* ctxt */ );
-void                ApplyAllSpecificContext (	/* SpecificTarget target,
+void                ApplyAllSpecificContext (	/* Document doc, SpecificTarget target,
 						   SpecificContextApplyHandler handler, void *param */ );
 void                ApplyAllSpecificSettings (	/* SpecificTarget target,
 						   SpecificContext cond, SpecificSettingsApplyHandler handler,

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void DebugBreak ( void );
-extern int GetFen ( ThotWindow win );
+extern int GetFrameNumber ( ThotWindow win );
 extern void MyWarningHandler ( void );
 extern void TtaInitDialogue ( char *server,
                               char *txtOK,
@@ -154,7 +154,7 @@ extern void TtaAbortShowDialogue ( void );
 #else /* __STDC__ */
 
 extern void DebugBreak (/* void */);
-extern int GetFen (/* ThotWindow win */);
+extern int GetFrameNumber (/* ThotWindow win */);
 extern void MyWarningHandler (/* void */);
 extern void TtaInitDialogue (/* char *server,
                                 char *txtOK,

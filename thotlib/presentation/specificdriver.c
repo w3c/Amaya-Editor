@@ -27,10 +27,8 @@
 
 #include "thot_sys.h"
 #include "message.h"
-#include "conststr.h"
-#include "typestr.h"
-#include "constprs.h"
-#include "typeprs.h"
+#include "constint.h"
+#include "typeint.h"
 #include "application.h"
 
 #include "specificdriver.h"
@@ -117,6 +115,128 @@ PresentationValue   v;
 }
 
 /*----------------------------------------------------------------------
+   Function used to to add a specific presentation rule
+   for a given type of rule associated to an element.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static PtrPRule  InsertElementPRule (SpecificTarget el, int type, int extra)
+#else
+static PtrPRule  InsertElementPRule (el, type, extra)
+SpecificTarget      el;
+int                 type;
+int                 extra;
+
+#endif
+{
+    PtrPRule cur, prev, new;
+    
+    prev = NULL;
+    cur = ((PtrElement) el)->ElFirstPRule;
+
+    while (cur != NULL) {
+	/* shortcut : rules are sorted by type and view number */
+	if ((cur->PrType > type) ||
+	    ((cur->PrType == type) && (cur->PrViewNum > 1)))
+	  {
+	     cur = NULL;
+	     break;
+	  }
+	
+	/* check for extra specification in case of function rule */
+	if ((type == PresFunction) && (cur->PrPresMode != extra)) {
+	    prev = cur;
+	    cur = cur->PrNextPRule;
+	    continue;
+	}
+
+	/* check this rule */
+	if (type == cur->PrType)
+	   break;
+
+	/* jump to next and keep track of previous */
+	prev = cur;
+	cur = cur->PrNextPRule;
+    }
+    if (cur != NULL)
+	return (cur);
+
+    /* not found, allocate it, fill it and insert it */
+    GetPresentRule (&new);
+    if (new == NULL)
+     {
+	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+	return (NULL);
+     }
+    new->PrType = type;
+    new->PrCond = NULL;
+    new->PrViewNum = 1;
+    new->PrSpecifAttr = 0;
+    new->PrSpecifAttrSSchema = NULL;
+
+    /* Add the order / conditions .... */
+    /* chain in the rule */
+    if (prev == NULL)
+     {
+	new->PrNextPRule = ((PtrElement) el)->ElFirstPRule;
+	((PtrElement) el)->ElFirstPRule = new;
+     }
+    else
+     {
+	new->PrNextPRule = prev->PrNextPRule;
+	prev->PrNextPRule = new;
+     }
+    return (new);
+}
+
+/*----------------------------------------------------------------------
+   Function used to to search all specific presentation rules
+   for a given type of rule associated to an element.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static PtrPRule SearchElementPRule (SpecificTarget el, int type, int extra)
+#else
+static PtrPRule SearchElementPRule (el, type, extra)
+SpecificTarget      el;
+int                 type;
+int                 extra;
+
+#endif
+{
+    PtrPRule cur, prev;
+    
+    prev = NULL;
+    cur = ((PtrElement) el)->ElFirstPRule;
+
+    while (cur != NULL) {
+	/* shortcut : rules are sorted by type and view number */
+	if ((cur->PrType > type) ||
+	    ((cur->PrType == type) && (cur->PrViewNum > 1)))
+	  {
+	     cur = NULL;
+	     break;
+	  }
+	
+	/* check for extra specification in case of function rule */
+	if ((type == PresFunction) && (cur->PrPresMode != extra)) {
+	    prev = cur;
+	    cur = cur->PrNextPRule;
+	    continue;
+	}
+
+	/* check this rule */
+	if (type == cur->PrType)
+	   break;
+
+	/* jump to next and keep track of previous */
+	prev = cur;
+	cur = cur->PrNextPRule;
+    }
+    return (cur);
+}
+
+/*----------------------------------------------------------------------
    *									*
    *	Function used to translate various parameters between external  *
    *	and internal representation of presentation attributes.		*
@@ -127,20 +247,21 @@ PresentationValue   v;
 
 #ifdef __STDC__
 static int          etoi_convert (SpecificTarget el, int type,
-			   PresentationValue val, PRule pRule, Document doc)
+   PresentationValue val, PRule pRule, Document doc,int specific)
 #else
-static int          etoi_convert (el, type, val, pRule, doc)
+static int          etoi_convert (el, type, val, pRule, doc, specific)
 SpecificTarget      el;
 int                 type;
 PresentationValue   val;
 PRule               pRule;
 Document            doc;
+int                 specific;
 
 #endif
 {
    PtrPRule            rule = (PtrPRule) pRule;
 
-   PresentationValueToPRule (val, rule->PrType, pRule, 0);
+   PresentationValueToPRule (val, rule->PrType, pRule, specific);
    RedisplayNewPRule (doc, el, pRule);
    return (0);
 }
@@ -186,32 +307,58 @@ Document            doc;
 int SpecificSet##name(PresentationTarget t, PresentationContext c,	\
                       PresentationValue v)				\
 {									\
-    PRule prule;							\
+    PtrPRule prule;							\
     SpecificTarget el = (SpecificTarget) t;				\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
-    prule = TtaGetPRule(el,PR##type);					\
-    if (prule == NULL) {						\
-        prule = TtaNewPRuleForView(PR##type,1,				\
-                                       cont->doc);			\
-        TtaAttachPRule(el,prule,cont->doc);				\
-    }									\
-    etoi_convert(el,PR##type,val,prule,cont->doc);			\
+    prule = InsertElementPRule(el,PR##type,0);				\
+    if (prule == NULL) return(-1);					\
+    etoi_convert(el,PR##type,val,(PRule)prule,cont->doc,0);		\
     return(0);								\
 }									\
 									\
 int SpecificGet##name(PresentationTarget t, PresentationContext c,	\
                       PresentationValue *v)				\
 {									\
-    PRule prule;							\
+    PtrPRule prule;							\
     SpecificTarget el = (SpecificTarget) t;				\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue *val = /* (SpecificValue *) - EGP */ v;		\
 									\
-    prule = TtaGetPRule(el,PR##type);					\
+    prule = SearchElementPRule(el,PR##type,0);				\
     if (prule == NULL) return(-1);					\
-    itoe_convert(el,PR##type,val,prule,cont->doc);			\
+    itoe_convert(el,PR##type,val,(PRule)prule,cont->doc);		\
+    return(0);								\
+}									\
+
+#define SPECIFIC_FUNCS2(type,category,name)				\
+									\
+int SpecificSet##name(PresentationTarget t, PresentationContext c,	\
+                      PresentationValue v)				\
+{									\
+    PtrPRule prule;							\
+    SpecificTarget el = (SpecificTarget) t;				\
+    SpecificContext cont = (SpecificContext) c;				\
+    SpecificValue val = /* (SpecificValue) - EGP */ v;			\
+									\
+    prule = InsertElementPRule(el,PR##type,category);			\
+    if (prule == NULL) return(-1);					\
+    etoi_convert(el,PR##type,val,(PRule)prule,cont->doc,category);	\
+    return(0);								\
+}									\
+									\
+int SpecificGet##name(PresentationTarget t, PresentationContext c,	\
+                      PresentationValue *v)				\
+{									\
+    PtrPRule prule;							\
+    SpecificTarget el = (SpecificTarget) t;				\
+    SpecificContext cont = (SpecificContext) c;				\
+    SpecificValue *val = /* (SpecificValue *) - EGP */ v;		\
+									\
+    prule = SearchElementPRule(el,PR##type,category);			\
+    if (prule == NULL) return(-1);					\
+    itoe_convert(el,PR##type,val,(PRule)prule,cont->doc);		\
     return(0);								\
 }									\
 
@@ -219,39 +366,61 @@ int SpecificGet##name(PresentationTarget t, PresentationContext c,	\
 
 #define SPECIFIC_FUNCS(type,name)					\
 									\
-int SpecificSet/**/name(t,c,v)						\
-    PresentationTarget t;						\
-    PresentationContext c;						\
-    PresentationValue v;						\
+int SpecificSet/**/name(PresentationTarget t, PresentationContext c,	\
+                      PresentationValue v)				\
 {									\
-    PRule prule;							\
+    PtrPRule prule;							\
     SpecificTarget el = (SpecificTarget) t;				\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
-    prule = TtaGetPRule(el,PR/**/type);					\
-    if (prule == NULL) {						\
-        prule = TtaNewPRuleForView(PR/**/type,1,	\
-                                       cont->doc);			\
-        TtaAttachPRule(el,prule,cont->doc);				\
-    }									\
-    etoi_convert(el,PR/**/type,val,prule,cont->doc);			\
+    prule = InsertElementPRule(el,PR/**/type,0);			\
+    if (prule == NULL) return(-1);					\
+    etoi_convert(el,PR/**/type,val,(PRule)prule,cont->doc,0);		\
     return(0);								\
 }									\
 									\
-int SpecificGet/**/name(t,c,v)						\
-    PresentationTarget t;						\
-    PresentationContext c;						\
-    PresentationValue *v;						\
+int SpecificGet/**/name(PresentationTarget t, PresentationContext c,	\
+                      PresentationValue *v)				\
+{									\
+    PtrPRule prule;							\
+    SpecificTarget el = (SpecificTarget) t;				\
+    SpecificContext cont = (SpecificContext) c;				\
+    SpecificValue *val = /* (SpecificValue *) - EGP */ v;		\
+									\
+    prule = SearchElementPRule(el,PR/**/type,0);			\
+    if (prule == NULL) return(-1);					\
+    itoe_convert(el,PR/**/type,val,(PRule)prule,cont->doc);		\
+    return(0);								\
+}									\
+
+#define SPECIFIC_FUNCS2(type,category,name)				\
+									\
+int SpecificSet/**/name(PresentationTarget t, PresentationContext c,	\
+                      PresentationValue v)				\
+{									\
+    PtrPRule prule;							\
+    SpecificTarget el = (SpecificTarget) t;				\
+    SpecificContext cont = (SpecificContext) c;				\
+    SpecificValue val = /* (SpecificValue) - EGP */ v;			\
+									\
+    prule = InsertElementPRule(el,PR/**/type,category);			\
+    if (prule == NULL) return(-1);					\
+    etoi_convert(el,PR/**/type,val,(PRule)prule,cont->doc,category);	\
+    return(0);								\
+}									\
+									\
+int SpecificGet/**/name(PresentationTarget t, PresentationContext c,	\
+                      PresentationValue *v)				\
 {									\
     PRule prule;							\
     SpecificTarget el = (SpecificTarget) t;				\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue *val = /* (SpecificValue *) - EGP */ v;		\
 									\
-    prule = TtaGetPRule(el,PR/**/type);					\
+    prule = SearchElementPRule(el,PR/**/type,category);			\
     if (prule == NULL) return(-1);					\
-    itoe_convert(el,PR/**/type,val,prule,cont->doc);			\
+    itoe_convert(el,PR/**/type,val,(PRule)prule,cont->doc,0);		\
     return(0);								\
 }									\
 
@@ -263,8 +432,8 @@ int SpecificGet/**/name(t,c,v)						\
    *									*
   ----------------------------------------------------------------------*/
 
-SPECIFIC_FUNCS (Foreground, ForegroundColor) \
-SPECIFIC_FUNCS (Background, BackgroundColor) \
+SPECIFIC_FUNCS (Foreground, ForegroundColor)
+SPECIFIC_FUNCS (Background, BackgroundColor)
 SPECIFIC_FUNCS (Size, FontSize)
 SPECIFIC_FUNCS (Style, FontStyle)
 SPECIFIC_FUNCS (Adjust, Alignment)
@@ -275,6 +444,13 @@ SPECIFIC_FUNCS (Underline, TextUnderlining)
 SPECIFIC_FUNCS (FillPattern, FillPattern)
 SPECIFIC_FUNCS (Font, FontFamily)
 SPECIFIC_FUNCS (LineSpacing, LineSpacing)
+SPECIFIC_FUNCS (Height, Height)
+SPECIFIC_FUNCS (Width, Width)
+SPECIFIC_FUNCS (VertPos, VPos)
+SPECIFIC_FUNCS (HorizPos, HPos)
+SPECIFIC_FUNCS2 (Function, FnLine, InLine)
+SPECIFIC_FUNCS2 (Function, FnShowBox, ShowBox)
+SPECIFIC_FUNCS2 (Function, FnPictureMode, PictureMode)
 
 /*----------------------------------------------------------------------
    *									*
@@ -282,67 +458,6 @@ SPECIFIC_FUNCS (LineSpacing, LineSpacing)
    *									*
   ----------------------------------------------------------------------*/
 
-#ifdef __STDC__
-int                 SpecificSetWidth (PresentationTarget t, PresentationContext c,
-				      PresentationValue v)
-#else
-int                 SpecificSetWidth (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue   v;
-
-#endif
-{
-   SpecificTarget      el = (SpecificTarget) t;
-   SpecificContext     cont = (SpecificContext) c;
-   int                 x, y;
-   int                 delta = v.value;
-
-   TtaGiveBoxSize (el, cont->doc, 1, UnPoint, &x, &y);
-   delta -= x;
-   TtaChangeBoxSize (el, cont->doc, 1, delta, 0, UnPoint);
-
-   return (0);
-}
-
-#ifdef __STDC__
-int                 SpecificGetWidth (PresentationTarget t, PresentationContext c,
-				      PresentationValue * v)
-#else
-int                 SpecificGetWidth (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue  *v;
-
-#endif
-{
-   PRule               prule;
-   SpecificTarget      el = (SpecificTarget) t;
-   SpecificContext     cont = (SpecificContext) c;
-   SpecificValue      *val = (SpecificValue *) v;
-   int                 width = -1;
-   int                 type;
-
-   prule = TtaGetPRule (el, PRWidth);
-   prule = NULL;
-   do
-     {
-	TtaNextPRule (el, &prule);
-	if (prule == NULL)
-	   break;
-	type = TtaGetPRuleType (prule);
-	if (type == PRWidth)
-	  {
-	     width = TtaGetPRuleValue (prule);
-	     break;
-	  }
-     }
-   while (prule != NULL);
-   if (width < 0)
-      return (-1);
-   itoe_convert (el, PRWidth, val, prule, cont->doc);
-   return (0);
-}
 
 /*----------------------------------------------------------------------
    *									*
@@ -390,7 +505,6 @@ PresentationStrategy SpecificStrategy =
    (PresentationGetFunction) SpecificGetFillPattern,
    (PresentationSetFunction) SpecificSetFillPattern,
 
-/*----------------------------------------------------------------------
    (PresentationGetFunction) SpecificGetVPos,
    (PresentationSetFunction) SpecificSetVPos,
 
@@ -400,29 +514,108 @@ PresentationStrategy SpecificStrategy =
    (PresentationGetFunction) SpecificGetHeight,
    (PresentationSetFunction) SpecificSetHeight,
 
-   (PresentationGetFunction) SpecificGetRelHeight,
-   (PresentationSetFunction) SpecificSetRelHeight,
-  ----------------------------------------------------------------------*/
-   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+   NULL, /* (PresentationGetFunction) SpecificGetRelHeight, */
+   NULL, /* (PresentationSetFunction) SpecificSetRelHeight, */
 
-/*----------------------------------------------------------------------
    (PresentationGetFunction) SpecificGetWidth,
    (PresentationSetFunction) SpecificSetWidth,
-  ----------------------------------------------------------------------*/
-   NULL, NULL,
 
-/*----------------------------------------------------------------------
-   (PresentationGetFunction) SpecificGetRelWidth,
-   (PresentationSetFunction) SpecificSetRelWidth,
+   NULL, /* (PresentationGetFunction) SpecificGetRelWidth, */
+   NULL, /* (PresentationSetFunction) SpecificSetRelWidth, */
 
    (PresentationGetFunction) SpecificGetInLine,
    (PresentationSetFunction) SpecificSetInLine,
 
-   (PresentationGetFunction) SpecificGetShow,
-   (PresentationSetFunction) SpecificSetShow,
+   NULL, /* (PresentationGetFunction) SpecificGetShow, */
+   NULL, /* (PresentationSetFunction) SpecificSetShow, */
 
-   (PresentationGetFunction) SpecificGetBox,
-   (PresentationSetFunction) SpecificSetBox,
-  ----------------------------------------------------------------------*/
-   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+   NULL, /* (PresentationGetFunction) SpecificGetBox, */
+   NULL, /* (PresentationSetFunction) SpecificSetBox, */
+
+   (PresentationGetFunction) SpecificGetShowBox,
+   (PresentationSetFunction) SpecificSetShowBox,
+
+   NULL, /* (PresentationGetFunction) SpecificGetBgImage, */
+   NULL, /* (PresentationSetFunction) SpecificSetBgImage, */
+
+   (PresentationGetFunction) SpecificGetPictureMode,
+   (PresentationSetFunction) SpecificSetPictureMode,
 };
+
+/*
+ * ApplyAllSpecificContext : browse all the PSchema structure,
+ *      creating for each PRules list the corresponding SpecificContext 
+ *      structure, and call the given handler for each one.
+ */
+
+#ifdef __STDC__
+void                ApplyAllSpecificContext (Document doc, SpecificTarget target,
+			    SpecificContextApplyHandler handler, void *param)
+#else  /* __STDC__ */
+void                ApplyAllSpecificContext (doc, target, handler, param)
+Document            doc;
+SpecificTarget       target;
+SpecificSettingsApplyHandler handler;
+void               *param;
+
+#endif /* __STDC__ */
+{
+     SpecificContextBlock ctxt;
+     
+     /*
+      * There is only one specific context applied to a document.
+      */
+     ctxt.drv = &SpecificStrategy;
+     ctxt.doc = doc;
+     ctxt.schema = TtaGetDocumentSSchema (doc);
+     ctxt.magic1 = 0;
+     ctxt.magic2 = 0;
+
+     handler (target, &ctxt, param);
+}
+
+/*
+ * ApplyAllSpecificSettings : browse all the PRules structures,
+ *      associated to the corresponding SpecificContext 
+ *      structure, and call the given handler for each one.
+ */
+
+#ifdef __STDC__
+void                ApplyAllSpecificSettings (SpecificTarget target,
+		   SpecificContext ctxt, SpecificSettingsApplyHandler handler,
+					     void *param)
+#else  /* __STDC__ */
+void                ApplyAllSpecificSettings (target, ctxt, handler, param)
+SpecificTarget       target;
+SpecificContext      ctxt;
+SpecificSettingsApplyHandler handler;
+void               *param;
+
+#endif /* __STDC__ */
+{
+   Element el = (Element) target;
+   PtrPRule rule;
+   PresentationSettingBlock setting;
+    
+   rule = ((PtrElement) el)->ElFirstPRule;
+
+   /*
+    * for each rule corresponding to the same context i.e. identical
+    * conditions, create the corresponding PresentationSetting and
+    * call the user handler.
+    */
+   while (rule != NULL)
+     {
+	/*
+	 * fill in the PresentationSetting and call the handler.
+	 */
+	if (rule->PrPresMode == PresFunction)
+	    PRuleToPresentationSetting ((PRule) rule, &setting, 
+	                                rule->PrPresFunction);
+	else
+	    PRuleToPresentationSetting ((PRule) rule, &setting, 0);
+	handler (target, ctxt, &setting, param);
+	rule = rule->PrNextPRule;
+     }
+}
+

@@ -35,17 +35,17 @@ extern void thotlib_APIDocument_TtaAppendDocumentPath ( struct Hthotlib_APIDocum
                                                         struct Hjava_lang_String* jaDirectory );
 extern void thotlib_APIDocument_TtaSetSchemaPath ( struct Hthotlib_APIDocument* none,
                                                    struct Hjava_lang_String* jpath );
-extern jint thotlib_APIDocument_TtaNewNature ( struct Hthotlib_APIDocument* none,
-                                               jint schema,
-                                               struct Hjava_lang_String* jnatureName,
-                                               struct Hjava_lang_String* jpresentationName );
-extern jint thotlib_APIDocument_TtaNewSchemaExtension ( struct Hthotlib_APIDocument* none,
-                                                        jint document,
-                                                        struct Hjava_lang_String* jextensionName,
-                                                        struct Hjava_lang_String* jpresentationName );
-extern jint thotlib_APIDocument_TtaGetSchemaExtension ( struct Hthotlib_APIDocument* none,
-                                                        jint document,
-                                                        struct Hjava_lang_String* jNomExtension );
+extern jlong thotlib_APIDocument_TtaNewNature ( struct Hthotlib_APIDocument* none,
+                                                jlong jschema,
+                                                struct Hjava_lang_String* jnatureName,
+                                                struct Hjava_lang_String* jpresentationName );
+extern jlong thotlib_APIDocument_TtaNewSchemaExtension ( struct Hthotlib_APIDocument* none,
+                                                         jint document,
+                                                         struct Hjava_lang_String* jextensionName,
+                                                         struct Hjava_lang_String* jpresentationName );
+extern jlong thotlib_APIDocument_TtaGetSchemaExtension ( struct Hthotlib_APIDocument* none,
+                                                         jint document,
+                                                         struct Hjava_lang_String* jNomExtension );
 extern void thotlib_APIDocument_TtaSetPSchema ( struct Hthotlib_APIDocument* none,
                                                 jint document,
                                                 struct Hjava_lang_String* jpresentationName );
@@ -76,18 +76,18 @@ extern void thotlib_APIDocument_TtaGetDocumentDirectory ( struct Hthotlib_APIDoc
                                                           jint document,
                                                           struct Hjava_lang_String* jbuffer,
                                                           jint bufferLength );
-extern jint thotlib_APIDocument_TtaGetDocumentSSchema ( struct Hthotlib_APIDocument* none,
-                                                        jint document );
+extern jlong thotlib_APIDocument_TtaGetDocumentSSchema ( struct Hthotlib_APIDocument* none,
+                                                         jint document );
 extern struct Hjava_lang_String* thotlib_APIDocument_TtaGetSSchemaName ( struct Hthotlib_APIDocument* none,
-                                                                         jint schema );
+                                                                         jlong jschema );
 extern struct Hjava_lang_String* thotlib_APIDocument_TtaGetPSchemaName ( struct Hthotlib_APIDocument* none,
-                                                                         jint schema );
-extern jint thotlib_APIDocument_TtaGetSSchema ( struct Hthotlib_APIDocument* none,
-                                                struct Hjava_lang_String* jname,
-                                                jint document );
+                                                                         jlong jschema );
+extern jlong thotlib_APIDocument_TtaGetSSchema ( struct Hthotlib_APIDocument* none,
+                                                 struct Hjava_lang_String* jname,
+                                                 jint document );
 extern jint thotlib_APIDocument_TtaSameSSchemas ( struct Hthotlib_APIDocument* none,
-                                                  jint schema1,
-                                                  jint schema2 );
+                                                  jlong jschema1,
+                                                  jlong jschema2 );
 extern void thotlib_APIDocument_TtaGiveSchemasOfDocument ( struct Hthotlib_APIDocument* none,
                                                            struct Hjava_lang_String* jdocumentName,
                                                            struct Hjava_lang_String* jstructureName,
@@ -152,17 +152,17 @@ extern void thotlib_APIDocument_TtaAppendDocumentPath (/* struct Hthotlib_APIDoc
                                                           struct Hjava_lang_String* jaDirectory */);
 extern void thotlib_APIDocument_TtaSetSchemaPath (/* struct Hthotlib_APIDocument* none,
                                                      struct Hjava_lang_String* jpath */);
-extern jint thotlib_APIDocument_TtaNewNature (/* struct Hthotlib_APIDocument* none,
-                                                 jint schema,
-                                                 struct Hjava_lang_String* jnatureName,
-                                                 struct Hjava_lang_String* jpresentationName */);
-extern jint thotlib_APIDocument_TtaNewSchemaExtension (/* struct Hthotlib_APIDocument* none,
-                                                          jint document,
-                                                          struct Hjava_lang_String* jextensionName,
-                                                          struct Hjava_lang_String* jpresentationName */);
-extern jint thotlib_APIDocument_TtaGetSchemaExtension (/* struct Hthotlib_APIDocument* none,
-                                                          jint document,
-                                                          struct Hjava_lang_String* jNomExtension */);
+extern jlong thotlib_APIDocument_TtaNewNature (/* struct Hthotlib_APIDocument* none,
+                                                  jlong jschema,
+                                                  struct Hjava_lang_String* jnatureName,
+                                                  struct Hjava_lang_String* jpresentationName */);
+extern jlong thotlib_APIDocument_TtaNewSchemaExtension (/* struct Hthotlib_APIDocument* none,
+                                                           jint document,
+                                                           struct Hjava_lang_String* jextensionName,
+                                                           struct Hjava_lang_String* jpresentationName */);
+extern jlong thotlib_APIDocument_TtaGetSchemaExtension (/* struct Hthotlib_APIDocument* none,
+                                                           jint document,
+                                                           struct Hjava_lang_String* jNomExtension */);
 extern void thotlib_APIDocument_TtaSetPSchema (/* struct Hthotlib_APIDocument* none,
                                                   jint document,
                                                   struct Hjava_lang_String* jpresentationName */);
@@ -193,18 +193,18 @@ extern void thotlib_APIDocument_TtaGetDocumentDirectory (/* struct Hthotlib_APID
                                                             jint document,
                                                             struct Hjava_lang_String* jbuffer,
                                                             jint bufferLength */);
-extern jint thotlib_APIDocument_TtaGetDocumentSSchema (/* struct Hthotlib_APIDocument* none,
-                                                          jint document */);
+extern jlong thotlib_APIDocument_TtaGetDocumentSSchema (/* struct Hthotlib_APIDocument* none,
+                                                           jint document */);
 extern struct Hjava_lang_String* thotlib_APIDocument_TtaGetSSchemaName (/* struct Hthotlib_APIDocument* none,
-                                                                           jint schema */);
+                                                                           jlong jschema */);
 extern struct Hjava_lang_String* thotlib_APIDocument_TtaGetPSchemaName (/* struct Hthotlib_APIDocument* none,
-                                                                           jint schema */);
-extern jint thotlib_APIDocument_TtaGetSSchema (/* struct Hthotlib_APIDocument* none,
-                                                  struct Hjava_lang_String* jname,
-                                                  jint document */);
+                                                                           jlong jschema */);
+extern jlong thotlib_APIDocument_TtaGetSSchema (/* struct Hthotlib_APIDocument* none,
+                                                   struct Hjava_lang_String* jname,
+                                                   jint document */);
 extern jint thotlib_APIDocument_TtaSameSSchemas (/* struct Hthotlib_APIDocument* none,
-                                                    jint schema1,
-                                                    jint schema2 */);
+                                                    jlong jschema1,
+                                                    jlong jschema2 */);
 extern void thotlib_APIDocument_TtaGiveSchemasOfDocument (/* struct Hthotlib_APIDocument* none,
                                                              struct Hjava_lang_String* jdocumentName,
                                                              struct Hjava_lang_String* jstructureName,

@@ -14,6 +14,9 @@ extern int GetHTML3Names ( Element elem,
                            Document doc,
                            char **lst,
                            int max );
+extern void PresentationSettingsToCSS ( PresentationSetting settings,
+                                        char *buffer,
+                                        int len );
 extern void UpdateStyleDelete ( NotifyAttribute * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void GetHTML3StyleString ( Element elem,
@@ -59,11 +62,6 @@ extern Element CreateNewWWWElement ( Document doc,
                                      int type );
 extern int IsImplicitClassName ( char *class,
                                  Document doc );
-extern Element SearchClass ( char *class,
-                             Document doc );
-extern void ApplyStyleRule ( Element elem,
-                             Element stylerule,
-                             Document doc );
 extern void RemoveStyleRule ( Element elClass,
                               Document doc );
 extern void RemoveStyle ( Element elem,
@@ -99,6 +97,9 @@ extern int GetHTML3Names (/* Element elem,
                              Document doc,
                              char **lst,
                              int max */);
+extern void PresentationSettingsToCSS (/* PresentationSetting settings,
+                                          char *buffer,
+                                          int len */);
 extern void UpdateStyleDelete (/* NotifyAttribute * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
 extern void GetHTML3StyleString (/* Element elem,
@@ -144,11 +145,6 @@ extern Element CreateNewWWWElement (/* Document doc,
                                        int type */);
 extern int IsImplicitClassName (/* char *class,
                                    Document doc */);
-extern Element SearchClass (/* char *class,
-                               Document doc */);
-extern void ApplyStyleRule (/* Element elem,
-                               Element stylerule,
-                               Document doc */);
 extern void RemoveStyleRule (/* Element elClass,
                                 Document doc */);
 extern void RemoveStyle (/* Element elem,

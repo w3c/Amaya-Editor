@@ -9,7 +9,7 @@
 extern boolean DrawEtendSelection ( PtrElement pEl,
                                     PtrDocument pDoc );
 extern void DrawAddAttr ( PtrAttribute * pAttr,
-			  PtrElement pEl );
+                          PtrElement pEl );
 extern void DrawSupprAttr ( PtrAttribute pAttr,
                             PtrElement pEl );
 
@@ -18,7 +18,7 @@ extern void DrawSupprAttr ( PtrAttribute pAttr,
 extern boolean DrawEtendSelection (/* PtrElement pEl,
                                       PtrDocument pDoc */);
 extern void DrawAddAttr (/* PtrAttribute * pAttr,
-			    PtrElement pEl */);
+                            PtrElement pEl */);
 extern void DrawSupprAttr (/* PtrAttribute pAttr,
                               PtrElement pEl */);
 

@@ -8,20 +8,20 @@
 
 extern void thotlib_APIDialog_TtaNewPulldown ( struct Hthotlib_APIDialog* none,
                                                jint ref,
-                                               jint parent,
+                                               jlong jparent,
                                                struct Hjava_lang_String* jtitle,
                                                jint number,
                                                struct Hjava_lang_String* jtext,
                                                struct Hjava_lang_String* jequiv );
 extern void thotlib_APIDialog_TtaSetPulldownOff ( struct Hthotlib_APIDialog* none,
                                                   jint ref,
-                                                  jint parent );
+                                                  jlong jparent );
 extern void thotlib_APIDialog_TtaSetPulldownOn ( struct Hthotlib_APIDialog* none,
                                                  jint ref,
-                                                 jint parent );
+                                                 jlong jparent );
 extern void thotlib_APIDialog_TtaNewPopup ( struct Hthotlib_APIDialog* none,
                                             jint ref,
-                                            jint parent,
+                                            jlong jparent,
                                             struct Hjava_lang_String* jtitle,
                                             jint number,
                                             struct Hjava_lang_String* jtext,
@@ -65,7 +65,7 @@ extern void thotlib_APIDialog_TtaDestroyDialogue ( struct Hthotlib_APIDialog* no
                                                    jint ref );
 extern void thotlib_APIDialog_TtaNewForm ( struct Hthotlib_APIDialog* none,
                                            jint ref,
-                                           jint parent,
+                                           jlong jparent,
                                            struct Hjava_lang_String* jtitle,
                                            jint horizontal,
                                            jint packet,
@@ -73,7 +73,7 @@ extern void thotlib_APIDialog_TtaNewForm ( struct Hthotlib_APIDialog* none,
                                            jint dbutton );
 extern void thotlib_APIDialog_TtaNewSheet ( struct Hthotlib_APIDialog* none,
                                             jint ref,
-                                            jint parent,
+                                            jlong jparent,
                                             struct Hjava_lang_String* jtitle,
                                             jint number,
                                             struct Hjava_lang_String* jtext,
@@ -83,7 +83,7 @@ extern void thotlib_APIDialog_TtaNewSheet ( struct Hthotlib_APIDialog* none,
                                             jint dbutton );
 extern void thotlib_APIDialog_TtaNewDialogSheet ( struct Hthotlib_APIDialog* none,
                                                   jint ref,
-                                                  jint parent,
+                                                  jlong jparent,
                                                   struct Hjava_lang_String* jtitle,
                                                   jint number,
                                                   struct Hjava_lang_String* jtext,
@@ -150,20 +150,20 @@ extern void register_thotlib_APIDialog_stubs ( void );
 
 extern void thotlib_APIDialog_TtaNewPulldown (/* struct Hthotlib_APIDialog* none,
                                                  jint ref,
-                                                 jint parent,
+                                                 jlong jparent,
                                                  struct Hjava_lang_String* jtitle,
                                                  jint number,
                                                  struct Hjava_lang_String* jtext,
                                                  struct Hjava_lang_String* jequiv */);
 extern void thotlib_APIDialog_TtaSetPulldownOff (/* struct Hthotlib_APIDialog* none,
                                                     jint ref,
-                                                    jint parent */);
+                                                    jlong jparent */);
 extern void thotlib_APIDialog_TtaSetPulldownOn (/* struct Hthotlib_APIDialog* none,
                                                    jint ref,
-                                                   jint parent */);
+                                                   jlong jparent */);
 extern void thotlib_APIDialog_TtaNewPopup (/* struct Hthotlib_APIDialog* none,
                                               jint ref,
-                                              jint parent,
+                                              jlong jparent,
                                               struct Hjava_lang_String* jtitle,
                                               jint number,
                                               struct Hjava_lang_String* jtext,
@@ -207,7 +207,7 @@ extern void thotlib_APIDialog_TtaDestroyDialogue (/* struct Hthotlib_APIDialog* 
                                                      jint ref */);
 extern void thotlib_APIDialog_TtaNewForm (/* struct Hthotlib_APIDialog* none,
                                              jint ref,
-                                             jint parent,
+                                             jlong jparent,
                                              struct Hjava_lang_String* jtitle,
                                              jint horizontal,
                                              jint packet,
@@ -215,7 +215,7 @@ extern void thotlib_APIDialog_TtaNewForm (/* struct Hthotlib_APIDialog* none,
                                              jint dbutton */);
 extern void thotlib_APIDialog_TtaNewSheet (/* struct Hthotlib_APIDialog* none,
                                               jint ref,
-                                              jint parent,
+                                              jlong jparent,
                                               struct Hjava_lang_String* jtitle,
                                               jint number,
                                               struct Hjava_lang_String* jtext,
@@ -225,7 +225,7 @@ extern void thotlib_APIDialog_TtaNewSheet (/* struct Hthotlib_APIDialog* none,
                                               jint dbutton */);
 extern void thotlib_APIDialog_TtaNewDialogSheet (/* struct Hthotlib_APIDialog* none,
                                                     jint ref,
-                                                    jint parent,
+                                                    jlong jparent,
                                                     struct Hjava_lang_String* jtitle,
                                                     jint number,
                                                     struct Hjava_lang_String* jtext,

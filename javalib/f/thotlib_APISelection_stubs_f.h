@@ -10,15 +10,15 @@ extern jint thotlib_APISelection_TtaIsDocumentSelected ( struct Hthotlib_APISele
                                                          jint document );
 extern void thotlib_APISelection_TtaSelectElement ( struct Hthotlib_APISelection* none,
                                                     jint document,
-                                                    jint selectedElement );
+                                                    jlong jselectedElement );
 extern void thotlib_APISelection_TtaSelectString ( struct Hthotlib_APISelection* none,
                                                    jint document,
-                                                   jint textElement,
+                                                   jlong jtextElement,
                                                    jint firstCharacter,
                                                    jint lastCharacter );
 extern void thotlib_APISelection_TtaExtendSelection ( struct Hthotlib_APISelection* none,
                                                       jint document,
-                                                      jint element,
+                                                      jlong jelement,
                                                       jint lastCharacter );
 extern void thotlib_APISelection_TtaSelectInterval ( struct Hthotlib_APISelection* none );
 extern void thotlib_APISelection_TtaUnselect ( struct Hthotlib_APISelection* none,
@@ -33,15 +33,15 @@ extern jint thotlib_APISelection_TtaIsDocumentSelected (/* struct Hthotlib_APISe
                                                            jint document */);
 extern void thotlib_APISelection_TtaSelectElement (/* struct Hthotlib_APISelection* none,
                                                       jint document,
-                                                      jint selectedElement */);
+                                                      jlong jselectedElement */);
 extern void thotlib_APISelection_TtaSelectString (/* struct Hthotlib_APISelection* none,
                                                      jint document,
-                                                     jint textElement,
+                                                     jlong jtextElement,
                                                      jint firstCharacter,
                                                      jint lastCharacter */);
 extern void thotlib_APISelection_TtaExtendSelection (/* struct Hthotlib_APISelection* none,
                                                         jint document,
-                                                        jint element,
+                                                        jlong jelement,
                                                         jint lastCharacter */);
 extern void thotlib_APISelection_TtaSelectInterval (/* struct Hthotlib_APISelection* none */);
 extern void thotlib_APISelection_TtaUnselect (/* struct Hthotlib_APISelection* none,

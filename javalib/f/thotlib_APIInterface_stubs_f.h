@@ -14,7 +14,7 @@ extern void thotlib_APIInterface_TtaChangeButton ( struct Hthotlib_APIInterface*
                                                    jint document,
                                                    jint view,
                                                    jint index,
-                                                   jint picture );
+                                                   jlong jpicture );
 extern void thotlib_APIInterface_TtaSetTextZone ( struct Hthotlib_APIInterface* none,
                                                   jint document,
                                                   jint view,
@@ -49,18 +49,18 @@ extern void thotlib_APIInterface_TtaSetStatus ( struct Hthotlib_APIInterface* no
                                                 jint view,
                                                 struct Hjava_lang_String* jtext,
                                                 struct Hjava_lang_String* jname );
-extern jint thotlib_APIInterface_TtaGetViewFrame ( struct Hthotlib_APIInterface* none,
-                                                   jint document,
-                                                   jint view );
+extern jlong thotlib_APIInterface_TtaGetViewFrame ( struct Hthotlib_APIInterface* none,
+                                                    jint document,
+                                                    jint view );
 extern void thotlib_APIInterface_TtaMainLoop ( struct Hthotlib_APIInterface* none );
 extern void thotlib_APIInterface_TtaHandlePendingEvents ( struct Hthotlib_APIInterface* none );
 extern void thotlib_APIInterface_TtaClickElement ( struct Hthotlib_APIInterface* none,
                                                    struct Hthotlib_Document* jdocument,
                                                    struct Hthotlib_Element* jelement );
-extern jint thotlib_APIInterface_TtaCreateBitmapLogo ( struct Hthotlib_APIInterface* none,
-                                                       jint width,
-                                                       jint height,
-                                                       struct Hjava_lang_String* jbits );
+extern jlong thotlib_APIInterface_TtaCreateBitmapLogo ( struct Hthotlib_APIInterface* none,
+                                                        jint width,
+                                                        jint height,
+                                                        struct Hjava_lang_String* jbits );
 extern void thotlib_APIInterface_TtaSetCursorWatch ( struct Hthotlib_APIInterface* none,
                                                      jint document,
                                                      jint view );
@@ -72,12 +72,12 @@ extern jint thotlib_APIInterface_TtaGetButtonColor ( struct Hthotlib_APIInterfac
 extern jint thotlib_APIInterface_TtaGetScreenDepth ( struct Hthotlib_APIInterface* none );
 extern void thotlib_APIInterface_TtaRegisterPixmap ( struct Hthotlib_APIInterface* none,
                                                      struct Hjava_lang_String* jname,
-                                                     jint pix );
-extern jint thotlib_APIInterface_TtaLoadImage ( struct Hthotlib_APIInterface* none,
-                                                struct Hjava_lang_String* jname,
-                                                struct Hjava_lang_String* jpath );
-extern jint thotlib_APIInterface_TtaGetImage ( struct Hthotlib_APIInterface* none,
-                                               struct Hjava_lang_String* jname );
+                                                     jlong jpix );
+extern jlong thotlib_APIInterface_TtaLoadImage ( struct Hthotlib_APIInterface* none,
+                                                 struct Hjava_lang_String* jname,
+                                                 struct Hjava_lang_String* jpath );
+extern jlong thotlib_APIInterface_TtaGetImage ( struct Hthotlib_APIInterface* none,
+                                                struct Hjava_lang_String* jname );
 extern void register_thotlib_APIInterface_stubs ( void );
 
 #else /* __STDC__ */
@@ -90,7 +90,7 @@ extern void thotlib_APIInterface_TtaChangeButton (/* struct Hthotlib_APIInterfac
                                                      jint document,
                                                      jint view,
                                                      jint index,
-                                                     jint picture */);
+                                                     jlong jpicture */);
 extern void thotlib_APIInterface_TtaSetTextZone (/* struct Hthotlib_APIInterface* none,
                                                     jint document,
                                                     jint view,
@@ -125,18 +125,18 @@ extern void thotlib_APIInterface_TtaSetStatus (/* struct Hthotlib_APIInterface* 
                                                   jint view,
                                                   struct Hjava_lang_String* jtext,
                                                   struct Hjava_lang_String* jname */);
-extern jint thotlib_APIInterface_TtaGetViewFrame (/* struct Hthotlib_APIInterface* none,
-                                                     jint document,
-                                                     jint view */);
+extern jlong thotlib_APIInterface_TtaGetViewFrame (/* struct Hthotlib_APIInterface* none,
+                                                      jint document,
+                                                      jint view */);
 extern void thotlib_APIInterface_TtaMainLoop (/* struct Hthotlib_APIInterface* none */);
 extern void thotlib_APIInterface_TtaHandlePendingEvents (/* struct Hthotlib_APIInterface* none */);
 extern void thotlib_APIInterface_TtaClickElement (/* struct Hthotlib_APIInterface* none,
                                                      struct Hthotlib_Document* jdocument,
                                                      struct Hthotlib_Element* jelement */);
-extern jint thotlib_APIInterface_TtaCreateBitmapLogo (/* struct Hthotlib_APIInterface* none,
-                                                         jint width,
-                                                         jint height,
-                                                         struct Hjava_lang_String* jbits */);
+extern jlong thotlib_APIInterface_TtaCreateBitmapLogo (/* struct Hthotlib_APIInterface* none,
+                                                          jint width,
+                                                          jint height,
+                                                          struct Hjava_lang_String* jbits */);
 extern void thotlib_APIInterface_TtaSetCursorWatch (/* struct Hthotlib_APIInterface* none,
                                                        jint document,
                                                        jint view */);
@@ -148,12 +148,12 @@ extern jint thotlib_APIInterface_TtaGetButtonColor (/* struct Hthotlib_APIInterf
 extern jint thotlib_APIInterface_TtaGetScreenDepth (/* struct Hthotlib_APIInterface* none */);
 extern void thotlib_APIInterface_TtaRegisterPixmap (/* struct Hthotlib_APIInterface* none,
                                                        struct Hjava_lang_String* jname,
-                                                       jint pix */);
-extern jint thotlib_APIInterface_TtaLoadImage (/* struct Hthotlib_APIInterface* none,
-                                                  struct Hjava_lang_String* jname,
-                                                  struct Hjava_lang_String* jpath */);
-extern jint thotlib_APIInterface_TtaGetImage (/* struct Hthotlib_APIInterface* none,
-                                                 struct Hjava_lang_String* jname */);
+                                                       jlong jpix */);
+extern jlong thotlib_APIInterface_TtaLoadImage (/* struct Hthotlib_APIInterface* none,
+                                                   struct Hjava_lang_String* jname,
+                                                   struct Hjava_lang_String* jpath */);
+extern jlong thotlib_APIInterface_TtaGetImage (/* struct Hthotlib_APIInterface* none,
+                                                  struct Hjava_lang_String* jname */);
 extern void register_thotlib_APIInterface_stubs (/* void */);
 
 #endif /* __STDC__ */

@@ -6,110 +6,120 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern jint thotlib_APIPresentation_TtaNewPRule ( struct Hthotlib_APIPresentation* none,
-                                                  jint presentationType,
-                                                  jint view,
-                                                  jint document );
-extern jint thotlib_APIPresentation_TtaNewPRuleForNamedView ( struct Hthotlib_APIPresentation* none,
-                                                              jint presentationType,
-                                                              struct Hjava_lang_String* jviewName,
-                                                              jint document );
-extern jint thotlib_APIPresentation_TtaCopyPRule ( struct Hthotlib_APIPresentation* none,
-                                                   jint pRule );
+extern jlong thotlib_APIPresentation_TtaNewPRule ( struct Hthotlib_APIPresentation* none,
+                                                   jint presentationType,
+                                                   jint view,
+                                                   jint document );
+extern jlong thotlib_APIPresentation_TtaNewPRuleForNamedView ( struct Hthotlib_APIPresentation* none,
+                                                               jint presentationType,
+                                                               struct Hjava_lang_String* jviewName,
+                                                               jint document );
+extern jlong thotlib_APIPresentation_TtaCopyPRule ( struct Hthotlib_APIPresentation* none,
+                                                    jlong jpRule );
 extern void thotlib_APIPresentation_TtaAttachPRule ( struct Hthotlib_APIPresentation* none,
-                                                     jint element,
-                                                     jint pRule,
+                                                     jlong jelement,
+                                                     jlong jpRule,
                                                      jint document );
 extern void thotlib_APIPresentation_TtaRemovePRule ( struct Hthotlib_APIPresentation* none,
-                                                     jint element,
-                                                     jint pRule,
+                                                     jlong jelement,
+                                                     jlong jpRule,
                                                      jint document );
 extern void thotlib_APIPresentation_TtaSetPRuleValue ( struct Hthotlib_APIPresentation* none,
-                                                       jint element,
-                                                       jint pRule,
+                                                       jlong jelement,
+                                                       jlong jpRule,
                                                        jint value,
                                                        jint document );
 extern void thotlib_APIPresentation_TtaChangeBoxSize ( struct Hthotlib_APIPresentation* none,
-                                                       jint element,
+                                                       jlong jelement,
                                                        jint document,
                                                        jint view,
                                                        jint deltaX,
                                                        jint deltaY,
                                                        jint unit );
 extern void thotlib_APIPresentation_TtaChangeBoxPosition ( struct Hthotlib_APIPresentation* none,
-                                                           jint element,
+                                                           jlong jelement,
                                                            jint document,
                                                            jint view,
                                                            jint X,
                                                            jint Y,
                                                            jint unit );
+extern jint thotlib_APIPresentation_TtaGetBoxMaxSize ( struct Hthotlib_APIPresentation* none,
+                                                       jlong jelement,
+                                                       jint document,
+                                                       jint view,
+                                                       jint unit );
 extern void thotlib_APIPresentation_TtaNextPRule ( struct Hthotlib_APIPresentation* none,
-                                                   jint element,
+                                                   jlong jelement,
                                                    struct Hthotlib_PRule* jpRule );
-extern jint thotlib_APIPresentation_TtaGetPRule ( struct Hthotlib_APIPresentation* none,
-                                                  jint element,
-                                                  jint presentationType );
+extern jlong thotlib_APIPresentation_TtaGetPRule ( struct Hthotlib_APIPresentation* none,
+                                                   jlong jelement,
+                                                   jint presentationType );
 extern jint thotlib_APIPresentation_TtaGetPRuleType ( struct Hthotlib_APIPresentation* none,
-                                                      jint pRule );
+                                                      jlong jpRule );
 extern jint thotlib_APIPresentation_TtaGetPRuleValue ( struct Hthotlib_APIPresentation* none,
-                                                       jint pRule );
+                                                       jlong jpRule );
 extern jint thotlib_APIPresentation_TtaSamePRules ( struct Hthotlib_APIPresentation* none,
-                                                    jint pRule1,
-                                                    jint pRule2 );
+                                                    jlong jpRule1,
+                                                    jlong jpRule2 );
 extern void register_thotlib_APIPresentation_stubs ( void );
 
 #else /* __STDC__ */
 
-extern jint thotlib_APIPresentation_TtaNewPRule (/* struct Hthotlib_APIPresentation* none,
-                                                    jint presentationType,
-                                                    jint view,
-                                                    jint document */);
-extern jint thotlib_APIPresentation_TtaNewPRuleForNamedView (/* struct Hthotlib_APIPresentation* none,
-                                                                jint presentationType,
-                                                                struct Hjava_lang_String* jviewName,
-                                                                jint document */);
-extern jint thotlib_APIPresentation_TtaCopyPRule (/* struct Hthotlib_APIPresentation* none,
-                                                     jint pRule */);
+extern jlong thotlib_APIPresentation_TtaNewPRule (/* struct Hthotlib_APIPresentation* none,
+                                                     jint presentationType,
+                                                     jint view,
+                                                     jint document */);
+extern jlong thotlib_APIPresentation_TtaNewPRuleForNamedView (/* struct Hthotlib_APIPresentation* none,
+                                                                 jint presentationType,
+                                                                 struct Hjava_lang_String* jviewName,
+                                                                 jint document */);
+extern jlong thotlib_APIPresentation_TtaCopyPRule (/* struct Hthotlib_APIPresentation* none,
+                                                      jlong jpRule */);
 extern void thotlib_APIPresentation_TtaAttachPRule (/* struct Hthotlib_APIPresentation* none,
-                                                       jint element,
-                                                       jint pRule,
+                                                       jlong jelement,
+                                                       jlong jpRule,
                                                        jint document */);
 extern void thotlib_APIPresentation_TtaRemovePRule (/* struct Hthotlib_APIPresentation* none,
-                                                       jint element,
-                                                       jint pRule,
+                                                       jlong jelement,
+                                                       jlong jpRule,
                                                        jint document */);
 extern void thotlib_APIPresentation_TtaSetPRuleValue (/* struct Hthotlib_APIPresentation* none,
-                                                         jint element,
-                                                         jint pRule,
+                                                         jlong jelement,
+                                                         jlong jpRule,
                                                          jint value,
                                                          jint document */);
 extern void thotlib_APIPresentation_TtaChangeBoxSize (/* struct Hthotlib_APIPresentation* none,
-                                                         jint element,
+                                                         jlong jelement,
                                                          jint document,
                                                          jint view,
                                                          jint deltaX,
                                                          jint deltaY,
                                                          jint unit */);
 extern void thotlib_APIPresentation_TtaChangeBoxPosition (/* struct Hthotlib_APIPresentation* none,
-                                                             jint element,
+                                                             jlong jelement,
                                                              jint document,
                                                              jint view,
                                                              jint X,
                                                              jint Y,
                                                              jint unit */);
+extern jint thotlib_APIPresentation_TtaGetBoxMaxSize (/* struct Hthotlib_APIPresentation* none,
+                                                         jlong jelement,
+                                                         jint document,
+                                                         jint view,
+                                                         jint unit */);
 extern void thotlib_APIPresentation_TtaNextPRule (/* struct Hthotlib_APIPresentation* none,
-                                                     jint element,
+                                                     jlong jelement,
                                                      struct Hthotlib_PRule* jpRule */);
-extern jint thotlib_APIPresentation_TtaGetPRule (/* struct Hthotlib_APIPresentation* none,
-                                                    jint element,
-                                                    jint presentationType */);
+extern jlong thotlib_APIPresentation_TtaGetPRule (/* struct Hthotlib_APIPresentation* none,
+                                                     jlong jelement,
+                                                     jint presentationType */);
 extern jint thotlib_APIPresentation_TtaGetPRuleType (/* struct Hthotlib_APIPresentation* none,
-                                                        jint pRule */);
+                                                        jlong jpRule */);
 extern jint thotlib_APIPresentation_TtaGetPRuleValue (/* struct Hthotlib_APIPresentation* none,
-                                                         jint pRule */);
+                                                         jlong jpRule */);
 extern jint thotlib_APIPresentation_TtaSamePRules (/* struct Hthotlib_APIPresentation* none,
-                                                      jint pRule1,
-                                                      jint pRule2 */);
+                                                      jlong jpRule1,
+                                                      jlong jpRule2 */);
 extern void register_thotlib_APIPresentation_stubs (/* void */);
 
 #endif /* __STDC__ */

@@ -11,6 +11,9 @@
  *
  */ 
 
+#ifndef __CONST_STR_H__
+#define __CONST_STR_H__
+
 #define MAX_NAME_LENGTH 32	/* maximum name length */	
 #define MAX_RULES_SSCHEMA 350	/* maximum number of rules in a structure
 				   schema */	
@@ -109,3 +112,4 @@
 #define C_PAGE_BREAK 'P'
 #define C_UNUSED 'U'
 
+#endif /* __CONST_STR_H__ */

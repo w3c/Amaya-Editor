@@ -44,6 +44,30 @@ extern void JavaAttributeType2CAttributeTypePtr ( struct Hthotlib_AttributeType*
                                                   AttributeType **out );
 extern void CAttributeTypePtr2JavaAttributeType ( AttributeType *in,
                                                   struct Hthotlib_AttributeType** out );
+extern void CPixmap2Javalong ( Pixmap in,
+                               jlong *out );
+extern void Javalong2CPixmap ( jlong in,
+                               Pixmap *out );
+extern void CElement2Javalong ( Element in,
+                                jlong *out );
+extern void Javalong2CElement ( jlong in,
+                                Element *out );
+extern void CSSchema2Javalong ( SSchema in,
+                                jlong *out );
+extern void Javalong2CSSchema ( jlong in,
+                                SSchema *out );
+extern void CAttribute2Javalong ( Attribute in,
+                                  jlong *out );
+extern void Javalong2CAttribute ( jlong in,
+                                  Attribute *out );
+extern void CPRule2Javalong ( PRule in,
+                              jlong *out );
+extern void Javalong2CPRule ( jlong in,
+                              PRule *out );
+extern void CThotWidget2Javalong ( ThotWidget in,
+                                   jlong *out );
+extern void Javalong2CThotWidget ( jlong in,
+                                   ThotWidget *out );
 
 #else /* __STDC__ */
 
@@ -85,6 +109,30 @@ extern void JavaAttributeType2CAttributeTypePtr (/* struct Hthotlib_AttributeTyp
                                                     AttributeType **out */);
 extern void CAttributeTypePtr2JavaAttributeType (/* AttributeType *in,
                                                     struct Hthotlib_AttributeType** out */);
+extern void CPixmap2Javalong (/* Pixmap in,
+                                 jlong *out */);
+extern void Javalong2CPixmap (/* jlong in,
+                                 Pixmap *out */);
+extern void CElement2Javalong (/* Element in,
+                                  jlong *out */);
+extern void Javalong2CElement (/* jlong in,
+                                  Element *out */);
+extern void CSSchema2Javalong (/* SSchema in,
+                                  jlong *out */);
+extern void Javalong2CSSchema (/* jlong in,
+                                  SSchema *out */);
+extern void CAttribute2Javalong (/* Attribute in,
+                                    jlong *out */);
+extern void Javalong2CAttribute (/* jlong in,
+                                    Attribute *out */);
+extern void CPRule2Javalong (/* PRule in,
+                                jlong *out */);
+extern void Javalong2CPRule (/* jlong in,
+                                PRule *out */);
+extern void CThotWidget2Javalong (/* ThotWidget in,
+                                     jlong *out */);
+extern void Javalong2CThotWidget (/* jlong in,
+                                     ThotWidget *out */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

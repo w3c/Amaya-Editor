@@ -648,7 +648,8 @@ CmpRulesFunc        cmp;
  */
 
 #ifdef __STDC__
-static int          TstRuleContext (PtrPRule rule, GenericContext ctxt, PRuleType pres)
+static int          TstRuleContext (PtrPRule rule, GenericContext ctxt,
+                                    PRuleType pres)
 #else  /* __STDC__ */
 static int          TstRuleContext (rule, ctxt, pres)
 PtrPRule            rule;
@@ -991,12 +992,13 @@ GenericContext      ctxt;
 
 #ifdef __STDC__
 static PtrPRule     PresRuleInsert (PSchema tsch, GenericContext ctxt,
-				    PRuleType pres)
+				    PRuleType pres, int extra)
 #else  /* __STDC__ */
-static PtrPRule     PresRuleInsert (tsch, ctxt, pres)
+static PtrPRule     PresRuleInsert (tsch, ctxt, pres, extra)
 PSchema             tsch;
 GenericContext      ctxt;
 PRuleType           pres;
+int                 extra;
 
 #endif /* !__STDC__ */
 {
@@ -1059,6 +1061,13 @@ PRuleType           pres;
 	     cur = NULL;
 	     break;
 	  }
+	
+	/* check for extra specification in case of function rule */
+	if ((pres == PresFunction) && (cur->PrPresMode != extra)) {
+	    prev = cur;
+	    cur = cur->PrNextPRule;
+	    continue;
+	}
 
 	/* check this rule */
 	if (TstRuleContext (cur, ctxt, pres))
@@ -1121,12 +1130,14 @@ PRuleType           pres;
  */
 
 #ifdef __STDC__
-static PtrPRule     PresRuleSearch (PSchema tsch, GenericContext ctxt, PRuleType pres)
+static PtrPRule     PresRuleSearch (PSchema tsch, GenericContext ctxt,
+                                    PRuleType pres, int extra)
 #else  /* __STDC__ */
-static PtrPRule     PresRuleSearch (tsch, ctxt, pres)
+static PtrPRule     PresRuleSearch (tsch, ctxt, pres, extra)
 PSchema             tsch;
 GenericContext      ctxt;
 PRuleType           pres;
+int                 extra;
 
 #endif /* !__STDC__ */
 {
@@ -1173,6 +1184,12 @@ PRuleType           pres;
 	     break;
 	  }
 
+	/* check for extra specification in case of function rule */
+	if ((pres == PresFunction) && (cur->PrPresMode != extra)) {
+	    cur = cur->PrNextPRule;
+	    continue;
+	}
+
 	/* check this rule */
 	if (TstRuleContext (cur, ctxt, pres))
 	   break;
@@ -1181,6 +1198,78 @@ PRuleType           pres;
 	cur = cur->PrNextPRule;
      }
    return (cur);
+}
+
+/*
+ * PresConstSearch : search a constant to the constant array and returns
+ *        the index.
+ */
+
+#ifdef __STDC__
+static int PresConstSearch (PSchema tsch, char *value)
+#else  /* __STDC__ */
+static int PresConstSearch (tsch, value)
+PSchema             tsch;
+char               *value;
+
+#endif /* !__STDC__ */
+{
+    PtrPSchema pSchemaPrs = (PtrPSchema) tsch;
+    int i;
+
+    if ((tsch == NULL) || (value == NULL)) return(-1);
+
+    /*
+     * Lookup the existing constants, searching for
+     * a corresponding entry.
+     */
+    for (i = 0;i < pSchemaPrs->PsNConstants;i++) {
+	if (pSchemaPrs->PsConstant[i].PdType != CharString) continue;
+        if (!strncmp(value, pSchemaPrs->PsConstant[i].PdString,
+	    MAX_PRES_CONST_LEN)) return(i);
+    }
+
+    return(-1);
+}
+
+/*
+ * PresConstInsert : add a constant to the constant array and returns
+ *        the index.
+ */
+
+#ifdef __STDC__
+static int PresConstInsert (PSchema tsch, char *value)
+#else  /* __STDC__ */
+static int PresConstInsert (tsch, value)
+PSchema             tsch;
+char               *value;
+
+#endif /* !__STDC__ */
+{
+    PtrPSchema pSchemaPrs = (PtrPSchema) tsch;
+    int i;
+
+    if ((tsch == NULL) || (value == NULL)) return(-1);
+
+    /*
+     * First lookup the existing constants, searching for
+     * a corresponding entry.
+     */
+    for (i = 0;i < pSchemaPrs->PsNConstants;i++) {
+	if (pSchemaPrs->PsConstant[i].PdType != CharString) continue;
+        if (!strncmp(value, pSchemaPrs->PsConstant[i].PdString,
+	    MAX_PRES_CONST_LEN)) return(i);
+    }
+
+    /*
+     * if not found, try to add it at the end.
+     */
+    if (pSchemaPrs->PsNConstants >= MAX_PRES_CONST) return(-1);
+    i = pSchemaPrs->PsNConstants;
+    pSchemaPrs->PsConstant[i].PdType = CharString;
+    strncpy(&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
+    pSchemaPrs->PsNConstants++;
+    return(i);
 }
 
 /*----------------------------------------------------------------------
@@ -1343,84 +1432,6 @@ int                 specific;
    if ((ctxt->box != 0) && (rule->PrPresMode == PresFunction)) {
       BuildBoxName(ctxt, &rule->PrPresBoxName);
    }
-}
-
-#ifdef __STDC__
-static void         itoe_convert (PtrPRule rule, PresentationSetting setting,
-				  GenericContext ctxt)
-#else  /* !__STDC__ */
-static void         itoe_convert (rule, setting, ctxt)
-PtrPRule            rule;
-PresentationSetting setting;
-GenericContext      ctxt;
-
-#endif /* !__STDC__ */
-{
-   /*
-    * first decoding step : analyze the type of the rule.
-    */
-   switch (rule->PrType)
-	 {
-	    case PtVisibility:
-	       setting->type = DRIVERP_SHOW;
-	       break;
-	    case PtFunction:
-	       setting->type = DRIVERP_IN_LINE;
-	       break;
-	    case PtSize:
-	       setting->type = DRIVERP_FONT_SIZE;
-	       break;
-	    case PtStyle:
-	       setting->type = DRIVERP_FONT_STYLE;
-	       break;
-	    case PtFont:
-	       setting->type = DRIVERP_FONT_FAMILY;
-	       break;
-	    case PtUnderline:
-	       setting->type = DRIVERP_TEXT_UNDERLINING;
-	       break;
-	    case PtIndent:
-	       setting->type = DRIVERP_INDENT;
-	       break;
-	    case PtLineSpacing:
-	       setting->type = DRIVERP_LINE_SPACING;
-	       break;
-	    case PtAdjust:
-	       setting->type = DRIVERP_ALIGNMENT;
-	       break;
-	    case PtJustify:
-	       setting->type = DRIVERP_JUSTIFICATION;
-	       break;
-	    case PtFillPattern:
-	       setting->type = DRIVERP_FILL_PATTERN;
-	       break;
-	    case PtBackground:
-	       setting->type = DRIVERP_BACKGROUND_COLOR;
-	       break;
-	    case PtForeground:
-	       setting->type = DRIVERP_FOREGROUND_COLOR;
-	       break;
-	    case PtHyphenate:
-	       setting->type = DRIVERP_HYPHENATION;
-	       break;
-	    case PtVertPos:
-	       setting->type = DRIVERP_VERTICAL_POSITION;
-	       break;
-	    case PtHorizPos:
-	       setting->type = DRIVERP_HORIZONTAL_POSITION;
-	       break;
-	    default:
-	       /*
-	        * not yet supported by the driver.
-	        */
-	       setting->type = DRIVERP_NONE;
-	       return;
-	 }
-
-   /*
-    * second decoding step : read the value contained.
-    */
-   setting->value = PRuleToPresentationValue ((PRule) rule);
 }
 
 /*----------------------------------------------------------------------
@@ -1737,7 +1748,11 @@ void               *param;
 	/*
 	 * fill in the PresentationSetting and call the handler.
 	 */
-	itoe_convert (rule, &setting, ctxt);
+	if (rule->PrPresMode == PresFunction)
+	    PRuleToPresentationSetting (rule, &setting, 
+	                                rule->PrPresFunction);
+	else
+	    PRuleToPresentationSetting (rule, &setting, 0);
 	handler (target, ctxt, &setting, param);
 	rule = rule->PrNextPRule;
      }
@@ -1770,9 +1785,9 @@ int GenericSet##name(PresentationTarget t, PresentationContext c,	\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   val = /* (GenericValue) - EGP */ v;			\
-    PtrPRule   rule;						\
+    PtrPRule   rule;							\
 									\
-    rule = PresRuleInsert(tsch, cont,Pt##genre);				\
+    rule = PresRuleInsert(tsch, cont,Pt##genre,0);			\
     if (rule == NULL) return(-1);					\
     etoi_convert(rule,val,cont,0);					\
     return(0);								\
@@ -1784,14 +1799,14 @@ int GenericGet##name(PresentationTarget t, PresentationContext c,	\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule   rule;						\
+    PtrPRule   rule;							\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt##genre);			\
+    rule = PresRuleSearch(tsch, cont, Pt##genre, 0);			\
     if (rule == NULL) return(-1);					\
-    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))		\
+    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))\
         return(-1);							\
-    val->value = rule->PrIntValue;						\
-    val->unit = DRIVERP_UNIT_REL;					\
+    val->typed_data.value = rule->PrIntValue;				\
+    val->typed_data.unit = DRIVERP_UNIT_REL;				\
     return(0);								\
 }									\
 
@@ -1803,9 +1818,9 @@ int GenericSet##name(PresentationTarget t, PresentationContext c,	\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   val = /* (GenericValue) - EGP */ v;			\
-    PtrPRule   rule;						\
+    PtrPRule   rule;							\
 									\
-    rule = PresRuleInsert(tsch, cont,Pt##genre);				\
+    rule = PresRuleInsert(tsch, cont,Pt##genre, category);		\
     if (rule == NULL) return(-1);					\
     etoi_convert(rule,val,cont,category);				\
     return(0);								\
@@ -1817,14 +1832,14 @@ int GenericGet##name(PresentationTarget t, PresentationContext c,	\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule   rule;						\
+    PtrPRule   rule;							\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt##genre);			\
+    rule = PresRuleSearch(tsch, cont, Pt##genre, category);		\
     if (rule == NULL) return(-1);					\
-    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))		\
+    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))\
         return(-1);							\
-    val->value = rule->PrIntValue;						\
-    val->unit = DRIVERP_UNIT_REL;					\
+    val->typed_data.value = rule->PrIntValue;				\
+    val->typed_data.unit = DRIVERP_UNIT_REL;				\
     return(0);								\
 }									\
 
@@ -1840,9 +1855,9 @@ int GenericSet/**/name(t,c,v)						\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   val = (GenericValue) v;				\
-    PtrPRule   rule;						\
+    PtrPRule   rule;							\
 									\
-    rule = PresRuleInsert(tsch, cont,Pt/**/genre);			\
+    rule = PresRuleInsert(tsch, cont,Pt/**/genre, 0);			\
     if (rule == NULL) return(-1);					\
     etoi_convert(rule,val,cont,0);					\
     return(0);								\
@@ -1858,12 +1873,12 @@ int GenericGet/**/name(t,c,v)						\
     GenericValue   *val = (GenericValue *) v;				\
     PtrPRule   rule;						\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt/**/genre);			\
+    rule = PresRuleSearch(tsch, cont, Pt/**/genre, 0);			\
     if (rule == NULL) return(-1);					\
-    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))		\
+    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))\
         return(-1);							\
-    val->value = rule->PrIntValue;						\
-    val->unit = DRIVERP_UNIT_REL;					\
+    val->typed_data.value = rule->PrIntValue;				\
+    val->typed_data.unit = DRIVERP_UNIT_REL;				\
     return(0);								\
 }									\
 
@@ -1877,9 +1892,9 @@ int GenericSet/**/name(t,c,v)						\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   val = (GenericValue) v;				\
-    PtrPRule   rule;						\
+    PtrPRule   rule;							\
 									\
-    rule = PresRuleInsert(tsch, cont,Pt/**/genre);				\
+    rule = PresRuleInsert(tsch, cont,Pt/**/genre, category);		\
     if (rule == NULL) return(-1);					\
     etoi_convert(rule,val,cont,category);				\
     return(0);								\
@@ -1893,14 +1908,14 @@ int GenericGet/**/name(t,c,v)						\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule   rule;						\
+    PtrPRule   rule;							\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt/**/genre);			\
+    rule = PresRuleSearch(tsch, cont, Pt/**/genre, category);		\
     if (rule == NULL) return(-1);					\
-    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))		\
+    if ((rule->PrPresMode != PresImmediate) || (rule->PrAttrValue != 0))\
         return(-1);							\
-    val->value = rule->PrIntValue;						\
-    val->unit = DRIVERP_UNIT_REL;					\
+    val->typed_data.value = rule->PrIntValue;				\
+    val->typed_data.unit = DRIVERP_UNIT_REL;				\
     return(0);								\
 }									\
 
@@ -1925,6 +1940,8 @@ GENERIC_FUNCS (FillPattern, FillPattern)
 GENERIC_FUNCS (Font, FontFamily)
 GENERIC_FUNCS (LineSpacing, LineSpacing)
 GENERIC_FUNCS2 (Function, FnLine, InLine)
+GENERIC_FUNCS2 (Function, FnShowBox, ShowBox)
+GENERIC_FUNCS2 (Function, FnPictureMode, PictureMode)
 
 /*----------------------------------------------------------------------
    *									*
@@ -1951,7 +1968,7 @@ PresentationValue   v;
    BoxRuleInsert (tsch, ctxt);
    box = ctxt->box;
    ctxt->box = 0;
-   rule = PresRuleInsert (tsch, ctxt, PtFunction);
+   rule = PresRuleInsert (tsch, ctxt, PtFunction, FnCreateEnclosing);
    if (rule == NULL)
       return (-1);
    ctxt->box = box;
@@ -1970,12 +1987,67 @@ PresentationValue  *v;
 
 #endif
 {
+   /******************
    GenericTarget       tsch = (GenericTarget) t;
    GenericContext      ctxt = (GenericContext) c;
 
-   /* PtrPRule   rule; */
+   PtrPRule   rule;
 
    (void *) BoxRuleSearch (tsch, ctxt);
+    ******************/
+   return (0);
+}
+
+#ifdef __STDC__
+int                 GenericSetBgImage (PresentationTarget t, PresentationContext c,
+				   PresentationValue v)
+#else
+int                 GenericSetBgImage (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+
+#endif
+{
+   GenericTarget       tsch = (GenericTarget) t;
+   GenericContext      ctxt = (GenericContext) c;
+   PtrPRule            rule;
+   int                 cst;
+
+   cst = PresConstInsert (tsch, v.pointer);
+   rule = PresRuleInsert (tsch, ctxt, PtFunction, FnBackgroundPicture);
+   if (rule == NULL)
+      return (-1);
+   v.typed_data.unit = DRIVERP_UNIT_REL;
+   v.typed_data.value = cst;
+   etoi_convert (rule, v, ctxt, FnBackgroundPicture);
+   return (0);
+}
+
+#ifdef __STDC__
+int                 GenericGetBgImage (PresentationTarget t, PresentationContext c,
+				   PresentationValue * v)
+#else
+int                 GenericGetBgImage (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue  *v;
+
+#endif
+{
+   GenericTarget       tsch = (GenericTarget) t;
+   PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
+   GenericContext      ctxt = (GenericContext) c;
+   PtrPRule            rule;
+   int                 cst;
+   PresentationValue   val;
+
+   rule = PresRuleSearch (tsch, ctxt, PtFunction, FnBackgroundPicture);
+   if (rule == NULL)
+      return (-1);
+   val = PRuleToPresentationValue ((PRule) rule);
+   cst = val.typed_data.unit;
+   v->pointer = &pSchemaPrs->PsConstant[cst].PdString[0];
    return (0);
 }
 
@@ -2002,7 +2074,7 @@ int                 GenericSetVPos (PresentationTarget t, PresentationContext c,
    GenericValue        val = /* (GenericValue) - EGP */ v;
    PtrPRule            rule;
 
-   rule = PresRuleInsert (tsch, cont, PtVertPos);
+   rule = PresRuleInsert (tsch, cont, PtVertPos, 0);
    if (rule == NULL)
       return (-1);
    etoi_convert (rule, val, cont, 0);
@@ -2089,30 +2161,33 @@ PresentationStrategy GenericStrategy =
    (PresentationGetFunction) GenericGetHPos,
    (PresentationSetFunction) GenericSetHPos,
 
-/*----------------------------------------------------------------------
-   (PresentationGetFunction) GenericGetHeight,
-   (PresentationSetFunction) GenericSetHeight,
+   NULL, /* (PresentationGetFunction) GenericGetHeight, */
+   NULL, /* (PresentationSetFunction) GenericSetHeight, */
 
-   (PresentationGetFunction) GenericGetRelHeight,
-   (PresentationSetFunction) GenericSetRelHeight,
+   NULL, /* (PresentationGetFunction) GenericGetRelHeight, */
+   NULL, /* (PresentationSetFunction) GenericSetRelHeight, */
 
-   (PresentationGetFunction) GenericGetWidth,
-   (PresentationSetFunction) GenericSetWidth,
+   NULL, /* (PresentationGetFunction) GenericGetWidth, */
+   NULL, /* (PresentationSetFunction) GenericSetWidth, */
 
-   (PresentationGetFunction) GenericGetRelWidth,
-   (PresentationSetFunction) GenericSetRelWidth,
-  ----------------------------------------------------------------------*/
-   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+   NULL, /* (PresentationGetFunction) GenericGetRelWidth, */
+   NULL, /* (PresentationSetFunction) GenericSetRelWidth, */
 
    (PresentationGetFunction) GenericGetInLine,
    (PresentationSetFunction) GenericSetInLine,
 
-/*----------------------------------------------------------------------
-   (PresentationGetFunction) GenericGetShow,
-   (PresentationSetFunction) GenericSetShow,
-  ----------------------------------------------------------------------*/
-   NULL, NULL,
+   NULL, /* (PresentationGetFunction) GenericGetShow, */
+   NULL, /* (PresentationSetFunction) GenericSetShow, */
 
    (PresentationGetFunction) GenericGetBox,
    (PresentationSetFunction) GenericSetBox,
+
+   (PresentationGetFunction) GenericGetShowBox,
+   (PresentationSetFunction) GenericSetShowBox,
+
+   NULL, /* (PresentationGetFunction) GenericGetBgImage, */
+   NULL, /* (PresentationSetFunction) GenericSetBgImage, */
+
+   (PresentationGetFunction) GenericGetPictureMode,
+   (PresentationSetFunction) GenericSetPictureMode,
 };

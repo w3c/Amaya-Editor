@@ -97,12 +97,30 @@ extern int GenericSetInLine ( PresentationTarget t,
 extern int GenericGetInLine ( PresentationTarget t,
                               PresentationContext c,
                               PresentationValue *v );
+extern int GenericSetShowBox ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int GenericGetShowBox ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v );
+extern int GenericSetPictureMode ( PresentationTarget t,
+                                   PresentationContext c,
+                                   PresentationValue v );
+extern int GenericGetPictureMode ( PresentationTarget t,
+                                   PresentationContext c,
+                                   PresentationValue *v );
 extern int GenericSetBox ( PresentationTarget t,
                            PresentationContext c,
                            PresentationValue v );
 extern int GenericGetBox ( PresentationTarget t,
                            PresentationContext c,
                            PresentationValue * v );
+extern int GenericSetBgImage ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int GenericGetBgImage ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue * v );
 extern int GenericSetWidth ( PresentationTarget t,
                              PresentationContext c,
                              PresentationValue v );
@@ -218,12 +236,30 @@ extern int GenericSetInLine (/* PresentationTarget t,
 extern int GenericGetInLine (/* PresentationTarget t,
                                 PresentationContext c,
                                 PresentationValue *v */);
+extern int GenericSetShowBox (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int GenericGetShowBox (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v */);
+extern int GenericSetPictureMode (/* PresentationTarget t,
+                                     PresentationContext c,
+                                     PresentationValue v */);
+extern int GenericGetPictureMode (/* PresentationTarget t,
+                                     PresentationContext c,
+                                     PresentationValue *v */);
 extern int GenericSetBox (/* PresentationTarget t,
                              PresentationContext c,
                              PresentationValue v */);
 extern int GenericGetBox (/* PresentationTarget t,
                              PresentationContext c,
                              PresentationValue * v */);
+extern int GenericSetBgImage (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int GenericGetBgImage (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue * v */);
 extern int GenericSetWidth (/* PresentationTarget t,
                                PresentationContext c,
                                PresentationValue v */);

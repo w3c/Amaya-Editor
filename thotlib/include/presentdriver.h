@@ -87,12 +87,14 @@ typedef struct struct_PresentationContext
 #define DRIVERP_UNIT_SET_FLOAT(u) u = ((u) | DRIVERP_UNIT_FLOAT)
 #define DRIVERP_UNIT_UNSET_FLOAT(u) u = ((u) & (~((int) DRIVERP_UNIT_FLOAT)))
 
-typedef struct _PresentationValue
-  {
-     int                 value:24;	/* the value coded on 24 bits */
-     int                 unit:8;	/* the unit  coded on 8 bits */
-  }
-PresentationValue;
+typedef union _PresentationValue {
+    int data;				/* some data without unit */
+    struct {
+        int                 value:24;	/* the value coded on 24 bits */
+        int                 unit:8;	/* the unit  coded on 8 bits */
+    } typed_data;
+    void *pointer;			/* A pointer */
+} PresentationValue;
 
 /*
  * PresentationSettings : structure returned by GetNextPresentationSettings
@@ -122,7 +124,10 @@ typedef enum
      DRIVERP_RELATIVE_WIDTH,
      DRIVERP_IN_LINE,
      DRIVERP_SHOW,
-     DRIVERP_BOX
+     DRIVERP_BOX,
+     DRIVERP_SHOWBOX,
+     DRIVERP_BGIMAGE,
+     DRIVERP_PICTUREMODE,
   }
 PresentationType;
 
@@ -177,6 +182,12 @@ typedef struct _PresentationSetting
 
 #define DRIVERP_INLINE			1
 #define DRIVERP_NOTINLINE		2
+
+#define DRIVERP_REALSIZE		1
+#define DRIVERP_SCALE			2
+#define DRIVERP_REPEAT			3
+#define DRIVERP_VREPEAT			4
+#define DRIVERP_HREPEAT			5
 
 /*
  * ApplyAllPresentationContext : function used to browse all the
@@ -236,14 +247,22 @@ typedef int         (*PresentationGet2Function) (PresentationTarget target,
  */
 
 #ifdef __STDC__
-void                PresentationValueToPRule (PresentationValue val, int type, PRule pRule,
+void                PresentationValueToPRule (PresentationValue val,
+                                              int type, PRule pRule,
 					      int specific);
 PresentationValue   PRuleToPresentationValue (PRule pRule);
+void                PRuleToPresentationSetting (PRule pRule,
+                                                PresentationSetting setting,
+						int extra);
 
 #else
-void                PresentationValueToPRule (	/* PresentationValue val, int type, PRule pRule,
+void                PresentationValueToPRule (	/* PresentationValue val,
+                                                   int type, PRule pRule,
 						   int specific */ );
 PresentationValue   PRuleToPresentationValue ( /* PRule pRule */ );
+void                PRuleToPresentationSetting ( /* PRule pRule,
+                                                    PresentationSetting setting,
+						    int extra */ );
 
 #endif
 
@@ -319,6 +338,15 @@ typedef struct struct_PresentationStrategy
 
      PresentationGetFunction GetBox;
      PresentationSetFunction SetBox;
+
+     PresentationGetFunction GetShowBox;
+     PresentationSetFunction SetShowBox;
+
+     PresentationGetFunction GetBgImage;
+     PresentationSetFunction SetBgImage;
+
+     PresentationGetFunction GetPictureMode;
+     PresentationSetFunction SetPictureMode;
   }
 PresentationStrategy;
 

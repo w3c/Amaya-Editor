@@ -9,7 +9,7 @@
 extern Pixmap TtaCreatePixmapLogo ( char **data );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern void RedisplayCopies ( void );
-extern void DrawAjAttr ( void );
+extern void DrawAddAttr ( void );
 extern void DrawChar ( unsigned char car,
                        int frame,
                        int x,
@@ -160,7 +160,7 @@ extern void PolyLineModification ( int frame,
 extern Pixmap TtaCreatePixmapLogo (/* char **data */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern void RedisplayCopies (/* void */);
-extern void DrawAjAttr (/* void */);
+extern void DrawAddAttr (/* void */);
 extern void DrawChar (/* unsigned char car,
                          int frame,
                          int x,

@@ -8,11 +8,15 @@
 
 extern boolean DeleteStyleRule ( NotifyElement * event );
 extern void ChangePRule ( NotifyPresentation * event );
+extern void AttrLangDeleted ( NotifyAttribute *event );
+extern void AttrLangCreated ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
 extern boolean DeleteStyleRule (/* NotifyElement * event */);
 extern void ChangePRule (/* NotifyPresentation * event */);
+extern void AttrLangDeleted (/* NotifyAttribute *event */);
+extern void AttrLangCreated (/* NotifyAttribute *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

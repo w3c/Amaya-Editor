@@ -912,7 +912,7 @@ View                view;
     * Check against concurrent loading on the same frame.
     */
    if (FilesLoading[newdoc]) {
-       return(0);
+       return;
    }
    FilesLoading[newdoc]++;
 #endif 
@@ -1296,6 +1296,7 @@ DoubleClickEvent    DC_event;
 	         return(0);
 	     }
              FilesLoading[newdoc]++;
+	     res = newdoc;
 #endif /* AMAYA_JAVA */
 	     W3Loading = newdoc;	/* this document is currently in load */
 	     ActiveTransfer (newdoc);
@@ -1337,7 +1338,6 @@ DoubleClickEvent    DC_event;
 #endif /* AMAYA_JAVA */
 		     return (res);
 		  }
-		  newdoc = res;
 		  TtaHandlePendingEvents ();
 		  /* fetch and display all images referred by the document */
 		  if (doc == baseDoc)
@@ -1356,14 +1356,12 @@ DoubleClickEvent    DC_event;
 		       TtaSetTextZone (newdoc, 1, 1, s);
 		    }
 		  W3Loading = 0;	/* loading is complete now */
-#ifdef AMAYA_JAVA
-		  ResetStop(newdoc);
-#endif /* AMAYA_JAVA */
 	       }
 #ifdef AMAYA_JAVA
              FilesLoading[newdoc]--;
+	     newdoc = res;
 #else
-	     ResetStop(newdoc);
+	     ResetStop(res);
 #endif /* AMAYA_JAVA */
 	  }
      }

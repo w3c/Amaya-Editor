@@ -15,21 +15,34 @@ extern NPError Ap_DestroyStream ( NPP instance,
                                   NPError reason );
 extern JRIEnv* Ap_GetJavaEnv ( void );
 extern jref Ap_GetJavaPeer ( NPP instance );
-extern void AP_GetURL_callback ( NPP instance,
-                                 char *tempfile );
+extern void Ap_URLNotify ( NPP instance,
+                           const char* url,
+                           NPReason reason,
+                           void* notifyData );
 extern NPError Ap_GetURL ( NPP instance,
                            const char* url,
-                           const char* window );
+                           const char* target );
+extern NPError Ap_GetURLNotify ( NPP instance,
+                                 const char* url,
+                                 const char* target,
+                                 void* notifyData );
 extern NPError Ap_NewStream ( NPP instance,
                               NPMIMEType type,
                               const char* window,
                               NPStream** stream_ptr );
 extern NPError Ap_PostURL ( NPP instance,
                             const char* url,
-                            const char* window,
+                            const char* target,
                             uint32 len,
                             const char* buf,
                             NPBool file );
+extern NPError Ap_PostURLNotify ( NPP instance,
+                                  const char* url,
+                                  const char* target,
+                                  uint32 len,
+                                  const char* buf,
+                                  NPBool file,
+                                  void* notifyData );
 extern NPError Ap_RequestRead ( NPStream* stream,
                                 NPByteRange* rangeList );
 extern void Ap_Status ( NPP instance,
@@ -44,9 +57,6 @@ extern void Ap_Version ( int* plugin_major,
                          int* amaya_major,
                          int* amaya_minor );
 extern void Ap_ReloadPlugins ( NPBool reloadPages );
-extern NPError Ap_GetValue ( NPP instance,
-                             NPNVariable variable,
-                             void* r_value );
 extern void Ap_InitializeAmayaTable ( void );
 extern void Ap_InitializePluginTable ( int indexHandler );
 extern void Ap_InitializePlugin ( char* path,
@@ -65,21 +75,34 @@ extern NPError Ap_DestroyStream (/* NPP instance,
                                     NPError reason */);
 extern JRIEnv* Ap_GetJavaEnv (/* void */);
 extern jref Ap_GetJavaPeer (/* NPP instance */);
-extern void AP_GetURL_callback (/* NPP instance,
-                                   char *tempfile */);
+extern void Ap_URLNotify (/* NPP instance,
+                             const char* url,
+                             NPReason reason,
+                             void* notifyData */);
 extern NPError Ap_GetURL (/* NPP instance,
                              const char* url,
-                             const char* window */);
+                             const char* target */);
+extern NPError Ap_GetURLNotify (/* NPP instance,
+                                   const char* url,
+                                   const char* target,
+                                   void* notifyData */);
 extern NPError Ap_NewStream (/* NPP instance,
                                 NPMIMEType type,
                                 const char* window,
                                 NPStream** stream_ptr */);
 extern NPError Ap_PostURL (/* NPP instance,
                               const char* url,
-                              const char* window,
+                              const char* target,
                               uint32 len,
                               const char* buf,
                               NPBool file */);
+extern NPError Ap_PostURLNotify (/* NPP instance,
+                                    const char* url,
+                                    const char* target,
+                                    uint32 len,
+                                    const char* buf,
+                                    NPBool file,
+                                    void* notifyData */);
 extern NPError Ap_RequestRead (/* NPStream* stream,
                                   NPByteRange* rangeList */);
 extern void Ap_Status (/* NPP instance,
@@ -94,9 +117,6 @@ extern void Ap_Version (/* int* plugin_major,
                            int* amaya_major,
                            int* amaya_minor */);
 extern void Ap_ReloadPlugins (/* NPBool reloadPages */);
-extern NPError Ap_GetValue (/* NPP instance,
-                               NPNVariable variable,
-                               void* r_value */);
 extern void Ap_InitializeAmayaTable (/* void */);
 extern void Ap_InitializePluginTable (/* int indexHandler */);
 extern void Ap_InitializePlugin (/* char* path,

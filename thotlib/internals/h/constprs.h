@@ -11,6 +11,8 @@
  *
  */
 
+#ifndef __CONST_PRS_H__
+#define __CONST_PRS_H__
 
 #define MAX_VIEW 5		/* max. number of views for a document */
 #define MAX_PRINT_VIEW 10	/* max. number of views to print for a
@@ -217,3 +219,4 @@
 #define C_WITHIN_LT 'I'
 #define C_WITHIN_EQ 'E'
 
+#endif /* __CONST_PRS_H__ */

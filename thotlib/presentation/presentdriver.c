@@ -6,7 +6,10 @@
  */
  
 /*
- * Set of function common to presentation drivers.
+ * Set of function common to presentation drivers. It offers the
+ * translators between the internal Presentation Rules coding of
+ * presentation attributes and the PresentationValue or
+ * PresentationSetting equivalents available at the driver API level.
  *
  * Author: D. Veillard (INRIA)
  *
@@ -46,8 +49,8 @@ int                 specific;
    int                 real;
    PtrPRule            rule = (PtrPRule) pRule;
 
-   value = val.value;
-   unit = val.unit;
+   value = val.typed_data.value;
+   unit = val.typed_data.unit;
 
    /*
     * The drivers affect only the main "WYSIWYG" view.
@@ -155,6 +158,8 @@ int                 specific;
 	       break;
 	    case PtHeight:
 	    case PtWidth:
+	       rule->PrDimRule.DrUnit = unit;
+	       rule->PrDimRule.DrValue = value;
 	       break;
 	    case PtJustify:
 	       break;
@@ -186,16 +191,11 @@ int                 specific;
 		  rule->PrPosRule.PoRefPresBox = 0;
 		  break;
 	       }
-    /*----------------------------------------------------------------------
-   case PtHeight :
-   case PtWidth : {
-   rule->PrPresMode = PresImmediate;
-   rule->PrDimRule.DrPosition = TRUE;
-   switch (val1) {
-   }
-   break;
-	}
-  ----------------------------------------------------------------------*/
+	    case PtHeight:
+	    case PtWidth:
+	       rule->PrDimRule.DrPosition = FALSE;
+	       rule->PrDimRule.DrAbsolute = TRUE;
+	       break;
 	    case PtFont:
 	       {
 		  rule->PrPresMode = PresImmediate;
@@ -353,6 +353,36 @@ int                 specific;
 			      rule->PrNPresBoxes = 0;
 			      rule->PrElement = TRUE;
 			      break;
+			   case FnShowBox:
+			      rule->PrPresFunction = (FunctionType) specific;
+			      rule->PrNPresBoxes = value;
+			      break;
+			   case FnBackgroundPicture:
+			      rule->PrPresFunction = (FunctionType) specific;
+			      rule->PrNPresBoxes = 1;
+			      rule->PrPresBox[0] = value;
+			      break;
+			   case FnPictureMode:
+			      rule->PrPresFunction = (FunctionType) specific;
+			      rule->PrNPresBoxes = 1;
+			      switch (value) {
+			          case DRIVERP_REALSIZE:
+				      rule->PrPresBox[0] = DRIVERP_REALSIZE;
+				      break;
+			          case DRIVERP_SCALE:
+				      rule->PrPresBox[0] = DRIVERP_SCALE;
+				      break;
+			          case DRIVERP_REPEAT:
+				      rule->PrPresBox[0] = DRIVERP_REPEAT;
+				      break;
+			          case DRIVERP_HREPEAT:
+				      rule->PrPresBox[0] = XRepeat; break;
+			          case DRIVERP_VREPEAT:
+				      rule->PrPresBox[0] = YRepeat; break;
+				  default:
+				      rule->PrPresBox[0] = DRIVERP_REALSIZE;
+			      }
+			      break;
 			   default:
 			      fprintf (stderr,
 				       "Presentation GenericDriver : unsupported PtFunction %d\n",
@@ -423,6 +453,9 @@ PRule               pRule;
 	    case PtHeight:
 	    case PtWidth:
 	       int_unit = rule->PrDimRule.DrUnit;
+	       if (int_unit == 0) {
+	           int_unit = UnPixel;
+	       }
 	       value = rule->PrDimRule.DrValue;
 	       break;
 	    case PtJustify:
@@ -600,6 +633,33 @@ PRule               pRule;
 			      value = rule->PrNPresBoxes;
 			      unit = DRIVERP_UNIT_BOX;
 			      break;
+			   case FnShowBox:
+			      value = rule->PrNPresBoxes;
+			      unit = DRIVERP_UNIT_REL;
+			      break;
+			   case FnBackgroundPicture:
+			      value = rule->PrPresBox[0];
+			      unit = DRIVERP_UNIT_REL;
+			      break;
+			   case FnPictureMode:
+			      unit = DRIVERP_UNIT_REL;
+			      value = DRIVERP_REALSIZE;
+			      switch (rule->PrPresBox[0]) {
+			          case RealSize:
+				      value = DRIVERP_REALSIZE; break;
+			          case ReScale:
+				      value = DRIVERP_SCALE; break;
+			          case FillFrame:
+				      value = DRIVERP_REPEAT; break;
+			          case XRepeat:
+				      value = DRIVERP_HREPEAT; break;
+			          case YRepeat:
+				      value = DRIVERP_VREPEAT; break;
+				  default:
+				      unit = DRIVERP_UNIT_INVALID;
+				      value = 0;
+			      }
+			      break;
 			   default:
 			      fprintf (stderr,
 				       "Presentation GenericDriver : unsupported PtFunction %d\n",
@@ -610,7 +670,118 @@ PRule               pRule;
 	    default:
 	       break;
 	 }
-   val.value = value;
-   val.unit = unit;
+   val.typed_data.value = value;
+   val.typed_data.unit = unit;
    return (val);
 }
+
+/*
+ * PRuleToPresentationSetting : Translate the internal values stored
+ *     in a PRule to a valid PresentationSetting.
+ */
+
+#ifdef __STDC__
+void   PRuleToPresentationSetting (PRule pRule,
+         PresentationSetting setting, int extra)
+#else
+void   PRuleToPresentationSetting (pRule, setting, extra)
+PRule               pRule;
+PresentationSetting setting;
+int                 extra;
+
+#endif
+{
+   PtrPRule            rule = (PtrPRule) pRule;
+
+   /*
+    * first decoding step : analyze the type of the rule.
+    */
+   switch (rule->PrType)
+	 {
+	    case PtVisibility:
+	       setting->type = DRIVERP_SHOW;
+	       break;
+	    case PtFunction:
+	       switch (extra) {
+	           case FnLine:
+		       setting->type = DRIVERP_IN_LINE;
+		       break;
+	           case FnShowBox:
+		       setting->type = DRIVERP_SHOWBOX;
+		       break;
+	           case FnBackgroundPicture:
+		       setting->type = DRIVERP_BGIMAGE;
+		       break;
+	           case FnPictureMode:
+		       setting->type = DRIVERP_PICTUREMODE;
+		       break;
+		   default:
+		       /*
+			* not yet supported by the driver.
+			*/
+		       setting->type = DRIVERP_NONE;
+		       return;
+	       }
+	       break;
+	    case PtSize:
+	       setting->type = DRIVERP_FONT_SIZE;
+	       break;
+	    case PtStyle:
+	       setting->type = DRIVERP_FONT_STYLE;
+	       break;
+	    case PtFont:
+	       setting->type = DRIVERP_FONT_FAMILY;
+	       break;
+	    case PtUnderline:
+	       setting->type = DRIVERP_TEXT_UNDERLINING;
+	       break;
+	    case PtIndent:
+	       setting->type = DRIVERP_INDENT;
+	       break;
+	    case PtLineSpacing:
+	       setting->type = DRIVERP_LINE_SPACING;
+	       break;
+	    case PtAdjust:
+	       setting->type = DRIVERP_ALIGNMENT;
+	       break;
+	    case PtJustify:
+	       setting->type = DRIVERP_JUSTIFICATION;
+	       break;
+	    case PtFillPattern:
+	       setting->type = DRIVERP_FILL_PATTERN;
+	       break;
+	    case PtBackground:
+	       setting->type = DRIVERP_BACKGROUND_COLOR;
+	       break;
+	    case PtForeground:
+	       setting->type = DRIVERP_FOREGROUND_COLOR;
+	       break;
+	    case PtHyphenate:
+	       setting->type = DRIVERP_HYPHENATION;
+	       break;
+	    case PtVertPos:
+	       setting->type = DRIVERP_VERTICAL_POSITION;
+	       break;
+	    case PtHorizPos:
+	       setting->type = DRIVERP_HORIZONTAL_POSITION;
+	       break;
+	    case PtHeight:
+	       setting->type = DRIVERP_HEIGHT;
+	       break;
+	    case PtWidth:
+	       setting->type = DRIVERP_WIDTH;
+	       break;
+	    default:
+	       /*
+	        * not yet supported by the driver.
+	        */
+	       setting->type = DRIVERP_NONE;
+	       return;
+	 }
+
+   /*
+    * second decoding step : read the value contained.
+    */
+   setting->value = PRuleToPresentationValue ((PRule) rule);
+}
+

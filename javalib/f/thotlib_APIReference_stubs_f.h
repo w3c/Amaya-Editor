@@ -7,119 +7,119 @@
 #ifdef __STDC__
 
 extern void thotlib_APIReference_TtaSetReference ( struct Hthotlib_APIReference* none,
-                                                   jint element,
+                                                   jlong jelement,
                                                    jint document,
-                                                   jint target,
+                                                   jlong jtarget,
                                                    jint targetDocument );
-extern jint thotlib_APIReference_TtaNewInclusion ( struct Hthotlib_APIReference* none,
-                                                   jint document,
-                                                   jint target,
-                                                   jint targetDocument );
+extern jlong thotlib_APIReference_TtaNewInclusion ( struct Hthotlib_APIReference* none,
+                                                    jint document,
+                                                    jlong jtarget,
+                                                    jint targetDocument );
 extern void thotlib_APIReference_TtaCopyReference ( struct Hthotlib_APIReference* none,
-                                                    jint element,
-                                                    jint source );
+                                                    jlong jelement,
+                                                    jlong jsource );
 extern void thotlib_APIReference_TtaSetAttributeReference ( struct Hthotlib_APIReference* none,
-                                                            jint attribute,
-                                                            jint element,
+                                                            jlong jattribute,
+                                                            jlong jelement,
                                                             jint document,
-                                                            jint target,
+                                                            jlong jtarget,
                                                             jint targetDocument );
 extern void thotlib_APIReference_TtaCopyAttributeReference ( struct Hthotlib_APIReference* none,
-                                                             jint attribute,
-                                                             jint element,
-                                                             jint source );
+                                                             jlong jattribute,
+                                                             jlong jelement,
+                                                             jlong jsource );
 extern void thotlib_APIReference_TtaGiveReferredElement ( struct Hthotlib_APIReference* none,
-                                                          jint element,
+                                                          jlong jelement,
                                                           struct Hthotlib_Element* jtarget,
                                                           struct Hjava_lang_String* jtargetDocumentName,
                                                           struct Hthotlib_Document* jtargetDocument );
 extern jint thotlib_APIReference_TtaIsElementTypeReference ( struct Hthotlib_APIReference* none,
                                                              jlong jelementType );
 extern jint thotlib_APIReference_TtaSameReferences ( struct Hthotlib_APIReference* none,
-                                                     jint element1,
-                                                     jint element2 );
+                                                     jlong jelement1,
+                                                     jlong jelement2 );
 extern void thotlib_APIReference_TtaGiveReferenceAttributeValue ( struct Hthotlib_APIReference* none,
-                                                                  jint attribute,
+                                                                  jlong jattribute,
                                                                   struct Hthotlib_Element* jtarget,
                                                                   struct Hjava_lang_String* jtargetDocumentName,
                                                                   struct Hthotlib_Document* jtargetDocument );
 extern jint thotlib_APIReference_TtaIsElementReferred ( struct Hthotlib_APIReference* none,
-                                                        jint element );
+                                                        jlong jelement );
 extern jint thotlib_APIReference_TtaSameReferenceAttributes ( struct Hthotlib_APIReference* none,
-                                                              jint attribute1,
-                                                              jint attribute2 );
+                                                              jlong jattribute1,
+                                                              jlong jattribute2 );
 extern void thotlib_APIReference_TtaNextLoadedReference ( struct Hthotlib_APIReference* none,
-                                                          jint target,
+                                                          jlong jtarget,
                                                           jint targetDocument,
                                                           struct Hthotlib_Element* jreferenceElement,
                                                           struct Hthotlib_Attribute* jreferenceAttribute,
                                                           struct Hthotlib_Document* jreferenceDocument );
 extern void thotlib_APIReference_TtaNextUnloadedReferringDocument ( struct Hthotlib_APIReference* none,
-                                                                    jint target,
+                                                                    jlong jtarget,
                                                                     jint targetDocument,
                                                                     struct Hjava_lang_String* jreferringDocumentName );
-extern jint thotlib_APIReference_TtaSearchReferenceElement ( struct Hthotlib_APIReference* none,
-                                                             jint scope,
-                                                             jint element );
+extern jlong thotlib_APIReference_TtaSearchReferenceElement ( struct Hthotlib_APIReference* none,
+                                                              jint scope,
+                                                              jlong jelement );
 extern void register_thotlib_APIReference_stubs ( void );
 
 #else /* __STDC__ */
 
 extern void thotlib_APIReference_TtaSetReference (/* struct Hthotlib_APIReference* none,
-                                                     jint element,
+                                                     jlong jelement,
                                                      jint document,
-                                                     jint target,
+                                                     jlong jtarget,
                                                      jint targetDocument */);
-extern jint thotlib_APIReference_TtaNewInclusion (/* struct Hthotlib_APIReference* none,
-                                                     jint document,
-                                                     jint target,
-                                                     jint targetDocument */);
+extern jlong thotlib_APIReference_TtaNewInclusion (/* struct Hthotlib_APIReference* none,
+                                                      jint document,
+                                                      jlong jtarget,
+                                                      jint targetDocument */);
 extern void thotlib_APIReference_TtaCopyReference (/* struct Hthotlib_APIReference* none,
-                                                      jint element,
-                                                      jint source */);
+                                                      jlong jelement,
+                                                      jlong jsource */);
 extern void thotlib_APIReference_TtaSetAttributeReference (/* struct Hthotlib_APIReference* none,
-                                                              jint attribute,
-                                                              jint element,
+                                                              jlong jattribute,
+                                                              jlong jelement,
                                                               jint document,
-                                                              jint target,
+                                                              jlong jtarget,
                                                               jint targetDocument */);
 extern void thotlib_APIReference_TtaCopyAttributeReference (/* struct Hthotlib_APIReference* none,
-                                                               jint attribute,
-                                                               jint element,
-                                                               jint source */);
+                                                               jlong jattribute,
+                                                               jlong jelement,
+                                                               jlong jsource */);
 extern void thotlib_APIReference_TtaGiveReferredElement (/* struct Hthotlib_APIReference* none,
-                                                            jint element,
+                                                            jlong jelement,
                                                             struct Hthotlib_Element* jtarget,
                                                             struct Hjava_lang_String* jtargetDocumentName,
                                                             struct Hthotlib_Document* jtargetDocument */);
 extern jint thotlib_APIReference_TtaIsElementTypeReference (/* struct Hthotlib_APIReference* none,
                                                                jlong jelementType */);
 extern jint thotlib_APIReference_TtaSameReferences (/* struct Hthotlib_APIReference* none,
-                                                       jint element1,
-                                                       jint element2 */);
+                                                       jlong jelement1,
+                                                       jlong jelement2 */);
 extern void thotlib_APIReference_TtaGiveReferenceAttributeValue (/* struct Hthotlib_APIReference* none,
-                                                                    jint attribute,
+                                                                    jlong jattribute,
                                                                     struct Hthotlib_Element* jtarget,
                                                                     struct Hjava_lang_String* jtargetDocumentName,
                                                                     struct Hthotlib_Document* jtargetDocument */);
 extern jint thotlib_APIReference_TtaIsElementReferred (/* struct Hthotlib_APIReference* none,
-                                                          jint element */);
+                                                          jlong jelement */);
 extern jint thotlib_APIReference_TtaSameReferenceAttributes (/* struct Hthotlib_APIReference* none,
-                                                                jint attribute1,
-                                                                jint attribute2 */);
+                                                                jlong jattribute1,
+                                                                jlong jattribute2 */);
 extern void thotlib_APIReference_TtaNextLoadedReference (/* struct Hthotlib_APIReference* none,
-                                                            jint target,
+                                                            jlong jtarget,
                                                             jint targetDocument,
                                                             struct Hthotlib_Element* jreferenceElement,
                                                             struct Hthotlib_Attribute* jreferenceAttribute,
                                                             struct Hthotlib_Document* jreferenceDocument */);
 extern void thotlib_APIReference_TtaNextUnloadedReferringDocument (/* struct Hthotlib_APIReference* none,
-                                                                      jint target,
+                                                                      jlong jtarget,
                                                                       jint targetDocument,
                                                                       struct Hjava_lang_String* jreferringDocumentName */);
-extern jint thotlib_APIReference_TtaSearchReferenceElement (/* struct Hthotlib_APIReference* none,
-                                                               jint scope,
-                                                               jint element */);
+extern jlong thotlib_APIReference_TtaSearchReferenceElement (/* struct Hthotlib_APIReference* none,
+                                                                jint scope,
+                                                                jlong jelement */);
 extern void register_thotlib_APIReference_stubs (/* void */);
 
 #endif /* __STDC__ */

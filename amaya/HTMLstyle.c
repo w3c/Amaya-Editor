@@ -59,24 +59,24 @@ int                 strncasecmp (char *s1, char *s2, size_t n)
 #define MAX_DEEP 10
 #include "HTMLstyleColor.h"
 
-/*----------------------------------------------------------------------
-   
-   PARSER FRONT-END                                  
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *			PARSER FRONT-END				*                                  
+ *									*  
+ ************************************************************************/
 
-/*
- * CSSparser :  is the front-end function called by the HTML parser
- *      when detecting a <STYLE TYPE="text/css"> indicating it's the
- *      beginning of a CSS fragment. readfunc is a function used to
- *      read one character at a time from the input stream.
- *
- *      The CSS parser has to handle <!-- ... --> constructs used to
- *      prevent prehistoric browser from displaying the CSS as a text
- *      content. It will stop on any sequence "<x" where x is different
- *      from ! and will return x as to the caller. Theorically x should
- *      be equal to / for the </STYLE> end of style marker but who knows !
- */
+/*----------------------------------------------------------------------
+   CSSparser :  is the front-end function called by the HTML parser
+        when detecting a <STYLE TYPE="text/css"> indicating it's the
+        beginning of a CSS fragment. readfunc is a function used to
+        read one character at a time from the input stream.
+  
+        The CSS parser has to handle <!-- ... --> constructs used to
+        prevent prehistoric browser from displaying the CSS as a text
+        content. It will stop on any sequence "<x" where x is different
+        from ! and will return x as to the caller. Theorically x should
+        be equal to / for the </STYLE> end of style marker but who knows !
+  ----------------------------------------------------------------------*/
 
 #define CSS_CHECK_BUFFER					\
 {								\
@@ -87,8 +87,6 @@ int                 strncasecmp (char *s1, char *s2, size_t n)
 	buffer = new;						\
     }}
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char                CSSparser (AmayaReadChar readfunc, Document doc)
 #else
@@ -166,11 +164,11 @@ Document            doc;
    return (cour);
 }
 
-/*----------------------------------------------------------------------
-   
-   PARSING DEFINITIONS                               
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *			  PARSING DEFINITIONS    			*
+ *									*  
+ ************************************************************************/
 
 /*
  * This flag is used to switch the parser to a destructive mode where
@@ -427,11 +425,11 @@ static HTML3StyleAttribute HTML3StyleAttributes[] =
 #endif
 
 
-/*----------------------------------------------------------------------
-   
-   UNITS CONVERSION FUNCTIONS                        
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ * 			 UNITS CONVERSION FUNCTIONS			*
+ *									*  
+ ************************************************************************/
 
 /********** UNUSED *************
 #ifdef __STDC__
@@ -523,7 +521,7 @@ PresentationValue  *pval;
    int                 f = 0;
    int                 uni;
 
-   pval->unit = DRIVERP_UNIT_REL;
+   pval->typed_data.unit = DRIVERP_UNIT_REL;
 
    SKIP_BLANK (attrstr);
    if (*attrstr == '-')
@@ -575,8 +573,8 @@ PresentationValue  *pval;
    if (!valid)
      {
 	SKIP_WORD (attrstr);
-	pval->unit = DRIVERP_UNIT_INVALID;
-	pval->value = 0;
+	pval->typed_data.unit = DRIVERP_UNIT_INVALID;
+	pval->typed_data.value = 0;
 	return (attrstr);
      }
    SKIP_BLANK (attrstr);
@@ -590,21 +588,21 @@ PresentationValue  *pval;
 			  strlen (HTML3UnitNames[uni].sign)))
 #endif /* !WWW_WINDOWS */
 	  {
-	     pval->unit = HTML3UnitNames[uni].unit;
+	     pval->typed_data.unit = HTML3UnitNames[uni].unit;
 	     if (real)
 	       {
-		  DRIVERP_UNIT_SET_FLOAT (pval->unit);
+		  DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
 		  if (minus)
-		     pval->value = -(f * 1000 + val);
+		     pval->typed_data.value = -(f * 1000 + val);
 		  else
-		     pval->value = f * 1000 + val;
+		     pval->typed_data.value = f * 1000 + val;
 	       }
 	     else
 	       {
 		  if (minus)
-		     pval->value = -val;
+		     pval->typed_data.value = -val;
 		  else
-		     pval->value = val;
+		     pval->typed_data.value = val;
 	       }
 	     return (attrstr + strlen (HTML3UnitNames[uni].sign));
 	  }
@@ -613,19 +611,19 @@ PresentationValue  *pval;
    /*
     * not in the list of predefined units.
     */
-   pval->unit = DRIVERP_UNIT_REL;
+   pval->typed_data.unit = DRIVERP_UNIT_REL;
    if (minus)
-      pval->value = -val;
+      pval->typed_data.value = -val;
    else
-      pval->value = val;
+      pval->typed_data.value = val;
    return (attrstr);
 }
 
-/*----------------------------------------------------------------------
-   
-   PARSING FUNCTIONS                                 
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *			PARSING FUNCTIONS				*
+ *									*  
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
    ParseHTMLURL :                                                    
@@ -761,12 +759,254 @@ int                 max;
    return (deep);
 }
 
-/*----------------------------------------------------------------------
-   
-   GENERIC FUNCTIONS FOR CONVERTING BEETWEEN                 
-   PRESENTATION ATTRIBUTES AND THE CORRESPONDING STYLE            
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *	TRANSLATING FROM PRESENTATION DRIVER VALUES TO CSS STRING	*
+ *									*  
+ ************************************************************************/
+
+/*
+ * PresentationSettingsToCSS :  translate a PresentationSetting to the
+ *      equivalent CSS string, and add it to the buffer given as the
+ *      argument.
+ */
+
+#ifdef __STDC__
+void         PresentationSettingsToCSS (PresentationSetting settings,
+                         char *buffer, int len)
+#else
+void         PresentationSettingsToCSS (settings, buffer, len)
+PresentationSetting settings;
+char               *param;
+
+#endif
+{
+   unsigned short      red, green, blue;
+   int                 add_unit = 0;
+   int                 real = 0;
+   float               fval;
+   int                 unit;
+
+   buffer[0] = EOS;
+   if (len < 40) return;
+
+   if (DRIVERP_UNIT_IS_FLOAT (settings->value.typed_data.unit))
+     {
+	DRIVERP_UNIT_UNSET_FLOAT (settings->value.typed_data.unit);
+	real = 1;
+	fval = (float) settings->value.typed_data.value;
+	fval /= 1000;
+     }
+
+   switch (settings->type)
+	 {
+	    case DRIVERP_FOREGROUND_COLOR:
+	       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+	       sprintf (buffer, "color : #%02X%02X%02X", red, green, blue);
+	       break;
+	    case DRIVERP_BACKGROUND_COLOR:
+	       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+	       sprintf (buffer, "background : #%02X%02X%02X", red, green, blue);
+	       break;
+	    case DRIVERP_FONT_SIZE:
+	       if (settings->value.typed_data.unit == DRIVERP_UNIT_REL)
+		  switch (settings->value.typed_data.value)
+			{
+			   case 1:
+			      strcpy (buffer, "font-size : xx-small");
+			      break;
+			   case 2:
+			      strcpy (buffer, "font-size : x-small");
+			      break;
+			   case 3:
+			      strcpy (buffer, "font-size : small");
+			      break;
+			   case 4:
+			      strcpy (buffer, "font-size : medium");
+			      break;
+			   case 5:
+			      strcpy (buffer, "font-size : large");
+			      break;
+			   case 6:
+			      strcpy (buffer, "font-size : x-large");
+			      break;
+			   default:
+			      if (settings->value.typed_data.value > 6)
+				 strcpy (buffer, "font-size : xx-large");
+			      break;
+			}
+	       else
+		 {
+		    if (real)
+		       sprintf (buffer, "font-size : %g", fval);
+		    else
+		       sprintf (buffer, "font-size : %d", settings->value.typed_data.value);
+		    add_unit = 1;
+		 }
+	       break;
+	    case DRIVERP_FONT_STYLE:
+	       switch (settings->value.typed_data.value)
+		     {
+			case DRIVERP_FONT_BOLD:
+			   strcpy (buffer, "font-weight : bold");
+			   break;
+			case DRIVERP_FONT_ROMAN:
+			   strcpy (buffer, "font-style : normal");
+			   break;
+			case DRIVERP_FONT_ITALICS:
+			   strcpy (buffer, "font-style : italic");
+			   break;
+			case DRIVERP_FONT_BOLDITALICS:
+			   strcpy (buffer, "font-weight : bold, font-style : italic");
+			   break;
+			case DRIVERP_FONT_OBLIQUE:
+			   strcpy (buffer, "font-style : oblique");
+			   break;
+			case DRIVERP_FONT_BOLDOBLIQUE:
+			   strcpy (buffer, "font-weight : bold, font-style : oblique");
+			   break;
+		     }
+	       break;
+	    case DRIVERP_FONT_FAMILY:
+	       switch (settings->value.typed_data.value)
+		     {
+			case DRIVERP_FONT_HELVETICA:
+			   strcpy (buffer, "font-family : helvetica");
+			   break;
+			case DRIVERP_FONT_TIMES:
+			   strcpy (buffer, "font-family : times");
+			   break;
+			case DRIVERP_FONT_COURIER:
+			   strcpy (buffer, "font-family : courrier");
+			   break;
+		     }
+	       break;
+	    case DRIVERP_TEXT_UNDERLINING:
+	       switch (settings->value.typed_data.value)
+		     {
+			case DRIVERP_UNDERLINE:
+			   strcpy (buffer, "text-decoration : underline");
+			   break;
+			case DRIVERP_OVERLINE:
+			   strcpy (buffer, "text-decoration : overline");
+			   break;
+			case DRIVERP_CROSSOUT:
+			   strcpy (buffer, "text-decoration : line-through");
+			   break;
+		     }
+	       break;
+	    case DRIVERP_LINE_SPACING:
+	       if (real)
+		  sprintf (buffer, "line-height : %g", fval);
+	       else
+		  sprintf (buffer, "line-height : %d", settings->value.typed_data.value);
+	       add_unit = 1;
+	       break;
+	    case DRIVERP_ALIGNMENT:
+	       switch (settings->value.typed_data.value)
+		     {
+                        case DRIVERP_ADJUSTLEFT:
+                           strcpy (buffer, "text-align : left");
+                           break;
+                        case DRIVERP_ADJUSTRIGHT:
+                           strcpy (buffer, "text-align : right");
+                           break;
+                        case DRIVERP_ADJUSTCENTERED:
+                           strcpy (buffer, "text-align : center");
+                           break;
+                        case DRIVERP_ADJUSTLEFTWITHDOTS:
+                           strcpy (buffer, "text-align : left");
+                           break;
+		     }
+	       break;
+	    case DRIVERP_JUSTIFICATION:
+	       if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
+		  sprintf (buffer, "text-align: justify");
+	       break;
+	    case DRIVERP_INDENT:
+	       if (real)
+		  sprintf (buffer, "text-indent : %g", fval);
+	       else
+		  sprintf (buffer, "text-indent : %d", settings->value.typed_data.value);
+	       add_unit = 1;
+	       break;
+#if 0
+	       /* not yet in CSS */
+	    case DRIVERP_HYPHENATION:
+	       if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
+		  sprintf (buffer, "text-align: justify");
+	       break;
+#endif
+	    case DRIVERP_FILL_PATTERN:
+	       break;
+	    case DRIVERP_VERTICAL_POSITION:
+	       if (real)
+		  sprintf (buffer, "marging-top : %g", fval);
+	       else
+		  sprintf (buffer, "marging-top : %d", settings->value.typed_data.value);
+	       add_unit = 1;
+	       break;
+	    case DRIVERP_HORIZONTAL_POSITION:
+	       if (real)
+		  sprintf (buffer, "margin-left : %g", fval);
+	       else
+		  sprintf (buffer, "margin-left : %d", settings->value.typed_data.value);
+	       add_unit = 1;
+	       break;
+	    case DRIVERP_HEIGHT:
+	       if (real)
+		  sprintf (buffer, "height : %g", fval);
+	       else
+		  sprintf (buffer, "height : %d", settings->value.typed_data.value);
+	       add_unit = 1;
+	       break;
+	    case DRIVERP_RELATIVE_HEIGHT:
+	       break;
+	    case DRIVERP_WIDTH:
+	       if (real)
+		  sprintf (buffer, "width : %g", fval);
+	       else
+		  sprintf (buffer, "width : %d", settings->value.typed_data.value);
+	       add_unit = 1;
+	       break;
+	       break;
+	    case DRIVERP_RELATIVE_WIDTH:
+	       break;
+	    case DRIVERP_IN_LINE:
+	       if (settings->value.typed_data.value == DRIVERP_INLINE)
+		  strcpy (buffer, "display: inline");
+	       else if (settings->value.typed_data.value == DRIVERP_NOTINLINE)
+		  strcpy (buffer, "display: block");
+	       break;
+	    case DRIVERP_SHOW:
+	       break;
+	    case DRIVERP_BOX:
+	       break;
+	    default:
+	       return;
+	 }
+   if (add_unit)
+     {
+	/*
+	 * add the unit string to the CSS string.
+	 */
+	for (unit = 0; unit < NB_UNITS; unit++)
+	  {
+	     if (HTML3UnitNames[unit].unit == settings->value.typed_data.unit)
+	       {
+		  strcat (buffer, HTML3UnitNames[unit].sign);
+		  break;
+	       }
+	  }
+     }
+}
+
+/************************************************************************
+ *									*  
+ *	GENERIC FUNCTIONS FOR CONVERTING BEETWEEN                 	*
+ *	PRESENTATION ATTRIBUTES AND THE CORRESPONDING STYLE		*
+ *									*  
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
    UpdateStyleDelete : attribute Style will be deleted.            
@@ -782,8 +1022,9 @@ NotifyAttribute    *event;
    PresentationTarget  target;
    SpecificContextBlock block;
    PresentationContext context;
-   PresentationValue   unused =
-   {0, 0};
+   PresentationValue   unused;
+   
+   unused.data = 0;
 
    /*
     * remove all the presentation specific rules applied to the element.
@@ -857,6 +1098,34 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
+   SpecificSettingsToCSS :  Callback for ApplyAllSpecificSettings,
+       enrich the CSS string.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static void         SpecificSettingsToCSS (SpecificTarget target,
+     SpecificContext ctxt,PresentationSetting settings, void *param)
+#else
+static void         SpecificSettingsToCSS (settings, param)
+PresentationSetting settings;
+void               *param;
+
+#endif
+{
+   char               *css_rules = param;
+   char                string[150];
+
+   string[0] = EOS;
+
+   PresentationSettingsToCSS(settings, &string[0], sizeof(string));
+
+   if ((string[0] != EOS) && (*css_rules != EOS))
+      strcat (css_rules, ", ");
+   if (string[0] != EOS)
+      strcat (css_rules, string);
+}
+
+/*----------------------------------------------------------------------
    GetHTML3StyleString : return a string corresponding to the CSS    
    description of the presentation attribute applied to a       
    element                                                      
@@ -871,235 +1140,22 @@ char               *buf;
 int                *len;
 #endif
 {
-   PRule               rule = NULL;
-   int                 type;
-   SpecificValue       pval;
-   int                 free;
-   unsigned short      red, green, blue;
-   int                 nb_rules;
-   char                mybuf[100];
-
-/*******
-    AttributeType   atType;
-    Attribute       at;
- *******/
-   ElementType         elType;
-   SpecificContextBlock block;
-   PresentationContext context;
+   SpecificContext      ctxt;
 
    if ((buf == NULL) || (len == NULL) || (*len <= 0))
       return;
 
-   free = *len - 1;
-   buf[0] = 0;
-
-/******
-    atType.AttrSSchema = TtaGetDocumentSSchema(doc);
-    atType.AttrTypeNum = HTML_ATTR_Class;
-    at = TtaGetAttribute(elem,atType);
-    if (at) {
-        *len = 0;
-        return;
-    }
-    atType.AttrSSchema = TtaGetDocumentSSchema(doc);
-    atType.AttrTypeNum = HTML_ATTR_ImplicitClass;
-    at = TtaGetAttribute(elem,atType);
-    if (at) {
-        *len = 0;
-        return;
-    }
- ******/
-
-   elType = TtaGetElementType (elem);
-
    /*
-    * create the context of the Specific presentation driver.
+    * this will transform all the Specific Settings associated to
+    * the element to one CSS string.
     */
-   block.drv = &SpecificStrategy;
-   block.doc = doc;
-   block.schema = TtaGetDocumentSSchema (doc);
-   context = (PresentationContext) & block;
+   buf[0] = EOS;
+   ctxt = GetSpecificContext(doc);
+   ApplyAllSpecificSettings (elem, &ctxt, SpecificSettingsToCSS, &buf[0]);
+   FreeSpecificContext(ctxt);
 
-   nb_rules = 0;
-
-   TtaNextPRule (elem, &rule);
-   do
-     {
-	mybuf[0] = 0;
-	if (rule)
-	  {
-	     type = TtaGetPRuleType (rule);
-	     switch (type)
-		   {
-	    /******
-                case PRHeight :
-                    if ((context->drv->GetHeight == NULL) ||
-		         context->drv->GetHeight(elem,context,&pval))
-		        break;
-                    sprintf(mybuf,"height : %dpt",pval.value);
-                    break;
-                case PRWidth :
-                    if ((context->drv->GetWidth == NULL) ||
-		         context->drv->GetWidth(elem,context,&pval))
-		        break;
-                    sprintf(mybuf,"width : %dpt",pval.value);
-                    break;
-	     *****/
-		      case PRForeground:
-			 if ((context->drv->GetForegroundColor == NULL) ||
-			     context->drv->GetForegroundColor (elem, context, &pval))
-			    break;
-			 TtaGiveThotRGB (pval.value, &red, &green, &blue);
-			 sprintf (mybuf, "color : #%02X%02X%02X", red, green, blue);
-			 break;
-		      case PRBackground:
-			 if ((context->drv->GetBackgroundColor == NULL) ||
-			     context->drv->GetBackgroundColor (elem, context, &pval))
-			    break;
-			 TtaGiveThotRGB (pval.value, &red, &green, &blue);
-			 sprintf (mybuf, "background : #%02X%02X%02X", red, green, blue);
-			 type = elType.ElTypeNum;
-			 if ((type == HTML_EL_HTML) || (type == HTML_EL_BODY) ||
-			     (type == HTML_EL_HEAD))
-			   {
-			      TtaSetViewBackgroundColor (doc, 1, pval.value);
-			   }
-			 break;
-		      case PRSize:
-			 if ((context->drv->GetFontSize == NULL) ||
-			   context->drv->GetFontSize (elem, context, &pval))
-			    break;
-			 sprintf (mybuf, "font-size : %dpt", pval.value);
-			 break;
-		      case PRStyle:
-			 if ((context->drv->GetFontStyle == NULL) ||
-			  context->drv->GetFontStyle (elem, context, &pval))
-			    break;
-			 switch (pval.value)
-			       {
-				  case DRIVERP_FONT_BOLD:
-				     sprintf (mybuf, "font-weight : bold");
-				     break;
-				  case DRIVERP_FONT_ITALICS:
-				     sprintf (mybuf, "font-style : italic");
-				     break;
-				  case DRIVERP_FONT_ROMAN:
-				     sprintf (mybuf, "font-style : roman");
-				     break;
-				  case DRIVERP_FONT_BOLDITALICS:
-				     sprintf (mybuf, "font-weight : bold, font-style : italic");
-				     break;
-				  case DRIVERP_FONT_OBLIQUE:
-				     sprintf (mybuf, "font-style : oblique");
-				     break;
-				  case DRIVERP_FONT_BOLDOBLIQUE:
-				     sprintf (mybuf, "font-weight : bold, font-style : oblique");
-				     break;
-			       }
-			 break;
-		      case PRFont:
-			 if ((context->drv->GetFontFamily == NULL) ||
-			 context->drv->GetFontFamily (elem, context, &pval))
-			    break;
-			 switch (pval.value)
-			       {
-				  case DRIVERP_FONT_TIMES:
-				     sprintf (mybuf, "font-family : times");
-				     break;
-				  case DRIVERP_FONT_HELVETICA:
-				     sprintf (mybuf, "font-family : helvetica");
-				     break;
-				  case DRIVERP_FONT_COURIER:
-				     sprintf (mybuf, "font-family : courier");
-				     break;
-			       }
-			 break;
-		      case PRUnderline:
-			 if ((context->drv->GetTextUnderlining == NULL) ||
-			     context->drv->GetTextUnderlining (elem, context, &pval))
-			    break;
-			 switch (pval.value)
-			       {
-				  case DRIVERP_UNDERLINE:
-				     sprintf (mybuf, "text-decoration : underline");
-				     break;
-				  case DRIVERP_OVERLINE:
-				     sprintf (mybuf, "text-decoration : overline");
-				     break;
-				  case DRIVERP_CROSSOUT:
-				     sprintf (mybuf, "text-decoration : line-through");
-				     break;
-			       }
-			 break;
-		      case PRLineSpacing:
-			 if ((context->drv->GetLineSpacing == NULL) ||
-			 context->drv->GetLineSpacing (elem, context, &pval))
-			    break;
-			 sprintf (mybuf, "line-height : %dpt", pval.value);
-			 break;
-		      case PRAdjust:
-			 if ((context->drv->GetAlignment == NULL) ||
-			  context->drv->GetAlignment (elem, context, &pval))
-			    break;
-			 switch (pval.value)
-			       {
-				  case DRIVERP_ADJUSTLEFT:
-				     sprintf (mybuf, "text-align : left");
-				     break;
-				  case DRIVERP_ADJUSTRIGHT:
-				     sprintf (mybuf, "text-align : right");
-				     break;
-				  case DRIVERP_ADJUSTCENTERED:
-				     sprintf (mybuf, "text-align : center");
-				     break;
-				  case DRIVERP_ADJUSTLEFTWITHDOTS:
-				     sprintf (mybuf, "text-align : left");
-				     break;
-			       }
-			 break;
-		      case PRJustify:
-			 if ((context->drv->GetJustification == NULL) ||
-			     context->drv->GetJustification (elem, context, &pval))
-			    break;
-			 if (pval.value == DRIVERP_JUSTIFIED)
-			    sprintf (mybuf, "align : justify");
-			 break;
-		      case PRIndent:
-			 if ((context->drv->GetIndent == NULL) ||
-			     context->drv->GetIndent (elem, context, &pval))
-			    break;
-			 sprintf (mybuf, "text-indent : %dpt", pval.value);
-			 break;
-		   }
-	  }
-	else
-	   break;
-	if (mybuf[0] != 0)
-	  {
-	     if (nb_rules != 0)
-	       {
-		  strncat (buf, "; ", free - strlen (buf));
-	       }
-	     strncat (buf, mybuf, free - strlen (buf));
-	     nb_rules++;
-	  }
-	/*
-	 * get next rule and add a separator if necessary.
-	 */
-	TtaNextPRule (elem, &rule);
-     }
-   while ((rule != NULL) && (strlen (buf) < free));
-
-   if (nb_rules == 0)
-     {
-	*len = 0;
-	buf[0] = 0;
-     }
-   else
-     {
-	*len = strlen (buf);
-	buf[strlen (buf)] = 0;
-     }
+   *len = strlen (buf);
+   buf[strlen (buf)] = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -1181,9 +1237,9 @@ Document            doc;
    PresentationTarget  target;
    SpecificContextBlock block;
    PresentationContext context;
-   PresentationValue   unused =
-   {0, 0};
+   PresentationValue   unused;
 
+   unused.data = 0;
 #ifdef DEBUG_STYLES
    fprintf (stderr, "ParseHTMLSpecificStyle(%s,%s,%d)\n",
 	    GetHTML3Name (elem, doc), attrstr, doc);
@@ -1240,8 +1296,9 @@ PSchema             gPres;
   int                 type, attr, attrval;
   char               *ancestors[MAX_ANCESTORS];
   int                 i, j;
-  PresentationValue   unused = {0, 0};
+  PresentationValue   unused;
 
+  unused.data = 0;
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
       ancestors[i] = NULL;
@@ -1442,11 +1499,11 @@ PSchema             gPres;
 #endif
 }
 
-/*----------------------------------------------------------------------
-   
-   PARSING FUNCTIONS FOR EACH ATTRIBUTES                      
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *		PARSING FUNCTIONS FOR EACH ATTRIBUTES			*
+ *									*  
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
    ParseHTML3StyleTest : For testing purposes only !!!             
@@ -1461,20 +1518,6 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   /*
-    * test for low level Boxes support ...
-    */
-   PresentationValue   pval =
-   {10, DRIVERP_UNIT_REL};
-#if 0
-   GenericContext      blk = (GenericContext) context;
-#endif
-
-   if (context->drv->SetBox)
-      context->drv->SetBox (target, context, pval);
-
-   if (context->drv->SetForegroundColor)
-      context->drv->SetForegroundColor (target, context, pval);
 
    SKIP_WORD (attrstr);
    return (attrstr);
@@ -1686,24 +1729,24 @@ char               *attrstr;
    SKIP_BLANK (attrstr);
    if (IS_WORD (attrstr, "block"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = DRIVERP_NOTINLINE;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = DRIVERP_NOTINLINE;
 	if (context->drv->SetInLine)
 	   context->drv->SetInLine (target, context, pval);
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "inline"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = DRIVERP_INLINE;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = DRIVERP_INLINE;
 	if (context->drv->SetInLine)
 	   context->drv->SetInLine (target, context, pval);
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "none"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = DRIVERP_HIDE;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = DRIVERP_HIDE;
 	if (context->drv->SetShow)
 	   context->drv->SetShow (target, context, pval);
 	SKIP_WORD (attrstr);
@@ -1795,8 +1838,8 @@ char               *attrstr;
 
    SKIP_BLANK (attrstr);
    attrstr = ParseHTML3Unit (attrstr, &pval);
-   if ((pval.unit == DRIVERP_UNIT_REL) && (pval.value >= -10) &&
-       (pval.value <= 10))
+   if ((pval.typed_data.unit == DRIVERP_UNIT_REL) && (pval.typed_data.value >= -10) &&
+       (pval.typed_data.value <= 10))
      {
 	if (context->drv == &GenericStrategy)
 	  {
@@ -1806,7 +1849,7 @@ char               *attrstr;
 		 (block->type == HTML_EL_BODY) ||
 		 (block->type == HTML_EL_HEAD))
 	       {
-		  CSSSetMagnification (block->doc, (PSchema) target, pval.value);
+		  CSSSetMagnification (block->doc, (PSchema) target, pval.typed_data.value);
 		  return (attrstr);
 	       }
 	  }
@@ -1924,30 +1967,33 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   PresentationValue   align =
-   {0, 1};
-   PresentationValue   justify =
-   {0, 1};
+   PresentationValue   align;
+   PresentationValue   justify;
+
+   align.typed_data.value = 0;
+   align.typed_data.unit = 1;
+   justify.typed_data.value = 0;
+   justify.typed_data.unit = 1;
 
    SKIP_BLANK (attrstr);
    if (IS_WORD (attrstr, "left"))
      {
-	align.value = AdjustLeft;
+	align.typed_data.value = AdjustLeft;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "right"))
      {
-	align.value = AdjustRight;
+	align.typed_data.value = AdjustRight;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "center"))
      {
-	align.value = Centered;
+	align.typed_data.value = Centered;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "justify"))
      {
-	justify.value = Justified;
+	justify.typed_data.value = Justified;
 	SKIP_WORD (attrstr);
      }
    else
@@ -1959,12 +2005,12 @@ char               *attrstr;
    /*
     * install the new presentation.
     */
-   if (align.value)
+   if (align.typed_data.value)
      {
 	if (context->drv->SetAlignment)
 	   context->drv->SetAlignment (target, context, align);
      }
-   if (justify.value)
+   if (justify.typed_data.value)
      {
 	if (context->drv->SetJustification)
 	   context->drv->SetJustification (target, context, justify);
@@ -1992,7 +2038,7 @@ char               *attrstr;
 
    SKIP_BLANK (attrstr);
    attrstr = ParseHTML3Unit (attrstr, &pval);
-   if (pval.unit == DRIVERP_UNIT_INVALID)
+   if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	fprintf (stderr, "invalid font size\n");
 	return (attrstr);
@@ -2137,50 +2183,50 @@ char               *attrstr;
    SKIP_BLANK (attrstr);
    if (IS_WORD (attrstr, "xx-small"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = 1;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = 1;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "x-small"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = 2;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = 2;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "small"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = 3;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = 3;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "medium"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = 4;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = 4;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "large"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = 5;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = 5;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "x-large"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = 6;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = 6;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "xx-large"))
      {
-	pval.unit = DRIVERP_UNIT_REL;
-	pval.value = 8;
+	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.value = 8;
 	SKIP_WORD (attrstr);
      }
    else
      {
 	attrstr = ParseHTML3Unit (attrstr, &pval);
-	if (pval.unit == DRIVERP_UNIT_INVALID)
+	if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
 	  {
 	     fprintf (stderr, "invalid font size\n");
 	     return (attrstr);
@@ -2210,38 +2256,39 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   PresentationValue   font =
-   {0, 1};
+   PresentationValue   font;
 
+   font.typed_data.value = 0;
+   font.typed_data.unit = 1;
    SKIP_BLANK (attrstr);
    if (IS_CASE_WORD (attrstr, "times"))
      {
-	font.value = DRIVERP_FONT_TIMES;
+	font.typed_data.value = DRIVERP_FONT_TIMES;
 	SKIP_PROPERTY (attrstr);
      }
    else if (IS_CASE_WORD (attrstr, "serif"))
      {
-	font.value = DRIVERP_FONT_TIMES;
+	font.typed_data.value = DRIVERP_FONT_TIMES;
 	SKIP_PROPERTY (attrstr);
      }
    else if (IS_CASE_WORD (attrstr, "helvetica"))
      {
-	font.value = DRIVERP_FONT_HELVETICA;
+	font.typed_data.value = DRIVERP_FONT_HELVETICA;
 	SKIP_PROPERTY (attrstr);
      }
    else if (IS_CASE_WORD (attrstr, "sans-serif"))
      {
-	font.value = DRIVERP_FONT_HELVETICA;
+	font.typed_data.value = DRIVERP_FONT_HELVETICA;
 	SKIP_PROPERTY (attrstr);
      }
    else if (IS_CASE_WORD (attrstr, "courier"))
      {
-	font.value = DRIVERP_FONT_COURIER;
+	font.typed_data.value = DRIVERP_FONT_COURIER;
 	SKIP_PROPERTY (attrstr);
      }
    else if (IS_CASE_WORD (attrstr, "monospace"))
      {
-	font.value = DRIVERP_FONT_COURIER;
+	font.typed_data.value = DRIVERP_FONT_COURIER;
 	SKIP_PROPERTY (attrstr);
      }
    else
@@ -2276,44 +2323,45 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   PresentationValue   weight =
-   {0, 1};
+   PresentationValue   weight;
    int                 val;
 
+   weight.typed_data.value = 0;
+   weight.typed_data.unit = 1;
    SKIP_BLANK (attrstr);
    if (IS_WORD (attrstr, "extra-light"))
      {
-	weight.value = -3;
+	weight.typed_data.value = -3;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "light"))
      {
-	weight.value = -2;
+	weight.typed_data.value = -2;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "demi-light"))
      {
-	weight.value = -1;
+	weight.typed_data.value = -1;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "medium"))
      {
-	weight.value = 0;
+	weight.typed_data.value = 0;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "extra-bold"))
      {
-	weight.value = +3;
+	weight.typed_data.value = +3;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "bold"))
      {
-	weight.value = +2;
+	weight.typed_data.value = +2;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "demi-bold"))
      {
-	weight.value = +1;
+	weight.typed_data.value = +1;
 	SKIP_WORD (attrstr);
      }
    else if (sscanf (attrstr, "%d", &val) > 0)
@@ -2321,10 +2369,10 @@ char               *attrstr;
 	if ((val < -3) || (val > 3))
 	  {
 	     fprintf (stderr, "invalid font weight %d\n", val);
-	     weight.value = 0;
+	     weight.typed_data.value = 0;
 	  }
 	else
-	   weight.value = val;
+	   weight.typed_data.value = val;
 	SKIP_INT (attrstr);
      }
    else
@@ -2336,17 +2384,17 @@ char               *attrstr;
     * Here we have to reduce since font weight is not well supported
     * by the Thot presentation API.
     */
-   switch (weight.value)
+   switch (weight.typed_data.value)
 	 {
 	    case 3:
 	    case 2:
 	    case 1:
-	       weight.value = DRIVERP_FONT_BOLD;
+	       weight.typed_data.value = DRIVERP_FONT_BOLD;
 	       break;
 	    case -3:
 	    case -2:
 	    case -1:
-	       weight.value = DRIVERP_FONT_ITALICS;
+	       weight.typed_data.value = DRIVERP_FONT_ITALICS;
 	       break;
 	 }
 
@@ -2373,31 +2421,33 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   PresentationValue   style =
-   {0, 1};
-   PresentationValue   size =
-   {0, 1};
+   PresentationValue   style;
+   PresentationValue   size;
 
+   style.typed_data.value = 0;
+   style.typed_data.unit = 1;
+   size.typed_data.value = 0;
+   size.typed_data.unit = 1;
    SKIP_BLANK (attrstr);
    if (IS_WORD (attrstr, "italic"))
      {
-	style.value = DRIVERP_FONT_ITALICS;
+	style.typed_data.value = DRIVERP_FONT_ITALICS;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "oblique"))
      {
-	style.value = DRIVERP_FONT_OBLIQUE;
+	style.typed_data.value = DRIVERP_FONT_OBLIQUE;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "small-caps"))
      {
-	style.value = DRIVERP_FONT_BOLD;
-	size.value = -2;
+	style.typed_data.value = DRIVERP_FONT_BOLD;
+	size.typed_data.value = -2;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "normal"))
      {
-	style.value = DRIVERP_FONT_ROMAN;
+	style.typed_data.value = DRIVERP_FONT_ROMAN;
 	SKIP_WORD (attrstr);
      }
    else
@@ -2409,19 +2459,19 @@ char               *attrstr;
    /*
     * install the new presentation.
     */
-   if (style.value != 0)
+   if (style.typed_data.value != 0)
      {
 	PresentationValue   previous_style;
 
 	if ((context->drv->GetFontStyle) &&
 	    (!context->drv->GetFontStyle (target, context, &previous_style)))
 	  {
-	     if (previous_style.value == DRIVERP_FONT_BOLD)
+	     if (previous_style.typed_data.value == DRIVERP_FONT_BOLD)
 	       {
-		  if (style.value == DRIVERP_FONT_ITALICS)
-		     style.value = DRIVERP_FONT_BOLDITALICS;
-		  if (style.value == DRIVERP_FONT_OBLIQUE)
-		     style.value = DRIVERP_FONT_BOLDOBLIQUE;
+		  if (style.typed_data.value == DRIVERP_FONT_ITALICS)
+		     style.typed_data.value = DRIVERP_FONT_BOLDITALICS;
+		  if (style.typed_data.value == DRIVERP_FONT_OBLIQUE)
+		     style.typed_data.value = DRIVERP_FONT_BOLDOBLIQUE;
 	       }
 	     if (context->drv->SetFontStyle)
 		context->drv->SetFontStyle (target, context, style);
@@ -2432,7 +2482,7 @@ char               *attrstr;
 		context->drv->SetFontStyle (target, context, style);
 	  }
      }
-   if (size.value != 0)
+   if (size.typed_data.value != 0)
      {
 	PresentationValue   previous_size;
 
@@ -2440,13 +2490,13 @@ char               *attrstr;
 	    (!context->drv->GetFontSize (target, context, &previous_size)))
 	  {
 	     /* !!!!!!!!!!!!!!!!!!!!!!!! Unite + relatif !!!!!!!!!!!!!!!! */
-	     size.value += previous_size.value;
+	     size.typed_data.value += previous_size.typed_data.value;
 	     if (context->drv->SetFontSize)
 		context->drv->SetFontSize (target, context, size);
 	  }
 	else
 	  {
-	     size.value = 10;
+	     size.typed_data.value = 10;
 	     if (context->drv->SetFontSize)
 		context->drv->SetFontSize (target, context, size);
 	  }
@@ -2472,7 +2522,7 @@ char               *attrstr;
    PresentationValue   lead;
 
    attrstr = ParseHTML3Unit (attrstr, &lead);
-   if (lead.unit == DRIVERP_UNIT_INVALID)
+   if (lead.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid font leading\n");
 	return (attrstr);
@@ -2501,23 +2551,24 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   PresentationValue   decor =
-   {0, 1};
+   PresentationValue   decor;
 
+   decor.typed_data.value = 0;
+   decor.typed_data.unit = 1;
    SKIP_BLANK (attrstr);
    if (IS_WORD (attrstr, "underline"))
      {
-	decor.value = Underline;
+	decor.typed_data.value = Underline;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "overline"))
      {
-	decor.value = Overline;
+	decor.typed_data.value = Overline;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "line-through"))
      {
-	decor.value = CrossOut;
+	decor.typed_data.value = CrossOut;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "box"))
@@ -2547,7 +2598,7 @@ char               *attrstr;
      }
    else if (IS_WORD (attrstr, "none"))
      {
-	decor.value = NoUnderline;
+	decor.typed_data.value = NoUnderline;
 	SKIP_WORD (attrstr);
      }
    else
@@ -2559,7 +2610,7 @@ char               *attrstr;
    /*
     * install the new presentation.
     */
-   if (decor.value)
+   if (decor.typed_data.value)
      {
 	if (context->drv->SetTextUnderlining)
 	   context->drv->SetTextUnderlining (target, context, decor);
@@ -2591,8 +2642,8 @@ PresentationValue  *val;
 
    SKIP_BLANK (attrstr);
 
-   val->unit = DRIVERP_UNIT_INVALID;
-   val->value = 0;
+   val->typed_data.unit = DRIVERP_UNIT_INVALID;
+   val->typed_data.value = 0;
 
    /*
     * first parse the attribute string
@@ -2701,14 +2752,14 @@ PresentationValue  *val;
 	 */
      }
  failed:
-   val->unit = DRIVERP_UNIT_INVALID;
-   val->value = 0;
+   val->typed_data.unit = DRIVERP_UNIT_INVALID;
+   val->typed_data.value = 0;
    return (attrstr);
 
  found_RGB:
    best = TtaGetThotColor (redval, greenval, blueval);
-   val->value = best;
-   val->unit = DRIVERP_UNIT_REL;
+   val->typed_data.value = best;
+   val->typed_data.unit = DRIVERP_UNIT_REL;
 
    return (attrstr);
 }
@@ -2772,7 +2823,7 @@ char               *attrstr;
     * first parse the attribute string
     */
    attrstr = ParseHTML3Unit (attrstr, &margin);
-   if (margin.unit == DRIVERP_UNIT_INVALID)
+   if (margin.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid margin top\n");
 	return (attrstr);
@@ -2804,7 +2855,7 @@ char               *attrstr;
     * first parse the attribute string
     */
    attrstr = ParseHTML3Unit (attrstr, &margin);
-   if (margin.unit == DRIVERP_UNIT_INVALID)
+   if (margin.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid margin top\n");
 	return (attrstr);
@@ -2863,7 +2914,7 @@ char               *attrstr;
 
    attrstr = ParseHTML3StyleColor (attrstr, &best);
 
-   if (best.unit == DRIVERP_UNIT_INVALID)
+   if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	return (attrstr);
      }
@@ -2889,7 +2940,6 @@ char               *attrstr;
 #endif
 {
    Element             el;
-   ElementType         elType;
    PresentationValue     best;
    GenericContext        gblock;
    SpecificContextBlock *sblock;
@@ -2899,7 +2949,7 @@ char               *attrstr;
    boolean               setColor;
 
    url = NULL;
-   best.unit = DRIVERP_UNIT_INVALID;
+   best.typed_data.unit = DRIVERP_UNIT_INVALID;
    setColor = TRUE;
    if (IS_CASE_WORD (attrstr, "url"))
      /*
@@ -2908,7 +2958,7 @@ char               *attrstr;
      attrstr = ParseHTMLURL (attrstr, &url);
 
    attrstr = ParseHTML3StyleColor (attrstr, &best);
-   if (best.unit == DRIVERP_UNIT_INVALID)
+   if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      setColor = FALSE;
 
    if (url || setColor)
@@ -2925,7 +2975,7 @@ char               *attrstr;
 	     {
 	       if (setColor)
 		 {
-		   CSSSetBackground (gblock->doc, (PSchema) target, best.value);
+		   CSSSetBackground (gblock->doc, (PSchema) target, best.typed_data.value);
 		   setColor = False;
 		 }
 	       if (url)
@@ -2947,7 +2997,7 @@ char               *attrstr;
 	     {
 	       if (setColor)
 		 {
-		   TtaSetViewBackgroundColor (sblock->doc, 1, best.value);
+		   TtaSetViewBackgroundColor (sblock->doc, 1, best.typed_data.value);
 		   setColor = False;
 		 }
 	       if (url)
@@ -2965,10 +3015,14 @@ char               *attrstr;
 	   if (context->drv->SetBackgroundColor)
 	     context->drv->SetBackgroundColor (target, context, best);
 	   /* thot specificity : need to set fill pattern for background color */
-	   best.value = 2;
-	   best.unit = DRIVERP_UNIT_REL;
+	   best.typed_data.value = 2;
+	   best.typed_data.unit = DRIVERP_UNIT_REL;
 	   if (context->drv->SetFillPattern)
 	     context->drv->SetFillPattern (target, context, best);
+	   best.typed_data.value = 1;
+	   best.typed_data.unit = DRIVERP_UNIT_REL;
+	   if (context->drv->SetShowBox)
+	     context->drv->SetShowBox (target, context, best);
 	 }
      }
 
@@ -2977,11 +3031,11 @@ char               *attrstr;
    return (attrstr);
 }
 
-/*----------------------------------------------------------------------
-   
-   PARSING FUNCTIONS FOR HEADER STYLE DECLARATIONS                
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *	PARSING FUNCTIONS FOR HEADER STYLE DECLARATIONS			*
+ *									*  
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
    ParseHTMLStyleDeclaration : parse one HTML style declaration    
@@ -3264,11 +3318,11 @@ PSchema             gPres;
      ApplyExtraPresentation (doc);
 }
 
-/*----------------------------------------------------------------------
-   
-   EVALUATION FUNCTIONS / CASCADING AND OVERLOADING              
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *	EVALUATION FUNCTIONS / CASCADING AND OVERLOADING		*
+ *									*  
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
    EvaluateClassContext : gives a score for an element in a tree   
@@ -3403,11 +3457,11 @@ Document            doc;
    return (val);
 }
 
-/*----------------------------------------------------------------------
-   
-   LIBRARY FUNCTIONS of GENERAL INTERREST                    
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *		LIBRARY FUNCTIONS of GENERAL INTERREST			*
+ *									*  
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
    CreateWWWElement : find or create an element of a given type in   
@@ -3590,95 +3644,6 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   SearchClass : search a given class in the style rules           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Element             SearchClass (char *class, Document doc)
-#else
-Element             SearchClass (class, doc)
-char               *class;
-Document            doc;
-#endif
-{
-   Element             el;
-   ElementType         elType;
-   AttributeType       atType;
-   Attribute           at;
-   char                name[101];
-   int                 len;
-
-   /*
-    * Browse the Style list in the document head.
-    */
-   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-   elType.ElTypeNum = HTML_EL_StyleRule;
-   el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
-
-   while (el != NULL)
-     {
-	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	atType.AttrTypeNum = HTML_ATTR_Selector;
-
-	at = TtaGetAttribute (el, atType);
-	if (at)
-	  {
-	     len = 100;
-	     TtaGiveTextAttributeValue (at, name, &len);
-	     name[len + 1] = 0;
-	     if (!strcmp (class, name))
-		break;
-	  }
-	/* get next StyleRule */
-	TtaNextSibling (&el);
-     }
-   return (el);
-}
-
-/*----------------------------------------------------------------------
-   ApplyStyleRule : Change the presentation attributes of          
-   a given element to reflect a style rule.                        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplyStyleRule (Element elem, Element stylerule, Document doc)
-#else
-void                ApplyStyleRule (elem, stylerule, doc)
-Element             elem;
-Element             stylerule;
-Document            doc;
-#endif
-{
-   PRule               rule, new;
-   PRule               orig;
-   int                 ruleType;
-
-   /*
-    * copy the new presentation specific attributes found.
-    */
-   rule = NULL;
-   do
-     {
-	TtaNextPRule (stylerule, &rule);
-	if (rule)
-	  {
-	     /*
-	      * if there is a rule for this type supress it.
-	      */
-	     ruleType = TtaGetPRuleType (rule);
-	     orig = TtaGetPRule (elem, ruleType);
-	     if (orig)
-		TtaRemovePRule (elem, orig, doc);
-
-	     /*
-	      * and copy the new one.
-	      */
-	     new = TtaCopyPRule (rule);
-	     TtaAttachPRule (elem, new, doc);
-	  }
-     }
-   while (rule != NULL);
-}
-
-/*----------------------------------------------------------------------
    RemoveStyleRule : removes the corresponding class.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3743,9 +3708,9 @@ Document            doc;
    PresentationTarget  target;
    SpecificContextBlock block;
    PresentationContext context;
-   PresentationValue   unused =
-   {0, 0};
+   PresentationValue   unused;
 
+   unused.data = 0;
 #ifdef DEBUG_STYLES
    char               *elHtmlName;
 
@@ -3813,11 +3778,11 @@ boolean                mode;
    HTMLStyleParserDestructiveMode = mode;
 }
 
-/*----------------------------------------------------------------------
-   
-   Needed for support of HTML 3.2                       
-   
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*  
+ *  Functions Needed for support of HTML 3.2 : translate to CSS equiv   *
+ *									*  
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
    HTMLSetBackgroundColor :                                        

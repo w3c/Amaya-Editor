@@ -11,6 +11,9 @@ extern void PresentationValueToPRule ( PresentationValue val,
                                        PRule pRule,
                                        int specific );
 extern PresentationValue PRuleToPresentationValue ( PRule pRule );
+extern void PRuleToPresentationSetting ( PRule pRule,
+                                         PresentationSetting setting,
+                                         int extra );
 
 #else /* __STDC__ */
 
@@ -19,6 +22,9 @@ extern void PresentationValueToPRule (/* PresentationValue val,
                                          PRule pRule,
                                          int specific */);
 extern PresentationValue PRuleToPresentationValue (/* PRule pRule */);
+extern void PRuleToPresentationSetting (/* PRule pRule,
+                                           PresentationSetting setting,
+                                           int extra */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -83,12 +83,56 @@ extern int SpecificSetLineSpacing ( PresentationTarget t,
 extern int SpecificGetLineSpacing ( PresentationTarget t,
                                     PresentationContext c,
                                     PresentationValue *v );
+extern int SpecificSetHeight ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int SpecificGetHeight ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v );
 extern int SpecificSetWidth ( PresentationTarget t,
                               PresentationContext c,
                               PresentationValue v );
 extern int SpecificGetWidth ( PresentationTarget t,
                               PresentationContext c,
-                              PresentationValue * v );
+                              PresentationValue *v );
+extern int SpecificSetVPos ( PresentationTarget t,
+                             PresentationContext c,
+                             PresentationValue v );
+extern int SpecificGetVPos ( PresentationTarget t,
+                             PresentationContext c,
+                             PresentationValue *v );
+extern int SpecificSetHPos ( PresentationTarget t,
+                             PresentationContext c,
+                             PresentationValue v );
+extern int SpecificGetHPos ( PresentationTarget t,
+                             PresentationContext c,
+                             PresentationValue *v );
+extern int SpecificSetInLine ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int SpecificGetInLine ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v );
+extern int SpecificSetShowBox ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue v );
+extern int SpecificGetShowBox ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue *v );
+extern int SpecificSetPictureMode ( PresentationTarget t,
+                                    PresentationContext c,
+                                    PresentationValue v );
+extern int SpecificGetPictureMode ( PresentationTarget t,
+                                    PresentationContext c,
+                                    PresentationValue *v );
+extern void ApplyAllSpecificContext ( Document doc,
+                                      SpecificTarget target,
+                                      SpecificContextApplyHandler handler,
+                                      void *param );
+extern void ApplyAllSpecificSettings ( SpecificTarget target,
+                                       SpecificContext ctxt,
+                                       SpecificSettingsApplyHandler handler,
+                                       void *param );
 
 #else /* __STDC__ */
 
@@ -169,12 +213,56 @@ extern int SpecificSetLineSpacing (/* PresentationTarget t,
 extern int SpecificGetLineSpacing (/* PresentationTarget t,
                                       PresentationContext c,
                                       PresentationValue *v */);
+extern int SpecificSetHeight (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int SpecificGetHeight (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v */);
 extern int SpecificSetWidth (/* PresentationTarget t,
                                 PresentationContext c,
                                 PresentationValue v */);
 extern int SpecificGetWidth (/* PresentationTarget t,
                                 PresentationContext c,
-                                PresentationValue * v */);
+                                PresentationValue *v */);
+extern int SpecificSetVPos (/* PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v */);
+extern int SpecificGetVPos (/* PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v */);
+extern int SpecificSetHPos (/* PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v */);
+extern int SpecificGetHPos (/* PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v */);
+extern int SpecificSetInLine (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int SpecificGetInLine (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v */);
+extern int SpecificSetShowBox (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue v */);
+extern int SpecificGetShowBox (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue *v */);
+extern int SpecificSetPictureMode (/* PresentationTarget t,
+                                      PresentationContext c,
+                                      PresentationValue v */);
+extern int SpecificGetPictureMode (/* PresentationTarget t,
+                                      PresentationContext c,
+                                      PresentationValue *v */);
+extern void ApplyAllSpecificContext (/* Document doc,
+                                        SpecificTarget target,
+                                        SpecificContextApplyHandler handler,
+                                        void *param */);
+extern void ApplyAllSpecificSettings (/* SpecificTarget target,
+                                         SpecificContext ctxt,
+                                         SpecificSettingsApplyHandler handler,
+                                         void *param */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

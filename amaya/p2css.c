@@ -58,13 +58,13 @@ static struct unit_def HTML3UnitNames[] =
 
 #define NB_UNITS (sizeof(HTML3UnitNames) / sizeof(struct unit_def))
 
-/*----------------------------------------------------------------------
-   *									*
-   * RPI handling : RPI are structures containing a generic CSS rule,	*
-   *	i.e. the selector, the presentation rules, a pointer to the	*
-   *	associated generic context and control data.			*
-   *									*
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*
+ * RPI handling : RPI are structures containing a generic CSS rule,	*
+ *	i.e. the selector, the presentation rules, a pointer to the	*
+ *	associated generic context and control data.			*
+ *									*
+ ************************************************************************/
 
 
 static FILE        *output = NULL;
@@ -310,8 +310,8 @@ PRuleInfoPtr        cour;
 #endif
 {
    PresentationContext context;
-   PresentationValue   unused =
-   {0, 0};
+   PresentationValue   unused;
+   unused.data = 0;
 
    if (cour == NULL)
       return;
@@ -330,28 +330,25 @@ PRuleInfoPtr        cour;
    cour->state = RemovedRPI;
 }
 
-/*----------------------------------------------------------------------
+/************************************************************************
  *									*
- * RPI scanning : These two functions are used to scan a PSchema and	*
+ * RPI scanning : These functions are used to scan a PSchema and	*
  *	extract all the generic CSS rules it contains and store them	*
  *	in a RPI list.							*
  *									*
-  ----------------------------------------------------------------------*/
+ ************************************************************************/
 
 
 /*
- * GenericSettingsToCSS :  translate a PresentationSetting to the
- *      equivalent CSS string, and add it to the buffer given as the
- *      argument.
+ * GenericSettingsToCSS :  Callback for ApplyAllGenericSettings,
+ *     enrich the CSS string.
  */
 
 #ifdef __STDC__
 static void         GenericSettingsToCSS (GenericTarget target,
-	     GenericContext ctxt, PresentationSetting settings, void *param)
+     GenericContext ctxt,PresentationSetting settings, void *param)
 #else
-static void         GenericSettingsToCSS (target, ctxt, settings, param)
-GenericTarget       target;
-GenericContext      ctxt;
+static void         GenericSettingsToCSS (settings, param)
 PresentationSetting settings;
 void               *param;
 
@@ -359,223 +356,11 @@ void               *param;
 {
    char               *css_rules = param;
    char                string[150];
-   unsigned short      red, green, blue;
-   int                 add_unit = 0;
-   int                 real = 0;
-   float               fval;
-   int                 unit;
 
    string[0] = EOS;
 
-   if (DRIVERP_UNIT_IS_FLOAT (settings->value.unit))
-     {
-	DRIVERP_UNIT_UNSET_FLOAT (settings->value.unit);
-	real = 1;
-	fval = (float) settings->value.value;
-	fval /= 1000;
-     }
+   PresentationSettingsToCSS(settings, &string[0], sizeof(string));
 
-   switch (settings->type)
-	 {
-	    case DRIVERP_FOREGROUND_COLOR:
-	       TtaGiveThotRGB (settings->value.value, &red, &green, &blue);
-	       sprintf (string, "color : #%02X%02X%02X", red, green, blue);
-	       break;
-	    case DRIVERP_BACKGROUND_COLOR:
-	       TtaGiveThotRGB (settings->value.value, &red, &green, &blue);
-	       sprintf (string, "background : #%02X%02X%02X", red, green, blue);
-	       break;
-	    case DRIVERP_FONT_SIZE:
-	       if (settings->value.unit == DRIVERP_UNIT_REL)
-		  switch (settings->value.value)
-			{
-			   case 1:
-			      strcpy (string, "font-size : xx-small");
-			      break;
-			   case 2:
-			      strcpy (string, "font-size : x-small");
-			      break;
-			   case 3:
-			      strcpy (string, "font-size : small");
-			      break;
-			   case 4:
-			      strcpy (string, "font-size : medium");
-			      break;
-			   case 5:
-			      strcpy (string, "font-size : large");
-			      break;
-			   case 6:
-			      strcpy (string, "font-size : x-large");
-			      break;
-			   default:
-			      if (settings->value.value > 6)
-				 strcpy (string, "font-size : xx-large");
-			      break;
-			}
-	       else
-		 {
-		    if (real)
-		       sprintf (string, "font-size : %g", fval);
-		    else
-		       sprintf (string, "font-size : %d", settings->value.value);
-		    add_unit = 1;
-		 }
-	       break;
-	    case DRIVERP_FONT_STYLE:
-	       switch (settings->value.value)
-		     {
-			case DRIVERP_FONT_BOLD:
-			   strcpy (string, "font-weight : bold");
-			   break;
-			case DRIVERP_FONT_ROMAN:
-			   strcpy (string, "font-style : normal");
-			   break;
-			case DRIVERP_FONT_ITALICS:
-			   strcpy (string, "font-style : italic");
-			   break;
-			case DRIVERP_FONT_BOLDITALICS:
-			   strcpy (string, "font-weight : bold, font-style : italic");
-			   break;
-			case DRIVERP_FONT_OBLIQUE:
-			   strcpy (string, "font-style : oblique");
-			   break;
-			case DRIVERP_FONT_BOLDOBLIQUE:
-			   strcpy (string, "font-weight : bold, font-style : oblique");
-			   break;
-		     }
-	       break;
-	    case DRIVERP_FONT_FAMILY:
-	       switch (settings->value.value)
-		     {
-			case DRIVERP_FONT_HELVETICA:
-			   strcpy (string, "font-family : helvetica");
-			   break;
-			case DRIVERP_FONT_TIMES:
-			   strcpy (string, "font-family : times");
-			   break;
-			case DRIVERP_FONT_COURIER:
-			   strcpy (string, "font-family : courrier");
-			   break;
-		     }
-	       break;
-	    case DRIVERP_TEXT_UNDERLINING:
-	       switch (settings->value.value)
-		     {
-			case DRIVERP_UNDERLINE:
-			   strcpy (string, "text-decoration : underline");
-			   break;
-			case DRIVERP_OVERLINE:
-			   strcpy (string, "text-decoration : overline");
-			   break;
-			case DRIVERP_CROSSOUT:
-			   strcpy (string, "text-decoration : line-through");
-			   break;
-		     }
-	       break;
-	    case DRIVERP_LINE_SPACING:
-	       if (real)
-		  sprintf (string, "line-height : %g", fval);
-	       else
-		  sprintf (string, "line-height : %d", settings->value.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_ALIGNMENT:
-	       switch (settings->value.value)
-		     {
-                        case DRIVERP_ADJUSTLEFT:
-                           strcpy (string, "text-align : left");
-                           break;
-                        case DRIVERP_ADJUSTRIGHT:
-                           strcpy (string, "text-align : right");
-                           break;
-                        case DRIVERP_ADJUSTCENTERED:
-                           strcpy (string, "text-align : center");
-                           break;
-                        case DRIVERP_ADJUSTLEFTWITHDOTS:
-                           strcpy (string, "text-align : left");
-                           break;
-		     }
-	       break;
-	    case DRIVERP_JUSTIFICATION:
-	       if (settings->value.value == DRIVERP_JUSTIFIED)
-		  sprintf (string, "text-align: justify");
-	       break;
-	    case DRIVERP_INDENT:
-	       if (real)
-		  sprintf (string, "text-indent : %g", fval);
-	       else
-		  sprintf (string, "text-indent : %d", settings->value.value);
-	       add_unit = 1;
-	       break;
-#if 0
-	       /* not yet in CSS */
-	    case DRIVERP_HYPHENATION:
-	       if (settings->value.value == DRIVERP_JUSTIFIED)
-		  sprintf (string, "text-align: justify");
-	       break;
-#endif
-	    case DRIVERP_FILL_PATTERN:
-	       break;
-	    case DRIVERP_VERTICAL_POSITION:
-	       if (real)
-		  sprintf (string, "marging-top : %g", fval);
-	       else
-		  sprintf (string, "marging-top : %d", settings->value.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_HORIZONTAL_POSITION:
-	       if (real)
-		  sprintf (string, "margin-left : %g", fval);
-	       else
-		  sprintf (string, "margin-left : %d", settings->value.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_HEIGHT:
-	       if (real)
-		  sprintf (string, "height : %g", fval);
-	       else
-		  sprintf (string, "height : %d", settings->value.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_RELATIVE_HEIGHT:
-	       break;
-	    case DRIVERP_WIDTH:
-	       if (real)
-		  sprintf (string, "width : %g", fval);
-	       else
-		  sprintf (string, "width : %d", settings->value.value);
-	       add_unit = 1;
-	       break;
-	       break;
-	    case DRIVERP_RELATIVE_WIDTH:
-	       break;
-	    case DRIVERP_IN_LINE:
-	       if (settings->value.value == DRIVERP_INLINE)
-		  strcpy (string, "display: inline");
-	       else if (settings->value.value == DRIVERP_NOTINLINE)
-		  strcpy (string, "display: block");
-	       break;
-	    case DRIVERP_SHOW:
-	       break;
-	    case DRIVERP_BOX:
-	       break;
-	    default:
-	       return;
-	 }
-   if (add_unit)
-     {
-	/*
-	 * add the unit string to the CSS string.
-	 */
-	for (unit = 0; unit < NB_UNITS; unit++)
-	  {
-	     if (HTML3UnitNames[unit].unit == settings->value.unit)
-	       {
-		  strcat (string, HTML3UnitNames[unit].sign);
-		  break;
-	       }
-	  }
-     }
    if ((string[0] != EOS) && (*css_rules != EOS))
       strcat (css_rules, ", ");
    if (string[0] != EOS)

@@ -11,6 +11,8 @@ extern jint thotlib_APILanguage_TtaNewLanguage ( struct Hthotlib_APILanguage* no
                                                  int languageAlphabet,
                                                  struct Hjava_lang_String* jprincipalDictionary,
                                                  struct Hjava_lang_String* jsecondDictionary );
+extern void thotlib_APILanguage_TtaRemoveLanguage ( struct Hthotlib_APILanguage* none,
+                                                    jint language );
 extern jint thotlib_APILanguage_TtaGetLanguageIdFromName ( struct Hthotlib_APILanguage* none,
                                                            struct Hjava_lang_String* jlanguageName );
 extern struct Hjava_lang_String* thotlib_APILanguage_TtaGetVarLANG ( struct Hthotlib_APILanguage* none );
@@ -35,6 +37,8 @@ extern jint thotlib_APILanguage_TtaNewLanguage (/* struct Hthotlib_APILanguage* 
                                                    int languageAlphabet,
                                                    struct Hjava_lang_String* jprincipalDictionary,
                                                    struct Hjava_lang_String* jsecondDictionary */);
+extern void thotlib_APILanguage_TtaRemoveLanguage (/* struct Hthotlib_APILanguage* none,
+                                                      jint language */);
 extern jint thotlib_APILanguage_TtaGetLanguageIdFromName (/* struct Hthotlib_APILanguage* none,
                                                              struct Hjava_lang_String* jlanguageName */);
 extern struct Hjava_lang_String* thotlib_APILanguage_TtaGetVarLANG (/* struct Hthotlib_APILanguage* none */);

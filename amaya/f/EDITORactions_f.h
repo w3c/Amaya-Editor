@@ -8,10 +8,8 @@
 
 extern void New ( Document document,
                   View view );
-extern void EnSpellCheck ( Document document,
-                           View view );
-extern void FrSpellCheck ( Document document,
-                           View view );
+extern void SpellCheck ( Document document,
+                         View view );
 extern void CreateBreak ( Document document,
                           View view );
 extern void CreateIsIndex ( Document document,
@@ -97,7 +95,7 @@ extern void CreateCommandLine ( Document document,
                                 View view );
 extern void SetAreaCoords ( Document document,
                             Element element,
-			    int attrNum);
+                            int attrNum );
 extern void CreateAreaRect ( Document doc,
                              View view );
 extern void CreateAreaCircle ( Document doc,
@@ -123,10 +121,8 @@ extern void DeleteAnchor ( Document doc,
 
 extern void New (/* Document document,
                     View view */);
-extern void EnSpellCheck (/* Document document,
-                             View view */);
-extern void FrSpellCheck (/* Document document,
-                             View view */);
+extern void SpellCheck (/* Document document,
+                           View view */);
 extern void CreateBreak (/* Document document,
                             View view */);
 extern void CreateIsIndex (/* Document document,
@@ -212,7 +208,7 @@ extern void CreateCommandLine (/* Document document,
                                   View view */);
 extern void SetAreaCoords (/* Document document,
                               Element element,
-			      int attrNum */);
+                              int attrNum */);
 extern void CreateAreaRect (/* Document doc,
                                View view */);
 extern void CreateAreaCircle (/* Document doc,
