@@ -14,7 +14,7 @@ extern void NewSVG ( Document document,
                      View view );
 extern void NewCss ( Document document,
                      View view );
-extern void InitializeNewDoc ( STRING url,
+extern void InitializeNewDoc ( char *url,
                                int docType,
                                Document doc );
 extern void SpellCheck ( Document document,
@@ -191,7 +191,7 @@ extern void NewSVG (/* Document document,
                        View view */);
 extern void NewCss (/* Document document,
                        View view */);
-extern void InitializeNewDoc (/* STRING url,
+extern void InitializeNewDoc (/* char *url,
                                  int docType,
                                  Document doc */);
 extern void SpellCheck (/* Document document,

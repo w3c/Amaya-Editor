@@ -609,7 +609,7 @@ static void         CreateMathConstruct (int construct)
                      parent, new, next;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
-  STRING             name;
+  char              *name;
   DisplayMode        dispMode;
   int                c1, i, len, oldStructureChecking, col;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
@@ -1202,7 +1202,7 @@ static void         CreateMathConstruct (int construct)
 /*----------------------------------------------------------------------
    CallbackMaths: manage Maths dialogue events.
   ----------------------------------------------------------------------*/
-static void         CallbackMaths (int ref, int typedata, STRING data)
+static void CallbackMaths (int ref, int typedata, char *data)
 {
   Document           doc;
 
@@ -2845,7 +2845,7 @@ static void SetAttrParseMe (Element el, Document doc)
    Insert an entity at the currently selected position.
    entityName is the name of the entity to be created.
  -----------------------------------------------------------------------*/
-static void InsertMathEntity (USTRING entityName, Document document)
+static void InsertMathEntity (unsigned char *entityName, Document document)
 {
   Element       firstSel, lastSel, el, el1, parent, sibling;
   ElementType   elType, elType1;
@@ -3653,7 +3653,7 @@ ThotBool            MathStyleAttrInMenu (NotifyAttribute * event)
 void MathPresentAttrCreated (NotifyAttribute *event)
 {
 #define buflen 200
-  STRING           value;
+  char            *value;
   int              length, attrKind;
   AttributeType    attrType;
 
@@ -3725,7 +3725,7 @@ ThotBool MathAttrRspaceDelete (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void MathAttrFontfamilyCreated (NotifyAttribute *event)
 {
-  STRING           value;
+  char            *value;
   int              length;
 
   value = TtaGetMemory (buflen);
@@ -3760,7 +3760,7 @@ ThotBool MathAttrFontfamilyDelete (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void MathAttrColorCreated (NotifyAttribute *event)
 {
-  STRING           value;
+  char            *value;
   int              length;
 
   value = TtaGetMemory (buflen);
@@ -3800,7 +3800,7 @@ void MathAttrFormChanged (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void MathAttrBackgroundCreated (NotifyAttribute *event)
 {
-  STRING           value;
+  char            *value;
   int              length;
 
   value = TtaGetMemory (buflen);
@@ -3875,7 +3875,7 @@ void AttrStretchyChanged (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void AttrSpacingCreated (NotifyAttribute *event)
 {
-  STRING           value;
+  char            *value;
   int              length, attrKind;
   AttributeType    attrType;
 
@@ -3975,7 +3975,7 @@ void AttrBevelledChanged (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void AttrScriptlevelCreated (NotifyAttribute *event)
 {
-  STRING           value;
+  char            *value;
   int              length;
 
   length = TtaGetTextAttributeLength (event->attribute);
@@ -4132,7 +4132,7 @@ void AttrSeparatorsChanged (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void AttrScriptShiftCreated (NotifyAttribute *event)
 {
-  STRING           value;
+  char            *value;
   int              length, attrKind;
   AttributeType    attrType;
 
@@ -4222,11 +4222,11 @@ static void SetIntRowAlign (Element row, int val, Document doc)
    (if delete) for element el in document doc. Update the IntRowAlign
    attributes of all enclosed mrow elements accordingly.
   ----------------------------------------------------------------------*/
-void      HandleRowalignAttribute (Attribute attr, Element el, Document doc,
-				   ThotBool delete)
+void HandleRowalignAttribute (Attribute attr, Element el, Document doc,
+			      ThotBool delete)
 {
-  STRING           value;
-  char*          ptr;
+  char            *value;
+  char            *ptr;
   int              length, val;
   ElementType      elType;
   Element          row;
@@ -4470,8 +4470,8 @@ static void RowWithoutColalignAttr (Element *row, Element *cell,
 void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 			      ThotBool delete, ThotBool allRows)
 {
-  STRING           value, localValue;
-  char*          ptr;
+  char            *value, *localValue;
+  char            *ptr;
   int              length, val;
   ElementType      elType;
   Element          cell, row;

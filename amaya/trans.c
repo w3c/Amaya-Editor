@@ -51,7 +51,7 @@ static int          topMatchStack;
 /* stack of generated tags */
 typedef struct _gStack
   {
-     STRING              Tag;
+     char               *Tag;
      strAttrDesc        *Attributes;
      int                 Idf;
      int                 Nbc;
@@ -152,7 +152,7 @@ static void         FreeMatchEnv ()
 /*----------------------------------------------------------------------
    NewNode: allocation of a Structure tree node.     
   ----------------------------------------------------------------------*/
-static strNode *NewNode (STRING tag)
+static strNode *NewNode (char *tag)
 {
    StructureTree res;
 
@@ -181,7 +181,7 @@ static void         BuildStructureTree (Element elem, Document doc, StructureTre
    Element             elemCour;
    Attribute           attr;
    ElementType         elemType;
-   STRING              tag;
+   char               *tag;
    strNode            *added, *child;
 #ifdef AMAYA_DEBUG
    int i;
@@ -499,7 +499,7 @@ static ThotBool     MatchAttributes (strSymbDesc * pSymb, Element elem)
    strAttrDesc        *pAttr = NULL;
    AttributeType       AttrTyp;
    Attribute           attr = NULL;
-   STRING              buf;
+   char               *buf;
    int                 AttrKind, length;
 
    buf = TtaGetMemory (MAX_LENGTH);
@@ -658,7 +658,7 @@ static void AddListSubTree (Element elem, int idf, int rank)
   Searches an element identified with a given label in the environement
   subtrees list.
   ----------------------------------------------------------------------*/
-static Element      FindListSTreeByLabel (STRING label)
+static Element      FindListSTreeByLabel (char *label)
 {
    strListElem        *pcour;
    ThotBool            found;
@@ -1237,7 +1237,7 @@ static void         CopySubTrees (strNode * Root, Document doc)
    PutBeginTag,PutEndTag,TransferNode 
    fill the HTML buffer with the generated nodes 
   ----------------------------------------------------------------------*/
-static ThotBool     PutInHtmlBuffer (STRING s)
+static ThotBool     PutInHtmlBuffer (char *s)
 {
   int len;
   
@@ -1263,7 +1263,7 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
   ElementType	      elType;
   strAttrDesc        *AD;
   strGenStack        *NS;
-  STRING              attrValue, tag;
+  char              *attrValue, *tag;
   strNode            *ancestor;
   ThotBool            found;
   AttributeType       attrType;
@@ -1906,13 +1906,13 @@ static void         MyNextSelectedElement (Document doc, Element * elSelect)
    WARNING This function works as long as there are no cycles in S schema
            whithout any HTML element inside....
   ----------------------------------------------------------------------*/
-static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING prevtag)
+static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag)
 {
 
   ElementType         elemTypeChild, tagElType, prevElType;
   ElementType 	      *subTypes;
   Construct           constOfType;
-  STRING              name;
+  char               *name;
   int                 cardinal, i = 0, start;
   ThotBool            result, found;
 
@@ -2100,13 +2100,13 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
    transformation root element                                          
   ----------------------------------------------------------------------*/
 static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
-				     STRING prevTag)
+				     char *prevTag)
 {
   strMatchChildren   *smc;
   strMatch           *sm2;
-  strNodeDesc           *node;
+  strNodeDesc        *node;
   ThotBool            result, sonsMatch;
-  STRING              curTag;
+  char               *curTag;
 
 
 
@@ -2348,8 +2348,8 @@ void                TransformType (Document doc, View view)
   Element             elemSelect;
   ElementType	       elType;
   int                 i, j, k;
-  STRING              menuBuf, tag, nameSet;
-  strMatch           *sm;
+  char                *menuBuf, *tag, *nameSet;
+  strMatch            *sm;
   StructureTree       node;
   ThotBool	       ok;
   strTransSet*	       transSets [4] = {NULL,NULL,NULL,NULL};
@@ -2545,7 +2545,7 @@ ThotBool TransformIntoType (ElementType resultType, Document doc)
   strSymbDesc        *sd;
   strMatch           *sm;
   StructureTree       node;
-  STRING              tag, nameSet;
+  char               *tag, *nameSet;
   SSchema	      transSchema;
 
   strMatchEnv.SourceTree = NULL;

@@ -6,16 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool CheckGenerator ( NotifyElement * event );
+extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool GenerateQuoteBefore ( NotifyAttribute *event );
-extern void GenerateQuoteAfter ( NotifyAttribute * event );
-extern ThotBool CheckValidID ( NotifyAttribute * event );
+extern void GenerateQuoteAfter ( NotifyAttribute *event );
+extern ThotBool CheckValidID ( NotifyAttribute *event );
 extern void SetRelativeURLs ( Document document,
-                              STRING newpath );
+                              char *newpath );
 extern void InitSaveObjectForm ( Document document,
                                  View view,
-                                 STRING object,
-                                 STRING pathname );
+                                 char *object,
+                                 char *pathname );
 extern void DeleteTempObjectFile ( void );
 extern void DoSaveObjectAs ( void );
 extern void SaveDocumentAs ( Document doc,
@@ -27,21 +27,21 @@ extern void Synchronize ( Document document,
 extern void SaveDocument ( Document doc,
                            View view );
 extern void BackUpDocs ( void );
-extern ThotBool DocumentToSave ( NotifyDialog * event );
+extern ThotBool DocumentToSave ( NotifyDialog *event );
 extern void DoSaveAs ( void );
 
 #else /* __STDC__ */
 
-extern ThotBool CheckGenerator (/* NotifyElement * event */);
+extern ThotBool CheckGenerator (/* NotifyElement *event */);
 extern ThotBool GenerateQuoteBefore (/* NotifyAttribute *event */);
-extern void GenerateQuoteAfter (/* NotifyAttribute * event */);
-extern ThotBool CheckValidID (/* NotifyAttribute * event */);
+extern void GenerateQuoteAfter (/* NotifyAttribute *event */);
+extern ThotBool CheckValidID (/* NotifyAttribute *event */);
 extern void SetRelativeURLs (/* Document document,
-                                STRING newpath */);
+                                char *newpath */);
 extern void InitSaveObjectForm (/* Document document,
                                    View view,
-                                   STRING object,
-                                   STRING pathname */);
+                                   char *object,
+                                   char *pathname */);
 extern void DeleteTempObjectFile (/* void */);
 extern void DoSaveObjectAs (/* void */);
 extern void SaveDocumentAs (/* Document doc,
@@ -53,7 +53,7 @@ extern void Synchronize (/* Document document,
 extern void SaveDocument (/* Document doc,
                              View view */);
 extern void BackUpDocs (/* void */);
-extern ThotBool DocumentToSave (/* NotifyDialog * event */);
+extern ThotBool DocumentToSave (/* NotifyDialog *event */);
 extern void DoSaveAs (/* void */);
 
 #endif /* __STDC__ */

@@ -9,13 +9,13 @@
 extern void ParseCharset ( Element el,
                            Document doc );
 extern void XhtmlEntityCreated ( int entityValue,
-                                 STRING entityName,
+                                 char *entityName,
                                  ThotBool entityFound,
                                  ParserData *context );
 extern void XhtmlElementComplete ( Element el,
                                    Document doc,
                                    int *error );
-extern Element PutInContent ( STRING ChrString,
+extern Element PutInContent ( char *ChrString,
                               ParserData *context );
 extern void CreateHTMLAttribute ( Element el,
                                   AttributeType attrType,
@@ -32,11 +32,11 @@ extern void XhtmlTypeAttrValue ( char *val,
                                  Attribute currentAttribute,
                                  Element lastAttrElement,
                                  ParserData *context );
-extern void CreateAttrWidthPercentPxl ( STRING buffer,
+extern void CreateAttrWidthPercentPxl ( char *buffer,
                                         Element el,
                                         Document doc,
                                         int oldWidth );
-extern void CreateAttrIntSize ( STRING buffer,
+extern void CreateAttrIntSize ( char *buffer,
                                 Element el,
                                 Document doc );
 extern void EndOfHTMLAttributeValue ( char *attrValue,
@@ -55,13 +55,13 @@ extern void MapHTMLAttributeValue ( char *AttrVal,
 extern void ParseCharset (/* Element el,
                              Document doc */);
 extern void XhtmlEntityCreated (/* int entityValue,
-                                   STRING entityName,
+                                   char *entityName,
                                    ThotBool entityFound,
                                    ParserData *context */);
 extern void XhtmlElementComplete (/* Element el,
                                      Document doc,
                                      int *error */);
-extern Element PutInContent (/* STRING ChrString,
+extern Element PutInContent (/* char *ChrString,
                                 ParserData *context */);
 extern void CreateHTMLAttribute (/* Element el,
                                     AttributeType attrType,
@@ -78,11 +78,11 @@ extern void XhtmlTypeAttrValue (/* char *val,
                                    Attribute currentAttribute,
                                    Element lastAttrElement,
                                    ParserData *context */);
-extern void CreateAttrWidthPercentPxl (/* STRING buffer,
+extern void CreateAttrWidthPercentPxl (/* char *buffer,
                                           Element el,
                                           Document doc,
                                           int oldWidth */);
-extern void CreateAttrIntSize (/* STRING buffer,
+extern void CreateAttrIntSize (/* char *buffer,
                                   Element el,
                                   Document doc */);
 extern void EndOfHTMLAttributeValue (/* char *attrValue,

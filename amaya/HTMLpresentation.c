@@ -163,7 +163,7 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
   ElementType   elType;
   int		kind, len;
 #define ATTRLEN 64
-  STRING	oldValue; /* [ATTRLEN]; */
+  char	       *oldValue; /* [ATTRLEN]; */
 
   elType = TtaGetElementType (elem);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
@@ -298,8 +298,8 @@ void                SetStyleAttribute (Document doc, Element elem)
    Attribute           styleAttr;
    ElementType         elType;
    Element	       firstChild, lastChild;
-   STRING              schName;
-   STRING              style;
+   char               *schName;
+   char               *style;
    int                 len;
 #define STYLELEN 1000
 
@@ -643,8 +643,8 @@ static void MoveAttrLang (Attribute oldAttr, Element *el, Document doc)
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
-  STRING	value    = TtaGetMemory (ATTRLEN); 
-  STRING oldValue = TtaGetMemory (ATTRLEN);
+  char	       *value    = TtaGetMemory (ATTRLEN); 
+  char         * oldValue = TtaGetMemory (ATTRLEN);
   ThotBool	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
@@ -721,7 +721,7 @@ void AttrLangCreated (NotifyAttribute *event)
   int		len;
   AttributeType attrType;
   Attribute	attr;
-  STRING	value    = TtaGetMemory (ATTRLEN); 
+  char	       *value = TtaGetMemory (ATTRLEN); 
 
   /* move the LANG attribute to the parent element if all sibling have the
      same attribute with the same value */

@@ -9,7 +9,6 @@
  * Amaya saving functions.
  *
  * Authors: I. Vatton, D. Veillard
- *          R. Guetari: Unicode
  *
  */
 
@@ -35,8 +34,8 @@ extern HINSTANCE    hInstance;
 
 
 #define StdDefaultName "Overview.html"
-static STRING       DefaultName;
-static char       tempSavedObject[MAX_LENGTH];
+static char        *DefaultName;
+static char         tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
    HTML_ATTR_codebase,
@@ -52,7 +51,7 @@ static int          SRC_attr_tab[] = {
    HTML_ATTR_background_,
    HTML_ATTR_Style_
 };
-static STRING       QuotedText;
+static char        *QuotedText;
 
 
 static char *HTMLDocTypes_1[] =
@@ -131,14 +130,14 @@ LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 
 	case IDCANCEL:
 	  EndDialog (hwnDlg, IDCANCEL);
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (STRING) 0);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char *) 0);
 	  break;
 
 	case ID_CONFIRM:
 	  /* TODO: Extract directory and file name from urlToOpen */
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  TtaExtractName (currentDocToSave, SavePath, ObjectName);
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (STRING) 1);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char *) 1);
 	  break;
 	}
       break;
@@ -151,7 +150,7 @@ LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 /*-----------------------------------------------------------------------
  CreateGetSaveDlgWindow
  ------------------------------------------------------------------------*/
-void CreateGetSaveDlgWindow (HWND parent, STRING path_name)
+void CreateGetSaveDlgWindow (HWND parent, char *path_name)
 {  
   sprintf (currentPathName, path_name);
   DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent,
@@ -162,12 +161,12 @@ void CreateGetSaveDlgWindow (HWND parent, STRING path_name)
 /*----------------------------------------------------------------------
   CheckGenerator                                                 
   ----------------------------------------------------------------------*/
-ThotBool            CheckGenerator (NotifyElement * event)
+ThotBool CheckGenerator (NotifyElement *event)
 {
   AttributeType      attrType;
   Attribute          attr;
-  char             buff[MAX_LENGTH];
-  STRING             ptr;
+  char               buff[MAX_LENGTH];
+  char              *ptr;
   int                length;
 
   attrType.AttrSSchema = TtaGetDocumentSSchema (event->document);
@@ -211,9 +210,9 @@ ThotBool            CheckGenerator (NotifyElement * event)
 /*----------------------------------------------------------------------
   GenerateQuoteBefore                                                  
   ----------------------------------------------------------------------*/
-ThotBool            GenerateQuoteBefore (NotifyAttribute *event)
+ThotBool GenerateQuoteBefore (NotifyAttribute *event)
 {
-  STRING            ptr;
+  char             *ptr;
   int               length;
 
   length = TtaGetTextAttributeLength (event->attribute);
@@ -246,7 +245,7 @@ ThotBool            GenerateQuoteBefore (NotifyAttribute *event)
 /*----------------------------------------------------------------------
   GenerateQuoteAfter                                                 
   ----------------------------------------------------------------------*/
-void                GenerateQuoteAfter (NotifyAttribute * event)
+void GenerateQuoteAfter (NotifyAttribute *event)
 {
   /* remove quotes before and after the text */
   QuotedText[strlen (QuotedText) - 1] = EOS;
@@ -262,11 +261,11 @@ void                GenerateQuoteAfter (NotifyAttribute * event)
   the value of the NAME attribute is a valid XML ID and if not,
   generate an ID attribute with a valid value.
   ----------------------------------------------------------------------*/
-ThotBool            CheckValidID (NotifyAttribute * event)
+ThotBool CheckValidID (NotifyAttribute *event)
 {
   AttributeType     attrType;
   Attribute         attr;
-  STRING            value;
+  char             *value;
   int               length, i;
 
   if (!SaveAsXML)
@@ -315,7 +314,7 @@ ThotBool            CheckValidID (NotifyAttribute * event)
 /*----------------------------------------------------------------------
    SetRelativeURLs: try to make relative URLs within an HTML document.
   ----------------------------------------------------------------------*/
-void                SetRelativeURLs (Document document, STRING newpath)
+void                SetRelativeURLs (Document document, char *newpath)
 {
   Element             el, root, content;
   ElementType         elType;
@@ -325,7 +324,7 @@ void                SetRelativeURLs (Document document, STRING newpath)
   char                old_url[MAX_LENGTH];
   char                oldpath[MAX_LENGTH];
   char                tempname[MAX_LENGTH];
-  STRING              new_url;
+  char               *new_url;
   int                 index, max;
   int                 len;
 
@@ -419,7 +418,7 @@ void                SetRelativeURLs (Document document, STRING newpath)
   InitSaveForm
   Build and display the Save As dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-static void InitSaveForm (Document document, View view, STRING pathname)
+static void InitSaveForm (Document document, View view, char *pathname)
 {
 #ifndef _WINDOWS
    char             buffer[3000];
@@ -514,8 +513,8 @@ static void InitSaveForm (Document document, View view, STRING pathname)
 /*----------------------------------------------------------------------
   InitSaveObjectForm
   ----------------------------------------------------------------------*/
-void InitSaveObjectForm (Document document, View view, STRING object,
-			 STRING pathname)
+void InitSaveObjectForm (Document document, View view, char *object,
+			 char *pathname)
 {
 #ifndef _WINDOWS
    char                tempdir[MAX_LENGTH];
@@ -707,7 +706,7 @@ void         SetNamespacesAndDTD (Document doc)
    Attribute		attr, charsetAttr;
    SSchema              nature;
    CHARSET              charset;
-   STRING               ptr;
+   char                *ptr;
 #define MAX_CHARSET_LEN 50
    char                 Charset[MAX_CHARSET_LEN];
    char		        buffer[200];
@@ -1055,10 +1054,10 @@ static void       RedisplaySourceFile (Document doc)
    SaveDocumentLocally save the document in a local file.
    Return TRUE if the document has been saved
   ----------------------------------------------------------------------*/
-static ThotBool SaveDocumentLocally (Document doc, STRING directoryName,
-				     STRING documentName)
+static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
+				     char *documentName)
 {
-  STRING              ptr;
+  char             *ptr;
   char              tempname[MAX_LENGTH];
   char              docname[100];
   ThotBool            ok;
@@ -1170,14 +1169,14 @@ static ThotBool AddNoName (Document document, View view, char *url,
   check for errors using a following GET.
   Return 0 if the file has been saved
   ----------------------------------------------------------------------*/
-static int SafeSaveFileThroughNet (Document doc, STRING localfile,
-				   STRING remotefile, PicType filetype,
+static int SafeSaveFileThroughNet (Document doc, char *localfile,
+				   char *remotefile, PicType filetype,
 				   ThotBool use_preconditions)
 {
   char              msg[MAX_LENGTH];
   char              tempfile[MAX_LENGTH]; /* File name used to refetch */
   char              tempURL[MAX_LENGTH];  /* May be redirected */
-  STRING            verify_publish;
+  char             *verify_publish;
   int               res;
   int               mode = 0;
 
@@ -1251,11 +1250,11 @@ static int SafeSaveFileThroughNet (Document doc, STRING localfile,
   confirm = TRUE form SAVE_AS and FALSE from SAVE
   ----------------------------------------------------------------------*/
 static ThotBool SaveObjectThroughNet (Document document, View view,
-				      STRING url, ThotBool confirm,
+				      char *url, ThotBool confirm,
 				      ThotBool use_preconditions)
 {
-  STRING           tempname;
-  STRING           msg;
+  char            *tempname;
+  char            *msg;
   int              remainder = 500;
   int              res;
 
@@ -1319,13 +1318,13 @@ static ThotBool SaveObjectThroughNet (Document document, View view,
   Save a document and the included images to a remote network location.
   confirm = TRUE form SAVE_AS and FALSE from SAVE
   ----------------------------------------------------------------------*/
-static ThotBool SaveDocumentThroughNet (Document doc, View view, STRING url,
+static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 					ThotBool confirm, ThotBool with_images,
 					ThotBool use_preconditions)
 {
   LoadedImageDesc *pImage;
-  STRING           tempname;
-  STRING           msg;
+  char            *tempname;
+  char            *msg;
   int              remainder = 10000;
   int              index = 0, len, nb = 0;
   int              imageType, res;
@@ -1924,7 +1923,7 @@ void                   BackUpDocs ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool DocumentToSave (NotifyDialog * event)
+ThotBool DocumentToSave (NotifyDialog *event)
 {
    SaveDocument (event->document, 1);
    return TRUE;	/* prevent Thot from performing normal save operation */
@@ -1949,16 +1948,16 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
    Element             el, root, content;
    LoadedImageDesc    *pImage;
    Language            lang;
-   char              tempfile[MAX_LENGTH];
-   char              localpath[MAX_LENGTH];
-   char              oldpath[MAX_LENGTH];
-   char              oldname[MAX_LENGTH];
-   char              tempname[MAX_LENGTH];
-   char              imgname[MAX_LENGTH];
-   char              url[MAX_LENGTH];
-   char              *buf, *ptr;
-   char              *sStyle, *stringStyle;
-   char*             oldStyle;
+   char                tempfile[MAX_LENGTH];
+   char                localpath[MAX_LENGTH];
+   char                oldpath[MAX_LENGTH];
+   char                oldname[MAX_LENGTH];
+   char                tempname[MAX_LENGTH];
+   char                imgname[MAX_LENGTH];
+   char                url[MAX_LENGTH];
+   char               *buf, *ptr;
+   char               *sStyle, *stringStyle;
+   char               *oldStyle;
    int                 buflen, max, index;
 
    if (imgbase[0] != EOS)
@@ -2300,16 +2299,16 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
   parameters, whether initial and final location are local or remote
   and recomputes URLs accordingly.
   ----------------------------------------------------------------------*/
-void                DoSaveAs (void)
+void DoSaveAs (void)
 {
   NotifyElement       event;
   Document            doc;
   AttributeType       attrType;
   ElementType         elType;
   Element             el, root;
-  STRING              documentFile;
-  STRING              tempname, oldLocal, newLocal;
-  STRING              imagePath, base;
+  char               *documentFile;
+  char               *tempname, *oldLocal, *newLocal;
+  char               *imagePath, *base;
   char                imgbase[MAX_LENGTH];
   char                documentname[MAX_LENGTH];
   char                tempdir[MAX_LENGTH];
@@ -2330,7 +2329,8 @@ void                DoSaveAs (void)
   base = NULL;
 
 #ifdef AMAYA_DEBUG
-  fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], SavePath, SaveName, (int) CopyImages);
+  fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n",
+	  DocumentURLs[SavingDocument], SavePath, SaveName, (int) CopyImages);
 #endif
 
   /* New document path */

@@ -11,9 +11,9 @@ extern void InitSelection ( void );
 extern void CheckSelectedElement ( PtrElement pEl,
                                    Document document );
 extern void TtaSetFocus ( void );
-extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
-                                      PtrElement * firstEl,
-                                      PtrElement * lastEl,
+extern ThotBool GetCurrentSelection ( PtrDocument *pDoc,
+                                      PtrElement *firstEl,
+                                      PtrElement *lastEl,
                                       int *firstChar,
                                       int *lastChar );
 extern void GetActiveView ( PtrDocument *pDoc,
@@ -90,9 +90,9 @@ extern void InitSelection (/* void */);
 extern void CheckSelectedElement (/* PtrElement pEl,
                                      Document document */);
 extern void TtaSetFocus (/* void */);
-extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
-                                        PtrElement * firstEl,
-                                        PtrElement * lastEl,
+extern ThotBool GetCurrentSelection (/* PtrDocument *pDoc,
+                                        PtrElement *firstEl,
+                                        PtrElement *lastEl,
                                         int *firstChar,
                                         int *lastChar */);
 extern void GetActiveView (/* PtrDocument *pDoc,

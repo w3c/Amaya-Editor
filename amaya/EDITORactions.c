@@ -80,18 +80,16 @@ void               NewCss (Document document, View view)
   InitializeNewDoc builds the initial contents of a new document
   When the parameter doc is 0 the function creates a new document window.
   ----------------------------------------------------------------------*/
-void InitializeNewDoc (STRING url, int docType, Document doc)
+void InitializeNewDoc (char *url, int docType, Document doc)
 {
   ElementType          elType;
   Element              docEl, root, title, text, el, head, child, meta, body;
   AttributeType        attrType;
   Attribute            attr;
   Language             language;
-  STRING               pathname;
-  STRING               documentname;
-  STRING               s;
-  char               tempfile[MAX_LENGTH];
-  STRING               profile;
+  char                *pathname, *documentname;
+  char                *s, *profile;
+  char                 tempfile[MAX_LENGTH];
 
   pathname = TtaGetMemory (MAX_LENGTH);
   documentname = TtaGetMemory (MAX_LENGTH);
@@ -1618,7 +1616,7 @@ void                CreateImageInput (Document doc, View view)
   Attribute           attr;
   ElementType         elType;
   Element             el, input;
-  STRING              value;
+  char               *value;
   int                 length;
   int                 firstchar, lastchar;
   ThotBool            withinP;
@@ -1765,7 +1763,7 @@ void                CreateObject (Document document, View view)
    Element             child, el;
    Attribute           attr;
    AttributeType       attrType;
-   STRING              name1;
+   char               *name1;
    int                 length;
    int                 firstchar, lastchar;
 

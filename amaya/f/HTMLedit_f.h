@@ -17,8 +17,8 @@ extern void RemoveLink ( Element el,
 extern ThotBool DeleteLink ( NotifyElement * event );
 extern void SetREFattribute ( Element element,
                               Document doc,
-                              STRING targetURL,
-                              STRING targetName );
+                              char *targetURL,
+                              char *targetName );
 extern void ChangeTitle ( Document doc,
                           View view );
 extern void SetNewTitle ( Document doc );
@@ -114,8 +114,8 @@ extern Element SearchAnchor ( Document doc,
                               ThotBool link,
                               ThotBool name );
 extern void UpdateAtom ( Document doc,
-                         STRING url,
-                         STRING title );
+                         char *url,
+                         char *title );
 extern void TitleModified ( NotifyOnTarget * event );
 
 #else /* __STDC__ */
@@ -131,8 +131,8 @@ extern void RemoveLink (/* Element el,
 extern ThotBool DeleteLink (/* NotifyElement * event */);
 extern void SetREFattribute (/* Element element,
                                 Document doc,
-                                STRING targetURL,
-                                STRING targetName */);
+                                char *targetURL,
+                                char *targetName */);
 extern void ChangeTitle (/* Document doc,
                             View view */);
 extern void SetNewTitle (/* Document doc */);
@@ -228,8 +228,8 @@ extern Element SearchAnchor (/* Document doc,
                                 ThotBool link,
                                 ThotBool name */);
 extern void UpdateAtom (/* Document doc,
-                           STRING url,
-                           STRING title */);
+                           char *url,
+                           char *title */);
 extern void TitleModified (/* NotifyOnTarget * event */);
 
 #endif /* __STDC__ */

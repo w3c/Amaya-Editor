@@ -172,8 +172,8 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-void    MapMathMLAttribute (char *attrName, AttributeType *attrType,
-			    STRING elementName, ThotBool *level, Document doc)
+void MapMathMLAttribute (char *attrName, AttributeType *attrType,
+			 char *elementName, ThotBool *level, Document doc)
 {
   attrType->AttrSSchema = GetMathMLSSchema (doc);
   MapXMLAttribute (MATH_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
@@ -184,9 +184,8 @@ void    MapMathMLAttribute (char *attrName, AttributeType *attrType,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void        MapMathMLAttributeValue (STRING AttrVal,
-				     AttributeType attrType,
-				     int *value)
+void MapMathMLAttributeValue (char *AttrVal, AttributeType attrType,
+			      int *value)
 {
    int                 i;
 
@@ -208,9 +207,8 @@ void        MapMathMLAttributeValue (STRING AttrVal,
    MapMathMLEntity
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
-void	MapMathMLEntity (STRING entityName,
-			 STRING entityValue,
-			 STRING alphabet)
+void MapMathMLEntity (char *entityName, char *entityValue,
+		      char *alphabet)
 {
    int	i;
   ThotBool       found;
@@ -240,8 +238,8 @@ void	MapMathMLEntity (STRING entityName,
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
-void    MathMLEntityCreated (USTRING entityValue, Language lang,
-			     STRING entityName, Document doc)
+void MathMLEntityCreated (unsigned char *entityValue, Language lang,
+			  char *entityName, Document doc)
 {
    ElementType	 elType;
    Element	 elText;
@@ -298,9 +296,8 @@ void    MathMLEntityCreated (USTRING entityValue, Language lang,
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
-void  MathMLEntityCreatedWithExpat (int         entityValue,
-				    STRING      entityName,
-				    ThotBool    entityFound,
+void  MathMLEntityCreatedWithExpat (int entityValue, char *entityName,
+				    ThotBool entityFound,
 				    ParserData *XmlContext)
 {
   ElementType	 elType;
@@ -1269,7 +1266,7 @@ void SetFontstyleAttr (Element el, Document doc)
   Attribute	attr, IntAttr;
   Element       textEl;
   int		len;
-  STRING        value;
+  char         *value;
   ThotBool      italic;
 
   if (el != NULL)
@@ -1870,7 +1867,7 @@ static void      TransformMFENCED (Element el, Document doc)
  Subscript or  Superscript child of el.
  If value is NULL, remove the Thot VertPos rule.
  -----------------------------------------------------------------------*/
-void MathMLScriptShift (Document doc, Element el, STRING value, int attr)
+void MathMLScriptShift (Document doc, Element el, char *value, int attr)
 {
   ElementType         elType;
   Element             script, child;
@@ -1931,12 +1928,12 @@ void MathMLScriptShift (Document doc, Element el, STRING value, int attr)
    att (which is subscriptshift or superscriptshift), generate the
    corresponding Thot presentation rule.
   ----------------------------------------------------------------------*/
-static void     SetScriptShift (Element el, Document doc, int att)
+static void SetScriptShift (Element el, Document doc, int att)
 {
    AttributeType     attrType;
    ElementType       elType;
    Attribute         attr;
-   STRING            value;
+   char             *value;
    int               length;
 
    elType = TtaGetElementType (el);
@@ -2163,7 +2160,7 @@ void      MathMLElementComplete (Element el, Document doc, int *error)
 /*----------------------------------------------------------------------
  SetFontfamily
  -----------------------------------------------------------------------*/
-void SetFontfamily (Document doc, Element el, STRING value)
+void SetFontfamily (Document doc, Element el, char *value)
 {
 #define buflen 50
   char           css_command[buflen+20];
@@ -2177,7 +2174,7 @@ void SetFontfamily (Document doc, Element el, STRING value)
  The MathML attribute linthickness is associated with element el. Generate
  the corresponding style property for this element. 
  -----------------------------------------------------------------------*/
-void MathMLlinethickness (Document doc, Element el, STRING value)
+void MathMLlinethickness (Document doc, Element el, char *value)
 {
 #define buflen 50
   char           css_command[buflen+20];
@@ -2197,7 +2194,7 @@ void MathMLlinethickness (Document doc, Element el, STRING value)
  The MathML attribute attr is associated with element el. Generate
  the corresponding style property for this element.
  -----------------------------------------------------------------------*/
-void MathMLAttrToStyleProperty (Document doc, Element el, STRING value, int attr)
+void MathMLAttrToStyleProperty (Document doc, Element el, char *value, int attr)
 {
   char           css_command[buflen+20];
 
@@ -2230,7 +2227,7 @@ void MathMLAttrToStyleProperty (Document doc, Element el, STRING value, int attr
  A scriptlevel attribute with value value is associated with element el.
  Generate the corresponding style property for this element.
  -----------------------------------------------------------------------*/
-void MathMLSetScriptLevel (Document doc, Element el, STRING value)
+void MathMLSetScriptLevel (Document doc, Element el, char *value)
 {
   PresentationValue   pval;
   PresentationContext ctxt;
@@ -2306,7 +2303,7 @@ void MathMLSetScriptLevel (Document doc, Element el, STRING value)
  the element.
  If value is NULL, remove the corresponding Thot presentation rule.
  -----------------------------------------------------------------------*/
-void MathMLSpacingAttr (Document doc, Element el, STRING value, int attr)
+void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
 {
   ElementType         elType;
   PresentationValue   pval;
@@ -2363,13 +2360,13 @@ void MathMLSpacingAttr (Document doc, Element el, STRING value, int attr)
    The XML parser has completed parsing attribute attr (as well as its value)
    that is associated with element el in document doc.
   ----------------------------------------------------------------------*/
-void      MathMLAttributeComplete (Attribute attr, Element el, Document doc)
+void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 {
    AttributeType     attrType;
    int		     attrKind;
    ElementType       elType;
 #define buflen 50
-   STRING            value;
+   char             *value;
    int               val, length;
    Attribute         intAttr;
  
@@ -2494,7 +2491,7 @@ void      MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 /*----------------------------------------------------------------------
    MathMLGetDTDName
   ----------------------------------------------------------------------*/
-void      MathMLGetDTDName (STRING DTDname, STRING elementName)
+void MathMLGetDTDName (char *DTDname, char *elementName)
 {
    /* no other DTD allowed within MathML elements */
    strcpy (DTDname, "");

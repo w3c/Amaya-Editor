@@ -23,7 +23,7 @@
 #include "GraphML.h"
 #endif
 
-static STRING       TargetDocumentURL = NULL;
+static char        *TargetDocumentURL = NULL;
 static int          OldWidth;
 static int          OldHeight;
 #define buflen 50
@@ -209,7 +209,7 @@ void                RemoveLink (Element el, Document doc)
 /*----------------------------------------------------------------------
    DeleteLink                                              
   ----------------------------------------------------------------------*/
-ThotBool            DeleteLink (NotifyElement * event)
+ThotBool DeleteLink (NotifyElement * event)
 {
   RemoveLink (event->element, event->document);
   return FALSE;		/* let Thot perform normal operation */
@@ -220,14 +220,15 @@ ThotBool            DeleteLink (NotifyElement * event)
    SetREFattribute  sets the HREF or CITE attribue of the element to      
    the concatenation of targetURL and targetName.
   ----------------------------------------------------------------------*/
-void                SetREFattribute (Element element, Document doc, STRING targetURL, STRING targetName)
+void SetREFattribute (Element element, Document doc, char *targetURL,
+		      char *targetName)
 {
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
    SSchema	       HTMLSSchema;
-   STRING              value, base;
-   char              tempURL[MAX_LENGTH];
+   char               *value, *base;
+   char                tempURL[MAX_LENGTH];
    int                 length;
    ThotBool            new, oldStructureChecking, isHTML;
 
@@ -461,14 +462,14 @@ void                SetNewTitle (Document doc)
 /*----------------------------------------------------------------------
    SelectDestination selects the destination of the el Anchor.     
   ----------------------------------------------------------------------*/
-void                SelectDestination (Document doc, Element el, ThotBool withUndo)
+void SelectDestination (Document doc, Element el, ThotBool withUndo)
 {
    Element             targetEl;
    ElementType	       elType;
    Document            targetDoc;
    Attribute           attr;
    AttributeType       attrType;
-   STRING              buffer = NULL;
+   char               *buffer = NULL;
    int                 length;
 #ifndef _WINDOWS
    int                 i;
@@ -654,7 +655,8 @@ Attribute           GetNameAttr (Document doc, Element selectedElement)
    If the forceID parameter, we'll always use an ID attribute, rather
    than a NAME one in some cases.
   ----------------------------------------------------------------------*/
-void                CreateTargetAnchor (Document doc, Element el, ThotBool forceID, ThotBool withUndo)
+void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
+			 ThotBool withUndo)
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -662,8 +664,8 @@ void                CreateTargetAnchor (Document doc, Element el, ThotBool force
    Element             elText;
    SSchema	       HTMLSSchema;
    Language            lang;
-   STRING              text;
-   STRING              url = TtaGetMemory (MAX_LENGTH);
+   char               *text;
+   char               *url = TtaGetMemory (MAX_LENGTH);
    int                 length, i, space;
    ThotBool            found;
    ThotBool            withinHTML, new;
@@ -1075,14 +1077,14 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
    in the document.
    If the NAME or ID is already used, add a number at the end of the value.
   ----------------------------------------------------------------------*/
-void         MakeUniqueName (Element el, Document doc)
+void MakeUniqueName (Element el, Document doc)
 {
   ElementType	    elType;
   AttributeType     attrType;
   Attribute         attr;
   Element	    image;
-  STRING            value;
-  char            url[MAX_LENGTH];
+  char             *value;
+  char              url[MAX_LENGTH];
   int               length, i;
   ThotBool          change, checkID;
 
@@ -1543,11 +1545,11 @@ void ElementDeleted (NotifyElement *event)
    namespace) that has to be updated. Update it according to the new
    context.
   ----------------------------------------------------------------------*/
-void    ChangeURI (Element el, Attribute attr,
-		   Document originDocument, Document doc)
+void ChangeURI (Element el, Attribute attr, Document originDocument,
+		Document doc)
 {
   int      length, i, iName;
-  STRING   value, base, documentURI, tempURI, path;
+  char    *value, *base, *documentURI, *tempURI, *path;
 
   /* get a buffer for the URI */
   length = TtaGetTextAttributeLength (attr) + 1;
@@ -1629,7 +1631,7 @@ void    ChangeURI (Element el, Attribute attr,
    If it's within the TITLE element, update the corresponding field in
    the Formatted window.
   ----------------------------------------------------------------------*/
-void                ElementPasted (NotifyElement * event)
+void ElementPasted (NotifyElement * event)
 {
   Document            originDocument, doc;
   Language            lang;
@@ -1639,7 +1641,7 @@ void                ElementPasted (NotifyElement * event)
   Attribute           attr;
   SSchema             HTMLschema;
   CSSInfoPtr          css;
-  STRING              value;
+  char               *value;
   int                 length, oldStructureChecking;
 
   el = event->element;
@@ -1783,7 +1785,7 @@ void CheckNewLines (NotifyOnTarget *event)
 {
   Element     ancestor;
   ElementType elType;
-  STRING      content;
+  char       *content;
   int         length, i;
   Language    lang;
   ThotBool    changed, pre;
@@ -1989,26 +1991,27 @@ ThotBool            AttrWidthDelete (NotifyAttribute * event)
    AttrWidthModifed  An attribute Width__ has been created or modified.
    Create the corresponding attribute IntWidthPercent or IntWidthPxl.
   ----------------------------------------------------------------------*/
-void                AttrWidthModified (NotifyAttribute * event)
+void AttrWidthModified (NotifyAttribute * event)
 {
-  STRING              buffer;
+  char               *buffer;
   int                 length;
-   length = buflen - 1;
-   buffer = TtaGetMemory (buflen);
-   TtaGiveTextAttributeValue (event->attribute, buffer, &length);
-   CreateAttrWidthPercentPxl (buffer, event->element, event->document,
-			      OldWidth);
-   TtaFreeMemory (buffer);
-   OldWidth = -1;
+
+  length = buflen - 1;
+  buffer = TtaGetMemory (buflen);
+  TtaGiveTextAttributeValue (event->attribute, buffer, &length);
+  CreateAttrWidthPercentPxl (buffer, event->element, event->document,
+			     OldWidth);
+  TtaFreeMemory (buffer);
+  OldWidth = -1;
 }
 
 /*----------------------------------------------------------------------
    an HTML attribute "size" has been created for a Font element.   
    Create the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/
-void                AttrFontSizeCreated (NotifyAttribute * event)
+void AttrFontSizeCreated (NotifyAttribute * event)
 {
-   STRING               buffer = TtaGetMemory (buflen);
+   char               *buffer = TtaGetMemory (buflen);
    int                 length;
    DisplayMode         dispMode;
 
@@ -2027,7 +2030,7 @@ void                AttrFontSizeCreated (NotifyAttribute * event)
    an HTML attribute "size" has been deleted for a Font element.   
    Delete the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/
-ThotBool            AttrFontSizeDelete (NotifyAttribute * event)
+ThotBool AttrFontSizeDelete (NotifyAttribute * event)
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -2054,9 +2057,9 @@ ThotBool            AttrFontSizeDelete (NotifyAttribute * event)
    an attribute color, TextColor or BackgroundColor has been       
    created or modified.                                            
   ----------------------------------------------------------------------*/
-void                AttrColorCreated (NotifyAttribute * event)
+void AttrColorCreated (NotifyAttribute * event)
 {
-   STRING           value = TtaGetMemory (buflen);
+   char            *value = TtaGetMemory (buflen);
    int              length;
 
    value[0] = EOS;
@@ -2187,7 +2190,7 @@ ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
 {
    ElementType         elType;
    SSchema	       HTMLSSchema;
-   STRING              attr;
+   char               *attr;
 
    elType = TtaGetElementType (event->element);
    attr = GetXMLAttributeName (event->attributeType, elType, event->document);
@@ -2616,16 +2619,16 @@ Element    SearchAnchor (Document doc, Element element, ThotBool link, ThotBool 
    BROWSER_HISTORY_INFO with title and url of current doc  
    c.f: http://zenon.inria.fr/koala/colas/browser-history/       
   ----------------------------------------------------------------------*/
-void                UpdateAtom (Document doc, STRING url, STRING title)
+void UpdateAtom (Document doc, char *url, char *title)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
-   STRING              v;
-   int                 v_size;
-   ThotWidget	       frame;
    static Atom         property_name = 0;
+   char               *v;
+   int                 v_size;
    Display            *dpy = TtaGetCurrentDisplay ();
    ThotWindow          win;
+   ThotWidget	       frame;
 
    frame = TtaGetViewFrame (doc, 1);
    if (frame == 0)

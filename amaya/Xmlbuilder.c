@@ -86,9 +86,9 @@ void    MapXmlAttributeValue (char        *AttrVal,
 /*----------------------------------------------------------------------
   MapGenericXmlType
   ----------------------------------------------------------------------*/
-void         MapGenericXmlType (STRING XMLname, ElementType *elType,
-				STRING *mappedName, char *content,
-				ThotBool *highEnoughLevel, Document doc)
+void MapGenericXmlType (char *XMLname, ElementType *elType,
+			char **mappedName, char *content,
+			ThotBool *highEnoughLevel, Document doc)
 
 {
 #ifdef XML_GEN

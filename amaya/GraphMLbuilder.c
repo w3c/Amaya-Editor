@@ -53,7 +53,7 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
    content of element named elementName.
    This element type appear with an 'X' in the ElemMappingTable.
   ----------------------------------------------------------------------*/
-void      GraphMLGetDTDName (STRING DTDname, STRING elementName)
+void      GraphMLGetDTDName (char *DTDname, char *elementName)
 {
    if (strcmp (elementName, "math") == 0)
       strcpy (DTDname, "MathML");
@@ -100,7 +100,7 @@ void    MapGraphMLAttributeValue (char* AttrVal, AttributeType attrType, int *va
    MapGraphMLEntity
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
-void   MapGraphMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
+void   MapGraphMLEntity (char *entityName, char *entityValue, char *alphabet)
 {
   entityValue[0] = EOS;
   *alphabet = EOS;
@@ -110,8 +110,8 @@ void   MapGraphMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
    GraphMLEntityCreated
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-void    GraphMLEntityCreated (USTRING entityValue, Language lang,
-			      STRING entityName, Document doc)
+void    GraphMLEntityCreated (unsigned char *entityValue, Language lang,
+			      char *entityName, Document doc)
 {
 }
 
@@ -120,7 +120,7 @@ void    GraphMLEntityCreated (USTRING entityValue, Language lang,
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 void  GraphMLEntityCreatedWithExpat (int         entityValue,
-				     STRING      entityName,
+				     char *     entityName,
 				     ThotBool    entityFound,
 				     ParserData *XmlContext)
 {
@@ -136,7 +136,7 @@ void   ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Docu
 #define buflen 50
    char               css_command[buflen+20];
    int                  length;
-   STRING               text;
+   char *              text;
 
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaGetMemory (length);
@@ -378,7 +378,7 @@ void             SetGraphicDepths (Document doc, Element el)
    Copy the subtree pointed by the href URI as a subtree of element el,
    which is od type use.
   ----------------------------------------------------------------------*/
-void  CopyUseContent (Element el, Document doc, STRING href)
+void  CopyUseContent (Element el, Document doc, char *href)
 {
   Element              source, curEl, copy, child, elFound;
   ElementType          elType;
@@ -386,7 +386,7 @@ void  CopyUseContent (Element el, Document doc, STRING href)
   AttributeType        attrType;
   SearchDomain         direction;
   int                  i, length, oldStructureChecking;
-  STRING               id;
+  char *              id;
 
   /* look for an element with an id attribute with the same value as the
      href attribute */
@@ -459,7 +459,7 @@ void  CopyUseContent (Element el, Document doc, STRING href)
    GraphMLElementComplete
    Check the Thot structure of the GraphML element el.
   ----------------------------------------------------------------------*/
-void      GraphMLElementComplete (Element el, Document doc, int *error)
+void GraphMLElementComplete (Element el, Document doc, int *error)
 {
    ElementType		elType, parentType, newType;
    Element		child, parent, new, leaf;
@@ -468,7 +468,7 @@ void      GraphMLElementComplete (Element el, Document doc, int *error)
    int                  length;
    PRule		fillPatternRule, newPRule;
    SSchema	        GraphMLSSchema;
-   STRING               text, href;
+   char                *text, *href;
    ThotBool		closedShape, parseCSS;
 
    *error = 0;
@@ -667,11 +667,11 @@ void   UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int m
    CreatePoints
    Process the points attribute
   ----------------------------------------------------------------------*/
-void            CreatePoints (Attribute attr, Element el, Document doc)
+void CreatePoints (Attribute attr, Element el, Document doc)
 {
    Element		leaf;
    TypeUnit		unit;
-   STRING		text, ptr;
+   char		       *text, *ptr;
    int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
    ThotBool		closed;
 
@@ -727,10 +727,10 @@ void            CreatePoints (Attribute attr, Element el, Document doc)
    Create or update a specific presentation rule for element el that reflects
    the value of the x, y, cx, cy, x1, x2, y1, y2, dx, or dy attribute attr.
   ----------------------------------------------------------------------*/
-void      ParseCoordAttribute (Attribute attr, Element el, Document doc)
+void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 {
    int                  length, attrKind, ruleType;
-   STRING               text, ptr;
+   char                *text, *ptr;
    AttributeType        attrType;
    PresentationValue    pval;
    PresentationContext  ctxt;
@@ -787,13 +787,14 @@ void      ParseCoordAttribute (Attribute attr, Element el, Document doc)
    Create or update a specific presentation rule for element el that reflects
    the value of attribute attr, which is width_, height_, r, rx, or ry.
   ----------------------------------------------------------------------*/
-ThotBool   ParseWidthHeightAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
+ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
+				    ThotBool delete)
 {
    AttributeType	attrType;
    ElementType          elType;
    Element              child;
    int			length, attrKind, ruleType;
-   STRING		text, ptr;
+   char		       *text, *ptr;
    PresentationValue    pval;
    PresentationContext  ctxt;
    ThotBool             ret;
@@ -911,7 +912,7 @@ ThotBool   ParseWidthHeightAttribute (Attribute attr, Element el, Document doc, 
    GetNumber
    Parse a coordinate value in a path expression and skip to next token
   ----------------------------------------------------------------------*/
-static STRING      GetNumber (STRING ptr, int* coord)
+static char *     GetNumber (char *ptr, int* coord)
 {
   int      val;
   ThotBool negative;
@@ -956,10 +957,11 @@ static STRING      GetNumber (STRING ptr, int* coord)
    ParseTransformAttribute
    Parse the value of a transform attribute
   ----------------------------------------------------------------------*/
-void      ParseTransformAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
+void ParseTransformAttribute (Attribute attr, Element el, Document doc,
+			      ThotBool delete)
 {
    int                  length, x, y;
-   STRING               text, ptr;
+   char                *text, *ptr;
    PresentationValue    pval;
    PresentationContext  ctxt;
 
@@ -1014,7 +1016,7 @@ void      ParseTransformAttribute (Attribute attr, Element el, Document doc, Tho
    ParsePathDataAttribute
    Parse the value of a path data attribute
   ----------------------------------------------------------------------*/
-void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
+void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 {
    int          length, x, y, x1, y1, x2, y2, xcur, ycur, xinit, yinit,
                 x2prev, y2prev, x1prev, y1prev, rx, ry, xAxisRotation,
@@ -1022,8 +1024,8 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
    Element      leaf;
    PathSegment  seg;
    ThotBool     relative, newSubpath;
-   STRING       text, ptr;
-   char       command, prevCommand;
+   char        *text, *ptr;
+   char         command, prevCommand;
 
    /* create (or get) the Graphics leaf */
    leaf = CreateGraphicalLeaf (EOS, el, doc, FALSE);

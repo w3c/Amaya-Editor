@@ -8,21 +8,21 @@
 
 extern void MapMathMLAttribute ( char *attrName,
                                  AttributeType *attrType,
-                                 STRING elementName,
+                                 char *elementName,
                                  ThotBool *level,
                                  Document doc );
-extern void MapMathMLAttributeValue ( STRING AttrVal,
+extern void MapMathMLAttributeValue ( char *AttrVal,
                                       AttributeType attrType,
                                       int *value );
-extern void MapMathMLEntity ( STRING entityName,
-                              STRING entityValue,
-                              STRING alphabet );
-extern void MathMLEntityCreated ( USTRING entityValue,
+extern void MapMathMLEntity ( char *entityName,
+                              char *entityValue,
+                              char *alphabet );
+extern void MathMLEntityCreated ( unsigned char *entityValue,
                                   Language lang,
-                                  STRING entityName,
+                                  char *entityName,
                                   Document doc );
 extern void MathMLEntityCreatedWithExpat ( int entityValue,
-                                           STRING entityName,
+                                           char *entityName,
                                            ThotBool entityFound,
                                            ParserData *XmlContext );
 extern ThotBool ElementNeedsPlaceholder ( Element el );
@@ -51,53 +51,53 @@ extern void CreateFencedSeparators ( Element fencedExpression,
                                      ThotBool record );
 extern void MathMLScriptShift ( Document doc,
                                 Element el,
-                                STRING value,
+                                char *value,
                                 int attr );
 extern void MathMLElementComplete ( Element el,
                                     Document doc,
                                     int *error );
 extern void SetFontfamily ( Document doc,
                             Element el,
-                            STRING value );
+                            char *value );
 extern void MathMLlinethickness ( Document doc,
                                   Element el,
-                                  STRING value );
+                                  char *value );
 extern void MathMLAttrToStyleProperty ( Document doc,
                                         Element el,
-                                        STRING value,
+                                        char *value,
                                         int attr );
 extern void MathMLSetScriptLevel ( Document doc,
                                    Element el,
-                                   STRING value );
+                                   char *value );
 extern void MathMLSpacingAttr ( Document doc,
                                 Element el,
-                                STRING value,
+                                char *value,
                                 int attr );
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
-extern void MathMLGetDTDName ( STRING DTDname,
-                               STRING elementName );
+extern void MathMLGetDTDName ( char *DTDname,
+                               char *elementName );
 
 #else /* __STDC__ */
 
 extern void MapMathMLAttribute (/* char *attrName,
                                    AttributeType *attrType,
-                                   STRING elementName,
+                                   char *elementName,
                                    ThotBool *level,
                                    Document doc */);
-extern void MapMathMLAttributeValue (/* STRING AttrVal,
+extern void MapMathMLAttributeValue (/* char *AttrVal,
                                         AttributeType attrType,
                                         int *value */);
-extern void MapMathMLEntity (/* STRING entityName,
-                                STRING entityValue,
-                                STRING alphabet */);
-extern void MathMLEntityCreated (/* USTRING entityValue,
+extern void MapMathMLEntity (/* char *entityName,
+                                char *entityValue,
+                                char *alphabet */);
+extern void MathMLEntityCreated (/* Uchar *entityValue,
                                     Language lang,
-                                    STRING entityName,
+                                    char *entityName,
                                     Document doc */);
 extern void MathMLEntityCreatedWithExpat (/* int entityValue,
-                                             STRING entityName,
+                                             char *entityName,
                                              ThotBool entityFound,
                                              ParserData *XmlContext */);
 extern ThotBool ElementNeedsPlaceholder (/* Element el */);
@@ -126,33 +126,33 @@ extern void CreateFencedSeparators (/* Element fencedExpression,
                                        ThotBool record */);
 extern void MathMLScriptShift (/* Document doc,
                                   Element el,
-                                  STRING value,
+                                  char *value,
                                   int attr */);
 extern void MathMLElementComplete (/* Element el,
                                       Document doc,
                                       int *error */);
 extern void SetFontfamily (/* Document doc,
                               Element el,
-                              STRING value */);
+                              char *value */);
 extern void MathMLlinethickness (/* Document doc,
                                     Element el,
-                                    STRING value */);
+                                    char *value */);
 extern void MathMLAttrToStyleProperty (/* Document doc,
                                           Element el,
-                                          STRING value,
+                                          char *value,
                                           int attr */);
 extern void MathMLSetScriptLevel (/* Document doc,
                                      Element el,
-                                     STRING value */);
+                                     char *value */);
 extern void MathMLSpacingAttr (/* Document doc,
                                   Element el,
-                                  STRING value,
+                                  char *value,
                                   int attr */);
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);
-extern void MathMLGetDTDName (/* STRING DTDname,
-                                 STRING elementName */);
+extern void MathMLGetDTDName (/* char *DTDname,
+                                 char *elementName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

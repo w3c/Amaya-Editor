@@ -8,13 +8,13 @@
 
 extern void SetAccessMode ( PtrDocument pDoc,
                             int accessMode );
-extern PtrPRule GetRule ( PtrPRule * pRSpecif,
+extern PtrPRule GetRule ( PtrPRule *pRSpecif,
                           PtrPRule * pRDefault,
                           PtrElement pEl,
                           PtrAttribute pAttr,
                           PtrSSchema pSS,
                           PtrDocument pDoc );
-extern PtrPRule GetRuleView ( PtrPRule * pRSpecif,
+extern PtrPRule GetRuleView ( PtrPRule *pRSpecif,
                               PtrPRule * pRDefault,
                               PRuleType Typ,
                               int Vue,
@@ -96,13 +96,13 @@ extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
 
 extern void SetAccessMode (/* PtrDocument pDoc,
                               int accessMode */);
-extern PtrPRule GetRule (/* PtrPRule * pRSpecif,
+extern PtrPRule GetRule (/* PtrPRule *pRSpecif,
                             PtrPRule * pRDefault,
                             PtrElement pEl,
                             PtrAttribute pAttr,
                             PtrSSchema pSS,
                             PtrDocument pDoc */);
-extern PtrPRule GetRuleView (/* PtrPRule * pRSpecif,
+extern PtrPRule GetRuleView (/* PtrPRule *pRSpecif,
                                 PtrPRule * pRDefault,
                                 PRuleType Typ,
                                 int Vue,

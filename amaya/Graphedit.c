@@ -1140,7 +1140,7 @@ void ControlPointChanged (NotifyOnValue *event)
   ElementType     elType;
   AttributeType	  attrType;
   Attribute       attr;
-  STRING          text, buffer;
+  char           *text, *buffer;
   int             i, length;
   int             x, y;
 
@@ -1297,7 +1297,7 @@ void         CreateGraphicElement (int entry)
   SSchema	    docSchema, graphSchema;
   DisplayMode       dispMode;
   char		    shape;
-  STRING            path;
+  char             *path;
   int		    c1, i, w, h;
   int	            oldStructureChecking;
   int               docModified;
@@ -1711,7 +1711,7 @@ static void         CreateGroup ()
 /*----------------------------------------------------------------------
    CallbackGraph: manage Graph dialogue events.
   ----------------------------------------------------------------------*/
-static void         CallbackGraph (int ref, int typedata, STRING data)
+static void         CallbackGraph (int ref, int typedata, char *data)
 {
   Document           doc;
  
@@ -1904,7 +1904,7 @@ ThotBool            AttrXlinkHrefWillBeChanged (NotifyAttribute * event)
 void             AttrXlinkHrefChanged (NotifyAttribute *event)
 {
    ElementType   elType;
-   STRING        text;
+   char         *text;
    int           length;
 
    length = TtaGetTextAttributeLength (event->attribute);
@@ -1951,7 +1951,7 @@ ThotBool TextWillChangeInGroup (NotifyOnTarget *event)
 {
   Element     leaf;
   int         len;
-  STRING      text;
+  char       *text;
   Language    lang;
 
   leaf = event->target;
@@ -1977,8 +1977,8 @@ void                TextChangedInGroup (NotifyOnTarget *event)
   AttributeType attrType;
   Document      doc;
   PRule         presRuleX1, presRuleX2, presRuleY1, presRuleY2;
-  char        buffer[8];
-  STRING        text;
+  char          buffer[8];
+  char         *text;
   Language      lang;
   int           x, y, xx, yy, x1, y1, x2, y2, i, len, num;
   ThotBool      found, neighbour;

@@ -13,14 +13,14 @@ extern ThotBool ExportDocument ( PtrDocument pDoc,
                                  ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
-                         STRING fName,
-                         STRING TSchemaName );
+                         char *fName,
+                         char *TSchemaName );
 extern ThotBool TtaExportDocument ( Document document,
-                                    STRING fileName,
-                                    STRING TSchemaName );
+                                    char *fileName,
+                                    char *TSchemaName );
 extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
-                                                      STRING fileName,
-                                                      STRING TSchemaName );
+                                                      char *fileName,
+                                                      char *TSchemaName );
 
 #else /* __STDC__ */
 
@@ -31,14 +31,14 @@ extern ThotBool ExportDocument (/* PtrDocument pDoc,
                                    ThotBool recordLineNb */);
 extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,
-                           STRING fName,
-                           STRING TSchemaName */);
+                           char *fName,
+                           char *TSchemaName */);
 extern ThotBool TtaExportDocument (/* Document document,
-                                      STRING fileName,
-                                      STRING TSchemaName */);
+                                      char *fileName,
+                                      char *TSchemaName */);
 extern ThotBool TtaExportDocumentWithNewLineNumbers (/* Document document,
-                                                        STRING fileName,
-                                                        STRING TSchemaName */);
+                                                        char *fileName,
+                                                        char *TSchemaName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

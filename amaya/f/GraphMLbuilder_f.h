@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void GraphMLGetDTDName ( STRING DTDname,
-                                STRING elementName );
+extern void GraphMLGetDTDName ( char *DTDname,
+                                char *elementName );
 extern void MapGraphMLAttribute ( char *attrName,
                                   AttributeType *attrType,
                                   char* elementName,
@@ -16,15 +16,15 @@ extern void MapGraphMLAttribute ( char *attrName,
 extern void MapGraphMLAttributeValue ( char* AttrVal,
                                        AttributeType attrType,
                                        int *value );
-extern void MapGraphMLEntity ( STRING entityName,
-                               STRING entityValue,
-                               STRING alphabet );
-extern void GraphMLEntityCreated ( USTRING entityValue,
+extern void MapGraphMLEntity ( char *entityName,
+                               char *entityValue,
+                               char *alphabet );
+extern void GraphMLEntityCreated ( unsigned char *entityValue,
                                    Language lang,
-                                   STRING entityName,
+                                   char *entityName,
                                    Document doc );
 extern void GraphMLEntityCreatedWithExpat ( int entityValue,
-                                            STRING entityName,
+                                            char * entityName,
                                             ThotBool entityFound,
                                             ParserData *XmlContext );
 extern void ParseFillStrokeAttributes ( int attrType,
@@ -40,7 +40,7 @@ extern void SetGraphicDepths ( Document doc,
                                Element el );
 extern void CopyUseContent ( Element el,
                              Document doc,
-                             STRING href );
+                             char *href );
 extern void GraphMLElementComplete ( Element el,
                                      Document doc,
                                      int *error );
@@ -73,8 +73,8 @@ extern void GraphMLAttributeComplete ( Attribute attr,
 
 #else /* __STDC__ */
 
-extern void GraphMLGetDTDName (/* STRING DTDname,
-                                  STRING elementName */);
+extern void GraphMLGetDTDName (/* char *DTDname,
+                                  char *elementName */);
 extern void MapGraphMLAttribute (/* char *attrName,
                                     AttributeType *attrType,
                                     char* elementName,
@@ -83,15 +83,15 @@ extern void MapGraphMLAttribute (/* char *attrName,
 extern void MapGraphMLAttributeValue (/* char* AttrVal,
                                          AttributeType attrType,
                                          int *value */);
-extern void MapGraphMLEntity (/* STRING entityName,
-                                 STRING entityValue,
-                                 STRING alphabet */);
-extern void GraphMLEntityCreated (/* USTRING entityValue,
+extern void MapGraphMLEntity (/* char *entityName,
+                                 char *entityValue,
+                                 char *alphabet */);
+extern void GraphMLEntityCreated (/* unsigned char *entityValue,
                                      Language lang,
-                                     STRING entityName,
+                                     char *entityName,
                                      Document doc */);
 extern void GraphMLEntityCreatedWithExpat (/* int entityValue,
-                                              STRING entityName,
+                                              char * entityName,
                                               ThotBool entityFound,
                                               ParserData *XmlContext */);
 extern void ParseFillStrokeAttributes (/* int attrType,
@@ -107,7 +107,7 @@ extern void SetGraphicDepths (/* Document doc,
                                  Element el */);
 extern void CopyUseContent (/* Element el,
                                Document doc,
-                               STRING href */);
+                               char *href */);
 extern void GraphMLElementComplete (/* Element el,
                                        Document doc,
                                        int *error */);

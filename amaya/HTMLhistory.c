@@ -23,14 +23,14 @@
 /* a record in an history */
 typedef struct _HistElement
 {
-     STRING HistUrl;        /* document URL */
-     STRING HistInitialUrl; /* document URL */
-     STRING form_data;      /* data associated with forms */
-     int    method;         /* method used to request this URL */
-     int    HistPosition;	/* volume preceding the first element to be
-                               made visible in the main window */
-     int    HistDistance;	/* distance from the  top of the window to the
-                               top of this element (% of the window height) */
+  char  *HistUrl;        /* document URL */
+  char  *HistInitialUrl; /* document URL */
+  char  *form_data;      /* data associated with forms */
+  int    method;         /* method used to request this URL */
+  int    HistPosition;	/* volume preceding the first element to be
+			   made visible in the main window */
+  int    HistDistance;	/* distance from the  top of the window to the
+			   top of this element (% of the window height) */
 } HistElement;
 
 /* the history of a window */
@@ -44,7 +44,7 @@ typedef struct _GotoHistory_context
   int                  prevnext;
   ThotBool	       last;
   ThotBool             next_doc_loaded;
-  STRING               initial_url;
+  char                *initial_url;
 } GotoHistory_context;
 
 /* the history of all windows */
@@ -174,15 +174,15 @@ int             RelativePosition (Document doc, int *distance)
   A IsDocumentLoaded frontend which returns TRUE if a given URL is already
   being displayed in another window. 
   ----------------------------------------------------------------------*/
-static ThotBool IsNextDocLoaded (const Document baseDoc, const STRING url,
-				 const STRING form_data, const ClickEvent CE_event)
+static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
+				 const char *form_data, const ClickEvent CE_event)
 {
-  STRING              tempdocument;
-  STRING              target;
-  STRING              documentname;
-  STRING              parameters;
-  STRING              pathname;
-  ThotBool loaded;
+  char              *tempdocument;
+  char              *target;
+  char              *documentname;
+  char              *parameters;
+  char              *pathname;
+  ThotBool           loaded;
 
   if (url == (STRING) NULL)
     return FALSE;
@@ -236,8 +236,8 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const STRING url,
    GotoPreviousHTML_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-void GotoPreviousHTML_callback (int newdoc, int status, STRING urlName,
-				STRING outputfile, AHTHeaders *http_headers,
+void GotoPreviousHTML_callback (int newdoc, int status, char *urlName,
+				char *outputfile, AHTHeaders *http_headers,
 				void * context)
 {
   Document             doc;
@@ -275,15 +275,15 @@ void GotoPreviousHTML_callback (int newdoc, int status, STRING urlName,
 void  GotoPreviousHTML (Document doc, View view)
 {
    GotoHistory_context *ctx;
-   STRING              url = NULL;
-   STRING              initial_url = NULL;
-   STRING              form_data = NULL;
-   int                 prev, i;
-   int                 method;
-   ThotBool	       last = FALSE;
-   ThotBool            hist = FALSE;
-   ThotBool            same_form_data;
-   ThotBool            next_doc_loaded = FALSE;
+   char                *url = NULL;
+   char                *initial_url = NULL;
+   char                *form_data = NULL;
+   int                  prev, i;
+   int                  method;
+   ThotBool	        last = FALSE;
+   ThotBool             hist = FALSE;
+   ThotBool             same_form_data;
+   ThotBool             next_doc_loaded = FALSE;
 
    if (doc < 0 || doc >= DocumentTableLength)
       return;
@@ -404,8 +404,8 @@ void  GotoPreviousHTML (Document doc, View view)
    GotoNextHTML_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-void GotoNextHTML_callback (int newdoc, int status, STRING urlName,
-			    STRING outputfile, AHTHeaders *http_headers,
+void GotoNextHTML_callback (int newdoc, int status, char *urlName,
+			    char *outputfile, AHTHeaders *http_headers,
 			    void * context)
 {
   Element	       el;
@@ -441,13 +441,13 @@ void GotoNextHTML_callback (int newdoc, int status, STRING urlName,
 void                GotoNextHTML (Document doc, View view)
 {
    GotoHistory_context  *ctx;
-   STRING        url = NULL;
-   STRING        initial_url = NULL;
-   STRING        form_data = NULL;
-   int           method;
-   int		 next, i;
-   ThotBool      same_form_data;
-   ThotBool      next_doc_loaded = FALSE;
+   char                 *url = NULL;
+   char                 *initial_url = NULL;
+   char                 *form_data = NULL;
+   int                   method;
+   int		         next, i;
+   ThotBool              same_form_data;
+   ThotBool              next_doc_loaded = FALSE;
 
    if (doc < 0 || doc >= DocumentTableLength)
       return;
@@ -542,8 +542,8 @@ void                GotoNextHTML (Document doc, View view)
    AddDocHistory
    Add a new URL in the history associated with the window of document doc.
   ----------------------------------------------------------------------*/
-void AddDocHistory (Document doc, STRING url, STRING initial_url,
-		    STRING form_data, ClickEvent method)
+void AddDocHistory (Document doc, char *url, char *initial_url,
+		    char *form_data, ClickEvent method)
 {
    int                 i, position, distance;
 
