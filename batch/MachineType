@@ -1,6 +1,12 @@
 :
 # recherche du type de machine
 
+if [ "$INSURE" = "yes" -o "$INSURE" = "YES" ]
+then
+    echo "INSURE"
+    exit 0
+fi
+
 #usage ...
 # on teste pour les dec
 if [ -r /bin/machine ]
@@ -33,11 +39,6 @@ fi
 # on teste pour l'ibm et les dpx
 if [ -x /bin/uname ]
 then
-        if [ "$INSURE" != "" ]
-	then
-	    echo INSURE
-	    exit 0
-	fi
 	MACH=`/bin/uname`
 	if [ "$MACH" = "AIX" ]
 	then
