@@ -2558,7 +2558,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	 }
        else
 	 {
-	   window_id = TtaGetActiveWindowId();
+	   window_id = TtaGetDocumentWindowId( doc, -1 );
+	   wxASSERT(window_id > 0);
 	   page_id   = TtaGetFreePageId( window_id );
 	   page_position = 1;
 	 }
@@ -5640,8 +5641,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* _WX */
 	      /* load an URL */ 
 	      else if (DontReplaceOldDoc)
-		GetAmayaDoc (LastURLName, NULL, 0, 0, (ClickEvent)Loading_method,
+#ifdef _WX
+		GetAmayaDoc (LastURLName, NULL, CurrentDocument /* it was 0 */, CurrentDocument /* it was 0 */, (ClickEvent)Loading_method,
 			     FALSE, NULL, NULL);
+#else /* _WX */
+		GetAmayaDoc (LastURLName, NULL, 0 , 0, (ClickEvent)Loading_method,
+			     FALSE, NULL, NULL);
+#endif /* _WX */
 	      else
 		GetAmayaDoc (LastURLName, NULL, CurrentDocument,
 			     CurrentDocument, (ClickEvent)Loading_method, TRUE,
