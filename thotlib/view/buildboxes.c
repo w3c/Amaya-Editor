@@ -1233,22 +1233,17 @@ int                *carIndex;
    unit = pAb->AbSizeUnit;
    height += ViewFrameTable[frame - 1].FrMagnification;
 
-   if (pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol || pAb->AbLeafType == LtCompound)
-     {
-	if (pAb->AbLeafType == LtText)
-	   if (pAb->AbLanguage == EOS)
-	      alphabet = 'L';
-	   else
-	      alphabet = TtaGetAlphabet (pAb->AbLanguage);
-	else if (pAb->AbLeafType == LtSymbol)
-	   alphabet = 'G';
-	else if (pAb->AbLeafType == LtCompound)
-	   alphabet = 'L';
-	/* teste l'unite */
-	font = ThotLoadFont (alphabet, pAb->AbFont, pAb->AbHighlight, height, unit, frame);
-     }
-   else
-      font = FontDialogue;
+   if (pAb->AbLeafType == LtText)
+     if (pAb->AbLanguage == EOS)
+       alphabet = 'L';
+     else
+       alphabet = TtaGetAlphabet (pAb->AbLanguage);
+   else if (pAb->AbLeafType == LtSymbol)
+     alphabet = 'G';
+   else if (pAb->AbLeafType == LtCompound)
+     alphabet = 'L';
+   /* teste l'unite */
+   font = ThotLoadFont (alphabet, pAb->AbFont, pAb->AbHighlight, height, unit, frame);
 
    /* Creation */
    pCurrentBox = pAb->AbBox;
@@ -2422,119 +2417,6 @@ int                 frame;
 	    pAb->AbHorizRefChange = (pAb->AbHorizRef.PosUnit == UnRelative);
 	    pAb->AbVertRefChange = (pAb->AbVertRef.PosUnit == UnRelative);
 	  }
-	/* CHANGEMENT DE LARGEUR */
-	if (pAb->AbWidthChange)
-	  {
-	     /* Annulation ancienne largeur */
-	     ClearDimRelation (pBox, TRUE, frame);
-	     /* Nouvelle largeur */
-	     condition = ComputeDimRelation (pAb, frame, TRUE);
-	     if (condition || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
-	       {
-		  switch (pAb->AbLeafType)
-			{
-			   case LtText:
-			      GiveTextSize (pAb, &width, &height, &i);
-			      break;
-			   case LtPicture:
-			      GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
-			      break;
-			   case LtSymbol:
-			      GiveSymbolSize (pAb, &width, &height);
-			      break;
-			   case LtGraphics:
-			      GiveGraphicSize (pAb, &width, &height);
-			      break;
-			   case LtCompound:
-			      if (pAb->AbInLine)
-				{
-				   /* La regle mise en lignes est prise en compte? */
-				   if (pBox->BxType != BoGhost)
-				      RecomputeLines (pAb, NULL, NULL, frame);
-				   width = pBox->BxWidth;
-				}
-			      else
-				 GiveEnclosureSize (pAb, frame, &width, &height);
-			      break;
-			   default:
-			      width = pBox->BxWidth;
-			      break;
-			}
-
-		  /* Mise a jour de la largeur du contenu */
-		  ChangeDefaultWidth (pBox, NULL, width, 0, frame);
-		  result = TRUE;
-	       }
-	     /* La boite ne depend pas de son contenu */
-	     else
-		result = TRUE;
-
-	     /* Check table consistency */
-	     if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-	       (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
-	     else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
-		      ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
-	       (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
-	     /* check enclosing cell */
-	     pCell = GetParentCell (pCurrentBox);
-	     if (pCell != NULL && ThotLocalActions[T_checkcolumn])
-	       {
-		 pBlock = SearchEnclosingType (pAb, BoBlock);
-		 if (pBlock != NULL)
-		   RecomputeLines (pBlock, NULL, NULL, frame);
-		 (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
-	       }
-	  }
-	/* CHANGEMENT DE HAUTEUR */
-	if (pAb->AbHeightChange)
-	  {
-	     /* Annulation ancienne hauteur */
-	     ClearDimRelation (pBox, FALSE, frame);
-	     /* Nouvelle hauteur */
-	     condition = ComputeDimRelation (pAb, frame, FALSE);
-	     if (condition || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
-	       {
-		  switch (pAb->AbLeafType)
-			{
-			   case LtText:
-			      GiveTextSize (pAb, &width, &height, &i);
-			      break;
-			   case LtPicture:
-			      GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
-			      break;
-			   case LtSymbol:
-			      GiveSymbolSize (pAb, &width, &height);
-			      break;
-			   case LtGraphics:
-			      GiveGraphicSize (pAb, &width, &height);
-			      break;
-			   case LtCompound:
-			      if (pAb->AbInLine)
-				{
-				   /* On evalue la hauteur du bloc de ligne */
-				   pLine = pBox->BxLastLine;
-				   if (pLine == NULL || pBox->BxType == BoGhost)
-				      height = pBox->BxHeight;
-				   else
-				      height = pLine->LiYOrg + pLine->LiHeight;
-				}
-			      else
-				 GiveEnclosureSize (pAb, frame, &width, &height);
-			      break;
-			   default:
-			      height = pBox->BxHeight;
-			      break;
-			}
-
-
-		  /* Mise a jour de la hauteur du contenu */
-		  ChangeDefaultHeight (pBox, NULL, height, frame);
-		  result = TRUE;
-	       }
-	     /* La boite ne depend pas de son contenu */
-	     else
-		result = TRUE;
-	  }
 	/* CONTENU DU PAVE MODIFIE */
 	if (pAb->AbChange || pAb->AbSizeChange)
 	  {
@@ -2704,6 +2586,119 @@ int                 frame;
 		pAb->AbChange = FALSE;
 	     if (pAb->AbSizeChange)
 	       pAb->AbSizeChange = FALSE;
+	  }
+	/* CHANGEMENT DE LARGEUR */
+	if (pAb->AbWidthChange)
+	  {
+	     /* Annulation ancienne largeur */
+	     ClearDimRelation (pBox, TRUE, frame);
+	     /* Nouvelle largeur */
+	     condition = ComputeDimRelation (pAb, frame, TRUE);
+	     if (condition || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
+	       {
+		  switch (pAb->AbLeafType)
+			{
+			   case LtText:
+			      GiveTextSize (pAb, &width, &height, &i);
+			      break;
+			   case LtPicture:
+			      GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
+			      break;
+			   case LtSymbol:
+			      GiveSymbolSize (pAb, &width, &height);
+			      break;
+			   case LtGraphics:
+			      GiveGraphicSize (pAb, &width, &height);
+			      break;
+			   case LtCompound:
+			      if (pAb->AbInLine)
+				{
+				   /* La regle mise en lignes est prise en compte? */
+				   if (pBox->BxType != BoGhost)
+				      RecomputeLines (pAb, NULL, NULL, frame);
+				   width = pBox->BxWidth;
+				}
+			      else
+				 GiveEnclosureSize (pAb, frame, &width, &height);
+			      break;
+			   default:
+			      width = pBox->BxWidth;
+			      break;
+			}
+
+		  /* Mise a jour de la largeur du contenu */
+		  ChangeDefaultWidth (pBox, NULL, width, 0, frame);
+		  result = TRUE;
+	       }
+	     /* La boite ne depend pas de son contenu */
+	     else
+		result = TRUE;
+
+	     /* Check table consistency */
+	     if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
+	       (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+	     else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
+		      ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+	       (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+	     /* check enclosing cell */
+	     pCell = GetParentCell (pCurrentBox);
+	     if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	       {
+		 pBlock = SearchEnclosingType (pAb, BoBlock);
+		 if (pBlock != NULL)
+		   RecomputeLines (pBlock, NULL, NULL, frame);
+		 (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	       }
+	  }
+	/* CHANGEMENT DE HAUTEUR */
+	if (pAb->AbHeightChange)
+	  {
+	     /* Annulation ancienne hauteur */
+	     ClearDimRelation (pBox, FALSE, frame);
+	     /* Nouvelle hauteur */
+	     condition = ComputeDimRelation (pAb, frame, FALSE);
+	     if (condition || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
+	       {
+		  switch (pAb->AbLeafType)
+			{
+			   case LtText:
+			      GiveTextSize (pAb, &width, &height, &i);
+			      break;
+			   case LtPicture:
+			      GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
+			      break;
+			   case LtSymbol:
+			      GiveSymbolSize (pAb, &width, &height);
+			      break;
+			   case LtGraphics:
+			      GiveGraphicSize (pAb, &width, &height);
+			      break;
+			   case LtCompound:
+			      if (pAb->AbInLine)
+				{
+				   /* On evalue la hauteur du bloc de ligne */
+				   pLine = pBox->BxLastLine;
+				   if (pLine == NULL || pBox->BxType == BoGhost)
+				      height = pBox->BxHeight;
+				   else
+				      height = pLine->LiYOrg + pLine->LiHeight;
+				}
+			      else
+				 GiveEnclosureSize (pAb, frame, &width, &height);
+			      break;
+			   default:
+			      height = pBox->BxHeight;
+			      break;
+			}
+
+
+		  /* Mise a jour de la hauteur du contenu */
+		  ChangeDefaultHeight (pBox, NULL, height, frame);
+		  result = TRUE;
+	       }
+	     /* La boite ne depend pas de son contenu */
+	     else
+		result = TRUE;
 	  }
 	/* CHANGEMENT DE POSITION HORIZONTALE */
 	if (pAb->AbHorizPosChange)
