@@ -320,7 +320,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"summary", "table", 'A', HTML_ATTR_summary, L_BasicValue},
 
    {"tabindex", "", 'A', HTML_ATTR_tabindex, L_BasicValue},
-   {"target", "", 'A', HTML_ATTR_target_, L_BasicValue},
+   {"target", "", 'A', HTML_ATTR_target_, L_TransitionalValue},
    {"text", "", 'A', HTML_ATTR_TextColor, L_TransitionalValue},
    {"title", "", 'A', HTML_ATTR_Title, L_BasicValue},
    {"type", "button", 'A', HTML_ATTR_Button_type, L_StrictValue},
