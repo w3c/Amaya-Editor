@@ -1761,10 +1761,10 @@ PtrAttribute        *pAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
+static void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
 
 #else  /* __STDC__ */
-void         ReadAttribute (pivFile, pEl, pDoc, create, pReadAttr)
+static void         ReadAttribute (pivFile, pEl, pDoc, create, pReadAttr)
 BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
