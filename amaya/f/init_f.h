@@ -78,6 +78,7 @@ extern void OpenNew ( Document document,
 extern void GoToHome ( Document doc,
                        View view );
 extern void UpdateDoctypeMenu ( Document doc );
+extern void AddDirAttributeToDocEl ( Document doc );
 extern Document InitDocAndView ( Document doc,
                                  char *docname,
                                  DocumentType docType,
@@ -270,6 +271,7 @@ extern void OpenNew (/* Document document,
 extern void GoToHome (/* Document doc,
                          View view */);
 extern void UpdateDoctypeMenu (/* Document doc */);
+extern void AddDirAttributeToDocEl (/* Document doc */);
 extern Document InitDocAndView (/* Document doc,
                                    char *docname,
                                    DocumentType docType,

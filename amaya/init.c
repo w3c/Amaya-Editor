@@ -2106,6 +2106,29 @@ void UpdateDoctypeMenu (Document doc)
 }
 
 /*----------------------------------------------------------------------
+  AddDirAttributeToDocEl
+  Set the HTML attribute dir on the Document element 
+  ----------------------------------------------------------------------*/
+void AddDirAttributeToDocEl (Document doc)
+{
+  Element root;
+  Attribute     attr;
+  AttributeType attrType;
+
+  root = TtaGetMainRoot (doc);
+  if (root)
+    {
+      attrType.AttrSSchema =  TtaGetSSchema ("HTML", doc);
+      if (!attrType.AttrSSchema)
+	return;
+      attrType.AttrTypeNum = HTML_ATTR_dir;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (root, attr, doc);
+      TtaSetAttributeValue (attr, HTML_ATTR_dir_VAL_ltr_, root, doc);
+    }
+}
+
+/*----------------------------------------------------------------------
    InitDocAndView prepares the main view of a new document.
    logFile is TRUE if the new view is created to display a log file
    sourceOfDoc is not zero when we're opening the source view of a document.
@@ -2235,15 +2258,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   else
 	     TtaSetPSchema (doc, "HTMLPBW");
 	   /* set attribute dir on the Document element. */
-	   root = TtaGetMainRoot (doc);
-	   if (root)
-	     {
-	       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	       attrType.AttrTypeNum = HTML_ATTR_dir;
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (root, attr, doc);
-	       TtaSetAttributeValue (attr, HTML_ATTR_dir_VAL_ltr_, root, doc);
-	     }
+	   AddDirAttributeToDocEl (doc);
 	 }
        if (docType == docSVG || docType == docMath)
 	 /* add a comment proudly claiming that the document was created by

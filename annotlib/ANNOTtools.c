@@ -2523,6 +2523,8 @@ void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (FALSE, doc);
       TtaInsertFirstChild (&el, body, doc);
+      /* set attribute dir on the Document element */
+      AddDirAttributeToDocEl (doc);
       TtaSetStructureChecking (oldStructureChecking, doc);
     }
 }
