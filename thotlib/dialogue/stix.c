@@ -23,18 +23,16 @@
 #include "frame.h"
 #include "appdialogue.h"
 #include "registry.h"
-
 #ifdef _GL
   #include "openglfont.h"
   #include "glwindowdisplay.h"
 #endif /*_GL*/
 
 #ifdef _WINGUI
-  #include "windowdisplay_f.h"
+#include "windowdisplay_f.h"
 #endif /*_WINGUI*/
-
 #if defined(_GTK) || defined(_WX)
-  #include "xwindowdisplay_f.h"
+#include "xwindowdisplay_f.h"
 #endif /* #if defined(_GTK) || defined(_WX) */
 
 #include "font_f.h"
@@ -43,7 +41,6 @@
 #define LOW_HEIGHT 2
 #define MID_HEIGHT 3
 #define HIGH_HEIGHT 5
-
 
 #ifdef _GL
   #define LOW_CHAR 25
@@ -92,61 +89,9 @@ MapEntry     Stix_Arrows [] = {
              {0,0x00}, {0,0x00}, {0,0x00}, {0,0x00},
               {0,0x00}, {0,0x00}, {0,0x00}, {0,0x00}
 };
+
 #define Stix_Arrows_length sizeof(Stix_Arrows) / sizeof(MapEntry)
 
-
-/*----------------------------------------------------------------------
-  GetStixFontAndIndex returns the glyph index and the font
-  used to display the wide character c
-  ----------------------------------------------------------------------*/
-int GetStixFontAndIndex (CHAR_T c, SpecFont fontset, ThotFont **font)
-{
-  MapEntry      entry;
-  int           val = c, index = 0, face = 0;
-
-  if (val >= Stix_Arrows_Start && val < Stix_Arrows_Start + Stix_Arrows_length)
-    {
-      entry = Stix_Arrows[val - Stix_Arrows_Start];
-      index = (int) (entry.MapIndex);
-      face = (int) (entry.MapFont);
-    }
-  if (face == 1)
-    *font = &(fontset->SFont_1);
-  else if (face == 2)
-    *font = &(fontset->SFont_2);
-  else if (face == 3)
-    *font = &(fontset->SFont_3);
-  else if (face == 4)
-    *font = &(fontset->SFont_4);
-  else if (face == 5)
-    *font = &(fontset->SFont_5);
-  else if (face == 6)
-    *font = &(fontset->SFont_6);
-  else if (face == 7)
-    *font = &(fontset->SFont_7);
-  else if (face == 8)
-    *font = &(fontset->SFont_8);
-  else if (face == 9)
-    *font = &(fontset->SFont_9);
-  else if (face == 10)
-    *font = &(fontset->SFont_10);
-  else if (face == 11)
-    *font = &(fontset->SFont_11);
-  else if (face == 12)
-    *font = &(fontset->SFont_12);
-  else if (face == 13)
-    *font = &(fontset->SFont_13);
-  else if (face == 14)
-    *font = &(fontset->SFont_14);
-  else if (face == 15)
-    *font = &(fontset->SFont_15);
-  else if (face == 16)
-    *font = &(fontset->SFont_16);
-  else if (face == 17)
-    *font = &(fontset->SFont_17);
-
-  return index;
-}
 
 /*----------------------------------------------------------------------
   DrawStixSigma
@@ -610,3 +555,62 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
 }
 
 
+/*----------------------------------------------------------------------
+  GetStixFontAndIndex returns the glyph index and the font
+  used to display the wide character c
+  ----------------------------------------------------------------------*/
+int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
+{
+  MapEntry      entry;
+  int           index = 0, face = 0;
+
+  if (c >= Stix_Arrows_Start && c < Stix_Arrows_Start + Stix_Arrows_length)
+    {
+      entry = Stix_Arrows[c - Stix_Arrows_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+  if (face == 1)
+    *font = &(fontset->SFont_1);
+  else if (face == 2)
+    *font = &(fontset->SFont_2);
+  else if (face == 3)
+    *font = &(fontset->SFont_3);
+  else if (face == 4)
+    *font = &(fontset->SFont_4);
+  else if (face == 5)
+    *font = &(fontset->SFont_5);
+  else if (face == 6)
+    *font = &(fontset->SFont_6);
+  else if (face == 7)
+    *font = &(fontset->SFont_7);
+  else if (face == 8)
+    *font = &(fontset->SFont_8);
+  else if (face == 9)
+    *font = &(fontset->SFont_9);
+  else if (face == 10)
+    *font = &(fontset->SFont_10);
+  else if (face == 11)
+    *font = &(fontset->SFont_11);
+  else if (face == 12)
+    *font = &(fontset->SFont_12);
+  else if (face == 13)
+    *font = &(fontset->SFont_13);
+  else if (face == 14)
+    *font = &(fontset->SFont_14);
+  else if (face == 15)
+    *font = &(fontset->SFont_15);
+  else if (face == 16)
+    *font = &(fontset->SFont_16);
+  else if (face == 17)
+    *font = &(fontset->SFont_17);
+  else
+    *font = NULL;
+
+#ifdef _GL
+  /* load the stix font if needed */
+  if (face > 0 && **font == NULL )
+    **font = LoadStixFont (face, fontset->FontSize);
+#endif /* _GL */
+  return index;
+}

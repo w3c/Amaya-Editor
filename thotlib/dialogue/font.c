@@ -24,6 +24,9 @@
 #include "frame.h"
 #include "appdialogue.h"
 #include "application.h"
+#ifdef _GL
+#include "stix.h"
+#endif /* _GL */
 /*  tolower(c) was a macro defined in ctypes.h that returns
    something wrong if c is not an upper case letter. */
 #define TOLOWER(c)	(isupper(c)? tolower(c) : (c))
@@ -1427,14 +1430,13 @@ static ThotFont LoadNearestFont (char script, int family, int highlight,
   unsigned int		  mask;
   char                text[10], PsName[10], textX[100];
 
-#if defined(_WINGUI) && !defined (_GL)
+#ifdef _WINGUI
   SIZE                wsize;
   TEXTMETRIC          textMetric;
   int                 c, ind, space = 32;
   HFONT               hOldFont;
   HDC                 display;
 #endif /* _WINGUI */
-  
   ThotFont            ptfont;
 
   GetFontIdentifier (script, family, highlight, size, UnRelative, text, textX);
@@ -1466,14 +1468,11 @@ static ThotFont LoadNearestFont (char script, int family, int highlight,
 	{
 	  /* No table overflow: load the new font */
 #ifdef _GL
-
 #ifdef _PCLDEBUGFONT
 	  g_print ("\n XLFD selection : %s %s", textX, text);
 #endif /*_PCLDEBUG*/
-
-    ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
+	  ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
 #else /*_GL*/
-
 #ifdef _WINGUI
 	  /* Allocate the font structure */
 	  val = LogicalPointsSizes[size];
@@ -1579,9 +1578,9 @@ static ThotFont LoadNearestFont (char script, int family, int highlight,
 	  else
 	    ptfont = NULL;
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#ifdef _GTK
 	  ptfont = LoadFont (textX);
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _GTK */
 #endif/*  _GL */
     
 	  /* Loading failed try to find a neighbour */
@@ -1722,17 +1721,17 @@ void ChangeFontsetSize (int size, PtrBox box, int frame)
       else
 	fontset = fontsetbase;
       fontset->FontSize = size;
-      fontset->FontIso_1 = LoadNearestFont (code,
-					    fontset->FontFamily,
-					    fontset->FontHighlight,
-					    size, size,
-					    frame, TRUE, TRUE);
+      fontset->Font_1 = LoadNearestFont (code,
+					 fontset->FontFamily,
+					 fontset->FontHighlight,
+					 size, size,
+					 frame, TRUE, TRUE);
     }
 }
 
 /*----------------------------------------------------------------------
-  GetFontAndIndexFromSpec return the glyph index and the font
-  used to display the wide character c;
+  GetFontAndIndexFromSpec returns the glyph index and the font
+  used to display the wide character c
   ----------------------------------------------------------------------*/
 int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 {
@@ -1759,13 +1758,13 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	  c == HAIR_SPACE || c == MEDIUM_SPACE)
 	{
 	  /* various spaces */
-	  *font = fontset->FontIso_1;
+	  *font = fontset->Font_1;
 	  car = (int) c;
 	}
       else if (c <= 0xFF)
 	{
 	  /* 0 -> FF */
-	  *font = fontset->FontIso_1;
+	  *font = fontset->Font_1;
 	  car = (int) c;
 	}
       else if (c == 0x202A /* lre */ || c == 0x200B /* zwsp*/ ||
@@ -1781,7 +1780,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      /* Greek characters */
 	      code = GreekFontScript;
-#ifndef _GL
 	      /* should use STIX fonts here */
 	      if (c == 0x3C2 || c == 0x3D1 ||
 		       c == 0x3D2 || c == 0x3D5 ||
@@ -1790,24 +1788,21 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		/* use the Symbol font */
 		{
 		  code = 'G';
-		  pfont = &(fontset->FontSymbol);
+		  pfont = &(fontset->Font_16);
 		  encoding = ISO_SYMBOL;
 		}
-	      else
-#endif /* _GL */
-	       if (code == '7')
+	      else if (code == '7')
 		{
-		  pfont = &(fontset->FontIso_7);
-#ifdef _WINGUI
+		  pfont = &(fontset->Font_7);
+#ifdef _WINDOWS
 		  encoding = WINDOWS_1253;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 		  encoding = ISO_8859_7;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 		}
 	      else
 		{
-		  pfont = &(fontset->FontSymbol);
+		  pfont = &(fontset->Font_16);
 		  encoding = ISO_SYMBOL;
 		}
 	    }
@@ -1816,15 +1811,31 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		   c == 0x2147 /* ExponentialE */ ||
 		   c == 0x2148 /* ImaginaryI */)
 	    {
+#ifdef _GL
+	      /* use STIX fonts here */
+	      code = 'E';
+	      car = GetStixFontAndIndex (c, fontset, &pfont);
+	      if (pfont == NULL )
+		{
+		  code = '1'; /* West Europe Latin */
+		  pfont = &(fontset->Font_1);
+		  if (c == 0x2148 /* ImaginaryI */)
+		    car = 105;
+		  else if (c == 0x2146 /* DifferentialD */)
+		    car = 100;
+		  else if (c == 0x210E /* planckh */)
+		    car = 104;
+		  else /* ExponentialE */
+		    car = 101;
+		}
+#else /* _GL */
 	      code = '1'; /* West Europe Latin */
-	      pfont = &(fontset->FontIso_1);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_1);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1252;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX) 
+#else /* _WINDOWS */
 	      encoding = ISO_8859_1;
-#endif /* defined(_GTK) || defined(_WX) */
-#ifndef _GL
+#endif /* _WINDOWS */
 	      if (c == 0x2148 /* ImaginaryI */)
 		c = 105;
 	      else if (c == 0x2146 /* DifferentialD */)
@@ -1844,19 +1855,22 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		   c == 0x2039 /*inf*/    || c == 0x203A /*sup*/ ||
 		   c == 0x20AC /*euro*/)
 	    {
-#ifdef _WINGUI
+#ifdef _GL
 	      code = '1'; /* West Europe Latin */
-	      pfont = &(fontset->FontIso_1);
+	      pfont = &(fontset->Font_1);
+#else /* _GL */
+#ifdef _WINDOWS
+	      code = '1'; /* West Europe Latin */
+	      pfont = &(fontset->Font_1);
 	      encoding = WINDOWS_1252;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX) 
+#else /* _WINDOWS */
 	      if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
 		  c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/)
 		{
 		  if (Printing)
 		    {
 		      code = '1'; /* Extended Latin */
-		      pfont = &(fontset->FontIso_1);
+		      pfont = &(fontset->Font_1);
 		      encoding = ISO_8859_1;
 		      if (c == 0x152)
 			c = 75;
@@ -1870,7 +1884,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		  else
 		    {
 		      code = 'F'; /* Extended Latin */
-		      pfont = &(fontset->FontIso_15);
+		      pfont = &(fontset->Font_15);
 		      encoding = ISO_8859_15;
 		    }
 		}
@@ -1879,8 +1893,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		  /* use an approaching character */
 		  encoding = ISO_8859_1;
 		  code = '1';
-		  pfont = &(fontset->FontIso_1);
-#ifndef _GL
+		  pfont = &(fontset->Font_1);
 		  if (c == 0x2C6)       /*circ*/
 		    c = 94;
 		  else if (c == 0x2DC)  /*tilde*/
@@ -1898,7 +1911,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		  else
 		    {
 		      code = 'G';
-		      pfont = &(fontset->FontSymbol);
+		      pfont = &(fontset->Font_16);
 		      if (c == 0x2013)  /* en dash */
 			c = 45;
 		      else if (c == 0x2014) /* em dash */
@@ -1906,31 +1919,29 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		      else if (c == 0x2026) /* horizontal ellipsis */
 			c = 188;
 		    }
-#endif /* _GL */
 		}
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
+#endif /* _GL */
 	    }
 	  else if (c == 0x11F || c == 0x130 || c == 0x131 || c == 0x15F)
 	    {
 	      code = '9'; /* Turkish */
-	      pfont = &(fontset->FontIso_9);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_9);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1254;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 	      encoding = ISO_8859_9;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x17F)
 	    {
 	      code = '2'; /* Central Europe */
-	      pfont = &(fontset->FontIso_2);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_2);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1250;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 	      encoding = ISO_8859_2;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 	    }
 	  else if ((c > 0x2000 && c < 0x237F &&
 		   (c < 0x2018 || c > 0x201D) && /* Windows quotations */
@@ -1943,92 +1954,90 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		   c == 0x192)     /* latin small letter f with hook */
 	    {
 	      /* Symbols */
-#ifndef _GL
-	      code = 'G';
-	      pfont = &(fontset->FontSymbol);
-	      encoding = ISO_SYMBOL;
-#else /* _GL */
-	      /* should use STIX fonts here */
-	      code = '7';
-		  pfont = &(fontset->FontIso_7);
-#ifdef _WINGUI
+#ifdef _GL
+	      /* use STIX fonts here */
+	      code = 'E';
+	      car = GetStixFontAndIndex (c, fontset, &pfont);
+	      if (pfont == NULL )
+		{
+		  code = '7';
+		  pfont = &(fontset->Font_16);
+#ifdef _WINDOWS
 		  encoding = WINDOWS_1253;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 		  encoding = ISO_8859_7;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
+		}
+#else /* _GL */
+	      code = 'G';
+	      pfont = &(fontset->Font_16);
+	      encoding = ISO_SYMBOL;
 #endif /* _GL */
 	    }
 	  else if (c < 0x24F)
 	    {
 	      code = '3';
-	      pfont = &(fontset->FontIso_3);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_3);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1250;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 	      encoding = ISO_8859_3;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x2AF)
 	    {
 	      code = '4'; /* Baltic RIM */
-	      pfont = &(fontset->FontIso_4);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_4);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1257;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 	      encoding = ISO_8859_4;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x45F)
 	    {
 	      code = '5'; /* Cyrillic */
-	      pfont = &(fontset->FontIso_5);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_5);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1251;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 	      encoding = ISO_8859_5;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x5FF)
 	    {
 	      code = '8'; /* Hebrew */
-	      pfont = &(fontset->FontIso_8);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_8);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1255;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 	      encoding = ISO_8859_8;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x5FF)
 	    {
 	      code = '9'; /* Turkish */
-	      pfont = &(fontset->FontIso_9);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_9);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1254;        
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 	      encoding = ISO_8859_9;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x65F)
 	    {
 	      code = '6'; /* Arabic */
-	      pfont = &(fontset->FontUnicode);
-#ifdef _WINGUI
+	      pfont = &(fontset->Font_17);
+#ifdef _WINDOWS
 	      encoding = WINDOWS_1256;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINDOWS */
 	      encoding = UNICODE_1_1;
-#endif /* defined(_GTK) || defined(_WX) */
+#endif /* _WINDOWS */
 	    }
 	  else
 	    {
 	      code = 'Z'; /* Unicode */
-	      pfont = &(fontset->FontUnicode);
+	      pfont = &(fontset->Font_17);
 	      encoding = UNICODE_1_1;
 	    }
       
@@ -2133,8 +2142,8 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 	  fontset->FontHighlight = highlight;
 	  fontset->FontSize = index;
 	  fontset->FontMask = mask;
-	  fontset->FontIso_1 = LoadNearestFont (script, family, highlight,
-						index, index, frame, TRUE, TRUE);
+	  fontset->Font_1 = LoadNearestFont (script, family, highlight,
+					     index, index, frame, TRUE, TRUE);
 	  /* link this new fontset */
 	  if (prevfontset)
 	    prevfontset->NextFontSet = fontset;
@@ -2149,8 +2158,8 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
       /* add the window frame number */
       fontset->FontMask = fontset->FontMask | mask;
       /* attach that font to the frame */
-      fontset->FontIso_1 = LoadNearestFont (script, family, highlight,
-					    index, index, frame, TRUE, TRUE);
+      fontset->Font_1 = LoadNearestFont (script, family, highlight,
+					 index, index, frame, TRUE, TRUE);
     }
   return (fontset);
 }
@@ -2258,7 +2267,6 @@ void InitDialogueFonts (char *name)
 #ifdef _WINGUI
   GreekFontScript = '7';
 #endif /* _WINGUI */
-  
 #if defined(_GTK) || defined(_WX)
   if (Printing)
     /* Only the sysmbol font is available in Postscript */
@@ -2600,7 +2608,7 @@ void LoadingArabicFont (SpecFont fontset ,ThotFont *font)
   *font = NULL;
 
   encoding = UNICODE_1_1;
-  lfont = fontset->FontUnicode;
+  lfont = fontset->Font_17;
   for (frame = 1 ; frame <= MAX_FRAME ; frame++)
     {
       mask = 1 << (frame - 1);
@@ -2612,7 +2620,7 @@ void LoadingArabicFont (SpecFont fontset ,ThotFont *font)
 
     }
   /* even if the font is not found avoid to retry later */
-  fontset->FontUnicode = lfont;
+  fontset->Font_17 = lfont;
   *font = lfont;
 }
 

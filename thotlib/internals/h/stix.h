@@ -1,5 +1,6 @@
 #ifndef __STIX_
 #define __STIX_
+int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font);
 
 void *LoadStixFont (int family, int size);
 
@@ -20,7 +21,6 @@ int GetMathFontWidth (SpecFont fontset,
 
 void GiveStixSize (ThotFont font, PtrAbstractBox pAb, 
 		   int *width, int *height, int size);
-
 
 
 void DrawStixChar (ThotFont font, unsigned char symb, 

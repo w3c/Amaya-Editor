@@ -27,19 +27,36 @@ typedef struct _FontSet {
   int           FontHighlight;
   int           FontSize;
   unsigned int  FontMask;
-  ThotFont      FontIso_1;
-  ThotFont      FontIso_2;
-  ThotFont      FontIso_3;
-  ThotFont      FontIso_4;
-  ThotFont      FontIso_5;
-  ThotFont      FontIso_6;
-  ThotFont      FontIso_7;
-  ThotFont      FontIso_8;
-  ThotFont      FontIso_9;
-  ThotFont      FontIso_13;
-  ThotFont      FontIso_15;
-  ThotFont      FontSymbol; /* Symbol of Stix fonts ?? */
-  ThotFont      FontUnicode;
+  ThotFont      Font_1;
+  ThotFont      Font_2;
+  ThotFont      Font_3;
+  ThotFont      Font_4;
+  ThotFont      Font_5;
+  ThotFont      Font_6;
+  ThotFont      Font_7;
+  ThotFont      Font_8;
+  ThotFont      Font_9;
+  ThotFont      Font_13;
+  ThotFont      Font_15;
+  ThotFont      Font_16; /* Symbol */
+  ThotFont      Font_17; /* Arabic or JIS */
+  ThotFont      SFont_1; /* STIX fonts */
+  ThotFont      SFont_2;
+  ThotFont      SFont_3;
+  ThotFont      SFont_4;
+  ThotFont      SFont_5;
+  ThotFont      SFont_6;
+  ThotFont      SFont_7;
+  ThotFont      SFont_8;
+  ThotFont      SFont_9;
+  ThotFont      SFont_10;
+  ThotFont      SFont_11;
+  ThotFont      SFont_12;
+  ThotFont      SFont_13;
+  ThotFont      SFont_14;
+  ThotFont      SFont_15;
+  ThotFont      SFont_16;
+  ThotFont      SFont_17;
 } FontSet;
 
 typedef unsigned char RuleSet[32];

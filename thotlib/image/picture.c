@@ -485,7 +485,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
 	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
 			GL_UNSIGNED_BYTE, NULL);
 	}
-      /*if (!Printing)*/
+      if (!Printing)
 	img->PicPixmap = None;
       img->TexCoordW = GL_w;
       img->TexCoordH = GL_h;

@@ -710,7 +710,6 @@ char TtaGetCharacterScript (wchar_t c)
   else if (c >= 0x45F && c < 0x600)
     return 'H'; /* Hebrew */
   else if ((c >= 0x600 && c < 0x6B0 )|| c == 0x200F || c == 0x202B || c == 0x202E)
-
     return 'A'; /* Arabic */
   else if (c >= 0x2E80 && c < 0xA000)
     return 'Z'; /* CJK */

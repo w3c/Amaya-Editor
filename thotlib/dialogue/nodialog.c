@@ -22,6 +22,7 @@
 #include "memory_f.h"
 #include "nodialog.h"
 
+
 /*----------------------------------------------------------------------
   DisplayPRule displays the presentation rule pointed by RP.
   ----------------------------------------------------------------------*/
