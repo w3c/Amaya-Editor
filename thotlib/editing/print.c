@@ -2609,53 +2609,110 @@ char              **argv;
 
 #endif /* __STDC__ */
 {
-   char               *server;
+   char               *server = (char*) NULL;
    char               *name;
    char               *realName;
    char               *tempDir;
+   char*               pChar ;
+   char                option [100];
    int                 NCopies;
    char               *destination;
    char                cmd[800];
    char                temp[MAX_PATH];
    int                 i, l, result;
-   int                 argCounter = 0 ;
-   int                 viewsCounter ;
+   int                 argCounter;
+   int                 viewsCounter = 0;
+   int                 index;
 
-   TtaInitializeAppRegistry (argv[argCounter++]);
-   if (!strcmp(argv[argCounter], "-")) server = NULL;
-   else {
-        server = (char*)  TtaGetMemory (strlen (argv[argCounter]) + 1);
-        strcpy (server, argv[argCounter]);
+   TtaInitializeAppRegistry (argv[0]);
+
+   argCounter = 1;
+   while (argCounter < argc) {
+       if (argv [argCounter][0] == '-') {
+	   if (!strcmp (argv [argCounter], "-display")) {
+              argCounter++;
+              server = (char*)  TtaGetMemory (strlen (argv[argCounter]) + 1);
+              strcpy (server, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-pivot")) {
+                  argCounter++;
+                  name = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  strcpy (name, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-dir")) {
+                  argCounter++;
+                  tempDir = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  strcpy (tempDir, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-rn")) {
+                  argCounter++;
+                  realName = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  strcpy (realName, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-ps")) {
+                  argCounter++;
+                  printer = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  strcpy (printer, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-v")) {
+                  argCounter++;
+                  strcpy (PrintViewName[viewsCounter++], argv [argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-npps")) {
+                  argCounter++;
+                  NPagesPerSheet = atoi (argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-bw")) {
+                  argCounter++;
+                  BlackAndWhite = atoi (argv[argCounter++]);
+           } else {
+                  index = 0;
+                  pChar = &argv [argCounter][2];
+                  while (option[index++] = *pChar++);
+                  option [index] = '\0';
+	          switch (argv [argCounter] [1]) {
+		         case 'R': Repaginate = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case 'F': firstPage = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case 'L': lastPage = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case 'P': pageSize = (char*) TtaGetMemory (strlen (option) + 1);
+                                   strcpy (pageSize, option);
+                                   argCounter++;
+                                   break;
+                         case '#': NCopies = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case 'H': HorizShift = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case 'V': VertShift = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case '%': Zoom = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case 'f': NoEmpyBox = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case 'M': manualFeed = atoi (option);
+                                   argCounter++;
+                                   break;
+                         case 'w': thotWindow = (ThotWindow) atoi (option);
+                                   argCounter++;
+                                   break;
+                         default:  fprintf (stderr, "Error: bad option (%s)\nProgram aborted\n", argv [argCounter]);
+                                   exit (1);
+                  }
+           }
+       } else if ((!strcmp (argv [argCounter], "Portrait")) || (!strcmp (argv [argCounter], "Landscape"))) {
+              Orientation = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
+              strcpy (Orientation, argv[argCounter++]);
+       } else if ((!strcmp (argv [argCounter], "PRINTER")) || (!strcmp (argv [argCounter], "PSFILE"))) {
+              destination = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
+              strcpy (destination, argv[argCounter++]);
+       } else {
+              fprintf (stderr, "Error: bad option (%s)\nProgram aborted\n", argv [argCounter]);
+              exit (1);
+       }
    }
-   argCounter++;
-   name = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-   strcpy (name, argv[argCounter++]);
-   tempDir = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-   strcpy (tempDir, argv[argCounter++]);
-   Repaginate = atoi (argv[argCounter++]);
-   firstPage = atoi (argv[argCounter++]);
-   lastPage = atoi (argv[argCounter++]);
-   realName = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-   strcpy (realName, argv[argCounter++]);
-   printer = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-   strcpy (printer, argv[argCounter++]);
-   pageSize = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-   strcpy (pageSize, argv[argCounter++]);
-   NCopies = atoi (argv[argCounter++]);
-   HorizShift = atoi (argv[argCounter++]);
-   VertShift = atoi (argv[argCounter++]);
-   Orientation = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-   strcpy (Orientation, argv[argCounter++]);
-   Zoom = atoi (argv[argCounter++]);
-   NPagesPerSheet = atoi (argv[argCounter++]);
-   NoEmpyBox = atoi (argv[argCounter++]);
-   manualFeed = atoi (argv[argCounter++]);
-   BlackAndWhite = atoi (argv[argCounter++]);
-   thotWindow = (ThotWindow) atoi (argv[argCounter++]);
-   destination = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-   strcpy (destination, argv[argCounter++]);
-   for (viewsCounter = argCounter; viewsCounter < argc; viewsCounter++)
-       strcpy (PrintViewName[viewsCounter - argCounter], argv [viewsCounter]);
 
    ShowSpace = 1;  /* Restitution des espaces */
 
@@ -2717,7 +2774,7 @@ char              **argv;
 			    MainDocument->DocSSchema))
 	 /* il ne faut pas repaginer si le document a l'exception NoPaginate */
 	 Repaginate = 0;
-   NPrintViews = viewsCounter-argCounter;
+   NPrintViews = viewsCounter;
    /* Imprime le document */
    if (MainDocument != NULL)
       PrintDocument (MainDocument);

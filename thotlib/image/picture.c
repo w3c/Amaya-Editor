@@ -396,7 +396,7 @@ char               *fileName;
   i = HandlersCounter - 1 ;
 #ifdef AMAYA_PLUGIN
   currentPlugin = HandlersCounter - InlineHandlers - 1;
-#endif
+#endif /* AMAYA_PLUGIN */
   l = strlen (fileName);
   if (l > 4)
     {

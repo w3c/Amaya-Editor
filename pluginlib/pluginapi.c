@@ -40,7 +40,6 @@
 extern XtAppContext     app_cont;
 extern PluginInfo*      pluginTable [100];
 extern Document         currentDocument;
-extern int              currentPlugin;
 extern int              pluginCounter;
 extern int              InlineHandlers;
 extern PictureHandler   PictureHandlerTable[MAX_PICT_FORMATS];
@@ -645,7 +644,6 @@ char*    filename;
     range.length = 2000; /*20;*/
     range.next   = NULL;
 
-    /*printf ("WriteReady = %d\n", (int) (*(pluginFunctionsTable->writeready)) (pluginTable [currentPlugin]->pluginInstance, stream));*/
     /*AM_requestread(stream, &range);*/
  
     printf ("Retrun from new stream = %d\n", ret);

@@ -107,11 +107,13 @@ char               *viewsToPrint;
 {
 #ifndef _WINDOWS
    char                cmd[800];
-   char                server[800];
+   char*               server = "";
    int                 res;
 
-   if (!servername) sprintf (server, "-");
-   else sprintf (server, "%s", servername);
+   if (servername) { 
+      server = (char*) TtaGetMemory (strlen (servername) + 10) ;
+      sprintf (server, "-display %s", servername);
+   }
 
    if(userOrientation == 0)
       strcpy (Orientation, "Portrait");
@@ -119,11 +121,11 @@ char               *viewsToPrint;
       strcpy (Orientation, "Landscape");
 
    if (printer[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &",
+      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps \"%s\" -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PRINTER -v %s &",
 	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &",
+      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps \"%s\" -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PRINTER -v %s &",
 	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
@@ -133,15 +135,12 @@ char               *viewsToPrint;
 #endif /* _WINDOWS */
 }
 
-
 /*----------------------------------------------------------------------
    PostScriptSave
    saves the PostScript version of a document into a file.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         PostScriptSave (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *psName, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
-
 #else  /* __STDC__ */
 static void         PostScriptSave (name, dir, thotSch, thotDoc, thotpres, realName, realDir, psName, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
 char               *name;
@@ -166,14 +165,15 @@ int                 blackAndWhite;
 int                 repaginate;
 char               *viewsToPrint;
 #endif /* __STDC__ */
-
 {
    char                cmd[800];
-   char                server[800];
+   char*               server = "";
    int                 res;
    
-   if (!servername) sprintf (server, "-");
-   else sprintf (server, "%s", servername);
+   if (servername) { 
+      server = (char*) TtaGetMemory (strlen (servername) + 10) ;
+      sprintf (server, "-display %s", servername);
+   }
    
    if(userOrientation == 0)
       strcpy (Orientation, "Portrait");
@@ -181,11 +181,11 @@ char               *viewsToPrint;
       strcpy (Orientation, "Landscape");
 
    if (psName[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
+      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps %s -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PSFILE -v %s &\n",
 	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
+      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps %s -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PSFILE -v %s &\n",
 	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
