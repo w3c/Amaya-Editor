@@ -2324,11 +2324,15 @@ static char *
 raptor_file_uri_to_filename(const char *uri) 
 {
   char *filename;
-#ifndef WIN32
+#ifndef WIN32DIRECTX
   int length;
 #endif
 
-#ifdef WIN32
+  /* JK: In case of error, filename isn't freed!. The following call
+  doesn't work unless you have the directx libraries. Disabling it for Amaya,
+  as we have a better URI creation */
+/* #ifdef WIN32 */
+#ifdef WIN32DIRECTX
   filename=LIBRDF_MALLOC(cstring, MAX_PATH);
   if (S_OK != URLDownloadToCacheFile(NULL, uri, filename, URLOSTRM_GETNEWESTVERSION, 0, NULL))
     return NULL;
