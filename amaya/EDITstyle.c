@@ -485,7 +485,7 @@ Document            doc;
   RemoveStyle (ClassReference, doc, FALSE);
 
   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-  if (stylestring[0] == '.')
+  if (stylestring[1] == '.')
     {
       a_class = &CurrentClass[0];
       if (*a_class == '.')
