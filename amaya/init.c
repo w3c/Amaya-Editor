@@ -2960,12 +2960,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 					 "SetupAndPrint",
 					 (Proc)SetupAndPrint,
 					 TRUE );
-	   iPrint = TtaAddToolBarButton( window_id,
-					 iconFind,
-					 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
-					 "TtcSearchText",
-					 (Proc)TtcSearchText,
-					 TRUE );
+	   iFind = TtaAddToolBarButton( window_id,
+					iconFind,
+					TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
+					"TtcSearchText",
+					(Proc)TtcSearchText,
+					TRUE );
 #endif /* _WX */
 
 #ifndef _WX
@@ -3144,6 +3144,33 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* BOOKMARKS */
 	 }
      }
+
+#if _WX
+   /* only if it's the first document open in this frame */
+  if (!replaceOldDoc)
+    {
+      /* initialize the enable/disable buttons states */
+      TtaChangeButton (doc, 1, iBack,    iconBackNo,    FALSE);
+      TtaChangeButton (doc, 1, iForward, iconForwardNo, FALSE);
+      TtaChangeButton (doc, 1, iReload,  iconReload,    TRUE);
+      TtaChangeButton (doc, 1, iStop,    stopN,         FALSE);
+      TtaChangeButton (doc, 1, iHome,    iconHome,      TRUE);
+      TtaChangeButton (doc, 1, iSave,    iconSaveNo,    FALSE);
+      TtaChangeButton (doc, 1, iPrint,   iconPrint,     TRUE);
+      TtaChangeButton (doc, 1, iFind,    iconFind,      TRUE);
+    }
+  
+  /* now be sure that the urlbar is setup */
+  /* TODO : changer peutetre les types de documents qui auront des urls */
+  if ( docType != docSource &&
+       docType != docCSS &&
+       docType != docText &&
+       docType != docMath )
+    {
+      TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+		       TRUE, (Proc)TextURL, URL_list );
+    }
+#endif /* _WX */
 
    /* store the new document type */
    DocumentTypes[doc] = docType;
