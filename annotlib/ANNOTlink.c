@@ -556,7 +556,7 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
   char *main_index_file_new;
   int len;
   int error;
-  FILE *fp_old;
+  FILE *fp_old = NULL;
   FILE *fp_new;
   
 
