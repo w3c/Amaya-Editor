@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations in Amaya</title>
-  <meta name="GENERATOR" content="amaya V3.9" />
+  <meta name="GENERATOR" content="amaya V4.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -55,8 +55,8 @@ describing annotations.</p>
 <p>Annotations can be stored locally or in one or more <strong>annotation
 servers</strong>. When a document is browsed, Amaya queries each of these
 servers, requesting the annotations related to that document. Currently Amaya
-presents annotations with pencil annotation icons <img
-src="../Icons/annot.png" alt="Annotation pencil icon" /> that are visually
+presents annotations with pencil annotation icons ( <img
+src="../Icons/annot.png" alt="Annotation pencil icon" /> )that are visually
 embedded in the document, as shown in the figure below. If the user
 single-clicks on an annotation icon, the text that was annotated is
 highlighted. If the user double-clicks on this icon, the annotation text and
@@ -65,12 +65,12 @@ other metadata are presented in a separate window.</p>
 <p style="text-align: center"><img src="../Icons/annotationicon.png"
 alt="annotation icon (= pencil)" /></p>
 
-<p>An annotation has many attributes including:</p>
+<p>An annotation has many properties including:</p>
 <ul>
-  <li>Privacy level: public or private</li>
-  <li>Physical location: file system; local or networked file system or Web
-    service</li>
-  <li>Scope: document-level or selection-level</li>
+  <li>Physical location: is the annotation stored in a local file system or in
+    an annotation server</li>
+  <li>Scope: is the annotation associated to a whole document or just to a
+    fragment of this document</li>
   <li>Annotation type: 'Annotation', 'Comment', 'Query', ...</li>
 </ul>
 
@@ -83,7 +83,7 @@ and stored by anyone having the correct access rights, such as is the case of
 other HTML documents. We also refer to remote annotations as <strong>shared or
 public annotations</strong>, as they can be seen by other people. If you wish
 to install your own annotation server, please refer to <a
-href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Annotations-HOWTO</a>.</p>
+href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Annotation-Server-HOWTO</a>.</p>
 
 <p>The user doesn't need a server to make <strong>local annotations</strong>.
 Local annotations are stored under the <a
@@ -261,16 +261,14 @@ annotation, and by the <strong>annotation server</strong> name. To apply any
 of these filters, you need to click on the text box to select a given type of
 annotations, and then on the corresponding action button. The <strong>Show
 all</strong> and <strong>Hide all</strong> commands apply to all the
-annotations.A small and uncomfortable star (*) character is used to indicate
-that an annotation is hidden.</p>
+annotations.A small and uncomfortable prefix charater shows the status of a
+given entry. This character can be either a space (' '), a star ('*') or a
+signet ('-') to say that tje annotations belonging to this given entrty are
+all visible, all hidden, or partially visible, respectively.</p>
 
-<p>Note that the filter menus only show you what's the status of the
-selections it shows you. There's no cross-reference among these filters. Let's
-say that you have one annotation in your document, and you hide it using the
-<strong>By Server</strong> filter. If you click on the <strong>By
-Author</strong> filter, it'll show this annotation as not being hidden, even
-if it is so, because the filter is not intelligent enough to know that all the
-annotations made by this author are currently hidden.</p>
+<p>Note that the filter menus only show you the annotations it knows about at
+the moment of its invocation. If you add new annotations in the meantime,
+you'll need to destroy this menu and invoke it again to see them.</p>
 
 <p>Note that for each annotation, the annotation user is shown by
 concatenating the author's name to the name of the annotation server where the

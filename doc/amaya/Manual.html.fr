@@ -24,7 +24,7 @@ alt="Doc" /></a></p>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
   <dt><strong>Collaborateurs :</strong></dt>
-    <dd>Charles McCathieNevile, John Russell</dd>
+    <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen</dd>
   <dt><strong>Traductrices :</strong></dt>
     <dd>Valentine Giordani, Magali Vatton</dd>
 </dl>
@@ -307,7 +307,7 @@ spécifique d'Amaya :</p>
     section</a></li>
   <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des
     collections de document</a></li>
-  <li><a href="Annotations.html.fr#Assembling">Les annotations dans
+  <li><a rel="Chapter" href="Annotations.html.fr#Annotations">Les annotations dans
   Amaya</a></li>
 </ul>
 

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya V3.9" />
+  <meta name="GENERATOR" content="amaya V4.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -25,8 +25,6 @@
   </tbody>
 </table>
 
-<div id="Assembling">
-<h2><a name="L1065">Les annotations dans Amaya</a></h2>
 <ul>
   <li><a href="Annotations.html.fr#def">Définition</a></li>
   <li><a href="Annotations.html.fr#Local">Annotations locales et
@@ -46,6 +44,8 @@
 </ul>
 
 <div id="Annotations">
+<h2><a name="L1065">Les annotations dans Amaya</a></h2>
+
 <h3 id="def">Définition</h3>
 
 <p>Une annotation est un commentaire, une note, une explication ou tout autre
@@ -61,44 +61,44 @@ href="http://www.w3.org/RDF/">RDF</a> pour décrire les annotations.</p>
 <p>Les annotations peuvent être enregistrées localement ou sur un ou plusieurs
 <strong>serveur(s) d'annotations</strong>. Lorsqu'un document est chargé,
 Amaya interroge chacun de ces serveurs et recherche les annotations relatives
-à ce document. Chaque annotation est ensuite représentée par une l'icône
-suivante <img src="../Icons/annot.png" alt="Annotation pencil icon" /> qui est
-ajoutée au document (voir figure ci-dessous). Lorsque l'utilisateur clique sur
-l'icône d'annotation, le passage annoté est mis en évidence. Si l'utilisateur
-double-clique sur l'icône alors le contenu de l'annotation ainsi que les
-autres méta-données lui sont présentées dans une nouvelle fenêtre.</p>
+à ce document. Chaque annotation est ensuite représentée par l'icône suivante
+<img src="../Icons/annot.png" alt="Crayon representant une annotation" /> qui
+est ajoutée au document (voir figure ci-dessous). Lorsque l'utilisateur clique
+sur l'icône d'annotation, le passage annoté est mis en évidence. Si
+l'utilisateur double-clique sur l'icône alors le contenu de l'annotation ainsi
+que les autres méta-données lui sont présentées dans une nouvelle fenêtre.</p>
 
 <p style="text-align: center"><img src="../Icons/annotationicon.png"
 alt="annotation icon (= pencil)" /></p>
 
-<p>Une annotation possède plusieurs attributs :</p>
+<p>Une annotation possède plusieurs propriétés :</p>
 <ul>
-  <li>Privacy level: public ou privé</li>
-  <li>Physical location: file system; local or networked file system or Web
-    service</li>
-  <li>Scope: document-level or selection-level</li>
+  <li>Point de stockage: dans le système de fichiers de l'utilisateur ou sur
+    un serveur d'annotations</li>
+  <li>Etendue : l'annotation est associée à un document entier ou à une
+    fragment de celui-ci</li>
   <li>Type de l'annotation: 'Annotation', 'Comment', 'Query', ...</li>
 </ul>
 
 <h3 id="Local">Annotations locales et distantes</h3>
 
-<p>Amaya enregistre les données de l'annotation dans un fichier local
-(annotations locales) ou sur le web (annotations distantes). Les
-<strong>annotations distantes</strong> sont enregistrées sur des serveurs
-d'annotations et peuvent être chargées ou enregistrées par quiconque ayant les
-droits d'accès correspondants, comme pour les autres documents HTML. Les
-annotations distantes sont dites <strong>partagées</strong> ou
-<strong>publiques</strong> parce qu'elles peuvent être vues par plusieurs
-personnes. Si vous désirez installer votre propre serveur d'annotations,
-veuillez vous référer au document "<a
-href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Annotations
+<p>Amaya peut sauver les annotations dans un fichier local (annotations
+locales) ou sur le Web (annotations distantes). Les <strong>annotations
+distantes</strong> sont enregistrées sur des serveurs d'annotations et peuvent
+être chargées ou enregistrées par quiconque ayant les droits d'accès
+correspondants, comme pour les autres documents HTML. Les annotations
+distantes sont dites <strong>partagées</strong> ou <strong>publiques</strong>
+parce qu'elles peuvent être vues par plusieurs personnes. Si vous désirez
+installer votre propre serveur d'annotations, veuillez vous référer au
+document "<a
+href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Annotation-Server
 HOWTO</a>".</p>
 
 <p>Les <strong>annotations locales</strong> ne nécessitent pas l'utilisation
-de serveur. Elles sont enregistrées sous ***the user preferences directory,
-*** dans un répertoire spécifique appelé <code>annotations</code> et peuvent
-être visualisées uniquement par leur auteur (selon les droits d'accès en
-fonction). Ce répertoire comporte trois sortes de fichiers:</p>
+de serveur. Elles sont enregistrées sous le repértoire de configuration
+d'Amaya,  dans un répertoire spécifique appelé <code>annotations</code> et
+peuvent être visualisées uniquement par leur auteur (selon les droits d'accès
+en fonction). Ce répertoire comporte trois sortes de fichiers:</p>
 <dl>
   <dt><strong>annot.index</strong></dt>
     <dd>les URL associées aux fichiers dans lesquels les méta-données des
@@ -137,14 +137,14 @@ alt="configuration dialog box" /></p>
 
 <p></p>
 <dl>
-  <dt><strong>Annotation user</strong></dt>
+  <dt><strong>Nom de l'utilisateur (Annotation user)</strong></dt>
     <dd>Ce champ est associé à chaque nouvelle annotation et définit
       l'<strong>auteur</strong> de l'annotation. Par défaut, Amaya utilise le
       nom de connexion pour construire la méta-donnée auteur. Le champ
       "Annotation user" permet à un utilisateur de remplacer ce nom par un nom
       plus significatif comme par exemple, changer le nom
       <code>u1723242</code> en <code>marja</code>.</dd>
-  <dt><strong>Annotation servers</strong></dt>
+  <dt><strong>Serveurs d'Annotations (Annotation servers)</strong></dt>
     <dd>Ce champ définit les serveurs d'annotations à interroger lorsque Amaya
       cherche une annotation. Vous pouvez spécifier un ou plusieurs serveurs.
       Le nom de serveur <strong>localhost</strong> est réservé, il indique à
@@ -155,7 +155,8 @@ alt="configuration dialog box" /></p>
       Windows, ils sont spécifiés les uns après les autres et séparés par la
       touche <code>Return</code>. Par défaut, ce champ est initialisé avec
       <code>localhost</code>.</dd>
-  <dt><strong>Autoload annotations</strong></dt>
+  <dt><strong>Chargement automatique des annotations (Autoload
+  annotations)</strong></dt>
     <dd>Cette option indique à Amaya de rechercher automatiquement ou non les
       annotations lorsqu'une nouvelle URL est chargée. Si elle n'est pas
       positionnée alors l'utilisateur doit explicitement sélectionner l'entrée
@@ -163,7 +164,8 @@ alt="configuration dialog box" /></p>
       peut y avoir un certain délai quand Amaya charge les annotations, ce
       délai étant du à la résolution du nom DNS des serveurs d'annotations.
       Par défaut, cette option est désactivée.</dd>
-  <dt><strong>Annotation post server</strong></dt>
+  <dt><strong>Serveur pour publier des annotations (Annotation Post
+  Server)</strong></dt>
     <dd>Ce champ définit le serveur sur lequel les annotations sont
       enregistrées. Les annotations locales sont toujours sauvegardées dans un
       répertoire local, sans tenir compte de ce champ. Par défaut, il est
@@ -258,24 +260,23 @@ requête envoyée aux serveurs.</p>
 
 <p>L'entrée <strong>Filtre local</strong> permet à l'utilisateur de montrer ou
 de cacher les icônes d'annotation dans un document annoté pour mieux se
-concentrer par exemple sur ce qui l'intéresse ou pour rendre le document
-annoté plus facile à lire. L'utilisateur peut filtrer ces icônes selon trois
+concentrer par exemple sur ce qui l'intéresse ou pour faciliter la lecture
+d'un document annoté. L'utilisateur peut filtrer ces icônes selon trois
 critères: le <strong>nom de l'auteur</strong> de l'annotation, le
 <strong>type</strong> de l'annotation et le <strong>nom du serveur</strong>
 d'annotations. Pour appliquer chacun de ces filtres, cliquez sur le texte
 correspondant pour sélectionner un type donné d'annotation puis sur le bouton
 correspondant à l'action. Les commandes <strong>Montrer Tout</strong> et
-<strong>Cacher Tout</strong> s'appliquent sur l'ensemble des annotations. Le
-caractère astérisque (*) est utilisé pour indiquer qu'une annotation est
-cachée.</p>
+<strong>Cacher Tout</strong> s'appliquent sur l'ensemble des annotations. On
+prefixe chaque entrée du menu d'un espace (' '), d'une étoile ('*') et d'un
+tiré ('-') pour indiquer que toutes les annotations appartenant à une
+catégorie donnée sont visibles, cachées ou partiellement cachées,
+respectivement.</p>
 
-<p>Il est à noter que le menu Filtre vous montre **what's the status of the
-selections it shows you.**. Il n'y a pas de référence croisée sur ces filtres.
-***Let's say that you have one annotation in your document, and you hide it
-using the By Server filter. If you click on the By Author filter, it'll show
-this annotation as not being hidden, even if it is so, because the filter is
-not intelligent enough to know that all the annotations made by this author
-are currently hidden.***</p>
+<p>Il est à noter que le menu Filtre vous montre l'état courant du document au
+moment où le filtre est invoqué. Si vous ajoutez des nouvelles annotations
+entre temps, le filtre ne les montrera pas. Il faudra appuyer sur le bouton
+terminer et le rappeler pour voir le nouvel état.</p>
 
 <p>Pour chaque annotation, le nom de l'utilisateur est obtenu en concaténant
 le nom de l'auteur et le nom du serveur d'annotations sur lequel celle-ci est
@@ -378,7 +379,6 @@ annotations trompeuses en ajoutant un attribut ID au second paragraphe:</p>
 
 <p>Ainsi, ce Xpointer pointera toujours sur le même paragraphe, sans se
 soucier de la position de celui-ci dans la structure du document.</p>
-</div>
 </div>
 
 <p align="right"><a href="MakeBook.html.fr"><img alt="previous" border="0"
