@@ -124,9 +124,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                EnSpellCheck (Document document, View view)
+void                SpellCheck (Document document, View view)
 #else  /* __STDC__ */
-void                EnSpellCheck (document, view)
+void                SpellCheck (document, view)
 Document            document;
 View                view;
 
@@ -134,78 +134,37 @@ View                view;
 {
    AttributeType       attrType;
    Attribute           attr;
-   Element             root, el;
+   Element             root, el, body;
    ElementType         elType;
    int                 firstchar, lastchar;
 
-   /* enforce the English language for the whole document */
+   root = TtaGetMainRoot (document);
+   elType = TtaGetElementType (root);
+   elType.ElTypeNum = HTML_EL_BODY;
+   body = TtaSearchTypedElement (elType, SearchInTree, root);
+   if (body == NULL)
+      return;
+   /* if there is no Language attribute on the BODY, create one */
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_Langue;
-   root = TtaGetMainRoot (document);
-   attr = TtaGetAttribute (root, attrType);
+   attr = TtaGetAttribute (body, attrType);
    if (attr == NULL)
      {
 	/* create the Language attribute */
 	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (root, attr, document);
+	TtaAttachAttribute (body, attr, document);
+        TtaSetAttributeText (attr, "en", body, document);
      }
    /* get the current selection */
    TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   TtaSetAttributeText (attr, "English", root, document);
    if (el == NULL)
      {
 	/* no current selection in the document */
 	/* select the first character in the body */
-	elType = TtaGetElementType (root);
-	elType.ElTypeNum = HTML_EL_BODY;
-	el = TtaSearchTypedElement (elType, SearchInTree, root);
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	el = TtaSearchTypedElement (elType, SearchInTree, el);
-	TtaSelectString (document, el, 1, 0);
-     }
-   TtcSpellCheck (document, view);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FrSpellCheck (Document document, View view)
-#else  /* __STDC__ */
-void                FrSpellCheck (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
-{
-   AttributeType       attrType;
-   Attribute           attr;
-   Element             root, el;
-   ElementType         elType;
-   int                 firstchar, lastchar;
-
-   /* enforce the French language for the whole document */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-   attrType.AttrTypeNum = HTML_ATTR_Langue;
-   root = TtaGetMainRoot (document);
-   attr = TtaGetAttribute (root, attrType);
-   if (attr == NULL)
-     {
-	/* create the Language attribute */
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (root, attr, document);
-     }
-   /* get the current selection */
-   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   TtaSetAttributeText (attr, "Fran\347ais", root, document);
-   if (el == NULL)
-     {
-	/* no current selection in the document */
-	/* select the first character in the body */
-	elType = TtaGetElementType (root);
-	elType.ElTypeNum = HTML_EL_BODY;
-	el = TtaSearchTypedElement (elType, SearchInTree, root);
-	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	el = TtaSearchTypedElement (elType, SearchInTree, el);
-	TtaSelectString (document, el, 1, 0);
+	el = TtaSearchTypedElement (elType, SearchInTree, body);
+	if (el != NULL)
+	   TtaSelectString (document, el, 1, 0);
      }
    TtcSpellCheck (document, view);
 }

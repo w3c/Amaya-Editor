@@ -52,7 +52,7 @@
 #include "memory_f.h"
 #include "structmodif_f.h"
 #include "changepresent_f.h"
-
+#include "language_f.h"
 #include "writepivot_f.h"
 #include "references_f.h"
 #include "externalref_f.h"
@@ -1380,7 +1380,7 @@ PtrDocument         pDoc;
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {
 	TtaWriteByte (pivFile, (char) C_PIV_LANG);
-	PutName (pivFile, TtaGetLanguageName (pDoc->DocLanguages[i]));
+	PutName (pivFile, TtaGetLanguageCode (pDoc->DocLanguages[i]));
      }
 }
 

@@ -358,7 +358,7 @@ static oneLine      StartTagEndingElem[] =
    "CENTER closes FONT B I P P* HEAD",
    "A closes A",
    "CAPTION closes P P*",
-   "TABLE closes P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP",
+   "TABLE closes P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP A",
    "TH closes TH TD",
    "TD closes TH TD",
    "TR closes TH TD TR CAPTION",
@@ -442,6 +442,9 @@ static AttributeMapping AttributeMappingTable[] =
    {"HSPACE", "", 'A', HTML_ATTR_hspace},
    {"HTTP-EQUIV", "", 'A', HTML_ATTR_http_equiv},
    {"ISMAP", "", 'A', HTML_ATTR_ISMAP},
+#ifdef COUGAR
+   {"LANG", "", 'A', HTML_ATTR_Langue},
+#endif
    {"LINK", "", 'A', HTML_ATTR_LinkColor},
    {"MAXLENGTH", "", 'A', HTML_ATTR_MaxLength},
    {"METHOD", "", 'A', HTML_ATTR_METHOD},

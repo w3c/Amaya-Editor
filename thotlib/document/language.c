@@ -8,7 +8,7 @@
 /*----------------------------------------------------------------------
    
    Application Program Interface                     
-   --->Language managment                                          
+   Language management                                          
   ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
@@ -31,6 +31,235 @@ static char         StandardLANG[3];
 
 #include "thotmsg_f.h"
 
+
+/*	ISO 639 CODES ALPHABETIC BY LANGUAGE NAME (ENGLISH SPELLING) */
+
+typedef unsigned char aLangName[16];
+typedef struct _ISO639entry
+  {
+     aLangName	fullName;
+     aLangName	code;
+  }
+ISO639entry;
+
+ISO639entry	ISO639table[] =
+{
+   {"ABKHAZIAN",	"AB"},
+   {"AFAN (OROMO)",	"OM"},
+   {"AFAR",		"AA"},
+   {"AFRIKAANS",	"AF"},
+   {"ALBANIAN",		"SQ"},
+   {"AMHARIC",		"AM"},
+   {"ARABIC",		"AR"},
+   {"ARMENIAN",		"HY"},
+   {"ASSAMESE",		"AS"},
+   {"AYMARA",		"AY"},
+   {"AZERBAIJANI",	"AZ"},
+   {"BASHKIR",		"BA"},
+   {"BASQUE",		"EU"},
+   {"BENGALI",		"BN"},
+   {"BANGLA",		"BN"},
+   {"BHUTANI",		"DZ"},
+   {"BIHARI",		"BH"},
+   {"BISLAMA",		"BI"},
+   {"BRETON",		"BR"},
+   {"BULGARIAN",	"BG"},
+   {"BURMESE",		"MY"},
+   {"BYELORUSSIAN",	"BE"},
+   {"CAMBODIAN",	"KM"},
+   {"CATALAN",		"CA"},
+   {"CHINESE",		"ZH"},
+   {"CORSICAN",		"CO"},
+   {"CROATIAN",		"HR"},
+   {"CZECH",		"CS"},
+   {"DANISH",		"DA"},
+   {"Dutch",		"NL"},
+   {"English",		"EN"},
+   {"ESPERANTO",	"EO"},
+   {"ESTONIAN",		"ET"},
+   {"FAROESE",		"FO"},
+   {"FIJI",		"FJ"},
+   {"Finnish",		"FI"},
+   {"French",		"FR"},
+   {"FRISIAN",		"FY"},
+   {"GALICIAN",		"GL"},
+   {"GEORGIAN",		"KA"},
+   {"German",		"DE"},
+   {"Greek",		"EL"},
+   {"GREENLANDIC",	"KL"},
+   {"GUARANI",		"GN"},
+   {"GUJARATI",		"GU"},
+   {"HAUSA",		"HA"},
+   {"HEBREW",		"IW"},
+   {"HINDI",		"HI"},
+   {"HUNGARIAN",	"HU"},
+   {"ICELANDIC",	"IS"},
+   {"INDONESIAN",	"IN"},
+   {"INTERLINGUA",	"IA"},
+   {"INTERLINGUE",	"IE"},
+   {"INUPIAK",		"IK"},
+   {"IRISH",		"GA"},
+   {"Italian",		"IT"},
+   {"JAPANESE",		"JA"},
+   {"JAVANESE",		"JV"},
+   {"KANNADA",		"KN"},
+   {"KASHMIRI",		"KS"},
+   {"KAZAKH",		"KK"},
+   {"KINYARWANDA",	"RW"},
+   {"KIRGHIZ",		"KY"},
+   {"KURUNDI",		"RN"},
+   {"KOREAN",		"KO"},
+   {"KURDISH",		"KU"},
+   {"LAOTHIAN",		"LO"},
+   {"LATIN",		"LA"},
+   {"LATVIAN",		"LV"},
+   {"LETTISH",		"LV"},
+   {"LINGALA",		"LN"},
+   {"LITHUANIAN",	"LT"},
+   {"MACEDONIAN",	"MK"},
+   {"MALAGASY",		"MG"},
+   {"MALAY",		"MS"},
+   {"MALAYALAM",	"ML"},
+   {"MALTESE",		"MT"},
+   {"MAORI",		"MI"},
+   {"MARATHI",		"MR"},
+   {"MOLDAVIAN",	"MO"},
+   {"MONGOLIAN",	"MN"},
+   {"NAURU",		"NA"},
+   {"NEPALI",		"NE"},
+   {"NORWEGIAN",	"NO"},
+   {"OCCITAN",		"OC"},
+   {"ORIYA",		"OR"},
+   {"PASHTO",		"PS"},
+   {"PUSHTO",		"PS"},
+   {"PERSIAN",		"FA"},
+   {"POLISH",		"PL"},
+   {"Portuguese",	"PT"},
+   {"PUNJABI",		"PA"},
+   {"QUECHUA",		"QU"},
+   {"RHAETO-ROMANCE",	"RM"},
+   {"ROMANIAN",		"RO"},
+   {"RUSSIAN",		"RU"},
+   {"SAMOAN",		"SM"},
+   {"SANGHO",		"SG"},
+   {"SANSKRIT",		"SA"},
+   {"SCOTS GAELIC",	"GD"},
+   {"SERBIAN",		"SR"},
+   {"SERBO-CROATIAN",	"SH"},
+   {"SESOTHO",		"ST"},
+   {"SETSWANA",		"TN"},
+   {"SHONA",		"SN"},
+   {"SINDHI",		"SD"},
+   {"SINGHALESE",	"SI"},
+   {"SISWATI",		"SS"},
+   {"SLOVAK",		"SK"},
+   {"SLOVENIAN",	"SL"},
+   {"SOMALI",		"SO"},
+   {"Spanish",		"ES"},
+   {"SUNDANESE",	"SU"},
+   {"SWAHILI",		"SW"},
+   {"Swedish",		"SV"},
+   {"TAGALOG",		"TL"},
+   {"TAJIK",		"TG"},
+   {"TAMIL",		"TA"},
+   {"TATAR",		"TT"},
+   {"TELUGU",		"TE"},
+   {"THAI",		"TH"},
+   {"TIBETAN",		"BO"},
+   {"TIGRINYA",		"TI"},
+   {"TONGA",		"TO"},
+   {"TSONGA",		"TS"},
+   {"TURKISH",		"TR"},
+   {"TURKMEN",		"TK"},
+   {"TWI",		"TW"},
+   {"UKRAINIAN",	"UK"},
+   {"URDU",		"UR"},
+   {"UZBEK",		"UZ"},
+   {"VIETNAMESE",	"VI"},
+   {"VOLAPUK",		"VO"},
+   {"WELSH",		"CY"},
+   {"WOLOF",		"WO"},
+   {"XHOSA",		"XH"},
+   {"YIDDISH",		"JI"},
+   {"YORUBA",		"YO"},
+   {"ZULU",		"ZU"},
+   {"",			""}
+};
+
+
+ISO639entry	OldLangTable[] =
+{
+   {"American",		"EN-US"},
+   {"Deutsch",		"DE"},
+   {"Espa\361ol",	"ES"},
+   {"Fran\347ais",	"FR"},
+   {"ISO_latin_1",	"  "},
+   {"Italiano",		"IT"},
+   {"",			""}
+};
+
+/*----------------------------------------------------------------------
+   TtaGetLanguageNameFromCode
+   Returns the full name of a language whose RFC-1766 code is known
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char            *TtaGetLanguageNameFromCode (char *code)
+#else  /* __STDC__ */
+char            *TtaGetLanguageNameFromCode (code)
+char               *code;
+#endif /* __STDC__ */
+
+{
+   int                 i;
+
+   Langbuffer[0] = '\0';
+   for (i = 0; Langbuffer[0] == '\0'; i++)
+      if (ISO639table[i].code[0] == '\0')
+	    break;
+      else if (strcasecmp (code, ISO639table[i].code) == 0)
+	 strcpy (Langbuffer, ISO639table[i].fullName);
+   if (Langbuffer[0] == '\0')
+      for (i = 0; Langbuffer[0] == '\0'; i++)
+         if (OldLangTable[i].code[0] == '\0')
+	    break;
+         else
+            if (strcasecmp (code, OldLangTable[i].code) == 0)
+	       strcpy (Langbuffer, OldLangTable[i].fullName);
+   return Langbuffer;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGetLanguageCodeFromName
+   Returns the RFC-1766 code for a language whose name is known
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char            *TtaGetLanguageCodeFromName (char *name)
+#else  /* __STDC__ */
+char            *TtaGetLanguageCodeFromName (name)
+char               *name;
+#endif /* __STDC__ */
+
+{
+   int                 i;
+
+   Langbuffer[0] = '\0';
+   for (i = 0; Langbuffer[0] == '\0'; i++)
+      if (ISO639table[i].fullName[0] == '\0')
+	 break;
+      else
+         if (strcasecmp (name, ISO639table[i].fullName) == 0)
+	    strcpy (Langbuffer, ISO639table[i].code);
+   if (Langbuffer[0] == '\0')
+      for (i = 0; Langbuffer[0] == '\0'; i++)
+         if (OldLangTable[i].fullName[0] == '\0')
+	    break;
+         else
+            if (strcasecmp (name, OldLangTable[i].fullName) == 0)
+	       strcpy (Langbuffer, OldLangTable[i].code);
+   return Langbuffer;
+}
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -46,6 +275,7 @@ static void         InitTypoLanguage ()
    for (i = 0; i < MAX_LANGUAGES; i++)
      {
 	TypoLangTable[i].LangNom[0] = '\0';
+	TypoLangTable[i].LangCode[0] = '\0';
 	TypoLangTable[i].LangAlphabet = 'L';
 	for (j = 0; j < MAX_DICTS; j++)
 	   TypoLangTable[i].LangDict[j] = NULL;
@@ -99,10 +329,11 @@ void                InitLanguage ()
 {
    int                 i, j;
 
-   /* Initialization of the remaining of the table */
+   /* Initialization of remaining entries of the language table */
    for (i = 0; i < MAX_LANGUAGES; i++)
      {
 	LangTable[i].LangNom[0] = '\0';
+	LangTable[i].LangCode[0] = '\0';
 	LangTable[i].LangAlphabet = 'L';
 	for (j = 0; j < MAX_DICTS; j++)
 	   LangTable[i].LangDict[j] = NULL;
@@ -111,86 +342,100 @@ void                InitLanguage ()
      }
    /* Loading the default languages */
    strcpy (LangTable[0].LangNom, "ISO_latin_1");
+   strcpy (LangTable[0].LangCode, "  ");
    LangTable[0].LangAlphabet = 'L';
    strcpy (LangTable[0].LangPrincipal, "Usigle");
    strcpy (LangTable[0].LangSecondary, "Uname");
 
-   strcpy (LangTable[1].LangNom, "Fran\347ais");
+   strcpy (LangTable[1].LangNom, "French");
+   strcpy (LangTable[1].LangCode, "fr");
    LangTable[1].LangAlphabet = 'L';
    strcpy (LangTable[1].LangPrincipal, "Fprinc");
    strcpy (LangTable[1].LangSecondary, "Fperso");
    strcpy (LangTable[1].LangPattern, "francais.ptn");
 
    strcpy (LangTable[2].LangNom, "English");
+   strcpy (LangTable[2].LangCode, "en");
    LangTable[2].LangAlphabet = 'L';
    strcpy (LangTable[2].LangPrincipal, "Eprinc");
    strcpy (LangTable[2].LangSecondary, "Eperso");
    strcpy (LangTable[2].LangPattern, "english.ptn");
 
    strcpy (LangTable[3].LangNom, "American");
+   strcpy (LangTable[3].LangCode, "en-US");
    LangTable[3].LangAlphabet = 'L';
    strcpy (LangTable[3].LangPrincipal, "Eprinc");
    strcpy (LangTable[3].LangSecondary, "Eperso");
    strcpy (LangTable[3].LangPattern, "american.ptn");
 
-   strcpy (LangTable[4].LangNom, "Deutsch");
+   strcpy (LangTable[4].LangNom, "German");
+   strcpy (LangTable[4].LangCode, "de");
    LangTable[4].LangAlphabet = 'L';
    strcpy (LangTable[4].LangPrincipal, "Gprinc");
    LangTable[4].LangSecondary[0] = '\0';
    strcpy (LangTable[4].LangPattern, "deutsch.ptn");
 
-   strcpy (LangTable[5].LangNom, "Italiano");
+   strcpy (LangTable[5].LangNom, "Italian");
+   strcpy (LangTable[5].LangCode, "it");
    LangTable[5].LangAlphabet = 'L';
    strcpy (LangTable[5].LangPrincipal, "Iprinc");
    LangTable[5].LangSecondary[0] = '\0';
    strcpy (LangTable[5].LangPattern, "italiano.ptn");
 
-   strcpy (LangTable[6].LangNom, "Espa\361ol");
+   strcpy (LangTable[6].LangNom, "Spanish");
+   strcpy (LangTable[6].LangCode, "es");
    LangTable[6].LangAlphabet = 'L';
    strcpy (LangTable[6].LangPrincipal, "Sprinc");
    LangTable[6].LangSecondary[0] = '\0';
    strcpy (LangTable[6].LangPattern, "espanol.ptn");
 
    strcpy (LangTable[7].LangNom, "Portuguese");
+   strcpy (LangTable[7].LangCode, "pt");
    LangTable[7].LangAlphabet = 'L';
    LangTable[7].LangPrincipal[0] = '\0';
    LangTable[7].LangSecondary[0] = '\0';
    strcpy (LangTable[7].LangPattern, "portug.ptn");
 
    strcpy (LangTable[8].LangNom, "Dutch");
+   strcpy (LangTable[8].LangCode, "nl");
    LangTable[8].LangAlphabet = 'L';
    strcpy (LangTable[8].LangPrincipal, "Nprinc");
    LangTable[8].LangSecondary[0] = '\0';
    strcpy (LangTable[8].LangPattern, "nederl.ptn");
 
    strcpy (LangTable[9].LangNom, "Swedish");
+   strcpy (LangTable[9].LangCode, "sv");
    LangTable[9].LangAlphabet = 'L';
    strcpy (LangTable[9].LangPrincipal, "Wprinc");
    LangTable[9].LangSecondary[0] = '\0';
    strcpy (LangTable[9].LangPattern, "swedish.ptn");
 
    strcpy (LangTable[10].LangNom, "Finnish");
+   strcpy (LangTable[10].LangCode, "fi");
    LangTable[10].LangAlphabet = 'L';
    LangTable[10].LangPrincipal[0] = '\0';
    LangTable[10].LangSecondary[0] = '\0';
    strcpy (LangTable[10].LangPattern, "finish.ptn");
 
    strcpy (LangTable[11].LangNom, "Symbol");
+   strcpy (LangTable[11].LangCode, "");
    LangTable[11].LangAlphabet = 'G';
    LangTable[11].LangPrincipal[0] = '\0';
    LangTable[11].LangSecondary[0] = '\0';
 
    strcpy (LangTable[12].LangNom, "Greek");
+   strcpy (LangTable[12].LangCode, "el");
    LangTable[12].LangAlphabet = 'G';
    LangTable[12].LangPrincipal[0] = '\0';
    LangTable[12].LangSecondary[0] = '\0';
 
    FreeEntry = 13;
 
+   for (i = 1; i < FreeEntry; i++)
+       strcpy (LangTable[i].LangNom, TtaGetLanguageNameFromCode(LangTable[i].LangCode));
+
    InitTypoLanguage ();
 }
-
-
 
 
 /*----------------------------------------------------------------------
@@ -211,7 +456,7 @@ void                InitLanguage ()
    has no effect.
 
    Parameters:
-   languageName: name of the language.
+   languageName: name of the language according RFC 1766.
    languageAlphabet: alphabet to be used for writing that language:
    `L' for ISO-Latin-1, `G' for Symbol (Greek).
    principalDictionary: name of the principal dictionary or NULL.
@@ -247,15 +492,30 @@ char               *secondDictionary;
       TtaError (ERR_too_many_languages);
    else
      {
-	/* Consults the languages table to see if the language exists. */
-	for (i = 0; i < FreeEntry; i++)
-	   if (!strcmp (languageName, LangTable[i].LangNom))
+	if (strlen(languageName) == 2 ||
+	    languageName[1] == '-' || languageName[2] == '-')
+	   /* it's an ISO-639 code */
+	  {
+	  for (i = 0; i < FreeEntry; i++)
+	    if (!strcasecmp (languageName, LangTable[i].LangCode))
 	      /* The language is already defined */
 	      return i;
+	  strcpy (LangTable[FreeEntry].LangCode, languageName);
+	  strcpy (LangTable[FreeEntry].LangNom, TtaGetLanguageCodeFromName(languageName));
+	  }
+	else
+	  {
+	  /* Consults the languages table to see if the language exists. */
+	  for (i = 0; i < FreeEntry; i++)
+	    if (!strcasecmp (languageName, LangTable[i].LangNom))
+	      /* The language is already defined */
+	      return i;
+	  strcpy (LangTable[FreeEntry].LangNom, languageName);
+	  strcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageNameFromCode (languageName));
+	  }
 
 	/* Saves the new language */
 	i = FreeEntry;
-	strcpy (LangTable[i].LangNom, languageName);
 	LangTable[i].LangAlphabet = languageAlphabet;
 	if (principalDictionary != NULL)
 	  {
@@ -300,6 +560,7 @@ char               *languageName;
 {
    int                 i;
    boolean             again;
+   aLangName	       code;
 
    i = 0;
    /* Avoids error cases */
@@ -315,15 +576,18 @@ char               *languageName;
 	again = TRUE;
 	while (again && i < FreeEntry)
 	  {
-	     if (!strcmp (languageName, LangTable[i].LangNom))
+	     if (!strcasecmp (languageName, LangTable[i].LangCode))
 		/* The language is already defined */
 		again = FALSE;
 	     else
-		i++;
+		if (!strcasecmp (languageName, LangTable[i].LangNom))
+		   again = FALSE;
+		else
+		   i++;
 	  }
 	if (again)
 	  {
-	     /* The language dose not exist, saerch intoTYPO languages */
+	     /* The language dose not exist, search in TYPO languages */
 	     i = 0;
 	     while (again && i < FreeTypoEntry)
 	       {
@@ -333,7 +597,21 @@ char               *languageName;
 		  else
 		     i++;
 	       }
-	  }			/* end of if (again) */
+	  }
+	if (again)
+	  {
+	  strcpy (code, TtaGetLanguageCodeFromName (languageName));
+	  if (code[0] != '\0')
+	    {
+	    i = 0;
+	    while (again && i < FreeEntry)
+	      if (!strcasecmp (code, LangTable[i].LangCode))
+		 /* The language is already defined */
+		 again = FALSE;
+	      else
+		 i++;
+	    }
+	  }
 
 	if (again)
 	  {
@@ -360,8 +638,8 @@ char               *TtaGetVarLANG ()
 
    name = TtaGetEnvString ("LANG");
    if (name == NULL)
-      strcpy (StandardLANG, "fr");
-   else if (!strcmp (name, "C") || !strcmp (name, "iso_8859_1"))
+      strcpy (StandardLANG, "en");
+   else if (!strcmp (name, "C") || !strcasecmp (name, "iso_8859_1"))
       strcpy (StandardLANG, "fr");
    else
      {
@@ -382,26 +660,9 @@ char               *TtaGetVarLANG ()
 Language            TtaGetDefaultLanguage ()
 {
    char               *name;
-   char                language[MAX_NAME_LENGTH];
 
    name = TtaGetVarLANG ();
-   if (!strncmp (name, "fr", 2))
-      strcpy (language, "Fran\347ais");
-   else if (!strncmp (name, "en", 2))
-      strcpy (language, "English");
-   else if (!strncmp (name, "es", 2))
-      strcpy (language, "Espa\361ol");
-   else if (!strncmp (name, "it", 2))
-      strcpy (language, "Italiano");
-   else if (!strncmp (name, "de", 2))
-      strcpy (language, "Deutsch");
-   else if (!strncmp (name, "sv", 2))
-      strcpy (language, "Swedish");
-   else if (!strncmp (name, "pt", 2))
-      strcpy (language, "Portuguese");
-   else
-      strcpy (language, "English");
-   return TtaGetLanguageIdFromName (language);
+   return TtaGetLanguageIdFromName (name);
 }
 
 /*----------------------------------------------------------------------
@@ -529,6 +790,44 @@ Language            languageId;
       strcpy (Langbuffer, LangTable[i].LangNom);
    return Langbuffer;
 }				/*TtaGetLanguageName */
+
+
+/*----------------------------------------------------------------------
+   TtaGetLanguageCode
+
+   Not available for TYPO languages.
+
+   Returns the RFC-1766 code of a given language.
+
+   Parameters:
+   languageId: identifier of the language.
+
+   Return value:
+   the code of the language.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+char               *TtaGetLanguageCode (Language languageId)
+
+#else  /* __STDC__ */
+char               *TtaGetLanguageCode (languageId)
+Language            languageId;
+
+#endif /* __STDC__ */
+
+{
+   int                 i;
+
+   i = (int) languageId;
+   if (i >= FreeEntry)
+     {
+	TtaError (ERR_language_not_found);
+	Langbuffer[0] = '\0';
+     }
+   else
+      strcpy (Langbuffer, LangTable[i].LangCode);
+   return Langbuffer;
+}
 
 
 /*----------------------------------------------------------------------

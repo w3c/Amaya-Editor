@@ -767,7 +767,7 @@ Language            languageId;
 	if (LangTable[lang].LangPrincipal[0] != '\0')
 	  {
 	     ret = LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
-	     if (ret > 0)
+	     if (dictPtr != NULL)
 		LangTable[lang].LangDict[0] = (Dictionary) dictPtr;
 	  }
      }
@@ -779,7 +779,7 @@ Language            languageId;
 	if (LangTable[lang].LangSecondary[0] != '\0')
 	  {
 	     ret = LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
-	     if (ret > 0)
+	     if (dictPtr != NULL)
 		LangTable[lang].LangDict[1] = (Dictionary) dictPtr;
 	  }
      }

@@ -12,12 +12,16 @@ RULES
 
  HTML : BEGIN
 	Create '<!doctype html public "-//w3c//dtd html 3.2 final//en">\12';
-	Create '<html>\12';
+	Create '<html';
+	Create Attributes;
+	Create '>\12';
 	Create '</html>\12' After;
 	END;
 
  HEAD:	BEGIN
-	Create '<head>\12';
+	Create '<head';
+	Create Attributes;
+	Create '>\12';
 	Create '</head>\12' After;
 	END;
 
@@ -27,7 +31,9 @@ RULES
 	END;
 
  TITLE:	BEGIN
-	Create '<title>';
+	Create '<title';
+	Create Attributes;
+	Create '>\12';
 	Create '</title>\12' After;
 	END;
 
@@ -700,6 +706,14 @@ RULES
 	END;
 
 ATTRIBUTES
+
+#ifdef COUGAR
+ Langue: BEGIN
+	Create ' lang="';
+	Create Langue;
+	Create DoubleQuote;
+	END;
+#endif
 
  http_equiv: BEGIN
 	Create ' http-equiv="';

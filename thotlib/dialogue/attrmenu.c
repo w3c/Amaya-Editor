@@ -78,6 +78,7 @@ static PtrAttribute PtrReqAttr;
 #include "structschema_f.h"
 #include "content_f.h"
 #include "applicationapi_f.h"
+#include "language_f.h"
 
 /*----------------------------------------------------------------------
   InitFormLangue
@@ -114,12 +115,12 @@ PtrAttribute        currAttr;
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = strlen (bufMenu) + 1;
    strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
-   TtaNewSheet (NumFormLanguage,  0,
+   TtaNewSheet (NumFormLanguage, TtaGetViewFrame (doc, view),
      TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
    nbItem = 0;
    ptr = &bufMenu[0];
-   language = '\0';
+   language = 0;
    nbLanguages = TtaGetNumberOfLanguages ();
    for (nbItem = 0; nbItem < nbLanguages; nbItem++)
      {
@@ -165,7 +166,12 @@ PtrAttribute        currAttr;
    pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
    if (pHeritAttr != NULL)
       if (pHeritAttr->AeAttrText != NULL)
-	 strcat (Lab, pHeritAttr->AeAttrText->BuContent);
+	 {
+	 /* the attribute value is a RFC-1766 code. Convert it into */
+	 /* a language name */
+	 language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
+	 strcat (Lab, TtaGetLanguageName(language));
+	 }
 
    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, Lab);
    /* affiche le formulaire */
@@ -898,6 +904,8 @@ char               *txt;
 
 #endif /* __STDC__ */
 {
+   Language		i;
+
    switch (ref)
 	 {
 	    case NumSelectLanguage:
@@ -905,7 +913,10 @@ char               *txt;
 	       if (txt == NULL)
 		  TextAttrValue[0] = '\0';
 	       else
-		  strncpy (TextAttrValue, txt, LgMaxAttrText);
+		  {
+		  i = TtaGetLanguageIdFromName (txt);
+		  strncpy (TextAttrValue, TtaGetLanguageCode (i), LgMaxAttrText);
+		  }
 	       break;
 	    case NumFormLanguage:
 	       /* retour du formulaire lui-meme */

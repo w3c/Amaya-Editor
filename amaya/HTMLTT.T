@@ -954,8 +954,6 @@ ATTRIBUTES
  Invalid_attribute:
 	Create Invalid_attribute;
 
-#include "Text_SGML.inc"
-
 GraphTRANSLATE
 	BEGIN
 	'c' -> 'circle';

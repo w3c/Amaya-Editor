@@ -40,8 +40,7 @@ MENUS
 	Edit_ button:BClear -> TtcDeleteSelection;
 	Edit_ Separator;
 	Edit_ button:BFind -> TtcSearchText;
-	Edit_.SpellCheck button:BEnglish -> EnSpellCheck;
-	Edit_.SpellCheck button:BFrench -> FrSpellCheck;
+	Edit_ button:BSpellCheck -> SpellCheck;
 
 	view:2 StructTypes button:BIsIndex -> CreateIsIndex;
 	view:2 StructTypes button:BBase -> CreateBase;

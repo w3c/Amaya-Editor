@@ -586,7 +586,31 @@ BOXES
 	END;
 
 { ---- Style CSS end ---- }
+#ifdef COUGAR
+  ATTR_LANG: BEGIN
+	Content: Text ' lang=';
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
 
+  VALUE_LANG: BEGIN
+	Content: (Langue);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+#endif
  ATTR_HTTPEQUIV: BEGIN
 	Content: Text ' http-equiv=';
 	Visibility: 0;
@@ -5464,7 +5488,13 @@ RULES
 	END;
 
 ATTRIBUTES
-
+#ifdef COUGAR
+ Langue:
+	BEGIN
+	CreateBefore(ATTR_LANG);
+	CreateBefore(VALUE_LANG);
+	END;
+#endif
  HREF_:
 	BEGIN
 	CreateBefore(ATTR_HREF);
@@ -6699,8 +6729,5 @@ dans des paragraphes s affichent a cote de leur cadre...
   Error_type = BadPosition:
 	if LastAttr
 	   CreateAfter(INVALID_E);
-
-  Langue: BEGIN
-	END;
 
 END

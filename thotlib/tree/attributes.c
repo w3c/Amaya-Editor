@@ -757,7 +757,7 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
-   DeleteElement la presentation associee a l'attribut pAttr dans les	
+   Retire la presentation associee a l'attribut pAttr dans les	
    images de l'element pEl.					
    Si pCompAttr != NULL, les regles de presentation dependant	
    de la comparaison doivent prendre pCompAttr comme attribut de   
@@ -794,7 +794,7 @@ PtrAttribute        pCompAttr;
 }
 
 /*----------------------------------------------------------------------
-   DeleteElement du sous arbre pEl du document pDoc les  regles de	
+   Retire du sous arbre pEl du document pDoc les  regles de	
    	presentation heritees de l'attribut pAttr.			
    Si pEl porte lui-meme un attribut de type pAttr, on arrete.	
   ----------------------------------------------------------------------*/
@@ -845,7 +845,7 @@ PtrAttribute        pAttr;
 
 
 /*----------------------------------------------------------------------
-   DeleteElement du sous arbre pointe' par pEl du document pDoc les     
+   Retire du sous arbre pointe' par pEl du document pDoc les     
    regles de presentation provenant de la comparaison avec		
    l'attribut pAttr.						
    On arrete la recursion quand on rencontre un fils portant       

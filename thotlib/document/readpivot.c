@@ -82,6 +82,7 @@ static int          newColor[] =
 #include "content_f.h"
 #include "applicationapi_f.h"
 #include "labelalloc_f.h"
+#include "language_f.h"
 
 /*----------------------------------------------------------------------
    	PivotError							
@@ -1629,6 +1630,18 @@ PtrAttribute       *pAttr;
 			    }
 		       while (!error && !stop) ;
 		       pBT->BuLength--;
+		       /* convert old language names into RFC-1766 codes */
+		       if (attr == 1)
+			  /* language attribute */
+			  if (strlen(pPremBuff->BuContent) != 2 &&
+			      pPremBuff->BuContent[1] != '-' &&
+			      pPremBuff->BuContent[2] != '-')
+			    /* it's not a valid language code. Convert it */
+			    {
+			    strcpy (pPremBuff->BuContent,
+				    TtaGetLanguageCodeFromName (pPremBuff->BuContent));
+			    pBT->BuLength = strlen (pPremBuff->BuContent);
+			    }
 		    }
 		  break;
 	    }
@@ -3312,8 +3325,8 @@ PtrSSchema          pLoadedSS;
 
 
 /*----------------------------------------------------------------------
-   	rdTableLangues	lit la table des langues qui se trouve en tete	
-   		du fichier pivot.					
+   	ReadLanguageTablePiv
+	lit la table des langues qui se trouve en tete du fichier pivot.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__

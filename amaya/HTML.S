@@ -367,7 +367,6 @@ EXCEPT
 	AREA:		MoveResize;
 	Preformatted:	ReturnCreateNL;
 
-	Langue:		Invisible;
 	Style\240:	Invisible;
 	InternalLink:	Invisible;
 	WidthElement:	NewWidth;
