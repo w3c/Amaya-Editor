@@ -2420,7 +2420,7 @@ static void DeleteAFile (char *fileName)
 #ifndef _WX
     DeleteFile (fileName);
 #else /* _WX */
-    /* TODO */
+    return;/* TODO */
 #endif /* _WX */
 }
 #endif /* _WINDOWS */
