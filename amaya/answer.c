@@ -189,14 +189,15 @@ HTAlertPar         *reply;
   opens a form to request user confirmation on an action.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
- BOOL         AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum, const STRING dfault,
-				void *input, HTAlertPar * reply)
+ BOOL         AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
+			  const char * dfault,
+			  void *input, HTAlertPar * reply)
 #else  /* __STDC__ */
  BOOL         AHTConfirm (request, op, msgnum, dfault, input, reply)
 HTRequest          *request;
 HTAlertOpcode       op;
 int                 msgnum;
-const STRING       dfault;
+const char         *dfault;
 void               *input;
 HTAlertPar         *reply;
 
@@ -315,14 +316,15 @@ HTAlertPar         *reply;
   Initial value of *password is completely discarded.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
- BOOL         AHTPromptUsernameAndPassword (HTRequest * request, HTAlertOpcode op, int msgnum,
-			const STRING dfault, void *input, HTAlertPar * reply)
+ BOOL         AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op, int msgnum,
+					    const char *dfault, 
+					    void *input, HTAlertPar * reply)
 #else
 BOOL         AHTPromptUsernameAndPassword (request, op, msgnum, dfault, input reply)
 HTRequest          *request;
 HTAlertOpcode       op;
 int                 msgnum;
-const STRING        dfault;
+const char         *dfault;
 void               *input;
 HTAlertPar         *reply;
 
