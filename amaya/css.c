@@ -460,8 +460,7 @@ ThotBool        removed;
 		    /* remove presentation schemas */
 		    TtaRemovePSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
 		    pInfo->PiSchemas = pIS->PiSNext;
-		    if (removed)
-		      TtaFreeMemory (pIS);
+		    TtaFreeMemory (pIS);
 		  }
 	      }
 	  /* free the document context */

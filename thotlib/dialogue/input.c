@@ -1391,6 +1391,7 @@ CHAR_T*               appliname;
 		/* C'est une autre action Thot */
 		MemoKey (mod1, key1, mod2, key2, /*255+i */ 0, i);
 		/* On met a jour l'equivalent clavier */
+		TtaFreeMemory (MenuActionList[i].ActionEquiv);
 		MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
 	      }  
        } else {

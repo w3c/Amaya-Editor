@@ -329,12 +329,12 @@ int                 number;
    MenuActionList[CMD_DeletePrevChar].ActionName = "TtcDeletePreviousChar";
    MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) NULL;
    MenuActionList[CMD_DeletePrevChar].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_DeletePrevChar].ActionEquiv = "BackSpace";
+   MenuActionList[CMD_DeletePrevChar].ActionEquiv = TtaStrdup ("BackSpace");
 
    MenuActionList[CMD_DeleteSelection].ActionName = "TtcDeleteSelection";
    MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) NULL;
    MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_DeleteSelection].ActionEquiv = "Delete";
+   MenuActionList[CMD_DeleteSelection].ActionEquiv = TtaStrdup ("Delete");
 
    MenuActionList[CMD_PreviousChar].ActionName = "TtcPreviousChar";
    MenuActionList[CMD_PreviousChar].Call_Action = (Proc) TtcPreviousChar;
@@ -379,42 +379,42 @@ int                 number;
    MenuActionList[CMD_PageUp].ActionName = "TtcPageUp";
    MenuActionList[CMD_PageUp].Call_Action = (Proc) TtcPageUp;
    MenuActionList[CMD_PageUp].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageUp].ActionEquiv = "Prior";
+   MenuActionList[CMD_PageUp].ActionEquiv = TtaStrdup ("Prior");
 
    MenuActionList[CMD_PageDown].ActionName = "TtcPageDown";
    MenuActionList[CMD_PageDown].Call_Action = (Proc) TtcPageDown;
    MenuActionList[CMD_PageDown].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageDown].ActionEquiv = "Next";
+   MenuActionList[CMD_PageDown].ActionEquiv = TtaStrdup ("Next");
 
    MenuActionList[CMD_PageTop].ActionName = "TtcPageTop";
    MenuActionList[CMD_PageTop].Call_Action = (Proc) TtcPageTop;
    MenuActionList[CMD_PageTop].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageTop].ActionEquiv = "Home";
+   MenuActionList[CMD_PageTop].ActionEquiv = TtaStrdup ("Home");
 
    MenuActionList[CMD_PageEnd].ActionName = "TtcPageEnd";
    MenuActionList[CMD_PageEnd].Call_Action = (Proc) TtcPageEnd;
    MenuActionList[CMD_PageEnd].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageEnd].ActionEquiv = "End";
+   MenuActionList[CMD_PageEnd].ActionEquiv = TtaStrdup ("End");
 
    MenuActionList[CMD_LineUp].ActionName = "TtcLineUp";
    MenuActionList[CMD_LineUp].Call_Action = (Proc) TtcLineUp;
    MenuActionList[CMD_LineUp].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_LineUp].ActionEquiv = "C Left";
+   MenuActionList[CMD_LineUp].ActionEquiv = TtaStrdup ("C Left");
 
    MenuActionList[CMD_LineDown].ActionName = "TtcLineDown";
    MenuActionList[CMD_LineDown].Call_Action = (Proc) TtcLineDown;
    MenuActionList[CMD_LineDown].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_LineDown].ActionEquiv = "C Down";
+   MenuActionList[CMD_LineDown].ActionEquiv = TtaStrdup ("C Down");
 
    MenuActionList[CMD_ScrollRight].ActionName = "TtcScrollRight";
    MenuActionList[CMD_ScrollRight].Call_Action = (Proc) TtcScrollRight;
    MenuActionList[CMD_ScrollRight].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_ScrollRight].ActionEquiv = "C Right";
+   MenuActionList[CMD_ScrollRight].ActionEquiv = TtaStrdup ("C Right");
 
    MenuActionList[CMD_ScrollLeft].ActionName = "TtcScrollLeft";
    MenuActionList[CMD_ScrollLeft].Call_Action = (Proc) TtcScrollLeft;
    MenuActionList[CMD_ScrollLeft].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_ScrollLeft].ActionEquiv = "C Left";
+   MenuActionList[CMD_ScrollLeft].ActionEquiv = TtaStrdup ("C Left");
 
    MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
    MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
@@ -458,11 +458,10 @@ void    FreeMenus ()
   int                 i;
 
   /* free menu actions */
+   for (i = 0; i < FreeMenuAction; i++)
+     TtaFreeMemory (MenuActionList[i].ActionEquiv);
    for (i = MAX_INTERNAL_CMD; i < FreeMenuAction; i++)
-     {
-       TtaFreeMemory (MenuActionList[i].ActionName);
-       TtaFreeMemory (MenuActionList[i].ActionEquiv);
-     }
+     TtaFreeMemory (MenuActionList[i].ActionName);
   TtaFreeMemory (MenuActionList);
   FreeMenuAction = 0;
 
