@@ -196,8 +196,8 @@ interpreter):</p>
 % <strong>perl config/winConfigure.pl</strong></pre>
 
 <p>Windows people are now done and can jump directly to the instructions for
-<a href="SourceDist.html#Installation">how to compile Amaya</a>. On Unix, you
-need two additional steps.</p>
+<a href="http://www.w3.org/Amaya/User/SourceDist.html#Installation">how to 
+compile Amaya</a>. On Unix, you need two additional steps.</p>
 
 <h3><a name="More">2. Generate Makefile (Unix only)</a></h3>
 
@@ -227,7 +227,8 @@ href="http://lists.w3.org/Archives/Public/www-amaya/">archives</a>) for
 information of new features as well as discussions of problems and ideas.</p>
 
 <p>Congratulations - you are now ready to <a
-href="SourceDist.html#Installing">configure and compile Amaya</a>!</p>
+href="http://www.w3.org/Amaya/User/SourceDist.html#Installing">configure and
+compile Amaya</a>!</p>
 
 <p></p>
 <hr>
