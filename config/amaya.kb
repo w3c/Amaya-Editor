@@ -44,8 +44,8 @@
 <Key>Backspace:     TtcDeletePreviousChar() 
 <Key>F2:            TtcParentElement()
 <Key>Return:        TtcCreateElement() 
-<Key>Home:          TtcStartOfLine() 
 <Key>End:           TtcEndOfLine()
+<Key>Home:          TtcStartOfLine() 
 #Following commented out to remember default actions
 #<Key>Up:           TtcPreviousLine() 
 #<Key>Down:         TtcNextLine() 
