@@ -68,6 +68,22 @@ extern int TtaAddToolBarButton ( int window_id,
                                  char * functionName,
                                  void (*procedure) (),
                                  ThotBool status );
+extern void TtaRefreshPanelButton ( Document doc,
+                                    View view,
+                                    int panel_type );
+extern void TtaSwitchPanelButton ( Document doc,
+                                   View view,
+                                   int panel_type,
+                                   int button_id );
+extern void TtaSetupPanel ( int panel_type,
+                            int window_id,
+                            int button_id,
+                            const char * tooltip,
+                            void (*procedure) () );
+extern void TtaRefreshPanelTooltips ( int window_id );
+extern void APP_Callback_PanelButtonActivate ( int type,
+                                               int frame_id,
+                                               int button_id );
 extern ThotBool TtaRegisterWidgetWX ( int ref,
                                       void * p_widget );
 
@@ -135,6 +151,22 @@ extern int TtaAddToolBarButton ( int window_id,
                                    char * functionName,
                                    void (*procedure) (),
                                    ThotBool status );
+extern void TtaRefreshPanelButton ( Document doc,
+                                      View view,
+                                      int panel_type );
+extern void TtaSwitchPanelButton ( Document doc,
+                                     View view,
+                                     int panel_type,
+                                     int button_id );
+extern void TtaSetupPanel ( int panel_type,
+                              int window_id,
+                              int button_id,
+                              const char * tooltip,
+                              void (*procedure) () );
+extern void TtaRefreshPanelTooltips ( int window_id );
+extern void APP_Callback_PanelButtonActivate ( int type,
+                                                 int frame_id,
+                                                 int button_id );
 extern ThotBool TtaRegisterWidgetWX ( int ref,
                                         void * p_widget );
 

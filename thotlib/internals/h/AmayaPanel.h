@@ -10,6 +10,10 @@
     #include "wx/panel.h"
 #endif
 
+
+class AmayaXHTMLPanel;
+class AmayaNormalWindow;
+
 /*
  *  Description:  - AmayaPanel contains a panel (bookmarks, elemets, attributes ...)
  *  
@@ -55,9 +59,11 @@
 
 class AmayaPanel : public wxPanel
 {
-public:
-  AmayaPanel(   // int            panel_id
-      		wxWindow *     p_parent_window = NULL
+ public:
+  DECLARE_DYNAMIC_CLASS(AmayaPanel)
+    
+  AmayaPanel(   wxWindow *     p_parent_window = NULL
+		,AmayaNormalWindow * p_parent_nwindow = NULL
 		,wxWindowID     id = -1
 	        ,const wxPoint& pos  = wxDefaultPosition
 	        ,const wxSize&  size = wxDefaultSize
@@ -65,11 +71,22 @@ public:
 	      );
   virtual ~AmayaPanel();
 
+  void ShowWhenUnsplit( bool show );
+
+  AmayaXHTMLPanel * GetXHTMLPanel() const;
+  void RefreshToolTips();
+
  protected:
-//  DECLARE_EVENT_TABLE()
+  DECLARE_EVENT_TABLE()
+  void OnClose( wxCommandEvent& event );
+
+ protected:
   int          m_PanelId;        // amaya panel id
   int          m_ParentWindowId; // amaya parent window id
+  AmayaNormalWindow * m_pParentNWindow  ;
 
+  AmayaXHTMLPanel *  m_pPanel_xhtml;
+  wxPanel *        m_pTitlePanel;
 };
 
 #endif // __AMAYAPANEL_H__

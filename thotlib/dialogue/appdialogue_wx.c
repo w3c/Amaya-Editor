@@ -16,10 +16,9 @@
 #include "application.h"
 #include "appdialogue_wx.h"
 #include "windowtypes_wx.h"
-#ifdef _WX
-  #include "message_wx.h"
-  #include "registry_wx.h"
-#endif /* _WX */
+#include "paneltypes_wx.h"
+#include "message_wx.h"
+#include "registry_wx.h"
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
@@ -42,6 +41,9 @@
 #include "AmayaPage.h"
 #include "AmayaToolBar.h"
 #include "AmayaNotebook.h"
+#include "AmayaPanel.h"
+#include "AmayaSubPanel.h"
+#include "AmayaXHTMLPanel.h"
 
 /* 
  * In this file there is a list of functions useful
@@ -1109,6 +1111,200 @@ int TtaAddToolBarButton( int window_id,
   return 0;
 #endif /* _WX */
 }
+
+/*----------------------------------------------------------------------
+  TtaRefreshPanelButton - 
+  refresh the button widgets of the frame's panel
+  params:
+    + panel_type : the panel type
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaRefreshPanelButton( Document doc, View view, int panel_type )
+{
+#ifdef _WX
+  int frame_id = -1;
+  if (doc == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame_id = GetWindowNumber (doc, view);
+      if (frame_id <= 0 || frame_id > MAX_FRAME)
+	TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame_id].WdFrame != 0 && FrameTable[frame_id].WdFrame->IsActive())
+	{
+	  /* get the frame's window parent */
+	  AmayaWindow * p_window = TtaGetWindowFromId( FrameTable[frame_id].FrWindowId );
+	  wxASSERT( p_window );
+	  if ( !p_window )
+	    return;
+	  /* get the window's panel */
+	  AmayaPanel * p_panel = p_window->GetAmayaPanel();
+	  wxASSERT( p_panel );
+	  if ( !p_panel )
+	    return;
+
+	  /* get the subpanel depending on panel_type */
+	  AmayaSubPanel * p_subpanel = NULL;
+	  bool * p_checked_array     = NULL;
+	  switch (panel_type)
+	    {
+	    case WXAMAYA_PANEL_XHTML:
+	      p_subpanel      = p_panel->GetXHTMLPanel();
+	      p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
+	      break;
+	    }
+	  wxASSERT( p_subpanel );
+	  if (!p_subpanel)
+	    return;
+
+	  /* refresh the subpanel with button stats */
+	  p_subpanel->RefreshCheckButtonState( p_checked_array );
+	}
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaSwitchPanelButton - 
+  switch on/off a button in a given panel
+  params:
+    + panel_type : the panel type
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaSwitchPanelButton( Document doc, View view,
+			   int panel_type,
+			   int button_id )
+{
+#ifdef _WX
+  int frame_id = -1;
+  if (doc == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame_id = GetWindowNumber (doc, view);
+      if (frame_id <= 0 || frame_id > MAX_FRAME)
+	TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame_id].WdFrame != 0)
+	{
+	  bool * p_enable_array  = NULL;
+	  bool * p_checked_array = NULL;
+
+	  switch (panel_type)
+	    {
+	    case WXAMAYA_PANEL_XHTML:
+	      p_enable_array  = FrameTable[frame_id].EnabledButton_Panel_XHTML;
+	      p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
+	      break;
+	    }
+
+	  /* switch the button */
+	  if (p_checked_array)
+	    {
+	      bool status = p_checked_array[button_id];
+	      p_checked_array[button_id] = !status;
+	      TtaRefreshPanelButton( doc, view, panel_type );
+	    }
+	}
+    }
+#endif /* _WX */
+}
+
+
+/*----------------------------------------------------------------------
+  TtaSetupPanel - 
+  init the panel for the given window
+  params:
+    + type : the panel type
+    + window_id : window identifier
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaSetupPanel( int panel_type,
+		    int window_id,
+		    int button_id,
+		    const char * tooltip,
+		    void (*procedure) () )
+{
+#ifdef _WX
+  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
+  wxASSERT( p_window );
+  if ( !p_window || p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
+    return;
+
+  // register the callback
+  switch (panel_type)
+    {
+    case WXAMAYA_PANEL_XHTML:
+      WindowTable[window_id].Tooltip_Panel_XHTML[button_id] = tooltip;
+      WindowTable[window_id].Call_Panel_XHTML[button_id]    = procedure;
+      break;
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaRefreshPanelTooltips
+  this function refresh the window's panel tooltips because the tooltips
+  tables is filled after windows (and panel) creation
+  params:
+    + window_id : the window to refresh (1 window = 1 panel)
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaRefreshPanelTooltips( int window_id )
+{
+#ifdef _WX
+  /* get window */
+  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
+  wxASSERT( p_window );
+  if ( !p_window )
+    return;
+  
+  /* get panel's window */
+  AmayaPanel * p_panel = p_window->GetAmayaPanel();
+  wxASSERT( p_panel );
+  if ( !p_panel )
+    return;  
+  
+  /* refresh panel tooltips */
+  p_panel->RefreshToolTips();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  APP_Callback_PanelButtonActivate - this callback is activated when a tool has been pressed
+  params:
+    + frame_id : frame identifier (current active frame)
+    + button_id : the button position
+  returns:
+  ----------------------------------------------------------------------*/
+void APP_Callback_PanelButtonActivate (int type, int frame_id, int button_id)
+{
+#ifdef _WX
+  Document            document;
+  View                view;
+
+  if ( button_id < MAX_BUTTON &&
+       button_id >= 0 )
+    {
+      // get the parent window
+      int window_id = FrameTable[frame_id].FrWindowId;
+      if ( window_id < 0 )
+	return; /* there is no parents */
+
+      CloseTextInsertion ();
+      FrameToView (frame_id, &document, &view);
+      TtaSetButtonActivatedStatus (TRUE);
+      switch (type)
+	{
+	case WXAMAYA_PANEL_XHTML:
+	  if (WindowTable[window_id].Call_Panel_XHTML[button_id])
+	    (*(Proc2)WindowTable[window_id].Call_Panel_XHTML[button_id]) ((void *)document, (void *)view);
+	  break;
+	}
+      TtaSetButtonActivatedStatus (FALSE);
+    }
+#endif /* _WX */
+}
+
 
 /*----------------------------------------------------------------------
   TtaRegisterWidgetWX - 

@@ -113,8 +113,11 @@ typedef struct _Frame_Ctl {
   ThotMenu   WdMenus[MAX_MENU];         /* List of menu Widgets              */
   ThotBool   EnabledMenus[MAX_MENU];    /* Enabled menus                     */
 
-  ThotBool   		EnabledButton[MAX_BUTTON]; /* Enabled toolbar buttons           */
-  ThotBool   		CheckedButton[MAX_BUTTON]; /* Checked toolbar buttons           */  
+  ThotBool   EnabledButton[MAX_BUTTON]; /* Enabled toolbar buttons           */
+  ThotBool   CheckedButton[MAX_BUTTON]; /* Checked toolbar buttons           */  
+
+  bool       EnabledButton_Panel_XHTML[MAX_BUTTON]; /* Enabled XHTML panel buttons           */
+  bool       CheckedButton_Panel_XHTML[MAX_BUTTON]; /* Checked XHTML panel buttons           */  
 
   Proc       Call_Text;                 /* This is the callback which is called when a url is activated */
   
@@ -141,9 +144,12 @@ typedef struct _Window_Ctl {
   AmayaWindow * WdWindow;               /* Widget of the wxWidgets window    */  
   ThotStatusBar WdStatus;               /* Widget of the window status bar   */
 
+  
   ThotControl 	Button[MAX_BUTTON];               /* List of toolbar button Widgets */
   Proc          Call_Button[MAX_BUTTON];          /* List of toolbar button Callbacks  */
-  Proc          Call_Text;                        /* This is the callback which is called when a url is activated */
+
+  Proc          Call_Panel_XHTML[MAX_BUTTON];     /* callbacks for XHTML panel */
+  const char *  Tooltip_Panel_XHTML[MAX_BUTTON];  /* tooltips for XHTML panel */
 
 } Window_Ctl;
 

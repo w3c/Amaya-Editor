@@ -5,12 +5,8 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-extern List *RDF_parseFile ( char *file_name,
-                             List **rdf_model );
 
 #else /* __STDC__ */
-extern List *RDF_parseFile ( char *file_name,
-                               List **rdf_model );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxPanel" name="wxID_TITLEPANEL">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_TOOLS">
+              <label>Tools</label>
+            </object>
+            <option>0</option>
+            <flag>wxALIGN_CENTRE</flag>
+          </object>
+          <object class="spacer">
+            <option>1</option>
+            <flag>wxEXPAND</flag>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_CLOSE">
+              <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+            </object>
+            <option>0</option>
+            <flag>wxALIGN_CENTRE</flag>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxPanel">
+          <size>-1,2</size>
+          <fg>#000000</fg>
+          <bg>#000000</bg>
+        </object>
+        <flag>wxEXPAND</flag>
+      </object>
+    </object>
+  </object>
+</resource>

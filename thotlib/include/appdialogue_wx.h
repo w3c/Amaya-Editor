@@ -38,7 +38,17 @@ extern int TtaAddToolBarButton( int window_id,
 				char * functionName,
 				void (*procedure) (),
 				ThotBool status );
+extern void TtaSetupPanel( int type,
+			   int window_id,
+			   int button_id,
+			   const char * tooltip,
+			   void (*procedure) () );
 
+extern void TtaSwitchPanelButton( Document doc, View view,
+				  int panel_type,
+				  int button_id );
+
+extern void TtaRefreshPanelTooltips( int window_id );
 
 #endif /* #define __APPDIALOGUE_WX_H__ */
 

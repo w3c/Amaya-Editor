@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -120,6 +119,7 @@ extern void ShowLinks ( Document doc,
                         View view );
 extern void ShowToC ( Document doc,
                       View view );
+extern ThotBool RequestView ( NotifyDialog *event );
 extern ThotBool ViewToClose ( NotifyDialog *event );
 extern void GetAmayaDoc_callback ( int newdoc,
                                    int status,
@@ -175,7 +175,6 @@ extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 
 #else /* __STDC__ */
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -290,6 +289,7 @@ extern void ShowLinks ( Document doc,
                           View view );
 extern void ShowToC ( Document doc,
                         View view );
+extern ThotBool RequestView ( NotifyDialog *event );
 extern ThotBool ViewToClose ( NotifyDialog *event );
 extern void GetAmayaDoc_callback ( int newdoc,
                                      int status,

@@ -42,6 +42,7 @@
 #include "AmayaCallback.h"
 #include "AmayaURLBar.h"
 #include "AmayaToolBar.h"
+#include "AmayaPanel.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
 
@@ -67,7 +68,8 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_WindowId( window_id ),
   m_IsClosing( FALSE ),
   m_Kind( kind ),
-  m_ShouldCleanUp( false )
+  m_ShouldCleanUp( false ),
+  m_ActiveFrameId( 0 )
 {
   wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
 }
@@ -440,6 +442,40 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
     }
 
   event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetAmayaPanel
+ * Description:  return the window's panel (exist only on AmayaNormalWindow)
+ *--------------------------------------------------------------------------------------
+ */
+AmayaPanel * AmayaWindow::GetAmayaPanel() const
+{
+  return NULL;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  ClosePanel
+ * Description:  close the side panel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::ClosePanel()
+{
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OpenPanel
+ * Description:  open the side panel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::OpenPanel()
+{
 }
 
 

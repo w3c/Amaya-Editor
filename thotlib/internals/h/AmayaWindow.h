@@ -19,6 +19,8 @@ class AmayaNotebook;
 class AmayaCParam;
 class AmayaURLBar;
 class AmayaToolBar;
+class AmayaPanel;
+
 #include "windowtypes_wx.h"
 
 #define MAX_DOC 50
@@ -93,6 +95,10 @@ class AmayaWindow : public wxFrame
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
 
+  virtual AmayaPanel * GetAmayaPanel() const;
+  virtual void ClosePanel();
+  virtual void OpenPanel();
+
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
@@ -143,6 +149,7 @@ class AmayaWindow : public wxFrame
   bool              m_IsClosing;
   bool              m_ShouldCleanUp;
   static int        m_ActiveWindowId;
+  int               m_ActiveFrameId;
 };
 
 #endif // __AMAYAWINDOW_H__

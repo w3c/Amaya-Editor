@@ -6,6 +6,8 @@
 #include "AmayaWindow.h"
 #include "windowtypes_wx.h"
 
+class AmayaQuickSplitButton;
+
 /*
  * =====================================================================================
  *        Class:  AmayaNormalWindow
@@ -93,20 +95,27 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void     SetEnableURL( bool urlenabled );
   virtual void     SetupURLBar();
 
+  AmayaPanel * GetAmayaPanel() const;
+  void ClosePanel();
+  void OpenPanel();
+  
  protected:
   void OnClose( wxCloseEvent& event );
   void OnMenuItem( wxCommandEvent& event );
-  void OnSplitterUnsplit( wxSplitterEvent& event );
   void OnMenuClose( wxMenuEvent& event );
   void OnMenuOpen( wxMenuEvent& event );
+  void OnSplitterUnsplit( wxSplitterEvent& event );
+  void OnSplitterDClick( wxSplitterEvent& event );
+  void OnSplitterPosChanged( wxSplitterEvent& event );
+  void OnSplitPanelButton( wxCommandEvent& event );
 
  protected:
   DECLARE_EVENT_TABLE()
   
-//  AmayaPanel *      m_aPanels[4];        // avalaible panels
-  AmayaPanel *      m_pCurrentPanel;     // current selected panel
+  AmayaPanel *      m_pPanel;     // current selected panel
   AmayaNotebook *   m_pNotebook;         // tabs container
-  float             m_SlashRatio; // 0.5 => page is half splitted  
+  wxPanel *         m_pNotebookPanel;
+  int               m_SlashPos;          // the slash pos in pixel
 
   bool         m_IsFullScreenEnable;
   bool         m_IsToolTipEnable;
@@ -118,6 +127,8 @@ class AmayaNormalWindow : public AmayaWindow
   wxSplitterWindow * m_pSplitterWindow;  
   AmayaURLBar *	     m_pURLBar;
   AmayaToolBar *     m_pToolBar;
+
+  AmayaQuickSplitButton * m_pSplitPanelButton;
 };
 
 #endif // __AMAYANORMALWINDOW_H__

@@ -222,7 +222,11 @@ EDITOR_OBJ = \
 	dialogue/AmayaWindow.o \
 	dialogue/AmayaSimpleWindow.o \
 	dialogue/AmayaNormalWindow.o \
+	dialogue/AmayaQuickSplitButton.o \
 	dialogue/AmayaPanel.o \
+	dialogue/AmayaSubPanel.o \
+	dialogue/AmayaFloatingPanel.o \
+	dialogue/AmayaXHTMLPanel.o \
 	dialogue/AmayaPage.o \
 	dialogue/AmayaFrame.o \
 	dialogue/AmayaCanvas.o \

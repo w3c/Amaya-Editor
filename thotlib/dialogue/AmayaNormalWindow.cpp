@@ -42,6 +42,7 @@
 #include "AmayaCallback.h"
 #include "AmayaURLBar.h"
 #include "AmayaToolBar.h"
+#include "AmayaQuickSplitButton.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
 
@@ -58,44 +59,51 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
 					,const wxSize&  size
 					) : 
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL ),
-  m_SlashRatio( 0.20 ),
   m_pURLBar( NULL ),
-  m_pDummyMenuBar( NULL )
+  m_pDummyMenuBar( NULL ),
+  m_SlashPos( 115 )
 {
   // Create a splitted vertical window
   m_pSplitterWindow = new wxSplitterWindow( this, -1,
                       		            wxDefaultPosition, wxDefaultSize,
-                     		            wxSP_3DBORDER | wxSP_PERMIT_UNSPLIT );
-  m_pSplitterWindow->SetMinimumPaneSize( 50 );
+                     		            wxSP_3DSASH | wxSP_3D | wxSP_3DBORDER /*| wxSP_PERMIT_UNSPLIT*/ );
+  m_pSplitterWindow->SetMinimumPaneSize( 100 );
   
   // Create a background panel to contains the notebook
-  wxPanel * p_NotebookPanel = new wxPanel( m_pSplitterWindow, -1, wxDefaultPosition, wxDefaultSize,
-        wxTAB_TRAVERSAL | wxCLIP_CHILDREN | wxNO_BORDER);
+  m_pNotebookPanel = new wxPanel( m_pSplitterWindow, -1, wxDefaultPosition, wxDefaultSize,
+				  wxTAB_TRAVERSAL | wxCLIP_CHILDREN | wxNO_BORDER);
 
   // Create the notebook with its special sizer
-  m_pNotebook                              = new AmayaNotebook( p_NotebookPanel, this );
+  m_pNotebook                              = new AmayaNotebook( m_pNotebookPanel, this );
   wxNotebookSizer * p_SpecialNotebookSizer = new wxNotebookSizer( m_pNotebook );
 
   // Create a sizer to layout the notebook in the panel
   wxBoxSizer * p_NotebookSizer             = new wxBoxSizer ( wxHORIZONTAL );
   p_NotebookSizer->Add(p_SpecialNotebookSizer, 1, wxEXPAND | wxALL, 0);
-  p_NotebookPanel->SetSizer(p_NotebookSizer);
-  p_NotebookPanel->Layout();
+  m_pNotebookPanel->SetSizer(p_NotebookSizer);
+  m_pNotebookPanel->Layout();
   
   // Create a AmayaPanel to contains commands shortcut
-  m_pCurrentPanel = new AmayaPanel( m_pSplitterWindow );
+  m_pPanel = new AmayaPanel( m_pSplitterWindow, this, -1, wxDefaultPosition, wxDefaultSize,  wxTAB_TRAVERSAL | wxRAISED_BORDER | wxCLIP_CHILDREN );
 
   // Split the Notebook and the AmayaPanel
   m_pSplitterWindow->SplitVertically(
-      m_pCurrentPanel,
-      p_NotebookPanel,
-      (int)(m_SlashRatio*((float)GetSize().GetWidth())) );  
+      m_pPanel,
+      m_pNotebookPanel,
+      m_SlashPos );  
 
-  // for the moment unsplit the panel : it's not ready to used it
-  m_pSplitterWindow->Unsplit( m_pCurrentPanel );
+  // by default close the side panel 
+  ClosePanel();
 
   // Creation of frame sizer to contains differents frame areas
   wxBoxSizer * p_SizerFrame = new wxBoxSizer ( wxHORIZONTAL );
+
+  // create the quick split button used to show/hide the panel
+  m_pSplitPanelButton = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_VERTICAL, 5 );
+  p_SizerFrame->Add( m_pSplitPanelButton, 0, wxEXPAND, 0 );
+  m_pSplitPanelButton->ShowQuickSplitButton( true );
+  
+  // add the splitter window to the top sizer : panel + notebook
   p_SizerFrame->Add( m_pSplitterWindow, 1, wxEXPAND );
   
   // Create the toolbar
@@ -688,6 +696,111 @@ void AmayaNormalWindow::OnMenuClose( wxMenuEvent& event )
   event.Skip();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnSplitterPosChanged
+ * Description:  this method is called when the splitter position has changed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::OnSplitterPosChanged( wxSplitterEvent& event )
+{
+  wxLogDebug( _T("AmayaNormalWindow::OnSplitterPosChanged now = %d"), event.GetSashPosition() );
+  m_SlashPos = event.GetSashPosition();
+  //  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnSplitterDClick
+ * Description:  called when a double click is done on the splitbar
+ *               detach the panel area (hide it)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::OnSplitterDClick( wxSplitterEvent& event )
+{
+  wxLogDebug( _T("AmayaNormalWindow::OnSplitterDClick") );
+  m_pSplitterWindow->Unsplit( m_pPanel );
+  m_pPanel->ShowWhenUnsplit( false );
+  //  event.Skip();  
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnSplitPanelButton
+ * Description:  this method is called when the button for quick split is pushed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::OnSplitPanelButton( wxCommandEvent& event )
+{
+  if ( event.GetId() != m_pSplitPanelButton->GetId() )
+    {
+      event.Skip();
+      return;
+    }
+
+  wxLogDebug( _T("AmayaNormalWindow::OnSplitPanelButton") );
+
+  if (!m_pSplitterWindow->IsSplit())
+    OpenPanel();
+  else
+    ClosePanel();
+
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  ClosePanel
+ * Description:  close the side panel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::ClosePanel()
+{
+  wxLogDebug( _T("AmayaNormalWindow::ClosePanel") );
+
+  if (m_pSplitterWindow->IsSplit())
+    {
+      m_pSplitterWindow->Unsplit( m_pPanel );
+      m_pPanel->ShowWhenUnsplit( false );
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OpenPanel
+ * Description:  open the side panel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::OpenPanel()
+{
+  wxLogDebug( _T("AmayaNormalWindow::OpenPanel") );
+  
+  if (!m_pSplitterWindow->IsSplit())
+    {
+      m_pSplitterWindow->SplitVertically( m_pPanel,
+					  m_pNotebookPanel,
+					  m_SlashPos ); 
+      m_pPanel->ShowWhenUnsplit( true );
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  GetAmayaPanel
+ * Description:  return the window's panel (exists only on AmayaNormalWindow)
+ *--------------------------------------------------------------------------------------
+ */
+AmayaPanel * AmayaNormalWindow::GetAmayaPanel() const
+{
+  return m_pPanel;
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -697,6 +810,11 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_MENU_CLOSE( AmayaNormalWindow::OnMenuClose )
   EVT_MENU( -1,   AmayaNormalWindow::OnMenuItem ) 
   EVT_CLOSE(      AmayaNormalWindow::OnClose )
+
+  EVT_SPLITTER_SASH_POS_CHANGED( -1, 	AmayaNormalWindow::OnSplitterPosChanged )
+  EVT_SPLITTER_DCLICK( -1, 		AmayaNormalWindow::OnSplitterDClick )
+
+  EVT_BUTTON( -1,                       AmayaNormalWindow::OnSplitPanelButton)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

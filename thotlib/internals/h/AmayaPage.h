@@ -10,6 +10,7 @@
 
 class AmayaFrame;
 class AmayaNotebook;
+class AmayaQuickSplitButton;
 
 // there is a maximum of 2 frames into a page
 #define MAX_MULTI_FRAME 2
@@ -100,6 +101,7 @@ public:
   void DeletedFrame( AmayaFrame * p_frame );
 
   void OnSplitterPosChanged( wxSplitterEvent& event );
+  void OnSplitterPosChanging( wxSplitterEvent& event );
   void OnSplitterDClick( wxSplitterEvent& event );
   void OnSplitterUnsplit( wxSplitterEvent& event );
   void OnSplitButton( wxCommandEvent& event );
@@ -113,14 +115,13 @@ public:
 
  protected:
   void AdjustSplitterPos( int height = -1, int width = -1 );
-  void ShowQuickSplitButton( bool show );
 
  protected:
   DECLARE_EVENT_TABLE()
   
   wxBoxSizer *       m_pSizerTop;
   wxSplitterWindow * m_pSplitterWindow;
-  wxBitmapButton *   m_pSplitButton; // button used to quickly split the frame
+  AmayaQuickSplitButton * m_pSplitButtonBottom; // button used to quickly split the frame
   wxPanel *          m_DummyPanel;
   AmayaFrame *       m_pTopFrame;
   AmayaFrame *       m_pBottomFrame;

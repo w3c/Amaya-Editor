@@ -57,6 +57,11 @@
 #include "davlib_f.h"
 #endif /* DAV */
 
+#ifdef _WX
+  #include "appdialogue_wx.h"
+  #include "paneltypes_wx.h"
+#endif /* _WX */
+
 /* Some prototypes */
 static ThotBool     FollowTheLink (Element anchor, Element elSource,
 				   Attribute HrefAttr, Document doc);
@@ -2018,7 +2023,11 @@ void UpdateContextSensitiveMenus (Document doc)
      {
 	SelectionInEM = newSelInElem;
 	TtaSetToggleItem (doc, 1, Types, TEmphasis, newSelInElem);
+#ifndef _WX
 	TtaSwitchButton (doc, 1, iI);
+#else /* _WX */
+	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH );
+#endif /* _WX */	
      }
 
    if (firstSel == NULL)
@@ -2036,7 +2045,11 @@ void UpdateContextSensitiveMenus (Document doc)
      {
 	SelectionInSTRONG = newSelInElem;
 	TtaSetToggleItem (doc, 1, Types, TStrong, newSelInElem);
+#ifndef _WX
 	TtaSwitchButton (doc, 1, iB);
+#else /* _WX */
+	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG );
+#endif /* _WX */
      }
 
    if (firstSel == NULL)
@@ -2156,7 +2169,11 @@ void UpdateContextSensitiveMenus (Document doc)
      {
 	SelectionInCODE = newSelInElem;
 	TtaSetToggleItem (doc, 1, Types, TCode, newSelInElem);
+#ifndef _WX
 	TtaSwitchButton (doc, 1, iT);
+#else /* _WX */
+	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE );
+#endif /* _WX */
      }
 
    if (firstSel == NULL)

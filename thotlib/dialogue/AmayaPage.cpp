@@ -39,6 +39,7 @@
 #include "AmayaFrame.h"
 #include "AmayaPage.h"
 #include "AmayaNotebook.h"
+#include "AmayaQuickSplitButton.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
 
@@ -72,30 +73,27 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
   SetSizer( m_pSizerTop );
  
   // Insert a windows splitter 
-  m_pSplitterWindow = new wxSplitterWindow( this, -1,
-					    wxDefaultPosition, wxDefaultSize,
-					    /*wxSP_FULLSASH |*/
+  m_pSplitterWindow = new wxSplitterWindow( this, -1
+					    ,wxDefaultPosition
+					    ,wxDefaultSize
+#if 0
+					    ,/*wxSP_FULLSASH |*/
 					    wxSP_3DSASH |
 					    wxSP_BORDER |
 					    wxSP_3D 
 					    /* | wxSP_NOBORDER*/
-					    /*| wxSP_PERMIT_UNSPLIT*/ ); // TODO: permettre le unsplit a la souris plus tard
-  m_pSizerTop->Add( m_pSplitterWindow, 1, wxGROW, 0 );
+					    /*| wxSP_PERMIT_UNSPLIT*/
+#endif /* 0 */
+					    );
+  m_pSizerTop->Add( m_pSplitterWindow, 1, wxEXPAND, 0 );
 
 
   // Split button creation
   // this button is used to quickly split the page 
-  wxBitmap button_split_icon1( TtaGetResourcePathWX( WX_RESOURCES_ICON, "split_black.gif"), wxBITMAP_TYPE_GIF );
-  wxBitmap button_split_icon2( TtaGetResourcePathWX( WX_RESOURCES_ICON, "split_red.gif"), wxBITMAP_TYPE_GIF );
-  m_pSplitButton = new wxBitmapButton( this
-				       ,-1
-				       ,button_split_icon1
-				       ,wxDefaultPosition
-				       ,wxDefaultSize
-				       ,wxBU_AUTODRAW );
-  m_pSplitButton->SetBitmapFocus(button_split_icon2);
-  m_pSizerTop->Add( m_pSplitButton, 0, wxGROW, 0 );
-  ShowQuickSplitButton( true );
+  m_pSplitButtonBottom = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_HORIZONTAL, 5 );
+  m_pSizerTop->Add( m_pSplitButtonBottom, 0, wxEXPAND, 0 );
+  m_pSplitButtonBottom->ShowQuickSplitButton( true );
+
   /// Insert to area : Top / bottom
   m_pTopFrame     = NULL;
   m_pBottomFrame  = NULL;
@@ -204,7 +202,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   if ( m_pTopFrame && m_pBottomFrame )
     {
       /* hide the split button */
-      ShowQuickSplitButton( false );
+      //      m_pSplitButtonBottom->ShowQuickSplitButton( false );
     }
 
   p_frame->Show();
@@ -301,7 +299,7 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
   if ( !(m_pTopFrame && m_pBottomFrame) )
     {
       /* show again the split button */
-      ShowQuickSplitButton( true );
+      //      m_pSplitButtonBottom->ShowQuickSplitButton( true );
     }
   
   // simulate a size event to refresh the canvas ...
@@ -328,20 +326,41 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
 extern void ShowStructure (Document doc, View view);
 void AmayaPage::OnSplitButton( wxCommandEvent& event )
 {
-  if ( event.GetId() != m_pSplitButton->GetId() )
+  if ( event.GetId() != m_pSplitButtonBottom->GetId() )
     {
       event.Skip();
       return;
     }
 
   wxLogDebug( _T("AmayaPage::OnSplitButton") );
-  
-  /* TODO: montrer la meme vue que la premiere frame */
-  AmayaFrame * p_frame = GetFrame(1);
-  Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
-  View view         = FrameTable[p_frame->GetFrameId()].FrView;
-  ShowStructure (document, view);
-  
+
+  if (!m_pSplitterWindow->IsSplit())
+    {
+      /* TODO: montrer la meme vue que la premiere frame */
+      AmayaFrame * p_frame = GetFrame(1);
+      Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+      View view         = FrameTable[p_frame->GetFrameId()].FrView;
+      ShowStructure (document, view);
+    }
+  else
+    {
+      // unsplit the page
+      DetachFrame(2);
+    }
+
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  OnSplitterPosChanging
+ * Description:  this method is called when the splitter position start to change its position
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::OnSplitterPosChanging( wxSplitterEvent& event )
+{
+  wxLogDebug( _T("AmayaPage::OnSplitterPosChanging pos=%d"), event.GetSashPosition() );
   event.Skip();
 }
 
@@ -355,7 +374,7 @@ void AmayaPage::OnSplitButton( wxCommandEvent& event )
  */
 void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
 {
-    wxLogDebug( _T("AmayaPage::OnSplitterPosChanged now = %d"), event.GetSashPosition() );
+    wxLogDebug( _T("AmayaPage::OnSplitterPosChanged pos=%d"), event.GetSashPosition() );
 
     // calculate the new ratio (depending of window size)
     float new_slash_pos = event.GetSashPosition();
@@ -369,7 +388,8 @@ void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
     if ( m_SlashRatio <= 0 || m_SlashRatio >= 1 )
       m_SlashRatio = 0.5;
     
-    event.Skip();
+    // do not forward this event because the panel/notebook splitter should not receive it
+    //    event.Skip();
 }
 
 /*
@@ -382,9 +402,10 @@ void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
  */
 void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 {
-  wxLogDebug( _T("AmayaPage::OnSplitterDClick\n") );
+  wxLogDebug( _T("AmayaPage::OnSplitterDClick") );
   DetachFrame(2);
-  event.Skip();  
+  // dont forward this event because childs slitterwindows dont must catch this event (AmayaPanel for exemple)
+  //  event.Skip();  
 }
 
 /*
@@ -397,7 +418,7 @@ void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
  */
 void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
 {
-  wxLogDebug( _T("AmayaPage::OnSplitterUnsplit\n") );
+  wxLogDebug( _T("AmayaPage::OnSplitterUnsplit") );
 
   // the frame has been maybe unsplited manualy
   // maybe an update is needed
@@ -413,7 +434,7 @@ void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
     }
 
   // we should show the quick split bar when frames are unsplited
-  ShowQuickSplitButton( true );
+  //  m_pSplitButtonBottom->ShowQuickSplitButton( true );
 
   event.Skip();  
 }
@@ -889,31 +910,6 @@ void AmayaPage::OnSetFocus( wxFocusEvent & event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  ShowQuickSplitButton
- * Description:  this function will show/hide the quick splitbar button
- *--------------------------------------------------------------------------------------
- */
-void AmayaPage::ShowQuickSplitButton( bool show )
-{
-  if (show)
-    {
-      // show
-      m_pSizerTop->SetItemMinSize( m_pSplitButton,
-				   wxSize( m_pSplitButton->GetSize().GetWidth(), 10 ) );
-    }
-  else
-    {
-      // hide
-      m_pSizerTop->SetItemMinSize( m_pSplitButton,
-				   wxSize( m_pSplitButton->GetSize().GetWidth(), 0 ) );
-    }
-  // re layout the top sizer
-  m_pSizerTop->Layout();
-}
-
 void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
 {
   wxLogDebug( _T("AmayaPage::OnContextMenu - (x,y)=(%d,%d)"),
@@ -928,6 +924,7 @@ void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
+  EVT_SPLITTER_SASH_POS_CHANGING( -1, 	AmayaPage::OnSplitterPosChanging )
   EVT_SPLITTER_SASH_POS_CHANGED( -1, 	AmayaPage::OnSplitterPosChanged )
   EVT_SPLITTER_DCLICK( -1, 		AmayaPage::OnSplitterDClick )
   EVT_SPLITTER_UNSPLIT( -1, 		AmayaPage::OnSplitterUnsplit )
