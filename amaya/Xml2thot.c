@@ -1857,12 +1857,7 @@ static ThotBool  IsLeadingSpaceUseless ()
 	   if ((strcmp (TtaGetSSchemaName (lastElType.ElSSchema), "HTML") == 0) &&
 	       ((lastElType.ElTypeNum == HTML_EL_Comment_) ||
 		(lastElType.ElTypeNum == HTML_EL_XMLPI)))
-	     {
-	       if (elType.ElTypeNum != HTML_EL_Definition_List &&
-		   elType.ElTypeNum != HTML_EL_Unnumbered_List &&
-		   elType.ElTypeNum != HTML_EL_Numbered_List)
-		 removeLeadingSpaces = FALSE;
-	     }
+	     removeLeadingSpaces = XhtmlCannotContainText (elType);
 	 }
      }
    else

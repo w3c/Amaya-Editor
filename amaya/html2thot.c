@@ -1075,14 +1075,9 @@ static void         TextToDocument ()
 		 lastType = TtaGetElementType (HTMLcontext.lastElement);
 		 if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "HTML") == 0) &&
 		     ((lastType.ElTypeNum == HTML_EL_Comment_) ||
-		     (lastType.ElTypeNum == HTML_EL_XMLPI)))
-		   {
-		     if (elType.ElTypeNum != HTML_EL_Definition_List &&
-			 elType.ElTypeNum != HTML_EL_Unnumbered_List &&
-			 elType.ElTypeNum != HTML_EL_Numbered_List)
-		       ignoreLeadingSpaces = FALSE;
-		   }
-
+		      (lastType.ElTypeNum == HTML_EL_XMLPI)))
+		   ignoreLeadingSpaces = CannotContainText (elType);
+		 
 		 if (ignoreLeadingSpaces)
 		   {
 		     if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "MathML") == 0) &&
