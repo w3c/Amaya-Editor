@@ -323,6 +323,10 @@ void GL_SetPrintForeground (int fg)
 		   ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
 	}
       ColorPs = fg;
+
+      /* SG : bug fix, when a new textcolor is set, the lastrgb must be reinitialized */
+      for (int i = 0; i < 4; i++)
+	LastRgb[i] = -1.;
     }
   /*******
   float rgb[3];
@@ -427,6 +431,11 @@ ThotBool GL_prepare (int frame)
 #ifdef _GTK
   return gdk_gl_pixmap_make_current (glpixmap, context);
 #endif 
+
+#ifdef _WX
+  /* TODO */
+#endif /* _WX */
+  
 #ifdef _WINGUI
   return wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);
 #endif /* _WINGUI */
@@ -472,6 +481,9 @@ void GLPrintPostScriptColor(void *v_rgb)
 	fprintf (FILE_STREAM, "0 G\n");
       else
 	fprintf (FILE_STREAM, "%g %g %g C\n", rgb[0], rgb[1], rgb[2]);
+
+      /* SG : bug fix, when a new RGB is set, the textcolor must be reinitialized */
+      ColorPs = -1;
     }
 }
 
@@ -526,11 +538,11 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      i = GLGetVertex (&vertices[0], current);
 	      current += i;
 	      used    -= i;
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	      GLPrintPostScriptColor (vertices[0].rgb);
 	      fprintf (FILE_STREAM, "%g -%g %g P\n", 
 		       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1], 0.5*psize);
-#endif /*#if defined(_MOTIF) || defined(_GTK)*/
+#endif /*#if defined(_MOTIF) || defined(_GTK) || defined(_WX)*/
 	      /* Call Win32 function */
 	      break;
 
@@ -545,7 +557,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      current += i;
 	      used    -= i;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	      if (LastLineWidth != lwidth)
 		{
 		  LastLineWidth = lwidth;
@@ -563,7 +575,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		{
 		  fprintf (FILE_STREAM, "[] 0 setdash\n");
 		}
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
         break;
 
@@ -583,14 +595,14 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		    {
           flag = 0;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 		      GLPrintPostScriptColor (vertices[0].rgb);
 		      fprintf (FILE_STREAM, "%g -%g %g -%g %g -%g T\n",
 			       vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
 			       vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
 			       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]);
 		      vertices[1] = vertices[2];
-#endif/*#if defined(_MOTIF) || defined(_GTK)*/
+#endif/*#if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
           
 		    }
 		  else
