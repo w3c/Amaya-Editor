@@ -171,6 +171,7 @@ typedef Pixmap         ThotIcon;
 /* button states */
 #define TBSTYLE_BUTTON  0
 #define TBSTYLE_CHECK   1
+#define TBSTYLE_SEP     2
 #define ThotColorNone ((Pixel)-1)
 #define ThotBitmapNone ((ThotBitmap)-1)
 
