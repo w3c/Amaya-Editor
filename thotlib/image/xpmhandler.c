@@ -86,7 +86,7 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *hif = 0;
   *xif = 0;
   *yif = 0;
-  return (NULL);
+  return (Drawable) (NULL);
 #endif /* _GTK */
 #else /* _WINDOWS */
   *width = 0;
