@@ -628,7 +628,7 @@ PtrAttribute    pAInit;
       attrNumber = -attrNumber;
    if (pAInit != NULL &&
        pAInit->AeAttrNum == attrNumber &&
-       pAInit->AeAttrSSchema == pEl->ElStructSchema)
+       !ustrcmp (pAInit->AeAttrSSchema->SsName, pEl->ElStructSchema->SsName))
       pAttr = pAInit;
    else
       {
@@ -638,7 +638,7 @@ PtrAttribute    pAInit;
          pA = pAsc->ElFirstAttr;
          while (pAttr == NULL && pA != NULL)
 	    if (pA->AeAttrNum == attrNumber &&
-	        pA->AeAttrSSchema == pEl->ElStructSchema)
+	        !ustrcmp (pA->AeAttrSSchema->SsName, pEl->ElStructSchema->SsName))
 	       pAttr = pA;
 	    else
 	       pA = pA->AeNext;
