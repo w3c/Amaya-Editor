@@ -144,8 +144,9 @@ impact subsequent executions of Amaya.</p>
 There are five different preference menus available: <a
 href="#General">general</a>, <a href="#Publishing">publishing</a>, <a
 href="#Cache">cache</a>, <a href="#Specifying1">proxy</a>, <a
-href="#color">colors</a>, and <a href="#HTML">geometry</a>. In all of these
-menus, we find three common action buttons:</p>
+href="#color">colors</a>, <a href="#HTML">geometry</a>, <a
+href="#Profiles">profiles</a>, and <a href="#Templates">templates</a>. In all
+of these menus, we find three common action buttons:</p>
 <dl>
   <dt><strong>Apply</strong></dt>
     <dd>This button will validate and store the options shown in the
@@ -454,11 +455,12 @@ done through the Amaya.css style sheet.</p>
 <p style="text-align: center"><img src="../Icons/GeomMenu.gif" alt="Geometry
 Preferences Menu"></p>
 
-<p>This menu allows you to save the current geometry values of the different
-views of a document (formatted, structure, alternate, links, and Table of
-Contents.) or to restore the default values. Note that the values that are
-saved are those belonging to the views of the document where you called this
-menu. These changes will be reflected when you open new document windows.</p>
+<p>This menu allows you to save the current window size of the different views
+of a document (formatted, structure, alternate, links, and Table of Contents.)
+or to restore the default values. Note that the values that are saved are
+those belonging to the views of the document where you called this menu. Also,
+note that the position of the windows on the screen isn't saved yet. These
+changes will be reflected when you open new document windows.</p>
 
 <h3>Language negotiation preferences</h3>
 
@@ -473,6 +475,36 @@ which exists in French, English, and Japanese versions. By changing the
 language negotiation to the ISO codes for the above languages
 (<strong>fr</strong>, <strong>en</strong>, or <strong>ja</strong> you can
 transparently request any of these versions.</p>
+
+<h3><a name="Profiles">Profiles</a></h3>
+
+<p style="text-align: center"><img src="../Icons/Profiles.gif" alt="Profiles 
+menu"></p>
+
+<p>In Amaya, a <strong>profile</strong> defines the look and feel of of the
+Amaya user interface. You can use profiles to hide or display the Amaya
+buttons and menus. This menu allows you to choose a given profile definition
+file and select among any of the profiles proposed by that file. Amaya
+proposes four  sample profiles: <em>editor</em>, <em>mini-editor</em>,
+<em>browser</em>, <em>mini-browser</em>, each one with different capabilities.
+ Any profile change will be effective upon the next launch of Amaya.</p>
+
+<h3><a name="Templates">Templates</a></h3>
+
+<p style="text-align: center"><img src="../Icons/Templates.gif" alt="Templates
+"></p>
+
+<p>A <strong>template</strong> is a model, or skeleton, of a document that you
+may use for creating your own documents. This menu allows you to specify the
+URL of a template server, which may be either local to your station or stored
+in some server. You'll need to quit Amaya to validate this option. When you
+launch Amaya again., there will be a new  <code>File/New/From Templat</code>e
+entry. Following this entry will open a new document showing you the results
+of browsing the template URL. The idea is that this page acts as an index to
+the templates available in your station or in the template server. A sample
+template server is available at <a
+href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>.
+The source code for these scripts is also available.</p>
 
 <h2><a name="shortcuts">Keyboard Shortcuts</a></h2>
 
