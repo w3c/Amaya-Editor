@@ -927,84 +927,6 @@ TypeUnit            unit;
 
 
 /*----------------------------------------------------------------------
-   TtaGetBoxMaxSize
-
-   Returns the maximum width of the box corresponding to an element in
-   a given view. This function is useful for block of lines elements.
-   It gives the width of the element in case of lines are not wrapped.
-
-   Parameters:
-   element: the element of interest.
-   view: the view.
-   unit: the unit used for the values.
-
-   Return parameters:
-   width: box width in points.
-
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                TtaGetBoxMaxSize (Element element, Document document, View view, TypeUnit unit)
-#else  /* __STDC__ */
-int                TtaGetBoxMaxSize (element, document, view, unit)
-Element             element;
-Document            document;
-View                view;
-TypeUnit            unit;
-#endif /* __STDC__ */
-{
-   PtrAbstractBox      pAb;
-   int                 v, frame;
-   int                 x, y, width;
-
-   UserErrorCode = 0;
-   width = 0;
-   if (element == NULL)
-      TtaError (ERR_invalid_parameter);
-   /* verifies the parameter document */
-   else if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-     /* parameter document is correct */
-     {
-       frame = GetWindowNumber (document, view);
-       if (frame != 0)
-	 {
-	   if (view < 100)
-	     /* View of the main tree */
-	     v = view;
-	   else
-	     /* View of associated elements */
-	     v = 1;
-	   pAb = AbsBoxOfEl ((PtrElement) element, v);
-	   if (pAb == NULL)
-	     TtaError (ERR_element_has_no_box);
-	   else
-	     {
-	       if (pAb->AbBox->BxType == BoBlock)
-		 width = pAb->AbBox->BxMaxWidth;
-	       else
-		 width = pAb->AbBox->BxWidth;
-	       /* Convert values to pixels */
-	       if (unit == UnPercent)
-		 {
-		   if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-		     GetSizesFrame (frame, &x, &y);
-		   else
-		     x = pAb->AbEnclosing->AbBox->BxWidth;
-		   width = PixelValue (width, UnPercent, (PtrAbstractBox) x);
-		 }
-	       else if (unit != UnPixel)
-		 width = PixelValue (width, unit, pAb);
-	     }
-	 }
-     }
-   return (width);
-}
-
-
-/*----------------------------------------------------------------------
    TtaGiveBoxSize
 
    Returns the height and width of the box corresponding to an element in
@@ -1123,61 +1045,69 @@ int                *yCoord;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pAb;
-   int                 v, frame;
-   int                 x, y;
+  PtrAbstractBox      pAb;
+  PtrBox              pBox;
+  int                 v, frame;
+  int                 x, y;
 
-   UserErrorCode = 0;
-   *xCoord = 0;
-   *yCoord = 0;
-   if (element == NULL)
-      TtaError (ERR_invalid_parameter);
-   /* verifies the parameter document */
-   else if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
+  UserErrorCode = 0;
+  *xCoord = 0;
+  *yCoord = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  /* verifies the parameter document */
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
       /* parameter document is correct */
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame != 0)
-	  {
-	     if (view < 100)
-		/* View of the main tree */
-		v = view;
-	     else
-		/* View of associated elements */
-		v = 1;
-	     pAb = AbsBoxOfEl ((PtrElement) element, v);
-	     if (pAb == NULL)
-		TtaError (ERR_element_has_no_box);
-	     else
-	       {
-		  if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-		     GetSizesFrame (frame, &x, &y);
-		  else
-		    {
-		       x = pAb->AbEnclosing->AbBox->BxWidth;
-		       y = pAb->AbEnclosing->AbBox->BxHeight;
-		    }
-
-		  *xCoord = pAb->AbBox->BxXOrg - pAb->AbEnclosing->AbBox->BxXOrg;
-		  *yCoord = pAb->AbBox->BxYOrg - pAb->AbEnclosing->AbBox->BxYOrg;
-		  /* Convert values to pixels */
-		  if (unit == UnPercent)
-		    {
-		       *xCoord = PixelValue (*xCoord, UnPercent, (PtrAbstractBox) x);
-		       *yCoord = PixelValue (*yCoord, UnPercent, (PtrAbstractBox) y);
-		    }
-		  else if (unit != UnPixel)
-		    {
-		       *xCoord = PixelValue (*xCoord, unit, pAb);
-		       *yCoord = PixelValue (*yCoord, unit, pAb);
-		    }
-	       }
-	  }
-     }
+      frame = GetWindowNumber (document, view);
+      if (frame != 0)
+	{
+	  if (view < 100)
+	    /* View of the main tree */
+	    v = view;
+	  else
+	    /* View of associated elements */
+	    v = 1;
+	  pAb = AbsBoxOfEl ((PtrElement) element, v);
+	  if (pAb == NULL)
+	    TtaError (ERR_element_has_no_box);
+	  else
+	    {
+	      pBox = pAb->AbBox;
+	      if (pBox->BxType == BoSplit && pBox->BxNexChild != NULL)
+		pBox = pBox->BxNexChild;
+	      if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
+		{
+		  GetSizesFrame (frame, &x, &y);
+		  *xCoord = pBox->BxXOrg;
+		  *yCoord = pBox->BxYOrg;
+		}
+	      else
+		{
+		  x = pAb->AbEnclosing->AbBox->BxWidth;
+		  y = pAb->AbEnclosing->AbBox->BxHeight;
+		  *xCoord = pBox->BxXOrg - pAb->AbEnclosing->AbBox->BxXOrg;
+		  *yCoord = pBox->BxYOrg - pAb->AbEnclosing->AbBox->BxYOrg;
+		}
+	      
+	      /* Convert values to pixels */
+	      if (unit == UnPercent)
+		{
+		  *xCoord = PixelValue (*xCoord, UnPercent, (PtrAbstractBox) x);
+		  *yCoord = PixelValue (*yCoord, UnPercent, (PtrAbstractBox) y);
+		}
+	      else if (unit != UnPixel)
+		{
+		  *xCoord = PixelValue (*xCoord, unit, pAb);
+		  *yCoord = PixelValue (*yCoord, unit, pAb);
+		}
+	    }
+	}
+    }
 }
 #endif
 
