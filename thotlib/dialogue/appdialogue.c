@@ -1822,9 +1822,6 @@ void TtcSwitchButtonBar (Document doc, View view)
   ----------------------------------------------------------------------*/
 #ifndef _GTK
 void APP_TextCallback (ThotWidget w, int frame, void *call_d)
-#else /* _GTK */
-void APP_TextCallbackGTK (GtkWidget *w, int frame)
-#endif /* !_GTK */
 {
    Document            doc;
    View                view;
@@ -1842,19 +1839,42 @@ void APP_TextCallbackGTK (GtkWidget *w, int frame)
    if (i < MAX_TEXTZONE)
      {
 	FrameToView (frame, &doc, &view);
+
 #ifdef _WINDOWS
 	GetWindowText (w, text, sizeof (text) + 1);
 #else /* _WINDOWS */
-#ifndef _GTK
 	text = XmTextGetString (w);
-#else /* _GTK */
-	text = gtk_editable_get_chars(GTK_EDITABLE(w), 0, -1);
-	/*	printf("textcallback=%s", text);*/
-#endif /* !_GTK */
 #endif /* _WINDOWS */
+
 	(*FrameTable[frame].Call_Text[i]) (doc, view, text);
      }
 }
+#else /* _GTK */
+gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
+{
+   Document            doc;
+   View                view;
+   int                 i;
+   char               *text;
+   GtkEntry           *text_widget;
+
+   CloseInsertion ();
+   i = 0;
+   while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != w)
+      i++;
+   if (i < MAX_TEXTZONE)
+     {
+	FrameToView (frame, &doc, &view);
+	text_widget = GTK_ENTRY (w);
+	text = gtk_entry_get_text (GTK_ENTRY (w));
+	(*FrameTable[frame].Call_Text[i]) (doc, view, text);
+	return TRUE;
+     }
+   /* False value permits the enter signal propagation
+    For a callback in the signal catching hierarhchy*/
+   return FALSE;
+}
+#endif /* !_GTK */
 
 /*----------------------------------------------------------------------
    TtaAddTextZone
@@ -2020,6 +2040,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      /* row est de type GTK_HBOX */
 	      gtk_widget_hide (row->parent->parent);
 	      gtk_widget_show (row);
+
 	      
 	      /* Insere la nouvelle zone de texte */	      
 	      if (label != NULL)
@@ -2046,15 +2067,20 @@ int TtaAddTextZone (Document doc, View view, char *label,
 				GTK_SIGNAL_FUNC(LeaveCallbackGTK),
 				(gpointer)frame);
 	      if (procedure != NULL)
-		{
-		  /* execute APP_TextCallbackGTK when pressing enter */
-		  ConnectSignalGTK (GTK_OBJECT (w),
-				    "activate",
-				    GTK_SIGNAL_FUNC(APP_TextCallbackGTK),
-				    (gpointer)frame);
+		  {
+		  /* execute APP_TextCallback GTK when pressing enter */
+		  gtk_signal_connect_after (GTK_OBJECT (w),
+			     "activate",
+			     GTK_SIGNAL_FUNC(APP_TextCallbackGTK),
+			     (gpointer)frame);
+
 		  FrameTable[frame].Call_Text[i] = (Proc) procedure;
+		  gtk_widget_show_all (row->parent->parent);
 		}
-	      gtk_widget_show_all (row->parent->parent->parent);
+	      else{
+		  gtk_widget_show_all (row->parent);
+	      }
+	      
 #endif /* !_GTK */
 
 #else  /* _WINDOWS */
@@ -2295,190 +2321,12 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
   id = (guint)gtk_object_get_data (GTK_OBJECT (w), signal_name);
   gtk_signal_disconnect (GTK_OBJECT (w), id);
 }
+
+gboolean text_wrapper_hide (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+    gtk_widget_hide(widget);
+}
 #endif
-
-
-/*----------------------------------------------------------------------
-  Callback function appellée par une frame lorsque celle-ci recoit un
-  evenement de type exposer. Redessine la page.
-  Le paramètre widget indique le widget qui a appellé cette fonction.
-  Le parametre event contient des informations sur l'evenement.
-  Le parametre data contient le numero de la frame.
--------------------------------------------------------------------------*/
-#ifdef _GTK
-#if 0
-gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
-{
-  int nframe;
-  int                 x;
-  int                 y;
-  int                 l;
-  int                 h;
-
-  nframe = (int )data;
-  x = event->area.x;
-  y = event->area.y;
-  l = event->area.width;
-  h = event->area.height;
-  
-  
-  if (nframe > 0 && nframe <= MAX_FRAME)
-    {
-      DefRegion (nframe, x, y, l+x, y+h );
-      RedrawFrameBottom(nframe, 0, NULL);
-    }
-  return FALSE;
-}
-
-gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data)
-{
-    TtaAbortShowDialogue ();
-    CharTranslationGTK (widget, event, data);
- return FALSE;
-}
-
-gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
-{
-  int nframe;
-  int                 x;
-  int                 y;
-  int                 l;
-  int                 frame;
-
-   PtrDocument         docsel;
-   PtrElement          firstSel, lastSel;
-   Document            document;
-   View                view;
-   int                 firstCar, lastCar;
-   ThotBool            ok;
-   int                 comm, dx, dy, sel, h;
-
-   frame = (int )data;
-   gtk_widget_grab_focus (widget);
-
-    /* ne pas traiter si le document est en mode NoComputedDisplay */
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-      return FALSE ;
-   /*_______> S'il n'y a pas d'evenement associe */
-   else if (event == NULL)
-      return FALSE;
-   /*_______> Si une designation de pave est attendue*/
-   else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
-     {
-        ClickIsDone = 0;
-        ClickFrame = frame;
-        ClickX = event->x;
-        ClickY = event->y;
-        return FALSE;
-     }
-
-   switch (event->type)
-     {
-     case GDK_BUTTON_PRESS:
-
-       /*_____________________________________________________*/
-       switch (event->button)
-         {
-           /* ==========BOUTON GAUCHE========== */
-         case 1:
-           /* Termine l'insertion courante s'il y en a une */
-           CloseInsertion ();
-
-           /* Est-ce que la touche modifieur de geometrie est active ? */
-           if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
-             {
-               /* On change la position d'une boite */
-               ApplyDirectTranslate (frame, event->x, event->y);
-             }
-           /* Est-ce que la touche modifieur d'extension est active ? */
-           else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
-             {
-               TtaAbortShowDialogue ();
-               LocateSelectionInView (frame, event->x, event->y, 0);
-               FrameToView (frame, &document, &view);
-               TtcCopyToClipboard (document, view);
-             }
-           /* Sinon c'est une selection normale */
-           else
-             {
-               t1 = event->time;
-               ClickFrame = frame;
-               ClickX = event->x;
-               ClickY = event->y;
-               LocateSelectionInView (frame, ClickX, ClickY, 2);
-
-               /* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
-               comm = 0;        /* il n'y a pas de drag */
-               /*TtaFetchOneEvent (&event);*/
-               FrameToView (frame, &document, &view);
-               h = FrameTable[frame].FrHeight;
-
-               /* S'il y a un drag on termine la selection */
-               FrameToView (frame, &document, &view);
-               if (comm == 1)
-                 LocateSelectionInView (frame, event->x, event->y, 0);
-               else if (comm == 0)
-                  /* click event */
-                 LocateSelectionInView (frame, event->x, event->y, 4);
-
-               if (comm != 0)
-                 TtcCopyToClipboard (document, view);
-             }
-           break;
-
-           /* ==========BOUTON MILIEU========== */
-         case 2:
-           /* Termine l'insertion courante s'il y en a une */
-           CloseInsertion ();
-           /* Est-ce que la touche modifieur de geometrie est active ? */
-           if ((event->state & GDK_CONTROL_MASK) != 0)
-	     /* On modifie les dimensions d'une boite */
-	     ApplyDirectResize (frame, event->x, event->y);
-           else
-	     LocateSelectionInView (frame, event->x, event->y, 5);
-           break;
-
-           /* ==========BOUTON DROIT========== */
-         case 3:
-           /* Termine l'insertion courante s'il y en a une */
-           CloseInsertion ();
-           if ((event->state & GDK_CONTROL_MASK) != 0)
-	     /* On modifie les dimensions d'une boite */
-	     ApplyDirectResize (frame, event->x, event->y);
-           else
-	     LocateSelectionInView (frame, event->x, event->y, 6);
-	   break;
-
-         default:
-           break;
-         }
-       break;
-
-     case  GDK_2BUTTON_PRESS:
-       /*       printf("double click detected\n");*/
-       break;
-       /*    case KeyPress:
-       t1 = 0;
-       TtaAbortShowDialogue ();
-       CharTranslation (ev);
-       break;
-
-     case EnterNotify:
-       t1 = 0;
-       break;
-
-     case LeaveNotify:
-       t1 = 0;
-       break; */
-
-     default:
-       break;
-     }
- return FALSE;
-}
-#endif /*0*/
-
-#endif /* _GTK */
 
 /*----------------------------------------------------------------------
    MakeFrame
@@ -2521,6 +2369,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    GdkBitmap          *amaya_mask;
    GtkObject          *tmpw;
    GtkAccelGroup      *accel_group;
+   GtkWidget          *wrap_text;
 #else /* _GTK */
    ThotWidget          table1;
    ThotWidget          shell;
@@ -2831,8 +2680,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 #ifndef _WINDOWS
 #ifdef _GTK
-	   /* Creation of the toolbar */
-           /* I dont use the toolbarwidget because it's difficulte to manipulate it */
+	   /* Creation of the toolbar 
+	      I dont use the toolbarwidget because
+	      it's difficulte to manipulate it */
 	   toolbar = gtk_hbox_new (FALSE, 0);
 	   gtk_widget_show (toolbar);
 	   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 2);
@@ -2877,19 +2727,39 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 	   
 	   /* Put the drawing area */
-	   drawing_area = gtk_drawing_area_new ();	
+	   drawing_area = gtk_drawing_area_new ();
 	   gtk_widget_show (drawing_area);
            gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
-	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_FOCUS);
-	   /*  GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_DEFAULT);*/
-	   /*	   gtk_widget_grab_default (drawing_area);*/
-	   
-	   /*	   gtk_widget_grab_focus (drawing_area);*/
-	   /*gtk_grab_add (GTK_WIDGET (drawing_area));*/
-	   /* GDK_BUTTON_PRESS_MASK used to detect if a mouse button is pressed */
-	   /* GDK_BUTTON_RELEASE_MASK used to detect if a mouse button is relesed */
-	   /* GDK_BUTTON_MOTION_MASK used to detect if the mouse is moving and a button is pressed, it's for the text selection on the document */
-	   /* GDK_EXPOSURE_MASK used to detect if the drawing zone must be repaint */
+
+	   /* Attach input context to a drawing with a hidden 
+	      entry text catcher that will handle 
+	      advanced keboard typing (ie : multikey)*/	   
+	   wrap_text = gtk_entry_new ();
+	   gtk_widget_hide (wrap_text);	  
+	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 1);
+	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_FOCUS);
+	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_DEFAULT);
+	   gtk_widget_grab_focus (GTK_WIDGET(wrap_text));
+
+	   /* If hidden input catcher textbox is displayed..
+	      This calllback connection will hide it */
+	   gtk_signal_connect(
+	       GTK_OBJECT(wrap_text), 
+	       "expose_event", 
+	       GTK_SIGNAL_FUNC(text_wrapper_hide), 
+	       (gpointer*)frame);
+
+	   /* A storage for a pointer on the text catcher 
+	      (so we can acess it in the future)  */
+	   gtk_object_set_data (GTK_OBJECT (drawing_area), 
+	       "Text_catcher", wrap_text);
+
+	   /* Callback connection on events */
+	   /*   GDK_BUTTON_PRESS_MASK used to detect if a mouse button is pressed */
+	   /*   GDK_BUTTON_RELEASE_MASK used to detect if a mouse button is relesed */
+	   /*   GDK_BUTTON_MOTION_MASK used to detect if the mouse is moving 
+	          and a button is pressed, it's for the text selection on the document */
+	   /*   GDK_EXPOSURE_MASK used to detect if the drawing zone must be repaint */
 	   gtk_widget_set_events (GTK_WIDGET (drawing_area),  
 				  GDK_BUTTON_PRESS_MASK
 				  | GDK_BUTTON_RELEASE_MASK
@@ -2901,7 +2771,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				  /*| GDK_ENTER_NOTIFY*/
 				  /*| GDK_LEAVE_NOTIFY*/
 				  | GDK_EXPOSURE_MASK
-				  | GDK_FOCUS_CHANGE_MASK
+	                          /*| GDK_FOCUS_CHANGE_MASK*/
 				  );
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "button_press_event",
@@ -2916,12 +2786,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
 			     (gpointer)frame);
 
- 	   /* the key press event is intercepted by the main frame and not by the drawing area.
-              the result is analised into the callback */
+	   /* the key press event is intercepted by the main frame, 
+	      not by the drawing area.
+	      the result is analysed in the callback */
 	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
-			     "key_press_event",
-			     GTK_SIGNAL_FUNC(CharTranslationGTK),
-			     (gpointer)frame);
+	       "key_press_event",
+	       GTK_SIGNAL_FUNC(CharTranslationGTK),
+	       (gpointer)frame);
 	   /* callbacks to know if it's necessary to redisplay */
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "expose_event",
@@ -2977,6 +2848,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   /* show the main window */
 	   gtk_widget_show_all (Main_Wd);
+	   /* But hide the text catcher*/
+	   gtk_widget_hide (wrap_text);	   
+
 
            FrameTable[frame].WdFrame =  drawing_area;
            FrRef[frame] = drawing_area->window;
