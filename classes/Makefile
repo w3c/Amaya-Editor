@@ -5,7 +5,7 @@
 
 AMAYA_DIRS=org/w3c/amaya
 THOTLIB_DIRS=org/w3c/thotlib
-JIGSAW_DIRS=org/w3c/www w3c/tools org/w3c/util org/w3c/jigsaw
+JIGSAW_DIRS=org/w3c/www org/w3c/tools org/w3c/util org/w3c/jigsaw
 
 CLASSROOT=`pwd`
 
