@@ -153,7 +153,7 @@ RULES
  BR:	BEGIN
 	Create '<BR';
 	Create Attributes;
-	Create '>';
+	Create '>\12';
 	Remove;
 	END;
  Italic_text:
@@ -1020,7 +1020,7 @@ ATTRIBUTES
 
  Value_: BEGIN
 	Create ' value="';
-	Create Default_Value;
+	Create Value_;
 	Create DoubleQuote;
 	END;
 
