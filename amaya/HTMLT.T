@@ -1837,6 +1837,20 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ pluginspage: BEGIN
+        create SAN;
+	Create 'pluginspage="';
+	Create pluginspage;
+	Create DoubleQuote;
+	END;
+
+ pluginurl: BEGIN
+        create SAN;
+	Create 'pluginurl="';
+	Create pluginurl;
+	Create DoubleQuote;
+	END;
+
  Link_type: BEGIN
         create SAN;
 	Create 'type="';

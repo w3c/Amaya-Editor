@@ -283,6 +283,8 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"onsubmit", "form", 'A', HTML_ATTR_onsubmit, L_StrictValue},
    {"onunload", "", 'A', HTML_ATTR_onunload, L_StrictValue},
 
+   {"pluginspage", "embed", 'A', HTML_ATTR_pluginspage, L_TransitionalValue},
+   {"pluginurl", "embed", 'A', HTML_ATTR_pluginurl, L_TransitionalValue},
    {"profile", "head", 'A', HTML_ATTR_profile, L_BasicValue},
    {"prompt", "", 'A', HTML_ATTR_Prompt, L_StrictValue},
 

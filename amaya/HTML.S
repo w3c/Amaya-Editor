@@ -205,6 +205,8 @@ STRUCT
 		{ hspace  vspace }
 	          Embed_type = Text;
 	        { type }
+		  pluginspage = Text;
+	          pluginurl = Text; 
 		) =	
 		BEGIN
 		Embed_Content;

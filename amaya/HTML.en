@@ -202,6 +202,8 @@ Param_name: name
 Param_value: value
 Param_type: type
 Object_type: type
+EmbedHidden: hidden
+EmbedName: name
 Embed_type: type
 BulletStyle: type
 COMPACT: compact

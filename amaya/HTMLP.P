@@ -5861,6 +5861,18 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
+ pluginspage:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
+
+ pluginurl:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
+
  Link_type:
 	BEGIN
 	CreateBefore(AttrName);
