@@ -13,7 +13,7 @@
 1;#easteurope
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
 
 
 
@@ -23,7 +23,7 @@
 2;#baltic
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
 
 
 
@@ -31,7 +31,7 @@
 3;#russian
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
 
 
 
@@ -41,7 +41,7 @@
 6;#arabic
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
 
 
 
@@ -51,7 +51,7 @@
 7;#greek
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
 
 
 
@@ -61,7 +61,7 @@
 8;#hebrew;
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
 
 
 
@@ -69,13 +69,13 @@
 9;#Latin5 (Turkish)
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
 
 
 10;#Latin6 (Nordic)
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Courrier New-*;2=*-Courrier New-b;3=*-Courrier New-i;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
 
 
 
