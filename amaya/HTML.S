@@ -73,6 +73,9 @@ STRUCT
 #ifdef COUGAR
 	Object;
 #endif
+#ifdef MATHML
+	XML = MathML;
+#endif
 	Form;
 	Table;
 	PICTURE;
@@ -126,6 +129,9 @@ STRUCT
 	Applet;
 #ifdef COUGAR
 	Object;
+#endif
+#ifdef MATHML
+	XML;
 #endif
 	SCRIPT;
 	MAP;

@@ -330,6 +330,16 @@ RULES
 	Create '</span>' After;
 	END;
 #endif
+
+#ifdef MATHML
+ XML: BEGIN
+	Create '<xml';
+	Create Attributes;
+	Create '>\12';
+	Create '</xml>\12' After;	
+	END;
+#endif
+
  Paragraph: BEGIN
 	Create '<p';
 	Create Attributes;

@@ -745,6 +745,17 @@ BOXES
 		END;
 	END;
 #endif
+#ifdef MATHML
+ XML_S: BEGIN
+	Content: Text 'XML';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+#endif
  P_S: BEGIN
 	Content: Text 'P';
 	Visibility: 0;
@@ -4589,6 +4600,24 @@ RULES
 		END;
 	END;
 
+#endif
+#ifdef MATHML
+ XML: BEGIN
+	CreateBefore(XML_S);
+	CreateWith(VerticalLine);
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	LineBreak: No;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;	
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
 #endif
 
  Paragraph: BEGIN
