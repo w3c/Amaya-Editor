@@ -1520,6 +1520,64 @@ NotifyElement      *event;
     }
 }
 
+/*----------------------------------------------------------------------
+   CheckNewLines
+   Some new text has been pasted or typed in a text element. Check the
+   NewLine characters and replace them by spaces, except in a PRE
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CheckNewLines (NotifyOnTarget *event)
+#else /* __STDC__*/
+void CheckNewLines(event)
+     NotifyOnTarget *event;
+#endif /* __STDC__*/
+{
+  Element     ancestor;
+  ElementType elType;
+  STRING      content;
+  int         length, i;
+  Language    lang;
+  ThotBool    changed, pre;
+
+  if (!event->target)
+     return;
+  length = TtaGetTextLength (event->target);
+  if (length == 0)
+     return;
+
+  /* is there a preformatted (or equivalent) ancestor? */
+  pre = FALSE;
+  ancestor = TtaGetParent (event->target);
+  while (ancestor && !pre)
+    {
+    elType = TtaGetElementType (ancestor);
+    if ((ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0) &&
+        (elType.ElTypeNum == HTML_EL_STYLE_ ||
+         elType.ElTypeNum == HTML_EL_SCRIPT ||
+	 elType.ElTypeNum == HTML_EL_Preformatted))
+       pre = TRUE;
+    else
+       ancestor = TtaGetParent (ancestor);
+    }
+  if (pre)
+     /* there is a preformatted ancestor. Don't change anything */
+     return;
+
+  /* replace every new line in the content of the element by a space */
+  content = TtaAllocString (length + 1);
+  TtaGiveTextContent (event->target, content, &length, &lang);
+  changed = FALSE;
+  for (i = 0; i < length; i++)
+     if (content[i] == (CHAR_T) EOL)
+       {
+        content[i] = SPACE;
+	changed = TRUE;
+       }
+  if (changed)
+     /* at least 1 new line has been replaced by a space */
+     TtaSetTextContent (event->target, content, lang, event->document);
+  TtaFreeMemory (content);
+}
 
 /*----------------------------------------------------------------------
    CreateTarget creates a target element.                          

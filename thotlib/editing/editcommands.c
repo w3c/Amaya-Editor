@@ -1331,7 +1331,7 @@ int                 frame;
 	   yDelta = 0;
 
 	BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
-	/* aadjuste la largeur de certains symboles */
+	/* adjust the width of some symbols */
 	ResizeHeight (pBox, NULL, NULL, 0, 0, 0, frame);
 	APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, FALSE);
      }
@@ -2172,12 +2172,13 @@ int                 editType;
 #endif
    int                 spacesDelta, charsDelta;
    int                 frame;
-   ThotBool            still, ok;
+   ThotBool            still, ok, textPasted;
    ThotBool            defaultWidth, defaultHeight;
 
    /* termine l'insertion de caracteres en cours */
    CloseTextInsertion ();
    pCell = NULL;
+   textPasted = FALSE;
 
    /* Traitement de la Commande PASTE de l'application */
    if (editType == TEXT_PASTE && ClipboardThot.BuLength == 0 && !FromKeyboard)
@@ -2556,7 +2557,10 @@ int                 editType;
 		      }
 
 		    if (pAb != NULL)
+		      {
 		      PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, &ClipboardThot);
+		      textPasted = TRUE;
+		      }
 		  }
 		else if (editType == TEXT_COPY && !FromKeyboard)
 		  {
@@ -2567,7 +2571,10 @@ int                 editType;
 		    pAb = NULL;
 		  }
 		else if (editType == TEXT_X_PASTE && !FromKeyboard)
+		  {
 		  PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, &XClipboard);
+		  textPasted = TRUE;
+		  }
 		else if (pAb->AbLeafType == LtPicture && FromKeyboard)
 		  LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
@@ -2631,6 +2638,9 @@ int                 editType;
 		return;
 
 	     NewContent (pAb);
+	     if (textPasted)
+	        /* send event TteElemTextModify.Post */
+	        APPtextModify (pAb->AbElement, frame, FALSE);
 
 	     /* signale la nouvelle selection courante */
 	     if ((editType == TEXT_CUT || editType == TEXT_PASTE ||

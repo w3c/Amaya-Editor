@@ -25,6 +25,9 @@ ELEMENTS
 	ElemTextModify.Post -> UpdateSRCattribute;
 	END;
 
+   TEXT_UNIT:
+	ElemTextModify.Post -> CheckNewLines;
+
    LINK:
 	BEGIN
 	ElemDelete.Pre -> DeleteLink;
