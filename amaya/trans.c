@@ -16,6 +16,7 @@
 #include "amaya.h"
 #include "trans.h"
 #include "tree.h"
+#include "undo.h"
 
 #include "HTMLimage_f.h"
 #include "html2thot_f.h"
@@ -964,8 +965,8 @@ Document doc;
 	      parSch = (TtaGetElementType (parent)).ElSSchema;
 	}
     }
-      
-  TtaRemoveTree (elem, doc);
+  TtaRegisterElementDelete (doc, elem) ;
+  TtaRemoveTree (elem, doc);  
 }
 
 /*----------------------------------------------------------------------
@@ -982,7 +983,7 @@ Document            doc;
 #endif
 {
    strMatchChildren   *prevMatch, *DMatch;
-   Element             lastEl, courEl, invEl, parentEl;
+   Element             courEl, invEl;
    ElementType         typeEl;
    boolean             res;
    SSchema             selSch, courSch;
@@ -1022,7 +1023,10 @@ Document            doc;
         myFirstSelect = DMatch->MatchNode->Parent->Elem;
         isClosed = FALSE;
      }
-     */
+    */
+
+   TtaOpenUndoSequence (doc, myFirstSelect, myLastSelect, 0, 0);
+   
    while (DMatch != NULL)
      {
 	prevMatch = DMatch;
@@ -1043,6 +1047,14 @@ Document            doc;
 #endif
 	TtaSetStructureChecking (0, doc);
 	ParseSubTree (bufHTML, myFirstSelect, isClosed, doc);
+	courEl = myFirstSelect;
+	TtaNextSibling (&courEl);
+	while (courEl != NULL && courEl != myLastSelect)
+	  {	    
+	    TtaRegisterElementCreate (doc, courEl);
+	    TtaNextSibling (&courEl);
+	  }
+	TtaCloseUndoSequence (doc);
 	TtaSetStructureChecking (1, doc);
 	typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
 	typeEl.ElTypeNum = HTML_EL_Invalid_element;
@@ -1063,26 +1075,7 @@ Document            doc;
 		       TtaIsBefore (invEl, myLastSelect))))
 		    {		/* if the transformation failed */
 		       res = FALSE;
-		       while (courEl != NULL && courEl != myLastSelect)
-			 {	/* deleting the generated structure */
-			    lastEl = courEl;
-			    TtaNextSibling (&courEl);
-			    TtaDeleteTree (lastEl, doc);
-			 }
-		       DMatch = sMatch;
-		       lastEl = myFirstSelect;
-		       while (DMatch != NULL)
-			 {	/* restoring the source elements */
-			   parentEl = DMatch->MatchNode->Elem;
-			   while (TtaGetParent (parentEl) != NULL)
-			     parentEl = TtaGetParent (parentEl);
-			   if (parentEl != lastEl)
-			     {
-			       TtaInsertSibling (parentEl, lastEl, FALSE, doc);
-			       lastEl = parentEl;
-			     }
-			   DMatch = DMatch->Next;
-			 }
+		       TtaUndo (doc);
 		    }
 	       }
 	  }
@@ -1094,33 +1087,7 @@ Document            doc;
 		  if (myLastSelect == NULL || TtaIsBefore (invEl, myLastSelect))
 		    {		/* if the transformation failed */
 		       res = FALSE;
-		       /* deleting the generated structure */
-		       courEl = TtaGetFirstChild (myFirstSelect);
-		       while (courEl != NULL && courEl != myLastSelect)
-			 {
-			   TtaDeleteTree (courEl, doc);
-			   courEl = TtaGetFirstChild (myFirstSelect);
-			 }
-		       /* restoring the source elements */
-		       DMatch = sMatch;
-		       parentEl = DMatch->MatchNode->Elem;
-		       while (TtaGetParent (parentEl) != NULL)
-			 parentEl = TtaGetParent (parentEl);
-		       TtaInsertFirstChild (&(parentEl), myFirstSelect, doc);
-		       lastEl = parentEl;
-		       DMatch = DMatch->Next;
-		       while (DMatch != NULL)
-			 {
-			   parentEl = DMatch->MatchNode->Elem;
-			   while (TtaGetParent (parentEl) != NULL)
-			     parentEl = TtaGetParent (parentEl);
-			   if (parentEl != lastEl)
-			     {
-			       TtaInsertSibling (parentEl, lastEl, FALSE, doc);
-			       lastEl = parentEl;
-			     }
-			    DMatch = DMatch->Next;
-			 }
+		       TtaUndo (doc);
 		    }
 	       }
 	  }
