@@ -1135,7 +1135,7 @@ RULES
 	Gather: Yes;
 	LineBreak: No;
 	PageBreak: No;
-	HorizRef: * . HMiddle;
+	HorizRef: * . HMiddle + 0.3;
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
