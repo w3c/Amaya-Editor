@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -34,13 +34,8 @@ XmlEntity        *pMathEntityTable = MathEntityTable;
 /*----------------------------------------------------------------------
    GetXHTMLSSchema returns the XHTML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 SSchema            GetXHTMLSSchema (Document doc)
-#else
-SSchema            GetXHTMLSSchema (doc)
-Document	   doc;
 
-#endif
 {
   SSchema	XHTMLSSchema;
 
@@ -54,13 +49,8 @@ Document	   doc;
 /*----------------------------------------------------------------------
    GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 SSchema            GetMathMLSSchema (Document doc)
-#else
-SSchema            GetMathMLSSchema (doc)
-Document	   doc;
 
-#endif
 {
   SSchema	MathMLSSchema;
 
@@ -75,13 +65,8 @@ Document	   doc;
 /*----------------------------------------------------------------------
    GetGraphMLSSchema returns the GraphML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 SSchema            GetGraphMLSSchema (Document doc)
-#else
-SSchema            GetGraphMLSSchema (doc)
-Document	   doc;
 
-#endif
 {
   SSchema	GraphMLSSchema;
 
@@ -96,13 +81,8 @@ Document	   doc;
 /*----------------------------------------------------------------------
    GetXLinkSSchema returns the XLink Thot schema for document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 SSchema            GetXLinkSSchema (Document doc)
-#else
-SSchema            GetXLinkSSchema (doc)
-Document	   doc;
 
-#endif
 {
   SSchema	XLinkSSchema;
 
@@ -116,13 +96,8 @@ Document	   doc;
 /*----------------------------------------------------------------------
    GetXMLSSchema returns the XML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 SSchema            GetXMLSSchema (int XMLtype, Document doc)
-#else
-SSchema            GetXMLSSchema (XMLtype, doc)
-Document	   doc;
-int                XMLtype;
-#endif
+
 {
   if (XMLtype == XHTML_TYPE)
     return GetXHTMLSSchema (doc);
@@ -146,7 +121,6 @@ int                XMLtype;
     - ElTypeNum and ElSSchema into elType  ElTypeNum = 0 if not found.
     - content 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         MapXMLElementType (int XMLtype,
 				STRING XMLname,
 				ElementType *elType,
@@ -154,17 +128,6 @@ void         MapXMLElementType (int XMLtype,
 				CHAR_T *content,
 				ThotBool *highEnoughLevel,
 				Document doc)
-#else
-void         MapXMLElementType (XMLtype, XMLname, elType, mappedName,
-				content, highEnoughLevel, doc)
-int            XMLtype;
-STRING         XMLname;
-ElementType   *elType;
-STRING        *mappedName;
-CHAR_T        *content;
-ThotBool      *highEnoughLevel;
-Document       doc;
-#endif
 {
    int                 i;
    ElemMapping        *ptr;
@@ -239,13 +202,7 @@ Document       doc;
    Generic function which searchs in the mapping table the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T*           GetXMLElementName (ElementType elType, Document doc)
-#else
-CHAR_T*           GetXMLElementName (elType, doc)
-ElementType       elType;
-Document          doc;
-#endif
 {
   ElemMapping        *ptr;
   STRING              name;
@@ -293,12 +250,8 @@ Document          doc;
    Generic function which searchs in the mapping table if a given
    Thot type is an inline character or not
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool         IsXMLElementInline (ElementType elType)
-#else
-ThotBool         IsXMLElementInline (elType)
-ElementType      el;
-#endif
+
 {
   int            i;
   ThotBool       ret = FALSE;
@@ -335,20 +288,9 @@ ElementType      el;
    the entry attrName associated to the element elementName.
    Returns the corresponding entry or -1.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int       MapXMLAttribute (int XMLtype, CHAR_T *attrName,
 			   CHAR_T *elementName, ThotBool *highEnoughLevel,
 			   Document doc, int *thotType)
-#else
-int       MapXMLAttribute (XMLtype, attrName, elementName,
-			   highEnoughLevel, doc, thotType)
-int          XMLtype;
-CHAR_T      *attrName;
-CHAR_T      *elementName;
-ThotBool    *highEnoughLevel;
-Document     doc;
-int         *thotType;
-#endif
 {
   int               i;
   AttributeMapping *ptr;
@@ -404,14 +346,9 @@ int         *thotType;
    Generic function which searchs in the mapping table the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T*           GetXMLAttributeName (AttributeType attrType, ElementType elType, Document doc)
-#else
-CHAR_T*           GetXMLAttributeName (attrType, elType, doc)
-AttributeType     attrType;
-ElementType       elType;
-Document          doc;
-#endif
+CHAR_T*           GetXMLAttributeName (AttributeType attrType,
+				       ElementType elType,
+				       Document doc)
 {
   AttributeMapping   *ptr;
   STRING              name, tag;
@@ -466,20 +403,14 @@ Document          doc;
    the entry entityName and give the corresponding decimal value.
    Returns FALSE if entityName is not found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
-#else
-ThotBool   MapXMLEntity (XMLtype, entityName, entityValue)
-int        XMLtype;
-STRING     entityName
-int       *entityValue
-#endif
+
 {
-  int         i;
   XmlEntity  *ptr;
   ThotBool    found;
+  int         inf, sup, med, rescomp;
 
-  i = 1;
+  /* Initialization */
   found = FALSE;
 
   /* Select the right table */
@@ -491,19 +422,29 @@ int       *entityValue
     ptr = NULL;
   
   if (ptr == NULL)
-    return FALSE;
+    return found;
 
-  /* look for the first concerned entry in the table */
-  for (i = 0; ptr[i].charCode >= 0 && !found; i++)
-    found = !ustrcmp (ptr[i].charName, entityName);
-  
-  if (found)
+  inf = 0;
+  for (sup = 0; ptr[sup].charCode > 0; sup++);
+
+  while (sup >= inf && !found)
+    /* Dichotomic research */
     {
-      /* entity found */
-      i--;
-      *entityValue = ptr[i].charCode;
-      return TRUE;
+      med = (sup + inf) / 2;
+      rescomp = ustrcmp (ptr[med].charName, entityName);
+      if (rescomp == 0)
+	{
+	  /* entity found */
+	  *entityValue = ptr[med].charCode;
+	  found = TRUE;
+	}
+      else
+	{
+	  if (rescomp > 0)
+	    sup = med - 1;
+	  else
+	    inf = med + 1;
+	}
     }
-  else
-    return FALSE;
-}
+  return found;
+ }

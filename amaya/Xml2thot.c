@@ -22,14 +22,17 @@
 #include "zlib.h"
 #include "MathML.h"
 #include "css_f.h"
+#include "fetchHTMLname.h"
+#ifdef XML_GEN
+#include "tree.h"
+#endif /* XML_GEN */
+
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLimage_f.h"
 #include "UIcss_f.h"
-#include "fetchHTMLname.h"
-
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
@@ -2376,8 +2379,9 @@ static void     CreateXmlEntity (CHAR_T *data, int length)
    STRING       buffer;
    int          entityValue, i;	
    ThotBool     found;
-
-   /* Name of the entity without '&' or ';' */
+   CHAR_T       schemaName[MAX_SS_NAME_LENGTH];
+      
+  /* Name of the entity without '&' or ';' */
    buffer = TtaAllocString (length);
    for (i = 0; i < length-1; i++)
        buffer[i] = data[i+1];
@@ -2399,9 +2403,16 @@ static void     CreateXmlEntity (CHAR_T *data, int length)
 						    buffer, &XMLcontext);
 	 }
        else
-	 {
+ 	 {
 	   /* Unknown entity */
-	   usprintf (msgBuffer, TEXT("Unknown XML entity %s"), buffer);
+	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	     ustrcpy (schemaName, "XHTML");
+	   else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
+	     ustrcpy (schemaName, "SVG");
+	   else
+	     ustrcpy (schemaName, currentParserCtxt->SSchemaName);
+	   usprintf (msgBuffer, TEXT("Unknown %s entity %s"),
+		     schemaName, buffer);
 	   XmlParseError (errorParsing, msgBuffer, 0);
 	 }
     }
@@ -3121,8 +3132,16 @@ static void       Hndl_ElementStart (void *userData,
      {
        strcpy (XMLrootName, (CHAR_T*) name);
        if (rootElement != NULL)
-	 /* This is the root of the Thot abstract tree */
-	 isRoot = TRUE;
+	 {
+	   /* This is the root of the Thot abstract tree */
+	   isRoot = TRUE;
+#ifdef XML_GEN
+	   /* Instanciate the XML generic Root Element */
+	   if (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
+			TEXT("XML")) == 0)
+	     TtaChangeXMLRootElement (XMLrootName, XMLcontext.doc);
+#endif /* XML_GEN */
+	 }
      }
 
    /* Treatment for the GI */
@@ -4186,7 +4205,7 @@ void       StartXmlParser (Document doc,
       /* Specific initialization for expat */
       InitializeExpatParser (charset);
 	
-      /* Parse the input file and build the Thot document */
+      /* Parse the input file and build the Thot tree */
       XmlParse (stream, &xmlDec, &xmlDoctype);
       
       /* Completes all unclosed elements */
