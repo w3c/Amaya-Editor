@@ -56,14 +56,14 @@ PRINT
 #define INVALID_Font Helvetica
 #define TableHSpace 0.2
 #define TableVSpace 0.3
-#define VSpaceBeforeH1 0.5
-#define VSpaceBeforeH2 0.5
-#define VSpaceBeforeH3 0.5
-#define VSpaceBeforeH4 0.5
-#define VSpaceBeforeH5 0.5
-#define VSpaceBeforeH6 0.5
+#define H1Margin 0.67 em
+#define H2Margin 0.75 em
+#define H3Margin 0.83 em
+#define H4Margin 1.12 em
+#define H5Margin 1.5 em
+#define H6Margin 1.67 em
 #define VSpaceInToC 0.2
-#define LIST_INDENT 2.5 em
+#define LIST_INDENT 40 px
 #define DEFINITION_INDENT 2.3
 
 COUNTERS
@@ -1743,9 +1743,10 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	if not within NOFRAMES BEGIN
-	        MarginLeft: 0.5;
-	        MarginRight: 0.5;
-	        MarginBottom: 2 cm;
+	        MarginLeft: 8 px;
+	        MarginRight: 8 px;
+		MarginTop: 8 px;
+		MarginBottom: 8 px;
 		VertPos: Top = Previous AnyElem . Bottom;
 		END;
 	if within NOFRAMES BEGIN
@@ -1766,6 +1767,7 @@ RULES
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		MarginLeft: 0;
 		MarginRight: 0;
+		MarginTop: 0;
 #ifdef PAGE
 		Adjust: Left;
 #else
@@ -1933,8 +1935,8 @@ RULES
 	NoBreak2 : 2;
 #endif
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: VSpaceBeforeH1;
-	MarginBottom: 0.2;
+	MarginTop: H1Margin;
+	MarginBottom: H1Margin;
 	Width: Enclosing . Width;
 	Size: Enclosing + 6 pt;
 	Weight: Bold;
@@ -1984,7 +1986,8 @@ RULES
 	NoBreak2 : 2;
 #endif
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: VSpaceBeforeH2;
+	MarginTop: H2Margin;
+	MarginBottom: H2Margin;
 	Width: Enclosing . Width;
 	Size: Enclosing + 4 pt;
 	Weight: Bold;
@@ -1993,11 +1996,14 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		MarginTop: 0;
+		MarginBottom: 0;
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
+		MarginTop: 0;
+		MarginBottom: 0;
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		VertPos: Top = Previous . Bottom;
@@ -2029,12 +2035,14 @@ RULES
 	NoBreak2 : 2;
 #endif
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: VSpaceBeforeH3;
+	MarginTop: H3Margin;
+	MarginBottom: H3Margin;
 	Width: Enclosing . Width;
 	Size: Enclosing + 2 pt;
 	Weight: Bold;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2044,6 +2052,7 @@ RULES
 		END;
 	IN Alternate_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		VertPos: Top = Previous . Bottom;
@@ -2075,7 +2084,8 @@ RULES
 	NoBreak2 : 2;
 #endif
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: VSpaceBeforeH4;
+	MarginTop: H4Margin;
+	MarginBottom: H4Margin;
 	Width: Enclosing . Width;
 	Size: Enclosing =;
 	Weight: Bold;
@@ -2090,6 +2100,7 @@ RULES
 		END;
 	IN Alternate_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Weight: Enclosing =;
 		Size: Enclosing =;
 		VertPos: Top = Previous . Bottom;
@@ -2102,6 +2113,7 @@ RULES
 		Width: Enclosing . Width - 3.2;
 #endif
 		MarginTop: 0;
+		MarginBottom: 0;
 		HorizPos: Left = Enclosing . Left + 3;
 		Size: Enclosing =;
 		Weight: Enclosing =;
@@ -2121,12 +2133,14 @@ RULES
 	NoBreak2 : 2;
 #endif
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: VSpaceBeforeH5;
+	MarginTop: H5Margin;
+	MarginBottom: H5Margin;
 	Width: Enclosing . Width;
 	Size: Enclosing - 2 pt;
 	Weight: Bold;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2147,6 +2161,7 @@ RULES
 		Width: Enclosing . Width - 4.2;
 #endif
 		MarginTop: 0;
+		MarginBottom: 0;
 		HorizPos: Left = Enclosing . Left + 4;
 		Size: Enclosing =;
 		Weight: Enclosing =;
@@ -2167,11 +2182,13 @@ RULES
 #endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: VSpaceBeforeH6;
+	MarginTop: H6Margin;
+	MarginBottom: H6Margin;
 	Size: Enclosing - 4 pt;
 	Weight: Bold;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2192,6 +2209,7 @@ RULES
 		Width: Enclosing . Width - 5.2;
 #endif
 		MarginTop: 0;
+		MarginBottom: 0;
 		HorizPos: Left = Enclosing . Left + 5;
 		Size: Enclosing =;
 		Weight: Enclosing =;
@@ -2723,12 +2741,8 @@ RULES
 #endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	{MarginTop: 1 em;
-	MarginBottom: 1 em;}
-	if not within List_Item BEGIN
-	    MarginTop: 0.2;
-	    MarginBottom: 0.4;
-	    END;
+	MarginTop: H4Margin;
+	MarginBottom: H4Margin;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		MarginBottom: 0;
@@ -2768,9 +2782,11 @@ RULES
 	LineBreak: No;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: 0.4;
+	MarginTop: H4Margin;
+	MarginBottom: H4Margin;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2812,7 +2828,7 @@ RULES
  Definition: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	MarginLeft: DEFINITION_INDENT;
+	MarginLeft: LIST_INDENT;
 	Width: Enclosing . Width;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
@@ -2833,13 +2849,16 @@ RULES
 	   ListStyleType: Square;
 	LineBreak: No;
 	Width: Enclosing . Width;
-	PaddingLeft: LIST_INDENT;
 	VertPos: Top = Previous not MAP . Bottom;
-	if not within Definition and not within List_Item
-	        MarginTop: 0.5;
+	MarginLeft: LIST_INDENT;
+	if not within Definition and not within List_Item BEGIN
+	        MarginTop: H4Margin;
+	        MarginBottom: H4Margin;
+		END;
 	IN Structure_view BEGIN
 		MarginTop: 0;
-		PaddingLeft: 0;
+		MarginBottom: 0;
+		MarginLeft: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2856,13 +2875,16 @@ RULES
 	ListStyleType: Decimal;
 	LineBreak: No;
 	Width: Enclosing . Width;
-	PaddingLeft: LIST_INDENT;
 	VertPos: Top = Previous not MAP . Bottom;
-	if not within Definition and not within List_Item
-	        MarginTop: 0.5;
+	MarginLeft: LIST_INDENT;
+	if not within Definition and not within List_Item BEGIN
+	        MarginTop: H4Margin;
+	        MarginBottom: H4Margin;
+		END;
 	IN Structure_view BEGIN
 		MarginTop: 0;
-		PaddingLeft: 0;
+		MarginBottom: 0;
+		MarginLeft: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2903,9 +2925,11 @@ RULES
 	LineBreak: No;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: 0.5;
+	MarginTop: H4Margin;
+	MarginBottom: H4Margin;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2922,9 +2946,11 @@ RULES
 	LineBreak: No;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: 0.5;
+	MarginTop: H4Margin;
+	MarginBottom: H4Margin;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2962,7 +2988,6 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: 0.4;
 	Width: Enclosed . Width;
 	if within Center
 	   HorizPos: VMiddle = Enclosing . VMiddle;
@@ -3026,8 +3051,8 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
 	Gather: Yes;
-	MarginTop: 0.2;
-	MarginBottom: 0.2;
+	MarginTop: H4Margin;
+	MarginBottom: H4Margin;
 	IN Structure_view BEGIN
 	        Gather: No;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -3201,8 +3226,8 @@ RULES
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom + 0.6;
-	MarginTop: 0.5;
-	MarginBottom: 0.5;
+	MarginTop: H4Margin;
+	MarginBottom: H4Margin;
 	BorderTopColor: DarkGrey2;
 	BorderRightColor: DarkGrey2;
 	BorderBottomColor: DarkGrey2;
@@ -3761,10 +3786,12 @@ RULES
 	CreateWith(VerticalLine);
 	HorizPos: Left = Enclosing . Left + 2;	
 	VertPos: Top = Previous AnyElem . Bottom;
-	MarginTop: 0.4;
+	MarginTop: H4Margin;
+	MarginBottom: H4Margin;
 	Width: Enclosing . Width - 4;
 	IN Structure_view BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -4051,7 +4078,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	MarginTop: 0; {VSpaceBeforeH2}
+	MarginTop: 0;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
 	IN Structure_view BEGIN
@@ -7399,10 +7426,10 @@ ATTRIBUTES
   dir (Unnumbered_List*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	PaddingLeft: LIST_INDENT;
-	PaddingRight: 0;
+	MarginLeft: LIST_INDENT;
+	MarginRight: 0;
 	IN Structure_view BEGIN
-		PaddingLeft: 0;
+		MarginLeft: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -7411,10 +7438,10 @@ ATTRIBUTES
   dir (Unnumbered_List*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	PaddingLeft: 0;
-	PaddingRight: LIST_INDENT;
+	MarginLeft: 0;
+	MarginRight: LIST_INDENT;
 	IN Structure_view BEGIN
-		PaddingRight: 0;
+		MarginRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -7423,10 +7450,10 @@ ATTRIBUTES
   dir (Numbered_List*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	PaddingLeft: LIST_INDENT;
-	PaddingRight: 0;
+	MarginLeft: LIST_INDENT;
+	MarginRight: 0;
 	IN Structure_view BEGIN
-		PaddingLeft: 0;
+		MarginLeft: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -7435,10 +7462,10 @@ ATTRIBUTES
   dir (Numbered_List*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	PaddingLeft: 0;
-	PaddingRight: LIST_INDENT;
+	MarginLeft: 0;
+	MarginRight: LIST_INDENT;
 	IN Structure_view BEGIN
-		PaddingRight: 0;
+		MarginRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -7492,7 +7519,7 @@ ATTRIBUTES
 	END;
   dir (Definition*) = ltr_:
 	BEGIN
-	MarginLeft: DEFINITION_INDENT;
+	MarginLeft: LIST_INDENT;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
 		MarginLeft: 0;
@@ -7500,12 +7527,12 @@ ATTRIBUTES
 		END;
 	IN Alternate_view BEGIN
 		MarginLeft: 0;
-		HorizPos: Left = Enclosing . Left + DEFINITION_INDENT;
+		HorizPos: Left = Enclosing . Left + LIST_INDENT;
 		END;
 	END;
   dir (Definition*) = rtl_:
 	BEGIN
-	MarginRight: DEFINITION_INDENT;
+	MarginRight: LIST_INDENT;
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view BEGIN
 		MarginRight: 0;
@@ -7513,7 +7540,7 @@ ATTRIBUTES
 		END;
 	IN Alternate_view BEGIN
 		MarginRight: 0;
-		HorizPos: Right = Enclosing . Right - DEFINITION_INDENT;
+		HorizPos: Right = Enclosing . Right - LIST_INDENT;
 		END;
 	END;
   dir (LEGEND*) = ltr_:

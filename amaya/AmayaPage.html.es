@@ -135,6 +135,8 @@
 </p>
 
 <div>
+<h3>Amaya</h3>
+
 <p><strong>Amaya</strong> es un cliente Web que actúa como navegador y como
 editor. Ha sido diseñado por el <a href="http://www.w3.org/">World Wide Web
 Consortium (<acronym title="World Wide Web Consortium">W3C</acronym>)</a> con

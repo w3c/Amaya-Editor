@@ -25,6 +25,7 @@ h3 {
 }
 div p {
  margin-left: 170px;
+ margin-bottom: 0;
 }
 div {
  margin-top: 2em;
