@@ -402,6 +402,12 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   else if (docType == docMath)
     {
       /*-------------  New MathML document ------------*/
+      /* Set the IntDisplaystyle attribute */
+      elType.ElTypeNum = MathML_EL_MathML;
+      root = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      if (root)
+	SetDisplaystyleMathElement (root, doc);
+
       /* create the MathML DOCTYPE element */
       elType.ElTypeNum = MathML_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
