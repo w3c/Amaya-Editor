@@ -79,6 +79,7 @@ Option: OPTION
 Checkbox_Input: INPUT
 Radio_Input: INPUT
 Text_Input: INPUT
+Button_Input: INPUT
 Reset_Input: INPUT
 Submit_Input: INPUT
 Input: INPUT
@@ -174,6 +175,7 @@ MenuSize: size
 Selected: selected
 Value_: value
 Checked: checked
+Button_type: type
 Area_Size: size
 MaxLength: maxlength
 Border: border

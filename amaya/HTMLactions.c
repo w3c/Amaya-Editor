@@ -442,11 +442,13 @@ NotifyElement      *event;
 {
    AttributeType       attrType;
    Attribute           attr;
-   Element             anchor, elFound, ancestor;
+   Element             anchor, elFound, ancestor, element;
    ElementType         elType, elType1;
+   int		       type;
    boolean	       ok, isHTML;
 
-   elType = TtaGetElementType (event->element);
+   element = event->element;
+   elType = TtaGetElementType (element);
    isHTML = (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
 
    /* Check if the current element is interested in double click */
@@ -466,44 +468,75 @@ NotifyElement      *event;
 	    elType.ElTypeNum == HTML_EL_Frame ||
 	    elType.ElTypeNum == HTML_EL_Option_Menu ||
 	    elType.ElTypeNum == HTML_EL_Submit_Input ||
-	    elType.ElTypeNum == HTML_EL_Reset_Input)
+	    elType.ElTypeNum == HTML_EL_Reset_Input ||
+	    elType.ElTypeNum == HTML_EL_BUTTON ||
+	    elType.ElTypeNum == HTML_EL_File_Input)
 	   ok = TRUE;
    if (!ok)
       /* DoubleClick is disabled for this element type */
       return (FALSE);
-
-   if (W3Loading)
-      /* interrupt current transfer */
-      StopTransfer (W3Loading, 1);
 
    if (isHTML && (elType.ElTypeNum == HTML_EL_Frame ||
 		  elType.ElTypeNum == HTML_EL_Submit_Input ||
 		  elType.ElTypeNum == HTML_EL_Reset_Input))
      {
 	if (elType.ElTypeNum == HTML_EL_Frame)
-	   elType1 = TtaGetElementType (TtaGetParent (event->element));
+	   {
+	   element = TtaGetParent (element);
+	   elType1 = TtaGetElementType (element);
+	   }
 	else
 	   elType1.ElTypeNum = elType.ElTypeNum;
 	if (elType1.ElTypeNum == HTML_EL_Submit_Input ||
 	    elType1.ElTypeNum == HTML_EL_Reset_Input)
-	   /* it is a double click on submit or reset element */
-	   SubmitForm (event->document, event->element);
+	   /* it 's a double click on a submit or reset button */
+	   {
+	   if (W3Loading)
+	      /* interrupt current transfer */
+	      StopTransfer (W3Loading, 1);	   
+	   SubmitForm (event->document, element);
+	   }
+	else if (elType1.ElTypeNum == HTML_EL_BUTTON)
+	   {
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_Button_type;
+	   attr = TtaGetAttribute (element, attrType);
+	   if (!attr)
+	      /* default value of attribute type is submit */
+	      type = HTML_ATTR_Button_type_VAL_submit;
+	   else
+	      type = TtaGetAttributeValue (attr);
+	   if (type == HTML_ATTR_Button_type_VAL_button)
+	      {
+	      /**** Activate the corresponding event ****/;
+	      }
+	   else
+	      {
+	      if (W3Loading)
+	         /* interrupt current transfer */
+	         StopTransfer (W3Loading, 1);	   
+	      SubmitForm (event->document, element);
+	      }
+	   }
 	return (TRUE);
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
        /* is it a double click on a graphic submit element? */
        elType.ElTypeNum = HTML_EL_Form;
-       elFound = TtaGetTypedAncestor (event->element, elType);
+       elFound = TtaGetTypedAncestor (element, elType);
        if (elFound != NULL)
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = HTML_ATTR_NAME;
-	   attr = TtaGetAttribute (event->element, attrType);
+	   attr = TtaGetAttribute (element, attrType);
 	   if (attr)
+	     /* it's a graphic submit element */
 	     {
-	       /* it's a graphic submit element */
-	       SubmitForm (event->document, event->element);
+	       if (W3Loading)
+		  /* interrupt current transfer */
+		  StopTransfer (W3Loading, 1);	   
+	       SubmitForm (event->document, element);
 	       return (TRUE);
 	     }
 	 }
@@ -511,7 +544,7 @@ NotifyElement      *event;
    else if (isHTML && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
 	/* is it an option menu ? */
-	elFound = TtaGetParent (event->element);
+	elFound = TtaGetParent (element);
 	elType1 = TtaGetElementType (elFound);
 	if (elType1.ElTypeNum == HTML_EL_Option)
 	  {
@@ -522,7 +555,7 @@ NotifyElement      *event;
    else if (isHTML && elType.ElTypeNum == HTML_EL_Option_Menu)
      {
 	/* it is an option menu */
-	elFound = TtaGetFirstChild (event->element);
+	elFound = TtaGetFirstChild (element);
 	elType1 = TtaGetElementType (elFound);
 	if (elType1.ElTypeNum == HTML_EL_Option)
 	  {
@@ -532,30 +565,35 @@ NotifyElement      *event;
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_Checkbox_Input)
      {
-	SelectCheckbox (event->document, event->element);
+	SelectCheckbox (event->document, element);
 	return (TRUE);
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_Radio_Input)
      {
-	SelectOneRadio (event->document, event->element);
+	SelectOneRadio (event->document, element);
+	return (TRUE);
+     }
+   else if (isHTML && elType.ElTypeNum == HTML_EL_File_Input)
+     {
+	ActivateFileInput (event->document, element);
 	return (TRUE);
      }
 
    /* Search the anchor or LINK element */
-   anchor = SearchAnchor (event->document, event->element, TRUE);
+   anchor = SearchAnchor (event->document, element, TRUE);
    if (anchor == NULL)
       if (isHTML && elType.ElTypeNum == HTML_EL_LINK)
-	   anchor = event->element;
+	   anchor = element;
       else
 	{
 	   elType1.ElTypeNum = HTML_EL_LINK;
 	   elType1.ElSSchema = TtaGetSSchema ("HTML", event->document);
-	   anchor = TtaGetTypedAncestor (event->element, elType1);
+	   anchor = TtaGetTypedAncestor (element, elType1);
 	}
    /* if not found, search a cite or href attribute on an ancestor */
    if (anchor == NULL)
       {
-	ancestor = event->element;
+	ancestor = element;
 	attrType.AttrSSchema = TtaGetSSchema ("HTML", event->document);
 	do
 	   {
@@ -574,7 +612,10 @@ NotifyElement      *event;
 	while (anchor == NULL && ancestor != NULL);
       }
 
-   return (FollowTheLink (anchor, event->element, event->document));
+   if (W3Loading)
+      /* interrupt current transfer */
+      StopTransfer (W3Loading, 1);	   
+   return (FollowTheLink (anchor, element, event->document));
 }
 
 /*----------------------------------------------------------------------

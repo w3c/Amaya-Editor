@@ -10,6 +10,8 @@ extern boolean SaveDocumentStatus ( NotifyOnTarget *event );
 extern void RestoreDocumentStatus ( NotifyOnTarget *event );
 extern void SubmitForm ( Document doc,
                          Element element );
+extern void ActivateFileInput ( Document doc,
+                                Element el );
 extern void SelectCheckbox ( Document doc,
                              Element el );
 extern void SelectOneRadio ( Document doc,
@@ -24,6 +26,8 @@ extern boolean SaveDocumentStatus (/* NotifyOnTarget *event */);
 extern void RestoreDocumentStatus (/* NotifyOnTarget *event */);
 extern void SubmitForm (/* Document doc,
                            Element element */);
+extern void ActivateFileInput (/* Document doc,
+                                Element el */);
 extern void SelectCheckbox (/* Document doc,
                                Element el */);
 extern void SelectOneRadio (/* Document doc,

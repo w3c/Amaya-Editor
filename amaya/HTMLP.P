@@ -1770,7 +1770,94 @@ BOXES
 	Height: Enclosing . Height;
 	Foreground : White;
 	LineWeight: 2 px;
+	Depth: 3;
+	Visibility: Creator =;
+	InLine: No;
+	IN Structure_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+ BrowseButton_Frame: BEGIN
+	Content: Graphics 'R';
+	VertPos: Top = Creator . Top - 1 px;
+	HorizPos: Left = Creator . Right - 1 px;
+	Width: 4;
+	Height: Creator . Height;
+	Foreground : Black;
+#ifndef BLACK_WHITE
+	Background : Grey;
+	FillPattern: backgroundcolor;
+#endif
+	LineWeight: 2 px;
 	Depth: 4;
+	Visibility: Creator =;
+	InLine: No;
+	IN Structure_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+ BrowseButton_Mark: BEGIN
+	Content: Graphics 'Z';
+	VertPos: Top = Creator . Top;
+	HorizPos: Left = Creator . Right - 1 px;
+	Width: 4;
+	Height: Creator . Height;
+	Foreground : White;
+	LineWeight: 2 px;
+	Depth: 3;
+	Visibility: Creator =;
+	InLine: No;
+	IN Structure_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+ BrowseLabel: BEGIN
+	Content: Text ' Browse...';
+	HorizPos: VMiddle = Previous BrowseButton_Mark . VMiddle;
+	VertPos: HMiddle = Previous BrowseButton_Mark . HMiddle;
+	Width: Enclosed . Width;
+	IN Structure_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+ ButtonElem_Frame: BEGIN
+	Content: Graphics 'R';
+	VertPos: Top = Creator . Top - 1 px;
+	HorizPos: Left = Creator . Left - 1 px;
+	Width: Creator . Width;
+	Height: Creator . Height;
+	Foreground : Black;
+#ifndef BLACK_WHITE
+	Background : Grey;
+	FillPattern: backgroundcolor;
+#endif
+	LineWeight: 2 px;
+	Depth: 4;
+	Visibility: Creator =;
+	InLine: No;
+	IN Structure_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+ ButtonElem_Mark: BEGIN
+	Content: Graphics 'Z';
+	VertPos: Top = Creator . Top;
+	HorizPos: Left = Creator . Left - 1 px;
+	Width: Creator . Width;
+	Height: Creator . Height;
+	Foreground : White;
+	LineWeight: 2 px;
+	Depth: 3;
 	Visibility: Creator =;
 	InLine: No;
 	IN Structure_view
@@ -2649,7 +2736,6 @@ BOXES
 	Content: (Value_);
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: HMiddle = Enclosing . HMiddle;
-	Height: 1.2;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -6942,9 +7028,22 @@ RULES
  File_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_File);
-	{******* more ******}
+	CreateAfter(BrowseButton_Frame);
+	CreateAfter(BrowseButton_Mark);
+	CreateAfter(BrowseLabel);
+	Width: 20 ex Min;
+	Height: 2 Min;
+	Font: INPUT_Font;
+	Depth: 4;
+	LineBreak: No;
+	Adjust: Left;
+#ifndef BLACK_WHITE
+	Background : LightRed4;
+#endif
 	IN Structure_view BEGIN
+		Width: 1 px;
 		Height: DOC_FONTSIZE;
+		Size: Enclosing =;
 		END;
 	END;
 
@@ -6985,7 +7084,8 @@ RULES
 	CreateLast(Button_Mark);
 	CreateLast(Button_Frame);
 	CreateAfter(Text_Space);
-	Width: 5 Min;
+	Width: 4 Min;
+	Height: 1.3;
 	Depth: 50;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -7006,7 +7106,8 @@ RULES
 	CreateLast(Button_Mark);
 	CreateLast(Button_Frame);
 	CreateAfter(Text_Space);
-	Width: 5 Min;
+	Width: 4 Min;
+	Height: 1.3;
 	Depth: 50;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -7027,7 +7128,8 @@ RULES
 	CreateLast(Button_Mark);
 	CreateLast(Button_Frame);
 	CreateAfter(Text_Space);
-	Width: 5 Min;
+	Width: 4 Min;
+	Height: 1.3;
 	Depth: 50;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -7042,10 +7144,32 @@ RULES
 
  LABEL: BEGIN
  	CreateBefore(LABEL_S);
+	CreateWith(VerticalLine);
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  BUTTON: BEGIN
 	CreateBefore(BUTTON_S);
+	CreateWith(VerticalLine);
+	CreateBefore(ButtonElem_Frame);
+	CreateBefore(ButtonElem_Mark);
+#ifndef BLACK_WHITE
+	Background : Grey;
+#endif
+	LineBreak: No;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Block_Quote: BEGIN

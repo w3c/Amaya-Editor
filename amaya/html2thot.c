@@ -686,6 +686,7 @@ static int          CharLevelElement[] =
    HTML_EL_Option, HTML_EL_Option_Menu,
    HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,
    HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text,
+   HTML_EL_Button_Input, HTML_EL_BUTTON,
    HTML_EL_LABEL,
    HTML_EL_BR,
    0};

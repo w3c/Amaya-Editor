@@ -674,59 +674,60 @@ Element             element;
    int                 i, length, button_type;
    char               *action, *name, *value, *info;
    int                 method;
+   boolean	       found;
 
    buffer = (char *) NULL;
    action = (char *) NULL;
 
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-
    /* find out the characteristics of the button which was pressed */
-   button_type = 0;
-   elForm = element;
-   while (!button_type)
+   found = FALSE;
+   while (!found && element)
      {
-	elType = TtaGetElementType (elForm);
-	switch (elType.ElTypeNum)
+        elType = TtaGetElementType (element);
+	if (elType.ElTypeNum == HTML_EL_Reset_Input ||
+	    elType.ElTypeNum == HTML_EL_Submit_Input ||
+	    elType.ElTypeNum == HTML_EL_BUTTON ||
+	    elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	   found = TRUE;
+	else
+	   element = TtaGetParent (element);
+     }
+   if (!found)
+     return;
+
+   button_type = 0;
+   attrType.AttrSSchema = elType.ElSSchema;
+   switch (elType.ElTypeNum)
 	      {
 		 case HTML_EL_Reset_Input:
 		    button_type = HTML_EL_Reset_Input;
 		    break;
 
-		 case HTML_EL_Submit_Input:
-		    button_type = HTML_EL_Submit_Input;
-
-		    /* get the button's value and name, if they exist */
-		    attrType.AttrTypeNum = HTML_ATTR_NAME;
-		    attr = TtaGetAttribute (elForm, attrType);
-		    if (attr != NULL)
-		      {
-			value = NULL;
-			length = TtaGetTextAttributeLength (attr);
-			name = TtaGetMemory (length + 1);
-			TtaGiveTextAttributeValue (attr, name, &length);
-			attrType.AttrTypeNum = HTML_ATTR_Value_;
-			attr = TtaGetAttribute (elForm, attrType);
-			if (attr != NULL) {
-			  length = TtaGetTextAttributeLength (attr);
-			  value = TtaGetMemory (length + 1);
-			  TtaGiveTextAttributeValue (attr, value, &length);
-			  AddNameValue (name, value);
-			}
-			if (name)
-			  {
-			    TtaFreeMemory (name);
-			    if (value)
-			      TtaFreeMemory (value);
-			  }
-		      }
+		 case HTML_EL_BUTTON:
+	            attrType.AttrTypeNum = HTML_ATTR_Button_type;
+	            attr = TtaGetAttribute (element, attrType);
+	            if (!attr)
+	               /* default value of attribute type is submit */
+ 	               button_type = HTML_EL_Submit_Input;
+	            else
+		       {
+		       i = TtaGetAttributeValue (attr);
+		       if (i == HTML_ATTR_Button_type_VAL_submit)
+			   button_type = HTML_EL_Submit_Input;
+		       else if (i == HTML_ATTR_Button_type_VAL_reset)
+		           button_type = HTML_EL_Reset_Input;
+		       }
 		    break;
 
-	      case HTML_EL_PICTURE_UNIT:
-		button_type = HTML_EL_Submit_Input;
-		    /* get the button'spair of name and values, if they
-		       exist */
+		 case HTML_EL_Submit_Input:
+		    button_type = HTML_EL_Submit_Input;
+		    break;
+
+	         case HTML_EL_PICTURE_UNIT:
+		    button_type = HTML_EL_Submit_Input;
+		    /* get the button's name, if it exists */
 		    attrType.AttrTypeNum = HTML_ATTR_NAME;
-		    attr = TtaGetAttribute (elForm, attrType);
+		    attr = TtaGetAttribute (element, attrType);
 		    if (attr != NULL)
 		      {
 			length = TtaGetTextAttributeLength (attr);
@@ -755,22 +756,52 @@ Element             element;
 			    TtaFreeMemory (name);
 		      }
 		    break;
-		 default:
-		    elForm = TtaGetParent (elForm);
-		    break;
 	      }
-     }
+
+   if (button_type == 0)
+	return;
+
+   if (elType.ElTypeNum == HTML_EL_Submit_Input ||
+       (elType.ElTypeNum == HTML_EL_BUTTON &&
+	button_type == HTML_EL_Submit_Input))
+	{
+	    /* get the button's value and name, if they exist */
+	    attrType.AttrTypeNum = HTML_ATTR_NAME;
+	    attr = TtaGetAttribute (element, attrType);
+	    if (attr != NULL)
+	      {
+		value = NULL;
+		length = TtaGetTextAttributeLength (attr);
+		name = TtaGetMemory (length + 1);
+		TtaGiveTextAttributeValue (attr, name, &length);
+		attrType.AttrTypeNum = HTML_ATTR_Value_;
+		attr = TtaGetAttribute (element, attrType);
+		if (attr != NULL)
+		  {
+		  length = TtaGetTextAttributeLength (attr);
+		  value = TtaGetMemory (length + 1);
+		  TtaGiveTextAttributeValue (attr, value, &length);
+		  AddNameValue (name, value);
+		  }
+		if (name)
+		  {
+		  TtaFreeMemory (name);
+		  if (value)
+		    TtaFreeMemory (value);
+		  }
+	      }
+	}
 
    /* find the parent form node */
    elType.ElTypeNum = HTML_EL_Form;
-   elType.ElSSchema = TtaGetDocumentSSchema (doc);
    elForm = TtaGetTypedAncestor (element, elType);
-   if (elForm == NULL) {
+   if (elForm == NULL)
+     /* could not find a form ancestor */
+     {
      if (buffer)
        TtaFreeMemory (buffer);
-	/* could not find a form ancestor */
-	return;
-   }
+     return;
+     }
    else
      ancestor = elForm;
 
@@ -821,6 +852,25 @@ Element             element;
    if (buffer)
      TtaFreeMemory (buffer);
 }
+
+
+/*----------------------------------------------------------------------
+   ActivateFileInput
+   The user has triggered the Browse button associated with a File_Input
+   element.  Display a file selector.
+   ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ActivateFileInput (Document doc, Element el)
+#else
+void                ActivateFileInput (doc, el)
+Document            doc;
+Element             el;
+
+#endif
+{
+	/******* TO DO *******/
+}
+
 
 /*----------------------------------------------------------------------
    SelectCheckbox

@@ -580,7 +580,7 @@ STRUCT
 		{ disabled  tabindex  accesskey }
 		  onfocus; onblur) =
 		{ onfocus  onblur }
-		LIST OF (Element) - (Anchor, Form, Fieldset, Input);
+		Basic_Set - (Anchor, Form, Fieldset, Input);
         LABEL						{ LABEL }
 	   (ATTR  Associated_control = TEXT;
 		{ for }
