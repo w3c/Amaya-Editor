@@ -343,7 +343,7 @@ Document            IsDocumentLoaded (CHAR_T* documentURL, CHAR_T* form_data)
   Return TRUE if the document has not been modified of if the user
   agrees to loose the changes he/she has made.
   ----------------------------------------------------------------------*/
-ThotBool		CanReplaceCurrentDocument (Document document, View view)
+ThotBool       CanReplaceCurrentDocument (Document document, View view)
 {
    ThotBool	ret;
 
@@ -430,7 +430,7 @@ static ThotBool     FileExistTarget (CHAR_T* filename)
   Change the appearance of the Back (if back == TRUE) or Forward button
   for a given document.
   ----------------------------------------------------------------------*/
-void                SetArrowButton (Document document, ThotBool back, ThotBool on)
+void            SetArrowButton (Document document, ThotBool back, ThotBool on)
 {
   int		index;
   ThotBool      state;
@@ -534,8 +534,8 @@ void                SetStopButton (Document document)
   ----------------------------------------------------------------------*/
 static void	SetFormReadWrite (Element el, Document doc)
 {
-   ElementType         elType;
-   Element             child, next;
+   ElementType  elType;
+   Element      child, next;
 
    while (el != NULL)
      {
@@ -571,8 +571,8 @@ static void	SetFormReadWrite (Element el, Document doc)
   ----------------------------------------------------------------------*/
 static void	SetDocumentReadOnly (Document doc)
 {
-   ElementType         elType;
-   Element             el, elForm;
+   ElementType  elType;
+   Element      el, elForm;
 
   TtaSetDocumentAccessMode (doc, 0);
   el = TtaGetMainRoot (doc);
@@ -596,7 +596,7 @@ static void	SetDocumentReadOnly (Document doc)
    Update the save button and corresponding menu entry according to the
    document status.
   ----------------------------------------------------------------------*/
-void      DocStatusUpdate (Document document, ThotBool modified)
+void          DocStatusUpdate (Document document, ThotBool modified)
 {
   Document    otherDoc;
 
@@ -637,7 +637,7 @@ void      DocStatusUpdate (Document document, ThotBool modified)
   ----------------------------------------------------------------------*/
 static void  UpdateBrowserMenus (Document document)
 {
-  View    view;
+  View       view;
 
 #ifdef _WINDOWS 
   WIN_TtaSwitchButton (document, 1, iEditor, iconEditor,
@@ -661,6 +661,9 @@ static void  UpdateBrowserMenus (Document document)
   if (DocumentTypes[document] == docHTML ||
       DocumentTypes[document] == docSVG ||
       DocumentTypes[document] == docMath ||
+#ifdef XML_GEN      
+      DocumentTypes[document] == docXml ||
+#endif /* XML_GEN */
       DocumentTypes[document] == docImage)
     {
       TtaChangeButton (document, 1, iI, iconINo, FALSE);
@@ -742,7 +745,7 @@ static void  UpdateBrowserMenus (Document document)
   ----------------------------------------------------------------------*/
 static void  UpdateEditorMenus (Document document)
 {
-  View    view;
+  View       view;
 
 #ifdef _WINDOWS 
   WIN_TtaSwitchButton (document, 1, iEditor, iconEditor,
@@ -1511,6 +1514,9 @@ Document     InitDocView (Document doc,
 
       if (DocumentTypes[doc] == docHTML ||
 	  DocumentTypes[doc] == docSVG ||
+#ifdef XML_GEN      
+	  DocumentTypes[doc] == docXml ||
+#endif /* XML_GEN */
 	  DocumentTypes[doc] == docMath)
 	{
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
@@ -1562,6 +1568,10 @@ Document     InitDocView (Document doc,
      doc = TtaInitDocument (TEXT("GraphML"), docname, requested_doc);
    else if (docType == docMath)
      doc = TtaInitDocument (TEXT("MathML"), docname, requested_doc);
+#ifdef XML_GEN      
+   else if (docType == docXml)
+     doc = TtaInitDocument (TEXT("XML"), docname, requested_doc);
+#endif /* XML_GEN */
    else
      doc = TtaInitDocument (TEXT("HTML"), docname, requested_doc);
    if (doc >= DocumentTableLength)
@@ -1583,6 +1593,10 @@ Document     InitDocView (Document doc,
 	   TtaSetPSchema (doc, TEXT("GraphMLP"));
        else if (docType == docMath)
 	   TtaSetPSchema (doc, TEXT("MathMLP"));
+#ifdef XML_GEN      
+       else if (docType == docXml)
+	   TtaSetPSchema (doc, TEXT("XMLP"));
+#endif /* XML_GEN */
        /* @@ shouldn't we have a Color and BW case for annots too? */
        else
 	 {
@@ -1811,6 +1825,9 @@ Document     InitDocView (Document doc,
 #ifdef ANNOTATIONS
 		docType == docAnnot ||
 #endif /* ANNOTATIONS */
+#ifdef XML_GEN      
+	        docType == docXml ||
+#endif /* XML_GEN */
 		docType == docSource)
 	 reinitialized = TRUE;
      }
@@ -1831,6 +1848,9 @@ Document     InitDocView (Document doc,
 	  (DocumentTypes[doc] == docHTML ||
 	   DocumentTypes[doc] == docImage ||
 	   DocumentTypes[doc] == docSVG ||
+#ifdef XML_GEN      
+	   DocumentTypes[doc] == docXml ||
+#endif /* XML_GEN */
 	   DocumentTypes[doc] == docMath)))
        {
 	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
@@ -1885,6 +1905,9 @@ Document     InitDocView (Document doc,
 	      DocumentTypes[doc] == docSource) ||
 	     (ReadOnlyDocument[doc] &&
 	      (DocumentTypes[doc] == docSVG ||
+#ifdef XML_GEN      
+	       DocumentTypes[doc] == docXml ||
+#endif /* XML_GEN */
 	       DocumentTypes[doc] == docMath)))
 	   {
 	     TtaSetItemOff (doc, 1, Views, TShowMapAreas);
@@ -1899,6 +1922,9 @@ Document     InitDocView (Document doc,
      else if (DocumentTypes[doc] == docHTML ||
 	      DocumentTypes[doc] == docImage ||
 	      DocumentTypes[doc] == docSVG ||
+#ifdef XML_GEN      
+	      DocumentTypes[doc] == docXml ||
+#endif /* XML_GEN */
 	      DocumentTypes[doc] == docMath)
        {
 	 if (reinitialized)
@@ -2123,7 +2149,11 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 		 {
 		   /* it's an XML document */
 		   isXML = TRUE;
-		   if (thotType == docSVG || thotType == docMath)
+		   if (thotType == docSVG ||
+#ifdef XML_GEN      
+		       thotType == docXml ||
+#endif /* XML_GEN */
+		       thotType == docMath)
 		     docType = thotType;
 		   else if (parsingLevel == L_Other)
 		     docType = docText;
@@ -2424,7 +2454,11 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	    ParsingLevel[newdoc] = L_Transitional;
 	}
       
-      if (docType == docSVG || docType == docMath)
+	if (docType == docSVG ||
+#ifdef XML_GEN
+	    docType == docXml ||
+#endif /* XML_GEN */    
+	    docType == docMath)
 	plainText = FALSE;
       else
 	plainText = (parsingLevel == L_Other);
@@ -2769,6 +2803,9 @@ void                ShowSource (Document document, View view)
      return;
    if (DocumentTypes[document] != docHTML &&
        DocumentTypes[document] != docSVG &&
+#ifdef XML_GEN      
+       DocumentTypes[document] != docXml &&
+#endif /* XML_GEN */
        DocumentTypes[document] != docMath)
      /* it's not an HTML or an XML document */
      return;
@@ -2796,6 +2833,11 @@ void                ShowSource (Document document, View view)
 	 else if (DocumentTypes[document] == docMath)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						TEXT("MathMLT"));
+#ifdef XML_GEN
+	 else if (DocumentTypes[document] == docXml)
+	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						TEXT("XMLT"));
+#endif /* XML_GEN */
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
@@ -3277,6 +3319,10 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
      docType = docSVG;
    else if (IsCSSName (documentname))
      docType = docCSS;
+#ifdef XML_GEN
+   else if (IsXMLName (documentname))
+     docType = docXml;
+#endif /* XML_GEN */
    else if (CE_event == CE_CSS)
      docType = docCSS;
    else

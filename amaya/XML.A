@@ -1,0 +1,16 @@
+APPLICATION XML;
+
+DEFAULT
+   BEGIN
+	DocClose.Post -> DocumentClosed;
+	DocSave.Pre -> DocumentToSave;
+   END;
+
+ATTRIBUTES
+
+   Langue:
+	BEGIN
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+	END;
+
+END

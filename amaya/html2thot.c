@@ -5204,6 +5204,9 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
 		      i += 6;
 		      *xmlDec = TRUE;
 		      *isXML = TRUE;
+#ifdef XML_GEN
+		      *thotType = docXml;
+#endif /* XML_GEN */
 		      /* check whether there is an encoding */
 		      ptr = strstr (&FileBuffer[i], "encoding");
 		      end = NULL;
@@ -5315,8 +5318,8 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
 		      /* it's not necessary to continue */
 		      found = FALSE;
 		      endOfSniffedFile = TRUE;
-		      *thotType = docSVG;
 		      *isXML = TRUE;
+		      *thotType = docSVG;
 		    }
 		  else if (!strncasecmp (&FileBuffer[i], "<math", 5))
 		    {
@@ -5325,8 +5328,8 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
 		      /* it's not necessary to continue */
 		      found = FALSE;
 		      endOfSniffedFile = TRUE;
-		      *thotType = docMath;
 		      *isXML = TRUE;
+		      *thotType = docMath;
 		    }
 		  else if (!strncmp (&FileBuffer[i], "<!", 2) ||
 			   !strncmp (&FileBuffer[i], "<?", 2))
@@ -5359,7 +5362,7 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
 		    }
 		  else
 		    {
-		      /* it's not a comment */
+		      /* it's not a comment or a PI */
 		      /* stop the analyze */
 		      found = FALSE;
 		      endOfSniffedFile = TRUE;

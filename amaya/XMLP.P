@@ -1,0 +1,430 @@
+	{ Thot presentation schema for Generic XML
+
+	  L. Carcone	January 2001	}
+
+PRESENTATION XML;
+
+VIEWS
+   Formatted_view,
+   Structure_view merge with Structure_view,
+   Alternate_view merge with Alternate_view;
+
+#define STRUCT_INDENT 1.5
+#define TAG_FONTSIZE 12 pt
+#define DOC_FONTSIZE 12 pt
+#define TAG_Style Roman
+#define TAG_Weight Normal
+#define TAG_Visibility 7
+#define ATTR_Style Roman
+#define ATTR_Weight Normal
+#define ATTR_Visibility 6
+#define ALT_Visibility 8
+ 
+#ifdef BLACK_WHITE
+#define TAG_Color Black
+#define ATTR_Color Black
+#define ATTRVALUE_Color Black
+#else
+#define TAG_Color Blue
+#define ATTR_Color Blue
+#define ATTRVALUE_Color Black
+#endif
+ 
+#define TAG_Font Helvetica
+#define ATTR_Font Helvetica
+
+DEFAULT
+
+   BEGIN
+   HorizRef: * . Top;
+   VertRef: * . Left;
+   HorizPos: Left = Enclosing . Left;
+   VertPos:  Top = Enclosing . Top;
+   Visibility: Enclosing =;
+   FillPattern: Enclosing =;
+   Depth: Enclosing =;
+   Font: Enclosing =;
+   IN Structure_view
+	BEGIN
+	VertPos: Top = Previous . Bottom;
+	Width: Enclosed . Width;
+	HorizRef: Enclosed . HRef;
+	END;
+   IN Alternate_view
+	BEGIN
+	VertPos: Top = Previous . Bottom;
+	Width: Enclosing . Width;
+	Height: Enclosed . Height;
+	HorizRef: Enclosed . HRef;
+	END;
+   END;
+
+BOXES
+
+   XML_S: BEGIN
+	Content: Text 'svg';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+{ Boxes for diplaying attributes and their value }
+
+  ATTR_id: BEGIN
+        Content: Text ' id=';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_id: BEGIN
+        Content: (id);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+  ATTR_class: BEGIN
+        Content: Text ' class=';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_class: BEGIN
+        Content: (class);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+ 
+  ATTR_style: BEGIN
+        Content: Text ' style=';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_style: BEGIN
+        Content: (style_);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_xml_space_default: BEGIN
+	Content: Text ' xml:space=default';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_xml_space_preserve: BEGIN
+	Content: Text ' xml:space=preserve';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+{
+
+   ATTR_xlink_href: BEGIN
+	Content: Text '  xlink:href=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_xlink_href: BEGIN
+	Content: (xlink_href);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+}
+
+{ presentation boxes }
+
+   VerticalLine: BEGIN
+	Content: Graphics 'W';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Creator . Top;
+		HorizPos: Left = Enclosing . Left;
+		Height: Creator . Height;
+		Width: 1.1;
+		LineWeight: 1 px;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+   Comment_Start:
+	BEGIN
+	Content: Text '<!--';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
+		Foreground: TAG_Color;
+		END;
+	END;
+
+   Comment_End:
+	BEGIN
+	Content: Text '-->';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
+		Foreground: TAG_Color;
+		VertPos: HRef = Previous . HRef;
+		HorizPos: Left = Previous . Right;
+		END;
+	END;
+
+   PI_Start:
+	BEGIN
+	Content: Text '<?';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
+		Foreground: TAG_Color;
+		END;
+	END;
+
+   PI_End:
+	BEGIN
+	Content: Text '?>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
+		Foreground: TAG_Color;
+		VertPos: HRef = Previous . HRef;
+		HorizPos: Left = Previous . Right;
+		END;
+	END;
+
+RULES
+
+   XML:
+	BEGIN
+	CreateBefore(XML_S);
+        CreateWith(VerticalLine);
+	HorizRef: *.Bottom;
+        if within XML BEGIN
+           Width: Enclosing . Width;
+           Height: Enclosing . Height;
+	   END;
+        if NOT within XML BEGIN
+           Width: 10 cm;
+           Height: 5 cm;
+           VertPos: Top = Previous . Bottom;
+	   Foreground: transparent;
+	   Background: Black;
+	   FillPattern: backgroundcolor;
+	END;
+	PageBreak: No;
+	LineBreak: No;
+	Justify: No;
+	Hyphenate: No;
+	Gather: Yes;
+	LineWeight: 1 pt;
+	IN Structure_view BEGIN
+	        Visibility: 0;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+        	Height	: Enclosed . Height;
+		Font: TAG_Font;
+		Foreground: Enclosing =;
+	        Background: Enclosing =;
+	        FillPattern: nopattern;
+		END;
+	IN Alternate_view BEGIN
+		Width: Enclosing . Width;
+        	Height	: Enclosed . Height;
+	   	MarginTop: 0;
+	   	MarginBottom: 0;
+		Foreground: Enclosing =;
+	        Background: Enclosing =;
+	        FillPattern: nopattern;
+		END;		
+	END;
+
+   XMLcomment:
+	BEGIN
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: 10;
+		Width: Enclosing . Width ;
+		END;
+	END;
+
+   XMLcomment_line:
+        BEGIN
+        IF First CreateFirst(Comment_Start);
+        IF Last CreateLast(Comment_End);
+	IN Structure_view BEGIN
+	        HorizPos: Left = Enclosing . Left;
+	        VertPos: Top = Previous . Bottom + 0.2;
+	        Width: Enclosed . Width;
+		END;
+        END;
+
+   XMLPI:
+	BEGIN
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: 10;
+		Width: Enclosing . Width ;
+		END;
+	END;
+
+   XMLPI_line:
+        BEGIN
+        IF First CreateFirst(PI_Start);
+        IF Last CreateLast(PI_End);
+	IN Structure_view BEGIN
+	        HorizPos: Left = Enclosing . Left;
+	        VertPos: Top = Previous . Bottom + 0.2;
+	        Width: Enclosed . Width;
+		END;
+        END;
+
+   TEXT_UNIT:
+	BEGIN
+	HorizRef: Enclosed . HRef;
+	HorizPos: Left = Previous . Right;
+        VertPos: HRef = Previous . HRef;
+	Width: Enclosed . Width;
+        Height: Enclosed . Height;
+	IN Structure_view BEGIN
+		if NOT within XMLcomment_line AND NOT within XMLPI_line
+		   BEGIN
+		   HorizPos: Left = Enclosing . Left;
+		   VertPos: Top = Previous . Bottom;
+		   END;
+		if within XMLcomment_line BEGIN
+		   HorizPos: Left = Previous . Right;
+                   VertPos: HRef = Previous . HRef;
+		   END;
+		if within XMLPI_line BEGIN
+		   HorizPos: Left = Previous . Right;
+                   VertPos: HRef = Previous . HRef;
+		   END;
+		END;
+	IN Alternate_view BEGIN
+	        Width: Enclosed . Width;
+        	VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+   GRAPHICS_UNIT:
+	BEGIN
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   PICTURE_UNIT:
+	BEGIN
+	Width: Enclosing . Width;
+        Height: Enclosing . Height;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+ATTRIBUTES
+
+  id:
+        BEGIN
+        CreateBefore(ATTR_id);
+        CreateBefore(VALUE_id);
+        END;
+
+  class:
+        BEGIN
+        CreateBefore(ATTR_class);
+        CreateBefore(VALUE_class);
+        END;
+ 
+  style_:
+        BEGIN
+        CreateBefore(ATTR_style);
+        CreateBefore(VALUE_style);
+        END;
+ 
+  xml_space = xml_space_default:
+	CreateBefore (ATTR_xml_space_default);
+
+  xml_space = xml_space_preserve:
+	CreateBefore (ATTR_xml_space_preserve);
+
+  Highlight:
+	BEGIN
+	END;
+
+{
+  xlink_href:
+	BEGIN
+	CreateBefore (ATTR_xlink_href);
+	CreateBefore (VALUE_xlink_href);
+	END;
+} 
+ 
+END

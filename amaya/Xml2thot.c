@@ -35,12 +35,15 @@
 #include "html2thot_f.h"
 #include "Xml2thot_f.h"
 #include "init_f.h"
+#include "styleparser_f.h"
+#include "XHTMLbuilder_f.h"
+#include "MathMLbuilder_f.h"
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif /* GRAPHML */
-#include "MathMLbuilder_f.h"
-#include "styleparser_f.h"
-#include "XHTMLbuilder_f.h"
+#ifdef XML_GEN
+#include "Xmlbuilder_f.h"
+#endif /* XML_GEN */
 #include "XLinkbuilder_f.h"
 
 #include "xmlparse.h"
@@ -436,9 +439,9 @@ static void    InitXmlParserContexts (void)
    ctxt->MapAttribute = NULL;
    ctxt->MapAttributeValue = NULL;
    ctxt->EntityCreated = NULL;
-   ctxt->CheckContext = NULL;
-   ctxt->CheckInsert = NULL;
-   ctxt->ElementComplete = NULL;
+   ctxt->CheckContext =  (Proc) XmlCheckContext;
+   ctxt->CheckInsert = (Proc) XmlCheckInsert;
+   ctxt->ElementComplete = (Proc) XmlElementComplete;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
    XLinkParserCtxt = ctxt;
@@ -1058,7 +1061,6 @@ void     InsertXmlElement (Element *el)
    GetXmlElType
    Search in the mapping tables the entry for the element type of
    name Xmlname and returns the corresponding Thot element type.
-   Schema = NULL if not found.
   ----------------------------------------------------------------------*/
 static void   GetXmlElType (STRING XMLname, ElementType *elType,
 			    STRING *mappedName, CHAR_T *content,
@@ -1072,9 +1074,16 @@ static void   GetXmlElType (STRING XMLname, ElementType *elType,
   /* Look at the current context if there is one */
   if (currentParserCtxt != NULL)
     {
-      elType->ElSSchema = currentParserCtxt->XMLSSchema;
-      MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType,
-			 mappedName, content, level, doc);
+      if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("XML")) == 0)
+	{
+	  MapGenericXmlType (XMLname, elType, mappedName, content, level, doc);
+	}
+      else
+	{
+	  elType->ElSSchema = currentParserCtxt->XMLSSchema;
+	  MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType,
+			     mappedName, content, level, doc);
+	}
     }
   else
     {
@@ -1528,7 +1537,8 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
 	{
 	  /* element not found in the corresponding DTD */
 	  /* don't process that element */
-	  usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
+	  usprintf (msgBuffer, TEXT("Unknown %s element %s"),
+		    currentParserCtxt->SSchemaName, GIname);
 	  XmlParseError (errorParsing, msgBuffer, 0);
 	  UnknownTag = TRUE;
  	}
@@ -1537,8 +1547,8 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
 	  /* element invalid for the current profile */
 	  /* doesn't process that element */
 	  usprintf (msgBuffer,
-		    TEXT("Unknown XML element %s for the current profile"),
-		    GIname);
+		    TEXT("Unknown %s element %s for the current profile"),
+		    currentParserCtxt->SSchemaName, GIname);
 	  XmlParseError (errorParsingProfile, msgBuffer, 0);
 	  UnknownTag = TRUE;
 	}
@@ -1686,10 +1696,10 @@ static void       EndOfXmlStartElement (CHAR_T *name)
 /*----------------------  EndElement  (start)  -----------------------*/
 
 /*----------------------------------------------------------------------
-   XmlEndElement
+   EndOfXmlElement
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
-static void    XmlEndElement (CHAR_T *GIname)
+static void       EndOfXmlElement (CHAR_T *GIname)
 
 {
    CHAR_T         msgBuffer[MaxMsgLength];
@@ -1721,7 +1731,8 @@ static void    XmlEndElement (CHAR_T *GIname)
 	 {
 	   /* element not found in the corresponding DTD */
 	   /* don't process that element */
-	   usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
+	   usprintf (msgBuffer, TEXT("Unknown %s element %s"),
+		     currentParserCtxt->SSchemaName, GIname);
 	   XmlParseError (errorParsing, msgBuffer, 0);
 	   UnknownTag = TRUE;
 	 }
@@ -1730,8 +1741,8 @@ static void    XmlEndElement (CHAR_T *GIname)
 	   /* element invalid for the current profile */
 	   /* doesn't process that element */
 	   usprintf (msgBuffer,
-		     TEXT("Unknown XML element %s for the current profile"),
-		     GIname);
+		     TEXT("Unknown %s element %s for the current profile"),
+		     currentParserCtxt->SSchemaName, GIname);
 	   XmlParseError (errorParsingProfile, msgBuffer, 0);
 	   UnknownTag = TRUE;
 	 }
@@ -2979,7 +2990,12 @@ static void       Hndl_ElementStart (void *userData,
 	   ustrcpy (bufName, buffer);
 	 }
 
-       /* We stop parsing if context is null, ie,
+#ifdef XML_GEN
+       /* We assign generix Thot XML schema if the context is null */ 
+      if (currentParserCtxt == NULL)
+	ChangeXmlParserContextDTD (TEXT("XML"));
+#else /* XML_GEN */
+       /* We stop parsing if the context is null, ie,
 	  if Thot doesn't know the corresponding namespaces */ 
       if (currentParserCtxt == NULL)
 	{
@@ -2989,6 +3005,7 @@ static void       Hndl_ElementStart (void *userData,
 	  DisableExpatParser ();
 	  return;
 	}
+#endif /* XML_GEN */
       else
 	  elementParserCtxt = currentParserCtxt;
 
@@ -3102,7 +3119,7 @@ static void     Hndl_ElementEnd (void *userData,
        
    /* Ignore the virtual root of a XML sub-tree */
    if (ustrcmp (bufName, SUBTREE_ROOT) != 0)
-     XmlEndElement ((CHAR_T*) (bufName));
+     EndOfXmlElement ((CHAR_T*) (bufName));
 
    /* Is it the end tag of the root element ? */
    if (!ustrcmp (XMLrootName, (CHAR_T*) name) && stackLevel == 1)
@@ -3362,8 +3379,8 @@ static void  InitializeExpatParser (CHARSET charset)
 	   charset == ISO_8859_10  || charset == ISO_8859_15  ||
 	   charset == ISO_8859_supp)
     parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+  /* Consider WINDOWS_1252 (Windows Latin 1) as ISO_8859_1 */
   else if (charset == WINDOWS_1252)
-    /* Consider WINDOWS_1252 (Windows Latin 1) as ISO_8859_1 */
     parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
   else
     {

@@ -8,10 +8,11 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#define MATH_TYPE  1
-#define GRAPH_TYPE 2
-#define XLINK_TYPE 3
-#define XHTML_TYPE 4
+#define MATH_TYPE    1
+#define GRAPH_TYPE   2
+#define XLINK_TYPE   3
+#define XHTML_TYPE   4
+#define XML_TYPE     5
 
 /* current HTML parsing level */
 #define L_Other        0
