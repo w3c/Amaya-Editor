@@ -1830,8 +1830,8 @@ static void MoveCellContents (Element nextCell, Element cell,
   ----------------------------------------------------------------------*/
 void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
 {
-  Element             table, nextCell, previous, next, colHead, curColHead,
-                      cHead, row, curRow, prevCell;
+  Element             table, nextCell, previous, colHead, curColHead, cHead,
+                      row, curRow, prevCell;
   ElementType         elType, tableType;
   AttributeType       attrType, rowspanType, colspanType;
   Attribute           attr;
@@ -1879,14 +1879,13 @@ void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
     }
   else
     rowspan = 1;
-  /* get current column */
+  /* get the column of the cell */
   attr = TtaGetAttribute (cell, attrType);
   if (attr)
     TtaGiveReferenceAttributeValue (attr, &colHead, name, &refDoc);
   else
     return;
 
-  ncol = 0;
   if (newspan > oldspan)
     /* merge with cells in following columns */
     {
@@ -1895,6 +1894,7 @@ void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
 	/* get the last element contained in the CellWrapper */
 	previous = TtaGetLastChild (previous);
       curColHead = colHead;
+      ncol = 0;
       while (curColHead && ncol < newspan)
 	{
 	  ncol++; /* count columns */
@@ -1926,7 +1926,9 @@ void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
 			  if (curColspan > newspan - ncol + 1)
 			    {
 			    prevCell = nextCell;
-			    cHead = curColHead;
+			    cHead = colHead;
+			    for (j = 0; j < newspan; j++)
+			      TtaNextSibling (&cHead);
 			    for (j = 0; j < curColspan-newspan+ncol-1; j++)
 			      {
 			      prevCell = AddEmptyCellInRow (curRow, cHead,
@@ -1944,22 +1946,50 @@ void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
 	  TtaNextSibling (&curColHead);
 	}
     }
-  else if (newspan < oldspan)
+  else
     /* generate empty cells */
-    /****** This code does not take cell extension into account *****/
     {
-      previous = cell;
-      for (ncol = 0; ncol < oldspan - newspan; ncol++)
+      /* process all rows covered by the cell (due to attribute rowspan) */
+      curRow = row; i = 0;
+      while (curRow && i < rowspan)
 	{
-	  elType.ElSSchema = tableType.ElSSchema;
-	  if (inMath)
-	    elType.ElTypeNum = MathML_EL_MTD;
-	  else
-	    elType.ElTypeNum = HTML_EL_Data_cell;
-	  nextCell = TtaNewTree (doc, elType, "");
-	  TtaInsertSibling (nextCell, previous, FALSE, doc);
-	  TtaRegisterElementCreate (nextCell, doc);
-	  previous = nextCell;
+	  elType = TtaGetElementType (curRow);
+	  if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
+	      (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
+			  elType.ElTypeNum == MathML_EL_MLABELEDTR)))
+	    /* this is really a row */
+	    {
+	      i++;
+	      if (curRow == row)
+		prevCell = cell;
+	      else
+		{
+		  cHead = colHead;
+		  prevCell = NULL;
+		  do
+		    {
+		      TtaPreviousSibling (&cHead);
+		      if (cHead)
+			prevCell = GetCellFromColumnHead (curRow, cHead,
+							  inMath);
+		    }
+		  while (cHead && !prevCell);
+		}
+	      cHead = colHead;
+	      /* skip the columns covered by the cell with its new colspan */
+	      for (j = 0; j < newspan; j++)
+		TtaNextSibling (&cHead);
+	      /* add new empty cells to fill the space left by reducing the
+		 colspan value */
+	      for (ncol = 0; ncol < oldspan - newspan; ncol++)
+		{
+		  prevCell = AddEmptyCellInRow (curRow, cHead, prevCell, FALSE,
+						doc, inMath, FALSE);
+		  TtaNextSibling (&cHead);
+		}
+	    }
+	  /* next sibling of current row */
+	  TtaNextSibling (&curRow);
 	}
     }
   CheckAllRows (table, doc, FALSE, TRUE);
@@ -2029,7 +2059,7 @@ void ColspanDeleted (NotifyAttribute * event)
    ChangeRowspan
    The value of the rowspan attribute has changed from oldspan to newspan
    for the given cell. Add new empty cells (if newspan < oldspan) below
-   element cell or merge the following cells (if oldspan > newspan).
+   the cell or merge the cells below (if oldspan > newspan).
   ----------------------------------------------------------------------*/
 void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
 {
