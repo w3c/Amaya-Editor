@@ -18,6 +18,7 @@ text_: text
 SpanElement: \240
 script_: script
 set_: set
+Anim: \240
 DOCTYPE: doctype
 XMLcomment: comment
 XMLPI: pi
@@ -58,9 +59,17 @@ embed_: embed
 bidi_override: bidi-override
 width_: width
 height_: height
+opacity_: opacity
 xlink_href: xlink:href
 title_: title
+fill_opacity: fill-opacity
+stroke_opacity: stroke-opacity
+writing_mode: writing-mode
+lr_tb: lr-tb
+rl_tb: rl-tb
+tb_rl: tb-rl
 baseline_shift: baseline-shift
+stop_color: stop-color
 target_: target
 attributeName_: attributeName
 begin_: begin
@@ -74,10 +83,6 @@ none_: none
 path_: path
 type_: type
 rotate_: rotate
-opacity_: opacity
-stroke_opacity: stroke-opacity
-fill_opacity: fill-opacity
-stop_color: stop-color
 
 
 
