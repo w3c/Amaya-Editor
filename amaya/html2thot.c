@@ -7292,6 +7292,7 @@ ThotBool            plainText;
    TtaSetDocumentUnmodified (doc);
 
    if (!plainText)
+     {
      if (XMLNotWellFormed)
        {
 	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
@@ -7301,7 +7302,7 @@ ThotBool            plainText;
        }
      else if (XMLErrorsFound)
 	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
-
+     }
    HTMLcontext.doc = 0;
 }
 

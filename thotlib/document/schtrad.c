@@ -15,7 +15,7 @@
  */
  
 /*
-   Chargement et liberation des schemas de structure et de traduction
+   Handler of translation schemas
  */
 
 #include "thot_sys.h"
@@ -54,11 +54,9 @@ static ATranslation LoadedTSchema[MAX_TSCHEMAS];
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitTranslationSchemasTable ()
-
 #else  /* __STDC__ */
 void                InitTranslationSchemasTable ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i;
 
@@ -77,11 +75,9 @@ void                InitTranslationSchemasTable ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearTranslationSchemasTable ()
-
 #else  /* __STDC__ */
 void                ClearTranslationSchemasTable ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i;
 
@@ -102,17 +98,13 @@ void                ClearTranslationSchemasTable ()
 /*----------------------------------------------------------------------
    LoadTranslationSchema charge un schema de traduction.           
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrTSchema          LoadTranslationSchema (Name schName, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 PtrTSchema          LoadTranslationSchema (schName, pSS)
 Name                schName;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    PtrTSchema          pTSch;
    int                 i;
@@ -164,17 +156,13 @@ PtrSSchema          pSS;
    schName est trouvee dans ce bloc, on met dans schName	
    le nom du schema de traduction a` utiliser.		
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static ThotBool     GetUSErule (PtrTRuleBlock pBlock, Name schName)
-
 #else  /* __STDC__ */
 static ThotBool     GetUSErule (pBlock, schName)
 PtrTRuleBlock       pBlock;
 Name                schName;
-
 #endif /* __STDC__ */
-
 {
    PtrTRule            pTRule;
    ThotBool            found;
@@ -210,16 +198,12 @@ Name                schName;
    Au retour, rend dans schName le nom du schema de        
    traduction.                                             
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         GetTransSchName (Name schName)
-
 #else  /* __STDC__ */
 static void         GetTransSchName (schName)
 Name                schName;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    ThotBool            found, natureOK;
@@ -268,13 +252,10 @@ Name                schName;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrTSchema          GetTranslationSchema (PtrSSchema pSS)
-
 #else  /* __STDC__ */
 PtrTSchema          GetTranslationSchema (pSS)
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    PtrTSchema          pTSchema;
    Name                schemaName;
@@ -287,7 +268,7 @@ PtrSSchema          pSS;
    do
      {
 	if (LoadedTSchema[i].pStructSchema != NULL)
-	   found = (LoadedTSchema[i].pStructSchema->SsCode == pSS->SsCode);
+	   found = (ustrcmp (pSS->SsName, LoadedTSchema[i].pStructSchema->SsName) == 0);
 	if (!found)
 	   i++;
      }

@@ -36,14 +36,12 @@ void                InitNatures ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadNatureSchema (PtrSSchema pSS, CHAR_T* PSchName, int rule)
-
 #else  /* __STDC__ */
 void                LoadNatureSchema (pSS, PSchName, rule)
 PtrSSchema          pSS;
 CHAR_T*             PSchName;
 int                 rule;
 #endif /* __STDC__ */
-
 {
    PtrSSchema          pNatureSS;
    Name                schName;
@@ -83,14 +81,11 @@ int                 rule;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AppendSRule (int *ret, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 static void         AppendSRule (ret, pSS)
 int                *ret;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
      {
@@ -205,7 +200,6 @@ PtrSSchema         pSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadSchemas (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool Extension)
-
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, Extension)
 CHAR_T*             SSchName;
@@ -213,9 +207,7 @@ CHAR_T*             PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
 ThotBool            Extension;
-
 #endif /* __STDC__ */
-
 {
    Name             schName;
 
@@ -249,13 +241,11 @@ ThotBool            Extension;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrSSchema          LoadExtension (CHAR_T* SSchName, CHAR_T* PSchName, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
 CHAR_T*             SSchName;
 CHAR_T*             PSchName;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 
 {
@@ -298,7 +288,6 @@ static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 static ThotBool     FreeNatureRules (pSS, pNatureSS)
 PtrSSchema          pSS;
 PtrSSchema          pNatureSS;
-
 #endif /* __STDC__ */
 {
    SRule              *pRule;
@@ -333,14 +322,11 @@ PtrSSchema          pNatureSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
-
 #else  /* __STDC__ */
 ThotBool            FreeNature (pSS, pNatureSS)
 PtrSSchema          pSS;
 PtrSSchema          pNatureSS;
-
 #endif /* __STDC__ */
-
 {
    ThotBool            ret;
 
@@ -367,7 +353,6 @@ void                FreeDocumentSchemas (PtrDocument pDoc)
 #else  /* __STDC__ */
 void                FreeDocumentSchemas (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 {
    PtrSSchema          pSS, pNextSS;

@@ -62,6 +62,7 @@ static  CHAR_T  oldXlinkHrefValue[oldHrefMaxLen];
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLpresentation_f.h"
+#include "init_f.h"
 #include "XLinkedit_f.h"
 
 /*----------------------------------------------------------------------

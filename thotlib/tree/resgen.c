@@ -68,6 +68,7 @@ TypeTree lastNode;
     if (lastNode->TChild != NULL)
       current = lastNode->TChild;
     else if (lastNode != tree)
+      {
       if (lastNode->TNext != NULL)
 	current = lastNode->TNext;
       else
@@ -75,6 +76,7 @@ TypeTree lastNode;
 	  current = lastNode->TParent;
 	  wentUp = TRUE;
 	}
+      }
 
   while (!found && current != NULL && (!wentUp || current != tree))
     {

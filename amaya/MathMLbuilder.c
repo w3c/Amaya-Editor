@@ -1767,6 +1767,7 @@ void SetIntAddSpaceAttr (el, doc)
 	    TtaGiveTextContent (textEl, text, &len, &lang);
 	    alphabet = TtaGetAlphabet (lang);
 	    if (len == 1)
+	      {
 	       /* the mo element contains a single character */
 	       if (alphabet == 'L')
 	          /* ISO-Latin 1 character */
@@ -1821,6 +1822,7 @@ void SetIntAddSpaceAttr (el, doc)
 		     (int)text[0] == 218 )  /* or */
 		    /* infix operator */
 		    val = MathML_ATTR_IntAddSpace_VAL_both;
+	      }
 	  }
        }
      TtaSetAttributeValue (attr, val, el, doc);

@@ -49,10 +49,9 @@ static APresentation LoadedPSchema[MAX_PSCHEMAS];
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitNatures ()
-
 #else  /* __STDC__ */
 void                InitNatures ()
-#endif				/* __STDC__ */
+#endif /* __STDC__ */
 {
    int                 i;
 
@@ -71,12 +70,10 @@ void                InitNatures ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrPSchema          LoadPresentationSchema (Name schemaName, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 PtrPSchema          LoadPresentationSchema (schemaName, pSS)
 Name                schemaName;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
 
 {
@@ -140,13 +137,10 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreePRuleList (PtrPRule * firstPRule)
-
 #else  /* __STDC__ */
 static void         FreePRuleList (firstPRule)
 PtrPRule           *firstPRule;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pPRule, pNextPRule;
 
@@ -169,7 +163,6 @@ PtrPRule           *firstPRule;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 void                FreePresentationSchema (pPSchema, pSS)
 PtrPSchema          pPSchema;
@@ -268,15 +261,12 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadNatureSchema (PtrSSchema pSS, CHAR_T* PSchName, int rule)
-
 #else  /* __STDC__ */
 void                LoadNatureSchema (pSS, PSchName, rule)
 PtrSSchema          pSS;
 CHAR_T*             PSchName;
 int                 rule;
-
 #endif /* __STDC__ */
-
 {
    Name                schName;
    PtrSSchema          pNatureSS;
@@ -345,14 +335,11 @@ int                 rule;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AppendSRule (int *ret, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 static void         AppendSRule (ret, pSS)
 int                *ret;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
       {
@@ -384,15 +371,12 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 CreateNature (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 int                 CreateNature (SSchName, PSchName, pSS)
 CHAR_T*             SSchName;
 CHAR_T*             PSchName;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    SRule              *pRule;
    int                 ret;
@@ -479,7 +463,6 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadSchemas (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool extension)
-
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, extension)
 CHAR_T*             SSchName;
@@ -487,9 +470,7 @@ CHAR_T*             PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
 ThotBool            extension;
-
 #endif /* __STDC__ */
-
 {
    Name          schName;
 
@@ -572,13 +553,11 @@ ThotBool            extension;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrSSchema          LoadExtension (CHAR_T* SSchName, CHAR_T* PSchName, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
 CHAR_T*             SSchName;
 CHAR_T*             PSchName;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 {
    PtrSSchema          pExtens, pPrevExtens;
@@ -633,12 +612,10 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
-
 #else  /* __STDC__ */
 static ThotBool     FreeNatureRules (pSS, pNatureSS)
 PtrSSchema          pSS;
 PtrSSchema          pNatureSS;
-
 #endif /* __STDC__ */
 {
    SRule              *pRule;
@@ -652,6 +629,7 @@ PtrSSchema          pNatureSS;
 	 {
 	 pRule = &pSS->SsRule[rule];
 	 if (pRule->SrConstruct == CsNatureSchema)
+	   {
 	    /* c'est une regle de nature */
 	    if (pRule->SrSSchemaNat == pNatureSS)
 	       /* elle fait reference a la nature supprimee */
@@ -665,6 +643,7 @@ PtrSSchema          pNatureSS;
 	       /* dans cette nature les regles qui font reference a la */
 	       /* nature supprimee. */
 	       FreeNatureRules (pRule->SrSSchemaNat, pNatureSS);
+	   }
 	 }
    return ret;
 }
@@ -678,14 +657,11 @@ PtrSSchema          pNatureSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
-
 #else  /* __STDC__ */
 ThotBool            FreeNature (pSS, pNatureSS)
 PtrSSchema          pSS;
 PtrSSchema          pNatureSS;
-
 #endif /* __STDC__ */
-
 {
    ThotBool            ret;
 
@@ -712,13 +688,10 @@ PtrSSchema          pNatureSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreeDocumentSchemas (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                FreeDocumentSchemas (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrSSchema          pSS, pNextSS;
    SRule              *pRule;
@@ -884,7 +857,6 @@ PtrDocument         pDoc;
    int                 rule, nat;
    ThotBool            present;
    SRule              *pSRule;
-   ThotBool            attrSchema;
 
    for (rule = 0; rule < pSS->SsNRules; rule++)
       {

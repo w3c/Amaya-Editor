@@ -931,10 +931,12 @@ Document    doc;
 	  elem = parent;
 	  parent = TtaGetParent (parent);
 	  if (parent !=NULL)
+	    {
 	    if (TtaGetParent(parent)!=NULL)
 	      parSch = (TtaGetElementType (TtaGetParent(parent))).ElSSchema;
 	    else
 	      parSch = (TtaGetElementType (parent)).ElSSchema;
+	    }
 	}
     }
   TtaRegisterElementDelete (elem, doc);
@@ -1271,6 +1273,7 @@ Document            doc;
 	   result = FALSE;
      }
    if (result == FALSE)
+     {
       /* impossible to create a descendance to the element */
       /* trying to flatten the element to be transferred */
       /* this is the worst case */
@@ -1280,6 +1283,7 @@ Document            doc;
       else
 	 result = FlattenAndInsertElement (newEl, elCour, TRUE, doc,
 					   &elem, rank);
+     }
    return result;
 }
 
@@ -1955,10 +1959,12 @@ Document            doc;
 	  {
 	     if (DMatch->MatchNode->Elem != NULL &&
 		 FindListSTreeByLabel (TtaGetElementLabel (DMatch->MatchNode->Elem)) == NULL)
+	       {
 	       if (TtaGetParent (DMatch->MatchNode->Elem) != NULL)
 		 TtaDeleteTree (TtaGetParent (DMatch->MatchNode->Elem), doc);
 	       else
 		 TtaDeleteTree (DMatch->MatchNode->Elem, doc);
+	       }
 	     DMatch = DMatch->Next;
 	  }
 	TtaSetErrorMessages (1);

@@ -1110,6 +1110,7 @@ CHAR_T                c;
    int		i;
 
    if (entityNameLength < MAX_ENTITY_LENGTH - 1)
+     {
       /* the entity buffer is not full */
       if (c >= '0' && c <= '9')
 	 /* the character is a decimal digit */
@@ -1131,6 +1132,7 @@ CHAR_T                c;
 	 normalTransition = FALSE;
 	 XMLabort = TRUE;
 	 }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1190,6 +1192,7 @@ CHAR_T                c;
    int		i;
 
    if (entityNameLength < MAX_ENTITY_LENGTH - 1)
+     {
       /* the entity buffer is not full */
       if ((c >= '0' && c <= '9') ||
           (c >= 'a' && c <= 'f') ||
@@ -1214,6 +1217,7 @@ CHAR_T                c;
 	 normalTransition = FALSE;
 	 XMLabort = TRUE;
 	 }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1323,6 +1327,7 @@ UCHAR_T       c;
    CHAR_T	cont;
 
    if (c != EOS)
+     {
      if ((int) c == EOL || (int) c == __CR__)
        /* new line in a comment */
        {
@@ -1360,6 +1365,7 @@ UCHAR_T       c;
 	   }
          inputBuffer[bufferLength++] = c;
        }
+     }
 }
  
 /*----------------------------------------------------------------------
@@ -1818,18 +1824,21 @@ Language  lang;
 	    /* LF = end of input line */
 	    {
 	      if (currentState != 12)
+		{
 		/* don't change characters in comments */
 		if (currentState != 0)
 		  /* not within a text element */
 		  {
 		    immAfterTag = FALSE;
 		    if (charRead != EOS)
+		      {
 		      /* Replace new line by a space, except if an entity is
 			 being read */
 		      if (currentState == 30) 
 			charRead = EOL; /* new line */
 		      else
 			charRead = SPACE;
+		      }
 		  }
 		else
 		  /* new line in ordinary text */
@@ -1849,6 +1858,7 @@ Language  lang;
 			  XMLTextToDocument ();
 		      }
 		  }
+		}
 	      else
 		immAfterTag = FALSE;	
 	      /* beginning of a new input line */

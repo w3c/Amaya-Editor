@@ -1895,6 +1895,7 @@ View                view;
       
       /* it's a complete name: save it */
       if (ok)
+	{
 	if (TextFormat)
 	  {
 	  ok = SaveObjectThroughNet (doc, view, DocumentURLs[doc],
@@ -1909,6 +1910,7 @@ View                view;
 				       FALSE, TRUE, TRUE);
 	  newLineNumbers = TRUE;
 	  }
+	}
     }
   else
     /* it's a local document */
@@ -1962,12 +1964,14 @@ View                view;
 
   SavingDocument = 0;
   if (newLineNumbers)
+    {
      /* line numbers have been changed in the saved document */
      if (DocumentTypes[doc] == docHTML)
         /* It's a HTML document. If the source view is open, redisplay the
 	   source. */
        RedisplaySourceFile (doc);
      else if (DocumentTypes[doc] == docSource)
+       {
 	/* It's a source document. Reparse the corresponding HTML document */
 	if (htmlDoc)
 	   {
@@ -1978,6 +1982,8 @@ View                view;
 	   event.document = doc;
 	   SynchronizeSourceView (&event);
 	   }
+       }
+    }
   if (ok)
     {
       if (DocumentMeta[doc]->method == CE_TEMPLATE)

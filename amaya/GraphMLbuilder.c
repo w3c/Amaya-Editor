@@ -601,7 +601,7 @@ int             *error
    Element		child, parent, new, leaf;
    AttributeType        attrType;
    Attribute            attr;
-   int                  length, i;
+   int                  length;
    PRule		fillPatternRule, newPRule;
    SSchema	        GraphMLSSchema;
    STRING               text, href;

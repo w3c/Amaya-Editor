@@ -1886,6 +1886,7 @@ UCHAR_T       c;
       else
 	pnode = ppRule->NewNodes;
       if (pnode && ustrcmp (pnode->Tag, TEXT("*")) != 0)
+	{
 	if (ppTrans->DestinationTag == NULL)
 	  {
 	    /* the dest type is undefined => the first tag of the rule defines */
@@ -1897,6 +1898,7 @@ UCHAR_T       c;
 	  /* the first tag of the rule is different from the destination type */
 	  /* the rule has no destination type */
 	  ustrcpy (ppTrans->DestinationTag, TEXT(""));
+	}
     }
   else
     {
@@ -2459,10 +2461,12 @@ strTransSet   **resTrSet;
         ustrcat (fileName, TEXT(".trans"));
 	found = (TtaFileExist(fileName) == 1);
 	if (!found)
+	  {
 	   if (next == NULL)
 	      cour = NULL;
 	   else
 	      cour = next+1;
+	  }
      }
    
    /* check if the file is newer than last read */

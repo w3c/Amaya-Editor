@@ -134,6 +134,7 @@ int IDst;
    /* si l'un des deux symboles (source ou dest) est @, recherche s'ils */
    /* correspondent au meme type d'element */
    if (PSrc[ISrc] == '@' || PDst[IDst] == '@')
+     {
      if(TtaSameSSchemas (RContext->CSrcSchema, (resctx->RDestType).ElSSchema) &&
 	resctx->RSrcPrint->SNodes[ISrc] != NULL &&
 	resctx->RDestNodes[IDst] != NULL &&
@@ -147,7 +148,8 @@ int IDst;
 	 {
 	   result = REC_MASK;
 	 }
-   
+     }
+
    if (result == NONE)
      {
        CSrc = PSrc[ISrc];

@@ -961,6 +961,7 @@ Document            doc;
 	  elType.ElTypeNum = HTML_EL_Table_foot;
 	  foot = TtaNewTree (doc, elType, "");
 	  if (foot != NULL)
+	    {
 	    if (tfoot != NULL)
 	      {
 		/* move element tfoot at the end */
@@ -970,6 +971,7 @@ Document            doc;
 	      }
 	    else
 	      TtaInsertSibling (foot, Tablebody, FALSE, doc);
+	    }
 	  
 	  if (thead != NULL)
 	    firstgroup = thead;

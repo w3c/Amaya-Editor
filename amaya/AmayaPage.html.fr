@@ -22,7 +22,6 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-
 <p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="466"
 height="349">
   <image id="backgroundImage" x="0" y="0" width="466" height="349"
@@ -60,7 +59,28 @@ height="349">
     <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"
              stroke="1"/>
     <foreignObject y="156px" x="35px">
-       xlink:href="color: #FFFFFF; font-family: times"y=1x2+1</foreignObject>
+       xmlns="http://www.w3.org/1999/xhtml"
+      <math xmlns="http://www.w3.org/1998/Math/MathML"
+      style="color: #FFFFFF; font-family: times">
+        <mrow>
+          <mi>y</mi>
+          <mo>=</mo>
+          <mfrac>
+            <mn>1</mn>
+            <msqrt>
+              <mrow>
+                <msup>
+                  <mi>x</mi>
+                  <mn>2</mn>
+                </msup>
+                <mo>+</mo>
+                <mn>1</mn>
+              </mrow>
+            </msqrt>
+          </mfrac>
+        </mrow>
+      </math>
+    </foreignObject>
     <polygon style="fill: #9EA4A6;" points="30,60  108,208  125,155"
              stroke="1"/>
     <polygon style="fill: #89A5C7;" points="30,60  125,155  144,161"

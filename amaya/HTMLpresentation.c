@@ -449,6 +449,7 @@ NotifyPresentation *event;
   /* if it's a rule on element HTML and it's not a background rule, move
      it to element BODY */
   if (event->event != TtePRuleDelete)
+    {
     if (elType.ElSSchema != HTMLschema)
       /* it's not an HTML element */
       {
@@ -643,6 +644,7 @@ NotifyPresentation *event;
 	      }
 	  }
       }
+    }
   /* set the Style_ attribute ? */
   SetStyleAttribute (doc, el);
   TtaSetDocumentModified (doc);

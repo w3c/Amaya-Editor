@@ -1148,6 +1148,7 @@ Element el;
 			 }
 		       while (lastChar[0] == SPACE && length > 0);
 		       if (nbspaces > 0)
+			 {
 			 if (length == 0)
 			   /* empty TEXT element */
 			   TtaDeleteTree (lastLeaf, XMLcontext.doc);
@@ -1155,6 +1156,7 @@ Element el;
 			   /* remove the ending spaces */
 			   TtaDeleteTextContent (lastLeaf, length + 1,
 						 nbspaces, XMLcontext.doc);
+			 }
 		     }
 		 }
 	     }
@@ -1231,6 +1233,7 @@ Element el;
 		 }
 
 	       if (nbspaces > 0)
+		 {
 		 if (length == 0)
 		   /* empty TEXT element */
 		   TtaDeleteTree (lastLeaf, XMLcontext.doc);
@@ -1238,6 +1241,7 @@ Element el;
 		   /* remove the ending spaces */
 		   TtaDeleteTextContent (lastLeaf, length + 1,
 					 nbspaces, XMLcontext.doc);
+		 }
 	     }
 	 }
      }
@@ -1384,28 +1388,30 @@ STRING    elName;
 	     ustrcmp (elName, TEXT("td")))
 	   ok = FALSE;
 
-       if (ok)
+       if (ok &&
+	   !ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
-	 if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
-	   {
-	     if (ustrcmp (elName, TEXT("caption"))  &&
-		 ustrcmp (elName, TEXT("thead"))    &&
-		 ustrcmp (elName, TEXT("tfoot"))    &&
-		 ustrcmp (elName, TEXT("tbody"))    &&
-		 ustrcmp (elName, TEXT("colgroup")) &&
-		 ustrcmp (elName, TEXT("col"))      &&
-		 ustrcmp (elName, TEXT("tr")))
-	         if (!ustrcmp (elName, TEXT("td")) ||
-		     !ustrcmp (elName, TEXT("th")))
-		   /* Table cell within a table, without a tr. Assume tr */
-		   {
-		     /* simulate a <TR> tag */
-		     StartOfXmlStartElement (TEXT("tr"));
-		   }
-		 else
-		   ok = FALSE;
-	   }
+	 {
+	   if (ustrcmp (elName, TEXT("caption"))  &&
+	       ustrcmp (elName, TEXT("thead"))    &&
+	       ustrcmp (elName, TEXT("tfoot"))    &&
+	       ustrcmp (elName, TEXT("tbody"))    &&
+	       ustrcmp (elName, TEXT("colgroup")) &&
+	       ustrcmp (elName, TEXT("col"))      &&
+	       ustrcmp (elName, TEXT("tr")))
+	     {
+	       if (!ustrcmp (elName, TEXT("td")) ||
+		   !ustrcmp (elName, TEXT("th")))
+		 /* Table cell within a table, without a tr. Assume tr */
+		 {
+		   /* simulate a <TR> tag */
+		   StartOfXmlStartElement (TEXT("tr"));
+		 }
+	       else
+		 ok = FALSE;
+	     }
+	 }
 
        if (ok)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
@@ -1419,6 +1425,7 @@ STRING    elName;
 	         ok = FALSE;
 
        if (ok)
+	 {
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
 	 if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("thead")) ||
 	     !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tfoot")) ||
@@ -1436,12 +1443,13 @@ STRING    elName;
 		 else
 		   ok = FALSE;
 	   }
+	 }
 
-       if (ok)
+       if (ok &&
+	   ustrcmp (elName, TEXT("body")) == 0 &&
+	   XmlWithinStack (HTML_EL_BODY, DocumentSSchema))
 	 /* refuse BODY within BODY */
-	 if (ustrcmp (elName, TEXT("body")) == 0)
-	     if (XmlWithinStack (HTML_EL_BODY, DocumentSSchema))
-	         ok = FALSE;
+	 ok = FALSE;
 
        if (ok)
 	 /* refuse HEAD within HEAD */
@@ -3115,6 +3123,7 @@ const XML_Char  *data;
    CreateXmlComment ((CHAR_T*) data);
 }
 
+#ifdef IV
 /*----------------------------------------------------------------------
    Hndl_Default
    Handler for any characters in the document which wouldn't
@@ -3133,7 +3142,6 @@ void            *userData;
 const XML_Char  *data;
 int              length;
 #endif  /* __STDC__ */
-
 {
 #ifdef EXPAT_PARSER_DEBUG
   int  i;
@@ -3146,6 +3154,7 @@ int              length;
   if (length > 1 && data[0] == '&')
     CreateXmlEntity ((CHAR_T*) data, length);
 }
+#endif /* IV */
 
 /*----------------------------------------------------------------------
    Hndl_DefaultExpand

@@ -231,6 +231,18 @@ extern void         TtaGiveNextElement (Document document, /*OUT*/ Element * ele
   ----------------------------------------------------------------------*/
 extern void         TtaGiveLastSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
 
+/*----------------------------------------------------------------------
+   TtaSetMoveForwardCallback permet de connecter une fonction de
+   l'application a la touche de deplacement du curseur vers l'avant
+  ----------------------------------------------------------------------*/
+extern void  TtaSetMoveForwardCallback (Func callbackFunc);
+
+/*----------------------------------------------------------------------
+   TtaSetMoveBackwardCallback permet de connecter une fonction de
+   l'application a la touche de deplacement du curseur vers l'arriere
+  ----------------------------------------------------------------------*/
+extern void  TtaSetMoveBackwardCallback (Func callbackFunc);
+
 #else  /* __STDC__ */
 
 extern ThotBool     TtaIsDocumentSelected ( /*Document document */ );
@@ -248,6 +260,8 @@ extern void         TtaGiveFirstSelectedElement ( /* Document document, Element 
 extern void         TtaGiveNextSelectedElement ( /* Document document, Element *selectedElement, int *firstCharacter, int *lastCharacter */ );
 extern void         TtaGiveNextElement ( /* Document document, Element * element, Element last */ );
 extern void         TtaGiveLastSelectedElement ( /* Document document, Element *selectedElement, int *firstCharacter, int *lastCharacter */ );
+extern void  TtaSetMoveForwardCallback (/* Func callbackFunc */);
+extern void  TtaSetMoveBackwardCallback (/* Func callbackFunc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

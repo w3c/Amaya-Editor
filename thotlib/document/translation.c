@@ -1432,6 +1432,7 @@ PtrDocument         pDoc;
 	       while (pPRule != NULL && !ret)
 		 {
 		 if (pPRule->PrType == (PRuleType)(Cond->TcAttr))
+		   {
 		   /* c'est la presentation cherchee, on teste sa valeur */
 		   if (pPRule->PrType == PtSize ||
 		       pPRule->PrType == PtIndent||
@@ -1448,6 +1449,7 @@ PtrDocument         pDoc;
 		   else
 		     ret = Cond->TcPresValue == PresRuleValue (pPRule) ||
 		           Cond->TcPresValue == EOS;
+		   }
 		 if (!ret)
 		   pPRule = pPRule->PrNextPRule;
 		 }
@@ -1960,6 +1962,7 @@ ThotBool            recordLineNb;
        while (pTRule != NULL && !*ignoreEl)
 	 {
 	 if (pTRule->TrOrder == position)
+	   {
 	   /* c'est une regle a appliquer a cette position */
 	   if (pTRule->TrType == TRemove)
 	     *removeEl = TRUE;
@@ -1974,6 +1977,7 @@ ThotBool            recordLineNb;
 	     ApplyTRule (pTRule, pTSchAttr, pAttr->AeAttrSSchema,
 			 pEl, transChar, lineBreak, removeEl, ignoreEl, NULL,
 			 pAttr, pDoc, recordLineNb);
+	   }
 	 /* passe a la regle suivante */
 	 pTRule = pTRule->TrNextTRule;
 	 }
@@ -2184,6 +2188,7 @@ ThotBool            recordLineNb;
        /* type de regle de presentation */
        pBlock = NULL;
        if (pTSch != NULL)
+	 {
 	 if (pPRule->PrType == PtSize ||
 	     pPRule->PrType == PtIndent ||
 	     pPRule->PrType == PtLineSpacing ||
@@ -2230,6 +2235,7 @@ ThotBool            recordLineNb;
 	     /* prend les regles qui s'appliquent a toute valeur */
 	     pBlock = pPRuleTr->RtPRuleValueBlock[0];
 	   }
+	 }
        /* parcourt les blocs de regles de la valeur de la presentation */
        while (pBlock != NULL && !*ignoreEl)
 	 {
@@ -2241,6 +2247,7 @@ ThotBool            recordLineNb;
 	   while (pTRule != NULL && !*ignoreEl)
 	     {
 	     if (pTRule->TrOrder == position)
+	       {
 	       /* c'est une regle a appliquer a cette position */
 	       if (pTRule->TrType == TRemove)
 		 *removeEl = TRUE;
@@ -2255,6 +2262,7 @@ ThotBool            recordLineNb;
 		 ApplyTRule (pTRule, pTSch, pEl->ElStructSchema, pEl,
 			     transChar, lineBreak, removeEl, ignoreEl,
 			     pPRule, pAttr, pDoc, recordLineNb);
+	       }
 	     /* passe a la regle suivante */
 	     pTRule = pTRule->TrNextTRule;
 	     }
@@ -2351,6 +2359,7 @@ ThotBool            lineBreak;
 	    pour l'element designe'par la reference si TrReferredObj est vrai*/
 	 pRef = NULL;
 	 if (ref)
+	   {
 	   if (pAttr != NULL &&
 	       pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].
 	                                         AttrType == AtReferenceAttr)
@@ -2363,6 +2372,7 @@ ThotBool            lineBreak;
 	     else
 	       /* c'est peut-etre une inclusion */
 	       pRef = pEl->ElSource;
+	   }
 	 if (pRef != NULL)
 	   {
 	   pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
@@ -2661,6 +2671,7 @@ ThotBool            recordLineNb;
 							 &pTransAlph);
 		 pBuf = pA->AeAttrText;
 		 if (pBuf)
+		   {
 		   if (!pTransTextSch || !pTransAlph)
 		     /* no translation */
 		     while (pBuf != NULL)
@@ -2675,6 +2686,7 @@ ThotBool            recordLineNb;
 		        line breaks. */
 		     TranslateText (pBuf, pTransTextSch, pTransAlph, FALSE,
 				    fileNum, pDoc);
+		   }
 		 break;
 	       case AtReferenceAttr:
 		 /* cas non traite' */
@@ -2853,6 +2865,7 @@ ThotBool            recordLineNb;
 		 nameBuffer = docIdent;
 	       }
 	     else if (pTRule->TrObject == ToReferredDocumentDir)
+	       {
 	       if (pRefEl != NULL && docIdent[0] == EOS)
 		 /* reference interne. On sort le directory du document
 		    lui-meme */
@@ -2874,6 +2887,7 @@ ThotBool            recordLineNb;
 		       nameBuffer = directoryName;
 		     }
 		 }
+	       }
 	     if (nameBuffer != NULL)
 	       while (*nameBuffer != WC_EOS)
 		 {
@@ -2928,6 +2942,7 @@ ThotBool            recordLineNb;
 				pTRule->TrObjectNature);
 	       }
 	     if (pRefEl != NULL)
+	       {
 	       /* traduit l'element reference', meme s'il a deja ete traduit */
 	       if (docIdent[0] == EOS)
 		 /* reference interne */
@@ -2937,6 +2952,7 @@ ThotBool            recordLineNb;
 		 /* reference externe a un document charge' */
 		 TranslateTree (pRefEl, pExtDoc, *transChar, *lineBreak, TRUE,
 				recordLineNb);
+	       }
 	     }
 	   break;
 
@@ -3264,12 +3280,14 @@ ThotBool            recordLineNb;
 	   do
 	     {
 	     if (pDoc->DocAssocRoot[i] != NULL)
+	       {
 	       if (pDoc->DocAssocRoot[i]->ElTypeNumber == pTRule->TrElemType)
 		 pElGet = pDoc->DocAssocRoot[i];
 	       else if (pDoc->DocAssocRoot[i]->ElFirstChild != NULL)
 		 if (pDoc->DocAssocRoot[i]->ElFirstChild->ElTypeNumber ==
 		     pTRule->TrElemType)
 		   pElGet = pDoc->DocAssocRoot[i];
+	       }
 	     i++;
 	     }
 	   while (pElGet == NULL && i < MAX_ASSOC_DOC);
@@ -3395,6 +3413,7 @@ ThotBool            recordLineNb
        while (pTRule != NULL && !*ignoreEl)
 	 {
 	 if (pTRule->TrOrder == position)
+	   {
 	   /* c'est une regle a appliquer a cette position */
 	   if (pTRule->TrType == TRemove)
 	     *removeEl = TRUE;
@@ -3408,6 +3427,7 @@ ThotBool            recordLineNb
 	     /* on applique la regle */
 	     ApplyTRule (pTRule, pTSch, pSS, pEl, transChar, lineBreak,
 			 removeEl, ignoreEl, NULL, NULL, pDoc, recordLineNb);
+	   }
 	 /* passe a la regle suivante */
 	 pTRule = pTRule->TrNextTRule;
 	 }
@@ -3547,6 +3567,7 @@ ThotBool            recordLineNb;
        /* traduit le contenu de l'element, sauf si on a deja rencontre' */
        /* une regle Remove ou Ignore pour cet element. */
        if (!removeEl && !ignoreEl)
+	 {
 	 /* pas de regle Remove ni Ignore */
 	 if (pEl->ElTerminal)
 	   /* c'est une feuille, applique les regles de traduction des */
@@ -3564,6 +3585,7 @@ ThotBool            recordLineNb;
 	     pChild = pChild->ElNext;
 	     }
 	   }
+	 }
        /* marque que les regles qui doivent etre appliquees apres */
        /* la traduction du contenu et qui sont associees aux attributs */
        /* et a la presentation n'ont pas encore ete appliquees */

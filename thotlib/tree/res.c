@@ -978,6 +978,7 @@ PrintMethod method;
       {
 	found = (sPrint->SPrintMethod == method);
 	if (!found)
+	  {
 	  if (sPrint->SNext == NULL)
 	    {
 	      sPrint->SNext = TtaGetMemory (sizeof(StrSourcePrint));
@@ -988,6 +989,7 @@ PrintMethod method;
 	    }
 	  else
 	    sPrint = sPrint->SNext;
+	  }
       }
   if (found)
     {

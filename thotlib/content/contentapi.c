@@ -938,12 +938,14 @@ Document            document;
 		   ((PtrElement) element)->ElLeafType = LtGraphics;
 		 }
 	       else if (((PtrElement) element)->ElLeafType == LtGraphics)
+		 {
 		 if (((PtrElement) element)->ElGraph == EOS &&
 		     shape != EOS)
 		   delta = 1;
 		 else if (((PtrElement) element)->ElGraph != EOS &&
 			  shape == EOS)
 		   delta = -1;
+		 }
 	     }
 	   if (((PtrElement) element)->ElLeafType == LtPolyLine)
 	     ((PtrElement) element)->ElPolyLineType = shape;
@@ -1073,6 +1075,7 @@ Document            document;
    PtrElement          pEl;
 
    if (PolylineOK (element, document))
+     {
       if (rank <= 0 || x < 0 || y < 0)
 	 TtaError (ERR_invalid_parameter);
       else if (unit != UnPoint && unit != UnPixel)
@@ -1094,6 +1097,7 @@ Document            document;
 	   RedisplayLeaf ((PtrElement) element, document, 1);
 #endif
 	}
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1123,6 +1127,7 @@ Document            document;
    PtrElement          pEl;
 
    if (PolylineOK (element, document))
+     {
       if (rank <= 0)
 	 TtaError (ERR_invalid_parameter);
       else
@@ -1143,6 +1148,7 @@ Document            document;
 	   RedisplayLeaf ((PtrElement) element, document, -1);
 #endif
 	}
+     }
 }
 
 
@@ -1181,6 +1187,7 @@ Document            document;
 
 {
    if (PolylineOK (element, document))
+     {
       if (rank <= 0 || x < 0 || y < 0)
 	 TtaError (ERR_invalid_parameter);
       else if (unit != UnPoint && unit != UnPixel)
@@ -1193,6 +1200,7 @@ Document            document;
 	   RedisplayLeaf ((PtrElement) element, document, 0);
 #endif
 	}
+     }
 }
 
 
@@ -1230,6 +1238,7 @@ Document            document;
    int                 rank;
 
    if (PolylineOK (element, document))
+     {
       if (x < 0 || y < 0)
 	 TtaError (ERR_invalid_parameter);
       else if (unit != UnPoint && unit != UnPixel)
@@ -1261,6 +1270,7 @@ Document            document;
 	   RedisplayLeaf ((PtrElement) element, document, 0);
 #endif
 	}
+     }
 }
 
 

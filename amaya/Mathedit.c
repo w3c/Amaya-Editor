@@ -1675,6 +1675,7 @@ static void RoundSelection (firstSel, lastSel, firstChar, lastChar)
 	    {
 	    sibling = *firstSel;  TtaPreviousSibling (&sibling);
 	    if (!sibling)
+	      {
 	       /* no sibling before the first selected element */
 	       if (TtaGetParent (*firstSel) != TtaGetParent (*lastSel))
 		  {
@@ -1692,6 +1693,7 @@ static void RoundSelection (firstSel, lastSel, firstChar, lastChar)
 		     *lastChar = 0;
 		     }
 		  }
+	      }
 	    }
    
    /* if the selection ends on the last character of a text string and
@@ -2421,10 +2423,12 @@ static Element ClosestLeaf (el, pos)
       elem = leaf;
       elType = TtaGetElementType (leaf);
       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	{
 	if (prev != NULL)
 	   *pos = TtaGetTextLength (leaf) + 1;
 	else
 	   *pos = 1;
+	}
       }
    return elem;
 }
@@ -2995,10 +2999,12 @@ static void ParseMathString (theText, theElem, doc)
 	  {
 	  newSelEl = textEl;
 	  if (newSelChar < j)
+	    {
 	     if (newSelChar < start)
 		newSelChar = 1;
 	     else
 		newSelChar -= start;
+	    }
 	  }
        MathSetAttributes (newEl, doc, &newSelEl);
        start = i;
