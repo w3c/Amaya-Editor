@@ -277,7 +277,7 @@ int     indexHandler;
    Ap_OpenPluginDriver (printing, indexHandler) ;
 
    HandlersCounter++;
-   printf ("HandlersCounter = %d\n", HandlersCounter) ;
+   /* printf ("HandlersCounter = %d\n", HandlersCounter) ; */
 }
 
 /*----------------------------------------------------------------------
