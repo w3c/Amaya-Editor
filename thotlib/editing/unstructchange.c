@@ -152,12 +152,13 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
    pAncest = NULL;
    *cancelled = FALSE;
    pOrig = pSavedEl->PeElement;
+   /* don't paste a cell if the enclosing row is not pasted */
    if (cellChild == NULL && TypeHasException (ExcIsCell, pOrig->ElTypeNumber,
 			 pOrig->ElStructSchema))
      {
-       /* paste children of the cell instead of the cell itself */
-       if (pOrig = pOrig->ElFirstChild)
+       if (pOrig && pOrig->ElFirstChild)
 	 {
+	   /* paste children of the cell instead of the cell itself */
 	   pOrig = pOrig->ElFirstChild;
 	   *cellChild = pOrig;
 	 }
