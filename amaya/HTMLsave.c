@@ -2055,9 +2055,9 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 				     AmayaLastHTTPErrorMsgR, FALSE);
 		      /* erase the last status message */
 		      TtaSetStatus (doc, view, "", NULL);
-		      res = -1;
-		      /* do not continue */
-		      pImage = NULL;
+		      /*res = -1;*/res = 0;
+		      /* continue */
+		      /*pImage = NULL;*/
 		    }
 		  else
 		    pImage->status = IMAGE_LOADED;
