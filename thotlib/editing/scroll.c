@@ -508,7 +508,11 @@ raint              *height;
    pFrame = &ViewFrameTable[frame - 1];
 
    if (pFrame->FrAbstractBox != NULL)
-      pBox = pFrame->FrAbstractBox->AbBox;
+     {
+       pBox = pFrame->FrAbstractBox->AbBox;
+       if (pBox == NULL)
+	 return;
+     }
    else
       return;
 

@@ -9,54 +9,57 @@ DEFPRES MathMLP;
 
 STRUCT
 
-   MathML =	MROW;
+   MathML =	Component;
+   Component = CASE OF
+		  Construction;
+		  MROW;
+		  END;
+   MROW = LIST OF (Construction);
 
-   MROW = LIST OF (Construction = CASE OF
+   Construction = CASE OF
 		  MTEXT = TEXT;
-		  MROOT =
-			BEGIN
+		  MROOT = BEGIN
 		  	Root_index = MN;
-			Root_exp = MROW;
+			Root_exp = Component;
 			END;
-		  MSQRT =
-			BEGIN
+		  MSQRT = BEGIN
 			Root_exp;
 			END;
-		  MFRAC =
-			BEGIN
-			Numerator = MROW;
-			Denominator = MROW;
+		  MFRAC = BEGIN
+			Numerator = Component;
+			Denominator = Component;
 			END;
-		  MSUBSUP =
-			BEGIN
+		  MSUBSUP = BEGIN
 			Base = CASE OF
 				    SYMBOL;
-				    MROW;
+				    Component;
 				    END;
-		  	Sub_exp = MROW;
-		  	Sup_exp = MROW;
+		  	Sub_exp = Component;
+		  	Sup_exp = Component;
 			END;
-		  MSUB =
-			BEGIN
+		  MSUB = BEGIN
 			Base;
 		  	Sub_exp;
 			END;
-		  MSUP =
-			BEGIN
+		  MSUP = BEGIN
 			Base;
 		  	Sup_exp;
 			END;
-		  MFENCE = SYMBOL;
-		  MN = TEXT;
-		  MI = TEXT;
-		  MO = TEXT;
-		  MS = TEXT;
-		  SYMBOL;
-		  END);
+		  Block = BEGIN
+		  	MFENCE = SYMBOL;
+			Block_exp = Component;
+			MFENCE;
+			END;
+		  MN = BEGIN TEXT; END;
+		  MI = BEGIN TEXT; END;
+		  MO = BEGIN TEXT; END;
+		  MS = BEGIN TEXT; END;
+		  END;
 
 EXCEPT
 
    MathML:	  Hidden;
+   Component:     Hidden;
    Construction:  Hidden;
    Root_index:	  Hidden;
    Root_exp:	  Hidden;
@@ -65,5 +68,6 @@ EXCEPT
    Base:	  Hidden;
    Sub_exp:	  Hidden;
    Sup_exp:	  Hidden;
-
+   Block:	  Hidden;
+   Block_exp:	  Hidden;
 END

@@ -565,7 +565,7 @@ int                *nSpaces;
    nChars = pAb->AbVolume;
    if (nChars == 0)
      {
-	*width = CharacterWidth (109, font);	/*'m' */
+	*width = 2;
 	*nSpaces = 0;
      }
    else
@@ -1279,7 +1279,7 @@ int                *carIndex;
 	/* Positionnement des axes de la boite construite */
 	ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
 
-	/* On traite differemmment la base d'un bloc de lignes */
+	/* On traite differemment la base d'un bloc de lignes  */
 	/* s'il depend de la premiere boite englobee           */
 	if (pAb->AbLeafType != LtCompound
 	    || !pAb->AbInLine

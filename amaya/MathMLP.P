@@ -54,9 +54,9 @@ VIEWS
 DEFAULT
 
    BEGIN
-   Visibility: Enclosing = ;
+   Visibility: Enclosing =;
    VertRef: * . Left ;
-   HorizRef: Enclosed . HRef ;
+   HorizRef: Enclosed . HRef;
    Height: Enclosed . Height;
    Width: Enclosed  . Width;
    VertPos: HRef = Previous . Href;
@@ -64,7 +64,7 @@ DEFAULT
    LineBreak: No;
    Font: Enclosing =;
    Style: Enclosing =;
-   Size: Enclosing = ;
+   Size: Enclosing =;
    Indent: 0;
    Justify: No;
    Adjust: Left;
@@ -257,6 +257,8 @@ BOXES
 	HorizPos: Left = Enclosing . Left;
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Solid;
+	IN Math_Structure_view
+		Visibility: 0;
 	END;
 
  SymbRadical:
@@ -267,6 +269,8 @@ BOXES
 	HorizPos: Left = Enclosing . Left;
 	Content: Symbol 'r';		{ root symbol }
 	Depth: Enclosing + 1;
+	IN Math_Structure_view
+		Visibility: 0;
 	END;
 
 RULES
@@ -274,37 +278,64 @@ RULES
    MathML:
 	BEGIN
 	PageBreak: No;
-	LineBreak: Yes;
+	LineBreak: No;
 	LineWeight: 1 pt;
 	VertPos: Top = Previous . Bottom;
-	HorizPos: VMiddle = Previous . VMiddle;
-	IN Math_Structure_view
-		Visibility: 8;
+	HorizPos: Left = Enclosing . Left;
+	Visibility: Enclosing - 2;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Visibility: 10;
+		END;
 	END;
 
    MROW:
 	BEGIN
 	CreateFirst(MROW_S);
+	CreateWith(VerticalLine);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
+		END;
+  	END;
+
+   Component:
+	BEGIN
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
+		END;
+  	END;
+
+   Construction:
+	BEGIN
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		END;
   	END;
 
    MROOT:
         BEGIN
 	CreateFirst(SymbRadical);
+	CreateFirst(MROOT_S);
+	CreateWith(VerticalLine);
 	HorizRef: Enclosed Root_exp . HRef ;
 	Gather: Yes;
-	CreateFirst(MROOT_S);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
   	END;
@@ -312,14 +343,16 @@ RULES
    MSQRT:
         BEGIN
 	CreateFirst(SymbRadical);
+	CreateFirst(MSQRT_S);
+	CreateWith(VerticalLine);
 	HorizRef: Enclosed Root_exp . HRef ;
 	Gather: Yes;
-	CreateFirst(MSQRT_S);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
   	END;
@@ -333,6 +366,8 @@ RULES
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
 		END;
    	END;
 	
@@ -343,20 +378,24 @@ RULES
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
 		END;
   	END;
 
    MFRAC:
 	BEGIN
 	CreateFirst(Bar);
+	CreateFirst(MFRAC_S);
+	CreateWith(VerticalLine);
 	HorizRef: Enclosed Bar . Bottom + 0.1;
 	Gather: Yes;
-	CreateFirst(MFRAC_S);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -369,6 +408,8 @@ RULES
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
@@ -380,6 +421,8 @@ RULES
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
@@ -388,11 +431,13 @@ RULES
 	Gather: Yes;
 	HorizRef: Enclosed  Base. HRef;
 	CreateFirst(MSUBSUP_S);
+	CreateWith(VerticalLine);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -402,11 +447,13 @@ RULES
 	Gather: Yes;
 	HorizRef: Enclosed  Base. HRef;
 	CreateFirst(MSUB_S);
+	CreateWith(VerticalLine);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -416,11 +463,13 @@ RULES
 	Gather: Yes;
 	HorizRef: Enclosed  Base. HRef;
 	CreateFirst(MSUP_S);
+	CreateWith(VerticalLine);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -432,6 +481,8 @@ RULES
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
@@ -444,6 +495,8 @@ RULES
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
@@ -456,21 +509,52 @@ RULES
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+   Block:
+	BEGIN
+	Gather: Yes;
+        HorizRef: Enclosed Block_exp . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		Font: Helvetica;
+		END;
+	END;
+
+   Block_exp:
+	BEGIN
+	HorizPos: Left = Previous . Right + 0.1;
+	VertPos: Top =  Enclosing . Top;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		Font: Helvetica;
 		END;
 	END;
 
    MFENCE:
 	BEGIN
-	HorizRef: * . Top;
-	Height: Enclosing . Height;
-	HorizPos: Left = Enclosing . Left + 0.1;
-	VertPos: Top =  Enclosing . Top;
 	CreateFirst(MFENCE_S);
+	CreateWith(VerticalLine);
+	Height: Enclosing . Height;
+	HorizPos: Left = Previous . Right + 0.1;
+	VertPos: Top =  Enclosing . Top;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -478,12 +562,14 @@ RULES
    MI:
 	BEGIN
 	CreateFirst(MI_S);
+	CreateWith(VerticalLine);
 	Style: Italics;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		Style: Enclosing =;
 		END;
@@ -492,11 +578,13 @@ RULES
    MO:
 	BEGIN
 	CreateFirst(MO_S);
+	CreateWith(VerticalLine);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -504,11 +592,13 @@ RULES
    MN:
 	BEGIN
 	CreateFirst(MN_S);
+	CreateWith(VerticalLine);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -516,11 +606,13 @@ RULES
    MS:
 	BEGIN
 	CreateFirst(MS_S);
+	CreateWith(VerticalLine);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -528,11 +620,13 @@ RULES
    MTEXT:
 	BEGIN
 	CreateFirst(MTEXT_S);
+	CreateWith(VerticalLine);
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
 		Font: Helvetica;
 		END;
 	END;
@@ -543,12 +637,26 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Nil;
 	HorizPos: Nil;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
+		Font: Helvetica;
+		END;
 	END;
 
    TEXT_UNIT:
 	BEGIN
 	VertRef: Enclosed . VRef;
 	LineBreak: Yes;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
+		Font: Helvetica;
+		END;
 	END;
 
 END

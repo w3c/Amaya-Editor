@@ -1847,10 +1847,8 @@ boolean             horizRef;
 	     localEdge = HorizRef;
 	     if (rule.PosUnit == UnPercent)
 		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxHeight);
-	     if (pCurrentAb->AbLeafType == LtText)
-		dist = FontBase (pBox->BxFont) - pBox->BxHeight;
 	     else
-		dist = 0;
+		dist = FontBase (pBox->BxFont) - pBox->BxHeight;
 	  }
      }
    /* SRule explicite */

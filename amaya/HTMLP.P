@@ -4612,6 +4612,7 @@ RULES
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		Visibility: 5;
 		END;	
 	IN Alternate_view
 		Visibility: 0;

@@ -58,6 +58,7 @@
 #include "fence.xpm"
 #include "n.xpm"
 #include "o.xpm"
+#include "id.xpm"
 #include "txt.xpm"
 #define FormMaths 0
 #define MenuMaths 1
@@ -105,7 +106,7 @@ static Pixmap       iconJava;
 #endif /* AMAYA_JAVA */
 #ifdef MATHML
 static Pixmap       iconMath;
-static Pixmap       mIcons[10];
+static Pixmap       mIcons[11];
 static int          MathsDialogue;
 static boolean      InitMaths;
 #endif /* MATHML */
@@ -214,40 +215,47 @@ char               *data;
 	return;
       /* the new element will be inserted before the selected element */
       before = TRUE;
-      addConstruction = TRUE;
+      addConstruction = FALSE;
       TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i);
       /* Check whether the selected element is a text element */
       elType = TtaGetElementType (sibling);
 
-      /* Check whether the selected element is a math element */
+      /* Check whether the selected element is a MathML element */
       docSchema = TtaGetDocumentSSchema (doc);
       if (!TtaSameSSchemas (docSchema, elType.ElSSchema))
 	{
+	  /* the selection concerns a MathML element */
 	  mathSchema = elType.ElSSchema;
 	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT && c1 > 1)
 	    {
 	      len = TtaGetTextLength (sibling);
 	      if (c1 > len)
-		/* the caret is at the end of that character string */
-		/* create the new element after the character string */
-		before = FALSE;
+		{
+		  /* the caret is at the end of that character string */
+		  /* create the new element after the character string */
+		  before = FALSE;
+		  addConstruction = TRUE;
+		}
 	      else
 		sibling = SplitTextInMathML (doc, sibling, c1);
 	    }
 	}
       else
 	{
-	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
 	  /* the selection concerns an HTML element */
+	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
 	  if (elType.ElTypeNum != HTML_EL_XML)
 	    {
 	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 		{
 		  len = TtaGetTextLength (sibling);
 		  if (c1 > len)
-		    /* the caret is at the end of that character string */
-		    /* create the new element after the character string */
-		    before = FALSE;
+		    {
+		      /* the caret is at the end of that character string */
+		      /* create the new element after the character string */
+		      before = FALSE;
+		      addConstruction = TRUE;
+		    }
 		  else
 		    {
 		      /* split the text to insert the XML element */
@@ -264,10 +272,11 @@ char               *data;
 		  if (el != NULL)
 		    {
 		      newType = TtaGetElementType (el);
-		      if (elType.ElTypeNum == HTML_EL_XML)
+		      if (newType.ElTypeNum == HTML_EL_XML)
 			{
 			  /* move to the end of the previous MathML element */
 			  before = FALSE;
+			  addConstruction = TRUE;
 			  sibling = TtaGetLastChild (el);		      
 			}
 		    }
@@ -279,10 +288,11 @@ char               *data;
 		  if (el != NULL)
 		    {
 		      newType = TtaGetElementType (el);
-		      if (elType.ElTypeNum == HTML_EL_XML)
+		      if (newType.ElTypeNum == HTML_EL_XML)
 			{
 			  /* move at the end of the previous MathML element */
 			  before = TRUE;
+			  addConstruction = FALSE;
 			  sibling = TtaGetFirstChild (el);		      
 			}
 		    }
@@ -291,16 +301,14 @@ char               *data;
 
 	  if (elType.ElTypeNum == HTML_EL_XML)
 	    {
-	      /* search the enclosed element at the lowest level */
-	      do
-		{
-		  row = sibling;
-		  sibling = TtaGetFirstChild (row);
-		  if (sibling != NULL)
-		    elType = TtaGetElementType (sibling);		  
-		}
-	      while (sibling != NULL);
-	      sibling = row;
+	      /* search the first MathML element */
+		sibling = TtaGetFirstChild (sibling);
+	      if (before)
+		el = TtaGetFirstChild (sibling);
+	      else
+		el = TtaGetLastChild (sibling);		
+	      if (el != NULL)
+		sibling = el;
 	    }
 	  else
 	    {
@@ -335,7 +343,7 @@ char               *data;
 	  newType.ElTypeNum = MathML_EL_MSUP;
 	  break;
 	case 6:
-	  newType.ElTypeNum = MathML_EL_MFENCE;
+	  newType.ElTypeNum = MathML_EL_Block;
 	  break;
 	case 7:
 	  newType.ElTypeNum = MathML_EL_MN;
@@ -346,6 +354,10 @@ char               *data;
 	  addConstruction = FALSE;
 	  break;
 	case 9:
+	  newType.ElTypeNum = MathML_EL_MI;
+	  addConstruction = FALSE;
+	  break;
+	case 10:
 	  newType.ElTypeNum = MathML_EL_MTEXT;
 	  addConstruction = FALSE;
 	  break;
@@ -354,7 +366,7 @@ char               *data;
 	}
       el = TtaNewTree (doc, newType, "");
 
-      if (elType.ElTypeNum == MathML_EL_MROW)
+      if (elType.ElTypeNum == MathML_EL_MROW || elType.ElTypeNum == MathML_EL_MathML)
 	{
 	/* the selected element is a MROW or the MathML element */
 	  row = sibling;
@@ -364,7 +376,7 @@ char               *data;
 	    sibling = TtaGetLastChild (row);
 	  if (sibling == NULL)
 	    {
-	      /* the MROW is empty -> replace the empty MROW by the new element*/
+	      /* replace the empty MROW by the new element*/
 	      /* do not check the Thot abstract tree against the structure */
 	      /* schema while changing the structure */
 	      TtaSetStructureChecking (0, doc);
@@ -374,18 +386,27 @@ char               *data;
 	      TtaSetStructureChecking (1, doc);
 	    }
 	  else
-	    TtaInsertSibling (el, sibling, before, doc);
+	    {
+	      /* check whether the element is a construction */
+	      elType = TtaGetElementType (sibling);
+	      if ((elType.ElTypeNum == MathML_EL_Component || elType.ElTypeNum == MathML_EL_Construction) && !addConstruction)
+		TtaInsertFirstChild (&el, sibling, doc);
+	      else
+		TtaInsertSibling (el, sibling, before, doc);
+	    }
 	}
-      else if ((elType.ElTypeNum == MathML_EL_Construction && !addConstruction)
-	  || elType.ElTypeNum == MathML_EL_MathML)
-	/* replace the construction choice */
-	TtaInsertFirstChild (&el, sibling, doc);
+      else if ((elType.ElTypeNum == MathML_EL_Component || elType.ElTypeNum == MathML_EL_Construction) && !addConstruction)
+	{
+	  /* replace the construction choice */
+	  TtaInsertFirstChild (&el, sibling, doc);
+	}
       else
 	{
+	  /* the selected element is not a MROW */
 	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	    /* go up to the MN, MI, MO or M_TEXT element */
 	    sibling = TtaGetParent (sibling);
-	  /* the selected element is not a MROW */
+	  /* check whether the parent is a row */
 	  row = TtaGetParent (sibling);
 	  elType = TtaGetElementType (row);
 	  if (elType.ElTypeNum != MathML_EL_MathML
@@ -422,8 +443,6 @@ char               *data;
 	}
       TtaSelectElement (doc, sibling);
       elType = TtaGetElementType (sibling);
-      if (elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
-	TtcDisplayMathKeyboard (doc, 1);
       break;
     default:
       break;
@@ -451,11 +470,12 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 		   0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-		   NULL, 10, mIcons, FALSE);
+		   NULL, 11, mIcons, FALSE);
       TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE);
+  KeyboardsLoadResources ();
 }
 #endif /* MATHML */
 
@@ -1357,6 +1377,7 @@ View                view;
    ResetStop(newdoc);
 }
 
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1369,6 +1390,9 @@ View                view;
 #endif
 {
    View                structView;
+#ifdef MATHML
+   View                mathView;
+#endif /* MATHML */
    int                 x, y, w, h;
 
    structView = TtaGetViewFromName (document, "Structure_view");
@@ -1376,6 +1400,11 @@ View                view;
      {
 	TtaCloseView (document, view);
 	TtaSetToggleItem (document, 1, Views, TShowStructure, FALSE);
+#ifdef MATHML
+	mathView = TtaGetViewFromName (document, "Math_Structure_view");
+	if (mathView != 0 && TtaIsViewOpened (document, mathView))
+	  TtaCloseView (document, mathView);
+#endif /* MATHML */
      }
    else if (structView != 0 && TtaIsViewOpened (document, structView))
       TtaCloseView (document, structView);
@@ -1385,6 +1414,10 @@ View                view;
 	structView = TtaOpenView (document, "Structure_view", x, y, w, h);
 	TtcSwitchButtonBar (document, structView);
 	TtcSwitchCommands (document, structView);
+#ifdef MATHML
+	TtaGetViewGeometry (document, "Math_Structure_view", &x, &y, &w, &h);
+	mathView = TtaOpenView (document, "Math_Structure_view", x, y, w, h);
+#endif /* MATHML */
      }
 }
 
@@ -1569,8 +1602,11 @@ NotifyDialog       *event;
 
 #endif
 {
-   Document            document;
-   View                view, structView, altView, linksView, tocView;
+   Document      document;
+   View          view, structView, altView, linksView, tocView;
+#ifdef MATHML
+   View          mathView;
+#endif /* MATHML */
 
    view = event->view;
    document = event->document;
@@ -1578,6 +1614,9 @@ NotifyDialog       *event;
    altView = TtaGetViewFromName (document, "Alternate_view");
    linksView = TtaGetViewFromName (document, "Links_view");
    tocView = TtaGetViewFromName (document, "Table_of_contents");
+#ifdef MATHML
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
+#endif /* MATHML */
    if (view != 1)
      {
 	if (view == structView)
@@ -1610,6 +1649,10 @@ NotifyDialog       *event;
      TtaCloseView (document, linksView);
    if (tocView != 0 && TtaIsViewOpened (document, tocView))
      TtaCloseView (document, tocView);
+#ifdef MATHML
+   if (mathView != 0 && TtaIsViewOpened (document, mathView))
+     TtaCloseView (document, mathView);
+#endif /* MATHML */
    return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -2270,7 +2313,8 @@ NotifyEvent        *event;
    mIcons[6] = TtaCreatePixmapLogo (fence_xpm);
    mIcons[7] = TtaCreatePixmapLogo (n_xpm);
    mIcons[8] = TtaCreatePixmapLogo (o_xpm);
-   mIcons[9] = TtaCreatePixmapLogo (txt_xpm);
+   mIcons[9] = TtaCreatePixmapLogo (id_xpm);
+   mIcons[10] = TtaCreatePixmapLogo (txt_xpm);
 # endif /* MATHML */
 
    TargetName = NULL;

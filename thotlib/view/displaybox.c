@@ -1085,8 +1085,10 @@ int                 frame;
    /* Empty */
    if (pBox->BxAbstractBox->AbVolume == 0)
      {
-	if (ThotLocalActions[T_emptybox] != NULL)
-	   (*ThotLocalActions[T_emptybox]) (pBox, frame, '2');
+       if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
+	 DisplayEmptyBox (pBox, frame, '2');
+       else if (ThotLocalActions[T_emptybox] != NULL)
+	 (*ThotLocalActions[T_emptybox]) (pBox, frame, '2');
      }
    /* Text */
    else if (pBox->BxAbstractBox->AbLeafType == LtText)

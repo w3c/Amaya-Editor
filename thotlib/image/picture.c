@@ -945,6 +945,9 @@ int                 frame;
      return;
    else if (imageDesc->PicFileName[0] == '\0')
      return;
+   else if (box->BxAbstractBox->AbLeafType == LtCompound
+	    && imageDesc->PicPixmap == PictureLogo)
+     return;
 
    drawable = TtaGetThotWindow (frame);
    GetXYOrg (frame, &x, &y);

@@ -797,13 +797,19 @@ boolean             lang;
    else
       strcpy (suffix, "conf");
 
-   /* compose le nom du fichier a ouvrir avec le nom du directory */
-   /* des schemas et le suffixe */
-   strncpy (DirBuffer, SchemaPath, MAX_PATH);
+   /* Search in HOME directory */
+   strcpy (DirBuffer, TtaGetEnvString ("HOME"));
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);
+   if (!TtaFileExist (filename))
+     {
+       /* compose le nom du fichier a ouvrir avec le nom du directory */
+       /* des schemas et le suffixe */
+       strncpy (DirBuffer, SchemaPath, MAX_PATH);
+       MakeCompleteName (name, suffix, DirBuffer, filename, &i);
+     }
    /* ouvre le fichier */
    file = TtaReadOpen (filename);
-   return file;
+   return (file);
 }
 
 /*----------------------------------------------------------------------
