@@ -860,6 +860,90 @@ static Element AppendEmptyText (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  UnFrameMath
+ -----------------------------------------------------------------------*/
+void UnFrameMath ()
+{
+  ElementType      elType;
+  Attribute        attr;
+  AttributeType    attrType;
+
+  if (MathElementSelected && DocMathElementSelected)
+    /* remove attribute IntSelected from the previously selected <math> elem */
+    {
+      elType = TtaGetElementType (MathElementSelected);
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_IntSelected;
+      attr = TtaGetAttribute (MathElementSelected, attrType);
+      if (attr)
+	TtaRemoveAttribute (MathElementSelected, attr, DocMathElementSelected);
+      MathElementSelected = NULL;
+      DocMathElementSelected = 0;
+    }
+}
+
+/*----------------------------------------------------------------------
+   MathSelectionChanged
+   A new element has been selected. Synchronize selection in source view.      
+  ----------------------------------------------------------------------*/
+void MathSelectionChanged (NotifyElement *event)
+{
+  Element          el;
+  Attribute        attr;
+  ElementType      elType;
+  AttributeType    attrType;
+  ThotBool         drawFrame;
+
+  CheckSynchronize (event);
+  /* update the displayed style information */
+  SynchronizeAppliedStyle (event);
+
+  if (!TtaGetEnvBoolean ("ENABLE_MATHFRAME", &drawFrame))
+    /* the environment variable is not defined. By default, draw a frame
+       around the <math> elements that contain the current selection */
+    drawFrame = TRUE;
+  if (drawFrame)
+    {
+      el = event->element;
+      elType = TtaGetElementType (el);
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML"))
+	/* it's not a MathML element */
+	UnFrameMath ();
+      else
+	{
+	  if (elType.ElTypeNum != MathML_EL_MathML)
+	    /* get the ancestor <math> element */
+	    {
+	      elType.ElTypeNum = MathML_EL_MathML;
+	      el = TtaGetTypedAncestor (el, elType);
+	    }
+	  if (el)
+	    {
+	      /* if another formula is already highlighted, remove its frame
+		 and frame the new one */
+	      if (el != MathElementSelected)
+		{
+		  UnFrameMath ();
+		  /* associate an attribute IntSelected with the new <math>
+		     element */
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = MathML_ATTR_IntSelected;
+		  attr = TtaNewAttribute (attrType);
+		  if (attr)
+		    {
+		      TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
+					    el, event->document);
+		      TtaAttachAttribute (el, attr, event->document);
+		    }
+		  MathElementSelected = el;
+		  DocMathElementSelected = event->document;
+		}
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    CreateMathConstruct
    Create a MathML construct at the current position
   ----------------------------------------------------------------------*/
@@ -867,10 +951,11 @@ static void         CreateMathConstruct (int construct)
 {
   Document           doc;
   Element            sibling, el, row, child, leaf, new_, next, foreignObj,
-                     altText;
+                     altText, selected;
   ElementType        newType, elType, parentType;
   Attribute          attr;
   AttributeType      attrType;
+  NotifyElement      event;
   SSchema            docSchema, mathSchema;
   char              *name;
   Language           lang;
@@ -884,6 +969,7 @@ static void         CreateMathConstruct (int construct)
     /* the document is in ReadOnly mode */
     return;
 
+  selected = NULL;
   docSchema = TtaGetDocumentSSchema (doc);
   TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
   emptySel = TtaIsSelectionEmpty ();
@@ -938,6 +1024,9 @@ static void         CreateMathConstruct (int construct)
 		  TtaSetDocumentModified (doc);
 		  TtaSetDisplayMode (doc, dispMode);
 		  TtaSelectElement (doc, new_);
+		  event.document = doc;
+		  event.element = new_;
+		  MathSelectionChanged (&event);
 		  TtaCloseUndoSequence (doc);
 		  return;
 		}
@@ -1275,6 +1364,9 @@ static void         CreateMathConstruct (int construct)
 		  TtaSetDocumentModified (doc);
 		  TtaSetDisplayMode (doc, dispMode);
 		  TtaSelectElement (doc, sibling);
+		  event.document = doc;
+		  event.element = sibling;
+		  MathSelectionChanged (&event);
 		  TtaCloseUndoSequence (doc);
 		  return;
 		}
@@ -1520,7 +1612,10 @@ static void         CreateMathConstruct (int construct)
 	  elType.ElTypeNum == MathML_EL_MALIGNMARK ||
 	  elType.ElTypeNum == MathML_EL_MALIGNGROUP)
 	/* select the new element itself */
-	TtaSelectElement (doc, el);
+	{
+	  TtaSelectElement (doc, el);
+	  selected = el;
+	}
       else
 	{
 	  /* select the leaf in the first (or second) child of the new
@@ -1536,10 +1631,18 @@ static void         CreateMathConstruct (int construct)
 	      child = TtaGetFirstChild (child);
 	    }
 	  if (leaf)
-	    TtaSelectElement (doc, leaf);
+	    {
+	      TtaSelectElement (doc, leaf);
+	      selected = leaf;
+	    }
 	}
     }
-
+  if (selected)
+    {
+      event.document = doc;
+      event.element = selected;
+      MathSelectionChanged (&event);
+    }
   TtaCloseUndoSequence (doc);
 }
 
@@ -2200,90 +2303,6 @@ void CreateMO (Document document, View view)
 void CreateMSPACE (Document document, View view)
 {
    CreateMathConstruct (19);
-}
-
-/*----------------------------------------------------------------------
-  UnFrameMath
- -----------------------------------------------------------------------*/
-void UnFrameMath ()
-{
-  ElementType      elType;
-  Attribute        attr;
-  AttributeType    attrType;
-
-  if (MathElementSelected && DocMathElementSelected)
-    /* remove attribute IntSelected from the previously selected <math> elem */
-    {
-      elType = TtaGetElementType (MathElementSelected);
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = MathML_ATTR_IntSelected;
-      attr = TtaGetAttribute (MathElementSelected, attrType);
-      if (attr)
-	TtaRemoveAttribute (MathElementSelected, attr, DocMathElementSelected);
-      MathElementSelected = NULL;
-      DocMathElementSelected = 0;
-    }
-}
-
-/*----------------------------------------------------------------------
-   MathSelectionChanged
-   A new element has been selected. Synchronize selection in source view.      
-  ----------------------------------------------------------------------*/
-void MathSelectionChanged (NotifyElement *event)
-{
-  Element          el;
-  Attribute        attr;
-  ElementType      elType;
-  AttributeType    attrType;
-  ThotBool         drawFrame;
-
-  CheckSynchronize (event);
-  /* update the displayed style information */
-  SynchronizeAppliedStyle (event);
-
-  if (!TtaGetEnvBoolean ("ENABLE_MATHFRAME", &drawFrame))
-    /* the environment variable is not defined. By default, draw a frame
-       around the <math> elements that contain the current selection */
-    drawFrame = TRUE;
-  if (drawFrame)
-    {
-      el = event->element;
-      elType = TtaGetElementType (el);
-      if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML"))
-	/* it's not a MathML element */
-	UnFrameMath ();
-      else
-	{
-	  if (elType.ElTypeNum != MathML_EL_MathML)
-	    /* get the ancestor <math> element */
-	    {
-	      elType.ElTypeNum = MathML_EL_MathML;
-	      el = TtaGetTypedAncestor (el, elType);
-	    }
-	  if (el)
-	    {
-	      /* if another formula is already highlighted, remove its frame
-		 and frame the new one */
-	      if (el != MathElementSelected)
-		{
-		  UnFrameMath ();
-		  /* associate an attribute IntSelected with the new <math>
-		     element */
-		  attrType.AttrSSchema = elType.ElSSchema;
-		  attrType.AttrTypeNum = MathML_ATTR_IntSelected;
-		  attr = TtaNewAttribute (attrType);
-		  if (attr)
-		    {
-		      TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
-					    el, event->document);
-		      TtaAttachAttribute (el, attr, event->document);
-		    }
-		  MathElementSelected = el;
-		  DocMathElementSelected = event->document;
-		}
-	    }
-	}
-    }
 }
 
 /*----------------------------------------------------------------------
@@ -3163,7 +3182,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   Language	language[TXTBUFLEN];
   char          mathType[TXTBUFLEN];
   int           oldStructureChecking;
-  ThotBool      empty, closeUndoSeq, separate, ok;
+  ThotBool      empty, closeUndoSeq, separate, ok, leadingSpace;
 
   elType = TtaGetElementType (theElem);
   MathMLSchema = elType.ElSSchema;
@@ -3238,12 +3257,38 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
           TtaGiveBufferContent (textEl, text, len, &lang);
 	  len = ustrlen (text);
           script = TtaGetScript (lang);
+	  leadingSpace = TRUE;
 	  for (j = 0; j < len; j++)
 	     {
 	     language[j] = lang;
-	     mathType[j] = (char)GetCharType (text[j], script);
+	     if (text[j] == ' ')
+	       /* the current character is a space */
+	       {
+		 /* if there is an non-space character before, this space
+		    takes the same type as the previous significant character*/
+		 if (!leadingSpace)
+		   mathType[j] = mathType[j - 1];
+	       }
+	     else
+	       /* this is a significant character */
+	       {
+		 /* Get it's type */
+		 mathType[j] = (char)GetCharType (text[j], script);
+		 if (leadingSpace)
+		   /* this is the first significant character */
+		   {
+		     leadingSpace = FALSE;
+		     /* assign the same type to the previous spaces, if any */
+		     if (j > 0)
+		       for (i = 0; i < j; i++)
+			 mathType[i] = mathType[j];
+		   }
+	       }
 	     }
 	  totLen = len;
+	  if (leadingSpace)
+	    /* only spaces: equivalent to an empty string */
+	    totLen = 0;
 	  }
        }
   /* try to identify numbers like: 0.123  1,000,000  2.1e10 */
@@ -3393,18 +3438,22 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
     }
   else
     /* the modified character string is not empty. Parse it */
+    leadingSpace = (text[0] == ' ');
     for (i = 1; i <= totLen; i++)
       {
       separate = FALSE;
-      if (mathType[i] != mathType[i-1] ||
-	  language[i] != language[i-1])
+      if (text[i-1] == ' ' && text[i] != ' ' && !leadingSpace)
+	/* consider a sequence of spaces as a separator */
+	separate = TRUE;
+      else if (mathType[i] != mathType[i-1] || language[i] != language[i-1])
 	/* different mathematical type or different script.
 	   Create a separate element */
 	separate = TRUE;
       else if (i == totLen)
 	/* end of string. Create an element anyway */
 	separate = TRUE;
-      else if (mathType[i-1] == (char)MathML_EL_MO)
+      else if (mathType[i-1] == (char)MathML_EL_MO &&
+	       text[i] != ' ')
 	/* an operator */
 	{
 	/* by default create a separate element */
@@ -3413,6 +3462,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	if (text[i] == 0x222B && text[i] == text [i-1])
 	  separate = FALSE;
 	}
+      if (leadingSpace && text[i] != ' ')
+	leadingSpace = FALSE;
       if (separate)
         /* create a new element */
         {
