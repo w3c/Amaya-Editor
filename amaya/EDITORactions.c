@@ -2395,7 +2395,7 @@ void PasteAfter (Document doc, View view)
   cell = GetEnclosingCell (doc);
   if (cell)
     {
-      /* move the selection at the beginning of the cell */
+      /* move the selection at the end of the cell */
       child = cell;
       while (child)
 	{

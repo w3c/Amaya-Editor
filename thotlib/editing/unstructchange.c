@@ -571,13 +571,14 @@ void PasteCommand ()
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, cellChild;
-  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable, addedCell;
+  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable, addedCell,
+                      pCell;
   PtrPasteElem        pPasteD;
   DisplayMode         dispMode;
   Document            doc;
   int                 firstChar, lastChar, view, i, info = 0;
   int                 colspan, rowspan;
-  ThotBool            ok, before, within, lock, cancelled, first;
+  ThotBool            ok, before, within, lock, cancelled, first, beginning;
   ThotBool            savebefore;
 
   before = FALSE;
@@ -613,63 +614,65 @@ void PasteCommand ()
 		}
 	    }
 
-	  if (WholeColumnSaved)
+	  pCell = NULL;
+	  if (WholeColumnSaved || TableRowsSaved)
 	    {
-	      /* paste a column */
-	      while (firstSel &&
-		     !TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
-					firstSel->ElStructSchema))
+	      pCell = firstSel;
+	      beginning = (firstChar < 2);
+	      while (pCell &&
+		     !TypeHasException (ExcIsCell, pCell->ElTypeNumber,
+					pCell->ElStructSchema))
 		{
-		  if (firstSel->ElPrevious)
-		    {
-		      /* the selection is not at the beginning of the cell */
-		      firstChar += 2;
-		      lastChar = 0;
-		    }
-		  else
-		    lastChar = 1;
-		  firstSel = firstSel->ElParent;
+		  if (pCell->ElPrevious)
+		    /* the selection is not at the beginning of the cell */
+		    beginning = FALSE;
+		  pCell = pCell->ElParent;
 		}
+	      if (pCell)
+		before = beginning;
+	    }
 
-	      if (firstChar < 2 && lastChar != 0)
-		/* paste before the current column */
-		before = TRUE;
+	  if (WholeColumnSaved && pCell)
+	    {
+	      /* paste a column in a table */
+	      /* look for the current column position */
+	      pColHead = GetColHeadOfCell (pCell);
+	      if (!before)
+		{
+		  /* get the last column of the cell */
+		  GetCellSpans (pCell, &colspan, &rowspan);
+		  while (colspan > 1 && pColHead)
+		    {
+		      pColHead = NextColumnInTable (pColHead, pTable);
+		      colspan--;
+		    }
+		}
+	      /* look for the first row */
+	      pRow = pCell->ElParent;
+	      if (pRow && pColHead)
+		{
+		  pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
+					     pRow->ElStructSchema);
+		  pTable = pColHead;
+		  while (pTable &&
+			 !TypeHasException (ExcIsTable,
+					    pTable->ElTypeNumber,
+					    pTable->ElStructSchema))
+		    pTable = pTable->ElParent;
+		}
 	      else
-		/* by default paste after the current column */
-		before = FALSE;
-
-	      if (firstSel)
-		{
-		  /* look for the current column position */
-		  pColHead = GetColHeadOfCell (firstSel);
-		  if (!before)
-		    {
-		      /* get the last column of the cell */
-		      GetCellSpans (firstSel, &colspan, &rowspan);
-		      while (colspan > 1 && pColHead)
-			{
-			  pColHead = NextColumnInTable (pColHead, pTable);
-			  colspan--;
-			}
-		    }
-		  /* look for the first row */
-		  pRow = firstSel->ElParent;
-		  if (pRow && pColHead)
-		    {
-		      pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
-						 pRow->ElStructSchema);
-		      pTable = pColHead;
-		      while (pTable &&
-			     !TypeHasException (ExcIsTable,
-						pTable->ElTypeNumber,
-						pTable->ElStructSchema))
-			pTable = pTable->ElParent;
-		    }
-		  else
-		    pRow = NULL;
-		}
+		pRow = NULL;
 	      /* change the selection to paste a whole column */
-	      pEl = firstSel;
+	      pEl = pCell;
+	      within = FALSE;
+	      pNextEl = NULL;
+	    }
+	  else if (TableRowsSaved && pCell)
+	    /* the clipboard contains a (sequence of) table rows */
+	    /* and the current selection is within a table cell */
+	    {
+	      pRow = pCell->ElParent;
+	      pEl = pRow;
 	      within = FALSE;
 	      pNextEl = NULL;
 	    }

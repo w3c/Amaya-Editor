@@ -13,6 +13,8 @@
 THOT_EXPORT PtrPasteElem FirstSavedElement;
 /* indicates whether a whole column is saved */
 THOT_EXPORT ThotBool     WholeColumnSaved;
+/* indicates whether a (sequence of) table row(s) is saved */
+THOT_EXPORT ThotBool     TableRowsSaved;
 /* the document from which saved elements have been copied or cut */
 THOT_EXPORT PtrDocument  DocOfSavedElements;
 /* Thot Clipboard */

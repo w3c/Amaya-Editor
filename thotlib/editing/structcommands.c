@@ -688,6 +688,7 @@ void FreeSavedElements ()
    DocOfSavedElements = NULL;
    /* no whole column is saved */
    WholeColumnSaved = FALSE;
+   TableRowsSaved = FALSE;
    /* disable Paste command */
    if (ClipboardThot.BuLength != 0)
      /* switch the Paste entry in all documents */
@@ -730,18 +731,30 @@ static void SaveElement (PtrElement pEl, PtrElement pParent)
   pNewPasteEl = (PtrPasteElem) TtaGetMemory (sizeof (PasteElemDescr));
   if (pNewPasteEl != NULL)
     {
+      if (FirstSavedElement == NULL || TableRowsSaved)
+	{
+	  if (TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+				pEl->ElStructSchema))
+	    {
+	      if (FirstSavedElement == NULL)
+		TableRowsSaved = TRUE;
+	    }
+	  else
+	    TableRowsSaved = FALSE;
+	}
       if (FirstSavedElement == NULL)
+	/* that's the first element saved */
 	{
 	  /* enable the Paste command */
 	  if (ClipboardThot.BuLength == 0)
 	    /* switch the Paste entry in all documents */
 	    SwitchPaste (NULL, TRUE);
 	  FirstSavedElement = pNewPasteEl;
-	  /* indicates whether a whole column is saved */
-	  WholeColumnSaved = WholeColumnSelected;
 	  pPasteEl = NULL;
 	  pNewPasteEl->PePrevious = NULL;
 	  pEl->ElPrevious = NULL;
+	  /* indicates whether a whole column is saved */
+	  WholeColumnSaved = WholeColumnSelected;
 	}
       else
 	{
