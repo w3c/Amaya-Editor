@@ -69,7 +69,7 @@ static int          OldHeight;
   ----------------------------------------------------------------------*/
 void InsertBefore (Document doc, View view)
 {
-  /****** TODO : see SRuleForSibling in structschema.c *******/
+  TtaInsertAnyElement (doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -77,7 +77,7 @@ void InsertBefore (Document doc, View view)
   ----------------------------------------------------------------------*/
 void InsertAfter (Document doc, View view)
 {
-  /****** TODO : see SRuleForSibling in structschema.c *******/
+  TtaInsertAnyElement (doc, FALSE);
 }
 
 /*----------------------------------------------------------------------

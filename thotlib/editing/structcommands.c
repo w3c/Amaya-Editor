@@ -3386,6 +3386,150 @@ void TtaInsertElement (ElementType elementType, Document document)
 			LoadedDocument[document - 1], TRUE);
 }
 
+/* ----------------------------------------------------------------------
+   TtaInsertAnyElement
+
+   Create an element whose type is defined in the structure schema and insert
+   it at the current position within a given document. The current position is
+   defined by the current selection.
+   If the current position is a single position (insertion point) the new
+   element is simply inserted at that position. If one or several characters
+   and/or elements are selected, the new element is created before the first
+   selected character/element if before is TRUE, after the last selected
+   character/element if before is FALSE.
+   The selection is set within the new element.
+   Parameters:
+   document: the document for which the element is created.
+   ---------------------------------------------------------------------- */
+void TtaInsertAnyElement (Document document, ThotBool before)
+{
+  PtrDocument     pDoc, pSelDoc;
+  PtrElement      firstSel, lastSel, pNew, pSibling, pSel;
+  int             firstChar, lastChar, typeNum, nSiblings;
+  PtrSSchema      pSS;
+  ThotBool        isList, optional;
+  NotifyElement   notifyEl;
+
+  UserErrorCode = 0;
+  if (document < 1 || document > MAX_DOCUMENTS)
+    /* Checks the parameter document */
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* Parameter document is ok */
+    {
+      pDoc = LoadedDocument[document - 1];
+      if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+				&lastChar))
+	/* there is no selection */
+	return;
+      else if (pSelDoc != pDoc)
+	/* the document asking for the creation of a new element is NOT the */
+	/* document containing the current selection */
+	return;
+      else if (pSelDoc->DocReadOnly)
+	/* the document can not be modified */
+	return;
+      else if (before && firstSel->ElTerminal && firstSel->ElLeafType == LtText ||
+	       !before && lastSel->ElTerminal && lastSel->ElLeafType == LtText)
+	/* selection is not a structure element */
+	return;
+      else
+	{
+	  if (before)
+	    SRuleForSibling (pDoc, firstSel, TRUE, 1, &typeNum, &pSS, &isList,
+			     &optional);
+	  else
+	    SRuleForSibling (pDoc, lastSel, FALSE, 1, &typeNum, &pSS, &isList,
+			     &optional);
+	  if (typeNum == 0 || pSS == NULL)
+	    /* no sibling allowed */
+	    return;
+	  if (TypeHasException (ExcNoCreate, typeNum, pSS))
+	    /* the user is not allowed to create this type of element */
+	    return;
+	  if (ExcludedType (firstSel->ElParent, typeNum, pSS))
+	    /* the parent element excludes this type of element */
+	    return;
+	  /* send event ElemNew.Pre to the application */
+	  notifyEl.event = TteElemNew;
+	  notifyEl.document = document;
+	  notifyEl.element = (Element) (firstSel->ElParent);
+	  notifyEl.info = 0; /* not sent by undo */
+	  notifyEl.elementType.ElTypeNum = typeNum;
+	  notifyEl.elementType.ElSSchema = (SSchema) (pSS);
+	  nSiblings = 0;
+	  if (before)
+	    pSibling = firstSel;
+	  else
+	    pSibling = lastSel;
+	  while (pSibling->ElPrevious != NULL)
+	    {
+	      nSiblings++;
+	      pSibling = pSibling->ElPrevious;
+	    }
+	  if (!before)
+	    nSiblings++;
+	  notifyEl.position = nSiblings;
+	  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+	    /* application does not accept element creation */
+	    return;
+	  OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
+			       lastChar);
+	  TtaClearViewSelections ();
+	  pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE, TRUE);
+	  if (before)
+	    {
+	      pSibling = firstSel->ElPrevious;
+	      BackSkipPageBreak (&pSibling);
+	      InsertElementBefore (firstSel, pNew);
+	      AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
+	      if (pSibling == NULL)
+		/* firstSel is no longer the first child of its parent */
+		ChangeFirstLast (firstSel, pDoc, TRUE, TRUE);
+	    }
+	  else
+	    {
+	      pSibling = lastSel->ElNext;
+	      FwdSkipPageBreak (&pSibling);
+	      InsertElementAfter (lastSel, pNew);
+	      AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
+	      if (pSibling == NULL)
+		/* lastSel is no longer the last child of its parent */
+		ChangeFirstLast (lastSel, pDoc, FALSE, TRUE);	      
+	    }
+	  /* remove exclusions from the created element */
+	  RemoveExcludedElem (&pNew, pDoc);
+	  AttachMandatoryAttributes (pNew, pDoc);
+	  if (pDoc->DocSSchema != NULL)
+	    /* the document has not been closed while waiting for mandatory
+	       attributes */
+	    {
+	      CreationExceptions (pNew, pDoc);
+	      CreateAllAbsBoxesOfEl (pNew, pDoc);
+	      AbstractImageUpdated (pDoc);
+	      RedisplayDocViews (pDoc);
+	      RedisplayCopies (pNew, pDoc, TRUE);
+	      UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
+	      /* send an event ElemNew.Post to application */
+	      NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0, FALSE, FALSE);
+	      if (pNew && pNew->ElParent)
+		{
+		  SetDocumentModified (pDoc, TRUE, 30);
+		  /* set a new selection */
+		  pSel = FirstLeaf (pNew);
+		  if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+		    SelectPositionWithEvent (pDoc, pSel, 1);
+		  else
+		    SelectElementWithEvent (pDoc, pSel, TRUE, TRUE);
+		}
+	    }
+	  CloseHistorySequence (pDoc);  
+	}
+    }
+}
+
 /*----------------------------------------------------------------------
    TtaSetTransformCallback permet de connecter une fonction de l'application
    au changement de type d'element
@@ -3394,5 +3538,3 @@ void  TtaSetTransformCallback (Func callbackFunc)
 {
    TransformIntoFunction = callbackFunc;
 }
-
-

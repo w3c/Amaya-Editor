@@ -52,7 +52,7 @@ RULES
 	BEGIN
 	Size: 12 pt;
 	Font: helvetica;
-    Visibility: 10;
+	Visibility: 10;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height min;
 	END;

@@ -305,6 +305,23 @@ extern void TtaCreateElement (ElementType elementType, Document document);
 extern void TtaInsertElement (ElementType elementType, Document document);
 
 /* ----------------------------------------------------------------------
+   TtaInsertAnyElement
+
+   Create an element whose type is defined in the structure schema and insert
+   it at the current position within a given document. The current position is
+   defined by the current selection.
+   If the current position is a single position (insertion point) the new
+   element is simply inserted at that position. If one or several characters
+   and/or elements are selected, the new element is created before the first
+   selected character/element if before is TRUE, after the last selected
+   character/element if before is FALSE.
+   The selection is set within the new element.
+   Parameters:
+   document: the document for which the element is created.
+   ---------------------------------------------------------------------- */
+extern void TtaInsertAnyElement (Document document, ThotBool before);
+
+/* ----------------------------------------------------------------------
    TtaRemoveTree
 
    Removes a tree (or a single element) from its tree, without freeing it.
