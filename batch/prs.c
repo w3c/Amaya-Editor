@@ -3574,12 +3574,12 @@ indLine             wi;
 
 {
    if (pSSchema->SsAttribute[attr - 1].AttrType != AtNumAttr)
+      /* not an attribute of type Integer, error */
       CompilerError (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine, LineNum);
-   /* ce n'est pas un attribut numerique */
    else
       switch (prevRule)
+	    /* prevRule = number of the rule where the attribute name appears*/
 	    {
-		  /* pr= numero de la regle ou apparait le nom d'attribut */
 	       case RULE_NbInherit:
 		  /* Integer */
 		  CurRule->PrIntValue = attr;
@@ -3590,7 +3590,7 @@ indLine             wi;
 		  CurUnit = Percent;
 		  LatestNumber = attr;
 		  LatestNumberAttr = True;
-		  PrevSign = 1;	/* signe positif */
+		  PrevSign = 1;	/* sign =  "+" */
 		  CurRule->PrDimRule.DrUnit = UnPercent;
 		  break;
 	       case RULE_IntPartA:
@@ -4596,7 +4596,7 @@ indLine             wi;
 	    case RULE_DimRatio:
 	       /* DimRatio */
 	       CurUnit = Percent;
-	       LatestNumber = n;
+	       LatestNumber = n * 1000;
 	       LatestNumberAttr = False;
 	       PrevSign = 1;	/* signe positif */
 	       CurRule->PrDimRule.DrUnit = UnPercent;
