@@ -28,6 +28,7 @@
 #include "font_tv.h"
 #include "frame_tv.h"
 #include "units_tv.h"
+#include "boxes_tv.h"
 #include "edit_tv.h"
 #include "thotcolor_tv.h"
 
@@ -2727,10 +2728,10 @@ C_points           *controls;
 	    }
 	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
 					UnPoint, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
+					ViewFrameTable[frame - 1].FrMagnification));
 	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
 					UnPoint, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
+					ViewFrameTable[frame - 1].FrMagnification));
 	  if (i == nb - 2)
 	    {
 	      cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
