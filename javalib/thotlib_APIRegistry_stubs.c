@@ -56,7 +56,10 @@ thotlib_APIRegistry_TtaGetEnvString(struct Hthotlib_APIRegistry* none, struct Hj
 
 	thotlib_APIRegistry_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*

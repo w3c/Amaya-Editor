@@ -170,7 +170,10 @@ thotlib_APIAttribute_TtaGetAttributeName(struct Hthotlib_APIAttribute* none, jlo
 	/* convert AttributeType attributeType to arg jlong jattributeType */
 	CAttributeType2Javalong(attributeType,&jattributeType);
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*

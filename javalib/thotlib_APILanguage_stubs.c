@@ -81,7 +81,10 @@ thotlib_APILanguage_TtaGetVarLANG(struct Hthotlib_APILanguage* none)
 
 	thotlib_APILanguage_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*
@@ -153,7 +156,10 @@ thotlib_APILanguage_TtaGetLanguageName(struct Hthotlib_APILanguage* none, jint l
 
 	thotlib_APILanguage_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*

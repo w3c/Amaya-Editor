@@ -446,7 +446,10 @@ thotlib_APIDocument_TtaGetDocumentName(struct Hthotlib_APIDocument* none, jint d
 
 	thotlib_APIDocument_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*
@@ -519,7 +522,10 @@ thotlib_APIDocument_TtaGetSSchemaName(struct Hthotlib_APIDocument* none, jint sc
 
 	thotlib_APIDocument_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*
@@ -537,7 +543,10 @@ thotlib_APIDocument_TtaGetPSchemaName(struct Hthotlib_APIDocument* none, jint sc
 
 	thotlib_APIDocument_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*

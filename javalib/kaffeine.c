@@ -8,6 +8,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "StubPreamble.h"
 #include "jtypes.h"
 #include "native.h"
@@ -29,6 +32,7 @@
 
 /* DEBUG_KAFFE    will print lot of debug messages                      */
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
+/* DEBUG_TIMING   add fine-tuned timing informations to debug messages  */
 /* DEBUG_SELECT_CHANNELS   will do some sanity checking and print debug */
 /*                         messages on extra channel uses               */
 /* DEBUG_LOCK     will print debug messages on Locks and Releases       */
@@ -48,7 +52,51 @@ extern void sleepThread(jlong time);
 static void register_stubs(void);
 void register_biss_awt_API_stubs(void);
 
-int JavaEnabled = 0;
+#ifdef DEBUG_TIMING
+/************************************************************************
+ *									*
+ *			Timing Debug Support				*
+ *									*
+ ************************************************************************/
+
+static int JavaTimerInitialized = 0;
+static struct timeval tv_start;
+static struct timeval tv_prev;
+
+static void InitJavaTimer(void)
+{
+    gettimeofday(&tv_start, NULL);
+    gettimeofday(&tv_prev, NULL);
+    JavaTimerInitialized = 1;
+}
+
+static char *GetJavaTimer(void)
+{
+    static char JavaGetTimerString[500];
+    struct timeval tv_cour;
+    unsigned long time;
+    unsigned long delta;
+
+    if (!JavaTimerInitialized) InitJavaTimer();
+    gettimeofday(&tv_cour, NULL);
+    time = tv_cour.tv_sec - tv_start.tv_sec;
+    time *= 1000000;
+    time += tv_cour.tv_usec;
+    time -= tv_start.tv_usec;
+    delta = tv_cour.tv_sec - tv_prev.tv_sec;
+    delta *= 1000000;
+    delta += tv_cour.tv_usec;
+    delta -= tv_prev.tv_usec;
+    tv_prev.tv_usec = tv_cour.tv_usec;
+    tv_prev.tv_sec = tv_cour.tv_sec;
+    sprintf(&JavaGetTimerString[0],"%8lu : +%8lu : ", time, delta);
+    return(&JavaGetTimerString[0]);
+}
+
+#define TIMER fprintf(stderr,GetJavaTimer());
+#else /* !DEBUG_TIMING */
+#define TIMER
+#endif /* DEBUG_TIMING */
 
 /************************************************************************
  *									*
@@ -131,6 +179,7 @@ void               InitJavaSelect()
     FD_ZERO(&extra_writefds);
     FD_ZERO(&extra_exceptfds);
 #ifdef DEBUG_SELECT
+    TIMER
     fprintf(stderr,"InitJavaSelect\n");
 #endif
     JavaSelectInitialized = 1;
@@ -174,6 +223,7 @@ int io;
     if ((fd < 0) || (fd > sizeof(fd_set) * 8)) return;
     if (fd >= max_extra_fd) max_extra_fd = fd;
 #ifdef DEBUG_SELECT_CHANNELS
+    TIMER
     if (io & 1) fprintf(stderr, "adding channel %d for read\n", fd);
     if (io & 2) fprintf(stderr, "adding channel %d for write\n", fd);
     if (io & 4) fprintf(stderr, "adding channel %d for exceptions\n", fd);
@@ -205,6 +255,7 @@ int io;
     if (DoJavaSelectPoll) BreakJavaSelectPoll++;
     if ((fd < 0) || (fd > sizeof(fd_set) * 8)) return;
 #ifdef DEBUG_SELECT_CHANNELS
+    TIMER
     if (io & 1) fprintf(stderr, "removing channel %d for read\n", fd);
     if (io & 2) fprintf(stderr, "removing channel %d for write\n", fd);
     if (io & 4) fprintf(stderr, "removing channel %d for exceptions\n", fd);
@@ -262,6 +313,7 @@ ThotEvent *ev;
         ((timeout == NULL) || (timeout->tv_usec != 0) ||
 	 (timeout->tv_sec != 0))){
         /* char *p = NULL; */
+	TIMER
         fprintf(stderr, "JavaSelect reentrancy !\n");
 	/* call debugger or dump core
 	*p = 0; ! */
@@ -269,21 +321,23 @@ ThotEvent *ev;
     InJavaSelect = 1;
 
     if ((DoJavaSelectPoll) && (BreakJavaSelectPoll) &&
-        (n >= x_window_socket) && (FD_ISSET(x_window_socket, &readfds)))  {
+        (n >= x_window_socket) && (FD_ISSET(x_window_socket, readfds)))  {
 	/*
 	 * We must interrupt the poll on the X-Window socket.
 	 */
 #ifdef DEBUG_SELECT
+	TIMER
 	fprintf(stderr,"JavaSelect : Poll break !\n");
 #endif
-	FD_ZERO(&readfds);
-	FD_SET(x_window_socket, &readfds);
-	FD_ZERO(&writefds);
-	FD_ZERO(&exceptfds);
+	FD_ZERO(readfds);
+	FD_SET(x_window_socket, readfds);
+	if (writefds) FD_ZERO(writefds);
+	if (exceptfds) FD_ZERO(exceptfds);
 	return(1);
     }
 
 #ifdef DEBUG_SELECT
+    TIMER
     fprintf(stderr,"<");
 #endif
 
@@ -378,6 +432,7 @@ restart_select:
         AND_FD(nb, &full_exceptfds, exceptfds);
 	InJavaSelect = 0;
 #ifdef DEBUG_SELECT
+	TIMER
         fprintf(stderr,"X");
 #endif
         return(res);
@@ -392,6 +447,7 @@ restart_select:
         AND_FD(nb, &full_exceptfds, exceptfds);
 	InJavaSelect = 0;
 #ifdef DEBUG_SELECT
+	TIMER
         fprintf(stderr,">");
 #endif
         return(0);
@@ -404,6 +460,7 @@ restart_select:
 
     if (DoJavaSelectPoll) {
 #ifdef DEBUG_SELECT
+	TIMER
         fprintf(stderr,"JavaSelect : Register Poll break\n");
 #endif
         BreakJavaSelectPoll++;
@@ -439,6 +496,7 @@ restart_select:
      */
     if (res <= 0) {
 #ifdef DEBUG_SELECT
+	TIMER
         fprintf(stderr,"|");
 #endif
         goto restart_select;
@@ -453,6 +511,7 @@ restart_select:
     /* !!! Do or do not update timeout ??? */
     InJavaSelect = 0;
 #ifdef DEBUG_SELECT
+    TIMER
     fprintf(stderr,">");
 #endif
     return(res);
@@ -484,6 +543,7 @@ void JavaThotlibLock()
 	    blockInts--;
 	     ****/
 #ifdef DEBUG_LOCK
+	    TIMER
             fprintf(stderr,"JavaThotlibLock(%d,%d) : block\n",
 	            ThotlibLockValue, XWindowSocketLockValue);
 #endif
@@ -503,6 +563,7 @@ void JavaThotlibLock()
 	   continue;
 	}
 #ifdef DEBUG_LOCK
+	TIMER
         fprintf(stderr,"JavaThotlibLock(%d,%d) : Ok\n",
 	        ThotlibLockValue, XWindowSocketLockValue);
 #endif
@@ -514,6 +575,7 @@ void JavaThotlibRelease()
 {
     ThotlibLockValue--;
 #ifdef DEBUG_LOCK
+	TIMER
         fprintf(stderr,"JavaThotlibRelease(%d,%d)\n",
 	        ThotlibLockValue, XWindowSocketLockValue);
 #endif
@@ -527,6 +589,7 @@ void JavaXWindowSocketLock()
 	 */
         while (XWindowSocketLockValue > 0) {
 #ifdef DEBUG_LOCK
+	    TIMER
             fprintf(stderr,"JavaXWindowSocketLock(%d,%d) : block\n",
 	            ThotlibLockValue, XWindowSocketLockValue);
 #endif
@@ -548,6 +611,7 @@ void JavaXWindowSocketLock()
 	   continue;
 	}
 #ifdef DEBUG_LOCK
+	TIMER
         fprintf(stderr,"JavaXWindowSocketLock(%d,%d) : Ok\n",
                 ThotlibLockValue, XWindowSocketLockValue);
 #endif
@@ -559,6 +623,7 @@ void JavaXWindowSocketRelease()
 {
     XWindowSocketLockValue--;
 #ifdef DEBUG_LOCK
+    TIMER
     fprintf(stderr,"JavaXWindowSocketRelease(%d,%d)\n",
             ThotlibLockValue, XWindowSocketLockValue);
 #endif
@@ -803,6 +868,7 @@ int                 JavaPollLoop ()
    DoJavaSelectPoll = 1;
    BreakJavaSelectPoll = 0;
 #ifdef DEBUG_SELECT
+   TIMER
    fprintf(stderr,"JavaPollLoop entered\n");
 #endif
 
@@ -820,6 +886,7 @@ int                 JavaPollLoop ()
 	        DoJavaSelectPoll = 0;
 		BreakJavaSelectPoll = 0;
 #ifdef DEBUG_SELECT
+		TIMER
 	        fprintf(stderr,"JavaPollLoop stopped\n");
 #endif
                 return(-1);
@@ -830,6 +897,7 @@ int                 JavaPollLoop ()
 	    DoJavaSelectPoll = 0;
 	    BreakJavaSelectPoll = 0;
 #ifdef DEBUG_SELECT
+	    TIMER
             fprintf(stderr,"JavaPollLoop stopped\n");
 #endif
 	    return(res);

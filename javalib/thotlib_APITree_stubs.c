@@ -582,7 +582,10 @@ thotlib_APITree_TtaGetElementTypeName(struct Hthotlib_APITree* none, jlong jelem
 	/* convert ElementType elementType to arg jlong jelementType */
 	CElementType2Javalong(elementType,&jelementType);
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*
@@ -650,7 +653,10 @@ thotlib_APITree_TtaGetElementLabel(struct Hthotlib_APITree* none, jint element)
 
 	thotlib_APITree_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*

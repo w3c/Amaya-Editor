@@ -245,7 +245,10 @@ thotlib_APIView_TtaGetViewName(struct Hthotlib_APIView* none, jint document, jin
 
 	thotlib_APIView_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*

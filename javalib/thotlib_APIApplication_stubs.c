@@ -84,7 +84,10 @@ thotlib_APIApplication_TtaGetVersion(struct Hthotlib_APIApplication* none)
 
 	thotlib_APIApplication_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*
@@ -120,7 +123,10 @@ thotlib_APIApplication_TtaGetStrError(struct Hthotlib_APIApplication* none, jint
 
 	thotlib_APIApplication_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*
@@ -181,7 +187,10 @@ thotlib_APIApplication_TtaStrdup(struct Hthotlib_APIApplication* none, struct Hj
 
 	thotlib_APIApplication_UNLOCK();
 
-	return(makeJavaString(res, sizeof(res)));
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
 }
 
 /*
