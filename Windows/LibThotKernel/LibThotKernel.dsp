@@ -191,7 +191,7 @@ SOURCE=..\..\thotlib\base\registry.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\document\schemastr.c
+SOURCE=..\..\thotlib\document\schemas.c
 # End Source File
 # Begin Source File
 

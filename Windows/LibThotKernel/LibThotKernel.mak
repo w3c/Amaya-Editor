@@ -75,7 +75,7 @@ CLEAN :
 	-@erase "$(INTDIR)\referenceapi.obj"
 	-@erase "$(INTDIR)\references.obj"
 	-@erase "$(INTDIR)\registry.obj"
-	-@erase "$(INTDIR)\schemastr.obj"
+	-@erase "$(INTDIR)\schemas.obj"
 	-@erase "$(INTDIR)\schtrad.obj"
 	-@erase "$(INTDIR)\structlist.obj"
 	-@erase "$(INTDIR)\structschema.obj"
@@ -137,7 +137,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\referenceapi.obj" \
 	"$(INTDIR)\references.obj" \
 	"$(INTDIR)\registry.obj" \
-	"$(INTDIR)\schemastr.obj" \
+	"$(INTDIR)\schemas.obj" \
 	"$(INTDIR)\schtrad.obj" \
 	"$(INTDIR)\structlist.obj" \
 	"$(INTDIR)\structschema.obj" \
@@ -200,7 +200,7 @@ CLEAN :
 	-@erase "$(INTDIR)\referenceapi.obj"
 	-@erase "$(INTDIR)\references.obj"
 	-@erase "$(INTDIR)\registry.obj"
-	-@erase "$(INTDIR)\schemastr.obj"
+	-@erase "$(INTDIR)\schemas.obj"
 	-@erase "$(INTDIR)\schtrad.obj"
 	-@erase "$(INTDIR)\structlist.obj"
 	-@erase "$(INTDIR)\structschema.obj"
@@ -262,7 +262,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\referenceapi.obj" \
 	"$(INTDIR)\references.obj" \
 	"$(INTDIR)\registry.obj" \
-	"$(INTDIR)\schemastr.obj" \
+	"$(INTDIR)\schemas.obj" \
 	"$(INTDIR)\schtrad.obj" \
 	"$(INTDIR)\structlist.obj" \
 	"$(INTDIR)\structschema.obj" \
@@ -1084,6 +1084,7 @@ DEP_CPP_CONTEN=\
 	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\attributes_f.h"\
 	"..\..\thotlib\internals\f\boxselection_f.h"\
+	"..\..\thotlib\internals\f\buildboxes_f.h"\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
@@ -1153,6 +1154,7 @@ DEP_CPP_CONTEN=\
 	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\attributes_f.h"\
 	"..\..\thotlib\internals\f\boxselection_f.h"\
+	"..\..\thotlib\internals\f\buildboxes_f.h"\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
@@ -2073,7 +2075,6 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\message_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -2128,7 +2129,6 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\message_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -3385,7 +3385,7 @@ DEP_CPP_REGIS=\
 
 !ENDIF 
 
-SOURCE=..\..\thotlib\document\schemastr.c
+SOURCE=..\..\thotlib\document\schemas.c
 
 !IF  "$(CFG)" == "LibThotKernel - Win32 Release"
 
@@ -3394,6 +3394,7 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
@@ -3412,13 +3413,18 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\config_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\readprs_f.h"\
 	"..\..\thotlib\internals\f\readstr_f.h"\
 	"..\..\thotlib\internals\f\schemas_f.h"\
+	"..\..\thotlib\internals\f\tree_f.h"\
+	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -3426,7 +3432,9 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\modif_tv.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -3434,7 +3442,7 @@ NODEP_CPP_SCHEM=\
 	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
-"$(INTDIR)\schemastr.obj" : $(SOURCE) $(DEP_CPP_SCHEM) "$(INTDIR)"
+"$(INTDIR)\schemas.obj" : $(SOURCE) $(DEP_CPP_SCHEM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3480,7 +3488,7 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	
 
-"$(INTDIR)\schemastr.obj" : $(SOURCE) $(DEP_CPP_SCHEM) "$(INTDIR)"
+"$(INTDIR)\schemas.obj" : $(SOURCE) $(DEP_CPP_SCHEM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
