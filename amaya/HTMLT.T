@@ -5,7 +5,7 @@ TRANSLATION HTML;
 LINELENGTH 78;
 
 CONST
-   QuoteF  = '"';
+   DoubleQuote  = '"';
    C_Style = ' style="';
 
 RULES
@@ -37,7 +37,7 @@ RULES
 	   BEGIN
 	   Create ' prompt="';
 	   Create Prompt;
-	   Create QuoteF;
+	   Create DoubleQuote;
 	   END;
 	Create Attributes;
 	Remove;
@@ -699,31 +699,31 @@ ATTRIBUTES
  http_equiv: BEGIN
 	Create ' http-equiv="';
 	Create http_equiv;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  meta_name: BEGIN
 	Create ' name="';
 	Create meta_name;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  meta_content: BEGIN
 	Create ' content="';
 	Create meta_content;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  REL:	BEGIN
 	Create ' rel="';
 	Create REL;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  REV:	BEGIN
 	Create ' rev="';
 	Create REV;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  HREF_ :
@@ -731,69 +731,70 @@ ATTRIBUTES
 	NoTranslation;
 	Create ' href="';
 	Create HREF_;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  background_ :
 	BEGIN
 	Create ' background="';
 	Create background_;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  BackgroundColor :
 	BEGIN
 	Create ' bgcolor="';
 	Create BackgroundColor;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  TextColor :
 	BEGIN
 	Create ' text="';
 	Create TextColor;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  LinkColor :
 	BEGIN
 	Create ' link="';
 	Create LinkColor;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  VisitedLinkColor :
 	BEGIN
 	Create ' vlink="';
 	Create VisitedLinkColor;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  ActiveLinkColor :
 	BEGIN
 	Create ' alink="';
 	Create ActiveLinkColor;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  BaseFontSize:
 	BEGIN
-	Create ' size=';
+	Create ' size="';
 	Create BaseFontSize;
+	Create DoubleQuote;
 	END;
 
  Font_size :
 	BEGIN
 	Create ' size="';
 	Create Font_size;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  color :
 	BEGIN
 	Create ' color="';
 	Create color;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Clear = Left_:
@@ -807,10 +808,8 @@ ATTRIBUTES
 
  Align = left_:
 	Create ' align=left';
-
  Align = center_:
 	Create ' align=center';
-
  Align = right_:
 	Create ' align=right';
 
@@ -820,75 +819,75 @@ ATTRIBUTES
  Size_: BEGIN
 	Create ' size="';
 	Create Size_;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Width__: BEGIN
 	Create ' width="';
 	Create Width__;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  codebase: BEGIN
 	NoTranslation;
 	Create ' codebase="';
 	Create codebase;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  code:	BEGIN
 	Create ' code="';
 	Create code;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  applet_name: BEGIN
 	Create ' name="';
 	Create applet_name;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Param_name: BEGIN
 	Create ' name="';
 	Create Param_name;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Param_value: BEGIN
 	Create ' value="';
 	Create Param_value;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 #ifdef COUGAR
  classid: BEGIN
 	Create ' classid="';
 	Create classid;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  data: BEGIN
 	Create ' data="';
 	Create data;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Object_type: BEGIN
 	Create ' type="';
 	Create Object_type;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  codetype: BEGIN
 	Create ' codetype="';
 	Create codetype;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 #endif
  Title : BEGIN
 	NoTranslation;
 	Create ' title="';
 	Create Title;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Class: BEGIN
@@ -903,7 +902,7 @@ ATTRIBUTES
 	    BEGIN
 	    Create ' class="';
 	    Create Class;
-	    Create QuoteF;
+	    Create DoubleQuote;
 	    END;
 	END;
 
@@ -914,7 +913,7 @@ ATTRIBUTES
 	    Create '<SPAN ';
 	    Create C_Style;
 	    Create Style\240;
-	    Create QuoteF;
+	    Create DoubleQuote;
 	    Create '>';
 	    Create '</SPAN>' After;
 	    END;
@@ -922,7 +921,7 @@ ATTRIBUTES
 	    BEGIN
 	    Create C_Style;
 	    Create Style\240;
-	    Create QuoteF;
+	    Create DoubleQuote;
 	    END;
 	END;
 
@@ -950,7 +949,7 @@ ATTRIBUTES
  Start > 1: BEGIN
 	Create ' start="';
 	Create Start;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  ItemStyle = disc :
@@ -973,19 +972,19 @@ ATTRIBUTES
  ItemValue: BEGIN
 	Create ' value="';
 	Create ItemValue;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  WidthElement: BEGIN
 	Create ' width="';
 	Create WidthElement;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Script_URL: BEGIN
 	Create ' action="';
 	Create Script_URL;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  METHOD=Post_:
@@ -997,22 +996,23 @@ ATTRIBUTES
  ENCTYPE: BEGIN
 	Create ' enctype="';
 	Create ENCTYPE;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  NAME: BEGIN
 	NoTranslation;
 	Create ' name="';
 	Create NAME;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Multiple:
 	Create ' multiple';
 
  MenuSize: BEGIN
-	Create ' size=';
+	Create ' size="';
 	Create MenuSize;
+	Create DoubleQuote;
 	END;
 
  Selected:
@@ -1021,42 +1021,46 @@ ATTRIBUTES
  Value_: BEGIN
 	Create ' value="';
 	Create Default_Value;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Rows: BEGIN
-	Create ' rows=';
+	Create ' rows="';
 	Create Rows;
+	Create DoubleQuote;
 	END;
 
  Columns: BEGIN
-	Create ' cols=';
+	Create ' cols="';
 	Create Columns;
+	Create DoubleQuote;
 	END;
 
  Checked = Yes_:
 	Create ' checked';
 
  Area_Size: BEGIN
-	Create ' size=';
+	Create ' size="';
 	Create Area_Size;
+	Create DoubleQuote;
 	END;
 
  MaxLength: BEGIN
-	Create ' maxlength=';
+	Create ' maxlength="';
 	Create MaxLength;
+	Create DoubleQuote;
 	END;
 
  SRC:	BEGIN
 	Create ' src="';
 	Create SRC;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  ALT:	BEGIN
 	Create ' alt="';
 	Create ALT;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Alignment = Top_:
@@ -1073,31 +1077,31 @@ ATTRIBUTES
  Height_: BEGIN
 	Create ' height="';
 	Create Height_;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Width_: BEGIN
 	Create ' width="';
 	Create Width_;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Img_border: BEGIN
 	Create ' border="';
 	Create Img_border;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  hspace: BEGIN
 	Create ' hspace="';
 	Create hspace;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  vspace: BEGIN
 	Create ' vspace="';
 	Create vspace;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  ISMAP:
@@ -1107,7 +1111,7 @@ ATTRIBUTES
 	NoTranslation;
 	Create ' usemap="';
 	Create USEMAP;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  nohref:
@@ -1123,12 +1127,13 @@ ATTRIBUTES
  coords: BEGIN
 	Create ' coords="';
 	Create coords;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Border: BEGIN
-	Create ' BORDER=';
+	Create ' border="';
 	Create Border;
+	Create DoubleQuote;
 	END;
 
  Table_align = Align_left:
@@ -1141,13 +1146,13 @@ ATTRIBUTES
  cellspacing: BEGIN
 	Create ' cellspacing="';
 	Create cellspacing;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  cellpadding: BEGIN
 	Create ' cellpadding="';
 	Create cellpadding;
-	Create QuoteF;
+	Create DoubleQuote;
 	END;
 
  Position = Position_top:
@@ -1169,13 +1174,15 @@ ATTRIBUTES
 	 Create ' valign=bottom';
 
  colspan: BEGIN
-	Create ' colspan=';
+	Create ' colspan="';
 	Create colspan;
+	Create DoubleQuote;
 	END;
 
  rowspan: BEGIN
-	Create ' rowspan=';
+	Create ' rowspan="';
 	Create rowspan;
+	Create DoubleQuote;
 	END;
 
  Cell_align = Cell_left:
@@ -1193,13 +1200,15 @@ ATTRIBUTES
 	Create ' valign=bottom';
 
  Cell_width: BEGIN
-	Create ' width=';
+	Create ' width="';
 	Create Cell_width;
+	Create DoubleQuote;
 	END;
 
  Cell_height: BEGIN
-	Create ' height=';
+	Create ' height="';
 	Create Cell_height;
+	Create DoubleQuote;
 	END;
 
  Word_wrap = No_wrap:
