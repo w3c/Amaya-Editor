@@ -94,3 +94,6 @@
 93 %d outstanding requests
 94 Connection closed
 95 Garbage collecting persistent cache - please wait...
+96 HTTP 403 Error: The server forbids this operation on this ressource
+97 HTTP 404 Error: The server cannot find the requested URL
+98 HTTP 500 Error: The server has encountered an inernal error

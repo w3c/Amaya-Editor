@@ -105,5 +105,8 @@ int                 AMAYA;
 #define AM_WAITING_REQUESTS            93
 #define AM_CONNECTION_CLOSED           94
 #define AM_CACHE_GC                    95
+#define AM_AUTHENTICATION_ERROR        96
+#define AM_UNKNOWN_URL                 97
+#define AM_SERVER_INTERNAL_ERROR       98
 
-#define AMAYA_MSG_MAX                  96
+#define AMAYA_MSG_MAX                  99
