@@ -42,10 +42,6 @@
 static ThotBool     CloseDontSave;
 static ThotBool     SaveBeforeClosing;
 
-#ifdef _WINDOWS
-extern ThotBool IsViewClosed;
-#endif /* _WINDOWS */
-
 #include "actions_f.h"
 #include "appdialogue_f.h"
 #include "displayview_f.h"
@@ -229,8 +225,5 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
-   IsViewClosed = TRUE;
-#  endif /* _WINDOWS */
    CloseADocument (document, document, view);
 }

@@ -144,6 +144,7 @@ DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TO
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
+static ThotBool CloseEvent = FALSE;
 #include "wininclude.h"
 
 /*----------------------------------------------------------------------
@@ -1312,15 +1313,14 @@ WPARAM      wParam;
 LPARAM      lParam; 
 #endif /* __STDC__ */
 {
-  /* PtrDocument         pDoc; */
+  PtrDocument         pDoc;
   HWND                hwndTextEdit;
   HWND                hwndToolTip;
   RECT                rect;
-  /* STRING              viewName; */
   RECT                rWindow;
   int                 frame = GetMainFrameNumber (hwnd);
   int                 doc, view;
-  /* ThotBool            assoc; */
+  ThotBool            assoc;
 
   if (frame != -1)
     currentFrame = frame;
@@ -1436,21 +1436,14 @@ LPARAM      lParam;
   case WM_DESTROY:
     if (!IsViewClosed) {
        if (frame <= MAX_FRAME) {
-          FrameToView (frame, &doc, &view);
-          if (view == 1)
-              TtcCloseDocument (doc, view);
-          else
-               TtcCloseView (doc, view);
+          GetDocAndView (frame, &pDoc, &view, &assoc);
+          CloseView (pDoc, view, assoc);
 	   }
-       for (frame = 0; frame <= MAX_FRAME; frame++)
-           if (FrRef[frame] != 0) {
-              /* there is still an active frame */
-              IsViewClosed = FALSE;
-              PostQuitMessage (0);
-              return 0;
-		   }
-           TtaQuit();
+       TtaQuit ();
 	}
+    IsViewClosed = FALSE;
+    PostQuitMessage (0);
+    return 0;
         
   case WM_SIZE: {
     int    cx = LOWORD (lParam);

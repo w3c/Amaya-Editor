@@ -40,10 +40,6 @@ static DocViewNumber ReferenceView;
 #include "viewapi_f.h"
 #include "views_f.h"
 
-#ifdef _WINDOWS
-extern ThotBool IsViewClosed ;
-#endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
    CallbackOpenView
    updates the openview form
@@ -147,10 +143,6 @@ View                viewIn;
    PtrDocument         pDoc;
    int                 view;
    ThotBool            assoc;
-
-#  ifdef _WINDOWS
-   IsViewClosed = TRUE;
-#  endif /* _WINDOWS */
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc != NULL)
