@@ -24,14 +24,10 @@
 
 typedef struct _BackgroundImageCallbackBlock
 {
-  Element                     el;
-  PSchema                     tsch;
-  CSSInfoPtr                  css;
-  union
-  {
-    PresentationContextBlock  specific;
-    GenericContextBlock       generic;
-  } context;
+  Element                el;
+  PSchema                tsch;
+  CSSInfoPtr             css;
+  PresentationContext    ctxt;
 }
 BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
 
@@ -3002,6 +2998,7 @@ static char *ParseSVGFillOpacity (Element element, PSchema tsch,
     }
   return (cssRule);
 }
+
 /*----------------------------------------------------------------------
   ParseCSSBackgroundImageCallback: Callback called asynchronously by
   FetchImage when a background image has been fetched.
@@ -3016,7 +3013,7 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   PSchema                    tsch;
   CSSInfoPtr                 css;
   PInfoPtr                   pInfo;
-  PresentationContext        context;
+  PresentationContext        ctxt;
   PresentationValue          image;
   PresentationValue          value;
   ThotBool                   enabled;
@@ -3027,10 +3024,10 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   css = NULL;
   el = callblock->el;
   tsch = callblock->tsch;
-  context = &callblock->context.specific;
+  ctxt = callblock->ctxt;
   if (doc == 0 && !isnew)
     /* apply to the current document only */
-    doc = context->doc;
+    doc = ctxt->doc;
   if (doc)
     {
       /* avoid too many redisplay */
@@ -3054,13 +3051,18 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
       image.typed_data.unit = UNIT_REL;
       image.typed_data.real = FALSE;
       image.pointer = file;
-      TtaSetStylePresentation (PRBackgroundPicture, el, tsch, context, image);
+      TtaSetStylePresentation (PRBackgroundPicture, el, tsch, ctxt, image);
       
       /* enforce the showbox */
       value.typed_data.value = 1;
       value.typed_data.unit = UNIT_REL;
       value.typed_data.real = FALSE;
-      TtaSetStylePresentation (PRShowBox, el, tsch, context, value);      
+      TtaSetStylePresentation (PRShowBox, el, tsch, ctxt, value);
+      /* check if the context can be freed */
+      ctxt->uses -= 1;
+      if (ctxt->uses == 0)
+	/* no other image loading */
+	TtaFreeMemory (ctxt);
     }
 
   TtaFreeMemory (callblock);
@@ -3158,11 +3160,10 @@ char *GetCSSBackgroundURL (char *styleString)
   ParseCSSBackgroundImage: parse a CSS BackgroundImage attribute string.
   ----------------------------------------------------------------------*/
 static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
-				      PresentationContext context,
+				      PresentationContext ctxt,
 				      char *cssRule, CSSInfoPtr css,
 				      ThotBool isHTML)
 {
-  GenericContext             ctxt = (GenericContext) context;
   Element                    el;
   BackgroundImageCallbackPtr callblock;
   PresentationValue          image, value;
@@ -3177,15 +3178,14 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
     el = element;
   else
     /* default element for FetchImage */
-    el = TtaGetMainRoot (context->doc);
+    el = TtaGetMainRoot (ctxt->doc);
     
   url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "none", 4))
     {
       image.pointer = NULL;
-      TtaSetStylePresentation (PRBackgroundPicture, element, tsch, context,
-			       image);
+      TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt, image);
       cssRule += 4;
     }
   else if (!strncasecmp (cssRule, "url", 3))
@@ -3230,18 +3230,18 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	}
       cssRule++;
 
-      if (context->destroy)
+      if (ctxt->destroy)
 	{
 	  /* remove the background image PRule */
 	  image.pointer = NULL;
-	  TtaSetStylePresentation (PRBackgroundPicture, element, tsch, context, image);
-	  if (TtaGetStylePresentation (PRFillPattern, element, tsch, context, &value) < 0)
+	  TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt, image);
+	  if (TtaGetStylePresentation (PRFillPattern, element, tsch, ctxt, &value) < 0)
 	    {
 	      /* there is no FillPattern rule -> remove ShowBox rule */
 	      value.typed_data.value = 1;
 	      value.typed_data.unit = UNIT_REL;
 	      value.typed_data.real = FALSE;
-	      TtaSetStylePresentation (PRShowBox, element, tsch, context, value);
+	      TtaSetStylePresentation (PRShowBox, element, tsch, ctxt, value);
 	    }
 	}
       else if (url)
@@ -3256,13 +3256,9 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 		  callblock->el = element;
 		  callblock->tsch = tsch;
 		  callblock->css = css;
-		  if (element == NULL)
-		    memcpy (&callblock->context.generic, ctxt,
-			    sizeof (GenericContextBlock));
-		  else
-		    memcpy (&callblock->context.specific, context,
-			    sizeof(PresentationContextBlock));
-
+		  callblock->ctxt = ctxt;
+		  /* new use of the context */
+		  ctxt->uses += 1;
 		  /* check if the image url is related to an external CSS */
 		  if (css)
 		    {
@@ -3271,13 +3267,13 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 			NormalizeURL (url, 0, tempname, imgname, css->url);
 		      else
 			/* the image concerns a style element */
-			NormalizeURL (url, context->doc, tempname, imgname, NULL);
+			NormalizeURL (url, ctxt->doc, tempname, imgname, NULL);
 		      /* fetch and display background image of element */
 		      FetchImage (0, el, tempname, AMAYA_LOAD_IMAGE,
 				  ParseCSSBackgroundImageCallback, callblock);
 		    }
 		  else
-		    FetchImage (context->doc, el, url, AMAYA_LOAD_IMAGE,
+		    FetchImage (ctxt->doc, el, url, AMAYA_LOAD_IMAGE,
 				ParseCSSBackgroundImageCallback, callblock);
 		}
 	    }
@@ -3293,7 +3289,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   ParseCSSBackgroundRepeat: parse a CSS BackgroundRepeat attribute string.
   ----------------------------------------------------------------------*/
 static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
-				       PresentationContext context,
+				       PresentationContext ctxt,
 				       char *cssRule, CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   repeat;
@@ -3318,8 +3314,8 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
     {
       /* check if it's an important rule */
       if (tsch)
-	cssRule = CheckImportantRule (cssRule, context);
-      TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);
+	cssRule = CheckImportantRule (cssRule, ctxt);
+      TtaSetStylePresentation (PRPictureMode, element, tsch, ctxt, repeat);
     }
   cssRule = SkipWord (cssRule);
   return (cssRule);
@@ -3330,7 +3326,7 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
    attribute string.                                          
   ----------------------------------------------------------------------*/
 static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
-					   PresentationContext context,
+					   PresentationContext ctxt,
 					   char *cssRule, CSSInfoPtr css,
 					   ThotBool isHTML)
 {
@@ -3341,16 +3337,14 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
     {
       /* force no-repeat for that background image */
       ptr = "no-repeat";
-      ParseCSSBackgroundRepeat (element, tsch, context,
-				ptr, css, isHTML);
+      ParseCSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "fixed", 5))
     {
       /* force no-repeat for that background image */
       ptr = "no-repeat";
-      ParseCSSBackgroundRepeat (element, tsch, context,
-				ptr, css, isHTML);
+      ParseCSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
       cssRule = SkipWord (cssRule);
     }
   return (cssRule);
@@ -3361,7 +3355,7 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
    attribute string.                                          
   ----------------------------------------------------------------------*/
 static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
-					 PresentationContext context,
+					 PresentationContext ctxt,
 					 char *cssRule, CSSInfoPtr css,
 					 ThotBool isHTML)
 {
@@ -3394,16 +3388,15 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
     {
       /* force no-repeat for that background image */
       ptr = "no-repeat";
-      ParseCSSBackgroundRepeat (element, tsch, context,
-				ptr, css, isHTML);
+      ParseCSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
       /* force realsize for the background image */
       repeat.typed_data.value = REALSIZE;
       repeat.typed_data.unit = UNIT_REL;
       repeat.typed_data.real = FALSE;
       /* check if it's an important rule */
       if (tsch)
-	cssRule = CheckImportantRule (cssRule, context);
-      /*TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);*/
+	cssRule = CheckImportantRule (cssRule, ctxt);
+      /*TtaSetStylePresentation (PRPictureMode, element, tsch, ctxt, repeat);*/
     }
   return (cssRule);
 }
@@ -3412,7 +3405,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
    ParseCSSBackground: parse a CSS background attribute 
   ----------------------------------------------------------------------*/
 static char *ParseCSSBackground (Element element, PSchema tsch,
-				 PresentationContext context, char *cssRule,
+				 PresentationContext ctxt, char *cssRule,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
   char     *ptr;
@@ -3423,19 +3416,19 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
     {
       /* perhaps a Background Image */
       if (!strncasecmp (cssRule, "url", 3) || !strncasecmp (cssRule, "none", 4))
-         cssRule = ParseCSSBackgroundImage (element, tsch, context, cssRule,
+         cssRule = ParseCSSBackgroundImage (element, tsch, ctxt, cssRule,
 					    css, isHTML);
       /* perhaps a Background Attachment */
       else if (!strncasecmp (cssRule, "scroll", 6) ||
                !strncasecmp (cssRule, "fixed", 5))
-	cssRule = ParseCSSBackgroundAttachment (element, tsch, context,
+	cssRule = ParseCSSBackgroundAttachment (element, tsch, ctxt,
 						cssRule, css, isHTML);
       /* perhaps a Background Repeat */
       else if (!strncasecmp (cssRule, "no-repeat", 9) ||
                !strncasecmp (cssRule, "repeat-y", 8)  ||
                !strncasecmp (cssRule, "repeat-x", 8)  ||
                !strncasecmp (cssRule, "repeat", 6))
-	cssRule = ParseCSSBackgroundRepeat (element, tsch, context,
+	cssRule = ParseCSSBackgroundRepeat (element, tsch, ctxt,
 					    cssRule, css, isHTML);
       /* perhaps a Background Position */
       else if (!strncasecmp (cssRule, "left", 4)   ||
@@ -3444,7 +3437,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
                !strncasecmp (cssRule, "top", 3)    ||
                !strncasecmp (cssRule, "bottom", 6) ||
                isdigit (*cssRule) || *cssRule == '.')
-           cssRule = ParseCSSBackgroundPosition (element, tsch, context,
+           cssRule = ParseCSSBackgroundPosition (element, tsch, ctxt,
 						 cssRule, css, isHTML);
       /* perhaps a Background Color */
       else
@@ -3452,7 +3445,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
 	  skippedNL = NewLineSkipped;
 	  /* check if the rule has been found */
 	  ptr = cssRule;
-	  cssRule = ParseCSSBackgroundColor (element, tsch, context,
+	  cssRule = ParseCSSBackgroundColor (element, tsch, ctxt,
 					     cssRule, css, isHTML);
 	  if (ptr == cssRule)
 	    {
@@ -3470,7 +3463,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
  ParseCSSPageBreakBefore: parse a CSS page-break-before attribute 
   ----------------------------------------------------------------------*/
 static char *ParseCSSPageBreakBefore (Element element, PSchema tsch,
-				      PresentationContext context, char *cssRule,
+				      PresentationContext ctxt, char *cssRule,
 				      CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   page;
@@ -3512,8 +3505,8 @@ static char *ParseCSSPageBreakBefore (Element element, PSchema tsch,
     {
       /* check if it's an important rule */
       if (tsch)
-	cssRule = CheckImportantRule (cssRule, context);
-      TtaSetStylePresentation (PRPageBefore, element, tsch, context, page);
+	cssRule = CheckImportantRule (cssRule, ctxt);
+      TtaSetStylePresentation (PRPageBefore, element, tsch, ctxt, page);
     }
   return (cssRule);
 }
@@ -3522,7 +3515,7 @@ static char *ParseCSSPageBreakBefore (Element element, PSchema tsch,
  ParseCSSPageBreakAfter: parse a CSS page-break-after attribute 
   ----------------------------------------------------------------------*/
 static char *ParseCSSPageBreakAfter (Element element, PSchema tsch,
-				     PresentationContext context,
+				     PresentationContext ctxt,
 				     char *cssRule, CSSInfoPtr css,
 				     ThotBool isHTML)
 {
@@ -3563,8 +3556,8 @@ static char *ParseCSSPageBreakAfter (Element element, PSchema tsch,
   /*if (page.typed_data.unit == UNIT_REL && DoApply)
     {
     if (tsch)
-    cssRule = CheckImportantRule (cssRule, context);
-    TtaSetStylePresentation (PRPageAfter, element, tsch, context, page);
+    cssRule = CheckImportantRule (cssRule, ctxt);
+    TtaSetStylePresentation (PRPageAfter, element, tsch, ctxt, page);
     }*/
   return (cssRule);
 }
@@ -3573,7 +3566,7 @@ static char *ParseCSSPageBreakAfter (Element element, PSchema tsch,
  ParseCSSPageBreakInside: parse a CSS page-break-inside attribute 
   ----------------------------------------------------------------------*/
 static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
-				      PresentationContext context,
+				      PresentationContext ctxt,
 				      char *cssRule, CSSInfoPtr css,
 				      ThotBool isHTML)
 {
@@ -3603,8 +3596,8 @@ static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
     page.typed_data.value == PageAvoid && DoApply)
     {
     if (tsch)
-    cssRule = CheckImportantRule (cssRule, context);
-    TtaSetStylePresentation (PRPageInside, element, tsch, context, page);
+    cssRule = CheckImportantRule (cssRule, ctxt);
+    TtaSetStylePresentation (PRPageInside, element, tsch, ctxt, page);
     }*/
   return (cssRule);
 }
@@ -3614,7 +3607,7 @@ static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
    ParseSVGStrokeWidth: parse a SVG stroke-width property value.   
   ----------------------------------------------------------------------*/
 static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
-				  PresentationContext context, char *cssRule,
+				  PresentationContext ctxt, char *cssRule,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   width;
@@ -3633,8 +3626,8 @@ static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
     {
       /* check if it's an important rule */
       if (tsch)
-	cssRule = CheckImportantRule (cssRule, context);
-      TtaSetStylePresentation (PRLineWeight, element, tsch, context, width);
+	cssRule = CheckImportantRule (cssRule, ctxt);
+      TtaSetStylePresentation (PRLineWeight, element, tsch, ctxt, width);
       width.typed_data.value = 1;
       width.typed_data.unit = UNIT_REL;
     }
@@ -3750,7 +3743,7 @@ static CSSProperty CSSProperties[] =
    but tolerate incorrect or incomplete input                    
   ----------------------------------------------------------------------*/
 static void  ParseCSSRule (Element element, PSchema tsch,
-			   PresentationContext context, char *cssRule,
+			   PresentationContext ctxt, char *cssRule,
 			   CSSInfoPtr css, ThotBool isHTML)
 {
   DisplayMode         dispMode;
@@ -3760,9 +3753,9 @@ static void  ParseCSSRule (Element element, PSchema tsch,
   ThotBool            found;
 
   /* avoid too many redisplay */
-  dispMode = TtaGetDisplayMode (context->doc);
+  dispMode = TtaGetDisplayMode (ctxt->doc);
   if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (context->doc, DeferredDisplay);
+    TtaSetDisplayMode (ctxt->doc, DeferredDisplay);
 
   while (*cssRule != EOS)
     {
@@ -3797,7 +3790,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 		  /* try to parse the value associated with this property */
 		  if (CSSProperties[i].parsing_function != NULL)
 		    {
-		      p = CSSProperties[i].parsing_function (element, tsch, context,
+		      p = CSSProperties[i].parsing_function (element, tsch, ctxt,
 							     p, css, isHTML);
 		      /* update index and skip the ";" separator if present */
 		      cssRule = p;
@@ -3825,7 +3818,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 
   /* restore the display mode */
   if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (context->doc, dispMode);
+    TtaSetDisplayMode (ctxt->doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -4375,55 +4368,58 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
 			      int specificity, ThotBool destroy)
 {
-   PresentationContext context;
-   ElementType         elType;
-   ThotBool            isHTML;
+  PresentationContext ctxt;
+  ElementType         elType;
+  ThotBool            isHTML;
 
-   /*  A rule applying to BODY is really meant to address HTML */
-   elType = TtaGetElementType (el);
+  /*  A rule applying to BODY is really meant to address HTML */
+  elType = TtaGetElementType (el);
 
-   /* store the current line for eventually reported errors */
-   LineNumber = TtaGetElementLineNumber (el);
-   if (destroy)
-     /* no reported errors */
-     ParsedDoc = 0;
-   else if (ParsedDoc != doc)
-     {
-       /* update the context for reported errors */
-       ParsedDoc = doc;
-       DocURL = DocumentURLs[doc];
-     }
-   isHTML = (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
-   /* create the context of the Specific presentation driver */
-   context = TtaGetSpecificStyleContext (doc);
-   if (context == NULL)
-     return;
-   context->type = elType.ElTypeNum;
-   context->cssSpecificity = specificity;
-   context->destroy = destroy;
-   /* Call the parser */
-   ParseCSSRule (el, NULL,
-		 (PresentationContext) context,
-		 cssRule, NULL, isHTML);
-   /* free the context */
-   TtaFreeMemory(context);
+  /* store the current line for eventually reported errors */
+  LineNumber = TtaGetElementLineNumber (el);
+  if (destroy)
+    /* no reported errors */
+    ParsedDoc = 0;
+  else if (ParsedDoc != doc)
+    {
+      /* update the context for reported errors */
+      ParsedDoc = doc;
+      DocURL = DocumentURLs[doc];
+    }
+  isHTML = (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+  /* create the context of the Specific presentation driver */
+  ctxt = TtaGetSpecificStyleContext (doc);
+  if (ctxt == NULL)
+    return;
+  ctxt->type = elType.ElTypeNum;
+  ctxt->cssSpecificity = specificity;
+  ctxt->destroy = destroy;
+  /* first use of the context */
+  ctxt->uses = 1;
+  /* Call the parser */
+  ParseCSSRule (el, NULL, (PresentationContext) ctxt, cssRule, NULL, isHTML);
+  /* check if the context can be freed */
+  ctxt->uses -= 1;
+  if (ctxt->uses == 0)
+    /* no image loading */
+    TtaFreeMemory(ctxt);
 }
 
 
 /*----------------------------------------------------------------------
-   ParseGenericSelector: Create a generic context for a given 
-   selector string. If the selector is made of multiple comma- 
-   separated selector items, it parses them one at a time and  
-   return the end of the selector string to be handled or NULL 
+  ParseGenericSelector: Create a generic context for a given selector
+  string.
+  If the selector is made of multiple comma, it parses them one at a time
+  and return the end of the selector string to be handled or NULL.
   ----------------------------------------------------------------------*/
-static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
+static char *ParseGenericSelector (char *selector, char *cssRule,
 				   GenericContext ctxt, Document doc,
 				   CSSInfoPtr css, Element link)
 {
   ElementType        elType;
   PSchema            tsch;
   AttributeType      attrType;
-  char              *deb, *cur, c;
+  char              *deb, *cur, *sel, c;
   char              *schemaName, *mappedName;
   char              *names[MAX_ANCESTORS];
   char              *ids[MAX_ANCESTORS];
@@ -4438,6 +4434,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
   ThotBool           isHTML;
   ThotBool           level, quoted;
 
+  sel = ctxt->sel;
   sel[0] = EOS;
   specificity = 0;
   for (i = 0; i < MAX_ANCESTORS; i++)
@@ -5060,7 +5057,6 @@ static void ParseStyleDeclaration (Element el, char *cssRule, Document doc,
 				   CSSInfoPtr css, Element link, ThotBool destroy)
 {
   GenericContext      ctxt;
-  char                sel[MAX_ANCESTORS * 50];
   char               *decl_end;
   char               *sel_end;
   char               *selector;
@@ -5098,11 +5094,15 @@ static void ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   if (ctxt == NULL)
     return;
   ctxt->destroy = destroy;
-
+  /* first use of the context */
+  ctxt->uses = 1;
   while (selector && *selector != EOS)
-    selector = ParseGenericSelector (selector, cssRule, sel, ctxt, doc,
-				     css, link);
-  TtaFreeMemory (ctxt);
+    selector = ParseGenericSelector (selector, cssRule, ctxt, doc, css, link);
+  /* check if the context can be freed */
+  ctxt->uses -= 1;
+  if (ctxt->uses == 0)
+    /* no image loading */
+    TtaFreeMemory (ctxt);
 }
 
 /************************************************************************
@@ -5282,6 +5282,12 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
+  ThotBool            loadcss;
+
+  /* check if we have to load CSS */
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (!loadcss)
+    return;
 
   css = SearchCSS (doc, NULL, el, &pInfo);
   if (css == NULL)
@@ -5360,6 +5366,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   /* look for the CSS context */
   if (css == NULL)
     css = SearchCSS (docRef, NULL, link, &pInfo);
+  else
+    pInfo = css->infos[docRef];
   if (css == NULL)
     {
       css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, CSS_ALL, NULL, NULL, link);
@@ -5367,8 +5375,6 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
     }
   else if (pInfo == NULL)
     pInfo = AddInfoCSS (docRef, css, CSS_DOCUMENT_STYLE, CSS_ALL, link);
-  else
-    pInfo = css->infos[docRef];
   /* look for the CSS descriptor that points to the extension schema */
   refcss = css;
   if (import)

@@ -1253,14 +1253,18 @@ void EndOfHTMLAttributeValue (char *attrValue,
   int             length;
   int             attrKind;
   ThotBool        done = FALSE;
+  ThotBool            loadcss;
 
   /* treatments of some particular HTML attributes */
   if (!strcmp (lastMappedAttr->XMLattribute, "style"))
     {
       TtaSetAttributeText (currentAttribute, attrValue,
 			   lastAttrElement, context->doc);
-      ParseHTMLSpecificStyle (context->lastElement, attrValue,
-			      context->doc, 100, FALSE);
+      /* check if we have to load CSS */
+      TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+      if (loadcss)
+	ParseHTMLSpecificStyle (context->lastElement, attrValue,
+				context->doc, 100, FALSE);
       done = TRUE;
     }
   else

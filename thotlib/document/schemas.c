@@ -1406,7 +1406,7 @@ ThotBool FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS, PtrDocument pDoc)
    Pour les schemas de presentation, la liberation n'est effective 
    que s'ils ne sont pas utilises par d'autres documents.          
   ----------------------------------------------------------------------*/
-void             FreeDocumentSchemas (PtrDocument pDoc)
+void FreeDocumentSchemas (PtrDocument pDoc)
 {
   PtrSSchema          pSS, pDocSS;
   PtrDocSchemasDescr  pPfS;

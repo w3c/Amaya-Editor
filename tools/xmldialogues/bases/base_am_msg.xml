@@ -3500,6 +3500,14 @@
 	<message xml:lang="en">Enter an element name</message>
 	<message xml:lang="fr">Entrer le nom d'un élément</message>
 </label>
+<label define="AM_LOAD_CSS">
+	<message xml:lang="en">Apply CSS</message>
+	<message xml:lang="fr">Appliquer CSS</message>
+</label>
+<label define="AM_SCREEN_TYPE">
+	<message xml:lang="en">Current screen type</message>
+	<message xml:lang="fr">Type d'écran courant</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

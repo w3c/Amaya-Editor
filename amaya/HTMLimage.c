@@ -927,13 +927,13 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	    /* it's not a SVG element, it's then a HTML img element */
 	    {
-	    attrType.AttrTypeNum = HTML_ATTR_SRC;
-	    elAttr = el;
+	      attrType.AttrTypeNum = HTML_ATTR_SRC;
+	      elAttr = el;
 	    }
           else
 	    {
-            attrType.AttrTypeNum = SVG_ATTR_xlink_href;
-	    elAttr = TtaGetParent (el);
+	      attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+	      elAttr = TtaGetParent (el);
 	    }
 	  attr = TtaGetAttribute (elAttr, attrType);
 	  if (attr != NULL)
@@ -951,7 +951,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	}
       else
 	imageName = URL;
-
+      
       /* LC 3/7/01 */
       /* Don't treat the  xlink:href attributes 
 	 that begins with the string  'data:' */
@@ -970,8 +970,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
       if (update)
 	{
 #else /*_BASE64*/
-      if (imageName &&
-	  strncasecmp (imageName, "data:", 5) != 0)
+      if (imageName && strncasecmp (imageName, "data:", 5) != 0)
 	{	  
 	  update = TRUE;    
 #endif /*_BASE64*/
@@ -979,11 +978,11 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	  NormalizeURL (imageName, doc, pathname, imageName, NULL);
 	  /* if it's not a remote URL, make any necessary file: conversions */
 	  if (!IsW3Path (pathname))
-	  {
-	    NormalizeFile (pathname, tempfile, AM_CONV_ALL);
-	    strcpy (pathname, tempfile);
-	    tempfile[0] = EOS;
-	  }
+	    {
+	      NormalizeFile (pathname, tempfile, AM_CONV_ALL);
+	      strcpy (pathname, tempfile);
+	      tempfile[0] = EOS;
+	    }
 	  /* is the image already loaded ? */
 	  newImage = AddLoadedImage (imageName, pathname, doc, &desc);
 	  if (newImage)
@@ -1001,13 +1000,13 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	      FetchImage_ctx = TtaGetMemory (sizeof (FetchImage_context));
 	      FetchImage_ctx->desc = desc;
 	      FetchImage_ctx->base_url =  TtaStrdup (DocumentURLs[doc]);
-
+	      
 	      UpdateTransfer(doc);
 	      if (flags & AMAYA_MBOOK_IMAGE)
 		newflags = flags | AMAYA_SYNC;
 	      else
 		newflags = flags | AMAYA_ASYNC;
-
+	      
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 	                        newflags, NULL, NULL,
 				(void *) libWWWImageLoaded,
@@ -1020,22 +1019,22 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		  desc->status = IMAGE_NOT_LOADED;
 		}
 	    }
-
+	  
 	  /* display the image within the document */
 	  if (update)
 	    {
 	      if (desc == NULL)
 		{
-		/* it is a local image */
-		if (callback)
-		  {
-		    if (!strncmp (pathname, "file:/", 6))
-		      callback (doc, el, &pathname[6], extra, TRUE);
-		    else
-		      callback (doc, el, &pathname[0], extra, TRUE);
-		  }
-		else
-		  DisplayImage (doc, el, NULL, pathname, NULL);
+		  /* it is a local image */
+		  if (callback)
+		    {
+		      if (!strncmp (pathname, "file:/", 6))
+			callback (doc, el, &pathname[6], extra, TRUE);
+		      else
+			callback (doc, el, &pathname[0], extra, TRUE);
+		    }
+		  else
+		    DisplayImage (doc, el, NULL, pathname, NULL);
 		}
 	      else if (desc->tempfile && TtaFileExist (desc->tempfile))
 		{
@@ -1066,10 +1065,12 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		}
 	    }
 	}
-      
-      if (attr != NULL && imageName)
+
+      if (attr && imageName)
 	TtaFreeMemory (imageName);
     }
+  else if (callback)
+    TtaFreeMemory (extra);
   TtaHandlePendingEvents ();
 }
 

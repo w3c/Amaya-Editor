@@ -129,7 +129,12 @@ void LoadUserStyleSheet (Document doc)
   FILE               *res;
   char               *buffer, *ptr;
   int                 len;
+  ThotBool            loadcss;
 
+  /* check if we have to load CSS */
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (!loadcss)
+    return;
   /* look for the User preferences */
   if (!UserCSS || !TtaFileExist (UserCSS))
     return;

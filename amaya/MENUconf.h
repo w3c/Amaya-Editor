@@ -8,11 +8,10 @@
 #ifndef _MENUCONF_H__
 #define _MENUCONF_H__
 /*----------------------------------------------------------------------
-     Definitions of the menu entries used in the configuration menus
-     (MENUconf.c)
-     Jose Kahan Feb 1999
+  Definitions of the menu entries used in the configuration menus
+  (MENUconf.c)
+  Jose Kahan Feb 1999
   ----------------------------------------------------------------------*/
-
 /* dialog and messages */
 
 #define CacheMenu         1
@@ -46,7 +45,8 @@
 
 #define BrowseMenu          1
 #define mToggleBrowse       2
-#define MAX_BROWSEMENU_DLG  3
+#define mScreenSelector     3
+#define MAX_BROWSEMENU_DLG  4
 
 #define PublishMenu         1
 #define mTogglePublish      2

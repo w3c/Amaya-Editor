@@ -35,6 +35,7 @@ typedef struct struct_GenericContext
     SSchema       schema;         /* associated structure */
     unsigned int  type;           /* type of element */
     int           cssSpecificity; /* specificity according to selector */
+    int           uses;           /* number of current uses */
     ThotBool      important;      /* important rule */
     ThotBool      destroy;        /* destructive mode ? */
     /*
@@ -47,6 +48,7 @@ typedef struct struct_GenericContext
     int           attrLevel[MAX_ANCESTORS]; /* level of the attribute */
     char         *attrText[MAX_ANCESTORS];  /* attr. or box name */
     AttrMatch     attrMatch[MAX_ANCESTORS]; /* how attr. values match */
+    char          sel[MAX_ANCESTORS * 50];  /* include selected values */
   }
 GenericContextBlock, *GenericContext;
 
@@ -57,6 +59,7 @@ typedef struct struct_SpecificContext
     int           type;           /* type of element */
     int           cssSpecificity; /* For specific rules: > 0 when the rule
 				     translates a CSS style rule */
+    int           uses;           /* number of current uses */
     ThotBool      important;      /* important rule */
     ThotBool      destroy;        /* destructive mode ? */
     /*

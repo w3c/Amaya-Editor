@@ -181,7 +181,7 @@ void AttrMediaChanged (NotifyAttribute *event)
       NormalizeURL (name2, doc, completeURL, tempname, NULL);
       TtaFreeMemory (name2);
       /* get the right CSS context */ 
-      css = SearchCSS (0, completeURL, el, &pInfo);
+      css = SearchCSS (doc, completeURL, el, &pInfo);
       if (css && pInfo)
 	{
 	  /* avoid too many redisplay */
@@ -846,28 +846,34 @@ char *GetStyleContents (Element el)
   Language            lang;
   char               *buffer;
   int                 length, i, j;
+  ThotBool            loadcss;
 
   buffer = NULL;
-  /* get enough space to store UTF-8 characters */
-  length = TtaGetElementVolume (el) * 6 + 1;
-  if (length > 1)
-    {
-      /* get the length of the included text */
-      buffer = TtaGetMemory (length);
 
-      /* fill the buffer */
-      elType = TtaGetElementType (el);
-      elType.ElTypeNum = 1 /* 1 = TEXT_UNIT element */;
-      text = TtaSearchTypedElementInTree (elType, SearchForward, el, el);
-      i = 0;
-      while (text != NULL)
+  /* check if we have to load CSS */
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (loadcss)
+    {
+      /* get enough space to store UTF-8 characters */
+      length = TtaGetElementVolume (el) * 6 + 1;
+      if (length > 1)
 	{
-	  j = length - i;
-	  TtaGiveTextContent (text, &buffer[i], &j, &lang);
-	  i += TtaGetTextLength (text);
-	  text = TtaSearchTypedElementInTree (elType, SearchForward, el, text);
+	  /* get the length of the included text */
+	  buffer = TtaGetMemory (length);
+	  /* fill the buffer */
+	  elType = TtaGetElementType (el);
+	  elType.ElTypeNum = 1 /* 1 = TEXT_UNIT element */;
+	  text = TtaSearchTypedElementInTree (elType, SearchForward, el, el);
+	  i = 0;
+	  while (text != NULL)
+	    {
+	      j = length - i;
+	      TtaGiveTextContent (text, &buffer[i], &j, &lang);
+	      i += TtaGetTextLength (text);
+	      text = TtaSearchTypedElementInTree (elType, SearchForward, el, text);
+	    }
+	  buffer[i] = EOS;
 	}
-      buffer[i] = EOS;
     }
   return (buffer);
 }
@@ -893,7 +899,12 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   CSSCategory         category;
   int                 len;
   ThotBool            import, printing;
+  ThotBool            loadcss;
 
+  /* check if we have to load CSS */
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (!loadcss)
+    return;
   import = (css != NULL);
   if (import)
     category = CSS_IMPORT;

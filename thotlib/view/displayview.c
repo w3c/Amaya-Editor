@@ -358,28 +358,32 @@ void TCloseDocument (PtrDocument pDoc)
   if (pDoc != NULL)
     {
       document = (Document) IdentDocument (pDoc);
-      notifyDoc.event = TteDocClose;
-      notifyDoc.document = document;
-      notifyDoc.view = 0;
-      if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+      if (LoadedDocument[document] == pDoc)
 	{
-	  /* if there is a "Spell checker" menu entry, close the spell checker
-	     dialog box */
-	  if (ThotLocalActions[T_clearhistory] != NULL)
-	    (*ThotLocalActions[T_clearhistory]) (pDoc);
-	  /* if some dialog boxes for attribute input are displayed
-             for that document, close them */
-          CloseAttributeDialogues (pDoc);
-          TtaHandlePendingEvents ();
-	  /* detruit toutes les vues ouvertes du document */
-	  CloseAllViewsDoc (pDoc);
-	  /* free document contents */
-	  UnloadTree (document);
+	  /* the document is still open */
 	  notifyDoc.event = TteDocClose;
 	  notifyDoc.document = document;
 	  notifyDoc.view = 0;
-	  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	  UnloadDocument (&pDoc);
+	  if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+	    {
+	      /* if there is a "Spell checker" menu entry, close the spell checker
+		 dialog box */
+	      if (ThotLocalActions[T_clearhistory] != NULL)
+		(*ThotLocalActions[T_clearhistory]) (pDoc);
+	      /* if some dialog boxes for attribute input are displayed
+		 for that document, close them */
+	      CloseAttributeDialogues (pDoc);
+	      TtaHandlePendingEvents ();
+	      /* detruit toutes les vues ouvertes du document */
+	      CloseAllViewsDoc (pDoc);
+	      /* free document contents */
+	      UnloadTree (document);
+	      notifyDoc.event = TteDocClose;
+	      notifyDoc.document = document;
+	      notifyDoc.view = 0;
+	      CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	      UnloadDocument (&pDoc);
+	    }
 	}
     }
 }
@@ -403,7 +407,7 @@ int NumberOfOpenViews (PtrDocument pDoc)
    FreeView libere les paves et le contexte de la vue view du	
    document pDoc.						
   ----------------------------------------------------------------------*/
-void                FreeView (PtrDocument pDoc, DocViewNumber view)
+void FreeView (PtrDocument pDoc, DocViewNumber view)
 {
    PtrGuestViewDescr  guestView, next;
 
@@ -438,24 +442,27 @@ void                FreeView (PtrDocument pDoc, DocViewNumber view)
   ----------------------------------------------------------------------*/
 void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
 {
-  if (pDoc != NULL)
-    /* on detruit la vue */
+  int                 d;
+  if (pDoc)
     {
-      FreeView (pDoc, view);
-      if (closeDoc)
-	/* verifie qu'il reste au moins une vue pour ce document */
-	if (NumberOfOpenViews (pDoc) < 1)
-	  {
-	    /* il ne reste plus de vue, on libere le document */
+      /* check if the document already exist */
+      d = 0;
+      while (d < MAX_DOCUMENTS - 1 && LoadedDocument[d] != pDoc)
+	d++;
+      if (LoadedDocument[d] == pDoc)
+	{
+	  FreeView (pDoc, view);
+	  if (closeDoc && NumberOfOpenViews (pDoc) < 1)
+	    /* the last view of the document is closed */
 	    TCloseDocument (pDoc);
-	  }
+	}
     }
 }
 
 /*----------------------------------------------------------------------
    CloseAllViewsDoc ferme toutes les vues ouvertes du document pDoc 
   ----------------------------------------------------------------------*/
-void                CloseAllViewsDoc (PtrDocument pDoc)
+void CloseAllViewsDoc (PtrDocument pDoc)
 {
   int                 view;
 

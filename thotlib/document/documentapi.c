@@ -261,7 +261,7 @@ void UnloadDocument (PtrDocument * pDoc)
     /* look for the current document in the documents table */
     {
       d = 0;
-      while (LoadedDocument[d] != *pDoc && d < MAX_DOCUMENTS - 1)
+      while (d < MAX_DOCUMENTS - 1 && LoadedDocument[d] != *pDoc)
 	d++;
       if (LoadedDocument[d] == *pDoc)
 	{

@@ -30,7 +30,7 @@
  *
  * Authors: J. Kahan
  * Contributors: Luc Bonameau for profiles and templates
- *               I. Vatton selelction colors and access keys
+ *               I. Vatton colors selection, browsing menu and access keys
  *
  * To do: remove the CACHE_RESTART option from some options, once we write
  * the code that should take it into account.
@@ -38,13 +38,11 @@
 
 /* Included headerfiles */
 #define THOT_EXPORT extern
-
 #include "amaya.h"
 #include "MENUconf.h"
 #include "print.h"
 #include "fileaccess.h"
 #include "profiles.h"
-
 #ifdef ANNOTATIONS
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
@@ -53,12 +51,10 @@
 #ifdef _WINDOWS
 #include "resource.h"
 #include "wininclude.h"
-
 #include "constmedia.h"
 #include "appdialogue.h"
 
 extern HINSTANCE hInstance;
-
 /* an optimization to say which common
 menu buttons we want to initialize */
 enum {AM_INIT_APPLY_BUTTON = 1,
@@ -152,11 +148,11 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 static int      GeneralBase;
 static int      DoubleClickDelay;
 static int      Zoom;
-static char     DefaultName [MAX_LENGTH];
-static char     DialogueLang [MAX_LENGTH];
+static char     DefaultName[MAX_LENGTH];
+static char     DialogueLang[MAX_LENGTH];
 static int      AccesskeyMod;
 static int      FontMenuSize;
-static char     HomePage [MAX_LENGTH];
+static char     HomePage[MAX_LENGTH];
 static ThotBool PasteLineByLine;
 static ThotBool BgImages;
 static ThotBool S_Buttons;
@@ -167,19 +163,28 @@ static ThotBool S_Numbers;
 /* Browse menu options */
 #ifdef _WINDOWS
 static HWND     BrowseHwnd =  NULL;
+static HWND     ScreensList;
 static AM_WIN_MenuText WIN_BrowseMenuText[] = 
 {
 	{AM_INIT_ALL, AM_BROWSE_MENU},
 	{IDC_LOADIMG, AM_LOAD_IMAGES},
+	{IDC_LOADCSS, AM_LOAD_CSS},
 	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
 	{IDC_ENABLEFTP, AM_ENABLE_FTP},
+	{IDC_SCREEN, AM_SCREEN_TYPE},
 	{0, 0}
 };
 #endif /* _WINDOWS */
 static int      BrowseBase;
+static int      CurrentScreen;
 static ThotBool LoadImages;
+static ThotBool LoadCss;
 static ThotBool DoubleClick;
 static ThotBool EnableFTP;
+static char     ScreenType[MAX_LENGTH];
+static char    *ScreensTxt[]={
+ "handheld", "projection", "screen", "tty", "tv"
+};
 
 /* Publish menu options */
 #ifdef _WINDOWS
@@ -261,8 +266,7 @@ static char     LanNeg [MAX_LENGTH];
 /* Profile menu options */
 #ifdef _WINDOWS
 static HWND     ProfileHwnd = NULL;
-static HWND     wndProfilesList;
-static HWND     wndProfile;
+static HWND     ProfilesList;
 static AM_WIN_MenuText WIN_ProfileMenuText[] = 
 {
 	{AM_INIT_ALL, AM_PROFILE_MENU},
@@ -273,8 +277,9 @@ static AM_WIN_MenuText WIN_ProfileMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      ProfileBase;
-static char     Profile [MAX_LENGTH];
-static char     Profiles_File [MAX_LENGTH];
+static int      CurrentProfile = -1;
+static char     Profile[MAX_LENGTH];
+static char     Profiles_File[MAX_LENGTH];
 #define MAX_PRO 50
 static char    *MenuText[MAX_PRO];
 
@@ -289,8 +294,7 @@ static AM_WIN_MenuText WIN_TemplatesMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      TemplatesBase;
-static char     TemplatesUrl [MAX_LENGTH];
-static int      CurrentProfile = -1;
+static char     TemplatesUrl[MAX_LENGTH];
 
 #ifdef ANNOTATIONS
 /* Annotation menu option */
@@ -309,9 +313,9 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      AnnotBase;
-static char     AnnotUser [MAX_LENGTH];
-static char     AnnotPostServer [MAX_LENGTH];
-static char     AnnotServers [MAX_LENGTH];
+static char     AnnotUser[MAX_LENGTH];
+static char     AnnotPostServer[MAX_LENGTH];
+static char     AnnotServers[MAX_LENGTH];
 static ThotBool AnnotLAutoLoad;
 static ThotBool AnnotRAutoLoad;
 static ThotBool AnnotRAutoLoadRst;
@@ -407,6 +411,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("PASTE_LINE_BY_LINE", "yes", FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("LOAD_IMAGES", "yes", FALSE);
+  TtaSetDefEnvString ("LOAD_CSS", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
   TtaSetDefEnvString ("DEFAULTNAME", "Overview.html", FALSE);
@@ -416,6 +421,7 @@ void InitAmayaDefEnv (void)
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
   TtaSetDefEnvString ("ENABLE_FTP", "no", FALSE);
+  TtaSetDefEnvString ("SCREEN_TYPE", "screen", FALSE);
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
 #endif
@@ -435,16 +441,16 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", "3", FALSE);
   TtaSetDefEnvString ("CACHE_SIZE", "10", FALSE);
   if (TempFileDirectory)
-  {
-    sprintf (s, "%s%clibwww-cache", TempFileDirectory, DIR_SEP);
-    TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
-  }
+    {
+      sprintf (s, "%s%clibwww-cache", TempFileDirectory, DIR_SEP);
+      TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
+      TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
+    }
   else
-  {
-    TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
-  }
+    {
+      TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
+      TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
+    }
   TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", "yes", FALSE);
   TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", "no", FALSE);
   TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", "no", FALSE);
@@ -678,7 +684,6 @@ static int RemoveLastDirSep (char  *name)
 }
 
 #ifdef _WINDOWS
-
 /*----------------------------------------------------------------------
   FilterSpaces
   If removeAll is true, all spaces in string are removed, otherwise, all
@@ -734,46 +739,42 @@ static int ConvertSpaceNL (char  *source, ThotBool toNL)
 
   if (source) 
     {
-	  /* remove all spaces before starting */
-	  if (!toNL)
-         result = FilterSpaces (source, TRUE);
-	  s = source;
-	  t = target;
+      /* remove all spaces before starting */
+      if (!toNL)
+	result = FilterSpaces (source, TRUE);
+      s = source;
+      t = target;
       while (*s)
-	  {
-		  if (toNL && *s == ' ')
-		  {
-			  *t++ = 13;
-			  *t++ = 10;
-			  s++;
-			  result = 1;
-		  }
-		  else if (!toNL && *s == 13)
-		  {
-		     *t++ = ' ';
-			  s++;
-			  s++;
-			  result = 1;
-		  }
-		  else 
-		  {
-	          *t++ = *s++;
-		  }
-	  }
-	  *t = *s;
-	  if (result)
-	  {
-		  if (!toNL)
-		    /* remove duplicate spaces, coming from empty lines */
-		    FilterSpaces (target, FALSE);
-		  strcpy (source, target);
-	  }
-  }
+	{
+	  if (toNL && *s == ' ')
+	    {
+	      *t++ = 13;
+	      *t++ = 10;
+	      s++;
+	      result = 1;
+	    }
+	  else if (!toNL && *s == 13)
+	    {
+	      *t++ = ' ';
+	      s++;
+	      s++;
+	      result = 1;
+	    }
+	  else 
+	    *t++ = *s++;
+	}
+      *t = *s;
+      if (result)
+	{
+	  if (!toNL)
+	    /* remove duplicate spaces, coming from empty lines */
+	    FilterSpaces (target, FALSE);
+	  strcpy (source, target);
+	}
+    }
   return result;
 }
-#endif /*_WINDOWS */
 
-#ifdef _WINDOWS
 
 /*----------------------------------------------------------------------
   WIN_SetCommonText
@@ -825,9 +826,8 @@ static void WIN_SetMenuText (HWND hwnDlg, AM_WIN_MenuText menu[])
       field = &menu[i];
     }
 }
-
 #endif /* _WINDOWS */
-  
+
 /*********************
 ** Cache configuration menu
 ***********************/
@@ -1016,8 +1016,8 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	    case IDC_CACHEDIRECTORY:
 	      GetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, CacheDirectory,
 			      sizeof (CacheDirectory) - 1);
-		  CacheStatus |= AMAYA_CACHE_RESTART;
-		  break;
+	      CacheStatus |= AMAYA_CACHE_RESTART;
+	      break;
 	    case IDC_CACHESIZE:
 	      CacheSize = GetDlgItemInt (hwnDlg, IDC_CACHESIZE, FALSE, FALSE);
 	      CacheStatus |= AMAYA_CACHE_RESTART;
@@ -1025,13 +1025,15 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	    case IDC_MAXCACHEFILE:
 	      MaxCacheFile = GetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE, FALSE, FALSE);
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-          break;			
+	      break;	
+	    default:
+	      break;
 	    }
 	}
       switch (LOWORD (wParam))
 	{
 	case IDC_ENABLECACHE:
-      CacheStatus |= AMAYA_CACHE_RESTART;
+	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  EnableCache = !EnableCache;
 	  break;
 	case IDC_CACHEPROTECTEDDOCS:
@@ -1067,7 +1069,7 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  GetDefaultCacheConf ();
 	  WIN_RefreshCacheMenu (hwnDlg);
 	  /* always signal this as modified */
-      CacheStatus |= AMAYA_CACHE_RESTART;
+	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  break;
 	}
       break;	     
@@ -1080,7 +1082,7 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   CacheCallbackDialog
   callback of the cache configuration menu
   ----------------------------------------------------------------------*/
-static void     CacheCallbackDialog (int ref, int typedata, char *data)
+static void CacheCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -1120,7 +1122,6 @@ static void     CacheCallbackDialog (int ref, int typedata, char *data)
 	      StopAllRequests (1);
 	      libwww_CleanCache ();
 	      break;
-
 	    default:
 	      break;
 	    }
@@ -1145,12 +1146,10 @@ static void     CacheCallbackDialog (int ref, int typedata, char *data)
 	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      CacheExpireIgnore = !CacheExpireIgnore;
 	      break;
-
 	    default:
 	      break;
 	    }
 	  break;
-	  
 	case mCacheDirectory:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  if (data)
@@ -1166,7 +1165,6 @@ static void     CacheCallbackDialog (int ref, int typedata, char *data)
 	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  MaxCacheFile = val;
 	  break;
-
 	default:
 	  break;
 	}
@@ -1178,7 +1176,7 @@ static void     CacheCallbackDialog (int ref, int typedata, char *data)
   CacheConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-void         CacheConfMenu (Document document, View view)
+void CacheConfMenu (Document document, View view)
 {
 #ifndef _WINDOWS
    int              i;
@@ -1268,8 +1266,7 @@ static void SetProxyConf (void)
 {
   TtaSetEnvString ("HTTP_PROXY", HttpProxy, TRUE);
   TtaSetEnvString ("PROXYDOMAIN", ProxyDomain, TRUE);
-  TtaSetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", ProxyDomainIsOnlyProxy,
-		    TRUE);
+  TtaSetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", ProxyDomainIsOnlyProxy, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -1332,14 +1329,12 @@ LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       /* write the current values in the dialog entries */
       WIN_RefreshProxyMenu (hwnDlg);
       break;
-      
     case WM_CLOSE:
     case WM_DESTROY:
       /* reset the status flag */
       ProxyHwnd = NULL;
       EndDialog (hwnDlg, ID_DONE);
       break;
-
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE)
 	{
@@ -1368,7 +1363,6 @@ LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  ProxyDomainIsOnlyProxy = TRUE;
 	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  break;
-
 	  /* action buttons */
 	case ID_APPLY:
 	  SetProxyConf ();	  
@@ -1400,7 +1394,7 @@ LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ProxyCallbackDialog
   callback of the proxy configuration menu
   ----------------------------------------------------------------------*/
-static void         ProxyCallbackDialog (int ref, int typedata, char *data)
+static void ProxyCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -2606,11 +2600,12 @@ void PublishConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetBrowseConf (void)
 {
-
   TtaGetEnvBoolean ("LOAD_IMAGES", &LoadImages);
+  TtaGetEnvBoolean ("LOAD_CSS", &LoadCss);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
   AHTFTPURL_flag_set (EnableFTP);
+  GetEnvString ("SCREEN_TYPE", ScreenType);
 }
 
 /*----------------------------------------------------------------------
@@ -2621,13 +2616,14 @@ static void GetBrowseConf (void)
 static void SetBrowseConf (void)
 {
   TtaSetEnvBoolean ("LOAD_IMAGES", LoadImages, TRUE);
+  TtaSetEnvBoolean ("LOAD_CSS", LoadCss, TRUE);
   TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
   TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
   AHTFTPURL_flag_set (EnableFTP);
-
+  TtaSetEnvString ("SCREEN_TYPE", ScreenType, TRUE);
   TtaSaveAppRegistry ();
 }
 
@@ -2639,13 +2635,37 @@ static void GetDefaultBrowseConf ()
 {
   GetDefEnvToggle ("LOAD_IMAGES", &LoadImages,
 		   BrowseBase + mToggleBrowse, 0);
-  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
+  GetDefEnvToggle ("LOAD_CSS", &LoadCss,
 		   BrowseBase + mToggleBrowse, 1);
-  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
 		   BrowseBase + mToggleBrowse, 2);
+  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+		   BrowseBase + mToggleBrowse, 3);
+  GetDefEnvString ("SCEEN_TYPE", ScreenType);
 }
 
 #ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  BuildScreensList builds the list allowing to select a screen type
+  (for windows)
+  ----------------------------------------------------------------------*/
+static void BuildScreensList (void)
+{
+  int           nbscreens = sizeof(ScreensTxt) / sizeof(char *);
+  int           i = 0;
+
+  /* Get the propositions of the list */ 
+  SendMessage (ScreensList, LB_RESETCONTENT, 0, 0);
+  while (i < nbscreens && ScreensTxt[i] != EOS)
+    {
+      /* keep in mind the current selected entry */
+      if (*ScreenType && !strcmp (ScreenType, ScreensTxt[i]))
+	CurrentScreen = i;
+      SendMessage (ScreensList, LB_INSERTSTRING, i, (LPARAM) ScreensTxt[i]);
+      i++;
+    }
+}
+
 /*----------------------------------------------------------------------
   WIN_RefreshBrowseMenu
   Displays the current registry values in the menu
@@ -2654,25 +2674,15 @@ void WIN_RefreshBrowseMenu (HWND hwnDlg)
 {
   CheckDlgButton (hwnDlg, IDC_LOADIMG, (LoadImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_LOADCSS, (LoadCss) 
+		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (EnableFTP) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+  BuildScreensList ();
 }
-#else /* WINDOWS */
-/*----------------------------------------------------------------------
-  RefreshBrowseMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-static void RefreshBrowseMenu ()
-{
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 0, LoadImages);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, DoubleClick);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, EnableFTP);
-}
-#endif /* !_WINDOWS */
 
-#ifdef _WINDOWS
 /*----------------------------------------------------------------------
   WIN_BrowseDlgProc
   Windows callback for the publish menu
@@ -2680,10 +2690,17 @@ static void RefreshBrowseMenu ()
 LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				    LPARAM lParam)
 { 
+  int       itemIndex = 0;
+
   switch (msg)
     {
     case WM_INITDIALOG:
       BrowseHwnd = hwnDlg;
+      ScreensList = CreateWindow ("listbox", NULL, 
+				  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				  10, 30, 200, 30, hwnDlg, (HMENU) 1, 
+				  (HINSTANCE) GetWindowLong (hwnDlg, 
+					 GWL_HINSTANCE), NULL);
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_BrowseMenuText);
       /* write the current values in the dialog entries */
@@ -2703,11 +2720,20 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_LOADIMG:
 	  LoadImages = !LoadImages;
 	  break;
+	case IDC_LOADCSS:
+	  LoadCss = !LoadCss;
+	  break;
 	case IDC_DOUBLECLICK:
 	  DoubleClick = !DoubleClick;
 	  break;
 	case IDC_ENABLEFTP:
 	  EnableFTP = !EnableFTP;
+	  break;
+	case IDC_SCREEN:
+	  if (HIWORD (wParam) == LBN_SELCHANGE)
+	  itemIndex = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
+	  itemIndex = SendMessage (ScreensList, LB_GETTEXT, itemIndex,
+				   (LPARAM) ScreenType);
 	  break;
 
 	  /* action buttons */
@@ -2736,7 +2762,59 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+
+#else /* WINDOWS */
+/*----------------------------------------------------------------------
+  BuildScreenSelector builds the list allowing to select a screen type
+  (for unix)
+  ----------------------------------------------------------------------*/
+static void BuildScreenSelector (void)
+{
+  int                  i;
+  int                  nbscreens = sizeof(ScreensTxt) / sizeof(char *);
+  int                  indx, length;
+  char                *entry;
+  char                 BufMenu[MAX_LENGTH];
+
+  /* recopy the propositions  */
+  indx = 0;
+  CurrentScreen = -1;
+  for (i = 0; i < nbscreens; i++)
+    {
+      entry =  ScreensTxt[i];
+      /* keep in mind the current selected entry */
+      if (*ScreenType && !strcmp (ScreenType, ScreensTxt[i]))
+	CurrentScreen = i;
+      length = strlen (entry) + 1;
+      if (length + indx < MAX_LENGTH)  
+	{
+	  strcpy (&BufMenu[indx], entry);
+	  indx += length;
+	}
+    }
+  
+  /* Fill in the profile form  */
+  TtaNewSizedSelector (BrowseBase + mScreenSelector, BrowseBase + BrowseMenu,
+		       TtaGetMessage (AMAYA, AM_SCREEN_TYPE), nbscreens,
+		       ((i < 2) ? "" : BufMenu), 3, 2, NULL, FALSE, FALSE);
+  /* preselect the screen matching the user preference */
+  TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
+}
+
+/*----------------------------------------------------------------------
+  RefreshBrowseMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+static void RefreshBrowseMenu ()
+{
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 0, LoadImages);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, LoadCss);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, DoubleClick);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 3, EnableFTP);
+  /* preselect the screen matching the user preference */
+  TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
+}
+
 /*----------------------------------------------------------------------
    callback of the Browsing menu
   ----------------------------------------------------------------------*/
@@ -2745,10 +2823,8 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
   int                 val;
 
   if (ref == -1)
-    {
-      /* removes the network conf menu */
-      TtaDestroyDialogue (BrowseBase + BrowseMenu);
-    }
+    /* removes the network conf menu */
+    TtaDestroyDialogue (BrowseBase + BrowseMenu);
   else
     {
       /* has the user changed the options? */
@@ -2781,12 +2857,22 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      LoadImages = !LoadImages;
 	      break;
 	    case 1:
-	      DoubleClick = !DoubleClick;
+	      LoadCss = !LoadCss;
 	      break;
 	    case 2:
+	      DoubleClick = !DoubleClick;
+	      break;
+	    case 3:
 	      EnableFTP = !EnableFTP;
 	      break;
 	    }
+	  break;
+	case mScreenSelector:
+	  /* Get the desired profile from the item number */
+	  if (data)
+	    strcpy (ScreenType, data);
+	  else
+	    ScreenType[0] = EOS;
 	  break;
 
 	default:
@@ -2794,7 +2880,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   BrowseConfMenu
@@ -2804,47 +2890,46 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 void BrowseConfMenu (Document document, View view)
 {
 #ifndef _WINDOWS
-   int              i;
+  int              i;
+#endif /* _WINDOWS */
 
-   /* Create the dialogue form */
-   i = 0;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-
-   TtaNewSheet (BrowseBase + BrowseMenu, 
-		TtaGetViewFrame (document, view),
-	       TtaGetMessage (AMAYA, AM_BROWSE_MENU),
-		2, s, FALSE, 11, 'L', D_DONE);
-   sprintf (s, "B%s%cB%s%cB%s", 
-	    TtaGetMessage (AMAYA, AM_LOAD_IMAGES), EOS,
-	    TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS, 
-	    TtaGetMessage (AMAYA, AM_ENABLE_FTP));
-   TtaNewToggleMenu (BrowseBase + mToggleBrowse,
-		     BrowseBase + BrowseMenu,
-		     NULL,
-		     3,
-		     s,
-		     NULL,
-		     FALSE);
-#endif /* !_WINDOWS */
-   /* reset the modified flag */
-   SafePutStatus = 0;
-   /* load the current values */
-   GetBrowseConf ();
-
-   /* display the menu */
+  /* reset the modified flag */
+  SafePutStatus = 0;
+  /* load the current values */
+  GetBrowseConf ();
 #ifndef _WINDOWS
-   RefreshBrowseMenu ();
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (BrowseBase + BrowseMenu, TRUE);
-#else
+  /* Create the dialogue form */
+  i = 0;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+  
+  TtaNewSheet (BrowseBase + BrowseMenu, 
+	       TtaGetViewFrame (document, view),
+	       TtaGetMessage (AMAYA, AM_BROWSE_MENU),
+	       2, s, FALSE, 11, 'L', D_DONE);
+  sprintf (s, "B%s%cB%s%cB%s%cB%s", 
+	   TtaGetMessage (AMAYA, AM_LOAD_IMAGES), EOS,
+	   TtaGetMessage (AMAYA, AM_LOAD_CSS), EOS,
+	   TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS, 
+	   TtaGetMessage (AMAYA, AM_ENABLE_FTP));
+  TtaNewToggleMenu (BrowseBase + mToggleBrowse,
+		    BrowseBase + BrowseMenu,
+		    NULL,
+		    4, s,
+		    NULL,
+		    FALSE);
+  BuildScreenSelector ();
+  RefreshBrowseMenu ();
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BrowseBase + BrowseMenu, TRUE);
+#else /* _WINDOWS */
   if (!BrowseHwnd)
 	   DialogBox (hInstance, MAKEINTRESOURCE (BROWSEMENU), NULL, 
-	  (DLGPROC) WIN_BrowseDlgProc);
+		      (DLGPROC) WIN_BrowseDlgProc);
   else
-     SetFocus (BrowseHwnd);
-#endif /* !_WINDOWS */
+    SetFocus (BrowseHwnd);
+#endif /* _WINDOWS */
 }
 
 
@@ -3659,35 +3744,32 @@ static void SetProfileConf (void)
 
   TtaGetDefProfileFileName (def_profiles_file, MAX_LENGTH);
   if (!strcasecmp (def_profiles_file, Profiles_File))
-    {
-      /* it is the default value. Erase the precedent registry value */
-      Profiles_File[0] = EOS;
-    }
+    /* it is the default value. Erase the precedent registry value */
+    Profiles_File[0] = EOS;
   TtaSetEnvString ("Profiles_File", Profiles_File, TRUE);
   TtaSetEnvString ("Profile", Profile, TRUE);
   TtaSaveAppRegistry ();
 }
 
 #ifdef _WINDOWS
-/*---------------------------------------------------------------
+/*----------------------------------------------------------------------
   BuildProfileList builds the list allowing to select a profile
   (for windows)
-------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void BuildProfileList (void)
 {
   int           nbprofiles = 0;
   int           i = 0;
 
   /* Get the propositions of the list */ 
-  SendMessage (wndProfilesList, LB_RESETCONTENT, 0, 0);
+  SendMessage (ProfilesList, LB_RESETCONTENT, 0, 0);
   nbprofiles = TtaGetProfilesItems (MenuText, MAX_PRO);
-  
-  while (i < nbprofiles && MenuText[i] != '\0')
+  while (i < nbprofiles && MenuText[i] != EOS)
     {
       /* keep in mind the current selected entry */
       if (*Profile && !strcmp (Profile, MenuText[i]))
 	CurrentProfile = i;
-      SendMessage (wndProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
+      SendMessage (ProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
       i++;
     }
 }
@@ -3700,7 +3782,6 @@ void WIN_RefreshProfileMenu (HWND hwnDlg)
 {		
   SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
   SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
-  /* SendMessage (wndProfilesList, LB_RESETCONTENT, 0, 0); */
 }
 
 /*----------------------------------------------------------------------
@@ -3710,7 +3791,6 @@ void WIN_RefreshProfileMenu (HWND hwnDlg)
 LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
 {
-
   int       itemIndex = 0;
   char     *ptr;
 
@@ -3718,16 +3798,15 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       ProfileHwnd = hwnDlg;
-      wndProfilesList = CreateWindow ("listbox", NULL, 
+      ProfilesList = CreateWindow ("listbox", NULL, 
 				      WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				      10, 90, 300, 90, hwnDlg, (HMENU) 1, 
 				      (HINSTANCE) GetWindowLong (hwnDlg, 
-				             GWL_HINSTANCE), NULL);
+						  GWL_HINSTANCE), NULL);
       WIN_SetMenuText (hwnDlg, WIN_ProfileMenuText);
       SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
       SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
-      break;
-      
+      break;      
     case WM_CLOSE:
     case WM_DESTROY:
       ptr = TtaGetEnvString ("Profiles_File");
@@ -3737,7 +3816,6 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       ProfileHwnd = NULL;
       EndDialog (hwnDlg, ID_DONE);
       break;
-
     case WM_COMMAND:
       switch (LOWORD (wParam)) 
 	{
@@ -3783,10 +3861,11 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       switch (HIWORD (wParam))
 	{
 	case LBN_SELCHANGE:
-	  itemIndex = SendMessage (wndProfilesList, LB_GETCURSEL, 0, 0);
-	  itemIndex = SendMessage (wndProfilesList, LB_GETTEXT, itemIndex, (LPARAM) Profile);
+	  itemIndex = SendMessage (ProfilesList, LB_GETCURSEL, 0, 0);
+	  itemIndex = SendMessage (ProfilesList, LB_GETTEXT, itemIndex,
+				   (LPARAM) Profile);
 	  SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
-	  break;		 
+	  break;
 	}
       break;
       
@@ -3797,10 +3876,10 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 }
 
 #else /* _WINDOWS */
-/*---------------------------------------------------------------
+/*----------------------------------------------------------------------
   BuildProfileSelector builds the list allowing to select a profile
   (for unix)
-------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void BuildProfileSelector (void)
 {
   int                  i;
@@ -3811,7 +3890,6 @@ static void BuildProfileSelector (void)
 
   /* Get the propositions of the selector */ 
   nbprofiles = TtaGetProfilesItems (MenuText, MAX_PRO);
-
   /* recopy the propositions  */
   indx = 0;
   for (i = 0; i < nbprofiles; i++)
@@ -3821,27 +3899,20 @@ static void BuildProfileSelector (void)
       if (*Profile && !strcmp (Profile, entry))
 	CurrentProfile = i;
       length = strlen (entry) + 1;
-      if (length + indx < MAX_PRO * MAX_PRO_LENGTH)  
+      if (length + indx < MAX_LENGTH)  
 	{
 	  strcpy (&BufMenu[indx], entry);
 	  indx += length;
 	}
     }
   
-  /* no entry */
-  entry = NULL;
   /* Fill in the profile form  */
   TtaNewSelector (ProfileBase + mProfileSelector, ProfileBase + ProfileMenu,
 		  NULL, nbprofiles,
-		  ((i < 2) ? "" : BufMenu), 4, entry, TRUE, FALSE);
-  
-  /* preselect the profile matching the user current profile in use if 
-     present  */
-  
+		  ((i < 2) ? "" : BufMenu), 3, NULL, TRUE, FALSE);
+  /* preselect the profile matching the user current profile */
   if (nbprofiles)
     TtaSetSelector (ProfileBase + mProfileSelector, CurrentProfile, NULL);
-  else
-    TtaSetSelector (ProfileBase + mProfileSelector, -1, "");
 }
 
 /*----------------------------------------------------------------------
@@ -3863,10 +3934,8 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
   char *ptr;
 
   if (ref == -1)
-    {
-      /* removes the Profile conf menu */
-      TtaDestroyDialogue (ProfileBase + ProfileMenu);
-    }
+    /* removes the Profile conf menu */
+    TtaDestroyDialogue (ProfileBase + ProfileMenu);
   else
     {
       /* has the user changed the options? */
@@ -3900,42 +3969,26 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    }
 	  break;
-
 	case mProfileSelector:
 	  /* Get the desired profile from the item number */
 	  if (data)
-	    {
-	      strcpy (Profile, data);
-	      /*RefreshProfileMenu();*/
-	    }
+	    strcpy (Profile, data);
 	  else
 	    Profile[0] = EOS;
-
 	  break;
-
 	case mProfiles_File:
 	  if (data)
 	    { 
 	      /* did the profile file change ? */
 	      if (strcmp (data, Profiles_File) != 0) 
-		{
-		   /* Yes, the profile file changed  : rescan the
-		      profile definition file and display the new
-		      profiles in the selector */
-		  strcpy (Profiles_File, data);
-		  /* only activate the following lines if we're using
-		     a reactive menu */
-#if 0
-		  TtaRebuildProTable (Profiles_File);
-		  BuildProfileSelector ();
-		  /*RefreshProfileMenu();*/
-#endif
-		}
+		/* Yes, the profile file changed  : rescan the
+		   profile definition file and display the new
+		   profiles in the selector */
+		strcpy (Profiles_File, data);
 	    }
 	  else
 	    Profiles_File [0] = EOS;
- 
-	  break;
+ 	  break;
 
 	default:
 	  break;
@@ -3949,7 +4002,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
   ProfileConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-void         ProfileConfMenu (Document document, View view)
+void ProfileConfMenu (Document document, View view)
 {
 #ifndef _WINDOWS
    int                   i;
@@ -3987,8 +4040,8 @@ void         ProfileConfMenu (Document document, View view)
    GetProfileConf ();
 
    if (!ProfileHwnd)
-	   DialogBox (hInstance, MAKEINTRESOURCE (PROFILEMENU), NULL, 
-		     (DLGPROC) WIN_ProfileDlgProc);
+     DialogBox (hInstance, MAKEINTRESOURCE (PROFILEMENU), NULL, 
+		(DLGPROC) WIN_ProfileDlgProc);
    else
      SetFocus (ProfileHwnd);
 #endif /* !_WINDOWS */
