@@ -135,6 +135,8 @@ typedef BOOL        Boolean;	/* X11/Intrinsic.h */
 #define True 1
 #endif
 
+#define Dimension int
+
 #else /* _WINDOWS *//***********************************WINDOWS**/
 
 #ifndef HAVE_BOOLEAN

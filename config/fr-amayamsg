@@ -135,6 +135,34 @@
 134 Nombre de Lignes
 135 Nombre de Colonnes
 136 Epaisseur des traits
-137 Valeur de l'aatribut ALT
+137 Valeur de l'attribut ALT
 138 L'attribut ALT est obligatoire
 139 Imprimer l'URL
+140 Appliquer
+141 Défauts
+142 Vider le cache
+143 Configuration du Cache
+144 Activer cache
+145 Stocker dans le cache les documents protegés
+146 Mode deconnecté
+147 Ignorer l'entete Expires:
+148 Répertoire père du cache
+149 Taille du cache (Mo)
+150 Taille maximale des entrées du cache (Mo)
+151 Configuration du Proxy
+152 Proxy HTTP
+153 Ne pas utiliser un proxy avec ces domaines
+154 Configuration Générale
+155 Page de démarrage
+156 Délai du tooltip (ms)
+157 Délai du double click (ms)
+158 Taille des fonts des menus
+159 Zoom
+160 Langage des dialogues
+161 Activer multikey
+162 Montrer les images de fond
+163 Cliquer deux fois pour suivre un lien
+164 Configuration de la Publication
+165 Utiliser les ETAGS et les pré-conditions
+166 Vérifier chaque PUT avec un GET
+167 Nom par défaut pour les URLs finissant par un  '/'

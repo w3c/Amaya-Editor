@@ -66,7 +66,7 @@ static STRING       export_items[MAX_ITEM_CONF];
 static STRING       export_items_menu[MAX_ITEM_CONF];
 
 /*----------------------------------------------------------------------
-   ConfigInit initialise le module de configuration.               
+   ConfigInit initializes the configuration module
   ----------------------------------------------------------------------*/
 void                ConfigInit ()
 {
@@ -1580,7 +1580,6 @@ PtrDocument         pDoc;
      }
 }
 
-
 /*----------------------------------------------------------------------
    ConfigGetViewGeometry retourne la position (x, y) et les        
    dimensions (width, height) de la fenetre ou doit        
@@ -1608,41 +1607,155 @@ int                *height;
    *y = 0;
    *width = 0;
    *height = 0;
-   /* ouvre le fichier .conf du document et avance jusqu'a la section "open" */
+
+   /* ouvre le fichier .conf du document et avance jusqu'a la section 
+      "open" */
    file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
    if (file != NULL)
      {
-	/* on a trouve' le debut de la section open. On lit le fichier .conf */
-	/* ligne par ligne, jusqu'a la ligne qui commence par le name de la vue */
-	found = FALSE;
-	while (!found && getNextLineInSection (file, line))
-	  {
-	     /* le 1er mot de la ligne est le nom d'une vue */
-	     getFirstWord (line, nameview);
-	     /* est-ce le nom de la vue cherchee ? */
-	     found = (ustrcmp (nameview, view) == 0);
-	  }
-	if (!found)
-	   /* on n'a pas trouve' dans la section "open". On cherche dans la */
-	   /* section "geometry" */
-	  {
-	     TtaReadClose (file);
-	     file = openConfFileAndReadUntil (pDoc->DocSSchema, "geometry");
-	     if (file != NULL)
-		while (!found && getNextLineInSection (file, line))
-		  {
-		     /* le 1er mot de la ligne est le nom d'une vue */
-		     getFirstWord (line, nameview);
-		     /* est-ce le nom de la vue cherchee ? */
-		     found = (ustrcmp (nameview, view) == 0);
-		  }
-	  }
-	if (found)
-	   getXYWidthHeight (line, pDoc, x, y, width, height);
-
-	TtaReadClose (file);
+       /* on a trouve' le debut de la section open. On lit le fichier 
+	  .conf ligne par ligne, jusqu'a la ligne qui commence par le 
+	  name de la vue */
+       found = FALSE;
+       while (!found && getNextLineInSection (file, line))
+	 {
+	   /* le 1er mot de la ligne est le nom d'une vue */
+	   getFirstWord (line, nameview);
+	   /* est-ce le nom de la vue cherchee ? */
+	   found = (ustrcmp (nameview, view) == 0);
+	 }
+       if (!found)
+	 /* on n'a pas trouve' dans la section "open". On cherche dans la
+	    section "geometry" */
+	 {
+	   TtaReadClose (file);
+	   file = openConfFileAndReadUntil (pDoc->DocSSchema, "geometry");
+	   if (file != NULL)
+	       while (!found && getNextLineInSection (file, line))
+		 {
+		   /* le 1er mot de la ligne est le nom d'une vue */
+		   getFirstWord (line, nameview);
+		   /* est-ce le nom de la vue cherchee ? */
+		   found = (ustrcmp (nameview, view) == 0);
+		 }
+	 }
+       TtaReadClose (file);
+       if (found)
+	 getXYWidthHeight (line, pDoc, x, y, width, height);
      }
 }
+
+/*----------------------------------------------------------------------
+   pixeltomm converts pixels into mm
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          pixeltomm (int N, int horiz)
+#else  /* __STDC__ */
+static int          pixeltomm (N, horiz)
+int                 N;
+int                 horiz;
+
+#endif /* __STDC__ */
+{
+  if (DOT_PER_INCHE != 83)
+    {
+      /* converts the resolution of the screen, if needed */
+      N = (int) (((float) (N * DOT_PER_INCHE) + 0.05) / 83);
+    }
+
+   if (horiz)
+     return (N * 254) / (DOT_PER_INCHE * 10);
+   else
+     return (N * 254) / (DOT_PER_INCHE * 10);
+}
+
+#ifndef _WINDOWS 
+/*----------------------------------------------------------------------
+   TtaGetViewWH returns the current width and height values associated
+   with the frame where a view is displayed
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGetViewWH (int frame, int *width, int *height)
+#else  /* __STDC__ */
+void                TtaSetViewWH (frame, width, height)
+int                  frame;
+int           *width;
+int           *height;
+#endif /* __STDC__ */
+{
+  int                 n;
+  ThotWidget          widget;
+  Arg                 args[20];
+  Dimension           w, h;
+
+  widget = (ThotWidget) FrameTable[frame].WdFrame;
+  widget = XtParent (XtParent (widget));
+  /* change the X Frame */
+  n = 0;
+  XtSetArg (args[n], XmNwidth, &w);
+  n++;
+  XtSetArg (args[n], XmNheight, &h);
+  n++;
+  XtGetValues (widget, args, n);
+  *width = pixeltomm ((int) w, 1);
+  *height = pixeltomm ((int) h, 0);
+}
+#endif /* !_WINDOWS *
+
+/*----------------------------------------------------------------------
+   TtaGetViewGeometryRegistry returns the position (x, y) and sizes        
+   (width, height) of the frame where the view is displayed. These values
+   are read from the Thot registry.
+   Parameters:    document: the document.                  
+   name: the name of the view in P schema.  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGetViewGeometryRegistry (Document document, STRING name,
+						int *x, int *y, 
+						int *width, int *height)
+#else  /* __STDC__ */
+void                TtaGetViewGeometryRegistry (document, name, x, y, width, 
+						height)
+Document            document;
+STRING              name;
+int                *x;
+int                *y;
+int                *width;
+int                *height;
+
+#endif /* __STDC__ */
+{
+  PtrDocument pDoc;
+  CHAR_T line[MAX_TXT_LEN];
+  STRING ptr;
+  boolean found;
+  UserErrorCode = 0;
+  *x = 0;
+  *y = 0;
+  *width = 0;
+  *height = 0;
+
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (document != 0)
+    {
+      pDoc = LoadedDocument[document - 1];
+      ptr = TtaGetEnvString (name);
+      if (!ptr || ptr[0] == EOS)
+	found = FALSE;
+      else
+	found = TRUE;
+      
+      if (found)
+	{
+	  sprintf (line, ":%s", ptr);
+	  getXYWidthHeight (line, pDoc, x, y, width, height);
+	}
+      else
+	ConfigGetViewGeometry (pDoc, name, x, y, width, height);
+    }
+}
+
 /*----------------------------------------------------------------------
    TtaGetViewGeometry returns the position (x, y) and sizes        
    (width, height) of the frame wher view is displayed.    

@@ -46,8 +46,6 @@
 extern HINSTANCE hInstance;
 #endif /* _WINDOWS */
 
-#define MAX_GEOMETRY_LENGTH 24
-
 static int CacheStatus;
 static int ProxyStatus;
 
@@ -113,20 +111,12 @@ static CHAR_T MenuFgColor [MAX_LENGTH+1];
 static CHAR_T MenuBgColor [MAX_LENGTH+1];
 
 /* Geometry menu options */
-#ifdef _WINDOWS
 static boolean GeometryActive = FALSE;
-#endif _WINDOWS
 static int GeometryBase;
-static CHAR_T FormattedView [MAX_GEOMETRY_LENGTH+1];
-static CHAR_T StructureView [MAX_GEOMETRY_LENGTH+1];
-static CHAR_T MathStructureView [MAX_GEOMETRY_LENGTH+1];
-static CHAR_T GraphStructureView [MAX_GEOMETRY_LENGTH+1];
-static CHAR_T AlternateView [MAX_GEOMETRY_LENGTH+1];
-static CHAR_T LinksView [MAX_GEOMETRY_LENGTH+1];
-static CHAR_T TableOfContentsView [MAX_GEOMETRY_LENGTH+1];
+static Document GeometryDoc = 0;
 
 /* common local variables */
-CHAR_T s[300]; /* general purpose buffer */
+CHAR_T s[MAX_LENGTH+1]; /* general purpose buffer */
 
 /* 
 ** function prototypes
@@ -143,7 +133,6 @@ static void WIN_RefreshProxyMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_PublishDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshPublishMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
-static void WIN_RefreshGeometryMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (HWND hwnDlg);
 #else
@@ -156,7 +145,6 @@ static void WIN_RefreshProxyMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_PublishDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshPublishMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
-static void WIN_RefreshGeometryMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (/* HWND hwnDlg */);
 #endif /* __STDC__ */
@@ -203,10 +191,8 @@ static void         GetDefaultColorConf (void);
 static void         SetColorConf (void);
 #ifndef _WINDOWS
 static void         GeometryCallbackDialog(int ref, int typedata, STRING data);
-static void         RefreshGeometryMenu (void);
 #endif /* !_WINDOWS */
-static void         GetGeometryConf (void);
-static void         GetDefaultGeometryConf (void);
+static void         RestoreDefaultGeometryConf (void);
 static void         SetGeometryConf (void);
 #else
 static void         GetEnvString (/* const STRING name, STRING value */);
@@ -249,10 +235,8 @@ static void         GetDefaultColorConf (/* void */);
 static void         SetColorConf (/* void */);
 #ifndef _WINDOWS
 static void         GeometryCallbackDialog(/* int ref, int typedata, STRING data */);
-static void         RefreshGeometryMenu (/* void */);
 #endif /* !_WINDOWS */
-static void         GetGeometryConf (/* void */);
-static void         GetDefaultGeometryConf (/* void */);
+static void         RestoreDefaultGeometryConf (/* void */);
 static void         SetGeometryConf (/* void */);
 #endif
 
@@ -647,6 +631,8 @@ static void SetCacheConf ()
   TtaSetEnvString ("CACHE_DIR", CacheDirectory, TRUE);
   TtaSetEnvInt ("CACHE_SIZE", CacheSize, TRUE);
   TtaSetEnvInt ("MAX_CACHE_ENTRY_SIZE", MaxCacheFile, TRUE);
+
+  TtaSaveAppRegistry ();
 }
 
 /*----------------------------------------------------------------------
@@ -744,19 +730,21 @@ View                view;
 
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Apply");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Defaults");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Flush Cache");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_FLUSH_CACHE_BUTTON));
    TtaNewSheet (CacheBase + CacheMenu, 
 		TtaGetViewFrame (document, view),
-	       "Cache Configuration", 3, s, FALSE, 6, 'L', D_DONE);
+		TtaGetMessage (AMAYA, AM_CACHE_MENU),
+		3, s, FALSE, 6, 'L', D_DONE);
 
-   sprintf (s, "%s%c%s%c%s%c%s", "BEnable cache", EOS, 
-	    "BCache protected documents", EOS,
-	    "BDisconnected mode", EOS,
-	    "BIgnore Expires: header");
+   sprintf (s, "B%s%cB%s%cB%s%cB%s",
+	    TtaGetMessage (AMAYA, AM_ENABLE_CACHE), EOS, 
+	    TtaGetMessage (AMAYA, AM_CACHE_PROT_DOCS), EOS,
+	    TtaGetMessage (AMAYA, AM_DISCONNECTED_MODE), EOS,
+	    TtaGetMessage (AMAYA, AM_IGNORE_EXPIRES));
    TtaNewToggleMenu (CacheBase + mCacheOptions,
 		     CacheBase + CacheMenu,
 		     NULL,
@@ -766,19 +754,19 @@ View                view;
 		     TRUE);
    TtaNewTextForm (CacheBase + mCacheDirectory,
 		   CacheBase + CacheMenu,
-		   "Cache directory",
+		   TtaGetMessage (AMAYA, AM_CACHE_DIR),
 		   20,
 		   1,
 		   TRUE);
    TtaNewNumberForm (CacheBase + mCacheSize,
 		     CacheBase + CacheMenu,
-		     "Cache size (Mb)",
+		     TtaGetMessage (AMAYA, AM_CACHE_SIZE),
 		     0,
 		     100,
 		     TRUE);
    TtaNewNumberForm (CacheBase + mMaxCacheFile,
 		     CacheBase + CacheMenu,
-		     "Cache entry size limit (Mb)",
+		     TtaGetMessage (AMAYA, AM_CACHE_ENTRY_SIZE),
 		     0,
 		     5,
 		     TRUE);
@@ -989,6 +977,8 @@ static void SetProxyConf ()
 {
   TtaSetEnvString ("HTTP_PROXY", HttpProxy, TRUE);
   TtaSetEnvString ("NO_PROXY", NoProxy, TRUE);
+
+  TtaSaveAppRegistry ();
 }
 
 /*----------------------------------------------------------------------
@@ -1059,23 +1049,24 @@ View                view;
 
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Apply");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Defaults");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (ProxyBase + ProxyMenu, 
 		TtaGetViewFrame (document, view),
-	       "Proxy Configuration", 2, s, FALSE, 6, 'L', D_DONE);
+		TtaGetMessage (AMAYA, AM_PROXY_MENU),
+		2, s, FALSE, 6, 'L', D_DONE);
 
    TtaNewTextForm (ProxyBase + mHttpProxy,
 		   ProxyBase + ProxyMenu,
-		   "HTTP proxy",
+		   TtaGetMessage (AMAYA, AM_HTTP_PROXY),
 		   20,
 		   1,
 		   TRUE);
    TtaNewTextForm (ProxyBase + mNoProxy,
 		   ProxyBase + ProxyMenu,
-		   "No proxy on these domains",
+		   TtaGetMessage (AMAYA, AM_NO_PROXY),
 		   20,
 		   1,
 		   TRUE);
@@ -1353,6 +1344,8 @@ static void SetGeneralConf ()
   TtaSetEnvString ("TMPDIR", TmpDir, TRUE);
   TtaSetEnvString ("APP_HOME", AppHome, TRUE);
 #endif /* _WINDOWS */
+
+  TtaSaveAppRegistry ();
 }
 
 /*----------------------------------------------------------------------
@@ -1454,17 +1447,18 @@ STRING              pathname;
 
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Apply");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Defaults");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (GeneralBase + GeneralMenu, 
 		TtaGetViewFrame (document, view),
-	       "General Configuration", 2, s, TRUE, 2, 'L', D_DONE);
+		TtaGetMessage (AMAYA, AM_GENERAL_MENU),
+		2, s, TRUE, 2, 'L', D_DONE);
    /* first line */
    TtaNewTextForm (GeneralBase + mHomePage,
 		   GeneralBase + GeneralMenu,
-		   "Home Page",
+		   TtaGetMessage (AMAYA, AM_HOME_PAGE),
 		   40,
 		   1,
 		   FALSE);
@@ -1472,43 +1466,44 @@ STRING              pathname;
    /* second line */
    TtaNewNumberForm (GeneralBase + mToolTipDelay,
 		     GeneralBase + GeneralMenu,
-		     "ToolTip delay (ms)",
+		     TtaGetMessage (AMAYA, AM_TOOLTIP_DELAY),
 		     0,
 		     65000,
 		     FALSE);   
    TtaNewNumberForm (GeneralBase + mDoubleClickDelay,
 		     GeneralBase + GeneralMenu,
-		     "Double Click delay (ms)",
+		     TtaGetMessage (AMAYA, AM_DOUBLECLICK_DELAY),
 		     0,
 		     65000,
 		     FALSE);   
    /* third line */
    TtaNewNumberForm (GeneralBase + mFontMenuSize,
 		     GeneralBase + GeneralMenu,
-		     "Menu font size",
+		     TtaGetMessage (AMAYA, AM_MENU_FONT_SIZE),
 		     8,
 		     20,
 		     FALSE);   
 
    TtaNewNumberForm (GeneralBase + mZoom,
 		     GeneralBase + GeneralMenu,
-		     "Zoom",
+		     TtaGetMessage (AMAYA, AM_ZOOM),
 		     0,
 		     10,
 		     FALSE);   
    /* fourth line */
    TtaNewTextForm (GeneralBase + mDialogueLang,
 		   GeneralBase + GeneralMenu,
-		   "Dialogue language",
+		   TtaGetMessage (AMAYA, AM_DIALOGUE_LANGUAGE),
 		   10,
 		   1,
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, "");   
    /* fifth line */
    sprintf (s, "B%s%cB%s%cB%s", 
-	    "Enable Multikey", EOS, 
-	    "Show background images", EOS,
-	    "Double click activates link");
+	    TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
+	    TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
+	    TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK));
+
    TtaNewToggleMenu (GeneralBase + mToggleGeneral,
 		     GeneralBase + GeneralMenu,
 		     NULL,
@@ -1719,6 +1714,8 @@ static void SetPublishConf ()
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, TRUE);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
   TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
+
+  TtaSaveAppRegistry ();
 }
 
 /*----------------------------------------------------------------------
@@ -1796,15 +1793,17 @@ STRING              pathname;
 
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Apply");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Defaults");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (PublishBase + PublishMenu, 
 		TtaGetViewFrame (document, view),
-	       "Publishing Configuration", 2, s, FALSE, 11, 'L', D_DONE);
-   sprintf (s, "%s%c%s", "BUse ETAGS and preconditions", EOS, 
-	    "BVerify each PUT with a GET");
+	       TtaGetMessage (AMAYA, AM_PUBLISH_MENU),
+		2, s, FALSE, 11, 'L', D_DONE);
+   sprintf (s, "B%s%cB%s", 
+	    TtaGetMessage (AMAYA, AM_USE_ETAGS), EOS, 
+	    TtaGetMessage (AMAYA, AM_VERIFY_PUT));
    TtaNewToggleMenu (PublishBase + mTogglePublish,
 		     PublishBase + PublishMenu,
 		     NULL,
@@ -1814,7 +1813,7 @@ STRING              pathname;
 		     FALSE);
    TtaNewTextForm (PublishBase + mDefaultName,
 		   PublishBase + PublishMenu,
-		   "Default name for URLs finishing in \'/\'",
+		   TtaGetMessage (AMAYA, AM_DEFAULT_NAME),
 		   20,
 		   1,
 		   FALSE);
@@ -1971,35 +1970,37 @@ STRING              pathname;
 
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Apply");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Defaults");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+
    TtaNewSheet (ColorBase + ColorMenu, 
 		TtaGetViewFrame (document, view),
-	       "Color Configuration", 2, s, TRUE, 2, 'L', D_DONE);
+		TtaGetMessage (AMAYA, AM_COLOR_MENU),
+		2, s, TRUE, 2, 'L', D_DONE);
    /* first line */
    TtaNewTextForm (ColorBase + mFgColor,
 		   ColorBase + ColorMenu,
-		   "Document foreground color",
+		   TtaGetMessage (AMAYA, AM_DOC_FG_COLOR),
 		   20,
 		   1,
 		   FALSE);   
    TtaNewTextForm (ColorBase + mBgColor,
 		   ColorBase + ColorMenu,
-		   "Document background color",
+		   TtaGetMessage (AMAYA, AM_DOC_BG_COLOR),
 		   20,
 		   1,
 		   FALSE);   
    /* second line */
    TtaNewTextForm (ColorBase + mMenuFgColor,
 		   ColorBase + ColorMenu,
-		   "Menu foreground color",
+		   TtaGetMessage (AMAYA, AM_MENU_FG_COLOR),
 		   20,
 		   1,
 		   FALSE);   
    TtaNewTextForm (ColorBase + mMenuBgColor,
 		   ColorBase + ColorMenu,
-		   "Menu background color",
+		   TtaGetMessage (AMAYA, AM_MENU_BG_COLOR),
 		   20,
 		   1,
 		   FALSE);  
@@ -2062,6 +2063,8 @@ static void GetColorConf ()
   GetEnvString ("BackgroundColor", BgColor);
   GetEnvString ("MenuFgColor", MenuFgColor);
   GetEnvString ("MenuBgColor", MenuBgColor);
+
+  TtaSaveAppRegistry ();
 }
 
 /*----------------------------------------------------------------------
@@ -2095,6 +2098,10 @@ static void SetColorConf ()
   TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
   TtaSetEnvString ("MenuFgColor", MenuFgColor, TRUE);
   TtaSetEnvString ("MenuBgColor", MenuBgColor, TRUE);
+  /* change the current settings */
+  TtaUpdateEditorColors ();
+  
+  TtaSaveAppRegistry ();
 }
 
 
@@ -2143,6 +2150,7 @@ STRING              data;
     {
       /* removes the geometry conf menu */
       TtaDestroyDialogue (GeometryBase + GeometryMenu);
+      GeometryDoc = 0;
     }
   else
     {
@@ -2155,61 +2163,19 @@ STRING              data;
 	    {
 	    case 0:
 	      TtaDestroyDialogue (ref);
+	      GeometryDoc = 0;
 	      break;
 	    case 1:
 	      SetGeometryConf ();
 	      break;
 	    case 2:
-	      GetDefaultGeometryConf ();
-	      RefreshGeometryMenu ();
+	      RestoreDefaultGeometryConf ();
 	      break;
 	    default:
 	      break;
 	    }
 	  break;
 	  
-	case mStructureView:
-	  if (data)
-	    ustrcpy (StructureView, data);
-	  else
-	    StructureView[0] = EOS;
-	  break;
-
-	case mMathStructureView:
-	  if (data)
-	    ustrcpy (MathStructureView, data);
-	  else
-	     MathStructureView[0] = EOS;
-	  break;
-
-	case mGraphStructureView:
-	  if (data)
-	    ustrcpy (GraphStructureView, data);
-	  else
-	     GraphStructureView[0] = EOS;
-	  break;
-
-	case mAlternateView:
-	  if (data)
-	    ustrcpy (AlternateView, data);
-	  else
-	     AlternateView[0] = EOS;
-	  break;
-
-	case mLinksView:
-	  if (data)
-	    ustrcpy (LinksView, data);
-	  else
-	     LinksView[0] = EOS;
-	  break;
-
-	case mTableOfContentsView:
-	  if (data)
-	    ustrcpy (TableOfContentsView, data);
-	  else
-	     TableOfContentsView[0] = EOS;
-	  break;
-
 	default:
 	  break;
 	}
@@ -2228,151 +2194,210 @@ void         GeometryConfMenu (document, view)
 Document            document;
 View                view;
 STRING              pathname;
-
 #endif
 {
-#ifndef _WINDOWS
    CHAR_T             s[MAX_LENGTH];
    int              i;
 
+   if (GeometryDoc)
+     {
+     /* menu already active, so we'll destroy it in order to
+      have a menu that points to the current document */
+       TtaDestroyDialogue (GeometryBase + GeometryMenu);
+     }
+   GeometryDoc = document;
+
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Apply");
+   strcpy (&s[i], "Save current geometry");
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Defaults");
+   strcpy (&s[i], "Restore default geometry");
+
    TtaNewSheet (GeometryBase + GeometryMenu, 
 		TtaGetViewFrame (document, view),
-	       "Geometry Configuration", 2, s, TRUE, 3, 'L', D_DONE);
-   TtaNewTextForm (GeometryBase + mFormattedView,
-		   GeometryBase + GeometryMenu,
-		   "Formatted view",
-		   20,
-		   1,
-		   FALSE);   
-   TtaNewTextForm (GeometryBase + mStructureView,
-		   GeometryBase + GeometryMenu,
-		   "Structure view",
-		   20,
-		   1,
-		   FALSE);
-   TtaNewTextForm (GeometryBase + mMathStructureView,
-		   GeometryBase + GeometryMenu,
-		   "Math structure view",
-		   20,
-		   1,
-		   FALSE);
-   TtaNewTextForm (GeometryBase + mGraphStructureView,
-		   GeometryBase + GeometryMenu,
-		   "Graph structure view",
-		   20,
-		   1,
-		   FALSE);
-   TtaNewTextForm (GeometryBase + mAlternateView,
-		   GeometryBase + GeometryMenu,
-		   "Alternate View",
-		   20,
-		   1,
-		   FALSE);
-   TtaNewTextForm (GeometryBase + mLinksView,
-		   GeometryBase + GeometryMenu,
-		   "Links View",
-		   20,
-		   1,
-		   FALSE);
-   TtaNewTextForm (GeometryBase + mTableOfContentsView,
-		   GeometryBase + GeometryMenu,
-		   "Table of Contents view",
-		   20,
-		   1,
-		   FALSE);
-#endif /* !_WINDOWS */
-   /* load and display the current values */
-   GetGeometryConf ();
+	        TtaGetMessage (AMAYA, AM_GEOMETRY_MENU),
+		2, s, TRUE, 1, 'L', D_DONE);
+   /* formatted view */
+   TtaNewLabel (GeometryBase + mGeometryLabel1,
+		GeometryBase + GeometryMenu,
+		"The change will be effective when you open a new window."
+		);
+   TtaNewLabel (GeometryBase + mGeometryLabel2,
+		GeometryBase + GeometryMenu,
+		""
+		);
 #ifndef _WINDOWS
-   RefreshGeometryMenu ();
    /* display the menu */
    TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
 #else
 #endif /* !_WINDOWS */
 }
 
-#ifdef _WINDOWS
 /*----------------------------------------------------------------------
-  WIN_RefreshGeometryMenu
-  Displays the current registry values in the menu
+  ConvIntGeom
+  Extracts the integer geometry values that are stored in a string in
+  the form "x y w h"
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_RefreshGeometryMenu (HWND hwnDlg)
+static void ConvIntGeom (STRING line, int *x, int *y, int *w, int *h)
 #else
-void WIN_RefreshGeometryMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
+static void ConvIntGeom (line, x, y, w, h)
+STRING line;
+int *x;
+int *y;
+int *w;
+int *h;
+#endif /*__STDC__ */
 {
-}
-#endif /* WINDOWS */
+  int nbIntegers;
 
+  if (line[0] != EOS)
+    nbIntegers = sscanf (line, "%d %d %d %d", x, y, w, h);
+  else
+    nbIntegers = 0;
+
+  if (nbIntegers != 4)
+      *x = *y = *w = *h = 0;
+}
+
+/*----------------------------------------------------------------------
+  GetEnvGeom
+  Extracts the integer geometry values that are stored in a registry
+  entry under the form "x y w h"
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetEnvGeom (STRING env_var, int *x, int *y, int *w, int *h)
+#else
+static void GetEnvGeom (env_var, x, y, w, h)
+STRING env_var;
+int *x;
+int *y;
+int *w;
+int *h;
+#endif /* _STDC_ */
+{
+  GetEnvString (env_var, s);
+  ConvIntGeom (s, 
+	       x,
+	       y,
+	       w,
+	       h);
+}
+
+/*----------------------------------------------------------------------
+  RestoreDefEnvGeom
+  Restores the default integer geometry values that are stored in a 
+  registry entry under the form "x y w h"
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RestoreDefEnvGeom (STRING env_var)
+#else
+static void RestoreDefEnvGeom (env_var
+STRING env_var;
+#endif /* _STDC_ */
+{
+  int x, y, w, h;
+
+  /* in order to read the default values from HTML.conf, we erase the 
+     registry entry */
+  TtaClearEnvString (env_var);
+  TtaGetViewGeometryRegistry (GeometryDoc, env_var, &x, &y, &w, &h);
+  sprintf (s, "%d %d %d %d", 
+	   x,
+	   y,
+	   w,
+	   h);
+  TtaSetEnvString (env_var, s, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  SetEnvGeom
+  Gets the current geometry for a view and saves it in the registry
+  using the format "x y w h"
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetEnvGeom (STRING view_name)
+#else
+static void SetEnvGeom (view_name)
+STRING view_name
+#endif /* _STDC_ */
+{
+  int frame, view;
+  int x, y, w, h;
+
+  GetEnvGeom (view_name, &x, &y, &w, &h);
+
+  view = TtaGetViewFromName (GeometryDoc, view_name);
+  if (view != 0 && TtaIsViewOpened (GeometryDoc, view))
+    {
+      frame =  GetWindowNumber (GeometryDoc, view);
+      /* get current geometry */
 #ifndef _WINDOWS
-/*----------------------------------------------------------------------
-  RefreshGeometryMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void RefreshGeometryMenu ()
-#else
-static void RefreshGeometryMenu ()
-#endif /* __STDC__ */
-{
-  TtaSetTextForm (GeometryBase + mFormattedView, FormattedView);
-  TtaSetTextForm (GeometryBase + mStructureView, StructureView);
-  TtaSetTextForm (GeometryBase + mMathStructureView, MathStructureView);
-  TtaSetTextForm (GeometryBase + mGraphStructureView, GraphStructureView);
-  TtaSetTextForm (GeometryBase + mAlternateView, AlternateView);
-  TtaSetTextForm (GeometryBase + mLinksView, LinksView);
-  TtaSetTextForm (GeometryBase + mTableOfContentsView, TableOfContentsView);
-}
+      TtaGetViewWH (frame, &w, &h);
 #endif /* !_WINDOWS */
-
-/*----------------------------------------------------------------------
-  GetGeometryConf
-  Makes a copy of the current registry geometry values
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void GetGeometryConf (void)
-#else
-static void GetGeometryConf ()
-#endif /* __STDC__ */
-{
-  GetEnvString ("FormattedView", FormattedView);
-  GetEnvString ("StructureView", StructureView);
-  GetEnvString ("MathStructureView", MathStructureView);
-  GetEnvString ("GraphStructureView", GraphStructureView);
-  GetEnvString ("AlternateView", AlternateView);
-  GetEnvString ("LinksView", LinksView);
-  GetEnvString ("TableOfContentsView", TableOfContentsView);
+      /*      SetEnvGeom ("Formatted_view", w, h); */
+    }
+   
+  sprintf (s, "%d %d %d %d", 
+	   x,
+	   y,
+	   w,
+	   h);
+  
+  TtaSetEnvString (view_name, s, TRUE);
 }
 
 /*----------------------------------------------------------------------
-  GetDefaultGeometryConf
+  RestoreDefaultGeometryConf
   Makes a copy of the default registry geometry values
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void GetDefaultGeometryConf (void)
+static void RestoreDefaultGeometryConf (void)
 #else
-static void GetDefaultGeometryConf ()
+static void RestolreDefaultGeometryConf ()
 #endif /* __STDC__ */
 {
-  GetDefEnvString ("FormattedView", FormattedView);
-  GetDefEnvString ("StructureView", StructureView);
-  GetDefEnvString ("MathStructureView", MathStructureView);
-  GetDefEnvString ("GraphStructureView", GraphStructureView);
-  GetDefEnvString ("AlternateView", AlternateView);
-  GetDefEnvString ("LinksView", LinksView);
-  GetDefEnvString ("TableOfContentsView", TableOfContentsView);
+  RestoreDefEnvGeom ("Formatted_view");
+  RestoreDefEnvGeom ("Structure_view");
+  RestoreDefEnvGeom ("Math_Structure_view");
+  RestoreDefEnvGeom ("Graph_Structure_view");
+  RestoreDefEnvGeom ("Alternate_view");
+  RestoreDefEnvGeom ("Links_view");
+  RestoreDefEnvGeom ("Table_of_contents");
+
+  /* save the options */
+  TtaSaveAppRegistry ();
+}
+
+/*----------------------------------------------------------------------
+  SetEnvCurrentGeometry stores the current doc geometry in the registry
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetEnvCurrentGeometry ()
+#else
+static void SetEnvCurrentGeometry ()
+#endif /* _STDC__ */
+{
+  /* only do the processing if the document exists */
+  if (DocumentURLs[GeometryDoc])
+    {
+      SetEnvGeom ("Formatted_view");
+      SetEnvGeom ("Structure_view");
+#ifdef MATHML
+      SetEnvGeom ("Math_Structure_view");
+#endif /* MATHML */
+#ifdef GRAPHML
+      SetEnvGeom ("Graph_Structure_view");
+#endif /* GRAPHML */
+      SetEnvGeom ("Alternate_view");
+      SetEnvGeom ("Links_view");
+      SetEnvGeom ("Table_of_contents");
+    } /* if GeometryDoc exists */
 }
 
 /*----------------------------------------------------------------------
   SetGeometryConf
-  Updates the registry Geometry values
+  Updates the registry Geometry values and redraws the windows
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void SetGeometryConf (void)
@@ -2380,11 +2405,18 @@ static void SetGeometryConf (void)
 static void SetGeometryConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString ("FormattedView", FormattedView, TRUE);
-  TtaSetEnvString ("StructureView", StructureView, TRUE);
-  TtaSetEnvString ("MathStructureView", MathStructureView, TRUE);
-  TtaSetEnvString ("GraphStructureView", GraphStructureView, TRUE);
-  TtaSetEnvString ("AlternateView", AlternateView, TRUE);
-  TtaSetEnvString ("LinksView", LinksView, TRUE);
-  TtaSetEnvString ("TableOfContentsView", TableOfContentsView, TRUE);
+  /* read the current values and save them into the registry */
+  SetEnvCurrentGeometry ();
+
+  /* save the options */
+  TtaSaveAppRegistry ();
 }
+
+
+
+
+
+
+
+
+

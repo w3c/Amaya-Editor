@@ -55,6 +55,33 @@ DisplayMode;
 extern View         TtaOpenMainView (Document document, int x, int y, int w, int h);
 
 /*----------------------------------------------------------------------
+   TtaGetViewWH 
+   returns the current width and height values associated
+   with the frame where a view is displayed
+   Parameters: 
+   frame: frame number
+   w: width of the frame
+   h: height of the frame
+
+  ----------------------------------------------------------------------*/
+extern void         TtaGetViewWH (int frame, /*OUT*/ int *w, 
+				  /*OUT*/ int *h);
+
+/*----------------------------------------------------------------------
+   TtaGetViewGeometryRegistry 
+   returns the position (x, y) and sizes        
+   (width, height) of the frame where a view is displayed. These values
+   are read from the Thot registry and, if they don't exist, from a 
+   .conf file.
+   Parameters:    document: the document.                  
+   name: the name of the view in P schema.  
+   x, y, width, height: the frame's geometry
+
+  ----------------------------------------------------------------------*/
+extern void         TtaGetViewGeometryRegistry (Document document, STRING name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
+
+
+/*----------------------------------------------------------------------
    TtaGetViewGeometry returns the position (x, y) and sizes        
    (width, height) of the frame wher view is displayed.    
    Parameters:    document: the document.                  
@@ -438,7 +465,8 @@ extern void         TtaClearViewSelections ( void );
 
 #else  /* __STDC__ */
 
-extern void         TtaGetViewGeometry (/*Document document, STRING name, int *x, int *y, int *width, int *height*/);
+extern void         TtaGetViewWH ( /* int frame, int *w, int *h */ );
+extern void         TtaGetViewGeometryRegistry ( /* Document document, STRING name, int *x, int *y, int *width, int *height */ );
 extern View         TtaOpenMainView ( /* Document document, int x, int y, int w, int h */ );
 extern View         TtaOpenSubView ( /* Document document, STRING viewName, int x, int y, int w, int h, Element subtree */ );
 extern void         TtaChangeViewTitle ( /*Document document, View view, STRING title */ );

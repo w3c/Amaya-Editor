@@ -213,8 +213,6 @@ MENUS
 	view:1 Special.Coptions button:BConfigProxy -> ConfigProxy;
 	view:1 Special.Coptions button:BConfigColor -> ConfigColor;
 	view:1 Special.Coptions button:BConfigGeometry -> ConfigGeometry;
-        view:1 Special.Coptions Separator;
-	view:1 Special.Coptions button:BSaveOptions -> SaveOptions;
 	
 
 	Attributes_;

@@ -437,7 +437,56 @@ int bottom_delta;
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
-   Evenement sur une frame document.                              
+  FrameRedraw
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                FrameRedraw (int frame, Dimension width, Dimension height)
+#else  /* __STDC__ */
+void                FrameRedraw (frame, width, height)
+int                 frame;
+Dimension           width;
+Dimension           height;
+
+#endif /* __STDC__ */
+{
+   int                 n, dx, dy, view;
+   NotifyWindow        notifyDoc;
+   Document            doc;
+
+   if ((width > 0) && (height > 0) && 
+       documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
+     /* ne pas traiter si le document est en mode NoComputedDisplay */
+     {
+       notifyDoc.event = TteViewResize;
+       FrameToView (frame, &doc, &view);
+       notifyDoc.document = doc;
+       notifyDoc.view = view;
+       dx = width - FrameTable[frame].FrWidth;
+       dy = height - FrameTable[frame].FrHeight;
+       notifyDoc.verticalValue = dy;
+       notifyDoc.horizontalValue = dx;
+       if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+	 {
+	   FrameTable[frame].FrWidth = (int) width;
+	   FrameTable[frame].FrHeight = (int) height;
+	   
+	   /* Il faut reevaluer le contenu de la fenetre */
+	   RebuildConcreteImage (frame);
+	   
+	   /* Reevalue les ascenseurs */
+	   UpdateScrollbars (frame);
+	   notifyDoc.event = TteViewResize;
+	   notifyDoc.document = doc;
+	   notifyDoc.view = view;
+	   notifyDoc.verticalValue = dy;
+	   notifyDoc.horizontalValue = dx;
+	   CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	 }
+     }
+}
+
+/*----------------------------------------------------------------------
+   FrameResized Evenement sur une frame document.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameResized (int *w, int frame, int *info)
@@ -449,11 +498,9 @@ int                *info;
 
 #endif /* __STDC__ */
 {
-   int                 n, dx, dy, view;
+   int                 n;
    Dimension           width, height;
    Arg                 args[MAX_ARGS];
-   NotifyWindow        notifyDoc;
-   Document            doc;
 
    n = 0;
    XtSetArg (args[n], XmNwidth, &width);
@@ -462,37 +509,8 @@ int                *info;
    n++;
    XtGetValues ((ThotWidget) w, args, n);
 
-   if ((width > 0) && (height > 0) && documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
-   /* ne pas traiter si le document est en mode NoComputedDisplay */
-      {
-	notifyDoc.event = TteViewResize;
-	FrameToView (frame, &doc, &view);
-	notifyDoc.document = doc;
-	notifyDoc.view = view;
-	dx = width - FrameTable[frame].FrWidth;
-	dy = height - FrameTable[frame].FrHeight;
-	notifyDoc.verticalValue = dy;
-	notifyDoc.horizontalValue = dx;
-	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-	  {
-	     FrameTable[frame].FrWidth = (int) width;
-	     FrameTable[frame].FrHeight = (int) height;
-
-	     /* Il faut reevaluer le contenu de la fenetre */
-	     RebuildConcreteImage (frame);
-
-	     /* Reevalue les ascenseurs */
-	     UpdateScrollbars (frame);
-	     notifyDoc.event = TteViewResize;
-	     notifyDoc.document = doc;
-	     notifyDoc.view = view;
-	     notifyDoc.verticalValue = dy;
-	     notifyDoc.horizontalValue = dx;
-	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	  }
-     }
+   FrameRedraw (frame, width, height);
 }
-
 #endif /* !_WINDOWS */
 
 #ifdef _WINDOWS

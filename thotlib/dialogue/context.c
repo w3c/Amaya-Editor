@@ -296,6 +296,39 @@ static void         InitCurs ()
 }
 
 /*----------------------------------------------------------------------
+ *      TtaUpdateEditorColors Updates the X-Window colors according to
+ *      the current chosen user values
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void TtaUpdateEditorColors (void)
+#else
+void TtaUpdateEditorColors ()
+#endif /* __STDC__ */
+{
+  STRING app_name;
+  boolean found;
+
+  app_name =  TtaGetEnvString ("appname");
+
+  /* background color */
+#       ifndef _WINDOWS
+  found = FindColor (0, app_name, "BackgroundColor", "gainsboro",
+		     &White_Color);
+#       else  /* _WINDOWS */
+  found = FindColor (0, app_name, "BackgroundColor", "LightGrey1", 
+		     &White_Color);
+#       endif /* _WINDOWS */
+  /* drawing color */
+  found = FindColor (0, app_name, "ForegroundColor", "Black", &Black_Color);
+  /* color for the menu background */
+  found = FindColor (0, app_name, "MenuBgColor", "Grey", &BgMenu_Color);
+  /* color for the menu foregroundground */
+  found = FindColor (0, app_name, "MenuFgColor", "Black", &FgMenu_Color);
+  /* scrolls color */
+  Scroll_Color = BgMenu_Color;
+}
+
+/*----------------------------------------------------------------------
  *      InitColors initializes the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__

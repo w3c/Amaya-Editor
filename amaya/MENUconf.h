@@ -54,15 +54,9 @@
 #define MAX_COLORMENU_DLG   6
 
 #define GeometryMenu         1
-#define mFormattedView       2
-#define mStructureView       3
-#define mMathStructureView   4
-#define mGraphStructureView  5
-#define mAlternateView       6
-#define mLinksView           7
-#define mTableOfContentsView 8
-#define mToggleUseCurrentXY  9
-#define MAX_GEOMETRYMENU_DLG    10
+#define mGeometryLabel1      2
+#define mGeometryLabel2      3
+#define MAX_GEOMETRYMENU_DLG 4
 
 #endif /* _MENUCONF.h */
 

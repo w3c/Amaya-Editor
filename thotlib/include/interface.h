@@ -302,6 +302,14 @@ extern void         TtaResetCursor (Document document, View view);
 extern Pixel        TtaGetMenuColor (void);
 
 /*----------------------------------------------------------------------
+  TtaUpdateEditorColors
+  
+  Updates the current foreground and background (text and menus) from
+  the values stored in the registry.
+  ----------------------------------------------------------------------*/
+extern void         TtaUpdateEditorColors (void);
+
+/*----------------------------------------------------------------------
    TtaGetScreenDepth
 
    Returns the current screen depth.
@@ -414,6 +422,7 @@ extern Pixmap       TtaCreateBitmapLogo ( /*int width, int height, STRING bits *
 extern void         TtaSetCursorWatch ( /*Document document, View view */ );
 extern void         TtaResetCursor ( /*Document document, View view */ );
 extern Pixel        TtaGetMenuColor ( /* void */ );
+extern void         TtaUpdateEditorColors ( /* void */ );
 extern Pixel        TtaGetButtonColor ( /* void */ );
 extern int          TtaGetScreenDepth ( /* void */ );
 extern Display     *TtaGetCurrentDisplay ( /* void */ );

@@ -1387,7 +1387,7 @@ boolean             logFile;
 	 }
 
        /* open the main view */
-       TtaGetViewGeometry (doc, "Formatted_view", &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (doc, "Formatted_view", &x, &y, &w, &h);
        TtaSetNotificationMode (doc, 1);
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
@@ -2571,7 +2571,7 @@ View                view;
      TtaRaiseView (document, structView);
    else
      {
-       TtaGetViewGeometry (document, "Structure_view", &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (document, "Structure_view", &x, &y, &w, &h);
        structView = TtaOpenView (document, "Structure_view", x, y, w, h);
        TtcSwitchButtonBar (document, structView);
        TtcSwitchCommands (document, structView);
@@ -2594,7 +2594,8 @@ View                view;
      TtaRaiseView (document, mathView);
    else
      {
-       TtaGetViewGeometry (document, "Math_Structure_view", &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (document, "Math_Structure_view", &x, &y, 
+				   &w, &h);
        mathView = TtaOpenView (document, "Math_Structure_view", x, y, w, h);
        if (mathView != 0)
 	 {
@@ -2621,7 +2622,8 @@ View                view;
      TtaRaiseView (document, graphView);
    else
      {
-       TtaGetViewGeometry (document, "Graph_Structure_view", &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (document, "Graph_Structure_view", &x, &y, 
+				   &w, &h);
        graphView = TtaOpenView (document, "Graph_Structure_view", x, y, w, h);
        if (graphView != 0)
 	 {
@@ -2665,7 +2667,8 @@ View                view;
       TtaRaiseView (document, altView);
    else
      {
-	TtaGetViewGeometry (document, "Alternate_view", &x, &y, &w, &h);
+	TtaGetViewGeometryRegistry (document, "Alternate_view", &x, &y, &w,
+				    &h);
 	altView = TtaOpenView (document, "Alternate_view", x, y, w, h);
 	TtcSwitchButtonBar (document, altView);
 	TtcSwitchCommands (document, altView);
@@ -2705,7 +2708,7 @@ View                view;
       TtaRaiseView (document, linksView);
    else
      {
-	TtaGetViewGeometry (document, "Links_view", &x, &y, &w, &h);
+	TtaGetViewGeometryRegistry (document, "Links_view", &x, &y, &w, &h);
 	linksView = TtaOpenView (document, "Links_view", x, y, w, h);
 	TtcSwitchButtonBar (document, linksView);
 	TtcSwitchCommands (document, linksView);
@@ -2745,7 +2748,8 @@ View                view;
       TtaRaiseView (document, tocView);
    else
      {
-	TtaGetViewGeometry (document, "Table_of_contents", &x, &y, &w, &h);
+	TtaGetViewGeometryRegistry (document, "Table_of_contents", &x, &y, 
+				    &w, &h);
 	tocView = TtaOpenView (document, "Table_of_contents", x, y, w, h);
 	TtcSwitchButtonBar (document, tocView);
 	TtcSwitchCommands (document, tocView);
