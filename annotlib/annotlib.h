@@ -15,6 +15,10 @@
  */
 
 #define THOT_EXPORT extern
+
+/* turn this off to remove the reply to annotations feature */
+#define ANNOT_ON_ANNOT
+
 #include "amaya.h"
 
 /* RDF Property names */

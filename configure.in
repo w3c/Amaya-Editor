@@ -735,15 +735,15 @@ fi
 dnl
 dnl Annotation thread support enabled by default
 dnl
-if test "$with_annot_threads" = "" ; then
-    if test "$enable_annot_threads" = "no" ; then
-	with_annot_threads="no"
-	ANNOT_THREAD_OPTIONS=
-    else
-	with_annot_threads="yes"
-	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT 
-    fi
-fi
+dnl if test "$with_annot_threads" = "" ; then
+dnl     if test "$enable_annot_threads" = "no" ; then
+dnl 	with_annot_threads="no"
+dnl 	ANNOT_THREAD_OPTIONS=
+dnl  else
+dnl 	with_annot_threads="yes"
+dnl 	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT 
+dnl  fi
+dnl fi
 
 if test "$build_amaya" = "yes" ; then
     if test ! -f $srcdir/../libwww/Makefile.in ; then
@@ -778,12 +778,12 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test "$with_annot" = "no" -a "$with_annot_threads" = "yes" ; then
-	AC_MSG_WARN(You must select the annotation support to have threads)
-	AC_MSG_WARN(Disabling annotation thread support)
-	with_annot_threads="no"
-	ANNOT_THREAD_OPTIONS=
-    fi
+dnl if test "$with_annot" = "no" -a "$with_annot_threads" = "yes" ; then
+dnl	AC_MSG_WARN(You must select the annotation support to have threads)
+dnl	AC_MSG_WARN(Disabling annotation thread support)
+dnl	with_annot_threads="no"
+dnl	ANNOT_THREAD_OPTIONS=
+dnl  fi
 
     if test "$with_plugin" = "yes" ; then
         AC_MSG_WARN(The plugin library isn't supported anymore in Amaya !!)
@@ -962,9 +962,9 @@ if test "$build_amaya" = "yes" ; then
     if test "$with_annot" = "yes" ; then
 	echo Amaya configured with Annotations support
     fi
-    if test "$with_annot_threads" = "yes" ; then
-	echo Amaya configured with Annotation threads support
-    fi
+dnl if test "$with_annot_threads" = "yes" ; then
+dnl	echo Amaya configured with Annotation threads support
+dnl fi
     if test "$with_generic_xml" = "yes" ; then
 	echo Amaya configured with generic XML suppport
     fi

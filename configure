@@ -6675,15 +6675,6 @@ if test "$with_generic_xml" = "" ; then
     fi
 fi
 
-if test "$with_annot_threads" = "" ; then
-    if test "$enable_annot_threads" = "no" ; then
-	with_annot_threads="no"
-	ANNOT_THREAD_OPTIONS=
-    else
-	with_annot_threads="yes"
-	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT 
-    fi
-fi
 
 if test "$build_amaya" = "yes" ; then
     if test ! -f $srcdir/../libwww/Makefile.in ; then
@@ -6718,12 +6709,6 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test "$with_annot" = "no" -a "$with_annot_threads" = "yes" ; then
-	echo "configure: warning: You must select the annotation support to have threads" 1>&2
-	echo "configure: warning: Disabling annotation thread support" 1>&2
-	with_annot_threads="no"
-	ANNOT_THREAD_OPTIONS=
-    fi
 
     if test "$with_plugin" = "yes" ; then
         echo "configure: warning: The plugin library isn't supported anymore in Amaya !!" 1>&2
@@ -7303,9 +7288,6 @@ if test "$build_amaya" = "yes" ; then
     fi
     if test "$with_annot" = "yes" ; then
 	echo Amaya configured with Annotations support
-    fi
-    if test "$with_annot_threads" = "yes" ; then
-	echo Amaya configured with Annotation threads support
     fi
     if test "$with_generic_xml" = "yes" ; then
 	echo Amaya configured with generic XML suppport
