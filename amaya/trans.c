@@ -2108,10 +2108,11 @@ STRING              prevtag;
 {
 
   ElementType         elemTypeChild, tagElType, prevElType;
-  int                 cardinal, i = 0, start;
   ElementType 	      *subTypes;
-  ThotBool            result, found;
   Construct           constOfType;
+  STRING              name;
+  int                 cardinal, i = 0, start;
+  ThotBool            result, found;
 
   result = FALSE;
   elemTypeChild.ElSSchema = elemType.ElSSchema;
@@ -2128,10 +2129,14 @@ STRING              prevtag;
     case ConstructIdentity:
       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	result = TRUE;
-      else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
-	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
-	/* search if tag can be inserted as a child of the identity */
-	result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+      else
+	{
+	  name = GITagNameByType (subTypes[0]);
+	  if (!ustrcmp (name, TEXT("???")) ||
+	      !ustrcmp (name, TEXT("none")))
+	    /* search if tag can be inserted as a child of the identity */
+	    result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	}
       /* any math element can be inserted under <MATH> (only row in MathML.S)*/
       if (!result &&
 	  !ustrcmp (TtaGetElementTypeName (elemType), TEXT("MathML")) && 
@@ -2142,10 +2147,14 @@ STRING              prevtag;
     case ConstructList:
       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	result = TRUE;
-      else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
-	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("p*")) ||
-	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
-	result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+      else
+	{
+	  name = GITagNameByType (subTypes[0]);
+	  if (!ustrcmp (name, TEXT("???")) ||
+	      !ustrcmp (name, TEXT("p*")) ||
+	      !ustrcmp (name, TEXT("none")))
+	    result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	}
       break;
 
     case ConstructChoice:
@@ -2154,10 +2163,13 @@ STRING              prevtag;
 	    result = TRUE;
       if (!result)
          for (i = 0; !result && i < cardinal; i++)
-	    if (!ustrcmp (GITagNameByType (subTypes[i]),TEXT("???")) ||
-		!ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-		!ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
+	   {
+	     name = GITagNameByType (subTypes[i]);
+	     if (!ustrcmp (name, TEXT("???")) ||
+		 !ustrcmp (name, TEXT("p*")) ||
+		 !ustrcmp (name, TEXT("none")))
 	       result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
+	   }
       break;
 
     case ConstructOrderedAggregate:
@@ -2177,10 +2189,14 @@ STRING              prevtag;
 	    found = TRUE;
 	    start = i+1;
 	    }
-	  else if (ustrcmp (GITagNameByType (subTypes[i]),TEXT("???")) ||
-		   ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-		   ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
-	    i = cardinal;
+	  else
+	    {
+	      name = GITagNameByType (subTypes[i]);
+	      if (ustrcmp (name, TEXT("???")) ||
+		  ustrcmp (name, TEXT("p*")) ||
+		  ustrcmp (name, TEXT("none")))
+		i = cardinal;
+	    }
 	  }
 	}
       if (found)
@@ -2191,29 +2207,34 @@ STRING              prevtag;
 	      if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 		result = TRUE;
 	      else
-		if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")) ||
-		    TtaIsOptionalInAggregate(i, elemType)) 
-		  i++;
-		else
-		  i = cardinal;
+		{
+		  name = GITagNameByType (subTypes[i]);
+		  if (!ustrcmp (name, TEXT("???")) ||
+		      !ustrcmp (name, TEXT("p*")) ||
+		      !ustrcmp (name, TEXT("none")) ||
+		      TtaIsOptionalInAggregate(i, elemType)) 
+		    i++;
+		  else
+		    i = cardinal;
+		}
 	    }
 	  if (!result)
 	    {
 	    i = start;
 	    while (!result && i < cardinal)
 	      {
-	      if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-		  !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-		  !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
-		result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
-	      else
-		if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")) ||
-		    TtaIsOptionalInAggregate(i, elemType)) 
-		  i++;
+		name = GITagNameByType (subTypes[i]);
+		if (!ustrcmp (name, TEXT("???")) ||
+		    !ustrcmp (name, TEXT("p*")) ||
+		    !ustrcmp (name, TEXT("none")))
+		  {
+		    result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
+		    if (!result &&
+			TtaIsOptionalInAggregate(i, elemType)) 
+		      i++;
+		    else
+		      i = cardinal;
+		  }
 		else
 		  i = cardinal;
 	      }
@@ -2227,23 +2248,30 @@ STRING              prevtag;
 	    result = TRUE;
       if (!result)
 	for (i = 0; !result && i < cardinal; i++)
-	  if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-	      !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-	      !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
-	    result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
+	  {
+	    name = GITagNameByType (subTypes[i]);
+	    if (!ustrcmp (name, TEXT("???")) ||
+		!ustrcmp (name, TEXT("p*")) ||
+		!ustrcmp (name, TEXT("none")))
+	      result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
+	  }
       break;
 
     case ConstructNature:
       if (TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
 	{
-	if (subTypes[0].ElTypeNum == 0)
-	   TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
-	if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
-	   result = TRUE;
-	else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
-		 !ustrcmp (GITagNameByType (subTypes[0]), TEXT("p*")) ||
-		 !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
-	   result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	  if (subTypes[0].ElTypeNum == 0)
+	    TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
+	  if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
+	    result = TRUE;
+	  else
+	    {
+	      name = GITagNameByType (subTypes[0]);
+	      if (!ustrcmp (name, TEXT("???")) ||
+		  !ustrcmp (name, TEXT("p*")) ||
+		  !ustrcmp (name, TEXT("none")))
+		result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	    }
 	}
       break;
 
