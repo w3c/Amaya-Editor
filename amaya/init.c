@@ -4728,7 +4728,7 @@ NotifyEvent        *event;
    TtaSetBackup (BackUpDocs);
    TtaSetApplicationQuit (FreeAmayaStructures);
    TtaSetDocStatusUpdate ((Proc) DocStatusUpdate);
-   AMAYA = TtaGetMessageTable (TEXT("amayamsg"), AMAYA_MSG_MAX);
+   AMAYA = TtaGetMessageTable (CUSTEXT("amayamsg"), AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */
    BaseDialog = TtaSetCallback (CallbackDialogue, MAX_REF);
    /* init the Picture context */

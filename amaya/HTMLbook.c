@@ -645,7 +645,7 @@ void                InitPrint (void)
 void                InitPrint ()
 #endif /* __STDC__ */
 {
-  STRING ptr;
+  CharUnit* ptr;
 
    BasePrint = TtaSetCallback (CallbackPrint, PRINT_MAX_REF);
    DocPrint = 0;
@@ -654,9 +654,9 @@ void                InitPrint ()
    /* read default printer variable */
    ptr = TtaGetEnvString ("THOTPRINT");
    if (ptr == NULL)
-     ustrcpy (PPrinter, TEXT(""));
+     StringCopy (PPrinter, CUSTEXT(""));
    else
-     ustrcpy (PPrinter, ptr);
+     StringCopy (PPrinter, ptr);
    TtaGetEnvInt ("PAPERSIZE", &PageSize);
    PaperPrint = PP_PRINTER;
    PrintURL = TRUE;

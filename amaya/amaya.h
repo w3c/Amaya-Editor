@@ -196,7 +196,7 @@ typedef enum _ClickEvent {
 #define AMAYA_PARSE_ALL         31  /* All the parts */
 
 THOT_EXPORT int          appArgc;
-THOT_EXPORT STRING       *appArgv;
+THOT_EXPORT CharUnit**   appArgv;
 THOT_EXPORT CharUnit     TempFileDirectory[MAX_LENGTH];
 THOT_EXPORT CHAR_T       Answer_text[MAX_LENGTH];
 THOT_EXPORT CHAR_T       Answer_name[NAME_LENGTH];

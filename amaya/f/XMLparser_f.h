@@ -23,7 +23,7 @@ extern void XMLparse ( FILE *infile,
                        Element el,
                        ThotBool isclosed,
                        Language lang,
-                       STRING closingTag );
+                       char* closingTag );
 
 #else /* __STDC__ */
 
@@ -44,7 +44,7 @@ extern void XMLparse (/* FILE *infile,
                          Element el,
                          ThotBool isclosed,
                          Language lang,
-                         STRING closingTag */);
+                         char* closingTag */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

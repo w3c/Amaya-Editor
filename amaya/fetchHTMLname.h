@@ -12,7 +12,7 @@
 #define MaxGIlength 14
 #define DummyAttribute 500
 
-typedef UCHAR_T GI[MaxGIlength];
+typedef unsigned char GI[MaxGIlength];
 
 
 typedef struct _ClosedElement *PtrClosedElement;
@@ -28,7 +28,7 @@ ClosedElement;
 typedef struct _GIMapping
   {                                     /* mapping of a HTML element */
      GI                  htmlGI;        /* name of the HTML element */
-     CHAR_T              htmlContents;  /* info about the contents of the HTML element:
+     char                htmlContents;  /* info about the contents of the HTML element:
                                            'E'=empty,  space=some contents */
      int                 ThotType;      /* type of the Thot element or attribute */
      PtrClosedElement    firstClosedElem;/* first element closed by the start

@@ -52,7 +52,7 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
 /* mapping table of attribute values */
 
 static AttrValueMapping GraphMLAttrValueMappingTable[] =
-{
+{ 
    {GraphML_ATTR_align, "center", GraphML_ATTR_align_VAL_center_},
    {GraphML_ATTR_align, "left", GraphML_ATTR_align_VAL_left_},
    {GraphML_ATTR_align, "right", GraphML_ATTR_align_VAL_right_},
@@ -115,13 +115,13 @@ STRING elementName;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          MapGraphMLAttribute (STRING Attr, AttributeType *attrType, STRING elementName, Document doc)
+void           MapGraphMLAttribute (char* Attr, AttributeType *attrType, char* elementName, Document doc)
 #else
-void          MapGraphMLAttribute (Attr, attrType, elementName, doc)
-STRING              Attr;
-AttributeType      *attrType;
-STRING		    elementName;
-Document            doc;
+void           MapGraphMLAttribute (Attr, attrType, elementName, doc)
+char*          Attr;
+AttributeType* attrType;
+char*		   elementName;
+Document       doc;
 #endif
 {
    int                 i;
@@ -130,7 +130,7 @@ Document            doc;
    attrType->AttrSSchema = NULL;
    i = 0;
    do
-      if (ustrcasecmp (GraphMLAttributeMappingTable[i].XMLattribute, Attr))
+      if (strcasecmp (GraphMLAttributeMappingTable[i].XMLattribute, Attr))
 	 i++;
       else
 	 if (GraphMLAttributeMappingTable[i].XMLelement[0] == EOS)
@@ -138,8 +138,7 @@ Document            doc;
 	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
 	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
 	       }
-	 else if (!ustrcasecmp (GraphMLAttributeMappingTable[i].XMLelement,
-			       elementName))
+	 else if (!strcasecmp (GraphMLAttributeMappingTable[i].XMLelement, elementName))
 	       {
 	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
 	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
@@ -155,10 +154,10 @@ Document            doc;
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MapGraphMLAttributeValue (STRING AttrVal, AttributeType attrType, int *value)
+void                MapGraphMLAttributeValue (char* AttrVal, AttributeType attrType, int *value)
 #else
 void                MapGraphMLAttributeValue (AttrVal, attrType, value)
-STRING              AttrVal;
+char*              AttrVal;
 AttributeType       attrType;
 int		   *value;
 #endif
@@ -172,7 +171,7 @@ int		   *value;
        i++;
    if (GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
        do
-	   if (!ustrcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	   if (!strcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	       *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
 	   else
 	       i++;

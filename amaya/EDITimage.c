@@ -37,10 +37,10 @@
 static Document     BgDocument;
 static int          BaseImage;
 static int          RepeatValue;
-static CHAR_T       DirectoryImage[MAX_LENGTH];
-static CHAR_T       LastURLImage[MAX_LENGTH];
+static CharUnit     DirectoryImage[MAX_LENGTH];
+static CharUnit     LastURLImage[MAX_LENGTH];
 static CHAR_T       ImageName[MAX_LENGTH];
-static CHAR_T       ImgFilter[NAME_LENGTH];
+static CharUnit     ImgFilter[NAME_LENGTH];
 static CHAR_T       ImgAlt[NAME_LENGTH];
 
 #include "AHTURLTools_f.h"
@@ -131,7 +131,7 @@ STRING              data;
          case FormImage:
          case FormBackground:
 	   if (val == 2) { /* Clear button */
-	     LastURLImage[0] = EOS;
+	     LastURLImage[0] = CUS_EOS;
 #ifndef _WINDOWS
 	     TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 #endif /* !_WINDOWS */
@@ -142,7 +142,7 @@ STRING              data;
 			       ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
 	   }
 	   else if (val == 0) { /* Cancel button */ 
-	     LastURLImage[0] = EOS;
+	     LastURLImage[0] = CUS_EOS;
 	     TtaDestroyDialogue (ref);
 	     BgDocument = 0;
 	     /* Confirm button */
@@ -254,7 +254,7 @@ STRING              data;
 			   if (TtaIsAncestor (last, el))
 			     last = el;
 			 } 
-			 if (LastURLImage[0] == EOS)
+			 if (LastURLImage[0] == CUS_EOS)
 			   HTMLResetBackgroundImage (document, el);
 			 else if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
 			   HTMLSetBackgroundImage (document, el, i, tempname);
@@ -290,14 +290,14 @@ STRING              data;
                  break;
               if (IsW3Path (data)) {
                  /* save the URL name */
-                 ustrcpy (LastURLImage, data);
+                 StringCopy (LastURLImage, data);
                  ImageName[0] = EOS;
 			  } else {
                      change = NormalizeFile (data, LastURLImage);
                      if (TtaCheckDirectory (LastURLImage)) {
-                        ustrcpy (DirectoryImage, LastURLImage);
+                        StringCopy (DirectoryImage, LastURLImage);
                         ImageName[0] = EOS;
-                        LastURLImage[0] = EOS;
+                        LastURLImage[0] = CUS_EOS;
 					 } else
                             TtaExtractName (LastURLImage, DirectoryImage, ImageName);
 			  }
@@ -309,11 +309,11 @@ STRING              data;
          case ImageDir:
               if (!ustrcmp (data, TEXT(".."))) {
                  /* suppress last directory */
-                 ustrcpy (tempname, DirectoryImage);
+                 StringCopy (tempname, DirectoryImage);
                  TtaExtractName (tempname, DirectoryImage, tempfile);
 			  } else {
-                     ustrcat (DirectoryImage, DIR_STR);
-                     ustrcat (DirectoryImage, data);
+                     StringConcat (DirectoryImage, CUS_DIR_STR);
+                     StringConcat (DirectoryImage, data);
 			  }
 #             ifndef _WINDOWS
               TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
@@ -325,16 +325,16 @@ STRING              data;
               ImageName[0] = EOS;
               break;
          case ImageSel:
-              if (DirectoryImage[0] == EOS) {
+              if (DirectoryImage[0] == CUS_EOS) {
                  /* set path on current directory */
                  ugetcwd (DirectoryImage, MAX_LENGTH);
 			  } 
               /* construct the image full name */
-              ustrcpy (LastURLImage, DirectoryImage);
-              val = ustrlen (LastURLImage) - 1;
-              if (LastURLImage[val] != DIR_SEP)
-                 ustrcat (LastURLImage, DIR_STR);
-              ustrcat (LastURLImage, data);
+              StringCopy (LastURLImage, DirectoryImage);
+              val = StringLength (LastURLImage) - 1;
+              if (LastURLImage[val] != CUS_DIR_SEP)
+                 StringConcat (LastURLImage, CUS_DIR_STR);
+              StringConcat (LastURLImage, data);
 #             ifndef _WINDOWS
               TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 #             endif /* !_WINDOWS */
@@ -354,8 +354,8 @@ void                InitImage ()
 {
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
-   LastURLImage[0] = EOS;
-   ustrcpy(ImgFilter, TEXT(".gif"));
+   LastURLImage[0] = CUS_EOS;
+   StringCopy(ImgFilter, CUSTEXT(".gif"));
    /* set path on current directory */
    ugetcwd (DirectoryImage, MAX_LENGTH);
 }
@@ -705,12 +705,12 @@ View                view;
 		     TtaGetMessage (AMAYA, AM_IMAGES_LOCATION),
 		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-   if (LastURLImage[0] != EOS)
+   if (LastURLImage[0] != CUS_EOS)
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
    else
      {
-	ustrcpy (LastURLImage, DirectoryImage);
-	ustrcat (LastURLImage, DIR_STR);
+	StringCopy (LastURLImage, DirectoryImage);
+	ustrcat (LastURLImage, CUS_DIR_STR);
 	ustrcat (LastURLImage, ImageName);
 	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
      }
@@ -785,11 +785,11 @@ void ChangeBackgroundImage (document, view)
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-   if (LastURLImage[0] != EOS)
+   if (LastURLImage[0] != CUS_EOS)
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
    else
      {
-	ustrcpy (s, DirectoryImage);
+	StringCopy (s, DirectoryImage);
 	ustrcat (s, DIR_STR);
 	ustrcat (s, ImageName);
 	TtaSetTextForm (BaseImage + ImageURL, s);
@@ -816,12 +816,12 @@ void ChangeBackgroundImage (document, view)
    TtaShowDialogue (BaseImage + FormBackground, TRUE);
    TtaFreeMemory (s);
 #  else /* _WINDOWS */
-   if (LastURLImage[0] != EOS)
-      ustrcpy (s, LastURLImage);
+   if (LastURLImage[0] != CUS_EOS)
+      StringCopy (s, LastURLImage);
    else {
-      ustrcpy (s, DirectoryImage);
-      ustrcat (s, DIR_STR);
-      ustrcat (s, ImageName);
+      StringCopy (s, DirectoryImage);
+      StringConcat (s, CUS_DIR_STR);
+      StringConcat (s, ImageName);
    }
    BgDocument = document;
    CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), BaseImage, FormBackground, ImageURL, ImageLabel, ImageDir, ImageSel, RepeatImage, s);

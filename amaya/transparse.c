@@ -1978,7 +1978,7 @@ typedef struct _Transition *PtrTransition;
 
 typedef struct _Transition
   {				/* a transition of the automaton in   "executable" form */
-     UCHAR_T       trigger;	/* the imput character that triggers
+     char       trigger;	/* the imput character that triggers
 					   the transition */
      Proc                action;	/* the procedure to be called when
 					   the transition occurs */
@@ -2004,7 +2004,7 @@ typedef struct _sourceTransition
   {				/* a transition of the automaton in
 				   "source" form */
      State               initState;	/* initial state of transition */
-     CHAR_T                trigger;	/* the imput character that triggers
+     char                trigger;	/* the imput character that triggers
 					   the transition */
      Proc                transitionAction;	/* the procedure to be called when
 						   the transition occurs */

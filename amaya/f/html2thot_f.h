@@ -10,13 +10,13 @@ extern STRING SkipSep ( STRING ptr );
 extern STRING SkipInt ( STRING ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
-extern STRING GITagNameByType ( ElementType elType );
-extern STRING GITagName ( Element elem );
-extern int MapThotAttr ( STRING Attr,
-                         STRING tag );
+extern char* GITagNameByType ( ElementType elType );
+extern char* GITagName ( Element elem );
+extern int MapThotAttr ( char* Attr,
+                         char* tag );
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
-                             USTRING msg );
+                             unsigned char* msg );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
@@ -25,7 +25,7 @@ extern void CheckCSSLink ( Element el,
                            Document doc,
                            SSchema schema );
 extern int MapAttrValue ( int ThotAtt,
-                          STRING AttrVal );
+                          char* AttrVal );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( STRING buffer,
@@ -63,13 +63,13 @@ extern STRING SkipSep (/* STRING ptr */);
 extern STRING SkipInt (/* STRING ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
-extern STRING GITagNameByType (/* ElementType elType */);
-extern STRING GITagName (/* Element elem */);
-extern int MapThotAttr (/* STRING Attr,
-                           STRING tag */);
+extern char* GITagNameByType (/* ElementType elType */);
+extern char* GITagName (/* Element elem */);
+extern int MapThotAttr (/* char* Attr,
+                           char* tag */);
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
-                               USTRING msg */);
+                               unsigned char* msg */);
 extern ThotBool IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
@@ -78,7 +78,7 @@ extern void CheckCSSLink (/* Element el,
                              Document doc,
                              SSchema schema */);
 extern int MapAttrValue (/* int ThotAtt,
-                            STRING AttrVal */);
+                            char* AttrVal */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* STRING buffer,

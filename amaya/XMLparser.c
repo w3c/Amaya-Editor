@@ -17,7 +17,7 @@
 #include "fetchHTMLname_f.h"
 
 /* an entity name */
-typedef UCHAR_T entName[10];
+typedef char entName[10];
 
 /* an entity representing an ISO-Latin-1 character */
 typedef struct _EntityDictEntry
@@ -1605,7 +1605,7 @@ void                FreeXMLParser ()
    closingTag: name of the tag that should terminate the tree to be parsed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, STRING closingTag)
+void	  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, char* closingTag)
 #else
 void	  XMLparse (infile, index, DTDname, doc, el, isclosed, lang, closingTag)
 FILE     *infile;
@@ -1615,7 +1615,7 @@ Document  doc;
 Element   el;
 ThotBool  isclosed;
 Language  lang;
-STRING    closingTag;
+char*     closingTag;
 #endif
 {
   UCHAR_T             charRead;

@@ -202,14 +202,14 @@ void InitAmayaDefEnv (void)
 void InitAmayaDefEnv ()
 #endif /* __STDC__ */
 {
-  STRING ptr;
+  CharUnit* ptr;
 
   /* browsing editing options */
   ptr = TtaGetEnvString ("THOTDIR");
   if (ptr != NULL)
     {
-      ustrcpy (HomePage, ptr);
-      ustrcat (HomePage, AMAYA_PAGE);
+      StringCopy (HomePage, ptr);
+      StringConcat (HomePage, AMAYA_PAGE);
     }
   else
     HomePage[0]  = EOS;
