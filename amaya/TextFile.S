@@ -20,6 +20,8 @@ STRUCT
 EXCEPT
 	TextFile: 	NoMove, NoResize, ImportLine;
 	BODY:           Hidden;
-        PrintURL:       Invisible;
+        Language:	Invisible; 
 	Highlight:	Invisible;
+        PrintURL:       Invisible;
+	Source:	        Invisible;
 END
