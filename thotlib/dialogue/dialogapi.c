@@ -6518,8 +6518,18 @@ ThotBool            react;
 	     /* Une simple liste */
 	     XtSetArg (args[n], XmNselectionPolicy, XmSINGLE_SELECT);
 	     n++;
-	     XtSetArg (args[n], XmNlistSizePolicy, XmVARIABLE);
-	     n++;
+	     if (width == 0)
+	       {
+		 XtSetArg (args[n], XmNlistSizePolicy, XmVARIABLE);
+		 n++;
+	       }
+	     else
+	       {
+		 XtSetArg (args[n], XmNlistSizePolicy, XmCONSTANT);
+		 n++;
+		 XtSetArg (args[n], XmNwidth, (Dimension) width);
+		 n++;
+	       }
 	     XtSetArg (args[n], XmNitems, item);
 	     n++;
 	     XtSetArg (args[n], XmNitemCount, number);
