@@ -2003,8 +2003,10 @@ void Synchronize (Document doc, View view)
 	 }
        else
 	 {
-	   TtaExtractName (tempdoc, tempdir, docname);
-	   RestartParser (doc, tempdoc, tempdir, docname, TRUE);
+	   /* do not restart parser if the document didn't change because
+	      it will lost the selection position */
+	   /*TtaExtractName (tempdoc, tempdir, docname);
+	     RestartParser (doc, tempdoc, tempdir, docname, TRUE);*/
 	}
      }
    else if (DocumentTypes[doc] == docSource)

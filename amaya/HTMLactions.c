@@ -2465,6 +2465,32 @@ void ResetHighlightedElement ()
 }
 
 /*----------------------------------------------------------------------
+   CheckSynchronize
+   Check if the selected document must be synchronized.
+   If the clicked document is not the current one : synchronize it !
+  ----------------------------------------------------------------------*/
+void CheckSynchronize (NotifyElement *event)
+{
+  if (event->document != SelectionDoc)
+    {
+      if (SelectionDoc != 0 && DocumentURLs[SelectionDoc] != NULL)
+	{
+	  /* Reset buttons state in previous selected document */
+	  UpdateContextSensitiveMenus (SelectionDoc);
+	  /* Synchronize the content of the old document */
+	  Synchronize( SelectionDoc, 1 );
+	}
+      /* change the new selected document */
+      SelectionDoc = event->document;
+    }
+  else
+    {
+      /* the document didn't change. Only synchronize the selection. */
+      SynchronizeSourceView( event );
+    }
+}
+
+/*----------------------------------------------------------------------
    SynchronizeSourceView
    A new element has been selected. If the Source view is open,
    synchronize it with the new selection.      
@@ -2912,16 +2938,23 @@ void SelectionChanged (NotifyElement *event)
   if (event->document != SelectionDoc)
     {
       if (SelectionDoc != 0 && DocumentURLs[SelectionDoc] != NULL)
-	/* Reset buttons state in previous selected document */
-	UpdateContextSensitiveMenus (SelectionDoc);
+	{
+	  /* Reset buttons state in previous selected document */
+	  UpdateContextSensitiveMenus (SelectionDoc);
+	  Synchronize( SelectionDoc, 1 );
+	}
       /* change the new selected document */
       SelectionDoc = event->document;
     }
-  UpdateContextSensitiveMenus (event->document);
-  SynchronizeSourceView (event);
+  else
+    {
+      UpdateContextSensitiveMenus (event->document);
+      SynchronizeSourceView (event);
+    }
+
   TtaSelectView (SelectionDoc, 1);
   /* update the displayed style information */
-  SynchronizeAppliedStyle (event);
+  SynchronizeAppliedStyle (event);    
 }
 
 /*----------------------------------------------------------------------
