@@ -42,33 +42,28 @@
 #include "pluginbrowse_f.h"
 #include "pluginapi_f.h"
 
-extern PluginInfo*    pluginTable [100];
-extern int            pluginCounter ;
-extern PictureHandler PictureHandlerTable[MAX_PICT_FORMATS];
+extern PluginInfo*    pluginTable [100];                     /* Loaded plug-ins info are stored in pluginTable */
+extern int            pluginCounter ;                        /* Counter of loaded plug-ins                     */
+extern PictureHandler PictureHandlerTable[MAX_PICT_FORMATS]; /* Image and plug-ins drivers                     */
 extern int            PictureIdType[MAX_PICT_FORMATS];
 extern int            PictureMenuType[MAX_PICT_FORMATS];
 extern char*          pluginPath;
+extern int            currentExtraHandler;                   /* Index of urrent running plug-in                */
 
 int                   pluginIndex;
-extern int            currentExtraHandler;
+char*                 amayaPluginDir;                        /* Value of environment variable AMAYA_PLUGIN_DIR */
 
 #ifdef __STDC__
-int Ap_OpenPluginDriver (boolean model, int indexHandler)
+static int Ap_OpenPluginDriver (boolean model, int indexHandler)
 #else /* __STDC__ */
-int Ap_OpenPluginDriver (model, indexHandler)
+static int Ap_OpenPluginDriver (model, indexHandler)
 boolean model;
 int     indexHandler;
 #endif /* __STDC__ */
 {
-  int refNum;
+  int res = Ap_InitializePlugin (pluginTable [indexHandler]->pluginDL, indexHandler);
 
-  Ap_InitializePlugin (pluginTable [indexHandler]->pluginDL, indexHandler) ;
-#ifdef NEW_WILLOWS
-  return(0);
-#else  /* NEW_WILLOWS */
-  refNum = GetPictTypeIndex (HandlersCounter);
-  return refNum;
-#endif /* !NEW_WILLOWS */
+  return res ;
 }
 
 /* ----------------------------------------------------------------------
@@ -248,13 +243,15 @@ char* fileName;
    Private Initializations of picture handlers and the visual type 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitPluginHandlers (boolean printing, int indexHandler)
+int InitPluginHandlers (boolean printing, int indexHandler)
 #else  /* __STDC__ */
-void                InitPluginHandlers (printing, indexHandler)
+int InitPluginHandlers (printing, indexHandler)
 boolean printing;
 int     indexHandler;
 #endif /* __STDC__ */
 {
+   int res;
+
    PictureHandlerTable[HandlersCounter].Produce_Picture    = Ap_ProducePicture;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = Ap_ProducePostscript;
    PictureHandlerTable[HandlersCounter].DrawPicture        = Ap_DrawPicture;
@@ -264,10 +261,11 @@ int     indexHandler;
    PictureIdType[HandlersCounter]                          = PLUGIN_FORMAT;
    PictureMenuType[HandlersCounter]                        = PLUGIN_FORMAT;
 
-   Ap_OpenPluginDriver (printing, indexHandler) ;
-
-   HandlersCounter++;
+   res = Ap_OpenPluginDriver (printing, indexHandler) ;
+   if (res != -1)
+       HandlersCounter++;
    /* printf ("HandlersCounter = %d\n", HandlersCounter) ; */
+   return res;
 }
 
 /*----------------------------------------------------------------------
@@ -278,6 +276,8 @@ void PluginLoadResources (void)
 void PluginLoadResources ()
 #endif
 {
+   amayaPluginDir = TtaGetEnvString ("AMAYA_PLUGIN_DIR");
+
    TtaBrowsePluginDirectory ();
 }
 

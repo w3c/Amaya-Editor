@@ -85,9 +85,13 @@ View     view;
        strcpy (pBuf, pluginTable [i]->pluginID);
        pBuf += strlen (pBuf) + 1;
    }
+
    TtaNewSelector (BasePlugin + PLUGIN_SELECTOR, BasePlugin + PLUGIN_FORM, "Plugin List", pluginCounter, buffer, 10, NULL, FALSE, TRUE);
    TtaSetSelector (BasePlugin + PLUGIN_SELECTOR, 0, ""); /* Select the first item */
-   sprintf (buffer, "Mime type: %s", pluginTable[0]->pluginMimeType);
+   if (pluginCounter > 0)
+      sprintf (buffer, "Mime type: %s", pluginTable[0]->pluginMimeType);
+   else
+       buffer[0] = '\0';
    /*    currentExtraHandler = 0;
    sprintf (buffer, "Mime type: %s", pluginTable [currentExtraHandler]->pluginDL);
    pluginPath = (char*) malloc (strlen (pluginTable [currentExtraHandler]->pluginDL) + 1);

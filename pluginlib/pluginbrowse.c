@@ -8,7 +8,7 @@
 /* author:
  * - Ramzi GUETARI (W3C/INRIA)
  *
- * Last modification: Jan 23 1997
+ * Last modification: March 28 1997
  */
 
 #include "thot_gui.h"
@@ -35,14 +35,19 @@ static int   ls_fileNbr;
 
 PluginInfo* pluginTable [100];
 
-char* homeDir ;
-char* amayaPluginDir ;
-
 int   pluginCounter = 0;
 
-extern int currentExtraHandler;
+extern int              currentExtraHandler;
 extern NPNetscapeFuncs* amayaFunctionsTable;
+extern char*            amayaPluginDir;
 
+/* -----------------------------------------------------------------------
+   TtaBrowsePluginDirectory: Browses the directory containing the plug-ins
+                       and initializes the river of each plugin encountred.
+                       The plug-ins directory may be defined by the
+                       environment variable AMAYA_PLUGIN_DIR or by default 
+                       $(HOME)/.amaya/plugins is considered.
+   ----------------------------------------------------------------------- */
 #ifdef __STDC__
 void TtaBrowsePluginDirectory (void)
 #else  /* __STDC__ */
@@ -52,12 +57,17 @@ void TtaBrowsePluginDirectory ()
    struct        stat;
    char          word[4 * NAME_LENGTH];
    int           ls_currentfile;
+   int           res ;
    boolean       stop;
    ThotDirBrowse thotDir;
 
-   homeDir = getenv ("HOME") ;
-   amayaPluginDir = TtaGetMemory (strlen (homeDir) + 16) ;
-   sprintf (amayaPluginDir, "%s/.amaya/plugins", homeDir);
+   if ((amayaPluginDir == NULL) || (amayaPluginDir[0] == '\0')) {
+       /* the envoronment variable AMAYA_PLUGIN_DIR is not positioned */
+       /* One use the defauly directory $(HOME)/.amaya/plugins        */
+      char* homeDir = TtaGetEnvString ("HOME") ;
+      amayaPluginDir = (char*) malloc (strlen (homeDir) + 15) ;
+      sprintf (amayaPluginDir, "%s/.amaya/plugins", homeDir) ;
+   }
 
    if (TtaCheckDirectory (amayaPluginDir)) {
       Ap_InitializeAmayaTable ();
@@ -69,14 +79,18 @@ void TtaBrowsePluginDirectory ()
       thotDir.bufLen = sizeof (word);
       thotDir.PicMask = ThotDirBrowse_FILES;
       if (ThotDirBrowse_first (&thotDir, amayaPluginDir, "*", PSuffix) == 1) {
+	  /* Looking for all ".so" files for unix or ".DLL" for windows in the amayaPluginDir */
          do {
             pluginTable [pluginCounter] = (PluginInfo*) malloc (sizeof (PluginInfo)) ;
             pluginTable [pluginCounter]->pluginDL = (char*) malloc (strlen (thotDir.buf) + 1);
             pluginTable [pluginCounter]->pluginHandle = (void*) NULL;
             pluginTable [pluginCounter]->pluginFunctionsTable = (NPPluginFuncs*) NULL;
             strcpy (pluginTable [pluginCounter]->pluginDL, thotDir.buf);
-            InitPluginHandlers (FALSE, pluginCounter);
-            pluginCounter++;
+
+            /* Initialize the plugin handler */
+            res = InitPluginHandlers (FALSE, pluginCounter);
+            if (res != -1)
+               pluginCounter++;
          } while (ThotDirBrowse_next (&thotDir) == 1);
          ThotDirBrowse_close (&thotDir);
       }

@@ -34,7 +34,18 @@
 #include "npupp.h"
 #include "pluginbrowse.h"
 
+#define MAX_LENGTH 512
+
 #define THOT_EXPORT extern
+
+/* How are Network accesses provided ? */
+
+#ifdef AMAYA_JAVA
+#include "libjava.h"
+#else
+#include "libwww.h"
+#endif
+
 #include "picture_tv.h"
 #include "frame_tv.h"
 
@@ -43,6 +54,7 @@
 
 #define AMAYA_SYNC  1
 #define AMAYA_ASYNC 4
+#define AMAYA_IASYNC	8	/*0x001000 */
 
 extern ThotAppContext   app_cont;
 extern PluginInfo*      pluginTable [100];
@@ -53,6 +65,8 @@ extern int              currentExtraHandler;
 extern PictureHandler   PictureHandlerTable[MAX_PICT_FORMATS];
 
 static NPMIMEType       pluginMimeType;
+static NPStream*        progressStream;
+static boolean          streamOpened = FALSE ;
 
 #ifdef _WINDOWS
 FARPROC ptr_NPP_GetMIMEDescription;
@@ -215,6 +229,213 @@ const char* pluginMimeType;
 }
 
 /*----------------------------------------------------------------------
+   Ap_Normal: This function is called by Ap_GetURL and Ap_CreatePluginInstance
+              if the type of stream required by the plugin is NP_NORMAL.
+              The data is delivered pregressively to the plug-in. 
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static void Ap_Normal (NPP pluginInstance, NPStream* stream, const char* url) 
+#else  /* __STDC__ */
+static void Ap_Normal (pluginInstance, stream, url) 
+NPP         pluginInstance; 
+NPStream*   stream; 
+const char* url;
+#endif /* __STDC__ */
+{
+    FILE*       fptr;
+    char*       buffer;
+    int         count = 0, ret = 0, ready_to_read;
+    long        offset;
+
+#   ifdef PLUGIN_DEBUG
+    printf ("***** Ap_Normal *****\n");
+#   endif
+    fptr = fopen (url, "rb");
+
+    offset = 0;
+    fseek (fptr, offset, SEEK_SET);
+     
+    while (!feof (fptr)) { 
+	  /* What quantity of data yhe plug-in is ready to accept (ready_to_read)? */
+	  ready_to_read = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->writeready)) (pluginInstance, stream);
+
+	  buffer = (char*) malloc (ready_to_read);
+          /* Reading data */
+	  count = fread (buffer, sizeof (char), ready_to_read, fptr);   
+
+          /* Data is delivered to the plug-in */             
+	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
+#         ifdef PLUGIN_DEBUG
+	  printf ("%d WriteReady \n", ready_to_read);
+	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
+#         endif
+	  offset += count;
+	  free (buffer);
+    }
+    fclose (fptr);
+}
+
+/*----------------------------------------------------------------------
+   Ap_AsFile: This function is called by Ap_GetURL and Ap_CreatePluginInstance
+              if the type of stream required by the plugin is NP_ASFILE.
+              The data is delivered pregressively to the plug-in as it is saved. 
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static void Ap_AsFile (NPP pluginInstance, NPStream* stream, const char* url) 
+#else  /* __STDC__ */
+static void Ap_AsFile (pluginInstance, stream, url) 
+NPP         pluginInstance; 
+NPStream*   stream; 
+const char* url;
+#endif /* __STDC__ */
+{
+    FILE*       fptr;
+    char        buffer [BUFSIZE];
+    int         count = 0, ret = 0;
+    long        offset;
+
+#   ifdef PLUGIN_DEBUG
+    printf ("***** Ap_AsFile *****\n");
+#   endif
+    fptr = fopen (url, "rb");
+
+    offset = 0;
+    fseek (fptr, offset, SEEK_SET);
+     
+    while (!feof (fptr)) { 
+	  count = fread (buffer, sizeof (char), BUFSIZE, fptr);
+	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
+#         ifdef PLUGIN_DEBUG
+	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
+#         endif
+	  offset += count;
+    }
+    fclose (fptr);
+}
+
+/*----------------------------------------------------------------------
+  Ap_GetURLNotifyProgressCallback
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void Ap_GetURLNotifyProgressCallback (void *ctxt, char *pbuffer, int buffer_length, int status)
+#else  /* __STDC__ */
+static void Ap_GetURLNotifyProgressCallback (ctxt, pbuffer, buffer_length, status)
+void* ctxt;
+char* pbuffer;
+int   buffer_length;
+int   status;
+int   status;
+#endif /* __STDC__ */
+{
+    AHTReqContext* context = (AHTReqContext*) ctxt;
+    struct stat    sbuf;
+    static FILE*   fptr = NULL;
+    static char*   streamBuf = NULL;
+    static char*   file;
+    static long    offset = 0;
+    char*          buffer;
+    char*          buf1;
+    NPP            instance;
+    int            count;
+    int            ready_to_read;
+    int            stype;
+    int            ret;
+
+    /* manage status: checking errors */
+    /* Test buffer_length             */
+
+    instance = (NPP) context->context_tcbf;
+
+    if (!streamOpened) {    
+       file                       = strdup (context->outputfile);
+       fptr                       = fopen (file, "rb") ;
+       progressStream             = (NPStream*) malloc (sizeof (NPStream));
+       progressStream->url        = strdup (file);
+       progressStream->pdata      = instance->pdata;
+       progressStream->ndata      = NULL;
+       progressStream->notifyData = NULL;
+       ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) (instance,
+										      pluginTable [currentExtraHandler]->pluginMimeType,
+										      progressStream, FALSE, &stype); 
+       streamOpened = TRUE;    
+    }
+
+    stat (file, &sbuf) ;
+    progressStream->end          = sbuf.st_size;
+    progressStream->lastmodified = sbuf.st_mtime;
+
+    if (fptr && offset < progressStream->end) {
+       fseek (fptr, offset, SEEK_SET);
+       
+       ready_to_read = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->writeready)) (instance, progressStream);
+
+       if (progressStream->end >= offset + ready_to_read) {       
+	  buffer = (char*) malloc (ready_to_read);
+	  /* Reading data */
+	  count = fread (buffer, sizeof (char), ready_to_read, fptr);
+	     
+	  /* Data is delivered to the plug-in */             
+	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (instance, progressStream, offset , ready_to_read, buffer);
+#         ifdef PLUGIN_DEBUG
+	  printf ("%d WriteReady \n", ready_to_read);
+	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
+#         endif
+	  offset += count;
+	  free (buffer);
+	  /* fclose (fptr); */
+	  /*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, file); */
+       }
+    }
+}
+
+/*----------------------------------------------------------------------
+  Ap_GetURLNotifyCallback
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void Ap_GetURLNotifyCallback (void *ctxt, int status)
+#else  /* __STDC__ */
+static void Ap_GetURLNotifyCallback (ctxt, status)
+void        *ctxt;
+int          status;
+#endif /* __STDC__ */
+{
+    AHTReqContext      *context = (AHTReqContext *) ctxt;
+    char* file;
+    struct stat sbuf;
+    NPStream*   stream;
+    NPP  instance;
+    int stype;
+    int ret;
+
+    if (status == HT_LOADED) {
+       file = strdup (context->outputfile);
+       instance = (NPP) context->context_tcbf;
+
+       stat (file, &sbuf);
+
+       stream               = (NPStream*) malloc (sizeof (NPStream));
+       stream->url          = strdup (file);
+       stream->end          = 0;
+       stream->pdata        = instance->pdata;
+       stream->ndata        = NULL;
+       stream->notifyData   = NULL;
+       stream->end          = sbuf.st_size;
+       stream->lastmodified = sbuf.st_mtime; 
+       
+       ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) (instance,
+										      pluginTable [currentExtraHandler]->pluginMimeType,
+										      stream, 
+										      FALSE, 
+										      &stype); 
+       Ap_Normal ((NPP) (instance), stream, file); 
+/*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, url);*/
+    }
+
+}
+
+/*----------------------------------------------------------------------
   Ap_MemAlloc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -224,9 +445,9 @@ void* Ap_MemAlloc (size)
 uint32 size;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_MemAlloc *****\n");
-#endif
+#   endif
     return malloc (size);
 }
 
@@ -263,83 +484,10 @@ void* ptr;
 }
 
 /*----------------------------------------------------------------------
-   Ap_Normal                                                             
+  Ap_FreePicture: Called when the instance of the plugin is destroyed
+                  for example when leaving the document contaning the
+                  plugin.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void Ap_Normal (NPP pluginInstance, NPStream* stream, char* url) 
-#else  /* __STDC__ */
-static void Ap_Normal (pluginInstance, stream, url) 
-NPP       pluginInstance; 
-NPStream* stream; 
-char*     url;
-#endif /* __STDC__ */
-{
-    FILE*       fptr;
-    char*       buffer;
-    int         count = 0, ret = 0, ready_to_read;
-    long        offset;
-
-#   ifdef PLUGIN_DEBUG
-    printf ("***** Ap_Normal *****\n");
-#   endif
-    fptr = fopen (url, "rb");
-
-    offset = 0;
-    fseek (fptr, offset, SEEK_SET);
-     
-    while (!feof (fptr)) { 
-	  ready_to_read = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->writeready)) (pluginInstance, stream);
-	  buffer = (char*) malloc (ready_to_read);
-	  count = fread (buffer, sizeof (char), ready_to_read, fptr);                
-	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
-#         ifdef PLUGIN_DEBUG
-	  printf ("%d WriteReady \n", ready_to_read);
-	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
-#         endif
-	  offset += count;
-	  free (buffer);
-    }
-    fclose (fptr);
-}
-
-/*----------------------------------------------------------------------
-   Ap_AsFile                                                             
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void Ap_AsFile (NPP pluginInstance, NPStream* stream, char* url) 
-#else  /* __STDC__ */
-static void Ap_AsFile (pluginInstance, stream, url) 
-NPP       pluginInstance; 
-NPStream* stream; 
-char*     url;
-#endif /* __STDC__ */
-{
-    FILE*       fptr;
-    char        buffer [BUFSIZE];
-    int         count = 0, ret = 0;
-    long        offset;
-
-#   ifdef PLUGIN_DEBUG
-    printf ("***** Ap_AsFile *****\n");
-#   endif
-    fptr = fopen (url, "rb");
-
-    offset = 0;
-    fseek (fptr, offset, SEEK_SET);
-     
-    while (!feof (fptr)) { 
-	  count = fread (buffer, sizeof (char), BUFSIZE, fptr);
-	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
-#         ifdef PLUGIN_DEBUG
-	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
-#         endif
-	  offset += count;
-    }
-    fclose (fptr);
-}
-
 #ifdef __STDC__
 void Ap_FreePicture (PictInfo* imageDesc) 
 #else  /* __STDC__ */
@@ -435,7 +583,6 @@ void*       notifyData;
 
 /*----------------------------------------------------------------------
   Ap_GetURL
-  A faire: remplacer le 1 dans Getxxx par doc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 NPError Ap_GetURL (NPP instance, const char* url, const char* target)
@@ -467,55 +614,20 @@ const char* target;
 #             ifdef PLUGIN_DEBUG
 	      printf ("AM_geturl: Passing stream to the plug-in\n");
 #             endif
-              result = GetObjectWWW (1, url, NULL, tempfile, AMAYA_ASYNC, NULL, NULL, NULL, NULL, FALSE) ;
-              if (result != -1) {
-                 stat (tempfile, &sbuf);
-
-                 stream               = (NPStream*) malloc (sizeof (NPStream));
-                 stream->url          = strdup (tempfile);
-                 stream->end          = 0;
-                 stream->pdata        = instance->pdata;
-                 stream->ndata        = NULL;
-                 stream->notifyData   = NULL;
-                 stream->end          = sbuf.st_size;
-                 stream->lastmodified = sbuf.st_mtime; 
-
-                 ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) (instance,
-                                                             pluginTable [currentExtraHandler]->pluginMimeType,
-                                                             stream, 
-                                                             FALSE, 
-                                                             &stype); 
-                 switch (stype) {
-                        case NP_NORMAL:     
-                             Ap_Normal ((NPP) (instance), stream, url); 
-                             break;
-                        case NP_ASFILEONLY: 
-                             (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, url);
-                              break;
-	                case NP_ASFILE:     
-                             Ap_AsFile ((NPP) (instance), stream, url);
-                             break;
-                        case NP_SEEK: 
-                             break;
-                        default:
-                             printf ("Error unknown mode %d\n", stype);
-                             break;
-		 }
-
-                 (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, url);
-	      }
+              result = GetObjectWWW (1, url, NULL, tempfile, AMAYA_IASYNC, 
+                                     (void*) Ap_GetURLNotifyProgressCallback, (void*) instance, 
+                                     (void*) Ap_GetURLNotifyCallback, (void*) instance, FALSE) ;
        }
     }
 #   ifdef PLUGIN_DEBUG
     else /* java? */
-         printf ("AM_geturl: Passing the stream to Java Interpreter\n");
+         printf ("AM_geturl: Passing the stream to Java Virtual Machine\n");
 #   endif
     return NPERR_NO_ERROR;
 }
 
 /*----------------------------------------------------------------------
   Ap_GetURLNotify
-  A faire: remplacer le 1 dans Getxxx par doc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 NPError Ap_GetURLNotify (NPP instance, const char* url, const char* target, void* notifyData)
@@ -831,6 +943,7 @@ void Ap_InitializeAmayaTable ()
 }
 
 /*----------------------------------------------------------------------
+  Ap_InitializePluginTable
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void Ap_InitializePluginTable (int indexHandler)
@@ -874,9 +987,9 @@ int indexHandler;
   InitializePlugin
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void Ap_InitializePlugin (char* path, int indexHandler)
+int Ap_InitializePlugin (char* path, int indexHandler)
 #else  /* __STDC__ */
-void Ap_InitializePlugin (path, indexHandler)
+int Ap_InitializePlugin (path, indexHandler)
 char* path;
 int   indexHandler;
 #endif /* __STDC__ */
@@ -902,9 +1015,9 @@ int   indexHandler;
 #endif /* _WINDOWS */
     
     if (message) {
-	printf ("dlerror message: %s\n", message);
-	exit (0);
-    }
+	printf ("ERROR: %s\n", message);
+        return -1;
+    } 
 
     /* get the symbols from the dynamic library */
 #ifdef _WINDOWS
@@ -945,7 +1058,8 @@ int   indexHandler;
     strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GUI_Name, MAX_FORMAT_NAMELENGHT);
     /* Initializing the pointers to the netscape functions */
     Ap_InitializePluginTable (indexHandler);
-
+    
+    return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -966,7 +1080,7 @@ Display* display;
     char*       url;
     uint16      stype;
     int         ret;
-    int16       argc  = 6; /* to parametrize */
+    int16       argc  = 5; /* to parametrize */
     /* int16       argc  = 3; */ /* to parametrize */
     struct stat sbuf;
      
@@ -978,9 +1092,10 @@ Display* display;
     argn[1] = "WIDTH";
     argn[2] = "HEIGHT";
     
-    argn[3] = "CONTROLS";
-    argn[4] = "AUTOSTART";
-    argn[5] = "STATUSBAR";
+    argn[3] = "DATASOURCE";
+    argn[4] = "INFINITE"; 
+    /* argn[4] = "AUTOSTART"; */
+    /* argn[5] = "STATUSBAR"; */
     
     sprintf (widthText, "%d", imageDesc->PicWArea);
     sprintf (heightText, "%d", imageDesc->PicHArea);
@@ -988,9 +1103,10 @@ Display* display;
     argv[1] = widthText;
     argv[2] = heightText;
     
-    argv[3] = "TRUE";
+    argv[3] = "http://www.dvcorp.com/cgi-bin/wx/satellite.x";
+    /* argv[3] = "TRUE"; */
     argv[4] = "TRUE";
-    argv[5] = "TRUE";
+    /* argv[5] = "TRUE"; */
     
     currentExtraHandler  = imageDesc->PicType - InlineHandlers;
 
@@ -1064,7 +1180,6 @@ Display* display;
            case NP_SEEK:
                 break;
            default:            
-                printf ("Error unknown mode %d\n", stype);
                 break;
     }
 

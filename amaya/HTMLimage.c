@@ -256,7 +256,7 @@ void *context;
 #ifdef __STDC__
 void                ImageLoaded (void *ctxt, int status)
 #else  /* __STDC__ */
-void                ImageLoaded (context, status)
+void                ImageLoaded (ctxt, status)
 void               *ctxt;
 int                 status;
 

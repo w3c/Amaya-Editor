@@ -59,8 +59,8 @@ extern void Ap_Version ( int* plugin_major,
 extern void Ap_ReloadPlugins ( NPBool reloadPages );
 extern void Ap_InitializeAmayaTable ( void );
 extern void Ap_InitializePluginTable ( int indexHandler );
-extern void Ap_InitializePlugin ( char* path,
-                                  int indexHandler );
+extern int Ap_InitializePlugin ( char* path,
+                                 int indexHandler );
 extern void Ap_CreatePluginInstance ( PictInfo *imageDesc,
                                       Display *display );
 
@@ -119,8 +119,8 @@ extern void Ap_Version (/* int* plugin_major,
 extern void Ap_ReloadPlugins (/* NPBool reloadPages */);
 extern void Ap_InitializeAmayaTable (/* void */);
 extern void Ap_InitializePluginTable (/* int indexHandler */);
-extern void Ap_InitializePlugin (/* char* path,
-                                    int indexHandler */);
+extern int Ap_InitializePlugin (/* char* path,
+                                   int indexHandler */);
 extern void Ap_CreatePluginInstance (/* PictInfo *imageDesc,
                                         Display *display */);
 
