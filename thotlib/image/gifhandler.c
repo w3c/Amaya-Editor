@@ -142,9 +142,6 @@ int WIN_InitSystemColors ()
        WinErrorBox (WIN_Main_Wd);
     }
 
-    /* nbSysColors = GetSystemPaletteEntries (TtDisplay, 0, GetDeviceCaps (TtDisplay, SIZEPALETTE), sysPalEntries); */
-    /* nbSysColors = GetPaletteEntries (TtCmap, 0, MAX_COLOR, sysPalEntries); */
-
     peInitialized = TRUE;
     return 0;
 }
@@ -926,6 +923,7 @@ int                 bg;
    return (PicMask);
 }
 #  else  /* _WINDOWS */
+#if 0
 Pixmap WIN_MakeMask (char* pixelindex, int w, int h, int bg)
 {
 
@@ -986,6 +984,7 @@ Pixmap WIN_MakeMask (char* pixelindex, int w, int h, int bg)
    BitBlt (TtDisplay, 0, 0, w, h, memDC, 0, 0, SRCCOPY);
    return (newmask);
 }
+#endif /* 0 */
 #  endif /* _WINDOWS */
 
 #ifdef _WINDOWS
