@@ -13,7 +13,6 @@
  * Author: V. Quint
  *         L. Carcone 
  */
-#ifdef EXPAT_PARSER
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -35,6 +34,7 @@
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
 
+#ifdef EXPAT_PARSER
 
 typedef CHAR_T XhtmlEntityName[10];
 typedef struct _XhtmlEntity
