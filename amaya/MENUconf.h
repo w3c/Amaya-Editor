@@ -99,7 +99,6 @@ static void BuildProfileSelector();
 typedef struct Prop_General_t
 {
   int      Zoom;
-  char     DefaultName[MAX_LENGTH];
   char     DialogueLang[MAX_LENGTH];
   int      AccesskeyMod;
   int      FontMenuSize;
@@ -124,5 +123,16 @@ typedef struct Prop_Browse_t
   char     ScreenType[MAX_LENGTH];
   int      DoubleClickDelay; /* not used ? */
 } Prop_Browse;
+
+typedef struct Prop_Publish_t
+{
+  char     DefaultName[MAX_LENGTH];
+  ThotBool UseXHTMLMimeType;
+  ThotBool LostUpdateCheck;
+  ThotBool ExportCRLF;
+  ThotBool VerifyPublish;
+  char     SafePutRedirect[MAX_LENGTH];
+  char     CharsetType[MAX_LENGTH];
+} Prop_Publish;
 
 #endif /* _MENUCONF.h */

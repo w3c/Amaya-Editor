@@ -38,6 +38,11 @@ private:
   void SetupDialog_Browse( const Prop_Browse & prop );
   Prop_Browse GetValueDialog_Browse();
 
+  // "Publish" tab
+  void SetupLabelDialog_Publish();
+  void SetupDialog_Publish( const Prop_Publish & prop );
+  Prop_Publish GetValueDialog_Publish();
+
   int GetPagePosFromXMLID( const wxString & xml_id );
 
   void OnOk( wxCommandEvent& event );

@@ -159,7 +159,6 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 static int      GeneralBase;
 static Prop_General GProp_General;
 static int &    Zoom = GProp_General.Zoom;
-static char *   DefaultName = GProp_General.DefaultName;
 static char *   DialogueLang = GProp_General.DialogueLang;
 static int &    AccesskeyMod = GProp_General.AccesskeyMod;
 static int &    FontMenuSize = GProp_General.FontMenuSize;
@@ -230,13 +229,17 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 };
 #endif /* _WINGUI */
 static int      PublishBase;
+
+static Prop_Publish GProp_Publish;
+static char     * DefaultName = GProp_Publish.DefaultName;
+static ThotBool & UseXHTMLMimeType = GProp_Publish.UseXHTMLMimeType;
+static ThotBool & LostUpdateCheck = GProp_Publish.LostUpdateCheck;
+static ThotBool & ExportCRLF = GProp_Publish.ExportCRLF;
+static ThotBool & VerifyPublish = GProp_Publish.VerifyPublish;
+static char     * SafePutRedirect = GProp_Publish.SafePutRedirect;
+static char     * CharsetType = GProp_Publish.CharsetType;
+
 static int      CurrentCharset;
-static ThotBool UseXHTMLMimeType;
-static ThotBool LostUpdateCheck;
-static ThotBool ExportCRLF;
-static ThotBool VerifyPublish;
-static char     SafePutRedirect[MAX_LENGTH];
-static char     CharsetType[MAX_LENGTH];
 static char     NewCharset[MAX_LENGTH];
 static char    *CharsetTxt[]={
   "us-ascii", "iso-8859-1", "utf-8"
@@ -2666,6 +2669,12 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+#ifdef _WX
+	      /* update NewScreen with ScreenType value because only ScreenType contains the updated value */
+	      strcpy (NewCharset, CharsetType);
+	      /* force SafePut refresh */
+	      SafePutStatus |= AMAYA_SAFEPUT_RESTART;
+#endif /* _WX */
 	      strcpy (CharsetType, NewCharset);
 	      SetPublishConf ();
 	      libwww_updateNetworkConf (SafePutStatus);
@@ -5046,24 +5055,49 @@ Prop_Browse GetProp_Browse()
 }
 
 /*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Publish preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Publish( const Prop_Publish & prop )
+{
+#ifdef _WX
+  GProp_Publish = prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Publish preferences)
+  ----------------------------------------------------------------------*/
+Prop_Publish GetProp_Publish()
+{
+#ifdef _WX
+  return GProp_Publish;
+#endif /* _WX */
+}
+
+
+/*----------------------------------------------------------------------
   PreferenceMenu
   Build and display the preference dialog
   ----------------------------------------------------------------------*/
 void PreferenceMenu (Document document, View view)
 {
 #ifdef _WX
-  /* load the current values => General tab */
-  GetGeneralConf ();
+  /* ---> General Tab */
+  GetGeneralConf (); /* load the current values => General tab */
   
-  /* load the current values => Browse tab */
+  /* ---> Browse Tab */
   SafePutStatus = 0; /* reset the modified flag */
-  GetBrowseConf ();
+  GetBrowseConf (); /* load the current values => Browse tab */
   /* keep initial values to detect an change */
   InitLoadImages = LoadImages;
   InitLoadObjects = LoadObjects;
   InitBgImages = BgImages;
   InitLoadCss = LoadCss;
   
+  /* ---> Publish Tab */
+  GetPublishConf ();
+  SafePutStatus = 0;  /* reset the modified flag */
+
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
 					     TtaGetViewFrame (document, view),
 					     URL_list );

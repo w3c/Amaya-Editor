@@ -55,6 +55,8 @@ extern void SetProp_General ( const Prop_General & prop );
 extern Prop_General GetProp_General ( void );
 extern void SetProp_Browse ( const Prop_Browse & prop );
 extern Prop_Browse GetProp_Browse ( void );
+extern void SetProp_Publish ( const Prop_Publish & prop );
+extern Prop_Publish GetProp_Publish ( void );
 extern void PreferenceMenu ( Document document,
                              View view );
 extern void InitConfMenu ( void );
@@ -110,6 +112,8 @@ extern void SetProp_General ( const Prop_General & prop );
 extern Prop_General GetProp_General ( void );
 extern void SetProp_Browse ( const Prop_Browse & prop );
 extern Prop_Browse GetProp_Browse ( void );
+extern void SetProp_Publish ( const Prop_Publish & prop );
+extern Prop_Publish GetProp_Publish ( void );
 extern void PreferenceMenu ( Document document,
                                View view );
 extern void InitConfMenu ( void );

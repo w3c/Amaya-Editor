@@ -53,6 +53,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   // send labels to dialog (labels depends on language)
   SetupLabelDialog_General();
   SetupLabelDialog_Browse();
+  SetupLabelDialog_Publish();
 
   XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
@@ -61,6 +62,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   // load current values and send it to the dialog
   SetupDialog_General( GetProp_General() );
   SetupDialog_Browse( GetProp_Browse() );
+  SetupDialog_Publish( GetProp_Publish() );
 
   // give focus to ...
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
@@ -289,6 +291,86 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
   return prop;
 }
 
+/************************************************************************/
+/* Publish tab                                                          */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_Publish init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_Publish()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Publish") );
+
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_PUBLISH") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PUBLISH_MENU)) );
+
+  XRCCTRL(*this, "wxID_LABEL_CHARSET", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DEFAULT_CHARSET)) );
+  XRCCTRL(*this, "wxID_LABEL_DEFAULTNAME", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DEFAULT_NAME)) );
+  XRCCTRL(*this, "wxID_LABEL_REDIRECT", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAFE_PUT_REDIRECT)) );
+
+  XRCCTRL(*this, "wxID_CHECK_XHTML", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_USE_XHTML_MIMETYPE)) );
+  XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_USE_ETAGS)) );
+  XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_VERIFY_PUT)) );
+}
+
+/*----------------------------------------------------------------------
+  SetupDialog_Publish send init value to dialog 
+  params:
+    + const PropTab_Publish & prop : the values to setup into the dialog
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_Publish( const Prop_Publish & prop )
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Publish") );
+
+  XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.CharsetType) );
+
+  XRCCTRL(*this, "wxID_CHECK_XHTML", wxCheckBox)->SetValue( prop.UseXHTMLMimeType );
+  XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->SetValue( prop.LostUpdateCheck );
+  XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->SetValue( prop.VerifyPublish );
+  
+  XRCCTRL(*this, "wxID_VALUE_DEFAULTNAME", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.DefaultName) );
+  XRCCTRL(*this, "wxID_VALUE_REDIRECT", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.SafePutRedirect) );
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_Publish get dialog values
+  params:
+  returns:
+    + Prop_Publish prop : the dialog values
+  ----------------------------------------------------------------------*/
+Prop_Publish PreferenceDlgWX::GetValueDialog_Publish()
+{
+  wxString        value;
+  Prop_Publish     prop;
+  memset( &prop, 0, sizeof(Prop_Publish) );
+
+  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_Publish") );
+
+  value = XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->GetStringSelection();
+  strcpy( prop.CharsetType, (const char*)value.mb_str(wxConvUTF8) );
+
+  prop.UseXHTMLMimeType = XRCCTRL(*this, "wxID_CHECK_XHTML", wxCheckBox)->GetValue();
+  prop.LostUpdateCheck  = XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->GetValue();
+  prop.VerifyPublish    = XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->GetValue();
+
+  value = XRCCTRL(*this, "wxID_VALUE_DEFAULTNAME", wxTextCtrl)->GetValue();
+  strcpy( prop.DefaultName, (const char*)value.mb_str(wxConvUTF8) );
+
+  value = XRCCTRL(*this, "wxID_VALUE_REDIRECT", wxTextCtrl)->GetValue();
+  strcpy( prop.SafePutRedirect, (const char*)value.mb_str(wxConvUTF8) );
+
+  return prop;
+}
+
+
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
   params:
@@ -301,6 +383,9 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 
   SetProp_Browse(GetValueDialog_Browse());
   ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 1);
+
+  SetProp_Publish(GetValueDialog_Publish());
+  ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 1);
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
@@ -329,6 +414,11 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Browse( GetProp_Browse() );
     }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_PUBLISH")) )
+    {
+      ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Publish( GetProp_Publish() );
+    }
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
@@ -342,6 +432,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 {
   ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
