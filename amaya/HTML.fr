@@ -224,7 +224,6 @@ Yes_: yes
 disc: disc
 circle: circle
 square: square
-Yes_: yes
 Arabic_: 1
 LowerAlpha: a
 UpperAlpha: A
