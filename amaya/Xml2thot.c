@@ -2007,7 +2007,7 @@ void            PutInXmlElement (char *data)
 	   else
 	     {
 	       /* create a TEXT element */
-	       /* elType.ElSSchema = currentParserCtxt->XMLSSchema; */
+	       elType.ElSSchema = currentParserCtxt->XMLSSchema;
 	       elType.ElTypeNum = 1;
 	       elText = TtaNewElement (XMLcontext.doc, elType);
 	       XmlSetElemLineNumber (elText);
