@@ -465,6 +465,7 @@ int                 end;
       notifyEl.position = end;
    else
       notifyEl.position = 0;
+   notifyEl.info = 0;
    cancel = CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
    if (pDoc->DocNotifyAll && !cancel)
       /* le document demande un evenement pour chaque element du sous-arbre */
@@ -1392,6 +1393,7 @@ boolean             save;
 				    pF = pF->ElPrevious;
 				  }
 				notifyEl.position = NSiblings;
+				notifyEl.info = 0;
 
 				if (!recorded)
 				  /* record that deletion in the history */
@@ -2963,6 +2965,7 @@ boolean             Before;
 			notifyEl.elementType.ElSSchema =
 			                       (SSchema) (pEl->ElStructSchema);
 			notifyEl.position = NSiblings + 1;
+			notifyEl.info = 0;
 			pSibling = NextElement (pEl);
 			/* retire l'element de l'arbre abstrait */
 			RemoveElement (pEl);

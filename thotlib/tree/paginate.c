@@ -273,6 +273,7 @@ PtrElement         *pLib;
    notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
    notifyEl.elementType.ElSSchema = (SSchema) (pPage->ElStructSchema);
    notifyEl.position = TTE_STANDARD_DELETE_LAST_ITEM;
+   notifyEl.info = 0;
    if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
      {
 	/* traitement de la suppression des pages dans les structures avec */
@@ -302,6 +303,7 @@ PtrElement         *pLib;
 	       }
 	  }
 	notifyEl.position = NSiblings;
+	notifyEl.info = 0;
 	CallEventType ((NotifyEvent *) & notifyEl, FALSE);
      }
 }

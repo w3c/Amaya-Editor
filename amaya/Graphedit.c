@@ -805,7 +805,9 @@ void GraphLeafDeleted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
-   TtaDeleteTree (event->element, event->document);
+   /* don't delete anything if event is sent by Undo */
+   if (!event->info)
+      TtaDeleteTree (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------

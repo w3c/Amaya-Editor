@@ -1231,6 +1231,7 @@ boolean		    select;
 			  pSibling = pSibling->ElPrevious;
 			}
 		      notifyEl.position = TTE_TOOLKIT_DELETE;
+		      notifyEl.info = 0;
 		      if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
 			/* l'application refuse de continuer */
 			return (ret);
@@ -1243,6 +1244,7 @@ boolean		    select;
 			{
 			  notifyEl.element = (Element) pPrev->ElParent;
 			  notifyEl.position = NSiblings;
+			  notifyEl.info = 0;
 			  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 			}
 		      if (pPrevEl != NULL)
@@ -1315,6 +1317,7 @@ boolean		    select;
 				      pSibling = pSibling->ElPrevious;
 				   }
 				 notifyEl.position = TTE_TOOLKIT_DELETE;
+				 notifyEl.info = 0;
 				 if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
 				    /* l'application refuse de continuer */
 				    return (ret);
@@ -1323,6 +1326,7 @@ boolean		    select;
 				 /* signale a l'application qu'on a retire' un element */
 				 notifyEl.element = (Element) (pE->ElParent);
 				 notifyEl.position = NSiblings;
+				 notifyEl.info = 0;
 				 CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 				 InsertElementAfter (pPrevEl, pClose);
 				 pPrevEl = pClose;

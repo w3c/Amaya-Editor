@@ -1009,6 +1009,7 @@ boolean reverse;
             pSibling = pSibling->ElPrevious;
             }
          notifyEl.position = nSiblings;
+	 notifyEl.info = 1;
          /* remove the element */
 	 if (!reverse)
             TtaDeleteTree ((Element)pEl, doc);

@@ -1399,6 +1399,7 @@ void                TtcCreateElement (doc, view)
 			    pSibling = pSibling->ElPrevious;
 			 }
 		       notifyEl.position = NSiblings;
+		       notifyEl.info = 0;
 		       pClose = NextElement (pElDelete);
 		       /* retire l'element de l'arbre abstrait */
 		       RemoveElement (pElDelete);
@@ -1828,6 +1829,7 @@ boolean             before;
 		       pS = pS->ElPrevious;
 		     }
 		   notifyEl.position = nSiblings;
+		   notifyEl.info = 0;
 		 }
 	       pSuccessor = NextElement (pElem);
 	       /* record the element to be deleted in the history */
@@ -1916,6 +1918,7 @@ boolean             before;
        		  pS = pS->ElPrevious;
        	       }
        	     notifyEl.position = nSiblings;
+	     notifyEl.info = 0;
        	     /* record the element the element that will be deleted */
        	     AddEditOpInHistory (pE, pDoc, TRUE, FALSE);
        	     /* retire l'element courant de l'arbre */

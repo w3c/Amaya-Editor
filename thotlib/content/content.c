@@ -363,6 +363,7 @@ boolean             removeAbsBox;
 				 notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 				 notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
 				 notifyEl.position = TTE_MERGE_DELETE_ITEM;
+				 notifyEl.info = 0;
 				 if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 				    /* l'application refuse la destruction, on ne fait rien */
 				    merge = FALSE;
@@ -494,6 +495,7 @@ boolean             removeAbsBox;
 					   pSibling = pSibling->ElPrevious;
 					}
 				      notifyEl.position = nSiblings;
+				      notifyEl.info = 0;
 				   }
 				 /* dechaine le 2eme element */
 				 RemoveElement (pEl2);
