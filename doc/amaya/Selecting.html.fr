@@ -59,7 +59,7 @@ peut être utile quand la structure du document est complexe.</p>
 
 <h3><a name="Selecting1">Sélectionner par la structure</a></h3>
 
-<p>La  structure vue est particulièrement commode pour sélectionner rapidement
+<p>La  Vue structure est particulièrement commode pour sélectionner rapidement
 des éléments longs. Il suffit de cliquer sur l'étiquette bleue  représentant
 l'élément, ou sur le nom d'un de ses attributs, ou encore sur sa ligne
 verticale bleue. Un élément long comme une  table complexe ou une longue liste
@@ -68,7 +68,7 @@ peut être sélectionné par un simple clique.</p>
 <p>Le fait de cliquer sur un caractère noir  dans la structure vue sélectionne
 uniquement ce caractère.</p>
 
-<p>Un texte en caractères gras dans la stucture vue  représente la valeur d'un
+<p>Un texte en caractères gras dans la Vue stucture  représente la valeur d'un
 attribut pouvant être édité directement à partir du clavier. Une sélection
 dans une telle valeur d'attribut ne peut pas être étendue en dehors de cet
 attribut.</p>
@@ -86,15 +86,15 @@ n'y a pas de "fils" suivant/précédent  au niveau courant), utilisez control-k
 
 <h3><a name="Selecting2">Sélectionner des images</a></h3>
 
-<p>Si vous cliquez sur la partie gauche d'une image, le point d'insertion est
-déplacé sur  le côté gauche de l'image. Ceci vous permet de taper le texte
+<p>Si vous cliquez sur la partie gauche d'une  image, le point d'insertion 
+est déplacé sur  le côté gauche de l'image. Ceci vous permet de taper le texte
 avant l'image. Si vous cliquez sur la partie droite d'une image, le point
 d'insertion est déplacé sur le côté droit de cette image. Ceci vous permet de
 taper le texte aprés l'image.</p>
 
 <p>Quand vous utilisez les touches de direction pour vous déplacer, le curseur
 se déplacera d'un côté de l'image vers l'image elle-même (tout en la
-sélectionnant) puis vers l'autre coté.</p>
+sélectionnant) puis vers l'autre côté.</p>
 
 <p>Si vous voulez sélectionner toute l'image, cliquez n'importe où à
 l'intérieur de l'image et déplacez un peu la souris tout en maintenant  le
