@@ -2177,11 +2177,14 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
      }
 
    doc = IdentDocument (pDoc);
-   if (before &&
-       ((pSibling->ElVolume == 0 && pParent->ElVolume > 0) ||
-	pSibling->ElStructSchema->SsRule->SrElem[pSibling->ElTypeNumber - 1]->SrConstruct == CsConstant))
+
+   if ((pSibling->ElVolume == 0 && pParent->ElVolume > 0) ||
+	pSibling->ElStructSchema->SsRule->SrElem[pSibling->ElTypeNumber - 1]->SrConstruct == CsConstant)
      /* BackSpace at the beginning of a non empty element (pParent) whose
-        previous sibling (pSibling) is empty.  Delete the empty sibling */
+        previous sibling (pSibling) is empty, or
+	Delete at the end of a non empty element (pParent) whose next sibling
+        (pSibling) is empty.
+        Delete the empty sibling */
      {
        OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
        /* record the element to be deleted in the history */
