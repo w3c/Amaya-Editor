@@ -523,10 +523,10 @@ RSC=rc.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
- "..\..\libpng\zlib" /D "_DEBUG" /D "_AMAYA_RELEASE_" /D "WWW_WIN_ASYNC" /D\
- "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D\
- "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /Fp"$(INTDIR)\libThotEditor.pch" /YX\
- /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+ "..\..\libpng\zlib" /I "..\..\amaya" /D "_DEBUG" /D "_AMAYA_RELEASE_" /D\
+ "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D\
+ "STDC_HEADERS" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS"\
+ /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
 BSC32=bscmake.exe
@@ -1786,6 +1786,7 @@ DEP_CPP_ATTRIB=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	{$(INCLUDE)}"sys\stat.h"\
@@ -1868,6 +1869,7 @@ DEP_CPP_ATTRIB=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
@@ -6504,6 +6506,7 @@ DEP_CPP_EDITC=\
 	"..\..\thotlib\internals\f\callback_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
+	"..\..\thotlib\internals\f\displayselect_f.h"\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
@@ -6514,6 +6517,7 @@ DEP_CPP_EDITC=\
 	"..\..\thotlib\internals\f\language_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\picture_f.h"\
+	"..\..\thotlib\internals\f\presentationapi_f.h"\
 	"..\..\thotlib\internals\f\scroll_f.h"\
 	"..\..\thotlib\internals\f\structcommands_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
@@ -6600,6 +6604,7 @@ DEP_CPP_EDITC=\
 	"..\..\thotlib\internals\f\callback_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
+	"..\..\thotlib\internals\f\displayselect_f.h"\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
@@ -6610,6 +6615,7 @@ DEP_CPP_EDITC=\
 	"..\..\thotlib\internals\f\language_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\picture_f.h"\
+	"..\..\thotlib\internals\f\presentationapi_f.h"\
 	"..\..\thotlib\internals\f\scroll_f.h"\
 	"..\..\thotlib\internals\f\structcommands_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
@@ -7491,6 +7497,7 @@ DEP_CPP_GEOM_=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
@@ -7549,6 +7556,7 @@ DEP_CPP_GEOM_=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	
 
@@ -10217,11 +10225,14 @@ DEP_CPP_PRESE=\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\undo_f.h"\
 	"..\..\thotlib\internals\f\viewapi_f.h"\
+	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -10231,6 +10242,7 @@ DEP_CPP_PRESE=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\frame_tv.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -10286,11 +10298,14 @@ DEP_CPP_PRESE=\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\undo_f.h"\
 	"..\..\thotlib\internals\f\viewapi_f.h"\
+	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -10300,6 +10315,7 @@ DEP_CPP_PRESE=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\frame_tv.h"\
 	
 
 "$(INTDIR)\presentationapi.obj" : $(SOURCE) $(DEP_CPP_PRESE) "$(INTDIR)"
@@ -12979,6 +12995,7 @@ DEP_CPP_SEARCH=\
 	{$(INCLUDE)}"sys\types.h"\
 	
 NODEP_CPP_SEARCH=\
+	"..\..\thotlib\dialogue\resource.h"\
 	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
@@ -15698,6 +15715,9 @@ DEP_CPP_TREEA=\
 !ENDIF 
 
 SOURCE=..\..\thotlib\unicode\uaccess.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
 DEP_CPP_UACCE=\
 	"..\..\thotlib\include\uaccess.h"\
 	"..\..\thotlib\include\ustring.h"\
@@ -15706,6 +15726,19 @@ DEP_CPP_UACCE=\
 "$(INTDIR)\uaccess.obj" : $(SOURCE) $(DEP_CPP_UACCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+DEP_CPP_UACCE=\
+	"..\..\thotlib\include\uaccess.h"\
+	"..\..\thotlib\include\ustring.h"\
+	
+
+"$(INTDIR)\uaccess.obj" : $(SOURCE) $(DEP_CPP_UACCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
 
 SOURCE=..\..\thotlib\unicode\uconvert.c
 
@@ -15964,6 +15997,7 @@ DEP_CPP_UNDOA=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\select_tv.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -16015,6 +16049,7 @@ DEP_CPP_UNDOA=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\select_tv.h"\
 	
 
 "$(INTDIR)\undoapi.obj" : $(SOURCE) $(DEP_CPP_UNDOA) "$(INTDIR)"
@@ -17224,6 +17259,7 @@ DEP_CPP_WINDO=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\font_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
@@ -17285,6 +17321,7 @@ DEP_CPP_WINDO=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\font_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
