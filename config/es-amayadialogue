@@ -138,7 +138,7 @@
 136 Crear o cambiar enlace...
 137 Crear destino
 138 Borrar ancla
-139 **Store selection as XPointer
+139 Guardar la selección como XPointer
 140 Mostar barra de botones
 141 Mostrar dirección
 142 Mostrar áreas de mapas
@@ -201,8 +201,8 @@
 199 Plantillas...
 200 Anotar selección
 201 Anotar documento
-202 **Move to selection
-203 **Move to stored XPointer
+202 Mover a la selección
+203 Mover al XPointer memorizado
 204 Post anotacion
 205 Borrar anotación
 206 Cargar anotaciones

@@ -199,9 +199,9 @@
 197 Usar paleta
 198 Negociación de idioma
 199 Configuracion para anotaciones
-200 Anotacion de usuario
-201 Anotacion post server
-202 Annotation servers
+200 Anotación de usuario
+201 Servidor de publicación
+202 Servidores de annotaciones
 203 Autocargar anotaciones locales
 204 Autocargar anotaciones remotas
 205 Desactivar la autocargada de las anotaciones
@@ -216,7 +216,7 @@
 214 En el perfil actual de Amaya:
 215 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
 216 La codificación de este documento no está soportada por Amaya
-217 El documento no tiene una declaracion de codage
+217 El documento no tiene una declaración de codage
 218 Ningun codage declarado. Utilisar ISO_8859_1 ?
 219 No disponible
 220 Navegar
@@ -236,3 +236,5 @@
 234 Ignorar
 235 Elemento de estilo
 236 No puedo crear un XPointer
+237 No se a donde mover la annotación
+238 No puedo mover la annotación a un otro documento

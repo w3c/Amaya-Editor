@@ -237,4 +237,6 @@
 #define AM_NONE		234
 #define AM_LOCAL_CSS		235
 #define AM_NO_XPOINTER		236
-#define AMAYA_MSG_MAX		237
+#define AM_NO_ANNOT_MOVE		237
+#define AM_NO_ANNOT_MOVE_OTHER		238
+#define AMAYA_MSG_MAX		239

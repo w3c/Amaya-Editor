@@ -236,3 +236,5 @@
 234 Ignore
 235 Style element
 236 Cannot create an XPointer
+237 Cannot find where to move the annotation
+238 Cannot move the annotation to a different document
