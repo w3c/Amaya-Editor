@@ -2512,9 +2512,11 @@ ThotBool FrameButtonDownCallback(
     int x, int y )
 {
 #ifdef _WX
+#ifndef _WINDOWS
   Document   document;
   View       view;
- 
+#endif /* _WINDOWS */
+  
   /* Amaya is waiting for a click selection ? */
   if (ClickIsDone == 1)
     {
@@ -2638,8 +2640,10 @@ ThotBool FrameButtonUpCallback(
   }
   else */
 
+#ifndef _WINDOWS
   Document   document;
   View       view;
+#endif /* _WINDOWS */
 
   if ( Selecting )
     {
@@ -2686,8 +2690,10 @@ ThotBool FrameButtonDClickCallback(
     int x, int y )
 {
 #ifdef _WX
+#ifndef _WINDOWS
   Document   document;
   View       view;
+#endif /* _WINDOWS */
 
   switch (thot_button_id)
   {
@@ -3436,10 +3442,10 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 {
   unsigned char      *title = NULL;
-  CHAR_T             *ptr;
 #ifdef _WX
   AmayaFrame         *p_frame;
 #else /* _WX */
+  CHAR_T             *ptr;
   unsigned char      *s;
 #if defined(_GTK)
   ThotWidget          w;
@@ -3497,8 +3503,6 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   ----------------------------------------------------------------------*/
 void ChangeSelFrame (int frame)
 {
-  Document            doc;
-
   if (ActiveFrame != frame)
     {
       CloseTextInsertion ();

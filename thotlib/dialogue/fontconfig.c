@@ -372,10 +372,14 @@ static FontScript **FontConfigLoad ()
 {  
   FontScript        **fontsscript_tab;
   FILE               *file;
-  char                fname[MAX_TXT_LEN], fname1[MAX_TXT_LEN], name[MAX_TXT_LEN];
-  char                word[50], word1[50];
+  char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
+  char                word[50];
   char               *appHome;
+#ifdef _UNIX
+  char                fname1[MAX_TXT_LEN];
+  char                word1[50];
   int                 script;
+#endif /* _UNIX */
   ThotBool            complete;
 
   appHome = TtaGetEnvString ("APP_HOME");
