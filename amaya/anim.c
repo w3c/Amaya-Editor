@@ -15,7 +15,6 @@
 
 /* Included headerfiles */
 #define THOT_EXPORT
-#include "Timeline.h"
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
@@ -31,9 +30,10 @@
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 
-#include "svgedit_f.h"
+#include "SVGedit_f.h"
 
 #ifdef _SVGANIM
+#include "Timeline.h"
 
 #ifndef _WINDOWS
 #include "anim.xpm"
