@@ -4,20 +4,16 @@
 #include "SVG.h"
 static ElemMapping    SVGElemMappingTable[] =
 {
-   /* This table MUST be in alphabetical order */
-   {"CDATA", SPACE, SVG_EL_CDATA, L_OtherValue, FALSE},
-   {"CDATA_line", SPACE, SVG_EL_CDATA_line, L_OtherValue, FALSE},
-   {"DOCTYPE", SPACE, SVG_EL_DOCTYPE, L_OtherValue, FALSE},
-   {"DOCTYPE_line", SPACE, SVG_EL_DOCTYPE_line, L_OtherValue, FALSE},
-   {"XMLPI", SPACE, SVG_EL_XMLPI, L_OtherValue, FALSE},
-   {"XMLPI_line", SPACE, SVG_EL_XMLPI_line, L_OtherValue, FALSE},
-   {"XMLcomment", SPACE, SVG_EL_XMLcomment, L_OtherValue, FALSE},
-   {"XMLcomment_line", SPACE, SVG_EL_XMLcomment_line, L_OtherValue, FALSE},
+   /* This table MUST be in alphabetical order  and in lower case */
    {"a", SPACE, SVG_EL_a, L_OtherValue, FALSE},
    {"c", SPACE, SVG_EL_TEXT_UNIT, L_OtherValue, TRUE},
+   {"cdata", SPACE, HTML_EL_CDATA, L_OtherValue, FALSE},
+   {"cdata_line", SPACE, HTML_EL_CDATA_line, L_OtherValue, FALSE},
    {"circle", SPACE, SVG_EL_circle, L_OtherValue, FALSE},
    {"defs", SPACE, SVG_EL_defs, L_OtherValue, FALSE},
    {"desc", SPACE, SVG_EL_desc, L_OtherValue, FALSE},
+   {"doctype", SPACE, HTML_EL_DOCTYPE, L_OtherValue, FALSE},
+   {"doctype_line", SPACE, HTML_EL_DOCTYPE_line, L_OtherValue, FALSE},
    {"ellipse", SPACE, SVG_EL_ellipse, L_OtherValue, FALSE},
    {"foreignObject", SPACE, SVG_EL_foreignObject, L_OtherValue, FALSE},
    {"g", SPACE, SVG_EL_g, L_OtherValue, FALSE},
@@ -37,6 +33,10 @@ static ElemMapping    SVGElemMappingTable[] =
    {"title", SPACE, SVG_EL_title, L_OtherValue, FALSE},
    {"tspan", SPACE, SVG_EL_tspan, L_OtherValue, FALSE},
    {"use", SPACE, SVG_EL_use_, L_OtherValue, FALSE},
+   {"xmlcomment", SPACE, HTML_EL_Comment_, L_OtherValue, FALSE},
+   {"xmlcomment_line", SPACE, HTML_EL_Comment_line, L_OtherValue, FALSE},
+   {"xmlpi", SPACE, HTML_EL_XMLPI, L_OtherValue, FALSE},
+   {"xmlpi_line", SPACE, HTML_EL_PI_line, L_OtherValue, FALSE},
    {"", SPACE, 0, L_OtherValue, FALSE} 	/* Last entry. Mandatory */
 };
 
