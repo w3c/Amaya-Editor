@@ -1403,45 +1403,64 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
   else
      quoteChar = EOS;
 
-  if (!strncasecmp (cssRule, "times", 5))
+  if (!strncasecmp (cssRule, "times", 5) &&
+      (quoteChar == EOS || quoteChar == cssRule[5]))
     {
       font.typed_data.value = STYLE_FONT_TIMES;
       cssRule += 5;
     }
-  else if (!strncasecmp (cssRule, "serif", 5))
+  else if (!strncasecmp (cssRule, "serif", 5) &&
+      (quoteChar == EOS || quoteChar == cssRule[5]))
     {
       font.typed_data.value = STYLE_FONT_TIMES;
       cssRule += 5;
+      if (quoteChar != EOS)
+	cssRule++;
     }
-  else if (!strncasecmp (cssRule, "helvetica", 9))
+  else if (!strncasecmp (cssRule, "helvetica", 9) &&
+      (quoteChar == EOS || quoteChar == cssRule[9]))
     {
      font.typed_data.value = STYLE_FONT_HELVETICA;
       cssRule += 9;
+      if (quoteChar != EOS)
+	cssRule++;
     }
-  else if (!strncasecmp (cssRule, "verdana", 7))
+  else if (!strncasecmp (cssRule, "verdana", 7) &&
+      (quoteChar == EOS || quoteChar == cssRule[7]))
     {
       font.typed_data.value = STYLE_FONT_HELVETICA;
       cssRule += 7;
+      if (quoteChar != EOS)
+	cssRule++;
     }
-  else if (!strncasecmp (cssRule, "sans-serif", 10))
+  else if (!strncasecmp (cssRule, "sans-serif", 10) &&
+      (quoteChar == EOS || quoteChar == cssRule[10]))
     {
       font.typed_data.value = STYLE_FONT_HELVETICA;
       cssRule += 10;
+      if (quoteChar != EOS)
+	cssRule++;
     }
-  else if (!strncasecmp (cssRule, "courier", 7))
+  else if (!strncasecmp (cssRule, "courier", 7) &&
+      (quoteChar == EOS || quoteChar == cssRule[7]))
     {
       font.typed_data.value = STYLE_FONT_COURIER;
       cssRule += 7;
+      if (quoteChar != EOS)
+	cssRule++;
     }
-  else if (!strncasecmp (cssRule, "monospace", 9))
+  else if (!strncasecmp (cssRule, "monospace", 9) &&
+      (quoteChar == EOS || quoteChar == cssRule[9]))
     {
       font.typed_data.value = STYLE_FONT_COURIER;
       cssRule += 9;
+      if (quoteChar != EOS)
+	cssRule++;
     }
   else
     /* unknown font name.  Skip it */
     {
-      if (quoteChar)
+      if (quoteChar != EOS)
          cssRule = SkipQuotedString (cssRule, quoteChar);
       else
          cssRule = SkipWord (cssRule);
