@@ -10,8 +10,7 @@ THOTDIR = @top_srcdir@
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) @X_CFLAGS@
-LDFLAGS = $(LDFLAGS) -L../tablelib -L../thotlib -L..
-LIBS	= -lThotTable -lThotEditor $(IMGLIBS) $(AMAYA_OPTION_LIBS) \
+LIBS	= -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor $(IMGLIBS) $(AMAYA_OPTION_LIBS) \
           @X_LIBS@ -lXm -lXt -lXext @X_PRE_LIBS@ -lX11 @X_EXTRA_LIBS@ @LIBS@ -lm
 
 prefix = @prefix@
