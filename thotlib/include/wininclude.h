@@ -52,7 +52,7 @@ extern void       CreatePrintDlgWindow (ThotWindow parent, STRING ps_dir);
 extern void       CreateAlign1DlgWindow (ThotWindow, int);
 extern void       CreateAlign2DlgWindow (ThotWindow, int);
 extern void       CreateAlign3DlgWindow (ThotWindow, int);
-extern void       CreateSearchDlgWindow (ThotWindow, BOOL, CHAR_T*);
+extern void       CreateSearchDlgWindow (ThotWindow parent);
 extern void       CreateSaveAsDlgWindow (ThotWindow parent, STRING path_name);
 extern void       CreateOpenDocDlgWindow (ThotWindow parent, STRING title, STRING docName, int doc_select, int dir_select, int doc_type);
 extern void       CreateGraphicsDlgWindow (ThotWindow frame);

@@ -24,7 +24,6 @@
 
 extern ThotWindow  FrRef[MAX_FRAME + 2];
 extern int         currentFrame;
-extern ThotBool    searchEnd;
 #ifdef  APPFILENAMEFILTER
 #undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -104,8 +103,6 @@ static CHAR_T*      classList;
 static CHAR_T*      langList;
 static CHAR_T*      saveList;
 static CHAR_T*      cssList;
-static CHAR_T       textToSearch [255];
-static CHAR_T       newText [255];
 static int          currentDoc;
 static int          currentView;
 static int          currentRef;
@@ -152,12 +149,10 @@ static HFONT        hOldFont;
 
 static ThotBool	    saveBeforeClose;
 static ThotBool     closeDontSave;
-static ThotBool     selectionFound;
 static ThotBool     isHref;
 static ThotBool     WithEdit;
 static ThotBool     WithCancel;
 static ThotBool     WithBorder;
-static ThotBool     UpperLower = TRUE;
 static ThotBool     HTMLFormat;
 
 static OPENFILENAME OpenFileName;
@@ -418,6 +413,11 @@ LPARAM lParam;
       SetDlgItemText (hwnDlg, IDC_CSSEDIT, szBuffer);
       break;
 
+    case WM_CLOSE:
+    case WM_DESTROY:
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
     case WM_COMMAND:
       if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
 	itemIndex = SendMessage (wndCSSList, LB_GETCURSEL, 0, 0);
@@ -435,11 +435,6 @@ LPARAM lParam;
 
 	case ID_DONE:
 	  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (CHAR_T*) 0);
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-
-	case WM_CLOSE:
-	case WM_DESTROY:
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	}
@@ -482,6 +477,11 @@ LPARAM lParam;
       SetFocus (GetDlgItem (hwnDlg, IDC_URLEDIT));
       break;
       
+    case WM_CLOSE:
+    case WM_DESTROY:
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+      
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
@@ -506,11 +506,6 @@ LPARAM lParam;
 	    ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 0);
 	  else
 	    ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (CHAR_T*) 0);
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-      
-	case WM_CLOSE:
-	case WM_DESTROY:
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	}
@@ -631,16 +626,16 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, IDC_ABOUT2), message2);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      EndDialog (hwnDlg, ID_CONFIRM);
+      break;
       
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
-	  EndDialog (hwnDlg, ID_CONFIRM);
-	  break;
-
-	case WM_CLOSE:
-	case WM_DESTROY:
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
 	}
@@ -673,11 +668,11 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       break;
 
-	case WM_CLOSE:
-	case WM_DESTROY:
-	  MathPal = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
+    case WM_CLOSE:
+    case WM_DESTROY:
+      MathPal = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
 
     case WM_COMMAND:
       switch (LOWORD (wParam))
@@ -1042,6 +1037,11 @@ LPARAM lParam;
 	  break;
 	}
       break;
+	
+    case WM_CLOSE:
+    case WM_DESTROY:
+      EndDialog (hwnDlg, IDCANCEL);
+      break;
       
     case WM_COMMAND:
       switch (LOWORD (wParam)) {
@@ -1095,11 +1095,6 @@ LPARAM lParam;
 	ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 0);
 	EndDialog (hwnDlg, IDCANCEL);
 	break;
-	
-      case WM_CLOSE:
-      case WM_DESTROY:
-	EndDialog (hwnDlg, IDCANCEL);
-	break;
       }
       break;
       
@@ -1107,155 +1102,6 @@ LPARAM lParam;
       return FALSE;
     }
   return TRUE;
-}
-
-/*-----------------------------------------------------------------------
- SearchDlgProc
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK SearchDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-    switch (msg)
-      {
-      case WM_INITDIALOG:
-	SetWindowText (hwnDlg, wndTitle);
-	SetWindowText (GetDlgItem (hwnDlg, IDC_SEARCHFOR), TtaGetMessage (LIB, TMSG_SEARCH_FOR));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_UPPERLOWER), TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEGROUP), TtaGetMessage (LIB, TMSG_REPLACE));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEDBY), TtaGetMessage (LIB, TMSG_REPLACE_BY));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_NOREPLACE), TtaGetMessage (LIB, TMSG_NO_REPLACE));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_ONREQUEST), TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_AUTOMATIC), TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_WHEREGROUP), TtaGetMessage (LIB, TMSG_SEARCH_WHERE));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC), TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	SetWindowText (GetDlgItem (hwnDlg, ID_NOREPLACE), TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
-	SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-	SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, TEXT(""));
-	SetDlgItemText (hwnDlg, IDC_REPLACEDIT, TEXT(""));	
-	iMode     = 0;
-	
-	CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_NOREPLACE);
-	if (selectionFound)
-	  {
-	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-	    iLocation = 2;
-	  }
-	else
-	  {
-	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
-	    iLocation = 3;
-	  }
-	/* initialize the ignore case button */
-	CheckDlgButton (hwnDlg, IDC_UPPERLOWER, (UpperLower)
-		  ? BST_CHECKED : BST_UNCHECKED);
-
-	SetFocus (GetDlgItem (hwnDlg, IDC_SEARCHEDIT));
-	break;
-
-      case WM_COMMAND:
-	switch (LOWORD (wParam))
-	  {
-	  case ID_CONFIRM:
-	    searchEnd = FALSE;
-	    GetDlgItemText (hwnDlg, IDC_SEARCHEDIT, textToSearch, sizeof (textToSearch) - 1);
-	    GetDlgItemText (hwnDlg, IDC_REPLACEDIT, newText, sizeof (newText) - 1);
-	    if (newText && newText[0] != '\0' && iMode == 0)
-	      {
-		iMode = 1;
-		CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
-	      }
-
-	    if (iMode == 1 || iMode == 2) 
-	      ThotCallback (NumZoneTextReplace, STRING_DATA, newText);
-							
-	    ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
-	    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (CHAR_T*) iMode);
-	    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (CHAR_T*) iLocation);
-	    ThotCallback (NumFormSearchText, INTEGER_DATA, (CHAR_T*) 1);
-	    if (!searchEnd && iLocation == 3)
-	      {
-		CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-		iLocation = 2;
-	      }
-	    break;
-
-	  case ID_NOREPLACE:
-	    ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
-	    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (CHAR_T*) 0);
-	    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (CHAR_T*) iLocation);
-	    ThotCallback (NumFormSearchText, INTEGER_DATA, (CHAR_T*) 1);
-	    if (iLocation == 3)
-	      {
-		CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-		iLocation = 2;
-	      }
-	    break;
-	    
-	  case WM_CLOSE:
-	  case WM_DESTROY:
-	    EndDialog (hwnDlg, ID_DONE);
-	    break;
-	    
-	  case ID_DONE:
-	    ThotCallback (120, 1, NULL);
-	    EndDialog (hwnDlg, ID_DONE);
-	    break;
-	    
-	  case IDC_NOREPLACE:
-	    iMode = 0;
-	    CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
-	    break;
-	    
-	  case IDC_ONREQUEST:
-	    iMode = 1;
-	    CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
-	    break;
-	    
-	  case IDC_AUTOMATIC:
-	    iMode = 2;
-	    CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
-	    break;
-	    
-	  case IDC_BEFORE:
-	    iLocation = 0;
-	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
-	    break;
-	    
-	  case IDC_WITHIN:
-	    iLocation = 1;
-	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
-	    break;
-	    
-	  case IDC_AFTER:
-	    iLocation = 2;
-	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
-	    break;
-	    
-	  case IDC_WHOLEDOC:
-	    iLocation = 3;
-	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
-	    break;
-	    
-	  case	IDC_UPPERLOWER:
-	    ThotCallback (NumToggleUpperEqualLower, INTEGER_DATA, (CHAR_T*) 0);
-	    break;
-	  }
-	break;
-      default:
-	return FALSE;
-      }
-    return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -1607,11 +1453,11 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       break;
 
-	case WM_CLOSE:
-	case WM_DESTROY:
-	  GraphPal = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
+    case WM_CLOSE:
+    case WM_DESTROY:
+      GraphPal = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
 
     case WM_COMMAND:
       SetFocus (FrRef[currentFrame]);
@@ -3788,23 +3634,6 @@ int    num_rows;
   numRows   = num_rows;
   WithBorder = FALSE;
   DialogBox (hInstance, MAKEINTRESOURCE (MATRIXDIALOG), NULL, (DLGPROC) TableDlgProc);
-}
-
-/*-----------------------------------------------------------------------
- CreateSearchDlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void        CreateSearchDlgWindow (ThotWindow parent, BOOL ok, CHAR_T* title)
-#else  /* !__STDC__ */
-void        CreateSearchDlgWindow (parent, ok, title)
-ThotWindow  parent;
-BOOL        ok;
-CHAR_T*     title;
-#endif /* __STDC__ */
-{  
-  selectionFound = ok;
-  ustrcpy (wndTitle, title);
-  DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
 }
 
 /*-----------------------------------------------------------------------
