@@ -1525,8 +1525,7 @@ void CheckMTable (elMTABLE, doc)
 {
   ElementType	elType;
   Element	MTableHead, MTableBody, row, nextRow, el, prevRow, cell,
-		nextCell, newMTD, firstColHead, child, prevChild, nextChild,
-		wrapper;
+		nextCell, newMTD, firstColHead;
   SSchema	MathMLSSchema;
 
   MathMLSSchema = GetMathMLSSchema (doc);

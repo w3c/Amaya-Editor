@@ -47,10 +47,10 @@ Fixed bugs 2.5:
   - A strange attribute named EntityName was proposed in the Attribute menu
   - Odd things happened when an attribute "other" was associated with
     a character string.
-  - Putting the cursor at some positions within a mathematical expression
+  - Moving the cursor to some positions within a mathematical expression
     was not possible.
   - The editor generated unneeded mrow elements in some cases (for instance
-    within a mtd or msqrt).
+    within a mtd or a msqrt).
 
 =============================================================
 2.4
