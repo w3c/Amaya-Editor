@@ -1733,8 +1733,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *uniqueChild)
 	      (pChildAb->AbLeafType == LtPicture ||
 	       (pChildAb->AbLeafType == LtCompound &&
 		!pChildAb->AbWidth.DimIsPosition &&
-		pChildAb->AbWidth.DimAbRef == NULL &&
-		pChildAb->AbWidth.DimValue != -1)))
+		pChildAb->AbWidth.DimAbRef == NULL)))
 	    /* it's a floating child */
 	    found = TRUE;
 	  else if (pChildAb->AbBox &&
@@ -1752,8 +1751,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *uniqueChild)
 		      (pInc->AbLeafType == LtPicture ||
 		       (pInc->AbLeafType == LtCompound &&
 			!pInc->AbWidth.DimIsPosition &&
-			pInc->AbWidth.DimAbRef == NULL &&
-			pInc->AbWidth.DimValue != -1)))
+			pInc->AbWidth.DimAbRef == NULL)))
 		    found = TRUE;
 		  else if (pInc->AbPrevious == NULL && pInc->AbNext == NULL)
 		    {
@@ -1786,8 +1784,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
       box = pAb->AbBox;
       if (pAb->AbLeafType == LtCompound &&
 	  (pAb->AbWidth.DimIsPosition ||
-	   pAb->AbWidth.DimAbRef ||
-	   pAb->AbWidth.DimValue == -1))
+	   pAb->AbWidth.DimAbRef))
 	{
 	  /* cannot be a floated box */
 	  pAb->AbFloat = 'N';
@@ -1912,7 +1909,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   TypeUnit            unit;
   SpecFont            font;
   PictInfo           *picture;
-  BoxType             tableType;
+  BoxType             boxType;
   char                script = 'L';
   int                 width, i;
   int                 height;
@@ -1923,18 +1920,18 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   if (pAb->AbDead)
     return (NULL);
   /* by default it's not a table element */
-  tableType = BoComplete;
+  boxType = BoComplete;
   pSS = pAb->AbElement->ElStructSchema;
   if (pAb->AbLeafType == LtCompound)
     {
     if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS))
-      tableType = BoColumn;
+      boxType = BoColumn;
     else if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS))
-      tableType = BoTable;
+      boxType = BoTable;
     else if (TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS))
-      tableType = BoRow;
+      boxType = BoRow;
     else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
-      tableType = BoCell;
+      boxType = BoCell;
     }
   /* Chargement de la fonte attachee au pave */
   height = pAb->AbSize;
@@ -1962,13 +1959,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   if (pCurrentBox)
     {
       if (pAb->AbLeafType == LtCompound)
-	pCurrentBox->BxType = tableType;
+	pCurrentBox->BxType = boxType;
       /* pMainBox points to the root box of the view */
       pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
       pCurrentBox->BxFont = font;
       pCurrentBox->BxUnderline = pAb->AbUnderline;
       pCurrentBox->BxThickness = pAb->AbThickness;
-      if (tableType == BoRow || tableType == BoColumn || tableType == BoCell)
+      if (boxType == BoRow || boxType == BoColumn || boxType == BoCell)
 	{
 	  /* float and inlines are not allowed for rows and cells */
 	  inLine = FALSE;
@@ -1985,19 +1982,35 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    AddFloatingBox (pAb, FALSE);
 	  if (pAb->AbLeafType == LtCompound)
 	    {
-	      if ((inLine || inLineFloat) &&
-		  pAb->AbAcceptLineBreak && pAb->AbFloat == 'N')
+	      if (inLine || inLineFloat)
 		{
-		  inlineChildren = inLine;
-		  inlineFloatC = inLineFloat;
-		  if (pAb->AbFirstEnclosed &&
+		  if (pAb->AbAcceptLineBreak && pAb->AbFloat == 'N' &&
 		      pCurrentBox->BxType != BoFloatGhost &&
 		      pCurrentBox->BxType != BoFloatBlock &&
 		      !HasFloatingChild (pAb, &uniqueChild))
 		    {
-		      if (inLine || inLineFloat)
-			/* that block will be skipped */
+		      /* this element can be split */
+		      inlineChildren = inLine;
+		      inlineFloatC = inLineFloat;
+		      /* ignore this box if it's not empty */
+		      if (pAb->AbFirstEnclosed)
 			pCurrentBox->BxType = BoGhost;
+		    }
+		  else if (pAb->AbInLine)
+		    {
+		      /* block of lines */
+		      boxType = BoBlock;
+		      inlineChildren = TRUE;
+		      inlineFloatC = FALSE;
+		      pCurrentBox->BxType = BoBlock;
+		      pCurrentBox->BxFirstLine = NULL;
+		      pCurrentBox->BxLastLine = NULL;
+		    }
+		  else
+		    {
+		      /* formatted element */
+		      inlineChildren = FALSE;
+		      inlineFloatC = FALSE;
 		    }
 		}
 	      else if (HasFloatingChild (pAb, &uniqueChild))
@@ -2037,11 +2050,11 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		    }
 		  pParent->AbBox->BxFirstLine = NULL;
 		  pParent->AbBox->BxLastLine = NULL;
-		  tableType = pCurrentBox->BxType;
+		  boxType = pCurrentBox->BxType;
 		}
 	      else if (pAb->AbInLine)
 		{
-		  tableType = BoBlock;
+		  boxType = BoBlock;
 		  inlineChildren = TRUE;
 		  inlineFloatC = FALSE;
 		  pCurrentBox->BxType = BoBlock;
@@ -2237,28 +2250,28 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    }
 	  break;
 	case LtCompound:
-	  if (tableType == BoTable)
+	  if (boxType == BoTable)
 	    {
 	      pCurrentBox->BxColumns = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
 	    }
-	  else if (tableType == BoColumn)
+	  else if (boxType == BoColumn)
 	    {
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
 	    }
-	  else if (tableType == BoRow)
+	  else if (boxType == BoRow)
 	    {
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
 	    }
-	  else if (tableType == BoCell)
+	  else if (boxType == BoCell)
 	    {
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
@@ -2357,25 +2370,25 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 
       pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
       /* manage table exceptions */
-      if (tableType == BoTable && ThotLocalActions[T_checktable])
+      if (boxType == BoTable && ThotLocalActions[T_checktable])
 	(*(Proc4)ThotLocalActions[T_checktable]) (
 		(void *)pAb,
 	       	(void *)NULL,
 	       	(void *)NULL,
 	       	(void *)frame);
-      else if (tableType == BoColumn && ThotLocalActions[T_checktable])
+      else if (boxType == BoColumn && ThotLocalActions[T_checktable])
 	(*(Proc4)ThotLocalActions[T_checktable]) (
 		(void *)NULL,
 	       	(void *)pAb, 
 		(void *)NULL,
 	       	(void *)frame);
-      else if (tableType == BoRow && ThotLocalActions[T_checktable])
+      else if (boxType == BoRow && ThotLocalActions[T_checktable])
 	(*(Proc4)ThotLocalActions[T_checktable]) (
 		(void *)NULL,
 	       	(void *)NULL,
 	       	(void *)pAb,
 	       	(void *)frame);
-      else if (tableType == BoCell && ThotLocalActions[T_checkcolumn])
+      else if (boxType == BoCell && ThotLocalActions[T_checkcolumn])
 	(*(Proc3)ThotLocalActions[T_checkcolumn]) (
 		(void *)pAb,
 	        (void *)NULL,
@@ -2958,8 +2971,7 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
 	  (pAb->AbLeafType == LtPicture ||
 	   (pAb->AbLeafType == LtCompound &&
 	    !pAb->AbWidth.DimIsPosition &&
-	    pAb->AbWidth.DimAbRef == NULL &&
-	    pAb->AbWidth.DimValue != -1)))
+	    pAb->AbWidth.DimAbRef == NULL)))
 	{
 	  /* a block with only one floating child */
 	  pParent->AbBox->BxType = BoFloatGhost;
@@ -3327,7 +3339,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 	  if (inLine || inLineFloat)
 	    {
-	      if (!HasFloatingChild (pParent, &uniqueChild) ||
+	      if (pParent->AbFloat == 'N' &&
+		  !HasFloatingChild (pParent, &uniqueChild) ||
 		  uniqueChild)
 		{
 		  /* the parent becomes ghost */

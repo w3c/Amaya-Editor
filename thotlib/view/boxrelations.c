@@ -907,39 +907,42 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 		}
 	    }
 
-	  refEdge = rule.PosRefEdge;
-	  localEdge = rule.PosEdge;
-	  /* Convert the distance value */
-	  dim = pAb->AbEnclosing->AbBox->BxW;
-	  if (rule.PosUnit == UnPercent)
-	    {
-	      dist = PixelValue (rule.PosDistance, UnPercent,
-				 (PtrAbstractBox) dim, 0);
-	      /* Change the rule for further updates */
-	      pAb->AbHorizPos.PosDistance = dist;
-	      pAb->AbHorizPos.PosUnit = UnPixel;
-	    }
+	  if (pAb->AbFloat != 'N')
+	    return;
 	  else
-	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  if (rule.PosDeltaUnit == UnPercent)
 	    {
-	      d = PixelValue (rule.PosDistDelta, UnPercent,
-			      (PtrAbstractBox) dim, 0);
-	      /* Change the rule for further updates */
-	      pAb->AbHorizPos.PosDistDelta = d;
-	      pAb->AbHorizPos.PosUnit = UnPixel;
+	      refEdge = rule.PosRefEdge;
+	      localEdge = rule.PosEdge;
+	      /* Convert the distance value */
+	      dim = pAb->AbEnclosing->AbBox->BxW;
+	      if (rule.PosUnit == UnPercent)
+		{
+		  dist = PixelValue (rule.PosDistance, UnPercent,
+				     (PtrAbstractBox) dim, 0);
+		  /* Change the rule for further updates */
+		  pAb->AbHorizPos.PosDistance = dist;
+		  pAb->AbHorizPos.PosUnit = UnPixel;
+		}
+	      else
+		dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      if (rule.PosDeltaUnit == UnPercent)
+		{
+		  d = PixelValue (rule.PosDistDelta, UnPercent,
+				  (PtrAbstractBox) dim, 0);
+		  /* Change the rule for further updates */
+		  pAb->AbHorizPos.PosDistDelta = d;
+		  pAb->AbHorizPos.PosUnit = UnPixel;
+		}
+	      else
+		d = PixelValue (rule.PosDistDelta, rule.PosDeltaUnit, pAb,
+				ViewFrameTable[frame - 1].FrMagnification);
+	      dist += d;
 	    }
-	  else
-	    d = PixelValue (rule.PosDistDelta, rule.PosDeltaUnit, pAb,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  dist += d;
 	}
     }
   else
     {
-if (pAb->AbFloat != 'N')
-  printf ("Create pos relation\n");
       /* Vertical rule */
       if (pRefAb == pAb)
 	{

@@ -1615,8 +1615,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
   variable = (pBox && pAb &&
 	      pBox->BxType != BoFloatGhost &&
 	      (pAb->AbLeafType == LtText ||
-	       (/*pAb->AbFloat == 'N' &&*/
-		pAb->AbLeafType == LtCompound &&
+	       (pAb->AbLeafType == LtCompound &&
 		((pAbRef == NULL &&
 		  pAb->AbWidth.DimUnit == UnPercent) ||
 		(pAbRef &&
