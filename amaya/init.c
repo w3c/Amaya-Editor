@@ -406,6 +406,32 @@ CHAR_T*             parameters;
      }
 }
 
+/*----------------------------------------------------------------------
+   FileExistTarget
+   Removes the URL target separator ('#') before verifying if a file
+   exists.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool     FileExistTarget (CHAR_T* filename)
+#else
+static ThotBool     FileExistTarget (filename)
+CHAR_T*             filename;
+#endif
+{
+  CHAR_T *ptr;
+  ThotBool result;
+
+  ptr = ustrrchr (filename, TEXT('#'));
+  if (ptr)
+    *ptr = TEXT('\0');
+
+  result = TtaFileExist (filename);
+
+  if (ptr)
+    *ptr = TEXT('#');
+
+  return result;
+}
 
 /*----------------------------------------------------------------------
   SetArrowButton
@@ -3913,7 +3939,7 @@ CHAR_T*             data;
 		   ustrcpy (tempfile, DirectoryName);
 		   ustrcat (tempfile, WC_DIR_STR);
 		   ustrcat (tempfile, DocumentName);
-		   if (TtaFileExist (tempfile))
+		   if (FileExistTarget (tempfile))
 		     {
 		       if (InNewWindow)
 			 GetHTMLDocument (tempfile, NULL, 0, 0, Loading_method,
@@ -4886,7 +4912,7 @@ NotifyEvent        *event;
    else
      {
        NormalizeFile (s, LastURLName, AM_CONV_NONE);
-       if (TtaFileExist (LastURLName)) {
+       if (FileExistTarget (LastURLName)) {
          /* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
 	 if ((LastURLName[0] == WC_DIR_SEP) || (LastURLName[1] == TEXT(':')))
