@@ -85,28 +85,23 @@ Document            targetDoc;
 
 #endif /* __STDC__ */
 {
-   int                 length;
    AttributeType       attrType;
-   Attribute           attrHREF;
-   char               *tempURL;
+   Attribute           attr;
+   char               *value, tempURL[MAX_LENGTH];
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_HREF_;
-   attrHREF = TtaGetAttribute (element, attrType);
-   if (attrHREF == 0)
+   attr = TtaGetAttribute (element, attrType);
+   if (attr == 0)
      {
 	/* create an attribute HREF for the element */
-	attrHREF = TtaNewAttribute (attrType);
-	TtaAttachAttribute (element, attrHREF, document);
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (element, attr, document);
      }
    /* build the complete target URL */
-   length = 2;
-   if (TargetName != NULL)
-      length += strlen (TargetName);
    if (document == targetDoc)
      {
 	/* internal link */
-	tempURL = TtaGetMemory (length);
 	if (TargetName == NULL)
 	   tempURL[0] = EOS;
 	else
@@ -114,13 +109,11 @@ Document            targetDoc;
 	     tempURL[0] = '#';
 	     strcpy (&tempURL[1], TargetName);
 	  }
+	TtaSetAttributeText (attr, tempURL, element, document);
      }
    else
      {
 	/* external link */
-	if (TargetDocumentURL != NULL)
-	   length += strlen (TargetDocumentURL);
-	tempURL = TtaGetMemory (length);
 	if (TargetDocumentURL != NULL)
 	   strcpy (tempURL, TargetDocumentURL);
 	else
@@ -130,9 +123,11 @@ Document            targetDoc;
 	     strcat (tempURL, "#");
 	     strcat (tempURL, TargetName);
 	  }
+	/* set the relative value or URL in attribute HREF */
+	value = MakeRelativeUrl (tempURL, DocumentURLs[document]);
+	TtaSetAttributeText (attr, value, element, document);
+	TtaFreeMemory (value);
      }
-   TtaSetAttributeText (attrHREF, tempURL, element, document);
-   TtaFreeMemory (tempURL);
 }
 
 /*----------------------------------------------------------------------
@@ -713,7 +708,7 @@ NotifyElement      *event;
 		      TtaGiveTextAttributeValue (attr, value, &length);
 		      if (value[0] == '#')
 			{
-			  /* the target element is part of the origin document */
+			  /* the target element is local in the document origin */
 			  /* convert internal link into external link */
 			  strcpy (tempURL, DocumentURLs[originDocument]);
 			  iName = 0;
@@ -751,8 +746,10 @@ NotifyElement      *event;
 			  else
 			    strcat (tempURL, &value[iName]);
 			}
-		      /* set the new value of attribute HREF */
-		      TtaSetAttributeText (attr, tempURL, el, doc);
+		      TtaFreeMemory (value);
+		      /* set the relative value or URL in attribute HREF */
+		      value = MakeRelativeUrl (tempURL, DocumentURLs[doc]);
+		      TtaSetAttributeText (attr, value, el, doc);
 		      TtaFreeMemory (value);
 		    }
 		}
