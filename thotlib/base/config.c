@@ -951,12 +951,12 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
 	   pAttr = pSS->SsAttribute->TtAttr[i];
 	   if (strcmp (AsciiTranslate (word), pAttr->AttrName) == 0)
 	     {
-		strncpy (pAttr->AttrName, trans, MAX_NAME_LENGTH - 1);
+		strncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
 	      for (j = 0; j < pAttr->AttrNEnumValues; j++)
-		 if (strcmp (word, pAttr->AttrEnumValue[j]) == 0)
+		 if (strcmp (AsciiTranslate (word), pAttr->AttrEnumValue[j]) == 0)
 		   {
 		      strncpy (pAttr->AttrEnumValue[j],
 			       AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
