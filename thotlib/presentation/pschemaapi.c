@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1996 Inria All rights reserved. -- */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -31,7 +28,7 @@ Document            doc;
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
    PtrHandlePSchema    result, pHd;
 
    result = NULL;
@@ -77,7 +74,7 @@ PSchema             TtaNewPSchema ()
 #else  /* __STDC__ */
 PSchema             TtaNewPSchema ()
 
-#endif				/* __STDC__ */
+#endif /* __STDC__ */
 
 {
    PtrPSchema          pSchPres;
