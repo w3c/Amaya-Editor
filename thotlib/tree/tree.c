@@ -2192,6 +2192,51 @@ PtrElement         *pEl;
 	   stop = TRUE;
 	else if ((*pEl)->ElLeafType != LtPageColBreak)
 	   stop = TRUE;
+
+	if (!stop)
+	   *pEl = (*pEl)->ElNext;
+     }
+   while (!stop);
+}
+
+
+/*----------------------------------------------------------------------
+   FwdSkipPageBreakAndExtension 
+   if pEl points to a page break or to an extension element, it returns
+   inside pEl a pointer to the first element which is not a page break
+   nor an extension element.
+   It returns NULL if pEl points to a page break or an extension item
+   which is not followed by any element or not followed by any element
+   different from a page break and which is not an extension item.
+   Does not do anything if pEl does not point to a page break nor an
+   extension element.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void                FwdSkipPageBreakAndExtension (PtrElement * pEl)
+
+#else  /* __STDC__ */
+void                FwdSkipPageBreakAndExtension (pEl)
+PtrElement         *pEl;
+
+#endif /* __STDC__ */
+
+{
+   boolean             stop;
+
+   stop = FALSE;
+   do
+     {
+        if (! ((*pEl)->ElStructSchema->SsExtension))
+          {
+	    if (*pEl == NULL)
+	       stop = TRUE;
+	    else if (!(*pEl)->ElTerminal)
+	       stop = TRUE;
+	    else if ((*pEl)->ElLeafType != LtPageColBreak)
+	       stop = TRUE;
+          }
+
 	if (!stop)
 	   *pEl = (*pEl)->ElNext;
      }
@@ -3920,7 +3965,7 @@ PtrSSchema          pSS;
 	   if (pDoc->DocAssocRoot[a]->ElFirstChild != NULL)
 	     {
 		pEl2 = pDoc->DocAssocRoot[a]->ElFirstChild;
-		FwdSkipPageBreak (&pEl2);
+		FwdSkipPageBreakAndExtension (&pEl2);
 		if (pEl2 != NULL)
 		   if (pEl2->ElTypeNumber == typeNum &&
 		       pEl2->ElStructSchema->SsCode == pSS->SsCode)
