@@ -2237,16 +2237,10 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
            CloseInsertion ();
            /* Est-ce que la touche modifieur de geometrie est active ? */
            if ((event->state & GDK_CONTROL_MASK) != 0)
-             {
-               /* On modifie les dimensions d'une boite */
-               ApplyDirectResize (frame, event->x, event->y);
-             }
+	     /* On modifie les dimensions d'une boite */
+	     ApplyDirectResize (frame, event->x, event->y);
            else
-             {
-               FrameToView (frame, &document, &view);
-               if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NUL)L
-                 (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (document, view);
-             }
+	     LocateSelectionInView (frame, event->x, event->y, 5);
            break;
 
            /* ==========BOUTON DROIT========== */
@@ -2254,28 +2248,11 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
            /* Termine l'insertion courante s'il y en a une */
            CloseInsertion ();
            if ((event->state & GDK_CONTROL_MASK) != 0)
-             {
-               /* On modifie les dimensions d'une boite */
-               ApplyDirectResize (frame, event->x, event->y);
-             }
-           else if (!GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
-             /* non, message 'Selectionnez' */
-             return FALSE;
-           else if (docsel->DocReadOnly)
-             /* on ne peut inserer ou coller dans un document en lecture seule */
-             return FALSE;
-           else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPolyLine)
-             {
-               /* selection a l'interieur d'une polyline */
-               if (ThotLocalActions[T_editfunc] != NULL)
-                 (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
-             }
+	     /* On modifie les dimensions d'une boite */
+	     ApplyDirectResize (frame, event->x, event->y);
            else
-             {
-               TtaSetDialoguePosition ();
-               if (ThotLocalActions[T_insertpaste] != NULL)
-                 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
-             }
+	     LocateSelectionInView (frame, event->x, event->y, 6);
+	   break;
 
          default:
            break;
