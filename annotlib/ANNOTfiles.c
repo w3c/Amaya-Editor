@@ -1181,6 +1181,18 @@ void ANNOT_PrepareAnnotView (document)
     TtaSetItemOff (document, view, File, BSaveAs);
     TtaSetTextZone (document, view, 1, DocumentURLs[document]);
 
+    /* views */
+    TtaSetItemOff (document, view, Views, TShowTextZone);
+    TtaSetItemOff (document, view, Views, BShowStructure);
+    TtaSetItemOff (document, view, Views, BShowAlternate);
+    TtaSetItemOff (document, view, Views, BShowSource);
+    TtaSetItemOff (document, view, Views, BShowLinks);
+
+    /* annotations */
+    TtaSetItemOff (document, view, Annotations_, BAnnotateSelection);
+    TtaSetItemOff (document, view, Annotations_, BAnnotateDocument);
+    TtaSetItemOff (document, view, Annotations_, BReplyToAnnotation);
+
 #if 0
     TtaAddTextZone (document, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
 		    NULL);
@@ -1188,9 +1200,7 @@ void ANNOT_PrepareAnnotView (document)
     TtaAddTextZone (document, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
 		    NULL);
     TtcSwitchCommands (document, view);
-    TtaSetItemOff (document, view, File, BReload);
 
-    TtaSetMenuOff (document, view, Views);
     TtaSetMenuOff (document, view, Special);
 #endif
   }
