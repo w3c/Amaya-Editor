@@ -572,9 +572,15 @@ char               *fileName;
 {
    int                 length;
    PathBuffer          directory;
+   char                URL_DIR_SEP;
+
+   if (name && strchr (name, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
 
    /* Recherche le fichier dans les repertoires de documents */
-   if (name[0] == DIR_SEP || name [1] == ':')
+   if (name[0] == URL_DIR_SEP || name [1] == ':')
       strcpy (fileName, name);
    else
      {
@@ -774,18 +780,24 @@ char               *fileName;
 {
    int                 ret, i;
    char                c;
+   char                URL_DIR_SEP;
 
-#ifdef _WINDOWS
+   if (fileName && strchr (fileName, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
+
+#  ifdef _WINDOWS
    ret = _access (fileName, 0);
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    ret = access (fileName, F_OK);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    if (ret == -1)
       /* file does not exist */
      {
 	/* check its directory */
 	i = strlen (fileName);
-	while ((i >= 0) && (fileName[i] != DIR_SEP))
+	while ((i >= 0) && (fileName[i] != URL_DIR_SEP))
 	   i--;
 	if (i < 0)
 	   /* no directory name: current directory */

@@ -829,13 +829,19 @@ void                TtaInitializeAppRegistry (appArgv0)
 char               *appArgv0;
 #endif
 {
-  PathBuffer          execname;
-  PathBuffer          path;
-  char               *home_dir;
-  char                filename[MAX_PATH];
-  char               *my_path;
-  char               *dir_end = NULL;
-  char               *appName;
+   char               *home_dir;
+   char                filename[MAX_PATH];
+   int                 execname_len;
+   PathBuffer          execname;
+   PathBuffer          path;
+   char               *my_path;
+   char               *dir_end = NULL;
+   char               *appName;
+#  ifndef _WINDOWS
+   char               *thot_dir_env;
+#  endif /* _WINDOWS */
+   char                URL_DIR_SEP;
+
 #ifdef _WINDOWS
 #ifndef __CYGWIN32__
   extern int _fmode;
@@ -843,10 +849,12 @@ char               *appArgv0;
 #endif
 #else /* ! _WINDOWS */
   struct stat         stat_buf;
-  char               *thot_dir_env;
 #endif /* _WINDOWS */
-  int                 execname_len;
-  int                 len;
+
+   if (appArgv0 && strchr (appArgv0, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
 
   if (AppRegistryInitialized != 0)
     return;
@@ -872,7 +880,8 @@ char               *appArgv0;
    * i.e. start with / on unixes or \ or ?:\ on Windows.
    */
 #  ifdef _WINDOWS
-  if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
+   if ((appArgv0[0] == URL_DIR_SEP) ||
+       ((appArgv0[1] == ':') && (appArgv0[2] == URL_DIR_SEP)))
 #  else  /* !_WINDOWS */
   if (appArgv0[0] == DIR_SEP)
 #  endif /* !_WINDOWS */
@@ -937,7 +946,7 @@ char               *appArgv0;
 
   do
     appName--;
-  while ((appName > &execname[0]) && (*appName != DIR_SEP));
+  while ((appName > &execname[0]) && (*appName != URL_DIR_SEP));
   if (*appName == DIR_SEP)
     /* dir_end used for relative links ... */
     dir_end = appName++;
@@ -979,9 +988,9 @@ char               *appArgv0;
 
    do
       dir_end--;
-   while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
+   while ((dir_end > &execname[0]) && (*dir_end != URL_DIR_SEP));
 
-   if (*dir_end == DIR_SEP)
+   if (*dir_end == URL_DIR_SEP)
      {
        *dir_end = '\0';
        /* save the binary directory in BinariesDirectory */
@@ -1029,9 +1038,9 @@ char               *appArgv0;
    
        do
 	 dir_end--;
-       while (dir_end > &execname[0] && *dir_end != DIR_SEP);
+       while (dir_end > &execname[0] && *dir_end != URL_DIR_SEP);
 
-       if (*dir_end != DIR_SEP)
+       if (*dir_end != URL_DIR_SEP)
 	 goto thot_dir_not_found;
 
        *dir_end = '\0';
@@ -1043,7 +1052,7 @@ char               *appArgv0;
 
        do
 	 dir_end--;
-       while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
+       while ((dir_end > &execname[0]) && (*dir_end != URL_DIR_SEP));
        if (*dir_end == DIR_SEP)
 	 {
 	   *dir_end = '\0';
@@ -1055,7 +1064,7 @@ char               *appArgv0;
 
 	   do
 	     dir_end--;
-	   while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
+	   while ((dir_end > &execname[0]) && (*dir_end != URL_DIR_SEP));
 	   if (*dir_end == DIR_SEP)
 	     {
 	       *dir_end = '\0';

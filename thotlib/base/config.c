@@ -303,11 +303,18 @@ boolean            *import;
    char                text[MAX_TXT_LEN];
    char                word[MAX_TXT_LEN];
    boolean             stop;
+   char                URL_DIR_SEP;
 
    *doctypeOrig = NULL;
    *doctypeTrans = NULL;
    *typ = CONFIG_UNKNOWN_TYPE;
    *import = FALSE;
+
+   if (fname && strchr (fname, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
+
    /* ouvre le fichier */
    file = TtaReadOpen (fname);
    if (file == NULL)
@@ -355,9 +362,9 @@ boolean            *import;
    else
       point = 0;
    /* cherche le dernier DIR_SEP du nom de fichier */
-   while (i > 0 && fname[i] != DIR_SEP)
+   while (i > 0 && fname[i] != URL_DIR_SEP)
       i--;
-   if (fname[i] == DIR_SEP)
+   if (fname[i] == URL_DIR_SEP)
       i++;
    if (fname[i] == '_')
       /* ignore les fichiers dont le nom commence par "-" */
@@ -1148,28 +1155,32 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   FILE               *file;
-   boolean             stop, error;
-   char                line[MAX_TXT_LEN];
-   char                text[MAX_TXT_LEN];
-   char                word[MAX_TXT_LEN];
+   FILE*   file;
+   boolean stop, error;
+   char*   line;
+   char*   text;
+   char*   word;
 
    if (pSS == NULL)
       return;
    /* ouvre le fichier de configuration langue associe' au schema */
    file = openConfigFile (pSS->SsName, TRUE);
-   if (file == NULL)
+   if (file == NULL) 
       /* pas de fichier langue associe' a ce schema de structure */
       return;
    stop = FALSE;
    /* avance dans le fichier jusqu'a la ligne qui contient le seul */
    /* mot "translation" */
+   line = TtaGetMemory (MAX_TXT_LEN);
+   text = TtaGetMemory (MAX_TXT_LEN);
+   word = TtaGetMemory (MAX_TXT_LEN);
    if (readUntil (file, "translation", ""))
       /* lit le fichier ligne a ligne */
       do
 	{
 	   error = FALSE;
 	   /* lit une ligne du fichier */
+
 	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	      /* fin de fichier */
 	      stop = TRUE;
@@ -1207,6 +1218,9 @@ PtrSSchema          pSS;
 	     }
 	}
       while (!stop);
+   TtaFreeMemory (line);
+   TtaFreeMemory (text);
+   TtaFreeMemory (word);
    TtaReadClose (file);
 }
 

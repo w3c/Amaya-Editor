@@ -166,7 +166,11 @@ unsigned int        n;
       n++;
    res = malloc ((size_t) n);
    if (!res)
+#     ifndef _WINDOWS
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
+#     else  /* _WINDOWS */
+      MessageBox (NULL, TtaGetMessage (NULL, LIB, TMSG_NOT_ENOUGH_MEMORY), "Amaya: fatal error", MB_ICONERROR);
+#     endif /* _WINDOWS */
    return (res);
 }
 
@@ -183,7 +187,7 @@ unsigned int        n;
    TtaGetMemory.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaFreeMemory (void *ptr)
+void                TtaFreeMemory (void* ptr)
 #else  /* __STDC__ */
 void                TtaFreeMemory (ptr)
 void               *ptr;
@@ -193,7 +197,7 @@ void               *ptr;
 {
    if (ptr)	{
       free (ptr);
-	  ptr = (char*) 0;
+	  ptr = (void*) 0;
    }
 }
 
