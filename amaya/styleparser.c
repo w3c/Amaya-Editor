@@ -4250,9 +4250,6 @@ boolean             withUndo;
 	  /* we're not within a comment or we're parsing * or / */
 	  switch (c)
 	    {
-	    case '\r':
-	      c = EOS;
-	      break;
 	    case '@':
 	      /* perhaps an import primitive */
 	      import = CSSindex;
@@ -4290,7 +4287,7 @@ boolean             withUndo;
 		}
 	      else if (CSScomment != MAX_CSS_LENGTH)
 		/* ignore a '/' within a comment which doesn't close it */
-		CSSindex--;;
+		CSSindex--;
 	      break;
 	    case '<':
 	      if (buffer != NULL)
@@ -4345,13 +4342,18 @@ boolean             withUndo;
 		  noRule = TRUE;
 		  ignoreMedia = FALSE;
 		}
+	      else if (ignoreMedia && openRule == 0)
+		{
+		  ignoreMedia = FALSE;
+		  noRule = TRUE;
+		}
 	      else
 		toParse = TRUE;
 	      break;
 	    default:
 	      break;
 	    }
-	  if (c != EOS)
+	  if (c != '\r')
 	    CSSindex++;
 	}
       else if (CSSindex > 1 &&
@@ -4359,6 +4361,7 @@ boolean             withUndo;
 	       CSSbuffer[CSSindex - 1] == '*')
 	/* ignore a '*' within the comment which is not followed by a '/' */
 	CSSindex--;
+
       if  (CSSindex >= MAX_CSS_LENGTH || !CSSparsing || toParse || noRule)
 	{
 	  CSSbuffer[CSSindex] = EOS;

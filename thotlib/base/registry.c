@@ -1097,7 +1097,7 @@ void                TtaSaveAppRegistry ()
 
    app_home = TtaGetEnvString ("APP_HOME");
    if (app_home != NULL)
-   	usprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
+     usprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
    else
      {
 	fprintf (stderr, "Cannot save Registry no APP_HOME dir\n");
@@ -1120,15 +1120,13 @@ void                TtaSaveAppRegistry ()
       the default values */
    ptr = TtaGetEnvString ("TMPDIR");
    if (ptr && ustrcasecmp (ptr, WIN_DEF_TMPDIR))
-     WINReg_set ("TmpDir", TtaGetEnvString ("TMPDIR"));
+     WINReg_set ("TmpDir", ptr);
    else
      WINReg_set ("TmpDir", "");
    
-   usprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, 
-	     AppRegistryEntryAppli);
-   ptr = TtaGetEnvString ("APP_HOME");
-   if (ptr && ustrcasecmp (filename, ptr))
-     WINReg_set ("AppHome", TtaGetEnvString ("APP_HOME"));
+   usprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
+   if (app_home && ustrcasecmp (filename, app_home))
+     WINReg_set ("AppHome", app_home);
    else
      WINReg_set ("AppHome", "");
 #endif /* _WINDOWS */

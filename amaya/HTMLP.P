@@ -7094,6 +7094,7 @@ RULES
 
  Pseudo_paragraph: BEGIN
 	Line;
+	LineSpacing: 0;
 	LineBreak: Yes;
 #ifdef PAGE
 	NoBreak1 : 2;
