@@ -277,10 +277,12 @@ void *context;
 	  else
 	    {
 	      if (targetDocument == doc)
-		/* jump in the same document */
 		{
+		/* jump in the same document */
 		  /* record current position in the history */
-		  AddDocHistory (doc, DocumentURLs[doc]);
+		  AddDocHistory (doc, DocumentURLs[doc], 
+				 DocumentMeta[doc]->form_data, 
+				 DocumentMeta[doc]->method);
 		}
 	      /* show the target element in all views */
 	      for (view = 1; view < 4; view++)
@@ -318,10 +320,11 @@ Document            doc;
    Document            targetDocument;
    SSchema             HTMLSSchema;
    char                documentURL[MAX_LENGTH];
-   char               *url, *info, *sourceDocUrl;
+   char               *url, *form_data, *info, *sourceDocUrl;
    int                 length;
    FollowTheLink_context *ctx;
 
+   info = NULL;
    HrefAttr = NULL;
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
 
@@ -401,7 +404,12 @@ Document            doc;
 	     else
 		/* the target element seems to be in another document */
 	       {
-		  strcpy (documentURL, url);
+		 /* remove any form parameters concatenated to the URL */
+		 form_data = strchr (url, '?');
+		 if (form_data)
+		   *form_data++ = EOS;
+		  strncpy (documentURL, url, MAX_LENGTH - 1);
+		  documentURL[MAX_LENGTH - 1] = EOS;
 		  url[0] = EOS;
 		  /* is the source element an image map? */
 		  attrType.AttrSSchema = HTMLSSchema;
@@ -413,14 +421,16 @@ Document            doc;
 		      info = GetActiveImageInfo (doc, elSource);
 		      if (info != NULL)
 			{
-			  strcat (documentURL, info);
-			  TtaFreeMemory (info);
+			  /* @@ what do we do with the precedent parameters? */
+			  form_data = &info[1];
 			}
 		    }
 		  /* get the referred document */
-		  targetDocument = GetHTMLDocument (documentURL, NULL,
+		  targetDocument = GetHTMLDocument (documentURL, form_data,
 				   doc, doc, CE_TRUE, TRUE, 
 				   (void *) FollowTheLink_callback, (void *) ctx);
+		  if (info)
+		    TtaFreeMemory (info);
 	       }
 	return (TRUE);
 	  }
@@ -712,6 +722,10 @@ Document       doc;
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
+      if (DocumentMeta[doc]->form_data)
+	TtaFreeMemory (DocumentMeta[doc]->form_data);
+      TtaFreeMemory (DocumentMeta);
+      DocumentMeta[doc] = NULL;
       RemoveDocCSSs (doc, TRUE);
       RemoveDocumentImages (doc);
     }

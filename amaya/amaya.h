@@ -220,8 +220,19 @@ typedef enum
   docHelp,
   docText
 } DocumentType;
+
+
+/* a record for data associated with a request */
+typedef struct _DocumentMetaDataElement
+{
+  char *form_data;  /* form data associated with a URL */
+  ClickEvent method;  /* method used to send this data */
+} DocumentMetaDataElement;
+
 #define DocumentTableLength 10
 THOT_EXPORT char        *DocumentURLs[DocumentTableLength];
+/* Any formdata associated with a URL */
+THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
 /* TRUE if the document is displayed by help commands */
 THOT_EXPORT DocumentType DocumentTypes[DocumentTableLength];
 /* The whole document is loaded when the corresponding value
@@ -236,7 +247,7 @@ THOT_EXPORT int          IButton;
 THOT_EXPORT int          BButton;
 THOT_EXPORT int          TTButton;
 
-#define IMAGE_NOT_LOADED	0
+#define IMAGE_NOT_LOADED        0
 #define IMAGE_LOCAL		1
 #define IMAGE_LOADED		2
 #define IMAGE_MODIFIED		3

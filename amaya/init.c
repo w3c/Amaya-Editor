@@ -204,7 +204,8 @@ extern void CreateFormPlugin (Document, View);
 extern void CreateFormJava (Document, View);
 #endif
 
-/* the structure used for the GETHTMLDocument_callback function */
+/* the structure used for storing the context of the 
+   GetHTMLDocument_callback function */
 typedef struct _GETHTMLDocument_context {
   Document doc;
   Document baseDoc;
@@ -213,21 +214,32 @@ typedef struct _GETHTMLDocument_context {
   boolean local_link;
   char *target;
   char *documentname;
+  char *form_data;
+  ClickEvent  method;
   char *tempdocument;
   TTcbf *cbf;
   void *ctx_cbf;
 } GETHTMLDocument_context;
 
+/* the structure used for storing the context of the 
+   Reload_callback function */
+typedef struct _RELOAD_context {
+  Document newdoc;
+  char *documentname;
+  char *form_data;
+  ClickEvent method;
+} RELOAD_context;
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
    corresponding document is already loaded or 0.          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            IsDocumentLoaded (char *documentURL)
+Document            IsDocumentLoaded (char *documentURL, char *form_data)
 #else
-Document            IsDocumentLoaded (documentURL)
+Document            IsDocumentLoaded (documentURL, form_data)
 char               *documentURL;
+char               *form_data;
 
 #endif
 {
@@ -255,15 +267,24 @@ char               *documentURL;
 	   i++;
 	else
 	  {
+	    /* compare the url */
 	     found = (strcmp (documentURL, DocumentURLs[i]) == 0
 		      || strcmp (otherURL, DocumentURLs[i]) == 0);
+	     /* compare the form_data */
+	     if (found 
+		 && (!((!form_data && !DocumentMeta[i]->form_data)
+		       || (form_data && DocumentMeta[i]->form_data
+			   && !strcmp (form_data, 
+				       DocumentMeta[i]->form_data)))))
+		 found = FALSE;
+
 	     if (!found)
 		i++;
 	  }
      }
-
    TtaFreeMemory (otherURL);
-   if (i < DocumentTableLength)
+
+   if (found)
       /* document is found */
       return ((Document) i);
    else
@@ -751,7 +772,7 @@ char               *text;
 
       if (!CanReplaceCurrentDocument (document, view))
 	{
-	  /* restore the previous value */
+	  /* restore the previous value @@ */
 	  TtaSetTextZone (document, view, 1, DocumentURLs[document]);
 	  /* abort the command */
 	  return;
@@ -1216,11 +1237,13 @@ char               *pathname;
   tempfile gives the file name of the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, char *pathname, char *tempfile, char *documentname, char *content_type, boolean history)
+static Document     LoadHTMLDocument (Document doc, char *pathname, char *form_data, int method, char *tempfile, char *documentname, char *content_type, boolean history)
 #else
-static Document     LoadHTMLDocument (doc, pathname, tempfile, documentname, content_type, history)
+static Document     LoadHTMLDocument (doc, pathname, form_data, method, tempfile, documentname, content_type, history)
 Document            doc;
 char               *pathname;
+char               *form_data;
+int                 method;
 char               *tempfile;
 char               *documentname;
 char               *content_type;
@@ -1305,7 +1328,9 @@ boolean		    history;
 	     modified */
 	  if (history)
 	    if (!TtaIsDocumentModified (doc))
-	      AddDocHistory (doc, DocumentURLs[doc]);
+	      AddDocHistory (doc, DocumentURLs[doc], 
+			     DocumentMeta[doc]->form_data,
+			     DocumentMeta[doc]->method);
 	  /* free the previous document */
 	  newdoc = InitDocView (doc, pathname);
 	}
@@ -1350,10 +1375,35 @@ boolean		    history;
       if (DocumentURLs[newdoc] != NULL)
 	TtaFreeMemory (DocumentURLs[(int) newdoc]);
       DocumentURLs[newdoc] = s;
+      /* save the document's formdata into the document table */
+      if (DocumentMeta[newdoc] != NULL)
+	{
+	  TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
+	  TtaFreeMemory (DocumentMeta[(int) newdoc]);
+	}
+      DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+      DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
+      DocumentMeta[newdoc]->method = method;
+
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
-	TtaSetTextZone (newdoc, 1, 1, s);
-      
+	{
+	  /* concatenate the URL and its form_data and then
+	     display it on the amaya URL box */
+	  i = strlen (pathname) + 1;
+	  if (form_data && method != CE_FORM_POST)
+	    i += strlen (form_data);
+	  s = TtaGetMemory (i);
+
+	  if (form_data && method != CE_FORM_POST)
+	    sprintf (s, "%s?%s", pathname, form_data);
+	  else
+	    strcpy (s, pathname);
+
+	  TtaSetTextZone (newdoc, 1, 1, s);
+	  TtaFreeMemory (s);
+	}
+
       tempdir = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
       StartParser (newdoc, tempdocument, documentname, tempdir, pathname,
@@ -1391,12 +1441,18 @@ void *context;
   char *pathname;
   char *tempfile;
   char *documentname;
+  char *form_data;
+  ClickEvent method;
   Document res;
+  RELOAD_context *ctx;
 
+  /* restore the context associated with the request */
+  ctx = (RELOAD_context *) context;
+  documentname = ctx->documentname;
+  newdoc = ctx->newdoc;
+  form_data = ctx->form_data;
+  method = ctx->method;
 
-  documentname = (char *) context;
-
-  newdoc = doc;
   tempfile = outputfile;
 
   pathname = TtaGetMemory (MAX_LENGTH);
@@ -1406,8 +1462,8 @@ void *context;
      {
        TtaSetCursorWatch (0, 0);
        /* do we need to control the last slash here? */
-       res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname,
-			       content_type, FALSE);
+       res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, 
+			       documentname, content_type, FALSE);
 	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
@@ -1418,6 +1474,9 @@ void *context;
   ResetStop(newdoc);
   TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
+  if (form_data)
+    TtaFreeMemory (form_data);
+  TtaFreeMemory (ctx);
 }
 
 
@@ -1437,6 +1496,10 @@ View                view;
    char               *pathname;
    char               *documentname;
    int                 toparse;
+   char               *form_data;
+   ClickEvent          method;
+   int                 mode;
+   RELOAD_context     *ctx;
 
    if (DocumentURLs[(int) document] == NULL)
       /* the document has not been loaded yet */
@@ -1453,6 +1516,11 @@ View                view;
    pathname = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
    NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname, NULL);
+   if (DocumentMeta[document]->form_data)
+     form_data = TtaStrdup (DocumentMeta[document]->form_data);
+   else
+     form_data = NULL;
+   method = DocumentMeta[document]->method;
 
    if (!IsW3Path (pathname) && !TtaFileExist (pathname))
      {
@@ -1476,26 +1544,44 @@ View                view;
      }
 #endif 
 
+#ifdef AMAYA_JAVA
+   mode = AMAYA_SYNC | AMAYA_NOCACHE;
+#else
+   mode = AMAYA_ASYNC | AMAYA_NOCACHE;
+#endif /* AMAYA_JAVA */
+
+   if (method == CE_FORM_POST)
+     mode |= AMAYA_FORM_POST;
+
    tempfile = TtaGetMemory (MAX_LENGTH);
    tempfile[0] = EOS;
    toparse = 0;
    ActiveTransfer (newdoc);
+   /* Create the context for the callback */
+
+   ctx = TtaGetMemory (sizeof (RELOAD_context));
+   ctx->newdoc = newdoc;
+   ctx->documentname = documentname;
+   ctx->form_data = form_data;
+   ctx->method = method;
+
    if (IsW3Path (pathname))
      {
        /* load the document from the Web */
 #ifdef AMAYA_JAVA
-       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
-			       AMAYA_SYNC | AMAYA_NOCACHE,
+       toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile, 
+			       mode, 
 			       NULL, NULL, NULL, NULL, YES, NULL);
 #else /* AMAYA_JAVA */
-       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
-			       AMAYA_ASYNC | AMAYA_NOCACHE,
+       toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile, 
+			       mode,
 			       NULL, NULL, (void *) Reload_callback, 
-			       (void *) documentname, YES, NULL);
+			       (void *) ctx, YES, NULL);
 #endif /* AMAYA_JAVA */
      }
    else if (TtaFileExist (pathname))
-     Reload_callback (newdoc, 0, pathname, tempfile, NULL, (void *) documentname);
+     Reload_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
+
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
    
@@ -1925,6 +2011,8 @@ void *context;
    char               *target;
    char               *pathname;
    char               *documentname;
+   char               *form_data;
+   ClickEvent          method;
    char               *tempdocument;
    char               *s;
    int                 i;
@@ -1947,11 +2035,13 @@ void *context;
    history = ctx->history;
    target = ctx->target;
    documentname = ctx->documentname;
+   form_data = ctx->form_data;
+   method = ctx->method;
    tempdocument = ctx->tempdocument;
    cbf = ctx->cbf;
    ctx_cbf = ctx->ctx_cbf;
    local_link = ctx->local_link;
-
+   
    pathname = TtaGetMemory (MAX_LENGTH + 1);
    strncpy (pathname, urlName, MAX_LENGTH);
    pathname[MAX_LENGTH] = EOS;
@@ -1975,8 +2065,9 @@ void *context;
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
 	   /* do we need to control the last slash here? */
-	   res = LoadHTMLDocument (newdoc, pathname, tempfile, 
-				   documentname, content_type, history);
+	   res = LoadHTMLDocument (newdoc, pathname, form_data, method, 
+				   tempfile, documentname, content_type, 
+				   history);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
@@ -2000,12 +2091,22 @@ void *context;
 	 {
 	   if (DocumentURLs[newdoc] == NULL)
 	     {
-	       /* save the document name into the document table */
+	       /* save the document name into the document table @@@ */
 	       i = strlen (pathname) + 1;
 	       s = TtaGetMemory (i);
 	       strcpy (s, pathname);
 	       DocumentURLs[newdoc] = s;
 	       TtaSetTextZone (newdoc, 1, 1, s);
+	       /* save the document's formdata into the document table */
+	       if (DocumentMeta[newdoc]->form_data != NULL)
+		 if (DocumentMeta[newdoc] != NULL)
+		   {
+		     TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
+		     TtaFreeMemory (DocumentMeta[(int) newdoc]);
+		   }
+	       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+	       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
+	       DocumentMeta[newdoc]->method = method;
 	     }
 	   W3Loading = 0;	/* loading is complete now */
 	 }
@@ -2037,6 +2138,8 @@ void *context;
    TtaFreeMemory (pathname);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (tempdocument);
+   if (form_data)
+     TtaFreeMemory (form_data);
    TtaFreeMemory (ctx);
    if (DocumentTypes[newdoc] == docHelp)
      TtaSetDocumentAccessMode (newdoc, 0);
@@ -2055,8 +2158,8 @@ void *context;
 #ifdef __STDC__
 Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, ClickEvent CE_event, boolean history, TTcbf *cbf, void *ctx_cbf)
 #else
-Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
-const char         *documentPath;
+Document            GetHTMLDocument (documentPath, const char *form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
+char               *documentPath;
 char               *form_data;
 Document            doc;
 Document            baseDoc;
@@ -2111,7 +2214,7 @@ void               *ctx_cbf;
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
    if (parameters[0] == EOS)
-     newdoc = IsDocumentLoaded (pathname);
+     newdoc = IsDocumentLoaded (pathname, form_data);
    else
      {
        /* we need to ask the server */
@@ -2119,25 +2222,13 @@ void               *ctx_cbf;
        strcat (pathname, "?");
        strcat (pathname, parameters);
      }
-   
-   if ((CE_event == CE_FORM_POST) || (CE_event == CE_FORM_GET))
-     /* special checks for forms */
-     {
-       /* we always have a fresh newdoc for forms */
-       newdoc = 0;
-       if (!IsW3Path (pathname))
-	 {
-	   /* the target document doesn't exist */
-	   TtaSetStatus (baseDoc, 1, 
-			 TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
-	   ok = FALSE; /* do not continue */
-	 }
-     }
-   
+
    if (ok && newdoc != 0 && history)
      /* it's just a move in the same document */
      /* record the current position in the history */
-     AddDocHistory (newdoc, DocumentURLs[newdoc]);
+     AddDocHistory (newdoc, DocumentURLs[newdoc], 
+		    DocumentMeta[newdoc]->form_data,
+		    DocumentMeta[newdoc]->method);
 
    if (ok)
      {
@@ -2149,6 +2240,11 @@ void               *ctx_cbf;
        ctx->history = history;
        ctx->target = target;
        ctx->documentname = documentname;
+       if (form_data)
+	 ctx->form_data = TtaStrdup (form_data);
+       else
+	 ctx->form_data = NULL;
+       ctx->method = CE_event;
        ctx->tempdocument = tempdocument;
        ctx->cbf = cbf;
        ctx->ctx_cbf = ctx_cbf;
@@ -2228,19 +2324,21 @@ void               *ctx_cbf;
 	       W3Loading = newdoc;
 	       ActiveTransfer (newdoc);
 	       /* set up the transfer mode */
+	       mode = AMAYA_ASYNC;
 	       if (CE_event == CE_FORM_POST)
-		 mode = AMAYA_ASYNC | AMAYA_FORM_POST | AMAYA_NOCACHE;
+		 mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
 	       else if (CE_event == CE_MAKEBOOK)
 		 mode = AMAYA_ASYNC;
-	       else
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-		 mode = AMAYA_ASYNC;
-#else
-	         mode = AMAYA_ASYNC;
-#endif /* AMAYA_JAVA */
+
 		 if (IsW3Path (pathname))
 		   {
-		     if (CE_event == CE_FORM_POST)
+		     if (CE_event != CE_FORM_POST
+			 && !strcmp (documentname, "noname.html"))
+		       {
+			 slash = strlen (pathname);
+			 if (slash && pathname[slash - 1] != '/')
+			   strcat (pathname, "/");
+		       }
 		       toparse =  GetObjectWWW (newdoc,
 						pathname,
 						form_data, 
@@ -2252,39 +2350,6 @@ void               *ctx_cbf;
 						(void *) ctx,
 						YES,
 						NULL);
-		     else
-		       {
-			 if (!strcmp (documentname, "noname.html"))
-			   {
-			     slash = strlen (pathname);
-			     if (slash && pathname[slash - 1] != '/')
-			       strcat (pathname, "/");
-			     
-			     toparse = GetObjectWWW (newdoc,
-						     pathname,
-						     NULL, 
-						     tempfile,
-						     mode,
-						     NULL,
-						     NULL,
-						     (void *) GetHTMLDocument_callback, 
-						     (void *) ctx,
-						     YES,
-						     NULL);
-			   }
-			 else 
-			   toparse = GetObjectWWW (newdoc, 
-						   pathname,
-						   NULL, 
-						   tempfile, 
-						   mode,
-						   NULL, 
-						   NULL,
-						   (void *) GetHTMLDocument_callback, 
-						   (void *) ctx,
-						   YES,
-						   NULL);
-		       }
 		   }
 		 else
 		   {
@@ -2924,16 +2989,16 @@ static boolean        RestoreAmayaDocs ()
 		      if (IsW3Path (docname))
 			{
 			  /* it's a remote file */
-			  LoadHTMLDocument (newdoc, docname, tempdoc, 
-					    DocumentName, NULL, FALSE);
+			  LoadHTMLDocument (newdoc, docname, NULL, CE_FALSE, 
+					    tempdoc, DocumentName, NULL, FALSE);
 			}
 		      else
 			{
 			  /* it's a local file */
 			  tempfile[0] = EOS;
 			  /* load the temporary file */
-			  LoadHTMLDocument (newdoc, tempdoc, tempfile, 
-					    DocumentName, NULL, FALSE);
+			  LoadHTMLDocument (newdoc, tempdoc, NULL, CE_FALSE,
+					    tempfile, DocumentName, NULL, FALSE);
 			  /* change its URL */
 			  TtaFreeMemory (DocumentURLs[newdoc]);
 			  len = strlen (docname) + 1;
@@ -3114,6 +3179,7 @@ NotifyEvent        *event;
        /* initialize document table */
        DocumentURLs[i] = NULL;
        DocumentTypes[i] = docHTML;
+       DocumentMeta[i] = NULL;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and image files */
@@ -3150,9 +3216,6 @@ NotifyEvent        *event;
 
    /* initialize parser mapping table and HTLib */
    InitMapping ();
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-   QueryInit ();
-#endif
 
    /* Define the backup function */
    TtaSetBackup (BackUpDocs);
@@ -3169,6 +3232,10 @@ NotifyEvent        *event;
    InitTransform ();
    /* initialize automaton for the HTML parser */
    InitAutomaton ();
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
+   /* initialize the libwww */
+   QueryInit ();
+#endif
 
    CurrentDocument = 0;
    DocBook = 0;

@@ -12,16 +12,16 @@
  * functions for resetting a form to its default value, and, finally,
  * functions for parsing and for submitting a form.
  * If you compile this module with -DFORM_DEBUG, then each time you press on
- * a Submit or Reset button, the subtree of the form will be printed
+ * a Submit or Resetbutton, the subtree of the form will be printed
  * out to /tmp/FormTree.dbg.
  *
  * Authors: J. Kahan, I. Vatton
  *
  */
 
-/*
+/**
 #define FORM_DEBUG
-*/
+**/
 
 /* Included headerfiles */
 #define THOT_EXPORT extern
@@ -185,12 +185,19 @@ unsigned char      *element;
 		   }
 	  }
 	/* for all other characters */
-	else
-	  {
-	     EscapeChar (&tmp[1], *element);
-	     AddToBuffer (tmp);
-	  }
-
+	else 
+	  if (*element == '\n')
+	    {
+	      EscapeChar (&tmp[1], '\r');
+	      AddToBuffer (&tmp[0]);
+	      EscapeChar (&tmp[1], '\n');
+	      AddToBuffer (&tmp[0]);
+	    }
+	  else
+	    {
+	      EscapeChar (&tmp[1], *element);
+	      AddToBuffer (tmp);
+	    }
 	element++;
      }
 }
@@ -638,15 +645,19 @@ char               *action;
 	       if (urlName != (char *) NULL)
 		 {
 		    strcpy (urlName, action);
+		    /*** @@ removing it from here
 		    strcat (urlName, "?");
 		    if (buffer_size)
 		      strcat (urlName, buffer);
-		    GetHTMLDocument (urlName, NULL, doc, doc, CE_FORM_GET, TRUE, FALSE, FALSE);
+		      ***/
+		    GetHTMLDocument (urlName, buffer, doc, doc,
+				     CE_FORM_GET, TRUE, FALSE, FALSE);
 		    TtaFreeMemory (urlName);
 		 }
 	       break;
 	    case HTML_ATTR_METHOD_VAL_Post_:
-	       GetHTMLDocument (action, buffer, doc, doc, CE_FORM_POST, TRUE, NULL, NULL);
+	       GetHTMLDocument (action, buffer, doc, doc,
+				CE_FORM_POST, TRUE, NULL, NULL);
 	       break;
 	    default:
 	       break;

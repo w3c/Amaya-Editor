@@ -24,7 +24,9 @@ extern void GotoNextHTML_callback ( int newdoc,
 extern void GotoNextHTML ( Document doc,
                            View view );
 extern void AddDocHistory ( Document doc,
-                            char *url );
+                            char *url,
+			    char *form_data,
+			    ClickEvent method );
 
 #else /* __STDC__ */
 
@@ -46,7 +48,14 @@ extern void GotoNextHTML_callback (/* int newdoc,
 extern void GotoNextHTML (/* Document doc,
                              View view */);
 extern void AddDocHistory (/* Document doc,
-                              char *url */);
+                              char *url,
+			      char *form_data,
+			      ClickEvent method */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
+
+
+
+
+

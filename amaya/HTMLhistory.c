@@ -23,6 +23,8 @@
 typedef struct _HistElement
 {
 	char*	HistUrl;	/* document URL */
+        char*   form_data;       /* data associated with forms */
+        int     method;         /* method used to request this URL */
 	int	HistPosition;	/* volume preceding the first element to be
 				made visible in the main window */
 	int	HistDistance;	/* distance from the  top of the window to the
@@ -229,6 +231,8 @@ View                view;
 {
    int                 prev, i;
    char               *url = NULL;
+   char               *form_data = NULL;
+   int                method;
    boolean	       last, hist;
    GotoHistory_context *ctx;
 
@@ -287,6 +291,8 @@ View                view;
 
    /* load the previous document */
    url = DocHistory[doc][prev].HistUrl;
+   form_data = DocHistory[doc][prev].form_data;
+   method = DocHistory[doc][prev].method;
 
    /* save the context */
    ctx = TtaGetMemory (sizeof (GotoHistory_context));
@@ -300,11 +306,11 @@ View                view;
        /* it's just a move in the same document */
        if (hist)
 	 /* record the current position in the history */
-	 AddDocHistory (doc, url);
+	 AddDocHistory (doc, url, form_data, method);
        GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
      }
-   else
-     (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, hist, (void *) GotoPreviousHTML_callback, (void *) ctx);
+   else 
+     (void) GetHTMLDocument (url, form_data, doc, doc, method, hist, (void *) GotoPreviousHTML_callback, (void *) ctx);
 }
 
 /*----------------------------------------------------------------------
@@ -365,6 +371,9 @@ View                view;
 #endif
 {
    char         *url = NULL;
+   char         *form_data = NULL;
+   int           method;
+
    int		next, i;
    GotoHistory_context  *ctx;
 
@@ -415,6 +424,8 @@ View                view;
    /* load the next document */
    DocHistoryIndex[doc] = next;
    url = DocHistory[doc][next].HistUrl;
+   form_data = DocHistory[doc][next].form_data;
+   method = DocHistory[doc][next].method;
 
    /* save the context */
    ctx = TtaGetMemory (sizeof (GotoHistory_context));
@@ -425,8 +436,8 @@ View                view;
    if (!strcmp (url, DocumentURLs[doc]))
      /* it's just a move in the same document */
      GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
-   else
-     (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, FALSE, (void *) GotoNextHTML_callback, (void *) ctx);
+   else 
+     (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE, (void *) GotoNextHTML_callback, (void *) ctx);
 }
 
 /*----------------------------------------------------------------------
@@ -435,11 +446,13 @@ View                view;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                AddDocHistory (Document doc, char *url)
+void                AddDocHistory (Document doc, char *url, char *form_data, ClickEvent method)
 #else  /* __STDC__ */
-void                AddDocHistory (doc, url)
+void                AddDocHistory (doc, url, form_data, method)
 Document	    doc;
 char               *url;
+char               *form_data;
+ClickEvent          method;
 
 #endif /* __STDC__ */
 {
@@ -469,10 +482,15 @@ char               *url;
       /* The Back button is normally OFF set it ON */
       SetArrowButton (doc, TRUE, TRUE);
 
-   /* store the URL */
+   /* store the URL and the associated form data */
    if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
-      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+     TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+   if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
+     TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
+   
    DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaStrdup (url);
+   DocHistory[doc][DocHistoryIndex[doc]].form_data = TtaStrdup (form_data);
+   DocHistory[doc][DocHistoryIndex[doc]].method = method;
 
    position = RelativePosition (doc, &distance);
    DocHistory[doc][DocHistoryIndex[doc]].HistDistance = distance;
@@ -483,9 +501,21 @@ char               *url;
 
    /* delete the next entry in the history */
    if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
-      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+       TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+   if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
+       TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
+
    DocHistory[doc][DocHistoryIndex[doc]].HistUrl = NULL;
+   DocHistory[doc][DocHistoryIndex[doc]].form_data = NULL;
+   DocHistory[doc][DocHistoryIndex[doc]].method = CE_FALSE;
 
    /* set the Forward button off */
    SetArrowButton (doc, FALSE, FALSE);
 }
+
+
+
+
+
+
+

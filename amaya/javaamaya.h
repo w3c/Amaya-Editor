@@ -11,7 +11,8 @@
  */
 
 #ifdef __STDC__
-extern Document IsDocumentLoaded ( char *documentURL );
+extern Document IsDocumentLoaded ( char *documentURL,
+				   char *form_data);
 extern void ExtractParameters ( char *aName,
                                 char *parameters );
 extern void ExtractSuffix ( char *aName,
@@ -60,7 +61,8 @@ extern void AmayaClose ( Document document,
 
 #else /* __STDC__ */
 
-extern Document IsDocumentLoaded (/* char *documentURL */);
+extern Document IsDocumentLoaded (/* char *documentURL,
+                                     char *form_data  */);
 extern void ExtractParameters (/* char *aName,
                                   char *parameters */);
 extern void ExtractSuffix (/* char *aName,

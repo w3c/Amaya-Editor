@@ -1762,17 +1762,17 @@ void *context_tcbf;
  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int GetObjectWWW (int docid, char* urlName, char* postString,
+int GetObjectWWW (int docid, char* urlName, char* formdata,
 		  char* outputfile, int mode, TIcbf* incremental_cbf, 
 		  void* context_icbf, TTcbf* terminate_cbf, 
 		  void* context_tcbf, boolean error_html, char *content_type)
 #else
-int GetObjectWWW (docid, urlName, postString, outputfile, mode, 
+int GetObjectWWW (docid, urlName, formdata, outputfile, mode, 
 		  incremental_cbf, context_icbf, 
 		  terminate_cbf, context_tcbf, error_html, content_type)
 int           docid;
 char         *urlName;
-char         *postString;
+char         *formdata;
 char         *outputfile;
 int           mode;
 TIcbf        *incremental_cbf;
@@ -1947,9 +1947,11 @@ char 	     *content_type;
 			   HTAtom_for ("application/x-www-form-urlencoded"));
        HTAnchor_setLength ((HTParentAnchor *) me->anchor, me->block_size);
        HTRequest_setEntityAnchor (me->request, me->anchor);
-       HTRequest_setEntityAnchor (me->request, me->anchor);
-       me->formdata = PrepareFormdata (postString);
      } 
+
+   /* create the formdata element for libwww */
+   if (formdata)
+     me->formdata = PrepareFormdata (formdata);
 
    /* do the request */
    if (mode & AMAYA_FORM_POST)
@@ -1961,6 +1963,9 @@ char 	     *content_type;
 				    me->request);
        status = posted ? YES : NO; 
      }
+   else if (formdata)
+     status = HTGetFormAnchor(me->formdata, (HTAnchor *) me->anchor,
+			      me->request);
    else
      status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
 

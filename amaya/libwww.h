@@ -128,9 +128,6 @@ typedef struct _AHTReqContext
      HTParentAnchor     *dest;	/* Destination for PUT etc.              */
      unsigned long       block_size;	/* size in bytes of the file to put      */
     int                 put_counter;	/* number of bytes already put           */
-    char               *mem_ptr;	/* ptr to a struct in mem which contains a copy */
-     /* of the file to put                           */
-
     HTAssocList        *formdata;        /* ptr to a struct containing the formdata used with POST */
 
      char               *error_stream;        /* pointer to an error message associated with the

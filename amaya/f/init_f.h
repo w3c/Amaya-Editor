@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document IsDocumentLoaded ( char *documentURL );
+extern Document IsDocumentLoaded ( char *documentURL,
+				   char *form_data );
 extern boolean CanReplaceCurrentDocument ( Document document,
                                            View view );
 extern void ExtractParameters ( char *aName,
@@ -121,7 +122,8 @@ extern void AmayaClose ( Document document,
 
 #else /* __STDC__ */
 
-extern Document IsDocumentLoaded (/* char *documentURL */);
+extern Document IsDocumentLoaded (/* char *documentURL,
+				     char *form_data */);
 extern boolean CanReplaceCurrentDocument (/* Document document,
                                              View view */);
 extern void ExtractParameters (/* char *aName,
