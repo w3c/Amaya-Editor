@@ -1385,6 +1385,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 #ifndef _WINDOWS
   int                 frame;
   ThotWidget          widget;
+  gint                wx, wy;
 #ifdef _GTK
   ThotWidget          tmpw;
 #else /* ! _GTK */  
@@ -1400,9 +1401,24 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));
   w = tmpw->allocation.width;
   h = tmpw->allocation.height;
-  gdk_window_get_position(tmpw->window,  
-			  (gint *)&x, 
-			  (gint *)&y);
+  x = y = 0;
+  while (tmpw) 
+    {
+      switch (GTK_OBJECT_TYPE(tmpw)) 
+	{
+	  /* Ignore the following containers */
+	case 49429:   /* GtkTable */
+	case 46101:   /* GtkHBox */
+	case 40725:   /* GtkVBox */
+	  break;
+	default:
+	  gdk_window_get_position(tmpw->window, &wx, &wy);
+	  x += wx;
+	  y += wy;
+	}
+      tmpw = tmpw->parent;
+    }
+  
 #else /* !_GTK */
   widget = XtParent (XtParent (XtParent (widget)));
 
