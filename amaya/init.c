@@ -6667,8 +6667,8 @@ void ShowButtons (Document doc, View view)
    }
 #else /* _WINDOWS */
   SButtons[doc] = !SButtons[doc];
-  TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);
 #endif /* _WINDOWS */
+  TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);
   TtcSwitchButtonBar (doc, view);
 }
 
@@ -6700,8 +6700,8 @@ void ShowAddress (Document doc, View view)
    }
 #else /* _WINDOWS */
   SAddress[doc] = !SAddress[doc];
-  TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);
 #endif /* _WINDOWS */
+  TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);
   TtcSwitchCommands (doc, view);
 }
 

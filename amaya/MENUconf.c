@@ -1927,13 +1927,13 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_SHOWBUTONS, (S_Address) 
+  CheckDlgButton (hwnDlg, IDC_SHOWBUTTONS, (S_Buttons) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_SHOWADDRESS, (S_Buttons) 
+  CheckDlgButton (hwnDlg, IDC_SHOWADDRESS, (S_Address) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_SHOWTARGETS, (S_Targets) 
+  CheckDlgButton (hwnDlg, IDC_SHOWTARGET, (S_Targets) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_NUMBERS, (S_Numbers) 
+  CheckDlgButton (hwnDlg, IDC_NUMBER, (S_Numbers) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_CRLF, (ExportCRLF) 
 		  ? BST_CHECKED : BST_UNCHECKED);
@@ -1990,11 +1990,13 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       GeneralHwnd = hwnDlg;
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWADDR),
+      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWBUTTONS),
+		     TtaGetMessage (1, TShowButtonbar));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWADDRESS),
 		     TtaGetMessage (1, TShowTextZone));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWTARGETS),
+      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWTARGET),
 		     TtaGetMessage (1, TShowTargets));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBERS),
+      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBER),
 		     TtaGetMessage (1, TSectionNumber));
       SetWindowText (GetDlgItem (hwnDlg, IDC_CRLF),
 		     TtaGetMessage (AMAYA, AM_EXPORT_CRLF));
@@ -2058,10 +2060,10 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_SHOWADDRESS:
 	  S_Address = !S_Address;
 	  break;
-	case IDC_SHOWTARGETS:
+	case IDC_SHOWTARGET:
 	  S_Targets = !S_Targets;
 	  break;
-	case IDC_NUMBERS:
+	case IDC_NUMBER:
 	  S_Numbers = !S_Numbers;
 	  break;
 	case IDC_CRLF:
@@ -2837,7 +2839,7 @@ void BrowseConfMenu (Document document, View view)
    TtaShowDialogue (BrowseBase + BrowseMenu, TRUE);
 #else
   if (!BrowseHwnd)
-	   DialogBox (hInstance, MAKEINTRESOURCE (PUBLISHMENU), NULL, 
+	   DialogBox (hInstance, MAKEINTRESOURCE (BROWSEMENU), NULL, 
 	  (DLGPROC) WIN_BrowseDlgProc);
   else
      SetFocus (BrowseHwnd);

@@ -44,26 +44,26 @@ BEGIN
                     WS_TABSTOP,7,128,138,8
     CONTROL         "Show background images",IDC_BGIMAGES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,140,138,10
-    CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
+    CONTROL         "Show button bar",IDC_SHOWBUTTONS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,153,138,10
     LTEXT           "Amaya user directory",IDC_TAPPHOME,7,8,111,8
     EDITTEXT        IDC_APPHOME,7,19,200,14,ES_AUTOHSCROLL | ES_READONLY
     LTEXT           "Temporary directory",IDC_TTMPDIR,7,37,135,8
     EDITTEXT        IDC_TMPDIR,7,48,200,14,ES_AUTOHSCROLL
-    CONTROL         "FTP support (experimental)",IDC_ENABLEFTP,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,206,138,10
+    CONTROL         "Numbering",IDC_NUMBER,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,192,138,10
     GROUPBOX        "",IDC_ACCESSKEY,160,118,85,55
     CONTROL         "Alt",IDC_AALT,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,
                     168,128,24,10
     CONTROL         "Ctrl",IDC_ACTRL,"Button",BS_AUTORADIOBUTTON,168,142,26,
                     10
     CONTROL         "",IDC_ANONE,"Button",BS_AUTORADIOBUTTON,168,156,72,8
-    CONTROL         "Show targets",IDC_SHOWTARGETS,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Show address",IDC_SHOWADDRESS,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,166,138,10
-    CONTROL         "Section numbering",IDC_NUMBERS,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Show targets",IDC_SHOWTARGET,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,180,138,10
     CONTROL         "Export CR/LF",IDC_CRLF,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,193,138,10
+                    WS_TABSTOP,7,206,138,10
 END
 
 PUBLISHMENU DIALOG DISCARDABLE  100, 100, 242, 135
@@ -342,6 +342,22 @@ BEGIN
     PUSHBUTTON      "",IDCANCEL,89,59,58,14
 END
 
+BROWSEMENU DIALOG DISCARDABLE  100, 100, 242, 79
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Browsing Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,30,51,50,14
+    PUSHBUTTON      "Done",ID_DONE,170,51,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,100,51,50,14
+    CONTROL         "Use double-click",IDC_DOUBLECLICK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,18,182,8
+    CONTROL         "Enable FTP",IDC_ENABLEFTP,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,30,174,10
+    CONTROL         "Load images",IDC_LOADIMG,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,6,228,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -476,6 +492,14 @@ BEGIN
         RIGHTMARGIN, 155
         TOPMARGIN, 7
         BOTTOMMARGIN, 74
+    END
+
+    BROWSEMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 235
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 72
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -875,7 +899,7 @@ GRAPHICSDIALOG DIALOGEX 400, 20, 61, 139
 STYLE DS_SYSMODAL | DS_3DLOOK | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_TOOLWINDOW | WS_EX_CONTEXTHELP
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "",ID_DONE,8,124,44,14
     CONTROL         405,IDC_GELLIPSE,"Static",SS_BITMAP | SS_NOTIFY,2,40,27,
