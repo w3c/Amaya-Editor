@@ -1149,305 +1149,298 @@ void              CreateAttrIntSize (char *buffer, Element el, Document doc)
    EndOfHTMLAttributeValue
    Filling of an HTML attribute value
   ----------------------------------------------------------------------*/
-void               EndOfHTMLAttributeValue (char       *attrValue,
-					    AttributeMapping *lastMappedAttr,
-					    Attribute   currentAttribute,
-					    Element     lastAttrElement,
-					    ThotBool    UnknownAttr,
-					    ParserData *context,
-					    ThotBool    isXML)
-
+void EndOfHTMLAttributeValue (char *attrValue,
+			      AttributeMapping *lastMappedAttr,
+			      Attribute currentAttribute,
+			      Element lastAttrElement,
+			      ThotBool UnknownAttr,
+			      ParserData *context,
+			      ThotBool isXML)
 {
-   AttributeType   attrType, attrType1;
-   Attribute       attr;
-   ElementType	   elType;
-   Element         child, root;
-   Language        lang;
-   char            translation;
-   char            shape;
-   char           *buffer;
-   char           *attrName;
-   int             val;
-   int             length;
-   int             attrKind;
-   ThotBool        done = FALSE;
-   ThotBool        level;
-   char            msgBuffer[MaxMsgLength];
+  AttributeType   attrType, attrType1;
+  Attribute       attr;
+  ElementType	   elType;
+  Element         child, root;
+  Language        lang;
+  char            translation;
+  char            shape;
+  char           *buffer;
+  char           *attrName;
+  char            msgBuffer[MaxMsgLength];
+  int             val;
+  int             length;
+  int             attrKind;
+  ThotBool        done = FALSE;
+  ThotBool        level;
 
-   /* treatments of some particular HTML attributes */
-   if (!strcmp (lastMappedAttr->XMLattribute, "style"))
-     {
-       TtaSetAttributeText (currentAttribute, attrValue,
-			    lastAttrElement, context->doc);
-       ParseHTMLSpecificStyle (context->lastElement, attrValue,
-			       context->doc, 1, FALSE);
-       done = TRUE;
-     }
-   else
-     {
-       if (!strcmp (lastMappedAttr->XMLattribute, "link"))
-	   HTMLSetAlinkColor (context->doc, attrValue);
-       else if (!strcmp (lastMappedAttr->XMLattribute, "alink"))
-	 HTMLSetAactiveColor (context->doc, attrValue);
-       else if (!strcmp (lastMappedAttr->XMLattribute, "vlink"))
-	 HTMLSetAvisitedColor (context->doc, attrValue);
-     }
+  /* treatments of some particular HTML attributes */
+  if (!strcmp (lastMappedAttr->XMLattribute, "style"))
+    {
+      TtaSetAttributeText (currentAttribute, attrValue,
+			   lastAttrElement, context->doc);
+      ParseHTMLSpecificStyle (context->lastElement, attrValue,
+			      context->doc, 1, FALSE);
+      done = TRUE;
+    }
+  else
+    {
+      if (!strcmp (lastMappedAttr->XMLattribute, "link"))
+	HTMLSetAlinkColor (context->doc, attrValue);
+      else if (!strcmp (lastMappedAttr->XMLattribute, "alink"))
+	HTMLSetAactiveColor (context->doc, attrValue);
+      else if (!strcmp (lastMappedAttr->XMLattribute, "vlink"))
+	HTMLSetAvisitedColor (context->doc, attrValue);
+    }
 
-   if (!done)
-     {
-       val = 0;
-       translation = lastMappedAttr->AttrOrContent;
-
-       switch (translation)
-	 {
-	 case 'C':	/* Content */
-	   child = PutInContent (attrValue, context);
-	   if (child != NULL)
-	       TtaAppendTextContent (child, "\" ", context->doc);
-	   break;
-
-	 case 'A':
-	   if (currentAttribute != NULL)
-	     {
-	       TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
-	       switch (attrKind)
-		 {
-		 case 0:	/* enumerate */
-		   if (isXML)
-		     MapHTMLAttributeValue (attrValue, attrType, &val);
-		   else
-		     val = MapAttrValue (lastMappedAttr->ThotAttribute,
-					 attrValue);
-		   if (val < 0)
-		     {
-		       TtaGiveAttributeType (currentAttribute,
-					     &attrType, &attrKind);
-		       attrName = TtaGetAttributeName (attrType);
-		       sprintf (msgBuffer,
-				 "Unknown attribute value \"%s = %s\"",
-				 attrName, attrValue);
-		       if (isXML)
-			 XmlParseError (errorParsing, msgBuffer, 0);
-		       else
-			 HTMLParseError (context->doc, msgBuffer);
-
-		       /* remove the attribute and replace it by an */
-		       /* Invalid_attribute */
-		       TtaRemoveAttribute (lastAttrElement,
-					   currentAttribute, context->doc);
-		       if (isXML)
-			 MapHTMLAttribute ("unknown_attr", &attrType,
-					   NULL, &level, context->doc);
-		       else
-			 {
-			   attrType.AttrSSchema = 
-			     TtaGetDocumentSSchema (context->doc);
-			   attrType.AttrTypeNum =
-			     pHTMLAttributeMapping[0].ThotAttribute;
-			 }
-		       sprintf (msgBuffer, "%s=%s", attrName, attrValue);
-		       CreateHTMLAttribute (lastAttrElement, attrType,
-					    msgBuffer, TRUE, context->doc,
-					    &currentAttribute, &lastAttrElement);
-		     }
-		   else
-		       TtaSetAttributeValue (currentAttribute, val,
-					     lastAttrElement, context->doc);
-		   break;
-		 case 1:	/* integer */
-		   if (attrType.AttrTypeNum == HTML_ATTR_Border &&
-		       !strcasecmp (attrValue, "border"))
-		     {
-		       /* border="border" for a table */
-		       val = 1;
-		       TtaSetAttributeValue (currentAttribute, val,
-					     lastAttrElement, context->doc);
-		     }
-		   else if (sscanf (attrValue, "%d", &val))
-		     TtaSetAttributeValue (currentAttribute, val,
-					   lastAttrElement, context->doc);
-		   else
-		     {
-		       TtaRemoveAttribute (lastAttrElement, currentAttribute,
-					   context->doc);
-		       sprintf (msgBuffer,
-				 "Unknown attribute value \"%s\"",
-				 attrValue);
-		       if (isXML)
-			 XmlParseError (errorParsing, msgBuffer, 0);
-		       else
-			 HTMLParseError (context->doc, msgBuffer);
-		     }
-		   break;
-		 case 2:	/* text */
-		   if (!UnknownAttr)
-		     {
-		       TtaSetAttributeText (currentAttribute, attrValue,
-					    lastAttrElement, context->doc);
-		       if (attrType.AttrTypeNum == HTML_ATTR_Langue)
-			 {
-			   /* it's a LANG attribute value */
-			   lang = TtaGetLanguageIdFromName (attrValue);
-			   if (lang == 0)
-			     {
-			       sprintf (msgBuffer,
-					"warning - unsupported language: %s",
+  if (!done)
+    {
+      val = 0;
+      translation = lastMappedAttr->AttrOrContent;
+      switch (translation)
+	{
+	case 'C':	/* Content */
+	  child = PutInContent (attrValue, context);
+	  if (child != NULL)
+	    TtaAppendTextContent (child, "\" ", context->doc);
+	  break;
+	  
+	case 'A':
+	  if (currentAttribute != NULL)
+	    {
+	      TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
+	      switch (attrKind)
+		{
+		case 0:	/* enumerate */
+		  if (isXML)
+		    MapHTMLAttributeValue (attrValue, attrType, &val);
+		  else
+		    val = MapAttrValue (lastMappedAttr->ThotAttribute,
 					attrValue);
-			       if (isXML)
-				 XmlParseError (errorParsing, msgBuffer, 0);
-			       else
-				 HTMLParseError (context->doc, msgBuffer);
-			     }
-			   else
-			     {
-			       /* change current language */
-			       context->language = lang;
-			       if (isXML)
-				 SetLanguagInXmlStack (lang);
-			       else
-				 SetLanguagInHTMLStack (lang);
-			     }
-			   root = TtaGetRootElement (context->doc);
-			   if (lastAttrElement == root)
-			     /* it's a LANG attribute on the root element */
-			     /* set the RealLang attribute */
-			     {
-			       attrType1.AttrSSchema = TtaGetDocumentSSchema (context->doc);
-			       attrType1.AttrTypeNum = HTML_ATTR_RealLang;
-			       /* this attribute could be already present,
-				  (lang and xml:lang attributes) */
-			       if (!TtaGetAttribute (lastAttrElement,
-						     attrType1))
-				 /* it's not present. Add it */
-				 {
-				   attr = TtaNewAttribute (attrType1);
-				   TtaAttachAttribute (lastAttrElement,
-						       attr, context->doc);
-				   TtaSetAttributeValue (attr,
-							 HTML_ATTR_RealLang_VAL_Yes_,
-							 lastAttrElement,
-							 context->doc);
-				 }
-			     }
-			 }
-		       else if (attrType.AttrTypeNum == HTML_ATTR_accesskey)
-			 TtaAddAccessKey (context->doc, (unsigned int)attrValue[0],
-					  lastAttrElement);
-		     }
-		   else
-		     /* this is the content of an invalid attribute */
-		     /* append it to the current Invalid_attribute */
-		     {
-		       length = strlen (attrValue) + 2;
-		       length += TtaGetTextAttributeLength (currentAttribute);
-		       buffer = TtaGetMemory (length + 1);
-		       TtaGiveTextAttributeValue (currentAttribute,
-						  buffer, &length);
-		       strcat (buffer, "=");
-		       strcat (buffer, attrValue);
-		       TtaSetAttributeText (currentAttribute, buffer,
+		  if (val < 0)
+		    {
+		      TtaGiveAttributeType (currentAttribute,
+					    &attrType, &attrKind);
+		      attrName = TtaGetAttributeName (attrType);
+		      sprintf (msgBuffer,
+			       "Unknown attribute value \"%s = %s\"",
+			       attrName, attrValue);
+		      if (isXML)
+			XmlParseError (errorParsing, msgBuffer, 0);
+		      else
+			HTMLParseError (context->doc, msgBuffer);
+		      
+		      /* remove the attribute and replace it by an */
+		      /* Invalid_attribute */
+		      TtaRemoveAttribute (lastAttrElement,
+					  currentAttribute, context->doc);
+		      if (isXML)
+			MapHTMLAttribute ("unknown_attr", &attrType,
+					  NULL, &level, context->doc);
+		      else
+			{
+			  attrType.AttrSSchema = 
+			    TtaGetDocumentSSchema (context->doc);
+			  attrType.AttrTypeNum =
+			    pHTMLAttributeMapping[0].ThotAttribute;
+			}
+		      sprintf (msgBuffer, "%s=%s", attrName, attrValue);
+		      CreateHTMLAttribute (lastAttrElement, attrType,
+					   msgBuffer, TRUE, context->doc,
+					   &currentAttribute, &lastAttrElement);
+		    }
+		  else
+		    TtaSetAttributeValue (currentAttribute, val,
+					  lastAttrElement, context->doc);
+		  break;
+		case 1:	/* integer */
+		  if (attrType.AttrTypeNum == HTML_ATTR_Border &&
+		      !strcasecmp (attrValue, "border"))
+		    {
+		      /* border="border" for a table */
+		      val = 1;
+		      TtaSetAttributeValue (currentAttribute, val,
 					    lastAttrElement, context->doc);
-		       TtaFreeMemory (buffer);
-		     }
-		   break;
-		 case 3:	/* reference */
-		   break;
-		 }
-	     }
-	   break;
-	   
-	 case SPACE:
-	   if (isXML)
-	     XhtmlTypeAttrValue (attrValue, currentAttribute,
-				 lastAttrElement, context);
-	   else
-	     HTMLTypeAttrValue (attrValue, currentAttribute,
+		    }
+		  else if (sscanf (attrValue, "%d", &val))
+		    TtaSetAttributeValue (currentAttribute, val,
+					  lastAttrElement, context->doc);
+		  else
+		    {
+		      TtaRemoveAttribute (lastAttrElement, currentAttribute,
+					  context->doc);
+		      sprintf (msgBuffer,
+			       "Unknown attribute value \"%s\"",
+			       attrValue);
+		      if (isXML)
+			XmlParseError (errorParsing, msgBuffer, 0);
+		      else
+			HTMLParseError (context->doc, msgBuffer);
+		    }
+		  break;
+		case 2:	/* text */
+		  if (!UnknownAttr)
+		    {
+		      TtaSetAttributeText (currentAttribute, attrValue,
+					   lastAttrElement, context->doc);
+		      if (attrType.AttrTypeNum == HTML_ATTR_Langue)
+			{
+			  /* it's a LANG attribute value */
+			  lang = TtaGetLanguageIdFromName (attrValue);
+			  if (lang == 0)
+			    {
+			      sprintf (msgBuffer,
+				       "warning - unsupported language: %s",
+				       attrValue);
+			      if (isXML)
+				XmlParseError (errorParsing, msgBuffer, 0);
+			      else
+				HTMLParseError (context->doc, msgBuffer);
+			    }
+			  else
+			    {
+			      /* change current language */
+			      context->language = lang;
+			      if (isXML)
+				SetLanguagInXmlStack (lang);
+			      else
+				SetLanguagInHTMLStack (lang);
+			    }
+			  root = TtaGetRootElement (context->doc);
+			  if (lastAttrElement == root)
+			    /* it's a LANG attribute on the root element */
+			    /* set the RealLang attribute */
+			    {
+			      attrType1.AttrSSchema = TtaGetDocumentSSchema (context->doc);
+			      attrType1.AttrTypeNum = HTML_ATTR_RealLang;
+			      /* this attribute could be already present,
+				 (lang and xml:lang attributes) */
+			      if (!TtaGetAttribute (lastAttrElement,
+						    attrType1))
+				/* it's not present. Add it */
+				{
+				  attr = TtaNewAttribute (attrType1);
+				  TtaAttachAttribute (lastAttrElement,
+						      attr, context->doc);
+				  TtaSetAttributeValue (attr,
+							HTML_ATTR_RealLang_VAL_Yes_,
+							lastAttrElement,
+							context->doc);
+				}
+			    }
+			}
+		      else if (attrType.AttrTypeNum == HTML_ATTR_accesskey)
+			TtaAddAccessKey (context->doc, (unsigned int)attrValue[0],
+					 lastAttrElement);
+		    }
+		  else
+		    /* this is the content of an invalid attribute */
+		    /* append it to the current Invalid_attribute */
+		    {
+		      length = strlen (attrValue) + 2;
+		      length += TtaGetTextAttributeLength (currentAttribute);
+		      buffer = TtaGetMemory (length + 1);
+		      TtaGiveTextAttributeValue (currentAttribute,
+						 buffer, &length);
+		      strcat (buffer, "=");
+		      strcat (buffer, attrValue);
+		      TtaSetAttributeText (currentAttribute, buffer,
+					   lastAttrElement, context->doc);
+		      TtaFreeMemory (buffer);
+		    }
+		  break;
+		case 3:	/* reference */
+		  break;
+		}
+	    }
+	  break;
+	  
+	case SPACE:
+	  if (isXML)
+	    XhtmlTypeAttrValue (attrValue, currentAttribute,
 				lastAttrElement, context);
-	   break;
-
+	  else
+	    HTMLTypeAttrValue (attrValue, currentAttribute,
+			       lastAttrElement, context);
+	  break;
+	  
 	 default:
 	   break;
-	 }
+	}
 
       if (lastMappedAttr->ThotAttribute == HTML_ATTR_Width__)
-	 /* HTML attribute "width" for a table or a hr */
-	 /* create the corresponding attribute IntWidthPercent or */
-	 /* IntWidthPxl */
-	 CreateAttrWidthPercentPxl (attrValue, lastAttrElement, context->doc, -1);
+	/* HTML attribute "width" for a table or a hr */
+	/* create the corresponding attribute IntWidthPercent or */
+	/* IntWidthPxl */
+	CreateAttrWidthPercentPxl (attrValue, lastAttrElement, context->doc, -1);
+      else if (!strcmp (lastMappedAttr->XMLattribute, "size"))
+	{
+	  TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
+	  if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
+	    CreateAttrIntSize (attrValue, lastAttrElement, context->doc);
+	}
+      else if (!strcmp (lastMappedAttr->XMLattribute, "shape"))
+	{
+	  child = TtaGetFirstChild (lastAttrElement);
+	  if (child != NULL)
+	    {
+	      switch (val)
+		{
+		case HTML_ATTR_shape_VAL_rectangle:
+		  shape = 'R';
+		  break;
+		case HTML_ATTR_shape_VAL_circle:
+		  shape = 'a';
+		  break;
+		case HTML_ATTR_shape_VAL_polygon:
+		  shape = 'p';
+		  break;
+		default:
+		  shape = SPACE;
+		  break;
+		}
+	      TtaSetGraphicsShape (child, shape, context->doc);
+	    }
+	}
+      else if (!strcmp (lastMappedAttr->XMLattribute, "value"))
+	{
+	  elType = TtaGetElementType (lastAttrElement);
+	  if (elType.ElTypeNum == HTML_EL_Text_Input ||
+	      elType.ElTypeNum == HTML_EL_Password_Input ||
+	      elType.ElTypeNum == HTML_EL_File_Input ||
+	      elType.ElTypeNum == HTML_EL_Input)
+	    /* create a Default_Value attribute with the same content */
+	    {
+	      attrType1.AttrSSchema = attrType.AttrSSchema;
+	      attrType1.AttrTypeNum = HTML_ATTR_Default_Value;
+	      attr = TtaNewAttribute (attrType1);
+	      TtaAttachAttribute (lastAttrElement, attr, context->doc);
+	      TtaSetAttributeText (attr, attrValue,
+				   lastAttrElement, context->doc);
+	    }
+	}
       else
-	 if (!strcmp (lastMappedAttr->XMLattribute, "size"))
-	   {
-	     TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
-	     if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
-	         CreateAttrIntSize (attrValue, lastAttrElement, context->doc);
-	   }
-      else
-	 if (!strcmp (lastMappedAttr->XMLattribute, "shape"))
-	     {
-	       child = TtaGetFirstChild (lastAttrElement);
-	       if (child != NULL)
-		 {
-		   switch (val)
-		     {
-		     case HTML_ATTR_shape_VAL_rectangle:
-		       shape = 'R';
-		       break;
-		     case HTML_ATTR_shape_VAL_circle:
-		       shape = 'a';
-		       break;
-		     case HTML_ATTR_shape_VAL_polygon:
-		       shape = 'p';
-		       break;
-		     default:
-		       shape = SPACE;
-		       break;
-		     }
-		   TtaSetGraphicsShape (child, shape, context->doc);
-		 }
-	     }
-	   else
-	     if (!strcmp (lastMappedAttr->XMLattribute, "value"))
-	       {
-		 elType = TtaGetElementType (lastAttrElement);
-		 if (elType.ElTypeNum == HTML_EL_Text_Input ||
-		     elType.ElTypeNum == HTML_EL_Password_Input ||
-		     elType.ElTypeNum == HTML_EL_File_Input ||
-		     elType.ElTypeNum == HTML_EL_Input)
-		   /* create a Default_Value attribute with the same content */
-		   {
-		     attrType1.AttrSSchema = attrType.AttrSSchema;
-		     attrType1.AttrTypeNum = HTML_ATTR_Default_Value;
-		     attr = TtaNewAttribute (attrType1);
-		     TtaAttachAttribute (lastAttrElement, attr, context->doc);
-		     TtaSetAttributeText (attr, attrValue,
-					  lastAttrElement, context->doc);
-		   }
-	       }
-
-       /* Some HTML attributes are equivalent to a CSS property:      */
-       /*      background     ->                   background         */
-       /*      bgcolor        ->                   background         */
-       /*      text           ->                   color              */
-       /*      color          ->                   color              */
-	     else
-	       if (!strcmp (lastMappedAttr->XMLattribute, "background"))
-		 {
-		   if (strlen (attrValue) > MaxMsgLength - 30)
-		       attrValue[MaxMsgLength - 30] = EOS;
-		   sprintf (msgBuffer, "background: url(%s)", attrValue);
-		   ParseHTMLSpecificStyle (context->lastElement, msgBuffer,
-					   context->doc, 1, FALSE);
-		 }
-	       else
-		 if (!strcmp (lastMappedAttr->XMLattribute, "bgcolor"))
-		     HTMLSetBackgroundColor (context->doc,
-					     context->lastElement, attrValue);
-		 else
-		   if (!strcmp (lastMappedAttr->XMLattribute, "text") ||
-		       !strcmp (lastMappedAttr->XMLattribute, "color"))
-		     HTMLSetForegroundColor (context->doc,
-					     context->lastElement, attrValue);
-     }
+	{
+	  /* Some HTML attributes are equivalent to a CSS property:      */
+	  /*      background     ->                   background         */
+	  /*      bgcolor        ->                   background         */
+	  /*      text           ->                   color              */
+	  /*      color          ->                   color              */
+	  if (!strcmp (lastMappedAttr->XMLattribute, "background"))
+	    {
+	      if (strlen (attrValue) > MaxMsgLength - 30)
+		attrValue[MaxMsgLength - 30] = EOS;
+	      HTMLSetBackgroundImage (context->doc,
+				      context->lastElement, STYLE_REPEAT, attrValue);
+	    }
+	  else if (!strcmp (lastMappedAttr->XMLattribute, "bgcolor"))
+	    HTMLSetBackgroundColor (context->doc,
+				    context->lastElement, attrValue);
+	  else if (!strcmp (lastMappedAttr->XMLattribute, "text") ||
+		   !strcmp (lastMappedAttr->XMLattribute, "color"))
+	    HTMLSetForegroundColor (context->doc,
+				    context->lastElement, attrValue);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

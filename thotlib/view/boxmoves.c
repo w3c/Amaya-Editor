@@ -800,18 +800,20 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 		  int frame, ThotBool horizRef)
 {
   PtrAbstractBox      pAb;
-  BoxEdge             oldPosEdge;
+  BoxEdge             oldPosEdge, oldVertEdge, oldHorizEdge;
   int                 translation;
 
   pAb = pBox->BxAbstractBox;
   translation = 0;
   /* Avoid to perform two times the same job */
-  if (pAb != NULL && delta != 0 && pBox->BxPacking == 0)
+  if (pAb != NULL && delta != 0 && pBox->BxPacking <= 1)
     {
       /* register that we're preforming the job */
-      pBox->BxPacking = 1;
+      pBox->BxPacking += 1;
       if (horizRef)
 	{
+	  /* save the previous fixed edge */
+	  oldHorizEdge = pBox->BxHorizEdge;
 	  /* Look for the horizontal fixed edge and the horizontal free edge */
 	  if (op == OpWidth)
 	    oldPosEdge = pAb->AbWidth.DimPosition.PosEdge;
@@ -859,10 +861,12 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	  delta = delta + pBox->BxWidth - pBox->BxW - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
 	  ResizeWidth (pBox, pSourceBox, NULL, delta, 0, 0, 0, frame);
 	  /* restore the fixed edge */
-	  pBox->BxHorizEdge = NoEdge;
+	  pBox->BxHorizEdge = oldHorizEdge;
 	}
       else
 	{
+	  /* save the previous fixed edge */
+	  oldVertEdge = pBox->BxVertEdge;
 	  /* Look for the vertical fixed edge and the vertical free edge */
 	  if (op == OpHeight)
 	    oldPosEdge = pAb->AbHeight.DimPosition.PosEdge;
@@ -910,11 +914,11 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	  /* Resize the box */
 	  ResizeHeight (pBox, pSourceBox, NULL, delta, 0, 0, frame);
 	  /* restore the fixed edge */
-	  pBox->BxVertEdge = NoEdge;
+	  pBox->BxVertEdge = oldVertEdge;
 	}
 
       /* the job is performed now */
-      pBox->BxPacking = 0;
+      pBox->BxPacking -= 1;
       /* restore the box history */
       if (pSourceBox == NULL)
 	pBox->BxMoved = pSourceBox;

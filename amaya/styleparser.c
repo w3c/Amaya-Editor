@@ -2536,7 +2536,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   ParseCSSBackgroundRepeat: parse a CSS BackgroundRepeat attribute string.
   ----------------------------------------------------------------------*/
 static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
-				 PresentationContext context, char *cssRule, CSSInfoPtr css, ThotBool isHTML)
+				       PresentationContext context,
+				       char *cssRule, CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   repeat;
   unsigned int        savedtype = 0;
@@ -3887,7 +3888,7 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat, char *image)
 /*----------------------------------------------------------------------
    HTMLSetForegroundColor:                                        
   ----------------------------------------------------------------------*/
-void   HTMLSetForegroundColor (Document doc, Element el, char *color)
+void HTMLSetForegroundColor (Document doc, Element el, char *color)
 {
    char           css_command[100];
 
@@ -3898,7 +3899,7 @@ void   HTMLSetForegroundColor (Document doc, Element el, char *color)
 /*----------------------------------------------------------------------
    HTMLResetBackgroundColor:                                      
   ----------------------------------------------------------------------*/
-void                HTMLResetBackgroundColor (Document doc, Element el)
+void HTMLResetBackgroundColor (Document doc, Element el)
 {
    char           css_command[100];
 
@@ -3909,7 +3910,7 @@ void                HTMLResetBackgroundColor (Document doc, Element el)
 /*----------------------------------------------------------------------
    HTMLResetBackgroundImage:                                      
   ----------------------------------------------------------------------*/
-void                HTMLResetBackgroundImage (Document doc, Element el)
+void HTMLResetBackgroundImage (Document doc, Element el)
 {
    char           css_command[1000];
 
@@ -3920,7 +3921,7 @@ void                HTMLResetBackgroundImage (Document doc, Element el)
 /*----------------------------------------------------------------------
    HTMLResetForegroundColor:                                      
   ----------------------------------------------------------------------*/
-void                HTMLResetForegroundColor (Document doc, Element el)
+void HTMLResetForegroundColor (Document doc, Element el)
 {
    char           css_command[100];
 
@@ -3932,7 +3933,7 @@ void                HTMLResetForegroundColor (Document doc, Element el)
 /*----------------------------------------------------------------------
    HTMLSetAlinkColor:                                             
   ----------------------------------------------------------------------*/
-void                HTMLSetAlinkColor (Document doc, char *color)
+void HTMLSetAlinkColor (Document doc, char *color)
 {
    char           css_command[100];
 
@@ -3943,7 +3944,7 @@ void                HTMLSetAlinkColor (Document doc, char *color)
 /*----------------------------------------------------------------------
    HTMLSetAactiveColor:                                           
   ----------------------------------------------------------------------*/
-void                HTMLSetAactiveColor (Document doc, char *color)
+void HTMLSetAactiveColor (Document doc, char *color)
 {
    char           css_command[100];
 

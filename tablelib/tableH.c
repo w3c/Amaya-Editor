@@ -994,7 +994,13 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
   *max = *max + mbp;
   GiveAttrWidth (cell, ViewFrameTable[frame - 1].FrMagnification, width, percent);
   if (*width)
-    *width = *width + mbp;
+    {
+      *width = *width + mbp;
+      if (*width > *min)
+	*min = *width;
+      if (*width > *max)
+	*max = *width;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1261,6 +1267,8 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 	{
 	  realMin += colBox[cRef]->AbBox->BxMinWidth;
 	  realMax += colBox[cRef]->AbBox->BxMaxWidth;
+	  if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
+	    span++;
 	}
 	  
       /* compare min and max values */
@@ -1495,6 +1503,10 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
 	      /* there a change within a specific cell */
 	      if (SetCellWidths (cell, table, frame))
 		{
+#ifdef TAB_DEBUG
+		  if (table->AbBox->BxCycles > 0)
+		    printf ("table in progress\n");
+#endif
 		  /* Now check the table size */
 		  CheckTableWidths (table, frame, TRUE);
 		  CheckRowHeights (table, frame);
