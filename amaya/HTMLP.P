@@ -7905,7 +7905,7 @@ RULES
 #ifdef PAGE
 	PageBreak: No;
 #endif
-	VertPos: Top = Previous . Bottom + 0.1;
+	VertPos: Top = Previous not Table_head . Bottom + 0.1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
@@ -7927,7 +7927,7 @@ RULES
 #ifdef PAGE
 	PageBreak: Yes;
 #endif
-	VertPos: Top = Previous . Bottom + 0.1;
+	VertPos: Top = Previous not Table_head . Bottom + 0.1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
