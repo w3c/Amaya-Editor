@@ -433,7 +433,7 @@ CHARSET TtaGetLocaleCharset ()
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
       char * lang = getenv("LANG");
-      if (lang && TtaDirExists ("/tmp"))
+      if (lang && ThotDirExists ("/tmp"))
 	{
 	  int  fd;
 	  char buffer[256];
