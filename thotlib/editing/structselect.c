@@ -1572,7 +1572,8 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
   PtrElement          pAncest, pE;
   ThotBool            bool, stop, elVisible;
 
-  if (pEl != NULL && pDoc != NULL && pEl->ElStructSchema != NULL)
+  if (pEl != NULL && pDoc != NULL && pEl->ElStructSchema != NULL &&
+      pEl != pDoc->DocDocElement) /* do not select the Document element */
     {
       if (check)
 	{
@@ -2854,19 +2855,18 @@ void BuildSelectionMessage ()
     }
   if (pEl == NULL)
     return;
-  /* put the type name of the first selected element */
-  strcpy (msgBuf, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
   /* add the types of the ancestors */
-  pEl = pEl->ElParent;
-  nbasc = 1;
+  nbasc = 0;
+  msgBuf[0] = EOS;
   while (pEl != NULL)
     {
       /* skip that ancestor if it is hidden */
       if (!HiddenType (pEl))
 	{
-	  /* put a separator */
-	  strcat (msgBuf, " \\ ");
-	  /* put the element type */
+	  /* put a separator if it's not the first element name */
+	  if (nbasc > 0)
+	     strcat (msgBuf, " \\ ");
+	  /* put the name of the element */
 	  strcat (msgBuf,
 		  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
 	  nbasc++;
@@ -2874,7 +2874,12 @@ void BuildSelectionMessage ()
       if (nbasc >= MAX_ITEM_MSG_SEL)
 	pEl = NULL;
       else
-	pEl = pEl->ElParent;
+	{
+	  pEl = pEl->ElParent;
+	  if (pEl && pEl == pDoc->DocDocElement)
+	    /* do not display the Document element name */
+	    pEl = NULL;
+	}
     }
   /* if the Selection message or the selected document have changed, */
   /* display this new message */
@@ -2959,7 +2964,12 @@ void SelectAround (int val)
 		{
 		  if (FirstSelectedElement->ElParent == LastSelectedElement->ElParent)
 		    /* selection is normalized */
-		    pEl = FirstSelectedElement->ElParent;
+		    {
+		      /* do not go up to the Document element */
+		      if (FirstSelectedElement->ElParent)
+			if (FirstSelectedElement->ElParent->ElParent)
+		          pEl = FirstSelectedElement->ElParent;
+		    }
 		  else
 		    /* The first and last selected elements are */
 		    /* not siblings. Change the selection so that */
