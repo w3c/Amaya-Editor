@@ -129,7 +129,6 @@ STRUCT
 	ISINDEX;						{ ISINDEX }
 	Horizontal_Rule;					{ HR }
 	Table;							{ TABLE }
-	FIELDSET;						{ FIELDSET }
 	Address = LIST OF (AddressContent);			{ ADDRESS }
 	PICTURE							{ IMG }
 	    (ATTR SRC = Text; ALT = Text; longdesc = Text;
@@ -442,6 +441,7 @@ STRUCT
   Form_Element = CASE OF
 	Paragraph;						{ P }
 	Pseudo_paragraph;
+	FIELDSET;						{ FIELDSET }
 	Option_Menu;						{ SELECT }
 	Text_Area; 						{ TEXTAREA }
 	Heading;						{ heading }
