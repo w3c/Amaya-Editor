@@ -802,6 +802,7 @@ BOXES
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	Visibility: 4;
+	Depth: Creator - 2;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
