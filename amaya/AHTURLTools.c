@@ -1816,27 +1816,35 @@ void         SimplifyUrl (char **url)
       /* Doesn't need to do any more */
       return;
     }
+    /*  In case of a user typed url without protocol specification
+      and filepath like url (the ~ or / url beginning), 
+      we add the http:// (more conveniant when you often type urls)
+      so that you can now enter w3.org directly  */
   else if (**url != DIR_SEP 
 	   && **url != '~'
 #ifdef _WINDOWS
 	   && (*url)[1] != ':'
 #endif /* _WINDOWS */
 	   && !IsW3Path(*url) 
-           /* && TtaFileExist (*url) == 0) */
 	   && (strlen (*url) + 8) < MAX_LENGTH)
    {
-      /*  In case of a user typed url without protocol specification
-       and filepath like url (the ~ or / url beginning), 
-       we add the http:// (more conveniant when you often type urls)
-       so that you can now enter w3.org directly  */	
-      newptr = TtaGetMemory (strlen (path) + 8);
-      *newptr = EOS;
-      strcat (newptr, "http://");
-      strcat (newptr, *url);
-      **url = EOS;
-      strcpy (*url, newptr);
-      TtaFreeMemory (newptr);
-      return;
+       if (TtaFileExist (*url) == 0)
+       {
+	   newptr = TtaGetMemory (strlen (*url) + 8);
+	   *newptr = EOS;
+	   strcat (newptr, "http://");
+	   strcat (newptr, *url);
+	   **url = EOS;
+	   strcpy (*url, newptr);
+	   TtaFreeMemory (newptr);
+	   return;
+       }
+       /* /!\ WARNING : if you append an else if below 
+	  be sure move the fileexist test in the else if
+	  upper, because the only reason of the separation 
+	  is Optimization. If you don't do so, the process
+	  will not go into your code if the user types a filename
+       */
     }
 
   if ((p = path))
