@@ -226,10 +226,11 @@ Element element;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         TtaClearHistory ()
+void         TtaClearHistory (Document document)
 #else /* __STDC__ */
-void         TtaClearHistory ()
+void         TtaClearHistory (document)
+Document document;
 #endif /* __STDC__ */
 {
-   ClearHistory ();
+   ClearHistory (LoadedDocument [document - 1]);
 }

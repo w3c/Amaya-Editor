@@ -6,11 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ClearHistory ();
+extern void ClearHistory (PtrDocument pDoc);
 extern void AddEditOpInHistory ( PtrElement pEl,
                                  PtrDocument pDoc,
                                  boolean save,
                                  boolean removeWhenUndoing );
+extern void AddAttrEditOpInHistory ( PtrAttribute pAttr,
+                                     PtrElement pEl,
+                                     PtrDocument pDoc,
+                                     boolean save,
+                                     boolean removeWhenUndoing );
 extern void CancelLastEditFromHistory ( PtrDocument pDoc );
 extern void OpenHistorySequence ( PtrDocument pDoc,
                                   PtrElement firstSel,
@@ -23,11 +28,16 @@ extern void TtcUndo ( Document doc,
 
 #else /* __STDC__ */
 
-extern void ClearHistory ();
+extern void ClearHistory (/* PtrDocument pDoc */);
 extern void AddEditOpInHistory (/* PtrElement pEl,
                                    PtrDocument pDoc,
                                    boolean save,
                                    boolean removeWhenUndoing */);
+extern void AddAttrEditOpInHistory (/* PtrAttribute pAttr,
+                                       PtrElement pEl,
+                                       PtrDocument pDoc,
+                                       boolean save,
+                                       boolean removeWhenUndoing */);
 extern void CancelLastEditFromHistory (/* PtrDocument pDoc */);
 extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     PtrElement firstSel,

@@ -509,10 +509,8 @@ PtrDocument        *pDoc;
 	   d++;
 	if (LoadedDocument[d] == *pDoc)
 	  {
-	    /* remove the Undo history */
-	    ClearHistory ();
-            /* disable Undo command */
-            SwitchUndo (*pDoc, FALSE);
+	    /* remove the Unod history */
+	    ClearHistory (*pDoc);
 	    /* libere les schemas */
 	    FreeDocumentSchemas (*pDoc);
 	    FreeDocument (LoadedDocument[d]);

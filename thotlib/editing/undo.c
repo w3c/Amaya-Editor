@@ -123,8 +123,6 @@ union
 #include "memory_f.h"
 #include "tree_f.h"
 
-/****** Reset history (ClearHistory) when loading or reloading a document ****/
-
 /*----------------------------------------------------------------------
    HistError
   ----------------------------------------------------------------------*/
@@ -282,31 +280,36 @@ PtrDocument pDoc;
 
 /*----------------------------------------------------------------------
    ClearHistory
-   Clear the current history
+   Clear the editing history of document pDoc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ClearHistory ()
+void ClearHistory (PtrDocument pDoc)
 #else  /* __STDC__ */
-void ClearHistory ()
+void ClearHistory (pDoc)
 PtrDocument pDoc;
 
 #endif /* __STDC__ */
 {
    PtrEditOperation editOp, nextEditOp;
 
-   /* free all editing operation recorded in the current history */
-   editOp = LastEdit;
-   while (editOp)
-     {
-       nextEditOp = editOp->EoNextOp;
-       CancelAnEdit (editOp, HistoryDoc);
-       editOp = nextEditOp;
-     }
-   /* reiniatilize all variable representing the current history */
-   HistoryDoc = NULL;
-   LastEdit = NULL;
-   NbEditsInHistory = 0;
-   EditSequence = FALSE;
+   if (HistoryDoc == pDoc)
+      {
+      /* free all editing operation recorded in the current history */
+      editOp = LastEdit;
+      while (editOp)
+        {
+        nextEditOp = editOp->EoNextOp;
+        CancelAnEdit (editOp, HistoryDoc);
+        editOp = nextEditOp;
+        }
+      /* reiniatilize all variable representing the current history */
+      HistoryDoc = NULL;
+      LastEdit = NULL;
+      NbEditsInHistory = 0;
+      EditSequence = FALSE;
+      /* disable Undo command */
+      SwitchUndo (pDoc, FALSE);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -386,9 +389,9 @@ PtrElement pTree;
 /*----------------------------------------------------------------------
    AddEditOpInHistory
    Register a single editing operation in the editing history.
-   pEl: the elements that has been (or will be) changed or deleted by the
+   pEl: the element that has been (or will be) changed or deleted by the
 	 editing operation.
-   pDoc: the document to which this element belong.
+   pDoc: the document to which this element belongs.
    save: a copy of element pEl must be saved in order to allow it to be
 	 restored when the operation will be undone.
    removeWhenUndoing: element pEl to must be deleted when the operation will
@@ -442,7 +445,7 @@ boolean removeWhenUndoing;
    editOp->EoSavedElement = NULL;
 
    if (save)
-     /* copy the elements concerned by the operation and attach them to the
+     /* copy the element concerned by the operation and attach it to the
         operation descriptor */
      {
        /* do the copy */
@@ -451,9 +454,111 @@ boolean removeWhenUndoing;
        /* store the copy in the editing operation descriptor */
        editOp->EoSavedElement = pCopy;
        /* if older editing operations in the history refer to elements that
-	  have been copied, change these reference to the copies */
+	  have been copied, change these references to the copies */
        ChangePointersOlderEdits (editOp, pEl);
      }
+}
+
+/*----------------------------------------------------------------------
+   ChangeAttrPointersOlderEdits
+   If Op and older editing operations in the history refer to attribute
+   pAttr, change these reference to the corresponding copy pCopyAttr.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ChangeAttrPointersOlderEdits (PtrEditOperation Op, PtrAttribute pAttr, PtrAttribute pCopyAttr)
+#else  /* __STDC__ */
+static void ChangeAttrPointersOlderEdits (Op, pAttr, pCopyAttr)
+PtrEditOperation Op;
+PtrAttribute pAttr;
+PtrAttribute pCopyAttr;
+
+#endif /* __STDC__ */
+{
+  PtrEditOperation	editOp, prevOp;
+
+  editOp = Op->EoPreviousOp;
+  while (editOp)
+    {
+    if (editOp->EoType == EtAttribute)
+       {
+       if (editOp->EoCreatedAttribute)
+	 if (editOp->EoCreatedAttribute == pAttr)
+	   editOp->EoCreatedAttribute = pCopyAttr;
+       }
+    editOp = editOp->EoPreviousOp;
+    }
+}
+
+/*----------------------------------------------------------------------
+   AddAttrEditOpInHistory
+   Register in the editing history a single editing operation for an
+   attribute
+   pAttr: the attribute that has been (or will be) changed or deleted by the
+	 editing operation.
+   pEl: the element to wich the attribute is associated
+   pDoc: the document to which this element belongs.
+   save: a copy of attribute pAttr must be saved in order to allow it to be
+	 restored when the operation will be undone.
+   removeWhenUndoing: attribute pAttr to must be deleted when the operation
+	 will be undone.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc, boolean save, boolean removeWhenUndoing)
+#else  /* __STDC__ */
+void AddAttrEditOpInHistory (pAttr, pEl, pDoc, save, removeWhenUndoing)
+PtrAttribute pAttr;
+PtrElement pEl;
+PtrDocument pDoc;
+boolean save;
+boolean removeWhenUndoing;
+
+#endif /* __STDC__ */
+{
+   PtrEditOperation	editOp;
+   PtrAttribute		pCopy;
+
+   if (!pEl && !pAttr)
+      return;
+  /* error if no sequence open */
+   if (!EditSequence)
+     {
+      HistError (2);
+      return;
+     }
+   /* if an editing sequence is open, changing document is not allowed */
+   if (HistoryDoc != pDoc)
+      {
+      HistError (3);
+      return;
+      }
+
+   /* create a new operation descriptor in the history */
+   editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
+   /* link the new operation descriptor in the history */
+   editOp->EoPreviousOp = LastEdit;
+   if (LastEdit)
+      LastEdit->EoNextOp = editOp;
+   LastEdit = editOp;
+   editOp->EoNextOp = NULL;
+   editOp->EoType = EtAttribute;
+   editOp->EoElement = pEl;
+   if (removeWhenUndoing)
+      editOp->EoCreatedAttribute = pAttr;
+   else
+      editOp->EoCreatedAttribute = NULL;
+
+   if (save)
+     /* copy the attribute concerned by the operation and attach it to the
+        operation descriptor */
+     {
+     pCopy = AddAttrToElem (NULL, pAttr, NULL);
+     editOp->EoSavedAttribute = pCopy;
+     /* if older editing operations in the history refer to attribute that
+	has been copied, change these references to the copy */
+     ChangeAttrPointersOlderEdits (editOp, pAttr, pCopy);
+     }
+   else
+     editOp->EoSavedAttribute = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -523,12 +628,7 @@ int lastSelChar;
   /* if it's for a different document, clear the current history and start
      a new one for the document of interest */
   if (HistoryDoc && HistoryDoc != pDoc)
-     {
-       ClearHistory (pDoc);
-       /* disable Undo command */
-       SwitchUndo (pDoc, FALSE);
-     }
-
+     ClearHistory (HistoryDoc);
   HistoryDoc = pDoc;
   EditSequence = TRUE;
 
@@ -618,6 +718,7 @@ View                view;
    PtrDocument          pDoc;
    PtrElement		pEl, pSibling;
    NotifyElement	notifyEl;
+   NotifyAttribute	notifyAttr;
    int			i, nSiblings;
    boolean		doit;
 
@@ -659,11 +760,46 @@ View                view;
 	 }
       if (LastEdit->EoType == EtAttribute)
 	 {
-	 /************/;
+	 notifyAttr.document = doc;
+	 notifyAttr.element = (Element) (LastEdit->EoElement);
+	 /* delete the attribute that has to be removed from the element */
+	 if (LastEdit->EoElement && LastEdit->EoCreatedAttribute)
+	    {
+	    /* tell the application that an attribute will be removed */
+	    notifyAttr.event = TteAttrDelete;
+	    notifyAttr.attribute = (Attribute) (LastEdit->EoCreatedAttribute);
+	    notifyAttr.attributeType.AttrSSchema = (SSchema) (LastEdit->EoCreatedAttribute->AeAttrSSchema);
+	    notifyAttr.attributeType.AttrTypeNum = LastEdit->EoCreatedAttribute->AeAttrNum;
+	    CallEventAttribute (&notifyAttr, TRUE);
+	    /* remove the attribute */
+	    TtaRemoveAttribute ((Element) (LastEdit->EoElement),
+			(Attribute)(LastEdit->EoCreatedAttribute), doc);
+	    notifyAttr.attribute = NULL;
+	    /* tell the application that an attribute has been removed */
+	    CallEventAttribute (&notifyAttr, FALSE);	    
+	    }
+	 /* put the saved attribute (if any) on the element */
+	 if (LastEdit->EoElement && LastEdit->EoSavedAttribute)
+	    {
+	    /* tell the application that an attribute will be created */
+	    notifyAttr.event = TteAttrCreate;
+	    notifyAttr.attribute = NULL;
+	    notifyAttr.attributeType.AttrSSchema = (SSchema) (LastEdit->EoSavedAttribute->AeAttrSSchema);
+	    notifyAttr.attributeType.AttrTypeNum = LastEdit->EoSavedAttribute->AeAttrNum;
+	    CallEventAttribute (&notifyAttr, TRUE);
+	    /* put the attribute on the element */
+	    TtaAttachAttribute ((Element)(LastEdit->EoElement),
+				 (Attribute)(LastEdit->EoSavedAttribute), doc);
+	    /* the attribute is no longer associated with the history block */
+	    LastEdit->EoSavedAttribute = NULL;
+	    /* tell the application that an attribute has been put */
+	    notifyAttr.attribute = (Attribute) (LastEdit->EoSavedAttribute);
+	    CallEventAttribute (&notifyAttr, FALSE);	    
+	    }
 	 }
       if (LastEdit->EoType == EtElement)
 	 {
-         /* delete the element that have to be removed from the abstract tree*/
+         /* delete the element that has to be removed from the abstract tree */
          if (LastEdit->EoCreatedElement)
             {
 	    pEl = LastEdit->EoCreatedElement;

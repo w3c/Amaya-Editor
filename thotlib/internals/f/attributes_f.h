@@ -66,10 +66,6 @@ extern void AttachMandatoryAttributes ( PtrElement pEl,
                                         PtrDocument pDoc );
 extern PtrAttribute GetAttrByExceptNum ( PtrElement pEl,
                                          int ExceptNum );
-extern void SetAttrValueByExceptNum ( PtrElement pEl,
-                                      PtrDocument pDoc,
-                                      int attrVal,
-                                      int ExceptNum );
 
 #else /* __STDC__ */
 
@@ -133,10 +129,6 @@ extern void AttachMandatoryAttributes (/* PtrElement pEl,
                                           PtrDocument pDoc */);
 extern PtrAttribute GetAttrByExceptNum (/* PtrElement pEl,
                                            int ExceptNum */);
-extern void SetAttrValueByExceptNum (/* PtrElement pEl,
-                                        PtrDocument pDoc,
-                                        int attrVal,
-                                        int ExceptNum */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

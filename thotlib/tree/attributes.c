@@ -59,6 +59,7 @@
 #include "applicationapi_f.h"
 #include "frame_f.h"
 #include "attributes_f.h"
+#include "undo_f.h"
 
 /*----------------------------------------------------------------------
    SetAttrReference fait pointer l'attribut reference pAttr sur    
@@ -950,21 +951,22 @@ PtrAttribute        pAttrNext;
 
   GetAttribute (&pAttr);
   /* on chaine cet attribut apres le dernier attribut de  l'element */
-  if (pEl->ElFirstAttr == NULL || pEl->ElFirstAttr == pAttrNext)
-    {
+  if (pEl)
+    if (pEl->ElFirstAttr == NULL || pEl->ElFirstAttr == pAttrNext)
+      {
       /* c'est le 1er attribut de l'element */
       pAttrNext = pEl->ElFirstAttr;
       pEl->ElFirstAttr = pAttr;
-    }
-  else
-    {
+      }
+    else
+      {
       /* cherche l'attribut qui doit etre le suivant */
       pA = pEl->ElFirstAttr;
       while (pA->AeNext != pAttrNext)
 	pA = pA->AeNext;
       /* chaine le nouvel attribut */
       pA->AeNext = pAttr;
-    }
+      }
   pAttr->AeNext = pAttrNext;
   pAttr->AeAttrSSchema = pNewAttr->AeAttrSSchema;
   pAttr->AeAttrNum = pNewAttr->AeAttrNum;
@@ -993,12 +995,15 @@ PtrAttribute        pAttrNext;
       pRef->RdInternalRef = pNewAttr->AeAttrReference->RdInternalRef;
       /* chaine la reference du nouvel attribut apres celle de */
       /* pNewAttr. */
-      pRef->RdNext = pNewAttr->AeAttrReference->RdNext;
-      if (pRef->RdNext != NULL)
-	pRef->RdNext->RdPrevious = pRef;
-      pRef->RdPrevious = pNewAttr->AeAttrReference;
-      if (pRef->RdPrevious != NULL)
-	pRef->RdPrevious->RdNext = pRef;
+      if (pEl)
+	 {
+         pRef->RdNext = pNewAttr->AeAttrReference->RdNext;
+         if (pRef->RdNext != NULL)
+	   pRef->RdNext->RdPrevious = pRef;
+         pRef->RdPrevious = pNewAttr->AeAttrReference;
+         if (pRef->RdPrevious != NULL)
+	   pRef->RdPrevious->RdNext = pRef;
+	 }
       break;
     default:
       break;
@@ -1122,15 +1127,16 @@ PtrAttribute        pNewAttr;
 	   soit par pEl soit par un ascendant */
 	if (pAttr)
 	  {
+	    /* register the attribute in history */
+	    AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, FALSE);
 	    /* detache l'attribut de l'element s'il y a lieu */
 	    pAttrNext = pAttr->AeNext;
+	    /* supprime l'attribut */
 	    RemoveAttribute (pEl, pAttr);
 	    /* heritage et comparaison sont lies a un attribut de pEl */
 	    /* On supprime d'abord les regles de presentation liees a
 	       l'attribut sur l'element lui-meme */
 	    RemoveAttrPresentation (pEl, pDoc, pAttr, FALSE, NULL);
-	    /* supprime l'attribut */
-	    /*RemoveAttribute (pEl, pAttr);*/
 	    /* indique que le document a ete modifie' */
 	    pDoc->DocModified = TRUE;
 	    /* un changement d'attribut vaut dix caracteres saisis */
@@ -1139,7 +1145,7 @@ PtrAttribute        pNewAttr;
 	       de l'heritage de cet attribut par le sous-arbre, s'il existe
 	       des elements heritants de celui-ci */
 	    if (inherit)
-	      RemoveInheritedAttrPresent (pEl, pDoc, pAttr);
+	       RemoveInheritedAttrPresent (pEl, pDoc, pAttr);
 	    /* On supprime des elements du sous arbre pEl la presentation
 	       venant de la comparaison d'un attribut du sous-arbre avec ce
 	       type d'attribut */
@@ -1176,6 +1182,8 @@ PtrAttribute        pNewAttr;
 	  {
 	    /* add a copy of the new attribute before pAttrNext */
 	    pAttr = AddAttrToElem (pEl, pNewAttr, pAttrNext);
+	    /* register the attribute in history */
+	    AddAttrEditOpInHistory (pAttr, pEl, pDoc, FALSE, TRUE);
 	    /* indique que le document a ete modifie' */
 	    pDoc->DocModified = TRUE;
 	    /* un changement d'attribut vaut dix caracteres saisis */
@@ -1253,6 +1261,62 @@ PtrAttribute        pNewAttr;
    AttachAttrToRange applique l'attribut pAttr a une partie de document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+static void	AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void	AttachAttrToElem (pAttr, pEl, pDoc)
+PtrAttribute pAttr;
+PtrElement pEl;
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   Language            lang;
+   PtrAttribute        pAttrAsc;
+   PtrElement          pElAttr;
+
+   /* On ne traite pas les marques de page */
+   if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+     {
+        if (pAttr->AeAttrNum == 1)
+   	/* c'est l'attribut langue */
+          {
+   	  /* change la langue de toutes les feuilles de texte du sous-arbre */
+   	  /* de l'element */
+   	  if (pAttr->AeAttrText != NULL)
+   	     lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+   	  else
+   	     /* c'est une suppression de l'attribut Langue */
+   	    {
+   	       lang = TtaGetDefaultLanguage ();		/* langue par defaut */
+   	       /* on cherche si un ascendant porte l'attribut Langue */
+   	       if (pEl->ElParent != NULL)
+   		 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
+   	       else
+   		 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
+
+   	       if (pAttrAsc != NULL)
+   		  /* un ascendant definit la langue, on prend cette langue */
+   		  if (pAttrAsc->AeAttrText != NULL)
+   		     lang = TtaGetLanguageIdFromName (pAttrAsc->AeAttrText->BuContent);
+   	    }
+   	  ChangeLanguage (pDoc, pEl, lang, FALSE);
+          }
+
+        /* met la nouvelle valeur de l'attribut dans l'element et */
+        /* applique les regles de presentation de l'attribut a l'element */
+        AttachAttrWithValue (pEl, pDoc, pAttr);
+        if (ThotLocalActions[T_attrtable] != NULL)
+   	(*ThotLocalActions[T_attrtable])
+   	   (pEl, pAttr, pDoc);	/* cas particulier des tableaux */
+
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   AttachAttrToRange applique l'attribut pAttr a une partie de document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, boolean reDisplay)
 #else  /* __STDC__ */
 void                AttachAttrToRange (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc, reDisplay)
@@ -1266,9 +1330,6 @@ boolean		    reDisplay;
 #endif /* __STDC__ */
 {
    PtrElement          pEl;
-   Language            lang;
-   PtrAttribute        pAttrAsc;
-   PtrElement          pElAttr;
    int                 i;
 
    /* eteint d'abord la selection */
@@ -1276,46 +1337,13 @@ boolean		    reDisplay;
    /* Coupe les elements du debut et de la fin de la selection s'ils */
    /* sont partiellement selectionnes */
    IsolateSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
+   /* start an operation sequence in editing history */
+   OpenHistorySequence (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
    /* parcourt les elements selectionnes */
    pEl = pFirstSel;
    while (pEl != NULL)
      {
-	/* On ne traite pas les marques de page */
-	if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-	  {
-	     if (pAttr->AeAttrNum == 1)
-		/* c'est l'attribut langue */
-	       {
-		  /* change la langue de toutes les feuilles de texte du sous-arbre */
-		  /* de l'element */
-		  if (pAttr->AeAttrText != NULL)
-		     lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
-		  else
-		     /* c'est une suppression de l'attribut Langue */
-		    {
-		       lang = TtaGetDefaultLanguage ();		/* langue par defaut */
-		       /* on cherche si un ascendant porte l'attribut Langue */
-		       if (pEl->ElParent != NULL)
-			 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
-		       else
-			 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
-
-		       if (pAttrAsc != NULL)
-			  /* un ascendant definit la langue, on prend cette langue */
-			  if (pAttrAsc->AeAttrText != NULL)
-			     lang = TtaGetLanguageIdFromName (pAttrAsc->AeAttrText->BuContent);
-		    }
-		  ChangeLanguage (pDoc, pEl, lang, FALSE);
-	       }
-
-	     /* met la nouvelle valeur de l'attribut dans l'element et */
-	     /* applique les regles de presentation de l'attribut a l'element */
-	     AttachAttrWithValue (pEl, pDoc, pAttr);
-	     if (ThotLocalActions[T_attrtable] != NULL)
-		(*ThotLocalActions[T_attrtable])
-		   (pEl, pAttr, pDoc);	/* cas particulier des tableaux */
-
-	  }
+	AttachAttrToElem (pAttr, pEl, pDoc);
 	/* cherche l'element a traiter ensuite */
 	pEl = NextInSelection (pEl, pLastSel);
      }
@@ -1327,13 +1355,13 @@ boolean		    reDisplay;
 	{
 	   for (i = 1; i <= MAX_PARAM_DOC; i++)
 	      if (pDoc->DocParameters[i - 1] != NULL)
-		 AttachAttrToRange (pAttr, 0, 0, pDoc->DocParameters[i - 1],
-				    pDoc->DocParameters[i - 1], pDoc, FALSE);
+		 AttachAttrToElem (pAttr, pDoc->DocParameters[i - 1], pDoc);
 	   for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	      if (pDoc->DocAssocRoot[i - 1] != NULL)
-		 AttachAttrToRange (pAttr, 0, 0, pDoc->DocAssocRoot[i - 1],
-				    pDoc->DocAssocRoot[i - 1], pDoc, FALSE);
+		 AttachAttrToElem (pAttr, pDoc->DocAssocRoot[i - 1], pDoc);
 	}
+   /* close the editing sequence */
+   CloseHistorySequence (pDoc);
    /* parcourt a nouveau les elements selectionnes pour fusionner les */
    /* elements voisins de meme type ayant les memes attributs, reaffiche */
    /* toutes les vues et retablit la selection */
@@ -1621,39 +1649,4 @@ int                 ExceptNum;
      }
    else
       return NULL;
-}
-
-
-/*----------------------------------------------------------------------
-   Modifie la valeur d'un attribut a valeurs enumerees porte par	
-   l'element pEl dans le document pDoc. L'attribut porte		
-   	l'exception de numero ExceptNum. La nouvelle valeur est attrVal	
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                SetAttrValueByExceptNum (PtrElement pEl, PtrDocument pDoc, int attrVal, int ExceptNum)
-
-#else  /* __STDC__ */
-void                SetAttrValueByExceptNum (pEl, pDoc, attrVal, ExceptNum)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 attrVal;
-int                 ExceptNum;
-
-#endif /* __STDC__ */
-
-{
-   PtrAttribute        pAttr;
-
-   GetAttribute (&pAttr);
-   if (pAttr != NULL)
-     {
-	pAttr->AeAttrSSchema = pEl->ElStructSchema;
-	pAttr->AeAttrNum = GetAttrWithException (ExceptNum, pEl->ElStructSchema);
-	pAttr->AeDefAttr = FALSE;
-	pAttr->AeAttrType = AtEnumAttr;
-	pAttr->AeAttrValue = attrVal;
-	AttachAttrWithValue (pEl, pDoc, pAttr);
-	DeleteAttribute (NULL, pAttr);
-     }
 }
