@@ -49,4 +49,5 @@ w800: 800
 w900: 900
 text_decoration: text-decoration
 DOCTYPE: doctype
+CDATA: cdata
 

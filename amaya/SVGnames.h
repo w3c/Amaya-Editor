@@ -5,6 +5,8 @@
 static ElemMapping    SVGElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
+   {"CDATA", SPACE, SVG_EL_CDATA, L_OtherValue, FALSE},
+   {"CDATA_line", SPACE, SVG_EL_CDATA_line, L_OtherValue, FALSE},
    {"DOCTYPE", SPACE, SVG_EL_DOCTYPE, L_OtherValue, FALSE},
    {"DOCTYPE_line", SPACE, SVG_EL_DOCTYPE_line, L_OtherValue, FALSE},
    {"XMLPI", SPACE, SVG_EL_XMLPI, L_OtherValue, FALSE},

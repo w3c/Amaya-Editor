@@ -4,6 +4,8 @@ static ElemMapping    XHTMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
  
+   {"CDATA", SPACE, HTML_EL_CDATA, L_OtherValue, FALSE},
+   {"CDATA_line", SPACE, HTML_EL_CDATA_line, L_OtherValue, FALSE},
    {"DOCTYPE", SPACE, HTML_EL_DOCTYPE, L_OtherValue, FALSE},
    {"DOCTYPE_line", SPACE, HTML_EL_DOCTYPE_line, L_OtherValue, FALSE},
    {"XMLPI", SPACE, HTML_EL_XMLPI, L_OtherValue, FALSE},

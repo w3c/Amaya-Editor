@@ -90,6 +90,16 @@ RULES
    DOCTYPE_line:
 	if not last create '\12' after;
 
+   CDATA: BEGIN
+	NoLineBreak;
+	Create '<![CDATA[';
+	NoTranslation;
+	Create ']]>\12' After;
+	END;
+
+   CDATA_line:
+	if not last create '\12' after;
+
    MROW:
 	begin
 	create SOT;

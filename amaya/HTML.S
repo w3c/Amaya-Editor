@@ -51,7 +51,7 @@ STRUCT
 	HEAD;
       ? BODY;	{ only one of BODY, document type }
       ? FRAMESET;
-	END + (Invalid_element, Unknown_namespace, Comment\240, XMLPI);
+	END + (Invalid_element, Unknown_namespace, Comment\240, XMLPI, CDATA);
 	
   BODY								{ BODY }
      (ATTR onload = Text; onunload = Text;
@@ -71,6 +71,8 @@ STRUCT
   Comment\240 = LIST OF (Comment_line = TEXT);
 
   XMLPI = LIST OF (PI_line = TEXT);
+	
+  CDATA = LIST OF (CDATA_line = TEXT);
 
   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 	
@@ -882,6 +884,7 @@ EXCEPT
 	Comment_line:	Hidden;
 	PI_line:	Hidden;
 	DOCTYPE_line:	Hidden;
+        CDATA_line:     Hidden;
 	GRAPHICS:	NoMove, NoResize;
 	TEXT:		NoMove, NoResize;
 	PICTURE:	MoveResize;

@@ -20,7 +20,7 @@ STRUCT
    XML =
        BEGIN
 	LIST OF (XML_Gen); 
-       END + (XMLcomment, XMLPI);
+       END + (XMLcomment, XMLPI, CDATA);
 	
    XML_Gen = LIST OF (XML_Elements);
 
@@ -33,6 +33,8 @@ STRUCT
    XMLPI = LIST OF (XMLPI_line = TEXT);
 	
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
+	
+   CDATA = LIST OF (CDATA_line = TEXT);
 
 EXCEPT
 
@@ -45,5 +47,6 @@ EXCEPT
    XMLcomment_line:     Hidden;
    XMLPI_line:          Hidden;
    DOCTYPE_line:        Hidden;
+   CDATA_line:          Hidden;
 
 END

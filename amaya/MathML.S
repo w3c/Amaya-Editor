@@ -41,9 +41,11 @@ STRUCT
 	        alttext = TEXT;
 	        RealLang = Yes_;
 		Charset = TEXT)
-	  = MROW + (XMLcomment, XMLPI, Unknown_namespace);
+	  = MROW + (XMLcomment, XMLPI, CDATA, Unknown_namespace);
 
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
+
+   CDATA = LIST OF (CDATA_line = TEXT);
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
@@ -431,6 +433,7 @@ EXCEPT
    XMLcomment_line:	Hidden;
    XMLPI_line:  	Hidden;
    DOCTYPE_line:  	Hidden;
+   CDATA_line:          Hidden;
    Unknown_namespace:   NoCreate;
    Construct:		Hidden;
    Construct1:		Hidden;

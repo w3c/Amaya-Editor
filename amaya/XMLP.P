@@ -241,6 +241,26 @@ BOXES
 		END;
 	END;
 
+ CDATA_S: BEGIN
+	Content: Text '<![CDATA[';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		END;
+	END;
+
+ CDATA_E: BEGIN
+	Content: Text ']]>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
 RULES
 
    Document:
@@ -326,7 +346,6 @@ RULES
 		END;
         END;
 
-
   DOCTYPE:
 	BEGIN
 	Visibility: 0;
@@ -344,7 +363,29 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosed . Width;
-		VertPos: Top = Previous . Bottom;
+		VertPos: Top = Previous . Bottom + 0.2;
+		END;
+	END;
+
+  CDATA:
+	BEGIN
+	Visibility: Enclosing =;
+	MarginBottom: 0.4;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width;
+	        MarginBottom: 0;
+		END;
+	END;
+
+  CDATA_line:
+	BEGIN
+	Visibility: Enclosing =;
+	HorizPos: Left = Enclosing . Left;
+	IF First CreateFirst(CDATA_S);
+	IF Last CreateLast(CDATA_E);
+	IN Structure_view BEGIN
+		Width: Enclosed . Width;
 		END;
 	END;
 
@@ -352,7 +393,7 @@ RULES
 	BEGIN
 	Width: Enclosed . Width;
 	IN Structure_view BEGIN
-		if NOT within XMLcomment_line AND NOT within XMLPI_line AND NOT within DOCTYPE_line
+		if NOT within XMLcomment_line AND NOT within XMLPI_line AND NOT within DOCTYPE_line AND NOT within CDATA_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -366,6 +407,11 @@ RULES
                    VertPos: HRef = Previous . HRef;
 		   END;
 		if within DOCTYPE_line
+                   BEGIN
+		   HorizPos: Left = Previous . Right;
+                   VertPos: HRef = Previous . HRef;
+                   END;
+		if within CDATA_line
                    BEGIN
 		   HorizPos: Left = Previous . Right;
                    VertPos: HRef = Previous . HRef;

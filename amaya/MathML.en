@@ -82,3 +82,4 @@ top_: top
 bottom_: bottom
 groupalign_malgr: groupalign
 DOCTYPE: doctype
+CDATA: cdata

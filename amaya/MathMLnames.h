@@ -4,6 +4,8 @@
 static ElemMapping    MathMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
+   {"CDATA", SPACE, MathML_EL_CDATA, L_OtherValue, FALSE},
+   {"CDATA_line", SPACE, MathML_EL_CDATA_line, L_OtherValue, FALSE},
    {"DOCTYPE", SPACE, MathML_EL_DOCTYPE, L_OtherValue, FALSE},
    {"DOCTYPE_line", SPACE, MathML_EL_DOCTYPE_line, L_OtherValue, FALSE},
    {"XMLPI", SPACE, MathML_EL_XMLPI, L_OtherValue, FALSE},

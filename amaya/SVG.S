@@ -49,7 +49,7 @@ STRUCT
 	      height_ = text;
 	      RealLang = Yes_;
 	      Charset = text)
-        = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, Unknown_namespace);
+        = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA, Unknown_namespace);
 
    desc = TEXT;
 	
@@ -423,6 +423,8 @@ STRUCT
 
    XMLPI = LIST OF (XMLPI_line = TEXT);
 
+   CDATA = LIST OF (CDATA_line = TEXT);
+
    Unknown_namespace = TEXT;
 
 EXCEPT
@@ -471,5 +473,6 @@ EXCEPT
    XMLcomment_line:     Hidden;
    XMLPI_line:          Hidden;
    DOCTYPE_line:        Hidden;
+   CDATA_line:          Hidden;
 
 END

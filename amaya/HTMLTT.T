@@ -583,6 +583,12 @@ RULES
  DOCTYPE_line:
 	Remove;
 
+ CDATA:
+	Remove;
+
+ CDATA_line:
+	Remove;
+
  FRAMESET: BEGIN
 	END;
 

@@ -802,6 +802,26 @@ BOXES
 		END;
 	END;
 
+ CDATA_S: BEGIN
+	Content: Text '<![CDATA[';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		END;
+	END;
+
+ CDATA_E: BEGIN
+	Content: Text ']]>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
  VALUE_ALT: BEGIN
 	Visibility: 0;
 	Content: (ALT);
@@ -3875,7 +3895,7 @@ RULES
 	if within Inserted_Text
 		Depth: Enclosing - 1;
 	IN Structure_view BEGIN
-		if not within Comment_line and not within PI_line and not within DOCTYPE_line
+		if not within Comment_line and not within PI_line and not within DOCTYPE_line and not within CDATA_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -3889,6 +3909,10 @@ RULES
 		if within PI_line
 		   HorizPos: Left = Previous . Right;
 		if within DOCTYPE_line
+                   BEGIN
+		   HorizPos: Left = Previous . Right;
+                   END;
+		if within CDATA_line
                    BEGIN
 		   HorizPos: Left = Previous . Right;
                    END;
@@ -4510,6 +4534,28 @@ RULES
 		Visibility: Enclosing =;
 		Width: Enclosed . Width;
 		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+  CDATA:
+	BEGIN
+	Visibility: Enclosing =;
+	MarginBottom: 0.4;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width;
+	        MarginBottom: 0;
+		END;
+	END;
+
+  CDATA_line:
+	BEGIN
+	Visibility: Enclosing =;
+	HorizPos: Left = Enclosing . Left;
+	IF First CreateFirst(CDATA_S);
+	IF Last CreateLast(CDATA_E);
+	IN Structure_view BEGIN
+		Width: Enclosed . Width;
 		END;
 	END;
 
