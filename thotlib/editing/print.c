@@ -191,7 +191,12 @@ int                *lastChar;
 /*----------------------------------------------------------------------
    FirstFrame cree et initialise la premiere frame.          	
   ----------------------------------------------------------------------*/
-static void         FirstFrame ()
+#ifdef __STDC__
+static void         FirstFrame (char* server)
+#else  /* __STDC__ */
+static void         FirstFrame (server)
+char* server;
+#endif /* __STDC__ */
 {
    int                 i;
 
@@ -202,12 +207,10 @@ static void         FirstFrame ()
 	FrRef[i] = 0;
      }
    /* Ouverture du serveur X-ThotWindow */
-   if (!TtDisplay) {
       /*Connexion au serveur X impossible */
-      TtDisplay = XOpenDisplay (NULL);
-      if (!TtDisplay)
-         TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
-   }
+   TtDisplay = XOpenDisplay (server);
+   if (!TtDisplay)
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
    TtScreen = DefaultScreen (TtDisplay);
    TtRootWindow = RootWindow (TtDisplay, TtScreen);
    TtWDepth = DefaultDepth (TtDisplay, TtScreen);
@@ -2606,6 +2609,7 @@ char              **argv;
 
 #endif /* __STDC__ */
 {
+   char               *server;
    char               *name;
    char               *realName;
    char               *tempDir;
@@ -2618,6 +2622,12 @@ char              **argv;
    int                 viewsCounter ;
 
    TtaInitializeAppRegistry (argv[argCounter++]);
+   if (!strcmp(argv[argCounter], "-")) server = NULL;
+   else {
+        server = (char*)  TtaGetMemory (strlen (argv[argCounter]) + 1);
+        strcpy (server, argv[argCounter]);
+   }
+   argCounter++;
    name = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
    strcpy (name, argv[argCounter++]);
    tempDir = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
@@ -2660,7 +2670,7 @@ char              **argv;
    InitKernelMemory ();
    InitEditorMemory ();
 
-   FirstFrame ();
+   FirstFrame (server);
 
    /* initialisation de la table des couleurs */
    NColors = MAX_COLOR;
