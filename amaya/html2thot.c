@@ -1163,8 +1163,13 @@ static void         PutInBuffer (UCHAR_T c)
 	{
 	  if (currentState == 0)
 	    TextToDocument ();
+	  else if (currentState == 6)
+	    ParseHTMLError (HTMLcontext.doc,
+			    TEXT("Attribute value too long"));
 	  else
-	    ParseHTMLError (HTMLcontext.doc, TEXT("Panic: buffer overflow"));
+	    ParseHTMLError (HTMLcontext.doc,
+			    TEXT("Buffer overflow"));
+	  
 	  LgBuffer = 0;
 	}
 

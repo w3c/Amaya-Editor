@@ -1457,7 +1457,7 @@ UCHAR_T       c;
 	  if (ppLgBuffer + len >= MaxBufferLength)
 	    {
 	      ppError = TRUE;
-	      ErrorMessage (TEXT("Panic: buffer overflow"));
+	      ErrorMessage (TEXT("Buffer overflow - Transformation process"));
 	      ppLgBuffer = 0;
 	    }
 	  if (len == 1)
