@@ -1215,7 +1215,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     }
 
   if (real)
-    value /= 1000;
+    value = (value + 500) / 1000;
 
   /* now, set-up the value */
   switch (type)
