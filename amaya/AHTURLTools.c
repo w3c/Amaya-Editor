@@ -378,9 +378,9 @@ boolean             IsValidProtocol (url)
 char               *url;
 #endif /* __STDC__ */
 {
-   if (!strncmp (url, "http:", 5)
-       || !strncmp (url, "ftp:", 4))
+   if (!strncmp (url, "http:", 5))
        /* experimental */
+      /***  || !strncmp (url, "ftp:", 4)) ***/
      /*** || !strncmp (path, "news:", 5)***/ 
       return (TRUE);
    else
