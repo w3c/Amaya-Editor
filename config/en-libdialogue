@@ -271,7 +271,7 @@
 271 Insertion mode
 272 Cancel
 273 Error in PostScript translation
-274 Destination refused by the spooler %s
-275 Cannot create %s
+274 Command refused by the spooler "%s"
+275 Cannot create "%s"
 276  Global Layout
 

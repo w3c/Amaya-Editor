@@ -1088,7 +1088,6 @@ int                *carIndex;
    if (pAb->AbDead)
       return (NULL);
 
-   pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
    /* Chargement de la fonte attachee au pave */
    height = pAb->AbSize;
    unit = pAb->AbSizeUnit;
@@ -1121,6 +1120,8 @@ int                *carIndex;
 
    if (pCurrentBox != NULL)
      {
+        /* pMainBox points to the root box of the view */
+        pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
 	pCurrentBox->BxFont = font;
 	pCurrentBox->BxUnderline = pAb->AbUnderline;
 	pCurrentBox->BxThickness = pAb->AbThickness;

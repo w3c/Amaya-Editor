@@ -271,6 +271,6 @@
 271 Mode d\'insertion
 272 Annuler
 273 Erreur dans la traduction en PostScript
-274 Refus du spooler sur la destination %s
-275 Creation impossible: %s
+274 Commande refus\351e par le spooler : %s
+275 Creation impossible : %s
 276 Pr\351sentation g\351n\351rale

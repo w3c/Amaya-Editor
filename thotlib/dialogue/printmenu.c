@@ -398,7 +398,10 @@ char               *viewNames;
        strcpy (tmpDirName,"/tmp");
        lg = 4;
      }
-   sprintf (&tmpDirName[lg], "/Thot%ld", pid + numOfJobs);
+
+   sprintf (tmpDocName, "Thot%ld", pid + numOfJobs);
+   strcpy(&tmpDirName[lg], DIR_STR);
+   strcat(&tmpDirName[lg], tmpDocName);
 #ifdef DEBUG
    fprintf (stderr,"printmenu : temp dir %s \n",tmpDirName);
 #endif
@@ -407,16 +410,7 @@ char               *viewNames;
    sprintf (cmd, "chmod +rwx '%s'\n", tmpDirName);
    system (cmd);
    numOfJobs++;
-   strcpy(tmpDocName,"ThotXXXXXX");
-#ifdef _WINDOWS
-   _mktemp (tmpDocName);
-#else  /* _WINDOWS */
-   mktemp (tmpDocName);
-#endif /* !_WINDOWS */
-   /* remove eventual dot at the end of tmpDocName */
-   lg = strlen (tmpDocName) - 1;
-   if (tmpDocName[lg] == '.')
-     tmpDocName[lg] = EOS;
+
    strncpy (dirName, pDoc->DocDirectory, MAX_PATH);
    strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
    if (pFuncExportPrintDoc !=NULL)
