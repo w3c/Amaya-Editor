@@ -139,7 +139,7 @@ int                 yf;
 		pFrame->FrClipYEnd = yf;
 	  }
      }
-}				/*DefClip */
+}
 
 
 /*----------------------------------------------------------------------
@@ -179,7 +179,7 @@ void                TtaRefresh ()
 	  {
 	     /* enforce redrawing of the whole frame */
 	     DefClip (frame, -1, -1, -1, -1);
-	     (void) RedrawFrameBottom (frame, 0);
+	     (void) RedrawFrameBottom (frame, 0, NULL);
 	  }
      }
 }
@@ -549,6 +549,8 @@ int                 scroll;
 
 	     /* Redraw from top to bottom all filled boxes */
 	     RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
+	     /* paint the background of all selected boxes */
+	     DisplayBgSelection (frame, pFrame->FrAbstractBox);
 	     /* Display planes in reverse order from biggest to lowest */
 	     plane = 65536;
 	     nextplane = plane - 1;
@@ -759,7 +761,7 @@ int                 scroll;
 			  printf ("ERR: Nothing to add\n");
 		       else
 			  /* Maybe image is not complete yet */
-			  isbelow = RedrawFrameBottom (frame, 0);
+			  isbelow = RedrawFrameBottom (frame, 0, NULL);
 		    }
 
 		  /* Volume computed is sufficient */
@@ -841,15 +843,18 @@ int                 frame;
    The area is cleaned before redrawing.
    The origin coordinates of the abstract boxes are expected
    to be already computed.
+   The parameter subtree gives the root of the redisplayed subtree. When
+   the subtree is NULL the whole tree is taken into account.
    Return non zero if new abstract boxes were added in order
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            RedrawFrameBottom (int frame, int scroll)
+ThotBool            RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 #else  /* __STDC__ */
-ThotBool            RedrawFrameBottom (frame, scroll)
+ThotBool            RedrawFrameBottom (frame, scroll, subtree)
 int                 frame;
 int                 scroll;
+PtrAbstractBox      subtree;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
@@ -858,7 +863,7 @@ int                 scroll;
    PtrBox              ToCreate;
    PtrBox              pFirstBox;
    ViewFrame          *pFrame;
-   PtrAbstractBox      pAb;
+   PtrAbstractBox      pAb, pCell;
    int                 plane;
    int                 nextplane;
    int                 i, delta;
@@ -896,28 +901,62 @@ int                 scroll;
 	frameymin = pFrame->FrClipYBegin;
 	frameymax = pFrame->FrClipYEnd;
 
-	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
-	height = pFrame->FrYOrg;
-	bottom = height + h;
-
 	/* Search the first visible box or the one below */
-	if (pFrame->FrAbstractBox->AbBox == NULL)
-	  pBox = NULL;
+	if (subtree)
+	  {
+	    /* if the box is enclosed by a cell and that cell has
+               a bacgroung the frame attached to the cell should be
+	       redisplay too */ 
+	    pCell = GetParentCell (subtree->AbBox);
+	    if (pCell)
+	      subtree = pCell->AbEnclosing;
+	    pAb = subtree;
+	  /* get the first terminal box */
+	  while (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
+	    pAb = pAb->AbFirstEnclosed;
+	  if (pAb)
+	    {
+	      pBox = pAb->AbBox;
+	      if (pBox && pBox->BxType == BoSplit)
+		pBox = pBox->BxNexChild;
+	    }
+	  else
+	    pBox = NULL;
+	  }
 	else
 	  {
-	    pBox = pFrame->FrAbstractBox->AbBox->BxNext;
-	    if (pBox == NULL)
+	    pAb = pFrame->FrAbstractBox;
+	    if (pAb->AbBox == NULL)
+	      pBox = NULL;
+	    else if (pAb->AbBox->BxNext)
+	      pBox = pAb->AbBox->BxNext;
+	    else
 	      /* empty document */
-	      pBox = pFrame->FrAbstractBox->AbBox;
+	      pBox = pAb->AbBox;
 	  }
 
+	height = pFrame->FrYOrg;
+	bottom = height + h;
 	ontop = TRUE;
 	pTopBox = NULL;
 	vol = 0;
 	delta = height - h / 2;
 
 	/* Redraw from top to bottom all filled boxes */
-	RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
+	if (subtree == NULL || subtree->AbLeafType != LtPolyLine)
+	  {
+
+	    DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
+	    RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
+	    /* paint the background of all selected boxes */
+	    if (subtree)
+	      DisplayBgSelection (frame, subtree);
+	    else
+	      DisplayBgSelection (frame, pFrame->FrAbstractBox);
+	  }
+	else
+	  DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 0);
+
 	/* Display planes in reverse order from biggest to lowest */
 	plane = 65536;
 	nextplane = plane - 1;
@@ -1023,6 +1062,9 @@ int                 scroll;
 		    }
 		  else
 		     pBox = pBox->BxNext;
+		  /* if the next box is still included in the subtree? */
+		  if (subtree && !IsParentBox (subtree->AbBox, pBox))
+		    pBox = NULL;
 	       }
 	  }
 
@@ -1185,7 +1227,7 @@ int                 scroll;
 		     printf ("ERR: Nothing to add\n");
 		  else
 		     /* Maybe image is not complete yet */
-		     ontop = RedrawFrameBottom (frame, 0);
+		     ontop = RedrawFrameBottom (frame, 0, subtree);
 	       }
 
 	     /* Volume computed is sufficient */
@@ -1237,7 +1279,7 @@ int                 frame;
   if (pFrame->FrAbstractBox != NULL)
     {
       /* Drawing of the updated area */
-      RedrawFrameBottom (frame, 0);
+      RedrawFrameBottom (frame, 0, NULL);
       
       /* recompute scrolls */
       CheckScrollingWidth (frame);

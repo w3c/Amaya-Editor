@@ -34,36 +34,292 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 
-#include "windowdisplay_f.h"
 #include "displayselect_f.h"
-#include "font_f.h"
-#include "units_f.h"
 #include "exceptions_f.h"
+#include "font_f.h"
+#include "frame_f.h"
+#include "units_f.h"
+#include "windowdisplay_f.h"
 
 
 /*----------------------------------------------------------------------
-   DisplayBoxSelection trace le contour de la boite pBox dans les   
-   limites de la fenetre.                                   
+  DisplayPointSelection draw characteristics point of the box.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplayBoxSelection (int frame, PtrBox pBox, int pointselect)
+void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 #else  /* __STDC__ */
-static void         DisplayBoxSelection (frame, pBox, pointselect)
+void         DisplayPointSelection (frame, pBox, pointselect)
 int                 frame;
 PtrBox              pBox;
 int                 pointselect;
-
 #endif /* __STDC__ */
 {
-  PtrBox              pChildBox;
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
   PtrTextBuffer       pBuffer;
   int                 leftX, rightX;
   int                 topY, bottomY;
-  int                 minX;
+  int                 minX, thick;
   int                 middleY;
   int                 i, j, n;
+  int                 x, y;
+
+  if (pBox != NULL)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      pAb = pBox->BxAbstractBox;
+      thick = HANDLE_WIDTH;
+      if (thick > pBox->BxWidth)
+	thick = pBox->BxWidth;
+      if (thick > pBox->BxHeight)
+	thick = pBox->BxHeight;
+
+      /* selection points */
+      leftX = pBox->BxXOrg - pFrame->FrXOrg;
+      topY = pBox->BxYOrg - pFrame->FrYOrg;
+      bottomY = topY + pBox->BxHeight - thick;
+      rightX = leftX + pBox->BxWidth - thick;
+      minX = leftX + (pBox->BxWidth - thick) / 2;
+      middleY = topY + (pBox->BxHeight - thick) / 2;
+      if (pAb->AbLeafType == LtPicture)
+	{
+	  /* 8 characteristic points */
+	  DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			 0, 0, 0, Select_Color, 2);
+	  DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
+			 0, 0, 0, Select_Color, 2);
+	  DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			 0, 0, 0, Select_Color, 2);
+	  DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
+			 0, 0, 0, Select_Color, 2);
+	  DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
+			 0, 0, 0, Select_Color, 2);
+	  DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			 0, 0, 0, Select_Color, 2);
+	  DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
+			 0, 0, 0, Select_Color, 2);
+	  DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			 0, 0, 0, Select_Color, 2);
+	}
+      else if (pAb->AbLeafType == LtPolyLine && pBox->BxNChars > 1)
+	{
+	  /* Draw characteristic points of the polyline */
+	  /* if there is almost one point in he polyline */
+	  pBuffer = pBox->BxBuffer;
+	  leftX = pBox->BxXOrg - pFrame->FrXOrg;
+	  topY = pBox->BxYOrg - pFrame->FrYOrg;
+	  j = 1;
+	  n = pBox->BxNChars;
+	  for (i = 1; i < n; i++)
+	    {
+	      if (j >= pBuffer->BuLength)
+		{
+		  if (pBuffer->BuNext != NULL)
+		    {
+		      /* Changement de buffer */
+		      pBuffer = pBuffer->BuNext;
+		      j = 0;
+		    }
+		}
+	      if (pointselect == 0 || pointselect == i)
+		{
+		  x = leftX + PointToPixel (pBuffer->BuPoints[j].XCoord / 1000);
+		  if (x > rightX)
+		    x =  rightX;
+		  y = topY + PointToPixel (pBuffer->BuPoints[j].YCoord / 1000);
+		  if (y > bottomY)
+		    y =  bottomY;
+		  DrawRectangle (frame, 0, 0,
+				 x, y,
+				 thick, thick,
+				 0, 0, 0, Select_Color, 2);
+		}
+	      
+	      j++;
+	    }
+	}
+      else if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
+	/* C'est une boite graphique */
+	/* On marque en noir les points caracteristiques de la boite */
+	switch (pAb->AbRealShape)
+	  {
+	  case SPACE:
+	  case TEXT('R'):
+	  case TEXT('0'):
+	  case TEXT('1'):
+	  case TEXT('2'):
+	  case TEXT('3'):
+	  case TEXT('4'):
+	  case TEXT('5'):
+	  case TEXT('6'):
+	  case TEXT('7'):
+	  case TEXT('8'):
+	    /* 8 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'C':
+	  case 'L':
+	  case 'a':
+	  case 'c':
+	  case 'P':
+	  case 'Q':
+	    /* 4 characteristic points */
+	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'W':
+	    /* 3 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'X':
+	    /* 3 characteristic points */
+	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'Y':
+	    /* 3 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'Z':
+	    /* 3 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	    
+	  case 'h':
+	  case '<':
+	  case '>':
+	    /* 2 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 't':
+	    /* 3 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'b':
+	    /* 3 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'v':
+	  case '^':
+	  case 'V':
+	    /* 2 characteristic points */
+	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'l':
+	    /* 3 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case 'r':
+	    /* 3 characteristic points */
+	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case '\\':
+	  case 'O':
+	  case 'e':
+	    /* 2 characteristic points */
+	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  case '/':
+	  case 'o':
+	  case 'E':
+	    /* 2 characteristic points */
+	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			   0, 0, 0, Select_Color, 2);
+	    break;
+	  default:
+	    break;
+	  }
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  DisplayBgBoxSelection paints the box background with the selection
+  color.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         DisplayBgBoxSelection (int frame, PtrBox pBox)
+#else  /* __STDC__ */
+void         DisplayBgBoxSelection (frame, pBox)
+int          frame;
+PtrBox       pBox;
+#endif /* __STDC__ */
+{
+  PtrBox              pChildBox;
+  ViewFrame          *pFrame;
+  PtrAbstractBox      pAb;
+  int                 leftX, topY;
 
   if (pBox != NULL)
     {
@@ -74,14 +330,13 @@ int                 pointselect;
 	  || (pAb != NULL
 	      && TypeHasException (ExcHighlightChildren, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema)))
 	{
-	  /* -> La boite est eclatee (boite fantome) */
-	  /* On visualise toutes les boites filles */
+	  /* the box is not displayed, select its children */
 	  if (pAb->AbFirstEnclosed != NULL)
 	    {
 	      pChildBox = pAb->AbFirstEnclosed->AbBox;
 	      while (pChildBox != NULL)
 		{
-		  DisplayBoxSelection (frame, pChildBox, 0);
+		  DisplayBgBoxSelection (frame, pChildBox);
 		  pAb = pChildBox->BxAbstractBox;
 		  if (pAb->AbNext != NULL)
 		    pChildBox = pAb->AbNext->AbBox;
@@ -90,195 +345,136 @@ int                 pointselect;
 		}
 	    }
 	}
-      else if (pBox->BxType != BoSplit)
+      else if (pBox->BxType == BoSplit)
 	{
-	  /* La boite est entiere */
-	  leftX = pBox->BxXOrg - pFrame->FrXOrg;
-	  topY = pBox->BxYOrg - pFrame->FrYOrg;
-	  bottomY = topY + pBox->BxHeight;
-	  rightX = leftX + pBox->BxWidth;
-	  minX = leftX + pBox->BxWidth / 2;
-	  middleY = topY + pBox->BxHeight / 2;
-
-	  if (pAb == NULL)
-	    /* C'est une boite sans pave */
-	    VideoInvert (frame, rightX - leftX, bottomY - topY, leftX, topY);
-	  else if (pAb->AbLeafType == LtPolyLine && pBox->BxNChars > 1)
-	    {
-	      /* C'est une boite polyline */
-	      /* On marque le(s) point(s) caracteristique(s) de la polyline */
-	      /* si la polyline contient au moins 1 point (effectif) */
-	      pBuffer = pBox->BxBuffer;
-	      leftX = pBox->BxXOrg - pFrame->FrXOrg;
-	      topY = pBox->BxYOrg - pFrame->FrYOrg;
-	      j = 1;
-	      n = pBox->BxNChars;
-	      for (i = 1; i < n; i++)
-		{
-		  if (j >= pBuffer->BuLength)
-		    {
-		      if (pBuffer->BuNext != NULL)
-			{
-			  /* Changement de buffer */
-			  pBuffer = pBuffer->BuNext;
-			  j = 0;
-			}
-		    }
-		  if (pointselect == 0 || pointselect == i)
-		    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH,
-				 leftX + PointToPixel (pBuffer->BuPoints[j].XCoord / 1000) - 2,
-				 topY + PointToPixel (pBuffer->BuPoints[j].YCoord / 1000) - 2);
-		  j++;
-		}
-	    }
-	  else if (pAb->AbLeafType == LtPicture)
-	    {
-	      /* 4 points caracteristiques */
-	      VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-	      VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-	      VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-	      VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-	      VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-	      VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
-	      VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
-	      VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
-	    }
-	  else if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
-	    /* C'est une boite graphique */
-	    /* On marque en noir les points caracteristiques de la boite */
-	    switch (pAb->AbRealShape)
-	      {
-	      case SPACE:
-	      case TEXT('R'):
-	      case TEXT('0'):
-	      case TEXT('1'):
-	      case TEXT('2'):
-	      case TEXT('3'):
-	      case TEXT('4'):
-	      case TEXT('5'):
-	      case TEXT('6'):
-	      case TEXT('7'):
-	      case TEXT('8'):
-		/* 8 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
-		break;
-	      case 'C':
-	      case 'L':
-	      case 'a':
-	      case 'c':
-	      case 'P':
-	      case 'Q':
-		/* 4 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
-		break;
-	      case 'W':
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
-		break;
-	      case 'X':
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
-		break;
-	      case 'Y':
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-		break;
-	      case 'Z':
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-		break;
-		
-	      case 'h':
-	      case '<':
-	      case '>':
-		/* 2 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-		break;
-	      case 't':
-		/* 3 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-		break;
-	      case 'b':
-		/* 3 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
-		break;
-	      case 'v':
-	      case '^':
-	      case 'V':
-		/* 2 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
-		break;
-	      case 'l':
-		/* 3 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
-		break;
-	      case 'r':
-		/* 3 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
-		break;
-	      case '\\':
-	      case 'O':
-	      case 'e':
-		/* 2 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
-		break;
-	      case '/':
-	      case 'o':
-	      case 'E':
-		/* 2 points caracteristiques */
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
-		break;
-	      default:
-		break;
-	      }
-	  /* C'est une boite d'un autre type */
-	  else
-	    VideoInvert (frame, rightX - leftX, bottomY - topY, leftX, topY);
-	}
-      else
-	{
-	  /* La boite est coupee */
-	  /* Calcul des points caracteristiques de la premiere boite coupee */
+	  /* display the selection on pieces of the current box */
 	  pChildBox = pBox->BxNexChild;
 	  while (pChildBox != NULL)
 	    {
-	      DisplayBoxSelection (frame, pChildBox, 0);
+	      DisplayBgBoxSelection (frame, pChildBox);
 	      pChildBox = pChildBox->BxNexChild;
 	    }
+	}
+      else if (pAb->AbLeafType != LtPicture &&
+	       pAb->AbLeafType != LtGraphics &&
+	       pAb->AbLeafType != LtPolyLine)
+	{
+	  /* the whole box is selected */
+	  leftX = pBox->BxXOrg - pFrame->FrXOrg;
+	  topY = pBox->BxYOrg - pFrame->FrYOrg;
+	  /* draw the background of the selection */
+	  DrawRectangle (frame, 0, 0, leftX, topY,
+			 pBox->BxWidth, pBox->BxHeight,
+			 0, 0, 0, Select_Color, 2);
 	}
     }
 }
 
 /*----------------------------------------------------------------------
-   SetNewSelectionStatus parcourt l'arborescence pour basculer la    
-   mise en evidence de la selection et forcer le nouvel    
-   etat de selection.                                      
+  DisplayBgSelection goes through the tree for displaying the background
+  selection.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DisplayBgSelection (int frame, PtrAbstractBox pAb)
+#else  /* __STDC__ */
+void                DisplayBgSelection (frame, pAb)
+int                 frame;
+PtrAbstractBox      pAb;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox      pChildAb;
+   ViewFrame          *pFrame;
+
+   if (pAb != NULL)
+     {
+	/* Le pave est selectionne */
+	if (pAb->AbSelected)
+	  {
+	     pFrame = &ViewFrameTable[frame - 1];
+	     /* On ne visualise pas les bornes de la selection */
+	     if (pFrame->FrSelectionBegin.VsBox == NULL ||
+		 pFrame->FrSelectionEnd.VsBox == NULL ||
+		 pAb->AbLeafType == LtCompound ||
+		 (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
+		  pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
+		 /* it's not an extremity of the selection */
+	       DisplayBgBoxSelection (frame, pAb->AbBox);
+	  }
+	else if (pAb->AbLeafType == LtCompound)
+	   /* Sinon on parcours le sous-arbre */
+	  {
+	     pChildAb = pAb->AbFirstEnclosed;
+	     while (pChildAb != NULL)
+	       {
+		  DisplayBgSelection (frame, pChildAb);
+		  pChildAb = pChildAb->AbNext;
+	       }
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  DrawBoxSelection paints the box with the selection background.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         DrawBoxSelection (int frame, PtrBox pBox)
+#else  /* __STDC__ */
+void         DrawBoxSelection (frame, pBox)
+int          frame;
+PtrBox       pBox;
+#endif /* __STDC__ */
+{
+  PtrBox              pChildBox;
+  PtrAbstractBox      pAb;
+  int                 leftX, topY;
+
+  if (pBox != NULL)
+    {
+      pAb = pBox->BxAbstractBox;      
+      if (pBox->BxType == BoGhost
+	  || (pAb != NULL
+	      && TypeHasException (ExcHighlightChildren, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema)))
+	{
+	  /* the box is not displayed, select its children */
+	  if (pAb->AbFirstEnclosed != NULL)
+	    {
+	      pChildBox = pAb->AbFirstEnclosed->AbBox;
+	      while (pChildBox != NULL)
+		{
+		  DrawBoxSelection (frame, pChildBox);
+		  pAb = pChildBox->BxAbstractBox;
+		  if (pAb->AbNext != NULL)
+		    pChildBox = pAb->AbNext->AbBox;
+		  else
+		    pChildBox = NULL;
+		}
+	    }
+	}
+      else if (pBox->BxType == BoSplit)
+	{
+	  /* display the selection on pieces of the current box */
+	  pChildBox = pBox->BxNexChild;
+	  while (pChildBox != NULL)
+	    {
+	      DrawBoxSelection (frame, pChildBox);
+	      pChildBox = pChildBox->BxNexChild;
+	    }
+	}
+      else if (pAb->AbLeafType != LtPicture &&
+	       pAb->AbLeafType != LtGraphics &&
+	       pAb->AbLeafType != LtPolyLine)
+	{
+	  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+	  /* display now */
+	  RedrawFrameBottom (frame, 0, pAb);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  SetNewSelectionStatus goes through the tree for switching the selection
+  indicator.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
@@ -299,16 +495,19 @@ ThotBool            status;
 	if (pAb->AbSelected)
 	  {
 	     pFrame = &ViewFrameTable[frame - 1];
-	     /* On ne visualise pas les bornes de la selection */
-	     if (pFrame->FrSelectionBegin.VsBox == NULL ||
-		 pFrame->FrSelectionEnd.VsBox == NULL)
-		DisplayBoxSelection (frame, pAb->AbBox, 0);
-	     else if (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
-		      pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
-		DisplayBoxSelection (frame, pAb->AbBox, 0);
 	     pAb->AbSelected = status;
+	     if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0)
+	       /* ready to un/display the current selection */
+	       /* doesn't display selection limits */
+	       if (pFrame->FrSelectionBegin.VsBox == NULL ||
+		   pFrame->FrSelectionEnd.VsBox == NULL ||
+		   pAb->AbLeafType == LtCompound ||
+		   (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
+		    pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
+		 if (pAb->AbBox)
+		   DrawBoxSelection (frame, pAb->AbBox);
 	  }
-	else
+	else if (pAb->AbLeafType == LtCompound)
 	   /* Sinon on parcours le sous-arbre */
 	  {
 	     pChildAb = pAb->AbFirstEnclosed;
@@ -322,15 +521,13 @@ ThotBool            status;
 }
 
 /*----------------------------------------------------------------------
-  DisplayStringSelection trace le contour d'une chaine de charcteres
-  dans la boite de texte pBox dans les limites de la fenetre entre leftX
-  et rightX.
-  S'il s'agit d'une polyline, allume le point selectionne.
+  DisplayStringSelection the selection on a substring of text
+  between leftX and rightX.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
+void         DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 #else  /* __STDC__ */
-static void         DisplayStringSelection (frame, leftX, rightX, pBox)
+void         DisplayStringSelection (frame, leftX, rightX, pBox)
 int                 frame;
 int                 leftX;
 int                 rightX;
@@ -345,11 +542,8 @@ PtrBox              pBox;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox != NULL)
-    /* On limite la visibilite de la selection aux portions de texte */
-    /* affichees dans les paragraphes.                               */
     {
-      /* Si on holophraste la racine du document */
-      /* le texte n'a pas de pave englobant */
+      /* For holophrasted documents there is no enclosing */
       if (pBox->BxAbstractBox->AbEnclosing == NULL)
 	pParentBox = pBox;
       else
@@ -387,113 +581,8 @@ PtrBox              pBox;
 	  else
 	    width = rightX - leftX;
 	}
-      VideoInvert (frame, width, h, leftX, topY);
+      DrawRectangle (frame, 0, 0, leftX, topY, width, h,
+		     0, 0, 0, Select_Color, 2);
     }
 }
 
-
-/*----------------------------------------------------------------------
-   DisplayCurrentSelection shows or hides the current selection.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DisplayCurrentSelection (int frame, ThotBool status)
-#else  /* __STDC__ */
-void                DisplayCurrentSelection (frame, status)
-int                 frame;
-ThotBool            status;
-
-#endif /* __STDC__ */
-{
-  PtrBox              pBox;
-  PtrBox              pSelBox;
-  PtrAbstractBox      pAb;
-  ViewFrame          *pFrame;
-  ViewSelection      *pViewSel;
-  ViewSelection      *pViewSelEnd;
-
-  /* On ne visualise la selection que si la selection est coherente */
-  if (FrameTable[frame].FrDoc && documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
-    {
-      pFrame = &ViewFrameTable[frame - 1];
-      pViewSel = &pFrame->FrSelectionBegin;
-      if (pViewSel->VsBox != NULL && pFrame->FrSelectionEnd.VsBox != NULL)
-	{
-	  /* Est-ce que les marques de selection sont dans la meme boite ? */
-	  if (pFrame->FrSelectionEnd.VsBox == pViewSel->VsBox)
-	    if (pFrame->FrSelectOnePosition)
-	      {
-		/* on ne visualise qu'une position position */
-		if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPolyLine)
-		  DisplayBoxSelection (frame, pViewSel->VsBox, pViewSel->VsIndBox);
-		else
-		  DisplayStringSelection (frame, pViewSel->VsXPos, pViewSel->VsXPos + 2, pViewSel->VsBox);
-	      }
-	    else if (pViewSel->VsBuffer == NULL
-		     || (pViewSel->VsBox->BxNChars == 0
-			 && (pViewSel->VsBox->BxType != BoSplit
-			     || pViewSel->VsBox->BxType != BoPiece)))
-	      DisplayBoxSelection (frame, pViewSel->VsBox, pViewSel->VsIndBox);
-	    else
-	      DisplayStringSelection (frame, pViewSel->VsXPos, pFrame->FrSelectionEnd.VsXPos, pViewSel->VsBox);
-	  else
-	    /* Les marques de selection sont dans deux boites differentes */
-	    /* Si les deux bornes de la selection sont compatibles */
-	    {
-	      pAb = NULL;
-	      pSelBox = pViewSel->VsBox;
-	      if (pViewSel->VsBuffer == NULL || pSelBox->BxNChars == 0)
-		DisplayBoxSelection (frame, pViewSel->VsBox, 0);
-	      else
-		{
-		  pAb = pSelBox->BxAbstractBox;
-		  /* Est-ce que la selection debute en fin de boite ? */
-		  if (pViewSel->VsXPos == pSelBox->BxWidth)
-		    DisplayStringSelection (frame, pViewSel->VsXPos,
-					    pSelBox->BxWidth + 2, pViewSel->VsBox);
-		  else
-		    DisplayStringSelection (frame, pViewSel->VsXPos, pSelBox->BxWidth,
-					    pViewSel->VsBox);
-		  /* Parcours les boites coupees soeurs */
-		  if (pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
-		    {
-		      pBox = pSelBox->BxNexChild;
-		      while (pBox != NULL &&
-			     pBox != pFrame->FrSelectionEnd.VsBox)
-			{
-			  if (pBox->BxNChars > 0)
-			    DisplayBoxSelection (frame, pBox, 0);
-			  pBox = pBox->BxNexChild;
-			}
-		    }
-		}
-	      pViewSelEnd = &pFrame->FrSelectionEnd;
-	      pSelBox = pViewSelEnd->VsBox;
-	      if (pViewSelEnd->VsBuffer == NULL || pSelBox->BxNChars == 0)
-		DisplayBoxSelection (frame, pViewSelEnd->VsBox, 0);
-	      else
-		{
-		  /* Parcours les boites coupees soeurs */
-		  if ((pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
-		      && pSelBox->BxAbstractBox != pAb)
-		    {
-		      pBox = pSelBox->BxAbstractBox->AbBox->BxNexChild;
-		      while (pBox != NULL &&
-			     pBox != pViewSelEnd->VsBox)
-			{
-			  DisplayBoxSelection (frame, pBox, 0);
-			  pBox = pBox->BxNexChild;
-			}
-		    }
-		  DisplayStringSelection (frame, 0, pViewSelEnd->VsXPos, pViewSelEnd->VsBox);
-		}
-	    }
-	  /* Bascule l'indicateur de la selection allumee */
-	  pFrame->FrSelectShown = !pFrame->FrSelectShown;
-	  
-	  SetNewSelectionStatus (frame, pFrame->FrAbstractBox, status);
-	}
-      else if (status == FALSE)
-	/* Annule la selection meme s'il n'y a plus de boite selectionnee */
-	pFrame->FrSelectShown = FALSE;
-    }
-}

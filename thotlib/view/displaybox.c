@@ -26,11 +26,12 @@
 #include "appdialogue_tv.h"
 #include "picture_tv.h"
 
-#include "font_f.h"
-#include "units_f.h"
-#include "displaybox_f.h"
-#include "picture_f.h"
 #include "buildboxes_f.h"
+#include "displaybox_f.h"
+#include "displayselect_f.h"
+#include "font_f.h"
+#include "picture_f.h"
+#include "units_f.h"
 #include "xwindowdisplay_f.h"
 
 /*----------------------------------------------------------------------
@@ -69,6 +70,7 @@ int                 ymax;
   int                 xd, yd, x, y;
   int                 width, height;
   int                 op, RO;
+  ThotBool            selected;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
@@ -101,6 +103,20 @@ int                 ymax;
 	  DrawPoints (frame, xd + width, yd,
 		      pBox->BxEndOfBloc, RO, op, pBox->BxAbstractBox->AbForeground);
 	}
+
+      /* show the selection on the whole image */
+      selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
+		  pFrame->FrSelectionEnd.VsBox == pBox);
+
+      if (selected)
+	if (pFrame->FrSelectOnePosition)
+	  /* show the selection on the beginning or the end of the image */
+	  DisplayStringSelection (frame,
+				  pFrame->FrSelectionBegin.VsXPos,
+				  pFrame->FrSelectionBegin.VsXPos + 2,
+				  pFrame->FrSelectionBegin.VsBox);
+	else
+	  DisplayPointSelection (frame, pBox, 0);
     }
 }
 
@@ -125,6 +141,7 @@ int                 frame;
   int                 bg;
   int                 op, RO;
   int                 width, height;
+  ThotBool            selected;
 
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
@@ -138,7 +155,7 @@ int                 frame;
 	  /* Position in the frame */
 	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
 	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
-
+	  
 	  if (pBox->BxAbstractBox->AbSensitive)
 	    op = 1;
 	  else
@@ -147,7 +164,7 @@ int                 frame;
 	    RO = 1;
 	  else
 	    RO = 0;
-	  
+
 	  /* box sizes have to be positive */
 	  width = pBox->BxW;
 	  if (width < 0)
@@ -227,11 +244,32 @@ int                 frame;
 	    default:
 	      break;
 	    }
+
 	  if (pBox->BxEndOfBloc > 0)
 	    {
 	      /* fill the end of the line with dots */
 	      yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	      DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
+	    }
+
+	  /* show the selection on the beginning or the end of the image */
+	  selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
+		      pFrame->FrSelectionEnd.VsBox == pBox);
+	  if (selected)
+	    {
+	      if (pFrame->FrSelectOnePosition ||
+		  pFrame->FrSelectionBegin.VsXPos == pBox->BxW)
+		/* display a carret 
+		   or the selection starts at the end of the box */
+		DisplayStringSelection (frame,
+					pFrame->FrSelectionBegin.VsXPos,
+					pFrame->FrSelectionBegin.VsXPos + 2,
+					pBox);
+	      else
+		DisplayStringSelection (frame,
+					pFrame->FrSelectionBegin.VsXPos,
+					pFrame->FrSelectionEnd.VsXPos,
+					pBox);
 	    }
 	}
     }
@@ -251,18 +289,20 @@ CHAR_T                modele;
 #endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
-  int                 op, RO;
+  PtrAbstractBox      pAb;
+  int                 op, RO, bg;
   int                 xd, yd;
   int                 width, height;
 
   pFrame = &ViewFrameTable[frame - 1];
-  if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+  pAb = pBox->BxAbstractBox;
+  if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      if (pBox->BxAbstractBox->AbSensitive)
+      if (pAb->AbSensitive)
 	op = 1;
       else
 	op = 0;
-      if (pBox->BxAbstractBox->AbReadOnly)
+      if (pAb->AbReadOnly)
 	RO = 1;
       else
 	RO = 0;
@@ -276,15 +316,22 @@ CHAR_T                modele;
       height = pBox->BxH;
       if (height < 0)
 	height = 0;
+
+       /* show the selection on the current symbol */
+      if (pFrame->FrSelectionBegin.VsBox == pBox ||
+	  pFrame->FrSelectionEnd.VsBox == pBox)
+	bg = Select_Color;
+      else
+	bg = pAb->AbBackground;
       
-      if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+      if (pAb->AbLeafType == LtGraphics)
 	DrawRectangle (frame, 2, 0, xd, yd, width,
-		       height, RO, op, pBox->BxAbstractBox->AbForeground,
-		       pBox->BxAbstractBox->AbBackground, 0);
+		       height, RO, op, pAb->AbForeground,
+		       bg, 0);
       else
 	PaintWithPattern (frame, xd, yd, width, height, 0, RO, op,
-			  pBox->BxAbstractBox->AbForeground,
-			  pBox->BxAbstractBox->AbBackground, 4);
+			  pAb->AbForeground,
+			  bg, 4);
     }
 }
 
@@ -308,19 +355,21 @@ int                 frame;
   int                 bg;
   int                 style;
   int                 width, height;
+  ThotBool            selected;
 
-  fg = pBox->BxAbstractBox->AbForeground;
-  bg = pBox->BxAbstractBox->AbBackground;
+  pAb = pBox->BxAbstractBox;
+  fg = pAb->AbForeground;
+  bg = pAb->AbBackground;
   pFrame = &ViewFrameTable[frame - 1];
-  if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+  if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
-      if (pBox->BxAbstractBox->AbSensitive)
+      if (pAb->AbSensitive)
 	op = 1;
       else
 	op = 0;
-      if (pBox->BxAbstractBox->AbReadOnly)
+      if (pAb->AbReadOnly)
 	RO = 1;
       else
 	RO = 0;
@@ -353,7 +402,6 @@ int                 frame;
 	if (height < 0)
 	  height = 0;
 
-	pAb = pBox->BxAbstractBox;
 	/* Style and thickness of drawing */
 	i = GetLineWeight (pAb);
 	switch (pAb->AbLineStyle)
@@ -507,7 +555,13 @@ int                 frame;
 	    yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	    DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
 	  }
-      }
+
+	/* show the selection on the whole image */
+	selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
+		    pFrame->FrSelectionEnd.VsBox == pBox);
+	if (selected && !pFrame->FrSelectOnePosition)
+	  DisplayPointSelection (frame, pBox, 0);
+     }
 }
 
 
@@ -613,6 +667,7 @@ int                 frame;
   int                 bg;
   int                 style, arrow;
   int                 width;
+  ThotBool            selected;
 
   /* If no point is defined, no need to draw it */
   if (pBox->BxBuffer == NULL || pBox->BxNChars <= 1)
@@ -620,19 +675,20 @@ int                 frame;
 
   /* Transform the polyline if the box size has changed */
   PolyTransform (pBox);
-  fg = pBox->BxAbstractBox->AbForeground;
-  bg = pBox->BxAbstractBox->AbBackground;
+  pAb = pBox->BxAbstractBox;
+  fg = pAb->AbForeground;
+  bg = pAb->AbBackground;
   pFrame = &ViewFrameTable[frame - 1];
-  if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+  if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
-      if (pBox->BxAbstractBox->AbSensitive)
+      if (pAb->AbSensitive)
 	op = 1;
       else
 	op = 0;
       
-      if (pBox->BxAbstractBox->AbReadOnly)
+      if (pAb->AbReadOnly)
 	RO = 1;
       else
 	RO = 0;
@@ -642,7 +698,6 @@ int                 frame;
       if (width < 0)
 	width = 0;
       
-      pAb = pBox->BxAbstractBox;
       /* Style and thickness of the line */
       i = GetLineWeight (pAb);
       switch (pAb->AbLineStyle)
@@ -719,6 +774,14 @@ int                 frame;
 	  yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
 	}
+      
+      /* show the selection on the whole image */
+      selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
+		  pFrame->FrSelectionEnd.VsBox == pBox);
+      if (selected && !pFrame->FrSelectOnePosition)
+	DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
+      else
+	DisplayPointSelection (frame, pBox, 0);
     }
 }
 
@@ -740,7 +803,8 @@ int                 frame;
   PtrTextBuffer       adbuff;
   PtrTextBuffer       newbuff;
   ViewFrame          *pFrame;
-  PtrBox              mbox;
+  PtrBox              mbox, nbox;
+  PtrAbstractBox      pAb;
   UCHAR_T             car;
   int                 indbuff;
   int                 restbl;
@@ -751,36 +815,42 @@ int                 frame;
   int                 indmax, bl;
   int                 nbcar, x, y;
   int                 lgspace;
-  int                 fg;
-  int                 bg;
-  int                 RO;
-  int                 op;
+  int                 fg, bg;
+  int                 RO, op;
   int                 shadow;
   int                 width;
+  int                 left, right;
   ThotBool            blockbegin;
   ThotBool            withbackground;
-  ThotBool            withline;
+  ThotBool            withline, selected;
 
   indmax = 0;
   buffleft = 0;
   adbuff = NULL;
   indbuff = 0;
   restbl = 0;
-
+  pAb = pBox->BxAbstractBox;
+  selected = pAb->AbSelected;
   /* Search for the enclosing box */
-  if (pBox->BxAbstractBox->AbEnclosing == NULL)
+  if (pAb->AbEnclosing == NULL)
     mbox = pBox;
   else
     {
-      mbox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+      mbox = pAb->AbEnclosing->AbBox;
       if (mbox->BxType == BoGhost)
-	while (mbox->BxType == BoGhost &&
-	       mbox->BxAbstractBox->AbEnclosing != NULL)
-	  mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
+	{
+	  selected = selected || mbox->BxAbstractBox->AbSelected;
+	  while (mbox->BxType == BoGhost &&
+		 mbox->BxAbstractBox->AbEnclosing != NULL)
+	    {
+	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
+	      selected = selected || mbox->BxAbstractBox->AbSelected;
+	    }
+	}
     } 
   
   /* do we have to display stars instead of characters? */
-  if (pBox->BxAbstractBox->AbBox->BxShadow)
+  if (pAb->AbBox->BxShadow)
     shadow = 1;
   else
     shadow = 0;
@@ -804,13 +874,12 @@ int                 frame;
   else
     withline = FALSE;
 
-  fg = pBox->BxAbstractBox->AbForeground;
-  bg = pBox->BxAbstractBox->AbBackground;
-  withbackground = (pBox->BxAbstractBox->AbFillPattern == 2);
-  
+  fg = pAb->AbForeground;
+  bg = pAb->AbBackground;
+  withbackground = (pAb->AbFillPattern == 2);
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxNChars > 0 &&
-      pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+      pAb->AbVisibility >= pFrame->FrVisibility)
     {
       /* Initialization */
       x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
@@ -821,11 +890,11 @@ int                 frame;
       charleft = pBox->BxNChars;
       newbl = pBox->BxNPixels;
       lg = 0;
-      if (pBox->BxAbstractBox->AbSensitive)
+      if (pAb->AbSensitive)
 	op = 1;
       else
 	op = 0;
-      if (pBox->BxAbstractBox->AbReadOnly)
+      if (pAb->AbReadOnly)
 	RO = 1;
       else
 	RO = 0;
@@ -897,6 +966,65 @@ int                 frame;
 		       width + pBox->BxLPadding + pBox->BxRPadding,
 		       FontHeight (pBox->BxFont) + pBox->BxTPadding + pBox->BxBPadding,
 		       0, 0, 0, bg, 2);
+
+      /* check if the box is selected */
+      left = 0;
+      right = 0;
+      if (selected)
+	{
+	  if (pBox == pFrame->FrSelectionBegin.VsBox ||
+	      pBox == pFrame->FrSelectionEnd.VsBox)
+	    {
+	      if (pFrame->FrSelectOnePosition)
+		{
+		  left = pFrame->FrSelectionBegin.VsXPos;
+		  right = left + 2;
+		}
+	      else
+		{
+		  /* almost one character is sleected */
+		  if (pBox == pFrame->FrSelectionBegin.VsBox)
+		    left = pFrame->FrSelectionBegin.VsXPos;
+		  if (pBox == pFrame->FrSelectionEnd.VsBox)
+		    right = pFrame->FrSelectionEnd.VsXPos;
+		  else
+		    right = pBox->BxWidth;
+		  DisplayStringSelection (frame, left, right, pBox);
+		  /* the selection is done now */
+		  left = 0;
+		  right = 0;
+		}
+	    }
+	  else if (pBox->BxType == BoPiece)
+	    {
+	      /* check if the box in within the selection */
+	      if (pFrame->FrSelectionBegin.VsBox &&
+		  pAb == pFrame->FrSelectionBegin.VsBox->BxAbstractBox)
+		{
+		  nbox = pFrame->FrSelectionBegin.VsBox;
+		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox && nbox != pBox)
+		    nbox = nbox->BxNexChild;
+		  if (nbox == pBox)
+		    /* it's within the current selection */
+		    DisplayBgBoxSelection (frame, pBox);
+		}
+	      else if (pFrame->FrSelectionEnd.VsBox &&
+		       pAb == pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
+		{
+		  nbox = pBox->BxNexChild;
+		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox)
+		    nbox = nbox->BxNexChild;
+		  if (nbox == pFrame->FrSelectionEnd.VsBox)
+		    /* it's within the current selection */
+		    DisplayBgBoxSelection (frame, pBox);
+		}
+	      else
+		DisplayBgBoxSelection (frame, pBox);
+	    }
+	  else
+	    DisplayBgBoxSelection (frame, pBox);
+	}
+
       while (charleft > 0)
 	{
 	  /* handle each char in the buffer */
@@ -988,6 +1116,9 @@ int                 frame;
 	  y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	  DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y, pBox->BxEndOfBloc, RO, op, fg);
 	}
+      /* display a caret if needed */
+      if (left != right)
+	DisplayStringSelection (frame, left, right, pBox);
     }
 }
 

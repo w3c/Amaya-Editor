@@ -6,19 +6,41 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void DisplayPointSelection ( int frame,
+                                    PtrBox pBox,
+                                    int pointselect );
+extern void DisplayBgBoxSelection ( int frame,
+                                    PtrBox pBox );
+extern void DisplayBgSelection ( int frame,
+                                 PtrAbstractBox pAb );
+extern void DrawBoxSelection ( int frame,
+                               PtrBox pBox );
 extern void SetNewSelectionStatus ( int frame,
                                     PtrAbstractBox pAb,
                                     ThotBool status );
-extern void DisplayCurrentSelection ( int frame,
-                                      ThotBool status );
+extern void DisplayStringSelection ( int frame,
+                                     int leftX,
+                                     int rightX,
+                                     PtrBox pBox );
 
 #else /* __STDC__ */
 
+extern void DisplayPointSelection (/* int frame,
+                                      PtrBox pBox,
+                                      int pointselect */);
+extern void DisplayBgBoxSelection (/* int frame,
+                                      PtrBox pBox */);
+extern void DisplayBgSelection (/* int frame,
+                                   PtrAbstractBox pAb */);
+extern void DrawBoxSelection (/* int frame,
+                                 PtrBox pBox */);
 extern void SetNewSelectionStatus (/* int frame,
                                       PtrAbstractBox pAb,
                                       ThotBool status */);
-extern void DisplayCurrentSelection (/* int frame,
-                                        ThotBool status */);
+extern void DisplayStringSelection (/* int frame,
+                                       int leftX,
+                                       int rightX,
+                                       PtrBox pBox */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

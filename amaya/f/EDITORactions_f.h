@@ -163,8 +163,8 @@ extern void LoadAnnotations ( Document doc,
                               View view );
 extern void PostAnnotation ( Document doc,
                              View view );
-extern void ShowAnnotations ( Document document,
-                              View view );
+extern void FilterAnnot ( Document document,
+                          View view );
 extern void CustomQuery ( Document document,
                           View view );
 
@@ -327,8 +327,8 @@ extern void LoadAnnotations (/* Document doc,
                                 View view */);
 extern void PostAnnotation (/* Document doc,
                                View view */);
-extern void ShowAnnotations (/* Document document,
-                                View view */);
+extern void FilterAnnot (/* Document document,
+                            View view */);
 extern void CustomQuery (/* Document document,
                             View view */);
 

@@ -3230,9 +3230,6 @@ int                 frame;
 	   pBox = pAb->AbBox;
 	   status = pFrame->FrReady;
 	   pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
-	   /* Remove la selection eventuelle */
-	   if (ThotLocalActions[T_switchsel])
-	     (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 	   /* Faut-il changer les dimensions de la boite document */
 	   if (!pBox->BxContentWidth
 	       || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
@@ -3290,7 +3287,7 @@ int                 frame;
 		 (*ThotLocalActions[T_showbox]) (frame, pVisibleAb->AbBox, 0, position);
 	     }
 	   else
-	     RedrawFrameBottom (frame, 0);
+	     RedrawFrameBottom (frame, 0, NULL);
 	   /* recompute scrolls */
 	   CheckScrollingWidth (frame);
 	   UpdateScrollbars (frame);
@@ -3392,7 +3389,7 @@ int                 frame;
 	pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
 	/* Faut-il retirer les marques de selection dans la fenetre */
 	CloseInsertion ();
-	ClearViewSelection (frame);
+	/*ClearViewSelection (frame);*/
 	/* Liberation de la hierarchie */
 	RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);
 	pFrame->FrAbstractBox = NULL;

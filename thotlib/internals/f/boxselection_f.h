@@ -6,11 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void SwitchSelection ( int frame,
-                              ThotBool toShow );
-extern void TtaSwitchSelection ( Document document,
-                                 View view,
-                                 ThotBool toShow );
 extern void ClearViewSelMarks ( int frame );
 extern void ClearViewSelection ( int frame );
 extern void TtaClearViewSelections ( void );
@@ -33,11 +28,6 @@ extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
 
 #else /* __STDC__ */
 
-extern void SwitchSelection (/* int frame,
-                                ThotBool toShow */);
-extern void TtaSwitchSelection (/* Document document,
-                                   View view,
-                                   ThotBool toShow */);
 extern void ClearViewSelMarks (/* int frame */);
 extern void ClearViewSelection (/* int frame */);
 extern void TtaClearViewSelections (/* void */);

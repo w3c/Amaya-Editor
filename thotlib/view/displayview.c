@@ -412,29 +412,6 @@ ThotBool            creation;
 
 
 /*----------------------------------------------------------------------
-   ExtinguishOrLightSelection bascule la selection courante dans      
-   toutes les vues du document pDoc.                               
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ExtinguishOrLightSelection (PtrDocument pDoc, ThotBool lighted)
-#else  /* __STDC__ */
-static void         ExtinguishOrLightSelection (pDoc, lighted)
-PtrDocument         pDoc;
-ThotBool            lighted;
-#endif /* __STDC__ */
-{
-  int                 view;
-  int                 assoc;
-
-  for (view = 0; view < MAX_VIEW_DOC; view++)
-    if (pDoc->DocView[view].DvPSchemaView > 0 && ThotLocalActions[T_switchsel])
-      (*ThotLocalActions[T_switchsel]) (pDoc->DocViewFrame[view], lighted);
-  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-    if (pDoc->DocAssocFrame[assoc] > 0 && ThotLocalActions[T_switchsel])
-      (*ThotLocalActions[T_switchsel]) (pDoc->DocAssocFrame[assoc], lighted);
-}
-
-/*----------------------------------------------------------------------
    TCloseDocument ferme toutes les vue d'un document et decharge ce	
    document. Si pDoc est NULL, demande a` l'utilisateur de 
    designer le document a` fermer et lui demande           
@@ -1154,12 +1131,8 @@ Document     document;
 {
    if (documentDisplayMode[document - 1] == DisplayImmediately)
      {
-	/* eteint la selection */
-	ExtinguishOrLightSelection (LoadedDocument[document - 1], FALSE);
 	/* reaffiche ce qui a deja ete prepare' */
 	RedisplayDocViews (LoadedDocument[document - 1]);
-	/* rallume la selection */
-	ExtinguishOrLightSelection (LoadedDocument[document - 1], TRUE);
      }
 }
 
@@ -1341,9 +1314,6 @@ DisplayMode         newDisplayMode;
 		  DestroyImage (pDoc);
 	      else if (newDisplayMode == SuspendDisplay)
 		TtaClearViewSelections ();
-	      else
-		/* eteint la selection */
-		ExtinguishOrLightSelection (pDoc, FALSE);
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 	    }
@@ -1368,8 +1338,6 @@ DisplayMode         newDisplayMode;
 		  /* la selection n'a pas change', on la rallume */
 		  if (oldDisplayMode == SuspendDisplay)
 		    HighlightSelection (TRUE, FALSE);
-		  else
-		    ExtinguishOrLightSelection (pDoc, TRUE);
 		}
 	      else
 		/* la selection a change', on etablit la selection */

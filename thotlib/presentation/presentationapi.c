@@ -539,18 +539,10 @@ ThotBool            display;
      {
        if (display)
 	 {
-	   for (view = 1; view <= MAX_VIEW_DOC; view++)
-	     if (updateframe[view - 1] > 0)
-	       /* eteint la selection dans la view traitee */
-	       SwitchSelection (updateframe[view - 1], FALSE);
 	   /* met a jour l'image abstraite */
 	   AbstractImageUpdated (pDoc);
 	   /* fait reafficher ce qui doit l'etre */
 	   RedisplayDocViews (pDoc);
-	   for (view = 1; view <= MAX_VIEW_DOC; view++)
-	     if (updateframe[view - 1] > 0)
-	       /* rallume la selection dans la view traitee */
-	       SwitchSelection (updateframe[view - 1], TRUE);
 	 }
      }
 }
@@ -1008,22 +1000,10 @@ ThotBool            display;
    if (reDisp || oldDisplayMode == DisplayImmediately)
      {
        TtaSetDisplayMode (doc, DisplayImmediately);
-       SwitchSelection (frame, TRUE);
-       
        if (display)
 	 {
-	   for (view = 1; view <= MAX_VIEW_DOC; view++)
-	     if (updateframe[view - 1] > 0)
-	       /* eteint la selection dans la view traitee */
-	       SwitchSelection (updateframe[view - 1], FALSE);
-
 	   AbstractImageUpdated (pDoc);	/* mise a jour de l'image abstraite */
 	   RedisplayDocViews (pDoc);	/* reafficher ce qu'il faut */
-
-	   for (view = 1; view <= MAX_VIEW_DOC; view++)
-	     if (updateframe[view - 1] > 0)
-	       /* rallume la selection dans la view traitee */
-	       SwitchSelection (updateframe[view - 1], TRUE);
 	 }
      }
 }

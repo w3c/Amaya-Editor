@@ -1267,7 +1267,6 @@ void                StructSelectLoadResources ()
      {
 	/* connecte les action d'edition structuree */
 	TteConnectAction (T_selecbox, (Proc) GetClickedStructBox);
-	TteConnectAction (T_switchsel, (Proc) SwitchSelection);
 	TteConnectAction (T_checksel, (Proc) CheckSelectedElement);
 	TteConnectAction (T_resetsel, (Proc) ResetSelection);
 	TteConnectAction (T_selstring, (Proc) SelectString);

@@ -45,25 +45,26 @@ extern void CreateFencedSeparators ( Element fencedExpression,
                                      Document doc,
                                      ThotBool record );
 extern void MathMLScriptShift ( Document doc,
-				Element el,
-				STRING value,
-				int attr );
+                                Element el,
+                                STRING value,
+                                int attr );
 extern void MathMLElementComplete ( Element el,
-                                    Document doc );
+                                    Document doc,
+                                    int *error );
 extern void SetFontfamily ( Document doc,
                             Element el,
                             STRING value );
 extern void MathMLAttrToStyleProperty ( Document doc,
                                         Element el,
                                         STRING value,
-					int attr );
+                                        int attr );
 extern void MathMLSetScriptLevel ( Document doc,
-				   Element el,
-				   STRING value );
+                                   Element el,
+                                   STRING value );
 extern void MathMLSpacingAttr ( Document doc,
-				Element el,
-				STRING value,
-				int attr );
+                                Element el,
+                                STRING value,
+                                int attr );
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
@@ -111,25 +112,26 @@ extern void CreateFencedSeparators (/* Element fencedExpression,
                                        Document doc,
                                        ThotBool record */);
 extern void MathMLScriptShift (/* Document doc,
-				  Element el,
-				  STRING value,
-				  int attr */);
+                                  Element el,
+                                  STRING value,
+                                  int attr */);
 extern void MathMLElementComplete (/* Element el,
-                                      Document doc */);
+                                      Document doc,
+                                      int *error */);
 extern void SetFontfamily (/* Document doc,
                               Element el,
                               STRING value */);
 extern void MathMLAttrToStyleProperty (/* Document doc,
                                           Element el,
                                           STRING value,
-			                  int attr */);
+                                          int attr */);
 extern void MathMLSetScriptLevel (/* Document doc,
-				     Element el,
-				     STRING value */);
+                                     Element el,
+                                     STRING value */);
 extern void MathMLSpacingAttr (/* Document doc,
-				  Element el,
-				  STRING value,
-				  int attr */);
+                                  Element el,
+                                  STRING value,
+                                  int attr */);
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);

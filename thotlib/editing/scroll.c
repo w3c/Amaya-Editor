@@ -82,10 +82,6 @@ int                 selection;
 	     /* Limites du scroll */
 	     if (srcbox != NULL)
 	       {
-		  /* On eteint la selection */
-		  if (selection != 0 && ThotLocalActions[T_switchsel])
-		    (*ThotLocalActions[T_switchsel]) (frame, FALSE);
-
 		  /* A priori pas de paves ajoutes */
 		  add = FALSE;
 		  /* Au plus, la limite du document + le debordement vertical */
@@ -118,7 +114,7 @@ int                 selection;
 			  height = pFrame->FrYOrg + hframe;
 			  DefClip (frame, pFrame->FrXOrg, height,
 				   pFrame->FrXOrg + lframe, height + delta);
-			  add = RedrawFrameBottom (frame, delta);
+			  add = RedrawFrameBottom (frame, delta, NULL);
 		       }
 		     else
 		       {
@@ -149,8 +145,6 @@ int                 selection;
 			  /* On reprend la nouvelle */
 			  /* On reallume la selection deja visualisee */
 		       }
-		     else if (ThotLocalActions[T_switchsel])
-		       (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	       }
 	  }
      }
@@ -191,9 +185,6 @@ int                 selection;
 	  CloseInsertion ();
 	  /* finish the current insertion */
 	  srcbox = pFrame->FrAbstractBox->AbBox;
-	  /* switch off the selection */
-	  if (selection != 0 && ThotLocalActions[T_switchsel])
-	    (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 	  GetSizesFrame (frame, &lframe, &hframe);
 	  /* FrameTable[frame].FrScrollOrg is negative or null */
 	  min = FrameTable[frame].FrScrollOrg - pFrame->FrXOrg;
@@ -233,14 +224,10 @@ int                 selection;
 
 	      /* display the rest of the window */
 	      pFrame->FrXOrg += delta;
-	      RedrawFrameBottom (frame, 0);
+	      RedrawFrameBottom (frame, 0, NULL);
 	      /* recompute the scroll bars */
 	      UpdateScrollbars (frame);
 	    }
-	  
-	  /* switch on the selection */
-	  if (selection != 0 && ThotLocalActions[T_switchsel])
-	    (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	}
     }
 }
@@ -669,7 +656,7 @@ int                 percent;
       VerticalScroll (frame, dy, 1);
    else
       {
-      RedrawFrameBottom (frame, dy);
+      RedrawFrameBottom (frame, dy, NULL);
       /* Mise a jour des ascenseurs */
       UpdateScrollbars (frame);
       }

@@ -74,7 +74,7 @@ PtrAbstractBox      pAb;
 	/* ce pave est selectionne */
 	pAbbox1->AbSelected = FALSE;
      }
-   else
+   else if (pAb->AbLeafType == LtCompound)
      {
 	/* on parcours le sous-arbre */
 	pChildAb = pAbbox1->AbFirstEnclosed;
@@ -86,59 +86,6 @@ PtrAbstractBox      pAb;
      }
 }
 
-/*----------------------------------------------------------------------
-   SwitchSelection bascule la mise en e'vidence de la se'lection dans 
-   la fene^tre frame :                                     
-   - si toShow est Vrai et que la se'lection est eteinte,  
-   - ou si toShow est Faux et la se'lection allume'e.      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SwitchSelection (int frame, ThotBool toShow)
-#else  /* __STDC__ */
-void                SwitchSelection (frame, toShow)
-int                 frame;
-ThotBool            toShow;
-
-#endif /* __STDC__ */
-{
-   ViewFrame          *pFrame;
-   Document doc;
-
-   /* visualisation la selection locale */
-   if (frame > 0)
-     {
-       doc = FrameTable[frame].FrDoc;
-       pFrame = &ViewFrameTable[frame - 1];
-       /* compare le booleen toShow et l'etat de la selection */
-       if (toShow && !pFrame->FrSelectShown)
-	 DisplayCurrentSelection (frame, TRUE);
-       else if (!toShow && pFrame->FrSelectShown)
-	 DisplayCurrentSelection (frame, TRUE);
-     }
-}
-
-
-/*----------------------------------------------------------------------
-  TtaSwitchSelection switches on or off the selection in the current 
-  document view according to the toShow value:
-  - TRUE if on
-  - FALSE if off
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSwitchSelection (Document document, View view, ThotBool toShow)
-#else  /* __STDC__ */
-void                TtaSwitchSelection (document, view, toShow)
-Document            document;
-View                view;
-ThotBool            toShow;
-
-#endif /* __STDC__ */
-{
-  int               frame;
-
-   frame = GetWindowNumber (document, view);
-   SwitchSelection (frame, toShow);
-}
 
 /*----------------------------------------------------------------------
    ClearViewSelMarks annule la selection courante dans la fenetre.   
@@ -177,18 +124,138 @@ int                 frame;
 #endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
+   PtrBox              pBox, pBox1, pBox2;
+   PtrAbstractBox      pAb1, pAb2;
+   int                 x1, x2;
 
    if (frame > 0)
      {
 	pFrame = &ViewFrameTable[frame - 1];
-	/* eteint la selection ssi elle est allumee */
-	if (pFrame->FrSelectShown)
-	   DisplayCurrentSelection (frame, FALSE);
-	else
-	   SetNewSelectionStatus (frame, pFrame->FrAbstractBox, FALSE);
-	pFrame->FrSelectOneBox = FALSE;
-	pFrame->FrSelectionBegin.VsBox = NULL;
-	pFrame->FrSelectionEnd.VsBox = NULL;
+	SetNewSelectionStatus (frame, pFrame->FrAbstractBox, FALSE);
+	if (pFrame->FrSelectionBegin.VsBox && pFrame->FrSelectionEnd.VsBox)
+	  {
+	    /* begginning of the selection */
+	    pBox1 = pFrame->FrSelectionBegin.VsBox;
+	    pAb1 = pBox1->BxAbstractBox;
+	    /* end of the selection */
+	    pBox2 = pFrame->FrSelectionEnd.VsBox;
+	    pAb2 = pBox2->BxAbstractBox;
+	    pFrame->FrSelectOneBox = FALSE;
+	    pFrame->FrSelectionBegin.VsBox = NULL;
+	    pFrame->FrSelectionEnd.VsBox = NULL;
+
+	    if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0)
+	      {
+		/* ready to un/display the current selection */
+		if (pBox1 == pBox2)
+		  {
+		    /* only one box is selected */
+		    if (pFrame->FrSelectionBegin.VsIndBox == 0)
+		      {
+			/* the whole box is selected */
+			x1 = pBox1->BxXOrg;
+			x2 = pBox1->BxXOrg + pBox1->BxWidth;
+		      }
+		    else
+		      {
+			x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
+			x2 = pBox1->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
+		      }
+		    DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
+		    /* undisplay current the selection */
+		    if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
+		      /* need to redraw more than one box */
+		      RedrawFrameBottom (frame, 0, NULL);
+		    else
+		      RedrawFrameBottom (frame, 0, pAb1);
+		  }
+		else if (pAb1 == pAb2)
+		  {
+		    /* several piece of a split box are selected */
+		    /* the first one */
+		    x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
+		    x2 = pBox1->BxXOrg + pBox1->BxWidth;
+		    DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
+		    RedrawFrameBottom (frame, 0, pAb1);
+		    /* intermediate boxes */
+		    pBox1 = pBox1->BxNexChild;
+		    while (pBox1 != pBox2)
+		      {
+			DefClip (frame, pBox1->BxXOrg, pBox1->BxYOrg, pBox1->BxXOrg + pBox1->BxWidth, pBox1->BxYOrg + pBox1->BxHeight);
+			RedrawFrameBottom (frame, 0, pAb1);
+			pBox1 = pBox1->BxNexChild;
+		      }
+		    /* the last one */
+		    x1 = pBox2->BxXOrg;
+		    x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
+		    DefClip (frame, x1, pBox2->BxYOrg, x2, pBox2->BxYOrg + pBox2->BxHeight);
+		    /* undisplay current the selection */
+		    RedrawFrameBottom (frame, 0, pAb1);
+		  }
+		else
+		  {
+		    /* undisplay the beginning of the selection */
+		    if (pFrame->FrSelectionBegin.VsIndBox == 0)
+		      {
+			/* the whole box is selected */
+			x1 = pBox1->BxXOrg;
+			x2 = pBox1->BxXOrg + pBox1->BxWidth;
+		      }
+		    else
+		      {
+			x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
+			x2 = pBox1->BxXOrg + pBox1->BxWidth;
+		      }
+		    DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
+		    if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
+		      /* need to redraw more thsn one box */
+		      RedrawFrameBottom (frame, 0, NULL);
+		    else
+		      RedrawFrameBottom (frame, 0, pAb1);
+		    if (pBox1->BxType == BoPiece)
+		      {
+			/* unselect the end of the split text */
+			pBox = pBox1->BxNexChild;
+			while (pBox)
+			  {
+			    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			    RedrawFrameBottom (frame, 0, pAb1);
+			    pBox = pBox->BxNexChild;
+			  }
+		      }
+		
+		    /* undisplay the end of the selection */
+		    if (pFrame->FrSelectionEnd.VsIndBox == 0)
+		      {
+			/* the whole box is selected */
+			x1 = pBox2->BxXOrg;
+			x2 = pBox2->BxXOrg + pBox2->BxWidth;
+		      }
+		    else
+		      {
+			x1 = pBox2->BxXOrg;
+			x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
+		      }
+		    DefClip (frame, x1, pBox2->BxYOrg, x2, pBox2->BxYOrg + pBox2->BxHeight);
+		    if (pAb2->AbLeafType == LtGraphics || pAb2->AbLeafType == LtPolyLine)
+		      /* need to redraw more than one box */
+		      RedrawFrameBottom (frame, 0, NULL);
+		    else
+		      RedrawFrameBottom (frame, 0, pAb2);
+		    if (pBox2->BxType == BoPiece)
+		      {
+			/* select the begin of the split text */
+			pBox = pAb2->AbBox->BxNexChild;
+			while (pBox != pBox2)
+			  {
+			    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			    RedrawFrameBottom (frame, 0, pAb2);
+			    pBox = pBox->BxNexChild;
+			  }
+		      }
+		  }
+	      }
+	  }
      }
 }
 
@@ -489,17 +556,14 @@ ViewSelection      *selMark;
 }
 
 /*----------------------------------------------------------------------
-   InsertViewSelMarks pose la selection courante sur la portion de   
-   document visualisee dans une frame du Mediateur. Le     
-   pave pAb correspond soit au debut de la selection       
-   (debut est Vrai), soit la fin de la selection (fin est  
-   vrai), soit les deux. Le parametre firstChar donne      
-   lindice du premier caractere selectionne ou 0 si tout   
-   le pave est selectionne.                                
-   Le parametre lastChar donne l'indice du caractere qui   
-   suit le dernier selectionne'.                           
-   Le parametre alone indique que la selection reelle     
-   donc visualisee porte sur un seul et unique pave.       
+  InsertViewSelMarks inserts selection makes into the displayed boxes.
+  The abstract box pAb concerns the beginning of the selection
+  (startSelection=TRUE) and/or the end of the selection (endSelection=TRUE).
+  The parameter firstChar gives the index of the first selected character
+  or 0 if the whole abstract box is selected.
+  The parameter lastChar gives the index of the character that follows
+  the last selected character.
+  The parameter alone is set to TRUE when only one abstract box is selected.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool startSelection, ThotBool endSelection, ThotBool alone)
@@ -515,195 +579,291 @@ ThotBool            alone;
 
 #endif /* __STDC__ */
 {
-   PtrLine             adline;
-   PtrTextBuffer       pBuffer;
-   int                 ind, charIndex;
-   PtrBox              pBox;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
+  PtrLine             adline;
+  PtrTextBuffer       pBuffer;
+  PtrBox              pBox;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
+  int                 ind, charIndex;
 
-   /* Verifie s'il faut reformater le dernier paragraphe edite */
-   if (ThotLocalActions[T_updateparagraph] != NULL)
-      (*ThotLocalActions[T_updateparagraph]) (pAb, frame);
+  /* Verifie s'il faut reformater le dernier paragraphe edite */
+  if (ThotLocalActions[T_updateparagraph] != NULL)
+    (*ThotLocalActions[T_updateparagraph]) (pAb, frame);
 
-   if (pAb != NULL && frame > 0)
-     {
-	pFrame = &ViewFrameTable[frame - 1];
-	if (pAb->AbBox != NULL)
-	  {
-	     /* eteint la selection */
-	     pBox = pAb->AbBox;
-	     adline = SearchLine (pBox);
-
-	     /* verifie la coherence des indices de caracteres */
-	     if (pAb->AbLeafType == LtText)
-		/* C'est une feuille de texte */
-	       {
-		  if (firstChar == 0 && lastChar != 0)
-		     firstChar = 1;
-		  else if (firstChar > 1 && lastChar == 0)
-		     lastChar = pAb->AbVolume;
-		  else if (firstChar == 0 && pAb->AbVolume != 0)
-		    {
-		       firstChar = 1;	/* selection tout le texte du pave */
-		       lastChar = pAb->AbVolume;
-		    }
-	       }
-	     else if (pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtPicture)
-		firstChar = 0;
-
-	     /* memorise si la selection relle porte sur un seul pave ou non */
-	     pFrame->FrSelectOneBox = alone;
-	     /* et si elle indique seulement une position */
-	     pFrame->FrSelectOnePosition = SelPosition;
-
-	     /* La selection porte sur le pave complet ou un point de controle */
-	     /* de pave polyline */
-	     if (firstChar == 0 || pAb->AbVolume == 0 || pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPicture)
-	       {
-		  /* Est-ce une boite de texte ? */
-		  if (pAb->AbLeafType == LtText)
-		    {
-		       ind = 1;
-		       pBuffer = pAb->AbText;
-		    }
-		  else
-		    {
-		       ind = 0;
-		       pBuffer = NULL;
-		    }
-
-		  /* memorise les marques de selection */
-		  if (startSelection)
-		    {
-		       pViewSel = &pFrame->FrSelectionBegin;
-		       pViewSel->VsBox = pBox;
-		       if (endSelection && pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtPicture)
-			  /* tout selectionne */
-			  pViewSel->VsIndBox = 0;
-		       else
-			  pViewSel->VsIndBox = firstChar;
-		       pViewSel->VsIndBuf = ind;
-		       pViewSel->VsBuffer = pBuffer;
-		       pViewSel->VsLine = adline;
-		       if (pAb->AbLeafType == LtPicture && firstChar > 0)
-			  pViewSel->VsXPos = pBox->BxWidth;
-		       else
-			  pViewSel->VsXPos = 0;
-		       pViewSel->VsNSpaces = 0;
-		    }
-		  if (endSelection || SelPosition)
-		    {
-		       pViewSel = &pFrame->FrSelectionEnd;
-		       pViewSel->VsBox = pBox;
-		       pViewSel->VsIndBox = 0;
-		       pViewSel->VsIndBuf = ind;
-		       pViewSel->VsBuffer = pBuffer;
-		       pViewSel->VsLine = adline;
-		       if (pAb->AbLeafType == LtPicture && firstChar > 0)
-			  pViewSel->VsXPos = pBox->BxWidth;
-		       else
-			  pViewSel->VsXPos = 0;
-		       pViewSel->VsNSpaces = 0;
-		    }
-
-	       }
-	     /* La selection porte sur une sous-chaine */
-	     else
-	       {
-		  /* recherche le buffer et l'index dans ce buffer */
-		  if (startSelection)
-		     ind = firstChar;
-		  else
-		     ind = lastChar;
+  if (pAb != NULL && frame > 0)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      if (pAb->AbBox != NULL)
+	{
+	  /* eteint la selection */
+	  pBox = pAb->AbBox;
+	  adline = SearchLine (pBox);
+	  
+	  /* verifie la coherence des indices de caracteres */
+	  if (pAb->AbLeafType == LtText)
+	    /* C'est une feuille de texte */
+	    {
+	      if (firstChar == 0 && lastChar != 0)
+		firstChar = 1;
+	      else if (firstChar > 1 && lastChar == 0)
+		lastChar = pAb->AbVolume;
+	      else if (firstChar == 0 && pAb->AbVolume != 0)
+		{
+		  firstChar = 1;	/* selection tout le texte du pave */
+		  lastChar = pAb->AbVolume;
+		}
+	    }
+	  else if (pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtPicture)
+	    firstChar = 0;
+	  
+	  /* memorise si la selection relle porte sur un seul pave ou non */
+	  pFrame->FrSelectOneBox = alone;
+	  /* et si elle indique seulement une position */
+	  pFrame->FrSelectOnePosition = SelPosition;
+	  
+	  /* La selection porte sur le pave complet ou un point de controle */
+	  /* de pave polyline */
+	  if (firstChar == 0 || pAb->AbVolume == 0 || pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPicture)
+	    {
+	      /* Est-ce une boite de texte ? */
+	      if (pAb->AbLeafType == LtText)
+		{
+		  ind = 1;
 		  pBuffer = pAb->AbText;
-		  if (ind > pAb->AbVolume)
+		}
+	      else
+		{
+		  ind = 0;
+		  pBuffer = NULL;
+		}
+
+	      /* memorise les marques de selection */
+	      if (startSelection)
+		{
+		  pViewSel = &pFrame->FrSelectionBegin;
+		  pViewSel->VsBox = pBox;
+		  if (endSelection && pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtPicture)
+		    /* tout selectionne */
+		    pViewSel->VsIndBox = 0;
+		  else
+		    pViewSel->VsIndBox = firstChar;
+		  pViewSel->VsIndBuf = ind;
+		  pViewSel->VsBuffer = pBuffer;
+		  pViewSel->VsLine = adline;
+		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
+		    pViewSel->VsXPos = pBox->BxWidth;
+		  else
+		    pViewSel->VsXPos = 0;
+		  pViewSel->VsNSpaces = 0;
+		}
+	      if (endSelection || SelPosition)
+		{
+		  pViewSel = &pFrame->FrSelectionEnd;
+		  pViewSel->VsBox = pBox;
+		  pViewSel->VsIndBox = 0;
+		  pViewSel->VsIndBuf = ind;
+		  pViewSel->VsBuffer = pBuffer;
+		  pViewSel->VsLine = adline;
+		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
+		    pViewSel->VsXPos = pBox->BxWidth;
+		  else
+		    pViewSel->VsXPos = 0;
+		  pViewSel->VsNSpaces = 0;
+		}
+	    }
+	  /* La selection porte sur une sous-chaine */
+	  else
+	    {
+	      /* recherche le buffer et l'index dans ce buffer */
+	      if (startSelection)
+		ind = firstChar;
+	      else
+		ind = lastChar;
+	      pBuffer = pAb->AbText;
+	      if (ind > pAb->AbVolume)
+		{
+		  /* En fin de boite */
+		  charIndex = pAb->AbVolume;
+		  /* recherche le buffer et l'indice */
+		  LocateBuffer (&pBuffer, &ind);
+		}
+	      else
+		{
+		  /* Au milieu de la boite */
+		  charIndex = ind - 1;
+		  /* recherche le buffer et l'indice */
+		  LocateBuffer (&pBuffer, &ind);
+		}
+	      
+	      /* met a jour le debut de selection */
+	      if (startSelection)
+		{
+		  pViewSel = &pFrame->FrSelectionBegin;
+		  pViewSel->VsBox = pBox;
+		  pViewSel->VsIndBox = charIndex;
+		  pViewSel->VsIndBuf = ind;
+		  pViewSel->VsBuffer = pBuffer;
+		  ComputeViewSelMarks (&pFrame->FrSelectionBegin);
+		}
+	      /* met a jour la fin de selection */
+	      if (endSelection)
+		{
+		  pViewSel = &pFrame->FrSelectionEnd;
+		  /* startSelection et endSelection sur le meme caractere */
+		  if (startSelection && firstChar >= lastChar)
 		    {
-		       /* En fin de boite */
-		       charIndex = pAb->AbVolume;
-		       /* recherche le buffer et l'indice */
-		       LocateBuffer (&pBuffer, &ind);
+		      pViewSel->VsBox = pFrame->FrSelectionBegin.VsBox;
+		      pViewSel->VsIndBox = pFrame->FrSelectionBegin.VsIndBox;
+		      pViewSel->VsLine = pFrame->FrSelectionBegin.VsLine;
+		      pViewSel->VsBuffer = pFrame->FrSelectionBegin.VsBuffer;
+		      pViewSel->VsIndBuf = pFrame->FrSelectionBegin.VsIndBuf;
+		      pViewSel->VsXPos = pFrame->FrSelectionBegin.VsXPos;
+		      pViewSel->VsNSpaces = pFrame->FrSelectionBegin.VsNSpaces;
 		    }
 		  else
 		    {
-		       /* Au milieu de la boite */
-		       charIndex = ind - 1;
-		       /* recherche le buffer et l'indice */
-		       LocateBuffer (&pBuffer, &ind);
+		      /* startSelection et endSelection sur deux caracteres differents */
+		      if (startSelection)
+			{
+			  pBuffer = pAb->AbText;
+			  ind = lastChar;
+			  if (ind > pAb->AbVolume)
+			    {
+			      /* En fin de boite */
+			      charIndex = pAb->AbVolume;
+			      /* recherche le buffer et l'indice */
+			      LocateBuffer (&pBuffer, &ind);
+			    }
+			  else
+			    {
+			      /* Au milieu de la boite */
+			      charIndex = ind - 1;
+			      /* recherche le buffer et l'indice */
+			      LocateBuffer (&pBuffer, &ind);
+			    }
+			}
+		      pViewSel->VsBox = pBox;
+		      pViewSel->VsIndBox = charIndex;
+		      pViewSel->VsIndBuf = ind;
+		      pViewSel->VsBuffer = pBuffer;
+		      ComputeViewSelMarks (&pFrame->FrSelectionEnd);
+		      /* the box could be updated */
+		      pBox =  pViewSel->VsBox;
 		    }
-
-		  /* met a jour le debut de selection */
-		  if (startSelection)
+		  
+		  /* recherche la position limite du caractere */
+		  pBox = pViewSel->VsBox;
+		  if (pBox->BxNChars == 0 && pBox->BxType == BoComplete)
+		    pViewSel->VsXPos += pBox->BxWidth;
+		  else if (pViewSel->VsIndBox == pBox->BxNChars)
+		    pViewSel->VsXPos += 2;
+		  else
 		    {
-		       pViewSel = &pFrame->FrSelectionBegin;
-		       pViewSel->VsBox = pBox;
-		       pViewSel->VsIndBox = charIndex;
-		       pViewSel->VsIndBuf = ind;
-		       pViewSel->VsBuffer = pBuffer;
-		       ComputeViewSelMarks (&pFrame->FrSelectionBegin);
+		      charIndex = (int) (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1]);
+		      if (charIndex == SPACE && pBox->BxSpaceWidth != 0)
+			pViewSel->VsXPos += pBox->BxSpaceWidth;
+		      else
+			pViewSel->VsXPos += CharacterWidth ((unsigned char) charIndex, pBox->BxFont);
 		    }
-		  /* met a jour la fin de selection */
-		  if (endSelection)
-		    {
-		       pViewSel = &pFrame->FrSelectionEnd;
-		       /* startSelection et endSelection sur le meme caractere */
-		       if (startSelection && firstChar >= lastChar)
-			 {
-			    pViewSel->VsBox = pFrame->FrSelectionBegin.VsBox;
-			    pViewSel->VsIndBox = pFrame->FrSelectionBegin.VsIndBox;
-			    pViewSel->VsLine = pFrame->FrSelectionBegin.VsLine;
-			    pViewSel->VsBuffer = pFrame->FrSelectionBegin.VsBuffer;
-			    pViewSel->VsIndBuf = pFrame->FrSelectionBegin.VsIndBuf;
-			    pViewSel->VsXPos = pFrame->FrSelectionBegin.VsXPos;
-			    pViewSel->VsNSpaces = pFrame->FrSelectionBegin.VsNSpaces;
-			 }
-		       else
-			 {
-			    /* startSelection et endSelection sur deux caracteres differents */
-			    if (startSelection)
-			      {
-				 pBuffer = pAb->AbText;
-				 ind = lastChar;
-				 if (ind > pAb->AbVolume)
-				   {
-				      /* En fin de boite */
-				      charIndex = pAb->AbVolume;
-				      /* recherche le buffer et l'indice */
-				      LocateBuffer (&pBuffer, &ind);
-				   }
-				 else
-				   {
-				      /* Au milieu de la boite */
-				      charIndex = ind - 1;
-				      /* recherche le buffer et l'indice */
-				      LocateBuffer (&pBuffer, &ind);
-				   }
-			      }
-			    pViewSel->VsBox = pBox;
-			    pViewSel->VsIndBox = charIndex;
-			    pViewSel->VsIndBuf = ind;
-			    pViewSel->VsBuffer = pBuffer;
-			    ComputeViewSelMarks (&pFrame->FrSelectionEnd);
-			 }
+		}
+	    }
 
-		       /* recherche la position limite du caractere */
-		       pBox = pViewSel->VsBox;
-		       if (pBox->BxNChars == 0 && pBox->BxType == BoComplete)
-			  pViewSel->VsXPos += pBox->BxWidth;
-		       else if (pViewSel->VsIndBox == pBox->BxNChars)
-			  pViewSel->VsXPos += 2;
-		       else
-			 {
-			    charIndex = (int) (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1]);
-			    if (charIndex == SPACE && pBox->BxSpaceWidth != 0)
-			       pViewSel->VsXPos += pBox->BxSpaceWidth;
-			    else
-			       pViewSel->VsXPos += CharacterWidth ((unsigned char) charIndex, pBox->BxFont);
-			 }
+	  /* pViewSel point to the right selector */
+	  if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0)
+	    {
+	      /* ready to display the current selection */
+	      if (startSelection && endSelection)
+		{
+		  /* display the whole selection */
+		  pBox = pViewSel->VsBox;
+		  if (pViewSel->VsIndBox == 0)
+		    {
+		      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		      RedrawFrameBottom (frame, 0, pAb);
 		    }
-	       }
-	  }
-     }
+		  else if (pBox != pFrame->FrSelectionBegin.VsBox)
+		    {
+		      /* several pieces of a split box are selected */
+		      /* the last one */
+		      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+		      RedrawFrameBottom (frame, 0, pAb);
+		      /* the first one */
+		      pBox = pFrame->FrSelectionBegin.VsBox;
+		      DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		      RedrawFrameBottom (frame, 0, pAb);
+		      /* intermediate boxes */
+		      pBox = pBox->BxNexChild;
+		      while (pBox != pFrame->FrSelectionEnd.VsBox)
+			{
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			  RedrawFrameBottom (frame, 0, pAb);
+			  pBox = pBox->BxNexChild;
+			}
+		    }
+		  else
+		    {
+		      DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			/* need to redraw more than one box */
+			RedrawFrameBottom (frame, 0, NULL);
+		      else
+			RedrawFrameBottom (frame, 0, pAb);
+		    }
+		}
+	      else if (endSelection)
+		{
+		  /* display the end of the selection */
+		  pBox = pViewSel->VsBox;
+		  if (pViewSel->VsIndBox == 0)
+		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		  else
+		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			/* need to redraw more than one box */
+			RedrawFrameBottom (frame, 0, NULL);
+		      else
+			RedrawFrameBottom (frame, 0, pAb);
+		  if (pBox->BxType == BoPiece)
+		    {
+		      /* select the begin of the split text */
+		      pBox = pAb->AbBox->BxNexChild;
+		      while (pBox != pViewSel->VsBox)
+			{
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			  RedrawFrameBottom (frame, 0, pAb);
+			  pBox = pBox->BxNexChild;
+			}
+		    }
+		}
+	      else
+		{
+		  /* display the beginning of the selection */
+		  pBox = pViewSel->VsBox;
+		  if (pViewSel->VsIndBox == 0)
+		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		  else
+		    DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			/* need to redraw more than one box */
+			RedrawFrameBottom (frame, 0, NULL);
+		      else
+			RedrawFrameBottom (frame, 0, pAb);
+		  
+		  if (pBox->BxType == BoPiece)
+		    {
+		      /* select the end of the split text */
+		      pBox = pBox->BxNexChild;
+		      while (pBox)
+			{
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			  RedrawFrameBottom (frame, 0, pAb);
+			  pBox = pBox->BxNexChild;
+			}
+		    }
+		}
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

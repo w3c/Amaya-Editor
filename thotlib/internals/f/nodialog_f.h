@@ -95,9 +95,20 @@ extern void SelectRange ( PtrDocument SelDoc,
                           PtrElement DerSel,
                           int premcar,
                           int dercar );
+extern void DisplayPointSelection ( int frame,
+                                    PtrBox pBox,
+                                    int pointselect );
+extern void DisplayBgBoxSelection ( int frame,
+                                    PtrBox pBox );
+extern void DisplayBgSelection ( int frame,
+                                 PtrAbstractBox pAb );
 extern void SetNewSelectionStatus ( int frame,
                                     PtrAbstractBox pAb,
                                     ThotBool Etat );
+extern void DisplayStringSelection ( int frame,
+                                     int leftX,
+                                     int rightX,
+                                     PtrBox pBox );
 extern void DirectCreation ( PtrBox pBox,
                              int frame );
 extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pav,
@@ -201,9 +212,20 @@ extern void SelectRange (/* PtrDocument SelDoc,
                             PtrElement DerSel,
                             int premcar,
                             int dercar */);
+extern void DisplayPointSelection (/* int frame,
+                                      PtrBox pBox,
+                                      int pointselect */);
+extern void DisplayBgBoxSelection (/* int frame,
+                                      PtrBox pBox */);
+extern void DisplayBgSelection (/* int frame,
+                                   PtrAbstractBox pAb */);
 extern void SetNewSelectionStatus (/* int frame,
                                       PtrAbstractBox pAb,
                                       ThotBool Etat */);
+extern void DisplayStringSelection (/* int frame,
+                                       int leftX,
+                                       int rightX,
+                                       PtrBox pBox */);
 extern void DirectCreation (/* PtrBox pBox,
                                int frame */);
 extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pav,

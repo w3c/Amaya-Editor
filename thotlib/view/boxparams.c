@@ -188,8 +188,6 @@ int                 Zoom;
 		 InsertViewSelMarks (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
 	       /* On visualise la selection que l'on vient de poser */
 	     }
-	   if (ThotLocalActions[T_switchsel])
-	     (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	 }
        ReadyToDisplay = TRUE;
      }

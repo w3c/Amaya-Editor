@@ -311,12 +311,7 @@ LPARAM     lParam;
          DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
          EndPaint (w, &ps);
          WIN_GetDeviceContext (frame);
-         if (ThotLocalActions[T_switchsel])
-            (*ThotLocalActions[T_switchsel]) (frame, FALSE);
-         /* RedrawFrameBottom (frame, 0); */
          DisplayFrame (frame);
-         if (ThotLocalActions[T_switchsel])
-            (*ThotLocalActions[T_switchsel]) (frame, TRUE);
          WIN_ReleaseDeviceContext ();
       }
    }
@@ -408,11 +403,7 @@ void               *ev;
        if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay/*DisplayImmediately*/)
 	 {
 	   DefRegion (frame, x, y, x + l, y + h);
-	   if (ThotLocalActions[T_switchsel])
-	     (*ThotLocalActions[T_switchsel]) (frame, FALSE);
-	   RedrawFrameBottom (frame, 0);
-	   if (ThotLocalActions[T_switchsel])
-	     (*ThotLocalActions[T_switchsel]) (frame, TRUE);
+	   RedrawFrameBottom (frame, 0, NULL);
 	 }
      }
 }

@@ -131,14 +131,6 @@ extern void         TtaSelectInterval ();
 extern void         TtaUnselect (Document document);
 
 /*----------------------------------------------------------------------
-  TtaSwitchSelection switches on or off the selection in the current 
-  document view according to the toShow value:
-  - TRUE if on
-  - FALSE if off
-  ----------------------------------------------------------------------*/
-extern void         TtaSwitchSelection (Document document, View view, ThotBool toShow);
-
-/*----------------------------------------------------------------------
    TtaSetSelectionMode
 
    Change selection mode. If withMenu = FALSE 
@@ -250,7 +242,6 @@ extern void         TtaExtendSelection ( /* Document document, Element element, 
 extern void         TtaAddElementToSelection (/* Document document, Element element */ );
 extern void         TtaSelectInterval ();
 extern void         TtaUnselect ( /* Document document */ );
-extern void         TtaSwitchSelection (/* Document document, View view, ThotBool toShow */);
 extern void         TtaSetSelectionMode ( /* ThotBool withMenu */ );
 extern ThotBool     TtaIsSelectionEmpty ();
 extern void         TtaGiveFirstSelectedElement ( /* Document document, Element *selectedElement, int *firstCharacter, int *lastCharacter */ );

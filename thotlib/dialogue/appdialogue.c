@@ -2383,7 +2383,7 @@ gint ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data)
   if (nframe > 0 && nframe <= MAX_FRAME)
      {
        DefRegion (nframe, x, y, l+x, y+h );
-       RedrawFrameBottom(nframe,0);
+       RedrawFrameBottom(nframe, 0, NULL);
      }
 
  return FALSE;

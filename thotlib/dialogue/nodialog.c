@@ -529,6 +529,47 @@ int                 dercar;
 {
 }
 
+/*----------------------------------------------------------------------
+  DisplayPointSelection draw characteristics point of the box.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
+#else  /* __STDC__ */
+void         DisplayPointSelection (frame, pBox, pointselect)
+int                 frame;
+PtrBox              pBox;
+int                 pointselect;
+#endif /* __STDC__ */
+{
+}
+
+/*----------------------------------------------------------------------
+  DisplayBgBoxSelection paints the box background with the selection
+  color.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         DisplayBgBoxSelection (int frame, PtrBox pBox)
+#else  /* __STDC__ */
+void         DisplayBgBoxSelection (frame, pBox)
+int          frame;
+PtrBox       pBox;
+#endif /* __STDC__ */
+{
+}
+
+/*----------------------------------------------------------------------
+  DisplayBgSelection goes through the tree for displaying the background
+  selection.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DisplayBgSelection (int frame, PtrAbstractBox pAb)
+#else  /* __STDC__ */
+void                DisplayBgSelection (frame, pAb)
+int                 frame;
+PtrAbstractBox      pAb;
+#endif /* __STDC__ */
+{
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -539,6 +580,23 @@ void                SetNewSelectionStatus (frame, pAb, Etat)
 int                 frame;
 PtrAbstractBox      pAb;
 ThotBool            Etat;
+#endif /* __STDC__ */
+{
+}
+
+
+/*----------------------------------------------------------------------
+  DisplayStringSelection the selection on a substring of text
+  between leftX and rightX.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
+#else  /* __STDC__ */
+void         DisplayStringSelection (frame, leftX, rightX, pBox)
+int                 frame;
+int                 leftX;
+int                 rightX;
+PtrBox              pBox;
 #endif /* __STDC__ */
 {
 }

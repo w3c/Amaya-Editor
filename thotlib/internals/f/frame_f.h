@@ -23,7 +23,8 @@ extern void TtaRefresh ( void );
 extern ThotBool RedrawFrameTop ( int frame,
                                  int scroll );
 extern ThotBool RedrawFrameBottom ( int frame,
-                                    int scroll );
+                                    int scroll,
+                                    PtrAbstractBox subtree );
 extern void DisplayFrame ( int frame );
 
 #else /* __STDC__ */
@@ -45,7 +46,8 @@ extern void TtaRefresh (/* void */);
 extern ThotBool RedrawFrameTop (/* int frame,
                                    int scroll */);
 extern ThotBool RedrawFrameBottom (/* int frame,
-                                      int scroll */);
+                                      int scroll,
+                                      PtrAbstractBox subtree */);
 extern void DisplayFrame (/* int frame */);
 
 #endif /* __STDC__ */

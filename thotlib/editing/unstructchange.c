@@ -2105,7 +2105,6 @@ void                NoStructSelectLoadResources ()
    if (ThotLocalActions[T_selecbox] == NULL)
      {
 	TteConnectAction (T_selecbox, (Proc) GetClickedBox);
-	TteConnectAction (T_switchsel, (Proc) SwitchSelection);
 	TteConnectAction (T_selectsiblings, (Proc) SelectSiblings);
 	TteConnectAction (T_checksel, (Proc) CheckSelectedElement);
 	TteConnectAction (T_resetsel, (Proc) ResetSelection);

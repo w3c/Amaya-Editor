@@ -392,18 +392,18 @@ CHAR_T*             name;
 	/* background color */
 	found = FindColor (0, name, "BackgroundColor", "Grey", &White_Color);
 	/* color for the selection */
-	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
+	found = FindColor (0, name, "DocSelectColor", "Yellow", &Select_Color);
 #else /* _GTK */
 	/* background color */
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
 	/* color for borders and buttons */
-	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
+	found = FindColor (0, name, "DocSelectColor", "Yellow", &Select_Color);
 #endif /* _GTK */
 #else  /* _WINDOWS */
 	/* background color */
 	found = FindColor (0, name, "BackgroundColor", TEXT("LightGrey1"), &White_Color);
 	/* color for borders and buttons */
-	found = FindColor (0, name, "DocSelectColor", TEXT("Blue"), &Select_Color);
+	found = FindColor (0, name, "DocSelectColor", TEXT("Yellow"), &Select_Color);
 #endif /* _WINDOWS */
 	/* color for the selection */
 	found = FindColor (0, name, "InactiveItemColor", TEXT("LightGrey1"), &InactiveB_Color);

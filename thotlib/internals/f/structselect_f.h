@@ -23,7 +23,6 @@ extern void CancelSelection ( void );
 extern void ResetSelection ( PtrDocument pDoc );
 extern PtrElement NextInSelection ( PtrElement pEl,
                                     PtrElement pLastEl );
-extern void ReverseSelection ( void );
 extern ThotBool HiddenType ( PtrElement pEl );
 extern void HighlightSelection ( ThotBool showBegin,
                                  ThotBool clearOldSel );
@@ -103,7 +102,6 @@ extern void CancelSelection (/* void */);
 extern void ResetSelection (/* PtrDocument pDoc */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
                                       PtrElement pLastEl */);
-extern void ReverseSelection (/* void */);
 extern ThotBool HiddenType (/* PtrElement pEl */);
 extern void HighlightSelection (/* ThotBool showBegin,
                                    ThotBool clearOldSel */);

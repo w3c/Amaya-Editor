@@ -1672,10 +1672,9 @@ ThotBool            pre;
 }
 
 /*----------------------------------------------------------------------
-   ApplyDirectTranslate recherche la boite selectionnee pour un changement 
-   de position. Si la plus petite boite englobant le point 
-   xm,ym de la fenetre frame ne peut pas etre deplacee, la 
-   procedure prend la boite englobante et ainsi de suite.  
+  ApplyDirectTranslate looks for the selected box for a move.
+  If the smaller box enclosing the point xm, ym of the window cannot
+  be moved, the function checks the encolsing box, etc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyDirectTranslate (int frame, int xm, int ym)
@@ -1778,9 +1777,8 @@ int                 ym;
 		       /* Note si le trace est ouvert ou ferme */
 		       still = (pAb->AbPolyLineShape == 'p' ||
 				pAb->AbPolyLineShape == 's');
-		       /* Reaffiche la selection */
-		       if (ThotLocalActions[T_switchsel])
-			 (*ThotLocalActions[T_switchsel]) (frame, FALSE);
+		       /* if (ThotLocalActions[T_switchsel])
+		       (*ThotLocalActions[T_switchsel]) (frame, FALSE);*/
 		       draw = GetParentDraw (pBox);
 		       PolyLineModification (frame, &x, &y, pBox, draw,
 					   pBox->BxNChars, pointselect, still);
@@ -1799,12 +1797,11 @@ int                 ym;
 		       if (width != pBox->BxWidth || height != pBox->BxHeight)
 			 NewDimension (pAb, width, height, frame, TRUE);
 #endif
-		       RedrawFrameBottom (frame, 0);
+		       RedrawFrameBottom (frame, 0, NULL);
 		       NewContent (pAb);
 		       APPgraphicModify (pEl, pointselect, frame, FALSE);
-		       /* Reaffiche la selection */
-		       if (ThotLocalActions[T_switchsel])
-			 (*ThotLocalActions[T_switchsel]) (frame, TRUE);
+		       /* if (ThotLocalActions[T_switchsel])
+			  (*ThotLocalActions[T_switchsel]) (frame, TRUE);*/
 		    }
 	       }
 	     else

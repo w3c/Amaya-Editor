@@ -1161,51 +1161,6 @@ int                 charWidth;
 
 
 /*----------------------------------------------------------------------
-   RedisplayOneChar affiche ou efface le caractere car dans la     
-   fenetre courante frame.                                 
-   La positon x,y correspond a la position du caractere    
-   dans l'image concrete affichee et non la position       
-   dans la fenetre.                                        
-   La fonction op indique s'il s'agit d'une boite          
-   active (1) ou non (0).                                  
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RedisplayOneChar (int frame, int x, int y, CHAR_T c, ptrfont font, PtrBox pBox)
-#else  /* __STDC__ */
-static void         RedisplayOneChar (frame, x, y, c, font, pBox)
-int                 frame;
-int                 x;
-int                 y;
-CHAR_T                c;
-ptrfont             font;
-PtrBox              pBox;
-
-#endif /* __STDC__ */
-{
-   ViewFrame          *pFrame;
-   int                 xd, yd;
-   int                 readOnlyStatus;
-   int                 linkStatus;
-   int                 fg;
-
-   pFrame = &ViewFrameTable[frame - 1];
-   xd = x - pFrame->FrXOrg;
-   yd = y - pFrame->FrYOrg;
-
-   fg = pBox->BxAbstractBox->AbForeground;
-   linkStatus = (int) pBox->BxAbstractBox->AbSensitive;
-   readOnlyStatus = (int) pBox->BxAbstractBox->AbReadOnly;
-   if (pBox->BxAbstractBox->AbBox->BxShadow)
-     DrawChar ('*', frame, xd, yd, font, readOnlyStatus, linkStatus, fg);
-   else
-     DrawChar (c, frame, xd, yd, font, readOnlyStatus, linkStatus, fg);
-   DisplayUnderline (frame, xd + CharacterWidth (c, font), yd, font, pBox->BxUnderline, pBox->BxThickness, CharacterWidth (c, font), readOnlyStatus, linkStatus, fg);
-   /* Affichage effectue */
-   DefClip (frame, 0, 0, 0, 0);
-}
-
-
-/*----------------------------------------------------------------------
    TtcInsertGraph insert a graphics                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1289,11 +1244,7 @@ int                 frame;
 	   /* Reevalue le bloc de lignes */
 	   RecomputeLines (LastInsertParagraph, NULL, NULL, LastInsertThotWindow);
 	   /* Et l'affiche */
-	   if (ThotLocalActions[T_switchsel])
-	     (*ThotLocalActions[T_switchsel]) (LastInsertThotWindow, FALSE);
-	   RedrawFrameBottom (LastInsertThotWindow, 0);
-	   if (ThotLocalActions[T_switchsel])
-	     (*ThotLocalActions[T_switchsel]) (LastInsertThotWindow, TRUE);
+	   RedrawFrameBottom (LastInsertThotWindow, 0, NULL);
 	   LastInsertParagraph = NULL;
 	}
       else
@@ -1315,7 +1266,7 @@ int                 frame;
 			   /* Reevalue le bloc de lignes */
 			   RecomputeLines (LastInsertParagraph, NULL, NULL, LastInsertThotWindow);
 			   /* Et l'affiche */
-			   RedrawFrameBottom (LastInsertThotWindow, 0);
+			   RedrawFrameBottom (LastInsertThotWindow, 0, NULL);
 			   LastInsertParagraph = NULL;
 			   pAb = NULL;
 			}
@@ -1394,8 +1345,6 @@ int                 frame;
 
   if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, TRUE))
     {
-      if (ThotLocalActions[T_switchsel])
-	(*ThotLocalActions[T_switchsel]) (frame, FALSE);
       /* efface la selection precedente */
       switch (c)
 	{
@@ -1515,8 +1464,6 @@ int                 frame;
 	  BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
 	}
       /* Reaffiche la selection */
-      if (ThotLocalActions[T_switchsel])
-	(*ThotLocalActions[T_switchsel]) (frame, FALSE);
       APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, FALSE);
     }
 }
@@ -2205,6 +2152,7 @@ int                 editType;
    int                 frame;
    ThotBool            still, ok, textPasted;
    ThotBool            defaultWidth, defaultHeight;
+   ThotBool            show;
 
    /* termine l'insertion de caracteres en cours */
    CloseTextInsertion ();
@@ -2260,6 +2208,7 @@ int                 editType;
 
 	pFrame = &ViewFrameTable[frame - 1];
 	pViewSel = &pFrame->FrSelectionBegin;
+	show = (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately);
 	if (pBox && editType == TEXT_SUP)
 	  {
 	    /* don't remove the selection if it is at the end of the text */
@@ -2597,9 +2546,9 @@ int                 editType;
 		else if (editType == TEXT_COPY && !FromKeyboard)
 		  {
 		    SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer, pAb, frame, &ClipboardThot);
-		    /* Pas de reaffichage */
+		    /* Reset the clipping */
 		    DefClip (frame, 0, 0, 0, 0);
-		    /* Il n'est pas necessaire de mettre a jour la selection */
+		    /* the selection is not changed */
 		    pAb = NULL;
 		  }
 		else if (editType == TEXT_X_PASTE && !FromKeyboard)
@@ -2657,12 +2606,9 @@ int                 editType;
 	     if (editType != TEXT_COPY)
 	       {
 		 pFrame->FrReady = TRUE;
-		 if (ThotLocalActions[T_switchsel])
-		   (*ThotLocalActions[T_switchsel]) (frame, FALSE);
-		 /* debloque l'affichage */
-		 still = RedrawFrameBottom (frame, 0);
-		 if (ThotLocalActions[T_switchsel])
-		   (*ThotLocalActions[T_switchsel]) (frame, TRUE);
+		 /* redisplay */
+		 if (show)
+		   still = RedrawFrameBottom (frame, 0, NULL);
 	       }
 
 	     if (pAb->AbElement == NULL)
@@ -2837,9 +2783,6 @@ int                 keyboard;
 			  }
 			else
 			  {
-			    /* efface la selection precedente */
-			    if (ThotLocalActions[T_switchsel])
-			      (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 			    /* libere le buffer vide */
 			    if (pBuffer->BuLength == 0)
 			      if (pBuffer->BuPrevious != NULL)
@@ -3082,9 +3025,6 @@ int                 keyboard;
 			  } /* ====================================== Delete */
 		      else
 			{
-			  /* efface la selection precedente */
-			  if (ThotLocalActions[T_switchsel])
-			    (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 			  /* Initialise l'insertion d'un caractere */
 			  charsDelta = 1;
 			  pix = 0;
@@ -3256,27 +3196,24 @@ int                 keyboard;
 		      
 		      /* teste si l'on peut optimiser le reaffichage */
 		      if (IsScrolled (frame, 0))
-			if (toDelete)
-			  RedrawFrameBottom (frame, 0);
-			else
 			  {
-			    /* largeur du rectangle d'affichage */
-			    charsDelta = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
-			    /* largeur du caractere ajoute/detruit */
-			    if (xDelta < 0)
-			      xDelta = -xDelta;
-			    if (pFrame->FrClipYBegin == topY && pFrame->FrClipYEnd == bottomY
-				&& xDelta >= charsDelta && (pFrame->FrClipXBegin == xx || pFrame->FrClipXEnd == xx))
-			      RedisplayOneChar (frame, pFrame->FrClipXBegin, topY, c, font, pSelBox);
-			    else
-			      RedrawFrameBottom (frame, 0);
+			    if (!toDelete)
+			      {
+				/* largeur du rectangle d'affichage */
+				charsDelta = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
+				/* largeur du caractere ajoute/detruit */
+				if (xDelta < 0)
+				  xDelta = -xDelta;
+				if (pFrame->FrClipYBegin == topY && pFrame->FrClipYEnd == bottomY
+				    && xDelta >= charsDelta && (pFrame->FrClipXBegin == xx || pFrame->FrClipXEnd == xx))
+				  DefClip (frame, pFrame->FrClipXEnd + 2, topY, pFrame->FrClipXEnd + 2, bottomY);
+			      }
+			    RedrawFrameBottom (frame, 0, NULL);
 			  }
 		      
 		      /* restaure l'indicateur d'insertion */
 		      TextInserting = saveinsert;
 		      /* Affiche la nouvelle selection */
-		      if (ThotLocalActions[T_switchsel])
-			(*ThotLocalActions[T_switchsel]) (frame, TRUE);
 		      pFrame->FrReady = TRUE;
 		    }
 		}

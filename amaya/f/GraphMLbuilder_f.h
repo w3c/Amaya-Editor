@@ -31,7 +31,8 @@ extern void ParseDirAndSpaceAttributes ( Element group,
                                          Element el,
                                          Document doc );
 extern void GraphMLElementComplete ( Element el,
-                                     Document doc );
+                                     Document doc,
+                                     int *error );
 extern void UpdateInternalAttrForPoly ( Element el,
                                         Element leaf,
                                         Document doc,
@@ -80,7 +81,8 @@ extern void ParseDirAndSpaceAttributes (/* Element group,
                                            Element el,
                                            Document doc */);
 extern void GraphMLElementComplete (/* Element el,
-                                       Document doc */);
+                                       Document doc,
+                                       int *error */);
 extern void UpdateInternalAttrForPoly (/* Element el,
                                           Element leaf,
                                           Document doc,
