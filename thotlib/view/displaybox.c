@@ -112,9 +112,9 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
       		     pBox->BxAbstractBox->AbBackground, 0);
       x = pFrame->FrXOrg;
       y = pFrame->FrYOrg;
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+      xd = pBox->BxXOrg + l + pBox->BxLMargin + pBox->BxLBorder +
            pBox->BxLPadding - x;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+      yd = pBox->BxYOrg + t + pBox->BxTMargin + pBox->BxTBorder +
            pBox->BxTPadding + FrameTable[frame].FrTopMargin - y;
       width = pBox->BxW;
       height = pBox->BxH;
@@ -140,7 +140,7 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
 	  DisplayStringSelection (frame,
 				  pFrame->FrSelectionBegin.VsXPos,
 				  pFrame->FrSelectionBegin.VsXPos + 2,
-				  pFrame->FrSelectionBegin.VsBox);
+				  t, pFrame->FrSelectionBegin.VsBox);
 	else
 	  DisplayPointSelection (frame, pBox, 0);
 	}
@@ -338,7 +338,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  if (selected &&
 	      !pFrame->FrSelectOnePosition &&
 	      pFrame->FrSelectionBegin.VsXPos != pBox->BxW)
-	    DisplayStringSelection (frame, 0, pBox->BxW, pBox);
+	    DisplayStringSelection (frame, 0, pBox->BxW, t, pBox);
 	  
 	  /* Line thickness */
 	  i = GetLineWeight (pBox->BxAbstractBox, frame);
@@ -504,7 +504,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	       or the selection starts at the end of the box */
 	    DisplayStringSelection (frame,
 				    pFrame->FrSelectionBegin.VsXPos,
-				    pFrame->FrSelectionBegin.VsXPos + 2, pBox);
+				    pFrame->FrSelectionBegin.VsXPos + 2,
+				    t, pBox);
 	}
     }
 }
@@ -550,7 +551,7 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected,
 	    {
 	      PaintWithPattern (frame, xd, yd, width, height, 0,
 				pAb->AbForeground, bg, 4);
-	      DisplayStringSelection (frame, 0, 2, pBox);
+	      DisplayStringSelection (frame, 0, 2, t, pBox);
 	    }
 	}
       else
@@ -1241,7 +1242,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
       /* Initialization */
-      x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+      x = pBox->BxXOrg + l + pBox->BxLMargin + pBox->BxLBorder +
 	  pBox->BxLPadding - pFrame->FrXOrg;
       y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 	  pBox->BxTPadding - pFrame->FrYOrg;
@@ -1296,7 +1297,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    right = pFrame->FrSelectionEnd.VsXPos;
 		  else
 		    right = pBox->BxW;
-		  DisplayStringSelection (frame, left, right, pBox);
+		  DisplayStringSelection (frame, left, right, t, pBox);
 		  left += x;
 		  right += x;
 		}
@@ -1795,7 +1796,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	}
       /* display a caret if needed */
       if (selected && right == left + 2)
-	DisplayStringSelection (frame, left, right, pBox);
+	DisplayStringSelection (frame, left, right, t, pBox);
       TtaFreeMemory (wbuffer);
       TtaFreeMemory (buffer);
     }
@@ -1808,7 +1809,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   DisplayBorders displays the box borders.
   The parameter pForm points the box that generates the border or fill.
   Parameters x, y, w, h give the clipping region.
-  e t, eb, el, and er give top, bottom, left and right extra margins.
+  et, eb, el, and er give top, bottom, left and right extra margins.
   Parameters first and last are TRUE when the box pBox is respectively
   at the first position and/or the last position of pFrom (they must be
   TRUE for pFrom itself).
@@ -1933,7 +1934,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
 	    dim -= b;
 	  /* rigth line */
 	  DrawVerticalLine (frame, 1, 5,
-			    xFrame + from->BxLMargin  + l+ from->BxLBorder, pos,
+			    xFrame + from->BxLMargin + l + from->BxLBorder, pos,
 			    1, dim,
 			    2, color);
 	  break;
@@ -2232,7 +2233,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 	       pAb->AbLeafType != LtPath)
 	{
 	  if (selfsel)
-	    DisplayStringSelection (frame, 0, box->BxW, box);
+	    DisplayStringSelection (frame, 0, box->BxW, t, box);
 	  else if (ThotLocalActions[T_emptybox])
 	    (*(Proc3)ThotLocalActions[T_emptybox]) (
 		(void *)box,

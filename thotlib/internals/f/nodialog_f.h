@@ -121,6 +121,7 @@ extern void SetNewSelectionStatus ( int frame,
 extern void DisplayStringSelection ( int frame,
                                      int leftX,
                                      int rightX,
+                                     int t,
                                      PtrBox pBox );
 extern void DirectCreation ( PtrBox pBox,
                              int frame );
@@ -260,6 +261,7 @@ extern void SetNewSelectionStatus ( int frame,
 extern void DisplayStringSelection ( int frame,
                                        int leftX,
                                        int rightX,
+                                       int t,
                                        PtrBox pBox );
 extern void DirectCreation ( PtrBox pBox,
                                int frame );

@@ -244,10 +244,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	  if (pBox)
 	    {
 #ifndef _GL
-	      xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-		pBox->BxLPadding;
-	      yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-		pBox->BxTPadding;
+	      xOrg =  pBox->BxXOrg;
+	      yOrg =  pBox->BxYOrg;
 	      width = pBox->BxWidth;
 	      height = pBox->BxHeight;
 #else /* _GL */
@@ -2747,14 +2745,17 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
   int                 extraSpace;
   int                 spaceWidth;
   int                 charWidth;
+  int                 t, b, l, r;
   SpecFont            font;
   CHAR_T              c;
   ThotBool            notfound, rtl;
 
+  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+  *x = *x - l - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding;
   /* Nombre de caracteres qui precedent */
   *index = 0;
   c = EOS;
-  dx = 0;
+  dx = l;
   charWidth = 0;
   if (pBox->BxAbstractBox->AbUnicodeBidi == 'O')
     rtl = (pBox->BxAbstractBox->AbDirection == 'R');

@@ -193,7 +193,6 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   int                 nSpaces, delta;
   int                 x;
   int                 i, j, k, max;
-  int                 t, b, l, r;
   ThotBool            rtl;
 
   if (pLine->LiFirstBox == NULL)
@@ -232,8 +231,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 		(pBox->BxAbstractBox->AbNotInLine &&
 		 pBox->BxAbstractBox->AbDisplay != 'U'))
 	      {
-		GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-		YMove (pBox, NULL, baseline + t - pBox->BxHorizRef - pBox->BxYOrg, frame);
+		YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
 	      }
 	    else if (!pBox->BxAbstractBox->AbNotInLine)
 	      {
@@ -317,9 +315,8 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	    {
 	      /* right-to-left wirting */
 	      x -= boxes[k]->BxWidth;
-	      GetExtraMargins (boxes[k], NULL, &t, &b, &l, &r);
-	      XMove (boxes[k], NULL, x + l - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline + t - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
+	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	    }
 	}
       else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
@@ -334,9 +331,8 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	  for (k = i; k >= j; k--)
 	    {
 	      /* left-to-right wirting */
-	      GetExtraMargins (boxes[k], NULL, &t, &b, &l, &r);
-	      XMove (boxes[k], NULL, x + l - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline + t - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
+	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	      x += boxes[k]->BxWidth;
 	    }
 
@@ -346,9 +342,8 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	  if (rtl)
 	    /* right-to-left wirting */
 	    x -= boxes[i]->BxWidth;
-	  GetExtraMargins (boxes[i], NULL, &t, &b, &l, &r);
-	  XMove (boxes[i], NULL, x + l - boxes[i]->BxXOrg, frame);
-	  YMove (boxes[i], NULL, baseline + t - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
+	  XMove (boxes[i], NULL, x - boxes[i]->BxXOrg, frame);
+	  YMove (boxes[i], NULL, baseline - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
 	  if (!rtl)
 	    /* left-to-right wirting */
 	    x += boxes[i]->BxWidth;
@@ -447,8 +442,7 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 		(pBox->BxAbstractBox->AbNotInLine &&
 		 pBox->BxAbstractBox->AbDisplay != 'U'))
 	      {
-		GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-		YMove (pBox, NULL, baseline + t - pBox->BxHorizRef - pBox->BxYOrg, frame);
+		YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
 	      }
 	    else if (!pBox->BxAbstractBox->AbNotInLine)
 	      {
@@ -481,9 +475,8 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	    {
 	      /* right-to-left wirting */
 	      x -= boxes[k]->BxWidth;
-	      GetExtraMargins (boxes[k], NULL, &t, &b, &l, &r);
-	      XMove (boxes[k], NULL, x + l - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline + t - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
+	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	    }
 	}
       else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
@@ -498,9 +491,8 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	  for (k = i; k >= j; k--)
 	    {
 	      /* left-to-right writing */
-	      GetExtraMargins (boxes[k], NULL, &t, &b, &l, &r);
-	      XMove (boxes[k], NULL, x + l - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline + t - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
+	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	      x += boxes[k]->BxWidth;
 	    }
 
@@ -510,9 +502,8 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	  if (rtl)
 	    /* right-to-left wirting */
 	    x -= boxes[i]->BxWidth;
-	  GetExtraMargins (boxes[i], NULL, &t, &b, &l, &r);
-	  XMove (boxes[i], NULL, x + l - boxes[i]->BxXOrg, frame);
-	  YMove (boxes[i], NULL, baseline + t - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
+	  XMove (boxes[i], NULL, x - boxes[i]->BxXOrg, frame);
+	  YMove (boxes[i], NULL, baseline - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
 	  if (!rtl)
 	    /* left-to-right wirting */
 	    x += boxes[i]->BxWidth;
@@ -1526,16 +1517,16 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
 static void AddBoxInLine (PtrBox pBox, int *descent, int *ascent, PtrLine pLine)
 {
   pLine->LiRealLength += pBox->BxWidth;
-  /* Compute the current line height */
-  if (*ascent < pBox->BxHorizRef)
-    *ascent = pBox->BxHorizRef;
-  if (*descent < pBox->BxHeight - pBox->BxHorizRef)
-    *descent = pBox->BxHeight - pBox->BxHorizRef;
   /* check if the line includes a compound box or an image */
   if (pBox->BxAbstractBox &&
       (pBox->BxAbstractBox->AbLeafType == LtCompound ||
        pBox->BxAbstractBox->AbLeafType == LtPicture))
     pLine->LiNoOverlap = TRUE;
+  /* Compute the current line height */
+  if (*ascent < pBox->BxHorizRef)
+    *ascent = pBox->BxHorizRef;
+  if (*descent < pBox->BxHeight - pBox->BxHorizRef)
+    *descent = pBox->BxHeight - pBox->BxHorizRef;
 }
 
 /*----------------------------------------------------------------------
@@ -2576,6 +2567,35 @@ static void UpdateBlockWithFloat (PtrBox pBlock, ThotBool xAbs, ThotBool yAbs,
       x1 += x2;
       pBlock->BxMinWidth += x1;
       pBlock->BxMaxWidth += x1;
+    }
+}
+
+/*----------------------------------------------------------------------
+  MoveFloatingBoxes updates the position of floating boxes below the
+  position y
+  Updates the minimum and maximum widths of the block when the parameter
+  updateWidth is TRUE.
+  Returns the updated height.
+  ----------------------------------------------------------------------*/
+static void MoveFloatingBoxes (PtrBox pBlock, int y, int delta, int frame)
+{
+  PtrFloat            pfloat;
+
+  pfloat = pBlock->BxLeftFloat;
+  while (pfloat && pfloat->FlBox)
+    {
+      if (pfloat->FlBox->BxYOrg >= y)
+	/* change the position */
+	YMove (pfloat->FlBox, NULL, delta, frame);
+      pfloat = pfloat->FlNext;
+    }
+  pfloat = pBlock->BxRightFloat;
+  while (pfloat && pfloat->FlBox)
+    {
+      if (pfloat->FlBox->BxYOrg >= y)
+	/* change the position */
+	YMove (pfloat->FlBox, NULL, delta, frame);
+      pfloat = pfloat->FlNext;
     }
 }
 
@@ -3807,7 +3827,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	    ComputeLines (pBox, frame, &height);
 	    if (pBox->BxContentWidth)
 	      {
-		/* it's an extensible bloc of lines */
+		/* it's an extensible block of lines */
 		width = pBox->BxMaxWidth;
 		h = pBox->BxYOrg;
 		pBox->BxW = pBox->BxMaxWidth;
@@ -4105,7 +4125,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   PtrBox              box;
   PtrBox              pPieceBox;
   PtrBox              pBlock;
-  int                 ascent, descent;
+  int                 ascent, descent, y, shift;
   int                 i, h, top, bottom, left, right;
   int                 pos, linespacing, spacing;
   PtrLine             pLine, prevLine;
@@ -4122,7 +4142,6 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
     linespacing = 0;
   pNextLine = NULL;
   h = 0;
-
   if (Propagate != ToSiblings || pBlock->BxVertFlex)
     {
       if (pBox->BxAbstractBox->AbFloat != 'N')
@@ -4147,6 +4166,9 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	  if (pLine)
 	    {
 	      pNextLine = pLine->LiNext;
+	      /* current limit of the line */
+	      y = pBlock->BxYOrg + pLine->LiYOrg + pLine->LiHeight;
+	      shift = 0;
 	      ascent = 0;
 	      descent = 0;
 	      if (!pBox->BxAbstractBox->AbHorizEnclosing)
@@ -4247,19 +4269,21 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 			MoveHorizRef (pBlock, NULL, i, frame);
 		    }
 		  
-		  /* move the box */
-		  /* vertical shifting of the box */
+		  /* vertical shift of the box */
 		  i = pBlock->BxYOrg + pLine->LiYOrg + pLine->LiHorizRef - pBox->BxHorizRef - pBox->BxYOrg;
 		  if (i)
-		    YMove (pBox, NULL, i, frame);
-		  
+		    YMove (pBox, NULL, i, frame);		  
 		  /* update the rest of the block */
 		  pLine->LiHeight = descent + ascent;
 		  /* delta of the block height if it's the last line */
 		  h = pLine->LiYOrg + pLine->LiHeight - pBlock->BxH;
+		  shift = pLine->LiYOrg + pLine->LiHeight - y;
 		}
 
-	      /* move next lines */
+	      /* Move next floated boxes */
+	      MoveFloatingBoxes (pBlock, y, shift, frame);
+
+	      /* Move next lines */
 	      if (pNextLine)
 		{
 		  /* new position of the next line */

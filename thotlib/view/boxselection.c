@@ -459,18 +459,19 @@ PtrTextBuffer DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 
 
 /*----------------------------------------------------------------------
-   ComputeViewSelMarks calcule la marque de selection connaissant la 
-   boite entiere VsBox, le buffer VsBuffer et l'index du   
-   caractere VsIndBuf marque'.                             
-   Deduit l'index caractere (VsIndBox), le nombre de blancs
-   le precedant VsNSpaces, la position dans la boite VsXPos
-   et la ligne contenant la boite VsLine.                  
+  ComputeViewSelMarks computes selection marks knowing the main VsBox
+  box, the VsBuffer buffer and the VsIndBuf index in the buffer.
+  Generates the number of spaces before the character in the
+  box (VsNSpaces), the character index in the box (VsIndBox), the
+  position within the box (VsXPos) and the line which includes the 
+  character (VsLine).
   ----------------------------------------------------------------------*/
 void ComputeViewSelMarks (ViewSelection *selMark)
 {
   PtrTextBuffer       pBuffer;
   PtrBox              pBox;
   int                 x;
+  int                 t, b, l, r;
   int                 spaces;
   int                 ind, pos;
 
@@ -530,7 +531,8 @@ void ComputeViewSelMarks (ViewSelection *selMark)
 	    }
 	}
 
-      selMark->VsXPos = x + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+      selMark->VsXPos = x + l + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       selMark->VsNSpaces = spaces;
     }
   selMark->VsLine = SearchLine (selMark->VsBox);
@@ -556,7 +558,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel, *pViewSelEnd;
   CHAR_T              c;
-  int                 l;
+  int                 t, b, l, r, shift;
   ThotBool            graphSel, rtl;
 
   /* Check if a paragraph should be reformatted after an edit */
@@ -571,6 +573,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
       if (pAb->AbBox)
 	{
 	  pBox = pAb->AbBox;
+	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
 	  rtl = (pBox->BxScript == 'A' || pBox->BxScript == 'H');
 	  adline = SearchLine (pBox);
 	  graphSel = (pAb->AbLeafType == LtPolyLine ||
@@ -613,7 +616,9 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		pBuffer = pAb->AbText;
 	      else
 		pBuffer = NULL;
-	      l = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	      /* text shift */
+	      shift = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	      l +=  shift;
 	      /* register selection marks */
 	      if (startSelection)
 		{
@@ -627,7 +632,9 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  pViewSel->VsBuffer = pBuffer;
 		  pViewSel->VsLine = adline;
 		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
-		    pViewSel->VsXPos = pBox->BxW + l;
+		    pViewSel->VsXPos = l + pBox->BxW;
+		  else if (pAb->AbLeafType == LtCompound)
+		    pViewSelEnd->VsXPos = l - shift;
 		  else
 		    pViewSel->VsXPos = l;
 		  pViewSel->VsNSpaces = 0;
@@ -641,11 +648,11 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  pViewSelEnd->VsLine = adline;
 		  if (pAb->AbLeafType == LtText)
 		    /* select the whole text */
-		    pViewSelEnd->VsXPos = pBox->BxW + l;
+		    pViewSelEnd->VsXPos = l + pBox->BxW;
 		  else if (pAb->AbLeafType == LtPicture)
 		    {
 		      if (!SelPosition)
-			pViewSelEnd->VsXPos = pBox->BxW + l;
+			pViewSelEnd->VsXPos = l + pBox->BxW;
 		      else if (firstChar == 0)
 			pViewSelEnd->VsXPos = l + 2;
 		      else
@@ -654,16 +661,13 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		    }
 		  else if (pAb->AbLeafType == LtSymbol && firstChar == 0)
 		    /* select the right side of the picture or symbol */
-		    pViewSelEnd->VsXPos = pBox->BxW + l;
+		    pViewSelEnd->VsXPos = l + pBox->BxW;
 		  else if (!SelPosition && pAb->AbLeafType == LtSymbol)
 		    /* select the right side of the picture or symbol */
-		    pViewSelEnd->VsXPos = pBox->BxW;
+		    pViewSelEnd->VsXPos = l + pBox->BxW;
 		  else if (pAb->AbLeafType == LtCompound)
-		    {
-		      /* select the whole box */
-		      pViewSelEnd->VsXPos = 0;
-		      pViewSelEnd->VsXPos = pBox->BxWidth;
-		    }
+		    /* select the whole box */
+		    pViewSelEnd->VsXPos = pBox->BxWidth - r;
 		  else
 		    pViewSelEnd->VsXPos = l;
 		  pViewSelEnd->VsNSpaces = 0;

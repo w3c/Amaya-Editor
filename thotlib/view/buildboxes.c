@@ -1547,7 +1547,8 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
 {
   PtrAbstractBox  pAb, pChild, pRefAb, pNext;
 
-  if (pBox == NULL || pRefBox == NULL || ((i == 0 || !first) && (j == 0 || !last)))
+  if (pBox == NULL || pRefBox == NULL ||
+      ((i == 0 || !first) && (j == 0 || !last)))
     return;
   pAb = pBox->BxAbstractBox;
   pRefAb = pRefBox->BxAbstractBox;
@@ -1581,7 +1582,15 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
     }
   else
     {
-      if (horizontal && inLineFloat && (i || j))
+      if (!inLineFloat)
+	{
+	  /* transmit i to the first and j to the last */
+	  if (!first)
+	    i = 0;
+	  if (!last)
+	    j = 0;
+	}
+      if (horizontal && (i || j))
 	{
 	  /* add left and rigth */
 	  if (i || j)
@@ -1594,7 +1603,7 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
 		ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
 	    }
 	}
-      else if (!horizontal && !inLineFloat && (i || j))
+      else if (!horizontal && (i || j))
 	{
 	  /* add left and rigth */
 	  if (i || j)
@@ -1606,24 +1615,6 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
 		/* the inside height is constrained */
 		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
 	    }
-	}
-      else if (horizontal && first && i)
-	{
-	  if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef)
-	    /* the outside width is constrained */
-	    ResizeWidth (pBox, pBox, NULL, -i, 0, 0, 0, frame);
-	  else
-	/* the inside width is constrained */
-	    ResizeWidth (pBox, pBox, NULL, 0, i, 0, 0, frame);
-	}
-      else if (!horizontal && last && j)
-	{
-	  if (pAb->AbHeight.DimIsPosition || pAb->AbHeight.DimAbRef)
-	    /* the outside height is constrained */
-	    ResizeHeight (pBox, pBox, NULL, -j, 0, 0, frame);
-	  else
-	/* the inside height is constrained */
-	    ResizeHeight (pBox, pBox, NULL, 0, 0, j, frame);
 	}
     }
 }
@@ -2277,6 +2268,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	      pBox = CreateBox (pChildAb, frame, inlineChildren, inlineFloatC, carIndex);
 	      pChildAb = pChildAb->AbNext;
 	    }
+#ifdef IV
+	  /* 12/03/2004 extra margins are already transmitted */
 	  if (pCurrentBox->BxType == BoGhost || pCurrentBox->BxType == BoFloatGhost)
 	    {
 	      /* transmit margins, borders and paddings */
@@ -2287,6 +2280,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	      j = pCurrentBox->BxBMargin + pCurrentBox->BxBPadding + pCurrentBox->BxBBorder;
 	      TransmitMBP (pCurrentBox, pCurrentBox, frame, i, j, FALSE, inLineFloat, TRUE, TRUE);
 	    }
+#endif
 	  GiveEnclosureSize (pAb, frame, &width, &height);
 	  /* Position of box axis */
 	  ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);

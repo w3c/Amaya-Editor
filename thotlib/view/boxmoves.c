@@ -687,9 +687,11 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     {
 #ifdef TAB_DEBUG
       if (pBox->BxType == BoTable)
-	printf ("ChangeWidth (table=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
+	printf ("ChangeWidth (table=%s, value=%d)\n",
+		pBox->BxAbstractBox->AbElement->ElLabel, delta);
       else if (pBox->BxType == BoColumn)
-	printf ("ChangeWidth (column=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
+	printf ("ChangeWidth (column=%s, value=%d)\n",
+		pBox->BxAbstractBox->AbElement->ElLabel, delta);
 #endif
       minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition
 		     && pBox->BxAbstractBox->AbWidth.DimMinimum);
@@ -712,7 +714,8 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      /* apply the minimum rule */
 	      pBox->BxRuleWidth = pBox->BxW;
 	      pBox->BxContentWidth = !pBox->BxContentWidth;
-	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW, 0, 0, spaceDelta, frame);
+	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW,
+			   0, 0, spaceDelta, frame);
 	    }
 	  else
 	    /* update the current minimum */
@@ -728,7 +731,8 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      width = pBox->BxRuleWidth;
 	      pBox->BxRuleWidth = pBox->BxW + delta;
 	      pBox->BxContentWidth = !pBox->BxContentWidth;
-	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW, 0, 0, spaceDelta, frame);
+	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW,
+			   0, 0, spaceDelta, frame);
 	    }
 	  else
 	    /* update the current minimum */
@@ -782,7 +786,8 @@ void ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      /* apply the minimum rule */
 	      pBox->BxRuleHeigth = pBox->BxH;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
-	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH, 0, 0, frame);
+	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH,
+			    0, 0, frame);
 	    }
 	  else
 	    /* update the minimum */
@@ -798,7 +803,8 @@ void ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      height = pBox->BxRuleHeigth;
 	      pBox->BxRuleHeigth = pBox->BxH + delta;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
-	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH, 0, 0, frame);
+	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH,
+			    0, 0, frame);
 	    }
 	  else
 	    /* update the current minimum */
@@ -1967,6 +1973,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   else
     diff = pBox->BxW + pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder + extraL + extraR - pBox->BxWidth;
 
+  /*if (extraL || extraR)
+    printf ("Resize %s with el=%d er=%d diff=%d (l=%d r=%d)\n", pCurrentAb->AbElement->ElLabel, extraL, extraR, diff, l, r);*/
   if (delta || diff ||
       pCurrentAb->AbLeftMarginUnit == UnAuto || pCurrentAb->AbRightMarginUnit == UnAuto)
     {
@@ -2408,7 +2416,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			pLine = pViewSel->VsLine;
 		      else
 			pLine = SearchLine (pBox);
-		      UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
+		      if (pCurrentAb->AbMBPChange || l || r)
+			UpdateLineBlock (pAb, pLine, pBox, diff, 0, frame);
+		      else
+			UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
 		    }
 		  /* if the inclusion is not checked at the end */
 		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
@@ -3393,7 +3404,6 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsYPosComplete (pBox);
-
 	  /*
 	   * Move only the origin if we're building the box
 	   * and it's not a stretchable box.

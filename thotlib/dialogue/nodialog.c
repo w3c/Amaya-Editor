@@ -337,7 +337,8 @@ void CancelSelection ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void SelectRange (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel, int premcar, int dercar)
+void SelectRange (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel,
+		  int premcar, int dercar)
 {
 }
 
@@ -367,8 +368,10 @@ void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool Etat)
 /*----------------------------------------------------------------------
   DisplayStringSelection the selection on a substring of text
   between leftX and rightX.
+  The parameter t gives the top extra margin of the box.
   ----------------------------------------------------------------------*/
-void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
+void DisplayStringSelection (int frame, int leftX, int rightX, int t,
+			     PtrBox pBox)
 {
 }
 

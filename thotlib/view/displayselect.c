@@ -525,8 +525,10 @@ void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
 /*----------------------------------------------------------------------
   DisplayStringSelection the selection on a substring of text
   between leftX and rightX.
+  The parameter t gives the top extra margin of the box.
   ----------------------------------------------------------------------*/
-void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
+void DisplayStringSelection (int frame, int leftX, int rightX, int t,
+			     PtrBox pBox)
 {
   PtrBox              pParentBox;
   ViewFrame          *pFrame;
@@ -544,7 +546,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
     }
   if (pBox->BxAbstractBox != NULL)
     {
-      topY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+      topY = pBox->BxYOrg + t + pBox->BxTMargin + pBox->BxTBorder +
 	     pBox->BxTPadding - pFrame->FrYOrg;
       h = pBox->BxH;
 

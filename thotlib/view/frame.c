@@ -399,7 +399,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 	r += from->BxRBorder;
       if (!setWindow || pFrom->AbSelected)
 	{
-	  xd =  pBox->BxXOrg + l;
+	  xd = pBox->BxXOrg + l;
 	  yd = pBox->BxYOrg + t;
 	  width = pBox->BxWidth - l - r;
 	  height = pBox->BxHeight - t - b;
