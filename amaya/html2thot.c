@@ -4407,7 +4407,7 @@ char               *pathURL;
 
 #endif
 {
-   ElementType         elType, newElType;
+   ElementType         elType, newElType, headElType;
    Element             el, elHead, elBody, nextEl, newEl, prevEl, lastChild,
                        firstTerm, lastTerm, termList, child, parent, firstEntry,
                        lastEntry, glossary, list, elText, previous, elLinks,
@@ -4508,6 +4508,7 @@ char               *pathURL;
 
 	if (elHead != NULL)
 	  {
+	     headElType = TtaGetElementType (elHead);
 	     /* create a Document_URL element as the first child of HEAD */
 	     newElType.ElSSchema = structSchema;
 	     newElType.ElTypeNum = HTML_EL_Document_URL;
@@ -4533,14 +4534,19 @@ char               *pathURL;
 	       }
 	     if (pathURL != NULL && elText != NULL)
 		TtaSetTextContent (elText, pathURL, documentLanguage, theDocument);
-	     /* move all Link elements as children of a Links element */
-	     /* and all Meta elements as children of a Metas element */
+	     /* check all chidren of the HEAD Element, except the first one */
+	     /* which is Document_URL */
+	     /* move all Link elements as children of a Links element, */
+	     /* all Meta elements as children of a Metas element, */
+	     /* and all Script elements as children of a Scripts element */
+	     TtaNextSibling (&el);
 	     elLinks = NULL;
 	     lastLink = NULL;
 	     elMetas = NULL;
 	     lastMeta = NULL;
 	     elScripts = NULL;
 	     lastScript = NULL;
+	     lastChild = NULL;
 	     while (el != NULL)
 	       {
 		  nextEl = el;
@@ -4592,13 +4598,36 @@ char               *pathURL;
 			    elScripts = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (elScripts, el, TRUE, theDocument);
 			 }
-		       /* move the element as the last child of the Metas element */
+		       /* move the element as the last child of the Scripts element */
 		       TtaRemoveTree (el, theDocument);
 		       if (lastScript == NULL)
 			  TtaInsertFirstChild (&el, elScripts, theDocument);
 		       else
 			  TtaInsertSibling (el, lastScript, FALSE, theDocument);
 		       lastScript = el;
+		    }
+		  else
+		    /* is this element allowed in the HEAD? */
+		    {
+		    if (TtaGetRankInAggregate (elType, headElType) <= 0)
+		      /* this element should be a child of BODY */
+	              {
+		        /* create the BODY element if it does not exist */
+		        if (elBody == NULL)
+		          {
+		             newElType.ElSSchema = structSchema;
+		             newElType.ElTypeNum = HTML_EL_BODY;
+		             elBody = TtaNewElement (theDocument, newElType);
+			     TtaInsertSibling (elBody, elHead, FALSE, theDocument);
+		          }
+		        /* move the current element into the BODY element */
+		        TtaRemoveTree (el, theDocument);
+		        if (lastChild == NULL)
+		           TtaInsertFirstChild (&el, elBody, theDocument);
+		        else
+		           TtaInsertSibling (el, lastChild, FALSE, theDocument);
+		        lastChild = el;
+	              }
 		    }
 		  el = nextEl;
 	       }
@@ -4633,7 +4662,7 @@ char               *pathURL;
 		       else
 			  TtaInsertSibling (elBody, previous, FALSE, theDocument);
 		    }
-		  /* move the current element in the BODY element */
+		  /* move the current element into the BODY element */
 		  TtaRemoveTree (el, theDocument);
 		  if (lastChild == NULL)
 		     TtaInsertFirstChild (&el, elBody, theDocument);

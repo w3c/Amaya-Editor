@@ -5442,17 +5442,29 @@ dans des paragraphes s affichent a cote de leur cadre...
 	Size: Enclosing + IntSizeIncr;
 	In Structure_view
 	    Size: Enclosing =;
+	In Anchors_view
+	    Size: Enclosing =;
+	In Alternate_view
+	    Size: Enclosing =;
 	END;
  IntSizeDecr:
 	BEGIN
 	Size: Enclosing - IntSizeDecr;
 	In Structure_view
 	    Size: Enclosing =;
+	In Anchors_view
+	    Size: Enclosing =;
+	In Alternate_view
+	    Size: Enclosing =;
 	END;
  IntSizeRel:
 	BEGIN
 	Size: IntSizeRel;
 	In Structure_view
+	    Size: Enclosing =;
+	In Anchors_view
+	    Size: Enclosing =;
+	In Alternate_view
 	    Size: Enclosing =;
 	END;
 

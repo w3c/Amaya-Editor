@@ -2702,17 +2702,70 @@ int                *size;
 }
 
 /* ----------------------------------------------------------------------
-   TtaIsOptionalInAggregate
+   TtaGetRankInAggregate
 
-   Returns TRUE if the type of the given rank is declared optionnal in 
-   the elementType definition.
+   Returns the rank that an element of type componentType should have in an
+   aggregate of type aggregateType, according to the structure schema.
 
    Parameter:
-   rank: the rank in the agreggate declaration.
-   elementType: the element type of interest.
+   componentType: type of the element whose rank is asked.
+   elementType: type of the aggregate.
 
    Return value:
-   boolean
+   rank of the component (first component = 1), or 0 if no element of type
+   componentType is allowed in the aggregate or if aggregateType is not
+   an aggregate.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int           TtaGetRankInAggregate (ElementType componentType, ElementType aggregateType)
+#else  /* __STDC__ */
+int           TtaGetRankInAggregate (componentType, aggregateType)
+ElementType 	    componentType;
+ElementType         aggregateType;
+#endif /* __STDC__ */
+{
+   int		rank, i;
+   SRule        *pRule;
+
+   UserErrorCode = 0;
+   rank = 0;
+   if (componentType.ElSSchema == NULL || aggregateType.ElSSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+     }
+   else if (componentType.ElTypeNum > ((PtrSSchema) (componentType.ElSSchema))->SsNRules ||
+	    componentType.ElTypeNum < 1 ||
+	    aggregateType.ElTypeNum > ((PtrSSchema) (aggregateType.ElSSchema))->SsNRules ||
+	    aggregateType.ElTypeNum < 1)
+     {
+	TtaError (ERR_invalid_element_type);
+     }
+   else if (componentType.ElSSchema == aggregateType.ElSSchema)
+     {
+        pRule = &(((PtrSSchema) (aggregateType.ElSSchema))->SsRule[aggregateType.ElTypeNum - 1]);
+        if (pRule->SrConstruct == CsAggregate ||
+	    pRule->SrConstruct == CsUnorderedAggregate)
+           for (i = 0; i < pRule->SrNComponents && rank == 0; i++)
+	      if (pRule->SrComponent[i] == componentType.ElTypeNum)
+		 rank = i+1;
+     }
+   return rank;
+}
+
+/* ----------------------------------------------------------------------
+   TtaIsOptionalInAggregate
+
+   Returns TRUE if component of rank rank is declared optionnal in 
+   the aggregate of type elementType, according to the structure schema.
+
+   Parameter:
+   rank: the rank in the agreggate declaration of the component to be tested.
+   elementType: type of the aggregate.
+
+   Return value:
+   TRUE if this component is optional.
 
    ---------------------------------------------------------------------- */
 
