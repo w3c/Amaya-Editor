@@ -1973,11 +1973,13 @@ Document		doc;
 	   else if (ChildOfMRowOrInferred (el))
 	     /* the MO element is a child of a MROW element */
 	      {
-	      if ((alphabet == 'L') &&
-		  (text[0] == TEXT('(') || text[0] == TEXT(')') ||
-		   text[0] == TEXT('[') || text[0] == TEXT(']') ||
-		   text[0] == TEXT('{') || text[0] == TEXT('}') ||
-		   text[0] == TEXT('|')))
+	      if (((alphabet == 'L') &&
+		   (text[0] == TEXT('(') || text[0] == TEXT(')') ||
+		    text[0] == TEXT('[') || text[0] == TEXT(']') ||
+		    text[0] == TEXT('{') || text[0] == TEXT('}') ||
+		    text[0] == TEXT('|')))  ||
+		  ((alphabet == 'G') &&
+		   ((int)text[0] == 225 || (int)text[0] == 241)))
 		/* it's a stretchable parenthesis or equivalent */
 		{
 		/* remove the content of the MO element */
@@ -2005,7 +2007,12 @@ Document		doc;
 		  }
 		/* create a new content for the MF element */
 		elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		c = (char) text[0];
+		if (alphabet == 'G' && (int)text[0] == 241)
+		  c = '>';    /* RightAngleBracket */
+		else if (alphabet == 'G' && (int)text[0] == 225)
+		  c = '<';    /* LeftAngleBracket */
+		else
+		  c = (char) text[0];
 		content = TtaNewElement (doc, elType);
 		TtaInsertFirstChild (&content, el, doc);
 		TtaSetGraphicsShape (content, c, doc);
