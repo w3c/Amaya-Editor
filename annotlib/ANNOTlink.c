@@ -281,6 +281,13 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
   
   if (iconS)
     {
+      /* @@@ JK? */
+#if 0
+      sprintf (s, "%s%camaya%cannot.png",
+	       TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
+      iconName = s;
+#endif
+      /* @@@ JK? */
       strcpy (iconName, iconS->object->name);
       WWWToLocal (iconName);
       /* expand $THOTDIR and $APP_HOME */
@@ -317,7 +324,17 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
     previous[0] = EOS;
 
   if (previous[0] == EOS || strcasecmp (iconName, previous))
-    TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
+    {
+      int docModified;
+
+      docModified = TtaIsDocumentModified (source_doc);
+      TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
+      if (!docModified)
+	{
+	  TtaSetDocumentUnmodified (source_doc);
+	  DocStatusUpdate (source_doc, docModified);
+	}
+    }
 }
 
 /*-----------------------------------------------------------------------

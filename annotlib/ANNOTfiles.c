@@ -403,10 +403,10 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (el, attr, docAnnot);
 
-  doc_anchor = TtaGetMemory (strlen (annot->source_url)
+  doc_anchor = TtaGetMemory (strlen (annot->body_url)
 			     + strlen (annot->name) 
 			     + 20);
-  sprintf (doc_anchor, "%s#%s", annot->source_url, annot->name);
+  sprintf (doc_anchor, "%s#%s", annot->body_url, annot->name);
   TtaSetAttributeText (attr, doc_anchor, el, docAnnot);
   TtaFreeMemory (doc_anchor);
 
