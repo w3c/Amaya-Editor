@@ -1406,23 +1406,23 @@ Document        doc;
 View            view;
 #endif
 {
-  CHAR_T* s;
+  CHAR_T   *s, *lang;
 
   s = TtaGetEnvString ("HOME_PAGE");
-   if (!s)
-     {
-       s = TtaGetEnvString ("THOTDIR");
-       if (s != NULL)
-	 ustrcpy (LastURLName, s);
-       else
-	 LastURLName[0] = WC_EOS;
-       ustrcat (LastURLName, AMAYA_PAGE);
-     }
-   else
-     ustrcpy (LastURLName, s);
-   InNewWindow = FALSE;
-   CurrentDocument = doc;
-   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
+  lang = TtaGetVarLANG ();
+  if (s == NULL)
+    {
+      s = TtaGetEnvString ("THOTDIR");
+      usprintf (LastURLName, TEXT("%s%camaya%c%s.%s"), s, DIR_SEP, DIR_SEP, AMAYA_PAGE, lang);
+      
+      if (!TtaFileExist (LastURLName))
+	usprintf (LastURLName, TEXT("%s%camaya%c%s"), s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
+    }
+  else
+    ustrcpy (LastURLName, s);
+  InNewWindow = FALSE;
+  CurrentDocument = doc;
+  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
 }
 
 
@@ -1761,6 +1761,7 @@ ThotBool     readOnly;
      ReadOnlyDocument[doc] = TRUE;
    
    if (reinitialized || !isOpen)
+     {
      /* now update menus and buttons according to the document status */
      if ((DocumentTypes[doc] == docText ||
 	  DocumentTypes[doc] == docCSS ||
@@ -1884,6 +1885,7 @@ ThotBool     readOnly;
 	   }
 	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
        }
+     }
    return (doc);
 }
 
@@ -4577,8 +4579,8 @@ void                InitAmaya (event)
 NotifyEvent        *event;
 #endif
 {
-   CHAR_T*             s;
-   CHAR_T*             tempname;
+   CHAR_T             *s;
+   CHAR_T             *tempname;
    int                 i;
    ThotBool            restoredDoc;
 
@@ -4811,9 +4813,8 @@ NotifyEvent        *event;
      /* old documents are restored */
      return;
    else
-      /* No argument in the command line. Try the variable HOME_PAGE */
-      s = TtaGetEnvString ("HOME_PAGE");
-
+     /* No argument in the command line. Try the variable HOME_PAGE */
+     s = TtaGetEnvString ("HOME_PAGE");
 #ifdef _WINDOWS
    usprintf (LostPicturePath, TEXT("%s\\amaya\\lost.gif"),
 	     TtaGetEnvString ("THOTDIR"));              
@@ -4821,21 +4822,7 @@ NotifyEvent        *event;
    if (!s)
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
-     {
-       s = TtaGetEnvString ("THOTDIR");
-       if (s != NULL)
-	 ustrcpy (LastURLName, s);
-       else
-	 LastURLName[0] = WC_EOS;
-       ustrcat (LastURLName, AMAYA_PAGE);
-       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
-     }
-   else if (IsW3Path (s))
-     {
-       /* it is a remote document */
-       ustrcpy (LastURLName, s);
-       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
-     }
+     GoToHome (0, 1);
    else
      {
        NormalizeFile (s, LastURLName, AM_CONV_NONE);
@@ -4981,6 +4968,7 @@ View                view;
 #endif /* _WINDOWS */
 }
 
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -5106,19 +5094,21 @@ int         index;
 #endif /* __STDC__*/
 {
   Document    document;
-  CHAR_T    localname[MAX_LENGTH];
-  CHAR_T*  s;
-  
-  localname[0] = EOS;
+  CHAR_T      localname[MAX_LENGTH];
+  CHAR_T     *s, *lang;
+
+  lang = TtaGetVarLANG ();
   s = TtaGetEnvString ("THOTDIR");
   if (s != NULL)
-    usprintf (localname, TEXT("%s%cdoc%camaya%c%s"), s, DIR_SEP, DIR_SEP,
-	      DIR_SEP, Manual[index]);
-
-  if (!TtaFileExist (localname))
     {
-      ustrcpy (localname, AMAYA_PAGE_DOC);
-      ustrcat (localname, Manual[index]);
+      /* get the documentation in the current language */
+      usprintf (localname, TEXT("%s%cdoc%camaya%c%s.%s"), s, DIR_SEP, DIR_SEP,
+		DIR_SEP, Manual[index], lang);
+
+      if (!TtaFileExist (localname))
+      /* get the standard english documentation */
+	usprintf (localname, TEXT("%s%cdoc%camaya%c%s"), s, DIR_SEP, DIR_SEP,
+		  DIR_SEP, Manual[index]);
     }
   document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
 			      NULL);

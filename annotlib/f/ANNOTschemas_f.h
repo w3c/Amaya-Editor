@@ -14,9 +14,9 @@ extern RDFStatementP ANNOT_FindRDFStatement ( List* list,
 extern char *ANNOT_GetLabel ( List **listP,
                               RDFResourceP r );
 extern void SCHEMA_ReadSchema ( Document doc,
-				char *namespace_URI );
+                                char *namespace_URI );
 extern void SCHEMA_InitSchemas ( Document doc );
-void SCHEMA_FreeRDFModel();
+extern void SCHEMA_FreeRDFModel ( void );
 
 #else /* __STDC__ */
 
@@ -28,9 +28,9 @@ extern RDFStatementP ANNOT_FindRDFStatement (/* List* list,
 extern char *ANNOT_GetLabel (/* List **listP,
                                 RDFResourceP r */);
 extern void SCHEMA_ReadSchema (/* Document doc,
-				  char *namespace_URI */);
+                                  char *namespace_URI */);
 extern void SCHEMA_InitSchemas (/* Document doc */);
-void SCHEMA_FreeRDFModel();
+extern void SCHEMA_FreeRDFModel (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

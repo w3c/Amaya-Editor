@@ -458,14 +458,8 @@ THOT_EXPORT LoadedImageDesc *ImageURLs;
 THOT_EXPORT LoadedImageDesc *ImageLocal;
 
 /* The default Amaya HOME pages (page shown at boot time */
-
-#ifdef _WINDOWS
-#      define AMAYA_PAGE  TEXT("\\amaya\\AmayaPage.html")
-#else  /* !_WINDOWS */
-#      define AMAYA_PAGE  TEXT("/amaya/AmayaPage.html")
-#endif /* !_WINDOWS */
-
-#define   AMAYA_PAGE_DOC  TEXT("http://www.w3.org/Amaya/User/")
+#define AMAYA_PAGE  TEXT("AmayaPage.html")
+#define AMAYA_PAGE_DOC  TEXT("http://www.w3.org/Amaya/User/")
 
 #ifndef MAX_TXT_LEN
 #define MAX_TXT_LEN 1024	/* Max. length of strings */

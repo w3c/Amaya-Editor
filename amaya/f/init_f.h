@@ -109,10 +109,6 @@ extern void ShowMapAreas ( Document document,
                            View view );
 extern void MakeIDMenu ( Document document,
                          View view );
-extern void AddAnIDd ( Document document,
-                       View view );
-extern void DelAnIDd ( Document document,
-                       View view );
 extern void HelpAmaya ( Document document,
                         View view );
 extern void HelpAtW3C ( Document document,
@@ -135,6 +131,8 @@ extern void HelpTables ( Document document,
                          View view );
 extern void HelpMath ( Document document,
                        View view );
+extern void HelpSVG ( Document document,
+                      View view );
 extern void HelpImageMaps ( Document document,
                             View view );
 extern void HelpStyleSheets ( Document document,
@@ -151,7 +149,11 @@ extern void HelpNumbering ( Document document,
                             View view );
 extern void HelpMakeBook ( Document document,
                            View view );
+extern void HelpAnnotation ( Document document,
+                             View view );
 extern void HelpConfigure ( Document document,
+                            View view );
+extern void HelpShortCuts ( Document document,
                             View view );
 extern void HelpAccess ( Document document,
                          View view );
@@ -268,10 +270,6 @@ extern void ShowMapAreas (/* Document document,
                              View view */);
 extern void MakeIDMenu (/* Document document,
                            View view */);
-extern void AddAnIDd (/* Document document,
-                         View view */);
-extern void DelAnIDd (/* Document document,
-                         View view */);
 extern void HelpAmaya (/* Document document,
                           View view */);
 extern void HelpAtW3C (/* Document document,
@@ -294,6 +292,8 @@ extern void HelpTables (/* Document document,
                            View view */);
 extern void HelpMath (/* Document document,
                          View view */);
+extern void HelpSVG (/* Document document,
+                        View view */);
 extern void HelpImageMaps (/* Document document,
                               View view */);
 extern void HelpStyleSheets (/* Document document,
@@ -310,7 +310,11 @@ extern void HelpNumbering (/* Document document,
                               View view */);
 extern void HelpMakeBook (/* Document document,
                              View view */);
+extern void HelpAnnotation (/* Document document,
+                               View view */);
 extern void HelpConfigure (/* Document document,
+                              View view */);
+extern void HelpShortCuts (/* Document document,
                               View view */);
 extern void HelpAccess (/* Document document,
                            View view */);
