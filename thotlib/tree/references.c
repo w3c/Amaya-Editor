@@ -496,101 +496,124 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pAsc, pChild, pC1;
-   PtrTextBuffer       pTxtBuf, pNextTxtBuf;
-
-   if (pEl != NULL)
-     {
-	if (pEl->ElSource == NULL)
-	  {
-	     if (pEl->ElReference != NULL && pEl->ElTerminal &&
-		 pEl->ElLeafType == LtReference)
-		DeleteReference (pEl->ElReference);
-	  }
-	else
-	   /* c'est une reference d'inclusion, on detruit tout le sous-arbre, */
-	   /* qui est une copie de l'element qui etait reference' */
-	  {
-	     DeleteReference (pEl->ElSource);
-	     if (pEl->ElTerminal)
-		switch (pEl->ElLeafType)
+  PtrElement          pAsc, pChild, pC1;
+  PtrTextBuffer       pTxtBuf, pNextTxtBuf;
+  PtrPathElement      pPa, pNextPa;
+  
+  if (pEl != NULL)
+    {
+      if (pEl->ElSource == NULL)
+	{
+	  if (pEl->ElReference != NULL && pEl->ElTerminal &&
+	      pEl->ElLeafType == LtReference)
+	    DeleteReference (pEl->ElReference);
+	}
+      else
+	/* c'est une reference d'inclusion, on detruit tout le sous-arbre */
+	/* qui est une copie de l'element qui etait reference' */
+	{
+	  DeleteReference (pEl->ElSource);
+	  if (pEl->ElTerminal)
+	    switch (pEl->ElLeafType)
+	      {
+	      case LtPicture:
+	      case LtText:
+		if (pEl->ElText != NULL)
+		  /* annule le contenu d'un texte ou d'une image */
+		  {
+		    pTxtBuf = pEl->ElText;	   /* vide le 1er buffer */
+		    pEl->ElTextLength = 0;
+		    /* met a jour le volume des elements ascendants */
+		    pAsc = pEl->ElParent;
+		    while (pAsc != NULL)
 		      {
-			 case LtPicture:
-			 case LtText:
-			    if (pEl->ElText != NULL)
-			       /* annule le contenu d'un texte ou d'une image */
-			      {
-				 pTxtBuf = pEl->ElText;		/* vide le 1er buffer */
-				 pEl->ElTextLength = 0;
-				 /* met a jour le volume des elements ascendants */
-				 pAsc = pEl->ElParent;
-				 while (pAsc != NULL)
-				   {
-				      pAsc->ElVolume = pAsc->ElVolume - pEl->ElVolume;
-				      pAsc = pAsc->ElParent;
-				   }
-				 pEl->ElVolume = 0;
-				 pTxtBuf->BuLength = 0;
-				 pTxtBuf->BuContent[0] = EOS;
-				 pTxtBuf = pTxtBuf->BuNext;
-				 /* libere les autres buffers */
-				 while (pTxtBuf != NULL)
-				   {
-				      pNextTxtBuf = pTxtBuf->BuNext;
-				      DeleteTextBuffer (&pTxtBuf);
-				      pTxtBuf = pNextTxtBuf;
-				   }
-			      }
-			    break;
-			 case LtPolyLine:
-			    /* annule le contenu d'une poly line */
-			    if (pEl->ElPolyLineBuffer != NULL)
-			      {
-				 /* met a jour le volume des elements ascendants */
-				 pAsc = pEl->ElParent;
-				 while (pAsc != NULL)
-				   {
-				      pAsc->ElVolume -= pEl->ElVolume;
-				      pAsc = pAsc->ElParent;
-				   }
-				 pEl->ElVolume = 0;
-				 /* vide le 1er buffer */
-				 pTxtBuf = pEl->ElPolyLineBuffer;
-				 pTxtBuf->BuLength = 0;
-				 pTxtBuf = pTxtBuf->BuNext;
-				 /* libere les buffers suivants */
-				 while (pTxtBuf != NULL)
-				   {
-				      pNextTxtBuf = pTxtBuf->BuNext;
-				      DeleteTextBuffer (&pTxtBuf);
-				      pTxtBuf = pNextTxtBuf;
-				   }
-			      }
-			    pEl->ElNPoints = 0;
-			    pEl->ElPolyLineType = EOS;
-			    break;
-			 case LtSymbol:
-			 case LtGraphics:
-			    pEl->ElGraph = EOS;
-			    pEl->ElWideChar = 0;
-			    break;
-			 default:
-			    break;
+			pAsc->ElVolume = pAsc->ElVolume - pEl->ElVolume;
+			pAsc = pAsc->ElParent;
 		      }
-	     else
-		/* ce n'est pas une feuille */
-	       {
-		  pChild = pEl->ElFirstChild;
-		  pEl->ElFirstChild = NULL;
-		  while (pChild != NULL)
-		    {
-		       pC1 = pChild;
-		       pChild = pC1->ElNext;
-		       DeleteElement (&pC1, pDoc);
-		    }
-	       }
-	  }
-     }
+		    pEl->ElVolume = 0;
+		    pTxtBuf->BuLength = 0;
+		    pTxtBuf->BuContent[0] = EOS;
+		    pTxtBuf = pTxtBuf->BuNext;
+		    /* libere les autres buffers */
+		    while (pTxtBuf != NULL)
+		      {
+			pNextTxtBuf = pTxtBuf->BuNext;
+			DeleteTextBuffer (&pTxtBuf);
+			pTxtBuf = pNextTxtBuf;
+		      }
+		  }
+		break;
+	      case LtPolyLine:
+		/* annule le contenu d'une polyline */
+		if (pEl->ElPolyLineBuffer != NULL)
+		  {
+		    /* met a jour le volume des elements ascendants */
+		    pAsc = pEl->ElParent;
+		    while (pAsc != NULL)
+		      {
+			pAsc->ElVolume -= pEl->ElVolume;
+			pAsc = pAsc->ElParent;
+		      }
+		    pEl->ElVolume = 0;
+		    /* vide le 1er buffer */
+		    pTxtBuf = pEl->ElPolyLineBuffer;
+		    pTxtBuf->BuLength = 0;
+		    pTxtBuf = pTxtBuf->BuNext;
+		    /* libere les buffers suivants */
+		    while (pTxtBuf != NULL)
+		      {
+			pNextTxtBuf = pTxtBuf->BuNext;
+			DeleteTextBuffer (&pTxtBuf);
+			pTxtBuf = pNextTxtBuf;
+		      }
+		  }
+		pEl->ElNPoints = 0;
+		pEl->ElPolyLineType = EOS;
+		break;
+	      case LtPath:
+		if (pEl->ElFirstPathElem)
+		  {
+		    pPa = pEl->ElFirstPathElem;
+		    pEl->ElFirstPathElem = NULL;
+		    /* met a jour le volume des elements ascendants */
+		    pAsc = pEl->ElParent;
+		    while (pAsc != NULL)
+		      {
+			pAsc->ElVolume = pAsc->ElVolume - pEl->ElVolume;
+			pAsc = pAsc->ElParent;
+		      }
+		    pEl->ElVolume = 0;
+		    /* libere les elements de path */
+		    while (pPa != NULL)
+		      {
+			pNextPa = pPa->PaNext;
+			FreePathElement (pPa);
+			pPa = pNextPa;
+		      }
+		  }
+		break;
+	      case LtSymbol:
+	      case LtGraphics:
+		pEl->ElGraph = EOS;
+		pEl->ElWideChar = 0;
+		break;
+	      default:
+		break;
+	      }
+	  else
+	    /* ce n'est pas une feuille */
+	    {
+	      pChild = pEl->ElFirstChild;
+	      pEl->ElFirstChild = NULL;
+	      while (pChild != NULL)
+		{
+		  pC1 = pChild;
+		  pChild = pC1->ElNext;
+		  DeleteElement (&pC1, pDoc);
+		}
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

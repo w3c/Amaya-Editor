@@ -33,6 +33,10 @@ int                 NbFree_TextBuff;
 int                 NbUsed_TextBuff;
 PtrTextBuffer       PtFree_TextBuff;
 
+int                 NbFree_PathElem;
+int                 NbUsed_PathElem;
+PtrPathElement      PtFree_PathElem;
+
 int                 NbFree_Element;
 int                 NbUsed_Element;
 PtrElement          PtFree_Element;
@@ -236,6 +240,14 @@ void                FreeAll ()
       TtaFreeMemory (ptr);
     }
   NbFree_TextBuff = 0;
+
+  while (PtFree_PathElem != NULL)
+    {
+      ptr = (void *)PtFree_PathElem;
+      PtFree_PathElem = PtFree_PathElem->PaNext;
+      TtaFreeMemory (ptr);
+    }
+  NbFree_PathElem = 0;
 
   while (PtFree_Element != NULL)
     {
@@ -596,6 +608,10 @@ void                InitEditorMemory ()
    NbUsed_TextBuff = 0;
    PtFree_TextBuff = NULL;
 
+   NbFree_PathElem = 0;
+   NbUsed_PathElem = 0;
+   PtFree_PathElem = NULL;
+
    NbFree_Element = 0;
    NbUsed_Element = 0;
    PtFree_Element = NULL;
@@ -742,6 +758,68 @@ PtrTextBuffer       pBT;
 }
 
 /*----------------------------------------------------------------------
+   GetPathElement
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GetPathElement (PtrPathElement * pPE)
+#else  /* __STDC__ */
+void                GetPathElement (pPE)
+PtrPathElement      *pPE;
+
+#endif /* __STDC__ */
+{
+   PtrPathElement       pPEl;
+
+   if (PtFree_PathElem == NULL)
+     {
+     /* pas de buffer dans la chaine des libres, acquiert un nouveau buffer */
+     pPEl = (PtrPathElement) TtaGetMemory (sizeof (PathElement));
+     }
+   else
+     {
+	/* recupere un buffer en tete de la chaine des libres */
+	pPEl = PtFree_PathElem;
+	PtFree_PathElem = pPEl->PaNext;
+	NbFree_PathElem--;
+     }
+   /* initialise le buffer */
+   *pPE = pPEl;
+   if (pPEl)
+     {
+       memset (pPEl, 0, sizeof (PathElement));
+       pPEl->PaNext = NULL;
+       pPEl->PaPrevious = NULL;
+       NbUsed_PathElem++;
+     }
+}
+
+/*----------------------------------------------------------------------
+   FreePathElement
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                FreePathElement (PtrPathElement pPE)
+#else  /* __STDC__ */
+void                FreePathElement (pPE)
+PtrPathElement      pPE;
+
+#endif /* __STDC__ */
+{
+
+   /* insere le buffer en tete de la chaine des libres */
+   if (pPE != NULL)
+     {
+#ifdef DEBUG_MEMORY
+        TtaFreeMemory (pPE);
+#else
+	pPE->PaNext = PtFree_PathElem;
+	PtFree_PathElem = pPE;
+	NbFree_PathElem++;
+#endif
+	NbUsed_PathElem--;
+     }
+}
+
+/*----------------------------------------------------------------------
    GetElement alloue un element.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -806,11 +884,23 @@ PtrElement          pEl;
 
 #endif /* __STDC__ */
 {
+   PtrPathElement   pPEl, pPElNext;
 
-   if (pEl->ElLeafType == LtText && pEl->ElText != NULL)
+   if (pEl->ElLeafType == LtText && pEl->ElText)
      {
        FreeTextBuffer (pEl->ElText);
        pEl->ElText = NULL;
+     }
+   else if (pEl->ElLeafType == LtPath && pEl->ElFirstPathElem)
+     {
+       pPEl = pEl->ElFirstPathElem;
+       do
+	 {
+	   pPElNext = pPEl->PaNext;
+	   FreePathElement (pPEl);
+	   pPEl = pPElNext;
+	 }
+       while (pPEl);
      }
    pEl->ElStructSchema = NULL;
 #ifdef DEBUG_MEMORY

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -158,7 +158,8 @@ Document            document;
    ThotBool            ok, changeSelection;
 
    pDoc = LoadedDocument[document - 1];
-   ok = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+   ok = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection,
+			     &firstChar, &lastChar);
    if (ok && selDoc == pDoc)
       /* il y a une selection dans le document traite' */
       if (SelContinue)
@@ -174,7 +175,8 @@ Document            document;
 		 /* il y a d'autres elements selectionne's, on fait demarrer */
 		 /* la nouvelle selection sur l'element suivant */
 		{
-		   firstSelection = NextInSelection (firstSelection, lastSelection);
+		   firstSelection = NextInSelection (firstSelection,
+						     lastSelection);
 		   firstChar = 0;
 		   changeSelection = TRUE;
 		}
@@ -202,19 +204,22 @@ Document            document;
 	     }
 	   else
 	     {
-		if (ElemIsWithinSubtree (firstSelection, pEl) && ElemIsWithinSubtree (lastSelection, pEl))
-		   /* la selection est entierement a l'interieur de l'element */
+		if (ElemIsWithinSubtree (firstSelection, pEl) &&
+		    ElemIsWithinSubtree (lastSelection, pEl))
+		   /* la selection est entierement a l'interieur de l'element*/
 		   /* on annule la selection courante */
 		   ResetSelection (pDoc);
 	     }
 	   if (changeSelection)
 	     {
 		if (firstChar > 1)
-		   TtaSelectString (document, (Element) firstSelection, firstChar, 0);
+		   TtaSelectString (document, (Element) firstSelection,
+				    firstChar, 0);
 		else
 		   TtaSelectElement (document, (Element) firstSelection);
 		if (lastSelection != firstSelection)
-		   TtaExtendSelection (document, (Element) lastSelection, lastChar);
+		   TtaExtendSelection (document, (Element) lastSelection,
+				       lastChar);
 	     }
 	}
       else
@@ -478,7 +483,8 @@ ThotBool           *assoc;
    PtrDocument         pSelDoc;
    PtrElement          firstSel, lastSel;
 
-   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+			     &lastChar))
       *pDoc = NULL;
    else
      {
@@ -777,7 +783,8 @@ ThotBool            clearOldSel;
 		       do
 			  /* search next element in current selection */
 			 {
-			    pNextEl = NextInSelection (pNextEl, LastSelectedElement);
+			    pNextEl = NextInSelection (pNextEl,
+						       LastSelectedElement);
 			    if (pNextEl == NULL)
 			       /* end of current selection */
 			       stop = TRUE;
@@ -863,7 +870,9 @@ ThotBool            clearOldSel;
 						first, last, unique);
 			    active = (view + 1 == SelectedView);
 			    if (showBegin && first &&
-				(assoc || SelectedDocument->DocView[view].DvSync || active))
+				(assoc ||
+				 SelectedDocument->DocView[view].DvSync ||
+				 active))
 			       ShowSelectedBox (frame, active);
 
 			    first = FALSE;
@@ -1194,7 +1203,8 @@ ThotBool            visible;
 		  if (pNextEl != NULL)
 		     /* there is a next element in the selection having an */
 		     /* abstract box in the view */
-		     if (WithinAbsBox (pNextEl->ElAbstractBox[view - 1], pRootAb))
+		     if (WithinAbsBox (pNextEl->ElAbstractBox[view - 1],
+				       pRootAb))
 			/* this abstract box is in the subtree */
 		        /* It's the next to be processed */
 		       {
@@ -1213,7 +1223,9 @@ ThotBool            visible;
 		  /* active view */
 		  active = view == SelectedView;
 		  if (visible)
-		     if (assoc || SelectedDocument->DocView[view - 1].DvSync || active)
+		     if (assoc ||
+			 SelectedDocument->DocView[view - 1].DvSync ||
+			 active)
 			ShowSelectedBox (frame, active);
 
 		  selBegin = FALSE;
@@ -1283,7 +1295,8 @@ ThotBool           *abExist;
 	      FirstSelectedChar > 1 && pEl->ElTextLength > 0)
 	    /* the text leaf is partly selected */
 	    partialSel = TRUE;
-	  else if ((pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics) &&
+	  else if ((pEl->ElLeafType == LtPolyLine ||
+		    pEl->ElLeafType == LtGraphics) &&
 		   SelectedPointInPolyline > 0)
 	    partialSel = TRUE;
       if (partialSel)
@@ -1320,7 +1333,8 @@ ThotBool           *abExist;
 	      pEl->ElTextLength > 0 && LastSelectedChar > 0)
 	    /* that text leaf is partly selected */
 	    partialSel = TRUE;
-	  else if ((pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics) &&
+	  else if ((pEl->ElLeafType == LtPolyLine ||
+		    pEl->ElLeafType == LtGraphics) &&
 		   SelectedPointInPolyline > 0)
 	    partialSel = TRUE;
       if (partialSel && !pAb->AbPresentationBox)
@@ -1338,7 +1352,8 @@ ThotBool           *abExist;
 	    {
 	      if (pEl->ElLeafType == LtText)
 		firstChar = FirstSelectedChar;
-	      else if (pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics)
+	      else if (pEl->ElLeafType == LtPolyLine ||
+		       pEl->ElLeafType == LtGraphics)
 		firstChar = SelectedPointInPolyline;
 	      else if (pEl->ElLeafType == LtPicture)
 		firstChar = SelectedPictureEdge;
@@ -1352,7 +1367,8 @@ ThotBool           *abExist;
 	    {
 	      if (pEl->ElLeafType == LtText)
 		lastChar = LastSelectedChar;
-	      else if (pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics)
+	      else if (pEl->ElLeafType == LtPolyLine ||
+		       pEl->ElLeafType == LtGraphics)
 		lastChar = SelectedPointInPolyline;
 	      else if (pEl->ElLeafType == LtPicture)
 		lastChar = SelectedPictureEdge;
@@ -1363,14 +1379,16 @@ ThotBool           *abExist;
 	    lastChar = 0;
 
 	  unique = FirstSelectedElement == LastSelectedElement;
-	  InsertViewSelMarks (frame, pAb, firstChar, lastChar, first, last, unique);
-
+	  InsertViewSelMarks (frame, pAb, firstChar, lastChar, first, last,
+			      unique);
 	  if (show)
 	    {
-	      /* should this abstract box be made visible to the user? (scroll) */
+	      /* should this abstract box be made visible to the user?
+		 (scroll) */
 	      active = view == SelectedView;
 	      if (first &&
-		  (assoc || active || SelectedDocument->DocView[view - 1].DvSync))
+		  (assoc || active ||
+		   SelectedDocument->DocView[view - 1].DvSync))
 		ShowSelectedBox (frame, active);
 	      first = FALSE;
 	    }
@@ -1464,8 +1482,10 @@ ThotBool            createView;
 			  if (pEl->ElTypeNumber != PageBreak + 1 ||
 			      pEl->ElViewPSchema == SelectedDocument->DocView[view].DvPSchemaView)
 			    {
-			      CheckAbsBox (pEl, view + 1, SelectedDocument, FALSE, TRUE);
-			      if (SelectedView == 0 && pEl->ElAbstractBox[view] != NULL)
+			      CheckAbsBox (pEl, view + 1, SelectedDocument,
+					   FALSE, TRUE);
+			      if (SelectedView == 0 &&
+				  pEl->ElAbstractBox[view] != NULL)
 				SetActiveView (0);
 			    }
 		    if (!done)
@@ -1501,9 +1521,11 @@ ThotBool            createView;
 			/* the application accepts */
 			{
 			  /* open the view */
-			  createdView = CreateAbstractImage (SelectedDocument, 0, pRoot->ElTypeNumber,
-							     pRoot->ElStructSchema, 0, TRUE, NULL);
-			  OpenCreatedView (SelectedDocument, createdView, TRUE, X, Y, width, height);
+			  createdView = CreateAbstractImage (SelectedDocument,
+					 0, pRoot->ElTypeNumber,
+					 pRoot->ElStructSchema, 0, TRUE, NULL);
+			  OpenCreatedView (SelectedDocument, createdView, TRUE,
+					   X, Y, width, height);
 			  /* tell the application that the view has */
 			  /* been opened */
 			  notifyDoc.event = TteViewOpen;
@@ -1535,7 +1557,8 @@ ThotBool            createView;
 		    {
 		      /* build the list of all possible views for the */
 		      /* document */
-		      nViews = BuildDocumentViewList (SelectedDocument, viewTable);
+		      nViews = BuildDocumentViewList (SelectedDocument,
+						      viewTable);
 		      for (i = 0; i < nViews && !abExist; i++)
 			{
 			  if (!viewTable[i].VdAssoc)
@@ -1833,7 +1856,8 @@ ThotBool            string;
 		}
 
 	   LastSelectedElement = FirstSelectedElement;
-	   if (pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics)
+	   if (pEl->ElLeafType == LtPolyLine ||
+	       pEl->ElLeafType == LtGraphics)
 	     {
 		SelectedPointInPolyline = firstChar;
 		FirstSelectedChar = 0;
@@ -2436,7 +2460,8 @@ ThotBool            last;
 			  FirstSelectedChar > 1) ||
 			 (FirstSelectedElement->ElLeafType == LtPolyLine &&
 			  SelectedPointInPolyline > 0))
-			SelectElement (SelectedDocument, FirstSelectedElement, TRUE, TRUE);
+			SelectElement (SelectedDocument, FirstSelectedElement,
+				       TRUE, TRUE);
 		  SelectedElement[0] = FirstSelectedElement;
 		  NSelectedElements = 1;
 	       }
@@ -2714,7 +2739,8 @@ ThotBool            drag;
    error = FALSE;
    doubleClickRef = FALSE;
    graphSel = (pAb->AbElement->ElLeafType == LtPolyLine ||
-	       (pAb->AbElement->ElLeafType == LtGraphics && pAb->AbElement->ElGraph == 'g'));
+	       (pAb->AbElement->ElLeafType == LtGraphics &&
+		pAb->AbElement->ElGraph == 'g'));
    /* process double clicks and extensions for polyline vertices */
    if (pAb != NULL && pAb->AbElement->ElTerminal && graphSel)
      /* it's a polyline or a line */
@@ -2778,7 +2804,8 @@ ThotBool            drag;
 	       /* scan all attributes of current element */
 	       while (pAttr != NULL && !doubleClickRef)
 		 if (pAttr->AeAttrType == AtReferenceAttr &&
-		     AttrHasException (ExcActiveRef, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+		     AttrHasException (ExcActiveRef, pAttr->AeAttrNum,
+				       pAttr->AeAttrSSchema))
 		   /* a reference attribute has been found */
 		   {
 		     doubleClickRef = TRUE;
@@ -2800,7 +2827,8 @@ ThotBool            drag;
 
    if (pAb != NULL &&
        pAb->AbElement->ElTerminal &&
-       (pAb->AbElement->ElLeafType == LtPairedElem || pAb->AbElement->ElLeafType == LtReference) &&
+       (pAb->AbElement->ElLeafType == LtPairedElem ||
+	pAb->AbElement->ElLeafType == LtReference) &&
        /* it's a reference element or a paired element */
        (!pAb->AbPresentationBox || !pAb->AbCanBeModified))
      /* it's not the presentation box of an attribute value */
@@ -2988,7 +3016,8 @@ ThotBool            drag;
              /* callback for event Select, it is selected */
 	     if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
 				   pEl->ElStructSchema) ||
-		 (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect, TRUE)))
+		 (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect,
+							TRUE)))
 	       {
 		  /* select element entirely */
 		  rank = 0;

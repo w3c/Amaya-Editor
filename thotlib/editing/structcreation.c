@@ -392,12 +392,11 @@ LeafType            type2;
 {
    if (type1 == type2)
       return TRUE;
-   else if (type2 == LtGraphics && type1 == LtPolyLine)
+   if ((type2 == LtGraphics || type2 == LtPolyLine || type2 == LtPath) &&
+       (type1 == LtGraphics || type1 == LtPolyLine || type1 == LtPath))
       return TRUE;
-   else if (type2 == LtPolyLine && type1 == LtGraphics)
-      return TRUE;
-   else
-      return FALSE;
+   
+   return FALSE;
 }
 
 
@@ -472,6 +471,9 @@ ThotBool            before;
 	  case LtPolyLine:
 	    lType = GraphicElem + 1;
 	    break;
+	  case LtPath:
+	    lType = GraphicElem + 1;
+	    break;
 	  default:
 	    break;
 	  }
@@ -544,6 +546,15 @@ ThotBool            before;
 				    break;
 				  case LtPolyLine:
 				    if (pChild->ElNPoints == 0)
+				      stop = TRUE;
+				    else
+				      {
+					pChild = NULL;
+					empty = FALSE;
+				      }
+				    break;
+				  case LtPath:
+				    if (pChild->ElVolume == 0)
 				      stop = TRUE;
 				    else
 				      {
@@ -939,6 +950,11 @@ PtrAbstractBox      pAbEl;
 		     pAb->AbPolyLineBuffer = pEl->ElPolyLineBuffer;
 		     pAb->AbPolyLineShape = pEl->ElPolyLineType;
 		     pAb->AbVolume = pEl->ElNPoints;
+		     break;
+		   case LtPath:
+		     pAb->AbLeafType = LtPath;
+		     pAb->AbFirstPathElem = pEl->ElFirstPathElem;
+		     pAb->AbVolume = pEl->ElVolume;
 		     break;
 		   case LtSymbol:
 		   case LtGraphics:

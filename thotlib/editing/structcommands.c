@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996.
+ *  (c) COPYRIGHT INRIA 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2132,6 +2132,7 @@ PtrSSchema          pSS;
 		   if (pEl->ElLeafType == LtText ||
 		       pEl->ElLeafType == LtPicture ||
 		       pEl->ElLeafType == LtPolyLine ||
+		       pEl->ElLeafType == LtPath ||
 		       pEl->ElLeafType == LtSymbol ||
 		       pEl->ElLeafType == LtGraphics)
 		      pEl->ElStructSchema = pElSurround->ElStructSchema;
@@ -2707,6 +2708,7 @@ ThotBool            Before;
 			 firstSel->ElLeafType == LtPicture  ||
 			 firstSel->ElLeafType == LtGraphics ||
 			 firstSel->ElLeafType == LtPolyLine ||
+			 firstSel->ElLeafType == LtPath     ||
 			 firstSel->ElLeafType == LtSymbol     ));
       /* Peut-on considerer la selection courante comme un simple point */
       /* d'insertion ? */
@@ -2841,6 +2843,7 @@ ThotBool            Before;
 			  (lastSel->ElLeafType == LtPicture && firstChar == 0) ||
 			  lastSel->ElLeafType == LtGraphics ||
 			  lastSel->ElLeafType == LtPolyLine ||
+			  lastSel->ElLeafType == LtPath     ||
 			  lastSel->ElLeafType == LtSymbol ));
 	      /* la selection est-t-elle a la fin de la derniere feuille
 		 de texte d'un element */
@@ -2853,6 +2856,7 @@ ThotBool            Before;
 			   firstChar > 0) ||
 			  lastSel->ElLeafType == LtGraphics ||
 			  lastSel->ElLeafType == LtPolyLine ||
+			  lastSel->ElLeafType == LtPath     ||
 			  lastSel->ElLeafType == LtSymbol ));
 	    }
 	  
@@ -2874,7 +2878,8 @@ ThotBool            Before;
 	      pEl = firstSel;
 	      createAfter = FALSE;
 	      if (lastSel->ElTerminal &&
-		  (lastSel->ElLeafType == LtText || lastSel->ElLeafType == LtPicture) &&
+		  (lastSel->ElLeafType == LtText ||
+		   lastSel->ElLeafType == LtPicture) &&
 		  firstChar > 1)
 		createAfter = TRUE;
 	    }

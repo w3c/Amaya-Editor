@@ -877,6 +877,7 @@ ThotBool            subTree;
 {
   PtrElement          pChild, pEl1;
   PtrTextBuffer       pBuf;
+  PtrPathElement      pPa;
   PtrAttribute        pAttr;
   PtrPRule            pPRule;
   PtrSSchema          pSS;
@@ -1113,6 +1114,58 @@ ThotBool            subTree;
 		      c += pBuf->BuLength;
 		      pBuf = pBuf->BuNext; /* buffer suivant du meme element */
 		    }
+		  break;
+		case LtPath:
+		  /* ecrit un caractere pour faciliter la lecture */
+		  TtaWriteByte (pivFile, ' ');
+		  /* ecrit une marque indiquant que c'est un Path */
+		  TtaWriteByte (pivFile, (CHAR_T) C_PIV_PATH);
+		  pPa = pEl1->ElFirstPathElem;
+		  while (pPa)
+		    {
+		      switch (pPa->PaShape)
+			{
+			case PtLine:
+			   TtaWriteByte (pivFile, 'L');
+			   break;
+			case PtCubicBezier:
+		           TtaWriteByte (pivFile, 'C');
+			   break;
+			case PtQuadricBezier:
+		           TtaWriteByte (pivFile, 'Q');
+			   break;
+			case PtElliptical:
+		           TtaWriteByte (pivFile, 'A');
+			   break;
+			}
+		      PutInteger (pivFile, pPa->XStart);
+		      PutInteger (pivFile, pPa->YStart);
+		      PutInteger (pivFile, pPa->XEnd);
+		      PutInteger (pivFile, pPa->YEnd);
+		      switch (pPa->PaShape)
+			{
+			case PtLine:
+			   break;
+			case PtCubicBezier:
+			   PutInteger (pivFile, pPa->XCtrlStart);
+			   PutInteger (pivFile, pPa->YCtrlStart);
+			   PutInteger (pivFile, pPa->XCtrlEnd);
+			   PutInteger (pivFile, pPa->YCtrlEnd);
+			   break;
+			case PtQuadricBezier:
+			   PutInteger (pivFile, pPa->XCtrlStart);
+			   PutInteger (pivFile, pPa->YCtrlStart);
+			   break;
+			case PtElliptical:
+			   PutInteger (pivFile, pPa->XRadius);
+			   PutInteger (pivFile, pPa->YRadius);
+			   PutShort (pivFile, pPa->XAxisRotation);
+			   PutBoolean (pivFile, pPa->LargeArc);
+			   PutBoolean (pivFile, pPa->Sweep);
+			   break;
+			}
+                      pPa = pPa->PaNext; 
+		    } 
 		  break;
 		default:
 		  break;

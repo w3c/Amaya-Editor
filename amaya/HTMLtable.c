@@ -157,7 +157,7 @@ ThotBool            inMath;
 }
 
 /*----------------------------------------------------------------------
-   AddEmptyCellInRow add empty cell element in the given row and relates
+   AddEmptyCellInRow add an empty cell element in the given row and relates
    it to the given Column_head colhead.
    The parameter sibling gives the cell which will precede or follow the newl
    cell according to the before value.
@@ -1384,16 +1384,23 @@ NotifyElement      *event;
    doc = event->document;
    row = TtaGetParent (cell);
    if (row == CurrentPastedRow)
-      /* this cell is part of the pasted row */
+     /* this cell is part of the pasted row */
      {
-	nextcell = cell;
-	TtaNextSibling (&nextcell);
-	if (nextcell == NULL)
-	   /* this is the last cell in the pasted row */
-	   CurrentPastedRow = NULL;
+       nextcell = cell;
+       TtaNextSibling (&nextcell);
+       if (nextcell == NULL)
+	 /* this is the last cell in the pasted row */
+	 CurrentPastedRow = NULL;
      }
    else
      {
+       if (event->info == 1)
+	 /* called by Undo command */
+	 {
+	   /* Someting has to be done here, if we are undoing a "delete column"
+	      command */
+	   ;
+	 }
        /* a single cell has been pasted */
        NewCell (cell, doc, TRUE);
        CurrentPastedRow = NULL;

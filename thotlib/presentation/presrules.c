@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1666,14 +1666,12 @@ PtrDocument         pDoc;
 
 
    if (!AssocView (pAb->AbElement))
-      /* vue de l'arbre principal */
-      pDoc->DocViewFreeVolume[pAb->AbDocView - 1] -= pAb->AbVolume;
+     /* vue de l'arbre principal */
+     pDoc->DocViewFreeVolume[pAb->AbDocView - 1] -= pAb->AbVolume;
    else
-      /* vue d'elements associes */
-      pDoc->DocAssocFreeVolume[pAb->AbElement->ElAssocNum - 1] -= pAb->AbVolume;
+     /* vue d'elements associes */
+     pDoc->DocAssocFreeVolume[pAb->AbElement->ElAssocNum - 1] -= pAb->AbVolume;
 }
-
-
 
 /*----------------------------------------------------------------------
    	FillContent met dans le pave pointe par pAb le contenu de l'element
@@ -1692,150 +1690,155 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   int                 lg, i;
-   PtrTextBuffer       pBu1;
-   PtrReference        pPR1;
-   PtrReferredDescr    pDe1;
-
-   if (pEl->ElHolophrast)
-     {
-	pAb->AbLeafType = LtText;
-	GetConstantBuffer (pAb);
-	pBu1 = pAb->AbText;
-	CopyStringToText (TEXT("<"), pBu1, &lg);
-	CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-			  pBu1, &i);
-	lg += i;
-	CopyStringToText (TEXT(">"), pBu1, &i);
-	lg += i;
-	pAb->AbVolume = lg;
-	pAb->AbCanBeModified = FALSE;
-	pAb->AbSensitive = TRUE;
-	/* met a jour le volume libre restant dans la vue */
-	UpdateFreeVol (pAb, pDoc);
-     }
-   else if (pEl->ElTerminal)
-     {
-	pAb->AbLeafType = pEl->ElLeafType;
-	switch (pEl->ElLeafType)
-	      {
-		 case LtPicture:
-		    /* saute les paves crees par FnCreateBefore */
-		    /* while (pAb->AbText != NULL && pAb->AbNext != NULL)
-		       pAb = pAb->AbNext; */
-		    NewPictInfo (pAb, pEl->ElText->BuContent, UNKNOWN_FORMAT);
-		    pAb->AbVolume = pEl->ElTextLength;
-		    break;
-		 case LtText:
-		    /* saute les paves crees par FnCreateBefore */
-		    while (pAb->AbText != NULL && pAb->AbNext != NULL)
-		       pAb = pAb->AbNext;
-		    /* prend le contenu de l'element correspondant */
-		    pAb->AbText = pEl->ElText;
-		    pAb->AbLanguage = pEl->ElLanguage;
-		    pAb->AbVolume = pEl->ElTextLength;
-		    break;
-		 case LtPolyLine:
-		    /* prend le contenu de l'element correspondant */
-		    pAb->AbPolyLineBuffer = pEl->ElPolyLineBuffer;
-		    pAb->AbVolume = pEl->ElNPoints;
-		    pAb->AbPolyLineShape = pEl->ElPolyLineType;
-		    break;
-		 case LtSymbol:
-		 case LtGraphics:
-		    pAb->AbShape = pEl->ElGraph;
-		    if (pEl->ElLeafType == LtGraphics && pEl->ElGraph == 'C')
-		      /* rectangle with rounded corners */
+  int                 lg, i;
+  PtrTextBuffer       pBu1;
+  PtrReference        pPR1;
+  PtrReferredDescr    pDe1;
+  
+  if (pEl->ElHolophrast)
+    {
+      pAb->AbLeafType = LtText;
+      GetConstantBuffer (pAb);
+      pBu1 = pAb->AbText;
+      CopyStringToText (TEXT("<"), pBu1, &lg);
+      CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber-1].SrName,
+			pBu1, &i);
+      lg += i;
+      CopyStringToText (TEXT(">"), pBu1, &i);
+      lg += i;
+      pAb->AbVolume = lg;
+      pAb->AbCanBeModified = FALSE;
+      pAb->AbSensitive = TRUE;
+      /* met a jour le volume libre restant dans la vue */
+      UpdateFreeVol (pAb, pDoc);
+    }
+  else if (pEl->ElTerminal)
+    {
+      pAb->AbLeafType = pEl->ElLeafType;
+      switch (pEl->ElLeafType)
+	{
+	case LtPicture:
+	  /* saute les paves crees par FnCreateBefore */
+	  /* while (pAb->AbText != NULL && pAb->AbNext != NULL)
+	     pAb = pAb->AbNext; */
+	  NewPictInfo (pAb, pEl->ElText->BuContent, UNKNOWN_FORMAT);
+	  pAb->AbVolume = pEl->ElTextLength;
+	  break;
+	case LtText:
+	  /* saute les paves crees par FnCreateBefore */
+	  while (pAb->AbText != NULL && pAb->AbNext != NULL)
+	    pAb = pAb->AbNext;
+	  /* prend le contenu de l'element correspondant */
+	  pAb->AbText = pEl->ElText;
+	  pAb->AbLanguage = pEl->ElLanguage;
+	  pAb->AbVolume = pEl->ElTextLength;
+	  break;
+	case LtPolyLine:
+	  /* prend le contenu de l'element correspondant */
+	  pAb->AbPolyLineBuffer = pEl->ElPolyLineBuffer;
+	  pAb->AbVolume = pEl->ElNPoints;
+	  pAb->AbPolyLineShape = pEl->ElPolyLineType;
+	  break;
+	case LtSymbol:
+	case LtGraphics:
+	  pAb->AbShape = pEl->ElGraph;
+	  if (pEl->ElLeafType == LtGraphics && pEl->ElGraph == 'C')
+	    /* rectangle with rounded corners */
+	    {
+	      pAb-> AbRx = 0;
+	      pAb-> AbRy = 0;
+	    }
+	  pAb->AbGraphAlphabet = 'G';
+	  if (pAb->AbShape == EOS)
+	    pAb->AbVolume = 0;
+	  else
+	    pAb->AbVolume = 1;
+	  break;
+	case LtPath:
+	  /* prend le contenu de l'element correspondant */
+	  pAb->AbFirstPathElem = pEl->ElFirstPathElem;
+	  pAb->AbVolume = pEl->ElVolume;
+	  break;
+	case LtReference:
+	  pAb->AbLeafType = LtText;
+	  GetConstantBuffer (pAb);
+	  pBu1 = pAb->AbText;
+	  pBu1->BuContent[0] = '[';
+	  lg = 2;
+	  pBu1->BuContent[lg - 1] = '?';
+	  /* la reference pointe sur rien */
+	  if (pEl->ElReference != NULL)
+	    {
+	      pPR1 = pEl->ElReference;
+	      if (pPR1->RdInternalRef)
+		{
+		  if (pPR1->RdReferred != NULL)
+		    if (!pPR1->RdReferred->ReExternalRef)
+		      if (!IsASavedElement (pPR1->RdReferred->ReReferredElem))
+			/* l'element reference' n'est pas dans le */
+			/* buffer des elements coupe's */
+			pBu1->BuContent[lg - 1] = '*';
+		  lg++;
+		  pBu1->BuContent[lg - 1] = ']';
+		}
+	      else
+		{
+		  if (pPR1->RdReferred != NULL)
+		    if (pPR1->RdReferred->ReExternalRef)
+		      /* copie le nom du document reference' */
 		      {
-			pAb-> AbRx = 0;
-			pAb-> AbRy = 0;
+			i = 1;
+			pDe1 = pPR1->RdReferred;
+			while (pDe1->ReExtDocument[i - 1] != EOS)
+			  {
+			    pBu1->BuContent[lg - 1] = pDe1->ReExtDocument[i-1];
+			    lg++;
+			    i++;
+			  }
+			lg--;
 		      }
-		    pAb->AbGraphAlphabet = 'G';
-		    if (pAb->AbShape == EOS)
-		       pAb->AbVolume = 0;
-		    else
-		       pAb->AbVolume = 1;
-		    break;
-		 case LtReference:
-		    pAb->AbLeafType = LtText;
-		    GetConstantBuffer (pAb);
-		    pBu1 = pAb->AbText;
-		    pBu1->BuContent[0] = '[';
-		    lg = 2;
-		    pBu1->BuContent[lg - 1] = '?';
-		    /* la reference pointe sur rien */
-		    if (pEl->ElReference != NULL)
-		      {
-			 pPR1 = pEl->ElReference;
-			 if (pPR1->RdInternalRef)
-			   {
-			      if (pPR1->RdReferred != NULL)
-				 if (!pPR1->RdReferred->ReExternalRef)
-				    if (!IsASavedElement (pPR1->RdReferred->ReReferredElem))
-				       /* l'element reference' n'est pas dans le */
-				       /* buffer des elements coupe's */
-				       pBu1->BuContent[lg - 1] = '*';
-			      lg++;
-			      pBu1->BuContent[lg - 1] = ']';
-			   }
-			 else
-			   {
-			      if (pPR1->RdReferred != NULL)
-				 if (pPR1->RdReferred->ReExternalRef)
-				    /* copie le nom du document reference' */
-				   {
-				      i = 1;
-				      pDe1 = pPR1->RdReferred;
-				      while (pDe1->ReExtDocument[i - 1] != EOS)
-					{
-					   pBu1->BuContent[lg - 1] = pDe1->ReExtDocument[i - 1];
-					   lg++;
-					   i++;
-					}
-				      lg--;
-				   }
-			      lg++;
-			      if (!pPR1->RdInternalRef)
-				{
-				   pBu1->BuContent[0] = '<';
-				   pBu1->BuContent[lg - 1] = '>';
-				}
-			      else
-				 pBu1->BuContent[lg - 1] = ']';
-			   }
-		      }
-		    pBu1->BuContent[lg] = EOS;
-		    /* fin de la chaine de car. */
-		    pBu1->BuLength = lg;
-		    pAb->AbVolume = lg;
-		    pAb->AbCanBeModified = FALSE;
-		    break;
-		 case LtPairedElem:
-		    pAb->AbLeafType = LtText;
-		    GetConstantBuffer (pAb);
-		    pBu1 = pAb->AbText;
-		    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair)
-		      {
-			 pBu1->BuContent[0] = '<';
-			 pBu1->BuContent[1] = '<';
-		      }
-		    else
-		      {
-			 pBu1->BuContent[0] = '>';
-			 pBu1->BuContent[1] = '>';
-		      }
-		    pBu1->BuContent[2] = EOS;
-		    /* fin de la chaine de car. */
-		    pBu1->BuLength = 2;
-		    pAb->AbVolume = 2;
-		    pAb->AbCanBeModified = FALSE;
-		    break;
-		 default:
-		    break;
-	      }
-	/* met a jour le volume libre restant dans la vue */
-	UpdateFreeVol (pAb, pDoc);
-     }
+		  lg++;
+		  if (!pPR1->RdInternalRef)
+		    {
+		      pBu1->BuContent[0] = '<';
+		      pBu1->BuContent[lg - 1] = '>';
+		    }
+		  else
+		    pBu1->BuContent[lg - 1] = ']';
+		}
+	    }
+	  pBu1->BuContent[lg] = EOS;
+	  /* fin de la chaine de car. */
+	  pBu1->BuLength = lg;
+	  pAb->AbVolume = lg;
+	  pAb->AbCanBeModified = FALSE;
+	  break;
+	case LtPairedElem:
+	  pAb->AbLeafType = LtText;
+	  GetConstantBuffer (pAb);
+	  pBu1 = pAb->AbText;
+	  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair)
+	    {
+	      pBu1->BuContent[0] = '<';
+	      pBu1->BuContent[1] = '<';
+	    }
+	  else
+	    {
+	      pBu1->BuContent[0] = '>';
+	      pBu1->BuContent[1] = '>';
+	    }
+	  pBu1->BuContent[2] = EOS;
+	  /* fin de la chaine de car. */
+	  pBu1->BuLength = 2;
+	  pAb->AbVolume = 2;
+	  pAb->AbCanBeModified = FALSE;
+	  break;
+	default:
+	  break;
+	}
+      /* met a jour le volume libre restant dans la vue */
+      UpdateFreeVol (pAb, pDoc);
+    }
 }
 
 

@@ -1,21 +1,12 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /* 
- * locate what is designated in Concret Image in unstructured mode.
+ * locate what is designated in Concrete Image in unstructured mode.
  *
  * Author: I. Vatton (INRIA)
  *
@@ -90,86 +81,91 @@ int                *pointselect;
    pFrame = &ViewFrameTable[frame - 1];
 
    if (pFrame->FrAbstractBox != NULL)
-      pBox = pFrame->FrAbstractBox->AbBox;
+     pBox = pFrame->FrAbstractBox->AbBox;
 
    if (pBox != NULL)
      {
-	pBox = pBox->BxNext;
-	while (pBox != NULL)
-	  {
-	     pAb = pBox->BxAbstractBox;
-	     pointIndex = 0;
-	     if (pAb->AbVisibility >= pFrame->FrVisibility)
-	       {
-		  if (pAb->AbPresentationBox || pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
-		    {
-		       pCurrentBox = GetEnclosingClickedBox (pAb, x, x, y, frame, &pointIndex);
-		       if (pCurrentBox == NULL)
-			  d = dist + 1;
-		       else
-			  d = 0;
-		    }
-		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
-		     /* glitch pour le symbole racine */
-		     d = GetShapeDistance (x, y, pBox, 1);
-		  else if (pAb->AbLeafType == LtText
-			   || pAb->AbLeafType == LtSymbol
-			   || pAb->AbLeafType == LtPicture
-		     /* ou une boite composee vide */
-		   || (pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
-		    {
-		       if (pAb->AbLeafType == LtPicture)
-			 {
-			    /* detecte si on selectionne la droite de l'image */
-			    d = pBox->BxXOrg + (pBox->BxWidth / 2);
-			    if (x > d)
-			       pointIndex = 1;
-			    d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
-					     pBox->BxWidth, pBox->BxHeight);
-			 }
-		       else
-			  d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
-					      pBox->BxWidth, pBox->BxHeight);
-		       /* limit the distance to MAX_DISTANCE */
-		       if (d > dist && dist == MAX_DISTANCE)
-			 dist = d;
-		    }
-		  else
+       pBox = pBox->BxNext;
+       while (pBox != NULL)
+	 {
+	   pAb = pBox->BxAbstractBox;
+	   pointIndex = 0;
+	   if (pAb->AbVisibility >= pFrame->FrVisibility)
+	     {
+	       if (pAb->AbPresentationBox ||
+		   pAb->AbLeafType == LtGraphics ||
+		   pAb->AbLeafType == LtPolyLine ||
+		   pAb->AbLeafType == LtPath)
+		 {
+		   pCurrentBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
+							 &pointIndex);
+		   if (pCurrentBox == NULL)
 		     d = dist + 1;
-
-		  /* Prend l'element le plus proche */
-		  if (d < dist)
-		    {
+		   else
+		     d = 0;
+		 }
+	       else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
+		 /* glitch pour le symbole racine */
+		 d = GetShapeDistance (x, y, pBox, 1);
+	       else if (pAb->AbLeafType == LtText ||
+			pAb->AbLeafType == LtSymbol ||
+			pAb->AbLeafType == LtPicture ||
+			/* ou une boite composee vide */
+			(pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
+		 {
+		   if (pAb->AbLeafType == LtPicture)
+		     {
+		       /* detecte si on selectionne la droite de l'image */
+		       d = pBox->BxXOrg + (pBox->BxWidth / 2);
+		       if (x > d)
+			 pointIndex = 1;
+		       d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
+					   pBox->BxWidth, pBox->BxHeight);
+		     }
+		   else
+		     d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
+					 pBox->BxWidth, pBox->BxHeight);
+		   /* limit the distance to MAX_DISTANCE */
+		   if (d > dist && dist == MAX_DISTANCE)
+		     dist = d;
+		 }
+	       else
+		 d = dist + 1;
+	       
+	       /* Prend l'element le plus proche */
+	       if (d < dist)
+		 {
+		   dist = d;
+		   pSelBox = pBox;
+		   /* le point selectionne */
+		   *pointselect = pointIndex;
+		 }
+	       else if (d == dist)
+		 {
+		   /* Si c'est la premiere boite trouvee */
+		   if (pSelBox == NULL)
+		     {
 		       dist = d;
 		       pSelBox = pBox;
 		       /* le point selectionne */
 		       *pointselect = pointIndex;
-		    }
-		  else if (d == dist)
-		    {
-		       /* Si c'est la premiere boite trouvee */
-		       if (pSelBox == NULL)
-			 {
-			    dist = d;
-			    pSelBox = pBox;
-			    /* le point selectionne */
-			    *pointselect = pointIndex;
-			 }
-		       /* Si la boite est sur un plan au dessus de la precedente */
-		       else if (pSelBox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
-			 {
-			    dist = d;
-			    pSelBox = pBox;
-			    /* le point selectionne */
-			    *pointselect = pointIndex;
-			 }
-		    }
-	       }
-	     pBox = pBox->BxNext;
-	  }
-	/* return the root box if there is no box selected */
-	if (pSelBox == NULL)
-	  pSelBox = pBox = pFrame->FrAbstractBox->AbBox;
+		     }
+		   /* Si la boite est sur un plan au dessus de la precedente */
+		   else if (pSelBox->BxAbstractBox->AbDepth >
+			                         pBox->BxAbstractBox->AbDepth)
+		     {
+		       dist = d;
+		       pSelBox = pBox;
+		       /* le point selectionne */
+		       *pointselect = pointIndex;
+		     }
+		 }
+	     }
+	   pBox = pBox->BxNext;
+	 }
+       /* return the root box if there is no box selected */
+       if (pSelBox == NULL)
+	 pSelBox = pBox = pFrame->FrAbstractBox->AbBox;
      }
    *result = pSelBox;
 }

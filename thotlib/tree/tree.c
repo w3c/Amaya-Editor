@@ -708,6 +708,10 @@ int                 Kind;
 			      if (pEl->ElNPoints == 0)
 				 ret = TRUE;
 			      break;
+			   case LtPath:
+			      if (pEl->ElFirstPathElem == NULL)
+				 ret = TRUE;
+			      break;
 			   case LtSymbol:
 			   case LtGraphics:
 			      if (pEl->ElGraph == EOS)
@@ -2377,177 +2381,185 @@ ThotBool            del;
 #endif /* __STDC__ */
 
 {
-   ThotBool            replace;
-   PtrTextBuffer       pTB;
-   PtrAttribute        pAttr;
-   PtrSSchema          pSS;
-   int                 T;
-   PtrElement          pE;
-   SRule              *pSRule;
-
-   /* the new element will replace the CHOICE element */
-   replace = TRUE;
-   if (pEl->ElParent != NULL)
-      /* ...except if the choice is a composite element */
-      if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
-	  pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
-	 replace = FALSE;
-   /* except if the choice has exceptions */
-   pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
-   if (pSRule->SrNInclusions > 0 || pSRule->SrNExclusions > 0)
+  ThotBool            replace;
+  PtrAttribute        pAttr;
+  PtrSSchema          pSS;
+  int                 T;
+  PtrElement          pE;
+  SRule              *pSRule;
+  
+  /* the new element will replace the CHOICE element */
+  replace = TRUE;
+  if (pEl->ElParent != NULL)
+    /* ...except if the choice is a composite element */
+    if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
+	pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
       replace = FALSE;
-   /* except if it's the root of the structure scheme */
-   if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
-      replace = FALSE;
-   /* except if it's the root of an associated element */
-   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
-      replace = FALSE;
-   if (!replace &&
-       pEl->ElTypeNumber == (*pNew)->ElTypeNumber &&
-       !ustrcmp (pEl->ElStructSchema->SsName, (*pNew)->ElStructSchema->SsName))
-     /* the two elements are of the same type; one will replace the other */
-     replace = TRUE;
-   if (del)
-      replace = TRUE;
-   if (!replace)
-      /* adds the new element as the child of the chosen element */
-      InsertFirstChild (pEl, *pNew);
-   else
-      /* replaces element CsChoice with the new element */
-     {
-	/* exhanges the types of the two elements */
-	pSS = pEl->ElStructSchema;
-	T = pEl->ElTypeNumber;
-	pEl->ElStructSchema = (*pNew)->ElStructSchema;
-	pEl->ElTypeNumber = (*pNew)->ElTypeNumber;
-	(*pNew)->ElStructSchema = pSS;
-	(*pNew)->ElTypeNumber = T;
-	if ((*pNew)->ElReferredDescr != NULL)
-	   /* suppreses all references to the CHOICE element and to the */
-	   /* descriptor of the reference element  of the CHOIX element */
-	  {
-	     DeleteAllReferences (pEl);
-	     DeleteReferredElDescr (pEl->ElReferredDescr);
-	     /* gets the description of the referenced element of the new element */
-	     pEl->ElReferredDescr = (*pNew)->ElReferredDescr;
-	     (*pNew)->ElReferredDescr = NULL;
-	     if (!pEl->ElReferredDescr->ReExternalRef)
-		if (pEl->ElReferredDescr->ReReferredElem == *pNew)
-		   pEl->ElReferredDescr->ReReferredElem = pEl;
-	  }
-	/* adds the attributes of pNew to those of pEl */
-	if (pEl->ElFirstAttr == NULL)
-	   /* pEl does not have any attributes */
-	   pEl->ElFirstAttr = (*pNew)->ElFirstAttr;
-	else
-	   /* searches for the last attribute of pEl */
-	  {
-	     pAttr = pEl->ElFirstAttr;
-	     while (pAttr->AeNext != NULL)
-		pAttr = pAttr->AeNext;
-	     /* links the attributs of pNew after those of pEl */
-	     pAttr->AeNext = (*pNew)->ElFirstAttr;
-	  }
-	/* pNew does not have any attributes */
-	(*pNew)->ElFirstAttr = NULL;
-	if ((*pNew)->ElSource != NULL)
-	  {
-	     pEl->ElSource = (*pNew)->ElSource;
-	     (*pNew)->ElSource = NULL;
-	     if (pEl->ElSource != NULL)
-		pEl->ElSource->RdElement = pEl;
-	  }
-	pEl->ElTerminal = (*pNew)->ElTerminal;
-	if (pEl->ElTerminal)
-	  {
-	     pEl->ElLeafType = (*pNew)->ElLeafType;
-	     switch (pEl->ElLeafType)
-		   {
-		      case LtPicture:
-			 pEl->ElPictInfo = (*pNew)->ElPictInfo;
-		      case LtText:
-			 pEl->ElText = (*pNew)->ElText;
-			 pEl->ElTextLength = (*pNew)->ElTextLength;
-			 if (pEl->ElLeafType == LtText)
-			   {
-			      pEl->ElVolume = pEl->ElTextLength;
-			      pEl->ElLanguage = (*pNew)->ElLanguage;
-			   }
-			 /* adds the volume of the element to that of its ancestors */
-
-			 if (pEl->ElVolume != 0)
-			   {
-			      pE = pEl->ElParent;
-			      while (pE != NULL)
-				{
-				   pE->ElVolume = pE->ElVolume + pEl->ElVolume;
-				   pE = pE->ElParent;
-				}
-			   }
-			 LeavesInheritLanguage (pEl);
-			 /* adds the text buffers of pNew to pEl */
-			 pTB = pEl->ElText;
-			 while (pTB != NULL)
-			    pTB = pTB->BuNext;
-			 (*pNew)->ElText = NULL;
-			 (*pNew)->ElTextLength = 0;
-			 break;
-		      case LtPolyLine:
-			 pEl->ElPolyLineBuffer = (*pNew)->ElPolyLineBuffer;
-			 pEl->ElNPoints = (*pNew)->ElNPoints;
-			 pEl->ElVolume = pEl->ElNPoints;
-			 /* adds the volume of the element to that of its ancestors */
-			 if (pEl->ElVolume != 0)
-			   {
-			      pE = pEl->ElParent;
-			      while (pE != NULL)
-				{
-				   pE->ElVolume = pE->ElVolume + pEl->ElVolume;
-				   pE = pE->ElParent;
-				}
-			   }
-			 /* adds the text buffers of pNew to pEl */
-			 pTB = pEl->ElPolyLineBuffer;
-			 while (pTB != NULL)
-			    pTB = pTB->BuNext;
-			 (*pNew)->ElPolyLineBuffer = NULL;
-			 (*pNew)->ElNPoints = 0;
-			 break;
-		      case LtSymbol:
-		      case LtGraphics:
-		      case LtCompound:
-			 pEl->ElGraph = (*pNew)->ElGraph;
-			 pEl->ElWideChar = (*pNew)->ElWideChar;
-			 break;
-		      case LtPageColBreak:
-			 pEl->ElPageModified = (*pNew)->ElPageModified;
-			 pEl->ElPageType = (*pNew)->ElPageType;
-			 pEl->ElPageNumber = (*pNew)->ElPageNumber;
-			 pEl->ElViewPSchema = (*pNew)->ElViewPSchema;
-			 break;
-		      case LtReference:
-			 pEl->ElReference = (*pNew)->ElReference;
-			 pEl->ElReference->RdElement = pEl;
-			 (*pNew)->ElReference = NULL;
-			 break;
-		      case LtPairedElem:
-			 pEl->ElPairIdent = (*pNew)->ElPairIdent;
-			 pEl->ElOtherPairedEl = (*pNew)->ElOtherPairedEl;
-			 if (pEl->ElOtherPairedEl != NULL)
-			    pEl->ElOtherPairedEl->ElOtherPairedEl = pEl;
-			 break;
-		   }
-
-	  }
-	else if ((*pNew)->ElFirstChild != NULL)
-	  {
-	     InsertFirstChild (pEl, (*pNew)->ElFirstChild);
-	     (*pNew)->ElFirstChild = NULL;
-	  }
-	if (!del)
-	   DeleteElement (pNew, pDoc);
-	*pNew = pEl;
-     }
+  /* except if the choice has exceptions */
+  pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+  if (pSRule->SrNInclusions > 0 || pSRule->SrNExclusions > 0)
+    replace = FALSE;
+  /* except if it's the root of the structure scheme */
+  if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
+    replace = FALSE;
+  /* except if it's the root of an associated element */
+  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
+    replace = FALSE;
+  if (!replace &&
+      pEl->ElTypeNumber == (*pNew)->ElTypeNumber &&
+      !ustrcmp (pEl->ElStructSchema->SsName, (*pNew)->ElStructSchema->SsName))
+    /* the two elements are of the same type; one will replace the other */
+    replace = TRUE;
+  if (del)
+    replace = TRUE;
+  if (!replace)
+    /* adds the new element as the child of the chosen element */
+    InsertFirstChild (pEl, *pNew);
+  else
+    /* replaces element CsChoice with the new element */
+    {
+      /* exchanges the types of the two elements */
+      pSS = pEl->ElStructSchema;
+      T = pEl->ElTypeNumber;
+      pEl->ElStructSchema = (*pNew)->ElStructSchema;
+      pEl->ElTypeNumber = (*pNew)->ElTypeNumber;
+      (*pNew)->ElStructSchema = pSS;
+      (*pNew)->ElTypeNumber = T;
+      if ((*pNew)->ElReferredDescr != NULL)
+	/* suppreses all references to the CHOICE element and to the */
+	/* descriptor of the reference element  of the CHOIX element */
+	{
+	  DeleteAllReferences (pEl);
+	  DeleteReferredElDescr (pEl->ElReferredDescr);
+	  /* gets the description of the referenced element of the new
+	     element */
+	  pEl->ElReferredDescr = (*pNew)->ElReferredDescr;
+	  (*pNew)->ElReferredDescr = NULL;
+	  if (!pEl->ElReferredDescr->ReExternalRef)
+	    if (pEl->ElReferredDescr->ReReferredElem == *pNew)
+	      pEl->ElReferredDescr->ReReferredElem = pEl;
+	}
+      /* adds the attributes of pNew to those of pEl */
+      if (pEl->ElFirstAttr == NULL)
+	/* pEl does not have any attributes */
+	pEl->ElFirstAttr = (*pNew)->ElFirstAttr;
+      else
+	/* searches for the last attribute of pEl */
+	{
+	  pAttr = pEl->ElFirstAttr;
+	  while (pAttr->AeNext != NULL)
+	    pAttr = pAttr->AeNext;
+	  /* links the attributs of pNew after those of pEl */
+	  pAttr->AeNext = (*pNew)->ElFirstAttr;
+	}
+      /* pNew does not have any attributes */
+      (*pNew)->ElFirstAttr = NULL;
+      if ((*pNew)->ElSource != NULL)
+	{
+	  pEl->ElSource = (*pNew)->ElSource;
+	  (*pNew)->ElSource = NULL;
+	  if (pEl->ElSource != NULL)
+	    pEl->ElSource->RdElement = pEl;
+	}
+      pEl->ElTerminal = (*pNew)->ElTerminal;
+      if (pEl->ElTerminal)
+	{
+	  pEl->ElLeafType = (*pNew)->ElLeafType;
+	  switch (pEl->ElLeafType)
+	    {
+	    case LtPicture:
+	      pEl->ElPictInfo = (*pNew)->ElPictInfo;
+	    case LtText:
+	      pEl->ElText = (*pNew)->ElText;
+	      pEl->ElTextLength = (*pNew)->ElTextLength;
+	      if (pEl->ElLeafType == LtText)
+		{
+		  pEl->ElVolume = pEl->ElTextLength;
+		  pEl->ElLanguage = (*pNew)->ElLanguage;
+		}
+	      /* adds the volume of the element to that of its ancestors */
+	      
+	      if (pEl->ElVolume != 0)
+		{
+		  pE = pEl->ElParent;
+		  while (pE != NULL)
+		    {
+		      pE->ElVolume = pE->ElVolume + pEl->ElVolume;
+		      pE = pE->ElParent;
+		    }
+		}
+	      LeavesInheritLanguage (pEl);
+	      (*pNew)->ElText = NULL;
+	      (*pNew)->ElTextLength = 0;
+	      break;
+	    case LtPolyLine:
+	      pEl->ElPolyLineBuffer = (*pNew)->ElPolyLineBuffer;
+	      pEl->ElNPoints = (*pNew)->ElNPoints;
+	      pEl->ElVolume = pEl->ElNPoints;
+	      /* adds the volume of the element to that of its ancestors */
+	      if (pEl->ElVolume != 0)
+		{
+		  pE = pEl->ElParent;
+		  while (pE != NULL)
+		    {
+		      pE->ElVolume = pE->ElVolume + pEl->ElVolume;
+		      pE = pE->ElParent;
+		    }
+		}
+	      (*pNew)->ElPolyLineBuffer = NULL;
+	      (*pNew)->ElNPoints = 0;
+	      break;
+	    case LtPath:
+	      pEl->ElFirstPathElem = (*pNew)->ElFirstPathElem;
+	      pEl->ElVolume = (*pNew)->ElVolume;
+	      /* adds the volume of the element to that of its ancestors */
+	      if (pEl->ElVolume != 0)
+		{
+		  pE = pEl->ElParent;
+		  while (pE != NULL)
+		    {
+		      pE->ElVolume = pE->ElVolume + pEl->ElVolume;
+		      pE = pE->ElParent;
+		    }
+		}
+	      (*pNew)->ElFirstPathElem = NULL;
+	      (*pNew)->ElVolume = 0;
+	      break;
+	    case LtSymbol:
+	    case LtGraphics:
+	    case LtCompound:
+	      pEl->ElGraph = (*pNew)->ElGraph;
+	      pEl->ElWideChar = (*pNew)->ElWideChar;
+	      break;
+	    case LtPageColBreak:
+	      pEl->ElPageModified = (*pNew)->ElPageModified;
+	      pEl->ElPageType = (*pNew)->ElPageType;
+	      pEl->ElPageNumber = (*pNew)->ElPageNumber;
+	      pEl->ElViewPSchema = (*pNew)->ElViewPSchema;
+	      break;
+	    case LtReference:
+	      pEl->ElReference = (*pNew)->ElReference;
+	      pEl->ElReference->RdElement = pEl;
+	      (*pNew)->ElReference = NULL;
+	      break;
+	    case LtPairedElem:
+	      pEl->ElPairIdent = (*pNew)->ElPairIdent;
+	      pEl->ElOtherPairedEl = (*pNew)->ElOtherPairedEl;
+	      if (pEl->ElOtherPairedEl != NULL)
+		pEl->ElOtherPairedEl->ElOtherPairedEl = pEl;
+	      break;
+	    }
+	  
+	}
+      else if ((*pNew)->ElFirstChild != NULL)
+	{
+	  InsertFirstChild (pEl, (*pNew)->ElFirstChild);
+	  (*pNew)->ElFirstChild = NULL;
+	}
+      if (!del)
+	DeleteElement (pNew, pDoc);
+      *pNew = pEl;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3254,6 +3266,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pChild, pNextChild;
    PtrTextBuffer       pBuf, pNextBuf;
+   PtrPathElement      pPa, pNextPa;
    int                 c, n;
    PtrAttribute        pAttr, pNextAttr;
    PtrPRule            pRule, pNextRule;
@@ -3309,6 +3322,18 @@ PtrDocument         pDoc;
 		 }
 	       pEl1->ElPolyLineBuffer = NULL;
 	       pEl1->ElNPoints = 0;
+	     }
+	   if (pEl1->ElLeafType == LtPolyLine)
+	     /* frees all the path elements associated to the element */
+	     {
+	       pPa = pEl1->ElFirstPathElem;
+	       while (pPa)
+		 {
+		   pNextPa = pPa->PaNext;
+		   FreePathElement (pPa);
+		   pPa = pNextPa;
+		 }
+	       pEl1->ElFirstPathElem = NULL;
 	     }
 	   if (pEl1->ElLeafType == LtReference)
 	     /* frees and unlinks the reference */
@@ -3440,6 +3465,42 @@ PtrDocument         pDoc;
      }
 }
 
+/*----------------------------------------------------------------------
+   CopyPath
+   create a copy of the string of path elements pointed to by firstPathEl
+   and return a pointer to the first element of the copy.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrPathElement  CopyPath (PtrPathElement firstPathEl)
+#else  /* __STDC__ */
+static PtrPathElement  CopyPath (firstPathEl)
+PtrPathElement firstPathEl;
+#endif /* __STDC__ */
+{
+   PtrPathElement    pSourcePa, pPrevPa, pPa, first;
+
+   pSourcePa = firstPathEl;
+   first = NULL;
+   while (pSourcePa)
+     {
+       GetPathElement (&pPa);
+       *pPa = *pSourcePa;
+       if (!first)
+	 {
+	   first = pPa;
+	   pPa->PaPrevious = NULL;
+	 }
+       else
+	 {
+	   pPrevPa->PaNext = pPa;
+	   pPa->PaPrevious = pPrevPa;
+         }
+       pPa->PaNext = NULL;
+       pPrevPa = pPa;
+       pSourcePa = pSourcePa->PaNext;
+     }
+   return first;
+}
 
 /*----------------------------------------------------------------------
    CopyTree
@@ -3672,6 +3733,11 @@ ThotBool            shareRef;
 		     pEl->ElPolyLineType = pSource->ElPolyLineType;
 		     pEl->ElVolume = pEl->ElNPoints;
 		     break;
+		  case LtPath:
+		     /* copies the path elements */
+		     pEl->ElFirstPathElem = CopyPath(pSource->ElFirstPathElem);
+		     pEl->ElVolume = pSource->ElVolume;
+		     break;
 		  case LtSymbol:
 		  case LtGraphics:
 		     pEl->ElGraph = pSource->ElGraph;
@@ -3827,6 +3893,7 @@ PtrDocument         pDoc;
 {
    PtrReference        pRef;
    PtrElement          pSource, pS2, pC1, pC2, pE;
+   PtrPathElement      pPa, pNextPa;
    DocumentIdentifier  docIdent;
    PtrDocument         pDocSource;
    ThotBool            done;
@@ -3834,152 +3901,168 @@ PtrDocument         pDoc;
    /* copy's not done yet */
    done = FALSE;
    if (pEl->ElTerminal)
-      switch (pEl->ElLeafType)
-	    {
-	       case LtPicture:
-	       case LtText:
-		  done = pEl->ElTextLength > 0;
-		  break;
-	       case LtPolyLine:
-		  done = pEl->ElNPoints > 0;
-	       case LtSymbol:
-	       case LtGraphics:
-		  done = pEl->ElGraph != EOS;
-		  break;
-	       case LtPageColBreak:
-	       case LtReference:
-		  break;
-	       default:
-		  break;
-	    }
+     switch (pEl->ElLeafType)
+       {
+       case LtPicture:
+       case LtText:
+	 done = pEl->ElTextLength > 0;
+	 break;
+       case LtPolyLine:
+	 done = pEl->ElNPoints > 0;
+       case LtSymbol:
+       case LtGraphics:
+	 done = pEl->ElGraph != EOS;
+	 break;
+       case LtPath:
+	 done = pEl->ElFirstPathElem != NULL;
+       case LtPageColBreak:
+       case LtReference:
+	 break;
+       default:
+	 break;
+       }
    else
-      done = pEl->ElFirstChild != NULL;
+     done = pEl->ElFirstChild != NULL;
    if (!done)
-      /* if we still haven't done the copy, let's do it */
+     /* if we still haven't done the copy, let's do it */
      {
        /* reference to the source element */
-	pRef = pEl->ElSource;
-	/* searches the element which must be copied: pSource */
-	pSource = ReferredElement (pRef, &docIdent, &pDocSource);
-	/* pSource points to the element to be copied, so let's do it */
-	if (pSource != NULL)
-	  {
-	     if (DocIdentIsNull (docIdent))
-		/* pSource is inside the same document */
-		pDocSource = pDoc;
-	     if (pDocSource != NULL)
-		/* the document containing pSource is loaded, so let's
-		   copy it's content */
-	       {
-		  /* we copy the attributes */
-		  CopyAttributes (pSource, pEl, pDocSource, pDoc, TRUE);
-		  /* we copy the specific presentation rules */
-		  CopyPresRules (pSource, pEl);
-		  if (pEl->ElTerminal)
-		     switch (pSource->ElLeafType)
+       pRef = pEl->ElSource;
+       /* searches the element which must be copied: pSource */
+       pSource = ReferredElement (pRef, &docIdent, &pDocSource);
+       /* pSource points to the element to be copied, so let's do it */
+       if (pSource != NULL)
+	 {
+	   if (DocIdentIsNull (docIdent))
+	     /* pSource is inside the same document */
+	     pDocSource = pDoc;
+	   if (pDocSource != NULL)
+	     /* the document containing pSource is loaded, so let's
+		copy it's content */
+	     {
+	       /* we copy the attributes */
+	       CopyAttributes (pSource, pEl, pDocSource, pDoc, TRUE);
+	       /* we copy the specific presentation rules */
+	       CopyPresRules (pSource, pEl);
+	       if (pEl->ElTerminal)
+		 switch (pSource->ElLeafType)
+		   {
+		   case LtText:
+		   case LtPicture:
+		   case LtPolyLine:
+		     if (pSource->ElLeafType == LtText)
+		       pEl->ElLanguage = pSource->ElLanguage;
+		     /* we copy the content of a text or of an image */
+		     if (pSource->ElLeafType == LtPolyLine)
+		       {
+			 if (pEl->ElLeafType == LtPolyLine &&
+			     pEl->ElPolyLineBuffer != NULL)
 			   {
-			      case LtText:
-			      case LtPicture:
-			      case LtPolyLine:
-				 if (pSource->ElLeafType == LtText)
-				    pEl->ElLanguage = pSource->ElLanguage;
-				 /* we copy the content of a text or of an image */
-				 if (pSource->ElLeafType == LtPolyLine)
-				   {
-				      if (pEl->ElLeafType == LtPolyLine &&
-					  pEl->ElPolyLineBuffer != NULL)
-					{
-					   ClearText (pEl->ElPolyLineBuffer);
-					   FreeTextBuffer (pEl->ElPolyLineBuffer);
-					}
-				      pEl->ElLeafType = LtPolyLine;
-				      pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
-				      pEl->ElNPoints = pSource->ElNPoints;
-				      pEl->ElPolyLineType = pSource->ElPolyLineType;
-				      pEl->ElVolume = pEl->ElNPoints;
-				   }
-				 else
-				   {
-				      pEl->ElText = CopyText (pSource->ElText, pEl);
-				      pEl->ElTextLength = pSource->ElTextLength;
-				      pEl->ElVolume = pEl->ElTextLength;
-				   }
-				 /* adds the element's volume to that of its ancestors */
-				 if (pEl->ElVolume != 0)
-				   {
-				      pE = pEl->ElParent;
-				      while (pE != NULL)
-					{
-					   pE->ElVolume = pE->ElVolume + pEl->ElVolume;
-					   pE = pE->ElParent;
-					}
-				   }
-
-				 break;
-			      case LtSymbol:
-			      case LtGraphics:
-				 pEl->ElGraph = pSource->ElGraph;
-				 pEl->ElWideChar = pSource->ElWideChar;
-				 break;
-			      case LtPageColBreak:
-				 break;
-			      case LtReference:
-				 if (pSource->ElReference != NULL)
-				   {
-				      if (pEl->ElReference == NULL)
-					 GetReference (&pEl->ElReference);
-				      CopyReference (pEl->ElReference, pSource->ElReference, &pEl);
-				   }
-				 break;
-			      default:
-				 break;
+			     ClearText (pEl->ElPolyLineBuffer);
+			     FreeTextBuffer (pEl->ElPolyLineBuffer);
 			   }
-		  else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice &&
-			   (pEl->ElTypeNumber != pSource->ElTypeNumber ||
-			    ustrcmp (pEl->ElStructSchema->SsName,
-				     pSource->ElStructSchema->SsName)))
-		    {
-		       pC1 = CopyTree (pSource, pDocSource, pEl->ElAssocNum, pEl
+			 pEl->ElLeafType = LtPolyLine;
+			 pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
+			 pEl->ElNPoints = pSource->ElNPoints;
+			 pEl->ElPolyLineType = pSource->ElPolyLineType;
+			 pEl->ElVolume = pEl->ElNPoints;
+		       }
+		     else
+		       {
+			 pEl->ElText = CopyText (pSource->ElText, pEl);
+			 pEl->ElTextLength = pSource->ElTextLength;
+			 pEl->ElVolume = pEl->ElTextLength;
+		       }
+		     /* adds the element's volume to that of its ancestors */
+		     if (pEl->ElVolume != 0)
+		       {
+			 pE = pEl->ElParent;
+			 while (pE != NULL)
+			   {
+			     pE->ElVolume = pE->ElVolume + pEl->ElVolume;
+			     pE = pE->ElParent;
+			   }
+		       }
+		     break;
+		   case LtPath:
+		     pPa = pEl->ElFirstPathElem;
+		     while (pPa)
+		       {
+			 pNextPa = pPa->PaNext;
+			 FreePathElement (pPa);
+			 pPa = pNextPa;
+		       }
+		     pEl->ElLeafType = LtPath;
+		     pEl->ElFirstPathElem = CopyPath(pSource->ElFirstPathElem);
+		     pEl->ElVolume = pSource->ElVolume;
+		     break;
+		   case LtSymbol:
+		   case LtGraphics:
+		     pEl->ElGraph = pSource->ElGraph;
+		     pEl->ElWideChar = pSource->ElWideChar;
+		     break;
+		   case LtPageColBreak:
+		     break;
+		   case LtReference:
+		     if (pSource->ElReference != NULL)
+		       {
+			 if (pEl->ElReference == NULL)
+			   GetReference (&pEl->ElReference);
+			 CopyReference (pEl->ElReference, pSource->ElReference,
+					&pEl);
+		       }
+		     break;
+		   default:
+		     break;
+		   }
+	       else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+			                            SrConstruct == CsChoice &&
+			(pEl->ElTypeNumber != pSource->ElTypeNumber ||
+			 ustrcmp (pEl->ElStructSchema->SsName,
+				  pSource->ElStructSchema->SsName)))
+		 {
+		   pC1 = CopyTree (pSource, pDocSource, pEl->ElAssocNum, pEl
 				   ->ElStructSchema, pDoc, pEl, TRUE, TRUE);
-		       if (pC1 != NULL)
+		   if (pC1 != NULL)
+		     {
+		       pC1->ElReferredDescr = NULL;
+		       InsertElemInChoice (pEl, &pC1, pDoc, FALSE);
+		     }
+		 }
+	       else if (pSource->ElFirstChild == NULL)
+		 pEl->ElFirstChild = NULL;
+	       else
+		 {
+		   pS2 = pSource->ElFirstChild;
+		   pC1 = NULL;
+		   do
+		     {
+		       pC2 = CopyTree (pS2, pDocSource, pEl->ElAssocNum,
+				       pEl->ElStructSchema, pDoc, pEl, TRUE,
+				       TRUE);
+		       if (pC2 != NULL)
 			 {
-			    pC1->ElReferredDescr = NULL;
-			    InsertElemInChoice (pEl, &pC1, pDoc, FALSE);
+			   if (pC1 == NULL)
+			     InsertFirstChild (pEl, pC2);
+			   else
+			     InsertElementAfter (pC1, pC2);
+			   pC1 = pC2;
 			 }
-		    }
-		  else if (pSource->ElFirstChild == NULL)
-		     pEl->ElFirstChild = NULL;
-		  else
-		    {
-		       pS2 = pSource->ElFirstChild;
-		       pC1 = NULL;
-		       do
-			 {
-			    pC2 = CopyTree (pS2, pDocSource, pEl->ElAssocNum,
-				pEl->ElStructSchema, pDoc, pEl, TRUE, TRUE);
-			    if (pC2 != NULL)
-			      {
-				 if (pC1 == NULL)
-				    InsertFirstChild (pEl, pC2);
-				 else
-				    InsertElementAfter (pC1, pC2);
-				 pC1 = pC2;
-			      }
-			    pS2 = pS2->ElNext;
-			 }
-		       while (pS2 != NULL);
-		    }
-	       }
-	  }
-	/* updates the internal references to the copied part */
-	TransferReferences (pEl, pDoc, pEl, pDocSource);
-
-	/* assigns new labels to the elements of the copy */
-	ChangeLabels (pEl, pDoc);
-
-	/* protects the included subtree against any user
-	   modification */
-	ProtectElement (pEl);
+		       pS2 = pS2->ElNext;
+		     }
+		   while (pS2 != NULL);
+		 }
+	     }
+	 }
+       /* updates the internal references to the copied part */
+       TransferReferences (pEl, pDoc, pEl, pDocSource);
+       
+       /* assigns new labels to the elements of the copy */
+       ChangeLabels (pEl, pDoc);
+       
+       /* protects the included subtree against any user
+	  modification */
+       ProtectElement (pEl);
      }
 }
 

@@ -1216,38 +1216,28 @@ Document	doc;
 	   case 'm':
 	     /* moveto */
              ptr = TtaSkipWCBlanks (ptr);
+	     if (relative)
+	       {
+	       x = xcur;
+	       y = ycur;
+	       }
 	     ptr = GetNumber (ptr, &xcur);
              ptr = GetNumber (ptr, &ycur);
+	     if (relative)
+	       {
+	       xcur += x;
+	       ycur += y;
+	       }
 	     xinit = xcur;
              yinit = ycur;
-	     prevCommand = command;
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
-		 (*ptr < '0' || *ptr > '9'))
-	       /* no more coordinates. New command */
-	       {
-	       command = *ptr;
-	       ptr++;
-	       }
-	     else
-	       /* more coordinates, do as if it was a lineto command */
-	       {
-	       if (command == 'M')
-		 command = 'L';
-	       else
-                 command = 'l';
-	       }
 	     break;
 
 	   case 'Z':
 	     relative = FALSE;
 	   case 'z':
 	     /* close path */
-             ptr = TtaSkipWCBlanks (ptr);	     
-	     command = *ptr;
-	     ptr++;
 	     /* draw a line from (xcur, ycur) to (xinit, yinit) */
 	     /******/
-	     prevCommand = command;
 	     break;
 
 	   case 'L':
@@ -1257,18 +1247,15 @@ Document	doc;
              ptr = TtaSkipWCBlanks (ptr);
              ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
+	     if (relative)
+	       {
+	       x += xcur;
+	       y += ycur;
+	       }
 	     /* draw a line from (xcur, ycur) to (x, y) */
 	     /******/
 	     xcur = x;
 	     ycur = y;
-	     prevCommand = command;
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
-		 (*ptr < '0' || *ptr > '9'))
-	       /* no more coordinates. New command */
-	       {
-	       command = *ptr;
-	       ptr++;
-	       }
 	     break;
 
 	   case 'H':
@@ -1277,17 +1264,11 @@ Document	doc;
 	     /* horizontal lineto */
              ptr = TtaSkipWCBlanks (ptr);
              ptr = GetNumber (ptr, &x);
-	     /* draw a horizontal line from (xcur, ycur) to (x, ycur) */
+	     if (relative)
+	       x += xcur;
+	     /* draw a line from (xcur, ycur) to (x, ycur) */
 	     /******/
 	     xcur = x;
-	     prevCommand = command;
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
-		 (*ptr < '0' || *ptr > '9'))
-	       /* no more coordinates. New command */
-	       {
-	       command = *ptr;
-	       ptr++;
-	       }
 	     break;
 
 	   case 'V':
@@ -1296,17 +1277,11 @@ Document	doc;
 	     /* vertical lineto */
              ptr = TtaSkipWCBlanks (ptr);
              ptr = GetNumber (ptr, &y);
-	     /* draw a vertical line from (xcur, ycur) to (xcur, y) */
+	     if (relative)
+	       y += ycur;
+	     /* draw a line from (xcur, ycur) to (xcur, y) */
 	     /******/
 	     ycur = y;
-	     prevCommand = command;
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
-		 (*ptr < '0' || *ptr > '9'))
-	       /* no more coordinates. New command */
-	       {
-	       command = *ptr;
-	       ptr++;
-	       }
 	     break;
 
 	   case 'C':
@@ -1320,6 +1295,15 @@ Document	doc;
              ptr = GetNumber (ptr, &y2);
 	     ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
+	     if (relative)
+	       {
+	       x1 += xcur;
+	       y1 += ycur;
+	       x2 += xcur;
+	       y2 += ycur;
+	       x += xcur;
+	       y += ycur;
+	       }
 	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point at the beginning of the curve
 		and (x2,y2) as the control point at the end of the curve */
@@ -1328,14 +1312,6 @@ Document	doc;
              ycur = y;
              x2prev = x2;
              y2prev = y2;
-	     prevCommand = command;
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
-		 (*ptr < '0' || *ptr > '9'))
-	       /* no more coordinates. New command */
-	       {
-	       command = *ptr;
-	       ptr++;
-	       }
 	     break;
 
 	   case 'S':
@@ -1347,6 +1323,13 @@ Document	doc;
              ptr = GetNumber (ptr, &y2);
 	     ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
+	     if (relative)
+	       {
+	       x2 += xcur;
+	       y2 += ycur;
+	       x += xcur;
+	       y += ycur;
+	       }
 	     /* compute the first control point */
 	     if (prevCommand == TEXT('C') || prevCommand == TEXT('c') || 
 		 prevCommand == TEXT('S') || prevCommand == TEXT('s'))
@@ -1367,14 +1350,6 @@ Document	doc;
              ycur = y;
              x2prev = x2;
              y2prev = y2;
-	     prevCommand = command;
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
-		 (*ptr < '0' || *ptr > '9'))
-	       /* no more coordinates. New command */
-	       {
-	       command = *ptr;
-	       ptr++;
-	       }
 	     break;
 
 	   case 'Q':
@@ -1386,6 +1361,13 @@ Document	doc;
              ptr = GetNumber (ptr, &y1);
 	     ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
+	     if (relative)
+	       {
+	       x1 += xcur;
+	       y1 += ycur;
+	       x += xcur;
+	       y += ycur;
+	       }
 	     /* draw a quadric Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point */
 	     /******/
@@ -1393,14 +1375,6 @@ Document	doc;
              ycur = y;
              x1prev = x1;
              y1prev = y1;
-	     prevCommand = command;
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
-		 (*ptr < '0' || *ptr > '9'))
-	       /* no more coordinates. New command */
-	       {
-	       command = *ptr;
-	       ptr++;
-	       }
 	     break;
 
 	   case 'T':
@@ -1410,6 +1384,11 @@ Document	doc;
              ptr = TtaSkipWCBlanks (ptr);
 	     ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
+	     if (relative)
+	       {
+	       x += xcur;
+	       y += ycur;
+	       }
 	     /* compute the control point */
 	     if (prevCommand == TEXT('Q') || prevCommand == TEXT('q') || 
 		 prevCommand == TEXT('T') || prevCommand == TEXT('t'))
@@ -1429,14 +1408,6 @@ Document	doc;
              ycur = y;
              x1prev = x1;
              y1prev = y1;
-	     prevCommand = command;
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
-		 (*ptr < '0' || *ptr > '9'))
-	       /* no more coordinates. New command */
-	       {
-	       command = *ptr;
-	       ptr++;
-	       }
 	     break;
 
 	   case 'A':
@@ -1444,18 +1415,41 @@ Document	doc;
 	   case 'a':
 	     /* elliptical arc */
              ptr = TtaSkipWCBlanks (ptr);
-             ptr = GetNumber (ptr, &rx);
-             ptr = GetNumber (ptr, &ry);
+             ptr = GetNumber (ptr, &rx);            /* must be non-negative */
+             ptr = GetNumber (ptr, &ry);            /* must be non-negative */
              ptr = GetNumber (ptr, &xAxisRotation);
-             ptr = GetNumber (ptr, &largeArcFlag);
-             ptr = GetNumber (ptr, &sweepFlag);
+             ptr = GetNumber (ptr, &largeArcFlag);  /* must be "0" or "1" */
+             ptr = GetNumber (ptr, &sweepFlag);     /* must be "0" or "1" */
 	     ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
+	     if (relative)
+	       {
+	       x += xcur;
+	       y += ycur;
+	       }
 	     /* draw an elliptical arc from (xcur, ycur) to (x, y) */
 	     /*******/
              xcur = x;
              ycur = y;
-	     prevCommand = command;
+	     break;
+
+	   default:
+	     /* unknown command. error. stop parsing. */
+	     command = EOS;
+	     break;
+	   }
+	 if (command != EOS)
+	   {
+	   prevCommand = command;
+	   if (command != 'Z' && command != 'z')
+	     /* don't expect coordinates after a close path command, only
+		a new command or the end of the string to be parsed */
+	     {
+             ptr = TtaSkipWCBlanks (ptr);	     
+	     command = *ptr;
+	     ptr++;
+	     }
+	   else
 	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
 		 (*ptr < '0' || *ptr > '9'))
 	       /* no more coordinates. New command */
@@ -1463,12 +1457,14 @@ Document	doc;
 	       command = *ptr;
 	       ptr++;
 	       }
-	     break;
-
-	   default:
-	     /* error */
-	     command = EOS;
-	     break;
+	     else
+	       /* more coordinates */
+	       /* if it's after a moveto command, interpret additional
+		  coordinates as if it was a lineto command */
+	       if (command == 'M')
+		 command = 'L';
+	       else if (command == 'm')
+		 command = 'l';
 	   }
          }
       TtaFreeMemory (text);

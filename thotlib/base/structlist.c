@@ -61,225 +61,224 @@ FILE               *fileDescriptor;
 
 #endif /* __STDC__ */
 {
-   switch (pRule->PrType)
-	 {
-	    case PtVisibility:
-	       fprintf (fileDescriptor, "Visibility");
-	       break;
-	    case PtFunction:
-	       switch (pRule->PrPresFunction)
-		  {
-		  case FnLine:
-		     fprintf (fileDescriptor, "Line");
-		     break;
-		  case FnPage:
-		     fprintf (fileDescriptor, "Page");
-		     break;
-		  case FnCreateBefore:
-		     fprintf (fileDescriptor, "CreateBefore");
-		     break;
-		  case FnCreateWith:
-		     fprintf (fileDescriptor, "CreateWith");
-		     break;
-		  case FnCreateFirst:
-		     fprintf (fileDescriptor, "CreateFirst");
-		     break;
-		  case FnCreateLast:
-		     fprintf (fileDescriptor, "CreateLast");
-		     break;
-		  case FnCreateAfter:
-		     fprintf (fileDescriptor, "CreateAfter");
-		     break;
-		  case FnColumn:
-		     fprintf (fileDescriptor, "Column");
-		     break;
-		  case FnCopy:
-		     fprintf (fileDescriptor, "Copy");
-		     break;
-		  case FnContentRef:
-		     fprintf (fileDescriptor, "ContentRef");
-		     break;
-		  case FnSubColumn:
-		     fprintf (fileDescriptor, "SubColumn");
-		     break;
-		  case FnNoLine:
-		     fprintf (fileDescriptor, "NoLine");
-		     break;
-		  case FnCreateEnclosing:
-		     fprintf (fileDescriptor, "CreateEnclosing");
-		     break;
-		  case FnShowBox:
-		     fprintf (fileDescriptor, "ShowBox");
-		     break;
-		  case FnBackgroundPicture:
-		     fprintf (fileDescriptor, "BackgroundPicture");
-		     break;
-		  case FnPictureMode:
-		     fprintf (fileDescriptor, "PictureMode");
-		     break;
-		  case FnNotInLine:
-		     fprintf (fileDescriptor, "InLine: No");
-		     break;
-		  default:
-		     fprintf (fileDescriptor, "PrPresFunction ????");
-		     break;
-		  }
-	       break;
-	    case PtVertRef:
-	       fprintf (fileDescriptor, "VRef");
-	       break;
-	    case PtHorizRef:
-	       fprintf (fileDescriptor, "HRef");
-	       break;
-	    case PtHeight:
-	       fprintf (fileDescriptor, "Height");
-	       break;
-	    case PtWidth:
-	       fprintf (fileDescriptor, "Width");
-	       break;
-	    case PtVertPos:
-	       fprintf (fileDescriptor, "VPos");
-	       break;
-	    case PtHorizPos:
-	       fprintf (fileDescriptor, "HPos");
-	       break;
-            case PtMarginTop:
-               fprintf (fileDescriptor, "MarginTop");
-               break;
-            case PtMarginRight:
-               fprintf (fileDescriptor, "MarginRight");
-               break;
-            case PtMarginBottom:
-               fprintf (fileDescriptor, "MarginBottom");
-               break;
-            case PtMarginLeft:
-               fprintf (fileDescriptor, "MarginLeft");
-               break;
-            case PtPaddingTop:
-               fprintf (fileDescriptor, "PaddingTop");
-               break;
-            case PtPaddingRight:
-               fprintf (fileDescriptor, "PaddingRight");
-               break;
-            case PtPaddingBottom:
-               fprintf (fileDescriptor, "PaddingBottom");
-               break;
-            case PtPaddingLeft:
-               fprintf (fileDescriptor, "PaddingLeft");
-               break;
-            case PtBorderTopWidth:
-               fprintf (fileDescriptor, "BorderTopWidth");
-               break;
-            case PtBorderRightWidth:
-               fprintf (fileDescriptor, "BorderRightWidth");
-               break;
-            case PtBorderBottomWidth:
-               fprintf (fileDescriptor, "BorderBottomWidth");
-               break;
-            case PtBorderLeftWidth:
-               fprintf (fileDescriptor, "BorderLeftWidth");
-               break;
-	    case PtXRadius:
-	       fprintf (fileDescriptor, "XRadius");
-	       break;
-	    case PtYRadius:
-	       fprintf (fileDescriptor, "YRadius");
-	       break;
-            case PtBorderTopColor:
-               fprintf (fileDescriptor, "BorderTopColor");
-               break;
-            case PtBorderRightColor:
-               fprintf (fileDescriptor, "BorderRightColor");
-               break;
-            case PtBorderBottomColor:
-               fprintf (fileDescriptor, "BorderBottomColor");
-               break;
-            case PtBorderLeftColor:
-               fprintf (fileDescriptor, "BorderLeftColor");
-               break;
-            case PtBorderTopStyle:
-               fprintf (fileDescriptor, "BorderTopStyle");
-               break;
-            case PtBorderRightStyle:
-               fprintf (fileDescriptor, "BorderRightStyle");
-               break;
-            case PtBorderBottomStyle:
-               fprintf (fileDescriptor, "BorderBottomStyle");
-               break;
-            case PtBorderLeftStyle:
-               fprintf (fileDescriptor, "BorderLeftStyle");
-               break;
-	    case PtSize:
-	       fprintf (fileDescriptor, "Size");
-	       break;
-	    case PtUnderline:
-	       fprintf (fileDescriptor, "Souligne");
-	       break;
-	    case PtThickness:
-	       fprintf (fileDescriptor, "Epaisseur");
-	       break;
-	    case PtStyle:
-	       fprintf (fileDescriptor, "Style");
-	       break;
-	    case PtWeight:
-	       fprintf (fileDescriptor, "Weight");
-	       break;
-	    case PtFont:
-	       fprintf (fileDescriptor, "Font");
-	       break;
-	    case PtIndent:
-	       fprintf (fileDescriptor, "Indent");
-	       break;
-	    case PtLineSpacing:
-	       fprintf (fileDescriptor, "InterL");
-	       break;
-	    case PtDepth:
-	       fprintf (fileDescriptor, "Depth");
-	       break;
-	    case PtAdjust:
-	       fprintf (fileDescriptor, "Adjust");
-	       break;
-	    case PtJustify:
-	       fprintf (fileDescriptor, "Justify");
-	       break;
-	    case PtHyphenate:
-	       fprintf (fileDescriptor, "Hyphenate");
-	       break;
-	    case PtVertOverflow:
-	       fprintf (fileDescriptor, "VertOverflow");
-	       break;
-	    case PtHorizOverflow:
-	       fprintf (fileDescriptor, "HorizOverflow");
-	       break;
-	    case PtBreak1:
-	       fprintf (fileDescriptor, "NoBr1");
-	       break;
-	    case PtBreak2:
-	       fprintf (fileDescriptor, "NoBr2");
-	       break;
-	    case PtLineStyle:
-	       fprintf (fileDescriptor, "LineStyle");
-	       break;
-	    case PtLineWeight:
-	       fprintf (fileDescriptor, "LineWeight");
-	       break;
-	    case PtFillPattern:
-	       fprintf (fileDescriptor, "FillPattern");
-	       break;
-	    case PtBackground:
-	       fprintf (fileDescriptor, "Background");
-	       break;
-	    case PtForeground:
-	       fprintf (fileDescriptor, "Foreground");
-	       break;
-	    case PtPictInfo:
-	       fprintf (fileDescriptor, "PictInfo");
-	       break;
-	    default:
-	       fprintf (fileDescriptor, "PrType ????");
-	       break;
-	 }
-
+  switch (pRule->PrType)
+    {
+    case PtVisibility:
+      fprintf (fileDescriptor, "Visibility");
+      break;
+    case PtFunction:
+      switch (pRule->PrPresFunction)
+	{
+	case FnLine:
+	  fprintf (fileDescriptor, "Line");
+	  break;
+	case FnPage:
+	  fprintf (fileDescriptor, "Page");
+	  break;
+	case FnCreateBefore:
+	  fprintf (fileDescriptor, "CreateBefore");
+	  break;
+	case FnCreateWith:
+	  fprintf (fileDescriptor, "CreateWith");
+	  break;
+	case FnCreateFirst:
+	  fprintf (fileDescriptor, "CreateFirst");
+	  break;
+	case FnCreateLast:
+	  fprintf (fileDescriptor, "CreateLast");
+	  break;
+	case FnCreateAfter:
+	  fprintf (fileDescriptor, "CreateAfter");
+	  break;
+	case FnColumn:
+	  fprintf (fileDescriptor, "Column");
+	  break;
+	case FnCopy:
+	  fprintf (fileDescriptor, "Copy");
+	  break;
+	case FnContentRef:
+	  fprintf (fileDescriptor, "ContentRef");
+	  break;
+	case FnSubColumn:
+	  fprintf (fileDescriptor, "SubColumn");
+	  break;
+	case FnNoLine:
+	  fprintf (fileDescriptor, "NoLine");
+	  break;
+	case FnCreateEnclosing:
+	  fprintf (fileDescriptor, "CreateEnclosing");
+	  break;
+	case FnShowBox:
+	  fprintf (fileDescriptor, "ShowBox");
+	  break;
+	case FnBackgroundPicture:
+	  fprintf (fileDescriptor, "BackgroundPicture");
+	  break;
+	case FnPictureMode:
+	  fprintf (fileDescriptor, "PictureMode");
+	  break;
+	case FnNotInLine:
+	  fprintf (fileDescriptor, "InLine: No");
+	  break;
+	default:
+	  fprintf (fileDescriptor, "PrPresFunction ????");
+	  break;
+	}
+      break;
+    case PtVertRef:
+      fprintf (fileDescriptor, "VRef");
+      break;
+    case PtHorizRef:
+      fprintf (fileDescriptor, "HRef");
+      break;
+    case PtHeight:
+      fprintf (fileDescriptor, "Height");
+      break;
+    case PtWidth:
+      fprintf (fileDescriptor, "Width");
+      break;
+    case PtVertPos:
+      fprintf (fileDescriptor, "VPos");
+      break;
+    case PtHorizPos:
+      fprintf (fileDescriptor, "HPos");
+      break;
+    case PtMarginTop:
+      fprintf (fileDescriptor, "MarginTop");
+      break;
+    case PtMarginRight:
+      fprintf (fileDescriptor, "MarginRight");
+      break;
+    case PtMarginBottom:
+      fprintf (fileDescriptor, "MarginBottom");
+      break;
+    case PtMarginLeft:
+      fprintf (fileDescriptor, "MarginLeft");
+      break;
+    case PtPaddingTop:
+      fprintf (fileDescriptor, "PaddingTop");
+      break;
+    case PtPaddingRight:
+      fprintf (fileDescriptor, "PaddingRight");
+      break;
+    case PtPaddingBottom:
+      fprintf (fileDescriptor, "PaddingBottom");
+      break;
+    case PtPaddingLeft:
+      fprintf (fileDescriptor, "PaddingLeft");
+      break;
+    case PtBorderTopWidth:
+      fprintf (fileDescriptor, "BorderTopWidth");
+      break;
+    case PtBorderRightWidth:
+      fprintf (fileDescriptor, "BorderRightWidth");
+      break;
+    case PtBorderBottomWidth:
+      fprintf (fileDescriptor, "BorderBottomWidth");
+      break;
+    case PtBorderLeftWidth:
+      fprintf (fileDescriptor, "BorderLeftWidth");
+      break;
+    case PtXRadius:
+      fprintf (fileDescriptor, "XRadius");
+      break;
+    case PtYRadius:
+      fprintf (fileDescriptor, "YRadius");
+      break;
+    case PtBorderTopColor:
+      fprintf (fileDescriptor, "BorderTopColor");
+      break;
+    case PtBorderRightColor:
+      fprintf (fileDescriptor, "BorderRightColor");
+      break;
+    case PtBorderBottomColor:
+      fprintf (fileDescriptor, "BorderBottomColor");
+      break;
+    case PtBorderLeftColor:
+      fprintf (fileDescriptor, "BorderLeftColor");
+      break;
+    case PtBorderTopStyle:
+      fprintf (fileDescriptor, "BorderTopStyle");
+      break;
+    case PtBorderRightStyle:
+      fprintf (fileDescriptor, "BorderRightStyle");
+      break;
+    case PtBorderBottomStyle:
+      fprintf (fileDescriptor, "BorderBottomStyle");
+      break;
+    case PtBorderLeftStyle:
+      fprintf (fileDescriptor, "BorderLeftStyle");
+      break;
+    case PtSize:
+      fprintf (fileDescriptor, "Size");
+      break;
+    case PtUnderline:
+      fprintf (fileDescriptor, "Souligne");
+      break;
+    case PtThickness:
+      fprintf (fileDescriptor, "Epaisseur");
+      break;
+    case PtStyle:
+      fprintf (fileDescriptor, "Style");
+      break;
+    case PtWeight:
+      fprintf (fileDescriptor, "Weight");
+      break;
+    case PtFont:
+      fprintf (fileDescriptor, "Font");
+      break;
+    case PtIndent:
+      fprintf (fileDescriptor, "Indent");
+      break;
+    case PtLineSpacing:
+      fprintf (fileDescriptor, "InterL");
+      break;
+    case PtDepth:
+      fprintf (fileDescriptor, "Depth");
+      break;
+    case PtAdjust:
+      fprintf (fileDescriptor, "Adjust");
+      break;
+    case PtJustify:
+      fprintf (fileDescriptor, "Justify");
+      break;
+    case PtHyphenate:
+      fprintf (fileDescriptor, "Hyphenate");
+      break;
+    case PtVertOverflow:
+      fprintf (fileDescriptor, "VertOverflow");
+      break;
+    case PtHorizOverflow:
+      fprintf (fileDescriptor, "HorizOverflow");
+      break;
+    case PtBreak1:
+      fprintf (fileDescriptor, "NoBr1");
+      break;
+    case PtBreak2:
+      fprintf (fileDescriptor, "NoBr2");
+      break;
+    case PtLineStyle:
+      fprintf (fileDescriptor, "LineStyle");
+      break;
+    case PtLineWeight:
+      fprintf (fileDescriptor, "LineWeight");
+      break;
+    case PtFillPattern:
+      fprintf (fileDescriptor, "FillPattern");
+      break;
+    case PtBackground:
+      fprintf (fileDescriptor, "Background");
+      break;
+    case PtForeground:
+      fprintf (fileDescriptor, "Foreground");
+      break;
+    case PtPictInfo:
+      fprintf (fileDescriptor, "PictInfo");
+      break;
+    default:
+      fprintf (fileDescriptor, "PrType ????");
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -320,6 +319,80 @@ FILE               *fileDescriptor;
 	  }
 	else
 	   fprintf (fileDescriptor, "...");
+     }
+}
+
+/*----------------------------------------------------------------------
+   WrPath ecrit dans le fichier fileDescriptor le contenu de la chaine des
+   elements de path commencant au bufferdescripteur pointe' par pPE.  
+   length: longueur maximum a` ecrire.                         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         WrPath (PtrPathElement pPE, int length, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         WrPath (pPE, length, fileDescriptor)
+PtrPathElement      pPE;
+int                 length;
+FILE               *fileDescriptor;
+
+#endif /* __STDC__ */
+{
+   PtrPathElement      b;
+   int                 l;
+
+   l = 0;
+   b = pPE;
+   while (b && l < length)
+      /* ecrit le contenu du path */
+     {
+        switch (b->PaShape)
+	  {
+	  case PtLine:
+	     putc ('L', fileDescriptor);
+	     fprintf (fileDescriptor, "%d,%d %d,%d",
+		      b->XStart, b->YStart,
+		      b->XEnd, b->YEnd);
+	     break;
+	  case PtCubicBezier:
+	     putc ('C', fileDescriptor);
+	     fprintf (fileDescriptor, "%d,%d %d,%d %d,%d %d,%d",
+		      b->XStart, b->YStart,
+		      b->XEnd, b->YEnd,
+		      b->XCtrlStart, b->YCtrlStart,
+		      b->XCtrlEnd, b->YCtrlEnd);
+	     break;
+	  case PtQuadricBezier:
+	     putc ('Q', fileDescriptor);
+	     fprintf (fileDescriptor, "%d,%d %d,%d %d,%d",
+		      b->XStart, b->YStart,
+		      b->XEnd, b->YEnd,
+		      b->XCtrlStart, b->YCtrlStart);
+	     break;
+	  case PtElliptical:
+	     putc ('A', fileDescriptor);
+	     fprintf (fileDescriptor, "%d,%d %d,%d %d,%d %d ",
+		      b->XStart, b->YStart,
+		      b->XEnd, b->YEnd,
+		      b->XRadius, b->YRadius, b->XAxisRotation);
+	     if (b->LargeArc)
+	        putc ('1', fileDescriptor);
+	     else
+	        putc ('0', fileDescriptor);
+	     putc (' ', fileDescriptor);
+	     if (b->Sweep)
+	        putc ('1', fileDescriptor);
+	     else
+	        putc ('0', fileDescriptor);
+	     break;
+	  }
+	if (l < length)
+	  {
+	     fprintf (fileDescriptor, "|");
+	     /* element suivant du meme path */
+	     b = b->PaNext;
+	  }
+	else
+	  fprintf (fileDescriptor, "...");
      }
 }
 
@@ -529,232 +602,240 @@ ThotBool            premierfils;
 
    if (pNode != NULL)
      {
-	/* ecrit les blancs de l'indentation */
-	for (i = 1; i <= Indent; i++)
-	   fprintf (fileDescriptor, " ");
-	/* si l'element est la copie par inclusion d'un autre element, */
-	/* ecrit la reference a cet autre element */
-	if (pNode->ElSource != NULL)
-	  {
-	     wrRef (pNode->ElSource, fileDescriptor);
-	     fprintf (fileDescriptor, "\n");
-	     for (i = 1; i <= Indent; i++)
-		fprintf (fileDescriptor, " ");
-	  }
-	i = 1;
-	/* ecrit le nom du type de l'element */
-	if (pNode->ElStructSchema == NULL)
-	   fprintf (fileDescriptor, "*ElStructSchema=NULL*");
-	else
-	  {
-	     pRe1 = &pNode->ElStructSchema->SsRule[pNode->ElTypeNumber - 1];
-	     fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
-	     /* ecrit le nom du schema de structure de l'element */
-	     fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
-		                          (unsigned int)pNode->ElStructSchema);
-	  }
-	fprintf (fileDescriptor, " Label=%s", pNode->ElLabel);
-	/* ecrit le volume de l'element */
-	fprintf (fileDescriptor, " Vol=%d", pNode->ElVolume);
-	fprintf (fileDescriptor, " Lin=%d", pNode->ElLineNb);
-	if (pNode->ElAssocNum != 0)
-	   fprintf (fileDescriptor, " Assoc=%d", pNode->ElAssocNum);
-	if (pNode->ElIsCopy)
-	   fprintf (fileDescriptor, " Copy");
-	switch (pNode->ElAccess)
-	      {
-		 case AccessReadOnly:
-		    fprintf (fileDescriptor, " Right=RO");
-		    break;
-		 case AccessReadWrite:
-		    fprintf (fileDescriptor, " Right=R/W");
-		    break;
-		 case AccessHidden:
-		    fprintf (fileDescriptor, " Right=Hidden");
-		    break;
-		 default:
-		    break;
-	      }
-	if (pNode->ElHolophrast)
-	   fprintf (fileDescriptor, " Holophrast");
-
-	/* ecrit les attributs de l'element */
-	if (pNode->ElFirstAttr != NULL)
-	  {
-	     fprintf (fileDescriptor, " (ATTR ");
-	     pAttr = pNode->ElFirstAttr;
-	     while (pAttr != NULL)
-	       {
-		  pAttr1 = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1];
-		  fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
-		  switch (pAttr1->AttrType)
-			{
-			   case AtNumAttr:
-			      fprintf (fileDescriptor, "%d", pAttr->AeAttrValue);
-			      break;
-			   case AtTextAttr:
-			      if (pAttr->AeAttrText != NULL)
-				{
-				   fprintf (fileDescriptor, "%s", pAttr->AeAttrText->BuContent);
-				   if (pAttr->AeAttrText->BuNext != NULL)
-				      fprintf (fileDescriptor, "...");
-				}
-			      break;
-			   case AtReferenceAttr:
-			      if (pAttr->AeAttrReference == NULL)
-				 fprintf (fileDescriptor, "*AeAttrReference=NULL*");
-			      else if (pAttr->AeAttrReference->RdReferred == NULL)
-				 fprintf (fileDescriptor, "*RdReferred=NULL*");
-			      else
-				 wrRef (pAttr->AeAttrReference, fileDescriptor);
-			      break;
-			   case AtEnumAttr:
-			      fprintf (fileDescriptor, "%s", pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
-			      break;
-			   default:
-			      fprintf (fileDescriptor, "AttrType ????");
-			      break;
-			}
-
-		  if (pAttr->AeNext != NULL)
-		     fprintf (fileDescriptor, ", ");
-		  pAttr = pAttr->AeNext;
-	       }
-	     fprintf (fileDescriptor, ")");
-	  }
-	/* ecrit les regles de presentation specifiques de l'element */
-	if (pNode->ElFirstPRule != NULL)
-	  {
-	     fprintf (fileDescriptor, " Pres(");
-	     pRule = pNode->ElFirstPRule;
-	     while (pRule != NULL)
-	       {
-		  if (pRule != pNode->ElFirstPRule)
-		     fprintf (fileDescriptor, ", ");
-		  WrPRuleType (pRule, fileDescriptor);
-		  if (pRule->PrSpecifAttr > 0)
-		     fprintf (fileDescriptor, "[%s]", pRule->PrSpecifAttrSSchema->
-			    SsAttribute[pRule->PrSpecifAttr - 1].AttrOrigName);
-		  fprintf (fileDescriptor, " view%d", pRule->PrViewNum);
-		  pRule = pRule->PrNextPRule;
-	       }
-	     fprintf (fileDescriptor, ")");
-	     /* ecrit le contenu de l'element */
-	  }
-	if (pNode->ElTerminal)
-	   switch (pNode->ElLeafType)
+       /* ecrit les blancs de l'indentation */
+       for (i = 1; i <= Indent; i++)
+	 fprintf (fileDescriptor, " ");
+       /* si l'element est la copie par inclusion d'un autre element, */
+       /* ecrit la reference a cet autre element */
+       if (pNode->ElSource != NULL)
+	 {
+	   wrRef (pNode->ElSource, fileDescriptor);
+	   fprintf (fileDescriptor, "\n");
+	   for (i = 1; i <= Indent; i++)
+	     fprintf (fileDescriptor, " ");
+	 }
+       i = 1;
+       /* ecrit le nom du type de l'element */
+       if (pNode->ElStructSchema == NULL)
+	 fprintf (fileDescriptor, "*ElStructSchema=NULL*");
+       else
+	 {
+	   pRe1 = &pNode->ElStructSchema->SsRule[pNode->ElTypeNumber - 1];
+	   fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
+	   /* ecrit le nom du schema de structure de l'element */
+	   fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
+		    (unsigned int)pNode->ElStructSchema);
+	 }
+       fprintf (fileDescriptor, " Label=%s", pNode->ElLabel);
+       /* ecrit le volume de l'element */
+       fprintf (fileDescriptor, " Vol=%d", pNode->ElVolume);
+       fprintf (fileDescriptor, " Lin=%d", pNode->ElLineNb);
+       if (pNode->ElAssocNum != 0)
+	 fprintf (fileDescriptor, " Assoc=%d", pNode->ElAssocNum);
+       if (pNode->ElIsCopy)
+	 fprintf (fileDescriptor, " Copy");
+       switch (pNode->ElAccess)
+	 {
+	 case AccessReadOnly:
+	   fprintf (fileDescriptor, " Right=RO");
+	   break;
+	 case AccessReadWrite:
+	   fprintf (fileDescriptor, " Right=R/W");
+	   break;
+	 case AccessHidden:
+	   fprintf (fileDescriptor, " Right=Hidden");
+	   break;
+	 default:
+	   break;
+	 }
+       if (pNode->ElHolophrast)
+	 fprintf (fileDescriptor, " Holophrast");
+       
+       /* ecrit les attributs de l'element */
+       if (pNode->ElFirstAttr != NULL)
+	 {
+	   fprintf (fileDescriptor, " (ATTR ");
+	   pAttr = pNode->ElFirstAttr;
+	   while (pAttr != NULL)
+	     {
+	       pAttr1 = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum-1];
+	       fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
+	       switch (pAttr1->AttrType)
 		 {
-		    case LtPicture:
-		       fprintf (fileDescriptor, " Lg=%d\n", pNode->ElTextLength);
-		       for (i = 1; i <= Indent; i++)
-			  fprintf (fileDescriptor, " ");
-		       fprintf (fileDescriptor, "\'");
-		       WrText (pNode->ElText, 72 - Indent, fileDescriptor);
-		       fprintf (fileDescriptor, "\'\n");
-		       break;
-		    case LtText:
-		       fprintf (fileDescriptor, " Lg=%d Language=%s\n",
-				pNode->ElTextLength,
-				TtaGetLanguageName (pNode->ElLanguage));
-		       for (i = 1; i <= Indent; i++)
-			  fprintf (fileDescriptor, " ");
-		       fprintf (fileDescriptor, "\'");
-		       WrText (pNode->ElText, 72 - Indent, fileDescriptor);
-		       fprintf (fileDescriptor, "\'\n");
-		       break;
-		    case LtPolyLine:
-		       fprintf (fileDescriptor, " Type=%c %d points\n",
-				pNode->ElPolyLineType,
-				pNode->ElNPoints);
-		       for (i = 1; i <= Indent; i++)
-			  fprintf (fileDescriptor, " ");
-		       for (i = 0; i < pNode->ElNPoints && i < 8; i++)
-			 {
-			 fprintf (fileDescriptor, "%d,%d ",
-				  pNode->ElPolyLineBuffer->BuPoints[i].XCoord,
-			          pNode->ElPolyLineBuffer->BuPoints[i].YCoord);
-			 }
-		       if (i < pNode->ElNPoints)
-			  fprintf (fileDescriptor, "...");
-		       fprintf (fileDescriptor, "\n");
-		       break;
-		    case LtSymbol:
-		       fprintf (fileDescriptor, " \'%c\'", pNode->ElGraph);
-		       if (pNode->ElGraph == '?')
-			 fprintf (fileDescriptor, " wc=%d",
-				  (int)pNode->ElWideChar);
-		       fprintf (fileDescriptor, "\n");
-                       break;
-		    case LtGraphics:
-		    case LtCompound:
-		       fprintf (fileDescriptor, " \'%c\'\n", pNode->ElGraph);
-		       break;
-		    case LtPageColBreak:
-		       fprintf (fileDescriptor, " Number=%d View=%d",
-				pNode->ElPageNumber,
-				pNode->ElViewPSchema);
-		       switch (pNode->ElPageType)
-			     {
-				case PgComputed:
-				   fprintf (fileDescriptor, " Computed page");
-				   break;
-				case PgBegin:
-				   fprintf (fileDescriptor, " Begin of element");
-				   break;
-				case PgUser:
-				   fprintf (fileDescriptor, " Page put by user");
-				   break;
-				case ColComputed:
-				   fprintf (fileDescriptor, " Computed column");
-				   break;
-				case ColBegin:
-				   fprintf (fileDescriptor, " First column");
-				   break;
-				case ColUser:
-				   fprintf (fileDescriptor, " Column put by user");
-				   break;
-				case ColGroup:
-				   fprintf (fileDescriptor, " Grouped column");
-				   break;
-				default:
-				   break;
-			     }
-		       fprintf (fileDescriptor, "\n");
-		       break;
-		    case LtReference:
-		       if (pNode->ElReference == NULL)
-			  fprintf (fileDescriptor, " *ElReference=NULL*\n");
-		       else
-			 {
-			    fprintf (fileDescriptor, " ");
-			    wrRef (pNode->ElReference, fileDescriptor);
-			    fprintf (fileDescriptor, "\n");
-			 }
-		       break;
-		    case LtPairedElem:
-		       fprintf (fileDescriptor, "(Id=%d)", pNode->ElPairIdent);
-		       if (pNode->ElOtherPairedEl == NULL)
-			  fprintf (fileDescriptor, " ElOtherPairedEl=NULL");
-		       fprintf (fileDescriptor, "\n");
-		       break;
-		    default:
-		       fprintf (fileDescriptor, "ElLeafType ????\n");
-		       break;
+		 case AtNumAttr:
+		   fprintf (fileDescriptor, "%d", pAttr->AeAttrValue);
+		   break;
+		 case AtTextAttr:
+		   if (pAttr->AeAttrText != NULL)
+		     {
+		       fprintf (fileDescriptor, "%s",
+				pAttr->AeAttrText->BuContent);
+		       if (pAttr->AeAttrText->BuNext != NULL)
+			 fprintf (fileDescriptor, "...");
+		     }
+		   break;
+		 case AtReferenceAttr:
+		   if (pAttr->AeAttrReference == NULL)
+		     fprintf (fileDescriptor, "*AeAttrReference=NULL*");
+		   else if (pAttr->AeAttrReference->RdReferred == NULL)
+		     fprintf (fileDescriptor, "*RdReferred=NULL*");
+		   else
+		     wrRef (pAttr->AeAttrReference, fileDescriptor);
+		   break;
+		 case AtEnumAttr:
+		   fprintf (fileDescriptor, "%s",
+			    pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
+		   break;
+		 default:
+		   fprintf (fileDescriptor, "AttrType ????");
+		   break;
 		 }
-	else
-	  {
-	     fprintf (fileDescriptor, "\n");
-	     /* element non terminal, on ecrit sa descendance */
-	     f = pNode->ElFirstChild;
-	     while (f != NULL)
+	       
+	       if (pAttr->AeNext != NULL)
+		 fprintf (fileDescriptor, ", ");
+	       pAttr = pAttr->AeNext;
+	     }
+	   fprintf (fileDescriptor, ")");
+	 }
+       /* ecrit les regles de presentation specifiques de l'element */
+       if (pNode->ElFirstPRule != NULL)
+	 {
+	   fprintf (fileDescriptor, " Pres(");
+	   pRule = pNode->ElFirstPRule;
+	   while (pRule != NULL)
+	     {
+	       if (pRule != pNode->ElFirstPRule)
+		 fprintf (fileDescriptor, ", ");
+	       WrPRuleType (pRule, fileDescriptor);
+	       if (pRule->PrSpecifAttr > 0)
+		 fprintf (fileDescriptor, "[%s]", pRule->PrSpecifAttrSSchema->
+			  SsAttribute[pRule->PrSpecifAttr - 1].AttrOrigName);
+	       fprintf (fileDescriptor, " view%d", pRule->PrViewNum);
+	       pRule = pRule->PrNextPRule;
+	     }
+	   fprintf (fileDescriptor, ")");
+	   /* ecrit le contenu de l'element */
+	 }
+       if (pNode->ElTerminal)
+	 switch (pNode->ElLeafType)
+	   {
+	   case LtPicture:
+	     fprintf (fileDescriptor, " Lg=%d\n", pNode->ElTextLength);
+	     for (i = 1; i <= Indent; i++)
+	       fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "\'");
+	     WrText (pNode->ElText, 72 - Indent, fileDescriptor);
+	     fprintf (fileDescriptor, "\'\n");
+	     break;
+	   case LtText:
+	     fprintf (fileDescriptor, " Lg=%d Language=%s\n",
+		      pNode->ElTextLength,
+		      TtaGetLanguageName (pNode->ElLanguage));
+	     for (i = 1; i <= Indent; i++)
+	       fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "\'");
+	     WrText (pNode->ElText, 72 - Indent, fileDescriptor);
+	     fprintf (fileDescriptor, "\'\n");
+	     break;
+	   case LtPolyLine:
+	     fprintf (fileDescriptor, " Type=%c %d points\n",
+		      pNode->ElPolyLineType,
+		      pNode->ElNPoints);
+	     for (i = 1; i <= Indent; i++)
+	       fprintf (fileDescriptor, " ");
+	     for (i = 0; i < pNode->ElNPoints && i < 8; i++)
 	       {
-		  WrTree (f, Indent + 2, fileDescriptor, premierfils);
-		  if (!premierfils)
-		     f = f->ElNext;
-		  else
-		     f = NULL;
+		 fprintf (fileDescriptor, "%d,%d ",
+			  pNode->ElPolyLineBuffer->BuPoints[i].XCoord,
+			  pNode->ElPolyLineBuffer->BuPoints[i].YCoord);
 	       }
-	  }
+	     if (i < pNode->ElNPoints)
+	       fprintf (fileDescriptor, "...");
+	     fprintf (fileDescriptor, "\n");
+	     break;
+	   case LtPath:
+	     for (i = 1; i <= Indent; i++)
+	       fprintf (fileDescriptor, " ");
+	     WrPath (pNode->ElFirstPathElem, 72 - Indent, fileDescriptor);
+	     fprintf (fileDescriptor, "\n");
+	     break;
+	   case LtSymbol:
+	     fprintf (fileDescriptor, " \'%c\'", pNode->ElGraph);
+	     if (pNode->ElGraph == '?')
+	       fprintf (fileDescriptor, " wc=%d",
+			(int)pNode->ElWideChar);
+	     fprintf (fileDescriptor, "\n");
+	     break;
+	   case LtGraphics:
+	   case LtCompound:
+	     fprintf (fileDescriptor, " \'%c\'\n", pNode->ElGraph);
+	     break;
+	   case LtPageColBreak:
+	     fprintf (fileDescriptor, " Number=%d View=%d",
+		      pNode->ElPageNumber,
+		      pNode->ElViewPSchema);
+	     switch (pNode->ElPageType)
+	       {
+	       case PgComputed:
+		 fprintf (fileDescriptor, " Computed page");
+		 break;
+	       case PgBegin:
+		 fprintf (fileDescriptor, " Begin of element");
+		 break;
+	       case PgUser:
+		 fprintf (fileDescriptor, " Page put by user");
+		 break;
+	       case ColComputed:
+		 fprintf (fileDescriptor, " Computed column");
+		 break;
+	       case ColBegin:
+		 fprintf (fileDescriptor, " First column");
+		 break;
+	       case ColUser:
+		 fprintf (fileDescriptor, " Column put by user");
+		 break;
+	       case ColGroup:
+		 fprintf (fileDescriptor, " Grouped column");
+		 break;
+	       default:
+		 break;
+	       }
+	     fprintf (fileDescriptor, "\n");
+	     break;
+	   case LtReference:
+	     if (pNode->ElReference == NULL)
+	       fprintf (fileDescriptor, " *ElReference=NULL*\n");
+	     else
+	       {
+		 fprintf (fileDescriptor, " ");
+		 wrRef (pNode->ElReference, fileDescriptor);
+		 fprintf (fileDescriptor, "\n");
+	       }
+	     break;
+	   case LtPairedElem:
+	     fprintf (fileDescriptor, "(Id=%d)", pNode->ElPairIdent);
+	     if (pNode->ElOtherPairedEl == NULL)
+	       fprintf (fileDescriptor, " ElOtherPairedEl=NULL");
+	     fprintf (fileDescriptor, "\n");
+	     break;
+	   default:
+	     fprintf (fileDescriptor, "ElLeafType ????\n");
+	     break;
+	   }
+       else
+	 {
+	   fprintf (fileDescriptor, "\n");
+	   /* element non terminal, on ecrit sa descendance */
+	   f = pNode->ElFirstChild;
+	   while (f != NULL)
+	     {
+	       WrTree (f, Indent + 2, fileDescriptor, premierfils);
+	       if (!premierfils)
+		 f = f->ElNext;
+	       else
+		 f = NULL;
+	     }
+	 }
      }
 }
 
@@ -1363,6 +1444,9 @@ FILE               *fileDescriptor;
 		 case LtPolyLine:
 		    fprintf (fileDescriptor, "POLYLINE ");
 		    break;
+		 case LtPath:
+		    fprintf (fileDescriptor, "PATH ");
+		    break;
 		 case LtPageColBreak:
 		    fprintf (fileDescriptor, "PAGE");
 		    break;
@@ -1460,7 +1544,13 @@ FILE               *fileDescriptor;
 	      if (i < pAb->AbVolume)
 		 fprintf (fileDescriptor, "...");
 	      break;
-/*CP */    case LtSymbol:
+	   case LtPath:
+	      fprintf (fileDescriptor, "\n");
+	      for (i = 1; i <= Indent + 6; i++)
+		 fprintf (fileDescriptor, " ");
+	      WrPath (pAb->AbFirstPathElem, 60, fileDescriptor);
+	      break;
+           case LtSymbol:
 	   case LtGraphics:
 	      fprintf (fileDescriptor, " alphabet=%c", pAb->AbGraphAlphabet);
 	      fprintf (fileDescriptor, "\'%c\'", pAb->AbShape);
@@ -1921,6 +2011,12 @@ FILE               *fileDescriptor;
 			   }
 			 if (i < pAb->AbVolume)
 			    fprintf (fileDescriptor, "...");
+			 break;
+		      case LtPath:
+			 fprintf (fileDescriptor, "PATH\n");
+			 for (j = 1; j <= Indent + 6; j++)
+			    fprintf (fileDescriptor, " ");
+			 WrPath (pAb->AbFirstPathElem, 60, fileDescriptor);
 			 break;
 		      default:
 			 break;

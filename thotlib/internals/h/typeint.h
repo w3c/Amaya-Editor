@@ -191,7 +191,8 @@ typedef enum
 	LtPageColBreak,
 	LtReference,
 	LtPairedElem,
-	LtPolyLine
+	LtPolyLine,
+        LtPath
 } LeafType;
 
 typedef CHAR_T Buffer[THOT_MAX_CHAR];
@@ -199,7 +200,7 @@ typedef CHAR_T Buffer[THOT_MAX_CHAR];
 /* a control point in a polyline (polygon or spline) */
 typedef struct _PolyLinePoint
 {
-	int		XCoord;	    /* coordinates of from the box origin */
+	int		XCoord;	    /* coordinates from the box origin */
 	int		YCoord;	    /* expressed in millipoint */
 }PolyLinePoint;
 
@@ -231,6 +232,60 @@ typedef struct _TextBuffer
 
 #define BuContent u.s0._BuContent_
 #define BuPoints u.s1._BuPoints_
+
+/* type of a path element */
+typedef enum
+{
+	PtLine,
+        PtCubicBezier,
+        PtQuadricBezier,
+        PtElliptical
+} PathElemType;
+
+typedef struct _PathElement *PtrPathElement;
+
+/* Description of a graphics path element */
+typedef struct _PathElement
+{
+	PtrPathElement  PaNext;	      /* Next element in the same path */
+        PtrPathElement  PaPrevious;   /* Previous element in the same path */
+        PathElemType    PaShape;      /* Shape of that element */
+        /* all coordinates are expressed in millipoint from the box origin */
+        int	        XStart;	      /* coordinates of start point */
+	int	        YStart;
+        int             XEnd;         /* coordinates of end point */
+	int             YEnd;
+    union
+    {
+	struct
+	{   /* PaShape = PtCubicBezier or PtQuadricBezier */
+	    /* a quadric Bezier curve uses only the first control point */
+	    int         _XCtrlStart_; /* coordinates of control point at the */
+	    int         _YCtrlStart_; /* beginning of the curve */
+	    int         _XCtrlEnd_;   /* coordinates of control point at the */
+	    int         _YCtrlEnd_;   /* end of the curve */
+	} s0;
+	struct
+	{   /* PaShape = PtElliptical */
+	    int         _XRadius_;
+	    int         _YRadius_;
+	    int         _XAxisRotation_;
+	    ThotBool    _LargeArc_;
+	    ThotBool    _Sweep_;      /* draw the arc in a "positive-angle" */
+	                              /* direction */
+	} s1;
+    } u;
+} PathElement;
+
+#define XCtrlStart u.s0._XCtrlStart_
+#define YCtrlStart u.s0._YCtrlStart_
+#define XCtrlEnd u.s0._XCtrlEnd_
+#define YCtrlEnd u.s0._YCtrlEnd_
+#define XRadius u.s1._XRadius_
+#define YRadius u.s1._YRadius_
+#define XAxisRotation u.s1._XAxisRotation_
+#define LargeArc u.s1._LargeArc_
+#define Sweep u.s1._Sweep_
 
 /* Descriptor representing an element that is kept after a Cut or Copy
    operation and is to be Pasted */
@@ -352,20 +407,25 @@ typedef struct _ElementDescr
 		    PtrElement	  _ElOtherPairedEl_;/* pointer on the other
 						     element in the same pair*/
 		} s4;
-		struct			/* ElLeafType = LtPlyLine */
+		struct			/* ElLeafType = LtPolyLine */
 		{
 		    PtrTextBuffer _ElPolyLineBuffer_; /* buffer containing the
 						     points defining the line*/
 		    int		  _ElNPoints_;	     /* number of points */
 		    char 	  _ElPolyLineType_;  /* type of line */
 		} s5;
+	        struct                  /* ElLeafType = LtPath */
+                {
+                    PtrPathElement _ElFirstPathElem_;/* first element of the
+							path elements list */
+                } s6;
 		struct			/* TypeImage = LtPicture */
 		{
 		    PtrTextBuffer _ElPictureName_;/* pointer on the buffer
 						   containing thepicture name*/
 		    int           _ElNameLength_; /* picture name length */
 		    int           *_ElPictInfo_;  /* info about the picture */
-		} s6;
+		} s7;
 	    } u;
 	} s1;
     } u;
@@ -389,9 +449,10 @@ typedef struct _ElementDescr
 #define ElPolyLineBuffer u.s1.u.s5._ElPolyLineBuffer_
 #define ElNPoints u.s1.u.s5._ElNPoints_
 #define ElPolyLineType u.s1.u.s5._ElPolyLineType_
-#define ElPictureName u.s1.u.s6._ElPictureName_
-#define ElNameLength u.s1.u.s6._ElNameLength_
-#define ElPictInfo u.s1.u.s6._ElPictInfo_
+#define ElFirstPathElem u.s1.u.s6._ElFirstPathElem_
+#define ElPictureName u.s1.u.s7._ElPictureName_
+#define ElNameLength u.s1.u.s7._ElNameLength_
+#define ElPictInfo u.s1.u.s7._ElPictInfo_
 
 /* The pointer ElFirstChild is interpreted according to the constructor of the
    rule defining the element:

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -102,7 +102,8 @@ int                 frame;
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pAbb, pAbbNext;
-  PtrTextBuffer       pBT, pBTSuiv;
+  PtrTextBuffer       pBT, pNextBT;
+  PtrPathElement      pPa, pNextPa;
   PtrDelayedPRule     pDelPR, pNextDelPR;
   ThotBool            libAb;
 
@@ -149,7 +150,7 @@ int                 frame;
       libAb = FALSE;
       if (pAb->AbPresentationBox)
 	if (pAb->AbLeafType == LtText || pAb->AbLeafType == LtPolyLine ||
-	    pAb->AbLeafType == LtPicture)
+	    pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtPath)
 	  libAb = TRUE;
       if (!libAb)
 	if (!pAb->AbPresentationBox)
@@ -169,10 +170,24 @@ int                 frame;
 	      pBT = pAb->AbText;
 	    while (pBT != NULL)
 	      {
-		pBTSuiv = pBT->BuNext;
+		pNextBT = pBT->BuNext;
 		DeleteTextBuffer (&pBT);
-		pBT = pBTSuiv;
+		pBT = pNextBT;
 	      }
+	    if (pAb->AbLeafType == LtPolyLine)
+	      pAb->AbPolyLineBuffer = NULL;
+	    else
+	      pAb->AbText = NULL;
+	    break;
+	  case LtPath:
+	    pPa = pAb->AbFirstPathElem;
+	    while (pPa)
+	      {
+		pNextPa = pPa->PaNext;
+		FreePathElement (pPa);
+		pPa = pNextPa;
+	      }
+	    pAb->AbFirstPathElem = NULL;
 	    break;
 	  case LtPicture:
 	    if (pAb->AbPresentationBox)

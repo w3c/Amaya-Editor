@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /* 
  * locate what is designated in Concret Image.
  *
@@ -100,72 +91,81 @@ int                 button;
 
    if (frame >= 1)
      {
-	/* check if a leaf box is selected */
-	pFrame = &ViewFrameTable[frame - 1];
-	x += pFrame->FrXOrg;
-	y += pFrame->FrYOrg;
-	pAb = pFrame->FrAbstractBox;
-	charsNumber = 0;
-	/* get the selected box */
-	if (ThotLocalActions[T_selecbox] != NULL)
-	   (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
-	/* When it's an extended selection, avoid to extend to the enclosing box */
-	if (button == 0 || button == 1)
-	  {
-	     if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
-		pBox = GetClickedLeafBox (frame, x, y);
-	  }
-	if (pBox != NULL)
-	  {
-	     pAb = pBox->BxAbstractBox;
-	     if (pAb->AbLeafType == LtText &&
-		 (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-	       {
-		  pos = x - pBox->BxXOrg;
-		  LocateClickedChar (pBox, &pBuffer, &pos, &index, &charsNumber, &spacesNumber);
-		  charsNumber = pBox->BxIndChar + charsNumber + 1;
-	       }
-	  }
-	else
-	   pAb = NULL;
-
-	CloseInsertion ();
-	if (pAb != NULL)
-	  {
-	    /* Initialization of the selection */
-	    if (button == 3)
-	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE);
-	    else if (button == 2)
-	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
-	    /* Extension of selection */
-	    else if (button == 0)
-	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
-	    else if (button == 1)
-	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
-	    else /* button == 4 */
-	      {
-		/* check if the curseur is within the box */
-		xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-		yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
-		if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		    y >= yOrg && y <= yOrg + pBox->BxH)
-		  {
-		    /* send event TteElemActivate.Pre to the application */
-		    el = pAb->AbElement;
-		    notifyEl.event = TteElemClick;
-		    notifyEl.document = FrameTable[frame].FrDoc;
-		    notifyEl.element = (Element) el;
-		    notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		    notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
-		    notifyEl.position = 0;
-		    if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		      /* the application asks Thot to do nothing */
-		      return;
-		    /* send event TteElemActivate.Pre to the application */
-		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		  }
-	      }
-	  }
+       /* check if a leaf box is selected */
+       pFrame = &ViewFrameTable[frame - 1];
+       x += pFrame->FrXOrg;
+       y += pFrame->FrYOrg;
+       pAb = pFrame->FrAbstractBox;
+       charsNumber = 0;
+       /* get the selected box */
+       if (ThotLocalActions[T_selecbox] != NULL)
+	 (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y,
+					  &charsNumber);
+       /* When it's an extended selection, avoid to extend to the
+	  enclosing box */
+       if (button == 0 || button == 1)
+	 {
+	   if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
+	     pBox = GetClickedLeafBox (frame, x, y);
+	 }
+       if (pBox != NULL)
+	 {
+	   pAb = pBox->BxAbstractBox;
+	   if (pAb->AbLeafType == LtText &&
+	       (!pAb->AbPresentationBox || pAb->AbCanBeModified))
+	     {
+	       pos = x - pBox->BxXOrg;
+	       LocateClickedChar (pBox, &pBuffer, &pos, &index, &charsNumber,
+				  &spacesNumber);
+	       charsNumber = pBox->BxIndChar + charsNumber + 1;
+	     }
+	 }
+       else
+	 pAb = NULL;
+       
+       CloseInsertion ();
+       if (pAb != NULL)
+	 {
+	   /* Initialization of the selection */
+	   if (button == 3)
+	     ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE,
+			      FALSE);
+	   else if (button == 2)
+	     ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE,
+			      FALSE);
+	   /* Extension of selection */
+	   else if (button == 0)
+	     ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE,
+			      FALSE);
+	   else if (button == 1)
+	     ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE,
+			      TRUE);
+	   else /* button == 4 */
+	     {
+	       /* check if the curseur is within the box */
+	       xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+		       pBox->BxLPadding;
+	       yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+		       pBox->BxTPadding;
+	       if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		   y >= yOrg && y <= yOrg + pBox->BxH)
+		 {
+		   /* send event TteElemActivate.Pre to the application */
+		   el = pAb->AbElement;
+		   notifyEl.event = TteElemClick;
+		   notifyEl.document = FrameTable[frame].FrDoc;
+		   notifyEl.element = (Element) el;
+		   notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+		   notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
+		   notifyEl.position = 0;
+		   if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		     /* the application asks Thot to do nothing */
+		     return;
+		   /* send event TteElemActivate.Pre to the application */
+		   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		 }
+	     }
+	 }
      }
 }
 
@@ -217,7 +217,8 @@ int                 height;
    x += width;
    height /= 2;
    y += height;
-   value = GetDistance (xRef - x, width) + Y_RATIO * GetDistance (yRef - y, height);
+   value = GetDistance (xRef - x, width) +
+           Y_RATIO * GetDistance (yRef - y, height);
    return (value);
 }
 
@@ -354,62 +355,62 @@ int                 frame;
    i++;
    while (i <= max || buff != pLastBuffer)
      {
-	prevX = nextX;
-	prevY = nextY;
-	nextX = PixelValue (buff->BuPoints[i].XCoord,
-			    UnPixel, NULL,
-			    ViewFrameTable[frame - 1].FrMagnification);
-	nextY = PixelValue (buff->BuPoints[i].YCoord,
-			    UnPixel, NULL,
-			    ViewFrameTable[frame - 1].FrMagnification);
-	if (prevY >= y)
-	  {
-	     while ((i <= max || buff != pLastBuffer) && (nextY >= y))
-	       {
-		  i++;		/* changement de point */
-		  if (i >= buff->BuLength && buff != pLastBuffer)
-		    {
-		       buff = buff->BuNext;	/* passe au buffer suivant */
-		       i = 0;
-		    }
-		  prevY = nextY;
-		  prevX = nextX;
-		  nextX = PixelValue (buff->BuPoints[i].XCoord,
-				      UnPixel, NULL,
-				      ViewFrameTable[frame - 1].FrMagnification);
-		  nextY = PixelValue (buff->BuPoints[i].YCoord,
-				      UnPixel, NULL,
-				      ViewFrameTable[frame - 1].FrMagnification);
-	       }
-
-	     if (i > max && buff == pLastBuffer)
-		break;
-	     cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
-	  }
-	else
-	  {
-	     while ((i <= max || buff != pLastBuffer) && (nextY < y))
-	       {
-		  i++;		/* changement de point */
-		  if (i >= buff->BuLength && buff != pLastBuffer)
-		    {
-		       buff = buff->BuNext;	/* passe au buffer suivant */
-		       i = 0;
-		    }
-		  prevY = nextY;
-		  prevX = nextX;
-		  nextX = PixelValue (buff->BuPoints[i].XCoord,
-				      UnPixel, NULL,
-				      ViewFrameTable[frame - 1].FrMagnification);
-		  nextY = PixelValue (buff->BuPoints[i].YCoord,
-				      UnPixel, NULL,
-				      ViewFrameTable[frame - 1].FrMagnification);
-	       }
-
-	     if (i > max && buff == pLastBuffer)
-		break;
-	     cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
-	  }
+       prevX = nextX;
+       prevY = nextY;
+       nextX = PixelValue (buff->BuPoints[i].XCoord,
+			   UnPixel, NULL,
+			   ViewFrameTable[frame - 1].FrMagnification);
+       nextY = PixelValue (buff->BuPoints[i].YCoord,
+			   UnPixel, NULL,
+			   ViewFrameTable[frame - 1].FrMagnification);
+       if (prevY >= y)
+	 {
+	   while ((i <= max || buff != pLastBuffer) && (nextY >= y))
+	     {
+	       i++;		/* changement de point */
+	       if (i >= buff->BuLength && buff != pLastBuffer)
+		 {
+		   buff = buff->BuNext;	/* passe au buffer suivant */
+		   i = 0;
+		 }
+	       prevY = nextY;
+	       prevX = nextX;
+	       nextX = PixelValue (buff->BuPoints[i].XCoord,
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	       nextY = PixelValue (buff->BuPoints[i].YCoord,
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	     }
+	   
+	   if (i > max && buff == pLastBuffer)
+	     break;
+	   cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
+	 }
+       else
+	 {
+	   while ((i <= max || buff != pLastBuffer) && (nextY < y))
+	     {
+	       i++;		/* changement de point */
+	       if (i >= buff->BuLength && buff != pLastBuffer)
+		 {
+		   buff = buff->BuNext;	/* passe au buffer suivant */
+		   i = 0;
+		 }
+	       prevY = nextY;
+	       prevX = nextX;
+	       nextX = PixelValue (buff->BuPoints[i].XCoord,
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	       nextY = PixelValue (buff->BuPoints[i].YCoord,
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	     }
+	   
+	   if (i > max && buff == pLastBuffer)
+	     break;
+	   cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
+	 }
      }
    ok = (ThotBool) (cross & 0x01);
    return (ok);
@@ -473,7 +474,8 @@ int                *pointselect;
 	Y2 = PixelValue (adbuff->BuPoints[j].YCoord,
 			 UnPixel, NULL,
 			 ViewFrameTable[frame - 1].FrMagnification);
-	if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL && y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
+	if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL &&
+	    y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
 	  {
 	     /* La selection porte sur un point de controle particulier */
 	     *pointselect = i;
@@ -597,7 +599,8 @@ int                 y;
     case 'c':		/* ovals */
     case 'Q':		/* ellipses */
       value1 = x - ((float) box->BxWidth / 2);
-      value2 = (y - ((float) box->BxHeight / 2)) * ((float) box->BxWidth / (float) box->BxHeight);
+      value2 = (y - ((float) box->BxHeight / 2)) *
+                ((float) box->BxWidth / (float) box->BxHeight);
       value1 = value1 * value1 + value2 * value2;
       value2 = (float) box->BxWidth / 2;
       value2 = value2 * value2;
@@ -760,16 +763,20 @@ int                *selpoint;
     case TEXT('7'):
     case TEXT('8'):
       if (IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, pBox->BxHeight) ||
+	  IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth,
+			pBox->BxHeight) ||
 	  IsOnPolyline (x, y, 0, 0, 0, pBox->BxHeight) ||
 	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
 	return (pBox);
       break;
     case 'L':
       if (IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, pBox->BxHeight) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2, pBox->BxWidth / 2, pBox->BxHeight))
+	  IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2,
+			pBox->BxHeight) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2,
+			pBox->BxWidth / 2, 0) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2,
+			pBox->BxWidth / 2, pBox->BxHeight))
 	return (pBox);
       break;
     case 'C':
@@ -777,14 +784,17 @@ int                *selpoint;
       arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
       if (IsOnPolyline (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
 	  IsOnPolyline (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
-	  IsOnPolyline (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc, pBox->BxHeight) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, arc, pBox->BxWidth, pBox->BxHeight - arc))
+	  IsOnPolyline (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc,
+			pBox->BxHeight) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, arc, pBox->BxWidth,
+			pBox->BxHeight - arc))
 	return (pBox);
       break;
     case 'a':
     case 'c':
     case 'Q':
-      if (controlPoint == 2 || controlPoint == 4 || controlPoint == 6 || controlPoint == 8)
+      if (controlPoint == 2 || controlPoint == 4 || controlPoint == 6 ||
+	  controlPoint == 8)
 	return (pBox);
       break;
     case 'W':
@@ -795,13 +805,15 @@ int                *selpoint;
       break;
     case 'X':
       if (controlPoint == 3 || controlPoint == 5 || controlPoint == 7 ||
-	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
+	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth,
+			pBox->BxHeight) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
 	return (pBox);
       break;
     case 'Y':
       if (controlPoint == 1 || controlPoint == 5 || controlPoint == 7 ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0,
+			pBox->BxHeight) ||
 	  IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
 	return (pBox);
       break;
@@ -815,7 +827,8 @@ int                *selpoint;
     case '<':
     case '>':
       if (controlPoint == 4 || controlPoint == 8 ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth, pBox->BxHeight / 2))
+	  IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth,
+			pBox->BxHeight / 2))
 	return (pBox);
       break;
     case 't':
@@ -825,14 +838,15 @@ int                *selpoint;
       break;
     case 'b':
       if (controlPoint == 5 || controlPoint == 6 || controlPoint == 7 ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
 	return (pBox);
       break;
     case 'v':
     case '^':
     case 'V':
       if (controlPoint == 2 || controlPoint == 6 ||
-	  IsOnPolyline (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2, pBox->BxHeight))
+	  IsOnPolyline (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2,
+			pBox->BxHeight))
 	return (pBox);
       break;
     case 'l':
@@ -917,7 +931,8 @@ int                 yRef;
   pBox = NULL;
   if (pFrame->FrAbstractBox != NULL)
     if (ThotLocalActions[T_selecbox] != NULL)
-      (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
+      (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame,
+				       xRef + pFrame->FrXOrg,
 				       yRef + pFrame->FrYOrg, &pointselect);
   if (pBox == NULL)
     return (NULL);
@@ -993,11 +1008,11 @@ int            *pointselect;
 	  }
 	else if (pAb->AbLeafType == LtPolyLine && pAb->AbVolume > 2)
 	  {
-	    /* the polyline includes almost one segment */
+	    /* the polyline includes at least one segment */
 	    pBox = GetPolylinePoint (pAb, lowerX, y, frame, pointselect);
 	    if (pBox != NULL)
 	      return (pBox);
-	    /* the point doesn't belong box segments */
+	    /* the point doesn't belong to the box segments */
 	    if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
 		&& InPolyline (pAb, lowerX, y, frame))
 	      return (pAb->AbBox);
@@ -1134,7 +1149,8 @@ int            yDelta;
 		}
 	    }
 #endif
-	  else if (pBox->BxAbstractBox->AbLeafType != LtText && pBox->BxNChars != 0)
+	  else if (pBox->BxAbstractBox->AbLeafType != LtText &&
+		   pBox->BxNChars != 0)
 	    {
 	      /* the box doesn't match, skip over */
 	      if (xDelta > 0)
@@ -1172,7 +1188,8 @@ int                 dist;
 {
   int                 value;
 
-  value = GetDistance (x - xRef, ANCHOR_SIZE) + GetDistance (y - yRef, ANCHOR_SIZE) * Y_RATIO;
+  value = GetDistance (x - xRef, ANCHOR_SIZE) +
+          GetDistance (y - yRef, ANCHOR_SIZE) * Y_RATIO;
   if (value < dist)
     return (value);
   else
@@ -1347,9 +1364,11 @@ int                 yRef;
 	     if (pAb->AbVisibility >= pFrame->FrVisibility
 		 && (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	       {
-		  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+		  if (pAb->AbLeafType == LtGraphics ||
+		      pAb->AbLeafType == LtPolyLine)
 		    {
-		       pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef, yRef, frame, &pointIndex);
+		       pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef,
+						     yRef, frame, &pointIndex);
 		       if (pCurrentBox == NULL)
 			  d = max + 1;
 		       else
@@ -1358,12 +1377,14 @@ int                 yRef;
 		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
 		     /* glitch for the root symbol */
 		     d = GetShapeDistance (xRef, yRef, pBox, 1);
-		  else if (pAb->AbLeafType == LtText
-			   || pAb->AbLeafType == LtSymbol
-			   || pAb->AbLeafType == LtPicture
-		     /* empty or compound box */
-		   || (pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
-		     d = GetBoxDistance (xRef, yRef, pBox->BxXOrg, pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
+		  else if (pAb->AbLeafType == LtText ||
+			   pAb->AbLeafType == LtSymbol ||
+			   pAb->AbLeafType == LtPicture ||
+			   /* empty or compound box */
+			   (pAb->AbLeafType == LtCompound &&
+			    pAb->AbVolume == 0))
+		     d = GetBoxDistance (xRef, yRef, pBox->BxXOrg,
+				 pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
 		  else
 		     d = max + 1;
 

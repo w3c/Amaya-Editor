@@ -2222,6 +2222,7 @@ ThotBool            createDesc;
 {
   PtrAttribute        pAttr;
   PtrTextBuffer       pBuf;
+  PtrPathElement      pPa, pPaPrev;
   PtrElement          pPrevEl, p, pEl, pEl2, pElInt, pElRead, pfutParent;
   PtrPRule            pPRule;
   PtrSSchema          pSS;
@@ -2235,10 +2236,10 @@ static  LabelString         label;
   PictureScaling      pres;
   NotifyElement       notifyEl;
   PictInfo           *image;
-  int                 i, j, n, view, pictureType, elType, rule;
+  int                 i, j, n, view, pictureType, elType, rule, n1, n2, n3, n4;
   CHAR_T              alphabet;
   char                c, ch;
-  ThotBool            create, inclusion, modif;
+  ThotBool            create, inclusion, modif, b1, b2;
   ThotBool            findtype, refExt, found, withReferences;
   
   pSRule = NULL;
@@ -2757,28 +2758,7 @@ static  LabelString         label;
 			  if (!TtaReadByte (pivFile, tag))
 			    PivotError (pivFile,
 					TEXT("PivotError: Graphic 1"));
-			  else if (*tag != C_PIV_POLYLINE)
-			    /* c'est un element graphique simple */
-			    {
-			      if (create)
-				{
-				  pEl->ElGraph = ch;
-				  pEl->ElWideChar = 0;
-				  /* remplace les anciens rectangles trame's */
-				  /* par de simple rectangles */
-				  if (pEl->ElGraph >= '0' &&
-				      pEl->ElGraph <= '9')
-				    pEl->ElGraph = 'R';
-				  else if (pEl->ElGraph >= '\260' &&
-					   pEl->ElGraph <= '\270')
-				    pEl->ElGraph = 'R';
-				  if (ch == EOS)
-				    pEl->ElVolume = 0;
-				  else
-				    pEl->ElVolume = 1;
-				}
-			    }
-			  else
+			  else if (*tag == C_PIV_POLYLINE)
 			    /* c'est une Polyline */
 			    {
 			      /* lit le nombre de points de la ligne */
@@ -2820,6 +2800,131 @@ static  LabelString         label;
 			      if (!TtaReadByte (pivFile, tag))
 				PivotError (pivFile,
 					    TEXT("PivotError: Polyline 1"));
+			    }
+			  else if (*tag == C_PIV_PATH)
+			    /* c'est un path graphique */
+			    {
+			      if (create)
+				/* transforme l'element graphique simple
+				   en un path */
+				{
+				  pEl->ElLeafType = LtPath;
+				  pEl->ElFirstPathElem = NULL;
+				  pPaPrev = NULL;
+				  n = 0;
+				}
+			      /* lit l'octet qui suit (type d'element de path
+			         ou tag de fin d'element) */
+			      if (!TtaReadByte (pivFile, tag))
+				PivotError (pivFile,
+					    TEXT("PivotError: Path 1"));
+			      else
+				{
+				while (*tag != C_PIV_END)
+				  {
+				  TtaReadInteger (pivFile, &n1);
+				  TtaReadInteger (pivFile, &n2);
+				  TtaReadInteger (pivFile, &n3);
+				  TtaReadInteger (pivFile, &n4);
+				  if (create)
+				    {
+				    GetPathElement (&pPa);
+				    if (pPaPrev)
+				      pPaPrev->PaNext = pPa;
+				    else
+				      pEl->ElFirstPathElem = pPa;
+				    pPa->PaPrevious = pPaPrev;
+				    pPa->PaNext = NULL;
+				    pPaPrev = pPa;
+				    n++;
+				    pPa->XStart = n1;
+				    pPa->YStart = n2;
+				    pPa->XEnd = n3;
+				    pPa->YEnd = n4;
+				    }
+				  switch ((char) *tag)
+				    {
+				    case 'L':
+				      if (create)
+				        pPa->PaShape = PtLine;
+				      break;
+				    case 'C':
+				      TtaReadInteger (pivFile, &n1);
+				      TtaReadInteger (pivFile, &n2);
+				      TtaReadInteger (pivFile, &n3);
+				      TtaReadInteger (pivFile, &n4);
+				      if (create)
+					{
+					pPa->PaShape = PtCubicBezier;
+					pPa->XCtrlStart = n1;
+					pPa->YCtrlStart = n2;
+					pPa->XCtrlEnd = n3;
+					pPa->YCtrlEnd = n4;
+					}
+				      break;
+				    case 'Q':
+				      TtaReadInteger (pivFile, &n1);
+				      TtaReadInteger (pivFile, &n2);
+				      if (create)
+					{
+					pPa->PaShape = PtQuadricBezier;
+					pPa->XCtrlStart = n1;
+					pPa->YCtrlStart = n2;
+					}
+				      break;
+				    case 'A':
+				      TtaReadInteger (pivFile, &n1);
+				      TtaReadInteger (pivFile, &n2);
+				      TtaReadShort (pivFile, &n3);
+				      b1 = ReadBoolean (pivFile);
+				      b2 = ReadBoolean (pivFile);
+				      if (create)
+					{
+					pPa->PaShape = PtElliptical;
+					pPa->XRadius = n1;
+					pPa->YRadius = n2;
+					pPa->XAxisRotation = n3;
+					pPa->LargeArc = b1;
+					pPa->Sweep = b2;
+					}
+				      break;
+				    default:
+				      PivotError (pivFile,
+					          TEXT("PivotError: Path 2"));
+				      break;
+				    }
+				  /* lit l'octet qui suit (type d'element de
+				     path ou tag de fin d'element) */
+			          if (!TtaReadByte (pivFile, tag))
+				     PivotError (pivFile,
+					         TEXT("PivotError: Path 3"));
+				  }
+				if (create)
+				  /* the volume of a path is the number of
+				     its elements */
+				  pEl->ElVolume = n;
+				}
+			    }
+			  else
+			    /* c'est un element graphique simple */
+			    {
+			      if (create)
+				{
+				  pEl->ElGraph = ch;
+				  pEl->ElWideChar = 0;
+				  /* remplace les anciens rectangles trame's */
+				  /* par de simple rectangles */
+				  if (pEl->ElGraph >= '0' &&
+				      pEl->ElGraph <= '9')
+				    pEl->ElGraph = 'R';
+				  else if (pEl->ElGraph >= '\260' &&
+					   pEl->ElGraph <= '\270')
+				    pEl->ElGraph = 'R';
+				  if (ch == EOS)
+				    pEl->ElVolume = 0;
+				  else
+				    pEl->ElVolume = 1;
+				}
 			    }
 			  break;
 			case PageBreak:

@@ -125,11 +125,12 @@ int                 h;
 	  else
 	    {
 	      /* Add a pagebreak probably missed at the end of the document */
-		if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
-		  AddLastPageBreak (pDoc->DocRootElement, 1, pDoc, FALSE);
-		nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1, TRUE, NULL);
-		OpenCreatedView (pDoc, nView, FALSE, x, y, w, h);
-		view = nView;
+	      if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
+		AddLastPageBreak (pDoc->DocRootElement, 1, pDoc, FALSE);
+	      nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1,
+					   TRUE, NULL);
+	      OpenCreatedView (pDoc, nView, FALSE, x, y, w, h);
+	      view = nView;
 	    }
      }
     }
@@ -166,31 +167,31 @@ int                 h;
 Element             subtree;
 #endif /* __STDC__ */
 {
-   int                 nView;
-   int                 nbViews;
-   int                 i;
-   int                 v;
-   PtrDocument         pDoc;
-   AvailableView       allViews;
-   ThotBool            assoc;
-   ThotBool            found;
-   View                view;
-   ThotBool            viewHasBeenOpen;
+  int                 nView;
+  int                 nbViews;
+  int                 i;
+  int                 v;
+  PtrDocument         pDoc;
+  AvailableView       allViews;
+  ThotBool            assoc;
+  ThotBool            found;
+  View                view;
+  ThotBool            viewHasBeenOpen;
 
-   UserErrorCode = 0;
-   view = 0;
-   v = 0;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-      /* parameter document is ok */
-   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+  UserErrorCode = 0;
+  view = 0;
+  v = 0;
+  /* Checks the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is ok */
+    if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       TtaError (ERR_no_presentation_schema);
-   else
-     {
+    else
+      {
 	pDoc = LoadedDocument[document - 1];
 	assoc = FALSE;
 	nView = 0;
@@ -200,53 +201,57 @@ Element             subtree;
 	found = FALSE;
 	for (i = 0; i < nbViews && !found; i++)
 	  {
-	     found = ustrcmp (viewName, allViews[i].VdViewName) == 0;
-	     if (found)
-		v = i;
+	    found = ustrcmp (viewName, allViews[i].VdViewName) == 0;
+	    if (found)
+	      v = i;
 	  }
 	if (found)
 	  {
-          viewHasBeenOpen = TRUE;
-
-	     /* Open the view */
-	     if (allViews[v].VdAssoc)
-	       {
-		  /* Add a page break probably missed at the end */
-		  if (allViews[v].VdView > 0)
-		     if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
-			AddLastPageBreak (pDoc->DocAssocRoot[allViews[v].VdView - 1], 1, pDoc, FALSE);
-		  nView = CreateAbstractImage (pDoc, 0, allViews[v].VdAssocNum,
-		      allViews[v].VdSSchema, 1, TRUE, (PtrElement) subtree);
-                  if (pDoc->DocAssocRoot[nView - 1] == NULL)
-                    /*** Associated tree creation has been refused. ***/
-                    viewHasBeenOpen = FALSE;
-		  assoc = TRUE;
-	       }
-	     else
-	       {
-		  /* Add a page break probably missed at the end */
-		  if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[allViews[v].VdView])
-		     AddLastPageBreak (pDoc->DocRootElement, allViews[v].VdView, pDoc, FALSE);
-		  nView = CreateAbstractImage (pDoc, allViews[v].VdView, 0,
-		     allViews[v].VdSSchema, 1, FALSE, (PtrElement) subtree);
-		  assoc = FALSE;
-	       }
-	     if (nView == 0)
-		TtaError (ERR_cannot_open_view);
-	     else
-	       {
-                  if (viewHasBeenOpen)
-                    {
-		       OpenCreatedView (pDoc, nView, assoc, x, y, w, h);
-		       if (assoc)
-		          view = nView + 100;
-		       else
-		          view = nView;
-                    }
-	       }
+	    viewHasBeenOpen = TRUE;
+	    
+	    /* Open the view */
+	    if (allViews[v].VdAssoc)
+	      {
+		/* Add a page break probably missed at the end */
+		if (allViews[v].VdView > 0)
+		  if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
+		    AddLastPageBreak (pDoc->DocAssocRoot[allViews[v].VdView-1],
+				      1, pDoc, FALSE);
+		nView = CreateAbstractImage (pDoc, 0, allViews[v].VdAssocNum,
+					     allViews[v].VdSSchema, 1, TRUE,
+					     (PtrElement) subtree);
+		if (pDoc->DocAssocRoot[nView - 1] == NULL)
+		  /*** Associated tree creation has been refused. ***/
+		  viewHasBeenOpen = FALSE;
+		assoc = TRUE;
+	      }
+	    else
+	      {
+		/* Add a page break probably missed at the end */
+		if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[allViews[v].VdView])
+		  AddLastPageBreak (pDoc->DocRootElement, allViews[v].VdView,
+				    pDoc, FALSE);
+		nView = CreateAbstractImage (pDoc, allViews[v].VdView, 0,
+					     allViews[v].VdSSchema, 1, FALSE,
+					     (PtrElement) subtree);
+		assoc = FALSE;
+	      }
+	    if (nView == 0)
+	      TtaError (ERR_cannot_open_view);
+	    else
+	      {
+		if (viewHasBeenOpen)
+		  {
+		    OpenCreatedView (pDoc, nView, assoc, x, y, w, h);
+		    if (assoc)
+		      view = nView + 100;
+		    else
+		      view = nView;
+		  }
+	      }
 	  }
-     }
-   return view;
+      }
+  return view;
 }
 
 /*----------------------------------------------------------------------
@@ -563,7 +568,8 @@ int                *position;
 	  /* recupere la boite selectionnee */
 	  if (ThotLocalActions[T_selecbox] != NULL)
 	    {
-	      (*ThotLocalActions[T_selecbox]) (&pBox, pRootAb, frame, x, y, &charsNumber);
+	      (*ThotLocalActions[T_selecbox]) (&pBox, pRootAb, frame, x, y,
+					       &charsNumber);
 	      if (pBox != NULL && pBox->BxAbstractBox != NULL)
 		{
 		  if (pBox->BxType == BoPiece || pBox->BxType == BoSplit)
@@ -624,12 +630,14 @@ int                 position;
 	  else
 	    aView = 1;
 	  pEl = (PtrElement) element;
-	  /* If the first abstract box of the element is incomplete, it is suppressed */
+	  /* If the first abstract box of the element is incomplete,
+	     it is suppressed */
 	  if (pEl->ElAbstractBox[aView - 1] != NULL &&
 	      pEl->ElAbstractBox[aView - 1]->AbLeafType == LtCompound &&
 	      pEl->ElAbstractBox[aView - 1]->AbTruncatedHead)
 	    /* Destroying the abstract box of the element in this view */
-	    DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE, aView);
+	    DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE,
+				 aView);
 	  /* and CheckAbsBox will rebuild it at the beginning of the element */
 	  CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, FALSE);
 	  if (pEl->ElAbstractBox[aView - 1] != NULL)
@@ -740,7 +748,8 @@ STRING              presentationName;
 
    UserErrorCode = 0;
    result = 0;
-   /* Arrange the name of the file to be opened with the schema directory name */
+   /* Arrange the name of the file to be opened with the schema directory
+      name */
    ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (presentationName, TEXT("PRS"), DirBuffer, text, &i);
    /* Checks if the file exists */
@@ -819,47 +828,47 @@ Document            document;
 View                view;
 #endif /* __STDC__ */
 {
-   PtrDocument         pDoc;
-   PtrElement          pEl;
-   DocViewDescr        dView;
-   int                 numAssoc;
+  PtrDocument         pDoc;
+  PtrElement          pEl;
+  DocViewDescr        dView;
+  int                 numAssoc;
 
-   UserErrorCode = 0;
-   nameBuffer[0] = EOS;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-      /* parameter document is ok */
-     {
-	pDoc = LoadedDocument[document - 1];
-	if (view < 100)
-	   /* View of the main tree */
-	   if (view < 1 || view > MAX_VIEW_DOC)
-	      TtaError (ERR_invalid_parameter);
-	   else
-	     {
-		dView = pDoc->DocView[view - 1];
-		if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
-		   ustrncpy (nameBuffer, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1], MAX_NAME_LENGTH);
-	     }
+  UserErrorCode = 0;
+  nameBuffer[0] = EOS;
+  /* Checks the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is ok */
+    {
+      pDoc = LoadedDocument[document - 1];
+      if (view < 100)
+	/* View of the main tree */
+	if (view < 1 || view > MAX_VIEW_DOC)
+	  TtaError (ERR_invalid_parameter);
 	else
-	   /* View of associated elements */
 	  {
-	     numAssoc = view - 100;
-	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  pEl = pDoc->DocAssocRoot[numAssoc - 1];
-		  if (pEl != NULL)
-		     ustrncpy (nameBuffer, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
-	       }
+	    dView = pDoc->DocView[view - 1];
+	    if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
+	      ustrncpy (nameBuffer, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1], MAX_NAME_LENGTH);
 	  }
-     }
-   return nameBuffer;
+      else
+	/* View of associated elements */
+	{
+	  numAssoc = view - 100;
+	  if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
+	    TtaError (ERR_invalid_parameter);
+	  else
+	    {
+	      pEl = pDoc->DocAssocRoot[numAssoc - 1];
+	      if (pEl != NULL)
+		ustrncpy (nameBuffer, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+	    }
+	}
+    }
+  return nameBuffer;
 }
 
 
@@ -1150,7 +1159,8 @@ int                 delta;
 	   /* reaffichage du pave */
 	   pAbbox1 = element->ElAbstractBox[view];
 	   /* saute les paves de presentation */
-	   while (pAbbox1->AbElement == element && pAbbox1->AbPresentationBox &&
+	   while (pAbbox1->AbElement == element &&
+		  pAbbox1->AbPresentationBox &&
 		  pAbbox1->AbNext != NULL)
 	      pAbbox1 = pAbbox1->AbNext;
 	   pAbbox1->AbVolume += delta;
@@ -1169,6 +1179,11 @@ int                 delta;
 	       pAbbox1->AbPolyLineBuffer = element->ElPolyLineBuffer;
 	       pAbbox1->AbPolyLineShape = element->ElPolyLineType;
 	       pAbbox1->AbVolume = element->ElNPoints;
+	       break;
+	     case LtPath:
+	       pAbbox1->AbLeafType = LtPath;
+	       pAbbox1->AbFirstPathElem = element->ElFirstPathElem;
+	       pAbbox1->AbVolume = element->ElVolume;
 	       break;
 	     case LtSymbol:
 	     case LtGraphics:
@@ -1314,7 +1329,8 @@ Document            document;
 	 ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
 	 stop = TRUE;
        }
-     else if (!pENeighbour->ElTerminal || pENeighbour->ElLeafType != LtPageColBreak)
+     else if (!pENeighbour->ElTerminal ||
+	      pENeighbour->ElLeafType != LtPageColBreak)
        stop = TRUE;
      else
        pENeighbour = pENeighbour->ElNext;
@@ -1405,7 +1421,8 @@ ThotBool            suppression;
      {
 	/* on supprime d'abord les regles de presentation liees */
 	/* a l'attribut sur l'element lui-meme */
-	RemoveAttrPresentation (pEl, LoadedDocument[document - 1], pOldAttr, pEl, FALSE, NULL);
+	RemoveAttrPresentation (pEl, LoadedDocument[document - 1], pOldAttr,
+				pEl, FALSE, NULL);
 	/* puis on supprime sur pEl et sur les elements du sous arbre pEl */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */
@@ -1502,7 +1519,8 @@ Document            document;
    do
       if (pPrevious == NULL)
 	 stop = TRUE;
-      else if (!pPrevious->ElTerminal || pPrevious->ElLeafType != LtPageColBreak)
+      else if (!pPrevious->ElTerminal ||
+	       pPrevious->ElLeafType != LtPageColBreak)
 	 stop = TRUE;
       else
 	 pPrevious = pPrevious->ElPrevious;

@@ -33,6 +33,7 @@
 #define C_PIV_VERSION 22	/* version mark */
 #define C_PIV_HOLOPHRAST 23	/* holophrasted element mark */
 #define C_PIV_POLYLINE 24	/* polyline mark */
+#define C_PIV_PATH 25		/* graphics path mark */
 #define C_PIV_DOC_END 26	/* document ending mark */
 
 /* specific presentation rule type codes */

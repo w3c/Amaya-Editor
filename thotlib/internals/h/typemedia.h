@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -474,8 +474,8 @@ typedef struct _AbstractBox
     } s0;
     struct /* AbLeafType = LtText */
     {
-      PtrTextBuffer  _AbText_;      /* On first text buffer */
-      Language  _AbLanguage_;  /* Language used */
+      PtrTextBuffer _AbText_;     /* On first text buffer */
+      Language      _AbLanguage_; /* Language used */
     } s1;
     struct /* AbLeafType = LtGraphics or LtSymbol */
     {
@@ -496,6 +496,10 @@ typedef struct _AbstractBox
       PtrTextBuffer _AbPolyLineBuffer_; /* First buffer */
       char          _AbPolyLineShape_;  /* Drawing type */
     } s4;
+    struct /* AbLeafType = LtPath  */
+    {
+      PtrPathElement _AbFirstPathElem_; /* First path element */
+    } s5;
   } u;
 } AbstractBox;
 
@@ -516,6 +520,7 @@ typedef struct _AbstractBox
 #define AbPictInfo u.s3._AbPictInfo_
 #define AbPolyLineBuffer u.s4._AbPolyLineBuffer_
 #define AbPolyLineShape u.s4._AbPolyLineShape_
+#define AbFirstPathElem u.s5._AbFirstPathElem_
 
 typedef struct _ViewFrame
 {

@@ -612,6 +612,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pChild, pNext;
    PtrTextBuffer       pBuf, pNextBuf;
+   PtrPathElement      pPa, pNextPa;
    int                 view;
    ThotBool            ToCreate[MAX_VIEW_DOC];
 
@@ -628,50 +629,61 @@ PtrDocument         pDoc;
    if (ThotLocalActions[T_AIupdate] != NULL)
      (*ThotLocalActions[T_AIupdate]) (pDoc);
    if (pEl->ElTerminal)
-      switch (pEl->ElLeafType)
-	    {
-	       case LtPicture:
-	       case LtText:
-		  pBuf = pEl->ElText;
-		  while (pBuf != NULL)
-		    {
-		       pNextBuf = pBuf->BuNext;
-		       FreeTextBuffer (pBuf);
-		       pBuf = pNextBuf;
-		    }
-		  pEl->ElText = NULL;
-		  pEl->ElTextLength = 0;
-		  break;
-	       case LtPolyLine:
-		  pBuf = pEl->ElPolyLineBuffer;
-		  while (pBuf != NULL)
-		    {
-		       pNextBuf = pBuf->BuNext;
-		       FreeTextBuffer (pBuf);
-		       pBuf = pNextBuf;
-		    }
-		  pEl->ElPolyLineBuffer = NULL;
-		  pEl->ElNPoints = 0;
-		  pEl->ElVolume = 0;
-		  pEl->ElPolyLineType = EOS;
-		  break;
-	       case LtSymbol:
-	       case LtGraphics:
-		  pEl->ElGraph = EOS;
-		  pEl->ElWideChar = 0;
-		  break;
-	       default:
-		  break;
-	    }
+     switch (pEl->ElLeafType)
+       {
+       case LtPicture:
+       case LtText:
+	 pBuf = pEl->ElText;
+	 while (pBuf != NULL)
+	   {
+	     pNextBuf = pBuf->BuNext;
+	     FreeTextBuffer (pBuf);
+	     pBuf = pNextBuf;
+	   }
+	 pEl->ElText = NULL;
+	 pEl->ElTextLength = 0;
+	 break;
+       case LtPolyLine:
+	 pBuf = pEl->ElPolyLineBuffer;
+	 while (pBuf != NULL)
+	   {
+	     pNextBuf = pBuf->BuNext;
+	     FreeTextBuffer (pBuf);
+	     pBuf = pNextBuf;
+	   }
+	 pEl->ElPolyLineBuffer = NULL;
+	 pEl->ElNPoints = 0;
+	 pEl->ElVolume = 0;
+	 pEl->ElPolyLineType = EOS;
+	 break;
+       case LtPath:
+	 pPa = pEl->ElFirstPathElem;
+	 while (pPa)
+	   {
+	     pNextPa = pPa->PaNext;
+	     FreePathElement (pPa);
+	     pPa = pNextPa;
+	   }
+	 pEl->ElFirstPathElem = NULL;
+	 pEl->ElVolume = 0;
+	 break;
+       case LtSymbol:
+       case LtGraphics:
+	 pEl->ElGraph = EOS;
+	 pEl->ElWideChar = 0;
+	 break;
+       default:
+	 break;
+       }
    else
      {
-	pChild = pEl->ElFirstChild;
-	while (pChild != NULL)
-	  {
-	     pNext = pChild->ElNext;
-	     DeleteElement (&pChild, pDoc);
-	     pChild = pNext;
-	  }
+       pChild = pEl->ElFirstChild;
+       while (pChild != NULL)
+	 {
+	   pNext = pChild->ElNext;
+	   DeleteElement (&pChild, pDoc);
+	   pChild = pNext;
+	 }
      }
    /* effectue une nouvelle copie */
    CopyIncludedElem (pEl, pDoc);
@@ -679,21 +691,21 @@ PtrDocument         pDoc;
    /* deja des paves */
    if (!AssocView (pEl))
      {
-	for (view = 0; view < MAX_VIEW_DOC; view++)
-	   if (ToCreate[view])
-	     {
-		pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
-		CreateNewAbsBoxes (pEl, pDoc, view + 1);
-	     }
+       for (view = 0; view < MAX_VIEW_DOC; view++)
+	 if (ToCreate[view])
+	   {
+	     pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
+	     CreateNewAbsBoxes (pEl, pDoc, view + 1);
+	   }
      }
    else
-      /* vue d'elements associes */
-   if (ToCreate[0])
-     {
-	pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
+     /* vue d'elements associes */
+     if (ToCreate[0])
+       {
+	 pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
 	   pDoc->DocAssocVolume[pEl->ElAssocNum - 1];
-	CreateNewAbsBoxes (pEl, pDoc, 1);
-     }
+	 CreateNewAbsBoxes (pEl, pDoc, 1);
+       }
    ApplDelayedRule (pEl, pDoc);
    /* reaffiche l'element dans toutes les vues ou il existe */
    /* Update Abstract views */

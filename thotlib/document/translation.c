@@ -416,7 +416,8 @@ ThotBool            lineBreak;
    usprintf (buffer, TEXT("%d"), n);
    i = 0;
    while (buffer[i] != EOS)
-      PutChar ((wchar_t) buffer[i++], fileNum, outBuffer, pDoc, lineBreak, FALSE);
+      PutChar ((wchar_t) buffer[i++], fileNum, outBuffer, pDoc, lineBreak,
+	       FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -771,14 +772,18 @@ PtrDocument         pDoc;
 	 {
 	   if (pDoc->DocCharset == UTF_8)
 	     /* translate into UTF_8 the unicode value */
-	     PutChar ((wchar_t) pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak, TRUE);
+	     PutChar ((wchar_t) pEl->ElWideChar, fileNum, NULL, pDoc,
+		      lineBreak, TRUE);
 	   else
 	     {
 	       /* write a numeric entity */
-	       PutChar ((wchar_t) TEXT('&'), fileNum, NULL, pDoc, lineBreak, FALSE);
-	       PutChar ((wchar_t) TEXT('#'), fileNum, NULL, pDoc, lineBreak, FALSE);
+	       PutChar ((wchar_t) TEXT('&'), fileNum, NULL, pDoc, lineBreak,
+			FALSE);
+	       PutChar ((wchar_t) TEXT('#'), fileNum, NULL, pDoc, lineBreak,
+			FALSE);
 	       PutInt (pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak);
-	       PutChar ((wchar_t) TEXT(';'), fileNum, NULL, pDoc, lineBreak, FALSE);
+	       PutChar ((wchar_t) TEXT(';'), fileNum, NULL, pDoc, lineBreak,
+			FALSE);
 	     }
 	 }
        else if (pTSch != NULL)
@@ -823,7 +828,8 @@ PtrDocument         pDoc;
 	     pTrans = &pTSch->TsCharTransl[ft - 1];
 	     while (pTrans->StTarget[b] != EOS)
 	       {
-	       PutChar ((wchar_t) (pTrans->StTarget[b]), fileNum, NULL, pDoc, lineBreak, TRUE);
+	       PutChar ((wchar_t) (pTrans->StTarget[b]), fileNum, NULL, pDoc,
+			lineBreak, TRUE);
 	       b++;
 	       }
 	     }
@@ -843,10 +849,12 @@ PtrDocument         pDoc;
 	       {
 	       for (i = 0; i < pBufT->BuLength; i++)
 		 {
-		 PutChar ((wchar_t) TEXT(' '), fileNum, NULL, pDoc, lineBreak, FALSE);
+		 PutChar ((wchar_t) TEXT(' '), fileNum, NULL, pDoc, lineBreak,
+			  FALSE);
 		 PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL, pDoc,
 			 lineBreak);
-		 PutChar ((wchar_t) TEXT(','), fileNum, NULL, pDoc, lineBreak, FALSE);
+		 PutChar ((wchar_t) TEXT(','), fileNum, NULL, pDoc, lineBreak,
+			  FALSE);
 		 PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL, pDoc,
 			 lineBreak);
 		 }
@@ -885,6 +893,9 @@ PtrDocument         pDoc;
 	     }
 	   }
        break;
+
+     case LtPath:
+       break;		/* On ne fait rien */
 
      case LtPageColBreak:
        break;		/* On ne fait rien */
@@ -1000,6 +1011,8 @@ PtrElement          pEl;
        case LtPolyLine:
 	 empty = (pEl->ElNPoints == 0);
 	 break;
+       case LtPath:
+	 empty = (pEl->ElFirstPathElem == NULL);
        default:
 	 empty = FALSE;
 	 break;
