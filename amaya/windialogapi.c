@@ -1339,15 +1339,31 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   	case ID_CHANGECHARSET:
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 3);
 	  if (SaveFormTmp[0] != EOS)
-	    _snprintf (buff, 500, "Charset: %s", UserCharset);	  
-	  SetDlgItemText (hwnDlg, IDC_CHARSET, buff);
+	  {
+	   if (UserCharset[0] != EOS)
+          ptr = UserCharset;  
+       else if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->charset)
+          ptr = DocumentMeta[SavingDocument]->charset;
+        else
+          ptr = "UNKNOWN";
+        _snprintf (buff, 500, "Charset: %s", ptr);
+        SetDlgItemText (hwnDlg, IDC_CHARSET, buff);	
+	  }
 	  break;
 
 	case ID_CHANGEMIMETYPE:
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
 	  if (SaveFormTmp[0] != EOS)
-	    _snprintf (buff, 500, "MIME type: %s", UserMimeType);	  
-	  SetDlgItemText (hwnDlg, IDC_MIMETYPE, buff);
+	  {
+		if (UserMimeType[0] != EOS)
+		   ptr = UserMimeType;
+	    else if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->content_type)
+	      ptr = DocumentMeta[SavingDocument]->content_type;
+        else 
+	      ptr = "UNKNOWN";
+	    _snprintf (buff, 500, "MIME type: %s", ptr);	  
+	    SetDlgItemText (hwnDlg, IDC_MIMETYPE, buff);
+	  }
 	  break;
 	  
 	case ID_CLEAR:
