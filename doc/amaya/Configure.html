@@ -1,8 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-Configuring Amaya</title>
+<title>Configuring Amaya</title>
 </head>
 <body lang="en">
 
@@ -108,6 +108,32 @@ set no_proxy=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
 <p>
 Please consult your system's documentation for more complete information on
 how to specify environment variables.</p>
+
+<h3><a name="Cache">Cache</a></h3>
+<p>
+As of version 1.3a, Amaya provides a cache thru libwww. The cache is enabled
+by default and is stored in a directory called libwww-cache.</p>
+<p>
+Three registry files entries allow you to control the cache:</p>
+<dl>
+<dt><strong>EnableCache</strong> [YES/NO, default YES]</dt>
+<dd>
+Activates or desactivates the cache
+</dd>
+<dt><strong>CacheSize</strong> [number in megabytes, default 5 megabytes]</dt>
+<dd>
+Gives the size of the cache repository
+</dd>
+<dt><strong>CacheDir</strong> [path, default the .amaya temporary
+directory]</dt>
+<dd>
+The directory path where you want to create the libwww-cache directory
+</dd>
+</dl>
+<p>
+To purge the cache, you just need to erase the libwww-cache directory (when
+Amaya is not running), or use the <strong>Purge Cache</strong> entry in the
+<strong>Special</strong> menu.</p>
 
 <h3><a name="HTML">Document Windows</a></h3>
 <p>
