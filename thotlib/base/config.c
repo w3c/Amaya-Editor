@@ -693,9 +693,12 @@ static FILE *openConfigFile (char *name, ThotBool lang)
        MakeCompleteName (name, suffix, DirBuffer, filename, &i);
        if (!TtaFileExist (filename))
 	 {
-	   /* it's probably a generic name */
-	   strncpy (DirBuffer, SchemaPath, MAX_PATH);
-	   MakeCompleteName ("XML", suffix, DirBuffer, filename, &i);
+	   if (strcmp (name, "Annot"))
+	     {
+	       /* it's probably a generic name */
+	       strncpy (DirBuffer, SchemaPath, MAX_PATH);
+	       MakeCompleteName ("XML", suffix, DirBuffer, filename, &i);
+	     }
 	 }
      }
    /* ouvre le fichier */
