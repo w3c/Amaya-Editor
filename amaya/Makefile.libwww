@@ -23,7 +23,7 @@ AMAYA_LIBWWW_LIBS= \
 		-L../$(LIBWWW)/Library/src/.libs \
 			-lwwwapp \
 			-lwwwhttp \
-			-lwwwxml \
+			$(LIBWWW_RDF_PARSER) \
 			-lwwwhtml \
 			-lwwwmime \
 			-lwwwcache \

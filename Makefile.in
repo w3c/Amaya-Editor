@@ -9,14 +9,15 @@ THOTDIR = @top_srcdir@
 
 include Options
 
-LIBWWW	= libwww
-KAFFE	= kaffe-$(KAFFE_VER)
-LIBJPEG	= libjpeg
-LIBPNG	= libpng
-LIBZ	= libz
+LIBWWW	   = libwww
+LIBRAPTOR  = libraptor
+KAFFE	   = kaffe-$(KAFFE_VER)
+LIBJPEG	   = libjpeg
+LIBPNG	   = libpng
+LIBZ	   = libz
 
 #MKP: adding davlib
-SUBDIRS	= tools thotlib tablelib batch drawlib indexlib annotlib amaya thot @DAVDIR@
+SUBDIRS	= @SUBDIRS@ tools thotlib tablelib batch drawlib indexlib annotlib amaya thot @DAVDIR@
 EXTRA_SUBDIRS= misc pluginlib
 
 prefix = @prefix@
@@ -168,7 +169,7 @@ AMAYA_LIBWWW_STANDARD_LIBS = \
 	libwwwcore \
 	libwwwutils \
 	libwwwftp \
-	libwwwxml \
+	@MAKE_LIBWWW_RDF_PARSER@ \
 	libwwwzip \
         @LIBDAV@
 
@@ -260,6 +261,41 @@ libwww_install : libwww_install_modules libwww_install_standard
 
 libwww : libwww_config libwww_make
 		@($(ECHO) "libwww is installed")
+
+#
+# Rules to build the raptor RDF package
+#
+
+libraptor_config: @MAKERAPTOR@ force
+	@(if [ ! -e "$(THOTDIR)/$(LIBRAPTOR)" ] ; then \
+	      $(ECHO) "Error raptor dir not found at $(THOTDIR)/$(LIBRAPTOR)" ; \
+	  fi)
+	@(if [ ! -e "$(THOTDIR)/$(LIBRAPTOR)/expat" ] ; then \
+	      libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
+	      echo $$libwwwdir ; \
+	      $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/$(LIBRAPTOR)/expat" ; \
+	  fi)
+	 @(if [ ! -d "$(LIBRAPTOR)" ] ; then \
+		$(MKDIR) $(LIBRAPTOR) ; \
+          fi)
+	 @(localdir=`pwd` ; raptordir="$$localdir/../$(LIBRAPTOR)" ; \
+	  cd $(LIBRAPTOR) ; unset LANG; \
+	  if [ ! -f Makefile -o ! -f config.h ] ; then \
+	  	$$raptordir/configure \
+			--disable-shared \
+			--with-expat ; \
+		$(ECHO) "libraptor is configured" ; \
+	  fi)
+
+libraptor_make: @MAKERAPTOR@ force
+	@(localdir=`pwd`; \
+	  cd $(LIBRAPTOR) ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" \
+		  CPPFLAGS="$(CPPFLAGS)" \
+	)
+
+libraptor: @MAKERAPTOR@ libraptor_config libraptor_make
+	@($(ECHO) "libraptor is installed")
 
 #
 # Rules to rebuild the libjpeg package

@@ -7,6 +7,7 @@
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
 WWWDAV = @WWWDAV@
+LIBWWW_RDF_PARSER = @LIBWWW_RDF_PARSER@
 
 include ../Options
 
@@ -14,6 +15,7 @@ INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(EXPAT_INCLUDES) $(X_FLAGS)
 XMLIB   = @MOTIF_LIBRARIES@
 LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 	   $(AMAYA_LIBWWW_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
+	   @AMAYA_RAPTOR_LIBS@ \
           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) $(EXPAT_LIBRARIES) \
 	  $(MOTIF_LIBRARIES) $(GTK_LIBRARIES) \
@@ -93,6 +95,9 @@ force :
 ../tools/mkdep/mkdep : 
 	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O")
 
+amaya_comp_libraptor : @MAKERAPTOR@ force
+	@(cd .. ; $(MAKE) libraptor CC="$(CC)" CFLAGS="-O2")
+
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
 
@@ -143,7 +148,7 @@ AMAYA_OPTION_OBJ= $(AMAYA_PLUGIN_OBJ) \
          $(AMAYA_ANNOT_OBJ) $(AMAYA_DAV_OBJ)
 
 AMAYA_SRC= $(AMAYA_PLUGIN_SRC) \
-         $(AMAYA_LIBWWW_SRC) $(AMAYA_MATH_SRC) $(AMAYA_SVG_SRC) \
+         $(AMAYA_LIBWWW_SRC) @AMAYA_RAPTOR_SRC@ $(AMAYA_MATH_SRC) $(AMAYA_SVG_SRC) \
          $(AMAYA_ANNOT_SRC) $(AMAYA_DAV_SRC)
 
 AMAYA_OPTION_LIBS= $(AMAYA_PLUGIN_LIBS) \
