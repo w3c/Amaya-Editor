@@ -354,7 +354,7 @@ LRESULT CALLBACK TextDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	}
       else
 	{
-	  SetWindowText (hwnDlg, TtaGetMessage (1, BTitle));
+	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_CHANGE_TITLE));
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_URL_TEXT),
 		  TtaGetMessage (AMAYA, AM_TITLE));
 	}
@@ -705,7 +705,7 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
   {
     case WM_INITDIALOG:
-      SetWindowText (hwnDlg, TtaGetMessage (1, BTable));
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL),
 		     TtaGetMessage (AMAYA, AM_COLS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMROWS),

@@ -1987,13 +1987,13 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWBUTTONS),
-		     TtaGetMessage (1, TShowButtonbar));
+		     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWADDRESS),
-		     TtaGetMessage (1, TShowTextZone));
+		     TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWTARGET),
-		     TtaGetMessage (1, TShowTargets));
+		     TtaGetMessage (AMAYA, AM_SHOW_TARGETS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBER),
-		     TtaGetMessage (1, TSectionNumber));
+		     TtaGetMessage (AMAYA, AM_SECTIONNUMBER));
       /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
@@ -2243,10 +2243,10 @@ void GeneralConfMenu (Document document, View view)
    sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
 	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
-	     TtaGetMessage (1, TShowButtonbar), EOS,
-	     TtaGetMessage (1, TShowTextZone), EOS,
-	     TtaGetMessage (1, TShowTargets), EOS,
-	     TtaGetMessage (1, TSectionNumber));
+	     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR), EOS,
+	     TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE), EOS,
+	     TtaGetMessage (AMAYA, AM_SHOW_TARGETS), EOS,
+	     TtaGetMessage (AMAYA, AM_SECTION_NUMBER));
 
    TtaNewToggleMenu (GeneralBase + mToggleGeneral,
 		     GeneralBase + GeneralMenu,

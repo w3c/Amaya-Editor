@@ -1489,7 +1489,7 @@ void CreateTable (Document document, View view)
 	   CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
 #else  /* !_WINDOWS */
 	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
-		       TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
+		       TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TRUE, 1, 'L', D_CANCEL);
 	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
 			     TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
 	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,

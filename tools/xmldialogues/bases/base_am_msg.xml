@@ -31,6 +31,106 @@
 	<message xml:lang="pt">Abrir</message>
 	<message xml:lang="fi">Avaa</message>
 </label>
+<label define="AM_NEW_HTML11">
+	<message xml:lang="en">New XHTML 1.1 document...</message>
+	<message xml:lang="fr">Nouveau document XHTML 1.1...</message>
+	<message xml:lang="de">XHTML 1.1...</message>
+	<message xml:lang="it">Nuovo documento XHTML 1.1...</message>
+	<message xml:lang="es">Documento XHTML 1.1 nuevo...</message>
+	<message xml:lang="pt">Novo documento XHTML 1.1...</message>
+	<message xml:lang="fi">Uusi XHTML 1.1 dokumentti...</message>
+	<message xml:lang="tr">Yeni XHTML 1.1 dosyası...</message>
+</label>
+<label define="AM_NEW_HTML_TRANSITIONAL">
+	<message xml:lang="en">New XHTML 1.0 Transitional document...</message>
+	<message xml:lang="fr">Nouveau document XHTML 1.0 Transitional...</message>
+	<message xml:lang="de">XHTML 1.0 Transitional...</message>
+	<message xml:lang="it">Nuovo documento XHTML 1.0 Transitional...</message>
+	<message xml:lang="es">Documento XHTML 1.0 Transitional nuevo...</message>
+	<message xml:lang="pt">Novo documento XHTML 1.0 Transitional...</message>
+	<message xml:lang="fi">Uusi XHTML 1.0 Transitional document...</message>
+	<message xml:lang="tr">Yeni XHTML 1.0 Transitional dosyası...</message>
+</label>
+<label define="AM_NEW_HTML_STRICT">
+	<message xml:lang="en">New XHTML 1.0 Strict document...</message>
+	<message xml:lang="fr">Nouveau document XHTML 1.0 Strict...</message>
+	<message xml:lang="de">XHTML 1.0 Strict...</message>
+	<message xml:lang="it">Nuovo documento XHTML 1.0 Strict...</message>
+	<message xml:lang="es">Documento XHTML 1.0 Strict nuevo...</message>
+	<message xml:lang="pt">Novo documento XHTML 1.0 Strict...</message>
+	<message xml:lang="fi">Uusi XHTML 1.0 Strict document...</message>
+	<message xml:lang="tr">Yeni XHTML 1.0 Strict dosyası...</message>
+</label>
+<label define="AM_NEW_HTML_BASIC">
+	<message xml:lang="en">New XHTML 1.0 Basic document...</message>
+	<message xml:lang="fr">Nouveau document XHTML 1.0 Basic ...</message>
+	<message xml:lang="de">XHTML 1.0 Basic...</message>
+	<message xml:lang="it">Nuovo documento XHTML 1.0 Basic...</message>
+	<message xml:lang="es">Documento XHTML 1.0 Basic nuevo...</message>
+	<message xml:lang="pt">Novo documento XHTML 1.0 Basic...</message>
+	<message xml:lang="fi">Uusi XHTML 1.0 Basic dokumentti...</message>
+	<message xml:lang="tr">Yeni XHTML 1.0 Basic dosyası...</message>
+</label>
+<label define="AM_NEW_MATHML">
+	<message xml:lang="en">New MathML document...</message>
+	<message xml:lang="fr">Nouveau document MathML...</message>
+	<message xml:lang="de">MathML...</message>
+	<message xml:lang="it">Nuovo documento MathML...</message>
+	<message xml:lang="es">Documento MathML nuevo...</message>
+	<message xml:lang="pt">Novo documento MathML...</message>
+	<message xml:lang="fi">Uusi MathML dokumentti...</message>
+	<message xml:lang="tr">Yeni MathML dosyası...</message>
+</label>
+<label define="AM_NEW_SVG">
+	<message xml:lang="en">New SVG document...</message>
+	<message xml:lang="fr">Nouveau document SVG...</message>
+	<message xml:lang="de">SVG...</message>
+	<message xml:lang="it">Nuovo documento SVG...</message>
+	<message xml:lang="es">Documento SVG nuevo...</message>
+	<message xml:lang="pt">Novo documento SVG...</message>
+	<message xml:lang="fi">Uusi SVG dokumentti...</message>
+	<message xml:lang="tr">Yeni SVG dosyası...</message>
+</label>
+<label define="AM_NEW_CSS">
+	<message xml:lang="en">New CSS style sheet...</message>
+	<message xml:lang="fr">Nouvelle feuille de style...</message>
+	<message xml:lang="de">Formatvorlage...</message>
+	<message xml:lang="it">Nuovo stile CSS...</message>
+	<message xml:lang="es">Nueva hoja de estilo CSS...</message>
+	<message xml:lang="pt">Nova folha de estilo CSS...</message>
+	<message xml:lang="fi">Uusi CSS tyylitiedosto...</message>
+	<message xml:lang="tr">Yeni CSS düz dizayn...</message>
+</label>
+<label define="AM_NEW_TEMPLATE">
+	<message xml:lang="en">From template</message>
+	<message xml:lang="fr">Modèle</message>
+	<message xml:lang="de">Schablone...</message>
+	<message xml:lang="it">Modello</message>
+	<message xml:lang="es">Desde plantilla</message>
+	<message xml:lang="pt">Do gabarito</message>
+	<message xml:lang="fi">Valmiista mallista</message>
+	<message xml:lang="tr">Model</message>
+</label>
+<label define="AM_OPEN_DOCUMENT">
+	<message xml:lang="en">Open document...</message>
+	<message xml:lang="fr">Ouvrir... </message>
+	<message xml:lang="de">Öffnen...</message>
+	<message xml:lang="it">Apri documento...</message>
+	<message xml:lang="tr">Belge aç...</message>
+	<message xml:lang="es">Abrir documento...</message>
+	<message xml:lang="pt">>Abrir documento...</message>
+	<message xml:lang="fi">Avaa dokumentti...</message>
+</label>
+<label define="AM_OPEN_IN_NEW_WINDOW">
+	<message xml:lang="en">Open in new window...</message>
+	<message xml:lang="fr">Ouvrir dans nouvelle fenêtre... </message>
+	<message xml:lang="de">Öffnen (neues Fenster)...</message>
+	<message xml:lang="it">Apri in una nuova finestra...</message>
+	<message xml:lang="tr">Yeni pencerede aç...</message>
+	<message xml:lang="es">Abrir en ventana nueva...</message>
+	<message xml:lang="pt">>Abrir em nova janela...</message>
+	<message xml:lang="fi">Avaa uudessa ikkunass...</message>
+</label>
 <label define="AM_CLEAR">
 	<message xml:lang="en">Clear</message>
 	<message xml:lang="fr">RAZ</message>
@@ -200,6 +300,16 @@
 	<message xml:lang="es">Título</message>
 	<message xml:lang="pt">Título</message>
 	<message xml:lang="fi">Otsikko</message>
+</label>
+<label define="AM_CHANGE_TITLE">
+	<message xml:lang="en">Change Title...</message>
+	<message xml:lang="fr">Changer le titre...</message>
+	<message xml:lang="de">Titel ändern</message>
+	<message xml:lang="it">Cambia Titolo...</message>
+	<message xml:lang="es">Cambiar Título...</message>
+	<message xml:lang="pt">Mudar título...</message>
+	<message xml:lang="fi">Muuta otsake...</message>
+	<message xml:lang="tr">Başlığı değiştir</message>
 </label>
 <label define="AM_DOC_MODIFIED">
 	<message xml:lang="en">Document modified. Confirm you really want to lose changes?</message>
@@ -748,6 +858,46 @@
 	<message xml:lang="es">Archivos CSS</message>
 	<message xml:lang="pt">Arquivos CSS</message>
 	<message xml:lang="fi">CSS tyylitiedostot</message>
+</label>
+<label define="AM_OPEN_CSS">
+	<message xml:lang="en">Open CSS</message>
+	<message xml:lang="fr">Ouvrir CSS</message>
+	<message xml:lang="it">Apri CSS</message>
+	<message xml:lang="de">Öffnen CSS</message>
+	<message xml:lang="es">Abrir CSS</message>
+	<message xml:lang="pt">Abrir CSS</message>
+	<message xml:lang="fi">Avaa CSS</message>
+	<message xml:lang="tr">Aç CSS</message>
+</label>
+<label define="AM_DISABLE_CSS">
+	<message xml:lang="en">Disable CSS</message>
+	<message xml:lang="fr">Désactiver CSS</message>
+	<message xml:lang="it">Disabilita CSS</message>
+	<message xml:lang="de">Deaktivieren CSS</message>
+	<message xml:lang="es">Desactivar CSS</message>
+	<message xml:lang="pt">Desabilitar CSS</message>
+	<message xml:lang="fi">Poista käytöstä CSS</message>
+	<message xml:lang="tr">Olumsuzla CSS</message>
+</label>
+<label define="AM_ENABLE_CSS">
+	<message xml:lang="en">Enable CSS</message>
+	<message xml:lang="fr">Réactiver CSS</message>
+	<message xml:lang="it">Abilita CSS</message>
+	<message xml:lang="de">Aktivieren CSS</message>
+	<message xml:lang="es">Activar CSS</message>
+	<message xml:lang="pt">Habilitar CSS</message>
+	<message xml:lang="fi">Ota käyttöön CSS</message>
+	<message xml:lang="tr">Olumla CSS</message>
+</label>
+<label define="AM_REMOVE_CSS">
+	<message xml:lang="en">Remove CSS</message>
+	<message xml:lang="fr">Retirer CSS</message>
+	<message xml:lang="it">Rimuovi CSS</message>
+	<message xml:lang="de">Entfernen CSS</message>
+	<message xml:lang="es">Eliminar CSS</message>
+	<message xml:lang="pt">Remover CSS</message>
+	<message xml:lang="fi">Poista CSS</message>
+	<message xml:lang="tr">Sil CSS</message>
 </label>
 <label define="AM_ABOUT1">
 	<message xml:lang="en">W3C's editor/browser for the Web</message>
@@ -1659,6 +1809,48 @@
 	<message xml:lang="fi">Näytä taustakuvat</message>
 	<message xml:lang="tr">Arka görüntülerini göster</message>
 </label>
+<label define="AM_SHOW_BUTTONBAR">
+	<message xml:lang="en">Show button bar</message>
+	<message xml:lang="fr">Montrer boutons</message>
+	<message xml:lang="de">Symbolleiste anzeigen</message>
+	<message xml:lang="it">Mostra barra dei pulsanti</message>
+	<message xml:lang="tr">Tusları göster</message>
+	<message xml:lang="es">Mostar barra de botones</message>
+	<message xml:lang="pt">Exibir barra de ferramentas</message>
+	<message xml:lang="fi">Näytä painikerivi</message>
+</label>
+<label define="AM_SHOW_TEXTZONE">
+	<message xml:lang="en">Show address</message>
+	<message xml:lang="fr">Montrer adresse</message>
+	<message xml:lang="de">Adresszeile anzeigen</message>
+	<message xml:lang="it">Mostra indirizzo</message>
+	<message xml:lang="tr">Adres göster</message>
+	<message xml:lang="es">Mostrar dirección</message>
+	<message xml:lang="pt">Exibir endereço</message>
+	<message xml:lang="fi">Näytä osoite</message>
+</label>
+<label define="AM_SHOW_TARGETS">
+	<message xml:lang="en">Show targets</message>
+	<message xml:lang="fr">Montrer les cibles</message>
+	<message xml:lang="de">Anker anzeigen</message>
+	<message xml:lang="it">Mostra obiettivi</message>
+	<message xml:lang="es">Mostrar destinos</message>
+	<message xml:lang="pt">Exibir destinos</message>
+	<message xml:lang="fi">Näytä kohteet</message>
+	<message xml:lang="tr">Hedefi göster</message>
+</label>
+<label define="AM_SECTION_NUMBER">
+	<message xml:lang="en">Section numbering</message>
+	<message xml:lang="fr">Numéroter les sections</message>
+	<message xml:lang="de">Abschnitte numerieren</message>
+	<message xml:lang="it">Numerazione delle sezioni</message>
+	<message xml:lang="tr">Bölüm numaralandırması</message>
+	<message xml:lang="es">Numeracón de sección</message>
+	<message xml:lang="pt">Numeração de seção</message>
+	<message xml:lang="fi">Osien numerointi</message>
+</label>
+
+
 <label define="AM_EXPORT_CRLF">
 	<message xml:lang="en">Export CR/LF</message>
 	<message xml:lang="fr">Exporter CR/LF</message>

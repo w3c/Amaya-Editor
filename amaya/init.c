@@ -2075,7 +2075,7 @@ void  OpenDoc (Document doc, View view)
        /* load the new document */
        InNewWindow = FALSE;
            /* no specific type requested */
-       InitOpenDocForm (doc, view, "", TtaGetMessage (1, BOpenDoc), docText);
+       InitOpenDocForm (doc, view, "", TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT), docText);
      }
 }
 
@@ -2085,7 +2085,7 @@ void OpenDocInNewWindow (Document document, View view)
 {
    InNewWindow = TRUE;
    /* no specific type requested */
-   InitOpenDocForm (document, view, "", TtaGetMessage (1, BOpenInNewWindow),
+   InitOpenDocForm (document, view, "", TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_WINDOW),
 	   docText);
 }
 
@@ -2106,31 +2106,31 @@ void OpenNew (Document document, View view, int docType, int docProfile)
       /* will scan html documents */
       strcpy (ScanFilter, "*.*htm*");
       if (docProfile == L_Basic)
-	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlBasic), docHTML);
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (AMAYA, AM_NEW_HTML_BASIC), docHTML);
       else if (docProfile == L_Strict)
-	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlStrict), docHTML);
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (AMAYA, AM_NEW_HTML_STRICT), docHTML);
       else if (docProfile == L_Xhtml11)
-	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtml11), docHTML);
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (AMAYA, AM_NEW_HTML11), docHTML);
       else
-	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlTransitional), docHTML);
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (AMAYA, AM_NEW_HTML_TRANSITIONAL), docHTML);
    }
   else if (NewDocType == docMath)
     {
       /* will scan html documents */
       strcpy (ScanFilter, "*.mml");
-    InitOpenDocForm (document, view, "New.mml", TtaGetMessage (1, BMathml), docMath);
+    InitOpenDocForm (document, view, "New.mml", TtaGetMessage (AMAYA, AM_NEW_MATHML), docMath);
     }
   else if (NewDocType == docSVG)
     {
       /* will scan html documents */
       strcpy (ScanFilter, "*.svg");
-      InitOpenDocForm (document, view, "New.svg", TtaGetMessage (1, BSvg), docSVG);
+      InitOpenDocForm (document, view, "New.svg", TtaGetMessage (AMAYA, AM_NEW_SVG), docSVG);
     }
   else
     {
       /* will scan html documents */
       strcpy (ScanFilter, "*.css");
-      InitOpenDocForm (document, view, "New.css", TtaGetMessage (1, BCss), docCSS);
+      InitOpenDocForm (document, view, "New.css", TtaGetMessage (AMAYA, AM_NEW_CSS), docCSS);
     }
 }
 

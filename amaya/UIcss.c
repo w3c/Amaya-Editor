@@ -773,7 +773,7 @@ void LinkCSS (Document doc, View view)
 void                OpenCSS (Document doc, View view)
 {
   CSScase = 1;
-  InitCSSDialog (doc, TtaGetMessage (1, BOpenCSS));
+  InitCSSDialog (doc, TtaGetMessage (AMAYA, AM_OPEN_CSS));
 }
 
 /*----------------------------------------------------------------------
@@ -782,7 +782,7 @@ void                OpenCSS (Document doc, View view)
 void                DisableCSS (Document doc, View view)
 {
   CSScase = 2;
-  InitCSSDialog (doc, TtaGetMessage (1, BDisableCSS));
+  InitCSSDialog (doc, TtaGetMessage (AMAYA, AM_DISABLE_CSS));
 }
 
 /*----------------------------------------------------------------------
@@ -791,7 +791,7 @@ void                DisableCSS (Document doc, View view)
 void                EnableCSS (Document doc, View view)
 {
   CSScase = 3;
-  InitCSSDialog (doc, TtaGetMessage (1, BEnableCSS));
+  InitCSSDialog (doc, TtaGetMessage (AMAYA, AM_ENABLE_CSS));
 }
 
 /*----------------------------------------------------------------------
@@ -800,5 +800,5 @@ void                EnableCSS (Document doc, View view)
 void                RemoveCSS (Document doc, View view)
 {
   CSScase = 4;
-  InitCSSDialog (doc, TtaGetMessage (1, BRemoveCSS));
+  InitCSSDialog (doc, TtaGetMessage (AMAYA, AM_REMOVE_CSS));
 }

@@ -561,7 +561,7 @@ void ChangeTitle (Document doc, View view)
        CurrentDocument = doc;
 #ifndef _WINDOWS 
        TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1),
-		   TtaGetMessage (1, BTitle), TRUE, 2, 'L', D_CANCEL);
+		   TtaGetMessage (AMAYA, AM_CHANGE_TITLE), TRUE, 2, 'L', D_CANCEL);
        TtaNewTextForm (BaseDialog + TitleText, BaseDialog + TitleForm, "",
 		       50, 1, FALSE);
        /* initialise the text field in the dialogue box */
