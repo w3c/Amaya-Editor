@@ -134,7 +134,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
   png_info        *info_ptr = NULL;
   png_byte        *png_pixels = NULL;
   png_byte       **row_pointers = NULL;
-  ThotColorStruct *colors = NULL, *ptr;
+  ThotColorStruct *colors = NULL;
   unsigned char   *pixels = NULL;
   unsigned short  *spixels = NULL;
   double           gamma_correction;
@@ -148,8 +148,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
   int              r, g, b, v, a;
   int              bit_depth, interlace_type;
   int              cr, cg, cb, cgr;
-  int              row, col, val;
-  ThotBool         found;
+  int              row, col;
 
   ret = fread (buf, 1, 8, infile);
   if (ret != 8)
