@@ -297,39 +297,39 @@
 </label>
 <label define="BRemoveDoctype">
 	<message xml:lang="en">Remove doctype</message>
-	<message xml:lang="fr">Supprime le doctype</message>
+	<message xml:lang="fr">Supprimer le doctype</message>
 </label>
 <label define="BDoctypeXhtml11">
 	<message xml:lang="en">Change/Create doctype XHTML 1.1</message>
-	<message xml:lang="fr">Change/Créé doctype XHTML 1.1</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1</message>
 </label>
 <label define="BBDoctypeXhtmlTransitional">
 	<message xml:lang="en">Change/Create doctype XHTML 1.0 Transitional</message>
-	<message xml:lang="fr">Change/Créé doctype XHTML 1.0 Transitional</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Transitional</message>
 </label>
 <label define="BDoctypeXhtmlStrict">
 	<message xml:lang="en">Change/Create doctype XHTML 1.0 Strict</message>
-	<message xml:lang="fr">Change/Créé doctype XHTML 1.0 Strict</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Strict</message>
 </label>
 <label define="BDoctypeXhtmlBasic">
 	<message xml:lang="en">Change/Create doctype XHTML 1.0 Basic</message>
-	<message xml:lang="fr">Change/Créé doctype XHTML 1.0 Basic</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Basic</message>
 </label>
 <label define="BBDoctypeHtmlTransitional">
 	<message xml:lang="en">Change/Create doctype HTML Transitional</message>
-	<message xml:lang="fr">Change/Créé doctype HTML Transitional</message>
+	<message xml:lang="fr">Changer/Créer doctype HTML Transitional</message>
 </label>
 <label define="BDoctypeHtmlStrict">
 	<message xml:lang="en">Change/Create doctype HTML Strict</message>
-	<message xml:lang="fr">Change/Créé doctype HTML Strict</message>
+	<message xml:lang="fr">Changer/Créer doctype HTML Strict</message>
 </label>
 <label define="BDoctypeMathML">
 	<message xml:lang="en">Change/Create doctype MathML</message>
-	<message xml:lang="fr">Change/Créé doctype MathML</message>
+	<message xml:lang="fr">Changer/Créer doctype MathML</message>
 </label>
 <label define="BDoctypeSVG">
 	<message xml:lang="en">Change/Create doctype SVG</message>
-	<message xml:lang="fr">Change/Créé doctype SVG</message>
+	<message xml:lang="fr">Changer/Créer doctype SVG</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document Information</message>
