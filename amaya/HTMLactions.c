@@ -579,7 +579,7 @@ Document       doc;
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
-      CleanDocumentCSS (doc);
+      RemoveDocCSSs (doc, TRUE);
       RemoveDocumentImages (doc);
     }
 

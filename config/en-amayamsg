@@ -51,8 +51,8 @@
 50 Add
 51 Show
 52 Browse
-53 External CSS
-54 Delete CSS
+53 Maths
+54 Graphics
 55 Delete
 56 Save
 57 Save as
@@ -67,14 +67,14 @@
 66 Document location
 67 Images directory
 68 Object location
-69 Document style
-70 User's preferences
-71 CSS file 1                                            
-72 Rule list for file 1                                   
-73 CSS file 2                                            
-74 Rule list for file 2                                   
-75 Select an external Style Sheet
-76 Delete a Style Sheet
+69 CSS files
+70 Amaya - an editor/browser for the Web
+71 developed by W3C (http://www.w3.org/)
+72 Can't handle URLs having more than %s chars
+73 Only default type is allowed
+74 Links update: %s%% has been done
+75 Nothing new to be saved
+76 repeat-y
 77 <HTML><HEAD><TITLE>ERROR: Cannot access a URL</TITLE></HEAD><BODY><H1>The requested URL could not be retrieved</H1><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existant.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
 78 Please enter username:
 79 %d outstanding requests
@@ -89,7 +89,7 @@
 88 Emphasis
 89 Strong
 90 Fixed font
-91 Style sheet
+91 no-repeat
 92 Insert image
 93 Heading level 1
 94 Heading level 2
@@ -129,14 +129,3 @@
 128 Repeat Mode
 129 repeat
 130 repeat-x
-131 repeat-y
-132 no-repeat
-133 Amaya - an editor/browser for the Web
-134 developed by W3C (http://www.w3.org/)
-135 Can't handle URLs having more than %s chars
-136 CSS error: %s
-137 Only default type is allowed
-138 Links update: %s%% has been done
-139 Nothing new to be saved
-140 Maths
-141 Graphics

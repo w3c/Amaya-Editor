@@ -10,10 +10,10 @@ extern void RemoveStyle ( Element el,
                           Document doc,
                           boolean removeSpan );
 extern boolean UpdateStyleDelete ( NotifyAttribute * event );
-extern boolean DeleteStyleRule ( NotifyElement * event );
-extern void SetStyleRule ( NotifyElement * event );
+extern boolean ChangeStyles ( NotifyElement * event );
+extern void StyleChanged ( NotifyAttribute * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
-extern void ChangeClass ( Document doc,
+extern void CreateClass ( Document doc,
                           View view );
 extern void ApplyClass ( Document doc,
                          View view );
@@ -27,10 +27,10 @@ extern void RemoveStyle (/* Element el,
                             Document doc,
                             boolean removeSpan */);
 extern boolean UpdateStyleDelete (/* NotifyAttribute * event */);
-extern boolean DeleteStyleRule (/* NotifyElement * event */);
-extern void SetStyleRule (/* NotifyElement * event */);
+extern boolean ChangeStyles (/* NotifyElement * event */);
+extern void StyleChanged (/* NotifyAttribute * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
-extern void ChangeClass (/* Document doc,
+extern void CreateClass (/* Document doc,
                             View view */);
 extern void ApplyClass (/* Document doc,
                            View view */);

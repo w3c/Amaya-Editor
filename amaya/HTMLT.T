@@ -69,17 +69,8 @@ RULES
 	   END;
 	Create Attributes;
 	Create '>\12';
+	NoTranslation;
 	Create '</style>\12' After;
-	END;
-
- StyleRule:
-	BEGIN
-	IF Selector
-	   BEGIN
-	   Create Selector;
-	   Create ' { ';
-	   Create ' }\12' After;
-	   END;
 	END;
 
  SCRIPT: BEGIN

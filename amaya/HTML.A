@@ -84,11 +84,10 @@ ELEMENTS
 	ElemDelete.Post -> RowDeleted;
 	END;
 
-   StyleRule:
+   Styles:
 	BEGIN
-	ElemChange.Pre -> DeleteStyleRule;
-	ElemChange.Post -> SetStyleRule;
-	ElemDelete.Pre -> DeleteStyleRule;
+	ElemTextModify.Pre -> ChangeStyles;
+	ElemTextModify.Post -> StyleChanged;
 	END;
 
    List_Item:

@@ -62,11 +62,6 @@ RULES
 	Remove;
 	END;
 
- StyleRule:
-	BEGIN
-	Remove;
-	END;
-
  SCRIPT: BEGIN
 	Remove;
 	END;

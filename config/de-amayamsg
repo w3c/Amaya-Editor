@@ -51,8 +51,8 @@
 50 Hinzufügen
 51 Anzeigen
 52 Browsen
-53 Externe CSS
-54 Lösche CSS
+53 Formeln
+54 ***Graphics
 55 Löschen
 56 Speichern
 57 Speichern unter
@@ -67,14 +67,14 @@
 66 Dokumentenadresse
 67 Grafik(unter)verzeichnis
 68 Objektadresse
-69 Dokumententyp
-70 Einstellungen
-71 CSS 1
-72 Regeln in Stylesheet 1                                   
-73 CSS 2                                            
-74 Regeln in Stylesheet 2
-75 Bitte ein externes Stylesheet wählen
-76 Stylesheet löschen
+69 Stylesheet wählen
+70 Amaya - ein Editor/Browser für das Web
+71 entwickelt vom W3C (http://www.w3.org/)
+72 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
+73 Nur Standardtyp erlaubt
+74 Aktualisierung der Verknüpfung : %s%% erfolgreich
+75 Nichts zu speichern
+76 Wiederholung y
 77 <HTML><HEAD><TITLE>ERROR: Kann nicht zugreifen auf URL</TITLE></HEAD><BODY><H1>Die angeforderte URL konnte nicht geladen werden </H1><HR><P>Beim Laden der URL:<A HREF=\"%s\">%s</A></P><P> ist folgender Fehler aufgetreten:</P><UL><LI><STRONG>Verbindung nicht möglich</STRONG></UL><P>Das System meldete:</P><PRE><I>(%d) %s</I></PRE><P>Dies bedeutet, daß:</P><PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.</PRE><PRE>Bitte später noch einmal versuchen.</PRE><P></P><HR>\n</BODY></HTML>
 78 Bitter Usernamen eingeben:
 79 %d offene Anfrage(n)
@@ -89,7 +89,7 @@
 88 Betont
 89 Fett
 90 Feste Schriftbreite
-91 Stylesheet
+91 keine Wiederholung
 92 Grafik einfügen
 93 Überschrift Ebene 1
 94 Überschrift Ebene 2
@@ -129,14 +129,3 @@
 128 Wiederholungsmodus
 129 Wiederholung
 130 Wiederholung x
-131 Wiederholung y
-132 keine Wiederholung
-133 Amaya - ein Editor/Browser für das Web
-134 entwickelt vom W3C (http://www.w3.org/)
-135 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
-136 CSS-Fehler: %s
-137 Nur Standardtyp erlaubt
-138 Aktualisierung der Verknüpfung : %s%% erfolgreich
-139 Nichts zu speichern
-140 Formeln
-141 ***Graphics

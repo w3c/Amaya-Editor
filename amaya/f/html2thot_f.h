@@ -52,11 +52,11 @@ extern void ParseSubTree ( char *HTMLbuf,
                            boolean isclosed,
                            Document doc );
 extern void StartParser ( Document doc,
-			  char *htmlFileName,
-			  char *documentName,
-			  char *documentDirectory,
-			  char *pathURL,
-			  boolean PlainText );
+                          char *htmlFileName,
+                          char *documentName,
+                          char *documentDirectory,
+                          char *pathURL,
+                          boolean PlainText );
 
 #else /* __STDC__ */
 
@@ -106,11 +106,11 @@ extern void ParseSubTree (/* char *HTMLbuf,
                              boolean isclosed,
                              Document doc */);
 extern void StartParser (/* Document doc,
-			    char *htmlFileName,
-			    char *documentName,
-			    char *documentDirectory,
-			    char *pathURL,
-			    boolean PlainText */);
+                            char *htmlFileName,
+                            char *documentName,
+                            char *documentDirectory,
+                            char *pathURL,
+                            boolean PlainText */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

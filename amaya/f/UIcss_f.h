@@ -8,39 +8,13 @@
 
 extern void InitCSSDialog ( Document doc,
                             View view );
-extern void DeleteExternalCSS ( Document doc,
-                                View view );
-extern void SelectExternalCSS ( Document doc,
-                                View view );
-extern void CSSConfirm ( Document document,
-                         View view,
-                         char *label );
 extern void ApplyExtraPresentation ( Document doc );
-extern void InitBrowse ( Document doc,
-                         View view,
-                         char *url );
-extern void CSSCallbackDialogue ( int ref,
-                                  int typedata,
-                                  char *data );
 
 #else /* __STDC__ */
 
 extern void InitCSSDialog (/* Document doc,
                               View view */);
-extern void DeleteExternalCSS (/* Document doc,
-                                  View view */);
-extern void SelectExternalCSS (/* Document doc,
-                                  View view */);
-extern void CSSConfirm (/* Document document,
-                           View view,
-                           char *label */);
 extern void ApplyExtraPresentation (/* Document doc */);
-extern void InitBrowse (/* Document doc,
-                           View view,
-                           char *url */);
-extern void CSSCallbackDialogue (/* int ref,
-                                    int typedata,
-                                    char *data */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

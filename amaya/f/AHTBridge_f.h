@@ -9,10 +9,10 @@
 extern void *AHTCallback_bridge ( caddr_t cd,
                                   int *s,
                                   XtInputId * id );
-extern void ProcessTerminateRequest ( HTRequest * request, 
-				      HTResponse * response, 
-				      void *param, 
-				      int status );
+extern void ProcessTerminateRequest ( HTRequest * request,
+                                      HTResponse * response,
+                                      void *param,
+                                      int status );
 extern int Add_NewSocket_to_Loop ( HTRequest * request,
                                    HTAlertOpcode op,
                                    int msgnum,
@@ -33,10 +33,10 @@ extern void RequestKillAllXtevents ( AHTReqContext * me );
 extern void *AHTCallback_bridge (/* caddr_t cd,
                                     int *s,
                                     XtInputId * id */);
-extern void ProcessTerminateRequest (/* HTRequest * request, 
-					HTResponse * response, 
-					void *param, 
-					int status */);
+extern void ProcessTerminateRequest (/* HTRequest * request,
+                                        HTResponse * response,
+                                        void *param,
+                                        int status */);
 extern int Add_NewSocket_to_Loop (/* HTRequest * request,
                                      HTAlertOpcode op,
                                      int msgnum,

@@ -46,6 +46,10 @@ extern void Reload_callback ( int doc,
                               void * context );
 extern void Reload ( Document document,
                      View view );
+extern void ZoomIn ( Document document,
+                     View view );
+extern void ZoomOut ( Document document,
+                      View view );
 extern void ShowStructure ( Document document,
                             View view );
 extern void ShowAlternate ( Document document,
@@ -157,6 +161,10 @@ extern void Reload_callback (/* int doc,
                                 void * context */);
 extern void Reload (/* Document document,
                        View view */);
+extern void ZoomIn (/* Document document,
+                       View view */);
+extern void ZoomOut (/* Document document,
+                        View view */);
 extern void ShowStructure (/* Document document,
                               View view */);
 extern void ShowAlternate (/* Document document,

@@ -1520,7 +1520,7 @@ char 	     *content_type;
    char               *ref;
    int                 status, l;
 
-   if (urlName == NULL || docid == 0 || outputfile == NULL) {
+   if (urlName == NULL || outputfile == NULL) {
       /* no file to be loaded */
       TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
        

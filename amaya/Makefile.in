@@ -24,8 +24,9 @@ CONFIGFILES=XKeysymDB thot.ini amaya.keyboard en-amayadialogue \
 
 DICOFILES= *.ptn alphabet clavier
 
-AMAYAFILES=COPYRIGHT COPYRIGHT.html HTML.STR HTML.conf HTML.trans HTML.en \
-           HTML.fr HTML*.PRS HTML*.TRA MathML.S MathMLP.P MathMLT.T
+AMAYAFILES= HTML.STR HTML.conf HTML.trans HTML.en HTML.fr\
+           HTML*.PRS HTML*.TRA \
+	   MathML.STR MathMLP.PRS MathMLT.TRA
 
 FONTSFILES=Families.list fonts.dir icones*
 
@@ -48,7 +49,7 @@ amaya : amaya_schemas amaya_src ../thotlib/libThotEditor.a ../tablelib/libThotTa
 all : amaya_schemas amaya_src ../bin/amaya
 
 clean :
-	$(RM) *.o *.h *.c EDITOR* HTML* logo.*
+	$(RM) *.o *.h *.c EDITOR* HTML* MathML* GraphML* logo.*
 
 ../bin/print : 
 	@(cd ../thotlib ; $(MAKE) print)
@@ -242,7 +243,6 @@ $(AMAYA)/HTMLT.TRA : $(AMAYA)/HTMLT.T ../bin/tra
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR ;\
 	$$TRA $(ALL_AMAYA_OPTIONS) HTMLT ;\
 	$$TRA $(ALL_AMAYA_OPTIONS) HTMLTT
-
 
 #
 # Interface schemas compilation

@@ -21,7 +21,6 @@ REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
 Comment\240: Comment
-StyleRule: Style rule
 Block_Quote: BLOCKQUOTE
 Address: ADDRESS
 MathDisp: MATHDISP
@@ -92,7 +91,7 @@ tbody: TBODY
 tfoot: TFOOT
 Table_foot: table foot
 Column_head: column head
-Table_row: ROW
+Table_row: TR
 Table_cell: cell
 Data_cell: TD
 Heading_cell: TH
@@ -118,7 +117,6 @@ Link_type: type
 REL: rel
 REV: rev
 Title: title
-Selector: selector
 Align: align
 NoShade: noshade
 Size_: size

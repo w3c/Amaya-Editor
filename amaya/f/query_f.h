@@ -10,6 +10,10 @@ extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
 extern boolean AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
+extern int AHTLoadTerminate_handler ( HTRequest * request,
+                                      HTResponse * response,
+                                      void *param,
+                                      int status );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
 extern void InvokeGetObjectWWW_callback ( int docid,
@@ -17,7 +21,7 @@ extern void InvokeGetObjectWWW_callback ( int docid,
                                           char *outputfile,
                                           TTcbf *terminate_cbf,
                                           void *context_tcbf,
-					  int status);
+                                          int status );
 extern int GetObjectWWW ( int docid,
                           char* urlName,
                           char* postString,
@@ -55,6 +59,10 @@ extern AHTDocId_Status *GetDocIdStatus (/* int docid,
                                            HTList * documents */);
 extern boolean AHTReqContext_delete (/* AHTReqContext * me */);
 extern int AHTOpen_file (/* HTRequest * request */);
+extern int AHTLoadTerminate_handler (/* HTRequest * request,
+                                        HTResponse * response,
+                                        void *param,
+                                        int status */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
 extern void InvokeGetObjectWWW_callback (/* int docid,
@@ -62,7 +70,7 @@ extern void InvokeGetObjectWWW_callback (/* int docid,
                                             char *outputfile,
                                             TTcbf *terminate_cbf,
                                             void *context_tcbf,
-					    int status */);
+                                            int status */);
 extern int GetObjectWWW (/* int docid,
                             char* urlName,
                             char* postString,

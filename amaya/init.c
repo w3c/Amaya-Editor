@@ -37,7 +37,6 @@
 #include "Num.xpm"
 #include "Bullet.xpm"
 #include "Print.xpm"
-#include "css.xpm"
 #include "Image.xpm"
 #include "DL.xpm"
 #include "Link.xpm"
@@ -113,7 +112,6 @@ static Pixmap       iconH1;
 static Pixmap       iconH2;
 static Pixmap       iconH3;
 static Pixmap       iconPrint;
-static Pixmap       iconCSS;
 static Pixmap       iconBullet;
 static Pixmap       iconNum;
 static Pixmap       iconDL;
@@ -138,22 +136,21 @@ static Pixmap       iconJava;
 #define inconI         7
 #define inconB         8
 #define iconT          9
-#define iconCSS       10
-#define inconImage    11
-#define iconH1        12
-#define iconH2        13
-#define iconH3        14
-#define iconBullet    15
-#define iconNum       16
-#define	iconDL        17
-#define iconLink      18
-#define iconTable     19
+#define inconImage    10
+#define iconH1        11
+#define iconH2        12
+#define iconH3        13
+#define iconBullet    14
+#define iconNum       15
+#define	iconDL        16
+#define iconLink      17
+#define iconTable     18
 #ifdef AMAYA_PLUGIN
-#define iconPlugin    20
+#define iconPlugin    19
 #endif AMAYA_PLUGIN
-#define stopN         22
-#define iconBackNo    23
-#define iconForwardNo 24
+#define stopN         20
+#define iconBackNo    21
+#define iconForwardNo 22
 
 static BOOL itemChecked = FALSE;
 extern int  currentFrame;
@@ -1063,7 +1060,6 @@ char               *pathname;
 	   TtaSetPSchema (doc, "HTMLP");
 	else
 	   TtaSetPSchema (doc, "HTMLPBW");
-
 	/* open the main view */
 	TtaSetNotificationMode (doc, 1);
 	TtaGetViewGeometry (doc, "Formatted_view", &x, &y, &w, &h);
@@ -1078,6 +1074,7 @@ char               *pathname;
 	     TtaFreeMemory (temppath);
 	     return (0);
 	  }
+	LoadUserStyleSheet (doc);
 	if (!opened)
 	  {
 	     DocumentTypes[doc] = docHTML;
@@ -1107,8 +1104,6 @@ char               *pathname;
 				      TtaGetMessage (AMAYA, AM_BUTTON_BOLD));
 	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode,
 				      TtaGetMessage (AMAYA, AM_BUTTON_CODE));
-	     TtaAddButton (doc, 1, iconCSS, InitCSSDialog,
-			   TtaGetMessage (AMAYA, AM_BUTTON_CSS));
 	     TtaAddButton (doc, 1, None, NULL, NULL);
 
 	     TtaAddButton (doc, 1, iconImage, CreateImage,
@@ -1149,7 +1144,6 @@ char               *pathname;
 	     IButton =  WIN_TtaAddButton (doc, 1, inconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS), TBSTYLE_CHECK, TBSTATE_ENABLED);
 	     BButton =  WIN_TtaAddButton (doc, 1, inconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD), TBSTYLE_CHECK, TBSTATE_ENABLED);
 	     TTButton = WIN_TtaAddButton (doc, 1, iconT, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE), TBSTYLE_CHECK, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconCSS, InitCSSDialog, TtaGetMessage (AMAYA, AM_BUTTON_CSS), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED);  /* SEPARATOR */
 
 	     WIN_TtaAddButton (doc, 1, inconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG), TBSTYLE_BUTTON, TBSTATE_ENABLED);
@@ -1453,13 +1447,14 @@ View                view;
    documentname = TtaGetMemory (MAX_LENGTH);
    NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname, NULL);
 
-   if (!IsW3Path (pathname) && !TtaFileExist (pathname)) {
-      /* Free Memory ***/
-      TtaFreeMemory (pathname);
-	  TtaFreeMemory (documentname);
-     /* cannot reload this document */
-     return;
-   }
+   if (!IsW3Path (pathname) && !TtaFileExist (pathname))
+     {
+       /* Free Memory ***/
+       TtaFreeMemory (pathname);
+       TtaFreeMemory (documentname);
+       /* cannot reload this document */
+       return;
+     }
 
    W3Loading = document;	/* this document is currently in load */
    newdoc = InitDocView (document, pathname);
@@ -2877,7 +2872,6 @@ NotifyEvent        *event;
    iconH2 = TtaCreatePixmapLogo (H2_xpm);
    iconH3 = TtaCreatePixmapLogo (H3_xpm);
    iconPrint = TtaCreatePixmapLogo (Print_xpm);
-   iconCSS = TtaCreatePixmapLogo (css_xpm);
    iconBullet = TtaCreatePixmapLogo (Bullet_xpm);
    iconNum = TtaCreatePixmapLogo (Num_xpm);
    iconImage = TtaCreatePixmapLogo (Image_xpm);
@@ -2905,7 +2899,6 @@ NotifyEvent        *event;
    TtaRegisterPixmap("H2", iconH2);
    TtaRegisterPixmap("H3", iconH3);
    TtaRegisterPixmap("Print", iconPrint);
-   TtaRegisterPixmap("CSS", iconCSS);
    TtaRegisterPixmap("Bullet", iconBullet);
    TtaRegisterPixmap("Numbered", iconNum);
    TtaRegisterPixmap("Definition", iconDL);
@@ -2955,7 +2948,8 @@ NotifyEvent        *event;
    TtaAppendDocumentPath (TempFileDirectory);
 
    /* Create and intialize resources needed for each document */
-   for (i = 1; i < DocumentTableLength; i++)
+   /* Style sheets are strored in directory .amaya/0 */
+   for (i = 0; i < DocumentTableLength; i++)
      {
        /* initialize document table */
        DocumentURLs[i] = NULL;

@@ -91,8 +91,10 @@ extern void CreateTextInput ( Document doc,
                               View view );
 extern void CreateTextArea ( Document doc,
                              View view );
-extern void CreateCommandLine ( Document doc,
-                                View view );
+extern void CreateSubmit ( Document doc,
+                           View view );
+extern void CreateReset ( Document doc,
+                          View view );
 extern void SetAreaCoords ( Document document,
                             Element element,
                             int attrNum );
@@ -204,8 +206,10 @@ extern void CreateTextInput (/* Document doc,
                                 View view */);
 extern void CreateTextArea (/* Document doc,
                                View view */);
-extern void CreateCommandLine (/* Document doc,
-                                  View view */);
+extern void CreateSubmit (/* Document doc,
+                             View view */);
+extern void CreateReset (/* Document doc,
+                            View view */);
 extern void SetAreaCoords (/* Document document,
                               Element element,
                               int attrNum */);

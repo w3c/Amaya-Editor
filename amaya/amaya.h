@@ -108,8 +108,10 @@ typedef char        AmayaReadChar ();
 #define About2		36
 #define About3		37
 #define Version		38
-#define FormAbout      	39    
-#define MAX_REF         40
+#define FormAbout      	39
+#define FromCSS         40
+#define CSSSelect       41
+#define MAX_REF         42
 
 /* The possible GET/POST/PUT request modes */
 

@@ -7,7 +7,7 @@
 
 /*
  *
- * Authors: D. Veillard and I. Vatton
+ * Authors: I. Vatton
  *          R. Guetari (W3C/INRIA) Windows NT/95
  *
  */
@@ -17,12 +17,6 @@
 #include "amaya.h"
 #include "css.h"
  
-/*----------------------------------------------------------------------
-   
-   CLASS MODIFICATION : USER INTERFACE AND INNER FUNCTIONS           
-   
-  ----------------------------------------------------------------------*/
-
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "HTMLpresentation_f.h"
@@ -47,66 +41,15 @@
  *   DocReference is the selected document.
  */
 
-static char         ClassList[50 * 80];
+static char         ListBuffer[MAX_CSS_LENGTH + 1];
 static int          NbClass = 0;
 static char         CurrentClass[80];
 static Element      ClassReference;
 static Document     DocReference;
-static char         AClassList[50 * 80];
-static int          NbAClass = 0;
-static char         CurrentAClass[80];
 static Element      AClassFirstReference;
 static Element      AClassLastReference;
 static Document     ADocReference;
 
-/*----------------------------------------------------------------------
-  CSSWarning displays a CSS confirm message
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CSSWarning (char *message)
-#else
-static void         CSSWarning (message)
-char               *message;
-#endif
-{
-  TtaDisplayMessage (CONFIRM, TtaGetMessage (AMAYA, AM_CSS_ERROR), message);
-}
-
-
-/*----------------------------------------------------------------------
-  GetClassSelector : return the pointer to the class value if the selector
-  contains a class or NULL.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char *GetClassSelector (char *selector)
-#else
-static char *GetClassSelector (selector)
-char        *selector;
-#endif
-{
-  char *ptr;
-
-  ptr = NULL;
-  if (selector != NULL)
-    ptr = strchr (selector, '.');
-  return (ptr);
-}
-
-/*----------------------------------------------------------------------
-  CleanGenericPresentation
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CleanGenericPresentation (char *selector, Document doc)
-#else
-static void         CleanGenericPresentation (selector, doc)
-char               *selector;
-Document            doc;
-#endif
-{
-  SetHTMLStyleParserDestructiveMode (TRUE);
-  ParseCSSGenericStyle (selector, "color : white", doc, GetDocumentStyle (doc));
-  SetHTMLStyleParserDestructiveMode (FALSE);
-}
 
 /*----------------------------------------------------------------------
    CleanStylePresentation:  remove the existing style presentation of a
@@ -124,7 +67,7 @@ Document            doc;
    SpecificContextBlock block;
    PresentationContext ctxt;
    PresentationValue   unused;
-   
+  
    unused.data = 0;
    /* remove all the presentation specific rules applied to the element */
    ctxt = (PresentationContext) & block;
@@ -152,17 +95,9 @@ boolean           removeSpan;
 {
    Attribute            attr;
    AttributeType        attrType;
-#ifdef DEBUG_STYLES
-   char                *elHtmlName;
-#endif
 
    if (el == NULL)
       return;
-
-#ifdef DEBUG_STYLES
-   elHtmlName = GetCSSName (el, doc);
-   fprintf (stderr, "RemoveStyle(%s,%d)\n", elHtmlName, doc);
-#endif
 
    /*
     * remove any Class or ImplicitClass associated to the element.
@@ -187,8 +122,6 @@ boolean           removeSpan;
 	if (removeSpan)
 	  DeleteSpanIfNoAttr (el, doc);
      }
-   /* remove all the presentation specific rules applied to the element */
-   CleanStylePresentation (el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -209,140 +142,148 @@ NotifyAttribute    *event;
 
 
 /*----------------------------------------------------------------------
-  DeleteStyleRule
-  A STYLE element will be deleted in the document HEAD.
+  ChangeStyles
+  the STYLE element will be changed in the document HEAD.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DeleteStyleRule (NotifyElement * event)
+boolean             ChangeStyles (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             DeleteStyleRule (event)
+boolean             ChangeStyles (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-  Attribute           attr;
-  AttributeType       attrType;
-  Element             elClass;
   Element             el;
-  ElementType         elType, selType;
-  Document            doc;
-  int                 len;
-  char                selector[100], value[100];
-  char               *class;
+  Language            lang;
+  int                 buflen;
 
-  elClass = event->element;
-  doc = event->document;
-  selType.ElTypeNum = 0;
-  /* get the selector */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-  attrType.AttrTypeNum = HTML_ATTR_Selector;
-  attr = TtaGetAttribute (elClass, attrType);
-  if (attr)
+  el = TtaGetFirstChild (event->element);
+  if (el != NULL)
     {
-      len = 100;
-      TtaGiveTextAttributeValue (attr, selector, &len);
-#ifdef DEBUG_STYLES
-      fprintf (stderr, "DeleteStyleRule(%d,%s)\n", doc, selector);
-#endif
-      /* get the name of the class */
-      class = GetClassSelector (selector);
-      if (class == NULL)
-	{
-	  /* remove a generic rule */
-	  /* TtaGiveTextContent (elClass, cssRule, &len, &lang); */
-	  /* use a pseudo cssRule */
-	  CleanGenericPresentation (selector, doc);
-	}
-      else
-	{
-	  if (class != selector && class[-1] != ' ')
-	    {
-	      /* remove a specific rule */
-	      class[0] = EOS;
-	      GIType (selector, &selType, doc);
-	    }
-	  else
-	    /* generic class */
-	    CleanGenericPresentation (selector, doc);
-
-	  /* search this class value in the whole document */
-	  el = TtaGetMainRoot (doc);
-	  attrType.AttrTypeNum = HTML_ATTR_Class;
-	  while (el != NULL)
-	    {
-	      TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-	      if (attr != NULL)
-		{
-		  len = 100;
-		  TtaGiveTextAttributeValue (attr, value, &len);
-		  if (!strcmp (value, &class[1]))
-		    if (selType.ElTypeNum == 0)
-		      {
-			TtaRemoveAttribute (el, attr, doc);
-			DeleteSpanIfNoAttr (el, doc);
-		      }
-		    else
-		      {
-			elType = TtaGetElementType (el);
-			if (selType.ElTypeNum == elType.ElTypeNum)
-			  CleanStylePresentation (el, doc);
-		      }
-		}
-	    }
-	}
-      TtaSetDocumentModified (doc);
+      /*save buffer contents before any change */
+      buflen = MAX_CSS_LENGTH;
+      TtaGiveTextContent (el, ListBuffer, &buflen, &lang);
+      ListBuffer[MAX_CSS_LENGTH] = EOS;
     }
-#ifdef AMAYA_DEBUG
-   else
-     fprintf (stderr, "DeleteStyleRule(%d), invalid element\n", doc);
-#endif
    return FALSE;  /* let Thot perform normal operation */
 }
 
 
+
 /*----------------------------------------------------------------------
-  DeleteStyleRule
-  A STYLE element will be deleted in the document HEAD.
+   StyleChanged
+   A STYLE element has been changed in the HEAD
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetStyleRule (NotifyElement * event)
-#else  /* __STDC__ */
-void                SetStyleRule (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
+void                StyleChanged (NotifyAttribute * event)
+#else
+void                StyleChanged (event)
+NotifyAttribute    *event;
+#endif
 {
-  Attribute           attr;
-  AttributeType       attrType;
-  Element             elClass;
-  Document            doc;
+  Element             el;
   Language            lang;
-  int                 len, base;
-  char               *stylestring;
+  char               *buffer, *ptr1, *ptr2;
+  char               *pEnd, *nEnd, c;
+  int                 buflen, i, j;
+  int                 previousEnd, nextEnd;
+  int                 braces;
 
-  stylestring = (char*) TtaGetMemory (1000 * sizeof (char));
-  elClass = event->element;
-  doc = event->document;
-  /* get the selector */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-  attrType.AttrTypeNum = HTML_ATTR_Selector;
-  attr = TtaGetAttribute (elClass, attrType);
-  if (attr)
+  el = TtaGetFirstChild (event->element);
+  if (el != NULL)
     {
-      len = 100;
-      TtaGiveTextAttributeValue (attr, stylestring, &len);
-      strcat (stylestring, " { ");
-      base = len + 1;
-      len = (1000 * sizeof (char)) - base - 4;
-      /* remove a generic rule */
-      TtaGiveTextContent (elClass, &stylestring[base], &len, &lang);
-      strcat (stylestring, "}");
+      /*save buffer contents after any change */
+      buflen = MAX_CSS_LENGTH;
+      buffer = TtaGetMemory (buflen+1);
+      TtaGiveTextContent (el, buffer, &buflen, &lang);
+      buffer[MAX_CSS_LENGTH] = EOS;
+
+      /* compare both srings */
+      i = 0;
+      ptr1 = buffer;
+      previousEnd = i;
+      pEnd = ptr1;
+      braces = 0;
+      while (ListBuffer[i] == *ptr1 && *ptr1 != EOS)
+	{
+	  if (i > 0 && ListBuffer[i-1] == '{')
+	    braces++;
+	  if (i > 0 &&
+	      (ListBuffer[i-1] == '}' ||
+	       ((ListBuffer[i-1] == ';' || ListBuffer[i-1] == '>') && braces == 0)))
+	    {
+	      if (ListBuffer[i-1] == '}')
+		braces--;
+	      previousEnd = i;
+	      pEnd = ptr1;
+	    }
+	  i++;
+	  ptr1++;
+	}
+      /* now ptr1 and ListBuffer[i] point different strings */
+      if (*ptr1 != EOS)
+	{
+	  ptr2 = ptr1 + strlen (ptr1);
+	  j = i + strlen (&ListBuffer[i]);
+	  nextEnd = j;
+	  nEnd = ptr2;
+	  braces = 0;
+	  while (ListBuffer[j] == *ptr2 && ptr2 != ptr1)
+	    {
+	      if (j > i && ListBuffer[j-1] == '{')
+		braces++;
+	      if (j > i &&
+		  (ListBuffer[j-1] == '}' ||
+		   ((ListBuffer[j-1] == '@' || ListBuffer[j-1] == '<') && braces == 0)))
+		{
+		  if (ListBuffer[j-1] == '}')
+		    braces--;
+		  nextEnd = j;
+		  nEnd = ptr2;
+		}
+	      j--;
+	      ptr2--;
+	    }
+	  if (ptr1 != ptr2)
+	    {
+	      /* take complete CSS rules */
+	      ListBuffer[nextEnd] = EOS;
+	      *nEnd = EOS;
+
+	      /* remove previous rules */
+	      ptr1 = &ListBuffer[previousEnd];
+	      ptr2 = ptr1;
+	      do
+		{
+		  while (*ptr2 != '}' && *ptr2 != EOS)
+		    ptr2++;
+		  c = *ptr2;
+		  ApplyCSSRules (event->element, ptr1, event->document, TRUE);
+		  *ptr2 = c;
+		  ptr1 = ptr2;
+		}
+	      while (*ptr2 != EOS);
+
+	      /* add new rules */
+	      ptr1 = pEnd;
+	      ptr2 = ptr1;
+	      do
+		{
+		  while (*ptr2 != '}' && *ptr2 != EOS)
+		    ptr2++;
+		  c = *ptr2;
+		  ApplyCSSRules (event->element, ptr1, event->document, FALSE);
+		  *ptr2 = c;
+		  ptr1 = ptr2;
+		}
+	      while (*ptr2 != EOS);
+	    }
+	}
       
-      /* parse and apply this new CSS to the current document */
-      ParseHTMLStyleHeader (NULL, stylestring, doc, TRUE);
+      TtaFreeMemory (buffer);
     }
-  TtaFreeMemory (stylestring);
 }
+
 
 /*----------------------------------------------------------------------
    UpdateStylePost : attribute Style has been updated or created.  
@@ -399,7 +340,7 @@ NotifyAttribute    *event;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
 	style[len] = EOS;
 
-	ParseHTMLSpecificStyle (el, style, doc);
+	ParseHTMLSpecificStyle (el, style, doc, FALSE);
 	TtaFreeMemory (style);
      }
 }
@@ -419,11 +360,7 @@ Document            doc;
   Element             cour;
   Attribute           attr;
   AttributeType       attrType;
-  char               *a_class = CurrentAClass;
-
-#ifdef DEBUG_STYLES
-  fprintf (stderr, "ApplyClassChange(%d,%s)\n", doc, CurrentAClass);
-#endif
+  char               *a_class = CurrentClass;
 
   if (!a_class)
     return;
@@ -435,7 +372,7 @@ Document            doc;
     return;
 
   /* class default : suppress all specific presentation. */
-  if (!strcmp (CurrentAClass, "default"))
+  if (!strcmp (CurrentClass, "default"))
     {
       cour = AClassFirstReference;
       while (cour != NULL)
@@ -471,7 +408,7 @@ Document            doc;
 	  
 	  /* set the Class attribute of the element */
 	  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	  if (!IsImplicitClassName (CurrentAClass, doc))
+	  if (!IsImplicitClassName (CurrentClass, doc))
 	    {
 	      attrType.AttrTypeNum = HTML_ATTR_Class;
 	      attr = TtaGetAttribute (cour, attrType);
@@ -510,7 +447,7 @@ Document            doc;
   int                 len, base;
 
   /* check whether it's the element type or a godd class name */
-  stylestring[0] = EOS;
+  strcpy (stylestring, "\n");
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
   /* create a string containing the new CSS definition. */
@@ -523,13 +460,13 @@ Document            doc;
   else if (selType.ElTypeNum != elType.ElTypeNum)
     {
       /* it's an invalid element type */
-      CSSWarning (TtaGetMessage (AMAYA, AM_INVALID_TYPE));
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TYPE), NULL);
       return;
     }
   strcat (stylestring, CurrentClass);
   strcat (stylestring, " { ");
   base = strlen (stylestring);
-  len = (1000 * sizeof (char)) - base - 4;
+  len = 1000 - base - 4;
   GetHTMLStyleString (ClassReference, doc, &stylestring[base], &len);
   strcat (stylestring, "}");
   
@@ -552,11 +489,13 @@ Document            doc;
       TtaSetAttributeText (attr, a_class, ClassReference, doc);
     }
   /* parse and apply this new CSS to the current document */
-    ParseHTMLStyleHeader (NULL, stylestring, doc, TRUE);
+  /*ApplyCSSRules (NULL, stylestring, doc, FALSE);*/
+  ReadCSSRules (doc, doc, NULL, stylestring);
 }
 
 /*----------------------------------------------------------------------
-   BuildClassList : Build the whole list of HTML class names in use  
+   BuildClassList : Build the whole list of HTML class names in use
+   after the first name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          BuildClassList (Document doc, char *buf, int size, char *first)
@@ -574,14 +513,17 @@ char               *first;
   Attribute           attr;
   AttributeType       attrType;
   char                selector[100];
-  int                 Free = size;
+  int                 Free;
   int                 len;
-  int                 nb = 0;
-  int                 index = 0;
-  int                 selectoren;
+  int                 nb, i;
+  int                 index, cur;
+  boolean             found;
 
   /* add the first element if specified */
-  buf[0] = 0;
+  buf[0] = EOS;
+  nb = 0;
+  index = 0;
+  Free = size;
   if (first)
     {
       strcpy (&buf[index], first);
@@ -591,51 +533,57 @@ char               *first;
       index += len;
       nb++;
     }
-  elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  attrType.AttrSSchema = elType.ElSSchema;
-  elType.ElTypeNum = HTML_EL_StyleRule;
-  el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
 
+  /* list all class values */
+  el = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_Class;
   while (el != NULL)
     {
-      attrType.AttrTypeNum = HTML_ATTR_Selector;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr)
+      TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+      if (attr != NULL)
 	{
-	  selectoren = 100;
-	  TtaGiveTextAttributeValue (attr, selector, &selectoren);
-	  /*
-	   * if the selector uses # this is an ID so don't show it
-	   * in the list. if there is a blank in the name, it's probably
-	   * not a class name.
-	   */
-	  if (selector[0] == '.' && (strcmp (selector, first)))
+	  len = 99;
+	  TtaGiveTextAttributeValue (attr, selector, &len);
+	  /* compare with all already known class names */
+	  cur = 0;
+	  found = FALSE;
+	  for (i = 0; i < nb && !found; i++)
 	    {
-	      strcpy (&buf[index], selector);
+	      if (buf[cur] == '.')
+		cur++;
+	      len = strlen (&buf[cur]) + 1;
+	      found = !strcmp (selector, &buf[cur]);
+	      cur += len;
+	    }
+
+	  if (!found)
+	    {
 	      len = strlen (selector);
-	      len++;
-	      Free -= len;
-	      index += len;
-	      nb++;
+	      if (len > Free)
+		return (nb);
+	      /* add this new class name + the dot */
+	      buf[index++] = '.';
+	      strcpy (&buf[index], selector);
+              len++; /* add the \0 */
+              Free -= len;
+              index += len;
+              nb++;
 	    }
 	}
-      /* get next StyleRule */
-      TtaNextSibling (&el);
     }
-#ifdef DEBUG_CLASS_INTERF
-  fprintf (stderr, "BuildClassList : found %d class\n", nb);
-#endif
   return (nb);
 }
 
 /*----------------------------------------------------------------------
-   ChangeClass : Change a class to reflect the presentation        
-   attributes of the selected element                              
+   CreateClass creates a class to reflect the presentation    
+   attributes of the selected element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChangeClass (Document doc, View view)
+void                CreateClass (Document doc, View view)
 #else  /* __STDC__ */
-void                ChangeClass (doc, view)
+void                CreateClass (doc, view)
 Document            doc;
 View                view;
 
@@ -659,13 +607,7 @@ View                view;
   
   /* one can only define a style from one element at a time. */
   if (last_elem != ClassReference)
-    {
-#ifdef DEBUG_CLASS_INTERF
-      fprintf (stderr, "first selected != last selected, first char %d, last %d\n",
-	       firstSelectedChar, lastSelectedChar);
-#endif
-      return;
-    }
+    return;
   if (ClassReference == NULL)
     return;
   
@@ -678,14 +620,13 @@ View                view;
   
 #  ifndef _WINDOWS
   TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
-	      
 	      TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
-  NbClass = BuildClassList (doc, ClassList, sizeof (ClassList), elHtmlName);
+  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
 #  ifndef _WINDOWS
   TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
 		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
-		  NbClass, ClassList, 5, NULL, TRUE, FALSE);
+		  NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
 #  endif /* !_WINDOWS */
   
   /* preselect the entry corresponding to the class of the element. */
@@ -714,7 +655,7 @@ View                view;
 #  ifndef _WINDOWS
   TtaShowDialogue (BaseDialog + ClassForm, TRUE);
 #  else  /* _WINDOWS */
-  CreateCreateRuleDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, ClassForm, ClassSelect, NbClass, ClassList);
+  CreateCreateRuleDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, ClassForm, ClassSelect, NbClass, ListBuffer);
 #  endif /* _WINDOWS */
 }
 
@@ -741,7 +682,7 @@ View                view;
   boolean             select_parent;
 
   ADocReference = doc;
-  CurrentAClass[0] = 0;
+  CurrentClass[0] = EOS;
   AClassFirstReference = NULL;
   AClassLastReference = NULL;
 
@@ -815,11 +756,11 @@ View                view;
   TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
 	      TtaGetMessage (AMAYA, AM_APPLY_CLASS), TRUE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
-  NbAClass = BuildClassList (doc, AClassList, sizeof (AClassList), "default");
+  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, "default");
 #  ifndef _WINDOWS
   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
 		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
-		  NbAClass, AClassList, 5, NULL, FALSE, FALSE);
+		  NbClass, ListBuffer, 5, NULL, FALSE, FALSE);
 #  endif /* !_WINDOWS */
 
   /* preselect the entry corresponding to the class of the element. */
@@ -831,19 +772,19 @@ View                view;
       len = 50;
       TtaGiveTextAttributeValue (attr, a_class, &len);
       TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
-      strcpy (CurrentAClass, a_class);
+      strcpy (CurrentClass, a_class);
     }
   else
     {
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
-      strcpy (CurrentAClass, "default");
+      strcpy (CurrentClass, "default");
     }
 
    /* pop-up the dialogue box. */
 #  ifndef _WINDOWS
   TtaShowDialogue (BaseDialog + AClassForm, TRUE);
 #  else  /* _WINDOWS */
-  CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, AClassForm, AClassSelect, NbAClass, AClassList);
+  CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, AClassForm, AClassSelect, NbClass, ListBuffer);
 #  endif /* _WINDOWS */
 }
 
@@ -878,6 +819,7 @@ char               *data;
       TtaDestroyDialogue (BaseDialog + ClassForm);
       break;
     case ClassSelect:
+    case AClassSelect:
       if (typedata == STRING_DATA)
 	strcpy (CurrentClass, data);
       break;
@@ -885,10 +827,6 @@ char               *data;
       if (typedata == INTEGER_DATA && val == 1)
 	ApplyClassChange (ADocReference);
       TtaDestroyDialogue (BaseDialog + AClassForm);
-      break;
-    case AClassSelect:
-      if (typedata == STRING_DATA)
-	strcpy (CurrentAClass, data);
       break;
     default:
       break;

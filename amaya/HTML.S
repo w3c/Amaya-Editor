@@ -36,7 +36,7 @@ STRUCT
 	  TITLE = TEXT;
 	? ISINDEX (ATTR Prompt = TEXT) = CONSTANT C_Empty;
 	? BASE;
-	? Styles (ATTR Notation = TEXT) = LIST OF (StyleRule);
+	? Styles (ATTR Notation = TEXT) = TEXT;
 	? Scripts = LIST OF (SCRIPT = TEXT);
 	? Metas = LIST OF (META);
 	? Links = LIST OF (LINK);
@@ -49,8 +49,6 @@ STRUCT
 #endif
 	     REL = Text; REV = Text; Title = Text)
 	 = CONSTANT C_Empty;
-
-  StyleRule (ATTR Selector = TEXT) = TEXT;
 
   BASE (ATTR !HREF_) = CONSTANT C_Empty;
 

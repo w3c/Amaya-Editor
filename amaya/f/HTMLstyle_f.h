@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char CSSparser ( Document doc );
 extern char *SkipBlanks ( char *ptr );
 extern boolean IsBlank ( char *ptr );
 extern char *SkipProperty ( char *ptr );
@@ -19,16 +18,10 @@ extern void GetHTMLStyleString ( Element el,
                                  Document doc,
                                  char *buf,
                                  int *len );
-extern void ParseCSSRule ( PresentationTarget target,
-                           PresentationContext context,
-                           char *cssRule );
 extern void ParseHTMLSpecificStyle ( Element elem,
                                      char *cssRule,
-                                     Document doc );
-extern void ParseCSSGenericStyle ( char *selector,
-                                   char *cssRule,
-                                   Document doc,
-                                   CSSInfoPtr css );
+                                     Document doc,
+                                     boolean destroy );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element el,
                                               char *file,
@@ -38,10 +31,9 @@ extern char *UpdateCSSBackgroundImage ( char *oldpath,
                                         char *imgpath,
                                         char *styleString );
 extern char *GetCSSBackgroundURL ( char *styleString );
-extern void ParseStyleDeclaration ( Element el,
-                                    char *cssRule,
-                                    Document doc,
-                                    CSSInfoPtr css );
+extern void ParseCSSRule ( PresentationTarget target,
+                           PresentationContext context,
+                           char *cssRule );
 extern void ParseHTMLClass ( Element elem,
                              char *cssRule,
                              Document doc );
@@ -53,13 +45,8 @@ extern int EvaluateClassSelector ( Element el,
                                    char *class,
                                    char *selector,
                                    Document doc );
-extern Element CreateWWWElement ( Document doc,
-                                  int type );
-extern Element CreateNewWWWElement ( Document doc,
-                                     int type );
 extern int IsImplicitClassName ( char *class,
                                  Document doc );
-extern void SetHTMLStyleParserDestructiveMode ( boolean mode );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element el,
                                      char *color );
@@ -85,10 +72,17 @@ extern void HTMLSetAvisitedColor ( Document doc,
 extern void HTMLResetAlinkColor ( Document doc );
 extern void HTMLResetAactiveColor ( Document doc );
 extern void HTMLResetAvisitedColor ( Document doc );
+extern void ApplyCSSRules ( Element el,
+                            char *cssRule,
+                            Document doc,
+                            boolean destroy );
+extern char ReadCSSRules ( Document doc,
+                           Document docRef,
+                           CSSInfoPtr css,
+                           char *buffer );
 
 #else /* __STDC__ */
 
-extern char CSSparser (/* Document doc */);
 extern char *SkipBlanks (/* char *ptr */);
 extern boolean IsBlank (/* char *ptr */);
 extern char *SkipProperty (/* char *ptr */);
@@ -101,16 +95,10 @@ extern void GetHTMLStyleString (/* Element el,
                                    Document doc,
                                    char *buf,
                                    int *len */);
-extern void ParseCSSRule (/* PresentationTarget target,
-                             PresentationContext context,
-                             char *cssRule */);
 extern void ParseHTMLSpecificStyle (/* Element elem,
                                        char *cssRule,
-                                       Document doc */);
-extern void ParseCSSGenericStyle (/* char *selector,
-                                     char *cssRule,
-                                     Document doc,
-                                     CSSInfoPtr css */);
+                                       Document doc,
+                                       boolean destroy */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element el,
                                                 char *file,
@@ -120,10 +108,9 @@ extern char *UpdateCSSBackgroundImage (/* char *oldpath,
                                           char *imgpath,
                                           char *styleString */);
 extern char *GetCSSBackgroundURL (/* char *styleString */);
-extern void ParseStyleDeclaration (/* Element el,
-                                      char *cssRule,
-                                      Document doc,
-                                      CSSInfoPtr css */);
+extern void ParseCSSRule (/* PresentationTarget target,
+                             PresentationContext context,
+                             char *cssRule */);
 extern void ParseHTMLClass (/* Element elem,
                                char *cssRule,
                                Document doc */);
@@ -135,13 +122,8 @@ extern int EvaluateClassSelector (/* Element el,
                                      char *class,
                                      char *selector,
                                      Document doc */);
-extern Element CreateWWWElement (/* Document doc,
-                                    int type */);
-extern Element CreateNewWWWElement (/* Document doc,
-                                       int type */);
 extern int IsImplicitClassName (/* char *class,
                                    Document doc */);
-extern void SetHTMLStyleParserDestructiveMode (/* boolean mode */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element el,
                                        char *color */);
@@ -167,6 +149,14 @@ extern void HTMLSetAvisitedColor (/* Document doc,
 extern void HTMLResetAlinkColor (/* Document doc */);
 extern void HTMLResetAactiveColor (/* Document doc */);
 extern void HTMLResetAvisitedColor (/* Document doc */);
+extern void ApplyCSSRules (/* Element el,
+                              char *cssRule,
+                              Document doc,
+                              boolean destroy */);
+extern char ReadCSSRules (/* Document doc,
+                             Document docRef,
+                             CSSInfoPtr css,
+                             char *buffer */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

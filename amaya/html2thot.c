@@ -744,6 +744,12 @@ static int          CharRank = 0;	  /* rank of the last matching
 
 #define MaxMsgLength 200	/* maximum size of error messages */
 
+#ifdef __STDC__
+static void         ProcessStartGI (char *GIname);
+#else
+static void         ProcessStartGI ();
+#endif
+ 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1687,7 +1693,7 @@ static void         TextToDocument ()
 	if (elType.ElTypeNum == HTML_EL_Styles && elType.ElSSchema == HTMLSSchema)
 	  {
 #ifndef STANDALONE
-	     ParseHTMLStyleHeader (parent, inputBuffer, theDocument, FALSE);
+	     ApplyCSSRules (parent, inputBuffer, theDocument, FALSE);
 #endif
 	     InitBuffer ();
 	     return;
@@ -2444,7 +2450,7 @@ Element             el;
 			      name2 = TtaGetMemory (length + 1);
 			      TtaGiveTextAttributeValue (attr, name2, &length);
 			      /* load the stylesheet file found here ! */
-			      LoadHTMLStyleSheet (name2, theDocument);
+			      LoadHTMLStyleSheet (name2, theDocument, NULL);
 			      TtaFreeMemory (name2);
 			   }
 		      }		/* other kind of Links ... */
@@ -3029,13 +3035,6 @@ char                c;
      }
 }
 
-#ifdef __STDC__
-static void         ProcessStartGI (char *GIname);
-
-#else
-static void         ProcessStartGI ();
-
-#endif
 
 /*----------------------------------------------------------------------
    ContextOK       returns TRUE if the element at position entry
@@ -3814,7 +3813,7 @@ char                c;
 #ifndef STANDALONE
 	TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
 			     theDocument);
-	ParseHTMLSpecificStyle (lastElement, (char *) inputBuffer, theDocument);
+	ParseHTMLSpecificStyle (lastElement, (char *) inputBuffer, theDocument, FALSE);
 #endif
 	done = TRUE;
      }
@@ -3978,7 +3977,7 @@ char                c;
 	else if (!strcmp (lastAttrEntry->XMLattribute, "BACKGROUND"))
 	  {
 	     sprintf (msgBuffer, "background: url(%s)", inputBuffer);
-	     ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument);
+	     ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
 	  }
 	else if (!strcmp (lastAttrEntry->XMLattribute, "BGCOLOR"))
 	   HTMLSetBackgroundColor (theDocument, lastElement, inputBuffer);
@@ -4723,45 +4722,45 @@ char          GetNextInputChar (endOfFile)
 boolean *endOfFile;
 #endif
 {
-   char		charRead;
+  char		charRead;
 
-   charRead = EOS;
-   *endOfFile = FALSE;
-   if (prevChar != EOS)
-      {
+  charRead = EOS;
+  *endOfFile = FALSE;
+  if (prevChar != EOS)
+    {
       charRead = prevChar;
       prevChar = EOS;
-      }
-   else
-      {
+    }
+  else
+    {
       charRead = GetNextChar (endOfFile);
       /* skip null characters*/
       while (charRead == EOS && !*endOfFile)
-	 charRead = GetNextChar (endOfFile);
-      }
-   if (*endOfFile == FALSE)
-      {
+	charRead = GetNextChar (endOfFile);
+    }
+  if (*endOfFile == FALSE)
+    {
       if ((int) charRead == 13)
-	 /* CR has been read */
-	 {
-	 /* Read next character */
-	 charRead = GetNextChar (endOfFile);
-	 if ((int) charRead != 10)
+	/* CR has been read */
+	{
+	  /* Read next character */
+	  charRead = GetNextChar (endOfFile);
+	  if ((int) charRead != 10)
 	    /* next character is not LF. Store next character and return LF */
 	    {
-	    prevChar = charRead;
-	    charRead = (char) 10;
+	      prevChar = charRead;
+	      charRead = (char) 10;
 	    }
-	 }
+	}
       /* update the counters of characters and lines read */
       if ((int) charRead == 10 || (int) charRead == 13)
-	 /* new line in HTML file */
-	 {
-	 numberOfLinesRead++;
-	 numberOfCharRead = 0;
-	 }
-      }
-   return charRead;
+	/* new line in HTML file */
+	{
+	  numberOfLinesRead++;
+	  numberOfCharRead = 0;
+	}
+    }
+  return charRead;
 }
 
 /*----------------------------------------------------------------------
@@ -4974,7 +4973,7 @@ char               *HTMLbuf;
 			    if (ParsingCSS)
 			      {
 #ifndef STANDALONE
-				 charRead = CSSparser (theDocument);
+				 charRead = ReadCSSRules (theDocument, theDocument, NULL, NULL);
 				 /* when returning from the CSS parser, a '<' has been
 				    read by the CSS parser and the following character,
 				    which is in charRead */
@@ -6422,8 +6421,6 @@ boolean	            PlainText;
 #ifdef AMAYA_JAVA
 	   handleLinkHeaders (theDocument);
 #endif /* AMAYA_JAVA */
-	   if (TtaIsViewOpened (theDocument, 1))
-	       ApplyFinalStyle (theDocument);
 	   TtaFreeMemory (docURL);
 #ifndef INCR_DISPLAY
 	   TtaSetDisplayMode (theDocument, DisplayImmediately);

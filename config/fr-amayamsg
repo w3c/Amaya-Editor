@@ -51,8 +51,8 @@
 50 Ajouter
 51 Visualiser
 52 Traiter
-53 CSS Externe
-54 Supprimer CSS
+53 Maths
+54 Graphique
 55 Supprimer
 56 Sauvegarder
 57 Sauvegarder sous
@@ -67,14 +67,14 @@
 66 Adresse du document
 67 Repertoire des images
 68 Adresse de l'objet
-69 Style du document
-70 Pr\351f\351rences de l'utilisateur
-71 Fichier 1 CSS                                         
-72 Liste de r\350gle pour fichier 1                         
-73 Fichier 2 CSS                                         
-74 Liste de règle pour fichier 2                           
-75 S\351lectionner une nouvelle feuille de style
-76 Supprimer une feuille de style
+69 Fichier CSS                                         
+70 Amaya, un navigateur et \351diteur pour le Web
+71 d\351velopp\351 par le W3C (http://www.w3.org/)
+72 Erreur Interne: L'URL a une longueur supérieure à  %s caractères
+73 Seul le type par d\351faut est autoris\351
+74 Mise \340 jour des liens : %s%% a \351t\351 trait\351
+75 Rien à sauver
+76 repeat-y
 77 <HTML><HEAD><TITLE>ERREUR : URL inaccessible</TITLE></HEAD><BODY><H1>ERREUR: L'URL recherchée n'est pas accessible</H1><HR><P>Lors de la recherche de l'URL:<A HREF=\"%s\">%s</A></P><P>l'erreur suivante s'est produite :</P><UL><LI><STRONG>Echec connection</STRONG></UL><P>Le système indique:</P><PRE><I>(%d) %s</I></PRE><P>Ce qui veut dire :</P><PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.</PRE><PRE>Essayer plus tard.</PRE><P></P><HR>\n</BODY></HTML>
 78 Entrer le nom utilisateur:
 79 Il y a %d requêtes en cours
@@ -89,7 +89,7 @@
 88 Italique
 89 Gras
 90 Fonte fixe
-91 Feuille de style
+91 no-repeat
 92 Ajout d'une image
 93 Titre niveau 1
 94 Titre niveau 2
@@ -129,14 +129,3 @@
 128 Mode de r\351p\351tition
 129 repeat
 130 repeat-x
-131 repeat-y
-132 no-repeat
-133 Amaya, un navigateur et \351diteur pour le Web
-134 d\351velopp\351 par le W3C (http://www.w3.org/)
-135 Erreur Interne: L'URL a une longueur supérieure à  %s caractères
-136 Erreur CSS : %s
-137 Seul le type par d\351faut est autoris\351
-138 Mise \340 jour des liens : %s%% a \351t\351 trait\351
-139 Rien à sauver
-140 Maths
-141 Graphique

@@ -541,30 +541,6 @@ BOXES
 		END;
 	END;
 
-  ATTR_SELECTOR: BEGIN
-	Content: (Selector);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		END;
-	END;
-
-  ATTR_SELECTOR_BEGIN: BEGIN
-	Content: Text ' {';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		END;
-	END;
-
-  ATTR_SELECTOR_END: BEGIN
-	Content: Text '}';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		END;
-	END;
-
   ATTR_CLASS: BEGIN
 	Content: Text ' class=';
 	Visibility: 0;
@@ -3849,20 +3825,11 @@ RULES
   Styles: BEGIN
 	CreateBefore(STYLE_S);
 	Visibility: 0;
+	Line;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Visibility: Enclosing =;
-		END;
-	END;
-
-  StyleRule: BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: 5;
-		Line;
-		Indent: - STRUCT_INDENT;
-		Width: Enclosing . Width;
 		END;
 	END;
 
@@ -6037,7 +6004,7 @@ ATTRIBUTES
 	CreateBefore(ATTR_SRC);
 	CreateBefore(VALUE_SRC);
 	END;
- 
+
  Width__:
 	BEGIN
 	CreateBefore(ATTR_WIDTH);
@@ -7023,13 +6990,6 @@ ATTRIBUTES
   	BEGIN
 	CreateBefore(ATTR_NOTATION);
 	CreateBefore(VALUE_NOTATION);
-	END;
-
-  Selector:
-	BEGIN
-	CreateFirst(ATTR_SELECTOR);
-	CreateFirst(ATTR_SELECTOR_BEGIN);
-	CreateLast(ATTR_SELECTOR_END);
 	END;
 
 #ifdef MATHML

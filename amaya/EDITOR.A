@@ -147,7 +147,7 @@ MENUS
 	view:1 Style button:BBackgroundImage -> ChangeBackgroundImage;
 	view:1 Style Separator;
 
-	view:1 Style button:BCreateClass -> ChangeClass;
+	view:1 Style button:BCreateClass -> CreateClass;
 	view:1 Style button:BApplyClass -> ApplyClass;
 	view:1 Style Separator;
 	view:1 Style button:BCSS -> InitCSSDialog;
