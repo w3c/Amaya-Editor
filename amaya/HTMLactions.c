@@ -1055,7 +1055,6 @@ Document            doc;
 	length = TtaGetTextLength (textElem) + 1;
 	text = TtaAllocString (length);
 	TtaGiveTextContent (textElem, text, &length, &lang);
-	TtaSetTextZone (doc, 1, 2, text);
 	UpdateAtom (doc, DocumentURLs[doc], text);
         TtaChangeWindowTitle (doc, 0, text);
     	if (DocumentSource[doc])

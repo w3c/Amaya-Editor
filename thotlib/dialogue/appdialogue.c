@@ -2114,7 +2114,7 @@ void                (*procedure) ();
 	     if (i < MAX_TEXTZONE)
 	       {
 		  row = FrameTable[frame].Text_Zone[0];
-		  /*XtManageChild(row); */
+		  XtManageChild(row);
 #ifndef _WINDOWS
 #ifndef _GTK
 		  XtUnmanageChild (XtParent (XtParent (row)));
@@ -3286,7 +3286,7 @@ int                 doc;
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 5);
 	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 5);
+	   XtSetArg (args[n], XmNmarginHeight, 0);
 	   n++;
 	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	   n++;
@@ -3301,6 +3301,10 @@ int                 doc;
 	   if (image != 0)
 	     {
 	       n = 0;
+	       XtSetArg (args[n], XmNmarginWidth, 0);
+	       n++;
+	       XtSetArg (args[n], XmNmarginHeight, 0);
+	       n++;
 	       XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	       n++;
 	       XtSetArg (args[n], XmNlabelType, XmPIXMAP);

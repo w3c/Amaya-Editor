@@ -1049,59 +1049,6 @@ CHAR_T*              text;
 }
 
 /*----------------------------------------------------------------------
-   TextTitle
-   The Title field in a document window has been modified by the user
-   Update the TITLE element for the corresponding document.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         TextTitle (Document document, View view, CHAR_T* text)
-#else
-static void         TextTitle (document, view, text)
-Document            doc;
-View                view;
-CHAR_T*              text;
-
-#endif
-{
-   ElementType         elType;
-   Element             el, child;
-
-   /* search the Title element */
-   el = TtaGetMainRoot (document);
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
-     {
-       elType.ElTypeNum = HTML_EL_TITLE;
-       el = TtaSearchTypedElement (elType, SearchForward, el);
-       if (!TtaGetDocumentAccessMode (document))
-	 /* the document is in ReadOnly mode */
-	 UpdateTitle (el, document);
-       else
-	 {
-	   TtaOpenUndoSequence (document, NULL, NULL, 0, 0);
-	   TtaRegisterElementReplace (el, document);
-	   child = TtaGetFirstChild (el);
-	   if (child == NULL)
-	     {
-	       /* insert the text element */
-	       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	       child = TtaNewElement (document, elType);
-	       TtaInsertFirstChild  (&child, el, document);
-	     }
-	   TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
-	   TtaCloseUndoSequence (document);
-	   TtaSetDocumentModified (document);
-           TtaChangeWindowTitle (document, 0, text);
-	   if (DocumentSource[document])
-	      TtaChangeWindowTitle (DocumentSource[document], 0, text);
-	 }
-     }
-   else
-     /* the document title cannot be changed */
-     TtaSetTextZone (document, 1, 2, TEXT(""));
-}
-
-/*----------------------------------------------------------------------
    SetWindowTitle
    Change the title of all windows (if view == 0) of document targetDoc
    or only the title of the window associated with the specified view.
@@ -1589,10 +1536,7 @@ ThotBool     logFile;
 	   return (0);
 	 }
 
-       if (opened)
-	   /* the window already exists */
-	   TtaSetTextZone (doc, 1, 2, TEXT(""));
-       else
+       if (!opened)
 	 /* re-use an existing window */
 	 {
 	   /* Create all buttons */
@@ -1686,12 +1630,8 @@ ThotBool     logFile;
 #ifdef ANNOTATIONS
 	   if (docType != docAnnot && docType != docAnnotRO)
 #endif /* ANNOTATIONS */
-	     {
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
 			   TextURL);
-	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
-			   TextTitle);
-	     }
 #ifdef ANNOTATIONS
 	   else
 	   /* @@ patch for not seeing the icon, while waiting for Irene */
