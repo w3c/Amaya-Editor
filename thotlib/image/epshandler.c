@@ -32,10 +32,10 @@
 #include "units_f.h"
 #include "memory_f.h"
 
+#ifndef ABS
 #define ABS(x) (x<0?-x:x)
-#define MAX(x,y) (x>y?x:y)
+#endif
 extern Pixmap       EpsfPictureLogo;
-
 
 /*----------------------------------------------------------------------
    Find EPS picture bounding box.      		             
@@ -94,7 +94,7 @@ Drawable EpsCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
    GetPictureBoundaries (fn, xif, yif, wif, hif);
    *width = *wif;
    *height = *hif;
-   return ((ThotBitmap) EpsfPictureLogo);
+   return ((Drawable) EpsfPictureLogo);
 #endif /* _WINDOWS */
 }			
 
@@ -108,7 +108,7 @@ void EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
    float               Scx, Scy;
    FILE               *fin;
    int                 x, y;
-  int                  picX, picY, picW, picH;
+   int                 picX, picY, picW, picH;
    int                 c;
 
    /* Read the picture boundaries */

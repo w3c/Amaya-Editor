@@ -27,8 +27,10 @@
 #include "boxes_tv.h"
 #include "frame_tv.h"
 
+#ifndef _GTK
 static int          GridSize = 1;
 #define DO_ALIGN(val) ((val + (GridSize/2)) / GridSize) * GridSize
+#endif
 
 #include "appli_f.h"
 #include "buildboxes_f.h"
@@ -107,6 +109,7 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
     }
 }
 
+#ifndef _GTK
 /*----------------------------------------------------------------------
   BoxGeometry set the geometry of the fake box used to interract with
   the user.
@@ -166,6 +169,7 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
 #endif /* _WINDOWS */
     }
 }
+#endif
 
 /*----------------------------------------------------------------------
   RedrawPolyLine shows the current state of the polyline (closed or

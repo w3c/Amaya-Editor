@@ -244,6 +244,7 @@ static ThotBool readUntil (FILE *file, char *word1, char *word2)
    return ret;
 }
 
+#if 0
 /*----------------------------------------------------------------------
    namesOfDocType                                                  
   ----------------------------------------------------------------------*/
@@ -388,6 +389,7 @@ static void namesOfDocType (char *fname, char **doctypeOrig,
 	strcpy (*doctypeTrans, *doctypeOrig);
      }
 }
+#endif
 
 /*----------------------------------------------------------------------
    ConfigFree

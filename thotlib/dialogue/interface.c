@@ -93,6 +93,7 @@ static unsigned int  previous_state = 0;
   ----------------------------------------------------------------------*/
 /* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
 /* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
+#ifndef _GTK
 static KeySym       TtaIsoKeySymTab[256] =
 {
    XK_nobreakspace,		/* First keysyms are mapped directly  */
@@ -116,6 +117,7 @@ XK_ocircumflex, XK_otilde, XK_odiaeresis, XK_division, XK_oslash, XK_ugrave,
 XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
    NoSymbol			/* Needed, do not remove ! */
 };
+#endif
 #endif /* !_WINDOWS */
 /*
  * definition of a multi-key sequence, is made of three KeySyms :
@@ -510,13 +512,15 @@ static Multi_Key    mk_tab[] =
 #define NB_MK (int)((sizeof(mk_tab) / sizeof(Multi_Key)))
 
 #ifndef _WINDOWS
+#ifndef _GTK
 static Display     *TtaDisplay = NULL;
 static int          TtaNbIsoKeySym = 0;
-static int          TtaNbKeySymPerKeyCode = 0;
 static int          TtaModifierNumber = 0;
+static KeyCode      TtaMode_switchKeyCode = NoSymbol;
+#endif
+static int          TtaNbKeySymPerKeyCode = 0;
 static int          TtaMinKeyCode = 0;
 static int          TtaMaxKeyCode = 0;
-static KeyCode      TtaMode_switchKeyCode = NoSymbol;
 static KeySym       TtaKeyboardMap[8 * 256];
 
 /*
@@ -853,7 +857,7 @@ int WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int* k)
   return 1;
 }
 #else /* _WINDOWS */
-
+#ifndef _GTK
 /*----------------------------------------------------------------------
    TtaGetIsoKeysym
 
@@ -1161,6 +1165,7 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
        return (1);
      }
 }
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1197,12 +1202,14 @@ void TtaFetchOneEvent (ThotEvent *ev)
 }
 
 #ifndef _WINDOWS
+#ifndef _GTK
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
 {
   return (0);
 }
+#endif /* !_GTK */
 #endif /* ! _WINDOWS */
 
 /*----------------------------------------------------------------------

@@ -870,7 +870,9 @@ void ANNOT_Post_callback (int doc, int status,
    Document  source_doc;
    /* For saving threads */
    ThotBool isReplyTo;
+#ifdef ANNOT_ON_ANNOT
    ThotBool is_root;
+#endif
    ThotBool do_update;
    char *previous_body_url;
    char *previous_annot_url;

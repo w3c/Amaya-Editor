@@ -2485,9 +2485,9 @@ ThotWindow TtaGetThotWindow (int frame)
 void SetCursorWatch (int thotThotWindowid)
 {
 #ifndef _WINDOWS
-   int                 frame;
    Drawable            drawable;
 #ifdef _GTK   
+   int                 frame;
    ThotWidget          w;
 #endif /* !_GTK */
 
@@ -2516,9 +2516,9 @@ void SetCursorWatch (int thotThotWindowid)
 void ResetCursorWatch (int thotThotWindowid)
 {  
 #ifndef _WINDOWS
-   int                 frame;
    Drawable            drawable;
 #ifdef _GTK
+   int                 frame;
    ThotWidget          w;
 #endif /* !_GTK */
 

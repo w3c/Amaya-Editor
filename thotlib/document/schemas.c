@@ -196,7 +196,6 @@ static void ResetNatureRules (PtrSSchema oldSS)
 }
 
 #ifndef NODISPLAY
-
 /*----------------------------------------------------------------------
    RegisterSSchemaForSavedElements
    Register schema pSSchema in the list of schemas used by the saved elements
@@ -1533,6 +1532,7 @@ void SearchNatures (PtrDocument pDoc, PtrSSchema natureTable[MAX_NAT_TABLE],
 #define STRUCT_INDENT 15
 #define DIST_BOTTOM 2
 
+#ifndef NODISPLAY
 /*----------------------------------------------------------------------
    RuleBefore
    Return TRUE if pPRule1 must occur before pPRule2 in a chain of
@@ -1678,6 +1678,7 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
       LinkNewPRule (pRule, &pAtPres->ApTextFirstPRule);
     }
 }
+#endif
 
 /*----------------------------------------------------------------------
    TtaAppendXMLAttribute
