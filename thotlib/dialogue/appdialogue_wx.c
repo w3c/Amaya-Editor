@@ -1166,16 +1166,38 @@ ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
   returns:
     + wxMenu * : a pointer on a wxMenu, call PopupMenu to show it.
   ----------------------------------------------------------------------*/
-wxMenu * TtaGetContextMenu( int window_id )
+wxMenu * TtaGetContextMenu( int window_id, int page_id, int frame_id )
 {
-  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
-  int frame_id = 0;
   int menu_id = 0;
-  if ( p_window && p_window->GetActiveFrame() )
-    frame_id = p_window->GetActiveFrame()->GetFrameId();
+  if (frame_id == -1)
+    {
+      if (window_id == -1)
+	{
+	  wxASSERT_MSG(FALSE, _T("Context menu cannot be created"));
+	  return NULL;
+	}
+      AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+      if (page_id == -1)
+	{
+	  // take the current active frame of the current active page
+	  if ( p_window && p_window->GetActiveFrame() )
+	    frame_id = p_window->GetActiveFrame()->GetFrameId();
+	}
+      else
+	{
+	  // take the current active frame of the given page
+	  AmayaPage * p_page = p_window->GetPage( page_id );
+	  if (!p_page)
+	    {
+	      wxASSERT_MSG(FALSE, _T("Context menu cannot be created (given page does not exists)"));
+	      return NULL;
+	    }
+	  frame_id = p_page->GetActiveFrame()->GetFrameId();
+	}
+    }
+
   if (frame_id)
     menu_id = FrameTable[frame_id].MenuContext;
-
   if (menu_id)
     return FrameTable[frame_id].WdMenus[menu_id];
   else

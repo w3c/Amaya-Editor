@@ -25,6 +25,7 @@ extern void TtaAppendDocumentPath ( char *directory );
 extern void TtaSetSchemaPath ( char *path );
 extern SSchema TtaNewNature ( Document document,
                               SSchema schema,
+                              char *natureURI,
                               char *natureName,
                               char *presentationName );
 extern SSchema TtaNewSchemaExtension ( Document document,
@@ -132,6 +133,7 @@ extern void TtaAppendDocumentPath ( char *directory );
 extern void TtaSetSchemaPath ( char *path );
 extern SSchema TtaNewNature ( Document document,
                                 SSchema schema,
+                                char *natureURI,
                                 char *natureName,
                                 char *presentationName );
 extern SSchema TtaNewSchemaExtension ( Document document,

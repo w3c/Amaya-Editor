@@ -65,9 +65,9 @@ extern void ConfigInit ( void );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
                                          char* nomNature,
-                                         char* presNature );
+                                         char **presNature );
 extern ThotBool ConfigDefaultPSchema ( char* schema,
-                                       char* schpres );
+                                       char **schpres );
 extern void FreeTranslations ( void );
 extern void RedisplayCopies ( PtrElement pEl,
                               PtrDocument pDoc,
@@ -213,9 +213,9 @@ extern void ConfigInit ( void );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
                                            char* nomNature,
-                                           char* presNature );
+                                           char **presNature );
 extern ThotBool ConfigDefaultPSchema ( char* schema,
-                                         char* schpres );
+                                         char **schpres );
 extern void FreeTranslations ( void );
 extern void RedisplayCopies ( PtrElement pEl,
                                 PtrDocument pDoc,
