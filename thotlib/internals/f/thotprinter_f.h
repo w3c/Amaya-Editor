@@ -5,7 +5,7 @@
 #define DLLEXPORT __declspec(dllexport)
 
 #ifdef __STDC__
-DLLEXPORT void PrintDoc (int, char**, HDC, BOOL, int, char*, char*, HINSTANCE);
+DLLEXPORT void PrintDoc (HWND, int, STRING*, HDC, BOOL, int, STRING, STRING, HINSTANCE, BOOL);
 #else  /* !__STDC__ */
 DLLEXPORT void PrintDoc ();
 #endif /* __STDC__ */

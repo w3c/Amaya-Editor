@@ -46,6 +46,8 @@
 extern int bgRed ;
 extern int bgGreen;
 extern int bgBlue ;
+
+extern void png_read_init (png_structp png_ptr);
 #endif /* _WINDOWS */
 
 int Magic256[256] =    /* for halftoning */
@@ -896,7 +898,10 @@ int            zoom;
   int             w, h;
   Pixmap          pixmap;
   ThotColorStruct colrs[256];
-  unsigned char   *buffer, *buffer2;
+  unsigned char   *buffer; 
+# ifndef _WIN_PRINT
+  unsigned char* buffer2;
+# endif /* _WIN_PRINT */
   int             ncolors, cpp, bg = -1;
 
 # ifdef _WINDOWS

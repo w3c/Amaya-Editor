@@ -91,7 +91,7 @@ extern int PrinterDPI;
 
 #ifdef _WINDOWS
 
-#include "win_f.h"
+#include "wininclude.h"
 
 /*----------------------------------------------------------------------
   DoPrintOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
@@ -172,11 +172,11 @@ int                 fg;
    ThotPoint           point[4];
    int                 result;
 
-   width = 5 + thick;
+   width = (float) (5 + thick);
    height = 10;
    dx = (float) (x2 - x1);
    dy = (float) (y1 - y2);
-   l = sqrt ((double) (dx * dx + dy * dy));
+   l = (float) sqrt ((double) (dx * dx + dy * dy));
    if (l == 0)
       return;
    sina = dy / l;
@@ -185,11 +185,11 @@ int                 fg;
    yb = x2 * sina + y2 * cosa;
    x = xb - height;
    y = yb - width / 2;
-   xc = FloatToInt (x * cosa + y * sina + .5);
-   yc = FloatToInt (-x * sina + y * cosa + .5);
+   xc = FloatToInt ((float) (x * cosa + y * sina + .5));
+   yc = FloatToInt ((float) (-x * sina + y * cosa + .5));
    y = yb + width / 2;
-   xd = FloatToInt (x * cosa + y * sina + .5);
-   yd = FloatToInt (-x * sina + y * cosa + .5);
+   xd = FloatToInt ((float) (x * cosa + y * sina + .5));
+   yd = FloatToInt ((float) (-x * sina + y * cosa + .5));
 
    /* draw */
    point[0].x = x2;
@@ -201,7 +201,7 @@ int                 fg;
    point[3].x = x2;
    point[3].y = y2;
 
-   pattern = CreatePattern (0, RO, active, fg, fg, 1);
+   pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
    if (pattern != 0) {
       hPen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
 
@@ -2299,7 +2299,7 @@ int                 pattern;
 
    y += FrameTable[frame].FrTopMargin;
 
-   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+   arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
 
    if (larg > thick + 1)
       larg = larg - thick - 1;

@@ -3188,7 +3188,7 @@ ThotWidget          parent;
 	  }
 #   else  /* _WINDOWS */
 	frame = GetMainFrameNumber (owner);
-    EnableMenuItem ((UINT)WinMenus[frame], parent, MF_GRAYED);
+    EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_GRAYED);
 	DrawMenuBar (FrMainRef[frame]); 
 #            endif /* _WINDOWS */
      }
@@ -3243,7 +3243,7 @@ ThotWidget          parent;
              XtManageChild (parent);
 #            else  /* _WINDOWS */
 			 frame = GetMainFrameNumber (owner);
-             EnableMenuItem ((UINT)WinMenus[frame], parent, MF_ENABLED);
+             EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_ENABLED);
 			 DrawMenuBar (FrMainRef[frame]); 
 #            endif /* _WINDOWS */
 	  }

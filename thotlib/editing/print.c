@@ -133,7 +133,7 @@ static ThotWindow    thotWindow;
 #include "tree_f.h"
 
 #ifdef _WINDOWS 
-#include "win_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 static int          manualFeed;
