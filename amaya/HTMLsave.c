@@ -85,10 +85,12 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
-	  SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
-	  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
+		     TtaGetMessage (LIB, TMSG_CANCEL));
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
       break;
       
@@ -96,12 +98,15 @@ LPARAM lParam;
       if (HIWORD (wParam) == EN_UPDATE)
 	{
 	  if (LOWORD (wParam) == IDC_EDITDOCSAVE)
-	    GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave, sizeof (currentDocToSave) - 1);
+	    GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave,
+			    sizeof (currentDocToSave) - 1);
 	}
       switch (LOWORD (wParam))
 	{
 	case IDC_BROWSE:
-	  WIN_ListSaveDirectory (BaseDialog + SaveForm, TtaGetMessage (AMAYA, AM_SAVE_AS), currentDocToSave);
+	  WIN_ListSaveDirectory (BaseDialog + SaveForm,
+				 TtaGetMessage (AMAYA, AM_SAVE_AS),
+				 currentDocToSave);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave);
 	  break;
 
@@ -136,7 +141,8 @@ STRING path_name;
 #endif /* __STDC__ */
 {  
   usprintf (currentPathName, path_name);
-  DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent, (DLGPROC) GetSaveDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent,
+	     (DLGPROC) GetSaveDlgProc);
 }
 #endif /* _WINDOWS */
 
@@ -185,7 +191,8 @@ NotifyElement      *event;
 		  ustrcpy (buff, HTAppName); 
 		  ustrcat (buff, TEXT(" "));
 		  ustrcat (buff, HTAppVersion);
-		  TtaSetAttributeText (attr, buff, event->element, event->document);
+		  TtaSetAttributeText (attr, buff, event->element,
+				       event->document);
 		}
 	    }
 	}
@@ -228,8 +235,10 @@ NotifyAttribute    *event;
       QuotedText[0] = '\'';
       QuotedText[length+1] = '\'';
     }
-  TtaSetAttributeText (event->attribute, QuotedText, event->element, event->document);
-  /* do NOT free the QuotedText string because it's used by GenerateQuoteAfter */
+  TtaSetAttributeText (event->attribute, QuotedText, event->element,
+		       event->document);
+  /* do NOT free the QuotedText string because it's used by
+     GenerateQuoteAfter */
   return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -246,7 +255,8 @@ NotifyAttribute    *event;
 {
   /* remove quotes before and after the text */
   QuotedText[ustrlen (QuotedText) - 1] = EOS;
-  TtaSetAttributeText (event->attribute, &QuotedText[1], event->element, event->document);
+  TtaSetAttributeText (event->attribute, &QuotedText[1], event->element,
+		       event->document);
   TtaFreeMemory (QuotedText);
 }
 
@@ -328,7 +338,8 @@ STRING              newpath;
 	      if (attrType.AttrTypeNum == HTML_ATTR_Style_)
 		{
 		  /* manage background-image rule within style attribute */
-		  new_url = UpdateCSSBackgroundImage (DocumentURLs[document], newpath, NULL, old_url);
+		  new_url = UpdateCSSBackgroundImage (DocumentURLs[document],
+						      newpath, NULL, old_url);
 		  if (new_url != NULL)
 		    {
 		      /* register the modification to be able to undo it */
@@ -343,7 +354,8 @@ STRING              newpath;
 		  NormalizeURL (old_url, document, oldpath, tempname, NULL);
 		  new_url = MakeRelativeURL (oldpath, newpath);
 #ifdef AMAYA_DEBUG
-		  fprintf(stderr, "Changed URL from %s to %s\n", old_url, new_url);
+		  fprintf(stderr, "Changed URL from %s to %s\n", old_url,
+			  new_url);
 #endif
 		  /* register the modification to be able to undo it */
 		  TtaRegisterAttributeReplace (attr, el, document);
@@ -371,7 +383,7 @@ STRING              pathname;
 
 #endif
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    CHAR_T             buffer[3000];
    CHAR_T             s[MAX_LENGTH];
    int              i;
@@ -384,14 +396,17 @@ STRING              pathname;
    i += ustrlen (&s[i]) + 1;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
    TtaNewSheet (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
-		TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L', D_CANCEL);
+		TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L',
+		D_CANCEL);
 
    /* choice between html, xhtml and text */
-   sprintf (buffer, "%s%c%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BXHTML", EOS, "BText", EOS, "S", EOS,
+   sprintf (buffer, "%s%c%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BXHTML", EOS,
+	    "BText", EOS, "S", EOS,
 	    TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
    TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
-		     TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 6, buffer, NULL, TRUE);
+		     TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 6, buffer,
+		     NULL, TRUE);
    if (TextFormat)
      {
        SaveAsHTML = FALSE;
@@ -443,9 +458,11 @@ STRING              pathname;
        TtaRedrawMenuEntry (BaseDialog + ToggleSave, 4, NULL, -1, FALSE);
        TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, FALSE);
      }
-#  else /* _WINDOWS */
-   CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave, ToggleSave);
-#  endif /* _WINDOWS */
+#else /* _WINDOWS */
+   CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname,
+			  BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave,
+			  ToggleSave);
+#endif /* _WINDOWS */
 }
 
 
@@ -463,16 +480,16 @@ STRING              pathname;
 
 #endif
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    CHAR_T                tempdir[MAX_LENGTH];
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (SavingDocument != 0 || SavingObject != 0)
      return;
    SavingObject = document;
    ustrncpy (tempSavedObject, object, sizeof (tempSavedObject));
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    /* Dialogue form for saving as */
    TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
@@ -486,9 +503,9 @@ STRING              pathname;
    TtaExtractName (pathname, tempdir, ObjectName);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -534,10 +551,10 @@ void                DoSaveObjectAs ()
 			    | AMAYA_USE_PRECONDITIONS, NULL, NULL);
 	if (res)
 	  {
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     TtaSetDialoguePosition ();
 	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     return;
 	  }
 	SavingObject = 0;
@@ -552,10 +569,10 @@ void                DoSaveObjectAs ()
 	if (!UserAnswer)
 	  {
 	     /* the user has to change the name of the saving file */
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     TtaSetDialoguePosition ();
 	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     return;
 	  }
      }
@@ -643,9 +660,9 @@ View                view;
 	 {
 	   TtaExtractName (tempname, SavePath, SaveName);
 	 }
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
        TtaSetDialoguePosition ();
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
      }
    else
      {
@@ -1307,7 +1324,7 @@ ThotBool         use_preconditions;
 	  pImage = pImage->nextImage;
 	}
 
-#     ifndef _WINDOWS 
+#ifndef _WINDOWS 
       TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
 		      NULL, nb, msg, 6, NULL, FALSE, TRUE);
        
@@ -1315,9 +1332,10 @@ ThotBool         use_preconditions;
       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
-#     else  /* _WINDOWS */
-      CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg, BaseDialog, ConfirmSave);
-#     endif /* _WINDOWS */
+#else  /* _WINDOWS */
+      CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg,
+			       BaseDialog, ConfirmSave);
+#endif /* _WINDOWS */
       if (!UserAnswer)
 	res = -1;
     }

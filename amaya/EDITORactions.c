@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -43,6 +43,7 @@
 #include "UIcss_f.h"
 
 /*----------------------------------------------------------------------
+  New: Create a new XHTML document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                New (Document document, View view)
@@ -56,7 +57,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   NewCss: Creates a new Css document
+   NewCss: Create a new CSS stylesheet
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               NewCss (Document document, View view)
@@ -110,7 +111,8 @@ ThotBool            isHTML;
   DocumentMeta[doc]->form_data = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
   DocumentMeta[doc]->put_default_name = FALSE;
-  DocumentMeta[doc]->xmlformat = FALSE;
+  /* by default the document will be saved in XHTML */
+  DocumentMeta[doc]->xmlformat = TRUE;
   DocumentSource[doc] = 0;
 
   ResetStop (doc);

@@ -1,6 +1,7 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -97,11 +98,11 @@ CHAR_T DocToOpen [MAX_LENGTH];
 #include "helpmenu.h"
 
 static int          AmayaInitialized = 0;
-static ThotBool  NewCSSfile = FALSE;
-static ThotBool  NewHTMLfile = FALSE;
+static ThotBool     NewCSSfile = FALSE;
+static ThotBool     NewHTMLfile = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the
    document view twice */
-static int  Loading_method = CE_INIT;
+static int          Loading_method = CE_INIT;
 
 #ifndef _WINDOWS
 static ThotIcon       stopR;
@@ -305,7 +306,8 @@ CHAR_T*              form_data;
       if (DocumentURLs[i])
 	{
 	  /* compare the url */
-	  found = (!ustrcmp (documentURL, DocumentURLs[i]) || !ustrcmp (otherURL, DocumentURLs[i]));
+	  found = (!ustrcmp (documentURL, DocumentURLs[i]) ||
+		   !ustrcmp (otherURL, DocumentURLs[i]));
 	  /* compare the form_data */
 	  if (found && (!((!form_data && !DocumentMeta[i]->form_data) ||
 		 (form_data && DocumentMeta[i]->form_data &&
@@ -341,7 +343,8 @@ View		view;
 
    ret = TRUE;
    if (TtaIsDocumentModified (document) ||
-       (DocumentSource[document] && TtaIsDocumentModified (DocumentSource[document])))
+       (DocumentSource[document] &&
+	TtaIsDocumentModified (DocumentSource[document])))
      {
 	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
 	if (UserAnswer)
@@ -474,7 +477,8 @@ Document            document;
 	  if(!(DocNetworkStatus[document] & AMAYA_NET_ERROR) &&
 	     (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
 	    /* if there was no error message, display the LOADED message */
-	    TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+	    TtaSetStatus (document, 1,
+			  TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 	  TtaChangeButton (document, 1, iStop, stopN, FALSE);
 	}
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
@@ -664,7 +668,8 @@ Document            doc;
        /* =============> The document is in Read-Only mode now */
        TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
 #ifdef _WINDOWS 
-       WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE, TRUE);
+       WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE,
+			    TRUE);
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, iEditor, iconBrowser, TRUE);
 #endif /* _WINDOWS */
@@ -792,7 +797,8 @@ Document            doc;
        if (TtaIsDocumentModified (document))
 	 DocStatusUpdate (document, TRUE);
 #ifdef _WINDOWS 
-       WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE, FALSE);
+       WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE,
+			    FALSE);
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINDOWS */
@@ -997,8 +1003,9 @@ CHAR_T*              text;
 	  if (!TtaFileExist (s))
 	    {
 	      /* It is not a valid URL */
-	      /*TtaSetTextZone (document, view, 1, DocumentURLs[document]);*/
-	      TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
+	      /* TtaSetTextZone (document, view, 1, DocumentURLs[document]); */
+	      TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			    text);
 	      TtaFreeMemory (s);
 	      return;
 	    }
@@ -1133,9 +1140,10 @@ CHAR_T*              server;
        TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
        TtaWaitShowDialogue ();
      }
-#  else /* _WINDOWS */
-   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view), auth_realm, server);
-#  endif /* _WINDOWS */
+#else /* _WINDOWS */
+   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view), auth_realm,
+				  server);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1189,9 +1197,12 @@ CHAR_T*              label3;
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
-#  else  /* _WINDOWS */
-   CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1, label2, label3);
-#  endif /* _WINDOWS */
+#else  /* _WINDOWS */
+   CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
+				 BaseDialog + ConfirmForm,
+				 TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1,
+				 label2, label3);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1206,7 +1217,7 @@ CHAR_T*              label;
 
 #endif
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    /* Confirm form */
    static ThotBool critic = FALSE;
 
@@ -1216,7 +1227,8 @@ CHAR_T*              label;
    if (critic)
      return;
    else critic = TRUE;
-   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
+   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
+	       TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
    TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
@@ -1224,9 +1236,11 @@ CHAR_T*              label;
    TtaWaitShowDialogue ();
    /* remove the critic section */
    critic = FALSE;
-#  else  /* _WINDOWS */
-   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label);
-#  endif /* _WINDOWS */
+#else  /* _WINDOWS */
+   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
+			       BaseDialog + ConfirmForm,
+			       TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label);
+#endif /* _WINDOWS */
 }
 
 
@@ -1296,7 +1310,9 @@ CHAR_T*             title;
       usprintf (s, TEXT("%s"), LastURLName);
    else
      usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s,
+			   BaseDialog, OpenForm, DocSelect, DirSelect,
+			   URLName, 2);
 #endif /* _WINDOWS */
 }
 
@@ -1318,6 +1334,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  OpenNew: create a new document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void        OpenNew (Document document, View view, ThotBool isHTML)
@@ -1571,7 +1588,8 @@ ThotBool     logFile;
        else if (sourceOfDoc &&
 		(docType == docSource || docType == docSourceRO))
 	 {
-	   TtaGetViewGeometryRegistry (sourceOfDoc, "Structure_view", &x, &y, &w, &h);
+	   TtaGetViewGeometryRegistry (sourceOfDoc, "Structure_view",
+				       &x, &y, &w, &h);
 	   mainView = TtaOpenMainView (doc, x, y, w, h);
 	 }
        else
@@ -1588,82 +1606,98 @@ ThotBool     logFile;
 	 {
 	   /* Create all buttons */
 	   iStop =TtaAddButton (doc, 1, stopN, StopTransfer,"StopTransfer",
-			 TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
-			 TBSTYLE_BUTTON, FALSE);
-	   iBack = TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML ,"GotoPreviousHTML",
-			 TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
-			 TBSTYLE_BUTTON, FALSE);
-	   iForward = TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML, "GotoNextHTML",
-			 TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
-			 TBSTYLE_BUTTON, FALSE);
+				TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
+				TBSTYLE_BUTTON, FALSE);
+	   iBack = TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML,
+				 "GotoPreviousHTML",
+				 TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
+				 TBSTYLE_BUTTON, FALSE);
+	   iForward = TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML,
+				    "GotoNextHTML",
+				    TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
+				    TBSTYLE_BUTTON, FALSE);
 	   iReload = TtaAddButton (doc, 1, iconReload, Reload, "Reload",
-			 TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
-			 TBSTYLE_BUTTON, TRUE);
+				   TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
+				   TBSTYLE_BUTTON, TRUE);
 	   iHome = TtaAddButton (doc, 1, iconHome, GoToHome, "GoToHome",
-			 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
-			 TBSTYLE_BUTTON, TRUE);
-	   iEditor = TtaAddButton (doc, 1, iconEditor, SetBrowserEditor, "SetBrowserEditor",
-			 TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
-			 TBSTYLE_BUTTON, TRUE);
+				 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
+				 TBSTYLE_BUTTON, TRUE);
+	   iEditor = TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
+				   "SetBrowserEditor",
+				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
+				   TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iSave = TtaAddButton (doc, 1, iconSaveNo, SaveDocument, "SaveDocument",
-			 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
-			 TBSTYLE_BUTTON, FALSE);
+	   iSave = TtaAddButton (doc, 1, iconSaveNo, SaveDocument,
+				 "SaveDocument",
+				 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
+				 TBSTYLE_BUTTON, FALSE);
 	   iPrint = TtaAddButton (doc, 1, iconPrint, PrintAs,  "PrintAs",
-			 TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
-			 TBSTYLE_BUTTON, TRUE);
-	   iFind = TtaAddButton (doc, 1, iconFind, TtcSearchText, "TtcSearchText", 
-			 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
-			 TBSTYLE_BUTTON, TRUE);
+				  TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
+				  TBSTYLE_BUTTON, TRUE);
+	   iFind = TtaAddButton (doc, 1, iconFind, TtcSearchText,
+				 "TtcSearchText", 
+				 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
+				 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iI =  TtaAddButton (doc, 1, iconI, SetOnOffEmphasis, "SetOnOffEmphasis",
-				    TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
-				    TBSTYLE_CHECK, TRUE);
+	   iI =  TtaAddButton (doc, 1, iconI, SetOnOffEmphasis,
+			       "SetOnOffEmphasis",
+			       TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
+			       TBSTYLE_CHECK, TRUE);
 	   iB =  TtaAddButton (doc, 1, iconB, SetOnOffStrong, "SetOnOffStrong",
-				    TtaGetMessage (AMAYA, AM_BUTTON_BOLD),
-				    TBSTYLE_CHECK, TRUE);
+			       TtaGetMessage (AMAYA, AM_BUTTON_BOLD),
+			       TBSTYLE_CHECK, TRUE);
 	   iT = TtaAddButton (doc, 1, iconT, SetOnOffCode, "SetOnOffCode",
-				    TtaGetMessage (AMAYA, AM_BUTTON_CODE),
-				    TBSTYLE_CHECK, TRUE);
+			      TtaGetMessage (AMAYA, AM_BUTTON_CODE),
+			      TBSTYLE_CHECK, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iImage = TtaAddButton (doc, 1, iconImage, CreateImage, "CreateImage", 
-			 TtaGetMessage (AMAYA, AM_BUTTON_IMG),
-			 TBSTYLE_BUTTON, TRUE);
-	   iH1 = TtaAddButton (doc, 1, iconH1, CreateHeading1, "CreateHeading1", 
-			 TtaGetMessage (AMAYA, AM_BUTTON_H1),
-			 TBSTYLE_BUTTON, TRUE);
-	   iH2 = TtaAddButton (doc, 1, iconH2, CreateHeading2, "CreateHeading2", 
-			 TtaGetMessage (AMAYA, AM_BUTTON_H2),
-			 TBSTYLE_BUTTON, TRUE);
-	   iH3 = TtaAddButton (doc, 1, iconH3, CreateHeading3, "CreateHeading3", 
-			 TtaGetMessage (AMAYA, AM_BUTTON_H3),
-			 TBSTYLE_BUTTON, TRUE);
-	   iBullet = TtaAddButton (doc, 1, iconBullet, CreateList, "CreateList",
-			 TtaGetMessage (AMAYA, AM_BUTTON_UL),
-			 TBSTYLE_BUTTON, TRUE);
-	   iNum = TtaAddButton (doc, 1, iconNum, CreateNumberedList, "CreateNumberedList",
-			 TtaGetMessage (AMAYA, AM_BUTTON_OL),
-			 TBSTYLE_BUTTON, TRUE);
-	   iDL = TtaAddButton (doc, 1, iconDL, CreateDefinitionList, "CreateDefinitionList",
-			 TtaGetMessage (AMAYA, AM_BUTTON_DL),
-			 TBSTYLE_BUTTON, TRUE);
-	   iLink = TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, "CreateOrChangeLink",
-			 TtaGetMessage (AMAYA, AM_BUTTON_LINK),
-			 TBSTYLE_BUTTON, TRUE);
-	   iTable = TtaAddButton (doc, 1, iconTable, CreateTable, "CreateTable",
-			 TtaGetMessage (AMAYA, AM_BUTTON_TABLE),
-			 TBSTYLE_BUTTON, TRUE);
+	   iImage = TtaAddButton (doc, 1, iconImage, CreateImage,
+				  "CreateImage", 
+				  TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+				  TBSTYLE_BUTTON, TRUE);
+	   iH1 = TtaAddButton (doc, 1, iconH1, CreateHeading1,
+			       "CreateHeading1", 
+			       TtaGetMessage (AMAYA, AM_BUTTON_H1),
+			       TBSTYLE_BUTTON, TRUE);
+	   iH2 = TtaAddButton (doc, 1, iconH2, CreateHeading2,
+			       "CreateHeading2", 
+			       TtaGetMessage (AMAYA, AM_BUTTON_H2),
+			       TBSTYLE_BUTTON, TRUE);
+	   iH3 = TtaAddButton (doc, 1, iconH3, CreateHeading3,
+			       "CreateHeading3", 
+			       TtaGetMessage (AMAYA, AM_BUTTON_H3),
+			       TBSTYLE_BUTTON, TRUE);
+	   iBullet = TtaAddButton (doc, 1, iconBullet, CreateList,
+				   "CreateList",
+				   TtaGetMessage (AMAYA, AM_BUTTON_UL),
+				   TBSTYLE_BUTTON, TRUE);
+	   iNum = TtaAddButton (doc, 1, iconNum, CreateNumberedList,
+				"CreateNumberedList",
+				TtaGetMessage (AMAYA, AM_BUTTON_OL),
+				TBSTYLE_BUTTON, TRUE);
+	   iDL = TtaAddButton (doc, 1, iconDL, CreateDefinitionList,
+			       "CreateDefinitionList",
+			       TtaGetMessage (AMAYA, AM_BUTTON_DL),
+			       TBSTYLE_BUTTON, TRUE);
+	   iLink = TtaAddButton (doc, 1, iconLink, CreateOrChangeLink,
+				 "CreateOrChangeLink",
+				 TtaGetMessage (AMAYA, AM_BUTTON_LINK),
+				 TBSTYLE_BUTTON, TRUE);
+	   iTable = TtaAddButton (doc, 1, iconTable, CreateTable,
+				  "CreateTable",
+				  TtaGetMessage (AMAYA, AM_BUTTON_TABLE),
+				  TBSTYLE_BUTTON, TRUE);
 	   
-#        ifdef AMAYA_PLUGIN 
-#        ifndef _WINDOWS
-	   TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin, "TtaCreateFormPlugin",
+#ifdef AMAYA_PLUGIN 
+#ifndef _WINDOWS
+	   TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin,
+			 "TtaCreateFormPlugin",
 			 TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN),
 			 TBSTYLE_BUTTON, TRUE);
-#        endif /* !_WINDOWS */
-#        endif /* AMAYA_PLUGIN */
+#endif /* !_WINDOWS */
+#endif /* AMAYA_PLUGIN */
 
 	   AddMathButton (doc, 1);
 #ifdef GRAPHML
@@ -1894,7 +1928,8 @@ ThotBool     logFile;
              TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
 #ifdef _WINDOWS 
-	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor, TB_INDETERMINATE, TRUE);
+	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor,
+				  TB_INDETERMINATE, TRUE);
 #else  /* _WINDOWS */
 	     TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
 #endif /* _WINDOWS */
@@ -1925,7 +1960,8 @@ ThotBool     logFile;
 	   {
 	     /* the document is in ReadWrite mode */
 #ifdef _WINDOWS 
-	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor, TB_INDETERMINATE, FALSE);
+	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor,
+				  TB_INDETERMINATE, FALSE);
 #else  /* _WINDOWS */
 	     TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINDOWS */
@@ -2006,12 +2042,12 @@ ThotBool local;
       else
 	ustrcat (ptr, TEXT(".html"));
       TtaFileUnlink (tempfile_new);
-#   ifndef _WINDOWS
+#ifndef _WINDOWS
       rename (tempfile, tempfile_new);
-#   else /* _WINDOWS */
+#else /* _WINDOWS */
       if (urename (tempfile, tempfile_new)  != 0)
 	usprintf (tempfile_new, TEXT("%s"), tempfile); 
-#   endif /* _WINDOWS */
+#endif /* _WINDOWS */
       urename (tempfile, tempfile_new);
       TtaFreeMemory (tempfile_new);
     }
@@ -2334,7 +2370,8 @@ ThotBool            history;
 	  else 
 	    {
 	      /* It's a local image file */
-	      usprintf (tempfile, TEXT("%s%c%d%c%s"), TempFileDirectory, WC_DIR_SEP, 0, WC_DIR_SEP, TEXT("contain.html"));
+	      usprintf (tempfile, TEXT("%s%c%d%c%s"), TempFileDirectory,
+			WC_DIR_SEP, 0, WC_DIR_SEP, TEXT("contain.html"));
 	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
 	    }
 	}
@@ -2454,10 +2491,12 @@ ThotBool            history;
       /* Now we forget the method CE_INIT. It's a standard method */
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
-      StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
+      StartParser (newdoc, tempdocument, documentname, tempdir, pathname,
+		   plainText);
       TtaFreeMemory (tempdir);
 
-      /* If it's an HTML document, save the charset into the Charset attribute */
+      /* If it's an HTML document, save the charset into the Charset
+	 attribute */
       if (charset)
 	{
 	  /* copy the charset to the document's metadata info */
@@ -2858,7 +2897,8 @@ View                view;
 	 DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	 DocumentMeta[sourceDoc]->form_data = NULL;
 	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
-	 DocumentMeta[sourceDoc]->put_default_name = DocumentMeta[document]->put_default_name;
+	 DocumentMeta[sourceDoc]->put_default_name =
+	                            DocumentMeta[document]->put_default_name;
 	 DocumentMeta[sourceDoc]->xmlformat = FALSE;
 	 DocumentTypes[sourceDoc] = docSource;
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
@@ -2948,8 +2988,10 @@ View                view;
      TtaRaiseView (document, mathView);
    else
      {
-       TtaGetViewGeometryRegistry (document, "Math_Structure_view", &x, &y, &w, &h);
-       mathView = TtaOpenView (document, TEXT("Math_Structure_view"), x, y, w, h);
+       TtaGetViewGeometryRegistry (document, "Math_Structure_view",
+				   &x, &y, &w, &h);
+       mathView = TtaOpenView (document, TEXT("Math_Structure_view"),
+			       x, y, w, h);
        if (mathView != 0)
 	 {
 	   TtcSwitchButtonBar (document, mathView);
@@ -2974,8 +3016,10 @@ View                view;
      TtaRaiseView (document, graphView);
    else
      {
-       TtaGetViewGeometryRegistry (document, "Graph_Structure_view", &x, &y, &w, &h);
-       graphView = TtaOpenView (document, TEXT("Graph_Structure_view"), x, y, w, h);
+       TtaGetViewGeometryRegistry (document, "Graph_Structure_view",
+				   &x, &y, &w, &h);
+       graphView = TtaOpenView (document, TEXT("Graph_Structure_view"),
+				x, y, w, h);
        if (graphView != 0)
 	 {
 	   TtcSwitchButtonBar (document, graphView);
@@ -3021,7 +3065,7 @@ View                view;
       TtaRaiseView (document, altView);
    else
      {
-	TtaGetViewGeometryRegistry (document, "Alternate_view", &x, &y, &w, &h);
+	TtaGetViewGeometryRegistry(document, "Alternate_view", &x, &y, &w, &h);
 	altView = TtaOpenView (document, TEXT("Alternate_view"), x, y, w, h);
 	if (altView != 0)
 	  {
@@ -3113,8 +3157,10 @@ View                view;
       TtaRaiseView (document, tocView);
    else
      {
-	TtaGetViewGeometryRegistry (document, "Table_of_contents", &x, &y, &w, &h);
-	tocView = TtaOpenView (document, TEXT("Table_of_contents"), x, y, w, h);
+	TtaGetViewGeometryRegistry (document, "Table_of_contents",
+				    &x, &y, &w, &h);
+	tocView = TtaOpenView (document, TEXT("Table_of_contents"),
+			       x, y, w, h);
 	if (tocView != 0)
 	  {
 	    SetWindowTitle (document, document, tocView);
@@ -3286,7 +3332,7 @@ void*     context;
 	       /* fetch and display all images referred by the document */
 	       if (doc == baseDoc)
 		 /* it's not a temporary document */
-		   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
+		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
 	     }
 	 }
        else
@@ -3325,7 +3371,8 @@ void*     context;
      }
 #endif /* ANNOTATIONS */
    /* select the target if present */
-   if (ok && !stopped_flag && target != NULL && target[0] != EOS && newdoc != 0)
+   if (ok && !stopped_flag && target != NULL && target[0] != EOS &&
+       newdoc != 0)
      {
        /* attribute HREF contains the NAME of a target anchor */
        elFound = SearchNAMEattribute (newdoc, target, NULL);
@@ -3396,7 +3443,8 @@ void               *ctx_cbf;
    /* Extract parameters if necessary */
    if (ustrlen (documentPath) > MAX_LENGTH - 1) 
      {
-       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), TEXT("512"));
+       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL),
+		     TEXT("512"));
        return (0);
      }
    else
@@ -3426,9 +3474,9 @@ void               *ctx_cbf;
    /* if it's a file: url, we remove the protocol, as it
       is a local file */
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    usprintf (wTitle, TEXT("%s"), documentname);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    /* we skip the file: prefix if it is present and do other local
     file urls conversions */
@@ -3511,7 +3559,8 @@ void               *ctx_cbf;
 	    && !TtaFileExist (pathname))
 	 {
 	   /* the target document doesn't exist */
-	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
+	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			 pathname);
 	   ok = FALSE; /* do not continue */
 	 }
        else    
@@ -3522,13 +3571,13 @@ void               *ctx_cbf;
 	     {
 	       /* need to create a new window for the document */
 	       if (CE_event == CE_LOG)
-		   newdoc = InitDocView (doc, documentname, docTextRO, 0, TRUE);
+		 newdoc = InitDocView (doc, documentname, docTextRO, 0, TRUE);
 	       else if (CE_event == CE_HELP)
-		   newdoc = InitDocView (doc, documentname, docHTMLRO, 0, FALSE);
+		 newdoc = InitDocView (doc, documentname, docHTMLRO, 0, FALSE);
 #ifdef ANNOTATIONS
 	       else if (CE_event == CE_ANNOT)
 		 {
-		   newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
+		   newdoc = InitDocView (doc, documentname, docAnnot, 0,FALSE);
 		   /* we're downloading an annotation, fix the accept_header
 		      (thru the content_type variable) to application/rdf */
 		   content_type = TEXT("application/rdf");
@@ -3547,12 +3596,14 @@ void               *ctx_cbf;
 		       TtcSwitchCommands (newdoc, 1); /* no command filed */
 		       
 		       if (CE_event == CE_HELP)
-			 TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
+			 TtaSetToggleItem (newdoc, 1, Views, TShowTextZone,
+					   FALSE);
 		       else
 			 {
 			   TtaSetItemOff (newdoc, 1, File, BReload);
 			   TtaSetItemOff (newdoc, 1, Edit_, TEditMode);
-			   TtaChangeButton (newdoc, 1, iEditor, iconEditor, FALSE);
+			   TtaChangeButton (newdoc, 1, iEditor, iconEditor,
+					    FALSE);
 			   /* invalid the menu Views */
 			   TtaSetMenuOff (newdoc, 1, Views);
 			 }
@@ -3595,22 +3646,31 @@ void               *ctx_cbf;
 		       }
 		     css = SearchCSS (0, pathname);
 		     if (css == NULL)
-		       toparse =  GetObjectWWW (newdoc, pathname, form_data, tempfile, mode, NULL, NULL, (void *) GetHTMLDocument_callback, (void *) ctx, YES, content_type);
+		       toparse =  GetObjectWWW (newdoc, pathname, form_data,
+					   tempfile, mode, NULL, NULL,
+					   (void *) GetHTMLDocument_callback,
+					   (void *) ctx, YES, content_type);
 		     else
 		       {
 			 /* it was already loaded, we need to open it */
-			 TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+			 TtaSetStatus (newdoc, 1,
+			      TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 			 /* just take a copy of the local temporary file */
 			 ustrcpy (tempfile, css->localName);
-			 GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
+			 GetHTMLDocument_callback (newdoc, 0, pathname,
+						   tempfile, NULL,
+						   (void *) ctx);
 			 TtaHandlePendingEvents ();
 		       }
 		   }
 		 else
 		   {
 		     /* wasn't a document off the web, we need to open it */
-		     TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-		     GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
+		     TtaSetStatus (newdoc, 1,
+				   TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
+				   NULL);
+		     GetHTMLDocument_callback (newdoc, 0, pathname, tempfile,
+					       NULL, (void *) ctx);
 		     TtaHandlePendingEvents ();
 		   }
 	     }
@@ -3619,9 +3679,11 @@ void               *ctx_cbf;
    else if (ok && newdoc != 0)
      /* following a local link */
      {
-       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
+		     NULL);
        ctx->local_link = 1;
-       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
+       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL,
+				 (void *) ctx);
        TtaHandlePendingEvents ();
      }
 
@@ -3687,56 +3749,61 @@ static void	SetFileSuffix ()
   CHAR_T*          filename;
   int		       i, len;
 
-  if (SavingDocument != 0 && SaveName[0] != WC_EOS) {
+  if (SavingDocument != 0 && SaveName[0] != WC_EOS)
+    {
      if (SaveAsHTML || SaveAsXHTML)
         ustrcpy (suffix, TEXT("html"));
      else if (SaveAsText)
-          ustrcpy (suffix, TEXT("txt"));
+        ustrcpy (suffix, TEXT("txt"));
      else
-          return;
+        return;
 
      /* looks for a suffix at the end of the document name */
      len = ustrlen (SaveName);
      for (i = len-1; i > 0 && SaveName[i] != TEXT('.'); i--);
-     if (SaveName[i] != TEXT('.')) {
-        /* there is no suffix */
-        i = len;
-        SaveName[i++] = TEXT('.');
-	 } else {
-            /* there is a suffix */
-            i++;
-            if (ustrncmp (suffix, &SaveName[i], 3) == 0)
-               /* the requested suffix is already here. Do nothing */
-               i = 0;
-#           ifdef _WINDOWS
-            ustrcpy (DocToOpen, SavePath );
-            if (ustrchr (SavePath, TEXT('/')))
-               ustrcat (DocToOpen, WC_URL_STR);
-            else
-                ustrcat (DocToOpen, WC_DIR_STR);
-            ustrcat (DocToOpen, SaveName);
-#           endif /* _WINDOWS */
-	 }
-      
-     if (i > 0) {
-        /* change or append the suffix */
-        ustrcpy (&SaveName[i], suffix);
-        /* display the new filename in the dialog box */
-        filename = TtaAllocString (MAX_LENGTH);
-        ustrcpy (filename, SavePath );
-        if (ustrchr (SavePath, TEXT('/')))
+     if (SaveName[i] != TEXT('.'))
+       {
+         /* there is no suffix */
+         i = len;
+         SaveName[i++] = TEXT('.');
+       }
+     else
+       {
+	 /* there is a suffix */
+	 i++;
+	 if (ustrncmp (suffix, &SaveName[i], 3) == 0)
+	   /* the requested suffix is already here. Do nothing */
+	   i = 0;
+#ifdef _WINDOWS
+	 ustrcpy (DocToOpen, SavePath );
+	 if (ustrchr (SavePath, TEXT('/')))
+	   ustrcat (DocToOpen, WC_URL_STR);
+	 else
+	   ustrcat (DocToOpen, WC_DIR_STR);
+	 ustrcat (DocToOpen, SaveName);
+#endif /* _WINDOWS */
+       }
+     
+     if (i > 0)
+       {
+	 /* change or append the suffix */
+	 ustrcpy (&SaveName[i], suffix);
+	 /* display the new filename in the dialog box */
+	 filename = TtaAllocString (MAX_LENGTH);
+	 ustrcpy (filename, SavePath );
+	 if (ustrchr (SavePath, TEXT('/')))
            ustrcat (filename, WC_URL_STR);
-        else
-            ustrcat (filename, WC_DIR_STR);
-        ustrcat (filename, SaveName);
-#       ifdef _WINDOWS
-        usprintf (DocToOpen, filename);
-#       else /* _WINDOWS */
-        TtaSetTextForm (BaseDialog + NameSave, filename);
-#       endif /* _WINDOWS */
-        TtaFreeMemory (filename);
-	 }
-  }
+	 else
+	   ustrcat (filename, WC_DIR_STR);
+	 ustrcat (filename, SaveName);
+#ifdef _WINDOWS
+	 usprintf (DocToOpen, filename);
+#else /* _WINDOWS */
+	 TtaSetTextForm (BaseDialog + NameSave, filename);
+#endif /* _WINDOWS */
+	 TtaFreeMemory (filename);
+       }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3781,17 +3848,19 @@ CHAR_T*             data;
 	 /* Clear */
 	 {
 	   LastURLName[0] = WC_EOS;
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + URLName, LastURLName);
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	 }
        else if (val == 3)
 	 /* Parse */
 	 {
 	   /* reinitialize directories and document lists */
 	   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
-			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
+			     TtaGetMessage (LIB, TMSG_DOC_DIR),
+			     BaseDialog + DirSelect,
+			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
+			     BaseDialog + DocSelect);
 	 }
        else
 	 {
@@ -3805,11 +3874,15 @@ CHAR_T*             data;
 		       InitializeNewDoc (LastURLName, NewHTMLfile);
 		   /* load an URL */
 		   else if (InNewWindow)
-		     GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method, FALSE, NULL, NULL);
+		     GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
+				      FALSE, NULL, NULL);
 		   else
-		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, Loading_method, TRUE, NULL, NULL);
+		     GetHTMLDocument (LastURLName, NULL, CurrentDocument,
+				      CurrentDocument, Loading_method, TRUE,
+				      NULL, NULL);
 		 }
-	       else if (DirectoryName[0] != WC_EOS && DocumentName[0] != WC_EOS)
+	       else if (DirectoryName[0] != WC_EOS &&
+			DocumentName[0] != WC_EOS)
 		 {
 		   /* load a local file */
 		   tempfile = TtaAllocString (MAX_LENGTH);
@@ -3820,36 +3893,47 @@ CHAR_T*             data;
 		   if (TtaFileExist (tempfile))
 		     {
 		       if (InNewWindow)
-			 GetHTMLDocument (tempfile, NULL, 0, 0, Loading_method, FALSE, NULL, NULL);
+			 GetHTMLDocument (tempfile, NULL, 0, 0, Loading_method,
+					  FALSE, NULL, NULL);
 		       else
-			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, Loading_method, TRUE, NULL, NULL);
+			 GetHTMLDocument (tempfile, NULL, CurrentDocument,
+					  CurrentDocument, Loading_method,
+					  TRUE, NULL, NULL);
 		     }
 		   else if (NewCSSfile || NewHTMLfile)
 		     InitializeNewDoc (tempfile, NewHTMLfile);
 		   else
-		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempfile);
+		     TtaSetStatus (CurrentDocument, 1,
+				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+				   tempfile);
 		   TtaFreeMemory (tempfile);
 		 }
 	       else
 		 {
 		   if (DocumentName[0] != EOS)
-		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), DocumentName);
+		     TtaSetStatus (CurrentDocument, 1,
+				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+				   DocumentName);
 		   else if (DirectoryName[0] != EOS)
-		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), DirectoryName);
+		     TtaSetStatus (CurrentDocument, 1,
+				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+				   DirectoryName);
 		   else
-		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), TEXT(""));
+		     TtaSetStatus (CurrentDocument, 1,
+				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+				   TEXT(""));
 		 }
 	       NewCSSfile = FALSE;
 	       NewHTMLfile = FALSE;
 	       CurrentDocument = 0;
 	     }
 	   else if (NewCSSfile || NewHTMLfile)
-	   {
-	     /* the command is aborted */
-	     CheckAmayaClosed ();
-	     NewCSSfile = FALSE;
-	     NewHTMLfile = FALSE;
-	   }
+	     {
+	       /* the command is aborted */
+	       CheckAmayaClosed ();
+	       NewCSSfile = FALSE;
+	       NewHTMLfile = FALSE;
+	     }
 	 }
        break;
      case URLName:
@@ -3878,9 +3962,9 @@ CHAR_T*             data;
        
        break;
      case DirSelect:
-#    ifdef _WINDOWS
-     usprintf (DirectoryName, TEXT("%s"), data);
-#    else  /* _WINDOWS */
+#ifdef _WINDOWS
+       usprintf (DirectoryName, TEXT("%s"), data);
+#else  /* _WINDOWS */
        if (DirectoryName[0] != EOS)
 	 {
 	   if (!ustrcmp (data, ".."))
@@ -3900,11 +3984,13 @@ CHAR_T*             data;
 	     }
 	   TtaSetTextForm (BaseDialog + URLName, DirectoryName);
 	   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
-			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
+			     TtaGetMessage (LIB, TMSG_DOC_DIR),
+			     BaseDialog + DirSelect, ScanFilter,
+			     TtaGetMessage (AMAYA, AM_FILES),
+			     BaseDialog + DocSelect);
 	   DocumentName[0] = EOS;
 	 }
-#    endif /* _WINDOWS */
+#endif /* _WINDOWS */
        break;
      case DocSelect:
        if (DirectoryName[0] == EOS)
@@ -3919,12 +4005,11 @@ CHAR_T*             data;
        ustrcpy (tempfile, DirectoryName);
        ustrcat (tempfile, WC_DIR_STR);
        ustrcat (tempfile, DocumentName);
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + URLName, tempfile);
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
        TtaFreeMemory (tempfile);
        break;
-       
      case ConfirmForm:
        /* *********Confirm********* */
        UserAnswer = (val == 1);
@@ -3934,10 +4019,10 @@ CHAR_T*             data;
        /* Filter value */
        if (ustrlen(data) <= NAME_LENGTH)
 	 ustrcpy (ScanFilter, data);
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
        else
 	 TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
        break;
      case FormAnswer:
        /* *********Get an answer********* */
@@ -3983,10 +4068,10 @@ CHAR_T*             data;
 	 }
        else
 	 Answer_password[NAME_LENGTH - 1] = WC_EOS;
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
        if (i > 0)
 	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
        break;
        
        /* *********Save document as********* */
@@ -3995,48 +4080,48 @@ CHAR_T*             data;
        switch (val)
 	 {
 	 case 0:	/* "Save as HTML" button */
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
 	   SaveAsHTML = TRUE;
 	   SaveAsXHTML = FALSE;
 	   SaveAsText = FALSE;
-#      else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 	   SaveAsHTML = !SaveAsHTML;
 	   SaveAsXHTML = !SaveAsHTML;
 	   SaveAsText = FALSE;
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 	   UpdateSaveAsButtons ();
-#       endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	   SetFileSuffix ();
 	   break;
 	 case 1:	/* "Save as XML" button */
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
 	   SaveAsHTML = FALSE;
 	   SaveAsXHTML = TRUE;
 	   SaveAsText = FALSE;
-#      else  /* !_WINDOWS */ 
+#else  /* !_WINDOWS */ 
 	   SaveAsXHTML = !SaveAsXHTML;
 	   SaveAsHTML = !SaveAsXHTML;
 	   SaveAsText = FALSE;
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 	   UpdateSaveAsButtons ();
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	   SetFileSuffix ();
 	   break;
 	 case 2:	/* "Save as Text" button */
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
 	   SaveAsText = TRUE;
 	   SaveAsHTML = FALSE;
 	   SaveAsXHTML = FALSE;
-#      else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 	   SaveAsText = !SaveAsText;
 	   SaveAsHTML = !SaveAsText;
 	   SaveAsXHTML = FALSE;
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	   UpdateSaveAsButtons ();
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	   SetFileSuffix ();
 	   break;
 	 case 4:	/* "Copy Images" button */
@@ -4080,10 +4165,10 @@ CHAR_T*             data;
 	       SavePath[0] = WC_EOS;
 	       SaveImgsURL[0] = WC_EOS;
 	       SaveName[0] = WC_EOS;
-#          ifndef _WINDOWS
+#ifndef _WINDOWS
 	       TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	       TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-#          endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     }
 	 }
        else if (val == 3)
@@ -4094,7 +4179,8 @@ CHAR_T*             data;
 	     TtaListDirectory (SavePath, BaseDialog + SaveForm,
 			       TtaGetMessage (LIB, TMSG_DOC_DIR),
 			       BaseDialog + DirSave, ScanFilter,
-			       TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+			       TtaGetMessage (AMAYA, AM_FILES),
+			       BaseDialog + DocSave);
 	 }
        else
 	 /* "Cancel" button */
@@ -4161,12 +4247,14 @@ CHAR_T*             data;
 	     ustrcat (tempfile, DocumentName);
 	   else
 	     ustrcat (tempfile, ObjectName);
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + NameSave, SavePath);
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	   TtaListDirectory (SavePath, BaseDialog + SaveForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
-			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+			     TtaGetMessage (LIB, TMSG_DOC_DIR),
+			     BaseDialog + DirSave,
+			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
+			     BaseDialog + DocSave);
 	   TtaFreeMemory (tempfile);
 	 }
        break;
@@ -4182,9 +4270,9 @@ CHAR_T*             data;
        ustrcpy (tempfile, SavePath);
        ustrcat (tempfile, WC_DIR_STR);
        ustrcat (tempfile, SaveName);
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
        TtaFreeMemory (tempfile);
        break;
 
@@ -4340,7 +4428,8 @@ DocumentType     docType;
 	{
 	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
 	  /* almost one file is restored */
-	  TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+	  TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
+			NULL);
 	}
       /* unlink this saved file */
       TtaFileUnlink (tempdoc);
@@ -4384,7 +4473,8 @@ static ThotBool       RestoreAmayaDocs ()
          iso2wc_strcpy (docname, docnameA);
          while (tempdoc[0] != WC_EOS && TtaFileExist (tempdoc)) {
                if (UserAnswer) {
-                  if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType))
+                  if (RestoreOneAmayaDoc (0, tempdoc, docname,
+					  (DocumentType) docType))
                      aDoc = TRUE;
 			   } else
                     /* unlink this saved file */
@@ -4586,7 +4676,7 @@ NotifyEvent        *event;
 #ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
 #endif /* AMAYA_PLUGIN */
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    InitMathML ();
 #ifdef GRAPHML
    InitGraphML ();
@@ -4611,7 +4701,8 @@ NotifyEvent        *event;
        else
 	 /* didn't work, so we exit */
 	 {
-	   usprintf (TempFileDirectory, TEXT("InitAmaya: Couldnt' create directory %s"), s);
+	   usprintf (TempFileDirectory,
+		     TEXT("InitAmaya: Couldnt' create directory %s"), s);
 #ifdef _WINDOWS
 	   MessageBox (NULL, TempFileDirectory, TEXT("Error"), MB_OK);
 #else
@@ -4625,16 +4716,17 @@ NotifyEvent        *event;
    ustrcpy (TempFileDirectory, s);
    TtaAppendDocumentPath (TempFileDirectory);
  
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    s = TtaGetEnvString ("APP_HOME");
    if (!CheckMakeDirectory (s, TRUE))
      /* didn't work, so we exit */
      {
-       usprintf (TempFileDirectory, TEXT("InitAmaya: Couldnt' create directory %s"), s);
+       usprintf (TempFileDirectory,
+		 TEXT("InitAmaya: Couldnt' create directory %s"), s);
        MessageBox (NULL, TempFileDirectory, TEXT("Error"), MB_OK);
        exit (1);
      }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    /*
     * Build the User preferences file name:
     * $HOME/.amaya/amaya.css on Unix platforms
@@ -4659,7 +4751,8 @@ NotifyEvent        *event;
        DocumentMeta[i] = NULL;
        /* initialize history */
        InitDocHistory (i);
-       /* Create a temporary sub-directory for storing the HTML and image files */
+       /* Create a temporary sub-directory for storing the HTML and
+	  image files */
        usprintf (tempname, TEXT("%s%c%d"), TempFileDirectory, WC_DIR_SEP, i);
        TtaMakeDirectory (tempname);
        /* adding the CSS directory */
@@ -4742,9 +4835,10 @@ NotifyEvent        *event;
       /* No argument in the command line. Try the variable HOME_PAGE */
       s = TtaGetEnvString ("HOME_PAGE");
 
-#  ifdef _WINDOWS
-   usprintf (LostPicturePath, TEXT("%s\\amaya\\lost.gif"), TtaGetEnvString ("THOTDIR"));              
-#  endif /* _WINDOWS */
+#ifdef _WINDOWS
+   usprintf (LostPicturePath, TEXT("%s\\amaya\\lost.gif"),
+	     TtaGetEnvString ("THOTDIR"));              
+#endif /* _WINDOWS */
    if (!s)
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
@@ -4767,12 +4861,12 @@ NotifyEvent        *event;
      {
        NormalizeFile (s, LastURLName, AM_CONV_NONE);
        if (TtaFileExist (LastURLName)) {
-          /* check if it is an absolute or a relative name */
-#          ifdef _WINDOWS
-           if ((LastURLName[0] == WC_DIR_SEP) || (LastURLName[1] == TEXT(':')))
-#          else  /* !_WINDOWS */
+         /* check if it is an absolute or a relative name */
+#ifdef _WINDOWS
+	 if ((LastURLName[0] == WC_DIR_SEP) || (LastURLName[1] == TEXT(':')))
+#else  /* !_WINDOWS */
            if (LastURLName[0] == WC_DIR_SEP)
-#          endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     /* it is an absolute name */
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
@@ -4844,7 +4938,7 @@ View                view;
 
 #endif
 {
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    int frame = GetWindowNumber (document, view);
 
    if (currentFrame == 0 || currentFrame > 10)
@@ -4860,7 +4954,7 @@ View                view;
               itemChecked = FALSE;
        }
    }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
 }
 
@@ -4949,22 +5043,27 @@ View                view;
    fclose (list);
 #endif /* AMAYA_DEBUG */
 
-# ifndef _WINDOWS
-  TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view), HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
-# endif  /* _WINDOWS */
-  ustrcpy (localname, HTAppName);
-  ustrcat (localname, TEXT(" - "));
-  ustrcat (localname, HTAppVersion);
-  ustrcat (localname, TEXT("     "));
-  ustrcat (localname, HTAppDate);
-# ifndef _WINDOWS
-  TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
-  TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm, TtaGetMessage(AMAYA, AM_ABOUT1));
-  TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm, TtaGetMessage(AMAYA, AM_ABOUT2));
-  TtaShowDialogue (BaseDialog + AboutForm, FALSE);
-# else  /* _WINDOWS */
-  CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname, TtaGetMessage(AMAYA, AM_ABOUT1), TtaGetMessage(AMAYA, AM_ABOUT2));
-# endif /* _WINDOWS */
+#ifndef _WINDOWS
+   TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
+		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+#endif  /* _WINDOWS */
+   ustrcpy (localname, HTAppName);
+   ustrcat (localname, TEXT(" - "));
+   ustrcat (localname, HTAppVersion);
+   ustrcat (localname, TEXT("     "));
+   ustrcat (localname, HTAppDate);
+#ifndef _WINDOWS
+   TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
+   TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
+	       TtaGetMessage(AMAYA, AM_ABOUT1));
+   TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
+	       TtaGetMessage(AMAYA, AM_ABOUT2));
+   TtaShowDialogue (BaseDialog + AboutForm, FALSE);
+#else  /* _WINDOWS */
+   CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
+			TtaGetMessage(AMAYA, AM_ABOUT1),
+			TtaGetMessage(AMAYA, AM_ABOUT2));
+#endif /* _WINDOWS */
 }
 
 
@@ -4983,7 +5082,8 @@ View                view;
   
   ustrcpy (localname, AMAYA_PAGE_DOC);
   ustrcat (localname, TEXT("BinDist.html"));
-  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL, NULL);
+  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
+			      NULL);
   InitDocHistory (document);
 }
 
@@ -5005,14 +5105,16 @@ int         index;
   localname[0] = EOS;
   s = TtaGetEnvString ("THOTDIR");
   if (s != NULL)
-    usprintf (localname, TEXT("%s%cdoc%camaya%c%s"), s, DIR_SEP, DIR_SEP, DIR_SEP, Manual[index]);
+    usprintf (localname, TEXT("%s%cdoc%camaya%c%s"), s, DIR_SEP, DIR_SEP,
+	      DIR_SEP, Manual[index]);
 
   if (!TtaFileExist (localname))
     {
       ustrcpy (localname, AMAYA_PAGE_DOC);
       ustrcat (localname, Manual[index]);
     }
-  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL, NULL);
+  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
+			      NULL);
   InitDocHistory (document);
 }
 
@@ -5294,7 +5396,8 @@ View     view;
 {
   CHAR_T    localname[MAX_LENGTH];
 
-  usprintf (localname, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+  usprintf (localname, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP,
+	    doc, DIR_SEP);
   doc = GetHTMLDocument (localname, NULL, 0, 0, CE_LOG, FALSE, NULL, NULL);
 }
 
