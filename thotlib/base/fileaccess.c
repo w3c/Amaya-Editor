@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -29,7 +29,6 @@
 #include "platform_f.h"
 #include "registry_f.h"
 #include "ustring_f.h"
-
 #ifdef _WINDOWS
 #include "winsys.h"
 #endif /* _WINDOWS */
@@ -43,32 +42,18 @@ extern unsigned long offset[6] ;
          0xFA082080UL,
          0x82082080UL
 };*/
-
 extern CHARSET CharEncoding;
 
-/* ---------------------------------------------- */
-/* |  Constants for read and write operations   | */
-/* ---------------------------------------------- */
-
 #define LMASK           0x000000ffL
- 
 #define DECAL_3         (3 * 8)
 #define DECAL_2         (2 * 8)
 #define DECAL_1         (1 * 8)
-
 #define SIGNED_SHORT_MASK	0xffff0000L
 
 /*----------------------------------------------------------------------
-   TtaReadByte reads a character (or byte) value.                  
+   TtaReadByte reads a character (or byte) value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool             TtaReadByte (BinFile file, char* bval)
-#else  /* __STDC__ */
-ThotBool            TtaReadByte (file, bval)
-BinFile             file;
-char*               bval;
-
-#endif /* __STDC__ */
+ThotBool TtaReadByte (BinFile file, char* bval)
 {
    unsigned char v;
    if (fread (&v, sizeof (unsigned char), 1, file) == 0) {
@@ -80,18 +65,11 @@ char*               bval;
 }
 
 /*----------------------------------------------------------------------
-   TtaReadWideChar reads a wide character value.                  
+   TtaReadWideChar reads a wide character value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaReadWideChar (BinFile file, CHAR_T* bval, CHARSET encoding)
-#else  /* __STDC__ */
-ThotBool            TtaReadWideChar (file, bval, encoding)
-BinFile             file;
-CHAR_T*             bval;
-CHARSET             encoding;
-#endif /* __STDC__ */
+ThotBool TtaReadWideChar (BinFile file, CHAR_T* bval, CHARSET encoding)
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     int           nbBytesToRead;
     unsigned char car;
     CHAR_T        res;
@@ -219,23 +197,16 @@ CHARSET             encoding;
                 break;
 	}
     return (TRUE);
-#   else  /* !_I18N_ */
+#else  /* !_I18N_ */
     return TtaReadByte (file, bval);
-#   endif /* !_I18N_ */ 
+#endif /* !_I18N_ */ 
 }
 
 
 /*----------------------------------------------------------------------
-   TtaReadBool reads a ThotBool value.                              
+   TtaReadBool reads a ThotBool value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaReadBool (BinFile file, ThotBool * bval)
-#else  /* __STDC__ */
-ThotBool            TtaReadBool (file, bval)
-BinFile             file;
-ThotBool           *bval;
-
-#endif /* __STDC__ */
+ThotBool TtaReadBool (BinFile file, ThotBool * bval)
 {
    char       b1;
 
@@ -253,7 +224,7 @@ ThotBool           *bval;
 
 
 /*----------------------------------------------------------------------
-   TtaReadShort reads an unsigned short value.                     
+   TtaReadShort reads an unsigned short value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            TtaReadShort (BinFile file, int *sval)
@@ -287,16 +258,9 @@ int                *sval;
  
 
 /*----------------------------------------------------------------------
-   TtaReadSignedShort reads a signed short value.                  
+   TtaReadSignedShort reads a signed short value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaReadSignedShort (BinFile file, int *sval)
-#else  /* __STDC__ */
-ThotBool            TtaReadSignedShort (file, sval)
-BinFile             file;
-int                *sval;
-
-#endif /* __STDC__ */
+ThotBool TtaReadSignedShort (BinFile file, int *sval)
 {
   char      car;
  
@@ -323,16 +287,9 @@ int                *sval;
 
 
 /*----------------------------------------------------------------------
-   TtaReadInteger reads an integer.                                
+   TtaReadInteger reads an integer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaReadInteger (BinFile file, int *sval)
-#else  /* __STDC__ */
-ThotBool            TtaReadInteger (file, sval)
-BinFile             file;
-int                *sval;
-
-#endif /* __STDC__ */
+ThotBool TtaReadInteger (BinFile file, int *sval)
 {
   char      car;
  
@@ -374,7 +331,7 @@ int                *sval;
 }
 
 /*----------------------------------------------------------------------
-   TtaReadName reads a Wide Character string value.                               
+   TtaReadName reads a Wide Character string value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            TtaReadName (BinFile file, CHAR_T* name)
@@ -408,134 +365,72 @@ CHAR_T*             name;
 
 
 /*----------------------------------------------------------------------
-   TtaReadOpen opens a file for reading.                           
+   TtaReadOpen opens a file for reading.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-BinFile             TtaReadOpen (CONST CHAR_T* filename)
-#else  /* __STDC__ */
-BinFile             TtaReadOpen (filename)
-CONST CHAR_T*       filename;
-
-#endif /* __STDC__ */
+BinFile TtaReadOpen (CONST char *filename)
 {
-#  ifdef _WINDOWS 
-   char*   mode = "rb";
-#  else  /* !_WINDOWS */
-   char*   mode = "r";
-#  endif /* !_WINDOWS */
+#ifdef _WINDOWS 
+   char   *mode = "rb";
+#else /* _WINDOWS */
+   char   *mode = "r";
+#endif /* _WINDOWS */
 
-#  ifdef _I18N_
-   char    mbs_filename [2 * MAX_TXT_LEN];
-#  endif /* _I18N_ */
-
-   if (filename && filename [0] != WC_EOS) {
-#     ifdef _I18N_
-#     ifdef _WINDOWS
-      if (IS_NT)
-         return _wfopen (filename, TEXT("rb"));
-      else /* !IS_NT */
-#     endif /* _WINDOWS */
-      { 
-           wcstombs (mbs_filename, filename, 2 * MAX_TXT_LEN);
-           return fopen (mbs_filename, mode);
-      }
-#     else  /* !_I18N_ */
-      return fopen (filename, mode);
-#     endif /* !_I18N_ */
-   } else
-         return (BinFile) NULL;
-#if 0 /* ********  OLD CODE  ******** */
-   if (filename && filename [0] != WC_EOS)
-#     ifdef _WINDOWS
-      return cus_fopen (filename, TEXT("rb"));
-#     else
-      return fopen (filename, "r");
-#     endif
+   if (filename && filename[0] != EOS)
+     return fopen (filename, mode);
    else
-	   return (BinFile) NULL;
-#endif /* ********  OLD CODE ********* */
+     return (BinFile) NULL;
 }
 
 
 /*----------------------------------------------------------------------
-   TtaReadClose closes a file.                                     
+   TtaReadClose closes a file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaReadClose (BinFile file)
-#else  /* __STDC__ */
-void                TtaReadClose (file)
-BinFile             file;
-
-#endif /* __STDC__ */
+void TtaReadClose (BinFile file)
 {
-   if (file != NULL)
-      fclose (file);
+  if (file != NULL)
+    fclose (file);
 }
 
 
 /*----------------------------------------------------------------------
-   TtaWriteOpen opens a file for writing.                          
+   TtaWriteOpen opens a file for writing.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-BinFile             TtaWriteOpen (CONST STRING filename)
-#else  /* __STDC__ */
-BinFile             TtaWriteOpen (filename)
-CONST STRING        filename;
-
-#endif /* __STDC__ */
+BinFile TtaWriteOpen (CONST STRING filename)
 {
 #ifdef _WINDOWS
-   return ufopen (filename, TEXT("wb+"));
-#else
-   return ufopen (filename, TEXT("w+"));
-#endif
+  return fopen (filename, "wb+");
+#else /* _WINDOWS */
+  return fopen (filename, "w+");
+#endif /* _WINDOWS */
 }
 
 
 /*----------------------------------------------------------------------
-   TtaWriteClose closes a file.                                    
+   TtaWriteClose closes a file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaWriteClose (BinFile file)
-#else  /* __STDC__ */
-void                TtaWriteClose (file)
-BinFile             file;
-
-#endif /* __STDC__ */
+void TtaWriteClose (BinFile file)
 {
-   if (file != NULL)
-      fclose (file);
+  if (file != NULL)
+    fclose (file);
 }
 
 /*----------------------------------------------------------------------
-   TtaWriteByte writes a character (or byte) value.                  
+   TtaWriteByte writes a character (or byte) value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaWriteByte (BinFile file, char bval)
-#else  /* __STDC__ */
-ThotBool            TtaWriteByte (file, bval)
-BinFile             file;
-char                bval;
-#endif /* __STDC__ */
+ThotBool TtaWriteByte (BinFile file, char bval)
 {
-   if (fwrite ((char *) &bval, sizeof (char), 1, file) == 0)
-      return FALSE;
-   return TRUE;
+  if (fwrite ((char *) &bval, sizeof (char), 1, file) == 0)
+    return FALSE;
+  else
+    return TRUE;
 }
 
 /*----------------------------------------------------------------------
-   TtaWriteWideChar writes a wide character value.                  
+   TtaWriteWideChar writes a wide character value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaWriteWideChar (BinFile file, CHAR_T val, CHARSET encoding)
-#else  /* __STDC__ */
-ThotBool            TtaWriteWideChar (file, bval, encoding)
-BinFile             file;
-CHAR_T              val;
-CHARSET             encoding;
-#endif /* __STDC__ */
+ThotBool TtaWriteWideChar (BinFile file, CHAR_T val, CHARSET encoding)
 {
-#  ifdef _I18N_
+#ifdef _I18N_
    unsigned char mbc[MAX_BYTES + 1] = "\0";
    int           nbBytes;
    int           i;
@@ -547,50 +442,29 @@ CHARSET             encoding;
       return FALSE;
    return TRUE;
    
-#  else  /* !_I18N_ */
+#else  /* !_I18N_ */
    if (fwrite ((char *) &val, sizeof (char), 1, file) == 0)
       return FALSE;
    return TRUE;
-#  endif /* !_I18N_ */
+#endif /* !_I18N_ */
 }
 
 /*----------------------------------------------------------------------
    TtaWriteShort reads an unsigned short value.
    -------------------------------------------------------------------- */
-
-#ifdef __STDC__
-ThotBool  TtaWriteShort (BinFile file, int sval)
-#else			     /* __STDC__ */
-ThotBool  TtaWriteShort (file, sval)
-BinFile   file;
-int       sval;
-
-#endif			     /* __STDC__ */
-
+ThotBool TtaWriteShort (BinFile file, int sval)
 {
-
-   if (!TtaWriteByte (file, (char) ((sval >> DECAL_1) & LMASK)))
-      return FALSE;
-
-   if (!TtaWriteByte (file, (char) (sval & LMASK)))
-      return FALSE;
-
+  if (!TtaWriteByte (file, (char) ((sval >> DECAL_1) & LMASK)))
+    return FALSE;
+  if (!TtaWriteByte (file, (char) (sval & LMASK)))
+    return FALSE;
    return TRUE;
 }
 
 /*----------------------------------------------------------------------
    TtaWriteInteger writes an integer.
    -------------------------------------------------------------------- */
-
-#ifdef __STDC__
-ThotBool  TtaWriteInteger (BinFile file, int lval)
-#else			     /* __STDC__ */
-ThotBool  TtaWriteInteger (file, lval)
-BinFile   file;
-int       lval;
-
-#endif			     /* __STDC__ */
-
+ThotBool TtaWriteInteger (BinFile file, int lval)
 {
 
    if (!TtaWriteByte (file, (char) ((lval >> DECAL_3) & LMASK)))
@@ -610,98 +484,70 @@ int       lval;
 
 
 /*----------------------------------------------------------------------
-   TtaWriteDocIdent writes a document identifier.                  
+   TtaWriteDocIdent writes a document identifier.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaWriteDocIdent (BinFile file, DocumentIdentifier Ident)
-#else  /* __STDC__ */
-void                TtaWriteDocIdent (file, Ident)
-BinFile             file;
-DocumentIdentifier  Ident;
-
-#endif /* __STDC__ */
+void TtaWriteDocIdent (BinFile file, DocumentIdentifier Ident)
 {
    int                 j;
-#  ifdef _I18N_
-   char   mbcstr[3] = "\0";
-   int    nbBytes;
-   CHAR_T WCcar;
-#  endif /* _I18N_ */
+#ifdef _I18N_
+   char                mbcstr[3] = "\0";
+   int                 nbBytes;
+   CHAR_T              WCcar;
+#endif /* _I18N_ */
 
    j = 1;
    while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != EOS)
-         {
-#            ifdef _I18N_
-             WCcar = Ident[j - 1];
-             nbBytes = wctomb (mbcstr, WCcar);
-             switch (nbBytes) {
-                    case 1: TtaWriteByte (file, mbcstr[0]);
-                            break;
-                    case 2: TtaWriteByte (file, mbcstr[0]);
-                            TtaWriteByte (file, mbcstr[1]);
-                            break;
-                    default: break;
-             }
-#            else  /* !_I18N_ */
-             TtaWriteByte (file, Ident[j - 1]);
-#            endif /* !_I18N_ */
-             j++;
-         }
+     {
+#ifdef _I18N_
+       WCcar = Ident[j - 1];
+       nbBytes = wctomb (mbcstr, WCcar);
+       switch (nbBytes) {
+       case 1: TtaWriteByte (file, mbcstr[0]);
+	 break;
+       case 2: TtaWriteByte (file, mbcstr[0]);
+	 TtaWriteByte (file, mbcstr[1]);
+	 break;
+       default: break;
+       }
+#else  /* !_I18N_ */
+       TtaWriteByte (file, Ident[j - 1]);
+#endif /* !_I18N_ */
+       j++;
+     }
    /* termine le nom par un octet nul */
    TtaWriteByte (file, EOS);
 }
 
 /*----------------------------------------------------------------------
-   TtaReadDocIdent                                                 
+   TtaReadDocIdent  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaReadDocIdent (BinFile file, DocumentIdentifier * Ident)
-#else  /* __STDC__ */
-void                TtaReadDocIdent (file, Ident)
-BinFile             file;
-DocumentIdentifier *Ident;
-
-#endif /* __STDC__ */
+void TtaReadDocIdent (BinFile file, DocumentIdentifier * Ident)
 {
    int j = 0;
    
    do
-#     ifdef _I18N_
-      if (!TtaReadWideChar (file, &((*Ident)[j++]), ISO_8859_1))
-         (*Ident)[j - 1] = WC_EOS;
-#     else /* !_I18N_ */
-      if (!TtaReadByte (file, &((*Ident)[j++])))
-         (*Ident)[j - 1] = EOS;
-#     endif /* !_I18N_ */
+#ifdef _I18N_
+     if (!TtaReadWideChar (file, &((*Ident)[j++]), ISO_8859_1))
+       (*Ident)[j - 1] = WC_EOS;
+#else /* !_I18N_ */
+   if (!TtaReadByte (file, &((*Ident)[j++])))
+     (*Ident)[j - 1] = EOS;
+#endif /* !_I18N_ */
    while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == WC_EOS)) ;
 }
 
 /*----------------------------------------------------------------------
-   CopyDocIdent                                                    
+   CopyDocIdent
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CopyDocIdent (DocumentIdentifier * Dest, DocumentIdentifier Source)
-#else  /* __STDC__ */
-void                CopyDocIdent (Dest, Source)
-DocumentIdentifier *Dest;
-DocumentIdentifier  Source;
-
-#endif /* __STDC__ */
+void CopyDocIdent (DocumentIdentifier * Dest, DocumentIdentifier Source)
 {
    ustrncpy (*Dest, Source, MAX_DOC_IDENT_LEN);
 }
 
 /*----------------------------------------------------------------------
-   SameDocIdent                                                    
+   SameDocIdent
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            SameDocIdent (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
-#else  /* __STDC__ */
-ThotBool            SameDocIdent (Ident1, Ident2)
-DocumentIdentifier  Ident1;
-DocumentIdentifier  Ident2;
-
-#endif /* __STDC__ */
+ThotBool SameDocIdent (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
 {
    ThotBool            ret;
 
@@ -710,29 +556,17 @@ DocumentIdentifier  Ident2;
 }
 
 /*----------------------------------------------------------------------
-   ClearDocIdent                                                     
+   ClearDocIdent     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ClearDocIdent (DocumentIdentifier * Ident)
-#else  /* __STDC__ */
-void                ClearDocIdent (Ident)
-DocumentIdentifier *Ident;
-
-#endif /* __STDC__ */
+void ClearDocIdent (DocumentIdentifier * Ident)
 {
    (*Ident)[0] = EOS;
 }
 
 /*----------------------------------------------------------------------
-   DocIdentIsNull                                                     
+   DocIdentIsNull   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            DocIdentIsNull (DocumentIdentifier Ident)
-#else  /* __STDC__ */
-ThotBool            DocIdentIsNull (Ident)
-DocumentIdentifier  Ident;
-
-#endif /* __STDC__ */
+ThotBool DocIdentIsNull (DocumentIdentifier Ident)
 {
    ThotBool            ret;
 
@@ -747,16 +581,7 @@ DocumentIdentifier  Ident;
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaExtractName (CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName)
-
-#else  /* __STDC__ */
-void                TtaExtractName (text, aDirectory, aName)
-CHAR_T*             text;
-CHAR_T*             aDirectory;
-CHAR_T*             aName;
-
-#endif /* __STDC__ */
+void TtaExtractName (CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName)
 {
    int                 lg, i, j;
    CHAR_T*             ptr;
@@ -820,17 +645,8 @@ CHAR_T*             aName;
    dans directory_list le 1er nom du path fourni a` l'appel
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MakeCompleteName (CHAR_T* fname, CHAR_T* fext, CHAR_T* directory_list, CHAR_T* completeName, int *length)
-#else  /* __STDC__ */
-void                MakeCompleteName (fname, fext, directory_list, completeName, length)
-CHAR_T*             fname;
-CHAR_T*             fext;
-CHAR_T*             directory_list;
-CHAR_T*             completeName;
-int*                length;
-
-#endif /* __STDC__ */
+void MakeCompleteName (CHAR_T* fname, CHAR_T* fext, CHAR_T* directory_list,
+		       CHAR_T* completeName, int *length)
 {
    int                 i, j;
    PathBuffer          single_directory;
@@ -884,14 +700,7 @@ int*                length;
    des repertoires de documents ou de sche'mas.            
    Si le fichier n'existe pas retourne name.               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetPictureFileName (STRING name, STRING fileName)
-#else  /* __STDC__ */
-void                GetPictureFileName (name, fileName)
-STRING              name;
-STRING              fileName;
-
-#endif /* __STDC__ */
+void GetPictureFileName (STRING name, STRING fileName)
 {
    int                 length;
    PathBuffer          directory;
@@ -922,14 +731,7 @@ STRING              fileName;
    IsExtended compare la fin de fileName avec extension. Si la fin 
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IsExtended (CHAR_T* fileName, CHAR_T* extension)
-#else  /* __STDC__ */
-static ThotBool     IsExtended (fileName, extension)
-CHAR_T*             fileName;
-CHAR_T*             extension;
-
-#endif /* __STDC__ */
 {
    int                 i, j;
    int                 nameLength, extLength;
@@ -970,17 +772,9 @@ CHAR_T*             extension;
    Si fileName se termine deja par extension, alors copie  
    simplement fileName dans completeName.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FindCompleteName (CHAR_T* fileName, CHAR_T* extension, PathBuffer directory, PathBuffer completeName, int *length)
-#else  /* __STDC__ */
-void                FindCompleteName (fileName, extension, directory, completeName, length)
-CHAR_T*             fileName;
-CHAR_T*             extension;
-PathBuffer          directory;
-PathBuffer          completeName;
-int                *length;
-
-#endif /* __STDC__ */
+void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
+		       PathBuffer directory, PathBuffer completeName,
+		       int *length)
 {
    int              i, j, k, h = 0;
    CHAR_T*          home_dir = NULL;
@@ -1058,17 +852,9 @@ int                *length;
 
 
 /*----------------------------------------------------------------------
-   GetDocIdent                                                     
+   GetDocIdent  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetDocIdent (DocumentIdentifier* Ident, CHAR_T* docName)
-#else  /* __STDC__ */
-void                GetDocIdent (Ident, docName)
-DocumentIdentifier* Ident;
-CHAR_T*             docName;
-
-#endif /* __STDC__ */
-
+void GetDocIdent (DocumentIdentifier* Ident, CHAR_T* docName)
 {
    ustrncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
    *Ident[MAX_DOC_IDENT_LEN - 1] = WC_EOS;
@@ -1094,13 +880,7 @@ CHAR_T*             docName;
 /*----------------------------------------------------------------------
    FileWriteAccess	returns the write access right for a file	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 FileWriteAccess (STRING fileName)
-#else  /* __STDC__ */
-int                 FileWriteAccess (fileName)
-STRING              fileName;
-
-#endif /* __STDC__ */
+int FileWriteAccess (STRING fileName)
 {
    int                 ret, i;
    CHAR_T                c;
@@ -1146,16 +926,7 @@ STRING              fileName;
    	GetCounterValue	converts the value number into a character	
    	string according to a given style (arabic, roman, letter).	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetCounterValue (int number, CounterStyle style, STRING string, int *len)
-#else  /* __STDC__ */
-void                GetCounterValue (number, style, string, len)
-int                 number;
-CounterStyle        style;
-STRING              string;
-int                *len;
-
-#endif /* __STDC__ */
+void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 {
    int                 c, i, begin;
 
@@ -1322,22 +1093,13 @@ int                *len;
    TtaMakeDirectory
 
    Platform independent call to the local mkdir function
-
    Parameter:
    directory: the directory name.
    Return value:
    TRUE if the directory could be created or if it existed already,
    FALSE otherwise.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaMakeDirectory (CHAR_T* directory)
-
-#else  /* __STDC__ */
-ThotBool            TtaMakeDirectory (directory)
-CHAR_T*             directory;
-
-#endif /* __STDC__ */
-
+ThotBool TtaMakeDirectory (CHAR_T* directory)
 {
   int i;
 
@@ -1359,22 +1121,13 @@ CHAR_T*             directory;
    TtaCheckDirectory
 
    Ckecks that a directory exists and can be accessed.
-
    Parameter:
    directory: the directory name.
    Return value:
    TRUE if the directory is OK, FALSE if not.
 	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaCheckDirectory (CHAR_T* directory)
-
-#else  /* __STDC__ */
-ThotBool            TtaCheckDirectory (directory)
-CHAR_T*             directory;
-
-#endif /* __STDC__ */
-
+ThotBool TtaCheckDirectory (CHAR_T* directory)
 {
 #ifdef _WINDOWS
    DWORD               attribs;
@@ -1422,6 +1175,3 @@ CHAR_T*             directory;
 #  endif /* !_I18N_ */
 #endif /* !_WINDOWS */
 }
-
-
-

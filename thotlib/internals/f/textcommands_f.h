@@ -36,7 +36,7 @@ extern void TtcPreviousSelWord ( Document document,
                                  View view );
 extern void TtcNextSelWord ( Document document,
                              View view );
-extern void TtcCopyToClipboard ( Document document,
+extern void TtcCopyToClipboard ( Document doc,
                                  View view );
 extern void SelectCurrentWord ( int frame,
                                 PtrBox pBox,
@@ -81,7 +81,7 @@ extern void TtcPreviousSelWord (/* Document document,
                                    View view */);
 extern void TtcNextSelWord (/* Document document,
                                View view */);
-extern void TtcCopyToClipboard (/* Document document,
+extern void TtcCopyToClipboard (/* Document doc,
                                    View view */);
 extern void SelectCurrentWord (/* int frame,
                                   PtrBox pBox,

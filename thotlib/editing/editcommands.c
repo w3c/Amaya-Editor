@@ -1048,7 +1048,7 @@ static ThotBool IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int charWidth
 /*----------------------------------------------------------------------
    TtcInsertGraph insert a graphics                                
   ----------------------------------------------------------------------*/
-void  TtcInsertGraph (Document document, View view, CHAR_T c)
+void  TtcInsertGraph (Document document, View view, UCHAR_T c)
 {
    DisplayMode         dispMode;
    int                 frame;
@@ -3212,7 +3212,7 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 /*----------------------------------------------------------------------
    TtcInsertChar insert a character
   ----------------------------------------------------------------------*/
-void TtcInsertChar (Document doc, View view, CHAR_T c)
+void TtcInsertChar (Document doc, View view, UCHAR_T c)
 {
   ViewSelection      *pViewSel;
   PtrAbstractBox      pAb;
@@ -3323,6 +3323,14 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 
 	  /* close the undo sequence */
 	  CloseHistorySequence (pDoc);
+
+	  /* compare the document encoding and the character value */
+	  if (pDoc->DocCharset == US_ASCII && c > 127)
+	    {
+	      /* force the ISO-latin-1 */
+	      pDoc->DocCharset = ISO_8859_1;
+	      pDoc->DocDefaultCharset = FALSE;
+	    }
 	  if (dispMode == DisplayImmediately)
 	    TtaSetDisplayMode (doc, dispMode);
 	}

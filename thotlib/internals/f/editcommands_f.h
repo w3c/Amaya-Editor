@@ -8,7 +8,7 @@
 
 extern void TtcInsertGraph ( Document document,
                              View view,
-                             CHAR_T c );
+                             UCHAR_T c );
 extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
@@ -20,7 +20,7 @@ extern void PasteXClipboard ( USTRING Xbuffer,
                               int nbytes );
 extern void TtcInsertChar ( Document doc,
                             View view,
-                            CHAR_T c );
+                            UCHAR_T c );
 extern void TtcCutSelection ( Document doc,
                               View view );
 extern void TtcDeletePreviousChar ( Document doc,
@@ -33,9 +33,9 @@ extern void TtcPasteFromClipboard ( Document document,
                                     View view );
 extern void TtcInsert ( Document document,
                         View view );
-extern void TtcCopySelection ( Document document,
+extern void TtcCopySelection ( Document doc,
                                View view );
-extern void TtcPaste ( Document document,
+extern void TtcPaste ( Document doc,
                        View view );
 extern void EditingLoadResources ( void );
 
@@ -43,7 +43,7 @@ extern void EditingLoadResources ( void );
 
 extern void TtcInsertGraph (/* Document document,
                                View view,
-                               CHAR_T c */);
+                               UCHAR_T c */);
 extern void CloseTextInsertion (/* void */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
@@ -55,7 +55,7 @@ extern void PasteXClipboard (/* USTRING Xbuffer,
                                 int nbytes */);
 extern void TtcInsertChar (/* Document doc,
                               View view,
-                              CHAR_T c */);
+                              UCHAR_T c */);
 extern void TtcCutSelection (/* Document doc,
                                 View view */);
 extern void TtcDeletePreviousChar (/* Document doc,
@@ -68,9 +68,9 @@ extern void TtcPasteFromClipboard (/* Document document,
                                       View view */);
 extern void TtcInsert (/* Document document,
                           View view */);
-extern void TtcCopySelection (/* Document document,
+extern void TtcCopySelection (/* Document doc,
                                  View view */);
-extern void TtcPaste (/* Document document,
+extern void TtcPaste (/* Document doc,
                          View view */);
 extern void EditingLoadResources (/* void */);
 
