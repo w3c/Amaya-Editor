@@ -1317,6 +1317,9 @@ boolean             inTree;
    boolean             stop;
    int                 compNum;
    int                 i;
+   boolean             beforeElement;
+
+   beforeElement = before;
 
    ok = FALSE;
    if (pEl != NULL)
@@ -1575,7 +1578,7 @@ boolean             inTree;
 		      ok = FALSE;
 		if (ok && user)
 		   /* l'insertion est demande'e par l'utilisateur */
-		   if (ElementIsReadOnly (pEl->ElParent))
+                   if (CannotInsertNearElement (pEl, beforeElement))
 		      ok = FALSE;
 		   else if (TypeHasException (ExcNoCreate, typeNum, pSS))
 		      ok = FALSE;

@@ -3278,7 +3278,7 @@ View                view;
    else if (pSelDoc->DocReadOnly)
       /* document en lecture seule */
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   if (!ElementIsReadOnly (firstSel->ElParent))
+   else if (!ElementIsReadOnly (firstSel->ElParent))
       /* on ne peut rien faire si le pere est protege' */
       if (firstSel == lastSel)
 	 /* on ne change qu'un element a la fois */
