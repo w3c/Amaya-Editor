@@ -32,6 +32,10 @@
 #include "ANNOTevent_f.h"
 #include "ANNOTtools_f.h"
 #endif /* ANNOTATIONS */
+#ifdef BOOKMARKS
+#include "bookmarks.h"
+#include "BMevent_f.h"
+#endif /* BOOKMARKS */
 #include "css_f.h"
 #include "EDITORactions_f.h"
 #include "HTMLhistory_f.h"
@@ -821,7 +825,12 @@ void SetNamespacesAndDTD (Document doc)
      root = ANNOT_GetHTMLRoot (doc, TRUE);
    else
 #endif /* ANNOTATIONS */
-     root = TtaGetRootElement (doc);
+#ifdef BOOKMARKS
+     if (DocumentTypes[doc] == docBookmark)
+       return;
+     else
+#endif /* BOOKMARKS */
+       root = TtaGetRootElement (doc);
    
   /* Look for all natures used in the document */
    do
@@ -1558,6 +1567,10 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
     TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
   else if (DocumentTypes[doc] == docXml)
     TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
+#ifdef BOOKMARKS
+  else if (DocumentTypes[doc] == docBookmark)
+    BM_DocSave (doc, tempname);
+#endif /* BOOKMARKS */
   else if (DocumentTypes[doc] == docImage)
     {
       /* export the new container using the image file name */
@@ -2086,6 +2099,10 @@ void SaveDocument (Document doc, View view)
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
 	  else if (DocumentTypes[doc] == docXml)
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
+#ifdef BOOKMARKS
+	  else if (DocumentTypes[doc] == docBookmark)
+	    ok = BM_DocSave (doc, tempname);
+#endif /* BOOKMARKS */
 	}
       /* save a local copy of the current document */
       if (xmlDoc)

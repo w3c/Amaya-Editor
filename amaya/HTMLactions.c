@@ -50,6 +50,11 @@
 #include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
 
+#ifdef BOOKMARKS
+#include "bookmarks.h"
+#include "BMevent_f.h"
+#endif /* BOOKMARKS */
+
 #ifdef DAV
 #include "davlib_f.h"
 #endif /* DAV */
@@ -1647,6 +1652,9 @@ void FreeDocumentResource (Document doc)
 #ifdef ANNOTATIONS
 	  ANNOT_FreeDocumentResource (doc);
 #endif /* ANNOTATIONS */
+#ifdef BOOKMARKS
+	  BM_FreeDocumentResource (doc);
+#endif /* BOOKMARKS */
 	}
       /* remove the document from the auto save list */
       RemoveAutoSavedDoc (doc);

@@ -84,7 +84,7 @@ MENUS
 	Edit_ Separator;
 	Edit_ button:BCut -> TtcCutSelection;
 	Edit_ button:BCopy -> TtcCopySelection;
-	Edit_ button:BPaste -> TtcPaste;
+	Edit_ button:BPaste -> PasteBuffer;
 	Edit_ button:BClear -> TtcDeleteSelection;
 	Edit_ Separator;
 	Edit_ toggle:TEditMode -> SetBrowserEditor;

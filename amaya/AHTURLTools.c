@@ -758,6 +758,9 @@ ThotBool IsRDFName (const char *path)
    if (!path)
       return (FALSE);
 
+   /* temporarily blocking this function */
+   return FALSE;
+
    strcpy (temppath, path);
    TtaExtractSuffix (temppath, suffix);
 

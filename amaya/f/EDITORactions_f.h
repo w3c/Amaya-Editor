@@ -46,6 +46,8 @@ extern void CreateDoctypeMathML ( Document document,
                                   View view );
 extern void CreateDoctypeSVG ( Document document,
                                View view );
+extern void PasteBuffer ( Document document,
+                          View view );
 extern void SpellCheck ( Document document,
                          View view );
 extern void CreateBreak ( Document document,
@@ -278,6 +280,8 @@ extern void CreateDoctypeMathML (/* Document document,
                                     View view */);
 extern void CreateDoctypeSVG (/* Document document,
                                  View view */);
+extern void PasteBuffer (/* Document document,
+                            View view */);
 extern void SpellCheck (/* Document document,
                            View view */);
 extern void CreateBreak (/* Document document,

@@ -709,6 +709,18 @@ void CreateDoctypeSVG (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+void PasteBuffer (Document document, View view)
+{
+#ifdef BOOKMARKS
+  if (DocumentTypes[document] == docBookmark)
+    BM_PasteHandler (document, view); /* bookmarks make their own cut and paste */
+  else
+#endif /* BOOKMARKS */
+    TtcPaste (document, view);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SpellCheck (Document document, View view)
 {
    AttributeType       attrType;
@@ -3046,7 +3058,7 @@ void EditTopics (Document document, View view)
 void ViewBookmarks (Document document, View view)
 {
 #ifdef BOOKMARKS
-  BM_ViewBookmarks (document, 0);
+  BM_ViewBookmarks (0, 0, FALSE);
 #endif /* BOOKMARKS */
 }
 

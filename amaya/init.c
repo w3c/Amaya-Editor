@@ -2595,7 +2595,11 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   lang = TtaGetLanguageIdFromScript('L');
 	   TtaSetTextContent (leaf, (unsigned char *)buffer, lang, doc);
 	 }
-       TtaSetNotificationMode (doc, 1);
+       if (docType == docBookmark)
+	 TtaSetNotificationMode (doc, 0); /* we don't need notif. in
+					      bookmarks */
+       else
+	 TtaSetNotificationMode (doc, 1);
 
 #ifdef _WX
        /* the document needs to have a window parent
@@ -2751,6 +2755,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef BOOKMARKS
        else if (docType == docBookmark)
 	 {
+#if 1
 	   TtaSetItemOff (doc, 1, File, New1);
 	   TtaSetItemOff (doc, 1, File, BOpenDoc);
 	   TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
@@ -2758,13 +2763,18 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BBack);
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
+#endif
 	   TtaSetItemOff (doc, 1, File, BSaveAs);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
 	   TtaSetItemOff (doc, 1, File, Doctype1);
+#if 1
 	   TtaSetItemOff (doc, 1, File, BDocInfo);
+#endif
 	   TtaSetItemOff (doc, 1, File, BSetUpandPrint);
 	   TtaSetItemOff (doc, 1, File, BPrint);
+#if 1 
 	   TtaSetMenuOff (doc, 1, Edit_);
+#endif
 	   TtaSetMenuOff (doc, 1, Types);
 	   TtaSetMenuOff (doc, 1, XMLTypes);
 	   TtaSetMenuOff (doc, 1, Links);
@@ -2776,10 +2786,12 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
 	   TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
+#if 1
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
 			   TRUE, (Proc) TextURL, NULL);
 	   TtcSwitchCommands (doc, 1); /* no command open */
+#endif
 	 }
 #endif /* BOOKMARKS */
        else if (!isOpen)
@@ -3302,7 +3314,9 @@ static Document LoadDocument (Document doc, char *pathname,
   ThotBool            contentImage, contentText, contentApplication;
   ThotBool            plainText;
   ThotBool            xmlDec, withDoctype, isXML, isknown;
+  ThotBool            isRDF;
 
+  isRDF = FALSE;
   docType = docText;
   unknown = TRUE;
   tempdir = tempdocument = NULL;
@@ -3351,6 +3365,16 @@ static Document LoadDocument (Document doc, char *pathname,
 	    docType = docLibrary;
 	  else
 	    docType = thotType;
+	  unknown = FALSE;
+	  if (IsRDFName (pathname))
+	    isRDF = TRUE;
+	}
+      else if (IsRDFName (pathname))
+	{
+	  /* it's an RDF document. By default we assume we will
+	     parse it as generic XML */
+	  docType = thotType;
+	  isRDF = TRUE;
 	  unknown = FALSE;
 	}
      else if (IsCSSName (pathname))
@@ -3410,7 +3434,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	  unknown = FALSE;
 	}
       /* Assign a content type to that local document */
-      if (docType == docCSS)
+      if (isRDF)
+	strcpy (local_content_type , "application/xml+rdf");
+      else if (docType == docCSS)
 	strcpy (local_content_type , "text/css");
       else if (docType == docMath)
 	strcpy (local_content_type , AM_MATHML_MIME_TYPE);
@@ -3553,6 +3579,20 @@ static Document LoadDocument (Document doc, char *pathname,
 	       docProfile = L_Other;
 	       unknown = FALSE;
 	     }
+	   else if (!strncasecmp (&content_type[i+1], "rrdf+xml", 7))
+	     {
+	       /* it's an RDF document. By default we assume we will
+		  parse it as generic XML */
+	       isXML = TRUE;
+	       isRDF = TRUE;
+#ifdef XML_GENERIC      
+	       docType = docXml;
+#else /* XML_GENERIC */
+	       docType = docText;
+#endif /* XML_GENERIC */
+	       docProfile = L_Other;
+	       unknown = FALSE;
+	     }
 	   else if (contentApplication &&
 		    !strncasecmp (&content_type[i+1], "smil", 4))
 	     {
@@ -3596,6 +3636,22 @@ static Document LoadDocument (Document doc, char *pathname,
 	     }
 	 }
      }
+
+#ifdef BOOKMARKS
+      if (isRDF)
+	{
+	  ThotBool res;
+
+	  /* verify if it contains bookmarks */
+	  if (tempfile && *tempfile != EOS)
+	    res = BM_Open (pathname, tempfile);
+	  else
+	    res = BM_Open (pathname, pathname);
+	  /* we detected some bookmarks, in this rdf document */
+	  if (res)
+	    docType = docBookmark;
+	}
+#endif /* BOOKMARKS */
   
   if (unknown && tempfile[0] != EOS)
     {
@@ -3742,6 +3798,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	  TtaFileCopy (pathname, tempdocument);
 	}
 
+#ifdef BOOKMARKS
+      if (docType == docBookmark)
+	/* update the corresponding bookmark context to point to the new tmpfile */
+	BM_TempFileSet (pathname, tempdocument);
+#endif /* BOOKMARKS */
+
+
       /* store a copy of CSS files in the directory 0 */
       if (DocumentTypes[newdoc] == docCSS)
 	{ 
@@ -3883,13 +3946,21 @@ static Document LoadDocument (Document doc, char *pathname,
 #ifdef ANNOTATIONS
 	  (docType == docAnnot && annotBodyType != docText) ||
 #endif /* ANNOTATIONS */
+#ifdef BOOKMARKS
+	  docType == docBookmark ||
+#endif /* BOOKMARKS */
 	  docType == docXml ||
 	  docType == docLibrary ||
 	  docType == docMath)
 	plainText = FALSE;
       else
 	plainText = (docProfile == L_Other);
-      
+    
+#ifdef BOOKMARKS
+      if (docType == docBookmark)
+	BM_ViewBookmarks (newdoc, 1, FALSE);
+      else
+#endif /* BOOKMARKS */
       /* Calls the corresponding parser */
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
 	StartXmlParser (newdoc,	tempdocument, documentname,
