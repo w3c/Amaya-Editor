@@ -1145,6 +1145,11 @@ int                 attrNum;
 		 h = w / 2;
 		 TtaSetAttributeValue (attrH, w, element, document);
 	       }
+	     else
+	       if (x2 > y2)
+		 h = y2 / 2;
+	       else
+		 h = x2 / 2;
 	     sprintf (text, "%d,%d,%d", x1 + h, y1 + h, h);
 	  }
      }
