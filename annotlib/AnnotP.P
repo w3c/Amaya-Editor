@@ -178,7 +178,7 @@ BOXES
 	Content: (Text '?  ');
 	Size: Creator =;
 	Foreground: Creator =;
-        VertPos: Bottom = Creator . HRef + 0.2;
+        VertPos: Href = Creator . HRef;
         HorizPos: Right = Creator . Left - 0.3;
 	Visibility: Creator =;
 	IN Links_view
@@ -358,8 +358,9 @@ RULES
         END;
 
  Thread_item:
-        BEGIN
-	CreateBefore (Thread_point_box);
+        BEGIN	
+	if  NOT Orphan_item
+	   CreateBefore (Thread_point_box);
         VertPos: Top = Previous AnyElem . Bottom + 0.2;
 	HorizPos: Left = Enclosing . left + THREAD_ITEM_INDENT;
 	Width: Enclosing . width - THREAD_ITEM_INDENT;
@@ -433,10 +434,8 @@ ATTRIBUTES
  	 Foreground: Red;
 	 END;
 
- Orphan_item(Thread_item):
-	BEGIN
-	CreateBefore (Thread_orphan_box);
-	END;
+Orphan_item = Yes_:
+	 CreateBefore (Thread_orphan_box);
 END
 
 
