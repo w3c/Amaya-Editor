@@ -937,10 +937,10 @@ static int          TtaHandleMultiKeyEvent (event)
 ThotKeyEvent       *event;
 #endif /* __STDC__ */
 {
-   KeySym              KS;
+   KeySym              KS, first, last;
    CHAR_T              buf[2];
    ThotComposeStatus   status;
-   unsigned int        state, state2;
+   unsigned int        state;
    int                 keycode;
    int                 index;
    int                 ret;
@@ -959,8 +959,58 @@ ThotKeyEvent       *event;
 	   /* we have already read the stressed character */ 
 	   /* We look for the result in the list */
 	   mk_state = 0;
+	   switch (previous_keysym)
+	     {
+	     case XK_dead_grave:
+	       first = XK_grave;
+	       break;
+	     case XK_dead_acute:
+	       first = XK_acute;
+	       break;
+	     case XK_dead_circumflex:
+	       first = XK_asciicircum;
+	       break;
+	     case XK_dead_diaeresis:
+	       first = XK_quotedbl;
+	       break;
+	     case XK_diaeresis:
+	       first = XK_quotedbl;
+	       break;
+	     case XK_dead_tilde:
+	       first = XK_asciitilde;
+	       break;
+	     default:
+	       first = previous_keysym;
+	       break;
+	     }
+
+	   switch (KS)
+	     {
+	     case XK_dead_grave:
+	       last = XK_grave;
+	       break;
+	     case XK_dead_acute:
+	       last = XK_acute;
+	       break;
+	     case XK_dead_circumflex:
+	       last = XK_asciicircum;
+	       break;
+	     case XK_dead_diaeresis:
+	       last = XK_quotedbl;
+	       break;
+	     case XK_diaeresis:
+	       last = XK_quotedbl;
+	       break;
+	     case XK_dead_tilde:
+	       last = XK_asciitilde;
+	       break;
+	     default:
+	       last = KS;
+	       break;
+	     }
+
 	   for (index = 0; index < NB_MK; index++)
-	     if (mk_tab[index].m == previous_keysym && mk_tab[index].c == KS)
+	     if (mk_tab[index].m == first && mk_tab[index].c == last)
 	       {
 		 /*
 		  * The corresponding sequence is found. 
@@ -984,7 +1034,13 @@ fprintf (stderr, " mapped to %c\n", mk_tab[index].r);
 		KS == XK_asciicircum ||
 		KS == XK_asciitilde ||
 		KS == XK_quotedbl ||
-		KS == XK_asterisk)
+		KS == XK_asterisk ||
+		KS == XK_dead_grave ||
+		KS == XK_dead_acute ||
+		KS == XK_dead_circumflex ||
+		KS == XK_dead_tilde ||
+		KS == XK_dead_diaeresis ||
+		KS == XK_diaeresis)
 	 {
 	   /* start of a compose sequence */
 	   mk_state = 1;
@@ -1030,9 +1086,58 @@ fprintf (stderr, "Start of compose sequence\n");
 fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 #endif
             mk_state = 0;
+	   switch (previous_keysym)
+	     {
+	     case XK_dead_grave:
+	       first = XK_grave;
+	       break;
+	     case XK_dead_acute:
+	       first = XK_acute;
+	       break;
+	     case XK_dead_circumflex:
+	       first = XK_asciicircum;
+	       break;
+	     case XK_dead_diaeresis:
+	       first = XK_quotedbl;
+	       break;
+	     case XK_diaeresis:
+	       first = XK_quotedbl;
+	       break;
+	     case XK_dead_tilde:
+	       first = XK_asciitilde;
+	       break;
+	     default:
+	       first = previous_keysym;
+	       break;
+	     };
+
+	   switch (KS)
+	     {
+	     case XK_dead_grave:
+	       last = XK_grave;
+	       break;
+	     case XK_dead_acute:
+	       last = XK_acute;
+	       break;
+	     case XK_dead_circumflex:
+	       last = XK_asciicircum;
+	       break;
+	     case XK_dead_diaeresis:
+	       last = XK_quotedbl;
+	       break;
+	     case XK_diaeresis:
+	       last = XK_quotedbl;
+	       break;
+	     case XK_dead_tilde:
+	       last = XK_asciitilde;
+	       break;
+	     default:
+	       last = KS;
+	       break;
+	     }
 	    for (index = 0; index < ExtNB_MK; index++)
-	      if (emk_tab[index].c == previous_keysym && emk_tab[index].m == KS ||
-		  emk_tab[index].c == KS && emk_tab[index].m == previous_keysym)
+	      if ((emk_tab[index].c == first && emk_tab[index].m == last) ||
+		  (emk_tab[index].c == last && emk_tab[index].m == first))
 		{
 		  /*
 		   * The corresponding sequence is found. 
