@@ -898,7 +898,6 @@ void TtaExportTree (Element element, Document document,
 void TtaRedisplayElement (Element element, Document document)
 {
 #ifndef NODISPLAY
-  PtrElement          pEl;
   PtrDocument         pDoc;
 
    UserErrorCode = 0;

@@ -296,11 +296,10 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
   PtrSSchema          pSchS;
   ThotBool            stop;
   PtrAttribute        pA;
-  PtrElement          pElAttr, pFirstAncest;
   InheritAttrTable   *inheritTable;
   PtrPSchema          pSP, pSPattr;
   PtrHandlePSchema    pHd;
-  int                 l, valNum;
+  int                 valNum;
   PtrAttributePres    prevAttrBlock, attrBlock;
 
   pRule = NULL;
