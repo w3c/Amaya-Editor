@@ -55,8 +55,10 @@ static int Zoom;
 static boolean Multikey;
 static boolean LostUpdateCheck;
 static boolean VerifyPublish;
+static CHAR DefaultName [MAX_LENGTH];
 static CHAR HomePage [MAX_LENGTH];
 static CHAR ThotPrint [MAX_LENGTH];
+
 
 /* Appearance menu options */
 static int AppearanceBase;
@@ -227,6 +229,7 @@ STRING              data;
 	    {
 	    case 0:
 	      TtaDestroyDialogue (NetworkBase);
+	      break;
 	    case 1:
 	      SetNetworkConf ();
 	      TtaDestroyDialogue (NetworkBase);
@@ -234,7 +237,7 @@ STRING              data;
 	    case 2:
 	      GetDefaultNetworkConf ();
 	      RefreshNetworkMenu ();
-	      
+	      break;
 	    default:
 	      break;
 	    }
@@ -299,7 +302,7 @@ static void GetNetworkConf ()
 {
   TtaGetEnvBoolean ("ENABLE_CACHE", &EnableCache);
   TtaGetEnvBoolean 
-    ("ENABLE_CACHE_PROTECTED_DOCUMENTS", &CacheProtectedDocuments);
+    ("CACHE_PROTECTED_DOCUMENTS", &CacheProtectedDocuments);
   GetEnvString ("CACHE_DIR", CacheDirectory);
   TtaGetEnvInt ("CACHE_SIZE", &CacheSize);
   TtaGetEnvInt ("CACHE_MAX_FILE_SIZE", &MaxCacheFile);
@@ -319,9 +322,9 @@ static void SetNetworkConf ()
 #endif /* __STDC__ */
 {
   TtaSetEnvBoolean ("ENABLE_CACHE", EnableCache, YES);
-  TtaSetEnvBoolean ("ENABLE_CACHE_PROTECTED_DOCUMENTS", 
+  TtaSetEnvBoolean ("CACHE_PROTECTED_DOCUMENTS", 
 		    CacheProtectedDocuments, YES);
-  TtaSetEnvString ("CACHE_DIRECTORY", CacheDirectory, YES);
+  TtaSetEnvString ("CACHE_DIR", CacheDirectory, YES);
   TtaSetEnvInt ("CACHE_SIZE", CacheSize, YES);
   TtaSetEnvInt ("CACHE_MAX_FILE_SIZE", MaxCacheFile, YES);
   TtaSetEnvString ("HTTP_PROXY", HttpProxy, YES);
@@ -343,9 +346,9 @@ static void GetDefaultNetworkConf ()
   GetDefEnvToggle ("ENABLE_CACHE", &EnableCache, 
 		    NetworkBase + mToggleCache, 0);
   GetDefEnvToggle 
-    ("ENABLE_CACHE_PROTECTED_DOCUMENTS", &CacheProtectedDocuments,
+    ("PROTECTED_DOCUMENTS", &CacheProtectedDocuments,
      NetworkBase + mToggleCache, 1);
-  GetEnvString ("CACHE_DIR", CacheDirectory);
+  GetDefEnvString ("CACHE_DIR", CacheDirectory);
   TtaGetDefEnvInt ("CACHE_SIZE", &CacheSize);
   TtaGetDefEnvInt ("CACHE_MAX_FILE_SIZE", &MaxCacheFile);
   GetDefEnvString ("HTTP_PROXY", HttpProxy);
@@ -502,7 +505,7 @@ STRING              data;
 	    case 2:
 	      GetDefaultBrEdConf ();
 	      RefreshBrEdMenu ();
-
+	      break;
 	    default:
 	      break;
 	    }
@@ -535,6 +538,12 @@ STRING              data;
 	      break;
 	    }
 	  break;
+
+	case mDefaultName:
+	  if (data)
+	    ustrcpy (DefaultName, data);
+	  else
+	    DefaultName [0] = EOS;
 
 	case mHomePage:
 	  if (data)
@@ -572,6 +581,7 @@ static void GetBrEdConf ()
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
   TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck);
   TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
+  GetEnvString ("DEFAULTNAME", DefaultName);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("THOTPRINT", ThotPrint);
 }
@@ -594,6 +604,7 @@ static void SetBrEdConf ()
   TtaSetMultikey (Multikey);
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, YES);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, YES);
+  TtaSetEnvString ("DEFAULTNAME", DefaultName, YES);
   TtaSetEnvString ("HOME_PAGE", HomePage, YES);
   TtaSetEnvString ("THOTPRINT", ThotPrint, YES);
 }
@@ -617,6 +628,7 @@ static void GetDefaultBrEdConf ()
 		    BrEdBase + mTogglePublish, 0);
   GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
 		    BrEdBase + mTogglePublish, 1);
+  GetDefEnvString ("DEFAULTNAME", DefaultName);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("THOTPRINT", ThotPrint);
 }
@@ -638,6 +650,7 @@ static void RefreshBrEdMenu ()
   TtaSetToggleMenu (BrEdBase + mTogglePublish, 0, LostUpdateCheck);
   TtaSetToggleMenu (BrEdBase + mTogglePublish, 1, 
 		    VerifyPublish);
+  TtaSetTextForm (BrEdBase + mDefaultName, DefaultName);
   TtaSetTextForm (BrEdBase + mHomePage, HomePage);
   TtaSetTextForm (BrEdBase + mThotPrint, ThotPrint);
   /* display the menu */
@@ -706,6 +719,12 @@ STRING              pathname;
 		     s,
 		     NULL,
 		     FALSE);
+   TtaNewTextForm (BrEdBase + mDefaultName,
+		   BrEdBase + BrEdMenu,
+		   "Default name for URLs finishing in \'/\'",
+		   20,
+		   1,
+		   FALSE);
    TtaNewTextForm (BrEdBase + mHomePage,
 		   BrEdBase + BrEdMenu,
 		   "Home Page",
