@@ -2057,9 +2057,6 @@ PictInfo           *imageDesc;
 		     yFrame = box->BxHeight;
 		 }
 
-#              ifdef _WINDOWS
-	       pic2print = FALSE;
-#              endif /* _WINDOWS */
 	       myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture))
 		 (WideChar2ISO(fileName), imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height, ViewFrameTable[frame - 1].FrMagnification);
 	       /* intrinsic width and height */
