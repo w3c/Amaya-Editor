@@ -104,34 +104,34 @@ void DrawStixIntegral (int frame, int thick,
      52 - => 3x text 3 line eq
      33 - => 2x text 2 line eq
      69 - => 1x+2 text or 18 for oneline eq */
-
-  font =  LoadStixFont (6, SizetoLogical(h-15));
   if (h < LOW_CHAR)
      /* display a single glyph */
-
      {
+       font =  LoadStixFont (6, SizetoLogical (h-15));
        DrawStixChar (font, 69, x, y, l, h, fg, frame);
      }
-   else if (h < MID_CHAR)
-	/* display a single glyph */
-     {
-       DrawStixChar (font, 33, x, y, l, h, fg, frame);
-     }
-   else 
+  else if (h < MID_CHAR)
     /* display a single glyph */
-     {
-	 DrawStixChar (font, 52, x, y, l, h, fg, frame);
+    {
+      font =  LoadStixFont (6, SizetoLogical (h-5));
+      DrawStixChar (font, 33, x, y, l, h, fg, frame);
+    }
+  else 
+    /* display a single glyph */
+    {
+      font =  LoadStixFont (6, SizetoLogical (h-5));
+      DrawStixChar (font, 52, x, y, l, h, fg, frame);
      }
    if (type == 2)		
      /* double integral */
       DrawStixIntegral (frame, thick, x + (CharacterWidth (52, font) / 2),
 		    y, l, h, -1, font, fg);
    /*contour integral
-   else if (type == 1)	
-      DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
-		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
-		font, fg);
-      */
+     else if (type == 1)	
+     DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
+     y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
+     font, fg);
+   */
 
 }
 /* ----------------------------------------------------------------------

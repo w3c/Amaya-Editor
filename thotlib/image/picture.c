@@ -466,13 +466,13 @@ static void GL_TexturePartialMap (void *ImagePt,
 			   int w, int h)
 {  
   PictInfo *Image;
-  float texW, texH;
+  float    texH, texW;
   
   
   Image = ImagePt;
 
-  texW = (Image->TexCoordW * w) / Image->PicWidth;
-  texH = (Image->TexCoordH * h) / Image->PicHeight;
+  texH = Image->TexCoordH * ((float)(Image->PicHeight - h) / Image->PicHeight);
+  texW = Image->TexCoordW * ((float)(w) / Image->PicWidth);
 
   GL_SetPicForeground ();
   
@@ -504,19 +504,24 @@ static void GL_TexturePartialMap (void *ImagePt,
      (not the faster one, I think) */
   glBegin (GL_QUADS);
   /* Texture coordinates are unrelative 
-     to the size of the square */      
+     to the size of the square */    
+  
   /* lower left */
-  glTexCoord2i (0,    0); 
-  glVertex2i (xFrame,     yFrame + h);
+  glTexCoord2f (0,                       texH); 
+  glVertex2i   (xFrame,                     yFrame + h);
+
   /* upper right*/
-  glTexCoord2f (texW, 0.0); 
-  glVertex2i (xFrame + w, yFrame + h);
+  glTexCoord2f (texW,           texH); 
+  glVertex2i   (xFrame + w,                 yFrame + h);
+
   /* lower right */
-  glTexCoord2f (texW, texH); 
-  glVertex2i (xFrame + w, yFrame); 
+  glTexCoord2f (texW,           Image->TexCoordH); 
+  glVertex2i   (xFrame + w,                 yFrame); 
+
   /* upper left */
-  glTexCoord2f (0.0,  texH); 
-  glVertex2i (xFrame,     yFrame);      
+  glTexCoord2f (0,                       Image->TexCoordH); 
+  glVertex2i   (xFrame,                     yFrame);  
+   
   glEnd ();	
   /* State disabling */
   glDisable (GL_TEXTURE_2D); 
