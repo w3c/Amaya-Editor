@@ -1178,8 +1178,6 @@ static void      RemoveTrailingSpaces (Element el)
 	       if (attr == NULL)
 		 {
 		   if (RemoveTrailingSpace)
-		     TtaRemoveInitialSpaces (lastLeaf, XMLcontext.doc);
-		   else
 		     TtaRemoveFinalSpaces (lastLeaf, XMLcontext.doc);
 		 }
 	     }
