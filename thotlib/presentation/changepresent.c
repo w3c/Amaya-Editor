@@ -1126,7 +1126,7 @@ boolean             display;
    NotifyAttribute     notifyAttr;
    Document            doc;
    DisplayMode         oldDisplayMode;
-   int                 x, y;
+   int                 x, y, dx, dy;
    int                 heightRef, widthRef;
    int                 updateframe[MAX_VIEW_DOC];
    int                 viewSch;
@@ -1182,23 +1182,32 @@ boolean             display;
 	   if (pRStd->PrDimRule.DrUnit == UnPercent)
 	     {
 	       if (!pRStd->PrDimRule.DrAbsolute)
-		 /* la largeur de la boite est un pourcentage de la largeur */
-		 /* d'une autre boite */
+		 /* the width is a percent of an other box width */
 		 widthRef = pAb->AbWidth.DimAbRef->AbBox->BxWidth;
 	       else if (pAb->AbEnclosing == NULL)
-		 /* la largeur de la boite est un pourcentage de la largeur */
-		 /* de la boite englobante */
+		 /* the width is a percent of the window width */
 		 GetSizesFrame (frame, &widthRef, &heightRef);
 	       else
-		 /* la largeur de la boite est un pourcentage de la largeur */
-		 /* de la boite englobante */
+		 /* the width is a percent of the parent box width */
 		 widthRef = pAb->AbEnclosing->AbBox->BxWidth;
-	       /* calcule le isNew rapport (pourcentage) de la boite */
+
+	       /* get the new percent value */
 	       x = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef, 0);
+	       dx = x;
 	     }
 	   else
-	     /* calcule la nouvelle largeur en unite logique */
-	     x = LogicalValue (width, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	     {
+	       if (!pRStd->PrDimRule.DrAbsolute)
+		 /* the height is given by a delta */
+		 dx = width - pAb->AbWidth.DimAbRef->AbBox->BxWidth;
+	       else
+		 /* the height is absolute */
+		 dx = width;
+	       
+	       /* convert the new height in logical value */
+	       dx = LogicalValue (dx, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	       x = LogicalValue (width, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	     }
 	   
 	   /* cherche si la largeur de l'element est determinee par un */
 	   /* attribut auquel est associee l'exception NewWidth */
@@ -1243,45 +1252,40 @@ boolean             display;
 	       /* cherche si l'element a deja une regle de largeur specifique */
 	       pPRule = SearchPresRule (pEl, PtWidth, 0, &isNew, pDoc, pAb->AbDocView);
 	       if (isNew)
-		 /* on a cree' une regle de largeur pour l'element */
+		 /* create a new rule for the element */
 		 {
 		   pR = pPRule->PrNextPRule;
-		   /* on recopie la regle standard */
+		   /* copy the standard rule */
 		   *pPRule = *pRStd;
 		   pPRule->PrCond = NULL;
 		   pPRule->PrNextPRule = pR;
 		   pPRule->PrViewNum = viewSch;
-		   /* si la regle copiee est associee a un attribut, */
-		   /* garde le lien avec cet attribut */
+		   /* if the rule is associated to an attribute */
+		   /* keep the link to that attribute */
 		   if (pAttr != NULL)
 		     {
 		       pPRule->PrSpecifAttr = pAttr->AeAttrNum;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
 		 }
-
-	       /*bValue = pPRule->PrDimRule.DrAttr;
-	       bAbs = pPRule->PrDimRule.DrAbsolute;*/
+	       /* put the absolute value into the rule for the application */
 	       value = pPRule->PrDimRule.DrValue;
-	       /* change la regle specifique - dimension absolue !! */
-	       /*pPRule->PrDimRule.DrAttr = FALSE;
-	       pPRule->PrDimRule.DrAbsolute = TRUE;*/
 	       pPRule->PrDimRule.DrValue = x;
 
-	       /* envoie un message APP a l'application */
+	       /* send the event message to the application */
 	       doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 	       if (!doit && !isNew)
-		 {
-		   /* reset previous values */
-		   /*pPRule->PrDimRule.DrAttr = bValue;
-		   pPRule->PrDimRule.DrAbsolute = bAbs;*/
-		   pPRule->PrDimRule.DrValue = value;
-		 }
+		 /* reset the previous value */
+		 pPRule->PrDimRule.DrValue = value;
+	       else
+		 /* put the new internal value into the rule */
+		 pPRule->PrDimRule.DrValue = dx;
 	     }
 
 	   if (doit)
 	     {
-	       pDoc->DocModified = TRUE;	/* le document est modifie' */
+	       /* the document is modified */
+	       pDoc->DocModified = TRUE;
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
@@ -1320,7 +1324,13 @@ boolean             display;
 	       if (attr)
 		 CallEventAttribute (&notifyAttr, FALSE);
 	       else
-		 PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+		 {
+		   /* put the absolute value for the application */
+		   pPRule->PrDimRule.DrValue = x;
+		   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+		   /* restore the internal value into the rule */
+		   pPRule->PrDimRule.DrValue = dx;
+		 }
 	     }
 	 }
      }
@@ -1348,23 +1358,32 @@ boolean             display;
 	   if (pRStd->PrDimRule.DrUnit == UnPercent)
 	     {
 	       if (!pRStd->PrDimRule.DrAbsolute)
-		 /* la hauteur de la boite est un pourcentage de la hauteur */
-		 /* d'une autre boite */
+		 /* the height is a percent of an other box height */
 		 heightRef = pAb->AbWidth.DimAbRef->AbBox->BxHeight;
 	       else if (pAb->AbEnclosing == NULL)
-		 /* la hauteur de la boite est un pourcentage de la hauteur */
-		 /* de la boite englobante */
+		 /* the height is a percent of the window height */
 		 GetSizesFrame (frame, &widthRef, &heightRef);
 	       else
-		 /* la largeur de la boite est un pourcentage de la largeur */
-		 /* de la boite englobante */
+		 /* the height is a percent of the parent box height */
 		 heightRef = pAb->AbEnclosing->AbBox->BxHeight;
-	       /* calcule le isNew rapport (pourcentage) de la boite */
+
+	       /* get the new percent value */
 	       y = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef, 0);
+	       dy = y;
 	     }
 	   else
-	     /* calcule la nouvelle largeur en unite logique */
-	     y = LogicalValue (height, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	     {
+	       if (!pRStd->PrDimRule.DrAbsolute)
+		 /* the height is given by a delta */
+		 dy = height - pAb->AbWidth.DimAbRef->AbBox->BxHeight;
+	       else
+		 /* the height is absolute */
+		 dy = height;
+	       
+	       /* convert the new height in logical value */
+	       dy = LogicalValue (dy, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	       y = LogicalValue (height, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	     }
 	   
 	   /* cherche si la hauteur de l'element est determinee par un */
 	   /* attribut auquel est associee l'exception NewHeight */
@@ -1408,16 +1427,16 @@ boolean             display;
 	       /* cherche si l'element a deja une regle de hauteur specifique */
 	       pPRule = SearchPresRule (pEl, PtHeight, 0, &isNew, pDoc, pAb->AbDocView);
 	       if (isNew)
-		 /* on a cree' une regle de hauteur pour l'element */
+		 /* create a new rule for the element */
 		 {
 		   pR = pPRule->PrNextPRule;
-		   /* on recopie la regle standard */
+		   /* copy the standard rule */
 		   *pPRule = *pRStd;
 		   pPRule->PrCond = NULL;
 		   pPRule->PrNextPRule = pR;
 		   pPRule->PrViewNum = viewSch;
-		   /* si la regle copiee est associee a un attribut, */
-		   /* garde le lien avec cet attribut */
+		   /* if the rule is associated to an attribute */
+		   /* keep the link to that attribute */
 		   if (pAttr != NULL)
 		     {
 		       pPRule->PrSpecifAttr = pAttr->AeAttrNum;
@@ -1425,28 +1444,24 @@ boolean             display;
 		     }
 		 }
 
-	       /*bValue = pPRule->PrDimRule.DrAttr;
-	       bAbs = pPRule->PrDimRule.DrAbsolute;*/
+	       /* put the absolute value into the rule for the application */
 	       value = pPRule->PrDimRule.DrValue;
-	       /* change la regle specifique - dimension absolue !! */
-	       /*pPRule->PrDimRule.DrAttr = FALSE;
-	       pPRule->PrDimRule.DrAbsolute = TRUE;*/
 	       pPRule->PrDimRule.DrValue = y;
 
-	       /* envoie un message APP a l'application */
+	       /* send the event message to the application */
 	       doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 	       if (!doit && !isNew)
-		 {
-		   /* reset previous values */
-		   pPRule->PrDimRule.DrAttr = bValue;
-		   pPRule->PrDimRule.DrAbsolute = bAbs;
-		   pPRule->PrDimRule.DrValue = value;
-		 }
+		 /* reset the previous value */
+		 pPRule->PrDimRule.DrValue = value;
+	       else
+		 /* put the new internal value into the rule */
+		 pPRule->PrDimRule.DrValue = dy;
 	     }
 	   
 	   if (doit)
 	     {
-	       pDoc->DocModified = TRUE;	/* le document est modifie' */
+	       /* the document is modified */
+	       pDoc->DocModified = TRUE;
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
@@ -1482,7 +1497,13 @@ boolean             display;
 	       if (attr)
 		 CallEventAttribute (&notifyAttr, FALSE);
 	       else
-		 PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+		 {
+		   /* put the absolute value for the application */
+		   pPRule->PrDimRule.DrValue = y;
+		   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+		   /* restore the internal value into the rule */
+		   pPRule->PrDimRule.DrValue = dy;
+		 }
 	     }
 	 }
      }

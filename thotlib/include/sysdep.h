@@ -804,13 +804,19 @@ extern volatile noshare int errno;	/* noshare to avoid PSECT conflict */
 #endif
 #ifdef HAVE_STRINGS_H
 #ifndef _AIX
+#ifndef hpux
 #include <strings.h>
+#endif
 #endif
 #endif
 
 /* syslog.h */
 #ifdef HAVE_SYSLOG_H
 #include <syslog.h>
+#else
+#ifdef HAVE_SYS_SYSLOG_H
+#include <sys/syslog.h>
+#endif
 #endif
 
 /* socket.h */
