@@ -25,8 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 OUTDIR=.\..
@@ -50,8 +48,6 @@ CLEAN :"zlib - Win32 ReleaseCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
-	-@erase "$(INTDIR)\dllmain.obj"
-	-@erase "$(INTDIR)\hashtable.obj"
 	-@erase "$(INTDIR)\HTAABrow.obj"
 	-@erase "$(INTDIR)\HTAAUtil.obj"
 	-@erase "$(INTDIR)\HTAccess.obj"
@@ -163,8 +159,6 @@ CLEAN :
 	-@erase "$(INTDIR)\md5.obj"
 	-@erase "$(INTDIR)\SGML.obj"
 	-@erase "$(INTDIR)\vc50.idb"
-	-@erase "$(INTDIR)\xmlparse.obj"
-	-@erase "$(INTDIR)\xmltok.obj"
 	-@erase "$(OUTDIR)\libwww.lib"
 
 "$(OUTDIR)" :
@@ -173,422 +167,12 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\Library\src" /D "NDEBUG"\
  /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch" /YX\
  /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libwww.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\dllmain.obj" \
-	"$(INTDIR)\hashtable.obj" \
-	"$(INTDIR)\HTAABrow.obj" \
-	"$(INTDIR)\HTAAUtil.obj" \
-	"$(INTDIR)\HTAccess.obj" \
-	"$(INTDIR)\HTAlert.obj" \
-	"$(INTDIR)\HTAnchor.obj" \
-	"$(INTDIR)\HTANSI.obj" \
-	"$(INTDIR)\HTArray.obj" \
-	"$(INTDIR)\HTAssoc.obj" \
-	"$(INTDIR)\HTAtom.obj" \
-	"$(INTDIR)\HTBind.obj" \
-	"$(INTDIR)\HTBInit.obj" \
-	"$(INTDIR)\HTBound.obj" \
-	"$(INTDIR)\HTBTree.obj" \
-	"$(INTDIR)\HTBufWrt.obj" \
-	"$(INTDIR)\HTCache.obj" \
-	"$(INTDIR)\HTChannl.obj" \
-	"$(INTDIR)\HTChunk.obj" \
-	"$(INTDIR)\HTConLen.obj" \
-	"$(INTDIR)\HTDemux.obj" \
-	"$(INTDIR)\HTDescpt.obj" \
-	"$(INTDIR)\HTDialog.obj" \
-	"$(INTDIR)\HTDigest.obj" \
-	"$(INTDIR)\HTDir.obj" \
-	"$(INTDIR)\HTDNS.obj" \
-	"$(INTDIR)\HTEPtoCl.obj" \
-	"$(INTDIR)\HTError.obj" \
-	"$(INTDIR)\HTEscape.obj" \
-	"$(INTDIR)\HTEvent.obj" \
-	"$(INTDIR)\HTEvtLst.obj" \
-	"$(INTDIR)\HTFile.obj" \
-	"$(INTDIR)\HTFilter.obj" \
-	"$(INTDIR)\HTFormat.obj" \
-	"$(INTDIR)\HTFSave.obj" \
-	"$(INTDIR)\HTFTP.obj" \
-	"$(INTDIR)\HTFTPDir.obj" \
-	"$(INTDIR)\HTFWrite.obj" \
-	"$(INTDIR)\HTGopher.obj" \
-	"$(INTDIR)\HTGuess.obj" \
-	"$(INTDIR)\HTHeader.obj" \
-	"$(INTDIR)\HTHInit.obj" \
-	"$(INTDIR)\HTHist.obj" \
-	"$(INTDIR)\HTHome.obj" \
-	"$(INTDIR)\HTHost.obj" \
-	"$(INTDIR)\HTIcons.obj" \
-	"$(INTDIR)\HTInet.obj" \
-	"$(INTDIR)\HTInit.obj" \
-	"$(INTDIR)\HTLib.obj" \
-	"$(INTDIR)\HTLink.obj" \
-	"$(INTDIR)\HTList.obj" \
-	"$(INTDIR)\HTLocal.obj" \
-	"$(INTDIR)\HTLog.obj" \
-	"$(INTDIR)\HTMemLog.obj" \
-	"$(INTDIR)\HTMemory.obj" \
-	"$(INTDIR)\HTMerge.obj" \
-	"$(INTDIR)\HTMethod.obj" \
-	"$(INTDIR)\HTMIME.obj" \
-	"$(INTDIR)\HTMIMERq.obj" \
-	"$(INTDIR)\HTMIMImp.obj" \
-	"$(INTDIR)\HTMIMPrs.obj" \
-	"$(INTDIR)\HTML.obj" \
-	"$(INTDIR)\HTMLGen.obj" \
-	"$(INTDIR)\HTMLPDTD.obj" \
-	"$(INTDIR)\HTMulti.obj" \
-	"$(INTDIR)\HTMuxCh.obj" \
-	"$(INTDIR)\HTMuxTx.obj" \
-	"$(INTDIR)\HTNDir.obj" \
-	"$(INTDIR)\HTNet.obj" \
-	"$(INTDIR)\HTNetTxt.obj" \
-	"$(INTDIR)\HTNews.obj" \
-	"$(INTDIR)\HTNewsLs.obj" \
-	"$(INTDIR)\HTNewsRq.obj" \
-	"$(INTDIR)\HTNoFree.obj" \
-	"$(INTDIR)\HTParse.obj" \
-	"$(INTDIR)\HTPEP.obj" \
-	"$(INTDIR)\HTPlain.obj" \
-	"$(INTDIR)\HTProfil.obj" \
-	"$(INTDIR)\HTProt.obj" \
-	"$(INTDIR)\HTProxy.obj" \
-	"$(INTDIR)\HTReader.obj" \
-	"$(INTDIR)\HTReqMan.obj" \
-	"$(INTDIR)\HTResponse.obj" \
-	"$(INTDIR)\HTRules.obj" \
-	"$(INTDIR)\HTSChunk.obj" \
-	"$(INTDIR)\HTSocket.obj" \
-	"$(INTDIR)\HTStream.obj" \
-	"$(INTDIR)\HTString.obj" \
-	"$(INTDIR)\HTStyle.obj" \
-	"$(INTDIR)\HTTChunk.obj" \
-	"$(INTDIR)\HTTCP.obj" \
-	"$(INTDIR)\HTTee.obj" \
-	"$(INTDIR)\HTTelnet.obj" \
-	"$(INTDIR)\HTTeXGen.obj" \
-	"$(INTDIR)\HTTimer.obj" \
-	"$(INTDIR)\HTTP.obj" \
-	"$(INTDIR)\HTTPGen.obj" \
-	"$(INTDIR)\HTTPReq.obj" \
-	"$(INTDIR)\HTTPRes.obj" \
-	"$(INTDIR)\HTTPServ.obj" \
-	"$(INTDIR)\HTTrace.obj" \
-	"$(INTDIR)\HTTrans.obj" \
-	"$(INTDIR)\HTUser.obj" \
-	"$(INTDIR)\HTUTree.obj" \
-	"$(INTDIR)\HTUU.obj" \
-	"$(INTDIR)\HTWriter.obj" \
-	"$(INTDIR)\HTWSRC.obj" \
-	"$(INTDIR)\HTWWWStr.obj" \
-	"$(INTDIR)\HTXParse.obj" \
-	"$(INTDIR)\HTZip.obj" \
-	"$(INTDIR)\md5.obj" \
-	"$(INTDIR)\SGML.obj" \
-	"$(INTDIR)\xmlparse.obj" \
-	"$(INTDIR)\xmltok.obj" \
-	"$(OUTDIR)\zlib.lib"
-
-"$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
-
-!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
-
-OUTDIR=.\..
-INTDIR=.\Debug
-# Begin Custom Macros
-OutDir=.\..
-# End Custom Macros
-
-!IF "$(RECURSE)" == "0" 
-
-ALL : "$(OUTDIR)\libwww.lib"
-
-!ELSE 
-
-ALL : "zlib - Win32 Debug" "$(OUTDIR)\libwww.lib"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"zlib - Win32 DebugCLEAN" 
-!ELSE 
-CLEAN :
-!ENDIF 
-	-@erase "$(INTDIR)\dllmain.obj"
-	-@erase "$(INTDIR)\hashtable.obj"
-	-@erase "$(INTDIR)\HTAABrow.obj"
-	-@erase "$(INTDIR)\HTAAUtil.obj"
-	-@erase "$(INTDIR)\HTAccess.obj"
-	-@erase "$(INTDIR)\HTAlert.obj"
-	-@erase "$(INTDIR)\HTAnchor.obj"
-	-@erase "$(INTDIR)\HTANSI.obj"
-	-@erase "$(INTDIR)\HTArray.obj"
-	-@erase "$(INTDIR)\HTAssoc.obj"
-	-@erase "$(INTDIR)\HTAtom.obj"
-	-@erase "$(INTDIR)\HTBind.obj"
-	-@erase "$(INTDIR)\HTBInit.obj"
-	-@erase "$(INTDIR)\HTBound.obj"
-	-@erase "$(INTDIR)\HTBTree.obj"
-	-@erase "$(INTDIR)\HTBufWrt.obj"
-	-@erase "$(INTDIR)\HTCache.obj"
-	-@erase "$(INTDIR)\HTChannl.obj"
-	-@erase "$(INTDIR)\HTChunk.obj"
-	-@erase "$(INTDIR)\HTConLen.obj"
-	-@erase "$(INTDIR)\HTDemux.obj"
-	-@erase "$(INTDIR)\HTDescpt.obj"
-	-@erase "$(INTDIR)\HTDialog.obj"
-	-@erase "$(INTDIR)\HTDigest.obj"
-	-@erase "$(INTDIR)\HTDir.obj"
-	-@erase "$(INTDIR)\HTDNS.obj"
-	-@erase "$(INTDIR)\HTEPtoCl.obj"
-	-@erase "$(INTDIR)\HTError.obj"
-	-@erase "$(INTDIR)\HTEscape.obj"
-	-@erase "$(INTDIR)\HTEvent.obj"
-	-@erase "$(INTDIR)\HTEvtLst.obj"
-	-@erase "$(INTDIR)\HTFile.obj"
-	-@erase "$(INTDIR)\HTFilter.obj"
-	-@erase "$(INTDIR)\HTFormat.obj"
-	-@erase "$(INTDIR)\HTFSave.obj"
-	-@erase "$(INTDIR)\HTFTP.obj"
-	-@erase "$(INTDIR)\HTFTPDir.obj"
-	-@erase "$(INTDIR)\HTFWrite.obj"
-	-@erase "$(INTDIR)\HTGopher.obj"
-	-@erase "$(INTDIR)\HTGuess.obj"
-	-@erase "$(INTDIR)\HTHeader.obj"
-	-@erase "$(INTDIR)\HTHInit.obj"
-	-@erase "$(INTDIR)\HTHist.obj"
-	-@erase "$(INTDIR)\HTHome.obj"
-	-@erase "$(INTDIR)\HTHost.obj"
-	-@erase "$(INTDIR)\HTIcons.obj"
-	-@erase "$(INTDIR)\HTInet.obj"
-	-@erase "$(INTDIR)\HTInit.obj"
-	-@erase "$(INTDIR)\HTLib.obj"
-	-@erase "$(INTDIR)\HTLink.obj"
-	-@erase "$(INTDIR)\HTList.obj"
-	-@erase "$(INTDIR)\HTLocal.obj"
-	-@erase "$(INTDIR)\HTLog.obj"
-	-@erase "$(INTDIR)\HTMemLog.obj"
-	-@erase "$(INTDIR)\HTMemory.obj"
-	-@erase "$(INTDIR)\HTMerge.obj"
-	-@erase "$(INTDIR)\HTMethod.obj"
-	-@erase "$(INTDIR)\HTMIME.obj"
-	-@erase "$(INTDIR)\HTMIMERq.obj"
-	-@erase "$(INTDIR)\HTMIMImp.obj"
-	-@erase "$(INTDIR)\HTMIMPrs.obj"
-	-@erase "$(INTDIR)\HTML.obj"
-	-@erase "$(INTDIR)\HTMLGen.obj"
-	-@erase "$(INTDIR)\HTMLPDTD.obj"
-	-@erase "$(INTDIR)\HTMulti.obj"
-	-@erase "$(INTDIR)\HTMuxCh.obj"
-	-@erase "$(INTDIR)\HTMuxTx.obj"
-	-@erase "$(INTDIR)\HTNDir.obj"
-	-@erase "$(INTDIR)\HTNet.obj"
-	-@erase "$(INTDIR)\HTNetTxt.obj"
-	-@erase "$(INTDIR)\HTNews.obj"
-	-@erase "$(INTDIR)\HTNewsLs.obj"
-	-@erase "$(INTDIR)\HTNewsRq.obj"
-	-@erase "$(INTDIR)\HTNoFree.obj"
-	-@erase "$(INTDIR)\HTParse.obj"
-	-@erase "$(INTDIR)\HTPEP.obj"
-	-@erase "$(INTDIR)\HTPlain.obj"
-	-@erase "$(INTDIR)\HTProfil.obj"
-	-@erase "$(INTDIR)\HTProt.obj"
-	-@erase "$(INTDIR)\HTProxy.obj"
-	-@erase "$(INTDIR)\HTReader.obj"
-	-@erase "$(INTDIR)\HTReqMan.obj"
-	-@erase "$(INTDIR)\HTResponse.obj"
-	-@erase "$(INTDIR)\HTRules.obj"
-	-@erase "$(INTDIR)\HTSChunk.obj"
-	-@erase "$(INTDIR)\HTSocket.obj"
-	-@erase "$(INTDIR)\HTStream.obj"
-	-@erase "$(INTDIR)\HTString.obj"
-	-@erase "$(INTDIR)\HTStyle.obj"
-	-@erase "$(INTDIR)\HTTChunk.obj"
-	-@erase "$(INTDIR)\HTTCP.obj"
-	-@erase "$(INTDIR)\HTTee.obj"
-	-@erase "$(INTDIR)\HTTelnet.obj"
-	-@erase "$(INTDIR)\HTTeXGen.obj"
-	-@erase "$(INTDIR)\HTTimer.obj"
-	-@erase "$(INTDIR)\HTTP.obj"
-	-@erase "$(INTDIR)\HTTPGen.obj"
-	-@erase "$(INTDIR)\HTTPReq.obj"
-	-@erase "$(INTDIR)\HTTPRes.obj"
-	-@erase "$(INTDIR)\HTTPServ.obj"
-	-@erase "$(INTDIR)\HTTrace.obj"
-	-@erase "$(INTDIR)\HTTrans.obj"
-	-@erase "$(INTDIR)\HTUser.obj"
-	-@erase "$(INTDIR)\HTUTree.obj"
-	-@erase "$(INTDIR)\HTUU.obj"
-	-@erase "$(INTDIR)\HTWriter.obj"
-	-@erase "$(INTDIR)\HTWSRC.obj"
-	-@erase "$(INTDIR)\HTWWWStr.obj"
-	-@erase "$(INTDIR)\HTXParse.obj"
-	-@erase "$(INTDIR)\HTZip.obj"
-	-@erase "$(INTDIR)\md5.obj"
-	-@erase "$(INTDIR)\SGML.obj"
-	-@erase "$(INTDIR)\vc50.idb"
-	-@erase "$(INTDIR)\xmlparse.obj"
-	-@erase "$(INTDIR)\xmltok.obj"
-	-@erase "$(OUTDIR)\libwww.lib"
-
-"$(OUTDIR)" :
-    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
-
-"$(INTDIR)" :
-    if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
-
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I\
- "..\..\..\libwww\modules\expat\xmlparse" /I\
- "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I\
- "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D\
- "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD\
- /c 
-CPP_OBJS=.\Debug/
-CPP_SBRS=.
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libwww.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\dllmain.obj" \
-	"$(INTDIR)\hashtable.obj" \
-	"$(INTDIR)\HTAABrow.obj" \
-	"$(INTDIR)\HTAAUtil.obj" \
-	"$(INTDIR)\HTAccess.obj" \
-	"$(INTDIR)\HTAlert.obj" \
-	"$(INTDIR)\HTAnchor.obj" \
-	"$(INTDIR)\HTANSI.obj" \
-	"$(INTDIR)\HTArray.obj" \
-	"$(INTDIR)\HTAssoc.obj" \
-	"$(INTDIR)\HTAtom.obj" \
-	"$(INTDIR)\HTBind.obj" \
-	"$(INTDIR)\HTBInit.obj" \
-	"$(INTDIR)\HTBound.obj" \
-	"$(INTDIR)\HTBTree.obj" \
-	"$(INTDIR)\HTBufWrt.obj" \
-	"$(INTDIR)\HTCache.obj" \
-	"$(INTDIR)\HTChannl.obj" \
-	"$(INTDIR)\HTChunk.obj" \
-	"$(INTDIR)\HTConLen.obj" \
-	"$(INTDIR)\HTDemux.obj" \
-	"$(INTDIR)\HTDescpt.obj" \
-	"$(INTDIR)\HTDialog.obj" \
-	"$(INTDIR)\HTDigest.obj" \
-	"$(INTDIR)\HTDir.obj" \
-	"$(INTDIR)\HTDNS.obj" \
-	"$(INTDIR)\HTEPtoCl.obj" \
-	"$(INTDIR)\HTError.obj" \
-	"$(INTDIR)\HTEscape.obj" \
-	"$(INTDIR)\HTEvent.obj" \
-	"$(INTDIR)\HTEvtLst.obj" \
-	"$(INTDIR)\HTFile.obj" \
-	"$(INTDIR)\HTFilter.obj" \
-	"$(INTDIR)\HTFormat.obj" \
-	"$(INTDIR)\HTFSave.obj" \
-	"$(INTDIR)\HTFTP.obj" \
-	"$(INTDIR)\HTFTPDir.obj" \
-	"$(INTDIR)\HTFWrite.obj" \
-	"$(INTDIR)\HTGopher.obj" \
-	"$(INTDIR)\HTGuess.obj" \
-	"$(INTDIR)\HTHeader.obj" \
-	"$(INTDIR)\HTHInit.obj" \
-	"$(INTDIR)\HTHist.obj" \
-	"$(INTDIR)\HTHome.obj" \
-	"$(INTDIR)\HTHost.obj" \
-	"$(INTDIR)\HTIcons.obj" \
-	"$(INTDIR)\HTInet.obj" \
-	"$(INTDIR)\HTInit.obj" \
-	"$(INTDIR)\HTLib.obj" \
-	"$(INTDIR)\HTLink.obj" \
-	"$(INTDIR)\HTList.obj" \
-	"$(INTDIR)\HTLocal.obj" \
-	"$(INTDIR)\HTLog.obj" \
-	"$(INTDIR)\HTMemLog.obj" \
-	"$(INTDIR)\HTMemory.obj" \
-	"$(INTDIR)\HTMerge.obj" \
-	"$(INTDIR)\HTMethod.obj" \
-	"$(INTDIR)\HTMIME.obj" \
-	"$(INTDIR)\HTMIMERq.obj" \
-	"$(INTDIR)\HTMIMImp.obj" \
-	"$(INTDIR)\HTMIMPrs.obj" \
-	"$(INTDIR)\HTML.obj" \
-	"$(INTDIR)\HTMLGen.obj" \
-	"$(INTDIR)\HTMLPDTD.obj" \
-	"$(INTDIR)\HTMulti.obj" \
-	"$(INTDIR)\HTMuxCh.obj" \
-	"$(INTDIR)\HTMuxTx.obj" \
-	"$(INTDIR)\HTNDir.obj" \
-	"$(INTDIR)\HTNet.obj" \
-	"$(INTDIR)\HTNetTxt.obj" \
-	"$(INTDIR)\HTNews.obj" \
-	"$(INTDIR)\HTNewsLs.obj" \
-	"$(INTDIR)\HTNewsRq.obj" \
-	"$(INTDIR)\HTNoFree.obj" \
-	"$(INTDIR)\HTParse.obj" \
-	"$(INTDIR)\HTPEP.obj" \
-	"$(INTDIR)\HTPlain.obj" \
-	"$(INTDIR)\HTProfil.obj" \
-	"$(INTDIR)\HTProt.obj" \
-	"$(INTDIR)\HTProxy.obj" \
-	"$(INTDIR)\HTReader.obj" \
-	"$(INTDIR)\HTReqMan.obj" \
-	"$(INTDIR)\HTResponse.obj" \
-	"$(INTDIR)\HTRules.obj" \
-	"$(INTDIR)\HTSChunk.obj" \
-	"$(INTDIR)\HTSocket.obj" \
-	"$(INTDIR)\HTStream.obj" \
-	"$(INTDIR)\HTString.obj" \
-	"$(INTDIR)\HTStyle.obj" \
-	"$(INTDIR)\HTTChunk.obj" \
-	"$(INTDIR)\HTTCP.obj" \
-	"$(INTDIR)\HTTee.obj" \
-	"$(INTDIR)\HTTelnet.obj" \
-	"$(INTDIR)\HTTeXGen.obj" \
-	"$(INTDIR)\HTTimer.obj" \
-	"$(INTDIR)\HTTP.obj" \
-	"$(INTDIR)\HTTPGen.obj" \
-	"$(INTDIR)\HTTPReq.obj" \
-	"$(INTDIR)\HTTPRes.obj" \
-	"$(INTDIR)\HTTPServ.obj" \
-	"$(INTDIR)\HTTrace.obj" \
-	"$(INTDIR)\HTTrans.obj" \
-	"$(INTDIR)\HTUser.obj" \
-	"$(INTDIR)\HTUTree.obj" \
-	"$(INTDIR)\HTUU.obj" \
-	"$(INTDIR)\HTWriter.obj" \
-	"$(INTDIR)\HTWSRC.obj" \
-	"$(INTDIR)\HTWWWStr.obj" \
-	"$(INTDIR)\HTXParse.obj" \
-	"$(INTDIR)\HTZip.obj" \
-	"$(INTDIR)\md5.obj" \
-	"$(INTDIR)\SGML.obj" \
-	"$(INTDIR)\xmlparse.obj" \
-	"$(INTDIR)\xmltok.obj" \
-	"$(OUTDIR)\zlib.lib"
-
-"$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
-
-!ENDIF 
 
 .c{$(CPP_OBJS)}.obj::
    $(CPP) @<<
@@ -620,6 +204,438 @@ LIB32_OBJS= \
    $(CPP_PROJ) $< 
 <<
 
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libwww.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\HTAABrow.obj" \
+	"$(INTDIR)\HTAAUtil.obj" \
+	"$(INTDIR)\HTAccess.obj" \
+	"$(INTDIR)\HTAlert.obj" \
+	"$(INTDIR)\HTAnchor.obj" \
+	"$(INTDIR)\HTANSI.obj" \
+	"$(INTDIR)\HTArray.obj" \
+	"$(INTDIR)\HTAssoc.obj" \
+	"$(INTDIR)\HTAtom.obj" \
+	"$(INTDIR)\HTBind.obj" \
+	"$(INTDIR)\HTBInit.obj" \
+	"$(INTDIR)\HTBound.obj" \
+	"$(INTDIR)\HTBTree.obj" \
+	"$(INTDIR)\HTBufWrt.obj" \
+	"$(INTDIR)\HTCache.obj" \
+	"$(INTDIR)\HTChannl.obj" \
+	"$(INTDIR)\HTChunk.obj" \
+	"$(INTDIR)\HTConLen.obj" \
+	"$(INTDIR)\HTDemux.obj" \
+	"$(INTDIR)\HTDescpt.obj" \
+	"$(INTDIR)\HTDialog.obj" \
+	"$(INTDIR)\HTDigest.obj" \
+	"$(INTDIR)\HTDir.obj" \
+	"$(INTDIR)\HTDNS.obj" \
+	"$(INTDIR)\HTEPtoCl.obj" \
+	"$(INTDIR)\HTError.obj" \
+	"$(INTDIR)\HTEscape.obj" \
+	"$(INTDIR)\HTEvent.obj" \
+	"$(INTDIR)\HTEvtLst.obj" \
+	"$(INTDIR)\HTFile.obj" \
+	"$(INTDIR)\HTFilter.obj" \
+	"$(INTDIR)\HTFormat.obj" \
+	"$(INTDIR)\HTFSave.obj" \
+	"$(INTDIR)\HTFTP.obj" \
+	"$(INTDIR)\HTFTPDir.obj" \
+	"$(INTDIR)\HTFWrite.obj" \
+	"$(INTDIR)\HTGopher.obj" \
+	"$(INTDIR)\HTGuess.obj" \
+	"$(INTDIR)\HTHeader.obj" \
+	"$(INTDIR)\HTHInit.obj" \
+	"$(INTDIR)\HTHist.obj" \
+	"$(INTDIR)\HTHome.obj" \
+	"$(INTDIR)\HTHost.obj" \
+	"$(INTDIR)\HTIcons.obj" \
+	"$(INTDIR)\HTInet.obj" \
+	"$(INTDIR)\HTInit.obj" \
+	"$(INTDIR)\HTLib.obj" \
+	"$(INTDIR)\HTLink.obj" \
+	"$(INTDIR)\HTList.obj" \
+	"$(INTDIR)\HTLocal.obj" \
+	"$(INTDIR)\HTLog.obj" \
+	"$(INTDIR)\HTMemLog.obj" \
+	"$(INTDIR)\HTMemory.obj" \
+	"$(INTDIR)\HTMerge.obj" \
+	"$(INTDIR)\HTMethod.obj" \
+	"$(INTDIR)\HTMIME.obj" \
+	"$(INTDIR)\HTMIMERq.obj" \
+	"$(INTDIR)\HTMIMImp.obj" \
+	"$(INTDIR)\HTMIMPrs.obj" \
+	"$(INTDIR)\HTML.obj" \
+	"$(INTDIR)\HTMLGen.obj" \
+	"$(INTDIR)\HTMLPDTD.obj" \
+	"$(INTDIR)\HTMulti.obj" \
+	"$(INTDIR)\HTMuxCh.obj" \
+	"$(INTDIR)\HTMuxTx.obj" \
+	"$(INTDIR)\HTNDir.obj" \
+	"$(INTDIR)\HTNet.obj" \
+	"$(INTDIR)\HTNetTxt.obj" \
+	"$(INTDIR)\HTNews.obj" \
+	"$(INTDIR)\HTNewsLs.obj" \
+	"$(INTDIR)\HTNewsRq.obj" \
+	"$(INTDIR)\HTNoFree.obj" \
+	"$(INTDIR)\HTParse.obj" \
+	"$(INTDIR)\HTPEP.obj" \
+	"$(INTDIR)\HTPlain.obj" \
+	"$(INTDIR)\HTProfil.obj" \
+	"$(INTDIR)\HTProt.obj" \
+	"$(INTDIR)\HTProxy.obj" \
+	"$(INTDIR)\HTReader.obj" \
+	"$(INTDIR)\HTReqMan.obj" \
+	"$(INTDIR)\HTResponse.obj" \
+	"$(INTDIR)\HTRules.obj" \
+	"$(INTDIR)\HTSChunk.obj" \
+	"$(INTDIR)\HTSocket.obj" \
+	"$(INTDIR)\HTStream.obj" \
+	"$(INTDIR)\HTString.obj" \
+	"$(INTDIR)\HTStyle.obj" \
+	"$(INTDIR)\HTTChunk.obj" \
+	"$(INTDIR)\HTTCP.obj" \
+	"$(INTDIR)\HTTee.obj" \
+	"$(INTDIR)\HTTelnet.obj" \
+	"$(INTDIR)\HTTeXGen.obj" \
+	"$(INTDIR)\HTTimer.obj" \
+	"$(INTDIR)\HTTP.obj" \
+	"$(INTDIR)\HTTPGen.obj" \
+	"$(INTDIR)\HTTPReq.obj" \
+	"$(INTDIR)\HTTPRes.obj" \
+	"$(INTDIR)\HTTPServ.obj" \
+	"$(INTDIR)\HTTrace.obj" \
+	"$(INTDIR)\HTTrans.obj" \
+	"$(INTDIR)\HTUser.obj" \
+	"$(INTDIR)\HTUTree.obj" \
+	"$(INTDIR)\HTUU.obj" \
+	"$(INTDIR)\HTWriter.obj" \
+	"$(INTDIR)\HTWSRC.obj" \
+	"$(INTDIR)\HTWWWStr.obj" \
+	"$(INTDIR)\HTXParse.obj" \
+	"$(INTDIR)\HTZip.obj" \
+	"$(INTDIR)\md5.obj" \
+	"$(INTDIR)\SGML.obj" \
+	"$(OUTDIR)\zlib.lib"
+
+"$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+OUTDIR=.\..
+INTDIR=.\Debug
+# Begin Custom Macros
+OutDir=.\..
+# End Custom Macros
+
+!IF "$(RECURSE)" == "0" 
+
+ALL : "$(OUTDIR)\libwww.lib"
+
+!ELSE 
+
+ALL : "zlib - Win32 Debug" "$(OUTDIR)\libwww.lib"
+
+!ENDIF 
+
+!IF "$(RECURSE)" == "1" 
+CLEAN :"zlib - Win32 DebugCLEAN" 
+!ELSE 
+CLEAN :
+!ENDIF 
+	-@erase "$(INTDIR)\HTAABrow.obj"
+	-@erase "$(INTDIR)\HTAAUtil.obj"
+	-@erase "$(INTDIR)\HTAccess.obj"
+	-@erase "$(INTDIR)\HTAlert.obj"
+	-@erase "$(INTDIR)\HTAnchor.obj"
+	-@erase "$(INTDIR)\HTANSI.obj"
+	-@erase "$(INTDIR)\HTArray.obj"
+	-@erase "$(INTDIR)\HTAssoc.obj"
+	-@erase "$(INTDIR)\HTAtom.obj"
+	-@erase "$(INTDIR)\HTBind.obj"
+	-@erase "$(INTDIR)\HTBInit.obj"
+	-@erase "$(INTDIR)\HTBound.obj"
+	-@erase "$(INTDIR)\HTBTree.obj"
+	-@erase "$(INTDIR)\HTBufWrt.obj"
+	-@erase "$(INTDIR)\HTCache.obj"
+	-@erase "$(INTDIR)\HTChannl.obj"
+	-@erase "$(INTDIR)\HTChunk.obj"
+	-@erase "$(INTDIR)\HTConLen.obj"
+	-@erase "$(INTDIR)\HTDemux.obj"
+	-@erase "$(INTDIR)\HTDescpt.obj"
+	-@erase "$(INTDIR)\HTDialog.obj"
+	-@erase "$(INTDIR)\HTDigest.obj"
+	-@erase "$(INTDIR)\HTDir.obj"
+	-@erase "$(INTDIR)\HTDNS.obj"
+	-@erase "$(INTDIR)\HTEPtoCl.obj"
+	-@erase "$(INTDIR)\HTError.obj"
+	-@erase "$(INTDIR)\HTEscape.obj"
+	-@erase "$(INTDIR)\HTEvent.obj"
+	-@erase "$(INTDIR)\HTEvtLst.obj"
+	-@erase "$(INTDIR)\HTFile.obj"
+	-@erase "$(INTDIR)\HTFilter.obj"
+	-@erase "$(INTDIR)\HTFormat.obj"
+	-@erase "$(INTDIR)\HTFSave.obj"
+	-@erase "$(INTDIR)\HTFTP.obj"
+	-@erase "$(INTDIR)\HTFTPDir.obj"
+	-@erase "$(INTDIR)\HTFWrite.obj"
+	-@erase "$(INTDIR)\HTGopher.obj"
+	-@erase "$(INTDIR)\HTGuess.obj"
+	-@erase "$(INTDIR)\HTHeader.obj"
+	-@erase "$(INTDIR)\HTHInit.obj"
+	-@erase "$(INTDIR)\HTHist.obj"
+	-@erase "$(INTDIR)\HTHome.obj"
+	-@erase "$(INTDIR)\HTHost.obj"
+	-@erase "$(INTDIR)\HTIcons.obj"
+	-@erase "$(INTDIR)\HTInet.obj"
+	-@erase "$(INTDIR)\HTInit.obj"
+	-@erase "$(INTDIR)\HTLib.obj"
+	-@erase "$(INTDIR)\HTLink.obj"
+	-@erase "$(INTDIR)\HTList.obj"
+	-@erase "$(INTDIR)\HTLocal.obj"
+	-@erase "$(INTDIR)\HTLog.obj"
+	-@erase "$(INTDIR)\HTMemLog.obj"
+	-@erase "$(INTDIR)\HTMemory.obj"
+	-@erase "$(INTDIR)\HTMerge.obj"
+	-@erase "$(INTDIR)\HTMethod.obj"
+	-@erase "$(INTDIR)\HTMIME.obj"
+	-@erase "$(INTDIR)\HTMIMERq.obj"
+	-@erase "$(INTDIR)\HTMIMImp.obj"
+	-@erase "$(INTDIR)\HTMIMPrs.obj"
+	-@erase "$(INTDIR)\HTML.obj"
+	-@erase "$(INTDIR)\HTMLGen.obj"
+	-@erase "$(INTDIR)\HTMLPDTD.obj"
+	-@erase "$(INTDIR)\HTMulti.obj"
+	-@erase "$(INTDIR)\HTMuxCh.obj"
+	-@erase "$(INTDIR)\HTMuxTx.obj"
+	-@erase "$(INTDIR)\HTNDir.obj"
+	-@erase "$(INTDIR)\HTNet.obj"
+	-@erase "$(INTDIR)\HTNetTxt.obj"
+	-@erase "$(INTDIR)\HTNews.obj"
+	-@erase "$(INTDIR)\HTNewsLs.obj"
+	-@erase "$(INTDIR)\HTNewsRq.obj"
+	-@erase "$(INTDIR)\HTNoFree.obj"
+	-@erase "$(INTDIR)\HTParse.obj"
+	-@erase "$(INTDIR)\HTPEP.obj"
+	-@erase "$(INTDIR)\HTPlain.obj"
+	-@erase "$(INTDIR)\HTProfil.obj"
+	-@erase "$(INTDIR)\HTProt.obj"
+	-@erase "$(INTDIR)\HTProxy.obj"
+	-@erase "$(INTDIR)\HTReader.obj"
+	-@erase "$(INTDIR)\HTReqMan.obj"
+	-@erase "$(INTDIR)\HTResponse.obj"
+	-@erase "$(INTDIR)\HTRules.obj"
+	-@erase "$(INTDIR)\HTSChunk.obj"
+	-@erase "$(INTDIR)\HTSocket.obj"
+	-@erase "$(INTDIR)\HTStream.obj"
+	-@erase "$(INTDIR)\HTString.obj"
+	-@erase "$(INTDIR)\HTStyle.obj"
+	-@erase "$(INTDIR)\HTTChunk.obj"
+	-@erase "$(INTDIR)\HTTCP.obj"
+	-@erase "$(INTDIR)\HTTee.obj"
+	-@erase "$(INTDIR)\HTTelnet.obj"
+	-@erase "$(INTDIR)\HTTeXGen.obj"
+	-@erase "$(INTDIR)\HTTimer.obj"
+	-@erase "$(INTDIR)\HTTP.obj"
+	-@erase "$(INTDIR)\HTTPGen.obj"
+	-@erase "$(INTDIR)\HTTPReq.obj"
+	-@erase "$(INTDIR)\HTTPRes.obj"
+	-@erase "$(INTDIR)\HTTPServ.obj"
+	-@erase "$(INTDIR)\HTTrace.obj"
+	-@erase "$(INTDIR)\HTTrans.obj"
+	-@erase "$(INTDIR)\HTUser.obj"
+	-@erase "$(INTDIR)\HTUTree.obj"
+	-@erase "$(INTDIR)\HTUU.obj"
+	-@erase "$(INTDIR)\HTWriter.obj"
+	-@erase "$(INTDIR)\HTWSRC.obj"
+	-@erase "$(INTDIR)\HTWWWStr.obj"
+	-@erase "$(INTDIR)\HTXParse.obj"
+	-@erase "$(INTDIR)\HTZip.obj"
+	-@erase "$(INTDIR)\md5.obj"
+	-@erase "$(INTDIR)\SGML.obj"
+	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(OUTDIR)\libwww.lib"
+
+"$(OUTDIR)" :
+    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+
+"$(INTDIR)" :
+    if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
+
+CPP=cl.exe
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I\
+ "..\..\..\libwww\modules\expat\xmlparse" /I\
+ "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I\
+ "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D\
+ "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD\
+ /c 
+CPP_OBJS=.\Debug/
+CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libwww.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\HTAABrow.obj" \
+	"$(INTDIR)\HTAAUtil.obj" \
+	"$(INTDIR)\HTAccess.obj" \
+	"$(INTDIR)\HTAlert.obj" \
+	"$(INTDIR)\HTAnchor.obj" \
+	"$(INTDIR)\HTANSI.obj" \
+	"$(INTDIR)\HTArray.obj" \
+	"$(INTDIR)\HTAssoc.obj" \
+	"$(INTDIR)\HTAtom.obj" \
+	"$(INTDIR)\HTBind.obj" \
+	"$(INTDIR)\HTBInit.obj" \
+	"$(INTDIR)\HTBound.obj" \
+	"$(INTDIR)\HTBTree.obj" \
+	"$(INTDIR)\HTBufWrt.obj" \
+	"$(INTDIR)\HTCache.obj" \
+	"$(INTDIR)\HTChannl.obj" \
+	"$(INTDIR)\HTChunk.obj" \
+	"$(INTDIR)\HTConLen.obj" \
+	"$(INTDIR)\HTDemux.obj" \
+	"$(INTDIR)\HTDescpt.obj" \
+	"$(INTDIR)\HTDialog.obj" \
+	"$(INTDIR)\HTDigest.obj" \
+	"$(INTDIR)\HTDir.obj" \
+	"$(INTDIR)\HTDNS.obj" \
+	"$(INTDIR)\HTEPtoCl.obj" \
+	"$(INTDIR)\HTError.obj" \
+	"$(INTDIR)\HTEscape.obj" \
+	"$(INTDIR)\HTEvent.obj" \
+	"$(INTDIR)\HTEvtLst.obj" \
+	"$(INTDIR)\HTFile.obj" \
+	"$(INTDIR)\HTFilter.obj" \
+	"$(INTDIR)\HTFormat.obj" \
+	"$(INTDIR)\HTFSave.obj" \
+	"$(INTDIR)\HTFTP.obj" \
+	"$(INTDIR)\HTFTPDir.obj" \
+	"$(INTDIR)\HTFWrite.obj" \
+	"$(INTDIR)\HTGopher.obj" \
+	"$(INTDIR)\HTGuess.obj" \
+	"$(INTDIR)\HTHeader.obj" \
+	"$(INTDIR)\HTHInit.obj" \
+	"$(INTDIR)\HTHist.obj" \
+	"$(INTDIR)\HTHome.obj" \
+	"$(INTDIR)\HTHost.obj" \
+	"$(INTDIR)\HTIcons.obj" \
+	"$(INTDIR)\HTInet.obj" \
+	"$(INTDIR)\HTInit.obj" \
+	"$(INTDIR)\HTLib.obj" \
+	"$(INTDIR)\HTLink.obj" \
+	"$(INTDIR)\HTList.obj" \
+	"$(INTDIR)\HTLocal.obj" \
+	"$(INTDIR)\HTLog.obj" \
+	"$(INTDIR)\HTMemLog.obj" \
+	"$(INTDIR)\HTMemory.obj" \
+	"$(INTDIR)\HTMerge.obj" \
+	"$(INTDIR)\HTMethod.obj" \
+	"$(INTDIR)\HTMIME.obj" \
+	"$(INTDIR)\HTMIMERq.obj" \
+	"$(INTDIR)\HTMIMImp.obj" \
+	"$(INTDIR)\HTMIMPrs.obj" \
+	"$(INTDIR)\HTML.obj" \
+	"$(INTDIR)\HTMLGen.obj" \
+	"$(INTDIR)\HTMLPDTD.obj" \
+	"$(INTDIR)\HTMulti.obj" \
+	"$(INTDIR)\HTMuxCh.obj" \
+	"$(INTDIR)\HTMuxTx.obj" \
+	"$(INTDIR)\HTNDir.obj" \
+	"$(INTDIR)\HTNet.obj" \
+	"$(INTDIR)\HTNetTxt.obj" \
+	"$(INTDIR)\HTNews.obj" \
+	"$(INTDIR)\HTNewsLs.obj" \
+	"$(INTDIR)\HTNewsRq.obj" \
+	"$(INTDIR)\HTNoFree.obj" \
+	"$(INTDIR)\HTParse.obj" \
+	"$(INTDIR)\HTPEP.obj" \
+	"$(INTDIR)\HTPlain.obj" \
+	"$(INTDIR)\HTProfil.obj" \
+	"$(INTDIR)\HTProt.obj" \
+	"$(INTDIR)\HTProxy.obj" \
+	"$(INTDIR)\HTReader.obj" \
+	"$(INTDIR)\HTReqMan.obj" \
+	"$(INTDIR)\HTResponse.obj" \
+	"$(INTDIR)\HTRules.obj" \
+	"$(INTDIR)\HTSChunk.obj" \
+	"$(INTDIR)\HTSocket.obj" \
+	"$(INTDIR)\HTStream.obj" \
+	"$(INTDIR)\HTString.obj" \
+	"$(INTDIR)\HTStyle.obj" \
+	"$(INTDIR)\HTTChunk.obj" \
+	"$(INTDIR)\HTTCP.obj" \
+	"$(INTDIR)\HTTee.obj" \
+	"$(INTDIR)\HTTelnet.obj" \
+	"$(INTDIR)\HTTeXGen.obj" \
+	"$(INTDIR)\HTTimer.obj" \
+	"$(INTDIR)\HTTP.obj" \
+	"$(INTDIR)\HTTPGen.obj" \
+	"$(INTDIR)\HTTPReq.obj" \
+	"$(INTDIR)\HTTPRes.obj" \
+	"$(INTDIR)\HTTPServ.obj" \
+	"$(INTDIR)\HTTrace.obj" \
+	"$(INTDIR)\HTTrans.obj" \
+	"$(INTDIR)\HTUser.obj" \
+	"$(INTDIR)\HTUTree.obj" \
+	"$(INTDIR)\HTUU.obj" \
+	"$(INTDIR)\HTWriter.obj" \
+	"$(INTDIR)\HTWSRC.obj" \
+	"$(INTDIR)\HTWWWStr.obj" \
+	"$(INTDIR)\HTXParse.obj" \
+	"$(INTDIR)\HTZip.obj" \
+	"$(INTDIR)\md5.obj" \
+	"$(INTDIR)\SGML.obj" \
+	"$(OUTDIR)\zlib.lib"
+
+"$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ENDIF 
+
 
 !IF "$(CFG)" == "libwww - Win32 Release" || "$(CFG)" == "libwww - Win32 Debug"
 
@@ -648,40 +664,6 @@ LIB32_OBJS= \
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1\
  
    cd "..\libwww"
-
-!ENDIF 
-
-SOURCE=..\..\..\libwww\modules\expat\xmltok\dllmain.c
-
-"$(INTDIR)\dllmain.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\..\libwww\modules\expat\xmlparse\hashtable.c
-
-!IF  "$(CFG)" == "libwww - Win32 Release"
-
-DEP_CPP_HASHT=\
-	"..\..\..\libwww\modules\expat\xmlparse\hashtable.h"\
-	
-NODEP_CPP_HASHT=\
-	"..\..\..\libwww\modules\expat\xmlparse\xmldef.h"\
-	
-
-"$(INTDIR)\hashtable.obj" : $(SOURCE) $(DEP_CPP_HASHT) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
-
-DEP_CPP_HASHT=\
-	"..\..\..\libwww\modules\expat\xmlparse\hashtable.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmldef.h"\
-	
-
-"$(INTDIR)\hashtable.obj" : $(SOURCE) $(DEP_CPP_HASHT) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
 
 !ENDIF 
 
@@ -12151,83 +12133,6 @@ DEP_CPP_SGML_=\
 	
 
 "$(INTDIR)\SGML.obj" : $(SOURCE) $(DEP_CPP_SGML_) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\..\libwww\modules\expat\xmlparse\xmlparse.c
-
-!IF  "$(CFG)" == "libwww - Win32 Release"
-
-DEP_CPP_XMLPA=\
-	"..\..\..\libwww\modules\expat\xmlparse\hashtable.h"\
-	"..\..\..\libwww\modules\expat\xmlparse\xmlparse.h"\
-	
-NODEP_CPP_XMLPA=\
-	"..\..\..\libwww\modules\expat\xmlparse\xmldef.h"\
-	"..\..\..\libwww\modules\expat\xmlparse\xmlrole.h"\
-	"..\..\..\libwww\modules\expat\xmlparse\xmltok.h"\
-	
-
-"$(INTDIR)\xmlparse.obj" : $(SOURCE) $(DEP_CPP_XMLPA) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
-
-DEP_CPP_XMLPA=\
-	"..\..\..\libwww\modules\expat\xmlparse\hashtable.h"\
-	"..\..\..\libwww\modules\expat\xmlparse\xmlparse.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmldef.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmlrole.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmltok.h"\
-	
-
-"$(INTDIR)\xmlparse.obj" : $(SOURCE) $(DEP_CPP_XMLPA) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\..\libwww\modules\expat\xmltok\xmltok.c
-
-!IF  "$(CFG)" == "libwww - Win32 Release"
-
-DEP_CPP_XMLTO=\
-	"..\..\..\libwww\modules\expat\xmltok\asciitab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\iasciitab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\latin1tab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\nametab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\utf8tab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmldef.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmltok.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmltok_impl.c"\
-	"..\..\..\libwww\modules\expat\xmltok\xmltok_impl.h"\
-	
-NODEP_CPP_XMLTO=\
-	"..\..\..\libwww\modules\expat\xmltok\nspr.h"\
-	
-
-"$(INTDIR)\xmltok.obj" : $(SOURCE) $(DEP_CPP_XMLTO) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
-
-DEP_CPP_XMLTO=\
-	"..\..\..\libwww\modules\expat\xmltok\asciitab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\iasciitab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\latin1tab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\nametab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\utf8tab.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmldef.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmltok.h"\
-	"..\..\..\libwww\modules\expat\xmltok\xmltok_impl.c"\
-	"..\..\..\libwww\modules\expat\xmltok\xmltok_impl.h"\
-	
-
-"$(INTDIR)\xmltok.obj" : $(SOURCE) $(DEP_CPP_XMLTO) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

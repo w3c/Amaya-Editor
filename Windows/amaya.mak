@@ -25,10 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
 OUTDIR=.\bin
@@ -100,6 +96,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I\
@@ -109,7 +106,40 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -241,6 +271,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
@@ -250,7 +281,40 @@ CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\thotlib\internals\h" /I\
  /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -310,36 +374,6 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(CFG)" == "amaya - Win32 Release" || "$(CFG)" == "amaya - Win32 Debug"
@@ -5225,6 +5259,7 @@ DEP_CPP_HTMLE=\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
+	"..\amaya\windialogapi_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -5409,6 +5444,7 @@ DEP_CPP_HTMLE=\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
+	"..\amaya\windialogapi_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -8579,8 +8615,10 @@ DEP_CPP_MATHML=\
 	"..\amaya\ahtinit.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
+	"..\amaya\css.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathedit_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
@@ -8605,6 +8643,7 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -8754,8 +8793,10 @@ DEP_CPP_MATHML=\
 	"..\amaya\ahtinit.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
+	"..\amaya\css.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathedit_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -8778,6 +8819,7 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
