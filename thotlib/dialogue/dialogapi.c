@@ -895,9 +895,11 @@ static gboolean CallPopGTK (GtkWidget *widget, gpointer data)
 #ifdef _GTK
 static gboolean scr_popup_key_press (GtkWidget * widget, GdkEventKey * event, gpointer data)
 {
-  if (event->keyval == GDK_Escape || event->keyval == GDK_Return)
-    CallPopGTK (widget, data);
-  return FALSE;
+  if (event->keyval == GDK_Escape)
+    return (formKillGTK (widget, event, (struct Cat_Context *) data));
+  else if (event->keyval == GDK_Return)
+    return (CallPopGTK (widget, data));
+	  
 }
 #endif /* _GTK */
 
