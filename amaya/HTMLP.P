@@ -2069,19 +2069,9 @@ BOXES
 
  Option_gif: BEGIN
 	Content: Picture 'option.gif';
-	HorizPos: Left = Enclosing . Left + 0.2;
+	HorizPos: Left = Enclosing . Left;
 	VertPos: HMiddle = Enclosing . Top + 0.5;
         HorizRef: * . Bottom;	
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
- Option_space: BEGIN
-	Content: Text ' ';
-	HorizPos: Left = Previous . Right;
-	VertPos: HMiddle = Enclosing . Top + 0.5;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -2957,6 +2947,25 @@ BOXES
 	FillPattern: backgroundcolor;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+ Value_Box_Alt: BEGIN
+	Content: (Text '[' Value_ Text ']');
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+ SelectedInAltView: BEGIN
+        Content: Text '* ';
+	Visibility: 0;
+	IN Alternate_view
+		Visibility: Enclosing =;
 	END;
 
  Toggle_gif: BEGIN
@@ -7189,6 +7198,7 @@ RULES
 	IN Alternate_view
 		BEGIN
 		Height: 1;
+		MarginTop: 0;
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Structure_view
@@ -7213,15 +7223,15 @@ RULES
 	END;
 
  Option_Menu: BEGIN
-	{CreateEnclosing(Option_Box);}
 	CreateBefore(SELECT_S);
 	CreateWith(VerticalLine);
-	CreateFirst(Option_gif);
-	CreateLast(Option_space);
+	CreateLast(Option_gif);
 	ShowBox;
 	Background : White;
 	Foreground : Black;
 	FillPattern: nopattern;
+	PaddingTop: 0.1;
+	PaddingLeft: 0.4;
 	BorderTopWidth: 1 px;
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
@@ -7241,13 +7251,24 @@ RULES
 	VertPos: Top = Enclosing . Top + 0.4;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
-		BorderTopWidth: 0 px;
-		BorderRightWidth: 0 px;
-		BorderBottomWidth: 0 px;
-		BorderLeftWidth: 0 px;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		END;
+	IN Alternate_view BEGIN
+		Background : Transparent;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		END;
 	END;
 
@@ -7257,19 +7278,19 @@ RULES
 	
  Option: BEGIN
 	CreateBefore(OPTION_S);
-	Visibility: 0;
-	HorizPos: Left = Option_gif . Right + 0.2;	
-	VertPos: Top = Previous Option . Bottom;
-	MarginTop: 0.1;
+	Visibility: 0;	{ attribute selected make it visible }
+	HorizPos: Left = Enclosing . Left + 20 px;	
+	HorizRef: Enclosed . HRef;
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
 		END;
-	IN Alternate_view
+	IN Alternate_view BEGIN
 		Visibility: Enclosing =;
+		HorizPos: Left = Enclosing . Left + 1;
+		END;
 	END;
 
  OptGroup: BEGIN
@@ -7345,9 +7366,13 @@ RULES
 	HorizPos: Left = Enclosing . Left + 0.4;
 	VertPos: Top = Enclosing . Top + 0.3;
 	Width: Enclosing . Width - 0.6;
-	{Size: GrandFather =;}
 	IN Structure_view BEGIN
 		Visibility: 0;
+		END;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Enclosing . Top;
+		Width: Enclosing . Width;
 		END;
 	END;
 
@@ -7423,6 +7448,13 @@ RULES
 		MarginBottom: 0;
 		MarginRight: 0;
 		END;
+	IN Alternate_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
+		Height: Enclosed . Height;
+		END;	
 	END;
 
  File_Input: BEGIN
@@ -7480,12 +7512,19 @@ RULES
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
 		END;
+	IN Alternate_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
+		END;
 	END;
 
  Reset_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Reset);
 	CreateFirst(Value_Box);
+	CreateFirst(Value_Box_Alt);
 	Depth: Enclosing + 1;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -7505,6 +7544,7 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Submit);
 	CreateFirst(Value_Box);
+	CreateFirst(Value_Box_Alt);
 	Depth: Enclosing + 1;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -7512,7 +7552,7 @@ RULES
 	LineBreak: No;
 	HorizPos: Left = Enclosing . Left + 0.2;	
 	VertPos: Top = Enclosing . Top + 0.4;
-	HorizRef: * . HMiddle;
+	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: 1 px;
@@ -7524,6 +7564,7 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Button);
 	CreateFirst(Value_Box);
+	CreateFirst(Value_Box_Alt);
 	Depth: Enclosing + 1;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -9275,6 +9316,7 @@ ATTRIBUTES
  Selected:
 	BEGIN
 	CreateBefore(ATTR_SELECTED);
+	CreateFirst (SelectedInAltView);
 	Visibility: 5 {*****};
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -9282,8 +9324,10 @@ ATTRIBUTES
 		END;
 	IN Links_view
 		Visibility: Enclosing =;
-	IN Alternate_view
+	IN Alternate_view BEGIN
 		Visibility: Enclosing =;
+		HorizPos: Left = Enclosing . Left;
+		END;
 	IN Table_of_contents
 		Visibility: Enclosing =;
 	END;
