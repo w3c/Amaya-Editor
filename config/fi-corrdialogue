@@ -1,0 +1,23 @@
+# encoding= latin1
+0 Ehdotuksien lukumäärä
+1 Tarkistetaan
+2 Etsi/Hylkää
+3 Korvaa (+ dic)
+4 Korvaa ja seuraava
+5 Toinen kieli
+6 Hylkää (+ dic)
+7 sanat, joissa:
+8 Oikeinkirjoituksen tarkistus ...
+9 Roomalaiset numerot
+10 Ohita
+11 sanat, joissa kaikki isolla
+12 sanat, joissa numeroita
+13 Parametritiedosto virhe
+14 Ei näppäimistötiedostoa
+15 Dokumentin sanastoa ei voi tallentaa
+16 Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa
+17 Sana "%s" lisätty dokumentin sanastoon
+18 Oikeinkirjoitustarkistus valmis!
+19 Oikeinkirjoitustarkistus keskeytetty!
+20 Valitse dokumentti
+21 Dokumentin sanasto tallennettu: %s

@@ -1,0 +1,141 @@
+# encoding= latin1
+0 X11 Virhe : %s\n
+1 Hyväksy
+2 Ei aakkostiedostoa
+3 Uusi näkymä ei voi korvata vanhaa
+4 Ei-yhteensopivia malleja. Koosta uudelleen %s
+5 Virhe: fontteja ei löydetty
+6 Muisti loppunut
+7 Virhe: Ei voida yhdistää X:ään
+8 Näkymää muutettu ennen luontia
+9 Rules-taulukko täynnä.
+10 Virheellinen tiedosto: %s.STR
+11 Virheellinen tiedosto: %s.PRS
+12 Dokumentti %s tulostettu
+13 Jäsentely
+14 1 sivu/arkille
+15 2 sivua/arkille
+16 4 sivua/arkille
+17 %s
+18 Ei ole tarpeeksi muistia
+19 *** Amaya: Peruuttamaton virhe ***
+20 muokatut dokumentit, jos on, tallennetaan
+21 Virheellinen .TRA file: %s
+22 %s ei ole käypä sisarus tälle: %s (%s)
+23 %s ei ole käypä lapsi tälle:%s (%s)
+24 %s, sivu %d
+25 Kieli
+26 Määritykset
+27 Vakio esitys
+28 Käytä
+29 Merkit
+30 Alleviivaa
+31 Grafiikka
+32 Muotoilu
+33 Oletus
+34 Kohdistus
+35 Sisennys
+36 Tulostus
+37 Käsinsyöttö
+38 Asetukset
+39 A4
+40 US
+41 Paperikoko
+42 Valmis
+43 Hakemistot
+44 Dokumentti %s on jo olemassa. Korvataanko?
+45 Vasen näppäin asettaa tekstin värin
+46 Keskimmäinen tai oikea näppäin asettaa taustavärin
+47 Fonttiperhe
+48 Normaali
+49 Lihavoitu
+50 Kursivoitu
+51 Viisto
+52 Normaali
+53 Lihavointi
+54 Normaali
+55 Alleviivaa
+56 Vedä yli
+57 Kappalekoko (pt)
+58 Sisennä (pt)
+59 Riviväli (pt)
+60 Riviväli
+61 Tallenna dokumentti
+62 Sulje, älä tallenna
+63 Merkkityyli
+64 Värit
+65 Poista
+66 Tuloste
+67 PostScript tiedosto
+68 Tulostin
+69 Etsi
+70 ISOLLA = pienellä
+71 Korvaa tällä
+72 Korvaa
+73 Älä korvaa
+74 Korvaa pyynnöstä
+75 Automaattinen korvus
+76 Etsi missä
+77 Ennen valintaa
+78 Valinnan sisällä
+79 Valinnan jälkeen
+80 Koko dokumentissa
+81 Älä korvaa
+82 Oletusvärit
+83 ennen sen sulkemista
+84 Sulje dokumentti
+85 Matemaattiset symbolit
+86 Grafiikka
+87 Latinalaiset aakkoset
+88 Kreikkalaiset aakkoset
+89 Tallenna
+90 Tekstiä
+91 Grafiikkaa
+92 Symboli
+93 Kuva
+94 Elementin tyyppi
+95 jälkeen
+96 ennen
+97 ympärillä
+98 Sisällytä
+99 Liitä
+100 luoda
+101 Sisällytä
+102 Katkaise sivu
+103 Elementin kieli
+104 Peritty kieli:
+105 Ei löydy
+106 Etsi tässä
+107 Etsi
+108 Vain lukuelementti
+109 Ei korvattavaa
+110 Vakiomerkit
+111 Vakiografiikka
+112 Vakiomuoto
+113 Vakiogeometria
+114 pt
+115 Viivatyyli
+116 Viivapaksuus
+117 Täyttökuvio
+118 Jaa
+119 Elementtityyppi
+120 Siirry sivulle:
+121 Mikä tahansa
+122 Määre etsintään
+123 Tyyppi etsintään
+124 Luonteet
+125 Määreen arvo:
+126 Tuntematon määre
+127 Peruuta
+128 Virhe PostScript käännöksessä
+129 Kirjoitinajuri hylkäsi komennon "%s"
+130 Ei voi luoda "%s"
+131 Yliviivaa
+132 Dokumentin muoto
+133 Tapahtumat
+134 Poista määritys
+135 Hiiren vasen näppäin asettaa valintavärin
+136 Hiiren keskimmäinen tai oikea näppäin asettaa caret värin
+137 Lisää ...
+138 Hae
+139 Väri
