@@ -1209,7 +1209,7 @@ void ANNOT_Post (Document doc, View view)
   char *rdf_file;
   char *url;
   ThotBool free_url;
-  AnnotMeta *annot;
+  AnnotMeta *annot = NULL;
   Document source_doc;
   ThotBool isReplyTo;
   ThotBool new_annotation;
