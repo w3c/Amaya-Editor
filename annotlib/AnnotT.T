@@ -1,4 +1,4 @@
-		{ Author: I. Vatton 	 1994-1995-1996  }
+		{ Author: J. Kahan, I. Vatton 	 1999-2001  }
 
 TRANSLATION Annot;
 
@@ -8,6 +8,12 @@ CONST
    DoubleQuote  = '"';
 
 RULES
+
+   Document: BEGIN
+    Create '<?xml version="1.0"';
+    Create '?>\12';
+   END;
+
 
    Annot : BEGIN
      Use HTMLTX for HTML;

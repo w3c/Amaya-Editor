@@ -88,7 +88,9 @@ extern void ANNOT_SetType ( Document doc,
                             RDFResourceP type );
 extern char * ANNOT_MakeFileURL ( const char *path );
 extern ThotBool ANNOT_CanAnnotate ( Document doc );
-extern Element ANNOT_GetHTMLRoot ( Document doc );
+extern Element ANNOT_GetHTMLRoot ( Document doc,
+                                   ThotBool getFirstChild );
+extern void ANNOT_CreateHTMLTree ( Document doc );
 extern void WWWToLocal ( char *url );
 extern char * LocalToWWW ( char *url );
 extern char *FixFileURL ( char *url );
@@ -177,7 +179,9 @@ extern void ANNOT_SetType (/* Document doc,
                               RDFResourceP type */);
 extern char * ANNOT_MakeFileURL (/* const char *path */);
 extern ThotBool ANNOT_CanAnnotate (/* Document doc */);
-extern Element ANNOT_GetHTMLRoot (/* Document doc */);
+extern Element ANNOT_GetHTMLRoot (/* Document doc,
+                                     ThotBool getFirstChild */);
+extern void ANNOT_CreateHTMLTree (/* Document doc */);
 extern void WWWToLocal (/* char *url */);
 extern char * LocalToWWW (/* char *url */);
 extern char *FixFileURL (/* char *url */);

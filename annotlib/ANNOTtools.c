@@ -1659,8 +1659,11 @@ ThotBool ANNOT_CanAnnotate (Document doc)
   ANNOT_GetHTMLRoot
   Returns the root element of the HTML body of an annotation document, NULL
   if it's not an annotation document.
+  If getFirstChild is FALSE, we return the element containing the Annot
+  BODY. Otherwise, we return the first child of this element (the real
+  HTML root).
   -----------------------------------------------------------------------*/
-Element ANNOT_GetHTMLRoot (Document doc)
+Element ANNOT_GetHTMLRoot (Document doc, ThotBool getFirstChild)
 {
   ElementType elType;
   Element el;
@@ -1672,12 +1675,42 @@ Element ANNOT_GetHTMLRoot (Document doc)
       elType = TtaGetElementType (el);
       elType.ElTypeNum = Annot_EL_Body;
       el = TtaSearchTypedElement (elType, SearchInTree, el);
-      el = TtaGetFirstChild (el);
+      if (getFirstChild)
+	el = TtaGetFirstChild (el);
     }
   else 
     el = NULL;
 
   return (el);
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_CreateHTMLRoot
+  Adds the first HTML element to the annotation body.
+  -----------------------------------------------------------------------*/
+void ANNOT_CreateHTMLTree (Document doc)
+{
+  ElementType elType;
+  Element body, el;
+  ThotBool result;
+  ThotBool oldStructureChecking;
+
+  if (DocumentTypes[doc] == docAnnot)
+    {
+      el = TtaGetRootElement (doc);
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = Annot_EL_Body;
+      body = TtaSearchTypedElement (elType, SearchInTree, el);
+      body = TtaGetLastChild (el);
+      elType.ElSSchema = GetXHTMLSSchema (doc);
+      elType.ElTypeNum = HTML_EL_HTML;
+      el = TtaNewTree (doc, elType, "");
+      result = TtaCanInsertFirstChild (elType, body, doc);
+      oldStructureChecking = TtaGetStructureChecking (doc);
+      TtaSetStructureChecking (FALSE, doc);
+      TtaInsertFirstChild (&el, body, doc);
+      TtaSetStructureChecking (oldStructureChecking, doc);
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -1769,9 +1802,3 @@ char *FixFileURL (char *url)
 
   return (fixed_url);
 }
-
-
-
-
-
-

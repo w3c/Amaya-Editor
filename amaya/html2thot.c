@@ -5673,7 +5673,7 @@ void            CheckAbstractTree (char* pathURL, Document doc)
      {
        docSSchema = TtaGetSSchema ("HTML", doc);
        /* we search the start of HTML document in the annotation struct */
-       elRoot = ANNOT_GetHTMLRoot (doc);
+       elRoot = ANNOT_GetHTMLRoot (doc, TRUE);
      }
    else
 #endif /* ANNOTATIONS */
@@ -6493,7 +6493,9 @@ void StartParser (Document doc, char *fileName,
 	{
 	  /* @@@ we know this is true, but we should try to protect */
 	  isHTML = 1;
-	  DocumentSSchema = TtaGetSSchema ("HTML", doc);
+	  /* if the HTML nature doesn't exists, add it. Otherwise,
+	     just get the SSschema reference */
+	  DocumentSSchema = GetXHTMLSSchema (doc);
 	  attrType.AttrSSchema = DocumentSSchema;
 	}
       else
@@ -6542,7 +6544,7 @@ void StartParser (Document doc, char *fileName,
 	  LoadUserStyleSheet (doc);
 #ifdef ANNOTATIONS
 	  if (DocumentTypes[doc] == docAnnot)
-	    rootElement = ANNOT_GetHTMLRoot (doc); 
+	    rootElement = ANNOT_GetHTMLRoot (doc, FALSE); 
 	  else
 #endif /* ANNOTATIONS */
 	    rootElement = TtaGetMainRoot (doc);

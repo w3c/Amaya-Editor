@@ -4339,8 +4339,8 @@ void StartXmlParser (Document doc,
 #ifdef ANNOTATIONS
   if (DocumentTypes[doc] == docAnnot)
     {
-      /* we search the start of HTML document in the annotation struct */
-      RootElement = ANNOT_GetHTMLRoot (doc);
+      /* we search the start of HTML Root element in the annotation struct */
+      RootElement = ANNOT_GetHTMLRoot (doc, FALSE);
     }
   else
 #endif /* ANNOTATIONS */

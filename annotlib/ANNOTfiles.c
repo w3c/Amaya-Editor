@@ -388,6 +388,8 @@ void  ANNOT_InitDocumentBody (Document docAnnot, char *source_doc_title)
   /*
   ** HTML initialization
   */
+  /* we first add the HTML tree */
+  ANNOT_CreateHTMLTree (docAnnot);
 
   /* we find the the HTML nature */
   root = TtaGetRootElement (docAnnot);
@@ -1156,14 +1158,9 @@ char             *html_filename;
   el = TtaGetFirstChild (el);
   TtaSetTextContent (el, annot->mdate, TtaGetDefaultLanguage (), doc_annot); 
 
-  return TtaExportDocument (doc_annot, html_filename, "AnnotT");
+  /* set up the charset and namespaces */
+  TtaSetDocumentCharset (doc_annot, TtaGetCharset ("UTF-8"));
+  /* SetNamespacesAndDTD (doc_annot); */
+  return TtaExportDocumentWithNewLineNumbers (doc_annot, html_filename, 
+					      "AnnotT");
 }
-
-
-
-
-
-
-
-
-

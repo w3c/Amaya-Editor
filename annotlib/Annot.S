@@ -13,7 +13,9 @@ STRUCT
 	
   Annot = BEGIN
 	  Description;
-	  Body = HTML;
+	  Body = BEGIN 
+                 ? HTML;
+                 END;
 	  ? Thread;
 	  END;
 
