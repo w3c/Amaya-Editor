@@ -683,12 +683,12 @@ ThotBool		    setLangAttr;
 	if (pEl->ElTextLength > 0)
 	  {
 	     pNext = pEl->ElNext;
-	     SplitTextElement (pEl, charIndex, pDoc, FALSE, &pNextEl);
+	     SplitTextElement (pEl, charIndex, pDoc, FALSE, &pNextEl, FALSE);
 	     BuildAbsBoxSpliText (pEl, pNextEl, pNext, pDoc);
 	     if (pEl->ElTextLength > 0 && pNextEl->ElTextLength > 0)
 	       {
 	          pNext = pNextEl->ElNext;
-		  SplitTextElement (pNextEl, 1, pDoc, FALSE, &pSecond);
+		  SplitTextElement (pNextEl, 1, pDoc, FALSE, &pSecond, FALSE);
 		  BuildAbsBoxSpliText (pNextEl, pSecond, pNext, pDoc);
 		  pEl = pNextEl;
 	       }
@@ -1156,7 +1156,8 @@ ThotBool		    select;
 		       }
 		     else
 		       {
-			  SplitTextElement (pEl, firstChar, pDoc, TRUE, &pNext);
+			  SplitTextElement (pEl, firstChar, pDoc, TRUE,
+					    &pNext, TRUE);
 			  if (pEl == NULL || pEl->ElStructSchema == NULL)
 			     /* pEl has been deleted by the application.
 				we are lost! */
@@ -1366,7 +1367,7 @@ ThotBool		    select;
 		  /* traitement des exceptions de l'element qui a ete coupe' */
 		  CreationExceptions (pElReplicate, pDoc);
 		  /* envoie un evenement ElemPaste.Post a l'application */
-		  NotifySubTree (TteElemPaste, pDoc, pChild, 0);
+		  NotifySubTree (TteElemPaste, pDoc, pChild, -1);
 		  /* reconstruit les paves des elements qui ont ete complete's */
 		  /* cree les paves du nouvel element */
 		  CreateAllAbsBoxesOfEl (pChild, pDoc);

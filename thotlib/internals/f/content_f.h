@@ -13,7 +13,8 @@ extern void SplitTextElement ( PtrElement pEl,
                                int rank,
                                PtrDocument pDoc,
                                ThotBool withAppEvent,
-                               PtrElement *pSecondPart );
+                               PtrElement *pSecondPart,
+                               ThotBool elBreak );
 extern ThotBool MergeTextElements ( PtrElement pEl,
                                     PtrElement * pFreeEl,
                                     PtrDocument pDoc,
@@ -60,7 +61,8 @@ extern void SplitTextElement (/* PtrElement pEl,
                                  int rank,
                                  PtrDocument pDoc,
                                  ThotBool withAppEvent,
-                                 PtrElement *pSecondPart */);
+                                 PtrElement *pSecondPart,
+                                 ThotBool elBreak */);
 extern ThotBool MergeTextElements (/* PtrElement pEl,
                                       PtrElement * pFreeEl,
                                       PtrDocument pDoc,

@@ -1928,31 +1928,11 @@ Document		doc;
 					el, doc);
 		  }
 		/* create a new content for the MF element */
-		if (text[0] == TEXT('|'))
-		  {
-		  elType.ElTypeNum = MathML_EL_GRAPHICS_UNIT;
-		  c = 'v';
-		  }
-		else
-		  {
-		  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		  c = (char) text[0];
-		  }
+		elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+		c = (char) text[0];
 		content = TtaNewElement (doc, elType);
 		TtaInsertFirstChild (&content, el, doc);
 		TtaSetGraphicsShape (content, c, doc);
-		if (elType.ElTypeNum == MathML_EL_GRAPHICS_UNIT)
-		  {
-		  ctxt = TtaGetSpecificStyleContext (doc);
-		  ctxt->destroy = FALSE;
-		  /* the specific presentation to be created is not
-		     a CSS rule */
-		  ctxt->cssLevel = 0;
-		  pval.typed_data.unit = STYLE_UNIT_REL;
-		  pval.typed_data.real = TRUE;
-		  pval.typed_data.value = 200;
-		  TtaSetStylePresentation (PRWidth, content, NULL, ctxt, pval);
-		  }
 		}
 	      }
 	   }

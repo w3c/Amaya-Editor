@@ -108,20 +108,22 @@ PtrTextBuffer      *pBuf;
    	pEl: l'element de texte a couper.				
    	rank: indice du caractere devant lequel on coupe		
    	pDoc: document auquel appartient l'element a couper
+        elBreak: appel par la procedure BreakElement
 
   au retour:
 	pSecondPart: l'element de texte correspondant a la partie
 		     apres la coupure.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, ThotBool withAppEvent, PtrElement *pSecondPart)
+void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, ThotBool withAppEvent, PtrElement *pSecondPart, ThotBool elBreak)
 #else  /* __STDC__ */
-void                SplitTextElement (pEl, rank, pDoc, withAppEvent, pSecondPart)
+void                SplitTextElement (pEl, rank, pDoc, withAppEvent, pSecondPart, elBreak)
 PtrElement          pEl;
 int                 rank;
 PtrDocument         pDoc;
 ThotBool            withAppEvent;
 PtrElement	    *pSecondPart;
+ThotBool            elBreak;
 #endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf;
@@ -255,7 +257,10 @@ PtrElement	    *pSecondPart;
 		       notifyTxt.document = (Document) IdentDocument (pDoc);
 		       notifyTxt.element = (Element) pAsc;
 		       notifyTxt.target = (Element) pEl;
-		       notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
+		       if (elBreak)
+		         notifyTxt.targetdocument = 0;
+		       else
+		         notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
 		       CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
 		       pAsc = pAsc->ElParent;
 		    }

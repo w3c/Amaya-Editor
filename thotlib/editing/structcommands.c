@@ -915,7 +915,8 @@ void                CopyCommand ()
 				 {
 				    pE = pCopy;
 				    SplitTextElement (pCopy, firstChar,
-						      pSelDoc, FALSE,&pSecond);
+						      pSelDoc, FALSE,
+						      &pSecond, FALSE);
 				    pCopy = pSecond;
 				    /* supprime la premiere partie */
 				    DeleteElement (&pE, pSelDoc);
@@ -930,7 +931,8 @@ void                CopyCommand ()
 				     /* coupe le dernier element sauve' */
 				    {
 				       SplitTextElement (pCopy, lastChar,
-							 pSelDoc, FALSE, &pE);
+							 pSelDoc, FALSE, &pE,
+							 FALSE);
 				       /* supprime la deuxieme partie */
 				       DeleteElement (&pE, pSelDoc);
 				    }
@@ -2997,7 +2999,7 @@ ThotBool            Before;
 		        AddEditOpInHistory (firstSel, pSelDoc, TRUE, FALSE);
 			pNextEl = firstSel->ElNext;
 			SplitTextElement (firstSel, firstChar, pSelDoc, TRUE,
-					  &pSecond);
+					  &pSecond, FALSE);
 			BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pSelDoc);
 		      }
 		  if (pNew == NULL)

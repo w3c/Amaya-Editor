@@ -482,7 +482,11 @@ Document doc;
     /* parent is not a mrow or inferred mrow */
     {
       elType = TtaGetElementType (el);
-      if (elType.ElTypeNum != MathML_EL_XMLcomment &&
+      if (elType.ElTypeNum != MathML_EL_TEXT_UNIT &&
+	  elType.ElTypeNum != MathML_EL_SYMBOL_UNIT &&
+	  elType.ElTypeNum != MathML_EL_GRAPHICS_UNIT &&
+	  elType.ElTypeNum != MathML_EL_PICTURE_UNIT &&
+	  elType.ElTypeNum != MathML_EL_XMLcomment &&
 	  elType.ElTypeNum != MathML_EL_XMLPI &&
 	  elType.ElTypeNum != MathML_EL_Numerator &&
 	  elType.ElTypeNum != MathML_EL_Denominator &&
@@ -510,7 +514,7 @@ Document doc;
 	  elType.ElTypeNum != MathML_EL_Label &&
 	  elType.ElTypeNum != MathML_EL_LabeledRow &&
 	  elType.ElTypeNum != MathML_EL_CellWrapper)
-	/* element is not an intermediate Thot element */
+	/* element is not an intermediate Thot element nor a text leaf */
 	{
 	/* count the number of children of parent that are not placeholders */
 	sibling = TtaGetFirstChild (parent);
@@ -2006,6 +2010,209 @@ void CreateMO (document, view)
 }
 
 /*----------------------------------------------------------------------
+   A new element has been selected. Synchronize selection in source view.      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                MathSelectionChanged (NotifyElement * event)
+#else  /* __STDC__ */
+void                MathSelectionChanged (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+   SynchronizeSourceView (event);
+}
+
+/*----------------------------------------------------------------------
+ MathMoveForward
+ Moves the caret to the next position in the MathML structure
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool MathMoveForward ()
+#else /* __STDC__*/
+static ThotBool MathMoveForward ()
+     
+#endif /* __STDC__*/
+{
+  Document      doc;
+  Element       el, nextEl, leaf;
+  ElementType   elType;
+  int           firstChar, lastChar, len;
+  NotifyElement event;
+  ThotBool      done;
+  
+  done = FALSE;
+  doc = TtaGetSelectedDocument ();
+  TtaGiveLastSelectedElement (doc, &el, &firstChar, &lastChar); 
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+    /* the caret is in a character string */
+    {
+      len = TtaGetTextLength (el);
+      if (lastChar < len)
+	/* the caret is not at the end of the string, move it to the
+	   next character in the string */
+	{
+	TtaSelectString (doc, el, lastChar+2, lastChar+1);
+	done = TRUE;
+	}
+    }
+  if (!done)
+    {
+      /* get the following element in the tree structure */
+      nextEl = TtaGetSuccessor (el);
+      if (nextEl)
+	{
+	  elType = TtaGetElementType (nextEl);
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),TEXT("MathML")) &&
+	      (elType.ElTypeNum == MathML_EL_MSPACE ||
+	       elType.ElTypeNum == MathML_EL_MGLYPH ||
+	       elType.ElTypeNum == MathML_EL_SEP ||
+	       elType.ElTypeNum == MathML_EL_MALIGNMARK ||
+	       elType.ElTypeNum == MathML_EL_MALIGNGROUP))
+	    /* select the element itself, not its contents */
+	    {
+	      TtaSelectElement (doc, nextEl);
+	      done = TRUE;
+	    }
+	  else
+	    {
+	      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+			    TEXT("MathML")) &&
+		  elType.ElTypeNum == MathML_EL_MTABLE)
+		/* don't select within hidden element MTable_head. Skip it */
+		{
+		nextEl = TtaGetFirstChild (nextEl);
+		if (nextEl)
+		  nextEl = TtaGetSuccessor (nextEl);
+		}
+	      if (nextEl)
+		{
+		  /* get the first leaf in that element */
+		  leaf = TtaGetFirstLeaf (nextEl);
+		  if (leaf)
+		    {
+		      elType = TtaGetElementType (leaf);
+		      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+				    TEXT("MathML")))
+			/* that leaf is still in the MathML namespace */
+			{
+			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+			    /* put the caret before the first character in the
+			       string */
+			    TtaSelectString (doc, leaf, 1, 0);
+			  else
+			    /* select the whole leaf */
+			    TtaSelectElement (doc, leaf);
+			  done = TRUE;
+			}
+		    }
+		}
+	    }
+	}
+    }
+  if (done)
+    {
+      event.document = doc;
+      MathSelectionChanged (&event);
+    }
+  return (done);
+}
+
+/*----------------------------------------------------------------------
+ MathMoveBackward
+ Moves the caret to the previous position in the MathML structure
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool MathMoveBackward ()
+#else /* __STDC__*/
+static ThotBool MathMoveBackward ()
+     
+#endif /* __STDC__*/
+{
+  Document    doc;
+  Element     el, prevEl, leaf;
+  ElementType elType;
+  int         firstChar, lastChar, len;
+  NotifyElement event;
+  ThotBool    done;
+  
+  done = FALSE;  
+  doc = TtaGetSelectedDocument ();
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar); 
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+    /* the caret is in a text string */
+    {
+      if (firstChar > 1)
+	/* the caret is not at the beginning of the string. Move it to
+	   the previous character in the string */
+	{
+	TtaSelectString (doc, el, firstChar-1, firstChar-2);
+	done = TRUE;
+	}
+    }
+  if (!done)
+    {
+      /* get the previous element in the tree structure */
+      prevEl = TtaGetPredecessor (el);
+      if (prevEl)
+	{
+	  elType = TtaGetElementType (prevEl);
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),TEXT("MathML")) &&
+	      (elType.ElTypeNum == MathML_EL_MSPACE ||
+	       elType.ElTypeNum == MathML_EL_MGLYPH ||
+	       elType.ElTypeNum == MathML_EL_SEP ||
+	       elType.ElTypeNum == MathML_EL_MALIGNMARK ||
+	       elType.ElTypeNum == MathML_EL_MALIGNGROUP))
+	    /* select the element itself, not its contents */
+	    {
+	      TtaSelectElement (doc, prevEl);
+	      done = TRUE;
+	    }
+	  else
+	    {
+	      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+			    TEXT("MathML")) &&
+		  elType.ElTypeNum == MathML_EL_MTable_head)
+		/* don't select within hidden element MTable_head. Skip it */
+		prevEl = TtaGetPredecessor (prevEl);
+	      if (prevEl)
+		{
+		  /* get the last leaf in that element */
+		  leaf = TtaGetLastLeaf (prevEl);
+		  if (leaf)
+		    {
+		      elType = TtaGetElementType (leaf);
+		      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+				    TEXT("MathML")))
+			/* that leaf is still in the MathML namespace */
+			{
+			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+			    /* put the caret at the end of the string */
+			    {
+			      len = TtaGetTextLength (leaf);
+			      TtaSelectString (doc, leaf, len+1, len);
+			    }
+			  else
+			    /* select the whole leaf */
+			    TtaSelectElement (doc, leaf);
+			  done = TRUE;
+			}
+		    }
+		}
+	    }
+	}
+    }
+  if (done)
+    {
+      event.document = doc;
+      MathSelectionChanged (&event);
+    }
+  return (done);
+}
+
+/*----------------------------------------------------------------------
    InitMathML initializes MathML context.           
   ----------------------------------------------------------------------*/
 void                InitMathML ()
@@ -2030,6 +2237,8 @@ void                InitMathML ()
 #endif /* _WINDOWS */
   MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();
+  TtaSetMoveForwardCallback ((Func) MathMoveForward);
+  TtaSetMoveBackwardCallback ((Func) MathMoveBackward);
 }
 
 /*----------------------------------------------------------------------
@@ -2496,7 +2705,7 @@ static void ParseMathString (theText, theElem, doc)
   Language	language[TXTBUFLEN];
   char          mathType[TXTBUFLEN];
   int           oldStructureChecking;
-  ThotBool      empty;
+  ThotBool      empty, closeUndoSeq;
 
   elType = TtaGetElementType (theElem);
   MathMLSchema = elType.ElSSchema;
@@ -2594,7 +2803,13 @@ static void ParseMathString (theText, theElem, doc)
 	  }
     }
 
-  TtaOpenUndoSequence (doc, selEl, selEl, firstSelChar, lastSelChar);
+  if (TtaPrepareUndo (doc))
+    closeUndoSeq = FALSE;
+  else
+    {
+      TtaOpenUndoSequence (doc, selEl, selEl, firstSelChar, lastSelChar);
+      closeUndoSeq = TRUE;
+    }
   TtaSetDisplayMode (doc, DeferredDisplay);
   oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (0, doc);
@@ -2861,7 +3076,8 @@ static void ParseMathString (theText, theElem, doc)
 
   TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
-  TtaCloseUndoSequence (doc);
+  if (closeUndoSeq)
+    TtaCloseUndoSequence (doc);
 
   /* set a new selection */
   if (newSelEl != NULL)
@@ -3356,7 +3572,10 @@ void MathStringModified (event)
      NotifyOnTarget *event;
 #endif /* __STDC__*/
 {
-  ParseMathString (event->target, event->element, event->document);
+  /* if the event comes from function BreakElement, don't do anything:
+     the user just want to split that character string */
+  if (event->targetdocument != 0)
+    ParseMathString (event->target, event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -3402,8 +3621,10 @@ void MathElementPasted(event)
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
 
-   /* if an enclosing MROW element is needed create it */
-   CreateParentMROW (event->element, event->document);
+   /* if an enclosing MROW element is needed create it, except if it's a
+      call from Undo command */
+   if (event->info != 1)
+     CreateParentMROW (event->element, event->document);
 
    /* if the pasted element is a child of a FencedExpression element,
       create the associated FencedSeparator elements */
@@ -3704,20 +3925,6 @@ void MathElementDeleted(event)
 	}
       }
    TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
-}
-
-/*----------------------------------------------------------------------
-   A new element has been selected. Synchronize selection in source view.      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MathSelectionChanged (NotifyElement * event)
-#else  /* __STDC__ */
-void                MathSelectionChanged (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
-{
-   SynchronizeSourceView (event);
 }
 
 /*----------------------------------------------------------------------

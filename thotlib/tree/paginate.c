@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * gestion de la pagination d'un arbre abstrait. Insere les diverses
  * marques de saut de page dans l'AA. Les effets de bord sont nombreux.
@@ -515,7 +506,7 @@ int                 nbView;
 {
    PtrElement	       pSecond;
 
-   SplitTextElement (pEl, cutChar + 1, pDoc, TRUE, &pSecond);
+   SplitTextElement (pEl, cutChar + 1, pDoc, TRUE, &pSecond, FALSE);
    /* reduit le volume du pave de l'element precedant le point de */
    /* coupure et de ses paves englobants, si ces paves existent dans la */
    /* vue traitee. */

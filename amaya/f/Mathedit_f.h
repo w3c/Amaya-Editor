@@ -84,7 +84,6 @@ extern void FencedSeparatorModified ( NotifyOnTarget *event );
 extern void AttrSeparatorsChanged ( NotifyAttribute *event );
 extern void AttrScriptShiftCreated ( NotifyAttribute *event );
 extern ThotBool AttrScriptShiftDelete ( NotifyAttribute *event );
-
 #else /* __STDC__ */
 
 extern void AddMathButton (/* Document doc,

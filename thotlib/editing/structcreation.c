@@ -329,7 +329,7 @@ PtrDocument         pDoc;
 	/* ce qui cree un deuxieme element feuille juste apres l'element */
 	/* initial */
 	pNext = (*firstSel)->ElNext;
-	SplitTextElement (*firstSel, *firstChar, pDoc, FALSE, &pSecond);
+	SplitTextElement (*firstSel, *firstChar, pDoc, FALSE, &pSecond, FALSE);
         BuildAbsBoxSpliText (*firstSel, pSecond, pNext, pDoc);
 	if (*firstSel == *lastSel)
 	   /* la fin de la selection est dans le nouvel element cree */
@@ -370,7 +370,7 @@ PtrDocument         pDoc;
 	pNextEl = lastSel->ElNext;
 	FwdSkipPageBreak (&pNextEl);
 	/* on coupe en deux la feuille de texte dans l'arbre abstrait */
-	SplitTextElement (lastSel, lastChar, pDoc, FALSE, &pSecond);
+	SplitTextElement (lastSel, lastChar, pDoc, FALSE, &pSecond, FALSE);
 	/* construit les paves de la 2eme partie et met a jours ceux de */
 	/* la premiere partie */
 	BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
@@ -430,7 +430,7 @@ ThotBool            before;
   NotifyElement     notifyEl;
   int               lType, ruleNum;
   int               view, firstChar, lastChar, nNew, i, nSiblings;
-  ThotBool          ident, isList, stop, empty, optional;
+  ThotBool          ident, isList, stop, empty, optional, opened;
 
   pCreatedAB = NULL;
   *frame = 0;
@@ -745,8 +745,15 @@ ThotBool            before;
 			      ident = TRUE;
 			    else
 			      ident = FALSE;
-			    InsertOption (pEl, &pE, pDoc);
 			    /* chaine l'element cree */
+			    opened = pDoc->DocEditSequence;
+			    if (!opened)
+			      OpenHistorySequence (pDoc, pEl, pEl, firstChar,
+						   lastChar);
+			    AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
+			    if (!opened)
+			      CloseHistorySequence (pDoc);
+			    InsertOption (pEl, &pE, pDoc);
 			    if (pEl == pE && ident)
 			      pLeaf = pEl;
 			  }
@@ -760,6 +767,13 @@ ThotBool            before;
 				pC = pC->ElNext;
 			      }
 			    InsertFirstChild (pEl, pE);
+			    opened = pDoc->DocEditSequence;
+			    if (!opened)
+			      OpenHistorySequence (pDoc, pEl, pEl, firstChar,
+						   lastChar);
+			    AddEditOpInHistory (pE, pDoc, FALSE, TRUE);
+			    if (!opened)
+			      CloseHistorySequence (pDoc);
 			  }
 		      }
 		  }
@@ -3091,7 +3105,7 @@ PtrElement         *pFree;
    /* abstraction faite des marques de page */
    pNextEl = lastSel->ElNext;
    FwdSkipPageBreak (&pNextEl);
-   SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pFollow);
+   SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pFollow, FALSE);
    if (create)
      {
 	if (page)
@@ -4434,7 +4448,9 @@ int                 item;
 				      pNextEl = firstSel->ElNext;
 				      FwdSkipPageBreak (&pNextEl);
 				      /* coupe la feuille de texte */
-				      SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollow);
+				      SplitTextElement (firstSel, firstChar,
+							pDoc, TRUE, &pFollow,
+							FALSE);
 				      /* met a jour la selection */
 				      if (firstSel == lastSel)
 					{

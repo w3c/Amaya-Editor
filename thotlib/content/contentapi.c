@@ -773,7 +773,8 @@ Document            document;
      {
 	pNextEl = ((PtrElement) element)->ElNext;
 	SplitTextElement ((PtrElement) element, position + 1,
-			  LoadedDocument[document - 1], FALSE, &secondPart);
+			  LoadedDocument[document - 1], FALSE, &secondPart,
+			  FALSE);
 #ifndef NODISPLAY
 	RedisplaySplittedText ((PtrElement) element, position, secondPart,
 				pNextEl, document);

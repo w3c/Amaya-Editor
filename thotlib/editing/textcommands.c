@@ -1,21 +1,12 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
- * Module dedicated to manage text commands.
+ * This module implements text commands.
  *
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
@@ -47,6 +38,10 @@ static ThotBool RightExtended;
 static ThotBool LeftExtended;
 static ThotBool Retry = FALSE;
 static ThotBool Moving = FALSE;
+
+/* cursor movement callback procedures for Math */
+static Func     MathMoveForwardCursorFunction = NULL;
+static Func     MathMoveBackwardCursorFunction = NULL;
 
 #include "abspictures_f.h"
 #include "applicationapi_f.h"
@@ -269,6 +264,34 @@ ThotBool            extendSel;
 }
 
 /*----------------------------------------------------------------------
+   TtaSetMoveForwardCallback permet de connecter une fonction de
+   l'application a la touche de deplacement du curseur vers l'avant
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  TtaSetMoveForwardCallback (Func callbackFunc)
+#else
+void  TtaSetMoveForwardCallback ()
+Func callbackFunc;
+#endif /* __STDC__ */
+{
+   MathMoveForwardCursorFunction = callbackFunc;
+}
+
+/*----------------------------------------------------------------------
+   TtaSetMoveBackwardCallback permet de connecter une fonction de
+   l'application a la touche de deplacement du curseur vers l'arriere
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  TtaSetMoveBackwardCallback (Func callbackFunc)
+#else
+void  TtaSetMoveBackwardCallback ()
+Func callbackFunc;
+#endif /* __STDC__ */
+{
+   MathMoveBackwardCursorFunction = callbackFunc;
+}
+
+/*----------------------------------------------------------------------
    Commandes de deplacement                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -290,7 +313,7 @@ ThotBool            extendSel;
    int                 xDelta, yDelta;
    int                 h, w, doc;
    int                 indpos, xpos;
-   ThotBool            top = TRUE;
+   ThotBool            done, top = TRUE;
 
    indpos = 0;
    xpos = 0;
@@ -416,6 +439,12 @@ ThotBool            extendSel;
 	 case 1:	/* Backward one character (^B) */
 	   if (pBox != NULL)
 	     {
+	     done = FALSE;
+	     if (!ustrcmp(pBox->BxAbstractBox->AbElement->ElStructSchema->SsName, TEXT("MathML")))
+	       if (MathMoveBackwardCursorFunction != NULL)
+		 done = MathMoveBackwardCursorFunction ();
+	     if (!done)
+	       {
 	       if (extendSel && RightExtended)
 		 {
 		   /* move the right extremity */
@@ -482,6 +511,7 @@ ThotBool            extendSel;
 		   xDelta = -2;
 		   LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 		 }
+	       }
 	     }
 	   /* Get the last X position */
 	   ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
@@ -490,6 +520,12 @@ ThotBool            extendSel;
 	 case 2:	/* Forward one character (^F) */
 	   if (pBox != NULL)
 	     {
+	     done = FALSE;
+	     if (!ustrcmp(pBox->BxAbstractBox->AbElement->ElStructSchema->SsName, TEXT("MathML")))
+	       if (MathMoveForwardCursorFunction != NULL)
+		 done = MathMoveForwardCursorFunction ();
+	     if (!done)
+	       {
 	       if (!extendSel || !LeftExtended)
 		 {
 		   /* move the right extremity */
@@ -557,6 +593,7 @@ ThotBool            extendSel;
 		   xDelta = 2;
 		   LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 		 }
+	       }
 	     }
 	   /* Get the last X position */
 	   ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;

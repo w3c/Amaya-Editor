@@ -2645,10 +2645,6 @@ RULES
 		Size: Enclosing * SMALLER;
         if within Subscript
 		Size: Enclosing * SMALLER;
-        if within Overscript
-		Size: Enclosing * SMALLER;
-        if within Underscript
-		Size: Enclosing * SMALLER;
         if within MSubscript
 		Size: Enclosing * SMALLER;
         if within MSuperscript
@@ -3174,7 +3170,8 @@ RULES
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosed . Width;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Line;
 		END;
 	END;
 
@@ -3188,7 +3185,8 @@ RULES
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosed . Width;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Line;
 		Style: Enclosing =;
 		END;
 	END;
@@ -3202,7 +3200,9 @@ RULES
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Width: Enclosed . Width;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Line;
 		END;
 	END;
 
@@ -3215,7 +3215,8 @@ RULES
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosed . Width;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Line;
 		END;
 	END;
 
@@ -3228,7 +3229,8 @@ RULES
 		Size: DOC_FONTSIZE;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top =  Previous . Bottom;
-		Width: Enclosed . Width;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Line;
 		END;
 	END;
 

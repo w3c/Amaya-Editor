@@ -604,7 +604,8 @@ void                PasteCommand ()
 	    FwdSkipPageBreak (&pClose);
 	    /* coupe la feuille de texte */
 	    pSplitText = firstSel;
-	    SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollowing);
+	    SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollowing,
+			      FALSE);
 	    /* met a jour la selection */
 	    if (firstSel == lastSel)
 	      {
