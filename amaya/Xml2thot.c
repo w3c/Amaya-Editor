@@ -1406,13 +1406,6 @@ CHAR_T*             GIname;
        return;
     }
 
-  /* Ignore the virtual root of a XML sub-tree */
-  if (ustrcmp (GIname, SUBTREE_ROOT) == 0)
-    {
-       UnknownTag = TRUE;
-       return;
-    }
-
   if (stackLevel == MAX_STACK_HEIGHT)
     {
       XmlParseError (XMLcontext.doc, TEXT("**FATAL** Too many XML levels"),0);
@@ -3201,49 +3194,53 @@ const XML_Char **attlist;
       else
 	  elementParserCtxt = currentParserCtxt;
 
-       /* Treatment called at the beginning of start tag */
-       StartOfXmlStartElement (bufName);
-   
-       /*-------  Treatment of the attributes -------*/
-       nbatts = XML_GetSpecifiedAttributeCount (parser);
-       while (*attlist != NULL)
-	 {
-	   /* Create the corresponding Thot attribute */
-	   bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
-	   strcpy (bufAttr, *attlist);
+      /* Ignore the virtual root of a XML sub-tree */
+      if (ustrcmp (bufName, SUBTREE_ROOT) != 0)
+	{
+	  /* Treatment called at the beginning of start tag */
+	  StartOfXmlStartElement (bufName);
+	  
+	  /*-------  Treatment of the attributes -------*/
+	  nbatts = XML_GetSpecifiedAttributeCount (parser);
+	  while (*attlist != NULL)
+	    {
+	      /* Create the corresponding Thot attribute */
+	      bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
+	      strcpy (bufAttr, *attlist);
 #ifdef LC
-	   printf ("\n  attr %s :", bufAttr);
+	      printf ("\n  attr %s :", bufAttr);
 #endif /* LC */
-	   EndOfAttributeName (bufAttr);
-	   TtaFreeMemory (bufAttr);
-
-	   /* Element context if attribute name is unknown */
-	   if (currentParserCtxt == NULL)
-	     currentParserCtxt = elementParserCtxt;
-	   
-	   /* Filling of the attribute value */
-	   attlist++;
-	   if (*attlist != NULL)
-	     {
-	       bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
-	       strcpy (bufAttr, *attlist);
+	      EndOfAttributeName (bufAttr);
+	      TtaFreeMemory (bufAttr);
+	      
+	      /* Element context if attribute name is unknown */
+	      if (currentParserCtxt == NULL)
+		currentParserCtxt = elementParserCtxt;
+	      
+	      /* Filling of the attribute value */
+	      attlist++;
+	      if (*attlist != NULL)
+		{
+		  bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
+		  strcpy (bufAttr, *attlist);
 #ifdef LC
-	       printf (" value=%s ", bufAttr);
+		  printf (" value=%s ", bufAttr);
 #endif /* LC */
-	       EndOfAttributeValue (bufAttr);
-	       TtaFreeMemory (bufAttr);
-	     }
-	   attlist++;
-	 }
-       /* Restore the context (it may have been changed */
-       /* by the treatment of the attributes) */
-       currentParserCtxt = elementParserCtxt;
-   
-       /*----- Treatment called at the end of start tag -----*/
-       EndOfXmlStartElement (bufName);
-
-       /*----- We are immediately after a start tag -----*/
-       ImmediatelyAfterTag = TRUE;
+		  EndOfAttributeValue (bufAttr);
+		  TtaFreeMemory (bufAttr);
+		}
+	      attlist++;
+	    }
+	  /* Restore the context (it may have been changed */
+	  /* by the treatment of the attributes) */
+	  currentParserCtxt = elementParserCtxt;
+	  
+	  /*----- Treatment called at the end of start tag -----*/
+	  EndOfXmlStartElement (bufName);
+	  
+	  /*----- We are immediately after a start tag -----*/
+	  ImmediatelyAfterTag = TRUE;
+	}
 
        TtaFreeMemory (bufName);
        TtaFreeMemory (buffer);
@@ -3284,7 +3281,7 @@ const XML_Char  *name
        ptr++;
        bufName = TtaGetMemory ((strlen (ptr) + 1));
        ustrcpy (bufName, ptr);
-
+       
        if ((currentParserCtxt != NULL &&
 	    ustrcmp (buffer, currentParserCtxt->UriName)) ||
 	   (currentParserCtxt == NULL))
@@ -3297,8 +3294,10 @@ const XML_Char  *name
        if (currentParserCtxt == NULL)
 	 ChangeXmlParserContextTagName (bufName);
      }
-
-   XmlEndElement ((CHAR_T*) (bufName));
+       
+   /* Ignore the virtual root of a XML sub-tree */
+   if (ustrcmp (bufName, SUBTREE_ROOT) != 0)
+     XmlEndElement ((CHAR_T*) (bufName));
 
    /* Is it the end tag of the root element ? */
    if (!ustrcmp (XMLrootName, (CHAR_T*) name) && stackLevel == 1)
@@ -3719,22 +3718,24 @@ ThotBool   isClosed;
 ThotBool   isSubTree;
 #endif  /* __STDC__ */
 {
-  /* Generic Context */
   XMLcontext.doc = doc;
   XMLcontext.lastElement = lastElem;
   XMLcontext.lastElementClosed = isClosed;
+  ParsingSubTree = isSubTree;
   
   /* initialize global variables */
+  XMLcontext.readingAnAttrValue = FALSE;
+  XMLcontext.parsingCSS = FALSE;
+  XMLcontext.mergeText = FALSE;
   currentAttribute = NULL;
   lastAttrElement = NULL;
   lastMappedAttr = NULL;
-  XMLcontext.readingAnAttrValue = FALSE;
-  XMLcontext.mergeText = FALSE;
-  XMLcontext.parsingCSS = FALSE;
-  UnknownTag = FALSE;
   ImmediatelyAfterTag = FALSE;
+  UnknownTag = FALSE;
+  XMLrootName[0] = WC_EOS;
+  XMLrootClosed = FALSE;
+
   XMLabort = FALSE;
-  ParsingSubTree = isSubTree;
   htmlLineRead = 0;
   htmlCharRead = 0;
   
@@ -3774,14 +3775,12 @@ Language   lang;
     return FALSE;
 
   /* generic initialization */
+  rootElement = NULL;
   InitializeXmlParsingContext (doc, *el, *isclosed, TRUE);
 
   /* specific Initialization */
   XMLcontext.language = lang;
   DocumentSSchema = TtaGetDocumentSSchema (doc);
-  rootElement = NULL;
-  XMLrootName[0] = WC_EOS;
-  XMLrootClosed = FALSE;
 
   /* Expat initialization */
   InitializeExpatParser ();
@@ -3845,46 +3844,42 @@ Language   lang;
    Return TRUE if the parsing of the sub-tree has no error.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool    ParseIncludedXml (FILE  *infile,
-			      char  *htmlBuffer,
-			      char  *fileBuffer,
-			      int   *index,
-			      int    fileBufferLength,
-			      STRING DTDname,
-			      Document doc,
-			      Element *el,
+ThotBool    ParseIncludedXml (FILE     *infile,
+			      char     *infileBuffer,
+			      int       infileBufferLength,
+			      ThotBool *infileEnd,
+			      ThotBool *infileNotToRead,
+			      char     *infilePreviousBuffer,
+			      char     *htmlBuffer,
+			      int      *index,
+			      int      *nbLineRead,
+			      int      *nbCharRead,
+			      STRING    DTDname,
+			      Document  doc,
+			      Element  *el,
 			      ThotBool *isclosed,
-			      Language lang,
-			      int  *nbLineRead,
-			      int  *nbCharRead,
-			      ThotBool *endOfFile)
+			      Language  lang)
 #else
-ThotBool    ParseIncludedXml (infile,
-			      htmlBuffer,
-			      fileBuffer,
-			      index,
-			      fileBufferLength,
-			      DTDname,
-			      doc,
-			      el,
-			      isclosed,
-			      lang,
-			      nbLineRead,
-			      nbCharRead,
-			      endOfFile)
-FILE      *infile;
-char      *htmlBuffer;
-char      *fileBuffer;
-int       *index;
-int        fileBufferLength;
-STRING     DTDname;
-Document   doc;
-Element   *el;
-ThotBool  *isclosed;
-Language   lang;
-int       *nbLineRead;
-int       *nbCharRead;
-ThotBool  *endOfFile;
+ThotBool    ParseIncludedXml (infile, infileBuffer, infileBufferLength,
+			      infileEnd, infileNotToRead, infilePreviousBuffer,
+			      htmlBuffer, index, nbLineRead, nbCharRead,
+			      DTDname, doc, el, isclosed, lang)
+
+FILE     *infile;
+char     *infileBuffer;
+int       infileBufferLength;
+ThotBool *infileEnd;
+ThotBool *infileNotToRead;
+char     *infilePreviousBuffer;
+char     *htmlBuffer;
+int      *index;
+int      *nbLineRead;
+int      *nbCharRead;
+STRING    DTDname;
+Document  doc;
+Element  *el;
+ThotBool *isclosed;
+Language  lang;
 #endif
 {
   ThotBool     endOfParsing = FALSE;
@@ -3902,6 +3897,7 @@ ThotBool  *endOfFile;
   /* generic initialization */
   /* If htmlBuffer isn't null, we are parging a html sub-tree */
   /* including XML elements */ 
+  rootElement = NULL;
   if (htmlBuffer == NULL)
     InitializeXmlParsingContext (doc, *el, *isclosed, FALSE);
   else
@@ -3911,11 +3907,11 @@ ThotBool  *endOfFile;
   XMLcontext.language = lang;
   DocumentSSchema = TtaGetDocumentSSchema (doc);
 
+  /* Initialize  counters */
+  extraLineRead = 0;
+  extraOffset = 0;
   htmlLineRead = *nbLineRead;
   htmlCharRead = *nbCharRead;
-  rootElement = NULL;
-  XMLrootName[0] = WC_EOS;
-  XMLrootClosed = FALSE;
 
   /* Expat initialization */
   InitializeExpatParser ();
@@ -3932,10 +3928,6 @@ ThotBool  *endOfFile;
       ChangeXmlParserContextDTD (schemaName);
     }
 
-  /* Initialize local counters */
-  extraLineRead = 0;
-  extraOffset = 0;
-
   /* Parse virtual DOCTYPE */
   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
     {
@@ -3950,16 +3942,62 @@ ThotBool  *endOfFile;
     }
 
   /* Parse the input file or HTML buffer and complete the Thot document */
-  while (!endOfParsing && !XMLabort)
+
+  /* If htmlBuffer isn't null, we are parsing a XML sub-tree */
+  /* included in a transformation */
+  if (htmlBuffer != NULL)
     {
-      if (htmlBuffer != NULL)
+      /* parse the HTML buffer */
+      tmpLen = strlen (htmlBuffer) - *index;
+      tmpBuffer = TtaGetMemory (tmpLen);
+      for (i = 0; i < tmpLen; i++)
+	tmpBuffer[i] = htmlBuffer[*index + i];	  
+      if (!XML_Parse (parser, tmpBuffer, tmpLen, 1))
 	{
-	  /* parse the HTML/XML buffer */
-	  tmpLen = strlen (htmlBuffer) - *index;
-	  tmpBuffer = TtaGetMemory (tmpLen);
-	  for (i = 0; i < tmpLen; i++)
-	    tmpBuffer[i] = htmlBuffer[*index + i];	  
-	  if (!XML_Parse (parser, tmpBuffer, tmpLen, 1))
+	  if (!XMLrootClosed)
+	    {
+	      XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+	      XMLabort = TRUE;
+	    }
+	}
+    }
+  else
+    {
+      /* read and parse the HTML file sequentialy */
+      while (!endOfParsing && !XMLabort)
+	{
+	  if (*index == 0)
+	    {
+	      if (*infileNotToRead)
+		*infileNotToRead = FALSE;
+	      else
+		{
+		  res = gzread (infile, infileBuffer, infileBufferLength);
+		  if (res < infileBufferLength)
+		    {
+		      *infileEnd = TRUE;
+		      endOfParsing = TRUE;
+		    }
+		}
+	    }
+
+	  if (tmpBuffer != NULL)   
+	    TtaFreeMemory (tmpBuffer);   
+	  if (*infileNotToRead)
+	    {
+	      tmpLen = strlen (infilePreviousBuffer) - *index;
+	      tmpBuffer = TtaGetMemory (tmpLen);
+	      for (i = 0; i < tmpLen; i++)
+		tmpBuffer[i] = infilePreviousBuffer[*index + i];	  
+	    }
+	  else
+	    {
+	      tmpLen = strlen (infileBuffer) - *index;
+	      tmpBuffer = TtaGetMemory (tmpLen);
+	      for (i = 0; i < tmpLen; i++)
+		tmpBuffer[i] = infileBuffer[*index + i];	  
+	    }
+	  if (!XML_Parse (parser, tmpBuffer, tmpLen, *infileEnd))
 	    {
 	      if (XMLrootClosed)
 		endOfParsing = TRUE;
@@ -3975,65 +4013,22 @@ ThotBool  *endOfFile;
 	      extraOffset =  extraOffset + tmpLen;
 	    }
 	}
+    }
+
+  /* return char/lines read */
+  if (htmlBuffer == NULL)
+    {
+      if (XML_GetCurrentLineNumber (parser) - extraLineRead <= 0)
+	/* We stay on the same line */
+	*nbCharRead += XML_GetCurrentColumnNumber (parser);
       else
 	{
-	  if (*index == 0)
-	    /* read the HTML/XML file sequentialy */
-	    {
-	      res = gzread (infile, fileBuffer, fileBufferLength);
-	      if (res < fileBufferLength)
-		{
-		  *endOfFile = TRUE;
-		  endOfParsing = TRUE;
-		}
-	      if (!XML_Parse (parser, fileBuffer, res, *endOfFile))
-		{
-		  if (XMLrootClosed)
-		    endOfParsing = TRUE;
-		  else
-		    {
-		      XmlParseError (XMLcontext.doc,
- (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-		      XMLabort = TRUE;
-		    }
-		}
-	    }
-	  else
-	    {    
-	      /* parse the file buffer */
-	      tmpLen = strlen (fileBuffer) - *index;
-	      tmpBuffer = TtaGetMemory (tmpLen);
-	      for (i = 0; i < tmpLen; i++)
-		tmpBuffer[i] = fileBuffer[*index + i];	  
-	      if (!XML_Parse (parser, tmpBuffer, tmpLen, *endOfFile))
-		{
-		  if (XMLrootClosed)
-		    endOfParsing = TRUE;
-		  else
-		    {
-		      XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-		      XMLabort = TRUE;
-		    }
-		}
-	      else
-		{
-		  *index = 0;
-		  extraOffset =  extraOffset + tmpLen;
-		}
-	    }
+	  /* We read at least one new line */
+	  *nbLineRead = *nbLineRead + XML_GetCurrentLineNumber (parser) - extraLineRead;
+	  *nbCharRead = XML_GetCurrentColumnNumber (parser);
 	}
     }
 
-  /* return parameters */
-  if (XML_GetCurrentLineNumber (parser) - extraLineRead <= 0)
-    /* We stay on the same line */
-      *nbCharRead += XML_GetCurrentColumnNumber (parser);
-  else
-    {
-      /* We read at least one new line */
-      *nbLineRead = *nbLineRead + XML_GetCurrentLineNumber (parser) - extraLineRead;
-      *nbCharRead = XML_GetCurrentColumnNumber (parser);
-    }
   offset = XML_GetCurrentByteIndex (parser) - extraOffset - 1;
   *index += offset;
   *el = XMLcontext.lastElement;
@@ -4203,8 +4198,6 @@ ThotBool    withDoctype;
 
   /* specific Initialization */
   XMLcontext.language = TtaGetDefaultLanguage ();
-  XMLrootName[0] = WC_EOS;
-  XMLrootClosed = FALSE;
   DocumentSSchema = TtaGetDocumentSSchema (doc);
   
   /* Reading of the file */

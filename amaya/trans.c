@@ -22,6 +22,7 @@
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "Xml2thot_f.h"
 #include "HTMLimage_f.h"
 #include "MathML.h"
 #include "transparse_f.h"

@@ -3097,7 +3097,7 @@ CHAR_T              c;
       theGI[MaxMsgLength - 1] = WC_EOS;
       /*** there may be a namespace prefix in front of the tag name ****/
       /*** We consider ":" as separator character ***/      
-      /* Must the first or the last ":" character be consedered ? */
+      /* Must the first or the last ":" character be considered ? */
 
       InitBuffer ();
       if (HTMLcontext.lastElementClosed &&
@@ -3134,22 +3134,17 @@ CHAR_T              c;
 	     ustrcpy (schemaName, TEXT("MathML"));
 	  else
 	     ustrcpy (schemaName, TEXT("GraphML"));
-	  /* Parse the corresponding element with the XML parser */
+
 	  /* Parse the corresponding element with the XML parser */
 #ifdef EXPAT_PARSER
-	  if (!ParseIncludedXml (stream,
-				 InputText,
-				 FileBuffer,
-				 &CurrentBufChar,
-				 INPUT_FILE_BUFFER_SIZE,
-				 schemaName,
-				 HTMLcontext.doc,
+	  if (!ParseIncludedXml (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
+				 &EndOfHtmlFile, &NotToReadFile, PreviousFileBuffer,
+				 InputText, &CurrentBufChar,
+				 &NumberOfLinesRead, &NumberOfCharRead,
+				 schemaName, HTMLcontext.doc,
 				 &HTMLcontext.lastElement,
 				 &HTMLcontext.lastElementClosed,
-				 HTMLcontext.language,
-				 &NumberOfLinesRead,
-				 &NumberOfCharRead,
-				 &EndOfHtmlFile))
+				 HTMLcontext.language))
 	    StopParsing ();   /* the XML parser raised an error */
 #else /* EXPAT_PARSER */
 	  if (!ustrcmp (theGI, TEXT("math")))
@@ -6986,8 +6981,7 @@ Document   doc;
        InputText = html_buff; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
-#ifdef LC
-       /* temporary flag until the end of XML transformations work */
+#ifdef EXPAT_PARSER
        if (!ParseXmlSubTree (InputText, &lastelem, &isclosed,
 			     doc, TtaGetDefaultLanguage()))
 #else /* EXPAT_PARSER */
