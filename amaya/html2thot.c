@@ -2531,11 +2531,6 @@ static ThotBool     ContextOK (int entry)
 	     ok = FALSE;
 	 }
        if (ok)
-	 /* refuse BODY within BODY */
-	 if (strcmp (pHTMLGIMapping[entry].XMLname, "body") == 0)
-	   if (Within (HTML_EL_BODY, DocumentSSchema))
-	     ok = FALSE;
-       if (ok)
 	 /* refuse HEAD within HEAD */
 	 if (strcmp (pHTMLGIMapping[entry].XMLname, "head") == 0)
 	   if (Within (HTML_EL_HEAD, DocumentSSchema))

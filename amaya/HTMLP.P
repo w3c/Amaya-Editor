@@ -1801,7 +1801,6 @@ RULES
 
  HTML:	BEGIN
 	Width: Enclosing . Width;
-	VertPos: Top = Enclosing . Top;
 	CreateBefore(ElementName);
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
