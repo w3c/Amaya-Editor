@@ -77,25 +77,29 @@ sub init_label {
 				if (defined ($line) ) {
 					chomp ($line);
 					$line_count++;
+					#print $line . "\n";
+					if ( $line eq $comment_for_begining_of_h_file) {
+						$continue = 1;
+					}
 				}
-			}while ( defined ($line) && $line ne $comment_for_begining_of_h_file );
-			if (defined ($line) && $line eq $comment_for_begining_of_h_file) {
-				$continue = 1;
-			}
+			} while ( defined ($line) && $line ne $comment_for_begining_of_h_file );
+			
 			
 
 #	the first line in witch we are interested can be (but not necessary)read	now
 			if ( $continue == 0) {
+				close (LABEL) || warn "problem during LABEL'file $in_labelfile is closed: $!\n";
+				
+				my $choice = "no";
 				do {
 					print "\n\tPlease write this line at the begining of the good labels:\n",
 							"$comment_for_begining_of_h_file\n",
 							"\tInto $in_labelfile \n",
 							"\tAre you ok? (Yes/No):\t";
-					$_ = <STDIN>;
-					chomp;				
+					$choice = <STDIN>;
+					chomp $choice;				
 				}
-				while (!defined ($_) || $_ !~ /^y/i );
-				close (LABEL) || warn "problem during LABEL'file $in_labelfile is closed: $!\n";
+				while (!defined ($choice) || $choice !~ /^y/i );
 				init_label ($in_labelfile, $comment_for_begining_of_h_file) ; ##warning : recursivity, can do some errors
 			}
 			else { #continue == 1

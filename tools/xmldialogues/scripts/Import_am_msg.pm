@@ -337,10 +337,10 @@ sub end_hndl { #	do the modification if necessary
 							print "The english version gives :$english_text\n";
 						}
 						print "The new would be :" . $texts{ $labels{$current_label}} . "\n";
-						print "If you agree with update, type 1,\nsinon 0\nOur choice [0] :\n"; 
+						print "If you agree with this update, Type 1,\nElse 0\nOur choice [1] :\n"; 
 						$choice = <STDIN>; chomp $choice;
 						if ($choice eq "") {
-							$choice = 0;
+							$choice = 1;
 						}
 				} while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= 2 ) ;
 				if ( $choice == 1) {

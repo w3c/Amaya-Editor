@@ -66,6 +66,9 @@ BEGIN {
 	#for small particularyty
 	my $label_ending = "";
 	my $comment_for_begining_of_h_file  = "";
+	#for compilation
+	my $begin_compilation = "";
+	my $end_compilation = "";
 	
 	
 	#for the specific file EDITOR.h
@@ -81,6 +84,8 @@ sub export {
 	$head_name = shift; # location/name of the ".h"
 	$label_ending = shift; #name of the last label
 	$comment_for_begining_of_h_file = shift;
+	$begin_compilation = shift;
+	$end_compilation = shift;
 		
 # to avoid problem when many calls
 	$reference_value = 0;
@@ -179,7 +184,9 @@ sub start_hndl {
 	elsif ( $element eq "label") {
 		$current_label = $attributes { "define"};#	to remember the last label if there's a text between begin and end tag
 		$string = "#define $current_label" . "\t\t" . $reference_value ."\n" ;
-		if ($recopy) { print HEADFILE $string ;} 
+		if ($recopy) { 
+			print HEADFILE $string ;
+		} 
 	}
 	elsif ( $element eq "base") {
 		#nothing	
@@ -200,6 +207,9 @@ sub start_hndl {
 		if ($recopy) { 
 			open ( HEADFILE, ">$head_name") || die "can't product $head_name because: $! \n";
 			push (@list_of_dialogues_files ,"$head_name");
+			if (defined ($begin_compilation)) {
+				print  HEADFILE "$begin_compilation\n";
+			}
 			print  HEADFILE "$comment_for_begining_of_h_file\n";
 		}
 	}
@@ -306,6 +316,9 @@ sub end_hndl { #	do the modification if necessary
 	}
 	elsif ($end_tag eq "messages") {
 		if ($recopy) { 
+			if (defined ($end_compilation)) {
+				print HEADFILE $end_compilation ;
+			}
 			close ( HEADFILE ) || die "can't close $head_name because: $! \n";
  		}
 		foreach $prefix (@list_of_lang_occur) {

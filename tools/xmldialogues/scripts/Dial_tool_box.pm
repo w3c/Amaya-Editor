@@ -75,10 +75,11 @@ my $text;
 	}
 	else {
 		$labels{$THE_label} = "<label define=\"$THE_label\">";
+		#for english
 		do {
 			print "\tWhat the english text for  this label ($THE_label)?\n";
 			$text = <STDIN>;chomp $text;
-			print "Are you OK for: $text ?(y or n)\n";
+			print "Are you OK for:\n\t $text \n\t(Yes or No)? :\n";
 			$_ = <STDIN>;
 		}
 		while ( $_ eq "" || $_ !~ /^y/ );
@@ -87,7 +88,24 @@ my $text;
 		$textunicode = latin1($text); #because english is typed from the terminal in latin1
 		$labels{$THE_label} .= "\n\t<message xml:lang=\"en\">";
 		$labels{$THE_label} .= $text ;
-		$labels{$THE_label} .= "</message>\n</label>";
+		$labels{$THE_label} .= "</message>\n";
+		#for french
+		do {
+			print "\tWhat the french text for  this label ($THE_label)?\n";
+			$text = <STDIN>;chomp $text;
+			print "\tAre you OK for:\n\t $text \n\t(Yes or No)? :\n";
+			$_ = <STDIN>;
+		}
+		while ( $_ eq "" || $_ !~ /^y/ );
+		$text =~ s/&/&amp;/g; # to avoid problem with message in HTML
+		$text	=~ s/</&lt;/g;
+		$textunicode = latin1($text); #because english is typed from the terminal in latin1
+		$labels{$THE_label} .= "\n\t<message xml:lang=\"fr\">";
+		$labels{$THE_label} .= $text ;
+		$labels{$THE_label} .= "</message>\n";
+		
+		#the end of label added
+		$labels{$THE_label} .= "</label>\n";
 		# no more need to : push (@labels , $THE_label);
 		return 1;
 	}

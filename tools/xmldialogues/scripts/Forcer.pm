@@ -114,8 +114,14 @@ sub forcer {
 		 	die "\tCan't rename the new base $base.new to $base because of: $! \n".
 			"\tThe old base still exist, the new base name is $base.new\n";		
 	
+	print "\tThat is the listing of the labels deleted during this process:\n";
+	foreach $label(keys ( %oldlabel ) ) {
+		if (defined ($label) ) {
+			print "\t\t$label\n";
+		}
+	}
 	
-	print "\t\tEnd of forcing the base with $h_file\n";
+	print "\n\t\tEnd of forcing the base with $h_file\n";
 
 }################################################################
 ## 						end forcer

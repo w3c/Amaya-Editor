@@ -7,9 +7,11 @@ use strict ;
 # some environement variables for portability  
 my $home = $ENV{"HOME"} . "/";
 my $config_file = "$home.amaya/am_dialogues.conf.xml";
+
 my $path_amaya = ""; # way between $home and the Repertory Amaya and libwww
 my $dir_obj = ""; #name of the object direcitriy for Amaya
-	( $path_amaya,$dir_obj) = load_parameters($home, $config_file);
+my $dir_perso = ""; #name of the repertory used by users to store new files translated
+	( $path_amaya, $dir_obj, $dir_perso) = Configfile::load_parameters($home, $config_file);
 
 
 #### 	for all the bases
@@ -85,7 +87,7 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
  $lang_sufix {'lib'} = '-libdialogue' ;
  $base_name {'lib'} = 'base_am_lib.xml';
  $for_h_file_compilation_begin {'lib'} = "#ifndef LIB_MSG_H\n#define LIB_MSG_H\n";
- $for_h_file_compilation_end {'lib'} = "#\nendif\n";
+ $for_h_file_compilation_end {'lib'} = "\n#endif\n";
 
 ####	for corrdialogue => corrd or $index {4}
  $head_dir {'corrd'} = "$path_amaya/Amaya/thotlib/internals/h/" ;
@@ -241,8 +243,11 @@ do { # to continue to treat the same type of dialogue
 		$lang = Iso::return_code_in_ISO_639 () ;
 		
 		do {
-		 	print "\tAre files in the normal repertory for Amaya (0)or (for \"new\")the \"IN\" repertory (1)?\n",
-					"\tOur choice [0] : ";
+		 	print "\tWhere files of messages are ?:\n"
+					. "\t0)In the normal repertory for Amaya (config) or \n"
+					. "\t1)In the $path_amaya/Amaya/tools/xmldialogues/in directory\n"
+					. "\t2)In your own directory ($dir_perso)\n"
+					. "\tOur choice [0] : ";
 			$choice = 0;		
 			$choice = <STDIN>;
 			chomp ($choice ) ;
@@ -254,17 +259,23 @@ do { # to continue to treat the same type of dialogue
 		if (/0/)
 			{	
 		$Import_am_msg::in_labelfile = $head_dir{ $of_what} . $head_name{ $of_what};
-		$Import_am_msg::basefile = $BASE_directory  . $base_name { $of_what};
 		$Import_am_msg::in_textdirectory = $lang_dir { $of_what};
-		$Import_am_msg::in_textsufix = $lang_sufix { $of_what};
 			}
-		else #if (/1/)
+		elsif (/1/)
 			{
 		$Import_am_msg::in_labelfile = "$path_amaya/Amaya/tools/xmldialogues/in/" . $head_name{ $of_what};
-		$Import_am_msg::basefile = $BASE_directory  . $base_name { $of_what};
 		$Import_am_msg::in_textdirectory = "$path_amaya/Amaya/tools/xmldialogues/in/";
-		$Import_am_msg::in_textsufix = $lang_sufix { $of_what};				
 			}
+		else 			
+			{
+		$Import_am_msg::in_labelfile = "$dir_perso/" . $head_name{ $of_what};
+		$Import_am_msg::in_textdirectory = "$dir_perso/";
+			}
+
+		#always	
+		$Import_am_msg::basefile = $BASE_directory  . $base_name { $of_what};	
+		$Import_am_msg::in_textsufix = $lang_sufix { $of_what};	
+			
 		Import_am_msg::import_a_language ($lang, $ending_label{ $of_what},$comment_for_begining_of_h_file ) ;		
 		$choice = -1; #to avoid problem		
 	}	
@@ -275,7 +286,9 @@ do { # to continue to treat the same type of dialogue
 										$lang_sufix { $of_what},
 										$head_dir{ $of_what} . $head_name{ $of_what},
 										$ending_label { $of_what},
-										$comment_for_begining_of_h_file
+										$comment_for_begining_of_h_file,
+										$for_h_file_compilation_begin {  $of_what},
+										$for_h_file_compilation_end { $of_what}
 										);
 		$choice = -1; #to avoid problem		
 	}
@@ -312,12 +325,14 @@ do { # to continue to treat the same type of dialogue
 
 #to do the update automaticaly
 	if ($_ != 3) {
-		Export_am_msg::export (	$BASE_directory . $base_name{ $of_what},
+		Export_am_msg::export (	$BASE_directory . $base_name { $of_what},
 										$OUT_MSG_directory,
-										$lang_sufix { $of_what},
-										$head_dir{ $of_what} . $head_name{ $of_what},
-										$ending_label { $of_what},
-										$comment_for_begining_of_h_file
+										$lang_sufix {$of_what},
+										$head_dir {$of_what} . $head_name { $of_what},
+										$ending_label {$of_what},
+										$comment_for_begining_of_h_file,
+										$for_h_file_compilation_begin { $of_what},
+										$for_h_file_compilation_end { $of_what}
 										);
 	}
 }
