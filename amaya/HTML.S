@@ -117,7 +117,7 @@ STRUCT
 #endif
 	SCRIPT;
 	MAP;
-	BR (ATTR Clear = Left_, Right_, All_)= CONSTANT C_BR;
+	BR (ATTR Clear = Left_, Right_, All_, None) = CONSTANT C_BR;
 	END;
 
   BaseFont (ATTR BaseFontSize = Integer) = CONSTANT C_Empty;
@@ -214,7 +214,7 @@ STRUCT
 	Text_Input_Line;
 	Command_Line;
 	Text_Area (ATTR !NAME; Rows = Integer; Columns = Integer;
-		        Default_Value = Text) =
+			Default_Value = Text) =
 		Text_With_Frame with Rows ?= 4, Columns ?= 20;
 	Heading;
 	List_;
@@ -228,46 +228,46 @@ STRUCT
 
   Option_Menu (ATTR !NAME; Multiple = Yes_; MenuSize = Integer) =
 	LIST OF (Option) - (Input);
-  Option (ATTR Selected = Yes_; DefaultSelected = Yes_; !Default_Value) =
+  Option (ATTR Selected = Yes_; DefaultSelected = Yes_; !Value_ = Text) =
 	TEXT;
 
   Toggle_Menu = LIST OF (Toggle_Item) - (Input);
   Toggle_Item = BEGIN
 	Checkbox_Input (ATTR !NAME; 
 			     Checked = Yes_, No_; DefaultChecked = Yes_, No_;
-			     Default_Value) =
+			     Value_) =
 		CONSTANT C_Empty with Checked ?= No_;
 	TEXT;
 	END;
 
   Radio_Menu (ATTR !NAME) = LIST OF (Radio_Item) - (Input);
   Radio_Item = BEGIN
-	Radio_Input (ATTR !NAME; Checked; DefaultChecked; !Default_Value) =
+	Radio_Input (ATTR !NAME; Checked; DefaultChecked; !Value_) =
 		CONSTANT C_Empty with Checked ?= No_, NAME ?= 'radio';
 	TEXT;
 	END;
 
   Text_Input_Line = BEGIN
 	TEXT;
-	Text_Input (ATTR !NAME; Area_Size = Integer; MaxLength = Integer; Default_Value) =
+	Text_Input (ATTR !NAME; Area_Size = Integer; MaxLength = Integer; Value_) =
 		Text_With_Frame with Area_Size ?= 20;
 	END - (Input);
 
   Command_Line = BEGIN
-	Reset_Input (ATTR NAME; Default_Value) = BEGIN
+	Reset_Input (ATTR NAME; Value_) = BEGIN
 		Frame;
-		END with NAME ?= 'Reset', Default_Value ?= 'Reset';
+		END with NAME ?= 'Reset', Value_ ?= 'Reset';
 	Space = CONSTANT C_Empty;
-	Submit_Input (ATTR NAME; Default_Value) = BEGIN
+	Submit_Input (ATTR NAME; Value_) = BEGIN
 		Frame;
-		END with Default_Value ?= 'Submit';
+		END with Value_ ?= 'Submit';
 	END - (Input);
 
   Input = CASE OF
 	Checkbox_Input;
 	Radio_Input;
 	Text_Input;
-	Hidden_Input (ATTR !NAME; Default_Value) = CONSTANT C_Empty;
+	Hidden_Input (ATTR !NAME; Value_) = CONSTANT C_Empty;
 	Password_Input (ATTR !NAME; Area_Size; MaxLength) = Text_With_Frame;
 	File_Input (ATTR !NAME) = CONSTANT C_Empty;
 	Reset_Input;

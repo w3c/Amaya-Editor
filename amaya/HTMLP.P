@@ -1000,18 +1000,6 @@ BOXES
 		END;
 	END;
 
- CLEAR_ALL: BEGIN
-	Content: Text ' clear=all';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
  CLEAR_LEFT: BEGIN
 	Content: Text ' clear=left';
 	Visibility: 0;
@@ -1026,6 +1014,30 @@ BOXES
 
  CLEAR_RIGHT: BEGIN
 	Content: Text ' clear=right';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ CLEAR_ALL: BEGIN
+	Content: Text ' clear=all';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ CLEAR_NONE: BEGIN
+	Content: Text ' clear=none';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -1300,8 +1312,8 @@ BOXES
 		END;
 	END;
 
- VALUE_DEF_VALUE: BEGIN
-	Content: (Default_Value);
+ VALUE_VALUE: BEGIN
+	Content: (Value_);
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -1445,7 +1457,7 @@ BOXES
 	END;
 
  Value_Box: BEGIN
-	Content: (Default_Value);
+	Content: (Value_);
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: HMiddle = Enclosing . HMiddle;
 	Height: 1.2;
@@ -5503,10 +5515,6 @@ dans des paragraphes s affichent a cote de leur cadre...
 	CreateBefore(VALUE_START);
 	END;
 
- Clear = All_:
-	BEGIN
-	CreateBefore(CLEAR_ALL);
-	END;
  Clear = Left_:
 	BEGIN
 	CreateBefore(CLEAR_LEFT);
@@ -5514,6 +5522,14 @@ dans des paragraphes s affichent a cote de leur cadre...
  Clear = Right_:
 	BEGIN
 	CreateBefore(CLEAR_RIGHT);
+	END;
+ Clear = All_:
+	BEGIN
+	CreateBefore(CLEAR_ALL);
+	END;
+ Clear = None:
+	BEGIN
+	CreateBefore(CLEAR_NONE);
 	END;
 
  Alignment = Top_:
@@ -5669,10 +5685,10 @@ dans des paragraphes s affichent a cote de leur cadre...
 	CreateBefore(VALUE_ALINKCOLOR);
 	END;
 
- Default_Value:
+ Value_:
 	BEGIN
 	CreateBefore(ATTR_VALUE);
-	CreateBefore(VALUE_DEF_VALUE);
+	CreateBefore(VALUE_VALUE);
 	IN Structure_view BEGIN
 	    HorizPos: Left = Previous . Right;
 	    VertPos: HRef = Previous . HRef;

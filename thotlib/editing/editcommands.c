@@ -2339,9 +2339,10 @@ int                 editType;
 		     CutSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
 	       }
 	     else if (editType == TEXT_DEL && !FromKeyboard)
-		if (pAb->AbVolume == 0 || pViewSel->VsIndBox == pAb->AbVolume)
+		if (pAb->AbVolume == 0 ||
+		    pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar == pAb->AbVolume)
 		  {
-		     /* Il n'y a rien a detruire */
+		     /* current selection is at the element end */
 		     if (ThotLocalActions[T_deletenextchar] != NULL)
 			(*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
 		     else

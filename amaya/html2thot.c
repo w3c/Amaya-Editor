@@ -481,7 +481,7 @@ static AttributeMapping AttributeMappingTable[] =
    {"VALIGN", "TR", 'A', HTML_ATTR_Row_valign},
    {"VALUE", "LI", 'A', HTML_ATTR_ItemValue},
    {"VALUE", "PARAM", 'A', HTML_ATTR_Param_value},
-   {"VALUE", "", 'A', HTML_ATTR_Default_Value},
+   {"VALUE", "", 'A', HTML_ATTR_Value_},
    {"VERSION", "", 'A', 0},
    {"VLINK", "", 'A', HTML_ATTR_VisitedLinkColor},
    {"VSPACE", "", 'A', HTML_ATTR_vspace},
@@ -515,6 +515,11 @@ static AttrValueMapping AttrValueMappingTable[] =
    {HTML_ATTR_Align, "LEFT", HTML_ATTR_Align_VAL_left_},
    {HTML_ATTR_Align, "CENTER", HTML_ATTR_Align_VAL_center_},
    {HTML_ATTR_Align, "RIGHT", HTML_ATTR_Align_VAL_right_},
+
+   {HTML_ATTR_Clear, "LEFT", HTML_ATTR_Clear_VAL_Left_},
+   {HTML_ATTR_Clear, "RIGHT", HTML_ATTR_Clear_VAL_Right_},
+   {HTML_ATTR_Clear, "ALL", HTML_ATTR_Clear_VAL_All_},
+   {HTML_ATTR_Clear, "NONE", HTML_ATTR_Clear_VAL_None},
 
    {HTML_ATTR_NumberStyle, "1", HTML_ATTR_NumberStyle_VAL_Arabic_},
    {HTML_ATTR_NumberStyle, "a", HTML_ATTR_NumberStyle_VAL_LowerAlpha},
@@ -2018,33 +2023,29 @@ Element             el;
 		child = TtaNewTree (theDocument, elType, "");
 		TtaInsertFirstChild (&child, el, theDocument);
 	    case HTML_EL_Text_Input:
-		attr = NULL;
-		TtaNextAttribute (el, &attr);
-		while (attr != NULL)
-		      {
-			 TtaGiveAttributeType (attr, &attrType, &kind);
-			 if (attrType.AttrTypeNum == HTML_ATTR_Default_Value)
-			   /* attribute Default_Value */
-			   /* copy attribute value into the first
-			      text leaf of element */
-			   {
-			   length = TtaGetTextAttributeLength (attr);
-			   text = TtaGetMemory (length + 1);
-			   TtaGiveTextAttributeValue (attr, text, &length);
-			     {
-			        leaf = TtaGetFirstChild (el);
-				if (leaf != NULL)
-				  {
-				  childType = TtaGetElementType (leaf);
-				  if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-				    TtaSetTextContent (leaf, text,
-					documentLanguage, theDocument);
-				  }
-			     }
-			   TtaFreeMemory (text);
-			   }
-			 TtaNextAttribute (el, &attr);
-		      }
+		attrType.AttrSSchema = structSchema;
+		attrType.AttrTypeNum = HTML_ATTR_Value_;
+		attr = TtaGetAttribute (el, attrType);
+		if (attr != NULL)
+		   {
+		   /* copy the value of attribute "value" into the first text
+		      leaf of element */
+		   length = TtaGetTextAttributeLength (attr);
+		   if (length > 0)
+		     {
+		        text = TtaGetMemory (length + 1);
+		        TtaGiveTextAttributeValue (attr, text, &length);
+		        leaf = TtaGetFirstChild (el);
+			if (leaf != NULL)
+			  {
+			  childType = TtaGetElementType (leaf);
+			  if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			    TtaSetTextContent (leaf, text, documentLanguage,
+					       theDocument);
+			  }
+		     }
+		   TtaFreeMemory (text);
+		   }
 	       break;
 
 	    case HTML_EL_Preformatted:		/* it's a preformatted */

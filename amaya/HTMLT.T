@@ -787,12 +787,14 @@ ATTRIBUTES
 	Create QuoteF;
 	END;
 
- Clear = All_:
-	Create ' clear=all';
  Clear = Left_:
 	Create ' clear=left';
  Clear = Right_:
 	Create ' clear=right';
+ Clear = All_:
+	Create ' clear=all';
+ Clear = None:
+	Create ' clear=none';
 
  Align = left_:
 	Create ' align=left';
@@ -1007,7 +1009,7 @@ ATTRIBUTES
  Selected:
 	Create ' selected';
 
- Default_Value: BEGIN
+ Value_: BEGIN
 	Create ' value="';
 	Create Default_Value;
 	Create QuoteF;

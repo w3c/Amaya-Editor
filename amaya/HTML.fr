@@ -143,6 +143,11 @@ ISMAP: ismap
 USEMAP: usemap
 SRC: src
 ALT: alt
+Clear: clear
+Left_: left
+Right_: right
+All_: all
+None: none
 Font_size: size
 color: color
 codebase: codebase
@@ -165,7 +170,7 @@ Columns: cols
 Multiple: multiple
 MenuSize: size
 Selected: selected
-Default_Value: value
+Value_: value
 Checked: checked
 Area_Size: size
 MaxLength: maxlength

@@ -243,7 +243,7 @@ int                 mode;
 			      if (mode == HTML_EL_Submit_Input)
 				{
 				  /* get the name of the Option Menu */
-				  length = 200;
+				  length = MAX_LENGTH - 1;
 				  TtaGiveTextAttributeValue (attr, name, &length);
 				  if (name[0] != '\0')
 				    {
@@ -251,24 +251,24 @@ int                 mode;
 					 selected option elements */
 				      elForm = TtaGetFirstChild (el);
 				      while (elForm) {
-					/*verify if the element is selected */
+					/* check if element is selected */
 					attrTypeS.AttrTypeNum = HTML_ATTR_Selected;
 					attrS = TtaGetAttribute (elForm, attrTypeS);					     
 					if (attrS != NULL && TtaGetAttributeValue (attrS) == HTML_ATTR_Selected_VAL_Yes_)
 					  {
-					    attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
+					    attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
 					    attrS = TtaGetAttribute (elForm, attrTypeS);
 					    if (attrS != NULL)
 					      {
 						/* there's an explicit value */
-						length = 200;
+						length = MAX_LENGTH - 1;
 						TtaGiveTextAttributeValue (attrS, value, &length);
 					      }
 					    else
 					      {
 						/* use the attached text as an implicit value */
 						elForm  = TtaGetFirstChild(elForm);
-						length = 200;
+						length = MAX_LENGTH - 1;
 						TtaGiveTextContent (elForm, value, &length, &lang);
 						elForm = TtaGetParent (elForm);
 					      }
@@ -370,15 +370,15 @@ int                 mode;
 				       TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
 				     {
 				       /* save the NAME attribute of the element el */
-				       length = 200;
+				       length = MAX_LENGTH - 1;
 				       TtaGiveTextAttributeValue (attr, name, &length);
-				       /* get the value attribute */
-					attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
+				       /* get the "value" attribute */
+					attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
 					attrS = TtaGetAttribute (el, attrTypeS);
 					if (attrS != NULL)
 					  {
-					     /* save the Default_Value attribute of the element el */
-					     length = 200;
+					     /* save the Value attribute of the element el */
+					     length = MAX_LENGTH - 1;
 					     TtaGiveTextAttributeValue (attrS, value, &length);
 					     AddNameValue (name, value);
 					  }
@@ -416,16 +416,16 @@ int                 mode;
 				   if (attrS != NULL &&
 				       TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
 				     {
-					/* get the value attribute */
-					attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
+					/* get the Value attribute */
+					attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
 					attrS = TtaGetAttribute (el, attrTypeS);
 					if (attrS != NULL)
 					  {
 					     /* save the NAME attribute of the element el */
-					     length = 200;
+					     length = MAX_LENGTH - 1;
 					     TtaGiveTextAttributeValue (attr, name, &length);
-					     /* save the Default_Value attribute of the element el */
-					     length = 200;
+					     /* save the Value attribute of the element el */
+					     length = MAX_LENGTH - 1;
 					     TtaGiveTextAttributeValue (attrS, value, &length);
 					     AddNameValue (name, value);
 					  }
@@ -462,7 +462,7 @@ int                 mode;
 				  if (elForm)
 				     {
 					/* save the NAME attribute of the element el */
-					length = 200;
+					length = MAX_LENGTH - 1;
 					TtaGiveTextAttributeValue (attr, name, &length);
 					/* save the VALUE attribute of the element el */
 					length = MAX_LENGTH - 1;
@@ -497,13 +497,13 @@ int                 mode;
 			      if (mode == HTML_EL_Submit_Input)
 				{
 				   /* the value is in the default value attribute */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
+				   attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
 				   attrS = TtaGetAttribute (el, attrType);
 				   def = TtaGetAttribute (el, attrTypeS);
 				   if (def != NULL)
 				     {
 					/* save the NAME attribute of the element el */
-					length = 200;
+					length = MAX_LENGTH - 1;
 					TtaGiveTextAttributeValue (attr, name, &length);
 					/* save of the element content */
 					length = MAX_LENGTH - 1;
@@ -647,7 +647,7 @@ Element             element;
 			length = TtaGetTextAttributeLength (attr);
 			name = TtaGetMemory (length + 1);
 			TtaGiveTextAttributeValue (attr, name, &length);
-			attrType.AttrTypeNum = HTML_ATTR_Default_Value;
+			attrType.AttrTypeNum = HTML_ATTR_Value_;
 			attr = TtaGetAttribute (elForm, attrType);
 			if (attr != NULL) {
 			  length = TtaGetTextAttributeLength (attr);
@@ -856,7 +856,7 @@ Element             el;
    if (attrN != NULL)
      {
 	/* save the NAME attribute of the element */
-	length = 200;
+	length = MAX_LENGTH - 1;
 	TtaGiveTextAttributeValue (attrN, name, &length);
      }
    else
@@ -900,7 +900,7 @@ Element             el;
 			    attrN = TtaGetAttribute (elForm, attrTypeN);
 			    if (attrN != NULL)
 			      {
-				 length = 200;
+				 length = MAX_LENGTH - 1;
 				 TtaGiveTextAttributeValue (attrN, buffer, &length);
 				 if (!strcmp (name, buffer))
 				   {
