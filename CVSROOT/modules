@@ -36,7 +36,7 @@ amaya_graphics          -a libjpeg libpng
 amaya_base              -a config batch fonts \
                            dicopar tools amaya_configure
 
-amaya_ilu               -a ilulib tools/ilustub
+# amaya_ilu               -a ilulib tools/ilustub
 
 amaya_java              -a classes javalib kaffe-cvs.tar.gz
 
@@ -50,7 +50,8 @@ amaya_thot              -a thotlib
 
 amaya_indexlib          -a indexlib
 
-amaya_tablelib          -a tablelib schemas/exc_Table.h
+amaya_tablelib          -a tablelib 
+# schemas/exc_Table.h
 
 amaya_drawlib           -a drawlib
 
