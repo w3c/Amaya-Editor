@@ -658,9 +658,11 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   Document    doc_annot;
   AnnotMeta  *annot;
   XPointerContextPtr ctx;
-  char     *xptr;
-  ThotBool   useDocRoot = mode & ANNOT_useDocRoot;
-  ThotBool   isReplyTo = mode & ANNOT_isReplyTo;
+  char       *xptr;
+  char       *title;
+  ThotBool    free_title;
+  ThotBool    useDocRoot = mode & ANNOT_useDocRoot;
+  ThotBool    isReplyTo = mode & ANNOT_isReplyTo;
 
 #if 0
   /* not used for the moment... select the annotation doc
@@ -735,6 +737,25 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   annot = LINK_CreateMeta (doc, doc_annot, mode);
   /* update the XPointer */
   annot->xptr = xptr;
+
+  /* prepare the title of the annotation */
+  title = ANNOT_GetHTMLTitle (doc);
+  if (!title || title[0] == EOS)
+    {
+      if (title)
+	TtaFreeMemory (title);
+      free_title = FALSE;
+      title = DocumentURLs[doc];
+    }
+  else
+    free_title = TRUE;
+  
+  annot->title = TtaGetMemory (sizeof ("Annotation of ")
+			       + strlen (title)
+			       + 1);
+  sprintf (annot->title, "Annotation of %s", title);
+  if (free_title)
+    TtaFreeMemory (title);
 
   ANNOT_InitDocumentStructure (doc, doc_annot, annot, TRUE);
 
@@ -1657,6 +1678,43 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
 }
 
 /*----------------------------------------------------------------------
+  ANNOT_UpdateTitle
+  Updates the title of an annotation
+  -----------------------------------------------------------------------*/
+void  Annot_UpdateTitle (NotifyElement *event)
+{
+  AnnotMeta *annot;
+  Document   doc;
+  Element    el;
+  int        len;
+  Language   lang;
+
+
+  el = event->element;
+  doc = event->document;
+  
+  /* search the annotation metadata */
+  annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
+  
+  if (!annot)
+    return;
+
+  /* update the metadata title field */
+  if (annot->title)
+    TtaFreeMemory (annot->title);
+  el = TtaGetFirstChild (el);
+  len = TtaGetTextLength (el) + 1;
+  if (len == 1)
+    annot->title = NULL;
+  else
+    {
+      annot->title = TtaGetMemory (len);
+      TtaGiveTextContent (el, annot->title, &len, &lang);
+    }
+  /* update the title of the window ? */
+}
+
+/*----------------------------------------------------------------------
   ANNOT_AddLink
   adds a new link to an annotation
  -----------------------------------------------------------------------*/
@@ -1692,3 +1750,5 @@ void ANNOT_AddLink (Document doc, View view)
   TtaSetTextContent (newEl, "jose", TtaGetDefaultLanguage (), doc);
 #endif
 }
+
+
