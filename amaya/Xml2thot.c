@@ -1830,7 +1830,7 @@ static void       StartOfXmlStartElement (char *name)
     {
       if (UnknownNS)
 	{
-	  /* The element belongs to a not supported namespace */
+	  /* The element doesn't belong to a supported namespace */
 	  sprintf (msgBuffer, 
 		   "Namespace not supported for the element <%s>", name);
 	  XmlParseError (errorParsing, msgBuffer, 0);
@@ -2563,7 +2563,7 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 /*--------------------  Attributes  (start)  ---------------------*/
 /*----------------------------------------------------------------------
   UnknownXmlAttribute
-  Creation and filling of an "unknown_attr" attribute
+  Creation and filling in of an "unknown_attr" attribute
   ----------------------------------------------------------------------*/
 static void      UnknownXmlAttribute (char *xmlAttr, char *ns_uri)
      
@@ -2656,7 +2656,7 @@ static void      UnknownXmlAttribute (char *xmlAttr, char *ns_uri)
 
 /*----------------------------------------------------------------------
    EndOfXhtmlAttributeName   
-   End of a XHTML attribute
+   End of an XHTML attribute
   ----------------------------------------------------------------------*/
 static void EndOfXhtmlAttributeName (char *attrName, Element el,
 				     Document doc)
@@ -2757,7 +2757,7 @@ static void EndOfXhtmlAttributeName (char *attrName, Element el,
 
 /*----------------------------------------------------------------------
    XmlEndOfAttrName
-   End of a XML attribute that doesn't belong to the XHTML DTD
+   End of a XML attribute (other than XHTML)
   ----------------------------------------------------------------------*/
 static void EndOfXmlAttributeName (char *attrName, char *uriName,
 				   Element  el, Document doc)
@@ -2901,11 +2901,11 @@ static void      EndOfAttributeName (char *xmlName)
      }
    else
      {
-       /* This attribute belongs to a same namespace than the element */
+       /* This attribute belongs to the same namespace than the element */
        attrName = TtaGetMemory (strlen (buffer) + 1);
        strcpy (attrName, buffer);
        if (UnknownNS)
-	 /* The corresponding element belongs to a no-supported namespace */ 
+	 /* The corresponding element doesn't belong to a supported namespace */ 
 	 {
 	   sprintf (msgBuffer, 
 		    "Namespace not supported for the attribute \"%s\"", xmlName);

@@ -1207,6 +1207,16 @@ RULES
 	   NoTranslation;
 	END;
 
+ XHTML_Unknown_namespace:
+        BEGIN
+           NoTranslation;
+           Create '\12';
+           Create Content;
+           Remove;
+           Create Attributes;
+           Create '>';
+        END;
+
  Comment\240: BEGIN
 	NoLineBreak;
  	Create '<!--';

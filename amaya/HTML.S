@@ -51,7 +51,7 @@ STRUCT
 	HEAD;
       ? BODY;	{ only one of BODY, document type }
       ? FRAMESET;
-	END + (Invalid_element, Unknown_namespace, Comment\240, XMLPI, CDATA);
+	END + (Invalid_element, Unknown_namespace, XHTML_Unknown_namespace, Comment\240, XMLPI, CDATA);
 	
   BODY								{ BODY }
      (ATTR onload = Text; onunload = Text;
@@ -67,6 +67,8 @@ STRUCT
   Invalid_element = TEXT;
 
   Unknown_namespace = TEXT;
+
+  XHTML_Unknown_namespace = TEXT;
 
   Comment\240 = LIST OF (Comment_line = TEXT);
 
@@ -899,6 +901,7 @@ EXCEPT
 	PICTURE:	MoveResize;
 	Invalid_element:NoCreate;
 	Unknown_namespace:NoCreate;
+	XHTML_Unknown_namespace:NoCreate;
 	Pseudo_paragraph: ParagraphBreak, Hidden;
 	Basic_Elem:	Hidden;
 	Paragraph:	ParagraphBreak;

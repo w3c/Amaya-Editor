@@ -769,7 +769,7 @@ void UnknownXhtmlNameSpace (ParserData *context, Element *unknownEl,
 
    /* Create a new Invalid_element */
    elType.ElSSchema = GetXMLSSchema (XHTML_TYPE, context->doc);
-   elType.ElTypeNum = HTML_EL_Unknown_namespace;
+   elType.ElTypeNum = HTML_EL_XHTML_Unknown_namespace;
    *unknownEl = TtaNewElement (context->doc, elType);
    if (*unknownEl != NULL)
      {

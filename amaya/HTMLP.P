@@ -657,14 +657,13 @@ BOXES
  VALUE_Unknown_attribute: BEGIN
 	Content: (Unknown_attribute);
 	Visibility: 0;
-	Underline: Creator =;
-	Foreground: UNKNOWNTAG_Color;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Visibility: Creator =;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
+	        Foreground: UNKNOWNTAG_Color;
 		END;	
 	END;
 
@@ -852,6 +851,21 @@ BOXES
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
+
+ UNKNOWN_E: BEGIN
+        Content: Text '>';
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: INVALID_Style;
+#ifdef BLACK_WHITE
+                Underline: CrossedOut;
+#else
+                Foreground: Creator =;
+#endif
+                END;
+        END;
 
  COMMENT_S: BEGIN
 	Content: Text '<!--';
@@ -4117,7 +4131,7 @@ RULES
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
 		   END;
-		if not within Invalid_element and not within Unknown_namespace
+		if not within Invalid_element and not within Unknown_namespace and not within XHTML_Unknown_namespace
 		   Style: Enclosing =;
 		if within Text_Input
 		   Visibility: 0;
@@ -4708,6 +4722,24 @@ RULES
 		Font: INVALID_Font;
 		END;
 	END;
+
+  XHTML_Unknown_namespace:
+        BEGIN
+        Visibility: 0;
+        if not AnyAttributes
+           CreateAfter(UNKNOWN_E);
+        IN Structure_view BEGIN
+		Visibility: Enclosing =;
+                Size: TAG_FONTSIZE;
+                Style: INVALID_Style; Weight: INVALID_Weight;
+#ifdef BLACK_WHITE
+                Underline: CrossedOut;
+#else
+                Foreground: INVALID_Color;
+#endif
+                Font: INVALID_Font;
+                END;
+        END;
 
   Comment\240:
 	BEGIN
@@ -7704,7 +7736,7 @@ ATTRIBUTES
 	   CreateAfter(VALUE_Invalid_attribute);
 	if Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
-	if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element  and not Unknown_namespace and not Anchor
+	if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element and not Unknown_namespace and not Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
 	END;
 
@@ -7718,9 +7750,13 @@ ATTRIBUTES
 	   CreateAfter(VALUE_Unknown_attribute);
 	if Unknown_namespace
 	   CreateAfter(VALUE_Unknown_attribute);
+        if XHTML_Unknown_namespace
+           CreateAfter(VALUE_Unknown_attribute);
+        if XHTML_Unknown_namespace and LastAttr
+           CreateAfter(UNKNOWN_E);
 	if Anchor
 	   CreateBefore(VALUE_Unknown_attribute);
-	if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element  and not Unknown_namespace and not Anchor
+	if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element and not Anchor and not XHTML_Unknown_namespace
 	   CreateBefore(VALUE_Unknown_attribute);
 	END;
 

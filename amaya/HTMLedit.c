@@ -198,7 +198,8 @@ void RemoveLink (Element el, Document doc)
   /* Search the "nature" of the link */
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);
-  if (strcmp (s, "HTML") == 0)
+  if ((strcmp (s, "HTML") == 0) &&
+      (elType.ElTypeNum != HTML_EL_XMLPI))
     {
       /* (X)HTML document, well, we search within a hlink element */
       attrType.AttrSSchema = elType.ElSSchema;
@@ -219,7 +220,9 @@ void RemoveLink (Element el, Document doc)
     }
   else
     {
-      if (strcmp (s, "MathML") == 0)
+      if (strcmp (s, "HTML") == 0)
+	piNum = HTML_EL_XMLPI;
+      else if (strcmp (s, "MathML") == 0)
 	piNum = MathML_EL_XMLPI;
       else if (strcmp (s, "SVG") == 0)
 	piNum = SVG_EL_XMLPI;
@@ -3269,6 +3272,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
       HTML elements */
    if (elType.ElTypeNum == HTML_EL_Invalid_element ||
        elType.ElTypeNum == HTML_EL_Unknown_namespace ||
+       elType.ElTypeNum == HTML_EL_XHTML_Unknown_namespace ||
        elType.ElTypeNum == HTML_EL_Comment_ ||
        elType.ElTypeNum == HTML_EL_Comment_line ||
        elType.ElTypeNum == HTML_EL_XMLPI ||
@@ -3287,6 +3291,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
 	   parentType = TtaGetElementType (parent);
 	   if (parentType.ElTypeNum == HTML_EL_Invalid_element ||
 	       parentType.ElTypeNum == HTML_EL_Unknown_namespace ||
+	       parentType.ElTypeNum == HTML_EL_XHTML_Unknown_namespace ||
 	       parentType.ElTypeNum == HTML_EL_Comment_ ||
 	       parentType.ElTypeNum == HTML_EL_Comment_line ||
 	       parentType.ElTypeNum == HTML_EL_XMLPI ||
