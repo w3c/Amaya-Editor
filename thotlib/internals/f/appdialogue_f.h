@@ -40,11 +40,13 @@ extern void APP_ButtonCallback ( ThotWidget w,
                                  int frame,
                                  caddr_t call_d );
 extern void InitClue ( ThotWidget toplevel );
+#ifndef _WINDOWS
 extern int TtaAddButton ( Document document,
                           View view,
                           Pixmap picture,
                           void (*procedure) (),
                           char *info );
+#endif /* _!WINDOWS */
 extern void TtaSwitchButton ( Document document,
                               View view,
                               int index );
