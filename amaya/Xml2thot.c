@@ -470,6 +470,9 @@ void XmlSetElemLineNumber (Element el)
   ----------------------------------------------------------------------*/
 void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 {
+  if (line == 0 && Parser == NULL)
+    return;
+
   if (!ErrFile)
     if (OpenParsingErrors (XMLcontext.doc) == FALSE)
       return;
