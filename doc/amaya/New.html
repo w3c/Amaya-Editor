@@ -18,6 +18,69 @@ border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 <p>This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
+<h1>Amaya 3.1</h1>
+
+<p>19 April, 2000</p>
+
+<h2>New features</h2>
+<ul>
+  <li>MathML: attributes <code>lquote</code> and <code>rquote</code> on
+    element <code>ms</code> are now taken into account in the formatted
+  view.</li>
+  <li>Lines are numbered in all text and source files.</li>
+  <li>It's now possible to completely create a link from the keyboard: Ctrl
+    Shift L creates the link element then pressing any key  pops up the input
+    dialogue form which can be filled immediately.</li>
+  <li>The paste command replaces the current selected text with the contents
+    of the paste buffer  or inserts it at the current position. Previously it
+    never removed the current selection.</li>
+  <li>The "<code>Check spelling</code>" can be now applied to text files and
+    source views.</li>
+  <li>The command "<code>Section numbering</code>" is now available for HTML
+    documents in Read-Only mode.</li>
+</ul>
+
+<h2>Fixed bugs</h2>
+<ul>
+  <li>Amaya hung up when a background image was unreachable.</li>
+  <li>Amaya defined its own key encoding for supporting a multi-key input
+    method. On Unix platforms, it now follows the standard xmodmap encoding
+    and provides a multi-key support too:
+    <p>When the user enables "Multi-key" in Special/Preferences/General s/he
+    can generate letters with diacritics by a two key sequence, the "accent"
+    followed by the "letter".</p>
+    <p>When "Multi-key" is disabled in Special/Preferences/General, but the
+    system provides a Compose key, letters with diacritics can also be entered
+    by the standard three sequence "Compose" followed, either by the "letter"
+    then the "accent", or by the "accent" then the "letter".</p>
+    <p>The benefit is that the NumLock key  doesn't disturb Amaya any
+    more.</p>
+    <p>Unfortunately, the multi-key input method don't work in Motif
+    dialogues. Although the requested callback is defined, it seems it's not
+    called 99% of the time (any help is welcome here).</p>
+  </li>
+  <li>The Math/Greek palette inserted latin characters instead of mathematical
+    symbols or greek letters.</li>
+  <li>Amaya didn't displayed MathML tables correctly.</li>
+  <li>Some characters such as thorn and yuml disappeared when downloading a
+    file or pasting some text from the clipboard.</li>
+  <li>Amaya crashed when a large number of text elements were copied into the
+    Xbuffer.</li>
+  <li>A long invalid XML document crashed Amaya. Now it stops parsing at the
+    first error and displays an error message. The log file gives more
+    information.</li>
+  <li>Margins, borders and padding set by a style attribute were ignored when
+    printing. They are now taken into account.</li>
+  <li>The background color and the foreground color of tooltips could be
+    incompatible.</li>
+  <li>When a simple click activates a link it worked even if the selection
+    point was outside the link box. Now it works when the selection is inside
+    the link box and it gives a simple selection in other cases.</li>
+  <li>In some cases the Make book crashed.</li>
+  <li>Amaya didn't manage SRC attributes: &amp;amp; were translated into
+    &amp;. It's fixed now.</li>
+</ul>
+
 <h1>Amaya 3.0</h1>
 
 <p>31 March, 2000</p>
