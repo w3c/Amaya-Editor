@@ -1181,20 +1181,6 @@ void TtaFetchOneEvent (ThotEvent *ev)
 #else /* _GTK */
   /* do nothing in gtk because we do not need to know event 
      on the queue */
-
-
-  while (!gtk_events_pending());
-  ev = gtk_get_current_event ();
-
-#if 0
-  /* free the precedent event */
-  if (ev) gdk_event_free (ev);
-  /* wait until one event is coming */
-  while ( !gdk_events_pending () );
-  /* get the waiting event */
-  ev = gdk_event_get ();
-#endif
-
 #endif /* !_GTK */
 #endif /* ! _WINDOWS */
 }
