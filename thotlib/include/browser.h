@@ -16,6 +16,19 @@
 extern void TtaExtractSuffix (char *aName, char *aSuffix);
 
 /*----------------------------------------------------------------------
+  TtaStrAddSorted
+  Adds new entry in table. Table is a linear array with strings
+  separated by EOS. The sort is done with a strcmp. This means
+  that digits are sorted alphabetically, rather than numerically.
+  Parameters:
+  new_entry : string to be added
+  table : string linear table
+  ptr_last : ptr to the last used byte in the table
+  nb_entries : number of entries in the table
+  ----------------------------------------------------------------------*/
+extern void TtaStrAddSorted (char *new_entry, char *table, char *ptr_last, int nb_entries);
+
+/*----------------------------------------------------------------------
    TtaListDirectory
    reads the content of a directory.
    aDirectory specifies the directory to read  (!=/afs). 

@@ -69,6 +69,45 @@ void TtaExtractSuffix (char *aName, char *aSuffix)
     }
 }
 
+/*----------------------------------------------------------------------
+  TtaStrAddSorted
+  Adds new entry in table. Table is a linear array with strings
+  separated by EOS. The sort is done with a strcmp. This means
+  that digits are sorted alphabetically, rather than numerically.
+  Parameters:
+  new_entry : string to be added
+  table : string linear table
+  ptr_last : ptr to the last used byte in the table
+  nb_entries : number of entries in the table
+  ----------------------------------------------------------------------*/
+void TtaStrAddSorted (char *new_entry, char *table, char *ptr_last, int nb_entries)
+{
+  int i;
+  int len_new_entry;
+  int index;
+  char *ptr;
+  
+  index = -1;
+  len_new_entry = strlen (new_entry);
+  for (i = 0; i < nb_entries; i++)
+    {
+      index++;
+      ptr = &table[index];
+      if (strcmp (new_entry, ptr) < 0)
+	{
+	  /* new entry comes before ptr  */
+	  memmove (ptr + len_new_entry + 1, ptr, ptr_last - ptr + 1);
+	  break;
+	}
+      while (table[index] != EOS)
+	index++;
+    }
+
+  if (i == nb_entries)
+    index++;
+  /* insert new entry at the end */
+  strcpy (&table[index], new_entry);
+}
 
 /*----------------------------------------------------------------------
    TtaListDirectory
@@ -190,7 +229,8 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
 		  stop = (ldir + length >= MAX_NAME * NAME_LENGTH);
 		  if (!stop)
 		    {
-		      strcpy (&ls_unixDirs[ldir], d->d_name);
+		      /* add this file in the list */
+		      TtaStrAddSorted (d->d_name, ls_unixDirs, &ls_unixDirs[ldir], ls_dirNbr);
 		      ldir += length;
 		      ls_dirNbr++;
 		    }
@@ -233,7 +273,7 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
 		      if (diff == 0)
 			{
 			  /* add this file in the list */
-			  strcpy (&ls_unixFiles[lfile], d->d_name);
+			  TtaStrAddSorted (d->d_name, ls_unixFiles, &ls_unixFiles[lfile], ls_fileNbr);
 			  lfile += length;
 			  ls_fileNbr++;
 			}
