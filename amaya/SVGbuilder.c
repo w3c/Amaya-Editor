@@ -99,7 +99,7 @@ void   ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
 {
 #define buflen 200
   char               css_command[buflen+20];
-  int                length, val;
+  int                length, val = 0;
   char               *text;
 
   text = NULL;

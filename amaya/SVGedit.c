@@ -250,7 +250,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
 {
   Element      asc, use;
   ElementType  elType;
-  int          elemType;
+  int          elemType = 0;
 
   /* if element is within a "use" or "tref" element, select that element
      instead */
