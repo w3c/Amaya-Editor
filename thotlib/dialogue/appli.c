@@ -587,7 +587,7 @@ int                 reason;
 int                 value;
 #endif /* __STDC__ */
 {
-   int        delta = 0, Xpos, Ypos, width = 1076, height;
+   int        delta = 0, width = 1076, height;
    int        sPos, nbPages, remaining;
 
    /* do not redraw it if in NoComputedDisplay mode */

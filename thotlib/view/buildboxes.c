@@ -3344,7 +3344,7 @@ int      frame;
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pAb;
-  PtrBox              pBox, pRootBox;
+  PtrBox              pBox;
   ViewFrame          *pFrame;
   int                 max, org;
   int                 w, h;

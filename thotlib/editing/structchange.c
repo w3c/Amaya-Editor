@@ -78,6 +78,8 @@
 #include "undo_f.h"
 #include "views_f.h"
 
+#ifdef IV
+
 /*----------------------------------------------------------------------
    AppendToFreeList append element pFree to the element list	
    anchored at pAnchor						
@@ -110,6 +112,7 @@ PtrElement         *pAnchor;
 	  }
      }
 }
+#endif /* IV */
 
 
 /*----------------------------------------------------------------------
