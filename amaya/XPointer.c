@@ -469,6 +469,31 @@ static Element AGetParent (Element el)
 }
 
 /*----------------------------------------------------------------------
+  AGetLastChild
+
+  returns the last child in a tree
+  ----------------------------------------------------------------------*/
+static Element AGetLastChild (Element el)
+{
+  Element child;
+
+  if (!el)
+    return NULL;
+  
+  child = el;
+
+  while (child)
+    {
+      child = TtaGetLastChild (child);
+      if (child && !ElIsHidden (child))
+	break;
+    }
+
+  return child;
+}
+
+
+/*----------------------------------------------------------------------
   PreviousSibling
 
   returns the first sibling element which doesn't have
@@ -498,7 +523,7 @@ static void PreviousSibling (Element *el)
       /* if the element is hidden, return the latest child */
       if (ElIsHidden (sibling))
 	{
-	  tmp_el = TtaGetLastChild (sibling);
+	  tmp_el = AGetLastChild (sibling);
 	  if (!tmp_el)
 	    {
 	      /* there was no child, let's try the next brother */

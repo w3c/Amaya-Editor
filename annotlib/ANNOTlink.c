@@ -504,7 +504,8 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	}
       else if (elType.ElTypeNum == HTML_EL_Unnumbered_List
 	       || elType.ElTypeNum == HTML_EL_Numbered_List
-	       || elType.ElTypeNum == HTML_EL_List_Item)
+	       || elType.ElTypeNum == HTML_EL_List_Item
+	       || elType.ElTypeNum == HTML_EL_Definition)
 	{
 	  /* for lists, we attach the A-element to the first pseudo
 	     paragraph. The .S forbids doing so elsewhere */
