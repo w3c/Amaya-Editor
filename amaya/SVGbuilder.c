@@ -1632,7 +1632,6 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
    TypeUnit		unit;
    PresentationValue    pval;
    PresentationContext  ctxt;
-   DisplayMode          dispMode;
    char                 *buffer, *text;
 
    leaf = TtaGetFirstChild (el);  /* Thot Graphic element */
@@ -1641,11 +1640,6 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
    ctxt->cssSpecificity = 0;
    ctxt->destroy = FALSE;
    pval.typed_data.unit = UNIT_PX;
-
-   dispMode = TtaGetDisplayMode (doc);
-   /* ask Thot to stop displaying changes made to the document*/
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);
 
    unit = UnPixel;
    width = maxX; height = maxY;
@@ -1682,13 +1676,13 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
 
    width = maxX - minX;
    height = maxY - minY;
+   TtaChangeLimitOfPolyline (leaf, unit, width, height, doc);
    pval.typed_data.value = width;
    pval.typed_data.real = FALSE;
    TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);    
    pval.typed_data.value = height;
    pval.typed_data.real = FALSE;
    TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
-   TtaChangeLimitOfPolyline (leaf, unit, width, height, doc);
 
    if (minX != 0)
      {
@@ -1728,7 +1722,6 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
      TranslateElement (el, doc, minX, unit, TRUE, TRUE);
    if (minY != 0)
      TranslateElement (el, doc, minY, unit, FALSE, TRUE);
-   TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------

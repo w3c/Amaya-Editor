@@ -1015,7 +1015,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 #ifdef _GTK
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
   e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-  ThotGrab (w, HVCurs, e, 0);
+  /***********  ThotGrab (w, HVCurs, e, 0); **********/
   xwindow = (GdkWindowPrivate*) w;
   XWarpPointer (GDK_DISPLAY(), 
 		None, 
@@ -1204,7 +1204,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 
 	  if (event->type == GDK_MOTION_NOTIFY)	
 	    {
-	      /* We take only last position update */
+	      /* We take only the last position update */
 	      while (gdk_events_pending ()) 
 		{
 		  event_tmp = gdk_event_get ();
@@ -1230,7 +1230,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			  newx = x + width;
 			  wrap = TRUE;
 			}
-	  
+
 		      /* Update the Y position */
 		      if (newy < y)
 			{
@@ -1246,7 +1246,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 		  /* shows the new adjacent segment position */
 		  if (newx != lastx || newy != lasty)
 		    {
-
 #ifndef _GL
 		      if (x1 != -1)
 			{
@@ -1259,7 +1258,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			  gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
 			}
 #else /* _GL */
-
 		      lastx = newx;
 		      lasty = newy;
 		      /* update the box buffer */
@@ -1267,64 +1265,50 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 					   ViewFrameTable[frame - 1].FrMagnification);
 		      newy = LogicalValue (lasty - firsty, UnPixel, NULL,
 					   ViewFrameTable[frame - 1].FrMagnification);
+		      if (pointselect == 0)
+			/* it's really a polyline, not a line */
+			{
+			  if (lastx - firstx > box->BxWidth)
+			    {
+			      box->BxWidth = lastx - firstx;
+			      box->BxW = box->BxWidth;
+			    }
+			  if (lasty - firsty > box->BxHeight)
+			    {
+			      box->BxHeight = lasty - firsty;
+			      box->BxH  = box->BxHeight;
+			    }
+			  if (lastx < box->BxClipX + EXTRA_GRAPH)
+			    box->BxClipX = lastx - EXTRA_GRAPH;
+			  if (lasty < box->BxClipY + EXTRA_GRAPH)
+			    box->BxClipY = lasty - EXTRA_GRAPH;
+			}
 
 		      ModifyPointInPolyline (Bbuffer, point, newx, newy);
 
 		      /* update the abstract box buffer */
 		      newx = (int) ((float) newx * ratioX);
 		      newy = (int) ((float) newy * ratioY);
-
+		      
 		      ModifyPointInPolyline (Pbuffer, point, newx, newy);
 
-		      {
-			PtrAbstractBox pAb;
+		      if (pointselect == 0)
+			{
+			  if (box->BxPictInfo != NULL)
+			    {
+			      /* we have to recompute the current spline */
+			      free ((STRING) box->BxPictInfo);
+			      box->BxPictInfo = NULL;
+			    }
+			}
 
-			pAb = box->BxAbstractBox;
-			if (pointselect != 0)
-			  {
-			    if (!box->BxAbstractBox->AbWidth.DimIsPosition && 
-				box->BxAbstractBox->AbEnclosing)
-			      /* this rule is applied to the parent */
-			      pAb = box->BxAbstractBox->AbEnclosing;
-			    switch (pointselect)
-			      {
-			      case 1:
-			      case 7:
-				if (box->BxHorizInverted)
-				  NewDimension (pAb, newx, newy, frame, TRUE);
-				else
-				  NewPosition (pAb, newx, 0, newy, 0, frame, TRUE);
-				break;
-			      case 3:
-			      case 5:
-				if (box->BxHorizInverted)
-				  NewPosition (pAb, newx, 0, newy, 0, frame, TRUE);
-				else
-				  NewDimension (pAb, newx, newy, frame, TRUE);
-				break;
-			      default: break;
-			      }
-			  }
-			else
-			  {
-			    if (box->BxPictInfo != NULL)
-			      {
-				/* we have to recompute the current spline */
-				free ((STRING) box->BxPictInfo);
-				box->BxPictInfo = NULL;
-			      }
-			    NewContent (pAb);
-			    APPgraphicModify (pAb->AbElement, pointselect, frame, FALSE, TRUE);
-			  }
-
-
-			DefRegion (frame, box->BxClipX - EXTRA_GRAPH,
-				   box->BxClipY - EXTRA_GRAPH,
-				   box->BxClipX + width + EXTRA_GRAPH,
-				   box->BxClipY + height + EXTRA_GRAPH);
-			FrameTable[frame].DblBuffNeedSwap = TRUE;
-			GL_Swap (frame);
-		      }
+		      DefRegion (frame, box->BxClipX - EXTRA_GRAPH,
+				 box->BxClipY - EXTRA_GRAPH,
+				 box->BxClipX + width + EXTRA_GRAPH,
+				 box->BxClipY + height + EXTRA_GRAPH);
+		      RedrawFrameBottom (frame, 0, NULL);
+		      FrameTable[frame].DblBuffNeedSwap = TRUE;
+		      GL_Swap (frame);
 #endif /* _GL */
 		      lastx = newx;
 		      lasty = newy;
@@ -1342,18 +1326,31 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 	    }
 	  if (event->type == GDK_BUTTON_RELEASE)
 	    {
-	      lastx = newx;
-	      lasty = newy;
+#ifdef _GL
+	      if (box->BxAbstractBox->AbEnclosing &&
+		  box->BxAbstractBox->AbEnclosing->AbBox)
+		/* suppose the enclosing box has the same width and height as
+		   the polyline box */
+		{
+		  box->BxAbstractBox->AbEnclosing->AbBox->BxHeight = box->BxHeight;
+		  box->BxAbstractBox->AbEnclosing->AbBox->BxH = box->BxH;
+		  box->BxAbstractBox->AbEnclosing->AbBox->BxWidth = box->BxWidth;
+		  box->BxAbstractBox->AbEnclosing->AbBox->BxW = box->BxW;
+		}
+#else
+	      lastx = newx - firstx;
+	      lasty = newy - firsty;
 	      /* update the box buffer */
-	      newx = LogicalValue (lastx - firstx, UnPixel, NULL,
+	      newx = LogicalValue (lastx, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
-	      newy = LogicalValue (lasty - firsty, UnPixel, NULL,
+	      newy = LogicalValue (lasty, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
 	      ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	      /* update the abstract box buffer */
 	      newx = (int) ((float) newx * ratioX);
 	      newy = (int) ((float) newy * ratioY);
 	      ModifyPointInPolyline (Pbuffer, point, newx, newy);
+#endif
 	      ret = 1;
 	    }
 	   
@@ -1658,6 +1655,7 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
   int                 x1, y1, x3, y3;
   int                 x, y, xorg, yorg;
   int                 lastx, lasty;
+  int                 boxType;
 
   *xi = *yi = 0;
   if (pBox == NULL || pBox->BxAbstractBox == NULL || pBox->BxAbstractBox->AbEnclosing == NULL)
@@ -1731,6 +1729,8 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
   /* get the current point */
   xorg -= pFrame->FrXOrg;
   yorg -= pFrame->FrYOrg;
+  boxType = pBox->BxAbstractBox->AbLeafType;
+  pBox->BxAbstractBox->AbLeafType = LtPolyLine;
   RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (pBox, frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1,
@@ -1746,6 +1746,7 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
 
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
+  pBox->BxAbstractBox->AbLeafType = boxType;
 }
 
 

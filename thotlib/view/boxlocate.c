@@ -2216,8 +2216,18 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 	  if (pBox != NULL)
 	    {
 	      /* A box is found */
-	      x = pBox->BxXOrg - pFrame->FrXOrg;
-	      y = pBox->BxYOrg - pFrame->FrYOrg;
+#ifdef _GL
+	      if (pBox->BxBoundinBoxComputed)
+		{
+		  x = pBox->BxClipX - pFrame->FrXOrg;
+		  y = pBox->BxClipY - pFrame->FrYOrg;
+		}
+	      else
+#endif /* _GL */
+		{
+		  x = pBox->BxXOrg - pFrame->FrXOrg;
+		  y = pBox->BxYOrg - pFrame->FrYOrg;
+		}
 	      width = pBox->BxWidth;
 	      height = pBox->BxHeight;
 	      pEl = pBox->BxAbstractBox->AbElement;

@@ -297,7 +297,7 @@ void AttrTransformChanged (NotifyAttribute *event)
 {
    ParseTransformAttribute (event->attribute, event->element, event->document,
 			    FALSE);
-   CheckSVGRoot (event->document, event->element);
+   /*******   CheckSVGRoot (event->document, event->element); *****/
 }
 
 /*----------------------------------------------------------------------
@@ -992,7 +992,7 @@ void GraphElemPasted (NotifyElement *event)
 
   XLinkPasted (event);
   /* check that the svg element includes that element */
-  CheckSVGRoot (event->document, event->element);
+/*****  CheckSVGRoot (event->document, event->element); ****/
   SetGraphicDepths (event->document, event->element);
 
   /* Set the namespace declaration if it's an <svg> element that is not
@@ -1305,6 +1305,7 @@ void ControlPointChanged (NotifyOnValue *event)
   ElementType     elType;
   AttributeType	  attrType;
   Attribute       attr;
+  DisplayMode     dispMode;
   char           *text, *buffer;
   int             i, length;
   int             x, y, minX, minY, maxX, maxY;
@@ -1345,6 +1346,12 @@ void ControlPointChanged (NotifyOnValue *event)
 	     i++;
 	  }
 	TtaFreeMemory (buffer);
+
+	dispMode = TtaGetDisplayMode (doc);
+	/* ask Thot to stop displaying changes made to the document*/
+	if (dispMode == DisplayImmediately)
+	  TtaSetDisplayMode (doc, DeferredDisplay);
+
 	attrType.AttrTypeNum = SVG_ATTR_points;
 	attr = TtaGetAttribute (el, attrType);
 	if (attr == NULL)
@@ -1356,12 +1363,8 @@ void ControlPointChanged (NotifyOnValue *event)
 	TtaSetAttributeText (attr, text, el, doc);
 	TtaFreeMemory (text);
 	UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY);
+	TtaSetDisplayMode (doc, dispMode);
      }
-  if (!InCreation)
-    /* don't check anything during the creation */
-    /* check that the enclosing svg element still encompasses the
-       element whose size or position has just been changed */
-    CheckSVGRoot (doc, el);
 }
 
 /*----------------------------------------------------------------------
