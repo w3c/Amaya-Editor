@@ -756,7 +756,9 @@ static AttributeMapping AttributeMappingTable[] =
    {"VSPACE", "", 'A', HTML_ATTR_vspace},
    {"WIDTH", "APPLET", 'A', HTML_ATTR_Width_},
    {"WIDTH", "HR", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "IMG", 'A', HTML_ATTR_Width_},
+   {"WIDTH", "IMG", 'A', HTML_ATTR_Width__},	/* should be HTML_ATTR_Width_
+						but accept percentage for
+						compatibility with Netscape */
 #ifdef COUGAR
    {"WIDTH", "OBJECT", 'A', HTML_ATTR_Width_},
 #endif
@@ -5004,7 +5006,7 @@ char                c;
 	      }
 
 	if (AttributeMappingTable[lastAttrEntry].ThotAttribute == HTML_ATTR_Width__)
-	   /* HTML attribute "width" for a Table of a HR */
+	   /* HTML attribute "width" for a Table or a HR */
 	   /* create the corresponding attribute IntWidthPercent or */
 	   /* IntWidthPxl */
 	   CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument);
