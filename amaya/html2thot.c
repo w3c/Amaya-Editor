@@ -315,7 +315,7 @@ static int          CharLevelElement[] =
    HTML_EL_Anchor,
    HTML_EL_Italic_text, HTML_EL_Bold_text, HTML_EL_Teletype_text,
    HTML_EL_Underlined_text, HTML_EL_Struck_text, HTML_EL_Big_text,
-   HTML_EL_Small_text,
+   HTML_EL_Small_text, HTML_EL_Subscript, HTML_EL_Superscript,
    HTML_EL_Font_,
    HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
    HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
