@@ -1854,7 +1854,9 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	      else
 		pNextBox = GetNextBox (pNextBox->BxAbstractBox);
 	      if (!pBox->BxAbstractBox->AbElement->ElTerminal &&
-		  (pNextBox == NULL || pNextBox->BxWidth + xi > maxX))
+		  (pNextBox == NULL ||
+		   (pNextBox->BxAbstractBox->AbLeafType != LtText &&
+		    pNextBox->BxWidth + xi > maxX)))
 		/* accept to cut the line here */ 
 		still = FALSE;
 	    }
