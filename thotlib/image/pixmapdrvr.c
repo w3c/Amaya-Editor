@@ -24,14 +24,8 @@
 #include "xpm.h"
 
 #include "imagedrvr.f"
+#include "inites.f"
 #include "font.f"
-#ifdef __STDC__
-extern void         ColorRGB (int, unsigned short *, unsigned short *, unsigned short *);
-
-#else  /* __STDC__ */
-extern void         ColorRGB ();
-
-#endif /* __STDC__ */
 
 
 /* ---------------------------------------------------------------------- */

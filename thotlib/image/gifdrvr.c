@@ -1263,50 +1263,6 @@ ThotColorStruct     colrs[256];
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Messages d'erreur : On recupere les erreurs de Xpm et on envoi  | */
-/* |            vers le frame Thot Dialogue                             | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                GifPrintErrorMsg (int ErrorNumber)
-#else  /* __STDC__ */
-void                GifPrintErrorMsg (ErrorNumber)
-int                 ErrorNumber;
-#endif /* __STDC__ */
-{
-   switch (ErrorNumber)
-	 {
-
-	    case XpmColorError:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_ERROR);
-		  break;
-	       }
-	    case XpmOpenFailed:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_OPEN_FAILED);
-		  break;
-	       }
-	    case XpmFileInvalid:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_FILE_INVALID);
-		  break;
-	       }
-	    case XpmNoMemory:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_NO_MEMORY);
-		  break;
-	       }
-	    case XpmColorFailed:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_FAILED);
-		  break;
-	       }
-
-	 }
-}
-
-
-/* ---------------------------------------------------------------------- */
 /* |    GifCreateImage lit et retourne le Gif lu dans le fichier        | */
 /* |            fn. Met a` jour xif, yif, wif, hif.                     | */
 /* ---------------------------------------------------------------------- */
