@@ -1993,13 +1993,13 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		      encoding = ISO_8859_7;
 #endif /* _WINDOWS */
 		    }
+		}
 #else /* _GL */
 		  /* Symbols */
 		  code = 'G';
 		  pfont = &(fontset->Font_16);
 		  encoding = ISO_SYMBOL;
 #endif /* _GL */
-		}
 	    }
 	  else if (c < 0x24F)
 	    {
