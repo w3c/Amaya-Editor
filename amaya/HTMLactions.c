@@ -796,23 +796,22 @@ Document	document;
 
 
 /*----------------------------------------------------------------------
-  DoubleClick     The user has double-clicked an element.         
+  ActivateElement    The user has activated an element.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            DoubleClick (NotifyElement * event)
+static ThotBool     ActivateElement (Element element, Document document)
 #else  /* __STDC__ */
-ThotBool            DoubleClick (event)
-NotifyElement      *event;
-
+static ThotBool     ActivateElement (element, document)
+Element             element;
+Document            document;
 #endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
-   Element             anchor, elFound, ancestor, element;
+   Element             anchor, elFound, ancestor;
    ElementType         elType, elType1;
    ThotBool	       ok, isHTML;
 
-   element = event->element;
    elType = TtaGetElementType (element);
    isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
 
@@ -859,11 +858,11 @@ NotifyElement      *event;
 	   /* it 's a double click on a submit or reset button */
 	   {
 	     /* interrupt current transfer */
-	     StopTransfer (event->document, 1);	   
-	     SubmitForm (event->document, element);
+	     StopTransfer (document, 1);	   
+	     SubmitForm (document, element);
 	   }
 	else if (elType1.ElTypeNum == HTML_EL_BUTTON)
-	   DblClickOnButton (element, event->document);
+	   DblClickOnButton (element, document);
 	return (TRUE);
      }
    else if (isHTML && (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
@@ -877,7 +876,7 @@ NotifyElement      *event;
        elFound = TtaGetTypedAncestor (element, elType1);
        if (elFound)
 	 {
-	  DblClickOnButton (elFound, event->document);
+	  DblClickOnButton (elFound, document);
 	  return (TRUE);
 	 }
      }
@@ -895,8 +894,8 @@ NotifyElement      *event;
 	     /* it's a graphic submit element */
 	     {
 	       /* interrupt current transfer */
-	       StopTransfer (event->document, 1);	   
-	       SubmitForm (event->document, element);
+	       StopTransfer (document, 1);	   
+	       SubmitForm (document, element);
 	       return (TRUE);
 	     }
 	 }
@@ -908,7 +907,7 @@ NotifyElement      *event;
 	elType1 = TtaGetElementType (elFound);
 	if (elType1.ElTypeNum == HTML_EL_Option)
 	  {
-	     SelectOneOption (event->document, elFound);
+	     SelectOneOption (document, elFound);
 	     return (TRUE);
 	  }
      }
@@ -920,28 +919,28 @@ NotifyElement      *event;
         elFound = TtaSearchTypedElement (elType1, SearchInTree, element);
         if (elFound)
 	  {
-	     SelectOneOption (event->document, elFound);
+	     SelectOneOption (document, elFound);
 	     return (TRUE);
 	  }
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_Checkbox_Input)
      {
-	SelectCheckbox (event->document, element);
+	SelectCheckbox (document, element);
 	return (TRUE);
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_Radio_Input)
      {
-	SelectOneRadio (event->document, element);
+	SelectOneRadio (document, element);
 	return (TRUE);
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_File_Input)
      {
-	ActivateFileInput (event->document, element);
+	ActivateFileInput (document, element);
 	return (TRUE);
      }
 
    /* Search the anchor or LINK element */
-   anchor = SearchAnchor (event->document, element, TRUE);
+   anchor = SearchAnchor (document, element, TRUE);
    if (anchor == NULL)
       if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
 		     elType.ElTypeNum == HTML_EL_FRAME))
@@ -949,14 +948,14 @@ NotifyElement      *event;
       else
 	{
 	   elType1.ElTypeNum = HTML_EL_LINK;
-	   elType1.ElSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
+	   elType1.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
 	   anchor = TtaGetTypedAncestor (element, elType1);
 	}
    /* if not found, search a cite or href attribute on an ancestor */
    if (anchor == NULL)
       {
 	ancestor = element;
-	attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
+	attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), document);
 	do
 	   {
 	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -974,7 +973,46 @@ NotifyElement      *event;
 	while (anchor == NULL && ancestor != NULL);
       }
 
-   return (FollowTheLink (anchor, element, event->document));
+   return (FollowTheLink (anchor, element, document));
+}
+
+/*----------------------------------------------------------------------
+  ActivateFromKeyboard         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void            ActivateFromKeyboard (Document doc, View view)
+#else  /* __STDC__ */
+void            ActivateFromKeyboard (doc, view)
+Document        doc;
+View            view;
+#endif /* __STDC__ */
+{
+   Element             firstSel;
+   int                 firstChar, lastChar;
+
+   TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
+   if (firstSel)
+     ActivateElement (firstSel, doc);
+}
+
+/*----------------------------------------------------------------------
+  DoubleClick     The user has double-clicked an element.         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            DoubleClick (NotifyElement *event)
+#else  /* __STDC__ */
+ThotBool            DoubleClick (event)
+NotifyElement      *event;
+#endif /* __STDC__ */
+{
+  ThotBool usedouble;
+
+  TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &usedouble);  
+  if (usedouble)
+    /* don't let Thot perform normal operation */
+    return (ActivateElement (event->element, event->document));
+  else
+    return TRUE;
 }
 
 
@@ -982,7 +1020,7 @@ NotifyElement      *event;
   SimpleClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            SimpleClick (NotifyElement * event)
+ThotBool            SimpleClick (NotifyElement *event)
 #else  /* __STDC__ */
 ThotBool            SimpleClick (event)
 NotifyElement      *event;
@@ -996,7 +1034,7 @@ NotifyElement      *event;
     return TRUE;
   else
     /* don't let Thot perform normal operation */
-    return (DoubleClick (event));
+    return (ActivateElement (event->element, event->document));
 }
 
 /*----------------------------------------------------------------------
@@ -1705,7 +1743,7 @@ void                SynchronizeSourceView (event)
 NotifyElement* event;
 #endif				/* __STDC__ */
 {
-   Element             firstSel, el, child, prevChild, otherEl;
+   Element             firstSel, el, child, otherEl;
    int                 firstChar, lastChar, line, i, view;
    AttributeType       attrType;
    Attribute	       attr;
@@ -1885,6 +1923,8 @@ int                 elemtype;
    int                 length, firstSelectedChar, lastSelectedChar, i;
    ThotBool            remove, done, toset;
 
+   if (!TtaGetDocumentAccessMode (document))
+     return;
    TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
 				&lastSelectedChar);
    if (selectedEl == NULL)

@@ -1031,56 +1031,6 @@ View                view;
 #endif /* !AMAYA_JAVA */
 }
 
-/*----------------------------------------------------------------------
-   SetCharEmphasis                                                 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetCharEmphasis (Document document, View view)
-#else
-void                SetCharEmphasis (document, view)
-Document            doc;
-View                view;
-
-#endif
-{
-   if (TtaGetDocumentAccessMode (document))
-     /* the document is in ReadWrite mode */
-     SetCharFontOrPhrase (document, HTML_EL_Emphasis);
-}
-
-/*----------------------------------------------------------------------
-   SetCharStrong                                                   
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetCharStrong (Document document, View view)
-#else
-void                SetCharStrong (document, view)
-Document            doc;
-View                view;
-
-#endif
-{
-   if (TtaGetDocumentAccessMode (document))
-     /* the document is in ReadWrite mode */
-     SetCharFontOrPhrase (document, HTML_EL_Strong);
-}
-
-/*----------------------------------------------------------------------
-   SetCharCode                                                     
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetCharCode (Document document, View view)
-#else
-void                SetCharCode (document, view)
-Document            doc;
-View                view;
-
-#endif
-{
-   if (TtaGetDocumentAccessMode (document))
-     /* the document is in ReadWrite mode */
-     SetCharFontOrPhrase (document, HTML_EL_Code);
-}
 
 /*----------------------------------------------------------------------
    TextURL                                                      
@@ -1594,13 +1544,13 @@ ThotBool     logFile;
 			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iI =  TtaAddButton (doc, 1, iconI, SetCharEmphasis, "SetCharEmphasis",
+	   iI =  TtaAddButton (doc, 1, iconI, SetOnOffEmphasis, "SetOnOffEmphasis",
 				    TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
 				    TBSTYLE_CHECK, TRUE);
-	   iB =  TtaAddButton (doc, 1, iconB, SetCharStrong, "SetCharStrong",
+	   iB =  TtaAddButton (doc, 1, iconB, SetOnOffStrong, "SetOnOffStrong",
 				    TtaGetMessage (AMAYA, AM_BUTTON_BOLD),
 				    TBSTYLE_CHECK, TRUE);
-	   iT = TtaAddButton (doc, 1, iconT, SetCharCode, "SetCharCode",
+	   iT = TtaAddButton (doc, 1, iconT, SetOnOffCode, "SetOnOffCode",
 				    TtaGetMessage (AMAYA, AM_BUTTON_CODE),
 				    TBSTYLE_CHECK, TRUE);
 	   /* SEPARATOR */
@@ -4107,8 +4057,12 @@ STRING              data;
 	 /* create an attribute HREF for the Link_Anchor */
 	 SetREFattribute (AttrHREFelement, AttrHREFdocument, AttrHREFvalue, NULL);
        else if (IsNewAnchor)
-	 /* remove the link if it was just created */
-	 DeleteAnchor (AttrHREFdocument, 1);
+	 {
+	   /* remove the link if it was just created */
+	   TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+	   DeleteAnchor (AttrHREFdocument, 1);
+	   TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+	 }
 
        break;
 

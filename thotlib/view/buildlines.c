@@ -3128,7 +3128,7 @@ PtrAbstractBox      pAb;
 	      else
 		{
 		  /* new position of the current line */
-		  pos = pLine->LiYOrg + pLine->LiHorizRef - ascent;
+		  pos = 0;
 		  /* vertical shifting of the current line baseline */
 		  i = pos - pLine->LiYOrg + ascent - pLine->LiHorizRef;
 		}
@@ -3157,8 +3157,8 @@ PtrAbstractBox      pAb;
 		}
 	      
 	      /* change the baseline of the current line */
-	      i = ascent - pLine->LiYOrg;
-	      pLine->LiYOrg = ascent;
+	      i = ascent - pLine->LiHorizRef;
+	      pLine->LiHorizRef = ascent;
 	      if (i)
 		{
 		  /* move the block baseline if it's inherited from the first line */
@@ -3169,7 +3169,7 @@ PtrAbstractBox      pAb;
 	      
 	      /* move the box */
 	      /* vertical shifting of the box */
-	      i = pLine->LiYOrg + pLine->LiHorizRef - pBox->BxHorizRef - pBox->BxYOrg;
+	      i = pParentBox->BxYOrg + pLine->LiYOrg + pLine->LiHorizRef - pBox->BxHorizRef - pBox->BxYOrg;
 	      if (i)
 		YMove (pBox, NULL, i, frame);
 	      

@@ -2027,7 +2027,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   SetCharFontOrPhrase (document, HTML_EL_Emphasis);
+  SetCharFontOrPhrase (document, HTML_EL_Emphasis);
 }
 
 /*----------------------------------------------------------------------
@@ -2041,7 +2041,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   SetCharFontOrPhrase (document, HTML_EL_Strong);
+  SetCharFontOrPhrase (document, HTML_EL_Strong);
 }
 
 /*----------------------------------------------------------------------
@@ -2055,7 +2055,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   SetCharFontOrPhrase (document, HTML_EL_Cite);
+  SetCharFontOrPhrase (document, HTML_EL_Cite);
 }
 
 
@@ -2070,7 +2070,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   SetCharFontOrPhrase (document, HTML_EL_Def);
+  SetCharFontOrPhrase (document, HTML_EL_Def);
 }
 
 

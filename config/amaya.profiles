@@ -219,6 +219,7 @@ HelpTables
 ################# MATHML
 [maths]
 &CreateMath
+&CreateMathMenu
 &CreateMROOT
 &CreateMSQRT
 &CreateMFRAC
@@ -234,6 +235,10 @@ HelpTables
 &DeleteMColumn
 &CreateNOSCRIPT
 HelpMath
+
+################# SVG
+[svg]
+&ShowGraphicsPalette
 
 ########### STYLE
 [html-style]
