@@ -1804,7 +1804,7 @@
 <label define="TMSG_NO_SELECT">
 	<message xml:lang="en">Please select a document</message>
 	<message xml:lang="de">Bitte ein Dokument auswählen</message>
-	<message xml:lang="fr">Rien à corriger : sélectionnez un document</message>
+	<message xml:lang="fr">Sélectionnez un document</message>
 	<message xml:lang="it">Seleziona un documento</message>
 	<message xml:lang="tr">Lütfen bir belge seçin</message>
 	<message xml:lang="es">Por favor, seleccione un documento</message>
@@ -1889,6 +1889,17 @@
 	<message xml:lang="pt">Selecionar uma classe ou pseudo-classe</message>
 	<message xml:lang="fi">Valitse luokka tai valeluokka</message>
 	<message xml:lang="ru">Выбрать класс или псевдо-класс</message>
+</label>
+<label define="TMSG_SEL">
+	<message xml:lang="en">Select</message>
+	<message xml:lang="fr">Sélectionner</message>
+	<message xml:lang="de">Auswählen</message>
+	<message xml:lang="it">Seleziona</message>
+	<message xml:lang="tr">Sınıf seçimi</message>
+	<message xml:lang="es">Seleccionar</message>
+	<message xml:lang="pt">Selecionar</message>
+	<message xml:lang="fi">Valitse</message>
+	<message xml:lang="ru">Выбрать</message>
 </label>
 <label define="TMSG_USE_F2">
 	<message xml:lang="en">Use F2 key to select the parent element</message>

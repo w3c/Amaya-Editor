@@ -164,7 +164,7 @@
 162 Mot "%s" ajouté dans le dictionnaire du document
 163 Correction terminée
 164 Correction interrompue
-165 Rien à corriger : sélectionnez un document
+165 Sélectionnez un document
 166 Sauvegarde du dictionnaire "%s"
 167 Pas disponible dans cette version
 168 Activer/Desactiver palette
@@ -177,11 +177,12 @@
 175 Justifié
 176 Appliquer classe
 177 Sélectionner une classe ou une pseudo-classe
-178 Utiliser la touche F2 pour sélectionner l'élément englobant
-179 Maths
-180 Divers
-181 Relations binaires
-182 Relations binaires de négation
-183 Opérateurs
-184 Alphabet grec (majuscules)
-185 Flèches
+178 Sélectionner
+179 Utiliser la touche F2 pour sélectionner l'élément englobant
+180 Maths
+181 Divers
+182 Relations binaires
+183 Relations binaires de négation
+184 Opérateurs
+185 Alphabet grec (majuscules)
+186 Flèches
