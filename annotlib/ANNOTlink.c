@@ -774,13 +774,12 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 		  AnnotThread[doc].references = 1;
 		  thread = &AnnotThread[doc_thread];
 		}
+	      /* add and show the thread item */
 	      List_add (&(thread->annotations), (void *) annot);
 	      if (!AnnotMetaData[doc].thread)
 		AnnotMetaData[doc].thread = thread;
 	      annot->thread = thread;
-	      /* sigh, hard coded for the moment */
-	      /* add and show the thread item */
-		ANNOT_AddThreadItem (doc_thread, annot);
+	      ANNOT_AddThreadItem (doc_thread, annot);
 	    }
 	  else
 #endif /* ANNOT_ON_ANNOT */

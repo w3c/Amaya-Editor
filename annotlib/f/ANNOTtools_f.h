@@ -51,6 +51,8 @@ extern ThotBool AnnotList_delAnnot ( List **list,
                                      ThotBool useAnnotUrl );
 extern Document AnnotThread_searchRoot ( char *root );
 extern Document AnnotThread_searchThreadDoc ( char *annot_url );
+extern ThotBool Annot_isSameURL ( char *url1,
+                                  char *url2 );
 extern ThotBool AnnotThread_link2ThreadDoc ( Document doc );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotFilter_free ( List *annot_list,
@@ -137,6 +139,8 @@ extern ThotBool AnnotList_delAnnot (/* List **list,
                                        ThotBool useAnnotUrl */);
 extern Document AnnotThread_searchRoot (/* char *root */);
 extern Document AnnotThread_searchThreadDoc (/* char *annot_url */);
+extern ThotBool Annot_isSameURL (/* char *url1,
+                                    char *url2 */);
 extern ThotBool AnnotThread_link2ThreadDoc (/* Document doc */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotFilter_free (/* List *annot_list,

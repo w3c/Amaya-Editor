@@ -1166,6 +1166,9 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   int              method;
   int              rel_doc;
   RAISESOURCEDOC_context *ctx;
+#ifdef ANNOT_ON_ANNOT
+  Document         thread_doc;
+#endif /* ANNOT_ON_ANNOT */
 
   /* initialize from the context */
   el = event->element;
@@ -1177,19 +1180,11 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != Annot_EL_SourceDoc)
     {
-      Document thread_doc;
-
       elType.ElTypeNum = Annot_EL_Thread_item;
       el = TtaSearchTypedElement (elType, SearchBackward, el);
       if (!el)
 	return FALSE;  /* let Thot do its usual operations */
       has_thread = TRUE;
-      thread_doc = ANNOT_GetThreadDoc (doc_annot);
-      if (thread_doc != 0 && thread_doc != doc_annot)
-	{
-	  ANNOT_ToggleThread (doc_annot, thread_doc, FALSE);
-	  TtaCloseDocument (thread_doc);
-	}
     }
 #endif /* ANNOT_ON_ANNOT */
 
@@ -1208,6 +1203,18 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
       url = TtaGetMemory (length);
       TtaGiveTextAttributeValue (HrefAttr, url, &length);
     }
+#ifdef ANNOT_ON_ANNOT
+  /* unless we're browsing the document corresponding to this
+     thread item, we close it */
+  thread_doc = ANNOT_GetThreadDoc (doc_annot);
+  if (thread_doc != 0 && !Annot_isSameURL (DocumentURLs[thread_doc], url)
+      && doc_annot != thread_doc)
+    {
+      ANNOT_ToggleThread (doc_annot, thread_doc, FALSE);
+	CloseDocument (thread_doc, 1);
+    }
+#endif /* ANNOT_ON_ANNOT */
+
   if (!docModified)
     {
       TtaSetDocumentUnmodified (doc_annot);

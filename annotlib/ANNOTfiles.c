@@ -189,7 +189,7 @@ void ANNOT_ReloadAnnotMeta (annotDoc)
      Document annotDoc;
 #endif /* __STDC__*/
 {
-  Document source_doc;
+  Document source_doc; 
   AnnotMeta *annot;
 
   source_doc = DocumentMeta[annotDoc]->source_doc;
@@ -452,7 +452,7 @@ static Element ANNOT_ThreadItem_new (Document doc)
   ANNOT_ThreadItem_init
   Inits a thread item default fields.
   -----------------------------------------------------------------------*/
-static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta *annot, ThotBool useSource)
+static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta *annot_doc, ThotBool useSource)
 {
   Element             el;
   ElementType         elType;
@@ -460,7 +460,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
   AttributeType       attrType;
   char               *href;
   char               *tmp;
-  AnnotMeta          *annot_source;
+  AnnotMeta          *annot;
 
   attrType.AttrSSchema = elType.ElSSchema = TtaGetSSchema ("Annot", doc);
 
@@ -474,11 +474,19 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
     TtaRemoveAttribute (thread_item, attr, doc);
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (thread_item, attr, doc);
-  tmp = (useSource) ? annot->source_url : annot->body_url,
+  tmp = (useSource) ? annot_doc->source_url : annot_doc->body_url,
   href = TtaGetMemory (strlen (tmp) + 20);
   sprintf (href, "%s", tmp);
   TtaSetAttributeText (attr, href, thread_item, doc);
   TtaFreeMemory (href);
+
+  if (useSource)
+    annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
+  else
+    annot = annot_doc;
+
+  if (!annot)
+    tmp = NULL;
 
   /* put the title of the annotation in the subject */
   elType.ElTypeNum = Annot_EL_TI_Title;
@@ -486,21 +494,35 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
   if (el)
     {
       el = TtaGetFirstChild (el);
-      if (useSource)
-	{
-	  /* @@ JK: Add the different cases here */
-	  annot_source = GetMetaData (DocumentMeta[doc]->source_doc, doc);
-	  if (annot_source)
-	    tmp = annot_source->title;
-	  else
-	    tmp = NULL;
-	}
-      else 
+      if (annot)
 	tmp = annot->title;
       TtaSetTextContent (el, (tmp) ? tmp :  "no title", 
 			 TtaGetDefaultLanguage (), doc);
     }
 
+  /* put the title of the annotation in the subject */
+  elType.ElTypeNum = Annot_EL_TI_Author;
+  el = TtaSearchTypedElement (elType, SearchInTree, thread_item);
+  if (el)
+    {
+      el = TtaGetFirstChild (el);
+      if (annot)
+	tmp = annot->author;
+      if (tmp)
+	TtaSetTextContent (el, tmp, TtaGetDefaultLanguage (), doc);
+    }
+
+  /* put the autor of the annotation in the subject */
+  elType.ElTypeNum = Annot_EL_TI_Date;
+  el = TtaSearchTypedElement (elType, SearchInTree, thread_item);
+  if (el)
+    {
+      el = TtaGetFirstChild (el);
+      if (annot)
+	tmp = annot->mdate;
+      if (tmp)
+	TtaSetTextContent (el, tmp, TtaGetDefaultLanguage (), doc);
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -586,8 +608,14 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
     }
   /* create the thread_item */
   thread_item = ANNOT_ThreadItem_new (doc);
-  /* and insert it as the first child of the above container */
-  TtaInsertFirstChild (&thread_item, el, doc);
+  /* and insert it as the last child of the above container */
+  /* JK: @@ we should use sort here the thread item by date too */
+  root = el;
+  el = TtaGetLastChild (root);
+  if (el)
+    TtaInsertSibling (thread_item, el, FALSE, doc);
+  else
+    TtaInsertFirstChild (&thread_item, root, doc);
 
   /* init the thread item elements */
   ANNOT_ThreadItem_init (thread_item, doc,  annot, FALSE);
@@ -607,7 +635,7 @@ void ANNOT_ToggleThread (Document thread_doc, Document annot_doc,
 {
 #ifdef ANNOT_ON_ANNOT
   ElementType    elType;
-  Element        root, el;
+  Element        root, el, ti_desc;
   Attribute      attr;
   AttributeType  attrType;
   char          *url;
@@ -624,26 +652,29 @@ void ANNOT_ToggleThread (Document thread_doc, Document annot_doc,
       i = TtaGetTextAttributeLength (attr) + 1;
       url = TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
-      attrType.AttrTypeNum = Annot_ATTR_Selected_;
-      attr = TtaGetAttribute (el, attrType);
       /* grr... again a local compare problem! */
+      elType.ElTypeNum = Annot_EL_TI_desc;
+      ti_desc = TtaSearchTypedElement (elType, SearchInTree, el);
+      attrType.AttrTypeNum = Annot_ATTR_Selected_;
+      attr = TtaGetAttribute (ti_desc, attrType);
       if (!strcasecmp (url, DocumentURLs[annot_doc])
-	  || !strcasecmp (url+sizeof ("file:/"), DocumentURLs[annot_doc]))
+	  || !strcasecmp (url + sizeof ("file:/"), DocumentURLs[annot_doc]))
 	{
 	  if (turnOn && !attr)
 	    {
 	      /* turn on the selected status */
 	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, thread_doc);
+	      TtaAttachAttribute (ti_desc, attr, thread_doc);
+	      TtaSetAttributeValue (attr, Annot_ATTR_Selected__VAL_Yes_, ti_desc, thread_doc);
 	    }
 	  if (!turnOn && attr)
 	    /* turn off the selected status */
-	    TtaRemoveAttribute (el, attr, thread_doc);
+	    TtaRemoveAttribute (ti_desc, attr, thread_doc);
 	}
       else if (strcasecmp (url, DocumentURLs[annot_doc]) && attr)
 	{
 	  /* turn off the selected status */
-	  TtaRemoveAttribute (el, attr, thread_doc);
+	  TtaRemoveAttribute (ti_desc, attr, thread_doc);
 	}
       TtaFreeMemory (url);
       root = el;
@@ -655,8 +686,8 @@ void ANNOT_ToggleThread (Document thread_doc, Document annot_doc,
 
 /*-----------------------------------------------------------------------
   ANNOT_GetThreadDoc
-  Returns the doc number where a thread item may be opened. Returns
-  0 if no doc is available.
+  Returns the doc number of the doc that is currently selected in a thread.
+  Returns 0 if no such doc is open.
   -----------------------------------------------------------------------*/
 Document ANNOT_GetThreadDoc (Document thread_doc)
 {
@@ -678,6 +709,7 @@ Document ANNOT_GetThreadDoc (Document thread_doc)
   TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
   if (el)
     {
+      el = TtaGetParent (el);
       attrType.AttrTypeNum = Annot_ATTR_HREF_;
       attr = TtaGetAttribute (el, attrType);
       i = TtaGetTextAttributeLength (attr) + 1;
@@ -690,8 +722,9 @@ Document ANNOT_GetThreadDoc (Document thread_doc)
 	  if (!DocumentURLs[i])
 	    continue;
 	  else if (!strcasecmp (url, DocumentURLs[i])
-		   || !strcasecmp (url+sizeof ("file:/"), DocumentURLs[i])
-		   || !strcasecmp (url+sizeof ("file://"), DocumentURLs[i]))
+		   || !strcasecmp (url + sizeof ("file:") - 1, DocumentURLs[i])
+		   || !strcasecmp (url + sizeof ("file:/") - 1, DocumentURLs[i])
+		   || !strcasecmp (url + sizeof ("file://") - 1, DocumentURLs[i]))
 	    {
 	      doc_annot = i;
 	      break;
@@ -763,6 +796,8 @@ void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot,
 {
   char *source_doc_title;
   char *text;
+  Element el;
+  ElementType elType;
 
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (docAnnot, NoComputedDisplay);
@@ -790,6 +825,16 @@ void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot,
     ANNOT_InitDocumentBody (docAnnot, source_doc_title);
 
   TtaFreeMemory (source_doc_title);
+
+#ifdef ANNOT_ON_ANNOT
+  /* erase the thread */
+  el = TtaGetRootElement (docAnnot);
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = Annot_EL_Thread;
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  if (el)
+    TtaRemoveTree (el, docAnnot);
+#endif /* ANNOT_ON_ANNOT */
 
   /* show the document */
   TtaSetDisplayMode (docAnnot, DisplayImmediately);

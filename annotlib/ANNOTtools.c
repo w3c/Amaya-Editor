@@ -623,7 +623,7 @@ AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch sea
 
 	case AM_BODY_FILE:
 	  if (annot->body_url && IsFilePath (annot->body_url))
-	    ptr = annot->body_url + sizeof ("file://") -1;
+	    ptr = annot->body_url + sizeof ("file://") - 1;
 	  else
 	    ptr = annot->body_url;
 	  break;
@@ -753,6 +753,23 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
 #else
   return 0;
 #endif /* ANNOT_ON_ANNOT */
+}
+
+/*------------------------------------------------------------
+   Annot_docIsOpen
+   Returns TRUE if both URLs are the same, FALSE otherwise.
+   ------------------------------------------------------------*/
+ThotBool Annot_isSameURL (char *url1, char *url2)
+{
+  if (!url1 || !url2)
+    return FALSE;
+
+  if (!strcasecmp (url1, url2)
+      || !strcasecmp (url1, url2 + sizeof ("file:") - 1)
+      || !strcasecmp (url1, url2 + sizeof ("file://") - 1))
+    return TRUE;
+  else
+    return FALSE;
 }
 
 /*------------------------------------------------------------

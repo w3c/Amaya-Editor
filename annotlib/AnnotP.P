@@ -177,9 +177,25 @@ BOXES
 	Visibility: 5;
 	Content: Picture 'selected.gif';
         VertPos: Bottom = Creator . HRef + 0.2;
-        HorizPos: Right = Creator . Left;
+        HorizPos: Left = Enclosing  . Left;
 #endif
 	END;
+
+ LeftSpace_box: BEGIN
+	Visibility: 5;
+	Content: (Text ' ');
+	END;
+
+ LeftP_box: BEGIN
+	Visibility: 5;
+	Content: (Text ' (');
+	END;
+
+ RightP_box: BEGIN
+	Visibility: 5;
+	Content: (Text ')');
+	END;
+
 RULES
 
   Document:
@@ -346,24 +362,32 @@ RULES
 
  TI_Title:
 	BEGIN
+	Style: Bold;
 	IN Links_view
 	   Visibility: Thread_visibility;
 	END;
 
  TI_Date:
 	BEGIN
+        CreateBefore (LeftSpace_box);
+	Style: Italics;
+	HorizPos: Left = Previous . Right + 5.0;
 	IN Links_view
 	   Visibility: Thread_visibility;
 	END;
 
  TI_Author:
 	BEGIN
+        CreateBefore (LeftP_box);
+        CreateAfter (RightP_box);
+	HorizPos: Left = Previous . Right + 5.0;
 	IN Links_view
 	   Visibility: Thread_visibility;
 	END;
 
  TI_Type:
 	BEGIN
+	HorizPos: Left = Previous . Right + 5.0;
 	IN Links_view
 	   Visibility: Thread_visibility;
 	END;
@@ -375,15 +399,11 @@ ATTRIBUTES
  	CreateBefore(ValueType);
         END;
 
- Selected_(Thread_item):
+ Selected_:
 	 BEGIN
 	 CreateFirst (Selected_gif);
  	 Foreground: Red;
 	 END;
 END
-
-
-
-
 
 
