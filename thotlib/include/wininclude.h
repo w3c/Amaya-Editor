@@ -10,7 +10,7 @@ extern ThotBool   RegisterWin95 (CONST WNDCLASS *lpwc);
 extern void       DropFile (Document doc, View view, char *s);
 extern HMENU      WIN_GetMenu (int ref);
 extern void       WinErrorBox (ThotWindow w, char *s);
-extern HFONT      WinLoadFont (HDC w, ptrfont f);
+extern HFONT      WinLoadFont (HDC w, PtrFont f);
 extern int        WIN_InitSystemColors ();
 extern void       WIN_GetDeviceContext (int frame);
 extern void       WIN_ReleaseDeviceContext ();
