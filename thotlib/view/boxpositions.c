@@ -761,13 +761,16 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 	      }
 	  }
 #ifdef _GL
-	/*if no transformation, make clipx, clipy OK*/
-	pChildBox->BxClipX = pChildBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-           pBox->BxLPadding;
-	pChildBox->BxClipY = pChildBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-           pBox->BxTPadding;
-	pChildBox->BxClipW = pChildBox->BxW;
-	pChildBox->BxClipH = pChildBox->BxH;
+	if (pChildBox)
+	  {
+	    /*if no transformation, make clipx, clipy OK*/
+	    pChildBox->BxClipX = pChildBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	      pBox->BxLPadding;
+	    pChildBox->BxClipY = pChildBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+	      pBox->BxTPadding;
+	    pChildBox->BxClipW = pChildBox->BxW;
+	    pChildBox->BxClipH = pChildBox->BxH;
+	  }
 #endif /* _GL */
 
 	/* passe au suivant */
