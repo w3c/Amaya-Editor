@@ -1,0 +1,64 @@
+The programs and files found in the Amaya/templates directory are protected
+under the W3C Copyright (http://www.w3.org/COPYRIGHT).
+
+The templates cgi scripts use the CPAN XML::Parser, which has the following
+copyright:
+===============================
+		
+			XML::Parser Version 2.23
+
+Copyright (c) 1998 Larry Wall and Clark Cooper.
+All rights reserved.
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+This is a Perl extension interface to James Clark's XML parser, expat.
+It requires at least version 5.004 of perl. The documentation for this
+extension can be found in pod format at the end of the files Parser.pm
+and Expat/Expat.pm. The expat distribution is included in full in
+this distribution in the directory Expat/expat.
+
+This was modified from the original XML::Parser created by Larry Wall.
+
+This is a beta version and there's resistance to making radical API
+changes at this time, but minor, evolutionary changes may occur as I get
+feedback from the people on the perl-xml mailing list. [You can subscribe to
+this list by sending a message to subscribe-perl-xml@lyris.activestate.com.]
+
+To configure this module, cd to the directory that contains this README file
+and type the following:
+
+	perl Makefile.PL
+
+Alternatively, if you plan to install XML::Parser somewhere other than
+your system's perl library directory. You can type something like this:
+
+	perl Makefile.PL PREFIX=/home/me/perl INSTALLDIRS=perl
+
+Then to build you run make.
+
+	make
+
+You can then test the module by typing:
+
+	make test
+
+There are some sample utilities in the samples directory along with an
+xml form of the XML specification to test them on. You may need to change
+the '#!' line at the top of these utilities to what is appropriate for
+your system. If you're going to play around with them prior to installing
+the module, you would need to add the blib paths to your perl search
+path, like this (assuming your current directory is samples):
+
+    perl -I../blib/lib -I../blib/arch xmlcomments REC-xml-19980210.xml
+
+or set your PERLLIB environment variable.
+
+If you have write access to the installation directories, you may then
+install by typing:
+
+	make install
+
+Clark Cooper
+  coopercc@netheaven.com
+=======================================

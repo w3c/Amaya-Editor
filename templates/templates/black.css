@@ -1,0 +1,16 @@
+body { background : black;
+       color : white;
+     }
+
+a:link    { color: lightgreen;
+       text-decoration : none;
+     }
+
+h1,h2,h3,h5,h6 {text-align : center;
+                   color : red;
+                  }
+h4     { color : red; }
+
+.background {background : green;
+             color : white;
+            }

@@ -1,0 +1,57 @@
+<templates>
+ <template file="resume.html">
+  <name>Resume</name>
+  <description>
+  A template to help you create your on-line resume. 
+  </description>
+ </template>
+ <template file="calendar.html">
+  <name>Calendar</name>
+  <description>
+  A template to conceive a calendar.
+  </description>
+ </template>
+ <template file="homepage.html">
+  <name>Personal home page</name>
+  <description>
+  A template to create your home page.
+  </description>
+ </template>
+ <template file="W3C-NOTE.html">
+  <name>W3C Note Template</name>
+  <description>
+  A template to create a W3 Consortium note.
+  </description>
+ </template>
+ <template file="W3C-REC.html">
+  <name>W3C Recommendation Template</name>
+  <description>
+  A template to create a W3 Consortium recommendation.
+  </description>
+ </template>
+ <template file="W3C-WD.html">
+  <name>W3C Working Draft Template</name>
+  <description>
+  A template to create a W3 Consortium working draft.
+  </description>
+ </template>
+
+ <stylesheet file="black.css">
+  <name>Black Red</name>
+  <description>
+  Black background, white text, red centered headlines, green links.
+  </description>
+ </stylesheet>
+ <stylesheet file="blue.css">
+  <name>Blue</name>
+  <description>
+  Light blue background, white text, blue dark headlines.
+  </description>
+ </stylesheet>
+ <stylesheet file="white.css">
+  <name>White</name>
+  <description>
+   White background, black text, blue headlines.
+  </description>
+ </stylesheet>
+</templates>

@@ -1,0 +1,23 @@
+body      { font-family : helvetica; 
+      	     background : white;
+          }
+h1        { text-align  : center;
+            color       : blue;
+          }
+h2        { font-size   : 6;
+            color       : #2222ff;
+          }
+h3        { font-size   : 4;
+            color       : #2222ff;
+          }
+h4        { font-size   : 4;
+            color       : 4444ff;
+          }
+dt        { font-weight : bold;
+          }
+dd        { font-style  : italic;
+          }
+
+highlight { font-weight : bold;
+            color       : #ff0000;
+          }

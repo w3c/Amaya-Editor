@@ -1,0 +1,38 @@
+<templates> 
+ <template file="cv.html">
+  <name>Curiculum Vitae</name>
+  <description>
+  Un modèle pour vous aider à créer votre CV on-line. 
+  </description>
+ </template>
+ <template file="calendrier.html">
+  <name>Calendrier</name>
+  <description>
+  Un modèle pour créer un calendrier.
+  </description>
+ </template>
+ <template file="pageWEBp.html">
+  <name>Page WEB personnelle</name>
+  <description>
+  Un modèle pour vous aider à créer votre page WEB personnelle.
+  </description>
+ </template>
+ <stylesheet file="noir.css">
+  <name>Noir</name>
+  <description>
+  Fond noir, texte blanc, titres rouges centrés, liens verts
+  </description>
+ </stylesheet>
+ <stylesheet file="bleu.css">
+  <name>Bleu</name>
+  <description>
+  Fond bleu clair, texte blanc, titres bleus marine
+  </description>
+ </stylesheet>
+ <stylesheet file="blanc.css">
+  <name>Blanc</name>
+  <description>
+   Fond blanc, texte noir, titres bleus
+  </description>
+ </stylesheet>
+</templates>
