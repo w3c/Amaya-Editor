@@ -1677,8 +1677,8 @@ static void PrintView (PtrDocument pDoc)
        PSfile = (FILE *) FrRef[CurrentFrame];
        NotePageNumber (PSfile);
        DisplayFrame (CurrentFrame);
-       DrawPage (PSfile, pPageAb->AbElement->ElPageNumber,
-		 pPageAb->AbBox->BxWidth, PageHeight);
+       DrawPage (PSfile, 1,
+		 pBox->BxWidth, PageHeight);
      }
    else
      {
