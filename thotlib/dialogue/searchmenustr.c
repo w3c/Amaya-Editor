@@ -519,10 +519,15 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 void                BuildStructSearchMenu (pDoc)
 {
+   char BufMenu [MAX_TXT_LEN];
+
    /* menu des natures utilisees dans le document */
    /* NumMenuSearchNature, cree' dynamiquement par cherche.c */
+   BufMenu[0] = 'B';
+   BufMenu[1] = '\0';
+   strcat (BufMenu,TtaGetMessage (LIB, TMSG_ANY));
    TtaNewToggleMenu (NumMenuSearchNature, NumFormSearchText,
-	TtaGetMessage (LIB, TMSG_NATURES), 1, TtaGetMessage (LIB, TMSG_ANY),
+	TtaGetMessage (LIB, TMSG_NATURES), 1, BufMenu,
 		     NULL, TRUE);
 
    /* selecteur pour la saisie du type de l'element a chercher */

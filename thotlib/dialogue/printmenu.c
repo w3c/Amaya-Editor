@@ -244,6 +244,7 @@ PtrDocument pDoc;
 #endif /* __STDC__ */
 {
    char               *ptr;
+   int                 lg;
 
    if (ThotLocalActions[T_rprint] == NULL)
      {
@@ -287,7 +288,23 @@ PtrDocument pDoc;
        if (pDocPrint->DocDirectory[0] == DIR_SEP)
 	 sprintf (PSdir, "%s/%s.ps", pDocPrint->DocDirectory, pDocPrint->DocDName);
        else
-	 sprintf (PSdir, "/tmp/%s.ps", pDocPrint->DocDName);
+         {
+           ptr = NULL;
+           ptr = TtaGetEnvString ("TMPDIR");
+           if (ptr != NULL && TtaCheckDirectory(ptr))
+             {
+             strcpy(PSdir,ptr);
+             lg = strlen(PSdir);
+             if (PSdir[lg - 1] == DIR_SEP)
+               PSdir[--lg] = '\0';
+             }
+           else
+             {
+               strcpy (PSdir,"/tmp");
+               lg = 4;
+             }
+	   sprintf (&PSdir[lg], "/%s.ps", pDocPrint->DocDName);
+         }
      }
 }
 
@@ -332,6 +349,7 @@ char               *viewNames;
    Name                savePres, newPres;
    ThotPid             pid = ThotPid_get ();
    char                cmd[100];
+   char               *dirString;
    int                 orientation, lg;
 
    pDoc = LoadedDocument[document - 1];
@@ -346,7 +364,30 @@ char               *viewNames;
      {
        TtaDisplayMessage(INFO,TtaGetMessage(LIB,TMSG_CHANGE_PSCH),newPres);
      }
-   sprintf (tmpDirName, "/tmp/Thot%ld", pid + numOfJobs);
+   /* recupere le repertoire tmp du registry */
+   dirString = NULL;
+   dirString = TtaGetEnvString("TMPDIR");
+   if (dirString != NULL) 
+     { 
+       if (!TtaCheckDirectory(dirString))
+         {
+           TtaDisplayMessage(INFO,TtaGetMessage(LIB,TMSG_MISSING_DIR),dirString);
+           return;
+         }
+       strcpy (tmpDirName, dirString);
+       lg = strlen(tmpDirName);
+       if (tmpDirName[lg - 1] == DIR_SEP)
+         tmpDirName[--lg] = '\0';
+     }
+   else
+     {
+       strcpy (tmpDirName,"/tmp");
+       lg = 4;
+     }
+   sprintf (&tmpDirName[lg], "/Thot%ld", pid + numOfJobs);
+#ifdef DEBUG
+   fprintf (stderr,"printmenu : temp dir %s \n",tmpDirName);
+#endif
    sprintf (cmd, "/bin/mkdir %s\n", tmpDirName);
    system (cmd);
    sprintf (cmd, "chmod +rwx '%s'\n", tmpDirName);
