@@ -76,7 +76,7 @@ RULES
 	LineWeight: 1 pt;
 	END;
 
-   groupe_abstrait:
+   abstract_group:
 	BEGIN
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
@@ -115,7 +115,23 @@ RULES
 	VertPos:  Top = Enclosing . Top UserSpecified;
 	END;
 
-   rect_period:
+   rect_id:
+	BEGIN
+	Width: 2.5 cm UserSpecified;
+	Height: 1.5 cm  UserSpecified;
+	HorizPos: Left = Enclosing . Left UserSpecified;
+	VertPos:  Top = Enclosing . Top UserSpecified;
+	END;
+
+   col_period:
+	BEGIN
+	Width: 2.5 cm UserSpecified;
+	Height: 1.5 cm  UserSpecified;
+	HorizPos: Left = Enclosing . Left UserSpecified;
+	VertPos:  Top = Enclosing . Top UserSpecified;
+	END;
+
+   exp_period:
 	BEGIN
 	Width: 2.5 cm UserSpecified;
 	Height: 1.5 cm  UserSpecified;
@@ -133,6 +149,16 @@ RULES
 
 
    text_:
+	BEGIN
+	Width: Enclosed . Width;
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 0.9 Userspecified;
+	HorizRef: Enclosed . HRef;
+	Foreground : Black;
+	FillPattern: nopattern;
+	END;
+
+	text_id:
 	BEGIN
 	Width: Enclosed . Width;
    	HorizPos: Left = Enclosing . Left Userspecified;

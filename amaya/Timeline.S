@@ -36,7 +36,7 @@ STRUCT
      = LIST OF (GraphicsElement);
 
 
-   groupe_abstrait 
+   abstract_group
      (ATTR transform = text) 
         = LIST OF (GraphicsElement);
 
@@ -71,11 +71,7 @@ STRUCT
               Timeline_Image;
 	      END;
 
-
-	
-{ Basic Shapes }
-
-   rect_period
+   exp_period
         (ATTR fill; stroke;
 	      x;
           y;
@@ -85,9 +81,28 @@ STRUCT
 		  GRAPHICS;
 		  END;
 	      
+	col_period
+        (ATTR fill; stroke;
+	      x;
+          y;
+          width_;
+          height_)
+        = BEGIN
+		  GRAPHICS;
+		  END;
 	   
 
    rect_interface
+        (ATTR fill; stroke; 
+	      x;
+          y;
+          width_;
+          height_)
+        = BEGIN
+		  GRAPHICS;
+		  END;
+
+	rect_id
         (ATTR fill; stroke; 
 	      x;
           y;
@@ -121,6 +136,13 @@ STRUCT
 	      y)
          = LIST OF (TEXT);
 
+   text_id
+        (ATTR fill; stroke; 
+	      font_family; font_size;
+	      x;
+	      y)
+         = LIST OF (TEXT);
+
    timing_text
         (ATTR fill; stroke; 
 	      font_family; font_size;
@@ -131,8 +153,8 @@ STRUCT
 
    GraphicsElement
 	= CASE OF
-         rect_period; rect_interface; text_; timing_text; tline; image_slider; 
-   	     image_collapse; image_keypos; Timeline; groupe_abstrait;
+         exp_period; col_period; rect_interface; rect_id; text_; text_id; timing_text; tline; image_slider; 
+   	     image_collapse; image_keypos; Timeline; abstract_group;
 		  END;
 	     
 
@@ -140,9 +162,11 @@ EXCEPT
 
    Document:			NoSelect;
    Timeline:            IsDraw, MoveResize, NoMove, NoCut, NoSelect;
-   groupe_abstrait:     NoMove, NoResize, HighlightChildren, NoShowBox, NoCreate, NoSelect, NoCut;
-   rect_period:         MoveResize, NoShowBox, NoCreate, NoVMove, NoVresize;
+   abstract_group:      NoMove, NoResize, HighlightChildren, NoShowBox, NoCreate, NoSelect, NoCut;
+   col_period:          MoveResize, NoShowBox, NoCreate, NoVMove, NoResize;
+   exp_period:          MoveResize, NoShowBox, NoCreate, NoVMove, NoVresize;
    rect_interface:      NoMove, NoResize, NoShowBox, NoCreate, NoCut;
+   rect_id:				NoMove, NoResize, NoShowBox, NoCreate, NoCut;
    tline:               NoMove, NoResize, NoShowBox, NoCreate, NoCut;
    text_:               NoMove, NoResize, NoShowBox, ReturnCreateWithin, NoCreate, NoCut, NoSelect;
    timing_text:         NoMove, NoResize, ReturnCreateWithin, NoCreate, NoCut;

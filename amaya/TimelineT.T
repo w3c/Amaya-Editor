@@ -33,7 +33,7 @@ RULES
 	END;
 
 
-  groupe_abstrait:
+  abstract_group:
 	BEGIN
 	create SOT;
 	create 'g';
@@ -84,7 +84,27 @@ RULES
 	END;
   
  
-   rect_period:
+   col_period:
+	BEGIN
+	create SOT;
+	create 'rect';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'rect>\12' after;
+		END;
+	END;
+
+
+  exp_period:
 	BEGIN
 	create SOT;
 	create 'rect';
@@ -122,6 +142,27 @@ RULES
 		END;
 	END;
 
+
+  rect_id:
+	BEGIN
+	create SOT;
+	create 'rect';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'rect>\12' after;
+		END;
+	END;
+
+
  
    tline:
 	BEGIN
@@ -144,6 +185,19 @@ RULES
 
   
    text_:
+	BEGIN
+	create SOT;
+	create 'text';
+	indent +6;
+	create attributes;
+	create '>';
+	indent -4;
+	indent -2 after;
+	create SCT after;
+	create 'text>\12' after;
+	END;
+
+ text_id:
 	BEGIN
 	create SOT;
 	create 'text';

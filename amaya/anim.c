@@ -54,7 +54,7 @@ static int      AnimButton;
 #endif /* _WINDOWS */
 
 
-/* path to images */
+/* path to images used by the interface */
 #define cte_image_c1_filename "collapse1.png"
 #define cte_image_c2_filename "collapse2.png"
 #define cte_image_slider_filename "slider.gif"
@@ -68,7 +68,6 @@ static int      AnimButton;
 #define cte_sep_bar 5
 
 /* line settings */
-#define cte_dec_time_sep 1
 #define cte_graduation_height 5
 #define cte_graduation_font_family "Verdana"
 #define cte_graduation_font_size 9
@@ -80,7 +79,6 @@ static int      AnimButton;
 
 /* title groups settings */
 #define cte_default_title_group_height 32
-#define cte_all_collapsed_at_first 1
 #define cte_default_text_for_no_id "Element without id"
 
 /* expanded groups settings */
@@ -92,41 +90,53 @@ static int      AnimButton;
 #define cte_collapsed_group_height 32
 #define cte_collapsed_anim_color "yellow"
 
-/* maximum number of animations handled */
-#define MAX_ANIM_ELTS 999
+/* maximum number of animated elements handled */
+#define MAX_ANIMATED_ELTS 999
 
+/* maximum number of animations handled for a specific element */
+#define MAX_ANIMATIONS 99
 
-/* can't enlarge timeline more than 100s at a time, 
+/* Forbid the enlargement of timeline of more than 1000s at a time, 
 useful to prevent Amaya from crashing when the user enters
 a very big value for slider position */
 #define MAX_ENLARGE_TIMELINE 1000
 
 
-
-typedef struct {
-	Document document; /* timeline document of document */
-
-	/* mapping between animated elements 
+/* mapping between <animation..> elements 
 	of the edited document and elements representing
-	animated elements in the timeline document:
-	mapping[a : animated element of the base document
-			b : title group of the animated element on the timeline 
-			c : expanded group of animated element on the timeline
-			d : collapsed group of animated element on the timeline]
-	image_collapse is the second child of b */
+	animation in the timeline document */
+typedef struct {
+	Element animation_tag;	/* animation tag of the edited document */
+	Element period;			/* element on timeline representing an animation tag */
+} tmapping_animations;
 
-	Element mapping_animated[MAX_ANIM_ELTS][4];
+
+/* mapping between animated elements 
+	of the edited document and elements representing
+	animated elements in the timeline document*/
+typedef struct {
+	Element animated_elem;  /* animated element of the base document */
+	Element title_group;    /* title group of the animated element on the timeline */
+	Element exp_group; /* expanded group of animated element on the timeline */
+	Element col_group;      /* collapsed group of animated element on the timeline,
+					           image_collapse is the second child of col_group */
+	int nb_periods;			/* number of periods in expanded_group */
+	tmapping_animations mapping_animations[MAX_ANIMATIONS];
+
+} tmapping_animated;
+typedef tmapping_animated* pmapping_animated;
+
+
+/* Mapping between opened documents in Amaya 
+     and their timeline documents */
+typedef struct {
+	Document timelinedoc; /* timeline document of document */
+
+	/* mapping */
+	tmapping_animated mapping_animated[MAX_ANIMATED_ELTS];
 	int nb_relations_animated;
 
-	/* mapping between <animation..> elements 
-	of the edited document and elements representing
-	animation in the timeline document: 
-	mapping[a : animation element of the base document
-            b : animation element on the timeline] */
-
-	Element mapping_animations[MAX_ANIM_ELTS][2];
-	int nb_relations_animations;
-
+	/* shorcuts to elements of timelinedoc*/
 	Element current_el;
 	Element timing_text;
 	int vertical_pos;
@@ -146,8 +156,7 @@ typedef struct {
 static TTimeline dt[DocumentTableLength];
 
 
-
-static int time_sep; /* pixels */
+static double time_sep; /* pixels */
 
 static int current_timeline_width; /* pixels */
 static double current_timeline_end; /* end timing (s) */
@@ -166,6 +175,30 @@ static void Build_path_to_image_dir(char* buffer) {
 #endif /* _SVGANIM */
 
 
+/*----------------------------------------------------------------------
+   Init_tmapping_animations_struct
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Init_tmapping_animations_struct(tmapping_animations m) {
+	m.animation_tag = NULL;
+	m.period = NULL;
+}
+#endif /* _SVGANIM */
+
+
+/*----------------------------------------------------------------------
+   Init_tmapping_animated_struct
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Init_tmapping_animated_struct(tmapping_animated m) {
+	m.animated_elem = NULL;
+	m.title_group = NULL;
+	m.exp_group = NULL;
+	m.col_group = NULL;
+	m.nb_periods = 0;
+}
+#endif /* _SVGANIM */
+
 
 /*----------------------------------------------------------------------
    Init_timeline_struct
@@ -173,22 +206,27 @@ static void Build_path_to_image_dir(char* buffer) {
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
 static void Init_timeline_struct(int k) {
-	int i, j;
-	dt[k].document = 0;
+	int i,j;
+	dt[k].timelinedoc = 0;
 
+	for (j=0; j<MAX_ANIMATED_ELTS; j++) {
+		Init_tmapping_animated_struct (dt[k].mapping_animated[j]);
+		for (i=0; i<MAX_ANIMATIONS; i++)
+			Init_tmapping_animations_struct (dt[k].mapping_animated[j].mapping_animations[i]);
+	}
+	dt[k].nb_relations_animated = 0;
+	
 	dt[k].current_el = NULL;
 	dt[k].timing_text = NULL;
-
-	for (j=0; j<MAX_ANIM_ELTS; j++) {
-		for (i=0; i<2; i++) 
-			dt[k].mapping_animations[j][i] = NULL;
-		
-		for (i=0; i<4; i++)
-			dt[k].mapping_animated[j][i] = NULL;
-	}
-	dt[k].nb_relations_animations = 0;
-	dt[k].nb_relations_animated = 0;
 	dt[k].vertical_pos = cte_top_bar;
+	
+	dt[k].slider = NULL;
+
+	dt[k].line1 = NULL;
+	dt[k].line2 = NULL;
+	dt[k].line3 = NULL;
+	dt[k].line4 = NULL;
+	dt[k].line5 = NULL;
 }
 #endif /* _SVGANIM */
 
@@ -217,6 +255,9 @@ void InitSVGAnim ()
 
 
 
+
+/* Following functions deal with mappings */
+
 /*----------------------------------------------------------------------
    Get_basedoc_of
    Returns the base document of a timeline document
@@ -224,83 +265,32 @@ void InitSVGAnim ()
 #ifdef _SVGANIM
 static Document Get_basedoc_of(Document timelinedoc) {
 	Document k = 0;
-	while ((k<DocumentTableLength) && (dt[k].document!=timelinedoc))
+	while ((k<DocumentTableLength) && (dt[k].timelinedoc!=timelinedoc))
 		k++;
 	return k;
 }
 #endif /* _SVGANIM */
 
 
-
-/* Following mapping functions operate on
-   mapping_animated [a : animated element of the base document
- 				 	 b : title group of the animated element on the timeline 
-				 	 c : expanded group of animated element on the timeline
-					 d : collapsed group of animated element on the timeline]
-  image_collapse is the second child of b */
-
-
 /*----------------------------------------------------------------------
-   Get_expanded_group_of_title_group
-   use mapping between elements to return expanded group
+   Get_mapping_from_title_group
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static Element Get_expanded_group_of_title_group (Document basedoc, Element im) {
-	Element res=NULL;
+static pmapping_animated Get_mapping_from_title_group (Document basedoc, Element tg) {
+	pmapping_animated res = NULL;
 
 	int k = 0, trouve=0;
 
 	while ((!trouve) && (k<dt[basedoc].nb_relations_animated))
-		if (dt[basedoc].mapping_animated[k][1]==im) {
+		if (dt[basedoc].mapping_animated[k].title_group==tg) {
 			trouve = 1;
-			res = dt[basedoc].mapping_animated[k][2];
+			res = &(dt[basedoc].mapping_animated[k]);
 		} else 
 			k++;
 
 	return res;
 }
 #endif /* _SVGANIM */
-
-/*----------------------------------------------------------------------
-   Get_collapsed_group_of_title_group
-   use mapping between elements to return collapsed group
-  ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
-static Element Get_collapsed_group_of_title_group (Document basedoc, Element im) {
-	Element res=NULL;
-
-	int k = 0, trouve=0;
-
-	while ((!trouve) && (k<dt[basedoc].nb_relations_animated)) 
-		if (dt[basedoc].mapping_animated[k][1]==im) {
-			trouve = 1;
-			res = dt[basedoc].mapping_animated[k][3];
-		} else 
-			k++;
-	return res;
-}
-#endif /* _SVGANIM */
-
-
-/*----------------------------------------------------------------------
-   Get_animated_element_of_title_group
-   use mapping between elements to return animated element
-  ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
-static Element Get_animated_element_of_title_group (Document basedoc, Element im) {
-	Element res=NULL;
-	int k = 0, trouve=0;
-
-	while ((!trouve) && (k<dt[basedoc].nb_relations_animated)) 
-		if (dt[basedoc].mapping_animated[k][1]==im) {
-			trouve = 1;
-			res = dt[basedoc].mapping_animated[k][0];
-		} else 
-			k++;
-	return res;
-}
-#endif /* _SVGANIM */
-
 
 
 
@@ -309,14 +299,14 @@ static Element Get_animated_element_of_title_group (Document basedoc, Element im
    use mapping between elements to return title group
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static Element Get_title_group_of_animated_element (Document basedoc, Element im) {
+static Element Get_title_group_of_animated_element (Document basedoc, Element an) {
 	Element res=NULL;
 	int k = 0, trouve=0;
 
 	while ((!trouve) && (k<dt[basedoc].nb_relations_animated)) 
-		if (dt[basedoc].mapping_animated[k][0]==im) {
+		if (dt[basedoc].mapping_animated[k].animated_elem==an) {
 			trouve = 1;
-			res = dt[basedoc].mapping_animated[k][1];
+			res = dt[basedoc].mapping_animated[k].title_group;
 		} else 
 			k++;
 	return res;
@@ -334,7 +324,7 @@ static int Is_animated (Document basedoc, Element el)
 	int k = 0;
 
 	while ((!res) && (k<dt[basedoc].nb_relations_animated)) 
-		if (dt[basedoc].mapping_animated[k][0]==el) {
+		if (dt[basedoc].mapping_animated[k].animated_elem==el) {
 			res = 1;
 		} else 
 			k++;
@@ -351,12 +341,11 @@ static int Is_animated (Document basedoc, Element el)
 #ifdef _SVGANIM
 static void Set_expanded_group_of (Document basedoc, Element element_anime, Element new_fresh_group) {
 	int k = 0, trouve=0;
-	Element tmp = element_anime; 
 	
 	while ((!trouve) && (k<dt[basedoc].nb_relations_animated)) 
-		if (dt[basedoc].mapping_animated[k][0]==tmp) {
+		if (dt[basedoc].mapping_animated[k].animated_elem==element_anime) {
 			trouve = 1;
-			dt[basedoc].mapping_animated[k][2] = new_fresh_group;
+			dt[basedoc].mapping_animated[k].exp_group = new_fresh_group;
 		} else 
 			k++;
 }
@@ -369,57 +358,36 @@ static void Set_expanded_group_of (Document basedoc, Element element_anime, Elem
 #ifdef _SVGANIM
 static void Set_collapsed_group_of (Document basedoc, Element element_anime, Element new_fresh_group) {
 	int k = 0, trouve=0;
-	Element tmp = element_anime; 
-	
+
 	while ((!trouve) && (k<dt[basedoc].nb_relations_animated)) 
-		if (dt[basedoc].mapping_animated[k][0]==tmp) {
+		if (dt[basedoc].mapping_animated[k].animated_elem==element_anime) {
 			trouve = 1;
-			dt[basedoc].mapping_animated[k][3] = new_fresh_group;
+			dt[basedoc].mapping_animated[k].col_group = new_fresh_group;
 		} else 
 			k++;
 }
 #endif /* _SVGANIM */
-
-
-
-	/* functions dealing with mapping between <animation..> elements 
-	of the edited document and elements representing
-	animation in the timeline document: 
-	mapping[] [a : animation element of the base document
-               b : animation element on the timeline] */
 
 
 /*----------------------------------------------------------------------
    Get_animation_tag_from_period
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static Element Get_animation_tag_from_period (Document basedoc, Element pr) {
-	Element res=NULL;
-	int k = 0, trouve=0;
+static Element Get_animation_tag_from_period (Document basedoc, Element exp_group, Element pr) {
+	Element res = NULL;
+	int k = 0, j = 0, trouve_g = 0, trouve_p = 0;
 
-	while ((!trouve) && (k<dt[basedoc].nb_relations_animations)) 
-		if (dt[basedoc].mapping_animations[k][1]==pr) {
-			trouve = 1;
-			res = dt[basedoc].mapping_animated[k][0];
-		} else 
-			k++;
-	return res;
-}
-#endif /* _SVGANIM */
+	while ((!trouve_g) && (k<dt[basedoc].nb_relations_animated)) 
+		if (dt[basedoc].mapping_animated[k].exp_group==exp_group) {
 
+			trouve_g = 1;	
+			while ((!trouve_p) && (j<dt[basedoc].mapping_animated[k].nb_periods))
+				if (dt[basedoc].mapping_animated[k].mapping_animations[j].period==pr) {
+					trouve_p = 1;
+					res = dt[basedoc].mapping_animated[k].mapping_animations[j].animation_tag;
+				}
+				else j++;
 
-/*----------------------------------------------------------------------
-   Get_period_from_animation_tag
-  ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
-static Element Get_period_from_animation_tag (Document basedoc, Element pr) {
-	Element res=NULL;
-	int k = 0, trouve=0;
-
-	while ((!trouve) && (k<dt[basedoc].nb_relations_animations)) 
-		if (dt[basedoc].mapping_animations[k][0]==pr) {
-			trouve = 1;
-			res = dt[basedoc].mapping_animated[k][1];
 		} else 
 			k++;
 	return res;
@@ -1131,7 +1099,7 @@ static void Set_y_translation (Document timelinedoc, Element found, int hg)
 
 	root = TtaGetMainRoot (timelinedoc);
 	elType = TtaGetElementType (root);
-	elType.ElTypeNum = Timeline_EL_groupe_abstrait;
+	elType.ElTypeNum = Timeline_EL_abstract_group;
 	
 	attrType.AttrSSchema = elType.ElSSchema;
 	attrType.AttrTypeNum = Timeline_ATTR_transform;
@@ -1197,17 +1165,30 @@ static void Set_y (Document timelinedoc, Element found, int ny)
 #ifdef _SVGANIM
 static void Translate_following_elements(Document basedoc, Document timelinedoc, int vpos, int hg) 
 {
-	Element found;
-	int yfound, k, j;
+	Element t_group, e_group, c_group;
+	int yfound, k;
 
-	for (k=0; k<dt[basedoc].nb_relations_animated; k++)
-		for (j=1; j<4; j++) {
-			found = dt[basedoc].mapping_animated[k][j];
+	for (k=0; k<dt[basedoc].nb_relations_animated; k++) {
+	
+			/* translate groups */
+			t_group = dt[basedoc].mapping_animated[k].title_group;
+			e_group = dt[basedoc].mapping_animated[k].exp_group;
+			c_group = dt[basedoc].mapping_animated[k].col_group;
 
-			if (found) {
-				yfound = Get_y_of (TtaGetFirstChild (found));
+			yfound = Get_y_of (TtaGetFirstChild (t_group));
+			if (yfound > vpos)
+				Set_y_translation (timelinedoc, t_group, hg);
+
+			if (e_group) {
+				yfound = Get_y_of (TtaGetFirstChild (e_group));
 				if (yfound > vpos)
-					Set_y_translation (timelinedoc, found, hg);
+					Set_y_translation (timelinedoc, e_group, hg);
+			}
+			
+			if (c_group) {
+				yfound = Get_y_of (TtaGetFirstChild (c_group));
+				if (yfound > vpos)
+					Set_y_translation (timelinedoc, c_group, hg);
 			}
 		}
 }
@@ -1325,8 +1306,38 @@ static void Read_time_info(Element el, double* start, double* duration)
 #ifdef _SVGANIM
 static void Write_time_info(Document basedoc, Element edited_anim, double start, double duration) 
 {
+	AttributeType attrType;
+	Attribute attr = NULL;
+	char buffer[512];
+	ElementType elType = TtaGetElementType (edited_anim);
 
-	/* to come... */
+	/* create or overwrite begin attribute */
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = SVG_ATTR_begin_;
+			
+	attr = TtaGetAttribute (edited_anim, attrType);
+	if (!attr) {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (edited_anim, attr, basedoc);
+	}
+
+	sprintf (buffer, "%.1fs", (float) start);
+	TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
+
+	
+	/* create or overwrite dur attribute */
+	attrType.AttrTypeNum = SVG_ATTR_dur;
+			
+	attr = TtaGetAttribute (edited_anim, attrType);
+	if (!attr) {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (edited_anim, attr, basedoc);
+	}
+
+	sprintf (buffer, "%.1fs", (float) duration);
+	TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
+
+	TtaSetDocumentModified (basedoc);
 
 }
 #endif /* _SVGANIM */
@@ -1453,10 +1464,10 @@ static void Create_title_group(Document basedoc, Document timelinedoc, int ty, E
 	char buffer[512];
 	
 	/* title rect*/
-	dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_groupe_abstrait);
+	dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_abstract_group);
 	Set_y_translation (timelinedoc, dt[basedoc].current_el, ty);
 
-	temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, "white", "black", 2, vertical_pos, cte_left_bar-8, cte_default_title_group_height, 1, Timeline_EL_rect_interface);	
+	temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, "white", "black", 2, vertical_pos, cte_left_bar-8, cte_default_title_group_height, 1, Timeline_EL_rect_id);	
 	
 	Build_path_to_image_dir (buffer);
 	if (collapsed)
@@ -1467,7 +1478,7 @@ static void Create_title_group(Document basedoc, Document timelinedoc, int ty, E
 	temp_el = Insert_image (timelinedoc, temp_el, buffer, 4, vertical_pos+12, 0, Timeline_EL_image_collapse);
 	if (!Get_nom_element_anime (parent, buffer))
 		strcpy (buffer, cte_default_text_for_no_id);
-	temp_el = Insert_text (timelinedoc, temp_el, "black", buffer, cte_elem_font_family, cte_elem_font_size, 18, vertical_pos+21, 0, Timeline_EL_text_); 
+	temp_el = Insert_text (timelinedoc, temp_el, "black", buffer, cte_elem_font_family, cte_elem_font_size, 18, vertical_pos+8, 0, Timeline_EL_text_id); 
 	TtaSetAccessRight (temp_el, ReadOnly, timelinedoc);
 }
 #endif /* _SVGANIM */
@@ -1484,7 +1495,7 @@ static void Create_title_group(Document basedoc, Document timelinedoc, int ty, E
    returns the first animation node which has not the same parent
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static Element Create_expanded_group(Document basedoc, Document timelinedoc, int ty, Element parent, Element first_anim, int* hauteur)
+static Element Create_expanded_group(Document basedoc, Document timelinedoc, int ty, Element parent, Element first_anim, pmapping_animated mapping, int* hauteur)
 {
 	Element found = first_anim;
 	Element temp_el;
@@ -1494,13 +1505,14 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
 	char color[512];
 
 		/* expanded group */	 	
-		dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_groupe_abstrait);	
+		dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_abstract_group);	
 		Set_y_translation(timelinedoc, dt[basedoc].current_el, ty);
 
 		/* temp: dummy node */
 		temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, "none", "none",  cte_left_bar, vertical_pos, 100, 20, 1, Timeline_EL_rect_interface);
 	
-		k=1;
+		k=0;
+		mapping->nb_periods = k;
 		while ((found) && (TtaGetParent(found)==parent)) {
 
 			Read_time_info (found, &start, &duration);
@@ -1508,9 +1520,8 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
 			duration *= time_sep;
 
 			/* periods */
-			temp_el = Insert_rectangle (timelinedoc, temp_el, cte_static_bar_color, cte_static_bar_color,  cte_left_bar, vertical_pos+6+(k-1)*(6+cte_height_bar), current_timeline_width, cte_static_bar_height, 0, Timeline_EL_rect_interface);
+			temp_el = Insert_rectangle (timelinedoc, temp_el, cte_static_bar_color, cte_static_bar_color,  cte_left_bar, vertical_pos+6+k*(6+cte_height_bar), current_timeline_width, cte_static_bar_height, 0, Timeline_EL_rect_interface);
 		
-
 			/* A color for each animation type */
 			elType = TtaGetElementType (found);
 			
@@ -1529,20 +1540,20 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
 				strcpy(color,"black"); break;
 			}
 
-			temp_el = Insert_rectangle (timelinedoc, temp_el, color, "none",  cte_left_bar+1+(int) start, vertical_pos+6+(k-1)*(6+cte_height_bar)+1, (int) duration, cte_static_bar_height-2, 0, Timeline_EL_rect_period);
+			temp_el = Insert_rectangle (timelinedoc, temp_el, color, "none",  cte_left_bar+1+(int) start, vertical_pos+6+k*(6+cte_height_bar)+1, (int) duration, cte_static_bar_height-2, 0, Timeline_EL_exp_period);
 			
 			/* update mapping of <animate> tags */
-			dt[basedoc].mapping_animations[dt[basedoc].nb_relations_animations][0]=found;
-			dt[basedoc].mapping_animations[dt[basedoc].nb_relations_animations][1]=temp_el;
-			dt[basedoc].nb_relations_animations++;
-			
+			mapping->mapping_animations[mapping->nb_periods].animation_tag = found;
+			mapping->mapping_animations[mapping->nb_periods].period = temp_el;
+
 			k++;
+			mapping->nb_periods = k;
 			found = Search_next_anim_in_tree (basedoc, found);
 		}
 	
 
-	*hauteur = 6 +(k-1)*(cte_static_bar_height+6);
-	if (k==2) { 
+	*hauteur = 6 +(k)*(cte_static_bar_height+6);
+	if (k==1) { 
 		/* there is only one animated element :*/
 		temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, cte_expanded_group_fill_color, "black", cte_left_bar-2, vertical_pos, current_timeline_width+4, cte_collapsed_group_height,1, Timeline_EL_rect_interface);
 		
@@ -1571,17 +1582,17 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
    returns the first animation node which has not the same parent
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static Element Create_collapsed_group(Document basedoc, Document timelinedoc, int ty, Element parent, Element first_anim) {
+static Element Create_collapsed_group(Document basedoc, Document timelinedoc, int ty, Element parent, pmapping_animated mapping, Element first_anim) {
 	Element found = first_anim;
 	Element temp_el, im;
 	int k, vertical_pos = 0, h;
 	double start, duration, tmin = 0.0, tmax = 0.0;
 	
-		k=1;
+		k=0;
 		while ((found) && (TtaGetParent(found)==parent)) {
 			Read_time_info (found, &start, &duration);
 
-			if (k==1) {
+			if (k==0) {
 				tmin = start;
 				tmax = start+duration;
 			}
@@ -1594,9 +1605,11 @@ static Element Create_collapsed_group(Document basedoc, Document timelinedoc, in
 			found = Search_next_anim_in_tree (basedoc, found);
 		}
 		
-		if (k==2) {
+		mapping->nb_periods = 0;
+
+		if (k==1) {
 			/* there is only one animation, expand group: */
-			Create_expanded_group (basedoc, timelinedoc, ty, parent, first_anim, &h);
+			Create_expanded_group (basedoc, timelinedoc, ty, parent, first_anim, mapping, &h);
 			/* remove image_collapse from title group:*/
 			/* get title group:*/
 			im = Get_title_group_of_animated_element (basedoc, parent);
@@ -1607,7 +1620,7 @@ static Element Create_collapsed_group(Document basedoc, Document timelinedoc, in
 			}
 		else {
 			/* collapsed group */	 	
-			dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_groupe_abstrait);	
+			dt[basedoc].current_el = Insert_group (timelinedoc, dt[basedoc].current_el, 0, Timeline_EL_abstract_group);	
 			Set_y_translation (timelinedoc, dt[basedoc].current_el, ty);
 
 			temp_el = Insert_rectangle (timelinedoc, dt[basedoc].current_el, cte_expanded_group_fill_color, "black", cte_left_bar-2, vertical_pos, current_timeline_width+4, cte_collapsed_group_height,1, Timeline_EL_rect_interface);
@@ -1616,12 +1629,7 @@ static Element Create_collapsed_group(Document basedoc, Document timelinedoc, in
 			tmax *= time_sep;
 			
 			temp_el = Insert_rectangle (timelinedoc, temp_el, cte_static_bar_color, cte_static_bar_color,  cte_left_bar, vertical_pos+10, current_timeline_width, cte_static_bar_height, 0, Timeline_EL_rect_interface);
-			temp_el = Insert_rectangle (timelinedoc, temp_el, cte_collapsed_anim_color, "none",  cte_left_bar+1+(int) tmin, vertical_pos+10+1, (int) (tmax-tmin), cte_static_bar_height-2, 0, Timeline_EL_rect_period);
-			
-			/* update mapping of <animate> tags */
-			dt[basedoc].mapping_animations[dt[basedoc].nb_relations_animations][0] = TtaGetParent (found); /* solution du collapsed, on lie le père => check types*/
-			dt[basedoc].mapping_animations[dt[basedoc].nb_relations_animations][1] = temp_el;
-			dt[basedoc].nb_relations_animations++;
+			temp_el = Insert_rectangle (timelinedoc, temp_el, cte_collapsed_anim_color, "none",  cte_left_bar+1+(int) tmin, vertical_pos+10+1, (int) (tmax-tmin), cte_static_bar_height-2, 0, Timeline_EL_col_period);
 		}
 
 	return found;
@@ -1647,17 +1655,17 @@ static Element Draw_graduation (Document timelinedoc, Element position, double t
 	if ((tf-ti)<MAX_ENLARGE_TIMELINE)
 		for (i = (int)ti; i<= (int)tf; i++) {
 			
-			if (i==0.0) 
-				top = 9;
-			else 
+			if (i) 
 				top = 14;
+			else 
+				top = 9;
 			
-			temp_el = Insert_tline (timelinedoc, temp_el, "black", cte_left_bar+i*time_sep, top, cte_left_bar+i*time_sep, 14+cte_graduation_height, 0);
-			temp_el = Insert_tline (timelinedoc, temp_el, "silver", cte_left_bar+i*time_sep+1, top, cte_left_bar+i*time_sep+1, 14+cte_graduation_height, 0);
+			temp_el = Insert_tline (timelinedoc, temp_el, "black", cte_left_bar+(int)(i*time_sep), top, cte_left_bar+(int)(i*time_sep), 14+cte_graduation_height, 0);
+			temp_el = Insert_tline (timelinedoc, temp_el, "silver", cte_left_bar+(int)(i*time_sep)+1, top, cte_left_bar+(int)(i*time_sep)+1, 14+cte_graduation_height, 0);
 			
 			sprintf (buffer, "%ds", i);
 			temp_el = Insert_text (timelinedoc, temp_el, "black", buffer, cte_graduation_font_family, cte_graduation_font_size,
-				cte_left_bar+i*time_sep-6, 14+cte_graduation_height+cte_graduation_font_size+2, 0, Timeline_EL_text_);
+				cte_left_bar+(int)(i*time_sep)-6, 14+cte_graduation_height+cte_graduation_font_size+2, 0, Timeline_EL_text_);
 			TtaSetAccessRight (temp_el, ReadOnly, timelinedoc);
 		}
 	return temp_el;
@@ -1680,11 +1688,12 @@ static View Build_timeline(Document basedoc, char* timelineName)
 	View timelineView;
 	Element       el, found, root, temp_el, parent, baseroot;
 	int oldStructureChecking;  
-	int h_current, hg, 
+	int h_current,
 		x_timeline, y_timeline, w_timeline, h_timeline,
 		period_w_size;
 	double t_debut_toutes_anim, t_fin_toutes_anim;
 	char buffer[512];
+	pmapping_animated mapping;
 	
 	el = NULL;
 	root = NULL;
@@ -1699,7 +1708,7 @@ static View Build_timeline(Document basedoc, char* timelineName)
 	Compute_global_anim_period_of_doc (basedoc, &t_debut_toutes_anim, &t_fin_toutes_anim);
 	
 	period_w_size = max( w_timeline-cte_left_bar - cte_vscrollbar_w, (int) (3/2.0 * cte_left_bar));
-	time_sep = (int) (period_w_size / t_fin_toutes_anim);
+	time_sep = period_w_size / t_fin_toutes_anim;
 
 	current_timeline_width = period_w_size;
 	
@@ -1740,29 +1749,24 @@ static View Build_timeline(Document basedoc, char* timelineName)
 		should be nb_relations_animated-1*/
 		
 		dt[basedoc].nb_relations_animated++;
+		mapping = &(dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1]);
 
 		/* update mapping of animated element as soon as created :*/
-		dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1][0]=parent;
+		mapping->animated_elem = parent;
 
-		Create_title_group (basedoc, timelinedoc, h_current, parent, cte_all_collapsed_at_first) ;
-		  /* maps title group*/
-		dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1][1] = dt[basedoc].current_el;
+		Create_title_group (basedoc, timelinedoc, h_current, parent, 1) ;
+		/* maps title group*/
+		mapping->title_group = dt[basedoc].current_el;
 		
-		if (cte_all_collapsed_at_first) { /* collapsed rect */
-			found =	Create_collapsed_group (basedoc, timelinedoc, h_current, parent, found);
-			hg = cte_collapsed_group_height;
-			dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1][3]=dt[basedoc].current_el;
-			dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1][2] = NULL;
-		}
-		else { /* expanded group */
-			found = Create_expanded_group (basedoc, timelinedoc, h_current, parent, found, &hg);
-	  		dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1][2] = dt[basedoc].current_el; 
-			dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1][3] = NULL;
-		}
-
-
-		
-		h_current += hg+2;
+		found =	Create_collapsed_group (basedoc, timelinedoc, h_current, parent, mapping, found);
+		/* maps collapsed group*/
+		/* warning :  if only one animation then maps expanded group else maps collapsed group :*/
+		if (mapping->nb_periods==1)
+			mapping->exp_group = dt[basedoc].current_el;
+		else
+			mapping->col_group = dt[basedoc].current_el;
+	
+		h_current += cte_collapsed_group_height+2;
 	}
 
 
@@ -1915,10 +1919,10 @@ static void Enlarge_timeline (Document basedoc, Document timelinedoc, int x)
 
 
 	/* enlarge line */
-	delta_t = 1 + (int)((x-cte_left_bar-current_timeline_end*time_sep)/(float)time_sep);
+	delta_t = 1 + (int)((x-cte_left_bar-current_timeline_end*time_sep)/time_sep);
 	Draw_graduation (timelinedoc, dt[basedoc].current_el, current_timeline_end, current_timeline_end+delta_t);
 
-	inc_lines = time_sep*(delta_t);
+	inc_lines = (int)(time_sep*delta_t);
 
 	inc_w = 6+x-(current_timeline_width+cte_left_bar);
 	
@@ -1931,8 +1935,8 @@ static void Enlarge_timeline (Document basedoc, Document timelinedoc, int x)
 	/* enlarge abstract groups elements */
 
 	for (k=0; k<(dt[basedoc]).nb_relations_animated; k++) {
-		egroup = (dt[basedoc]).mapping_animated[k][2];
-		cgroup = (dt[basedoc]).mapping_animated[k][3];
+		egroup = (dt[basedoc]).mapping_animated[k].exp_group;
+		cgroup = (dt[basedoc]).mapping_animated[k].col_group;
 		
 		if (egroup)
 			Enlarge_group_items (timelinedoc, egroup, inc_w); 
@@ -1976,11 +1980,11 @@ void ShowTimeLineWindow (Document document, View view)
 #ifdef _SVGANIM
 /*      	- already created -> show it
 			- not created     -> create it */
-	if (dt[document].document)
-			     TtaRaiseView (dt[document].document, 1);
+	if (dt[document].timelinedoc)
+			     TtaRaiseView (dt[document].timelinedoc, 1);
 	else 
 	{
-		dt[document].document = Build_timeline (document, "Timeline");
+		dt[document].timelinedoc = Build_timeline (document, "Timeline");
 	}
 #endif /* _SVGANIM */
 }
@@ -2150,9 +2154,10 @@ static void Image_collapse_on_click(NotifyElement *event)
 	int length, hg, vpos, hep;
 	char buffer[512], im2[512], im1[512];
     Language lang;  
-	Element parent, title_group, exp_group, col_group, element_anime,
+	Element parent, title_group,
 		first_found, new_fresh_group;
  	ElementType elType;
+	pmapping_animated mapping;
 	Document basedoc = Get_basedoc_of (event->document);
 	
 	lang = TtaGetDefaultLanguage ();
@@ -2163,9 +2168,7 @@ static void Image_collapse_on_click(NotifyElement *event)
 	length = 512;
 	TtaGiveTextContent (event->element, buffer, &length, &lang);
 		
-	exp_group = Get_expanded_group_of_title_group (basedoc, title_group);
-	col_group = Get_collapsed_group_of_title_group (basedoc, title_group); 
-	element_anime = Get_animated_element_of_title_group (basedoc, title_group); 
+	mapping = Get_mapping_from_title_group (basedoc, title_group);
 
 	Build_path_to_image_dir (im1);
 	strcat (im1, cte_image_c1_filename);
@@ -2177,18 +2180,20 @@ static void Image_collapse_on_click(NotifyElement *event)
 		TtaSetTextContent (event->element, im2, SPACE, event->document);
 							 
 		/* create collapsed group */
-		first_found = Search_first_anim_in_tree (basedoc, element_anime);
+		first_found = Search_first_anim_in_tree (basedoc, mapping->animated_elem);
 		vpos = Get_y_of (TtaGetFirstChild (title_group));
-		Create_collapsed_group (basedoc, event->document, vpos, element_anime, first_found);
+		Create_collapsed_group (basedoc, event->document, vpos, mapping->animated_elem, mapping, first_found);
 		new_fresh_group = dt[basedoc].current_el;
-			
-		/* update mapping*/
-		Set_collapsed_group_of (basedoc, element_anime, new_fresh_group);
-		Set_expanded_group_of (basedoc, element_anime, NULL);
-	
-		hep = Get_height_of(TtaGetFirstChild(exp_group));
+
+		hep = Get_height_of(TtaGetFirstChild(mapping->exp_group));
+
 		/* delete expanded group */
-		TtaDeleteTree (exp_group, event->document); 
+		TtaDeleteTree (mapping->exp_group, event->document); 
+				
+		/* update mapping*/
+		Set_collapsed_group_of (basedoc, mapping->animated_elem, new_fresh_group);
+		Set_expanded_group_of (basedoc, mapping->animated_elem, NULL);
+	
 		/* translate visible groups on the interface */
 		Translate_following_elements (basedoc, event->document, vpos, -(hep-cte_collapsed_group_height));
 		dt[basedoc].vertical_pos -= (hep-cte_collapsed_group_height);
@@ -2198,18 +2203,18 @@ static void Image_collapse_on_click(NotifyElement *event)
 		TtaSetTextContent (event->element, im1, SPACE, event->document);
 
 		/* create expanded group  */
-		first_found = Search_first_anim_in_tree (basedoc, element_anime);
+		first_found = Search_first_anim_in_tree (basedoc, mapping->animated_elem);
 		vpos = Get_y_of (TtaGetFirstChild (title_group));
-		Create_expanded_group (basedoc, event->document, vpos, element_anime, first_found, &hg);
+		Create_expanded_group (basedoc, event->document, vpos, mapping->animated_elem, first_found, mapping, &hg);
 		new_fresh_group = dt[basedoc].current_el;
 
-		/* update mapping*/
-		Set_expanded_group_of (basedoc, element_anime, new_fresh_group);
-		Set_collapsed_group_of (basedoc, element_anime, NULL);
-		
 		/* delete collapsed group */
-		TtaDeleteTree (col_group, event->document);
+		TtaDeleteTree (mapping->col_group, event->document);
 
+		/* update mapping*/
+		Set_expanded_group_of (basedoc, mapping->animated_elem, new_fresh_group);
+		Set_collapsed_group_of (basedoc, mapping->animated_elem, NULL);
+		
 		/* translate visible groups on the interface */
 		Translate_following_elements (basedoc, event->document, vpos, hg-cte_collapsed_group_height);
 		dt[basedoc].vertical_pos += hg-cte_collapsed_group_height;
@@ -2243,19 +2248,6 @@ static void Define_keytime (NotifyElement *event)
 	
 }
 #endif /* _SVGANIM */
-
-
-
-/*----------------------------------------------------------------------
-  TimelineTextPreModify
-   callback on text modify
-  ----------------------------------------------------------------------*/
-ThotBool TimelineTextPreModify (NotifyOnTarget *event)
-{	ThotBool res = FALSE;
-#ifdef _SVGANIM
-#endif /* _SVGANIM */
-	return res;
-}
 
 
 
@@ -2331,9 +2323,8 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 	}
 
 
-	TtaSetDocumentUnmodified (event->document);
 	TtaSetDisplayMode (event->document, dp);
-
+	TtaSetDocumentUnmodified (event->document);
 #endif /* _SVGANIM */
 }
 
@@ -2347,10 +2338,11 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 #ifdef _SVGANIM
 static void Show_selected_element (NotifyElement *event) 
 {
+	pmapping_animated mapping;
 	Document basedoc = Get_basedoc_of (event->document);
 	Element title_group = TtaGetParent (TtaGetParent (event->element));
-	Element el = Get_animated_element_of_title_group (basedoc, title_group);
-	TtaSelectElement (basedoc, el);
+	mapping = Get_mapping_from_title_group (basedoc, title_group);
+	TtaSelectElement (basedoc, mapping->animated_elem);
 }
 #endif /* _SVGANIM */
 
@@ -2375,9 +2367,9 @@ ThotBool TimelineElClicked (NotifyElement *event)
 		Image_collapse_on_click(event);
 	else if (elType.ElTypeNum == Timeline_EL_image_keypos) 
 		Define_keytime (event);
-	else if (elType.ElTypeNum == Timeline_EL_rect_interface) 
+	else if (elType.ElTypeNum == Timeline_EL_rect_id) 
 		Show_selected_element (event);
-	else if (elType.ElTypeNum == Timeline_EL_text_) 
+	else if (elType.ElTypeNum == Timeline_EL_text_id) 
 		Show_selected_element (event);
 
 
@@ -2427,6 +2419,38 @@ static int Apply_hpos_mini (Document doc, Element el, int xmin)
 
 
 
+/*----------------------------------------------------------------------
+  Apply_new_width
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static int Apply_new_width (Document doc, Element el) 
+{
+	int nw = 0;
+	char buffer[512];
+	Attribute attr;
+	AttributeType attrType;
+	ElementType elType;
+	PRule         presRuleX;
+	presRuleX = TtaGetPRule (el, PRWidth);
+	if (presRuleX)
+		nw = TtaGetPRuleValue (presRuleX);
+	
+	sprintf (buffer, "%dpx", nw);
+	elType = TtaGetElementType (el);
+
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = Timeline_ATTR_width_;
+
+	attr = TtaGetAttribute (el, attrType);
+	if (attr) {
+		TtaSetAttributeText (attr, buffer, el, doc);
+		TimelineParseWidthHeightAttribute (attr, el, doc, FALSE);
+	}
+	return nw;
+}
+#endif /* _SVGANIM */
+
+
 
 /*----------------------------------------------------------------------
   Timeline_finished_moving_slider
@@ -2447,7 +2471,7 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
 		
 		x = Apply_hpos_mini (event->document, event->element, cte_left_bar-6);
 
-		d = (x+6-cte_left_bar)/(double)time_sep;
+		d = (x+6-cte_left_bar)/time_sep;
 		sprintf (buffer, "%.2fs", (float) d);
 		TtaSetTextContent (child, buffer, lang, event->document);
 
@@ -2460,45 +2484,72 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
 }
 
 
-/*----------------------------------------------------------------------
-  TimelineBeforeElModified
-   A Callback: a rect_period element is going to be resized or moved
-  ----------------------------------------------------------------------*/
-ThotBool TimelineBeforeElModified (NotifyOnValue *event)
-{
-	ThotBool res = FALSE;
-#ifdef _SVGANIM
-	/* let the user perform any translation/resize */
-	
-#endif /* _SVGANIM */
-	return res;
-}
-
 
 /*----------------------------------------------------------------------
-  TimelineAfterElModified
-   A Callback: a rect_period element has been resized or moved
+  Timeline_exp_period_modified
+   A Callback: an exp_period element has been resized or moved
   ----------------------------------------------------------------------*/
-void TimelineAfterElModified (NotifyOnValue *event)
+void Timeline_exp_period_modified (NotifyOnValue *event)
 {
 #ifdef _SVGANIM
 	Document basedoc = Get_basedoc_of (event->document);
-	Element edited_anim;
+	Element edited_anim, exp_group;
 	double start, duration;
+	int nw;
 
 	/* visual retroaction*/
 	int x = Apply_hpos_mini (event->document, event->element, cte_left_bar);
-	start = (x+6-cte_left_bar)*time_sep;
-	x += Get_width_of (event->element);
+	start = (x+6-(cte_left_bar+1))/time_sep;
+	nw = Apply_new_width (event->document, event->element);
+	x += nw;
+	duration = nw/time_sep;
 	if (x>cte_left_bar+current_timeline_width)
 		Enlarge_timeline (basedoc, event->document, x);
-	TtaSetDocumentUnmodified (event->document);
-
-	duration = Get_width_of (event->element)/(float)time_sep;
+	
+	exp_group = TtaGetParent (event->element);
 
 	/* basedoc modification */
-	edited_anim = Get_animation_tag_from_period (basedoc, event->element);
+	edited_anim = Get_animation_tag_from_period (basedoc, exp_group, event->element);
 	Write_time_info (basedoc, edited_anim, start, duration);
+
+	TtaSetDocumentUnmodified (event->document);
+
+#endif /* _SVGANIM */
+}
+
+
+
+
+/*----------------------------------------------------------------------
+  Timeline_col_period_modified
+   A Callback: an col_period element has been resized or moved
+  ----------------------------------------------------------------------*/
+void Timeline_col_period_modified (NotifyOnValue *event)
+{
+#ifdef _SVGANIM
+
+	Document basedoc = Get_basedoc_of (event->document);
+	Element exp_group;
+	double start, duration;
+	int nw;
+
+	/* visual retroaction*/
+	int x = Apply_hpos_mini (event->document, event->element, cte_left_bar);
+	start = (x+6-(cte_left_bar+1))/time_sep;
+	nw = Apply_new_width (event->document, event->element);
+	x += nw;
+	duration = nw/time_sep;
+	if (x>cte_left_bar+current_timeline_width)
+		Enlarge_timeline (basedoc, event->document, x);
+	
+	exp_group = TtaGetParent (event->element);
+
+	/* basedoc modification */
+	/* to come : modify the attribute start="" of all childrens */
+
+
+	TtaSetDocumentUnmodified (event->document);
+
 
 
 #endif /* _SVGANIM */
@@ -2514,12 +2565,12 @@ void TimelineWindowClose (NotifyDialog * event)
 #ifdef _SVGANIM
 	int k = 0;
 
-	while ((k<DocumentTableLength) && dt[k].document!=event->document) {
+	while ((k<DocumentTableLength) && dt[k].timelinedoc!=event->document) {
 	k++;	
 	}
 	if (k!=DocumentTableLength) 
 		Init_timeline_struct(k);
-
+	TtaSetDocumentUnmodified (event->document);
 #endif /* _SVGANIM */
 }
 

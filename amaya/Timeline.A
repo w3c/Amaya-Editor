@@ -4,23 +4,20 @@ DEFAULT
    BEGIN
 	 ElemLClick.Pre -> TimelineElClicked;
 	 DocClose.Post -> TimelineWindowClose;
-	 ElemTextModify.Pre -> TimelineTextPreModify;
 	 ElemTextModify.Post -> TimelineTextPostModify;
    END;
 
 
 ELEMENTS
 
-   rect_period:
-	BEGIN
-	PRuleModify.Pre -> TimelineBeforeElModified;
-	PRuleModify.Post -> TimelineAfterElModified;
-	END;
+   exp_period:
+	PRuleModify.Post -> Timeline_exp_period_modified;
+
+   col_period:
+	PRuleModify.Post -> Timeline_col_period_modified;
 
    image_slider:
-   BEGIN
     PRuleModify.Post -> Timeline_finished_moving_slider;
-   END; 
 
 
 ATTRIBUTES
