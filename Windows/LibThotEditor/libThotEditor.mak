@@ -784,24 +784,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 "libjpeg - Win32 Release" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
    cd "..\LibThotEditor"
 
 "libjpeg - Win32 ReleaseCLEAN" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" RECURSE=1 CLEAN 
    cd "..\LibThotEditor"
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
 "libjpeg - Win32 Debug" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
    cd "..\LibThotEditor"
 
 "libjpeg - Win32 DebugCLEAN" : 
-   cd "..\libjpeg"
+   cd "\users\guetari\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\LibThotEditor"
 
@@ -810,24 +810,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 "libpng - Win32 Release" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" 
    cd "..\LibThotEditor"
 
 "libpng - Win32 ReleaseCLEAN" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" RECURSE=1 CLEAN 
    cd "..\LibThotEditor"
 
 !ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
 
 "libpng - Win32 Debug" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" 
    cd "..\LibThotEditor"
 
 "libpng - Win32 DebugCLEAN" : 
-   cd "..\libpng"
+   cd "\users\guetari\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\LibThotEditor"
 

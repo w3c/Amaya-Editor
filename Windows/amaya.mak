@@ -488,14 +488,14 @@ SOURCE=..\amaya\amaya.rc
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "..\amaya" /d "NDEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\users\guetari\Amaya\amaya" /d "NDEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "..\amaya" /d "_DEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\users\guetari\Amaya\amaya" /d "_DEBUG" $(SOURCE)
 
 
 !ENDIF 
