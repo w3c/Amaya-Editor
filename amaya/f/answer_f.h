@@ -30,6 +30,7 @@ extern BOOL AHTPromptUsernameAndPassword ( HTRequest *request,
                                            const char *dfault,
                                            void *input,
                                            HTAlertPar * reply );
+extern ThotBool IsHTTP09Error ( HTRequest * request );
 extern BOOL AHTError_print ( HTRequest * request,
                              HTAlertOpcode op,
                              int msgnum,
@@ -68,6 +69,7 @@ extern BOOL AHTPromptUsernameAndPassword (/* HTRequest *request,
                                              const char *dfault,
                                              void *input,
                                              HTAlertPar * reply */);
+extern ThotBool IsHTTP09Error (/* HTRequest * request */);
 extern BOOL AHTError_print (/* HTRequest * request,
                                HTAlertOpcode op,
                                int msgnum,

@@ -426,36 +426,50 @@ STRING name
 }
 
 /*----------------------------------------------------------------------
-  CleanSpace
-  Removes all the spaces in a name. Returns TRUE if such
+  CleanFirstLastSpace
+  Removes the first and last space in a name. Returns TRUE if such
   operation was done.
+  Returns 1 if it made any change, 0 otherwise (not boolean).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int CleanSpace (STRING name)
+int CleanFirstLastSpace (STRING name)
 #else
-int CleanSpace (name)
+int CleanFirstLastSpace (name)
 STRING name
 #endif /* __STDC__ */
 {
  int result = 0;
- int s, d;
+ int l, d;
 
-  /* remove all double DIR_SEP */
-  s = 0;
-  d = 0;
-  while (name[d] != EOS)
-  {
-    if (name[d] == ' ')
-	{
-	  result = 1;
-	  d++;
-	  continue;
-	}
-	name[s] = name[d];
-	s++;
-	d++;
-  }
-  name[s] = EOS;
+ if (!name ||  *name == EOS)
+   return (0);
+
+ /* start by removing the ending spaces */
+ l = ustrlen (name) - 1;
+ while (l > 0 && name[l] == ' ')
+   l--;
+ if (name[l+1] == ' ')
+   {
+     result = 1;
+     name[l+1] = EOS;
+   }
+
+ /* now remove the leading spaces */
+ l = 0;
+ while (name[l] == ' ' && name[l] != EOS)
+   l++;
+ if (l > 0)
+   {
+     result = 1;
+     d = 0;
+     while (name[l] != EOS)
+       {
+	 name[d] = name[l];
+	 d++;
+	 l++;
+       }
+     name[d] = name[l];
+   }
 
   return (result);
 }
@@ -552,7 +566,7 @@ static void ValidateCacheConf ()
 
  /* validate the cache dir */
  change = 0;
- change += CleanSpace (CacheDirectory);
+ change += CleanFirstLastSpace (CacheDirectory);
  change += CleanDirSep (CacheDirectory);
  /* remove the last DIR_SEP, if we have it */
  change += RemoveLastDirSep (CacheDirectory);
@@ -1393,7 +1407,7 @@ static void ValidateGeneralConf ()
   **validate the tmp dir
   */
   change = 0;
-  change += CleanSpace (AppTmpDir);
+  change += CleanFirstLastSpace (AppTmpDir);
   change += CleanDirSep (AppTmpDir);
   /* remove the last DIR_SEP, if we have it */
   change += RemoveLastDirSep (AppTmpDir);
