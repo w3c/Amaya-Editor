@@ -15,13 +15,14 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "css.h"
 #include "undo.h"
+#include "MathML.h"
+#include "parser.h"
 
 #include "Mathedit_f.h"
 #include "XMLparser_f.h"
-
-#include "MathML.h"
-#include "parser.h"
+#include "styleparser_f.h"
 
 #define EOS     '\0'
 #define SPACE    ' '

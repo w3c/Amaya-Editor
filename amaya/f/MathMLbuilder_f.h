@@ -54,6 +54,9 @@ extern void TransformMFENCED ( Element el,
                                Document doc );
 extern void MathMLElementComplete ( Element el,
                                     Document doc );
+extern void SetFontfamily ( Document doc,
+                            Element el,
+                            STRING value );
 extern void SetFontsize ( Document doc,
                           Element el,
                           STRING value );
@@ -113,6 +116,9 @@ extern void TransformMFENCED (/* Element el,
                                  Document doc */);
 extern void MathMLElementComplete (/* Element el,
                                       Document doc */);
+extern void SetFontfamily (/* Document doc,
+                              Element el,
+                              STRING value */);
 extern void SetFontsize (/* Document doc,
                             Element el,
                             STRING value */);
