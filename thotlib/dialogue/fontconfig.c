@@ -124,32 +124,20 @@ int isnum (char c)
 }
 
 /*----------------------------------------------------------------------
-   PassOnComments                                                   
-  ----------------------------------------------------------------------*/
-static int PassOnComments (unsigned char *line, int indline)
-{
-  while (indline < MAX_TXT_LEN && 
-	 line[indline] == '#')
-    {
-      while (indline < MAX_TXT_LEN && line[indline] != EOS &&
-	     line[indline] != EOL)
-	indline++; 
-    }
-  if (indline == MAX_TXT_LEN)
-    indline--;  
-  return indline;
-}
-
-/*----------------------------------------------------------------------
    AdvanceNextWord                                                    
   ----------------------------------------------------------------------*/
 static int AdvanceNextWord (unsigned char *line, int indline)
 {
-  while (indline < MAX_TXT_LEN && line[indline] != EOS &&
-	 !isnum (line[indline]))
+  while (line[indline] != EOS && !isnum (line[indline]))
     {
-      indline = PassOnComments (line, indline);
-      indline++;
+      while (line[indline] != EOS && line[indline] == EOL)
+	indline++;
+      while (line[indline] != EOS && line[indline] == '#')
+	{
+	  /* skip to the end of the current line */
+	  while (line[indline] != EOS && line[indline] != EOL)
+	    indline++;
+	}
     }
   return indline;
 }
@@ -166,8 +154,7 @@ static int getWord (int indline, unsigned char *line, char *word)
   /* copy the word from the line*/
   indword = 0;
   word[0] = EOS;
-  while (indline < MAX_TXT_LEN && line[indline] != EOS &&
-	 line[indline] != ';')
+  while (line[indline] != EOS && line[indline] != ';')
     word[indword++] = line[indline++];
   /* marque la fin du mot trouve' */
   word[indword] = EOS;
@@ -176,6 +163,8 @@ static int getWord (int indline, unsigned char *line, char *word)
       line[0] = EOS;
       return 0;
     }
+  if (line[indline] == ';')
+    indline++;
   /*place ourself next to a word*/
   indline = AdvanceNextWord (line, indline);
   return (indline);
@@ -191,8 +180,7 @@ static int getFontFace (int indline, unsigned char *line, char *word)
   indword = 0;
   word[0] = EOS;  
   /* skip all char if there are */
-  while (indline < MAX_TXT_LEN &&
-	 line[indline] != EOS && line[indline] != EOL)
+  while (line[indline] != EOS && line[indline] != EOL)
      {
        if (line[indline] == '=')
 	 {
@@ -201,7 +189,7 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 	   word[indword++] = EOS;
 	   indline++;
 	   /*we return to the '1=' */
-	   while (indline < MAX_TXT_LEN && line[indline] != EOS &&
+	   while (line[indline] != EOS &&
 		  line[indline] >= SPACE && line[indline] != ';')
 	     word[indword++] = line[indline++];
 	   indline++;
@@ -224,21 +212,12 @@ static int getFontFamily (int indline, unsigned char *line, char *word)
   /* copy the word from the line*/
   indword = 0;
   word[0] = EOS;
-#ifdef _WINDOWS
-   while (indline < MAX_TXT_LEN && line[indline] != EOS &&
-	  (line[indline-4] != EOL ||
-	   line[indline-2] != EOL ||
-	   line[indline] != EOL))
-#else     
-     while (indline < MAX_TXT_LEN && line[indline] != EOS &&
-	    (line[indline-2] != EOL ||
-	     line[indline-1] != EOL ||
-	     line[indline] != EOL))
-#endif
+     while (line[indline] != EOS &&
+	    (line[indline] != EOL || line[indline-1] != EOL))
      {
        if (isnum (line[indline]))
 	 {
-	   while (indline < MAX_TXT_LEN && line[indline] != EOS &&
+	   while (line[indline] != EOS &&
 		  line[indline] > SPACE && line[indline] != ';')
 	     word[indword++] = line[indline++];
 	   /* marque la fin du mot trouve' */
@@ -257,85 +236,89 @@ static int getFontFamily (int indline, unsigned char *line, char *word)
   ----------------------------------------------------------------------*/
 static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 {
-  char                line[MAX_TXT_LEN];
   char                word[MAX_TXT_LEN];
+  char               *line;
   char               *fontface;
   int                 endfile, indline, script, style, face;
   ThotBool            complete;
 
-  line[0] = EOS;
+  line = NULL;
   complete = TRUE;
-  while ((endfile = fread (line, 1, MAX_TXT_LEN - 1, file)))
+  /* get the size of the file */
+  fseek (file, 0L, 2);	/* end of the file */
+  endfile = ftell (file) + 1;
+  fseek (file, 0L, 0);	/* beginning of the file */
+  line = TtaGetMemory (endfile);
+  indline = fread (line, 1, endfile, file);
+  line[endfile-1] = EOS;
+  indline = 0;
+  while (indline < endfile && line[indline] != EOS)
     {
-      line[endfile] = '\0';	 
-      indline = 0;
-      while (indline < MAX_TXT_LEN && line[indline] != EOS)
+      /*reads the script*/
+      indline = getWord (indline, line, word);
+      if (indline < endfile && indline && word[0] != EOS)
 	{
-	  /*reads the script*/
-	  indline = getWord (indline, line, word);
-	  if (indline < MAX_TXT_LEN && indline && word[0] != EOS)
+	  script = atoi (word);
+	  if (script >= 0 && script < 30)
 	    {
-	      script = atoi (word);
-	      if (script >= 0 && script < 30)
+	      if (fontsscript_tab[script] == NULL)
 		{
-		  if (fontsscript_tab[script] == NULL)
+		  /* first loading */
+		  fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
+		  for (face = 0; face < MAX_FONT_FACE; face++)
+		    fontsscript_tab[script]->family[face] = NULL;
+		}
+	      face = 0;
+	      /* reads all family for a script */
+	      while (indline != 0 && indline < endfile)
+		{
+		  indline = getFontFamily (indline, line, word);
+		  if (word[0] == EOS)
+		    break;
+		  face = atoi (word);
+		  if (face < MAX_FONT_FACE && face >= 0)
 		    {
-		    /* first loading */
-		      fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
-		      for (face = 0; face < MAX_FONT_FACE; face++)
-			fontsscript_tab[script]->family[face] = NULL;
-		    }
-		  face = 0;
-		  /* reads all family for a script */
-		  while (indline != 0 && indline < MAX_TXT_LEN)
-		    {
-		      indline = getFontFamily (indline, line, word);
-		      if (word[0] == EOS)
-			break;
-		      face = atoi (word);
-		      if (face < MAX_FONT_FACE && face >= 0)
+		      if (fontsscript_tab[script]->family[face] == NULL)
 			{
-			  if (fontsscript_tab[script]->family[face] == NULL)
+			  /* first loading */
+			  fontsscript_tab[script]->family[face] = TtaGetMemory (sizeof (FontFamilyConfig));
+			  for (style = 0; style < MAX_FONT_STYLE; style++)
+			    fontsscript_tab[script]->family[face]->highlight[style] = NULL;
+			}
+		      /* reads all highlights */
+		      style = 0;
+		      while (indline != 0 && indline < endfile)
+			{
+			  indline = getFontFace (indline, line, word);  
+			  if (word[0] == EOS)
+			    break;
+			  style = atoi (word);
+			  if (style < MAX_FONT_STYLE && style >= 0 &&
+			      fontsscript_tab[script]->family[face]->highlight[style] == NULL)
 			    {
-			      /* first loading */
-			      fontsscript_tab[script]->family[face] = TtaGetMemory (sizeof (FontFamilyConfig));
-			      for (style = 0; style < MAX_FONT_STYLE; style++)
-				fontsscript_tab[script]->family[face]->highlight[style] = NULL;
-			    }
-			  /* reads all highlights */
-			  style = 0;
-			  while (indline != 0 && indline < MAX_TXT_LEN)
-			    {
-			      indline = getFontFace (indline, line, word);  
-			      if (word[0] == EOS)
-				break;
-			      style = atoi (word);
-			      if (style < MAX_FONT_STYLE && style >= 0 &&
-				  fontsscript_tab[script]->family[face]->highlight[style] == NULL)
-				{
-				  /*Get the font-face in 1=font-face string (so +1-1)*/
-				  fontface = TtaStrdup (&word[2]);
+			      /*Get the font-face in 1=font-face string (so +1-1)*/
+			      fontface = TtaStrdup (&word[2]);
 #ifdef _GL
-				  if (!TtaFileExist (fontface))
+			      if (!TtaFileExist (fontface))
 #else /* _GL */
-				  if (!IsXLFDPatterneAFont (fontface))
+			      if (!IsXLFDPatterneAFont (fontface))
 #endif /* _GL */
-				    {
-				      complete = FALSE;
-				      /*printf ("Font file %s not found\n", fontface)*/;
-				    }
-				  else
-				    fontsscript_tab[script]->family[face]->highlight[style] = fontface;
+				{
+				  complete = FALSE;
+				  /*printf ("Font file %s not found\n", fontface)*/;
 				}
+			      else
+				fontsscript_tab[script]->family[face]->highlight[style] = fontface;
 			    }
 			}
 		    }
 		}
 	    }
-	  else
-	    break;	     
 	}
+      else
+	break;	     
     }
+  TtaFreeMemory (line);
   return complete;
 }
 

@@ -6,20 +6,15 @@
 #4 = cursive;normale face;bold face;italic face  
 #5 = fantasy;normale face;bold face;italic face  
 
-
 1;#Latin1 (West European)
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
 
-
-
 2;#Latin2 (East European)
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
-
-
 
 3;#Latin3 (South European)
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
