@@ -511,6 +511,9 @@ void TteInitMenus (char *name, int number)
 
    MenuActionList[CMD_NextSelWord].ActionName = "TtcNextSelWord";
    MenuActionList[CMD_NextSelWord].Call_Action = (Proc) TtcNextSelWord;
+
+   MenuActionList[CMD_Copy].ActionName = "TtcCopySelection";
+   MenuActionList[CMD_NextSelWord].Call_Action = (Proc) TtcCopySelection;
 }
 
 
