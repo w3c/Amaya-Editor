@@ -349,11 +349,12 @@ bool AmayaFrame::SetCurrent()
  *      Method:  DisplayIsReady
  * Description:  return true if the canvas is ready to recived drawing instructions
  *               usefull with opengl because on certains implementations, it's important to wait 
- *               for initilaisation before sending commands to opengl.
+ *               for initialisation before sending commands to opengl.
  *--------------------------------------------------------------------------------------
  */
 bool AmayaFrame::DisplayIsReady()
 {
+  wxASSERT(m_pCanvas && m_pCanvas->IsInit());
   return (m_pCanvas && m_pCanvas->IsInit());
 }
 

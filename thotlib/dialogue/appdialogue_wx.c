@@ -244,6 +244,10 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   if (kind != WXAMAYAWINDOW_SIMPLE)
     TtaMakeWindowMenuBar( window_id );
   
+  /* need to show the window now because if it's done later,
+     the opengl canvas can't be correctly realized */
+  TtaShowWindow( window_id, TRUE );
+
   return window_id;
 #else
   return 0;
