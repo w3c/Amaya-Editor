@@ -898,6 +898,7 @@ ThotColorStruct    *colrs;
   int                 bmap_order;
   unsigned long       c;
   int                 rshift, gshift, bshift;
+  int                 useMSB;
 
   switch (depth)
     {
@@ -1000,13 +1001,19 @@ ThotColorStruct    *colrs;
     case 24:
     case 32:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
+      newimage = XCreateImage (dsp,
+			       theVisual,
+			       depth, ZPixmap, 0, (char *) bit_data,
+			       width, height, 8, 0);
+
       rshift = highbit (theVisual->red_mask) - 7;
       gshift = highbit (theVisual->green_mask) - 7;
       bshift = highbit (theVisual->blue_mask) - 7;
       bmap_order = BitmapBitOrder (dsp);
-      
+
       bitp = bit_data;
       datap = data;
+      useMSB = (newimage->bits_per_pixel > 24);
       for (w = (width * height); w > 0; w--)
 	{
 	  c =
@@ -1018,7 +1025,8 @@ ThotColorStruct    *colrs;
 	  
 	  if (bmap_order == MSBFirst)
 	    {
-	      *bitp++ = (unsigned char) ((c >> 24) & 0xff);
+	      if (useMSB)
+		*bitp++ = (unsigned char) ((c >> 24) & 0xff);
 	      *bitp++ = (unsigned char) ((c >> 16) & 0xff);
 	      *bitp++ = (unsigned char) ((c >> 8) & 0xff);
 	      *bitp++ = (unsigned char) (c & 0xff);
@@ -1028,14 +1036,10 @@ ThotColorStruct    *colrs;
 	      *bitp++ = (unsigned char) (c & 0xff);
 	      *bitp++ = (unsigned char) ((c >> 8) & 0xff);
 	      *bitp++ = (unsigned char) ((c >> 16) & 0xff);
-	      *bitp++ = (unsigned char) ((c >> 24) & 0xff);
+	      if (useMSB)
+		*bitp++ = (unsigned char) ((c >> 24) & 0xff);
 	    }
 	}
-
-      newimage = XCreateImage (dsp,
-			       theVisual,
-			       depth, ZPixmap, 0, (char *) bit_data,
-			       width, height, 32, 0);
       break;
     default:
       fprintf (stderr, "gifhandler: Don't know how to format image for display of depth %d\n", depth);
