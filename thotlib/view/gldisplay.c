@@ -372,27 +372,19 @@ void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
      return;
 
    fh = FontHeight (font);
-   if (0 && h < fh * 2 && l <= CharacterWidth (229, font))
-     {
-	/* Only one glyph needed */
-	GL_DrawStixChar (font, 69, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
-     }
-   else
-     {
-        y += FrameTable[frame].FrTopMargin;
-	xm = x + (l / 3);
-	ym = y + (h / 2) - 1;
-
-	InitDrawing (5, 1, fg);
-	/* Center */
-	DoDrawOneLine (frame, x, y + 1, xm, ym);
-	DoDrawOneLine (frame, x, y + h - 2, xm, ym);
-
-	InitDrawing (5, 2, fg);
-	/* Borders */
-	DoDrawOneLine (frame, x, y, x + l, y);
-	DoDrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
-     }
+   y += FrameTable[frame].FrTopMargin;
+   xm = x + (l / 3);
+   ym = y + (h / 2) - 1;
+   
+   InitDrawing (5, 1, fg);
+   /* Center */
+   DoDrawOneLine (frame, x, y + 1, xm, ym);
+   DoDrawOneLine (frame, x, y + h - 2, xm, ym);
+   
+   InitDrawing (5, 2, fg);
+   /* Borders */
+   DoDrawOneLine (frame, x, y, x + l, y);
+   DoDrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
 }
 
 /*----------------------------------------------------------------------

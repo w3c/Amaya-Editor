@@ -77,11 +77,6 @@ int GL_UnicodeDrawString (int fg,
 void GL_DrawUnicodeChar (CHAR_T const c, 
 			 float x, float y, 
 			 void *GL_font, int fg);
-void GL_DrawStixChar (void *GL_font, unsigned char const c, int x, int y, 
-		      int fg, int size, int l, int h, int Totalheight);
-
-
-
 
 /* GL specific */
 void GL_Swap (int frame);
