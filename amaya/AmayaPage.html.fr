@@ -24,7 +24,7 @@
 <body xml:lang="fr" lang="fr">
 <p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="604"
 height="352">
-  <rect x="0" y="0" width="604" height="352" style="fill: #E1E1E1"/>
+  <rect x="0" y="0" width="604" height="353" style="fill: #E1E1E1"/>
   <text y="38px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
   xlink:type="simple" xlink:href="http://www.w3.org/Amaya"
   style="fill:#dc5b53; font: bold 16px">Amaya au W3C
@@ -43,13 +43,21 @@ height="352">
   </text>
   <text y="158px" x="477px" style="fill:#dc5b53; font: bold 16px"
   xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-  xlink:href="../doc/amaya/Math.html.fr">MathML
+  xlink:href="../doc/amaya/Creating.html.fr">XHTML
   </text>
   <text y="188px" x="477px" style="fill:#dc5b53; font: bold 16px"
   xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+  xlink:href="../doc/amaya/Math.html.fr">MathML
+  </text>
+  <text y="218px" x="477px" style="fill:#dc5b53; font: bold 16px"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
   xlink:href="../doc/amaya/SVG.html.fr">SVG
   </text>
-  <text y="218px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
+  <text y="248px" x="477px" style="fill:#dc5b53; font: bold 16px"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+  xlink:href="../doc/amaya/StyleSheets.html.fr">CSS
+  </text>
+  <text y="278px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
   xlink:type="simple" xlink:href="http://www.w3.org"
   style="fill:#dc5b53; font: bold 16px">W3C
   </text>

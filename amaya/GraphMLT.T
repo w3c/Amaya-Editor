@@ -212,9 +212,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'text';
+	indent +6;
 	create attributes;
 	create '>';
-	indent +2;
+	indent -4;
 	indent -2 after;
 	create SCT after;
 	create 'text>\12' after;
@@ -224,9 +225,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'tspan';
+	indent +7;
 	create attributes;
 	create '>';
-	indent +2;
+	indent -5;
 	indent -2 after;
 	create SCT after;
 	create 'tspan>\12' after;
