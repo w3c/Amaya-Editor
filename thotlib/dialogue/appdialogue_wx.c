@@ -358,10 +358,6 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   FrameTable[frame_id].FrWindowId   	= window_id;
   FrameTable[frame_id].FrPageId         = page_id;
 
-  /* initialize toolbar button default stats */
-  memcpy( WindowTable[window_id].EnabledButtonDefault, FrameTable[frame_id].EnabledButton, sizeof(ThotBool) * MAX_BUTTON );
-  memcpy( WindowTable[window_id].CheckedButtonDefault, FrameTable[frame_id].CheckedButton, sizeof(ThotBool) * MAX_BUTTON );
-
   p_page->Show();
   FrameTable[frame_id].WdFrame->RaiseFrame();
 
@@ -670,7 +666,7 @@ ThotBool TtaFrameIsActive( int frame_id )
 ThotBool TtaFrameIsClosed( int frame_id )
 {
 #ifdef _WX
-  return FrameTable[frame_id].FrDoc > 0;
+  return FrameTable[frame_id].FrDoc <= 0;
 #else
   return TRUE;
 #endif /* #ifdef _WX */
@@ -845,8 +841,6 @@ int TtaAddToolBarButton( int window_id,
       wxASSERT_MSG(FALSE, _T("Too much toolbar buttons !"));
       return 0;
     }
-  WindowTable[window_id].Call_Button[button_id]          = procedure;
-  WindowTable[window_id].EnabledButtonDefault[button_id] = status;
 
   // Init existing window's frames default values
   int        frame_id = 1;
@@ -873,8 +867,9 @@ int TtaAddToolBarButton( int window_id,
 						      ,wxBU_AUTODRAW | wxNO_BORDER | wxBU_EXACTFIT );
       p_button->SetToolTip( wxString(tooltip, AmayaWindow::conv_ascii) );
       p_toolbar->AddTool( p_button );
-      WindowTable[window_id].Button[button_id] = p_button;
+      WindowTable[window_id].Button[button_id]               = p_button;
       WindowTable[window_id].Button[button_id]->Enable( status );
+      WindowTable[window_id].Call_Button[button_id]          = procedure;
     }
   else
     {
@@ -888,18 +883,3 @@ int TtaAddToolBarButton( int window_id,
   return 0;
 #endif /* _WX */
 }
-
-/*----------------------------------------------------------------------
-  TtaInitFrameToolBarButton - 
-  init the toolbar buttons for the given frame
-  params:
-    + frame_id : frame identifier
-  returns:
-  ----------------------------------------------------------------------*/
-void TtaInitFrameToolBarButton( int frame_id,
-				void (*procedure) (),
-				ThotBool state )
-{
-  
-}
-
