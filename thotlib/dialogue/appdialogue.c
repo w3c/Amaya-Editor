@@ -387,6 +387,10 @@ int                 number;
    MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
    MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
 
+   MenuActionList[CMD_LineBreak].ActionName = "TtcInsertLineBreak";
+   MenuActionList[CMD_LineBreak].Call_Action = (Proc) TtcInsertLineBreak;
+   MenuActionList[CMD_LineBreak].ActionEquiv = TtaStrdup ("C Return");
+
    MenuActionList[CMD_CopyToClipboard].ActionName = "TtcCopyToClipboard";
    MenuActionList[CMD_CopyToClipboard].Call_Action = (Proc) TtcCopyToClipboard;
 

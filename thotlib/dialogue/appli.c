@@ -1700,56 +1700,59 @@ LPARAM lParam;
 
             case WM_SYSKEYDOWN:
             case WM_KEYDOWN:
-                 if (wParam != VK_F2     &&
-                     wParam != VK_F3     &&
-                     wParam != VK_F4     &&
-                     wParam != VK_F5     &&
-                     wParam != VK_F6     &&
-                     wParam != VK_F7     &&
-                     wParam != VK_F8     &&
-                     wParam != VK_F9     &&
-                     wParam != VK_F10    &&
-                     wParam != VK_F11    &&
-                     wParam != VK_F12    &&
-                     wParam != VK_F13    &&
-                     wParam != VK_F14    &&
-                     wParam != VK_F15    &&
-                     wParam != VK_F16    &&
-                     wParam != VK_INSERT &&
-                     wParam != VK_DELETE &&
-                     wParam != VK_HOME   &&
-                     wParam != VK_END    &&
-                     wParam != VK_PRIOR  &&
-                     wParam != VK_NEXT   &&
-                     wParam != VK_LEFT   &&
-                     wParam != VK_RIGHT  &&
-                     wParam != VK_UP     &&
-                     wParam != VK_DOWN   &&
-                     wParam != VK_RETURN &&
-                     wParam != 0x30      &&
-                     wParam != 0x31      &&
-                     wParam != 0x32      &&
-                     wParam != 0x33      &&
-                     wParam != 0x34      &&
-                     wParam != 0x35      &&
-                     wParam != 0x36      &&
-                     wParam != 0x37      &&
-                     wParam != 0x38      &&
-					 wParam != 0x39)
+                 if (wParam == VK_F2     ||
+                     wParam == VK_F3     ||
+                     wParam == VK_F4     ||
+                     wParam == VK_F5     ||
+                     wParam == VK_F6     ||
+                     wParam == VK_F7     ||
+                     wParam == VK_F8     ||
+                     wParam == VK_F9     ||
+                     wParam == VK_F10    ||
+                     wParam == VK_F11    ||
+                     wParam == VK_F12    ||
+                     wParam == VK_F13    ||
+                     wParam == VK_F14    ||
+                     wParam == VK_F15    ||
+                     wParam == VK_F16    ||
+                     wParam == VK_INSERT ||
+                     wParam == VK_DELETE ||
+                     wParam == VK_HOME   ||
+                     wParam == VK_END    ||
+                     wParam == VK_PRIOR  ||
+                     wParam == VK_NEXT   ||
+                     wParam == VK_LEFT   ||
+                     wParam == VK_RIGHT  ||
+                     wParam == VK_UP     ||
+                     wParam == VK_DOWN   /*||
+                     wParam == VK_RETURN ||
+                     wParam == 0x30      ||
+                     wParam == 0x31      ||
+                     wParam == 0x32      ||
+                     wParam == 0x33      ||
+                     wParam == 0x34      ||
+                     wParam == 0x35      ||
+                     wParam == 0x36      ||
+                     wParam == 0x37      ||
+                     wParam == 0x38      ||
+					 wParam == 0x39*/)
+				 {
+ 		         key = (int) wParam;
+                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T *)&key))
+                   WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, TRUE);
+                 if (wParam != VK_MENU)
+                   return 0;
+				 }
                     break;
-                 /* if (wParam == VK_RETURN && IS_NT)
-                    break; */
 
             case WM_SYSCHAR:
             case WM_CHAR:
-                 /* TtaAbortShowDialogue (); */
-		 key = (int) wParam;
-                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T*)&key))
-                    /* WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam); */
-                    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam);
-                 if (wParam == VK_MENU)
-                    break ;
-                 return 0;
+ 		         key = (int) wParam;
+                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T *)&key))
+                   WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
+                 if (wParam != VK_MENU)
+                   return 0;
+                 break;
 
             case WM_LBUTTONDOWN:
                  /* Activate the client window */
@@ -1761,20 +1764,17 @@ LPARAM lParam;
                  CloseInsertion ();
 
                  status = GetKeyState (VK_SHIFT);
-                 if (HIBYTE (status)) {
+                 if (HIBYTE (status))
                     LocateSelectionInView (frame, ClickX, ClickY, 0);
-				 } else {
+				 else
+				 {
                    status = GetKeyState (VK_CONTROL);
-                   if (HIBYTE (status)) {
+                   if (HIBYTE (status))
                      /* changes the box position */
                      ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
                      /* This is the beginning of a selection */
-				   } else {
-                     /* ClickFrame = frame;
-                     oldXPos = ClickX = LOWORD (lParam);
-                     oldYPos = ClickY = HIWORD (lParam); */
+				   else
                      LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 2);
-				   }
                    fBlocking = TRUE;
 				   moved = FALSE;
 				 }
@@ -1852,25 +1852,28 @@ LPARAM lParam;
                  X_Pos = LOWORD (lParam);
                  Y_Pos = HIWORD (lParam);
                  /* if (fBlocking) { */
-                 if (wParam & MK_LBUTTON) {
+                 if (wParam & MK_LBUTTON)
+				 {
                     if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) ||  
                         ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))
 					{
                        LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
 					   moved = TRUE;
 					}
-                 } else
-                     fBlocking = FALSE;
+                 }
+				 else
+                   fBlocking = FALSE;
 				 oldXPos = X_Pos;
 				 oldYPos = Y_Pos;
                  return 0;
 
             case WM_NCMOUSEMOVE:
-                 if (firstTime && fBlocking) {
-                     winCapture = GetCapture ();
-                     autoScroll = TRUE;
-		     firstTime = FALSE;
-                     SetCapture (hwnd);
+                 if (firstTime && fBlocking)
+				 {
+                   winCapture = GetCapture ();
+                   autoScroll = TRUE;
+                   firstTime = FALSE;
+                   SetCapture (hwnd);
 				 }
                  return 0;
 

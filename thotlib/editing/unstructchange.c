@@ -1070,15 +1070,29 @@ ThotBool		    before
 }
 
 /*----------------------------------------------------------------------
-   L'utilisateur a frappe' la touche "Return".
-   Traitement en mode non structure'.
+  TtcInsertLineBreak handles the key "Control Return".
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtcCreateElement (Document doc, View view)
+void     TtcInsertLineBreak (Document doc, View view)
 #else
-void                TtcCreateElement (doc, view)
-   Document doc  ; 
-   View     view ;
+void     TtcInsertLineBreak (doc, view)
+Document doc; 
+View     view;
+#endif
+{
+  if (MenuActionList[0].Call_Action)
+    (*MenuActionList[0].Call_Action) (doc, view, BREAK_LINE);
+}
+
+/*----------------------------------------------------------------------
+  TtcCreateElement handles the key "Return".
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void     TtcCreateElement (Document doc, View view)
+#else
+void     TtcCreateElement (doc, view)
+Document doc; 
+View     view;
 #endif
 {
   PtrElement          firstSel, lastSel, pListEl, pE, pNew, pSibling;

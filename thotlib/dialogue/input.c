@@ -46,22 +46,12 @@ typedef struct _key
   int                 K_EntryCode;    /* input key                           */
   int                 K_Command;      /* index in the command list or -1     */
   int                 K_Value;	      /* return key if command = -1          */
+  ThotBool            K_Special;      /* TRUE if it's a special key          */
   struct _key        *K_Other;	      /* next entry at the same level        */
-  union
-  {
-    struct
-    {
-      struct _key    *_K_Next_;	      /* 1st complementary touch (1st level) */
-    } s0;
-    struct
-    {
-      int             _K_Modifier_;   /* modifier value (2nd level)          */
-    } s1;
-  } u;
+  struct _key        *K_Next;	      /* 1st complementary touch (1st level) */
+  int                 K_Modifier;     /* modifier value (2nd level)          */
 }
 KEY;
-#define K_Next u.s0._K_Next_
-#define K_Modifier u.s1._K_Modifier_
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -102,6 +92,7 @@ KEY;
 #define MY_KEY_Next      7
 #define MY_KEY_Home      8
 #define MY_KEY_End       9
+#define MY_KEY_Return    10
 static int          SpecialKeys[] = {
   CMD_PreviousLine,
   CMD_PreviousChar,
@@ -112,7 +103,8 @@ static int          SpecialKeys[] = {
   CMD_PageUp,
   CMD_PageDown,
   CMD_PageTop,
-  CMD_PageEnd
+  CMD_PageEnd,
+  CMD_CreateElement
 };
 static int          SpecialShiftKeys[] = {
   CMD_PreviousSelLine,
@@ -124,7 +116,8 @@ static int          SpecialShiftKeys[] = {
   CMD_PageUp,
   CMD_PageDown,
   CMD_PageTop,
-  CMD_PageEnd
+  CMD_PageEnd,
+  CMD_CreateElement
 };
 static int          SpecialCtrlKeys[] = {
   CMD_LineUp,
@@ -136,7 +129,8 @@ static int          SpecialCtrlKeys[] = {
   CMD_PageUp,
   CMD_PageDown,
   CMD_PageTop,
-  CMD_PageEnd
+  CMD_PageEnd,
+  CMD_LineBreak
 };
 
 /* the automata */
@@ -150,7 +144,6 @@ static KEY         *Automata_current = NULL;
 
 #ifdef _WINDOWS
 static BOOL specialKey;
-static BOOL escChar = FALSE;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -173,7 +166,7 @@ STRING              name;
 	 return ("0x2c");
       else
 	 return (name);
-   else if (!strcasecmp (name, "Return"))
+   else if (!strcasecmp (name, "Enter"))
       return ("0x0d");
    else if (!strcasecmp (name, "Backspace"))
       return ("0x08");
@@ -194,24 +187,28 @@ STRING              name;
    which Thot can use.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static unsigned int SpecialKey (char* name)
+static unsigned int  SpecialKey (char *name, ThotBool *isSpecial)
 #else  /* __STDC__ */
-static unsigned int SpecialKey (name)
-char*               name;
-
+static unsigned int  SpecialKey (name, isSpecial)
+char                *name;
+ThotBool            *isSpecial;
 #endif /* __STDC__ */
 {
+	*isSpecial = TRUE;
    /* is it the name of a special character? */
    if (!strcasecmp (name, "Return"))
-      return (unsigned int) THOT_KEY_Return;
+     return (unsigned int) THOT_KEY_Return;
    else if (!strcasecmp (name, "Backspace"))
-      return (unsigned int) THOT_KEY_BackSpace;
+     return (unsigned int) THOT_KEY_BackSpace;
    else if (!strcasecmp (name, "Space"))
-      return 32;
+   {
+     *isSpecial = FALSE;
+     return 32;
+   }
    else if (!strcasecmp (name, "Escape"))
-      return (unsigned int) THOT_KEY_Escape;
+     return (unsigned int) THOT_KEY_Escape;
    else if (!strcasecmp (name, "Delete"))
-      return (unsigned int) THOT_KEY_Delete;
+     return (unsigned int) THOT_KEY_Delete;
    else if (!strcasecmp (name, "F1"))
       return (unsigned int) THOT_KEY_F1;
    else if (!strcasecmp (name, "F2"))
@@ -285,20 +282,23 @@ char*               name;
       return (unsigned int) THOT_KEY_R15;
 #endif /* THOT_KEY_R1 */
    else if (!strcasecmp (name, "Up"))
-      return (unsigned int) THOT_KEY_Up;
+     return (unsigned int) THOT_KEY_Up;
    else if (!strcasecmp (name, "Down"))
-      return (unsigned int) THOT_KEY_Down;
+     return (unsigned int) THOT_KEY_Down;
    else if (!strcasecmp (name, "Left"))
-      return (unsigned int) THOT_KEY_Left;
+     return (unsigned int) THOT_KEY_Left;
    else if (!strcasecmp (name, "Right"))
-      return (unsigned int) THOT_KEY_Right;
+     return (unsigned int) THOT_KEY_Right;
    else if (!strcasecmp (name, "Home"))
-      return (unsigned int) THOT_KEY_Home;
+     return (unsigned int) THOT_KEY_Home;
    else if (!strcasecmp (name, "End"))
-      return (unsigned int) THOT_KEY_End;
+     return (unsigned int) THOT_KEY_End;
    else
-      return (unsigned int) name[0];
-}				/*SpecialKey */
+   {
+     *isSpecial = FALSE;
+     return (unsigned int) name[0];
+   }
+}
 
 
 
@@ -313,13 +313,15 @@ char*               name;
    command = number of the command in MyActions
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MemoKey (int mod1, int key1, int mod2, int key2, int key, int command)
+static void         MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2, ThotBool spec2, int key, int command)
 #else  /* __STDC__ */
-static void         MemoKey (mod1, key1, mod2, key2, key, command)
+static void         MemoKey (mod1, key1, spec1, mod2, key2, spec2, key, command)
 int                 mod1;
 int                 key1;
+ThotBool            spec1;
 int                 mod2;
 int                 key2;
+THotBool            spec2;
 int                 key;
 int                 command;
 
@@ -341,24 +343,12 @@ int                 command;
 	       break;
 	    case THOT_MOD_CTRL:
 	       addFirst = &Automata_ctrl;
-#          ifdef _WINDOWS
-           if (key1 >= 'a' && key1 <= 'z')
-              key1 = key1 - 'a' + 1;
-           else if (key1 >= 'A' && key1 <= 'Z')
-                key1 = key1 - 'A' + 1;
-#          endif /* _WINDOWS */
 	       break;
 	    case THOT_MOD_ALT:
 	       addFirst = &Automata_alt;
 	       break;
 	    case THOT_MOD_S_CTRL:
 	       addFirst = &Automata_CTRL;
-#          ifdef _WINDOWS
-           if (key1 >= 'a' && key1 <= 'z')
-              key1 = key1 - 'a' + 1;
-           else if (key1 >= 'A' && key1 <= 'Z')
-                key1 = key1 - 'A' + 1;
-#          endif /* _WINDOWS */
 	       break;
 	    case THOT_MOD_S_ALT:
 	       addFirst = &Automata_ALT;
@@ -384,12 +374,12 @@ int                 command;
 	do
 	  {
 	     /* is it the same entry key ? */
-	     if (oldptr->K_EntryCode == key1)
+	     if (oldptr->K_EntryCode == key1 && oldptr->K_Special == spec1)
 		exists = TRUE;	/* the key1 entry already exists */
 	     else if (oldptr->K_Other != NULL)
 	       {
 		  oldptr = oldptr->K_Other;
-		  if (oldptr->K_EntryCode == key1)
+		  if (oldptr->K_EntryCode == key1 && oldptr->K_Special == spec1)
 		     exists = TRUE;	/* we must also verify the last entry */
 	       }
 	  }
@@ -404,6 +394,7 @@ int                 command;
 	  {
 	     /* Creation d'une entree d'automate de 1er niveau */
 	     ptr->K_EntryCode = key1;
+		 ptr->K_Special = spec1;
 	     ptr->K_Next = NULL;
 	     ptr->K_Other = NULL;
 	     ptr->K_Command = 0;
@@ -424,6 +415,7 @@ int                 command;
 	     if (ptr == NULL)
 	       ptr = (KEY *) TtaGetMemory (sizeof (KEY));
 	     ptr->K_EntryCode = key2;
+		 ptr->K_Special = spec2;
 	     ptr->K_Modifier = mod2;
 	     ptr->K_Other = NULL;
 	     ptr->K_Command = command;
@@ -459,6 +451,7 @@ int                 command;
 	     if (ptr == NULL)
 	       ptr = (KEY *) TtaGetMemory (sizeof (KEY));
 	     ptr->K_EntryCode = key2;
+		 ptr->K_Special = spec2;
 	     ptr->K_Modifier = mod2;
 	     ptr->K_Other = NULL;
 	     ptr->K_Command = command;
@@ -473,6 +466,7 @@ int                 command;
      {
 	/* on cree une entree de premier niveau */
 	ptr->K_EntryCode = key1;
+	ptr->K_Special = spec1;
 	ptr->K_Modifier = mod1;
 	ptr->K_Other = NULL;
 	ptr->K_Next = NULL;
@@ -491,80 +485,93 @@ int                 command;
    MSCharTranslation
    MS-Window front-end to the character translation and handling.
    Decodes the MS-Window callback parameters and calls the
-   generic character handling function. 
+   generic character handling function.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam)
+void     WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial)
 #else  /* !__STDC__ */
-void WIN_CharTranslation (hWnd, frame, msg, wParam, lParam)
-HWND   hWnd; 
-int    frame; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
+void     WIN_CharTranslation (hWnd, frame, msg, wParam, lParam, isSpecial)
+HWND     hWnd; 
+int      frame; 
+UINT     msg; 
+WPARAM   wParam; 
+LPARAM   lParam;
+ThotBool isSpecial;
 #endif /* __STDC__ */
-{   
+{
+   CHAR_T string[2];
    int  keyboard_mask = 0;   
    int  status;
-   CHAR_T string[2];
-   int  len = 0;
+   int  len;
 
    if (frame < 0)
-      return;
+     return;
 
-   escChar = FALSE;
-
-   /* Is the Shift key pressed ?? */
+   len = 1;
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status)) 
-      /* Yes it is */
-      keyboard_mask |= THOT_MOD_SHIFT;
-
-   /* Is the Control key pressed ?? */
+     /* the Shift key is pressed */
+     keyboard_mask |= THOT_MOD_SHIFT;
    status = GetKeyState (VK_CONTROL);
-   if (HIBYTE (status)) {
-      /* Yes it is */
-      keyboard_mask |= THOT_MOD_CTRL;
-      escChar = TRUE;
-   } 
-
+   if (HIBYTE (status))
+     /* the Control key is pressed */
+     keyboard_mask |= THOT_MOD_CTRL;
    /* Alt key is a particular key for Windows. It generates a WM_SYSKEYDOWN and */
    /* usulally we have not to trap this event and let Windows do.  In our case, */
    /* we do not use the standard accelerator tables as in common Windows appli. */
    /* Is the Alt key pressed ?? */
    status = GetKeyState (VK_MENU);
-   if (HIBYTE (status)) {
-      /* Yes it is */
+   if (HIBYTE (status))
+      /* the Alt key is pressed */
       keyboard_mask |= THOT_MOD_ALT;
-      escChar = TRUE;
-   }
 
-   if ((msg == WM_KEYDOWN) && (wParam == VK_RETURN) && !(keyboard_mask & THOT_MOD_ALT))
+   if (msg == WM_KEYDOWN && wParam == VK_RETURN && 
+	   !(keyboard_mask & THOT_MOD_ALT))
 	   return;
-
-   /* If the message is WM_CHAR then this is a character to insert and  not a */
-   /* particular key as a short cut for example                               */
-   if (msg == WM_CHAR)
-      specialKey = FALSE;
-   else
-      /* if the message is WM_KEYDOWN or WM_SYSKEYDOWN then we have to suppose */
-	  /* that we have to deal with something else than a character to  insert: */
-	  /* a short cut for example                                               */
-      specialKey = TRUE;
-
-
-   if (msg == WM_SYSCHAR)
-      len = 0;
-   else
-        len = 1;
-
-   if (wParam == VK_MENU)
-      return;
+   /* check if it's a special key */
+   specialKey = isSpecial;
+   if (HIBYTE (GetKeyState (VK_UP)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_LEFT)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_RIGHT)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_UP)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_DOWN)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_BACK)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_DELETE)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_PRIOR)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_NEXT)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_HOME)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_END)))
+     specialKey = TRUE;
+   else if (HIBYTE (GetKeyState (VK_RETURN)))
+     specialKey = TRUE;
+   else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
+	 {
+	   /* Windows translates Ctrl a-z */
+       if (keyboard_mask & THOT_MOD_SHIFT)
+         wParam += 64;
+	   else
+		 wParam += 96;
+	 }
 
    string[0] = (CHAR_T) wParam;
-   if (msg == WM_SYSCHAR)
-      if (wParam >= 'a' && wParam <= 'z')
-         wParam -= 'a' - 'A';
+   if (msg == WM_SYSCHAR || msg == WM_SYSKEYDOWN)
+     len = 0;
+   else
+   {
+		if (wParam == 0x0A)
+	     /* Linefeed key */
+	     wParam = 0x0D;
+   }
 
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
@@ -589,8 +596,8 @@ gpointer *data;
    int                 PicMask;
    int                 frame;
    unsigned int        state, save;
-   UCHAR_T       string[2];
-   ThotComposeStatus      ComS;
+   UCHAR_T             string[2];
+   ThotComposeStatus   ComS;
    KeySym              KS;
 
    frame = (int) data;
@@ -701,24 +708,10 @@ int                 key;
   int                 command;
   int                 mainframe;
   ThotBool            found;
-#ifdef _WINDOWS
-  ThotBool            endOfSearch = FALSE;
-#endif /* _WINDOWS */
   
   if (frame > MAX_FRAME)
     frame = 0;
-  
-#ifdef _WINDOWS
-  if (key == 0xD && nb == 1)
-    specialKey = TRUE;
-  else if ((key >= 0x1 && key <= 0x1A) && nb == 1)
-    specialKey = TRUE;
-  else if (escChar) {
-    specialKey = TRUE;
-    escChar = FALSE;
-  }
-#endif /* _WINDOWS */
-  
+    
   value = string[0];
   found = FALSE;
   if (nb == 2)
@@ -756,7 +749,11 @@ int                 key;
 	    {
 	      if (ptr != NULL)
 		{
-		  if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
+		  if (ptr->K_EntryCode == key &&
+#ifdef _WINDOWS
+			  ptr->K_Special == specialKey &&
+#endif /* _WINDOWS */
+			  modtype == ptr->K_Modifier)
 		    found = TRUE;
 		  else
 		    ptr = ptr->K_Other;
@@ -775,13 +772,7 @@ int                 key;
 	  if (modtype == THOT_MOD_S_CTRL)
 	    ptr = Automata_CTRL;
 	  else if (modtype == THOT_MOD_CTRL)
-	    {
-	      ptr = Automata_ctrl;
-#ifdef _WINDOWS
-	      if (key == 0x0A)
-		key = 0x0D;
-#endif /* _WINDOWS */
-	    }
+	    ptr = Automata_ctrl;
 	  else if (modtype == THOT_MOD_S_ALT)
 	    ptr = Automata_ALT;
 	  else if (modtype == THOT_MOD_ALT)
@@ -789,22 +780,15 @@ int                 key;
 	  else
 	    ptr = Automata_normal;
       
-#ifdef _WINDOWS
-	  endOfSearch = FALSE;
-	  while (!endOfSearch && ptr != NULL)
-#else  /* !_WINDOWS */
 	    while (!found && ptr != NULL)
-#endif /* _WINDOWS */
 	      {
 		if (ptr != NULL)
 		  {
-		    if (ptr->K_EntryCode == key)
-		      {
+		    if (ptr->K_EntryCode == key
 #ifdef _WINDOWS
-			endOfSearch = TRUE;
-			if (specialKey)
-			  {
+			  && ptr->K_Special == specialKey)
 #endif /* _WINDOWS */
+		      {
 			    /* On entre dans un automate */
 			    found = TRUE;
 			    Automata_current = ptr->K_Next;
@@ -814,9 +798,6 @@ int                 key;
 				value = (UCHAR_T) ptr->K_Value;
 				command = ptr->K_Command;
 			      }
-#ifdef _WINDOWS
-			  }
-#endif /* _WINDOWS */
 		      }
 		    else
 		      ptr = ptr->K_Other;
@@ -830,7 +811,7 @@ int                 key;
 #else /* !_WINDOWS */
   if (!found)
 #endif /* _WINDOWS */
-    /* Mangement of special keys */
+    /* Handling special keys */
     switch (key)
       {
       case THOT_KEY_Up:
@@ -846,6 +827,16 @@ int                 key;
 	Automata_current = NULL;
 	break;
 	
+     case THOT_KEY_Return:
+	if (modtype == THOT_MOD_SHIFT)
+	  command = SpecialShiftKeys[MY_KEY_Return];
+	else if (modtype == THOT_MOD_CTRL)
+	  command = SpecialCtrlKeys[MY_KEY_Return];
+	else
+	  command = SpecialKeys[MY_KEY_Return];
+	Automata_current = NULL;
+	break;
+
       case THOT_KEY_Left:
 #ifdef THOT_KEY_R10
       case THOT_KEY_R10:
@@ -981,8 +972,12 @@ int                 key;
 		(*MenuActionList[command].Call_Action) (document, view);
 	    }
 	}
-      else if (nb == 0) /* Rien a inserer */      
-	return;
+     else if (nb == 0)
+	  {
+		/* Rien a inserer */ 
+		Automata_current = NULL;
+        return;
+	 }
       /* Traitement des caracteres au cas par cas */
       else
 	{
@@ -1025,7 +1020,7 @@ int                 key;
 		   ( value >= 32 && value < 128) || (value >= 144 && value < 256))
 	    {
 #ifdef _WINDOWS
-	      if (!specialKey)
+	      /*if (!specialKey)*/
 #endif /* _WINDOWS */
 		/* on insere un caractere valide quelque soit la langue */
 		if (MenuActionList[0].Call_Action)
@@ -1161,14 +1156,15 @@ CHAR_T*               appliname;
    int                 len, max;
    FILE               *file;
    ThotTranslations    table = 0;
+   ThotBool            isSpecialKey1, isSpecialKey2;
 
    appHome = TtaGetEnvString ("APP_HOME");
    ustrcpy (name, appliname);
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    ustrcat (name, TEXT(".kb"));
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    ustrcat (name, TEXT(".keyboard"));
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    ustrcpy (home, appHome);
    ustrcat (home, WC_DIR_STR);
@@ -1272,7 +1268,7 @@ CHAR_T*               appliname;
 			}
 
             /* convertion vers keysym pour l'automate */
-            key1 = SpecialKey (transText);
+            key1 = SpecialKey (transText, &isSpecialKey1);
             strcat (equiv, transText);
 
             /* Lecture eventuelle d'une deuxieme composition */
@@ -1342,7 +1338,7 @@ CHAR_T*               appliname;
                   else
                       strcat (line, " ");
 	       } 
-               key2 = SpecialKey (transText);
+               key2 = SpecialKey (transText, &isSpecialKey2);
                strcat (equiv, transText);
 
                /* Lecture de l'action */
@@ -1356,7 +1352,8 @@ CHAR_T*               appliname;
                adr = strchr (ch, SPACE);
             if (adr == NULL)
                i = max;
-            else {
+            else
+			{
                  adr[0] = EOS;
                  /* Selection de la bonne commande */
                  for (i = 0; i < max; i++)
@@ -1365,14 +1362,15 @@ CHAR_T*               appliname;
 			} 
 
             /* Est-ce une translation valable pour le texte Motif */
-            if (i <= 8) {
+            if (i <= 8)
+			{
                /* FnCopy la ligne dans le source de la table de translations */
                strcat (text, line);
                if (!strcmp (ch, "TtcInsertChar"))
-		 {
+			   {
                   strcat (text, "insert-string(");
                   strcat (text, ISOAsciiTranslate (&adr[1]));
-		 }
+			   }
 	       else if (!strcmp (ch, "TtcDeleteSelection"))
                 strcat (text, "delete-selection()");
                else if (!strcmp (ch, "TtcDeletePreviousChar"))
@@ -1401,12 +1399,12 @@ CHAR_T*               appliname;
 		strcat (text, "\n");
 		/* C'est un encodage de caractere */
 		adr = ISOAsciiTranslate (&transText[len]);
-		MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
+		MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, (unsigned int) adr[0], 0);
 	      }
 	    else if (i < max)
 	      {
 		/* C'est une autre action Thot */
-		MemoKey (mod1, key1, mod2, key2, /*255+i */ 0, i);
+		MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, /*255+i */ 0, i);
 		/* On met a jour l'equivalent clavier */
 		TtaFreeMemory (MenuActionList[i].ActionEquiv);
 		MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
