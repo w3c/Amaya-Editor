@@ -2579,9 +2579,10 @@ int                 frame;
 			      if (pBox->BxSpaceWidth != 0)
 				{
 				   i = pBox->BxSpaceWidth - CharacterWidth (_SPACE_, pBox->BxFont);
+				   /* On prend la largeur justifiee */
+				   width = width + i * nSpaces + pBox->BxNPixels;
 				   /* Ecart de largeur */
-				   adjustDelta = width + i * nSpaces + pBox->BxNPixels - pBox->BxWidth;
-				   width = pBox->BxWidth;	/* On prend la largeur justifiee */
+				   adjustDelta = width - pBox->BxWidth;
 				}
 			      charDelta = pAb->AbVolume - pBox->BxNChars;	/* ecart de caracteres */
 			      nSpaces -= pBox->BxNSpaces;	/* ecart de blancs */
