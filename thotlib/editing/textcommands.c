@@ -1416,7 +1416,8 @@ void TtcCopyToClipboard (Document doc, View view)
 	  // This data objects are held by the clipboard, 
 	  // so do not delete them in the app.
 	  wxTheClipboard->SetData( new wxTextDataObject( TtaConvMessageToWX((char *)buffer) ) );
-	  wxLogDebug( _T("TtcCopyToClipboard: ") + TtaConvMessageToWX((char *)buffer) );
+	  // do not log clipboard because some caracteres causes amaya to crash ... I don't know why.
+	  //	  wxLogDebug( _T("TtcCopyToClipboard: ") + TtaConvMessageToWX((char *)buffer) );
 	}
       else if (Xbuffer)
 	{
