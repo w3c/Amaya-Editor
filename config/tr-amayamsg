@@ -51,8 +51,8 @@
 50 Ekle
 51 Göster
 52 Tara
-53 Dýþ CSS
-54 CSS Sil
+53 Matematik
+54 Grafik
 55 Sil
 56 Kaydet
 57 Ýsimle kaydet
@@ -67,14 +67,14 @@
 66 Belgenin adresi
 67 Görüntü dizini
 68 Nesne konumu
-69 Belge tarzý
-70 Kullanýcý seçenekleri
-71 CSS dosyasý 1                                            
-72 1. dosya için kural dökümü                                   
-73 CSS dosyasý 2                                            
-74 2. dosya için kural dökümü                                   
-75 Dýþ \'Style Sheet\' seçimi
-76 \'Style Sheet\' sil
+69 CSS dosyasý 1
+70 Amaya - WWW için tarayýcý ve belge düzenleyici
+71 W3C tarafýndan deneme tarayýcýsý olarak geliþtirildi (http://www.w3.org/)
+72 %s karakterden uzun URL\'ler þimdilik iþlenemiyor
+73 Sadece öntanýmlý tip kullanýlabilir
+74 Baðlantý güncellemesi: %s%% tamamlandý
+75 Kaydedilecek bir þey yok
+76 y\'de tekrar                                           
 77 <HTML><HEAD><TITLE>HATA: URL eriþilemiyor</TITLE></HEAD><BODY><H1>Belirtilen URL alýnamadý</H1><HR><P>Belirtilen URL alýnýrken:<A HREF=\"%s\">%s</A></P><P>Aþaðýdaki hata ile karþýlaþýldý:</P><UL><LI><STRONG>Baðlantý baþarýsýz</STRONG></UL><P>Sistem hata olarak:</P><PRE><I>(%d) %s</I></PRE>mesajýný verdi<P>Bunun anlamý:</P><PRE>Karþý sunucunun çalýþmýyor olmasý veya istenen belgenin sunucuda yer almamasý.</PRE><PRE>Lütfen bir süre sonra tekrar deneyin.</PRE><P></P><HR>\n</BODY></HTML>
 78 Kullanýcý ismini girin:
 79 %d istek sýrada
@@ -89,7 +89,7 @@
 88 Vurgu
 89 Kuvvetli
 90 Sabit geniþlikli yazýtipi
-91 Style sheet
+91 tekrar yok
 92 Görüntü ekle
 93 Baþlýk 1
 94 Baþlýk 2
@@ -129,14 +129,3 @@
 128 Tekrar Kipi
 129 tekrar
 130 x\'te tekrar
-131 y\'de tekrar
-132 tekrar yok
-133 Amaya - WWW için tarayýcý ve belge düzenleyici
-134 W3C tarafýndan deneme tarayýcýsý olarak geliþtirildi (http://www.w3.org/)
-135 Matematik
-136 %s karakterden uzun URL\'ler þimdilik iþlenemiyor
-137 CSS hatasý: %s
-138 Sadece öntanýmlý tip kullanýlabilir
-139 Baðlantý güncellemesi: %s%% tamamlandý
-140 Kaydedilecek bir þey yok
-141 ***matrix

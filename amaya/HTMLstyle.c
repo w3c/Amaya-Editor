@@ -136,8 +136,8 @@ char        *SkipBlanks (ptr)
 char               *ptr;
 #endif
 {
-  while (*ptr == SPACE || *ptr == '\b' || *ptr == '\n' || 
-	 *ptr == '\212' || *ptr == '\r')
+  while (*ptr == SPACE || *ptr == '\b' || *ptr == '\n' ||
+	  *ptr == '\t' || *ptr == '\212' || *ptr == '\r')
     ptr++;
   return (ptr);
 }
