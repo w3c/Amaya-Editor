@@ -27,8 +27,7 @@ extern int LogicalValue ( int val,
 extern int FontBase ( ptrfont font );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
-extern ptrfont LoadFont ( char name[100],
-                          int toPatch );
+extern ptrfont LoadFont ( char *name );
 extern void FontIdentifier ( char alphabet,
                              char family,
                              int highlight,
@@ -75,8 +74,7 @@ extern int LogicalValue (/* int val,
 extern int FontBase (/* ptrfont font */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
-extern ptrfont LoadFont (/* char name[100],
-                            int toPatch */);
+extern ptrfont LoadFont (/* char *name */);
 extern void FontIdentifier (/* char alphabet,
                                char family,
                                int highlight,

@@ -284,41 +284,61 @@ ptrfont             font;
 #else  /* !_WINDOWS */
 #endif /* _WINDOWS */
 #else /* !_I18N_ */
-   int                 l;
+#if !defined(_WINDOWS) && !defined(_GTK)
+  XFontStruct        *xf;
+  int                 i;
+#endif /* !defined(_WINDOWS) && !defined(_GTK) */
+  int                 l;
 
-   if (font == NULL)
-      return (0);
-   else
-     {
-        if (c == NEW_LINE)
-	  /* characters NEW_LINE and BREAK_LINE are equivalent */
-           c = BREAK_LINE;
-	else if (c == TAB)
-	  /* we use the SPACE width for the character TAB */
-	  c = SPACE;
+  if (font == NULL)
+    return (0);
+  else
+    {
+      if (c == NEW_LINE)
+	/* characters NEW_LINE and BREAK_LINE are equivalent */
+	c = BREAK_LINE;
+      else if (c == TAB)
+	/* we use the SPACE width for the character TAB */
+	c = SPACE;
 #ifdef _WINDOWS
-        l = font->FiWidths[c];
+      l = font->FiWidths[c];
 #else  /* _WINDOWS */
 #ifdef _GTK
-	l = gdk_char_width (font, c);
+      l = gdk_char_width (font, c);
 #else /* _GTK */
-        if (((XFontStruct*) font)->per_char == NULL)
-	  l = ((XFontStruct*) font)->max_bounds.width;
-        else if (c < ((XFontStruct*) font)->min_char_or_byte2)
-	  l = 0;
-        else
-	  {
-	    if (c == UNBREAKABLE_SPACE)
-	      l = ((XFontStruct *) font)->per_char[32 - ((XFontStruct *) font)->min_char_or_byte2].width;
-	    else if (c == BREAK_LINE)
-	      l = 1;
-	    else if (c == THIN_SPACE)
-	      l = (((XFontStruct *) font)->per_char[32 - ((XFontStruct *) font)->min_char_or_byte2].width + 3) / 4;
-	    else if (c == HALF_EM)
-	      l = (((XFontStruct *) font)->per_char[32 - ((XFontStruct *) font)->min_char_or_byte2].width + 1) / 2;
-	    else
-	      l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
-	  }
+      xf = (XFontStruct *) font;
+      if (xf->per_char == NULL)
+	l = xf->max_bounds.width;
+      else if (c < xf->min_char_or_byte2)
+	l = 0;
+      else
+	{
+	  if (c == UNBREAKABLE_SPACE)
+	    l = xf->per_char[32 - xf->min_char_or_byte2].width;
+	  else if (c == BREAK_LINE)
+	    l = 1;
+	  else if (c == THIN_SPACE)
+	    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
+	  else if (c == HALF_EM)
+	    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 1) / 2;
+	  else if (c == 244)
+	    {
+	      /* a patch due to errors in standard symbol fonts */
+	      i = 0;
+	      while (i < MAX_FONT && font != TtFonts[i])
+		i++;
+	      if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
+		l = 1;
+	      else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
+		l = 2;
+	      else if (TtPatchedFont[i] == 24)
+		l = 4;
+	      else
+		l = xf->per_char[c - xf->min_char_or_byte2].width;
+	    }
+	  else
+	    l = xf->per_char[c - xf->min_char_or_byte2].width;
+	}
 #endif /* _GTK */
 #endif /* !_WINDOWS */
      }
@@ -338,9 +358,8 @@ ptrfont             font;
 #endif /* __STDC__ */
 {
 #ifdef _GTK
-    int l;
+  int l;
 #endif /* _GTK */
-
 
   if (font == NULL)
     return (0);
@@ -369,14 +388,19 @@ ptrfont             font;
 int                 CharacterAscent (UCHAR_T c, ptrfont font)
 #else  /* __STDC__ */
 int                 CharacterAscent (c, font)
-UCHAR_T       c;
+UCHAR_T             c;
 ptrfont             font;
 #endif /* __STDC__ */
 {
 #ifdef _GTK
-   int lbearing, rbearing, width, ascent, descent;
+  int               lbearing, rbearing, width, ascent, descent;
+#else /* _GTK */
+#ifndef _WINDOWS
+  XFontStruct      *xf;
+  int               i;
+#endif /* _WINDOWS */
 #endif /* _GTK */
-
+ 
   if (font == NULL)
     return (0);
 #ifdef _WINDOWS
@@ -390,10 +414,23 @@ ptrfont             font;
       return (ascent);
     }
 #else /* _GTK */
-  else if (((XFontStruct *) font)->per_char == NULL)
-    return ((XFontStruct *) font)->max_bounds.ascent;
   else
-    return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent;
+    {
+      xf = (XFontStruct *) font;
+      /* a patch due to errors in standard symbol fonts */
+      if (xf->per_char == NULL)
+	return (xf->max_bounds.ascent);
+      else if (c == 244)
+	{
+	  /* a patch due to errors in standard symbol fonts */
+	  i = 0;
+	  while (i < MAX_FONT && font != TtFonts[i])
+	    i++;
+	  if (TtPatchedFont[i])
+	    return (xf->per_char[c - xf->min_char_or_byte2].ascent - 2);
+	}
+      return (xf->per_char[c - xf->min_char_or_byte2].ascent);
+    }
 #endif /* _GTK */
 #endif /* !_WINDOWS */
 }
@@ -644,14 +681,13 @@ int                 size;
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
- *      LoadFont load a given font designed by its name.
+  LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             LoadFont (char name[100], int toPatch)
+ptrfont      LoadFont (char *name)
 #else  /* __STDC__ */
-ptrfont             LoadFont (name, toPatch)
-char                name[100];
-int                 toPatch;
+ptrfont      LoadFont (name)
+char        *name;
 #endif /* __STDC__ */
 {
 #ifdef _GTK
@@ -660,54 +696,7 @@ int                 toPatch;
   result = gdk_font_load ((gchar *)name);
   return (result);
 #else /* _GTK */
-  char                tmp[200];
-  XFontStruct        *result, *patched;
-  int                 mincar, nb, i;
-
-  strcpy (tmp, name);
-  result = XLoadQueryFont (TtDisplay, tmp);
-  if (result != NULL)
-    if (result->per_char != NULL)
-      {
-	mincar = result->min_char_or_byte2;
-	nb = result->max_char_or_byte2 - mincar + 1;
-	if (toPatch != 0)
-	  {
-	    patched = TtaGetMemory (sizeof (XFontStruct));
-	    patched->min_char_or_byte2 = mincar;
-	    patched->min_char_or_byte2 = result->min_char_or_byte2;
-	    patched->max_bounds.ascent = result->max_bounds.ascent;
-	    patched->max_bounds.descent = result->max_bounds.descent;
-	    patched->ascent = result->ascent;
-	    patched->descent = result->descent;
-	    patched->per_char = TtaGetMemory (sizeof (XCharStruct) * nb);
-	    for (i = 0; i < nb; i++)
-	      {
-		/* a patch due to errors in standard symbol fonts */
-		if (i == 244 - mincar)
-		  {
-		    if (toPatch == 8 || toPatch == 10)
-		      patched->per_char[i].width = 1;
-		    else if (toPatch == 12 || toPatch == 14)
-		      patched->per_char[i].width = 2;
-		    else if (toPatch == 24)
-		      result->per_char[i].width = 4;
-		    else
-		      patched->per_char[i].width = result->per_char[i].width;
-		    patched->per_char[i].ascent -= 2;
-		  }
-		else
-		  {
-		    patched->per_char[i].width = result->per_char[i].width;
-		    patched->per_char[i].ascent = result->per_char[i].ascent;
-		  }
-		patched->per_char[i].descent = result->per_char[i].descent;
-	      }
-	    XFreeFont (TtDisplay, result);
-	    result = patched;
-	  }
-      }
-  return ((ptrfont) result);
+  return ((ptrfont) XLoadQueryFont (TtDisplay, name));
 #endif /* _GTK */
 }
 #  endif /* !_WINDOWS */
@@ -908,7 +897,7 @@ TypeUnit            unit;
 
    FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
 #  ifndef _WINDOWS
-   return LoadFont (nameX, 0);
+   return LoadFont (nameX);
 #  else  /* _WINDOWS */
    return NULL;
 #  endif /* _WINDOWS */
@@ -1066,10 +1055,7 @@ ThotBool            increase;
 	      currentActiveFont = 0;
 	    }
 #else  /* _WINDOWS */
-	  if (alphabet == 'G' && size > 8 && (size < 16 || size == 24))
-	    ptfont = LoadFont (textX, size);
-	  else
-	    ptfont = LoadFont (textX, 0);
+	  ptfont = LoadFont (textX);
 #endif /* !_WINDOWS */
 	  /* Loading failed try to find a neighbour */
 	  if (ptfont == NULL)
@@ -1127,8 +1113,8 @@ ThotBool            increase;
 	  /* initialize a new cache entry */
 	  TtFonts[i] = ptfont;
 #ifndef _GTK
-	  if (alphabet == 'G' && size > 8 && (size < 16 || size == 24))
-	    TtPatchedFont[j] = TRUE;
+	  if (alphabet == 'G' && size == 8 && (size < 16 || size == 24))
+	    TtPatchedFont[i] = size;
 #endif /* _GTK */
 	  TtFontFrames[i] = 0;
 	}
@@ -1321,7 +1307,7 @@ CHAR_T*             name;
      }
 #ifndef _GTK
    for (i = 0; i < MAX_FONT; i++)
-     TtPatchedFont[i] = FALSE;
+     TtPatchedFont[i] = 0;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
@@ -1411,13 +1397,10 @@ int                 frame;
 #ifdef _GTK
 		  gdk_font_unref (TtFonts[i]);
 #else /* _GTK */
+		  /* remove the indicator */
 		  if (TtPatchedFont[i])
-		    {
-		      TtPatchedFont[i] = FALSE;
-		      TtaFreeMemory ( TtFonts[i]);
-		    }
-		  else
-		    XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
+		    TtPatchedFont[i] = 0;
+		  XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 		  TtFonts[i] = NULL;

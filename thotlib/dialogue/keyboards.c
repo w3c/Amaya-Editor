@@ -872,7 +872,7 @@ void                GraphicsLoadResources ()
      }
 
 #   ifndef _WINDOWS
-   GraphicsIcons = LoadFont ("ivgraf", 0);
+   GraphicsIcons = LoadFont ("ivgraf");
 #   endif /* _WINDOWS */
    if (GraphicsIcons == NULL)
      {
@@ -908,7 +908,7 @@ void                KeyboardsLoadResources ()
      }
 
 #   ifndef _WINDOWS
-    SymbolIcons = LoadFont ("ivsymb", 0);
+    SymbolIcons = LoadFont ("ivsymb");
     if (SymbolIcons == NULL) {
        /*Fonte 'ivsymb' inaccessible */
        TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
