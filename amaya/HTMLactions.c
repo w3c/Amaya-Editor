@@ -10,6 +10,7 @@
  * These functions concern links and other HTML general features.
  *
  * Authors: V. Quint, I. Vatton
+ *          R.Guetari (W3C/INRIA) - Windows routines.
  *
  */
 

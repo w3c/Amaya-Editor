@@ -8,7 +8,7 @@
 /*
  *
  * Authors: D. Veillard and I. Vatton
- *         R. Guetari (W3C/INRIA) Windows NT/95
+ *          R. Guetari (W3C/INRIA) Windows NT/95
  *
  */
 

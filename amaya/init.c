@@ -1055,10 +1055,6 @@ char               *pathname;
 
 #        else /* _WINDOWS */
 
-	     /* WIN_TtaAddButton (doc, 1, stopN, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT), TBSTYLE_BUTTON, TBSTATE_ENABLED); */
-
 		 WIN_TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTYLE_BUTTON, FALSE);
 	     WIN_TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTYLE_BUTTON, FALSE);
 	     WIN_TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT), TBSTYLE_BUTTON, FALSE);

@@ -9,6 +9,7 @@
  * Initialization functions and button functions of Amaya application.
  *
  * Authors: V. Quint, I. Vatton
+ *          R. Guetari (W3C/INRIA) - Windows routines.
  */
 
 

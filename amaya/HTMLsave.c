@@ -117,7 +117,7 @@ LPARAM lParam;
 
 				       case ID_CONFIRM:
 						    /* TODO: Extract directory and file name from urlToOpen */
-                            TtaExtractName (currentDocToSave, DirectoryName, ObjectName);
+                            TtaExtractName (currentDocToSave, SavePath, ObjectName);
 						    ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 1);
 					        EndDialog (hwnDlg, ID_CONFIRM);
 							break;
@@ -247,7 +247,6 @@ char               *pathname;
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #  else /* _WINDOWS */
    CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave, ToggleSave);
-   /* WIN_ListSaveDirectory (BaseDialog + DirSave, BaseDialog + SaveForm, SavePath, ScanFilter); */
 #  endif /* _WINDOWS */
 }
 
@@ -1285,7 +1284,7 @@ char               *pathname;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #  else  /* _WINDOWS */
-   CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm);
+   CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname);
 #  endif /* _WINDOWS */
 }
 
