@@ -289,7 +289,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   /* save the document name into the document table */
   s = TtaStrdup (url);
   DocumentURLs[doc] = s;
-  s = (char *)TtaConvertByteToMbs (url, TtaGetDefaultCharset ());
+  s = (char *)TtaConvertByteToMbs ((unsigned char *)url, TtaGetDefaultCharset ());
   AddURLInCombobox (s, NULL, TRUE);
   TtaSetTextZone (doc, 1, URL_list);
   TtaFreeMemory (s);

@@ -1032,7 +1032,8 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 #endif /*_BASE64*/
 	  /* add BASE to image name, if necessary */
 	  NormalizeURL (imageName, doc, pathname, imageName, NULL);
-      isopath = (char *)TtaConvertMbsToByte (pathname, TtaGetDefaultCharset ());
+	  isopath = (char *)TtaConvertMbsToByte ((unsigned char *)pathname,
+						 TtaGetDefaultCharset ());
 	  strcpy (pathname, isopath);
 	  TtaFreeMemory (isopath);
 	  /* if it's not a remote URL, make any necessary file: conversions */

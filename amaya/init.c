@@ -3321,9 +3321,11 @@ static Document LoadDocument (Document doc, char *pathname,
 
   /* Check informations within the document */
   if (tempfile[0] != EOS)
-	isopath = TtaConvertMbsToByte (tempfile, TtaGetDefaultCharset ());
+    isopath = (char *)TtaConvertMbsToByte ((unsigned char *)tempfile,
+					   TtaGetDefaultCharset ());
   else
-    isopath = TtaConvertMbsToByte (pathname, TtaGetDefaultCharset ());
+    isopath = (char *)TtaConvertMbsToByte ((unsigned char *)pathname,
+					   TtaGetDefaultCharset ());
 
   CheckDocHeader (isopath, &xmlDec, &withDoctype, &isXML, &isknown,
 		    &docProfile, &charset, charsetname, &thotType);
@@ -3743,10 +3745,11 @@ static Document LoadDocument (Document doc, char *pathname,
       if (tempfile[0] != EOS)
 	{
        if (IsW3Path (pathname))
-	   {
+	 {
 	   TtaFreeMemory (isopath);
-       isopath = TtaConvertMbsToByte (pathname, TtaGetDefaultCharset ());
-	   }
+	   isopath = (char *)TtaConvertMbsToByte ((unsigned char *)pathname,
+						  TtaGetDefaultCharset ());
+	 }
 
 	  /* It is a document loaded from the Web */
 	  if (!TtaFileExist (tempfile))
@@ -3895,30 +3898,11 @@ static Document LoadDocument (Document doc, char *pathname,
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
 	{
-	  if (DocumentTypes[newdoc] == docLibrary)
-	    {
 #ifdef _SVG
-	      SelectLibraryFromPath (DocumentURLs[newdoc]);
-	      TtaSetTextZone (newdoc, 1, SVGlib_list);
+	  if (DocumentTypes[newdoc] == docLibrary)
+	    SelectLibraryFromPath (DocumentURLs[newdoc]);
 #endif /* _SVG */
-	    }
-	  else
-	    {
-	      /* concatenate the URL and its form_data and then
-		 display it on the amaya URL box
-	      i = strlen (isopath) + 5;
-	      if (form_data && method != CE_FORM_POST)
-		i += strlen (form_data);
-	      s = (char *)TtaGetMemory (i);
-	      if (form_data && method != CE_FORM_POST)
-		sprintf (s, "%s?%s", pathname, form_data);
-	      else
-		strcpy (s, pathname);
-	      /* add the URI in the combobox string
-		 AddURLInCombobox (docname, FALSE);
-	      TtaFreeMemory (s);*/
-	      TtaSetTextZone (newdoc, 1, URL_list);
-	    }
+	  TtaSetTextZone (newdoc, 1, URL_list);
 	}
 
       tempdir = (char *)TtaGetMemory (MAX_LENGTH);
