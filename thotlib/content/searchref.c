@@ -66,6 +66,7 @@
 #include "structschema_f.h"
 #include "docs_f.h"
 #include "readpivot_f.h"
+#include "searchref_f.h"
 
 #define MAX_ITEM_MENU_REF 10
 
