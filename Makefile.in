@@ -280,7 +280,7 @@ libraptor_config: @MAKERAPTOR@ force
 	 @(localdir=`pwd` ; raptordir="$$localdir/../$(LIBRAPTOR)" ; \
 	  cd $(LIBRAPTOR) ; unset LANG; \
 	  if [ ! -f Makefile -o ! -f config.h ] ; then \
-	  	CFLAGS="-$$raptordir/expat/xmlparse" \
+	  	CFLAGS="-I$$raptordir/expat/xmlparse" \
 			$$raptordir/configure \
 			--without-shared \
 			--with-expat ; \
