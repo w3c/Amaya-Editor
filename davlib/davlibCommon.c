@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.7  2002-06-12 10:29:07  kirschpi
+ ** Revision 1.8  2002-06-13 13:40:32  kahan
+ ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
+ ** the code was generating a warning.
+ **
+ ** Revision 1.7  2002/06/12 10:29:07  kirschpi
  ** - adjusts in code format
  ** - new commentaries
  ** - small fixes
@@ -167,7 +171,7 @@ char * DAVBreakString (char *original)
   ----------------------------------------------------------------------*/
 BOOL DAVAddResource (char *new_resource, char *list, char sep, int len) 
 {
-    char buf[LINE_MAX];
+    char buf[DAV_LINE_MAX];
     int i;
     BOOL status = NO;
     

@@ -14,7 +14,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.7  2002-06-11 17:34:52  kirschpi
+ ** Revision 1.8  2002-06-13 13:40:32  kahan
+ ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
+ ** the code was generating a warning.
+ **
+ ** Revision 1.7  2002/06/11 17:34:52  kirschpi
  ** improving commentaries and format (for WebDAV code).
  ** update DAV Resources list automatically
  ** Manuele
@@ -277,7 +281,7 @@ void DAVFreeLock (Document docid)
     BOOL ok = NO;
     char *lockinfo;
     char *relURI, *absURI, *ptr;
-    char label1[LINE_MAX], label2[LINE_MAX];
+    char label1[DAV_LINE_MAX], label2[DAV_LINE_MAX];
 
     lockinfo = relURI = absURI = ptr = NULL;
     

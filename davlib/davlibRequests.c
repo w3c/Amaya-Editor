@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.8  2002-06-12 10:29:07  kirschpi
+ ** Revision 1.9  2002-06-13 13:40:32  kahan
+ ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
+ ** the code was generating a warning.
+ **
+ ** Revision 1.8  2002/06/12 10:29:07  kirschpi
  ** - adjusts in code format
  ** - new commentaries
  ** - small fixes
@@ -242,7 +246,7 @@ int FilterLocked_handler (HTRequest * request, HTResponse * response,
             new_davctx->error_msgs = AwList_new (2);
             if (new_davctx->error_msgs) 
              {
-                msg = HT_CALLOC (LINE_MAX, sizeof(char));
+                msg = HT_CALLOC (DAV_LINE_MAX, sizeof(char));
                 sprintf (msg, TtaGetMessage (AMAYA,AM_LOCKED), new_davctx->relativeURI);
                 AwList_put (new_davctx->error_msgs,msg);
              }
@@ -290,7 +294,7 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
     AHTReqContext *new_request = NULL;
     char *msg    = NULL;
     char *reason = NULL;
-    char urlName[LINE_MAX];
+    char urlName[DAV_LINE_MAX];
     BOOL ok = NO;
     int i = 0;
     char c;
@@ -360,7 +364,7 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
                 new_davctx->error_msgs = AwList_new (2);
                 if (new_davctx->error_msgs) 
                  {
-                    msg = HT_CALLOC (LINE_MAX, sizeof(char));
+                    msg = HT_CALLOC (DAV_LINE_MAX, sizeof(char));
                     reason = HTResponse_reason (response);
                     sprintf (msg, TtaGetMessage (AMAYA,AM_MULTI_STATUS_FAIL), 
                                                  (reason)?reason:"Multi-Status Failure");
@@ -450,8 +454,8 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
     LockLine       *lockinfo =   NULL;
     BOOL            ok       =   NO;
     
-    char owner[LINE_MAX];
-    char label1[LINE_MAX],label2[LINE_MAX];
+    char owner[DAV_LINE_MAX];
+    char label1[DAV_LINE_MAX],label2[DAV_LINE_MAX];
     char *out, *deb, *uri,*msg, *ptr ;
     
     out = deb = uri = msg = NULL;
@@ -955,10 +959,10 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
     AHTReqContext  *context  = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext  *davctx   = (context)?context->dav_context:NULL;
     LockLine       *lockinfo = NULL;
-    char owner[LINE_MAX];
-    char tmp1[LINE_MAX];
-    char tmp2[LINE_MAX];
-    char tmp3[LINE_MAX];
+    char owner[DAV_LINE_MAX];
+    char tmp1[DAV_LINE_MAX];
+    char tmp2[DAV_LINE_MAX];
+    char tmp3[DAV_LINE_MAX];
     char *ptr, *out, *deb;
     
     out = deb = ptr = NULL;
@@ -1284,9 +1288,9 @@ int FilterFindAndUnlock_handler (HTRequest * request, HTResponse * response,
     AHTDAVContext  *davctx     = (context)?context->dav_context:NULL;
     AHTDAVContext  *new_davctx = NULL;
     LockLine       *lockinfo   = NULL;
-    char label1[LINE_MAX],label2[LINE_MAX];
-    char owner[LINE_MAX];
-    char msg[LINE_MAX];
+    char label1[DAV_LINE_MAX],label2[DAV_LINE_MAX];
+    char owner[DAV_LINE_MAX];
+    char msg[DAV_LINE_MAX];
     char *out, *deb, *ptr;
     BOOL ok = NO;
     
@@ -1502,8 +1506,8 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
     char *lockdiscovery    = NULL;
     LockLine     *lockinfo = NULL;
     LockLine     *line     = NULL;
-    char label1[LINE_MAX], label2[LINE_MAX];
-    char owner[LINE_MAX];
+    char label1[DAV_LINE_MAX], label2[DAV_LINE_MAX];
+    char owner[DAV_LINE_MAX];
     char *out, *deb, *ptr;
     BOOL saved = NO;
 
@@ -1773,7 +1777,7 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
     AHTDAVContext *davctx   = (context)?context->dav_context:NULL;
     char          *format   = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
     LockLine      *lockinfo = NULL;
-    char owner[LINE_MAX];
+    char owner[DAV_LINE_MAX];
     char *out, *deb;
 
     out = deb = NULL;

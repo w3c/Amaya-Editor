@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.7  2002-06-12 10:29:07  kirschpi
+ ** Revision 1.8  2002-06-13 13:40:32  kahan
+ ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
+ ** the code was generating a warning.
+ **
+ ** Revision 1.7  2002/06/12 10:29:07  kirschpi
  ** - adjusts in code format
  ** - new commentaries
  ** - small fixes
@@ -92,7 +96,7 @@ void DAVDisplayMessage (char *msg, char *arg)
      {
         if (arg && *arg) 
          {
-            char label[LINE_MAX];
+            char label[DAV_LINE_MAX];
             sprintf (label,msg,arg);
             InitInfo (" ",label);
          }
@@ -151,7 +155,7 @@ void DAVPropertiesVerticalDialog (Document docid, char *title, char *rheader,
 #ifndef _WINDOWS
     char *name, *value;
     
-    char label[LINE_MAX];
+    char label[DAV_LINE_MAX];
     char *ns = NULL;
 #endif /* ! _WINDOWS */
 
@@ -259,7 +263,7 @@ void DAVHorizontalDialog (Document docid, char *title, char *rheader,
     int i=MAX_REF+1, form=MAX_REF;
 #ifndef _WINDOWS
     char *name, *value;    
-    char label[LINE_MAX];
+    char label[DAV_LINE_MAX];
 #endif /* _WINDOWS */
 
     if (docid>0 && list) 
@@ -676,7 +680,7 @@ void DAVShowMultiStatusInfo (AHTReqContext *context)
     AwNode *root = NULL;            
     AwString pattern = NULL;
     char *name, *value, *ptr;
-    char tmp[LINE_MAX];
+    char tmp[DAV_LINE_MAX];
         
     if (context) 
      {
@@ -783,7 +787,7 @@ void DAVShowMultiStatusInfo (AHTReqContext *context)
 
             if (ok) 
              {
-                char tmp[LINE_MAX];
+                char tmp[DAV_LINE_MAX];
                 sprintf (tmp,TtaGetMessage (AMAYA, AM_MULTI_STATUS_FAIL)," ");
                 DAVPropertiesVerticalDialog (context->docid, " ", "  ", tmp, list);
              }

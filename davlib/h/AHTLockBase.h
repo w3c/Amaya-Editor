@@ -32,7 +32,7 @@
 #include "sysdep.h"
 
 #define  BREAK_CHAR    '\t'
-#define  LINE_MAX      1024
+#define  DAV_LINE_MAX      1024
 
 #ifndef _WINDOWS
 #define PORT_CHAR      ':'
@@ -45,7 +45,7 @@
    Static (global) variable used to create the lock base
   ----------------------------------------------------------------------*/
 
-PUBLIC char     	DAVHome[LINE_MAX];
+PUBLIC char     	DAVHome[DAV_LINE_MAX];
 
 
 /* ------------------------------------------------------------------ 

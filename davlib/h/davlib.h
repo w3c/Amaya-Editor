@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.3  2002-06-05 16:46:52  kirschpi
+ ** Revision 1.4  2002-06-13 13:40:33  kahan
+ ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
+ ** the code was generating a warning.
+ **
+ ** Revision 1.3  2002/06/05 16:46:52  kirschpi
  ** Adding to the registry a DAVResource list, a list of resources
  ** (specially collections), where we should do a Lock discovery.
  ** Manuele
@@ -94,19 +98,19 @@
 /*
  * WebDAV User's preferences and informations
  */
-char DAVDepth[LINE_MAX];                        /* Depth to be used in WebDAV requests */
-char DAVTimeout[LINE_MAX];                      /* Timeout to be used in LOCK requests */
-char DAVLockScope[LINE_MAX];                    /* Lock scope (exclusive/shared) */
-char DAVUserURL[LINE_MAX];                      /* user's reference */
+char DAVDepth[DAV_LINE_MAX];                        /* Depth to be used in WebDAV requests */
+char DAVTimeout[DAV_LINE_MAX];                      /* Timeout to be used in LOCK requests */
+char DAVLockScope[DAV_LINE_MAX];                    /* Lock scope (exclusive/shared) */
+char DAVUserURL[DAV_LINE_MAX];                      /* user's reference */
 BOOL DAVAwareness;                              /* if user wants general awareness info */
 BOOL DAVAwarenessExit;                          /* if user wants awareness information */
                                                 /* about his/her locks, when exiting a resource */  
-char DAVResources[LINE_MAX];                    /* list of user's WebDAV resources */
+char DAVResources[DAV_LINE_MAX];                    /* list of user's WebDAV resources */
 
 /*
  * Full qualified host.domain name 
  */
-char DAVFullHostName[LINE_MAX];              
+char DAVFullHostName[DAV_LINE_MAX];              
 
 
 /*

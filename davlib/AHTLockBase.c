@@ -319,10 +319,10 @@ PUBLIC BOOL LockLine_delete (LockLine *me)
  * ----------------------------------------------------------- */
 PUBLIC LockLine * LockLine_readline (FILE *fp) 
 {
-    char   line [LINE_MAX];
+    char   line [DAV_LINE_MAX];
     LockLine * info = NULL;
     
-    if (fp && fgets (line,LINE_MAX,fp) != NULL )
+    if (fp && fgets (line,DAV_LINE_MAX,fp) != NULL )
      { 
         info = LockLine_new (line);
      }
@@ -339,14 +339,14 @@ PUBLIC LockLine * LockLine_readline (FILE *fp)
 PUBLIC BOOL LockLine_writeline (FILE *fp, LockLine *line) 
 {
     BOOL status = NO;
-    char fileline[LINE_MAX];
+    char fileline[DAV_LINE_MAX];
     int len;
     
     if (fp && line) 
      {
         len = strlen (line->relativeURI) +  strlen (line->lockToken);
         len += strlen (line->timeout) +  strlen (line->initialTime) + 6;
-	if (len >= LINE_MAX) return NO;
+	if (len >= DAV_LINE_MAX) return NO;
 	
         sprintf (fileline,"%s%c%s%c%c%c%s%c%s\n",line->relativeURI,BREAK_CHAR,
                                                  line->lockToken,BREAK_CHAR,
@@ -442,7 +442,7 @@ PUBLIC HTList * processLockFile (const char * filename, const char * reqUri)
     LockLine * info = NULL;
     BOOL match = NO;
     HTList * list = NULL;
-    char path[LINE_MAX];
+    char path[DAV_LINE_MAX];
     
     if ( filename && *filename && reqUri && *reqUri) 
      {
@@ -798,7 +798,7 @@ PUBLIC BOOL saveLockLine (char *absolute, LockLine *lockinfo)
 {
     FILE *fp = NULL;
     BOOL status = NO;
-    char filename[LINE_MAX];
+    char filename[DAV_LINE_MAX];
 
     if (absolute && *absolute && lockinfo) 
      {
@@ -840,7 +840,7 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative,
     LockLine *line = NULL;
     AwTree * tree = NULL;
     AwString data;
-    char filename[LINE_MAX];
+    char filename[DAV_LINE_MAX];
     
     if (absolute && *absolute && relative && *relative && 
         xmlbody && *xmlbody && headers ) 
@@ -896,13 +896,13 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative,
 PUBLIC BOOL removeFromBase (char *filename, LockLine *line) 
 {
     FILE *fp = NULL;
-    char buf[LINE_MAX];
+    char buf[DAV_LINE_MAX];
     char *ptr,*cp;
     char old;
     BOOL status = NO;
     BOOL eof = NO;
     HTList *list = NULL;
-    char path[LINE_MAX];
+    char path[DAV_LINE_MAX];
     
     if (filename!=NULL && line!=NULL && (line->relativeURI)!=NULL && 
         *filename && *line->relativeURI ) 
@@ -923,7 +923,7 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
         
 
         /* copying file to memory */
-        while (fgets (buf,LINE_MAX,fp) != NULL && status) 
+        while (fgets (buf,DAV_LINE_MAX,fp) != NULL && status) 
          { 
 #ifdef DEBUG_LOCK_BASE		
             fprintf (stderr,"AHTLockBase.... reading %s", buf);
