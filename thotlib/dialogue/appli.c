@@ -563,9 +563,8 @@ gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, gpointer dat
   GL_FocusIn :
   Manage Drawing Timer upon Frame focus by user
   ----------------------------------------------------------------------*/
-gboolean GL_FocusIn (ThotWidget widget, 
-			  GdkEventExpose *event, 
-			  gpointer data)
+gboolean GL_FocusIn (ThotWidget widget, GdkEventExpose *event, 
+		     gpointer data)
 {
   int      frame;
  
@@ -578,9 +577,8 @@ gboolean GL_FocusIn (ThotWidget widget,
   GL_FocusOut :
   Manage Drawing Timer upon Frame focus by user
   ----------------------------------------------------------------------*/
-gboolean GL_FocusOut (ThotWidget widget, 
-			  GdkEventExpose *event, 
-			  gpointer data)
+gboolean GL_FocusOut (ThotWidget widget, GdkEventExpose *event, 
+		      gpointer data)
 {
   int      frame;
  
@@ -593,9 +591,8 @@ gboolean GL_FocusOut (ThotWidget widget,
  GL_Destroy :
  Close Opengl pipeline
  ----------------------------------------------------------------------*/
-gboolean  GL_Destroy (ThotWidget widget, 
-		   GdkEventExpose *event, 
-		   gpointer data)
+gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event, 
+		      gpointer data)
 {
   int      frame;
  
@@ -607,8 +604,7 @@ gboolean  GL_Destroy (ThotWidget widget,
  GL_Init :
  Opengl pipeline state initialization
  ----------------------------------------------------------------------*/
-gboolean  GL_Init (ThotWidget widget, 
-		   GdkEventExpose *event, 
+gboolean  GL_Init (ThotWidget widget, GdkEventExpose *event, 
 		   gpointer data)
 {
   int frame;
@@ -1119,6 +1115,8 @@ void FrameVScrolled (int *w, int frame, int *param)
 }
 #else /* _GTK */
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 { 
   int        delta, Xpos, Ypos, width, height, viewed, left;
@@ -1172,10 +1170,10 @@ void TtcLineUp (Document document, View view)
 #if !defined(_WINDOWS) && !defined(_GTK)
   infos.reason = XmCR_DECREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else /* _GTK*/
+#else /* _WINDOWS && _GTK */
   delta = -13;
   VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1198,7 +1196,7 @@ void TtcLineDown (Document document, View view)
 #if !defined(_WINDOWS) && !defined(_GTK)
   infos.reason = XmCR_INCREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else  /* _WINDOWS && _GTK */
+#else /* _WINDOWS && _GTK */
   delta = 13;
   VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS && _GTK */
@@ -1261,7 +1259,6 @@ void TtcScrollRight (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageUp (Document document, View view)
 {
- 
 #if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS && GTK */
@@ -1620,7 +1617,8 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 			    0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
 
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
-    if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
+    if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON,
+		      (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
       WinErrorBox (NULL, "WndProc: WM_CREATE cannot create toolbar");
     
     hwndToolTip = ToolBar_GetToolTips (ToolBar);
@@ -1632,17 +1630,10 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
     ShowWindow (StatusBar, SW_SHOWNORMAL);
     UpdateWindow (StatusBar); 
-	hwndClient = 0;
-    hwndClient = CreateWindowEx (WS_EX_ACCEPTFILES, 
-								 "ClientWndProc", 
-								 NULL,
-								 WS_CHILD | 
-								 WS_BORDER, 
-								 0, 0, 0, 0,
-				                 hwnd, 
-								 (HMENU) 2,
-								 hInstance, 
-								 NULL);
+    hwndClient = 0;
+    hwndClient = CreateWindowEx (WS_EX_ACCEPTFILES, "ClientWndProc", NULL,
+				 WS_CHILD | WS_BORDER,
+				 0, 0, 0, 0, hwnd, (HMENU) 2, hInstance, NULL);
 #ifdef _GL
 	if (!hwndClient) 
 	{      
@@ -1672,13 +1663,13 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 #endif /*_GL*/
 #ifdef WM_MOUSEWHEEL
   case WM_MOUSEWHEEL:
-	  {
-         short int ydelta;
-		 
-		 ydelta = - (HIWORD (wParam));
-		 VerticalScroll (frame, ydelta, 1);
-	  }
-	 ActiveFrame = frame;
+    {
+      short int ydelta;
+      
+      ydelta = - (HIWORD (wParam));
+      VerticalScroll (frame, ydelta, 1);
+    }
+    ActiveFrame = frame;
     return 0L;
 #endif /*WM_MOUSEWHEEL*/
 
@@ -1692,7 +1683,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   case WM_ENTER:
     hwndTextEdit = GetFocus ();
-	ActiveFrame = frame;
+    ActiveFrame = frame;
     APP_TextCallback (hwndTextEdit, frame, NULL);
     if (frame != -1)
       SetFocus (FrRef [frame]);
@@ -1700,42 +1691,40 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   case WM_SYSKEYDOWN:
   case WM_KEYDOWN:
-	  if (frame != -1)
-	  {
+    if (frame != -1)
+      {
         SetFocus (FrRef [frame]);
-		ActiveFrame = frame;
-		SendMessage (FrRef [frame], mMsg, wParam, lParam);
-	  }
+	ActiveFrame = frame;
+	SendMessage (FrRef [frame], mMsg, wParam, lParam);
+      }
     return 0L;
 
   case WM_DROPFILES:
-	  if (frame != -1)
+    if (frame != -1)
 	{
-		  SetFocus (FrRef [frame]);
-			ActiveFrame = frame;
-	  
-    SendMessage (FrRef [frame], mMsg, wParam, lParam);
-		}
+	  SetFocus (FrRef [frame]);
+	  ActiveFrame = frame;
+	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
+	}
     return 0L;
 	
   case WM_IME_CHAR:
   case WM_SYSCHAR:
-  case WM_CHAR:	  if (frame != -1)
-	  {
-          SetFocus (FrRef [frame]);
-	  ActiveFrame = frame;
-	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
-	  }
-    return 0L;
+  case WM_CHAR:
+    if (frame != -1)
+      {
+	SetFocus (FrRef [frame]);
+	ActiveFrame = frame;
+	SendMessage (FrRef [frame], mMsg, wParam, lParam);
+      }
+  return 0L;
 
   case WM_NOTIFY:
     pnmh = (LPNMHDR) lParam;
     idCtrl = (int) wParam;
-    
     /*Toolbar notifications */
     if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
       return ToolBarNotify (frame, hwnd, wParam, lParam);
-    
     /* Fetch tooltip text */
     if (pnmh->code == TTN_NEEDTEXT)
       {
@@ -1890,16 +1879,12 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   RECT         cRect;
   ThotBool     isSpecial;
 
-
-
   frame = GetFrameNumber (hwnd);
-  if (frame != -1) 
-    ActiveFrame = frame;
-  
-  
   /* do not handle events if the Document is in NoComputedDisplay mode. */
   if (frame != -1)
     {
+      ActiveFrame = frame;
+      FrameToView (frame, &document, &view);
       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
 	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
       
@@ -1919,34 +1904,37 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	}
     } 
 
-  /* if (frame != -1 && winCapture != hwnd && fBlocking) { */
   if (wParam & MK_LBUTTON && frame != -1 && winCapture != (HWND) -1)
     {
       if (winCapture != hwnd)
 	{
-      GetWindowRect (hwnd, &rect);
-      GetClientRect (hwnd, &cRect);
+	  GetWindowRect (hwnd, &rect);
+	  GetClientRect (hwnd, &cRect);
 	  GetCursorPos (&ptCursor);
-	  if (ptCursor.y > rect.bottom || ptCursor.y < rect.top)
+	  /* generate a scroll if necessary */
+	  if (ptCursor.y > rect.bottom)
 	    {
-	      if (ptCursor.y > rect.bottom)
-		{
-		  delta = 13;
-		  Y_Pos = cRect.bottom;
-		}
-	      if (ptCursor.y < rect.top)
-		{
-		  delta = -13;
-		  Y_Pos = 0;
-		}
-	      
-	      if (ptCursor.x > rect.right)
-		X_Pos = cRect.right;
-	      VerticalScroll (frame, delta, 1);
-	      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-	      /* if (wParam & MK_LBUTTON) */
-	      SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
+	      Y_Pos = cRect.bottom;
+	      TtcLineDown (document, view);
 	    }
+	  else if (ptCursor.y < rect.top)
+	    {
+	      Y_Pos = rect.top;
+	      TtcLineUp (document, view);
+	    }
+	  if (ptCursor.x > rect.right)
+	    {
+	      X_Pos = cRect.right;
+	      TtcScrollRight (document, view);
+	    }
+	  else if (ptCursor.x < rect.left + 1)
+	    {
+	      X_Pos = rect.left + 1;
+	      TtcScrollLeft (document, view);
+	    }
+	  LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+	  /* if (wParam & MK_LBUTTON) */
+	  SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
 	}
     }
   switch (mMsg)
@@ -1968,7 +1956,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 
     case WM_DROPFILES:
       nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
-      FrameToView (frame, &document, &view);
       if (FrameTable[frame].Call_Text[0] != NULL)
 	for (i = 0; i < nNumFiles; i++)
 	  {
@@ -2053,21 +2040,21 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_IME_COMPOSITION:
 	{
 	  HIMC hIMC = ImmGetContext(hwnd);
+	  if (lParam & GCS_RESULTSTR)
+	    {
+	      CHAR_T str[128];
+	      int len, i;
 
-	  if (lParam & GCS_RESULTSTR) {
-	    CHAR_T str[128];
-	    int len, i;
-
-	    len = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);
-	    /* need to check (len/2) < 128; len is strangely in bytes rather than wchars */
-	    ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, str, len);
-	    ImmReleaseContext(hwnd, hIMC);
-	    len /= 2;
-	    /* actually move the characters to the document */
-	    for (i=0; i<len; i++)
-	      InsertChar(ActiveFrame, str[i], -1);
-	    return 0;
-	  }
+	      len = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);
+	      /* need to check (len/2) < 128; len is strangely in bytes rather than wchars */
+	      ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, str, len);
+	      ImmReleaseContext(hwnd, hIMC);
+	      len /= 2;
+	      /* actually move the characters to the document */
+	      for (i=0; i<len; i++)
+		InsertChar(ActiveFrame, str[i], -1);
+	      return 0;
+	    }
 	}
       break;
 #endif /* IME_INPUT */
@@ -2204,10 +2191,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 #endif /*GL*/
   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
-#endif /* _WINDOWS */
-
-#ifndef _WINDOWS
-
+#else /* _WINDOWS */
 #ifdef _GTK
 /*----------------------------------------------------------------------
    GtkLiningSelection 
@@ -2218,26 +2202,79 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
    in order to repeat user action until he released the button
    or move away from the widget.
 ----------------------------------------------------------------------*/
-static int Motion_y = 0;
-static int Motion_x = 0;
+static int          Motion_y = 0;
+static int          Motion_x = 0;
+static ThotBool     Selecting = FALSE;
 
-gboolean GtkLiningSelection(gpointer data)
+gboolean GtkLiningSelection (gpointer data)
 {
-  int       frame;
-  Document  doc; 
-  int       view;
-  
-   frame = (int) data; 
+  Document            doc; 
+  ViewFrame          *pFrame;
+  int                 frame;
+  int                 view;
+
+   frame = (int) data;
+   if (frame < 1)
+     return FALSE;
    FrameToView (frame, &doc, &view);
-   if (Motion_y > FrameTable[frame].FrHeight) 
-       TtcLineDown (doc, view); 
+   pFrame = &ViewFrameTable[frame - 1];
+   /* generate a scroll if necessary */
+   if (Motion_y > FrameTable[frame].FrHeight)
+     {
+       if (pFrame->FrAbstractBox &&
+	   pFrame->FrAbstractBox->AbBox &&
+	   pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxHeight)
+	 TtcLineDown (doc, view);
+       else
+	 {
+	   /* stop the scrolling */
+	   Selecting = FALSE;
+	   Motion_y = FrameTable[frame].FrHeight;
+	 }
+       
+     }
    else if (Motion_y < 0)
-      TtcLineUp (doc, view); 
-   LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
-   TtcCopyToClipboard (doc, view);
+     {
+       if (pFrame->FrYOrg > 0)
+	 TtcLineUp (doc, view);
+       else
+	 {
+	   /* stop the scrolling */
+	   Selecting = FALSE;
+	   Motion_y = 0;
+	 }
+     }
+   if (FrameTable[frame].FrScrollWidth > FrameTable[frame].FrWidth)
+     {
+       if (Motion_x > FrameTable[frame].FrWidth)
+	 {
+	   if (pFrame->FrXOrg + FrameTable[frame].FrWidth < FrameTable[frame].FrScrollWidth)
+	     TtcScrollRight (doc, view);
+	   else
+	     {
+	       Selecting = FALSE;
+	       Motion_x = FrameTable[frame].FrWidth;
+	     }
+	 }
+       else if (Motion_x < 1)
+	 {
+	   if (pFrame->FrXOrg > 0)
+	     TtcScrollLeft (doc, view);
+	   else
+	     {
+	       Selecting = FALSE;
+	       Motion_x = 0;
+	     }
+	 }
+     }
+   if (Selecting)
+     {
+       LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
+       TtcCopyToClipboard (doc, view);
+     }
    /* As this is a timeout function, return TRUE so that it
      continues to get called */
-   return TRUE;
+   return Selecting;
 }
 #endif /* _GTK */
 
@@ -2260,7 +2297,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   int                 frame;
   GtkEntry            *textzone;
   static int          timer = None;
-  static ThotBool     selecting = FALSE;
 #endif /* _GTK */
   Document            document;
   View                view;
@@ -2408,10 +2444,18 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 			{
 			  LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
 			  comm = 1;	/* il y a un drag */
+			  /* generate a scroll if necessary */
 			  if (event.xmotion.y > h)
 			    TtcLineDown (document, view);
-			  else if (event.xmotion.y < 0)
+			  else if (event.xmotion.y <= 1)
 			    TtcLineUp (document, view);
+			  if (FrameTable[frame].FrScrollWidth > FrameTable[frame].FrWidth)
+			    {
+			      if (event.xmotion.x > FrameTable[frame].FrWidth)
+				TtcScrollRight (document, view);
+			      else if (event.xmotion.x <= 1)
+				TtcScrollLeft (document, view);
+			    }
 			}
 		    }
 		  TtaHandleOneEvent (&event);
@@ -2527,7 +2571,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	{
 	  gtk_timeout_remove (timer);
 	  timer = None;
-	  selecting = FALSE;
+	  Selecting = FALSE;
 	} 
       switch (event->button)
 	{
@@ -2552,7 +2596,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      ClickX = event->x;
 	      ClickY = event->y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 2);
-	      selecting = TRUE;
+	      Selecting = TRUE;
 	    }
 	  break;
 	case 2:
@@ -2595,7 +2639,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  TtcLineUp(document, view); 
 	  TtcLineUp(document, view); 
 	  TtcLineUp(document, view); 
-	  
 	  break;
 	case 5:
            /* wheel mice down */
@@ -2641,12 +2684,11 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       /* extend the current selection */
       Motion_y = event->y;
       Motion_x = event->x;
-      if (selecting == TRUE)
+      if (Selecting == TRUE)
 	{
 	  /* We add a callback timer caller */
 	  if (timer == None)
-	    timer = gtk_timeout_add (100, 
-				     GtkLiningSelection, 
+	    timer = gtk_timeout_add (100,  GtkLiningSelection, 
 				     (gpointer) frame);
 	}
       break;
@@ -2654,7 +2696,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       /* if a button release, we save the selection in the clipboard */
       /* drag is finished */
       /* we stop the callback calling timer */
-      selecting = FALSE;
+      Selecting = FALSE;
+      printf ("button release\n");
+      Motion_y = event->y;
+      Motion_x = event->x;
       if (timer != None)
 	{
 	  gtk_timeout_remove (timer);
@@ -2684,77 +2729,69 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
-    DragCallbackGTK
-   Traite les drag and drop                     
+  DragCallbackGTK handles drag and drop                     
  ----------------------------------------------------------------------*/
-gboolean DragCallbackGTK (GtkWidget *widget,
-			  GdkDragContext *drag_context,
-			  gint x,
-			  gint y,
-			  guint time,
-			  gpointer user_data)
-    {
-      /* TODO */
-      return FALSE;
-    }
-#endif /* _GTK */
+gboolean DragCallbackGTK (GtkWidget *widget, GdkDragContext *drag_context,
+			  gint x, gint y, guint time, gpointer user_data)
+{
+  /* TODO */
+  return FALSE;
+}
   
-#ifdef _GTK
-gboolean FocusInCallbackGTK (GtkWidget *widget,
-			     GdkEventFocus *event,
-			     gpointer user_data)
-  {
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
+gboolean FocusInCallbackGTK (GtkWidget *widget, GdkEventFocus *event,
+			 gpointer user_data)
+{
+  gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
+  return FALSE;
+}
 
-    /*    int frame = (int)user_data;*/
-    /*    printf("focus in\n");*/
-    gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
-    return FALSE;
-  }
-
-gboolean FocusOutCallbackGTK (GtkWidget *widget,
-			      GdkEventFocus *event,
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
+gboolean FocusOutCallbackGTK (GtkWidget *widget, GdkEventFocus *event,
 			      gpointer user_data)
-  {
-    /*    int frame = (int)user_data;*/
-    
-    /*    printf("focus out\n");*/
-    gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)FALSE);
-    return FALSE;
-  }
- 
-gboolean EnterCallbackGTK (GtkWidget *widget,
-			   GdkEventCrossing *event,
+{
+  gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)FALSE);
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
+gboolean EnterCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
 			   gpointer user_data)
-  {
-     gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)TRUE);    
-    return FALSE;
-  }
+{
+  gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)TRUE);    
+  return FALSE;
+}
 
-gboolean LeaveCallbackGTK (GtkWidget *widget,
-			   GdkEventCrossing *event,
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
+gboolean LeaveCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
 			   gpointer user_data)
-  {
-    gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)FALSE);        
-    return FALSE;
-  }
+{
+  gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)FALSE);        
+  return FALSE;
+}
 
 
-gboolean ButtonPressCallbackGTK (GtkWidget *widget,
-				 GdkEventButton *event,
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
+gboolean ButtonPressCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 				 gpointer user_data)
-  {
-     gtk_object_set_data (GTK_OBJECT(widget), "ButtonPress", (gpointer)TRUE);    
-    return FALSE;
-  }
+{
+  gtk_object_set_data (GTK_OBJECT(widget), "ButtonPress", (gpointer)TRUE);    
+  return FALSE;
+}
 
-gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
-				   GdkEventButton *event,
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
+gboolean ButtonReleaseCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 				   gpointer user_data)
-  {
-    /*    printf("enter\n");*/
-    gtk_object_set_data (GTK_OBJECT(widget), "ButtonRelease", (gpointer)TRUE);    
-    return FALSE;
-  }
+{
+  gtk_object_set_data (GTK_OBJECT(widget), "ButtonRelease", (gpointer)TRUE);    
+  return FALSE;
+}
  
 #endif /*_GTK*/
 
@@ -2766,16 +2803,10 @@ void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 {
 #ifndef _WINDOWS
 #ifndef _GTK 
-   XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
-		 win, cursor, CurrentTime);
+  XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
+		win, cursor, CurrentTime);
 #else /* _GTK */
-   gdk_pointer_grab (win,
-		     FALSE, 
-		     events,
-		     win,
-		     cursor,
-		     GDK_CURRENT_TIME);
-
+  gdk_pointer_grab (win, FALSE, events, win, cursor, GDK_CURRENT_TIME);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 }
@@ -2788,9 +2819,9 @@ void ThotUngrab ()
 {
 #ifndef _WINDOWS
 #ifndef _GTK
-   XUngrabPointer (TtDisplay, CurrentTime);
+  XUngrabPointer (TtDisplay, CurrentTime);
 #else /* _GTK */
-   gdk_pointer_ungrab (GDK_CURRENT_TIME);
+  gdk_pointer_ungrab (GDK_CURRENT_TIME);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 }
@@ -2800,7 +2831,7 @@ void ThotUngrab ()
   ----------------------------------------------------------------------*/
 ThotWindow TtaGetThotWindow (int frame)
 {
-   return FrRef[frame];
+  return FrRef[frame];
 }
 
 /*----------------------------------------------------------------------
