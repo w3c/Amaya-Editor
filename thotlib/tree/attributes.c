@@ -652,6 +652,9 @@ boolean             force;
    PtrElement          pChild;
    PtrAbstractBox      pAbsBox;
 
+   if (pEl == NULL)
+      return;
+
    if (!pEl->ElTerminal)
       /* l'element n'est pas une feuille, on traite son sous-arbre */
      {

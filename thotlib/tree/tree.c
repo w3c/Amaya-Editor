@@ -980,6 +980,9 @@ Language            lang;
 {
    PtrElement          pChild;
 
+   if (pEl == NULL)
+      return;
+
    if (!pEl->ElTerminal)
       /*The element is not a leave. We recursively process all of the */
       /* element's subtree */
