@@ -2785,7 +2785,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 w, h;
   int                 width, height;
   int                 left, right, top, bottom;
-  ThotBool            Box_Need_Resize = FALSE;
   
 #ifdef _WINDOWS
   ThotBool            releaseDC = FALSE;
