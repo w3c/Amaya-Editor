@@ -85,9 +85,9 @@
 83 Directorio de imágenes:
 84 Ubicación de objeto
 85 Hojas de estilo enlazadas:
-86 Abrir hoja de estilo
-87 Desactivar hoja de estilo
-88 Activar hoja de estilo
+86 Abrir hoja de estilo enlazada
+87 Desactivar hoja de estilo enlazada
+88 Activar hoja de estilo enlazada
 89 Borrar enlace a hoja de estilo
 90 Editor/Navegador del W3C para la Web
 91 (enviar sugerencias a www-amaya@w3.org)
@@ -96,7 +96,7 @@
 94 Actualización de enlace: %s%% realizada
 95 Nada nuevo que guardar
 96 Repetir-y (repeat-y)
-97 Por favor, introduzca un nombre de usuario:
+97 Por favor, escriba un nombre de usuario:
 98 %d solicitud pendiente
 99 No hay ninguna hoja de estilo enlazada
 100 Detener
@@ -182,13 +182,13 @@
 180 Generar copias de seguridad
 181 Mostrar imágenes de fondo
 182 Mostar barra de botones
-183 Mostrar dirección
+183 Mostrar barra de dirección
 184 Mostrar destinos
 185 Numeración de sección
 186 Exportar CR/LF
 187 Preferencias de navegación
 188 Cargar imágenes (img)
-189 Doble clic activa enlaces
+189 Activar enlaces con un doble clic
 190 Preferencias de publicación
 191 Usar ETAGS y precondiciones
 192 Verificar cada PUT con un GET
@@ -211,7 +211,7 @@
 209 Preferencias de perfiles
 210 URL del servidor de plantillas:
 211 Preferencias de plantillas
-212 Permitir redirecciones PUT automáticas en los dominios:
+212 Permitir redirecciones PUT automáticas a estos dominios:
 213 Ignorar hojas de estilo
 214 Tipo de transformación
 215 (separar los dominios con un espacio)
@@ -265,9 +265,9 @@
 263 Imposible adjuntar un XPointer final sobre un elemento interno agregado
 264 No sé a dónde mover la anotación
 265 No puedo mover la anotación a otro documento
-266 No puede anotar un documento modificado. Por favor, guárdelo primero.
-267 No hay anotaciones de usuario declarados. Por favor, abra el menú de configuración de Anotaciones
-268 No puedo construir un XPointer para esta anotación
+266 No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.
+267 No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones
+268 No se puede crear un XPointer para esta anotación
 269 Crear una nueva anotación
 270 Fallo al enviar la anotación
 271 Fallo al borrar la anotación
@@ -354,7 +354,7 @@
 352 Borrar atributos id
 353 Crear/Borrar atributos id
 354 Aplicar operación
-355 Escribe un nombre de etiqueta XHTML:
+355 Escribe un nombre de elemento:
 356 Aplicar hojas de estilo
 357 Tipo de pantalla actual:
 358 Nuevo Tema
@@ -362,14 +362,14 @@
 360 Propiedades de tema
 361 Jerarquía de temas:
 362 Título:
-363 Enlaza:
+363 Enlace al recurso:
 364 Autor:
 365 Creado:
 366 Última modificación:
 367 Descripción:
 368 Por favor, seleccione un elemento
 369 Todos las hojas de estilo
-370 Reglas de estilo CSS aplicadas al elemento <%s>\n
-371 Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n
+370 Reglas de estilo aplicadas al elemento <%s>\n
+371 Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
 372 Cargar objetos (object, embed)
 373 No hay regla de estilo para este elemento
