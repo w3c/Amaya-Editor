@@ -2768,9 +2768,8 @@ int                 viewToApply;
 
 #endif /* __STDC__ */
 {
-   PtrElement          pEl, pNext;	/* traite la racine du sous-arbre */
+   PtrElement          pEl, pNext;
 
-   RemoveSpecifPres (pElRoot, pDoc, RulesS, viewToApply);
    if (!pElRoot->ElTerminal)
      {
 	/* passe au premier fils */
@@ -2784,4 +2783,6 @@ int                 viewToApply;
 	     pEl = pNext;
 	  }
      }
+   /* traite la racine du sous-arbre */
+   RemoveSpecifPres (pElRoot, pDoc, RulesS, viewToApply);
 }

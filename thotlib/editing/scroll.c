@@ -742,7 +742,11 @@ int                 percent;
    if (dy != 0)
       VerticalScroll (frame, dy, 1);
    else
+      {
       RedrawFrameBottom (frame, dy);
+      /* Mise a jour des ascenseurs */
+      UpdateScrollbars (frame);
+      }
 }
 
 

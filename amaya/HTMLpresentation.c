@@ -131,9 +131,9 @@ void DeleteSpanIfNoAttr (el, doc)
   encloses this text string and move the attribute to that SPAN element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  AttrToSpan (Element elem, Attribute attr, Document doc)
+void  AttrToSpan (Element elem, Attribute attr, Document doc)
 #else /* __STDC__*/
-static void  AttrToSpan (elem, attr, doc)
+void  AttrToSpan (elem, attr, doc)
      Element elem;
      Attribute attr;
      Document doc;

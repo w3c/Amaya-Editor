@@ -4934,7 +4934,12 @@ char                c;
 				       }
 				     break;
 				  case 1:	/* integer */
-				     sscanf (inputBuffer, "%d", &val);
+				    if (attrType.AttrTypeNum == HTML_ATTR_Border &&
+					!strcasecmp (inputBuffer, "border") )
+					/* BORDER="BORDER" for a TABLE */
+					val = 1;
+				    else
+				        sscanf (inputBuffer, "%d", &val);
 				     TtaSetAttributeValue (lastAttribute, val, lastAttrElement,
 							   theDocument);
 				     break;

@@ -31,6 +31,7 @@ static char        *TargetDocumentURL = NULL;
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLpresentation_f.h"
 #include "HTMLstyle_f.h"
 #include "tree.h"
 
@@ -873,7 +874,12 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   UpdateAttrID:  check that the ID is a unique name in the document.
+   UpdateAttrID
+   An ID attribute has been created, modified or deleted.
+   If it's a creation or modification, check that the ID is a unique name
+   in the document.
+   If it's a deletion for a SPAN element, remove that element if it's
+   not needed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateAttrID (NotifyAttribute * event)
@@ -883,7 +889,19 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   MakeUniqueName (event->element, event->document);
+   if (event->event == TteAttrDelete)
+      /* if the element is a SPAN without any other attribute, remove the SPAN
+         element */
+      DeleteSpanIfNoAttr (event->element, event->document);
+   else
+      {
+      MakeUniqueName (event->element, event->document);
+      if (event->event == TteAttrCreate)
+         /* if the ID attribute is on a text string, create a SPAN element that
+         encloses this text string and move the ID attribute to that SPAN
+         element */
+         AttrToSpan (event->element, event->attribute, event->document);
+      }
 }
 
 

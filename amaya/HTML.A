@@ -276,5 +276,6 @@ ATTRIBUTES
 	BEGIN
 	AttrCreate.Post -> UpdateAttrID;
 	AttrModify.Post -> UpdateAttrID;	
+	AttrDelete.Post -> UpdateAttrID;
 	END;
 END

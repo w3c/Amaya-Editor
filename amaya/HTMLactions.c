@@ -194,7 +194,7 @@ Document            doc;
    SSchema             docSchema;
    View                view;
    char                documentURL[MAX_LENGTH];
-   char               *url, *info;
+   char               *url, *info, *sourceDocUrl;
    int                 length;
 
    docSchema = TtaGetDocumentSSchema (doc);
@@ -210,12 +210,12 @@ Document            doc;
 
    if (HrefAttr != NULL)
      {
+	targetDocument = 0;
+	PseudoAttr = NULL;
 	/* get a buffer for the URL */
 	length = TtaGetTextAttributeLength (HrefAttr);
 	length++;
 	url = TtaGetMemory (length);
-	targetDocument = 0;
-	PseudoAttr = NULL;
 	if (url != NULL)
 	  {
 	     elType = TtaGetElementType (anchor);
@@ -241,20 +241,19 @@ Document            doc;
 	     while (url[length] == ' ')
 		url[length--] = EOS;
 	     if (url[0] == '#')
-	       {
-		  /* the target element is part of the same document */
-		  targetDocument = doc;
-	       }
+		/* the target element is part of the same document */
+		targetDocument = doc;
 	     else
+		/* the target element seems to be in another document */
 	       {
-		  /* the target element is in another document */
 		  strcpy (documentURL, url);
 		  url[0] = EOS;
-		  /* is the source element an image map */
+		  /* is the source element an image map? */
 		  attrType.AttrSSchema = docSchema;
 		  attrType.AttrTypeNum = HTML_ATTR_ISMAP;
 		  attr = TtaGetAttribute (elSource, attrType);
 		  if (attr != NULL)
+		    /* it's an image map */
 		    {
 		      info = GetActiveImageInfo (doc, elSource);
 		      if (info != NULL)
@@ -264,6 +263,10 @@ Document            doc;
 			}
 		    }
 
+		  /* save the complete URL of the source document */
+		  length = strlen (DocumentURLs[doc])+1;
+		  sourceDocUrl = TtaGetMemory (length);
+		  strcpy (sourceDocUrl, DocumentURLs[doc]);
 		  /* get the referred document */
 		  targetDocument = GetHTMLDocument (documentURL, NULL,
 				   doc, doc, CE_TRUE, TRUE);
@@ -271,10 +274,15 @@ Document            doc;
 		    /* help document are displayed in read-only mode */
 		    TtaSetDocumentAccessMode (targetDocument, 0);
 
-		  /* if the referred document has replaced the clicked
+		  /* if the target document has replaced the clicked
 		     document, pseudo attribute "visited" should not be set */
 		  if (targetDocument == doc)
-		     PseudoAttr = NULL;
+		     /* the target document is in the same window as the
+			source document */
+		     if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
+			/* both document have different URLs */
+		        PseudoAttr = NULL;
+		  TtaFreeMemory (sourceDocUrl);
 	       }
 
 	     TtaSetSelectionMode (TRUE);
