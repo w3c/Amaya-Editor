@@ -295,7 +295,16 @@ ptrfont             font;
 	/* we use the SPACE width for the character TAB */
 	c = SPACE;
 #ifdef _WINDOWS
-      l = font->FiWidths[c];
+      if (c == UNBREAKABLE_SPACE)
+	l = font->FiWidths[32];
+      else if (c == BREAK_LINE)
+	l = 1;
+      else if (c == THIN_SPACE)
+	l = (font->FiWidths[32] + 3) / 4;
+      else if (c == HALF_EM)
+	l = (font->FiWidths[32] + 1) / 2;
+      else
+	l = font->FiWidths[c];
 #else  /* _WINDOWS */
 #ifdef _GTK
       l = gdk_char_width (font, c);
