@@ -268,12 +268,13 @@ Element             el;
 		       update = FALSE;	/* the image is not loaded yet */
 		       FilesLoading[doc]++;
 		       i = GetObjectWWW (doc, pathname, NULL, tempfile, AMAYA_ASYNC, NULL, NULL, (TTcbf *) ImageLoaded, (void *) desc, NO);
-		       if (i == -1)
-			  update = TRUE;
-		       if (i != HT_OK)
-			  desc->status = IMAGE_NOT_LOADED;
-		       else
-			  desc->status = IMAGE_LOADED;
+		       if (i != HT_ERROR) 
+			 desc->status = IMAGE_LOADED;
+		       else {
+			 FilesLoading[doc]--;
+			 update = TRUE;
+			 desc->status = IMAGE_NOT_LOADED;
+		       }
 		    }
 		  /* display the image within the document */
 		  if (update)
