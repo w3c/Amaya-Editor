@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -44,15 +44,7 @@ static DocViewNumber ReferenceView;
    CallbackOpenView
    updates the openview form
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CallbackOpenView (int ref, int dataType, STRING data)
-#else  /* __STDC__ */
-void                CallbackOpenView (ref, dataType, data)
-int                 ref;
-int                 dataType;
-STRING              data;
-
-#endif /* __STDC__ */
+void CallbackOpenView (int ref, int dataType, STRING data)
 {
    if ((int) data >= 0)
       if (ViewToOpenDoc != NULL)
@@ -69,14 +61,7 @@ STRING              data;
    TtcOpenView
    initializes the openview menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcOpenView (Document document, View view)
-#else  /* __STDC__ */
-void                TtcOpenView (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void TtcOpenView (Document document, View view)
 {
    int                 k, l, nbItems;
    STRING              src;
@@ -131,14 +116,7 @@ View                view;
    TtcCloseView
    closes a document view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcCloseView (Document document, View viewIn)
-#else  /* __STDC__ */
-void                TtcCloseView (document, viewIn)
-Document            document;
-View                viewIn;
-
-#endif /* __STDC__ */
+void TtcCloseView (Document document, View viewIn)
 {
    PtrDocument         pDoc;
    int                 view;
@@ -157,14 +135,7 @@ View                viewIn;
    TtcSynchronizeView
    Switches the synchronizaton mode of the view of a document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SwitchSynchronize (Document document, View view)
-#else  /* __STDC__ */
-void                SwitchSynchronize (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void SwitchSynchronize (Document document, View view)
 {
    PtrDocument         pDoc;
 

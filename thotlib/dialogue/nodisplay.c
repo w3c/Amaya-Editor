@@ -22,121 +22,53 @@
 #include "readpivot_f.h"
 
 /* procedure bidon declarees localement et exportees */
-#ifdef __STDC__
-int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
-#else  /* __STDC__ */
-int                 TtaGetThotColor (red, green, blue)
-unsigned short      red;
-unsigned short      green;
-unsigned short      blue;
-#endif /* __STDC__ */
+int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
 {
   return 1;
 }
 
-#ifdef __STDC__
-ThotBool            CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
-#else  /* __STDC__ */
-ThotBool            CallEventType (notifyEvent, pre)
-NotifyEvent        *notifyEvent;
-ThotBool            pre;
-#endif /* __STDC__ */
+ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 {
    return FALSE;
 }
 
-#ifdef __STDC__
-ThotBool            CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
-#else  /* __STDC__ */
-ThotBool            CallEventAttribute (notifyAttr, pre)
-NotifyAttribute    *notifyAttr;
-ThotBool            pre;
-#endif /* __STDC__ */
+ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 {
    return FALSE;
 }
 
 
-#ifdef __STDC__
-void                FreePictInfo (PictInfo *esc)
-#else  /* __STDC__ */
-void                FreePictInfo (desc)
-PictInfo           *desc;
-#endif /* __STDC__ */
+void FreePictInfo (PictInfo *esc)
 {
 }
 
 
-#ifdef __STDC__
-void                AddInSelection (PtrElement pEl, ThotBool dernier)
-#else  /* __STDC__ */
-void                AddInSelection (pEl, dernier)
-PtrElement          pEl;
-ThotBool            dernier;
-#endif /* __STDC__ */
+void AddInSelection (PtrElement pEl, ThotBool dernier)
 {
 }
 
 
 /* FreeAbEl est appele' par le module arbabs */
-#ifdef __STDC__
-void                FreeAbEl (PtrElement pEl)
-#else  /* __STDC__ */
-void                FreeAbEl (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
+void FreeAbEl (PtrElement pEl)
 {
 }
 
-#ifdef __STDC__
-void                ConfigTranslateSSchema (PtrSSchema pSS)
-#else  /* __STDC__ */
-void                ConfigTranslateSSchema (pSS)
-PtrSSchema          pSS;
-#endif /* __STDC__ */
+void ConfigTranslateSSchema (PtrSSchema pSS)
 {
 }
 
 /* GlobalSearchRulepEl est appele' par le module pivlec */
-#ifdef __STDC__
-PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, FunctionType typeFunc, ThotBool Pag, ThotBool attr, PtrAttribute * pAttr)
-#else  /* __STDC__ */
-PtrPRule            GlobalSearchRulepEl (pEl, pSPR, pSSR, NumPres, pSchP, Vue, TRegle, typeFunc, Pag, attr, pAttr)
-PtrElement          pEl;
-PtrPSchema         *pSPR;
-PtrSSchema         *pSSR;
-int                 NumPres;
-PtrPSchema          pSchP;
-int                 Vue;
-PRuleType           TRegle;
-FunctionType        typeFunc;
-ThotBool            Pag;
-ThotBool            attr;
-PtrAttribute       *pAttr;
-#endif /* __STDC__ */
+PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, FunctionType typeFunc, ThotBool Pag, ThotBool attr, PtrAttribute * pAttr)
 {
    return NULL;
 }
 
-#ifdef __STDC__
-ThotBool            IsASavedElement (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            IsASavedElement (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
+ThotBool IsASavedElement (PtrElement pEl)
 {
    return FALSE;
 }
 
-#ifdef __STDC__
-ThotBool            BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
-#else  /* __STDC__ */
-ThotBool            BothHaveNoSpecRules (pEl1, pEl2)
-PtrElement          pEl1;
-PtrElement          pEl2;
-
-#endif /* __STDC__ */
+ThotBool BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 {
    if (pEl1->ElFirstPRule == NULL && pEl2->ElFirstPRule == NULL)
       return TRUE;
@@ -144,13 +76,6 @@ PtrElement          pEl2;
       return FALSE;
 }
 
-#ifdef __STDC__
-void         AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
-#else  /* __STDC__ */
-void         AddSchemaGuestViews (pDoc, pSS)
-PtrDocument  pDoc;
-PtrSSchema   pSS;
-
-#endif /* __STDC__ */
+void AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
 {
 }

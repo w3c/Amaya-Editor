@@ -9,23 +9,23 @@
 extern void InitPrintParameters ( Document document );
 extern void TtcPrint ( Document document,
                        View view );
-extern void TtaGetPrintNames ( STRING *printDocName,
-                               STRING *printDirName );
+extern void TtaGetPrintNames ( char **printDocName,
+                               char **printDirName );
 extern void TtaPrint ( Document document,
-                       STRING viewNames,
-                       STRING cssNames );
+                       char *viewNames,
+                       char *cssNames );
 extern void TtaSetPrintExportFunc ( Func exportFunc );
 extern void TtaSetPrintParameter ( PrintParameter parameter,
                                    int value );
 extern int TtaGetPrintParameter ( PrintParameter parameter );
-extern void TtaSetPrintCommand ( STRING command );
-extern void TtaGetPrintCommand ( STRING command );
-extern void TtaSetPrintSchema ( CHAR_T* name );
-extern void TtaSetPsFile ( STRING path );
-extern void TtaGetPsFile ( STRING path );
+extern void TtaSetPrintCommand ( char *command );
+extern void TtaGetPrintCommand ( char *command );
+extern void TtaSetPrintSchema ( char *name );
+extern void TtaSetPsFile ( char *path );
+extern void TtaGetPsFile ( char *path );
 extern void CallbackPrintmenu ( int ref,
                                 int val,
-                                STRING txt );
+                                char *txt );
 extern void TtcPrintSetup ( Document document,
                             View view );
 
@@ -34,23 +34,23 @@ extern void TtcPrintSetup ( Document document,
 extern void InitPrintParameters (/* Document document */);
 extern void TtcPrint (/* Document document,
                          View view */);
-extern void TtaGetPrintNames (/* STRING *printDocName,
-                                 STRING *printDirName */);
+extern void TtaGetPrintNames (/* char **printDocName,
+                                 char **printDirName */);
 extern void TtaPrint (/* Document document,
-                         STRING viewNames,
-                         STRING cssNames */);
+                         char *viewNames,
+                         char *cssNames */);
 extern void TtaSetPrintExportFunc (/* Func exportFunc */);
 extern void TtaSetPrintParameter (/* PrintParameter parameter,
                                      int value */);
 extern int TtaGetPrintParameter (/* PrintParameter parameter */);
-extern void TtaSetPrintCommand (/* STRING command */);
-extern void TtaGetPrintCommand (/* STRING command */);
-extern void TtaSetPrintSchema (/* CHAR_T* name */);
-extern void TtaSetPsFile (/* STRING path */);
-extern void TtaGetPsFile (/* STRING path */);
+extern void TtaSetPrintCommand (/* char *command */);
+extern void TtaGetPrintCommand (/* char *command */);
+extern void TtaSetPrintSchema (/* char *name */);
+extern void TtaSetPsFile (/* char *path */);
+extern void TtaGetPsFile (/* char *path */);
 extern void CallbackPrintmenu (/* int ref,
                                   int val,
-                                  STRING txt */);
+                                  char *txt */);
 extern void TtcPrintSetup (/* Document document,
                               View view */);
 

@@ -56,13 +56,13 @@ static int          SearchedPageSchView;
 /* number of the searched page */
 static int          SearchedPageNumber;
 /* precedent searched string */
-static CHAR_T         pPrecedentString[THOT_MAX_CHAR];
+static char           pPrecedentString[THOT_MAX_CHAR];
 /* searched string */
-static CHAR_T         pSearchedString[THOT_MAX_CHAR];
+static char           pSearchedString[THOT_MAX_CHAR];
 /* length of the searched string */
 static int          SearchedStringLen;
 /* the replace string */
-static CHAR_T         pReplaceString[THOT_MAX_CHAR];
+static char           pReplaceString[THOT_MAX_CHAR];
 /* length of the replace string */
 static int          ReplaceStringLen;
 /* pointer to the current reference */
@@ -115,9 +115,9 @@ static int          ReturnValueSelectReferMenu;
 static int          iLocation;
 static int          iMode;
 static ThotWindow   SearchW = NULL;
-static CHAR_T       textToSearch [255];
-static CHAR_T       newText [255];
-static CHAR_T       msgCaption [200];
+static char         textToSearch [255];
+static char         newText [255];
+static char         msgCaption [200];
 static ThotBool     searchEnd;
 
 /*-----------------------------------------------------------------------
@@ -237,9 +237,9 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    ThotCallback (NumZoneTextReplace, STRING_DATA, newText);
 	  
 	  ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
-	  ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (CHAR_T*) iMode);
-	  ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (CHAR_T*) iLocation);
-	  ThotCallback (NumFormSearchText, INTEGER_DATA, (CHAR_T*) 1);
+	  ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) iMode);
+	  ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) iLocation);
+	  ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
 	  if (!searchEnd && iLocation == 3)
 	    {
 	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
@@ -249,9 +249,9 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case ID_NOREPLACE:
 	  ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
-	  ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (CHAR_T*) 0);
-	  ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (CHAR_T*) iLocation);
-	  ThotCallback (NumFormSearchText, INTEGER_DATA, (CHAR_T*) 1);
+	  ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) 0);
+	  ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) iLocation);
+	  ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
 	  if (iLocation == 3)
 	    {
 	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
@@ -301,7 +301,7 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	  
 	case	IDC_UPPERLOWER:
-	  ThotCallback (NumToggleUpperEqualLower, INTEGER_DATA, (CHAR_T*) 0);
+	  ThotCallback (NumToggleUpperEqualLower, INTEGER_DATA, (char *) 0);
 	  break;
 	}
       break;
@@ -332,17 +332,13 @@ static void         InitMenuWhereToSearch (int ref)
   char                string[200];
   
   i = 0;
-  usprintf (&string[i], TEXT("%s%s"), "B",
-	    TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-  i += ustrlen (&string[i]) + 1;
-  usprintf (&string[i], TEXT("%s%s"), "B",
-	    TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-  i += ustrlen (&string[i]) + 1;
-  usprintf (&string[i], TEXT("%s%s"), "B",
-	    TtaGetMessage (LIB, TMSG_AFTER_SEL));
-  i += ustrlen (&string[i]) + 1;
-  usprintf (&string[i], TEXT("%s%s"), "B",
-	    TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+  sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
+  i += strlen (&string[i]) + 1;
+  sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+  i += strlen (&string[i]) + 1;
+  sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_AFTER_SEL));
+  i += strlen (&string[i]) + 1;
+  sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
   /* sous-menu Ou` rechercher element vide */
   TtaNewSubmenu (NumMenuOrSearchText, ref, 0,
 		 TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string,
@@ -687,7 +683,7 @@ void                CallbackSearchEmptyEl (int ref, int val)
 	      /* on reactive les entrees du sous-menu "Ou chercher" */
 	      ActivateMenuWhereToSearch ();
 	      /* efface le message "Pas trouve'" dans le formulaire */
-	      TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TEXT(" "));
+	      TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, " ");
 #endif /* !_WINDOWS */
 	    }
 	  else
@@ -715,7 +711,7 @@ void                TtcSearchEmptyElement (Document document, View view)
    PtrElement          pLastSel;
    int                 firstChar;
    int                 lastChar;
-   CHAR_T                buffTitle[200];
+   char                  buffTitle[200];
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
@@ -738,8 +734,8 @@ void                TtcSearchEmptyElement (Document document, View view)
    StartSearch = TRUE;
    /* feuille de dialogue Rechercher element vide */
    /* compose le titre "Recherche dans le document..." */
-   ustrcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
-   ustrcat (buffTitle, pDoc->DocDName);
+   strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
+   strcat (buffTitle, pDoc->DocDName);
 #ifndef _WINDOWS
    TtaNewSheet (NumFormSearchEmptyElement, TtaGetViewFrame (document, view),
 		buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE,
@@ -751,7 +747,7 @@ void                TtcSearchEmptyElement (Document document, View view)
 
    /* le message "Pas trouve'" */
    TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement,
-		TEXT(" "));
+		" ");
    /* active le formulaire */
    TtaShowDialogue (NumFormSearchEmptyElement, TRUE);
 #endif /* !_WINDOWS */
@@ -824,7 +820,7 @@ void                CallbackSearchEmptyref (int ref, int val)
 		     /* efface le message 'Pas trouve' dans la feuille de */
 		     /* saisie */
 		     TtaNewLabel (NumLabelEmptyRefereneceNotFound,
-				  NumFormSearchEmptyReference, TEXT(" "));
+				  NumFormSearchEmptyReference, " ");
 #endif /* !_WINDOWS */
 		  }
 		else
@@ -857,7 +853,7 @@ void                TtcSearchEmptyReference (Document document, View view)
    PtrElement          pLastSel;
    int                 firstChar;
    int                 lastChar;
-   CHAR_T                buffTitle[200];
+   char                  buffTitle[200];
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
@@ -880,8 +876,8 @@ void                TtcSearchEmptyReference (Document document, View view)
 
    StartSearch = TRUE;
    /* compose le titre "Recherche dans le document..." */
-   ustrcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
-   ustrcat (buffTitle, pDoc->DocDName);
+   strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
+   strcat (buffTitle, pDoc->DocDName);
    /* feuille de dialogue Rechercher reference vide */
 #ifndef _WINDOWS
    TtaNewSheet (NumFormSearchEmptyReference, TtaGetViewFrame (document, view),
@@ -895,7 +891,7 @@ void                TtcSearchEmptyReference (Document document, View view)
 
    /* le message "Pas trouve'" */
    TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference,
-		TEXT(" "));
+		" ");
    /* active le formulaire */
    TtaShowDialogue (NumFormSearchEmptyReference, TRUE);
 #endif /* !_WINDOWS */
@@ -921,11 +917,11 @@ void                CallbackReferenceMenu (int val)
 /*----------------------------------------------------------------------
   BuildReferenceMenu
   ----------------------------------------------------------------------*/
-void   BuildReferenceMenu (STRING bufMenu, int nbEntries, int *selEntry)
+void   BuildReferenceMenu (char *bufMenu, int nbEntries, int *selEntry)
 {
-   CHAR_T                bufMenuB[MAX_TXT_LEN];
-   STRING              src;
-   STRING              dest;
+   char                bufMenuB[MAX_TXT_LEN];
+   char               *src;
+   char               *dest;
    int                 k, l;
 
    ReturnValueSelectReferMenu = 0;
@@ -934,10 +930,10 @@ void   BuildReferenceMenu (STRING bufMenu, int nbEntries, int *selEntry)
    src = &bufMenu[0];
    for (k = 1; k <= nbEntries; k++)
      {
-	ustrcpy (dest, TEXT("B"));
+	strcpy (dest, "B");
 	dest++;
-	l = ustrlen (src);
-	ustrcpy (dest, src);
+	l = strlen (src);
+	strcpy (dest, src);
 	dest += l + 1;
 	src += l + 1;
      }
@@ -957,25 +953,25 @@ void   BuildReferenceMenu (STRING bufMenu, int nbEntries, int *selEntry)
   ----------------------------------------------------------------------*/
 static void         SearchAReference (ThotBool docExtNext)
 {
-   CHAR_T                msg[100];
+   char                  msg[100];
 
    /* chercher une reference */
    FindReference (&CurrRef, &CurrRefDoc, &CurrRefElem,
 		  &CurrRefElemDoc, &pExtCurrDoc, docExtNext);
    if (CurrRef != NULL)
       /* on a trouve', on efface le message qui traine */
-      ustrcpy (msg, TEXT(" "));
+      strcpy (msg, " ");
    else if (pExtCurrDoc != NULL)
       /* references dans un document non charge' */
      {
-	ustrcpy (msg, TtaGetMessage (LIB, TMSG_REF_IN_DOC));
-	GetDocName (pExtCurrDoc->EdDocIdent, msg + ustrlen (msg));
+	strcpy (msg, TtaGetMessage (LIB, TMSG_REF_IN_DOC));
+	GetDocName (pExtCurrDoc->EdDocIdent, msg + strlen (msg));
      }
    else
      {
 	/* on n'a trouve' aucune reference */
 	SearchReferenceEnd = TRUE;
-	ustrcpy (msg, TtaGetMessage (LIB, TMSG_NOT_FOUND));
+	strcpy (msg, TtaGetMessage (LIB, TMSG_NOT_FOUND));
      }
 #ifndef _WINDOWS
    TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, msg);
@@ -996,7 +992,7 @@ void                BuildSearchReferences (PtrDocument pDoc)
    PtrDocument         pDocSel;
    int                 firstChar;
    int                 lastChar;
-   CHAR_T                bufText[200];
+   char                  bufText[200];
    ThotBool            found;
 
    if (GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar))
@@ -1027,14 +1023,14 @@ void                BuildSearchReferences (PtrDocument pDoc)
 	     SearchReferenceEnd = FALSE;
 	     /* initialise le label du formulaire en y mettant le type de */
 	     /* l'element reference' */
-	     ustrcpy (bufText, TtaGetMessage (LIB, TMSG_SEARCH_REF_TO_EL));
-	     ustrcat (bufText, TEXT(" "));
-	     ustrcat (bufText, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	     strcpy (bufText, TtaGetMessage (LIB, TMSG_SEARCH_REF_TO_EL));
+	     strcat (bufText, " ");
+	     strcat (bufText, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 #ifndef _WINDOWS
 	     TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
 			  bufText);
 	     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference,
-			  TEXT(" "));
+			  " ");
 	     /* active le formulaire de recherche */
 	     TtaShowDialogue (NumFormSearchReference, FALSE);
 #endif /* !_WINDOWS */
@@ -1048,7 +1044,7 @@ void                BuildSearchReferences (PtrDocument pDoc)
 void                TtcSearchReference (Document document, View view)
 {
    PtrDocument         pDoc;
-   CHAR_T                BufMenu[100];
+   char                  BufMenu[100];
    int                 i;
 
    pDoc = LoadedDocument[document - 1];
@@ -1057,20 +1053,20 @@ void                TtcSearchReference (Document document, View view)
    if (pDoc != NULL)
      {
 	/* feuille de dialogue pour la recherche des references a` un element */
-	ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_SEARCH));
-	i = ustrlen (TtaGetMessage (LIB, TMSG_SEARCH)) + 1;
-	ustrcpy (BufMenu + i, TtaGetMessage (LIB, TMSG_OPEN));
+	strcpy (BufMenu, TtaGetMessage (LIB, TMSG_SEARCH));
+	i = strlen (TtaGetMessage (LIB, TMSG_SEARCH)) + 1;
+	strcpy (BufMenu + i, TtaGetMessage (LIB, TMSG_OPEN));
 #ifndef _WINDOWS
 	TtaNewSheet (NumFormSearchReference, TtaGetViewFrame (document, view),
 		     TtaGetMessage (LIB, TMSG_SEARCH_REF), 2, BufMenu, TRUE,
-		     1, TEXT('L'), D_DONE);
+		     1, 'L', D_DONE);
 	/* label indiquant le type d'element dont on cherche les references */
 	TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
 		     TtaGetMessage (LIB, TMSG_SEARCH_REF_TO_EL));
 
 	/* label "Pas trouve'" pour Recherche des references a` un element */
 	TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference,
-		     TEXT(" "));
+		     " ");
 #endif /* !_WINDOWS */
 	BuildSearchReferences (pDoc);
      }
@@ -1116,7 +1112,7 @@ void                CallbackReferenceTo (int ref, int data)
 			     /* efface le label */
 #ifndef _WINDOWS
 			     TtaNewLabel (NumLabelReferenceNotFound,
-					  NumFormSearchReference, TEXT(" "));
+					  NumFormSearchReference, " ");
 #endif /* !_WINDOWS */
 			     SearchAReference (FALSE);
 			   }
@@ -1140,7 +1136,7 @@ void                TtcSearchText (Document document, View view)
   PtrElement          pFirstSel;
   PtrElement          pLastSel;
   PtrDocument         pDoc;
-  CHAR_T              bufTitle[200], string[200];
+  char                bufTitle[200], string[200];
   int                 firstChar;
   int                 lastChar, i;
   ThotBool            ok;
@@ -1164,19 +1160,19 @@ void                TtcSearchText (Document document, View view)
   StartSearch = TRUE;
   
   /* compose le titre du formulaire "Recherche dans le document..." */
-  ustrcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
-  ustrcat (bufTitle, TEXT(" "));
-  ustrcat (bufTitle, pDoc->DocDName);
+  strcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
+  strcat (bufTitle, " ");
+  strcat (bufTitle, pDoc->DocDName);
 #ifdef _WINDOWS
-  ustrcpy (msgCaption, bufTitle);
+  strcpy (msgCaption, bufTitle);
 #endif /* _WINDOWS */
   /* feuille de dialogue Rechercher texte et structure */
-  ustrcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-  i = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
-  ustrcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
+  strcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+  i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
+  strcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
 #ifndef _WINDOWS
   TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
-	       bufTitle, 2, string, FALSE, 6, TEXT('L'), D_DONE);
+	       bufTitle, 2, string, FALSE, 6, 'L', D_DONE);
   
   /* zone de saisie du texte a` rechercher */
   TtaNewTextForm (NumZoneTextSearch, NumFormSearchText,
@@ -1204,10 +1200,10 @@ void                TtcSearchText (Document document, View view)
       i = 0;
       sprintf (&string[i], "%s%s", "B",
 	       TtaGetMessage (LIB, TMSG_NO_REPLACE));
-      i += ustrlen (&string[i]) + 1;
+      i += strlen (&string[i]) + 1;
       sprintf (&string[i], "%s%s", "B",
 	       TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
-      i += ustrlen (&string[i]) + 1;
+      i += strlen (&string[i]) + 1;
       sprintf (&string[i], "%s%s", "B",
 	       TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
       TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0,
@@ -1231,7 +1227,7 @@ void                TtcSearchText (Document document, View view)
   WithReplace = FALSE;
   ReplaceDone = FALSE;
   AutoReplace = FALSE;
-  ustrcpy (pPrecedentString, TEXT(""));
+  strcpy (pPrecedentString, "");
   
 #ifdef _WINDOWS
   SearchAfter = ok;
@@ -1269,7 +1265,7 @@ void                TtcSearchText (Document document, View view)
   ref: reference of the dialogue element to process.
   val: value of the dialogue element.
   ----------------------------------------------------------------------*/
-void                CallbackTextReplace (int ref, int val, STRING txt)
+void CallbackTextReplace (int ref, int val, char *txt)
 {
   PtrElement          pFirstSel;
   PtrElement          pLastSel;
@@ -1287,18 +1283,18 @@ void                CallbackTextReplace (int ref, int val, STRING txt)
     {
     case NumZoneTextSearch:
       /* Chaine a chercher */
-      ustrcpy (pSearchedString, txt);
-      if (ustrcmp (pSearchedString, pPrecedentString) != 0)
+      strcpy (pSearchedString, txt);
+      if (strcmp (pSearchedString, pPrecedentString) != 0)
 	{
 	  ReplaceDone = FALSE;
-	  ustrcpy (pPrecedentString, pSearchedString);
+	  strcpy (pPrecedentString, pSearchedString);
 	}
-      SearchedStringLen = ustrlen (pSearchedString);
+      SearchedStringLen = strlen (pSearchedString);
       break;
     case NumZoneTextReplace:
       /* Chaine a remplacer */
-      ustrcpy (pReplaceString, txt);
-      ReplaceStringLen = ustrlen (pReplaceString);
+      strcpy (pReplaceString, txt);
+      ReplaceStringLen = strlen (pReplaceString);
       /* bascule automatiquement le remplacement */
       if (!WithReplace && !SearchingD->SDocument->DocReadOnly)
 	{
@@ -1344,7 +1340,7 @@ void                CallbackTextReplace (int ref, int val, STRING txt)
     case NumFormSearchText:
       /* Boutons de la feuille de dialogue */
 #ifndef _WINDOWS
-      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TEXT(" "));
+      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
 #endif /* !_WINDOWS */
       if (SearchingD->SDocument == NULL)
 	{
@@ -1635,7 +1631,7 @@ void                CallbackTextReplace (int ref, int val, STRING txt)
 void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView,
 			ThotBool assoc)
 {
-   CHAR_T                buffTitle[200];
+   char                  buffTitle[200];
 
    if (ThotLocalActions[T_searchpage] == NULL)
       TteConnectAction (T_searchpage, (Proc) CallbackGoToPageMenu);
@@ -1666,12 +1662,12 @@ void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView,
 	SearchedPageRoot = pDoc->DocRootElement;
      }
    /* compose le titre "Recherche dans le document..." */
-   ustrcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
-   ustrcat (buffTitle, pDoc->DocDName);
+   strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
+   strcat (buffTitle, pDoc->DocDName);
 #ifndef _WINDOWS 
    /* cree formulaire de saisie du numero de la page cherchee */
    TtaNewSheet (NumFormSearchPage,  0, buffTitle, 1,
-		TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, TEXT('L'),
+		TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L',
 		D_CANCEL);
 
    /* cree zone de saisie du numero de la page cherchee */
@@ -1685,7 +1681,7 @@ void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView,
   CallbackGoToPageMenu
   callback handler for the GotoPage menu.
   ----------------------------------------------------------------------*/
-void                CallbackGoToPageMenu (int ref, int val)
+void CallbackGoToPageMenu (int ref, int val)
 {
    PtrElement          pPage;
 

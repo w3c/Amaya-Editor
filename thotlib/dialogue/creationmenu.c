@@ -1,6 +1,6 @@
 /*
  *
- *  (C) COPYRIGHT INRIA, 1996.
+ *  (C) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -27,18 +27,13 @@
 #include "platform_tv.h"
 #include "edit_tv.h"
 
-static ThotBool     AnswerMenuAskForNew;	/* valid answer to the create/designate menu */
-static ThotBool     AnswerCreateAskForNew;	/* answer AnswerCreateAskForNew to the create/designate menu */ 
+/* valid answer to the create/designate menu */
+static ThotBool     AnswerMenuAskForNew;
+/* answer AnswerCreateAskForNew to the create/designate menu */ 
+static ThotBool     AnswerCreateAskForNew;
 
 #include "structcreation_f.h"
- 
-#ifdef __STDC__
-extern int          ConfigMakeDocTypeMenu (CHAR_T*, int*, ThotBool);
-
-#else  /* __STDC__ */
-extern int          ConfigMakeDocTypeMenu ();
-
-#endif /* __STDC__ */
+extern int ConfigMakeDocTypeMenu (CHAR_T*, int*, ThotBool);
 
 /*----------------------------------------------------------------------
    AskForNew_RemplRefer
@@ -49,14 +44,7 @@ extern int          ConfigMakeDocTypeMenu ();
    generate is TRUE if the user wants to create the referenced
    element, FALSE if he only wants to designate it.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            AskForNew_RemplRefer (ThotBool * generate, Name typeName)
-#else  /* __STDC__ */
-ThotBool            AskForNew_RemplRefer (generate, typeName)
-ThotBool           *generate;
-Name                typeName;
-
-#endif /* __STDC__ */
+ThotBool AskForNew_RemplRefer (ThotBool * generate, Name typeName)
 {
    int                 i;
    CHAR_T                bufMenu[MAX_TXT_LEN];
@@ -67,11 +55,11 @@ Name                typeName;
    i += ustrlen (&bufMenu[i]) + 1;
    usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
    TtaNewPopup (NumMenuCreateReferenceElem, 0, TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
    /* waits until the user replies to the menu */
    TtaWaitShowDialogue ();
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    *generate = AnswerCreateAskForNew;
    return AnswerMenuAskForNew;
 }
@@ -82,13 +70,7 @@ Name                typeName;
    to designate a referenced element or if if he prefers to create
    a new element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CallbackAskForNew (int Val)
-#else  /* __STDC__ */
-void                CallbackAskForNew (Val)
-int                 Val;
-
-#endif /* __STDC__ */
+void CallbackAskForNew (int Val)
 {
    if (Val == 0)
      {
@@ -106,16 +88,7 @@ int                 Val;
 /*----------------------------------------------------------------------
   BuildChoiceMenu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool natureChoice)
-#else  /* __STDC__ */
-void                BuildChoiceMenu (bufMenu, menuTitle, nbEntries, natureChoice)
-STRING              bufMenu;
-Name                menuTitle;
-int                 nbEntries;
-ThotBool            natureChoice;
-
-#endif /* __STDC__ */
+void BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool natureChoice)
 {
    int                 menu;
    CHAR_T              bufMenuB[MAX_TXT_LEN];
@@ -126,11 +99,11 @@ ThotBool            natureChoice;
    if (natureChoice)
      {
 	menu = NumFormNature;
-#   ifndef _WINDOWS
+#ifndef _WINDOWS
 	/* selector stating the nature of the element to create (or of the capture zone
 	   if the configuration files don't define any natures */
 	TtaNewForm (NumFormNature, 0, TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_CANCEL);
-#   endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	nbitem = ConfigMakeDocTypeMenu (bufMenuB, &length, FALSE);
 	if (nbitem > 0)
 	   /* the Start Up file defines the natures */
@@ -141,19 +114,19 @@ ThotBool            natureChoice;
 	     else
 		length = 5;
 	     /* creates the selector */
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     TtaNewSelector (NumSelectNatureName, NumFormNature,
 			     TtaGetMessage (LIB, TMSG_OBJECT_TYPE), nbitem, bufMenuB, length, NULL, TRUE, FALSE);
 	     /* sets the selector on its first entry */
 	     TtaSetSelector (NumSelectNatureName, 0, TEXT(""));
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	  }
 	else
 	   /* we did not create a selector, we create a capture zone having
 	      the nature of the element to create */
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
 	   TtaNewTextForm (NumSelectNatureName, NumFormNature, TtaGetMessage (LIB, TMSG_OBJECT_TYPE), 30, 1, FALSE)
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	   ;
      }
    else
@@ -173,12 +146,12 @@ ThotBool            natureChoice;
 	  }
 	TtaNewPopup (NumMenuElChoice, 0, menuTitle, nbEntries, bufMenuB, NULL, 'L');
      }
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaShowDialogue (menu, FALSE);
    /* waits until the user has answered to the menu and that the 
       mediator has called ChoiceMenuCallback */
    TtaWaitShowDialogue ();
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 }
 
 
@@ -186,16 +159,8 @@ ThotBool            natureChoice;
    InsertSeparatorInMenu 
    Inserts a separator in the menu Insert/Paste/Include
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd, STRING bufMenu)
-#else  /* __STDC__ */
-void                InsertSeparatorInMenu (prevMenuInd, nbEntries, menuInd, bufMenu)
-int                *prevMenuInd;
-int                *nbEntries;
-int                *menuInd;
-STRING              bufMenu;
-
-#endif /* __STDC__ */
+void InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd,
+			    STRING bufMenu)
 {
    *prevMenuInd = *menuInd;
    /* indicates if it's a separator */
@@ -209,17 +174,8 @@ STRING              bufMenu;
 /*----------------------------------------------------------------------
   BuildPasteMenu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                BuildPasteMenu (int RefMenu, STRING bufMenu, Name title, int nbEntries, char button)
-#else  /* __STDC__ */
-void                BuildPasteMenu (RefMenu, bufMenu, title, nbEntries, button)
-int                 RefMenu;
-STRING              bufMenu;
-Name                title;
-int                 nbEntries;
-char                button;
-
-#endif /* __STDC__ */
+void BuildPasteMenu (int RefMenu, STRING bufMenu, Name title,
+		     int nbEntries, char button)
 {
    CHAR_T                bufMenuB[MAX_TXT_LEN];
    STRING              src;
@@ -243,11 +199,11 @@ char                button;
 	src += l + 1;
      }
    TtaNewPopup (RefMenu, 0, title, nbEntries, bufMenuB, NULL, button);
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaShowDialogue (RefMenu, FALSE);
    /* waits for the user's answer */
    TtaWaitShowDialogue ();
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 }
 
 

@@ -5,15 +5,6 @@
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /* 
  * Creation commands
  *
@@ -65,14 +56,7 @@ static PathBuffer     DirectoryDocToCreate;
    CallbackConfirmMenu
    updates the confirmation menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CallbackConfirmMenu (int ref, int typeData, STRING data)
-#else  /* __STDC__ */
-void                CallbackConfirmMenu (ref, typeData, data)
-int                 ref;
-int                 typeData;
-STRING              data;
-#endif /* __STDC__ */
+void CallbackConfirmMenu (int ref, int typeData, char *data)
 {
    PtrDocument         pDoc;
    int                i;
@@ -110,14 +94,7 @@ STRING              data;
    CallbackNewDocMenu
    updates the createdoc menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CallbackNewDocMenu (int ref, int typeData, char* data)
-#else  /* __STDC__ */
-void                CallbackNewDocMenu (ref, typeData, data)
-int                 ref;
-int                 typeData;
-char*               data;
-#endif /* __STDC__ */
+void CallbackNewDocMenu (int ref, int typeData, char *data)
 {
    PathBuffer          docName;
    int                 i;
@@ -135,10 +112,7 @@ char*               data;
 	       /* le formulaire "Creer un document" lui-meme */
 	       if (NameDocToCreate[0] == EOS)
 		  /* le nom par defaut */
-          /* Here the is a problem: TtaGetMessage must return a Wide Character String. */
-          /* NameDocToCreate is of type char* We have to use another procedure then */
-          /* TtaGetMessage to get the name of the document to create */
-		  ustrcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
+		  strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
 	       CurrentDialog = NumFormCreateDoc;
 	       if (ClassDocToCreate[0] != EOS && ((int) data) == 1)
 		 {
@@ -164,14 +138,14 @@ char*               data;
 			 else
 			    /* traite la confirmation */
 			 if (ThotLocalActions[T_confirmcreate] != NULL)
-			    (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm, 1, (STRING) 1);
+			    (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm, 1, (char *) 1);
 		      }
 		 }
 	       else
 		  /* annulation : on detruit les dialogues */
 		 {
 		    if (ThotLocalActions[T_confirmcreate] != NULL)
-		       (*ThotLocalActions[T_confirmcreate]) (0, 1, (STRING) 1);
+		       (*ThotLocalActions[T_confirmcreate]) (0, 1, (char *) 1);
 		 }
 	       /*ClassDocToCreate[0] = EOS; */
 	       break;
@@ -229,14 +203,7 @@ char*               data;
    TtcCreateDocument
    starts the change of createdoc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcCreateDocument (Document document, View view)
-
-#else  /* __STDC__ */
-void                TtcCreateDocument (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
+void TtcCreateDocument (Document document, View view)
 {
    PathBuffer          docName;
    char*               ptr;
@@ -278,9 +245,6 @@ View                view;
 	  }
      }
 
-   /* Here the is a problem: TtaGetMessage must return a Wide Character String. */
-   /* NameDocToCreate is of type char* We have to use another procedure then */
-   /* TtaGetMessage to get the name of the document to create */
    strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
    strcpy (docName, DirectoryDocToCreate);
    strcat (docName, DIR_STR);
@@ -317,9 +281,9 @@ View                view;
 
    /* Formulaire Confirmation creation */
    /* ++++++++++++++++++++++++++++++++ */
-   ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
-   i = ustrlen (BufMenu) + 1;
-   ustrcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   strcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
+   i = strlen (BufMenu) + 1;
+   strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    TtaNewDialogSheet (NumFormConfirm, parentWidget, NULL, 2, BufMenu, FALSE, 1, 'L');
 
    /* affichage du formulaire Creer document */

@@ -18,7 +18,7 @@ extern void CallbackSearchEmptyref ( int ref,
 extern void TtcSearchEmptyReference ( Document document,
                                       View view );
 extern void CallbackReferenceMenu ( int val );
-extern void BuildReferenceMenu ( STRING bufMenu,
+extern void BuildReferenceMenu ( char *bufMenu,
                                  int nbEntries,
                                  int *selEntry );
 extern void BuildSearchReferences ( PtrDocument pDoc );
@@ -30,7 +30,7 @@ extern void TtcSearchText ( Document document,
                             View view );
 extern void CallbackTextReplace ( int ref,
                                   int val,
-                                  STRING txt );
+                                  char *txt );
 extern void BuildGoToPageMenu ( PtrDocument pDoc,
                                 int docView,
                                 int schView,
@@ -53,7 +53,7 @@ extern void CallbackSearchEmptyref (/* int ref,
 extern void TtcSearchEmptyReference (/* Document document,
                                         View view */);
 extern void CallbackReferenceMenu (/* int val */);
-extern void BuildReferenceMenu (/* STRING bufMenu,
+extern void BuildReferenceMenu (/* char *bufMenu,
                                    int nbEntries,
                                    int *selEntry */);
 extern void BuildSearchReferences (/* PtrDocument pDoc */);
@@ -65,7 +65,7 @@ extern void TtcSearchText (/* Document document,
                               View view */);
 extern void CallbackTextReplace (/* int ref,
                                     int val,
-                                    STRING txt */);
+                                    char *txt */);
 extern void BuildGoToPageMenu (/* PtrDocument pDoc,
                                   int docView,
                                   int schView,

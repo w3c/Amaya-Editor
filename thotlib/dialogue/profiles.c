@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT MIT and INRIA, 1996.
+ *  COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -78,12 +78,7 @@ static ThotBool             EnableEdit = TRUE;
 /*----------------------------------------------------------------------
   SkipNewLineSymbol : Remove the EOF ('end of line') character
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   SkipNewLineSymbol (char* Astring)
-#else  /* !__STDC__ */
-static void   SkipNewLineSymbol (Astring)
-char*         Astring;
-#endif /* !__STDC__ */
 {
   int         c = 0;
 
@@ -98,12 +93,7 @@ char*         Astring;
   SkipAllBlanks:  Remove all the spaces, tabulations and return
   returns (CR) and "end of line" characters.
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   SkipAllBlanks (char* Astring)
-#else  /* !__STDC__ */
-static void   SkipAllBlanks (Astring)
-char*         string;
-#endif /* !__STDC__ */
 {
   int         c = 0;
   int         nbsp = 0;
@@ -131,16 +121,9 @@ char*         string;
   The parameter ctxt points to the first ctxt of the table.
   Return the first context of the new module.
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrProCtl   AddInTable (char* name, ThotBool isModule, ThotBool edit, PtrProCtl subModule, int number, PtrProCtl ctxt)
-#else  /* !__STDC__ */
-static PtrProCtl   AddInTable (name, isModule, edit, subModule, number, ctxt)
-char*              name;
-ThotBool           isModule;
-ThotBool           edit;
-int                number;
-PtrProCtl          table;
-#endif /* !__STDC__ */
+static PtrProCtl  AddInTable (char *name, ThotBool isModule, ThotBool edit,
+			      PtrProCtl subModule, int number,
+			      PtrProCtl ctxt)
 {
   PtrProCtl           current, prev, new;
   int                 i;
@@ -191,12 +174,7 @@ PtrProCtl          table;
   AddModule inserts a new module in the module table.
   Return the first context of the new module.
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrProCtl    AddModule (char* name)
-#else  /* !__STDC__ */
-static PtrProCtl    AddModule (name)
-char*               name;
-#endif /* !__STDC__ */
 {
   PtrProCtl     new = NULL;
 
@@ -216,12 +194,7 @@ char*               name;
   AddProfile inserts a new profile in the profile table.
   Return the first context of the new profile.
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrProCtl    AddProfile (char* name)
-#else  /* !__STDC__ */
-static PtrProCtl    AddProfile (name)
-char*               name;
-#endif /* !__STDC__ */
 {
   PtrProCtl     new = NULL;
 
@@ -245,13 +218,7 @@ char*               name;
   The parameter ctxt points to the first context of the table.
   The parameter recursive is TRUE if the referred context must be freed.
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void    DeleteTable (PtrProCtl ctxt, ThotBool recursive)
-#else  /* __STDC__ */
-static void    DeleteTable (ctxt, recursive)
-PtrProCtl      ctxt;
-ThotBool       recursive;
-#endif /* __STDC__ */
 {
   PtrProCtl           next;
   int                 i;
@@ -278,12 +245,7 @@ ThotBool       recursive;
   SearchModule searchs a module in the module table and return the
   pointer to current entry.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ProElement  *SearchModule (char* name)
-#else  /* !__STDC__ */
-static ProElement  *SearchModule (name) 
-char*               name;
-#endif /* !__STDC__ */
 {
   PtrProCtl        current;
   int              i = 0;
@@ -316,12 +278,7 @@ char*               name;
   ProcessDefinition : Recursive function that helps
   building the profile table
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void    ProcessDefinition (char* element)
-#else  /* !__STDC__ */
-static void    ProcessDefinition (element)
-char*         element;
-#endif /* !__STDC__ */ 
 {
   ProElement      *pEntry;
   PtrProCtl        ctxt;
@@ -403,12 +360,7 @@ char*         element;
    AddFunctions keep in the function table the list of functions
    declared in the list of contexts.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void AddFunctions (PtrProCtl ctxt)
-#else  /* !__STDC__ */
-static void AddFunctions (ctxt)
-PtrProCtl   ctxt;
-#endif /* !__STDC__ */
 {
   int           i;
 
@@ -491,12 +443,7 @@ static void SortFunctionTable ()
   Prof_BelongTable searchs a function in the function table and return TRUE
   if the function exists.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool    Prof_BelongTable (char* name)
-#else  /* !__STDC__ */
-ThotBool    Prof_BelongTable (name) 
-char*       name;
-#endif /* !__STDC__ */
 {
   int              left, right, middle, i;
   ThotBool         found = FALSE;
@@ -610,12 +557,7 @@ void Prof_FreeTable ()
 /*----------------------------------------------------------------------
   TtaRebuildProTable: Rebuild the Profiles Table
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void     TtaRebuildProTable (CHAR_T* prof_file)
-#else  /* !__STDC__ */
-void     TtaRebuildProTable (prof_file)
-CHAR_T*  prof_file;
-#endif /* !__STDC__ */
 {
   /* delete the profiles table */
   Prof_FreeTable ();
@@ -635,12 +577,7 @@ ThotBool    TtaCanEdit ()
    TtaGetProfileFileName:  Get the text for the profile file name.
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void     TtaGetProfileFileName (CHAR_T* name, int length)
-#else  /* !__STDC__ */
-void     TtaGetProfileFileName (name, length)
-CHAR_T*  name;
-#endif /* !__STDC__ */
 {
   CHAR_T*   ptr;
   CHAR_T    buffer[MAX_LENGTH];
@@ -659,12 +596,7 @@ CHAR_T*  name;
    TtaGetDefProfileFileName:  Get the text for the default profile file name.
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void     TtaGetDefProfileFileName (CHAR_T* name, int length)
-#else  /* !__STDC__ */
-void     TtaGetDefProfileFileName (name, length)
-CHAR_T*  name;
-#endif /* !__STDC__ */
 {
   CHAR_T* ptr;
   CHAR_T  buffer[200];
@@ -685,12 +617,7 @@ CHAR_T*  name;
    listEntries is a provided list of length pointers.
    Returns the number of items
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int      TtaGetProfilesItems (char** listEntries, int length)
-#else  /* !__STDC__ */
-int      TtaGetProfilesItems (listEntries, length)
-char**   listEntries;
-#endif /* !__STDC__ */
 {
   PtrProCtl     ctxt;
   int           nbelem = 0;
@@ -713,32 +640,20 @@ char**   listEntries;
 
 
 /*----------------------------------------------------------------------
-    Prof_ShowSeparator : determines if a separator must be displayed
-    in the menu interface. Two consecutive separators musn't be displayed
+  Prof_ShowSeparator : determines if a separator must be displayed
+  in the menu interface. Two consecutive separators musn't be displayed
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool     Prof_ShowSeparator (Menu_Ctl *ptrmenu, int item, char LastItemType)
-#else  /* __STDC__ */
-ThotBool     Prof_ShowSeparator (*ptrmenu, item, LastItemType)
-Menu_Ctl    *ptrmenu;
-int          item;
-char         LastItemType;
-#endif /* __STDC__ */
+ThotBool Prof_ShowSeparator (Menu_Ctl *ptrmenu, int item, char LastItemType)
 {  
   return !(LastItemType == 'S' || item == 0);
 }
 
 
 /*-----------------------------------------------------------------------
-    Prof_ShowButton : Add a button if the function associated to that button
-    belongs to the user profile
+  Prof_ShowButton : Add a button if the function associated to that button
+  belongs to the user profile
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool    Prof_ShowButton (char* FunctionName)
-#else  /* __STDC__ */
-ThotBool    Prof_ShowButton (FunctionName)
-char*       FunctionName;
-#endif /* __STDC__ */
 {
   return (Prof_BelongTable (FunctionName));
 }
@@ -748,12 +663,7 @@ char*       FunctionName;
     Prof_ShowSubMenu : Check if a submenu has to be displayed.
     A submenu musn't be displayed if it contains no entry
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool   Prof_ShowSubMenu (Menu_Ctl *ptrsubmenu)
-#else  /* __STDC__ */
-ThotBool   Prof_ShowSubMenu (ptrsubmenu)
-Menu_Ctl  *ptrsubmenu;
-#endif /* __STDC__ */
 {
   int      item    = 0;
   
@@ -772,12 +682,7 @@ Menu_Ctl  *ptrsubmenu;
     Prof_ShowMenu : Check if a menu has to be displayed. A menu mustn't be
     displayed if it contains no entry.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool   Prof_ShowMenu (Menu_Ctl *ptrmenu)
-#else  /* __STDC__ */
-ThotBool   Prof_ShowMenu (ptrmenu)
-Menu_Ctl  *ptrmenu;
-#endif /* __STDC__ */
 {
   int      item    = 0;
 

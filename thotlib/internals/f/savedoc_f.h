@@ -8,10 +8,10 @@
 
 extern void UnsetEntryMenu ( int ref,
                              int ent );
-extern void BuildSaveDocMenu ( void );
 extern void CallbackSaveDocMenu ( int ref,
                                   int typedata,
-                                  STRING txt );
+                                  char *txt );
+extern void BuildSaveDocMenu ( void );
 extern void TtcSaveDocumentAs ( Document document,
                                 View view );
 extern void TtcSaveDocument ( Document document,
@@ -21,10 +21,10 @@ extern void TtcSaveDocument ( Document document,
 
 extern void UnsetEntryMenu (/* int ref,
                                int ent */);
-extern void BuildSaveDocMenu (/* void */);
 extern void CallbackSaveDocMenu (/* int ref,
                                     int typedata,
-                                    STRING txt */);
+                                    char *txt */);
+extern void BuildSaveDocMenu (/* void */);
 extern void TtcSaveDocumentAs (/* Document document,
                                   View view */);
 extern void TtcSaveDocument (/* Document document,

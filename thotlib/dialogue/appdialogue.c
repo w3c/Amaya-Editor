@@ -158,44 +158,44 @@ LRESULT ToolBarNotify (int frame, HWND hwnd, WPARAM wParam, LPARAM lParam)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-LRESULT CALLBACK textZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    switch (msg) { 
-           case WM_KEYDOWN: 
-                switch (wParam) { 
-                       case VK_RETURN: 
-                            SendMessage(GetParent (hwnd), WM_ENTER, 0, 0); 
-                            return 0; 
-				} 
-                break; 
+  switch (msg)
+    { 
+    case WM_KEYDOWN: 
+      switch (wParam)
+	{ 
+	case VK_RETURN: 
+	  SendMessage(GetParent (hwnd), WM_ENTER, 0, 0); 
+	  return 0; 
+	} 
+      break; 
  
-           case WM_KEYUP: 
-           case WM_CHAR: 
-                switch (wParam) { 
-                       case VK_RETURN: 
-                       return 0; 
-				} 
-    } 
+    case WM_KEYUP: 
+    case WM_CHAR: 
+      switch (wParam)
+	{ 
+	case VK_RETURN: 
+	  return 0; 
+	} 
+    }
  
-    /* 
-     * Call the original window procedure for default 
-     * processing. 
-     */ 
- 
-    return CallWindowProc (lpfnTextZoneWndProc, hwnd, msg, wParam, lParam); 
+  /* Call the original window procedure for default processing */ 
+  return CallWindowProc (lpfnTextZoneWndProc, hwnd, msg, wParam, lParam); 
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-HWND GetCurrentWindow () {
-     return FrRef [currentFrame];
+HWND GetCurrentWindow ()
+{
+  return FrRef [currentFrame];
 }
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
-void                TteInitMenus (CHAR_T* name, int number)
+void TteInitMenus (CHAR_T* name, int number)
 {
    int                 i;
    char                namef1[100];
@@ -1762,13 +1762,13 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
    if (i < MAX_TEXTZONE)
      {
 	FrameToView (frame, &document, &view);
-#   ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 	text = XmTextGetString (w);
 #endif /* _GTK */
-#   else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	GetWindowText (w, text, sizeof (text) + 1);
-#   endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	(*FrameTable[frame].Call_Text[i]) (document, view, text);
      }
 }
@@ -1789,183 +1789,175 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 int   TtaAddTextZone (Document document, View view, STRING label,
 		      ThotBool editable, void (*procedure) ())
 {
-   int                 frame, i;
-   ThotWidget          w, row;
+  int                 frame, i;
+  ThotWidget          w, row;
 #  ifndef _WINDOWS
-   int                 n;
-   ThotWidget          rowh;
-   ThotWidget         *brother;
-   XmString            title_string;
-   Arg                 args[MAX_ARGS];
+  int                 n;
+  ThotWidget          rowh;
+  ThotWidget         *brother;
+  XmString            title_string;
+  Arg                 args[MAX_ARGS];
 #  else /* _WINDOWS */
-   RECT       rect;
-   ThotWidget wLabel;
+  RECT                rect;
+  ThotWidget          wLabel;
 #  endif /* _WINDOWS */
 
-   UserErrorCode = 0;
-   i = 0;
-   w = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-	     i = 0;
-	     while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
-		i++;
-	     if (i < MAX_TEXTZONE)
-	       {
-		  row = FrameTable[frame].Text_Zone[0];
+  UserErrorCode = 0;
+  i = 0;
+  w = 0;
+  /* verifie le parametre document */
+  if (document == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame == 0 || frame > MAX_FRAME)
+	TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame].WdFrame != 0)
+	{
+	  i = 0;
+	  while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
+	    i++;
+	  if (i < MAX_TEXTZONE)
+	    {
+	      row = FrameTable[frame].Text_Zone[0];
 #ifndef _WINDOWS
 #ifndef _GTK
-		  XtUnmanageChild (XtParent (XtParent (row)));
-	          XtManageChild (row);
- 
-		  /* Insere la nouvelle zone de texte */
-		  n = 0;
-		  XtSetArg (args[n], XmNchildren, &brother);
+	      XtUnmanageChild (XtParent (XtParent (row)));
+	      XtManageChild (row);
+	      
+	      /* Insere la nouvelle zone de texte */
+	      n = 0;
+	      XtSetArg (args[n], XmNchildren, &brother);
+	      n++;
+	      XtGetValues (row, args, n);
+	      
+	      n = 0;
+	      XtSetArg (args[n], XmNmarginWidth, 0);
+	      n++;
+	      XtSetArg (args[n], XmNmarginHeight, 0);
+	      n++;
+	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	      n++;
+	      XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+	      n++;
+	      if (brother == NULL)
+		{
+		  XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
 		  n++;
-		  XtGetValues (row, args, n);
-
-		  n = 0;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
+		}
+	      else
+		{
+		  XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET);
 		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
+		  XtSetArg (args[n], XmNtopWidget, *brother);
 		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+		  XtSetArg (args[n], XmNbottomWidget, *brother);
 		  n++;
-		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-		  n++;
-		  if (brother == NULL)
-		    {
-		       XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
-		       n++;
-		    }
-		  else
-		    {
-		       XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET);
-		       n++;
-		       XtSetArg (args[n], XmNtopWidget, *brother);
-		       n++;
-		       XtSetArg (args[n], XmNbottomWidget, *brother);
-		       n++;
-		    }
-		  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-		  n++;
-		  rowh = XmCreateForm (row, "Dialogue", args, n);
-		  XtManageChild (rowh);
-		  if (label != NULL)
-		    {
-		       n = 0;
-		       XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		       n++;
-		       XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		       n++;
-		       XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeFontDialogue));
-		       n++;
-		       XtSetArg (args[n], XmNfontList, DefaultFont);
-		       n++;
-		       title_string = XmStringCreateSimple (label);
-		       XtSetArg (args[n], XmNlabelString, title_string);
-		       n++;
-		       /*XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-		       n++;
-		       XtSetArg (args[n], XmNalignment, XmALIGNMENT_BEGINNING);
-		       n++;
-		       XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
-		       n++;*/
-		       XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
-		       n++;
-		       XtSetArg (args[n], XmNy, (Dimension) 10);
-		       n++;
-		       XtSetArg (args[n], XmNwidth, (Dimension) 60);
-		       n++;
-		       w = XmCreateLabel (rowh, "Dialogue", args, n);
-		       XtManageChild (w);
-		       XmStringFree (title_string);
-		    }
-
+		}
+	      XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+	      n++;
+	      rowh = XmCreateForm (row, "Dialogue", args, n);
+	      XtManageChild (rowh);
+	      if (label != NULL)
+		{
 		  n = 0;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
 		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
+		  XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeFontDialogue));
 		  n++;
-		  XtSetArg (args[n], XmNtraversalOn, TRUE);
+		  XtSetArg (args[n], XmNfontList, DefaultFont);
 		  n++;
-		  XtSetArg (args[n], XmNkeyboardFocusPolicy, XmEXPLICIT);
+		  title_string = XmStringCreateSimple (label);
+		  XtSetArg (args[n], XmNlabelString, title_string);
 		  n++;
-		  XtSetArg (args[n], XmNsensitive, TRUE);
+		  XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
 		  n++;
-		  XtSetArg (args[n], XmNeditable, editable);
+		  XtSetArg (args[n], XmNy, (Dimension) 10);
 		  n++;
-		  XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+		  XtSetArg (args[n], XmNwidth, (Dimension) 60);
 		  n++;
-		  XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
-		  n++;
-		  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-		  n++;
-		  if (label != NULL)
-		    {
-		       XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET);
-		       n++;
-		       XtSetArg (args[n], XmNleftWidget, w);
-		       n++;
-		    }
-		  else
-		    {
-		       XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-		       n++;
-		    }
-
-		  w = XmCreateText (rowh, "Dialogue", args, n);
+		  w = XmCreateLabel (rowh, "Dialogue", args, n);
 		  XtManageChild (w);
-		  FrameTable[frame].Text_Zone[i] = w;
-		  if (procedure != NULL)
-		    {
-		       XtAddCallback (w, XmNactivateCallback,
-				      (XtCallbackProc) APP_TextCallback,
-				      (XtPointer) frame);
-		       FrameTable[frame].Call_Text[i] = (Proc) procedure;
-		    }
-		  XtManageChild (XtParent (XtParent (XtParent (row))));
-		  XtManageChild (XtParent (XtParent (row)));
+		  XmStringFree (title_string);
+		}
+
+	      n = 0;
+	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	      n++;
+	      XtSetArg (args[n], XmNforeground, FgMenu_Color);
+	      n++;
+	      XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
+	      n++;
+	      XtSetArg (args[n], XmNtraversalOn, TRUE);
+	      n++;
+	      XtSetArg (args[n], XmNkeyboardFocusPolicy, XmEXPLICIT);
+	      n++;
+	      XtSetArg (args[n], XmNsensitive, TRUE);
+	      n++;
+	      XtSetArg (args[n], XmNeditable, editable);
+	      n++;
+	      XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+	      n++;
+	      XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
+	      n++;
+	      XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+	      n++;
+	      if (label != NULL)
+		{
+		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET);
+		  n++;
+		  XtSetArg (args[n], XmNleftWidget, w);
+		  n++;
+		}
+	      else
+		{
+		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+		  n++;
+		}
+
+	      w = XmCreateText (rowh, "Dialogue", args, n);
+	      XtManageChild (w);
+	      FrameTable[frame].Text_Zone[i] = w;
+	      if (procedure != NULL)
+		{
+		  XtAddCallback (w, XmNactivateCallback,
+				 (XtCallbackProc) APP_TextCallback,
+				 (XtPointer) frame);
+		  FrameTable[frame].Call_Text[i] = (Proc) procedure;
+		}
+	      XtManageChild (XtParent (XtParent (XtParent (row))));
+	      XtManageChild (XtParent (XtParent (row)));
 #endif /* _GTK */
 #else  /* _WINDOWS */
-		  currentFrame = frame;
-                  GetClientRect (FrMainRef [frame], &rect);
-                  w = CreateWindow (TEXT("EDIT"), TEXT(""),
-				    WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
-                                    0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+	      currentFrame = frame;
+	      GetClientRect (FrMainRef [frame], &rect);
+	      w = CreateWindow (TEXT("EDIT"), TEXT(""),
+				WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
+				0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+	      FrameTable[frame].Text_Zone[i] = w;
+	      FrameTable[frame].Call_Text[i] = (Proc) procedure;
 
-                  FrameTable[frame].Text_Zone[i] = w;
-                  FrameTable[frame].Call_Text[i] = (Proc) procedure;
-
-				  if (lpfnTextZoneWndProc == (WNDPROC) 0)
-                     lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
-				  else
-				     SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
-
-                  wLabel = CreateWindow (TEXT("STATIC"), label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
-                                         0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
-                  FrameTable[frame].Label[i] = wLabel;
-				  /* FrameTable[frame].showLogo = TRUE; */
-                  PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
+	      if (lpfnTextZoneWndProc == (WNDPROC) 0)
+		lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) TextZoneProc);
+	      else
+		SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) TextZoneProc);
+	      wLabel = CreateWindow (TEXT("STATIC"), label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+				     0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
+	      FrameTable[frame].Label[i] = wLabel;
+	      /* FrameTable[frame].showLogo = TRUE; */
+	      PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #endif /* _WINDOWS */
-	       }
-	     else
-		i = 0;
-	  }
-     }
-   /* force la mise a jour de la fenetre */
-   TtaHandlePendingEvents ();
-   return (i);
+	    }
+	  else
+	    i = 0;
+	}
+    }
+  /* force la mise a jour de la fenetre */
+  TtaHandlePendingEvents ();
+  return (i);
 }
 
 
@@ -1974,12 +1966,10 @@ int   TtaAddTextZone (Document document, View view, STRING label,
 
    Sets the text in text-zone in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: identifier of the document.
    view: identifier of the view.
    index: 
-
   ----------------------------------------------------------------------*/
 void TtaSetTextZone (Document document, View view, int index, STRING text)
 {

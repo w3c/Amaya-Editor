@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -47,14 +47,7 @@ extern int Y_Pos;
 /*----------------------------------------------------------------------
   DrawOutline :                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void DrawOutline (HWND hwnd, POINT ptBeg, POINT ptEnd)
-#else  /* __STDC__ */
-static void DrawOutline (hwnd, ptBeg, ptEnd)
-HWND  hwnd; 
-POINT ptBeg; 
-POINT ptEnd;
-#endif /* __STDC__ */
 {
   HDC hdc;
   POINT ptTab [2];
@@ -75,14 +68,7 @@ POINT ptEnd;
 /*----------------------------------------------------------------------
   DrawOutpolygon :                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void DrawOutpolygon (HWND hwnd, POINT* pt, int nb)
-#else  /* __STDC__ */
-void DrawOutpolygon (hwnd, pt, nb)
-HWND  hwnd; 
-POINT pt; 
-int   nb;
-#endif /* __STDC__ */
 {
   HDC hdc;
 
@@ -100,17 +86,7 @@ int   nb;
   VideoInvert switch to inverse video the area of frame located at
   (x,y) and of size width x height.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         VideoInvert (int frame, int width, int height, int x, int y)
-#else  /* __STDC__ */
-static void         VideoInvert (frame, width, height, x, y)
-int                 frame;
-int                 width;
-int                 height;
-int                 x;
-int                 y;
-
-#endif /* __STDC__ */
+static void VideoInvert (int frame, int width, int height, int x, int y)
 {
   ThotWindow          w;
 
@@ -137,18 +113,8 @@ int                 y;
   BoxGeometry set the geometry of the fake box used to interract with
   the user.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr)
-#else  /* __STDC__ */
-static void    BoxGeometry (frame, x, y, width, height, xr, yr)
-int            frame;
-int            x;
-int            y;
-int            width;
-int            height;
-int            xr;
-int            yr;
-#endif /* __STDC__ */
+static void BoxGeometry (int frame, int x, int y, int width, int height,
+			 int xr, int yr)
 {
   if (width > 0)
     /*upper border */
@@ -171,18 +137,8 @@ int            yr;
   InvertEllipse set the geometry of the fake box used to interract with
   the user.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    InvertEllipse (int frame, int x, int y, int width, int height, int xr, int yr)
-#else  /* __STDC__ */
-static void    InvertEllipse (frame, x, y, width, height, xr, yr)
-int            frame;
-int            x;
-int            y;
-int            width;
-int            height;
-int            xr;
-int            yr;
-#endif /* __STDC__ */
+static void InvertEllipse (int frame, int x, int y, int width, int height,
+			   int xr, int yr)
 {
   ThotWindow          w;
 #ifdef _WINDOWS
@@ -221,24 +177,9 @@ int            yr;
   - x2, y2 point
   - x3, y3 successor of point
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, ThotBool close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3)
-#else  /* __STDC__ */
-static void    RedrawPolyLine (frame, x, y, buffer, nb, point, close, x1, y1, x2, y2, x3, y3)
-int            frame;
-int            x;
-int            y;
-PtrTextBuffer  buffer;
-int            nb;
-int            point;
-ThotBool       close;
-int           *x1;
-int           *y1;
-int           *x2;
-int           *y2;
-int           *x3;
-int           *y3;
-#endif /* __STDC__ */
+static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
+			    int nb, int point, ThotBool close, int *x1,
+			    int *y1, int *x2, int *y2, int *x3, int *y3)
 {
   ThotWindow          w;
   ThotPoint          *points;
@@ -334,29 +275,10 @@ int           *y3;
    - Pbuffer and Bbuffer point to the current Abstract Box buffer and
      Box buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void      AddPoints (int frame, int x, int y, int x1, int y1, int x3, int y3,
-			    int lastx, int lasty, int point, int *nbpoints, int maxPoints,
-			    int width, int height, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
-#else  /* __STDC__ */
-static void      AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, nbpoints, maxPoints, width, height, Pbuffer, Bbuffer)
-int              frame;
-int              x;
-int              y;
-int              x1;
-int              y1;
-int              x3;
-int              y3;
-int              lastx;
-int              lasty;
-int              point;
-int             *nbpoints;
-int              maxPoints;
-int              width;
-int              height;
-PtrTextBuffer    Pbuffer;
-PtrTextBuffer    Bbuffer;
-#endif /* __STDC__ */
+static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
+		       int y3, int lastx, int lasty, int point,
+		       int *nbpoints, int maxPoints, int width, int height,
+		       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 {
   ThotWindow          w;
   ThotEvent           event;
@@ -741,27 +663,10 @@ PtrTextBuffer    Bbuffer;
    - Pbuffer and Bbuffer point to the current Abstract Box buffer and
      Box buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void      MoveApoint (int frame, int x, int y, int x1, int y1, int x3, int y3,
-			    int lastx, int lasty, int point,
-			    int width, int height, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
-#else  /* __STDC__ */
-static void      MoveApoint (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer)
-int              frame;
-int              x;
-int              y;
-int              x1;
-int              y1;
-int              x3;
-int              y3;
-int              lastx;
-int              lasty;
-int              point;
-int              width;
-int              height;
-PtrTextBuffer    Pbuffer;
-PtrTextBuffer    Bbuffer;
-#endif /* __STDC__ */
+static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
+			int y3, int lastx, int lasty, int point,
+			int width, int height, PtrTextBuffer Pbuffer,
+			PtrTextBuffer Bbuffer)
 {
   ThotWindow          w;
   ThotEvent           event;
@@ -1003,16 +908,8 @@ PtrTextBuffer    Bbuffer;
   This fonction updates both list of control points and
   returns the number of point in the polyline.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox, int maxPoints)
-#else  /* __STDC__ */
-int                 PolyLineCreation (frame, xOrg, yOrg, pBox, maxPoints)
-int                 frame;
-int                *xOrg;
-int                *yOrg;
-PtrBox              pBox;
-int                 maxPoints;
-#endif /* __STDC__ */
+int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
+		      int maxPoints)
 {
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
@@ -1057,18 +954,8 @@ int                 maxPoints;
   point expricitely indicate the point to be moved.
   This fonction updates both  list of control points.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox, int nbpoints, int point, ThotBool close)
-#else  /* __STDC__ */
-void                PolyLineModification (frame, xOrg, yOrg, pBox, nbpoints, point, close)
-int                 frame;
-int                *xOrg;
-int                *yOrg;
-PtrBox              pBox;
-int                 nbpoints;
-int                 point;
-ThotBool            close;
-#endif /* __STDC__ */
+void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
+			   int nbpoints, int point, ThotBool close)
 {
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
@@ -1120,18 +1007,8 @@ ThotBool            close;
   This fonction updates both  list of control points and
   returns the new number of points in the polyline.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int              PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox, int nbpoints, int point, ThotBool close)
-#else  /* __STDC__ */
-int              PolyLineExtension (frame, xOrg, yOrg, pBox, nbpoints, point, close)
-int              frame;
-int             *xOrg;
-int             *yOrg;
-PtrBox           pBox;
-int              nbpoints;
-int              point;
-ThotBool         close;
-#endif /* __STDC__ */
+int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
+		       int nbpoints, int point, ThotBool close)
 {
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
@@ -1169,20 +1046,11 @@ ThotBool         close;
 /*----------------------------------------------------------------------
   LineCreation interracts with the user to read points forming
   a line in a given frame.
-  *x1 and *y1 values give the initial position of the box pBox in the frame.
+  *x1 and *y1 values give the initial position of the box pBox in the frame
   This fonction returns position of extremities: x1, y1 and x2, y2.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2, int *y2)
-#else  /* __STDC__ */
-int                 LineCreation (frame, pBox, x1, y1, x2, y2)
-int                 frame;
-PtrBox              pBox;
-int                *x1;
-int                *y1;
-int                *x2;
-int                *y2;
-#endif /* __STDC__ */
+int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
+		  int *y2)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      draw;
@@ -1240,16 +1108,7 @@ int                *y2;
   Values xi, yi give the initial position of the box origin in the window.
   This fonction returns the new position of the extremity: xi, yi.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
-#else  /* __STDC__ */
-void                LineModification (frame, pBox, point, xi, yi)
-int                 frame;
-PtrBox              pBox;
-int                 point;
-int                *xi;
-int                *yi;
-#endif /* __STDC__ */
+void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
 {
   ViewFrame          *pFrame;
   PtrTextBuffer       pBuffer;
@@ -1343,25 +1202,9 @@ int                *yi;
   Resizing
   This function returns the new dimensions of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         Resizing (int frame, int *x, int *y, int *width, int *height, PtrBox box, int xmin, int xmax, int ymin, int ymax, int xm, int ym, int percentW, int percentH)
-#else  /* __STDC__ */
-static void         Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH)
-int                 frame;
-int                *x;
-int                *y;
-int                *width;
-int                *height;
-PtrBox              box;
-int                 xmin;
-int                 xmax;
-int                 ymin;
-int                 ymax;
-int                 xm;
-int                 ym;
-int                 percentW;
-int                 percentH;
-#endif /* __STDC__ */
+static void Resizing (int frame, int *x, int *y, int *width, int *height,
+		      PtrBox box, int xmin, int xmax, int ymin, int ymax,
+		      int xm, int ym, int percentW, int percentH)
 {
 #define C_TOP 0
 #define C_HCENTER 1
@@ -1930,25 +1773,9 @@ int                 percentH;
   if height is equal to width).
   This function returns the new dimensions of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GeometryResize (int frame, int x, int y, int *width, int *height, PtrBox box, int xmin, int xmax, int ymin, int ymax, int xm, int ym, int percentW, int percentH)
-#else  /* __STDC__ */
-void                GeometryResize (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH)
-int                 frame;
-int                 x;
-int                 y;
-int                *width;
-int                *height;
-PtrBox              box;
-int                 xmin;
-int                 xmax;
-int                 ymin;
-int                 ymax;
-int                 xm;
-int                 ym;
-int                 percentW;
-int                 percentH;
-#endif /* __STDC__ */
+void GeometryResize (int frame, int x, int y, int *width, int *height,
+		     PtrBox box, int xmin, int xmax, int ymin, int ymax,
+		     int xm, int ym, int percentW, int percentH)
 {
   ThotWindow          w;
 #ifndef _WINDOWS
@@ -1984,23 +1811,9 @@ int                 percentH;
   Moving
   This function returns the new position (x, y) of the reference point of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         Moving (int frame, int *x, int *y, int width, int height, PtrBox box, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
-#else  /* __STDC__ */
-static void         Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym)
-int                 frame;
-int                *x;
-int                *y;
-int                 width;
-int                 height;
-PtrBox              box;
-int                 xmin;
-int                 xmax;
-int                 ymin;
-int                 ymax;
-int                 xm;
-int                 ym;
-#endif /* __STDC__ */
+static void Moving (int frame, int *x, int *y, int width, int height,
+		    PtrBox box, int xmin, int xmax, int ymin, int ymax,
+		    int xm, int ym)
 {
    ThotEvent           event;
    ThotWindow          w;
@@ -2304,23 +2117,9 @@ int                 ym;
   xm and ym gives the initial mouse coordinates in the frame.
   This function returns the new position (x, y) of the origin.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GeometryMove (int frame, int *x, int *y, int width, int height, PtrBox box, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
-#else  /* __STDC__ */
-void                GeometryMove (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym)
-int                 frame;
-int                *x;
-int                *y;
-int                 width;
-int                 height;
-PtrBox              box;
-int                 xmin;
-int                 xmax;
-int                 ymin;
-int                 ymax;
-int                 xm;
-int                 ym;
-#endif /* __STDC__ */
+void GeometryMove (int frame, int *x, int *y, int width, int height,
+		   PtrBox box, int xmin, int xmax, int ymin, int ymax,
+		   int xm, int ym)
 {
    ThotWindow          w;
 #ifdef _WINDOWS
@@ -2367,27 +2166,10 @@ int                 ym;
   - x, y the position of the origin.
   - width, height the dimension of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GeometryCreate (int frame, int *x, int *y, int *width, int *height, int xmin, int xmax, int ymin, int ymax, PtrBox box, int PosX, int PosY, int DimX, int DimY, int percentW, int percentH)
-#else  /* __STDC__ */
-void                GeometryCreate (frame, x, y, width, height, xmin, xmax, ymin, ymax, box, PosX, PosY, DimX, DimY, percentW, percentH)
-int                 frame;
-int                *x;
-int                *y;
-int                *width;
-int                *height;
-int                 xmin;
-int                 xmax;
-int                 ymin;
-int                 ymax;
-PtrBox              box;
-int                 PosX;
-int                 PosY;
-int                 DimX;
-int                 DimY;
-int                 percentW;
-int                 percentH;
-#endif /* __STDC__ */
+void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
+		     int xmin, int xmax, int ymin, int ymax, PtrBox box,
+		     int PosX, int PosY, int DimX, int DimY, int percentW,
+		     int percentH)
 {
   ThotWindow          w;
   ThotEvent           event;

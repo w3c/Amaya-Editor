@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /*
    Edition functions == file, view, import, and export menus
  *
@@ -66,12 +57,7 @@ static CHAR_T       DirectoryImage[MAX_PATH];
    validates or invalidates the presentation type according to the
    image type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CheckPresImage (int indexType)
-#else  /* __STDC__ */
-static void         CheckPresImage (indexType)
-int                 indexType;
-#endif /* __STDC__ */
 {
   if (indexType == XBM_FORMAT || indexType == XPM_FORMAT)
     {
@@ -167,16 +153,7 @@ static void         InitPathImage ()
    CallbackPictureMenu
    records the return values of the Picture form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CallbackPictureMenu (int ref, int typeData, STRING txt)
-
-#else  /* __STDC__ */
-void                CallbackPictureMenu (ref, typeData, txt)
-int                 ref;
-int                 typeData;
-STRING              txt;
-
-#endif /* __STDC__ */
+void CallbackPictureMenu (int ref, int typeData, STRING txt)
 {
    PathBuffer          completeName;
    int                 i, val;
@@ -303,17 +280,7 @@ STRING              txt;
   BuildPictureMenu
   This menu is called whenever an image is modified.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                BuildPictureMenu (STRING name, ThotBool * result, int *typim, int *pres, PtrBox pBox)
-#else  /* __STDC__ */
-void                BuildPictureMenu (name, result, typim, pres, pBox)
-STRING              name;
-ThotBool           *result;
-int                *typim;
-int                *pres;
-int                *pres;
-PtrBox              pBox;
-#endif /* __STDC__ */
+void BuildPictureMenu (STRING name, ThotBool * result, int *typim, int *pres, PtrBox pBox)
 {
    int                 i, indx;
    char                bufTypeImage[MAX_TXT_LEN];

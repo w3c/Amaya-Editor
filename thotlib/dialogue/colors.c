@@ -9,7 +9,7 @@
  * Colors Keyboard routines
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -47,6 +47,7 @@ static ThotBool PalMessageSet1 = TRUE;
 #define MAX_ARGS 20
 
 #ifdef _WINDOWS
+#include "wininclude.h"
 #define HORIZ_DIV  8
 #define VERT_DIV  19
 #define Button1    1		
@@ -55,17 +56,9 @@ static ThotBool PalMessageSet1 = TRUE;
 #endif /* _IDDONE_ */
 #define _IDDONE_     100
 #define DEFAULTCOLOR 103
-
 static BOOL   wndRegistered = FALSE;
 static HWND   HwndColorPal  = (HWND)0;
-
 extern LPCTSTR iconID;
-
-#ifdef __STDC__
-LRESULT CALLBACK ThotColorPaletteWndProc (HWND, UINT, WPARAM, LPARAM);
-#else  /* __STDC__ */
-LRESULT CALLBACK ThotColorPaletteWndProc ();
-#endif /* __STDC__ */
 #endif /* _WINDOWS */
 
 static ThotWindow   Color_Window = 0;
@@ -85,22 +78,14 @@ static ThotGC       GCkey;
 #include "xwindowdisplay_f.h"
 
 #ifdef _WINDOWS
-#include "wininclude.h"
-
-static int   WIN_LastFg, WIN_CurrentFg, WIN_LastBg, WIN_CurrentBg;
+static int          WIN_LastFg, WIN_CurrentFg, WIN_LastBg, WIN_CurrentBg;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    ThotSelectPalette
    Shows the current selection.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ThotSelectPalette (int bground, int fground)
-#else  /* __STDC__ */
-static void         ThotSelectPalette (bground, fground)
-int                 bground;
-int                 fground;
-#endif /* __STDC__ */
+static void ThotSelectPalette (int bground, int fground)
 {
 #ifndef _GTK
 #ifdef _WINDOWS 
@@ -188,41 +173,12 @@ int                 fground;
 }
 
 
-/*----------------------------------------------------------------------
-   EndPalette
-   Ends the display of the palette.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EndPalette (ThotWidget w, int index, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         EndPalette (w, index, call_d)
-ThotWidget          w;
-int                 index;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
-{
-#ifndef _WINDOWS
-   XtPopdown (Color_Palette);
-#endif
-}
-
 
 /*----------------------------------------------------------------------
    KillPalette
    kills the palette.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         KillPalette (ThotWidget w, int index, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         KillPalette (w, index, call_d)
-ThotWidget          w;
-int                 index;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
+static void KillPalette (ThotWidget w, int index, caddr_t call_d)
 {
    Color_Palette = 0;
    Color_Window = 0;
@@ -233,14 +189,14 @@ caddr_t             call_d;
    ColorsExpose
    redisplays a color keyboard.
   ----------------------------------------------------------------------*/
-static void         ColorsExpose ()
+static void ColorsExpose ()
 {
 #ifndef _GTK
    int                 max, y, w, h;
 #ifndef _WINDOWS 
+   char               *ptr;
    register int        i;
    int                 x;
-   STRING              ptr;
    int                 fground, bground;
 #endif /* !_WINDOWS */
    int                 wcase, hcase;
@@ -268,7 +224,7 @@ static void         ColorsExpose ()
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
    ptr = TtaGetMessage (LIB, TMSG_STD_COLORS);
    WChaine (Color_Window, ptr,
-	    (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, ustrlen (ptr)) / 2),
+	    (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, strlen (ptr)) / 2),
 	    0, FontDialogue, TtLineGC);
 
    /* grille */
@@ -285,7 +241,7 @@ static void         ColorsExpose ()
 	   x = (i % COLORS_COL) * wcase;
 	   y = ((i / COLORS_COL) + 1) * hcase;
 	   WChaine (Color_Window, ColorName (i),
-		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ColorName (i), ustrlen (ColorName (i))) / 2),
+		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ColorName (i), strlen (ColorName (i))) / 2),
 		    y, SmallFontDialogue, TtLineGC);
 	}
    else
@@ -312,117 +268,437 @@ static void         ColorsExpose ()
    ColorsPress
    handles a click on the color palette
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ColorsPress (int button, int x, int y)
-#else  /* __STDC__ */
-static void         ColorsPress (button, x, y)
-int                 button;
-int                 x;
-int                 y;
-#endif /* __STDC__ */
 {
-   int                 color, li, co;
+  int                 color, li, co;
 #ifndef _WINDOWS
-   int                 wcase, hcase;
+  int                 wcase, hcase;
 
-   if (TtWDepth == 1)
-      /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CharacterWidth ('m', FontDialogue) * 12;
-   else
-      /* Affiche les couleurs sur un ecran couleur */
-      wcase = CharacterWidth ('m', FontDialogue) * 4;
-   hcase = FontHeight (FontDialogue);
-
-   /* Regarde si on n'a pas clique dans le titre */
-   if (y < hcase)
-     {
-	if (button == Button1)
-	  {
-	     /* couleur de trace' standard */
-	     ModifyColor (-1, FALSE);
-	     ThotSelectPalette (LastBg, -1);
-	  }
-	else
-	  {
-	     /* couleur de fond standard */
-	     ModifyColor (-1, TRUE);
-	     ThotSelectPalette (-1, LastFg);
-	  }
-	return;
-     }
-
-   li = x / wcase;
-   co = (y - hcase) / hcase;
-   color = co * COLORS_COL + li;
+  if (TtWDepth == 1)
+    /* Affiche le nom des couleurs sur un ecran N&B */
+    wcase = CharacterWidth ('m', FontDialogue) * 12;
+  else
+    /* Affiche les couleurs sur un ecran couleur */
+    wcase = CharacterWidth ('m', FontDialogue) * 4;
+  hcase = FontHeight (FontDialogue);
+  
+  /* Regarde si on n'a pas clique dans le titre */
+  if (y < hcase)
+    {
+      if (button == Button1)
+	{
+	  /* couleur de trace' standard */
+	  ModifyColor (-1, FALSE);
+	  ThotSelectPalette (LastBg, -1);
+	}
+      else
+	{
+	  /* couleur de fond standard */
+	  ModifyColor (-1, TRUE);
+	  ThotSelectPalette (-1, LastFg);
+	}
+      return;
+    }
+  li = x / wcase;
+  co = (y - hcase) / hcase;
+  color = co * COLORS_COL + li;
 
 #else  /* _WINDOWS  */
-   if (y < 60 || y > 345) {
-	  if (button == Button1) {
-	     /* couleur de trace' standard */
-		 fgcolor = -1;
-		 if (applyToSelection)
-		 {
-	         ModifyColor (-1, FALSE);
-	         ThotSelectPalette (LastBg, -1);
-		 }
-	  } else {
-	       /* couleur de fond standard */
-		  bgcolor = -1;
-		  if (applyToSelection)
-		  {
-	        ModifyColor (-1, TRUE);
-	        ThotSelectPalette (-1, LastFg);
-		  }
-	  }
-	  return;
-   } 
-   li = (y - 60) / 15;
-   co = x / 39;
-   color = co + li * COLORS_COL;
+  if (y < 60 || y > 345)
+    {
+      if (button == Button1)
+	{
+	  /* couleur de trace' standard */
+	  fgcolor = -1;
+	  if (applyToSelection)
+	    {
+	      ModifyColor (-1, FALSE);
+	      ThotSelectPalette (LastBg, -1);
+	    }
+	}
+      else
+	{
+	  /* couleur de fond standard */
+	  bgcolor = -1;
+	  if (applyToSelection)
+	    {
+	      ModifyColor (-1, TRUE);
+	      WIN_CurrentBg = -1;
+	    }
+	}
+      return;
+    } 
+  li = (y - 60) / 15;
+  co = x / 39;
+  color = co + li * COLORS_COL;
 #endif /* _WINDOWS */
-   if (button == Button1)
-     {
-       /* selectionne la couleur de trace' */
-       fgcolor = color;
-       if (applyToSelection)
-	 {
-	   ModifyColor (color, FALSE);
-	   ThotSelectPalette (LastBg, color);
-	 }
-     }
-   else
-     {
-       /* selectionne la couleur de fond */
-       bgcolor = color;
-       if (applyToSelection)
-	 {
-	   ModifyColor (color, TRUE);
-	   ThotSelectPalette (color, LastFg);
-	 }
-     }
+  if (button == Button1)
+    {
+      /* selectionne la couleur de trace' */
+      fgcolor = color;
+      if (applyToSelection)
+	{
+	  ModifyColor (color, FALSE);
+	  ThotSelectPalette (LastBg, color);
+	}
+    }
+  else
+    {
+      /* selectionne la couleur de fond */
+      bgcolor = color;
+      if (applyToSelection)
+	{
+	  ModifyColor (color, TRUE);
+	  ThotSelectPalette (color, LastFg);
+	}
+    }
 }
 
 
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+ ThotColorPaletteWndProc
+  ----------------------------------------------------------------------*/
+LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+{
+  static BOOL fState[HORIZ_DIV][VERT_DIV];
+  static int  cxBlock, cyBlock;
+  static BOOL inColorArea = FALSE;
+  HDC         hdc;
+  PAINTSTRUCT ps;
+  HBRUSH      hBrush;
+  HBRUSH      hOldBrush;
+  HPEN        hPen;
+  HPEN        hOldPen;
+  int         x, y, nbPalEntries;
+  int         YPos;
+  int         red, green, blue;
+  HWND        hwnLButton;
+  HWND        hwnRButton;
+  HWND        hwnDefaultColors;
+  HWND        doneButton;
+
+  switch (iMsg)
+    {
+    case WM_CREATE:
+      cxBlock = 39;
+      cyBlock = 15;
+      hwnLButton = CreateWindow ("STATIC",
+			     (applyToSelection || PalMessageSet1)
+				  ? TtaGetMessage (LIB, TMSG_BUTTON_1)
+				  : TtaGetMessage (LIB, TMSG_CPBUTTON_1), 
+				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 320, 20,
+				 hwnd, (HMENU) 99, hInstance, NULL);
+      ShowWindow (hwnLButton, SW_SHOWNORMAL);
+      UpdateWindow (hwnLButton);
+    
+      hwnRButton = CreateWindow ("STATIC",
+			     (applyToSelection ||  PalMessageSet1)
+				  ? TtaGetMessage (LIB, TMSG_BUTTON_2)
+				  : TtaGetMessage (LIB, TMSG_CPBUTTON_2), 
+				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 20, 320, 20,
+				 hwnd, (HMENU) 101, hInstance, NULL);
+      ShowWindow (hwnRButton, SW_SHOWNORMAL);
+      UpdateWindow (hwnRButton);
+      
+      hwnDefaultColors = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_STD_COLORS), 
+				       WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 40, 320, 20,
+				       hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL); 
+      ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
+      UpdateWindow (hwnDefaultColors);
+      
+      doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				 95, 350, 80, 20, hwnd, 
+				 (HMENU) _IDDONE_, hInstance, NULL);
+      ShowWindow (doneButton, SW_SHOWNORMAL);
+      UpdateWindow (doneButton);
+    break;
+    
+    case WM_LBUTTONDOWN:
+      YPos = HIWORD (lParam);
+      if (HIWORD (lParam) >= 40 && HIWORD (lParam) <= 345) {
+         ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
+	  
+         /* Switch off last FG color */
+         if (WIN_LastFg >= 0 && WIN_LastFg != WIN_CurrentFg) {
+            x = (WIN_LastFg % COLORS_COL) * 39;
+            y = (WIN_LastFg / COLORS_COL) * 15 + 60;
+	      
+            hdc = GetDC (hwnd);
+            hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
+            hOldBrush = SelectObject (hdc, hBrush);
+            Rectangle (hdc, x, y, x + 39, y + 15);
+            SelectObject (hdc, hOldBrush);
+            DeleteObject (hBrush);
+            EndPaint (hwnd, &ps);
+            DeleteDC (hdc);
+	 }
+      
+	  /* Switch on last FG color */
+	  if (WIN_LastFg != WIN_CurrentFg)
+	    {
+	      WIN_LastFg = WIN_CurrentFg;
+	      x = (WIN_LastFg % COLORS_COL) * 39;
+	      y = (WIN_LastFg / COLORS_COL) * 15 + 60;
+	      x += 1;
+	      y += 1;
+	      
+	      hdc = GetDC (hwnd);
+	      red   = 255 - RGB_Table [WIN_LastFg].red;
+	      green = 255 - RGB_Table [WIN_LastFg].green;
+	      blue  = 255 - RGB_Table [WIN_LastFg].blue;
+	      hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
+	      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
+	      hOldPen = SelectObject (hdc, hPen);
+	      hOldBrush = SelectObject (hdc, hBrush);
+	      Rectangle (hdc, x, y, x + 37, y + 13);
+	      SelectObject (hdc, hOldBrush);
+	      DeleteObject (hBrush);
+	      SelectObject (hdc, hOldPen);
+	      DeleteObject (hPen);
+	      EndPaint (hwnd, &ps);
+	      DeleteDC (hdc);
+	    }
+	  /* SetFocus (FrRef[currentFrame]); */
+	  /* destroy the menu right away */
+      if (!applyToSelection)
+	  {
+	    DeleteObject (TtCmap);
+	    TtCmap = 0;
+	    DestroyWindow (hwnd);
+	  }
+	} 
+      break;
+      
+    case WM_MBUTTONDOWN:
+      ColorsPress (2, LOWORD (lParam), HIWORD (lParam));
+      /* Switch off last BG color */
+      if (WIN_LastBg >= 0 && WIN_LastBg != WIN_CurrentBg)
+	{
+	  x = (WIN_LastBg % COLORS_COL) * 39;
+	  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
+      
+	  hdc = GetDC (hwnd);
+	  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
+	  hOldBrush = SelectObject (hdc, hBrush);
+	  Rectangle (hdc, x, y, x + 39, y + 15);
+	  SelectObject (hdc, hOldBrush);
+	  DeleteObject (hBrush);
+	  EndPaint (hwnd, &ps);
+	  DeleteDC (hdc);
+	}
+
+      /* Switch on last FG color */
+      if (WIN_LastBg != WIN_CurrentBg)
+	{
+	  WIN_LastBg = WIN_CurrentBg;
+	  x = (WIN_LastBg % COLORS_COL) * 39;
+	  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
+	  x += 1;
+	  y += 1;
+	  
+	  hdc = GetDC (hwnd);
+	  red   = 255 - RGB_Table [WIN_LastBg].red;
+	  green = 255 - RGB_Table [WIN_LastBg].green;
+	  blue  = 255 - RGB_Table [WIN_LastBg].blue;
+	  hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
+	  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
+	  hOldPen = SelectObject (hdc, hPen);
+	  hOldBrush = SelectObject (hdc, hBrush);
+	  Rectangle (hdc, x, y, x + 37, y + 13);
+	  SelectObject (hdc, hOldBrush);
+	  DeleteObject (hBrush);
+	  SelectObject (hdc, hOldPen);
+	  DeleteObject (hPen);
+	  EndPaint (hwnd, &ps);
+	  DeleteDC (hdc);
+	}
+      /* SetFocus (FrRef[currentFrame]); */
+	  /* destroy the menu right away */
+      if (!applyToSelection)
+	  {
+	    DeleteObject (TtCmap);
+	    TtCmap = 0;
+	    DestroyWindow (hwnd);
+	  }
+      break;
+      
+    case WM_RBUTTONDOWN:
+      ColorsPress (3, LOWORD (lParam), HIWORD (lParam));
+      /* Switch off last BG color */
+      if (WIN_LastBg >= 0 && WIN_LastBg != WIN_CurrentBg)
+	{
+	  x = (WIN_LastBg % COLORS_COL) * 39;
+	  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
+	  
+	  hdc = GetDC (hwnd);
+	  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
+	  hOldBrush = SelectObject (hdc, hBrush);
+	  Rectangle (hdc, x, y, x + 39, y + 15);
+	  SelectObject (hdc, hOldBrush);
+	  DeleteObject (hBrush);
+	  /* SelectObject (hdc, hOldPen); */
+	  EndPaint (hwnd, &ps);
+	  DeleteDC (hdc);
+	}
+	  
+      /* Switch on last FG color */
+      if (WIN_LastBg != WIN_CurrentBg)
+	{
+	  WIN_LastBg = WIN_CurrentBg;
+	  x = (WIN_LastBg % COLORS_COL) * 39;
+	  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
+	  x += 1;
+	  y += 1;
+	  
+	  hdc = GetDC (hwnd);
+	  red   = 255 - RGB_Table [WIN_LastBg].red;
+	  green = 255 - RGB_Table [WIN_LastBg].green;
+	  blue  = 255 - RGB_Table [WIN_LastBg].blue;
+	  hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
+	  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
+	  hOldPen = SelectObject (hdc, hPen);
+	  hOldBrush = SelectObject (hdc, hBrush);
+	  Rectangle (hdc, x, y, x + 37, y + 13);
+	  SelectObject (hdc, hOldBrush);
+	  DeleteObject (hBrush);
+	  SelectObject (hdc, hOldPen);
+	  DeleteObject (hPen);
+	  EndPaint (hwnd, &ps);
+	  DeleteDC (hdc);
+	}
+      
+      /* SetFocus (FrRef[currentFrame]); */
+	  /* destroy the menu right away */
+      if (!applyToSelection)
+	  {
+	    DeleteObject (TtCmap);
+
+	     TtCmap = 0;
+	    DestroyWindow (hwnd);
+	  }
+      break;
+      
+    case WM_PAINT:
+      CheckTtCmap ();
+      if (TtCmap == NULL) 
+         WinErrorBox (WIN_Main_Wd, "ThotColor: WM_PAINT");
+      else
+	{
+	  hdc = BeginPaint (hwnd, &ps);
+	  SelectPalette (hdc, TtCmap, FALSE);
+	  nbPalEntries = RealizePalette (hdc);
+	  
+	  for (y = 0; y < VERT_DIV; y++)
+	    for (x = 0; x < HORIZ_DIV; x++)
+	      {
+		hBrush = CreateSolidBrush (PALETTEINDEX (x + y * HORIZ_DIV));
+		hOldBrush = SelectObject (hdc, hBrush);
+		Rectangle (hdc, x * cxBlock, (y * cyBlock) + 60,(x + 1) * cxBlock, (y + 1) * cyBlock + 60);
+		SelectObject (hdc, hOldBrush);
+		if (!DeleteObject (hBrush))
+		  WinErrorBox (WIN_Main_Wd, "ThotColor: WM_PAINT");
+		hBrush = (HBRUSH) 0;
+	      }
+	  
+	  /* Switch on last FG color */
+	  if (WIN_CurrentFg >= 0)
+	    {
+	      WIN_LastFg = WIN_CurrentFg;
+	      x = (WIN_LastFg % COLORS_COL) * 39;
+	      y = (WIN_LastFg / COLORS_COL) * 15 + 60;
+	      x += 1;
+	      y += 1;
+	    
+	      red   = 255 - RGB_Table [WIN_LastFg].red;
+	      green = 255 - RGB_Table [WIN_LastFg].green;
+	      blue  = 255 - RGB_Table [WIN_LastFg].blue;
+	      hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
+	      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
+	      hOldPen = SelectObject (hdc, hPen);
+	      hOldBrush = SelectObject (hdc, hBrush);
+	      Rectangle (hdc, x, y, x + 37, y + 13);
+	      SelectObject (hdc, hOldBrush);
+	      DeleteObject (hBrush);
+	      SelectObject (hdc, hOldPen);
+	      DeleteObject (hPen);
+	      EndPaint (hwnd, &ps);
+	      DeleteDC (hdc);
+	    }
+
+	  /* Switch on last BG color */
+	  if (WIN_CurrentBg >= 0 && WIN_CurrentBg != WIN_LastFg)
+	    {
+	      WIN_LastBg = WIN_CurrentBg;
+	      x = (WIN_LastBg % COLORS_COL) * 39;
+	      y = (WIN_LastBg / COLORS_COL) * 15 + 60;
+	      x += 1;
+	      y += 1;
+	      
+	      hdc = GetDC (hwnd);
+	      red   = 255 - RGB_Table [WIN_LastBg].red;
+	      green = 255 - RGB_Table [WIN_LastBg].green;
+	      blue  = 255 - RGB_Table [WIN_LastBg].blue;
+	      hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
+	      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
+	      hOldPen = SelectObject (hdc, hPen);
+	      hOldBrush = SelectObject (hdc, hBrush);
+	      Rectangle (hdc, x, y, x + 37, y + 13);
+	      SelectObject (hdc, hOldBrush);
+	      DeleteObject (hBrush);
+	      SelectObject (hdc, hOldPen);
+	      DeleteObject (hPen);
+	      EndPaint (hwnd, &ps);
+	      DeleteDC (hdc);
+	    }
+
+	  EndPaint (hwnd, &ps);
+	  DeleteDC (hdc);
+	} 
+      break;
+	
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case _IDDONE_:
+	  DeleteObject (TtCmap);
+	  TtCmap = 0;
+	  DestroyWindow (hwnd);
+	  break;
+	}
+    case WM_CLOSE:
+    case WM_DESTROY :
+      HwndColorPal = (HWND) 0;
+      PostQuitMessage (0);
+      break;
+    }
+  return DefWindowProc (hwnd, iMsg, wParam, lParam);
+}
+#else /* _WINDOWS */
+
+/*----------------------------------------------------------------------
+   EndPalette
+   Ends the display of the palette.
+  ----------------------------------------------------------------------*/
+static void EndPalette (ThotWidget w, int index, caddr_t call_d)
+{
+  XtPopdown (Color_Palette);
+}
+
 /*----------------------------------------------------------------------
    ColorsEvent
    handles the X events of the palette.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ColorsEvent (ThotEvent * event)
-#else  /* __STDC__ */
-void                ColorsEvent (event)
-ThotEvent             *event;
-
-#endif /* __STDC__ */
+void ColorsEvent (ThotEvent * event)
 {
-   if (event->xbutton.window == Color_Window && Color_Window != 0)
-     {
-	if (event->type == Expose)
-	   ColorsExpose ();
-	else if (event->type == ButtonPress)
-	   ColorsPress (event->xbutton.button, event->xbutton.x, event->xbutton.y);
-     }
+  if (event->xbutton.window == Color_Window && Color_Window != 0)
+    {
+      if (event->type == Expose)
+	ColorsExpose ();
+      else if (event->type == ButtonPress)
+	ColorsPress (event->xbutton.button, event->xbutton.x, event->xbutton.y);
+    }
 }
 #endif /* !_WINDOWS */
 
@@ -431,26 +707,20 @@ ThotEvent             *event;
    ThotCreatePalette
    creates the color palette.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ThotCreatePalette (int x, int y)
-#else  /* __STDC__ */
-ThotBool            ThotCreatePalette (x, y)
-int                 x;
-int                 y;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS
    int                 n;
    int                 width, height;
-   ThotWidget          w;
-   ThotWidget          row;
-   ThotWidget          frame;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    XmFontList          xfont;
    XGCValues           GCmodel;
-   CHAR_T                string[10];
+   char                string[10];
+   ThotWidget          w;
+   ThotWidget          row;
+   ThotWidget          frame;
 
    xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
    if (SmallFontDialogue == NULL)
@@ -658,6 +928,7 @@ int                 y;
    /* pas de selection precedente */
    LastBg = -1;
    LastFg = -1;
+
 #else  /* _WINDOWS */
    WNDCLASSEX  wndThotPaletteClass;
    int   frame;
@@ -677,7 +948,7 @@ int                 y;
       wndThotPaletteClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
       wndThotPaletteClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
       wndThotPaletteClass.lpszMenuName  = NULL;
-      wndThotPaletteClass.lpszClassName = TEXT("ThotColorPalette");
+      wndThotPaletteClass.lpszClassName = "ThotColorPalette";
       wndThotPaletteClass.cbSize        = sizeof(WNDCLASSEX);
       wndThotPaletteClass.hIconSm       = LoadIcon (hInstance, iconID);
 
@@ -685,7 +956,7 @@ int                 y;
          return FALSE;
    }
 
-   HwndColorPal = CreateWindow (TEXT("ThotColorPalette"), TtaGetMessage (LIB, TMSG_COLORS),
+   HwndColorPal = CreateWindow ("ThotColorPalette", TtaGetMessage (LIB, TMSG_COLORS),
                                DS_MODALFRAME | WS_POPUP | 
                                WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                ClickX, ClickY,
@@ -705,336 +976,6 @@ int                 y;
    return TRUE;
 }
 
-/*----------------------------------------------------------------------
- ThotColorPaletteWndProc
-  ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-#ifdef __STDC__
-LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
-#else  /* __STDC__ */
-LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
-#endif /* __STDC__ */
-{
-  static BOOL fState[HORIZ_DIV][VERT_DIV];
-  static int  cxBlock, cyBlock;
-  static BOOL inColorArea = FALSE;
-  HDC         hdc;
-  PAINTSTRUCT ps;
-  HBRUSH      hBrush;
-  HBRUSH      hOldBrush;
-  HPEN        hPen;
-  HPEN        hOldPen;
-  int         x, y, nbPalEntries;
-  int         YPos;
-  int         red, green, blue;
-  HWND        hwnLButton;
-  HWND        hwnRButton;
-  HWND        hwnDefaultColors;
-  HWND        doneButton;
-
-  switch (iMsg)
-    {
-    case WM_CREATE:
-      cxBlock = 39;
-      cyBlock = 15;
-      hwnLButton = CreateWindow (TEXT("STATIC"),
-			     (applyToSelection || PalMessageSet1)
-				  ? TtaGetMessage (LIB, TMSG_BUTTON_1)
-				  : TtaGetMessage (LIB, TMSG_CPBUTTON_1), 
-				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 320, 20,
-				 hwnd, (HMENU) 99, hInstance, NULL);
-      ShowWindow (hwnLButton, SW_SHOWNORMAL);
-      UpdateWindow (hwnLButton);
-    
-      hwnRButton = CreateWindow (TEXT("STATIC"),
-			     (applyToSelection ||  PalMessageSet1)
-				  ? TtaGetMessage (LIB, TMSG_BUTTON_2)
-				  : TtaGetMessage (LIB, TMSG_CPBUTTON_2), 
-				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 20, 320, 20,
-				 hwnd, (HMENU) 101, hInstance, NULL);
-      ShowWindow (hwnRButton, SW_SHOWNORMAL);
-      UpdateWindow (hwnRButton);
-      
-      hwnDefaultColors = CreateWindow (TEXT("STATIC"), TtaGetMessage (LIB, TMSG_STD_COLORS), 
-				       WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 40, 320, 20,
-				       hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL); 
-      ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
-      UpdateWindow (hwnDefaultColors);
-      
-      doneButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DONE), 
-				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				 95, 350, 80, 20, hwnd, 
-				 (HMENU) _IDDONE_, hInstance, NULL);
-      ShowWindow (doneButton, SW_SHOWNORMAL);
-      UpdateWindow (doneButton);
-    break;
-    
-    case WM_LBUTTONDOWN:
-      YPos = HIWORD (lParam);
-      if (HIWORD (lParam) >= 40 && HIWORD (lParam) <= 345) {
-         ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
-	  
-         /* Switch off last FG color */
-         if (WIN_LastFg >= 0 && WIN_LastFg != WIN_CurrentFg) {
-            x = (WIN_LastFg % COLORS_COL) * 39;
-            y = (WIN_LastFg / COLORS_COL) * 15 + 60;
-	      
-            hdc = GetDC (hwnd);
-            hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
-            hOldBrush = SelectObject (hdc, hBrush);
-            if (!Rectangle (hdc, x, y, x + 39, y + 15))
-               WinErrorBox (NULL, TEXT("ThotColorPaletteWndProc: WM_LBUTTONDOWN"));
-            SelectObject (hdc, hOldBrush);
-            DeleteObject (hBrush);
-            EndPaint (hwnd, &ps);
-            DeleteDC (hdc);
-		 }
-      
-	  /* Switch on last FG color */
-	  if (WIN_LastFg != WIN_CurrentFg)
-	    {
-	      WIN_LastFg = WIN_CurrentFg;
-	      x = (WIN_LastFg % COLORS_COL) * 39;
-	      y = (WIN_LastFg / COLORS_COL) * 15 + 60;
-	      x += 1;
-	      y += 1;
-	      
-	      hdc = GetDC (hwnd);
-	      red   = 255 - RGB_Table [WIN_LastFg].red;
-	      green = 255 - RGB_Table [WIN_LastFg].green;
-	      blue  = 255 - RGB_Table [WIN_LastFg].blue;
-	      hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
-	      hOldPen = SelectObject (hdc, hPen);
-	      hOldBrush = SelectObject (hdc, hBrush);
-	      Rectangle (hdc, x, y, x + 37, y + 13);
-	      SelectObject (hdc, hOldBrush);
-	      DeleteObject (hBrush);
-	      SelectObject (hdc, hOldPen);
-	      DeleteObject (hPen);
-	      EndPaint (hwnd, &ps);
-	      DeleteDC (hdc);
-	    }
-	  /* SetFocus (FrRef[currentFrame]); */
-	  /* destroy the menu right away */
-      if (!applyToSelection)
-	  {
-	    if (!DeleteObject (TtCmap))
-	       WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: _IDDONE_"));
-	     TtCmap = 0;
-	    DestroyWindow (hwnd);
-	  }
-	} 
-      break;
-      
-    case WM_MBUTTONDOWN:
-      ColorsPress (2, LOWORD (lParam), HIWORD (lParam));
-      /* Switch off last BG color */
-      if (WIN_LastBg >= 0 && WIN_LastBg != WIN_CurrentBg)
-	{
-	  x = (WIN_LastBg % COLORS_COL) * 39;
-	  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
-      
-	  hdc = GetDC (hwnd);
-	  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
-	  hOldBrush = SelectObject (hdc, hBrush);
-	  Rectangle (hdc, x, y, x + 39, y + 15);
-	  SelectObject (hdc, hOldBrush);
-	  DeleteObject (hBrush);
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	}
-
-      /* Switch on last FG color */
-      if (WIN_LastBg != WIN_CurrentBg)
-	{
-	  WIN_LastBg = WIN_CurrentBg;
-	  x = (WIN_LastBg % COLORS_COL) * 39;
-	  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
-	  x += 1;
-	  y += 1;
-	  
-	  hdc = GetDC (hwnd);
-	  red   = 255 - RGB_Table [WIN_LastBg].red;
-	  green = 255 - RGB_Table [WIN_LastBg].green;
-	  blue  = 255 - RGB_Table [WIN_LastBg].blue;
-	  hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
-	  hOldPen = SelectObject (hdc, hPen);
-	  hOldBrush = SelectObject (hdc, hBrush);
-	  Rectangle (hdc, x, y, x + 37, y + 13);
-	  SelectObject (hdc, hOldBrush);
-	  DeleteObject (hBrush);
-	  SelectObject (hdc, hOldPen);
-	  DeleteObject (hPen);
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	}
-      /* SetFocus (FrRef[currentFrame]); */
-	  /* destroy the menu right away */
-      if (!applyToSelection)
-	  {
-	    if (!DeleteObject (TtCmap))
-	       WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: _IDDONE_"));
-	     TtCmap = 0;
-	    DestroyWindow (hwnd);
-	  }
-      break;
-      
-    case WM_RBUTTONDOWN:
-      ColorsPress (3, LOWORD (lParam), HIWORD (lParam));
-      /* Switch off last BG color */
-      if (WIN_LastBg >= 0 && WIN_LastBg != WIN_CurrentBg)
-	{
-	  x = (WIN_LastBg % COLORS_COL) * 39;
-	  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
-	  
-	  hdc = GetDC (hwnd);
-	  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
-	  hOldBrush = SelectObject (hdc, hBrush);
-	  Rectangle (hdc, x, y, x + 39, y + 15);
-	  SelectObject (hdc, hOldBrush);
-	  DeleteObject (hBrush);
-	  /* SelectObject (hdc, hOldPen); */
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	}
-	  
-      /* Switch on last FG color */
-      if (WIN_LastBg != WIN_CurrentBg)
-	{
-	  WIN_LastBg = WIN_CurrentBg;
-	  x = (WIN_LastBg % COLORS_COL) * 39;
-	  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
-	  x += 1;
-	  y += 1;
-	  
-	  hdc = GetDC (hwnd);
-	  red   = 255 - RGB_Table [WIN_LastBg].red;
-	  green = 255 - RGB_Table [WIN_LastBg].green;
-	  blue  = 255 - RGB_Table [WIN_LastBg].blue;
-	  hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
-	  hOldPen = SelectObject (hdc, hPen);
-	  hOldBrush = SelectObject (hdc, hBrush);
-	  Rectangle (hdc, x, y, x + 37, y + 13);
-	  SelectObject (hdc, hOldBrush);
-	  DeleteObject (hBrush);
-	  SelectObject (hdc, hOldPen);
-	  DeleteObject (hPen);
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	}
-      
-      /* SetFocus (FrRef[currentFrame]); */
-	  /* destroy the menu right away */
-      if (!applyToSelection)
-	  {
-	    if (!DeleteObject (TtCmap))
-	       WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: _IDDONE_"));
-	     TtCmap = 0;
-	    DestroyWindow (hwnd);
-	  }
-      break;
-      
-    case WM_PAINT:
-      CheckTtCmap ();
-      if (TtCmap == NULL) 
-         WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: WM_PAINT"));
-      else
-	{
-	  hdc = BeginPaint (hwnd, &ps);
-	  SelectPalette (hdc, TtCmap, FALSE);
-	  nbPalEntries = RealizePalette (hdc);
-	  
-	  for (y = 0; y < VERT_DIV; y++)
-	    for (x = 0; x < HORIZ_DIV; x++)
-	      {
-		hBrush = CreateSolidBrush (PALETTEINDEX (x + y * HORIZ_DIV));
-		hOldBrush = SelectObject (hdc, hBrush);
-		Rectangle (hdc, x * cxBlock, (y * cyBlock) + 60,(x + 1) * cxBlock, (y + 1) * cyBlock + 60);
-		SelectObject (hdc, hOldBrush);
-		if (!DeleteObject (hBrush))
-		  WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: WM_PAINT"));
-		hBrush = (HBRUSH) 0;
-	      }
-	  
-	  /* Switch on last FG color */
-	  if (WIN_CurrentFg >= 0)
-	    {
-	      WIN_LastFg = WIN_CurrentFg;
-	      x = (WIN_LastFg % COLORS_COL) * 39;
-	      y = (WIN_LastFg / COLORS_COL) * 15 + 60;
-	      x += 1;
-	      y += 1;
-	    
-	      red   = 255 - RGB_Table [WIN_LastFg].red;
-	      green = 255 - RGB_Table [WIN_LastFg].green;
-	      blue  = 255 - RGB_Table [WIN_LastFg].blue;
-	      hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
-	      hOldPen = SelectObject (hdc, hPen);
-	      hOldBrush = SelectObject (hdc, hBrush);
-	      Rectangle (hdc, x, y, x + 37, y + 13);
-	      SelectObject (hdc, hOldBrush);
-	      DeleteObject (hBrush);
-	      SelectObject (hdc, hOldPen);
-	      DeleteObject (hPen);
-	      EndPaint (hwnd, &ps);
-	      DeleteDC (hdc);
-	    }
-
-	  /* Switch on last BG color */
-	  if (WIN_CurrentBg >= 0 && WIN_CurrentBg != WIN_LastFg)
-	    {
-	      WIN_LastBg = WIN_CurrentBg;
-	      x = (WIN_LastBg % COLORS_COL) * 39;
-	      y = (WIN_LastBg / COLORS_COL) * 15 + 60;
-	      x += 1;
-	      y += 1;
-	      
-	      hdc = GetDC (hwnd);
-	      red   = 255 - RGB_Table [WIN_LastBg].red;
-	      green = 255 - RGB_Table [WIN_LastBg].green;
-	      blue  = 255 - RGB_Table [WIN_LastBg].blue;
-	      hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
-	      hOldPen = SelectObject (hdc, hPen);
-	      hOldBrush = SelectObject (hdc, hBrush);
-	      Rectangle (hdc, x, y, x + 37, y + 13);
-	      SelectObject (hdc, hOldBrush);
-	      DeleteObject (hBrush);
-	      SelectObject (hdc, hOldPen);
-	      DeleteObject (hPen);
-	      EndPaint (hwnd, &ps);
-	      DeleteDC (hdc);
-	    }
-
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	} 
-      break;
-	
-    case WM_COMMAND:
-      switch (LOWORD (wParam))
-	{
-	case _IDDONE_:
-	  if (!DeleteObject (TtCmap))
-	    WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: _IDDONE_"));
-	  TtCmap = 0;
-	  DestroyWindow (hwnd);
-	  break;
-	}
-    case WM_CLOSE:
-    case WM_DESTROY :
-      HwndColorPal = (HWND) 0;
-      PostQuitMessage (0);
-      break;
-    }
-  return DefWindowProc (hwnd, iMsg, wParam, lParam);
-}
-#endif /* _WINDOWS */
-
 
 /*----------------------------------------------------------------------
    TtcChangeColors
@@ -1043,14 +984,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
    of number "view" (if Assoc = TRUE).
    Initializes and activates the corresponding menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcChangeColors (Document document, View view)
-#else  /* __STDC__ */
-void                TtcChangeColors (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void TtcChangeColors (Document document, View view)
 {
    PtrDocument         pSelDoc;
    PtrElement          pFirstSel, pLastSel;
@@ -1117,14 +1051,7 @@ View                view;
    Displays the color palette and returns the foreground and background
    colors chosen by the user.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void TtcGetPaletteColors (int *fg, int *bg, ThotBool palType)
-#else  /* __STDC__ */
-void TtcGetPaletteColors (fg, bg, palType)
-int *fg;
-int *bg;
-int palType;
-#endif /* __STDC__ */
 { 
 #ifdef _WINDOWS
     PalMessageSet1 = palType;

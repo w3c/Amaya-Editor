@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -64,13 +55,7 @@ static int          ls_fileNbr;
    ExtractFileName
    extracts a filename from the ls_stream.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ExtractFileName (STRING word)
-#else  /* __STDC__ */
-void                ExtractFileName (word)
-STRING              word;
-
-#endif /* __STDC__ */
 {
    int                 i;
    ThotBool            notEof;
@@ -101,56 +86,24 @@ STRING              word;
    returns TRUE if the directory contains any file with the requested
    suffix.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaIsSuffixFileIn (CHAR_T* aDirectory, CHAR_T* suffix)
-#else  /* __STDC__ */
-ThotBool            TtaIsSuffixFileIn (aDirectory, suffix)
-CHAR_T*             aDirectory;
-CHAR_T*             suffix;
-
-#endif /* __STDC__ */
+ThotBool TtaIsSuffixFileIn (CHAR_T* aDirectory, CHAR_T* suffix)
 {
-   ThotBool            ret;
-   CHAR_T              command[MAX_LENGTH];
-   ThotDirBrowse       thotDir;
+  CHAR_T              command[MAX_LENGTH];
+  ThotDirBrowse       thotDir;
+  ThotBool            ret;
 
-   ret = FALSE;
-   /* S'il s'agit d'un directory accessible */
-   if (TtaCheckDirectory (aDirectory))
-     {
-	thotDir.buf = command;
-	thotDir.bufLen = sizeof (command) / sizeof (CHAR_T);
-	thotDir.PicMask = (ThotDirBrowse_mask)
-                          (ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
-	ret = ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix);
-	ThotDirBrowse_close (&thotDir);
-     }
-   return (ret);
-#if 0
-#ifdef WWW_WINDOWS
-   WIN32_FIND_DATA     findData;
-   HANDLE              findNextHandle;
-
-   sprintf (command, "%s\\*.%s", aDirectory, suffix);	/* use the same space */
-   if ((findNextHandle = FindFirstFile (command, &findData)) !=
-       INVALID_HANDLE_VALUE)
-     {
-	ret = TRUE;
-	FindClose (findNextHandle);
-     }
-#else  /* WWW_WINDOWS */
-   /* Commande ls sur le directory */
-   sprintf (command, "/bin/ls %s/*%s 2>/dev/null", aDirectory, suffix);
-   ls_stream = popen (command, "r");
-   if (ls_stream != NULL)
-     {
-	ls_car = fgetc (ls_stream);
-	if (ls_car != EOF)
-	   ret = TRUE;
-	pclose (ls_stream);
-     }
-#endif /* !WWW_WINDOWS */
-#endif
+  ret = FALSE;
+  /* S'il s'agit d'un directory accessible */
+  if (TtaCheckDirectory (aDirectory))
+    {
+      thotDir.buf = command;
+      thotDir.bufLen = sizeof (command) / sizeof (CHAR_T);
+      thotDir.PicMask = (ThotDirBrowse_mask)
+	(ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
+      ret = ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix);
+      ThotDirBrowse_close (&thotDir);
+    }
+  return (ret);
 }
 
 
@@ -168,197 +121,209 @@ CHAR_T*             suffix;
    won't be created.
    If aDirectory doesn't exist, the selectors will be empty.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaListDirectory (STRING aDirectory, int formRef, STRING dirTitle, int dirRef, STRING suffix, STRING fileTitle, int fileRef)
-#else  /* __STDC__ */
-void                TtaListDirectory (aDirectory, formRef, dirTitle, dirRef, suffix, fileTitle, fileRef)
-STRING              aDirectory;
-int                 formRef;
-STRING              dirTitle;
-int                 dirRef;
-STRING              suffix;
-STRING              fileTitle;
-int                 fileRef;
-
-#endif /* __STDC__ */
+void TtaListDirectory (STRING aDirectory, int formRef, STRING dirTitle,
+		       int dirRef, STRING suffix, STRING fileTitle,
+		       int fileRef)
 {
-#  ifndef _WINDOWS
-   struct stat;
-   STRING              addr1;
-   CHAR_T              word[4 * NAME_LENGTH];
-   int                 ls_currentfile;
-   int                 length;
-   ThotBool            stop;
+#ifndef _WINDOWS
+  struct stat;
+  STRING              addr1;
+  CHAR_T              word[4 * NAME_LENGTH];
+  int                 ls_currentfile;
+  int                 length;
+  ThotBool            stop;
 #define SELECTOR_WIDTH 150
 
-   if (dirTitle == NULL)
-      dirTitle = TEXT("");
-   if (fileTitle == NULL)
-      fileTitle = TEXT("");
+  if (dirTitle == NULL)
+    dirTitle = TEXT("");
+  if (fileTitle == NULL)
+    fileTitle = TEXT("");
 
-   /* S'il s'agit d'un directory accessible */
-   if (TtaCheckDirectory (aDirectory)
-       && strcmp (aDirectory, "/afs") != 0
-       && strcmp (aDirectory, "/afs/") != 0)
-     {
-	/* CsList les directories du directory */
-	if (dirRef >= 0)
-	  {
-	     ThotDirBrowse       thotDir;
-
-	     ls_unixFiles[0] = EOS;
-	     ls_fileNbr = 0;
-	     ls_currentfile = 0;
-	     stop = FALSE;
-	     thotDir.buf = word;
-	     thotDir.bufLen = sizeof (word);
-	     thotDir.PicMask = ThotDirBrowse_DIRECTORIES;
-	     if (ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), TEXT("")) == 1)
-	       {
-		  do
+  /* S'il s'agit d'un directory accessible */
+  if (TtaCheckDirectory (aDirectory)
+      && strcmp (aDirectory, "/afs") != 0
+      && strcmp (aDirectory, "/afs/") != 0)
+    {
+      /* CsList les directories du directory */
+      if (dirRef >= 0)
+	{
+	  ThotDirBrowse       thotDir;
+	  
+	  ls_unixFiles[0] = EOS;
+	  ls_fileNbr = 0;
+	  ls_currentfile = 0;
+	  stop = FALSE;
+	  thotDir.buf = word;
+	  thotDir.bufLen = sizeof (word);
+	  thotDir.PicMask = ThotDirBrowse_DIRECTORIES;
+	  if (ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), TEXT("")) == 1)
+	    {
+	      do
+		{
+		  /* On ne garde que le nom du fichier en eliminant le path */
+		  addr1 = strrchr (word, DIR_SEP);
+		  stop = (addr1 == NULL);
+		  if (!stop)
 		    {
-		       /* On ne garde que le nom du fichier en eliminant le path */
-		       addr1 = strrchr (word, DIR_SEP);
-		       stop = (addr1 == NULL);
-		       if (!stop)
-			 {
-			    addr1++;
-			    length = strlen (addr1) + 1;
-			    stop = (ls_currentfile + length >= MAX_NAME * NAME_LENGTH);
-			    if (!stop)
-			      {
-				 strcpy (&ls_unixFiles[ls_currentfile], addr1);
-				 ls_currentfile += strlen (addr1) + 1;
-				 ls_fileNbr++;
-			      }
-			 }
+		      addr1++;
+		      length = strlen (addr1) + 1;
+		      stop = (ls_currentfile + length >= MAX_NAME * NAME_LENGTH);
+		      if (!stop)
+			{
+			  strcpy (&ls_unixFiles[ls_currentfile], addr1);
+			  ls_currentfile += strlen (addr1) + 1;
+			  ls_fileNbr++;
+			}
 		    }
-		  while (ThotDirBrowse_next (&thotDir) == 1);
-		  ThotDirBrowse_close (&thotDir);
-	       }
-	     if (strlen (aDirectory) == 0)
-	       TtaNewSizedSelector (dirRef, formRef, dirTitle,
-				    ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
-				    SELECTOR_NB_ITEMS, "", FALSE, TRUE);
-	     else
-		TtaNewSizedSelector (dirRef, formRef, dirTitle,
-				     ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
-				     SELECTOR_NB_ITEMS, "..", FALSE, TRUE);
-	     TtaSetSelector (dirRef, -1, "");
-	  }
-	/* CsList les fichiers du directory */
-	if (fileRef >= 0)
-	  {
-	     ThotDirBrowse       thotDir;
+		}
+	      while (ThotDirBrowse_next (&thotDir) == 1);
+	      ThotDirBrowse_close (&thotDir);
+	    }
+	  if (strlen (aDirectory) == 0)
+	    TtaNewSizedSelector (dirRef, formRef, dirTitle,
+				 ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
+				 SELECTOR_NB_ITEMS, "", FALSE, TRUE);
+	  else
+	    TtaNewSizedSelector (dirRef, formRef, dirTitle,
+				 ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
+				 SELECTOR_NB_ITEMS, "..", FALSE, TRUE);
+	  TtaSetSelector (dirRef, -1, "");
+	}
+      /* CsList les fichiers du directory */
+      if (fileRef >= 0)
+	{
+	  ThotDirBrowse       thotDir;
 
-	     thotDir.buf = word;
-	     thotDir.bufLen = sizeof (word);
-	     thotDir.PicMask = ThotDirBrowse_FILES;
-
-	     ls_unixFiles[0] = EOS;
-	     ls_fileNbr = 0;
-	     ls_currentfile = 0;
-	     stop = FALSE;
-	     /* Commande ls sur le directory */
-	     if (ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix) == 1)
-		do
+	  thotDir.buf = word;
+	  thotDir.bufLen = sizeof (word);
+	  thotDir.PicMask = ThotDirBrowse_FILES;
+	  
+	  ls_unixFiles[0] = EOS;
+	  ls_fileNbr = 0;
+	  ls_currentfile = 0;
+	  stop = FALSE;
+	  /* Commande ls sur le directory */
+	  if (ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix) == 1)
+	    do
+	      {
+		/* c'est un fichier regulier -> compare le suffixe */
+		/* On ne garde que le nom du fichier en eliminant le path */
+		addr1 = strrchr (word, DIR_SEP);
+		stop = (addr1 == NULL);
+		if (!stop)
 		  {
-		     /* c'est un fichier regulier -> compare le suffixe */
-		     /* On ne garde que le nom du fichier en eliminant le path */
-		     addr1 = strrchr (word, DIR_SEP);
-		     stop = (addr1 == NULL);
-		     if (!stop)
-		       {
-			  addr1++;
-			  length = strlen (addr1) + 1;
-			  stop = (ls_currentfile + length >= MAX_NAME * NAME_LENGTH);
-			  if (!stop)
-			    {
-			       strcpy (&ls_unixFiles[ls_currentfile], addr1);
-			       ls_currentfile += strlen (addr1) + 1;
-			       ls_fileNbr++;
-			    }
-		       }
+		    addr1++;
+		    length = strlen (addr1) + 1;
+		    stop = (ls_currentfile + length >= MAX_NAME * NAME_LENGTH);
+		    if (!stop)
+		      {
+			strcpy (&ls_unixFiles[ls_currentfile], addr1);
+			ls_currentfile += strlen (addr1) + 1;
+			ls_fileNbr++;
+		      }
 		  }
-		while (ThotDirBrowse_next (&thotDir) == 1);
-	     ThotDirBrowse_close (&thotDir);
-	     /* initialisation des menus */
-	     TtaNewSizedSelector (fileRef, formRef, fileTitle,
-				  ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
-				  SELECTOR_NB_ITEMS + 1, NULL, FALSE, TRUE);
-	     TtaSetSelector (fileRef, -1, "");
-	  }
-     }
-   else
-     {
-	/* Ce n'est pas un directory -> annule les selecteurs */
-	if (dirRef >= 0)
-	  {
-	     TtaNewSizedSelector (dirRef, formRef, dirTitle, 0, NULL,
-				  SELECTOR_WIDTH, SELECTOR_NB_ITEMS,
-				  "", FALSE, TRUE);
-	     TtaSetSelector (dirRef, -1, "");
-	  }
-	if (fileRef >= 0)
-	  {
-	     TtaNewSizedSelector (fileRef, formRef, fileTitle, 0, NULL,
-				  SELECTOR_WIDTH, SELECTOR_NB_ITEMS + 1,
-				  NULL, FALSE, TRUE);
-	     TtaSetSelector (fileRef, -1, "");
-	  }
-     }
-#  endif /* _WINDOWS */
+	      }
+	    while (ThotDirBrowse_next (&thotDir) == 1);
+	  ThotDirBrowse_close (&thotDir);
+	  /* initialisation des menus */
+	  TtaNewSizedSelector (fileRef, formRef, fileTitle,
+			       ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
+			       SELECTOR_NB_ITEMS + 1, NULL, FALSE, TRUE);
+	  TtaSetSelector (fileRef, -1, "");
+	}
+    }
+  else
+    {
+      /* Ce n'est pas un directory -> annule les selecteurs */
+      if (dirRef >= 0)
+	{
+	  TtaNewSizedSelector (dirRef, formRef, dirTitle, 0, NULL,
+			       SELECTOR_WIDTH, SELECTOR_NB_ITEMS,
+			       "", FALSE, TRUE);
+	  TtaSetSelector (dirRef, -1, "");
+	}
+      if (fileRef >= 0)
+	{
+	  TtaNewSizedSelector (fileRef, formRef, fileTitle, 0, NULL,
+			       SELECTOR_WIDTH, SELECTOR_NB_ITEMS + 1,
+			       NULL, FALSE, TRUE);
+	  TtaSetSelector (fileRef, -1, "");
+	}
+    }
+#endif /* _WINDOWS */
 }
 
 #ifdef _GTK
-
 /* The suffix used to filter directories */
 static char * suffix = ".htm" ;
 
-/* Callback function of the "filter" entry widget of the "save as" frame */
+/*----------------------------------------------------------------------
+  Callback function of the "filter" entry widget of the "save as" frame
+  ----------------------------------------------------------------------*/
 void save_filter_entry_func (GtkWidget *widget, gpointer data)
 {
   printf ("filter\n");
- suffix =  gtk_entry_get_text (GTK_ENTRY (widget));
+  suffix =  gtk_entry_get_text (GTK_ENTRY (widget));
 }
-/* Callback function of the "filter" entry widget of the "new" frame */
+
+/*----------------------------------------------------------------------
+ Callback function of the "filter" entry widget of the "new" frame
+  ----------------------------------------------------------------------*/
 void new_filter_entry_func (GtkWidget *widget, gpointer data)
 {
   printf ("filter\n");
- suffix =  gtk_entry_get_text (GTK_ENTRY (widget));
+  suffix =  gtk_entry_get_text (GTK_ENTRY (widget));
 }
-/* Callback function of the "filter" entry widget of the "background image" frame */
+
+/*----------------------------------------------------------------------
+  Callback function of the "filter" entry widget of the "background image"
+  frame
+  ----------------------------------------------------------------------*/
 void back_filter_entry_func (GtkWidget *widget, gpointer data)
 {
   printf ("filter\n");
- suffix =  gtk_entry_get_text (GTK_ENTRY (widget));
+  suffix =  gtk_entry_get_text (GTK_ENTRY (widget));
 }
-/* Callback function of the "image directory" entry widget of the "save as"frame */
-void
-image_dir_entry_func                     (GtkButton       *button,
-                                        gpointer         user_data)
+
+/*----------------------------------------------------------------------
+  Callback function of the "image directory" entry widget of the "save as"
+  frame
+  ----------------------------------------------------------------------*/
+void image_dir_entry_func (GtkButton *button,
+                                        gpointer user_data)
 {
- printf ("repertoire image \n");
+  printf ("repertoire image \n");
 }
-/* Callback function of the "clear" button widget of the "save as"frame*/
+
+/*----------------------------------------------------------------------
+  Callback function of the "clear" button widget of the "save as"frame
+  ----------------------------------------------------------------------*/
 void save_clear_button_func (GtkWidget *widget, gpointer data)
 {
- gtk_entry_set_text (GTK_ENTRY((GTK_MY_FILE_SELECTION(data))->selection_entry), "");
- gtk_entry_set_text (GTK_ENTRY((GTK_MY_FILE_SELECTION(data))->image_directory_entry), "");
-
+  gtk_entry_set_text (GTK_ENTRY((GTK_MY_FILE_SELECTION(data))->selection_entry), "");
+  gtk_entry_set_text (GTK_ENTRY((GTK_MY_FILE_SELECTION(data))->image_directory_entry), "");
 }
-/* Callback function of the "clear" button widget of the "new" frame*/
+
+/*----------------------------------------------------------------------
+  Callback function of the "clear" button widget of the "new" frame
+  ----------------------------------------------------------------------*/
 void new_clear_button_func (GtkWidget *widget, gpointer data)
 {
- gtk_entry_set_text (GTK_ENTRY((GTK_MY_FILE_SELECTION(data))->selection_entry), "");
+  gtk_entry_set_text (GTK_ENTRY((GTK_MY_FILE_SELECTION(data))->selection_entry), "");
  
 }
-/* Callback function of the "clear" button widget of the "back" frame */
+
+/*----------------------------------------------------------------------
+  Callback function of the "clear" button widget of the "back" frame
+  ----------------------------------------------------------------------*/
 void back_clear_button_func (GtkWidget *widget, gpointer data)
 {
- gtk_entry_set_text (GTK_ENTRY((GTK_MY_FILE_SELECTION(data))->selection_entry), "");
+  gtk_entry_set_text (GTK_ENTRY((GTK_MY_FILE_SELECTION(data))->selection_entry), "");
 }
-/* Callback function of the "filter" button widget*/
+
+/*----------------------------------------------------------------------
+  Callback function of the "filter" button widget
+  ----------------------------------------------------------------------*/
 void filter_button_func (GtkWidget *widget, gpointer data)
 {
   GtkMyFileSelection *fs;
@@ -369,32 +334,38 @@ void filter_button_func (GtkWidget *widget, gpointer data)
   gtk_my_file_selection_populate (fs, dirname,TRUE);
   printf ("activer le filtre\n ");
 }
-/* Callback function of the "cancel" button widget*/
+
+/*----------------------------------------------------------------------
+  Callback function of the "cancel" button widget
+  ----------------------------------------------------------------------*/
 void cancel_button_func (GtkWidget *widget, gpointer data)
 {
- gtk_widget_destroy (GTK_WIDGET (data));
+  gtk_widget_destroy (GTK_WIDGET (data));
 }
 
-/* Callback function of the "html" checkbutton widget of the "save as"frame*/
-void
-html_format_func                       (GtkButton       *button,
-                                        gpointer         user_data)
+/*----------------------------------------------------------------------
+  Callback function of the "html" checkbutton widget of the "save as"frame
+  ----------------------------------------------------------------------*/
+void html_format_func (GtkButton *button, gpointer user_data)
 {
- printf ("html\n ");
+  printf ("html\n ");
 }
-/* Callback function of the "xhtml" checkbutton widget of the "save as"frame*/
-void
-xhtml_format_func                      (GtkButton       *button,
-                                        gpointer         user_data)
-{
- printf ("xhtml\n ");
-}
-/* Callback function of the "text" checkbutton widget of the "save as"frame*/
-void
-text_format_func                       (GtkButton       *button,
-                                        gpointer         user_data)
-{
 
+/*----------------------------------------------------------------------
+  Callback function of the "xhtml" checkbutton widget of the "save as"
+  frame.
+  ----------------------------------------------------------------------*/
+void xhtml_format_func (GtkButton *button, gpointer user_data)
+{
+  printf ("xhtml\n ");
+}
+
+/*----------------------------------------------------------------------
+  Callback function of the "text" checkbutton widget of the "save as"
+  frame.
+  ----------------------------------------------------------------------*/
+void text_format_func (GtkButton *button, gpointer user_data)
+{
   if (GTK_TOGGLE_BUTTON (button)->active) 
     {
       gtk_widget_set_sensitive ((GTK_MY_FILE_SELECTION (user_data))->copy_image_checkbutton, FALSE);
@@ -406,58 +377,62 @@ text_format_func                       (GtkButton       *button,
       gtk_widget_set_sensitive ((GTK_MY_FILE_SELECTION (user_data))->transform_URL_checkbutton,TRUE);
     }
 }
-/* Callback function of the "copy images" checkbutton widget*/
-void
-copy_images_func                       (GtkButton       *button,
-                                        gpointer         user_data)
+
+/*----------------------------------------------------------------------
+  Callback function of the "copy images" checkbutton widget
+  ----------------------------------------------------------------------*/
+void copy_images_func (GtkButton *button, gpointer user_data)
 {
- printf ("Copy umages\n ");
+  printf ("Copy umages\n ");
 }
-/* Callback function of the "transform url" checkbutton widget*/
-void
-transform_url_func                     (GtkButton       *button,
-                                        gpointer         user_data)
+
+/*----------------------------------------------------------------------
+  Callback function of the "transform url" checkbutton widget
+  ----------------------------------------------------------------------*/
+void transform_url_func (GtkButton *button, gpointer user_data)
 {
  printf ("Transform url\n ");
 }
 
-/* Callback function of the "repeat" radiobutton of the "background image frame */
-void
-repeat_func                            (GtkButton       *button,
-                                        gpointer         user_data)
-{
 
+/*----------------------------------------------------------------------
+ Callback function of the "repeat" radiobutton of the "background image"
+ frame
+  ----------------------------------------------------------------------*/
+void repeat_func (GtkButton *button, gpointer user_data)
+{
 }
 
-/* Callback function of the "repeat-x" radiobutton of the "background image frame */
-void
-repeat_x_func                          (GtkButton       *button,
-                                        gpointer         user_data)
-{
 
+/*----------------------------------------------------------------------
+ Callback function of the "repeat-x" radiobutton of the "background image"
+ frame
+  ----------------------------------------------------------------------*/
+void repeat_x_func (GtkButton *button, gpointer user_data)
+{
 }
 
-/* Callback function of the "repeat-y" radiobutton of the "background image frame */
-void
-repeat_y_func                          (GtkButton       *button,
-                                        gpointer         user_data)
-{
 
+/*----------------------------------------------------------------------
+ Callback function of the "repeat-y" radiobutton of the "background image"
+ frame
+  ----------------------------------------------------------------------*/
+void repeat_y_func (GtkButton *button, gpointer user_data)
+{
 }
 
-/* Callback function of the "no_repeat" radiobutton of the "background image frame */
-void
-no_repeat_func                         (GtkButton       *button,
-                                        gpointer         user_data)
-{
 
+/*----------------------------------------------------------------------
+  Callback function of the "no_repeat" radiobutton of the "background
+  image" frame
+  ----------------------------------------------------------------------*/
+void no_repeat_func (GtkButton *button, gpointer user_data)
+{
 }
 
 #include<libintl.h>
 #define _(String) dgettext("gtk+",String)
 #include <gtk/gtk.h>
-  
-
 
 #define DIR_LIST_WIDTH   150
 #define DIR_LIST_HEIGHT  150

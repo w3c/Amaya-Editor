@@ -51,7 +51,7 @@
 #include "writedoc_f.h"
 
 extern int          CurrentDialog;
-CHAR_T                DefaultFileSuffix[5];        
+char                DefaultFileSuffix[5];        
 static PathBuffer   SaveDirectoryName;
 static PathBuffer   SaveFileName;
 static PathBuffer   TraductionSchemaName;
@@ -62,18 +62,10 @@ static int          PivotEntryNum;
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
-   UnsetEntryMenu
-   displays as non active the "ent" entry of the menu referenced by
-   "ref".
+  UnsetEntryMenu
+  displays as non active the "ent" entry of the menu referenced by "ref".
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UnsetEntryMenu (int ref, int ent)
-#else  /* __STDC__ */
-void                UnsetEntryMenu (ref, ent)
-int                 ref;
-int                 ent;
-
-#endif /* __STDC__ */
+void UnsetEntryMenu (int ref, int ent)
 {
    char                fontname[100];
    char                text[20];
@@ -85,53 +77,244 @@ int                 ent;
 	FontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
 	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
      }
-}				/*UnsetEntryMenu */
-#endif /* !_WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  CallbackSaveDocMenu
+  callback handler for the Save File menu.
+  ----------------------------------------------------------------------*/
+void CallbackSaveDocMenu (int ref, int typedata, char *txt)
+{
+  PathBuffer          ptTranslatedName;
+  PathBuffer          BufDir;
+  char               *URL_DIR_SEP;
+  int                 i, nbitem;
+  int                 val;
+
+  if (typedata == STRING_DATA && txt && strchr (txt, '/'))
+    URL_DIR_SEP = '/';
+  else 
+    URL_DIR_SEP = DIR_SEP;
+
+  val = (int) txt;
+  switch (ref)
+    {
+    case NumZoneDocNameTooSave:
+      /* zone de saisie du nom du document a creer */
+      if (TtaCheckDirectory (txt) &&
+	  txt[strlen (txt) - 1] != URL_DIR_SEP)
+	{
+	  strcpy (SaveDirectoryName, txt);
+	  SaveFileName[0] = EOS;
+	}
+      else
+	{
+	  /* conserve le nom du document a sauver */
+	  TtaExtractName (txt, SaveDirectoryName, BufDir);
+	  /* Remove le suffixe du nom de fichier */
+	  i = strlen (BufDir) - 4;
+	  if (!strcmp (&BufDir[i], DefaultFileSuffix))
+	    BufDir[i] = EOS;
+	  else
+	    i += 4;
+	  if (i >= MAX_NAME_LENGTH - 1)
+	    {
+	      i = MAX_NAME_LENGTH - 1; /* Longueur du nom limitee */
+	      BufDir[i] = EOS;
+	      strcpy (ptTranslatedName, SaveDirectoryName);
+	      strcat (ptTranslatedName, DIR_STR);
+	      strcat (ptTranslatedName, BufDir);
+	      if (TraductionSchemaName[0] == EOS)
+		strcat (ptTranslatedName, DefaultFileSuffix);
+	      /* reinitialise la zone du nom de document */
+	      TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
+	    }
+	  strcpy (SaveFileName, BufDir);
+	}
+
+      if (TtaCheckDirectory (SaveDirectoryName))
+	{
+	  /* Est-ce un nouveau directory qui contient des documents*/
+	  if (!TtaIsInDocumentPath (SaveDirectoryName) &&
+	      TtaIsSuffixFileIn (SaveDirectoryName, DefaultFileSuffix))
+	    {
+	      /* il faut ajouter le directory au path */
+	      i = strlen (DocumentPath);
+	      if (i + strlen (SaveDirectoryName) + 2 < MAX_PATH)
+		{
+		  strcat (DocumentPath, PATH_STR);
+		  strcat (DocumentPath, SaveDirectoryName);
+		  BuildPathDocBuffer (BufDir, EOS, &nbitem);
+		  TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs,
+				  TtaGetMessage (LIB, TMSG_DOC_DIR),
+				  nbitem, BufDir, 6, NULL, FALSE, TRUE);
+		}
+	    }
+	}
+      break;
+
+    case NumZoneDirDocToSave:
+      /* zone de saisie du directory ou le document doit etre cree */
+      strcpy (SaveDirectoryName, txt);
+      strcpy (ptTranslatedName, SaveDirectoryName);
+      strcat (ptTranslatedName, DIR_STR);
+      strcat (ptTranslatedName, SaveFileName);
+      if (TraductionSchemaName[0] == EOS)
+	strcat (ptTranslatedName, DefaultFileSuffix);
+      /* reinitialise la zone du nom de document */
+      TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
+      break;
+
+    case NumMenuFormatDocToSave:
+      /* sous-menu pour le choix du format de sauvegarde */
+      strcpy (ptTranslatedName, SaveDirectoryName);
+      strcat (ptTranslatedName, DIR_STR);
+      strcat (ptTranslatedName, SaveFileName);
+      if (val == 0)
+	{
+	  /* premiere entree du menu format: format Thot */
+	  TraductionSchemaName[0] = EOS;
+	  strcat (ptTranslatedName, DefaultFileSuffix);
+	  TtaRedrawMenuEntry (NumMenuCopyOrRename, 0, NULL, -1, 1);
+	  TtaRedrawMenuEntry (NumMenuCopyOrRename, 1, NULL, -1, 1);
+	}
+      else if (val == PivotEntryNum)
+	{
+	  strcpy (TraductionSchemaName, "_ThotOther_");
+	  UnsetEntryMenu (NumMenuCopyOrRename, 0);
+	  UnsetEntryMenu (NumMenuCopyOrRename, 1);
+	}
+      else
+	{
+	  ConfigGetExportSchemaName (val, TraductionSchemaName);
+	  UnsetEntryMenu (NumMenuCopyOrRename, 0);
+	  UnsetEntryMenu (NumMenuCopyOrRename, 1);
+	}
+      /* reinitialise la zone du nom de document */
+      TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
+      break;
+
+    case NumMenuCopyOrRename:
+      /* sous-menu copier/renommer un document */
+      if (val == 0)
+	/* c'est un copy */
+	{
+	  SaveDocWithCopy = TRUE;
+	  SaveDocWithMove = FALSE;
+	}
+      else
+	/* c'est un move */
+	{
+	  SaveDocWithCopy = FALSE;
+	  SaveDocWithMove = TRUE;
+	}
+      break;
+
+    case NumFormSaveAs:
+      /* le formulaire Sauver Comme */
+      /* fait disparaitre la feuille de dialogue */
+      if (val == 1)
+	{
+	  /* c'est une confirmation */
+	  TtaUnmapDialogue (NumFormSaveAs);
+	  CurrentDialog = NumFormSaveAs;
+	  if (DocumentToSave != NULL &&
+	      DocumentToSave->DocSSchema != NULL)
+	    {
+	      /* le document a sauver n'a pas ete ferme' entre temps */
+	      if (!TtaCheckDirectory (SaveDirectoryName))
+		{
+		  /* le repertoire est invalide : affiche un message et
+		     detruit les dialogues */
+		  TtaDisplayMessage (CONFIRM,
+				     TtaGetMessage (LIB, TMSG_MISSING_DIR),
+				     SaveDirectoryName);
+		  if (ThotLocalActions[T_confirmcreate] != NULL)
+		    (*ThotLocalActions[T_confirmcreate])
+		      (0, 1, (char *) 1);
+		}
+	      else if (!strcmp (SaveDirectoryName, DocumentToSave->DocDirectory) &&
+		       !strcmp (SaveFileName, DocumentToSave->DocDName) &&
+		       TraductionSchemaName[0] == WC_EOS)
+		{
+		  /* traite la confirmation */
+		  if (ThotLocalActions[T_confirmcreate] != NULL)
+		    (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm,
+							  1, (char *) 1);
+		}
+	      else
+		{
+		  strcpy (ptTranslatedName, SaveDirectoryName);
+		  strcat (ptTranslatedName, WC_DIR_STR);
+		  strcat (ptTranslatedName, SaveFileName);
+		  if (TraductionSchemaName[0] == WC_EOS)
+		    strcat (ptTranslatedName, DefaultFileSuffix);
+		  if (TtaFileExist (ptTranslatedName))
+		    {
+		      /* demande confirmation */
+		      sprintf (BufDir, TtaGetMessage(LIB, TMSG_FILE_EXIST),
+			       ptTranslatedName);
+		      TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
+		      TtaShowDialogue (NumFormConfirm, FALSE);
+		    }
+		  else if (ThotLocalActions[T_confirmcreate] != NULL)
+		    /* traite la confirmation */
+		    (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm,
+							  1, (char *) 1);
+		}
+	    }
+	}
+      else if (ThotLocalActions[T_confirmcreate] != NULL)
+	(*ThotLocalActions[T_confirmcreate]) (0, 1, (char *) 1);
+      break;
+    }
+}
+#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
    BuildSaveDocMenu
    does the File Save.
   ----------------------------------------------------------------------*/
-void                BuildSaveDocMenu ()
-
+void BuildSaveDocMenu ()
 {
-   PathBuffer          outputFileName;
-   int                 i;
-   NotifyDialog        notifyDoc;
+  PathBuffer          outputFileName;
+  NotifyDialog        notifyDoc;
+  int                 i;
 
-   /* Name du fichier a sauver */
-   ustrcpy (outputFileName, SaveDirectoryName);
-   ustrcat (outputFileName, WC_DIR_STR);
-   ustrcat (outputFileName, SaveFileName);
-   if (TraductionSchemaName[0] == WC_EOS)
-      /* sauver en format Thot */
-     {
-       if (ThotLocalActions[T_setwritedirectory] != NULL &&
-	   ThotLocalActions[T_writedocument] != NULL)
-	 {
-	   if (DocumentToSave->DocPivotVersion == -1)
-	     {
-	       (*ThotLocalActions [T_setwritedirectory]) (DocumentToSave,
-							  SaveFileName, 
-							  SaveDirectoryName, 
+  /* Name du fichier a sauver */
+  strcpy (outputFileName, SaveDirectoryName);
+  strcat (outputFileName, DIR_STR);
+  strcat (outputFileName, SaveFileName);
+  if (TraductionSchemaName[0] == EOS)
+    /* sauver en format Thot */
+    {
+      if (ThotLocalActions[T_setwritedirectory] != NULL &&
+	  ThotLocalActions[T_writedocument] != NULL)
+	{
+	  if (DocumentToSave->DocPivotVersion == -1)
+	    {
+	      (*ThotLocalActions [T_setwritedirectory]) (DocumentToSave,
+							 SaveFileName, 
+							 SaveDirectoryName, 
 							  SaveDocWithCopy, 
 							SaveDocWithMove);
 	       (*ThotLocalActions[T_writedocument]) (DocumentToSave, 0);
 	     }
 	   else
 	     {
-	       ustrcat (outputFileName, TEXT(".PIV")); 
+	       strcat (outputFileName, ".PIV"); 
 	       (void) StoreDocument (DocumentToSave,
 				     SaveFileName, SaveDirectoryName,
 				     SaveDocWithCopy, SaveDocWithMove);
 	     }
 	 }
      }
-   else if (!ustrcmp (TraductionSchemaName, TEXT("_ThotOther_")))
+   else if (!strcmp (TraductionSchemaName, "_ThotOther_"))
      {
        if (DocumentToSave->DocPivotVersion == -1)
          {
-	   ustrcat (outputFileName, TEXT(".PIV")); 
+	   strcat (outputFileName, ".PIV"); 
 	   (void) StoreDocument (DocumentToSave,
 				 SaveFileName, SaveDirectoryName,
 				 SaveDocWithCopy, SaveDocWithMove);
@@ -149,7 +332,7 @@ void                BuildSaveDocMenu ()
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EXPORTING),
 				DocumentToSave->DocDName);
-	     FindCompleteName (SaveFileName, TEXT(""), SaveDirectoryName,
+	     FindCompleteName (SaveFileName, "", SaveDirectoryName,
 			       outputFileName, &i);
 	     ExportDocument (DocumentToSave, outputFileName,
 			     TraductionSchemaName, FALSE);
@@ -164,235 +347,19 @@ void                BuildSaveDocMenu ()
      }
 }
 
-#ifndef _WINDOWS
-/*----------------------------------------------------------------------
-   CallbackSaveDocMenu
-   callback handler for the Save File menu.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CallbackSaveDocMenu (int ref, int typedata, STRING txt)
-
-#else  /* __STDC__ */
-void                CallbackSaveDocMenu (ref, typedata, txt)
-int                 ref;
-int                 typedata;
-STRING              txt;
-
-#endif /* __STDC__ */
-
-{
-   PathBuffer          ptTranslatedName;
-   PathBuffer          BufDir;
-   int                 i, nbitem;
-   int                 val;
-   CHAR_T                URL_DIR_SEP;
-
-   if (typedata == STRING_DATA && txt && ustrchr (txt, TEXT('/')))
-	  URL_DIR_SEP = TEXT('/');
-   else 
-	   URL_DIR_SEP = DIR_SEP;
-
-   val = (int) txt;
-   switch (ref)
-     {
-     case NumZoneDocNameTooSave:
-       /* zone de saisie du nom du document a creer */
-       if (TtaCheckDirectory (txt) &&
-	   txt[ustrlen (txt) - 1] != URL_DIR_SEP)
-	 {
-	   ustrcpy (SaveDirectoryName, txt);
-	   SaveFileName[0] = EOS;
-	 }
-       else
-	 {
-	   /* conserve le nom du document a sauver */
-	   TtaExtractName (txt, SaveDirectoryName, BufDir);
-	   /* Remove le suffixe du nom de fichier */
-	   i = ustrlen (BufDir) - 4;
-	   if (!ustrcmp (&BufDir[i], DefaultFileSuffix))
-	     BufDir[i] = EOS;
-	   else
-	     i += 4;
-	   if (i >= MAX_NAME_LENGTH - 1)
-	     {
-	       i = MAX_NAME_LENGTH - 1; /* Longueur du nom limitee */
-	       BufDir[i] = EOS;
-	       ustrcpy (ptTranslatedName, SaveDirectoryName);
-	       ustrcat (ptTranslatedName, DIR_STR);
-	       ustrcat (ptTranslatedName, BufDir);
-	       if (TraductionSchemaName[0] == WC_EOS)
-		 ustrcat (ptTranslatedName, DefaultFileSuffix);
-	       /* reinitialise la zone du nom de document */
-#ifndef _WINDOWS
-	       TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
-#endif /* !_WINDOWS */
-	     }
-	   ustrcpy (SaveFileName, BufDir);
-	 }
-
-       if (TtaCheckDirectory (SaveDirectoryName))
-	 {
-	   /* Est-ce un nouveau directory qui contient des documents*/
-	   if (!TtaIsInDocumentPath (SaveDirectoryName))
-	     if (TtaIsSuffixFileIn (SaveDirectoryName, DefaultFileSuffix))
-	       {
-		 /* il faut ajouter le directory au path */
-		 i = ustrlen (DocumentPath);
-		 if (i + ustrlen (SaveDirectoryName) + 2 < MAX_PATH)
-		   {
-		     ustrcat (DocumentPath, PATH_STR);
-		     ustrcat (DocumentPath, SaveDirectoryName);
-		     BuildPathDocBuffer (BufDir, EOS, &nbitem);
-#ifndef _WINDOWS
-		     TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs,
-				     TtaGetMessage (LIB, TMSG_DOC_DIR),
-				     nbitem, BufDir, 6, NULL, FALSE, TRUE);
-#endif /* _WINDOWS */
-		   }
-	       }
-	 }
-       break;
-
-     case NumZoneDirDocToSave:
-       /* zone de saisie du directory ou le document doit etre cree */
-       ustrcpy (SaveDirectoryName, txt);
-       ustrcpy (ptTranslatedName, SaveDirectoryName);
-       ustrcat (ptTranslatedName, WC_DIR_STR);
-       ustrcat (ptTranslatedName, SaveFileName);
-       if (TraductionSchemaName[0] == WC_EOS)
-	 ustrcat (ptTranslatedName, DefaultFileSuffix);
-       /* reinitialise la zone du nom de document */
-       TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
-       break;
-
-     case NumMenuFormatDocToSave:
-       /* sous-menu pour le choix du format de sauvegarde */
-       ustrcpy (ptTranslatedName, SaveDirectoryName);
-       ustrcat (ptTranslatedName, DIR_STR);
-       ustrcat (ptTranslatedName, SaveFileName);
-       if (val == 0)
-	 {
-	   /* premiere entree du menu format: format Thot */
-	   TraductionSchemaName[0] = WC_EOS;
-	   ustrcat (ptTranslatedName, DefaultFileSuffix);
-	   TtaRedrawMenuEntry (NumMenuCopyOrRename, 0, NULL, -1, 1);
-	   TtaRedrawMenuEntry (NumMenuCopyOrRename, 1, NULL, -1, 1);
-	 }
-       else if (val == PivotEntryNum)
-	 {
-	   ustrcpy (TraductionSchemaName, TEXT("_ThotOther_"));
-	   UnsetEntryMenu (NumMenuCopyOrRename, 0);
-	   UnsetEntryMenu (NumMenuCopyOrRename, 1);
-	 }
-       else
-	 {
-	   ConfigGetExportSchemaName (val, TraductionSchemaName);
-	   UnsetEntryMenu (NumMenuCopyOrRename, 0);
-	   UnsetEntryMenu (NumMenuCopyOrRename, 1);
-	 }
-       /* reinitialise la zone du nom de document */
-       TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
-       break;
-
-     case NumMenuCopyOrRename:
-       /* sous-menu copier/renommer un document */
-       if (val == 0)
-	 /* c'est un copy */
-	 {
-	   SaveDocWithCopy = TRUE;
-	   SaveDocWithMove = FALSE;
-	 }
-       else
-	 /* c'est un move */
-	 {
-	   SaveDocWithCopy = FALSE;
-	   SaveDocWithMove = TRUE;
-	 }
-       break;
-
-     case NumFormSaveAs:
-       /* le formulaire Sauver Comme */
-       /* fait disparaitre la feuille de dialogue */
-       if (val == 1)
-	 {
-	   /* c'est une confirmation */
-	   TtaUnmapDialogue (NumFormSaveAs);
-	   CurrentDialog = NumFormSaveAs;
-	   if (DocumentToSave != NULL)
-	     if (DocumentToSave->DocSSchema != NULL)
-	       {
-		 /* le document a sauver n'a pas ete ferme' entre temps */
-		 if (!TtaCheckDirectory (SaveDirectoryName))
-		   {
-		     /* le repertoire est invalide : affiche un message et
-			detruit les dialogues */
-		     TtaDisplayMessage (CONFIRM,
-					TtaGetMessage (LIB, TMSG_MISSING_DIR),
-					SaveDirectoryName);
-		     if (ThotLocalActions[T_confirmcreate] != NULL)
-		       (*ThotLocalActions[T_confirmcreate])
-			 (0, 1, (STRING) 1);
-		   }
-		 else if (!ustrcmp (SaveDirectoryName, DocumentToSave->DocDirectory) &&
-			  !ustrcmp (SaveFileName, DocumentToSave->DocDName) &&
-			  TraductionSchemaName[0] == WC_EOS)
-		   {
-		     /* traite la confirmation */
-		     if (ThotLocalActions[T_confirmcreate] != NULL)
-		       (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm, 1,
-							     (STRING) 1);
-		   }
-		 else
-		   {
-		     ustrcpy (ptTranslatedName, SaveDirectoryName);
-		     ustrcat (ptTranslatedName, WC_DIR_STR);
-		     ustrcat (ptTranslatedName, SaveFileName);
-		     if (TraductionSchemaName[0] == WC_EOS)
-		       ustrcat (ptTranslatedName, DefaultFileSuffix);
-		     if (TtaFileExist (ptTranslatedName))
-		       {
-			 /* demande confirmation */
-			 usprintf (BufDir, TtaGetMessage(LIB, TMSG_FILE_EXIST),
-				   ptTranslatedName);
-#ifndef _WINDOWS
-			 TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
-#endif /* !_WINDOWS */
-			 TtaShowDialogue (NumFormConfirm, FALSE);
-		       }
-		     else
-		       /* traite la confirmation */
-		       if (ThotLocalActions[T_confirmcreate] != NULL)
-			 (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm,
-							       1, (STRING) 1);
-		   }
-	       }
-	 }
-       else if (ThotLocalActions[T_confirmcreate] != NULL)
-	 (*ThotLocalActions[T_confirmcreate]) (0, 1, (STRING) 1);
-       break;
-     }
-}
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
-   SaveDocAs
-   creates, initializes and activates the "Save As" form for document
-   pDoc.
+  SaveDocAs creates, initializes and activates the "Save As" form for
+  document pDoc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SaveDocAs (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         SaveDocAs (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+static void SaveDocAs (PtrDocument pDoc)
 {
    int                 nbitem;
-   CHAR_T              BufMenu[MAX_TXT_LEN];
-   CHAR_T              BufMenuB[MAX_TXT_LEN];   
-   CHAR_T              BufDir[MAX_PATH];
-   STRING              src;
-   STRING              dest;
+   char                BufMenu[MAX_TXT_LEN];
+   char                BufMenuB[MAX_TXT_LEN];   
+   char                BufDir[MAX_PATH];
+   char               *src;
+   char               *dest;
    int                 i, k, l, Indx,entry;
 
    if (pDoc != NULL)
@@ -415,36 +382,36 @@ PtrDocument         pDoc;
 #endif /* _WINDOWS */
 	      entry = SearchStringInBuffer(BufDir,pDoc->DocDirectory,nbitem);
 #ifndef _WINDOWS
-	      TtaSetSelector (NumZoneDirDocToSave, entry, TEXT(""));
+	      TtaSetSelector (NumZoneDirDocToSave, entry, "");
 #endif /* !_WINDOWS */
 	      /* initialise le titre du formulaire Sauver Comme */
-	      ustrcpy (SaveFileName, pDoc->DocDName);
-	      ustrcpy (SaveDirectoryName, pDoc->DocDirectory);
+	      strcpy (SaveFileName, pDoc->DocDName);
+	      strcpy (SaveDirectoryName, pDoc->DocDirectory);
 	      /* compose le menu des formats de sauvegarde applicables */
 	      /* a ce document, d'apres sa classe */
 	      nbitem = ConfigMakeMenuExport(pDoc->DocSSchema->SsName, BufMenu);
 	      /* met le format Thot en tete */
-	      BufMenuB[0] = TEXT('B');
-	      ustrcpy (&BufMenuB[1], TtaGetMessage (LIB, TMSG_THOT_APP));
-	      l = ustrlen (TtaGetMessage (LIB, TMSG_THOT_APP)) + 2;
+	      BufMenuB[0] = 'B';
+	      strcpy (&BufMenuB[1], TtaGetMessage (LIB, TMSG_THOT_APP));
+	      l = strlen (TtaGetMessage (LIB, TMSG_THOT_APP)) + 2;
 	      /* ajoute 'B' au debut de chaque entree */
 	      dest = &BufMenuB[l];
 	      src = &BufMenu[0];
 	      for (k = 1; k <= nbitem; k++)
 		{
-		   ustrcpy (dest, TEXT("B"));
+		   strcpy (dest, "B");
 		   dest++;
-		   l = ustrlen (src);
-		   ustrcpy (dest, src);
+		   l = strlen (src);
+		   strcpy (dest, src);
 		   dest += l + 1;
 		   src += l + 1;
 		}
 	      nbitem++;
 	      if (pDoc->DocPivotVersion == -1)
 		{
-		  ustrcpy (dest, TEXT("B"));
+		  strcpy (dest, "B");
 		  dest++;
-		  ustrcpy (dest, TEXT("Pivot"));
+		  strcpy (dest, "Pivot");
 		  PivotEntryNum = nbitem;
 		  nbitem++;
 		}
@@ -454,26 +421,26 @@ PtrDocument         pDoc;
 	      TtaSetMenuForm (NumMenuFormatDocToSave, 0);
 	      /* sous-menu copier/renommer un document */
 	      Indx = 0;
-	      usprintf (&BufMenu[Indx], TEXT("B%s"),
+	      sprintf (&BufMenu[Indx], "B%s",
 			TtaGetMessage (LIB, TMSG_COPY));
-	      Indx += ustrlen (&BufMenu[Indx]) + 1;
-	      usprintf (&BufMenu[Indx], TEXT("B%s"),
+	      Indx += strlen (&BufMenu[Indx]) + 1;
+	      sprintf (&BufMenu[Indx], "B%s",
 			TtaGetMessage (LIB, TMSG_RENAME));
 	      TtaNewSubmenu (NumMenuCopyOrRename, NumFormSaveAs, 0,
 		   TtaGetMessage (LIB, TMSG_SAVE), 2, BufMenu, NULL, FALSE);
 	      TtaSetMenuForm (NumMenuCopyOrRename, 0);
 	      /* initialise le  nom de document propose */
-	      ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE));
-	      ustrcat (BufMenu, TEXT(" "));
-	      ustrcat (BufMenu, pDoc->DocDName);
+	      strcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE));
+	      strcat (BufMenu, " ");
+	      strcat (BufMenu, pDoc->DocDName);
 	      TtaChangeFormTitle (NumFormSaveAs, BufMenu);
-	      ustrcpy (BufMenu, SaveDirectoryName);
-	      ustrcat (BufMenu, WC_DIR_STR);
-	      ustrcat (BufMenu, SaveFileName);
+	      strcpy (BufMenu, SaveDirectoryName);
+	      strcat (BufMenu, WC_DIR_STR);
+	      strcat (BufMenu, SaveFileName);
 	      if (pDoc->DocPivotVersion == -1)
-             ustrcat (BufMenu, TEXT(".xml"));
+             strcat (BufMenu, ".xml");
 	      else
-               ustrcat (BufMenu, TEXT(".PIV"));
+               strcat (BufMenu, ".PIV");
 	      /* nom de document propose' */
 #ifndef _WINDOWS
 	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs,
@@ -481,18 +448,14 @@ PtrDocument         pDoc;
 			      TRUE);
 #endif /* !_WINDOWS */
 	      TtaSetTextForm (NumZoneDocNameTooSave, BufMenu);
-
-/*        ActiveEntree(NumMenuCopyOrRename, 0); */
-/*        ActiveEntree(NumMenuCopyOrRename, 1); */
-/*        TtaSetMenuForm(NumMenuCopyOrRename, 0); */
 	      /* premiere entree du menu format: format Thot */
 	      TraductionSchemaName[0] = WC_EOS;
 	      SaveDocWithCopy = TRUE;
 	      SaveDocWithMove = FALSE;
 	      /* Formulaire Confirmation creation */
-	      ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE_AS));
-	      i = ustrlen (BufMenu) + 1;
-	      ustrcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	      strcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE_AS));
+	      i = strlen (BufMenu) + 1;
+	      strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 #ifndef _WINDOWS
 	      TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE,
 				 1, 'L');
@@ -508,14 +471,7 @@ PtrDocument         pDoc;
   TtcSaveDocumentAs
   standard handler for a SaveDocumentAs action.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcSaveDocumentAs (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSaveDocumentAs (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void TtcSaveDocumentAs (Document document, View view)
 {
    PtrDocument         pDoc;
    int                 frame;
@@ -547,14 +503,7 @@ View                view;
   TtcSaveDocument
   standard handler for a SaveDocument action.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcSaveDocument (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSaveDocument (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void TtcSaveDocument (Document document, View view)
 {
   PtrDocument         pDoc;
   int                 frame;

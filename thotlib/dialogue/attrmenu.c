@@ -74,12 +74,6 @@ static PtrDocument  PtrDocOfReqAttr;
 #ifdef _WINDOWS
 extern WNDPROC      lpfnTextZoneWndProc ;
 CHAR_T              WIN_buffMenu[MAX_TXT_LEN];
-
-#ifdef __STDC__
-extern LRESULT CALLBACK textZoneProc (HWND, UINT, WPARAM, LPARAM);
-#else  /* !__STDC__ */
-extern LRESULT CALLBACK textZoneProc ();
-#endif /* !__STDC_ */
 #endif /* _WINDOWS */
 
 static CHAR_T       WIN_Lab[1024];
@@ -274,9 +268,9 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
 
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
-						       (DWORD) textZoneProc);
+						       (DWORD) TextZoneProc);
       else
-	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
       
       /* Create Confirm button */
       confirmButton = CreateWindow (TEXT("BUTTON"),
@@ -428,9 +422,9 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPar
 				
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
-						       (DWORD) textZoneProc);
+						       (DWORD) TextZoneProc);
       else
-	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
       
       /* Create Apply button */
       applyButton = CreateWindow (TEXT("BUTTON"),
@@ -588,9 +582,9 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wP
       SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
-						       (DWORD) textZoneProc);
+						       (DWORD) TextZoneProc);
       else
-	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
       
       /* Create Apply button */
       applyButton = CreateWindow (TEXT("BUTTON"),

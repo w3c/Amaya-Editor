@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -28,20 +28,12 @@
 #include "callbackinit_f.h"
 
 /*----------------------------------------------------------------------
-   ElementHasAction
-   It returns TRUE if element pEl has an action associated with event event/pre
-   else it returns FALSE.
-   Only Users action are considered.
+  ElementHasAction
+  It returns TRUE if element pEl has an action associated with event/pre
+  else it returns FALSE.
+  Only Users action are considered.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool  ElementHasAction (PtrElement pEl, APPevent event, ThotBool pre)
-#else  /* __STDC__ */
-ThotBool  ElementHasAction (pEl, event, pre)
-PtrElement pEl;
-APPevent event;
-ThotBool pre;
-
-#endif /* __STDC__ */
 {
    PtrActionEvent	pActEvent;
    ThotBool		hasAction;
@@ -68,19 +60,9 @@ ThotBool pre;
    It returns TRUE if the event action takes place of the editor action
    else it returns FALSE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     CallAction (NotifyEvent * notifyEvent, APPevent event, ThotBool pre, int type, Element element, PtrSSchema schStruct, ThotBool attr)
-#else  /* __STDC__ */
-static ThotBool     CallAction (notifyEvent, event, pre, type, element, schStruct, attr)
-NotifyEvent        *notifyEvent;
-APPevent            event;
-ThotBool            pre;
-int                 type;
-ment             element;
-SSchema          schStruct;
-ThotBool		    attr;
-
-#endif /* __STDC__ */
+static ThotBool CallAction (NotifyEvent * notifyEvent, APPevent event,
+			    ThotBool pre, int type, Element element,
+			    PtrSSchema schStruct, ThotBool attr)
 {
    PtrActionEvent      pActEvent;
    PtrEventsSet        eventsSet;
@@ -184,14 +166,7 @@ ThotBool		    attr;
    It returns TRUE if it executed an action,               
    else it returns FALSE.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
-#else  /* __STDC__ */
-ThotBool            CallEventAttribute (notifyAttr, pre)
-NotifyAttribute    *notifyAttr;
-ThotBool            pre;
-
-#endif /* __STDC__ */
+ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 {
    Element             element;
    PtrSSchema          schStruct;
@@ -214,16 +189,7 @@ ThotBool            pre;
    executed the function returns 'TRUE' else it returns    
    'FALSE'.                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
-
-#else  /* __STDC__ */
-ThotBool            CallEventType (notifyEvent, pre)
-NotifyEvent        *notifyEvent;
-ThotBool            pre;
-
-#endif /* __STDC__ */
-
+ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 {
    int                 elType;
    Element             element;
