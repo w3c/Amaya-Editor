@@ -4594,6 +4594,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 		   GetHTMLDocument_callback (newdoc, 0, pathname,
 					     tempfile, NULL,
 					     (void *) ctx);
+		   InNewWindow = FALSE;
 		   TtaHandlePendingEvents ();
 		 }
 	     }
@@ -4605,6 +4606,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 			     NULL);
 	       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile,
 					 NULL, (void *) ctx);
+	       InNewWindow = FALSE;
 	       TtaHandlePendingEvents ();
 	     }
 	 }
