@@ -1003,8 +1003,8 @@ PtrSSchema        pSS;
 		       while (!(stop));
 		       condcour = pVois == NULL;
 		       /* traitement particulier pour les lignes de tableau */
-		       if (ThotLocalActions[T_Tableau_Cond_Dernier]!= NULL)
-			 (*ThotLocalActions[T_Tableau_Cond_Dernier])(pElem, &condcour);
+		       if (ThotLocalActions[T_condlast]!= NULL)
+			 (*ThotLocalActions[T_condlast])(pElem, &condcour);
 		       break;
 
 		    case PcReferred:
@@ -3734,8 +3734,8 @@ boolean             heritage;
 
    applique = TRUE;
    /* exceptions pour les attributs d'un tableau */
-   if (ThotLocalActions[T_Tableau_ApplRegleAttribut]!= NULL)
-       (*ThotLocalActions[T_Tableau_ApplRegleAttribut])
+   if (ThotLocalActions[T_ruleattr]!= NULL)
+       (*ThotLocalActions[T_ruleattr])
 	 (pEl, pAttr, pDoc, &applique);
    if (applique)
      {

@@ -6,29 +6,29 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern C_points *PointsControle ( PtrTextBuffer buffer,
+extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
                                   int nb );
-extern void DimTexte ( PtrTextBuffer adbuff,
+extern void GiveTextParams ( PtrTextBuffer adbuff,
                        int nChars,
                        ptrfont font,
                        int *width,
                        int *nSpaces );
-extern void EvalSymb ( PtrAbstractBox pAb,
+extern void GiveSymbolSize ( PtrAbstractBox pAb,
                        int *width,
                        int *height );
-extern void EvalGraph ( PtrAbstractBox pAb,
+extern void GiveGraphicSize ( PtrAbstractBox pAb,
                         int *width,
                         int *height );
-extern void EvalText ( PtrAbstractBox pAb,
+extern void GiveTextSize ( PtrAbstractBox pAb,
                        int *width,
                        int *height,
                        int *nSpaces );
-extern void EvalComp ( PtrAbstractBox pAb,
+extern void GiveEnclosureSize ( PtrAbstractBox pAb,
                        int frame,
                        int *width,
                        int *height );
-extern PtrLine DesLigne ( PtrBox pBox );
-extern void MajBox ( PtrBox pBox,
+extern PtrLine SearchLine ( PtrBox pBox );
+extern void BoxUpdate ( PtrBox pBox,
                      PtrLine adligne,
                      int dcar,
                      int dbl,
@@ -37,43 +37,43 @@ extern void MajBox ( PtrBox pBox,
                      int dy,
                      int frame,
                      boolean BCOUP );
-extern void DispBoite ( PtrAbstractBox pAb,
+extern void RemoveBoxes ( PtrAbstractBox pAb,
                         boolean Recree,
                         int frame );
-extern void DiffereEnglobement ( PtrBox pBox,
+extern void RecordEnclosing ( PtrBox pBox,
                                  boolean EnX );
-extern void TraiteEnglobement ( int frame );
-extern void ModFenetre ( int frame );
-extern void RazVue ( int frame );
-extern boolean ModifVue ( int frame,
+extern void ComputeEnclosing ( int frame );
+extern void RebuildConcreteImage ( int frame );
+extern void ClearConcreteImage ( int frame );
+extern boolean ChangeConcreteImage ( int frame,
                           int *page,
                           PtrAbstractBox Pv );
 
 #else /* __STDC__ */
 
-extern C_points *PointsControle (/* PtrTextBuffer buffer,
+extern C_points *ComputeControlPoints (/* PtrTextBuffer buffer,
                                     int nb */);
-extern void DimTexte (/* PtrTextBuffer adbuff,
+extern void GiveTextParams (/* PtrTextBuffer adbuff,
                          int nChars,
                          ptrfont font,
                          int *width,
                          int *nSpaces */);
-extern void EvalSymb (/* PtrAbstractBox pAb,
+extern void GiveSymbolSize (/* PtrAbstractBox pAb,
                          int *width,
                          int *height */);
-extern void EvalGraph (/* PtrAbstractBox pAb,
+extern void GiveGraphicSize (/* PtrAbstractBox pAb,
                           int *width,
                           int *height */);
-extern void EvalText (/* PtrAbstractBox pAb,
+extern void GiveTextSize (/* PtrAbstractBox pAb,
                          int *width,
                          int *height,
                          int *nSpaces */);
-extern void EvalComp (/* PtrAbstractBox pAb,
+extern void GiveEnclosureSize (/* PtrAbstractBox pAb,
                          int frame,
                          int *width,
                          int *height */);
-extern PtrLine DesLigne (/* PtrBox pBox */);
-extern void MajBox (/* PtrBox pBox,
+extern PtrLine SearchLine (/* PtrBox pBox */);
+extern void BoxUpdate (/* PtrBox pBox,
                        PtrLine adligne,
                        int dcar,
                        int dbl,
@@ -82,15 +82,15 @@ extern void MajBox (/* PtrBox pBox,
                        int dy,
                        int frame,
                        boolean BCOUP */);
-extern void DispBoite (/* PtrAbstractBox pAb,
+extern void RemoveBoxes (/* PtrAbstractBox pAb,
                           boolean Recree,
                           int frame */);
-extern void DiffereEnglobement (/* PtrBox pBox,
+extern void RecordEnclosing (/* PtrBox pBox,
                                    boolean EnX */);
-extern void TraiteEnglobement (/* int frame */);
-extern void ModFenetre (/* int frame */);
-extern void RazVue (/* int frame */);
-extern boolean ModifVue (/* int frame,
+extern void ComputeEnclosing (/* int frame */);
+extern void RebuildConcreteImage (/* int frame */);
+extern void ClearConcreteImage (/* int frame */);
+extern boolean ChangeConcreteImage (/* int frame,
                             int *page,
                             PtrAbstractBox Pv */);
 

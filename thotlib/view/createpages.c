@@ -1542,7 +1542,7 @@ boolean             EnAvant;
 		     /* on appelle Modifvue a partir du pave haut (ou bas de page) */
 		     h = 0;
 		     frame = pDoc->DocViewFrame[VueNb - 1];
-		     bool = ModifVue (frame, &h, pAb);
+		     bool = ChangeConcreteImage (frame, &h, pAb);
 		     /* calcul de la hauteur du pave haut ou bas de page */
 		     HautCoupure (pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
 		     /* Hauteur = dimension verticale du pave haut (ou bas) de page */
@@ -2500,7 +2500,7 @@ boolean            *arret;
 			     frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 			  else
 			     frame = pDoc->DocViewFrame[VueNb - 1];
-			  bool = ModifVue (frame, &h, pAbbRoot);
+			  bool = ChangeConcreteImage (frame, &h, pAbbRoot);
 			  FreeDeadAbstractBoxes (pAbbRoot);
 			  /* on met les regles de creation en attente */
 			  /* pour provoquer la recreation des paves de pres */
@@ -2997,7 +2997,7 @@ boolean            *arret;
 				       frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 				    else
 				       frame = pDoc->DocViewFrame[VueNb - 1];
-				    bool = ModifVue (frame, &h, pAb);
+				    bool = ChangeConcreteImage (frame, &h, pAb);
 				 }
 			       if (pAb->AbLeafType == LtPicture)
 				 {
@@ -3313,7 +3313,7 @@ boolean            *arret;
 	     /* on signale au mediateur les paves */
 	     /* (au cas ou il ne les ait pas encore vus) */
 	     /* on appelle Modifvue */
-	     bool = ModifVue (frame, &h, pAbbRoot);
+	     bool = ChangeConcreteImage (frame, &h, pAbbRoot);
 	     pAbb = pEl->ElAbstractBox[VueNb - 1];
 	     if (pAbb->AbPresentationBox)
 	       {

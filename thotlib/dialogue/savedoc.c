@@ -439,8 +439,8 @@ View                view;
 		  TteConnectAction (T_buildpathdocbuffer, (Proc) BuildPathDocBuffer);
 	       }
 	     frame = GetWindowNumber (document, view);
-	     if (ThotLocalActions[T_update_paragraph] != NULL)
-		(*ThotLocalActions[T_update_paragraph]) (FntrTable[frame - 1].FrAbstractBox, frame);
+	     if (ThotLocalActions[T_updateparagraph] != NULL)
+		(*ThotLocalActions[T_updateparagraph]) (FntrTable[frame - 1].FrAbstractBox, frame);
 	     SauveDocComme (pDoc);
 	  }
      }
@@ -467,8 +467,8 @@ View                view;
 	   /* il y a un document pour cette entree de la table */
 	  {
 	     frame = GetWindowNumber (document, view);
-	     if (ThotLocalActions[T_update_paragraph] != NULL)
-		(*ThotLocalActions[T_update_paragraph]) (FntrTable[frame - 1].FrAbstractBox, frame);
+	     if (ThotLocalActions[T_updateparagraph] != NULL)
+		(*ThotLocalActions[T_updateparagraph]) (FntrTable[frame - 1].FrAbstractBox, frame);
 	     pDoc->DocModified = !SauveDocument (pDoc, 4);
 	  }
      }

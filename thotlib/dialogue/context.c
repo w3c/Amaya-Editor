@@ -784,8 +784,8 @@ XSelectionEvent    *event;
 			 if (buffer != NULL)
 			   {
 			      /* returns the cut buffer */
-			      if (ThotLocalActions[T_pasteClipboard] != NULL)
-				 (*ThotLocalActions[T_pasteClipboard]) (buffer, r);
+			      if (ThotLocalActions[T_pasteclipboard] != NULL)
+				 (*ThotLocalActions[T_pasteclipboard]) (buffer, r);
 			   }
 		      }
 		    else
@@ -798,8 +798,8 @@ XSelectionEvent    *event;
 			 if (r == Success && type != None && format == 8)
 			   {
 			      /* paste the content of the selection */
-			      if (ThotLocalActions[T_pasteClipboard] != NULL)
-				 (*ThotLocalActions[T_pasteClipboard]) (buffer, (int) nbitems);
+			      if (ThotLocalActions[T_pasteclipboard] != NULL)
+				 (*ThotLocalActions[T_pasteclipboard]) (buffer, (int) nbitems);
 			   }
 		      }
 		 }

@@ -737,7 +737,7 @@ int                 frame;
 			  fleche = 3;
 		       /* calcul des points de controles */
 		       if (pBox->BxPictInfo == NULL)
-			  pBox->BxPictInfo = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
+			  pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
 		       AfCourbe (frame, i, style, xd, yd, pBox->BxBuffer,
 				 pBox->BxNChars, RO, op, fg, fleche, (C_points *) pBox->BxPictInfo);
 		       break;
@@ -748,7 +748,7 @@ int                 frame;
 		    case 's':	/* spline fermee */
 		       /* calcul des points de controles */
 		       if (pBox->BxPictInfo == NULL)
-			  pBox->BxPictInfo = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
+			  pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
 		       AfSpline (frame, i, style, xd, yd, pBox->BxBuffer,
 				 pBox->BxNChars, RO, op, fg, bg, pv->AbFillPattern, (C_points *) pBox->BxPictInfo);
 		       break;
@@ -928,7 +928,7 @@ int                 frame;
 			   if (pBox->BxAbstractBox->AbHeight.DimValue != 0 || pBox->BxAbstractBox->AbWidth.DimValue != 0)
 			     {
 				/* On evalue la longueur reelle de la chaine de caractere */
-				EvalText (pBox->BxAbstractBox, &lg, &i, &i);
+				GiveTextSize (pBox->BxAbstractBox, &lg, &i, &i);
 				if (avecfond)
 				   AfRectangle (frame, 0, 0, x, y, lg, FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
 				x += AfChaine (pBu1->BuContent, indbuff, buffrest, frame, x,

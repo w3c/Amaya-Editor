@@ -1127,7 +1127,7 @@ int                 frame;
 		  /* boites filles est positionnee par une relation hors-structure */
 		  /* --> il faut reevaluer la largeur correspondante.              */
 		  if (reenglobx && pBox->BxContentWidth)
-		     DiffereEnglobement (pBox, TRUE);
+		     RecordEnclosing (pBox, TRUE);
 	       }
 	  }
 	Englobement = SaveEnglob;	/* On restaure */
@@ -1280,7 +1280,7 @@ int                 frame;
 		  /* boites filles est positionnee par une relation hors-structure */
 		  /* --> il faut reevaluer la hauteur correspondante.              */
 		  if (reengloby && pBox->BxContentHeight)
-		     DiffereEnglobement (pBox, FALSE);
+		     RecordEnclosing (pBox, FALSE);
 	       }
 	  }
 	Englobement = SaveEnglob;	/* On restaure */
@@ -2046,7 +2046,7 @@ int                 frame;
 			       if (pAb->AbEnclosing == pavebox
 				   && (pavebox->AbInLine || pavebox->AbBox->BxType == BoGhost))
 				 {
-				    adligne = DesLigne (box1);
+				    adligne = SearchLine (box1);
 				    if (adligne == NULL)
 				       dxo = 0;		/* la ligne n'est pas encore construite */
 				    else
@@ -2103,7 +2103,7 @@ int                 frame;
 			       if (pBox == pMa1->VsBox)
 				  adligne = pMa1->VsLine;
 			       else
-				  adligne = DesLigne (pBox);
+				  adligne = SearchLine (pBox);
 			       MajBloc (pAb, adligne, pBox, delta, dbl, frame);
 			    }
 			  /* Si l'englobement n'est pas prevu en fin de traitement */
@@ -2112,7 +2112,7 @@ int                 frame;
 			     /* On differe le traitement de l'englobement   */
 			     /* quand la mise a jour a une origine externe  */
 			     if (Propage != ToAll)
-				DiffereEnglobement (pAb->AbBox, TRUE);
+				RecordEnclosing (pAb->AbBox, TRUE);
 			  /* l'englobement d'une boite ne peut etre traite */
 			  /* plus de deux fois (sinon on boucle).      */
 			     else if (pAb->AbBox->BxNPixels <= 1)
@@ -2478,7 +2478,7 @@ int                 frame;
 			       if (pAb->AbEnclosing == pavebox
 				   && (pavebox->AbInLine || pavebox->AbBox->BxType == BoGhost))
 				 {
-				    adligne = DesLigne (box1);
+				    adligne = SearchLine (box1);
 				    if (adligne == NULL)
 				       dyo = 0;		/* la ligne n'est pas encore construite */
 				    else
@@ -2547,7 +2547,7 @@ int                 frame;
 			     /* On differe le traitement de l'englobement   */
 			     /* quand la mise a jour a une origine externe  */
 			     if (Propage != ToAll)
-				DiffereEnglobement (pAb->AbBox, FALSE);
+				RecordEnclosing (pAb->AbBox, FALSE);
 			  /* l'englobement d'une boite ne peut etre traite */
 			  /* plus de deux fois (sinon on boucle).      */
 			     else if (pAb->AbBox->BxSpaceWidth <= 1)
@@ -3113,7 +3113,7 @@ int                 frame;
 	if (nonvide)
 	   larg += val;		/* Nouvelle position extreme droite */
 	if (larg == x && pAb->AbVolume == 0)
-	   EvalText (pAb, &larg, &x, &i);
+	   GiveTextSize (pAb, &larg, &x, &i);
 	else
 	   larg -= x;
 	x = larg - pBo1->BxWidth;	/* Difference de largeur */
@@ -3203,7 +3203,7 @@ int                 frame;
    else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
 	    && pBo1->BxType != BoGhost)
      {
-	EvalComp (pAb, frame, &larg, &val);
+	GiveEnclosureSize (pAb, frame, &larg, &val);
 	ChangeLgContenu (pBo1, org, larg, 0, frame);
      }
 }
@@ -3335,7 +3335,7 @@ int                 frame;
 	if (nonvide)
 	   haut += val;		/* Nouvelle position extreme basse */
 	if (haut == y && pAb->AbVolume == 0)
-	   EvalText (pAb, &y, &haut, &i);
+	   GiveTextSize (pAb, &y, &haut, &i);
 	else
 	   haut -= y;
 	y = haut - pBo1->BxHeight;	/* Difference de hauteur */
@@ -3433,7 +3433,7 @@ int                 frame;
    else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
 	    && pBo1->BxType != BoGhost)
      {
-	EvalComp (pAb, frame, &val, &haut);
+	GiveEnclosureSize (pAb, frame, &val, &haut);
 	ChangeHtContenu (pBo1, org, haut, frame);
      }
 }

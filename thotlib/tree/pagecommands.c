@@ -377,11 +377,11 @@ int                 VueNb;
 	     det = TRUE;	/* des paves ont ete detruits */
 	  }
 	/* signale les paves morts au Mediateur */
-	/* si pas de destruction, on appelle ModifVue pour positionner ret */
+	/* si pas de destruction, on appelle ChangeConcreteImage pour positionner ret */
 	/* et refait evaluer la coupure de page */
 	Hauteurffective = HauteurCoupPage;
 	ChangeRHPage (PavRac, pDoc, VueNb);
-	ret = ModifVue (frame, &Hauteurffective, PavRac);
+	ret = ChangeConcreteImage (frame, &Hauteurffective, PavRac);
 	if (det)
 	   /* libere tous les paves morts de la vue */
 	   FreeDeadAbstractBoxes (PavRac);
@@ -503,7 +503,7 @@ int                 VueNb;
      }
    /* signale les paves morts au Mediateur */
    Hauteurffective = HauteurPage;
-   ret = ModifVue (frame, &Hauteurffective, PavRac);
+   ret = ChangeConcreteImage (frame, &Hauteurffective, PavRac);
    /* libere tous les paves morts de la vue */
    FreeDeadAbstractBoxes (PavRac);
    return ret;

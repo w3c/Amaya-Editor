@@ -2580,7 +2580,7 @@ int                 frame;
 	  {
 	     /* fait reevaluer la mise en lignes et on recupere */
 	     /* la hautteur et la largeur du contenu de la boite */
-	     EvalComp (pAb, frame, &width, &height);
+	     GiveEnclosureSize (pAb, frame, &width, &height);
 	  }
 	else
 	  {
@@ -2881,7 +2881,7 @@ PtrAbstractBox    pAb;
    pBo1 = pAb->AbBox;
    if (Propage != ToSiblings || pBo1->BxVertFlex)
      {
-	pLi1 = DesLigne (pBox);
+	pLi1 = SearchLine (pBox);
 	/*pDimAb = &pAb->AbHeight; */
 
 	if (pLi1 != NULL)

@@ -85,14 +85,14 @@ C_points           *cp;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PointsControle calcule les points de controle de la courbe.     | */
+/* |    ComputeControlPoints calcule les points de controle de la courbe.     | */
 /* |            Le parametre nb contient le nombre de points + 1        | */
 /* |            definis dans la polyline.                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-C_points           *PointsControle (PtrTextBuffer buffer, int nb)
+C_points           *ComputeControlPoints (PtrTextBuffer buffer, int nb)
 #else  /* __STDC__ */
-C_points           *PointsControle (buffer, nb)
+C_points           *ComputeControlPoints (buffer, nb)
 PtrTextBuffer      buffer;
 int                 nb;
 
@@ -223,7 +223,7 @@ int                 nb;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DimTexte calcule les dimensions : hauteur, base, largeur et     | */
+/* |    GiveTextParams calcule les dimensions : hauteur, base, largeur et     | */
 /* |            nombre de blancs contenus (nSpaces).                    | */
 /* |            nSpaces contient initialement 0 si la largeur           | */
 /* |            du blanc est celle de la fonte sinon la valeur imposee. | */
@@ -231,9 +231,9 @@ int                 nb;
 /* |            caractere du texte.                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DimTexte (PtrTextBuffer pBuffer, int nChars, ptrfont font, int *width, int *nSpaces)
+void                GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font, int *width, int *nSpaces)
 #else  /* __STDC__ */
-void                DimTexte (pBuffer, nChars, font, width, nSpaces)
+void                GiveTextParams (pBuffer, nChars, font, width, nSpaces)
 PtrTextBuffer       pBuffer;
 int                 nChars;
 ptrfont             font;
@@ -515,12 +515,12 @@ PtrBox            pBox;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    EvalText evalue les dimensions de la boite du pave Texte.       | */
+/* |    GiveTextSize evalue les dimensions de la boite du pave Texte.       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void      EvalText (PtrAbstractBox pAb, int *width, int *height, int *nSpaces)
+void      GiveTextSize (PtrAbstractBox pAb, int *width, int *height, int *nSpaces)
 #else  /* __STDC__ */
-void      EvalText (pAb, width, height, nSpaces)
+void      GiveTextSize (pAb, width, height, nSpaces)
 PtrAbstractBox      pAb;
 int                *width;
 int                *height;
@@ -545,19 +545,19 @@ int                *nSpaces;
 	/* Texte -> Calcule directement ses dimensions */
 	*width = 1;		/* Index du premier caractere a traiter */
 	*nSpaces = 0;		/* On prend la largeur reelle du blanc */
-	DimTexte (pAb->AbText, nChars, font, width, nSpaces);
+	GiveTextParams (pAb->AbText, nChars, font, width, nSpaces);
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    EvalComp e'value les dimensions du contenu du pave' compose'    | */
+/* |    GiveEnclosureSize e'value les dimensions du contenu du pave' compose'    | */
 /* |            pAb dans la fenetree^tre frame.                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void       EvalComp (PtrAbstractBox pAb, int frame, int *width, int *height)
+void       GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width, int *height)
 #else  /* __STDC__ */
-void       EvalComp (pAb, frame, width, height)
+void       GiveEnclosureSize (pAb, frame, width, height)
 PtrAbstractBox      pAb;
 int                 frame;
 int                *width;
@@ -821,7 +821,7 @@ int                *height;
    /* La boite composee est vide ? */
    if (pFirstAb == NULL && pAb->AbVolume == 0)
      {
-	EvalText (pAb, &x, &y, &val);
+	GiveTextSize (pAb, &x, &y, &val);
 	if (*width == 0)
 	   *width = x;
 	if (*height == 0)
@@ -1092,7 +1092,7 @@ int                *carIndex;
 		    pCurrentBox->BxNChars = pAb->AbVolume;
 		    pCurrentBox->BxFirstChar = 1;
 		    pCurrentBox->BxSpaceWidth = 0;
-		    EvalText (pAb, &width, &height, &i);
+		    GiveTextSize (pAb, &width, &height, &i);
 		    pCurrentBox->BxNSpaces = i;
 		    break;
 		 case LtPicture:
@@ -1151,7 +1151,7 @@ int                *carIndex;
 		      }
 		    pCurrentBox->BxSpaceWidth = 0;	/* pas d'englobement vertical en cours */
 		    pCurrentBox->BxNPixels = 0;	/* pas d'englobement horizontal en cours */
-		    EvalComp (pAb, frame, &width, &height);
+		    GiveEnclosureSize (pAb, frame, &width, &height);
 		    break;
 		 default:
 		    break;
@@ -1163,7 +1163,7 @@ int                *carIndex;
 	/* indirectement (parce que la boite contient un bloc de ligne) la  */
 	/* hauteur du contenu de la boite.                                  */
 	if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
-	   EvalComp (pAb, frame, &width, &height);
+	   GiveEnclosureSize (pAb, frame, &width, &height);
 	ChangeHtContenu (pCurrentBox, pCurrentBox, height, frame);
 
 	/* Positionnement des axes de la boite construite */
@@ -1196,13 +1196,13 @@ int                *carIndex;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DesLigne cherche l'adresse de la ligne englobant la boite       | */
+/* |    SearchLine cherche l'adresse de la ligne englobant la boite       | */
 /* |            designee.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrLine            DesLigne (PtrBox pBox)
+PtrLine            SearchLine (PtrBox pBox)
 #else  /* __STDC__ */
-PtrLine            DesLigne (pBox)
+PtrLine            SearchLine (pBox)
 PtrBox            pBox;
 #endif /* __STDC__ */
 {
@@ -1320,7 +1320,7 @@ PtrBox            pBox;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MajBox met a jour les informations d'une boite terminale (nombre| */
+/* |    BoxUpdate met a jour les informations d'une boite terminale (nombre| */
 /* |            de caracteres, nombre de blancs, largeur).              | */
 /* |            La largeur ajoutee est wDelta pour la boite coupee ou   | */
 /* |            entiere, adjustDelta ou wDelta (si adjustDelta est 0)   | */
@@ -1329,9 +1329,9 @@ PtrBox            pBox;
 /* |            deux boites, donc seule la boite coupee est mise a jour.| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void          MajBox (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int wDelta, int adjustDelta, int hDelta, int frame, boolean splitBox)
+void          BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int wDelta, int adjustDelta, int hDelta, int frame, boolean splitBox)
 #else  /* __STDC__ */
-void          MajBox (pBox, pLine, charDelta, spaceDelta, wDelta, adjustDelta, hDelta, frame, splitBox)
+void          BoxUpdate (pBox, pLine, charDelta, spaceDelta, wDelta, adjustDelta, hDelta, frame, splitBox)
 PtrBox            pBox;
 PtrLine           pLine;
 int               charDelta;
@@ -1421,7 +1421,7 @@ boolean           splitBox;
 	   /* Faut-il mettre a jour le bloc de ligne englobant ? */
 	   if (Propage == ToAll)
 	     {
-		ligne = DesLigne (pBox->BxNexChild);
+		ligne = SearchLine (pBox->BxNexChild);
 		ReevalBloc (pAb->AbEnclosing, ligne, pBox, frame);
 	     }
 	}
@@ -1449,15 +1449,15 @@ boolean           splitBox;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DispBoite libere toutes les boites correpondant aux paves inclus| */
+/* |    RemoveBoxes libere toutes les boites correpondant aux paves inclus| */
 /* |            dans pAb y compris celle du pave passe' en parametre    | */
 /* |            toRemake est vrai si la boite doit etre recree          | */
 /* |            immediatement apres.                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DispBoite (PtrAbstractBox pAb, boolean toRemake, int frame)
+void                RemoveBoxes (PtrAbstractBox pAb, boolean toRemake, int frame)
 #else  /* __STDC__ */
-void                DispBoite (pAb, toRemake, frame)
+void                RemoveBoxes (pAb, toRemake, frame)
 PtrAbstractBox             pAb;
 boolean             toRemake;
 int                 frame;
@@ -1495,7 +1495,7 @@ int                 frame;
 	     /* Liberation des boites des paves inclus */
 	     while (pChildAb != NULL)
 	       {
-		  DispBoite (pChildAb, toRemake, frame);
+		  RemoveBoxes (pChildAb, toRemake, frame);
 		  pChildAb = pChildAb->AbNext;	/* while */
 	       }
 
@@ -1832,7 +1832,7 @@ int                 frame;
 	RazLiens (pBox);
 	RazDim (pBox, TRUE, frame);
 	RazDim (pBox, FALSE, frame);
-	DispBoite (pAb, FALSE, frame);
+	RemoveBoxes (pAb, FALSE, frame);
 
 	/* Mise a jour de la liste des boites terminales */
 	/* premiere boite de la liste */
@@ -1923,7 +1923,7 @@ int                 frame;
 			      height = 0;
 			      break;
 			   case LtText:
-			      EvalText (pAb, &width, &height, &nSpaces);
+			      GiveTextSize (pAb, &width, &height, &nSpaces);
 
 			      /* Si la boite est justifiee */
 			      if (pBox->BxSpaceWidth != 0)
@@ -2023,7 +2023,7 @@ int                 frame;
 		  else
 		     height -= pBox->BxHeight;	/* ecart de hauteur */
 		  pLine = NULL;
-		  MajBox (pBox, pLine, charDelta, nSpaces, width, adjustDelta, height, frame, FALSE);
+		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width, adjustDelta, height, frame, FALSE);
 		  result = TRUE;
 	       }
 
@@ -2067,7 +2067,7 @@ int                 frame;
 		  switch (pAb->AbLeafType)
 			{
 			   case LtText:
-			      EvalText (pAb, &width, &height, &i);
+			      GiveTextSize (pAb, &width, &height, &i);
 			      break;
 			   case LtPicture:
 			      GivePictureSize (pAb, &width, &height);
@@ -2087,7 +2087,7 @@ int                 frame;
 				   width = pBox->BxWidth;
 				}
 			      else
-				 EvalComp (pAb, frame, &width, &height);
+				 GiveEnclosureSize (pAb, frame, &width, &height);
 			      break;
 			   default:
 			      width = pBox->BxWidth;
@@ -2114,7 +2114,7 @@ int                 frame;
 		  switch (pAb->AbLeafType)
 			{
 			   case LtText:
-			      EvalText (pAb, &width, &height, &i);
+			      GiveTextSize (pAb, &width, &height, &i);
 			      break;
 			   case LtPicture:
 			      GivePictureSize (pAb, &width, &height);
@@ -2136,7 +2136,7 @@ int                 frame;
 				     height = pLine->LiYOrg + pLine->LiHeight;
 				}
 			      else
-				 EvalComp (pAb, frame, &width, &height);
+				 GiveEnclosureSize (pAb, frame, &width, &height);
 			      break;
 			   default:
 			      height = pBox->BxHeight;
@@ -2217,7 +2217,7 @@ int                 frame;
 		  if (!pAb->AbHorizEnclosing)
 		    {
 		       pPosAb = &pAb->AbVertPos;
-		       pLine = DesLigne (pBox);
+		       pLine = SearchLine (pBox);
 		       if (pLine != NULL)
 			 {
 			    i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
@@ -2265,12 +2265,12 @@ int                 frame;
 
 
 /* ---------------------------------------------------------------------- */
-/* | DiffereEnglobement  enregistre les englobements diffe're's.        | */
+/* | RecordEnclosing  enregistre les englobements diffe're's.        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DiffereEnglobement (PtrBox pBox, boolean horizRef)
+void                RecordEnclosing (PtrBox pBox, boolean horizRef)
 #else  /* __STDC__ */
-void                DiffereEnglobement (pBox, horizRef)
+void                RecordEnclosing (pBox, horizRef)
 PtrBox            pBox;
 boolean             horizRef;
 #endif /* __STDC__ */
@@ -2318,12 +2318,12 @@ boolean             horizRef;
 
 
 /* ---------------------------------------------------------------------- */
-/* | TraiteEnglobement traite les contraintes d'englobement diffe're'es | */
+/* | ComputeEnclosing traite les contraintes d'englobement diffe're'es | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TraiteEnglobement (int frame)
+void                ComputeEnclosing (int frame)
 #else  /* __STDC__ */
-void                TraiteEnglobement (frame)
+void                ComputeEnclosing (frame)
 int                 frame;
 #endif /* __STDC__ */
 {
@@ -2366,14 +2366,14 @@ int                 frame;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ModFenetre reevalue une vue de document suite a` la modification| */
+/* |    RebuildConcreteImage reevalue une vue de document suite a` la modification| */
 /* |            du frame. Reaffiche la vue dans la fenetre supposee     | */
 /* |            nettoyee.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ModFenetre (int frame)
+void                RebuildConcreteImage (int frame)
 #else  /* __STDC__ */
-void                ModFenetre (frame)
+void                RebuildConcreteImage (frame)
 int                 frame;
 #endif /* __STDC__ */
 {
@@ -2402,7 +2402,7 @@ int                 frame;
 		  /* S'il y a une regle de minimum il faut la verifier */
 		  if (!condition)
 		    {
-		       EvalComp (pAb, frame, &width, &height);
+		       GiveEnclosureSize (pAb, frame, &width, &height);
 		       ChangeLgContenu (pCurrentBox, pCurrentBox, width, 0, frame);
 		    }
 	       }
@@ -2414,7 +2414,7 @@ int                 frame;
 		  /* S'il y a une regle de minimum il faut la verifier */
 		  if (!condition)
 		    {
-		       EvalComp (pAb, frame, &width, &height);
+		       GiveEnclosureSize (pAb, frame, &width, &height);
 		       ChangeHtContenu (pCurrentBox, pCurrentBox, height, frame);
 		    }
 	       }
@@ -2441,7 +2441,7 @@ int                 frame;
 	     pFrame->FrReady = status;	/* La frame est affichable */
 
 	     /* Traitement des englobements retardes */
-	     TraiteEnglobement (frame);
+	     ComputeEnclosing (frame);
 
 	     /* RemoveElement la selection eventuelle */
 	     SetSelect (frame, FALSE);
@@ -2524,13 +2524,13 @@ int                 frame;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    RazVue libere toutes les boites de la vue dont on donne         | */
+/* |    ClearConcreteImage libere toutes les boites de la vue dont on donne         | */
 /* |            le pave racine.                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazVue (int frame)
+void                ClearConcreteImage (int frame)
 #else  /* __STDC__ */
-void                RazVue (frame)
+void                ClearConcreteImage (frame)
 int                 frame;
 #endif /* __STDC__ */
 {
@@ -2544,7 +2544,7 @@ int                 frame;
 	EndInsert ();
 	ResetSelect (frame);
 	/* Liberation de la hierarchie */
-	DispBoite (pFrame->FrAbstractBox, FALSE, frame);
+	RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);
 	pFrame->FrAbstractBox = NULL;
 	pFrame->FrReady = TRUE;	/* La frame est affichable */
 	DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
@@ -2686,7 +2686,7 @@ int                 frame;
 				 if (pBox->BxType == BoSplit)
 				    while (pBox->BxNexChild != NULL)
 				       pBox = pBox->BxNexChild;
-				 pLine = DesLigne (pBox);
+				 pLine = SearchLine (pBox);
 			      }
 			    else
 			       pLine = NULL;
@@ -2700,7 +2700,7 @@ int                 frame;
 			 {
 			    if (pBox->BxType == BoSplit && pBox->BxNexChild != NULL)
 			       pBox = pBox->BxNexChild;
-			    pLine = DesLigne (pBox);
+			    pLine = SearchLine (pBox);
 			 }
 		       else
 			  pLine = NULL;
@@ -2748,9 +2748,9 @@ int                 frame;
 /* |            coupe la limite ou de'borde sont marque's.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             ModifVue (int frame, int *pageHeight, PtrAbstractBox pAb)
+boolean             ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 #else  /* __STDC__ */
-boolean             ModifVue (frame, pageHeight, pAb)
+boolean             ChangeConcreteImage (frame, pageHeight, pAb)
 int                 frame;
 int                *pageHeight;
 PtrAbstractBox      pAb;
@@ -2787,7 +2787,7 @@ PtrAbstractBox      pAb;
 	else if (pAb->AbEnclosing == NULL && pAb->AbDead)
 	  {
 	     if (pAb == pFrame->FrAbstractBox)
-		RazVue (frame);
+		ClearConcreteImage (frame);
 	     else
 		TtaDisplaySimpleMessage (INFO, LIB, VIEW_MODIFIED_BEFORE_CREATION);
 	  }
@@ -2855,7 +2855,7 @@ PtrAbstractBox      pAb;
 			       if (pBox->BxType == BoSplit)
 				  while (pBox->BxNexChild != NULL)
 				     pBox = pBox->BxNexChild;
-			       pLine = DesLigne (pBox);
+			       pLine = SearchLine (pBox);
 			    }
 		       }
 		     else
@@ -2864,7 +2864,7 @@ PtrAbstractBox      pAb;
 			  pBox = pAb->AbBox;
 			  if (pBox->BxType == BoSplit)
 			     pBox = pBox->BxNexChild;
-			  pLine = DesLigne (pBox);
+			  pLine = SearchLine (pBox);
 		       }
 	       }
 
@@ -2882,7 +2882,7 @@ PtrAbstractBox      pAb;
 	     Propage = ToAll;	/* On passe en mode normal de propagation */
 
 	     /* Traitement des englobements retardes */
-	     TraiteEnglobement (frame);
+	     ComputeEnclosing (frame);
 
 
 	     /* On ne limite plus le traitement de l'englobement */
@@ -2933,7 +2933,7 @@ PtrAbstractBox      pAb;
 	       }
 	     /* Est-ce que l'on a de nouvelles boites dont le contenu est */
 	     /* englobe et depend de relations hors-structure ?           */
-	     TraiteEnglobement (frame);
+	     ComputeEnclosing (frame);
 	     /* Verification de la mise en page */
 	     if (*pageHeight > 0)
 	       /* changement de la signification de page */

@@ -502,7 +502,7 @@ boolean             complete;
    if (complete)
      {
 	TuePave (pAbbRoot);
-	ModifVue (frame, &h, pAbbRoot);
+	ChangeConcreteImage (frame, &h, pAbbRoot);
 	detruit (pDoc, Vue, Assoc, TRUE);
 	FrameTable[frame].FrDoc = 0;
 	/*FntrTable[frame - 1].FrAbstractBox = NULL; */
@@ -526,7 +526,7 @@ boolean             complete;
 #else  /* __COLPAGE__ */
 	h = 0;
 #endif /* __COLPAGE__ */
-	ModifVue (frame, &h, pAbbRoot);
+	ChangeConcreteImage (frame, &h, pAbbRoot);
 	/* libere tous les paves morts de la vue */
 	FreeDeadAbstractBoxes (pAbbRoot);
 
@@ -1449,7 +1449,7 @@ PtrDocument         pDoc;
 	frame = pDoc->DocAssocFrame[Vue - 1];
 	CreePaves (pElRacine, pDoc, 1, TRUE, TRUE, &complet);
 	h = 0;
-	ModifVue (frame, &h, pAbbRoot);
+	ChangeConcreteImage (frame, &h, pAbbRoot);
      }
    else
      {
@@ -1464,7 +1464,7 @@ PtrDocument         pDoc;
 	frame = pDoc->DocViewFrame[Vue - 1];
 	CreePaves (pElRacine, pDoc, Vue, TRUE, TRUE, &complet);
 	h = 0;
-	ModifVue (frame, &h, pAbbRoot);
+	ChangeConcreteImage (frame, &h, pAbbRoot);
      }
 }				/* RecreeImageVue */
 
@@ -2017,8 +2017,8 @@ Document            document;
 	   /* l'element qui precede la partie detruite devient dernier */
 	   PlusPremDer (pPrevious, pDoc, FALSE, FALSE);
 	/* traitement particulier aux tableaux */
-      if (ThotLocalActions[T_TableauCreeFiletLigne]!=NULL)
-        (*ThotLocalActions[T_TableauCreeFiletLigne])(pPrevious, pEl, pDoc);
+      if (ThotLocalActions[T_createhairline]!=NULL)
+        (*ThotLocalActions[T_createhairline])(pPrevious, pEl, pDoc);
      }
    /* reevalue l'image de toutes les vues */
    AbstractImageUpdated (pDoc);
@@ -2304,7 +2304,7 @@ int                 delta;
 		  {
 		     h = 0;
 		     /* on ne s'occupe pas de la hauteur de page */
-		     ModifVue (frame, &h, pAbbox1);
+		     ChangeConcreteImage (frame, &h, pAbbox1);
 		  }
 	     }
      }
@@ -2457,7 +2457,7 @@ Document            document;
 		  frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 	       }
 	     h = 0;		/* on ne s'occupe pas de la hauteur de page */
-	     ModifVue (frame, &h, pAb->AbEnclosing);
+	     ChangeConcreteImage (frame, &h, pAb->AbEnclosing);
 	     if (pAb->AbDead && pAb->AbNext != NULL)
 		pAb->AbNext->AbVolume += dvol;
 	     do

@@ -2537,7 +2537,7 @@ int                 VueNb;
 			      {
 				 DestrAbbNext (pAbb1, pDoc);
 				 h = 0;
-				 bool = ModifVue (frame, &h, pAbbRoot);
+				 bool = ChangeConcreteImage (frame, &h, pAbbRoot);
 				 FreeDeadAbstractBoxes (pAbbRoot);
 			      }
 			    if (assoc)
@@ -3734,7 +3734,7 @@ PtrDocument         pDocRef;
 #else  /* __COLPAGE__ */
 		      h = HauteurPage;
 #endif /* __COLPAGE__ */
-		      (void) ModifVue (frame, &h, pPavRef);
+		      (void) ChangeConcreteImage (frame, &h, pPavRef);
 		      /* on ne reaffiche pas si on est en train de calculer */
 		      /* les pages */
 #ifdef __COLPAGE__
@@ -4090,7 +4090,7 @@ boolean             reaff;
 #else  /* __COLPAGE__ */
 		   h = HauteurPage;
 #endif /* __COLPAGE__ */
-		   ModifVue (frame, &h, pAb);
+		   ChangeConcreteImage (frame, &h, pAb);
 		   /* on ne reaffiche pas si on est en train de calculer les */
 		   /* pages */
 #ifdef __COLPAGE__
@@ -4203,7 +4203,7 @@ boolean             reaff;
 #else  /* __COLPAGE__ */
 		     h = HauteurPage;
 #endif /* __COLPAGE__ */
-		     ModifVue (frame, &h, pAb);
+		     ChangeConcreteImage (frame, &h, pAb);
 		     /* on ne reaffiche pas si on est en train de calculer les */
 		     /* pages */
 #ifdef __COLPAGE__
@@ -4535,7 +4535,7 @@ boolean             reaff;
 #else  /* __COLPAGE__ */
 						 h = HauteurPage;
 #endif /* __COLPAGE__ */
-						 ModifVue (frame, &h, pAbb);
+						 ChangeConcreteImage (frame, &h, pAbb);
 						 /* on ne reaffiche pas si on est en
 						    train de calculer les pages */
 #ifdef __COLPAGE__

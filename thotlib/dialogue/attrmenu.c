@@ -797,8 +797,8 @@ int                 frame;
 		pAttrNouv->AeAttrReference->RdAttribute = pAttrNouv;
 		/* demande a l'utilisateur l'element reference' */
 		if (LinkReference (PremSel, pAttrNouv, SelDoc, &AssocCreated))
-		  if (ThotLocalActions[T_TableauVerifExtension]!=NULL)
-		    (*ThotLocalActions[T_TableauVerifExtension])
+		  if (ThotLocalActions[T_checkextens]!=NULL)
+		    (*ThotLocalActions[T_checkextens])
 		      (pAttrNouv, PremSel, DerSel, FALSE);
 		if (AssocCreated != NULL)
 		  {

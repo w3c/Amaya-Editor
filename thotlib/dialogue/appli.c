@@ -232,7 +232,7 @@ void                MSChangeTaille (int frame, int larg, int haut, int top_delta
    FrameTable[frame].FrHeight = (int) haut;
 
    /* need to recompute the content of the window */
-   ModFenetre (frame);
+   RebuildConcreteImage (frame);
 
    /* recompute the scroll bars
       MajScrolls(frame); */
@@ -285,7 +285,7 @@ int                *infos;
 	     FrameTable[frame].FrHeight = (int) haut;
 
 	     /* Il faut reevaluer le contenu de la fenetre */
-	     ModFenetre (frame);
+	     RebuildConcreteImage (frame);
 
 	     /* Reevalue les ascenseurs */
 	     MajScrolls (frame);
@@ -1227,8 +1227,8 @@ XEvent             *ev;
 			     }
 			   else
 			     {
-				if (ThotLocalActions[T_creecolle] != NULL)
-				   (*ThotLocalActions[T_creecolle]) (TRUE, FALSE, 'R', &ok);
+				if (ThotLocalActions[T_insertpaste] != NULL)
+				   (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
 			     }
 
 			default:

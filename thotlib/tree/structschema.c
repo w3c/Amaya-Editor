@@ -1190,9 +1190,9 @@ PtrElement          pElCut;
       if (TypeHasException (ExcNoCut, pEl->ElTypeNumber, pEl->ElSructSchema))
 	 /* l'exception NoCut est associee au type de l'element */
 	{
-	  if (ThotLocalActions[T_Tableau_OrphanCell]!=NULL)
+	  if (ThotLocalActions[T_singlecell]!=NULL)
 	    {
-	      (*ThotLocalActions[T_Tableau_OrphanCell])(pEl, pElCut, &InCutBuffer);
+	      (*ThotLocalActions[T_singlecell])(pEl, pElCut, &InCutBuffer);
 	      if (InCutBuffer)
 		/* C'est une cellule de tableau orpheline, sa colonne de
 		   reference a deja ete coupee */
@@ -2595,8 +2595,8 @@ PtrElement         *pSplitEl;
 	     pE = pE->ElParent;
 	  }
 	exctab = FALSE;
-	if (ThotLocalActions[T_Tableau_Except]!= NULL)
-	  (*ThotLocalActions[T_Tableau_Except])(*pSplitEl, &exctab);
+	if (ThotLocalActions[T_excepttable]!= NULL)
+	  (*ThotLocalActions[T_excepttable])(*pSplitEl, &exctab);
 	if (exctab)
 	   /* c'est la division d'un tableau, on refuse */
 	  {

@@ -2351,8 +2351,8 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 	  /* appelle l'exception des tableaux, au cas ou ce serait la regle */
 	  /* de hauteur d'un filet vertical d'un tableau */
 	  pPavPos = NULL;
-	  if (ThotLocalActions[T_Tableau_PaveRef]!= NULL)
-	    (*ThotLocalActions[T_Tableau_PaveRef])(pPa1, pRe1, pRegle, &pPavPos);
+	  if (ThotLocalActions[T_abref]!= NULL)
+	    (*ThotLocalActions[T_abref])(pPa1, pRe1, pRegle, &pPavPos);
 	  /* si l'exception n'a pas ete traitee, effectue un traitement normal*/
 	  if (pPavPos == NULL)
 	    pPavPos = PaveRef(pRe1->PoNotRel, pRe1->PoTypeRefElem, pSchP,
@@ -3052,7 +3052,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	     /* on previent le mediateur */
 	     {
 	     h = 0;
-	     ModifVue(frame, &h, pP);
+	     ChangeConcreteImage(frame, &h, pP);
 	     }
 	    /* on nettoie l'image abstraite des paves morts */
 	    FreeDeadAbstractBoxes(pP); /* liberation a partir de la racine car */
@@ -3311,7 +3311,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	                  frame = pDoc->DocViewFrame[Vue - 1];
 	                }
 	              h = 0;
-	              bool = ModifVue(frame, &h, pP);
+	              bool = ChangeConcreteImage(frame, &h, pP);
 	            }
 	          /* on nettoie l'image abstraite des paves morts */
 	          FreeDeadAbstractBoxes(pAb->AbEnclosing);
@@ -4029,8 +4029,8 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	  appldimension(&pPa1->AbHeight, pAb, pSchP, pAttr, &appl,pRegle,pDoc);
 	  /* traitement special pour le debordement vertical des cellules*/
 	  /* de tableau etendues verticalement */
-	  if (ThotLocalActions[T_TableauDebordeVertical]!= NULL)
-	    (*ThotLocalActions[T_TableauDebordeVertical])(pRegle, pAb);
+	  if (ThotLocalActions[T_vertspan]!= NULL)
+	    (*ThotLocalActions[T_vertspan])(pRegle, pAb);
 	  break;
 	case PtVisibility:
 	  pPa1->AbVisibility = valintregle(pRegle, pPa1->AbElement, 
@@ -4285,8 +4285,8 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	  pPa1->AbVertPos = Posit;
 	  /* traitement special pour le debordement vertical des cellules*/
 	  /* de tableau etendues verticalement */
-	  if (ThotLocalActions[T_TableauDebordeVertical]!= NULL)
-	    (*ThotLocalActions[T_TableauDebordeVertical])(pRegle, pAb);
+	  if (ThotLocalActions[T_vertspan]!= NULL)
+	    (*ThotLocalActions[T_vertspan])(pRegle, pAb);
 	  break;
 #else /* __COLPAGE__ */
 	      /* Si le precedent est un separateur de page, le pave est */
@@ -4378,8 +4378,8 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 		}
 	      /* traitement special pour le debordement vertical des cellules*/
 	      /* de tableau etendues verticalement */
-	      if (ThotLocalActions[T_TableauDebordeVertical]!= NULL)
-		(*ThotLocalActions[T_TableauDebordeVertical])(pRegle, pAb);
+	      if (ThotLocalActions[T_vertspan]!= NULL)
+		(*ThotLocalActions[T_vertspan])(pRegle, pAb);
 	  break;
 #endif /* __COLPAGE__ */
 	case PtHorizPos:

@@ -536,8 +536,8 @@ PtrDocument         pDoc;
 		  /* validite de l'attribut dans le cas des extensions de */
 		  /* cellule des tableaux */
 		  if (pRef->RdAttribute != NULL)
-		    if (ThotLocalActions[T_TableauVerifExtension]!=NULL)
-		      (*ThotLocalActions[T_TableauVerifExtension])
+		    if (ThotLocalActions[T_checkextens]!=NULL)
+		      (*ThotLocalActions[T_checkextens])
 			(pRef->RdAttribute, pRef->RdElement, pRef->RdElement, TRUE);
 	       }
 	     pRef = pNextRef;	/* passe a la reference suivante */
@@ -570,8 +570,8 @@ PtrDocument         pDoc;
 		     {
 			/* verifie la validite de l'attribut dans le cas des */
 			/* extensions de cellule des tableaux */
-		        if (ThotLocalActions[T_TableauVerifExtension]!=NULL)
-			  (*ThotLocalActions[T_TableauVerifExtension])
+		        if (ThotLocalActions[T_checkextens]!=NULL)
+			  (*ThotLocalActions[T_checkextens])
 			   (pAttr, pRoot, pRoot, TRUE);
 			if (DocDeSauve != pDoc)
 			   /* reference et objet reference' sont */
@@ -580,8 +580,8 @@ PtrDocument         pDoc;
 			   /* cas particulier des tableaux. */
 			  {
 			    attrRef = TRUE;
-			    if (ThotLocalActions[T_TableauAttributRef]!=NULL)
-			      (*ThotLocalActions[T_TableauAttributRef])
+			    if (ThotLocalActions[T_refattr]!=NULL)
+			      (*ThotLocalActions[T_refattr])
 				(pAttr, &attrRef);
 			    if (!attrRef)
 			      DeleteAttribute (pRoot, pAttr);

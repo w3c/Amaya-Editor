@@ -71,8 +71,8 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
         /* si creation d'une table */
-    if (ThotLocalActions[T_Tableau_Creation]!= NULL)
-       (*ThotLocalActions[T_Tableau_Creation])(pEl, pDoc);
+    if (ThotLocalActions[T_createtable]!= NULL)
+       (*ThotLocalActions[T_createtable])(pEl, pDoc);
 }
 
 

@@ -1947,7 +1947,7 @@ int                 frame;
 	       {
 		  if (pDoc->DocAssocModifiedAb[vue - 1] != NULL)
 		    {
-		       (void) ModifVue (frame, &h, pDoc->DocAssocModifiedAb[vue - 1]);
+		       (void) ChangeConcreteImage (frame, &h, pDoc->DocAssocModifiedAb[vue - 1]);
 		       FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[vue - 1]);
 		       pDoc->DocAssocModifiedAb[vue - 1] = NULL;
 		    }
@@ -1965,7 +1965,7 @@ int                 frame;
 		  /* appel de modifVue depuis la racine car de nouvelles */
 		  /* pages ont pu etre creees TODO incoherent ??? */
 #endif /* __COLPAGE__ */
-		  (void) ModifVue (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
+		  (void) ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
 		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[vue - 1]);
 		  pDoc->DocViewModifiedAb[vue - 1] = NULL;
 	       }
@@ -2048,7 +2048,7 @@ int                 frame;
 	     h = HauteurCoupPage;
 	     /* appel de modifVue depuis la racine car de nouvelles */
 	     /* pages ont pu etre detruites */
-	     (void) ModifVue (frame, &h, pAb);
+	     (void) ChangeConcreteImage (frame, &h, pAb);
 	     /* meme chose pour FreeDeadAbstractBoxes */
 	     FreeDeadAbstractBoxes (pAb);
 	     /* DocAssocModifiedAb et DocViewModifiedAb non utilises */
@@ -2064,14 +2064,14 @@ int                 frame;
 	       {
 		  if (pDoc->DocAssocModifiedAb[vue - 1] != NULL)
 		    {
-		       (void) ModifVue (frame, &h, pDoc->DocAssocModifiedAb[vue - 1]);
+		       (void) ChangeConcreteImage (frame, &h, pDoc->DocAssocModifiedAb[vue - 1]);
 		       FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[vue - 1]);
 		       pDoc->DocAssocModifiedAb[vue - 1] = NULL;
 		    }
 	       }
 	     else if (pDoc->DocViewModifiedAb[vue - 1] != NULL)
 	       {
-		  (void) ModifVue (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
+		  (void) ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
 		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[vue - 1]);
 		  pDoc->DocViewModifiedAb[vue - 1] = NULL;
 	       }
@@ -2304,7 +2304,7 @@ int                 frame;
 			  pAbbRoot->AbDead = TRUE;	/* pour que sa boite soit */
 			  /* detruite */
 			  h = 0;
-			  ModifVue (frame, &h, pAbbRoot);
+			  ChangeConcreteImage (frame, &h, pAbbRoot);
 			  pAbbRoot->AbDead = FALSE;
 			  pAbbRoot->AbNew = TRUE;
 			  pAbbRoot->AbTruncatedHead = TRUE;
@@ -2648,7 +2648,7 @@ int                 frame;
 				       pAbbRoot->AbDead = TRUE;
 				       /* marque mort le pave racine */
 				       /* le signale au Mediateur */
-				       ModifVue (frame, &h, pAbbRoot);
+				       ChangeConcreteImage (frame, &h, pAbbRoot);
 				       pAbbRoot->AbDead = FALSE;
 				       /* resucite le pave racine */
 				       FreeDeadAbstractBoxes (pAbbRoot);
@@ -2664,7 +2664,7 @@ int                 frame;
 				  if (frame != 0)
 				    {
 				       pAbbRoot->AbDead = TRUE;
-				       ModifVue (frame, &h, pAbbRoot);
+				       ChangeConcreteImage (frame, &h, pAbbRoot);
 				       pAbbRoot->AbDead = FALSE;
 				       FreeDeadAbstractBoxes (pAbbRoot);
 				       pDo1->DocViewModifiedAb[Vue - 1] = NULL;
@@ -2804,7 +2804,7 @@ int                 frame;
 			if (frame != 0)
 			  {
 			     h = 0;
-			     ModifVue (frame, &h, pAbbRoot);
+			     ChangeConcreteImage (frame, &h, pAbbRoot);
 			     if (affiche)
 				DisplayFrame (frame);
 			     /* il n'y a plus rien a reafficher dans cette vue */

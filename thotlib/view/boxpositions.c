@@ -553,10 +553,10 @@ boolean             EnY;
    /* boites filles est positionnee par une relation hors-structure */
    /* --> il faut reevaluer la dimension correspondante.            */
    if (reenglobx && pBox->BxContentWidth)
-      DiffereEnglobement (pBox, TRUE);
+      RecordEnclosing (pBox, TRUE);
 
    if (reengloby && pBox->BxContentHeight)
-      DiffereEnglobement (pBox, FALSE);
+      RecordEnclosing (pBox, FALSE);
 }				/* Placer */
 
 

@@ -1586,7 +1586,7 @@ PtrDocument         pDoc;
 #endif /* __COLPAGE__ */
 	     i = 0;
 	     /* on ne s'occupe pas de la hauteur de page */
-	     ModifVue (pDoc->DocViewFrame[0], &i, pDoc->DocViewRootAb[0]);
+	     ChangeConcreteImage (pDoc->DocViewFrame[0], &i, pDoc->DocViewRootAb[0]);
 	     DisplayFrame (pDoc->DocViewFrame[0]);
 	     notifyDoc.event = TteViewOpen;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
@@ -1865,8 +1865,8 @@ PathBuffer          nomdir;
 		   /* des attributs requis */
 		  {
 		     /* traitement des exceptions */
-		    if (ThotLocalActions[T_Tableau_Creation]!= NULL)
-		      (*ThotLocalActions[T_Tableau_Creation])
+		    if (ThotLocalActions[T_createtable]!= NULL)
+		      (*ThotLocalActions[T_createtable])
 			(pDo1->DocRootElement, pDo1);
 		     /* ouvre les vues du document cree' */
 		     OuvreVuesInit (pDo1);
@@ -2019,8 +2019,8 @@ PtrElement          RacineVue;
 			    pDoc->DocAssocRoot[elass - 1]->ElAccess = AccessReadWrite;
 			    CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[elass - 1]);
 			    /* traitement des exceptions */
-			    if (ThotLocalActions[T_Tableau_Creation]!= NULL)
-			      (*ThotLocalActions[T_Tableau_Creation])	
+			    if (ThotLocalActions[T_createtable]!= NULL)
+			      (*ThotLocalActions[T_createtable])	
 				(pDoc->DocAssocRoot[elass - 1], pDoc);  
 			    /* creation d'une table */
 			    /* traitement des attributs requis */
@@ -2256,7 +2256,7 @@ int                 H;
 	  {
 	     pDoc->DocAssocFrame[vue - 1] = frame;
 	     pDoc->DocAssocVolume[vue - 1] = vol;
-	     ModifVue (frame, &h, pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0]);
+	     ChangeConcreteImage (frame, &h, pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0]);
 	     DisplayFrame (frame);
 	     VisuSelect (pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0], TRUE);
 	  }
@@ -2265,7 +2265,7 @@ int                 H;
 	  {
 	     pDoc->DocViewFrame[vue - 1] = frame;
 	     pDoc->DocViewVolume[vue - 1] = vol;
-	     ModifVue (frame, &h, pDoc->DocViewRootAb[vue - 1]);
+	     ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[vue - 1]);
 	     DisplayFrame (frame);
 	     VisuSelect (pDoc->DocViewRootAb[vue - 1], TRUE);
 	  }

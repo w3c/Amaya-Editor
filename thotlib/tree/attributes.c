@@ -263,7 +263,7 @@ PtrAttribute         pAttr;
 #else  /* __COLPAGE__ */
 		height = HauteurPage;
 #endif /* __COLPAGE__ */
-		ModifVue (frame, &height, pAbsBox);
+		ChangeConcreteImage (frame, &height, pAbsBox);
 		/* on ne reaffiche pas si on est en train de calculer les pages */
 #ifdef __COLPAGE__
 		if (HauteurCoupPage == 0)
@@ -1276,8 +1276,8 @@ PtrDocument         pDoc;
 	     /* met la nouvelle valeur de l'attribut dans l'element et */
 	     /* applique les regles de presentation de l'attribut a l'element */
 	     AttachAttrWithValue (pEl, pDoc, pAttr);
-	     if (ThotLocalActions[T_TableauAttributSpecial]!=NULL)
-	       (*ThotLocalActions[T_TableauAttributSpecial])	
+	     if (ThotLocalActions[T_attrtable]!=NULL)
+	       (*ThotLocalActions[T_attrtable])	
 		 (pEl, pAttr, pDoc);	/* cas particulier des tableaux */
 
 	  }

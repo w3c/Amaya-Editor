@@ -990,8 +990,8 @@ int                 y;
    pFrame = &FntrTable[frame - 1];
    pBox = NULL;
    if (pFrame->FrAbstractBox != NULL)
-      if (ThotLocalActions[T_desboite] != NULL)
-	 (*ThotLocalActions[T_desboite]) (&pBox, pFrame->FrAbstractBox, frame, x + pFrame->FrXOrg,
+      if (ThotLocalActions[T_selecbox] != NULL)
+	 (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, x + pFrame->FrXOrg,
 				       y + pFrame->FrYOrg, &pointselect);
    if (pBox == NULL)
       return (NULL);
@@ -1406,8 +1406,8 @@ int                 ym;
 
 	/* On recherche la boite englobant le point designe */
 
-	if (ThotLocalActions[T_desboite] != NULL)
-	   (*ThotLocalActions[T_desboite]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
+	if (ThotLocalActions[T_selecbox] != NULL)
+	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
 					 &pointselect);
 	if (pBox == NULL)
 	   pAb = NULL;
@@ -1473,7 +1473,7 @@ int                 ym;
 		       if (pBox->BxPictInfo != NULL)
 			 {
 			    free ((char *) pBox->BxPictInfo);
-			    pBox->BxPictInfo = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
+			    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
 			 }
 		       /* on force le reaffichage de la boite */
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + large + EXTRA_GRAPH, pBox->BxYOrg + haut + EXTRA_GRAPH);
@@ -1679,8 +1679,8 @@ int                 ym;
 
 	/* On recherche la boite englobant le point designe */
 	/* designation style Grenoble */
-	if (ThotLocalActions[T_desboite] != NULL)
-	   (*ThotLocalActions[T_desboite]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
+	if (ThotLocalActions[T_selecbox] != NULL)
+	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
 					 &pointselect);
 	if (pBox == NULL)
 	   pAb = NULL;

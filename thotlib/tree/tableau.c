@@ -1950,31 +1950,31 @@ static void Tableau_Except_CR(pEl, ret)
 void TableauLoadResources()
 {
 
-  if (ThotLocalActions[T_Tableau_Creation] == NULL)
+  if (ThotLocalActions[T_createtable] == NULL)
     { 
       /* initialisations */
 
       /* connection des ressources */
-      TteConnectAction(T_Tableau_Creation, (Proc)Tableau_Creation);
-      TteConnectAction(T_Tableau_Selection, (Proc)Tableau_Selection);
-      TteConnectAction(T_Tableau_OrphanCell, (Proc)Tableau_OrphanCell);
-      TteConnectAction(T_TableauAttributSpecial, (Proc)TableauAttributSpecial);
-      TteConnectAction(T_Tableau_DernierSauve, (Proc)Tableau_DernierSauve);
-      TteConnectAction(T_Tableau_Cond_Dernier, (Proc)Tableau_Cond_Dernier);
-      TteConnectAction(T_Tableau_ColleVoisin, (Proc)Tableau_ColleVoisin);
-      TteConnectAction(T_TableauAttributRef, (Proc)Tableau_AttributRef);
-      TteConnectAction(T_Tableau_ApplRegleAttribut, (Proc)Tableau_ApplRegleAttribut);
-      TteConnectAction(T_TableauCreeFiletLigne, (Proc)Tableau_CreeFiletLigne);
-      TteConnectAction(T_TableauCanHolophrast, (Proc)Tableau_CanHolophrast);
-      TteConnectAction(T_TableauVerifExtension, (Proc)TableauVerifExtension);
-      TteConnectAction(T_Tableau_PaveRef, (Proc)Tableau_PaveRef);
-      TteConnectAction(T_TableauDebordeVertical, (Proc)TableauDebordeVertical);
-      TteConnectAction(T_Tableau_Except, (Proc)Tableau_Except);
-      TteConnectAction(T_Tableau_Except_CR, (Proc)Tableau_Except_CR);
-      TteConnectAction(T_Exc_Page_Break_Inserer, (Proc)Exc_Page_Break_Inserer);
-      TteConnectAction(T_Exc_Page_Break_Couper, (Proc)Exc_Page_Break_Couper);
-      TteConnectAction(T_Exc_Page_Break_Supprime, (Proc)Exc_Page_Break_Supprime);
-      TteConnectAction(T_Exc_Page_Break_Detruit_Pave, (Proc)Exc_Page_Break_Detruit_Pave);
+      TteConnectAction(T_createtable, (Proc)Tableau_Creation);
+      TteConnectAction(T_selecttable, (Proc)Tableau_Selection);
+      TteConnectAction(T_singlecell, (Proc)Tableau_OrphanCell);
+      TteConnectAction(T_attrtable, (Proc)TableauAttributSpecial);
+      TteConnectAction(T_lastsaved, (Proc)Tableau_DernierSauve);
+      TteConnectAction(T_condlast, (Proc)Tableau_Cond_Dernier);
+      TteConnectAction(T_pastesiblingtable, (Proc)Tableau_ColleVoisin);
+      TteConnectAction(T_refattr, (Proc)Tableau_AttributRef);
+      TteConnectAction(T_ruleattr, (Proc)Tableau_ApplRegleAttribut);
+      TteConnectAction(T_createhairline, (Proc)Tableau_CreeFiletLigne);
+      TteConnectAction(T_holotable, (Proc)Tableau_CanHolophrast);
+      TteConnectAction(T_checkextens, (Proc)TableauVerifExtension);
+      TteConnectAction(T_abref, (Proc)Tableau_PaveRef);
+      TteConnectAction(T_vertspan, (Proc)TableauDebordeVertical);
+      TteConnectAction(T_excepttable, (Proc)Tableau_Except);
+      TteConnectAction(T_entertable, (Proc)Tableau_Except_CR);
+      TteConnectAction(T_insertpage, (Proc)Exc_Page_Break_Inserer);
+      TteConnectAction(T_cutpage, (Proc)Exc_Page_Break_Couper);
+      TteConnectAction(T_deletepage, (Proc)Exc_Page_Break_Supprime);
+      TteConnectAction(T_deletepageab, (Proc)Exc_Page_Break_Detruit_Pave);
     }
 }
 

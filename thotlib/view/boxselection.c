@@ -333,7 +333,7 @@ ViewSelection            *marque;
 		if (pBox->BxNexChild == NULL)
 		   fin = TRUE;
 		/* Il existe une boite apres mais c'est une boite fantome */
-		else if (pBox->BxNexChild->BxNChars == 0 && DesLigne (pBox->BxNexChild) == NULL)
+		else if (pBox->BxNexChild->BxNChars == 0 && SearchLine (pBox->BxNexChild) == NULL)
 		   fin = TRUE;
 		else
 		   fin = max - deb + saut > i && adbuff == ibuff;
@@ -383,7 +383,7 @@ ViewSelection            *marque;
 	     /* Reevaluation du decalage dans la boite */
 	     carbl = pBox->BxSpaceWidth;	/* 0 si on prend la largeur reelle du blanc */
 	     x = pBox->BxFirstChar;	/* Index du premier caractere a traiter */
-	     DimTexte (pBox->BxBuffer, marque->VsIndBox, pBox->BxFont, &x, &carbl);
+	     GiveTextParams (pBox->BxBuffer, marque->VsIndBox, pBox->BxFont, &x, &carbl);
 	     marque->VsXPos = x;
 	     marque->VsNSpaces = carbl;
 	     /* On ajoute eventuellement les pixels repartis */
@@ -395,7 +395,7 @@ ViewSelection            *marque;
 	  }
 	marque->VsBox = pBox;
      }
-   marque->VsLine = DesLigne (marque->VsBox);
+   marque->VsLine = SearchLine (marque->VsBox);
 }
 
 
@@ -479,8 +479,8 @@ boolean             Unique;
    ViewSelection            *pMa1;
 
    /* Verifie s'il faut reformater le dernier paragraphe edite */
-   if (ThotLocalActions[T_update_paragraph] != NULL)
-      (*ThotLocalActions[T_update_paragraph]) (Pav, frame);
+   if (ThotLocalActions[T_updateparagraph] != NULL)
+      (*ThotLocalActions[T_updateparagraph]) (Pav, frame);
 
    if (Pav != NULL && frame > 0)
      {
@@ -489,7 +489,7 @@ boolean             Unique;
 	  {
 	     /* On eteint la selection */
 	     pBox = Pav->AbBox;
-	     adligne = DesLigne (pBox);
+	     adligne = SearchLine (pBox);
 
 	     /* On verifie la coherence des indices de caracteres */
 	     if (Pav->AbLeafType == LtText)
@@ -707,8 +707,8 @@ int                 bouton;
 	    && pBox->BxAbstractBox->AbLeafType == LtPlyLine)
 	   testbox = DansLaBoite (pBox->BxAbstractBox, x - 2, x, y, &nbcar);
 #else
-	if (ThotLocalActions[T_desboite] != NULL)
-	   (*ThotLocalActions[T_desboite]) (&pBox, paved, frame, x, y, &nbcar);
+	if (ThotLocalActions[T_selecbox] != NULL)
+	   (*ThotLocalActions[T_selecbox]) (&pBox, paved, frame, x, y, &nbcar);
 #endif
 	/* S'il s'agit d'une extension de la selection */
 	/* il faut eviter de selectionner la boite englobante */

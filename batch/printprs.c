@@ -1293,7 +1293,7 @@ char              **argv;
    /* lit le schema de presentation et le schema de structure correspondant */
    pSchemaPrs = RdSchPres (filename, pSchemaStr);
    if (pSchemaPrs == NULL)
-      TtaDisplaySimpleMessage (FATAL, PRS, PRS_NO_SUCH_FILE);
+      TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
    else
       /* les schemas ont ete lus correctement */
      {

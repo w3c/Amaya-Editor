@@ -413,8 +413,8 @@ static void SupprMarquePage(pPage, pDoc, pLib)
     {
     /* traitement de la suppression des pages dans les structures avec */
     /* coupures speciales */
-     if (ThotLocalActions[T_Exc_Page_Break_Supprime]!= NULL)
-       (*ThotLocalActions[T_Exc_Page_Break_Supprime])(pPage, pDoc);
+     if (ThotLocalActions[T_deletepage]!= NULL)
+       (*ThotLocalActions[T_deletepage])(pPage, pDoc);
     pPrec = pPage->ElPrevious;
     /* prepare l'evenement ElemDelete.Post */
     notifyEl.event = TteElemDelete;
@@ -607,7 +607,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
           frame = pDoc->DocAssocFrame[Vue - 1];
 	  CreePaves(pElRacine, pDoc, 1, TRUE, TRUE, &complet);
           h = 0;
-          (void) ModifVue(frame, &h, PavRacine);
+          (void) ChangeConcreteImage(frame, &h, PavRacine);
           if (!sel)
 	    DisplayFrame(frame);
         }
@@ -628,7 +628,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
           	frame = pDoc->DocViewFrame[v - 1];
 	  	CreePaves(pElRacine, pDoc, v, TRUE, TRUE, &complet);
                 h = 0;
-                (void) ModifVue(frame, &h, PavRacine);
+                (void) ChangeConcreteImage(frame, &h, PavRacine);
                 if (!sel)
 		  DisplayFrame(frame);
 	      }
@@ -1223,7 +1223,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
    }
  /* on nettoie d'abord l'image abstraite des paves morts */
  h = -1; /* changement de signification de la valeur de h */
- bool = ModifVue(frame, &h, pRacine);
+ bool = ChangeConcreteImage(frame, &h, pRacine);
  FreeDeadAbstractBoxes(pRacine);
  /* appel de CreePaves */
  /* TODO : a mettre en coherence ->CrPaveNouv pour appel ApplRegleRet */
@@ -1247,7 +1247,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   /* la coupure de page pour le cas ou on traite des colonnes */
   ChangeRHPage (pRacine, pDoc, VueNb);
   Hauteurffective = HauteurCoupPage;
-  bool = ModifVue(frame, &Hauteurffective, pRacine);
+  bool = ChangeConcreteImage(frame, &Hauteurffective, pRacine);
   pPa1 = pElPage->ElAbstractBox[VueNb-1];
  /* tous les paves de la page prec ne sont plus marques surpage et horspage */
  /* inutile .... et incomplet: il faudrait faire toute la hierarchie */
@@ -1326,7 +1326,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 	    /* signale ces paves au Mediateur, sans faire reevaluer la coupure de page. */
 	    {
 	      h = 0;
-	      (void) ModifVue(frame, &h, PavHautPage);
+	      (void) ChangeConcreteImage(frame, &h, PavHautPage);
 	    }
 	}
       NbBoiteHautPageACreer = 0;
@@ -1341,8 +1341,8 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   pElPage->ElAssocHeader = FALSE;
   /* traitement de l'insertion des pages dans les structures avec coupures speciales */
   coupe = FALSE; /* a priori pas de coupure effectuee par l'exception */
-  if (ThotLocalActions[T_Exc_Page_Break_Inserer]!= NULL)
-    (*ThotLocalActions[T_Exc_Page_Break_Inserer])(pElPage, pDoc, VueNb, &coupe);
+  if (ThotLocalActions[T_insertpage]!= NULL)
+    (*ThotLocalActions[T_insertpage])(pElPage, pDoc, VueNb, &coupe);
   if (!coupe)
     CrPaveNouv(pElPage, pDoc, VueNb);
   if (!VueAssoc(pEl))
@@ -1353,7 +1353,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   if (PavModifie != NULL)
     {
     h = 0;
-    (void) ModifVue(frame, &h, PavModifie);
+    (void) ChangeConcreteImage(frame, &h, PavModifie);
     pPa1 = pElPage->ElAbstractBox[VueNb-1];
     pPa1->AbOnPageBreak = FALSE;
     pPa1->AbAfterPageBreak = FALSE;
@@ -1919,7 +1919,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
   while (!(PaveCoupeOrig != NULL || pAb == NULL));
   /* place les marques de page sans tenir compte des boites de haut et de */
   /* bas de page de hauteur variable (notes de bas de page par exemple) */
- /* dans la version de Vincent, ModifVue est appelee avec une */
+ /* dans la version de Vincent, ChangeConcreteImage est appelee avec une */
  /* Hauteur de Page fixe : maintenamt, on va chercher a la mettre a */
  /* jour a chaque fois que on ajoutera un elt associe en bas */
  /* de page ; ce sera fait dans CreePaves */
@@ -2016,8 +2016,8 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		/* detruit le saut de page et ses paves */
 		DetPavVue(pPage, pDoc, FALSE, VueNb);
 		/* traitement des elements demandant des coupures speciales */
-		if (ThotLocalActions[T_Exc_Page_Break_Detruit_Pave]!= NULL)
-		  (*ThotLocalActions[T_Exc_Page_Break_Detruit_Pave])
+		if (ThotLocalActions[T_deletepageab]!= NULL)
+		  (*ThotLocalActions[T_deletepageab])
 		      (pPage, pDoc, VueNb);
 		if (PageConcernee == pPage)
 		  NbBoiteHautPageACreer = 0;
@@ -2027,7 +2027,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		else	
 		  PavReaff = pDoc->DocAssocModifiedAb[ElRacine->ElAssocNum-1];
 		Hauteurffective = HauteurPage;
-		(void) ModifVue(frame, &Hauteurffective, PavReaff);
+		(void) ChangeConcreteImage(frame, &Hauteurffective, PavReaff);
 		/* libere tous les paves morts de la vue */ 
 		FreeDeadAbstractBoxes(pAb);
 		/* detruit la marque de page a liberer dans l'arbre abstrait */
@@ -2042,7 +2042,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		if (PavReaff != NULL)
 		  {
 		    h = Hauteurffective; 
-		    (void) ModifVue(frame, &h, PavReaff);
+		    (void) ChangeConcreteImage(frame, &h, PavReaff);
 		  }
 		/* libere les elements rendus inutiles par les fusions */
 		DeleteElement(&pElLib);
@@ -2194,7 +2194,7 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
          /* on signale au mediateur les paves (au cas ou il ne les */
          /* ait pas encore vus) */
          /* on appelle Modifvue a partir du pave haut de page */
-         bool = ModifVue(frame, &h, pAb);
+         bool = ChangeConcreteImage(frame, &h, pAb);
          /* calcul de la hauteur du pave haut ou bas de page */
          HautCoupure(pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
          HauteurRefHautPage = Hauteur;
@@ -2213,7 +2213,7 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
          /* on signale au mediateur les paves (au cas ou il ne les */
          /* ait pas encore vus) */
          /* on appelle Modifvue a partir du pave haut de page */
-         bool = ModifVue(frame, &h, pAb);
+         bool = ChangeConcreteImage(frame, &h, pAb);
          /* calcul de la hauteur du pave haut ou bas de page */
          HautCoupure(pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
          HauteurRefBasPage = Hauteur;
@@ -2330,7 +2330,7 @@ static void DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch)
 #else /* __COLPAGE__ */
   h = 0;
 #endif /* __COLPAGE__ */
-  (void) ModifVue(frame, &h, PavRacine);
+  (void) ChangeConcreteImage(frame, &h, PavRacine);
   /* libere tous les paves morts de la vue */
   FreeDeadAbstractBoxes(PavRacine);
   /* indique qu'il faudra reappliquer les regles de presentation du */
@@ -2519,7 +2519,7 @@ static void Equilibrer_Col (pDoc, PavRacine, VueNb, VueSch)
       frame = pDoc->DocViewFrame[VueNb - 1];
       /* on signale les paves au mediateur pour qu'il cree les boites */
       h = 0;
-      bool = ModifVue(frame, &h, PavRacine);
+      bool = ChangeConcreteImage(frame, &h, PavRacine);
       pP = pP->AbFirstEnclosed; /* pP pave de colonne gauche */
       /* calcul de la hauteur du pave colonne gauche */
       HautCoupure(pP, TRUE, &Hauteur, &PosV, &CarCoupe);
@@ -2528,7 +2528,7 @@ static void Equilibrer_Col (pDoc, PavRacine, VueNb, VueSch)
       /* on appelle Modifvue a partir du pave colonne simple */
  ChangeRHPage (PavRacine, pDoc, VueNb);
       h = PosV + (Hauteur / 2);
-      bool = ModifVue(frame, &h, PavRacine);
+      bool = ChangeConcreteImage(frame, &h, PavRacine);
       /******
 	list = fopen("/perles/roisin/debug/equil","w");
 	if (list != NULL)
@@ -2719,11 +2719,11 @@ HauteurTotalePage = 0;
   volume = 0;
  /* on change la regle des paves corps de page (sauf si MP mise */
  /* par l'utilisateur) : hauteur = celle du contenu */
- /* pour permettre a ModifVue de determiner la coupure de page */
+ /* pour permettre a ChangeConcreteImage de determiner la coupure de page */
  ChangeRHPage (PavRacine, pDoc, VueNb);
   /* fait calculer l'image par le Mediateur */
   Hauteurffective = HauteurCoupPage;
-  tropcourt = ModifVue(frame, &Hauteurffective, PavRacine);
+  tropcourt = ChangeConcreteImage(frame, &Hauteurffective, PavRacine);
   /* cherche le pave de la premiere marque de page */
   pPageATraiter = PavRacine->AbFirstEnclosed;
  /* c'est le premier fils de la racine */
@@ -2743,11 +2743,11 @@ HauteurTotalePage = 0;
  /* HautPage(pP->AbElement, VueNb, VueSch, frame, pDoc); */
  /* TODO faut-il verifier que pPageATraiter n'est pas NULL ? */
  /* detruit les paves de la page precedente (si existe) pour */
- /* avoir une coupure correcte lors du prochain ModifVue */
+ /* avoir une coupure correcte lors du prochain ChangeConcreteImage */
  /* calcule le volume de ce qui a ete detruit */
  /* pour en regenerer autant ensuite */
 	volprec = PavRacine->AbVolume;
- /* rappel : TueAvantPage appelle ModifVue apres destruction */
+ /* rappel : TueAvantPage appelle ChangeConcreteImage apres destruction */
  tropcourt = TueAvantPage(pP, frame, pDoc, VueNb);
  PavRacine->AbTruncatedHead = TRUE;
  /* si on a detruit des paves, la racine est coupee en tete */
@@ -2878,7 +2878,7 @@ HauteurTotalePage = 0;
                 while (!(PavRacine->AbVolume > volprec ||
                          !PavRacine->AbTruncatedTail));
          volume = PavRacine->AbVolume; /* pour l prochain ajout de paves*/
-                /* appelle ModifVue pour savoir si au moins une boite est */
+                /* appelle ChangeConcreteImage pour savoir si au moins une boite est */
                 /* traversee par une frontiere de page apres l'ajout des
                    paves supplementaires */
                 Hauteurffective = HauteurCoupPage;
@@ -2887,7 +2887,7 @@ HauteurTotalePage = 0;
          /* et on decale la position du bas et du filet de page */
          ChangeRHPage (PavRacine, pDoc, VueNb);
                 tropcourt =
-           ModifVue(frame, &Hauteurffective, PavRacine);
+           ChangeConcreteImage(frame, &Hauteurffective, PavRacine);
          /* si tropcourt, et si l'arret de creation est du^ */
          /* a un element MP ou ref assoc HB (TrouveMPHB = vrai) */
          /* on bascule ArretAvantCreation pour permettre */
@@ -2932,7 +2932,7 @@ HauteurTotalePage = 0;
                 SuppRfPave (PavAssocADetruire, &PavR, pDoc);
                 /* on signale les paves detruits au mediateur */
                 h = -1; /* changement de signification de h */
-                tropcourt = ModifVue(frame, &h, PavRacine);
+                tropcourt = ChangeConcreteImage(frame, &h, PavRacine);
                 /* on libere les paves */
 		       pP = PavAssocADetruire->AbEnclosing;
                 FreeDeadAbstractBoxes (PavAssocADetruire->AbEnclosing);
@@ -2963,7 +2963,7 @@ HauteurTotalePage = 0;
                        &Hauteur, &PosV, &CarCoupe);
            /* on force la coupure a cette hauteur */
            h = PosV;
-           tropcourt = ModifVue(frame, &h, PavRacine);
+           tropcourt = ChangeConcreteImage(frame, &h, PavRacine);
            /* normalement tropcourt est tj faux */         
          } /* fin cas page trop grande a cause d'elt ref HB */
          /* si on a cree les paves de la page suivante (page */
@@ -3065,7 +3065,7 @@ HauteurTotalePage = 0;
       HautPage(pP->AbElement, VueSch, &b, &pSchPage);
   /* fait calculer l'image par le Mediateur */
   Hauteurffective = HauteurPage;
-  tropcourt = ModifVue(frame, &Hauteurffective, PavRacine);
+  tropcourt = ChangeConcreteImage(frame, &Hauteurffective, PavRacine);
   do	
     /* traite une page apres l'autre */
     {
@@ -3223,7 +3223,7 @@ HauteurTotalePage = 0;
 	  while (!(PavRacine->AbVolume > volprec ||
 		   !PavRacine->AbTruncatedTail));
 	  volume = 0;	/* plus rien a generer */
-	  /* appelle ModifVue pour savoir si au moins une boite est */
+	  /* appelle ChangeConcreteImage pour savoir si au moins une boite est */
 	  /* traversee par une frontiere de page apres l'ajout des
 	     paves supplementaires */
 	  Hauteurffective = HauteurPage;
@@ -3232,13 +3232,13 @@ HauteurTotalePage = 0;
 	      if (pDoc->DocAssocModifiedAb[Vue-1] != NULL)
 	        {
 	  	  tropcourt = 
-		  ModifVue(frame, &Hauteurffective, pDoc->DocAssocModifiedAb[Vue-1]);
+		  ChangeConcreteImage(frame, &Hauteurffective, pDoc->DocAssocModifiedAb[Vue-1]);
 		  pDoc->DocAssocModifiedAb[Vue-1] = NULL;
 	        } 
 	    }
 	  else if (pDoc->DocViewModifiedAb[Vue-1] != NULL)
 	    {
-	      tropcourt = ModifVue(frame, &Hauteurffective, pDoc->DocViewModifiedAb[Vue-1]);
+	      tropcourt = ChangeConcreteImage(frame, &Hauteurffective, pDoc->DocViewModifiedAb[Vue-1]);
 	      pDoc->DocViewModifiedAb[Vue-1] = NULL;
 	      /* si de nouveaux paves ont ete crees, on refait un tour pour */
 	      /* traiter les marques de pages qu'ils contiennent */
@@ -3290,13 +3290,13 @@ HauteurTotalePage = 0;
 	      if (pDoc->DocAssocModifiedAb[Vue-1] != NULL)
 	        {
 	  	  tropcourt = 
-		  ModifVue(frame, &h, pDoc->DocAssocModifiedAb[Vue-1]);
+		  ChangeConcreteImage(frame, &h, pDoc->DocAssocModifiedAb[Vue-1]);
 		  pDoc->DocAssocModifiedAb[Vue-1] = NULL;
 	        } 
 	      }
 	    else if (pDoc->DocViewModifiedAb[Vue-1] != NULL)
 	      {
-	        tropcourt = ModifVue(frame, &h, pDoc->DocViewModifiedAb[Vue-1]);
+	        tropcourt = ChangeConcreteImage(frame, &h, pDoc->DocViewModifiedAb[Vue-1]);
 	        pDoc->DocViewModifiedAb[Vue-1] = NULL;
 	      }
      PrintOnePage(pDoc, pavPagePrec, pP, Vue, Assoc);

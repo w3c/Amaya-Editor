@@ -2398,7 +2398,7 @@ int                 frame;
 	FrameTable[frame].FrDoc = 0;
 	/* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
 
-	RazVue (frame);
+	ClearConcreteImage (frame);
 	ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
      }				/*if */
 }
@@ -2974,13 +2974,13 @@ char               *data;
       switch (ref)
 	    {
 	       case NumMenuInsert:
-		  (*ThotLocalActions[T_rcreecolle]) (TRUE, FALSE, (int) data + 1);
+		  (*ThotLocalActions[T_rcinsertpaste]) (TRUE, FALSE, (int) data + 1);
 		  break;
 	       case NumMenuPaste:
-		  (*ThotLocalActions[T_rcreecolle]) (FALSE, TRUE, (int) data + 1);
+		  (*ThotLocalActions[T_rcinsertpaste]) (FALSE, TRUE, (int) data + 1);
 		  break;
 	       case NumMenuInclude:
-		  (*ThotLocalActions[T_rcreecolle]) (FALSE, FALSE, (int) data + 1);
+		  (*ThotLocalActions[T_rcinsertpaste]) (FALSE, FALSE, (int) data + 1);
 		  break;
 	       case NumMenuChoixEl:
 		  (*ThotLocalActions[T_rchoice]) ((int) data + 1, NULL);

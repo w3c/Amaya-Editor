@@ -160,13 +160,13 @@ int                 Zoom;
 	/* On sauvegarde la position de la fenetre dans le document */
 	x = pFrame->FrXOrg;
 	y = pFrame->FrYOrg;
-	DispBoite (pAb, TRUE, frame);
+	RemoveBoxes (pAb, TRUE, frame);
 	ThotFreeFont (frame);
 	/* On libere les polices de caracteres utilisees */
 	pFrame->FrAbstractBox = NULL;
 	/* Recreation de la vue */
 	h = 0;
-	(void) ModifVue (frame, &h, pAb);
+	(void) ChangeConcreteImage (frame, &h, pAb);
 	/* On restaure la position de la fenetre dans le document */
 	pFrame->FrXOrg = x;
 	pFrame->FrYOrg = y;

@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -69,15 +66,15 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuf, pBufPrec, pBufSuiv;
+   PtrTextBuffer       pBuf, pBufPrec, pBufSuiv;
    char               *ptr;
    int                 length, l, delta;
    PtrElement          pEl;
 
 #ifndef NODISPLAY
    PtrDocument         selDoc;
-   PtrElement          premSel, derSel;
-   int                 premCar, derCar;
+   PtrElement          firstSelection, lastSelection;
+   int                 firstChar, lastChar;
    boolean             selOk, changeSelection;
 
 #endif
@@ -98,7 +95,7 @@ Document            document;
      }
    else
      {
-	/* verifie le parametre document */
+	/* verifies the parameter document */
 	if (document < 1 || document > MAX_DOCUMENTS)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
@@ -108,37 +105,37 @@ Document            document;
 	     TtaError (ERR_invalid_document_parameter);
 	  }
 	else
-	   /* parametre document correct */
+	   /* parameter document is correct */
 	  {
 #ifndef NODISPLAY
-	     /* modifie la selection si l'element en fait partie */
-	     selOk = SelEditeur (&selDoc, &premSel, &derSel, &premCar, &derCar);
+	     /* modifies the selection if the element is within it */
+	     selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	     changeSelection = FALSE;
 	     if (selOk)
 		if (selDoc == TabDocuments[document - 1])
-		   if ((PtrElement) element == premSel ||
-		       (PtrElement) element == derSel)
-		      /* la selection commence et/ou se termine dans */
-		      /* l'element. On annule la selection d'abord */
+		   if ((PtrElement) element == firstSelection ||
+		       (PtrElement) element == lastSelection)
+		      /* The selectio starts and/or stops in the element */
+		      /* First, we abort the selection */
 		     {
 			TtaSelectElement (document, NULL);
 			changeSelection = TRUE;
-			if (derCar > 1)
-			   derCar -= 1;
+			if (lastChar > 1)
+			   lastChar -= 1;
 			pEl = (PtrElement) element;
-			if (pEl == premSel)
-			   /* notre element est en tete de la selection */
+			if (pEl == firstSelection)
+			   /* The element is at the begenning of the selection */
 			  {
-			     premCar = 0;
-			     if (pEl == derSel)
-				/* la selection se reduit a cet element, on */
-				/* selectionnera tout l'element */
-				derCar = 0;
+			     firstChar = 0;
+			     if (pEl == lastSelection)
+				/* The selection consists only in the element it self, 
+				 * one select the whole element */
+				lastChar = 0;
 			  }
-			else if (pEl == derSel)
-			   /* notre element est en queue de la selection */
-			   /* on selectionnera jusqu'a la fin de l'element */
-			   derCar = 0;
+			else if (pEl == lastSelection)
+			   /* The element is at the end of the selection 
+                            * one select until the end of the element */
+			   lastChar = 0;
 		     }
 #endif
 	     ptr = content;
@@ -179,7 +176,7 @@ Document            document;
 	     while (length > 0);
 
 	     while (pBuf != NULL)
-		/* libere les buffers qui restent */
+		/* Release the remaining buffers */
 	       {
 		  pBufSuiv = pBuf->BuNext;
 #ifdef NODISPLAY
@@ -189,7 +186,7 @@ Document            document;
 #endif
 		  pBuf = pBufSuiv;
 	       }
-	     /* met a jour le volume des elements ascendants */
+	     /* Updates the labels of the ancestors */
 	     pEl = ((PtrElement) element)->ElParent;
 	     while (pEl != NULL)
 	       {
@@ -198,32 +195,34 @@ Document            document;
 	       }
 	     if (((PtrElement) element)->ElLeafType == LtPicture)
 	       {
-		  /* On libere la pixmap */
+		  /* Releases the  pixmap */
 		  if (((PtrElement) element)->ElImageDescriptor != NULL)
 		     FreeImage ((PictInfo *) (((PtrElement) element)->ElImageDescriptor));
 	       }
 
 #ifndef NODISPLAY
 	     RedispLeaf ((PtrElement) element, document, delta);
-	     /* etablit une nouvelle selection si l'element en fait partie */
+	     /* Set up a new selection if the element is within it */
 	     if (changeSelection)
 	       {
-		  if (premCar > 0)
-		     TtaSelectString (document, (Element) premSel, premCar, 0);
+		  if (firstChar > 0)
+		     TtaSelectString (document, (Element) firstSelection, firstChar, 0);
 		  else
-		     TtaSelectElement (document, (Element) premSel);
-		  if (derSel != premSel)
-		     TtaExtendSelection (document, (Element) derSel, derCar);
+		     TtaSelectElement (document, (Element) firstSelection);
+		  if (lastSelection != firstSelection)
+		     TtaExtendSelection (document, (Element) lastSelection, lastChar);
 	       }
 #endif
 	  }
      }
 }
 
-	/* InsertText   insere la chaine de caracteres "content" dans l'element
-	   pointe' par pEl (qui doit etre de type Texte), a la position
-	   "position". On travaille pour le document "document". Si document
-	   est nul, on ne s'occupe ni de selection ni d'affichage. */
+/* -----------------------------------------------------
+   InsertText   inserts the string "content" in the element 
+   pEl (which must be of type text), at the position
+   "position". If "document" is null, we have not to consider
+   the selction nor the displaying
+   -----------------------------------------------------*/
 
 #ifdef __STDC__
 void                InsertText (PtrElement pEl, int position, char *content, Document document)
@@ -238,15 +237,15 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuf, pBufPrec, newBuf;
+   PtrTextBuffer       pBuf, pBufPrec, newBuf;
    char               *ptr;
    int                 stringLength, l, delta, lengthBefore;
    PtrElement          pElAsc;
 
 #ifndef NODISPLAY
    PtrDocument         selDoc;
-   PtrElement          premSel, derSel;
-   int                 premCar, derCar;
+   PtrElement          firstSelection, lastSelection;
+   int                 firstChar, lastChar;
    boolean             selOk, changeSelection;
 
 #endif
@@ -254,36 +253,36 @@ Document            document;
    stringLength = strlen (content);
    if (stringLength > 0)
      {
-	/* corrige eventuellement le parametre position */
+	/* corrects the parameter position */
 	if (position > pEl->ElTextLength)
 	   position = pEl->ElTextLength;
 #ifndef NODISPLAY
 	if (document > 0)
 	  {
-	     /* modifie la selection si l'element en fait partie */
-	     selOk = SelEditeur (&selDoc, &premSel, &derSel, &premCar, &derCar);
+	     /* modifies the selection if the element belongs to it */
+	     selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	     changeSelection = FALSE;
 	     if (selOk)
 		if (selDoc == TabDocuments[document - 1])
-		   if (pEl == premSel || pEl == derSel)
-		      /* la selection commence et/ou se termine dans */
-		      /* l'element. On annule la selection d'abord */
+		   if (pEl == firstSelection || pEl == lastSelection)
+		      /* The selectio starts and/or stops in the element */
+		      /* First, we abort the selection */
 		     {
 			TtaSelectElement (document, NULL);
 			changeSelection = TRUE;
-			if (derCar > 1)
-			   derCar -= 1;
-			if (pEl == premSel)
-			   /* notre element est en tete de la selection */
+			if (lastChar > 1)
+			   lastChar -= 1;
+			if (pEl == firstSelection)
+			   /* The element is at the begenning of the selection */
 			  {
-			     if (premCar > position)
-				premCar += stringLength;
+			     if (firstChar > position)
+				firstChar += stringLength;
 			  }
-			if (pEl == derSel)
-			   /* notre element est en queue de la selection */
+			if (pEl == lastSelection)
+			   /* The element is at the end of the selection */
 			  {
-			     if (position < derCar)
-				derCar += stringLength;
+			     if (position < lastChar)
+				lastChar += stringLength;
 			  }
 		     }
 	  }
@@ -291,7 +290,7 @@ Document            document;
 	delta = stringLength;
 	pEl->ElTextLength += stringLength;
 	pEl->ElVolume += stringLength;
-	/* cherche le buffer pBuf ou` se place l'insertion */
+	/* looks for the buffer pBuf where the insertion has to be done */
 	pBuf = pEl->ElText;
 	lengthBefore = 0;
 	while (pBuf->BuNext != NULL && lengthBefore + pBuf->BuLength < position)
@@ -302,9 +301,9 @@ Document            document;
 	/* longueur qui doit rester dans le buffer coupe' */
 	lengthBefore = position - lengthBefore;
 	if (lengthBefore == 0)
-	   /* on insere avant le 1er caractere de l'element */
+	   /* one insert before the first character of the element */
 	  {
-	     /* on ajoute un buffer avant ceux qui existent deja */
+	     /* one add a buffer before the existing buffers */
 	     GetBufTexte (&pBuf);
 	     pBuf->BuNext = pEl->ElText;
 	     pBuf->BuPrevious = NULL;
@@ -367,15 +366,15 @@ Document            document;
 	     /* etablit une nouvelle selection si l'element en fait partie */
 	     if (changeSelection)
 	       {
-		  if (premCar > 0)
-		     if (derSel == premSel)
-			TtaSelectString (document, (Element) premSel, premCar, derCar);
+		  if (firstChar > 0)
+		     if (lastSelection == firstSelection)
+			TtaSelectString (document, (Element) firstSelection, firstChar, lastChar);
 		     else
-			TtaSelectString (document, (Element) premSel, premCar, 0);
+			TtaSelectString (document, (Element) firstSelection, firstChar, 0);
 		  else
-		     TtaSelectElement (document, (Element) premSel);
-		  if (derSel != premSel)
-		     TtaExtendSelection (document, (Element) derSel, derCar);
+		     TtaSelectElement (document, (Element) firstSelection);
+		  if (lastSelection != firstSelection)
+		     TtaExtendSelection (document, (Element) lastSelection, lastChar);
 	       }
 	  }
 #endif
@@ -509,8 +508,8 @@ Document            document;
 
 #ifndef NODISPLAY
    PtrDocument         selDoc;
-   PtrElement          premSel, derSel;
-   int                 premCar, derCar;
+   PtrElement          firstSelection, lastSelection;
+   int                 firstChar, lastChar;
    boolean             selOk, changeSelection;
 
 #endif
@@ -541,36 +540,36 @@ Document            document;
 	   length = ((PtrElement) element)->ElTextLength - position + 1;
 #ifndef NODISPLAY
 	/* modifie la selection si l'element en fait partie */
-	selOk = SelEditeur (&selDoc, &premSel, &derSel, &premCar, &derCar);
+	selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	changeSelection = FALSE;
 	if (selOk)
 	   if (selDoc == TabDocuments[document - 1])
-	      if ((PtrElement) element == premSel || (PtrElement) element == derSel)
+	      if ((PtrElement) element == firstSelection || (PtrElement) element == lastSelection)
 		 /* la selection commence et/ou se termine dans */
 		 /* l'element. On annule la selection d'abord */
 		{
 		   TtaSelectElement (document, NULL);
 		   changeSelection = TRUE;
-		   if (derCar > 1)
-		      derCar -= 1;
-		   if ((PtrElement) element == premSel)
+		   if (lastChar > 1)
+		      lastChar -= 1;
+		   if ((PtrElement) element == firstSelection)
 		      /* notre element est en tete de la selection */
 		     {
-			if (premCar > position)
+			if (firstChar > position)
 			  {
-			     premCar -= length;
-			     if (premCar < position)
-				premCar = position;
+			     firstChar -= length;
+			     if (firstChar < position)
+				firstChar = position;
 			  }
 		     }
-		   if ((PtrElement) element == derSel)
+		   if ((PtrElement) element == lastSelection)
 		      /* notre element est en queue de la selection */
 		     {
-			if (position < derCar)
+			if (position < lastChar)
 			  {
-			     derCar -= length;
-			     if (derCar < position)
-				derCar = position;
+			     lastChar -= length;
+			     if (lastChar < position)
+				lastChar = position;
 			  }
 		     }
 		}
@@ -704,15 +703,15 @@ Document            document;
 	/* etablit une nouvelle selection si l'element en fait partie */
 	if (changeSelection)
 	  {
-	     if (premCar > 0)
-		if (derSel == premSel)
-		   TtaSelectString (document, (Element) premSel, premCar, derCar);
+	     if (firstChar > 0)
+		if (lastSelection == firstSelection)
+		   TtaSelectString (document, (Element) firstSelection, firstChar, lastChar);
 		else
-		   TtaSelectString (document, (Element) premSel, premCar, 0);
+		   TtaSelectString (document, (Element) firstSelection, firstChar, 0);
 	     else
-		TtaSelectElement (document, (Element) premSel);
-	     if (derSel != premSel)
-		TtaExtendSelection (document, (Element) derSel, derCar);
+		TtaSelectElement (document, (Element) firstSelection);
+	     if (lastSelection != firstSelection)
+		TtaExtendSelection (document, (Element) lastSelection, lastChar);
 	  }
 #endif
      }

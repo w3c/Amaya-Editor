@@ -1463,8 +1463,8 @@ boolean             CanHolo;
    else 
     {
       CanHolo = TRUE;
-      if (ThotLocalActions[T_TableauCanHolophrast]!=NULL)
-          (*ThotLocalActions[T_TableauCanHolophrast])(((PtrElement)element), &CanHolo);
+      if (ThotLocalActions[T_holotable]!=NULL)
+          (*ThotLocalActions[T_holotable])(((PtrElement)element), &CanHolo);
       if ((((PtrElement)element)->ElTerminal &&
 	    ((PtrElement)element)->ElLeafType == LtPageColBreak) ||
 	   !CanHolo)

@@ -58,9 +58,9 @@ typedef struct _SchemaMenu_Ctl
 #define T_colors	0
 #define T_keyboard	1
 #define T_imagemenu	2
-#define T_update_paragraph	3
+#define T_updateparagraph	3
 #define T_stopinsert	4
-#define T_pasteClipboard	5
+#define T_pasteclipboard	5
 #define T_chsplit	6
 #define T_chvisibility	8
 #define T_rsvisibility	9
@@ -83,8 +83,8 @@ typedef struct _SchemaMenu_Ctl
 #define T_confirmclose	25
 #define T_rconfirmclose	26
 #define T_buildpathdocbuffer	27
-#define T_creecolle	28
-#define T_rcreecolle	29
+#define T_insertpaste	28
+#define T_rcinsertpaste	29
 #define T_raskfornew	30
 #define T_searchtext	31
 #define T_locatesearch	32
@@ -110,11 +110,11 @@ typedef struct _SchemaMenu_Ctl
 #define T_rprint	51
 
 #define T_cancopyorcut	52
-#define T_remonteselection 53
-#define T_desboite	54
-#define T_collevoisin	55
-#define T_collededans	56
-#define T_carriage	57
+#define T_selectsiblings 53
+#define T_selecbox	54
+#define T_pastesibling	55
+#define T_pastewithin	56
+#define T_enter	57
 #define T_cmdpaste	58
 #define T_deletenextchar 59
 
@@ -125,26 +125,26 @@ typedef struct _SchemaMenu_Ctl
 #define T_strsearchshowvalattr	64
 #define T_strsearchretmenu	65
 
-#define T_Tableau_Creation 66
-#define T_Tableau_Selection 67
-#define T_Tableau_OrphanCell 68
-#define T_TableauAttributSpecial 69
-#define T_Tableau_DernierSauve 70
-#define T_Tableau_Cond_Dernier 71
-#define T_Tableau_ColleVoisin 72
-#define T_TableauAttributRef 73
-#define T_Tableau_ApplRegleAttribut 74
-#define T_TableauCreeFiletLigne 75
-#define T_TableauCanHolophrast 76
-#define T_TableauVerifExtension 77
-#define T_Tableau_PaveRef 78
-#define T_TableauDebordeVertical 79
-#define T_Tableau_Except 80 
-#define T_Tableau_Except_CR 81
-#define T_Exc_Page_Break_Inserer 82
-#define T_Exc_Page_Break_Couper 83
-#define T_Exc_Page_Break_Supprime 84
-#define T_Exc_Page_Break_Detruit_Pave 85
+#define T_createtable 66
+#define T_selecttable 67
+#define T_singlecell 68
+#define T_attrtable 69
+#define T_lastsaved 70
+#define T_condlast 71
+#define T_pastesiblingtable 72
+#define T_refattr 73
+#define T_ruleattr 74
+#define T_createhairline 75
+#define T_holotable 76
+#define T_checkextens 77
+#define T_abref 78
+#define T_vertspan 79
+#define T_excepttable 80 
+#define T_entertable 81
+#define T_insertpage 82
+#define T_cutpage 83
+#define T_deletepage 84
+#define T_deletepageab 85
 
 #define MAX_LOCAL_ACTIONS 86
 
