@@ -81,8 +81,7 @@ extern void OpenNew ( Document document,
                       int docProfile );
 extern void GoToHome ( Document doc,
                        View view );
-extern void UpdateDoctypeMenu ( Document doc,
-                                ThotBool withDocType );
+extern void UpdateDoctypeMenu ( Document doc );
 extern void AddDirAttributeToDocEl ( Document doc );
 extern Document InitDocAndView ( Document oldDoc,
                                  ThotBool replaceOldDoc,
@@ -252,8 +251,7 @@ extern void OpenNew ( Document document,
                         int docProfile );
 extern void GoToHome ( Document doc,
                          View view );
-extern void UpdateDoctypeMenu ( Document doc,
-                                  ThotBool withDocType );
+extern void UpdateDoctypeMenu ( Document doc );
 extern void AddDirAttributeToDocEl ( Document doc );
 extern Document InitDocAndView ( Document oldDoc,
                                    ThotBool replaceOldDoc,

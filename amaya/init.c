@@ -1068,10 +1068,13 @@ void SetTableMenuOn (Document doc, View view)
 static void UpdateBrowserMenus (Document doc)
 {
   View       view;
-
+ 
   TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
   TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 
+  /* Update the doctype menu */
+  UpdateDoctypeMenu (doc);
+  
   TtaSetItemOff (doc, 1, Edit_, BUndo);
   TtaSetItemOff (doc, 1, Edit_, BRedo);
   TtaSetItemOff (doc, 1, Edit_, BCut);
@@ -1174,6 +1177,8 @@ void UpdateEditorMenus (Document doc)
 
   /* update specific menu entries */
   TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
+  /* Update the doctype menu */
+  UpdateDoctypeMenu (doc);
   /* structure information is active only in the structure view */
   TtaSetItemOff (doc, 1, Types, BStyle);
   TtaSetItemOff (doc, 1, Types, BComment);
@@ -1217,6 +1222,8 @@ void UpdateEditorMenus (Document doc)
 	    {
 	      if (isXhtml11)
 		TtaSetMenuOn (doc, 1, XMLTypes);
+	      else
+		TtaSetMenuOff (doc, 1, XMLTypes);
 	      TtaSetItemOn (doc, 1, Special, TSectionNumber);
 	      TtaSetItemOn (doc, 1, Special, BMakeBook);
 	      TtaSetItemOn (doc, 1, Edit_, BTransform);
@@ -2387,18 +2394,20 @@ void GoToHome (Document doc, View view)
 
 /*----------------------------------------------------------------------
   UpdateDoctypeMenu
-  The parameter withDocType is TRUE when the document includes a DocType.
   ----------------------------------------------------------------------*/
-void UpdateDoctypeMenu (Document doc, ThotBool withDocType)
+void UpdateDoctypeMenu (Document doc)
 {
+  Element         el_doc, el_doctype;
+  ElementType     elType;
   DocumentType    docType;
   SSchema         nature;
-  char           *ptr;
+  char           *ptr, *s;
   ThotBool	  useMathML, useSVG, useHTML;
  
   docType = DocumentTypes[doc];
   if (docType != docText && docType != docCSS &&
-      docType != docSource && docType != docLog)
+      docType != docSource && docType != docLog &&
+      TtaGetDocumentAccessMode (doc))
     {
       /* look for a MathML or SVG nature within the document */
       nature = NULL;
@@ -2417,7 +2426,22 @@ void UpdateDoctypeMenu (Document doc, ThotBool withDocType)
 	}
       while (nature);
 
-      if (withDocType)
+      /* Look for a doctype */
+      el_doc = TtaGetMainRoot (doc);
+      elType = TtaGetElementType (el_doc);
+      /* Search the doctype declaration according to the main schema */
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      if (strcmp (s, "HTML") == 0)
+	elType.ElTypeNum = HTML_EL_DOCTYPE;
+      else if (strcmp (s, "SVG") == 0)
+	elType.ElTypeNum = SVG_EL_DOCTYPE;
+      else if (strcmp (s, "MathML") == 0)
+	elType.ElTypeNum = MathML_EL_DOCTYPE;
+      else
+	elType.ElTypeNum = XML_EL_doctype;
+      el_doctype = TtaSearchTypedElement (elType, SearchInTree, el_doc);
+      
+      if (el_doctype)
 	{
 	  /* there is a Doctype */
 	  TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
@@ -4050,7 +4074,7 @@ static Document LoadDocument (Document doc, char *pathname,
       TtaFreeMemory (tempdir);
    
       /* Update the Doctype menu */
-      UpdateDoctypeMenu (newdoc, withDoctype);
+      UpdateDoctypeMenu (newdoc);
       if (ReadOnlyDocument[newdoc])
 	{
 	  UpdateBrowserMenus (newdoc);

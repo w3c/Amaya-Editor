@@ -552,7 +552,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
     }
 
   /* Update the Doctype menu */
-  UpdateDoctypeMenu (doc, TRUE);
+  UpdateDoctypeMenu (doc);
   /* the document should be saved */
   TtaSetDocumentUnmodified (doc);
   UpdateEditorMenus (doc);
@@ -603,7 +603,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
       TtaSetDocumentProfile (doc, new_doctype);
       
       /* Update the Doctype menu */
-      UpdateDoctypeMenu (doc, TRUE);
+      UpdateDoctypeMenu (doc);
       /* Notify the document as modified */
       TtaSetDocumentModified (doc);
       /* Synchronize the document */
@@ -651,7 +651,7 @@ void RemoveDoctype (Document document, View view)
     {
       TtaDeleteTree (doctype, document);
       TtaSetDocumentProfile (document, L_Other);
-      UpdateDoctypeMenu (document, FALSE);
+      UpdateDoctypeMenu (document);
       TtaSetDocumentModified (document);
     }
   /* Synchronize the document */
@@ -709,6 +709,7 @@ void AddDoctype (Document document, View view)
     profile = L_SVG;
 
   CreateOrChangeDoctype (document, view, profile);
+  UpdateEditorMenus (document);
 }
 
 /*--------------------------------------------------------------------------
@@ -719,6 +720,7 @@ void CreateDoctypeXhtml11 (Document document, View view)
 {
   XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_Xhtml11);
+  UpdateEditorMenus (document);
 }
 
 /*--------------------------------------------------------------------------
@@ -729,6 +731,7 @@ void CreateDoctypeXhtmlTransitional (Document document, View view)
 {
   XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_Transitional);
+  UpdateEditorMenus (document);
 }
 
 /*--------------------------------------------------------------------------
@@ -739,6 +742,7 @@ void CreateDoctypeXhtmlStrict (Document document, View view)
 {
   XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_Strict);
+  UpdateEditorMenus (document);
 }
 
 /*--------------------------------------------------------------------------
@@ -749,6 +753,7 @@ void CreateDoctypeXhtmlBasic (Document document, View view)
 {
   XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_Basic);
+  UpdateEditorMenus (document);
 }
 
 /*--------------------------------------------------------------------------
@@ -759,6 +764,7 @@ void CreateDoctypeHtmlTransitional (Document document, View view)
 {
   XmlDoctype = FALSE;
   CreateOrChangeDoctype (document, view, L_Transitional);
+  UpdateEditorMenus (document);
 }
 
 /*--------------------------------------------------------------------------
@@ -769,6 +775,7 @@ void CreateDoctypeHtmlStrict (Document document, View view)
 {
   XmlDoctype = FALSE;
   CreateOrChangeDoctype (document, view, L_Strict);
+  UpdateEditorMenus (document);
 }
 
 /*--------------------------------------------------------------------------
