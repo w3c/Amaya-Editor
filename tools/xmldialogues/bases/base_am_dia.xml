@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue Mar  9 18:05:08 CET 2004" version="72">
+<base last_update="Tue Jul  6 10:32:45 CEST 2004" version="73">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -703,8 +703,8 @@
 	<message xml:lang="fi">Tulosta</message>
 </label>
 <label define="BClosePage">
-	<message xml:lang="en">&amp;Close page</message>
-	<message xml:lang="fr">&amp;Fermer l'onglet</message>
+	<message xml:lang="en">&amp;Close document</message>
+	<message xml:lang="fr">&amp;Fermer le document</message>
 </label>
 <label define="BClose">
 	<message xml:lang="en">&amp;Close window</message>
@@ -1717,6 +1717,7 @@
 <label define="BDate">
 	<message xml:lang="en">Insert time stamp</message>
 	<message xml:lang="fr">Insérer date e mise a jour</message>
+	<message xml:lang="es">Insertar marca de tiempo</message>
 </label>
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>
@@ -2733,9 +2734,11 @@
 </label>
 <label define="BAddSeparator">
 	<message xml:lang="en">New Separator</message>
+	<message xml:lang="es">Nuevo separador</message>
 </label>
 <label define="BMoveItem">
 	<message xml:lang="en">Move Item</message>
+	<message xml:lang="es">Mover elemento</message>
 </label>
 <label define="BLock">
 	<message xml:lang="en">Lock resource...</message>

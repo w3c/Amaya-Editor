@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <title>Graphics and SMIL Animation</title>
+  <title>Grafik und SMIL-Animation</title>
   <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -27,102 +27,56 @@
 </table>
 
 <div id="page_body">
-<h1>Graphics and SMIL Animation</h1>
+<h1>Grafik und SMIL-Animation</h1>
 
-<p>SVG represents animation as elements interspersed through the main
-structure which represents the organization of the graphics. Animation
-elements appear as children of the graphics elements they animate. To allow
-the author to focus on animation, a timeline view shows all animation
-elements and group them together according to the graphics element they
-animate.</p>
+<p>SVG stellt Animationen als Elemente, in einer den Aufbau der Grafik widerspiegelnden Prim&auml;rstruktur, dar.
+Animierte Elemente sind von den graphischen Elementen abgeleitet, die sie animieren sollen. Damit der Autor seine Aufmerksamkeit auf die Animation richten kann, zeigt ein Zeitablaufsdiagramm (im Folgenden Zeitachsenansicht genannt) alle Animationselemente, zusammen mit den dazu passenden grafischen Animationselementen, an.</p>
 
-<h2>The Timeline View</h2>
+<h2>Die Zeitachsenansicht </h2>
 
-<p>The timeline view displays animations associated with graphics objects.
-Each animated object of the document is represented there, with a graphical
-representation of its animation elements.</p>
+<p>Die Zeitachsenansicht zeigt Animationen zusammen mit grafischen Objekten an. Jedes animierte Objekt des Dokuments wird in der Ansicht durch eine grafische Darstellung der zu animierenden Elemente angezeigt. 
+Die folgende Abbildung zeigt die drei animierten Objekte des Dokuments. Jedes Objekt wird auf der linken Seite der Ansicht durch ein wei&szlig; hinterlegtes Namensschild (Label genannt) mit einem K&auml;stchen daneben repr&auml;sentiert. Beim Anklicken wird das zum Schild geh&ouml;rige Element in der Formatierungsansicht hervorgehoben, was dem Benutzer den Zusammenhang zeigt. Hat ein graphisches Element nur ein Animationselement (wie z.B. das Element "Rechteck" in der Abbildung), wird dieses durch einen farbigen Balken dargestellt. Gibt es mehrere Elemente werden diese durch einen grauen Balken, stellvertretend f&uuml;r die gesamte Animation, repr&auml;sentiert (siehe Kreis am Fu&szlig;e der Abbildung). Ein '+'-Schalter im Label wechselt in die erweiterte Ansicht. Das Element "MyText" ist ein Beispiel f&uuml;r eine solche erweiterte Darstellung in der jedes Element durch einen farbigen Balken repr&auml;sentiert wird. Mit dem '-'-Schalter der erweiterten Ansicht gelangt man wieder zur&uuml;ck.</p>
 
-<p>The following figure shows the three animated objects of a document. Each
-object is represented on the left side of the view by a label with a white
-background and a box next to its label. Clicking the label highlights the
-corresponding element in the formatted view, thus providing the user with the
-context of that element. If the graphics element has a single animation
-element (like element Rectangle in the figure), this animation element is
-displayed as a colored bar. If there are several elements, a single gray bar
-represents the whole animation (Circle, at the bottom of the figure), and a
-'+' button in the label allows the user to get a expanded representation.
-Element MyText, is an example of such an expanded representation where each
-animation element is represented by a colored bar. The button becomes a '-'
-that allows the user to get back to the condensed representation.</p>
-
-<p>Position on the timeline depends on when they start and stop acting and
-the color of each bar reflects the type of animation:</p>
+<p>Die Position auf der Zeitachse h&auml;ngt vom ihrem Anfang und Ende ab. Die Farbe jedes Balken spiegelt die Art der Anmation wieder, dabei steht:</p>
 <ul>
-  <li>yellow for <code>animate</code>,</li>
-  <li>red for <code>set</code>,</li>
-  <li>green for <code>animateMotion</code>,</li>
-  <li>dark blue for <code>animateColor</code>,</li>
-  <li>light blue <code>animateTransform</code></li>
+  <li>gelb f&uuml;r  <code>animate</code>,</li>
+  <li>rot f&uuml;r  <code>set</code>,</li>
+  <li>gr&uuml;n f&uuml;r <code>animateMotion</code>,</li>
+  <li>unkelblau f&uuml;r <code>animateColor</code>,</li>
+  <li>hellblau f&uuml;r  <code>animateTransform</code></li>
 </ul>
 
 <p class="figure"><img alt="Animation view"
 src="//home/vatton/Amaya/doc/images/timeline_view.png" /></p>
 </div>
 
-<h2>Editing Animations</h2>
+<h2>Animationen edieren</h2>
 
-<p>The timeline view is helpful to quickly perceive the animation of all
-graphics in a document, but it also allows an author to edit animation.
-Existing elements can be modified. Most manipulations are done directly on
-the timeline, such as moving a bar or changing its length. This is
-immediately reflected in other views where the corresponding attributes of
-the animation element are updated (attributes <code>begin</code> and
-<code>dur</code> in that case).</p>
+<p>Die Zeitachenansicht gibt dem Autor zum Einen &Uuml;bersicht &uuml;ber die Animation aller Grafiken im Dokument und zum Anderen kann er damit auch die vorhandenen Animationselemente bearbeiten. Die meisten Ver&auml;nderungen, wie zum Beispiel das Bewegen eines Balkens oder das &Auml;ndern seiner L&auml;nge, werden direkt auf der Zeitachse ausgef&uuml;hrt. Diese Ver&auml;nderungen sind sofort in den anderen Darstellungen zu sehen, da deren Attribute unmittelbar auf dem neusten Stand gehalten werden. Im unserem Beispiel sind das die  <code>begin</code> und
+<code>dur</code>.</p>
 
-<p>When creating a movement for an existing graphics element:</p>
+<p>F&uuml;r ein existierendes grafisches Element  eine Bewegung erstellen:</p>
 <ul>
-  <li>The user starts by selecting the start time of the animation
-    <p>Click Ctrl + Left mouse button on the red timeline slider and move it
-    to the right start position</p>
+  <li>Man beginnt mit der Auswahl des Startzeitpunktes der Animation, indem er Strg + linke Maustaste &uuml;ber dem roten Zeitachsenschieberegler dr&uuml;ckt und ihn anschlie&szlig;end an die gew&uuml;nschte Position verschiebt.
   </li>
-  <li>Then he'she selects the element of interest in the formatted view
-    <p>If the element should have an ID which will be used as a label,</p>
+  <li>Falls das Element eine ID erhalten soll die dann als Beschriftung fungiert, w&auml;hlt man dieses Element in der Formatierungsansicht aus
   </li>
-  <li>Then he/she clicks on the top left <img alt="anim_motion"
-    src="../../../amaya/anim_motion_sh_db.png" /> button in the timeline view
-    <p>This creates a new animation element in that view.</p>
+  <li>Dann klickt man den Schalter oben links auf der Zeitachse an und ein neues Animationselement wird in der Ansicht erstellt.
   </li>
-  <li>The user then points at the starting position and at the ending
-    position of the movement in the formatted view
-    <p>Click Ctrl + Left mouse button on the displayed <img alt="cross"
-    src="../../../amaya/timeline_cross.gif" /> icon in the formatted
-    view.Doing so, he/she can control the key positions of the animated
-    element in the context of the other graphics elements. In fact, the user
-    draws the motion path it as if he/she would draw the shape of any curve
-    belonging to the document.</p>
+  <li>Nun stellt der Autor die Start- und Endposition der Bewegung im der Formatierungsansicht ein, indem er
+Strg + linke Maustaste &uuml;ber dem Dargestellt-Icon <img alt="cross"
+    src="../../../amaya/timeline_cross.gif" /> in der Formatierungsansicht dr&uuml;ckt. Dabei kann er die Schl&uuml;sselpositionen des zu animierenden Elements im zusammenwirken mit denanderen grafischen Elementen steuern. Tats&auml;chlich wird der Bewegunspfad gezeichnet, als w&uuml;rde man die Form einer jeden Kurve, die zum Element geh&ouml;rt, zeichnen.
   </li>
-  <li>Finally, going back to the timeline view, he/she can move and/or resize
-    the new bar to adjust the timing</li>
+  <li>Schlie&szlig;lich, zur&uuml;ck in der Zeitachsenansicht, kann man nun den neuen Balken, zur Festlegung des Timings, nach eigenem Wunsch verschieben, strecken und stauchen.</li>
 </ul>
 
-<p>Manipulating timing in the timeline view is more comfortable, as this
-allows the user to better understand the synchronization of a particular
-element with the other animated elements. The user can also modify the key
-positions in the main view, just by moving points with the mouse. But the
-other views are still there, and some parameters may be adjusted in the
-structure view by editing attributes, as well as in the source code if
-necessary.</p>
+<p>Das Ver&auml;ndern des Timings mit Hilfe der Zeitansicht ist wesentlich angenehmer, zumal so dem Anwender die Synchronisation eines Elements mit den anderen Animationselementen besser verst&auml;ndlich wird. Au&szlig;erdem kann der Nutzer Schl&uuml;sselpositionen in der Hauptansicht durch blo&szlig;es Verschieben der Punkte mit der Maus einstellen. Die &uuml;brigen Ansichten sind weiterhin vorhanden. Manche Parameter k&ouml;nnen in der Strukturdarstellung und nat&uuml;rlich auch im Quellcode durch &Auml;ndern von Attributen eingestellt werden.</p>
 
-<p>When creating a a color change for an existing graphics element, the user
-starts by selecting the element of interest in the main view, he/she then
-clicks on the top left <img alt="anim_color"
-src="../../../amaya/anim_color_sh_db.png" /> button.</p>
+<p>Will man eine Farbver&auml;nderung f&uuml;r ein existierendes graphiisches Element erstellen, beginnt man mit der Auswahl des gew&uuml;nschten Elements in der Hauptansicht und klickt dann auf den  -Schalter oben links <img alt="anim_color"
+src="../../../amaya/anim_color_sh_db.png" />.</p>
 
-<p>The user can manipulate a bar representing an animation in the same way
-he/she manipulates a rectangle in the document. Obviously some constraints
-are put in the timeline view. For instance colored bars can move only
-horizontally along the time axis and their height can not be changed
-individually. Those constraints represent the semantics of the timeline
-graphic language.</p>
+<p>
+Der Anwender kann einen, diie Animation repr&auml;sentierenden, Balken in der gleichen Weise ver&auml;ndern in der er auch eine Rechteck im Dokument ver&auml;ndert.. Nat&uuml;rlich schr&auml;nkt die Zeitachsenansicht auch ein.. Zum Beispiel k&ouml;nnen farbige Balken nur horizontal, also entlang der Zeitachse, bewegt werden, wohingegen die H&ouml;he nicht individuell eingestellt werden kann.
+Diese Einschr&auml;nkungen stammen aus der Semantik der Zeitreihengrafiksprache.</p>
 </body>
 </html>
