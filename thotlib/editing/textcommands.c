@@ -570,17 +570,27 @@ static void MovingCommands (int code, Document doc, View view,
 			  if (pLine && pLine == SearchLine (ibox, frame))
 			    {
 			      /* moving to the beginning of the current box */
+#ifndef _GL
 			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
 			      x = pBox->BxXOrg + xpos;
+#else /* _GL */
+			      y = pBox->BxClipY + (pBox->BxClipH / 2);
+			      x = pBox->BxClipX + xpos;
+#endif /* _GL */
 			      if (pBox->BxScript == 'A' ||
 				  pBox->BxScript == 'H')
 				x += pBox->BxWidth + 2;
 			    }
 			  else
 			    {
-			      /* moving to the end of the next box */
-			      y = ibox->BxYOrg + ibox->BxHeight;
+			      /* moving to the end of the previous box */
+#ifndef _GL
+			      y = ibox->BxYOrg + (pBox->BxHeight / 2);
 			      x = ibox->BxXOrg;
+#else /* _GL */
+			      y = ibox->BxClipY + (pBox->BxClipH / 2);
+			      x = ibox->BxClipX;
+#endif /* _GL */
 			      if (ibox->BxScript != 'A' &&
 				  ibox->BxScript != 'H')
 				x += ibox->BxWidth + 2;
