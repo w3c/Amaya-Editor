@@ -42,11 +42,12 @@
 static int NetworkBase;
 static boolean EnableCache;
 static boolean CacheProtectedDocuments;
-static CHAR CacheDirectory [MAX_LENGTH];
+static CHAR CacheDirectory [MAX_LENGTH+1];
 static int CacheSize;
 static int MaxCacheFile;
-static CHAR HttpProxy [MAX_LENGTH];
-static CHAR NoProxy [MAX_LENGTH];
+static CHAR HttpProxy [MAX_LENGTH+1];
+static CHAR NoProxy [MAX_LENGTH+1];
+static int NetworkStatus;
 
 /* Browser/Editing menu */
 static int BrEdBase;
@@ -56,14 +57,17 @@ static int Zoom;
 static boolean Multikey;
 static boolean LostUpdateCheck;
 static boolean VerifyPublish;
-static CHAR HomePage [MAX_LENGTH];
-static CHAR ThotPrint [MAX_LENGTH];
-static CHAR DefaultName [MAX_LENGTH];
+static CHAR HomePage [MAX_LENGTH+1];
+static CHAR ThotPrint [MAX_LENGTH+1];
+static CHAR DefaultName [MAX_LENGTH+1];
 static boolean BgImages;
 static boolean DoubleClick;
 
 /* Appearance menu options */
 static int AppearanceBase;
+static CHAR Lang [MAX_LENGTH+1];
+static int FontMenuSize;
+static CHAR ForegroundColor [MAX_LENGTH+1];
 
 /* common local variables */
 CHAR s[300]; /* general purpose buffer */
@@ -83,6 +87,9 @@ static void         GetBrEdConf (void);
 static void         GetDefaultBrEdConf (void);
 static void         SetBrEdConf (void);
 static void         AppearanceCallbackDialog(int ref, int typedata, STRING data);
+static void         RefreshAppearanceMenu (void);
+static void         GetAppearanceConf (void);
+
 #else
 static void         GetEnvString (/* const STRING name, STRING value */);
 static void         GetDefEnvToggle (/* const STRING name, boolean *value, int ref, int entry */);
@@ -99,9 +106,58 @@ static void         GetBrEdConf (/* void */);
 static void         GetDefaultBrEdConf (/* void */);
 static void         SetBrEdConf (/* void */);
 static void         AppearanceCallbackDialog(/* int ref, int typedata, STRING data */);
+static void         RefreshAppearanceMenu (/* void */);
+static void         GetAppearanceConf (/* void */);
 #endif
 
-/* Common functions */
+/*
+** Common functions
+*/
+
+/*----------------------------------------------------------------------
+  InitDefEnv
+  Initializes the default options which are not setup by thot.ini.
+  This protects us against a crash due to a  user's erasing thot.ini.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void InitDefEnv (void)
+#else
+void InitDefEnv ()
+#endif /* __STDC__ */
+{
+  char *ptr;
+
+  /* browsing editing options */
+  TtaSetDefEnvString ("HOME_PAGE", "", FALSE);
+  TtaSetDefEnvString ("TMPDIR", "", FALSE);
+  TtaSetDefEnvString ("ENABLE_MULTIKEY", "no", FALSE);
+  TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
+  TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
+  TtaSetDefEnvString ("DEFAULT_NAME", "Overview.html", FALSE);
+
+  /* network configuration */
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
+  TtaSetDefEnvString ("ENABLE_PIPELINING", "yes", FALSE);
+  TtaSetDefEnvString ("NET_EVENT_TIMEOUT", "60000", FALSE);
+  TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", "60", FALSE);
+  TtaSetDefEnvString ("DNS_TIMEOUT", "1800", FALSE);
+  TtaSetDefEnvString ("MAX_SOCKET", "32", FALSE);
+  TtaSetDefEnvString ("ENABLE_MDA", "yes", FALSE);
+  TtaSetDefEnvString ("NO_PROXY", "", FALSE);
+  TtaSetDefEnvString ("HTTP_PROXY", "", FALSE);
+  TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", "3", FALSE);
+  TtaSetDefEnvString ("CACHE_SIZE", "10", FALSE);
+  TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
+  TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", "yes", FALSE);
+  ptr = TtaGetDefEnvString ("ENABLE_CACHE");
+  TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
+
+  /* appearance */
+  TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
+
+}
+
 /*----------------------------------------------------------------------
    InitConfMenu: initialisation, called during Amaya initialisation
   ----------------------------------------------------------------------*/
@@ -111,6 +167,7 @@ void                InitConfMenu (void)
 void                InitConfMenu ()
 #endif /* __STDC__*/
 {
+  InitDefEnv ();
   NetworkBase = TtaSetCallback (NetworkCallbackDialog, MAX_NETWORKMENU_DLG);
   BrEdBase = TtaSetCallback (BrEdCallbackDialog, MAX_BREDMENU_DLG);
   AppearanceBase = TtaSetCallback (AppearanceCallbackDialog,
@@ -203,15 +260,7 @@ STRING              data;
 
 #endif
 {
-  int                 val, length;
-  DisplayMode         oldDisplayMode;
-  SSchema	       sch;
-  Element	       elParent, elFound;
-  Attribute	       attr;
-  AttributeType       attrType;
-  boolean	       found;
-  CHAR		       buf [MAX_LENGTH];
-  SearchDomain	       domain;
+  int                 val;
 
   if (ref == -1)
     {
@@ -232,10 +281,18 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetNetworkConf ();
+#ifdef AMAYA_JAVA
+#else      
+	      libwww_updateNetworkConf (NetworkStatus);
+#endif /* !AMAYA_JAVA */
+	      /* reset the status flag */
+	      NetworkStatus = 0;
 	      break;
 	    case 2:
 	      GetDefaultNetworkConf ();
 	      RefreshNetworkMenu ();
+	      /* always signal this as modified */
+	      NetworkStatus = AMAYA_CACHE_RESTART | AMAYA_PROXY_RESTART;
 	      break;
 	    default:
 	      break;
@@ -246,15 +303,18 @@ STRING              data;
 	  switch (val) 
 	    {
 	    case 0:
+	      NetworkStatus |= AMAYA_CACHE_RESTART;
 	      EnableCache = !EnableCache;
 	      break;
 	    case 1:
+	      NetworkStatus |= AMAYA_CACHE_RESTART;
 	      CacheProtectedDocuments = !CacheProtectedDocuments;
 	      break;
 	    }
 	  break;
 
 	case mCacheDirectory:
+	  NetworkStatus |= AMAYA_CACHE_RESTART;
 	  if (data)
 	    ustrcpy (CacheDirectory, data);
 	  else
@@ -262,14 +322,17 @@ STRING              data;
 	  break;
 
 	case mCacheSize:
+	  NetworkStatus |= AMAYA_CACHE_RESTART;
 	  CacheSize = val;
 	  break;
 
 	case mMaxCacheFile:
+	  NetworkStatus |= AMAYA_CACHE_RESTART;
 	  MaxCacheFile = val;
 	  break;
 
 	case mHttpProxy:
+	  NetworkStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
 	    ustrcpy (HttpProxy, data);
 	  else
@@ -277,6 +340,7 @@ STRING              data;
 	  break;
 
 	case mNoProxy:
+	  NetworkStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
 	    ustrcpy (NoProxy, data);
 	  else
@@ -304,7 +368,7 @@ static void GetNetworkConf ()
     ("CACHE_PROTECTED_DOCUMENTS", &CacheProtectedDocuments);
   GetEnvString ("CACHE_DIR", CacheDirectory);
   TtaGetEnvInt ("CACHE_SIZE", &CacheSize);
-  TtaGetEnvInt ("CACHE_MAX_FILE_SIZE", &MaxCacheFile);
+  TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
   GetEnvString ("HTTP_PROXY", HttpProxy);
   GetEnvString ("NO_PROXY", NoProxy);
 }
@@ -320,14 +384,14 @@ static void SetNetworkConf (void)
 static void SetNetworkConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvBoolean ("ENABLE_CACHE", EnableCache, YES);
+  TtaSetEnvBoolean ("ENABLE_CACHE", EnableCache, TRUE);
   TtaSetEnvBoolean ("CACHE_PROTECTED_DOCUMENTS", 
-		    CacheProtectedDocuments, YES);
-  TtaSetEnvString ("CACHE_DIR", CacheDirectory, YES);
-  TtaSetEnvInt ("CACHE_SIZE", CacheSize, YES);
-  TtaSetEnvInt ("CACHE_MAX_FILE_SIZE", MaxCacheFile, YES);
-  TtaSetEnvString ("HTTP_PROXY", HttpProxy, YES);
-  TtaSetEnvString ("NO_PROXY", NoProxy, YES);
+		    CacheProtectedDocuments, TRUE);
+  TtaSetEnvString ("CACHE_DIR", CacheDirectory, TRUE);
+  TtaSetEnvInt ("CACHE_SIZE", CacheSize, TRUE);
+  TtaSetEnvInt ("MAX_CACHE_ENTRY_SIZE", MaxCacheFile, TRUE);
+  TtaSetEnvString ("HTTP_PROXY", HttpProxy, TRUE);
+  TtaSetEnvString ("NO_PROXY", NoProxy, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -349,7 +413,7 @@ static void GetDefaultNetworkConf ()
      NetworkBase + mToggleCache, 1);
   GetDefEnvString ("CACHE_DIR", CacheDirectory);
   TtaGetDefEnvInt ("CACHE_SIZE", &CacheSize);
-  TtaGetDefEnvInt ("CACHE_MAX_FILE_SIZE", &MaxCacheFile);
+  TtaGetDefEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
   GetDefEnvString ("HTTP_PROXY", HttpProxy);
   GetDefEnvString ("NO_PROXY", NoProxy);
 }
@@ -388,8 +452,6 @@ void         NetworkConfMenu (Document document, View view)
 void         NetworkConfMenu (document, view)
 Document            document;
 View                view;
-STRING              pathname;
-
 #endif
 {
    int              i;
@@ -402,7 +464,7 @@ STRING              pathname;
 
    TtaNewSheet (NetworkBase + NetworkMenu, 
 		TtaGetViewFrame (document, view),
-	       "Network Configuration", 3, s, TRUE, 3, 'L', D_DONE);
+	       "Network Configuration", 2, s, FALSE, 4, 'L', D_DONE);
 
    sprintf (s, "%s%c%s", "BEnable cache", EOS, 
 	    "BCache protected documents");
@@ -412,41 +474,43 @@ STRING              pathname;
 		     2,
 		     s,
 		     NULL,
-		     FALSE);
+		     TRUE);
    TtaNewTextForm (NetworkBase + mCacheDirectory,
 		   NetworkBase + NetworkMenu,
-		   "Cache Directory",
+		   "Cache directory",
 		   20,
 		   1,
-		   FALSE);
+		   TRUE);
    TtaNewNumberForm (NetworkBase + mCacheSize,
 		     NetworkBase + NetworkMenu,
 		     "Cache size (Mb)",
 		     0,
 		     100,
-		     FALSE);
+		     TRUE);
    TtaNewNumberForm (NetworkBase + mMaxCacheFile,
 		     NetworkBase + NetworkMenu,
-		     "Maximum file size (Mb)",
+		     "Cache entry size limit (Mb)",
 		     0,
 		     5,
-		     FALSE);
+		     TRUE);
    TtaNewTextForm (NetworkBase + mHttpProxy,
 		   NetworkBase + NetworkMenu,
-		   "HTTP Proxy",
+		   "HTTP proxy",
 		   20,
 		   1,
-		   FALSE);
+		   TRUE);
    TtaNewTextForm (NetworkBase + mNoProxy,
 		   NetworkBase + NetworkMenu,
-		   "No Proxy",
+		   "No proxy",
 		   20,
 		   1,
-		   FALSE);
+		   TRUE);
 
    /* load and display the current values */
    GetNetworkConf ();
    RefreshNetworkMenu ();
+   /* clean the modified flags */
+   NetworkStatus = 0;
   /* display the menu */
   TtaShowDialogue (NetworkBase + NetworkMenu, TRUE);
 }
@@ -468,15 +532,7 @@ STRING              data;
 
 #endif
 {
-  int                 val, length;
-  DisplayMode         oldDisplayMode;
-  SSchema	       sch;
-  Element	       elParent, elFound;
-  Attribute	       attr;
-  AttributeType       attrType;
-  boolean	       found;
-  CHAR		       buf [MAX_LENGTH];
-  SearchDomain	       domain;
+  int                 val;
 
   if (ref == -1)
     {
@@ -604,24 +660,24 @@ static void SetBrEdConf ()
 {
   int i;
 
-  TtaSetEnvInt ("TOOLTIPDELAY", ToolTipDelay, YES);
-  TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, YES);
-  TtaSetEnvInt ("ZOOM", Zoom, YES);
+  TtaSetEnvInt ("TOOLTIPDELAY", ToolTipDelay, TRUE);
+  TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, TRUE);
+  TtaSetEnvInt ("ZOOM", Zoom, TRUE);
   /* recalibrate the zoom settings in all the active documents */
   for (i = 0; i < DocumentTableLength -1; i++)
     {
       if (DocumentURLs[i])
 	RecalibrateZoom (i, 1);
     }
-  TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, YES);
+  TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, TRUE);
   TtaSetMultikey (Multikey);
-  TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, YES);
-  TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, YES);
-  TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, YES);
-  TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, YES);
-  TtaSetEnvString ("DEFAULTNAME", DefaultName, YES);
-  TtaSetEnvString ("HOME_PAGE", HomePage, YES);
-  TtaSetEnvString ("THOTPRINT", ThotPrint, YES);
+  TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
+  TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
+  TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, TRUE);
+  TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
+  TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
+  TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
+  TtaSetEnvString ("THOTPRINT", ThotPrint, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -677,8 +733,9 @@ static void RefreshBrEdMenu ()
 }
 
 /*----------------------------------------------------------------------
-  BrowsingEditingConfMenu
-  Build and display the Conf Menu dialog box and prepare for input.
+  BrEdConfMenu
+  Build and display the Browsing Editing conf Menu dialog box and prepare 
+  for input.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         BrEdConfMenu (Document document, View view)
@@ -701,7 +758,13 @@ STRING              pathname;
 
    TtaNewSheet (BrEdBase + BrEdMenu, 
 		TtaGetViewFrame (document, view),
-	       "Editing/Browsing Configuration", 2, s, TRUE, 3, 'L', D_DONE);
+	       "Editing/Browsing Configuration", 2, s, FALSE, 11, 'L', D_DONE);
+   TtaNewTextForm (BrEdBase + mHomePage,
+		   BrEdBase + BrEdMenu,
+		   "Home Page",
+		   20,
+		   1,
+		   FALSE);
    TtaNewNumberForm (BrEdBase + mToolTipDelay,
 		     BrEdBase + BrEdMenu,
 		     "ToolTip delay (ms)",
@@ -753,12 +816,6 @@ STRING              pathname;
    TtaNewTextForm (BrEdBase + mDefaultName,
 		   BrEdBase + BrEdMenu,
 		   "Default name for URLs finishing in \'/\'",
-		   20,
-		   1,
-		   FALSE);
-   TtaNewTextForm (BrEdBase + mHomePage,
-		   BrEdBase + BrEdMenu,
-		   "Home Page",
 		   20,
 		   1,
 		   FALSE);
@@ -857,27 +914,65 @@ STRING              pathname;
    TtaNewSheet (AppearanceBase + AppearanceMenu, 
 		TtaGetViewFrame (document, view),
 	       "Appearance Configuration", 2, s, TRUE, 3, 'L', D_DONE);
-
+   TtaNewTextForm (AppearanceBase + mDialogueLang,
+		   AppearanceBase + AppearanceMenu,
+		   "Dialogue language",
+		   20,
+		   1,
+		   FALSE);   
+   TtaNewNumberForm (AppearanceBase + mFontMenuSize,
+		     AppearanceBase + AppearanceMenu,
+		     "Menu font size",
+		     8,
+		     20,
+		     FALSE);   
+   TtaNewTextForm (AppearanceBase + mForegroundColor,
+		   AppearanceBase + AppearanceMenu,
+		   "Foreground color",
+		   20,
+		   1,
+		   FALSE);   
+   /* load and display the current values */
+   GetAppearanceConf ();
+   RefreshAppearanceMenu ();
+   /* display the menu */
    TtaShowDialogue (AppearanceBase + AppearanceMenu, TRUE);
 }
 
-void InitEnv ()
+/*----------------------------------------------------------------------
+  RefreshAppearanceMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RefreshAppearanceMenu ()
+#else
+static void RefreshAppearanceMenu ()
+#endif /* __STDC__ */
 {
-
+  TtaSetNumberForm (AppearanceBase + mFontMenuSize, FontMenuSize);
+  TtaSetTextForm (AppearanceBase + mForegroundColor, ForegroundColor);
+  TtaSetTextForm (AppearanceBase + mDialogueLang, Lang);
 }
+
+/*----------------------------------------------------------------------
+  GetAppearanceConf
+  Makes a copy of the current registry appearance values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetAppearanceConf (void)
+#else
+static void GetAppearanceConf ()
+#endif /* __STDC__ */
+{
+  char *ptr;
+
+  GetEnvString ("LANG", Lang);
+  TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
+  GetEnvString ("ForegroundColor", ForegroundColor);
+}
+
+
 #endif /* CONF_MENU */
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

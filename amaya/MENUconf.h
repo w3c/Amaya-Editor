@@ -38,7 +38,21 @@
 #define MAX_BREDMENU_DLG  12
 
 #define AppearanceMenu      1
-#define MAX_APPEARANCEMENU_DLG  2
+#define mDialogueLang       2
+#define mFontMenuSize       3
+#define mForegroundColor    4
+#define mBackgrounColor     5
+#define mButtonColor        6
+#define mScrollColor        7
+#define mFormattedView      8
+#define mStructureView      9
+#define mMathStructureView  10
+#define mGraphStructureView 11
+#define mAlternateView      12
+#define mLinksView           13
+#define mTableOfContentsView 14
+#define mToggleUseCurrentXY  15
+#define MAX_APPEARANCEMENU_DLG  16
 
 #endif /* _MENUCONF.h */
 
