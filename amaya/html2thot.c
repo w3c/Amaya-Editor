@@ -5258,7 +5258,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 {
   gzFile     stream;
-  char      *ptr, *end, *end2,*meta, *content, *body, *http;
+  char      *ptr, *end, *end2, *meta, *endmeta, *content, *body, *http;
   int        res, i, j, k;
   ThotBool   endOfSniffedFile;
 
@@ -5281,16 +5281,32 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 	  meta = StrCaseStr (&FileBuffer[i], "<meta");
 	  if (meta)
 	    {
+	      endmeta = strstr (meta, ">");
 	      /* looks for the first "http-equiv" declaration */
 	      http = StrCaseStr (meta, "http-equiv");
+	      if (http && http > endmeta)
+		{
+		  while (endmeta && http > endmeta)
+		    {
+		      meta =  StrCaseStr (endmeta,  "<meta");
+		      if (meta)
+			endmeta = strstr (meta, ">");
+		      else
+			{
+			  endmeta = NULL;
+			  http = NULL;
+			}
+		    }
+		  
+		}
 	      if (http)
 		{
 		  /* looks for the "Content-Type" declaration */
-		  content = StrCaseStr (http, "content-type");
+		  content = StrCaseStr (meta, "content-type");
 		  if (content)
 		    {
 		      /* check whether there is a charset */
-		      ptr = StrCaseStr (content, "charset");
+		      ptr = StrCaseStr (meta, "charset");
 		      if (ptr)
 			{
 			  endOfSniffedFile = TRUE;
