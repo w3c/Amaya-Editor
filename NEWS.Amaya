@@ -15,6 +15,10 @@ Extensions 2.2:
   mini-browser. Amaya menus and buttons are displayed according to the
   current profile.
 
+* A new option in the Preferences/Publishing menu allows to declare a set
+  of domains where a PUT may be redirected, and thus avoid having a popup
+  asking a user to confirm each redirection.
+
 Fixed bugs 2.1a:
 ---------------
 
