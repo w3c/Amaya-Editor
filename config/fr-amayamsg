@@ -235,7 +235,7 @@
 233 Essayer l'entrée "Fichier/Forcer un code caractère"
 234 Caractères invalides
 235 Profil du document :
-236 Certains éléments ou attributs sont ignorés - voir Fichier/Montrer les erreurs
+236 Erreurs détectées - voir Fichier/Montrer les erreurs
 237 Le codage de ce document n'est pas supporté par Amaya
 238 Editer et sauver ce document changera son type
 239 Non disponible
@@ -383,3 +383,5 @@
 381 Remplacer le document courant
 382 Dans un nouvel onglet
 383 Dans une nouvelle fenêtre
+384 Anti-aliasing
+385 Date universelle

@@ -235,7 +235,7 @@
 233 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
 234 Ungültige Zeichen
 235 Dokumenttyp:
-236 Einige Tags/Attribute wurden ignoriert - siehe Datei/Parserfehler anzeigen
+236 Anzeigen - siehe Datei/Parserfehler anzeigen
 237 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
 238 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
 239 Nicht verfügbar
@@ -383,3 +383,5 @@
 381 **Replace current
 382 **In new tab
 383 **In new Window
+384 Anti-aliasing
+385 **Universal date

@@ -235,7 +235,7 @@
 233 Try the 'File/Force a Character Coding' entry
 234 Invalid characters
 235 Document profile:
-236 Some elements/attributes are ignored - see File/Show parsing errors
+236 Errors detected - see File/Show parsing errors
 237 The encoding of this document is not supported by Amaya
 238 Editing and saving this document will change its type
 239 Not available
@@ -383,3 +383,5 @@
 381 Replace current
 382 In new tab
 383 In new Window
+384 Anti-aliasing
+385 Universal date

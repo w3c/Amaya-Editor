@@ -235,7 +235,7 @@
 233 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
 234 Caracteres inválidos
 235 Perfil de este documento:
-236 Se ignoran Tags/atributos - vea Archivo > Mostrar errores sintácticos
+236 Eerrores - vea Archivo > Mostrar errores sintácticos
 237 La codificación de este documento no está soportada por Amaya
 238 Al editar y guardar este documento se cambiará su tipo
 239 No disponible
@@ -383,3 +383,5 @@
 381 **Replace current
 382 **In new tab
 383 **In new Window
+384 Anti-aliasing
+385 **Universal date

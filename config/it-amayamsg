@@ -235,7 +235,7 @@
 233 Prova la voce 'File/Forza codifica caratteri'
 234 Caratteri non validi
 235 Profilo di documento:
-236 I tag/attributi sono ignorati - vedi File/Mostra le errore
+236 Errore - vedi File/Mostra le errore
 237 La codifica per questo documento non e` supportata da Amaya
 238 Editando e salvando questo documento il suo tipo verrà cambiato
 239 Non disponibile
@@ -383,3 +383,5 @@
 381 **Replace current
 382 **In new tab
 383 **In new Window
+384 Anti-aliasing
+385 **Universal date

@@ -235,7 +235,7 @@
 233 **Try the 'File/Force a Character Coding' entry
 234 Caracteres inválidos
 235 Perfil del documento:
-236 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
+236 Erros - veja Vistas/Exibir erros de gramática (parsing)
 237 A codificação deste documento não é suportada por Amaya
 238 Editar ou salvar este documento vai mudar seu tipo
 239 Indisponível
@@ -383,3 +383,5 @@
 381 **Replace current
 382 **In new tab
 383 **In new Window
+384 Anti-aliasing
+385 **Universal date

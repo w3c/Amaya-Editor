@@ -235,7 +235,7 @@
 233 **Try the 'File/Force a Character Coding' entry
 234 Yanlış karakter
 235 Belgenin profili:
-236 Işaretler ve tarz tanımları bilinmiyor - Görünümler/Hataları göster bakın
+236 Hata - Görünümler/Hataları göster bakın
 237 Bu belgenin kodlaması Amaya tarafından yapılamıyor
 238 Yazmak ve kaydetmek bu belgenin tipini değiştirir
 239 Kullanıma hazır değil
@@ -383,3 +383,5 @@
 381 **Replace current
 382 **In new tab
 383 **In new Window
+384 Anti-aliasing
+385 **Universal date

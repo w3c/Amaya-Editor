@@ -235,7 +235,7 @@
 233 **Try the 'File/Force a Character Coding' entry
 234 Virheellisiä merkkejä
 235 Dokumentin profiili:
-236 Jotkut tagit/määrittelyt ohitettiin - katso Näytä/Näytä käännösvirheet
+236 Virhe - katso Näytä/Näytä käännösvirheet
 237 Amaya ei tue dokumentin tyyppiä
 238 Muokkaus ja tallennus muuttavat dokumentin tyypin
 239 Ei saatavilla
@@ -383,3 +383,5 @@
 381 **Replace current
 382 **In new tab
 383 **In new Window
+384 Anti-aliasing
+385 **Universal date

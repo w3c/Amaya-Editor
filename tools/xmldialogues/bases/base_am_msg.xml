@@ -2579,15 +2579,15 @@
 	<message xml:lang="ru">Профиль документа:</message>
 </label>
 <label define="AM_XML_WARNING">
-	<message xml:lang="en">Some elements/attributes are ignored - see File/Show parsing errors</message>
-	<message xml:lang="fr">Certains éléments ou attributs sont ignorés - voir Fichier/Montrer les erreurs</message>
-	<message xml:lang="it">I tag/attributi sono ignorati - vedi File/Mostra le errore</message>
-	<message xml:lang="de">Einige Tags/Attribute wurden ignoriert - siehe Datei/Parserfehler anzeigen</message>
-	<message xml:lang="es">Se ignoran Tags/atributos - vea Archivo > Mostrar errores sintácticos</message>
-	<message xml:lang="pt">Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)</message>
-	<message xml:lang="fi">Jotkut tagit/määrittelyt ohitettiin - katso Näytä/Näytä käännösvirheet</message>
-	<message xml:lang="tr">Işaretler ve tarz tanımları bilinmiyor - Görünümler/Hataları göster bakın</message>
-	<message xml:lang="ru">Некоторые элементы/атрибуты проигнорированы - смотрите Вид/Показать разбор ошибок</message>
+	<message xml:lang="en">Errors detected - see File/Show parsing errors</message>
+	<message xml:lang="fr">Erreurs détectées - voir Fichier/Montrer les erreurs</message>
+	<message xml:lang="it">Errore - vedi File/Mostra le errore</message>
+	<message xml:lang="de">Anzeigen - siehe Datei/Parserfehler anzeigen</message>
+	<message xml:lang="es">Eerrores - vea Archivo > Mostrar errores sintácticos</message>
+	<message xml:lang="pt">Erros - veja Vistas/Exibir erros de gramática (parsing)</message>
+	<message xml:lang="fi">Virhe - katso Näytä/Näytä käännösvirheet</message>
+	<message xml:lang="tr">Hata - Görünümler/Hataları göster bakın</message>
+	<message xml:lang="ru">Ошибка - смотрите Вид/Показать разбор ошибок</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
 	<message xml:lang="en">The encoding of this document is not supported by Amaya</message>
@@ -4043,6 +4043,21 @@
 <label define="AM_INNEWWINDOW">
 	<message xml:lang="en">In new Window</message>
 	<message xml:lang="fr">Dans une nouvelle fenêtre</message>
+</label>
+<label define="AM_NOALIASING">
+	<message xml:lang="en">Anti-aliasing</message>
+	<message xml:lang="fr">Anti-aliasing</message>
+	<message xml:lang="es">Anti-aliasing</message>
+	<message xml:lang="de">Anti-aliasing</message>
+	<message xml:lang="it">Anti-aliasing</message>
+	<message xml:lang="pt">Anti-aliasing</message>
+	<message xml:lang="tr">Anti-aliasing</message>
+	<message xml:lang="fi">Anti-aliasing</message>
+	<message xml:lang="ru">Anti-aliasing</message>
+</label>
+<label define="AM_GTM">
+	<message xml:lang="en">Universal date</message>
+	<message xml:lang="fr">Date universelle</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
