@@ -606,7 +606,7 @@ STRING name;
       return (ugetcwd (&CurrentDir[0], sizeof(CurrentDir)));
     }
 
-  /* First lookup in the System defaults */
+  /* first lookup in the System defaults */
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
@@ -620,11 +620,13 @@ STRING name;
       cour = cour->next;
     }
 
-  /* Then lookup in the application defaults */
+  /* then lookup in the application user preferences */
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!ustrcasecmp (cour->appli, AppRegistryEntryAppli) && !ustrcmp (cour->name, name) && cour->value[0] != EOS)
+      if (!ustrcasecmp (cour->appli, AppRegistryEntryAppli)
+		  && !ustrcmp (cour->name, name) && cour->value[0] != EOS
+		  && cour->level == REGISTRY_USER)
 	{
 #ifdef DEBUG_REGISTRY
 	  fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
@@ -632,9 +634,25 @@ STRING name;
 	  return (cour->value);
 	}
       cour = cour->next;
-    }
-  
-  /* Then lookup in the Thot library defaults */
+    } 
+
+    /* then lookup in the application defaults */
+  cour = AppRegistryEntry;
+  while (cour != NULL)
+    {
+      if (!ustrcasecmp (cour->appli, AppRegistryEntryAppli) 
+		  && !ustrcmp (cour->name, name) && cour->value[0] != EOS
+		  && cour->level == REGISTRY_SYSTEM)
+	{
+#ifdef DEBUG_REGISTRY
+	  fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
+#endif
+	  return (cour->value);
+	}
+      cour = cour->next;
+    } 
+
+  /* then lookup in the Thot library defaults */
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
@@ -721,9 +739,9 @@ int                 overwrite;
   STRING ptr;
 
   if (value)
-    ptr = "Yes";
+    ptr = "yes";
   else
-    ptr = "No";
+    ptr = "no";
   AddRegisterEntry (AppRegistryEntryAppli, name, ptr,
 		    REGISTRY_USER, overwrite);
 }
