@@ -2062,8 +2062,8 @@ int                 docid;
 		 ** If it's a SYNC request, we just mark it as aborted
 		 */
 		 me->reqStatus = HT_ABORT;
-		 if ((me->mode & AMAYA_IASYNC)
-		     ||	 (me->mode & AMAYA_ASYNC) 
+		 if (((me->mode & AMAYA_IASYNC)
+		     ||	 (me->mode & AMAYA_ASYNC))
 		     && !(me->mode & AMAYA_ASYNC_SAFE_STOP))
 		   {
 		     if (HTRequest_net (me->request))
@@ -2146,8 +2146,8 @@ fprintf (stderr, "Stop: url %s says NEW_PENDING, WAITING", me->urlName);
 		     reqChannel = HTChannel_find(reqSock);
 		     reqHost = HTChannel_host (reqChannel);
 
-		 if ((me->mode & AMAYA_IASYNC)
-		     ||	 (me->mode & AMAYA_ASYNC)
+		 if (((me->mode & AMAYA_IASYNC)
+		     ||	 (me->mode & AMAYA_ASYNC))
 		     && !(me->mode & AMAYA_ASYNC_SAFE_STOP))
 		   {
 		     if (HTRequest_net (me->request))
