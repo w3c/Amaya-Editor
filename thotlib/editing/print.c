@@ -2637,7 +2637,7 @@ PtrDocument         pDoc;
 		  if (pDocRef != NULL)
 		    {
 		       CopyDocIdent (&pDocRef->DocIdent, pRefD->ReExtDocument);
-		       OpenDocument ("", pDocRef, TRUE, FALSE, NULL, FALSE);
+		       OpenDocument ("", pDocRef, TRUE, FALSE, NULL, FALSE, FALSE);
 		    }
 	       }
 	  }
@@ -2920,7 +2920,7 @@ char              **argv;
        else
 	 sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
        
-       if (!OpenDocument (name, MainDocument, TRUE, FALSE, NULL, FALSE))
+       if (!OpenDocument (name, MainDocument, TRUE, FALSE, NULL, FALSE, FALSE))
 	 MainDocument = NULL;
      }
    if (MainDocument != NULL)

@@ -233,15 +233,16 @@ PtrDocument         pDoc;
    schema de structure et utiliser pSS si pSS <> NULL.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             OpenDocument (Name docName, PtrDocument pDoc, boolean loadIncludedDoc, boolean skeleton, PtrSSchema pSS, boolean withAppEvent)
+boolean             OpenDocument (Name docName, PtrDocument pDoc, boolean loadIncludedDoc, boolean skeleton, PtrSSchema pSS, boolean withAppEvent, boolean removeExclusions)
 #else  /* __STDC__ */
-boolean             OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent)
+boolean             OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent, removeExclusions)
 Name                docName;
 PtrDocument         pDoc;
 boolean             loadIncludedDoc;
 boolean             skeleton;
 PtrSSchema          pSS;
 boolean             withAppEvent;
+boolean		    removeExclusions
 #endif /* __STDC__ */
 {
    boolean             ret;
@@ -289,7 +290,7 @@ boolean             withAppEvent;
 	       {
 		  /* le document appartient au directory courant */
 		  strncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
-		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent);
+		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent, removeExclusions);
 		  TtaReadClose (pivotFile);
 		  if (pDoc->DocRootElement != NULL)
 		     /* le document lu n'est pas vide */
@@ -3394,15 +3395,16 @@ char               *tag;
    document est charge sous forme squelette.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadDocumentPiv (BinFile file, PtrDocument pDoc, boolean loadExternalDoc, boolean skeleton, PtrSSchema pLoadedSS, boolean withEvent)
+void                LoadDocumentPiv (BinFile file, PtrDocument pDoc, boolean loadExternalDoc, boolean skeleton, PtrSSchema pLoadedSS, boolean withEvent, boolean removeExclusions)
 #else  /* __STDC__ */
-void                LoadDocumentPiv (file, pDoc, loadExternalDoc, skeleton, pLoadedSS, withEvent)
+void                LoadDocumentPiv (file, pDoc, loadExternalDoc, skeleton, pLoadedSS, withEvent, removeExclusions)
 BinFile             file;
 PtrDocument         pDoc;
 boolean             loadExternalDoc;
 boolean             skeleton;
 PtrSSchema          pLoadedSS;
 boolean             withEvent;
+boolean		    removeExclusions
 #endif /* __STDC__ */
 
 {
@@ -3525,7 +3527,8 @@ boolean             withEvent;
 		if (!error)
 		  {
 		     /* retire les elements exclus */
-		     RemoveExcludedElem (&p);
+		     if (removeExclusions)
+		        RemoveExcludedElem (&p);
 		     /* accouple les paires */
 		     AssociatePairs (p);
 		     pDoc->DocParameters[i - 1] = p;
@@ -3568,7 +3571,8 @@ boolean             withEvent;
 		  /* retire les elements exclus */
 		  if (p != NULL)
 		    {
-		       RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
+		       if (removeExclusions)
+		          RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
 		       /* accouple les paires */
 		       AssociatePairs (p);
 		    }
@@ -3640,7 +3644,8 @@ boolean             withEvent;
 				 /* chaine le 1er elem. associe dans cette liste */
 				 InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], pFirst);
 				 /* retire les elements exclus */
-				 RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
+				 if (removeExclusions)
+				    RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
 				 /* accouple les paires */
 				 AssociatePairs (pDoc->DocAssocRoot[assoc - 1]);
 			      }
@@ -3664,7 +3669,8 @@ boolean             withEvent;
 			    else
 			       InsertElementAfter (p, s);
 			    /* retire les elements exclus */
-			    RemoveExcludedElem (&s);
+			    if (removeExclusions)
+			       RemoveExcludedElem (&s);
 			    /* accouple les paires */
 			    AssociatePairs (s);
 			    if (s != NULL)
@@ -3721,7 +3727,8 @@ boolean             withEvent;
 			     InsertFirstChild (p, s);
 			  }
 			/* traite les elements exclus */
-			RemoveExcludedElem (&p);
+			if (removeExclusions)
+			   RemoveExcludedElem (&p);
 			/* accouple les paires */
 			AssociatePairs (p);
 			pDoc->DocRootElement = p;
@@ -3845,7 +3852,7 @@ boolean             withEvent;
 							 CopyDocIdent (&pExternalDoc[extDocNum]->DocIdent, docIdent);
 							 ok = OpenDocument (NULL, pExternalDoc[extDocNum],
 							       FALSE, FALSE,
-							       NULL, FALSE);
+							       NULL, FALSE, removeExclusions);
 						      }
 						    if (pExternalDoc[extDocNum] != NULL)
 						      {

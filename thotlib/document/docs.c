@@ -218,7 +218,7 @@ char               *fileName;
        /* on ouvre le document en chargeant temporairement les documents */
        /* externes qui contiennent les elements inclus dans notre document */
        TtaDisplaySimpleMessage (INFO, LIB, TMSG_READING_DOC);
-       ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE);
+       ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE, TRUE);
        /* restaure le path des documents s'il a ete ecrase */
        if (directoryBuffer[0] != '\0')
 	 strncpy (DocumentPath, directoryBuffer, MAX_PATH);
