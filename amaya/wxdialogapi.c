@@ -8,6 +8,7 @@
   #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/TitleDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
+  #include "wxdialog/PrintDlgWX.h"
   #include "AmayaApp.h"
 
   #include "appdialogue_wx.h"
@@ -156,7 +157,7 @@ void CreateTitleDlgWX ( ThotWindow parent,
 /*----------------------------------------------------------------------
   CreateSearchDlgWX create the Search dialog
   params:
-    + doc_title : the current document title
+    + caption : the widget caption (including document title)
   returns:
   ----------------------------------------------------------------------*/
 void CreateSearchDlgWX ( ThotWindow parent,  char* caption)
@@ -169,6 +170,28 @@ void CreateSearchDlgWX ( ThotWindow parent,  char* caption)
   SearchDlgWX * p_dlg = new SearchDlgWX(
       parent,
       wx_caption );
+
+  p_dlg->ShowModal();
+  p_dlg->Destroy();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreatePrintDlgWX create the SearchSetupAndPrint dialog
+  params:
+    + ps_file : postscript file
+  returns:
+  ----------------------------------------------------------------------*/
+void CreatePrintDlgWX ( ThotWindow parent,  char* ps_file)
+{
+#ifdef _WX
+  wxString wx_ps_file = TtaConvMessageToWX( ps_file );
+
+  wxLogDebug( _T("SearchDlgWX - ps_file=")+wx_ps_file );
+
+  PrintDlgWX * p_dlg = new PrintDlgWX(
+      parent,
+      wx_ps_file );
 
   p_dlg->ShowModal();
   p_dlg->Destroy();

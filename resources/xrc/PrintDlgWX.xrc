@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="PrintDlgWX">
+    <title></title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxGridSizer">
+              <cols>2</cols>
+              <rows>1</rows>
+              <object class="sizeritem">
+                <object class="wxRadioBox" name="wxID_PAPER_FORMAT_BOX">
+                  <label></label>
+                  <content>
+                    <item/>
+                    <item/></content>
+                  <selection>0</selection>
+                  <style>wxRA_SPECIFY_COLS</style>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxRadioBox" name="wxID_OUTPUT_BOX">
+                  <label></label>
+                  <content>
+                    <item/>
+                    <item/></content>
+                  <selection>0</selection>
+                  <style>wxRA_SPECIFY_COLS</style>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxGridSizer">
+              <cols>2</cols>
+              <rows>1</rows>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_NONE">
+                  <label></label>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_FILE_TXT_CTRL">
+                  <value></value>
+                  <size></size>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxGridSizer">
+              <cols>2</cols>
+              <rows>1</rows>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxRadioBox" name="wxID_ORIENTATION_BOX">
+                      <label></label>
+                      <content>
+                        <item/>
+                        <item/></content>
+                      <style>wxRA_SPECIFY_COLS</style>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>5</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxRadioBox" name="wXxID_DISPOSITION_BO">
+                      <label></label>
+                      <content>
+                        <item/>
+                        <item/>
+                        <item/></content>
+                      <style>wxRA_SPECIFY_COLS</style>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>5</border>
+                  </object>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_OPTIONS_TXT">
+                      <label></label>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>5</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxStaticLine"/>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>5</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_MANUAL_CHK">
+                      <label></label>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>2</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_TOC_CHK">
+                      <label></label>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>2</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_LINKS_CHK">
+                      <label></label>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>2</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_PRINT_URL_CHK">
+                      <label></label>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>2</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_IGNORE_CSS_CHK">
+                      <label></label>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>2</border>
+                  </object>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
+        <border>5</border>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_PRINTBUTTON">
+              <label>CONFIRMBUTTON</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_CANCELBUTTON">
+              <label>CANCELBUTTON</label>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

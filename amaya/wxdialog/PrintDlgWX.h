@@ -1,7 +1,7 @@
 #ifdef _WX
 
-#ifndef __SEARCHDLGWX_H__
-#define __SEARCHDLGWX_H__
+#ifndef __PRINTDLGWX_H__
+#define __PRINTDLGWX_H__
 
 //-----------------------------------------------------------------------------
 // Headers
@@ -10,28 +10,24 @@
 #include "wx/dialog.h"
 
 //-----------------------------------------------------------------------------
-// Class definition: SearchDlgWX
+// Class definition: PrintDlgWX
 //-----------------------------------------------------------------------------
 
-class SearchDlgWX : public wxDialog
+class PrintDlgWX : public wxDialog
 {
 public: 
     
   // Constructor.
-  SearchDlgWX( wxWindow* parent,
-	       const wxString & titlecaption );
+  PrintDlgWX( wxWindow* parent,
+	      const wxString & ps_file );
   
   // Destructor.                  
-  ~SearchDlgWX();
+  ~PrintDlgWX();
 
 private:
     // Override base class functions of a wxDialog.
-  void OnConfirmButton( wxCommandEvent& event );
+  void OnPrintButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
-  void OnNoReplaceButton( wxCommandEvent& event );
-  void OnReplaceBox( wxCommandEvent& event );
-  void OnSearchAreaBox( wxCommandEvent& event );
-  void OnCheckCaseBox( wxCommandEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
@@ -42,6 +38,6 @@ private:
   bool  m_case;
 };
 
-#endif  //__SEARCHDLGWX_H__
+#endif  //__PRINTDLGWX_H__
 
 #endif /* _WX */

@@ -12,6 +12,10 @@
  *          R. Guetari (W3C/INRIA) - Windows version.
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "AmayaApp.h"
+#endif /* _WX */
 
 /* Included headerfiles */
 #define THOT_EXPORT extern
@@ -63,9 +67,13 @@ static int              PagePerSheet;
 #include "HTMLhistory_f.h"
 #include "UIcss_f.h"
 
-#ifdef _WINGUI 
+#ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
+
+#ifdef _WX
+  #include "wxdialogapi_f.h"
+#endif /* _WX */
 
 static ThotBool GetIncludedDocuments (Element el, Element link,
 				      Document doc, IncludeCtxt *prev);
@@ -706,17 +714,17 @@ void InitPrint (void)
   ----------------------------------------------------------------------*/
 void SetupAndPrint (Document doc, View view)
 {
-#ifndef _WINGUI
+#ifdef _GTK
   char           bufMenu[MAX_LENGTH];
   int            i;
-#endif /* _WINGUI */
+#endif /* _GTK */
   ThotBool       textFile;
 
   textFile = (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS);
   /* Print form */
   CheckPrintingDocument (doc);
 
-#ifndef _WINGUI
+#ifdef _GTK
   TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
 	       TtaGetMessage (LIB, TMSG_LIB_PRINT), 1,
 	       TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
@@ -811,9 +819,13 @@ void SetupAndPrint (Document doc, View view)
       TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, (ThotColor)-1, FALSE);
       TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, (ThotColor)-1, FALSE);
     }
-#else  /* _WINGUI */
+#endif /* _GTK */
+#ifdef _WINGUI
   CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSfile);
 #endif /* _WINGUI */
+#ifdef _WX
+  CreatePrintDlgWX (TtaGetViewFrame (doc, view), PSfile);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
