@@ -84,7 +84,7 @@ PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
 		    pNextAb->AbBox == NULL)
 		  pNextAb = pNextAb->AbNext;
 		/* Est-ce un pave compose eclate ? */
-		if (pNextAb &&
+		if (pNextAb && pNextAb->AbBox &&
 		    (pNextAb->AbBox->BxType == BoGhost ||
 		     pNextAb->AbBox->BxType == BoFloatGhost))
 		  {
@@ -112,7 +112,7 @@ PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
 	      }
 	  }
 
-	if (pNextAb == NULL)
+	if (pNextAb == NULL || pNextAb->AbBox == NULL)
 	   result = NULL;
 	else
 	  {
@@ -160,7 +160,7 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
 	      pNextAb->AbBox == NULL)
 	    pNextAb = pNextAb->AbPrevious;
 	  /* Est-ce un pave compose eclate ? */
-	  if (pNextAb &&
+	  if (pNextAb && pNextAb->AbBox &&
 	      (pNextAb->AbBox->BxType == BoGhost ||
 	       pNextAb->AbBox->BxType == BoFloatGhost))
 	    {
@@ -184,7 +184,7 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
 	}
      }
       
-   if (pNextAb == NULL)
+   if (pNextAb == NULL || pNextAb->AbBox == NULL)
      result = NULL;
    else
      {
