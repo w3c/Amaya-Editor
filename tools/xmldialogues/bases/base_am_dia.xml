@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue Oct 28 15:43:55 CET 2003" version="59">
+<base last_update="Tue Oct 28 17:22:22 CET 2003" version="60">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -2339,7 +2339,7 @@
 <label define="BEditTopics">
 	<message xml:lang="en">New Topic</message>
 	<message xml:lang="fr">Nouvelle rubrique</message>
-	<message xml:lang="it">Nuovo argomento</message>
+	<message xml:lang="it">Nuova rubrica</message>
 </label>
 <label define="BViewBookmarks">
 	<message xml:lang="en">View Bookmarks</message>
@@ -2351,7 +2351,7 @@
 </label>
 <label define="BImportTopics">
 	<message xml:lang="en">Import a topic hierarchy</message>
-	<message xml:lang="it">Importa una gerarchia di argomenti</message>
+	<message xml:lang="it">Importa una gerarchia di rubriche</message>
 </label>
 <label define="BLock">
 	<message xml:lang="en">Lock resource...</message>

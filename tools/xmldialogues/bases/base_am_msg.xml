@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue Oct 28 15:43:55 CET 2003" version="57">
+<base last_update="Tue Oct 28 17:22:22 CET 2003" version="58">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -3513,11 +3513,12 @@
 <label define="AM_SCREEN_TYPE">
 	<message xml:lang="en">Current screen type</message>
 	<message xml:lang="fr">Type d'écran courant</message>
+	<message xml:lang="it">Output corrente</message>
 </label>
 <label define="AM_NEW_TOPIC">
 	<message xml:lang="en">New Topic</message>
 	<message xml:lang="fr">Nouvelle Rubrique</message>
-	<message xml:lang="it">Nuovo argomento</message>
+	<message xml:lang="it">Nuova rubrica</message>
 </label>
 <label define="AM_BM_BPROPERTIES">
 	<message xml:lang="en">Bookmark Properties</message>
@@ -3527,18 +3528,18 @@
 <label define="AM_BM_TPROPERTIES">
 	<message xml:lang="en">Topic Properties</message>
 	<message xml:lang="fr">Propriétés de la rubrique</message>
-	<message xml:lang="it">Proprietà dell'argomento</message>
+	<message xml:lang="it">Proprietà della rubrica</message>
 </label>
 <label define="AM_BM_TOPIC_HIERARCHY">
 	<message xml:lang="en">Topic hierarchy:</message>
 	<message xml:lang="fr">Hiérarchie des rubriques:</message>
-	<message xml:lang="it">Gerarchia degli argomenti :</message>
+	<message xml:lang="it">Gerarchia delle rubriche :</message>
 </label>
 <label define="AM_BM_TITLE">
 	<message xml:lang="en">Title:</message>
 	<message xml:lang="fr">Titre:</message>
 	<message xml:lang="de">Titel:</message>
-	<message xml:lang="it">Titolo:</message>
+	<message xml:lang="it">Titolo :</message>
 	<message xml:lang="tr">Başlık:</message>
 	<message xml:lang="es">Título:</message>
 	<message xml:lang="pt">Título:</message>
@@ -3547,13 +3548,14 @@
 <label define="AM_BM_RECALLS">
 	<message xml:lang="en">Recalls:</message>
 	<message xml:lang="fr">Rappele:</message>
+	<message xml:lang="it">Richiama :</message>
 </label>
 <label define="AM_BM_AUTHOR">
 	<message xml:lang="en">Author:</message>
 	<message xml:lang="de">Auto:r</message>
 	<message xml:lang="fr">Auteur:</message>
 	<message xml:lang="es">Autor:</message>
-	<message xml:lang="it">Autore:</message>
+	<message xml:lang="it">Autore :</message>
 	<message xml:lang="pt">Autor:</message>
 	<message xml:lang="tr">Sahip:</message>
 </label>
@@ -3585,12 +3587,12 @@
 <label define="AM_STYLE_APPLIED">
 	<message xml:lang="en">CSS style rules applied to the &lt;%s> element\n</message>
 	<message xml:lang="fr">Règles de style CSS appliqué �  l'élément &lt;%s> \n</message>
-	<message xml:lang="it">Regole di stile CSS applicata all'elemento &lt;%s>\n</message>
+	<message xml:lang="it">Regole di stile CSS applicate all'elemento &lt;%s>\n</message>
 </label>
 <label define="AM_LINK_LINE">
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
 	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click</message>
-	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) click\n</message>
+	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
 	<message xml:lang="en">Load objects (object, embed)</message>

@@ -240,6 +240,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
       strncasecmp (deb, "cursor", 6) &&
       strncasecmp (deb, "empty-cells", 11) &&
       strncasecmp (deb, "letter-spacing", 14) &&
+      strncasecmp (deb, "marker-offset", 12) &&
       strncasecmp (deb, "max-height", 10) &&
       strncasecmp (deb, "max-width", 9) &&
       strncasecmp (deb, "min-height", 10) &&
@@ -253,7 +254,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
       strncasecmp (deb, "quotes", 6) &&
       strncasecmp (deb, "table-layout", 12) &&
       strncasecmp (deb, "visibility", 10) &&
-      strncasecmp (deb, "widows", 6))
+      strncasecmp (deb, "windows", 7))
     CSSPrintError ("CSS property ignored:", deb);
   *ptr = c;
   return (ptr);

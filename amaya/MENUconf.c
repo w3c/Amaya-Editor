@@ -154,7 +154,7 @@ static ThotBool S_Buttons;
 static ThotBool S_Address;
 static ThotBool S_Targets;
 static ThotBool S_Numbers;
-#define DEF_SAVE_INTVL 500	/* number of typed characters triggering 
+#define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
 				   automatic saving */
 static ThotBool S_AutoSave;
 

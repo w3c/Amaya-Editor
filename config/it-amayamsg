@@ -356,20 +356,20 @@
 354 Applica l'operazione
 355 Inserisci un nome di elemento
 356 Applica il CSS
-357 **Current screen type
-358 Nuovo argomento
+357 Output corrente
+358 Nuova rubrica
 359 Proprietà del bookmark
-360 Proprietà dell'argomento
-361 Gerarchia degli argomenti :
-362 Titolo:
-363 **Recalls:
-364 Autore:
+360 Proprietà della rubrica
+361 Gerarchia delle rubriche :
+362 Titolo :
+363 Richiama :
+364 Autore :
 365 Creato :
 366 Ultima modifica :
 367 Descrizione :
 368 Selezionare un elemento
 369 Tutti i CSS
-370 Regole di stile CSS applicata all'elemento <%s>\n
-371 Le righe in blu sono collegamenti attivati con un doppio (o semplice) click\n
+370 Regole di stile CSS applicate all'elemento <%s>\n
+371 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
 372 Carica oggetti (object, embed)
 373 Nessuna regola di stile per questo elemento

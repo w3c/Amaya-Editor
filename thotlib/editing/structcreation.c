@@ -876,6 +876,7 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 		 /* memorise le pave a reafficher */
 		 frame = pDoc->DocViewFrame[view];
 		 if (pAb != NULL)
+
 		   {
 		     ClearViewSelection (frame);
 		     h = 0;
@@ -897,8 +898,8 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
    /* DocBackUpInterval = 0 signifie pas de sauvegarde automatique */
    /* this code is now obsolete */
    /*
-   if (pDoc->DocBackUpInterval > 0)
-     if (pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
+   if (DocBackUpInterval > 0)
+     if (pDoc->DocNTypedChars >= DocBackUpInterval)
        {
 	 (*ThotLocalActions[T_writedocument]) (pDoc, 1);
 	 pDoc->DocNTypedChars = 0;
