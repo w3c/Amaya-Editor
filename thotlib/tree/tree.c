@@ -29,10 +29,10 @@
 #include "abspictures_f.h"
 #include "externalref_f.h"
 
-/* ----------------------------------------------------------------------
-   DocumentOfElement
-   returns the document to which a pEl element belongs.
-   ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *  DocumentOfElement
+ *  returns the document to which a pEl element belongs.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 PtrDocument         DocumentOfElement (PtrElement pEl)
@@ -80,10 +80,10 @@ PtrElement          pEl;
    return NULL;
 }
 
-/* ---------------------------------------------------------------------- 
-   ProtectElement
-   sets the ElIsCopy flag in the elements of the subtree of pEl.
-   ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *  ProtectElement
+ *  sets the ElIsCopy flag in the elements of the subtree of pEl.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 void                ProtectElement (PtrElement pEl)
@@ -108,10 +108,10 @@ PtrElement          pEl;
 }
 
 
-/* ----------------------------------------------------------------------
-   GetOtherPairedElement
-   returns a pointer on the mark which is pair to the one pointed to by pEl.
-   ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *  GetOtherPairedElement
+ *  returns a pointer on the mark which is pair to the one pointed to by pEl.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 PtrElement          GetOtherPairedElement (PtrElement pEl)
@@ -177,11 +177,11 @@ PtrElement          pEl;
    return pOther;
 }
 
-/* ---------------------------------------------------------------------- 
-   ElementIsReadOnly
-   returns TRUE if the element pointed by pEl is protected against user
-   modifications, or if it belongs to a protected tree.
-   ---------------------------------------------------------------------- */
+/** ---------------------------------------------------------------------- 
+ *  ElementIsReadOnly
+ *  returns TRUE if the element pointed by pEl is protected against user
+ *  modifications, or if it belongs to a protected tree.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 boolean             ElementIsReadOnly (PtrElement pEl)
@@ -216,11 +216,11 @@ PtrElement          pEl;
    return ret;
 }
 
-/* ----------------------------------------------------------------------
-   ElementIsHidden
-   returns TRUE if the element pointed by pEl is hidden to the user, or 
-   if it belongs to a hidden tree.
-   ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *  ElementIsHidden
+ *  returns TRUE if the element pointed by pEl is hidden to the user, or 
+ *  if it belongs to a hidden tree.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 boolean             ElementIsHidden (PtrElement pEl)
@@ -245,9 +245,9 @@ PtrElement          pEl;
    return ret;
 }
 
-/* ----------------------------------------------------------------------
-   FwdSearchTypeNameInSubtree					
-   ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *  FwdSearchTypeNameInSubtree					
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 static PtrElement   FwdSearchTypeNameInSubtree (PtrElement pEl, boolean test, char *typeName)
@@ -281,12 +281,12 @@ char               *typeName;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- 
-   FwdSearchElemByTypeName
-   makes forward search on a tree, starting from the element pointed by
-   Pel,  of an element having the name typeName. The function returns a
-   pointer to the element if there's a hit, NULL otherwise.
-   ---------------------------------------------------------------------- */
+/** ---------------------------------------------------------------------- 
+ *  FwdSearchElemByTypeName
+ *  makes forward search on a tree, starting from the element pointed by
+ *  Pel,  of an element having the name typeName. The function returns a
+ *  pointer to the element if there's a hit, NULL otherwise.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 PtrElement          FwdSearchElemByTypeName (PtrElement pEl, char *typeName)
@@ -350,9 +350,9 @@ char               *typeName;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- 
-   BackSearchTypeNameInSubtree				       
-   ---------------------------------------------------------------------- */
+/** ---------------------------------------------------------------------- 
+ *  BackSearchTypeNameInSubtree				       
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, char *typeName)
@@ -389,13 +389,13 @@ char               *typeName;
      }
    return pRet;
 }
-/* ---------------------------------------------------------------------- 
-   BackSearchElemByTypeName
-   cherche en arriere dans l'arbre, a partir de l'elt  
-   pointe par pEl, un element dont le nom de type est typeName.    
-   La fonction rend un pointeur sur l'element trouve ou NULL       
-   si echec.                                                       
-   ---------------------------------------------------------------------- */
+/** ---------------------------------------------------------------------- 
+ *  BackSearchElemByTypeName
+ *  starting from the element pointed by elt, it makes a backward tree search
+ *  for an element having type typeName.
+ *  If it finds the  element, it returns a pointer to it. Otherwise, it
+ *  NULL.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 PtrElement          BackSearchElemByTypeName (PtrElement pEl, char *typeName)
@@ -435,9 +435,9 @@ char               *typeName;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    BackSearchVisibleSubtree                                        | */
-/* ---------------------------------------------------------------------- */
+/** ---------------------------------------------------------------------- 
+ *  BackSearchVisibleSubtree                                        
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 static PtrElement   BackSearchVisibleSubtree (PtrElement pEl, int *view)
@@ -474,10 +474,12 @@ int                *view;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- 
-   AttrFound
-   retourne 'vrai' si l'element pointe' par pEl est l'elt cherche'.|
-   ---------------------------------------------------------------------- */
+/** ---------------------------------------------------------------------- 
+ *  AttrFound
+ *  searches for a specific attribute in an element.
+ *  Returns TRUE if the element pointed by pEL is the one we are looking
+ *  for, FALSE otherwise.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 static boolean      AttrFound (PtrElement pEl, char *textVal, int val, int attrNum, PtrSSchema pSS)
@@ -537,9 +539,9 @@ PtrSSchema       pSS;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FwdSearchAttrInSubtree                                          | */
-/* ---------------------------------------------------------------------- */
+/** ---------------------------------------------------------------------- 
+ *  FwdSearchAttrInSubtree                                          
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 static PtrElement   FwdSearchAttrInSubtree (PtrElement pEl, boolean test, PtrSSchema pSS, int attrNum, int val, char *textVal)
@@ -576,10 +578,9 @@ char               *textVal;
    return pRet;
 }
 
-
-/* ---------------------------------------------------------------------- */
-/* |    BackSearchAttrInSubtree                                         | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *   BackSearchAttrInSubtree                                         
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 static PtrElement   BackSearchAttrInSubtree (PtrElement pEl, char *textVal, int val, int attrNum, PtrSSchema pSS)
@@ -654,13 +655,12 @@ PtrSSchema        pSS;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ElemIsEmptyOrRefOrPair     teste si l'element pointe' par pE    | */
-/* |            est vide (si Kind = 1) ou si c'est un element           | */
-/* |            reference (si Kind = 2) ou si c'est un element de       | */
-/* |            paire (si Kind = 3).                                    | */
-/* |            Retourne Vrai si le test est satisfait.                 | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *  ElemIsEmptyOrRefOrPair
+ *  tests if the element pointed by pEL is empty (Kind = 1), if it's a 
+ *  reference element (Kind = 2), or if its a pair element (Kind = 3).
+ *  Returns TRUE or FALSE, according to the result of the test.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 static boolean      ElemIsEmptyOrRefOrPair (PtrElement pEl, int Kind)
@@ -723,9 +723,9 @@ int                 Kind;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FwdSearchEmptyInSubtree						| */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *  FwdSearchEmptyInSubtree						
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 static PtrElement   FwdSearchEmptyInSubtree (PtrElement pEl, boolean test, int Kind)
@@ -758,14 +758,15 @@ int                 Kind;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FwdSearchRefOrEmptyElem    cherche en avant a partir de l'element  | */
-/* |            pEl le premier element qui soit vide (si Kind = 1)     | */
-/* |            ou la premiere CsReference (si Kind = 2)                 | */
-/* |            ou le premier element de paire (si Kind = 3).          | */
-/* |            Retourne un pointeur sur l'element trouve' ou NULL en   | */
-/* |            cas d'echec.                                            | */
-/* ---------------------------------------------------------------------- */
+/** --------------------------------------------------------------------
+ *  FwdSearchRefOrEmptyElem
+ *  starting from the element pointed by pEl, makes a forward search
+ *  for the first empty element (Kind = 1), for the first 
+ *  CsReference (Kind = 2), or for the first element of the pair
+ *  pair (Kind = 3).
+ *  If it finds an element, it returns a pointer to it. Otherwise, it
+ *  returns NULL.
+ *  -------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 PtrElement          FwdSearchRefOrEmptyElem (PtrElement pEl, int Kind)
@@ -828,10 +829,10 @@ int                 Kind;
    return pRet;
 }
 
+/** --------------------------------------------------------------------
+ *  BackSearchEmptyInSubtree					
+ *  -------------------------------------------------------------------- **/
 
-/* ---------------------------------------------------------------------- */
-/* |     BackSearchEmptyInSubtree					| */
-/* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 static PtrElement   BackSearchEmptyInSubtree (PtrElement pEl, int Kind)
@@ -867,14 +868,15 @@ int                 Kind;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    BackSearchRefOrEmptyElem    cherche en arriere a partir de l'element| */
-/* |            pEl le premier element qui soit vide (si Kind = 1)     | */
-/* |            ou la premiere CsReference (si Kind = 2)                 | */
-/* |            ou le prochain element de paire (si Kind = 3).         | */
-/* |            Retourne un pointeur sur l'element trouve' ou NULL en   | */
-/* |            cas d'echec.                                            | */
-/* ---------------------------------------------------------------------- */
+/** --------------------------------------------------------------------
+ *  BackSearchRefOrEmptyElem
+ *  starting from the element pointed by pEl, makes a forward search
+ *  for the first empty element (Kind = 1), for the first 
+ *  CsReference (Kind = 2), or for the first element of the pair
+ *  pair (Kind = 3).
+ *  If it finds an element, it returns a pointer to it. Otherwise, it
+ *  returns NULL.
+ *  -------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 PtrElement          BackSearchRefOrEmptyElem (PtrElement pEl, boolean Kind)
@@ -914,11 +916,12 @@ boolean             Kind;
    return pRet;
 }
 
+/** --------------------------------------------------------------------
+ *  ChangeLnaguageLeaves
+ *  changes the language attribute for all the text leaves in the
+ *  subtree of the element pointed by pEl.
+ *  -------------------------------------------------------------------- **/
 
-/* ---------------------------------------------------------------------- */
-/* |    Change la langue de toutes les feuilles de texte dans le        | */
-/* |    sous-arbre de l'element pointe' par pEl.                        | */
-/* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 static void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
