@@ -7,20 +7,20 @@
 #ifdef __STDC__
 
 extern void AddCSSHistory ( CSSInfoPtr css );
-extern void AddHTMLHistory ( char* url );
+extern void AddHTMLHistory ( char *url );
 extern int BuildCSSHistoryList ( Document doc,
-                                 char* buf,
+                                 char *buf,
                                  int size,
-                                 char* first );
+                                 char *first );
 
 #else /* __STDC__ */
 
 extern void AddCSSHistory (/* CSSInfoPtr css */);
-extern void AddHTMLHistory (/* char* url */);
+extern void AddHTMLHistory (/* char *url */);
 extern int BuildCSSHistoryList (/* Document doc,
-                                   char* buf,
+                                   char *buf,
                                    int size,
-                                   char* first */);
+                                   char *first */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

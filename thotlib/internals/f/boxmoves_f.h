@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void IsXYPosComplete ( PtrBox pBox,
-                              boolean *horizRef,
-                              boolean *vertRef );
+                              boolean * horizRef,
+                              boolean * vertRef );
 extern boolean IsXPosComplete ( PtrBox pBox );
 extern boolean IsYPosComplete ( PtrBox pBox );
 extern boolean IsParentBox ( PtrBox pBox,
@@ -90,8 +90,8 @@ extern void HeightPack ( PtrAbstractBox pAb,
 #else /* __STDC__ */
 
 extern void IsXYPosComplete (/* PtrBox pBox,
-                                boolean *horizRef,
-                                boolean *vertRef */);
+                                boolean * horizRef,
+                                boolean * vertRef */);
 extern boolean IsXPosComplete (/* PtrBox pBox */);
 extern boolean IsYPosComplete (/* PtrBox pBox */);
 extern boolean IsParentBox (/* PtrBox pBox,

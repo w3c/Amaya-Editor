@@ -14,12 +14,12 @@
 #include "application.h"
 #include "language.h"
 #include "constmenu.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "typecorr.h"
 #include "libmsg.h"
 #include "message.h"
 #include "dictionary.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #define MAX_DICTS        2	/* Maximum number of dictionaries related to a given language */
@@ -302,15 +302,15 @@ char               *dictDirectory;
    char                tempbuffer[MAX_CHAR];
 
    FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
-   if (ThotFile_exist (tempbuffer) == 0)	/* Unknown file */
+   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
      {
 	/* Looks for not pre-treated dictionary */
 	FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
-	if (ThotFile_exist (tempbuffer) == 0)
+	if (TtaFileExist (tempbuffer) == 0)
 	  {			/* File .DIC unknown */
 	     /* Looks for a dictionary LEX not pre-treated */
 	     FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
-	     if (ThotFile_exist (tempbuffer) == 0)	/* unknown file */
+	     if (TtaFileExist (tempbuffer) == 0)	/* unknown file */
 		ret = -1;	/* unknown file */
 	     else
 		ret = 2;	/* File .LEX exists */
@@ -344,22 +344,22 @@ PtrDict             dict;
    i = 1;
    while (i <= dict->nbcars)
      {
-	BIOreadByte (dictFile, &(dict->chaine[i - 1]));
+	TtaReadByte (dictFile, &(dict->chaine[i - 1]));
 	i++;
      }
 
    i = 1;
    while (i <= dict->nbmots)
      {
-	BIOreadByte (dictFile, &(dict->commun[i - 1]));
+	TtaReadByte (dictFile, &(dict->commun[i - 1]));
 	i++;
      }
 
    for (i = 0; i < dict->nbmots; i++)
-      BIOreadInteger (dictFile, &dict->pdico[i]);
+      TtaReadInteger (dictFile, &dict->pdico[i]);
 
    for (i = 0; i < MAX_WORD_LEN; i++)
-      BIOreadInteger (dictFile, &dict->plgdico[i]);
+      TtaReadInteger (dictFile, &dict->plgdico[i]);
 
    /* Loaded */
    dict->DictCharge = TRUE;
@@ -483,7 +483,7 @@ boolean             toTreat;
      }
    if (readonly == FALSE)
      {				/* Alterable dictionary */
-	if (ThotFile_exist (tempbuffer) != 0)
+	if (TtaFileExist (tempbuffer) != 0)
 	  {
 	     dictFile = fopen (tempbuffer, "rw");	/* updating the dictionary */
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
@@ -499,7 +499,7 @@ boolean             toTreat;
      {
 	/* READONLY dictionary (generally pre-treated) */
 	if (treated == TRUE)
-	   dictFile = BIOreadOpen (tempbuffer);
+	   dictFile = TtaReadOpen (tempbuffer);
 	else
 	   dictFile = fopen (tempbuffer, "r");
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
@@ -530,15 +530,15 @@ boolean             toTreat;
      {
 	if (treated)		/* dictionary already treated */
 	  {
-	     ret = BIOreadInteger (dictFile, &i);
+	     ret = TtaReadInteger (dictFile, &i);
 	     if (ret == FALSE)
 	       {
-		  BIOreadClose (dictFile);
+		  TtaReadClose (dictFile);
 		  return;	/* no memory */
 	       }
 	     pdict->MAXmots = i;
 	     pdict->nbmots = i;
-	     BIOreadInteger (dictFile, &i);
+	     TtaReadInteger (dictFile, &i);
 	     pdict->MAXcars = i;
 	     pdict->nbcars = i;
 	  }

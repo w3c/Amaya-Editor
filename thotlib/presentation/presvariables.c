@@ -13,7 +13,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "language.h"
 
 #include "tree_f.h"

@@ -21,8 +21,8 @@
 #include "strmsg.h"
 #include "typemedia.h"
 #include "typegrm.h"
-#include "storage.h"
-#include "thotfile.h"
+#include "fileaccess.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #define MAX_SRULE_RECURS 15	/* maximum of included rule levels within a rule */
@@ -2795,12 +2795,12 @@ char              **argv;
 	     strcat (buffer, ".SCH");
 
 	     /* does the file to compile exist */
-	     if (ThotFile_exist (srceFileName) == 0)
+	     if (TtaFileExist (srceFileName) == 0)
 		TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
 	     else
 	       {
 		 /* provide the real source file */
-		 RemoveFile (buffer);
+		 TtaFileUnlink (buffer);
 		 pwd = TtaGetEnvString ("PWD");
 		 if (pwd != NULL)
 		   sprintf (cmd, "cpp -I%s -C %s > %s", pwd, srceFileName, buffer);
@@ -2811,10 +2811,10 @@ char              **argv;
 		   {
 		     /* cpp is not available, copy directely the file */
 		     TtaDisplaySimpleMessage (FATAL, STR, STR_CPP_NOT_FOUND);
-		     ThotCopyFile (srceFileName, buffer);
+		     TtaFileCopy (srceFileName, buffer);
 		   }
 		 /* open the resulting file */
-		  inputFile = BIOreadOpen (buffer);
+		  inputFile = TtaReadOpen (buffer);
 		  /* suppress the suffix ".SCH" */
 		  srceFileName[nb] = '\0';
 		  /* get memory for structure schema */
@@ -2836,7 +2836,7 @@ char              **argv;
 		       i = 0;
 		       do
 			 {
-			    fileOK = BIOreadByte (inputFile, &inputLine[i]);
+			    fileOK = TtaReadByte (inputFile, &inputLine[i]);
 			    i++;
 			 }
 		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
@@ -2915,7 +2915,7 @@ char              **argv;
 		    }
 		  free (pSSchema);
 		  free (pExternSSchema);
-		  BIOreadClose (inputFile);
+		  TtaReadClose (inputFile);
 	       }
 	  }
      }

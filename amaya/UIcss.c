@@ -675,7 +675,7 @@ char               *data;
 		    strcat (tempfile, CSSDocumentName);
 		    if (CSSBrowseState == CSS_BROWSE_SaveAll)
 		      {
-			 if (ThotFile_exist (tempfile))
+			 if (TtaFileExist (tempfile))
 			   {
 			      /* ask confirmation */
 			      sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);

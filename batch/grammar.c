@@ -19,10 +19,10 @@
 #include "conststr.h"
 #include "constprs.h"
 #include "message.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "typegrm.h"
 #include "typeint.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 typedef char        fname[30];	/* nom de fichier */
@@ -793,7 +793,7 @@ char              **argv;
 	/* ajoute le suffixe .LAN */
 	strcat (fileName, ".LAN");
 
-	if (ThotFile_exist (fileName) == 0)
+	if (TtaFileExist (fileName) == 0)
 	   TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);
 	else
 	   /* le fichier d'entree existe, on l'ouvre */
@@ -830,7 +830,7 @@ char              **argv;
 	       {
 		  i = 0;
 		  do
-		     fileOK = BIOreadByte (infile, &inputLine[i++]);
+		     fileOK = TtaReadByte (infile, &inputLine[i++]);
 		  while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 		  /* marque la fin reelle de la ligne */
 		  inputLine[i - 1] = '\0';

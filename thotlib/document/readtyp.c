@@ -14,7 +14,7 @@
 #include "platform_tv.h"
 
 #include "memory_f.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "message.h"
 
 static boolean      erreurSchema;
@@ -54,7 +54,7 @@ PtrRegleTypo       *nextr;
    char                c;
    PtrRegleTypo        bloc;
 
-   BIOreadByte (fich, &c);
+   TtaReadByte (fich, &c);
    if (c == '\0')
       bloc = NULL;
    else
@@ -82,7 +82,7 @@ PtrRTypoAttribut   *nexta;
    char                c;
    PtrRTypoAttribut    attrtyp;
 
-   BIOreadByte (fich, &c);
+   TtaReadByte (fich, &c);
    if (c == '\0')
       attrtyp = NULL;
    else
@@ -115,7 +115,7 @@ PtrRegleTypo       *nextr;
    char                c;
    PtrRegleTypo        regtyp;
 
-   BIOreadByte (fich, &c);
+   TtaReadByte (fich, &c);
    if (c == '\0')
       regtyp = NULL;
    else
@@ -142,7 +142,7 @@ PtrTypoFunction    *nextf;
    char                c;
    PtrTypoFunction     fcttyp;
 
-   BIOreadByte (fich, &c);
+   TtaReadByte (fich, &c);
    if (c == '\0')
       fcttyp = NULL;
    else
@@ -167,7 +167,7 @@ BinFile             fich;
    char                c;
    TypeCondTypo        type;
 
-   if (!BIOreadByte (fich, &c))
+   if (!TtaReadByte (fich, &c))
       erreurTypo (1);
    else
       switch (c)
@@ -219,7 +219,7 @@ BinFile             fich;
    char                c;
    TypeFunct           type;
 
-   if (!BIOreadByte (fich, &c))
+   if (!TtaReadByte (fich, &c))
       erreurTypo (1);
    else
       switch (c)
@@ -293,7 +293,7 @@ PtrTypoFunction    *nextf;
 	   pFc1->TFTypeFunct = RdTypeRegleTypo (fich);
 	   if (!erreurSchema)
 	     {
-		BIOreadName (fich, pFc1->TFIdent);
+		TtaReadName (fich, pFc1->TFIdent);
 		/* passe a la fonction suivante */
 		if (pFc1->TFSuiv != NULL)
 		   pFc1->TFSuiv = *nextf;
@@ -337,24 +337,24 @@ PtrRegleTypo       *nextr;
 	   pRe1->RTyTypeFunct = RdTypeRegleTypo (fich);
 	   if (!erreurSchema)
 	     {
-		BIOreadName (fich, pRe1->RTyIdentFunct);
-		BIOreadShort (fich, &pRe1->RTyNbCond);
+		TtaReadName (fich, pRe1->RTyIdentFunct);
+		TtaReadShort (fich, &pRe1->RTyNbCond);
 
 		for (nbcond = 1; nbcond <= pRe1->RTyNbCond; nbcond++)
 		  {
 		     TyCond = &pRe1->RTyCondition[nbcond - 1];
 		     TyCond->CondTypeCond = RdTypeCondTypo (fich);
-		     BIOreadBool (fich, &TyCond->CondNegative);
-		     BIOreadShort (fich, &TyCond->CondTypeElem);
+		     TtaReadBool (fich, &TyCond->CondNegative);
+		     TtaReadShort (fich, &TyCond->CondTypeElem);
 		     switch (TyCond->CondTypeCond)
 			   {
 			      case TyAvantType:
 			      case TyApresType:
-				 BIOreadBool (fich, &TyCond->CondOpTypeIn);
+				 TtaReadBool (fich, &TyCond->CondOpTypeIn);
 				 break;
 			      case TyLangue:
 			      case TyFonction:
-				 BIOreadName (fich, TyCond->CondNom);
+				 TtaReadName (fich, TyCond->CondNom);
 				 break;
 			      default:;
 				 break;
@@ -397,11 +397,11 @@ PtrSSchema         *SS;
    if (!erreurSchema)
      {
 	/* lit un attribut */
-	BIOreadShort (fich, &pRTy1->RTyATypeElem);
+	TtaReadShort (fich, &pRTy1->RTyATypeElem);
 	switch ((*SS)->SsAttribute[att - 1].AttrType)
 	      {
 		 case AtNumAttr:
-		    BIOreadShort (fich, &pRTy1->RTyANbCas);
+		    TtaReadShort (fich, &pRTy1->RTyANbCas);
 		    if (!erreurSchema)
 		       for (j = 1; j <= pRTy1->RTyANbCas; j++)
 			  pRTy1->RTyACas[j - 1].TyANBlocRegles = RdPtrBlocTypo (fich, nextR);
@@ -409,13 +409,13 @@ PtrSSchema         *SS;
 		       if (!erreurSchema)
 			 {
 			    pTyC1 = &pRTy1->RTyACas[j - 1];
-			    BIOreadSignedShort (fich, &pTyC1->TyANBorneInf);
-			    BIOreadSignedShort (fich, &pTyC1->TyANBorneSup);
+			    TtaReadSignedShort (fich, &pTyC1->TyANBorneInf);
+			    TtaReadSignedShort (fich, &pTyC1->TyANBorneSup);
 			    ReadReglesTypo (fich, &pTyC1->TyANBlocRegles, nextR);
 			 }
 		    break;
 		 case AtTextAttr:
-		    BIOreadName (fich, pRTy1->RTyATxtVal);
+		    TtaReadName (fich, pRTy1->RTyATxtVal);
 		    pRTy1->RTyATxt = RdPtrBlocTypo (fich, nextR);
 		    ReadReglesTypo (fich, &pRTy1->RTyATxt, nextR);
 		    break;
@@ -479,7 +479,7 @@ PtrSSchema          SS;
    MakeCompleteName (fname, "TYP", DirBuffer, texte, &i);
 
    /* ouvre le fichier */
-   fich = BIOreadOpen (texte);
+   fich = TtaReadOpen (texte);
    if (fich == 0)
      {
 	strncpy (texte, fname, MAX_PATH);
@@ -498,8 +498,8 @@ PtrSSchema          SS;
 	   erreurTypo (1);
 
 	/* lit la partie fixe du schema de typographie */
-	BIOreadName (fich, &pSchT->STyNomStruct);
-	BIOreadShort (fich, &pSchT->STyStructCode);
+	TtaReadName (fich, &pSchT->STyNomStruct);
+	TtaReadShort (fich, &pSchT->STyStructCode);
 	pSchT->STySuivant = NULL;
 
 	if (SS->SsRootElem == 0 && !erreurSchema)
@@ -521,7 +521,7 @@ PtrSSchema          SS;
 
 	     if (!erreurSchema)
 		for (i = 1; i <= NbElemStructInitial; i++)
-		   BIOreadBool (fich, &pSchT->STyElemAlinea[i - 1]);
+		   TtaReadBool (fich, &pSchT->STyElemAlinea[i - 1]);
 	     if (!erreurSchema)
 		/* lit la chaine des fonctions */
 		ReadTypoFunctions (fich, &pSchT->STyFunction, &nextf);
@@ -530,7 +530,7 @@ PtrSSchema          SS;
 		   pSchT->STyRegleElem[i - 1] = RdPtrBlocTypo (fich, &nextr);
 	     if (!erreurSchema)
 		for (i = 1; i <= NbElemStructInitial; i++)
-		   BIOreadBool (fich, &pSchT->STyElemHeritAttr[i - 1]);
+		   TtaReadBool (fich, &pSchT->STyElemHeritAttr[i - 1]);
 	     if (!erreurSchema)
 		for (i = 1; i <= SS->SsNAttributes; i++)
 		   pSchT->STyAttribSem[i - 1] = RdPtrAttrTypo (fich, &nexta);
@@ -550,7 +550,7 @@ PtrSSchema          SS;
 	     free (nexta);	/* on avait anticipe... */
 	  }
 	/* ferme le fichier */
-	BIOreadClose (fich);
+	TtaReadClose (fich);
      }
    if (erreurSchema)
      {

@@ -13,7 +13,7 @@
 #include "consttra.h"
 #include "typemedia.h"
 #include "typetra.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #define EXPORT extern
 #include "platform_tv.h"
@@ -63,7 +63,7 @@ BinFile             file;
    TransCondition      cond;
 
    cond = TcondFirst;
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (1);
    else
       switch (c)
@@ -161,7 +161,7 @@ BinFile             file;
    TRuleType           ruleType;
 
    ruleType = TRemove;
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (3);
    else
       switch (c)
@@ -233,7 +233,7 @@ BinFile             file;
    RelatNAscend        relat;
 
    relat = RelEquals;		/* valeur par defaut */
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (3);
    else
       switch (c)
@@ -271,7 +271,7 @@ BinFile             file;
    TOrder              order;
 
    order = TAfter;
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (5);
    else
       switch (c)
@@ -311,7 +311,7 @@ BinFile             file;
    CreatedObject       obj;
 
    obj = ToConst;
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (7);
    else
       switch (c)
@@ -404,7 +404,7 @@ BinFile             file;
    TRelatPosition      position;
 
    position = RpSibling;
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (9);
    else
       switch (c)
@@ -448,7 +448,7 @@ BinFile             file;
    TCounterOp          op;
 
    op = TCntrNoOp;
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (11);
    else
       switch (c)
@@ -493,7 +493,7 @@ BinFile             file;
    TranslVarType       varType;
 
    varType = VtText;
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (13);
    else
       switch (c)
@@ -552,7 +552,7 @@ BinFile             file;
    CounterStyle        style;
 
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = ' ';
 	TSchemaError (15);
@@ -601,7 +601,7 @@ PtrTRule           *pNextTRule;
    char                c;
    PtrTRule            pTRule;
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       TSchemaError (17);
    if (c == '\0')
       pTRule = NULL;
@@ -648,20 +648,20 @@ PtrTRule           *pNextTRule;
 		       case TCreate:
 		       case TWrite:
 			  pTRule->TrObject = ReadCreatedObject (file);
-			  BIOreadShort (file, &pTRule->TrObjectNum);
-			  BIOreadName (file, (char *) &pTRule->TrObjectNature);
-			  BIOreadBool (file, &pTRule->TrReferredObj);
-			  BIOreadShort (file, &pTRule->TrFileNameVar);
+			  TtaReadShort (file, &pTRule->TrObjectNum);
+			  TtaReadName (file, (char *) &pTRule->TrObjectNature);
+			  TtaReadBool (file, &pTRule->TrReferredObj);
+			  TtaReadShort (file, &pTRule->TrFileNameVar);
 			  break;
 		       case TGet:
 		       case TCopy:
-			  BIOreadShort (file, &pTRule->TrElemType);
-			  BIOreadName (file, (char *) &pTRule->TrElemNature);
+			  TtaReadShort (file, &pTRule->TrElemType);
+			  TtaReadName (file, (char *) &pTRule->TrElemNature);
 			  pTRule->TrRelPosition = ReadTRelatPosition (file);
 			  break;
 		       case TUse:
-			  BIOreadName (file, (char *) &pTRule->TrNature);
-			  BIOreadName (file, (char *) &pTRule->TrTranslSchemaName);
+			  TtaReadName (file, (char *) &pTRule->TrNature);
+			  TtaReadName (file, (char *) &pTRule->TrTranslSchemaName);
 			  break;
 		       case TRemove:
 		       case TNoTranslation:
@@ -669,19 +669,19 @@ PtrTRule           *pNextTRule;
 
 			  break;
 		       case TRead:
-			  BIOreadShort (file, &pTRule->TrBuffer);
+			  TtaReadShort (file, &pTRule->TrBuffer);
 			  break;
 		       case TInclude:
 			  pTRule->TrBufOrConst = ReadCreatedObject (file);
-			  BIOreadShort (file, &pTRule->TrInclFile);
+			  TtaReadShort (file, &pTRule->TrInclFile);
 			  break;
 		       case TChangeMainFile:
-			  BIOreadShort (file, &pTRule->TrNewFileVar);
+			  TtaReadShort (file, &pTRule->TrNewFileVar);
 			  break;
 		       case TSetCounter:
 		       case TAddCounter:
-			  BIOreadShort (file, &pTRule->TrCounterNum);
-			  BIOreadShort (file, &pTRule->TrCounterParam);
+			  TtaReadShort (file, &pTRule->TrCounterNum);
+			  TtaReadShort (file, &pTRule->TrCounterParam);
 			  break;
 		       default:
 			  break;
@@ -736,7 +736,7 @@ PtrTRuleBlock      *pNextBlock;
 {
    char                c;
 
-   BIOreadByte (file, &c);
+   TtaReadByte (file, &c);
    if (c == '\0')
       return NULL;
    else
@@ -779,46 +779,46 @@ PtrTRuleBlock      *pNextBlock;
 		TSchemaError (19);
 	     /* lit un bloc */
 	     pBl->TbNextBlock = ReadPtrTRuleBlock (file, pNextBlock);
-	     BIOreadShort (file, &pBl->TbNConditions);
+	     TtaReadShort (file, &pBl->TbNConditions);
 	     for (cond = 0; cond < pBl->TbNConditions; cond++)
 	       {
 		  pCond = &pBl->TbCondition[cond];
 		  pCond->TcCondition = ReadTransCondition (file);
-		  BIOreadBool (file, &pCond->TcNegativeCond);
-		  BIOreadBool (file, &pCond->TcTarget);
-		  BIOreadShort (file, &pCond->TcAscendType);
-		  BIOreadName (file, (char *) &pCond->TcAscendNature);
-		  BIOreadSignedShort (file, &pCond->TcAscendRelLevel);
+		  TtaReadBool (file, &pCond->TcNegativeCond);
+		  TtaReadBool (file, &pCond->TcTarget);
+		  TtaReadShort (file, &pCond->TcAscendType);
+		  TtaReadName (file, (char *) &pCond->TcAscendNature);
+		  TtaReadSignedShort (file, &pCond->TcAscendRelLevel);
 		  switch (pCond->TcCondition)
 			{
 			   case TcondAlphabet:
-			      BIOreadByte (file, &pCond->TcAlphabet);
+			      TtaReadByte (file, &pCond->TcAlphabet);
 			      break;
 			   case TcondWithin:
 			   case TcondFirstWithin:
-			      BIOreadShort (file, &pCond->TcElemType);
-			      BIOreadName (file, (char *) &pCond->TcElemNature);
-			      BIOreadBool (file, &pCond->TcImmediatelyWithin);
+			      TtaReadShort (file, &pCond->TcElemType);
+			      TtaReadName (file, (char *) &pCond->TcElemNature);
+			      TtaReadBool (file, &pCond->TcImmediatelyWithin);
 			      pCond->TcAscendRel = ReadRelatNAscend (file);
-			      BIOreadShort (file, &pCond->TcAscendLevel);
+			      TtaReadShort (file, &pCond->TcAscendLevel);
 			      break;
 			   case TcondAttr:
-			      BIOreadShort (file, &pCond->TcAttr);
+			      TtaReadShort (file, &pCond->TcAttr);
 			      if (!error)
 				 switch ((*pSS)->SsAttribute[pCond->TcAttr - 1].AttrType)
 				       {
 					  case AtNumAttr:
-					     BIOreadSignedShort (file, &pCond->TcLowerBound);
-					     BIOreadSignedShort (file, &pCond->TcUpperBound);
+					     TtaReadSignedShort (file, &pCond->TcLowerBound);
+					     TtaReadSignedShort (file, &pCond->TcUpperBound);
 					     break;
 					  case AtTextAttr:
-					     BIOreadName (file, (char *) &pCond->TcTextValue);
+					     TtaReadName (file, (char *) &pCond->TcTextValue);
 					     break;
 					  case AtReferenceAttr:
 
 					     break;
 					  case AtEnumAttr:
-					     BIOreadShort (file, &pCond->TcAttrValue);
+					     TtaReadShort (file, &pCond->TcAttrValue);
 					     break;
 					  default:
 					     break;
@@ -826,7 +826,7 @@ PtrTRuleBlock      *pNextBlock;
 
 			      break;
 			   case TcondPRule:
-			      BIOreadShort (file, &pCond->TcAttr);
+			      TtaReadShort (file, &pCond->TcAttr);
 			      if (!error)
 				 if (pCond->TcAttr == PtSize ||
 				     pCond->TcAttr == PtIndent ||
@@ -836,11 +836,11 @@ PtrTRuleBlock      *pNextBlock;
 				     pCond->TcAttr == PtBackground ||
 				     pCond->TcAttr == PtForeground)
 				   {
-				      BIOreadSignedShort (file, &pCond->TcLowerBound);
-				      BIOreadSignedShort (file, &pCond->TcUpperBound);
+				      TtaReadSignedShort (file, &pCond->TcLowerBound);
+				      TtaReadSignedShort (file, &pCond->TcUpperBound);
 				   }
 				 else
-				    BIOreadByte (file, &pCond->TcPresValue);
+				    TtaReadByte (file, &pCond->TcPresValue);
 			      break;
 			   default:
 			      break;
@@ -908,23 +908,23 @@ PtrTSchema         *pTSch;
    if (!error)
      {
 	pAttrT = &(*pTSch)->TsAttrTRule[att];
-	BIOreadShort (file, &pAttrT->AtrElemType);
+	TtaReadShort (file, &pAttrT->AtrElemType);
 	switch ((*pSS)->SsAttribute[att].AttrType)
 	      {
 		 case AtNumAttr:
-		    BIOreadShort (file, &pAttrT->AtrNCases);
+		    TtaReadShort (file, &pAttrT->AtrNCases);
 		    for (i = 0; i < pAttrT->AtrNCases; i++)
 		       if (!error)
 			 {
 			    pCase = &pAttrT->AtrCase[i];
-			    BIOreadSignedShort (file, &pCase->TaLowerBound);
-			    BIOreadSignedShort (file, &pCase->TaUpperBound);
+			    TtaReadSignedShort (file, &pCase->TaLowerBound);
+			    TtaReadSignedShort (file, &pCase->TaUpperBound);
 			    ReadBlocks (file, &pCase->TaTRuleBlock, pNextTRule,
 					pSS, pNextBlock);
 			 }
 		    break;
 		 case AtTextAttr:
-		    BIOreadName (file, (char *) &pAttrT->AtrTextValue);
+		    TtaReadName (file, (char *) &pAttrT->AtrTextValue);
 		    ReadBlocks (file, &pAttrT->AtrTxtTRuleBlock, pNextTRule,
 				pSS, pNextBlock);
 		    break;
@@ -1015,13 +1015,13 @@ PtrTSchema         *pTSch;
 	       pres == PtForeground)
 	      /* presentation a valeur numerique */
 	     {
-		BIOreadShort (file, &pPruleTr->RtNCase);
+		TtaReadShort (file, &pPruleTr->RtNCase);
 		for (i = 0; i < pPruleTr->RtNCase; i++)
 		   if (!error)
 		     {
 			pCase = &pPruleTr->RtCase[i];
-			BIOreadSignedShort (file, &pCase->TaLowerBound);
-			BIOreadSignedShort (file, &pCase->TaUpperBound);
+			TtaReadSignedShort (file, &pCase->TaLowerBound);
+			TtaReadSignedShort (file, &pCase->TaUpperBound);
 			ReadBlocks (file, &pCase->TaTRuleBlock, pNextTRule,
 				    pSS, pNextBlock);
 		     }
@@ -1029,7 +1029,7 @@ PtrTSchema         *pTSch;
 	   else
 	      for (i = 0; i <= MAX_TRANSL_PRES_VAL; i++)
 		{
-		   BIOreadByte (file, &pPruleTr->RtPRuleValue[i]);
+		   TtaReadByte (file, &pPruleTr->RtPRuleValue[i]);
 		   ReadBlocks (file, &pPruleTr->RtPRuleValueBlock[i],
 			       pNextTRule, pSS, pNextBlock);
 		}
@@ -1110,7 +1110,7 @@ PtrSSchema          pSS;
    MakeCompleteName (fileName, "TRA", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
-   file = BIOreadOpen (buf);
+   file = TtaReadOpen (buf);
    if (file == 0)
      {
 	strncpy (buf, fileName, MAX_PATH);
@@ -1136,18 +1136,18 @@ PtrSSchema          pSS;
 	  }
 
 	/* lit la partie fixe du schema de traduction */
-	BIOreadName (file, (char *) &pTSch->TsStructName);
-	BIOreadShort (file, &pTSch->TsStructCode);
-	BIOreadShort (file, &pTSch->TsLineLength);
-	BIOreadName (file, (char *) &pTSch->TsEOL);
-	BIOreadName (file, (char *) &pTSch->TsTranslEOL);
-	BIOreadShort (file, &pTSch->TsNConstants);
-	BIOreadShort (file, &pTSch->TsNCounters);
-	BIOreadShort (file, &pTSch->TsNVariables);
-	BIOreadShort (file, &pTSch->TsNBuffers);
+	TtaReadName (file, (char *) &pTSch->TsStructName);
+	TtaReadShort (file, &pTSch->TsStructCode);
+	TtaReadShort (file, &pTSch->TsLineLength);
+	TtaReadName (file, (char *) &pTSch->TsEOL);
+	TtaReadName (file, (char *) &pTSch->TsTranslEOL);
+	TtaReadShort (file, &pTSch->TsNConstants);
+	TtaReadShort (file, &pTSch->TsNCounters);
+	TtaReadShort (file, &pTSch->TsNVariables);
+	TtaReadShort (file, &pTSch->TsNBuffers);
 	if (!error)
 	   for (i = 0; i < pTSch->TsNConstants; i++)
-	      BIOreadShort (file, &pTSch->TsConstBegin[i]);
+	      TtaReadShort (file, &pTSch->TsConstBegin[i]);
 	if (!error)
 	   for (i = 0; i < pTSch->TsNCounters; i++)
 	     {
@@ -1156,36 +1156,36 @@ PtrSSchema          pSS;
 		if (pCntr->TnOperation == TCntrNoOp)
 		   pCntr->TnParam1 = 0;
 		else
-		   BIOreadShort (file, &pCntr->TnElemType1);
+		   TtaReadShort (file, &pCntr->TnElemType1);
 		if (pCntr->TnOperation == TCntrSet)
 		  {
-		     BIOreadShort (file, &pCntr->TnElemType2);
-		     BIOreadShort (file, &pCntr->TnParam1);
-		     BIOreadShort (file, &pCntr->TnParam2);
+		     TtaReadShort (file, &pCntr->TnElemType2);
+		     TtaReadShort (file, &pCntr->TnParam1);
+		     TtaReadShort (file, &pCntr->TnParam2);
 		  }
 		else if (pCntr->TnOperation == TCntrRank)
-		   BIOreadSignedShort (file, &pCntr->TnAcestorLevel);
-		BIOreadShort (file, &pCntr->TnAttrInit);
+		   TtaReadSignedShort (file, &pCntr->TnAcestorLevel);
+		TtaReadShort (file, &pCntr->TnAttrInit);
 	     }
 	if (!error)
 	   for (i = 0; i < pTSch->TsNVariables; i++)
 	     {
 		pVar = &pTSch->TsVariable[i];
-		BIOreadShort (file, &pVar->TrvNItems);
+		TtaReadShort (file, &pVar->TrvNItems);
 		if (!error)
 		   for (j = 0; j < pVar->TrvNItems; j++)
 		     {
 			pVarItem = &pVar->TrvItem[j];
 			pVarItem->TvType = ReadTranslVarType (file);
-			BIOreadShort (file, &pVarItem->TvItem);
+			TtaReadShort (file, &pVarItem->TvItem);
 			if (pVarItem->TvType == VtCounter)
 			  {
-			     BIOreadShort (file, &pVarItem->TvLength);
+			     TtaReadShort (file, &pVarItem->TvLength);
 			     pVarItem->TvCounterStyle = ReadCounterStyle (file);
 			  }
 		     }
 	     }
-	BIOreadShort (file, &pTSch->TsPictureBuffer);
+	TtaReadShort (file, &pTSch->TsPictureBuffer);
 	for (i = 0; i < MAX_TRANSL_BUFFER; i++)
 	   pTSch->TsBuffer[i][0] = '\0';
 	if (pSS->SsFirstDynNature == 0)
@@ -1201,7 +1201,7 @@ PtrSSchema          pSS;
 	      pTSch->TsElemTRule[i] = ReadPtrTRuleBlock (file, &pNextBlock);
 	if (!error)
 	   for (i = 0; i < InitialNElems; i++)
-	      BIOreadBool (file, &pTSch->TsInheritAttr[i]);
+	      TtaReadBool (file, &pTSch->TsInheritAttr[i]);
 	if (!error)
 	   for (i = 0; i < pSS->SsNAttributes; i++)
 	      if (!error)
@@ -1210,7 +1210,7 @@ PtrSSchema          pSS;
 		   switch (pSS->SsAttribute[i].AttrType)
 			 {
 			    case AtNumAttr:
-			       BIOreadShort (file, &pAttrTr->AtrNCases);
+			       TtaReadShort (file, &pAttrTr->AtrNCases);
 			       if (!error)
 				  for (j = 0; j < pAttrTr->AtrNCases; j++)
 				     pAttrTr->AtrCase[j].TaTRuleBlock =
@@ -1238,14 +1238,14 @@ PtrSSchema          pSS;
 	      if (!error)
 		{
 		   pPRuleTr = &pTSch->TsPresTRule[i];
-		   BIOreadBool (file, &pPRuleTr->RtExist);
+		   TtaReadBool (file, &pPRuleTr->RtExist);
 		   if (pPRuleTr->RtExist)
 		      if (i == PtSize || i == PtIndent || i == PtLineSpacing ||
 			  i == PtLineWeight || i == PtFillPattern ||
 			  i == PtBackground || i == PtForeground)
 			 /* presentation a valeur numerique */
 			{
-			   BIOreadShort (file, &pPRuleTr->RtNCase);
+			   TtaReadShort (file, &pPRuleTr->RtNCase);
 			   if (!error)
 			      for (j = 0; j < pPRuleTr->RtNCase; j++)
 				 pPRuleTr->RtCase[j].TaTRuleBlock =
@@ -1256,20 +1256,20 @@ PtrSSchema          pSS;
 			    pPRuleTr->RtPRuleValueBlock[j] =
 			       ReadPtrTRuleBlock (file, &pNextBlock);
 		}
-	BIOreadShort (file, &pTSch->TsNTranslAlphabets);
+	TtaReadShort (file, &pTSch->TsNTranslAlphabets);
 	if (!error)
 	   for (i = 0; i < pTSch->TsNTranslAlphabets; i++)
 	     {
 		pAlphTr = &pTSch->TsTranslAlphabet[i];
-		BIOreadByte (file, &pAlphTr->AlAlphabet);
-		BIOreadShort (file, &pAlphTr->AlBegin);
-		BIOreadShort (file, &pAlphTr->AlEnd);
+		TtaReadByte (file, &pAlphTr->AlAlphabet);
+		TtaReadShort (file, &pAlphTr->AlBegin);
+		TtaReadShort (file, &pAlphTr->AlEnd);
 	     }
-	BIOreadShort (file, &pTSch->TsSymbolFirst);
-	BIOreadShort (file, &pTSch->TsSymbolLast);
-	BIOreadShort (file, &pTSch->TsGraphicsFirst);
-	BIOreadShort (file, &pTSch->TsGraphicsLast);
-	BIOreadShort (file, &pTSch->TsNCharTransls);
+	TtaReadShort (file, &pTSch->TsSymbolFirst);
+	TtaReadShort (file, &pTSch->TsSymbolLast);
+	TtaReadShort (file, &pTSch->TsGraphicsFirst);
+	TtaReadShort (file, &pTSch->TsGraphicsLast);
+	TtaReadShort (file, &pTSch->TsNCharTransls);
 	/* lit les tables de traduction de caracteres */
 	if (!error)
 	   for (i = 0; i < pTSch->TsNCharTransls; i++)
@@ -1278,12 +1278,12 @@ PtrSSchema          pSS;
 		/* lit la chaine source */
 		j = 0;
 		do
-		   BIOreadByte (file, &pStringTr->StSource[j++]);
+		   TtaReadByte (file, &pStringTr->StSource[j++]);
 		while (pStringTr->StSource[j - 1] != '\0');
 		/* lit la chaine cible */
 		j = 0;
 		do
-		   BIOreadByte (file, &pStringTr->StTarget[j++]);
+		   TtaReadByte (file, &pStringTr->StTarget[j++]);
 		while (pStringTr->StTarget[j - 1] != '\0');
 	     }
 	if (!error)
@@ -1292,7 +1292,7 @@ PtrSSchema          pSS;
 	     {
 		j = pTSch->TsConstBegin[i] - 1;
 		do
-		   BIOreadByte (file, &pTSch->TsConstant[j++]);
+		   TtaReadByte (file, &pTSch->TsConstant[j++]);
 		while (pTSch->TsConstant[j - 1] != '\0');
 	     }
 	/* lit les blocs de regles des elements */
@@ -1314,7 +1314,7 @@ PtrSSchema          pSS;
 	TtaFreeMemory ((char *) pNextBlock);
 
 	/* ferme le fichier */
-	BIOreadClose (file);
+	TtaReadClose (file);
      }
    if (error)
      {

@@ -9,7 +9,7 @@
 
 #include "language.h"
 #include "application.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #undef EXPORT
 #define EXPORT extern

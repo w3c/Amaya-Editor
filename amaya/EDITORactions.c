@@ -66,7 +66,7 @@ View                view;
 	     j++;
 	  }
 	if (!exist)
-	   exist = ThotFile_exist (tempfile);
+	   exist = TtaFileExist (tempfile);
 	if (exist)
 	  {
 	     /* the file exists -> generate a new name */

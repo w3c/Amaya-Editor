@@ -594,7 +594,7 @@ void                DoSaveAs ()
 	strcpy (tempfile, DirectoryName);
 	strcat (tempfile, DIR_STR);
 	strcat (tempfile, DocumentName);
-	if (ThotFile_exist (tempfile))
+	if (TtaFileExist (tempfile))
 	  {
 	     /* ask confirmation */
 	     sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
@@ -631,7 +631,7 @@ void                DoSaveAs ()
 	strcpy (tempfile, DirectoryName);
 	strcat (tempfile, DIR_STR);
 	strcat (tempfile, DocumentName);
-	if (ThotFile_exist (tempfile))
+	if (TtaFileExist (tempfile))
 	  {
 	     /* ask confirmation */
 	     sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
@@ -699,7 +699,7 @@ void                DoSaveAs ()
 			    strcat (tempfile, DIR_STR);
 			    strcat (tempfile, imgname);
 			 }
-		       ThotCopyFile (tempname, tempfile);
+		       TtaFileCopy (tempname, tempfile);
 
 		       TtaFreeMemory (buf);
 		    }
@@ -1001,7 +1001,7 @@ void                DoSaveObjectAs ()
 	SavingDocument = (Document) None;
 	return;
      }
-   if (ThotFile_exist (tempfile))
+   if (TtaFileExist (tempfile))
      {
 	/* ask confirmation */
 	sprintf (msg, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
@@ -1014,7 +1014,7 @@ void                DoSaveObjectAs ()
 	     return;
 	  }
      }
-   ThotCopyFile (tempSavedObject, tempfile);
+   TtaFileCopy (tempSavedObject, tempfile);
    SavingObject = (Document) None;
    TtaDestroyDialogue (BaseDialog + FormSauver);
 }

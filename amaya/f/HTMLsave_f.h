@@ -20,7 +20,7 @@ extern int SaveDocumentThroughNet ( Document document,
                                     Boolean confirm );
 extern void SaveDocument ( Document document,
                            View view );
-extern unsigned char DocumentToSave ( NotifyDialog *event );
+extern unsigned char DocumentToSave ( NotifyDialog * event );
 extern void CreateNewImagePaths ( char *DocUrl,
                                   char *OldPath,
                                   char *NewUrl,
@@ -48,7 +48,7 @@ extern int SaveDocumentThroughNet (/* Document document,
                                       Boolean confirm */);
 extern void SaveDocument (/* Document document,
                              View view */);
-extern unsigned char DocumentToSave (/* NotifyDialog *event */);
+extern unsigned char DocumentToSave (/* NotifyDialog * event */);
 extern void CreateNewImagePaths (/* char *DocUrl,
                                     char *OldPath,
                                     char *NewUrl,

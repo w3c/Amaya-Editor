@@ -10,7 +10,7 @@ extern void CallbackPictureMenu ( int ref,
                                   int typeData,
                                   char *txt );
 extern void BuildPictureMenu ( char *name,
-                               boolean *result,
+                               boolean * result,
                                int *typim,
                                int *pres,
                                PtrBox pBox );
@@ -22,7 +22,7 @@ extern void CallbackPictureMenu (/* int ref,
                                     int typeData,
                                     char *txt */);
 extern void BuildPictureMenu (/* char *name,
-                                 boolean *result,
+                                 boolean * result,
                                  int *typim,
                                  int *pres,
                                  PtrBox pBox */);

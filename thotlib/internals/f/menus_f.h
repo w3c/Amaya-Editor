@@ -7,16 +7,16 @@
 #ifdef __STDC__
 
 extern void CreerPaletteFormeRectangle ( int Menu,
-                                         Widget Pere,
+                                         ThotWidget Pere,
                                          int Langue );
 extern void CreerPaletteTrait ( int Menu,
-                                Widget Pere,
+                                ThotWidget Pere,
                                 int Langue );
 extern void CreerPaletteFleche ( int Menu,
-                                 Widget Pere,
+                                 ThotWidget Pere,
                                  int Langue );
 extern void CreerPaletteLien ( int Menu,
-                               Widget Pere,
+                               ThotWidget Pere,
                                int Langue );
 extern void TraiterEvtPaletteFormeRectangle ( int ref,
                                               int typedata,
@@ -40,16 +40,16 @@ extern void AppliquerFeuilleTrait ( int ref,
 #else /* __STDC__ */
 
 extern void CreerPaletteFormeRectangle (/* int Menu,
-                                           Widget Pere,
+                                           ThotWidget Pere,
                                            int Langue */);
 extern void CreerPaletteTrait (/* int Menu,
-                                  Widget Pere,
+                                  ThotWidget Pere,
                                   int Langue */);
 extern void CreerPaletteFleche (/* int Menu,
-                                   Widget Pere,
+                                   ThotWidget Pere,
                                    int Langue */);
 extern void CreerPaletteLien (/* int Menu,
-                                 Widget Pere,
+                                 ThotWidget Pere,
                                  int Langue */);
 extern void TraiterEvtPaletteFormeRectangle (/* int ref,
                                                 int typedata,

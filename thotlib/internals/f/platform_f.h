@@ -13,8 +13,8 @@ extern int BaseName ( char *filename,
 extern int DirName ( char *filename,
                      char *dirname,
                      char delim );
-extern int ThotFile_exist ( char *filename );
-extern int RemoveFile ( char *filename );
+extern int TtaFileExist ( char *filename );
+extern int TtaFileUnlink ( char *filename );
 extern int ThotDirBrowse_first ( ThotDirBrowse * me,
                                  char *dir,
                                  char *name,
@@ -23,20 +23,22 @@ extern int ThotDirBrowse_next ( ThotDirBrowse * me );
 extern int ThotDirBrowse_close ( ThotDirBrowse * me );
 extern void ThotExit ( int result );
 extern void InitErrorHandler ( void );
-extern ThotFileHandle ThotFile_open ( char *name,
-                                      ThotFileMode mode );
-extern int ThotFile_close ( ThotFileHandle handle );
-extern int ThotFile_read ( ThotFileHandle handle,
-                           void *buffer,
-                           unsigned int count );
-extern int ThotFile_write ( ThotFileHandle handle,
-                            void *buffer,
-                            unsigned int count );
-extern ThotFileOffset ThotFile_seek ( ThotFileHandle handle,
-                                      ThotFileOffset offset,
-                                      ThotFileOrigin origin );
-extern int ThotFile_stat ( ThotFileHandle handle,
-                           ThotFileInfo * pInfo );
+extern ThotFileHandle TtaFileOpen ( char *name,
+                                    ThotFileMode mode );
+extern int TtaFileClose ( ThotFileHandle handle );
+extern int TtaFileRead ( ThotFileHandle handle,
+                         void *buffer,
+                         unsigned int count );
+extern int TtaFileWrite ( ThotFileHandle handle,
+                          void *buffer,
+                          unsigned int count );
+extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
+                                    ThotFileOffset offset,
+                                    ThotFileOrigin origin );
+extern int TtaFileStat ( ThotFileHandle handle,
+                         ThotFileInfo * pInfo );
+extern void TtaFileCopy ( char *sourceFileName,
+                          char *targetFileName );
 
 #else /* __STDC__ */
 
@@ -47,8 +49,8 @@ extern int BaseName (/* char *filename,
 extern int DirName (/* char *filename,
                        char *dirname,
                        char delim */);
-extern int ThotFile_exist (/* char *filename */);
-extern int RemoveFile (/* char *filename */);
+extern int TtaFileExist (/* char *filename */);
+extern int TtaFileUnlink (/* char *filename */);
 extern int ThotDirBrowse_first (/* ThotDirBrowse * me,
                                    char *dir,
                                    char *name,
@@ -57,20 +59,22 @@ extern int ThotDirBrowse_next (/* ThotDirBrowse * me */);
 extern int ThotDirBrowse_close (/* ThotDirBrowse * me */);
 extern void ThotExit (/* int result */);
 extern void InitErrorHandler (/* void */);
-extern ThotFileHandle ThotFile_open (/* char *name,
-                                        ThotFileMode mode */);
-extern int ThotFile_close (/* ThotFileHandle handle */);
-extern int ThotFile_read (/* ThotFileHandle handle,
-                             void *buffer,
-                             unsigned int count */);
-extern int ThotFile_write (/* ThotFileHandle handle,
-                              void *buffer,
-                              unsigned int count */);
-extern ThotFileOffset ThotFile_seek (/* ThotFileHandle handle,
-                                        ThotFileOffset offset,
-                                        ThotFileOrigin origin */);
-extern int ThotFile_stat (/* ThotFileHandle handle,
-                             ThotFileInfo * pInfo */);
+extern ThotFileHandle TtaFileOpen (/* char *name,
+                                      ThotFileMode mode */);
+extern int TtaFileClose (/* ThotFileHandle handle */);
+extern int TtaFileRead (/* ThotFileHandle handle,
+                           void *buffer,
+                           unsigned int count */);
+extern int TtaFileWrite (/* ThotFileHandle handle,
+                            void *buffer,
+                            unsigned int count */);
+extern ThotFileOffset TtaFileSeek (/* ThotFileHandle handle,
+                                      ThotFileOffset offset,
+                                      ThotFileOrigin origin */);
+extern int TtaFileStat (/* ThotFileHandle handle,
+                           ThotFileInfo * pInfo */);
+extern void TtaFileCopy (/* char *sourceFileName,
+                            char *targetFileName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

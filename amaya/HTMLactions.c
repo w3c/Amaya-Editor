@@ -302,7 +302,7 @@ NotifyDialog       *event;
 		strcat (tempdocument, "noname.html");
 	     else
 		strcat (tempdocument, documentname);
-	     RemoveFile (tempdocument);
+	     TtaFileUnlink (tempdocument);
 	  }
 	TtaFreeMemory (DocumentURLs[doc]);
 	DocumentURLs[doc] = NULL;

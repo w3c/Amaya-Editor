@@ -15,10 +15,10 @@
 #include "frame.h"
 #include "epsflogo.h"
 #include "interface.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 #include "png.h"
-#include "storage.h"
+#include "fileaccess.h"
 #define EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
@@ -439,7 +439,7 @@ int                *typeImage;
    if (*typeImage >= MAX_PICT_FORMATS || *typeImage < 0)
       *typeImage = UNKNOWN_FORMAT;
 
-   if (ThotFile_exist (fileName))
+   if (TtaFileExist (fileName))
      {
 	if (*typeImage == UNKNOWN_FORMAT)
 	  {

@@ -9,9 +9,9 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "thotdir.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -34,12 +34,12 @@
 #define SIGNED_SHORT_MASK	0xffff0000L
 
 /*----------------------------------------------------------------------
-   BIOreadByte reads a character (or byte) value.                  
+   TtaReadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BIOreadByte (BinFile file, char *bval)
+boolean             TtaReadByte (BinFile file, char *bval)
 #else  /* __STDC__ */
-boolean             BIOreadByte (file, bval)
+boolean             TtaReadByte (file, bval)
 BinFile             file;
 char               *bval;
 
@@ -54,12 +54,12 @@ char               *bval;
 }
 
 /*----------------------------------------------------------------------
-   BIOreadBool reads a boolean value.                              
+   TtaReadBool reads a boolean value.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BIOreadBool (BinFile file, boolean * bval)
+boolean             TtaReadBool (BinFile file, boolean * bval)
 #else  /* __STDC__ */
-boolean             BIOreadBool (file, bval)
+boolean             TtaReadBool (file, bval)
 BinFile             file;
 boolean            *bval;
 
@@ -67,7 +67,7 @@ boolean            *bval;
 {
    char       b1;
 
-   if (!BIOreadByte (file, &b1))
+   if (!TtaReadByte (file, &b1))
      {
 	*bval = FALSE;
 	return FALSE;
@@ -78,12 +78,12 @@ boolean            *bval;
 
 
 /*----------------------------------------------------------------------
-   BIOreadShort reads an unsigned short value.                     
+   TtaReadShort reads an unsigned short value.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BIOreadShort (BinFile file, int *sval)
+boolean             TtaReadShort (BinFile file, int *sval)
 #else  /* __STDC__ */
-boolean             BIOreadShort (file, sval)
+boolean             TtaReadShort (file, sval)
 BinFile             file;
 int                *sval;
 
@@ -93,13 +93,13 @@ char      car;
  
    *sval = 0;
  
-   if (!BIOreadByte (file, &car)) {
+   if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
    };
    *sval |= ((((int) car) & LMASK) << DECAL_1);
  
-   if (!BIOreadByte (file, &car)) {
+   if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
    };
@@ -110,12 +110,12 @@ char      car;
 
 
 /*----------------------------------------------------------------------
-   BIOreadSignedShort reads a signed short value.                  
+   TtaReadSignedShort reads a signed short value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BIOreadSignedShort (BinFile file, int *sval)
+boolean             TtaReadSignedShort (BinFile file, int *sval)
 #else  /* __STDC__ */
-boolean             BIOreadSignedShort (file, sval)
+boolean             TtaReadSignedShort (file, sval)
 BinFile             file;
 int                *sval;
 
@@ -125,7 +125,7 @@ char      car;
  
    *sval = 0;
  
-   if (!BIOreadByte (file, &car)) {
+   if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
    };
@@ -133,7 +133,7 @@ char      car;
       *sval = SIGNED_SHORT_MASK;
    *sval |= ((((int) car) & LMASK) << DECAL_1);
  
-   if (!BIOreadByte (file, &car)) {
+   if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
    };
@@ -144,12 +144,12 @@ char      car;
 
 
 /*----------------------------------------------------------------------
-   BIOreadInteger reads an integer.                                
+   TtaReadInteger reads an integer.                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BIOreadInteger (BinFile file, int *sval)
+boolean             TtaReadInteger (BinFile file, int *sval)
 #else  /* __STDC__ */
-boolean             BIOreadInteger (file, sval)
+boolean             TtaReadInteger (file, sval)
 BinFile             file;
 int                *sval;
 
@@ -159,25 +159,25 @@ char      car;
  
    *sval = 0;
  
-   if (!BIOreadByte (file, &car)) {
+   if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
    };
    *sval |= ((((int) car) & LMASK) << DECAL_3);
  
-   if (!BIOreadByte (file, &car)) {
+   if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
    };
    *sval |= ((((int) car) & LMASK) << DECAL_2);
  
-   if (!BIOreadByte (file, &car)) {
+   if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
    };
    *sval |= ((((int) car) & LMASK) << DECAL_1);
  
-   if (!BIOreadByte (file, &car)) {
+   if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
    };
@@ -188,12 +188,12 @@ char      car;
 
 
 /*----------------------------------------------------------------------
-   BIOreadName reads a string value.                               
+   TtaReadName reads a string value.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BIOreadName (BinFile file, char *name)
+boolean             TtaReadName (BinFile file, char *name)
 #else  /* __STDC__ */
-boolean             BIOreadName (file, name)
+boolean             TtaReadName (file, name)
 BinFile             file;
 char               *name;
 
@@ -203,7 +203,7 @@ char               *name;
 
    for (i = 0; i < MAX_NAME_LENGTH; i++)
      {
-	if (!BIOreadByte (file, &name[i]))
+	if (!TtaReadByte (file, &name[i]))
 	  {
 	     name[i] = '\0';
 	     return FALSE;
@@ -222,12 +222,12 @@ char               *name;
 
 
 /*----------------------------------------------------------------------
-   BIOreadOpen opens a file for reading.                           
+   TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             BIOreadOpen (char *filename)
+BinFile             TtaReadOpen (char *filename)
 #else  /* __STDC__ */
-BinFile             BIOreadOpen (filename)
+BinFile             TtaReadOpen (filename)
 char               *filename;
 
 #endif /* __STDC__ */
@@ -237,12 +237,12 @@ char               *filename;
 
 
 /*----------------------------------------------------------------------
-   BIOreadClose closes a file.                                     
+   TtaReadClose closes a file.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BIOreadClose (BinFile file)
+void                TtaReadClose (BinFile file)
 #else  /* __STDC__ */
-void                BIOreadClose (file)
+void                TtaReadClose (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -253,12 +253,12 @@ BinFile             file;
 
 
 /*----------------------------------------------------------------------
-   BIOwriteOpen opens a file for writing.                          
+   TtaWriteOpen opens a file for writing.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             BIOwriteOpen (char *filename)
+BinFile             TtaWriteOpen (char *filename)
 #else  /* __STDC__ */
-BinFile             BIOwriteOpen (filename)
+BinFile             TtaWriteOpen (filename)
 char               *filename;
 
 #endif /* __STDC__ */
@@ -268,12 +268,12 @@ char               *filename;
 
 
 /*----------------------------------------------------------------------
-   BIOwriteClose closes a file.                                    
+   TtaWriteClose closes a file.                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BIOwriteClose (BinFile file)
+void                TtaWriteClose (BinFile file)
 #else  /* __STDC__ */
-void                BIOwriteClose (file)
+void                TtaWriteClose (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -283,12 +283,12 @@ BinFile             file;
 }
 
 /*----------------------------------------------------------------------
-   BIOwriteByte writes a character (or byte) value.                  
+   TtaWriteByte writes a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BIOwriteByte (BinFile file, char bval)
+boolean             TtaWriteByte (BinFile file, char bval)
 #else  /* __STDC__ */
-boolean             BIOwriteByte (file, bval)
+boolean             TtaWriteByte (file, bval)
 BinFile             file;
 char                bval;
 
@@ -301,13 +301,13 @@ char                bval;
 
 
 /*----------------------------------------------------------------------
-   BIOwriteShort reads an unsigned short value.
+   TtaWriteShort reads an unsigned short value.
    -------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean   BIOwriteShort (BinFile file, int sval)
+boolean   TtaWriteShort (BinFile file, int sval)
 #else			     /* __STDC__ */
-boolean   BIOwriteShort (file, sval)
+boolean   TtaWriteShort (file, sval)
 BinFile   file;
 int       sval;
 
@@ -315,23 +315,23 @@ int       sval;
 
 {
 
-   if (!BIOwriteByte (file, (char) ((sval >> DECAL_1) & LMASK)))
+   if (!TtaWriteByte (file, (char) ((sval >> DECAL_1) & LMASK)))
       return FALSE;
 
-   if (!BIOwriteByte (file, (char) (sval & LMASK)))
+   if (!TtaWriteByte (file, (char) (sval & LMASK)))
       return FALSE;
 
    return TRUE;
 }
 
 /*----------------------------------------------------------------------
-   BIOwriteInteger writes an integer.
+   TtaWriteInteger writes an integer.
    -------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean   BIOwriteInteger (BinFile file, int lval)
+boolean   TtaWriteInteger (BinFile file, int lval)
 #else			     /* __STDC__ */
-boolean   BIOwriteInteger (file, lval)
+boolean   TtaWriteInteger (file, lval)
 BinFile   file;
 int       lval;
 
@@ -339,16 +339,16 @@ int       lval;
 
 {
 
-   if (!BIOwriteByte (file, (char) ((lval >> DECAL_3) & LMASK)))
+   if (!TtaWriteByte (file, (char) ((lval >> DECAL_3) & LMASK)))
       return FALSE;
 
-   if (!BIOwriteByte (file, (char) ((lval >> DECAL_2) & LMASK)))
+   if (!TtaWriteByte (file, (char) ((lval >> DECAL_2) & LMASK)))
       return FALSE;
 
-   if (!BIOwriteByte (file, (char) ((lval >> DECAL_1) & LMASK)))
+   if (!TtaWriteByte (file, (char) ((lval >> DECAL_1) & LMASK)))
       return FALSE;
 
-   if (!BIOwriteByte (file, (char) (lval & LMASK)))
+   if (!TtaWriteByte (file, (char) (lval & LMASK)))
       return FALSE;
 
    return TRUE;
@@ -356,12 +356,12 @@ int       lval;
 
 
 /*----------------------------------------------------------------------
-   BIOwriteDocIdent writes a document identifier.                  
+   TtaWriteDocIdent writes a document identifier.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BIOwriteDocIdent (BinFile file, DocumentIdentifier Ident)
+void                TtaWriteDocIdent (BinFile file, DocumentIdentifier Ident)
 #else  /* __STDC__ */
-void                BIOwriteDocIdent (file, Ident)
+void                TtaWriteDocIdent (file, Ident)
 BinFile             file;
 DocumentIdentifier  Ident;
 
@@ -372,20 +372,20 @@ DocumentIdentifier  Ident;
    j = 1;
    while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != '\0')
      {
-	BIOwriteByte (file, Ident[j - 1]);
+	TtaWriteByte (file, Ident[j - 1]);
 	j++;
      }
    /* termine le nom par un octet nul */
-   BIOwriteByte (file, '\0');
+   TtaWriteByte (file, '\0');
 }
 
 /*----------------------------------------------------------------------
-   BIOreadDocIdent                                                 
+   TtaReadDocIdent                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BIOreadDocIdent (BinFile file, DocumentIdentifier * Ident)
+void                TtaReadDocIdent (BinFile file, DocumentIdentifier * Ident)
 #else  /* __STDC__ */
-void                BIOreadDocIdent (file, Ident)
+void                TtaReadDocIdent (file, Ident)
 BinFile             file;
 DocumentIdentifier *Ident;
 
@@ -395,7 +395,7 @@ DocumentIdentifier *Ident;
 
    j = 0;
    do
-      if (!BIOreadByte (file, &((*Ident)[j++])))
+      if (!TtaReadByte (file, &((*Ident)[j++])))
 	 (*Ident)[j - 1] = '\0';
    while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == '\0')) ;
 }
@@ -521,7 +521,7 @@ int                *length;
 	   strncpy (first_directory, single_directory, MAX_PATH);
 	/* on construit le nom */
 	FindCompleteName (fname, fext, single_directory, completeName, length);
-	if (ThotFile_exist (completeName))
+	if (TtaFileExist (completeName))
 	  {
 	     found = TRUE;
 	     strncpy (directory_list, single_directory, MAX_PATH);
@@ -564,7 +564,7 @@ char               *fileName;
      {
 	strcpy (directory, DocumentPath);
 	MakeCompleteName (name, "", directory, fileName, &length);
-	if (!ThotFile_exist (fileName))
+	if (!TtaFileExist (fileName))
 	  {
 	     /* Recherche le fichier dans les repertoires de schemas */
 	     strcpy (directory, SchemaPath);

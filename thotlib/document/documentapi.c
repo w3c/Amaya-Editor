@@ -7,12 +7,12 @@
 #include "typemedia.h"
 #include "application.h"
 #include "document.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "constpiv.h"
 #include "typecorr.h"
 #include "appdialogue.h"
 #include "thotdir.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 
 #ifdef NODISPLAY
 /*** For the ThotKernel, variables FirstSelectedElement and
@@ -327,7 +327,7 @@ char               *documentName;
 	  {
 	     /* Arrange the file name */
 	     FindCompleteName (documentName, "PIV", pDoc->DocDirectory, path, &i);
-	     pivotFile = BIOwriteOpen (path);
+	     pivotFile = TtaWriteOpen (path);
 	     if (pivotFile == 0)
 	       {
 		  TtaError (ERR_cannot_open_pivot_file);
@@ -336,7 +336,7 @@ char               *documentName;
 	       {
 		  /* writing the document in the file in the pivot format */
 		  SauveDoc (pivotFile, pDoc);
-		  BIOwriteClose (pivotFile);
+		  TtaWriteClose (pivotFile);
 		  /* modifies files .EXT of new referenced documents or file which
 		     are no more referenced bu the document */
 		  UpdateExt (pDoc);
@@ -544,13 +544,13 @@ Document            document;
 	/* destroys files .PIV, .EXT, .REF et .BAK of the document */
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
 	FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, text, &i);
-	RemoveFile (text);
+	TtaFileUnlink (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
 	FindCompleteName (pDoc->DocDName, "EXT", DirectoryOrig, text, &i);
-	RemoveFile (text);
+	TtaFileUnlink (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
 	FindCompleteName (pDoc->DocDName, "REF", DirectoryOrig, text, &i);
-	RemoveFile (text);
+	TtaFileUnlink (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
 	FindCompleteName (pDoc->DocDName, "BAK", DirectoryOrig, text, &i);
 #ifndef NODISPLAY
@@ -1901,7 +1901,7 @@ char               *presentationName;
    strncpy (DirBuffer, DocumentPath, MAX_PATH);
    MakeCompleteName (documentName, "PIV", DirBuffer, text, &i);
    /* Verify if the file exists */
-   file = BIOreadOpen (text);
+   file = TtaReadOpen (text);
    if (file == 0)
       /* document file inaccessible */
      {
@@ -1912,17 +1912,17 @@ char               *presentationName;
      {
 	error = FALSE;
 	/* Gets the version number if it exists */
-	if (!BIOreadByte (file, &charGotten))
+	if (!TtaReadByte (file, &charGotten))
 	   error = TRUE;
 	if (charGotten == (char) C_PIV_VERSION)
 	  {
-	     if (!BIOreadByte (file, &charGotten))
+	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
-	     if (!BIOreadByte (file, &charGotten))
+	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
 	     else
 		currentVersion = (int) charGotten;
-	     if (!BIOreadByte (file, &charGotten))
+	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
 	  }
 	/* Gets the label max. of the document if it is present */
@@ -1930,7 +1930,7 @@ char               *presentationName;
 		       charGotten == (char) C_PIV_LABEL))
 	  {
 	     ReadLabel (charGotten, lab, file);
-	     if (!BIOreadByte (file, &charGotten))
+	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
 	  }
 
@@ -1940,14 +1940,14 @@ char               *presentationName;
 	     while (charGotten == (char) C_PIV_LANG && !error)
 	       {
 		  do
-		     if (!BIOreadByte (file, &charGotten))
+		     if (!TtaReadByte (file, &charGotten))
 			error = TRUE;
 		  while (!(error || charGotten == '\0')) ;
 		  if (charGotten != '\0')
 		     error = TRUE;
 		  else
 		     /* Gets the byte following the language name */
-		  if (!BIOreadByte (file, &charGotten))
+		  if (!TtaReadByte (file, &charGotten))
 		     error = TRUE;
 	       }
 	  }
@@ -1956,7 +1956,7 @@ char               *presentationName;
 	if (!error && (charGotten == (char) C_PIV_COMMENT || charGotten == (char) C_PIV_OLD_COMMENT))
 	  {
 	     /* Get the byte following the comment */
-	     if (!BIOreadByte (file, &charGotten))
+	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
 	  }
 	/* Gets the name of the schema structure which is at the begenning of the pivot file */
@@ -1966,7 +1966,7 @@ char               *presentationName;
 	  {
 	     i = 0;
 	     do
-		if (!BIOreadByte (file, &structureName[i++]))
+		if (!TtaReadByte (file, &structureName[i++]))
 		   error = TRUE;
 	     while (!(error || structureName[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
 	     if (structureName[i - 1] != '\0')
@@ -1975,20 +1975,20 @@ char               *presentationName;
 	       {
 		  if (currentVersion >= 4)
 		     /* Gets the code of the structure schema */
-		     if (!BIOreadShort (file, &i))
+		     if (!TtaReadShort (file, &i))
 			error = TRUE;
 		  if (!error)
 		    {
 		       /* Gets the name of the associated presentation schema */
 		       i = 0;
 		       do
-			  if (!BIOreadByte (file, &presentationName[i++]))
+			  if (!TtaReadByte (file, &presentationName[i++]))
 			     error = TRUE;
 		       while (!(error || presentationName[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
 		    }
 	       }
 	  }
-	BIOreadClose (file);
+	TtaReadClose (file);
      }
 }
 

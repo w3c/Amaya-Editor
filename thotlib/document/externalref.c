@@ -11,7 +11,7 @@
 #include "constmedia.h"
 #include "constpiv.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -68,7 +68,7 @@ BinFile             file;
    switch (labelType)
 	 {
 	    case C_PIV_SHORT_LABEL:
-	       if (BIOreadShort (file, &j))
+	       if (TtaReadShort (file, &j))
 		  LabelIntToString (j, label);
 	       else
 		  /* error */
@@ -76,8 +76,8 @@ BinFile             file;
 	       break;
 	    case C_PIV_LONG_LABEL:
 	       j = 0;
-	       if (BIOreadShort (file, &j))
-		  if (BIOreadShort (file, &k))
+	       if (TtaReadShort (file, &j))
+		  if (TtaReadShort (file, &k))
 		     j = j * 65536 + k;
 	       LabelIntToString (j, label);
 	       break;
@@ -85,7 +85,7 @@ BinFile             file;
 	       j = 0;
 	       do
 		 {
-		    BIOreadByte (file, &label[j]);
+		    TtaReadByte (file, &label[j]);
 		    /* drop last bytes if the label is too long */
 		    if (j < MAX_LABEL_LEN)
 		       j++;
@@ -131,7 +131,7 @@ boolean             labelsOnly;
 
    error = FALSE;
    /* lit la 1ere marque de label */
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       error = TRUE;
    pPrevRefD = NULL;
    if (pDoc == NULL)
@@ -187,7 +187,7 @@ boolean             labelsOnly;
 	/* lit la liste des documents qui referencent l'element portant */
 	/* ce label */
 	/* lit la 1ere marque de nom de document */
-	if (!BIOreadByte (file, &c))
+	if (!TtaReadByte (file, &c))
 	   error = TRUE;
 	if (c != (char) C_PIV_DOCNAME || error)
 	  {
@@ -198,7 +198,7 @@ boolean             labelsOnly;
 	while (c == (char) C_PIV_DOCNAME && !error)
 	   /* lit l'identificateur du document referencant */
 	  {
-	     BIOreadDocIdent (file, &docIdent);
+	     TtaReadDocIdent (file, &docIdent);
 	     if (pRefD != NULL && !error && !labelsOnly)
 		/* cree et chaine un descripteur d'element referencant */
 	       {
@@ -217,7 +217,7 @@ boolean             labelsOnly;
 		    }
 	       }
 	     /* lit l'octet qui suit le nom */
-	     if (!BIOreadByte (file, &c))
+	     if (!TtaReadByte (file, &c))
 		error = TRUE;
 	  }
      }
@@ -249,7 +249,7 @@ PtrChangedReferredEl *Anchor;
    *Anchor = NULL;
    pPrevChnRef = NULL;
    /* read first character in file */
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       error = TRUE;
    while (!error)
 
@@ -268,7 +268,7 @@ PtrChangedReferredEl *Anchor;
 	/* lit l'ancien label */
 	strncpy (pChnRef->CrOldLabel, label, MAX_LABEL_LEN);
 	/* lit le nouveau label */
-	if (!BIOreadByte (file, &c))
+	if (!TtaReadByte (file, &c))
 	   error = TRUE;
 	ReadLabel (c, label, file);
 	if (!error)
@@ -276,7 +276,7 @@ PtrChangedReferredEl *Anchor;
 	     strncpy (pChnRef->CrNewLabel, label, MAX_LABEL_LEN);
 	     /* lit le nom de l'ancien document */
 	     /* lit la marque de nom de document */
-	     if (!BIOreadByte (file, &c))
+	     if (!TtaReadByte (file, &c))
 		error = TRUE;
 	     if (c != (char) C_PIV_DOCNAME)
 	       {
@@ -287,11 +287,11 @@ PtrChangedReferredEl *Anchor;
 	     else
 		/* read the name */
 	       {
-		  BIOreadDocIdent (file, &pChnRef->CrOldDocument);
+		  TtaReadDocIdent (file, &pChnRef->CrOldDocument);
 		  /* lit le nom du nouveau document */
 		  if (!error)
 		     /* lit la marque de nom de document */
-		     if (!BIOreadByte (file, &c))
+		     if (!TtaReadByte (file, &c))
 			error = TRUE;
 		  if (c != (char) C_PIV_DOCNAME)
 		    {
@@ -302,10 +302,10 @@ PtrChangedReferredEl *Anchor;
 		  else
 		     /* lit le nom */
 		    {
-		       BIOreadDocIdent (file, &pChnRef->CrNewDocument);
+		       TtaReadDocIdent (file, &pChnRef->CrNewDocument);
 		       /* lit l'octet qui suit le nom */
 		       if (!error)
-			  if (!BIOreadByte (file, &c))
+			  if (!TtaReadByte (file, &c))
 			     error = TRUE;
 		    }
 	       }

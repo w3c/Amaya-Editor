@@ -235,7 +235,7 @@ char               *text;
 	     AddLoadedImage (imagename, localname, doc, &desc);
 	     desc->status = IMAGE_MODIFIED;
 	     /* JK: was name, seems it should be pathimage */
-	     ThotCopyFile (pathimage, desc->localName);
+	     TtaFileCopy (pathimage, desc->localName);
 
 	     TtaExtractName (DocumentURLs[doc], pathdoc, name);
 	     TtaExtractName (imagename, pathimage, name);
@@ -403,7 +403,7 @@ LoadedImageDesc   **desc;
    LoadedImageDesc    *pImage, *previous;
    char                localname[MAX_LENGTH];
 
-   if (!ThotFile_exist (fullname))
+   if (!TtaFileExist (fullname))
       return (FALSE);
 
    *desc = NULL;
@@ -441,7 +441,7 @@ LoadedImageDesc   **desc;
    /*
     * copy the image in place.
     */
-   ThotCopyFile (fullname, localname);
+   TtaFileCopy (fullname, localname);
 
    /*
     * add a new identifier to the list if necessary.
@@ -494,7 +494,7 @@ Document            doc;
 	  {
 	     pImage->status = IMAGE_NOT_LOADED;
 	     /* remove the image */
-	     RemoveFile (pImage->localName);
+	     TtaFileUnlink (pImage->localName);
 	     /* free the descriptor */
 	     if (pImage->originalName != NULL)
 		TtaFreeMemory (pImage->originalName);

@@ -12,7 +12,7 @@
 #include "picture.h"
 #include "libmsg.h"
 #include "message.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 typedef int         L_Relations[30];
 

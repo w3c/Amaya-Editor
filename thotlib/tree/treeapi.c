@@ -8,7 +8,7 @@
 #include "document.h"
 #include "tree.h"
 #include "view.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "typecorr.h"
 #include "appdialogue.h"
 #include "labelAllocator.h"

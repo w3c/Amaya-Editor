@@ -11,7 +11,7 @@
 #include "attribute.h"
 #include "reference.h"
 #include "typecorr.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #undef EXPORT
 #define EXPORT

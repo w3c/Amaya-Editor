@@ -12,7 +12,7 @@
 #include "typecorr.h"
 #include "libmsg.h"
 #include "message.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #undef  EXPORT
 #define EXPORT

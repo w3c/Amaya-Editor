@@ -11,7 +11,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "constpiv.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 static BinFile      outfile;
 
@@ -29,8 +29,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   BIOwriteByte (outfile, (char) (n / 256));
-   BIOwriteByte (outfile, (char) (n % 256));
+   TtaWriteByte (outfile, (char) (n / 256));
+   TtaWriteByte (outfile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------
@@ -65,7 +65,7 @@ Name                n;
 
    i = 0;
    do
-      BIOwriteByte (outfile, n[i++]);
+      TtaWriteByte (outfile, n[i++]);
    while (n[i - 1] != '\0');
 }
 
@@ -82,9 +82,9 @@ PtrPRule            p;
 #endif /* __STDC__ */
 {
    if (p == NULL)
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
    else
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
 }
 
 
@@ -100,9 +100,9 @@ boolean             b;
 #endif /* __STDC__ */
 {
    if (b)
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
    else
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
 }
 
 /*----------------------------------------------------------------------
@@ -120,23 +120,23 @@ TypeUnit            unit;
    switch (unit)
 	 {
 	    case UnRelative:
-	       BIOwriteByte (outfile, C_UNIT_REL);
+	       TtaWriteByte (outfile, C_UNIT_REL);
 	       break;
 	    case UnXHeight:
-	       BIOwriteByte (outfile, C_UNIT_XHEIGHT);
+	       TtaWriteByte (outfile, C_UNIT_XHEIGHT);
 	       break;
 	    case UnPoint:
-	       BIOwriteByte (outfile, C_UNIT_POINT);
+	       TtaWriteByte (outfile, C_UNIT_POINT);
 	       break;
 	    case UnPixel:
-	       BIOwriteByte (outfile, C_UNIT_PIXEL);
+	       TtaWriteByte (outfile, C_UNIT_PIXEL);
 	       break;
 	    case UnPercent:
-	       BIOwriteByte (outfile, C_UNIT_PERCENT);
+	       TtaWriteByte (outfile, C_UNIT_PERCENT);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid unit %X\n", unit);
-	       BIOwriteByte (outfile, C_UNIT_REL);
+	       TtaWriteByte (outfile, C_UNIT_REL);
 	       break;
 	 }
 }
@@ -155,82 +155,82 @@ PRuleType           ruleType;
    switch (ruleType)
 	 {
 	    case PtVisibility:
-	       BIOwriteByte (outfile, C_PR_VISIBILITY);
+	       TtaWriteByte (outfile, C_PR_VISIBILITY);
 	       break;
 	    case PtFunction:
-	       BIOwriteByte (outfile, C_PR_FUNCTION);
+	       TtaWriteByte (outfile, C_PR_FUNCTION);
 	       break;
 	    case PtVertRef:
-	       BIOwriteByte (outfile, C_PR_VREF);
+	       TtaWriteByte (outfile, C_PR_VREF);
 	       break;
 	    case PtHorizRef:
-	       BIOwriteByte (outfile, C_PR_HREF);
+	       TtaWriteByte (outfile, C_PR_HREF);
 	       break;
 	    case PtHeight:
-	       BIOwriteByte (outfile, C_PR_HEIGHT);
+	       TtaWriteByte (outfile, C_PR_HEIGHT);
 	       break;
 	    case PtWidth:
-	       BIOwriteByte (outfile, C_PR_WIDTH);
+	       TtaWriteByte (outfile, C_PR_WIDTH);
 	       break;
 	    case PtVertPos:
-	       BIOwriteByte (outfile, C_PR_VPOS);
+	       TtaWriteByte (outfile, C_PR_VPOS);
 	       break;
 	    case PtHorizPos:
-	       BIOwriteByte (outfile, C_PR_HPOS);
+	       TtaWriteByte (outfile, C_PR_HPOS);
 	       break;
 	    case PtSize:
-	       BIOwriteByte (outfile, C_PR_SIZE);
+	       TtaWriteByte (outfile, C_PR_SIZE);
 	       break;
 	    case PtUnderline:
-	       BIOwriteByte (outfile, C_PR_UNDERLINE);
+	       TtaWriteByte (outfile, C_PR_UNDERLINE);
 	       break;
 	    case PtThickness:
-	       BIOwriteByte (outfile, C_PR_UNDER_THICK);
+	       TtaWriteByte (outfile, C_PR_UNDER_THICK);
 	       break;
 	    case PtStyle:
-	       BIOwriteByte (outfile, C_PR_STYLE);
+	       TtaWriteByte (outfile, C_PR_STYLE);
 	       break;
 	    case PtFont:
-	       BIOwriteByte (outfile, C_PR_FONT);
+	       TtaWriteByte (outfile, C_PR_FONT);
 	       break;
 	    case PtBreak1:
-	       BIOwriteByte (outfile, C_PR_BREAK1);
+	       TtaWriteByte (outfile, C_PR_BREAK1);
 	       break;
 	    case PtBreak2:
-	       BIOwriteByte (outfile, C_PR_BREAK2);
+	       TtaWriteByte (outfile, C_PR_BREAK2);
 	       break;
 	    case PtIndent:
-	       BIOwriteByte (outfile, C_PR_INDENT);
+	       TtaWriteByte (outfile, C_PR_INDENT);
 	       break;
 	    case PtLineSpacing:
-	       BIOwriteByte (outfile, C_PR_LINESPACING);
+	       TtaWriteByte (outfile, C_PR_LINESPACING);
 	       break;
 	    case PtAdjust:
-	       BIOwriteByte (outfile, C_PR_ADJUST);
+	       TtaWriteByte (outfile, C_PR_ADJUST);
 	       break;
 	    case PtJustify:
-	       BIOwriteByte (outfile, C_PR_JUSTIFY);
+	       TtaWriteByte (outfile, C_PR_JUSTIFY);
 	       break;
 	    case PtHyphenate:
-	       BIOwriteByte (outfile, C_PR_HYPHENATE);
+	       TtaWriteByte (outfile, C_PR_HYPHENATE);
 	       break;
 	    case PtDepth:
-	       BIOwriteByte (outfile, C_PR_DEPTH);
+	       TtaWriteByte (outfile, C_PR_DEPTH);
 	       break;
 	    case PtLineStyle:
-	       BIOwriteByte (outfile, C_PR_LINESTYLE);
+	       TtaWriteByte (outfile, C_PR_LINESTYLE);
 	       break;
 	    case PtLineWeight:
-	       BIOwriteByte (outfile, C_PR_LINEWEIGHT);
+	       TtaWriteByte (outfile, C_PR_LINEWEIGHT);
 	       break;
 	    case PtFillPattern:
-	       BIOwriteByte (outfile, C_PR_FILLPATTERN);
+	       TtaWriteByte (outfile, C_PR_FILLPATTERN);
 	       break;
 	    case PtBackground:
-	       BIOwriteByte (outfile, C_PR_BACKGROUND);
+	       TtaWriteByte (outfile, C_PR_BACKGROUND);
 	       break;
 	    case PtForeground:
-	       BIOwriteByte (outfile, C_PR_FOREGROUND);
+	       TtaWriteByte (outfile, C_PR_FOREGROUND);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid rule type %X\n", ruleType);
@@ -254,13 +254,13 @@ PresMode            mode;
    switch (mode)
 	 {
 	    case PresImmediate:
-	       BIOwriteByte (outfile, C_IMMEDIATE);
+	       TtaWriteByte (outfile, C_IMMEDIATE);
 	       break;
 	    case PresInherit:
-	       BIOwriteByte (outfile, C_INHERIT);
+	       TtaWriteByte (outfile, C_INHERIT);
 	       break;
 	    case PresFunction:
-	       BIOwriteByte (outfile, C_PRES_FUNCTION);
+	       TtaWriteByte (outfile, C_PRES_FUNCTION);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid mode %X\n", mode);
@@ -283,19 +283,19 @@ InheritMode         mode;
    switch (mode)
 	 {
 	    case InheritParent:
-	       BIOwriteByte (outfile, C_INH_ASCEND);
+	       TtaWriteByte (outfile, C_INH_ASCEND);
 	       break;
 	    case InheritPrevious:
-	       BIOwriteByte (outfile, C_INH_PREVIOUS);
+	       TtaWriteByte (outfile, C_INH_PREVIOUS);
 	       break;
 	    case InheritChild:
-	       BIOwriteByte (outfile, C_INH_DESC);
+	       TtaWriteByte (outfile, C_INH_DESC);
 	       break;
 	    case InheritCreator:
-	       BIOwriteByte (outfile, C_INH_CREATOR);
+	       TtaWriteByte (outfile, C_INH_CREATOR);
 	       break;
 	    case InheritGrandFather:
-	       BIOwriteByte (outfile, C_INH_GRAND_FATHER);
+	       TtaWriteByte (outfile, C_INH_GRAND_FATHER);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid inherit %X\n", mode);
@@ -320,58 +320,58 @@ boolean             rep;
    switch (functType)
 	 {
 	    case FnLine:
-	       BIOwriteByte (outfile, C_PF_LINE);
+	       TtaWriteByte (outfile, C_PF_LINE);
 	       break;
 	    case FnPage:
-	       BIOwriteByte (outfile, C_PF_PAGE);
+	       TtaWriteByte (outfile, C_PF_PAGE);
 	       break;
 	    case FnCreateBefore:
 	       if (rep)
-		  BIOwriteByte (outfile, C_PF_CR_BEFORE_REP);
+		  TtaWriteByte (outfile, C_PF_CR_BEFORE_REP);
 	       else
-		  BIOwriteByte (outfile, C_PF_CR_BEFORE);
+		  TtaWriteByte (outfile, C_PF_CR_BEFORE);
 	       break;
 	    case FnCreateWith:
-	       BIOwriteByte (outfile, C_PF_CR_WITH);
+	       TtaWriteByte (outfile, C_PF_CR_WITH);
 	       break;
 	    case FnCreateFirst:
 	       if (rep)
-		  BIOwriteByte (outfile, C_PF_CR_FIRST_REP);
+		  TtaWriteByte (outfile, C_PF_CR_FIRST_REP);
 	       else
-		  BIOwriteByte (outfile, C_PF_CR_FIRST);
+		  TtaWriteByte (outfile, C_PF_CR_FIRST);
 	       break;
 	    case FnCreateLast:
 	       if (rep)
-		  BIOwriteByte (outfile, C_PF_CR_LAST_REP);
+		  TtaWriteByte (outfile, C_PF_CR_LAST_REP);
 	       else
-		  BIOwriteByte (outfile, C_PF_CR_LAST);
+		  TtaWriteByte (outfile, C_PF_CR_LAST);
 	       break;
 	    case FnCreateAfter:
 	       if (rep)
-		  BIOwriteByte (outfile, C_PF_CR_AFTER_REP);
+		  TtaWriteByte (outfile, C_PF_CR_AFTER_REP);
 	       else
-		  BIOwriteByte (outfile, C_PF_CR_AFTER);
+		  TtaWriteByte (outfile, C_PF_CR_AFTER);
 	       break;
 	    case FnCreateEnclosing:
 	       if (rep)
-		  BIOwriteByte (outfile, C_PF_CR_ENCLOSING_REP);
+		  TtaWriteByte (outfile, C_PF_CR_ENCLOSING_REP);
 	       else
-		  BIOwriteByte (outfile, C_PF_CR_ENCLOSING);
+		  TtaWriteByte (outfile, C_PF_CR_ENCLOSING);
 	       break;
 	    case FnColumn:
-	       BIOwriteByte (outfile, C_PF_COLUMN);
+	       TtaWriteByte (outfile, C_PF_COLUMN);
 	       break;
 	    case FnSubColumn:
-	       BIOwriteByte (outfile, C_PF_SUBCOLUMN);
+	       TtaWriteByte (outfile, C_PF_SUBCOLUMN);
 	       break;
 	    case FnCopy:
-	       BIOwriteByte (outfile, C_PF_COPY);
+	       TtaWriteByte (outfile, C_PF_COPY);
 	       break;
 	    case FnContentRef:
-	       BIOwriteByte (outfile, C_PF_REF_CONTENT);
+	       TtaWriteByte (outfile, C_PF_REF_CONTENT);
 	       break;
 	    case FnNoLine:
-	       BIOwriteByte (outfile, C_PF_NOLINE);
+	       TtaWriteByte (outfile, C_PF_NOLINE);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid function %X\n", functType);
@@ -394,16 +394,16 @@ BAlignment          align;
    switch (align)
 	 {
 	    case AlignLeft:
-	       BIOwriteByte (outfile, C_PIV_LEFT);
+	       TtaWriteByte (outfile, C_PIV_LEFT);
 	       break;
 	    case AlignRight:
-	       BIOwriteByte (outfile, C_PIV_RIGHT);
+	       TtaWriteByte (outfile, C_PIV_RIGHT);
 	       break;
 	    case AlignCenter:
-	       BIOwriteByte (outfile, C_PIV_CENTERED);
+	       TtaWriteByte (outfile, C_PIV_CENTERED);
 	       break;
 	    case AlignLeftDots:
-	       BIOwriteByte (outfile, C_PIV_LEFTDOT);
+	       TtaWriteByte (outfile, C_PIV_LEFTDOT);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid alignment %X\n", align);
@@ -426,76 +426,76 @@ PresCondition       cond;
    switch (cond)
 	 {
 	    case PcFirst:
-	       BIOwriteByte (outfile, C_COND_FIRST);
+	       TtaWriteByte (outfile, C_COND_FIRST);
 	       break;
 	    case PcLast:
-	       BIOwriteByte (outfile, C_COND_LAST);
+	       TtaWriteByte (outfile, C_COND_LAST);
 	       break;
 	    case PcReferred:
-	       BIOwriteByte (outfile, C_COND_REFERRED);
+	       TtaWriteByte (outfile, C_COND_REFERRED);
 	       break;
 	    case PcFirstRef:
-	       BIOwriteByte (outfile, C_COND_FIRSTREF);
+	       TtaWriteByte (outfile, C_COND_FIRSTREF);
 	       break;
 	    case PcLastRef:
-	       BIOwriteByte (outfile, C_COND_LASTREF);
+	       TtaWriteByte (outfile, C_COND_LASTREF);
 	       break;
 	    case PcExternalRef:
-	       BIOwriteByte (outfile, C_COND_EXTREF);
+	       TtaWriteByte (outfile, C_COND_EXTREF);
 	       break;
 	    case PcInternalRef:
-	       BIOwriteByte (outfile, C_COND_INTREF);
+	       TtaWriteByte (outfile, C_COND_INTREF);
 	       break;
 	    case PcCopyRef:
-	       BIOwriteByte (outfile, C_COND_COPYREF);
+	       TtaWriteByte (outfile, C_COND_COPYREF);
 	       break;
 	    case PcAnyAttributes:
-	       BIOwriteByte (outfile, C_COND_ATTR);
+	       TtaWriteByte (outfile, C_COND_ATTR);
 	       break;
 	    case PcFirstAttr:
-	       BIOwriteByte (outfile, C_COND_FIRST_ATTR);
+	       TtaWriteByte (outfile, C_COND_FIRST_ATTR);
 	       break;
 	    case PcLastAttr:
-	       BIOwriteByte (outfile, C_COND_LAST_ATTR);
+	       TtaWriteByte (outfile, C_COND_LAST_ATTR);
 	       break;
 	    case PcUserPage:
-	       BIOwriteByte (outfile, C_COND_USERPAGE);
+	       TtaWriteByte (outfile, C_COND_USERPAGE);
 	       break;
 	    case PcStartPage:
-	       BIOwriteByte (outfile, C_COND_STARTPAGE);
+	       TtaWriteByte (outfile, C_COND_STARTPAGE);
 	       break;
 	    case PcComputedPage:
-	       BIOwriteByte (outfile, C_COND_COMPPAGE);
+	       TtaWriteByte (outfile, C_COND_COMPPAGE);
 	       break;
 	    case PcEmpty:
-	       BIOwriteByte (outfile, C_COND_EMPTY);
+	       TtaWriteByte (outfile, C_COND_EMPTY);
 	       break;
 	    case PcEven:
-	       BIOwriteByte (outfile, C_COND_EVEN);
+	       TtaWriteByte (outfile, C_COND_EVEN);
 	       break;
 	    case PcOdd:
-	       BIOwriteByte (outfile, C_COND_ODD);
+	       TtaWriteByte (outfile, C_COND_ODD);
 	       break;
 	    case PcOne:
-	       BIOwriteByte (outfile, C_COND_ONE);
+	       TtaWriteByte (outfile, C_COND_ONE);
 	       break;
 	    case PcInterval:
-	       BIOwriteByte (outfile, C_COND_INTER);
+	       TtaWriteByte (outfile, C_COND_INTER);
 	       break;
 	    case PcWithin:
-	       BIOwriteByte (outfile, C_COND_ANCEST);
+	       TtaWriteByte (outfile, C_COND_ANCEST);
 	       break;
 	    case PcElemType:
-	       BIOwriteByte (outfile, C_COND_ELEM);
+	       TtaWriteByte (outfile, C_COND_ELEM);
 	       break;
 	    case PcAttribute:
-	       BIOwriteByte (outfile, C_COND_HAS_ATTR);
+	       TtaWriteByte (outfile, C_COND_HAS_ATTR);
 	       break;
 	    case PcNoCondition:
-	       BIOwriteByte (outfile, C_COND_NOCOND);
+	       TtaWriteByte (outfile, C_COND_NOCOND);
 	       break;
 	    case PcDefaultCond:
-	       BIOwriteByte (outfile, C_COND_DEFAULT);
+	       TtaWriteByte (outfile, C_COND_DEFAULT);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid condition %X\n", cond);
@@ -518,13 +518,13 @@ CounterValue        val;
    switch (val)
 	 {
 	    case CntMaxVal:
-	       BIOwriteByte (outfile, C_VAL_MAX);
+	       TtaWriteByte (outfile, C_VAL_MAX);
 	       break;
 	    case CntMinVal:
-	       BIOwriteByte (outfile, C_VAL_MIN);
+	       TtaWriteByte (outfile, C_VAL_MIN);
 	       break;
 	    case CntCurVal:
-	       BIOwriteByte (outfile, C_VAL_CUR);
+	       TtaWriteByte (outfile, C_VAL_CUR);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid counter cond. %X\n", val);
@@ -547,13 +547,13 @@ ArithRel            rel;
    switch (rel)
 	 {
 	    case CondGreater:
-	       BIOwriteByte (outfile, C_WITHIN_GT);
+	       TtaWriteByte (outfile, C_WITHIN_GT);
 	       break;
 	    case CondLess:
-	       BIOwriteByte (outfile, C_WITHIN_LT);
+	       TtaWriteByte (outfile, C_WITHIN_LT);
 	       break;
 	    case CondEquals:
-	       BIOwriteByte (outfile, C_WITHIN_EQ);
+	       TtaWriteByte (outfile, C_WITHIN_EQ);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid relationship %X\n", rel);
@@ -575,31 +575,31 @@ BoxEdge             edge;
    switch (edge)
 	 {
 	    case Top:
-	       BIOwriteByte (outfile, C_AX_TOP);
+	       TtaWriteByte (outfile, C_AX_TOP);
 	       break;
 	    case Bottom:
-	       BIOwriteByte (outfile, C_AX_BOTTOM);
+	       TtaWriteByte (outfile, C_AX_BOTTOM);
 	       break;
 	    case Left:
-	       BIOwriteByte (outfile, C_AX_LEFT);
+	       TtaWriteByte (outfile, C_AX_LEFT);
 	       break;
 	    case Right:
-	       BIOwriteByte (outfile, C_AX_RIGHT);
+	       TtaWriteByte (outfile, C_AX_RIGHT);
 	       break;
 	    case HorizRef:
-	       BIOwriteByte (outfile, C_AX_HREF);
+	       TtaWriteByte (outfile, C_AX_HREF);
 	       break;
 	    case VertRef:
-	       BIOwriteByte (outfile, C_AX_VREF);
+	       TtaWriteByte (outfile, C_AX_VREF);
 	       break;
 	    case HorizMiddle:
-	       BIOwriteByte (outfile, C_AX_HMIDDLE);
+	       TtaWriteByte (outfile, C_AX_HMIDDLE);
 	       break;
 	    case VertMiddle:
-	       BIOwriteByte (outfile, C_AX_VMIDDLE);
+	       TtaWriteByte (outfile, C_AX_VMIDDLE);
 	       break;
 	    case NoEdge:
-	       BIOwriteByte (outfile, C_AX_NULL);
+	       TtaWriteByte (outfile, C_AX_NULL);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid side %X\n", edge);
@@ -622,34 +622,34 @@ Level               level;
    switch (level)
 	 {
 	    case RlEnclosing:
-	       BIOwriteByte (outfile, C_PARENT);
+	       TtaWriteByte (outfile, C_PARENT);
 	       break;
 	    case RlSameLevel:
-	       BIOwriteByte (outfile, C_SAME_LEVEL);
+	       TtaWriteByte (outfile, C_SAME_LEVEL);
 	       break;
 	    case RlEnclosed:
-	       BIOwriteByte (outfile, C_CHILD);
+	       TtaWriteByte (outfile, C_CHILD);
 	       break;
 	    case RlPrevious:
-	       BIOwriteByte (outfile, C_PREVIOUS);
+	       TtaWriteByte (outfile, C_PREVIOUS);
 	       break;
 	    case RlNext:
-	       BIOwriteByte (outfile, C_NEXT);
+	       TtaWriteByte (outfile, C_NEXT);
 	       break;
 	    case RlSelf:
-	       BIOwriteByte (outfile, C_SELF);
+	       TtaWriteByte (outfile, C_SELF);
 	       break;
 	    case RlContainsRef:
-	       BIOwriteByte (outfile, C_CONTAINS_REF);
+	       TtaWriteByte (outfile, C_CONTAINS_REF);
 	       break;
 	    case RlRoot:
-	       BIOwriteByte (outfile, C_ROOT);
+	       TtaWriteByte (outfile, C_ROOT);
 	       break;
 	    case RlReferred:
-	       BIOwriteByte (outfile, C_REFERRED);
+	       TtaWriteByte (outfile, C_REFERRED);
 	       break;
 	    case RlCreator:
-	       BIOwriteByte (outfile, C_CREATOR);
+	       TtaWriteByte (outfile, C_CREATOR);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid level %X\n", level);
@@ -672,16 +672,16 @@ CounterOp           op;
    switch (op)
 	 {
 	    case CntrSet:
-	       BIOwriteByte (outfile, C_CNT_SET);
+	       TtaWriteByte (outfile, C_CNT_SET);
 	       break;
 	    case CntrAdd:
-	       BIOwriteByte (outfile, C_CNT_ADD);
+	       TtaWriteByte (outfile, C_CNT_ADD);
 	       break;
 	    case CntrRank:
-	       BIOwriteByte (outfile, C_CNT_RANK);
+	       TtaWriteByte (outfile, C_CNT_RANK);
 	       break;
 	    case CntrRLevel:
-	       BIOwriteByte (outfile, C_CNT_RLEVEL);
+	       TtaWriteByte (outfile, C_CNT_RLEVEL);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid operator %X\n", op);
@@ -704,22 +704,22 @@ BasicType           typ;
    switch (typ)
 	 {
 	    case CharString:
-	       BIOwriteByte (outfile, C_CHAR_STRING);
+	       TtaWriteByte (outfile, C_CHAR_STRING);
 	       break;
 	    case GraphicElem:
-	       BIOwriteByte (outfile, C_GRAPHICS);
+	       TtaWriteByte (outfile, C_GRAPHICS);
 	       break;
 	    case Symbol:
-	       BIOwriteByte (outfile, C_SYMBOL);
+	       TtaWriteByte (outfile, C_SYMBOL);
 	       break;
 	    case Picture:
-	       BIOwriteByte (outfile, C_PICTURE);
+	       TtaWriteByte (outfile, C_PICTURE);
 	       break;
 	    case Refer:
-	       BIOwriteByte (outfile, C_REFER);
+	       TtaWriteByte (outfile, C_REFER);
 	       break;
 	    case PageBreak:
-	       BIOwriteByte (outfile, C_PAGE_BREAK);
+	       TtaWriteByte (outfile, C_PAGE_BREAK);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid type %X\n", typ);
@@ -742,34 +742,34 @@ VariableType        typ;
    switch (typ)
 	 {
 	    case VarText:
-	       BIOwriteByte (outfile, C_VAR_TEXT);
+	       TtaWriteByte (outfile, C_VAR_TEXT);
 	       break;
 	    case VarCounter:
-	       BIOwriteByte (outfile, C_VAR_COUNTER);
+	       TtaWriteByte (outfile, C_VAR_COUNTER);
 	       break;
 	    case VarAttrValue:
-	       BIOwriteByte (outfile, C_VAR_ATTR_VAL);
+	       TtaWriteByte (outfile, C_VAR_ATTR_VAL);
 	       break;
 	    case VarDate:
-	       BIOwriteByte (outfile, C_VAR_DATE);
+	       TtaWriteByte (outfile, C_VAR_DATE);
 	       break;
 	    case VarFDate:
-	       BIOwriteByte (outfile, C_VAR_FDATE);
+	       TtaWriteByte (outfile, C_VAR_FDATE);
 	       break;
 	    case VarDirName:
-	       BIOwriteByte (outfile, C_VAR_DIRNAME);
+	       TtaWriteByte (outfile, C_VAR_DIRNAME);
 	       break;
 	    case VarDocName:
-	       BIOwriteByte (outfile, C_VAR_DOCNAME);
+	       TtaWriteByte (outfile, C_VAR_DOCNAME);
 	       break;
 	    case VarElemName:
-	       BIOwriteByte (outfile, C_VAR_ELEMNAME);
+	       TtaWriteByte (outfile, C_VAR_ELEMNAME);
 	       break;
 	    case VarAttrName:
-	       BIOwriteByte (outfile, C_VAR_ATTRNAME);
+	       TtaWriteByte (outfile, C_VAR_ATTRNAME);
 	       break;
 	    case VarPageNumber:
-	       BIOwriteByte (outfile, C_VAR_PAGENUMBER);
+	       TtaWriteByte (outfile, C_VAR_PAGENUMBER);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid variable %X\n", typ);
@@ -792,19 +792,19 @@ CounterStyle        style;
    switch (style)
 	 {
 	    case CntArabic:
-	       BIOwriteByte (outfile, C_NUM_ARABIC);
+	       TtaWriteByte (outfile, C_NUM_ARABIC);
 	       break;
 	    case CntURoman:
-	       BIOwriteByte (outfile, C_NUM_ROMAN);
+	       TtaWriteByte (outfile, C_NUM_ROMAN);
 	       break;
 	    case CntLRoman:
-	       BIOwriteByte (outfile, C_NUM_LOWER_ROMAN);
+	       TtaWriteByte (outfile, C_NUM_LOWER_ROMAN);
 	       break;
 	    case CntUppercase:
-	       BIOwriteByte (outfile, C_NUM_UPPERCASE);
+	       TtaWriteByte (outfile, C_NUM_UPPERCASE);
 	       break;
 	    case CntLowercase:
-	       BIOwriteByte (outfile, C_NUM_LOWERCASE);
+	       TtaWriteByte (outfile, C_NUM_LOWERCASE);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid style %X\n", style);
@@ -827,16 +827,16 @@ ContentType         typ;
    switch (typ)
 	 {
 	    case FreeContent:
-	       BIOwriteByte (outfile, C_CONT_FREE);
+	       TtaWriteByte (outfile, C_CONT_FREE);
 	       break;
 	    case ContVariable:
-	       BIOwriteByte (outfile, C_CONT_VAR);
+	       TtaWriteByte (outfile, C_CONT_VAR);
 	       break;
 	    case ContConst:
-	       BIOwriteByte (outfile, C_CONT_CONST);
+	       TtaWriteByte (outfile, C_CONT_CONST);
 	       break;
 	    case ContElement:
-	       BIOwriteByte (outfile, C_CONT_ELEM);
+	       TtaWriteByte (outfile, C_CONT_ELEM);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid content %X\n", typ);
@@ -859,10 +859,10 @@ AttrComparType      typ;
    switch (typ)
 	 {
 	    case ComparConstant:
-	       BIOwriteByte (outfile, C_COMP_CONST);
+	       TtaWriteByte (outfile, C_COMP_CONST);
 	       break;
 	    case ComparAttr:
-	       BIOwriteByte (outfile, C_COMP_ATTR);
+	       TtaWriteByte (outfile, C_COMP_ATTR);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid comparison %X\n", typ);
@@ -1004,7 +1004,7 @@ PtrPRule            pPRule;
 			     case PtUnderline:
 			     case PtThickness:
 			     case PtLineStyle:
-				BIOwriteByte (outfile, currentRule->PrChrValue);
+				TtaWriteByte (outfile, currentRule->PrChrValue);
 				break;
 			     case PtBreak1:
 			     case PtBreak2:
@@ -1095,7 +1095,7 @@ PtrSSchema          pSS;
    int                 i, j, k;
 
    /* cree le fichier */
-   outfile = BIOwriteOpen (fileName);
+   outfile = TtaWriteOpen (fileName);
    if (outfile == 0)
       /* echec */
       return False;
@@ -1177,10 +1177,10 @@ PtrSSchema          pSS;
      {
 	pConst = &pPSch->PsConstant[i];
 	WriteBasicType (pConst->PdType);
-	BIOwriteByte (outfile, pConst->PdAlphabet);
+	TtaWriteByte (outfile, pConst->PdAlphabet);
 	j = 0;
 	do
-	   BIOwriteByte (outfile, pConst->PdString[j++]);
+	   TtaWriteByte (outfile, pConst->PdString[j++]);
 	while (pConst->PdString[j - 1] != '\0');
      }
 
@@ -1371,6 +1371,6 @@ PtrSSchema          pSS;
 	WriteShort (pPSch->PsTransmElem[i].TeTargetDoc);
 	WriteName (pPSch->PsTransmElem[i].TeTargetAttr);
      }
-   BIOwriteClose (outfile);
+   TtaWriteClose (outfile);
    return True;
 }

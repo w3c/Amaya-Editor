@@ -259,7 +259,7 @@ char               *txt;
 			       strcat (ptTranslatedName, SaveFileName);
 			       if (TraductionSchemaName[0] == '\0')
 				  strcat (ptTranslatedName, ".PIV");
-			       if (ThotFile_exist (ptTranslatedName))
+			       if (TtaFileExist (ptTranslatedName))
 				 {
 				    /* demande confirmation */
 				    sprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), ptTranslatedName);

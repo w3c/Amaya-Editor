@@ -11,7 +11,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "application.h"
 #include "document.h"
 #include "tree.h"

@@ -664,7 +664,7 @@ int                 status;
 				 HT_ERROR);
 	if (me->outputfile && me->outputfile[0] != EOS)
 	  {
-	     RemoveFile (me->outputfile);
+	     TtaFileUnlink (me->outputfile);
 	     me->outputfile[0] = EOS;
 	  }
      }
@@ -677,7 +677,7 @@ int                 status;
 
 	if (me->outputfile && me->outputfile[0] != EOS)
 	  {
-	     RemoveFile (me->outputfile);
+	     TtaFileUnlink (me->outputfile);
 	     me->outputfile[0] = EOS;
 	  }
      }
@@ -691,7 +691,7 @@ int                 status;
 
 	if (me->outputfile && me->outputfile[0] != EOS)
 	  {
-	     RemoveFile (me->outputfile);
+	     TtaFileUnlink (me->outputfile);
 	     me->outputfile[0] = EOS;
 	     me->reqStatus = HT_ERR;
 	  }
@@ -1388,9 +1388,9 @@ BOOL                error_html;
 	return HT_ERROR;
      }
    /* verify if that file name existed */
-   if (ThotFile_exist (outputfile))
+   if (TtaFileExist (outputfile))
      {
-	RemoveFile (outputfile);
+	TtaFileUnlink (outputfile);
      }
 
    /* try to open the outputfile */
@@ -1638,7 +1638,7 @@ void               *context_tcbf;
    unsigned long       block_size;
 
    if (urlName == NULL || docid == 0 || fileName == NULL ||
-       !ThotFile_exist (fileName))
+       !TtaFileExist (fileName))
       /* no file to be uploaded */
       return HT_ERROR;
 

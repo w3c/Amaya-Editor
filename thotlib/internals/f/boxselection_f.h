@@ -17,7 +17,7 @@ extern void UpdateViewSelMarks ( int frame,
                                  int charDelta );
 extern PtrTextBuffer DeleteBuffer ( PtrTextBuffer pBuffer,
                                     int frame );
-extern void ComputeViewSelMarks ( ViewSelection *selMark );
+extern void ComputeViewSelMarks ( ViewSelection * selMark );
 extern void InsertViewSelMarks ( int frame,
                                  PtrAbstractBox pAb,
                                  int firstChar,
@@ -41,7 +41,7 @@ extern void UpdateViewSelMarks (/* int frame,
                                    int charDelta */);
 extern PtrTextBuffer DeleteBuffer (/* PtrTextBuffer pBuffer,
                                       int frame */);
-extern void ComputeViewSelMarks (/* ViewSelection *selMark */);
+extern void ComputeViewSelMarks (/* ViewSelection * selMark */);
 extern void InsertViewSelMarks (/* int frame,
                                    PtrAbstractBox pAb,
                                    int firstChar,

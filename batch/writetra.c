@@ -12,7 +12,7 @@
 #include "consttra.h"
 #include "typemedia.h"
 #include "typetra.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #define EXPORT extern
 static BinFile      outfile;
@@ -31,8 +31,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   BIOwriteByte (outfile, (char) (n / 256));
-   BIOwriteByte (outfile, (char) (n % 256));
+   TtaWriteByte (outfile, (char) (n / 256));
+   TtaWriteByte (outfile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------
@@ -72,7 +72,7 @@ Name                n;
 
    i = 0;
    do
-      BIOwriteByte (outfile, n[i++]);
+      TtaWriteByte (outfile, n[i++]);
    while (n[i - 1] != '\0');
 }
 
@@ -93,9 +93,9 @@ boolean             b;
 {
 
    if (b)
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
    else
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
 }
 
 
@@ -118,71 +118,71 @@ TransCondition      cond;
    switch (cond)
 	 {
 	    case TcondFirst:
-	       BIOwriteByte (outfile, C_TR_FIRST);
+	       TtaWriteByte (outfile, C_TR_FIRST);
 	       break;
 	    case TcondLast:
-	       BIOwriteByte (outfile, C_TR_LAST);
+	       TtaWriteByte (outfile, C_TR_LAST);
 	       break;
 	    case TcondDefined:
-	       BIOwriteByte (outfile, C_TR_DEFINED);
+	       TtaWriteByte (outfile, C_TR_DEFINED);
 	       break;
 	    case TcondReferred:
-	       BIOwriteByte (outfile, C_TR_REFERRED);
+	       TtaWriteByte (outfile, C_TR_REFERRED);
 	       break;
 	    case TcondFirstRef:
-	       BIOwriteByte (outfile, C_TR_FIRSTREF);
+	       TtaWriteByte (outfile, C_TR_FIRSTREF);
 	       break;
 	    case TcondLastRef:
-	       BIOwriteByte (outfile, C_TR_LAST_REF);
+	       TtaWriteByte (outfile, C_TR_LAST_REF);
 	       break;
 	    case TcondWithin:
-	       BIOwriteByte (outfile, C_TR_WITHIN);
+	       TtaWriteByte (outfile, C_TR_WITHIN);
 	       break;
 	    case TcondFirstWithin:
-	       BIOwriteByte (outfile, C_TR_FIRST_WITHIN);
+	       TtaWriteByte (outfile, C_TR_FIRST_WITHIN);
 	       break;
 	    case TcondAttr:
-	       BIOwriteByte (outfile, C_TR_ATTRIBUTE);
+	       TtaWriteByte (outfile, C_TR_ATTRIBUTE);
 	       break;
 	    case TcondPresentation:
-	       BIOwriteByte (outfile, C_TR_PRESENT);
+	       TtaWriteByte (outfile, C_TR_PRESENT);
 	       break;
 	    case TcondPRule:
-	       BIOwriteByte (outfile, C_TR_PRULE);
+	       TtaWriteByte (outfile, C_TR_PRULE);
 	       break;
 	    case TcondComment:
-	       BIOwriteByte (outfile, C_TR_COMMENT);
+	       TtaWriteByte (outfile, C_TR_COMMENT);
 	       break;
 	    case TcondAlphabet:
-	       BIOwriteByte (outfile, C_TR_ALPHABET);
+	       TtaWriteByte (outfile, C_TR_ALPHABET);
 	       break;
 	    case TcondAttributes:
-	       BIOwriteByte (outfile, C_TR_ATTRIBUTES);
+	       TtaWriteByte (outfile, C_TR_ATTRIBUTES);
 	       break;
 	    case TcondFirstAttr:
-	       BIOwriteByte (outfile, C_TR_FIRSTATTR);
+	       TtaWriteByte (outfile, C_TR_FIRSTATTR);
 	       break;
 	    case TcondLastAttr:
-	       BIOwriteByte (outfile, C_TR_LASTATTR);
+	       TtaWriteByte (outfile, C_TR_LASTATTR);
 	       break;
 	    case TcondComputedPage:
-	       BIOwriteByte (outfile, C_TR_COMPUTEDPAGE);
+	       TtaWriteByte (outfile, C_TR_COMPUTEDPAGE);
 	       break;
 	    case TcondStartPage:
-	       BIOwriteByte (outfile, C_TR_STARTPAGE);
+	       TtaWriteByte (outfile, C_TR_STARTPAGE);
 	       break;
 	    case TcondUserPage:
-	       BIOwriteByte (outfile, C_TR_USERPAGE);
+	       TtaWriteByte (outfile, C_TR_USERPAGE);
 	       break;
 	    case TcondReminderPage:
-	       BIOwriteByte (outfile, C_TR_REMINDERPAGE);
+	       TtaWriteByte (outfile, C_TR_REMINDERPAGE);
 
 	       break;
 	    case TcondEmpty:
-	       BIOwriteByte (outfile, C_TR_EMPTY);
+	       TtaWriteByte (outfile, C_TR_EMPTY);
 	       break;
 	    case TcondExternalRef:
-	       BIOwriteByte (outfile, C_TR_EXTERNALREF);
+	       TtaWriteByte (outfile, C_TR_EXTERNALREF);
 	       break;
 	 }
 }
@@ -205,13 +205,13 @@ RelatNAscend        rel;
    switch (rel)
 	 {
 	    case RelGreater:
-	       BIOwriteByte (outfile, C_WITHIN_GT);
+	       TtaWriteByte (outfile, C_WITHIN_GT);
 	       break;
 	    case RelLess:
-	       BIOwriteByte (outfile, C_WITHIN_LT);
+	       TtaWriteByte (outfile, C_WITHIN_LT);
 	       break;
 	    case RelEquals:
-	       BIOwriteByte (outfile, C_WITHIN_EQ);
+	       TtaWriteByte (outfile, C_WITHIN_EQ);
 	       break;
 	 }
 }
@@ -235,43 +235,43 @@ TRuleType           typ;
    switch (typ)
 	 {
 	    case TCreate:
-	       BIOwriteByte (outfile, C_TR_CREATE);
+	       TtaWriteByte (outfile, C_TR_CREATE);
 	       break;
 	    case TGet:
-	       BIOwriteByte (outfile, C_TR_GET);
+	       TtaWriteByte (outfile, C_TR_GET);
 	       break;
 	    case TUse:
-	       BIOwriteByte (outfile, C_TR_USE);
+	       TtaWriteByte (outfile, C_TR_USE);
 	       break;
 	    case TRemove:
-	       BIOwriteByte (outfile, C_TR_REMOVE);
+	       TtaWriteByte (outfile, C_TR_REMOVE);
 	       break;
 	    case TWrite:
-	       BIOwriteByte (outfile, C_TR_WRITE);
+	       TtaWriteByte (outfile, C_TR_WRITE);
 	       break;
 	    case TRead:
-	       BIOwriteByte (outfile, C_TR_READ);
+	       TtaWriteByte (outfile, C_TR_READ);
 	       break;
 	    case TInclude:
-	       BIOwriteByte (outfile, C_TR_INCLUDE);
+	       TtaWriteByte (outfile, C_TR_INCLUDE);
 	       break;
 	    case TNoTranslation:
-	       BIOwriteByte (outfile, C_TR_NOTRANSL);
+	       TtaWriteByte (outfile, C_TR_NOTRANSL);
 	       break;
 	    case TNoLineBreak:
-	       BIOwriteByte (outfile, C_TR_NOLINEBREAK);
+	       TtaWriteByte (outfile, C_TR_NOLINEBREAK);
 	       break;
 	    case TCopy:
-	       BIOwriteByte (outfile, C_TR_COPY);
+	       TtaWriteByte (outfile, C_TR_COPY);
 	       break;
 	    case TChangeMainFile:
-	       BIOwriteByte (outfile, C_TR_CHANGEFILE);
+	       TtaWriteByte (outfile, C_TR_CHANGEFILE);
 	       break;
 	    case TSetCounter:
-	       BIOwriteByte (outfile, C_TR_SET_COUNTER);
+	       TtaWriteByte (outfile, C_TR_SET_COUNTER);
 	       break;
 	    case TAddCounter:
-	       BIOwriteByte (outfile, C_TR_ADD_COUNTER);
+	       TtaWriteByte (outfile, C_TR_ADD_COUNTER);
 	       break;
 	 }
 
@@ -297,10 +297,10 @@ TOrder              order;
    switch (order)
 	 {
 	    case TAfter:
-	       BIOwriteByte (outfile, C_TR_AFTER);
+	       TtaWriteByte (outfile, C_TR_AFTER);
 	       break;
 	    case TBefore:
-	       BIOwriteByte (outfile, C_TR_BEFORE);
+	       TtaWriteByte (outfile, C_TR_BEFORE);
 	       break;
 	 }
 
@@ -325,64 +325,64 @@ CreatedObject       obj;
    switch (obj)
 	 {
 	    case ToConst:
-	       BIOwriteByte (outfile, C_OB_CONST);
+	       TtaWriteByte (outfile, C_OB_CONST);
 	       break;
 	    case ToBuffer:
-	       BIOwriteByte (outfile, C_OB_BUFFER);
+	       TtaWriteByte (outfile, C_OB_BUFFER);
 	       break;
 	    case ToVariable:
-	       BIOwriteByte (outfile, C_OB_VAR);
+	       TtaWriteByte (outfile, C_OB_VAR);
 	       break;
 	    case ToAttr:
-	       BIOwriteByte (outfile, C_OB_ATTR);
+	       TtaWriteByte (outfile, C_OB_ATTR);
 	       break;
 	    case ToContent:
-	       BIOwriteByte (outfile, C_OB_CONTENT);
+	       TtaWriteByte (outfile, C_OB_CONTENT);
 	       break;
 	    case ToComment:
-	       BIOwriteByte (outfile, C_OB_COMMENT);
+	       TtaWriteByte (outfile, C_OB_COMMENT);
 	       break;
 	    case ToAllAttr:
-	       BIOwriteByte (outfile, C_OB_ATTRIBUTES);
+	       TtaWriteByte (outfile, C_OB_ATTRIBUTES);
 	       break;
 	    case ToPRuleValue:
-	       BIOwriteByte (outfile, C_OB_PRES_VAL);
+	       TtaWriteByte (outfile, C_OB_PRES_VAL);
 	       break;
 	    case ToAllPRules:
-	       BIOwriteByte (outfile, C_OB_PRESENTATION);
+	       TtaWriteByte (outfile, C_OB_PRESENTATION);
 	       break;
 	    case ToRefId:
-	       BIOwriteByte (outfile, C_OB_REFID);
+	       TtaWriteByte (outfile, C_OB_REFID);
 	       break;
 	    case ToPairId:
-	       BIOwriteByte (outfile, C_OB_PAIRID);
+	       TtaWriteByte (outfile, C_OB_PAIRID);
 	       break;
 	    case ToReferredElem:
-	       BIOwriteByte (outfile, C_OB_REFERRED_ELEM);
+	       TtaWriteByte (outfile, C_OB_REFERRED_ELEM);
 	       break;
 	    case ToFileDir:
-	       BIOwriteByte (outfile, C_OB_FILEDIR);
+	       TtaWriteByte (outfile, C_OB_FILEDIR);
 	       break;
 	    case ToFileName:
-	       BIOwriteByte (outfile, C_OB_FILENAME);
+	       TtaWriteByte (outfile, C_OB_FILENAME);
 	       break;
 	    case ToExtension:
-	       BIOwriteByte (outfile, C_OB_EXTENSION);
+	       TtaWriteByte (outfile, C_OB_EXTENSION);
 	       break;
 	    case ToDocumentName:
-	       BIOwriteByte (outfile, C_OB_DOCUMENTNAME);
+	       TtaWriteByte (outfile, C_OB_DOCUMENTNAME);
 	       break;
 	    case ToDocumentDir:
-	       BIOwriteByte (outfile, C_OB_DOCUMENTDIR);
+	       TtaWriteByte (outfile, C_OB_DOCUMENTDIR);
 	       break;
 	    case ToReferredDocumentName:
-	       BIOwriteByte (outfile, C_OB_REFERRED_DOCNAME);
+	       TtaWriteByte (outfile, C_OB_REFERRED_DOCNAME);
 	       break;
 	    case ToReferredDocumentDir:
-	       BIOwriteByte (outfile, C_OB_REFERRED_DOCDIR);
+	       TtaWriteByte (outfile, C_OB_REFERRED_DOCDIR);
 	       break;
 	    case ToReferredRefId:
-	       BIOwriteByte (outfile, C_OB_REFERRED_REFID);
+	       TtaWriteByte (outfile, C_OB_REFERRED_REFID);
 	       break;
 	 }
 
@@ -407,16 +407,16 @@ TRelatPosition      pos;
    switch (pos)
 	 {
 	    case RpSibling:
-	       BIOwriteByte (outfile, C_TR_SIBLING);
+	       TtaWriteByte (outfile, C_TR_SIBLING);
 	       break;
 	    case RpDescend:
-	       BIOwriteByte (outfile, C_TR_DESCEND);
+	       TtaWriteByte (outfile, C_TR_DESCEND);
 	       break;
 	    case RpReferred:
-	       BIOwriteByte (outfile, C_TR_REFERRED_EL);
+	       TtaWriteByte (outfile, C_TR_REFERRED_EL);
 	       break;
 	    case RpAssoc:
-	       BIOwriteByte (outfile, C_TR_ASSOC);
+	       TtaWriteByte (outfile, C_TR_ASSOC);
 	       break;
 	 }
 
@@ -441,16 +441,16 @@ TCounterOp          op;
    switch (op)
 	 {
 	    case TCntrRank:
-	       BIOwriteByte (outfile, C_TR_RANK);
+	       TtaWriteByte (outfile, C_TR_RANK);
 	       break;
 	    case TCntrRLevel:
-	       BIOwriteByte (outfile, C_TR_RLEVEL);
+	       TtaWriteByte (outfile, C_TR_RLEVEL);
 	       break;
 	    case TCntrSet:
-	       BIOwriteByte (outfile, C_TR_SET);
+	       TtaWriteByte (outfile, C_TR_SET);
 	       break;
 	    case TCntrNoOp:
-	       BIOwriteByte (outfile, C_TR_NOOP);
+	       TtaWriteByte (outfile, C_TR_NOOP);
 	       break;
 	 }
 
@@ -474,31 +474,31 @@ TranslVarType       typ;
    switch (typ)
 	 {
 	    case VtText:
-	       BIOwriteByte (outfile, C_TR_CONST);
+	       TtaWriteByte (outfile, C_TR_CONST);
 	       break;
 	    case VtCounter:
-	       BIOwriteByte (outfile, C_TR_COUNTER);
+	       TtaWriteByte (outfile, C_TR_COUNTER);
 	       break;
 	    case VtBuffer:
-	       BIOwriteByte (outfile, C_TR_BUFFER);
+	       TtaWriteByte (outfile, C_TR_BUFFER);
 	       break;
 	    case VtAttrVal:
-	       BIOwriteByte (outfile, C_TR_ATTR);
+	       TtaWriteByte (outfile, C_TR_ATTR);
 	       break;
 	    case VtFileDir:
-	       BIOwriteByte (outfile, C_TR_FILEDIR);
+	       TtaWriteByte (outfile, C_TR_FILEDIR);
 	       break;
 	    case VtFileName:
-	       BIOwriteByte (outfile, C_TR_FILENAME);
+	       TtaWriteByte (outfile, C_TR_FILENAME);
 	       break;
 	    case VtExtension:
-	       BIOwriteByte (outfile, C_TR_EXTENSION);
+	       TtaWriteByte (outfile, C_TR_EXTENSION);
 	       break;
 	    case VtDocumentName:
-	       BIOwriteByte (outfile, C_TR_DOCUMENTNAME);
+	       TtaWriteByte (outfile, C_TR_DOCUMENTNAME);
 	       break;
 	    case VtDocumentDir:
-	       BIOwriteByte (outfile, C_TR_DOCUMENTDIR);
+	       TtaWriteByte (outfile, C_TR_DOCUMENTDIR);
 	       break;
 	 }
 }
@@ -521,19 +521,19 @@ CounterStyle        style;
    switch (style)
 	 {
 	    case CntArabic:
-	       BIOwriteByte (outfile, C_NUM_ARABIC);
+	       TtaWriteByte (outfile, C_NUM_ARABIC);
 	       break;
 	    case CntURoman:
-	       BIOwriteByte (outfile, C_NUM_ROMAN);
+	       TtaWriteByte (outfile, C_NUM_ROMAN);
 	       break;
 	    case CntLRoman:
-	       BIOwriteByte (outfile, C_NUM_LOWER_ROMAN);
+	       TtaWriteByte (outfile, C_NUM_LOWER_ROMAN);
 	       break;
 	    case CntUppercase:
-	       BIOwriteByte (outfile, C_NUM_UPPERCASE);
+	       TtaWriteByte (outfile, C_NUM_UPPERCASE);
 	       break;
 	    case CntLowercase:
-	       BIOwriteByte (outfile, C_NUM_LOWERCASE);
+	       TtaWriteByte (outfile, C_NUM_LOWERCASE);
 	       break;
 	 }
 
@@ -553,9 +553,9 @@ PtrTRule            ptr;
 
 {
    if (ptr == NULL)
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
    else
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
 }
 
 
@@ -646,9 +646,9 @@ PtrTRuleBlock       pBlock;
 {
 
    if (pBlock == NULL)
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
    else
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
 }
 
 
@@ -689,7 +689,7 @@ PtrSSchema          pSS;
 	     switch (pCond->TcCondition)
 		   {
 		      case TcondAlphabet:
-			 BIOwriteByte (outfile, pCond->TcAlphabet);
+			 TtaWriteByte (outfile, pCond->TcAlphabet);
 			 break;
 		      case TcondWithin:
 		      case TcondFirstWithin:
@@ -735,7 +735,7 @@ PtrSSchema          pSS;
 			      WriteSignedShort (pCond->TcUpperBound);
 			   }
 			 else
-			    BIOwriteByte (outfile, pCond->TcPresValue);
+			    TtaWriteByte (outfile, pCond->TcPresValue);
 			 break;
 		      default:
 			 break;
@@ -840,7 +840,7 @@ PtrTSchema          pTSch;
       else
 	 for (i = 0; i <= MAX_TRANSL_PRES_VAL; i++)
 	   {
-	      BIOwriteByte (outfile, pPRuleTr->RtPRuleValue[i]);
+	      TtaWriteByte (outfile, pPRuleTr->RtPRuleValue[i]);
 	      WriteBlocks (pPRuleTr->RtPRuleValueBlock[i], pSS);
 	   }
 }
@@ -871,7 +871,7 @@ PtrSSchema          pSS;
    int                 i, j;
 
    /* cree le fichier */
-   outfile = BIOwriteOpen (fileName);
+   outfile = TtaWriteOpen (fileName);
    if (outfile == 0)
       return False;
    /* copie le code d'identification du schema de structure */
@@ -972,7 +972,7 @@ PtrSSchema          pSS;
    for (i = 0; i < pTSch->TsNTranslAlphabets; i++)
      {
 	pAlphTr = &pTSch->TsTranslAlphabet[i];
-	BIOwriteByte (outfile, pAlphTr->AlAlphabet);
+	TtaWriteByte (outfile, pAlphTr->AlAlphabet);
 	WriteShort (pAlphTr->AlBegin);
 	WriteShort (pAlphTr->AlEnd);
      }
@@ -986,18 +986,18 @@ PtrSSchema          pSS;
 	pStrnTr = &pTSch->TsCharTransl[i];
 	j = 0;
 	do
-	   BIOwriteByte (outfile, pStrnTr->StSource[j++]);
+	   TtaWriteByte (outfile, pStrnTr->StSource[j++]);
 	while (pStrnTr->StSource[j - 1] != '\0');
 	j = 0;
 	do
-	   BIOwriteByte (outfile, pStrnTr->StTarget[j++]);
+	   TtaWriteByte (outfile, pStrnTr->StTarget[j++]);
 	while (pStrnTr->StTarget[j - 1] != '\0');
      }
    for (i = 0; i < pTSch->TsNConstants; i++)
      {
 	j = pTSch->TsConstBegin[i] - 1;
 	do
-	   BIOwriteByte (outfile, pTSch->TsConstant[j++]);
+	   TtaWriteByte (outfile, pTSch->TsConstant[j++]);
 	while (pTSch->TsConstant[j - 1] != '\0');
      }
    for (i = 0; i < pSS->SsNRules; i++)
@@ -1006,6 +1006,6 @@ PtrSSchema          pSS;
       WriteTRulesAttr (i + 1, pSS, pTSch);
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
       WritePRuleTrans (i + 1, pSS, pTSch);
-   BIOwriteClose (outfile);
+   TtaWriteClose (outfile);
    return True;
 }

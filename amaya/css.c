@@ -602,9 +602,9 @@ CSSInfoPtr          css;
 	   TtaFreeMemory (css->css_rule);
 	if (css->tempfile)
 	  {
-	     if (ThotFile_exist (css->tempfile) != 0)
+	     if (TtaFileExist (css->tempfile) != 0)
 	       {
-		  if (RemoveFile (css->tempfile) != 0)
+		  if (TtaFileUnlink (css->tempfile) != 0)
 		    {
 #ifdef DEBUG_CSS
 		       fprintf (stderr, "cannot remove %s\n", css->tempfile);
@@ -1324,7 +1324,7 @@ Document            doc;
      {
 	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot open file\n", URL);
 	if (!local)
-	   RemoveFile (tempfile);
+	   TtaFileUnlink (tempfile);
 	return;
      }
    if (fstat (fileno (res), &buf))
@@ -1332,7 +1332,7 @@ Document            doc;
 	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot stat file\n", URL);
 	fclose (res);
 	if (!local)
-	   RemoveFile (tempfile);
+	   TtaFileUnlink (tempfile);
 	return;
      }
    buffer = (char *) TtaGetMemory (buf.st_size + 1000);
@@ -1341,7 +1341,7 @@ Document            doc;
 	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : out of mem\n", URL);
 	fclose (res);
 	if (!local)
-	   RemoveFile (tempfile);
+	   TtaFileUnlink (tempfile);
 	return;
      }
    len = fread (buffer, buf.st_size, 1, res);
@@ -1350,14 +1350,14 @@ Document            doc;
 	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : read failed\n", URL);
 	fclose (res);
 	if (!local)
-	   RemoveFile (tempfile);
+	   TtaFileUnlink (tempfile);
 	TtaFreeMemory (buffer);
 	return;
      }
    buffer[buf.st_size] = 0;
    fclose (res);
    if (!local)
-      RemoveFile (tempfile);
+      TtaFileUnlink (tempfile);
 
    /*
     * allocate a new Presentation structure, parse the whole thing
@@ -1493,7 +1493,7 @@ int                 merge;
    buffer[buf.st_size] = 0;
    fclose (res);
    if (!local)
-      RemoveFile (tempfile);
+      TtaFileUnlink (tempfile);
 
    /*
     * allocate a new Presentation structure, parse the whole thing

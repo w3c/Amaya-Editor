@@ -14,7 +14,7 @@ extern void FrameKilled ( int *w,
                           int *info );
 extern void FrameToRedisplay ( ThotWindow w,
                                int frame,
-                               void * ev );
+                               void *ev );
 extern void FrameResized ( int *w,
                            int frame,
                            int *info );
@@ -43,7 +43,7 @@ extern void TtaSetStatus ( Document document,
                            char *text,
                            char *name );
 extern void FrameCallback ( int frame,
-                            void * evnt );
+                            void *evnt );
 extern void ThotGrab ( ThotWindow win,
                        ThotCursor cursor,
                        long events,
@@ -90,7 +90,7 @@ extern void FrameKilled (/* int *w,
                             int *info */);
 extern void FrameToRedisplay (/* ThotWindow w,
                                  int frame,
-                                 void * ev */);
+                                 void *ev */);
 extern void FrameResized (/* int *w,
                              int frame,
                              int *info */);
@@ -119,7 +119,7 @@ extern void TtaSetStatus (/* Document document,
                              char *text,
                              char *name */);
 extern void FrameCallback (/* int frame,
-                              void * evnt */);
+                              void *evnt */);
 extern void ThotGrab (/* ThotWindow win,
                          ThotCursor cursor,
                          long events,

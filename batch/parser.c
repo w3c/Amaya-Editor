@@ -17,7 +17,7 @@
 #include "compilmsg.h"
 #include "message.h"
 #include "registry.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 typedef struct _ParserStackItem
   {
@@ -941,7 +941,7 @@ char               *fileName;
    else
      {
 	/* ouvre le fichier grammaire */
-	grmFile = BIOreadOpen (pgrname);
+	grmFile = TtaReadOpen (pgrname);
 	NKeywords = 0;
 	LastShortKeyword = 0;
 	/* on commence par la lecture de la table des mots-cles */
@@ -955,7 +955,7 @@ char               *fileName;
 	     j = 0;
 	     do
 	       {
-		  fileOK = BIOreadByte (grmFile, &inputLine[j]);
+		  fileOK = TtaReadByte (grmFile, &inputLine[j]);
 		  j++;
 	       }
 	     while (j < LINE_LENGTH && inputLine[j - 1] != '\n' && fileOK);
@@ -1052,6 +1052,6 @@ char               *fileName;
 	       }
 	     while (wind != 0);	/* plus de mot dans la ligne */
 	  }
-	BIOreadClose (grmFile);
+	TtaReadClose (grmFile);
      }
 }

@@ -7,38 +7,40 @@
 #ifdef __STDC__
 
 extern LONG AHTCallback_bridge ( caddr_t cd,
-                                 int* s );
-extern int Add_NewSocket_to_Loop ( HTRequest* request,
+                                 int *s );
+extern int Add_NewSocket_to_Loop ( HTRequest * request,
                                    HTAlertOpcode op,
                                    int msgnum,
-                                   const char* dfault,
-                                   void* input,
-                                   HTAlertPar* reply );
+                                   const char *dfault,
+                                   void *input,
+                                   HTAlertPar * reply );
 extern int AHTEvent_register ( SOCKET sock,
-                               HTRequest* rqp,
+                               HTRequest * rqp,
                                SockOps ops,
-                               HTEventCallback* cbf,
+                               HTEventCallback * cbf,
                                HTPriority p );
 extern int AHTEvent_unregister ( SOCKET sock,
                                  SockOps ops );
+extern void RequestKillAllXtevents ( AHTReqContext * me );
 
 #else /* __STDC__ */
 
 extern LONG AHTCallback_bridge (/* caddr_t cd,
-                                   int* s */);
-extern int Add_NewSocket_to_Loop (/* HTRequest* request,
+                                   int *s */);
+extern int Add_NewSocket_to_Loop (/* HTRequest * request,
                                      HTAlertOpcode op,
                                      int msgnum,
-                                     const char* dfault,
-                                     void* input,
-                                     HTAlertPar* reply */);
+                                     const char *dfault,
+                                     void *input,
+                                     HTAlertPar * reply */);
 extern int AHTEvent_register (/* SOCKET sock,
-                                 HTRequest* rqp,
+                                 HTRequest * rqp,
                                  SockOps ops,
-                                 HTEventCallback* cbf,
+                                 HTEventCallback * cbf,
                                  HTPriority p */);
 extern int AHTEvent_unregister (/* SOCKET sock,
                                    SockOps ops */);
+extern void RequestKillAllXtevents (/* AHTReqContext * me */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

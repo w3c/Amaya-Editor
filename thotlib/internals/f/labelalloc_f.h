@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaSetLabelAllocator ( T_LabelAllocator *labelAlloc );
+extern void TtaSetLabelAllocator ( T_LabelAllocator * labelAlloc );
 extern int NewLabel ( PtrDocument pDoc );
 extern int GetCurrentLabel ( PtrDocument pDoc );
 extern void SetCurrentLabel ( PtrDocument pDoc,
@@ -14,7 +14,7 @@ extern void SetCurrentLabel ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
-extern void TtaSetLabelAllocator (/* T_LabelAllocator *labelAlloc */);
+extern void TtaSetLabelAllocator (/* T_LabelAllocator * labelAlloc */);
 extern int NewLabel (/* PtrDocument pDoc */);
 extern int GetCurrentLabel (/* PtrDocument pDoc */);
 extern void SetCurrentLabel (/* PtrDocument pDoc,

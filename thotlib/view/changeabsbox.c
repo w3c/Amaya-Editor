@@ -13,7 +13,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #define EXPORT extern
 #include "platform_tv.h"

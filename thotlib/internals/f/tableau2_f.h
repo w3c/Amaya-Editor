@@ -9,11 +9,11 @@
 extern void Tableau_ApplRegleAttribut ( PtrElement pEl,
                                         PtrAttribute pAttr,
                                         PtrDocument pDoc,
-                                        boolean *ApplAttr );
+                                        boolean * ApplAttr );
 extern void Tableau_PaveRef ( PtrAbstractBox pAb,
-                              PosRule *Posit,
+                              PosRule * Posit,
                               PtrPRule pRegle,
-                              PtrAbstractBox *pPavBas );
+                              PtrAbstractBox * pPavBas );
 extern void Tableau_Cond_Dernier ( PtrElement pEl,
                                    boolean * PcLast );
 extern void TableauDebordeVertical ( PtrPRule pRegle,
@@ -23,7 +23,7 @@ extern void HauteurFilets ( PtrElement pBasTableau,
 extern void Exc_Page_Break_Inserer ( PtrElement pElPage,
                                      PtrDocument pDoc,
                                      int VueNb,
-                                     boolean *coupe );
+                                     boolean * coupe );
 extern void Exc_Page_Break_Supprime ( PtrElement pElPage,
                                       PtrDocument pDoc );
 extern void Exc_Page_Break_Detruit_Pave ( PtrElement pElPage,
@@ -35,11 +35,11 @@ extern void Exc_Page_Break_Detruit_Pave ( PtrElement pElPage,
 extern void Tableau_ApplRegleAttribut (/* PtrElement pEl,
                                           PtrAttribute pAttr,
                                           PtrDocument pDoc,
-                                          boolean *ApplAttr */);
+                                          boolean * ApplAttr */);
 extern void Tableau_PaveRef (/* PtrAbstractBox pAb,
-                                PosRule *Posit,
+                                PosRule * Posit,
                                 PtrPRule pRegle,
-                                PtrAbstractBox *pPavBas */);
+                                PtrAbstractBox * pPavBas */);
 extern void Tableau_Cond_Dernier (/* PtrElement pEl,
                                      boolean * PcLast */);
 extern void TableauDebordeVertical (/* PtrPRule pRegle,
@@ -49,7 +49,7 @@ extern void HauteurFilets (/* PtrElement pBasTableau,
 extern void Exc_Page_Break_Inserer (/* PtrElement pElPage,
                                        PtrDocument pDoc,
                                        int VueNb,
-                                       boolean *coupe */);
+                                       boolean * coupe */);
 extern void Exc_Page_Break_Supprime (/* PtrElement pElPage,
                                         PtrDocument pDoc */);
 extern void Exc_Page_Break_Detruit_Pave (/* PtrElement pElPage,

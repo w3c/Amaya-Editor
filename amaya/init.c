@@ -336,7 +336,7 @@ char               *text;
 
    if (text)
      {
-	if (IsW3Path (text) || ThotFile_exist (text))
+	if (IsW3Path (text) || TtaFileExist (text))
 	   strcpy (LastURLName, text);
 	else
 	  {
@@ -707,7 +707,7 @@ char               *documentname;
 	if (tempfile[0] != EOS)
 	  {
 	     /* It is a document loaded from the Web */
-	     if (!ThotFile_exist (tempfile))
+	     if (!TtaFileExist (tempfile))
 	       {
 		  /* Nothing is loaded */
 		  W3Loading = 0;
@@ -727,13 +727,13 @@ char               *documentname;
 		  else
 		     fclose (tmp_fp);
 		  /* now we can rename the local name of a remote document */
-		  ThotCopyFile (tempfile, tempdocument);
-		  RemoveFile (tempfile);
+		  TtaFileCopy (tempfile, tempdocument);
+		  TtaFileUnlink (tempfile);
 	       }
 	     else
 	       {
 		  /* now we can rename the local name of a remote document */
-		  RemoveFile (tempdocument);
+		  TtaFileUnlink (tempdocument);
 		  rename (tempfile, tempdocument);
 	       }
 	  }
@@ -1007,7 +1007,7 @@ DoubleClickEvent    DC_event;
    if (newdoc == (Document) None)
      {
 	/* document not loaded yet */
-	if (DC_event & DC_TRUE && !IsW3Path (pathname) && !ThotFile_exist (pathname))
+	if (DC_event & DC_TRUE && !IsW3Path (pathname) && !TtaFileExist (pathname))
 	   /* the target document doesn't exist */
 	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
 	else
@@ -1180,7 +1180,7 @@ char               *data;
 			      strcpy (tempfile, DirectoryName);
 			      strcat (tempfile, DIR_STR);
 			      strcat (tempfile, DocumentName);
-			      if (ThotFile_exist (tempfile))
+			      if (TtaFileExist (tempfile))
 				{
 				   if (InNewWindow)
 				      GetHTMLDocument (tempfile, NULL, 0, DC_FALSE);
@@ -1604,7 +1604,7 @@ NotifyEvent        *event;
 	strcpy (LastURLName, s);
 	CallbackDialogue (BaseDialog + FormOuvrir, INTEGER_DATA, (char *) 1);
      }
-   else if (ThotFile_exist (s))
+   else if (TtaFileExist (s))
      {
 	NormalizeFile (s, LastURLName);
 	/* check if it is an absolute or a relative name */

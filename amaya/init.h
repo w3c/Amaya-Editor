@@ -5,7 +5,7 @@
 extern Document     IsDocumentLoaded (char *documentURL);
 extern void         ExtractParameters (char *aName, char *parameters);
 extern void         ExtractSuffix (char *aName, char *aSuffix);
-extern void         ThotCopyFile (char *sourceFileName, char *targetFileName);
+extern void         TtaFileCopy (char *sourceFileName, char *targetFileName);
 extern void         ResetStop (Document document);
 extern void         ActiveTransfer (Document document);
 extern void         StopTransfer (Document document, View view);
@@ -32,7 +32,7 @@ extern void         AmayaClose (Document document, View view);
 extern Document     IsDocumentLoaded ();
 extern void         ExtractParameters ();
 extern void         ExtractSuffix ();
-extern void         ThotCopyFile ();
+extern void         TtaFileCopy ();
 extern void         ResetStop ();
 extern void         ActiveTransfer ();
 extern void         StopTransfer ();

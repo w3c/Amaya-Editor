@@ -15,12 +15,12 @@ extern void TtaInstallMultiKey ( void );
 extern int TtaGetIsoKeysym ( XEvent * event,
                              KeySym keysym );
 extern int TtaHandleMultiKeyEvent ( XEvent * event );
-extern void DisplayEmptyBoxLoadResources ( void );
 extern void TtaHandleOneEvent ( XEvent * ev );
 extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
 extern Pixel TtaGetMenuColor ( void );
 extern Pixel TtaGetButtonColor ( void );
+extern void DisplayEmptyBoxLoadResources ( void );
 extern int TtaGetScreenDepth ( void );
 extern void TtaClickElement ( Document * document,
                               Element * element );
@@ -41,12 +41,12 @@ extern void TtaInstallMultiKey (/* void */);
 extern int TtaGetIsoKeysym (/* XEvent * event,
                                KeySym keysym */);
 extern int TtaHandleMultiKeyEvent (/* XEvent * event */);
-extern void DisplayEmptyBoxLoadResources (/* void */);
 extern void TtaHandleOneEvent (/* XEvent * ev */);
 extern void TtaHandlePendingEvents (/* void */);
 extern void TtaMainLoop (/* void */);
 extern Pixel TtaGetMenuColor (/* void */);
 extern Pixel TtaGetButtonColor (/* void */);
+extern void DisplayEmptyBoxLoadResources (/* void */);
 extern int TtaGetScreenDepth (/* void */);
 extern void TtaClickElement (/* Document * document,
                                 Element * element */);

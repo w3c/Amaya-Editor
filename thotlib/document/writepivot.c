@@ -16,12 +16,12 @@
 #include "typemedia.h"
 #include "picture.h"
 #include "constpiv.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "appaction.h"
 #include "app.h"
 #include "typecorr.h"
 #include "thotdir.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "labelAllocator.h"
 
 #undef EXPORT
@@ -150,11 +150,11 @@ BinFile             pivFile;
 {
    int                 version;
 
-   BIOwriteByte (pivFile, (char) C_PIV_VERSION);
-   BIOwriteByte (pivFile, (char) C_PIV_VERSION);
+   TtaWriteByte (pivFile, (char) C_PIV_VERSION);
+   TtaWriteByte (pivFile, (char) C_PIV_VERSION);
    /* Version courante de PIVOT: 4 */
    version = 4;
-   BIOwriteByte (pivFile, (char) version);
+   TtaWriteByte (pivFile, (char) version);
 }
 
 /*----------------------------------------------------------------------
@@ -169,8 +169,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   BIOwriteByte (pivFile, (char) (n / 256));
-   BIOwriteByte (pivFile, (char) (n % 256));
+   TtaWriteByte (pivFile, (char) (n / 256));
+   TtaWriteByte (pivFile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------
@@ -203,9 +203,9 @@ boolean             b;
 #endif /* __STDC__ */
 {
    if (b)
-      BIOwriteByte (pivFile, C_PIV_ABSOLUTE);
+      TtaWriteByte (pivFile, C_PIV_ABSOLUTE);
    else
-      BIOwriteByte (pivFile, C_PIV_RELATIVE);
+      TtaWriteByte (pivFile, C_PIV_RELATIVE);
 }
 
 /*----------------------------------------------------------------------
@@ -221,9 +221,9 @@ TypeUnit            unit;
 #endif /* __STDC__ */
 {
    if (unit == UnPoint)
-      BIOwriteByte (pivFile, C_PIV_PT);
+      TtaWriteByte (pivFile, C_PIV_PT);
    else
-      BIOwriteByte (pivFile, C_PIV_EM);
+      TtaWriteByte (pivFile, C_PIV_EM);
 }
 
 /*----------------------------------------------------------------------
@@ -239,9 +239,9 @@ boolean             b;
 #endif /* __STDC__ */
 {
    if (b)
-      BIOwriteByte (pivFile, C_PIV_PLUS);
+      TtaWriteByte (pivFile, C_PIV_PLUS);
    else
-      BIOwriteByte (pivFile, C_PIV_MINUS);
+      TtaWriteByte (pivFile, C_PIV_MINUS);
 }
 
 /*----------------------------------------------------------------------
@@ -261,7 +261,7 @@ PtrPRule            pPRule;
    PutDimensionType (pivFile, pPRule->PrDimRule.DrAbsolute);
    PutShort (pivFile, abs (pPRule->PrDimRule.DrValue));
    if (pPRule->PrDimRule.DrUnit == UnPercent)
-      BIOwriteByte (pivFile, C_PIV_PERCENT);
+      TtaWriteByte (pivFile, C_PIV_PERCENT);
    else
       PutUnit (pivFile, pPRule->PrDimRule.DrUnit);
    PutSign (pivFile, (boolean) (pPRule->PrDimRule.DrValue >= 0));
@@ -280,9 +280,9 @@ boolean             b;
 #endif /* __STDC__ */
 {
    if (b)
-      BIOwriteByte (pivFile, C_PIV_TRUE);
+      TtaWriteByte (pivFile, C_PIV_TRUE);
    else
-      BIOwriteByte (pivFile, C_PIV_FALSE);
+      TtaWriteByte (pivFile, C_PIV_FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -300,16 +300,16 @@ BAlignment          c;
    switch (c)
 	 {
 	    case AlignLeft:
-	       BIOwriteByte (pivFile, C_PIV_LEFT);
+	       TtaWriteByte (pivFile, C_PIV_LEFT);
 	       break;
 	    case AlignRight:
-	       BIOwriteByte (pivFile, C_PIV_RIGHT);
+	       TtaWriteByte (pivFile, C_PIV_RIGHT);
 	       break;
 	    case AlignCenter:
-	       BIOwriteByte (pivFile, C_PIV_CENTERED);
+	       TtaWriteByte (pivFile, C_PIV_CENTERED);
 	       break;
 	    case AlignLeftDots:
-	       BIOwriteByte (pivFile, C_PIV_LEFTDOT);
+	       TtaWriteByte (pivFile, C_PIV_LEFTDOT);
 	       break;
 	 }
 }
@@ -329,26 +329,26 @@ PageType            t;
    switch (t)
 	 {
 	    case PgComputed:
-	       BIOwriteByte (pivFile, C_PIV_COMPUTED_PAGE);
+	       TtaWriteByte (pivFile, C_PIV_COMPUTED_PAGE);
 	       break;
 	    case PgBegin:
-	       BIOwriteByte (pivFile, C_PIV_START_PAGE);
+	       TtaWriteByte (pivFile, C_PIV_START_PAGE);
 	       break;
 	    case PgUser:
-	       BIOwriteByte (pivFile, C_PIV_USER_PAGE);
+	       TtaWriteByte (pivFile, C_PIV_USER_PAGE);
 	       break;
 #ifdef __COLPAGE__
 	    case ColComputed:
-	       BIOwriteByte (pivFile, C_PIV_COMPUTED_COL);
+	       TtaWriteByte (pivFile, C_PIV_COMPUTED_COL);
 	       break;
 	    case ColBegin:
-	       BIOwriteByte (pivFile, C_PIV_START_COL);
+	       TtaWriteByte (pivFile, C_PIV_START_COL);
 	       break;
 	    case ColUser:
-	       BIOwriteByte (pivFile, C_PIV_USER_COL);
+	       TtaWriteByte (pivFile, C_PIV_USER_COL);
 	       break;
 	    case ColGroup:
-	       BIOwriteByte (pivFile, C_PIV_COL_GROUP);
+	       TtaWriteByte (pivFile, C_PIV_COL_GROUP);
 	       break;
 #endif /* __COLPAGE__ */
 	    default:
@@ -374,13 +374,13 @@ boolean             expansion;
    switch (t)
 	 {
 	    case RefFollow:
-	       BIOwriteByte (pivFile, C_PIV_REF_FOLLOW);
+	       TtaWriteByte (pivFile, C_PIV_REF_FOLLOW);
 	       break;
 	    case RefInclusion:
 	       if (expansion)
-		  BIOwriteByte (pivFile, C_PIV_REF_INCLUS_EXP);
+		  TtaWriteByte (pivFile, C_PIV_REF_INCLUS_EXP);
 	       else
-		  BIOwriteByte (pivFile, C_PIV_REF_INCLUSION);
+		  TtaWriteByte (pivFile, C_PIV_REF_INCLUSION);
 	       break;
 	 }
 }
@@ -402,7 +402,7 @@ PtrTextBuffer       pBuf;
    PtrTextBuffer       pBuf1;
 
    /* ecrit la marque de commentaire */
-   BIOwriteByte (pivFile, (char) C_PIV_COMMENT);
+   TtaWriteByte (pivFile, (char) C_PIV_COMMENT);
    /* calcule la longeur du commentaire */
    pBuf1 = pBuf;
    len = 0;
@@ -421,7 +421,7 @@ PtrTextBuffer       pBuf;
 	i = 1;
 	while (i <= pBuf->BuLength)
 	  {
-	     BIOwriteByte (pivFile, pBuf->BuContent[i - 1]);
+	     TtaWriteByte (pivFile, pBuf->BuContent[i - 1]);
 	     i++;
 	  }
 	pBuf = pBuf->BuNext;
@@ -446,7 +446,7 @@ PtrDocument         pDoc;
    int                 n;
    boolean             stop;
 
-   BIOwriteByte (pivFile, (char) C_PIV_NATURE);
+   TtaWriteByte (pivFile, (char) C_PIV_NATURE);
    /* cherche le schema de structure */
    n = 0;
    stop = FALSE;
@@ -478,10 +478,10 @@ LabelString         label;
 {
    int                 i;
 
-   BIOwriteByte (pivFile, (char) C_PIV_LABEL);
+   TtaWriteByte (pivFile, (char) C_PIV_LABEL);
    i = 0;
    do
-      BIOwriteByte (pivFile, label[i++]);
+      TtaWriteByte (pivFile, label[i++]);
    while (label[i - 1] != '\0');
 }
 
@@ -521,13 +521,13 @@ PictureScaling      PicPresent;
    switch (PicPresent)
 	 {
 	    case RealSize:
-	       BIOwriteByte (pivFile, C_PIV_REALSIZE);
+	       TtaWriteByte (pivFile, C_PIV_REALSIZE);
 	       break;
 	    case ReScale:
-	       BIOwriteByte (pivFile, C_PIV_RESCALE);
+	       TtaWriteByte (pivFile, C_PIV_RESCALE);
 	       break;
 	    case FillFrame:
-	       BIOwriteByte (pivFile, C_PIV_FILLFRAME);
+	       TtaWriteByte (pivFile, C_PIV_FILLFRAME);
 	       break;
 	 }
 }
@@ -568,7 +568,7 @@ PtrReference        pRef;
 	     PutLabel (pivFile, pRefD->ReReferredLabel);
 	     /* ecrit l'identificateur du document auquel appartient l'objet */
 	     /* designe' */
-	     BIOwriteDocIdent (pivFile, pRefD->ReExtDocument);
+	     TtaWriteDocIdent (pivFile, pRefD->ReExtDocument);
 	  }
 	else
 	   /* l'objet designe' est dans le meme document */
@@ -648,7 +648,7 @@ PtrDocument         pDoc;
 		stop = TRUE;
 	     }
 	while (!stop);
-	BIOwriteByte (pivFile, (char) C_PIV_ATTR);
+	TtaWriteByte (pivFile, (char) C_PIV_ATTR);
 	PutShort (pivFile, n);
 	/* numero de la nature de l'attribut */
 	PutShort (pivFile, pAttr->AeAttrNum);
@@ -672,10 +672,10 @@ PtrDocument         pDoc;
 		      {
 			 i = 0;
 			 while (pBuf->BuContent[i] != '\0')
-			    BIOwriteByte (pivFile, pBuf->BuContent[i++]);
+			    TtaWriteByte (pivFile, pBuf->BuContent[i++]);
 			 pBuf = pBuf->BuNext;
 		      }
-		    BIOwriteByte (pivFile, '\0');
+		    TtaWriteByte (pivFile, '\0');
 		    break;
 		 default:
 		    break;
@@ -719,7 +719,7 @@ PtrPRule            pPRule;
        && pPRule->PrPresMode == PresImmediate)
      {
 	/* ecrit la marque de regle */
-	BIOwriteByte (pivFile, (char) C_PIV_PRESENT);
+	TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
 	/* ecrit le numero de vue */
 	PutShort (pivFile, pPRule->PrViewNum);
 	/* ecrit le numero de la boite de presentation concernee */
@@ -729,109 +729,109 @@ PtrPRule            pPRule;
 	      {
 		 case PtAdjust:
 		    /* mode de mise en ligne */
-		    BIOwriteByte (pivFile, C_PR_ADJUST);
+		    TtaWriteByte (pivFile, C_PR_ADJUST);
 		    PutAlignment (pivFile, pPRule->PrAdjust);
 		    break;
 		 case PtHeight:
 		    if (!pPRule->PrDimRule.DrPosition)
 		      {
-			 BIOwriteByte (pivFile, C_PR_HEIGHT);
+			 TtaWriteByte (pivFile, C_PR_HEIGHT);
 			 PutDimension (pivFile, pPRule);
 		      }
 		    break;
 		 case PtWidth:
 		    if (!pPRule->PrDimRule.DrPosition)
 		      {
-			 BIOwriteByte (pivFile, C_PR_WIDTH);
+			 TtaWriteByte (pivFile, C_PR_WIDTH);
 			 PutDimension (pivFile, pPRule);
 		      }
 		    break;
 		 case PtVertPos:
 		 case PtHorizPos:
 		    if (pPRule->PrType == PtVertPos)
-		       BIOwriteByte (pivFile, C_PR_VPOS);
+		       TtaWriteByte (pivFile, C_PR_VPOS);
 		    else
-		       BIOwriteByte (pivFile, C_PR_HPOS);
+		       TtaWriteByte (pivFile, C_PR_HPOS);
 		    PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
 		    PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
 		    PutSign (pivFile, pPRule->PrPosRule.PoDistance >= 0);
 		    break;
 		 case PtSize:
-		    BIOwriteByte (pivFile, C_PR_SIZE);
+		    TtaWriteByte (pivFile, C_PR_SIZE);
 		    PutShort (pivFile, pPRule->PrMinValue);
 		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtStyle:
-		    BIOwriteByte (pivFile, C_PR_STYLE);
-		    BIOwriteByte (pivFile, pPRule->PrChrValue);
+		    TtaWriteByte (pivFile, C_PR_STYLE);
+		    TtaWriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 case PtUnderline:
-		    BIOwriteByte (pivFile, C_PR_UNDERLINE);
-		    BIOwriteByte (pivFile, pPRule->PrChrValue);
+		    TtaWriteByte (pivFile, C_PR_UNDERLINE);
+		    TtaWriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 case PtThickness:
-		    BIOwriteByte (pivFile, C_PR_UNDER_THICK);
-		    BIOwriteByte (pivFile, pPRule->PrChrValue);
+		    TtaWriteByte (pivFile, C_PR_UNDER_THICK);
+		    TtaWriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 case PtFont:
-		    BIOwriteByte (pivFile, C_PR_FONT);
-		    BIOwriteByte (pivFile, pPRule->PrChrValue);
+		    TtaWriteByte (pivFile, C_PR_FONT);
+		    TtaWriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 case PtBreak1:
-		    BIOwriteByte (pivFile, C_PR_BREAK1);
+		    TtaWriteByte (pivFile, C_PR_BREAK1);
 		    PutShort (pivFile, pPRule->PrMinValue);
 		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtBreak2:
-		    BIOwriteByte (pivFile, C_PR_BREAK2);
+		    TtaWriteByte (pivFile, C_PR_BREAK2);
 		    PutShort (pivFile, pPRule->PrMinValue);
 		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtPictInfo:
-		    BIOwriteByte (pivFile, C_PR_PICTURE);
+		    TtaWriteByte (pivFile, C_PR_PICTURE);
 		    PutPictureArea (pivFile, (int *) &(pPRule->PrPictInfo));
 		    PutPresentation (pivFile, pPRule->PrPictInfo.PicPresent);
 		    PutShort (pivFile, pPRule->PrPictInfo.PicType);
 		    break;
 		 case PtIndent:
-		    BIOwriteByte (pivFile, C_PR_INDENT);
+		    TtaWriteByte (pivFile, C_PR_INDENT);
 		    PutShort (pivFile, abs (pPRule->PrMinValue));
 		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    PutSign (pivFile, pPRule->PrMinValue >= 0);
 		    break;
 		 case PtLineSpacing:
-		    BIOwriteByte (pivFile, C_PR_LINESPACING);
+		    TtaWriteByte (pivFile, C_PR_LINESPACING);
 		    PutShort (pivFile, pPRule->PrMinValue);
 		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtJustify:
-		    BIOwriteByte (pivFile, C_PR_JUSTIFY);
+		    TtaWriteByte (pivFile, C_PR_JUSTIFY);
 		    PutBoolean (pivFile, pPRule->PrJustify);
 		    break;
 		 case PtHyphenate:
-		    BIOwriteByte (pivFile, C_PR_HYPHENATE);
+		    TtaWriteByte (pivFile, C_PR_HYPHENATE);
 		    PutBoolean (pivFile, pPRule->PrJustify);
 		    break;
 		 case PtLineWeight:
-		    BIOwriteByte (pivFile, C_PR_LINEWEIGHT);
+		    TtaWriteByte (pivFile, C_PR_LINEWEIGHT);
 		    PutShort (pivFile, pPRule->PrMinValue);
 		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtFillPattern:
-		    BIOwriteByte (pivFile, C_PR_FILLPATTERN);
+		    TtaWriteByte (pivFile, C_PR_FILLPATTERN);
 		    PutShort (pivFile, pPRule->PrIntValue);
 		    break;
 		 case PtBackground:
-		    BIOwriteByte (pivFile, C_PR_BACKGROUND);
+		    TtaWriteByte (pivFile, C_PR_BACKGROUND);
 		    PutShort (pivFile, pPRule->PrIntValue);
 		    break;
 		 case PtForeground:
-		    BIOwriteByte (pivFile, C_PR_FOREGROUND);
+		    TtaWriteByte (pivFile, C_PR_FOREGROUND);
 		    PutShort (pivFile, pPRule->PrIntValue);
 		    break;
 		 case PtLineStyle:
-		    BIOwriteByte (pivFile, C_PR_LINESTYLE);
-		    BIOwriteByte (pivFile, pPRule->PrChrValue);
+		    TtaWriteByte (pivFile, C_PR_LINESTYLE);
+		    TtaWriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 default:
 		    break;
@@ -878,7 +878,7 @@ boolean             subTree;
    if (write)
      {
 	/* ecrit la marque de type */
-	BIOwriteByte (pivFile, (char) C_PIV_TYPE);
+	TtaWriteByte (pivFile, (char) C_PIV_TYPE);
 	/* ecrit le numero de la regle definissant le type */
 	PutShort (pivFile, pEl1->ElTypeNumber);
 	/* si c'est une copie d'element inclus, ecrit la reference a */
@@ -886,7 +886,7 @@ boolean             subTree;
 	if (pEl1->ElSource != NULL)
 	   /* ecrit la marque d'element inclus */
 	  {
-	     BIOwriteByte (pivFile, (char) C_PIV_INCLUDED);
+	     TtaWriteByte (pivFile, (char) C_PIV_INCLUDED);
 	     PutReference (pivFile, pEl1->ElSource);
 	  }
 	/* ecrit la marque "Element-reference'" si l'element est */
@@ -895,13 +895,13 @@ boolean             subTree;
 	   if (pEl1->ElReferredDescr->ReFirstReference != NULL ||
 	       pEl1->ElReferredDescr->ReExtDocRef != NULL)
 	      /* l'element est effectivement reference' */
-	      BIOwriteByte (pivFile, (char) C_PIV_REFERRED);
+	      TtaWriteByte (pivFile, (char) C_PIV_REFERRED);
 	/* ecrit le label de l'element */
 	PutLabel (pivFile, pEl1->ElLabel);
 
 	/* Ecrit la marque d'holophraste si l'element est holophraste' */
 	if (pEl1->ElHolophrast)
-	   BIOwriteByte (pivFile, (char) C_PIV_HOLOPHRAST);
+	   TtaWriteByte (pivFile, (char) C_PIV_HOLOPHRAST);
 
 	/* ecrit les attributs de l'element, mais pas les attributs imposes, */
 	/* a moins qu'ils soient du type reference */
@@ -970,12 +970,12 @@ boolean             subTree;
 			       i++;
 			    if (i > 0)
 			      {
-				 BIOwriteByte (pivFile, (char) C_PIV_LANG);
-				 BIOwriteByte (pivFile, (char) i);
+				 TtaWriteByte (pivFile, (char) C_PIV_LANG);
+				 TtaWriteByte (pivFile, (char) i);
 			      }
 			 }
 		       if (pEl1->ElLeafType != LtReference)
-			  BIOwriteByte (pivFile, (char) C_PIV_BEGIN);
+			  TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
 		       switch (pEl1->ElLeafType)
 			     {
 				case LtPicture:
@@ -990,7 +990,7 @@ boolean             subTree;
 					  {
 					     i = 0;
 					     while (pBuf->BuContent[i] != '\0' && i < pBuf->BuLength)
-						BIOwriteByte (pivFile, pBuf->BuContent[i++]);
+						TtaWriteByte (pivFile, pBuf->BuContent[i++]);
 					     c = c + i;
 					     /* buffer suivant du meme element */
 					     pBuf = pBuf->BuNext;
@@ -1024,18 +1024,18 @@ boolean             subTree;
 									   }
 				     }
 				   while (!stop);
-				   BIOwriteByte (pivFile, '\0');
+				   TtaWriteByte (pivFile, '\0');
 				   break;
 				case LtReference:
 				   /* ecrit une marque de reference et le label de */
 				   /* l'element qui est reference' */
-				   BIOwriteByte (pivFile, (char) C_PIV_REFERENCE);
+				   TtaWriteByte (pivFile, (char) C_PIV_REFERENCE);
 				   PutReference (pivFile, pEl1->ElReference);
 				   break;
 				case LtSymbol:
 				case LtGraphics:
 				   /* ecrit le code du symbole ou du graphique */
-				   BIOwriteByte (pivFile, pEl1->ElGraph);
+				   TtaWriteByte (pivFile, pEl1->ElGraph);
 				   break;
 				case LtPageColBreak:
 				   /* ecrit le numero de page et le type de page */
@@ -1049,9 +1049,9 @@ boolean             subTree;
 				   break;
 				case LtPlyLine:
 				   /* ecrit le code representant la forme de la ligne */
-				   BIOwriteByte (pivFile, pEl1->ElPolyLineType);
+				   TtaWriteByte (pivFile, pEl1->ElPolyLineType);
 				   /* ecrit une marque indiquant que c'est une Polyline */
-				   BIOwriteByte (pivFile, (char) C_PIV_POLYLINE);
+				   TtaWriteByte (pivFile, (char) C_PIV_POLYLINE);
 				   /* ecrit le nombre de points de la ligne */
 				   PutShort (pivFile, pEl1->ElNPoints);
 				   /* ecrit tous les points */
@@ -1072,7 +1072,7 @@ boolean             subTree;
 				   break;
 			     }
 		       if (pEl1->ElLeafType != LtReference)
-			  BIOwriteByte (pivFile, (char) C_PIV_END);
+			  TtaWriteByte (pivFile, (char) C_PIV_END);
 		    }
 	       }
 	  }
@@ -1085,7 +1085,7 @@ boolean             subTree;
 	     {
 		if (write)
 		   /* ecrit une marque de debut */
-		   BIOwriteByte (pivFile, (char) C_PIV_BEGIN);
+		   TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
 		pChild = pEl1->ElFirstChild;
 		/* ecrit successivement la representation pivot de tous */
 		/* les fils de l'element */
@@ -1122,7 +1122,7 @@ boolean             subTree;
 		     pChild = pChild->ElNext;
 		  }
 		/* ecrit une marque de fin */
-		BIOwriteByte (pivFile, (char) C_PIV_END);
+		TtaWriteByte (pivFile, (char) C_PIV_END);
 	     }
      }
 }
@@ -1142,8 +1142,8 @@ Name                N;
    int                 j;
 
    for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != '\0'; j++)
-      BIOwriteByte (pivFile, N[j]);
-   BIOwriteByte (pivFile, '\0');
+      TtaWriteByte (pivFile, N[j]);
+   TtaWriteByte (pivFile, '\0');
 }
 
 /*----------------------------------------------------------------------
@@ -1298,9 +1298,9 @@ PtrDocument         pDoc;
      {
 	/* ecrit la marque de classe ou d'extension */
 	if (pDoc->DocNatureSSchema[nat]->SsExtension)
-	   BIOwriteByte (pivFile, (char) C_PIV_SSCHEMA_EXT);
+	   TtaWriteByte (pivFile, (char) C_PIV_SSCHEMA_EXT);
 	else
-	   BIOwriteByte (pivFile, (char) C_PIV_NATURE);
+	   TtaWriteByte (pivFile, (char) C_PIV_NATURE);
 	/* ecrit le nom de schema de structure dans le fichier */
 	PutName (pivFile, pDoc->DocNatureSSchema[nat]->SsName);
 	/* ecrit le code du schema de structure */
@@ -1366,7 +1366,7 @@ PtrDocument         pDoc;
    UpdateLanguageTable (pDoc, pDoc->DocRootElement);
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {
-	BIOwriteByte (pivFile, (char) C_PIV_LANG);
+	TtaWriteByte (pivFile, (char) C_PIV_LANG);
 	PutName (pivFile, TtaGetLanguageName (pDoc->DocLanguages[i]));
      }
 }
@@ -1441,7 +1441,7 @@ PtrDocument         pDoc;
 	   if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	      /* l'application accepte que Thot sauve l'element */
 	     {
-		BIOwriteByte (pivFile, (char) C_PIV_PARAM);
+		TtaWriteByte (pivFile, (char) C_PIV_PARAM);
 		/* Ecrit l'element */
 		Externalise (pivFile, &pEl, pDoc, TRUE);
 		/* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1491,7 +1491,7 @@ PtrDocument         pDoc;
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* ecrit une marque d'element associe' */
-			  BIOwriteByte (pivFile, (char) C_PIV_ASSOC);
+			  TtaWriteByte (pivFile, (char) C_PIV_ASSOC);
 			  /* si ces elements associes sont definis dans une extension */
 			  /* du schema de structure du document, on ecrit un */
 			  /* changement de nature */
@@ -1527,7 +1527,7 @@ PtrDocument         pDoc;
 	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
-	     BIOwriteByte (pivFile, (char) C_PIV_STRUCTURE);
+	     TtaWriteByte (pivFile, (char) C_PIV_STRUCTURE);
 	     /* ecrit la forme pivot de tout l'arbre */
 	     Externalise (pivFile, &pEl, pDoc, TRUE);
 	     /* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1541,7 +1541,7 @@ PtrDocument         pDoc;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
-   BIOwriteByte (pivFile, (char) C_PIV_DOC_END);
+   TtaWriteByte (pivFile, (char) C_PIV_DOC_END);
 }
 
 
@@ -1599,7 +1599,7 @@ PtrDocument         pDoc;
 		       if (!fileOpen)
 			 {
 			    /* ouvre le fichier */
-			    refFile = BIOwriteOpen (fileName);
+			    refFile = TtaWriteOpen (fileName);
 			    if (refFile != 0)
 			       fileOpen = TRUE;
 			    else
@@ -1625,11 +1625,11 @@ PtrDocument         pDoc;
      }
    /* fin du parcours des descripteurs d'elements reference's */
    if (fileOpen)
-      BIOwriteClose (refFile);
+      TtaWriteClose (refFile);
    /* vide le buffer d'entree-sortie */
    if (noExtRef)
       /* il n'y a pas de reference sortante, on detruit le fichier */
-      RemoveFile (fileName);
+      TtaFileUnlink (fileName);
 }
 
 /*----------------------------------------------------------------------
@@ -1649,7 +1649,7 @@ PathBuffer          fileName;
    BinFile             refFile;
    PtrChangedReferredEl pChnRef, pNextChnRef;
 
-   refFile = BIOwriteOpen (fileName);
+   refFile = TtaWriteOpen (fileName);
    if (refFile != 0)
      {
 	/* le fichier est ouvert */
@@ -1661,19 +1661,19 @@ PathBuffer          fileName;
 	     /* ecrit le nouveau label de l'element */
 	     PutLabel (refFile, pChnRef->CrNewLabel);
 	     /* ecrit une marque de nom de document */
-	     BIOwriteByte (refFile, (char) C_PIV_DOCNAME);
+	     TtaWriteByte (refFile, (char) C_PIV_DOCNAME);
 	     /* ecrit le nom de l'ancien document de l'element */
-	     BIOwriteDocIdent (refFile, pChnRef->CrOldDocument);
+	     TtaWriteDocIdent (refFile, pChnRef->CrOldDocument);
 	     /* ecrit une marque de nom de document */
-	     BIOwriteByte (refFile, (char) C_PIV_DOCNAME);
+	     TtaWriteByte (refFile, (char) C_PIV_DOCNAME);
 	     /* ecrit l'identificateur du nouveau document de l'element */
-	     BIOwriteDocIdent (refFile, pChnRef->CrNewDocument);
+	     TtaWriteDocIdent (refFile, pChnRef->CrNewDocument);
 	     /* on libere le descripteur qu'on vient d'ecrire */
 	     pNextChnRef = pChnRef->CrNext;
 	     FreeElemRefChng (pChnRef);
 	     pChnRef = pNextChnRef;
 	  }
-	BIOwriteClose (refFile);
+	TtaWriteClose (refFile);
      }
 }
 
@@ -1716,7 +1716,7 @@ PathBuffer          fileName;
 	     if (!fileOpen)
 	       {
 		  /* ouvre le fichier */
-		  extFile = BIOwriteOpen (fileName);
+		  extFile = TtaWriteOpen (fileName);
 		  if (extFile != 0)
 		     fileOpen = TRUE;
 		  else
@@ -1735,9 +1735,9 @@ PathBuffer          fileName;
 		  do
 		    {
 		       /* ecrit une marque de nom de document */
-		       BIOwriteByte (extFile, (char) C_PIV_DOCNAME);
+		       TtaWriteByte (extFile, (char) C_PIV_DOCNAME);
 		       /* ecrit le nom du document referencant */
-		       BIOwriteDocIdent (extFile, pExtDoc->EdDocIdent);
+		       TtaWriteDocIdent (extFile, pExtDoc->EdDocIdent);
 		       /* passe au descripteur de document referencant suivant */
 		       pExtDoc = pExtDoc->EdNext;
 		    }
@@ -1749,11 +1749,11 @@ PathBuffer          fileName;
 	   pRefD = pRefD->ReNext;
      }
    if (fileOpen)
-      BIOwriteClose (extFile);
+      TtaWriteClose (extFile);
 
    if (noExtRef)
       /* il n'y a pas de reference externe, on detruit le fichier */
-      RemoveFile (fileName);
+      TtaFileUnlink (fileName);
    /* libere la chaine de decripteurs d'elements reference's */
    pRefD = pFirstRefD;
    while (pRefD != NULL)
@@ -1833,12 +1833,12 @@ PtrDocument         pDoc;
 	FindCompleteName (extDocIdent, "EXT", directoryName, fileName, &i);
 	if (fileName[0] != '\0')
 	  {
-	     extFile = BIOreadOpen (fileName);
+	     extFile = TtaReadOpen (fileName);
 	     if (extFile != 0)
 	       {
 		  /* le fichier .EXT existe, on le charge */
 		  LoadEXTfile (extFile, NULL, &pFirstRefD, FALSE);
-		  BIOreadClose (extFile);
+		  TtaReadClose (extFile);
 	       }
 	  }
 	/* parcourt les deux listes de references sortantes et traite */
@@ -2049,12 +2049,12 @@ PtrDocument         pDoc;
 	strncpy (pExtFileD->ErFileName, fileName, MAX_PATH);
 	if (fileName[0] != '\0')
 	  {
-	     extFile = BIOreadOpen (fileName);
+	     extFile = TtaReadOpen (fileName);
 	     if (extFile != 0)
 		/* ce fichier existe, on le charge */
 	       {
 		  LoadEXTfile (extFile, NULL, &(pExtFileD->ErFirstReferredEl), FALSE);
-		  BIOreadClose (extFile);
+		  TtaReadClose (extFile);
 	       }
 	  }
 	pChnRef = pDoc->DocChangedReferredEl;
@@ -2157,12 +2157,12 @@ PtrDocument         pDoc;
 		       strncpy (pFile->RcFileName, fileName, MAX_PATH);
 		       if (fileName[0] != '\0')
 			 {
-			    refFile = BIOreadOpen (fileName);
+			    refFile = TtaReadOpen (fileName);
 			    if (refFile != 0)
 			      {
 				 /* le fichier .REF existe, on le charge */
 				 LoadREFfile (refFile, &pChnRefRead);
-				 BIOreadClose (refFile);
+				 TtaReadClose (refFile);
 				 pFile->RcFirstChange = pChnRefRead;
 			      }
 			 }
@@ -2380,12 +2380,12 @@ boolean             copyDoc;
 		  FindCompleteName (pRefD->ReExtDocument, "EXT", directoryName, fileName, &i);
 		  if (fileName[0] != '\0')
 		    {
-		       extFile = BIOreadOpen (fileName);
+		       extFile = TtaReadOpen (fileName);
 		       if (extFile != 0)
 			 {
 			    /* ce fichier existe, on le charge */
 			    LoadEXTfile (extFile, NULL, &pFirstRefD, FALSE);
-			    BIOreadClose (extFile);
+			    TtaReadClose (extFile);
 			 }
 		    }
 		  if (pFirstRefD != NULL)
@@ -2556,12 +2556,12 @@ Name                newName;
 	  }
 	if (pFile->RcFileName[0] != '\0')
 	  {
-	     refFile = BIOreadOpen (pFile->RcFileName);
+	     refFile = TtaReadOpen (pFile->RcFileName);
 	     if (refFile != 0)
 	       {
 		  /* le fichier .REF du document referencant existe, on le charge */
 		  LoadREFfile (refFile, &(pFile->RcFirstChange));
-		  BIOreadClose (refFile);
+		  TtaReadClose (refFile);
 	       }
 	  }
 	/* ajoute un enregistrement en queue : s'il y a plusieurs */

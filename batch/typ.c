@@ -27,11 +27,11 @@
 #include "typegrm.h"
 #include "typetyp.h"
 #include "message.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "compilmsg.h"
 #include "libmsg.h"
 #include "typmsg.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 /* Variables  pour l'analyseur syntaxique */
@@ -1521,12 +1521,12 @@ char              **argv;
 	     /* ajoute le suffixe .SCH */
 	     strcat (pfilename, ".SCH");
 	     /* teste si le fichier a compiler existe */
-	     if (ThotFile_exist (pfilename) == 0)
+	     if (TtaFileExist (pfilename) == 0)
 		TtaDisplaySimpleMessage (FATAL, TYP, TYP_FILE_NOT_FOUND);
 	     else
 		/* le fichier d'entree existe, on l'ouvre */
 	       {
-		  infile = BIOreadOpen (pfilename);
+		  infile = TtaReadOpen (pfilename);
 		  /* supprime le suffixe ".SCH" */
 		  pfilename[i] = '\0';
 		  /* acquiert la memoire pour le schema de typographie */
@@ -1542,7 +1542,7 @@ char              **argv;
 		       i = 0;
 		       do
 			 {
-			    fileOK = BIOreadByte (infile, &inputLine[i]);
+			    fileOK = TtaReadByte (infile, &inputLine[i]);
 			    i++;
 			 }
 		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
@@ -1585,7 +1585,7 @@ char              **argv;
 			    while (wi != 0 && !error);
 			 }	/* il n'y a plus de mots dans la ligne */
 		    }
-		  BIOreadClose (infile);
+		  TtaReadClose (infile);
 		  if (!error)
 		     ParserEnd ();	/* fin d'analyse */
 		  if (!error)

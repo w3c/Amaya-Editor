@@ -10,7 +10,7 @@
 #include "logo.xpm"
 #include "logo.xbm"
 #include "registry.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #undef EXPORT
@@ -875,7 +875,7 @@ PtrEventsSet        pAppli;
 	WriteIncludeFile (dotHFile, infoFILE);
 	fclose (infoFILE);
 	fclose (dotHFile);
-	if (!ThotFile_exist ("logo.xpm"))
+	if (!TtaFileExist ("logo.xpm"))
 	  {
 	     /* cree le fichier logo.xpm */
 	     infoFILE = fopen ("logo.xpm", "w");
@@ -890,7 +890,7 @@ PtrEventsSet        pAppli;
 	     fprintf (infoFILE, "\"%s\"};\n", ptr[i]);
 	     fclose (infoFILE);
 	  }
-	if (!ThotFile_exist ("logo.xbm"))
+	if (!TtaFileExist ("logo.xbm"))
 	  {
 	     /* cree le fichier logo.xbm */
 	     infoFILE = fopen ("logo.xbm", "w");

@@ -110,7 +110,7 @@ LoadedImageDesc   **desc;
      {
 	/* the image file exist for a different document */
 	pImage->status = IMAGE_LOADED;
-	ThotCopyFile (sameImage->localName, pImage->localName);
+	TtaFileCopy (sameImage->localName, pImage->localName);
 	return (FALSE);
      }
    else
@@ -190,7 +190,7 @@ int                 status;
 	/* rename the local file of the image */
 	desc = (LoadedImageDesc *) context->context_tcbf;
 	strcpy (tempfile, desc->localName);
-	RemoveFile (tempfile);
+	TtaFileUnlink (tempfile);
 	rename (context->outputfile, tempfile);
 
 	/* save pathname */
@@ -281,7 +281,7 @@ Element             el;
 		       if (desc == NULL)
 			  /* it is a local image */
 			  DisplayImage (doc, el, pathname);
-		       else if (ThotFile_exist (desc->localName))
+		       else if (TtaFileExist (desc->localName))
 			  DisplayImage (doc, el, desc->localName);
 		       else
 			 {

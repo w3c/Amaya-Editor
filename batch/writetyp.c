@@ -17,7 +17,7 @@
 /* types */
 #include "typemedia.h"
 #include "typetyp.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "fileaccess_f.h"
 
 static BinFile      outfile;
@@ -35,8 +35,8 @@ int                 n;
 #endif /* __STDC__ */
 
 {
-   BIOwriteByte (outfile, (char) (n / 256));
-   BIOwriteByte (outfile, (char) (n % 256));
+   TtaWriteByte (outfile, (char) (n / 256));
+   TtaWriteByte (outfile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------
@@ -81,7 +81,7 @@ Name                N;
    i = 0;
    do
      {
-	BIOwriteByte (outfile, N[i]);
+	TtaWriteByte (outfile, N[i]);
 	i++;
      }
    while (N[i - 1] != '\0');
@@ -106,11 +106,11 @@ Name                N;
    int                 i;
 
    /* le _ sera supprime pour solaris2 ... */
-   BIOwriteByte (outfile, '_');
+   TtaWriteByte (outfile, '_');
    i = 0;
    do
      {
-	BIOwriteByte (outfile, N[i]);
+	TtaWriteByte (outfile, N[i]);
 	i++;
      }
    while (N[i - 1] != '\0');
@@ -133,9 +133,9 @@ PtrRegleTypo        b;
 {
 
    if (b == NULL)
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
    else
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
 }
 
 
@@ -155,9 +155,9 @@ PtrTypoFunction     b;
 {
 
    if (b == NULL)
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
    else
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
 }
 
 
@@ -178,31 +178,31 @@ TypeFunct           T;
    switch (T)
 	 {
 	    case TyCapital:
-	       BIOwriteByte (outfile, MTyCapital);
+	       TtaWriteByte (outfile, MTyCapital);
 	       break;
 	    case TyWord:
-	       BIOwriteByte (outfile, MTyWord);
+	       TtaWriteByte (outfile, MTyWord);
 	       break;
 	    case TySpace:
-	       BIOwriteByte (outfile, MTySpace);
+	       TtaWriteByte (outfile, MTySpace);
 	       break;
 	    case TyPunct:
-	       BIOwriteByte (outfile, MTyPunct);
+	       TtaWriteByte (outfile, MTyPunct);
 	       break;
 	    case TyPair:
-	       BIOwriteByte (outfile, MTyPair);
+	       TtaWriteByte (outfile, MTyPair);
 	       break;
 	    case TyDistance:
-	       BIOwriteByte (outfile, MTyDistance);
+	       TtaWriteByte (outfile, MTyDistance);
 	       break;
 	    case TyExponent:
-	       BIOwriteByte (outfile, MTyExponent);
+	       TtaWriteByte (outfile, MTyExponent);
 	       break;
 	    case TyAbbrev:
-	       BIOwriteByte (outfile, MTyAbbrev);
+	       TtaWriteByte (outfile, MTyAbbrev);
 	       break;
 	    case TyAttribute:
-	       BIOwriteByte (outfile, MTyAttribute);
+	       TtaWriteByte (outfile, MTyAttribute);
 	       break;
 	 }
 
@@ -253,9 +253,9 @@ boolean             b;
 {
 
    if (b)
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
    else
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
 }
 
 /*----------------------------------------------------------------------
@@ -274,9 +274,9 @@ PtrRegleTypo        b;
 {
 
    if (b == NULL)
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
    else
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
 }
 
 
@@ -296,9 +296,9 @@ PtrRTypoAttribut    b;
 {
 
    if (b == NULL)
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
    else
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
 }
 
 
@@ -321,25 +321,25 @@ TypeCondTypo        T;
    switch (T)
 	 {
 	    case TyPremier:
-	       BIOwriteByte (outfile, MTyPremier);
+	       TtaWriteByte (outfile, MTyPremier);
 	       break;
 	    case TyDernier:
-	       BIOwriteByte (outfile, MTyDernier);
+	       TtaWriteByte (outfile, MTyDernier);
 	       break;
 	    case TyDansType:
-	       BIOwriteByte (outfile, MTyDansType);
+	       TtaWriteByte (outfile, MTyDansType);
 	       break;
 	    case TyAvantType:
-	       BIOwriteByte (outfile, MTyAvantType);
+	       TtaWriteByte (outfile, MTyAvantType);
 	       break;
 	    case TyApresType:
-	       BIOwriteByte (outfile, MTyApresType);
+	       TtaWriteByte (outfile, MTyApresType);
 	       break;
 	    case TyLangue:
-	       BIOwriteByte (outfile, MTyLangue);
+	       TtaWriteByte (outfile, MTyLangue);
 	       break;
 	    case TyFonction:
-	       BIOwriteByte (outfile, MTyFonction);
+	       TtaWriteByte (outfile, MTyFonction);
 	       break;
 	 }
 }
@@ -491,7 +491,7 @@ PtrSSchema          pSchStr;
    fname[i + 3] = 'P';
    fname[i + 4] = '\0';
    /* cree le fichier */
-   outfile = BIOwriteOpen (fname);
+   outfile = TtaWriteOpen (fname);
 
    wrnom (pSchTypo->STyNomStruct);
    WriteShort (pSchTypo->STyStructCode);
@@ -510,6 +510,6 @@ PtrSSchema          pSchStr;
    for (i = 1; i <= pSchStr->SsNAttributes; i++)
       WriteReglesAttr (i, pSchTypo->STyAttribSem[i - 1], pSchStr);
 
-   BIOwriteClose (outfile);
+   TtaWriteClose (outfile);
 }
 /* End Of Module wrschtyp */

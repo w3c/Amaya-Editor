@@ -11,7 +11,7 @@
 #include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 /* variables importees */
 #define EXPORT extern
@@ -40,7 +40,7 @@ AttribType         *attrType;
 {
    char                c;
 
-   BIOreadByte (file, &c);
+   TtaReadByte (file, &c);
    switch (c)
 	 {
 	    case C_INT_ATTR:
@@ -82,7 +82,7 @@ RConstruct         *constr;
 {
    char                c;
 
-   BIOreadByte (file, &c);
+   TtaReadByte (file, &c);
    switch (c)
 	 {
 	    case C_IDENTITY_CONSTR:
@@ -144,7 +144,7 @@ BasicType          *typ;
 {
    char                c;
 
-   BIOreadByte (file, &c);
+   TtaReadByte (file, &c);
    switch (c)
 	 {
 	    case C_CHAR_STRING:
@@ -194,11 +194,11 @@ TtAttribute        *pAttr;
    AttribType          attrType;
    int                 j;
 
-   BIOreadName (file, pAttr->AttrName);
+   TtaReadName (file, pAttr->AttrName);
    strcpy (pAttr->AttrOrigName, pAttr->AttrName);
-   BIOreadBool (file, &pAttr->AttrGlobal);
-   BIOreadShort (file, &pAttr->AttrFirstExcept);
-   BIOreadShort (file, &pAttr->AttrLastExcept);
+   TtaReadBool (file, &pAttr->AttrGlobal);
+   TtaReadShort (file, &pAttr->AttrFirstExcept);
+   TtaReadShort (file, &pAttr->AttrLastExcept);
    if (ReadAttribType (file, &attrType))
      {
 	pAttr->AttrType = attrType;
@@ -208,13 +208,13 @@ TtAttribute        *pAttr;
 		 case AtTextAttr:
 		    break;
 		 case AtReferenceAttr:
-		    BIOreadShort (file, &pAttr->AttrTypeRef);
-		    BIOreadName (file, pAttr->AttrTypeRefNature);
+		    TtaReadShort (file, &pAttr->AttrTypeRef);
+		    TtaReadName (file, pAttr->AttrTypeRefNature);
 		    break;
 		 case AtEnumAttr:
-		    BIOreadShort (file, &pAttr->AttrNEnumValues);
+		    TtaReadShort (file, &pAttr->AttrNEnumValues);
 		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
-		       BIOreadName (file, pAttr->AttrEnumValue[j]);
+		       TtaReadName (file, pAttr->AttrEnumValue[j]);
 		    break;
 	      }
      }
@@ -242,45 +242,45 @@ SRule              *pSRule;
    RConstruct          constr;
    int                 j;
 
-   BIOreadName (file, pSRule->SrName);
-   BIOreadShort (file, &pSRule->SrNDefAttrs);
+   TtaReadName (file, pSRule->SrName);
+   TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
-      BIOreadShort (file, &pSRule->SrDefAttr[j]);
+      TtaReadShort (file, &pSRule->SrDefAttr[j]);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
-      BIOreadSignedShort (file, &pSRule->SrDefAttrValue[j]);
+      TtaReadSignedShort (file, &pSRule->SrDefAttrValue[j]);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
-      BIOreadBool (file, &pSRule->SrDefAttrModif[j]);
+      TtaReadBool (file, &pSRule->SrDefAttrModif[j]);
 
-   BIOreadShort (file, &pSRule->SrNLocalAttrs);
+   TtaReadShort (file, &pSRule->SrNLocalAttrs);
    for (j = 0; j < pSRule->SrNLocalAttrs; j++)
-      BIOreadShort (file, &pSRule->SrLocalAttr[j]);
+      TtaReadShort (file, &pSRule->SrLocalAttr[j]);
    for (j = 0; j < pSRule->SrNLocalAttrs; j++)
-      BIOreadBool (file, &pSRule->SrRequiredAttr[j]);
+      TtaReadBool (file, &pSRule->SrRequiredAttr[j]);
 
-   BIOreadBool (file, &pSRule->SrAssocElem);
-   BIOreadBool (file, &pSRule->SrParamElem);
-   BIOreadBool (file, &pSRule->SrUnitElem);
-   BIOreadBool (file, &pSRule->SrRecursive);
+   TtaReadBool (file, &pSRule->SrAssocElem);
+   TtaReadBool (file, &pSRule->SrParamElem);
+   TtaReadBool (file, &pSRule->SrUnitElem);
+   TtaReadBool (file, &pSRule->SrRecursive);
    pSRule->SrRecursDone = FALSE;
 
-   BIOreadBool (file, &pSRule->SrExportedElem);
+   TtaReadBool (file, &pSRule->SrExportedElem);
    if (pSRule->SrExportedElem)
      {
-	BIOreadShort (file, &pSRule->SrExportContent);
-	BIOreadName (file, pSRule->SrNatExpContent);
+	TtaReadShort (file, &pSRule->SrExportContent);
+	TtaReadName (file, pSRule->SrNatExpContent);
      }
 
-   BIOreadShort (file, &pSRule->SrFirstExcept);
-   BIOreadShort (file, &pSRule->SrLastExcept);
+   TtaReadShort (file, &pSRule->SrFirstExcept);
+   TtaReadShort (file, &pSRule->SrLastExcept);
 
-   BIOreadShort (file, &pSRule->SrNInclusions);
+   TtaReadShort (file, &pSRule->SrNInclusions);
    for (j = 0; j < pSRule->SrNInclusions; j++)
-      BIOreadShort (file, &pSRule->SrInclusion[j]);
+      TtaReadShort (file, &pSRule->SrInclusion[j]);
 
-   BIOreadShort (file, &pSRule->SrNExclusions);
+   TtaReadShort (file, &pSRule->SrNExclusions);
    for (j = 0; j < pSRule->SrNExclusions; j++)
-      BIOreadShort (file, &pSRule->SrExclusion[j]);
-   BIOreadBool (file, &pSRule->SrRefImportedDoc);
+      TtaReadShort (file, &pSRule->SrExclusion[j]);
+   TtaReadBool (file, &pSRule->SrRefImportedDoc);
    if (!ReadRConstruct (file, &constr))
       return FALSE;
 
@@ -296,36 +296,36 @@ SRule              *pSRule;
 		  return FALSE;
 	       break;
 	    case CsReference:
-	       BIOreadShort (file, &pSRule->SrReferredType);
-	       BIOreadName (file, pSRule->SrRefTypeNat);
+	       TtaReadShort (file, &pSRule->SrReferredType);
+	       TtaReadName (file, pSRule->SrRefTypeNat);
 
 	       break;
 	    case CsIdentity:
-	       BIOreadShort (file, &pSRule->SrIdentRule);
+	       TtaReadShort (file, &pSRule->SrIdentRule);
 	       break;
 	    case CsList:
-	       BIOreadShort (file, &pSRule->SrListItem);
-	       BIOreadShort (file, &pSRule->SrMinItems);
-	       BIOreadShort (file, &pSRule->SrMaxItems);
+	       TtaReadShort (file, &pSRule->SrListItem);
+	       TtaReadShort (file, &pSRule->SrMinItems);
+	       TtaReadShort (file, &pSRule->SrMaxItems);
 	       break;
 	    case CsChoice:
-	       BIOreadSignedShort (file, &pSRule->SrNChoices);
+	       TtaReadSignedShort (file, &pSRule->SrNChoices);
 	       for (j = 0; j < pSRule->SrNChoices; j++)
-		  BIOreadShort (file, &pSRule->SrChoice[j]);
+		  TtaReadShort (file, &pSRule->SrChoice[j]);
 	       break;
 	    case CsAggregate:
 	    case CsUnorderedAggregate:
-	       BIOreadShort (file, &pSRule->SrNComponents);
+	       TtaReadShort (file, &pSRule->SrNComponents);
 	       for (j = 0; j < pSRule->SrNComponents; j++)
-		  BIOreadShort (file, &pSRule->SrComponent[j]);
+		  TtaReadShort (file, &pSRule->SrComponent[j]);
 	       for (j = 0; j < pSRule->SrNComponents; j++)
-		  BIOreadBool (file, &pSRule->SrOptComponent[j]);
+		  TtaReadBool (file, &pSRule->SrOptComponent[j]);
 	       break;
 	    case CsConstant:
-	       BIOreadShort (file, &pSRule->SrIndexConst);
+	       TtaReadShort (file, &pSRule->SrIndexConst);
 	       break;
 	    case CsPairedElement:
-	       BIOreadBool (file, &pSRule->SrFirstOfPair);
+	       TtaReadBool (file, &pSRule->SrFirstOfPair);
 	       break;
 	    case CsExtensionRule:
 	       break;
@@ -356,11 +356,11 @@ PtrSSchema          pSS;
      {
 	do
 	  {
-	     BIOreadByte (file, &c);
+	     TtaReadByte (file, &c);
 	     pSS->SsConstBuffer[i++] = c;
 	  }
 	while (c != '\0' && i < MAX_LEN_ALL_CONST);
-	BIOreadByte (file, &c);
+	TtaReadByte (file, &c);
 	pSS->SsConstBuffer[i++] = c;
      }
    while (c != '\0' && i < MAX_LEN_ALL_CONST);
@@ -401,7 +401,7 @@ PtrSSchema          pSS;
    MakeCompleteName (fileName, "STR", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
-   file = BIOreadOpen (buf);
+   file = TtaReadOpen (buf);
    if (file == 0)
       /* echec */
      {
@@ -414,21 +414,21 @@ PtrSSchema          pSS;
      {
 	pSS->SsActionList = NULL;
 	/* lit la partie fixe du schema de structure */
-	BIOreadName (file, pSS->SsName);
-	BIOreadShort (file, &pSS->SsCode);
-	BIOreadName (file, pSS->SsDefaultPSchema);
+	TtaReadName (file, pSS->SsName);
+	TtaReadShort (file, &pSS->SsCode);
+	TtaReadName (file, pSS->SsDefaultPSchema);
 	pSS->SsPSchema = NULL;
-	BIOreadBool (file, &pSS->SsExtension);
+	TtaReadBool (file, &pSS->SsExtension);
 	pSS->SsNExtensRules = 0;
 	pSS->SsExtensBlock = NULL;
-	BIOreadShort (file, &pSS->SsRootElem);
+	TtaReadShort (file, &pSS->SsRootElem);
 	pSS->SsNObjects = 0;
-	BIOreadShort (file, &pSS->SsNAttributes);
-	BIOreadShort (file, &pSS->SsNRules);
-	BIOreadBool (file, &pSS->SsExport);
-	BIOreadShort (file, &pSS->SsNExceptions);
+	TtaReadShort (file, &pSS->SsNAttributes);
+	TtaReadShort (file, &pSS->SsNRules);
+	TtaReadBool (file, &pSS->SsExport);
+	TtaReadShort (file, &pSS->SsNExceptions);
 	for (i = 0; i < pSS->SsNExceptions; i++)
-	   BIOreadShort (file, &pSS->SsException[i]);
+	   TtaReadShort (file, &pSS->SsException[i]);
 
 	/* lit le texte des constantes */
 	if (!ReadConstants (file, pSS))
@@ -461,7 +461,7 @@ PtrSSchema          pSS;
 	     }
 	if (pSS->SsExtension)
 	  {
-	     if (BIOreadShort (file, &pSS->SsNExtensRules))
+	     if (TtaReadShort (file, &pSS->SsNExtensRules))
 		if (pSS->SsNExtensRules > 0)
 		  {
 		     /* acquiert un bloc d'extension */
@@ -478,7 +478,7 @@ PtrSSchema          pSS;
 		  }
 	  }
 
-	BIOreadClose (file);
+	TtaReadClose (file);
 	return TRUE;
      }
 }

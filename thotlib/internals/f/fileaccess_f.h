@@ -6,27 +6,31 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean BIOreadByte ( BinFile file,
+extern boolean TtaReadByte ( BinFile file,
                              char *bval );
-extern boolean BIOreadBool ( BinFile file,
+extern boolean TtaReadBool ( BinFile file,
                              boolean * bval );
-extern boolean BIOreadShort ( BinFile file,
+extern boolean TtaReadShort ( BinFile file,
                               int *sval );
-extern boolean BIOreadSignedShort ( BinFile file,
+extern boolean TtaReadSignedShort ( BinFile file,
                                     int *sval );
-extern boolean BIOreadInteger ( BinFile file,
+extern boolean TtaReadInteger ( BinFile file,
                                 int *sval );
-extern boolean BIOreadName ( BinFile file,
+extern boolean TtaReadName ( BinFile file,
                              char *name );
-extern BinFile BIOreadOpen ( char *filename );
-extern void BIOreadClose ( BinFile file );
-extern BinFile BIOwriteOpen ( char *filename );
-extern void BIOwriteClose ( BinFile file );
-extern boolean BIOwriteByte ( BinFile file,
+extern BinFile TtaReadOpen ( char *filename );
+extern void TtaReadClose ( BinFile file );
+extern BinFile TtaWriteOpen ( char *filename );
+extern void TtaWriteClose ( BinFile file );
+extern boolean TtaWriteByte ( BinFile file,
                               char bval );
-extern void BIOwriteDocIdent ( BinFile file,
+extern boolean TtaWriteShort ( BinFile file,
+                               int sval );
+extern boolean TtaWriteInteger ( BinFile file,
+                                 int lval );
+extern void TtaWriteDocIdent ( BinFile file,
                                DocumentIdentifier Ident );
-extern void BIOreadDocIdent ( BinFile file,
+extern void TtaReadDocIdent ( BinFile file,
                               DocumentIdentifier * Ident );
 extern void CopyDocIdent ( DocumentIdentifier * Dest,
                            DocumentIdentifier Source );
@@ -58,27 +62,31 @@ extern void GetCounterValue ( int number,
 
 #else /* __STDC__ */
 
-extern boolean BIOreadByte (/* BinFile file,
+extern boolean TtaReadByte (/* BinFile file,
                                char *bval */);
-extern boolean BIOreadBool (/* BinFile file,
+extern boolean TtaReadBool (/* BinFile file,
                                boolean * bval */);
-extern boolean BIOreadShort (/* BinFile file,
+extern boolean TtaReadShort (/* BinFile file,
                                 int *sval */);
-extern boolean BIOreadSignedShort (/* BinFile file,
+extern boolean TtaReadSignedShort (/* BinFile file,
                                       int *sval */);
-extern boolean BIOreadInteger (/* BinFile file,
+extern boolean TtaReadInteger (/* BinFile file,
                                   int *sval */);
-extern boolean BIOreadName (/* BinFile file,
+extern boolean TtaReadName (/* BinFile file,
                                char *name */);
-extern BinFile BIOreadOpen (/* char *filename */);
-extern void BIOreadClose (/* BinFile file */);
-extern BinFile BIOwriteOpen (/* char *filename */);
-extern void BIOwriteClose (/* BinFile file */);
-extern boolean BIOwriteByte (/* BinFile file,
+extern BinFile TtaReadOpen (/* char *filename */);
+extern void TtaReadClose (/* BinFile file */);
+extern BinFile TtaWriteOpen (/* char *filename */);
+extern void TtaWriteClose (/* BinFile file */);
+extern boolean TtaWriteByte (/* BinFile file,
                                 char bval */);
-extern void BIOwriteDocIdent (/* BinFile file,
+extern boolean TtaWriteShort (/* BinFile file,
+                                 int sval */);
+extern boolean TtaWriteInteger (/* BinFile file,
+                                   int lval */);
+extern void TtaWriteDocIdent (/* BinFile file,
                                  DocumentIdentifier Ident */);
-extern void BIOreadDocIdent (/* BinFile file,
+extern void TtaReadDocIdent (/* BinFile file,
                                 DocumentIdentifier * Ident */);
 extern void CopyDocIdent (/* DocumentIdentifier * Dest,
                              DocumentIdentifier Source */);

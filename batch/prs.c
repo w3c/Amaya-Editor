@@ -18,10 +18,10 @@
 #include "message.h"
 #include "typemedia.h"
 #include "typegrm.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "prsdef.h"
 #include "thotpattern.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #define EXPORT
@@ -6151,11 +6151,11 @@ char              **argv;
 	strcpy (fname, srceFileName);
 	strcat (fname, ".SCH");
 	/* ouvre le fichier a compiler */
-	if (ThotFile_exist (fname) == 0)
+	if (TtaFileExist (fname) == 0)
 	   TtaDisplayMessage (FATAL, TtaGetMessage (PRS, UNKNOWN_FILE), fname);
 	else
 	  {
-	     infile = BIOreadOpen (fname);
+	     infile = TtaReadOpen (fname);
 	     /* le fichier a compiler est ouvert */
 	     NIdentifiers = 0;	/* table des identificateurs vide */
 	     LineNum = 0;	/* encore aucune ligne lue */
@@ -6169,7 +6169,7 @@ char              **argv;
 		  i = 0;
 		  do
 		    {
-		       fileOK = BIOreadByte (infile, &inputLine[i]);
+		       fileOK = TtaReadByte (infile, &inputLine[i]);
 		       i++;
 		    }
 		  while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
@@ -6212,7 +6212,7 @@ char              **argv;
 		    }
 	       }
 	     /* fin du fichier */
-	     BIOreadClose (infile);
+	     TtaReadClose (infile);
 	     if (!error)
 		ParserEnd ();
 	     /* fin d'analyse */

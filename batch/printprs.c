@@ -13,7 +13,7 @@
 #include "typemedia.h"
 #include "libmsg.h"
 #include "prsmsg.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "message.h"
 
 #define EXPORT

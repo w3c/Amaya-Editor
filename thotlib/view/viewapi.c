@@ -5,7 +5,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "application.h"
 #include "document.h"
 #include "view.h"
@@ -914,17 +914,17 @@ char               *presentationName;
    strncpy (DirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (presentationName, "PRS", DirBuffer, text, &i);
    /* Checks if the file exists */
-   file = BIOreadOpen (text);
+   file = TtaReadOpen (text);
    if (file == 0)
       /* presentation schema inaccessible */
       TtaError (ERR_cannot_load_pschema);
    else
      {
 	/* Gets the corresponding structure schema name */
-	BIOreadName (file, gotStructName);
+	TtaReadName (file, gotStructName);
 	if (strcmp (structureName, gotStructName) == 0)
 	   result = 1;
-	BIOreadClose (file);
+	TtaReadClose (file);
      }
    return result;
 }

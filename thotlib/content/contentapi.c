@@ -12,7 +12,7 @@
 #include "view.h"
 #include "selection.h"
 #include "language.h"
-#include "storage.h"
+#include "fileaccess.h"
 #ifndef NODISPLAY
 #include "frame.h"
 #endif

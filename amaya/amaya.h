@@ -286,7 +286,7 @@ extern int          PtEnPixel (int value, int horiz);	/* thot internal function 
 extern int          PixelEnPt (int value, int horiz);	/* thot internal function */
 extern void         CreateNewElement (int, SSchema, Document);
 extern void         SelectInitial (Document);
-extern int          ThotFile_exist (char *);
+extern int          TtaFileExist (char *);
 extern boolean      OpenMainView (Document, char *, char *);
 extern void         SetTarget (Document, View);
 extern void         SetTableWidths (Document);
@@ -310,7 +310,7 @@ extern void         CreateAnchor (Document, View, boolean);
 extern void         SetCharFontOrPhrase (int, int);
 extern void         InsertChar (unsigned char, int);
 extern void         ClearAllViewSelection (void);
-extern int          RemoveFile (char *);
+extern int          TtaFileUnlink (char *);
 extern void         QuitEditor (void);
 extern void         CloseInsertion (void);
 extern char        *ThotRealloc (char *, unsigned int);
@@ -329,7 +329,7 @@ extern int          PtEnPixel ();	/* thot internal function */
 extern int          PixelEnPt ();	/* thot internal function */
 extern void         CreateNewElement ();
 extern void         SelectInitial ();
-extern int          ThotFile_exist ();
+extern int          TtaFileExist ();
 extern boolean      OpenMainView ();
 extern void         SetTarget ();
 extern void         SetTableWidths ();
@@ -353,7 +353,7 @@ extern void         CreateAnchor ();
 extern void         SetCharFontOrPhrase ();
 extern void         InsertChar ();
 extern void         ClearAllViewSelection ();
-extern int          RemoveFile ();
+extern int          TtaFileUnlink ();
 extern void         QuitEditor ();
 extern void         CloseInsertion ();
 extern char        *ThotRealloc ();

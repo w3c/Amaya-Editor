@@ -18,7 +18,7 @@
 #include "language.h"
 #include "libmsg.h"
 #include "message.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "typecorr.h"
 #include "appdialogue.h"
 
@@ -87,7 +87,7 @@ BinFile             file;
    i = 1;
    while (!stop && i < 200)
      {
-	if (!BIOreadByte (file, &c))
+	if (!TtaReadByte (file, &c))
 	   stop = TRUE;
 	else
 	  {
@@ -235,7 +235,7 @@ boolean             withAppEvent;
 		strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
 	     MakeCompleteName (pDoc->DocDName, "PIV", directoryName, text, &i);
 	     /* ouvre le fichier 'PIV' */
-	     pivotFile = BIOreadOpen (text);
+	     pivotFile = TtaReadOpen (text);
 	     if (pivotFile != 0)
 		/* le fichier existe */
 		/* internalise le fichier pivot sans charger les documents */
@@ -244,7 +244,7 @@ boolean             withAppEvent;
 		  /* le document appartient au directory courant */
 		  strncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
 		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent);
-		  BIOreadClose (pivotFile);
+		  TtaReadClose (pivotFile);
 		  if (pDoc->DocRootElement != NULL)
 		     /* le document lu n'est pas vide */
 		    {
@@ -253,20 +253,20 @@ boolean             withAppEvent;
 		       /* lit le fichier des references externes s'il existe */
 		       /* dans le meme directory que le fichier .PIV */
 		       FindCompleteName (pDoc->DocDName, "EXT", directoryName, text, &i);
-		       pivotFile = BIOreadOpen (text);
+		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
 			    LoadEXTfile (pivotFile, pDoc, NULL, FALSE);
-			    BIOreadClose (pivotFile);
+			    TtaReadClose (pivotFile);
 			 }
 		       /* lit le fichier de mise a jour des references sortantes */
 		       /* s'il existe dans le meme directory que le fichier .PIV */
 		       FindCompleteName (pDoc->DocDName, "REF", directoryName, text, &i);
-		       pivotFile = BIOreadOpen (text);
+		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
 			    LoadREFfile (pivotFile, &pChngRef);
-			    BIOreadClose (pivotFile);
+			    TtaReadClose (pivotFile);
 			    /* traite les mises a jour de */
 			    /* references sortantes */
 			    if (pChngRef != NULL)
@@ -459,7 +459,7 @@ BinFile             file;
 {
    char                c;
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -484,7 +484,7 @@ BinFile             file;
 {
    char                c;
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -519,7 +519,7 @@ BinFile             file;
 {
    char                c;
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -546,7 +546,7 @@ BinFile             file;
 {
    char                c;
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -574,7 +574,7 @@ BinFile             file;
    char                c;
    BAlignment          align;
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -620,7 +620,7 @@ BinFile             file;
    char                c;
    PageType            typ;
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -715,7 +715,7 @@ boolean             oldformat;
 
    len = 0;
    /* lit l'octet qui suit le tag commentaire */
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -734,7 +734,7 @@ boolean             oldformat;
 	  {
 	     len = 256 * ((int) c);
 	     /* lit le 2eme octet de la longueur */
-	     if (!BIOreadByte (file, &c))
+	     if (!TtaReadByte (file, &c))
 	       {
 		  c = '\0';
 		  PivotError (file);
@@ -748,7 +748,7 @@ boolean             oldformat;
 	     if (oldformat)
 		/* lit le fichier jusqu'au 1er zero */
 		do
-		   if (!BIOreadByte (file, &c))
+		   if (!TtaReadByte (file, &c))
 		     {
 			c = '\0';
 			PivotError (file);
@@ -758,7 +758,7 @@ boolean             oldformat;
 		while (len > 0)
 		  {
 		     /* lit le nombre d'octets indique' */
-		     if (!BIOreadByte (file, &c))
+		     if (!TtaReadByte (file, &c))
 			PivotError (file);
 		     len--;
 		  }
@@ -785,7 +785,7 @@ boolean             oldformat;
 			  n = 0;
 
 		       }
-		     if (!BIOreadByte (file, &c))
+		     if (!TtaReadByte (file, &c))
 		       {
 			  c = '\0';
 			  PivotError (file);
@@ -809,7 +809,7 @@ boolean             oldformat;
 	if (oldformat)
 	  {
 	     /* lit le tag de fin */
-	     if (!BIOreadByte (file, &c))
+	     if (!TtaReadByte (file, &c))
 		c = '\0';
 	     if (c != (char) C_PIV_END)
 	       {
@@ -837,7 +837,7 @@ BinFile             file;
 {
    int                 n;
 
-   BIOreadShort (file, &n);
+   TtaReadShort (file, &n);
    /* Pour assurer la compatibilite avec Linux et autre machine */
    if (n == 255)
       return -1;
@@ -865,13 +865,13 @@ int                *PicHArea;
 {
    int                 n;
 
-   BIOreadShort (file, &n);
+   TtaReadShort (file, &n);
    *PicXArea = PointToPixel (n);
-   BIOreadShort (file, &n);
+   TtaReadShort (file, &n);
    *PicYArea = PointToPixel (n);
-   BIOreadShort (file, &n);
+   TtaReadShort (file, &n);
    *PicWArea = PointToPixel (n);
-   BIOreadShort (file, &n);
+   TtaReadShort (file, &n);
    *PicHArea = PointToPixel (n);
 }
 
@@ -892,7 +892,7 @@ BinFile             file;
    char                c;
    PictureScaling      scaling;
 
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -994,7 +994,7 @@ BinFile             file;
 
    ClearDocIdent (docIdent);
    /* lit un octet */
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
      {
 	c = '\0';
 	PivotError (file);
@@ -1031,7 +1031,7 @@ BinFile             file;
 			 break;
 		   }
 	     /* lit le type de label */
-	     if (!BIOreadByte (file, &c))
+	     if (!TtaReadByte (file, &c))
 	       {
 		  c = '\0';
 		  PivotError (file);
@@ -1040,7 +1040,7 @@ BinFile             file;
 	     ReadLabel (c, label, file);
 	     if (*refExt && label[0] != '\0')
 		/* lit le nom du document contenant l'element reference' */
-		BIOreadDocIdent (file, docIdent);
+		TtaReadDocIdent (file, docIdent);
 	  }
 	else
 	   /* on interprete comme dans la version 1 */
@@ -1050,7 +1050,7 @@ BinFile             file;
 	     *refExt = FALSE;	/* il n'y a qu'un label court, sans tag */
 	     /* l'octet lu est l'octet de poids fort du label */
 	     j = 256 * ((int) c);	/* lit le 2eme octet du label */
-	     if (!BIOreadByte (file, &c))
+	     if (!TtaReadByte (file, &c))
 	       {
 		  c = '\0';
 		  PivotError (file);
@@ -1080,7 +1080,7 @@ BinFile             file;
 	/* lit l'indicateur reference  interne/externe */
 	*refExt = !ReadBoolean (file);
 	/* lit le type de label */
-	if (!BIOreadByte (file, &c))
+	if (!TtaReadByte (file, &c))
 	  {
 	     c = '\0';
 	     PivotError (file);
@@ -1089,7 +1089,7 @@ BinFile             file;
 	ReadLabel (c, label, file);
 	if (*refExt && label[0] != '\0')
 	   /* lit l'identificateur du document contenant l'element reference' */
-	   BIOreadDocIdent (file, docIdent);
+	   TtaReadDocIdent (file, docIdent);
 
      }
 }
@@ -1295,7 +1295,7 @@ char               *tag;
    if (*tag == (char) C_PIV_NATURE)
      {
 	/* lit le numero de nature */
-	BIOreadShort (pivFile, &nat);
+	TtaReadShort (pivFile, &nat);
 	if (nat < 0 || nat >= pDoc->DocNNatures)
 	  {
 	     PivotError (pivFile);
@@ -1303,7 +1303,7 @@ char               *tag;
 	  }
 	/* lit le tag de type qui suit */
 	if (!error)
-	   if (!BIOreadByte (pivFile, tag))
+	   if (!TtaReadByte (pivFile, tag))
 	      PivotError (pivFile);
 	/* teste si le numero lu est celui de la structure generique du document */
 	   else if (nat == 0)
@@ -1339,7 +1339,7 @@ char               *tag;
       if (*tag == (char) C_PIV_TYPE)
 	{
 	   /* lit le numero de type de l'element */
-	   BIOreadShort (pivFile, &rule);
+	   TtaReadShort (pivFile, &rule);
 	   if (pDoc->DocPivotVersion < 4)
 	      /* on tient compte de l'ajout du type de base PolyLine */
 	      if (rule >= MAX_BASIC_TYPE)
@@ -1589,7 +1589,7 @@ PtrAttribute       *pAttr;
    pA = NULL;
    signe = FALSE;
    /* lit le numero du schema de structure definissant l'attribut */
-   BIOreadShort (pivFile, &n);
+   TtaReadShort (pivFile, &n);
    if (n < 0 || n >= pDoc->DocNNatures)
      {
 	DisplayPivotMessage ("Nature Num GetAttributeOfElement ");
@@ -1603,7 +1603,7 @@ PtrAttribute       *pAttr;
 	PivotError (pivFile);
      }
    /* lit l'attribut */
-   BIOreadShort (pivFile, &attr);
+   TtaReadShort (pivFile, &attr);
    if (pDoc->DocPivotVersion < 4)
       /* on tient compte de l'ajout de l'attribut Langue */
       attr++;
@@ -1612,7 +1612,7 @@ PtrAttribute       *pAttr;
       switch (pSchAttr->SsAttribute[attr - 1].AttrType)
 	    {
 	       case AtEnumAttr:
-		  BIOreadShort (pivFile, &val);
+		  TtaReadShort (pivFile, &val);
 		  if (val > pSchAttr->SsAttribute[attr - 1].AttrNEnumValues)
 		    {
 		       printf ("Attribute value error: %s = %d\n", pSchAttr->SsAttribute[attr - 1].AttrOrigName, val);
@@ -1620,7 +1620,7 @@ PtrAttribute       *pAttr;
 		    }
 		  break;
 	       case AtNumAttr:
-		  BIOreadShort (pivFile, &val);
+		  TtaReadShort (pivFile, &val);
 		  signe = ReadSign (pivFile);
 		  break;
 	       case AtReferenceAttr:
@@ -1630,7 +1630,7 @@ PtrAttribute       *pAttr;
 		  if (!create)
 		     /* on consomme le texte de l'attribut, sans le garder */
 		     do
-			if (!BIOreadByte (pivFile, &c))
+			if (!TtaReadByte (pivFile, &c))
 			  {
 			     PivotError (pivFile);
 			     DisplayPivotMessage ("A");
@@ -1644,7 +1644,7 @@ PtrAttribute       *pAttr;
 		       /* lit tout le texte de l'attribut */
 		       stop = FALSE;
 		       do
-			  if (!BIOreadByte (pivFile, &pBT->BuContent[pBT->BuLength++]))
+			  if (!TtaReadByte (pivFile, &pBT->BuContent[pBT->BuLength++]))
 			     /* erreur de lecture */
 			    {
 			       PivotError (pivFile);
@@ -1853,11 +1853,11 @@ boolean             link;
    *pRuleRead = NULL;
    unit = UnRelative;
    /* lit le numero de vue */
-   BIOreadShort (pivFile, &view);
+   TtaReadShort (pivFile, &view);
    /* lit le numero de la boite de present. concernee par la regle */
-   BIOreadShort (pivFile, &box);
+   TtaReadShort (pivFile, &box);
    /* lit le type de la regle */
-   if (!BIOreadByte (pivFile, &ch))
+   if (!TtaReadByte (pivFile, &ch))
       PivotError (pivFile);
    switch (ch)
 	 {
@@ -1943,13 +1943,13 @@ boolean             link;
 	       case PtHeight:
 	       case PtWidth:
 		  absolute = ReadDimensionType (pivFile);
-		  BIOreadShort (pivFile, &val);
+		  TtaReadShort (pivFile, &val);
 		  unit = ReadUnit (pivFile);
 		  sign = ReadSign (pivFile);
 		  break;
 	       case PtVertPos:
 	       case PtHorizPos:
-		  BIOreadShort (pivFile, &val);
+		  TtaReadShort (pivFile, &val);
 		  unit = ReadUnit (pivFile);
 		  sign = ReadSign (pivFile);
 		  break;
@@ -1959,7 +1959,7 @@ boolean             link;
 	       case PtSize:
 	       case PtLineSpacing:
 	       case PtLineWeight:
-		  BIOreadShort (pivFile, &val);
+		  TtaReadShort (pivFile, &val);
 		  unit = ReadUnit (pivFile);
 		  if (TypeRP == PtIndent)
 		     sign = ReadSign (pivFile);
@@ -1967,14 +1967,14 @@ boolean             link;
 	       case PtFillPattern:
 	       case PtBackground:
 	       case PtForeground:
-		  BIOreadShort (pivFile, &val);
+		  TtaReadShort (pivFile, &val);
 		  break;
 	       case PtFont:
 	       case PtStyle:
 	       case PtUnderline:
 	       case PtThickness:
 	       case PtLineStyle:
-		  if (!BIOreadByte (pivFile, &ch))
+		  if (!TtaReadByte (pivFile, &ch))
 		     PivotError (pivFile);
 		  break;
 	       case PtJustify:
@@ -2266,7 +2266,7 @@ boolean             createDesc;
 	i = 1;
 	while (!error && i < 200)
 	  {
-	     if (!BIOreadByte (pivFile, &c))
+	     if (!TtaReadByte (pivFile, &c))
 		PivotError (pivFile);
 	     else
 	       {
@@ -2393,7 +2393,7 @@ boolean             createDesc;
 		     pSSchema->SsRule[elType - 1].SrParamElem = TRUE;
 	       }
 
-	     if (!BIOreadByte (pivFile, tag))
+	     if (!TtaReadByte (pivFile, tag))
 		PivotError (pivFile);
 	  }
 	inclusion = FALSE;	/* est-ce une reference a un element inclus? */
@@ -2410,7 +2410,7 @@ boolean             createDesc;
 		  pEl->ElIsCopy = TRUE;
 
 	       }
-	     if (!BIOreadByte (pivFile, tag))
+	     if (!TtaReadByte (pivFile, tag))
 		PivotError (pivFile);
 	  }
 
@@ -2419,7 +2419,7 @@ boolean             createDesc;
 	   if (*tag == (char) C_PIV_REFERRED)
 	     {
 		withReferences = TRUE;
-		if (!BIOreadByte (pivFile, tag))
+		if (!TtaReadByte (pivFile, tag))
 		   PivotError (pivFile);
 	     }
 	   else
@@ -2432,7 +2432,7 @@ boolean             createDesc;
 	     {
 		ReadLabel (*tag, label, pivFile);
 		/* lit le tag qui suit le label */
-		if (!BIOreadByte (pivFile, tag))
+		if (!TtaReadByte (pivFile, tag))
 		   PivotError (pivFile);
 	     }
 	if (!error && label[0] != '\0' && create)
@@ -2477,7 +2477,7 @@ boolean             createDesc;
 	     if (create)
 		pEl->ElHolophrast = TRUE;
 	     /* lit l'octet qui suit */
-	     if (!BIOreadByte (pivFile, tag))
+	     if (!TtaReadByte (pivFile, tag))
 		PivotError (pivFile);
 	  }
 	/* lit les attributs de l'element s'il y en a */
@@ -2485,7 +2485,7 @@ boolean             createDesc;
 	  {
 	     ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
 	     if (!error)
-		if (!BIOreadByte (pivFile, tag))
+		if (!TtaReadByte (pivFile, tag))
 		   PivotError (pivFile);
 	  }
 	/* tous les attributs de l'element sont lus, on verifie qu'il ne */
@@ -2504,7 +2504,7 @@ boolean             createDesc;
 	     ReadPRulePiv (pDoc, pivFile, pEl, create, &pPRule, TRUE);
 	     if (!error)
 		/* lit l'octet qui suit la regle */
-		if (!BIOreadByte (pivFile, tag))
+		if (!TtaReadByte (pivFile, tag))
 		   PivotError (pivFile);
 	  }
 	/* lit le commentaire qui accompagne eventuellement l'element */
@@ -2515,7 +2515,7 @@ boolean             createDesc;
 		if (create)
 		   pEl->ElComment = pBufComment;
 		/* lit l'octet suivant le commentaire */
-		if (!BIOreadByte (pivFile, tag))
+		if (!TtaReadByte (pivFile, tag))
 		   PivotError (pivFile);
 	     }
 	if (!error)
@@ -2537,7 +2537,7 @@ boolean             createDesc;
 			       ReadReference (&refType, label, &refExt, &docIdent, pivFile);
 			       if (create)
 				  CreateReference (pEl->ElReference, refType, label, refExt, docIdent, pDoc);
-			       if (!BIOreadByte (pivFile, tag))
+			       if (!TtaReadByte (pivFile, tag))
 				  PivotError (pivFile);
 			    }
 			  break;
@@ -2550,12 +2550,12 @@ boolean             createDesc;
 			  else
 			     /* traitement des paires : on lit l'identificateur */
 			    {
-			       BIOreadInteger (pivFile, &i);
+			       TtaReadInteger (pivFile, &i);
 			       if (create)
 				  pEl->ElPairIdent = i;
 			       if (i > pDoc->DocMaxPairIdent)
 				  pDoc->DocMaxPairIdent = i;
-			       if (!BIOreadByte (pivFile, tag))
+			       if (!TtaReadByte (pivFile, tag))
 				  PivotError (pivFile);
 			       if (*tag != (char) C_PIV_END)
 				  /* erreur, pas de tag de fin */
@@ -2563,7 +2563,7 @@ boolean             createDesc;
 				    PivotError (pivFile);
 				    DisplayPivotMessage ("m");
 				 }
-			       else if (!BIOreadByte (pivFile, tag))
+			       else if (!TtaReadByte (pivFile, tag))
 				  PivotError (pivFile);
 			    }
 			  break;
@@ -2579,12 +2579,12 @@ boolean             createDesc;
 				  else
 				    {
 				       /* lit le numero de langue (pour la table des langues du document */
-				       if (!BIOreadByte (pivFile, tag))
+				       if (!TtaReadByte (pivFile, tag))
 					  PivotError (pivFile);
 				       else
 					  i = (int) (*tag);
 				       /* lit l'octet suivant */
-				       if (!BIOreadByte (pivFile, tag))
+				       if (!TtaReadByte (pivFile, tag))
 					  PivotError (pivFile);
 				    }
 				  if (create && !error)
@@ -2617,7 +2617,7 @@ boolean             createDesc;
 				    {
 				       alphabet = *tag;
 				       /* lit l'octet suivant */
-				       if (!BIOreadByte (pivFile, tag))
+				       if (!TtaReadByte (pivFile, tag))
 					  PivotError (pivFile);
 				    }
 				  if (create)
@@ -2641,7 +2641,7 @@ boolean             createDesc;
 			  if (*tag == (char) C_PIV_BEGIN && !error)
 			    {
 			       if (leafType != PageBreak)
-				  if (!BIOreadByte (pivFile, tag))
+				  if (!TtaReadByte (pivFile, tag))
 				     PivotError (pivFile);
 			       if (*tag != (char) C_PIV_END)	/* il y a un contenu */
 				 {
@@ -2653,7 +2653,7 @@ boolean             createDesc;
 						  {
 						     ch = *tag;
 						     while (ch != '\0' && !error)
-							if (!BIOreadByte (pivFile, &ch))
+							if (!TtaReadByte (pivFile, &ch))
 							   PivotError (pivFile);
 						  }
 						else
@@ -2707,7 +2707,7 @@ boolean             createDesc;
 								   ch = '\231';
 							     /* range le caractere et lit le suivant */
 							     pBuf->BuContent[n - 1] = ch;
-							     if (!BIOreadByte (pivFile, &ch))
+							     if (!TtaReadByte (pivFile, &ch))
 								PivotError (pivFile);
 							  }
 						     while (ch != '\0') ;
@@ -2716,7 +2716,7 @@ boolean             createDesc;
 						     pBuf->BuContent[n] = '\0';
 						     pEl->ElVolume = pEl->ElTextLength;
 						  }
-						if (!BIOreadByte (pivFile, tag))
+						if (!TtaReadByte (pivFile, tag))
 						   PivotError (pivFile);
 						break;
 					     case Picture:
@@ -2725,7 +2725,7 @@ boolean             createDesc;
 						  {
 						     ch = *tag;
 						     while (ch != '\0')
-							if (!BIOreadByte (pivFile, &ch))
+							if (!TtaReadByte (pivFile, &ch))
 							   PivotError (pivFile);
 						  }
 						else
@@ -2748,7 +2748,7 @@ boolean             createDesc;
 							     n++;
 							     /* range le caractere et lit le suivant */
 							     pBuf->BuContent[n - 1] = ch;
-							     if (!BIOreadByte (pivFile, &ch))
+							     if (!TtaReadByte (pivFile, &ch))
 								PivotError (pivFile);
 							  }
 						     while (ch != '\0') ;
@@ -2767,7 +2767,7 @@ boolean             createDesc;
 						     pBuf->BuContent[n] = '\0';
 						     pEl->ElVolume = pEl->ElNameLength;
 						  }
-						if (!BIOreadByte (pivFile, tag))
+						if (!TtaReadByte (pivFile, tag))
 						   PivotError (pivFile);
 						break;
 					     case Symbol:
@@ -2775,7 +2775,7 @@ boolean             createDesc;
 						/* on a lu le code representant la forme */
 						ch = *tag;
 						/* lit l'octet qui suit */
-						if (!BIOreadByte (pivFile, tag))
+						if (!TtaReadByte (pivFile, tag))
 						   PivotError (pivFile);
 						else if (*tag != (char) C_PIV_POLYLINE)
 						   /* c'est un element graphique simple */
@@ -2799,12 +2799,12 @@ boolean             createDesc;
 						   /* c'est une Polyline */
 						  {
 						     /* lit le nombre de points de la ligne */
-						     if (!BIOreadShort (pivFile, &n))
+						     if (!TtaReadShort (pivFile, &n))
 							PivotError (pivFile);
 						     /* lit tous les points */
 						     else if (!create)
 							for (i = 0; i < n; i++)
-							   BIOreadInteger (pivFile, &j);
+							   TtaReadInteger (pivFile, &j);
 						     else
 						       {
 							  /* transforme l'element graphique simple en Polyline */
@@ -2823,22 +2823,22 @@ boolean             createDesc;
 								    pBuf = NewTextBuffer (pBuf);
 								    j = 0;
 								 }
-							       BIOreadInteger (pivFile, &pBuf->BuPoints[j].XCoord);
-							       BIOreadInteger (pivFile, &pBuf->BuPoints[j].YCoord);
+							       TtaReadInteger (pivFile, &pBuf->BuPoints[j].XCoord);
+							       TtaReadInteger (pivFile, &pBuf->BuPoints[j].YCoord);
 							       pBuf->BuLength++;
 							       j++;
 							    }
 						       }
 						     /* lit l'octet qui suit (tag de fin d'element) */
-						     if (!BIOreadByte (pivFile, tag))
+						     if (!TtaReadByte (pivFile, tag))
 							PivotError (pivFile);
 						  }
 						break;
 					     case PageBreak:
 						/* lit le numero de page et */
 						/* le type de page */
-						BIOreadShort (pivFile, &n);
-						BIOreadShort (pivFile, &view);
+						TtaReadShort (pivFile, &n);
+						TtaReadShort (pivFile, &view);
 						pageType = ReadPageType (pivFile);
 						modif = ReadBoolean (pivFile);
 						if (create)
@@ -2848,7 +2848,7 @@ boolean             createDesc;
 						     pEl->ElPageType = pageType;
 						     pEl->ElPageModified = modif;
 						  }
-						if (!BIOreadByte (pivFile, tag))
+						if (!TtaReadByte (pivFile, tag))
 						   PivotError (pivFile);
 						break;
 					     default:
@@ -2862,7 +2862,7 @@ boolean             createDesc;
 				    DisplayPivotMessage ("F");
 				 }
 
-			       if (!BIOreadByte (pivFile, tag))
+			       if (!TtaReadByte (pivFile, tag))
 				  PivotError (pivFile);
 			    }
 			  break;
@@ -2879,7 +2879,7 @@ boolean             createDesc;
 			       /* erreur: feuille avec contenu */
 			       if (!error)
 				 {
-				    if (!BIOreadByte (pivFile, tag))
+				    if (!TtaReadByte (pivFile, tag))
 				       PivotError (pivFile);
 				    pPrevEl = NULL;
 				    while (*tag != (char) C_PIV_END && !error)
@@ -2950,7 +2950,7 @@ boolean             createDesc;
 					      }
 				      }
 				    if (!error)
-				       if (!BIOreadByte (pivFile, tag))
+				       if (!TtaReadByte (pivFile, tag))
 					  PivotError (pivFile);
 				 }
 			    }
@@ -3220,7 +3220,7 @@ PtrSSchema          pLoadedSS;
    rank = 1;
    /* lit le type du document */
    do
-      if (!BIOreadByte (file, &SSName[i++]))
+      if (!TtaReadByte (file, &SSName[i++]))
 	 PivotError (file);
    while (!error && SSName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
    if (SSName[i - 1] != '\0')
@@ -3233,16 +3233,16 @@ PtrSSchema          pLoadedSS;
 	if (pDoc->DocPivotVersion >= 4)
 	   /* Lit le code du schema de structure */
 	   if (!error)
-	      if (!BIOreadShort (file, &versionSchema))
+	      if (!TtaReadShort (file, &versionSchema))
 		 PivotError (file);
 	/* Lit le nom du schema de presentation associe' */
 	i = 0;
 	do
-	   if (!BIOreadByte (file, &PSchemaName[i++]))
+	   if (!TtaReadByte (file, &PSchemaName[i++]))
 	      PivotError (file);
 	while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
 
-	if (!BIOreadByte (file, tag))
+	if (!TtaReadByte (file, tag))
 	   PivotError (file);
 	PutNatureInTable (pDoc, SSName, rank);
 	/* charge les schemas de structure et de presentation du document */
@@ -3281,17 +3281,17 @@ PtrSSchema          pLoadedSS;
 	i = 0;
 	rank++;
 	do
-	   if (!BIOreadByte (file, &SSName[i++]))
+	   if (!TtaReadByte (file, &SSName[i++]))
 	      PivotError (file);
 	while (SSName[i - 1] != '\0' && !error) ;
 	if (pDoc->DocPivotVersion >= 4)
 	   /* Lit le code du schema de structure */
 	   if (!error)
-	      if (!BIOreadShort (file, &versionSchema))
+	      if (!TtaReadShort (file, &versionSchema))
 		 PivotError (file);
 	/* Lit le nom du schema de presentation associe' */
 	if (!error)
-	   if (!BIOreadByte (file, tag))
+	   if (!TtaReadByte (file, tag))
 	      PivotError (file);
 	if (*tag >= '!' && *tag <= '~' && !error)
 	   /* il y a un nom de schema de presentation */
@@ -3299,11 +3299,11 @@ PtrSSchema          pLoadedSS;
 	     PSchemaName[0] = *tag;
 	     i = 1;
 	     do
-		if (!BIOreadByte (file, &PSchemaName[i++]))
+		if (!TtaReadByte (file, &PSchemaName[i++]))
 		   PivotError (file);
 	     while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
 
-	     if (!BIOreadByte (file, tag))
+	     if (!TtaReadByte (file, tag))
 		PivotError (file);
 	  }
 	else
@@ -3375,7 +3375,7 @@ char               *tag;
 	{
 	   i = 0;
 	   do
-	      if (!BIOreadByte (file, &languageName[i++]))
+	      if (!TtaReadByte (file, &languageName[i++]))
 		 PivotError (file);
 	   while (!error && languageName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
 	   if (languageName[i - 1] != '\0')
@@ -3390,7 +3390,7 @@ char               *tag;
 		      pDoc->DocLanguages[pDoc->DocNLanguages++] =
 			 TtaGetLanguageIdFromName (languageName);
 		/* lit l'octet suivant le nom de langue */
-		if (!BIOreadByte (file, tag))
+		if (!TtaReadByte (file, tag))
 		   PivotError (file);
 	     }
 	}
@@ -3418,15 +3418,15 @@ PtrDocument         pDoc;
 
    ret = 0;
    pDoc->DocPivotVersion = 1;
-   if (!BIOreadByte (file, &c))
+   if (!TtaReadByte (file, &c))
       ret = 10;
    else if (c != (char) C_PIV_VERSION)
       ret = 10;
-   else if (!BIOreadByte (file, &c))
+   else if (!TtaReadByte (file, &c))
       ret = 10;
    else if (c != (char) C_PIV_VERSION)
       ret = 10;
-   else if (!BIOreadByte (file, &c))
+   else if (!TtaReadByte (file, &c))
       ret = 10;
    else
       pDoc->DocPivotVersion = (int) c;
@@ -3454,18 +3454,18 @@ char               *tag;
    char                c;
 
    /* lit le numero de version s'il est present */
-   if (!BIOreadByte (file, tag))
+   if (!TtaReadByte (file, tag))
       PivotError (file);
    if (*tag == (char) C_PIV_VERSION)
      {
-	if (!BIOreadByte (file, tag))
+	if (!TtaReadByte (file, tag))
 	   PivotError (file);
-	else if (!BIOreadByte (file, &c))
+	else if (!TtaReadByte (file, &c))
 	   PivotError (file);
 	else
 	  {
 	     pDoc->DocPivotVersion = (int) c;
-	     if (!BIOreadByte (file, tag))
+	     if (!TtaReadByte (file, tag))
 		PivotError (file);
 	  }
      }
@@ -3480,7 +3480,7 @@ char               *tag;
 	ReadLabel (*tag, label, file);
 	LabelStringToInt (label, &i);
 	SetCurrentLabel (pDoc, i);
-	if (!BIOreadByte (file, tag))
+	if (!TtaReadByte (file, tag))
 	   PivotError (file);
      }
    /* lit la table des langues utilisees par le document */
@@ -3549,7 +3549,7 @@ boolean             withEvent;
      {
 	pDoc->DocComment = ReadComment (file, TRUE, (tag == (char) C_PIV_OLD_COMMENT));
 	/* lit l'octet suivant le commentaire */
-	if (!BIOreadByte (file, &tag))
+	if (!TtaReadByte (file, &tag))
 	   PivotError (file);
      }
    /* Lit le nom du schema de structure qui est en tete du fichier pivot */
@@ -3601,11 +3601,11 @@ boolean             withEvent;
 	/* pendant la lecture du fichier .PIV). On cherche ce */
 	/* fichier dans le meme directory que le fichier .PIV */
 	FindCompleteName (pDoc->DocDName, "EXT", pDoc->DocDirectory, buffer, &i);
-	EXTfile = BIOreadOpen (buffer);
+	EXTfile = TtaReadOpen (buffer);
 	if (EXTfile != 0)
 	  {
 	     LoadEXTfile (EXTfile, NULL, &pDoc->DocLabels, TRUE);
-	     BIOreadClose (EXTfile);
+	     TtaReadClose (EXTfile);
 	  }
 	else
 	   pDoc->DocLabels = NULL;
@@ -3623,7 +3623,7 @@ boolean             withEvent;
 	     }
 	   else
 	     {
-		if (!BIOreadByte (file, &tag))
+		if (!TtaReadByte (file, &tag))
 		   PivotError (file);
 		rule = 0;
 		pNat = NULL;
@@ -3656,7 +3656,7 @@ boolean             withEvent;
 	   /* debut d'un nouveau type d'element associe */
 	  {
 	     assoc++;
-	     if (!BIOreadByte (file, &tag))
+	     if (!TtaReadByte (file, &tag))
 		PivotError (file);
 	     /* lit et cree le premier element associe de ce type */
 	     rule = 0;
@@ -3800,7 +3800,7 @@ boolean             withEvent;
 		}
 	      else
 		{
-		   if (!BIOreadByte (file, &tag))
+		   if (!TtaReadByte (file, &tag))
 		      PivotError (file);
 		   if (tag != (char) C_PIV_TYPE && tag != (char) C_PIV_NATURE)
 		     {

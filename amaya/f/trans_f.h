@@ -8,8 +8,8 @@
 
 extern void InitTransform ( void );
 extern void init_pile ( void );
-extern void empile ( Tagnode* t,
-                     ListSymb* v );
+extern void empile ( Tagnode * t,
+                     ListSymb * v );
 extern void depile ( Tagnode ** t,
                      ListSymb ** v );
 extern void TransCallbackDialog ( int ref,
@@ -24,8 +24,8 @@ extern unsigned char TransformIntoType ( ElementType resultType,
 
 extern void InitTransform (/* void */);
 extern void init_pile (/* void */);
-extern void empile (/* Tagnode* t,
-                       ListSymb* v */);
+extern void empile (/* Tagnode * t,
+                       ListSymb * v */);
 extern void depile (/* Tagnode ** t,
                        ListSymb ** v */);
 extern void TransCallbackDialog (/* int ref,

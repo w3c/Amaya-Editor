@@ -15,12 +15,12 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "typegrm.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "app.h"
 #include "modif.h"
 #include "menuaction.h"
 #include "registry.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #include "parser_f.h"
@@ -1565,7 +1565,7 @@ char              **argv;
 		    {
 		       i = 0;
 		       do
-			  fileOK = BIOreadByte (filedesc, &inputLine[i++]);
+			  fileOK = TtaReadByte (filedesc, &inputLine[i++]);
 		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 		       /* marque la fin reelle de la ligne */
 		       inputLine[i - 1] = '\0';

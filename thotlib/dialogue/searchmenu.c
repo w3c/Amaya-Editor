@@ -14,7 +14,7 @@
 #include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "interface.h"
 #include "appdialogue.h"
 

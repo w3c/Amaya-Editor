@@ -10,7 +10,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #define EXPORT extern
 static BinFile      outfile;
@@ -52,8 +52,8 @@ int                 n;
 #endif /* __STDC__ */
 
 {
-   BIOwriteByte (outfile, (char) (n / 256));
-   BIOwriteByte (outfile, (char) (n % 256));
+   TtaWriteByte (outfile, (char) (n / 256));
+   TtaWriteByte (outfile, (char) (n % 256));
 }
 
 
@@ -94,7 +94,7 @@ Name                name;
 
    i = 0;
    do
-      BIOwriteByte (outfile, name[i++]);
+      TtaWriteByte (outfile, name[i++]);
    while (name[i - 1] != '\0');
 }
 
@@ -113,9 +113,9 @@ boolean             b;
 
 {
    if (b)
-      BIOwriteByte (outfile, '\1');
+      TtaWriteByte (outfile, '\1');
    else
-      BIOwriteByte (outfile, '\0');
+      TtaWriteByte (outfile, '\0');
 }
 
 
@@ -136,16 +136,16 @@ AttribType          typ;
    switch (typ)
 	 {
 	    case AtNumAttr:
-	       BIOwriteByte (outfile, C_INT_ATTR);
+	       TtaWriteByte (outfile, C_INT_ATTR);
 	       break;
 	    case AtTextAttr:
-	       BIOwriteByte (outfile, C_TEXT_ATTR);
+	       TtaWriteByte (outfile, C_TEXT_ATTR);
 	       break;
 	    case AtReferenceAttr:
-	       BIOwriteByte (outfile, C_REF_ATTR);
+	       TtaWriteByte (outfile, C_REF_ATTR);
 	       break;
 	    case AtEnumAttr:
-	       BIOwriteByte (outfile, C_ENUM_ATTR);
+	       TtaWriteByte (outfile, C_ENUM_ATTR);
 	       break;
 	 }
 }
@@ -167,37 +167,37 @@ RConstruct          constr;
    switch (constr)
 	 {
 	    case CsIdentity:
-	       BIOwriteByte (outfile, C_IDENTITY_CONSTR);
+	       TtaWriteByte (outfile, C_IDENTITY_CONSTR);
 	       break;
 	    case CsList:
-	       BIOwriteByte (outfile, C_LIST_CONSTR);
+	       TtaWriteByte (outfile, C_LIST_CONSTR);
 	       break;
 	    case CsChoice:
-	       BIOwriteByte (outfile, C_CHOICE_CONSTR);
+	       TtaWriteByte (outfile, C_CHOICE_CONSTR);
 	       break;
 	    case CsAggregate:
-	       BIOwriteByte (outfile, C_AGG_CONSTR);
+	       TtaWriteByte (outfile, C_AGG_CONSTR);
 	       break;
 	    case CsUnorderedAggregate:
-	       BIOwriteByte (outfile, C_UNORD_AGG_CONSTR);
+	       TtaWriteByte (outfile, C_UNORD_AGG_CONSTR);
 	       break;
 	    case CsConstant:
-	       BIOwriteByte (outfile, C_CONST_CONSTR);
+	       TtaWriteByte (outfile, C_CONST_CONSTR);
 	       break;
 	    case CsReference:
-	       BIOwriteByte (outfile, C_REF_CONSTR);
+	       TtaWriteByte (outfile, C_REF_CONSTR);
 	       break;
 	    case CsBasicElement:
-	       BIOwriteByte (outfile, C_BASIC_TYPE_CONSTR);
+	       TtaWriteByte (outfile, C_BASIC_TYPE_CONSTR);
 	       break;
 	    case CsNatureSchema:
-	       BIOwriteByte (outfile, C_NATURE_CONSTR);
+	       TtaWriteByte (outfile, C_NATURE_CONSTR);
 	       break;
 	    case CsPairedElement:
-	       BIOwriteByte (outfile, C_PAIR_CONSTR);
+	       TtaWriteByte (outfile, C_PAIR_CONSTR);
 	       break;
 	    case CsExtensionRule:
-	       BIOwriteByte (outfile, C_EXTENS_CONSTR);
+	       TtaWriteByte (outfile, C_EXTENS_CONSTR);
 	       break;
 	 }
 }
@@ -219,25 +219,25 @@ BasicType           typ;
    switch (typ)
 	 {
 	    case CharString:
-	       BIOwriteByte (outfile, C_CHAR_STRING);
+	       TtaWriteByte (outfile, C_CHAR_STRING);
 	       break;
 	    case GraphicElem:
-	       BIOwriteByte (outfile, C_GRAPHICS);
+	       TtaWriteByte (outfile, C_GRAPHICS);
 	       break;
 	    case Symbol:
-	       BIOwriteByte (outfile, C_SYMBOL);
+	       TtaWriteByte (outfile, C_SYMBOL);
 	       break;
 	    case Picture:
-	       BIOwriteByte (outfile, C_PICTURE);
+	       TtaWriteByte (outfile, C_PICTURE);
 	       break;
 	    case Refer:
-	       BIOwriteByte (outfile, C_REFER);
+	       TtaWriteByte (outfile, C_REFER);
 	       break;
 	    case PageBreak:
-	       BIOwriteByte (outfile, C_PAGE_BREAK);
+	       TtaWriteByte (outfile, C_PAGE_BREAK);
 	       break;
 	    case UnusedBasicType:
-	       BIOwriteByte (outfile, C_UNUSED);
+	       TtaWriteByte (outfile, C_UNUSED);
 	       break;
 	 }
 }
@@ -361,7 +361,7 @@ int                 code;
    int                 i, j;
 
    /* ouvre le fichier */
-   outfile = BIOwriteOpen (fileName);
+   outfile = TtaWriteOpen (fileName);
    if (outfile == 0)
       return False;
 
@@ -387,11 +387,11 @@ int                 code;
    /* ecrit le texte des constantes */
    i = 0;
    do
-      BIOwriteByte (outfile, pSS->SsConstBuffer[i++]);
+      TtaWriteByte (outfile, pSS->SsConstBuffer[i++]);
    while (pSS->SsConstBuffer[i - 1] != '\0' || pSS->SsConstBuffer[i] != '\0');
 
    /* SsFirstDynNature */
-   BIOwriteByte (outfile, '\0');
+   TtaWriteByte (outfile, '\0');
 
    /* ecrit les attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
@@ -429,6 +429,6 @@ int                 code;
 	for (i = 0; i < pSS->SsNExtensRules; i++)
 	   WriteRule (&pSS->SsExtensBlock->EbExtensRule[i]);
      }
-   BIOwriteClose (outfile);
+   TtaWriteClose (outfile);
    return True;
 }

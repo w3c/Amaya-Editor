@@ -9,7 +9,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "thotdir.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 
 /*----------------------------------------------------------------------
    BaseName est un equivalent de la fonction Unix basename         
@@ -109,14 +109,14 @@ char                delim;
 }
 
 /*----------------------------------------------------------------------
-   ThotFile_exist teste l'existence d'un fichier.                       
+   TtaFileExist teste l'existence d'un fichier.                       
    Rend 1 si le fichier a e't'e trouve' et 0 sinon.        
    Si filename est un repertoire, on retourne 0.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotFile_exist (char *filename)
+int                 TtaFileExist (char *filename)
 #else  /* __STDC__ */
-int                 ThotFile_exist (filename)
+int                 TtaFileExist (filename)
 char               *filename;
 
 #endif /* __STDC__ */
@@ -157,12 +157,12 @@ char               *filename;
 }
 
 /*----------------------------------------------------------------------
-   RemoveFile : remove a file.                                     
+   TtaFileUnlink : remove a file.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 RemoveFile (char *filename)
+int                 TtaFileUnlink (char *filename)
 #else  /* __STDC__ */
-int                 RemoveFile (filename)
+int                 TtaFileUnlink (filename)
 char               *filename;
 
 #endif /* __STDC__ */
@@ -368,7 +368,7 @@ void                ThotFile_test (char *name)
 
    space[sizeof (space) - 1] = 0;
    printf ("ThotFile_test: opening %s for CREATE/READ/WRITE\n", name);
-   handle = ThotFile_open (name, ThotFile_CREATE | ThotFile_TRUNCATE | ThotFile_READWRITE);
+   handle = TtaFileOpen (name, ThotFile_CREATE | ThotFile_TRUNCATE | ThotFile_READWRITE);
    if (handle == ThotFile_BADHANDLE)
      {
 	printf ("ThotFile_test: handle == ThotFile_BADHANDLE\n");
@@ -378,34 +378,34 @@ void                ThotFile_test (char *name)
    for (i = 0; i < 100; i++)
      {
 	sprintf (space, format, i);
-	if (ThotFile_write (handle, space, sizeof (space)) == -1)
+	if (TtaFileWrite (handle, space, sizeof (space)) == -1)
 	  {
 	     printf ("ThotFile_test: bad write\n");
 	     break;
 	  }
      }
    printf ("ThotFile_test: closing %s\n", name);
-   if (ThotFile_close (handle) == 0)
+   if (TtaFileClose (handle) == 0)
      {
 	printf ("ThotFile_test: bad write\n");
 	return;
      }
    printf ("ThotFile_test: reopening %s\n", name);
-   handle = ThotFile_open (name, ThotFile_READWRITE);
+   handle = TtaFileOpen (name, ThotFile_READWRITE);
    if (handle == ThotFile_BADHANDLE)
      {
 	printf ("ThotFile_test: handle == ThotFile_BADHANDLE\n");
 	return;
      }
    printf ("ThotFile_test: stating %s\n", name);
-   if (ThotFile_stat (handle, &info) == 0)
+   if (TtaFileStat (handle, &info) == 0)
      {
-	printf ("ThotFile_stat: bad stat\n");
+	printf ("TtaFileStat: bad stat\n");
 	return;
      }
    printf ("ThotFile_test: file %s is %d bytes long\n", name, info.size);
    printf ("ThotFile_test: seeking end of %s\n", name);
-   offset = ThotFile_seek (handle, 0, ThotFile_SEEKEND);
+   offset = TtaFileSeek (handle, 0, ThotFile_SEEKEND);
    if (offset == ThotFile_BADOFFSET)
      {
 	printf ("ThotFile_test: offset == ThotFile_BADOFFSET\n");
@@ -413,7 +413,7 @@ void                ThotFile_test (char *name)
      }
    printf ("ThotFile_test: end found at %d\n", offset);
    printf ("ThotFile_test: seeking to offset %d in %s\n", offset - 4 * sizeof (space), name);
-   offset = ThotFile_seek (handle, offset - 4 * sizeof (space), ThotFile_SEEKSET);
+   offset = TtaFileSeek (handle, offset - 4 * sizeof (space), ThotFile_SEEKSET);
    if (offset == ThotFile_BADOFFSET)
      {
 	printf ("ThotFile_test: offset == ThotFile_BADOFFSET\n");
@@ -424,7 +424,7 @@ void                ThotFile_test (char *name)
      {
 	int                 red;
 
-	red = ThotFile_read (handle, space, sizeof (space));
+	red = TtaFileRead (handle, space, sizeof (space));
 	if (red == -1)
 	  {
 	     printf ("ThotFile_test: bad write\n");
@@ -438,7 +438,7 @@ void                ThotFile_test (char *name)
 	printf ("ThotFile_test: %s should == %d\n", space, i);
      }
    printf ("ThotFile_test: closing %s\n", name);
-   if (ThotFile_close (handle) == 0)
+   if (TtaFileClose (handle) == 0)
      {
 	printf ("ThotFile_test: bad write\n");
 	return;
@@ -527,12 +527,12 @@ void                InitErrorHandler ()
 
 
 /*----------------------------------------------------------------------
-   ThotFile_open returns: ThotFile_BADHANDLE: error handle:		
+   TtaFileOpen returns: ThotFile_BADHANDLE: error handle:		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotFileHandle      ThotFile_open (char *name, ThotFileMode mode)
+ThotFileHandle      TtaFileOpen (char *name, ThotFileMode mode)
 #else  /* __STDC__ */
-ThotFileHandle      ThotFile_open (name, mode)
+ThotFileHandle      TtaFileOpen (name, mode)
 char               *name;
 ThotFileMode        mode;
 
@@ -571,12 +571,12 @@ ThotFileMode        mode;
 }
 
 /*----------------------------------------------------------------------
-   ThotFile_close returns, 0: error, 1: OK.				
+   TtaFileClose returns, 0: error, 1: OK.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotFile_close (ThotFileHandle handle)
+int                 TtaFileClose (ThotFileHandle handle)
 #else  /* __STDC__ */
-int                 ThotFile_close (handle)
+int                 TtaFileClose (handle)
 ThotFileHandle      handle;
 
 #endif /* __STDC__ */
@@ -592,12 +592,12 @@ ThotFileHandle      handle;
 }
 
 /*----------------------------------------------------------------------
-   ThotFile_read returns +n: number of bytes read, 0: at EOF, -1: error 
+   TtaFileRead returns +n: number of bytes read, 0: at EOF, -1: error 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotFile_read (ThotFileHandle handle, void *buffer, unsigned int count)
+int                 TtaFileRead (ThotFileHandle handle, void *buffer, unsigned int count)
 #else  /* __STDC__ */
-int                 ThotFile_read (handle, buffer, count)
+int                 TtaFileRead (handle, buffer, count)
 ThotFileHandle      handle;
 void               *buffer;
 unsigned int        count;
@@ -621,12 +621,12 @@ unsigned int        count;
 }
 
 /*----------------------------------------------------------------------
-   ThotFile_write returns:  n: number of bytes written, -1: error	
+   TtaFileWrite returns:  n: number of bytes written, -1: error	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotFile_write (ThotFileHandle handle, void *buffer, unsigned int count)
+int                 TtaFileWrite (ThotFileHandle handle, void *buffer, unsigned int count)
 #else  /* __STDC__ */
-int                 ThotFile_write (handle, buffer, count)
+int                 TtaFileWrite (handle, buffer, count)
 ThotFileHandle      handle;
 void               *buffer;
 unsigned int        count;
@@ -651,12 +651,12 @@ unsigned int        count;
 }
 
 /*----------------------------------------------------------------------
-   ThotFile_seek returns: ThotFile_BADOFFSET: error, ThotFileOffset	
+   TtaFileSeek returns: ThotFile_BADOFFSET: error, ThotFileOffset	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotFileOffset      ThotFile_seek (ThotFileHandle handle, ThotFileOffset offset, ThotFileOrigin origin)
+ThotFileOffset      TtaFileSeek (ThotFileHandle handle, ThotFileOffset offset, ThotFileOrigin origin)
 #else  /* __STDC__ */
-ThotFileOffset      ThotFile_seek (handle, offset, origin)
+ThotFileOffset      TtaFileSeek (handle, offset, origin)
 ThotFileHandle      handle;
 ThotFileOffset      offset;
 ThotFileOrigin      origin;
@@ -674,12 +674,12 @@ ThotFileOrigin      origin;
 }
 
 /*----------------------------------------------------------------------
-   ThotFile_seek returns: 1: your data is all there, sir, 0: error	
+   TtaFileSeek returns: 1: your data is all there, sir, 0: error	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotFile_stat (ThotFileHandle handle, ThotFileInfo * pInfo)
+int                 TtaFileStat (ThotFileHandle handle, ThotFileInfo * pInfo)
 #else  /* __STDC__ */
-int                 ThotFile_stat (handle, pInfo)
+int                 TtaFileStat (handle, pInfo)
 ThotFileHandle      handle;
 ThotFileInfo       *pInfo;
 
@@ -710,12 +710,12 @@ ThotFileInfo       *pInfo;
 }
 
 /*----------------------------------------------------------------------
-   ThotCopyFile copies a source file into a target file.              
+   TtaFileCopy copies a source file into a target file.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ThotCopyFile (char *sourceFileName, char *targetFileName)
+void                TtaFileCopy (char *sourceFileName, char *targetFileName)
 #else
-void                ThotCopyFile (sourceFileName, targetFileName)
+void                TtaFileCopy (sourceFileName, targetFileName)
 char               *sourceFileName;
 char               *targetFileName;
 

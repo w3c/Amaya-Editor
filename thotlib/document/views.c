@@ -14,9 +14,9 @@
 #include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "appdialogue.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #undef EXPORT

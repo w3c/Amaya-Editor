@@ -18,7 +18,7 @@
 #include "dialog.h"
 #include "appdialogue.h"
 #include "frame.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 
 #undef EXPORT
 #define EXPORT extern

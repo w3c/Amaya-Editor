@@ -10,8 +10,8 @@ extern int AttrValue ( PtrAttribute pAttr );
 extern int IntegerRule ( PtrPRule pPRule,
                          PtrElement pEl,
                          DocViewNumber view,
-                         boolean *ok,
-                         TypeUnit *unit,
+                         boolean * ok,
+                         TypeUnit * unit,
                          PtrAttribute pAttr );
 extern void GetBufConst ( PtrAbstractBox pAb );
 extern void UpdateFreeVol ( PtrAbstractBox pAb,
@@ -23,9 +23,9 @@ extern FunctionType TypeCreatedRule ( PtrDocument pDoc,
                                       PtrAbstractBox pAbbCreator,
                                       PtrAbstractBox pAbbCreated );
 extern void SearchPresSchema ( PtrElement pEl,
-                               PtrPSchema *pSchP,
+                               PtrPSchema * pSchP,
                                int *indexElType,
-                               PtrSSchema *pSchS );
+                               PtrSSchema * pSchS );
 extern void ApplyCopy ( PtrDocument pDoc,
                         PtrPRule pPRule,
                         PtrAbstractBox pAb,
@@ -37,7 +37,7 @@ extern boolean ApplyRule ( PtrPRule pPRule,
                            PtrAttribute pAttr );
 extern PtrPRule SearchPresRule ( PtrElement pEl,
                                  PRuleType ruleType,
-                                 boolean *isNew,
+                                 boolean * isNew,
                                  PtrDocument pDoc,
                                  int view );
 extern void RedispAbsBox ( PtrAbstractBox pAb,
@@ -50,8 +50,8 @@ extern int AttrValue (/* PtrAttribute pAttr */);
 extern int IntegerRule (/* PtrPRule pPRule,
                            PtrElement pEl,
                            DocViewNumber view,
-                           boolean *ok,
-                           TypeUnit *unit,
+                           boolean * ok,
+                           TypeUnit * unit,
                            PtrAttribute pAttr */);
 extern void GetBufConst (/* PtrAbstractBox pAb */);
 extern void UpdateFreeVol (/* PtrAbstractBox pAb,
@@ -63,9 +63,9 @@ extern FunctionType TypeCreatedRule (/* PtrDocument pDoc,
                                         PtrAbstractBox pAbbCreator,
                                         PtrAbstractBox pAbbCreated */);
 extern void SearchPresSchema (/* PtrElement pEl,
-                                 PtrPSchema *pSchP,
+                                 PtrPSchema * pSchP,
                                  int *indexElType,
-                                 PtrSSchema *pSchS */);
+                                 PtrSSchema * pSchS */);
 extern void ApplyCopy (/* PtrDocument pDoc,
                           PtrPRule pPRule,
                           PtrAbstractBox pAb,
@@ -77,7 +77,7 @@ extern boolean ApplyRule (/* PtrPRule pPRule,
                              PtrAttribute pAttr */);
 extern PtrPRule SearchPresRule (/* PtrElement pEl,
                                    PRuleType ruleType,
-                                   boolean *isNew,
+                                   boolean * isNew,
                                    PtrDocument pDoc,
                                    int view */);
 extern void RedispAbsBox (/* PtrAbstractBox pAb,

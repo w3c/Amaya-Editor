@@ -13,7 +13,7 @@
 #include "typemedia.h"
 #include "libmsg.h"
 #include "message.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 typedef struct _APresentation
   {

@@ -10,7 +10,8 @@ extern void DebugBreak ( void );
 extern void MyWarningHandler ( void );
 extern void TtaInitDialogueWindows ( char *server,
                                      char *txtOK,
-                                     char *txtRAZ );
+                                     char *txtRAZ,
+                                     char *txtDone );
 extern void TtaChangeDialogueFonts ( char *menufont,
                                      char *formfont );
 extern int TtaGetReferencesBase ( int number );
@@ -159,7 +160,8 @@ extern void DebugBreak (/* void */);
 extern void MyWarningHandler (/* void */);
 extern void TtaInitDialogueWindows (/* char *server,
                                        char *txtOK,
-                                       char *txtRAZ */);
+                                       char *txtRAZ,
+                                       char *txtDone */);
 extern void TtaChangeDialogueFonts (/* char *menufont,
                                        char *formfont */);
 extern int TtaGetReferencesBase (/* int number */);

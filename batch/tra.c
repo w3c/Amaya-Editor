@@ -19,12 +19,12 @@
 #include "typemedia.h"
 #include "typegrm.h"
 #include "typetra.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "compilmsg.h"
 #include "tramsg.h"
 #include "message.h"
 #include "thotpattern.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #define EXPORT
@@ -3114,12 +3114,12 @@ char              **argv;
 	     /* ajoute le suffixe .SCH */
 	     strcat (srceFileName, ".SCH");
 
-	     if (ThotFile_exist (srceFileName) == 0)
+	     if (TtaFileExist (srceFileName) == 0)
 		TtaDisplaySimpleMessage (FATAL, TRA, MISSING_FILE);
 	     else
 		/* le fichier d'entree existe, on l'ouvre */
 	       {
-		  infile = BIOreadOpen (srceFileName);
+		  infile = TtaReadOpen (srceFileName);
 		  /* supprime le suffixe ".SCH" */
 		  srceFileName[len] = '\0';
 		  /* acquiert la memoire pour le schema de traduction */
@@ -3137,7 +3137,7 @@ char              **argv;
 		       i = 0;
 		       do
 			 {
-			    fileOK = BIOreadByte (infile, &inputLine[i]);
+			    fileOK = TtaReadByte (infile, &inputLine[i]);
 			    i++;
 			 }
 		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
@@ -3180,7 +3180,7 @@ char              **argv;
 			    while (wi != 0 && !error);
 			 }	/* il n'y a plus de mots dans la ligne */
 		    }
-		  BIOreadClose (infile);
+		  TtaReadClose (infile);
 		  if (!error)
 		     ParserEnd ();	/* fin d'analyse */
 		  if (!error)

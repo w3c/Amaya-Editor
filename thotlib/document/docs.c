@@ -14,9 +14,9 @@
 #include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "appdialogue.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #undef EXPORT
@@ -299,7 +299,7 @@ PathBuffer          directory;
 	   MakeCompleteName (docType, "STR", directoryBuffer, fileNameBuffer, &i);
 	   /* teste si le fichier '.STR' existe */
 
-	   if (ThotFile_exist (fileNameBuffer) == 0)
+	   if (TtaFileExist (fileNameBuffer) == 0)
 	     {
 		strncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
 		strcat (fileNameBuffer, ".STR");
@@ -784,7 +784,7 @@ boolean             withEvent;
 
    if (!pDoc->DocReadOnly)
      {
-	pivotFile = BIOwriteOpen (name);
+	pivotFile = TtaWriteOpen (name);
 	if (pivotFile == 0)
 	   return FALSE;
 	else
@@ -804,7 +804,7 @@ boolean             withEvent;
 	       {
 		  /* ecrit le document dans ce fichier sous la forme pivot */
 		  SauveDoc (pivotFile, pDoc);
-		  BIOwriteClose (pivotFile);
+		  TtaWriteClose (pivotFile);
 		  if (withEvent)
 		    {
 		       /* envoie l'evenement DocSave.Post a l'application */
@@ -940,7 +940,7 @@ boolean             move;
 		/* >> tout s'est bien passe' << */
 		/* detruit l'ancienne sauvegarde */
 	       {
-		  RemoveFile (bakName);
+		  TtaFileUnlink (bakName);
 		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN),
 				     pivName);
 		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
@@ -959,7 +959,7 @@ boolean             move;
 		  UpdateRef (pDoc);
 		  /* detruit le fichier .REF du document sauve' */
 		  FindCompleteName (pDoc->DocDName, "REF", oldDir, buf, &i);
-		  RemoveFile (buf);
+		  TtaFileUnlink (buf);
 		  if (!sameFile)
 		    {
 		       if (strcmp (dirName, oldDir) != 0 &&
@@ -973,7 +973,7 @@ boolean             move;
 			       rename (buf, pivName);
 			       /* detruire l'ancien fichier PIV */
 			       FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
-			       RemoveFile (buf);
+			       TtaFileUnlink (buf);
 			    }
 
 		       if (strcmp (docName, pDoc->DocDName) != 0)
@@ -1003,7 +1003,7 @@ boolean             move;
 				 /* detruit l'ancien fichier .PIV */
 				 FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf,
 						   &i);
-				 RemoveFile (buf);
+				 TtaFileUnlink (buf);
 			      }
 			 }
 		       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);

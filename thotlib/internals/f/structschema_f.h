@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void CreateDocument ( PtrDocument * pDoc );
-extern void GetSRuleFromName ( int * typeNum,
+extern void GetSRuleFromName ( int *typeNum,
                                PtrSSchema * pSS,
                                Name typeName );
 extern int GetTypeNumIdentity ( int typeNum,
@@ -32,7 +32,7 @@ extern boolean AllowedIncludedElem ( PtrElement pEl,
                                      int typeNum,
                                      PtrSSchema pSS );
 extern void ListOrAggregateRule ( PtrElement pEl,
-                                  int * typeNum,
+                                  int *typeNum,
                                   PtrSSchema * pSS );
 extern RConstruct GetElementConstruct ( PtrElement pEl );
 extern PtrElement AncestorList ( PtrElement pEl );
@@ -41,14 +41,14 @@ extern boolean CanChangeNumberOfElem ( PtrElement pEl,
 extern void SRuleForSibling ( PtrElement pEl,
                               boolean before,
                               int distance,
-                              int * typeNum,
+                              int *typeNum,
                               PtrSSchema * pSS,
                               boolean * list,
                               boolean * optional );
 extern void ReferredType ( PtrElement pRefEl,
                            PtrAttribute pRefAttr,
                            PtrSSchema * pSS,
-                           int * typeNum );
+                           int *typeNum );
 extern boolean CanCutElement ( PtrElement pEl,
                                PtrDocument pDoc,
                                PtrElement pElCut );
@@ -104,7 +104,7 @@ extern boolean CanSplitElement ( PtrElement firstEl,
 #else /* __STDC__ */
 
 extern void CreateDocument (/* PtrDocument * pDoc */);
-extern void GetSRuleFromName (/* int * typeNum,
+extern void GetSRuleFromName (/* int *typeNum,
                                  PtrSSchema * pSS,
                                  Name typeName */);
 extern int GetTypeNumIdentity (/* int typeNum,
@@ -129,7 +129,7 @@ extern boolean AllowedIncludedElem (/* PtrElement pEl,
                                        int typeNum,
                                        PtrSSchema pSS */);
 extern void ListOrAggregateRule (/* PtrElement pEl,
-                                    int * typeNum,
+                                    int *typeNum,
                                     PtrSSchema * pSS */);
 extern RConstruct GetElementConstruct (/* PtrElement pEl */);
 extern PtrElement AncestorList (/* PtrElement pEl */);
@@ -138,14 +138,14 @@ extern boolean CanChangeNumberOfElem (/* PtrElement pEl,
 extern void SRuleForSibling (/* PtrElement pEl,
                                 boolean before,
                                 int distance,
-                                int * typeNum,
+                                int *typeNum,
                                 PtrSSchema * pSS,
                                 boolean * list,
                                 boolean * optional */);
 extern void ReferredType (/* PtrElement pRefEl,
                              PtrAttribute pRefAttr,
                              PtrSSchema * pSS,
-                             int * typeNum */);
+                             int *typeNum */);
 extern boolean CanCutElement (/* PtrElement pEl,
                                  PtrDocument pDoc,
                                  PtrElement pElCut */);

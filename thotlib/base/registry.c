@@ -67,11 +67,11 @@ static char        *AppRegistryEntryAppli = NULL;
 static char        *Thot_Dir;
 
 #ifdef __STDC__
-extern int          ThotFile_exist (char *);
+extern int          TtaFileExist (char *);
 extern void         MakeCompleteName (Name, char *, PathBuffer, PathBuffer, int *);
 
 #else  /* __STDC__ */
-extern int          ThotFile_exist ();
+extern int          TtaFileExist ();
 extern void         MakeCompleteName ();
 
 #endif
@@ -612,7 +612,7 @@ static int          IsThotDir (const char *path)
    strcat (filename, THOT_CONFIG_FILENAME);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_INI_FILENAME);
-   if (ThotFile_exist (filename))
+   if (TtaFileExist (filename))
       return (1);
    else
       return (0);
@@ -938,7 +938,7 @@ char               *appArgv0;
     * second case, the argv[0] indicate a relative path name.
     * The exec name is obtained by appending the current directory.
     */
-   else if (ThotFile_exist (appArgv0))
+   else if (TtaFileExist (appArgv0))
      {
 	getcwd (&execname[0], sizeof (execname));
 	strcat (execname, DIR_STR);
@@ -1110,7 +1110,7 @@ char               *appArgv0;
    strcat (filename, THOT_CONFIG_FILENAME);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_INI_FILENAME);
-   if (ThotFile_exist (filename))
+   if (TtaFileExist (filename))
      {
 #ifdef DEBUG_REGISTRY
 	fprintf (stderr, "reading system %s from %s\n",
@@ -1128,7 +1128,7 @@ char               *appArgv0;
 	strcpy (filename, home_dir);
 	strcat (filename, DIR_STR);
 	strcat (filename, THOT_INI_FILENAME);
-	if (ThotFile_exist (filename))
+	if (TtaFileExist (filename))
 	  {
 #ifdef DEBUG_REGISTRY
 	     fprintf (stderr, "reading user's %s from %s\n",
@@ -1186,7 +1186,7 @@ char               *fullName;
 	    case 1:
 	       /* Recherche dans les schemas et les documents */
 	       strcat (fullName, fileName);
-	       ret = ThotFile_exist (fullName);
+	       ret = TtaFileExist (fullName);
 	       /* Recherche le fichier dans les directories de schemas */
 	       i = 0;
 	       j = 0;
@@ -1200,7 +1200,7 @@ char               *fullName;
 		    i++;
 		    j = 0;
 		    sprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
-		    ret = ThotFile_exist (fullName);
+		    ret = TtaFileExist (fullName);
 		 }
 
 	       /* continue la recheche dans les repertoires de documents */
@@ -1216,7 +1216,7 @@ char               *fullName;
 		    i++;
 		    j = 0;
 		    sprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
-		    ret = ThotFile_exist (fullName);
+		    ret = TtaFileExist (fullName);
 		 }
 	       break;
 
@@ -1242,11 +1242,11 @@ char               *fullName;
 	 }
 
    /* on cherche le fichier */
-   ret = ThotFile_exist (fullName);
+   ret = TtaFileExist (fullName);
    if (ret == 0)
      {
 	strcpy (fullName, fileName);
-	ret = ThotFile_exist (fullName);
+	ret = TtaFileExist (fullName);
      }
    return ret;
 }

@@ -643,7 +643,7 @@ typedef unsigned long mode_t;
 #define cfree   VAXC$CFREE_OPT
 #define realloc VAXC$REALLOC_OPT
 #endif /* VAXC but not DECC */
-#define RemoveFile remove
+#define TtaFileUnlink remove
 #define gmtime localtime
 #include <stat.h>
 #define S_ISDIR(m)      (((m)&S_IFMT) == S_IFDIR)
@@ -1170,7 +1170,7 @@ extern int          sys_nerr;
 #endif
 
 #ifndef REMOVE
-#define REMOVE(a)       RemoveFile((a))
+#define REMOVE(a)       TtaFileUnlink((a))
 #endif
 
 #ifndef DEFAULT_SUFFIXES

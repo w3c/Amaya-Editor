@@ -14,7 +14,7 @@
 #include "message.h"
 #include "dialog.h"
 #include "document.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
 
 #undef EXPORT
@@ -121,7 +121,7 @@ char               *data;
 		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DIR), DirectoryDocToCreate);
 		    else
 		      {
-			 if (ThotFile_exist (docName))
+			 if (TtaFileExist (docName))
 			   {
 			      /* demande confirmation */
 			      sprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), docName);

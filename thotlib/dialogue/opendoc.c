@@ -14,9 +14,9 @@
 #include "dialog.h"
 #include "application.h"
 #include "document.h"
-#include "thotfile.h"
+#include "fileaccess.h"
 #include "thotdir.h"
-#include "storage.h"
+#include "fileaccess.h"
 
 #define MAX_ARGS 20
 
@@ -349,7 +349,7 @@ char               *data;
 
 	       MakeCompleteName (DefaultDocumentName, "PIV", DirectoryName, docName, &i);
 	       /* teste si le fichier 'PIV' existe */
-	       if (ThotFile_exist (docName) != 0)
+	       if (TtaFileExist (docName) != 0)
 		  /* le fichier PIV existe, on ouvre le document */
 		 {
 		    /* acquiert et initialise un descripteur de document */
@@ -367,7 +367,7 @@ char               *data;
 		    /* cherche s'il existe un fichier de ce nom, sans extension */
 		    strncpy (DirectoryName, DocumentPath, MAX_PATH);
 		    MakeCompleteName (DefaultDocumentName, "", DirectoryName, docName, &i);
-		    if (ThotFile_exist (docName) == 0)
+		    if (TtaFileExist (docName) == 0)
 		       /* le fichier n'existe pas */
 		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), DefaultDocumentName);
 		    else

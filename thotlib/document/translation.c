@@ -17,7 +17,7 @@
 #include "typemedia.h"
 #include "typetra.h"
 #include "language.h"
-#include "storage.h"
+#include "fileaccess.h"
 #include "libmsg.h"
 #include "appaction.h"
 #include "app.h"
@@ -2941,16 +2941,16 @@ boolean            *removeEl;
 		    MakeCompleteName (fname, "", directoryName, fullName, &i);
 		 }
 	       /* ouvre le fichier a inclure */
-	       includedFile = BIOreadOpen (fullName);
+	       includedFile = TtaReadOpen (fullName);
 	       if (includedFile == 0)
 		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCLUDE_FILE_IMP), fname);
 	       else
 		  /* le fichier a inclure est ouvert */
 		 {
-		    while (BIOreadByte (includedFile, &c))
+		    while (TtaReadByte (includedFile, &c))
 		       /* on ecrit dans le fichier principal courant */
 		       PutChar (c, 1, NULL, pDoc, lineBreak);
-		    BIOreadClose (includedFile);
+		    TtaReadClose (includedFile);
 		 }
 	       break;
 	    default:
