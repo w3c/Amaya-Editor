@@ -25,7 +25,7 @@
 /********************** static variables ***********************/
 
 /* 
- * Namespace and Predicate names used in an Annotation Description 
+ * Namespace and Property names used in an Annotation Description 
  */
 static const char * DC_NS = "http://purl.org/dc/elements/1.0/";
 static const char * DC_CREATOR = "creator";
@@ -210,7 +210,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
             } 
             else 
               {
-                int len = sizeof (ANNOT_NS) - 1;
+                int len = strlen (ANNOT_NS) - 1;
                 if (!strncmp (object, ANNOT_NS, len)) 
                   {
                     if (*object + len)
