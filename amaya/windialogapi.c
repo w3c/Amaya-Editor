@@ -164,7 +164,6 @@ static ThotWindow         wndCSSList;
 static ThotWindow         wndLangList;
 static ThotWindow         wndListRule;
 static ThotWindow         wndEditRule;
-static ThotWindow         EditURLWnd;
 static ThotWindow         transURLWnd;
 static ThotWindow         copyImgWnd;
 static ThotWindow         WndSearchEdit;
@@ -409,7 +408,6 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM
       SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TEXT("Clear"));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
-      EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
 	  if (tmpDocName[0] != WC_EOS)
 		  SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
 	  else
@@ -991,6 +989,9 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPAR
 	  if (UpdateURLs)
 	    CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
 	}
+	  /* set the default focus and return FALSE to validate it */
+	  SetFocus (GetDlgItem (hwnDlg, IDC_EDITDOCSAVE));
+	  return FALSE;
       break;
     
     case WM_COMMAND:
@@ -1087,10 +1088,12 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPA
       SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TEXT("Clear"));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
-      EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
       SetWindowText (hwnDlg, wndTitle);
       SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
       urlToOpen [0] = 0;
+	  /* put the focus on the first dialog item */
+	  SetFocus (GetDlgItem (hwnDlg, IDC_GETURL));
+	  return FALSE;
       break;
 
     case WM_COMMAND:
