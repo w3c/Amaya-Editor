@@ -2035,15 +2035,9 @@ static void SafePut_init (void)
 static void SafePut_init ()
 #endif /* __STDC__ */
 {
-  /***
   CharUnit* strptr;
   CharUnit* str = NULL;
-  char*     ptr, strptrA[MAX_LENGTH];
-  ***/
-  STRING strptr;
-  STRING str = NULL;
-  char  *strptrA, *ptr;
-  /*****/
+  char*     ptr, *strptrA;
   char*     domain;
 
   /* get the proxy settings from the thot.ini file */
@@ -2051,13 +2045,9 @@ static void SafePut_init ()
   if (strptr && *strptr)
     {
       /* Get copy we can mutilate */
-      /*****
       str = StringDuplicate (strptr);
+      strptrA = (char*) TtaGetMemory (StringLength (strptr) + 1);
       cus2iso_strcpy (strptrA, strptr);
-      ****/
-      str = TtaStrdup (strptr); 
-      strptrA = WideChar2ISO (str);
-      /******/
       /* convert to lowercase */
       ptr = strptrA;
       while (*ptr) 
@@ -2073,6 +2063,7 @@ static void SafePut_init ()
 	  HTList_addObject (safeput_list, TtaStrdup (domain)); 
 
       TtaFreeMemory (str);
+      TtaFreeMemory (strptrA);
     }
 }
 
