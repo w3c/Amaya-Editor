@@ -1344,7 +1344,7 @@ void                CutCommand (ThotBool save)
 		    pSave = NULL;
 		    pLastSave = NULL;
 		    pFree = NULL;
-		    while (pEl != NULL)
+		    while (pEl != NULL && pEl->ElStructSchema != NULL)
 		      {
 			if (!pageSelected)
 			  /* On ne detruit pas les marques de pages,
