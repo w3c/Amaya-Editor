@@ -308,9 +308,9 @@ void  MathMLEntityCreatedWithExpat (int entityValue, char *entityName,
   int		 len;
   Language       lang;
 #define MAX_ENTITY_LENGTH 80
-  char	 buffer[MAX_ENTITY_LENGTH];
-  char	 bufName[MAX_ENTITY_LENGTH];
-  char         msgBuffer[MAX_ENTITY_LENGTH + 50];
+  char	         buffer[MAX_ENTITY_LENGTH];
+  char	         bufName[MAX_ENTITY_LENGTH];
+  char           msgBuffer[MAX_ENTITY_LENGTH + 50];
   
   if (entityValue <= 255 && entityFound)
     {
@@ -555,12 +555,13 @@ static void	NextNotComment (Element* el, Element* prev)
   CheckMathSubExpressions
   Children of element el should be of type type1, type2, and type3.
   If they are not, wrap them in elements of these types.
-  If element el have too many or not enough children, return FALSE.
+  If element el has too many or not enough children, return FALSE.
   ----------------------------------------------------------------------*/
 static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int type3, Document doc)
 {
   Element	child, new, prev;
   ElementType	elType, childType;
+  char          msgBuffer[200];
   ThotBool      result;
 
   result = TRUE;
@@ -572,12 +573,22 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
     {
     if (child)
       /* no child expected and there is one, error */
-      result = FALSE;
+      {
+	sprintf (msgBuffer, "No subexpression allowed in %s",
+		 TtaGetElementTypeName (TtaGetElementType (el)));
+	XmlParseError (errorParsing, msgBuffer, 0);
+	result = FALSE;
+      }
     }
   else
     if (!child)
       /* a first child is expected and it's missing */
-      result = FALSE;
+      {
+	sprintf (msgBuffer, "Missing subexpression in %s",
+		 TtaGetElementTypeName (TtaGetElementType (el)));
+	XmlParseError (errorParsing, msgBuffer, 0);
+	result = FALSE;
+      }
     else
       {
       elType.ElTypeNum = type1;
@@ -601,13 +612,23 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
         {
         if (child)
           /* this second child is not expected, error */
-          result = FALSE;
+	  {
+	    sprintf (msgBuffer, "Only 1 subexpression allowed in %s",
+		     TtaGetElementTypeName (TtaGetElementType (el)));
+	    XmlParseError (errorParsing, msgBuffer, 0);
+	    result = FALSE;
+	  }
         }
       else
 	{
 	  if (!child)
 	    /* a second child is expected and it's missing */
-	    result = FALSE;
+	    {
+	      sprintf (msgBuffer, "2 subexpressions required in %s",
+		       TtaGetElementTypeName (TtaGetElementType (el)));
+	      XmlParseError (errorParsing, msgBuffer, 0);
+	      result = FALSE;
+	    }
 	  else
 	    {
 	      elType.ElTypeNum = type2;
@@ -628,13 +649,23 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 		{
 		if (child)
 		  /* this third child is not expected, error */
-		  result = FALSE;
+		  {
+		    sprintf (msgBuffer, "Only 2 subexpressions allowed in %s",
+			     TtaGetElementTypeName (TtaGetElementType (el)));
+		    XmlParseError (errorParsing, msgBuffer, 0);
+		    result = FALSE;
+		  }
 		}
 	      else
 		{
 		  if (!child)
 		    /* a third child is expected and it's missing */
-		    result = FALSE;
+		    {
+		      sprintf (msgBuffer, "3 subexpressions required in %s",
+			       TtaGetElementTypeName (TtaGetElementType (el)));
+		      XmlParseError (errorParsing, msgBuffer, 0);
+		      result = FALSE;
+		    }
 		  else
 		    {
 		      elType.ElTypeNum = type3;
@@ -654,7 +685,12 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 		  NextNotComment (&child, &prev);
 		  if (child)
 		    /* this fourth child is unexpected */
-		    result = FALSE;
+		    {
+		      sprintf (msgBuffer,"Only 3 subexpressions allowed in %s",
+			       TtaGetElementTypeName (TtaGetElementType (el)));
+		      XmlParseError (errorParsing, msgBuffer, 0);
+		      result = FALSE;
+		    }
 		}
 	    }
         }
@@ -1312,7 +1348,7 @@ void SetFontstyleAttr (Element el, Document doc)
         else
 	   /* MI contains a single character. Remove attribute IntFontstyle
 	      if it exists, except if it's ImaginaryI, ExponentialE or
-	      DifferentialD. */
+	      DifferentialD */
 	   {
 	   italic = TRUE;
 	   textEl = TtaGetFirstChild (el);
@@ -1328,9 +1364,9 @@ void SetFontstyleAttr (Element el, Document doc)
 		  {
 		  value = TtaGetMemory (len+1);
 		  TtaGiveTextAttributeValue (attr, value, &len);
-		  if (strcmp (value, "&ImaginaryI;") == 0 ||
-		      strcmp (value, "&ExponentialE;") == 0 ||
-		      strcmp (value, "&DifferentialD;") == 0)
+		  if (strcmp (&value[1], "ImaginaryI;") == 0 ||
+		      strcmp (&value[1], "ExponentialE;") == 0 ||
+		      strcmp (&value[1], "DifferentialD;") == 0)
 		    italic = FALSE;
 		  TtaFreeMemory (value);
 		  }
@@ -1704,6 +1740,65 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
      }
 }
 
+/*----------------------------------------------------------------------
+   CreateOpeningOrClosingFence
+   Create the OpeningFence or ClosingFence element (depending on parameter
+   open) for the MFENCED element el which contain the fencedExpression
+   element.
+  ----------------------------------------------------------------------*/
+static void  CreateOpeningOrClosingFence (Element fencedExpression,
+					  Element el, Document doc,
+					  ThotBool open)
+{
+  ElementType	elType;
+  Element       leaf, fence;
+  AttributeType attrType;
+  Attribute     attr;
+  int           length;
+  char          text[32];
+  char          c;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (open)
+    {
+      c = '(';    /* default value of attribute 'open' */
+      attrType.AttrTypeNum = MathML_ATTR_open;
+      elType.ElTypeNum = MathML_EL_OpeningFence;
+    }
+  else
+    {
+      c = ')';    /* default value of attribute 'close' */
+      attrType.AttrTypeNum = MathML_ATTR_close;
+      elType.ElTypeNum = MathML_EL_ClosingFence;
+    }
+  attr = TtaGetAttribute (el, attrType);
+  if (attr != NULL)
+    {
+      length = 31;
+      TtaGiveTextAttributeValue (attr, text, &length);
+      if (length != 1)
+	/* content of attribute open or close should be a single character */
+	c = '?';
+      else
+	{
+	  c = (char)text[0];
+	  /* filter characters that would represent strange symbols, such
+	     as root, integrals, arrows, etc. */
+	  if (c == 'r' || c == 'i' || c == 'c' || c == 'd' || c == 'S' ||
+	      c == 'P' || c == 'I' || c == 'U' || c == 'o' || c == 'u' ||
+	      c == 'h' || c == 'v' || c == 'R' || c == '^' || c == 'L' ||
+	      c == 'V' || c == 'D')
+	    c = '?';
+	}
+    }
+  fence = TtaNewElement (doc, elType);
+  TtaInsertSibling (fence, fencedExpression, open, doc);
+  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+  leaf = TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&leaf, fence, doc);
+  TtaSetGraphicsShape (leaf, c, doc);
+}
 
 /*----------------------------------------------------------------------
    TransformMFENCED
@@ -1713,13 +1808,7 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
 static void      TransformMFENCED (Element el, Document doc)
 {
    ElementType	 elType;
-   Element	 child, fencedExpression, leaf, fence, next, prev,
-		 firstChild;
-   AttributeType attrType;
-   Attribute     attr;
-   int           length;
-   char        text[32];
-   char          c;
+   Element	 child, fencedExpression, next, prev, firstChild;
 
    child = TtaGetFirstChild (el);
    if (child != NULL)
@@ -1799,41 +1888,10 @@ static void      TransformMFENCED (Element el, Document doc)
 	}
 
       /* create the OpeningFence element according to the open attribute */
-      c = '(';
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = MathML_ATTR_open;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-	{
-        length = 7;
-        TtaGiveTextAttributeValue (attr, text, &length);
-	c = (char)text[0];
-	}
-      elType.ElTypeNum = MathML_EL_OpeningFence;
-      fence = TtaNewElement (doc, elType);
-      TtaInsertSibling (fence, fencedExpression, TRUE, doc);
-      elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-      leaf = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&leaf, fence, doc);
-      TtaSetGraphicsShape (leaf, c, doc);
+      CreateOpeningOrClosingFence (fencedExpression, el, doc, TRUE);
 
       /* create the ClosingFence element according to close attribute */
-      c = ')';
-      attrType.AttrTypeNum = MathML_ATTR_close;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-	{
-        length = 7;
-        TtaGiveTextAttributeValue (attr, text, &length);
-	c = (char) text[0];
-	}
-      elType.ElTypeNum = MathML_EL_ClosingFence;
-      fence = TtaNewElement (doc, elType);
-      TtaInsertSibling (fence, fencedExpression, FALSE, doc);
-      elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-      leaf = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&leaf, fence, doc);
-      TtaSetGraphicsShape (leaf, c, doc);
+      CreateOpeningOrClosingFence (fencedExpression, el, doc, FALSE);
       }
 }
 
