@@ -1406,7 +1406,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  pBox->BxLPadding - pFrame->FrXOrg;
       y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 	  pBox->BxTPadding - pFrame->FrYOrg;
-      y1 = pBox->BxYOrg + pBox->BxHorizRef/*y + BoxFontBase (pBox->BxFont)*/;
+      y1 = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
       /* no previous spaces */
       bl = 0;
       charleft = pBox->BxNChars;
@@ -1448,7 +1448,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  lg = lgspace;
 		  if (newbl > 0)
 		    {
-		      newbl--; charleft--;
+		      newbl--;
 		      lg++;
 		    } 
 		}
