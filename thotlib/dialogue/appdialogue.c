@@ -3607,12 +3607,17 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* main box of the windows : a Vertical One */
 	   vbox1 = gtk_vbox_new (FALSE, 0);
 	   /* compose the main Vertical Box */
-	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);		     
-	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(toolbar), FALSE, FALSE, 2);
+	   if (menu_bar)
+	     gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
+	   if (toolbar)
+	     gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(toolbar), FALSE, FALSE, 2);
+	   
 	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(hbox1), FALSE, FALSE, 5);
-	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 0);
+	   if (wrap_text)
+	     gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 0);
 	   gtk_box_pack_start (GTK_BOX(vbox1), GTK_WIDGET(table2), TRUE, TRUE, 0);
-	   gtk_box_pack_end (GTK_BOX(vbox1), GTK_WIDGET(statusbar), FALSE, FALSE, 0);
+	   if (statusbar)
+	     gtk_box_pack_end (GTK_BOX(vbox1), GTK_WIDGET(statusbar), FALSE, FALSE, 0);
 	   /* add it to the window */
  	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1); 
 	  	   

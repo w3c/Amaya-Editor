@@ -1518,7 +1518,7 @@ static void InitSVGBufferForComboBox ()
 void SelectLibraryFromPath (char *path)
 {
 #ifdef _SVGLIB
-  char             *title;
+  char             *title=NULL;
   ListUriTitle     *curList;
   int               lg = 0;
 
@@ -2581,7 +2581,7 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
   Attribute             newAttr, attrExist, attrFound = NULL;
   AttributeType         attrType;
   int                   length, val, oldVal, attrKind = 0;
-  char                 *text, *ptr;
+  char                 *text=NULL, *ptr;
   char                  buffer[MAX_LENGTH];
   PresentationValue     pval, oldpval;
 
@@ -2790,7 +2790,7 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
 {
 #ifdef _SVGLIB
   Element         imgEl, rootEl, rowEl, cellEl, anchorEl, table, newcellEl;
-  Element         insertedEl, textEl, testEl;
+  Element         insertedEl=0, textEl, testEl;
   ElementType     elType;
   Attribute       attr;
   AttributeType   attrType;
