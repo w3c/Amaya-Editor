@@ -273,5 +273,3 @@ typedef struct _RDFStatement
 #endif /* RAPTOR_RDF_PARSER */
 
 #endif /* ANNOTATIONS_H */
-
-

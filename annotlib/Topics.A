@@ -1,10 +1,14 @@
 APPLICATION Topics;
 
 DEFAULT
+   BEGIN
+     ElemRClick.Pre -> BM_SimpleRClick;
+     ElemActivate.Pre -> BM_ShowProperties;
+     ElemDelete.Pre -> BM_ItemDelete;
+   END;
+
 
 ELEMENTS
-   Bookmark_item: BEGIN
- 	ElemRClick.Pre -> BM_SimpleClick;
-   END;
+
 END 
 
