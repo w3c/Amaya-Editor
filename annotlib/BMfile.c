@@ -27,6 +27,7 @@
 
 /* amaya includes */
 #include "AHTURLTools_f.h"
+#include "init_f.h"
 #include "f/BMfile_f.h"
 
 /* global variables */
@@ -182,11 +183,16 @@ static void serialize (librdf_model *model, char *name, char *filename, char *mi
       FILE *test;
 
       test = fopen (filename, "w");
-      librdf_serializer_serialize_model (serializer, test, NULL, model);
-      fclose (test);
-      /* uncomment this to output the model to stdout */
-      /* librdf_serializer_serialize_model (serializer, stdout, NULL, model); */
-      librdf_free_serializer(serializer);
+      if (test)
+	{
+	  librdf_serializer_serialize_model (serializer, test, NULL, model);
+	  fclose (test);
+	  /* uncomment this to output the model to stdout */
+	  /* librdf_serializer_serialize_model (serializer, stdout, NULL, model); */
+	  librdf_free_serializer(serializer);
+	}
+      else 
+	InitInfo ("Error", "Couldn't write to the bookmark file.");
     }
 }
 
