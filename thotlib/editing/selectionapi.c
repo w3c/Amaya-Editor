@@ -128,7 +128,7 @@ int                 lastCharacter;
       TtaError (ERR_invalid_document_parameter);
    else if (TtaGetDisplayMode (document) == DisplayImmediately)
       SelectString (LoadedDocument[document - 1],
-	       (PtrElement) textElement, firstCharacter, lastCharacter + 1);
+	       (PtrElement) textElement, firstCharacter, lastCharacter);
    else
       NewSelection (document, textElement, firstCharacter, lastCharacter);
 }

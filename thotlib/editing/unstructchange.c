@@ -1397,7 +1397,7 @@ boolean             before;
 		     else
 		       {
 			  /* set selection before the first character of the string */
-			  SelectString (pDoc, pSibling, 1, 1);
+			  SelectString (pDoc, pSibling, 1, 0);
 			  /* simulate a delete */
 			  TtcDeleteSelection (0, 0);
 		       }

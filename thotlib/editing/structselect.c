@@ -1831,7 +1831,7 @@ boolean             string;
 	{
 	   oldFirstSelEl = FirstSelectedElement;
 	   oldFirstSelChar = FirstSelectedChar;
-	   if (pEl->ElLeafType == LtText)
+	   if (string && pEl->ElLeafType == LtText)
 	      if (lastChar == 0)
 		 lastChar = pEl->ElTextLength;
 	      else if (lastChar < firstChar)
@@ -1954,7 +1954,7 @@ int                 lastChar;
 
    /* it's a string, not a position within a string */
    string = TRUE;
-   if (firstChar == lastChar)
+   if (firstChar == lastChar+1)
       /* it's a position */
       string = FALSE;
    SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, string);

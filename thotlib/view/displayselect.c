@@ -411,7 +411,7 @@ boolean             status;
      {
 	/* Est-ce que les marques de selection sont dans la meme boite ? */
 	if (pFrame->FrSelectionEnd.VsBox == pViewSel->VsBox)
-	   if (!StructSelectionMode && pFrame->FrSelectOnePosition)
+	   if (pFrame->FrSelectOnePosition)
 	      /* on ne visualise que la position */
 	      DisplayStringSelection (frame, pViewSel->VsXPos, pViewSel->VsXPos + 2, pViewSel->VsBox);
 	   else if (pViewSel->VsBuffer == NULL
