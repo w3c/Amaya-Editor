@@ -180,8 +180,6 @@ Element InsertCssInXml (Document doc, View view)
   Element      piEl, root, el;
   ElementType  elType;
 
-  printf ("\n -----  InsertCssInXml  ----- \n");
-
   /* Check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (0, doc);
 
