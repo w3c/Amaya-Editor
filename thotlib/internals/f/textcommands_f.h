@@ -19,7 +19,6 @@ extern void TtcStartOfLine ( Document document,
                              View view );
 extern void TtcEndOfLine ( Document document,
                            View view );
-extern void CloseInsertion ( void );
 extern int CopyXClipboard ( unsigned char **buffer );
 extern void TtcCopyToClipboard ( Document document,
                                  View view );
@@ -39,7 +38,6 @@ extern void TtcStartOfLine (/* Document document,
                                View view */);
 extern void TtcEndOfLine (/* Document document,
                              View view */);
-extern void CloseInsertion (/* void */);
 extern int CopyXClipboard (/* unsigned char **buffer */);
 extern void TtcCopyToClipboard (/* Document document,
                                    View view */);

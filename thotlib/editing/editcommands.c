@@ -1159,11 +1159,14 @@ void                CloseTextInsertion ()
 
    /* elimine systematiquement les exposes en attente */
 #ifdef WWW_XWINDOWS
-   while (XCheckMaskEvent (TtDisplay, (long) ExposureMask, (ThotEvent *) & event))
+   while (XCheckMaskEvent (TtDisplay, (long) ExposureMask, (ThotEvent *) &event))
      {
-	frame = GetWindowFrame (event.xexpose.window);
-	FrameToRedisplay (event.xexpose.window, frame, (XExposeEvent *) & event);
-	XtDispatchEvent (&event);
+       if (event.type == GraphicsExpose || event.type == Expose)
+	 {
+	   frame = GetWindowFrame (event.xexpose.window);
+	   FrameToRedisplay (event.xexpose.window, frame, (XExposeEvent *) & event);
+	   XtDispatchEvent (&event);
+	 }
      }
 #endif /* WWW_XWINDOWS */
 }

@@ -19,10 +19,6 @@ extern char TtaGetAlphabet ( Language languageId );
 extern char *TtaGetLanguageName ( Language languageId );
 extern int TtaGetNumberOfLanguages ( void );
 extern boolean GetPatternList ( Language langageId );
-extern char *FoundPatternInList ( Language langageId,
-                                  unsigned char substring[MAX_LET_PATTERN] );
-extern void FoundHyphenPoints ( Language langageId,
-                                char wordToCut[MAX_CHAR] );
 extern int *TtaGetPatternHyphenList ( char word[MAX_CHAR],
                                       Language languageId );
 extern boolean TtaExistPatternList ( Language languageId );
@@ -42,10 +38,6 @@ extern char TtaGetAlphabet (/* Language languageId */);
 extern char *TtaGetLanguageName (/* Language languageId */);
 extern int TtaGetNumberOfLanguages (/* void */);
 extern boolean GetPatternList (/* Language langageId */);
-extern char *FoundPatternInList (/* Language langageId,
-                                    unsigned char substring[MAX_LET_PATTERN] */);
-extern void FoundHyphenPoints (/* Language langageId,
-                                  char wordToCut[MAX_CHAR] */);
 extern int *TtaGetPatternHyphenList (/* char word[MAX_CHAR],
                                         Language languageId */);
 extern boolean TtaExistPatternList (/* Language languageId */);

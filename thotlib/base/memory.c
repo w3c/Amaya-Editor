@@ -929,13 +929,12 @@ PtrReferenceChange *pFRC;
 	PtFree_UpdateRefFile = pNewFRC->RcNext;
 	NbFree_UpdateRefFile--;
      }
-   NbUsed_UpdateRefFile++;
    *pFRC = pNewFRC;
-   memset (pNewFRC, 0, sizeof (ReferenceChange));
-   pNewFRC->RcNext = NULL;
-   pNewFRC->RcFirstChange = NULL;
-   ClearDocIdent (&(pNewFRC->RcDocIdent));
-   pNewFRC->RcFileName[0] = '\0';
+   if (pNewFRC)
+     {
+       memset (pNewFRC, 0, sizeof (ReferenceChange));
+       NbUsed_UpdateRefFile++;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -950,6 +949,7 @@ PtrReferenceChange  pFRC;
 #endif /* __STDC__ */
 
 {
+   pFRC->RcFirstChange = NULL;
    pFRC->RcNext = PtFree_UpdateRefFile;
    PtFree_UpdateRefFile = pFRC;
    NbFree_UpdateRefFile++;
@@ -1031,7 +1031,6 @@ void                GetDocument (pDoc)
 PtrDocument        *pDoc;
 #endif /* __STDC__ */
 {
-   int                 i;
    PtrDocument         pNewDoc;
 
    if (PtFree_Document == NULL)
@@ -1047,59 +1046,10 @@ PtrDocument        *pDoc;
    if (pNewDoc)
      {
        memset (pNewDoc, 0, sizeof (DocumentDescr));
-       pNewDoc->DocNext = NULL;
-       pNewDoc->DocComment = NULL;
-       pNewDoc->DocSSchema = NULL;
-       pNewDoc->DocRootElement = NULL;
-       for (i = 0; i < MAX_ASSOC_DOC; i++)
-	 {
-	   pNewDoc->DocAssocRoot[i] = NULL;
-	   pNewDoc->DocAssocSubTree[i] = NULL;
-	   pNewDoc->DocAssocFrame[i] = 0;
-	   pNewDoc->DocAssocVolume[i] = 0;
-	   pNewDoc->DocAssocFreeVolume[i] = 0;
-	   pNewDoc->DocAssocNPages[i] = 0;
-	   pNewDoc->DocAssocModifiedAb[i] = NULL;
-	 }
-       for (i = 0; i < MAX_PARAM_DOC; i++)
-	 pNewDoc->DocParameters[i] = NULL;
        /* cree et initialise un descripteur bidon de reference, debut */
        /* de la chaine des descripteurs de references du document */
        GetReferredDescr (&pNewDoc->DocReferredEl);
-       for (i = 0; i < MAX_VIEW_DOC; i++)
-	 {
-	   pNewDoc->DocView[i].DvSSchema = NULL;
-	   pNewDoc->DocView[i].DvPSchemaView = 0;
-	   pNewDoc->DocView[i].DvSync = FALSE;
-	   pNewDoc->DocViewRootAb[i] = NULL;
-	   pNewDoc->DocViewSubTree[i] = NULL;
-	   pNewDoc->DocViewFrame[i] = 0;
-	   pNewDoc->DocViewVolume[i] = 0;
-	   pNewDoc->DocViewFreeVolume[i] = 0;
-	   pNewDoc->DocViewNPages[i] = 0;
-	   pNewDoc->DocViewModifiedAb[i] = NULL;
-	 }
-       pNewDoc->DocDName[0] = '\0';
-       ClearDocIdent (&pNewDoc->DocIdent);
-       pNewDoc->DocDirectory[0] = '\0';
-       pNewDoc->DocSchemasPath[0] = '\0';
-       pNewDoc->DocBackUpInterval = 0;
-       pNewDoc->DocReadOnly = FALSE;
-       pNewDoc->DocExportStructure = FALSE;
        pNewDoc->DocLabelExpMax = 1;
-       pNewDoc->DocMaxPairIdent = 0;
-       pNewDoc->DocModified = FALSE;
-       pNewDoc->DocNTypedChars = 0;
-       pNewDoc->DocNewOutRef = NULL;
-       pNewDoc->DocDeadOutRef = NULL;
-       pNewDoc->DocChangedReferredEl = NULL;
-       pNewDoc->DocNLanguages = 0;
-       pNewDoc->DocNNatures = 0;
-       pNewDoc->DocPivotVersion = 0;
-       pNewDoc->DocLabels = NULL;
-       pNewDoc->DocToBeChecked = FALSE;
-       pNewDoc->DocPivotError = FALSE;
-       pNewDoc->DocNotifyAll = FALSE;
        NbUsed_Document++;
      }
 }
@@ -1109,20 +1059,79 @@ PtrDocument        *pDoc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreeDocument (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                FreeDocument (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 
 {
+   int                 i;
+
+   pDoc->DocComment = NULL;
+   pDoc->DocSSchema = NULL;
+   pDoc->DocRootElement = NULL;
+   for (i = 0; i < MAX_ASSOC_DOC; i++)
+     {
+       pDoc->DocAssocRoot[i] = NULL;
+       pDoc->DocAssocSubTree[i] = NULL;
+       pDoc->DocAssocModifiedAb[i] = NULL;
+     }
+   for (i = 0; i < MAX_PARAM_DOC; i++)
+     pDoc->DocParameters[i] = NULL;
+   for (i = 0; i < MAX_VIEW_DOC; i++)
+     {
+       pDoc->DocView[i].DvSSchema = NULL;
+       pDoc->DocViewRootAb[i] = NULL;
+       pDoc->DocViewSubTree[i] = NULL;
+       pDoc->DocViewModifiedAb[i] = NULL;
+     }
+   pDoc->DocNewOutRef = NULL;
+   pDoc->DocDeadOutRef = NULL;
+   pDoc->DocChangedReferredEl = NULL;
+   pDoc->DocLabels = NULL;
 
    pDoc->DocNext = PtFree_Document;
    PtFree_Document = pDoc;
    NbFree_Document++;
    NbUsed_Document--;
 }
+
+/*----------------------------------------------------------------------
+   GetAttributePres allocates a attribute presentation.                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GetAttributePres (AttributePres **pAP)
+#else  /* __STDC__ */
+void                GetAttributePres (pAP)
+AttributePres     **pAP;
+#endif /* __STDC__ */
+
+{
+  AttributePres          *pNewAP;
+  pNewAP = (AttributePres *) TtaGetMemory (sizeof (AttributePres));
+  if (pNewAP)
+    memset (pNewAP, 0, sizeof (AttributePres));
+  *pAP = pNewAP;
+}
+
+/*----------------------------------------------------------------------
+   FreeAttributePres frees a attribute presentation.                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                FreeAttributePres (AttributePres *pAP)
+#else  /* __STDC__ */
+void                FreeAttributePres (pAP)
+AttributePres      *pAP;
+#endif /* __STDC__ */
+
+{
+  if (pAP)
+    {
+      TtaFreeMemory (pAP);
+      pAP->ApNextAttrPres = NULL;
+    }
+}
+
 
 /*----------------------------------------------------------------------
    GetSchPres alloue un schema de presentation.                    
@@ -1136,7 +1145,6 @@ PtrPSchema         *pSP;
 
 {
    PtrPSchema          pNewSP;
-   int                 i;
 
    if (PtFree_SPres == NULL)
       pNewSP = (PtrPSchema) TtaGetMemory (sizeof (PresentSchema));
@@ -1150,54 +1158,6 @@ PtrPSchema         *pSP;
    if (pNewSP)
      {
        memset (pNewSP, 0, sizeof (PresentSchema));
-       pNewSP->PsNext = NULL;
-       pNewSP->PsStructName[0] = '\0';
-       pNewSP->PsPresentName[0] = '\0';
-       pNewSP->PsStructCode = 0;
-       pNewSP->PsNViews = 0;
-       for (i = 0; i < MAX_VIEW; i++)
-	 {
-	   pNewSP->PsView[i][0] = '\0';
-	   pNewSP->PsPaginatedView[i] = FALSE;
-	   pNewSP->PsColumnView[i] = FALSE;
-	   pNewSP->PsExportView[i] = FALSE;
-	 }
-       pNewSP->PsNPrintedViews = 0;
-       for (i = 0; i < MAX_PRINT_VIEW; i++)
-	 {
-	   pNewSP->PsPrintedView[i].VpAssoc = FALSE;
-	   pNewSP->PsPrintedView[i].VpNumber = 0;
-	 }
-       pNewSP->PsNCounters = 0;
-       pNewSP->PsNConstants = 0;
-       pNewSP->PsNVariables = 0;
-       pNewSP->PsNPresentBoxes = 0;
-       pNewSP->PsFirstDefaultPRule = NULL;
-       for (i = 0; i < MAX_PRES_BOX; i++)
-	 {
-	   pNewSP->PsPresentBox[i].PbFirstPRule = NULL;
-	 }
-       for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
-	 {
-	   pNewSP->PsAttrPRule[i] = NULL;
-	   pNewSP->PsNAttrPRule[i] = 0;
-	   pNewSP->PsNComparAttrs[i] = 0;
-	   pNewSP->PsComparAttr[i] = NULL;
-	 }
-       for (i = 0; i < MAX_RULES_SSCHEMA; i++)
-	 {
-	   pNewSP->PsElemPRule[i] = NULL;
-	   pNewSP->PsNInheritedAttrs[i] = 0;
-	   pNewSP->PsInheritedAttr[i] = NULL;
-	   pNewSP->PsAcceptPageBreak[i] = TRUE;
-	   pNewSP->PsAcceptLineBreak[i] = TRUE;
-	   pNewSP->PsBuildAll[i] = FALSE;
-	   pNewSP->PsNotInLine[i] = FALSE;
-	   pNewSP->PsInPageHeaderOrFooter[i] = FALSE;
-	   pNewSP->PsAssocPaginated[i] = FALSE;
-	   pNewSP->PsElemTransmit[i] = 0;
-	 }
-       pNewSP->PsNTransmElems = 0;
        NbUsed_SchPres++;
      }
 }
@@ -1213,7 +1173,26 @@ PtrPSchema          pSP;
 #endif /* __STDC__ */
 
 {
+  int                 i;
 
+  pSP->PsNext = NULL;
+  pSP->PsFirstDefaultPRule = NULL;
+  for (i = 0; i < MAX_PRES_BOX; i++)
+    {
+      pSP->PsPresentBox[i].PbFirstPRule = NULL;
+    }
+  for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+    {
+      FreeAttributePres ( pSP->PsAttrPRule[i]);
+      pSP->PsAttrPRule[i] = NULL;
+      pSP->PsComparAttr[i] = NULL;
+    }
+  for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+    {
+      pSP->PsElemPRule[i] = NULL;
+      pSP->PsInheritedAttr[i] = NULL;
+    }
+  
    pSP->PsNext = PtFree_SPres;
    PtFree_SPres = pSP;
    NbFree_SchPres++;
@@ -1272,6 +1251,81 @@ PtrHandlePSchema    pHSP;
    NbFree_HandleSchPres++;
    NbUsed_HandleSchPres--;
 }
+
+
+/*----------------------------------------------------------------------
+   GetTRule allocates a translation rule
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GetTRule (PtrTRule *pR)
+#else  /* __STDC__ */
+void                GetTRule (pR)
+PtrTRule           *pR;
+#endif /* __STDC__ */
+{
+  PtrTRule    pNewR;
+
+  pNewR = (PtrTRule) TtaGetMemory (sizeof (TranslRule));
+  *pR = pNewR;
+  if (pNewR)
+    memset (pNewR, 0, sizeof (TranslRule));
+}
+
+
+/*----------------------------------------------------------------------
+   FreeTRule frees a translation rule
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                FreeTRule (PtrTRule pR)
+#else  /* __STDC__ */
+void                FreeTRule (pR)
+PtrTRule            pR;
+#endif /* __STDC__ */
+{
+  if (pR)
+    TtaFreeMemory (pR);
+}
+
+
+/*----------------------------------------------------------------------
+   GetSchTra allocates a translation schema
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GetSchTra (PtrTSchema *pST)
+#else  /* __STDC__ */
+void                GetSchTra (pST)
+PtrTSchema           *pST;
+#endif /* __STDC__ */
+{
+  PtrTSchema    pNewST;
+
+  pNewST = (PtrTSchema) TtaGetMemory (sizeof (TranslSchema));
+  *pST = pNewST;
+  if (pNewST)
+    memset (pNewST, 0, sizeof (TranslSchema));
+}
+
+
+/*----------------------------------------------------------------------
+   FreeTRule frees a translation schema
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                FreeSchTra (PtrTSchema pST)
+#else  /* __STDC__ */
+void                FreeSchTra (pST)
+PtrTSchema          pST;
+#endif /* __STDC__ */
+{
+  int     i;
+
+  if (pST)
+    {
+      for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+	pST->TsElemTRule[i] = NULL;
+      TtaFreeMemory (pST);
+    }
+}
+
 
 /*----------------------------------------------------------------------
    GetExternalBlock alloue un bloc d'extension pour un schema de   
@@ -1346,12 +1400,6 @@ PtrSSchema         *pSS;
   if (pNewSS)
     {
       memset (pNewSS, 0, sizeof (StructSchema));
-      pNewSS->SsNextExtens = NULL;
-      pNewSS->SsPrevExtens = NULL;
-      pNewSS->SsExtension = FALSE;
-      pNewSS->SsNExtensRules = 0;
-      pNewSS->SsExtensBlock = NULL;
-      pNewSS->SsFirstPSchemaExtens = NULL;
       NbUsed_SchStruct++;
     }
 }
@@ -1367,9 +1415,32 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
+  PtrHandlePSchema  pHSP, pNewHSP;
+
+  /* free HandleSchPres */
+  if (pSS->SsFirstPSchemaExtens != NULL)
+    {
+      pHSP = pSS->SsFirstPSchemaExtens;
+      while (pHSP != NULL)
+	{
+	  pNewHSP = pHSP->HdNextPSchema;
+	  FreeHandleSchPres (pHSP);
+	  pHSP = pNewHSP;
+	}
+      pSS->SsFirstPSchemaExtens = NULL;
+    }
    if (pSS->SsExtensBlock != NULL)
-      FreeExternalBlock (pSS->SsExtensBlock);
+     {
+       FreeExternalBlock (pSS->SsExtensBlock);
+       pSS->SsExtensBlock = NULL;
+     }
+   pSS->SsPrevExtens = NULL;
+   pSS->SsExtension = FALSE;
+   pSS->SsNExtensRules = 0;
+   pSS->SsExtensBlock = NULL;
+   pSS->SsFirstPSchemaExtens = NULL;
    pSS->SsNextExtens = PtFree_SStruct;
+
    PtFree_SStruct = pSS;
    NbFree_SchStruct++;
    NbUsed_SchStruct--;

@@ -451,15 +451,6 @@ View                view;
    MovingCommands (3);
 }
 
-/*----------------------------------------------------------------------
-   Termine l'insertion de caracteres dans une boite de texte       
-  ----------------------------------------------------------------------*/
-void                CloseInsertion ()
-{
-   if (ThotLocalActions[T_stopinsert] != NULL)
-      (*ThotLocalActions[T_stopinsert]) ();
-}
-
 
 /*----------------------------------------------------------------------
    CopyXClipboard insere le contenu de la selection courante dans   

@@ -1016,13 +1016,20 @@ indLine             wl;
 #endif /* __STDC__ */
 {
    SRule              *pRule;
+   PtrExtensBlock      pEB;
 
    pRule = NULL;
    if (GetExtensionRule (wi, wl) != NULL)
       CompilerMessage (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, LineNum);
    if (pSSchema->SsExtensBlock == NULL)
-      if ((pSSchema->SsExtensBlock = (PtrExtensBlock) malloc (sizeof (ExtensBlock))) == NULL)
+     {
+      
+      GetExternalBlock (&pEB);
+      if (pEB == NULL)
 	 TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
+      pSSchema->SsExtensBlock = pEB;
+     }
+
    if (pSSchema->SsExtensBlock != NULL)
       if (pSSchema->SsNExtensRules >= MAX_EXTENS_SSCHEMA)
 	 CompilerMessage (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, LineNum);
@@ -2281,7 +2288,8 @@ SyntRuleNum         pr;
 			      else if (pr == RULE_ExceptType)
 				 /* constant within exceptions set */
 				 ExceptType = RuleNumber (wl, wi);
-			      if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
+
+			      if (ExceptType > 0 && pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
 				 CompilerMessage (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
 			      break;
 			   default:
@@ -2830,11 +2838,15 @@ char              **argv;
 	    /* suppress the suffix ".SCH" */
 	    srceFileName[nb] = '\0';
 	    /* get memory for structure schema */
-	    if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+	    GetSchStruct (&pSSchema);
+	    if (pSSchema == NULL)
 	      TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
+
 	    /* get memory for external structure schema */
-	    if ((pExternSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+	    GetSchStruct (&pExternSSchema);
+	    if (pExternSSchema == NULL)
 	      TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
+
 	    /* table of identifiers is empty */
 	    NIdentifiers = 0;
 	    LineNum = 0;

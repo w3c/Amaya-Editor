@@ -13,8 +13,12 @@
  *
  */
 
+#ifndef _TYPEMEDIA_H
+#define _TYPEMEDIA_H
+
 #include "typeint.h"
 #include "typecorr.h"
+#include "typetra.h"
 
 typedef unsigned char RuleSet[32];
 
@@ -440,3 +444,4 @@ typedef char    ButtonLabel[10];
 typedef int     CatIndex[MAX_ENTRY];
 typedef char    CatalogText[MAX_TXT_LEN];
 
+#endif

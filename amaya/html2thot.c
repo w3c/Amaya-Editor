@@ -4962,15 +4962,14 @@ in the Head ****/
    If last elem is NULL or doc=0, the parser doesn't initialize
    the stack
   ----------------------------------------------------------------------*/
-#ifdef __STDC_
+#ifdef __STDC__
 void                InitializeParser (Element lastelem, boolean isclosed, Document doc)
-#else
+#else  /* __STDC__ */
 void                InitializeParser (lastelem, isclosed, doc)
 Element             lastelem;
 boolean             isclosed;
 Document            doc;
-
-#endif
+#endif  /* __STDC__ */
 {
    char                tag[20];
    Element             elem;

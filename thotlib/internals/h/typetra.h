@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
 /*
  * Data structures for the Thot translator.
  *
@@ -13,6 +13,10 @@
  * Author: V. Quint (INRIA)
  *
  */
+
+#ifndef _TYPETRA_H
+#define _TYPETRA_H
+#include "consttra.h"
 
 /*
    DEFINITIONS:
@@ -498,7 +502,7 @@ typedef struct _TranslSchema
 					   of the string of translation rules associated
 					   with each element type, in the same order than in
 					   the table StructSchema.SsRule */ 
-	boolean		TsInheritAttr[MAX_RULES_SSCHEMA];	/* indicates for
+	boolean		 TsInheritAttr[MAX_RULES_SSCHEMA];	/* indicates for
 					   each element type, in the same order than in
 					   the table StructSchema.SsRule, if the element
 					   inherits from an ascendent element attribute */ 
@@ -510,7 +514,7 @@ typedef struct _TranslSchema
 					   presentation rules types */	
 	int 		TsNTranslAlphabets;	/* number of element in the array
 					   TsTranslAlphabet */
-	AlphabetTransl         TsTranslAlphabet[MAX_TRANSL_ALPHABET];	/* translation
+	AlphabetTransl  TsTranslAlphabet[MAX_TRANSL_ALPHABET];	/* translation
 					   of character strings for the different alphabets */
 	int 		TsSymbolFirst;	/* index of the first symbols translation rule
 						   in the table TsCharTransl */
@@ -521,8 +525,9 @@ typedef struct _TranslSchema
 	int 		TsGraphicsLast;   /* index of the last graphics translation rule
 						   in the same table */
 	int 		TsNCharTransls;	/* total number of characters translation rules */
-	StringTransl         TsCharTransl[MAX_TRANSL_CHAR];	/* the characters translation
+	StringTransl    TsCharTransl[MAX_TRANSL_CHAR];	/* the characters translation
 						   				   table */
 	char            TsConstant[MAX_TRANSL_CONST_LEN];	/* string of all the
 					   translation constants, separated by NULL */
 } TranslSchema;
+#endif

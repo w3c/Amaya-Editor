@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern int IdentDocument ( PtrDocument pDoc );
+extern void CloseInsertion ( void );
 extern void TtaInitialize ( char *applicationName );
 extern void TtaQuit ( void );
 extern void TtaSetErrorMessages ( int on );
@@ -20,6 +21,7 @@ extern void TtaExtractName ( char *text,
 #else /* __STDC__ */
 
 extern int IdentDocument (/* PtrDocument pDoc */);
+extern void CloseInsertion (/* void */);
 extern void TtaInitialize (/* char *applicationName */);
 extern void TtaQuit (/* void */);
 extern void TtaSetErrorMessages (/* int on */);

@@ -1483,8 +1483,7 @@ PtrSSchema          pSS;
 			  if (pPSch->PsNAttrPRule[i] > 0)
 			    {
 			       /* allocation des regles */
-			       pPSch->PsAttrPRule[i] =
-				  (AttributePres *) TtaGetMemory (pPSch->PsNAttrPRule[i] * sizeof (AttributePres));
+			       GetAttributePres (&(pPSch->PsAttrPRule[i]));
 			       if ((pAttrP = pPSch->PsAttrPRule[i]) != NULL)
 				 {
 				    /* chainage des regles */

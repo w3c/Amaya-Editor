@@ -802,7 +802,6 @@ View                view;
    tempfile[0] = EOS;
    toparse = 0;
    ActiveTransfer (newdoc);
-   TtaSetCursorWatch (0, 0);
    if (IsW3Path (pathname))
      {
 	/* load the document from the Web */
@@ -811,10 +810,11 @@ View                view;
      }
    if (toparse != -1)
      {
+        TtaSetCursorWatch (0, 0);
 	/* do we need to control the last slash here? */
 	newdoc = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+	TtaResetCursor (0, 0);
      }
-   TtaResetCursor (0, 0);
 }
 
 /*----------------------------------------------------------------------

@@ -172,7 +172,6 @@ boolean             nextExtDoc;
 /*----------------------------------------------------------------------
    GetCurrentSelection                                             
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
 #else  /* __STDC__ */
@@ -182,9 +181,7 @@ PtrElement         *firstEl;
 PtrElement         *lastEl;
 int                *firstChar;
 int                *lastChar;
-
 #endif /* __STDC__ */
-
 {
    *pDoc = TheDoc;
    return FALSE;
@@ -248,9 +245,7 @@ ThotWindow          TtaGetThotWindow (int frame)
 #else  /* __STDC__ */
 ThotWindow          TtaGetThotWindow (frame)
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
    return FrRef[frame];
 }
@@ -263,19 +258,15 @@ int                 frame;
    sinon rend assoc faux.                                  
    Procedure differente de GetDocAndView de docvues.c          
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetDocAndView (int frame, PtrDocument * pDoc, int *view, boolean * assoc)
-
 #else  /* __STDC__ */
 void                GetDocAndView (frame, pDoc, view, assoc)
 int                 frame;
 PtrDocument        *pDoc;
 int                *view;
 boolean            *assoc;
-
 #endif /* __STDC__ */
-
 {
    *pDoc = TheDoc;
    if (CurAssocNum > 0)
@@ -294,15 +285,12 @@ boolean            *assoc;
 /*----------------------------------------------------------------------
    OpenPSFile ouvre le fichier d'impression.                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          OpenPSFile (char *name, int *volume)
-
 #else  /* __STDC__ */
 static int          OpenPSFile (name, volume)
 char               *name;
 int                *volume;
-
 #endif /* __STDC__ */
 {
    FILE               *PSfile;
@@ -2026,16 +2014,12 @@ int                 lastPage;
 /*----------------------------------------------------------------------
    PrintDocument							
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         PrintDocument (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         PrintDocument (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrSSchema          pSS;
    PtrPSchema          pPSchema;
@@ -2549,6 +2533,13 @@ int                 errorCode;
 #endif /* __STDC__ */
 {
    UserErrorCode = errorCode;
+}
+
+/*----------------------------------------------------------------------
+   Termine l'insertion de caracteres dans une boite de texte       
+  ----------------------------------------------------------------------*/
+void                CloseInsertion ()
+{
 }
 
 /*----------------------------------------------------------------------

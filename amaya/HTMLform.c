@@ -431,11 +431,10 @@ char               *action;
       buffer_size = strlen (buffer);
    else
      {
-     buffer_size = 0;
-     buffer = "";
+       buffer_size = 0;
+       buffer = "";
      }
-
-   if ((buffer >0)  && (buffer[buffer_size - 1] == '&'))
+   if (buffer_size != 0  && (buffer[buffer_size - 1] == '&'))
      {
 	buffer[buffer_size - 1] = EOS;
 	buffer_size--;
@@ -443,7 +442,7 @@ char               *action;
 
    switch (method)
 	 {
-	    case -9999:	/*index, not yet inside HTML.s */
+	    case -9999:	/*index, not yet inside HTML.S */
 
 	       for (i = 0; i < buffer_size; i++)
 		  switch (buffer[i])
@@ -457,12 +456,13 @@ char               *action;
 			}	/* switch */
 	       break;		/* case INDEX */
 	    case HTML_ATTR_METHOD_VAL_Get_:
-	       urlName = TtaGetMemory (strlen (action) + strlen (buffer) + 2);
+	       urlName = TtaGetMemory (strlen (action) + buffer_size + 2);
 	       if (urlName != (char *) NULL)
 		 {
 		    strcpy (urlName, action);
 		    strcat (urlName, "?");
-		    strcat (urlName, buffer);
+		    if (buffer_size)
+		      strcat (urlName, buffer);
 		    GetHTMLDocument (urlName, NULL, doc, DC_TRUE | DC_FORM_GET);
 		    TtaFreeMemory (urlName);
 		 }
@@ -474,7 +474,6 @@ char               *action;
 	    default:
 	       break;
 	 }
-   return;
 }
 
 
@@ -482,7 +481,7 @@ char               *action;
 /*----------------------------------------------------------------------
   SubmitForm
   callback handler that launches the parsing of the form containing 
-  the element and sends	the query to the server						
+  the element and sends	the query to the server
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SubmitForm (Document doc, Element element)
@@ -527,6 +526,7 @@ Element             element;
 		    /* get the button's value and name, if they exist */
 		    attrType.AttrTypeNum = HTML_ATTR_NAME;
 		    attr = TtaGetAttribute (elForm, attrType);
+		    value = NULL;
 		    if (attr != NULL)
 		      {
 			 GetAttrValue (&name, attr);
@@ -534,8 +534,8 @@ Element             element;
 			 attr = TtaGetAttribute (elForm, attrType);
 			 if (attr != NULL)
 			    GetAttrValue (&value, attr);
+			 AddNameValue (name, value);
 		      }
-		    AddNameValue (name, value);
 		    if (name)
 		      {
 			 TtaFreeMemory (name);

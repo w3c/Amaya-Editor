@@ -1290,8 +1290,16 @@ boolean             error_html;
    if (mode & AMAYA_FORM_POST)
      {
 	me->method = METHOD_POST;
-	me->mem_ptr = postString;
-	me->block_size = strlen (postString);
+	if (postString)
+	  {
+	    me->mem_ptr = postString;
+	    me->block_size = strlen (postString);
+	  }
+	else
+	  {
+	    me->mem_ptr = "";
+	    me->block_size = 0;
+	  }
 	HTRequest_setMethod (me->request, METHOD_POST);
 	HTRequest_setPostCallback (me->request, AHTUpload_callback);
      }

@@ -623,9 +623,9 @@ Language            langageId;
   if true, it returns 1 else 0 
   ----------------------------------------------------------------------*/
 #ifdef __STDC
-char               *FoundPatternInList (Language langageId, unsigned char substring[MAX_LET_PATTERN])
+static char        *FoundPatternInList (Language langageId, unsigned char substring[MAX_LET_PATTERN])
 #else  /* __STDC__ */
-char               *FoundPatternInList (langageId, substring)
+static char        *FoundPatternInList (langageId, substring)
 Language            langageId;
 unsigned char       substring[MAX_LET_PATTERN];
 
@@ -633,24 +633,40 @@ unsigned char       substring[MAX_LET_PATTERN];
 {
    int                 language;
    int                 lgstring;
-   int                 i;
+   int                 i, max;
    struct PatternList *ptrTabPattern;
 
    language = (int) langageId;
    lgstring = strlen (substring);
-   ptrTabPattern = &LangTable[language].LangTabPattern;
-   i = ptrTabPattern->ind_pattern[lgstring-1];
-   if (i == 0)
-      return (0);
-
-   while ((strlen (ptrTabPattern->liste_pattern[i].CarPattern) <= lgstring)
-	  && (i <= ptrTabPattern->NbPatt))
+   if (lgstring >= MAX_LET_PATTERN)
+     return (NULL);
+   else
      {
-	if (!strcmp (ptrTabPattern->liste_pattern[i].CarPattern, substring))
-	   return (ptrTabPattern->liste_pattern[i].PoidsPattern);
-	i++;
+       ptrTabPattern = &LangTable[language].LangTabPattern;
+       i = ptrTabPattern->ind_pattern[lgstring];
+       if (i == 0)
+	 return (NULL);
+       else
+	 {
+	   /* search last index */
+	   max = lgstring + 1;
+	   if (max == MAX_LET_PATTERN)
+	     max = ptrTabPattern->NbPatt;
+	   else
+	     {
+	       max = ptrTabPattern->ind_pattern[max];
+	       if (max == 0)
+		 max = ptrTabPattern->NbPatt;
+	     }
+	   while (i < max)
+	     {
+	       if (!strcmp (ptrTabPattern->liste_pattern[i].CarPattern, substring))
+		 return (ptrTabPattern->liste_pattern[i].PoidsPattern);
+	       i++;
+	     }
+	   return (NULL);
+	 }
      }
-   return (0);
 }
 
 
@@ -659,9 +675,9 @@ unsigned char       substring[MAX_LET_PATTERN];
    * hypen points.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FoundHyphenPoints (Language langageId, char wordToCut[MAX_CHAR])
+static void         FoundHyphenPoints (Language langageId, char wordToCut[MAX_CHAR])
 #else  /* __STDC__ */
-void                FoundHyphenPoints (langageId, wordToCut)
+static void         FoundHyphenPoints (langageId, wordToCut)
 Language            langageId;
 char                wordToCut[MAX_CHAR];
 

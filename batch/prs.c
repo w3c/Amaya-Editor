@@ -175,12 +175,16 @@ static void         Initialize ()
    int                 i;
 
    /* acquiert un schema de presentation */
-   if ((pPSchema = (PtrPSchema) malloc (sizeof (PresentSchema))) == NULL)
+   GetSchStruct (&pPSchema);
+   if (pPSchema == NULL)
       /* memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+
    /* acquiert un schema de structure pour les structures externes */
-   if ((pExternalSS = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+   GetSchStruct (&pExternalSS);
+   if (pExternalSS == NULL)
       TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);
+
    /* initialise ce schema */
    pPSchema->PsStructName[0] = '\0';
    pPSchema->PsNViews = 0;
@@ -265,7 +269,8 @@ static void         Initialize ()
    CurRule = NULL;
    FirstRule = NULL;
    CurType = 1;
-   if ((NextRule = (PtrPRule) malloc (sizeof (PresRule))) == NULL)
+   GetPresentRule (&NextRule);
+   if (NextRule == NULL)
       /* memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    Conditions = NULL;
@@ -369,7 +374,8 @@ indLine             wi;
          conditions Within parmi les conditions courantes */
       CheckConditions (wi);
    CurRule = NextRule;
-   if ((NextRule = (PtrPRule) malloc (sizeof (PresRule))) == NULL)
+   GetPresentRule (&NextRule);
+   if (NextRule == NULL)
       /*memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    CurRule->PrType = t;
@@ -617,13 +623,13 @@ static void         NewCondition (indLine wi)
 #else  /* __STDC__ */
 static void         NewCondition (wi)
 indLine             wi;
-
 #endif /* __STDC__ */
 {
    PtrCondition        newCond;
 
    /* acquiert un bloc memoire pour une nouvelle condition */
-   if ((newCond = (PtrCondition) malloc (sizeof (Condition))) == NULL)
+   GetPresentRuleCond (&newCond);
+   if (newCond == NULL)
       /*memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    else
@@ -647,11 +653,9 @@ indLine             wi;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewConst (indLine wi)
-
 #else  /* __STDC__ */
 static void         NewConst (wi)
 indLine             wi;
-
 #endif /* __STDC__ */
 
 {
@@ -864,17 +868,16 @@ static AttributePres *NewAttrPRule (int att)
 #else  /* __STDC__ */
 static AttributePres *NewAttrPRule (att)
 int                 att;
-
 #endif /* __STDC__ */
 {
    AttributePres      *pPRuleA;
    NumAttrCase        *pAttrCase;
    int                 j;
 
-   pPRuleA = (AttributePres *) malloc (sizeof (AttributePres));
+   GetAttributePres (&pPRuleA);
    if (pPRuleA)
      {
-	pPRuleA->ApNextAttrPres = NULL;
+        memset (pPRuleA, 0, sizeof (AttributePres));
 	/* selon le type de l'attribut */
 	switch (pSSchema->SsAttribute[att - 1].AttrType)
 	      {
@@ -904,7 +907,8 @@ int                 att;
 		    break;
 	      }
      }
-   else				/* memoire insuffisante */
+   else
+      /* memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    pPSchema->PsNAttrPRule[att - 1] += 1;
    return (pPRuleA);
@@ -1488,7 +1492,6 @@ PtrPRule            firstR;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateDefaultRule ()
-
 #else  /* __STDC__ */
 static void         CreateDefaultRule ()
 #endif				/* __STDC__ */
@@ -1497,9 +1500,11 @@ static void         CreateDefaultRule ()
    if (CurRule != NULL)
       CurRule->PrNextPRule = NextRule;
    CurRule = NextRule;
-   if ((NextRule = (PtrPRule) malloc (sizeof (PresRule))) == NULL)
+   GetPresentRule (&NextRule);
+   if (NextRule == NULL)
       /* memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+
    if (pPSchema->PsFirstDefaultPRule == NULL)
       pPSchema->PsFirstDefaultPRule = CurRule;
    CurRule->PrNextPRule = NULL;
@@ -1514,13 +1519,10 @@ static void         CreateDefaultRule ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InheritRule (InheritMode inheritType)
-
 #else  /* __STDC__ */
 static void         InheritRule (inheritType)
 InheritMode         inheritType;
-
 #endif /* __STDC__ */
-
 {
    CurRule->PrPresMode = PresInherit;
    CurRule->PrInheritMode = inheritType;
@@ -3688,7 +3690,6 @@ indLine             wi;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRule, indLine wl, indLine wi)
-
 #else  /* __STDC__ */
 static void         ProcessName (gCode, identnum, prevRule, wl, wi)
 SyntacticCode       gCode;
@@ -3696,7 +3697,6 @@ int                 identnum;
 SyntacticCode       prevRule;
 indLine             wl;
 indLine             wi;
-
 #endif /* __STDC__ */
 
 {
@@ -3720,7 +3720,8 @@ indLine             wi;
 		 {
 		    CopyName (n, wi, wl);
 		    /* lit le schema de structure compile' */
-		    if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+		    GetSchStruct (&pSSchema);
+		    if (pSSchema == NULL)
 		       TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);	/* memoire insuffisante */
 		    if (!ReadStructureSchema (n, pSSchema))
 		       TtaDisplaySimpleMessage (FATAL, PRS, MISSING_STRUCT_SCHEM);
@@ -5173,18 +5174,14 @@ int                 counter;
    de ce type dans la chaine et retourne un pointeur sur la        
    regle creee.                                                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static PtrPRule     SearchPRule (PtrPRule * firstRule, PRuleType ruleType, int view)
-
 #else  /* __STDC__ */
 static PtrPRule     SearchPRule (firstRule, ruleType, view)
 PtrPRule           *firstRule;
 PRuleType           ruleType;
 int                 view;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pR, pPRule;
    boolean             stop, cree;
@@ -5228,8 +5225,8 @@ int                 view;
    if (cree)
       /* il n'y a pas de regle de ce type, on en cree une */
      {
-
-	if ((pR = (PtrPRule) malloc (sizeof (PresRule))) == NULL)
+        GetPresentRule (&pR);
+	if (pR == NULL)
 	   TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);
 	pR->PrType = ruleType;
 	/* on insere la regle cree */
@@ -5258,11 +5255,9 @@ int                 view;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckPageBoxes ()
-
 #else  /* __STDC__ */
 static void         CheckPageBoxes ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    PtrPRule            pR, pHeadR, pPRule, pRule;
    int                 b, hfB, el, view, footHeight, headHeight, h, i,

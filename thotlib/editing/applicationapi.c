@@ -84,6 +84,16 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+   Termine l'insertion de caracteres dans une boite de texte       
+  ----------------------------------------------------------------------*/
+void                CloseInsertion ()
+{
+   if (ThotLocalActions[T_stopinsert] != NULL)
+      (*ThotLocalActions[T_stopinsert]) ();
+}
+
+
+/*----------------------------------------------------------------------
    TtaInitialize
 
    Initializes the Thot editing tool kit for an application. This function must be

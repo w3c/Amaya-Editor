@@ -205,10 +205,6 @@ boolean             pre;
    return FALSE;
 }
 
-void                CloseInsertion ()
-{
-}
-
 #ifdef __STDC__
 void                CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */

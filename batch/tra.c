@@ -33,7 +33,6 @@
 #include "consttra.h"
 #include "typemedia.h"
 #include "typegrm.h"
-#include "typetra.h"
 #include "fileaccess.h"
 #include "compilmsg.h"
 #include "tramsg.h"
@@ -165,42 +164,12 @@ static void         Initialize ()
    Asterisk = False;
    TypeWithin[0] = '\0';
    AncestorName[0] = '\0';
-   if ((pExtSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+
+   GetSchStruct (&pExtSSchema);
+   GetSchStruct (&pSSchema);
+   GetSchTra (&pTSchema);
+   if (pTSchema == NULL || pSSchema == NULL || pExtSSchema == NULL)
       TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
-   if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-      TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
-   if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
-      TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
-   /* initialise le schema de traduction */
-   pTSchema->TsLineLength = 0;	/* pas de longueur max des lignes traduites */
-   strcpy (pTSchema->TsEOL, "\n");	/* caractere fin de ligne par
-					   defaut */
-   strcpy (pTSchema->TsTranslEOL, "\n");	/* fin de ligne a inserer par
-						   defaut */
-   pTSchema->TsNConstants = 0;	/* nombre de constantes */
-   pTSchema->TsNCounters = 0;	/* nombre de compteurs */
-   pTSchema->TsNVariables = 0;	/* nombre de variables de traduction */
-   pTSchema->TsNBuffers = 0;	/* nombre de buffers */
-   pTSchema->TsPictureBuffer = 0;	/* pas de buffer pour les images */
-   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
-     {
-	pTSchema->TsElemTRule[i] = NULL;	/* pointeurs sur le debut de la chaine
-						   de regles de traduction specifiques a chaque type d'element */
-	pTSchema->TsInheritAttr[i] = False;
-     }
-   for (i = 0; i < MAX_TRANSL_PRULE; i++)
-      pTSchema->TsPresTRule[i].RtExist = False;
-   pTSchema->TsNTranslAlphabets = 0;	/* pas de traduction de texte */
-   pTSchema->TsSymbolFirst = 0;	/* indice de la 1ere regle de traduction
-				   de symboles dans la table TsCharTransl */
-   pTSchema->TsSymbolLast = 0;	/* indice de la derniere regle de traduction de
-				   symboles dans la meme table */
-   pTSchema->TsGraphicsFirst = 0;	/* indice de la 1ere regle de traduction de
-					   graphiques dans la table TsCharTransl */
-   pTSchema->TsGraphicsLast = 0;	/* indice de la derniere regle de traduction
-					   de graphiques dans la meme table */
-   pTSchema->TsNCharTransls = 0;	/* nombre total de regles de traduction de
-					   caracteres */
 }
 
 /*----------------------------------------------------------------------
@@ -285,14 +254,11 @@ PtrSSchema          pSS;
    traite le type d'element indique' dans une clause Ancestor      
    Le nom du type se trouve dans la variable AncestorName.         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ProcessAncestorName (PtrSSchema pSS)
-
 #else  /* __STDC__ */
 static void         ProcessAncestorName (pSS)
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
 
 {
@@ -579,17 +545,13 @@ int                 len;
    indx: index dans inputLine du premier caractere de la chaine,   
    len est la longueur de la chaine.                               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ProcessTargetString (int indx, int len)
-
 #else  /* __STDC__ */
 static void         ProcessTargetString (indx, len)
 int                 indx;
 int                 len;
-
 #endif /* __STDC__ */
-
 {
    int                 k;
    TargetString        target;
@@ -605,22 +567,21 @@ int                 len;
 /*----------------------------------------------------------------------
    Cree et initialise un nouveau bloc de regles                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         NewRuleBlock ()
-
 #else  /* __STDC__ */
 static void         NewRuleBlock ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    PtrTRuleBlock       pBlock;
    AttributeTransl    *pAttrTrans;
    PRuleTransl        *pPresTrans;
 
    ChangeRuleBlock = False;
-   if ((pBlock = (PtrTRuleBlock) malloc (sizeof (TRuleBlock))) == NULL)
+   if ((pBlock = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
       TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
+   else
+     memset (pBlock, 0, sizeof (TRuleBlock));
    /* cree un pBlock */
    if (CurBlock == NULL)
       /* pas de bloc courant, attache ce bloc au schema de traduction */
@@ -680,20 +641,18 @@ static void         NewRuleBlock ()
 /*----------------------------------------------------------------------
    cree une nouvelle regle, la chaine et l'initialise              
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         NewTransRule ()
-
 #else  /* __STDC__ */
 static void         NewTransRule ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    PtrTRule            pTRule;
 
    EndOfContdition (pSSchema);
    InCondition = False;
-   if ((pTRule = (PtrTRule) malloc (sizeof (TranslRule))) == NULL)
+   GetTRule (&pTRule);
+   if (pTRule == NULL)
       TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
    /* cree une nouvelle regle */
    if (CurBlock == NULL || ChangeRuleBlock)
@@ -3157,7 +3116,8 @@ char              **argv;
 	     /* le fichier a compiler est ouvert */
 
 	    /* acquiert la memoire pour le schema de traduction */
-	    if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
+	    GetSchTra (&pTSchema);
+	    if (pTSchema == NULL)
 	      TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
 	    NIdentifiers = 0;	/* table des identificateurs vide */
 	    LineNum = 0;

@@ -255,7 +255,7 @@ STRUCT
 	Space = CONSTANT C_Empty;
 	Submit_Input (ATTR NAME; Default_Value) = BEGIN
 		Frame;
-		END with NAME ?= 'Submit', Default_Value ?= 'Submit';
+		END with Default_Value ?= 'Submit';
 	END - (Input);
 
   Input = CASE OF
