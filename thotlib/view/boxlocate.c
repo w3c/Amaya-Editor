@@ -2708,7 +2708,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
   int                 charWidth;
   int                 newIndex;
   ptrfont             font;
-  UCHAR_T       c;
+  UCHAR_T             c;
   ThotBool            notfound;
 
   /* Nombre de caracteres qui precedent */
@@ -2757,7 +2757,11 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
       if (extend)
 	notfound = (dx + charWidth < *x);
       else
+	{
 	notfound = (dx + (charWidth / 2) < *x);
+	if (!notfound)
+	  *x = dx;
+	}
 #endif
 	while (notfound && length > 0)
 	  {
@@ -2806,15 +2810,20 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
 	     /* largeur du caractere suivant */
 	     c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
-		charWidth = 0;
+	       charWidth = 0;
 	     else if (c == SPACE)
-		charWidth = spaceWidth;
+	       charWidth = spaceWidth;
 	     else
-		charWidth = CharacterWidth (c, font);
+	       charWidth = CharacterWidth (c, font);
+
 	     if (extend)
 	       notfound = (dx + charWidth < *x);
 	     else
-	     notfound = (dx + charWidth / 2 < *x);
+	       {
+		 notfound = (dx + charWidth / 2 < *x);
+		 if (!notfound)
+		   *x = dx;
+	       }
 #endif
 	  }
 
@@ -2826,7 +2835,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
 	  {
 #ifdef STRUCT_EDIT
 	     /* BAlignment sur le caractere */
-	     *x = dx - charWidth;
+	      *x = dx - charWidth;
 	     if (c == SPACE)
 	       {
 		  if (*spacesNumber > 0 && pBox->BxNPixels >= *spacesNumber)
@@ -2847,8 +2856,13 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
 	  {
 	     *x = dx;
 	     if (newIndex == 1 && (*pBuffer)->BuPrevious != NULL)
-		*pBuffer = (*pBuffer)->BuPrevious;
-	     (*index)++;
+	       *pBuffer = (*pBuffer)->BuPrevious;
+	     else
+	       (*index)++;
 	  }
      }
 }
+
+
+
+
