@@ -288,8 +288,8 @@
 286 I stili sono ignorati - vedi Viste/Mostra le errore
 287 Questo documento è già caricato in un'altra finestra
 288 Salvare questa istanza può fare perdere degli aggiornamenti
-289 **Adding or changing the doctype will remove some elements or attributes
-290 **Do you confirm the operation ?
+289 Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi
+290 Confermi l'operazione?
 291 Per un documento XHTML, usa il MIME type application/xhtml+xml
 292 Charset per i nuovi documenti
 293 Lock riuscito!

@@ -3931,7 +3931,7 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 #else /* _WX */
   /* Add the Amaya version */
   s = (unsigned char *)TtaGetMemory (strlen ((const char *)title) + strlen (HTAppVersion) + 10);
-  sprintf ((char *)s, "%s - Amaya %s", text, HTAppVersion);
+  sprintf ((char *)s, "%s - Amaya %s", title, HTAppVersion);
 #ifdef _WINGUI
   if (FrMainRef [frame])
     SetWindowText (FrMainRef[frame], s);
