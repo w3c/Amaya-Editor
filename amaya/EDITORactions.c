@@ -2831,7 +2831,7 @@ void ReplyToAnnotation (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   Show/Hide the annotations
+   CustomQuery the annotations base
   ----------------------------------------------------------------------*/
 void CustomQuery (Document document, View view)
 {
@@ -2839,6 +2839,18 @@ void CustomQuery (Document document, View view)
   CustomQueryMenuInit (document, view);
 #endif /* ANNOTATIONS */
 }
+
+/*----------------------------------------------------------------------
+   BookmarkFile
+   Bookmarks a file
+  ----------------------------------------------------------------------*/
+void BookmarkFile (Document document, View view)
+{
+#ifdef BOOKMARKS
+  BM_Create (document, view);
+#endif /* BOOKMARKS */
+}
+
 
 /*------------ Begin: WebDAV Modifications by Manuele Kirsch -----------*/
 /* Note: There is no #include "davlib.h" in this file to prevent

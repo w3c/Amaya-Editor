@@ -17,6 +17,9 @@ USES
        , SVG
        , Timeline
 #endif
+#ifdef _BOOKMARKS
+       , Bookmark
+#endif
        , TableH;
 
 
@@ -287,6 +290,9 @@ MENUS
 	view:1 Annotations_ button:BFilterAnnotations -> FilterAnnot;
 	Annotations_ Separator;
 	view:1 Annotations_ button:BConfigAnnotations -> ConfigAnnot;
+
+	view:1 Bookmarks_ button:BBookmarkFile -> BookmarkFile;
+	view:1 Bookmarks_ button:BViewBookmarks -> ConfigAnnot;
 
 	view:1 Cooperation_ button:BLock -> LockDocument;
 	view:1 Cooperation_ button:BUnlock -> UnlockDocument;
