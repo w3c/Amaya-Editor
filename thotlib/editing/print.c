@@ -80,6 +80,8 @@ static int          NPrintViews;
 static Name         PrintViewName[MAX_PRINTED_VIEWS];
 static int          TopMargin;
 static int          LeftMargin;
+static boolean          isFirstPrintedPage; /* premiere page imprimee pour le
+					     pagination-impression */
 static PtrAbstractBox RootAbsBox;	/* pave racine de la vue traitee */
 static DocViewNumber CurrentView;	/* numero de la vue traitee */
 static int          CurAssocNum;	/* No d'element associe de la vue traitee */
@@ -2226,12 +2228,12 @@ PtrDocument         pDoc;
 		       /* on pagine le document et on imprime au fur et */
 		       /* mesure les pages creees : PaginateView appelle la */
 		       /* procedure PrintOnePage definie ci-dessous */
+		       isFirstPrintedPage = True;
 		       if (assoc)
 			  PaginateView (TheDoc, CurAssocNum, assoc);
 		       else
 			  PaginateView (TheDoc, CurrentView, assoc);
-		       RootAbsBox = NULL;
-		    }
+		       RootAbsBox = NULL;		    }
 		  else
 		     /* imprime la vue */
 		     PrintView (firstPage, lastPage);
@@ -2322,7 +2324,13 @@ boolean             assoc;
 	     /* on ne connait pas encore les dimensions et les marges de la page */
 	     TopMargin = 0;
 	     LeftMargin = 0;
+	  }
+        if (isFirstPrintedPage && 
+	    pPageAb->AbElement->ElPageNumber >= firstPage
+	    && pPageAb->AbElement->ElPageNumber <= lastPage)
+	  /* cas ou on imprime la premiere page */
 	     /* il faut rendre le premier filet invisible */
+	  {
 	     if (pPageAb->AbFirstEnclosed != NULL &&
 		 !pPageAb->AbFirstEnclosed->AbPresentationBox)
 		/* rend le filet invisible */
@@ -2330,6 +2338,8 @@ boolean             assoc;
 		  pPageAb->AbFirstEnclosed->AbShape = ' ';
 		  pPageAb->AbFirstEnclosed->AbRealShape = ' ';
 	       }
+		 KillAbsBoxBeforePage (pPageAb, CurrentFrame, TheDoc, CurrentView);
+	     isFirstPrintedPage = False;
 	  }
 
 	/* met a jour les marges du haut et du cote gauche (mais pas PageHeight */
