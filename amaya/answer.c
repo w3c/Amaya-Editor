@@ -399,6 +399,10 @@ HTRequest          *request;
 			   }
 			 break;
 		      default:
+			if (pres->par != NULL)
+			   {
+			     StrAllocCat (me->error_stream, pres->par);
+			   }
 			 break;
 		   }
 	  }
