@@ -15,7 +15,7 @@
               <rows>1</rows>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_PAPER_FORMAT_BOX">
-                  <label></label>
+                  <label>'                                     '</label>
                   <content>
                     <item/>
                     <item/></content>
@@ -83,7 +83,7 @@
                     <border>5</border>
                   </object>
                   <object class="sizeritem">
-                    <object class="wxRadioBox" name="wXxID_DISPOSITION_BO">
+                    <object class="wxRadioBox" name="wxID_DISPOSITION_BOX">
                       <label></label>
                       <content>
                         <item/>
