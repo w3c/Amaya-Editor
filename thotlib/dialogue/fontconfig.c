@@ -325,7 +325,7 @@ static FontScript **FontConfigLoad ()
      fontsscript_tab[script] = NULL;
    memset (line, 0, MAX_TXT_LEN - 1);
    line[0] = EOS;
-   while ((endfile = fread (line, 1, MAX_TXT_LEN + 2, file)))
+   while ((endfile = fread (line, 1, MAX_TXT_LEN - 1, file)))
        {
 	 line[endfile] = '\0';	 
 	 indline = 0;
