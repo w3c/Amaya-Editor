@@ -3685,8 +3685,8 @@ View                view;
 {
 #  ifdef _WINDOWS
    HANDLE hMem   = 0;
-   LPWSTR lpData = 0;
-   LPWSTR pBuff;
+   LPTSTR lpData = 0;
+   LPTSTR pBuff;
    int    ndx;
    int    frame;
 
@@ -3719,8 +3719,8 @@ View                view;
                EmptyClipboard ();
 
                hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-               lpData = (LPWSTR) GlobalLock (hMem);
-               pBuff  = (LPWSTR) Xbuffer;
+               lpData = GlobalLock (hMem);
+               pBuff  = Xbuffer;
                for (ndx = 0; ndx < ClipboardLength; ndx++)
                    *lpData++ = *pBuff++;
 
