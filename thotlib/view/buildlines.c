@@ -800,7 +800,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 
       if ((newWidth + carWidth > max || i >= count) && i != 0)
 	{
-	  /* the character cannot be inserted in the line */
+	  /* The character cannot be inserted in the line */
 	  still = FALSE;
 	  if (max >= pBox->BxWidth)
 	    {
@@ -854,11 +854,14 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	      pBuffer = *pNewBuff;
 	      charIndex = *newIndex;
 	      /* Select the first character after the break */
-	      if (charIndex >= pBuffer->BuLength && pBuffer->BuNext)
+	      if (*newIndex >= (*pNewBuff)->BuLength - 1)
 		{
-		  /* the next character is in another buffer */
-		  *pNewBuff = pBuffer->BuNext;
-		  *newIndex = 0;
+		  if ((*pNewBuff)->BuNext)
+		    {
+		      /* the next character is in another buffer */
+		      *pNewBuff = pBuffer->BuNext;
+		      *newIndex = 0;
+		    }
 		}
 	      else
 		/* the next character is in the same buffer */
@@ -905,35 +908,25 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 		  *boxLength = pBox->BxNChars;
 		  *nSpaces = pBox->BxNSpaces;
 		}
-	      else
-		{
-		  /* next buffer */
-		  pBuffer = pBuffer->BuNext;
-		  charIndex = 0;
-		}
+	      /* next buffer */
+	      pBuffer = pBuffer->BuNext;
+	      charIndex = 0;
 	    }
 	}
     }
-  
-  /* remove extra spaces just before the break */
-  if ((pBuffer && dummySpaces != 0) || max >= pBox->BxWidth)
+
+  /* Point the last character before the break */
+  if (pBuffer && charIndex == 0 && pBuffer->BuPrevious)
     {
-      /* remove extra spaces */
-      still = TRUE;
-      if (charIndex == 0 && pBuffer->BuPrevious)
-	{
-	  /* the previous character is in another buffer */
-	  pBuffer = pBuffer->BuPrevious;
-	  charIndex = pBuffer->BuLength - 1;
-	}
-      else
-	/* the previous character is in the same buffer */
-	charIndex--;
+      /* the previous character is in another buffer */
+      pBuffer = pBuffer->BuPrevious;
+      charIndex = pBuffer->BuLength - 1;
     }
   else
-    still = FALSE;
-  
-	      
+    /* the previous character is in the same buffer */
+    charIndex--;
+  /* Remove extra spaces just before the break */
+  still = ((pBuffer && dummySpaces != 0) || max >= pBox->BxWidth);
   while (still && *boxLength > 0)
     {
       character = pBuffer->BuContent[charIndex];
@@ -941,11 +934,10 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	{
 	  if (*pNewBuff == NULL)
 	    {
-	      /* end of the box */
+	      /* points the last character of the box */
 	      *pNewBuff = pBuffer;
-	      *newIndex = charIndex;
-	    }
-	  
+	      *newIndex = charIndex + 1;
+	    }	  
 	  /* previous char */
 	  if (charIndex == 0)
 	    {
@@ -969,29 +961,36 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	still = FALSE;
     }
 
-  if (max < pBox->BxWidth && CanHyphen (pBox) &&
-      wordLength > 1 && !TextInserting)
+  if (*pNewBuff == NULL && dummySpaces)
+    {
+      /* end of the box */
+      *pNewBuff = pBuffer;
+      *newIndex = charIndex;
+    }
+  else if (max < pBox->BxWidth && CanHyphen (pBox) &&
+	   wordLength > 1 && !TextInserting)
     {
       /* Avoid more than MAX_SIBLING_HYPHENS consecutive hyphens */
       still = TRUE;
-      if (pLine != NULL)
+      if (pLine)
 	{
 	  pPreviousLine = pLine->LiPrevious;
 	  count = 0;
-	  while (count < MAX_SIBLING_HYPHENS && pPreviousLine != NULL)
-	    if (pPreviousLine->LiLastPiece != NULL)
-	      if (pPreviousLine->LiLastPiece->BxType == BoDotted)
-		{
-		  /* the previous line has an hyphen */
-		  /* continue */
-		  pPreviousLine = pPreviousLine->LiPrevious;
-		  count++;
-		}
-	      else
-		pPreviousLine = NULL;
+	  while (count < MAX_SIBLING_HYPHENS && pPreviousLine)
+	    if (pPreviousLine->LiLastPiece)
+	      {
+		if (pPreviousLine->LiLastPiece->BxType == BoDotted)
+		  {
+		    /* the previous line has an hyphen */
+		    /* continue */
+		    pPreviousLine = pPreviousLine->LiPrevious;
+		    count++;
+		  }
+		else
+		  pPreviousLine = NULL;
+	      }
 	    else
 	      pPreviousLine = NULL;
-	  
 	  if (count == MAX_SIBLING_HYPHENS)
 	    /* don't break the last word */
 	    still = FALSE;
@@ -1039,48 +1038,40 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 		dummySpaces = -2;
 	    }
 	}
-    }
   
-  /*
-   * If we cannot break the word and the word cannot be rejected
-   * to the next line (only one word in that line), we force
-   * a break after almost one character.
-   */
-  if (dummySpaces == 0
-      && (pBox == pLine->LiFirstBox || pBox == pLine->LiFirstPiece)
-      && *pNewBuff != NULL)
-    {
-      /* generate an hyphen */
-      dummySpaces = -1;
-      *boxWidth += BoxCharacterWidth (173, font);
-      
-      /* remove one or more characters corresponding to the hyphen width */
-      while (*boxWidth > max && *boxLength > 1)
+      /*
+       * If we cannot break the word and the word cannot be rejected
+       * to the next line (only one word in that line), we force
+       * a break after almost one character.
+       */
+      if (dummySpaces == 0 && *pNewBuff &&
+	  (pBox == pLine->LiFirstBox || pBox == pLine->LiFirstPiece))
 	{
-	  /* previous char */
-	  if (*newIndex == 1)
-	    if ((*pNewBuff)->BuPrevious != NULL)
-	      {
-		*pNewBuff = (*pNewBuff)->BuPrevious;
-		*newIndex = (*pNewBuff)->BuLength;
-	      }
-	    else
-	      return dummySpaces;
-	  else
-	    (*newIndex)--;
-	  
-	  *boxWidth -= BoxCharacterWidth (character, font);
-	  (*boxLength)--;
+	  /* generate an hyphen */
+	  dummySpaces = -1;
+	  *boxWidth += BoxCharacterWidth (173, font);
+	  /* remove one or more characters corresponding to the hyphen width */
+	  while (*boxWidth > max && *boxLength > 1)
+	    {
+	      /* previous char */
+	      if (*newIndex == 1)
+		if ((*pNewBuff)->BuPrevious != NULL)
+		  {
+		    *pNewBuff = (*pNewBuff)->BuPrevious;
+		    *newIndex = (*pNewBuff)->BuLength;
+		  }
+		else
+		  return dummySpaces;
+	      else
+		(*newIndex)--;
+	      *boxWidth -= BoxCharacterWidth (character, font);
+	      (*boxLength)--;
+	    }
 	}
     }
   
-  /* remove extra spaces just after the break */
-  if (*pNewBuff && dummySpaces > 0)
-    /* there are spaces */
-    still = TRUE;
-  else
-    still = FALSE;
-  
+  /* Remove extra spaces just after the break */
+  still = (*pNewBuff && dummySpaces > 0);
   while (still)
     {
       character = (*pNewBuff)->BuContent[*newIndex];
@@ -2375,7 +2366,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		pBoxToBreak = NULL;
 	      /* Update the no wrapped width of the block */
 	      noWrappedWidth += pLine->LiRealLength;
-	      if (!breakLine && pBoxToBreak != NULL)
+	      if (!breakLine && pBoxToBreak)
 		{
 		  /* take undisplayed spaces into account */
 		  lostPixels = pBoxToBreak->BxFirstChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxFirstChar;
@@ -2396,7 +2387,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		}
 
 	      /* Teste le cadrage des lignes */
-	      if (toAdjust && (full || pAb->AbTruncatedTail) &&
+	      if (toAdjust &&
+		  (full || pAb->AbTruncatedTail || pLine->LiRealLength > pLine->LiXMax) &&
 		  pAb->AbAdjust == AlignJustify)
 		Adjust (pBox, pLine, frame, orgXComplete, orgYComplete);
 	      else

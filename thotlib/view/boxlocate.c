@@ -3009,7 +3009,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	}
 
       /* character found, manage extensions */
-      if (dx < *x)
+      if (dx < *x && *x < pBox->BxW)
 	{
 	  /* get the ending position of the character */
 	  if (rtl)

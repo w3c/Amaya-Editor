@@ -433,11 +433,11 @@ void ComputeViewSelMarks (ViewSelection *selMark)
 	  GiveTextParams (&pBuffer, &ind, &pos, pBox->BxFont, &x, &spaces, 'L', 'O');
 	  if (pBox->BxScript == 'A' || pBox->BxScript == 'H')
 	    x = - x + pBox->BxW;
-	  /* ajoute eventuellement les pixels repartis */
 	  if (pBox->BxSpaceWidth)
 	    {
+	      /* treatment of justified lines */
 	      if (spaces < pBox->BxNPixels)
-		x += selMark->VsNSpaces;
+		x += spaces;
 	      else
 		x += pBox->BxNPixels;
 	    }

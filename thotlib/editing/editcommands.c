@@ -1512,43 +1512,49 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	/* Note que le texte de l'e'le'ment va changer */
 	StartTextInsertion (NULL, frame, NULL, NULL, 0, 0);
 	/* fusionne le premier et dernier buffer de la selection */
-	/* premier buffer=destination */
+	/* target of the moving */
 	pTargetBuffer = pViewSel->VsBuffer;
-	/* indice de destination */
 	targetInd = pViewSel->VsIndBuf;
-	/* dernier buffer=pSourceBuffer */
+	/* source of the moving */
 	pSourceBuffer = pFrame->FrSelectionEnd.VsBuffer;
-	/* indice de pSourceBuffer */
 	sourceInd = pFrame->FrSelectionEnd.VsIndBuf;
-	/* nombre de caracteres a copier */
-	if (pSourceBuffer)
-	  i = pSourceBuffer->BuLength - sourceInd;
-	else
-	  i = 0;
-	/* ==>Nombre de caracteres a copier nul */
-	if (i <= 0)
-	  i = targetInd - 1;
-	/* ==>Il y a des caracteres a deplacer */
-	else
+	if (SelPosition)
 	  {
-	    length = THOT_MAX_CHAR - targetInd;
-	    /* deplace en deux fois? */
-	    if (i > length)
+	    if (sourceInd >= pSourceBuffer->BuLength - 1)
 	      {
-		ustrncpy (&pTargetBuffer->BuContent[targetInd],
-			  &pSourceBuffer->BuContent[sourceInd], length);
-		pTargetBuffer->BuLength = FULL_BUFFER;
-		pTargetBuffer->BuContent[FULL_BUFFER - 1] = EOS;
-		targetInd = 0;
-		sourceInd += length;
-		i -= length;
-		pTargetBuffer = pTargetBuffer->BuNext;
+		pSourceBuffer = pSourceBuffer->BuNext;
+		sourceInd = 0;
 	      }
-	    ustrncpy (&pTargetBuffer->BuContent[targetInd],
-		      &pSourceBuffer->BuContent[sourceInd], i);
-	    i = i + targetInd - 1;
+	    else
+	      sourceInd++;
 	  }
-	
+	if (pSourceBuffer)
+	  {
+	/* nombre de caracteres a copier */
+	  i = pSourceBuffer->BuLength - sourceInd;
+	  if (i <= 0)
+	    /* no moving */
+	    i = targetInd;
+	  else
+	    {
+	      length = THOT_MAX_CHAR - targetInd;
+	      /* deplace en deux fois? */
+	      if (i > length)
+		{
+		  ustrncpy (&pTargetBuffer->BuContent[targetInd],
+			    &pSourceBuffer->BuContent[sourceInd], length);
+		  pTargetBuffer->BuLength = FULL_BUFFER;
+		  pTargetBuffer->BuContent[FULL_BUFFER - 1] = EOS;
+		  targetInd = 0;
+		  sourceInd += length;
+		  i -= length;
+		  pTargetBuffer = pTargetBuffer->BuNext;
+		}
+	      ustrncpy (&pTargetBuffer->BuContent[targetInd],
+			&pSourceBuffer->BuContent[sourceInd], i);
+	      i = i + targetInd;
+	    }
+	  }
 	pTargetBuffer->BuLength = i;
 	pTargetBuffer->BuContent[i] = EOS;
 	
@@ -1697,12 +1703,12 @@ static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
 {
   PtrTextBuffer       pTargetBuffer;
   ViewFrame          *pFrame;
-  int                 i;
+  int                 i, end;
   int                 xDelta, charsDelta;
   int                 spacesDelta;
 
   charsDelta = 0;
-  if (pAb != NULL)
+  if (pAb)
     {
       if (pAb->AbLeafType == LtText)
 	{
@@ -1718,9 +1724,13 @@ static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
 	      /* index of the beginning */
 	      i = 1;
 	      pTargetBuffer = NULL;
+	      end = pFrame->FrSelectionEnd.VsIndBuf;
+	      if (SelPosition)
+		/* suppress the next char */
+		end++;
 	      CopyBuffers (pBox->BxFont, frame,
 			   pFrame->FrSelectionBegin.VsIndBuf,
-			   pFrame->FrSelectionEnd.VsIndBuf, i,
+			   end, i,
 			   pFrame->FrSelectionBegin.VsBuffer,
 			   pFrame->FrSelectionEnd.VsBuffer, &pTargetBuffer,
 			   &xDelta, &spacesDelta, &charsDelta);
@@ -2097,7 +2107,7 @@ static void         ContentEditing (int editType)
 	      else
 		pAb = NULL;
 	    }
-	  else if (pAb != NULL)
+	  else if (pAb)
 	    pAb = pBox->BxAbstractBox;
 	  
 	  if (pAb)

@@ -76,7 +76,7 @@ void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame,
    if (pBox != NULL)
      {
        pBox = pBox->BxNext;
-       while (pBox != NULL)
+       while (pBox)
 	 {
 	   pAb = pBox->BxAbstractBox;
 	   if (pAb->AbVisibility >= pFrame->FrVisibility)
