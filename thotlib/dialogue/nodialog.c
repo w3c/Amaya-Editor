@@ -483,4 +483,8 @@ AmayaWindow * TtaGetActiveWindow()
   return NULL;
 }
 
+void TtaRedirectFocus()
+{
+}
+
 #endif /* _WX */

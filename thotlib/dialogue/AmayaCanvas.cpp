@@ -24,6 +24,7 @@
 #include "libmsg.h"
 #include "thot_key.h"
 #include "frame.h"
+#include "appdialogue_wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -394,6 +395,9 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
 #ifndef _WINDOWS
   // force the focus because on debian woody, the focus do not come in when clicking on the canvas
   SetFocus();
+#else
+  // force the focus when clicking on the canvas because the focus is locked on panel buttons
+  TtaRedirectFocus();
 #endif /* _WINDOWS */
 }
 
@@ -438,6 +442,9 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 #ifndef _WINDOWS
   // force the focus because on debian woody, the focus do not come in when clicking on the canvas
   SetFocus();
+#else
+  // force the focus when clicking on the canvas because the focus is locked on panel buttons
+  TtaRedirectFocus();
 #endif /* _WINDOWS */
 }
 
