@@ -1,4 +1,3 @@
-0 Expression reguli\350re trop grosse
 1 Vue non trouv\351e.
 2 Erreur au cours du chargement du dictionnaire: %s\n 
 3 Fichier inaccessible : %s\n
@@ -20,11 +19,6 @@
 19 Il n\'y a plus de place pour la police %s
 20 La structure du document %s est invalide
 21 Le document %s ne peut \352tre ni sauv\351 ni modifi\351
-22 Expression r\351guli\350re invalide
-23 Parenth\350se gauche manquante
-24 Parenth\350se droite manquante
-25 Fin pr\351matur\351e d'expression r\351guli\350re
-26 Trop d'imbrications
 27 Une erreur de position horizontale : %s
 28 Une erreur de position verticale : %s
 29 Table des regles saturee.
@@ -179,7 +173,6 @@
 178 Fichier PostScript
 179 Imprimante
 180 Texte \340 chercher
-181 Expression r\351guli\350re
 182 MAJUSCULES = minuscules
 183 Texte de remplacement
 184 Remplacement

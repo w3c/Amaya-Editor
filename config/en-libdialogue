@@ -1,4 +1,3 @@
-0 Regular expression too big
 1 View not found.
 2 Error while loading the dictionary: %s\n 
 3 Missing file: %s\n
@@ -20,11 +19,6 @@
 19 No more place for the font %s
 20 Structure of document %s invalid
 21 Document %s cannot be edited nor saved
-22 Invalid regular expression
-23 Unmatched left
-24 Unmatched right
-25 Premature end of regular expression
-26 Nesting too deep
 27 Horizontal positionning mistake: %s
 28 Vertical positionning mistake: %s
 29 Rules table full.
@@ -179,7 +173,6 @@
 178 PostScript file
 179 Printer
 180 Search for
-181 Regular expression
 182 UPPERCASE = lowercase
 183 Replace by
 184 Replace

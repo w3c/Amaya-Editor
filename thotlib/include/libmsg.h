@@ -5,7 +5,7 @@
 
 /*=====   Simple messages                                     */
 
-#define TMSG_REG_EXP_TOO_BIG		               0
+
 #define TMSG_MISSING_VIEW			               1
 #define TMSG_ERR_LOADING_DICO			               2
 #define TMSG_LIB_MISSING_FILE			               3
@@ -27,11 +27,6 @@
 #define TMSG_NO_PLACE_FOR_FONT		              19
 #define TMSG_INCORRECT_DOC_STRUCTURE	              20
 #define TMSG_LOCKED_DOC			              21
-#define TMSG_INCORRECT_REG_EXP		              22
-#define TMSG_UNMATCHED_LEFT			              23
-#define TMSG_UNMATCHED_RIGHT			              24
-#define TMSG_PREMATURE_END_REG_EXP	              25
-#define TMSG_LIB_NESTING_TOO_DEEP			              26
 #define TMSG_INCORRECT_HORIZ_POS			              27
 #define TMSG_INCORRECT_VERT_POS			              28
 #define TMSG_LIB_RULES_TABLE_FULL			              29
@@ -186,7 +181,6 @@
 #define TMSG_PS_FILE		                     178
 #define TMSG_PRINTER     		                     179
 #define TMSG_SEARCH_FOR		       	                     180
-#define TMSG_REG_EXP		                     181
 #define TMSG_UPPERCASE_EQ_LOWERCASE    	                     182
 #define TMSG_REPLACE_BY		       	                     183
 #define TMSG_REPLACE			                     184

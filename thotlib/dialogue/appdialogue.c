@@ -3089,7 +3089,7 @@ char               *data;
 		  break;
 	       case NumFormSearchText:
 	       case NumMenuReplaceMode:
-	       case NumToggleRegExp:
+	       case NumToggleUpperEqualLower:
 	       case NumMenuSearchNature:
 		  /* sous-menu mode de remplacement */
 		  (*ThotLocalActions[T_searchtext]) (ref, (int) data, NULL);

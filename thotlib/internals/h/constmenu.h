@@ -122,7 +122,7 @@
 #define NumFormSearchEmptyElement	129
 #define NumLabelDocSearcheEmptyElement	130
 #define NumLabelDocSearchEmptyRef	131
-#define NumToggleRegExp	132
+#define NumToggleUpperEqualLower	132
 #define NumMenuOrSearchEmptyElem	133
 #define NumLabelEmptyElemNotFound	134
 #define NumFormSearchEmptyReference	135

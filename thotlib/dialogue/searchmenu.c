@@ -73,9 +73,6 @@ static int          SearchedPageNumber;		/* numero de la page chercheee */
 static char         pPrecedentString[MAX_CHAR];		/* la chaine cherchee precedente */
 static char         pSearchedString[MAX_CHAR];	/* la chaine cherchee */
 static int          SearchedStringLen;	/* longueur de cette chaine */
-static boolean      RegExp;	/* pSearchedString est une 
-
-				   expression reguliere */
 static char         pReplaceString[MAX_CHAR];	/* la chaine de remplacement */
 static int          ReplaceStringLen;	/* longueur de cette chaine */
 
@@ -1003,15 +1000,12 @@ View                view;
 		   TtaGetMessage (LIB, TMSG_SEARCH_FOR), 30, 1, FALSE);
    TtaSetTextForm (NumZoneTextSearch, pSearchedString);
 
-   /* Toggle button "Expression reguliere" */
+   /* Toggle button "UPPERCAE = lowercase" */
    i = 0;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_REG_EXP));
-   i += strlen (&string[i]) + 1;
    sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
-   TtaNewToggleMenu (NumToggleRegExp, NumFormSearchText,
-		     NULL, 2, string, NULL, FALSE);
-   TtaSetToggleMenu (NumToggleRegExp, 0, RegExp);
-   TtaSetToggleMenu (NumToggleRegExp, 1, CaseDistinction);
+   TtaNewToggleMenu (NumToggleUpperEqualLower, NumFormSearchText,
+		     NULL, 1, string, NULL, FALSE);
+   TtaSetToggleMenu (NumToggleUpperEqualLower, 0, CaseDistinction);
 
    /* zone de saisie du texte de remplacement */
    TtaNewTextForm (NumZoneTextReplace, NumFormSearchText,
@@ -1127,11 +1121,8 @@ char               *txt;
 			  TtaSetMenuForm (NumMenuReplaceMode, 1);
 		       }
 		     break;
-		  case NumToggleRegExp:
+		  case NumToggleUpperEqualLower:
 		     if (val == 0)
-			/* toggle button expression reguliere */
-			RegExp = !RegExp;
-		     else
 			/* toggle button MAJUSCULES = minuscules */
 			CaseDistinction = !CaseDistinction;
 		     break;
@@ -1298,25 +1289,13 @@ char               *txt;
 					      pLastSel = searchDomain->SStartElement;
 					      lastChar = searchDomain->SStartChar;
 					   }
-
-					 if (RegExp)
-					   {
-					      if (!searchDomain->SStartToEnd)
-						 if (firstChar > 0)
-						    firstChar--;
-					      found = SearchRegularExpression (&pFirstSel, &firstChar, &pLastSel,
-									       &lastChar, searchDomain->SStartToEnd,
-									       CaseDistinction, pSearchedString);
-					   }
-					 else
-					   {
-					      found = SearchText (searchDomain->SDocument, &pFirstSel,
-								  &firstChar, &pLastSel, &lastChar,
-						  searchDomain->SStartToEnd,
-								  CaseDistinction, pSearchedString, SearchedStringLen);
-					      if (found)
-						 lastChar--;
-					   }
+					 found = SearchText (searchDomain->SDocument,
+					      &pFirstSel, &firstChar, &pLastSel,
+					      &lastChar, searchDomain->SStartToEnd,
+					      CaseDistinction, pSearchedString,
+					      SearchedStringLen);
+					 if (found)
+					    lastChar--;
 
 					 foundString = found;
 					 if (found)
@@ -1591,7 +1570,6 @@ void                SearchLoadResources ()
      }
    pSearchedString[0] = '\0';
    SearchedStringLen = 0;
-   RegExp = FALSE;
    CaseDistinction = FALSE;
    WithReplace = FALSE;
    pReplaceString[0] = '\0';

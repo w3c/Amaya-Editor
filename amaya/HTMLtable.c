@@ -3,12 +3,13 @@
  ***/
 
 /* Included header files */
-#include "app.h"
 #include "HTML.h"
-#include "tree.h"
+#include "app.h"
+#include "application.h"
 #include "attribute.h"
 #include "reference.h"
 #include "selection.h"
+#include "tree.h"
 
 static Element      CurrentPastedRow = NULL;
 static Element      CurrentCreatedRow = NULL;
@@ -104,6 +105,7 @@ Document            doc;
       else
 	 attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
       sscanf (attrVal, "%d", &cellWidth);
+      TtaFreeMemory (attrVal);
       attrColWidth = TtaGetAttribute (colhead, attrType);
       if (attrColWidth != NULL)
 	/* the Column_head has this attribute, get its value */
