@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxDialog" name="InitConfirmDlgWX">
+  <object class="wxDialog" name="OpenDocDlgWX">
     <title></title>
     <centered>1</centered>
     <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
@@ -17,7 +17,9 @@
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxStaticLine"/>
+            <object class="wxComboBox" name="wxID_COMBOBOX">
+              <content/>
+            </object>
             <flag>wxEXPAND</flag>
           </object>
         </object>
@@ -25,22 +27,22 @@
         <border>5</border>
       </object>
       <object class="sizeritem">
-        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
+        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxADJUST_MINSIZE</flag>
         <border>5</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_EXTRABUTTON">
-              <label>EXTRABUTTON</label>
+            <object class="wxButton" name="wxID_OPENBUTTON">
+              <label>OPENBUTTON</label>
             </object>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_CONFIRMBUTTON">
-              <label>CONFIRMBUTTON</label>
+            <object class="wxButton" name="wxID_BROWSEBUTTON">
+              <label>BROWSEBUTTON</label>
             </object>
           </object>
           <object class="sizeritem">

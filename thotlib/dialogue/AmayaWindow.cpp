@@ -328,7 +328,8 @@ void AmayaWindow::OnClose(wxCloseEvent& event)
   // reactivate the menubar if the windows is still alive
   ActivateMenuBar();
 
-  event.Skip();
+  // !! DO NOT SKIP THE EVENT !!
+  // the event is skiped or vetoed into childs widgets (notebook) depending of document modification status
 }
 
 /*

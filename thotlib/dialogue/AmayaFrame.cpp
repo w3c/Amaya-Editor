@@ -103,7 +103,8 @@ AmayaFrame::~AmayaFrame()
   //    GetPageParent()->DeletedFrame( this );
 
   // destroy the menu bar
-  if (m_pMenuBar) m_pMenuBar->Destroy();
+  if (m_pMenuBar)
+    m_pMenuBar->Destroy();
   m_pMenuBar = NULL;
 
   /* destroy the canvas (it should be automaticaly destroyed by 
@@ -635,7 +636,12 @@ AmayaWindow * AmayaFrame::GetWindowParent()
 void AmayaFrame::OnClose(wxCloseEvent& event)
 {
   wxLogDebug( _T("AmayaFrame::OnClose: frame=%d"), m_FrameId );
-  
+
+  // activate the frame just before closing it
+  // so the user can see what it's beeing closed 
+  SetActive( TRUE );
+  if ( GetPageParent() )
+    GetPageParent()->RaisePage();
 
   PtrDocument         pDoc;
   int                 view;

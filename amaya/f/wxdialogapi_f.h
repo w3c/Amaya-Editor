@@ -11,6 +11,13 @@ extern void CreateInitConfirmDlgWX ( ThotWindow parent,
                                      char *extrabutton,
                                      char *confirmbutton,
                                      char *label );
+extern void CreateOpenDocDlgWX ( ThotWindow parent,
+                                 const char *title,
+                                 const char *urlList,
+                                 const char *docName,
+                                 int doc_select,
+                                 int dir_select,
+                                 DocumentType doc_type );
 
 #else /* __STDC__ */
 
@@ -19,6 +26,13 @@ extern void CreateInitConfirmDlgWX ( ThotWindow parent,
                                        char *extrabutton,
                                        char *confirmbutton,
                                        char *label );
+extern void CreateOpenDocDlgWX ( ThotWindow parent,
+                                   const char *title,
+                                   const char *urlList,
+                                   const char *docName,
+                                   int doc_select,
+                                   int dir_select,
+                                   DocumentType doc_type );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -33,6 +33,7 @@ private:
   void OnExtraButton( wxCommandEvent& event );
   void OnConfirmButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
+  void OnSize( wxSizeEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()

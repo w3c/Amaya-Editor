@@ -8,7 +8,10 @@
 
 extern void TtaShowWindow ( int window_id,
                             ThotBool show );
-extern int TtaMakeWindow ( void );
+extern int TtaMakeWindow ( int x,
+                           int y,
+                           int w,
+                           int h );
 extern int TtaMakeFrame ( const char * schema_name,
                           int schView,
                           Document doc_id,
@@ -58,7 +61,10 @@ extern int TtaAddToolBarButton ( int window_id,
 
 extern void TtaShowWindow ( int window_id,
                               ThotBool show );
-extern int TtaMakeWindow ( void );
+extern int TtaMakeWindow ( int x,
+                             int y,
+                             int w,
+                             int h );
 extern int TtaMakeFrame ( const char * schema_name,
                             int schView,
                             Document doc_id,
