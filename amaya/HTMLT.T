@@ -10,7 +10,7 @@ CONST
 RULES
 
  HTML : BEGIN
-	Create '<!doctype html public "-//w3c//dtd html 3.2 final//en">\12';
+	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\12';
 	Create '<html';
 	Create Attributes;
 	Create '>\12';
