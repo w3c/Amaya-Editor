@@ -1853,28 +1853,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    int                 n;
    char               *arg;
 #endif /* _WINDOWS && GTK */
-#ifdef _GTK
-   /* char   *ptr; */
 
-   /* Sets the current locale according to the program environment */
-   /* ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-      if (ptr && !strcasecmp (ptr, "yes"))*/
-   gtk_set_locale ();
-
-   /* In order to get a "." even in a localised unix
-      (ie : french becomes ",")*/
-   setlocale (LC_NUMERIC, "C");
-
-   /* initialize everything needed to operate the toolkit and parses some standard command line options */
-   if (!gtk_init_check (&appArgc, &appArgv))
-       gdk_init (&appArgc, &appArgv);
-   DefaultFont = gdk_font_load ("fixed");
-   /* initilize the imlib, gtkv2.0 dont use imlib , it uses gdkpixbuf */
-#ifndef _GL
-   gdk_imlib_init ();
-#endif /* _GL */
-   TtDisplay = GDK_DISPLAY ();
-#else /* _GTK */
    CurrentWait = 0;
    ShowReturn = 0;
    ShowX = 100;
@@ -1889,6 +1868,26 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    PopShell = 0;
    /* Pas encore de reference attribuee */
    FirstFreeRef = 0;
+#ifdef _GTK
+   /* Sets the current locale according to the program environment */
+   /* ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
+      if (ptr && !strcasecmp (ptr, "yes"))*/
+   gtk_set_locale ();
+
+   /* In order to get a "." even in a localised unix
+      (ie : french becomes ",")*/
+   setlocale (LC_NUMERIC, "C");
+
+   /* initialize everything needed to operate the toolkit and parses some standard command line options */
+   if (!gtk_init_check (&appArgc, &appArgv))
+       gdk_init (&appArgc, &appArgv);
+   /* initilize the imlib, gtkv2.0 dont use imlib , it uses gdkpixbuf */
+#ifndef _GL
+   gdk_imlib_init ();
+#endif /* _GL */
+   DefaultFont = gdk_font_load ("fixed");
+   TtDisplay = GDK_DISPLAY ();
+#else /* _GTK */
 #ifdef _WINDOWS
    FrMainRef[0] = 0;
    iconID = "IDI_APPICON";
