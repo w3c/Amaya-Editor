@@ -16,6 +16,45 @@ typedef struct Classthotlib_Document {
 } Classthotlib_Document;
 HandleTo(thotlib_Document);
 
+extern jint thotlib_Document_TtaNewDocument(struct Hthotlib_Document*, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern jint thotlib_Document_TtaOpenDocument(struct Hthotlib_Document*, struct Hjava_lang_String*, jint);
+extern void thotlib_Document_TtaSaveDocument(struct Hthotlib_Document*, jint, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaExportDocument(struct Hthotlib_Document*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaCloseDocument(struct Hthotlib_Document*, jint);
+extern void thotlib_Document_TtaRemoveDocument(struct Hthotlib_Document*, jint);
+extern void thotlib_Document_TtaSetDocumentPath(struct Hthotlib_Document*, struct Hjava_lang_String*);
+extern jint /* bool */ thotlib_Document_TtaCheckDirectory(struct Hthotlib_Document*, struct Hjava_lang_String*);
+extern jint /* bool */ thotlib_Document_TtaCheckPath(struct Hthotlib_Document*, struct Hjava_lang_String*);
+extern jint /* bool */ thotlib_Document_TtaIsInDocumentPath(struct Hthotlib_Document*, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaAppendDocumentPath(struct Hthotlib_Document*, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaSetSchemaPath(struct Hthotlib_Document*, struct Hjava_lang_String*);
+extern jint thotlib_Document_TtaNewNature(struct Hthotlib_Document*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern jint thotlib_Document_TtaNewSchemaExtension(struct Hthotlib_Document*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern jint thotlib_Document_TtaGetSchemaExtension(struct Hthotlib_Document*, jint, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaSetPSchema(struct Hthotlib_Document*, jint, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaSetDocumentDirectory(struct Hthotlib_Document*, jint, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaSetDocumentName(struct Hthotlib_Document*, jint, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaSetDocumentAccessMode(struct Hthotlib_Document*, jint, jint);
+extern void thotlib_Document_TtaSetDocumentBackUpInterval(struct Hthotlib_Document*, jint, jint);
+extern void thotlib_Document_TtaSetNotificationMode(struct Hthotlib_Document*, jint, jint);
+extern void thotlib_Document_TtaSetDocumentModified(struct Hthotlib_Document*, jint);
+extern void thotlib_Document_TtaSetDocumentUnmodified(struct Hthotlib_Document*, jint);
+extern struct Hjava_lang_String* thotlib_Document_TtaGetDocumentName(struct Hthotlib_Document*, jint);
+extern jint thotlib_Document_TtaGetDocumentFromName(struct Hthotlib_Document*, struct Hjava_lang_String*);
+extern void thotlib_Document_TtaGetDocumentDirectory(struct Hthotlib_Document*, jint, struct Hjava_lang_String*, jint);
+extern jint thotlib_Document_TtaGetDocumentSSchema(struct Hthotlib_Document*, jint);
+extern struct Hjava_lang_String* thotlib_Document_TtaGetSSchemaName(struct Hthotlib_Document*, jint);
+extern struct Hjava_lang_String* thotlib_Document_TtaGetPSchemaName(struct Hthotlib_Document*, jint);
+extern jint thotlib_Document_TtaGetSSchema(struct Hthotlib_Document*, struct Hjava_lang_String*, jint);
+extern jint thotlib_Document_TtaSameSSchemas(struct Hthotlib_Document*, jint, jint);
+extern void thotlib_Document_TtaGiveSchemasOfDocument(struct Hthotlib_Document*, struct Hjava_lang_String*, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern jint thotlib_Document_TtaIsDocumentModified(struct Hthotlib_Document*, jint);
+extern jint thotlib_Document_TtaGetDocumentAccessMode(struct Hthotlib_Document*, jint);
+extern jint thotlib_Document_TtaGetDocumentBackUpInterval(struct Hthotlib_Document*, jint);
+extern jint thotlib_Document_TtaGetNotificationMode(struct Hthotlib_Document*, jint);
+extern void thotlib_Document_TtaGetDocumentPath(struct Hthotlib_Document*, struct Hjava_lang_String*, jint);
+extern void thotlib_Document_TtaGetSchemaPath(struct Hthotlib_Document*, struct Hjava_lang_String*, jint);
+extern jint thotlib_Document_TtaGetDocumentOfSavedElements(struct Hthotlib_Document*);
 
 #ifdef __cplusplus
 }

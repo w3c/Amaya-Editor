@@ -18,7 +18,7 @@ thotlib_Interface_TtaSwitchButton(struct Hthotlib_Interface* none, jint document
 {
 
 
-	TtaSwitchButton((int ) document, (int ) view, (int ) index);
+	TtaSwitchButton((Document ) document, (View ) view, (int ) index);
 }
 
 /*
@@ -31,7 +31,7 @@ thotlib_Interface_TtaSetTextZone(struct Hthotlib_Interface* none, jint document,
 
 	javaString2CString(jtext, text, sizeof(text));
 
-	TtaSetTextZone((char *) document, (char *) view, (char *) index, (char *) text);
+	TtaSetTextZone((Document ) document, (View ) view, (int ) index, (char *) text);
 }
 
 /*
@@ -42,7 +42,7 @@ thotlib_Interface_TtaSetMenuOff(struct Hthotlib_Interface* none, jint document, 
 {
 
 
-	TtaSetMenuOff((int ) document, (int ) view, (int ) menuID);
+	TtaSetMenuOff((Document ) document, (View ) view, (int ) menuID);
 }
 
 /*
@@ -53,7 +53,7 @@ thotlib_Interface_TtaSetMenuOn(struct Hthotlib_Interface* none, jint document, j
 {
 
 
-	TtaSetMenuOn((int ) document, (int ) view, (int ) menuID);
+	TtaSetMenuOn((Document ) document, (View ) view, (int ) menuID);
 }
 
 /*
@@ -64,7 +64,7 @@ thotlib_Interface_TtaSetToggleItem(struct Hthotlib_Interface* none, jint documen
 {
 
 
-	TtaSetToggleItem((boolean ) document, (boolean ) view, (boolean ) menuID, (boolean ) itemID, (boolean ) on);
+	TtaSetToggleItem((Document ) document, (View ) view, (int ) menuID, (int ) itemID, (boolean ) on);
 }
 
 /*
@@ -75,7 +75,7 @@ thotlib_Interface_TtaSetActionOff(struct Hthotlib_Interface* none, jint document
 {
 
 
-	TtaSetActionOff((int ) document, (int ) view, (int ) menuID, (int ) itemID);
+	TtaSetActionOff((Document ) document, (View ) view, (int ) menuID, (int ) itemID);
 }
 
 /*
@@ -86,7 +86,7 @@ thotlib_Interface_TtaSetActionOn(struct Hthotlib_Interface* none, jint document,
 {
 
 
-	TtaSetActionOn((int ) document, (int ) view, (int ) menuID, (int ) itemID);
+	TtaSetActionOn((Document ) document, (View ) view, (int ) menuID, (int ) itemID);
 }
 
 /*
@@ -101,7 +101,7 @@ thotlib_Interface_TtaSetStatus(struct Hthotlib_Interface* none, jint document, j
 	javaString2CString(jtext, text, sizeof(text));
 	javaString2CString(jname, name, sizeof(name));
 
-	TtaSetStatus((char *) document, (char *) view, (char *) text, (char *) name);
+	TtaSetStatus((Document ) document, (View ) view, (char *) text, (char *) name);
 }
 
 /*
@@ -134,7 +134,7 @@ thotlib_Interface_TtaSetCursorWatch(struct Hthotlib_Interface* none, jint docume
 {
 
 
-	TtaSetCursorWatch((View ) document, (View ) view);
+	TtaSetCursorWatch((Document ) document, (View ) view);
 }
 
 /*
@@ -145,7 +145,7 @@ thotlib_Interface_TtaResetCursor(struct Hthotlib_Interface* none, jint document,
 {
 
 
-	TtaResetCursor((View ) document, (View ) view);
+	TtaResetCursor((Document ) document, (View ) view);
 }
 
 /*
@@ -159,7 +159,7 @@ thotlib_Interface_TtaGetScreenDepth(struct Hthotlib_Interface* none)
 
 	res = TtaGetScreenDepth();
 
-	return((jint) result);
+	return((jint) res);
 }
 
 /*

@@ -18,12 +18,12 @@ javastub.o : javastub.c
 	$(CC) $(CFLAGS) -c $<
 
 clean :
-	rm javastub *.o 
+	rm javastub *.o thotlib_Interface*
 
 install : all
 	-@(mkdir ../../`../../batch/MachineType`/bin)
 	cp javastub ../../`../../batch/MachineType`/bin
 
 test: all
-	./javastub -C thotlib_Interface ../../thotlib/include/interface.h > thotlib_Interface.c
+	./javastub -C thotlib_Interface ../../thotlib/include/interface.h 
 

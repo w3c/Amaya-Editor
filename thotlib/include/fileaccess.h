@@ -9,6 +9,7 @@
 #ifndef _FILEACCESS_H_
 #define _FILEACCESS_H_
 
+#include "thot_sys.h"
 #include "typebase.h"
 
 typedef FILE *BinFile;

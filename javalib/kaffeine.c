@@ -10,6 +10,12 @@
 #include <string.h>
 #include "thotlib_Interface_stubs.h"
 #include "thotlib_Document_stubs.h"
+#include "thotlib_Application_stubs.h"
+#include "thotlib_Tree_stubs.h"
+#include "thotlib_Presentation_stubs.h"
+#include "thotlib_Language_stubs.h"
+#include "thotlib_Registry_stubs.h"
+#include "thotlib_Pivot_stubs.h"
 #include "StubPreamble.h"
 #include "jtypes.h"
 #include "native.h"
@@ -92,7 +98,7 @@ char *app_name;
                    "([Ljava/lang/String;)V", args);
 
     /* Start the application loop of events */
-    do_execute_java_class_method("thotlib.Document", "main",
+    do_execute_java_class_method("thotlib.Interface", "main",
                    "([Ljava/lang/String;)V", args);
 }
 
@@ -101,7 +107,13 @@ char *app_name;
  */
 static void register_stubs(void)
 {
-   register_thotlib_Document_stubs();
    register_thotlib_Interface_stubs();
+   register_thotlib_Document_stubs();
+   register_thotlib_Application_stubs();
+   register_thotlib_Tree_stubs();
+   register_thotlib_Presentation_stubs();
+   register_thotlib_Language_stubs();
+   register_thotlib_Registry_stubs();
+   register_thotlib_Pivot_stubs();
 }
 

@@ -14,7 +14,19 @@ typedef struct Classthotlib_Interface {
 } Classthotlib_Interface;
 HandleTo(thotlib_Interface);
 
+extern void thotlib_Interface_TtaSwitchButton(struct Hthotlib_Interface*, jint, jint, jint);
+extern void thotlib_Interface_TtaSetTextZone(struct Hthotlib_Interface*, jint, jint, jint, struct Hjava_lang_String*);
+extern void thotlib_Interface_TtaSetMenuOff(struct Hthotlib_Interface*, jint, jint, jint);
+extern void thotlib_Interface_TtaSetMenuOn(struct Hthotlib_Interface*, jint, jint, jint);
+extern void thotlib_Interface_TtaSetToggleItem(struct Hthotlib_Interface*, jint, jint, jint, jint, jint /* bool */);
+extern void thotlib_Interface_TtaSetActionOff(struct Hthotlib_Interface*, jint, jint, jint, jint);
+extern void thotlib_Interface_TtaSetActionOn(struct Hthotlib_Interface*, jint, jint, jint, jint);
+extern void thotlib_Interface_TtaSetStatus(struct Hthotlib_Interface*, jint, jint, struct Hjava_lang_String*, struct Hjava_lang_String*);
 extern void thotlib_Interface_TtaMainLoop(struct Hthotlib_Interface*);
+extern void thotlib_Interface_TtaHandlePendingEvents(struct Hthotlib_Interface*);
+extern void thotlib_Interface_TtaSetCursorWatch(struct Hthotlib_Interface*, jint, jint);
+extern void thotlib_Interface_TtaResetCursor(struct Hthotlib_Interface*, jint, jint);
+extern jint thotlib_Interface_TtaGetScreenDepth(struct Hthotlib_Interface*);
 
 #ifdef __cplusplus
 }

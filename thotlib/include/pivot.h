@@ -16,6 +16,10 @@
  
 #ifndef _PIVOT_H_
 #define _PIVOT_H_
+#include "thot_sys.h"
+#include "fileaccess.h"
+#include "presentation.h"
+#include "attribute.h"
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
