@@ -56,6 +56,36 @@ extern void TtaChangeLimitOfPolyline ( Element element,
                                        int x,
                                        int y,
                                        Document document );
+extern PathSegment TtaNewPathSegLine ( int xstart,
+                                       int ystart,
+                                       int xend,
+                                       int yend );
+extern PathSegment TtaNewPathSegCubic ( int xstart,
+                                        int ystart,
+                                        int xend,
+                                        int yend,
+                                        int xctrl1,
+                                        int yctrl1,
+                                        int xctrl2,
+                                        int yctrl2 );
+extern PathSegment TtaNewPathSegQuadratic ( int xstart,
+                                            int ystart,
+                                            int xend,
+                                            int yend,
+                                            int xctrl,
+                                            int yctrl );
+extern PathSegment TtaNewPathSegArc ( int xstart,
+                                      int ystart,
+                                      int xend,
+                                      int yend,
+                                      int xradius,
+                                      int yradius,
+                                      int angle,
+                                      ThotBool largearc,
+                                      ThotBool sweep );
+extern void TtaAppendPathSeg ( Element element,
+                               PathSegment segment,
+                               Document document );
 extern void TtaCopyPage ( Element destination,
                           Element source );
 extern int TtaGetVolume ( Element element );
@@ -126,6 +156,36 @@ extern void TtaChangeLimitOfPolyline (/* Element element,
                                          int x,
                                          int y,
                                          Document document */);
+extern PathSegment TtaNewPathSegLine (/* int xstart,
+                                         int ystart,
+                                         int xend,
+                                         int yend */);
+extern PathSegment TtaNewPathSegCubic (/* int xstart,
+                                          int ystart,
+                                          int xend,
+                                          int yend,
+                                          int xctrl1,
+                                          int yctrl1,
+                                          int xctrl2,
+                                          int yctrl2 */);
+extern PathSegment TtaNewPathSegQuadratic (/* int xstart,
+                                              int ystart,
+                                              int xend,
+                                              int yend,
+                                              int xctrl,
+                                              int yctrl */);
+extern PathSegment TtaNewPathSegArc (/* int xstart,
+                                        int ystart,
+                                        int xend,
+                                        int yend,
+                                        int xradius,
+                                        int yradius,
+                                        int angle,
+                                        ThotBool largearc,
+                                        ThotBool sweep */);
+extern void TtaAppendPathSeg (/* Element element,
+                                 PathSegment segment,
+                                 Document document */);
 extern void TtaCopyPage (/* Element destination,
                             Element source */);
 extern int TtaGetVolume (/* Element element */);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
@@ -283,13 +283,7 @@ TypeBrowserFile WidgetParent;
    Clears the dynamically allocated memory associated to a metadata
    element. Doesn't free the element or clears any of its other elements.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DocumentMetaClear (DocumentMetaDataElement *me)
-#else
-void                DocumentMetaClear (me)
-DocumentMetaDataElement *me;
-
-#endif
 {
   if (me->form_data)
     {
@@ -308,14 +302,7 @@ DocumentMetaDataElement *me;
    IsDocumentLoaded returns the document identification if the        
    corresponding document is already loaded or 0.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Document            IsDocumentLoaded (CHAR_T* documentURL, CHAR_T* form_data)
-#else
-Document            IsDocumentLoaded (documentURL, form_data)
-CHAR_T*             documentURL;
-CHAR_T*              form_data;
-
-#endif
 {
   int               i;
   ThotBool          found;
@@ -356,13 +343,7 @@ CHAR_T*              form_data;
   Return TRUE if the document has not been modified of if the user
   agrees to loose the changes he/she has made.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool		CanReplaceCurrentDocument (Document document, View view)
-#else
-ThotBool		CanReplaceCurrentDocument (document, view)
-Document	document;
-View		view;
-#endif
 {
    ThotBool	ret;
 
@@ -388,13 +369,7 @@ View		view;
 /*----------------------------------------------------------------------
    ExtractParameters extract parameters from document nane.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ExtractParameters (CHAR_T* aName, CHAR_T* parameters)
-#else
-void                ExtractParameters (aName, parameters)
-CHAR_T*             aName;
-CHAR_T*             parameters;
-#endif
 {
    int              lg, i;
    CHAR_T*          ptr;
@@ -433,12 +408,7 @@ CHAR_T*             parameters;
    Removes the URL target separator ('#') before verifying if a file
    exists.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     FileExistTarget (CHAR_T* filename)
-#else
-static ThotBool     FileExistTarget (filename)
-CHAR_T*             filename;
-#endif
 {
   CHAR_T *ptr;
   ThotBool result;
@@ -460,14 +430,7 @@ CHAR_T*             filename;
   Change the appearance of the Back (if back == TRUE) or Forward button
   for a given document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetArrowButton (Document document, ThotBool back, ThotBool on)
-#else
-void                SetArrowButton (document, back, on)
-Document            document;
-ThotBool		    back;
-ThotBool		    on;
-#endif
 {
   int		index;
   ThotBool      state;
@@ -511,12 +474,7 @@ ThotBool		    on;
 /*----------------------------------------------------------------------
    ResetStop resets the stop button state                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ResetStop (Document document)
-#else
-void                ResetStop (document)
-Document            document;
-#endif
 {
   if (FilesLoading[document] != 0)
     FilesLoading[document]--;
@@ -540,12 +498,7 @@ Document            document;
 /*----------------------------------------------------------------------
    ActiveTransfer initialize the current transfer                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ActiveTransfer (Document document)
-#else
-void                ActiveTransfer (document)
-Document            doc;
-#endif
 {
   DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
   FilesLoading[document] = 1;
@@ -557,12 +510,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    SetStopButton Activates the stop button if it's turned off
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetStopButton (Document document)
-#else
-void                SetStopButton (document)
-Document            doc;
-#endif
 {
   if (document == 0)
     return;
@@ -584,13 +532,7 @@ Document            doc;
    SetFormReadWrite
    Set ReadWrite access to input elements
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	SetFormReadWrite (Element el, Document doc)
-#else
-static void	SetFormReadWrite (el, doc)
-Element         el;
-Document        doc;
-#endif
 {
    ElementType         elType;
    Element             child, next;
@@ -627,12 +569,7 @@ Document        doc;
    SetDocumentReadOnly
    Set the whole document in ReadOnly mode except input elements
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	SetDocumentReadOnly (Document doc)
-#else
-static void	SetDocumentReadOnly (doc)
-Document        doc;
-#endif
 {
    ElementType         elType;
    Element             el, elForm;
@@ -659,13 +596,7 @@ Document        doc;
    Update the save button and corresponding menu entry according to the
    document status.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      DocStatusUpdate (Document document, ThotBool modified)
-#else
-void      DocStatusUpdate (document, modified)
-Document  doc;
-ThotBool  modified;
-#endif
 {
   Document    otherDoc;
 
@@ -704,12 +635,7 @@ ThotBool  modified;
   UpdateBrowserMenus
   Update windows menus for the Browser mode              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  UpdateBrowserMenus (Document document)
-#else
-static void  UpdateBrowserMenus (document)
-Document  doc;
-#endif
 {
   View    view;
 
@@ -814,12 +740,7 @@ Document  doc;
    UpdateEditorMenus 
    Update windows menus for the Editor mode              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  UpdateEditorMenus (Document document)
-#else
-static void  UpdateEditorMenus (document)
-Document  doc;
-#endif
 {
   View    view;
 
@@ -930,12 +851,7 @@ Document  doc;
    ChangeToEdotirMode
    Similar to Editor mode except for  the variable ReadOnlyDocument
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void    ChangeToEditorMode (Document document)
-#else
-void    ChangeToEditorMode (document)
-Document    doc;
-#endif
 {
    Document  docSel;
 
@@ -957,12 +873,7 @@ Document    doc;
    ChangeToBrowserMode
    Similar to Browser mode except for the variable ReadOnlyDocument
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void    ChangeToBrowserMode (Document document)
-#else
-void    ChangeToBrowserMode (document)
-Document    doc;
-#endif
 {
    Document  docSel;
 
@@ -980,12 +891,7 @@ Document    doc;
 /*----------------------------------------------------------------------
    Change the Browser/Editor mode                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void    SetBrowserEditor (Document document)
-#else
-void    SetBrowserEditor (document)
-Document    doc;
-#endif
 {
    Document  docSel;
 
@@ -1019,13 +925,7 @@ Document    doc;
 /*----------------------------------------------------------------------
    UpdateTransfer updates the status of the current transfer
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateTransfer (Document document)
-#else
-void                UpdateTransfer (document)
-Document            doc;
-
-#endif
 {
   FilesLoading[document]++;
 }
@@ -1033,14 +933,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    StopTransfer stops the current transfer                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                StopTransfer (Document document, View view)
-#else
-void                StopTransfer (document, view)
-Document            doc;
-View                view;
-
-#endif
 {
   if (document == 0)
     return;
@@ -1073,15 +966,7 @@ View                view;
    The Address text field in a document window has been modified by the user
    Load the corresponding document in that window.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         TextURL (Document document, View view, CHAR_T* text)
-#else
-static void         TextURL (document, view, text)
-Document            doc;
-View                view;
-CHAR_T*              text;
-
-#endif
 {
   CHAR_T           *s = NULL;
   CHAR_T           *url;
@@ -1147,14 +1032,7 @@ CHAR_T*              text;
    The new title is the content of the TITLE element of document sourceDoc.
    If document sourceDoc does not have any TITLE element, nothing happen.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
-#else
-void         SetWindowTitle (sourceDoc, targetDoc, view)
-Document            sourceDoc;
-Document            targetDoc;
-View                view;
-#endif
 {
    ElementType         elType;
    Element             el, child;
@@ -1189,16 +1067,7 @@ View                view;
   InitFormAnswer
   Dialogue form for answering text, user name and password
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitFormAnswer (Document document, View view, const CHAR_T* auth_realm, CHAR_T* server)
-#else
-void                InitFormAnswer (document, view, auth_realm, server)
-Document            document;
-View                view;
-const CHAR_T       *auth_realm;
-CHAR_T             *server;
-
-#endif
 {
 #ifndef _WINDOWS
    CHAR_T* label;
@@ -1248,13 +1117,7 @@ CHAR_T             *server;
   InitInfo
   Displays a message box with the given info text
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void       InitInfo (CHAR_T* label, CHAR_T* info)
-#else
-void       InitInfo (label, info)
-CHAR_T    *label;
-CHAR_T    *info;
-#endif
 {
   if (!info || *info == WC_EOS)
     return;
@@ -1267,17 +1130,7 @@ CHAR_T    *info;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      InitConfirm3L (Document document, View view, CHAR_T *label1, CHAR_T *label2, CHAR_T *label3, ThotBool withCancel)
-#else
-void      InitConfirm3L (document, view, label1, label2, label3, withCancel)
-Document  document;
-View      view;
-CHAR_T   *label1;
-CHAR_T   *label2;
-CHAR_T   *label3;
-ThotBool  withCancel;
-#endif
 {
 #ifndef _WINDOWS
   /* Confirm form */
@@ -1312,14 +1165,7 @@ ThotBool  withCancel;
 static ThotBool critic = FALSE;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             InitConfirm (Document document, View view, CHAR_T* label)
-#else
-void             InitConfirm (document, view, label)
-Document         document;
-View             view;
-CHAR_T*          label;
-#endif
 {
 #ifndef _WINDOWS
    /* Confirm form */
@@ -1352,14 +1198,7 @@ CHAR_T*          label;
   BrowserForm
   Initializes a form that ask the URI of the opened or new created document.
   -------------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   BrowserForm (Document doc, View view, CHAR_T* urlname)
-#else
-static void   BrowserForm (doc, view, urlnale)
-Document      doc;
-View          view;
-CHAR_T       *urlname
-#endif
 {
    CHAR_T    s[MAX_LENGTH];
    int       i;
@@ -1443,14 +1282,7 @@ CHAR_T       *urlname
   InitOpenDocForm initializes a form that ask the URI of the opened or
   new created document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void        InitOpenDocForm (Document document, View view, CHAR_T* title)
-#else
-static void        InitOpenDocForm (document, view, title)
-Document           document;
-View               view;
-CHAR_T*             title;
-#endif
 {
    CHAR_T            s[MAX_LENGTH];
 #ifndef _WINDOWS
@@ -1502,14 +1334,7 @@ CHAR_T*             title;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                OpenDoc (Document document, View view)
-#else
-void                OpenDoc (document, view)
-Document            document;
-View                view;
-
-#endif
 {
    if (CanReplaceCurrentDocument (document, view))
      {
@@ -1521,14 +1346,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                OpenDocInNewWindow (Document document, View view)
-#else
-void                OpenDocInNewWindow (document, view)
-Document            document;
-View                view;
-
-#endif
 {
    InNewWindow = TRUE;
    InitOpenDocForm (document, view, TtaGetMessage (1, BOpenInNewWindow));
@@ -1538,14 +1356,7 @@ View                view;
 /*----------------------------------------------------------------------
   OpenNew: create a new document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void        OpenNew (Document document, View view, int docType)
-#else
-void        OpenNew (document, view, docType)
-Document   document;
-View       view;
-int        docType;
-#endif
 {
   CHAR_T  tempfile[MAX_LENGTH];
   int       i;
@@ -1634,13 +1445,7 @@ int        docType;
 /*----------------------------------------------------------------------
   Load the Home page
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void            GoToHome (Document doc, View view)
-#else
-void            GoToHome (doc, view)
-Document        doc;
-View            view;
-#endif
 {
   CHAR_T   *s, *lang;
 
@@ -1667,20 +1472,11 @@ View            view;
    logFile is TRUE if the new view is created to display a log file
    sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Document     InitDocView (Document doc,
 			  CHAR_T* docname,
 			  DocumentType docType,
 			  Document sourceOfDoc,
 			  ThotBool readOnly)
-#else
-Document     InitDocView (doc, docname, docType, sourceOfDoc, readOnly)
-Document     doc;
-CHAR_T*      docname;
-DocumentType docType;
-Document     sourceOfDoc;
-ThotBool     readOnly;
-#endif
 {
   View          mainView, structView, altView, linksView, tocView;
   Document      old_doc;
@@ -2116,16 +1912,8 @@ ThotBool     readOnly;
 /*----------------------------------------------------------------------
   CreateHTMLContainer creates an HTML container for an image
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void CreateHTMLContainer (CHAR_T* pathname, CHAR_T* docname,
 				 CHAR_T* tempfile, ThotBool local)
-#else
-static void CreateHTMLContainer (pathname, docname, tempfile, local)
-CHAR_T* pathname;
-CHAR_T* docname;
-CHAR_T* tempfile;
-ThotBool local;
-#endif 
 {
   FILE *file;
   CHAR_T* tempfile_new;
@@ -2176,15 +1964,8 @@ ThotBool local;
   MoveImageFile moves an image file (related to an HTML container) from 
   one directory to another
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void MoveImageFile (Document source_doc, Document dest_doc,
 			   CHAR_T* documentname)
-#else
-static void MoveImageFile (source_doc, dest_doc, documentname)
-Document source_doc;
-Document dest_doc;
-CHAR_T* documentname;
-#endif
 {
   CHAR_T* source;
   CHAR_T* target;
@@ -2224,20 +2005,7 @@ CHAR_T* documentname;
   For a remote loading, the parameter tempfile gives the file name that
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, CHAR_T* initial_url, int method, CHAR_T* tempfile, CHAR_T* documentname, AHTHeaders *http_headers, ThotBool history)
-#else
-static Document     LoadHTMLDocument (doc, pathname, form_data, initial_url, method, tempfile, documentname, http_headers, history)
-Document            doc;
-CHAR_T*             pathname;
-CHAR_T*             form_data;
-CHAR_T*             initial_url;
-int                 method;
-CHAR_T*             tempfile;
-CHAR_T*             documentname;
-AHTHeaders*         http_headers
-ThotBool            history;
-#endif
 {
   CSSInfoPtr          css;
   Document            newdoc = 0;
@@ -2696,21 +2464,9 @@ ThotBool            history;
 /*----------------------------------------------------------------------
   Reload_callback
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                Reload_callback (int doc, int status, CHAR_T* urlName,
                                      CHAR_T* outputfile, AHTHeaders *http_headers,
 				       void * context)
-#else  /* __STDC__ */
-void                Reload_callback (doc, status, urlName, outputfile, 
-				       http_headers, context)
-int doc;
-int status;
-CHAR_T* urlName;
-CHAR_T* outputfile;
-AHTHeaders *http_headers;
-void *context;
-
-#endif
 {
   Document newdoc;
   CHAR_T* pathname;
@@ -2798,14 +2554,7 @@ void *context;
 /*----------------------------------------------------------------------
   Reload
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                Reload (Document doc, View view)
-#else
-void                Reload (doc, view)
-Document            doc;
-View                view;
-
-#endif
 {
    CHAR_T*              tempfile;
    CHAR_T*              pathname;
@@ -2900,13 +2649,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowTargets (Document document, View view)
-#else
-void                ShowTargets (document, view)
-Document            document;
-View                view;
-#endif
 {
   int               visibility;
   View		    tocView;
@@ -2933,13 +2676,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ZoomIn (Document document, View view)
-#else
-void                ZoomIn (document, view)
-Document            document;
-View                view;
-#endif
 {
   int               zoom, zoomVal;
   CHAR_T*            zoomStr;
@@ -2973,13 +2710,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ZoomOut (Document document, View view)
-#else
-void                ZoomOut (document, view)
-Document            document;
-View                view;
-#endif
 {
   int               zoom, zoomVal;
   CHAR_T*            zoomStr;
@@ -3015,13 +2746,7 @@ View                view;
   ShowSource
   Display the source code of an HTML page.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowSource (Document document, View view)
-#else
-void                ShowSource (document, view)
-Document            document;
-View                view;
-#endif
 {
    CHAR_T*        tempdocument;
    CHAR_T*       s;
@@ -3124,13 +2849,7 @@ View                view;
   ShowStructure
   Open the structure view(s) of an HTML document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowStructure (Document document, View view)
-#else
-void                ShowStructure (document, view)
-Document            document;
-View                view;
-#endif
 {
    View                structView;
    int                 x, y, w, h;
@@ -3169,14 +2888,7 @@ View                view;
   ShowAlternate
   Open the Alternate view of an HTML document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowAlternate (Document document, View view)
-#else
-void                ShowAlternate (document, view)
-Document            document;
-View                view;
-
-#endif
 {
    View                altView;
    int                 x, y, w, h;
@@ -3214,14 +2926,7 @@ View                view;
   ShowLinks
   Open the Links view of an HTML document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowLinks (Document document, View view)
-#else
-void                ShowLinks (document, view)
-Document            document;
-View                view;
-
-#endif
 {
    View                linksView;
    int                 x, y, w, h;
@@ -3259,14 +2964,7 @@ View                view;
   ShowToC
   Open the Table of content view of an HTML document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowToC (Document document, View view)
-#else
-void                ShowToC (document, view)
-Document            document;
-View                view;
-
-#endif
 {
    View                tocView;
    int                 x, y, w, h;
@@ -3303,13 +3001,7 @@ View                view;
 /*----------------------------------------------------------------------
    ViewToClose                                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ViewToClose (NotifyDialog * event)
-#else
-ThotBool            ViewToClose (event)
-NotifyDialog       *event;
-
-#endif
 {
    Document      document;
    View          view, structView, altView, linksView, tocView;
@@ -3343,18 +3035,7 @@ NotifyDialog       *event;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* outputfile, AHTHeaders *http_headers, void * context)
-#else  /* __STDC__ */
-void GetHTMLDocument_callback (newdoc, status, urlName, outputfile, http_headers, context)
-int       newdoc;
-int       status;
-CHAR_T*   urlName;
-CHAR_T*    outputfile;
-AHTHeaders *http_headers;
-void*     context;
-
-#endif
 {
    Element             elFound;
    Document            doc;
@@ -3522,19 +3203,7 @@ void*     context;
       click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_data, Document doc, Document baseDoc, ClickEvent CE_event, ThotBool history, TTcbf *cbf, void *ctx_cbf)
-#else
-Document            GetHTMLDocument (documentPath, const CHAR_T* form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
-CHAR_T*              documentPath;
-CHAR_T*              form_data;
-Document            doc;
-Document            baseDoc;
-ClickEvent          CE_event;
-ThotBool            history;
-TTcbf              *cbf;
-void               *ctx_cbf;
-#endif
 {
    Document            newdoc;
    CSSInfoPtr          css;
@@ -3837,11 +3506,7 @@ void               *ctx_cbf;
    UpdateSaveAsButtons
    Maintain consistency between buttons in the Save As dialog box
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	UpdateSaveAsButtons ()
-#else
-static void	UpdateSaveAsButtons ()
-#endif
 {
 #ifndef _WINDOWS
   int	active;
@@ -3869,12 +3534,7 @@ static void	UpdateSaveAsButtons ()
    SetFileSuffix
    Set the suffix of the file name used for saving a document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	SetFileSuffix ()
-#else
-static void	SetFileSuffix ()
-
-#endif
 {
   CHAR_T	       suffix[6];
   CHAR_T*          filename;
@@ -3942,14 +3602,7 @@ static void	SetFileSuffix ()
 /*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
-#else
-void                CallbackDialogue (ref, typedata, data)
-int                 ref;
-int                 typedata;
-CHAR_T*             data;
-#endif
 {
   CHAR_T*           tempfile;
   CHAR_T*           tempname;
@@ -4708,17 +4361,7 @@ CHAR_T*             data;
   tempdoc is the name of the saved file.
   Return the new recovered document
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static int       RestoreOneAmayaDoc (Document doc, CHAR_T* tempdoc, CHAR_T* docname, DocumentType docType)
-#else
-static int       RestoreOneAmayaDoc (doc, tempdoc, docname, docType)
-Document         doc;
-CHAR_T*          tempdoc;
-CHAR_T*          docname;
-DocumentType     docType;
-#endif
-
 {
   AHTHeaders          http_headers;
   CHAR_T              content_type[MAX_LENGTH];
@@ -4983,12 +4626,7 @@ void                FreeAmayaStructures ()
   InitAmaya intializes Amaya variables and opent the first document
   window.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitAmaya (NotifyEvent * event)
-#else
-void                InitAmaya (event)
-NotifyEvent        *event;
-#endif
 {
    CHAR_T             *s;
    CHAR_T             *tempname;
@@ -5077,11 +4715,8 @@ NotifyEvent        *event;
    /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);
    TargetName = NULL;
-
-   /*
-    * Initialize the Amaya user and tmp directories
-    */
-
+   /*TtaSetAccessKeyFunction ((Proc) );*/
+   /* Initialize the Amaya user and tmp directories */
    s = TtaGetEnvString ("APP_TMPDIR");
    if (!CheckMakeDirectory (s, TRUE))
      /* try to use the default value */
@@ -5270,13 +4905,7 @@ NotifyEvent        *event;
   type attrNum, create one.
   If the root has such an attribute, delete it.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         ChangeAttrOnRoot (Document document, int attrNum)
-#else
-void         ChangeAttrOnRoot (document, view)
-Document            document;
-int                 attrNum;
-#endif
 {
    Element	    root;
    AttributeType    attrType;
@@ -5310,14 +4939,7 @@ int                 attrNum;
   ShowMapAreas
   Execute the "Show Map Areas" command
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowMapAreas (Document document, View view)
-#else
-void                ShowMapAreas (document, view)
-Document            document;
-View                view;
-
-#endif
 {
 #ifdef _WINDOWS
    int frame = GetWindowNumber (document, view);
@@ -5343,14 +4965,7 @@ View                view;
   MakeIDMenu
   A menu for adding or removing ID attributes in a document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                MakeIDMenu (Document doc, View view)
-#else
-void                MakeIDMenu (doc, view)
-Document            doc;
-View                view;
-
-#endif
 {
 #ifndef _WINDOWS
   int i;
@@ -5406,13 +5021,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                HelpAmaya (Document document, View view)
-#else
-void                HelpAmaya (document, view)
-Document            document;
-View                view;
-#endif
 {
    CHAR_T                localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
@@ -5499,14 +5108,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                HelpAtW3C (Document document, View view)
-#else
-void                HelpAtW3C (document, view)
-Document            document;
-View                view;
-
-#endif
 {
   CHAR_T    localname[MAX_LENGTH];
   
@@ -5520,13 +5122,7 @@ View                view;
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void DisplayHelp (int doc, int index)
-#else /* __STDC__*/
-static void DisplayHelp (doc, index)
-int         doc;
-int         index;
-#endif /* __STDC__*/
 {
   Document    document;
   CHAR_T      localname[MAX_LENGTH];
@@ -5552,13 +5148,7 @@ int         index;
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpBrowsing (Document document, View view)
-#else /* __STDC__*/
-void HelpBrowsing (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, BROWSING);
 }
@@ -5566,13 +5156,7 @@ void HelpBrowsing (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpSelecting (Document document, View view)
-#else /* __STDC__*/
-void HelpSelecting (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, SELECTING);
 }
@@ -5580,13 +5164,7 @@ void HelpSelecting (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpSearching (Document document, View view)
-#else /* __STDC__*/
-void HelpSearching (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, SEARCHING);
 }
@@ -5594,13 +5172,7 @@ void HelpSearching (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpViews (Document document, View view)
-#else /* __STDC__*/
-void HelpViews (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, VIEWS);
 }
@@ -5608,13 +5180,7 @@ void HelpViews (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpCreating (Document document, View view)
-#else /* __STDC__*/
-void HelpCreating (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, CREATING);
 }
@@ -5622,13 +5188,7 @@ void HelpCreating (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpLinks (Document document, View view)
-#else /* __STDC__*/
-void HelpLinks (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, LINKS);
 }
@@ -5636,13 +5196,7 @@ void HelpLinks (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpChanging (Document document, View view)
-#else /* __STDC__*/
-void HelpChanging (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, CHANGING);
 }
@@ -5650,13 +5204,7 @@ void HelpChanging (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpTables (Document document, View view)
-#else /* __STDC__*/
-void HelpTables (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, TABLES);
 }
@@ -5664,13 +5212,7 @@ void HelpTables (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpMath (Document document, View view)
-#else /* __STDC__*/
-void HelpMath (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, MATH);
 }
@@ -5678,13 +5220,7 @@ void HelpMath (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpSVG (Document document, View view)
-#else /* __STDC__*/
-void HelpSVG (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, SVG);
 }
@@ -5692,13 +5228,7 @@ void HelpSVG (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpImageMaps (Document document, View view)
-#else /* __STDC__*/
-void HelpImageMaps (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, IMAGEMAPS);
 }
@@ -5706,13 +5236,7 @@ void HelpImageMaps (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpStyleSheets (Document document, View view)
-#else /* __STDC__*/
-void HelpStyleSheets (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, CSS);
 }
@@ -5720,26 +5244,14 @@ void HelpStyleSheets (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpAttributes (Document document, View view)
-#else /* __STDC__*/
-void HelpAttributes (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, ATTRIBUTES);
 }
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpSpellChecking (Document document, View view)
-#else /* __STDC__*/
-void HelpSpellChecking (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, SPELLCHECKING);
 }
@@ -5747,13 +5259,7 @@ void HelpSpellChecking (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpPublishing (Document document, View view)
-#else /* __STDC__*/
-void HelpPublishing (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, PUBLISHING);
 }
@@ -5761,13 +5267,7 @@ void HelpPublishing (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpPrinting (Document document, View view)
-#else /* __STDC__*/
-void HelpPrinting (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, PRINTING);
 }
@@ -5775,13 +5275,7 @@ void HelpPrinting (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpNumbering (Document document, View view)
-#else /* __STDC__*/
-void HelpNumbering (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, NUMBERING);
 }
@@ -5789,13 +5283,7 @@ void HelpNumbering (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpMakeBook (Document document, View view)
-#else /* __STDC__*/
-void HelpMakeBook (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, MAKEBOOK);
 }
@@ -5803,13 +5291,7 @@ void HelpMakeBook (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpAnnotation (Document document, View view)
-#else /* __STDC__*/
-void HelpAnnotation (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, ANNOTATE);
 }
@@ -5817,13 +5299,7 @@ void HelpAnnotation (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpConfigure (Document document, View view)
-#else /* __STDC__*/
-void HelpConfigure (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, CONFIGURE);
 }
@@ -5831,13 +5307,7 @@ void HelpConfigure (document, view)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpShortCuts (Document document, View view)
-#else /* __STDC__*/
-void HelpShortCuts (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, SHORTCUTS);
 }
@@ -5845,13 +5315,7 @@ void HelpShortCuts (document, view)
 /*----------------------------------------------------------------------
 Accessibility help page. Added by Charles McCN oct 99
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HelpAccess (Document document, View view)
-#else /* __STDC__*/
-void HelpAccess (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
   DisplayHelp (document, ACCESS);
 }
@@ -5860,13 +5324,7 @@ void HelpAccess (document, view)
   ShowLogFile
   Show error messages generated by the parser.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ShowLogFile (Document doc, View view)
-#else  /* __STDC__ */
-void ShowLogFile (doc, view)
-Document doc; 
-View     view;
-#endif /* __STDC__ */
 {
   CHAR_T    localname[MAX_LENGTH];
   int       newdoc;
@@ -5900,14 +5358,7 @@ void                CheckAmayaClosed ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CloseDocument (Document doc, View view)
-#else
-void                CloseDocument (doc, view)
-Document            doc;
-View                view;
-
-#endif
 {
   TtcCloseDocument (doc, view);
   if (!W3Loading)
@@ -5916,14 +5367,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AmayaClose (Document document, View view)
-#else
-void                AmayaClose (document, view)
-Document            document;
-View                view;
-
-#endif
 {
    int              i;
    ThotBool         documentClosed;

@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
  
 /*
@@ -188,17 +179,10 @@ typedef struct FrCatalogue {
 
 FrCatalogue FrameCatList [MAX_FRAME + 1];
 
-#ifdef __STDC__
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ThotDlgProc    (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK TxtZoneWndProc (HWND, UINT, WPARAM, LPARAM);
-#else  /* !__STDC__ */
-LRESULT CALLBACK WndProc        ();
-LRESULT CALLBACK ClientWndProc  ();
-LRESULT CALLBACK ThotDlgProc    ();
-LRESULT CALLBACK TxtZoneWndProc ();
-#endif /* __STDC__ */
 
 static int          nAmayaShow;
 static DWORD        WinLastError;
@@ -231,23 +215,13 @@ static CHAR_T     key;
 UINT subMenuID [MAX_FRAME];
 static ThotWindow WIN_curWin = NULL;
 
-#ifdef __STDC__
 extern int main (int, CHAR_T**);
-#else  /* !__STDC__ */
-extern int main ();
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
    WinErrorBox :  Pops-up a message box when an MS-Window error      
    occured.                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WinErrorBox (HWND hWnd, STRING source)
-#else  /* !__STDC__ */
-void WinErrorBox (hWnd, source)
-HWND hWnd;
-STRING source;
-#endif /* __STDC__ */
 {
 #  ifndef _AMAYA_RELEASE_
    int                 msg;
@@ -272,12 +246,7 @@ STRING source;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool isOnlyBlank (CONST STRING text)
-#else  /* __STDC__ */
-static ThotBool isOnlyBlank (text)
-CONST STRING text;
-#endif /* __STDC__ */
 {
     STRING pText = text;
     while (pText && *pText == SPACE)
@@ -291,12 +260,7 @@ CONST STRING text;
    GetMainFrameNumber :  returns the Thot window number associated to an     
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int GetMainFrameNumber  (ThotWindow win)
-#else  /* !__STDC__ */
-int GetMainFrameNumber (win)
-ThotWindow win;
-#endif /* __STDC__ */
 {
    int frame;
 
@@ -311,12 +275,7 @@ ThotWindow win;
    WIN_GetDeviceContext :  select a Device Context for a given       
    thot window.                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_GetDeviceContext (int frame)
-#else  /* !__STDC__ */
-void WIN_GetDeviceContext (frame)
-int frame;
-#endif /* __STDC__ */
 {
   if (frame < 0 || frame > MAX_FRAME)
     {
@@ -349,11 +308,7 @@ int frame;
 /*----------------------------------------------------------------------
    WIN_ReleaseDeviceContext :  unselect the Device Context           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_ReleaseDeviceContext (void)
-#else  /* !__STDC__ */
-void WIN_ReleaseDeviceContext ()
-#endif /* __STDC__ */
 {
   /* release the previous Device Context. */
   if (TtDisplay != NULL)
@@ -369,12 +324,7 @@ void WIN_ReleaseDeviceContext ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 BOOL RegisterWin95 (CONST WNDCLASS* lpwc)
-#else  /* !__STDC__ */
-BOOL RegisterWin95 (lpwc)
-CONST WNDCLASS lpwc;
-#endif /* __STDC__ */
 {
    WNDCLASSEX wcex;
 
@@ -399,12 +349,7 @@ CONST WNDCLASS lpwc;
    GetMenuParentNumber :  returns the Thot window number associated to a     
    given menu.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int GetMenuParentNumber (ThotMenu menu)
-#else  /* !__STDC__ */
-int GetMenuParentNumber (menu)
-ThotMenu menu;
-#endif /* __STDC__ */
 {
    int      menuIndex;
    int      frameIndex = 0;
@@ -429,12 +374,7 @@ ThotMenu menu;
   GetVScrollParentNumber:  returns the Thot window number associated to a     
    given menu.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int GetVScrollParentNumber (ThotWidget vScroll)
-#else  /* !__STDC__ */
-int GetVScrollParentNumber (vScroll)
-ThotWindow vScroll;
-#endif /* __STDC__ */
 {
    int     frame = 0;
   
@@ -450,12 +390,7 @@ ThotWindow vScroll;
   GetHScrollParentNumber:  returns the Thot window number associated to a  
    given menu.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int GetHScrollParentNumber (ThotWidget hScroll)
-#else  /* !__STDC__ */
-int GetHScrollParentNumber (hScroll)
-ThotWindow hScroll;
-#endif /* __STDC__ */
 {
    int     frame = 0;
   
@@ -469,25 +404,14 @@ ThotWindow hScroll;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 HMENU WIN_GetMenu (int frame)
-#else  /* !__STDC__ */
-HMENU WIN_GetMenu (frame)
-int frame;
-#endif /* !__STDC__ */
 {
     return (GetMenu (FrMainRef [frame]));
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_AddFrameCatalogue (ThotWidget parent, struct Cat_Context* catalogue)
-#else  /* !__STDC__ */
-void WIN_AddFrameCatalogue (parent, catalogue)
-ThotWidget          parent; 
-struct Cat_Context* catalogue;
-#endif /* __STDC__ */
 {
    int                 frameIndex;
    int                 catIndex;
@@ -557,16 +481,11 @@ struct Cat_Context* catalogue;
 /*----------------------------------------------------------------------
 CleanFrameCatList
   ----------------------------------------------------------------------*/
-#ifdef __SIDC__
 void CleanFrameCatList (int frame) 
-#else  /* __STDC__ */
-void CleanFrameCatList (frame) 
-int frame;
-#endif /* __STDC__ */
 {
-	int catIndex;
-	for (catIndex = 0; catIndex < MAX_FRAMECAT; catIndex++)
-		FrameCatList [frame].Cat_Table[catIndex] = NULL;
+  int catIndex;
+  for (catIndex = 0; catIndex < MAX_FRAMECAT; catIndex++)
+    FrameCatList [frame].Cat_Table[catIndex] = NULL;
 }
 
 
@@ -574,13 +493,7 @@ int frame;
    WinLookupCatEntry Lookup the Catalogue table for an entry          
    corresponding to an existing Window.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static struct Cat_Context *WinLookupCatEntry (ThotWidget win, int ref)
-#else  /* !__STDC__ */
-static struct Cat_Context *WinLookupCatEntry (win, ref)
-ThotWidget win;
-int        ref;
-#endif /* __STDC__ */
 {
    register int        icat = 1;
    ThotBool            found = FALSE;
@@ -622,14 +535,7 @@ int        ref;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, char* cmdLine)
-#else  /* __STDC__ */
-int makeArgcArgv (hInst, pArgv, cmdLine)
-HINSTANCE   hInst; 
-CHAR_T***   pArgv; 
-char*       cmdLine;
-#endif /* __STDC__ */
 { 
     int            argc;
     static CHAR_T* argv[20];
@@ -693,15 +599,7 @@ char*       cmdLine;
 /*----------------------------------------------------------------------
    WinMain
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int nShow)
-#else  /* !__STDC__ */
-BOOL PASCAL WinMain (hInst, hPrevInst, lpCommand, nShow)
-HINSTANCE hInst; 
-HINSTANCE hPrevInst; 
-STRING    lpCommand; 
-int       nShow;
-#endif /* __STDC__ */
 { 
    int        argc;
    CHAR_T**   argv;
@@ -720,12 +618,7 @@ int       nShow;
    GetFrameNumber :  returns the Thot window number associated to an         
    X-Window window.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int GetFrameNumber (ThotWindow win)
-#else  /* !__STDC__ */
-int GetFrameNumber (win)
-ThotWindow win;
-#endif /* __STDC__ */
 {
    int frame;
 
@@ -740,16 +633,8 @@ ThotWindow win;
 /*----------------------------------------------------------------------
    Procedure de retour par defaut.                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallbackError (int ref, int typedata, STRING data)
 
-#else  /* __STDC__ */
-static void         CallbackError (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif /* __STDC__ */
 {
    printf ("Toolkit error : No callback procedure ...\n");
 }
@@ -810,12 +695,7 @@ static struct E_List *NewEList ()
 /*----------------------------------------------------------------------
    FreeEList: Releases all blocks of elements.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FreeEList (struct E_List *adbloc)
-#else  /* __STDC__ */
-static void         FreeEList (adbloc)
-struct E_List      *adbloc;
-#endif /* __STDC__ */
 {
    struct E_List      *cebloc;
 
@@ -838,14 +718,7 @@ struct E_List      *adbloc;
 /*----------------------------------------------------------------------
    Callback for closing a menu                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#else  /* __STDC__ */
-static void         UnmapMenu (w, catalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-caddr_t             call_d;
-#endif /* __STDC__ */
 {
    struct Cat_Context *icatal;
 
@@ -862,14 +735,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Callback for a menu button                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#else  /* __STDC__ */
-static void         CallMenu (w, catalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-caddr_t             call_d;
-#endif /* __STDC__ */
 {
    register int        i;
    register int        index;
@@ -931,14 +797,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Callback pour un bouton du sous-menu de formulaire                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#else  /* __STDC__ */
-static void         CallRadio (w, catalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-caddr_t             call_d;
-#endif /* __STDC__ */
 {
    register int        i;
    register int        index;
@@ -978,14 +837,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Callback pour un bouton du toggle-menu                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#else  /* __STDC__ */
-static void         CallToggle (w, catalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-caddr_t             call_d;
-#endif /* __STDC__ */
 {
    register int        i;
    int                 entry;
@@ -1030,12 +882,7 @@ caddr_t             call_d;
    ReturnTogglevalues retourne les entre'es bascule'es du             
    toggle-menu catalogue.                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ReturnTogglevalues (struct Cat_Context *catalogue)
-#else  /* __STDC__ */
-static void         ReturnTogglevalues (catalogue)
-struct Cat_Context *catalogue;
-#endif /* __STDC__ */
 {
    register int        i;
    register int        index;
@@ -1075,16 +922,7 @@ struct Cat_Context *catalogue;
 /*----------------------------------------------------------------------
    Callback d'initialisation d'un formulaire.                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         INITform (w, parentCatalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *parentCatalogue;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    register int        n;
@@ -1148,16 +986,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Callback d'initialisation d'un formulaire avec positionnement.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         INITetPOSform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         INITetPOSform (w, parentCatalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *parentCatalogue;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    TtaSetDialoguePosition ();
@@ -1169,16 +998,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Destruction de feuillet.                                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         formKill (w, parentCatalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *parentCatalogue;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
    /* Le widget est detruit */
   if ((catalogue->Cat_Type == CAT_FORM)
@@ -1192,15 +1012,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Callback de saisie de valeur.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#else  /* __STDC__ */
-static void         CallValueSet (w, catalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
   int                 val, val1;
   CHAR_T              text[11];
@@ -1259,16 +1071,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Callback de feuillet.                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         CallSheet (w, parentCatalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *parentCatalogue;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
   register int        n;
@@ -1417,15 +1220,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Callback de selection dans une liste.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbackStruct * infos)
-#else  /* __STDC__ */
-static void         CallList (w, catalogue, infos)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-XmListCallbackStruct *infos;
-#endif /* __STDC__ */
-
 {
    STRING              text = NULL;
    ThotBool            ok;
@@ -1447,16 +1242,7 @@ XmListCallbackStruct *infos;
 /*----------------------------------------------------------------------
    Callback de saisie de texte.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallTextChange (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         CallTextChange (w, catalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-caddr_t             call_d;
-#endif /* __STDC__ */
-
 {
 #ifndef _GTK
    ThotWidget          wtext;
@@ -1482,16 +1268,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    Callback pour un bouton du label de selecteur                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         CallLabel (w, catalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
@@ -1532,16 +1309,7 @@ void                MyWarningHandler ()
 /*----------------------------------------------------------------------
   Procedure which controls Motif dialogue colors
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             ThotXmColorProc (ThotColorStruct *bg, ThotColorStruct *fg, ThotColorStruct *sel, ThotColorStruct *top, ThotColorStruct *bottom)
-#else  /* !__STDC__ */
-void             ThotXmColorProc (bg, fg, sel, top, bottom)
-ThotColorStruct *bg;
-ThotColorStruct *fg;
-ThotColorStruct *sel;
-ThotColorStruct *top;
-ThotColorStruct *bottom;
-#endif /* __STDC__ */
 {
    top->red = RGB_Table[3].red *256;
    top->green = RGB_Table[3].green *256;
@@ -1571,29 +1339,14 @@ ThotColorStruct *bottom;
    display:  contient au retour l'identification de l'e'cran.
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-#ifdef __STDC__
-BOOL             WIN_TtaInitDialogue (CHAR_T* server)
-#else  /* !__STDC__ */
-BOOL             WIN_TtaInitDialogue (server)
-CHAR_T*          server; 
-#endif /* __STDC__ */
+ThotBool   WIN_TtaInitDialogue (CHAR_T* server)
 #else  /* _WINDOWS */
-#ifdef __STDC__
-void             TtaInitDialogue (CHAR_T* server, ThotAppContext * app_context, Display ** Dp)
-
-#else  /* __STDC__ */
-void             TtaInitDialogue (server, app_context, Dp)
-CHAR_T*          server;
-ThotAppContext*  app_context;
-Display**        Dp;
-
-#endif /* __STDC__ */
+void       TtaInitDialogue (CHAR_T* server, ThotAppContext * app_context, Display ** Dp)
 #endif /* _WINDOWS */
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    int                 n;
-#  endif /* !_WINDOWS */
-
+#endif /* !_WINDOWS */
 #ifdef _GTK
    gtk_init(&appArgc,&appArgv);
 #endif /* _GTK */
@@ -1710,13 +1463,7 @@ Display**        Dp;
    TtaInitDialogueTranslations initialise les translations du         
    dialogue. Ce sont tous les racoursis claviers.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaInitDialogueTranslations (ThotTranslations translations)
-#else  /* __STDC__ */
-void                TtaInitDialogueTranslations (translations)
-ThotTranslations      translations;
-
-#endif /* __STDC__ */
 {
    TextTranslations = translations;
 }
@@ -1725,13 +1472,7 @@ ThotTranslations      translations;
 /*----------------------------------------------------------------------
    TtaChangeDialogueFonts change les polices de caracteres du dialogue.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaChangeDialogueFonts (STRING menufont, STRING formfont)
-#else  /* __STDC__ */
-void                TtaChangeDialogueFonts (menufont, formfont)
-STRING              menufont;
-STRING              formfont;
-#endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
    /* see code/chap04/ezfont.c */
@@ -1758,13 +1499,7 @@ STRING              formfont;
    l'application a` partir de la base courante.            
    La fonction retourne la base courante.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetReferencesBase (int number)
-#else  /* __STDC__ */
-int                 TtaGetReferencesBase (number)
-int                 number;
-
-#endif /* __STDC__ */
 {
    int                 base;
 
@@ -1779,18 +1514,7 @@ int                 number;
    TtaInitDialogueWindow Cre'ation et initialisation de la fenetree^tre    
    principale d'une application.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaInitDialogueWindow (CHAR_T* name, STRING geometry, Pixmap logo, Pixmap icon, int number, STRING textmenu)
-#else  /* __STDC__ */
-void                TtaInitDialogueWindow (name, geometry, logo, icon, number, textmenu)
-STRING              name;
-STRING              geometry;
-Pixmap              logo;
-Pixmap              icon;
-int                 number;
-STRING              textmenu;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -2020,15 +1744,7 @@ STRING              textmenu;
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ConfirmMessage (Widget w, Widget MsgBox, caddr_t call_d)
-#else  /* __STDC__ */
-static void         ConfirmMessage (w, MsgBox, call_d)
-Widget              w;
-Widget              MsgBox;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    XtPopdown (MsgBox);
@@ -2039,13 +1755,7 @@ caddr_t             call_d;
 /*----------------------------------------------------------------------
    DisplayConfirmMessage displays the given message (text).        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DisplayConfirmMessage (STRING text)
-#else  /* __STDC__ */
-void                DisplayConfirmMessage (text)
-STRING              text;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #  ifndef _WINDOWS
@@ -2168,14 +1878,7 @@ STRING              text;
    - INFO : bellow the previous message.                   
    - OVERHEAD : instead of the previous message.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DisplayMessage (STRING text, int msgType)
-#else  /* __STDC__ */
-void                DisplayMessage (text, msgType)
-STRING              text;
-int                 msgType;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #  ifndef _WINDOWS
@@ -2250,13 +1953,7 @@ int                 msgType;
    DefineCallbackDialog de'finit la proce'dure de traitement des      
    retoursde catalogues dans l'application.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaDefineDialogueCallback (void (*procedure) ())
-#else  /* __STDC__ */
-void                TtaDefineDialogueCallback (procedure)
-void                (*procedure) ();
-
-#endif /* __STDC__ */
 {
    CallbackDialogue = procedure;
 }
@@ -2266,13 +1963,7 @@ void                (*procedure) ();
 /*----------------------------------------------------------------------
    ClearChildren nettoie tous les catalalogues fils du catalogue.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ClearChildren (struct Cat_Context *parentCatalogue)
-#else  /* __STDC__ */
-static void         ClearChildren (parentCatalogue)
-struct Cat_Context *parentCatalogue;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    register int        icat;
@@ -2326,13 +2017,7 @@ struct Cat_Context *parentCatalogue;
    existe de'ja` ou une entre'e libre dans la table des catalogues.   
    Retourne l'adresse du catalogue cre'e' ou NULL.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static struct Cat_Context *CatEntry (int ref)
-#else  /* __STDC__ */
-static struct Cat_Context *CatEntry (ref)
-int                 ref;
-
-#endif /* __STDC__ */
 {
    register int        icat;
    struct Cat_Context *catlib;
@@ -2396,13 +2081,7 @@ int                 ref;
 /*----------------------------------------------------------------------
   WIN_ListOpenDirectory
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_ListOpenDirectory (HWND parent, STRING fileName)
-#else  /* __STDC__ */
-void WIN_ListOpenDirectory (parent, fileName)
-HWND parent;
-STRING fileName;
-#endif /* __STDC__ */
 {
 
  	STRING szFilter;
@@ -2436,14 +2115,7 @@ STRING fileName;
 /*----------------------------------------------------------------------
   WIN_ListSaveDirectory
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void    WIN_ListSaveDirectory (int parentRef, STRING title, STRING fileName)
-#else  /* __STDC__ */
-void    WIN_ListSaveDirectory (parentRef, title, fileName)
-int     parentRef;
-STRING  title;
-STRING  fileName; 
-#endif /* __STDC__ */
 {
 
     struct Cat_Context* parentCatalogue = CatEntry (parentRef);
@@ -2476,14 +2148,7 @@ STRING  fileName;
    son index.                                                         
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          DestContenuMenu (struct Cat_Context *catalogue)
-
-#else  /* __STDC__ */
-static int          DestContenuMenu (catalogue)
-struct Cat_Context *catalogue;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    register int        ent;
@@ -2581,18 +2246,7 @@ return 0; /*rajouté pour tester gtk */
    des entre'es du menu.                                              
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, char* equiv)
-#else  /* __STDC__ */
-void                TtaNewPulldown (ref, parent, title, number, text, equiv)
-int                 ref;
-ThotMenu            parent;
-STRING              title;
-int                 number;
-STRING              text;
-char*               equiv;
-
-#endif /* __STDC__ */
 {
    register int        count;
    register int        index;
@@ -3062,32 +2716,18 @@ char*               equiv;
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-#ifdef __STDC__
 void                WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
-#else  /* __STDC__ */
-void                WIN_TtaSetPulldownOff (ref, parent, owner)
-int                 ref;
-ThotMenu            parent;
-HWND                owner;
-#endif /* __STDC__ */
 #else  /* !_WINDOWS */
-#ifdef __STDC__
 void                TtaSetPulldownOff (int ref, ThotWidget parent)
-#else  /* __STDC__ */
-void                TtaSetPulldownOff (ref, parent)
-int                 ref;
-ThotWidget          parent;
-#endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
-
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  else  /* _WINDOWS */
-   int frame;
-#  endif /* _WINDOWS */
+#else  /* _WINDOWS */
+   int                 frame;
+#endif /* _WINDOWS */
 
    if (ref == 0)
       TtaError (ERR_invalid_reference);
@@ -3098,18 +2738,18 @@ ThotWidget          parent;
 	catalogue = CatEntry (ref);
 	if (catalogue == NULL)
 	   TtaError (ERR_invalid_reference);
-#   ifndef _WINDOWS
+#ifndef _WINDOWS
 	else if (catalogue->Cat_Widget != 0)
 	  {
              XtSetArg (args[0], XmNsubMenuId, NULL);
              XtSetValues (parent, args, 1);
              XtManageChild (parent);
 	  }
-#   else  /* _WINDOWS */
-	frame = GetMainFrameNumber (owner);
-    EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_GRAYED);
+#else  /* _WINDOWS */
+        frame = GetMainFrameNumber (owner);
+        EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_GRAYED);
 	DrawMenuBar (FrMainRef[frame]); 
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
 #endif /* _GTK */
 }
@@ -3118,33 +2758,19 @@ ThotWidget          parent;
    TtaSetPulldownOn reactive le pulldown                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-#ifdef __STDC__
 void                WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
-#else  /* __STDC__ */
-void                WIN_TtaSetPulldownOn (ref, parent, owner)
-int                 ref;
-ThotMenu            parent;
-HWND                owner;
-#endif /* __STDC__ */
 #else  /* !_WINDOWS */
-#ifdef __STDC__
 void                TtaSetPulldownOn (int ref, ThotWidget parent)
-#else  /* __STDC__ */
-void                TtaSetPulldownOn (ref, parent)
-int                 ref;
-ThotWidget          parent;
-#endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
    ThotWidget          menu;
-
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  else  /* _WINDOWS */
-   int frame;
-#  endif /* _WINDOWS */
+#else  /* _WINDOWS */
+   int                 frame;
+#endif /* _WINDOWS */
 
    if (ref == 0)
       TtaError (ERR_invalid_reference);
@@ -3158,15 +2784,15 @@ ThotWidget          parent;
 	else if (catalogue->Cat_Widget != 0)
 	  {
 	     menu = catalogue->Cat_Widget;
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
              XtSetArg (args[0], XmNsubMenuId, menu);
              XtSetValues (parent, args, 1);
              XtManageChild (parent);
-#            else  /* _WINDOWS */
-			 frame = GetMainFrameNumber (owner);
+#else  /* _WINDOWS */
+	     frame = GetMainFrameNumber (owner);
              EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_ENABLED);
 			 DrawMenuBar (FrMainRef[frame]); 
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  }
      }
 #endif /* _GTK */
@@ -3185,19 +2811,7 @@ ThotWidget          parent;
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, char button)
-#else  /* __STDC__ */
-void                TtaNewPopup (ref, parent, title, number, text, equiv, button)
-int                 ref;
-ThotWidget          parent;
-STRING              title;
-int                 number;
-STRING              text;
-STRING              equiv;
-char                button;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    register int        count;
@@ -3548,16 +3162,7 @@ char                button;
    + entry -> l'index dans le bloc des entre'es concerne'.            
    + adbloc -> le bloc des entre'es concerne'.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotWidget   AddInFormulary (struct Cat_Context *catalogue, int *index, int *entry, struct E_List **adbloc)
-#else  /* __STDC__ */
-static ThotWidget   AddInFormulary (catalogue, index, entry, adbloc)
-struct Cat_Context *catalogue;
-int                *index;
-int                *entry;
-struct E_List     **adbloc;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    ThotWidget          row;
@@ -3666,19 +3271,7 @@ return (NULL);
    Tout changement de se'lection dans le sous-menu est imme'diatement 
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, ThotBool horizontal)
-#else  /* __STDC__ */
-void                TtaNewIconMenu (ref, ref_parent, entry, title, number, icons, horizontal)
-int                 ref;
-int                 ref_parent;
-int                 entry;
-STRING              title;
-int                 number;
-Pixmap             *icons;
-ThotBool            horizontal;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    int                 i;
@@ -3856,19 +3449,7 @@ ThotBool            horizontal;
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, char* equiv, ThotBool react)
-#else  /* __STDC__ */
-void                TtaNewSubmenu (ref, ref_parent, entry, title, number, text, equiv, react)
-int                 ref;
-int                 ref_parent;
-int                 entry;
-STRING              title;
-int                 number;
-STRING              text;
-char*               equiv;
-ThotBool            react;
-#endif /* __STDC__ */
 {
   ThotWidget          w;
   ThotWidget          row;
@@ -4517,14 +4098,7 @@ ThotBool            react;
    The parameter ref donne la re'fe'rence du catalogue.               
    The parameter val de'signe l'entre'e se'lectionne'e.               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetMenuForm (int ref, int val)
-#else  /* __STDC__ */
-void                TtaSetMenuForm (ref, val)
-int                 ref;
-int                 val;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #  ifndef _WINDOWS
@@ -4615,19 +4189,7 @@ int                 val;
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, ThotBool react)
-#else  /* __STDC__ */
-void                TtaNewToggleMenu (ref, ref_parent, title, number, text, equiv, react)
-int                 ref;
-int                 ref_parent;
-STRING              title;
-int                 number;
-STRING              text;
-STRING              equiv;
-ThotBool            react;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    register int        count;
@@ -4879,62 +4441,54 @@ ThotBool            react;
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS 
-#ifdef __STDC__
-void                WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
-#else  /* __STDC__ */
-void                WIN_TtaSetToggleMenu (ref, val, on, owner)
-int                 ref;
-int                 val;
-ThotBool            on;
-HWND                owner;
-#endif /* __STDC__ */
+void          WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #else  /* !_WINDOWS */
-#ifdef __STDC__
-void                TtaSetToggleMenu (int ref, int val, ThotBool on)
-#else  /* __STDC__ */
-void                TtaSetToggleMenu (ref, val, on)
-int                 ref;
-int                 val;
-ThotBool            on;
-
-#endif /* __STDC__ */
+void          TtaSetToggleMenu (int ref, int val, ThotBool on)
 #endif /* _WINDOWS */
 {
 #ifndef _GTK
-#  ifdef _WINDOWS 
-   struct Cat_Context *catalogue;
-   HMENU              hMenu;
-   struct E_List      *adbloc;
-   int                ent = 2;
+#ifdef _WINDOWS 
+  struct Cat_Context *catalogue;
+  HMENU              hMenu;
+  struct E_List      *adbloc;
+  int                ent = 2;
 
-   catalogue = CatEntry (ref);
-   adbloc    = catalogue->Cat_Entries;
-
-   if (catalogue == NULL)
-      TtaError (ERR_invalid_reference);
-   else if (catalogue->Cat_Widget == 0)
-      TtaError (ERR_invalid_reference);
-   else {
-        hMenu = catalogue->Cat_Widget;
-        if (on) {
-			if (IsMenu (adbloc->E_ThotWidget[ent + val])) {
+  catalogue = CatEntry (ref);
+  adbloc    = catalogue->Cat_Entries;
+  if (catalogue == NULL)
+    TtaError (ERR_invalid_reference);
+  else if (catalogue->Cat_Widget == 0)
+    TtaError (ERR_invalid_reference);
+  else
+    {
+      hMenu = catalogue->Cat_Widget;
+      if (on)
+	{
+	  if (IsMenu (adbloc->E_ThotWidget[ent + val]))
+	    {
               if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_CHECKED) == 0xFFFFFFFF) 
-				  WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (1)"));
-			} else if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) {
-                   hMenu = GetMenu (owner);
-                   if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) 
-                      WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (2)"));
-			}
-        } else {
-			if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
-               hMenu = GetMenu (owner);
-               if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
-                  if (IsMenu (adbloc->E_ThotWidget[ent + val]))
-                     if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_UNCHECKED) == 0xFFFFFFFF) 
-                         WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (3)"));
-			   }
-			}
+		WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (1)"));
+	    }
+	  else if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF)
+	    {
+	      hMenu = GetMenu (owner);
+	      if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) 
+		WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (2)"));
+	    }
+        }
+      else
+	{
+	  if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF)
+	    {
+	      hMenu = GetMenu (owner);
+	      if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF)
+		{
+                  if (IsMenu (adbloc->E_ThotWidget[ent + val]) &&
+		      CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_UNCHECKED) == 0xFFFFFFFF) 
+		      WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (3)"));
 		}
+	    }
+	}
    }
 #  else  /* !_WINDOWS  */
    ThotWidget          w;
@@ -5041,7 +4595,7 @@ ThotBool            on;
 	if (!visible)
 	   XtUnmanageChild (catalogue->Cat_Widget);
      }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 #endif /* _GTK */
 }
 
@@ -5050,15 +4604,7 @@ ThotBool            on;
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
    du menu de'signe' par sa re'fe'rence ref.                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaChangeMenuEntry (int ref, int entry, STRING text)
-#else  /* __STDC__ */
-void                TtaChangeMenuEntry (ref, entry, text)
-int                 ref;
-int                 entry;
-STRING              text;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -5130,17 +4676,7 @@ STRING              text;
    TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaRedrawMenuEntry (int ref, int entry, STRING fontname, Pixel color, int activate)
-#else  /* __STDC__ */
-void                TtaRedrawMenuEntry (ref, entry, fontname, color, activate)
-int                 ref;
-int                 entry;
-STRING              fontname;
-Pixel               color;
-int                 activate;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -5256,13 +4792,7 @@ int                 activate;
    DestForm de'truit un formulaire ou une feuille de saisie:          
    The parameter ref donne la re'fe'rence du catalogue.               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          DestForm (int ref)
-#else  /* __STDC__ */
-static int          DestForm (ref)
-int                 ref;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    register int        entry;
@@ -5374,14 +4904,7 @@ int                 ref;
 /*----------------------------------------------------------------------
    TtaUnmapDialogue desactive le dialogue s'il est actif.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaUnmapDialogue (int ref)
-
-#else  /* __STDC__ */
-void                TtaUnmapDialogue (ref)
-int                 ref;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
@@ -5424,13 +4947,7 @@ int                 ref;
 /*----------------------------------------------------------------------
    TtaDestroyDialogue de'truit le catalogue de'signe' par ref.                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaDestroyDialogue (int ref)
-#else  /* __STDC__ */
-void                TtaDestroyDialogue (ref)
-int                 ref;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    register int        entry;
@@ -5574,14 +5091,7 @@ int                 ref;
    The parameter ref donne la re'fe'rence du catalogue.               
    Le parame'tre title donne le titre du catalogue.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaChangeFormTitle (int ref, STRING title)
-#else  /* __STDC__ */
-void                TtaChangeFormTitle (ref, title)
-int                 ref;
-STRING              title;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
@@ -5616,22 +5126,7 @@ STRING              title;
 /*----------------------------------------------------------------------
   NewSheet
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, char button, int dbutton, int cattype)
-#else  /* __STDC__ */
-static void         NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, cattype)
-int                 ref;
-ThotWidget          parent;
-STRING              title;
-int                 number;
-STRING              text;
-ThotBool            horizontal;
-int                 package;
-char                button;
-int                 dbutton;
-int                 cattype;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    int                 ent;
@@ -5895,14 +5390,7 @@ int                 cattype;
  /*----------------------------------------------------------------------
    Callback pour un bouton du menu                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-void WIN_ThotCallBack (hWnd, wParam, lParam)
-HWND   hWnd; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
    /* BOOL    modified; */
    /* Element el; */
@@ -5952,15 +5440,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  ThotDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK ThotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK ThotDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
     int        ndx;
     
@@ -5997,19 +5477,7 @@ LPARAM lParam;
    Le parame'tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int package, char button, int dbutton)
-#else  /* __STDC__ */
-void                TtaNewForm (ref, parent, title, horizontal, package, button, dbutton)
-int                 ref;
-ThotWidget          parent;
-STRING              title;
-ThotBool            horizontal;
-int                 package;
-char                button;
-int                 dbutton;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    NewSheet (ref, parent, title, 0, NULL, horizontal, package, button, dbutton, CAT_FORM);
@@ -6034,21 +5502,7 @@ int                 dbutton;
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, CHAR_T button, int dbutton)
-#else  /* __STDC__ */
-void                TtaNewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton)
-int                 ref;
-ThotWidget          parent;
-STRING              title;
-int                 number;
-STRING              text;
-ThotBool            horizontal;
-int                 package;
-CHAR_T                button;
-int                 dbutton;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, CAT_SHEET);
@@ -6073,21 +5527,7 @@ int                 dbutton;
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, CHAR_T button)
-
-#else  /* __STDC__ */
-void                TtaNewDialogSheet (ref, parent, title, number, text, horizontal, package, button)
-int                 ref;
-ThotWidget          parent;
-STRING              title;
-int                 number;
-STRING              text;
-ThotBool            horizontal;
-int                 package;
-CHAR_T                button;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    NewSheet (ref, parent, title, number - 1, text, horizontal, package, button, D_DONE, CAT_DIALOG);
@@ -6098,13 +5538,7 @@ CHAR_T                button;
    TtaAttachForm attache le catalogue au formulaire ou au feuillet    
    dont il de'pend. Les catalogues sont cre'e's attache's.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaAttachForm (int ref)
-#else  /* __STDC__ */
-void                TtaAttachForm (ref)
-int                 ref;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    int                 entry;
@@ -6173,13 +5607,7 @@ int                 ref;
    TtaDetachForm detache le catalogue au formulaire ou au feuillet    
    dont il de'pend. Les catalogues sont cre'e's attache's.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaDetachForm (int ref)
-#else  /* __STDC__ */
-void                TtaDetachForm (ref)
-int                 ref;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    int                 entry;
@@ -6260,22 +5688,7 @@ int                 ref;
    Quand le parame`tre react est vrai, tout changement de se'lection
    dans le se'lecteur est imme'diatement signale' a` l'application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewSizedSelector (int ref, int ref_parent, STRING title, int number, STRING text, int width, int height, STRING label, ThotBool withText, ThotBool react)
-#else  /* __STDC__ */
-void                TtaNewSizedSelector (ref, ref_parent, title, number, text, width, height, label, withText, react)
-int                 ref;
-int                 ref_parent;
-STRING              title;
-int                 number;
-STRING              text;
-int                 width;
-int                 height;
-STRING              label;
-ThotBool            withText;
-ThotBool            react;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
@@ -6621,20 +6034,7 @@ ThotBool            react;
    Quand le parame`tre react est vrai, tout changement de se'lection
    dans le se'lecteur est imme'diatement signale' a` l'application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, ThotBool withText, ThotBool react)
-#else  /* __STDC__ */
-void                TtaNewSelector (ref, ref_parent, title, number, text, height, label, withText, react)
-int                 ref;
-int                 ref_parent;
-STRING              title;
-int                 number;
-STRING              text;
-int                 height;
-STRING              label;
-ThotBool            withText;
-ThotBool            react;
-#endif /* __STDC__ */
 {
   TtaNewSizedSelector (ref, ref_parent, title, number, text, 0, height, label, withText, react);
 }
@@ -6642,12 +6042,7 @@ ThotBool            react;
 /*----------------------------------------------------------------------
    TtaActiveSelector rend actif le  se'lecteur.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaActiveSelector (int ref)
-#else  /* __STDC__ */
-void                TtaActiveSelector (ref)
-int                 ref;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -6675,13 +6070,7 @@ int                 ref;
 /*----------------------------------------------------------------------
    TtaDesactiveSelector rend non actif le  se'lecteur.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaDesactiveSelector (int ref)
-#else  /* __STDC__ */
-void                TtaDesactiveSelector (ref)
-int                 ref;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
   ThotWidget          w;
@@ -6713,15 +6102,7 @@ int                 ref;
    se'lectionne'e.                                                    
    The parameter text donne le texte si entry vaut -1.                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetSelector (int ref, int entry, STRING text)
-#else  /* __STDC__ */
-void                TtaSetSelector (ref, entry, text)
-int                 ref;
-int                 entry;
-STRING              text;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -6798,15 +6179,7 @@ STRING              text;
    The parameter ref donne la re'fe'rence du catalogue.               
    The parameter text donne l'intitule'.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewLabel (int ref, int ref_parent, STRING text)
-#else  /* __STDC__ */
-void                TtaNewLabel (ref, ref_parent, text)
-int                 ref;
-int                 ref_parent;
-STRING              text;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
@@ -6920,17 +6293,7 @@ STRING              text;
    If the parameter react is TRUE, any change in the input box generates a
    callback to the application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewTextForm (int ref, int ref_parent, STRING title, int width, int height, ThotBool react)
-#else  /* __STDC__ */
-void                TtaNewTextForm (ref, ref_parent, title, width, height, react)
-int                 ref;
-int                 ref_parent;
-STRING              title;
-int                 width;
-int                 height;
-ThotBool            react;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    int                 ent;
@@ -7077,14 +6440,7 @@ ThotBool            react;
    The parameter ref donne la re'fe'rence du catalogue.               
    The parameter text donne la valeur initiale.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetTextForm (int ref, STRING text)
-#else  /* __STDC__ */
-void                TtaSetTextForm (ref, text)
-int                 ref;
-STRING              text;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    int                 lg;
@@ -7127,18 +6483,7 @@ STRING              text;
    Quand le parame`tre react est vrai, tout changement dans           
    la feuille de saisie est imme'diatement signale' a` l'application. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int min, int max, ThotBool react)
-#else  /* __STDC__ */
-void                TtaNewNumberForm (ref, ref_parent, title, min, max, react)
-int                 ref;
-int                 ref_parent;
-STRING              title;
-int                 min;
-int                 max;
-ThotBool            react;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    int                 ent;
@@ -7327,14 +6672,7 @@ ThotBool            react;
    The parameter ref donne la re'fe'rence du catalogue.               
    The parameter val donne la valeur initiale.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetNumberForm (int ref, int val)
-#else  /* __STDC__ */
-void                TtaSetNumberForm (ref, val)
-int                 ref;
-int                 val;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    CHAR_T              text[10];
@@ -7401,13 +6739,7 @@ void                TtaSetDialoguePosition ()
 /*----------------------------------------------------------------------
    TtaShowDialogue active le catalogue de'signe.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaShowDialogue (int ref, ThotBool remanent)
-#else  /* __STDC__ */
-void                TtaShowDialogue (ref, remanent)
-int                 ref;
-ThotBool            remanent;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifdef _WINDOWS
@@ -7592,12 +6924,7 @@ void                TtaAbortShowDialogue ()
 /*----------------------------------------------------------------------
    TtaFreeAllCatalogs frees the memory associated with catalogs.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaFreeAllCatalogs (void)
-#else  /* __STDC__ */
-void                TtaFreeAllCatalogs (void)
-
-#endif /* __STDC__ */
 {
   static struct Cat_List *current;
   

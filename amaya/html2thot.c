@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3911,6 +3911,8 @@ CHAR_T              c;
 						   HTMLcontext.doc);
 			     }
 			  }
+		       else if (attrType.AttrTypeNum == HTML_ATTR_accesskey)
+			 TtaAddAccessKey (HTMLcontext.doc, (int)inputBuffer[0], lastAttrElement);
 		       }
 		    else
 		       /* this is the content of an invalid attribute */

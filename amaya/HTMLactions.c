@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -80,15 +80,7 @@ typedef struct _FollowTheLink_context {
    ResetFontOrPhraseOnText: The text element elem should
    not be any longer within an element of type notType.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ResetFontOrPhraseOnText (Document document, Element elem, int notType)
-#else  /* __STDC__ */
-static void         ResetFontOrPhraseOnText (document, elem, notType)
-Document            document;
-Element             elem;
-int                 notType;
-
-#endif /* __STDC__ */
 {
    ElementType         elType, parentType;
    Element             elFont, parent, prev, next, added, child, last;
@@ -170,16 +162,8 @@ int                 notType;
    SetFontOrPhraseOnText: The text element elem should be 
    within an element of type newtype.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetFontOrPhraseOnText (Document document, Element elem,
 				 int newtype)
-#else  /* __STDC__ */
-static void         SetFontOrPhraseOnText (document, elem, newtype)
-Document            document;
-Element             elem;
-int                 newtype;
-
-#endif /* __STDC__ */
 {
    ElementType         elType, siblingType;
    Element             prev, next, child, added, parent;
@@ -311,17 +295,8 @@ int                 newtype;
 /*----------------------------------------------------------------------
    SetFontOrPhraseOnElement                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetFontOrPhraseOnElement (Document document, Element elem,
 					      int elemtype, ThotBool remove)
-#else  /* __STDC__ */
-static void         SetFontOrPhraseOnElement (document, elem, elemtype, remove)
-Document            document;
-Element             elem;
-int                 elemtype;
-ThotBool            remove;
-
-#endif /* __STDC__ */
 {
    Element             child, next;
    ElementType         elType;
@@ -363,18 +338,8 @@ ThotBool            remove;
    If ignore is not NULL, it is an attribute that should be ignored when
    comparing attributes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element GetElemWithAttr (Document doc, AttributeType attrType,
 				STRING nameVal, Attribute ignore)
-#else  /* __STDC__ */
-static Element GetElemWithAttr (doc, attrType, nameVal, Attribute ignore)
-Document            doc;
-AttributeType	    attrType;
-STRING              nameVal;
-Attribute           ignore;
-
-#endif /* __STDC__ */
-
 {
    Element             el, elFound;
    Attribute           nameAttr;
@@ -419,15 +384,7 @@ Attribute           ignore;
    If ignore is not NULL, it is an attribute that should be ignored when
    comparing NAME attributes.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute ignore)
-#else  /* __STDC__ */
-Element             SearchNAMEattribute (doc, nameVal, ignore)
-Document            doc;
-STRING              nameVal;
-Attribute           ignore;
-
-#endif /* __STDC__ */
 {
    Element             elFound;
    AttributeType       attrType;
@@ -492,24 +449,11 @@ Attribute           ignore;
    FollowTheLink_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void               FollowTheLink_callback (int targetDocument, int status, 
 					   STRING urlName,
 					   STRING outputfile, 
 					   AHTHeaders *http_headers,
 					   void * context)
-#else  /* __STDC__ */
-void               FollowTheLink_callback (targetDocument, status, urlName,
-					   outputfile, http_headers,
-					   context)
-int TargetDocument;
-int status;
-STRING url, urlName;
-STRING outputfile;
-AHTHeaders *http_headers;
-void *context;
-
-#endif
 {
   Element             elFound=NULL;
   ElementType         elType;
@@ -608,14 +552,7 @@ void *context;
   double click on the elSource element.
   The parameter doc is the document that contains the origin element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
-#else  /* __STDC__ */
-static ThotBool  FollowTheLink (anchor, elSource, doc)
-Element          anchor;
-Element          elSource;
-Document         doc;
-#endif /* __STDC__ */
 {
    AttributeType          attrType;
    Attribute              HrefAttr, PseudoAttr, attr;
@@ -788,14 +725,7 @@ Document         doc;
 /*----------------------------------------------------------------------
   DblClickOnButton     The user has double-clicked a BUTTON element.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DblClickOnButton (Element element, Document document)
-#else  /* __STDC__ */
-static void         DblClickOnButton (element, document)
-Element		element;
-Document	document;
-
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -826,13 +756,7 @@ Document	document;
 /*----------------------------------------------------------------------
   ActivateElement    The user has activated an element.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ActivateElement (Element element, Document document)
-#else  /* __STDC__ */
-static ThotBool     ActivateElement (element, document)
-Element             element;
-Document            document;
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -1039,13 +963,7 @@ Document            document;
 /*----------------------------------------------------------------------
   DisplayUrlAnchor    Display the url when an anchor is selectionned 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     DisplayUrlAnchor (Element element, Document document)
-#else  /* __STDC__ */
-static void     DisplayUrlAnchor (element, document)
-Element             element;
-Document            document;
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr, HrefAttr = NULL;
@@ -1192,13 +1110,7 @@ Document            document;
 /*----------------------------------------------------------------------
   DoAction         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void            DoAction (Document doc, View view)
-#else  /* __STDC__ */
-void            DoAction (doc, view)
-Document        doc;
-View            view;
-#endif /* __STDC__ */
 {
    Element             firstSel;
    int                 firstChar, lastChar;
@@ -1211,12 +1123,7 @@ View            view;
 /*----------------------------------------------------------------------
   IgnoreEvent       An empty function to be able to ignore events.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IgnoreEvent (NotifyElement *event)
-#else  /* __STDC__ */
-ThotBool            IgnoreEvent (event)
-NotifyElement      *event;
-#endif /* __STDC__ */
 {
   /* don't let Thot perform it's normal operation */
   return TRUE;
@@ -1225,12 +1132,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
   DoubleClick     The user has double-clicked an element.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            DoubleClick (NotifyElement *event)
-#else  /* __STDC__ */
-ThotBool            DoubleClick (event)
-NotifyElement      *event;
-#endif /* __STDC__ */
 {
   ThotBool usedouble;
 
@@ -1246,13 +1148,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
   SimpleClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            SimpleClick (NotifyElement *event)
-#else  /* __STDC__ */
-ThotBool            SimpleClick (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
   ThotBool usedouble;
 
@@ -1270,13 +1166,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
   AnnotSimpleClick     The user has clicked on an annotation icon
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            AnnotSimpleClick (NotifyElement *event)
-#else  /* __STDC__ */
-ThotBool            AnnotSimpleClick (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
 #ifdef ANNOTATIONS
   /* if it's an annotation link, highlight the annotated text  */
@@ -1290,14 +1180,7 @@ NotifyElement      *event;
    UpdateTitle update the content of the Title field on top of the 
    main window, according to the contents of element el.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateTitle (Element el, Document doc)
-#else  /* __STDC__ */
-void                UpdateTitle (el, doc)
-Element             el;
-Document            doc;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    Element             textElem;
@@ -1326,13 +1209,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    FreeDocumentResource                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FreeDocumentResource (Document doc)
-#else  /* __STDC__ */
-void                FreeDocumentResource (doc)
-Document       doc;
-
-#endif /* __STDC__ */
 {
   STRING             tempdocument;
   Document	     sourceDoc;
@@ -1382,6 +1259,8 @@ Document       doc;
 	DocumentSource[doc] = 0;
       else
 	{
+	  /* free access keys table */
+	  TtaRemoveDocAccessKeys (doc);
 	  if (DocumentSource[doc])
 	    {
 	      sourceDoc = DocumentSource[doc];
@@ -1417,13 +1296,7 @@ Document       doc;
 /*----------------------------------------------------------------------
    DocumentClosed                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DocumentClosed (NotifyDialog * event)
-#else  /* __STDC__ */
-void                DocumentClosed (event)
-NotifyDialog       *event;
-
-#endif /* __STDC__ */
 {
    if (event == NULL)
       return;
@@ -1433,12 +1306,7 @@ NotifyDialog       *event;
 /*----------------------------------------------------------------------
    A new element has been selected. Update menus accordingly.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateContextSensitiveMenus (Document doc)
-#else  /* __STDC__ */
-void                UpdateContextSensitiveMenus (doc)
-Document            doc
-#endif				/* __STDC__ */
 {
    ElementType         elType, elTypeSel;
    Element             firstSel;
@@ -1873,12 +1741,7 @@ Document            doc
    LineNumberOfEl
    Returns the line number (position in the source file) of element el.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int LineNumberOfEl (Element el)
-#else  /* __STDC__ */
-static int LineNumberOfEl (el)
-Element	el;
-#endif /* __STDC__ */
 {
    int		ln;
    Element	child, sibling, uncle, ancestor, prev, parent;
@@ -1995,12 +1858,7 @@ void                ResetHighlightedElement ()
    A new element has been selected. If the Source view is open,
    synchronize it with the new selection.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SynchronizeSourceView (NotifyElement * event)
-#else  /* __STDC__ */
-void                SynchronizeSourceView (event)
-NotifyElement* event;
-#endif				/* __STDC__ */
 {
    Element             firstSel, el, child, otherEl;
    int                 firstChar, lastChar, line, i, view;
@@ -2157,13 +2015,7 @@ NotifyElement* event;
 /*----------------------------------------------------------------------
    A new element has been selected. Update menus accordingly.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectionChanged (NotifyElement * event)
-#else  /* __STDC__ */
-void                SelectionChanged (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
    if (event->document != SelectionDoc)
      {
@@ -2177,34 +2029,12 @@ NotifyElement      *event;
    SynchronizeSourceView (event);
    TtaSelectView (SelectionDoc, 1);
 }
-#ifdef IV
-/*----------------------------------------------------------------------
-   A element type conversion has not been achieved by the editor.
-   Trying with language-driven restructuration.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool           ElemToTransform (NotifyOnElementType * event)
-#else  /* __STDC__ */
-ThotBool              ElemToTransform (event)
-NotifyOnElementType * event;
-#endif  /* __STDC__ */
-{
-   return (!TransformIntoType(event->targetElementType, event->document));
-}
 
-#endif /*IV*/
 
 /*----------------------------------------------------------------------
    SetCharFontOrPhrase                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetCharFontOrPhrase (int document, int elemtype)
-#else  /* __STDC__ */
-void                SetCharFontOrPhrase (document, elemtype)
-int                 document;
-int                 elemtype;
-
-#endif /* __STDC__ */
 {
    Element             selectedEl, elem, firstSelectedElem, lastSelectedElem,
                        child, next, elFont, lastEl;

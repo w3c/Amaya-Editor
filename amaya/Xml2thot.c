@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2601,12 +2601,10 @@ CHAR_T     *attrValue;
      {
        if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("link")))
 	   HTMLSetAlinkColor (XMLcontext.doc, attrValue);
-       else
-	   if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("alink")))
-	       HTMLSetAactiveColor (XMLcontext.doc, attrValue);
-	   else
-	       if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("vlink")))
-		   HTMLSetAvisitedColor (XMLcontext.doc, attrValue);
+       else if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("alink")))
+	 HTMLSetAactiveColor (XMLcontext.doc, attrValue);
+       else if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("vlink")))
+	 HTMLSetAvisitedColor (XMLcontext.doc, attrValue);
      }
 
    if (!done)
@@ -2663,20 +2661,17 @@ CHAR_T     *attrValue;
 		       TtaSetAttributeValue (currentAttribute, val,
 					     lastAttrElement, XMLcontext.doc);
 		     }
+		   else if (usscanf (attrValue, TEXT("%d"), &val))
+		     TtaSetAttributeValue (currentAttribute, val,
+					   lastAttrElement, XMLcontext.doc);
 		   else
 		     {
-		       if (usscanf (attrValue, TEXT("%d"), &val))
-			   TtaSetAttributeValue (currentAttribute, val,
-						 lastAttrElement, XMLcontext.doc);
-		       else
-			 {
-			   TtaRemoveAttribute (lastAttrElement,
-					       currentAttribute, XMLcontext.doc);
-			   usprintf (msgBuffer,
-				     TEXT("Unknown attribute value \"%s\""),
-				     attrValue);
-			   XmlParseError (errorParsing, msgBuffer, 0);
-			 }
+		       TtaRemoveAttribute (lastAttrElement,
+					   currentAttribute, XMLcontext.doc);
+		       usprintf (msgBuffer,
+				 TEXT("Unknown attribute value \"%s\""),
+				 attrValue);
+		       XmlParseError (errorParsing, msgBuffer, 0);
 		     }
 		   break;
 		 case 2:	/* text */
@@ -2690,16 +2685,15 @@ CHAR_T     *attrValue;
 			   lang = TtaGetLanguageIdFromName (attrValue);
 			   if (lang == 0)
 			     {
-			       usprintf (msgBuffer,
-					 TEXT("Unknown language: %s"),
-					 attrValue);
-			       XmlParseError (errorParsing, msgBuffer, 0);
+			     usprintf (msgBuffer, TEXT("Unknown language: %s"),
+				       attrValue);
+			     XmlParseError (errorParsing, msgBuffer, 0);
 			     }
 			   else
 			     {
-			       /* change current language */
-			       XMLcontext.language = lang;
-			       languageStack[stackLevel - 1] = XMLcontext.language;
+			     /* change current language */
+			     XMLcontext.language = lang;
+			     languageStack[stackLevel - 1] = XMLcontext.language;
 			     }
 			   if (!TtaGetParent (lastAttrElement))
 			     /* it's a LANG attribute on the root element */
@@ -2715,6 +2709,8 @@ CHAR_T     *attrValue;
 						     lastAttrElement, XMLcontext.doc);
 			     }
 			 }
+		       else if (attrType.AttrTypeNum == HTML_ATTR_accesskey)
+			 TtaAddAccessKey (XMLcontext.doc, (int)attrValue[0], lastAttrElement);
 		     }
 		   else
 		     /* this is the content of an invalid attribute */

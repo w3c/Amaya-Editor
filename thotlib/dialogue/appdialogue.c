@@ -80,7 +80,7 @@ extern void TteLoadApplications ( void );
 extern ThotBool     WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 extern int          appArgc;
-extern CHAR_T**     appArgv;
+extern CHAR_T     **appArgv;
 extern int          iString;
 typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
@@ -96,7 +96,7 @@ CallbackCTX;
 static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
 static Pixmap       wind_pixmap;
-static  void *      LastProcedure = NULL;   
+static  void       *LastProcedure = NULL;   
 
 /* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
 /* Chaque item contient le numero d'entree dans le fichier de    */
@@ -4258,7 +4258,7 @@ int                 set;
    ctxCallback->callbackSet = set;
    ctxCallback->callbackNext = NULL;
    return (TtaGetReferencesBase (set));
-}				/*TtaSetCallback */
+}
 
 
 /*----------------------------------------------------------------------

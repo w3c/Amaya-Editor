@@ -37,14 +37,32 @@ extern int          TtaUseOwnXLookupString;
 #define Graphic_keyboard		3
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  TtaSetAccessKeyFunction registers the access key function.
+  ----------------------------------------------------------------------*/
+extern void      TtaSetAccessKeyFunction (void (*procedure) ());
+
+/*----------------------------------------------------------------------
+  TtaAddAccessKey registers a new access key for the document doc
+  The parameter param which will be returned when the access key will be
+  activated.
+  ----------------------------------------------------------------------*/
+extern void      TtaAddAccessKey (Document doc, int key, void *param);
+
+/*----------------------------------------------------------------------
+  TtaRemoveDocAccessKeys removes all access keys of a document.
+  ----------------------------------------------------------------------*/
+extern void      TtaRemoveDocAccessKeys (Document doc);
+
+/*----------------------------------------------------------------------
+  TtaRemoveAccessKey removes an access key of a document.
+  ----------------------------------------------------------------------*/
+extern void      TtaRemoveAccessKey (Document doc, int key);
 
 /*----------------------------------------------------------------------
    TtaAddButton
-
    Adds a new button entry in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: the concerned document.
    view: the concerned view.
@@ -61,11 +79,9 @@ extern int          TtaAddButton (Document document, View view, ThotIcon picture
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
-
    Get the callback of a button in a document view.
    Returns the callback if it exists
            NULL if it doesn't exists
-
    Parameters:
    document: the concerned document.
    view: the concerned view.
@@ -75,10 +91,8 @@ extern void *TtaGetButtonCallback (Document document, View view, int index);
 
 /*----------------------------------------------------------------------
    TtaSwitchButton
-
    Change the status of the button entry in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: the concerned document.
    view: the concerned view.
@@ -88,10 +102,8 @@ extern void         TtaSwitchButton (Document document, View view, int index);
 
 /*----------------------------------------------------------------------
    TtaChangeButton
-
    Change the button entry in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: the concerned document.
    view: the concerned view.
@@ -103,10 +115,8 @@ extern void         TtaChangeButton (Document document, View view, int index, Th
 
 /*----------------------------------------------------------------------
    TtaAddTextZone
-
    Adds a new textual command in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: the concerned document.
    view: the concerned view.
@@ -118,15 +128,12 @@ extern int          TtaAddTextZone (Document document, View view, STRING label, 
 
 /*----------------------------------------------------------------------
    TtaSetTextZone
-
    Sets the text in text-zone in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: identifier of the document.
    view: identifier of the view.
    index: 
-
   ----------------------------------------------------------------------*/
 extern void         TtaSetTextZone (Document document, View view, int index, STRING text);
 
@@ -162,7 +169,6 @@ extern void         TtaSetItemOn (Document document, View view, int menuID, int 
 
 /*----------------------------------------------------------------------
    TtaSetCallback
-
    Specifies the procedure that is called when the user activates a set of forms
    and/or menus created by the application.
    The parameter set gives the number of forms and/or menus created by the 
@@ -172,12 +178,10 @@ extern void         TtaSetItemOn (Document document, View view, int menuID, int 
    This function replaces the DefineCallback function in the Dialogue tool kit.
    This procedure is called with three parameters: the menu or form reference,
    data type, and data value.
-
    void callbakProcedure(reference, datatype, data)
    int reference;
    int datatype;
    STRING data; 
-
    Parameter:
    callbakProcedure: the application callback procedure.
    set: the number of forms and/or menus managed.
@@ -196,52 +200,29 @@ extern void         TtaSetStatus (Document document, View view, CONST STRING tex
   ----------------------------------------------------------------------*/
 extern ThotWidget   TtaGetViewFrame (Document document, View view);
 
-#ifndef _WINDOWS
-/*----------------------------------------------------------------------
-   TtaFetchOneEvent
-
-   retrieve one X-Windows Event from the queue, this is a blocking call.
-  ----------------------------------------------------------------------*/
-extern void         TtaFetchOneEvent (ThotEvent *ev);
-/*----------------------------------------------------------------------
-   TtaHandleOneEvent
-
-   process an X-Windows Event.
-  ----------------------------------------------------------------------*/
-extern void         TtaHandleOneEvent (ThotEvent * ev);
-extern int          TtaXLookupString (ThotKeyEvent * event, STRING buffer, int nbytes,
-				  KeySym * keysym, ThotComposeStatus * status);
-
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaMainLoop
-
    The application main event loop
   ----------------------------------------------------------------------*/
 extern void         TtaMainLoop (void);
 
 /*----------------------------------------------------------------------
-   * TtaHandlePendingEvents
- *
-   * Processes all pending events in an application.
+    TtaHandlePendingEvents
+    Processes all pending events in an application.
   ----------------------------------------------------------------------*/
 extern void         TtaHandlePendingEvents ();
 
 /*----------------------------------------------------------------------
    TtaClickElement
-
    Returns document and element clicked.
-
   ----------------------------------------------------------------------*/
 extern void         TtaClickElement (/*OUT*/ Document *document, /*OUT*/ Element *element);
 extern Pixmap       TtaCreatePixmapLogo (char** data);
 
 /*----------------------------------------------------------------------
    TtaCreateBitmapLogo
-
    Creates a logo pixmap from a bitmap description: width, height and bit array.
-
    Parameters:
    width: the width value of the bitmap.
    height: the height value of the bitmap.
@@ -249,7 +230,6 @@ extern Pixmap       TtaCreatePixmapLogo (char** data);
 
    Return value:
    The created pixmap for the logo.
-
   ----------------------------------------------------------------------*/
 extern Pixmap       TtaCreateBitmapLogo (int width, int height, char* bits);
 extern void         TtaSetCursorWatch (Document document, View view);
@@ -257,14 +237,12 @@ extern void         TtaResetCursor (Document document, View view);
 
 /*----------------------------------------------------------------------
    TtaGetMenuColor
-
    Returns the color used for the background of dialogue windows.
   ----------------------------------------------------------------------*/
 extern Pixel        TtaGetMenuColor (void);
 
 /*----------------------------------------------------------------------
   TtaUpdateEditorColors
-  
   Updates the current foreground and background (text and menus) from
   the values stored in the registry.
   ----------------------------------------------------------------------*/
@@ -272,15 +250,25 @@ extern void         TtaUpdateEditorColors (void);
 
 /*----------------------------------------------------------------------
    TtaGetScreenDepth
-
    Returns the current screen depth.
-
   ----------------------------------------------------------------------*/
 extern int          TtaGetScreenDepth (void);
 
 #ifndef _WINDOWS
-extern Display     *TtaGetCurrentDisplay (void);
+/*----------------------------------------------------------------------
+   TtaFetchOneEvent
+   retrieve one X-Windows Event from the queue, this is a blocking call.
+  ----------------------------------------------------------------------*/
+extern void         TtaFetchOneEvent (ThotEvent *ev);
+/*----------------------------------------------------------------------
+   TtaHandleOneEvent
+   process an X-Windows Event.
+  ----------------------------------------------------------------------*/
+extern void         TtaHandleOneEvent (ThotEvent * ev);
+extern int          TtaXLookupString (ThotKeyEvent * event, STRING buffer, int nbytes,
+				  KeySym * keysym, ThotComposeStatus * status);
 
+extern Display     *TtaGetCurrentDisplay (void);
 #endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -291,52 +279,11 @@ extern void         TtaGiveSelectPosition (Document document, Element element, V
 
 /*----------------------------------------------------------------------
    TtaSetMultiKey
-
    Enables or disables the multikey support
-
    Parameters:
    value : TRUE/FALSE
-
   ----------------------------------------------------------------------*/
 extern void         TtaSetMultikey ( ThotBool value );
-
-#else  /* __STDC__ */
-
-extern int          TtaAddButton (/*Document document, View view, ThotIcon picture, void (*procedure) (), STRING functionName, STRING info, BYTE type, ThotBool state*/);
-extern void        *TtaGetButtonCallback ( /*Document document, View view, int index */);
-extern void         TtaSwitchButton ( /*Document document, View view, int index */ );
-extern void         TtaChangeButton ( /*Document document, View view, int index, ThotIcon picture, ThotBool state */ );
-extern int          TtaAddTextZone ( /*Document document, View view, STRING label, ThotBool editable, void (*procedure) () */ );
-extern void         TtaSetTextZone ( /*Document document, View view, int index, STRING text */ );
-extern void         TtaSetMenuOff ( /*Document document, View view, int menuID */ );
-extern void         TtaSetMenuOn ( /*Document document, View view, int menuID */ );
-extern void         TtaSetToggleItem ( /*Document document, View view, int menuID, int itemID, ThotBool on */ );
-extern void         TtaSetItemOff ( /*Document document, View view, int menuID, int itemID */ );
-extern void         TtaSetItemOn ( /*Document document, View view, int menuID, int itemID */ );
-extern int          TtaSetCallback ( /*void (*callbakProcedure) (), int set */ );
-
-#ifndef _WINDOWS
-extern void         TtaFetchOneEvent ( /*ThotEvent *ev */ );
-extern void         TtaHandleOneEvent ( /*ThotEvent *ev */ );
-extern int          TtaXLookupString (	/* ThotKeyEvent *event, STRING buffer, int nbytes,
-					   KeySym *keysym, ThotComposeStatus *status */ );
-
-#endif /* !_WINDOWS */
-extern void         TtaMainLoop ( /* void */ );
-extern void         TtaHandlePendingEvents ();
-extern void         TtaClickElement ( /*Document *document, Element *element */ );
-extern Pixmap       TtaCreatePixmapLogo ( /*STRING *data */ );
-extern Pixmap       TtaCreateBitmapLogo ( /*int width, int height, STRING bits */ );
-extern void         TtaSetCursorWatch ( /*Document document, View view */ );
-extern void         TtaResetCursor ( /*Document document, View view */ );
-extern Pixel        TtaGetMenuColor ( /* void */ );
-extern void         TtaUpdateEditorColors ( /* void */ );
-extern Pixel        TtaGetButtonColor ( /* void */ );
-extern int          TtaGetScreenDepth ( /* void */ );
-extern Display     *TtaGetCurrentDisplay ( /* void */ );
-extern void         TtaGiveSelectPosition ( /* Document document, Element element, View view, int *X, int *Y */ );
-extern void         TtaSetMultikey (/* ThotBool value*/);
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

@@ -86,7 +86,7 @@ Alt <Key>f:                        GotoNextHTML()
 Alt <Key>r:                        Reload() 
 Ctrl <Key>x , Ctrl <Key>k:         CloseDocument() 
 Ctrl <Key>x , Ctrl <Key>c:         AmayaClose()
-Ctrl <Key>x , Ctrl <Key>j:         TtcCloseView()
+Ctrl <Key>v , Ctrl <Key>x:         TtcCloseView()
 Ctrl <Key>x , Ctrl <Key>z:         Synchronize()
 
 #edit menu 

@@ -210,7 +210,6 @@ extern void DrawSpline ( int frame,
                          int bg,
                          int pattern,
                          C_points * controls );
-
 extern void DrawPath ( int frame,
                        int thick,
                        int style,

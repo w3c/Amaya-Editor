@@ -1,20 +1,11 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
+ /*
  * 
  * Module for keyboard input handling.
  * Authors: I. Vatton (INRIA)
@@ -48,10 +39,19 @@ typedef struct _key
   int                 K_Value;	      /* return key if command = -1          */
   ThotBool            K_Special;      /* TRUE if it's a special key          */
   struct _key        *K_Other;	      /* next entry at the same level        */
+  union
+  {
+    struct _key    *_K_Next_;	      /* 1st complementary touch (1st level) */
+    int             _K_Modifier_;     /* modifier value (2nd level)          */
+    void           *_K_Param_;     /* the parameter of the access key     */
+  } u;
   struct _key        *K_Next;	      /* 1st complementary touch (1st level) */
   int                 K_Modifier;     /* modifier value (2nd level)          */
 }
 KEY;
+#define K_Next u._K_Next_
+#define K_Modifier u._K_Modifier_
+#define K_Param u._K_Param_
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -140,6 +140,9 @@ static KEY         *Automata_alt     = NULL;
 static KEY         *Automata_CTRL    = NULL;
 static KEY         *Automata_ALT     = NULL;
 static KEY         *Automata_current = NULL;
+/* Access key table for loaded documents */
+static Proc         AccessKeyFunction = NULL;
+static KEY         *DocAccessKey[MAX_DOCUMENTS];
 #ifdef _WINDOWS
 static ThotBool    Special;
 #endif /* _WINDOWS */
@@ -149,12 +152,7 @@ static ThotBool    Special;
    translates the keynames not supported by the interpreter of
    Motif translations.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char*       NameCode (char* name)
-#else  /* __STDC__ */
-static char*       NameCode (name)
-STRING              name;
-#endif /* __STDC__ */
+static char        *NameCode (char* name)
 {
    if (strlen (name) < 5)
       if (name[0] == ',')
@@ -181,13 +179,7 @@ STRING              name;
    translates the name given by the file thot.keyboard into a key value
    which Thot can use.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static unsigned int  SpecialKey (char *name, ThotBool *isSpecial)
-#else  /* __STDC__ */
-static unsigned int  SpecialKey (name, isSpecial)
-char                *name;
-ThotBool            *isSpecial;
-#endif /* __STDC__ */
 {
 	*isSpecial = TRUE;
    /* is it the name of a special character? */
@@ -307,20 +299,7 @@ ThotBool            *isSpecial;
    key  = keysym value or 0
    command = number of the command in MyActions
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2, ThotBool spec2, int key, int command)
-#else  /* __STDC__ */
-static void         MemoKey (mod1, key1, spec1, mod2, key2, spec2, key, command)
-int                 mod1;
-int                 key1;
-ThotBool            spec1;
-int                 mod2;
-int                 key2;
-THotBool            spec2;
-int                 key;
-int                 command;
-
-#endif /* __STDC__ */
 {
    ThotBool            exists;
    KEY                *ptr = NULL;
@@ -353,7 +332,7 @@ int                 command;
 	 }
 
    /* Initializations */
-   ptr = (KEY *) TtaGetMemory (sizeof (KEY));	/* nouvelle entree */
+   ptr = (KEY *) TtaGetMemory (sizeof (KEY));
    oldptr = *addFirst;		/* debut chainage entrees existantes */
    /* Verifies if we already have a ctrl key */
    if (oldptr == NULL)
@@ -462,7 +441,6 @@ int                 command;
 	/* on cree une entree de premier niveau */
 	ptr->K_EntryCode = key1;
 	ptr->K_Special = spec1;
-	ptr->K_Modifier = mod1;
 	ptr->K_Other = NULL;
 	ptr->K_Next = NULL;
 	ptr->K_Command = command;
@@ -482,17 +460,7 @@ int                 command;
    Decodes the MS-Window callback parameters and calls the
    generic character handling function.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void     WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial)
-#else  /* !__STDC__ */
-void     WIN_CharTranslation (hWnd, frame, msg, wParam, lParam, isSpecial)
-HWND     hWnd; 
-int      frame; 
-UINT     msg; 
-WPARAM   wParam; 
-LPARAM   lParam;
-ThotBool isSpecial;
-#endif /* __STDC__ */
 {
    CHAR_T string[2];
    int  keyboard_mask = 0;   
@@ -550,24 +518,23 @@ ThotBool isSpecial;
    else if (HIBYTE (GetKeyState (VK_RETURN)))
      Special = TRUE;
    else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
-	 {
-	   /* Windows translates Ctrl a-z */
+     {
+       /* Windows translates Ctrl a-z */
        if (keyboard_mask & THOT_MOD_SHIFT)
          wParam += 64;
-	   else
-		 wParam += 96;
-	 }
-
+       else
+	 wParam += 96;
+     }
+   
    string[0] = (CHAR_T) wParam;
    if (msg == WM_SYSCHAR || msg == WM_SYSKEYDOWN)
      len = 0;
    else
-   {
-		if (wParam == 0x0A)
-	     /* Linefeed key */
-	     wParam = 0x0D;
-   }
-
+     {
+       if (wParam == 0x0A)
+	 /* Linefeed key */
+	 wParam = 0x0D;
+     }
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
 #else /* _WINDOWS */
@@ -579,13 +546,7 @@ ThotBool isSpecial;
    handling function.
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-#ifdef __STDC__
 void                XCharTranslation (GdkEventKey * event, gpointer * data)
-#else  /* __STDC__ */
-void                XCharTranslation (event, data)
-GdkEventKey             *event;
-gpointer *data;
-#endif /* __STDC__ */
 {
    int                 status;
    int                 PicMask;
@@ -601,24 +562,19 @@ gpointer *data;
 
    status = 0;
    /* control, alt and mouse status bits of the state are ignored */
-
    state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK );
-   if (event->state == state) {
-       /* status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS); */
-     strncpy (string, event->string, 2);
-     KS = event->keyval;
-     /*ComS = NULL ; */
-
-  } else
+   if (event->state == state)
+     {
+       strncpy (string, event->string, 2);
+       KS = event->keyval;
+     }
+   else
      {
        save = event->state;
        event->state = state;
        state = save;
-       /* status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);*/
        strncpy (string, event->string, 2);
        KS = event->keyval;
-       /* ComS = NULL ;*/
-
      }
 
    PicMask = 0;
@@ -630,17 +586,10 @@ gpointer *data;
       PicMask |= THOT_MOD_CTRL;
    if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
       PicMask |= THOT_MOD_ALT;
-
    ThotInput (frame, &string[0], event->length, PicMask, KS);
 }
-
 #else /* _GTK */
-#ifdef __STDC__
 void                XCharTranslation (ThotKeyEvent *event)
-#else  /* __STDC__ */
-void                XCharTranslation (event)
-  ThotKeyEvent     *event;
-#endif /* __STDC__ */
 {
    KeySym              KS;
    UCHAR_T             string[2];
@@ -682,18 +631,7 @@ void                XCharTranslation (event)
    ThotInput
    handles the character encoding.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ThotInput (int frame, USTRING string, unsigned int nb,
-			       int PicMask, int key)
-#else  /* __STDC__ */
-void                ThotInput (frame, string, nb, PicMask, key)
-int                 frame;
-USTRING             string;
-unsigned int        nb;
-int                 PicMask;
-int                 key;
-
-#endif /* __STDC__ */
+void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int key)
 {
   KEY                *ptr;
   Document            document;
@@ -706,7 +644,7 @@ int                 key;
   
   if (frame > MAX_FRAME)
     frame = 0;
-    
+  FrameToView (frame, &document, &view);
   value = string[0];
   found = FALSE;
   if (nb == 2)
@@ -720,15 +658,19 @@ int                 key;
       command = 0;	   
       /* Set the right indicator */
       if (PicMask & THOT_MOD_CTRL)
+	{
 	if (PicMask & THOT_MOD_SHIFT)
 	  modtype = THOT_MOD_S_CTRL;
 	else
 	  modtype = THOT_MOD_CTRL;
+	}
       else if (PicMask & THOT_MOD_ALT)
+	{
 	if (PicMask & THOT_MOD_SHIFT)
 	  modtype = THOT_MOD_S_ALT;
 	else
 	  modtype = THOT_MOD_ALT;
+	}
       else if (PicMask & THOT_MOD_SHIFT)
 	modtype = THOT_MOD_SHIFT;
       else
@@ -746,9 +688,9 @@ int                 key;
 		{
 		  if (ptr->K_EntryCode == key &&
 #ifdef _WINDOWS
-			  ptr->K_Special == Special &&
+		      ptr->K_Special == Special &&
 #endif /* _WINDOWS */
-			  modtype == ptr->K_Modifier)
+		      modtype == ptr->K_Modifier)
 		    found = TRUE;
 		  else
 		    ptr = ptr->K_Other;
@@ -771,7 +713,21 @@ int                 key;
 	  else if (modtype == THOT_MOD_S_ALT)
 	    ptr = Automata_ALT;
 	  else if (modtype == THOT_MOD_ALT)
-	    ptr = Automata_alt;
+	    {
+	      /* check if it's an access key */
+	      if (AccessKeyFunction && document && DocAccessKey[document])
+		{
+		  ptr = DocAccessKey[document];
+		  while (ptr != NULL && ptr->K_EntryCode != key)
+		    ptr = ptr->K_Other;
+		  if (ptr)
+		    {
+		      (*AccessKeyFunction) (document, ptr->K_Param);
+		      return;
+		    }
+		}
+	      ptr = Automata_alt;
+	    }
 	  else
 	    ptr = Automata_normal;
       
@@ -786,15 +742,15 @@ int                 key;
 		    if (ptr->K_EntryCode == key)
 #endif /* _WINDOWS */
 		      {
-			    /* On entre dans un automate */
-			    found = TRUE;
-			    Automata_current = ptr->K_Next;
-			    if (Automata_current == NULL)
-			      {
-				/* il s'agit d'une valeur definie a premier niveau */
-				value = (UCHAR_T) ptr->K_Value;
-				command = ptr->K_Command;
-			      }
+			/* first level entry found */
+			found = TRUE;
+			Automata_current = ptr->K_Next;
+			if (Automata_current == NULL)
+			  {
+			    /* one key shortcut */
+			    value = (UCHAR_T) ptr->K_Value;
+			    command = ptr->K_Command;
+			  }
 		      }
 		    else
 		      ptr = ptr->K_Other;
@@ -885,7 +841,7 @@ int                 key;
 	  command = SpecialKeys[MY_KEY_Prior];
 	Automata_current = NULL;
 	break;
-	
+
       case THOT_KEY_Next:
 #ifdef THOT_KEY_R15
       case THOT_KEY_R15:
@@ -951,7 +907,6 @@ int                 key;
   if (Automata_current == NULL)
     {
       /* Appel d'une action Thot */
-      FrameToView (frame, &document, &view);
       mainframe = GetWindowNumber (document, 1);
       if (command > 0)
 	{
@@ -1032,6 +987,11 @@ int                 key;
 void FreeTranslations ()
 {
    KEY                *ptr, *subkey;
+   int                 i;
+
+   /* free all document access keys */
+   for (i = 0; i < MAX_DOCUMENTS; i++)
+     TtaRemoveDocAccessKeys (i);
 
    while (Automata_current != NULL)
      {
@@ -1103,15 +1063,9 @@ void FreeTranslations ()
 /*----------------------------------------------------------------------
    EndOfString check wether string end by suffix.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          EndOfString (char* string, char* suffix)
-#else  /* __STDC__ */
-static int          EndOfString (string, suffix)
-char*               string;
-char*               suffix;
-#endif /* __STDC__ */
+static int      EndOfString (char *string, char *suffix)
 {
-   int                 string_lenght, suffix_lenght;
+   int             string_lenght, suffix_lenght;
 
    string_lenght = strlen (string);
    suffix_lenght = strlen (suffix);
@@ -1123,15 +1077,101 @@ char*               suffix;
 
 
 /*----------------------------------------------------------------------
+  TtaSetAccessKeyFunction registers the access key function.
+  ----------------------------------------------------------------------*/
+void      TtaSetAccessKeyFunction (Proc procedure)
+{
+  AccessKeyFunction = procedure;
+}
+
+
+/*----------------------------------------------------------------------
+  TtaAddAccessKey registers a new access key for the document doc
+  The parameter param which will be returned when the access key will be
+  activated.
+  ----------------------------------------------------------------------*/
+void      TtaAddAccessKey (Document doc, int key, void *param)
+{
+  KEY                *ptr, *next;
+
+  /* looks for the current access key in the table */
+  next = DocAccessKey[doc];
+  ptr = NULL;
+  while (next != NULL && next->K_EntryCode != key)
+    {
+      ptr = next;
+      next = next->K_Other;
+    }
+  if (next = NULL)
+    {
+      /* not found: add a new entry */
+      next = (KEY *) TtaGetMemory (sizeof (KEY));
+      if (ptr)
+	ptr->K_Other = next;
+      else
+	/* the first entry */
+	DocAccessKey[doc] = next;
+      next->K_EntryCode = key;
+      next->K_Special = FALSE;
+      next->K_Other = NULL;
+      next->K_Param = param;
+      next->K_Command = -1;
+      next->K_Value = key;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  TtaRemoveDocAccessKeys removes all access keys of a document.
+  ----------------------------------------------------------------------*/
+void      TtaRemoveDocAccessKeys (Document doc)
+{
+  KEY                *ptr, *next;
+
+  next = DocAccessKey[doc];
+  while (next != NULL)
+    {
+      ptr = next;
+      next = ptr->K_Other;
+      TtaFreeMemory (ptr);
+    }
+  DocAccessKey[doc] = NULL;
+}
+
+
+/*----------------------------------------------------------------------
+  TtaRemoveAccessKey removes an access key of a document.
+  ----------------------------------------------------------------------*/
+void      TtaRemoveAccessKey (Document doc, int key)
+{
+  KEY                *ptr, *next;
+
+  /* looks for the current access key in the table */
+  next = DocAccessKey[doc];
+  ptr = NULL;
+  while (next != NULL && next->K_EntryCode != key)
+    {
+      ptr = next;
+      next = next->K_Other;
+    }
+  if (next)
+    {
+      /* found: remove it */
+      if (ptr)
+	ptr->K_Other = next->K_Other;
+      else
+	/* the first entry */
+	DocAccessKey[doc] = next->K_Other;
+      TtaFreeMemory (next);
+    }
+}
+
+
+/*----------------------------------------------------------------------
    InitTranslations
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotTranslations      InitTranslations (CHAR_T* appliname)
-#else  /* __STDC__ */
-ThotTranslations      InitTranslations (appliname)
-CHAR_T*               appliname;
-#endif /* __STDC__ */
+ThotTranslations      InitTranslations (char *appliname)
 {
   CHAR_T*             appHome;	   /* fichier de translation */
   CHAR_T              fullName[200];  /* ligne en construction pour motif */
@@ -1150,6 +1190,10 @@ CHAR_T*               appliname;
   FILE               *file;
   ThotTranslations    table = 0;
   ThotBool            isSpecialKey1, isSpecialKey2;
+
+  /* clean up the access key table */
+  for (i = 0; i < MAX_DOCUMENTS; i++)
+    DocAccessKey[i] = NULL;
 
   appHome = TtaGetEnvString ("APP_HOME");
   ustrcpy (name, appliname);

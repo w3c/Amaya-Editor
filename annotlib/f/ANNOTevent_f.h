@@ -21,14 +21,14 @@ extern void ANNOT_Init ( void );
 extern void ANNOT_FreeConf ( void );
 extern void ANNOT_Quit ( void );
 extern void ANNOT_FreeDocumentResource ( Document doc );
-extern void ANNOT_AutoLoad ( Document doc,
-                             View view );
 extern void RemoteLoad_callback ( int doc,
                                   int status,
                                   CHAR_T *urlName,
                                   CHAR_T *outputfile,
                                   AHTHeaders *http_headers,
                                   void * context );
+extern void ANNOT_AutoLoad ( Document doc,
+                             View view );
 extern void ANNOT_Load ( Document doc,
                          View view );
 extern void ANNOT_Create ( Document doc,
@@ -62,6 +62,8 @@ extern void ANNOT_Delete_callback ( int doc,
                                     void * context );
 extern void ANNOT_Delete ( Document doc,
                            View view );
+extern void ANNOT_AddLink ( Document doc,
+                            View view );
 
 #else /* __STDC__ */
 
@@ -80,14 +82,14 @@ extern void ANNOT_Init (/* void */);
 extern void ANNOT_FreeConf (/* void */);
 extern void ANNOT_Quit (/* void */);
 extern void ANNOT_FreeDocumentResource (/* Document doc */);
-extern void ANNOT_AutoLoad (/* Document doc,
-                               View view */);
 extern void RemoteLoad_callback (/* int doc,
                                     int status,
                                     CHAR_T *urlName,
                                     CHAR_T *outputfile,
                                     AHTHeaders *http_headers,
                                     void * context */);
+extern void ANNOT_AutoLoad (/* Document doc,
+                               View view */);
 extern void ANNOT_Load (/* Document doc,
                            View view */);
 extern void ANNOT_Create (/* Document doc,
@@ -121,6 +123,8 @@ extern void ANNOT_Delete_callback (/* int doc,
                                       void * context */);
 extern void ANNOT_Delete (/* Document doc,
                              View view */);
+extern void ANNOT_AddLink (/* Document doc,
+                              View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

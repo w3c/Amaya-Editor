@@ -13,7 +13,13 @@ extern void ThotInput ( int frame,
                         int PicMask,
                         int key );
 extern void FreeTranslations ( void );
-extern ThotTranslations InitTranslations ( CHAR_T* appliname );
+extern void TtaSetAccessKeyFunction ( Proc procedure );
+extern void TtaAddAccessKey ( Document doc,
+                              int key,
+                              void *param );
+extern void TtaRemoveDocAccessKeys ( Document doc );
+extern void TtaRemoveAccessKey ( Document doc,
+                                 int key );
 
 #else /* __STDC__ */
 
@@ -24,7 +30,13 @@ extern void ThotInput (/* int frame,
                           int PicMask,
                           int key */);
 extern void FreeTranslations (/* void */);
-extern ThotTranslations InitTranslations (/* CHAR_T* appliname */);
+extern void TtaSetAccessKeyFunction (/* Proc procedure */);
+extern void TtaAddAccessKey (/* Document doc,
+                                int key,
+                                void *param */);
+extern void TtaRemoveDocAccessKeys (/* Document doc */);
+extern void TtaRemoveAccessKey (/* Document doc,
+                                   int key */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
