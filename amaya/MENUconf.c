@@ -270,7 +270,7 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 {
 	{AM_INIT_ALL, AM_ANNOT_CONF_MENU},
 	{IDC_ANNOTUSER, AM_ANNOT_USER},
-	{IDC_ANNOTPOSTSERVER, AM_ANNOT_POSTSERVER},
+	{IDC_ANNOTPOSTSERVER, AM_ANNOT_POST_SERVER},
 	{IDC_ANNOTSERVERS, AM_ANNOT_SERVERS},
 	{IDC_ANNOTAUTOLOAD, AM_ANNOT_AUTOLOAD},
 	{0, 0}
@@ -4069,8 +4069,8 @@ HWND hwnDlg;
 #endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser);
-  SetDlgItemText (hwnDlg, IDC_ANNOT_POST_SERVER, AnnotPostServer);
-  SetDlgItemText (hwnDlg, IDC_ANNOT_SERVERS, AnnotServers);
+  SetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer);
+  SetDlgItemText (hwnDlg, IDC_ANNOTSERVERS, AnnotServers);
   CheckDlgButton (hwnDlg, IDC_ANNOTAUTOLOAD, (AnnotAutoLoad) 
 		  ? BST_CHECKED : BST_UNCHECKED);
 }
@@ -4133,7 +4133,7 @@ LPARAM lParam;
 	    {
 	    case IDC_ANNOTUSER:
 	      GetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser,
-			      sizeof (AnnotUsere) - 1);
+			      sizeof (AnnotUser) - 1);
 	      break;
 	    case IDC_ANNOTPOSTSERVER:
 	      GetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer,
