@@ -9,6 +9,7 @@
 
 #define DEBUG_ARCH
 
+#ifdef DIRECT_JAVA_VM_ACCESS
 /*
  * Test how a pointer is stored internally in the Kaffe V.M. inside
  * a jlong.
@@ -250,6 +251,7 @@ void *JavaLongPtr2CIntPtr(jlong *in)
     }
     return (res);
 }
+#endif /* DIRECT_JAVA_VM_ACCESS */
 
 /*
  * Another problem when creating Java internal (Unicode) strings:
@@ -288,8 +290,10 @@ static void is_lsbf_architecture(void) {
 
 void initJavaTypes() {
     is_lsbf_architecture();
+#ifdef DIRECT_JAVA_VM_ACCESS
     do_ptr_need_shift();
     check_jlong_storage();
+#endif /* DIRECT_JAVA_VM_ACCESS */
 }
 
 /*

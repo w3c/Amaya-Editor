@@ -54,7 +54,7 @@ amaya_HTTPRequest_Callback(struct Hamaya_HTTPRequest* request,
     javaString2CString(Get_HTTPRequest_Str_filename(request),
                        outputfile, sizeof(outputfile));
 
-fprintf(stderr,"GetObjectWWWCallback : %s : %d\n", urlName, status);
+/* fprintf(stderr,"HTTPRequest_Callback : %s : %d\n", urlName, status); */
 
     if (callback != NULL) {
 	JavaThotlibLock();
