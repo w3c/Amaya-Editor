@@ -1,10 +1,10 @@
 /* XPM */
 static char * BulletNo_xpm[] = {
 "16 16 5 1",
-" 	c #BFBFBFBFBFBF",
+" 	c #BFBFBF",
 ".	c #DFDFDFDFDFDF",
-"X	c #FFFFFFFFFFFF",
-"o	c #000000000000",
+"X	c #FFFFFF",
+"o	c #000000",
 "O	c #808080808080",
 "                ",
 ".XX.  XXXXXXXXX ",

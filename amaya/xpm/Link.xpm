@@ -1,10 +1,10 @@
 /* XPM */
 static char * Link_xpm[] = {
 "16 16 4 1",
-" 	c #BFBFBFBFBFBF",
-".	c #FFFF8A8A1010",
-"X	c #000000000000",
-"o	c #5F5F5F5F5F5F",
+" 	c #BFBFBF",
+".	c #FF6969",
+"X	c #000000",
+"o	c #767676",
 "                ",
 "...   .....   ..",
 ".... ....... ...",

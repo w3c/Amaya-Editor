@@ -1,10 +1,10 @@
 /* XPM */
 static char * MathNo_xpm[] = {
 "16 16 4 1",
-" 	c #BFBFBFBFBFBF",
-".	c #FFFFFFFFFFFF",
-"X	c #000000000000",
-"o	c #5F5F5F5F5F5F",
+" 	c #BFBFBF",
+".	c #FFFFFF",
+"X	c #000000",
+"o	c #767676",
 "    ..   ..     ",
 "     .. ..XX    ",
 "     X...XX     ",

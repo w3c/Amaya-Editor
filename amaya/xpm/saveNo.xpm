@@ -1,9 +1,9 @@
 /* XPM */
 static char * saveNo_xpm[] = {
 "16 16 3 1",
-" 	c #BFBFBFBFBFBF",
-".	c #000000000000",
-"X	c #FFFFFFFFFFFF",
+" 	c #BFBFBF",
+".	c #000000",
+"X	c #FFFFFF",
 "                ",
 " .............. ",
 " .X.XXXXXXXX.X. ",

@@ -1,10 +1,10 @@
 /* XPM */
 static char * home_xpm[] = {
 "16 16 4 1",
-" 	c #BFBFBFBFBFBF",
-".	c #69A669A6FFFF",
-"X	c #000000000000",
-"o	c #71C675D671C6",
+" 	c #BFBFBF",
+".	c #6969FF",
+"X	c #000000",
+"o	c #767676",
 "                ",
 "            .X  ",
 "      ..... .X  ",

@@ -1,11 +1,11 @@
 /* XPM */
 static char * I_xpm[] = {
 "16 16 5 1",
-" 	c #BFBFBFBFBFBF",
-".	c #0000E79D9E79",
-"X	c #0000FFFFAEBA",
-"O	c #71C675D671C6",
-"o	c #000000000000",
+" 	c #BFBFBF",
+".	c #00FF00",
+"X	c #C1FFC1",
+"O	c #767676",
+"o	c #000000",
 "                ",
 "                ",
 "     .XXXXXXXXX.",

@@ -1,10 +1,10 @@
 /* XPM */
 static char * find_xpm[] = {
 "16 16 4 1",
-" 	c #BFBFBFBFBFBF",
-".	c #FFFFCB2B69A6",
-"X	c #000000000000",
-"o	c #FFFFFFFFFFFF",
+" 	c #BFBFBF",
+".	c #FFCB69",
+"X	c #000000",
+"o	c #FFFFFF",
 "                ",
 "     ....       ",
 "   ........     ",

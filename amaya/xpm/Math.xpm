@@ -1,9 +1,9 @@
 /* XPM */
 static char * Math_xpm[] = {
 "16 16 3 1",
-" 	c #BFBFBFBFBFBF",
-".	c #AEBA0000E79D",
-"X	c #000000000000",
+" 	c #BFBFBF",
+".	c #D369FF",
+"X	c #000000",
 "    ..   ..     ",
 "     .. ..XX    ",
 "      ...XX     ",

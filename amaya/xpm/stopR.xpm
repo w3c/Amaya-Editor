@@ -1,10 +1,10 @@
 /* XPM */
 static char * stopR_xpm[] = {
 "16 16 4 1",
-" 	c #BFBFBFBFBFBF",
-".	c #FFFFFFFFFFFF",
-"X	c #EEEE00000000",
-"o	c #000000000000",
+" 	c #BFBFBF",
+".	c #FFFFFF",
+"X	c #EE0000",
+"o	c #000000",
 "     .......    ",
 "    .XXXXXXXo   ",
 "   .XXXXXXXXXo  ",

@@ -1,10 +1,10 @@
 /* XPM */
 static char * H2No_xpm[] = {
 "16 16 4 1",
-" 	c #BFBFBFBFBFBF",
-".	c #FFFFFFFFFFFF",
-"X	c #5F5F5F5F5F5F",
-"o	c #000000000000",
+" 	c #BFBFBF",
+".	c #FFFFFF",
+"X	c #767676",
+"o	c #000000",
 "                ",
 "                ",
 ".... .....      ",

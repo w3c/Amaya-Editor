@@ -1,10 +1,10 @@
 /* XPM */
 static char * Reload_xpm[] = {
 "16 16 4 1",
-" 	c #BFBFBFBFBFBF",
-".	c #69696969FFFF",
-"X	c #000000000000",
-"o	c #61616161FFFF",
+" 	c #BFBFBF",
+".	c #6969FF",
+"X	c #000000",
+"o	c #6969FF",
 "                ",
 "     .....      ",
 "    ....X.o     ",

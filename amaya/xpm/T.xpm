@@ -1,12 +1,12 @@
 /* XPM */
 static char * T_xpm[] = {
 "16 16 6 1",
-" 	c #BFBFBFBFBFBF",
-".	c #0000FFFFAEBA",
-"X	c #0000E79D9E79",
+" 	c #BFBFBF",
+".	c #C1FFC1",
+"X	c #00FF00",
 "o	c #0000B2CA0000",
-"O	c #71C675D671C6",
-"+	c #000000000000",
+"O	c #767676",
+"+	c #000000",
 "     .....X X   ",
 "   X.Xoooo.X.   ",
 "  X.OO+++++..O  ",

@@ -4,7 +4,7 @@ static char * opera_xpm[] = {
 " 	c None",
 ".	c #EBEBC1C1FFFF",
 "X	c #00000000B2B2",
-"o	c #000000000000",
+"o	c #000000",
 "                                                                              ",
 "  ..                                                                          ",
 "   ....                                                                       ",
