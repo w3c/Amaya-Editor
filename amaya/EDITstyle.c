@@ -585,7 +585,7 @@ void UpdateStylePost (NotifyAttribute * event)
 	    InitInfo ("", TtaGetMessage (AMAYA, AM_CSS_ERROR));
 	  }
 	else
-	  TtaSetItemOn (doc, 1, Views, BShowLogFile);
+	  TtaSetItemOff (doc, 1, Views, BShowLogFile);
 	TtaFreeMemory (style);
      }
 }
