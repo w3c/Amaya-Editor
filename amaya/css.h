@@ -39,25 +39,22 @@ typedef struct _PISchema
 
 typedef struct _PInfo
 {
-  struct _PInfo      *PiNext;
-  Document            PiDoc;
-  Element             PiLink; /* the element which links this CSS */
-  PISchemaPtr         PiSchemas; /* list of schemas */
+  struct _PInfo      *PiNext;     /* next link in the same document */
+  Element             PiLink;     /* the element which links this CSS */
+  CSSCategory         PiCategory; /* the category of this CSS link */
+  ThotBool            PiEnabled;  /* enabled/disabled */
+  CSSmedia            PiMedia;    /* for what media */
+  PISchemaPtr         PiSchemas;  /* list of schemas */
 } PInfo , *PInfoPtr;
 
 typedef struct _CSSInfo
 {
   struct _CSSInfo    *NextCSS;
-  int                 doc;   /* entry in the document table or 0 */
+  int                 doc;   /* document which displays the CSS file */
   char               *url;
   char               *localName;
-  Element             styleEl;  /* the style element which contains this CSS */
-  CSSCategory         category;
-  PInfoPtr            infos; /* the document Presentation Schemas */
-  /* documents using this CSS */
-  ThotBool            documents[DocumentTableLength]; /* document concerned */
-  ThotBool            enabled[DocumentTableLength];   /* enabled/disabled */
-  CSSmedia            media[DocumentTableLength];     /* for what media */
+  PInfoPtr            infos[DocumentTableLength]; /* documents using this CSS */
+  ThotBool            import; /* import entry */
 } CSSInfo , *CSSInfoPtr;
 
 THOT_EXPORT CSSInfoPtr   CSSList;

@@ -1399,10 +1399,10 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
   css = CSSList;
   while (css)
     {
-      if (css->documents[doc])
+      if (css->infos[doc])
 	{
-	  pInfo = css->infos;
-	  if (pInfo && pInfo->PiDoc == doc)
+	  pInfo = css->infos[doc];
+	  while (pInfo)
 	    {
 	      pIS = pInfo->PiSchemas;
 	      while (pIS && pIS->PiSSchema)
@@ -1426,6 +1426,7 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
 		    }
 		  pIS = pIS->PiSNext;
 		}
+	      pInfo = pInfo->PiNext;
 	    }
 	}
       css = css->NextCSS;

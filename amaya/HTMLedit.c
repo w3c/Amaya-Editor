@@ -2174,7 +2174,7 @@ void ElementPasted (NotifyElement * event)
       value = TtaGetMemory (length + 1);
       TtaGiveTextContent (child, value, &length, &lang);
       /* parse the content */
-      css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL, el);
+      css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, CSS_ALL, NULL, NULL, el);
       ReadCSSRules (doc, css, value, NULL, TtaGetElementLineNumber (child),
 		    FALSE, el);
       TtaFreeMemory (value);

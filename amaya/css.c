@@ -136,14 +136,93 @@ CSSmedia CheckMediaCSS (char *buff)
 }
 
 /*----------------------------------------------------------------------
+  AttrMediaChanged: the user has created removed or modified a Media
+  attribute
+  ----------------------------------------------------------------------*/
+void AttrMediaChanged (NotifyAttribute *event)
+{
+  ElementType         elType;
+  Element             el;
+  Document            doc;
+  Attribute           attr;
+  AttributeType       attrType;
+  CSSInfoPtr          css;
+  CSSmedia            media;
+  PInfoPtr            pInfo;
+  DisplayMode         dispMode;
+  char                completeURL[MAX_LENGTH];
+  char                tempname[MAX_LENGTH];
+  char               *name2;
+  int                 length;
+
+  el = event->element;
+  doc = event->document;
+  attr = event->attribute;
+  elType = TtaGetElementType (el);
+  /* get the new media value */
+  length = TtaGetTextAttributeLength (attr);
+  name2 = TtaGetMemory (length + 1);
+  TtaGiveTextAttributeValue (attr, name2, &length);
+  media = CheckMediaCSS (name2);
+  TtaFreeMemory (name2);
+  /* get the CSS URI */
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr &&
+      /* don't manage a document used by make book */
+      (DocumentMeta[doc] == NULL ||
+       DocumentMeta[doc]->method != CE_MAKEBOOK))
+    {
+      length = TtaGetTextAttributeLength (attr);
+      name2 = TtaGetMemory (length + 1);
+      TtaGiveTextAttributeValue (attr, name2, &length);
+      /* load the stylesheet file found here ! */
+      NormalizeURL (name2, doc, completeURL, tempname, NULL);
+      TtaFreeMemory (name2);
+      /* get the right CSS context */ 
+      css = SearchCSS (0, completeURL, el, &pInfo);
+      if (css && pInfo)
+	{
+	  /* avoid too many redisplay */
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, DeferredDisplay);
+	  /* something changed and we are not printing */
+	  if ((media == CSS_ALL || media == CSS_SCREEN) &&
+	      (pInfo->PiMedia == CSS_PRINT || pInfo->PiMedia == CSS_OTHER))
+	    LoadStyleSheet (completeURL, doc, el, NULL, media,
+			    pInfo->PiCategory == CSS_USER_STYLE);
+	  else
+	    {
+	      if ((media == CSS_PRINT || media == CSS_OTHER) &&
+		  (pInfo->PiMedia == CSS_ALL || pInfo->PiMedia == CSS_SCREEN))
+		{
+		  if (elType.ElTypeNum != HTML_EL_STYLE_)
+		    el = NULL;
+		  RemoveStyleSheet (completeURL, doc, FALSE, FALSE, el);
+		}
+	      /* only update the CSS media info */
+	      pInfo->PiMedia = media;
+	    }
+	  /* restore the display mode */
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, dispMode);
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
   GetPExtension returns the Presentation Extension Schema associated with
   the document doc and the structure sSchema
   At the same time, this funciton updates the css context.
   ----------------------------------------------------------------------*/
-PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
+PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
+		       Element link)
 {
   CSSInfoPtr          oldcss;
-  PInfoPtr            pInfo;
+  PInfoPtr            pInfo, oldInfo;
   PISchemaPtr         pIS;
   PSchema             pSchema, nSchema, prevS;
   Element             prevLink, nextLink, parent, prevStyle, nextStyle;
@@ -155,44 +234,47 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
   int                 length;
   ThotBool            found, before;
 
+  if (css == NULL)
+    return NULL;
+
   if (sSchema == NULL)
     sSchema = TtaGetDocumentSSchema (doc);
-  pInfo = css->infos;
+  pInfo = css->infos[doc];
   nextLink = NULL;
   nextStyle = NULL;
   found = FALSE;
   pIS = NULL;
   while (pInfo && !found)
     {
-      if (pInfo->PiDoc == doc)
+      if (pInfo->PiLink == link)
 	{
 	  /* look for the list of document schemas */
 	  pIS = pInfo->PiSchemas;
 	  while (pIS && !found)
 	    {
-	      if (sSchema == pIS->PiSSchema && pIS->PiPSchema)
-		/* the pschema is already known */
-		return (pIS->PiPSchema);
+	      if (sSchema == pIS->PiSSchema)
+		{
+		  if (pIS->PiPSchema)
+		    /* the pschema is already known */
+		    return (pIS->PiPSchema);
+		}
 	      else
 		pIS = pIS->PiSNext;
 	    }
 	  found = TRUE;
 	}
-      else
+      if (!found)
 	/* next info context */
 	pInfo = pInfo->PiNext;
     }
 
   if (pInfo == NULL)
     {
-      /* add the presentation info block for the current document */
-      pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
-      pInfo->PiNext = css->infos;
-      css->infos = pInfo;
-      pInfo->PiDoc = doc;
-      pInfo->PiLink = NULL;
-      pInfo->PiSchemas = NULL;
+      /* add the presentation info block for the current document style */
+      pInfo = AddInfoCSS (doc, css, CSS_DOCUMENT_STYLE, CSS_ALL, link);
       pIS = NULL;
+      if (pInfo == NULL)
+	return NULL;
     }
 
   if (pIS == NULL)
@@ -206,19 +288,20 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
     }
 
   /* create the presentation schema for this structure */
-  nSchema = TtaNewPSchema (sSchema, css->category == CSS_USER_STYLE);
+  nSchema = TtaNewPSchema (sSchema, pInfo->PiCategory == CSS_USER_STYLE);
   pSchema = TtaGetFirstPSchema (doc, sSchema);
   pIS->PiPSchema = nSchema;
   /* chain the presentation schema at the right position */
   prevS = NULL;
   before = FALSE;
-  if (css->category == CSS_USER_STYLE || pSchema == NULL)
+  if (pInfo->PiCategory == CSS_USER_STYLE || pSchema == NULL)
     {
       /* add in first position and last priority */
       /* link the new presentation schema */
       TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema);
     }
-  else if (css->category == CSS_DOCUMENT_STYLE || css->category == CSS_EXTERNAL_STYLE)
+  else if (pInfo->PiCategory == CSS_DOCUMENT_STYLE ||
+	   pInfo->PiCategory == CSS_EXTERNAL_STYLE)
     {
       /* check the order among its external style sheets */
       if (pInfo->PiLink)
@@ -262,7 +345,8 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 	  found = FALSE;
 	  while (!found && (prevLink || prevStyle))
 	    {
-	      prevLink = TtaSearchTypedElementInTree (elType, SearchBackward, parent, prevLink);
+	      prevLink = TtaSearchTypedElementInTree (elType, SearchBackward,
+						      parent, prevLink);
 	      if (prevLink)
 		{
 		  if (attrType.AttrTypeNum == 0)
@@ -275,7 +359,8 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			  /* get a buffer for the attribute value */
 			  length = MAX_LENGTH;
 			  TtaGiveTextAttributeValue (attr, buffer, &length);
-			  found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
+			  found = (!strcasecmp (buffer, "STYLESHEET") ||
+				   !strcasecmp (buffer, "STYLE"));
 			}
 		    }
 		}
@@ -285,22 +370,20 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 		{
 		  /* there is another linked CSS style sheet before */
 		  oldcss = CSSList;
+		  found = FALSE;
 		  /* search if that previous CSS context */
-		  while (oldcss)
+		  while (oldcss && !found)
 		    {
-		      if (oldcss != css && oldcss->documents[doc] &&
-			  (oldcss->category == CSS_DOCUMENT_STYLE ||
-			   oldcss->category == CSS_EXTERNAL_STYLE))
+		      oldInfo = oldcss->infos[doc];
+		      while (oldInfo && !found)
 			{
-			  /* check if it includes a presentation schema
-			     for that structure */
-			  pInfo = oldcss->infos;
-			  while (pInfo && pInfo->PiDoc != doc)
-			    pInfo = pInfo->PiNext;
-			  if (pInfo && (pInfo->PiLink == prevLink ||
-					pInfo->PiLink == prevStyle))
+			  if (oldInfo != pInfo &&
+			      (oldInfo->PiCategory == CSS_DOCUMENT_STYLE ||
+			       oldInfo->PiCategory == CSS_EXTERNAL_STYLE) &&
+			      (oldInfo->PiLink == prevLink ||
+			       oldInfo->PiLink == prevStyle))
 			    {
-			      pIS = pInfo->PiSchemas;
+			      pIS = oldInfo->PiSchemas;
 			      while (pIS && pIS->PiSSchema != sSchema)
 				pIS = pIS->PiSNext;
 			      if (pIS && pIS->PiPSchema)
@@ -308,27 +391,26 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 				  /* link after that presentation schema */
 				  before = FALSE;
 				  prevS = pIS->PiPSchema;
+				  found = TRUE;
 				}
-			      else
-				found = FALSE;
-			      oldcss = NULL;
 			    }
-			  else
-			    /* it's not the the previous style sheet */
-			    oldcss = oldcss->NextCSS;
+			  if (!found)
+			    oldInfo = oldInfo->PiNext;
 			}
-		      else
+		      if (!found)
+			/* it's not the the previous style sheet */
 			oldcss = oldcss->NextCSS;
 		    }
 		}
 	    }
-	  if (pInfo)
+	  if (!found)
 	    {
 	      /* look for the next link with rel="STYLESHEET" */
 	      nextLink = pInfo->PiLink;
 	      while (!found && (nextLink || nextStyle))
 		{
-		  nextLink = TtaSearchTypedElementInTree (elType, SearchForward, parent, nextLink);
+		  nextLink = TtaSearchTypedElementInTree (elType, SearchForward,
+							  parent, nextLink);
 		  if (nextLink)
 		    {
 		      if (attrType.AttrTypeNum == 0)
@@ -352,21 +434,19 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 		    {
 		      /* there is another linked CSS style sheet after */
 		      oldcss = CSSList;
-		      while (oldcss)
+		      found = FALSE;
+		      while (oldcss && !found)
 			{
-			  if (oldcss != css && oldcss->documents[doc] &&
-			      (oldcss->category == CSS_DOCUMENT_STYLE ||
-			       oldcss->category == CSS_EXTERNAL_STYLE))
+			  oldInfo = oldcss->infos[doc];
+			  while (oldInfo && !found)
 			    {
-			      /* check if it includes a presentation schema
-				 for that structure */
-			      pInfo = oldcss->infos;
-			      while (pInfo && pInfo->PiDoc != doc)
-				pInfo = pInfo->PiNext;
-			      if (pInfo && (pInfo->PiLink == nextStyle ||
-					    pInfo->PiLink == nextLink))
+			      if (oldInfo != pInfo &&
+				  (oldInfo->PiCategory == CSS_DOCUMENT_STYLE ||
+				   oldInfo->PiCategory == CSS_EXTERNAL_STYLE) &&
+				  (oldInfo->PiLink == nextStyle ||
+				   oldInfo->PiLink == nextLink))
 				{
-				  pIS = pInfo->PiSchemas;
+				  pIS = oldInfo->PiSchemas;
 				  while (pIS && pIS->PiSSchema != sSchema)
 				    pIS = pIS->PiSNext;
 				  if (pIS && pIS->PiPSchema)
@@ -374,13 +454,14 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 				      /* link before that presentation schema */
 				      before = TRUE;
 				      prevS = pIS->PiPSchema;
+				      found = TRUE;
 				    }
-				  else
-				    found = FALSE;
 				}
-			      oldcss = NULL;
+			      if (!found)
+				oldInfo = oldInfo->PiNext;
 			    }
-			  else
+			  if (!found)
+			    /* it's not the the previous style sheet */
 			    oldcss = oldcss->NextCSS;
 			}
 		    }
@@ -392,37 +473,31 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 	      /* look for CSS_USER_STYLE or CSS_DOCUMENT_STYLE */
 	      /* there is another linked CSS style sheet after */
 	      oldcss = CSSList;
-	      while (!found && oldcss)
+	      while (oldcss && !found)
 		{
-		  if (oldcss != css && oldcss->documents[doc])
-		    if (oldcss->category == CSS_USER_STYLE)
-		      {
-			/* check if it includes a presentation schema
-			   for that structure */
-			pInfo = oldcss->infos;
-			while (pInfo != NULL && pInfo->PiDoc != doc)
-			  pInfo = pInfo->PiNext;
-			if (pInfo != NULL && pInfo->PiLink == nextLink)
-			  {
-			    pIS = pInfo->PiSchemas;
-			    while (pIS && pIS->PiSSchema != sSchema)
-			      pIS = pIS->PiSNext;
-			    if (pIS && pIS->PiPSchema)
-			      {
-				found = TRUE;
+		  oldInfo = oldcss->infos[doc];
+		  while (oldInfo && !found)
+		    {
+		      if (oldInfo != pInfo &&
+			  (oldInfo->PiCategory == CSS_USER_STYLE &&
+			   oldInfo->PiLink == nextLink))
+			{
+			  pIS = oldInfo->PiSchemas;
+			  while (pIS && pIS->PiSSchema != sSchema)
+			    pIS = pIS->PiSNext;
+			  if (pIS && pIS->PiPSchema)
+			    {
 				/* add after that schema with a higher priority */
-				prevS = pIS->PiPSchema;
-				before = FALSE;
-			      }
-			    else
-			      oldcss = oldcss->NextCSS;
-			  }
-			else
-			  oldcss = oldcss->NextCSS;
-		      }
-		    else
-		      oldcss = oldcss->NextCSS;
-		  else
+			      prevS = pIS->PiPSchema;
+			      before = FALSE;
+			      found = TRUE;
+			    }
+			}
+		      if (!found)
+			oldInfo = oldInfo->PiNext;
+		    }
+		  if (!found)
+		    /* it's not the the previous style sheet */
 		    oldcss = oldcss->NextCSS;
 		}
 	    }
@@ -441,11 +516,44 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
   return (nSchema);
 }
 
+
 /*----------------------------------------------------------------------
-   AddCSS adds a new CSS context in the list.
+  AddInfoCSS adds a new info context into the CSS context css.
+  The parameter link specifies the link and the CSS position for
+  imported style sheets.
+  ----------------------------------------------------------------------*/
+PInfoPtr AddInfoCSS (Document doc, CSSInfoPtr css, CSSCategory category,
+		     CSSmedia media,  Element link)
+{
+  PInfoPtr            pInfo;
+
+  pInfo = NULL;
+  if (css)
+    {
+      /* add the presentation info block */
+      pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
+      /* add a new entry at the beginning to avoid trouble with Synchronize */
+      pInfo->PiNext = css->infos[doc];
+      css->infos[doc] = pInfo;
+      pInfo->PiLink = link;
+      pInfo->PiSchemas = NULL;
+      pInfo->PiCategory = category;
+      pInfo->PiMedia = media;
+      /* we have to apply the style sheet to this document */
+      pInfo->PiEnabled = TRUE;
+    }
+  return pInfo;
+}
+
+
+/*----------------------------------------------------------------------
+  AddCSS adds a new CSS context in the list.
+  The parameter link specifies the link andthe CSS position for
+  imported style sheets.
   ----------------------------------------------------------------------*/
 CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
-		   char *url, char *localName, Element styleElement)
+		   CSSmedia media, char *url, char *localName,
+		   Element link)
 {
   CSSInfoPtr          css, prev;
   int                 i;
@@ -456,29 +564,19 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
       css->doc = doc;
       css->url = TtaStrdup (url);
       css->localName = TtaStrdup (localName);
-      css->styleEl = styleElement;
-      css->category = category;
-
+      css->NextCSS = NULL;
+      css ->import = (category == CSS_IMPORT);
       /* that CSS is only used by the document docRef */
       for (i = 0; i < DocumentTableLength; i++)
-	{
-	  css->documents[i] = FALSE;
-	  css->enabled[i] = FALSE;
-	  css->media[i] = CSS_ALL;
-	}
-      /* store information about this docRef */
-      css->documents[docRef] = TRUE;
-      css->enabled[docRef] = TRUE;
-      css->infos = NULL;
-      css->NextCSS = NULL;
-
+	css->infos[i] = NULL;
+      AddInfoCSS (docRef, css, category, media, link);
       /* chain to the CSS list */
       if (CSSList == NULL)
 	CSSList = css;
-      else if (category == CSS_IMPORT && styleElement)
+      else if (category == CSS_IMPORT && link)
 	{
 	  prev = CSSList;
-	  if (prev == (CSSInfoPtr) styleElement)
+	  if (prev == (CSSInfoPtr) link)
 	    {
 	      /* that CSS becomes the first entry */
 	      css->NextCSS = prev;
@@ -486,7 +584,7 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
 	    }
 	  else
 	    {
-	      while (prev->NextCSS && prev->NextCSS != (CSSInfoPtr) styleElement)
+	      while (prev->NextCSS && prev->NextCSS != (CSSInfoPtr) link)
 		prev = prev->NextCSS;
 	      css->NextCSS = prev->NextCSS;
 	      prev->NextCSS = css;
@@ -504,42 +602,73 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
 }
 
 /*----------------------------------------------------------------------
-   SearchCSS searchs the css corresponding to the specific url (doc == 0)
-   or the CSS_DOCUMENT_STYLE css of the document.
+  SearchCSS searchs the css corresponding to the specific url (doc == 0)
+  or the CSS_DOCUMENT_STYLE css of the document.
+  The parameter link specifies the link.
+  When the CSS context is found the function points to that context.
+  If the reference to the element is found within this context, it's
+  returned into the info parameter.
   ----------------------------------------------------------------------*/
-CSSInfoPtr SearchCSS (Document doc, char *url, Element styleEl)
+CSSInfoPtr SearchCSS (Document doc, char *url, Element link, PInfoPtr *info)
 {
-  CSSInfoPtr          css = CSSList;
- 
-  while (css != NULL)
+  CSSInfoPtr          css, match;
+  PInfoPtr            pInfo;
+  int                 i;
+
+  *info = NULL;
+  css = CSSList;
+  match = NULL;
+  while (css)
     {
-      if (url && ((css->url && !strcmp (url, css->url)) ||
-		  (css->localName && !strcmp (url, css->localName))))
-	/* an external CSS */
-	return css;
-      else if (doc != 0 && css->doc == doc)
-	/* a document CSS */
+      if ((url &&
+	  ((css->url && !strcmp (url, css->url)) ||
+	   (css->localName && !strcmp (url, css->localName)))) ||
+	  (url == NULL && doc && css->doc == doc))
 	{
-	  if (!styleEl)
-	    /* any document CSS is ok */
+	  if (doc == 0)
+	    /* no specific document is requested */
 	    return css;
-	  else if (css->styleEl == styleEl)
-	    return css;
+	  else
+	    {
+	      /* look for an entry with the right link */
+	      pInfo = css->infos[doc];
+	      while (pInfo)
+		{
+		  if (pInfo->PiLink == link)
+		    {
+		      *info = pInfo;
+		      return css;
+		    }
+		  else
+		    pInfo = pInfo->PiNext;
+		}
+	      /* check if the CSS is already used by another document */
+	      if (css->import)
+		{
+		  for (i = 0; i < DocumentTableLength; i++)
+		    if (css->infos[i] && css->infos[i]->PiLink == link)
+		      return css;
+		}
+	      else
+		/* it could be the right entry */
+		match = css;
+	    }
 	}
       css = css->NextCSS;
     }
-  return css;
+  return match;
 }
 
 
 /*----------------------------------------------------------------------
-   UnlinkCSS the CSS is no longer applied to this document and if the
-   parameter removed is TRUE, the link is cut.
-   If this CSS is no longer used the context and attached information
-   are freed.
+  UnlinkCSS the CSS is no longer applied to this document and if the
+  parameter removed is TRUE, the link is cut.
+  If this CSS is no longer used the context and attached information
+  are freed.
+  The parameter link specifies the link.
   ----------------------------------------------------------------------*/
-void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
-		ThotBool removed)
+void UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
+		ThotBool disabled, ThotBool removed)
 {
   CSSInfoPtr          prev;
   PInfoPtr            pInfo, prevInfo;
@@ -552,56 +681,59 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
   else
     {
       /* look for the specific P descriptors in the css */
-      pInfo = css->infos;
+      pInfo = css->infos[doc];
       prevInfo = NULL;
-      if (removed)
-	css->documents[doc] = FALSE;
-      while (pInfo != NULL && pInfo->PiDoc != doc)
-	{
-	  prevInfo = pInfo;
-	  pInfo = pInfo->PiNext;
-	}
+      if (css->doc == doc)
+	/* the document displays the CSS file itself */
+	/* or it includes a style element */
+	css->doc = 0;
+      else
+	/* look for the right entry */
+	while (pInfo && pInfo->PiLink != link)
+	  {
+	    prevInfo = pInfo;
+	    pInfo = pInfo->PiNext;
+	  }
       if (pInfo)
 	{
-	  if (removed)
-	    {
-	      /* unlink the document context from the list */
-	      if (prevInfo == NULL)
-		css->infos = pInfo->PiNext;
-	      else
-		prevInfo->PiNext = pInfo->PiNext;
-	    }
-	  if (css->enabled[doc] && css->category != CSS_EMBED)
+	  if (pInfo->PiEnabled)
 	    {
 	      /* disapply the CSS */
-	      while (pInfo->PiSchemas != NULL)
+	      while (pInfo->PiSchemas)
 		{
 		  pIS = pInfo->PiSchemas;
 		  if (pIS->PiPSchema)
 		    {
-		      TtaCleanStylePresentation (pIS->PiPSchema, pInfo->PiDoc,
+		      TtaCleanStylePresentation (pIS->PiPSchema, doc,
 						 pIS->PiSSchema);
-		      TtaUnlinkPSchema (pIS->PiPSchema, pInfo->PiDoc,
+		      TtaUnlinkPSchema (pIS->PiPSchema, doc,
 					pIS->PiSSchema);
 		      pInfo->PiSchemas = pIS->PiSNext;
 		      TtaFreeMemory (pIS);
 		    }
 		}
 	    }
-	  /* free the document context */
+	  /* the CSS is no longer applied */
+	  if (disabled)
+	    pInfo->PiEnabled = FALSE;
 	  if (removed)
-	    TtaFreeMemory (pInfo);
+	    {
+	      /* unlink the context from the list */
+	      if (prevInfo == NULL)
+		css->infos[doc] = pInfo->PiNext;
+	      else
+		prevInfo->PiNext = pInfo->PiNext;
+	      /* free the context */
+	      TtaFreeMemory (pInfo);
+	    }
 	}
 
-      /* the CSS is no longer applied */
-      if (disabled)
-	css->enabled[doc] = FALSE;
       /* look at if this css is alway used */
       used = (css->doc != 0);
       i = 1;
       while (!used && i < DocumentTableLength)
 	{
-	  used = css->documents[i];
+	  used = (css->infos[i] != NULL);
 	  i++;
 	}
       if (!used)
@@ -638,13 +770,12 @@ void RemoveDocCSSs (Document doc)
     {
       next = css->NextCSS;
       if (css->doc == doc)
-	{
-	  /* the document displays the CSS file itself */
-	  css->doc = 0;
-	  UnlinkCSS (css, doc, TRUE, TRUE);
-	}
-      else if (css->documents[doc])
-	UnlinkCSS (css, doc, TRUE, TRUE);
+	/* the document displays the CSS file itself */
+	/* or it includes a style element */
+	UnlinkCSS (css, doc, NULL, TRUE, TRUE);
+      else
+	while (css->infos[doc])
+	  UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE);
       /* look at the next CSS context */
       css = next;
     }
@@ -657,36 +788,46 @@ void RemoveDocCSSs (Document doc)
    disabled is TRUE when the CSS style sheet is disabled.
    removed is TRUE when the CSS style sheet is removed.
   ----------------------------------------------------------------------*/
-void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
-			ThotBool removed, Element styleEl)
+void RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
+		       ThotBool removed, Element link)
 {
   CSSInfoPtr      css;
-  ThotBool        found;
+  PInfoPtr        pInfo;
   DisplayMode     dispMode;
+  ThotBool        found;
 
   css = CSSList;
   found = FALSE;
   while (css && !found)
     {
-      if (url && ((css->url && !strcmp (url, css->url)) ||
-		  (css->localName && !strcmp (url, css->localName))))
-	/* an external CSS */
-	found = TRUE;
-      else if (!url && css->category == CSS_DOCUMENT_STYLE &&
-	       css->documents[doc] &&
-	       (styleEl == NULL || css->styleEl == styleEl))
-	found = TRUE;
-      else
-	css = css->NextCSS;
+      if ((url &&
+	   ((css->url && !strcmp (url, css->url)) ||
+	    (css->localName && !strcmp (url, css->localName)))) ||
+	  (!url && css->infos[doc]))
+	{
+	  pInfo = css->infos[doc];
+	  while (pInfo)
+	    {
+	      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE &&
+		  (pInfo->PiLink == NULL || pInfo->PiLink == link))
+		found = TRUE;
+	      else
+		pInfo = pInfo->PiNext;
+	    }
+	  if (found)
+	    link = pInfo->PiLink;
+	  else
+	    css = css->NextCSS;
+	}
     }
 
-  if (css != NULL)
+  if (css)
     {
       /* Change the Display Mode to take into account the new presentation */
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode != NoComputedDisplay)
 	TtaSetDisplayMode (doc, NoComputedDisplay);
-      UnlinkCSS (css, doc, disabled, removed);
+      UnlinkCSS (css, doc, link, disabled, removed);
       /* Restore the display mode */
       if (dispMode != NoComputedDisplay)
 	TtaSetDisplayMode (doc, dispMode);
@@ -733,99 +874,76 @@ char *GetStyleContents (Element el)
 
 /*----------------------------------------------------------------------
   LoadStyleSheet loads the external Style Sheet found at the given url.
-  The parameter el gives the element which links the CSS or NULL.
+  The parameter link gives the element which links the CSS or NULL.
   The parameter css gives the CSS context which imports this CSS file.
   The parameter media gives the application limits of the CSS.
   The parameter user is true when it's a User style sheet. It's false
   when it's an authr style sheet
   ----------------------------------------------------------------------*/
-void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
+void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 		     CSSmedia media, ThotBool user)
 {
-  CSSInfoPtr          oldcss, refcss = NULL;
+  CSSInfoPtr          refcss = NULL;
   PInfoPtr            pInfo;
   struct stat         buf;
   FILE               *res;
   char                tempfile[MAX_LENGTH];
   char                tempURL[MAX_LENGTH];
   char               *tmpBuff;
+  CSSCategory         category;
   int                 len;
   ThotBool            import, printing;
 
   import = (css != NULL);
+  if (import)
+    category = CSS_IMPORT;
+  else if (user)
+    category = CSS_USER_STYLE;
+  else
+    category = CSS_EXTERNAL_STYLE;
   printing = TtaIsPrinting ();
-  LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile);
-  oldcss = SearchCSS (0, tempURL, NULL);
-  if (oldcss == NULL)
+  refcss = css;
+  /* get the absolute URI */
+  LoadRemoteStyleSheet (url, doc, link, css, tempURL, tempfile);
+  css = SearchCSS (doc, tempURL, link, &pInfo);
+  if (css == NULL ||
+      (import && !css->import))
     {
       /* It's a new CSS file: allocate a new Presentation structure */
-      if (import)
-	{
-	  /* a @import CSS: add the CSS descriptor just before the main css */
-	  oldcss = AddCSS (0, doc, CSS_IMPORT, tempURL, tempfile, (Element) css);
-	  oldcss->media[doc] = media;
-	}
-      else
-	{
-	  if (user)
-	    css = AddCSS (0, doc, CSS_USER_STYLE, tempURL, tempfile, NULL);
-	  else
-	    css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile, NULL);
-	  css->media[doc] = media;
-	  oldcss = css;
-	}
+      /* or a @import CSS: add the CSS descriptor just before the main css */
+      css = AddCSS (0, doc, category, media, tempURL, tempfile, link);
+      pInfo = css->infos[doc];
     }
-  else if (!oldcss->documents[doc])
+  else
     {
-      /* we have to apply the style sheet to this document */
-      oldcss->documents[doc] = TRUE;
-      oldcss->enabled[doc] = TRUE;
-      /* update the current media value */
-      if (media == CSS_ALL)
-	oldcss->media[doc] = media;
-      else if (oldcss->media[doc] != media ||
-	       oldcss->media[doc] != CSS_ALL)
-	{
-	  if ((printing && media == CSS_PRINT) ||
-	      (!printing && media == CSS_SCREEN))
-	    oldcss->media[doc] = media;
-	}
-    }
-  
-  /* look for the CSS descriptor that points to the extension schema */
-  refcss = oldcss;
-  if (import)
-    {
-      while (refcss && refcss->category == CSS_IMPORT)
-	refcss = refcss->NextCSS;
+      if (pInfo && pInfo->PiCategory != category)
+	/* this entry doesn't match */
+	pInfo = NULL;
+      if (pInfo == NULL)
+	/* add a new entry at the end */
+	pInfo = AddInfoCSS (doc, css, category, media, link);
     }
 
+  /* look for the CSS descriptor that points to the extension schema */
+  refcss = css;
+  if (import)
+    {
+      while (refcss && refcss->import)
+	refcss = refcss->NextCSS;
+      if (refcss->infos[doc])
+	link = refcss->infos[doc]->PiLink;
+    }
+  /* now apply style rules */
+  pInfo = refcss->infos[doc];
   if (tempfile[0] == EOS)
     /* cannot do more */
     return;
-  else if (media == CSS_OTHER || oldcss == NULL ||
+  else if (media == CSS_OTHER || css == NULL ||
 	   (!printing && media == CSS_PRINT) ||
 	   (printing && media == CSS_SCREEN) ||
-	   !oldcss->enabled[doc])
+	   !pInfo->PiEnabled)
     /* nothing more to do */
     return;
-  
-
-  /* store the element which links the CSS */
-  pInfo = refcss->infos;
-  while (pInfo && pInfo->PiDoc != doc)
-    /* next info context */
-    pInfo = pInfo->PiNext;
-  if (pInfo == NULL)
-    {
-      /* add the presentation info block */
-      pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
-      pInfo->PiNext = refcss->infos;
-      pInfo->PiDoc = doc;
-      pInfo->PiLink = el;
-      pInfo->PiSchemas = NULL;
-      refcss->infos = pInfo;
-    }
 
   /* apply CSS rules in current Presentation structure (import) */
   if ( pInfo->PiSchemas == NULL || import)
@@ -859,14 +977,14 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	{
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	  fclose (res);
-	  ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE, NULL);
+	  ReadCSSRules (doc, css, tmpBuff, tempURL, 0, FALSE, NULL);
 	  TtaFreeMemory (tmpBuff);
 	  return;
 	}
       tmpBuff[buf.st_size] = 0;
       fclose (res);
 
-      ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE, NULL);
+      ReadCSSRules (doc, css, tmpBuff, tempURL, 0, FALSE, link);
       TtaFreeMemory (tmpBuff);
     }
 }

@@ -3122,6 +3122,7 @@ static Document LoadDocument (Document doc, char *pathname,
 			      ThotBool history, ThotBool *inNewWindow)
 {
   CSSInfoPtr          css;
+  PInfoPtr            pInfo;
   Document            newdoc = 0;
   DocumentType        docType;
 #ifdef ANNOTATIONS
@@ -3666,7 +3667,7 @@ static Document LoadDocument (Document doc, char *pathname,
       /* store a copy of CSS files in the directory 0 */
       if (DocumentTypes[newdoc] == docCSS)
 	{ 
-	  css = SearchCSS (0, pathname, NULL);
+	  css = SearchCSS (0, pathname, NULL, &pInfo);
 	  if (css == NULL)
 	    {
 	      /* store a copy of this new CSS context in .amaya/0 */
@@ -3674,9 +3675,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	      TtaFileCopy (tempdocument, s);
 	      /* initialize a new CSS context */
 	      if (UserCSS && !strcmp (pathname, UserCSS))
-		AddCSS (newdoc, 0, CSS_USER_STYLE, NULL, s, NULL);
+		AddCSS (newdoc, 0, CSS_USER_STYLE, CSS_ALL, NULL, s, NULL);
 	      else
-		AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, s, NULL);
+		AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, CSS_ALL, pathname, s, NULL);
 	      TtaFreeMemory (s);
 	    }
 	  else
@@ -4744,295 +4745,295 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 		      ThotBool history, TTcbf *cbf, void *ctx_cbf,
 		      CHARSET charset)
 {
-   Document            newdoc;
-   CSSInfoPtr          css;
-   char               *tempfile;
-   char               *tempdocument;
-   char               *parameters;
-   char               *target;
-   char               *pathname;
-   char               *documentname;
-   char               *content_type = NULL;
-   int                 toparse;
-   int                 mode;
-   int                 docType;
-   ThotBool            ok;
-   GETHTMLDocument_context *ctx = NULL;
+  Document            newdoc;
+  CSSInfoPtr          css;
+  PInfoPtr            pInfo;
+  GETHTMLDocument_context *ctx = NULL;
+  char               *tempfile;
+  char               *tempdocument;
+  char               *parameters;
+  char               *target;
+  char               *pathname;
+  char               *documentname;
+  char               *content_type = NULL;
+  int                 toparse;
+  int                 mode;
+  int                 docType;
+  ThotBool            ok;
 
-   /* Extract parameters if necessary */
-   if (strlen (documentPath) > MAX_LENGTH - 1) 
-     {
-       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
-       return (0);
-     }
-   else
-     /* clean up the status line */
-     TtaSetStatus (baseDoc, 1, " ", NULL);
-   ok = TRUE;
-   target       = TtaGetMemory (MAX_LENGTH);
-   documentname = TtaGetMemory (MAX_LENGTH);
-   parameters   = TtaGetMemory (MAX_LENGTH);
-   tempfile     = TtaGetMemory (MAX_LENGTH);
-   tempfile[0]  = EOS;
-   pathname     = TtaGetMemory (MAX_LENGTH);
-   /* Store DocumentURLs and DocHistory in UTF-8 */
-   tempdocument = TtaConvertByteToMbs (documentPath, charset);
-   ExtractParameters (tempdocument, parameters);
-   /* Extract the target if necessary */
-   ExtractTarget (tempdocument, target);
-   /* Add the  base content if necessary */
-   if (method == CE_RELATIVE || method == CE_FORM_GET ||
-       method == CE_FORM_POST || method == CE_MAKEBOOK)
-     NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
-   else
+  /* Extract parameters if necessary */
+  if (strlen (documentPath) > MAX_LENGTH - 1) 
+    {
+      TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
+      return (0);
+    }
+  else
+    /* clean up the status line */
+    TtaSetStatus (baseDoc, 1, " ", NULL);
+  ok = TRUE;
+  target       = TtaGetMemory (MAX_LENGTH);
+  documentname = TtaGetMemory (MAX_LENGTH);
+  parameters   = TtaGetMemory (MAX_LENGTH);
+  tempfile     = TtaGetMemory (MAX_LENGTH);
+  tempfile[0]  = EOS;
+  pathname     = TtaGetMemory (MAX_LENGTH);
+  /* Store DocumentURLs and DocHistory in UTF-8 */
+  tempdocument = TtaConvertByteToMbs (documentPath, charset);
+  ExtractParameters (tempdocument, parameters);
+  /* Extract the target if necessary */
+  ExtractTarget (tempdocument, target);
+  /* Add the  base content if necessary */
+  if (method == CE_RELATIVE || method == CE_FORM_GET ||
+      method == CE_FORM_POST || method == CE_MAKEBOOK)
+    NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
+  else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
-   /* check the document suffix */
-   if (IsMathMLName (documentname))
-     docType = docMath;
-   else if (IsSVGName (documentname))
-     docType = docSVG;
-   else if (IsCSSName (documentname))
-     docType = docCSS;
-   else if (IsTextName (documentname))
+  /* check the document suffix */
+  if (IsMathMLName (documentname))
+    docType = docMath;
+  else if (IsSVGName (documentname))
+    docType = docSVG;
+  else if (IsCSSName (documentname))
+    docType = docCSS;
+  else if (IsTextName (documentname))
      docType = docText;
 #ifdef XML_GENERIC
-   else if (IsXMLName (documentname))
-     docType = docXml;
+  else if (IsXMLName (documentname))
+    docType = docXml;
 #endif /* XML_GENERIC */
 #ifdef _SVGLIB
-   else if (IsLibraryName (documentname))
-     docType = docLibrary;
+  else if (IsLibraryName (documentname))
+    docType = docLibrary;
 #endif /* _SVGLIB */
-   else if (method == CE_CSS)
-     docType = docCSS;
-   else
-     docType = docHTML;
-     
+  else if (method == CE_CSS)
+    docType = docCSS;
+  else
+    docType = docHTML;
+  
    /* we skip the file: prefix if it is present and do other local
-    file urls conversions */
-   if (!IsW3Path (pathname))
-       {
-	 /* we take the long way around to get the result
-	    of normalizeFile, as the function doesn't allocate
-	    memory dynamically (note: this can generate some MAX_LENGTH
-	    problems) */
-	 if (method == CE_RELATIVE || method == CE_FORM_GET ||
-	     method == CE_ANNOT || method == CE_FORM_POST ||
-	     method == CE_MAKEBOOK)
-	   /* we're following a link, so do all the convertions on
-	      the URL */
-	   NormalizeFile (pathname, tempfile, AM_CONV_ALL);
-	 else
-	   NormalizeFile (pathname, tempfile, AM_CONV_NONE);
-	 strcpy (pathname, tempfile);
-	 tempfile[0] = EOS;
-       }
+      file urls conversions */
+  if (!IsW3Path (pathname))
+    {
+      /* we take the long way around to get the result
+	 of normalizeFile, as the function doesn't allocate
+	 memory dynamically (note: this can generate some MAX_LENGTH
+	 problems) */
+      if (method == CE_RELATIVE || method == CE_FORM_GET ||
+	  method == CE_ANNOT || method == CE_FORM_POST ||
+	  method == CE_MAKEBOOK)
+	/* we're following a link, so do all the convertions on
+	   the URL */
+	NormalizeFile (pathname, tempfile, AM_CONV_ALL);
+      else
+	NormalizeFile (pathname, tempfile, AM_CONV_NONE);
+      strcpy (pathname, tempfile);
+      tempfile[0] = EOS;
+    }
 
-   /* check if the user is already browsing the document in another window */
-   if (method == CE_FORM_GET)
-     {
-       newdoc = IsDocumentLoaded (pathname, form_data);
-       /* we don't concatenate the new parameters as we give preference
-	  to the form data */
-     }
-   else
-     {
-       /* concatenate the parameters before making the test */
-       if (parameters[0] != EOS)
-	 {
-	   strcat (pathname, "?");
-	   strcat (pathname, parameters);
-	 }
-       /* if it's a POST form, we search the document using the
-	  form_data */
-       if (method == CE_FORM_POST)
-	 newdoc = IsDocumentLoaded (pathname, form_data);
-       else
-	 newdoc = IsDocumentLoaded (pathname, NULL);
-     }
+  /* check if the user is already browsing the document in another window */
+  if (method == CE_FORM_GET)
+    {
+      newdoc = IsDocumentLoaded (pathname, form_data);
+      /* we don't concatenate the new parameters as we give preference
+	 to the form data */
+    }
+  else
+    {
+      /* concatenate the parameters before making the test */
+      if (parameters[0] != EOS)
+	{
+	  strcat (pathname, "?");
+	  strcat (pathname, parameters);
+	}
+      /* if it's a POST form, we search the document using the
+	 form_data */
+      if (method == CE_FORM_POST)
+	newdoc = IsDocumentLoaded (pathname, form_data);
+      else
+	newdoc = IsDocumentLoaded (pathname, NULL);
+    }
 
-   if (newdoc != 0)
-     /* the document is already loaded */
-     {
-
-       if (newdoc == doc)
-	 /* it's a move in the same document */
-	 {
-	   if (history)
+  if (newdoc != 0)
+    /* the document is already loaded */
+    {
+      if (newdoc == doc)
+	/* it's a move in the same document */
+	{
+	  if (history)
 	     /* record the current position in the history */
-	     AddDocHistory (newdoc, DocumentURLs[newdoc], 
-			    DocumentMeta[doc]->initial_url,
-			    DocumentMeta[doc]->form_data,
-			    DocumentMeta[doc]->method);
-	 }
-       else
-	 /* following the link to another open window */
-	 {
-	   /* raise its window */
-	   TtaRaiseView (newdoc, 1);
-	   /* don't add it to the doc's historic */
-	   history = FALSE;
-	 }
-     }
+	    AddDocHistory (newdoc, DocumentURLs[newdoc], 
+			   DocumentMeta[doc]->initial_url,
+			   DocumentMeta[doc]->form_data,
+			   DocumentMeta[doc]->method);
+	}
+      else
+	/* following the link to another open window */
+	{
+	  /* raise its window */
+	  TtaRaiseView (newdoc, 1);
+	  /* don't add it to the doc's historic */
+	  history = FALSE;
+	}
+    }
 
-   /* Create the context for the callback */
-   ctx = TtaGetMemory (sizeof (GETHTMLDocument_context));
-   ctx->doc = doc;
-   ctx->baseDoc = baseDoc;
-   ctx->history = history;
-   ctx->target = target;
-   ctx->documentname = documentname;
-   ctx->initial_url = TtaStrdup (pathname);
-   if (form_data)
-     ctx->form_data = TtaStrdup (form_data);
-   else
-     ctx->form_data = NULL;
-   ctx->method = method;
-   ctx->cbf = cbf;
-   ctx->ctx_cbf = ctx_cbf;
-   ctx->local_link = 0;
-   ctx->inNewWindow = InNewWindow;
+  /* Create the context for the callback */
+  ctx = TtaGetMemory (sizeof (GETHTMLDocument_context));
+  ctx->doc = doc;
+  ctx->baseDoc = baseDoc;
+  ctx->history = history;
+  ctx->target = target;
+  ctx->documentname = documentname;
+  ctx->initial_url = TtaStrdup (pathname);
+  if (form_data)
+    ctx->form_data = TtaStrdup (form_data);
+  else
+    ctx->form_data = NULL;
+  ctx->method = method;
+  ctx->cbf = cbf;
+  ctx->ctx_cbf = ctx_cbf;
+  ctx->local_link = 0;
+  ctx->inNewWindow = InNewWindow;
 
-   toparse = 0;
-   if (newdoc == 0)
-     {
-       /* document not loaded yet */
-       if ((method == CE_RELATIVE || method == CE_FORM_GET ||
-	    method == CE_FORM_POST || method == CE_MAKEBOOK ||
-	    method == CE_ANNOT) &&
-	    !IsW3Path (pathname) && !TtaFileExist (pathname))
-	 {
-	   /* the target document doesn't exist */
-	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
-	   ok = FALSE; /* do not continue */
-	 }
-       else if (method == CE_LOG)
-	   /* need to create a new window for the document */
-	     newdoc = InitDocAndView (doc, documentname, docLog, 0, FALSE,
-				      L_Other, method);
-       else if (method == CE_HELP)
-	 {
-	   /* add the URI in the combobox string */
-	   AddURLInCombobox (pathname, NULL, FALSE);
-	   /* need to create a new window for the document */
-	   newdoc = InitDocAndView (doc, documentname, docType, 0, TRUE,
-				    L_Other, method);
-	   if (newdoc)
-	     {
-	       /* help document has to be in read-only mode */
-	       TtcSwitchCommands (newdoc, 1); /* no command open */
-	       TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
-	       TtaSetMenuOff (newdoc, 1, Help_);
-	     }
-	 }
+  toparse = 0;
+  if (newdoc == 0)
+    {
+      /* document not loaded yet */
+      if ((method == CE_RELATIVE || method == CE_FORM_GET ||
+	   method == CE_FORM_POST || method == CE_MAKEBOOK ||
+	   method == CE_ANNOT) &&
+	  !IsW3Path (pathname) && !TtaFileExist (pathname))
+	{
+	  /* the target document doesn't exist */
+	  TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
+	  ok = FALSE; /* do not continue */
+	}
+      else if (method == CE_LOG)
+	/* need to create a new window for the document */
+	newdoc = InitDocAndView (doc, documentname, docLog, 0, FALSE,
+				 L_Other, method);
+      else if (method == CE_HELP)
+	{
+	  /* add the URI in the combobox string */
+	  AddURLInCombobox (pathname, NULL, FALSE);
+	  /* need to create a new window for the document */
+	  newdoc = InitDocAndView (doc, documentname, docType, 0, TRUE,
+				   L_Other, method);
+	  if (newdoc)
+	    {
+	      /* help document has to be in read-only mode */
+	      TtcSwitchCommands (newdoc, 1); /* no command open */
+	      TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
+	      TtaSetMenuOff (newdoc, 1, Help_);
+	    }
+	}
 #ifdef ANNOTATIONS
-       else if (method == CE_ANNOT)
-	 {
-	   /* need to create a new window for the document */
-	   newdoc = InitDocAndView (doc, documentname, docAnnot, 0, FALSE,
-				    L_Other, method);
-	   /* we're downloading an annotation, fix the accept_header
-	      (thru the content_type variable) to application/rdf */
-	   content_type = "application/rdf";
-	 }
+      else if (method == CE_ANNOT)
+	{
+	  /* need to create a new window for the document */
+	  newdoc = InitDocAndView (doc, documentname, docAnnot, 0, FALSE,
+				   L_Other, method);
+	  /* we're downloading an annotation, fix the accept_header
+	     (thru the content_type variable) to application/rdf */
+	  content_type = "application/rdf";
+	}
 #endif /* ANNOTATIONS */
-       else if (doc == 0 || InNewWindow)
-	 {
-	   /* In case of initial document, open the view before loading */
-	   /* add the URI in the combobox string */
-	   AddURLInCombobox (pathname, NULL, FALSE);
-	   newdoc = InitDocAndView (0, documentname, docType, 0, FALSE,
-				    L_Other, method);
-	 }
-       else
-	 {
-	   newdoc = doc;
-	   /* stop current transfer for previous document */
-	   if (method != CE_MAKEBOOK)
-	     StopTransfer (baseDoc, 1);
-	   else
-	     /* temporary docs to make a book are not in ReadOnly mode */
-	     DocumentTypes[newdoc] = docHTML;
-	 }
+      else if (doc == 0 || InNewWindow)
+	{
+	  /* In case of initial document, open the view before loading */
+	  /* add the URI in the combobox string */
+	  AddURLInCombobox (pathname, NULL, FALSE);
+	  newdoc = InitDocAndView (0, documentname, docType, 0, FALSE,
+				   L_Other, method);
+	}
+      else
+	{
+	  newdoc = doc;
+	  /* stop current transfer for previous document */
+	  if (method != CE_MAKEBOOK)
+	    StopTransfer (baseDoc, 1);
+	  else
+	    /* temporary docs to make a book are not in ReadOnly mode */
+	    DocumentTypes[newdoc] = docHTML;
+	}
+      
+      if (newdoc == 0)
+	/* cannot display the new document */
+	ok = FALSE;
+      if (ok)
+	{
+	  /* this document is currently in load */
+	  W3Loading = newdoc;
+	  ActiveTransfer (newdoc);
+	  /* set up the transfer mode */
+	  mode = AMAYA_ASYNC | AMAYA_FLUSH_REQUEST;
 
-       if (newdoc == 0)
-	 /* cannot display the new document */
-	 ok = FALSE;
-       if (ok)
-	 {
-	   /* this document is currently in load */
-	   W3Loading = newdoc;
-	   ActiveTransfer (newdoc);
-	   /* set up the transfer mode */
-	   mode = AMAYA_ASYNC | AMAYA_FLUSH_REQUEST;
+	  if (method == CE_FORM_POST)
+	    mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
+	  else if (method == CE_MAKEBOOK)
+	    mode = AMAYA_ASYNC;
 
-	   if (method == CE_FORM_POST)
-	     mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
-	   else if (method == CE_MAKEBOOK)
-	     mode = AMAYA_ASYNC;
-
-	   if (IsW3Path (pathname))
-	     {
-	       css = SearchCSS (0, pathname, NULL);
-	       if (css == NULL)
-		 toparse =  GetObjectWWW (newdoc, pathname, form_data,
-					  tempfile, mode, NULL, NULL,
-					  (void *) GetAmayaDoc_callback,
-					  (void *) ctx, YES, content_type);
-	       else
-		 {
-		   /* it was already loaded, we need to open it */
-		   TtaSetStatus (newdoc, 1,
-				 TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-		   /* just take a copy of the local temporary file */
-		   strcpy (tempfile, css->localName);
-		   GetAmayaDoc_callback (newdoc, 0, pathname,
-					 tempfile, NULL, (void *) ctx);
-		   TtaHandlePendingEvents ();
-		 }
-	     }
-	   else
-	     {
-	       /* wasn't a document off the web, we need to open it */
-	       TtaSetStatus (newdoc, 1,
-			     TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
-			     NULL);
-	       GetAmayaDoc_callback (newdoc, 0, pathname, tempfile,
-					 NULL, (void *) ctx);
-	       TtaHandlePendingEvents ();
-	     }
-	 }
-     }
-   else if (ok && newdoc != 0)
-     {
-       /* following a local link */
-       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-       ctx->local_link = 1;
-       GetAmayaDoc_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
-       TtaHandlePendingEvents ();
-     }
-
-   if (ok == FALSE)
-     /* if the document isn't loaded off the web (because of an error, or 
-	because it was already loaded), we invoke the callback function */
-     {
-       if (ctx->form_data)
-	 TtaFreeMemory (ctx->form_data);
-       TtaFreeMemory (ctx->initial_url);
-       if (ctx)
-	 TtaFreeMemory (ctx);
-       if (cbf)
-	 (*cbf) (newdoc, -1, pathname, tempfile, NULL, ctx_cbf);
-       /* Free the memory associated with the context */
-       TtaFreeMemory (target);
-       TtaFreeMemory (documentname);
-     }
-   TtaFreeMemory (parameters);
-   TtaFreeMemory (tempfile);
-   TtaFreeMemory (pathname);
-   TtaFreeMemory (tempdocument);
-   InNewWindow = FALSE;
-   return (newdoc);
+	  if (IsW3Path (pathname))
+	    {
+	      css = SearchCSS (0, pathname, NULL, &pInfo);
+	      if (css == NULL)
+		toparse =  GetObjectWWW (newdoc, pathname, form_data,
+					 tempfile, mode, NULL, NULL,
+					 (void *) GetAmayaDoc_callback,
+					 (void *) ctx, YES, content_type);
+	      else
+		{
+		  /* it was already loaded, we need to open it */
+		  TtaSetStatus (newdoc, 1,
+				TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+		  /* just take a copy of the local temporary file */
+		  strcpy (tempfile, css->localName);
+		  GetAmayaDoc_callback (newdoc, 0, pathname,
+					tempfile, NULL, (void *) ctx);
+		  TtaHandlePendingEvents ();
+		}
+	    }
+	  else
+	    {
+	      /* wasn't a document off the web, we need to open it */
+	      TtaSetStatus (newdoc, 1,
+			    TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
+			    NULL);
+	      GetAmayaDoc_callback (newdoc, 0, pathname, tempfile,
+				    NULL, (void *) ctx);
+	      TtaHandlePendingEvents ();
+	    }
+	}
+    }
+  else if (ok && newdoc != 0)
+    {
+      /* following a local link */
+      TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+      ctx->local_link = 1;
+      GetAmayaDoc_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
+      TtaHandlePendingEvents ();
+    }
+  
+  if (ok == FALSE)
+    /* if the document isn't loaded off the web (because of an error, or 
+       because it was already loaded), we invoke the callback function */
+    {
+      if (ctx->form_data)
+	TtaFreeMemory (ctx->form_data);
+      TtaFreeMemory (ctx->initial_url);
+      if (ctx)
+	TtaFreeMemory (ctx);
+      if (cbf)
+	(*cbf) (newdoc, -1, pathname, tempfile, NULL, ctx_cbf);
+      /* Free the memory associated with the context */
+      TtaFreeMemory (target);
+      TtaFreeMemory (documentname);
+    }
+  TtaFreeMemory (parameters);
+  TtaFreeMemory (tempfile);
+  TtaFreeMemory (pathname);
+  TtaFreeMemory (tempdocument);
+  InNewWindow = FALSE;
+  return (newdoc);
 }
 
 /*----------------------------------------------------------------------

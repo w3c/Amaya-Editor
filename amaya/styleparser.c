@@ -3015,10 +3015,11 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   Element                    el;
   PSchema                    tsch;
   CSSInfoPtr                 css;
+  PInfoPtr                   pInfo;
   PresentationContext        context;
   PresentationValue          image;
   PresentationValue          value;
-
+  ThotBool                   enabled;
   callblock = (BackgroundImageCallbackPtr) extra;
   if (callblock == NULL)
     return;
@@ -3072,11 +3073,18 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   else if (css)
     {
       for (doc = 1; doc < DocumentTableLength; doc++)
-	if (css->documents[doc] && css->enabled[doc] &&
+	if (css->infos[doc] &&
 	    /* don't manage a document used by make book */
 	    (DocumentMeta[doc] == NULL ||
 	     DocumentMeta[doc]->method != CE_MAKEBOOK))
 	  {
+	    pInfo = css->infos[doc];
+	    enabled = FALSE;
+	    while (pInfo && !enabled)
+	      {
+		enabled = pInfo->PiEnabled;
+		pInfo = pInfo->PiNext;
+	      }
 	    /* Change the Display Mode to take into account the new presentation */
 	    dispMode = TtaGetDisplayMode (doc);
 	    if (dispMode == DisplayImmediately)
@@ -3375,7 +3383,9 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
     cssRule = SkipWord (cssRule);
   else if (isdigit (*cssRule) || *cssRule == '.')
     {
-      cssRule = SkipWord (cssRule);
+      while (*cssRule != EOS && *cssRule != SPACE &&
+	     *cssRule != ',' && *cssRule != ';')
+	cssRule++;
     }
   else
     ok = FALSE;
@@ -4408,7 +4418,7 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
   ----------------------------------------------------------------------*/
 static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
 				   GenericContext ctxt, Document doc,
-				   CSSInfoPtr css)
+				   CSSInfoPtr css, Element link)
 {
   ElementType        elType;
   PSchema            tsch;
@@ -5032,7 +5042,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
   /* Get the schema name of the main element */
   schemaName = TtaGetSSchemaName (ctxt->schema);
   isHTML = (strcmp (schemaName, "HTML") == 0);
-  tsch = GetPExtension (doc, ctxt->schema, css);
+  tsch = GetPExtension (doc, ctxt->schema, css, link);
   if (tsch && cssRule)
     ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
   /* future CSS rules should apply */
@@ -5041,14 +5051,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
 }
 
 /*----------------------------------------------------------------------
-   ParseStyleDeclaration: parse a style declaration    
-   stored in the style element of a document                       
-   We expect the style string to be of the form:                   
-   [                                                                
-   e.g: pinky, awful { color: pink, font-family: helvetica }        
+  ParseStyleDeclaration: parse a style declaration stored in the style
+  element of a document                       
+  We expect the style string to be of the form:                   
+  .pinky, .awful { color: pink; font-family: helvetica }        
   ----------------------------------------------------------------------*/
-static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
-				    CSSInfoPtr css, ThotBool destroy)
+static void ParseStyleDeclaration (Element el, char *cssRule, Document doc,
+				   CSSInfoPtr css, Element link, ThotBool destroy)
 {
   GenericContext      ctxt;
   char                sel[MAX_ANCESTORS * 50];
@@ -5091,7 +5100,8 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   ctxt->destroy = destroy;
 
   while (selector && *selector != EOS)
-    selector = ParseGenericSelector (selector, cssRule, sel, ctxt, doc, css);
+    selector = ParseGenericSelector (selector, cssRule, sel, ctxt, doc,
+				     css, link);
   TtaFreeMemory (ctxt);
 }
 
@@ -5106,7 +5116,7 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
    implicit one, eg "H1" or "H2 EM" meaning it's a GI name       
    or an HTML context name.                                      
   ----------------------------------------------------------------------*/
-int         IsImplicitClassName (char *class, Document doc)
+int IsImplicitClassName (char *class, Document doc)
 {
    char         name[200];
    char        *cur = name;
@@ -5223,7 +5233,7 @@ void HTMLSetAactiveColor (Document doc, char *color)
 /*----------------------------------------------------------------------
    HTMLSetAvisitedColor:                                          
   ----------------------------------------------------------------------*/
-void                HTMLSetAvisitedColor (Document doc, char *color)
+void HTMLSetAvisitedColor (Document doc, char *color)
 {
    char           css_command[100];
 
@@ -5234,7 +5244,7 @@ void                HTMLSetAvisitedColor (Document doc, char *color)
 /*----------------------------------------------------------------------
    HTMLResetAlinkColor:                                           
   ----------------------------------------------------------------------*/
-void                HTMLResetAlinkColor (Document doc)
+void HTMLResetAlinkColor (Document doc)
 {
    char           css_command[100];
 
@@ -5245,7 +5255,7 @@ void                HTMLResetAlinkColor (Document doc)
 /*----------------------------------------------------------------------
    HTMLResetAactiveColor:                                                 
   ----------------------------------------------------------------------*/
-void                HTMLResetAactiveColor (Document doc)
+void HTMLResetAactiveColor (Document doc)
 {
    char           css_command[100];
 
@@ -5256,7 +5266,7 @@ void                HTMLResetAactiveColor (Document doc)
 /*----------------------------------------------------------------------
    HTMLResetAvisitedColor:                                        
   ----------------------------------------------------------------------*/
-void                HTMLResetAvisitedColor (Document doc)
+void HTMLResetAvisitedColor (Document doc)
 {
    char           css_command[100];
 
@@ -5265,18 +5275,22 @@ void                HTMLResetAvisitedColor (Document doc)
 }
 
 /*----------------------------------------------------------------------
-  ApplyCSSRules: parse a CSS Style description stored in the
-  header of a HTML document.
+  ApplyCSSRules: parse a CSS Style description stored in the header of
+  a HTML document.
   ----------------------------------------------------------------------*/
 void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
 {
-  CSSInfoPtr        css;
+  CSSInfoPtr          css;
+  PInfoPtr            pInfo;
 
-  css = SearchCSS (doc, NULL, el);
+  css = SearchCSS (doc, NULL, el, &pInfo);
   if (css == NULL)
-    /* create the document css */
-    css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL, el);
-  ParseStyleDeclaration (el, cssRule, doc, css, destroy); 
+    /* create the document css context */
+    css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, CSS_ALL, NULL, NULL, el);
+  else if (pInfo == NULL)
+    /* create the entry into the css context */
+    pInfo = AddInfoCSS (doc, css, CSS_DOCUMENT_STYLE, CSS_ALL, el);
+  ParseStyleDeclaration (el, cssRule, doc, css, el, destroy); 
 }
 
 /*----------------------------------------------------------------------
@@ -5302,9 +5316,11 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
   ----------------------------------------------------------------------*/
 char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		   int numberOfLinesRead, ThotBool withUndo,
-		   Element styleElement)
+		   Element link)
 {
   DisplayMode         dispMode;
+  CSSInfoPtr          refcss = NULL;
+  PInfoPtr            pInfo;
   char                c;
   char               *cssRule, *base, *saveDocURL, *ptr;
   int                 index;
@@ -5317,7 +5333,6 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   ThotBool            toParse, eof, quoted;
   ThotBool            ignoreMedia, media;
   ThotBool            noRule, ignoreImport, skip;
-  CSSInfoPtr          refcss = NULL;
 
   CSScomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
@@ -5344,16 +5359,25 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 
   /* look for the CSS context */
   if (css == NULL)
-    css = SearchCSS (docRef, NULL, styleElement);
+    css = SearchCSS (docRef, NULL, link, &pInfo);
   if (css == NULL)
-    css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL,
-		  styleElement);
+    {
+      css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, CSS_ALL, NULL, NULL, link);
+      pInfo = css->infos[docRef];
+    }
+  else if (pInfo == NULL)
+    pInfo = AddInfoCSS (docRef, css, CSS_DOCUMENT_STYLE, CSS_ALL, link);
+  else
+    pInfo = css->infos[docRef];
   /* look for the CSS descriptor that points to the extension schema */
   refcss = css;
   if (import)
     {
-      while (refcss && refcss->category == CSS_IMPORT)
+      while (refcss &&
+	   refcss->infos[docRef] && refcss->infos[docRef]->PiCategory == CSS_IMPORT)
 	refcss = refcss->NextCSS;
+      if (refcss)
+	pInfo = refcss->infos[docRef];
     }
 
   /* register parsed CSS file and the document to which CSS are to be applied*/
@@ -5546,7 +5570,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		{
 		  /* future import rules must be ignored */
 		  ignoreImport = TRUE;
-		  ParseStyleDeclaration (NULL, CSSbuffer, docRef, refcss, FALSE);
+		  ParseStyleDeclaration (NULL, CSSbuffer, docRef, refcss, link, FALSE);
 		  LineNumber += newlines;
 		  newlines = 0;
 		  NewLineSkipped = 0;
@@ -5618,9 +5642,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		      ptr = TtaStrdup (base);
 		      /* get the CSS URI in UTF-8 */
 		      ptr = ReallocUTF8String (ptr, docRef);
-		      LoadStyleSheet (base, docRef, NULL, css,
-				      css->media[docRef],
-				      css->category == CSS_USER_STYLE);
+		      LoadStyleSheet (base, docRef, (Element) css, css,
+				      pInfo->PiMedia,
+				      pInfo->PiCategory == CSS_USER_STYLE);
 		      /* restore the displayed URL when an error is reported */
 		      DocURL = saveDocURL;
 		      TtaFreeMemory (ptr);

@@ -17,7 +17,6 @@ extern void EmbedStyleSheets ( Document docsrc,
                                Document docdest );
 extern void UpdateStyleSheet ( char *url,
                                char *tempdoc );
-extern void AttrMediaChanged ( NotifyAttribute *event );
 extern char *CssToPrint ( Document doc,
                           char *printdir );
 extern void InitCSS ( void );
@@ -45,7 +44,6 @@ extern void EmbedStyleSheets (/* Document docsrc,
                                  Document docdest */);
 extern void UpdateStyleSheet (/* char *url,
                                  char *tempdoc */);
-extern void AttrMediaChanged (/* NotifyAttribute *event */);
 extern char *CssToPrint (/* Document doc,
                             char *printdir */);
 extern void InitCSS (/* void */);
