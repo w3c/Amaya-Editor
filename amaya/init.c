@@ -3079,6 +3079,7 @@ View                view;
 	                            DocumentMeta[document]->put_default_name;
 	 DocumentMeta[sourceDoc]->xmlformat = FALSE;
 	 DocumentTypes[sourceDoc] = docSource;
+	 TtaSetDocumentCharset (sourceDoc, TtaGetDocumentCharset (document));
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
 		      tempdocument, TRUE);

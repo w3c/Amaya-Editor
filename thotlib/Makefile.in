@@ -293,7 +293,7 @@ PRINT_OBJ= \
 	editing/print.o
 
 tree/paginatePP.o : @srcdir@/tree/paginate.c @srcdir@/include/thot_sys.h
-	$(CC) $(CFLAGS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
+	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
 
 print : ../bin ../bin/print
 

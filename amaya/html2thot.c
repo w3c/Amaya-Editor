@@ -5572,12 +5572,7 @@ STRING	           pathURL;
   NumberOfLinesRead = 1; 
   CurrentBufChar = 0;
 
-  if (DocumentTypes[doc] == docSource)
-    {
-      htmlDoc = GetDocFromSource (doc);
-      isUTF8 = (TtaGetDocumentCharset (htmlDoc) == UTF_8);
-    }
-
+  isUTF8 = (TtaGetDocumentCharset (doc) == UTF_8);
   /* initialize input buffer */
   charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
   parent = TtaGetMainRoot (doc);
