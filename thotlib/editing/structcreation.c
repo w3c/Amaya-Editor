@@ -689,12 +689,13 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 			    if (!opened)
 			      OpenHistorySequence (pDoc, pEl, pEl, NULL,
 						   firstChar, lastChar);
-			    AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
-			    if (!opened)
-			      CloseHistorySequence (pDoc);
+			    AddEditOpInHistory (pEl, pDoc, TRUE, FALSE);
 			    InsertOption (pEl, &pE, pDoc);
+			    AddEditOpInHistory (pE, pDoc, FALSE, TRUE);
 			    if (pEl == pE && ident)
 			      pLeaf = pEl;
+			    if (!opened)
+			      CloseHistorySequence (pDoc);
 			  }
 			else
 			  /* compte les elements nouvellement crees au 1er niveau */

@@ -3641,15 +3641,21 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 	  dispMode = TtaGetDisplayMode (doc);
 	  if (dispMode == DisplayImmediately)
 	    TtaSetDisplayMode (doc, DeferredDisplay);
-	  if (AbsBoxSelectedAttr && FirstSelectedCharInAttr < LastSelectedCharInAttr)
-	    /* the history sequence will be closed at the end of the insertion */
-	    OpenHistorySequence (pDoc, firstEl, lastEl,
-				 AbsBoxSelectedAttr->AbCreatorAttr,
-				 FirstSelectedCharInAttr,
-				 LastSelectedCharInAttr);
-	  else if (firstChar < lastChar)
-	    /* the history sequence will be closed at the end of the insertion */
-	    OpenHistorySequence (pDoc, firstEl, lastEl, NULL, firstChar, lastChar);
+	  if (!pDoc->DocEditSequence)
+	    /* there is no history sequence open yet. Open a new sequence. */
+	    {
+	      /* the history sequence will be closed at the end of the
+		 insertion */
+	      if (AbsBoxSelectedAttr &&
+		  FirstSelectedCharInAttr < LastSelectedCharInAttr)
+		OpenHistorySequence (pDoc, firstEl, lastEl,
+				     AbsBoxSelectedAttr->AbCreatorAttr,
+				     FirstSelectedCharInAttr,
+				     LastSelectedCharInAttr);
+	      else
+		OpenHistorySequence (pDoc, firstEl, lastEl, NULL, firstChar,
+				     lastChar);
+	    }
 	  /* lock tables formatting */
 	  if (ThotLocalActions[T_islock])
 	    {
