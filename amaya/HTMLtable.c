@@ -902,10 +902,11 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 {
   Element            *colElement;
   Element             row, nextRow, firstrow, colhead, prevColhead;
-  Element             cell, nextCell, group, prevGroup, new_;
+  Element             cell, nextCell, group, prevGroup, new_, prev;
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
+  SSchema             tableSS;
   int                *colVSpan;
   int                 span, cRef, cNumber;
   int                 i, rowType;
@@ -917,7 +918,8 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   colVSpan = (int *)TtaGetMemory (sizeof (int) * MAX_COLS);
   /* store the list of colheads */
   elType = TtaGetElementType (table);
-  inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+  tableSS = elType.ElSSchema;
+  inMath = TtaSameSSchemas (tableSS, TtaGetSSchema ("MathML", doc));
   if (inMath)
     {
       elType.ElTypeNum = MathML_EL_MColumn_head;
@@ -928,7 +930,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       elType.ElTypeNum = HTML_EL_Column_head;
       rowType = HTML_EL_Table_row;
     }
-  
+
   colhead = TtaSearchTypedElement (elType, SearchForward, table);
   cNumber = 0;
   while (colhead != 0 && cNumber < MAX_COLS)
@@ -939,9 +941,9 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       cNumber++;
     }
   cell = NULL;
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrTypeHSpan.AttrSSchema = elType.ElSSchema;
-  attrTypeVSpan.AttrSSchema = elType.ElSSchema;
+  attrType.AttrSSchema = tableSS;
+  attrTypeHSpan.AttrSSchema = tableSS;
+  attrTypeVSpan.AttrSSchema = tableSS;
   if (inMath)
     {
       attrTypeHSpan.AttrTypeNum = MathML_ATTR_columnspan;
@@ -959,7 +961,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
     row = firstrow;
     /* the rows group could be thead, tbody, tfoot */
     group = TtaGetParent (row);
-    while (row != NULL)
+    while (row)
       {
       nextRow = row;
       TtaNextSibling (&nextRow);
@@ -971,8 +973,23 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	/* treat all cells in the row */
 	cRef = 0;
 	cell = NULL;
+	/* get the first cell in the row, ignoring other elements such as
+	   comments or elements from other namespaces */
 	nextCell = TtaGetFirstChild (row);
-	if (inMath && elType.ElTypeNum == MathML_EL_MLABELEDTR)
+	if (nextCell)
+	  elType = TtaGetElementType (nextCell);
+	while (nextCell &&
+	       (elType.ElSSchema != tableSS ||
+		(inMath && elType.ElTypeNum != MathML_EL_MTD) ||
+		(!inMath && (elType.ElTypeNum != HTML_EL_Data_cell &&
+			     elType.ElTypeNum != HTML_EL_Heading_cell))))
+	  {
+	    TtaNextSibling (&nextCell);
+	    if (nextCell)
+	      elType = TtaGetElementType (nextCell);
+	  }
+	if (nextCell && inMath &&
+	    TtaGetElementType(row).ElTypeNum == MathML_EL_MLABELEDTR)
 	  /* skip the first significant child of the row: it's a label */
 	  {
 	  /* skip comments and PIs first */
@@ -987,12 +1004,12 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		 (elType.ElTypeNum == MathML_EL_XMLcomment ||
 		  elType.ElTypeNum == MathML_EL_XMLPI));
 	  /* skip the following element */
-	  TtaNextSibling (&nextCell);
+	  nextCell = GetSiblingCell (nextCell, FALSE, inMath);
 	  }
-	while (nextCell != NULL)
+	while (nextCell)
 	  {
 	  cell = nextCell;
-	  TtaNextSibling (&nextCell);
+          TtaNextSibling (&nextCell);
 	  elType = TtaGetElementType (cell);
 	  if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
 	    {
@@ -1071,7 +1088,8 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		      colVSpan[cRef] = colVSpan[cRef-1];
 		      i++;
 		    }
-		  if (nextCell)
+
+		  if (GetSiblingCell (cell, FALSE, inMath))
 		    /* There are more cells in this row, after the spanning
 		       cell. Create additional Column_heads for the spanning
 		       cell, except if spanning is "infinite". */
@@ -1135,19 +1153,40 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	/* Delete any other type of element */
 	TtaDeleteTree (row, doc);
       row = nextRow;
-      
+
       /* do we have to get a new group of rows */
       if (row == NULL && !inMath)
 	{
 	elType = TtaGetElementType (group);
 	if (elType.ElTypeNum == HTML_EL_tbody)
+	  /* this is a tbody. Is there a sibling tboby in the same
+	     Table_body parent? */
 	  {
 	  row = group;
-	  group = TtaGetParent (group);
-	  TtaNextSibling (&row);
+	  group = TtaGetParent (group); /* the Table_body parent */
+	  TtaNextSibling (&row); /* next sibling of the current tbody */
 	  if (row != NULL)
-	    group = row;
-	  else
+	    {
+	    /* skip comments and other insignificant elements, until we get
+	       a sibling tbody */
+	    elType = TtaGetElementType (row);
+	    while (row && (elType.ElSSchema != tableSS ||
+			   elType.ElTypeNum != HTML_EL_tbody))
+	      {
+		prev = row;
+		TtaNextSibling (&row);
+		/* remove text leaves between tbody elements */
+		if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		  TtaDeleteTree (prev, doc);
+		if (row)
+		  elType = TtaGetElementType (row);
+	      }
+	    if (row)
+	      group = row;
+	    }
+	  if (row == NULL)
+	    /* there is no sibling tbody. Get the next sibling of the
+	       Table_body element */
 	    TtaNextSibling (&group);
 	  }
 	else
@@ -1176,22 +1215,22 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		TtaDeleteTree (prevGroup, doc);
 	      if (group)
 		elType = TtaGetElementType (group);
-	    }
-	  if (group)
-	    {
+	      }
+	    if (group)
+	      {
 	      elType = TtaGetElementType (group);
 	      if (elType.ElTypeNum == HTML_EL_Table_foot)
 		/* don't look for rows in the Table_foot! */
 		row = NULL;
 	      else
 		row = TtaGetFirstChild (group);
+	      }
+	    else
+	      row = NULL;
 	    }
 	  else
 	    row = NULL;
 	  }
-	else
-	  row = NULL;
-	}
       }
     }
 

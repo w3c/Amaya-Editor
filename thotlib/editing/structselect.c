@@ -507,7 +507,7 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 	  pAsc = pRow->ElParent;
 	  while (pAsc && pAsc != pTable && !pAsc->ElNext)
 	    pAsc = pAsc->ElParent;
-	  while (!pNextRow &&pAsc && pAsc->ElNext)
+	  while (!pNextRow && pAsc && pAsc->ElNext)
 	    {
 	      pAsc = pAsc->ElNext;
 	      if (pAsc)
@@ -516,6 +516,11 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 		pNextRow = SearchTypedElementInSubtree (pAsc,
 							pRow->ElTypeNumber,
 							pRow->ElStructSchema);
+	      if (!pNextRow && !pAsc->ElNext)
+		{
+		  if (pAsc->ElParent != pTable)
+		    pAsc = pAsc->ElParent;
+		}
 	    }
 	}
     }
@@ -2414,7 +2419,7 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 	       oldLastChar != LastSelectedChar))
 	    {
 	      change = TRUE;
-	      if (FirstSelectedChar == 0)
+	      if (FirstSelectedChar == 0 && !SelectedColumn)
 		while (FirstSelectedElement->ElNext == NULL
 		       && FirstSelectedElement->ElPrevious == NULL
 		       && FirstSelectedElement->ElParent != NULL)
