@@ -2672,7 +2672,7 @@ Document       doc;
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
-  SetBrowserEditor (doc);
+  SetErrorMode (doc);
   XMLabort = TRUE;
   CurrentBufChar = 0;
   /* InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR)); */
@@ -5867,6 +5867,7 @@ CHARSET    *charset;
   int           res, i, j, k;
   ThotBool      endOfSniffedFile;
 
+  *charset = UNDEFINED_CHARSET;
   wc2iso_strcpy (file_name, fileName);
   stream = gzopen (file_name, "r");
   if (stream != 0)

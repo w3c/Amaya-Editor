@@ -659,11 +659,11 @@ Document        doc;
    document status.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DocStatusUpdate (Document document, ThotBool modified)
+void      DocStatusUpdate (Document document, ThotBool modified)
 #else
-void                DocStatusUpdate (document, modified)
-Document            doc;
-ThotBool            modified;
+void      DocStatusUpdate (document, modified)
+Document  doc;
+ThotBool  modified;
 #endif
 {
   Document    otherDoc;
@@ -700,216 +700,283 @@ ThotBool            modified;
 }
 
 /*----------------------------------------------------------------------
-   Change the Browser/Editor mode                    
+  UpdateBrowserMenus
+  Update windows menus for the Browser mode              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetBrowserEditor (Document document)
+static void  UpdateBrowserMenus (Document document)
 #else
-void                SetBrowserEditor (document)
-Document            doc;
+static void  UpdateBrowserMenus (document)
+Document  doc;
 #endif
 {
-   View                view;
-   Document            docSel;
+  View    view;
+
+#ifdef _WINDOWS 
+  WIN_TtaSwitchButton (document, 1, iEditor, iconEditor,
+		       TB_INDETERMINATE, TRUE);
+#else  /* _WINDOWS */
+  TtaChangeButton (document, 1, iEditor, iconBrowser, TRUE);
+#endif /* _WINDOWS */
+
+  TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
+
+  TtaSetItemOff (document, 1, File, BSave);
+  TtaSetItemOff (document, 1, File, BSynchro);
+  TtaSetItemOff (document, 1, Edit_, BUndo);
+  TtaSetItemOff (document, 1, Edit_, BRedo);
+  TtaSetItemOff (document, 1, Edit_, BCut);
+  TtaSetItemOff (document, 1, Edit_, BPaste);
+  TtaSetItemOff (document, 1, Edit_, BClear);
+  
+  TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
+
+  if (DocumentTypes[document] == docHTML ||
+      DocumentTypes[document] == docSVG ||
+      DocumentTypes[document] == docMath ||
+      DocumentTypes[document] == docImage)
+    {
+      TtaChangeButton (document, 1, iI, iconINo, FALSE);
+      TtaChangeButton (document, 1, iB, iconBNo, FALSE);
+      TtaChangeButton (document, 1, iT, iconTNo, FALSE);
+      TtaChangeButton (document, 1, iImage, iconImageNo, FALSE);
+      TtaChangeButton (document, 1, iH1, iconH1No, FALSE);
+      TtaChangeButton (document, 1, iH2, iconH2No, FALSE);
+      TtaChangeButton (document, 1, iH3, iconH3No, FALSE);
+      TtaChangeButton (document, 1,iBullet, iconBulletNo, FALSE);
+      TtaChangeButton (document, 1,iNum, iconNumNo, FALSE);
+      TtaChangeButton (document, 1,iDL, iconDLNo, FALSE);
+      TtaChangeButton (document, 1, iLink, iconLinkNo, FALSE);
+      TtaChangeButton (document, 1, iTable, iconTableNo, FALSE);
+      SwitchIconMath (document, 1, FALSE);
+
+#ifdef GRAPHML
+      SwitchIconGraph (document, 1, FALSE);
+#endif /* GRAPHML */
+      
+      TtaSetItemOff (document, 1, Edit_, BSpellCheck);
+      TtaSetItemOff (document, 1, Edit_, BTransform);
+      TtaSetMenuOff (document, 1, Types);
+      TtaSetMenuOff (document, 1, Links);
+      TtaSetMenuOff (document, 1, Style);
+      TtaSetItemOff (document, 1, Special, BMakeBook);
+
+#ifdef ANNOTATIONS
+      TtaSetMenuOff (document, 1, Annotations_);
+#endif /* ANNOTATIONS */
+
+      view = TtaGetViewFromName (document, "Structure_view");
+      if (view != 0 && TtaIsViewOpened (document, view))
+	{
+	  TtaSetItemOff (document, view, Edit_, BCut);
+	  TtaSetItemOff (document, view, Edit_, BPaste);
+	  TtaSetItemOff (document, view, Edit_, BClear);
+	  TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	  TtaSetItemOff (document, view, Edit_, BTransform);
+	  TtaSetMenuOff (document, view, StructTypes);
+	  TtaSetMenuOff (document, view, Types);
+	}
+      view = TtaGetViewFromName (document, "Alternate_view");
+      if (view != 0 && TtaIsViewOpened (document, view))
+	{
+	  TtaSetItemOff (document, view, Edit_, BCut);
+	  TtaSetItemOff (document, view, Edit_, BPaste);
+	  TtaSetItemOff (document, view, Edit_, BClear);
+	  TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	  TtaSetMenuOff (document, view, StructTypes);
+	  TtaSetMenuOff (document, view, Types);
+	}
+      view = TtaGetViewFromName (document, "Links_view");
+      if (view != 0 && TtaIsViewOpened (document, view))
+	{
+	  TtaSetItemOff (document, view, Edit_, BCut);
+	  TtaSetItemOff (document, view, Edit_, BPaste);
+	  TtaSetItemOff (document, view, Edit_, BClear);
+	  TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	  TtaSetItemOff (document, view, Edit_, BTransform);
+	  TtaSetMenuOff (document, view, Types);
+	}
+      view = TtaGetViewFromName (document, "Table_of_contents");
+      if (view != 0 && TtaIsViewOpened (document, view))
+	{
+	  TtaSetItemOff (document, view, Edit_, BCut);
+	  TtaSetItemOff (document, view, Edit_, BPaste);
+	  TtaSetItemOff (document, view, Edit_, BClear);
+	  TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	  TtaSetItemOff (document, view, Edit_, BTransform);
+	  TtaSetMenuOff (document, view, Types);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   UpdateEditorMenus 
+   Update windows menus for the Editor mode              
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void  UpdateEditorMenus (Document document)
+#else
+static void  UpdateEditorMenus (document)
+Document  doc;
+#endif
+{
+  View    view;
+  
+#ifdef _WINDOWS 
+  WIN_TtaSwitchButton (document, 1, iEditor, iconEditor,
+		       TB_INDETERMINATE, FALSE);
+#else  /* _WINDOWS */
+  TtaChangeButton (document, 1, iEditor, iconEditor, TRUE);
+#endif /* _WINDOWS */
+
+  TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
+
+  TtaSetItemOn (document, 1, Edit_, BUndo);
+  TtaSetItemOn (document, 1, Edit_, BRedo);
+  TtaSetItemOn (document, 1, Edit_, BCut);
+  TtaSetItemOn (document, 1, Edit_, BPaste);
+  TtaSetItemOn (document, 1, Edit_, BClear);
+  
+  if (DocumentTypes[document] == docHTML ||
+      DocumentTypes[document] == docSVG ||
+      DocumentTypes[document] == docImage)
+    {
+      TtaChangeButton (document, 1, iI, iconI, TRUE);
+      TtaChangeButton (document, 1, iB, iconB, TRUE);
+      TtaChangeButton (document, 1, iT, iconT, TRUE);
+      TtaChangeButton (document, 1, iImage, iconImage, TRUE);
+      TtaChangeButton (document, 1, iH1, iconH1, TRUE);
+      TtaChangeButton (document, 1, iH2, iconH2, TRUE);
+      TtaChangeButton (document, 1, iH3, iconH3, TRUE);
+      TtaChangeButton (document, 1,iBullet, iconBullet, TRUE);
+      TtaChangeButton (document, 1,iNum, iconNum, TRUE);
+      TtaChangeButton (document, 1,iDL, iconDL, TRUE);
+      TtaChangeButton (document, 1, iLink, iconLink, TRUE);
+      TtaChangeButton (document, 1, iTable, iconTable, TRUE);
+      SwitchIconMath (document, 1, TRUE);
+
+#ifdef GRAPHML
+      SwitchIconGraph (document, 1, TRUE);
+#endif /* GRAPHML */
+
+      TtaSetItemOn (document, 1, Edit_, BSpellCheck);
+      TtaSetItemOn (document, 1, Edit_, BTransform);
+      TtaSetMenuOn (document, 1, Types);
+      TtaSetMenuOn (document, 1, Links);
+      TtaSetMenuOn (document, 1, Style);
+      TtaSetItemOn (document, 1, Special, BMakeBook);
+
+#ifdef ANNOTATIONS
+      TtaSetMenuOn (document, 1, Annotations_);
+#endif /* ANNOTATIONS */
+      
+      view = TtaGetViewFromName (document, "Structure_view");
+      if (view != 0 && TtaIsViewOpened (document, view))
+	{
+	  TtaSetItemOn (document, view, Edit_, BCut);
+	  TtaSetItemOn (document, view, Edit_, BPaste);
+	  TtaSetItemOn (document, view, Edit_, BClear);
+	  TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	  TtaSetItemOn (document, view, Edit_, BTransform);
+	  TtaSetMenuOn (document, view, StructTypes);
+	  TtaSetMenuOn (document, view, Types);
+	}
+      view = TtaGetViewFromName (document, "Alternate_view");
+      if (view != 0 && TtaIsViewOpened (document, view))
+	{
+	  TtaSetItemOn (document, view, Edit_, BCut);
+	  TtaSetItemOn (document, view, Edit_, BPaste);
+	  TtaSetItemOn (document, view, Edit_, BClear);
+	  TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	  TtaSetMenuOn (document, view, StructTypes);
+	  TtaSetMenuOn (document, view, Types);
+	}
+      view = TtaGetViewFromName (document, "Links_view");
+      if (view != 0 && TtaIsViewOpened (document, view))
+	{
+	  TtaSetItemOn (document, view, Edit_, BCut);
+	  TtaSetItemOn (document, view, Edit_, BPaste);
+	  TtaSetItemOn (document, view, Edit_, BClear);
+	  TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	  TtaSetItemOn (document, view, Edit_, BTransform);
+	  TtaSetMenuOn (document, view, Types);
+	}
+      view = TtaGetViewFromName (document, "Table_of_contents");
+      if (view != 0 && TtaIsViewOpened (document, view))
+	{
+	  TtaSetItemOn (document, view, Edit_, BCut);
+	  TtaSetItemOn (document, view, Edit_, BPaste);
+	  TtaSetItemOn (document, view, Edit_, BClear);
+	  TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	  TtaSetItemOn (document, view, Edit_, BTransform);
+	  TtaSetMenuOn (document, view, Types);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   Change to Error/Warning mode
+   This mode is similar to Browser mode except for 
+   the variable ReadOnlyDocument[document]
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void    SetErrorMode (Document document)
+#else
+void    SetErrorMode (document)
+Document    doc;
+#endif
+{
+   Document  docSel;
 
    docSel = TtaGetSelectedDocument ();
    if (docSel == document)
      TtaUnselect (document);
+
+   /* =============> The document is in Read-Only mode now */
+   /* change the document status */
+   SetDocumentReadOnly (document);
+   /* update windows menus */
+   UpdateBrowserMenus (document);
+}
+
+/*----------------------------------------------------------------------
+   Change the Browser/Editor mode                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void    SetBrowserEditor (Document document)
+#else
+void    SetBrowserEditor (document)
+Document    doc;
+#endif
+{
+   Document  docSel;
+
+   docSel = TtaGetSelectedDocument ();
+   if (docSel == document)
+     TtaUnselect (document);
+
    if (TtaGetDocumentAccessMode (document))
      {
        /* =============> The document is in Read-Only mode now */
-       TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
-#ifdef _WINDOWS 
-       WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE,
-			    TRUE);
-#else  /* _WINDOWS */
-       TtaChangeButton (document, 1, iEditor, iconBrowser, TRUE);
-#endif /* _WINDOWS */
        /* change the document status */
-       ReadOnlyDocument[document] = TRUE;
        SetDocumentReadOnly (document);
-
+       ReadOnlyDocument[document] = TRUE;
        /* update windows menus */
-       TtaSetItemOff (document, 1, File, BSave);
-       TtaSetItemOff (document, 1, File, BSynchro);
-       TtaSetItemOff (document, 1, Edit_, BUndo);
-       TtaSetItemOff (document, 1, Edit_, BRedo);
-       TtaSetItemOff (document, 1, Edit_, BCut);
-       TtaSetItemOff (document, 1, Edit_, BPaste);
-       TtaSetItemOff (document, 1, Edit_, BClear);
-
-       TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
-       if (DocumentTypes[document] == docHTML ||
-	   DocumentTypes[document] == docSVG ||
-	   DocumentTypes[document] == docMath ||
-	   DocumentTypes[document] == docImage)
-	 {
-	   TtaChangeButton (document, 1, iI, iconINo, FALSE);
-	   TtaChangeButton (document, 1, iB, iconBNo, FALSE);
-	   TtaChangeButton (document, 1, iT, iconTNo, FALSE);
-	   TtaChangeButton (document, 1, iImage, iconImageNo, FALSE);
-	   TtaChangeButton (document, 1, iH1, iconH1No, FALSE);
-	   TtaChangeButton (document, 1, iH2, iconH2No, FALSE);
-	   TtaChangeButton (document, 1, iH3, iconH3No, FALSE);
-	   TtaChangeButton (document, 1,iBullet, iconBulletNo, FALSE);
-	   TtaChangeButton (document, 1,iNum, iconNumNo, FALSE);
-	   TtaChangeButton (document, 1,iDL, iconDLNo, FALSE);
-	   TtaChangeButton (document, 1, iLink, iconLinkNo, FALSE);
-	   TtaChangeButton (document, 1, iTable, iconTableNo, FALSE);
-	   SwitchIconMath (document, 1, FALSE);
-#ifdef GRAPHML
-	   SwitchIconGraph (document, 1, FALSE);
-#endif /* GRAPHML */
-
-	   TtaSetItemOff (document, 1, Edit_, BSpellCheck);
-	   TtaSetItemOff (document, 1, Edit_, BTransform);
-	   TtaSetMenuOff (document, 1, Types);
-	   TtaSetMenuOff (document, 1, Links);
-	   TtaSetMenuOff (document, 1, Style);
-	   TtaSetItemOff (document, 1, Special, BMakeBook);
-#ifdef ANNOTATIONS
-	   TtaSetMenuOff (document, 1, Annotations_);
-#endif /* ANNOTATIONS */
-	   view = TtaGetViewFromName (document, "Structure_view");
-	   if (view != 0 && TtaIsViewOpened (document, view))
-	     {
-	       TtaSetItemOff (document, view, Edit_, BCut);
-	       TtaSetItemOff (document, view, Edit_, BPaste);
-	       TtaSetItemOff (document, view, Edit_, BClear);
-	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	       TtaSetItemOff (document, view, Edit_, BTransform);
-	       TtaSetMenuOff (document, view, StructTypes);
-	       TtaSetMenuOff (document, view, Types);
-	     }
-	   view = TtaGetViewFromName (document, "Alternate_view");
-	   if (view != 0 && TtaIsViewOpened (document, view))
-	     {
-	       TtaSetItemOff (document, view, Edit_, BCut);
-	       TtaSetItemOff (document, view, Edit_, BPaste);
-	       TtaSetItemOff (document, view, Edit_, BClear);
-	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	       TtaSetMenuOff (document, view, StructTypes);
-	       TtaSetMenuOff (document, view, Types);
-	     }
-	   view = TtaGetViewFromName (document, "Links_view");
-	   if (view != 0 && TtaIsViewOpened (document, view))
-	     {
-	       TtaSetItemOff (document, view, Edit_, BCut);
-	       TtaSetItemOff (document, view, Edit_, BPaste);
-	       TtaSetItemOff (document, view, Edit_, BClear);
-	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	       TtaSetItemOff (document, view, Edit_, BTransform);
-	       TtaSetMenuOff (document, view, Types);
-	     }
-	   view = TtaGetViewFromName (document, "Table_of_contents");
-	   if (view != 0 && TtaIsViewOpened (document, view))
-	     {
-	       TtaSetItemOff (document, view, Edit_, BCut);
-	       TtaSetItemOff (document, view, Edit_, BPaste);
-	       TtaSetItemOff (document, view, Edit_, BClear);
-	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	       TtaSetItemOff (document, view, Edit_, BTransform);
-	       TtaSetMenuOff (document, view, Types);
-	     }
-	 }
+       UpdateBrowserMenus (document);
      }
    else
      {
        /* =============> The document is in Read-Write mode now */
-       TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
+       /* change the document status */
        if (TtaIsDocumentModified (document))
 	 DocStatusUpdate (document, TRUE);
-#ifdef _WINDOWS 
-       WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE,
-			    FALSE);
-#else  /* _WINDOWS */
-       TtaChangeButton (document, 1, iEditor, iconEditor, TRUE);
-#endif /* _WINDOWS */
-
        /* change the document status */
        ReadOnlyDocument[document] = FALSE;
        TtaSetDocumentAccessMode (document, 1);
        /* update windows menus */
-       TtaSetItemOn (document, 1, Edit_, BUndo);
-       TtaSetItemOn (document, 1, Edit_, BRedo);
-       TtaSetItemOn (document, 1, Edit_, BCut);
-       TtaSetItemOn (document, 1, Edit_, BPaste);
-       TtaSetItemOn (document, 1, Edit_, BClear);
-       
-       if (DocumentTypes[document] == docHTML ||
-	   DocumentTypes[document] == docSVG ||
-	   DocumentTypes[document] == docImage)
-	 {
-	   TtaChangeButton (document, 1, iI, iconI, TRUE);
-	   TtaChangeButton (document, 1, iB, iconB, TRUE);
-	   TtaChangeButton (document, 1, iT, iconT, TRUE);
-	   TtaChangeButton (document, 1, iImage, iconImage, TRUE);
-	   TtaChangeButton (document, 1, iH1, iconH1, TRUE);
-	   TtaChangeButton (document, 1, iH2, iconH2, TRUE);
-	   TtaChangeButton (document, 1, iH3, iconH3, TRUE);
-	   TtaChangeButton (document, 1,iBullet, iconBullet, TRUE);
-	   TtaChangeButton (document, 1,iNum, iconNum, TRUE);
-	   TtaChangeButton (document, 1,iDL, iconDL, TRUE);
-	   TtaChangeButton (document, 1, iLink, iconLink, TRUE);
-	   TtaChangeButton (document, 1, iTable, iconTable, TRUE);
-	   SwitchIconMath (document, 1, TRUE);
-#ifdef GRAPHML
-	   SwitchIconGraph (document, 1, TRUE);
-#endif /* GRAPHML */
-	   TtaSetItemOn (document, 1, Edit_, BSpellCheck);
-	   TtaSetItemOn (document, 1, Edit_, BTransform);
-	   TtaSetMenuOn (document, 1, Types);
-	   TtaSetMenuOn (document, 1, Links);
-	   TtaSetMenuOn (document, 1, Style);
-	   TtaSetItemOn (document, 1, Special, BMakeBook);
-#ifdef ANNOTATIONS
-	   TtaSetMenuOn (document, 1, Annotations_);
-#endif /* ANNOTATIONS */
-	   view = TtaGetViewFromName (document, "Structure_view");
-	   if (view != 0 && TtaIsViewOpened (document, view))
-	     {
-	       TtaSetItemOn (document, view, Edit_, BCut);
-	       TtaSetItemOn (document, view, Edit_, BPaste);
-	       TtaSetItemOn (document, view, Edit_, BClear);
-	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	       TtaSetItemOn (document, view, Edit_, BTransform);
-	       TtaSetMenuOn (document, view, StructTypes);
-	       TtaSetMenuOn (document, view, Types);
-	     }
-	   view = TtaGetViewFromName (document, "Alternate_view");
-	   if (view != 0 && TtaIsViewOpened (document, view))
-	     {
-	       TtaSetItemOn (document, view, Edit_, BCut);
-	       TtaSetItemOn (document, view, Edit_, BPaste);
-	       TtaSetItemOn (document, view, Edit_, BClear);
-	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	       TtaSetMenuOn (document, view, StructTypes);
-	       TtaSetMenuOn (document, view, Types);
-	     }
-	   view = TtaGetViewFromName (document, "Links_view");
-	   if (view != 0 && TtaIsViewOpened (document, view))
-	     {
-	       TtaSetItemOn (document, view, Edit_, BCut);
-	       TtaSetItemOn (document, view, Edit_, BPaste);
-	       TtaSetItemOn (document, view, Edit_, BClear);
-	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	       TtaSetItemOn (document, view, Edit_, BTransform);
-	       TtaSetMenuOn (document, view, Types);
-	     }
-	   view = TtaGetViewFromName (document, "Table_of_contents");
-	   if (view != 0 && TtaIsViewOpened (document, view))
-	     {
-	       TtaSetItemOn (document, view, Edit_, BCut);
-	       TtaSetItemOn (document, view, Edit_, BPaste);
-	       TtaSetItemOn (document, view, Edit_, BClear);
-	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	       TtaSetItemOn (document, view, Edit_, BTransform);
-	       TtaSetMenuOn (document, view, Types);
-	     }
-	 }
+       UpdateEditorMenus (document);
      }
 }
-
 
 /*----------------------------------------------------------------------
    UpdateTransfer updates the status of the current transfer
@@ -1561,7 +1628,11 @@ View            view;
    sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document     InitDocView (Document doc, CHAR_T* docname, DocumentType docType, Document sourceOfDoc, ThotBool readOnly)
+Document     InitDocView (Document doc,
+			  CHAR_T* docname,
+			  DocumentType docType,
+			  Document sourceOfDoc,
+			  ThotBool readOnly)
 #else
 Document     InitDocView (doc, docname, docType, sourceOfDoc, readOnly)
 Document     doc;
@@ -1586,7 +1657,10 @@ ThotBool     readOnly;
   if (!TtaCanEdit ())
     /* change the document status */
     readOnly = TRUE;
-  old_doc = doc;		/* previous document */
+  
+  /* previous document */
+  old_doc = doc;
+
   if (doc != 0 && docType != docLog && !TtaIsDocumentModified (doc))
     /* the new document will replace another document in the same window */
     {
@@ -1742,7 +1816,7 @@ ThotBool     readOnly;
 	   TtcSwitchCommands (doc, 1); /* no command open */
 	 }
        else if (!isOpen)
-	 /* re-use an existing window */
+	 /* use a new window */
 	 {
 	   /* Create all buttons */
 	   iStop =TtaAddButton (doc, 1, stopN, StopTransfer,"StopTransfer",
@@ -2034,8 +2108,8 @@ ThotBool     readOnly;
   CreateHTMLContainer creates an HTML container for an image
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CreateHTMLContainer (CHAR_T* pathname, CHAR_T* docname, CHAR_T* tempfile,
-				 ThotBool local)
+static void CreateHTMLContainer (CHAR_T* pathname, CHAR_T* docname,
+				 CHAR_T* tempfile, ThotBool local)
 #else
 static void CreateHTMLContainer (pathname, docname, tempfile, local)
 CHAR_T* pathname;
@@ -2159,7 +2233,8 @@ ThotBool            history;
   CSSInfoPtr          css;
   Document            newdoc = 0;
   DocumentType        docType;
-  CHARSET             charset, httpcharset, metacharset;
+  CHARSET             charset, httpcharset;
+  CHARSET             metacharset = UNDEFINED_CHARSET;
   CHAR_T*             charEncoding;
   CHAR_T*             tempdocument;
   CHAR_T*             tempdir;
