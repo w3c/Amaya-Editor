@@ -1506,6 +1506,7 @@ LPARAM lParam;
       break;
 
     case WM_COMMAND:
+      SetFocus (FrRef[currentFrame]);
       switch (LOWORD (wParam))
 	{
 	case ID_DONE:
@@ -1567,7 +1568,6 @@ LPARAM lParam;
 	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)11);
 	  break;
 	}
-      SetFocus (FrRef[currentFrame]);
       break;
 
     default: return (FALSE);
@@ -3646,7 +3646,7 @@ void        CreateMathDlgWindow (parent)
 ThotWindow  parent;
 #endif /* __STDC__ */
 {  
-  if (GraphPal)
+  if (MathPal)
     SetFocus (MathPal);
   else
     DialogBox (hInstance, MAKEINTRESOURCE (MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
