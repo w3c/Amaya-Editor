@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>À propos de l'auteur</title>
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="fr" lang="fr">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
+        border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="lists.html.fr"><img alt="previous"
+        border="0" src="../../images/left.gif" /></a> <a
+        href="../Manual.html.fr#There"><img alt="top" border="0"
+        src="../../images/up.gif" /></a> <a href="inline.html.fr"><img
+        alt="next" border="0" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="About">
+<h1>À propos de l'auteur</h1>
+
+<p>Une page Web devrait toujours contenir certaines informations qui
+permettent au lecteur de connaître qui a écrit la page ou qui en est
+responsable. Ceci peut inclure une adresse email (qui peut être liée), un
+URL, ou bien une adresse physique. Le type <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-ADDRESS"><code>ADDRESS</code></a>
+est utilisé pour identifier cette information, et il peut contenir d'autres
+niveaux blocs d'éléments comme les paragraphes, les entêtes et les listes.</p>
+
+<p>Il existe un style par défaut pour les adresses des éléments dans la
+plupart des navigateurs mais l'auteur peut également utiliser <a
+href="../StyleSheets.html">les feuilles de style</a> pour fournir une
+présentation suggestive.</p>
+</div>
+
+<p></p>
+</body>
+</html>

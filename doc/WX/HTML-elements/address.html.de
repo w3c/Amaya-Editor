@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Informationen über den Autor</title>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img
+        alt="Amaya" src="../../images/amaya.gif" />
+      </td>
+      <td><a href="lists.html.de"><img alt="vorherige Seite"
+        src="../../images/left.gif" /></a> <a
+        href="../Document.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a href="inline.html.de"><img
+        alt="nächste Seite" src="../../images/right.gif" /></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Informationen über den Autor</h1>
+
+<p>Eine Webseite sollte immer Informationen enthalten, welche es dem Leser
+gestatten herauszufinden, wer sie geschrieben hat oder wer verantwortlich
+dafür ist. Die Information kann die Email-Adresse (als Verweis), ein URI oder
+sogar die Postanschrift sein. Hierzu wird das Element <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-ADDRESS"><code>address</code></a>
+verwendet und es kann andere Blockelemente, wie Absätze, Überschriften und
+Listen enthalten.</p>
+
+<p>Die meisten Browser stellen dieses Element in besonderer Weise dar. Der
+Autor hat aber die Möglicchkeit diese Darstellung mittels <a
+href="../StyleSheets.html.de">Formatvorlagen</a> selber zu wählen.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Die Dokumentstruktur</title>
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><a href="creating_new_documents.html.de"><img alt="vorherige Seite"
+        src="../../images/left.gif" /></a> <a href="../Document.html.de"><img
+        alt="erste Seite" src="../../images/up.gif" /></a> <a
+        href="infoTypes.html.de"><img alt="nächste Seite"
+        src="../../images/right.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Die Dokumentstruktur</h1>
+
+<p>HTML-Dokumente sind in ihrer Struktur relativ flach. Anders als Dokumente,
+die Abschnitte enthalten, welche wiederum Unterabschnitte enthalten, werden
+in HTML diese Textabschnitte durch unterschiedliche <a
+href="headings.html.de">Überschriftselemente</a> markiert, die sich auf der
+gleichen Ebene wie Absätze und andere Blockelemente befinden. Es gibt das
+Element <code>div</code>, mit dem man Abschnitte gruppieren kann. Um eine
+Gruppierung vorzunehmen muss man den zu gruppierenden Teil des Dokuments
+markieren und aus dem Menü <strong>XHTML</strong> den Befehl
+<strong>Abschnitt</strong> auswählen (oder das Tastenkürzel <kbd>Strg h Strg
+v</kbd> verwenden).</p>
+
+<p>Es gibt eine spezielle Struktur, den Verweis, welche das Web erst zu dem
+macht was es ist. Mehr dazu unter <a href="../Links.html.de">Verweise</a>.</p>
+
+<p>Eine normale HTML-Seite sollte mindestens folgendes beinhalten: <a
+href="../Creating.html#Changing">einen Titel</a>, <a
+href="headings.html.de">eine Überschrift der Ebene 1</a> und <a
+href="address.html.de">eine Adresse oder andere Informationen über den
+Autor</a>. Darüber hinaus kann sie Absätze, Listen, Bilder, Tabellen und
+anderen Inhalt enthalten, welcher mit Überschriften der verschiedenen Ebenen
+in Unterabschnitte eingeteilt ist.</p>
+</div>
+</body>
+</html>

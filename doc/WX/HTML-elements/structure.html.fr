@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Structure du document HTML</title>
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
+        border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="infoTypes.html.fr"><img alt="previous"
+        border="0" src="../../images/left.gif" /></a> <a
+        href="../Manual.html.fr#There"><img alt="top" border="0"
+        src="../../images/up.gif" /></a> <a href="headings.html.fr"><img
+        alt="next" border="0" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="HTML">
+<h1>Structure du document HTML</h1>
+
+<p>Les documents HTML ont une structure assez uniforme. S'il y a des sections
+qui contiennent des sous-sections, la division du texte est ordinairement
+marquée par des <a href="headings.html.fr">éléments en-têtes</a> de
+différents niveaux, qui se trouvent sur le bord des paragraphes et autres
+blocs d'éléments.</p>
+
+<p>L'élément <code>DIV</code> est là pour regrouper une section dans une
+division _ pour l'utiliser, sélectionnez la section que vous voulez assembler
+au groupe (en incluant son en-tête), puis sélectionnez l'option <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-DIV"
+name="DIV">Division (div)</a> du menu <strong>XHTML</strong> (ou utilisez le
+raccourci-clavier <kbd>Ctrl h Ctrl v</kbd> ).</p>
+
+<p>Il y a une structure spéciale dans HTML _ le lien, qui fait du Web une
+toile. Les informations sur <a href="../Links.html">comment créer un lien</a>
+et <a href="../Tables.html">comment créer des tables</a> sont fournies par la
+documentation du <a href="../Manual.html.fr">manuel d'utilisation.</a></p>
+
+<p>Une page normale HTML devrait inclure <a
+href="../Creating.html.fr#Changing">un titre,</a> <a
+href="headings.html.fr">une en-tête de niveau un</a>et <a
+href="address.html.fr">une adresse ou une information sur l'auteur.</a> Elle
+devrait également inclure des paragraphes, des listes, des images, des
+tables, et un contenu organisé en sous-sections avec différents niveaux
+d'en-têtes.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Über Darstellungsorientierte Formate</title>
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table cellspacing="5" cellpadding="5">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><a href="inline.html.de"><img alt="vorherige Seite"
+        src="../../images/left.gif" /></a> <a href="../Document.html.de"><img
+        alt="erste Seite" src="../../images/up.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über darstellungsorientierte Formate</h1>
+
+<h2>Was man <strong>nicht</strong> tun sollte und wie man es machen
+sollte...</h2>
+
+<p>HTML 4.0 (Strict) enthält einige Elemente, die eine Zeichenformatierung
+gestatten. Diese Elemente sollten, wenn möglich, durch die Verwendung
+strukturierter Elemente ersetzt werden.</p>
+
+<p>Alle diese Elemente, mit Ausnahme von <code>pre</code> findet man im Menü
+<strong>XHTML</strong>, Untermenü <strong>Darstellungsorientiert</strong>:</p>
+<dl>
+  <dt><code>b</code> und <code>i</code></dt>
+    <dd>Diese sollten durch <a
+      href="inline.html.de#Emphasis"><code>strong</code></a> und <code><a
+      href="inline.html.de#Emphasis">em</a></code> ersetzt werden um ein Wort
+      oder einen Satz hervorzuheben. Es gibt <a
+      href="infoTypes.html.de">spezielle Elemente</a> um eine Überschrift,
+      Begriffe, welche definiert werden sollen und andere, zu kennzeichnen .
+      Auch stehen andere Elemente zu Verfügung um beispielsweise ein Zitat
+      oder einen Ausschnitt eines Programms hervorzuheben. Werden die o. g.
+      Elemente nur dazu verwendet um eine Zeichenkette fett oder kursiv
+      darzustellen, dann sollte man dazu <a
+      href="../StyleSheets.html.de">Formatvorlagen</a> verwenden.</dd>
+  <dt><code>big</code> und <code>small</code></dt>
+    <dd>Dieser Effekt sollte generell mit Hilfe von <a
+      href="../StyleSheets.html.de">Formatvorlagen</a> erzielt werden. Werden
+      sie verwendet um einen spezifischen Typ einer Information, wie z. B.
+      die Quelle eines Zitats, Benutzereingaben oder Computerausgaben zu
+      kennzeichnen, dann sollte man die dazu <a
+      href="inline.html.de">passenden HTML-Elemente</a> verwenden.</dd>
+  <dt><code>sub</code> und <code>sup</code></dt>
+    <dd>Man sollte <a href="../StyleSheets.html.de">Formatvorlagen</a>
+      verwenden, um diesen Effekt zu erzielen. Handelt es sich dabei um
+      mathematische Ausdrücke, dann steht dazu eine passende
+      Auszeichnungssprache, <a href="../Math.html.de">MathML</a>, bereit,
+      welche man, wann immer möglich, verwenden werden sollte.</dd>
+  <dt><code>tt</code> und <code>pre</code></dt>
+    <dd>Um diesen Effekt zu erzielen sollte man <a
+      href="../StyleSheets.html.de">Formatvorlagen</a> verwenden.</dd>
+</dl>
+</div>
+</body>
+</html>

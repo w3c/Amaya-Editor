@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Informationstypen</title>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img
+        alt="Amaya" src="../../images/amaya.gif" /> <a
+        href="structure.html.de"><img alt="vorherige Seite"
+        src="../../images/left.gif" /></a> <a href="../Document.html.de"><img
+        alt="erste Seite" src="../../images/up.gif" /></a> <a
+        href="HTML.html.de"><img alt="nächste Seite"
+        src="../../images/right.gif" /></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Informationstypen</h1>
+
+<p>HTML (Strict) stellt Elemente zur Verfügung, welche einen bestimmten Typ
+von Information kennzeichnen. Obwohl es eine standardisierte Darstellung für
+jedes dieser Elemente gibt, kann man die Darstellung dieser Elemente mittels
+Verwendung von <a href="../StyleSheets.html.de">Formatvorlagen</a> ändern. Die
+Informationstypen, die durch HTML-Elemente repräsentiert werden sind:</p>
+<dl>
+  <dt><a href="headings.html.de">Überschriften</a></dt>
+    <dd>Es gibt sechs Ebenen von Überschriften in HTML, die benutzt werden
+      sollten um Dokumentenüberschriften oder Themen gemäß ihrer Wichtigkeit
+      zu markieren.</dd>
+  <dt><a href="lists.html.de">Listen</a></dt>
+    <dd>HTML stellt zwei einfache Listen zur Verfügung:
+      <ol>
+        <li>geordnete (numerierte) Listen, wie diese</li>
+        <li>ungeordnete Listen (Aufzählungslisten).</li>
+      </ol>
+      <p>Weiterhin wird eine <a href="lists.html.de">Liste zur Definition von
+      Begriffen</a> (Definitionsliste) bereitgestellt.</p>
+    </dd>
+  <dt><a href="address.html.de">Information über den Autor</a></dt>
+    <dd>Es gibt das Element <code>address</code>, welches Information über
+      den Verfasser der HTML-Seite beinhalteten sollte.</dd>
+  <dt>Definitionen</dt>
+    <dd>Diese können als <a href="inline.html#Definition"
+      rel="glossary">eingelagerte Definitionen</a> (im Absatz definiert) oder
+      als <a href="lists.html.de">Definitionsliste</a> ausgezeichnet werden. Die
+      hier gezeigte Liste von Informationstypen ist selbst eine
+      Definitionsliste. Auch ist es möglich den Wert <code>glossary</code>
+      des Attributs <code>rel</code> eines Verweises zu verwenden, wenn der
+      Verweis selber eine Definition ist. In der Strukturansicht und der
+      Verweisansicht von Amaya wird das Attribut <code>rel</code> von
+      Verweisen dargestellt.</dd>
+  <dt><a href="inline.html#Inline1">Zitate</a></dt>
+    <dd>Diese können als eingelagert (<code>q</code>) oder als Block
+      (<code>blockquote</code>) ausgezeichnet werden. In beiden Fällen kann
+      die Quelle des Zitats mit dem Attribut <code>cite</code> angegeben
+      werden. Mit dem Element <code>cite</code> wird eine Zitatquelle
+      ausgezeichnet.</dd>
+  <dt><a href="inline.html#Sample">Benutzereingaben, Computerausgaben und
+  Programmcode</a></dt>
+    <dd>Es werden Elemente für <kbd>Benutzereingaben</kbd>,
+      <samp>Computerausgaben</samp> und <code>Programmcode</code>, bei dem
+      <var>Variablen</var> zusätzlich ausgezeichnet werden können,
+      bereitgestellt.</dd>
+  <dt><a href="inline.html#Inline">Akronyme und Abkürzungen</a></dt>
+    <dd>Auch dafür stehen Elemente zur Verfügung.</dd>
+  <dt><a href="inline.html#Inline2">Texteinfügungen und
+  Textentfernungen</a></dt>
+    <dd>Es gibt Elemente um Text, welcher hinzugefügt wurde oder entfernt
+      werden sollte auszuzeichnen. Dies ist hilfreich, wenn mehrere Personen
+      eine Seite bearbeiten.</dd>
+  <dt><a href="inline.html#Emphasis">Betonung</a></dt>
+    <dd>HTML hat zwei Ebenen zur Betonung: <em>Betonung</em> (em) und
+      <strong>Hervorhebung</strong> (strong).</dd>
+</dl>
+</div>
+</body>
+</html>
