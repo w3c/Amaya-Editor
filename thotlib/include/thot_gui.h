@@ -24,7 +24,7 @@
  * MS-Windows specific definition, constants ...		*
  *								*
  ****************************************************************/
-#include "windows.h"
+#include <windows.h>
 #include <commdlg.h>
 #include <commctrl.h>
 #include <stdlib.h>
@@ -90,6 +90,7 @@ typedef int         ThotIcon;
 #define FOR_MSW			/* for XPM stuff ! */
 #define PIXEL_ALREADY_TYPEDEFED /* for XPM stuff ! */
 
+#include "simx.h"
 typedef XColor    ThotColorStruct;
 
 #else  /* _WINDOWS */
