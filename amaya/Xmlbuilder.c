@@ -90,6 +90,22 @@ void         MapGenericXmlType (STRING XMLname, ElementType *elType,
 				ThotBool *highEnoughLevel, Document doc)
 
 {
+  int        i;
+
   printf ("\n MapGenericXmlType\n");
-  return;
+  /* Initialize variables */
+  *mappedName = NULL;
+  *highEnoughLevel = TRUE;
+  elType->ElTypeNum = 0;
+
+  /* Search for the element name in the structure schema */
+
+  if (1)
+    {
+      /* that element already exists */
+    }
+  else
+    {
+      /* Create a new rule for that element */
+    }
 }

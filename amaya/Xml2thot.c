@@ -1076,7 +1076,9 @@ static void   GetXmlElType (STRING XMLname, ElementType *elType,
     {
       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("XML")) == 0)
 	{
-	  MapGenericXmlType (XMLname, elType, mappedName, content, level, doc);
+	  elType->ElSSchema = currentParserCtxt->XMLSSchema;
+	  MapGenericXmlType (XMLname, elType, mappedName,
+			     content, level, doc);
 	}
       else
 	{
