@@ -2229,6 +2229,7 @@ TextTRANSLATE
 	'\74' -> '&lt;';	{ less-than sign, U+003C ISOnum }
 	'\76' -> '&gt;'; 	{ greater-than sign, U+003E ISOnum }
 	'\240' -> '&nbsp;';     { no-break space = non-breaking space, U+00A0 ISOnum }
+	'\260' -> '&deg;';	{ degree sign, U+00B0 ISOnum }
 	END;
 
 #include "greek.sgml"
