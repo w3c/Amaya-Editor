@@ -54,15 +54,20 @@ PtrAbstractBox      pAb;
   DisplayImage displays a empty box in the frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplayImage (PtrBox pBox, int frame)
+static void         DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, int ymin, int ymax)
 #else  /* __STDC__ */
-static void         DisplayImage (pBox, frame)
+static void         DisplayImage (pBox, frame, xmin, xmax, ymin, ymax)
 PtrBox              pBox;
 int                 frame;
+int                 xmin;
+int                 xmax;
+int                 ymin;
+int                 ymax;
 #endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
-  int                 dx, dy;
+  int                 xd, yd, x, y;
+  int                 width, height;
   int                 op, RO;
 
   pFrame = &ViewFrameTable[frame - 1];
@@ -80,15 +85,20 @@ int                 frame;
       /* For changing drawing color */
       DrawRectangle (frame, 0, 0, 0, 0, 0, 0, 0, 0, pBox->BxAbstractBox->AbForeground,
 		     pBox->BxAbstractBox->AbBackground, 0);
-
-      DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, 0, 0, 0, 0);
+      x = pFrame->FrXOrg;
+      y = pFrame->FrYOrg;
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y;
+      width = pBox->BxW;
+      height = pBox->BxH;
+      DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, xd, yd, width, height);
       /* Should the end of de line be filled with dots */
       if (pBox->BxEndOfBloc > 0)
 	{
 	  /* fill the end of the line with dots */
-	  dx = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-	  dy = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-	  DrawPoints (frame, dx + pBox->BxWidth - pFrame->FrXOrg, dy,
+	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x;
+	  yd = pBox->BxYOrg + pBox->BxHorizRef - y;
+	  DrawPoints (frame, xd + width, yd,
 		      pBox->BxEndOfBloc, RO, op, pBox->BxAbstractBox->AbForeground);
 	}
     }
@@ -179,22 +189,22 @@ int                 frame;
 	      DrawUnion (frame, xd, yd, width, height, font, RO, op, fg);
 	      break;
 	    case 'h':
-	      DrawHorizontalLine (frame, i, 0, xd, yd, width, height, 1, RO, op, fg);
+	      DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
 	      break;
 	    case 'v':
-	      DrawVerticalLine (frame, i, 0, xd, yd, width, height, 1, RO, op, fg);
+	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
 	      break;
 	    case '>':
-	      DrawArrow (frame, i, 0, xd, yd, width, height, 0, RO, op, fg);
+	      DrawArrow (frame, i, 5, xd, yd, width, height, 0, RO, op, fg);
 	      break;
 	    case '^':
-	      DrawArrow (frame, i, 0, xd, yd, width, height, 90, RO, op, fg);
+	      DrawArrow (frame, i, 5, xd, yd, width, height, 90, RO, op, fg);
 	      break;
 	    case '<':
-	      DrawArrow (frame, i, 0, xd, yd, width, height, 180, RO, op, fg);
+	      DrawArrow (frame, i, 5, xd, yd, width, height, 180, RO, op, fg);
 	      break;
 	    case 'V':
-	      DrawArrow (frame, i, 0, xd, yd, width, height, 270, RO, op, fg);
+	      DrawArrow (frame, i, 5, xd, yd, width, height, 270, RO, op, fg);
 	      break;
 	    case '(':
 	      DrawParenthesis (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
@@ -1269,7 +1279,7 @@ int                 ymax;
     DisplayJustifiedText (box, frame);
   else if (box->BxType == BoPicture)
     /* Picture */
-    DisplayImage (box, frame);
+    DisplayImage (box, frame, xmin, xmax, ymin, ymax);
   else if (box->BxAbstractBox->AbLeafType == LtSymbol)
     /* Symbol */
     if (box->BxAbstractBox->AbShape == EOS)

@@ -217,19 +217,27 @@ int                 ymax;
     return;
 
   GetSizesFrame (frame, &width, &height);
-  DisplayBorders (pBox, frame, x, y, width, height);
-    imageDesc = (PictInfo *) pAb->AbPictBackground;
+  xd = xmin;
+  yd = ymin;
+  /* clipping on the origin */
+  /* clipping on the width */
+  if (xd + width > xmax)
+    width = xmax - xd;
+  /* clipping on the height */
+  if (yd + height > ymax)
+    height = ymax - yd;
+  imageDesc = (PictInfo *) pAb->AbPictBackground;
   if (imageDesc &&
       (!pAb->AbTruncatedHead ||
        (imageDesc->PicPresent != XRepeat &&
 	imageDesc->PicPresent != RealSize)))
-    DrawPicture (pBox, imageDesc, frame, x, y, width, height);
+    DrawPicture (pBox, imageDesc, frame, xd - x, yd - y, width, height);
   else if (pAb->AbFillBox)
     {
       /* paint the whole window */
       /* todo: clip when backgroud will be printed */
       DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-		     x, y, width, height, 0, 0, pAb->AbForeground,
+		     xd - x, yd - y, width, height, 0, 0, pAb->AbForeground,
 		     pAb->AbBackground, pAb->AbFillPattern);
     }
   
@@ -238,152 +246,153 @@ int                 ymax;
     {
       pBox = pBox->BxNextBackground;
       pAb = pBox->BxAbstractBox;
-      if (pBox->BxType == BoGhost)
-	{
-	  /* see child elements */
-	  pAbChild = pAb->AbFirstEnclosed;
-	  while (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox->BxType == BoGhost)
-	    pAbChild = pAbChild->AbFirstEnclosed;
-	  if (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox != NULL)
-	    {
-	      pBoxChild = pAbChild->AbBox;
-	      /* if the box is split take child boxes */
-	      if (pBoxChild->BxType == BoSplit)
-		pBoxChild = pBoxChild->BxNexChild;
-	      do
-		{
-		  xd = pBoxChild->BxXOrg + pBoxChild->BxLMargin;
-		  yd = pBoxChild->BxYOrg + pBoxChild->BxTMargin;
-		  width = pBoxChild->BxWidth - pBoxChild->BxLMargin - pBoxChild->BxRMargin;
-		  height = pBoxChild->BxHeight - pBoxChild->BxTMargin - pBoxChild->BxBMargin;
-		  /* clipping on the origin */
-		  if (xd < x)
-		    {
-		      width = width - x + xd;
-		      xd = x;
-		    }
-		  if (yd < y)
-		    {
-		      height = height - y + yd;
-		      yd = y;
-		    }
-		  /* clipping on the width */
-		  if (xd + width > xmax)
-		    width = xmax - xd;
-		  /* clipping on the height */
-		  if (yd + height > ymax)
-		    height = ymax - yd;
-		  
-		  if (yd + height >= ymin
-		      && yd <= ymax
-		      && xd + width >= xmin
-		      && xd <= xmax)
-		    {
-		      DisplayBorders (pBoxChild, frame, xd - x, yd - y, width, height);
-		      /* draw over the padding */
-		      xd = pBoxChild->BxXOrg + pBoxChild->BxLMargin + pBoxChild->BxLBorder;
-		      yd = pBoxChild->BxYOrg + pBoxChild->BxTMargin + pBoxChild->BxTBorder;
-		      width = pBoxChild->BxW + pBoxChild->BxLPadding + pBoxChild->BxRPadding;
-		      height = pBoxChild->BxH + pBoxChild->BxTPadding + pBoxChild->BxBPadding;
-		      /* clipping on the origin */
-		      if (xd < x)
-			{
-			  width = width - x + xd;
-			  xd = x;
-			}
-		      if (yd < y)
-			{
-			  height = height - y + yd;
-			  yd = y;
-			}
-		      /* clipping on the width */
-		      if (xd + width > xmax)
-			width = xmax - xd;
-		      /* clipping on the height */
-		      if (yd + height > ymax)
-			height = ymax - yd;
-		      imageDesc = (PictInfo *) pAb->AbPictBackground;
-		      if (pAb->AbPictBackground &&
-			  (!pAb->AbTruncatedHead ||
-			   (imageDesc->PicPresent != XRepeat &&
-			    imageDesc->PicPresent != RealSize)))
-			DrawPicture (pBoxChild,
-				     (PictInfo *) pAb->AbPictBackground,
-				     frame, xd - x, yd - y,
-				     width, height);
-		      else
-			DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-				       xd - x, yd - y,
-				       width, height, 0, 0, pAb->AbForeground,
-				       pAb->AbBackground, pAb->AbFillPattern);
-		    }
-		  pBoxChild = pBoxChild->BxNext;
-		}
-	      while (pBoxChild != NULL && IsParentBox (pBox, pBoxChild));
-	    }
-	}
-      else
-	{
-	  xd = pBox->BxXOrg + pBox->BxLMargin;
-	  yd = pBox->BxYOrg + pBox->BxTMargin;
-	  width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
-	  height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
-	  /* clipping on the origin */
-	  if (xd < x)
-	    {
-	      width = width - x + xd;
-	      xd = x;
-	    }
-	  if (yd < y)
-	    {
-	      height = height - y + yd;
-	      yd = y;
-	    }
-	  /* clipping on the width */
-	  if (xd + width > xmax)
-	    width = xmax - xd + 1;
-	  /* clipping on the height */
-	  if (yd + height > ymax)
-	    height = ymax - yd + 1;
-
-	  if (yd + height >= ymin
-	      && yd <= ymax
-	      && xd + width >= xmin
-	      && xd <= xmax)
-	    {
-	      DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
-	      /* draw over the padding */
-	      xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
-	      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
-	      width = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding;
-	      height = pBox->BxH + pBox->BxTPadding + pBox->BxBPadding;
-	      /* clipping on the origin */
-	      if (xd < x)
-		{
-		  width = width - x + xd;
-		  xd = x;
-		}
-	      if (yd < y)
-		{
-		  height = height - y + yd;
-		  yd = y;
-		}
-	      /* clipping on the width */
-	      if (xd + width > xmax)
-		width = xmax - xd + 1;
-	      /* clipping on the height */
-	      if (yd + height > ymax)
-		height = ymax - yd + 1;
-	      if (pAb->AbPictBackground)
-		DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground,
-			     frame,  xd - x, yd - y, width, height);
-	      else
-		DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-			       xd - x, yd - y,
-			       width, height, 0, 0, pAb->AbForeground,
-			       pAb->AbBackground, pAb->AbFillPattern);
-	    }
-	}
+      if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+	if (pBox->BxType == BoGhost)
+	  {
+	    /* see child elements */
+	    pAbChild = pAb->AbFirstEnclosed;
+	    while (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox->BxType == BoGhost)
+	      pAbChild = pAbChild->AbFirstEnclosed;
+	    if (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox != NULL)
+	      {
+		pBoxChild = pAbChild->AbBox;
+		/* if the box is split take child boxes */
+		if (pBoxChild->BxType == BoSplit)
+		  pBoxChild = pBoxChild->BxNexChild;
+		do
+		  {
+		    xd = pBoxChild->BxXOrg + pBoxChild->BxLMargin;
+		    yd = pBoxChild->BxYOrg + pBoxChild->BxTMargin;
+		    width = pBoxChild->BxWidth - pBoxChild->BxLMargin - pBoxChild->BxRMargin;
+		    height = pBoxChild->BxHeight - pBoxChild->BxTMargin - pBoxChild->BxBMargin;
+		    /* clipping on the origin */
+		    if (xd < x)
+		      {
+			width = width - x + xd;
+			xd = x;
+		      }
+		    if (yd < y)
+		      {
+			height = height - y + yd;
+			yd = y;
+		      }
+		    /* clipping on the width */
+		    if (xd + width > xmax)
+		      width = xmax - xd;
+		    /* clipping on the height */
+		    if (yd + height > ymax)
+		      height = ymax - yd;
+		    
+		    if (yd + height >= ymin
+			&& yd <= ymax
+			&& xd + width >= xmin
+			&& xd <= xmax)
+		      {
+			DisplayBorders (pBoxChild, frame, xd - x, yd - y, width, height);
+			/* draw over the padding */
+			xd = pBoxChild->BxXOrg + pBoxChild->BxLMargin + pBoxChild->BxLBorder;
+			yd = pBoxChild->BxYOrg + pBoxChild->BxTMargin + pBoxChild->BxTBorder;
+			width = pBoxChild->BxW + pBoxChild->BxLPadding + pBoxChild->BxRPadding;
+			height = pBoxChild->BxH + pBoxChild->BxTPadding + pBoxChild->BxBPadding;
+			/* clipping on the origin */
+			if (xd < x)
+			  {
+			    width = width - x + xd;
+			    xd = x;
+			  }
+			if (yd < y)
+			  {
+			    height = height - y + yd;
+			    yd = y;
+			  }
+			/* clipping on the width */
+			if (xd + width > xmax)
+			  width = xmax - xd;
+			/* clipping on the height */
+			if (yd + height > ymax)
+			  height = ymax - yd;
+			imageDesc = (PictInfo *) pAb->AbPictBackground;
+			if (pAb->AbPictBackground &&
+			    (!pAb->AbTruncatedHead ||
+			     (imageDesc->PicPresent != XRepeat &&
+			      imageDesc->PicPresent != RealSize)))
+			  DrawPicture (pBoxChild,
+				       (PictInfo *) pAb->AbPictBackground,
+				       frame, xd - x, yd - y,
+				       width, height);
+			else
+			  DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+					 xd - x, yd - y,
+					 width, height, 0, 0, pAb->AbForeground,
+					 pAb->AbBackground, pAb->AbFillPattern);
+		      }
+		    pBoxChild = pBoxChild->BxNext;
+		  }
+		while (pBoxChild != NULL && IsParentBox (pBox, pBoxChild));
+	      }
+	  }
+	else
+	  {
+	    xd = pBox->BxXOrg + pBox->BxLMargin;
+	    yd = pBox->BxYOrg + pBox->BxTMargin;
+	    width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
+	    height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
+	    /* clipping on the origin */
+	    if (xd < x)
+	      {
+		width = width - x + xd;
+		xd = x;
+	      }
+	    if (yd < y)
+	      {
+		height = height - y + yd;
+		yd = y;
+	      }
+	    /* clipping on the width */
+	    if (xd + width > xmax)
+	      width = xmax - xd + 1;
+	    /* clipping on the height */
+	    if (yd + height > ymax)
+	      height = ymax - yd + 1;
+	    
+	    if (yd + height >= ymin
+		&& yd <= ymax
+		&& xd + width >= xmin
+		&& xd <= xmax)
+	      {
+		DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
+		/* draw over the padding */
+		xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
+		yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
+		width = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding;
+		height = pBox->BxH + pBox->BxTPadding + pBox->BxBPadding;
+		/* clipping on the origin */
+		if (xd < x)
+		  {
+		    width = width - x + xd;
+		    xd = x;
+		  }
+		if (yd < y)
+		  {
+		    height = height - y + yd;
+		    yd = y;
+		  }
+		/* clipping on the width */
+		if (xd + width > xmax)
+		  width = xmax - xd + 1;
+		/* clipping on the height */
+		if (yd + height > ymax)
+		  height = ymax - yd + 1;
+		if (pAb->AbPictBackground)
+		  DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground,
+			       frame,  xd - x, yd - y, width, height);
+		else
+		  DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+				 xd - x, yd - y,
+				 width, height, 0, 0, pAb->AbForeground,
+				 pAb->AbBackground, pAb->AbFillPattern);
+	      }
+	  }
     }
 }
 

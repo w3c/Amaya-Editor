@@ -1549,7 +1549,7 @@ int                 hlogo;
 
 /*----------------------------------------------------------------------
   DrawPicture draws the picture in the frame window.
-  Parameters x, y, w, h give the displayed area for background images only.
+  Parameters x, y, w, h give the displayed area of the box.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int w, int h)
@@ -1576,7 +1576,7 @@ int                 frame;
   Drawable            drawable;
 #endif /* !_WINDOWS */
   
-  if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+  if (w == 0 && h == 0)
     /* the picture is not visible */
     return;
 
@@ -1599,16 +1599,6 @@ int                 frame;
   GetPictureFileName (imageDesc->PicFileName, fileName);
 
   pres = imageDesc->PicPresent;
-  /* we use x, y, w, and h when it's a background image */
-  if (box->BxAbstractBox->AbLeafType == LtPicture)
-    {
-      /* draw within the inside box */
-      x = box->BxXOrg + box->BxLMargin + box->BxLBorder + box->BxLPadding - xFrame;
-      y = box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding + FrameTable[frame].FrTopMargin - yFrame;
-      w = box->BxW;
-      h = box->BxH;
-    }
-
   /* resize plugins if necessary */
   if (typeImage >= InlineHandlers)
     {

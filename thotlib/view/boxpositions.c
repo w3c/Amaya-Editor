@@ -462,8 +462,8 @@ ThotBool            vertRef;
 
    /* Origine de la boite du pave le plus englobant */
    pBox = pAb->AbBox;
-   x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-   y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+   x = pBox->BxXOrg;
+   y = pBox->BxYOrg;
    width = pBox->BxW;
    height = pBox->BxH;
    Peclate = (pBox->BxType == BoGhost);

@@ -597,7 +597,7 @@ int                 fg;
 	 *         bottom = y + ascent + 3;
 	 */
 
-	InitDrawing (0, 0, thickness, RO, active, fg);
+	InitDrawing (0, 5, thickness, RO, active, fg);
 	switch (type)
 	      {
 		 case 1:
@@ -703,11 +703,11 @@ int                 fg;
    xm = x + (fh / 2);
    xp = x + (fh / 4);
    y += FrameTable[frame].FrTopMargin;
-   InitDrawing (0, 0, 0, RO, active, fg);
+   InitDrawing (0, 5, 0, RO, active, fg);
    /* vertical part */
    DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
 
-   InitDrawing (0, 0, thick, RO, active, fg);
+   InitDrawing (0, 5, thick, RO, active, fg);
    /* Acending part */
    DoDrawOneLine (frame, xp, y + h, xm, y);
    /* Upper part */
@@ -857,12 +857,12 @@ int                 fg;
         y += FrameTable[frame].FrTopMargin;
 	xm = x + (l / 3);
 	ym = y + (h / 2) - 1;
-	InitDrawing (0, 0, 0, RO, active, fg);
+	InitDrawing (0, 5, 0, RO, active, fg);
 	/* Center */
 	DoDrawOneLine (frame, x, y + 1, xm, ym);
 	DoDrawOneLine (frame, x, y + h - 2, xm, ym);
 
-	InitDrawing (0, 0, 2, RO, active, fg);
+	InitDrawing (0, 5, 2, RO, active, fg);
 	/* Borders */
 	DoDrawOneLine (frame, x, y, x + l, y);
 	DoDrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
@@ -902,12 +902,12 @@ int                 fg;
    else
      {
         y += FrameTable[frame].FrTopMargin;
-	InitDrawing (0, 0, 0, RO, active, fg);
+	InitDrawing (0, 5, 0, RO, active, fg);
 	/* Vertical part */
 	DoDrawOneLine (frame, x + 2, y + 1, x + 2, y + h);
 	DoDrawOneLine (frame, x + l - 3, y + 1, x + l - 3, y + h);
 
-	InitDrawing (0, 0, 2, RO, active, fg);
+	InitDrawing (0, 5, 2, RO, active, fg);
 	/* Upper part */
 	DoDrawOneLine (frame, x + 1, y + 1, x + l, y);
 	FinishDrawing (0, RO, active);
@@ -950,7 +950,7 @@ int                 fg;
 	y = y + FrameTable[frame].FrTopMargin;
 	/* radius of arcs is 6mm */
 	arc = h / 4;
-	InitDrawing (0, 0, 2, RO, active, fg);
+	InitDrawing (0, 5, 2, RO, active, fg);
 	/* vertical part */
 	DoDrawOneLine (frame, x + 1, y + arc, x + 1, y + h);
 	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
@@ -1003,7 +1003,7 @@ int                 fg;
 	y = y + FrameTable[frame].FrTopMargin;
 	/* radius of arcs is 3mm */
 	arc = h / 4;
-	InitDrawing (0, 0, 2, RO, active, fg);
+	InitDrawing (0, 5, 2, RO, active, fg);
 	/* two vertical lines */
 	DoDrawOneLine (frame, x + 1, y, x + 1, y + h - arc);
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);

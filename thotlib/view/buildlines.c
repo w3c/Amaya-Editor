@@ -2353,6 +2353,7 @@ int                *height;
 	{
 	  pPosAb = &pAb->AbHorizRef;
 	  x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	  x += top;
 	  MoveHorizRef (pBox, NULL, pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
 	}
     }

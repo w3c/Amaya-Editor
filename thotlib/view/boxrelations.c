@@ -1412,8 +1412,17 @@ PtrBox              pPreviousBox;
   ComputeDimRelation applies the vertical/horizontal sizing rule of pAb
   according to the parameter horizRef. 
   Return TRUE when the dimension depends on the contents.
-  If the dimension depends to another box, the box size BxW or BxH is 
-  updated and dependencies between boxes are registered.
+  There are 4 different case:
+  - if the dim depends on the parent the rule concerns the outside
+    dim and is related to the inside dim of the parent.
+  - if it's the default dim the rule concerns the inside dim and is 
+    related to the outside dim of children.
+  - if the dim depends on another box the rule concerns the outside
+    dim and is related to the outside dim of that box.
+  - if the rule gives an absolute dim the rule concerns the inside
+    dim of the box.
+  The box size BxW or BxH is updated and dependencies between boxes are
+  registered.
 
   Relation between values:
   ^
