@@ -2575,7 +2575,7 @@ char              **argv;
    char               *tempDir;
    int                 NCopies;
    long                thotWindow;
-   int                 number;
+   /*int                 number;*/
    char               *destination;
    char                cmd[800];
    char                temp[MAX_PATH];
@@ -2591,7 +2591,7 @@ char              **argv;
    Repaginate = atoi (argv[argCounter++]);
    firstPage = atoi (argv[argCounter++]);
    lastPage = atoi (argv[argCounter++]);
-   number = atoi (argv[argCounter++]);
+   /*number = atoi (argv[argCounter++]);*/
    realName = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
    strcpy (realName, argv[argCounter++]);
    printer = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);

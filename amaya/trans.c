@@ -933,7 +933,6 @@ int                *nbCreated;
 #endif
 {
    Element             elCour, elPreced, elNext;
-   ElementType         elemType;
    int                 nbc;
    boolean             res;
 
@@ -954,7 +953,6 @@ int                *nbCreated;
        	/* for each child of the source element */
 	elNext = elCour;
 	TtaNextSibling (&elNext);
-	elemType = TtaGetElementType (elCour);
 	TtaRemoveTree (elCour, doc);
 	if (elPreced != NULL)
 	   TtaInsertSibling (elCour, elPreced, FALSE, doc);

@@ -249,7 +249,6 @@ char               *text;
 	     ActiveTransfer (doc);
 	     TtaSetAttributeText (attr, pathimage, el, doc);
 	     FetchImage (doc, el);
-	     desc->status = IMAGE_MODIFIED;
 	     ResetStop (doc);
 	  }
      }
@@ -268,7 +267,6 @@ char               *text;
 	     ActiveTransfer (doc);
 	     TtaSetAttributeText (attr, pathimage, el, doc);
 	     FetchImage (doc, el);
-	     desc->status = IMAGE_MODIFIED;
 	     ResetStop (doc);
 	  }
      }

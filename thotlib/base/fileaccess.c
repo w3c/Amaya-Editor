@@ -473,26 +473,24 @@ DocumentIdentifier  Ident;
 
 /*----------------------------------------------------------------------
    MakeCompleteName compose un nom de fichier absolu en concatenant 
-   un nom de directory, le nom de fichier (fname) et       
-   l'extension (fext).                                     
-   Retourne le nom compose' dans nomabs.                   
-   Si fname se termine deja par fext, alors copie          
-   simplement fname dans nomabs.                           
-   La chaine directory_list peut contenir un path          
-   hierarchique ou` les noms de repertoires sont classe's  
-   par ordre d'importance, et separes par PATH_SEP         
-   Si le fichier existe, on retourne dans directory_list   
-   le nom du directory qui le contient, sinon              
-   directory_list n'est pas change'.                       
-   Si le fichier n'existe pas, on retourne nomabs vide et  
+   un nom de directory, le nom de fichier (fname) et l'extension (fext).
+   Retourne le nom compose' dans completeName.                   
+   Si fname se termine deja par fext, alors copie simplement fname dans
+   completeName.
+   La chaine directory_list peut contenir un path
+   hierarchique ou` les noms de repertoires sont classe's
+   par ordre d'importance, et separes par PATH_SEP
+   Si le fichier existe, on retourne dans directory_list le nom du directory
+   qui le contient, sinon directory_list n'est pas change'.       
+   Si le fichier n'existe pas, on retourne completeName vide et
    dans directory_list le 1er nom du path fourni a` l'appel
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MakeCompleteName (Name fname, char *fext, PathBuffer directory_list, PathBuffer completeName, int *length)
+void                MakeCompleteName (char *fname, char *fext, PathBuffer directory_list, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                MakeCompleteName (fname, fext, directory_list, completeName, length)
-Name                fname;
+char               *fname;
 char               *fext;
 PathBuffer          directory_list;
 PathBuffer          completeName;
@@ -585,10 +583,10 @@ char               *fileName;
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsExtended (Name fileName, char *extension)
+static boolean      IsExtended (char *fileName, char *extension)
 #else  /* __STDC__ */
 static boolean      IsExtended (fileName, extension)
-Name                fileName;
+char               *fileName;
 char               *extension;
 
 #endif /* __STDC__ */
@@ -633,10 +631,10 @@ char               *extension;
    simplement fileName dans completeName.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FindCompleteName (Name fileName, char *extension, PathBuffer directory, PathBuffer completeName, int *length)
+void                FindCompleteName (char *fileName, char *extension, PathBuffer directory, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                FindCompleteName (fileName, extension, directory, completeName, length)
-Name                fileName;
+char               *fileName;
 char               *extension;
 PathBuffer          directory;
 PathBuffer          completeName;
@@ -722,7 +720,7 @@ int                *length;
    GetDocIdent                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetDocIdent (DocumentIdentifier * Ident, Name docName)
+void                GetDocIdent (DocumentIdentifier *Ident, Name docName)
 #else  /* __STDC__ */
 void                GetDocIdent (Ident, docName)
 DocumentIdentifier *Ident;
@@ -732,6 +730,7 @@ Name                docName;
 
 {
    strncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
+   *Ident[MAX_DOC_IDENT_LEN - 1] = '\0';
 }
 
 /*----------------------------------------------------------------------
@@ -747,6 +746,7 @@ Name                docName;
 #endif /* __STDC__ */
 {
    strncpy (docName, Ident, MAX_NAME_LENGTH);
+   docName[MAX_NAME_LENGTH - 1] = '\0';
 }
 
 

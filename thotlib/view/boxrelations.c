@@ -1152,7 +1152,6 @@ boolean             horizRef;
    PtrAbstractBox      pChildAb;
    boolean             inLine;
    boolean             defaultDim;
-   ptrfont             font;
    OpRelation          op;
    AbDimension        *pDimAb;
    AbPosition         *pPosAb;
@@ -1248,7 +1247,6 @@ boolean             horizRef;
 	/* Est-ce une boite non-elastique ? */
 	if ((horizRef && !pAb->AbWidth.DimIsPosition) || (!horizRef && !pAb->AbHeight.DimIsPosition))
 	  {
-	     font = pBox->BxFont;
 	     /* Est-ce que la dimension est exprimee en points typo. ? */
 	     if (horizRef)
 		pDimAb = &pAb->AbWidth;

@@ -959,7 +959,7 @@ char               *name;
    char               *fontpath;
    char                FONT_PATH[128];
    char               *value;
-   int                 f3, f4, f5;
+   int                 f3;
 
    /* is there a predefined font family ? */
    MenuSize = 12;
@@ -1000,8 +1000,6 @@ char               *name;
    if (value != NULL)
       sscanf (value, "%d", &MenuSize);
    f3 = MenuSize + 2;
-   f4 = MenuSize - 2;
-   f5 = MenuSize;
 
 #ifndef _WINDOWS
    fontpath = TtaGetEnvString ("THOTFONT");

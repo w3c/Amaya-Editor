@@ -397,7 +397,7 @@ PtrBox              pBox;
 	*pres = (PictureScaling) (IndexPresImage);
 	image = (PictInfo *) pBox->BxPictInfo;
 	strcpy (image->PicFileName, name);
-	image->PicPresent = *pres;
+	image->PicPresent = (PictureScaling) *pres;
 	image->PicType = *typim;
      }
    *result = RedisplayPicture;

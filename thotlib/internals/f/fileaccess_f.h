@@ -38,14 +38,14 @@ extern boolean SameDocIdent ( DocumentIdentifier Ident1,
                               DocumentIdentifier Ident2 );
 extern void ClearDocIdent ( DocumentIdentifier * Ident );
 extern boolean DocIdentIsNull ( DocumentIdentifier Ident );
-extern void MakeCompleteName ( Name fname,
+extern void MakeCompleteName ( char *fname,
                                char *fext,
                                PathBuffer directory_list,
                                PathBuffer completeName,
                                int *length );
 extern void GetPictureFileName ( char *name,
                                  char *fileName );
-extern void FindCompleteName ( Name fileName,
+extern void FindCompleteName ( char *fileName,
                                char *extension,
                                PathBuffer directory,
                                PathBuffer completeName,
@@ -94,14 +94,14 @@ extern boolean SameDocIdent (/* DocumentIdentifier Ident1,
                                 DocumentIdentifier Ident2 */);
 extern void ClearDocIdent (/* DocumentIdentifier * Ident */);
 extern boolean DocIdentIsNull (/* DocumentIdentifier Ident */);
-extern void MakeCompleteName (/* Name fname,
+extern void MakeCompleteName (/* char *fname,
                                  char *fext,
                                  PathBuffer directory_list,
                                  PathBuffer completeName,
                                  int *length */);
 extern void GetPictureFileName (/* char *name,
                                    char *fileName */);
-extern void FindCompleteName (/* Name fileName,
+extern void FindCompleteName (/* char *fileName,
                                  char *extension,
                                  PathBuffer directory,
                                  PathBuffer completeName,

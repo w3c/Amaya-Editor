@@ -507,10 +507,12 @@ static struct Cat_List *NewCatList ()
    /* Updates thenumber of available and free catalogues */
    NbLibCat += MAX_CAT;
    for (i = 0; i < MAX_CAT; i++)
-      adlist->Cat_Table[i].Cat_Widget = 0;
+     {
+       adlist->Cat_Table[i].Cat_Widget = 0;
+       adlist->Cat_Table[i].Cat_Entries = NULL;
+     }
    return (adlist);
-
-}				/*NewCatList */
+}
 
 
 /*----------------------------------------------------------------------
@@ -570,8 +572,8 @@ struct E_List      *adbloc;
 	  }
 	else
 	   cebloc = cebloc->E_Next;
-     }				/*while */
-}				/*FreeEList */
+     }
+}
 
 
 /*----------------------------------------------------------------------
@@ -647,17 +649,16 @@ caddr_t             call_d;
 			entry = index;
 		     i++;
 		     index++;
-		  }		/*while */
+		  }
 		/* Passe au bloc suivant */
 		adbloc = adbloc->E_Next;
 		i = 0;
-	     }			/*while */
+	     }
 
-/*** Retour de l'entree du menu choisie vers l'application ***/
+	   /*** Retour de l'entree du menu choisie vers l'application ***/
 	   (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
 	}
-
-}				/*CallMenu */
+}
 
 
 /*----------------------------------------------------------------------
@@ -694,19 +695,19 @@ caddr_t             call_d;
 		     entry = index;
 		  i++;
 		  index++;
-	       }		/*while */
+	       }
 	     /* Passe au bloc suivant */
 	     adbloc = adbloc->E_Next;
 	     i = 0;
-	  }			/*while */
+	  }
 
-/*** Sauve la valeur de la derniere selection ***/
+	/*** Sauve la valeur de la derniere selection ***/
 	catalogue->Cat_Data = entry;
 	/* retourne la valeur si le menu est reactif */
 	if (catalogue->Cat_React)
 	   (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
      }
-}				/*CallRadio */
+}
 
 
 /*----------------------------------------------------------------------
@@ -753,7 +754,7 @@ caddr_t             call_d;
 		    }
 		  i++;
 		  ent++;
-	       }		/*while */
+	       }
 	     /* Passe au bloc suivant */
 	     adbloc = adbloc->E_Next;
 	     i = 0;
@@ -793,7 +794,7 @@ struct Cat_Context *catalogue;
 	  {
 	     while (i < C_NUMBER && ent < max)
 	       {
-/*** Retour les entrees selectionnees vers l'application ***/
+		 /*** Retour les entrees selectionnees vers l'application ***/
 		  if (adbloc->E_Free[i] == 'Y')
 		    {
 		       (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, index);
@@ -802,13 +803,13 @@ struct Cat_Context *catalogue;
 		  i++;
 		  ent++;
 		  index++;
-	       }		/*while */
+	       }
 	     /* Passe au bloc suivant */
 	     adbloc = adbloc->E_Next;
 	     i = 0;
-	  }			/*while */
-     }				/*if */
-}				/*ReturnTogglevalues */
+	  }
+     }
+}
 
 
 /*----------------------------------------------------------------------
@@ -838,7 +839,7 @@ caddr_t             call_d;
    /* Affiche le formulaire */
    if (parentCatalogue->Cat_Widget != 0)
      {
-/*** Allume les sous-widgets du formulaire ***/
+        /*** Allume les sous-widgets du formulaire ***/
 	adbloc = parentCatalogue->Cat_Entries;
 	/* Le premier bloc contient les boutons de la feuille de saisie */
 	adbloc = adbloc->E_Next;
@@ -854,7 +855,7 @@ caddr_t             call_d;
 		  if (catalogue->Cat_Widget != 0)
 		     XtManageChild (catalogue->Cat_Widget);
 #endif /* _WINDOWS */
-	       }		/*if */
+	       }
 
 	     /* Faut-il passer au bloc suivant ? */
 	     ent++;
@@ -868,7 +869,7 @@ caddr_t             call_d;
 	       }
 	  }			/*while */
 
-/*** Positionne le formulaire a la position courante du show ***/
+	/*** Positionne le formulaire a la position courante du show ***/
 	n = 0;
 	w = parentCatalogue->Cat_Widget;
 	n = 0;
@@ -882,8 +883,8 @@ caddr_t             call_d;
 	XtManageChild (w);
 	XtManageChild (XtParent (w));
 #endif /* _WINDOWS */
-     }				/*if */
-}				/*INITform */
+     }
+}
 
 
 /*----------------------------------------------------------------------
@@ -902,7 +903,7 @@ caddr_t             call_d;
 {
    TtaSetDialoguePosition ();
    INITform (w, parentCatalogue, call_d);
-}				/*INITetPOSform */
+}
 
 
 /*----------------------------------------------------------------------
@@ -971,9 +972,9 @@ caddr_t             call_d;
 	   else
 	      return;
 
-/*** Retour vers l'application ***/
-/*** Eteins les sous-widgets du feuillet si on quitte ***/
-/*** Recupere les retours des sous-catalogues         ***/
+	/*** Retour vers l'application ***/
+	/*** Eteins les sous-widgets du feuillet si on quitte ***/
+	/*** Recupere les retours des sous-catalogues         ***/
 	adbloc = adbloc->E_Next;
 	ent = 1;
 	while (adbloc->E_ThotWidget[ent] != 0)
@@ -1041,9 +1042,9 @@ caddr_t             call_d;
 				      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, XmTextGetString (wtext));
 				   }
 			      }
-			 }	/*if i>0 */
-		    }		/*if */
-	       }		/*if */
+			 }
+		    }
+	       }
 
 	     /* Faut-il passer au bloc suivant ? */
 	     ent++;
@@ -1057,7 +1058,7 @@ caddr_t             call_d;
 	       }
 	  }			/*while */
 
-/*** On fait disparaitre le formulaire ***/
+	/*** On fait disparaitre le formulaire ***/
 	if (entry == 0 || parentCatalogue->Cat_Type == CAT_DIALOG || parentCatalogue->Cat_Type == CAT_FORM)
 	  {
 	     XtUnmanageChild (parentCatalogue->Cat_Widget);
@@ -1073,8 +1074,8 @@ caddr_t             call_d;
 	  }
 
 	(*CallbackDialogue) (parentCatalogue->Cat_Ref, INTEGER_DATA, entry);
-     }				/*if */
-}				/*CallSheet */
+     }
+}
 
 
 /*----------------------------------------------------------------------
@@ -1140,7 +1141,7 @@ caddr_t             call_d;
 
 	     }
 	}
-}				/*CallValueSet */
+}
 
 
 /*----------------------------------------------------------------------
@@ -1169,7 +1170,7 @@ XmListCallbackStruct *infos;
 	      if (text[0] != '\0' && text[0] != ' ')
 		 (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
 	}
-}				/*CallList */
+}
 
 
 /*----------------------------------------------------------------------
@@ -1200,7 +1201,7 @@ caddr_t             call_d;
 	   /* retourne la valeur saisie si la feuille de saisie est reactive */
 	   (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, XmTextGetString (wtext));
 	}
-}				/*CallTextChange */
+}
 
 
 /*----------------------------------------------------------------------
@@ -1238,7 +1239,7 @@ caddr_t             call_d;
 	else
 	   XtSetValues ((ThotWidget) catalogue->Cat_Entries, args, 1);
      }
-}				/*CallLabel */
+}
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1278,7 +1279,7 @@ XtAppContext       *app_context;
 Display           **Dp;
 
 #endif /* __STDC__ */
-#endif				/* !WWW_XWINDOWS */
+#endif /* _WINDOWS */
 {
    int                 n;
 
@@ -1365,8 +1366,9 @@ Display           **Dp;
    TextTranslations = NULL;
 #endif /* _WINDOWS */
    MainShell = 0;
-   FirstFreeRef = 0;		/* Pas encore de reference attribuee */
-}				/*TtaInitDialogue */
+   /* Pas encore de reference attribuee */
+   FirstFreeRef = 0;
+}
 
 
 #ifdef WWW_XWINDOWS
@@ -1383,7 +1385,7 @@ XtTranslations      translations;
 #endif /* __STDC__ */
 {
    TextTranslations = translations;
-}				/*TtaInitDialogueTranslations */
+}
 #endif /* WWW_XWINDOWS */
 
 
@@ -1408,7 +1410,7 @@ char               *formfont;
    if (menufont != NULL)
       formFONT = XmFontListCreate (XLoadQueryFont (GDp, formfont), XmSTRING_DEFAULT_CHARSET);
 #endif /* _WINDOWS */
-}				/*TtaChangeDialogueFonts */
+}
 
 
 /*----------------------------------------------------------------------
@@ -1430,18 +1432,16 @@ int                 number;
    if (number > 0)
       FirstFreeRef += number;
    return (base);
-}				/*TtaGetReferencesBase */
+}
+
 
 /*----------------------------------------------------------------------
    TtaInitDialogueWindow Cre'ation et initialisation de la fenetree^tre    
    principale d'une application.                           
   ----------------------------------------------------------------------*/
-
 #ifdef _WINDOWS
 extern HINSTANCE    hInstance;
-
 #endif
-
 #ifdef __STDC__
 void                TtaInitDialogueWindow (char *name, char *geometry, Pixmap logo, Pixmap icon, int number, char *textmenu)
 #else  /* __STDC__ */
@@ -1520,7 +1520,7 @@ char               *textmenu;
 
 	if (number > 0)
 	  {
-/*** La barre des menus ***/
+	    /*** La barre des menus ***/
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
@@ -1529,7 +1529,7 @@ char               *textmenu;
 	     menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", args, n);
 	     XtManageChild (menu_bar);
 
-/*** Creation des menus ***/
+	     /*** Creation des menus ***/
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
@@ -1563,7 +1563,7 @@ char               *textmenu;
 	frame = XmCreateFrame (Main_Wd, "Frame", args, n);
 	XtManageChild (frame);
 
-/*** Creation de la zone messages ***/
+	/*** Creation de la zone messages ***/
 	if (WithMessages || logo != 0)
 	  {
 
@@ -1655,7 +1655,7 @@ char               *textmenu;
 	       }
 	  }
 
-/*** Creation d'un frame pour attacher le dialogue ***/
+	/*** Creation d'un frame pour attacher le dialogue ***/
 	n = 0;
 	XtSetArg (args[n], XmNmarginWidth, 0);
 	n++;
@@ -1667,14 +1667,14 @@ char               *textmenu;
 	XtManageChild (w);
 	FrameTable[0].WdFrame = w;	/* widget frame */
 
-/*** Realisation de la fenetre de dialogue ***/
+	/*** Realisation de la fenetre de dialogue ***/
 	if (menu_bar != 0 || frame != 0)
 	   XmMainWindowSetAreas (Main_Wd, menu_bar, w, NULL, NULL, frame);
 	XtPopup (MainShell, XtGrabNonexclusive);
 	FrRef[0] = XtWindowOfObject (w);
      }
 #endif /* _WINDOWS */
-}				/*TtaInitDialogueWindow */
+}
 
 #ifdef WWW_XWINDOWS
 /*----------------------------------------------------------------------
@@ -1787,7 +1787,7 @@ char               *text;
    w = XmCreateLabel (row, "Thot_MSG", args, n);
    XtManageChild (w);
 
-/*** Create the Row-Column that includes OK button ***/
+   /*** Create the Row-Column that includes OK button ***/
    n = 0;
    XtSetArg (args[n], XmNborderColor, Button_Color);
    n++;
@@ -1804,7 +1804,7 @@ char               *text;
    row = XmCreateRowColumn (row, "Dialogue", args, n);
    XtManageChild (row);
 
-/*** Create the OK button ***/
+   /*** Create the OK button ***/
    n = 0;
    XtSetArg (args[n], XmNbackground, Button_Color);
    n++;
@@ -1923,7 +1923,7 @@ void                (*procedure) ();
 #endif /* __STDC__ */
 {
    CallbackDialogue = procedure;
-}				/*TtaDefineDialogueCallback */
+}
 
 
 
@@ -2019,18 +2019,18 @@ int                 ref;
 	while (icat < MAX_CAT && catval == NULL)
 	  {
 	     catalogue = &adlist->Cat_Table[icat];
-/*===============> C'est la premiere entree libre */
+	     /*===============> C'est la premiere entree libre */
 	     if (catalogue->Cat_Widget == 0)
 	       {
 		  if (catlib == NULL)
 		     catlib = catalogue;
 	       }
-/*===============> Le catalogue existe deja */
+	     /*===============> Le catalogue existe deja */
 	     else if (catalogue->Cat_Ref == ref)
 		catval = catalogue;
 
 	     icat++;
-	  }			/*while */
+	  }
 
 	/* On passe au bloc suivant */
 	if (adlist->Cat_Next == NULL && catval == NULL && catlib == NULL)
@@ -2039,7 +2039,7 @@ int                 ref;
 	     adlist->Cat_Next = NewCatList ();
 	  }
 	adlist = adlist->Cat_Next;
-     }				/*while */
+     }
 
    /* Si le catalogue n'existe pas encore */
    if (catval == NULL && catlib != NULL)
@@ -2051,7 +2051,7 @@ int                 ref;
      }
    else
       return (catval);
-}				/*CatEntry */
+}
 
 
 /*----------------------------------------------------------------------
@@ -2137,7 +2137,7 @@ struct Cat_Context *catalogue;
 	catalogue->Cat_XtWParent = (int) w;
 	return (0);
      }
-}				/*DestContenuMenu */
+}
 
 
 /*----------------------------------------------------------------------
@@ -2269,7 +2269,7 @@ char               *equiv;
 	     return;
 	  }
 
-/*** Cree le titre du menu ***/
+	/*** Cree le titre du menu ***/
 	if (title != NULL)
 	  {
 #ifdef _WINDOWS
@@ -2384,7 +2384,7 @@ char               *equiv;
 		       }
 
 		     if (text[index] == 'B')
-/*__________________________________________ Creation d'un bouton __*/
+		       /*__________________________________________ Creation d'un bouton __*/
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
@@ -2397,7 +2397,7 @@ char               *equiv;
 #endif /* _WINDOWS */
 		       }
 		     else if (text[index] == 'T')
-/*__________________________________________ Creation d'un toggle __*/
+		       /*__________________________________________ Creation d'un toggle __*/
 		       {
 			  /* un toggle a faux */
 #ifdef _WINDOWS
@@ -2413,7 +2413,7 @@ char               *equiv;
 #endif /* _WINDOWS */
 		       }
 		     else if (text[index] == 'M')
-/*_______________________________________ Creation d'un sous-menu __*/
+		       /*_______________________________________ Creation d'un sous-menu __*/
 		       {
 			  /* En attendant le sous-menu on cree un bouton */
 #ifdef _WINDOWS
@@ -2425,7 +2425,7 @@ char               *equiv;
 #endif /* _WINDOWS */
 		       }
 		     else if (text[index] == 'F')
-/*_________________________________ Creation d'un sous-formulaire __*/
+		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
 			  strcpy (heading, &text[index + 1]);
 			  strcat (heading, "...");
@@ -2440,7 +2440,7 @@ char               *equiv;
 #endif /* _WINDOWS */
 		       }
 		     else if (text[index] == 'S')
-/*_________________________________ Creation d'un separateur __*/
+		       /*_________________________________ Creation d'un separateur __*/
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_SEPARATOR, 0, NULL);
@@ -2453,12 +2453,13 @@ char               *equiv;
 #endif /* _WINDOWS */
 		       }
 		     else
-/*____________________________________ Une erreur de construction __*/
+		       /*____________________________________ Une erreur de construction __*/
 		       {
 			  TtaDestroyDialogue (ref);
-			  TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
+			  /* Type d'entree non defini */
+			  TtaError (ERR_invalid_parameter);
 			  return;
-		       }	/*else if */
+		       }
 
 #ifndef _WINDOWS
 		     /* liberation de la string */
@@ -2468,8 +2469,8 @@ char               *equiv;
 		     i++;
 		     ent++;
 		     index += count + 1;
-		  }		/*else */
-	     }			/*while */
+		  }
+	     }
 
 	/* Attache le pull-down menu au widget passe en parametre */
 	if (parent != 0 && !rebuilded)
@@ -2481,10 +2482,11 @@ char               *equiv;
 	     XtSetValues (parent, args, n);
 	     XtManageChild (parent);
 #endif /* _WINDOWS */
-	  }			/*if */
-     }				/*else */
+	  }
+     }
 
-}				/*TtaNewPulldown */
+}
+
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
@@ -2639,7 +2641,8 @@ char                button;
 	  {
 	     if (catalogue->Cat_Type == CAT_POPUP)
 	       {
-		  DestContenuMenu (catalogue);	/* Modification du catalogue */
+		 /* Modification du catalogue */
+		  DestContenuMenu (catalogue);
 		  rebuilded = TRUE;
 	       }
 	     else
@@ -2829,7 +2832,7 @@ char                button;
 		       }
 
 		     if (text[index] == 'B')
-/*__________________________________________ Creation d'un bouton __*/
+		       /*__________________________________________ Creation d'un bouton __*/
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
@@ -2842,7 +2845,7 @@ char                button;
 #endif /* !_WINDOWS */
 		       }
 		     else if (text[index] == 'T')
-/*__________________________________________ Creation d'un toggle __*/
+		       /*__________________________________________ Creation d'un toggle __*/
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
@@ -2857,7 +2860,7 @@ char                button;
 #endif /* !_WINDOWS */
 		       }
 		     else if (text[index] == 'M')
-/*_______________________________________ Creation d'un sous-menu __*/
+		       /*_______________________________________ Creation d'un sous-menu __*/
 		       {
 			  /* En attendant le sous-menu on cree un bouton */
 #ifdef _WINDOWS
@@ -2869,7 +2872,7 @@ char                button;
 #endif /* !_WINDOWS */
 		       }
 		     else if (text[index] == 'F')
-/*_________________________________ Creation d'un sous-formulaire __*/
+		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
 			  strcpy (heading, &text[index + 1]);
 			  strcat (heading, "...");
@@ -2883,7 +2886,7 @@ char                button;
 #endif /* !_WINDOWS */
 		       }
 		     else if (text[index] == 'S')
-/*_________________________________ Creation d'un separateur __*/
+		       /*_________________________________ Creation d'un separateur __*/
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_SEPARATOR, 0, NULL);
@@ -2896,7 +2899,7 @@ char                button;
 #endif /* !_WINDOWS */
 		       }
 		     else
-/*____________________________________ Une erreur de construction __*/
+		       /*____________________________________ Une erreur de construction __*/
 		       {
 			  TtaDestroyDialogue (ref);
 			  TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
@@ -2913,11 +2916,12 @@ char                button;
 		     ent++;
 		     index += count + 1;
 		  }		/*else */
-	     }			/*while */
+	     }
 
-     }				/*else */
+     }
 
-}				/*TtaNewPopup */
+}
+
 
 /*----------------------------------------------------------------------
    AddInFormulary recherche une entree libre dans le formulaire  
@@ -2962,7 +2966,7 @@ struct E_List     **adbloc;
    row = XtParent (w);
 #endif /* !_WINDOWS */
 
-/*** Recherche une entree libre dans le formulaire ***/
+   /*** Recherche une entree libre dans le formulaire ***/
    while ((*adbloc)->E_ThotWidget[*entry] != 0)
      {
 	/* Est-ce un widget de Row-Column (n fois le facteur de blocage) ? */
@@ -2979,7 +2983,7 @@ struct E_List     **adbloc;
 	     *adbloc = (*adbloc)->E_Next;
 	     *entry = 0;
 	  }
-     }				/*while */
+     }
 
    /* Faut-il ajouter un nouveau Row-Column ? */
    if (*index % catalogue->Cat_FormPack == 0)
@@ -3016,10 +3020,10 @@ struct E_List     **adbloc;
 	  }
      }				/*if */
 
-   /*                                       il faut mettre a jour l'index */
+   /* il faut mettre a jour l'index */
    *index += C_NUMBER;
    return (w);
-}				/*AddInFormulary */
+}
 
 
 /*----------------------------------------------------------------------
@@ -3076,7 +3080,7 @@ boolean             horizontal;
 	catalogue->Cat_React = TRUE;
 	title_string = 0;
 	parentCatalogue = CatEntry (ref_parent);
-/*__________________________________ Le catalogue parent n'existe pas __*/
+	/*__________________________________ Le catalogue parent n'existe pas __*/
 	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
@@ -3087,14 +3091,14 @@ boolean             horizontal;
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-/*_________________________________________ Sous-menu d'un formulaire __*/
+	/*_________________________________________ Sous-menu d'un formulaire __*/
 	else if (parentCatalogue->Cat_Type == CAT_FORM
 		 || parentCatalogue->Cat_Type == CAT_SHEET
 		 || parentCatalogue->Cat_Type == CAT_DIALOG)
 	  {
 	     w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
-/*** Cree un sous-menu d'un formulaire ***/
+	     /*** Cree un sous-menu d'un formulaire ***/
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
@@ -3120,7 +3124,7 @@ boolean             horizontal;
 	     catalogue->Cat_Entries = adbloc;
 	  }
 
-/*** Cree le titre du sous-menu ***/
+	/*** Cree le titre du sous-menu ***/
 	if (title != NULL)
 	  {
 	     n = 0;
@@ -3173,7 +3177,7 @@ boolean             horizontal;
 	row = XmCreateRowColumn (menu, "Dialogue", args, n);
 	XtManageChild (row);
 
-/*** Cree les differentes entrees du sous-menu ***/
+	/*** Cree les differentes entrees du sous-menu ***/
 	n = 0;
 	XtSetArg (args[n], XmNfontList, DefaultFont);
 	n++;
@@ -3197,7 +3201,7 @@ boolean             horizontal;
 		  adbloc->E_Next = NewEList ();
 		  adbloc = adbloc->E_Next;
 		  ent = 0;
-	       }		/*if */
+	       }
 
 	     /* On ne traite que des entrees de type bouton */
 	     adbloc->E_Type[ent] = 'B';
@@ -3306,9 +3310,9 @@ boolean             react;
 	      /* Modification du catalogue */
 	      TtaDestroyDialogue (ref);
 
-/*======================================> Recherche le catalogue parent */
+	/*======================================> Recherche le catalogue parent */
 	parentCatalogue = CatEntry (ref_parent);
-/*__________________________________ Le catalogue parent n'existe pas __*/
+	/*__________________________________ Le catalogue parent n'existe pas __*/
 	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
@@ -3319,7 +3323,7 @@ boolean             react;
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-/*_________________________________________ Sous-menu d'un formulaire __*/
+	/*_________________________________________ Sous-menu d'un formulaire __*/
 	else if (parentCatalogue->Cat_Type == CAT_FORM
 		 || parentCatalogue->Cat_Type == CAT_SHEET
 		 || parentCatalogue->Cat_Type == CAT_DIALOG)
@@ -3330,7 +3334,7 @@ boolean             react;
 
 #ifdef _WINDOWS
 #else  /* _WINDOWS */
-/*** Cree un sous-menu d'un formulaire ***/
+		  /*** Cree un sous-menu d'un formulaire ***/
 		  n = 0;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
@@ -3363,7 +3367,7 @@ boolean             react;
 		  adbloc = catalogue->Cat_Entries;
 	       }
 
-/*** Cree le titre du sous-menu ***/
+	     /*** Cree le titre du sous-menu ***/
 	     if (title != NULL)
 	       {
 #ifdef _WINDOWS
@@ -3441,7 +3445,7 @@ boolean             react;
 		row = (ThotWidget) catalogue->Cat_XtWParent;
 
 #ifndef _WINDOWS
-/*** Cree les differentes entrees du sous-menu ***/
+	     /*** Cree les differentes entrees du sous-menu ***/
 	     n = 0;
 	     XtSetArg (args[n], XmNindicatorType, XmONE_OF_MANY);
 	     n++;
@@ -3514,7 +3518,7 @@ boolean             react;
 	       }		/*while */
 
 	  }
-/*_______________________________________________ Sous-menu d'un menu __*/
+	/*_______________________________________________ Sous-menu d'un menu __*/
 	else
 	  {
 	     if (parentCatalogue->Cat_Type == CAT_POPUP
@@ -3525,7 +3529,7 @@ boolean             react;
 		  /* Faut-il reconstruire entierement le menu */
 		  if (!rebuilded)
 		    {
-/*=========> Recherche l'entree du menu parent corespondante */
+		      /*=========> Recherche l'entree du menu parent corespondante */
 		       adbloc = parentCatalogue->Cat_Entries;
 		       ent = entry + 2;		/* decalage de 2 pour le widget titre */
 		       while (ent >= C_NUMBER)
@@ -3578,7 +3582,7 @@ boolean             react;
 			    /* Memorise l'entree decalee de 2 pour le widget titre */
 			    catalogue->Cat_EntryParent = entry + 2;
 
-/*** Relie le sous-menu au bouton du menu ***/
+			    /*** Relie le sous-menu au bouton du menu ***/
 			    w = adbloc->E_ThotWidget[ent];
 			    n = 0;
 #ifdef _WINDOWS
@@ -3607,7 +3611,7 @@ boolean             react;
 		       adbloc = catalogue->Cat_Entries;
 		    }
 	       }
-/*____________________________________________ Sous-menu non valide __*/
+	     /*____________________________________________ Sous-menu non valide __*/
 	     else
 	       {
 		  TtaError (ERR_invalid_parameter);
@@ -3719,7 +3723,7 @@ boolean             react;
 			 }
 
 		       if (text[index] == 'B')
-/*________________________________________ Creation d'un bouton __*/
+			 /*________________________________________ Creation d'un bouton __*/
 			 {
 #ifdef _WINDOWS
 #else  /* _WINDOWS */
@@ -3730,7 +3734,7 @@ boolean             react;
 #endif /* !_WINDOWS */
 			 }
 		       else if (text[index] == 'T')
-/*________________________________________ Creation d'un toggle __*/
+			 /*________________________________________ Creation d'un toggle __*/
 			 {
 #ifdef _WINDOWS
 #else  /* _WINDOWS */
@@ -3744,7 +3748,7 @@ boolean             react;
 #endif /* !_WINDOWS */
 			 }
 		       else if (text[index] == 'M')
-/*________________________________________ Appel d'un sous-menu __*/
+			 /*________________________________________ Appel d'un sous-menu __*/
 			 {
 #ifdef _WINDOWS
 #else  /* _WINDOWS */
@@ -3753,7 +3757,7 @@ boolean             react;
 #endif /* !_WINDOWS */
 			 }
 		       else if (text[index] == 'F')
-/*__________________________________ Appel d'un sous-formulaire __*/
+			 /*__________________________________ Appel d'un sous-formulaire __*/
 			 {
 #ifdef _WINDOWS
 #else  /* _WINDOWS */
@@ -3765,7 +3769,7 @@ boolean             react;
 #endif /* !_WINDOWS */
 			 }
 		       else if (text[index] == 'S')
-/*_________________________________ Creation d'un separateur __*/
+			 /*_________________________________ Creation d'un separateur __*/
 			 {
 #ifdef _WINDOWS
 #else  /* _WINDOWS */
@@ -3776,7 +3780,7 @@ boolean             react;
 #endif /* !_WINDOWS */
 			 }
 		       else
-/*__________________________________ Une erreur de construction __*/
+			 /*__________________________________ Une erreur de construction __*/
 			 {
 			    TtaDestroyDialogue (ref);
 			    TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
@@ -3796,7 +3800,7 @@ boolean             react;
 
 	  }
      }
-}				/*TtaNewSubmenu */
+}
 
 
 /*----------------------------------------------------------------------
@@ -3874,7 +3878,7 @@ int                 val;
 		    }
 		  i++;
 		  ent++;
-	       }		/*while */
+	       }
 	     /* Passe au bloc suivant */
 	     adbloc = adbloc->E_Next;
 	     i = 0;
@@ -3886,7 +3890,7 @@ int                 val;
 	/* La selection de l'utilisateur est desactivee */
 	catalogue->Cat_Data = val;
      }
-}				/*TtaSetMenuForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -3960,18 +3964,18 @@ boolean             react;
 	      /* Modification du catalogue */
 	      TtaDestroyDialogue (ref);
 
-/*======================================> Recherche le catalogue parent */
+	/*======================================> Recherche le catalogue parent */
 	if (!rebuilded)
 	   parentCatalogue = CatEntry (ref_parent);
 	else
 	   parentCatalogue = catalogue->Cat_PtParent;
 
-/*__________________________________ Le catalogue parent n'existe pas __*/
+	/*__________________________________ Le catalogue parent n'existe pas __*/
 	if (parentCatalogue == NULL)
 	   TtaError (ERR_invalid_parent_dialogue);
 	else if (parentCatalogue->Cat_Widget == 0)
 	   TtaError (ERR_invalid_parent_dialogue);
-/*_________________________________________ Sous-menu d'un formulaire __*/
+	/*_________________________________________ Sous-menu d'un formulaire __*/
 	else if (parentCatalogue->Cat_Type == CAT_FORM
 		 || parentCatalogue->Cat_Type == CAT_SHEET
 		 || parentCatalogue->Cat_Type == CAT_DIALOG)
@@ -4011,7 +4015,7 @@ boolean             react;
 		  adbloc = catalogue->Cat_Entries;
 	       }
 
-/*** Cree le titre du sous-menu ***/
+	     /*** Cree le titre du sous-menu ***/
 	     if (title != NULL)
 	       {
 		  n = 0;
@@ -4146,13 +4150,13 @@ boolean             react;
 		       index += count + 1;
 		       ent++;
 		    }
-	       }		/*while */
+	       }
 	  }
 	else
 	   TtaError (ERR_invalid_parameter);
      }
 #endif /* _WINDOWS */
-}				/*TtaNewToggleMenu */
+}
 
 
 /*----------------------------------------------------------------------
@@ -4282,7 +4286,7 @@ boolean             on;
 	   XtUnmanageChild (catalogue->Cat_Widget);
 #endif /* _WINDOWS */
      }
-}				/*TtaSetToggleMenu */
+}
 
 
 /*----------------------------------------------------------------------
@@ -4361,7 +4365,7 @@ char               *text;
 #endif /* _WINDOWS */
 	  }
      }
-}				/*TtaChangeMenuEntry */
+}
 
 
 /*----------------------------------------------------------------------
@@ -4486,7 +4490,7 @@ int                 activate;
 #endif /* _WINDOWS */
 	  }
      }
-}				/*TtaRedrawMenuEntry */
+}
 
 
 /*----------------------------------------------------------------------
@@ -4514,7 +4518,7 @@ int                 ref;
       return (1);
    else
      {
-/*=====================> Detruit une feuille de saisie ou un formulaire*/
+       /*=====================> Detruit une feuille de saisie ou un formulaire*/
 	if ((catalogue->Cat_Type != CAT_INT)
 	    && (catalogue->Cat_Type != CAT_TEXT)
 	    && (catalogue->Cat_Type != CAT_FORM)
@@ -4548,7 +4552,7 @@ int                 ref;
 		       if ((parentCatalogue->Cat_Type == CAT_FORM)
 			   || (parentCatalogue->Cat_Type == CAT_SHEET)
 			   || (parentCatalogue->Cat_Type == CAT_DIALOG))
-/*__________________________________________ Dans un formulaire __*/
+			 /*__________________________________________ Dans un formulaire __*/
 			 {
 #ifndef _WINDOWS
 			    XtUnmanageChild (catalogue->Cat_Widget);
@@ -4559,7 +4563,7 @@ int                 ref;
 		       else if ((parentCatalogue->Cat_Type == CAT_POPUP)
 				|| (parentCatalogue->Cat_Type == CAT_PULL)
 				|| (parentCatalogue->Cat_Type == CAT_MENU))
-/*________________________________ Formulaire attache a un menu __*/
+			 /*________________________________ Formulaire attache a un menu __*/
 			 {
 			    if ((adbloc->E_Type[entry] == 'F')
 				&& (adbloc->E_Free[entry] == 'N'))
@@ -4598,7 +4602,7 @@ int                 ref;
 	     return (0);
 	  }
      }
-}				/*DestForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -4646,7 +4650,7 @@ int                 ref;
 	   ShowCat = NULL;
 	   ShowReturn = 0;
 	}
-}				/*TtaUnmapDialogue */
+}
 
 
 /*----------------------------------------------------------------------
@@ -4686,7 +4690,7 @@ int                 ref;
    else
      {
 	TtaUnmapDialogue (ref);
-/*===============================================> Detruit un sous-menu */
+	/*===============================================> Detruit un sous-menu */
 	if ((catalogue->Cat_Type == CAT_MENU)
 	    || (catalogue->Cat_Type == CAT_TMENU)
 	    || (catalogue->Cat_Type == CAT_FMENU))
@@ -4714,7 +4718,7 @@ int                 ref;
 		    {
 		       if (catalogue->Cat_Type == CAT_FMENU
 			   || catalogue->Cat_Type == CAT_TMENU)
-/*___________________________________ Sous-menu d'un formulaire __*/
+			 /*___________________________________ Sous-menu d'un formulaire __*/
 			 {
 			    /* Libere l'entree du sous-menu dans le formulaire */
 			    adbloc->E_ThotWidget[entry] = 0;
@@ -4722,7 +4726,7 @@ int                 ref;
 
 			 }
 		       else
-/*_________________________________________ Sous-menu d'un menu __*/
+			 /*_________________________________________ Sous-menu d'un menu __*/
 			 {
 			    if ((adbloc->E_Type[entry] == 'M')
 				&& (adbloc->E_Free[entry] == 'N'))
@@ -4742,7 +4746,7 @@ int                 ref;
 		    }		/*if entry */
 	       }
 	  }
-/*=================================================> Un autre catalogue */
+	/*=================================================> Un autre catalogue */
 	else if ((catalogue->Cat_Type != CAT_POPUP)
 		 && (catalogue->Cat_Type != CAT_PULL)
 		 && (catalogue->Cat_Type != CAT_LABEL))
@@ -4772,7 +4776,7 @@ int                 ref;
 	NbLibCat++;
 	NbOccCat--;
      }
-}				/*TtaDestroyDialogue */
+}
 
 
 /*----------------------------------------------------------------------
@@ -4885,13 +4889,13 @@ int                 cattype;
 	   TtaDestroyDialogue (ref);	/* Reconstruction du catalogue */
 
 	/* Recherche le widget parent */
-/*___________________________________________ Sous-feuillet d'un menu __*/
+	/*___________________________________________ Sous-feuillet d'un menu __*/
 	if (ref_parent != 0)
 	  {
 	     /* Recherche le catalogue parent */
 	     parentCatalogue = CatEntry (ref_parent);
 
-/*_______________ le catalogue parent n'existe pas */
+	     /*_______________ le catalogue parent n'existe pas */
 	     if (parentCatalogue == NULL)
 	       {
 		  TtaError (ERR_invalid_parent_dialogue);
@@ -4902,7 +4906,7 @@ int                 cattype;
 		  TtaError (ERR_invalid_parent_dialogue);
 		  return;
 	       }
-/*_____________ le catalogue parent n'est conforme */
+	     /*_____________ le catalogue parent n'est conforme */
 	     else if ((parentCatalogue->Cat_Type != CAT_POPUP)
 		      && (parentCatalogue->Cat_Type != CAT_PULL)
 		      && (parentCatalogue->Cat_Type != CAT_MENU))
@@ -4942,8 +4946,9 @@ int                 cattype;
 
 		  /* Note la relation entre le formulaire et le menu parent */
 		  catalogue->Cat_PtParent = parentCatalogue;
-		  catalogue->Cat_EntryParent = entry + 2;	/* pour le titre et le filet */
-	       }		/*else */
+		  /* pour le titre et le filet */
+		  catalogue->Cat_EntryParent = entry + 2;
+	       }
 
 	     /* Attache le formulaire au widget */
 #ifndef _WINDOWS
@@ -4955,7 +4960,7 @@ int                 cattype;
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-/*________________________________________________ Feuillet principal __*/
+	/*________________________________________________ Feuillet principal __*/
 	else
 	  {
 	     /* Il n'y a pas de menu parent */
@@ -5013,8 +5018,8 @@ int                 cattype;
 	adbloc->E_Next = NewEList ();
 	adbloc = adbloc->E_Next;
 
-/*** Cree un Row-Column pour mettre les boutons QUIT/... ***/
-/*** en dessous des sous-menus et sous-formulaires.    ***/
+	/*** Cree un Row-Column pour mettre les boutons QUIT/... ***/
+	/*** en dessous des sous-menus et sous-formulaires.    ***/
 	n = 0;
 	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
@@ -5031,8 +5036,8 @@ int                 cattype;
 	row = XmCreateRowColumn (form, "Dialogue", args, n);
 	XtManageChild (row);
 
-/*** Cree un Row-Column pour contenir les lignes ou colonnes ***/
-/*** de sous-menus et sous-formulaires.                      ***/
+	/*** Cree un Row-Column pour contenir les lignes ou colonnes ***/
+	/*** de sous-menus et sous-formulaires.                      ***/
 	n = 0;
 	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
@@ -5054,7 +5059,7 @@ int                 cattype;
 	w = XmCreateRowColumn (row, "Dialogue", args, n);
 	XtManageChild (w);
 
-/*** Cree un 1er Row-Column pour contenir les sous-menus/formulaires ***/
+	/*** Cree un 1er Row-Column pour contenir les sous-menus/formulaires ***/
 	n = 0;
 	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
@@ -5077,7 +5082,7 @@ int                 cattype;
 	   /* il n'y a pas de boutons a engendrer */
 	   return;
 
-/*** Cree un Row-Column pour contenir les boutons QUIT/... ***/
+	/*** Cree un Row-Column pour contenir les boutons QUIT/... ***/
 	n = 0;
 	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
@@ -5096,7 +5101,7 @@ int                 cattype;
 	row = XmCreateRowColumn (row, "Dialogue", args, n);
 	XtManageChild (row);
 
-/*** Cree les boutons ***/
+	/*** Cree les boutons ***/
 	n = 0;
 	XtSetArg (args[n], XmNfontList, formFONT);
 	n++;
@@ -5110,7 +5115,7 @@ int                 cattype;
 	   ent = 1;
 	else if (cattype == CAT_FORM)
 	  {
-/*** Cree le bouton de confirmation du formulaire ***/
+	    /*** Cree le bouton de confirmation du formulaire ***/
 	     w = XmCreatePushButton (row, Confirm_string, args, n);
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
@@ -5126,7 +5131,7 @@ int                 cattype;
 	else
 	   ent = 0;
 
-/*** Cree les autres boutons du feuillet ***/
+	/*** Cree les autres boutons du feuillet ***/
 	index = 0;
 	while (ent < C_NUMBER && ent <= number && text != NULL)
 	  {
@@ -5157,7 +5162,7 @@ int                 cattype;
 	  }			/*while */
 
 	if (cattype == CAT_SHEET || cattype == CAT_FORM)
-/*** Cree le bouton QUIT ***/
+	  /*** Cree le bouton QUIT ***/
 	   switch (dbutton)
 		 {
 		    case D_CANCEL:
@@ -5177,7 +5182,7 @@ int                 cattype;
 	adbloc->E_ThotWidget[0] = w;
 
      }
-}				/*NewSheet */
+}
 
 
 /*----------------------------------------------------------------------
@@ -5210,7 +5215,7 @@ int                 dbutton;
 #endif /* __STDC__ */
 {
    NewSheet (ref, parent, ref_parent, entry, title, 0, NULL, horizontal, package, button, dbutton, CAT_FORM);
-}				/*TtaNewForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -5291,7 +5296,7 @@ int                 dbutton;
 #endif /* __STDC__ */
 {
    NewSheet (ref, parent, ref_parent, entry, title, number - 1, text, horizontal, package, button, dbutton, CAT_DIALOG);
-}				/*TtaNewDialogSheet */
+}
 
 
 /*----------------------------------------------------------------------
@@ -5367,7 +5372,7 @@ int                 ref;
 #endif /* _WINDOWS */
 	  }
      }
-}				/*TtaAttachForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -5444,7 +5449,7 @@ int                 ref;
 	  }
 
      }
-}				/*TtaDetachForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -5525,7 +5530,7 @@ boolean             react;
 	   TtaDestroyDialogue (ref);	/* Modification du catalogue */
      }
 
-/*______________________________ Regarde si le catalogue parent existe __*/
+   /*______________________________ Regarde si le catalogue parent existe __*/
    if (!rebuilded)
      {
 	parentCatalogue = CatEntry (ref_parent);
@@ -5646,11 +5651,11 @@ boolean             react;
      }
    else
      {
-/*_______________________________________ C'est un nouveau formulaire __*/
+       /*_______________________________________ C'est un nouveau formulaire __*/
 	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 	/* Cree un sous-menu d'un formulaire */
-/*** Cree un Row-Column dans le Row-Column du formulaire ***/
+	/*** Cree un Row-Column dans le Row-Column du formulaire ***/
 	n = 0;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
@@ -5673,7 +5678,7 @@ boolean             react;
 	catalogue->Cat_EntryParent = i;
 	catalogue->Cat_Title = 0;
 
-/*** Cree le titre du selecteur ***/
+	/*** Cree le titre du selecteur ***/
 	if (title != NULL)
 	  {
 	     n = 0;
@@ -5696,7 +5701,7 @@ boolean             react;
 	     XmStringFree (title_string);
 	  }
 
-/*** Cree le label attache au selecteur ***/
+	/*** Cree le label attache au selecteur ***/
 	if (label != NULL)
 	  {
 	     n = 0;
@@ -5796,7 +5801,7 @@ boolean             react;
 
 	/* Conserve le widget du selecteur dans l'entree Cat_Entries */
 	catalogue->Cat_Entries = (struct E_List *) w;
-     }				/*else */
+     }
 
    /* Libere les XmString allouees */
    i = 0;
@@ -5807,8 +5812,7 @@ boolean             react;
      }
    TtaFreeMemory ((char *) item);
 #endif /* _WINDOWS */
-
-}				/*TtaNewSelector */
+}
 
 
 /*----------------------------------------------------------------------
@@ -5980,7 +5984,7 @@ char               *text;
 	      XtAddCallback (wt, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
 #endif /* _WINDOWS */
      }
-}				/*TtaSetSelector */
+}
 
 /*----------------------------------------------------------------------
    TtaNewLabel cre'e un intitule' constant dans un formulaire :       
@@ -6097,11 +6101,11 @@ char               *text;
 	adbloc->E_Free[ent] = 'N';
 	catalogue->Cat_EntryParent = i;
 	catalogue->Cat_Entries = NULL;
-     }				/*else */
+     }
 
    XmStringFree (title_string);
 #endif /* _WINDOWS */
-}				/*TtaNewLabel */
+}
 
 /*----------------------------------------------------------------------
    TtaNewTextForm cre'e une feuille de saisie de texte :              
@@ -6154,9 +6158,9 @@ boolean             react;
 	if (catalogue->Cat_Widget != 0)
 	   DestForm (ref);	/* Modification du catalogue */
 
-/*======================================> Recherche le catalogue parent */
+	/*======================================> Recherche le catalogue parent */
 	parentCatalogue = CatEntry (ref_parent);
-/*__________________________________ Le catalogue parent n'existe pas __*/
+	/*__________________________________ Le catalogue parent n'existe pas __*/
 	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
@@ -6167,7 +6171,7 @@ boolean             react;
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-/*_______________________ Le catalogue parent n'est pas un formulaire __*/
+	/*_______________________ Le catalogue parent n'est pas un formulaire __*/
 	else if ((parentCatalogue->Cat_Type != CAT_FORM)
 		 && (parentCatalogue->Cat_Type != CAT_SHEET)
 		 && (parentCatalogue->Cat_Type != CAT_DIALOG))
@@ -6175,7 +6179,7 @@ boolean             react;
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-/*_____________________________________________________________ Sinon __*/
+	/*_____________________________________________________________ Sinon __*/
 	else
 	  {
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
@@ -6194,7 +6198,7 @@ boolean             react;
 	     n++;
 	     row = XmCreateRowColumn (row, "Dialogue", args, n);
 
-/*** Cree le titre du sous-menu ***/
+	     /*** Cree le titre du sous-menu ***/
 	     if (title != NULL)
 	       {
 		  n = 0;
@@ -6269,11 +6273,10 @@ boolean             react;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
 	     adbloc->E_Free[ent] = 'N';
 	     catalogue->Cat_EntryParent = i;
-	  }			/*else */
-
-     }				/*else */
+	  }
+     }
 #endif /* _WINDOWS */
-}				/*TtaNewTextForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -6320,7 +6323,7 @@ char               *text;
 	   XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
 #endif /* _WINDOWS */
      }
-}				/*TtaSetTextForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -6375,9 +6378,9 @@ boolean             react;
 	if (catalogue->Cat_Widget != 0)
 	   DestForm (ref);	/* Modification du catalogue */
 
-/*======================================> Recherche le catalogue parent */
+	/*======================================> Recherche le catalogue parent */
 	parentCatalogue = CatEntry (ref_parent);
-/*__________________________________ Le catalogue parent n'existe pas __*/
+	/*__________________________________ Le catalogue parent n'existe pas __*/
 	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
@@ -6388,7 +6391,7 @@ boolean             react;
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-/*_______________________ Le catalogue parent n'est pas un formulaire __*/
+	/*_______________________ Le catalogue parent n'est pas un formulaire __*/
 	else if ((parentCatalogue->Cat_Type != CAT_FORM)
 		 && (parentCatalogue->Cat_Type != CAT_SHEET)
 		 && (parentCatalogue->Cat_Type != CAT_DIALOG))
@@ -6396,7 +6399,7 @@ boolean             react;
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-/*_____________________________________________________________ Sinon __*/
+	/*_____________________________________________________________ Sinon __*/
 	else
 	  {
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
@@ -6429,7 +6432,7 @@ boolean             react;
 	     adbloc = NewEList ();
 	     catalogue->Cat_Entries = adbloc;
 
-/*** Cree le titre du sous-menu ***/
+	     /*** Cree le titre du sous-menu ***/
 	     if (title != NULL)
 	       {
 		  n = 0;
@@ -6528,10 +6531,9 @@ boolean             react;
 	     XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 	     catalogue->Cat_Entries->E_ThotWidget[1] = w;
 	  }
-
      }
 #endif /* _WINDOWS */
-}				/*TtaNewNumberForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -6589,7 +6591,7 @@ int                 val;
 	XtAddCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 #endif /* _WINDOWS */
      }
-}				/*TtaSetNumberForm */
+}
 
 
 /*----------------------------------------------------------------------
@@ -6607,7 +6609,7 @@ void                TtaSetDialoguePosition ()
    wdum = RootWindow (GDp, DefaultScreen (GDp));
    XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
 #endif /* _WINDOWS */
-}				/*TtaSetDialoguePosition */
+}
 
 
 /*----------------------------------------------------------------------
@@ -6623,7 +6625,6 @@ boolean             remanent;
 #endif /* __STDC__ */
 {
    int                 n;
-
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
 
@@ -6655,7 +6656,7 @@ boolean             remanent;
    else if (XtIsManaged (w))
       XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
 #endif /* _WINDOWS */
-/*===========> Active un pop-up menu */
+   /*===========> Active un pop-up menu */
    else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL)
      {
 	/* Faut-il invalider un TtaShowDialogue precedent */
@@ -6669,7 +6670,7 @@ boolean             remanent;
 	     ShowCat = catalogue;
 	  }
 
-/*** Positionne le pop-up a la position courante du show ***/
+	/*** Positionne le pop-up a la position courante du show ***/
 	n = 0;
 #ifndef _WINDOWS
 	XtSetArg (args[n], XmNx, (Position) ShowX);
@@ -6680,7 +6681,7 @@ boolean             remanent;
 	XtManageChild (w);
 #endif /* _WINDOWS */
      }
-/*===========> Active un formulaire */
+   /*===========> Active un formulaire */
    else if (((catalogue->Cat_Type == CAT_FORM)
 	     || (catalogue->Cat_Type == CAT_SHEET)
 	     || (catalogue->Cat_Type == CAT_DIALOG))
@@ -6711,7 +6712,7 @@ boolean             remanent;
      }
    else
       TtaError (ERR_invalid_reference);
-}				/*TtaShowDialogue */
+}
 
 
 /*----------------------------------------------------------------------
@@ -6730,12 +6731,12 @@ void                TtaWaitShowDialogue ()
      {
 	XtAppNextEvent (Def_AppCont, &event);
 	TtaHandleOneEvent (&event);
-     }				/*while */
+     }
 
    /* Fin de l'attente */
    CurrentWait = 0;
 #endif /* _WINDOWS */
-}				/*TtaWaitShowDialogue */
+}
 
 
 /*----------------------------------------------------------------------
@@ -6745,7 +6746,7 @@ void                TtaWaitShowDialogue ()
 boolean             TtaTestWaitShowDialogue ()
 {
    return (CurrentWait);
-}				/*TtaTestWaitShowDialogue */
+}
 
 
 /*----------------------------------------------------------------------
@@ -6783,7 +6784,7 @@ void                TtaAbortShowDialogue ()
 
 	  }
      }
-}				/*TtaAbortShowDialogue */
+}
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------

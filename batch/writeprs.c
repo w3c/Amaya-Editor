@@ -151,7 +151,7 @@ TypeUnit            unit;
 	       TtaWriteByte (outfile, C_UNIT_PERCENT);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid unit %X\n", unit);
+	       fprintf (stderr, "Invalid unit %X\n", (int)unit);
 	       TtaWriteByte (outfile, C_UNIT_REL);
 	       break;
 	 }
@@ -255,7 +255,7 @@ PRuleType           ruleType;
 	       TtaWriteByte (outfile, C_PR_VERTOVERFLOW);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid rule type %X\n", ruleType);
+	       fprintf (stderr, "Invalid rule type %X\n", (int)ruleType);
 	       break;
 	 }
 }

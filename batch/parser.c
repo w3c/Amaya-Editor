@@ -636,6 +636,7 @@ SyntRuleNum        *pr;
    boolean             meta;
    int                 s;
 
+   *pr = 0;
    if (level < 0)
       CompilerMessage (wi, COMPIL, FATAL, END_HAS_BEEN_DETECTED,
 		     inputLine, LineNum);

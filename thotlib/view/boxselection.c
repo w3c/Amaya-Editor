@@ -246,38 +246,41 @@ int                 frame;
       pNextBuffer->BuPrevious = pPreviousBuffer;
 
    /* Mise a jour des marques de selection courante */
-   pFrame = &ViewFrameTable[frame - 1];
-   pViewSel = &pFrame->FrSelectionBegin;
-   if (pViewSel->VsBuffer == pBuffer)
+   if (frame > 0)
      {
-	if (pFrame->FrSelectionEnd.VsBuffer == pViewSel->VsBuffer)
-	  {
-	     pViewSelEnd = &pFrame->FrSelectionEnd;
-	     if (pPreviousBuffer != NULL)
-	       {
-		  /* deplace la selection dans les buffers */
-		  pViewSelEnd->VsIndBuf += length;
-		  pViewSelEnd->VsBuffer = pPreviousBuffer;
-	       }
-	     else
-	       {
-		  pViewSelEnd->VsIndBuf = 1;
-		  pViewSelEnd->VsBuffer = pNextBuffer;
-	       }
-	  }
-	pViewSel->VsBuffer = pPreviousBuffer;
-
-	if (pPreviousBuffer != NULL)
-	  {
-	     /* deplace la selection dans les buffers */
-	     pViewSel->VsIndBuf += length;
-	     pViewSel->VsBuffer = pPreviousBuffer;
-	  }
-	else
-	  {
-	     pViewSel->VsIndBuf = 1;
-	     pViewSel->VsBuffer = pNextBuffer;
-	  }
+       pFrame = &ViewFrameTable[frame - 1];
+       pViewSel = &pFrame->FrSelectionBegin;
+       if (pViewSel->VsBuffer == pBuffer)
+	 {
+	   if (pFrame->FrSelectionEnd.VsBuffer == pViewSel->VsBuffer)
+	     {
+	       pViewSelEnd = &pFrame->FrSelectionEnd;
+	       if (pPreviousBuffer != NULL)
+		 {
+		   /* deplace la selection dans les buffers */
+		   pViewSelEnd->VsIndBuf += length;
+		   pViewSelEnd->VsBuffer = pPreviousBuffer;
+		 }
+	       else
+		 {
+		   pViewSelEnd->VsIndBuf = 1;
+		   pViewSelEnd->VsBuffer = pNextBuffer;
+		 }
+	     }
+	   pViewSel->VsBuffer = pPreviousBuffer;
+	   
+	   if (pPreviousBuffer != NULL)
+	     {
+	       /* deplace la selection dans les buffers */
+	       pViewSel->VsIndBuf += length;
+	       pViewSel->VsBuffer = pPreviousBuffer;
+	     }
+	   else
+	     {
+	       pViewSel->VsIndBuf = 1;
+	       pViewSel->VsBuffer = pNextBuffer;
+	     }
+	 }
      }
 
    FreeTextBuffer (pBuffer);

@@ -828,7 +828,6 @@ int                 frame;
    int                 xif, yif, wif, hif;
    int                 PicXArea, PicYArea, PicWArea, PicHArea;
    int                 xtranslate, ytranslate, pxorig, pyorig;
-   Drawable            myDrawable;
    Drawable            drawable;
    int                 XOrg, YOrg;
    unsigned long       BackGroundPixel;
@@ -864,7 +863,6 @@ int                 frame;
 	     if (!IsValid (box, imageDesc))
 	       {
 		  LoadPicture (frame, box, imageDesc);
-		  myDrawable = imageDesc->PicPixmap;
 	       }
 	     else
 	       {

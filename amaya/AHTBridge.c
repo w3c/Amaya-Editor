@@ -102,11 +102,13 @@ XtInputId          *id;
    HTEventCallback    *cbf;
 
 #else
-   HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (*s, ops, &rqp);
+   HTEventCallback    *cbf;
 
+   ops = FD_WRITE;
+   cbf = (HTEventCallback *) __RetrieveCBF (*s, ops, &rqp);
 #endif
-   me = HTRequest_context (rqp);
 
+   me = HTRequest_context (rqp);
    if (THD_TRACE)
      fprintf (stderr, "AHTBridge: Processing url %s \n", me->urlName);
 

@@ -1621,7 +1621,7 @@ PtrElement         *pSelEl;
    PtrAbstractBox      pAb;
    int                 assocNum, referredTypeNum, frame;
    Name                typeName;
-   boolean             again, assoc, new, inclusion, ret;
+   boolean             again, assoc, new, ret;
 
    ret = FALSE;
    assoc = FALSE;
@@ -1683,18 +1683,12 @@ PtrElement         *pSelEl;
 	     if (pAb != NULL)
 		/* une selection de pave a bien ete faite */
 	       {
-		  inclusion = FALSE;
-
 		  if (pEl != NULL)
 		    {
 		       if (pEl->ElSource != NULL)
-			  /* c'est une inclusion d'element */
-			 {
-			    inclusion = TRUE;
-
-			    /* pRef : pointeur sur le descripteur de reference */
-			    pRef = pEl->ElSource;
-			 }
+			 /* c'est une inclusion d'element */
+			 /* pRef : pointeur sur le descripteur de reference */
+			 pRef = pEl->ElSource;
 		       else
 			  /* c'est un element reference */
 

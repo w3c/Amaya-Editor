@@ -44,17 +44,26 @@
 #define MAX_AUTOMATA	80
 /* automata structure for the keys */
 typedef struct _key
+{
+  int                 K_EntryCode;    /* input key                           */
+  short               K_Command;      /* index in the command list or -1     */
+  int                 K_Value;	      /* return key if command = -1          */
+  struct _key        *K_Other;	      /* next entry at the same level        */
+  union
   {
-     int                 K_EntryCode;	/* input key                                */
-     struct _key        *K_Next;	/* 1st complementary touch (1st level)      */
-     struct _key        *K_Other;	/* next entry at the same level             */
-     short               K_Command;	/* index in the command list or -1          */
-     int                 K_Value;	/* return key if command = -1               */
-  }
+    struct
+    {
+      struct _key    *_K_Next_;	      /* 1st complementary touch (1st level) */
+    } s0;
+    struct
+    {
+      int             _K_Modifier_;   /* modifier value (2nd level)          */
+    } s1;
+  } u;
+}
 KEY;
-
-#define T_Modifieur K_Next	/* modifier value (2nd level) */
-
+#define K_Next u.s0._K_Next_
+#define K_Modifier u.s1._K_Modifier_
 
 #undef EXPORT
 #define EXPORT extern
@@ -366,7 +375,7 @@ int                 command;
 	     /* creation d'une 1ere entree de 2eme niveau */
 	     ptr = (KEY *) TtaGetMemory (sizeof (KEY));
 	     ptr->K_EntryCode = key2;
-	     ptr->T_Modifieur = (KEY *) mod2;
+	     ptr->K_Modifier = mod2;
 	     ptr->K_Other = NULL;
 	     ptr->K_Command = command;
 	     ptr->K_Value = key;
@@ -400,7 +409,7 @@ int                 command;
 	     /* Creation d'une entree d'automate de 2eme niveau */
 	     ptr = (KEY *) TtaGetMemory (sizeof (KEY));
 	     ptr->K_EntryCode = key2;
-	     ptr->T_Modifieur = (KEY *) mod2;
+	     ptr->K_Modifier = mod2;
 	     ptr->K_Other = NULL;
 	     ptr->K_Command = command;
 	     ptr->K_Value = key;
@@ -414,7 +423,7 @@ int                 command;
      {
 	/* on cree une entree de premier niveau */
 	ptr->K_EntryCode = key1;
-	ptr->T_Modifieur = (KEY *) mod1;
+	ptr->K_Modifier = mod1;
 	ptr->K_Other = NULL;
 	ptr->K_Next = NULL;
 	ptr->K_Command = command;
@@ -424,7 +433,7 @@ int                 command;
 	if (oldptr != NULL)
 	   oldptr->K_Other = ptr;
      }
-}				/*MemoKey */
+}
 
 
 #ifdef _WINDOWS
@@ -600,7 +609,7 @@ int                 key;
 
 	     /* Recherche l'entree de 1er niveau */
 	     while (!found && ptr != NULL)
-		if (ptr->K_EntryCode == key && modtype == (int) ptr->T_Modifieur)
+		if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
 		   found = TRUE;
 		else
 		   ptr = ptr->K_Other;

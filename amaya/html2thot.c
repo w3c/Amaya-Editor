@@ -1288,9 +1288,11 @@ static boolean      InsertElement ();
   ----------------------------------------------------------------------*/
 static boolean      InsertSibling ()
 {
-   if (lastElementClosed ||
-       TtaIsLeaf (TtaGetElementType (lastElement)) ||
-       GIMappingTable[GINumberStack[StackLevel - 1]].htmlContents == 'E')
+   if (StackLevel == 0)
+      return FALSE;
+   else if (lastElementClosed ||
+	    TtaIsLeaf (TtaGetElementType (lastElement)) ||
+	    GIMappingTable[GINumberStack[StackLevel - 1]].htmlContents == 'E')
       return TRUE;
    else
       return FALSE;
@@ -2647,6 +2649,9 @@ int                 entry;
 #endif
 {
    boolean             ok;
+
+   if (StackLevel == 0)
+     return FALSE;
 
    ok = TRUE;
    /* only TH and TD elements are allowed as children of a TR element */
@@ -4107,11 +4112,11 @@ static void         InitAutomaton ()
    prevTrans = NULL;
    do
      {
-	trans = (PtrTransition) TtaGetMemory (sizeof (Transition));
-	trans->nextTransition = NULL;
 	theState = sourceAutomaton[entry].initState;
 	if (theState < 1000)
 	  {
+	     trans = (PtrTransition) TtaGetMemory (sizeof (Transition));
+	     trans->nextTransition = NULL;
 	     trans->trigger = sourceAutomaton[entry].trigger;
 	     trans->action = sourceAutomaton[entry].transitionAction;
 	     trans->newState = sourceAutomaton[entry].newState;

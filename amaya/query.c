@@ -83,38 +83,6 @@ static int          object_counter = 0;	/* loaded objects counter */
 #include "AHTMemConv_f.h"
 #include "AHTFWrite_f.h"
 
-/*----------------------------------------------------------------------*/
-
-#ifdef CATCH_SIG
-
-/*----------------------------------------------------------------------
-  SetSignal
-  this function sets up signal handlers. This might not 
-  be necessary to call if the application has its own handlers.    
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetSignal (void)
-#else
-static void         SetSignal ()
-#endif
-{
-   /* On some systems (SYSV) it is necessary to catch the SIGPIPE signal
-      ** when attemting to connect to a remote host where you normally should
-      ** get `connection refused' back
-    */
-   if (signal (SIGPIPE, SIG_IGN) == SIG_ERR)
-     {
-	if (PROT_TRACE)
-	   HTTrace ("HTSignal.... Can't catch SIGPIPE\n");
-     }
-   else
-     {
-	if (PROT_TRACE)
-	   HTTrace ("HTSignal.... Ignoring SIGPIPE\n");
-     }
-}
-#endif /* CATCH_SIG */
-
 
 /*----------------------------------------------------------------------
   GetDocIdStatus
@@ -140,8 +108,8 @@ HTList             *documents;
 	  {
 	     if (me->docid == docid)
 		return (me);
-	  }			/* while */
-     }				/* if */
+	  }
+     }
    return (AHTDocId_Status *) NULL;
 
 }
@@ -1024,7 +992,7 @@ void                QueryInit ()
    Amaya->open_requests = 0;
 
 #ifdef CATCH_SIG
-   SetSignal ();
+   signal (SIGPIPE, SIG_IGN);
 #endif
 }
 

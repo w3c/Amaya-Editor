@@ -154,11 +154,9 @@ PtrDict             PtFree_Dict;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               *TtaGetMemory (unsigned int n)
-
 #else  /* __STDC__ */
 void               *TtaGetMemory (n)
 unsigned int        n;
-
 #endif /* __STDC__ */
 
 {
@@ -377,7 +375,6 @@ PtrTextBuffer      *pBT;
 	PtFree_TextBuff = pBuf->BuNext;
 	NbFree_TextBuff--;
      }
-   NbUsed_TextBuff++;
    /* initialise le buffer */
    *pBT = pBuf;
    if (pBuf)
@@ -387,6 +384,7 @@ PtrTextBuffer      *pBT;
        pBuf->BuPrevious = NULL;
        pBuf->BuLength = 0;
        pBuf->BuContent[0] = '\0';
+       NbUsed_TextBuff++;
      }
 }
 
@@ -435,7 +433,6 @@ PtrElement         *pEl;
 	PtFree_Element = pNewEl->ElNext;
 	NbFree_Element--;
      }
-   NbUsed_Element++;
    *pEl = pNewEl;
    if (pNewEl)
      {
@@ -463,6 +460,7 @@ PtrElement         *pEl;
        pNewEl->ElTransPres = FALSE;
        pNewEl->ElTerminal = FALSE;
        pNewEl->ElFirstChild = NULL;
+       NbUsed_Element++;
      }
 }
 
@@ -478,6 +476,11 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 {
 
+   if (pEl->ElLeafType == LtText && pEl->ElText != NULL)
+     {
+       FreeTextBuffer (pEl->ElText);
+       pEl->ElText = NULL;
+     }
    pEl->ElNext = PtFree_Element;
    PtFree_Element = pEl;
    NbFree_Element++;
@@ -506,7 +509,6 @@ PtrAttribute       *pAttr;
 	PtFree_Attr = pNewAttr->AeNext;
 	NbFree_Attr--;
      }
-   NbUsed_Attr++;
    *pAttr = pNewAttr;
    if (pNewAttr)
      {
@@ -517,6 +519,7 @@ PtrAttribute       *pAttr;
        pNewAttr->AeAttrType = AtEnumAttr;
        pNewAttr->AeAttrValue = 0;
        pNewAttr->AeDefAttr = FALSE;
+       NbUsed_Attr++;
      }
 }
 
@@ -559,7 +562,6 @@ PtrReferredDescr   *pDR;
 	PtFree_DescRef = pNewDR->ReNext;
 	NbFree_DescRef--;
      }
-   NbUsed_DescRef++;
    *pDR = pNewDR;
    if (pNewDR)
      {
@@ -571,6 +573,7 @@ PtrReferredDescr   *pDR;
        pNewDR->ReReferredLabel[0] = '\0';
        pNewDR->ReExternalRef = FALSE;
        pNewDR->ReReferredElem = NULL;
+       NbUsed_DescRef++;
      }
 }
 
@@ -613,7 +616,6 @@ PtrCopyDescr       *pDC;
 	PtFree_DescCopy = pNewDC->CdNext;
 	NbFree_DescCopy--;
      }
-   NbUsed_DescCopy++;
    *pDC = pNewDC;
    if (pNewDC)
      {
@@ -623,6 +625,7 @@ PtrCopyDescr       *pDC;
        pNewDC->CdCopyRule = NULL;
        pNewDC->CdPrevious = NULL;
        pNewDC->CdNext = NULL;
+       NbUsed_DescCopy++;
      }
 }
 
@@ -667,27 +670,24 @@ PtrExternalDoc     *pDE;
 	PtFree_ExternalDoc = pNewDE->EdNext;
 	NbFree_ExternalDoc--;
      }
-   NbUsed_ExternalDoc++;
    *pDE = pNewDE;
    if (pNewDE)
      {
        memset (pNewDE, 0, sizeof (ExternalDoc));
        pNewDE->EdNext = NULL;
        ClearDocIdent (&pNewDE->EdDocIdent);
+       NbUsed_ExternalDoc++;
      }
 }
 
 /*----------------------------------------------------------------------
    FreeExternalDoc libere un descripteur de document externe.      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeExternalDoc (PtrExternalDoc pDE)
-
 #else  /* __STDC__ */
 void                FreeExternalDoc (pDE)
 PtrExternalDoc      pDE;
-
 #endif /* __STDC__ */
 
 {
@@ -758,46 +758,43 @@ PtrReference        pRef;
 /*----------------------------------------------------------------------
    GetOutputRef alloue un descripteur de reference sortante.       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetOutputRef (PtrOutReference * pRS)
-
 #else  /* __STDC__ */
 void                GetOutputRef (pRS)
 PtrOutReference    *pRS;
-
 #endif /* __STDC__ */
 
 {
-   PtrOutReference     pRs1;
+   PtrOutReference     pNewRS;
 
    if (PtFree_OutputRef == NULL)
-      *pRS = (PtrOutReference) malloc (sizeof (OutReference));
+      pNewRS = (PtrOutReference) TtaGetMemory (sizeof (OutReference));
    else
      {
-	*pRS = PtFree_OutputRef;
-	PtFree_OutputRef = (*pRS)->OrNext;
+	pNewRS = PtFree_OutputRef;
+	PtFree_OutputRef = pNewRS->OrNext;
 	NbFree_OutputRef--;
      }
-   NbUsed_OutputRef++;
-   pRs1 = *pRS;
-   memset (pRs1, 0, sizeof (OutReference));
-   pRs1->OrNext = NULL;
-   pRs1->OrLabel[0] = '\0';
-   ClearDocIdent (&pRs1->OrDocIdent);
+   *pRS = pNewRS;
+   if (pNewRS)
+     {
+       memset (pNewRS, 0, sizeof (OutReference));
+       pNewRS->OrNext = NULL;
+       pNewRS->OrLabel[0] = '\0';
+       ClearDocIdent (&(pNewRS->OrDocIdent));
+       NbUsed_OutputRef++;
+     }
 }
 
 /*----------------------------------------------------------------------
    FreeOutputRef libere un descripteur de reference sortante.      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeOutputRef (PtrOutReference pRS)
-
 #else  /* __STDC__ */
 void                FreeOutputRef (pRS)
 PtrOutReference     pRS;
-
 #endif /* __STDC__ */
 
 {
@@ -810,49 +807,46 @@ PtrOutReference     pRS;
 /*----------------------------------------------------------------------
    GetChangedReferredEl alloue un descripteur de changement de reference.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetChangedReferredEl (PtrChangedReferredEl * pER)
-
 #else  /* __STDC__ */
 void                GetChangedReferredEl (pER)
 PtrChangedReferredEl *pER;
-
 #endif /* __STDC__ */
 
 {
-   PtrChangedReferredEl pEr1;
+   PtrChangedReferredEl pNewER;
 
    if (PtFree_ElemRefChng == NULL)
-      *pER = (PtrChangedReferredEl) malloc (sizeof (ChangedReferredEl));
+      pNewER = (PtrChangedReferredEl) TtaGetMemory (sizeof (ChangedReferredEl));
    else
      {
-	*pER = PtFree_ElemRefChng;
-	PtFree_ElemRefChng = (*pER)->CrNext;
+	pNewER = PtFree_ElemRefChng;
+	PtFree_ElemRefChng = pNewER->CrNext;
 	NbFree_ElemRefChng--;
      }
-   NbUsed_ElemRefChng++;
-   pEr1 = *pER;
-   memset (pEr1, 0, sizeof (ChangedReferredEl));
-   pEr1->CrNext = NULL;
-   pEr1->CrOldLabel[0] = '\0';
-   pEr1->CrNewLabel[0] = '\0';
-   ClearDocIdent (&pEr1->CrOldDocument);
-   ClearDocIdent (&pEr1->CrNewDocument);
-   pEr1->CrReferringDoc = NULL;
+   *pER = pNewER;
+   if (pNewER)
+     {
+       memset (pNewER, 0, sizeof (ChangedReferredEl));
+       pNewER->CrNext = NULL;
+       pNewER->CrOldLabel[0] = '\0';
+       pNewER->CrNewLabel[0] = '\0';
+       ClearDocIdent (&(pNewER->CrOldDocument));
+       ClearDocIdent (&(pNewER->CrNewDocument));
+       pNewER->CrReferringDoc = NULL;
+       NbUsed_ElemRefChng++;
+     }
 }
 
 /*----------------------------------------------------------------------
    FreeChangedReferredEl libere un descripteur de changement de reference
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeChangedReferredEl (PtrChangedReferredEl pER)
-
 #else  /* __STDC__ */
 void                FreeChangedReferredEl (pER)
 PtrChangedReferredEl pER;
-
 #endif /* __STDC__ */
 
 {
@@ -865,43 +859,41 @@ PtrChangedReferredEl pER;
 /*----------------------------------------------------------------------
    GetInputRef alloue un descripteur de reference entrante.        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetInputRef (PtrEnteringReferences * pRE)
-
 #else  /* __STDC__ */
 void                GetInputRef (pRE)
 PtrEnteringReferences *pRE;
-
 #endif /* __STDC__ */
 
 {
-   PtrEnteringReferences pRe1;
+   PtrEnteringReferences pNewRE;
 
    if (PtFree_InputRef == NULL)
-      *pRE = (PtrEnteringReferences) malloc (sizeof (EnteringReferences));
+      pNewRE = (PtrEnteringReferences) TtaGetMemory (sizeof (EnteringReferences));
    else
      {
-	*pRE = PtFree_InputRef;
-	PtFree_InputRef = (*pRE)->ErNext;
+	pNewRE = PtFree_InputRef;
+	PtFree_InputRef = pNewRE->ErNext;
 	NbFree_InputRef--;
      }
-   NbUsed_InputRef++;
-   pRe1 = *pRE;
-   memset (pRe1, 0, sizeof (EnteringReferences));
-   pRe1->ErNext = NULL;
-   pRe1->ErFirstReferredEl = NULL;
-   ClearDocIdent (&pRe1->ErDocIdent);
-   pRe1->ErFileName[0] = '\0';
+   *pRE = pNewRE;
+   if (pNewRE)
+     {
+       memset (pNewRE, 0, sizeof (EnteringReferences));
+       pNewRE->ErNext = NULL;
+       pNewRE->ErFirstReferredEl = NULL;
+       ClearDocIdent (&(pNewRE->ErDocIdent));
+       pNewRE->ErFileName[0] = '\0';
+       NbUsed_InputRef++;
+     }
 }
 
 /*----------------------------------------------------------------------
    FreeInputRef libere un descripteur de reference entrante.       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeInputRef (PtrEnteringReferences pRE)
-
 #else  /* __STDC__ */
 void                FreeInputRef (pRE)
 PtrEnteringReferences pRE;
@@ -919,48 +911,42 @@ PtrEnteringReferences pRE;
    GetFileRefChng alloue un descripteur de changement de reference 
    fichier.                                                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetFileRefChng (PtrReferenceChange * pFRC)
-
 #else  /* __STDC__ */
 void                GetFileRefChng (pFRC)
 PtrReferenceChange *pFRC;
-
 #endif /* __STDC__ */
 
 {
-   PtrReferenceChange  pFrc1;
+   PtrReferenceChange  pNewFRC;
 
    if (PtFree_UpdateRefFile == NULL)
-      *pFRC = (PtrReferenceChange) malloc (sizeof (ReferenceChange));
+      pNewFRC = (PtrReferenceChange) TtaGetMemory (sizeof (ReferenceChange));
    else
      {
-	*pFRC = PtFree_UpdateRefFile;
-	PtFree_UpdateRefFile = (*pFRC)->RcNext;
+	pNewFRC = PtFree_UpdateRefFile;
+	PtFree_UpdateRefFile = pNewFRC->RcNext;
 	NbFree_UpdateRefFile--;
      }
    NbUsed_UpdateRefFile++;
-   pFrc1 = *pFRC;
-   memset (pFrc1, 0, sizeof (ReferenceChange));
-   pFrc1->RcNext = NULL;
-   pFrc1->RcFirstChange = NULL;
-   ClearDocIdent (&pFrc1->RcDocIdent);
-   pFrc1->RcFileName[0] = '\0';
+   *pFRC = pNewFRC;
+   memset (pNewFRC, 0, sizeof (ReferenceChange));
+   pNewFRC->RcNext = NULL;
+   pNewFRC->RcFirstChange = NULL;
+   ClearDocIdent (&(pNewFRC->RcDocIdent));
+   pNewFRC->RcFileName[0] = '\0';
 }
 
 /*----------------------------------------------------------------------
    FreeFileRefChng libere un descripteur de changement de reference
    fichier                                                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeFileRefChng (PtrReferenceChange pFRC)
-
 #else  /* __STDC__ */
 void                FreeFileRefChng (pFRC)
 PtrReferenceChange  pFRC;
-
 #endif /* __STDC__ */
 
 {
@@ -1056,69 +1042,71 @@ PtrDocument        *pDoc;
 	PtFree_Document = pNewDoc->DocNext;
 	NbFree_Document--;
      }
-   NbUsed_Document++;
    /* initialise le contexte de document */
    *pDoc = pNewDoc;
-   memset (pNewDoc, 0, sizeof (DocumentDescr));
-   pNewDoc->DocNext = NULL;
-   pNewDoc->DocComment = NULL;
-   pNewDoc->DocSSchema = NULL;
-   pNewDoc->DocRootElement = NULL;
-   for (i = 0; i < MAX_ASSOC_DOC; i++)
+   if (pNewDoc)
      {
-	pNewDoc->DocAssocRoot[i] = NULL;
-	pNewDoc->DocAssocSubTree[i] = NULL;
-	pNewDoc->DocAssocFrame[i] = 0;
-	pNewDoc->DocAssocVolume[i] = 0;
-	pNewDoc->DocAssocFreeVolume[i] = 0;
-	pNewDoc->DocAssocNPages[i] = 0;
-	pNewDoc->DocAssocModifiedAb[i] = NULL;
+       memset (pNewDoc, 0, sizeof (DocumentDescr));
+       pNewDoc->DocNext = NULL;
+       pNewDoc->DocComment = NULL;
+       pNewDoc->DocSSchema = NULL;
+       pNewDoc->DocRootElement = NULL;
+       for (i = 0; i < MAX_ASSOC_DOC; i++)
+	 {
+	   pNewDoc->DocAssocRoot[i] = NULL;
+	   pNewDoc->DocAssocSubTree[i] = NULL;
+	   pNewDoc->DocAssocFrame[i] = 0;
+	   pNewDoc->DocAssocVolume[i] = 0;
+	   pNewDoc->DocAssocFreeVolume[i] = 0;
+	   pNewDoc->DocAssocNPages[i] = 0;
+	   pNewDoc->DocAssocModifiedAb[i] = NULL;
+	 }
+       for (i = 0; i < MAX_PARAM_DOC; i++)
+	 pNewDoc->DocParameters[i] = NULL;
+       /* cree et initialise un descripteur bidon de reference, debut */
+       /* de la chaine des descripteurs de references du document */
+       GetReferredDescr (&pNewDoc->DocReferredEl);
+       for (i = 0; i < MAX_VIEW_DOC; i++)
+	 {
+	   pNewDoc->DocView[i].DvSSchema = NULL;
+	   pNewDoc->DocView[i].DvPSchemaView = 0;
+	   pNewDoc->DocView[i].DvSync = FALSE;
+	   pNewDoc->DocViewRootAb[i] = NULL;
+	   pNewDoc->DocViewSubTree[i] = NULL;
+	   pNewDoc->DocViewFrame[i] = 0;
+	   pNewDoc->DocViewVolume[i] = 0;
+	   pNewDoc->DocViewFreeVolume[i] = 0;
+	   pNewDoc->DocViewNPages[i] = 0;
+	   pNewDoc->DocViewModifiedAb[i] = NULL;
+	 }
+       pNewDoc->DocDName[0] = '\0';
+       ClearDocIdent (&pNewDoc->DocIdent);
+       pNewDoc->DocDirectory[0] = '\0';
+       pNewDoc->DocSchemasPath[0] = '\0';
+       pNewDoc->DocBackUpInterval = 0;
+       pNewDoc->DocReadOnly = FALSE;
+       pNewDoc->DocExportStructure = FALSE;
+       pNewDoc->DocLabelExpMax = 1;
+       pNewDoc->DocMaxPairIdent = 0;
+       pNewDoc->DocModified = FALSE;
+       pNewDoc->DocNTypedChars = 0;
+       pNewDoc->DocNewOutRef = NULL;
+       pNewDoc->DocDeadOutRef = NULL;
+       pNewDoc->DocChangedReferredEl = NULL;
+       pNewDoc->DocNLanguages = 0;
+       pNewDoc->DocNNatures = 0;
+       pNewDoc->DocPivotVersion = 0;
+       pNewDoc->DocLabels = NULL;
+       pNewDoc->DocToBeChecked = FALSE;
+       pNewDoc->DocPivotError = FALSE;
+       pNewDoc->DocNotifyAll = FALSE;
+       NbUsed_Document++;
      }
-   for (i = 0; i < MAX_PARAM_DOC; i++)
-      pNewDoc->DocParameters[i] = NULL;
-   /* cree et initialise un descripteur bidon de reference, debut */
-   /* de la chaine des descripteurs de references du document */
-   GetReferredDescr (&pNewDoc->DocReferredEl);
-   for (i = 0; i < MAX_VIEW_DOC; i++)
-     {
-	pNewDoc->DocView[i].DvSSchema = NULL;
-	pNewDoc->DocView[i].DvPSchemaView = 0;
-	pNewDoc->DocView[i].DvSync = FALSE;
-	pNewDoc->DocViewRootAb[i] = NULL;
-	pNewDoc->DocViewSubTree[i] = NULL;
-	pNewDoc->DocViewFrame[i] = 0;
-	pNewDoc->DocViewVolume[i] = 0;
-	pNewDoc->DocViewFreeVolume[i] = 0;
-	pNewDoc->DocViewNPages[i] = 0;
-	pNewDoc->DocViewModifiedAb[i] = NULL;
-     }
-   pNewDoc->DocDName[0] = '\0';
-   ClearDocIdent (&pNewDoc->DocIdent);
-   pNewDoc->DocDirectory[0] = '\0';
-   pNewDoc->DocSchemasPath[0] = '\0';
-   pNewDoc->DocBackUpInterval = 0;
-   pNewDoc->DocReadOnly = FALSE;
-   pNewDoc->DocExportStructure = FALSE;
-   pNewDoc->DocLabelExpMax = 1;
-   pNewDoc->DocMaxPairIdent = 0;
-   pNewDoc->DocModified = FALSE;
-   pNewDoc->DocNTypedChars = 0;
-   pNewDoc->DocNewOutRef = NULL;
-   pNewDoc->DocDeadOutRef = NULL;
-   pNewDoc->DocChangedReferredEl = NULL;
-   pNewDoc->DocNLanguages = 0;
-   pNewDoc->DocNNatures = 0;
-   pNewDoc->DocPivotVersion = 0;
-   pNewDoc->DocLabels = NULL;
-   pNewDoc->DocToBeChecked = FALSE;
-   pNewDoc->DocPivotError = FALSE;
-   pNewDoc->DocNotifyAll = FALSE;
 }
 
 /*----------------------------------------------------------------------
    FreeDocument libere un descripteur de document.                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeDocument (PtrDocument pDoc)
 
@@ -1139,92 +1127,89 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    GetSchPres alloue un schema de presentation.                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetSchPres (PtrPSchema * pSP)
-
 #else  /* __STDC__ */
 void                GetSchPres (pSP)
 PtrPSchema         *pSP;
-
 #endif /* __STDC__ */
 
 {
+   PtrPSchema          pNewSP;
    int                 i;
 
    if (PtFree_SPres == NULL)
-      *pSP = (PtrPSchema) TtaGetMemory (sizeof (PresentSchema));
+      pNewSP = (PtrPSchema) TtaGetMemory (sizeof (PresentSchema));
    else
      {
-	*pSP = PtFree_SPres;
-	PtFree_SPres = (*pSP)->PsNext;
+	pNewSP = PtFree_SPres;
+	PtFree_SPres = pNewSP->PsNext;
 	NbFree_SchPres--;
      }
-   memset ((*pSP), 0, sizeof (PresentSchema));
-   (*pSP)->PsNext = NULL;
-   (*pSP)->PsStructName[0] = '\0';
-   (*pSP)->PsPresentName[0] = '\0';
-   (*pSP)->PsStructCode = 0;
-   (*pSP)->PsNViews = 0;
-   for (i = 0; i < MAX_VIEW; i++)
+   *pSP = pNewSP;
+   if (pNewSP)
      {
-	(*pSP)->PsView[i][0] = '\0';
-	(*pSP)->PsPaginatedView[i] = FALSE;
-	(*pSP)->PsColumnView[i] = FALSE;
-	(*pSP)->PsExportView[i] = FALSE;
+       memset (pNewSP, 0, sizeof (PresentSchema));
+       pNewSP->PsNext = NULL;
+       pNewSP->PsStructName[0] = '\0';
+       pNewSP->PsPresentName[0] = '\0';
+       pNewSP->PsStructCode = 0;
+       pNewSP->PsNViews = 0;
+       for (i = 0; i < MAX_VIEW; i++)
+	 {
+	   pNewSP->PsView[i][0] = '\0';
+	   pNewSP->PsPaginatedView[i] = FALSE;
+	   pNewSP->PsColumnView[i] = FALSE;
+	   pNewSP->PsExportView[i] = FALSE;
+	 }
+       pNewSP->PsNPrintedViews = 0;
+       for (i = 0; i < MAX_PRINT_VIEW; i++)
+	 {
+	   pNewSP->PsPrintedView[i].VpAssoc = FALSE;
+	   pNewSP->PsPrintedView[i].VpNumber = 0;
+	 }
+       pNewSP->PsNCounters = 0;
+       pNewSP->PsNConstants = 0;
+       pNewSP->PsNVariables = 0;
+       pNewSP->PsNPresentBoxes = 0;
+       pNewSP->PsFirstDefaultPRule = NULL;
+       for (i = 0; i < MAX_PRES_BOX; i++)
+	 {
+	   pNewSP->PsPresentBox[i].PbFirstPRule = NULL;
+	 }
+       for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+	 {
+	   pNewSP->PsAttrPRule[i] = NULL;
+	   pNewSP->PsNAttrPRule[i] = 0;
+	   pNewSP->PsNComparAttrs[i] = 0;
+	   pNewSP->PsComparAttr[i] = NULL;
+	 }
+       for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+	 {
+	   pNewSP->PsElemPRule[i] = NULL;
+	   pNewSP->PsNInheritedAttrs[i] = 0;
+	   pNewSP->PsInheritedAttr[i] = NULL;
+	   pNewSP->PsAcceptPageBreak[i] = TRUE;
+	   pNewSP->PsAcceptLineBreak[i] = TRUE;
+	   pNewSP->PsBuildAll[i] = FALSE;
+	   pNewSP->PsNotInLine[i] = FALSE;
+	   pNewSP->PsInPageHeaderOrFooter[i] = FALSE;
+	   pNewSP->PsAssocPaginated[i] = FALSE;
+	   pNewSP->PsElemTransmit[i] = 0;
+	 }
+       pNewSP->PsNTransmElems = 0;
+       NbUsed_SchPres++;
      }
-   (*pSP)->PsNPrintedViews = 0;
-   for (i = 0; i < MAX_PRINT_VIEW; i++)
-     {
-	(*pSP)->PsPrintedView[i].VpAssoc = FALSE;
-	(*pSP)->PsPrintedView[i].VpNumber = 0;
-     }
-   (*pSP)->PsNCounters = 0;
-   (*pSP)->PsNConstants = 0;
-   (*pSP)->PsNVariables = 0;
-   (*pSP)->PsNPresentBoxes = 0;
-   (*pSP)->PsFirstDefaultPRule = NULL;
-   for (i = 0; i < MAX_PRES_BOX; i++)
-     {
-	(*pSP)->PsPresentBox[i].PbFirstPRule = NULL;
-     }
-   for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
-     {
-	(*pSP)->PsAttrPRule[i] = NULL;
-	(*pSP)->PsNAttrPRule[i] = 0;
-	(*pSP)->PsNComparAttrs[i] = 0;
-	(*pSP)->PsComparAttr[i] = NULL;
-     }
-   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
-     {
-	(*pSP)->PsElemPRule[i] = NULL;
-	(*pSP)->PsNInheritedAttrs[i] = 0;
-	(*pSP)->PsInheritedAttr[i] = NULL;
-	(*pSP)->PsAcceptPageBreak[i] = TRUE;
-	(*pSP)->PsAcceptLineBreak[i] = TRUE;
-	(*pSP)->PsBuildAll[i] = FALSE;
-	(*pSP)->PsNotInLine[i] = FALSE;
-	(*pSP)->PsInPageHeaderOrFooter[i] = FALSE;
-	(*pSP)->PsAssocPaginated[i] = FALSE;
-	(*pSP)->PsElemTransmit[i] = 0;
-     }
-
-   (*pSP)->PsNTransmElems = 0;
-
-   NbUsed_SchPres++;
 }
 
 /*----------------------------------------------------------------------
    FreeSchPres libere un schemas de presentation.                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeSchPres (PtrPSchema pSP)
-
 #else  /* __STDC__ */
 void                FreeSchPres (pSP)
 PtrPSchema          pSP;
-
 #endif /* __STDC__ */
 
 {
@@ -1239,44 +1224,44 @@ PtrPSchema          pSP;
    GetHandleSchPres alloue un element de chainage de schemas de    
    presentation.                                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetHandleSchPres (PtrHandlePSchema * pHSP)
-
 #else  /* __STDC__ */
 void                GetHandleSchPres (pHSP)
 PtrHandlePSchema   *pHSP;
-
 #endif /* __STDC__ */
 
 {
+  PtrHandlePSchema  pNewHSP;
+
    if (PtFree_HandleSchPres == NULL)
-      *pHSP = (PtrHandlePSchema) TtaGetMemory (sizeof (HandlePSchema));
+      pNewHSP = (PtrHandlePSchema) TtaGetMemory (sizeof (HandlePSchema));
    else
      {
-	*pHSP = PtFree_HandleSchPres;
-	PtFree_HandleSchPres = (*pHSP)->HdNextPSchema;
+	pNewHSP = PtFree_HandleSchPres;
+	PtFree_HandleSchPres = pNewHSP->HdNextPSchema;
 	NbFree_HandleSchPres--;
      }
-   memset ((*pHSP), 0, sizeof (HandlePSchema));
-   (*pHSP)->HdPSchema = NULL;
-   (*pHSP)->HdNextPSchema = NULL;
-   (*pHSP)->HdPrevPSchema = NULL;
-   NbUsed_HandleSchPres++;
+   *pHSP = pNewHSP;
+   if (pNewHSP)
+     {
+       memset (pNewHSP, 0, sizeof (HandlePSchema));
+       pNewHSP->HdPSchema = NULL;
+       pNewHSP->HdNextPSchema = NULL;
+       pNewHSP->HdPrevPSchema = NULL;
+       NbUsed_HandleSchPres++;
+     }
 }
 
 /*----------------------------------------------------------------------
    FreeHandleSchPres libere un element de chainage de schemas de   
    presentation.                                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeHandleSchPres (PtrHandlePSchema pHSP)
-
 #else  /* __STDC__ */
 void                FreeHandleSchPres (pHSP)
 PtrHandlePSchema    pHSP;
-
 #endif /* __STDC__ */
 
 {
@@ -1292,44 +1277,41 @@ PtrHandlePSchema    pHSP;
    GetExternalBlock alloue un bloc d'extension pour un schema de   
    structure.                                                      
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                GetExternalBlock (PtrExtensBlock * pBE)
-
 #else  /* __STDC__ */
 void                GetExternalBlock (pBE)
 PtrExtensBlock     *pBE;
-
 #endif /* __STDC__ */
 
 {
+  PtrExtensBlock    pNewBE;
 
    if (PtFree_ExtenBlock == NULL)
-      *pBE = (PtrExtensBlock) TtaGetMemory (sizeof (ExtensBlock));
+      pNewBE = (PtrExtensBlock) TtaGetMemory (sizeof (ExtensBlock));
    else
      {
-	*pBE = PtFree_ExtenBlock;
-	PtFree_ExtenBlock = (*pBE)->EbNextBlock;
+	pNewBE = PtFree_ExtenBlock;
+	PtFree_ExtenBlock = pNewBE->EbNextBlock;
 	NbFree_ExtenBlock--;
      }
-   memset (*pBE, 0, sizeof (ExtensBlock));
-   (*pBE)->EbNextBlock = NULL;
-   NbUsed_ExtenBlock++;
+   *pBE = pNewBE;
+   if (pNewBE)
+     {
+       memset (pNewBE, 0, sizeof (ExtensBlock));
+       pNewBE->EbNextBlock = NULL;
+       NbUsed_ExtenBlock++;
+     }
 }
 
 /*----------------------------------------------------------------------
    FreeExternalBlock libere un bloc extension de schema de structure. 
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                FreeExternalBlock (PtrExtensBlock pBE)
-
 #else  /* __STDC__ */
 void                FreeExternalBlock (pBE)
 PtrExtensBlock      pBE;
-
 #endif /* __STDC__ */
 
 {
@@ -1342,46 +1324,46 @@ PtrExtensBlock      pBE;
 /*----------------------------------------------------------------------
    GetSchStruct alloue un schema de structure.                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetSchStruct (PtrSSchema * pSS)
-
 #else  /* __STDC__ */
 void                GetSchStruct (pSS)
 PtrSSchema         *pSS;
-
 #endif /* __STDC__ */
 
 {
-   if (PtFree_SStruct == NULL)
-      *pSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
-   else
-     {
-	*pSS = PtFree_SStruct;
-	PtFree_SStruct = (*pSS)->SsNextExtens;
-	NbFree_SchStruct--;
-     }
-   NbUsed_SchStruct++;
-   memset ((*pSS), 0, sizeof (StructSchema));
-   (*pSS)->SsNextExtens = NULL;
-   (*pSS)->SsPrevExtens = NULL;
-   (*pSS)->SsExtension = FALSE;
-   (*pSS)->SsNExtensRules = 0;
-   (*pSS)->SsExtensBlock = NULL;
-   (*pSS)->SsFirstPSchemaExtens = NULL;
+  PtrSSchema    pNewSS;
+
+  if (PtFree_SStruct == NULL)
+    pNewSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
+  else
+    {
+      pNewSS = PtFree_SStruct;
+      PtFree_SStruct = pNewSS->SsNextExtens;
+      NbFree_SchStruct--;
+    }
+  *pSS = pNewSS;
+  if (pNewSS)
+    {
+      memset (pNewSS, 0, sizeof (StructSchema));
+      pNewSS->SsNextExtens = NULL;
+      pNewSS->SsPrevExtens = NULL;
+      pNewSS->SsExtension = FALSE;
+      pNewSS->SsNExtensRules = 0;
+      pNewSS->SsExtensBlock = NULL;
+      pNewSS->SsFirstPSchemaExtens = NULL;
+      NbUsed_SchStruct++;
+    }
 }
 
 /*----------------------------------------------------------------------
    FreeSchStruc libere un schema de structure.                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeSchStruc (PtrSSchema pSS)
-
 #else  /* __STDC__ */
 void                FreeSchStruc (pSS)
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
 
 {
@@ -1396,45 +1378,44 @@ PtrSSchema          pSS;
 /*----------------------------------------------------------------------
    GetPresentRule alloue une regle de presentation.                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetPresentRule (PtrPRule * pRP)
-
 #else  /* __STDC__ */
 void                GetPresentRule (pRP)
 PtrPRule           *pRP;
-
 #endif /* __STDC__ */
 
 {
+  PtrPRule    pNewRP;
 
-   if (PtFree_PresRule == NULL)
-      *pRP = (PtrPRule) TtaGetMemory (sizeof (PresRule));
-   else
-     {
-	*pRP = PtFree_PresRule;
-	PtFree_PresRule = (*pRP)->PrNextPRule;
-	NbFree_PresRule--;
-     }
-   NbUsed_PresRule++;
-   memset ((*pRP), 0, sizeof (PresRule));
-   (*pRP)->PrNextPRule = NULL;
-   (*pRP)->PrSpecifAttr = 0;
-   (*pRP)->PrSpecifAttrSSchema = NULL;
-   (*pRP)->PrCond = NULL;
+  if (PtFree_PresRule == NULL)
+    pNewRP = (PtrPRule) TtaGetMemory (sizeof (PresRule));
+  else
+    {
+      pNewRP = PtFree_PresRule;
+      PtFree_PresRule = pNewRP->PrNextPRule;
+      NbFree_PresRule--;
+    }
+  *pRP = pNewRP;
+  if (pNewRP)
+    {
+      memset (pNewRP, 0, sizeof (PresRule));
+      pNewRP->PrNextPRule = NULL;
+      pNewRP->PrSpecifAttr = 0;
+      pNewRP->PrSpecifAttrSSchema = NULL;
+      pNewRP->PrCond = NULL;
+      NbUsed_PresRule++;
+    }
 }
 
 /*----------------------------------------------------------------------
    FreePresentRule libere une regle de presentation.               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreePresentRule (PtrPRule pRP)
-
 #else  /* __STDC__ */
 void                FreePresentRule (pRP)
 PtrPRule            pRP;
-
 #endif /* __STDC__ */
 
 {
@@ -1457,44 +1438,44 @@ PtrPRule            pRP;
    GetPresentRuleCond alloue une condition pour une regle de       
    presentation.                                                   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetPresentRuleCond (PtrCondition * pCond)
-
 #else  /* __STDC__ */
 void                GetPresentRuleCond (pCond)
 PtrCondition       *pCond;
-
 #endif /* __STDC__ */
 
 {
-   if (PtFree_CondPresRule == NULL)
-      *pCond = (PtrCondition) TtaGetMemory (sizeof (Condition));
-   else
-     {
-	*pCond = PtFree_CondPresRule;
-	PtFree_CondPresRule = (*pCond)->CoNextCondition;
-	NbFree_CondPresRule--;
-     }
-   NbUsed_CondPresRule++;
-   memset ((*pCond), 0, sizeof (Condition));
-   (*pCond)->CoNextCondition = NULL;
-   (*pCond)->CoNotNegative = FALSE;
-   (*pCond)->CoTarget = FALSE;
+  PtrCondition   pNewCond;
+
+  if (PtFree_CondPresRule == NULL)
+    pNewCond = (PtrCondition) TtaGetMemory (sizeof (Condition));
+  else
+    {
+      pNewCond = PtFree_CondPresRule;
+      PtFree_CondPresRule = pNewCond->CoNextCondition;
+      NbFree_CondPresRule--;
+    }
+  *pCond = pNewCond;
+  if (pNewCond)
+    {
+      memset (pNewCond, 0, sizeof (Condition));
+      pNewCond->CoNextCondition = NULL;
+      pNewCond->CoNotNegative = FALSE;
+      pNewCond->CoTarget = FALSE;
+      NbUsed_CondPresRule++;
+    }
 }
 
 /*----------------------------------------------------------------------
    FreePresentRuleCond libere une condition sur une regle de       
    presentation.                                                   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreePresentRuleCond (PtrCondition pCond)
-
 #else  /* __STDC__ */
 void                FreePresentRuleCond (pCond)
 PtrCondition        pCond;
-
 #endif /* __STDC__ */
 
 {
@@ -1507,48 +1488,47 @@ PtrCondition        pCond;
 /*----------------------------------------------------------------------
    GetDifferedRule alloue une regle retardee.                      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetDifferedRule (PtrDelayedPRule * pRR)
-
 #else  /* __STDC__ */
 void                GetDifferedRule (pRR)
 PtrDelayedPRule    *pRR;
-
 #endif /* __STDC__ */
 
 {
-   if (PtFree_DelayR == NULL)
-      *pRR = (PtrDelayedPRule) TtaGetMemory (sizeof (DelayedPRule));
-   else
-     {
-	*pRR = PtFree_DelayR;
-	PtFree_DelayR = (*pRR)->DpNext;
-	NbFree_DelayR--;
-     }
-   NbUsed_DelayR++;
-   memset (*pRR, 0, sizeof (DelayedPRule));
-   (*pRR)->DpPRule = NULL;
-   (*pRR)->DpPSchema = NULL;
-   (*pRR)->DpAbsBox = NULL;
-   (*pRR)->DpNext = NULL;
+  PtrDelayedPRule   pNewRR;
+
+  if (PtFree_DelayR == NULL)
+    pNewRR = (PtrDelayedPRule) TtaGetMemory (sizeof (DelayedPRule));
+  else
+    {
+      pNewRR = PtFree_DelayR;
+      PtFree_DelayR = pNewRR->DpNext;
+      NbFree_DelayR--;
+    }
+  *pRR = pNewRR;
+  if (pNewRR)
+    {
+      memset (*pRR, 0, sizeof (DelayedPRule));
+      pNewRR->DpPRule = NULL;
+      pNewRR->DpPSchema = NULL;
+      pNewRR->DpAbsBox = NULL;
+      pNewRR->DpNext = NULL;
+      NbUsed_DelayR++;
+    }
 }
 
 /*----------------------------------------------------------------------
    FreeDifferedRule libere une regle retardee.                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeDifferedRule (PtrDelayedPRule pRR)
-
 #else  /* __STDC__ */
 void                FreeDifferedRule (pRR)
 PtrDelayedPRule     pRR;
-
 #endif /* __STDC__ */
 
 {
-
    pRR->DpNext = PtFree_DelayR;
    PtFree_DelayR = pRR;
    NbFree_DelayR++;
@@ -1562,7 +1542,7 @@ PtrDelayedPRule     pRR;
 void                InitKernelMemory ()
 #else  /* __STDC__ */
 void                InitKernelMemory ()
-#endif				/* __STDC__ */
+#endif /* __STDC__ */
 {
    int                 i;
    ViewFrame          *pFrame;
@@ -1595,65 +1575,59 @@ void                InitKernelMemory ()
    NbUsed_Line = 0;
    FrameUpdating = FALSE;
    TextInserting = FALSE;
-
 }
+
 
 /*----------------------------------------------------------------------
    GetPosBlock alloue un bloc de relations de position.           
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                GetPosBlock (PtrPosRelations * adbloc)
-
+void                GetPosBlock (PtrPosRelations * pBlock)
 #else  /* __STDC__ */
-void                GetPosBlock (adbloc)
-PtrPosRelations    *adbloc;
-
+void                GetPosBlock (pBlock)
+PtrPosRelations    *pBlock;
 #endif /* __STDC__ */
 
 {
    int                 i;
-
-   /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
-   PtrPosRelations     pTa1;
+   PtrPosRelations     pNewBlock;
 
    if (PtFrePosB == NULL)
-      *adbloc = (PtrPosRelations) TtaGetMemory (sizeof (PosRelations));
+     pNewBlock  = (PtrPosRelations) TtaGetMemory (sizeof (PosRelations));
    /* Sinon recupere le bloc en tete de la chaine des libres */
    else
      {
-	*adbloc = PtFrePosB;
-	PtFrePosB = (*adbloc)->PosRNext;
+	pNewBlock = PtFrePosB;
+	PtFrePosB = pNewBlock->PosRNext;
 	NbFree_PosB--;
      }
-   NbUsed_PosB++;
    /* Initialisation du bloc */
-   pTa1 = *adbloc;
-   memset (pTa1, 0, sizeof (PosRelations));
-   pTa1->PosRNext = NULL;
-
-   for (i = 1; i <= MAX_RELAT_POS; i++)
-      pTa1->PosRTable[i - 1].ReBox = NULL;
+   *pBlock = pNewBlock;
+   if (pNewBlock)
+     {
+       memset (pNewBlock, 0, sizeof (PosRelations));
+       pNewBlock->PosRNext = NULL;
+       
+       for (i = 1; i <= MAX_RELAT_POS; i++)
+	 pNewBlock->PosRTable[i - 1].ReBox = NULL;
+       NbUsed_PosB++;
+     }
 }
 
 /*----------------------------------------------------------------------
    FreePosBlock libere le bloc de relations.                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                FreePosBlock (PtrPosRelations * adbloc)
-
+void                FreePosBlock (PtrPosRelations * pBlock)
 #else  /* __STDC__ */
-void                FreePosBlock (adbloc)
-PtrPosRelations    *adbloc;
-
+void                FreePosBlock (pBlock)
+PtrPosRelations    *pBlock;
 #endif /* __STDC__ */
 
 {
-
    /* Insere le bloc en tete de la chaine des libres */
-   (*adbloc)->PosRNext = PtFrePosB;
-   PtFrePosB = *adbloc;
+   (*pBlock)->PosRNext = PtFrePosB;
+   PtFrePosB = *pBlock;
    NbFree_PosB++;
    NbUsed_PosB--;
 }
@@ -1661,62 +1635,57 @@ PtrPosRelations    *adbloc;
 /*----------------------------------------------------------------------
    GetDimBlock alloue un bloc de relations de dimension.            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                GetDimBlock (PtrDimRelations * adbloc)
-
+void                GetDimBlock (PtrDimRelations * pBlock)
 #else  /* __STDC__ */
-void                GetDimBlock (adbloc)
-PtrDimRelations    *adbloc;
-
+void                GetDimBlock (pBlock)
+PtrDimRelations    *pBlock;
 #endif /* __STDC__ */
 
 {
    int                 i;
-
-   /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
-   PtrDimRelations     pTa1;
+   PtrDimRelations     pNewBlock;
 
    if (PtFreBDim == NULL)
-      *adbloc = (PtrDimRelations) TtaGetMemory (sizeof (DimRelations));
+     pNewBlock = (PtrDimRelations) TtaGetMemory (sizeof (DimRelations));
    /* Sinon recupere le bloc en tete de la chaine des libres */
    else
      {
-	*adbloc = PtFreBDim;
-	PtFreBDim = (*adbloc)->DimRNext;
-	NbFree_BDim--;
+       pNewBlock = PtFreBDim;
+       PtFreBDim = pNewBlock->DimRNext;
+       NbFree_BDim--;
      }
-   NbUsed_BDim++;
    /* Initialisation du bloc */
-   pTa1 = *adbloc;
-   memset (pTa1, 0, sizeof (DimRelations));
-   pTa1->DimRNext = NULL;
-
-   for (i = 1; i <= MAX_RELAT_DIM; i++)
+   *pBlock = pNewBlock;
+   if (pNewBlock)
      {
-	pTa1->DimRTable[i - 1] = NULL;
-	pTa1->DimRSame[i - 1] = TRUE;
+       memset (pNewBlock, 0, sizeof (DimRelations));
+       pNewBlock->DimRNext = NULL;
+       
+       for (i = 1; i <= MAX_RELAT_DIM; i++)
+	 {
+	   pNewBlock->DimRTable[i - 1] = NULL;
+	   pNewBlock->DimRSame[i - 1] = TRUE;
+	 }
+       NbUsed_BDim++;
      }
 }
 
 /*----------------------------------------------------------------------
    FreeDimBlock libere le bloc de relations de dimension.              
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                FreeDimBlock (PtrDimRelations * adbloc)
-
+void                FreeDimBlock (PtrDimRelations * pBlock)
 #else  /* __STDC__ */
-void                FreeDimBlock (adbloc)
-PtrDimRelations    *adbloc;
-
+void                FreeDimBlock (pBlock)
+PtrDimRelations    *pBlock;
 #endif /* __STDC__ */
 
 {
 
    /* Insere le bloc en tete de la chaine des libres */
-   (*adbloc)->DimRNext = PtFreBDim;
-   PtFreBDim = *adbloc;
+   (*pBlock)->DimRNext = PtFreBDim;
+   PtFreBDim = *pBlock;
    NbFree_BDim++;
    NbUsed_BDim--;
 }
@@ -1724,99 +1693,93 @@ PtrDimRelations    *adbloc;
 /*----------------------------------------------------------------------
    GetBox Alloue un nouveau contexte de boite pour le pave pAb.    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrBox              GetBox (PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 PtrBox              GetBox (pAb)
 PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
 
 {
-   PtrBox              adbox;
+   PtrBox              pBox;
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
    if (PtFreBox == NULL)
-      adbox = (PtrBox) malloc (sizeof (Box));
+      pBox = (PtrBox) TtaGetMemory (sizeof (Box));
    /* Sinon recupere le contexte en tete de la chaine des libres */
    else
      {
-	adbox = PtFreBox;
-	PtFreBox = adbox->BxNexChild;
+	pBox = PtFreBox;
+	PtFreBox = pBox->BxNexChild;
 	NbFree_Box--;
      }
-   NbUsed_Box++;
 
    /* Initialisation de la box */
-   if (adbox != NULL)
+   if (pBox != NULL)
      {
-	memset (adbox, 0, sizeof (Box));
-	adbox->BxAbstractBox = pAb;
-	adbox->BxPrevious = NULL;
-	adbox->BxNext = NULL;
-	adbox->BxType = BoComplete;
-	adbox->BxNexChild = NULL;
-	adbox->BxXOrg = 0;
-	adbox->BxYOrg = 0;
-	adbox->BxWidth = 0;
-	adbox->BxHeight = 0;
-	adbox->BxHorizRef = 0;
-	adbox->BxVertRef = 0;
-	adbox->BxFont = NULL;
-	adbox->BxUnderline = 0;
-	adbox->BxThickness = 0;
-	adbox->BxMoved = NULL;
-	adbox->BxHorizInc = NULL;
-	adbox->BxVertInc = NULL;
-	adbox->BxNChars = 0;
-	adbox->BxHorizEdge = Left;
-	adbox->BxVertEdge = Top;
-	adbox->BxNSpaces = 0;
-	adbox->BxSpaceWidth = 0;
-	adbox->BxPosRelations = NULL;
-	adbox->BxWidthRelations = NULL;
-	adbox->BxHeightRelations = NULL;
-	adbox->BxEndOfBloc = 0;
+	memset (pBox, 0, sizeof (Box));
+	pBox->BxAbstractBox = pAb;
+	pBox->BxPrevious = NULL;
+	pBox->BxNext = NULL;
+	pBox->BxType = BoComplete;
+	pBox->BxNexChild = NULL;
+	pBox->BxXOrg = 0;
+	pBox->BxYOrg = 0;
+	pBox->BxWidth = 0;
+	pBox->BxHeight = 0;
+	pBox->BxHorizRef = 0;
+	pBox->BxVertRef = 0;
+	pBox->BxFont = NULL;
+	pBox->BxUnderline = 0;
+	pBox->BxThickness = 0;
+	pBox->BxMoved = NULL;
+	pBox->BxHorizInc = NULL;
+	pBox->BxVertInc = NULL;
+	pBox->BxNChars = 0;
+	pBox->BxHorizEdge = Left;
+	pBox->BxVertEdge = Top;
+	pBox->BxNSpaces = 0;
+	pBox->BxSpaceWidth = 0;
+	pBox->BxPosRelations = NULL;
+	pBox->BxWidthRelations = NULL;
+	pBox->BxHeightRelations = NULL;
+	pBox->BxEndOfBloc = 0;
 	/* Il n'y a pas de relations hors-structure */
-	adbox->BxXOutOfStruct = FALSE;
-	adbox->BxYOutOfStruct = FALSE;
-	adbox->BxWOutOfStruct = FALSE;
-	adbox->BxHOutOfStruct = FALSE;
+	pBox->BxXOutOfStruct = FALSE;
+	pBox->BxYOutOfStruct = FALSE;
+	pBox->BxWOutOfStruct = FALSE;
+	pBox->BxHOutOfStruct = FALSE;
 	/* La box n'est pas elastique */
-	adbox->BxHorizFlex = FALSE;
-	adbox->BxVertFlex = FALSE;
-	adbox->BxHorizInverted = FALSE;
-	adbox->BxVertInverted = FALSE;
-	adbox->BxNew = FALSE;
+	pBox->BxHorizFlex = FALSE;
+	pBox->BxVertFlex = FALSE;
+	pBox->BxHorizInverted = FALSE;
+	pBox->BxVertInverted = FALSE;
+	pBox->BxNew = FALSE;
 	/* Initialisation du traitement des dimensions minimales */
-	adbox->BxContentHeight = FALSE;
-	adbox->BxContentWidth = FALSE;
-	adbox->BxRuleHeigth = 0;
-	adbox->BxRuleWidth = 0;
-	adbox->BxBuffer = NULL;
-	adbox->BxEndOfBloc = 0;
-	adbox->BxNPixels = 0;
-	adbox->BxFirstChar = 0;
-	adbox->BxXToCompute = FALSE;
-	adbox->BxYToCompute = FALSE;
+	pBox->BxContentHeight = FALSE;
+	pBox->BxContentWidth = FALSE;
+	pBox->BxRuleHeigth = 0;
+	pBox->BxRuleWidth = 0;
+	pBox->BxBuffer = NULL;
+	pBox->BxEndOfBloc = 0;
+	pBox->BxNPixels = 0;
+	pBox->BxFirstChar = 0;
+	pBox->BxXToCompute = FALSE;
+	pBox->BxYToCompute = FALSE;
+	NbUsed_Box++;
      }
-   return adbox;
+   return pBox;
 }
 
 /*----------------------------------------------------------------------
-   FreeBox libere le contexte de boite adBox et retourne la boite 
+   FreeBox libere le contexte de boite pBox et retourne la boite 
    suivante.                                               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-PtrBox              FreeBox (PtrBox adBox)
-
+PtrBox              FreeBox (PtrBox pBox)
 #else  /* __STDC__ */
-PtrBox              FreeBox (adBox)
-PtrBox              adBox;
-
+PtrBox              FreeBox (pBox)
+PtrBox              pBox;
 #endif /* __STDC__ */
 
 {
@@ -1824,24 +1787,22 @@ PtrBox              adBox;
    PtrPosRelations     nepos;
    PtrDimRelations     pDimRel;
    PtrDimRelations     nedim;
-   PtrBox              pBo1;
    PtrBox              NextBox;
 
    /* Insere le contexte de boite en tete de la chaine des libres */
-   pBo1 = adBox;
-   pBo1->BxAbstractBox = NULL;
-   pBo1->BxPrevious = NULL;
-   pBo1->BxNext = NULL;
+   pBox->BxAbstractBox = NULL;
+   pBox->BxPrevious = NULL;
+   pBox->BxNext = NULL;
    /* On retire l'indicateur de fin de* bloc */
-   pBo1->BxEndOfBloc = 0;
-   pBo1->BxType = BoComplete;
-   NextBox = pBo1->BxNexChild;
-   pBo1->BxNexChild = PtFreBox;
-   PtFreBox = adBox;
+   pBox->BxEndOfBloc = 0;
+   pBox->BxType = BoComplete;
+   NextBox = pBox->BxNexChild;
+   pBox->BxNexChild = PtFreBox;
+   PtFreBox = pBox;
    NbFree_Box++;
    NbUsed_Box--;
    /* On libere les differents blocs attaches a la boite */
-   pPosRel = pBo1->BxPosRelations;
+   pPosRel = pBox->BxPosRelations;
    while (pPosRel != NULL)
      {
 	nepos = pPosRel->PosRNext;
@@ -1849,7 +1810,7 @@ PtrBox              adBox;
 	pPosRel = nepos;
      }
 
-   pDimRel = pBo1->BxWidthRelations;
+   pDimRel = pBox->BxWidthRelations;
    while (pDimRel != NULL)
      {
 	nedim = pDimRel->DimRNext;
@@ -1857,7 +1818,7 @@ PtrBox              adBox;
 	pDimRel = nedim;
      }
 
-   pDimRel = pBo1->BxHeightRelations;
+   pDimRel = pBox->BxHeightRelations;
    while (pDimRel != NULL)
      {
 	nedim = pDimRel->DimRNext;
@@ -1867,75 +1828,70 @@ PtrBox              adBox;
    return NextBox;
 }
 
+
 /*----------------------------------------------------------------------
    GetLine alloue un contexte de ligne.                            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                GetLine (PtrLine * adligne)
-
+void                GetLine (PtrLine * pLine)
 #else  /* __STDC__ */
-void                GetLine (adligne)
-PtrLine            *adligne;
-
+void                GetLine (pLine)
+PtrLine            *pLine;
 #endif /* __STDC__ */
 
 {
-   PtrLine             pLi1;
+   PtrLine             pNewLine;
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
    if (PtFree_Line == NULL)
-      *adligne = (PtrLine) malloc (sizeof (Line));
+      pNewLine = (PtrLine) TtaGetMemory (sizeof (Line));
    /* Sinon recupere le contexte en tete de la chaine des libres */
    else
      {
-	*adligne = PtFree_Line;
-	PtFree_Line = (*adligne)->LiNext;
+	pNewLine = PtFree_Line;
+	PtFree_Line = pNewLine->LiNext;
 	NbFree_Line--;
      }
-   NbUsed_Line++;
    /* Initialisation de la ligne */
-   if (*adligne != NULL)
+   *pLine = pNewLine;
+   if (pNewLine)
      {
-	pLi1 = *adligne;
-	memset (pLi1, 0, sizeof (Line));
-	pLi1->LiPrevious = NULL;
-	pLi1->LiNext = NULL;
-	pLi1->LiXOrg = 0;
-	pLi1->LiYOrg = 0;
-	pLi1->LiXMax = 0;
-	pLi1->LiMinLength = 0;
-	pLi1->LiHeight = 0;
-	pLi1->LiHorizRef = 0;
-	pLi1->LiNSpaces = 0;
-	pLi1->LiSpaceWidth = 0;
-	pLi1->LiNPixels = 0;
-	pLi1->LiFirstBox = NULL;
-	pLi1->LiLastBox = NULL;
-	pLi1->LiFirstPiece = NULL;
-	pLi1->LiLastPiece = NULL;
-	pLi1->LiRealLength = 0;
+	memset (pNewLine, 0, sizeof (Line));
+	pNewLine->LiPrevious = NULL;
+	pNewLine->LiNext = NULL;
+	pNewLine->LiXOrg = 0;
+	pNewLine->LiYOrg = 0;
+	pNewLine->LiXMax = 0;
+	pNewLine->LiMinLength = 0;
+	pNewLine->LiHeight = 0;
+	pNewLine->LiHorizRef = 0;
+	pNewLine->LiNSpaces = 0;
+	pNewLine->LiSpaceWidth = 0;
+	pNewLine->LiNPixels = 0;
+	pNewLine->LiFirstBox = NULL;
+	pNewLine->LiLastBox = NULL;
+	pNewLine->LiFirstPiece = NULL;
+	pNewLine->LiLastPiece = NULL;
+	pNewLine->LiRealLength = 0;
+	NbUsed_Line++;
      }
 }
 
 /*----------------------------------------------------------------------
    FreeLine libere le contexte de ligne.                           
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                FreeLine (PtrLine adligne)
-
+void                FreeLine (PtrLine pLine)
 #else  /* __STDC__ */
-void                FreeLine (adligne)
-PtrLine             adligne;
-
+void                FreeLine (pLine)
+PtrLine             pLine;
 #endif /* __STDC__ */
 
 {
 
    /* Insere le contexte de ligne en tete de la chaine des libres */
-   adligne->LiNext = PtFree_Line;
-   PtFree_Line = adligne;
+   pLine->LiNext = PtFree_Line;
+   PtFree_Line = pLine;
    PtFree_Line->LiPrevious = NULL;
    NbFree_Line++;
    NbUsed_Line--;
@@ -1945,14 +1901,11 @@ PtrLine             adligne;
 /*----------------------------------------------------------------------
    GetSearchContext alloue un contexte de recherche.                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetSearchContext (PtrSearchContext * pSearch)
-
 #else  /* __STDC__ */
 void                GetSearchContext (pSearch)
 PtrSearchContext   *pSearch;
-
 #endif /* __STDC__ */
 
 {
@@ -1960,32 +1913,32 @@ PtrSearchContext   *pSearch;
 
    if (pSearch != NULL)
      {
-	s = (PtrSearchContext) malloc (sizeof (SearchContext));
+	s = (PtrSearchContext) TtaGetMemory (sizeof (SearchContext));
 	/* Initialisation des champs */
 	*pSearch = s;
-	memset (s, 0, sizeof (SearchContext));
-	s->SDocument = NULL;
-	s->STree = 0;
-	s->SStartElement = NULL;
-	s->SStartChar = 0;
-	s->SEndElement = NULL;
-	s->SEndChar = 0;
-	s->SStartToEnd = TRUE;
-	s->SWholeDocument = FALSE;
+	if (s)
+	  {
+	    memset (s, 0, sizeof (SearchContext));
+	    s->SDocument = NULL;
+	    s->STree = 0;
+	    s->SStartElement = NULL;
+	    s->SStartChar = 0;
+	    s->SEndElement = NULL;
+	    s->SEndChar = 0;
+	    s->SStartToEnd = TRUE;
+	    s->SWholeDocument = FALSE;
+	  }
      }
 }
 
 /*----------------------------------------------------------------------
    FreeSearchContext libe`re un contexte de recherche.                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeSearchContext (PtrSearchContext * pSearch)
-
 #else  /* __STDC__ */
 void                FreeSearchContext (pSearch)
 PtrSearchContext   *pSearch;
-
 #endif /* __STDC__ */
 
 {
@@ -2006,7 +1959,6 @@ void                FreeStringInDict (PtrDict pDict)
 #else  /* __STDC__ */
 void                FreeStringInDict (pDict)
 PtrDict             pDict;
-
 #endif /* __STDC__ */
 {
    PtrChaine           pCh1;
@@ -2044,7 +1996,6 @@ static void        *GetDictContext (unsigned int n)
 #else  /* __STDC__ */
 static void        *GetDictContext (n)
 unsigned int        n;
-
 #endif /* __STDC__ */
 {
 
@@ -2064,7 +2015,6 @@ int                 GetStringInDict (PtrDict * pDict, boolean readonly)
 int                 GetStringInDict (pDict, readonly)
 PtrDict            *pDict;
 boolean             readonly;
-
 #endif /* __STDC__ */
 {
    PtrDict             pdict;
@@ -2076,37 +2026,29 @@ boolean             readonly;
    /* alloue la chaine necessaire */
    pdict->chaine = (PtrChaine) GetDictContext (i);
    if (pdict->chaine == NULL)
-
      {
 	FreeStringInDict (pdict);
 	return (-1);
-
      }
 
    pdict->MAXmots += (pdict->DictReadOnly == FALSE) ? 50 : 2;
    i = pdict->MAXmots;
    pdict->commun = (PtrCommuns) GetDictContext (i);
    if (pdict->commun == NULL)
-
      {
 	FreeStringInDict (pdict);
 	return (-1);
-
      }
 
    /* ATTENTION : ce sont des entiers */
    pdict->pdico = (PtrMots) GetDictContext (i * sizeof (int));
 
    if (pdict->pdico == NULL)
-
      {
 	FreeStringInDict (pdict);
 	return (-1);
-
      }
-
    return (0);
-
 }
 
 
@@ -2127,22 +2069,19 @@ PtrDict            *pDict;
 
    if (PtFree_Dict == NULL)
       *pDict = (PtrDict) GetDictContext (sizeof (Dictionnaire));
-
    else
      {
 	*pDict = PtFree_Dict;
 	PtFree_Dict = (*pDict)->DictSuivant;
 	NbFree_Dict--;
-
      }
-   if (*pDict != NULL)
 
+   if (*pDict != NULL)
      {
 	NbUsed_Dict++;
 
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
-
 	pdict->DictNom[0] = '\0';
 	pdict->DictDirectory[0] = '\0';
 	pdict->DictReadOnly = TRUE;
@@ -2161,9 +2100,7 @@ PtrDict            *pDict;
 	pdict->MAXcars = 0;
 	pdict->nbmots = -1;
 	pdict->nbcars = 0;
-
      }
-
 }
 
 

@@ -282,7 +282,8 @@ int                 msgType;
 	       }
 	     else
 	       {
-		  switch (*++p)
+		 p++;
+		  switch (*p)
 			{
 			   case 'd':
 			      /* it is a value */

@@ -813,9 +813,7 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
 
-   el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Toggle_Item;
    TtaInsertElement (elType, document);
@@ -834,9 +832,7 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
 
-   el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Radio_Item;
    TtaInsertElement (elType, document);
@@ -907,9 +903,7 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
 
-   el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Text_Input_Line;
    TtaInsertElement (elType, document);
@@ -928,9 +922,7 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
 
-   el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Text_Area;
    TtaInsertElement (elType, document);
@@ -949,9 +941,7 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
 
-   el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Command_Line;
    TtaInsertElement (elType, document);

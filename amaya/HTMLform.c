@@ -418,7 +418,6 @@ char               *action;
 
 #endif
 {
-   int                 status;
    int                 buffer_size;
    int                 i;
    char               *urlName;
@@ -440,7 +439,6 @@ char               *action;
 
    switch (method)
 	 {
-
 	    case -9999:	/*index, not yet inside HTML.s */
 
 	       for (i = 0; i < buffer_size; i++)
@@ -454,36 +452,23 @@ char               *action;
 			      break;
 			}	/* switch */
 	       break;		/* case INDEX */
-
 	    case HTML_ATTR_METHOD_VAL_Get_:
-
 	       urlName = TtaGetMemory (strlen (action) + strlen (buffer) + 2);
-
 	       if (urlName != (char *) NULL)
 		 {
 		    strcpy (urlName, action);
 		    strcat (urlName, "?");
 		    strcat (urlName, buffer);
-		    status = GetHTMLDocument (urlName, NULL, doc, DC_TRUE | DC_FORM_GET);
+		    GetHTMLDocument (urlName, NULL, doc, DC_TRUE | DC_FORM_GET);
 		    TtaFreeMemory (urlName);
 		 }
-	       else
-		  status = HT_ERROR;
 	       break;
-
 	    case HTML_ATTR_METHOD_VAL_Post_:
 	       if (action != (char *) NULL)
-		 {
-		    status = GetHTMLDocument (action, buffer, doc, DC_TRUE | DC_FORM_POST);
-		 }
-	       else
-		  status = HT_ERROR;
+		 GetHTMLDocument (action, buffer, doc, DC_TRUE | DC_FORM_POST);
 	       break;
-
 	    default:
-	       status = HT_ERROR;	/* invalid form method */
 	       break;
-
 	 }
    return;
 }

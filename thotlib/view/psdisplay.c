@@ -1905,17 +1905,14 @@ int                 fg;
 {
    int                 xcour, ycour;	/*encoding */
    FILE               *fout;
-   ptrfont             font;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
-   font = (ptrfont) ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (lgboite > 0)
      {
 	fout = (FILE *) FrRef[frame];
 	/* Load the current font */
-	/*encoding = CurrentFont(fout,font); */
 	xcour = PixelToPoint (x);
 	ycour = PixelToPoint (y);
 
