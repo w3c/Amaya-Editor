@@ -1831,8 +1831,8 @@ void                DoSaveAs ()
   STRING              documentFile;
   STRING              tempname, localPath;
   STRING              imagePath, base;
-  CHAR_T                imgbase[MAX_LENGTH];
-  CHAR_T                url_sep;
+  CHAR_T              imgbase[MAX_LENGTH];
+  CHAR_T              url_sep;
   int                 res;
   int                 len;
   ThotBool            src_is_local;
@@ -1843,6 +1843,7 @@ void                DoSaveAs ()
   dst_is_local = !IsW3Path (SavePath);
   ok = TRUE;
   toUndo = FALSE;
+  base = NULL;
 
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], SavePath, SaveName, (int) CopyImages);
@@ -2108,12 +2109,3 @@ void                DoSaveAs ()
     }
   TtaFreeMemory (documentFile);
 }
-
-
-
-
-
-
-
-
-

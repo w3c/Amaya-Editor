@@ -186,6 +186,7 @@ ThotBool            inMath;
   Element             lastcell;
   ElementType         elType;
 
+  lastcell = NULL;
   if (row == NULL)
     return (NULL);
 
@@ -513,6 +514,7 @@ Document            doc;
       TtaNextSibling (&colhead);
       cNumber++;
     }
+  cell = NULL;
   
   attrType.AttrSSchema = elType.ElSSchema;
   attrTypeHSpan.AttrSSchema = elType.ElSSchema;
@@ -664,7 +666,7 @@ Document            doc;
 	  TtaDeleteTree (row, doc);
 #ifdef MATHML
 	/* accept XML comments */
-	else if (inMath &&
+	else if (inMath && cell &&
 		 elType.ElTypeNum != MathML_EL_XMLcomment)
 	  /* Delete any other type of element */
 	  TtaDeleteTree (cell, doc);

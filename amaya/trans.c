@@ -828,6 +828,7 @@ Element            *elem;
      }
    return result;
 }
+
 /*----------------------------------------------------------------------
    ExportSubTree Exports a subtree in generation buffer without any
    change
@@ -861,8 +862,8 @@ Document doc;
 	}
     }
   else
+  *****/
     {
-    *****/
       ustrcpy (tmpfilename, TtaGetEnvString (TEXT("TMPDIR")));
       ustrcat (tmpfilename, DIR_STR);
       ustrcat (tmpfilename, TEXT("amayatrans.tmp"));
@@ -872,6 +873,7 @@ Document doc;
       if (status != -1)
 	if (StatBuffer->st_size < len)
 	  inputFile = TtaReadOpen (tmpfilename);
+      charRead = EOS;
       if (inputFile != NULL)
 	{
 	  charRead = getc (inputFile);
@@ -885,7 +887,7 @@ Document doc;
       TtaFileUnlink (tmpfilename);  
       if (charRead == EOF)
 	result = TRUE;
-  /*}*/
+    }
   bufHTML[szHTML] = EOS;
   return result;
 }

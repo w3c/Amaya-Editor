@@ -60,6 +60,7 @@ CSSInfoPtr      css;
     sSchema = TtaGetDocumentSSchema (doc);
   pInfo = css->infos;
   found = FALSE;
+  pIS = NULL;
   while (pInfo != NULL && !found)
     {
       if (pInfo->PiDoc == doc)

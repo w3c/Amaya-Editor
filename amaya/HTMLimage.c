@@ -554,8 +554,8 @@ void *context;
 #endif /* __STDC__ */
 {
    STRING              pathname;
-   STRING               tempfile;
-   FetchImage_context  *FetchImage_ctx;
+   STRING              tempfile;
+   FetchImage_context *FetchImage_ctx;
    LoadedImageDesc    *desc;
    STRING              base_url;
    STRING              ptr;
@@ -563,6 +563,7 @@ void *context;
    ElementType         elType;
 
    /* restore the context */
+   desc = NULL;
    FetchImage_ctx = (FetchImage_context *) context;
    if (FetchImage_ctx) 
      {
