@@ -1815,7 +1815,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       /* check if there is enough space between left and right floating boxes */
       if ((floatL || floatR) &&
 	  (pLine->LiXMax < width ||
-	   (floatL && clearL == 'L') || (floatR && clearR == 'R')))
+	   (floatL && floatL != pBox && clearL == 'L') ||
+	   (floatR && floatR != pBox && clearR == 'R')))
 	{
 	  /* update line information */
 	  if (clearL == 'L' || clearR == 'R')
@@ -2764,11 +2765,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
-      if (box->BxWidth < w + MIN_SPACE)
+      if (box->BxWidth < w)
 	{
-	  /****if ((pBlock->BxType == BoFloatBlock &&
-	       boxPrevL && y == boxPrevL->BxYOrg) ||
-	       (boxPrevR && y == boxPrevR->BxYOrg))*****/
 	  /* it's possible to display the floating box at the current position */
 	  if (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
 	      box->BxAbstractBox->AbFloat == 'L')
