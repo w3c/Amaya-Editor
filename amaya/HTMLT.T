@@ -2223,20 +2223,10 @@ ATTRIBUTES
 	END;
 
  NAME: BEGIN
-#ifndef XHTML11
         create SAN;
 	Create 'name="';
         Create NAME;
         Create DoubleQuote;
-#endif
-#ifdef XML
-	if Anchor and not ID BEGIN
-                create SAN;
-       		Create 'id="';
-    		Create NAME;
-       		Create DoubleQuote;
-	       	END;
-#endif
 #ifdef XHTML11
 	if map and not ID BEGIN
                 create SAN;
@@ -2250,9 +2240,9 @@ ATTRIBUTES
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
-	if not map and not MAP and not Anchor BEGIN
+	if Anchor and not ID BEGIN
                 create SAN;
-       		Create 'name="';
+       		Create 'id="';
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
