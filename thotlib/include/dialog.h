@@ -239,6 +239,26 @@ extern void TtaAttachForm (int ref);
 extern void TtaDetachForm (int ref);
 
 /*----------------------------------------------------------------------
+   TtaNewSizedSelector creates a selector of a given width in a dialogue form:
+   The parameter ref donne la re'fe'rence pour l'application.
+   The parameter title donne le titre du catalogue.             
+   The parameter number donne le nombre d'intitule's.          
+   The parameter text contient la liste des intitule's.   
+   The parameter height donne le nombre d'intitule's visibles a` la
+   fois (hauteur de la fenetree^tre de visualisation).
+   The parameter label ajoute un choix supple'mentaire a` la liste
+   des choix possibles. Ce choix est affiche' se'pare'ment et donc
+   mis en e'vidence. 
+   The parameter withText indique s'il faut creer une zone texte.
+   Quand le parame`tre react est vrai, tout changement de se'lection
+   dans le se'lecteur est imme'diatement signale' a` l'application.
+  ----------------------------------------------------------------------*/
+extern void TtaNewSizedSelector (int ref, int ref_parent, char *title,
+				 int number, char *text, int width, int height,
+				 char *label, ThotBool withText,
+				 ThotBool react);
+
+/*----------------------------------------------------------------------
    TtaNewSelector cre'e un se'lecteur dans un formulaire :            
    Le parame`tre ref donne la re'fe'rence pour l'application.         
    Le parame`tre title donne le titre du catalogue.                   

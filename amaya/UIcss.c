@@ -32,6 +32,7 @@ static Document    CSSdocument;
 #include "HTMLedit_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
+#include "dialog.h"
 #include "init_f.h"
 #include "query_f.h"
 #include "styleparser_f.h"

@@ -46,10 +46,12 @@
 #include "attributes_f.h"
 #include "callback_f.h"
 #include "contentapi_f.h"
+#include "displayview_f.h"
 #include "memory_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "tree_f.h"
+#include "viewapi_f.h"
 
 /*----------------------------------------------------------------------
    HistError
