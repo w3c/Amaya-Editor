@@ -507,16 +507,6 @@ LPARAM lParam;
    if (frame < 0)
       return;
 
-   /* If the message is WM_CHAR then this is a character to insert and  not a */
-   /* particular key as a short cut for example                               */
-   if (msg == WM_CHAR)
-      specialKey = FALSE;
-   else
-      /* if the message is WM_KEYDOWN or WM_SYSKEYDOWN then we have to suppose */
-	  /* that we have to deal with something else than a character to  insert: */
-	  /* a short cut for example                                               */
-      specialKey = TRUE;
-
    /* Is the Shift key pressed ?? */
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status)) 
@@ -541,6 +531,20 @@ LPARAM lParam;
       keyboard_mask |= THOT_MOD_ALT;
       escChar = TRUE;
    }
+
+   if ((msg == WM_KEYDOWN) && (wParam == VK_RETURN) && !(keyboard_mask & THOT_MOD_ALT))
+	   return;
+
+   /* If the message is WM_CHAR then this is a character to insert and  not a */
+   /* particular key as a short cut for example                               */
+   if (msg == WM_CHAR)
+      specialKey = FALSE;
+   else
+      /* if the message is WM_KEYDOWN or WM_SYSKEYDOWN then we have to suppose */
+	  /* that we have to deal with something else than a character to  insert: */
+	  /* a short cut for example                                               */
+      specialKey = TRUE;
+
 
    if (msg == WM_SYSCHAR)
       len = 0;
