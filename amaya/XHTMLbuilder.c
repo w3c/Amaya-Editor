@@ -855,28 +855,5 @@ STRING    alphabet;
      }
 }
 
-/*----------------------------------------------------------------------
-   XhtmlEntityCreated
-   A XTHML entity has been created by the XML parser.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        XhtmlEntityCreated (USTRING entityValue,
-				Language lang,
-				STRING entityName,
-				Document doc)
-#else
-void        XhtmlEntityCreated (entityValue,
-				lang,
-				entityName,
-				doc)
-USTRING entityValue;
-Language lang;
-STRING  entityName;
-Document doc;
-
-#endif
-{
-}
-
 /*--------------------  Entities  (end)  ---------------------*/
 

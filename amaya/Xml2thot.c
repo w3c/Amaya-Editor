@@ -47,15 +47,6 @@
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
 
-typedef struct _ElemToBeChecked *PtrElemToBeChecked;
-typedef struct _ElemToBeChecked
-  {
-     Element               Elem;	/* the element to be checked */
-     PtrElemToBeChecked    nextElemToBeChecked;
-  }
-ElemToBeChecked;
-
-
 /* elements that cannot contain text as immediate children.
    When some text is present in the HTML file it must be surrounded
    by a Thot Paragraph (or Pseudo_paragraph) element */
@@ -71,77 +62,6 @@ static int          NoTextChild[] =
    HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
    0};
-
-/* block level elements */
-static int          BlockLevelElement[] =
-{
-   HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph,
-   HTML_EL_H1, HTML_EL_H2, HTML_EL_H3, HTML_EL_H4, HTML_EL_H5, HTML_EL_H6,
-   HTML_EL_TITLE, HTML_EL_Term, HTML_EL_CAPTION, HTML_EL_LEGEND,
-   0};
-
-/* start tags that imply the end of a current element */
-/* any tag of each line implies the end of the current element if the type of
-   that element is in the same line */
-typedef char        oneLine[100];
-static oneLine      EquivEndingElem[] =
-{
-   "dt dd li option",
-   "h1 h2 h3 h4 h5 h6",
-   "address pre listing xmp",
-   ""
-};
-/* acording the HTML DTD, HR should be added to the 2nd line above, as it */
-/* is not allowed within a H1, H2, H3, etc. But we should tolerate that case */
-/* because many documents contain rules in headings... */
-
-/* start tags that imply the end of current element */
-static oneLine      StartTagEndingElem[] =
-{
-   "form closes form p p* hr h1 h2 h3 h4 h5 h6 dl ul ol menu dir address pre listing xmp head",
-   "head closes p p*",
-   "title closes p p*",
-   "body closes head style script title p p*",
-   "li closes p p* h1 h2 h3 h4 h5 h6 dl address pre listing xmp head",
-   "hr closes p p* head",
-   "h1 closes p p* head",
-   "h2 closes p p* head",
-   "h3 closes p p* head",
-   "h4 closes p p* head",
-   "h5 closes p p* head",
-   "h6 closes p p* head",
-   "dir closes p p* head",
-   "address closes p p* head ul",
-   "pre closes p p* head ul",
-   "listing closes p p* head",
-   "xmp closes p p* head",
-   "blockquote closes p p* head",
-   "dl closes p p* dt menu dir address pre listing xmp head",
-   "dt closes p p* menu dir address pre listing xmp head",
-   "dd closes p p* menu dir address pre listing xmp head",
-   "ul closes p p* head ol menu dir address pre listing xmp",
-   "ol closes p p* head ul",
-   "menu closes p p* head ul",
-   "p closes p p* head h1 h2 h3 h4 h5 h6",
-   "p* closes p p* head",
-   "div closes p p* head",
-   "noscript closes p p* head",
-   "center closes font b i p p* head",
-   "a closes a",
-   "caption closes p p*",
-   "colgroup closes caption colgroup col p p*",
-   "col closes caption col p p*",
-   "table closes p p* head h1 h2 h3 h4 h5 h6 pre listing xmp a",
-   "th closes th td",
-   "td closes th td",
-   "tr closes th td tr caption col colgroup",
-   "thead closes caption col colgroup",
-   "tfoot closes th td tr caption col colgroup thead tbody",
-   "tbody closes th td tr caption col colgroup thead tfoot tbody",
-   "optgroup closes option",
-   "fieldset closes legend p p* head h1 h2 h3 h4 h5 h6 pre listing xmp a",
-   ""
-};
 
 
 /* ---------------------- static variables ---------------------- */
@@ -184,6 +104,8 @@ XMLparserContext;
 static PtrParserCtxt	firstParserCtxt = NULL;
                 /* current context */
 static PtrParserCtxt	currentParserCtxt = NULL;
+                /* xhtml context */
+static PtrParserCtxt	xhtmlParserCtxt = NULL;
 
 #define MAX_URI_NAME_LENGTH  60
 #define XHTML_URI            TEXT("http://www.w3.org/1999/xhtml")
@@ -268,8 +190,6 @@ static Element     CommentText = NULL;
                 /* character data should be catenated
 		   with the last Text element */
 static ThotBool    MergeText = FALSE;
-static PtrElemToBeChecked FirstElemToBeChecked = NULL;
-static PtrElemToBeChecked LastElemToBeChecked = NULL;
 
 
 /* information about the Thot document under construction */
@@ -296,13 +216,13 @@ static CHAR_T	    currentMappedName[16];
 #define MaxMsgLength 200
 
 #ifdef __STDC__
-static void         ProcessStartGI (CHAR_T* GIname);
+static void         StartOfXmlStartTag (CHAR_T* GIname);
 static void         InsertElement (Element * el);
 static void         PutMathMLEntity (USTRING entityValue, Language lang,
 				     STRING entityName, Document doc);
 static void         XhtmlElementComplete (Element el, Document doc, int *error);
 #else
-static void         ProcessStartGI ();
+static void         StartOfXmlStartTag ();
 static void         InsertElement ();
 static void         PutMathMLEntity (entityValue, lang, entityName, doc);
 static void         XhtmlElementComplete (el, doc, error);
@@ -347,11 +267,13 @@ static void            InitXmlParserContexts ()
    ctxt->MapAttribute = (Proc) XhtmlMapAttribute;
    ctxt->MapAttributeValue = (Proc) XhtmlMapAttributeValue;
    ctxt->MapEntity = (Proc) XhtmlMapEntity;
-   ctxt->EntityCreated = (Proc) XhtmlEntityCreated;
+   /* ctxt->EntityCreated = (Proc) XhtmlEntityCreated; */
+   ctxt->EntityCreated = NULL;
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
    prevCtxt = ctxt;
+   xhtmlParserCtxt = ctxt;
 
    /* initialize MathML parser */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
@@ -629,14 +551,14 @@ Element el;
 }
 
 /*----------------------------------------------------------------------
-   Within  
+   XmlWithin  
    Checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     Within (int ThotType,
+static ThotBool  XmlWithin (int ThotType,
 			    SSchema ThotSSchema)
 #else
-static ThotBool     Within (ThotType,
+static ThotBool  XmlWithin (ThotType,
 			    ThotSSchema)
 int                 ThotType;
 SSchema		    ThotSSchema;
@@ -649,20 +571,20 @@ SSchema		    ThotSSchema;
 
    ret = FALSE;
    i = stackLevel - 1;
+
    while (i >= 0 && !ret)
      {
-	if (elementStack[i] != NULL)
-	  {
-	     elType = TtaGetElementType (elementStack[i]);
-	     if (elType.ElTypeNum == ThotType &&
-		 elType.ElSSchema == ThotSSchema)
-		ret = TRUE;
-	  }
-	i--;
+       if (elementStack[i] != NULL)
+	 {
+	   elType = TtaGetElementType (elementStack[i]);
+	   if (elType.ElTypeNum == ThotType &&
+	       elType.ElSSchema == ThotSSchema)
+	       ret = TRUE;
+	 }
+       i--;
      }
    return ret;
 }
-
 
 /*----------------------------------------------------------------------
    InsertSibling   return TRUE if the new element must be inserted
@@ -674,41 +596,18 @@ static ThotBool     InsertSibling ()
    if (stackLevel == 0)
        return FALSE;
    else
+     /*
      if (lastElementClosed ||
 	 TtaIsLeaf (TtaGetElementType (lastElement)) ||
 	 (nameElementStack[stackLevel - 1] != NULL &&
 	  previousElementContent == 'E'))
+     */
+     if (lastElementClosed ||
+	 TtaIsLeaf (TtaGetElementType (lastElement)))
        return TRUE;
      else
        return FALSE;
 
-}
-
-/*----------------------------------------------------------------------
-   IsBlockElement  
-   Return TRUE if element el is a block element.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     IsBlockElement (Element el)
-#else
-static ThotBool     IsBlockElement (el)
-Element             el;
-
-#endif
-{
-   ElementType         elType;
-   int                 i;
-   ThotBool            ret;
-
-   ret = FALSE;
-   elType = TtaGetElementType (el);
-   i = 0;
-   while (BlockLevelElement[i] > 0 &&
-	  BlockLevelElement[i] != elType.ElTypeNum)
-      i++;
-   if (BlockLevelElement[i] == elType.ElTypeNum)
-      ret = TRUE;
-   return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -730,58 +629,22 @@ ElementType         elType;
       /* not an HTML element */
       ret = TRUE;
    else
-      {
-      ret = FALSE;
-      i = 0;
-      while (NoTextChild[i] > 0 && NoTextChild[i] != elType.ElTypeNum)
-         i++;
-      if (NoTextChild[i] == elType.ElTypeNum)
-         ret = TRUE;
-      }
+     {
+       ret = FALSE;
+       i = 0;
+       while (NoTextChild[i] > 0 && NoTextChild[i] != elType.ElTypeNum)
+           i++;
+       if (NoTextChild[i] == elType.ElTypeNum)
+           ret = TRUE;
+     }
    return ret;
 }
 
 /*----------------------------------------------------------------------
-   BlockInCharLevelElem
-   Element el is a block-level element. If its parent is a character-level
-   element, add a record in the list of block-level elements to be
-   checked when the document is complete.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void BlockInCharLevelElem (Element el)
-#else
-static void BlockInCharLevelElem (el)
-Element             el;
-
-#endif
-{
-   PtrElemToBeChecked  elTBC;
-   Element             parent;
-
-   if (LastElemToBeChecked != NULL)
-      if (LastElemToBeChecked->Elem == el)
-	 /* this element is already in the queue */
-	 return;
-
-   parent = TtaGetParent (el);
-   if (parent != NULL)
-     if (IsCharacterLevelElement (parent))
-	{
-	elTBC = (PtrElemToBeChecked) TtaGetMemory(sizeof(ElemToBeChecked));
-	elTBC->Elem = el;
-	elTBC->nextElemToBeChecked = NULL;
-	if (LastElemToBeChecked == NULL)
-	   FirstElemToBeChecked = elTBC;
-	else
-	   LastElemToBeChecked->nextElemToBeChecked = elTBC;
-	LastElemToBeChecked = elTBC;
-	}
-}
-
-/*----------------------------------------------------------------------
    CheckSurrounding
-   Inserts an element Pseudo_paragraph in the abstract tree of the Thot
-   document if el is a leaf and is not allowed to be a child of element parent.
+   Inserts an element Pseudo_paragraph in the abstract tree of
+   the Thot document if el is a leaf and is not allowed to be
+   a child of element parent.
    Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -800,85 +663,91 @@ Element           parent;
    ThotBool	       ret;
 
    if (parent == NULL)
-      return(FALSE);
+       return(FALSE);
+
    ret = FALSE;
    elType = TtaGetElementType (*el);
-   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_BR
-       || elType.ElTypeNum == HTML_EL_PICTURE_UNIT
-       || elType.ElTypeNum == HTML_EL_Input
-       || elType.ElTypeNum == HTML_EL_Text_Area)
+
+   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || 
+       elType.ElTypeNum == HTML_EL_BR ||
+       elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+       elType.ElTypeNum == HTML_EL_Input ||
+       elType.ElTypeNum == HTML_EL_Text_Area)
      {
 	/* the element to be inserted is a character string */
 	/* Search the ancestor that is not a character level element */
 	ancestor = parent;
 	while (ancestor != NULL && IsCharacterLevelElement (ancestor))
-	   ancestor = TtaGetParent (ancestor);
+	       ancestor = TtaGetParent (ancestor);
+
 	if (ancestor != NULL)
 	  {
-	   elType = TtaGetElementType (ancestor);
-	   if (XhtmlCannotContainText (elType) &&
-	       !Within (HTML_EL_Option_Menu, DocumentSSchema))
-	      /* Element ancestor cannot contain text directly. Create a */
-	      /* Pseudo_paragraph element as the parent of the text element */
+	    elType = TtaGetElementType (ancestor);
+	    if (XhtmlCannotContainText (elType) &&
+		!XmlWithin (HTML_EL_Option_Menu, DocumentSSchema))
 	      {
-	      newElType.ElSSchema = DocumentSSchema;
-	      newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-	      newEl = TtaNewElement (currentDocument, newElType);
-	      XmlSetElemLineNumber (newEl);
-	      /* insert the new Pseudo_paragraph element */
-	      InsertElement (&newEl);
-	      if (newEl != NULL)
-	        {
-	          /* insert the Text element in the tree */
-	          TtaInsertFirstChild (el, newEl, currentDocument);
-	          BlockInCharLevelElem (newEl);
-		  ret = TRUE;
-
-		  /* if previous siblings of the new Pseudo_paragraph element
-		     are character level elements, move them within the new
-		     Pseudo_paragraph element */
-		  prev = newEl;
-		  TtaPreviousSibling (&prev);
-		  while (prev != NULL)
-		     {
-		     if (!IsCharacterLevelElement (prev))
-			prev = NULL;
-		     else
-			{
-			prevprev = prev;  TtaPreviousSibling (&prevprev);
-			TtaRemoveTree (prev, currentDocument);
-			TtaInsertFirstChild (&prev, newEl, currentDocument);
-			prev = prevprev;
-			}
-		     }
-	        }
+		/* Element ancestor cannot contain text directly. Create a */
+		/* Pseudo_paragraph element as the parent of the text element */
+		newElType.ElSSchema = DocumentSSchema;
+		newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		newEl = TtaNewElement (currentDocument, newElType);
+		XmlSetElemLineNumber (newEl);
+		/* insert the new Pseudo_paragraph element */
+		InsertElement (&newEl);
+		printf ("\n*** Insert HTML_EL_Pseudo_paragraph \n");
+		if (newEl != NULL)
+		  {
+		    /* insert the Text element in the tree */
+		    TtaInsertFirstChild (el, newEl, currentDocument);
+		    BlockInCharLevelElem (newEl);
+		    ret = TRUE;
+		    
+		    /* if previous siblings of the new Pseudo_paragraph element
+		       are character level elements, move them within the new
+		       Pseudo_paragraph element */
+		    prev = newEl;
+		    TtaPreviousSibling (&prev);
+		    while (prev != NULL)
+		      {
+			if (!IsCharacterLevelElement (prev))
+			  prev = NULL;
+			else
+			  {
+			    prevprev = prev;  TtaPreviousSibling (&prevprev);
+			    TtaRemoveTree (prev, currentDocument);
+			    TtaInsertFirstChild (&prev, newEl, currentDocument);
+			    prev = prevprev;
+			  }
+		      }
+		  }
      	      }
 	  }
      }
-
+   
    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
        (elType.ElTypeNum != HTML_EL_Inserted_Text &&
 	IsCharacterLevelElement (*el)))
-      /* it is a character level element */
      {
-	parentType = TtaGetElementType (parent);
-	if (parentType.ElTypeNum == HTML_EL_Text_Area)
+       /* it is a character level element */
+       parentType = TtaGetElementType (parent);
+       if (parentType.ElTypeNum == HTML_EL_Text_Area)
+	 {
 	   /* A basic element cannot be a child of a Text_Area */
 	   /* create a Inserted_Text element as a child of Text_Area */
-	  {
-	     newElType.ElSSchema = DocumentSSchema;
-	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	     newEl = TtaNewElement (currentDocument, newElType);
-	     XmlSetElemLineNumber (newEl);
-	     InsertElement (&newEl);
-	     if (newEl != NULL)
-	       {
-	         TtaInsertFirstChild (el, newEl, currentDocument);
-		 ret = TRUE;
-	       }
-	  }
+	   newElType.ElSSchema = DocumentSSchema;
+	   newElType.ElTypeNum = HTML_EL_Inserted_Text;
+	   newEl = TtaNewElement (currentDocument, newElType);
+	   XmlSetElemLineNumber (newEl);
+	   InsertElement (&newEl);
+	   if (newEl != NULL)
+	     {
+	       TtaInsertFirstChild (el, newEl, currentDocument);
+	       ret = TRUE;
+	     }
+	 }
      }
-  return ret;
+
+   return ret;
 }
 
 
@@ -897,7 +766,8 @@ Element            *el;
 {
    Element       parent;
 
-   if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0)
+   /* if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0) */
+   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0) 
      {
        if (InsertSibling ())
 	 {
@@ -917,7 +787,9 @@ Element            *el;
        else
 	 {
 	   if (!CheckSurrounding (el, lastElement))
-	     TtaInsertFirstChild (el, lastElement, currentDocument);
+	     {
+	       TtaInsertFirstChild (el, lastElement, currentDocument);
+	     }
 	 }
      }
    else
@@ -930,8 +802,8 @@ Element            *el;
 	 {
 	   TtaInsertFirstChild (el, lastElement, currentDocument);
 	 }
-      }
-       
+     }
+   
    if (*el != NULL)
      {
        lastElement = *el;
@@ -1407,12 +1279,13 @@ static ThotBool     CloseElement (USTRING mappedName,
 #else
 static ThotBool     CloseElement (mappedName,
 				  onStartTag)
-USTRING           mappedName;
+USTRING          mappedName;
 ThotBool         onStartTag;
 #endif
 {
    int                 i, error;
    Element             el, parent;
+   ElementType         elType, parentType;
    ThotBool            ret, stop, spacesDeleted;
 
    ret = FALSE;
@@ -1465,6 +1338,28 @@ ThotBool         onStartTag;
 	   lastElementClosed = TRUE;
 	   ret = TRUE;
 	 }
+       else
+	 {
+	   /* element not found in the stack */
+	   if (lastElement != NULL)
+	     {
+	       /* implicit close. Check the parent of current element */
+	       if (InsertSibling ())
+		 parent = TtaGetParent (lastElement);
+	       else
+		 parent = lastElement;
+	       if (parent != NULL)
+		 {
+		   parentType = TtaGetElementType (parent);
+		   if (parentType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		     {
+		       lastElement = parent;
+		       lastElementClosed = TRUE;
+		       ret = TRUE;
+		     }
+		 }
+	     }
+	 }
 
        if (ret)
 	 /* successful close */
@@ -1514,13 +1409,13 @@ ThotBool         onStartTag;
 /*--------------------  StartElement  (start)  ---------------------*/
 
 /*----------------------------------------------------------------------
-   ProcessEndGI
+   EndOfXmlStartTag
    Function called at the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ProcessEndGI (CHAR_T *name)
+static void     EndOfXmlStartTag (CHAR_T *name)
 #else
-static void         ProcessEndGI (name)
+static void     EndOfXmlStartTag (name)
 CHAR_T   *name;
 
 #endif
@@ -1633,7 +1528,7 @@ STRING    elName;
 		   /* Table cell within a table, without a tr. Assume tr */
 		   {
 		     /* simulate a <TR> tag */
-		     ProcessStartGI (TEXT("tr"));
+		     StartOfXmlStartTag (TEXT("tr"));
 		   }
 		 else
 		   ok = FALSE;
@@ -1663,7 +1558,7 @@ STRING    elName;
 		   /* Assume tr */
 		   {
 		     /* simulate a <tr> tag */
-		     ProcessStartGI (TEXT("tr"));
+		     StartOfXmlStartTag (TEXT("tr"));
 		   }
 		 else
 		   ok = FALSE;
@@ -1672,19 +1567,19 @@ STRING    elName;
        if (ok)
 	 /* refuse BODY within BODY */
 	 if (ustrcmp (elName, TEXT("body")) == 0)
-	     if (Within (HTML_EL_BODY, DocumentSSchema))
+	     if (XmlWithin (HTML_EL_BODY, DocumentSSchema))
 	         ok = FALSE;
 
        if (ok)
 	 /* refuse HEAD within HEAD */
 	 if (ustrcmp (elName, TEXT("head")) == 0)
-	   if (Within (HTML_EL_HEAD, DocumentSSchema))
+	   if (XmlWithin (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
 
        if (ok)
 	 /* refuse STYLE within STYLE */
 	 if (ustrcmp (elName, TEXT("style")) == 0)
-	   if (Within (HTML_EL_STYLE_, DocumentSSchema))
+	   if (XmlWithin (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
 
        return ok;
@@ -1692,15 +1587,15 @@ STRING    elName;
 }
 
 /*----------------------------------------------------------------------
-   ProcessStartGI  
+   StartOfXmlStartTag  
    The name of an element type has been read in a start tag.
    Create the corresponding Thot thing (element, attribute,
    or character), according to the mapping table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ProcessStartGI (CHAR_T* GIname)
+static void   StartOfXmlStartTag (CHAR_T* GIname)
 #else
-static void         ProcessStartGI (GIname)
+static void   StartOfXmlStartTag (GIname)
 CHAR_T*             GIname;
 
 #endif
@@ -1713,7 +1608,7 @@ CHAR_T*             GIname;
   ThotBool            elInStack = FALSE;
 
   /* ignore tag <P> within PRE */
-  if (Within (HTML_EL_Preformatted, DocumentSSchema))
+  if (XmlWithin (HTML_EL_Preformatted, DocumentSSchema))
     if (ustrcasecmp (GIname, TEXT("p")) == 0)
       return;
 
@@ -1787,7 +1682,6 @@ CHAR_T*             GIname;
 		    {
 		      if (currentElementContent == 'E')
 			lastElementClosed = TRUE;
-		      currentElementClosed = TRUE;
 		      
 		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 			/* an empty Text element has been created. The */
@@ -1824,13 +1718,13 @@ CHAR_T*             GIname;
 /*----------------------  EndElement  (start)  -----------------------*/
 
 /*----------------------------------------------------------------------
-   EndOfElement
+   EndOfXmlElement
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    EndOfElement (CHAR_T *GIname)
+static void    EndOfXmlElement (CHAR_T *GIname)
 #else
-static void    EndOfElement (GIname)
+static void    EndOfXmlElement (GIname)
 CHAR_T     *GIname;
 
 #endif
@@ -1939,6 +1833,7 @@ STRING      data;
 	   (data[0] == WC_EOL  || data[0] == WC_CR))
 	 {
 	   data[0] = WC_SPACE;
+	   i = 1;
 	   EmptyLine = 1;
 	 }
        else
@@ -1950,16 +1845,6 @@ STRING      data;
 	     EmptyLine = 0;
 	   }
      }
-   
-   /* replace single CR character by space character */
-   /* except for <PRE>, <STYLE> and <SCRIPT> elements */
-   /*
-   if (length == 1 && !AfterTagPRE &&
-       (data[0] == WC_EOL  || data[0] == WC_CR))
-     {
-       data[0] = WC_SPACE;
-     }
-   */
 
    if (lastElement != NULL)
      {
@@ -2008,9 +1893,9 @@ STRING      data;
 	  }
 
 	if (ignoreLeadingSpaces)
-	    if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
-		!Within (HTML_EL_STYLE_, DocumentSSchema) &&
-		!Within (HTML_EL_SCRIPT, DocumentSSchema))
+	    if (!XmlWithin (HTML_EL_Preformatted, DocumentSSchema) &&
+		!XmlWithin (HTML_EL_STYLE_, DocumentSSchema) &&
+		!XmlWithin (HTML_EL_SCRIPT, DocumentSSchema))
 	        /* suppress leading spaces */
 	        while (data[i] <= WC_SPACE && data[i] != WC_EOS)
 		  i++;
@@ -2027,8 +1912,8 @@ STRING      data;
 	    else
 	      {
 		/* create a TEXT element */
-		elType.ElSSchema = DocumentSSchema;
-		elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		elType.ElSSchema = currentParserCtxt->XMLSSchema;
+		elType.ElTypeNum = 1;
 		elText = TtaNewElement (currentDocument, elType);
 		XmlSetElemLineNumber (elText);
 		InsertElement (&elText);
@@ -2325,10 +2210,11 @@ CHAR_T         *attrName;
    currentAttribute = NULL;
    HTMLStyleAttribute = FALSE;
 
-   if (nameElementStack[stackLevel-1] == NULL) 
+   if (nameElementStack[stackLevel-1] == NULL)
        return;
 
-   if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0)
+   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+   /* if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0) */
        XhtmlEndOfAttrName (attrName);
    else
        XmlEndOfAttrName (attrName);
@@ -2364,7 +2250,7 @@ STRING              ChrString;
 	while (child != NULL);
 	elType = TtaGetElementType (el);
 	length = 0;
-	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	if (elType.ElTypeNum == 1)
 	   length = TtaGetTextLength (el);
 	if (length == 0)
 	   TtaSetTextContent (el, ChrString, currentLanguage, currentDocument);
@@ -2394,7 +2280,7 @@ CHAR_T*             val;
   CHAR_T              msgBuffer[MaxMsgLength];
   int                 value;
 
-  attrType.AttrSSchema = DocumentSSchema;
+  attrType.AttrSSchema = currentParserCtxt->XMLSSchema;
   attrType.AttrTypeNum = DummyAttribute;
   XhtmlMapAttributeValue (val, attrType, &value);
 
@@ -2420,7 +2306,7 @@ CHAR_T*             val;
 	}
       else
 	{
-	  elType.ElSSchema = DocumentSSchema;
+	  elType.ElSSchema = currentParserCtxt->XMLSSchema;
 	  elType.ElTypeNum = value;
 	  newChild = TtaNewTree (currentDocument, elType, "");
 	  XmlSetElemLineNumber (newChild);
@@ -2793,7 +2679,8 @@ CHAR_T     *attrValue;
    if (nameElementStack[stackLevel-1] == NULL) 
        return;
 
-   if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0)
+   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+     /* if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0) */
        XhtmlEndOfAttrValue (attrValue);
    else
        XmlEndOfAttrValue (attrValue);
@@ -2827,80 +2714,83 @@ Document  doc;
 
 #endif
 {
-   ElementType	 elType;
-   Element	 elText;
-   AttributeType attrType;
-   Attribute	 attr;
-   int		 len, code;
+  ElementType	 elType;
+  Element	 elText;
+  AttributeType attrType;
+  Attribute	 attr;
+  int		 len, code;
 #define MAX_ENTITY_LENGTH 80
-   CHAR_T	 buffer[MAX_ENTITY_LENGTH];
-
-   if (lang < 0)
-     /* unknown entity */
-     {
-       /* by default display a question mark */
-       entityValue[0] = '?';
-       entityValue[1] = WC_EOS;
-       lang = TtaGetLanguageIdFromAlphabet('L');
-       /* let's see if we can do more */
-       if (entityName[0] == '#')
-	  /* it's a number */
-	  {
-	    if (entityName[1] == 'x')
-	        /* it's a hexadecimal number */
-	        usscanf (&entityName[2], TEXT("%x"), &code);
-	    else
-	        /* it's a decimal number */
-	        usscanf (&entityName[1], TEXT("%d"), &code);
-
-	    GetFallbackCharacter (code, entityValue, &lang);
-	  }
-     }
-
-   elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
-   elType.ElSSchema = GetMathML_DTD (doc);
-   elText = TtaNewElement (doc, elType);
-   XmlSetElemLineNumber (elText);
-   InsertElement (&elText);
-   lastElementClosed = TRUE;
-   TtaSetTextContent (elText, entityValue, lang, doc);
-   MergeText = FALSE; 
-   
-   /* make that text leaf read-only */
-   TtaSetAccessRight (elText, ReadOnly, doc);
-   
-   /* associate an attribute EntityName with the new text leaf */
-   attrType.AttrSSchema = GetMathML_DTD (doc);
-   attrType.AttrTypeNum = MathML_ATTR_EntityName;
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (elText, attr, doc);
-
-   len = ustrlen (entityName);
-   if (len > MAX_ENTITY_LENGTH -3)
-       len = MAX_ENTITY_LENGTH -3;
-   buffer[0] = '&';
-   ustrncpy (&buffer[1], entityName, len);
-   buffer[len+1] = ';';
-   buffer[len+2] = WC_EOS;
-   TtaSetAttributeText (attr, buffer, elText, doc);
-   MergeText = FALSE; 
+  CHAR_T	 buffer[MAX_ENTITY_LENGTH];
+  
+  if (lang < 0)
+    /* unknown entity */
+    {
+      /* by default display a question mark */
+      entityValue[0] = '?';
+      entityValue[1] = WC_EOS;
+      lang = TtaGetLanguageIdFromAlphabet('L');
+      /* let's see if we can do more */
+      if (entityName[0] == '#')
+	/* it's a number */
+	{
+	  if (entityName[1] == 'x')
+	    /* it's a hexadecimal number */
+	    usscanf (&entityName[2], TEXT("%x"), &code);
+	  else
+	    /* it's a decimal number */
+	    usscanf (&entityName[1], TEXT("%d"), &code);
+	  
+	  GetFallbackCharacter (code, entityValue, &lang);
+	}
+    }
+  
+  elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
+  elType.ElSSchema = GetMathML_DTD (doc);
+  elText = TtaNewElement (doc, elType);
+  XmlSetElemLineNumber (elText);
+  InsertElement (&elText);
+  lastElementClosed = TRUE;
+  TtaSetTextContent (elText, entityValue, lang, doc);
+  MergeText = FALSE; 
+  
+  /* make that text leaf read-only */
+  TtaSetAccessRight (elText, ReadOnly, doc);
+  
+  /* associate an attribute EntityName with the new text leaf */
+  attrType.AttrSSchema = GetMathML_DTD (doc);
+  attrType.AttrTypeNum = MathML_ATTR_EntityName;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (elText, attr, doc);
+  
+  len = ustrlen (entityName);
+  if (len > MAX_ENTITY_LENGTH -3)
+    len = MAX_ENTITY_LENGTH -3;
+  buffer[0] = '&';
+  ustrncpy (&buffer[1], entityName, len);
+  buffer[len+1] = ';';
+  buffer[len+2] = WC_EOS;
+  TtaSetAttributeText (attr, buffer, elText, doc);
+  MergeText = FALSE; 
 }
 
 /*----------------------------------------------------------------------
-   PutNonISOlatin1Char     
-   Put a Unicode character in the input buffer.
+  PutNonISOlatin1Char     
+  Put a Unicode character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void     PutNonISOlatin1Char (int code,
 				     STRING prefix,
-				     STRING entityName)
+				     STRING entityName,
+				     Document doc)
 #else
 static void     PutNonISOlatin1Char (code,
 				     prefix,
-				     entityName)
-int              code;
-STRING           prefix;
-STRING           entityName;
+				     entityName,
+				     doc)
+int          code;
+STRING       prefix;
+STRING       entityName;
+Document     doc;
 #endif
 {
    Language	 lang, l;
@@ -2921,9 +2811,9 @@ STRING           entityName;
      /* this entity belongs to the element contents */
      {
        /* create a new text leaf */
-       elType.ElSSchema = DocumentSSchema;
+       elType.ElSSchema = TtaGetDocumentSSchema (doc);
        elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-       elText = TtaNewElement (currentDocument, elType);
+       elText = TtaNewElement (doc, elType);
        XmlSetElemLineNumber (elText);
        InsertElement (&elText);
        lastElementClosed = TRUE;
@@ -2933,33 +2823,71 @@ STRING           entityName;
        GetFallbackCharacter (code, buffer, &lang);
 
        /* put that fallback character in the new text leaf */
-       TtaSetTextContent (elText, buffer, lang, currentDocument);
+       TtaSetTextContent (elText, buffer, lang, doc);
        currentLanguage = l;
 
        /* make that text leaf read-only */
-       TtaSetAccessRight (elText, ReadOnly, currentDocument);
+       TtaSetAccessRight (elText, ReadOnly, doc);
 
        /* associate an attribute EntityName with the new text leaf */
-       attrType.AttrSSchema = DocumentSSchema;
+       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
        attrType.AttrTypeNum = HTML_ATTR_EntityName;
        attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (elText, attr, currentDocument);
+       TtaAttachAttribute (elText, attr, doc);
        ustrcpy (buffer, prefix);
        ustrcat (buffer, entityName);
-       TtaSetAttributeText (attr, buffer, elText, currentDocument);
+       TtaSetAttributeText (attr, buffer, elText, doc);
        MergeText = FALSE;
      }
 }
 
 /*----------------------------------------------------------------------
-   EndOfEntity
-   End of a HTML entity. Search that entity in the entity table 
-   and put the corresponding character in the corresponding element.
+   XhtmlEntityCreated
+   A XTHML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfXmlEntity (STRING entityName)
+static void    XhtmlEntityCreated (int entityVal,
+				   Language lang,
+				   STRING entityName,
+				   Document doc)
 #else
-static void         EndOfXmlEntity (entityName)
+static void    XhtmlEntityCreated (entityVal,
+				   lang,
+				   entityName,
+				   doc)
+int       entityVal;
+Language  lang;
+STRING    entityName;
+Document  doc;
+
+#endif
+{ 
+
+  if (lang < 0)
+      PutInXmlElement (entityName);
+  else
+    {
+      printf (" \n code=%d", entityVal);
+      if (entityVal < 255)
+	  PutInXmlElement ((STRING) entityVal);
+      else
+	  PutNonISOlatin1Char (entityVal,
+			     TEXT(""),
+			     entityName,
+			     doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+   CreateXmlEntity
+   End of a XML entity. 
+   Search that entity in the corresponding entity table and 
+   put the corresponding character in the corresponding element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CreateXmlEntity (STRING entityName)
+#else
+static void         CreateXmlEntity (entityName)
 STRING       entityName;
 
 #endif
@@ -2972,25 +2900,25 @@ STRING       entityName;
    UCHAR_T        entityValue[MaxEntityLength];	
    Language	  lang;
 
-   printf ("\n EndOfXmlEntity - Name : %s", entityName);
+   printf ("\n CreateXmlEntity - Name : %s", entityName);
 
    buffer = TtaAllocString ((ustrlen (entityName)) - 1);
    ustrcpy (buffer, &entityName[1]);
    if (ptr = ustrrchr (buffer, TEXT(';')))
        ustrcpy (ptr, TEXT("\0"));
-   printf ("\n EndOfXmlEntity - buffer:%s", buffer);
+   printf ("\n CreateXmlEntity - buffer:%s", buffer);
    
    
    if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0)
-     {
-       XhtmlMapEntity (buffer, &entityVal,
-		       MaxEntityLength-1, &alphabet);
-     }
+       XhtmlMapEntity (buffer,
+		       &entityVal,
+		       MaxEntityLength-1,
+		       &alphabet);
    else
-     {
-       (*(currentParserCtxt->MapEntity)) (buffer, entityValue,
-					  MaxEntityLength-1, &alphabet);
-     }
+       (*(currentParserCtxt->MapEntity)) (buffer,
+					  entityValue,
+					  MaxEntityLength-1,
+					  &alphabet);
    
    lang = 0;
    if (alphabet == WC_EOS)
@@ -3011,26 +2939,15 @@ STRING       entityName;
      }
    
    if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0)
-     {
-       if (alphabet == WC_EOS)
-	   PutInXmlElement (entityName);
-       else
-	 {
-	   printf (" \n code=%d", entityVal);
-	   if (entityVal < 255)
-	     PutInXmlElement ((STRING) entityVal);
-	   else
-	     PutNonISOlatin1Char (entityVal,
-				  TEXT(""),
-				  entityName);
-	 }
-     }
+       XhtmlEntityCreated (entityVal,
+			   lang,
+			   entityName,
+			   currentDocument);
    else
-     {
-       (*(currentParserCtxt->EntityCreated)) (entityValue, lang,
-					      buffer, currentDocument);
-     }
-       
+       (*(currentParserCtxt->EntityCreated)) (entityValue,
+					      lang,
+					      buffer,
+					      currentDocument);       
    TtaFreeMemory (buffer);
 }
 /*--------------------  Entities  (end)  ---------------------*/
@@ -3038,13 +2955,13 @@ STRING       entityName;
 
 /*--------------------  Comments  (start)  ---------------------*/
 /*----------------------------------------------------------------------
-   CreateComment
+   CreateXmlComment
    Create a comment element into the Thot tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    CreateComment (CHAR_T *commentValue)
+static void    CreateXmlComment (CHAR_T *commentValue)
 #else
-static void    CreateComment (commentValue)
+static void    CreateXmlComment (commentValue)
 CHAR_T     *commentValue;
 
 #endif
@@ -3063,7 +2980,8 @@ CHAR_T     *commentValue;
    if (elType.ElTypeNum <= 0)
      {
        usprintf (msgBuffer,
-		 TEXT("Unknown XML element %s"), commentValue);
+		 TEXT("Unknown XML element %s"),
+		 commentValue);
        ParseHTMLError (currentDocument, msgBuffer);
      }
    else
@@ -3072,8 +2990,6 @@ CHAR_T     *commentValue;
        XmlSetElemLineNumber (commentEl);
        InsertElement (&commentEl);
        lastElementClosed = TRUE;
-       /* A changer */
-       /* XMLInsertElement (commentEl); */
 
        /* create a XMLcomment_line element as the first child of */
        /* element XMLcomment */
@@ -3191,7 +3107,7 @@ const XML_Char  *data;
 
 {
    printf ("\n Hndl_Comment %s", data);
-   CreateComment ((CHAR_T*) data);
+   CreateXmlComment ((CHAR_T*) data);
 }
 
 /*----------------------------------------------------------------------
@@ -3259,7 +3175,7 @@ int              length;
        for (i = 0; i < length; i++)
 	 buffer[i] = data[i];
        buffer[length] = WC_EOS;
-       EndOfXmlEntity (buffer);
+       CreateXmlEntity (buffer);
        TtaFreeMemory (buffer);
      }
 }
@@ -3324,6 +3240,7 @@ const XML_Char **attlist;
    CHAR_T       *bufAttr;
    CHAR_T       *bufName;
    CHAR_T       *ptr;
+   PtrParserCtxt	oldParserCtxt = NULL;
 
    printf ("\n Hndl_ElementStart '%s'", name);
    
@@ -3354,10 +3271,18 @@ const XML_Char **attlist;
 	   ustrcpy (bufName, buffer);
 	 }
 
-       /* Treatment for the beginning of start tag */
-       ProcessStartGI (bufName);
+       if (ustrcmp (bufName, TEXT("math")) == 0)
+	 {
+	   oldParserCtxt = currentParserCtxt;
+	   currentParserCtxt = xhtmlParserCtxt;	 
+	 }
+       else
+	   oldParserCtxt = currentParserCtxt;
+	   
+       /* Treatment called at the beginning of start tag */
+       StartOfXmlStartTag (bufName);
    
-       /* Treatment for the attributes */
+       /* Treatment called for each attribute */
        nbatts = XML_GetSpecifiedAttributeCount (parser);
    
        while (*attlist != NULL)
@@ -3382,8 +3307,10 @@ const XML_Char **attlist;
 	   attlist++;
 	 }
    
-       /* Treatment for the end of start tag */
-       ProcessEndGI (bufName);
+       /* Treatment called at the end of start tag */
+       EndOfXmlStartTag (bufName);
+
+       currentParserCtxt = oldParserCtxt;
 
        TtaFreeMemory (bufName);
        TtaFreeMemory (buffer);
@@ -3408,6 +3335,7 @@ const XML_Char  *name
    CHAR_T       *bufName;
    CHAR_T       *buffer;
    CHAR_T       *ptr;
+   PtrParserCtxt	oldParserCtxt = NULL;
 
    printf ("\n Hndl_ElementEnd '%s'\n", name);
 
@@ -3428,7 +3356,17 @@ const XML_Char  *name
        ustrcpy (bufName, buffer);
      }
 
-   EndOfElement ((CHAR_T*) (bufName));
+   if (ustrcmp (bufName, TEXT("math")) == 0)
+     {
+       oldParserCtxt = currentParserCtxt;
+       currentParserCtxt = xhtmlParserCtxt;	 
+     }
+   else
+     oldParserCtxt = currentParserCtxt;
+
+   EndOfXmlElement ((CHAR_T*) (bufName));
+   currentParserCtxt = oldParserCtxt;
+
    TtaFreeMemory (bufName);   
    TtaFreeMemory (buffer);   
 }
@@ -3572,7 +3510,7 @@ const XML_Char  *pidata;
 #endif  /* __STDC__ */
 
 {
-  printf ("\n Hndl_PI %s", pidata);
+  printf ("\n Hndl_PI");
   printf ("\n   target : %s", target);
   printf ("\n   pidata : %s", pidata);
   /* No treatment in Amaya for PI */
@@ -3966,12 +3904,12 @@ void       StartXmlParser (Document doc,
 			   CHAR_T*  pathURL,
 			   ThotBool plainText)
 #else
-void        StartXmlParser (doc,
-			    htmlFileName,
-			    documentName,
-			    documentDirectory,
-			    pathURL,
-			    plainText)
+void       StartXmlParser (doc,
+			   htmlFileName,
+			   documentName,
+			   documentDirectory,
+			   pathURL,
+			   plainText)
 Document    doc;
 CHAR_T*     htmlFileName;
 CHAR_T*     documentName;
@@ -4004,8 +3942,6 @@ ThotBool    plainText;
   int	          oldStackLevel;
 
   currentDocument = doc;
-  FirstElemToBeChecked = NULL;
-  LastElemToBeChecked = NULL;
   lastElement = NULL;
   lastElementClosed = FALSE;
   lastAttribute = NULL;
@@ -4024,7 +3960,8 @@ ThotBool    plainText;
   if (stream != 0)
     {
       WithinTable = 0;
-      if (documentName[0] == WC_EOS && !TtaCheckDirectory (documentDirectory))
+      if (documentName[0] == WC_EOS &&
+	  !TtaCheckDirectory (documentDirectory))
 	{
 	  ustrcpy (documentName, documentDirectory);
 	  documentDirectory[0] = WC_EOS;
@@ -4057,6 +3994,8 @@ ThotBool    plainText;
 	TtaSetStructureChecking (0, doc);
 	/* set the notification mode for the new document */
 	TtaSetNotificationMode (doc, 1);
+
+	/* Initialize global variables */
 	currentLanguage = TtaGetDefaultLanguage ();
 	DocumentSSchema = TtaGetDocumentSSchema (doc);
 
@@ -4078,6 +4017,7 @@ ThotBool    plainText;
 	
 	LoadUserStyleSheet (doc);
 	rootElement = TtaGetMainRoot (doc);
+
 	/* add the default attribute PrintURL */
 	attrType.AttrSSchema = DocumentSSchema;
 	attrType.AttrTypeNum = HTML_ATTR_PrintURL;
@@ -4102,6 +4042,7 @@ ThotBool    plainText;
 	/* save the path or URL of the document */
 	TtaExtractName (pathURL, temppath, tempname);
 	TtaSetDocumentDirectory (doc, temppath);
+
 	/* disable auto save */
 	TtaSetDocumentBackUpInterval (doc, 0);
 
@@ -4109,8 +4050,10 @@ ThotBool    plainText;
 	if (firstParserCtxt == NULL)
 	    InitXmlParserContexts ();
 	ChangeXmlParserContext (TEXT("HTML"));
+
 	/* initialize parsing environment */
 	InitializeXmlParser (NULL, FALSE, 0);
+
 	/* Specific initialization for expat */
 	InitializeExpatParser ();
 	
@@ -4121,13 +4064,14 @@ ThotBool    plainText;
 	el = lastElement;
 	while (el != NULL)
 	  {
-	    (*(currentParserCtxt->ElementComplete)) (el, currentDocument,
+	    (*(currentParserCtxt->ElementComplete)) (el,
+						     currentDocument,
 						     &error);
 	    el = TtaGetParent (el);
 	  }
 
 	/* check the Thot abstract tree */
-	CheckAbstractTree (pathURL);
+	CheckAbstractTree (pathURL, currentDocument);
 
 	gzclose (stream);
 	TtaFreeMemory (docURL);

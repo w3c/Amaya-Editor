@@ -55,7 +55,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("dt"), SPACE, HTML_EL_Term},
    {TEXT("em"), SPACE, HTML_EL_Emphasis},
    {TEXT("fieldset"), SPACE, HTML_EL_FIELDSET},
-   {TEXT("font"), SPACE, HTML_EL_Font},
+   {TEXT("font"), SPACE, HTML_EL_Font_},
    {TEXT("form"), SPACE, HTML_EL_Form},
    {TEXT("frame"), 'E', HTML_EL_FRAME},
    {TEXT("frameset"), SPACE, HTML_EL_FRAMESET},
@@ -82,6 +82,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("link"), 'E', HTML_EL_LINK},
    {TEXT("listing"), SPACE, HTML_EL_Preformatted}, /*converted to PRE */
    {TEXT("map"), SPACE, HTML_EL_MAP},
+   {TEXT("math"), SPACE, HTML_EL_Math},
    {TEXT("menu"), SPACE, HTML_EL_Menu},
    {TEXT("meta"), 'E', HTML_EL_META},
    {TEXT("noframes"), SPACE, HTML_EL_NOFRAMES},
