@@ -33,6 +33,9 @@ extern ThotBool TtaMergeText ( Element element,
 extern void TtaSetGraphicsShape ( Element element,
                                   char shape,
                                   Document document );
+extern void TtaSetSymbolCode ( Element element,
+                               wchar_t code,
+                               Document document );
 extern void TtaAddPointInPolyline ( Element element,
                                     int rank,
                                     TypeUnit unit,
@@ -100,6 +103,9 @@ extern ThotBool TtaMergeText (/* Element element,
 extern void TtaSetGraphicsShape (/* Element element,
                                     char shape,
                                     Document document */);
+extern void TtaSetSymbolCode (/* Element element,
+                                 wchar_t code,
+                                 Document document */);
 extern void TtaAddPointInPolyline (/* Element element,
                                       int rank,
                                       TypeUnit unit,
