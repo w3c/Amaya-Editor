@@ -4888,13 +4888,14 @@ char               *HTMLbuf;
 		  if (charRead == SPACE)
 		     /* space character */
 		    {
-		       if (currentState == 0)
-			  /* in a text element */
-			  if (!Within (HTML_EL_Preformatted, HTMLSSchema))
-			     /* not in preformatted text */
-			     /* ignore spaces at the beginning of an input line */
-			     if (EmptyLine)
-				charRead = EOS;
+		       if (currentState == 12 ||
+			   (currentState == 0 &&
+				!Within (HTML_EL_Preformatted, HTMLSSchema)))
+			  /* reading text in a comment or in an element
+			     that is not preformatted text */
+			  /* ignore spaces at the beginning of an input line */
+			  if (EmptyLine)
+			     charRead = EOS;
 		    }
 		  else if ((charRead < SPACE || (int) charRead >= 254 ||
 			    ((int) charRead >= 127 && (int) charRead <= 159))

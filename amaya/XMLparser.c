@@ -1640,8 +1640,8 @@ char *closingTag;
 	      if (charRead == SPACE)
 		/* space character */
 		{
-		  if (currentState == 0)
-		    /* in a text element */
+		  if (currentState == 0 || currentState == 12)
+		    /* in a text element or in a comment */
 		    /* ignore spaces at the beginning of an input line */
 		    if (EmptyLine)
 		      charRead = EOS;
