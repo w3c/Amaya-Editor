@@ -43,19 +43,11 @@ AmayaURLBar::AmayaURLBar ( wxWindow *     parent
 
   // create the combobox and the ok button
   m_pComboBox = new wxComboBox( this, -1, _T(""), wxDefaultPosition, wxDefaultSize );
-  // create the icone for the button
-  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
-  m_pValidateButton = new wxBitmapButton( this
-					  ,-1
-					  ,wxBitmap( amaya_directory + _T("/resources/icons/logo.png") )
-					  ,wxDefaultPosition
-					  ,wxSize(32,32)
-					  ,wxBU_AUTODRAW | wxNO_BORDER | wxBU_EXACTFIT );
   
-  // create the sizer to contains these 2 widgets (combo + button)    
+  // create the sizer to contains these widgets (combo)
+  // it's possible to add others widgets here - exemple : validate button
   wxBoxSizer * p_sizer = new wxBoxSizer ( wxHORIZONTAL );
   p_sizer->Add( m_pComboBox, 1, wxEXPAND );
-  p_sizer->Add( m_pValidateButton, 0, wxEXPAND );
   SetSizer(p_sizer);
 }
 
