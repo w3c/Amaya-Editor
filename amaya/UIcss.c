@@ -389,7 +389,9 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 			      /* re-apply that CSS to each related document */
 			      UnlinkCSS (refcss, doc, refInfo->PiLink, TRUE, FALSE);
 			      refInfo->PiEnabled = TRUE;
-			      if (UserCSS && !strcmp (refcss->url, UserCSS))
+			      if (refInfo->PiCategory == CSS_DOCUMENT_STYLE)
+				EnableStyleElement (doc, refInfo->PiLink);
+			      else if (UserCSS && !strcmp (refcss->url, UserCSS))
 				LoadUserStyleSheet (doc);
 			      else
 				LoadStyleSheet (refcss->url, doc, refInfo->PiLink, NULL,

@@ -2892,7 +2892,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
    char               *esc_url;
    int                 status, l;
    int                 tempsubdir;
-   ThotBool            bool_tmp;
+   ThotBool            bool_tmp, referer;
 
    if (urlName == NULL || outputfile == NULL) 
      {
@@ -3022,7 +3022,9 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
 	 else
 	   AHTRequest_setCustomAcceptHeader (me->request, GENERAL_ACCEPT_NEGOTIATION);
        /* IV 13/08/2003 */
-       if (refdoc && DocumentURLs[refdoc] && IsHTTPPath (DocumentURLs[refdoc]))
+       TtaGetEnvBoolean ("SEND_REFERER", &referer);
+       if (referer && refdoc && DocumentURLs[refdoc] &&
+	   IsHTTPPath (DocumentURLs[refdoc]))
 	 AHTRequest_setRefererHeader (me->request, DocumentURLs[refdoc]);
        /* language negotiation */
        HTRequest_setLanguage (me->request, acceptLanguages, TRUE);
