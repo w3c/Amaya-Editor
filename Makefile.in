@@ -15,8 +15,8 @@ LIBJPEG	= libjpeg
 LIBPNG	= libpng
 LIBZ	= libz
 
-SUBDIRS	= tools thotlib tablelib batch drawlib indexlib amaya thot misc/annotations
-EXTRA_SUBDIRS= misc classes javalib pluginlib annotlib
+SUBDIRS	= tools thotlib tablelib batch drawlib indexlib annotlib amaya thot
+EXTRA_SUBDIRS= misc pluginlib
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -55,15 +55,6 @@ thotlib: rebuild force
 thot_prog: rebuild force
 	@(if test -d thot ; then cd thot ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" thot ; fi)
-
-annotations: rebuild force
-	@(if test -d misc/annotations ; then cd misc/annotations ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" annotations ; fi)
-
-
-html2piv: rebuild force
-	@(if test -d amaya ; then cd amaya ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" html2piv ; fi)
 
 amaya_prog: rebuild force bin/str
 	@(if test -d amaya ; then cd amaya ; \
