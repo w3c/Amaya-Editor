@@ -1226,7 +1226,8 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       
 	  if (HTMLFormat ||
 		  DocumentTypes[SavingDocument] == docMath ||
-	      DocumentTypes[SavingDocument] == docSVG)
+	      DocumentTypes[SavingDocument] == docSVG ||
+          DocumentTypes[SavingDocument] == docXml)
 	  {
 	    SetWindowText (GetDlgItem (hwnDlg, IDC_COPYIMG),
 			 TtaGetMessage (AMAYA, AM_BCOPY_IMAGES));
@@ -1266,12 +1267,12 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    if (!SaveAsText && CopyImages)
 	      CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
 	  }
-	  else if (DocumentTypes[SavingDocument] == docMath)
-	    EnableWindow (copyImgWnd, FALSE);
+	  else if (DocumentTypes[SavingDocument] == docMath ||
+               DocumentTypes[SavingDocument] == docXml)
+	      EnableWindow (copyImgWnd, FALSE);
 
-	  
 	  if (UpdateURLs)
-	    CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
+	      CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
 
       /* mime type */
       _snprintf (buff, 500, "MIME type: %s", 
