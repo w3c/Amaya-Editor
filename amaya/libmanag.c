@@ -892,7 +892,6 @@ void ShowLibraryBrowser ()
 {
 #ifdef _SVGLIB
   Document       doc;
-  doc = TtaGetSelectedDocument ();
 #ifndef _WINDOWS
   char           bufButton[MAX_LENGTH];
   char          *filename;
@@ -936,7 +935,7 @@ void ShowLibraryBrowser ()
   
   TtaFreeMemory (filename);
 #else /* _WINDOWS */
-
+  doc = TtaGetSelectedDocument ();
 #endif /* _WINDOWS */
 #endif /* _SVGLIB */
 }
