@@ -374,7 +374,7 @@ static ThotBool TestIdValue (Element el, char *val)
 
   id_value = GetIdValue (el);
 
-  if (id_value)
+  if (id_value && val)
     {
       if (!strcmp (id_value, val))
 	result = TRUE;
