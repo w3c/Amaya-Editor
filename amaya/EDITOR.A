@@ -110,11 +110,12 @@ MENUS
 
 	view:1 Views toggle:TShowButtonbar -> TtcSwitchButtonBar;
 	view:1 Views toggle:TShowTextZone -> TtcSwitchCommands;
-	view:1 Views toggle:TShowStructure -> ShowStructure;
-	view:1 Views toggle:TShowAlternate -> ShowAlternate;
-	view:1 Views toggle:TShowLinks -> ShowLinks;
-	view:1 Views toggle:TShowToC -> ShowToC;
 	view:1 Views toggle:TShowMapAreas -> ShowMapAreas;
+	view:1 Views Separator;
+	view:1 Views button:BShowStructure -> ShowStructure;
+	view:1 Views button:BShowAlternate -> ShowAlternate;
+	view:1 Views button:BShowLinks -> ShowLinks;
+	view:1 Views button:BShowToC -> ShowToC;
 
         view:1 Style button:BCharacterStyle -> TtcChangeCharacters;
         view:1 Style button:BColors -> TtcChangeColors;
