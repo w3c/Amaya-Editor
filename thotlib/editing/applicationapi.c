@@ -413,16 +413,30 @@ Proc                procedure;
   ----------------------------------------------------------------------*/
 void                TtaQuit ()
 {
+  PtrDocument        *pDoc;
+  int                 d;
+
 #ifndef NODISPLAY
   FreeDocColors ();
   FreeAllMessages ();
   Prof_FreeTable ();
 #endif /* NODISPLAY */
-  FreeAll ();
 #ifndef NODISPLAY
   FreeTranslations ();
   FreeMenus ();
 #endif /* NODISPLAY */
+  for (d = 0; d < MAX_DOCUMENTS - 1; d++)
+    if (LoadedDocument[d])
+      {
+	/* free the document tree */
+	UnloadTree (d + 1);
+	pDoc = LoadedDocument[d];
+	/* free document schemas */
+	FreeDocumentSchemas (*pDoc);
+	FreeDocument (LoadedDocument[d]);
+	LoadedDocument[d] = NULL;
+      }
+  FreeAll ();
   TtaFreeAppRegistry ();
   if (AppClosingFunction)
     (*AppClosingFunction) ();

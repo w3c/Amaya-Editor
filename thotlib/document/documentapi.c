@@ -278,30 +278,30 @@ void                UnloadDocument (pDoc)
 PtrDocument        *pDoc;
 #endif /* __STDC__ */
 {
-	int                 d;
+  int                 d;
 
-   if (*pDoc != NULL)
-      /* cherche dans la table le descripteur de document a liberer */
-     {
-	d = 0;
-	while (LoadedDocument[d] != *pDoc && d < MAX_DOCUMENTS - 1)
-	   d++;
-	if (LoadedDocument[d] == *pDoc)
-	  {
-	    /* libere les schemas */
-	    FreeDocumentSchemas (*pDoc);
-	    FreeDocument (LoadedDocument[d]);
-	    LoadedDocument[d] = NULL;
-	    /* annuler le pointeur sur le doc a imprimer */
+  if (*pDoc != NULL)
+    /* look for the current document in the documents table */
+    {
+      d = 0;
+      while (LoadedDocument[d] != *pDoc && d < MAX_DOCUMENTS - 1)
+	d++;
+      if (LoadedDocument[d] == *pDoc)
+	{
+	  /* free document schemas */
+	  FreeDocumentSchemas (*pDoc);
+	  FreeDocument (LoadedDocument[d]);
+	  LoadedDocument[d] = NULL;
 #ifndef NODISPLAY
-	    if (PrintingDoc == d+1)
-               PrintingDoc = 0;
+	  /* clear the PrintingDoc if it points to this document */
+	  if (PrintingDoc == d+1)
+	    PrintingDoc = 0;
 #endif
-	    *pDoc = NULL;
-	    /* libere les contextes inutilises */
-	    FreeAll ();
-	  }
-     }
+	  *pDoc = NULL;
+	  /* clean up freed contexts */
+	  FreeAll ();
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
