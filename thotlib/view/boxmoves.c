@@ -1042,7 +1042,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      toHorizPack = FALSE;
 	      /* if the box position is not complete
 		 transmit the box position instead of the shift */
-	      if (pBox->BxXToCompute)
+	      if (!pBox->BxYOutOfStruct && pBox->BxXToCompute)
 		delta = pBox->BxXOrg;
 	      while (pChildAb != NULL)
 		{
@@ -1052,11 +1052,12 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 			toHorizPack = TRUE;
 		      else
 			{
+			  /*****
 			  if (pBox->BxXToCompute &&
 			      Propagate == ToSiblings &&
 			      !pChildAb->AbBox->BxHorizFlex)
-				/* Adding the current position */
-			    pChildAb->AbBox->BxXToCompute = TRUE;
+			      ** Adding the current position **
+			    pChildAb->AbBox->BxXToCompute = TRUE; *****/
 			  XMoveAllEnclosed (pChildAb->AbBox, delta, frame);
 			}
 		    }
@@ -1107,7 +1108,6 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
       /* pFromBoxedemment designee on garde l'ancienne boite */
       if (IsParentBox (PackBoxRoot, pParentBox))
 	PackBoxRoot = pParentBox;
-      
       if (pBox->BxType == BoSplit ||
 	  pBox->BxType == BoMulScript)
 	{
@@ -1192,9 +1192,9 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      /* Move inclused boxes which depend on it */
 	      pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;
 	      toVertPack = FALSE;
-	      /* if the box position is not completed
+	      /* if the box position is not complete
 		 transmit the box position instead of the shift */
-	      if (pBox->BxYToCompute)
+	      if (!pBox->BxYOutOfStruct && pBox->BxYToCompute)
 		  delta = pBox->BxYOrg;
 	      while (pChildAb != NULL)
 		{
@@ -3180,7 +3180,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	      && (pChildAb->AbWidth.DimAbRef != pAb || pChildBox->BxContentWidth))
 	    {
 	      /* look for the box which relies the box to its enclosing */
-	      pRelativeBox = GetHPosRelativePos (pChildBox, NULL);
+	      pRelativeBox = GetHPosRelativeBox (pChildBox, NULL);
 	      if (pRelativeBox != NULL)
 		if (pRelativeBox->BxAbstractBox != NULL)
 		  {
@@ -3251,7 +3251,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	      {
 		
 		/* look for the box which relies the box to its enclosing */
-		pRelativeBox = GetHPosRelativePos (pChildBox, NULL);
+		pRelativeBox = GetHPosRelativeBox (pChildBox, NULL);
 		if (pRelativeBox && pRelativeBox->BxAbstractBox &&
 		    pRelativeBox->BxAbstractBox->AbHorizPos.PosAbRef == NULL)
 		  {

@@ -616,7 +616,6 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   according to the parameter horizRef for the box pBox. 
   The box origin BxXOrg or BxYOrg is updated and dependencies between 
   boxes are registered.  
-
   Relation between values:
   ^
   BxXOrg
@@ -1113,14 +1112,14 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 
 
 /*----------------------------------------------------------------------
-   GetHPosRelativePos search the box which horizontally links   
+   GetHPosRelativeBox search the box which horizontally links   
    pBox to is enclosing:                                
    - If relations were not updated, that box is BxHorizInc
    - If the box has the relation OpHorizInc, it's itself
    - Else get the sibling box which gives the position.     
-   Return a box or NULL.                        
+   Return a box or NULL.
   ----------------------------------------------------------------------*/
-PtrBox GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
+PtrBox GetHPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
 {
   PtrBox              pRelativeBox;
   PtrPosRelations     pPosRel;
@@ -1196,7 +1195,7 @@ PtrBox GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
 		  if (pRelation->ReBox->BxHorizFlex)
 		    pRelativeBox = pRelation->ReBox;
 		  else
-		    pRelativeBox = GetHPosRelativePos (pRelation->ReBox, pBox);
+		    pRelativeBox = GetHPosRelativeBox (pRelation->ReBox, pBox);
 		  
 		  /* Est-ce que l'on a trouve la boite qui donne la position ? */
 		  if (pRelativeBox != NULL)
@@ -1236,7 +1235,7 @@ PtrBox GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
    GetVPosRelativeBox search the box which vertically links 
    pBox to is enclosing:                                
    - If relations were not updated, that box is BxVertInc
-   - If the box has the relation OpHorizInc, it's itself
+   - If the box has the relation OpVertInc, it's itself
    - Else get the sibling box which gives the position.     
    Return a box or NULL.                        
   ----------------------------------------------------------------------*/
@@ -2328,39 +2327,7 @@ static ThotBool RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 	while (i <= MAX_RELAT_POS && notEmpty)
 	  {
 	    pRelation = &pPosRel->PosRTable[i - 1];
-	    if (pRelation->ReBox->BxAbstractBox == NULL)
-printf ("Relation not removed\n");
-#ifdef IV
-	      {
-		/* a dead relation, remove it */
-		j = i;
-		while (j < MAX_RELAT_POS)
-		  {
-		    k = j + 1;
-			  /* New patch LC 16.02.2001 */
-			  if (pPosRel->PosRTable[k - 1].ReBox == NULL)
-			    {
-			      pPosRel->PosRTable[j - 1].ReBox = NULL;
-			      j = MAX_RELAT_POS;
-			    }
-			  else
-			    {
-			      pPosRel->PosRTable[j - 1] = pPosRel->PosRTable[k - 1];
-			      j++;
-			      if (j == MAX_RELAT_POS)
-				pPosRel->PosRTable[j - 1].ReBox = NULL;
-			    }		  }
-		
-		if (i == MAX_RELAT_POS)
-		  /* the last entry */
-		  pRelation->ReBox = NULL;
-		else
-		  /* re-examine this entry */
-		  i--;
-	      }
-	    else
-#endif /* IV */
-            if (horizRef)
+	    if (horizRef)
 	      {
 		/* horizontal relation */
 		if (pRelation->ReBox == pTargetBox &&
@@ -2377,13 +2344,13 @@ printf ("Relation not removed\n");
 		else if (found == 0 && Pos && pRelation->ReOp == OpHorizDep &&
 			 pCurrentAb != NULL && pRelation->ReBox == pTargetBox)
 		  {
-		
+		    
 		    /* it's the position relation of pCurrentAb */
 		    pAb = pRelation->ReBox->BxAbstractBox;
 		    pAb = pAb->AbHorizPos.PosAbRef;
 		    
 		    if (pAb == NULL)
-		    /* a rule NIL, get the associated abstract box */
+		      /* a rule NIL, get the associated abstract box */
 		      pAb = GetPosRelativeAb (pRelation->ReBox->BxAbstractBox, horizRef);
 		    if (pAb != pCurrentAb)
 		      {

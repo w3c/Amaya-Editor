@@ -1,11 +1,15 @@
 /*
  *
- * libmanag.c
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *
+ *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
+ *
+ * libmanag.c
+ *
  * This module contains functions to handle Amaya SVG Library
  */
 
@@ -96,10 +100,10 @@ static char LastURLSVG[MAX_LENGTH];
 static char LastURLCatalogue[MAX_LENGTH];
 #endif /* _SVGLIB */
 
-/*------------------------------------------------
+/*----------------------------------------------------------------------
   IsCurrentSelectionSVG
   Check if the current selection is only svg
-  ------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 ThotBool IsCurrentSelectionSVG ()
 {
  ThotBool     IsSVG;
@@ -110,14 +114,14 @@ ThotBool IsCurrentSelectionSVG ()
 }
 
 
-/*------------------------------------------------
+/*----------------------------------------------------------------------
   Copy_svg_information_tree                                  
   
   Check if the selection is a SVG element        
   and copy it into a temporary buffer
 
   Initializes add svg model Form
-  ------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void CopySvgInformationTree (Document doc, View view)
 {
 #ifdef _SVGLIB
@@ -174,10 +178,10 @@ void CopySvgInformationTree (Document doc, View view)
 }
 
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------
   CallbackLibrary
   handle return of Library form
-  -------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void CallbackLibrary (int ref, int typedata, char *data)
 {
 #ifdef _SVGLIB
@@ -454,10 +458,10 @@ void CallbackLibrary (int ref, int typedata, char *data)
 #endif /* _SVGLIB */
 }
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------
   CreateNewCatalogueDialogue
   Initialize create new catalogue form
-  -------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void CreateNewCatalogueDialogue (Document doc, View view)
 {
 #ifdef _SVGLIB
@@ -509,9 +513,9 @@ void CreateNewCatalogueDialogue (Document doc, View view)
 #endif /* _SVGLIB */
 }
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------
   ShowLibraryBrowser
-  -------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void ShowLibraryBrowser (int FileSuffix)
 {
 #ifdef _SVGLIB
@@ -605,11 +609,11 @@ void ShowLibraryBrowser (int FileSuffix)
 }
 
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------
   SVGLibraryListItemNumber
   This function return the number of elements of a List
   and modify a string by changing \n in \0
-  -------------------------------------------*/
+  ----------------------------------------------------------------------*/
 int SVGLibraryListItemNumber (char *buffer)
 {
   int          cpt = 0;
@@ -646,11 +650,11 @@ int SVGLibraryListItemNumber (char *buffer)
 
 
 
-/*----------------------------------------------------
+/*----------------------------------------------------------------------
   IsSVGCatalogueExist
   Search into HeaderListUriTitle
   parameters: data which is title or URI
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 char *IsSVGCatalogueExist (char *data)
 {
   char              *catalogueUri;
@@ -670,12 +674,13 @@ char *IsSVGCatalogueExist (char *data)
 #endif /* _SVGLIB */
       return catalogueUri;
 }
-/*----------------------------------------------------
+
+/*----------------------------------------------------------------------
   AddGraphicalObjectIntoCatalogue                    
   
   input: svg selected event                        
   output: the graphical object into the catalogue  
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void AddGraphicalObjectIntoCatalogue (Document doc, View view)
 {
 #ifdef _SVGLIB
@@ -683,11 +688,11 @@ void AddGraphicalObjectIntoCatalogue (Document doc, View view)
 #endif /* _SVGLIB */
 }
 
-/*----------------------------------------------------
+/*----------------------------------------------------------------------
   CreateLibraryFile
   Create a lib_file.dat into APP_HOME when the user
   want to add a new catalogue
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void CreateLibraryFile ()
 {
 #ifdef _SVGLIB
@@ -740,12 +745,12 @@ void CreateLibraryFile ()
 }
 */
 
-/*-------------------------------------------------------------------
+/*----------------------------------------------------------------------
   GetLibraryFileTitle
   Allocate and return the title associated to a Library File document
   input parameters:
   URL
-  -------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 char *GetLibraryFileTitle (char *url)
 {
   char               *reTitle = NULL;
@@ -808,12 +813,12 @@ char *GetLibraryFileTitle (char *url)
   return reTitle;
 }
 
-/*------------------------------------------------------------------
+/*----------------------------------------------------------------------
   AddLibraryDataIntoStructure
   Add a new structure url title into a dynamic liste
   the Library Manager Structure List
   parameters: url and title
-  ------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void AddLibraryDataIntoStructure (char *url, char *title)
 {
 /* Utiliser un tableau plutôt qu'une liste chainée */
@@ -1184,10 +1189,10 @@ void OpenCatalogue (Document doc, View view)
 #endif /* _SVGLIB */
 }
 
-/*-----------------------------------------------------
+/*----------------------------------------------------------------------
   ShowLibrary
   open a catalogue file and customize the dialogue window widget
-  -----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void ShowLibrary (Document doc, View view)
 {
 #ifdef _SVGLIB
@@ -1202,14 +1207,14 @@ void ShowLibrary (Document doc, View view)
 #endif /* _SVGLIB */
 }
 
-/*------------------------------------------------
+/*----------------------------------------------------------------------
   SaveSVGURL
   function that save SVG URL into a buffer
   input parameters:
   doc:the number of the selected document
   El:the selected element
   output: the SVG URL in local variable buffermem (if URL exist)
-  -------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void SaveSVGURL (Document doc, Element El)
 {
 #ifdef _SVGLIB
@@ -1251,13 +1256,13 @@ void SaveSVGURL (Document doc, Element El)
 }
 
 
-/*------------------------------------------------
+/*----------------------------------------------------------------------
   ChangeSVGLibraryLinePresentation
   function that change table line presentation of a library Document
   input parameters:
   doc:the number of the selected document
   El:the selected element
-  -------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void ChangeSVGLibraryLinePresentation (Document doc, Element El)
 {
 #ifdef _SVGLIB
@@ -1307,10 +1312,10 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
 #endif /* _SVGLIB */
 }
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------
   InitLibrary
   Initialize Library
-  ------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void InitLibrary (void)
 {
 #ifdef _SVGLIB
@@ -1318,9 +1323,9 @@ void InitLibrary (void)
 #endif /* _SVGLIB */
 }
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------
  GetURIId
- -------------------------------------------*/
+  ----------------------------------------------------------------------*/
 char *GetURIId (char *href)
 {
   char    *result = href;
@@ -1349,11 +1354,11 @@ char *GetURIId (char *href)
   return result;
 }
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------
   SearchSVGElement
   Return the svg element which has an Id Attribute
   with identificateur value
-  -------------------------------------------*/
+  ----------------------------------------------------------------------*/
 Element SearchSVGElement (Document doc, char *identificateur)
 {
   Element        elFound;
@@ -1641,7 +1646,7 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
   TtaSetDisplayMode (destDoc, dispMode);
  
  /* adapt the size of the SVG root element if necessary */
-/*  CheckSVGRoot (destDoc, copiedElement);*/
+  CheckSVGRoot (destDoc, copiedElement);
   SetGraphicDepths (destDoc, SvgRootEl);
   TtaCloseUndoSequence (destDoc);
   TtaSetDocumentModified (destDoc);
@@ -1649,10 +1654,10 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
   return copiedElement;
 }
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------
   CopyOrReference
   This function starts the drop processus
-  -------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void CopyOrReference (Document doc, View view)
 {
 #ifdef _SVGLIB

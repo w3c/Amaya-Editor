@@ -1094,7 +1094,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 		  pChildAb->AbWidth.DimAbRef != pAb)
 		{
 		  /* the child box is misplaced */
-		  pBox = GetHPosRelativePos (pChildBox, NULL);
+		  pBox = GetHPosRelativeBox (pChildBox, NULL);
 		  if (pBox != NULL)
 		    {
 		      /* mobile box */

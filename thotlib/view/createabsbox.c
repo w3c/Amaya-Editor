@@ -2104,6 +2104,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		      ok = (pAPRule->ApString[k] == EOS);
 		      if (ok)
 			{
+			  /* the substring was found */
 			  if (pAPRule->ApMatch == CoWord)
 			    {
 			      /* check if a word matches */
