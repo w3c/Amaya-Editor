@@ -314,6 +314,7 @@ void             XhtmlEntityCreated (int         entityValue,
 	{
 	  /* Character not found in the fallback table or not supported */
 	  /* Put the entity name into the new text leaf */
+	  lang = TtaGetLanguageIdFromAlphabet('L');
 	  TtaSetTextContent (elLeaf, bufName, lang, context->doc);
 	  if (entityFound)
 	    {

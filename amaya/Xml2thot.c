@@ -2308,22 +2308,23 @@ static void         EndOfXmlAttributeValue (char *attrValue)
    An attribute value has been read from the HTML file.
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
-static void       EndOfAttributeValue (char *attrValue, char *attrName)
+static void       EndOfAttributeValue (unsigned char *attrValue,
+				       unsigned char *attrName)
 {
 
    unsigned char *buffer;
    unsigned char *srcbuf;
    wchar_t        wcharRead;
-   char           charRead;
+   unsigned char  charRead;
    int            nbBytesRead = 0;
    int            i = 0, j = 0;
    int            length;
    char           tmpbuf[10];
    int            tmplen;
-   int            k, l;
+   int            k, l, m;
    char          *entityName;
    int            entityValue;	
-   ThotBool       found;
+   ThotBool       found, end;
 
    if (lastMappedAttr != NULL  || currentAttribute != NULL) 
      {
@@ -2344,35 +2345,33 @@ static void       EndOfAttributeValue (char *attrValue, char *attrName)
 	       if (wcharRead <= 255)
 		 {
 		   /* It's an ISO-Latin1 character */
-		   charRead = (char) wcharRead;
-		   if (charRead == '&')
+		   charRead = (unsigned char) wcharRead;
+		   if (charRead == START_ENTITY)
 		     {
 		       /* Maybe it is the beginning of an entity */
 		       l = 0;
-		       for (k = i; k < length; k++)
+		       end = FALSE;
+		       entityName[l++] = START_ENTITY;
+		       for (k = i; k < length && !end; k++)
 			 {
-			   if (attrValue[k] == '&')
-			     {
-			       /* An '&' inside an other '&' ?? We suppose */
-			       /* the first one don't belongs to an entity */
-			       k = length;
-			       buffer [j++] = (char) START_ENTITY;
-			     }
-			   else if (attrValue[k] == ';')
+			   if (attrValue[k] == ';')
 			     {
 			       /* End of the entity */
+			       end = TRUE;
+			       i = k + 1;
 			       entityName[l] = EOS;
 			       found = MapXMLEntity (currentParserCtxt->XMLtype,
-						     entityName, &entityValue);
+						     &entityName[1], &entityValue);
 			       if (found && entityValue <= 255)
 				 {
 				   /* It is an ISO latin1 character */
 				   buffer [j++] = (char) entityValue;
-				   i = k + 1;
 				 }
 			       else
 				 {
-				   buffer [j++] = (char) START_ENTITY;
+				   for (m = 0; entityName[m] != EOS; m++)
+				     buffer[j++] = entityName[m];
+				   buffer[j++] = ';';
 				 }
 			     }
 			   else
@@ -3164,8 +3163,8 @@ static void       Hndl_ElementStart (void *userData,
 {
    int            nbatts = 0;
    char          *buffer = NULL;
-   char          *attrName = NULL;
-   char          *attrValue = NULL;
+   unsigned char *attrName = NULL;
+   unsigned char *attrValue = NULL;
    char          *bufName = NULL;
    char          *ptr;
    PtrParserCtxt  elementParserCtxt = NULL;

@@ -347,6 +347,7 @@ void  MathMLEntityCreatedWithExpat (int         entityValue,
 	{
 	  /* Character not found in the fallback table or not supported */
 	  /* Put the symbol '?' into the new text leaf */
+	  lang = TtaGetLanguageIdFromAlphabet('L');
 	  TtaSetTextContent (elText, bufName, lang, XmlContext->doc);
 	  if (entityFound)
 	    {
