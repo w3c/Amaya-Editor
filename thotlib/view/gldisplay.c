@@ -58,8 +58,8 @@
 #include "xwindowdisplay_f.h"
 #include "tesse_f.h"
 #include "spline_f.h"
+#include "stix_f.h"
 #include "glwindowdisplay.h"
-#include "stix.h"
 #include "glprint.h"
 
 /*
