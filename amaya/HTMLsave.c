@@ -54,7 +54,9 @@ URL_elem            URL_elem_tab[] =
 #define NB_URL_PAIR ((sizeof(URL_elem_tab)) / (sizeof(URL_elem)))
 
 #include "init_f.h"
+#ifndef AMAYA_JAVA
 #include "query_f.h"
+#endif
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "HTMLimage_f.h"
@@ -352,15 +354,15 @@ PicType             filetype;
      * Save.
      */
     res = PutObjectWWW(doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE,
-                       filetype, (TTcbf *) NULL, (void *) NULL);
-    if (res != HT_OK) {
+                       filetype, NULL, NULL);
+    if (res) {
         /*
 	 * The HTTP PUT method failed !
 	 */
         return(res);
     }
 
-    if (no_reread_check != NULL) return(HT_OK);
+    if (no_reread_check != NULL) return(0);
 
     /*
      * Refetch
@@ -370,7 +372,7 @@ PicType             filetype;
     res = GetObjectWWW(doc, tempURL, NULL, &tempfile[0],
                        AMAYA_SYNC | AMAYA_NOCACHE,
                        NULL, NULL, NULL, NULL, NO);
-    if (res != HT_OK) {
+    if (res) {
         /*
 	 * The HTTP GET method failed !
 	 */
@@ -382,7 +384,7 @@ PicType             filetype;
 	   return (res);
 	}
 	/* Ignore the read failure */
-	return(HT_OK);
+	return(0);
     }
 
     /*
@@ -398,11 +400,11 @@ PicType             filetype;
 	if (!UserAnswer) {
 	   /* Trigger the error */
 	   TtaFileUnlink(tempfile);
-	   return(HT_ERROR);
+	   return(-1);
 	}
     }
 
-    if (no_write_check != NULL) return(HT_OK);
+    if (no_write_check != NULL) return(0);
 
     /*
      * Compare content.
@@ -414,11 +416,11 @@ PicType             filetype;
 	if (!UserAnswer) {
 	   /* Trigger the error */
 	   TtaFileUnlink(tempfile);
-	   return(HT_ERROR);
+	   return(-1);
 	}
     }
     TtaFileUnlink(tempfile);
-    return(HT_OK);
+    return(0);
 }
 
 /*----------------------------------------------------------------------
@@ -533,7 +535,7 @@ boolean             with_images;
 		  imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
 		  res = SafeSaveFileThroughNet(document, pImage->localName,
 					   pImage->originalName, imageType);
-		  if (res != HT_OK)
+		  if (res)
 		    {
 		       FilesLoading[document] = 2;
 		       ResetStop (document);
@@ -558,7 +560,7 @@ boolean             with_images;
    res = SafeSaveFileThroughNet (document, tempname, DocumentURLs[document],
                              unknown_type);
 
-   if (res != HT_OK)
+   if (res)
      {
 	FilesLoading[document] = 2;
 	ResetStop (document);
@@ -738,14 +740,14 @@ char                  *newURL;
 		 }
 	       else
 		 {
-		   buf = HTParse (newURL, "", PARSE_ALL);
+		   buf = AmayaParseUrl (newURL, "", AMAYA_PARSE_ALL);
 		   if (buf)
 		     {
-		       buf = HTSimplify (&buf);
+		       buf = AmayaSimplifyUrl (&buf);
 		       TtaExtractName (buf, tempfile, tempname);
 		       strcat (tempfile, DIR_STR);
 		       TtaSetAttributeText (attr, tempfile, el, SavingDocument);
-		       HT_FREE (buf);
+		       TtaFreeMemory (buf);
 		     }
 		 }
 	     }
@@ -1220,10 +1222,10 @@ void                DoSaveObjectAs ()
 
    if (!dst_is_local)
      {
-	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile, unknown_type,
-			    AMAYA_SYNC, (TTcbf *) NULL, (void *) NULL);
+	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
+	                    unknown_type, AMAYA_SYNC, NULL, NULL);
 
-	if (res != HT_OK)
+	if (res)
 	  {
 	     TtaSetDialoguePosition ();
 	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
@@ -1251,3 +1253,4 @@ void                DoSaveObjectAs ()
    SavingObject = (Document) None;
    TtaDestroyDialogue (BaseDialog + SaveForm);
 }
+

@@ -40,7 +40,7 @@ struct _HTStream
   {
      const HTStreamClass *isa;
      FILE               *fp;
-     BOOL                leave_open;	/* Close file when HT_FREE? */
+     BOOL                leave_open;	/* Close file when TtaFreeMemory? */
      char               *end_command;	/* Command to execute       */
      BOOL                remove_on_close;	/* Remove file?             */
      char               *filename;	/* Name of file             */
@@ -172,9 +172,9 @@ PicType contentType;
      ** Amaya could not detect the type, so 
      ** we try to use the filename's suffix to do so.
      */
-     filename = HTParse (urlName, "", PARSE_PATH | PARSE_PUNCTUATION);
+     filename = AmayaParseUrl (urlName, "", AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
      HTBind_getFormat (filename, &atom, &enc, &cte, &lang, &quality);
-     HT_FREE (filename);
+     TtaFreeMemory (filename);
      if (atom ==  WWW_UNKNOWN)
 	 /*
 	 ** we could not identify the suffix, so we assign it
@@ -292,7 +292,7 @@ AHTReqContext      *me;
 	HTRequest_delete (me->request);
 
 	if (me->error_stream != (char *) NULL)
-	  HT_FREE (me->error_stream);
+	  TtaFreeMemory (me->error_stream);
 #ifdef WWW_XWINDOWS	
 	if (me->read_xtinput_id || me->write_xtinput_id ||
             me->except_xtinput_id)
@@ -467,10 +467,10 @@ int                 status;
 	if (strncmp (new_anchor->parent->address, "http:", 5))
 	  {
 	     /* Yes, so we use the pre-redirection anchor as a base name */
-	     ref = HTParse (new_anchor->parent->address, me->urlName, PARSE_ALL);
+	     ref = AmayaParseUrl (new_anchor->parent->address, me->urlName, AMAYA_PARSE_ALL);
 	     if (ref)
 	       {
-		  HT_FREE (new_anchor->parent->address);
+		  TtaFreeMemory (new_anchor->parent->address);
 		  new_anchor->parent->address = ref;
 	       }
 	  }
@@ -1434,7 +1434,7 @@ boolean             error_html;
    object_counter++;
 
    /* normalize the URL */
-   ref = HTParse (urlName, "", PARSE_ALL);
+   ref = AmayaParseUrl (urlName, "", AMAYA_PARSE_ALL);
 
    /* should we abort the request if we could not normalize the url? */
 
@@ -1463,7 +1463,7 @@ boolean             error_html;
 	outputfile[0] = EOS;	/* file could not be opened */
 	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
 		      outputfile);
-	HT_FREE (ref);
+	TtaFreeMemory (ref);
 
 	if (error_html)
 	   FilesLoading[docid] = 2;	/* so we can show the error message */
@@ -1483,7 +1483,7 @@ boolean             error_html;
 	fclose (tmp_fp);
 	outputfile[0] = EOS;
 	/* need an error message here */
-	HT_FREE (ref);
+	TtaFreeMemory (ref);
 	return (HT_ERROR);
      }
 
@@ -1566,7 +1566,7 @@ generated
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
 
-   HT_FREE (ref);
+   TtaFreeMemory (ref);
 
    if (mode & AMAYA_FORM_POST)
      {

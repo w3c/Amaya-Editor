@@ -15,6 +15,8 @@
  *
  */
 
+#ifndef AMAYA_JAVA
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 
@@ -27,7 +29,7 @@ struct _HTStream
   {
      const HTStreamClass *isa;
      FILE               *fp;
-     BOOL                leave_open;	  /* Close file when HT_FREE? */
+     BOOL                leave_open;	  /* Close file when TtaFreeMemory? */
      char               *end_command;	  /* Command to execute       */
      BOOL                remove_on_close; /* Remove file?             */
      char               *filename;	  /* Name of file             */
@@ -178,9 +180,9 @@ HTStream           *me;
 	   REMOVE (me->filename);
 	if (me->callback)
 	   (*me->callback) (me->request, me->filename);
-	HT_FREE (me->end_command);
-	HT_FREE (me->filename);
-	HT_FREE (me);
+	TtaFreeMemory (me->end_command);
+	TtaFreeMemory (me->filename);
+	TtaFreeMemory (me);
      }
    return HT_OK;
 }
@@ -205,9 +207,9 @@ HTList             *e;
 	   fclose (me->fp);
 	if (me->remove_on_close)
 	   REMOVE (me->filename);
-	HT_FREE (me->end_command);
-	HT_FREE (me->filename);
-	HT_FREE (me);
+	TtaFreeMemory (me->end_command);
+	TtaFreeMemory (me->filename);
+	TtaFreeMemory (me);
      }
    return HT_ERROR;
 }
@@ -261,14 +263,5 @@ BOOL                leave_open;
   End of Module AHTFWrite.c
 */
 
-
-
-
-
-
-
-
-
-
-
+#endif /* !AMAYA_JAVA */
 

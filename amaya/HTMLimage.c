@@ -19,7 +19,9 @@
 
 
 #include "init_f.h"
+#ifndef AMAYA_JAVA
 #include "query_f.h"
+#endif
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "HTMLactions_f.h"
@@ -221,7 +223,7 @@ void *context;
 	   ResetStop (doc);
 
 	/* the image could not be loaded */
-	if (status != HT_LOADED)
+	if (status != 200)
 	   return;
 
 	/* rename the local file of the image */
@@ -255,10 +257,10 @@ void *context;
    		from the web.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ImageLoaded (AHTReqContext * context, int status)
+void                ImageLoaded (void *ctxt, int status)
 #else  /* __STDC__ */
 void                ImageLoaded (context, status)
-AHTReqContext      *context;
+void               *ctxt;
 int                 status;
 
 #endif /* __STDC__ */
@@ -268,6 +270,7 @@ int                 status;
    LoadedImageDesc    *desc;
    Document            doc;
    ElemImage          *ctxEl, *ctxPrev;
+   AHTReqContext      *context = (AHTReqContext *) ctxt;
 
    doc = context->docid;
    if (DocumentURLs[doc] != NULL)
@@ -382,15 +385,15 @@ int                 flags;
 #ifdef AMAYA_JAVA
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
-				(TTcbf *) JavaImageLoaded,
+				(void *) JavaImageLoaded,
 				(void *) desc, NO);
 #else /* !AMAYA_JAVA */
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 	                        AMAYA_ASYNC, NULL, NULL,
-				(TTcbf *) ImageLoaded,
+				(void *) ImageLoaded,
 				(void *) desc, NO);
 #endif /* !AMAYA_JAVA */
-	      if (i != HT_ERROR) 
+	      if (i != -1) 
 		desc->status = IMAGE_LOADED;
 	      else
 		{

@@ -11,11 +11,6 @@ extern double __copysign ( double __x,
 extern __long_double_t __copysignl ( __long_double_t __x,
                                      __long_double_t __y );
 extern void InitJavaSelect ( void );
-extern void JavaSetSelectCallback ( void *val );
-extern void JavaFdSetState ( int fd,
-                             int io );
-extern void JavaFdResetState ( int fd,
-                               int io );
 extern int JavaSelect ( int n,
                         fd_set *readfds,
                         fd_set *writefds,
@@ -27,6 +22,7 @@ extern void JavaXWindowSocketLock ( void );
 extern void JavaXWindowSocketRelease ( void );
 extern void JavaHandleOneEvent ( ThotEvent *ev );
 extern int JavaFetchEvent ( ThotEvent *ev );
+extern int OldJavaFetchEvent ( ThotEvent *ev );
 extern boolean JavaFetchAvailableEvent ( ThotEvent *ev );
 extern void InitJava ( void );
 extern void CloseJava ( void );
@@ -43,11 +39,6 @@ extern double __copysign (/* double __x,
 extern __long_double_t __copysignl (/* __long_double_t __x,
                                        __long_double_t __y */);
 extern void InitJavaSelect (/* void */);
-extern void JavaSetSelectCallback (/* void *val */);
-extern void JavaFdSetState (/* int fd,
-                               int io */);
-extern void JavaFdResetState (/* int fd,
-                                 int io */);
 extern int JavaSelect (/* int n,
                           fd_set *readfds,
                           fd_set *writefds,
@@ -59,6 +50,7 @@ extern void JavaXWindowSocketLock (/* void */);
 extern void JavaXWindowSocketRelease (/* void */);
 extern void JavaHandleOneEvent (/* ThotEvent *ev */);
 extern int JavaFetchEvent (/* ThotEvent *ev */);
+extern int OldJavaFetchEvent (/* ThotEvent *ev */);
 extern boolean JavaFetchAvailableEvent (/* ThotEvent *ev */);
 extern void InitJava (/* void */);
 extern void CloseJava (/* void */);

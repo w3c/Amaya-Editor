@@ -21,7 +21,9 @@
 
 #include "css_f.h"
 #include "init_f.h"
+#ifndef AMAYA_JAVA
 #include "query_f.h"
+#endif
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "HTMLactions_f.h"

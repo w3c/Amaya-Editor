@@ -14,6 +14,8 @@
  *
  */
 
+#ifndef AMAYA_JAVA
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 
@@ -40,7 +42,7 @@ static int AHTMemConv_write ( HTStream * me,
                                       const char *s,
                                       int l );
 static int AHTMemConv_flush ( HTStream * me );
-static int AHTMemConv_HT_FREE ( HTStream * me );
+static int AHTMemConv_TtaFreeMemory ( HTStream * me );
 static int AHTMemConv_abort ( HTStream * me,
                                       HTList * e );
 #else 
@@ -52,7 +54,7 @@ static int AHTMemConv_write (/* HTStream * me,
                                         const char *s,
                                         int l */);
 static int AHTMemConv_flush (/* HTStream * me */);
-static int AHTMemConv_HT_FREE (/* HTStream * me */);
+static int AHTMemConv_TtaFreeMemory (/* HTStream * me */);
 static int AHTMemConv_abort (/* HTStream * me,
                                        HTList * e */);
 #endif
@@ -163,19 +165,19 @@ HTStream           *me;
 
 
 /*----------------------------------------------------------------------
-  AHTMemConv_put_HT_FREE
+  AHTMemConv_put_TtaFreeMemory
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int         AHTMemConv_HT_FREE (HTStream * me)
+static int         AHTMemConv_TtaFreeMemory (HTStream * me)
 #else  /* __STDC__ */
-static int         AHTMemConv_HT_FREE (me)
+static int         AHTMemConv_TtaFreeMemory (me)
 HTStream           *me;
 
 #endif /* __STDC__ */
 {
    if (WWWTRACE)
       HTTrace ("AHTMemConv_free\n");
-   HT_FREE (me);
+   TtaFreeMemory (me);
    return HT_OK;
 }
 
@@ -193,7 +195,7 @@ HTList             *e;
 {
    if (WWWTRACE)
       HTTrace ("AHTMemConv_abort\n");
-   AHTMemConv_HT_FREE (me);
+   AHTMemConv_TtaFreeMemory (me);
    return HT_ERROR;
 }
 
@@ -205,7 +207,7 @@ static const HTStreamClass AHTResponseClass =
 {
    "AHTResponse",
    AHTMemConv_flush,
-   AHTMemConv_HT_FREE,
+   AHTMemConv_TtaFreeMemory,
    AHTMemConv_abort,
    AHTMemConv_put_character,
    AHTMemConv_put_string,
@@ -236,7 +238,7 @@ HTRequest          *request;
 
    if (reqcont->error_stream)
      {
-	HT_FREE (reqcont->error_stream);
+	TtaFreeMemory (reqcont->error_stream);
 	reqcont->error_stream = (char *) NULL;
 	reqcont->error_stream_size = 0;
      }
@@ -267,3 +269,5 @@ HTStream           *output_stream;
 /*
   End of Module AHTMemConv.c
 */
+#endif /* ! AMAYA_JAVA */
+

@@ -15,7 +15,7 @@ extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
 extern void DisplayImage ( Document doc,
                            Element el,
                            char *imageName );
-extern void ImageLoaded ( AHTReqContext * context,
+extern void ImageLoaded ( void *ctxt,
                           int status );
 extern void FetchImage ( Document doc,
                          Element el,
@@ -35,7 +35,7 @@ extern LoadedImageDesc *SearchLoadedImage (/* char *localpath,
 extern void DisplayImage (/* Document doc,
                              Element el,
                              char *imageName */);
-extern void ImageLoaded (/* AHTReqContext * context,
+extern void ImageLoaded (/* void *ctxt,
                             int status */);
 extern void FetchImage (/* Document doc,
                            Element el,

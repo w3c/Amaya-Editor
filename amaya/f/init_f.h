@@ -42,8 +42,6 @@ extern void ShowToC ( Document document,
                       View view );
 extern boolean ViewToOpen ( NotifyDialog * event );
 extern boolean ViewToClose ( NotifyDialog * event );
-extern void ShowMapAreas ( Document document,
-                           View view );
 extern Document GetHTMLDocument ( char *documentPath,
                                   char *form_data,
                                   Document doc,
@@ -57,6 +55,8 @@ extern void CallbackDialogue ( int ref,
 extern void InitAmaya ( NotifyEvent * event );
 extern void SectionNumbering ( Document document,
                                View view );
+extern void ShowMapAreas ( Document document,
+                           View view );
 extern void MakeBook ( Document document,
                        View view );
 extern void RealTimeHTML ( Document document,
@@ -104,8 +104,6 @@ extern void ShowToC (/* Document document,
                         View view */);
 extern boolean ViewToOpen (/* NotifyDialog * event */);
 extern boolean ViewToClose (/* NotifyDialog * event */);
-extern void ShowMapAreas (/* Document document,
-                             View view */);
 extern Document GetHTMLDocument (/* char *documentPath,
                                     char *form_data,
                                     Document doc,
@@ -119,6 +117,8 @@ extern void CallbackDialogue (/* int ref,
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void SectionNumbering (/* Document document,
                                  View view */);
+extern void ShowMapAreas (/* Document document,
+                             View view */);
 extern void MakeBook (/* Document document,
                          View view */);
 extern void RealTimeHTML (/* Document document,

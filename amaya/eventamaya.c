@@ -433,7 +433,7 @@ boolean             error_html;
    /*
     * normalize the URL
     */
-   ref = HTParse (urlName, "", PARSE_ALL);
+   ref = AmayaParseUrl (urlName, "", AMAYA_PARSE_ALL);
 
    /*
     * should we abort the request if we could not normalize the url?
@@ -467,7 +467,7 @@ boolean             error_html;
 	outputfile[0] = EOS;	/* file could not be opened */
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
 		      outputfile);
-	HT_FREE (ref);
+	TtaFreeMemory (ref);
 
 	if (error_html)
 	   FilesLoading[doc] = 2;	/* so we can show the error message */
@@ -479,7 +479,7 @@ boolean             error_html;
     */
    request =  NewNetRequest();
    if (request == NULL) {
-      HT_FREE (ref);
+      TtaFreeMemory (ref);
       return (AMAYA_NET_STATUS_FAILED);
    }
    request->blk.outputfile = TtaStrdup(outputfile);

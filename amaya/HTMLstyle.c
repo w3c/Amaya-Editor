@@ -19,6 +19,7 @@
 #include "html2thot_f.h"
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
+#include "HTMLimage_f.h"
 
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)

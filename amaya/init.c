@@ -16,6 +16,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
+#include "print.h"
 
 #include "stopN.xpm"
 #include "stopR.xpm"
@@ -83,9 +84,6 @@ static Pixmap       iconPlugin;
 #include "HTMLhistory_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
-#include "query_f.h"
-#include "trans_f.h"
-#include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
@@ -96,6 +94,11 @@ static Pixmap       iconPlugin;
 #include "HTMLsave_f.h"
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
+#include "trans_f.h"
+#ifndef AMAYA_JAVA
+#include "query_f.h"
+#endif
+#include "AHTURLTools_f.h"
 
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
@@ -242,21 +245,19 @@ Document            doc;
 
 #endif
 {
+#ifndef AMAYA_JAVA
    if (FilesLoading[document] > 0)
      {
-#ifndef AMAYA_JAVA
 	if (FilesLoading[document] == 1)
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA,
 						 AM_DOCUMENT_LOADED), NULL);
-#endif
 
 	FilesLoading[document] = 0;
-#ifndef AMAYA_JAVA
 	if (TtaGetViewFrame (document, 1) != 0)
 	   /* this document is displayed */
 	   TtaChangeButton (document, 1, 1, stopN);
-#endif
      }
+#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -270,10 +271,12 @@ Document            doc;
 
 #endif
 {
+#ifndef AMAYA_JAVA
    FilesLoading[document] = 1;
    if (TtaGetViewFrame (document, 1) != 0)
       /* this document is displayed */
       TtaChangeButton (document, 1, 1, stopR);
+#endif /* AMAYA_JAVA */
 }
 
 
@@ -289,6 +292,9 @@ View                view;
 
 #endif
 {
+#ifdef AMAYA_JAVA
+   StopRequest (document);
+#else /* !AMAYA_JAVA */
    if (FilesLoading[document] != 0)
      {
 	TtaChangeButton (document, 1, 1, stopN);
@@ -298,6 +304,7 @@ View                view;
 	StopRequest (document);
 	FilesLoading[document] = 0;
      }
+#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------

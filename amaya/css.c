@@ -100,19 +100,13 @@ static char        *last_message = NULL;
 #include "css_f.h"
 #include "init_f.h"
 #include "p2css_f.h"
+#ifndef AMAYA_JAVA
 #include "query_f.h"
+#endif
 #include "AHTURLTools_f.h"
 #include "HTMLhistory_f.h"
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
-
-#ifdef linux
-/* due to changes in /usr/include/assert.h */
-void                __assert_fail (char *expression, char *file, unsigned int lineno)
-{   fprintf (stderr, "%s:%u: failed assertion `%s'\n", file, lineno, "expression");
-}
-
-#endif
 
 /*----------------------------------------------------------------------
    CSSClassChanged : the user has removed or modified an attribute 
@@ -1067,7 +1061,7 @@ Document            doc;
 	   return;
 
 	toparse = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
-	if (toparse != HT_OK)
+	if (toparse)
 	  {
 	     fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
 	     return;
@@ -1205,7 +1199,7 @@ int                 merge;
 	   return;
 
 	toparse = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
-	if (toparse != HT_OK)
+	if (toparse)
 	  {
 	     fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" failed\n", URL);
 	     return;
@@ -2416,8 +2410,8 @@ CSSInfoPtr          css;
 	if (DumpCSSToFile (currentDocument, css, filename))
 	   return (-1);
 	res = PutObjectWWW (doc, filename, css->url, AMAYA_SYNC, unknown_type,
-			    (TTcbf *) NULL, (void *) NULL);
-	if (res != HT_OK)
+			    NULL, NULL);
+	if (res)
 	  {
 	     CSSConfirm (doc, view, "Failed to save to URL");
 	  }

@@ -29,6 +29,12 @@ extern char *AHTMakeRelativeName ( char *url,
 extern boolean HasKnownFileSuffix ( char *path );
 extern void ChopURL ( char *outputURL,
                       char *inputURL );
+extern char * AmayaParseUrl ( const char *aName,
+                              const char *relatedName,
+                              int wanted );
+extern char *AmayaSimplifyUrl ( char ** url );
+extern char * AmayaRelativeUrl ( const char * aName,
+                                 const char * relatedName );
 
 #else /* __STDC__ */
 
@@ -55,6 +61,12 @@ extern char *AHTMakeRelativeName (/* char *url,
 extern boolean HasKnownFileSuffix (/* char *path */);
 extern void ChopURL (/* char *outputURL,
                         char *inputURL */);
+extern char * AmayaParseUrl (/* const char *aName,
+                                const char *relatedName,
+                                int wanted */);
+extern char *AmayaSimplifyUrl (/* char ** url */);
+extern char * AmayaRelativeUrl (/* const char * aName,
+                                   const char * relatedName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
