@@ -196,15 +196,19 @@ typedef struct _Box
   PtrBox          BxNext;	/* Next displayable box */
   int	          BxNChars;	/* Total number of characters in the box */
   int             BxIndChar;	/* 0 or position of the split box */
+#ifndef _GL
+  int             BxXOrg;	/* X origin from the root */
+  int             BxYOrg;	/* Y origin from the root */
+#else /*_GL*/
+
   float             BxXOrg;	/* X origin from the root */
   float             BxYOrg;	/* Y origin from the root */
-#ifdef _GL
+
   int             BxClipX; 
   int             BxClipY; 
 
   int             BxClipW;
   int             BxClipH;
-
 #endif /* _GL */
   float             BxHeight;	        /* Box height including margins */
   float             BxWidth;	        /* Box width including margins */
