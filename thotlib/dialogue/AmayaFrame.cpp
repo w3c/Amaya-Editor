@@ -954,7 +954,7 @@ int AmayaFrame::GetMasterFrameId()
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
   EVT_CLOSE( 		AmayaFrame::OnClose )
-  EVT_SIZE( 		AmayaFrame::OnSize )
+  //  EVT_SIZE( 		AmayaFrame::OnSize )
   EVT_IDLE(             AmayaFrame::OnIdle ) // Process a wxEVT_IDLE event
   EVT_CONTEXT_MENU(     AmayaFrame::OnContextMenu )
 END_EVENT_TABLE()

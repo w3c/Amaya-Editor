@@ -325,7 +325,7 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
   // simulate a size event to refresh the canvas ...
   // this is usefull when a document is modified and there is many open views :
   // if nothing is done here when a view is detached from the page, a undraw
-  // zone appears into the canvas of the other frame...
+  // zone appears into the canvas on the other frame...
   // this is not very clean but it works (maybe try to remove this on further wxWidgets version)
   if (p_other_frame && p_other_frame->GetCanvas())
     {
@@ -741,11 +741,11 @@ void AmayaPage::SetSelected( bool isSelected )
 		  wxPostEvent( p_canvas, event_canvas );
 		}
 	      // to page
-	      wxSizeEvent event_page( GetSize() );
-	      wxPostEvent( this, event_page );
+	      //	      wxSizeEvent event_page( GetSize() );
+	      //	      wxPostEvent( this, event_page );
 	    }
 	}
-      
+
       // if there is an active frame
       if ( GetActiveFrame() )
 	{
