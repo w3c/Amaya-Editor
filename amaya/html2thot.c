@@ -1576,15 +1576,12 @@ char	alphabet;
 {
    ElementType         elType;
    Element             elContent, parent;
-   int                 i;
-   boolean             ignoreLeadingSpaces;
+   int                 i, firstChar, lastChar;
    Language	       lang;
 
    CloseBuffer ();
    if (lastElement != NULL)
      {
-	i = 0;
-	ignoreLeadingSpaces = TRUE;
 	if (MathInsertSibling ())
 	   /* There is a previous sibling (lastElement) for the new Text
 	      element */
@@ -1592,42 +1589,39 @@ char	alphabet;
 	     parent = TtaGetParent (lastElement);
 	     if (parent == NULL)
 		parent = lastElement;
-	     elType = TtaGetElementType (parent);
 	  }
 	else
 	   /* the new Text element should be the first child of the latest
 	      element encountered */
-	   {
 	   parent = lastElement;
-	   elType = TtaGetElementType (parent);
-	   if (elType.ElTypeNum == MathML_EL_MTEXT ||
-	       elType.ElTypeNum == MathML_EL_MI ||
-	       elType.ElTypeNum == MathML_EL_MO ||
-	       elType.ElTypeNum == MathML_EL_MN ||
-	       elType.ElTypeNum == MathML_EL_MS)
-	      ignoreLeadingSpaces = FALSE;
-	   }
 	/* suppress leading spaces */
-	if (ignoreLeadingSpaces)
-	   while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
-	      i++;
-	if (inputBuffer[i] != EOS)
+	for (i = 0; inputBuffer[i] <= SPACE && inputBuffer[i] != EOS; i++);
+	firstChar = i;
+	/* suppress trailing spaces */
+	lastChar = firstChar;
+	for (i = firstChar; inputBuffer[i] != EOS; i++)
+	   if (inputBuffer[i] > SPACE)
+	      lastChar = i;
+	inputBuffer[lastChar+1] = EOS;
+
+	if (inputBuffer[firstChar] != EOS)
 	  {
+	    elType = TtaGetElementType (parent);
 	    if (elType.ElTypeNum == MathML_EL_MF &&
-		(inputBuffer[i] == '(' ||
-		 inputBuffer[i] == ')' ||
-		 inputBuffer[i] == '[' ||
-		 inputBuffer[i] == ']' ||
-		 inputBuffer[i] == '{' ||
-		 inputBuffer[i] == '}'))
+		(inputBuffer[firstChar] == '(' ||
+		 inputBuffer[firstChar] == ')' ||
+		 inputBuffer[firstChar] == '[' ||
+		 inputBuffer[firstChar] == ']' ||
+		 inputBuffer[firstChar] == '{' ||
+		 inputBuffer[firstChar] == '}'))
 	       /* create a Thot SYMBOL */
 	       elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
 	    else if (elType.ElTypeNum == MathML_EL_MF &&
-		     inputBuffer[i] == '|')
+		     inputBuffer[firstChar] == '|')
 	       /* create a Thot GRAPHIC */
 	       {
 	       elType.ElTypeNum = MathML_EL_GRAPHICS_UNIT;
-	       inputBuffer[i] = 'v';
+	       inputBuffer[firstChar] = 'v';
 	       }
 	    else
 	       /* create a TEXT element */
@@ -1641,10 +1635,10 @@ char	alphabet;
 	       {
 	       /* put the content of the input buffer into the TEXT element */
 	       lang = TtaGetLanguageIdFromAlphabet(alphabet);
-	       TtaSetTextContent (elContent, &(inputBuffer[i]), lang, theDocument);
+	       TtaSetTextContent (elContent, &(inputBuffer[firstChar]), lang, theDocument);
 	       }
 	    else
-	       TtaSetGraphicsShape (elContent, inputBuffer[i], theDocument);
+	       TtaSetGraphicsShape (elContent, inputBuffer[firstChar], theDocument);
 	  }
      }
    InitBuffer ();

@@ -257,6 +257,8 @@ BOXES
 	HorizPos: Left = Enclosing . Left;
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Solid;
+	Background: Creator =;
+	Foreground: Creator =;
 	IN Math_Structure_view
 		Visibility: 0;
 	END;
@@ -269,6 +271,8 @@ BOXES
 	HorizPos: Left = Enclosing . Left;
 	Content: Symbol 'r';		{ root symbol }
 	Depth: Enclosing + 1;
+	Background: Creator =;
+	Foreground: Creator =;
 	IN Math_Structure_view
 		Visibility: 0;
 	END;
@@ -539,6 +543,8 @@ RULES
 
    Block:
 	BEGIN
+	CreateFirst(MROW_S);
+	CreateWith(VerticalLine);
 	Gather: Yes;
         HorizRef: Enclosed not MF . HRef;
 	VertPos: HRef = Previous not MF . HRef;
@@ -689,5 +695,13 @@ RULES
 		Font: Helvetica;
 		END;
 	END;
+
+ATTRIBUTES
+
+  fontslant = plain:
+	Style: roman;
+
+  fontslant = italic:
+	Style: Italics;
 
 END

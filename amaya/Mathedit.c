@@ -412,4 +412,27 @@ void                InitMathML ()
    mIcons[9] = TtaCreatePixmapLogo (id_xpm);
    mIcons[10] = TtaCreatePixmapLogo (txt_xpm);
 }
+
+/*----------------------------------------------------------------------
+   MImodified
+   The content of a MI element has been modified.
+   Change attribute fontslant accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MImodified (NotifyOnTarget *event)
+#else /* __STDC__*/
+void MImodified(event)
+     NotifyOnTarget *event;
+#endif /* __STDC__*/
+{
+  Element	el;
+  Document	doc;
+  AttributeType	attrType;
+  Attribute	attr;
+
+  el = event->element;
+  doc = event->document;
+  /* to be completed */
+}
+
 #endif /* MATHML */

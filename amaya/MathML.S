@@ -51,7 +51,7 @@ STRUCT
 			MF;
 			END;
 		  MN = BEGIN TEXT; END;
-		  MI = BEGIN TEXT; END;
+		  MI (ATTR fontslant = plain, italic) = BEGIN TEXT; END;
 		  MO = BEGIN TEXT; END;
 		  MS = BEGIN TEXT; END;
 		  END;
