@@ -101,23 +101,23 @@ STRING              orig;
    void               *status;
    int                 lg;
 
-   lg = ustrlen (orig) + 1;
-   if ((int)ustrlen (buffer) + lg > lgbuffer)
+   lg = strlen (orig) + 1;
+   if ((int)strlen (buffer) + lg > lgbuffer)
      {
 	/* it is necessary to extend the buffer */
 	if (lg < PARAM_INCREMENT)
 	   lg = PARAM_INCREMENT;
-	status = TtaRealloc (buffer, sizeof (CHAR_T) * (lgbuffer + lg));
+	status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + lg));
 
 	if (status != NULL)
 	  {
 	     buffer = status;
 	     lgbuffer += lg;
-	     ustrcat (buffer, orig);
+	     strcat (buffer, orig);
 	  }
      }
    else
-      ustrcat (buffer, orig);
+      strcat (buffer, orig);
 }
 
 
@@ -133,16 +133,16 @@ USTRING             element;
 
 #endif
 {
-   CHAR_T                tmp[4];
-   CHAR_T                tmp2[2];
+   char                tmp[4];
+   char                tmp2[2];
 
 
-   usprintf (tmp, "%s", "%");
-   usprintf (tmp2, "%s", "a");
+   sprintf (tmp, "%s", "%");
+   sprintf (tmp2, "%s", "a");
 
    if (buffer == (STRING) NULL)
      {
-	buffer = TtaAllocString (PARAM_INCREMENT);
+	buffer = TtaGetMemory (PARAM_INCREMENT);
 	lgbuffer = PARAM_INCREMENT;
 	buffer[0] = EOS;
      }
@@ -222,7 +222,7 @@ STRING              string;
   while (*start && *start == ' ')
     start++;
 
-  end = &string[ustrlen (string) - 1];
+  end = &string[strlen (string) - 1];
 
   while (end > start && *end == ' ')
     end--;
@@ -270,7 +270,7 @@ Document	    doc;
   Attribute           attr;
   AttributeType       attrType;
   int                 length;
-  CHAR_T             *value;
+  char             *value;
   Language            lang;
 
   /* check if element is selected */
@@ -286,7 +286,7 @@ Document	    doc;
         {
 	/* there's an explicit value */
 	length = TtaGetTextAttributeLength (attr) + 1;
-	value = TtaAllocString (length);
+	value = TtaGetMemory (length);
 	TtaGiveTextAttributeValue (attr, value, &length);
         }
       else
@@ -296,7 +296,7 @@ Document	    doc;
 	if (elText)
 	   {
 	   length = TtaGetTextLength (elText) + 1;
-	   value = TtaAllocString (length);
+	   value = TtaGetMemory (length);
 	   TtaGiveTextContent (elText, value, &length, &lang);
 	   }
         }
@@ -327,7 +327,7 @@ Document	   doc;
   ElementType         elType;
   Element             option, child;
   int                 length;
-  CHAR_T              name[MAX_LENGTH];
+  char              name[MAX_LENGTH];
   
   /* get the name of the Option Menu */
   length = MAX_LENGTH - 1;
@@ -514,8 +514,8 @@ ThotBool            withinForm;
   Element             elForm;
   Attribute           attr, attrS, def;
   AttributeType       attrType, attrTypeS;
-  CHAR_T              name[MAX_LENGTH], *value = NULL;
-  CHAR_T*             text;
+  char              name[MAX_LENGTH], *value = NULL;
+  char*             text;
   Language            lang;
   int                 length;
   int                 modified = FALSE;
@@ -572,7 +572,7 @@ ThotBool            withinForm;
 			    {
 			      /* save the Value attribute of the element el */
 			      length = TtaGetTextAttributeLength (attrS) + 1;
-			      value = TtaAllocString (length);
+			      value = TtaGetMemory (length);
 			      TtaGiveTextAttributeValue (attrS, value, &length);
 			      AddNameValue (name, value);
 			      TtaFreeMemory (value);
@@ -622,7 +622,7 @@ ThotBool            withinForm;
 			      TtaGiveTextAttributeValue (attr, name, &length);
 			      /* save the Value attribute of the element el */
 			      length = TtaGetTextAttributeLength (attrS) + 1;
-			      value = TtaAllocString (length);
+			      value = TtaGetMemory (length);
 			      TtaGiveTextAttributeValue (attrS, value, &length);
 			      AddNameValue (name, value);
 			      TtaFreeMemory (value);
@@ -667,7 +667,7 @@ ThotBool            withinForm;
 		      while (elForm)
 			{
 			  length = TtaGetTextLength (elForm) + 1;
-			  text = TtaAllocString (length);
+			  text = TtaGetMemory (length);
 			  TtaGiveTextContent (elForm, text, &length, &lang);
 			  AddElement (text);
 			  TtaFreeMemory (text);
@@ -684,13 +684,13 @@ ThotBool            withinForm;
 		      if (def != NULL)
 			{
 			  length = TtaGetTextAttributeLength (def) + 1;
-			  value = TtaAllocString (length);
+			  value = TtaGetMemory (length);
 			  TtaGiveTextAttributeValue (def, value, &length);
 			}
 		      else
 			{
 			  /* there's no default value */
-			  value = TtaAllocString (1);
+			  value = TtaGetMemory (1);
 			  value[0] = EOS;
 			}
 		      /* search the value in the Text_With_Frame element */
@@ -718,7 +718,7 @@ ThotBool            withinForm;
 			  TtaGiveTextAttributeValue (attr, name, &length);
 			  /* save of the element content */
 			  length = TtaGetTextAttributeLength (def) + 1;
-			  value = TtaAllocString (length);
+			  value = TtaGetMemory (length);
 			  TtaGiveTextAttributeValue (def, value, &length);
 			  AddNameValue (name, value);
 			  TtaFreeMemory (value);
@@ -771,7 +771,7 @@ STRING              action;
 
   /* remove any trailing & */
   if (buffer)
-    buffer_size = ustrlen (buffer);
+    buffer_size = strlen (buffer);
   else
     {
       buffer_size = 0;
@@ -798,10 +798,10 @@ STRING              action;
 	  }
       break;		/* case INDEX */
     case HTML_ATTR_METHOD_VAL_Get_:
-      urlName = TtaAllocString (ustrlen (action) + buffer_size + 2);
+      urlName = TtaGetMemory (strlen (action) + buffer_size + 2);
       if (urlName != (STRING) NULL)
 	{
-	  ustrcpy (urlName, action);
+	  strcpy (urlName, action);
 	  GetHTMLDocument (urlName, buffer, doc, doc,
 			   CE_FORM_GET, TRUE, NULL, NULL);
 	  TtaFreeMemory (urlName);
@@ -896,9 +896,9 @@ Element             element;
 		    if (attr != NULL)
 		      {
 			length = TtaGetTextAttributeLength (attr);
-			name = TtaAllocString (length + 3);
+			name = TtaGetMemory (length + 3);
 			TtaGiveTextAttributeValue (attr, name, &length);
-			ustrcat (name, ". ");
+			strcat (name, ". ");
 			length ++;
 			/* get the x and y coordinates */
 			info = GetActiveImageInfo (doc, element);
@@ -937,14 +937,14 @@ Element             element;
 	      {
 		value = NULL;
 		length = TtaGetTextAttributeLength (attr);
-		name = TtaAllocString (length + 1);
+		name = TtaGetMemory (length + 1);
 		TtaGiveTextAttributeValue (attr, name, &length);
 		attrType.AttrTypeNum = HTML_ATTR_Value_;
 		attr = TtaGetAttribute (element, attrType);
 		if (attr != NULL)
 		  {
 		  length = TtaGetTextAttributeLength (attr);
-		  value = TtaAllocString (length + 1);
+		  value = TtaGetMemory (length + 1);
 		  TtaGiveTextAttributeValue (attr, value, &length);
 		  AddNameValue (name, value);
 		  }
@@ -994,7 +994,7 @@ Element             element;
 	    length = TtaGetTextAttributeLength (attr);
 	    if (length)
 	      {
-		action = TtaAllocString (length + 1);
+		action = TtaGetMemory (length + 1);
 		TtaGiveTextAttributeValue (attr, action, &length);
 	      }
 	  }
@@ -1129,7 +1129,7 @@ Element             el;
   Attribute           attr, attrN;
   AttributeType       attrType, attrTypeN;
   int                 modified, length;
-  CHAR_T              name[MAX_LENGTH], *buffer = NULL;
+  char              name[MAX_LENGTH], *buffer = NULL;
 
   if (el == NULL)
     return;
@@ -1189,9 +1189,9 @@ Element             el;
 		      if (attrN != NULL)
 			{
 			  length = TtaGetTextAttributeLength (attrN) + 1;
-			  buffer = TtaAllocString (length);
+			  buffer = TtaGetMemory (length);
 			  TtaGiveTextAttributeValue (attrN, buffer, &length);
-			  if (!ustrcmp (name, buffer))
+			  if (!strcmp (name, buffer))
 			    {
 			      /* same NAME: set the checked attribute to NO */
 			      attr = TtaGetAttribute (elForm, attrType);
@@ -1298,8 +1298,8 @@ Element             el;
   AttributeType       attrType;
   Attribute	      attr;
   SSchema	      htmlSch;
-  CHAR_T              text[MAX_LABEL_LENGTH];
-  CHAR_T              buffmenu[MAX_LENGTH];
+  char              text[MAX_LABEL_LENGTH];
+  char              buffmenu[MAX_LENGTH];
   Language            lang;
   int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
   int                 modified;
@@ -1397,11 +1397,11 @@ Element             el;
 		     /* add an item */
 		     {
 		       if (elType.ElTypeNum == HTML_EL_OptGroup)
-			 usprintf (&buffmenu[lgmenu], "M%s", text);
+			 sprintf (&buffmenu[lgmenu], "M%s", text);
 		       else if (multipleOptions)
-			 usprintf (&buffmenu[lgmenu], "T%s", text);
+			 sprintf (&buffmenu[lgmenu], "T%s", text);
 		       else
-			 usprintf (&buffmenu[lgmenu], "B%s", text);
+			 sprintf (&buffmenu[lgmenu], "B%s", text);
 		       nbitems++;
 		     }
 		   lgmenu += length;
@@ -1467,9 +1467,9 @@ Element             el;
 			 length++;
 			 if (lgmenu + length < MAX_LENGTH) { /* append that item to the buffer */
 			   if (multipleOptions)
-			     usprintf (&buffmenu[lgmenu], "T%s", text);
+			     sprintf (&buffmenu[lgmenu], "T%s", text);
 			   else
-			     usprintf (&buffmenu[lgmenu], "B%s", text);
+			     sprintf (&buffmenu[lgmenu], "B%s", text);
 			   nbsubitems++;
 			 } 
 			 lgmenu += length;

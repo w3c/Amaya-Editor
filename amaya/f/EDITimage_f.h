@@ -31,9 +31,9 @@ extern void SvgImageCreated ( NotifyElement * event );
 extern void SRCattrModified ( NotifyAttribute * event );
 extern void CreateImage ( Document doc,
                           View view );
-extern ThotBool AddLocalImage ( CHAR_T* fullname,
-                                CHAR_T* name,
-                                CHAR_T* url,
+extern ThotBool AddLocalImage ( char* fullname,
+                                char* name,
+                                char* url,
                                 Document doc,
                                 LoadedImageDesc ** desc );
 extern void RemoveDocumentImages ( Document doc );
@@ -65,9 +65,9 @@ extern void SvgImageCreated (/* NotifyElement * event */);
 extern void SRCattrModified (/* NotifyAttribute * event */);
 extern void CreateImage (/* Document doc,
                             View view */);
-extern ThotBool AddLocalImage (/* CHAR_T* fullname,
-                                  CHAR_T* name,
-                                  CHAR_T* url,
+extern ThotBool AddLocalImage (/* char* fullname,
+                                  char* name,
+                                  char* url,
                                   Document doc,
                                   LoadedImageDesc ** desc */);
 extern void RemoveDocumentImages (/* Document doc */);

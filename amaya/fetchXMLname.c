@@ -129,7 +129,7 @@ void         MapXMLElementType (int XMLtype,
 				STRING XMLname,
 				ElementType *elType,
 				STRING *mappedName,
-				CHAR_T *content,
+				char *content,
 				ThotBool *highEnoughLevel,
 				Document doc)
 {
@@ -174,11 +174,11 @@ void         MapXMLElementType (int XMLtype,
        /* search in the ElemMappingTable */
        i = 0;
        /* look for the first concerned entry in the table */
-       while (ptr[i].XMLname[0] < XMLname[0] && ptr[i].XMLname[0] != WC_EOS)
+       while (ptr[i].XMLname[0] < XMLname[0] && ptr[i].XMLname[0] != EOS)
 	 i++;     
        /* look at all entries starting with the right character */
        do
-	 if (ustrcmp (ptr[i].XMLname, XMLname))
+	 if (strcmp (ptr[i].XMLname, XMLname))
 	   /* it's not the tag */
 	   i++;
 	 else if (ParsingLevel[doc] != L_Other &&
@@ -206,7 +206,7 @@ void         MapXMLElementType (int XMLtype,
    Generic function which searchs in the mapping table the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
-CHAR_T*           GetXMLElementName (ElementType elType, Document doc)
+char*           GetXMLElementName (ElementType elType, Document doc)
 {
   ElemMapping        *ptr;
   STRING              name;
@@ -218,9 +218,9 @@ CHAR_T*           GetXMLElementName (ElementType elType, Document doc)
       i = 0;
       /* Select the table which matches with the element schema */
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (ustrcmp ("MathML", name) == 0)
+      if (strcmp ("MathML", name) == 0)
 	ptr = MathMLElemMappingTable;
-      else if (ustrcmp ("GraphML", name) == 0)
+      else if (strcmp ("GraphML", name) == 0)
 	ptr = GraphMLElemMappingTable;
       else
 	ptr = XHTMLElemMappingTable;
@@ -239,7 +239,7 @@ CHAR_T*           GetXMLElementName (ElementType elType, Document doc)
 	      }
 	    i++;
 	  }
-	while (ptr[i].XMLname[0] != WC_EOS);	  
+	while (ptr[i].XMLname[0] != EOS);	  
     }
   if (invalid)
     return "";
@@ -267,16 +267,16 @@ ThotBool         IsXMLElementInline (ElementType elType)
       i = 0;
       /* Select the table which matches with the element schema */
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (ustrcmp ("MathML", name) == 0)
+      if (strcmp ("MathML", name) == 0)
 	ptr = MathMLElemMappingTable;
-      else if (ustrcmp ("GraphML", name) == 0)
+      else if (strcmp ("GraphML", name) == 0)
 	ptr = GraphMLElemMappingTable;
       else
 	ptr = XHTMLElemMappingTable;
       
       if (ptr)
 	{
-	  while (ptr[i].XMLname[0] != WC_EOS &&
+	  while (ptr[i].XMLname[0] != EOS &&
 		 ptr[i].ThotType != elType.ElTypeNum)
 	    i++;
 	  if (ptr[i].ThotType == elType.ElTypeNum)
@@ -292,8 +292,8 @@ ThotBool         IsXMLElementInline (ElementType elType)
    the entry attrName associated to the element elementName.
    Returns the corresponding entry or -1.
   ----------------------------------------------------------------------*/
-int       MapXMLAttribute (int XMLtype, CHAR_T *attrName,
-			   CHAR_T *elementName, ThotBool *highEnoughLevel,
+int       MapXMLAttribute (int XMLtype, char *attrName,
+			   char *elementName, ThotBool *highEnoughLevel,
 			   Document doc, int *thotType)
 {
   int               i;
@@ -321,14 +321,14 @@ int       MapXMLAttribute (int XMLtype, CHAR_T *attrName,
 
   /* look for the first concerned entry in the table */
   while (ptr[i].XMLattribute[0] < attrName[0] && 
-	 ptr[i].XMLattribute[0] != WC_EOS)
+	 ptr[i].XMLattribute[0] != EOS)
     i++;
 
   while (ptr[i].XMLattribute[0] == attrName[0])
     {
-      if (ustrcmp (ptr[i].XMLattribute, attrName) ||
-	  (ptr[i].XMLelement[0] != WC_EOS &&
-	   ustrcmp (ptr[i].XMLelement, elementName)))
+      if (strcmp (ptr[i].XMLattribute, attrName) ||
+	  (ptr[i].XMLelement[0] != EOS &&
+	   strcmp (ptr[i].XMLelement, elementName)))
 	i++;
       else if (ptr[i].Level > ParsingLevel[doc])
 	{
@@ -350,7 +350,7 @@ int       MapXMLAttribute (int XMLtype, CHAR_T *attrName,
    Generic function which searchs in the mapping table the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
-CHAR_T*           GetXMLAttributeName (AttributeType attrType,
+char*           GetXMLAttributeName (AttributeType attrType,
 				       ElementType elType,
 				       Document doc)
 {
@@ -370,11 +370,11 @@ CHAR_T*           GetXMLAttributeName (AttributeType attrType,
       i = 0;
       /* Select the table which matches with the element schema */
       name = TtaGetSSchemaName (attrType.AttrSSchema);
-      if (ustrcmp ("MathML", name) == 0)
+      if (strcmp ("MathML", name) == 0)
 	ptr = MathMLAttributeMappingTable;
-      else if (ustrcmp ("GraphML", name) == 0)
+      else if (strcmp ("GraphML", name) == 0)
 	ptr = GraphMLAttributeMappingTable;
-      else if (ustrcmp ("XLink", name) == 0)
+      else if (strcmp ("XLink", name) == 0)
 	ptr = XLinkAttributeMappingTable;
       else
 	ptr = XHTMLAttributeMappingTable;
@@ -383,8 +383,8 @@ CHAR_T*           GetXMLAttributeName (AttributeType attrType,
 	do
 	  {
 	    if (ptr[i].ThotAttribute == attrType.AttrTypeNum &&
-		(ptr[i].XMLelement[0] == WC_EOS ||
-		 !ustrcmp (ptr[i].XMLelement, tag)))
+		(ptr[i].XMLelement[0] == EOS ||
+		 !strcmp (ptr[i].XMLelement, tag)))
 	      {
 		if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
 		  return ptr[i].XMLattribute;
@@ -393,7 +393,7 @@ CHAR_T*           GetXMLAttributeName (AttributeType attrType,
 	      }
 	    i++;
 	  }
-	while (ptr[i].XMLattribute[0] != WC_EOS);	  
+	while (ptr[i].XMLattribute[0] != EOS);	  
     }
   if (invalid)
     return "";
@@ -444,7 +444,7 @@ ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
     /* Dichotomic research */
     {
       med = (sup + inf) / 2;
-      rescomp = ustrcmp (ptr[med].charName, entityName);
+      rescomp = strcmp (ptr[med].charName, entityName);
       if (rescomp == 0)
 	{
 	  /* entity found */

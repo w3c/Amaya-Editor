@@ -70,7 +70,7 @@ static Element	LastDeletedElement = NULL;
 #include "XLinkedit_f.h"
 
 /* Function name table */
-typedef CHAR_T     functName[10];
+typedef char     functName[10];
 static  functName  functionName[] =
 {
    "Imaginary",
@@ -626,14 +626,14 @@ static void         CreateMathConstruct (int construct)
   docSchema = TtaGetDocumentSSchema (doc);
   name = TtaGetSSchemaName (elType.ElSSchema);
 #ifdef GRAPHML
-  if (construct == 1 && ustrcmp (name, "GraphML"))
+  if (construct == 1 && strcmp (name, "GraphML"))
     /* Math button and selection is not in a SVG element */
 #else /* GRAPHML */
   if (construct == 1)
 #endif /* GRAPHML */
     /* Math button */
     {
-      if (ustrcmp (name, "MathML"))
+      if (strcmp (name, "MathML"))
 	/* selection is not in a MathML element */
 	{
 	  /* get the MathML schema for this document or associate it to the
@@ -661,7 +661,7 @@ static void         CreateMathConstruct (int construct)
   registered = FALSE;
   
   /* Check whether the selected element is a MathML element */
-  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
     {
       /* current selection is within a MathML element */
       mathSchema = elType.ElSSchema;
@@ -820,7 +820,7 @@ static void         CreateMathConstruct (int construct)
 	    {
 #ifdef GRAPHML
 	      elType = TtaGetElementType (sibling);
-	      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+	      if (strcmp (TtaGetSSchemaName (elType.ElSSchema),
 			   "GraphML") == 0)
 		/* selection is within a GraphML element */
 		{
@@ -1554,7 +1554,7 @@ static void CreateCharStringElement (int typeNum, Document doc)
       /* selection seems to be empty. Let's see... */
       {
 	elType = TtaGetElementType (firstSel);
-        if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0
+        if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0
             && (elType.ElTypeNum == MathML_EL_MTEXT ||
 		elType.ElTypeNum == MathML_EL_MI ||
 		elType.ElTypeNum == MathML_EL_MN ||
@@ -1596,7 +1596,7 @@ static void CreateCharStringElement (int typeNum, Document doc)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
 
    TtaSetDisplayMode (doc, DeferredDisplay);
@@ -1836,7 +1836,7 @@ static ThotBool MathMoveForward ()
       if (nextEl)
 	{
 	  elType = TtaGetElementType (nextEl);
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML") &&
+	  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML") &&
 	      (elType.ElTypeNum == MathML_EL_MSPACE ||
 	       elType.ElTypeNum == MathML_EL_MGLYPH ||
 	       elType.ElTypeNum == MathML_EL_MALIGNMARK ||
@@ -1848,7 +1848,7 @@ static ThotBool MathMoveForward ()
 	    }
 	  else
 	    {
-	      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),
 			    "MathML") &&
 		  elType.ElTypeNum == MathML_EL_MTABLE)
 		/* don't select within hidden element MTable_head. Skip it */
@@ -1864,7 +1864,7 @@ static ThotBool MathMoveForward ()
 		  if (leaf)
 		    {
 		      elType = TtaGetElementType (leaf);
-		      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+		      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),
 				    "MathML"))
 			/* that leaf is still in the MathML namespace */
 			{
@@ -1925,7 +1925,7 @@ static ThotBool MathMoveBackward ()
       if (prevEl)
 	{
 	  elType = TtaGetElementType (prevEl);
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML") &&
+	  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML") &&
 	      (elType.ElTypeNum == MathML_EL_MSPACE ||
 	       elType.ElTypeNum == MathML_EL_MGLYPH ||
 	       elType.ElTypeNum == MathML_EL_MALIGNMARK ||
@@ -1937,7 +1937,7 @@ static ThotBool MathMoveBackward ()
 	    }
 	  else
 	    {
-	      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),
 			    "MathML") &&
 		  elType.ElTypeNum == MathML_EL_MTable_head)
 		/* don't select within hidden element MTable_head. Skip it */
@@ -1949,7 +1949,7 @@ static ThotBool MathMoveBackward ()
 		  if (leaf)
 		    {
 		      elType = TtaGetElementType (leaf);
-		      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+		      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),
 				    "MathML"))
 			/* that leaf is still in the MathML namespace */
 			{
@@ -2010,7 +2010,7 @@ void                InitMathML ()
    GetCharType
    returns the type of character c (MN, MI or MO).
  -----------------------------------------------------------------------*/
-static int GetCharType (UCHAR_T c, CHAR_T alphabet)
+static int GetCharType (unsigned char c, char alphabet)
 {
   int	ret;
 
@@ -2190,7 +2190,7 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
   Language       lang;
   int            len, flen, firstChar, i, func;
 #define BUFLEN 200
-  UCHAR_T        text[BUFLEN];
+  unsigned char        text[BUFLEN];
   ThotBool       split, stop, firstElChanged, leafSplit;
 
   el = *firstEl;
@@ -2248,8 +2248,8 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 		     stop = FALSE;
 		     do
 		       {
-		       flen = ustrlen (functionName[func]);
-		       if (ustrncmp (functionName[func], &text[i], flen) == 0) 
+		       flen = strlen (functionName[func]);
+		       if (strncmp (functionName[func], &text[i], flen) == 0) 
 			 /* this substring is a function name */
 			 {
 			 /* this element will be deleted */
@@ -2354,7 +2354,7 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
                        func++; 
                        }
 		     while (!stop &&
-			    ustrcmp (functionName[func], "") != 0);
+			    strcmp (functionName[func], "") != 0);
 		     }
 	        }
 	     /* the whole text leaf has been checked */
@@ -2428,10 +2428,10 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
 		start;
-  CHAR_T	alphabet, c;
+  char	alphabet, c;
   Language	lang;
 #define TXTBUFLEN 200
-  UCHAR_T       text[TXTBUFLEN];
+  unsigned char       text[TXTBUFLEN];
   Language	language[TXTBUFLEN];
   char          mathType[TXTBUFLEN];
   int           oldStructureChecking;
@@ -2853,17 +2853,17 @@ static void InsertMathEntity (USTRING entityName, Document document)
   AttributeType attrType;
   int           firstChar, lastChar, i, len;
   ThotBool      before, done, found;
-  CHAR_T        buffer[MAX_LENGTH+2];
+  char        buffer[MAX_LENGTH+2];
   int           value;
   Language      lang;
-  CHAR_T	bufEntity[8];
+  char	bufEntity[8];
 
   if (!TtaIsSelectionEmpty ())
     return;
   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
   /* if not within a MathML element, nothing to do */
   elType = TtaGetElementType (firstSel);
-  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
     return;
   TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
   TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
@@ -2935,9 +2935,9 @@ static void InsertMathEntity (USTRING entityName, Document document)
   attrType.AttrTypeNum = MathML_ATTR_EntityName;
   attr =  TtaNewAttribute (attrType);
   TtaAttachAttribute (el, attr, document);
-  ustrcpy (buffer, "&");
-  ustrcat (buffer, entityName);
-  ustrcat (buffer, ";");
+  strcpy (buffer, "&");
+  strcat (buffer, entityName);
+  strcat (buffer, ";");
   TtaSetAttributeText (attr, buffer, el, document);
 
   found = MapXMLEntity (MATH_TYPE, entityName, &value);
@@ -2952,7 +2952,7 @@ static void InsertMathEntity (USTRING entityName, Document document)
     {
       if (value < 255)
 	{
-	  bufEntity[0] = ((UCHAR_T) value);
+	  bufEntity[0] = ((unsigned char) value);
 	  bufEntity[1] = EOS;
 	  lang = TtaGetLanguageIdFromAlphabet('L');
 	}
@@ -2991,7 +2991,7 @@ void CreateMathEntity (Document document, View view)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
    
    MathMLEntityName[0] = EOS;
@@ -3032,7 +3032,7 @@ void CreateInvisibleTimes (Document document, View view)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
    InsertMathEntity ("InvisibleTimes", document);
 }
@@ -3057,7 +3057,7 @@ void CreateApplyFunction (Document document, View view)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
    InsertMathEntity ("ApplyFunction", document);
 }
@@ -3380,7 +3380,7 @@ void DeleteMColumn (Document document, View view)
    AttributeType       attrType;
    Attribute           attr;
    Document            refDoc;
-   CHAR_T                name[50];
+   char                name[50];
    int                 firstchar, lastchar, len;
    ThotBool            selBefore;
 
@@ -3605,7 +3605,7 @@ void FenceModified (NotifyOnValue *event)
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr;
-  UCHAR_T         text[2];
+  unsigned char         text[2];
 
   mfencedEl = TtaGetParent (event->element);
   elType = TtaGetElementType (event->element);
@@ -3621,7 +3621,7 @@ void FenceModified (NotifyOnValue *event)
      attr =  TtaNewAttribute (attrType);
      TtaAttachAttribute (mfencedEl, attr, event->document);
      }
-  text[0] = (UCHAR_T) event->value;
+  text[0] = (unsigned char) event->value;
   text[1] = '\0';
   TtaSetAttributeText (attr, text, mfencedEl, event->document);
 }
@@ -3657,7 +3657,7 @@ void MathPresentAttrCreated (NotifyAttribute *event)
   int              length, attrKind;
   AttributeType    attrType;
 
-  value = TtaAllocString (buflen);
+  value = TtaGetMemory (buflen);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
@@ -3728,7 +3728,7 @@ void MathAttrFontfamilyCreated (NotifyAttribute *event)
   STRING           value;
   int              length;
 
-  value = TtaAllocString (buflen);
+  value = TtaGetMemory (buflen);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
@@ -3763,7 +3763,7 @@ void MathAttrColorCreated (NotifyAttribute *event)
   STRING           value;
   int              length;
 
-  value = TtaAllocString (buflen);
+  value = TtaGetMemory (buflen);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
@@ -3803,7 +3803,7 @@ void MathAttrBackgroundCreated (NotifyAttribute *event)
   STRING           value;
   int              length;
 
-  value = TtaAllocString (buflen);
+  value = TtaGetMemory (buflen);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
@@ -3882,7 +3882,7 @@ void AttrSpacingCreated (NotifyAttribute *event)
   length = TtaGetTextAttributeLength (event->attribute);
   if (length > 0)
      {
-     value = TtaAllocString (length+1);
+     value = TtaGetMemory (length+1);
      value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
@@ -3981,7 +3981,7 @@ void AttrScriptlevelCreated (NotifyAttribute *event)
   length = TtaGetTextAttributeLength (event->attribute);
   if (length > 0)
      {
-     value = TtaAllocString (length+1);
+     value = TtaGetMemory (length+1);
      value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      MathMLSetScriptLevel (event->document, event->element, value);
@@ -4008,7 +4008,7 @@ void AttrOpenCloseChanged (NotifyAttribute *event)
 {
   Element	fence, content;
   int		length;
-  CHAR_T    text[8];
+  char    text[8];
 
   if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
      fence = TtaGetFirstChild (event->element);
@@ -4050,7 +4050,7 @@ void FencedSeparatorModified (NotifyOnTarget *event)
   AttributeType	attrType;
   int		i, len;
   Language	lang;
-  UCHAR_T         text[32];
+  unsigned char         text[32];
 
   fencedExpEl = TtaGetParent (event->element);
   if (fencedExpEl == NULL)
@@ -4139,7 +4139,7 @@ void AttrScriptShiftCreated (NotifyAttribute *event)
   length = TtaGetTextAttributeLength (event->attribute);
   if (length > 0)
      {
-     value = TtaAllocString (length+1);
+     value = TtaGetMemory (length+1);
      value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
@@ -4226,7 +4226,7 @@ void      HandleRowalignAttribute (Attribute attr, Element el, Document doc,
 				   ThotBool delete)
 {
   STRING           value;
-  CHAR_T*          ptr;
+  char*          ptr;
   int              length, val;
   ElementType      elType;
   Element          row;
@@ -4243,7 +4243,7 @@ void      HandleRowalignAttribute (Attribute attr, Element el, Document doc,
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaAllocString (length+1);
+	  value = TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
@@ -4275,15 +4275,15 @@ void      HandleRowalignAttribute (Attribute attr, Element el, Document doc,
 	      /* process that word */
 	      if (*ptr != EOS && *ptr != ' ')
 		{
-		  if (!ustrncasecmp (ptr, "top", 3))
+		  if (!strncasecmp (ptr, "top", 3))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntTop;
-		  else if (!ustrncasecmp (ptr, "bottom", 6))
+		  else if (!strncasecmp (ptr, "bottom", 6))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntBottom;
-		  else if (!ustrncasecmp (ptr, "center", 6))
+		  else if (!strncasecmp (ptr, "center", 6))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntCenter;
-		  else if (!ustrncasecmp (ptr, "baseline", 8))
+		  else if (!strncasecmp (ptr, "baseline", 8))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntBaseline;
-		  else if (!ustrncasecmp (ptr, "axis", 4))
+		  else if (!strncasecmp (ptr, "axis", 4))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntAxis;
 		  else
 		    val = 0;
@@ -4471,7 +4471,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 			      ThotBool delete, ThotBool allRows)
 {
   STRING           value, localValue;
-  CHAR_T*          ptr;
+  char*          ptr;
   int              length, val;
   ElementType      elType;
   Element          cell, row;
@@ -4494,7 +4494,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	{
-	  value = TtaAllocString (length+1);
+	  value = TtaGetMemory (length+1);
 	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
@@ -4521,7 +4521,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 	  {
 	    if (localValue)
 	      TtaFreeMemory (localValue);
-	    localValue = TtaAllocString (length+1);
+	    localValue = TtaGetMemory (length+1);
 	    localValue[0] = EOS;
 	    TtaGiveTextAttributeValue (localAttr, localValue, &length);
 	    ptr = localValue;
@@ -4545,11 +4545,11 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 	      /* process that word */
 	      if (*ptr != EOS && *ptr != ' ')
 		{
-		  if (!ustrncasecmp (ptr, "left", 4))
+		  if (!strncasecmp (ptr, "left", 4))
 		    val = MathML_ATTR_IntColAlign_VAL_IntLeft;
-		  else if (!ustrncasecmp (ptr, "center", 6))
+		  else if (!strncasecmp (ptr, "center", 6))
 		    val = MathML_ATTR_IntColAlign_VAL_IntCenter;
-		  else if (!ustrncasecmp (ptr, "right", 5))
+		  else if (!strncasecmp (ptr, "right", 5))
 		    val = MathML_ATTR_IntColAlign_VAL_IntRight;
 		  else
 		    val = 0;
@@ -4580,7 +4580,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 		{
 		  if (localValue)
 		    TtaFreeMemory (localValue);
-		  localValue = TtaAllocString (length+1);
+		  localValue = TtaGetMemory (length+1);
 		  localValue[0] = EOS;
 		  TtaGiveTextAttributeValue (localAttr, localValue, &length);
 		  ptr = localValue;

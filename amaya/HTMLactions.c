@@ -50,7 +50,7 @@
 #include "wininclude.h"
 
 HWND currentWindow = NULL;
-static CHAR_T WIN_buffer [1024];
+static char WIN_buffer [1024];
 #endif /* _WINDOWS */
 
 /* info about the last element highlighted when synchronizing with the
@@ -354,12 +354,12 @@ static Element GetElemWithAttr (Document doc, AttributeType attrType,
 	     {
 		length = TtaGetTextAttributeLength (nameAttr);
 		length++;
-		name = TtaAllocString (length);
+		name = TtaGetMemory (length);
 		if (name != NULL)
 		  {
 		     TtaGiveTextAttributeValue (nameAttr, name, &length);
 		     /* compare the NAME attribute */
-		     found = (ustrcmp (name, nameVal) == 0);
+		     found = (strcmp (name, nameVal) == 0);
 		     TtaFreeMemory (name);
 		  }
 	     }
@@ -487,7 +487,7 @@ void FollowTheLink_callback (int targetDocument, int status, STRING urlName,
       if (targetDocument == doc)
 	/* the target document is in the same window as the
 	   source document */
-	if (ustrcmp (sourceDocUrl, DocumentURLs[targetDocument]))
+	if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
 	  /* both document have different URLs */
 	  PseudoAttr = NULL;
      
@@ -555,7 +555,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
    ElementType            elType;
    Document               targetDocument;
    SSchema                HTMLSSchema;
-   CHAR_T                 documentURL[MAX_LENGTH];
+   char                 documentURL[MAX_LENGTH];
    STRING                 url, info, sourceDocUrl;
    int                    length;
    ThotBool		  isHTML;
@@ -588,7 +588,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 	 else
 	   {
 	     if (elType.ElTypeNum == GraphML_EL_a &&
-		 !ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+		 !strcmp (TtaGetSSchemaName (elType.ElSSchema),
 			   "GraphML"))
 	       /* it's an SVG anchor element, look for an xlink:href attr. */
 	       {
@@ -617,7 +617,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
        /* get a buffer for the target URL */
        length = TtaGetTextAttributeLength (HrefAttr);
        length++;
-       url = TtaAllocString (length);
+       url = TtaGetMemory (length);
        if (url != NULL)
 	 {
 	   elType = TtaGetElementType (anchor);
@@ -643,9 +643,9 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 	   while (url[length] == ' ')
 	     url[length--] = EOS;
 	   /* save the complete URL of the source document */
-	   length = ustrlen (DocumentURLs[doc])+1;
-	   sourceDocUrl = TtaAllocString (length);
-	   ustrcpy (sourceDocUrl, DocumentURLs[doc]);
+	   length = strlen (DocumentURLs[doc])+1;
+	   sourceDocUrl = TtaGetMemory (length);
+	   strcpy (sourceDocUrl, DocumentURLs[doc]);
 	   /* save the context */
 	   ctx = TtaGetMemory (sizeof (FollowTheLink_context));
 	   ctx->anchor = anchor;
@@ -670,7 +670,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 	   else
 	     /* the target element seems to be in another document */
 	     {
-	       ustrncpy (documentURL, url, MAX_LENGTH - 1);
+	       strncpy (documentURL, url, MAX_LENGTH - 1);
 	       documentURL[MAX_LENGTH - 1] = EOS;
 	       url[0] = EOS;
 	       /* is the source element an image map? */
@@ -684,7 +684,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 		   if (info != NULL)
 		     {
 		       /* @@ what do we do with the precedent parameters? */
-		       ustrcat (documentURL, info);
+		       strcat (documentURL, info);
 		       TtaFreeMemory (info);
 		     }
 		 }
@@ -1074,17 +1074,17 @@ static void     DisplayUrlAnchor (Element element, Document document)
        /* Get a buffer for the target URL */
        length = TtaGetTextAttributeLength (HrefAttr);
        length++;
-       url = TtaAllocString (length);
+       url = TtaGetMemory (length);
        if (url != NULL)
 	 {
 	   /* Get the URL itself */
 	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
-	   pathname = TtaAllocString (MAX_LENGTH);
-	   documentname = TtaAllocString (MAX_LENGTH);
+	   pathname = TtaGetMemory (MAX_LENGTH);
+	   documentname = TtaGetMemory (MAX_LENGTH);
 	   if (url[0] == '#')
 	     {
-	       ustrcpy (pathname, DocumentURLs[document]);
-	       ustrcat (pathname, url);
+	       strcpy (pathname, DocumentURLs[document]);
+	       strcat (pathname, url);
 	     }
 	   else
 	       /* Normalize the URL */
@@ -1248,7 +1248,7 @@ void                UpdateTitle (Element el, Document doc)
 	 }
        /* get the text of the title */
        length++;
-       text = TtaAllocString (length);
+       text = TtaGetMemory (length);
        next = textElem;
        i = 0;
        while (next)
@@ -1278,7 +1278,7 @@ void                FreeDocumentResource (Document doc)
 {
   STRING             tempdocument;
   Document	     sourceDoc;
-  CHAR_T               htmlErrFile [80];
+  char               htmlErrFile [80];
   int			i;
 
   if (doc == 0)
@@ -1297,7 +1297,7 @@ void                FreeDocumentResource (Document doc)
 	  TtaFileUnlink (tempdocument);
 	  TtaFreeMemory (tempdocument);
 	  /* remove the log file */
-	  usprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
+	  sprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
 		    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
 	  if (TtaFileExist (htmlErrFile))
 	    TtaFileUnlink (htmlErrFile);

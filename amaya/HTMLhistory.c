@@ -187,13 +187,13 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const STRING url,
   if (url == (STRING) NULL)
     return FALSE;
 
-  tempdocument = TtaAllocString (MAX_LENGTH);
-  target = TtaAllocString (MAX_LENGTH);
-  documentname = TtaAllocString (MAX_LENGTH);
-  parameters = TtaAllocString (MAX_LENGTH);
-  pathname = TtaAllocString (MAX_LENGTH);
+  tempdocument = TtaGetMemory (MAX_LENGTH);
+  target = TtaGetMemory (MAX_LENGTH);
+  documentname = TtaGetMemory (MAX_LENGTH);
+  parameters = TtaGetMemory (MAX_LENGTH);
+  pathname = TtaGetMemory (MAX_LENGTH);
 
-  ustrcpy (tempdocument, url);
+  strcpy (tempdocument, url);
   ExtractParameters (tempdocument, parameters);
   /* Extract the target if necessary */
   ExtractTarget (tempdocument, target);
@@ -215,10 +215,10 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const STRING url,
    else
      {
        /* concatenate the parameters before making the test */
-       if (parameters[0] != WC_EOS)
+       if (parameters[0] != EOS)
 	 {
-	   ustrcat (pathname, "?");
-	   ustrcat (pathname, parameters);
+	   strcat (pathname, "?");
+	   strcat (pathname, parameters);
 	 }
        loaded = IsDocumentLoaded (pathname, NULL);
      }
@@ -311,7 +311,7 @@ void  GotoPreviousHTML (Document doc, View view)
    if (!form_data && (!DocumentMeta[doc]  || !DocumentMeta[doc]->form_data))
      same_form_data = TRUE;
    else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
-	    && (!ustrcmp (form_data, DocumentMeta[doc]->form_data)))
+	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
      same_form_data = TRUE;
    else
      same_form_data = FALSE;
@@ -319,7 +319,7 @@ void  GotoPreviousHTML (Document doc, View view)
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
    if (DocumentURLs[doc] != NULL &&
-       (ustrcmp(DocumentURLs[doc], url) || !same_form_data))
+       (strcmp(DocumentURLs[doc], url) || !same_form_data))
      {
        /* is the next document already loaded? */
        next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
@@ -388,7 +388,7 @@ void  GotoPreviousHTML (Document doc, View view)
      }
 
    /* is it the current document ? */     
-   if (DocumentURLs[doc] && !ustrcmp (url, DocumentURLs[doc]) && same_form_data)
+   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
      {
        /* it's just a move in the same document */
        GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
@@ -474,7 +474,7 @@ void                GotoNextHTML (Document doc, View view)
    if (!form_data && (!DocumentMeta[doc] || !DocumentMeta[doc]->form_data))
      same_form_data = TRUE;
    else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
-	    && (!ustrcmp (form_data, DocumentMeta[doc]->form_data)))
+	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
      same_form_data = TRUE;
    else
      same_form_data = FALSE;
@@ -482,7 +482,7 @@ void                GotoNextHTML (Document doc, View view)
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
    if (DocumentURLs[doc] != NULL &&
-       (ustrcmp (DocumentURLs[doc], DocHistory[doc][next].HistUrl) ||
+       (strcmp (DocumentURLs[doc], DocHistory[doc][next].HistUrl) ||
 	!same_form_data))
      {
        /* is the next document already loaded? */
@@ -528,7 +528,7 @@ void                GotoNextHTML (Document doc, View view)
    ctx->initial_url = TtaStrdup (initial_url);
 
    /* is it the current document ? */
-   if (DocumentURLs[doc] && !ustrcmp (url, DocumentURLs[doc]) && same_form_data)
+   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
      /* it's just a move in the same document */
      GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
    else
@@ -589,9 +589,9 @@ void AddDocHistory (Document doc, STRING url, STRING initial_url,
    if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
    
-   DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaWCSdup (url);
-   DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl = TtaWCSdup (initial_url);
-   DocHistory[doc][DocHistoryIndex[doc]].form_data = TtaWCSdup (form_data);
+   DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaStrdup (url);
+   DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl = TtaStrdup (initial_url);
+   DocHistory[doc][DocHistoryIndex[doc]].form_data = TtaStrdup (form_data);
    DocHistory[doc][DocHistoryIndex[doc]].method = method;
 
    position = RelativePosition (doc, &distance);

@@ -172,7 +172,7 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-void    MapMathMLAttribute (CHAR_T *attrName, AttributeType *attrType,
+void    MapMathMLAttribute (char *attrName, AttributeType *attrType,
 			    STRING elementName, ThotBool *level, Document doc)
 {
   attrType->AttrSSchema = GetMathMLSSchema (doc);
@@ -197,7 +197,7 @@ void        MapMathMLAttributeValue (STRING AttrVal,
        i++;
    if (MathMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
        do
-	   if (!ustrcasecmp (MathMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	   if (!strcasecmp (MathMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	       *value = MathMLAttrValueMappingTable[i].ThotAttrValue;
 	   else
 	       i++;
@@ -217,13 +217,13 @@ void	MapMathMLEntity (STRING entityName,
 
   found = FALSE;
   for (i = 0; pMathEntityTable[i].charCode >= 0 && !found; i++)
-    found = !ustrcmp (pMathEntityTable[i].charName, entityName);
+    found = !strcmp (pMathEntityTable[i].charName, entityName);
 
   if (found)
     /* entity found */
     {
       i--;
-      entityValue[0] = (UCHAR_T) pMathEntityTable[i].charCode;
+      entityValue[0] = (unsigned char) pMathEntityTable[i].charCode;
       entityValue[1] = EOS;
       *alphabet = 'G';
       /* *alphabet = pMathEntityTable[i].charAlphabet;*/
@@ -249,7 +249,7 @@ void    MathMLEntityCreated (USTRING entityValue, Language lang,
    Attribute	 attr;
    int		 len, code;
 #define MAX_ENTITY_LENGTH 80
-   CHAR_T	 buffer[MAX_ENTITY_LENGTH];
+   char	 buffer[MAX_ENTITY_LENGTH];
 
    if (lang < 0)
      /* unknown entity */
@@ -283,11 +283,11 @@ void    MathMLEntityCreated (USTRING entityValue, Language lang,
    attrType.AttrTypeNum = MathML_ATTR_EntityName;
    attr = TtaNewAttribute (attrType);
    TtaAttachAttribute (elText, attr, doc);
-   len = ustrlen (entityName);
+   len = strlen (entityName);
    if (len > MAX_ENTITY_LENGTH -3)
      len = MAX_ENTITY_LENGTH -3;
    buffer[0] = '&';
-   ustrncpy (&buffer[1], entityName, len);
+   strncpy (&buffer[1], entityName, len);
    buffer[len+1] = ';';
    buffer[len+2] = EOS;
    TtaSetAttributeText (attr, buffer, elText, doc);
@@ -310,15 +310,15 @@ void  MathMLEntityCreatedWithExpat (int         entityValue,
   int		 len;
   Language       lang;
 #define MAX_ENTITY_LENGTH 80
-  CHAR_T	 buffer[MAX_ENTITY_LENGTH];
-  CHAR_T	 bufName[MAX_ENTITY_LENGTH];
-  CHAR_T         msgBuffer[MAX_ENTITY_LENGTH + 50];
+  char	 buffer[MAX_ENTITY_LENGTH];
+  char	 bufName[MAX_ENTITY_LENGTH];
+  char         msgBuffer[MAX_ENTITY_LENGTH + 50];
   
   if (entityValue <= 255 && entityFound)
     {
       /* It is an ISO latin1 character */
-      buffer[0] = ((UCHAR_T) entityValue);
-      buffer[1] = WC_EOS;
+      buffer[0] = ((unsigned char) entityValue);
+      buffer[1] = EOS;
       lang = TtaGetLanguageIdFromAlphabet('L');
       PutInXmlElement (buffer);
     }
@@ -329,13 +329,13 @@ void  MathMLEntityCreatedWithExpat (int         entityValue,
 	  /* try to find a fallback character */
 	  GetFallbackCharacter (entityValue, buffer, &lang);
 	}
-      len = ustrlen (entityName);
+      len = strlen (entityName);
       if (len > MAX_ENTITY_LENGTH -3)
 	len = MAX_ENTITY_LENGTH -3;
       bufName[0] = (char) START_ENTITY;
-      ustrncpy (&bufName[1], entityName, len);
+      strncpy (&bufName[1], entityName, len);
       bufName[len+1] = ';';
-      bufName[len+2] = WC_EOS;
+      bufName[len+2] = EOS;
       
       /* Create a new text leaf */
       elType.ElSSchema = GetXMLSSchema (MATH_TYPE, XmlContext->doc);
@@ -350,7 +350,7 @@ void  MathMLEntityCreatedWithExpat (int         entityValue,
 	  TtaSetTextContent (elText, bufName, lang, XmlContext->doc);
 	  if (entityFound)
 	    {
-	      usprintf (msgBuffer, "MathML entity not supported : &%s", bufName);
+	      sprintf (msgBuffer, "MathML entity not supported : &%s", bufName);
 	      XmlParseError (errorParsing, msgBuffer, 0);
 	    }
  	}
@@ -678,8 +678,8 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
   AttributeType	attrType;
   int		len;
   Language	lang;
-  CHAR_T	alphabet;
-  UCHAR_T       text[2];
+  char	alphabet;
+  unsigned char       text[2];
   unsigned char c;
 
   if (el == NULL)
@@ -804,8 +804,8 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
   AttributeType	attrType;
   int		    len;
   Language	    lang;
-  CHAR_T		alphabet;
-  UCHAR_T       text[2];
+  char		alphabet;
+  unsigned char       text[2];
   unsigned char c;
 
   if (el == NULL)
@@ -1321,11 +1321,11 @@ void SetFontstyleAttr (Element el, Document doc)
 	       len = TtaGetTextAttributeLength (attr);
 	       if (len > 0)
 		  {
-		  value = TtaAllocString (len+1);
+		  value = TtaGetMemory (len+1);
 		  TtaGiveTextAttributeValue (attr, value, &len);
-		  if (ustrcmp (value, "&ImaginaryI;") == 0 ||
-		      ustrcmp (value, "&ExponentialE;") == 0 ||
-		      ustrcmp (value, "&DifferentialD;") == 0)
+		  if (strcmp (value, "&ImaginaryI;") == 0 ||
+		      strcmp (value, "&ExponentialE;") == 0 ||
+		      strcmp (value, "&DifferentialD;") == 0)
 		    italic = FALSE;
 		  TtaFreeMemory (value);
 		  }
@@ -1366,9 +1366,9 @@ void SetIntAddSpaceAttr (Element el, Document doc)
   Attribute	attr, formAttr;
   int		len, val, form;
 #define BUFLEN 10
-  UCHAR_T    	text[BUFLEN];
+  unsigned char    	text[BUFLEN];
   Language	lang;
-  CHAR_T		alphabet;
+  char		alphabet;
 
   /* get the content of the mo element */
   textEl = TtaGetFirstChild (el);
@@ -1561,8 +1561,8 @@ void      CheckFence (Element el, Document doc)
    Attribute	 attr, attrStretchy;
    int           len, val;
    Language	 lang;
-   CHAR_T	 alphabet;
-   UCHAR_T       text[2];
+   char	 alphabet;
+   unsigned char       text[2];
    unsigned char c;
    PresentationValue   pval;
    PresentationContext ctxt;
@@ -1664,7 +1664,7 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
    Attribute     attr;
    int		 length, sep, i;
    Language	 lang;
-   CHAR_T	 text[32], sepValue[4];
+   char	 text[32], sepValue[4];
 
    /* get the separators attribute */
    mfenced = TtaGetParent (fencedExpression);
@@ -1742,7 +1742,7 @@ static void      TransformMFENCED (Element el, Document doc)
    AttributeType attrType;
    Attribute     attr;
    int           length;
-   CHAR_T        text[32];
+   char        text[32];
    char          c;
 
    child = TtaGetFirstChild (el);
@@ -1947,7 +1947,7 @@ static void     SetScriptShift (Element el, Document doc, int att)
       length = TtaGetTextAttributeLength (attr);
       if (length > 0)
 	 {
-	 value = TtaAllocString (length+1);
+	 value = TtaGetMemory (length+1);
 	 value[0] = EOS;
 	 TtaGiveTextAttributeValue (attr, value, &length);
 	 MathMLScriptShift (doc, el, value, att);
@@ -2162,9 +2162,9 @@ void      MathMLElementComplete (Element el, Document doc, int *error)
 void SetFontfamily (Document doc, Element el, STRING value)
 {
 #define buflen 50
-  CHAR_T           css_command[buflen+20];
+  char           css_command[buflen+20];
  
-  usprintf (css_command, "font-family: %s", value);
+  sprintf (css_command, "font-family: %s", value);
   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
@@ -2176,15 +2176,15 @@ void SetFontfamily (Document doc, Element el, STRING value)
 void MathMLlinethickness (Document doc, Element el, STRING value)
 {
 #define buflen 50
-  CHAR_T           css_command[buflen+20];
+  char           css_command[buflen+20];
 
-  if (ustrcmp (value, "thin") == 0)
-     ustrcpy (value, "1pt");
-  else if (ustrcmp (value, "medium") == 0)
-     ustrcpy (value, "1pt");
-  else if (ustrcmp (value, "thick") == 0)
-     ustrcpy (value, "2pt");
-  usprintf (css_command, "stroke-width: %s", value);
+  if (strcmp (value, "thin") == 0)
+     strcpy (value, "1pt");
+  else if (strcmp (value, "medium") == 0)
+     strcpy (value, "1pt");
+  else if (strcmp (value, "thick") == 0)
+     strcpy (value, "2pt");
+  sprintf (css_command, "stroke-width: %s", value);
   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
@@ -2195,27 +2195,27 @@ void MathMLlinethickness (Document doc, Element el, STRING value)
  -----------------------------------------------------------------------*/
 void MathMLAttrToStyleProperty (Document doc, Element el, STRING value, int attr)
 {
-  CHAR_T           css_command[buflen+20];
+  char           css_command[buflen+20];
 
   switch (attr)
     {
     case MathML_ATTR_fontsize:
-       usprintf (css_command, "font-size: %s", value);
+       sprintf (css_command, "font-size: %s", value);
        break;
     case MathML_ATTR_mathsize:
-       if (ustrcmp (value, "small") == 0)
-	 ustrcpy (value, "80%");
-       else if (ustrcmp (value, "normal") == 0)
-	 ustrcpy (value, "100%");
-       else if (ustrcmp (value, "big") == 0)
-	 ustrcpy (value, "125%");
-       usprintf (css_command, "font-size: %s", value);
+       if (strcmp (value, "small") == 0)
+	 strcpy (value, "80%");
+       else if (strcmp (value, "normal") == 0)
+	 strcpy (value, "100%");
+       else if (strcmp (value, "big") == 0)
+	 strcpy (value, "125%");
+       sprintf (css_command, "font-size: %s", value);
        break;
     case MathML_ATTR_lspace:
-       usprintf (css_command, "padding-left: %s", value);
+       sprintf (css_command, "padding-left: %s", value);
        break;
     case MathML_ATTR_rspace:
-       usprintf (css_command, "padding-right: %s", value);
+       sprintf (css_command, "padding-right: %s", value);
        break;
     }
   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
@@ -2330,7 +2330,7 @@ void MathMLSpacingAttr (Document doc, Element el, STRING value, int attr)
       return;
     }
   ctxt = TtaGetSpecificStyleContext (doc);
-  if (!value || (ustrcmp (value, "auto") == 0))
+  if (!value || (strcmp (value, "auto") == 0))
     /* remove the presentation rule */
     {
       ctxt->destroy = TRUE;
@@ -2446,7 +2446,7 @@ void      MathMLAttributeComplete (Attribute attr, Element el, Document doc)
          length = buflen - 1;
       if (length > 0)
 	 {
-	   value = TtaAllocString (buflen);
+	   value = TtaGetMemory (buflen);
 	   value[0] = EOS;
 	   TtaGiveTextAttributeValue (attr, value, &length);
 	   switch (attrType.AttrTypeNum)
@@ -2493,7 +2493,7 @@ void      MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 void      MathMLGetDTDName (STRING DTDname, STRING elementName)
 {
    /* no other DTD allowed within MathML elements */
-   ustrcpy (DTDname, "");
+   strcpy (DTDname, "");
 }
 
 /* end of module */

@@ -6,39 +6,39 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int MapGI ( CHAR_T *gi,
+extern int MapGI ( char *gi,
                    SSchema *schema,
                    Document doc );
-extern void GIType ( CHAR_T* gi,
+extern void GIType ( char* gi,
                      ElementType *elType,
                      Document doc );
-extern AttributeMapping *MapAttr ( CHAR_T *attrName,
+extern AttributeMapping *MapAttr ( char *attrName,
                                    SSchema *schema,
                                    int elemEntry,
                                    ThotBool *level,
                                    Document doc );
-extern AttributeMapping *MapHTMLAttribute ( CHAR_T *attrName,
+extern AttributeMapping *MapHTMLAttribute ( char *attrName,
                                             AttributeType *attrType,
-                                            CHAR_T *elementName,
+                                            char *elementName,
                                             ThotBool *level,
                                             Document doc );
 
 #else /* __STDC__ */
 
-extern int MapGI (/* CHAR_T *gi,
+extern int MapGI (/* char *gi,
                      SSchema *schema,
                      Document doc */);
-extern void GIType (/* CHAR_T* gi,
+extern void GIType (/* char* gi,
                        ElementType *elType,
                        Document doc */);
-extern AttributeMapping *MapAttr (/* CHAR_T *attrName,
+extern AttributeMapping *MapAttr (/* char *attrName,
                                      SSchema *schema,
                                      int elemEntry,
                                      ThotBool *level,
                                      Document doc */);
-extern AttributeMapping *MapHTMLAttribute (/* CHAR_T *attrName,
+extern AttributeMapping *MapHTMLAttribute (/* char *attrName,
                                               AttributeType *attrType,
-                                              CHAR_T *elementName,
+                                              char *elementName,
                                               ThotBool *level,
                                               Document doc */);
 

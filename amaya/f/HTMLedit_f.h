@@ -36,7 +36,7 @@ extern void CreateAnchor ( Document doc,
                            ThotBool createLink );
 extern void MakeUniqueName ( Element el,
                              Document doc );
-extern void CreateRemoveIDAttribute ( CHAR_T *elName,
+extern void CreateRemoveIDAttribute ( char *elName,
                                       Document doc,
                                       ThotBool createID,
                                       ThotBool inSelection );
@@ -150,7 +150,7 @@ extern void CreateAnchor (/* Document doc,
                              ThotBool createLink */);
 extern void MakeUniqueName (/* Element el,
                                Document doc */);
-extern void CreateRemoveIDAttribute (/* CHAR_T *elName,
+extern void CreateRemoveIDAttribute (/* char *elName,
                                         Document doc,
                                         ThotBool createID,
                                         ThotBool inSelection */);

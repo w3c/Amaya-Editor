@@ -13,7 +13,7 @@ extern void XMLTextToDocument ( void );
 extern void GetXMLElementType ( STRING XMLname,
                                 ElementType *elType,
                                 STRING *mappedName,
-                                CHAR_T *content,
+                                char *content,
                                 Document doc );
 extern void FreeXMLParser ( void );
 extern ThotBool XMLparse ( FILE *infile,
@@ -33,7 +33,7 @@ extern void XMLTextToDocument (/* void */);
 extern void GetXMLElementType (/* STRING XMLname,
                                   ElementType *elType,
                                   STRING *mappedName,
-                                  CHAR_T *content,
+                                  char *content,
                                   Document doc */);
 extern void FreeXMLParser (/* void */);
 extern ThotBool XMLparse (/* FILE *infile,

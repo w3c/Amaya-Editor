@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void MapXLinkAttribute ( CHAR_T *attrName,
+extern void MapXLinkAttribute ( char *attrName,
                                 AttributeType *attrType,
-                                CHAR_T *elementName,
+                                char *elementName,
                                 ThotBool *level,
                                 Document doc );
-extern void MapXLinkAttributeValue ( CHAR_T* AttrVal,
+extern void MapXLinkAttributeValue ( char* AttrVal,
                                      AttributeType attrType,
                                      int *value );
 extern void XLinkAttributeComplete ( Attribute attr,
@@ -20,12 +20,12 @@ extern void XLinkAttributeComplete ( Attribute attr,
 
 #else /* __STDC__ */
 
-extern void MapXLinkAttribute (/* CHAR_T *attrName,
+extern void MapXLinkAttribute (/* char *attrName,
                                   AttributeType *attrType,
-                                  CHAR_T *elementName,
+                                  char *elementName,
                                   ThotBool *level,
                                   Document doc */);
-extern void MapXLinkAttributeValue (/* CHAR_T* AttrVal,
+extern void MapXLinkAttributeValue (/* char* AttrVal,
                                        AttributeType attrType,
                                        int *value */);
 extern void XLinkAttributeComplete (/* Attribute attr,

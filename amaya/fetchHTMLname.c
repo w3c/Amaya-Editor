@@ -30,23 +30,23 @@
   gi is the output string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      LowercaseGI (CHAR_T *GI, CHAR_T *gi)
+static void      LowercaseGI (char *GI, char *gi)
 #else
 static void      LowercaseGI (GI, gi)
-CHAR_T          *GI;
-CHAR_T          *gi;
+char          *GI;
+char          *gi;
 #endif
 {
   int        i;
 
-  for (i = 0; GI[i] != WC_EOS && i < MaxTypeNameLength-1; i++)
+  for (i = 0; GI[i] != EOS && i < MaxTypeNameLength-1; i++)
     {
       if (GI[i] >= 'A' && GI[i] <= 'Z')
-	gi[i] = (CHAR_T) ((int) GI[i] + 32);
+	gi[i] = (char) ((int) GI[i] + 32);
       else
 	gi[i] = GI[i];
     }
-  gi[i] = WC_EOS;
+  gi[i] = EOS;
 }
 
 
@@ -58,17 +58,17 @@ CHAR_T          *gi;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapGI (CHAR_T *gi, SSchema *schema, Document doc)
+int                 MapGI (char *gi, SSchema *schema, Document doc)
 #else
 int                 MapGI (gi, schema, doc)
-CHAR_T*             gi;
+char*             gi;
 SSchema*            schema;
 Document            doc;
 #endif
 {
   ElementType     elType;
-  CHAR_T*         ptr; 
-  CHAR_T          c;
+  char*         ptr; 
+  char          c;
   int             i;
   int             entry;
   ThotBool	  isHTML; 
@@ -84,7 +84,7 @@ Document            doc;
   else
     {
       ptr = TtaGetSSchemaName (*schema);
-      isHTML = !ustrcmp (ptr, "HTML");
+      isHTML = !strcmp (ptr, "HTML");
     }
 
   i = 0;
@@ -106,7 +106,7 @@ Document            doc;
       /* look at all entries starting with the right character */
       do
 	{
-	  if (ustrcasecmp (pHTMLGIMapping[i].XMLname, gi))
+	  if (strcasecmp (pHTMLGIMapping[i].XMLname, gi))
 	    i++;
 	  else
 	    entry = i;
@@ -124,9 +124,9 @@ Document            doc;
 	  elType.ElTypeNum = 0;
 	  elType.ElSSchema = *schema;
 	  
-	  if (!ptr || !ustrcmp (ptr, "MathML"))
+	  if (!ptr || !strcmp (ptr, "MathML"))
 	    MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, &level, doc);
-	  if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, "GraphML")))
+	  if (elType.ElTypeNum == 0 && (!ptr || !strcmp (ptr, "GraphML")))
 	    MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, &level, doc);
 	  if (elType.ElTypeNum == 0)
 	    {
@@ -149,16 +149,16 @@ Document            doc;
    a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GIType (CHAR_T* gi, ElementType *elType, Document doc)
+void                GIType (char* gi, ElementType *elType, Document doc)
 #else
 void                GIType (gi, elType, doc)
-CHAR_T*             gi;
+char*             gi;
 ElementType*        elType;
 Document            doc;
 #endif
 {
-  CHAR_T              c;
-  CHAR_T*             ptr;
+  char              c;
+  char*             ptr;
   int                 i;
   ThotBool	      level; 
 
@@ -183,7 +183,7 @@ Document            doc;
   /* look at all entries starting with the right character */
   do
     {
-      if (!ustrcasecmp (pHTMLGIMapping[i].XMLname, gi))
+      if (!strcasecmp (pHTMLGIMapping[i].XMLname, gi))
       {
 	if (doc != 0)
         elType->ElSSchema = TtaGetSSchema ("HTML", doc);
@@ -206,11 +206,11 @@ Document            doc;
    as well as the corresponding Thot SSchema
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-AttributeMapping   *MapAttr (CHAR_T *attrName, SSchema *schema,
+AttributeMapping   *MapAttr (char *attrName, SSchema *schema,
 			     int elemEntry, ThotBool *level, Document doc)
 #else
 AttributeMapping   *MapAttr (attrName, schema, elemEntry, level, doc)
-CHAR_T             *attrName;
+char             *attrName;
 SSchema            *schema;
 int                 elemEntry;
 ThotBool           *level
@@ -239,17 +239,17 @@ Document            doc;
    of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-AttributeMapping *MapHTMLAttribute (CHAR_T *attrName,
+AttributeMapping *MapHTMLAttribute (char *attrName,
 				    AttributeType *attrType,
-				    CHAR_T *elementName,
+				    char *elementName,
 				    ThotBool *level,
 				    Document doc)
 #else
 AttributeMapping *MapHTMLAttribute (attrName, attrType,
 				    elementName, level, doc)
-CHAR_T        *attrName;
+char        *attrName;
 AttributeType *attrType;
-CHAR_T        *elementName;
+char        *elementName;
 ThotBool      *level
 Document       doc;
 #endif

@@ -50,13 +50,13 @@ static AttrValueMapping XLinkAttrValueMappingTable[] =
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void     MapXLinkAttribute (CHAR_T *attrName, AttributeType *attrType,
-			    CHAR_T *elementName, ThotBool *level, Document doc)
+void     MapXLinkAttribute (char *attrName, AttributeType *attrType,
+			    char *elementName, ThotBool *level, Document doc)
 #else
 void     MapXLinkAttribute (Attr, attrType, elementName, level, doc)
-CHAR_T        *attrName;
+char        *attrName;
 AttributeType *attrType;
-CHAR_T*        elementName;
+char*        elementName;
 ThotBool      *level;
 Document       doc;
 #endif
@@ -71,10 +71,10 @@ Document       doc;
    and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MapXLinkAttributeValue (CHAR_T* AttrVal, AttributeType attrType, int *value)
+void                MapXLinkAttributeValue (char* AttrVal, AttributeType attrType, int *value)
 #else
 void                MapXLinkAttributeValue (AttrVal, attrType, value)
-CHAR_T*             AttrVal;
+char*             AttrVal;
 AttributeType       attrType;
 int		   *value;
 #endif
@@ -88,7 +88,7 @@ int		   *value;
       i++;
    if (XLinkAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
       do
-	if (!ustrcasecmp (XLinkAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	if (!strcasecmp (XLinkAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	   *value = XLinkAttrValueMappingTable[i].ThotAttrValue;
 	else
 	   i++;

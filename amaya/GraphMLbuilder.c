@@ -55,10 +55,10 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
   ----------------------------------------------------------------------*/
 void      GraphMLGetDTDName (STRING DTDname, STRING elementName)
 {
-   if (ustrcmp (elementName, "math") == 0)
-      ustrcpy (DTDname, "MathML");
+   if (strcmp (elementName, "math") == 0)
+      strcpy (DTDname, "MathML");
    else
-      ustrcpy (DTDname, "");
+      strcpy (DTDname, "");
 }
 
 /*----------------------------------------------------------------------
@@ -66,8 +66,8 @@ void      GraphMLGetDTDName (STRING DTDname, STRING elementName)
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-void   MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType,
-			    CHAR_T* elementName, ThotBool *level, Document doc)
+void   MapGraphMLAttribute (char *attrName, AttributeType *attrType,
+			    char* elementName, ThotBool *level, Document doc)
 {
   attrType->AttrSSchema = GetGraphMLSSchema (doc);
   MapXMLAttribute (GRAPH_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
@@ -78,7 +78,7 @@ void   MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void    MapGraphMLAttributeValue (CHAR_T* AttrVal, AttributeType attrType, int *value)
+void    MapGraphMLAttributeValue (char* AttrVal, AttributeType attrType, int *value)
 {
    int                 i;
 
@@ -89,7 +89,7 @@ void    MapGraphMLAttributeValue (CHAR_T* AttrVal, AttributeType attrType, int *
      i++;
    if (GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
      do
-       if (!ustrcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue,AttrVal))
+       if (!strcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue,AttrVal))
 	 *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
        else
 	 i++;
@@ -134,23 +134,23 @@ void  GraphMLEntityCreatedWithExpat (int         entityValue,
 void   ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Document doc, ThotBool delete)
 {
 #define buflen 50
-   CHAR_T               css_command[buflen+20];
+   char               css_command[buflen+20];
    int                  length;
    STRING               text;
 
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
+   text = TtaGetMemory (length);
    if (text != NULL)
       {
       /* get the value of the attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
       /* builds the equivalent CSS rule */
       if (attrType == GraphML_ATTR_fill)
-	  usprintf (css_command, "fill: %s", text);
+	  sprintf (css_command, "fill: %s", text);
       else if (attrType == GraphML_ATTR_stroke)
-          usprintf (css_command, "stroke: %s", text);
+          sprintf (css_command, "stroke: %s", text);
       else if (attrType == GraphML_ATTR_stroke_width)
-          usprintf (css_command, "stroke-width: %s", text);
+          sprintf (css_command, "stroke-width: %s", text);
       /* parse the CSS rule */
       ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
       TtaFreeMemory (text);
@@ -169,7 +169,7 @@ static Element      CreateGraphicalLeaf (char shape, Element el, Document doc, T
   Element	   leaf, child;
   AttributeType    attrType;
   Attribute        attr;
-  CHAR_T           oldShape;
+  char           oldShape;
 
   leaf = NULL;
   child = TtaGetLastChild (el);
@@ -408,10 +408,10 @@ void  CopyUseContent (Element el, Document doc, STRING href)
 	      {
 		/* get its value */
 		length = TtaGetTextAttributeLength (attr);
-		id = TtaAllocString (length + 1);
+		id = TtaGetMemory (length + 1);
 		TtaGiveTextAttributeValue (attr, id, &length);
 		/* compare with the xlink:href attribute of the use element */
-		if (!ustrcasecmp (&href[1], id))
+		if (!strcasecmp (&href[1], id))
 		  /* same  values. we found it */
 		  source = elFound;
 		TtaFreeMemory (id);
@@ -533,7 +533,7 @@ void      GraphMLElementComplete (Element el, Document doc, int *error)
 	   {
 	     /* get its value */
 	     length = TtaGetTextAttributeLength (attr);
-	     href = TtaAllocString (length + 1);
+	     href = TtaGetMemory (length + 1);
 	     TtaGiveTextAttributeValue (attr, href, &length);
 	     CopyUseContent (el, doc, href);
 	     TtaFreeMemory (href);
@@ -555,9 +555,9 @@ void      GraphMLElementComplete (Element el, Document doc, int *error)
 	   /* get its value */
 	   {
 	     length = TtaGetTextAttributeLength (attr);
-	     text = TtaAllocString (length + 1);
+	     text = TtaGetMemory (length + 1);
 	     TtaGiveTextAttributeValue (attr, text, &length);
-	     if (!ustrcasecmp (text, "text/css"))
+	     if (!strcasecmp (text, "text/css"))
 	       parseCSS = TRUE;
 	     TtaFreeMemory (text);
 	   }
@@ -679,7 +679,7 @@ void            CreatePoints (Attribute attr, Element el, Document doc)
 
    /* text attribute. Get its value */
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
+   text = TtaGetMemory (length);
    if (text != NULL)
       {
       /* first, delete all points in the polyline */
@@ -733,7 +733,7 @@ void      ParseCoordAttribute (Attribute attr, Element el, Document doc)
    PresentationContext  ctxt;
 
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
+   text = TtaGetMemory (length);
    if (text != NULL)
       {
       /* get the value of the x or y attribute */
@@ -801,7 +801,7 @@ ThotBool   ParseWidthHeightAttribute (Attribute attr, Element el, Document doc, 
    if (attr && !delete)
      {
        length = TtaGetTextAttributeLength (attr) + 2;
-       text = TtaAllocString (length);
+       text = TtaGetMemory (length);
        if (!text)
 	 return ret;
      }
@@ -924,7 +924,7 @@ static STRING      GetNumber (STRING ptr, int* coord)
       negative = TRUE;
     }
   /* read the integer part */
-  while (*ptr != WC_EOS && *ptr >= '0' && *ptr <= '9')
+  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
     {
       val *= 10;
       val += *ptr - '0';
@@ -934,7 +934,7 @@ static STRING      GetNumber (STRING ptr, int* coord)
     /* skip the decimal part */
     {
       ptr++;
-      while (*ptr != WC_EOS &&  *ptr >= '0' && *ptr <= '9')
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
 	ptr++;
     }
   if (negative)
@@ -942,9 +942,9 @@ static STRING      GetNumber (STRING ptr, int* coord)
   else
     *coord = val;
   /* skip the following spaces */
-  while (*ptr != WC_EOS &&
-         (*ptr == ',' || *ptr == WC_SPACE || *ptr == WC_BSPACE ||
-	  *ptr == WC_EOL    || *ptr == WC_TAB   || *ptr == WC_CR))
+  while (*ptr != EOS &&
+         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
+	  *ptr == EOL    || *ptr == TAB   || *ptr == CR))
     ptr++;
   return (ptr);
 }
@@ -961,7 +961,7 @@ void      ParseTransformAttribute (Attribute attr, Element el, Document doc, Tho
    PresentationContext  ctxt;
 
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
+   text = TtaGetMemory (length);
    if (text)
      {
        /* get the content of the transform attribute */
@@ -1020,7 +1020,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
    PathSegment  seg;
    ThotBool     relative, newSubpath;
    STRING       text, ptr;
-   CHAR_T       command, prevCommand;
+   char       command, prevCommand;
 
    /* create (or get) the Graphics leaf */
    leaf = CreateGraphicalLeaf (EOS, el, doc, FALSE);
@@ -1028,7 +1028,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
       return;
 
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
+   text = TtaGetMemory (length);
    if (text)
       {
       /* get the content of the path data attribute */
@@ -1038,7 +1038,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
       ptr = TtaSkipWCBlanks (ptr);
       command = *ptr;
       ptr++;
-      prevCommand = WC_EOS;
+      prevCommand = EOS;
       xcur = 0;
       ycur = 0;
       newSubpath = FALSE;

@@ -8,7 +8,7 @@
 
 extern void XmlSetElemLineNumber ( Element el );
 extern void XmlParseError ( ErrorType type,
-                            CHAR_T *msg,
+                            unsigned char *msg,
                             int line );
 extern ThotBool IsParsingCSS ( void );
 extern void SetParsingCSS ( ThotBool value );
@@ -18,7 +18,7 @@ extern int IsWithinTable ( void );
 extern void SubWithinTable ( void );
 extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
-extern void PutInXmlElement ( CHAR_T * data );
+extern void PutInXmlElement ( char *data );
 extern void FreeXmlParserContexts ( void );
 extern ThotBool ParseXmlSubTree ( char *xmlBuffer,
                                   Element *el,
@@ -36,16 +36,16 @@ extern ThotBool ParseIncludedXml ( FILE *infile,
                                    int *index,
                                    int *nbLineRead,
                                    int *nbCharRead,
-                                   STRING DTDname,
+                                   char *DTDname,
                                    Document doc,
                                    Element *el,
                                    ThotBool *isclosed,
                                    Language lang );
 extern void StartXmlParser ( Document doc,
-                             CHAR_T* htmlFileName,
-                             CHAR_T* documentName,
-                             CHAR_T* documentDirectory,
-                             CHAR_T* pathURL,
+                             char *htmlFileName,
+                             char *documentName,
+                             char *documentDirectory,
+                             char *pathURL,
                              ThotBool xmlDec,
                              ThotBool xmlDoctype );
 
@@ -53,7 +53,7 @@ extern void StartXmlParser ( Document doc,
 
 extern void XmlSetElemLineNumber (/* Element el */);
 extern void XmlParseError (/* ErrorType type,
-                              CHAR_T *msg,
+                              unsigned char *msg,
                               int line */);
 extern ThotBool IsParsingCSS (/* void */);
 extern void SetParsingCSS (/* ThotBool value */);
@@ -63,7 +63,7 @@ extern int IsWithinTable (/* void */);
 extern void SubWithinTable (/* void */);
 extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
-extern void PutInXmlElement (/* CHAR_T * data */);
+extern void PutInXmlElement (/* char *data */);
 extern void FreeXmlParserContexts (/* void */);
 extern ThotBool ParseXmlSubTree (/* char *xmlBuffer,
                                     Element *el,
@@ -81,16 +81,16 @@ extern ThotBool ParseIncludedXml (/* FILE *infile,
                                      int *index,
                                      int *nbLineRead,
                                      int *nbCharRead,
-                                     STRING DTDname,
+                                     char *DTDname,
                                      Document doc,
                                      Element *el,
                                      ThotBool *isclosed,
                                      Language lang */);
 extern void StartXmlParser (/* Document doc,
-                               CHAR_T* htmlFileName,
-                               CHAR_T* documentName,
-                               CHAR_T* documentDirectory,
-                               CHAR_T* pathURL,
+                               char *htmlFileName,
+                               char *documentName,
+                               char *documentDirectory,
+                               char *pathURL,
                                ThotBool xmlDec,
                                ThotBool xmlDoctype */);
 

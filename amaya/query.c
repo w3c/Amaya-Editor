@@ -47,7 +47,7 @@
 #include <fcntl.h>
 #include "HTEvtLst.h"
 #include "HTAABrow.h"
-#include "ustring.h"
+#include "string.h"
 
 #if defined(__svr4__) || defined (_AIX)
 #define CATCH_SIG
@@ -353,7 +353,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 	  else 
 	    {
 	      iso2wc_strcpy (tmp_wchar, tmp_char);
-	      me->http_headers.content_type = TtaWCSdup (tmp_wchar);
+	      me->http_headers.content_type = TtaStrdup (tmp_wchar);
 	    }
 	  
 #ifdef DEBUG_LIBWWW
@@ -379,7 +379,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   if (tmp_atom)
     {
       iso2wc_strcpy (tmp_wchar, HTAtom_name (tmp_atom));
-      me->http_headers.charset = TtaWCSdup (tmp_wchar);
+      me->http_headers.charset = TtaStrdup (tmp_wchar);
     }
 
   /* copy the content length */
@@ -395,7 +395,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   if (tmp_char)
     {
       iso2wc_strcpy (tmp_wchar, tmp_char);
-      me->http_headers.reason = TtaWCSdup (tmp_wchar);
+      me->http_headers.reason = TtaStrdup (tmp_wchar);
     }
 }
 
@@ -916,7 +916,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
 	   (me->method == METHOD_PUT))
 	 {
 	   TtaFreeMemory (me->urlName);
-	   me->urlName = TtaWCSdup (urlAdr);
+	   me->urlName = TtaStrdup (urlAdr);
 	 }
        else
 	 {
@@ -1474,16 +1474,16 @@ static void         AHTAcceptLanguagesInit (HTList *c)
   
   lang_list = TtaGetEnvString ("ACCEPT_LANGUAGES");
   s[2] = EOS;
-  if (lang_list && *lang_list != WC_EOS)
+  if (lang_list && *lang_list != EOS)
     {
       /* add the default language first  */
       HTLanguage_add (c, "*", -1.0);
       /* how many languages do we have? */
       ptr = lang_list;
       count = 0;
-      while (*ptr != WC_EOS)
+      while (*ptr != EOS)
 	{
-	  while (*ptr != WC_EOS &&
+	  while (*ptr != EOS &&
 		 (*ptr < 'A' || (*ptr > 'Z' && *ptr < 'a') || *ptr > 'z'))
 	    /* skip the whole separator */
 	    ptr++;
@@ -1497,7 +1497,7 @@ static void         AHTAcceptLanguagesInit (HTList *c)
 	    }
 	  if (lg >= 2)
 	    count++;
-	  if (*ptr != WC_EOS)
+	  if (*ptr != EOS)
 	    ptr++;
 	}
 
@@ -1738,7 +1738,7 @@ static void RecCleanCache (char *dirname)
 	  if (strcmp (ffd.cFileName, "..") && strcmp (ffd.cFileName, "."))
 	    {
 	      strcpy (ptr, ffd.cFileName);
-	      strcat (ptr, WC_DIR_STR);
+	      strcat (ptr, DIR_STR);
 	      RecCleanCache (t_dir);
 	      urmdir (t_dir);
 	    }
@@ -1928,13 +1928,13 @@ int i;
     {
       real_dir = TtaGetMemory (strlen (strptr) + strlen (CACHE_DIR_NAME) + 20);
       strcpy (real_dir, strptr);
-      if (*(real_dir + strlen (real_dir) - 1) != WC_DIR_SEP)
-	strcat (real_dir, WC_DIR_STR);
+      if (*(real_dir + strlen (real_dir) - 1) != DIR_SEP)
+	strcat (real_dir, DIR_STR);
     }
   else
     {
       real_dir = TtaGetMemory (strlen (TempFileDirectory) + strlen (CACHE_DIR_NAME) + 20);
-      usprintf (real_dir, "%s%s", TempFileDirectory, CACHE_DIR_NAME);
+      sprintf (real_dir, "%s%s", TempFileDirectory, CACHE_DIR_NAME);
     }
 
   /* compatiblity with previous versions of Amaya: does real_dir
@@ -1945,7 +1945,7 @@ int i;
   else
     {
       i = strlen (CACHE_DIR_NAME);
-	  if (strptr[i] != WC_EOS)
+	  if (strptr[i] != EOS)
           strcat (real_dir, CACHE_DIR_NAME);
     }
 
@@ -1977,7 +1977,7 @@ int i;
 	     will remove all, making the following call unnecessary */
 	  /* little trick to win some memory */
 	  strptr = strrchr (cache_lockfile, '.');
-	  *strptr = WC_EOS;
+	  *strptr = EOS;
 	  RecCleanCache (cache_lockfile);
 	  *strptr = '.';
 	}
@@ -2749,7 +2749,7 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
    tempsubdir = (mode & AMAYA_LOAD_CSS) ? 0 : docid;
 
    /* create a tempfilename */
-   usprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, WC_DIR_SEP, tempsubdir, WC_DIR_SEP, object_counter);
+   sprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, DIR_SEP, tempsubdir, DIR_SEP, object_counter);
    /* update the object_counter (used for the tempfilename) */
    object_counter++;
    
@@ -2822,7 +2822,7 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
 	   else if (mode & AMAYA_LOAD_CSS)
 	     AHTRequest_setCustomAcceptHeader (me->request, "*/*;q=0.1,css/*");
 #ifdef ANNOTATIONS
-	   else if (content_type && content_type[0] != WC_EOS)
+	   else if (content_type && content_type[0] != EOS)
 	     /* use the custom sent content_type */
 	     AHTRequest_setCustomAcceptHeader (me->request, content_type);
 #endif /* ANNOTATIONS */
@@ -3157,7 +3157,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
    esc_url = EscapeURL (urlName);
-   me->urlName = TtaWCSdup (esc_url);
+   me->urlName = TtaStrdup (esc_url);
    TtaFreeMemory (esc_url);
    me->block_size =  file_size;
    /* select the parameters that distinguish a PUT from a GET/POST */
@@ -3220,7 +3220,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
    if (charset != UNDEFINED_CHARSET)
      {
        tmp =  TtaGetCharsetName (charset);
-       if (tmp && *tmp != WC_EOS)
+       if (tmp && *tmp != EOS)
 	 {
 	   tmp2 = TtaWC2ISOdup (tmp);
 	   HTAnchor_setCharset (dest_anc_parent, HTAtom_for (tmp2));

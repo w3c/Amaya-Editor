@@ -16,21 +16,21 @@ extern void MapXMLElementType ( int XMLtype,
                                 STRING XMLname,
                                 ElementType *elType,
                                 STRING *mappedName,
-                                CHAR_T *content,
+                                char *content,
                                 ThotBool *highEnoughLevel,
                                 Document doc );
-extern CHAR_T* GetXMLElementName ( ElementType elType,
-                                   Document doc );
+extern char* GetXMLElementName ( ElementType elType,
+                                 Document doc );
 extern ThotBool IsXMLElementInline ( ElementType elType );
 extern int MapXMLAttribute ( int XMLtype,
-                             CHAR_T *attrName,
-                             CHAR_T *elementName,
+                             char *attrName,
+                             char *elementName,
                              ThotBool *highEnoughLevel,
                              Document doc,
                              int *thotType );
-extern CHAR_T* GetXMLAttributeName ( AttributeType attrType,
-                                     ElementType elType,
-                                     Document doc );
+extern char* GetXMLAttributeName ( AttributeType attrType,
+                                   ElementType elType,
+                                   Document doc );
 extern ThotBool MapXMLEntity ( int XMLtype,
                                STRING entityName,
                                int *entityValue );
@@ -49,21 +49,21 @@ extern void MapXMLElementType (/* int XMLtype,
                                   STRING XMLname,
                                   ElementType *elType,
                                   STRING *mappedName,
-                                  CHAR_T *content,
+                                  char *content,
                                   ThotBool *highEnoughLevel,
                                   Document doc */);
-extern CHAR_T* GetXMLElementName (/* ElementType elType,
-                                     Document doc */);
+extern char* GetXMLElementName (/* ElementType elType,
+                                   Document doc */);
 extern ThotBool IsXMLElementInline (/* ElementType elType */);
 extern int MapXMLAttribute (/* int XMLtype,
-                               CHAR_T *attrName,
-                               CHAR_T *elementName,
+                               char *attrName,
+                               char *elementName,
                                ThotBool *highEnoughLevel,
                                Document doc,
                                int *thotType */);
-extern CHAR_T* GetXMLAttributeName (/* AttributeType attrType,
-                                       ElementType elType,
-                                       Document doc */);
+extern char* GetXMLAttributeName (/* AttributeType attrType,
+                                     ElementType elType,
+                                     Document doc */);
 extern ThotBool MapXMLEntity (/* int XMLtype,
                                  STRING entityName,
                                  int *entityValue */);

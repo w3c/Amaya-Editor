@@ -43,7 +43,7 @@ PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
   ElementType	      elType;
   AttributeType       attrType;
   Attribute           attr;
-  CHAR_T              buffer[MAX_LENGTH];
+  char              buffer[MAX_LENGTH];
   int                 length;
   ThotBool            found, before;
 
@@ -143,7 +143,7 @@ PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 		      /* get a buffer for the attribute value */
 		      length = MAX_LENGTH;
 		      TtaGiveTextAttributeValue (attr, buffer, &length);
-		      found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
+		      found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
 		    }
 		  if (found)
 		    {
@@ -200,7 +200,7 @@ PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			  /* get a buffer for the attribute value */
 			  length = MAX_LENGTH;
 			  TtaGiveTextAttributeValue (attr, buffer, &length);
-			  found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
+			  found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
 			}
 		      /* search if the previous CSS has a presentation schema */
 		      if (found)
@@ -328,8 +328,8 @@ CSSInfoPtr      AddCSS (Document doc, Document docRef, CSSCategory category, STR
   if (css != NULL)
     {
       css->doc = doc;
-      css->localName = TtaWCSdup (localName);
-      css->url = TtaWCSdup (url);
+      css->localName = TtaStrdup (localName);
+      css->url = TtaStrdup (url);
       css->category = category;
 
       /* that CSS is only used by the document docRef */
@@ -369,8 +369,8 @@ CSSInfoPtr          SearchCSS (Document doc, STRING url)
  
   while (css != NULL)
     {
-      if (url && ((css->url && !ustrcmp (url, css->url)) ||
-		  (css->localName && !ustrcmp (url, css->localName))))
+      if (url && ((css->url && !strcmp (url, css->url)) ||
+		  (css->localName && !strcmp (url, css->localName))))
 	/* an external CSS */
 	return css;
       else if (doc != 0 && css->doc == doc)
@@ -512,8 +512,8 @@ void   RemoveStyleSheet (STRING url, Document doc, ThotBool disabled, ThotBool r
   found = FALSE;
   while (css != NULL && !found)
     {
-      if (url && ((css->url && !ustrcmp (url, css->url)) ||
-		  (css->localName && !ustrcmp (url, css->localName))))
+      if (url && ((css->url && !strcmp (url, css->url)) ||
+		  (css->localName && !strcmp (url, css->localName))))
 	/* an external CSS */
 	found = TRUE;
       else if (!url && css->category == CSS_DOCUMENT_STYLE &&
@@ -546,7 +546,7 @@ STRING              GetStyleContents (Element el)
   if (length > 1)
     {
       /* get the length of the included text */
-      buffer = TtaAllocString (length);
+      buffer = TtaGetMemory (length);
 
       /* fill the buffer */
       elType = TtaGetElementType (el);
@@ -577,9 +577,9 @@ void        LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css
   PInfoPtr            pInfo;
   struct stat         buf;
   FILE               *res;
-  CHAR_T              tempfile[MAX_LENGTH];
-  CHAR_T              tempURL[MAX_LENGTH];
-  CHAR_T*             buffer = NULL;
+  char              tempfile[MAX_LENGTH];
+  char              tempURL[MAX_LENGTH];
+  char*             buffer = NULL;
   char*               tmpBuff;
   int                 len;
   ThotBool            import, printing;
@@ -645,7 +645,7 @@ void        LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css
       if ( pInfo->PiSchemas == NULL || import)
 	{
 	  /* load the resulting file in memory */
-	  res = ufopen (tempfile, "r");
+	  res = fopen (tempfile, "r");
 	  if (res == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
@@ -682,7 +682,7 @@ void        LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css
 	  fclose (res);
 
 #     ifdef _I18N_
-	  buffer = TtaAllocString (buf.st_size + 1000);
+	  buffer = TtaGetMemory (buf.st_size + 1000);
       mbstowcs (buffer, tmpBuff, buf.st_size + 1000);
 #     else  /* !_I18N_ */
       buffer = tmpBuff;

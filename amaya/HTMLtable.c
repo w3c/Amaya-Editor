@@ -52,7 +52,7 @@ ThotBool            inMath;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
-   CHAR_T                name[50];
+   char                name[50];
    Document            refdoc;
 
    cell = TtaGetFirstChild (row);
@@ -1232,7 +1232,7 @@ ThotBool            genrateColumn;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  CHAR_T              ptr[100];
+  char              ptr[100];
   int                 span, i;
   ThotBool            before, inMath;
 
@@ -1531,7 +1531,7 @@ NotifyElement      *event;
   AttributeType       attrType;
   Attribute           attr;
   Document            refDoc;
-  CHAR_T                name[50];
+  char                name[50];
   ThotBool            inMath;
 
   if (CurrentRow)

@@ -45,8 +45,8 @@ ThotBool	 WithToC;
 ThotBool         IgnoreCSS;
 
 static struct _SubDoc  *SubDocs;
-static CHAR_T           PSfile[MAX_PATH];
-static CHAR_T           PPrinter[MAX_PATH];
+static char           PSfile[MAX_PATH];
+static char           PPrinter[MAX_PATH];
 static STRING           DocPrintURL;
 static Document		DocPrint;
 static int              PaperPrint;
@@ -81,7 +81,7 @@ static void         RegisterSubDoc (Element el, STRING url)
   entry = TtaGetMemory (sizeof (struct _SubDoc));
   entry->SDnext = NULL;
   entry->SDel = el;
-  entry->SDname = TtaWCSdup (url);
+  entry->SDname = TtaStrdup (url);
 
   if (SubDocs == NULL)
     SubDocs = entry;
@@ -114,7 +114,7 @@ static Element      SearchSubDoc (STRING url)
   el = NULL;
   while (!docFound && entry != NULL)
     {
-      docFound = (ustrcmp (url, entry->SDname) == 0);
+      docFound = (strcmp (url, entry->SDname) == 0);
       if (!docFound)
 	entry = entry->SDnext;
       else
@@ -159,8 +159,8 @@ void             SetInternalLinks (Document document)
   Attribute             attr, ExtLinkAttr;
   AttributeType	        attrType;
   STRING		text, ptr, url; 
-  CHAR_T                  number[10];
-  CHAR_T                  value[MAX_LENGTH];
+  char                  number[10];
+  char                  value[MAX_LENGTH];
   int			length, i, volume;
   int                   status, position;
   ThotBool              split;
@@ -192,7 +192,7 @@ void             SetInternalLinks (Document document)
 	  while (sibling != NULL);
 	  el = TtaGetParent (el);
 	}
-      usprintf (number, "%d", position*100/volume);
+      sprintf (number, "%d", position*100/volume);
       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_UPDATED_LINK), number);
       TtaHandlePendingEvents ();
       link = TtaSearchTypedElement (elType, SearchForward, link);
@@ -223,13 +223,13 @@ void             SetInternalLinks (Document document)
 	    /* this element has an HREF or cite attribute */
 	    {
 	      length = TtaGetTextAttributeLength (HrefAttr);
-	      text = TtaAllocString (length + 1);
+	      text = TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (HrefAttr, text, &length);
 
 	      /* does an external link become an internal link ? */
 	      if (document == DocBook && SubDocs != NULL)
 		{
-		  ptr = ustrrchr (text, '#');
+		  ptr = strrchr (text, '#');
 		  url = text;
 		  split = FALSE;
 		  if (ptr == text)
@@ -264,8 +264,8 @@ void             SetInternalLinks (Document document)
 		      if (ptr != NULL)
 			{
 			  /* get the target name */
-			  ustrcpy (value, ptr);
-			  length = ustrlen (value);
+			  strcpy (value, ptr);
+			  length = strlen (value);
 			  /* check whether the name changed */
 			  i = 0;
 			  target = SearchNAMEattribute (document, &value[1], NULL);
@@ -278,7 +278,7 @@ void             SetInternalLinks (Document document)
 				{
 				  /* continue the search */
 				  i++;
-				  usprintf (&value[length], "%d", i);
+				  sprintf (&value[length], "%d", i);
 				  target = SearchNAMEattribute (document,
 							&value[1], NULL);
 				}
@@ -348,13 +348,13 @@ void             SetInternalLinks (Document document)
   ----------------------------------------------------------------------*/
 static void         CheckPrintingDocument (Document document)
 {
-  CHAR_T         docName[MAX_LENGTH];
-  CHAR_T        *ptr; 
-  CHAR_T         suffix[MAX_LENGTH];
+  char         docName[MAX_LENGTH];
+  char        *ptr; 
+  char         suffix[MAX_LENGTH];
   int            lg;
 
   if (DocPrint != document || DocPrintURL == NULL ||
-      ustrcmp(DocPrintURL, DocumentURLs[document]))
+      strcmp(DocPrintURL, DocumentURLs[document]))
     {
       /* initialize print parameters */
       TtaFreeMemory (DocPrintURL);
@@ -364,15 +364,15 @@ static void         CheckPrintingDocument (Document document)
       /* define the new default PS file */
       ptr = TtaGetEnvString ("APP_TMPDIR");
       if (ptr != NULL && TtaCheckDirectory (ptr))
-	ustrcpy (PSfile, ptr);
+	strcpy (PSfile, ptr);
       else
-	ustrcpy (PSfile, TtaGetDefEnvString ("APP_TMPDIR"));
-      lg = ustrlen (PSfile);
-      if (PSfile[lg - 1] == WC_DIR_SEP)
-	PSfile[--lg] = WC_EOS;
-      ustrcpy (docName, TtaGetDocumentName (document));
+	strcpy (PSfile, TtaGetDefEnvString ("APP_TMPDIR"));
+      lg = strlen (PSfile);
+      if (PSfile[lg - 1] == DIR_SEP)
+	PSfile[--lg] = EOS;
+      strcpy (docName, TtaGetDocumentName (document));
       ExtractSuffix (docName, suffix);
-      usprintf (&PSfile[lg], "%c%s.ps", WC_DIR_SEP, docName);
+      sprintf (&PSfile[lg], "%c%s.ps", DIR_SEP, docName);
       TtaSetPsFile (PSfile);
     }
 }
@@ -387,7 +387,7 @@ static void         PrintDocument (Document doc, View view)
   Attribute          attr;
   Element            el;
   STRING             files, dir;
-  CHAR_T             viewsToPrint[MAX_PATH];
+  char             viewsToPrint[MAX_PATH];
   ThotBool           status, textFile;
 
   textFile = (DocumentTypes[doc] == docText ||
@@ -396,9 +396,9 @@ static void         PrintDocument (Document doc, View view)
 
   /* initialize printing information */
   CheckPrintingDocument (doc);
-  ustrcpy (viewsToPrint, "Formatted_view ");
+  strcpy (viewsToPrint, "Formatted_view ");
   if (DocumentTypes[doc] == docHTML && WithToC)
-    ustrcat (viewsToPrint, "Table_of_contents ");
+    strcat (viewsToPrint, "Table_of_contents ");
   
   if (textFile)
     {
@@ -444,7 +444,7 @@ static void         PrintDocument (Document doc, View view)
 	  else
 	    TtaSetPrintSchema ("HTMLPLPUS");
 	}
-      ustrcat (viewsToPrint, "Links_view ");
+      strcat (viewsToPrint, "Links_view ");
     }
   else if (PageSize == PP_A4)
     {
@@ -631,10 +631,10 @@ void CallbackPrint (int ref, int typedata, STRING data)
 	{
 	if (PaperPrint == PP_PRINTER)
 	    /* text capture zone for the printer name */
-	    ustrncpy (PPrinter, data, MAX_PATH);
+	    strncpy (PPrinter, data, MAX_PATH);
 	else
 	  /* text capture zone for the name of the PostScript file */
-	  ustrncpy (PSfile, data, MAX_PATH);
+	  strncpy (PSfile, data, MAX_PATH);
 	}
       break;
     }
@@ -644,7 +644,7 @@ void CallbackPrint (int ref, int typedata, STRING data)
   ----------------------------------------------------------------------*/
 void                InitPrint (void)
 {
-  CHAR_T* ptr;
+  char* ptr;
 
    BasePrint = TtaSetCallback (CallbackPrint, PRINT_MAX_REF);
    DocPrint = 0;
@@ -653,9 +653,9 @@ void                InitPrint (void)
    /* read default printer variable */
    ptr = TtaGetEnvString ("THOTPRINT");
    if (ptr == NULL)
-     ustrcpy (PPrinter, "");
+     strcpy (PPrinter, "");
    else
-     ustrcpy (PPrinter, ptr);
+     strcpy (PPrinter, ptr);
    TtaSetPrintCommand (PPrinter);
    PaperPrint = PP_PRINTER;
    TtaSetPrintParameter (PP_Destination, PaperPrint);
@@ -680,7 +680,7 @@ void                InitPrint (void)
 void                SetupAndPrint (Document doc, View view)
 {
 #ifndef _WINDOWS
-  CHAR_T           bufMenu[MAX_LENGTH];
+  char           bufMenu[MAX_LENGTH];
   int              i;
 #endif /* !_WINDOWS */
   ThotBool           textFile;
@@ -697,7 +697,7 @@ void                SetupAndPrint (Document doc, View view)
   /* Paper format submenu */
   i = 0;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
   TtaNewSubmenu (BasePrint + PaperFormat, BasePrint + FormPrint, 0,
 		 TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, TRUE);
@@ -709,7 +709,7 @@ void                SetupAndPrint (Document doc, View view)
   /* Orientation submenu */
   i = 0;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_PORTRAIT));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_LANDSCAPE));
   TtaNewSubmenu (BasePrint + PaperOrientation, BasePrint + FormPrint, 0,
 		 TtaGetMessage (AMAYA, AM_ORIENTATION), 2, bufMenu, NULL, TRUE);
@@ -720,9 +720,9 @@ void                SetupAndPrint (Document doc, View view)
   /* Pages per sheet submenu */
   i = 0;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_1_PAGE_SHEET));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_2_PAGE_SHEET));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
   TtaNewSubmenu (BasePrint + PPagesPerSheet, BasePrint + FormPrint, 0,
 		 TtaGetMessage (LIB, TMSG_REDUCTION), 3, bufMenu, NULL, TRUE);
@@ -736,7 +736,7 @@ void                SetupAndPrint (Document doc, View view)
   /* Print to paper/ Print to file submenu */
   i = 0;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
   TtaNewSubmenu (BasePrint + PrintSupport, BasePrint + FormPrint, 0,
 		 TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
@@ -757,13 +757,13 @@ void                SetupAndPrint (Document doc, View view)
   /* The toggle */
   i = 0;
   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_TOC));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_URL));
-  i += ustrlen (&bufMenu[i]) + 1;
+  i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_WITH_CSS));
   TtaNewToggleMenu (BasePrint + PrintOptions, BasePrint + FormPrint,
 		    TtaGetMessage (LIB, TMSG_OPTIONS), 5, bufMenu, NULL, FALSE);
@@ -1096,11 +1096,11 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
       if (attr)
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  text = TtaAllocString (length + 1);
+	  text = TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, text, &length);
 	  /* Valid rel values are rel="chapter" or rel="subdocument" */
-	  if (ustrcasecmp (text, "chapter") &&
-	      ustrcasecmp (text, "subdocument"))
+	  if (strcasecmp (text, "chapter") &&
+	      strcasecmp (text, "subdocument"))
 	    attr = NULL;
 	  TtaFreeMemory (text);
 	}
@@ -1115,9 +1115,9 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
 	/* this link has an attribute HREF */
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  text = TtaAllocString (length + 1);
+	  text = TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, text, &length);
-	  ptr = ustrrchr (text, '#');
+	  ptr = strrchr (text, '#');
 	  url = text;
 	  if (ptr != NULL)
 	    {

@@ -8,7 +8,7 @@
 
 extern void TransCallbackDialog ( int ref,
                                   int typedata,
-                                  CHAR_T* data );
+                                  char* data );
 extern void InitTransform ( void );
 extern void TransformType ( Document doc,
                             View view );
@@ -19,7 +19,7 @@ extern ThotBool TransformIntoType ( ElementType resultType,
 
 extern void TransCallbackDialog (/* int ref,
                                     int typedata,
-                                    CHAR_T* data */);
+                                    char* data */);
 extern void InitTransform (/* void */);
 extern void TransformType (/* Document doc,
                               View view */);

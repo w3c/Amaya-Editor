@@ -61,7 +61,7 @@ void           XmlElementComplete (Element el, Document doc, int *error)
   ----------------------------------------------------------------------*/
 void           CreateXmlAttribute (Element       el,
 				   AttributeType attrType,
-				   CHAR_T*       text,
+				   char*       text,
 				   ThotBool      isInvalid,
 				   Document      doc,
 				   Attribute    *lastAttribute,
@@ -75,7 +75,7 @@ void           CreateXmlAttribute (Element       el,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void    MapXmlAttributeValue (CHAR_T        *AttrVal,
+void    MapXmlAttributeValue (char        *AttrVal,
 			      AttributeType  attrType,
 			      int           *value)
 
@@ -87,7 +87,7 @@ void    MapXmlAttributeValue (CHAR_T        *AttrVal,
   MapGenericXmlType
   ----------------------------------------------------------------------*/
 void         MapGenericXmlType (STRING XMLname, ElementType *elType,
-				STRING *mappedName, CHAR_T *content,
+				STRING *mappedName, char *content,
 				ThotBool *highEnoughLevel, Document doc)
 
 {

@@ -47,7 +47,7 @@ static Pixmap   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
 #define oldHrefMaxLen 400
-static  CHAR_T  oldXlinkHrefValue[oldHrefMaxLen];
+static  char  oldXlinkHrefValue[oldHrefMaxLen];
 
 #define BUFFER_LENGTH 100
 
@@ -364,7 +364,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
   ElementType		elType;
   AttributeType	        attrType;
   Attribute		attr;
-  CHAR_T		buffer[512], buffer1[8];
+  char		buffer[512], buffer1[8];
   int			nbPoints, point, x, y, posX, posY;
 
   elType = TtaGetElementType (el);
@@ -387,7 +387,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    }
 	  else
 	    GetAttributeValueAndUnit (attr, &x, &unit);
-	  usprintf (buffer, "%dpx", x);
+	  sprintf (buffer, "%dpx", x);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	  /* update the last point */
 	  attrType.AttrTypeNum = GraphML_ATTR_x2;
@@ -404,7 +404,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    {
 	      x = 0;
 	    }
-	  usprintf (buffer, "%dpx", x);
+	  sprintf (buffer, "%dpx", x);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	}
       else
@@ -425,7 +425,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    {
 	      y = 0;
 	    }
-	  usprintf (buffer, "%dpx", y);
+	  sprintf (buffer, "%dpx", y);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	  /* update the last point */
 	  attrType.AttrTypeNum = GraphML_ATTR_y2;
@@ -442,7 +442,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    {
 	      y = 0;
 	    }
-	  usprintf (buffer, "%dpx", y);
+	  sprintf (buffer, "%dpx", y);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	}
 #endif /* IV */
@@ -482,12 +482,12 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    {
 	      TtaGivePolylinePoint (child, point, unit, &x, &y);
 	      if (point > 1)
-		ustrcat (buffer, " ");
-	      usprintf (buffer1, "%d", x + posX);
-	      ustrcat (buffer, buffer1);
-	      ustrcat (buffer, ",");
-	      usprintf (buffer1, "%d", y + posY);
-	      ustrcat (buffer, buffer1);
+		strcat (buffer, " ");
+	      sprintf (buffer1, "%d", x + posX);
+	      strcat (buffer, buffer1);
+	      strcat (buffer, ",");
+	      sprintf (buffer1, "%d", y + posY);
+	      strcat (buffer, buffer1);
 	    }
 	  attrType.AttrTypeNum = GraphML_ATTR_points;
 	  attr = TtaGetAttribute (el, attrType);
@@ -509,7 +509,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
  -----------------------------------------------------------------------*/
 static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value, ThotBool delta, ThotBool update)
 {
-  CHAR_T		buffer[32], unit[32];
+  char		buffer[32], unit[32];
   Attribute             attr;
   int                   v, e;
   int                   pval, pe, i;
@@ -522,7 +522,7 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
       TtaAttachAttribute (el, attr, doc);
 
       /* by default generate pixel values */
-      usprintf (buffer, "%dpx", value);
+      sprintf (buffer, "%dpx", value);
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaRegisterAttributeCreate (attr, el, doc);
     }
@@ -534,44 +534,44 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
       /* check if the value includes decimals */
       i = 0;
       v = 0;
-      while (buffer[i] != WC_EOS && !v)
+      while (buffer[i] != EOS && !v)
 	{
 	  if (buffer[i] == '.')
 	    {
-	      buffer[i] = WC_EOS;
+	      buffer[i] = EOS;
 	      usscanf (buffer, "%d", &pval);	      
 	      v = i + 1;
 	    }
 	  i++;
 	}
-      unit[0] = WC_EOS;
+      unit[0] = EOS;
       pe = 0;
       if (v)
 	usscanf (&buffer[v], "%d%s", &pe, unit);
       else
 	usscanf (buffer, "%d%s", &pval, unit);
       /* convert the value according to the current unit */
-      if (!ustrcmp (unit, "em") || !ustrcmp (unit, "ex"))
+      if (!strcmp (unit, "em") || !strcmp (unit, "ex"))
 	{
 	  v = value / 10;
 	  e = value - (v * 10);
 	}
-      else if (!ustrcmp (unit, "pc"))
+      else if (!strcmp (unit, "pc"))
 	{
 	  v = value / 12;
 	  e = value - (v * 12);
 	}
-      else if (!ustrcmp (unit, "in"))
+      else if (!strcmp (unit, "in"))
 	{
 	  v = value / 72;
 	  e = value - (v * 72);
 	}
-      else if (!ustrcmp (unit, "cm"))
+      else if (!strcmp (unit, "cm"))
 	{
 	  v = (value + 14) / 28;
 	  e = value - (v * 28);
 	}
-      else if (!ustrcmp (unit, "mm"))
+      else if (!strcmp (unit, "mm"))
 	{
 	  value = value * 10;
 	  v = (value + 14) / 28;
@@ -588,9 +588,9 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
 	  e = e + pe;
 	}
       if (e > 0)
-	usprintf (buffer, "%d.%d%s", v, e, unit);
+	sprintf (buffer, "%d.%d%s", v, e, unit);
       else
-	usprintf (buffer, "%d%s", v, unit);
+	sprintf (buffer, "%d%s", v, unit);
       TtaRegisterAttributeReplace (attr, el, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
     }
@@ -1157,16 +1157,16 @@ void ControlPointChanged (NotifyOnValue *event)
 	length = TtaGetPolylineLength (child);
 	/* get all points */
 	i = 1;
-	buffer = TtaAllocString (20);
-	text = TtaAllocString (length * 20);
+	buffer = TtaGetMemory (20);
+	text = TtaGetMemory (length * 20);
 	text[0] = EOS;
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x, &y);
-	     usprintf (buffer, "%d,%d", x, y);
-	     ustrcat (text, buffer);
+	     sprintf (buffer, "%d,%d", x, y);
+	     strcat (text, buffer);
 	     if (i < length)
-	       ustrcat (text, " ");
+	       strcat (text, " ");
 	     i++;
 	  }
 	TtaFreeMemory (buffer);
@@ -1226,7 +1226,7 @@ ThotBool ExportForeignObject (NotifyElement *event)
   while (child)
     {
       elType = TtaGetElementType (child);
-      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	 /* child is an HTML element */
 	{
         attrType.AttrTypeNum = GraphML_ATTR_Namespace;
@@ -1330,7 +1330,7 @@ void         CreateGraphicElement (int entry)
 	/* the current selection is not in a GraphML element, create one */
 	{
 	  selType = TtaGetElementType (first);
-	  if (ustrcmp (TtaGetSSchemaName (selType.ElSSchema), "HTML"))
+	  if (strcmp (TtaGetSSchemaName (selType.ElSSchema), "HTML"))
 	    {
 	      /* selection is not in an HTML element. */
 	      TtaCancelLastRegisteredSequence (doc);
@@ -1894,7 +1894,7 @@ ThotBool            AttrXlinkHrefWillBeChanged (NotifyAttribute * event)
    if (len >= oldHrefMaxLen)
       len = oldHrefMaxLen - 1;
    TtaGiveTextAttributeValue (event->attribute, oldXlinkHrefValue, &len);
-   oldXlinkHrefValue[len] = WC_EOS;
+   oldXlinkHrefValue[len] = EOS;
    return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -1915,7 +1915,7 @@ void             AttrXlinkHrefChanged (NotifyAttribute *event)
 			  event->document);
      return;
      }
-   text = TtaAllocString (length + 1);
+   text = TtaGetMemory (length + 1);
    TtaGiveTextAttributeValue (event->attribute, text, &length);
    elType = TtaGetElementType (event->element);
    if (elType.ElTypeNum == GraphML_EL_image)
@@ -1956,7 +1956,7 @@ ThotBool TextWillChangeInGroup (NotifyOnTarget *event)
 
   leaf = event->target;
   len = TtaGetTextLength (leaf) + 1;
-  text = TtaAllocString (len);
+  text = TtaGetMemory (len);
   TtaGiveTextContent (leaf, text, &len, &lang);
   usscanf (text, "%d", &oldValue);
   TtaFreeMemory (text);
@@ -1977,7 +1977,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
   AttributeType attrType;
   Document      doc;
   PRule         presRuleX1, presRuleX2, presRuleY1, presRuleY2;
-  CHAR_T        buffer[8];
+  char        buffer[8];
   STRING        text;
   Language      lang;
   int           x, y, xx, yy, x1, y1, x2, y2, i, len, num;
@@ -1996,7 +1996,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
     /* there is no class attribute */
      return;
   len = TtaGetTextAttributeLength (attr)+1;
-  text = TtaAllocString (len);
+  text = TtaGetMemory (len);
   TtaGiveTextAttributeValue (attr, text, &len);
   found = (strcmp(text, "animatable") == 0);
   TtaFreeMemory (text);
@@ -2007,7 +2007,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
   /* get the content of the text element that has been changed */
   leaf1 = event->target;
   len = TtaGetTextLength (leaf1) + 1;
-  text = TtaAllocString (len);
+  text = TtaGetMemory (len);
   TtaGiveTextContent (leaf1, text, &len, &lang);
   /* convert that content into a number */
   usscanf (text, "%d", &num);
@@ -2016,7 +2016,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
   if (num < 4 || num > 9 || oldValue < 4 || oldValue > 9)
     {
       /* this cube can't be moved. Restore its original number */
-      usprintf (buffer, "%d", oldValue);
+      sprintf (buffer, "%d", oldValue);
       TtaSetTextContent (leaf1, buffer, lang, doc);
       return;
     }
@@ -2050,7 +2050,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
 			if (elType.ElTypeNum == GraphML_EL_TEXT_UNIT)
 			  {
 			    len = TtaGetTextLength (leaf2) + 1;
-			    text = TtaAllocString (len);
+			    text = TtaGetMemory (len);
 			    TtaGiveTextContent (leaf2, text, &len, &lang);
 			    /* convert the content into a number */
 			    usscanf (text, "%d", &i);
@@ -2072,7 +2072,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
     /* there is no other cube with that number. Restore the original number
        and return */
     {
-      usprintf (buffer, "%d", oldValue);
+      sprintf (buffer, "%d", oldValue);
       TtaSetTextContent (leaf1, buffer, lang, doc);
       return;
     }
@@ -2084,7 +2084,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
     neighbour = FALSE;
 
   /* the other cube take the previous number of the modified cube */
-  usprintf (buffer, "%d", oldValue);
+  sprintf (buffer, "%d", oldValue);
   TtaSetTextContent (leaf2, buffer, lang, doc);
 
   /* get the original coordinates of both cubes */

@@ -6,14 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern STRING SkipSep ( STRING ptr );
-extern STRING SkipInt ( STRING ptr );
+extern char *SkipSep ( char *ptr );
+extern char *SkipInt ( char *ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
 extern void SetLanguagInHTMLStack ( Language lang );
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
-                             CHAR_T* msg );
+                             char* msg );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern ThotBool IsBlockElement ( Element el );
 extern void BlockInCharLevelElem ( Element el );
@@ -24,58 +24,58 @@ extern void CheckCSSLink ( Element el,
                            Document doc,
                            SSchema schema );
 extern int MapAttrValue ( int thotAttr,
-                          CHAR_T* attrVal );
+                          char* attrVal );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void GetFallbackCharacter ( int code,
-                                   STRING fallback,
-                                   Language* lang );
+                                   char *fallback,
+                                   Language *lang );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
 extern void SetElemLineNumber ( Element el );
-extern CHAR_T GetNextInputChar ( FILE *infile,
-                                 int *index,
-                                 ThotBool *endOfFile );
+extern char GetNextInputChar ( FILE *infile,
+                               int *index,
+                               ThotBool *endOfFile );
 extern void ReadTextFile ( FILE *infile,
-                           char* textbuf,
+                           char *textbuf,
                            Document doc,
-                           STRING pathURL );
-extern void CheckDocHeader ( CHAR_T *fileName,
+                           char *pathURL );
+extern void CheckDocHeader ( char *fileName,
                              ThotBool *xmlDec,
                              ThotBool *docType,
                              ThotBool *isXML,
                              int *parsingLevel,
                              CHARSET *charset,
-                             STRING charsetname,
+                             char *charsetname,
                              DocumentType *thotType );
-extern void CheckCharsetInMeta ( CHAR_T *fileName,
+extern void CheckCharsetInMeta ( char *fileName,
                                  CHARSET *charset,
-                                 STRING charsetname );
-extern void CheckAbstractTree ( CHAR_T* pathURL,
+                                 char *charsetname );
+extern void CheckAbstractTree ( char* pathURL,
                                 Document doc );
 extern void ParseIncludedHTML ( Element elem,
-                                STRING closingTag );
-extern void ParseSubTree ( CHAR_T* HTMLbuf,
+                                char *closingTag );
+extern void ParseSubTree ( char* HTMLbuf,
                            Element lastelem,
                            ThotBool isclosed,
                            Document doc );
 extern void StartParser ( Document doc,
-                          CHAR_T* htmlFileName,
-                          CHAR_T* documentName,
-                          CHAR_T* documentDirectory,
-                          CHAR_T* pathURL,
+                          char* htmlFileName,
+                          char* documentName,
+                          char* documentDirectory,
+                          char* pathURL,
                           ThotBool plainText );
 
 #else /* __STDC__ */
 
-extern STRING SkipSep (/* STRING ptr */);
-extern STRING SkipInt (/* STRING ptr */);
+extern char *SkipSep (/* char *ptr */);
+extern char *SkipInt (/* char *ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
 extern void SetLanguagInHTMLStack (/* Language lang */);
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
-                               CHAR_T* msg */);
+                               char* msg */);
 extern ThotBool IsCharacterLevelElement (/* Element el */);
 extern ThotBool IsBlockElement (/* Element el */);
 extern void BlockInCharLevelElem (/* Element el */);
@@ -86,46 +86,46 @@ extern void CheckCSSLink (/* Element el,
                              Document doc,
                              SSchema schema */);
 extern int MapAttrValue (/* int thotAttr,
-                            CHAR_T* attrVal */);
+                            char* attrVal */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void GetFallbackCharacter (/* int code,
-                                     STRING fallback,
-                                     Language* lang */);
+                                     char *fallback,
+                                     Language *lang */);
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
 extern void SetElemLineNumber (/* Element el */);
-extern CHAR_T GetNextInputChar (/* FILE *infile,
-                                   int *index,
-                                   ThotBool *endOfFile */);
+extern char GetNextInputChar (/* FILE *infile,
+                                 int *index,
+                                 ThotBool *endOfFile */);
 extern void ReadTextFile (/* FILE *infile,
-                             char* textbuf,
+                             char *textbuf,
                              Document doc,
-                             STRING pathURL */);
-extern void CheckDocHeader (/* CHAR_T *fileName,
+                             char *pathURL */);
+extern void CheckDocHeader (/* char *fileName,
                                ThotBool *xmlDec,
                                ThotBool *docType,
                                ThotBool *isXML,
                                int *parsingLevel,
                                CHARSET *charset,
-                               STRING charsetname,
+                               char *charsetname,
                                DocumentType *thotType */);
-extern void CheckCharsetInMeta (/* CHAR_T *fileName,
+extern void CheckCharsetInMeta (/* char *fileName,
                                    CHARSET *charset,
-                                   STRING charsetname */);
-extern void CheckAbstractTree (/* CHAR_T* pathURL,
+                                   char *charsetname */);
+extern void CheckAbstractTree (/* char* pathURL,
                                   Document doc */);
 extern void ParseIncludedHTML (/* Element elem,
-                                  STRING closingTag */);
-extern void ParseSubTree (/* CHAR_T* HTMLbuf,
+                                  char *closingTag */);
+extern void ParseSubTree (/* char* HTMLbuf,
                              Element lastelem,
                              ThotBool isclosed,
                              Document doc */);
 extern void StartParser (/* Document doc,
-                            CHAR_T* htmlFileName,
-                            CHAR_T* documentName,
-                            CHAR_T* documentDirectory,
-                            CHAR_T* pathURL,
+                            char* htmlFileName,
+                            char* documentName,
+                            char* documentDirectory,
+                            char* pathURL,
                             ThotBool plainText */);
 
 #endif /* __STDC__ */

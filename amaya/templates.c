@@ -29,7 +29,7 @@
 #     define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
 #endif /* defined(_I18N_) || defined(__JIS__) */
 /* URL of the script providing templates (for reload) */
-static CHAR_T* script_URL;
+static char* script_URL;
 
 #include "init_f.h"
 
@@ -72,9 +72,9 @@ Document doc;
   ThotBool            found = FALSE;
   ThotBool            ok = FALSE;
   int                 length;
-  CHAR_T              buffer[MAX_LENGTH];
-  CHAR_T             *URLdir;
-  CHAR_T             *URLname;
+  char              buffer[MAX_LENGTH];
+  char             *URLdir;
+  char             *URLname;
 
   metaElType.ElSSchema = TtaGetDocumentSSchema (doc);
   metaElType.ElTypeNum = HTML_EL_META;
@@ -92,7 +92,7 @@ Document doc;
             {
               length = MAX_LENGTH - 1;
  	      TtaGiveTextAttributeValue (metaAttr, buffer, &length);
-              found = !ustrcmp (buffer, META_TEMPLATE_NAME);
+              found = !strcmp (buffer, META_TEMPLATE_NAME);
             }
         }
     }
@@ -118,9 +118,9 @@ Document doc;
       if (ok)
         {
           if (script_URL == NULL)
-            script_URL = TtaWCSdup (DocumentURLs[doc]);
+            script_URL = TtaStrdup (DocumentURLs[doc]);
 	  TtaFreeMemory (DocumentURLs[doc]);
-	  DocumentURLs[doc] = TtaWCSdup (buffer);
+	  DocumentURLs[doc] = TtaStrdup (buffer);
           DocumentMeta[doc]->method = CE_TEMPLATE;
 	  TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	  TtaSetDocumentUnmodified (doc);
@@ -134,7 +134,7 @@ Document doc;
 	
       /* set the document name and dir */
       
-      URLname = ustrrchr (buffer, URL_SEP);
+      URLname = strrchr (buffer, URL_SEP);
       if (URLname)
 	{
 	  URLname[0] = EOS;
@@ -159,14 +159,14 @@ Document doc;
   to reload a template
   ----------------------------------------------------------------------*/
 #ifdef __STDC__    
-void        ReloadTemplateParams (CHAR_T **docURL, ClickEvent *method)
+void        ReloadTemplateParams (char **docURL, ClickEvent *method)
 #else /* __STDC__ */
 void        ReloadTemplateParams (docURL, method)
-CHAR_T    **docURL;
+char    **docURL;
 ClickEvent *method;
 #endif /* __STDC__ */
 {
    *method = CE_FORM_GET;
    TtaFreeMemory (*docURL);
-   *docURL = TtaWCSdup (script_URL); 
+   *docURL = TtaStrdup (script_URL); 
 }

@@ -60,14 +60,14 @@ HTAlertPar         *reply;
 #endif
 {
    AHTReqContext      *me = HTRequest_context (request);
-   CHAR_T              tempbuf[MAX_LENGTH];
+   char              tempbuf[MAX_LENGTH];
    char                buf[11];
    long                cl, bytes_rw;
    int                 pro;
    int                *raw_rw;
    HTParentAnchor     *anchor;
-   CHAR_T              text[MAX_LENGTH];
-   CHAR_T              Buff[11];
+   char              text[MAX_LENGTH];
+   char              Buff[11];
 
    if (request && HTRequest_internal (request))
       return NO;
@@ -78,7 +78,7 @@ HTAlertPar         *reply;
    if (input) 
       iso2wc_strcpy (text, (char*)input);
    else 
-       text[0] = WC_EOS;
+       text[0] = EOS;
 
    switch (op)
 	 {
@@ -113,7 +113,7 @@ HTAlertPar         *reply;
 			 pro = 100;
 		       HTNumToStr ((unsigned long) cl, buf, 10);
                iso2wc_strcpy (Buff, buf);
-		       usprintf (tempbuf, "%s (%d%% of %s\n)", me->status_urlName, (int) pro, Buff);
+		       sprintf (tempbuf, "%s (%d%% of %s\n)", me->status_urlName, (int) pro, Buff);
 		     }
 		   else 
 		     {
@@ -123,13 +123,13 @@ HTAlertPar         *reply;
 			 {
 			   HTNumToStr(bytes_rw, buf, 10); 
                iso2wc_strcpy (Buff, buf);
-			   usprintf (tempbuf, "%s bytes", Buff);
+			   sprintf (tempbuf, "%s bytes", Buff);
 			 } 
 		       else if (raw_rw && *raw_rw>0) 
 			 {
 			   HTNumToStr(*raw_rw, buf, 10);
                iso2wc_strcpy (Buff, buf);
-			   usprintf (tempbuf, "%s bytes", Buff);
+			   sprintf (tempbuf, "%s bytes", Buff);
 			 } 
 		       else 
 			 buf[0] = EOS;
@@ -153,7 +153,7 @@ HTAlertPar         *reply;
 			pro = (int) ((bytes_rw * 100l) / cl);
 			HTNumToStr ((unsigned long) cl, buf, 10);
             iso2wc_strcpy (Buff, buf);
-			usprintf (tempbuf, "%s: Writing (%d%% of %s\n)", me->urlName, pro, Buff);
+			sprintf (tempbuf, "%s: Writing (%d%% of %s\n)", me->urlName, pro, Buff);
 			TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
 		    }
 		  else  
@@ -164,13 +164,13 @@ HTAlertPar         *reply;
 			{
 			  HTNumToStr(bytes_rw, buf, 10);
               iso2wc_strcpy (Buff, buf);
-			  usprintf (tempbuf, "%s bytes ", Buff);
+			  sprintf (tempbuf, "%s bytes ", Buff);
 			} 
 		      else if (raw_rw && *raw_rw >0) 
 			{
 			  HTNumToStr(*raw_rw, buf, 10);
               iso2wc_strcpy (Buff, buf);
-			  usprintf (tempbuf, "%s bytes ", Buff);
+			  sprintf (tempbuf, "%s bytes ", Buff);
 			} 
 		      else 
 			buf[0] = EOS;
@@ -237,14 +237,14 @@ HTAlertPar         *reply;
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
       break;
     case HT_MSG_FILE_REPLACE:
-      tmp_buf = TtaAllocString (ustrlen (me->urlName) + ustrlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 10); /*a bit more than enough memory */
-      usprintf (tmp_buf, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), me->urlName);
+      tmp_buf = TtaGetMemory (strlen (me->urlName) + strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 10); /*a bit more than enough memory */
+      sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), me->urlName);
       InitConfirm (0, 0, tmp_buf);
       TtaFreeMemory (tmp_buf);
       break;
     case HT_MSG_RULES:
-      tmp_buf = TtaAllocString (ustrlen (me->urlName) + ustrlen (TtaGetMessage (AMAYA, AM_ETAG_CHANGED)) + 10); /*a bit more than enough memory */
-      usprintf (tmp_buf, TtaGetMessage (AMAYA, AM_ETAG_CHANGED), me->urlName);
+      tmp_buf = TtaGetMemory (strlen (me->urlName) + strlen (TtaGetMessage (AMAYA, AM_ETAG_CHANGED)) + 10); /*a bit more than enough memory */
+      sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_ETAG_CHANGED), me->urlName);
       InitConfirm (0, 0, tmp_buf);
       TtaFreeMemory (tmp_buf);
       break;
@@ -353,20 +353,20 @@ HTAlertPar         *reply;
 {
    AHTReqContext      *me = HTRequest_context (request);
    const char*               realm = HTRequest_realm (request);
-   CHAR_T*             server;
+   char*             server;
    AHTReqStatus        old_reqStatus;
 #  ifdef _I18N_
-   CHAR_T              RealM[MAX_LENGTH];
+   char              RealM[MAX_LENGTH];
 #  else  /* !_I18N_ */
-   const CHAR_T*             RealM = realm;
+   const char*             RealM = realm;
 #  endif /* !_I18N_ */
 
    if (reply && msgnum >= 0) 
      {
        /* initialise */
-       Answer_name[0] = WC_EOS;
+       Answer_name[0] = EOS;
        Lg_password = 0;
-       Answer_password[0] = WC_EOS;
+       Answer_password[0] = EOS;
 
 #      ifdef _I18N_ 
        iso2wc_strcpy (RealM, realm);
@@ -519,7 +519,7 @@ HTRequest          *request;
    HTList             *cur = request->error_stack;
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
    int                 index;
-   CHAR_T              buffer[1024];
+   char              buffer[1024];
    char                isoBuff [1024];
 
 
@@ -530,7 +530,7 @@ HTRequest          *request;
 
    /* force the error type (we're generating it anyway) */
    if (!me->http_headers.content_type)
-     me->http_headers.content_type = TtaWCSdup ("text/html");
+     me->http_headers.content_type = TtaStrdup ("text/html");
 
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {
@@ -545,13 +545,13 @@ HTRequest          *request;
 		{
 		  if (me->method != METHOD_PUT) 
 		    {
-		      usprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, pres->par);
+		      sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, pres->par);
               wc2iso_strcpy (isoBuff, buffer);
 		      StrAllocCat (me->error_stream, isoBuff);
 		    }
 		  else
 		    {
-		      usprintf (buffer, "Error: Server is unavailable or doesn't exist");
+		      sprintf (buffer, "Error: Server is unavailable or doesn't exist");
               wc2iso_strcpy (isoBuff, buffer);
 		      StrAllocCat (me->error_stream, isoBuff);
 		    }
@@ -561,13 +561,13 @@ HTRequest          *request;
 	    case HTERR_TIME_OUT:
 	      if (me->method != METHOD_PUT)
 		{
-		  usprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, "connection timeout");
+		  sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, "connection timeout");
           wc2iso_strcpy (isoBuff, buffer);
 		  StrAllocCat (me->error_stream, isoBuff);
 		}
 	      else
 		{
-		  usprintf (buffer, "Error: Server is unavailable or doesn't exist");
+		  sprintf (buffer, "Error: Server is unavailable or doesn't exist");
           wc2iso_strcpy (isoBuff, buffer);
 		  StrAllocCat (me->error_stream, isoBuff);
 		}
@@ -599,7 +599,7 @@ BOOL             last_seconds_of_life;
 {
    int                 waiting_count = 0;
    AHTDocId_Status    *docid_status;
-   CHAR_T              buffer[120];
+   char              buffer[120];
 
    /* verify if there are any requests at all associated with docid */
 
@@ -613,7 +613,7 @@ BOOL             last_seconds_of_life;
 
    if (waiting_count > 0)
      {
-	usprintf (buffer, TtaGetMessage (AMAYA, AM_WAITING_REQUESTS), waiting_count);
+	sprintf (buffer, TtaGetMessage (AMAYA, AM_WAITING_REQUESTS), waiting_count);
 	TtaSetStatus (docid, 1, buffer, NULL);
 
      }
@@ -639,9 +639,9 @@ int status;
   HTError             *next_error;
   HTErrorElement      errorElement;
   HTList              *cur;
-  CHAR_T              msg_status[10];
+  char              msg_status[10];
   char                *server_status = NULL;
-  CHAR_T              *wc_tmp;
+  char              *wc_tmp;
   HTResponse          *response;
 
   if (status == 200)
@@ -666,7 +666,7 @@ int status;
 		    TtaGetMessage (AMAYA, 
 				   AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX),
 		    (STRING) NULL);
-      usprintf (AmayaLastHTTPErrorMsg, 
+      sprintf (AmayaLastHTTPErrorMsg, 
 	       TtaGetMessage (AMAYA,
 			      AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
     }
@@ -676,7 +676,7 @@ int status;
 		    TtaGetMessage (AMAYA, 
 				   AM_AUTHENTICATION_FAILURE), 
 		    me->status_urlName);
-      usprintf (AmayaLastHTTPErrorMsg, 
+      sprintf (AmayaLastHTTPErrorMsg, 
 	       TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE),
 	       me->status_urlName);
     }
@@ -685,7 +685,7 @@ int status;
       TtaSetStatus (me->docid, 1,
 		    TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS),
 		    me->status_urlName);
-      usprintf (AmayaLastHTTPErrorMsg, 
+      sprintf (AmayaLastHTTPErrorMsg, 
 	       TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), 
 	       me->urlName);
     }
@@ -694,14 +694,14 @@ int status;
       TtaSetStatus (me->docid, 1, 
 		    TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED),
 		    (STRING) NULL);
-      usprintf(AmayaLastHTTPErrorMsg, 
+      sprintf(AmayaLastHTTPErrorMsg, 
 	      TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
     }
   else if (status == -409)
     {
       TtaSetStatus (me->docid, 1,
 		    "Conflict with the current state of the resource", NULL);
-      usprintf(AmayaLastHTTPErrorMsg, "409: Conflict with the current state of the resource");
+      sprintf(AmayaLastHTTPErrorMsg, "409: Conflict with the current state of the resource");
     }
   else if (status <0)
     {
@@ -733,11 +733,11 @@ int status;
       if (error == (HTError *) NULL)
 	/* there's no error context */
 	{
-	  usprintf (msg_status, "%d", status); 
+	  sprintf (msg_status, "%d", status); 
 	  TtaSetStatus (me->docid, 1, 
 			TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), 
 			msg_status);
-	  usprintf (AmayaLastHTTPErrorMsg, 
+	  sprintf (AmayaLastHTTPErrorMsg, 
 		   TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS),
 		   msg_status);
 	  return;
@@ -749,20 +749,20 @@ int status;
 	{
 	  TtaSetStatus (me->docid, 1,
 			"Transfer interrupted by user", (STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg, "%s", "Transfer interrupted by user");
+	  sprintf (AmayaLastHTTPErrorMsg, "%s", "Transfer interrupted by user");
 	}
       else if (errorElement == HTERR_PRECON_FAILED) 
 	{
 	  TtaSetStatus (me->docid, 1,
 			"Document has changed (412)", (STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg, "%s", "Document has changed (412)");
+	  sprintf (AmayaLastHTTPErrorMsg, "%s", "Document has changed (412)");
 	  status = -412;
 	}
       else if (errorElement == HTERR_TIME_OUT || errorElement == HTERR_TIMEOUT)
 	{
 	  TtaSetStatus (me->docid, 1,
 			"Connection Timeout", (STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg,
+	  sprintf (AmayaLastHTTPErrorMsg,
 		    "Connection Timeout");
 	}
       else if (errorElement == HTERR_NOT_IMPLEMENTED)
@@ -770,7 +770,7 @@ int status;
 	  TtaSetStatus (me->docid, 1,
 			TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), 
 			(STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg, 
+	  sprintf (AmayaLastHTTPErrorMsg, 
 		    TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
 	  status = -501;
 	}
@@ -778,7 +778,7 @@ int status;
 	{
 	  TtaSetStatus (me->docid, 1,
 			"Host %s doesn't exist", (char *) error->par);
-	  usprintf (AmayaLastHTTPErrorMsg, 
+	  sprintf (AmayaLastHTTPErrorMsg, 
 		    "Host %s doesn't exist", (char *) error->par);
 	}
       else if (errorElement == HTERR_INTERNAL)
@@ -789,7 +789,7 @@ int status;
 	      TtaSetStatus (me->docid, 1, 
 			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
 			    error->par);
-	      usprintf (AmayaLastHTTPErrorMsg, 
+	      sprintf (AmayaLastHTTPErrorMsg, 
 			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
 			error->par);
 	    }
@@ -798,7 +798,7 @@ int status;
 	      TtaSetStatus (me->docid, 1, 
 			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), 
 			    (STRING) NULL);
-	      usprintf (AmayaLastHTTPErrorMsg, 
+	      sprintf (AmayaLastHTTPErrorMsg, 
 			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
 	    }
 	  status = -500; 
@@ -810,7 +810,7 @@ int status;
 	  TtaSetStatus (me->docid, 1,
 			"Server or network forced libwww to downgrade to HTTP/0.9.",
 			(STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg,
+	  sprintf (AmayaLastHTTPErrorMsg,
 		    "Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit.");
 	}
 #endif
@@ -819,15 +819,15 @@ int status;
 	  wc_tmp = TtaISO2WCdup (server_status);
 	  /* let's output whatever the server or libwww reports as an error */
 	  TtaSetStatus (me->docid, 1, wc_tmp, (STRING) NULL);
-	  ustrcpy (AmayaLastHTTPErrorMsg, wc_tmp);
+	  strcpy (AmayaLastHTTPErrorMsg, wc_tmp);
 	  TtaFreeMemory (wc_tmp);
 	}
       else
 	{
 	  /* we don't have anything else, except for the status code */
-	  usprintf (msg_status, "%d", status); 
+	  sprintf (msg_status, "%d", status); 
 	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-	  usprintf (AmayaLastHTTPErrorMsg, 
+	  sprintf (AmayaLastHTTPErrorMsg, 
 		    TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
 	}
     }
@@ -841,7 +841,7 @@ int status;
 	  if (server_status && *server_status)
 	    {
 	      wc_tmp = TtaISO2WCdup (server_status);
-	      usprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
+	      sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
 			wc_tmp);
 	      TtaFreeMemory (wc_tmp);
 	    }

@@ -55,7 +55,7 @@ ThotBool            AddLoadedImage (STRING name, STRING pathname, Document doc, 
    previous = NULL;
    while (pImage != NULL)
      {
-	if (ustrcmp (pathname, pImage->originalName) == 0)
+	if (strcmp (pathname, pImage->originalName) == 0)
 	  {
 	     /* image already loaded */
 	     sameImage = pImage;
@@ -82,10 +82,10 @@ ThotBool            AddLoadedImage (STRING name, STRING pathname, Document doc, 
 
    /* It is a new loaded image */
    pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
-   pImage->originalName = TtaAllocString (ustrlen (pathname) + 1);
-   ustrcpy (pImage->originalName, pathname);
-   pImage->localName = TtaAllocString (ustrlen (localname) + 1);
-   ustrcpy (pImage->localName, localname);
+   pImage->originalName = TtaGetMemory (strlen (pathname) + 1);
+   strcpy (pImage->originalName, pathname);
+   pImage->localName = TtaGetMemory (strlen (localname) + 1);
+   strcpy (pImage->localName, localname);
    pImage->prevImage = previous;
    if (previous != NULL)
       previous->nextImage = pImage;
@@ -128,7 +128,7 @@ LoadedImageDesc    *SearchLoadedImage (STRING localpath, Document doc)
       pImage = ImageURLs;
       while (pImage != NULL)
 	{
-	  if (ustrcmp (localpath, pImage->localName) == 0 && 
+	  if (strcmp (localpath, pImage->localName) == 0 && 
 	      ((doc == 0) || (pImage->document == doc)))
 	    /* image found */
 	    return (pImage);
@@ -179,7 +179,7 @@ void                SetAreaCoords (Document document, Element element, int attrN
    shape = TtaGetAttributeValue (attrShape);
    /* prepare the coords string */
    length = 2000;
-   text = TtaAllocString (length);
+   text = TtaGetMemory (length);
    if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle)
      {
 	/* Search the x_coord attribute */
@@ -262,7 +262,7 @@ void                SetAreaCoords (Document document, Element element, int attrN
 	      }    
 	  }
 	if (shape == HTML_ATTR_shape_VAL_rectangle)
-	   usprintf (text, "%d,%d,%d,%d", x1, y1, x1 + x2, y1 + y2);
+	   sprintf (text, "%d,%d,%d,%d", x1, y1, x1 + x2, y1 + y2);
 	else
 	  {
 	     /* to make a circle, height and width have to be equal */
@@ -287,7 +287,7 @@ void                SetAreaCoords (Document document, Element element, int attrN
 		 h = y2 / 2;
 	       else
 		 h = x2 / 2;
-	     usprintf (text, "%d,%d,%d", x1 + h, y1 + h, h);
+	     sprintf (text, "%d,%d,%d", x1 + h, y1 + h, h);
 	  }
      }
    else if (shape == HTML_ATTR_shape_VAL_polygon)
@@ -296,15 +296,15 @@ void                SetAreaCoords (Document document, Element element, int attrN
 	length = TtaGetPolylineLength (child);
 	/* get points */
 	i = 1;
-	buffer = TtaAllocString (100);
+	buffer = TtaGetMemory (100);
 	text[0] = EOS;
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
-	     usprintf (buffer, "%d,%d", x1, y1);
-	     ustrcat (text, buffer);
+	     sprintf (buffer, "%d,%d", x1, y1);
+	     strcat (text, buffer);
 	     if (i < length)
-	       ustrcat (text, ",");
+	       strcat (text, ",");
 	     i++;
 	  }
 	TtaFreeMemory (buffer);
@@ -340,7 +340,7 @@ void                UpdateImageMap (Element image, Document document, int oldWid
 	/* Search the MAP element associated with IMAGE element */
 	length = TtaGetTextAttributeLength (attr);
 	length++;
-	text = TtaAllocString (length);
+	text = TtaGetMemory (length);
 	TtaGiveTextAttributeValue (attr, text, &length);
 	if (text[0] == '#')
 	   el = SearchNAMEattribute (document, &text[1], NULL);
@@ -469,8 +469,8 @@ void                DisplayImage (Document doc, Element el, STRING imageName)
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
-      for (i = ustrlen (imageName); i > 0 && imageName[i] != '.'; i--);
-      if (imageName[i] == '.' && !ustrcmp (&imageName[i+1], "svg"))
+      for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
+      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
 	{
 	  /* it's an SVG image */
 	  /* parse the SVG file and include the parse tree at the
@@ -533,7 +533,7 @@ static void         HandleImageLoaded (int doc, int status, STRING urlName,
        TtaFreeMemory (FetchImage_ctx);
        
        /* check if this request wasn't aborted */
-       if (ustrcmp (base_url, DocumentURLs[doc]))
+       if (strcmp (base_url, DocumentURLs[doc]))
 	 {
 	   /* it's not the same url, so let's just return */
 	   TtaFreeMemory (base_url);
@@ -549,23 +549,23 @@ static void         HandleImageLoaded (int doc, int status, STRING urlName,
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
-	tempfile = TtaAllocString (MAX_LENGTH);
+	tempfile = TtaGetMemory (MAX_LENGTH);
 	/* rename the local file of the image */
-	ustrcpy (tempfile, desc->localName);
+	strcpy (tempfile, desc->localName);
 	
 	/* If this is an image document, point to the correct files */
 	if (DocumentTypes[doc] == docImage)
 	  {
-	    ptr = ustrrchr (tempfile, '.');
+	    ptr = strrchr (tempfile, '.');
 	    if (ptr) 
 	      {
 		ptr++;
-		ustrcpy (ptr, "html");
+		strcpy (ptr, "html");
 	      }
 	    else
-	      ustrcat (tempfile, ".html");
+	      strcat (tempfile, ".html");
 	    TtaFreeMemory (desc->localName);
-	    desc->localName = TtaWCSdup (tempfile);
+	    desc->localName = TtaStrdup (tempfile);
 
 	  }
 	else
@@ -575,7 +575,7 @@ static void         HandleImageLoaded (int doc, int status, STRING urlName,
 	    rename (outputfile, tempfile);
 #else /* _WINDOWS */
 	    if (urename (outputfile, tempfile) != 0)
-	      usprintf (tempfile, "%s", outputfile); 
+	      sprintf (tempfile, "%s", outputfile); 
 #endif /* _WINDOWS */
 	  }
 
@@ -584,8 +584,8 @@ static void         HandleImageLoaded (int doc, int status, STRING urlName,
 	   the registered name is not the original name
 	   TtaFreeMemory (desc->originalName);
 	   pathname = urlName;
-	   desc->originalName = TtaAllocString (ustrlen (pathname) + 1);
-	   ustrcpy (desc->originalName, pathname);
+	   desc->originalName = TtaGetMemory (strlen (pathname) + 1);
+	   strcpy (desc->originalName, pathname);
 	*/
 	desc->status = IMAGE_LOADED;
 	/* display for each elements in the list */
@@ -670,8 +670,8 @@ STRING              GetActiveImageInfo (Document document, Element element)
        if (Y < 0)
 	 Y = 0;
        /* create the search string to be appended to the URL */
-       ptr = TtaAllocString (27);
-       usprintf (ptr, "?%d,%d", X, Y);
+       ptr = TtaGetMemory (27);
+       sprintf (ptr, "?%d,%d", X, Y);
      }
    return ptr;
 }
@@ -689,8 +689,8 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
   Attribute           attr;
   LoadedImageDesc     *desc;
   STRING              imageName;
-  CHAR_T              pathname[MAX_LENGTH];
-  CHAR_T              tempfile[MAX_LENGTH];
+  char              pathname[MAX_LENGTH];
+  char              tempfile[MAX_LENGTH];
   int                 length, i, newflags;
   ThotBool            update;
   ThotBool            newImage;
@@ -709,7 +709,7 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
 	  /* prepare the attribute to be searched */
 	  elType = TtaGetElementType (el);
 	  attrType.AttrSSchema = elType.ElSSchema;
-	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	    /* it's not a SVG element, it's then a HTML img element */
 	    {
 	    attrType.AttrTypeNum = HTML_ATTR_SRC;
@@ -729,7 +729,7 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
 	      if (length > 0)
 		{
 		  /* allocate some memory: length of name + 6 cars for noname */
-		  imageName = TtaAllocString (length + 7);
+		  imageName = TtaGetMemory (length + 7);
 		  TtaGiveTextAttributeValue (attr, imageName, &length);
 		}
 	    }
@@ -746,7 +746,7 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
 	  if (!IsW3Path (pathname))
 	  {
 	    NormalizeFile (pathname, tempfile, AM_CONV_ALL);
-	    ustrcpy (pathname, tempfile);
+	    strcpy (pathname, tempfile);
 	    tempfile[0] = EOS;
 	  }
 	  /* is the image already loaded ? */
@@ -765,7 +765,7 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
 	      /* store the context before downloading the images */
 	      FetchImage_ctx = TtaGetMemory (sizeof (FetchImage_context));
 	      FetchImage_ctx->desc = desc;
-	      FetchImage_ctx->base_url =  TtaWCSdup (DocumentURLs[doc]);
+	      FetchImage_ctx->base_url =  TtaStrdup (DocumentURLs[doc]);
 
 	      UpdateTransfer(doc);
 	      if (flags & AMAYA_MBOOK_IMAGE)
@@ -794,7 +794,7 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
 		/* it is a local image */
 		if (callback)
 		  {
-		    if (!ustrncmp(pathname, "file:/", 6))
+		    if (!strncmp(pathname, "file:/", 6))
 		      callback(doc, el, &pathname[6], extra);
 		    else
 		      callback(doc, el, &pathname[0], extra);
@@ -869,7 +869,7 @@ ThotBool            FetchAndDisplayImages (Document doc, int flags)
      return FALSE;
 
    /* register the current URL */
-   currentURL = TtaWCSdup (DocumentURLs[doc]);
+   currentURL = TtaStrdup (DocumentURLs[doc]);
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
    /* prepare the attribute to be searched */
@@ -887,7 +887,7 @@ ThotBool            FetchAndDisplayImages (Document doc, int flags)
 	   TtaHandlePendingEvents ();
 	   /* verify if StopTransfer was called */
 	   if (DocumentURLs[doc] == NULL ||
-	       ustrcmp (currentURL, DocumentURLs[doc]))
+	       strcmp (currentURL, DocumentURLs[doc]))
 	     /* the document has been removed */
 	     break;
 	   
@@ -917,7 +917,7 @@ ThotBool            FetchAndDisplayImages (Document doc, int flags)
 	 TtaHandlePendingEvents ();
 	 /* verify if StopTransfer was called */
 	 if (DocumentURLs[doc] == NULL ||
-	     ustrcmp (currentURL, DocumentURLs[doc]))
+	     strcmp (currentURL, DocumentURLs[doc]))
 	   /* the document has been removed */
 	   break;
 	 
@@ -940,7 +940,7 @@ ThotBool            FetchAndDisplayImages (Document doc, int flags)
 	       if (length > 0)
 		 {
 		   /* allocate some memory */
-		   imageURI = TtaAllocString (length + 7);
+		   imageURI = TtaGetMemory (length + 7);
 		   TtaGiveTextAttributeValue (attr, imageURI, &length);
 		   FetchImage (doc, pic, imageURI, flags, NULL, NULL);
 		   TtaFreeMemory (imageURI);

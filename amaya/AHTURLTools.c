@@ -992,7 +992,7 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
    if (doc != 0)
      basename = GetBaseURL (doc);
    else if (otherPath != NULL)
-     basename = TtaWCSdup (otherPath);
+     basename = TtaStrdup (otherPath);
    else
      basename = NULL;
 

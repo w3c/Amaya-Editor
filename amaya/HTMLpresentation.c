@@ -45,8 +45,8 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc)
   ret = FALSE;
   *span = NULL;
   elType = TtaGetElementType (elem);
-  if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-      !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
+      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
     /* it's an HTML or GraphML element */
     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
 	elType.ElTypeNum == HTML_EL_Basic_Elem)
@@ -58,9 +58,9 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc)
 	doit = TRUE;
 	elType = TtaGetElementType (parent);
 	if ((elType.ElTypeNum == HTML_EL_Span &&
-	     !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")) ||
+	     !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")) ||
 	    (elType.ElTypeNum == GraphML_EL_tspan &&
-	     !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML")))
+	     !strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML")))
 	   /* element parent is a span element */
 	   {
 	   sibling = elem;
@@ -82,7 +82,7 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc)
 	if (doit)
 	   /* enclose the text leaf within a span element */
 	   {
-	   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	   if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	      elType.ElTypeNum = HTML_EL_Span;
 	   else
 	      elType.ElTypeNum = GraphML_EL_tspan;
@@ -120,7 +120,7 @@ void DeleteSpanIfNoAttr (Element el, Document doc, Element *firstChild,
   *lastChild = NULL;
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == HTML_EL_Span &&
-      ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+      strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
      span = el;
      attr = NULL;
@@ -172,7 +172,7 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
     {
       parent = TtaGetParent (elem);
       elType = TtaGetElementType (parent);
-      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
         /* the parent element is an HTML element */
 	/* Create a Span element and move to attribute to this Span element */
         MakeASpan (elem, &span, doc);
@@ -181,7 +181,7 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
 	span = parent;
       if (span != NULL)
         {
-          oldValue = TtaAllocString (ATTRLEN);
+          oldValue = TtaGetMemory (ATTRLEN);
           TtaGiveAttributeType (attr, &attrType, &kind);
 	  newAttr = TtaGetAttribute (span, attrType);
 	  if (newAttr == NULL)
@@ -306,14 +306,14 @@ void                SetStyleAttribute (Document doc, Element elem)
    /* does the element have a Style_ attribute ? */
    elType = TtaGetElementType (elem);
    schName = TtaGetSSchemaName (elType.ElSSchema);
-   if (ustrcmp (schName, "MathML") == 0)
+   if (strcmp (schName, "MathML") == 0)
      {
        attrType.AttrSSchema = elType.ElSSchema;
        attrType.AttrTypeNum = MathML_ATTR_style_;
      }
    else
 #ifdef GRAPHML
-   if (ustrcmp (schName, "GraphML") == 0)
+   if (strcmp (schName, "GraphML") == 0)
      {
        attrType.AttrSSchema = elType.ElSSchema;
        attrType.AttrTypeNum = GraphML_ATTR_style_;
@@ -328,7 +328,7 @@ void                SetStyleAttribute (Document doc, Element elem)
 
    /* keep the new style string */
    len = STYLELEN;
-   style = TtaAllocString (STYLELEN);
+   style = TtaGetMemory (STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
    if (len == 0)
      {
@@ -376,7 +376,7 @@ ThotBool            ChangePRule (NotifyPresentation * event)
   AttributeType      attrType;
   Attribute          attr;
 #define STYLELEN 1000
-  CHAR_T               buffer[15];
+  char               buffer[15];
   int                presType;
   int                w, h, unit, value, i;
   ThotBool           ret;
@@ -506,9 +506,9 @@ ThotBool            ChangePRule (NotifyPresentation * event)
 		    TtaGiveBoxSize (el, doc, 1, unit, &value, &i);
 		    value = TtaGetPRuleValue (presRule);
 		    if (unit == UnPercent)
-		      usprintf (buffer, "%d%%", value);
+		      sprintf (buffer, "%d%%", value);
 		    else
-		      usprintf (buffer, "%d", value);
+		      sprintf (buffer, "%d", value);
 
 		    attrType.AttrTypeNum = HTML_ATTR_Width__;
 		    attr = TtaGetAttribute (el, attrType);
@@ -643,8 +643,8 @@ static void MoveAttrLang (Attribute oldAttr, Element *el, Document doc)
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
-  STRING	value    = TtaAllocString (ATTRLEN); 
-  STRING oldValue = TtaAllocString (ATTRLEN);
+  STRING	value    = TtaGetMemory (ATTRLEN); 
+  STRING oldValue = TtaGetMemory (ATTRLEN);
   ThotBool	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
@@ -672,7 +672,7 @@ static void MoveAttrLang (Attribute oldAttr, Element *el, Document doc)
 	      {
 	      len = ATTRLEN - 1;
 	      TtaGiveTextAttributeValue (attr, value, &len);
-	      if (ustrcasecmp(oldValue, value) != 0)
+	      if (strcasecmp(oldValue, value) != 0)
 		 sameLang = FALSE;
 	      }
 	   }
@@ -721,7 +721,7 @@ void AttrLangCreated (NotifyAttribute *event)
   int		len;
   AttributeType attrType;
   Attribute	attr;
-  STRING	value    = TtaAllocString (ATTRLEN); 
+  STRING	value    = TtaGetMemory (ATTRLEN); 
 
   /* move the LANG attribute to the parent element if all sibling have the
      same attribute with the same value */
@@ -730,7 +730,7 @@ void AttrLangCreated (NotifyAttribute *event)
 
   len = ATTRLEN - 1;
   TtaGiveTextAttributeValue (event->attribute, value, &len);
-  if (ustrcasecmp(value, "Symbol") == 0)
+  if (strcasecmp(value, "Symbol") == 0)
      /* it's a character string in the Symbol character set, it's not really
 	a language */
     {

@@ -420,7 +420,7 @@ static char         PreviousFileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 static int	    LastCharInFileBuffer = 0; /* last char. in the buffer */
 static int          CurrentBufChar;           /* current character read */
 static int          StartOfTagIndx;           /* last "<" read */
-static CHAR_T	    PreviousBufChar = EOS;    /* previous character read */
+static char	    PreviousBufChar = EOS;    /* previous character read */
 static char*        InputText;
 static gzFile       stream = 0;
 static int          NumberOfLinesRead = 0;/* number of lines read in the
@@ -432,7 +432,7 @@ static ThotBool     EmptyLine = TRUE;	  /* no printable character encountered
 static ThotBool     StartOfFile = TRUE;	  /* no printable character encountered
 			        	     yet in the file */
 static ThotBool     AfterTagPRE = FALSE;  /* <PRE> has just been read */
-static CHAR_T*      docURL = NULL;	  /* path or URL of the document */
+static char*      docURL = NULL;	  /* path or URL of the document */
 
 /* Static variables used for the call to the XML parser */
 static ThotBool     NotToReadFile = FALSE;
@@ -449,7 +449,7 @@ static ThotBool     EndOfHtmlFile;
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
 #define MaxMsgLength 200	/* maximum size of error messages */
-static  UCHAR_T     inputBuffer[MaxBufferLength];
+static  unsigned char     inputBuffer[MaxBufferLength];
 static int          LgBuffer = 0;	  /* actual length of text in input
 					     buffer */
 static int	    BufferLineNumber = 0; /* line number in the source file of
@@ -500,8 +500,8 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 					     matches the entity read so far */
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
-static void         ProcessStartGI (CHAR_T* GIname);
-static void         EndOfAttrValue (CHAR_T c);
+static void         ProcessStartGI (char* GIname);
+static void         EndOfAttrValue (char c);
 
 
 /*----------------------------------------------------------------------
@@ -532,7 +532,7 @@ void ParseAreaCoords (Element element, Document document)
    AttributeType    attrType;
    Attribute        attrCoords, attrX, attrY;
    Attribute        attrW, attrH, attrShape;
-   STRING           ptr3, text;
+   char            *ptr3, *text;
    int              x1, y1, x2, y2;
    int              length, shape, r;
 
@@ -562,7 +562,7 @@ void ParseAreaCoords (Element element, Document document)
    else
       shape = TtaGetAttributeValue (attrShape);
    length = TtaGetTextAttributeLength (attrCoords);
-   text = TtaAllocString (length + 1);
+   text = TtaGetMemory (length + 1);
    TtaGiveTextAttributeValue (attrCoords, text, &length);
 
    if (shape == HTML_ATTR_shape_VAL_rectangle ||
@@ -891,7 +891,7 @@ static ThotBool     Within (int ThotType, SSchema ThotSSchema)
 /*----------------------------------------------------------------------
    ParseHTMLError  print the error message msg on stderr.
   ----------------------------------------------------------------------*/
-void               ParseHTMLError (Document doc, CHAR_T* msg)
+void               ParseHTMLError (Document doc, char* msg)
 {
 #ifdef _I18N_
    unsigned char   mbcsMsg [MAX_TXT_LEN * 2];
@@ -908,7 +908,7 @@ void               ParseHTMLError (Document doc, CHAR_T* msg)
    HTMLErrorsFound = TRUE;
    if (!ErrFile)
      {
-      usprintf (ErrFileName, "%s%c%d%cPARSING.ERR", TempFileDirectory,
+      sprintf (ErrFileName, "%s%c%d%cPARSING.ERR", TempFileDirectory,
 		DIR_SEP, doc, DIR_SEP);
       if ((ErrFile = fopen (ErrFileName, "w")) == NULL)
          return;
@@ -1162,7 +1162,7 @@ static void         StartOfTag (char c)
 /*----------------------------------------------------------------------
    PutInBuffer     put character c in the input buffer.
   ----------------------------------------------------------------------*/
-static void         PutInBuffer (UCHAR_T c)
+static void         PutInBuffer (unsigned char c)
 {
   int               len;
 
@@ -1562,7 +1562,7 @@ void          OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
    LastLeafInElement
    return the last leaf element in element el.
   ----------------------------------------------------------------------*/
-static Element      LastLeafInElement (Element el)
+static Element LastLeafInElement (Element el)
 {
    Element          child, lastLeaf;
 
@@ -1582,12 +1582,12 @@ static Element      LastLeafInElement (Element el)
    The element is a HTML link.
    Check element attributes and load the style sheet if needed.
   ----------------------------------------------------------------------*/
-void         CheckCSSLink (Element el, Document doc, SSchema schema)
+void CheckCSSLink (Element el, Document doc, SSchema schema)
 {
   Attribute           attr;
   AttributeType       attrType;
   CSSmedia            media;
-  STRING              name1, name2;
+  char               *name1, *name2;
   int                 length;
 
        /* A LINK element is complete.
@@ -1600,7 +1600,7 @@ void         CheckCSSLink (Element el, Document doc, SSchema schema)
 	  /* there is an attribute REL */
 	 {
 	    length = TtaGetTextAttributeLength (attr);
-	    name1 = TtaAllocString (length + 1);
+	    name1 = TtaGetMemory (length + 1);
 	    TtaGiveTextAttributeValue (attr, name1, &length);
 	    if (!strcasecmp (name1, "stylesheet") ||
 		!strcasecmp (name1, "style"))
@@ -1612,7 +1612,7 @@ void         CheckCSSLink (Element el, Document doc, SSchema schema)
 		 if (attr != NULL)
 		   {
 		      length = TtaGetTextAttributeLength (attr);
-		      name2 = TtaAllocString (length + 1);
+		      name2 = TtaGetMemory (length + 1);
 		      TtaGiveTextAttributeValue (attr, name2, &length);
 		      if (!strcasecmp (name2, "screen"))
 			media = CSS_SCREEN;
@@ -1632,7 +1632,7 @@ void         CheckCSSLink (Element el, Document doc, SSchema schema)
 		 if (attr != NULL)
 		   {
 		      length = TtaGetTextAttributeLength (attr);
-		      name2 = TtaAllocString (length + 1);
+		      name2 = TtaGetMemory (length + 1);
 		      TtaGiveTextAttributeValue (attr, name2, &length);
 		      /* load the stylesheet file found here ! */
 		      LoadStyleSheet (name2, doc, el, NULL, media);
@@ -1656,9 +1656,8 @@ static void            ElementComplete (Element el)
    Attribute           attr;
    AttributeType       attrType;
    Language            lang;
-   STRING              text;
-   CHAR_T              lastChar[2];
-   STRING              name1;
+   char                lastChar[2];
+   char               *text, *name1;
    int                 length;
 
    elType = TtaGetElementType (el);
@@ -1698,7 +1697,7 @@ static void            ElementComplete (Element el)
 	    length = TtaGetTextAttributeLength (attr);
 	    if (length > 0)
 	      {
-		name1 = TtaAllocString (length + 1);
+		name1 = TtaGetMemory (length + 1);
 		TtaGiveTextAttributeValue (attr, name1, &length);
 		attrType.AttrTypeNum = HTML_ATTR_SRC;
 		attr = TtaGetAttribute (child, attrType);
@@ -1852,7 +1851,7 @@ static void            ElementComplete (Element el)
 		      if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
 			{
 			  /* copy attribute value into the text leaf */
-			  text = TtaAllocString (length + 1);
+			  text = TtaGetMemory (length + 1);
 			  TtaGiveTextAttributeValue (attr, text, &length);
 			  TtaSetTextContent (leaf, text, HTMLcontext.language,
 					     HTMLcontext.doc);
@@ -1934,7 +1933,7 @@ static void            ElementComplete (Element el)
 	       TtaAttachAttribute (el, attr, HTMLcontext.doc);
 	       desc = TtaGetFirstChild (child);
 	       length = TtaGetTextLength (desc) + 1;
-	       text = TtaAllocString (length);
+	       text = TtaGetMemory (length);
 	       TtaGiveTextContent (desc, text, &length, &lang);
 	       TtaSetAttributeText (attr, text, el, HTMLcontext.doc);
 	       TtaFreeMemory (text);
@@ -2013,7 +2012,7 @@ static ThotBool     RemoveEndingSpaces (Element el)
    int              length, nbspaces;
    ElementType      elType;
    Element          lastLeaf;
-   CHAR_T           lastChar[2];
+   char           lastChar[2];
    ThotBool         endingSpacesDeleted;
 
    endingSpacesDeleted = FALSE;
@@ -2256,7 +2255,7 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
    the attribute thotAttr and its value attrVal. Returns the corresponding
    Thot value.
   ----------------------------------------------------------------------*/
-int           MapAttrValue (int thotAttr, CHAR_T* attrVal)
+int           MapAttrValue (int thotAttr, char* attrVal)
 {
    int        i, value;
 
@@ -2446,13 +2445,13 @@ static void         StopParsing (Document doc)
    EndOfStartTag   a ">" has been read. It indicates the end
    of a start tag.
   ----------------------------------------------------------------------*/
-static void           EndOfStartTag (CHAR_T c)
+static void           EndOfStartTag (char c)
 {
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
+  char               *text;
   int                 length;
-  STRING              text;
 
   UnknownTag = FALSE;
   if ((HTMLcontext.lastElement != NULL) && (lastElemEntry != -1))
@@ -2494,7 +2493,7 @@ static void           EndOfStartTag (CHAR_T c)
 	    /* get its value */
 	    {
 	      length = TtaGetTextAttributeLength (attr);
-	      text = TtaAllocString (length + 1);
+	      text = TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (attr, text, &length);
 	      if (!strcasecmp (text, "text/css"))
 		HTMLcontext.parsingCSS = TRUE;
@@ -2643,7 +2642,7 @@ static void         SpecialImplicitEnd (int entry)
    position indicate whether the element type is unknown (FALSE) or the
    tag position is incorrect (TRUE).
   ----------------------------------------------------------------------*/
-static void         InsertInvalidEl (CHAR_T* content, ThotBool position)
+static void         InsertInvalidEl (char* content, ThotBool position)
 {
    ElementType       elType;
    AttributeType     attrType;
@@ -2682,12 +2681,12 @@ static void         InsertInvalidEl (CHAR_T* content, ThotBool position)
    Create the corresponding Thot thing (element, attribute,
    or character), according to the mapping table.
   ----------------------------------------------------------------------*/
-static void           ProcessStartGI (CHAR_T* GIname)
+static void           ProcessStartGI (char* GIname)
 {
   ElementType         elType;
   Element             el;
   int                 entry, i;
-  CHAR_T              msgBuffer[MaxMsgLength];
+  char              msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
   ThotBool            sameLevel;
   SSchema	      schema;
@@ -2721,11 +2720,11 @@ static void           ProcessStartGI (CHAR_T* GIname)
 	{
 	  if (strlen (GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = EOS;
-	  usprintf (msgBuffer, "warning - unknown tag <%s>", GIname);
+	  sprintf (msgBuffer, "warning - unknown tag <%s>", GIname);
 	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
-	  usprintf (msgBuffer, "<%s", GIname);
+	  sprintf (msgBuffer, "<%s", GIname);
 	  InsertInvalidEl (msgBuffer, FALSE);
 	}
     }
@@ -2743,11 +2742,11 @@ static void           ProcessStartGI (CHAR_T* GIname)
       if (!ContextOK (entry))
 	/* element not allowed in the current structural context */
 	{
-	  usprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
+	  sprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
 	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
-	  usprintf (msgBuffer, "<%s", GIname);
+	  sprintf (msgBuffer, "<%s", GIname);
 	  InsertInvalidEl (msgBuffer, TRUE);
 	}
       else
@@ -2804,10 +2803,10 @@ static void           ProcessStartGI (CHAR_T* GIname)
 /*----------------------------------------------------------------------
    EndOfStartGI    An HTML GI has been read in a start tag.
   ----------------------------------------------------------------------*/
-static void     EndOfStartGI (CHAR_T c)
+static void     EndOfStartGI (char c)
 {
-  CHAR_T        schemaName[20];
-  CHAR_T        theGI[MaxMsgLength];
+  char        schemaName[20];
+  char        theGI[MaxMsgLength];
   int		 i;
 
   if (HTMLcontext.parsingTextArea)
@@ -2908,7 +2907,7 @@ static void     EndOfStartGI (CHAR_T c)
    EndOfStartGIandTag      a ">" has been read. It indicates the
    end of a GI and the end of a start tag.
   ----------------------------------------------------------------------*/
-static void        EndOfStartGIandTag (CHAR_T c)
+static void        EndOfStartGIandTag (char c)
 {
    EndOfStartGI (c);
    EndOfStartTag (c);
@@ -2918,10 +2917,10 @@ static void        EndOfStartGIandTag (CHAR_T c)
    EndOfEndTag     An end tag has been read in the HTML file.
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
-static void        EndOfEndTag (CHAR_T c)
+static void        EndOfEndTag (char c)
 {
    SSchema	   schema;
-   CHAR_T          msgBuffer[MaxMsgLength];
+   char          msgBuffer[MaxMsgLength];
    int             entry;
    int             i;
    ThotBool        ok;
@@ -2976,17 +2975,17 @@ static void        EndOfEndTag (CHAR_T c)
         {
         if (strlen (inputBuffer) > MaxMsgLength - 20)
 	   inputBuffer[MaxMsgLength - 20] = EOS;
-	usprintf (msgBuffer, "warning - unknown tag </%s>", inputBuffer);
+	sprintf (msgBuffer, "warning - unknown tag </%s>", inputBuffer);
 	ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	/* create an Invalid_element */
-	usprintf (msgBuffer, "</%s", inputBuffer);
+	sprintf (msgBuffer, "</%s", inputBuffer);
 	InsertInvalidEl (msgBuffer, FALSE);
         }
       else if (!CloseElement (entry, -1, FALSE))
         /* the end tag does not close any current element */
         {
 	/* print an error message... */
-	usprintf (msgBuffer, "Unexpected end tag </%s>", inputBuffer);
+	sprintf (msgBuffer, "Unexpected end tag </%s>", inputBuffer);
 	ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	/* ... and try to recover */
 	if ((inputBuffer[0] == 'H' || inputBuffer[0] == 'h') &&
@@ -3029,7 +3028,7 @@ static void        EndOfEndTag (CHAR_T c)
 	  {
             if (strlen (inputBuffer) > MaxMsgLength - 10)
 	       inputBuffer[MaxMsgLength - 10] = EOS;
-	    usprintf (msgBuffer, "</%s", inputBuffer);
+	    sprintf (msgBuffer, "</%s", inputBuffer);
 	    InsertInvalidEl (msgBuffer, TRUE);
 	  }
         }
@@ -3041,15 +3040,15 @@ static void        EndOfEndTag (CHAR_T c)
    EndOfAttrName   A HTML attribute has been read. Create the
    corresponding Thot attribute.
   ----------------------------------------------------------------------*/
-static void            EndOfAttrName (CHAR_T c)
+static void            EndOfAttrName (char c)
 {
    AttributeMapping*   tableEntry;
    AttributeType       attrType;
    ElementType         elType;
    Attribute           attr;
    SSchema             schema;
-   CHAR_T              translation;
-   CHAR_T              msgBuffer[MaxMsgLength];
+   char              translation;
+   char              msgBuffer[MaxMsgLength];
    ThotBool            level;
 
    CloseBuffer ();
@@ -3103,7 +3102,7 @@ static void            EndOfAttrName (CHAR_T c)
 	   {
            if (strlen (inputBuffer) > MaxMsgLength - 30)
 	      inputBuffer[MaxMsgLength - 30] = EOS;
-	   usprintf (msgBuffer, "Invalid attribute \"%s\"", inputBuffer);
+	   sprintf (msgBuffer, "Invalid attribute \"%s\"", inputBuffer);
 	   ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	   /* attach an Invalid_attribute to the current element */
 	   tableEntry = &pHTMLAttributeMapping[0];
@@ -3185,7 +3184,7 @@ static void            EndOfAttrName (CHAR_T c)
    EndOfAttrNameAndTag     A ">" has been read. It indicates the
    end of an attribute name and the end of a start tag.
   ----------------------------------------------------------------------*/
-static void         EndOfAttrNameAndTag (CHAR_T c)
+static void         EndOfAttrNameAndTag (char c)
 {
    EndOfAttrName (c);
    EndOfStartTag (c);
@@ -3215,16 +3214,15 @@ static void         StartOfUnquotedAttrValue (char c)
    PutInBuffer (c);
 }
 
+static ThotBool   isAttrValueTruncated;
 /*----------------------------------------------------------------------
    EndOfAttrValue
    An attribute value has been read from the HTML file.
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
-static void         EndOfAttrValue (CHAR_T c)
+static void         EndOfAttrValue (char c)
 {
-
-  static ThotBool   isAttrValueTruncated;
-  STRING            newBufferAttrValue;
+  char             *newBufferAttrValue;
   int               lg;
 
   if (TruncatedAttrValue)
@@ -3300,7 +3298,7 @@ static void         EndOfAttrValue (CHAR_T c)
    EndOfAttrValueAndTag    A ">" has been read. It indicates the
    end of an attribute value and the end of a start tag.
   ----------------------------------------------------------------------*/
-static void         EndOfAttrValueAndTag (CHAR_T c)
+static void         EndOfAttrValueAndTag (char c)
 {
    EndOfAttrValue (c);
    EndOfStartTag (c);
@@ -3309,7 +3307,7 @@ static void         EndOfAttrValueAndTag (CHAR_T c)
 /*----------------------------------------------------------------------
    StartOfEntity   A character '&' has been encountered in the text.
   ----------------------------------------------------------------------*/
-static void         StartOfEntity (CHAR_T c)
+static void         StartOfEntity (char c)
 {
    LgEntityName = 0;
    EntityTableEntry = 0;
@@ -3319,7 +3317,7 @@ static void         StartOfEntity (CHAR_T c)
 /*----------------------------------------------------------------------
    GetFallbackCharacter
   ----------------------------------------------------------------------*/
-void         GetFallbackCharacter (int code, STRING fallback, Language* lang)
+void GetFallbackCharacter (int code, char *fallback, Language *lang)
 {
    int	     i;
 
@@ -3381,14 +3379,14 @@ void         GetFallbackCharacter (int code, STRING fallback, Language* lang)
    PutNonISOlatin1Char     
    Put a Unicode character belonging to an element in the input buffer.
   ----------------------------------------------------------------------*/
-static void      PutNonISOlatin1Char (int code, STRING prefix)
+static void PutNonISOlatin1Char (int code, char *prefix)
 {
    Language	 lang, l;
    ElementType	 elType;
    Element	 elLeaf;
    AttributeType attrType;
    Attribute	 attr;
-   CHAR_T	 buffer[MaxEntityLength+10];
+   char	 buffer[MaxEntityLength+10];
 
    /* put the current content of the input buffer into the document */
    TextToDocument ();
@@ -3480,11 +3478,11 @@ static void         PutAmpersandInDoc ()
    EndOfEntity     End of a HTML entity. Search that entity in the
    entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
-static void      EndOfEntity (CHAR_T c)
+static void      EndOfEntity (char c)
 {
 
    int           i;
-   CHAR_T        msgBuffer[MaxMsgLength];
+   char        msgBuffer[MaxMsgLength];
 
    EntityName[LgEntityName] = EOS;
    if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
@@ -3503,7 +3501,7 @@ static void      EndOfEntity (CHAR_T c)
 	     PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
 	 }
        else
-	 PutInBuffer ((CHAR_T)XhtmlEntityTable[EntityTableEntry].charCode);
+	 PutInBuffer ((char)XhtmlEntityTable[EntityTableEntry].charCode);
      }
    else
      {
@@ -3513,7 +3511,7 @@ static void      EndOfEntity (CHAR_T c)
 	 PutInBuffer (EntityName[i]);
        PutInBuffer (';');
        /* print an error message */
-       usprintf (msgBuffer, "Entity not supported\"&%s;\"", EntityName);
+       sprintf (msgBuffer, "Entity not supported\"&%s;\"", EntityName);
        ParseHTMLError (HTMLcontext.doc, msgBuffer);
      }
    LgEntityName = 0;
@@ -3527,7 +3525,7 @@ static void      EntityChar (unsigned char c)
 {
    int           i;
    ThotBool      OK, done, stop;
-   CHAR_T        msgBuffer[MaxMsgLength];
+   char        msgBuffer[MaxMsgLength];
 
    done = FALSE;
    if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
@@ -3624,7 +3622,7 @@ static void      EntityChar (unsigned char c)
 	       /* print an error message */
 	       EntityName[LgEntityName++] = c;
 	       EntityName[LgEntityName++] = EOS;
-	       usprintf (msgBuffer, "Entity not supported\"&%s\"", EntityName);
+	       sprintf (msgBuffer, "Entity not supported\"&%s\"", EntityName);
 	       ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	     }
 	   /* next state is the return state from the entity subautomaton,
@@ -3643,7 +3641,7 @@ static void      EntityChar (unsigned char c)
    string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
-static void      EndOfDecEntity (CHAR_T c)
+static void      EndOfDecEntity (char c)
 {
    int           code;
    int           i;
@@ -3711,7 +3709,7 @@ static void     DecEntityChar (char c)
    string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
-static void         EndOfHexEntity (CHAR_T c)
+static void         EndOfHexEntity (char c)
 {
    int              code;
    int              i;
@@ -3792,7 +3790,7 @@ static void         EndOfDocument ()
 /*----------------------------------------------------------------------
    PutLess put '<' in the input buffer
   ----------------------------------------------------------------------*/
-static void         PutLess (CHAR_T c)
+static void         PutLess (char c)
 {
    PutInBuffer ('<');
 }
@@ -3800,7 +3798,7 @@ static void         PutLess (CHAR_T c)
 /*----------------------------------------------------------------------
    PutAmpersandSpace       put '& ' in the input buffer.
   ----------------------------------------------------------------------*/
-static void         PutAmpersandSpace (CHAR_T c)
+static void         PutAmpersandSpace (char c)
 {
    PutInBuffer ('&');
    PutInBuffer (SPACE);
@@ -3819,7 +3817,7 @@ static void         PutLessAndSpace (char c)
 /*----------------------------------------------------------------------
    StartOfComment  Beginning of a HTML comment.
   ----------------------------------------------------------------------*/
-static void         StartOfComment (CHAR_T c)
+static void         StartOfComment (char c)
 {
    ElementType      elType;
    Element          elComment, elCommentLine, child, lastChild;
@@ -3866,7 +3864,7 @@ static void         StartOfComment (CHAR_T c)
 /*----------------------------------------------------------------------
    PutInComment    put character c in the current HTML comment.
   ----------------------------------------------------------------------*/
-static void         PutInComment (UCHAR_T c)
+static void         PutInComment (unsigned char c)
 {
   ElementType       elType;
   Element           elCommentLine, prevElCommentLine;
@@ -3913,7 +3911,7 @@ static void         PutInComment (UCHAR_T c)
 /*----------------------------------------------------------------------
    EndOfComment    End of a HTML comment.
   ----------------------------------------------------------------------*/
-static void         EndOfComment (CHAR_T c)
+static void         EndOfComment (char c)
 {
    if (LgBuffer > 0)
      {
@@ -3978,7 +3976,7 @@ static void         EndOfDoctypeDecl (char c)
 /*----------------------------------------------------------------------
    EndOfPI	A Processing Instruction has been read
   ----------------------------------------------------------------------*/
-static void         EndOfPI (CHAR_T c)
+static void         EndOfPI (char c)
 {
    CloseBuffer ();
    /* process the Processing Instruction available in inputBuffer */
@@ -3990,7 +3988,7 @@ static void         EndOfPI (CHAR_T c)
 /*----------------------------------------------------------------------
    Do_nothing      Do nothing.
   ----------------------------------------------------------------------*/
-static void         Do_nothing (CHAR_T c)
+static void         Do_nothing (char c)
 {
 }
 
@@ -4001,7 +3999,7 @@ typedef struct _Transition *PtrTransition;
 typedef struct _Transition
   {				/* a transition of the automaton in
 				   "executable" form */
-     UCHAR_T       trigger;	/* the imput character that triggers
+     unsigned char       trigger;	/* the imput character that triggers
 					   the transition */
      Proc                action;	/* the procedure to be called when
 					   the transition occurs */
@@ -4027,7 +4025,7 @@ typedef struct _sourceTransition
   {				/* a transition of the automaton in
 				   "source" form */
      State               initState;	/* initial state of transition */
-     CHAR_T                trigger;	/* the imput character that triggers
+     char                trigger;	/* the imput character that triggers
 					   the transition */
      Proc                transitionAction;	/* the procedure to be called when
 						   the transition occurs */
@@ -4253,12 +4251,12 @@ void                   FreeHTMLParser (void)
    GetNextChar returns the next character in the imput file or buffer,
    whatever it is.
   ----------------------------------------------------------------------*/
-static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
+static char    GetNextChar (FILE *infile, char* buffer, int *index,
 			      ThotBool *endOfFile)
 {
   unsigned char *srcbuf;
   wchar_t        wcharRead;
-  CHAR_T         charRead;
+  char         charRead;
   char           fallback[5];
   char           extrabuf[7];
   unsigned char *ptrextrabuf;
@@ -4282,7 +4280,7 @@ static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
 						       HTMLcontext.encoding);
       (*index) += nbBytes;
       if (wcharRead != 0)
-	charRead = (CHAR_T) wcharRead;
+	charRead = (char) wcharRead;
       else
 	*endOfFile = TRUE;
     }
@@ -4437,9 +4435,9 @@ void            SetElemLineNumber (Element el)
    GetNextInputChar        returns the next non-null character in the
    input file or buffer.
   ----------------------------------------------------------------------*/
-CHAR_T      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
+char      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 {
-  CHAR_T    charRead;
+  char    charRead;
 
   charRead = EOS;
   *endOfFile = FALSE;
@@ -4495,7 +4493,7 @@ CHAR_T      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
   ----------------------------------------------------------------------*/
 static void        HTMLparse (FILE * infile, char* HTMLbuf)
 {
-   UCHAR_T         charRead; 
+   unsigned char         charRead; 
    ThotBool        match;
    PtrTransition   trans;
 
@@ -4737,12 +4735,11 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
    input text comes from either the infile file or the text
    buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
-void           ReadTextFile (FILE *infile, char* textbuf,
-			     Document doc, STRING pathURL)
+void ReadTextFile (FILE *infile, char *textbuf, Document doc, char *pathURL)
 {
   Element      parent, el, prev;
   ElementType  elType;
-  UCHAR_T      charRead;
+  unsigned char      charRead;
   ThotBool     endOfTextFile;
   Element      elLeaf;
 
@@ -4888,9 +4885,9 @@ void           ReadTextFile (FILE *infile, char* textbuf,
   UNDEFINED_CHARSET.
   The type of the document (given by the first element name)
   ----------------------------------------------------------------------*/
-void CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec, ThotBool *docType,
+void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 		     ThotBool *isXML, int *parsingLevel, CHARSET *charset,
-		     STRING charsetname, DocumentType *thotType)
+		     char *charsetname, DocumentType *thotType)
 {
   gzFile      stream;
   char        file_name[MAX_LENGTH];
@@ -5154,7 +5151,7 @@ void CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec, ThotBool *docType,
   Parses the loaded file to detect if it includes a charset value 
   in a META element 
   ----------------------------------------------------------------------*/
-void CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset, STRING charsetname)
+void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 {
   gzFile     stream;
   char       file_name[MAX_LENGTH];
@@ -5601,7 +5598,7 @@ static void            CheckBlocksInCharElem (Document doc)
    CheckAbstractTree
    Check the Thot abstract tree and create the missing elements.
   ----------------------------------------------------------------------*/
-void            CheckAbstractTree (CHAR_T* pathURL, Document doc)
+void            CheckAbstractTree (char* pathURL, Document doc)
 {
    ElementType	elType, newElType, headElType;
    Element	elRoot;
@@ -6187,7 +6184,7 @@ void            CheckAbstractTree (CHAR_T* pathURL, Document doc)
   ----------------------------------------------------------------------*/
 static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Document doc)
 {
-   CHAR_T       tag[20];
+   char       tag[20];
    Element      elem;
    int          i;
    SSchema      schema;
@@ -6266,7 +6263,7 @@ static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Docum
 /*----------------------------------------------------------------------
    ParseIncludedHTML
   ----------------------------------------------------------------------*/
-void          ParseIncludedHTML (Element elem, STRING closingTag)
+void ParseIncludedHTML (Element elem, char *closingTag)
 {
    Element    oldLastElement;
    ThotBool   oldLastElementClosed;
@@ -6294,11 +6291,11 @@ void          ParseIncludedHTML (Element elem, STRING closingTag)
    ParseSubTree
    
   ----------------------------------------------------------------------*/
-void            ParseSubTree (CHAR_T* HTMLbuf, Element lastelem,
+void            ParseSubTree (char* HTMLbuf, Element lastelem,
 			      ThotBool isclosed, Document doc)
 {
    ElementType  elType;
-   CHAR_T*      schemaName;
+   char*      schemaName;
 #ifdef _I18N_
    char         html_buff [4 * MAX_TXT_LEN];
    char*        ptrHTMLbuf = html_buff;
@@ -6344,16 +6341,16 @@ void            ParseSubTree (CHAR_T* HTMLbuf, Element lastelem,
    The parameter pathURL gives the original (local or
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
-void              StartParser (Document doc, CHAR_T* htmlFileName,
-			       CHAR_T* documentName, CHAR_T* documentDirectory,
-			       CHAR_T* pathURL, ThotBool plainText)
+void              StartParser (Document doc, char* htmlFileName,
+			       char* documentName, char* documentDirectory,
+			       char* pathURL, ThotBool plainText)
 {
   Element         el, oldel;
   AttributeType   attrType;
   Attribute       attr;
-  CHAR_T*         s;
-  CHAR_T          tempname[MAX_LENGTH];
-  CHAR_T          temppath[MAX_LENGTH];
+  char*         s;
+  char          tempname[MAX_LENGTH];
+  char          temppath[MAX_LENGTH];
   int             length;
   ThotBool        isHTML;
   char            www_file_name[MAX_LENGTH];
@@ -6401,14 +6398,14 @@ void              StartParser (Document doc, CHAR_T* htmlFileName,
 	length = strlen (pathURL);
 	if (strcmp (pathURL, htmlFileName) == 0)
 	  {
-	    docURL = TtaAllocString (length + 1);
+	    docURL = TtaGetMemory (length + 1);
 	    strcpy (docURL, pathURL);
 	  }
 	else
 	  {
 	    length += strlen (htmlFileName) + 20;
-	    docURL = TtaAllocString (length+1);
-	    usprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
+	    docURL = TtaGetMemory (length+1);
+	    sprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
 	  }
 	/* do not check the Thot abstract tree against the structure */
 	/* schema while building the Thot document. */

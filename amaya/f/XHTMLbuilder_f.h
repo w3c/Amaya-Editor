@@ -19,16 +19,16 @@ extern Element PutInContent ( STRING ChrString,
                               ParserData *context );
 extern void CreateHTMLAttribute ( Element el,
                                   AttributeType attrType,
-                                  CHAR_T* text,
+                                  char* text,
                                   ThotBool isInvalid,
                                   Document doc,
                                   Attribute *lastAttribute,
                                   Element *lastAttrElement );
-extern void HTMLTypeAttrValue ( CHAR_T *val,
+extern void HTMLTypeAttrValue ( char *val,
                                 Attribute lastAttribute,
                                 Element lastAttrElement,
                                 ParserData *context );
-extern void XhtmlTypeAttrValue ( CHAR_T *val,
+extern void XhtmlTypeAttrValue ( char *val,
                                  Attribute currentAttribute,
                                  Element lastAttrElement,
                                  ParserData *context );
@@ -39,14 +39,14 @@ extern void CreateAttrWidthPercentPxl ( STRING buffer,
 extern void CreateAttrIntSize ( STRING buffer,
                                 Element el,
                                 Document doc );
-extern void EndOfHTMLAttributeValue ( CHAR_T *attrValue,
+extern void EndOfHTMLAttributeValue ( char *attrValue,
                                       AttributeMapping *lastMappedAttr,
                                       Attribute currentAttribute,
                                       Element lastAttrElement,
                                       ThotBool UnknownAttr,
                                       ParserData *context,
                                       ThotBool isXML );
-extern void MapHTMLAttributeValue ( CHAR_T *AttrVal,
+extern void MapHTMLAttributeValue ( char *AttrVal,
                                     AttributeType attrType,
                                     int *value );
 
@@ -65,16 +65,16 @@ extern Element PutInContent (/* STRING ChrString,
                                 ParserData *context */);
 extern void CreateHTMLAttribute (/* Element el,
                                     AttributeType attrType,
-                                    CHAR_T* text,
+                                    char* text,
                                     ThotBool isInvalid,
                                     Document doc,
                                     Attribute *lastAttribute,
                                     Element *lastAttrElement */);
-extern void HTMLTypeAttrValue (/* CHAR_T *val,
+extern void HTMLTypeAttrValue (/* char *val,
                                   Attribute lastAttribute,
                                   Element lastAttrElement,
                                   ParserData *context */);
-extern void XhtmlTypeAttrValue (/* CHAR_T *val,
+extern void XhtmlTypeAttrValue (/* char *val,
                                    Attribute currentAttribute,
                                    Element lastAttrElement,
                                    ParserData *context */);
@@ -85,14 +85,14 @@ extern void CreateAttrWidthPercentPxl (/* STRING buffer,
 extern void CreateAttrIntSize (/* STRING buffer,
                                   Element el,
                                   Document doc */);
-extern void EndOfHTMLAttributeValue (/* CHAR_T *attrValue,
+extern void EndOfHTMLAttributeValue (/* char *attrValue,
                                         AttributeMapping *lastMappedAttr,
                                         Attribute currentAttribute,
                                         Element lastAttrElement,
                                         ThotBool UnknownAttr,
                                         ParserData *context,
                                         ThotBool isXML */);
-extern void MapHTMLAttributeValue (/* CHAR_T *AttrVal,
+extern void MapHTMLAttributeValue (/* char *AttrVal,
                                       AttributeType attrType,
                                       int *value */);
 

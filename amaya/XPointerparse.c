@@ -136,7 +136,7 @@ static void AddChild (XPointerContextPtr ctx, char *node)
       if (curNode->node == NULL)
 	{
 	  curNode->nodeSize = 30 + strlen (node) * 2 + 1;
-	  curNode->node = (char *) TtaGetMemory (sizeof (CHAR_T) * curNode->nodeSize);
+	  curNode->node = (char *) TtaGetMemory (sizeof (char) * curNode->nodeSize);
 	}
       else
 	{
@@ -144,7 +144,7 @@ static void AddChild (XPointerContextPtr ctx, char *node)
 	  /* we do a free, rather than a calloc because we're not interested
 	     in keeping whatever was stored in this buffer */
 	  TtaFreeMemory (curNode->node);
-	  curNode->node =  (char *) TtaGetMemory (sizeof (CHAR_T) * (curNode->nodeSize));
+	  curNode->node =  (char *) TtaGetMemory (sizeof (char) * (curNode->nodeSize));
 	}
     }
   strcpy (curNode->node, node);

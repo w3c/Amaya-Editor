@@ -226,7 +226,7 @@ static ThotBool  itemChecked = FALSE;
 #include "trans_f.h"
 #include "transparse_f.h"
 #include "UIcss_f.h"
-#include "ustring.h"
+#include "string.h"
 #include "XMLparser_f.h"
 #include "Xml2thot_f.h"
 
@@ -338,7 +338,7 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
 void DocumentInfo (Document document, View view)
 {
 #ifndef _WINDOWS
-  CHAR_T         *content;
+  char         *content;
 
   /* Main form */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
@@ -2094,12 +2094,12 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
   ----------------------------------------------------------------------*/
 void               LatinReading (Document document, View view)
 {
-   CHAR_T*         tempdocument = NULL;
-   CHAR_T          documentname[MAX_LENGTH];
-   CHAR_T          tempdir[MAX_LENGTH];
+   char*         tempdocument = NULL;
+   char          documentname[MAX_LENGTH];
+   char          tempdir[MAX_LENGTH];
    CHARSET         charset;
-   CHAR_T          htmlErrFile [80];
-   CHAR_T          charsetname[MAX_LENGTH];
+   char          htmlErrFile [80];
+   char          charsetname[MAX_LENGTH];
    int             parsingLevel;
    ThotBool        xmlDec, withDoctype, isXML;
    DocumentType    thotType;
@@ -2123,7 +2123,7 @@ void               LatinReading (Document document, View view)
    HTMLErrorsFound = FALSE;
    XMLErrorsFound = FALSE;
    /* remove the log file */
-   usprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
+   sprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
 	     TempFileDirectory, DIR_SEP, document, DIR_SEP);
    if (TtaFileExist (htmlErrFile))
      TtaFileUnlink (htmlErrFile);
@@ -2134,7 +2134,7 @@ void               LatinReading (Document document, View view)
    
    /* force the charset to ISO Latin1 */
    TtaSetDocumentCharset (document, ISO_8859_1);
-   DocumentMeta[document]->charset = TtaWCSdup ("iso-8859-1");
+   DocumentMeta[document]->charset = TtaStrdup ("iso-8859-1");
 
    StartXmlParser (document, tempdocument, documentname, tempdir,
 		   tempdocument, xmlDec, withDoctype);
@@ -2176,7 +2176,7 @@ static Document  LoadDocument (Document doc, char *pathname,
   DocumentType        docType;
   CHARSET             charset, httpcharset;
   CHARSET             metacharset = UNDEFINED_CHARSET;
-  CHAR_T              charsetname[MAX_LENGTH];
+  char              charsetname[MAX_LENGTH];
   char               *charEncoding;
   char               *tempdocument;
   char               *tempdir;
@@ -2527,7 +2527,7 @@ static Document  LoadDocument (Document doc, char *pathname,
 	}
       
       /* save the document name into the document table */
-      s = TtaWCSdup (pathname);
+      s = TtaStrdup (pathname);
       if (DocumentURLs[newdoc] != NULL)
 	{
 	  TtaFreeMemory (DocumentURLs[newdoc]);
@@ -2543,9 +2543,9 @@ static Document  LoadDocument (Document doc, char *pathname,
 	DocumentMetaClear (DocumentMeta[newdoc]);
       else
 	DocumentMeta[newdoc] = DocumentMetaDataAlloc ();
-      DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
+      DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
       if (initial_url && strcmp (pathname, initial_url))
-	DocumentMeta[newdoc]->initial_url = TtaWCSdup (initial_url);
+	DocumentMeta[newdoc]->initial_url = TtaStrdup (initial_url);
       else
 	DocumentMeta[newdoc]->initial_url = NULL;
       DocumentMeta[newdoc]->method = (ClickEvent) method;
@@ -2561,33 +2561,33 @@ static Document  LoadDocument (Document doc, char *pathname,
       if (charset != UNDEFINED_CHARSET)
 	{
 	  TtaSetDocumentCharset (newdoc, charset);
-	  DocumentMeta[newdoc]->charset = TtaWCSdup (charsetname);
+	  DocumentMeta[newdoc]->charset = TtaStrdup (charsetname);
 	}
       else if (httpcharset != UNDEFINED_CHARSET && charEncoding)
 	{
 	  TtaSetDocumentCharset (newdoc, httpcharset);
-	  DocumentMeta[newdoc]->charset = TtaWCSdup (charEncoding);
+	  DocumentMeta[newdoc]->charset = TtaStrdup (charEncoding);
 	}
       else if (metacharset != UNDEFINED_CHARSET)
 	{
 	  TtaSetDocumentCharset (newdoc, metacharset);
-	  DocumentMeta[newdoc]->charset = TtaWCSdup (charsetname);
+	  DocumentMeta[newdoc]->charset = TtaStrdup (charsetname);
 	}
       else if (charsetname[0] != EOS)
-	DocumentMeta[newdoc]->charset = TtaWCSdup (charsetname);
+	DocumentMeta[newdoc]->charset = TtaStrdup (charsetname);
 
       /*
       ** copy some HTTP headers to the metadata 
       */
       /* content-type */
       if (http_content_type)
-	DocumentMeta[newdoc]->content_type = TtaWCSdup (http_content_type);
+	DocumentMeta[newdoc]->content_type = TtaStrdup (http_content_type);
       else
 	DocumentMeta[newdoc]->content_type = NULL;
       /* content-length */
       s = HTTP_headers (http_headers, AM_HTTP_CONTENT_LENGTH);
       if (s)
-	DocumentMeta[newdoc]->content_length = TtaWCSdup (s);
+	DocumentMeta[newdoc]->content_length = TtaStrdup (s);
       else
 	DocumentMeta[newdoc]->content_length = NULL;
 
@@ -2825,7 +2825,7 @@ void                Reload (Document doc, View view)
      }
 
    if (DocumentMeta[doc]->form_data)
-     form_data = TtaWCSdup (DocumentMeta[doc]->form_data);
+     form_data = TtaStrdup (DocumentMeta[doc]->form_data);
    else
      form_data = NULL;
    method = DocumentMeta[doc]->method;
@@ -3027,7 +3027,7 @@ void                ShowSource (Document document, View view)
      if (sourceDoc > 0)
        {
 	 DocumentSource[document] = sourceDoc;
-	 s = TtaWCSdup (DocumentURLs[document]);
+	 s = TtaStrdup (DocumentURLs[document]);
 	 DocumentURLs[sourceDoc] = s;
 	 DocumentMeta[sourceDoc] = DocumentMetaDataAlloc ();
 	 DocumentMeta[sourceDoc]->form_data = NULL;
@@ -3372,7 +3372,7 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 	   if (DocumentURLs[newdoc] == NULL)
 	     {
 	       /* save the document name into the document table */
-	       s = TtaWCSdup (pathname);
+	       s = TtaStrdup (pathname);
 	       DocumentURLs[newdoc] = s;
 	       TtaSetTextZone (newdoc, 1, 1, s);
 	       /* save the document's formdata into the document table */
@@ -3380,9 +3380,9 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 		   DocumentMetaClear (DocumentMeta[(int) newdoc]);
 	       else
 		 DocumentMeta[newdoc] = DocumentMetaDataAlloc ();
-	       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
+	       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
 	       if (strcmp (pathname, initial_url))
-		 DocumentMeta[newdoc]->initial_url = TtaWCSdup (initial_url);
+		 DocumentMeta[newdoc]->initial_url = TtaStrdup (initial_url);
 	       else
 		 DocumentMeta[newdoc]->initial_url = NULL;
 	       DocumentMeta[newdoc]->method = method;
@@ -3588,9 +3588,9 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
        ctx->history = history;
        ctx->target = target;
        ctx->documentname = documentname;
-       ctx->initial_url = TtaWCSdup (pathname);
+       ctx->initial_url = TtaStrdup (pathname);
        if (form_data)
-          ctx->form_data = TtaWCSdup (form_data);
+          ctx->form_data = TtaStrdup (form_data);
        else
            ctx->form_data = NULL;
        ctx->method = CE_event;
@@ -4808,7 +4808,7 @@ ThotBool CheckMakeDirectory (char *name, ThotBool recursive)
 	return FALSE;
       
       /* try to create all the missing directories up to name */
-      tmp_name = TtaWCSdup (name);
+      tmp_name = TtaStrdup (name);
       ptr = tmp_name;
       /* create all the intermediary directories */
       while (*ptr != EOS)
@@ -5015,7 +5015,7 @@ void                InitAmaya (NotifyEvent * event)
    tempname = TtaGetMemory (MAX_LENGTH);
    sprintf (tempname, "%s%c%s.css", s, DIR_SEP, HTAppName);
    if (TtaFileExist (tempname))
-     UserCSS = TtaWCSdup (tempname);
+     UserCSS = TtaStrdup (tempname);
    else
      /* no User preferences */
      UserCSS = NULL;

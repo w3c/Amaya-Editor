@@ -28,15 +28,15 @@
 
 #ifdef _WINDOWS
 #include "resource.h"
-static CHAR_T       currentDocToSave[MAX_LENGTH];
-static CHAR_T       currentPathName[MAX_LENGTH];
+static char       currentDocToSave[MAX_LENGTH];
+static char       currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
 #endif /* _WINDOWS */
 
 
 #define StdDefaultName "Overview.html"
 static STRING       DefaultName;
-static CHAR_T       tempSavedObject[MAX_LENGTH];
+static char       tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
    HTML_ATTR_codebase,
@@ -55,7 +55,7 @@ static int          SRC_attr_tab[] = {
 static STRING       QuotedText;
 
 
-static CHAR_T *HTMLDocTypes_1[] =
+static char *HTMLDocTypes_1[] =
 {
   "\"-//W3C//DTD XHTML Basic 1.0//EN\"",
   "\"-//W3C//DTD XHTML 1.0 Strict//EN\"",
@@ -66,7 +66,7 @@ static CHAR_T *HTMLDocTypes_1[] =
   "\"-//W3C//DTD HTML 4.01 Frameset//EN\""
 };
 
-static CHAR_T *HTMLDocTypes_2[] =
+static char *HTMLDocTypes_2[] =
 {
   "\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\n",
   "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n",
@@ -99,7 +99,7 @@ static CHAR_T *HTMLDocTypes_2[] =
 LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				 LPARAM lParam)
 {
-  static CHAR_T txt [500];
+  static char txt [500];
   
   switch (msg)
     {
@@ -166,7 +166,7 @@ ThotBool            CheckGenerator (NotifyElement * event)
 {
   AttributeType      attrType;
   Attribute          attr;
-  CHAR_T             buff[MAX_LENGTH];
+  char             buff[MAX_LENGTH];
   STRING             ptr;
   int                length;
 
@@ -322,9 +322,9 @@ void                SetRelativeURLs (Document document, STRING newpath)
   Attribute           attr;
   AttributeType       attrType;
   Language            lang;
-  CHAR_T                old_url[MAX_LENGTH];
-  CHAR_T                oldpath[MAX_LENGTH];
-  CHAR_T                tempname[MAX_LENGTH];
+  char                old_url[MAX_LENGTH];
+  char                oldpath[MAX_LENGTH];
+  char                tempname[MAX_LENGTH];
   STRING              new_url;
   int                 index, max;
   int                 len;
@@ -422,8 +422,8 @@ void                SetRelativeURLs (Document document, STRING newpath)
 static void         InitSaveForm (Document document, View view, STRING pathname)
 {
 #ifndef _WINDOWS
-   CHAR_T             buffer[3000];
-   CHAR_T             s[MAX_LENGTH];
+   char             buffer[3000];
+   char             s[MAX_LENGTH];
    int              i;
 #endif /* WINDOWS */
 
@@ -518,7 +518,7 @@ void InitSaveObjectForm (Document document, View view, STRING object,
 			 STRING pathname)
 {
 #ifndef _WINDOWS
-   CHAR_T                tempdir[MAX_LENGTH];
+   char                tempdir[MAX_LENGTH];
 #endif /* _WINDOWS */
 
    if (SavingDocument != 0 || SavingObject != 0)
@@ -559,8 +559,8 @@ void                DeleteTempObjectFile (void)
   ----------------------------------------------------------------------*/
 void                DoSaveObjectAs (void)
 {
-   CHAR_T           tempfile[MAX_LENGTH];
-   CHAR_T           msg[MAX_LENGTH];
+   char           tempfile[MAX_LENGTH];
+   char           msg[MAX_LENGTH];
    ThotBool         dst_is_local;
    int              res;
 
@@ -618,7 +618,7 @@ void                DoSaveObjectAs (void)
   ----------------------------------------------------------------------*/
 void                SaveDocumentAs (Document doc, View view)
 {
-   CHAR_T           tempname[MAX_LENGTH];
+   char           tempname[MAX_LENGTH];
    int              i;
 
    if ((SavingDocument != 0 && SavingDocument != doc) ||
@@ -642,13 +642,13 @@ void                SaveDocumentAs (Document doc, View view)
 	 {
 	   tempname[i-2] = EOS;
 	   TtaFreeMemory (DocumentURLs[doc]);
-	   DocumentURLs[doc] = TtaWCSdup (tempname);
+	   DocumentURLs[doc] = TtaStrdup (tempname);
 	 }
        else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
 	 {
 	   tempname[i-1] = EOS;
 	   TtaFreeMemory (DocumentURLs[doc]);
-	   DocumentURLs[doc] = TtaWCSdup (tempname);
+	   DocumentURLs[doc] = TtaStrdup (tempname);
 	 }
 
        /* if it is a Web document use the current SavePath */
@@ -714,8 +714,8 @@ void         SetNamespacesAndDTD (Document doc)
    CHARSET              charset;
    STRING               ptr;
 #define MAX_CHARSET_LEN 50
-   CHAR_T               Charset[MAX_CHARSET_LEN];
-   CHAR_T		buffer[200];
+   char               Charset[MAX_CHARSET_LEN];
+   char		buffer[200];
    ThotBool		useMathML, useGraphML, useFrames;
 
    root = TtaGetMainRoot (doc);
@@ -953,12 +953,12 @@ void         SetNamespacesAndDTD (Document doc)
 /*----------------------------------------------------------------------
    RestartParser
   ----------------------------------------------------------------------*/
-static void RestartParser (Document doc, CHAR_T *localFile, CHAR_T *tempdir,
-			   CHAR_T *documentname)
+static void RestartParser (Document doc, char *localFile, char *tempdir,
+			   char *documentname)
 {
   CHARSET             charset;
-  CHAR_T              htmlErrFile [80];
-  CHAR_T              charsetname[MAX_LENGTH];
+  char              htmlErrFile [80];
+  char              charsetname[MAX_LENGTH];
   int                 parsingLevel;
   int                 i;
   ThotBool            xmlDec, withDoctype, isXML;
@@ -1023,9 +1023,9 @@ static void RestartParser (Document doc, CHAR_T *localFile, CHAR_T *tempdir,
   ----------------------------------------------------------------------*/
 static void       RedisplaySourceFile (Document doc)
 {
-  CHAR_T             *localFile;
-  CHAR_T	      documentname[MAX_LENGTH];
-  CHAR_T	      tempdir[MAX_LENGTH];
+  char             *localFile;
+  char	      documentname[MAX_LENGTH];
+  char	      tempdir[MAX_LENGTH];
   NotifyElement       event;
 
   if (DocumentTypes[doc] == docHTML ||
@@ -1058,8 +1058,8 @@ static ThotBool SaveDocumentLocally (Document doc, STRING directoryName,
 				     STRING documentName)
 {
   STRING              ptr;
-  CHAR_T              tempname[MAX_LENGTH];
-  CHAR_T              docname[100];
+  char              tempname[MAX_LENGTH];
+  char              docname[100];
   ThotBool            ok;
 
 #ifdef AMAYA_DEBUG
@@ -1124,11 +1124,11 @@ static ThotBool SaveDocumentLocally (Document doc, STRING directoryName,
   It ask the user whether an extra name suffix should be added or
   abort.
   ----------------------------------------------------------------------*/
-static ThotBool AddNoName (Document document, View view, CHAR_T *url,
+static ThotBool AddNoName (Document document, View view, char *url,
 			   ThotBool *ok)
 {
-   CHAR_T            msg[MAX_LENGTH];
-   CHAR_T            documentname[MAX_LENGTH];
+   char            msg[MAX_LENGTH];
+   char            documentname[MAX_LENGTH];
    int             len;
 
   len = strlen (url);
@@ -1173,9 +1173,9 @@ static int SafeSaveFileThroughNet (Document doc, STRING localfile,
 				   STRING remotefile, PicType filetype,
 				   ThotBool use_preconditions)
 {
-  CHAR_T              msg[MAX_LENGTH];
-  CHAR_T              tempfile[MAX_LENGTH]; /* File name used to refetch */
-  CHAR_T              tempURL[MAX_LENGTH];  /* May be redirected */
+  char              msg[MAX_LENGTH];
+  char              tempfile[MAX_LENGTH]; /* File name used to refetch */
+  char              tempURL[MAX_LENGTH];  /* May be redirected */
   STRING            verify_publish;
   int               res;
   int               mode = 0;
@@ -1527,9 +1527,9 @@ Document       GetDocFromSource (Document sourceDoc)
 void                Synchronize (Document document, View view)
 {
    NotifyElement       event;
-   CHAR_T*             tempdocument = NULL;
-   CHAR_T              documentname[MAX_LENGTH];
-   CHAR_T              tempdir[MAX_LENGTH];
+   char*             tempdocument = NULL;
+   char              documentname[MAX_LENGTH];
+   char              tempdir[MAX_LENGTH];
    DisplayMode         dispMode;
    Document            htmlDoc, otherDoc;
 
@@ -1633,11 +1633,11 @@ void                Synchronize (Document document, View view)
 void                SaveDocument (Document doc, View view)
 {
   NotifyElement       event;
-  CHAR_T              tempname[MAX_LENGTH];
-  CHAR_T              localFile[MAX_LENGTH];
-  CHAR_T              documentname[MAX_LENGTH];
-  CHAR_T              tempdir[MAX_LENGTH];
-  CHAR_T*             ptr;
+  char              tempname[MAX_LENGTH];
+  char              localFile[MAX_LENGTH];
+  char              documentname[MAX_LENGTH];
+  char              tempdir[MAX_LENGTH];
+  char*             ptr;
   int                 i, res;
   Document	      htmlDoc;
   DisplayMode         dispMode;
@@ -1687,13 +1687,13 @@ void                SaveDocument (Document doc, View view)
     {
       tempname[i-2] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
-      DocumentURLs[doc] = TtaWCSdup (tempname);
+      DocumentURLs[doc] = TtaStrdup (tempname);
     }
   else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
     {
       tempname[i-1] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
-      DocumentURLs[doc] = TtaWCSdup (tempname);
+      DocumentURLs[doc] = TtaStrdup (tempname);
     }
 
 #ifdef AMAYA_DEBUG
@@ -1720,7 +1720,7 @@ void                SaveDocument (Document doc, View view)
 	    strcat (tempname, URL_STR);
 	  strcat (tempname, DefaultName);
 	  TtaFreeMemory (DocumentURLs[doc]);
-	  DocumentURLs[doc] = TtaWCSdup (tempname);
+	  DocumentURLs[doc] = TtaStrdup (tempname);
 	  DocumentMeta[doc]->put_default_name = TRUE; 
 	  if (DocumentTypes[doc] == docHTML)
 	      /* it's an HTML document. It could have a source doc */
@@ -1730,7 +1730,7 @@ void                SaveDocument (Document doc, View view)
 		/* it has a source document */
 		{
 		TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
-		DocumentURLs[DocumentSource[doc]] = TtaWCSdup (tempname);
+		DocumentURLs[DocumentSource[doc]] = TtaStrdup (tempname);
 		}
 	      }
 	  else if (DocumentTypes[doc] == docSource)
@@ -1740,7 +1740,7 @@ void                SaveDocument (Document doc, View view)
 	      if (htmlDoc)
 		 {
 		 TtaFreeMemory (DocumentURLs[htmlDoc]);
-		 DocumentURLs[htmlDoc] = TtaWCSdup (tempname);
+		 DocumentURLs[htmlDoc] = TtaStrdup (tempname);
 		 }
 	      }
 	}
@@ -1866,9 +1866,9 @@ void                   BackUpDocs ()
 {
   Document        doc;
   FILE           *f;
-  CHAR_T          pathname[MAX_LENGTH];
-  CHAR_T          docname[MAX_LENGTH];
-  CHAR_T*         ptr;
+  char          pathname[MAX_LENGTH];
+  char          docname[MAX_LENGTH];
+  char*         ptr;
   char            tempdocA[MAX_LENGTH];
   char            docnameA[MAX_LENGTH];  
   int             l;
@@ -1940,7 +1940,7 @@ ThotBool DocumentToSave (NotifyDialog * event)
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
 static void UpdateImages (Document doc, ThotBool src_is_local,
-			  ThotBool dst_is_local, CHAR_T *imgbase, CHAR_T *newURL)
+			  ThotBool dst_is_local, char *imgbase, char *newURL)
 {
    AttributeType       attrType;
    ElementType         elType;
@@ -1948,16 +1948,16 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
    Element             el, root, content;
    LoadedImageDesc    *pImage;
    Language            lang;
-   CHAR_T              tempfile[MAX_LENGTH];
-   CHAR_T              localpath[MAX_LENGTH];
-   CHAR_T              oldpath[MAX_LENGTH];
-   CHAR_T              oldname[MAX_LENGTH];
-   CHAR_T              tempname[MAX_LENGTH];
-   CHAR_T              imgname[MAX_LENGTH];
-   CHAR_T              url[MAX_LENGTH];
-   CHAR_T              *buf, *ptr;
-   CHAR_T              *sStyle, *stringStyle;
-   CHAR_T*             oldStyle;
+   char              tempfile[MAX_LENGTH];
+   char              localpath[MAX_LENGTH];
+   char              oldpath[MAX_LENGTH];
+   char              oldname[MAX_LENGTH];
+   char              tempname[MAX_LENGTH];
+   char              imgname[MAX_LENGTH];
+   char              url[MAX_LENGTH];
+   char              *buf, *ptr;
+   char              *sStyle, *stringStyle;
+   char*             oldStyle;
    int                 buflen, max, index;
 
    if (imgbase[0] != EOS)
@@ -2111,7 +2111,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 				       /* image was already loaded */
 				       if (pImage->originalName != NULL)
 					 TtaFreeMemory (pImage->originalName);
-				       pImage->originalName = TtaWCSdup (tempname);
+				       pImage->originalName = TtaStrdup (tempname);
 				       if (TtaFileExist(pImage->localName))
 					 pImage->status = IMAGE_MODIFIED;
 				       else
@@ -2269,7 +2269,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 				       /* image was already loaded */
 				       if (pImage->originalName != NULL)
 					 TtaFreeMemory (pImage->originalName);
-				       pImage->originalName = TtaWCSdup (tempname);
+				       pImage->originalName = TtaStrdup (tempname);
 				       if (TtaFileExist(pImage->localName))
 					 pImage->status = IMAGE_MODIFIED;
 				       else
@@ -2308,8 +2308,8 @@ void                DoSaveAs (void)
   STRING              documentFile;
   STRING              tempname, oldLocal, newLocal;
   STRING              imagePath, base;
-  CHAR_T              imgbase[MAX_LENGTH];
-  CHAR_T              url_sep;
+  char              imgbase[MAX_LENGTH];
+  char              url_sep;
   int                 res;
   int                 len;
   DisplayMode         dispMode;
@@ -2573,12 +2573,12 @@ void                DoSaveAs (void)
 	  if (TextFormat || !SaveAsText)
 	    {
 	      TtaFreeMemory (DocumentURLs[doc]);
-	      DocumentURLs[doc] = TtaWCSdup (documentFile);
+	      DocumentURLs[doc] = TtaStrdup (documentFile);
 	      TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	      if (DocumentSource[doc])
 		{
 	          TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
-	          DocumentURLs[DocumentSource[doc]] = TtaWCSdup (documentFile);
+	          DocumentURLs[DocumentSource[doc]] = TtaStrdup (documentFile);
 		}
 	      if (DocumentMeta[doc]->method == CE_TEMPLATE)
 		{
