@@ -1374,8 +1374,9 @@ void SetFontstyleAttr (Element el, Document doc)
   Language      lang;
 #ifndef _I18N_
   char          script;
+  char         *value;
 #endif
-  char         *value, text[2];
+  CHAR_T        text[2];
   ThotBool      italic;
 
   if (el != NULL)
@@ -1464,12 +1465,13 @@ void SetFontstyleAttr (Element el, Document doc)
 		    }
 		  else if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 		    {
-		      /* is there a single digit? */
-		      len = TtaGetTextLength (textEl);
+		      len = TtaGetElementVolume (textEl);
 		      if (len == 1)
+			/* the TEXT element contains a single character */
 			{
-			  len++;
-			  TtaGiveTextContent (textEl, text, &len, &lang);
+			  /* get that character */
+			  len = 2;
+			  TtaGiveBufferContent (textEl, text, len, &lang);
 #ifndef _I18N_
 			  script = TtaGetScript (lang);
 #endif
@@ -1478,25 +1480,37 @@ void SetFontstyleAttr (Element el, Document doc)
 			      script == 'L' &&
 #endif
 			      text[0] >= '0' && text[0] <= '9')
+			    /* that's a single digit */
 			    italic = FALSE;
-			}
-
-		      /* is there an attribute EntityName on that character? */
-		      attrType.AttrTypeNum = MathML_ATTR_EntityName;
-		      attr = TtaGetAttribute (textEl, attrType);
-		      if (attr)
-			{
-			  len = TtaGetTextAttributeLength (attr);
-			  if (len > 0)
+			  else
+#ifdef _I18N_
+			    /* is this the Unicode character for DifferentialD,
+			       ExponentialE or ImaginaryI? */
+			    if (text[0] == 0x2146 || text[0] == 0x2147 ||
+				text[0] == 0x2148)
+			      italic = FALSE;
+#else
 			    {
-			      value = TtaGetMemory (len+1);
-			      TtaGiveTextAttributeValue (attr, value, &len);
-			      if (strcmp (&value[1], "ImaginaryI;") == 0 ||
-				  strcmp (&value[1], "ExponentialE;") == 0 ||
-				  strcmp (&value[1], "DifferentialD;") == 0)
-				italic = FALSE;
-			      TtaFreeMemory (value);
+			    /* is there an attribute EntityName on that
+			       character? */
+			    attrType.AttrTypeNum = MathML_ATTR_EntityName;
+			    attr = TtaGetAttribute (textEl, attrType);
+			    if (attr)
+			      {
+				len = TtaGetTextAttributeLength (attr);
+				if (len > 0)
+				  {
+				    value = TtaGetMemory (len+1);
+				    TtaGiveTextAttributeValue (attr, value, &len);
+				    if (strcmp (&value[1], "ImaginaryI;") == 0 ||
+					strcmp (&value[1], "ExponentialE;") == 0 ||
+					strcmp (&value[1], "DifferentialD;") == 0)
+				      italic = FALSE;
+				    TtaFreeMemory (value);
+				  }
+			      }
 			    }
+#endif
 			}
 		    }
 		  if (italic)
