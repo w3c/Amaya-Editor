@@ -32,7 +32,7 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
 	:  wxNotebook( wxDynamicCast(p_parent_window, wxWindow),
 		       -1,
 		       wxDefaultPosition, wxDefaultSize,
-		       wxNB_FIXEDWIDTH /* only windows */ | wxNB_MULTILINE /* only windows */ )
+		       /*wxNB_FIXEDWIDTH*/ /* only windows |*/ wxNB_MULTILINE /* only windows */ )
 	   ,m_pAmayaWindow( p_amaya_window )
 	   ,m_ShouldLostFocus( FALSE )
 {
