@@ -1340,6 +1340,7 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
   double  w_scale, h_scale; 
   ThotBool is_translated, is_scaled;
 
+  x_trans = y_trans = w_scale = h_scale = 0;
   is_translated = is_scaled = FALSE;
   while (Trans)
     {
