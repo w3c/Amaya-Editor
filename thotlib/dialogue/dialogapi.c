@@ -4329,9 +4329,9 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
       gtk_widget_show (scr_window);
       /* set the widget size */
       if (number < 6)
-	gtk_widget_set_usize (scr_window, 150, number * 17);
+	gtk_widget_set_usize (scr_window, 180, number * 34);
       else
-	gtk_widget_set_usize (scr_window, 150, 100);
+	gtk_widget_set_usize (scr_window, 180, 100);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->hscrollbar, GTK_CAN_FOCUS);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->vscrollbar, GTK_CAN_FOCUS);
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scr_window), GTK_POLICY_AUTOMATIC,
