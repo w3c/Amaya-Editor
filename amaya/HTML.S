@@ -221,7 +221,7 @@ STRUCT
 	   coords = Text; tabindex = Integer;
 	 { coords         tabindex }
 	   onfocus = Text; onblur = Text;
-	 { onfocus         onfocus }
+	 { onfocus         onblur }
 	   InternalLink; ExternalLink) =
 	Basic_Set;
 
@@ -458,7 +458,7 @@ STRUCT
 	  { disabled         tabindex  onfocus  onblur}
 	    onchange = Text) =
 	  { onchange }
-	LIST OF (Option) - (Input);
+	LIST OF (CASE OF Option; OptGroup; END) - (Input);
 
   Option							{ OPTION }
      (ATTR Selected = Yes_; DefaultSelected = Yes_;
@@ -466,6 +466,11 @@ STRUCT
 	   disabled; label = Text; !Value_ = Text) =
          { disabled  label          value }
 	TEXT;
+
+  OptGroup							{ OPTGROUP }
+     (ATTR disabled; label) =
+	 { disabled  label }
+	LIST OF (Option);
 
   Text_Area							{ TEXTAREA }
      (ATTR !NAME; Rows = Integer; Columns = Integer;

@@ -257,6 +257,239 @@ char               *name, *value,
 }
 
 /*----------------------------------------------------------------------
+  SubmitOption
+  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SubmitOption (Element option, char *name, Document doc)
+#else
+static void         SubmitOption (option, name, doc)
+Element		    option;
+char		   *name;
+Document	    doc;
+#endif
+{
+  Element             elText;
+  Attribute           attr;
+  AttributeType       attrType;
+  int                 length;
+  char                value[MAX_LENGTH];
+  Language            lang;
+
+  /* check if element is selected */
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrTypeNum = HTML_ATTR_Selected;
+  attr = TtaGetAttribute (option, attrType);
+  if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Selected_VAL_Yes_)
+      {
+      attrType.AttrTypeNum = HTML_ATTR_Value_;
+      attr = TtaGetAttribute (option, attrType);
+      if (attr != NULL)
+        {
+	/* there's an explicit value */
+	length = MAX_LENGTH - 1;
+	TtaGiveTextAttributeValue (attr, value, &length);
+        }
+      else
+        {
+	/* use the attached text as an implicit value */
+	elText = TtaGetFirstChild(option);
+	length = MAX_LENGTH - 1;
+	TtaGiveTextContent (elText, value, &length, &lang);
+        }
+      /* remove extra spaces */
+      TrimSpaces ((char *) &name);
+      TrimSpaces ((char *) &value);
+      /* save the name/value pair of the element */
+      AddNameValue (name, value);
+      }
+}
+
+
+/*----------------------------------------------------------------------
+  SubmitOptionMenu
+  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void        SubmitOptionMenu (Element menu, Attribute nameAttr, Document doc)
+#else
+static void        SubmitOptionMenu (menu, nameAttr, doc)
+Element		   menu;
+Attribute	   nameAttr;
+Document	   doc;
+#endif
+{
+  ElementType         elType;
+  Element             option, child;
+  int                 length;
+  char                name[MAX_LENGTH];
+  
+  /* get the name of the Option Menu */
+  length = MAX_LENGTH - 1;
+  TtaGiveTextAttributeValue (nameAttr, name, &length);
+  if (name[0] != '\0')
+    {
+      /* there was a value for the NAME attribute. Now, process the
+	 selected option elements */
+      option = TtaGetFirstChild (menu);
+      while (option)
+	{
+	elType = TtaGetElementType (option);
+	if (elType.ElTypeNum == HTML_EL_Option)
+	   SubmitOption (option, name, doc);
+	else if (elType.ElTypeNum == HTML_EL_OptGroup)
+	   {
+	   child = TtaGetFirstChild (option);
+	   while (child)
+	      {
+	      elType = TtaGetElementType (child);
+	      if (elType.ElTypeNum == HTML_EL_Option)
+	         SubmitOption (child, name, doc);
+	      TtaNextSibling (&child);
+	      }
+	   }
+	TtaNextSibling (&option);
+      }
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  ResetOption
+  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void        ResetOption (Element option, boolean multipleSelects, boolean *defaultSelected, Document doc)
+#else
+static void        ResetOption (option,  multipleSelects, defaultSelected, doc)
+Element		   option;
+boolean		   multipleSelects;
+boolean		  *defaultSelected;
+Document	   doc;
+#endif
+{
+   Attribute           attr, def;
+   AttributeType       attrType;
+
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
+   def = TtaGetAttribute (option, attrType);
+   attrType.AttrTypeNum = HTML_ATTR_Selected;
+   attr = TtaGetAttribute (option, attrType);
+   if (!def) 
+	{
+	/* not a default option, so remove attribute Selected */
+	if (attr)
+	   TtaRemoveAttribute (option, attr, doc);
+	}
+   else if (!multipleSelects && defaultSelected) 
+	{
+	/* a default option, but multiple default options are not allowed and
+	   one other option has already been selected */
+	if (attr)
+	   TtaRemoveAttribute (option, attr, doc);
+	}
+   else if (multipleSelects || (!multipleSelects && !defaultSelected))
+	{
+	/* a default option and it may be selected */
+	if (!attr)
+	    {
+	    /* create a new selected attribute */
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (option, attr, doc);
+	    TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, option, doc);
+	    }
+	*defaultSelected = TRUE;
+	}
+}
+
+/*----------------------------------------------------------------------
+  ResetOptionMenu
+  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void        ResetOptionMenu (Element menu, Document doc)
+#else
+static void        ResetOptionMenu (menu, doc)
+Element		   menu;
+Document	   doc;
+#endif
+{
+   ElementType	       elType;
+   Element             option, firstOption, child;
+   Attribute           attr;
+   AttributeType       attrType;
+   boolean             multipleSelects, defaultSelected;
+
+  /* reset according to the default attribute */
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrTypeNum = HTML_ATTR_Multiple;
+  attr = TtaGetAttribute (menu, attrType);
+  if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Multiple_VAL_Yes_)
+    /* it's a multiple selects menu */
+    multipleSelects = TRUE;
+  else
+    multipleSelects = FALSE;
+  firstOption = NULL;
+  /* reset/set each option of the menu */
+  defaultSelected = FALSE;
+  /* menu is the root of the SELECT subtree */
+  option = TtaGetFirstChild (menu);
+  while (option)
+    {
+      elType = TtaGetElementType (option);
+      if (elType.ElTypeNum == HTML_EL_Option)
+	 {
+	 if (!firstOption)
+	    firstOption = option;
+         ResetOption (option, multipleSelects, &defaultSelected, doc);
+	 }
+      else if (elType.ElTypeNum == HTML_EL_OptGroup)
+	 {
+	 child = TtaGetFirstChild (option);
+	 while (child)
+	    {
+	    elType = TtaGetElementType (child);
+	    if (elType.ElTypeNum == HTML_EL_Option)
+	       {
+	       if (!firstOption)
+		  firstOption = child;
+	       ResetOption (child, multipleSelects, &defaultSelected, doc);
+	       }
+	    TtaNextSibling (&child);
+	    }
+	 }
+      TtaNextSibling (&option);
+    }
+
+  if (defaultSelected == FALSE && firstOption)
+    {
+      /* there's no explicit default option, so select the first option of
+	 the menu */
+      /* select the option if it's not already selected */
+      attrType.AttrTypeNum = HTML_ATTR_Selected;
+      attr = TtaGetAttribute (firstOption, attrType);
+      if (attr == NULL)
+	 {
+	 /* create a new selected attribute */
+	 attr = TtaNewAttribute (attrType);
+	 TtaAttachAttribute (firstOption, attr, doc);
+	 TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, firstOption, doc);
+	 }
+    }
+
+  if (!multipleSelects)
+    {
+    /* call the parser to check the default selections menu ? */
+    attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
+    TtaSearchAttribute (attrType, SearchInTree, menu, &option, &attr);
+    if (option)
+      /* Reset according to the default attribute */
+      OnlyOneOptionSelected (option, doc, FALSE);
+    }
+}
+
+/*----------------------------------------------------------------------
    ParseForm
    traverses the tree of element, applying the parse_input 
    function to each element with an attribute NAME                    
@@ -278,7 +511,6 @@ int                 mode;
    AttributeType       attrType, attrTypeS;
    int                 length;
    char                name[MAX_LENGTH], value[MAX_LENGTH];
-   boolean             multipleSelects, defaultSelected;
    int                 modified = FALSE;
    Language            lang;
 
@@ -301,128 +533,11 @@ int                 mode;
 		  elType = TtaGetElementType (el);
 		  switch (elType.ElTypeNum)
 			{
-			   case HTML_EL_Option_Menu:
+			  case HTML_EL_Option_Menu:
 			      if (mode == HTML_EL_Submit_Input)
-				{
-				  /* get the name of the Option Menu */
-				  length = MAX_LENGTH - 1;
-				  TtaGiveTextAttributeValue (attr, name, &length);
-				  if (name[0] != '\0')
-				    {
-				      /* there was a value for the NAME attribute. Now, process the
-					 selected option elements */
-				      elForm = TtaGetFirstChild (el);
-				      while (elForm) {
-					/* check if element is selected */
-					attrTypeS.AttrTypeNum = HTML_ATTR_Selected;
-					attrS = TtaGetAttribute (elForm, attrTypeS);					     
-					if (attrS != NULL && TtaGetAttributeValue (attrS) == HTML_ATTR_Selected_VAL_Yes_)
-					  {
-					    attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
-					    attrS = TtaGetAttribute (elForm, attrTypeS);
-					    if (attrS != NULL)
-					      {
-						/* there's an explicit value */
-						length = MAX_LENGTH - 1;
-						TtaGiveTextAttributeValue (attrS, value, &length);
-					      }
-					    else
-					      {
-						/* use the attached text as an implicit value */
-						elForm  = TtaGetFirstChild(elForm);
-						length = MAX_LENGTH - 1;
-						TtaGiveTextContent (elForm, value, &length, &lang);
-						elForm = TtaGetParent (elForm);
-					      }
-					    /* remove extra spaces */
-					    TrimSpaces ((char *) &name);
-					    TrimSpaces ((char *) &value);
-					    /* save the name/value pair of the element */
-					    AddNameValue (name, value);
-					  }
-					TtaNextSibling (&elForm);
-				      }
-				    }
-				}
-
+				 SubmitOptionMenu (el, attr, doc);
 			      else if (mode == HTML_EL_Reset_Input)
-				{
-				  /* reset according to the default attribute */
-				  attrTypeS.AttrTypeNum = HTML_ATTR_Multiple;
-				  attrS = TtaGetAttribute (el, attrTypeS);
-				  if (attrS != NULL &&
-				      TtaGetAttributeValue (attrS) == HTML_ATTR_Multiple_VAL_Yes_)
-				    /* it's a multiple selects menu */
-				    multipleSelects = TRUE;
-				  else
-				    multipleSelects = FALSE;
-
-				  /* reset/set each option of the menu */
-				  defaultSelected = FALSE;
-				  elForm = TtaGetFirstChild (el);
-				  /* el points to the rootf of the SELECT subtree */
-				  while (elForm)
-				    {
-				      attrTypeS.AttrTypeNum = HTML_ATTR_DefaultSelected;
-				      def = TtaGetAttribute (elForm, attrTypeS);
-				      attrTypeS.AttrTypeNum = HTML_ATTR_Selected;
-				      attrS = TtaGetAttribute (elForm, attrTypeS);
-				      if (def == NULL) 
-					{
-					  /* not a default option, so remove it */
-					  if(attrS != NULL)
-					    TtaRemoveAttribute (elForm, attrS, doc);
-					}
-				      else if (def != NULL && !multipleSelects && defaultSelected) 
-					  {
-					  /* a default option, but multiple default options are not allowed and
-					     one other option has already been selected */
-					    if(attrS != NULL)
-					      TtaRemoveAttribute (elForm, attrS, doc);
-					  }
-				      else if (def != NULL && (multipleSelects || (!multipleSelects && !defaultSelected)))
-					{
-					  /* a default option and it may be selected */
-					  if (attrS == NULL)
-					    {
-					      /* create a new selected attribute */
-					      attrS = TtaNewAttribute (attrTypeS);
-					      TtaAttachAttribute (elForm, attrS, doc);
-					      TtaSetAttributeValue (attrS, HTML_ATTR_Selected_VAL_Yes_, elForm, doc);
-					    }
-					  defaultSelected = TRUE;
-					}
-				      TtaNextSibling (&elForm);
-				    }
-
-				  if (defaultSelected == FALSE)
-				    {
-				      /* there's no explicit default option, so select the first option of the menu */
-				      elForm = TtaGetFirstChild (el);
-				      if (elForm)
-					{
-					  /* select the option if it's not already selected */
-					  attrTypeS.AttrTypeNum = HTML_ATTR_Selected;
-					  attrS = TtaGetAttribute (elForm, attrTypeS);
-					  if (attrS == NULL)
-					    {
-					      /* create a new selected attribute */
-					      attrS = TtaNewAttribute (attrTypeS);
-					      TtaAttachAttribute (elForm, attrS, doc);
-					      TtaSetAttributeValue (attrS, HTML_ATTR_Selected_VAL_Yes_, elForm, doc);
-					    }
-					}
-				    }
-
-				  if (!multipleSelects) {
-				    /* call the parser to check the default selections menu ? */
-				    attrTypeS.AttrTypeNum = HTML_ATTR_DefaultSelected;
-				    TtaSearchAttribute (attrTypeS, SearchInTree, el, &elForm, &attrS);
-				    if (elForm != NULL)
-				      /* Reset according to the default attribute */
-				      OnlyOneOptionSelected (elForm, doc, FALSE);
-				  }
-				}
+				 ResetOptionMenu (el, doc);
 			      break;
 
 			   case HTML_EL_Checkbox_Input:
@@ -1107,18 +1222,23 @@ Element             el;
 #endif
 {
 #define MAX_OPTIONS 100
-#define MAX_BUF_LEN 80
-   ElementType         elType;
-   Element             option[MAX_OPTIONS], elText, menuEl;
+#define MAX_SUBOPTIONS 20
+#define MAX_LABEL_LENGTH 50
+   ElementType         elType, childType;
+   Element	       elText, menuEl, child;
+   Element             option[MAX_OPTIONS],
+		       subOptions[MAX_SUBMENUS][MAX_SUBOPTIONS];
+   boolean	       selected[MAX_OPTIONS],
+		       subSelected[MAX_SUBMENUS][MAX_SUBOPTIONS];
    AttributeType       attrType;
    Attribute	       attr;
-   int                 length, nbitems, lgmenu, i;
-   char                text[MAX_BUF_LEN];
+   SSchema	       htmlSch;
+   int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
+   char                text[MAX_LABEL_LENGTH];
    char                buffmenu[MAX_LENGTH];
    Language            lang;
    int                 modified;
-   boolean	       selected[MAX_OPTIONS];
-   boolean	       multipleOptions;
+   boolean	       multipleOptions, sel;
 
    if (el == NULL)
       return;
@@ -1127,24 +1247,28 @@ Element             el;
    opDoc = doc;
 #  endif /* _WINDOWS */
 
-   /* search the option element */
-   elType = TtaGetElementType (el);
-   while (elType.ElTypeNum != HTML_EL_BODY &&
-	  elType.ElTypeNum != HTML_EL_Option)
+   htmlSch = TtaGetSSchema ("HTML", doc);
+   /* search the enclosing option element */
+   do
      {
-	el = TtaGetParent (el);
 	elType = TtaGetElementType (el);
+	if (elType.ElTypeNum != HTML_EL_Option || elType.ElSSchema != htmlSch)
+	   el = TtaGetParent (el);
      }
+   while (el &&
+          (elType.ElTypeNum != HTML_EL_Option || elType.ElSSchema != htmlSch));
 
-   if (elType.ElTypeNum == HTML_EL_Option)
+   if (elType.ElTypeNum == HTML_EL_Option && elType.ElSSchema == htmlSch)
      {
 	/* create the option menu */
 	lgmenu = 0;
 	nbitems = 0;
-	menuEl = TtaGetParent (el);
+	nbsubmenus = 0;
+        elType.ElTypeNum = HTML_EL_Option_Menu;
+	menuEl = TtaGetTypedAncestor (el, elType);
 	if (menuEl != NULL)
 	  {
-	     attrType.AttrSSchema = elType.ElSSchema;
+	     attrType.AttrSSchema = htmlSch;
 	     attrType.AttrTypeNum = HTML_ATTR_Multiple;
 	     attr = TtaGetAttribute (menuEl, attrType);
 	     if (attr)
@@ -1155,71 +1279,201 @@ Element             el;
 	     
 	     attrType.AttrTypeNum = HTML_ATTR_Selected;
 	     el = TtaGetFirstChild (menuEl);
-	     while (nbitems < MAX_OPTIONS && el != NULL)
+	     while (nbitems < MAX_OPTIONS && el)
 	       {
 		  elType = TtaGetElementType (el);
-		  if (elType.ElTypeNum == HTML_EL_Option)
+		  if (elType.ElTypeNum == HTML_EL_OptGroup &&
+                      elType.ElSSchema == htmlSch)
+                    {
+                    /* It's an OptGroup.A submenu has to be created later on */
+                    if (nbsubmenus < MAX_SUBMENUS)
+		       nbsubmenus++;
+		    else
+		       /* too many submenus. Ignore that OptGroup */
+		       elType.ElTypeNum = 0;
+                    }
+		  if ((elType.ElTypeNum == HTML_EL_Option ||
+                      elType.ElTypeNum == HTML_EL_OptGroup) &&
+                       elType.ElSSchema == htmlSch)
 		    {
 		       option[nbitems] = el;
 #              ifdef _WINDOWS 
                opOption[nbitems] = el;
 #              endif /* _WINDOWS */
 		       if (multipleOptions)
+                          {
+                          attrType.AttrTypeNum = HTML_ATTR_Selected;
 		          selected[nbitems] = (TtaGetAttribute (el, attrType) != NULL);
-		       length = MAX_BUF_LEN;
-		       elText = TtaGetFirstChild (el);
-		       TtaGiveTextContent (elText, text, &length, &lang);
-		       if (length >= 50)
-			 {
-			    /* CHKR_LIMIT on entry name to 50 characters */
-			    length = 50;
-			    text[length - 1] = EOS;
-			 }
+                          }
+                       /* get the menu item label */
+                       /* is there a label attribute? */
+                       attrType.AttrTypeNum = HTML_ATTR_label;
+                       attr = TtaGetAttribute (el, attrType);
+		       length = MAX_LABEL_LENGTH;
+                       if (attr)
+                          TtaGiveTextAttributeValue (attr, text, &length);
+                       else if (elType.ElTypeNum == HTML_EL_Option)
+                          /* there is no label attribute, but it's an Option
+                             Take its content as the item label */
+                          {
+		          elText = TtaGetFirstChild (el);
+			  if (elText)
+		             TtaGiveTextContent (elText, text, &length, &lang);
+			  else
+			     length = 0;
+                          }
 		       else
-			  length++;
-		       length++;  /* we have to add the 'B' or 'T' character */
+			  length = 0;
+		       /* count the EOS character */
+		       text[length] = EOS;
+		       length++;
+                       /* we have to add the 'B', 'T' or 'M' character */
+		       length++;
 		       if (lgmenu + length < MAX_LENGTH)
-			 {
-			    /* add an item */
-			    if (multipleOptions)
-			       sprintf (&buffmenu[lgmenu], "T%s", text);
-			    else
-			       sprintf (&buffmenu[lgmenu], "B%s", text);
-			    nbitems++;
-			 }
+			  /* add an item */
+			  {
+                          if (elType.ElTypeNum == HTML_EL_OptGroup)
+                             sprintf (&buffmenu[lgmenu], "M%s", text);
+			  else if (multipleOptions)
+			     sprintf (&buffmenu[lgmenu], "T%s", text);
+			  else
+			     sprintf (&buffmenu[lgmenu], "B%s", text);
+			  nbitems++;
+			  }
 		       lgmenu += length;
 		    }
 		  TtaNextSibling (&el);
 	       }
 	     if (nbitems > 0)
 	       {
-		  ReturnOption = -1;
+		  /* create the main menu */
 		  TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-			       "", nbitems, buffmenu, NULL, 'L');
+			       NULL, nbitems, buffmenu, NULL, 'L');
 		  if (multipleOptions)
-		     {
 		     for (i = 0; i < nbitems; i++)
-			{
 			if (selected[i])
 			   TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
-			}
-		     }
+                  if (nbsubmenus > 0)
+                     /* There ia at least 1 OPTGROUP. Create submenus
+                        corresponding to OPTGROUPs */
+                     {
+                     nbitems = 0;	/* item number in main (SELECT) menu */
+		     /* check all children of element SELECT */
+        	     el = TtaGetFirstChild (menuEl);
+		     nbsubmenus = 0;
+        	     while (nbsubmenus < MAX_SUBMENUS && el)
+        	       {
+        		  elType = TtaGetElementType (el);
+        		  if (elType.ElTypeNum == HTML_EL_Option &&
+                              elType.ElSSchema == htmlSch)
+			     /* this is an OPTION */
+                             nbitems++;	/* item number in the main menu */
+        		  else if (elType.ElTypeNum == HTML_EL_OptGroup &&
+                              elType.ElSSchema == htmlSch)
+			    /* this is an OPTGROUP.  Create the corresponding
+			       sub menu */
+                            {
+			    /* First, check all children of OPTGROUP */
+                            child = TtaGetFirstChild (el);
+                            lgmenu = 0;
+                            nbsubitems = 0;
+                            while (nbsubitems < MAX_SUBOPTIONS && child)
+                               {
+                               childType = TtaGetElementType (child);
+                               if (childType.ElTypeNum == HTML_EL_Option &&
+                                   childType.ElSSchema == htmlSch)
+				  /* it's an OPTION. Create a submenu item */
+                                  {
+				  subOptions[nbsubmenus][nbsubitems] = child;
+				  if (multipleOptions)
+				     {
+				     attrType.AttrTypeNum = HTML_ATTR_Selected;
+				     subSelected[nbsubmenus][nbsubitems] =
+					(TtaGetAttribute (child, attrType) != NULL);
+				     }
+                                  /* get the item label */
+                                  attrType.AttrTypeNum = HTML_ATTR_label;
+                                  attr = TtaGetAttribute (child, attrType);
+                                  length = MAX_LABEL_LENGTH - 1;
+                                  if (attr)
+				     /* there is a label attribute. Take it */
+                                     TtaGiveTextAttributeValue (attr, text,
+								&length);
+				  else
+				     /* take the element's content */
+				     {
+				     elText = TtaGetFirstChild (child);
+				     if (elText)
+				        TtaGiveTextContent (elText, text,
+							    &length, &lang);
+				     else
+					length = 0;
+				     }
+			          /* count the EOS character */
+			          text[length] = EOS;
+			          length++;
+	                          /* we have to add the 'B'or 'T' character */
+			          length++;
+        		          if (lgmenu + length < MAX_LENGTH)
+        			    /* append that item to the buffer */
+                                    {
+        			    if (multipleOptions)
+        			      sprintf (&buffmenu[lgmenu], "T%s", text);
+        			    else
+        			      sprintf (&buffmenu[lgmenu], "B%s", text);
+        			    nbsubitems++;
+        			    }
+        		          lgmenu += length;
+                                  }
+			       /* next child of OPTGROUP */
+                               TtaNextSibling (&child);
+                               }
+			    /* All children of OPTGROUP have been checked. */
+			    /* create the submenu */
+                            TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1,
+                                        BaseDialog+OptionMenu, nbitems, NULL,
+                                        nbsubitems, buffmenu, NULL, FALSE);
+			    if (multipleOptions)
+			       for (i = 0; i < nbsubitems; i++)
+			          if (subSelected[nbsubmenus][i])
+				     TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
+			    nbsubmenus++;
+                            nbitems++;	/* item number in the main menu */
+                            }
+			  /* Next child of SELECT */
+                          TtaNextSibling (&el);
+        	       }
+                     }
+		  /* activate the menu that has just been created */
+		  ReturnOption = -1;
+		  ReturnOptionMenu = -1;
 		  TtaSetDialoguePosition ();
 		  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-		  /* wait for an answer */
+		  /* wait for an answer from the user */
 		  TtaWaitShowDialogue ();
-		  if (ReturnOption >= 0)
+		  if (ReturnOption >= 0 && ReturnOptionMenu >= 0)
 		    {
 		       /* make the returned option selected */
-		       el = option[ReturnOption];
-		       modified = TtaIsDocumentModified (doc);
+		       if (ReturnOptionMenu == 0)
+			  /* an item in the main (SELECT) menu */
+			  {
+		          el = option[ReturnOption];
+		          sel = selected[ReturnOption];
+			  }
+		       else
+			  /* an item in a submenu */
+			  {
+		          el = subOptions[ReturnOptionMenu - 1][ReturnOption];
+			  sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
+			  }
+		       modified = TtaIsDocumentModified (doc);	  
 		       if (!multipleOptions)
 		          OnlyOneOptionSelected (el, doc, FALSE);
 		       else
 			  {
 			  attrType.AttrTypeNum = HTML_ATTR_Selected;
 			  attr = TtaGetAttribute (el, attrType);
-			  if (selected[ReturnOption])
+			  if (sel)
 			     TtaRemoveAttribute (el, attr, doc);
 			  else
 			     {

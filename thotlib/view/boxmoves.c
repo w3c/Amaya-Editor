@@ -2112,41 +2112,41 @@ int                 frame;
 		while (i < MAX_RELAT_DIM && pNextBox != NULL)
 		  {
 		    pAb = pNextBox->BxAbstractBox;
-		    /* Est-ce la meme dimension ? */
-		    if (pDimRel->DimRSame[i])
-		      /* Oui => Changement de largeur */
-		      {
-			if (pAb->AbWidth.DimUnit == UnPercent)
-			  /* Le changement de taille est un pourcentage */
-			  orgTrans = pBox->BxWidth * pAb->AbWidth.DimValue / 100 - pNextBox->BxWidth;
-			else
-			  orgTrans = delta;	/* + ou - une constante */
-			/* evite de boucler sur l'automodification */
-			if (pNextBox != pBox)
-			  ChangeWidth (pNextBox, pSourceBox, pBox, orgTrans, spaceDelta, frame);
-			
-		      }
-		    else
-		      /* Non => Changement de hauteur */
-		      {
-			/* L'heritage porte sur la hauteur de la ligne? */
-			if (pAb->AbEnclosing == pCurrentAb
-			    && (pCurrentAb->AbInLine || pCurrentAb->AbBox->BxType == BoGhost))
-			  {
-			    pLine = SearchLine (pNextBox);
-			    if (pLine == NULL)
-			      /* la ligne n'est pas encore construite */
-			      orgTrans = 0;
-			    else
-			      orgTrans = pLine->LiHeight - pNextBox->BxHeight;
-			  }
-			/* Le changement de taille est un pourcentage */
-			else if (pAb->AbHeight.DimUnit == UnPercent)
-			  orgTrans = pBox->BxWidth * pAb->AbHeight.DimValue / 100 - pNextBox->BxHeight;
-			else
-			  orgTrans = delta;
-			ChangeHeight (pNextBox, pSourceBox, NULL, orgTrans, frame);
-		      }
+		    if (pAb)
+		       /* Est-ce la meme dimension ? */
+		       if (pDimRel->DimRSame[i])
+			 /* Oui => Changement de largeur */
+			 {
+			   if (pAb->AbWidth.DimUnit == UnPercent)
+			     /* Le changement de taille est un pourcentage */
+			     orgTrans = pBox->BxWidth * pAb->AbWidth.DimValue / 100 - pNextBox->BxWidth;
+			   else
+			     orgTrans = delta;	/* + ou - une constante */
+			   /* evite de boucler sur l'automodification */
+			   if (pNextBox != pBox)
+			     ChangeWidth (pNextBox, pSourceBox, pBox, orgTrans, spaceDelta, frame);
+			 }
+		       else
+			 /* Non => Changement de hauteur */
+			 {
+			   /* L'heritage porte sur la hauteur de la ligne? */
+			   if (pAb->AbEnclosing == pCurrentAb
+			       && (pCurrentAb->AbInLine || pCurrentAb->AbBox->BxType == BoGhost))
+			     {
+			       pLine = SearchLine (pNextBox);
+			       if (pLine == NULL)
+				 /* la ligne n'est pas encore construite */
+				 orgTrans = 0;
+			       else
+				 orgTrans = pLine->LiHeight - pNextBox->BxHeight;
+			     }
+			   /* Le changement de taille est un pourcentage */
+			   else if (pAb->AbHeight.DimUnit == UnPercent)
+			     orgTrans = pBox->BxWidth * pAb->AbHeight.DimValue / 100 - pNextBox->BxHeight;
+			   else
+			     orgTrans = delta;
+			   ChangeHeight (pNextBox, pSourceBox, NULL, orgTrans, frame);
+			 }
 		    
 		    i++;
 		    if (i < MAX_RELAT_DIM)

@@ -600,9 +600,10 @@ NotifyElement      *event;
    else if (isHTML && elType.ElTypeNum == HTML_EL_Option_Menu)
      {
 	/* it is an option menu */
-	elFound = TtaGetFirstChild (element);
-	elType1 = TtaGetElementType (elFound);
-	if (elType1.ElTypeNum == HTML_EL_Option)
+        elType1.ElSSchema = elType.ElSSchema;
+        elType1.ElTypeNum = HTML_EL_Option;
+        elFound = TtaSearchTypedElement (elType1, SearchInTree, element);
+        if (elFound)
 	  {
 	     SelectOneOption (event->document, elFound);
 	     return (TRUE);

@@ -80,6 +80,7 @@ static MathEntity        MathEntityTable[] =
    {"LeftRightArrow", 171, 'G'},
    {"Mgr", 77, 'G'},
    {"Ngr", 78, 'G'},
+   {"NonBreakingSpace", 160, 'L'},
    {"Not", 216, 'G'},
    {"NotElement", 207, 'G'},
    {"NotEqual", 185, 'G'},

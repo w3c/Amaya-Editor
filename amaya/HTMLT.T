@@ -564,6 +564,13 @@ RULES
 	Create '</option>' After;
 	END;
 
+ OptGroup: BEGIN
+	Create '\12<optgroup';
+	Create Attributes;
+	Create '>';
+	Create '</optgroup>' After;
+	END;
+
  Text_Area: BEGIN
 	Create '<textarea';
 	Create Attributes;

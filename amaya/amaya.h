@@ -104,14 +104,16 @@ typedef char        AmayaReadChar ();
 #define ConfirmSave     32
 #define ConfirmSaveList 33
 #define OptionMenu	34
-#define About1		35
-#define About2		36
-#define About3		37
-#define Version		38
-#define FormAbout      	39
-#define FromCSS         40
-#define CSSSelect       41
-#define MAX_REF         42
+#define MAX_SUBMENUS    20
+/* MAX_SUBMENUS references reserved for submenus of Option menu */
+#define About1		55
+#define About2		56
+#define About3		57
+#define Version		58
+#define FormAbout      	59
+#define FromCSS         60
+#define CSSSelect       61
+#define MAX_REF         62
 
 /* The possible GET/POST/PUT request modes */
 
@@ -179,6 +181,7 @@ THOT_EXPORT char        *SavingFile;	/* complete path or URL of the document */
 THOT_EXPORT int          Lg_password;
 THOT_EXPORT int          BaseDialog;
 THOT_EXPORT int          ReturnOption;
+THOT_EXPORT int          ReturnOptionMenu;
 THOT_EXPORT Document     CurrentDocument;
 THOT_EXPORT Document     SavingDocument;
 THOT_EXPORT Document     SavingObject;

@@ -377,6 +377,9 @@ RULES
 	Remove;
 	END;
 
+ OptGroup: BEGIN
+	END;
+
  Text_Area: BEGIN
 	Create Content;
 	Remove;

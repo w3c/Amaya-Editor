@@ -1890,6 +1890,16 @@ BOXES
 		END;
 	END;
 
+ OPTGROUP_S: BEGIN
+	Content: Text 'OPTGROUP';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  TEXTAREA_S: BEGIN
 	Content: Text 'TEXTAREA';
 	Visibility: 0;
@@ -7322,6 +7332,19 @@ RULES
 		Visibility: Enclosing =;
 	END;
 
+ OptGroup: BEGIN
+	CreateBefore(OPTGROUP_S);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Alternate_view
+		Visibility: Enclosing =;
+	END;
+
  Text_Area: BEGIN
 	CreateBefore(TEXTAREA_S);
 	{CreateBefore(Text_Space);}
@@ -9087,7 +9110,7 @@ ATTRIBUTES
  Selected:
 	BEGIN
 	CreateBefore(ATTR_SELECTED);
-	Visibility: Enclosing =;
+	Visibility: 5 {*****};
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;

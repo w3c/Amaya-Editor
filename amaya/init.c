@@ -2530,12 +2530,18 @@ char               *data;
     url_sep = DIR_SEP;
 
    val = (int) data;
-   switch (ref - BaseDialog)
+
+   if (ref - BaseDialog >= OptionMenu &&
+       ref - BaseDialog <= OptionMenu + MAX_SUBMENUS)
+     /* a popup menu corresponding to a SELECT element or a submenu
+        corresponding to an OPTGROUP element*/
      {
-     case OptionMenu:
        ReturnOption = val;
+       ReturnOptionMenu = ref - BaseDialog - OptionMenu;
        TtaDestroyDialogue (BaseDialog + OptionMenu);
-       break;
+     }
+   else switch (ref - BaseDialog)
+     {
      case OpenForm:
        /* *********Load URL or local document********* */
        if (val == 2)
