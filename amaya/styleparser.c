@@ -1721,8 +1721,8 @@ PresentationValue  *val;
     {
       best = TtaGetThotColor (redval, greenval, blueval);
       val->typed_data.value = best;
+      val->typed_data.unit = STYLE_UNIT_REL;
     }
-  val->typed_data.unit = STYLE_UNIT_REL;
   val->typed_data.real = FALSE;
  return (cssRule);
 }
