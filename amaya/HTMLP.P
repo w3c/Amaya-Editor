@@ -5290,6 +5290,9 @@ RULES
  Iframe_Src_Content: BEGIN
 	LineBreak: No;
 	PageBreak: No;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	VertPos: Top = Enclosing . Top;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
