@@ -170,6 +170,7 @@ extern void TtaAbortShowDialogue ( void );
 extern void TtaSetDialoguePosition ( void );
 extern void TtaShowDialogue ( int ref,
                               ThotBool remanent );
+extern void TtaWaitShowProcDialogue ( void );
 extern void TtaWaitShowDialogue ( void );
 extern ThotBool TtaTestWaitShowDialogue ( void );
 extern void TtaFreeAllCatalogs ( void );
@@ -340,6 +341,7 @@ extern void TtaAbortShowDialogue (/* void */);
 extern void TtaSetDialoguePosition (/* void */);
 extern void TtaShowDialogue (/* int ref,
                                 ThotBool remanent */);
+extern void TtaWaitShowProcDialogue (/* void */);
 extern void TtaWaitShowDialogue (/* void */);
 extern ThotBool TtaTestWaitShowDialogue (/* void */);
 extern void TtaFreeAllCatalogs (/* void */);
