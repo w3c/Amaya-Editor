@@ -747,7 +747,7 @@ void ANNOT_Create (doc, view)
 
   annot = LINK_CreateMeta (doc, doc_annot, useDocRoot);
 
-  ANNOT_InitDocumentStructure (doc, doc_annot, annot);
+  ANNOT_InitDocumentStructure (doc, doc_annot, annot, TRUE);
 
   /* remove the existing selection */
   TtaUnselect (doc);
@@ -858,6 +858,8 @@ void *context;
 			 LINK_SaveLink (source_doc);
 		       else
 			 LINK_DeleteLink (source_doc);
+
+		       AnnotFilter_update (source_doc, annot);
 		     }
 
 		   /* update the annotation body_url */
