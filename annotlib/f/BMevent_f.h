@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool GetBookmarksEnabled ( void );
 extern char *GetLocalBookmarksFile ( void );
 extern char *GetLocalBookmarksBaseURI ( void );
 extern char *GetHomeTopicURI ( void );
@@ -27,6 +28,7 @@ extern ThotBool BM_ItemDelete ( NotifyElement *event );
 
 #else /* __STDC__ */
 
+extern ThotBool GetBookmarksEnabled (/* void */);
 extern char *GetLocalBookmarksFile (/* void */);
 extern char *GetLocalBookmarksBaseURI (/* void */);
 extern char *GetHomeTopicURI (/* void */);

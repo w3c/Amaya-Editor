@@ -38,6 +38,12 @@
 static char *LocalBookmarksFile;
 static char *LocalBookmarksBaseURI;
 static char *HomeTopicURI;
+static ThotBool BookmarksEnabled;
+
+ThotBool GetBookmarksEnabled (void)
+{
+  return BookmarksEnabled;
+}
 
 char *GetLocalBookmarksFile (void)
 {
@@ -64,8 +70,32 @@ char *GetHomeTopicURI (void)
 void BM_Init (void)
 {
   char *ptr;
+  ThotBool test_result;
 
+  BookmarksEnabled = TRUE;
+
+  /* The user may disable bookmarks from the registry */
+  TtaGetEnvBoolean ("DISABLE_BOOKMARKS", &test_result);
   
+  if (test_result)
+    BookmarksEnabled = FALSE;
+  else
+    {
+      /* as we don't have a lock protection for the moment, we bind
+	 ourselves to the cache */
+      TtaGetEnvBoolean ("ENABLE_CACHE", &test_result);
+      if (!test_result)
+	BookmarksEnabled = FALSE;
+      else
+	{
+	  if (!HTCacheMode_enabled ())
+	    BookmarksEnabled = FALSE;
+	}
+    }
+
+  if (!BookmarksEnabled)
+    return;
+
   redland_init ();
   
   /* The TopicURL menu */
@@ -114,6 +144,9 @@ void BM_Init (void)
   -----------------------------------------------------------------------*/
 void BM_FreeConf ()
 {
+  if (!BookmarksEnabled)
+    return;
+
   TtaFreeMemory (LocalBookmarksFile);
   TtaFreeMemory (LocalBookmarksBaseURI);
 }
@@ -123,6 +156,9 @@ void BM_FreeConf ()
   -----------------------------------------------------------------------*/
 void BM_Quit (void)
 {
+  if (!BookmarksEnabled)
+    return;
+
   /* save the bookmark file */
   BM_save (LocalBookmarksFile);
   redland_free ();
@@ -135,6 +171,9 @@ void BM_Quit (void)
   -----------------------------------------------------------------------*/
 void BM_CreateBM (Document doc, View view)
 {
+  if (!BookmarksEnabled)
+    return;
+
   BM_BookmarkMenu (doc, view, NULL);
 }
 
@@ -144,6 +183,9 @@ void BM_CreateBM (Document doc, View view)
   -----------------------------------------------------------------------*/
 void BM_CreateTopic (Document doc, View view)
 {
+  if (!BookmarksEnabled)
+    return;
+
   BM_TopicMenu (doc, view, NULL);
 }
 
@@ -158,6 +200,9 @@ void BM_ViewBookmarks (Document doc, View view)
   int count;
   int item_count;
   Document bookmark_doc;
+
+  if (!BookmarksEnabled)
+    return;
 
   count = Model_dumpAsList (&list, TRUE);
   item_count = Model_dumpAsList (&items, FALSE);
@@ -216,6 +261,9 @@ void BM_refreshBookmarkView (void)
 void BM_ImportTopics (Document doc, View view)
 {
   char *url, *normalized_url;
+
+  if (!BookmarksEnabled)
+    return;
 
   url = GetTopicURL (doc, view);
   if (url && !IsHTTPPath (url))
