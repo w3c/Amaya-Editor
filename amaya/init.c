@@ -700,7 +700,11 @@ Document            doc;
 #endif
 {
    View                view;
+   Document            docSel;
 
+   docSel = TtaGetSelectedDocument ();
+   if (docSel == document)
+     TtaUnselect (document);
    if (TtaGetDocumentAccessMode (document))
      {
        /* the document is in ReadWrite mode */
@@ -731,7 +735,6 @@ Document            doc;
        TtaSetMenuOff (document, 1, Links);
        TtaSetMenuOff (document, 1, Style);
        TtaSetMenuOff (document, 1, Special);
-       TtaSetMenuOff (document, 1, Attributes_);
        view = TtaGetViewFromName (document, "Structure_view");
        if (view != 0 && TtaIsViewOpened (document, view))
 	 {
@@ -742,7 +745,6 @@ Document            doc;
 	    TtaSetItemOff (document, view, Edit_, BTransform);
 	    TtaSetMenuOff (document, view, StructTypes);
 	    TtaSetMenuOff (document, view, Types);
-	    TtaSetMenuOff (document, view, Attributes_);
 	 }
 #ifdef MATHML
        view = TtaGetViewFromName (document, "Math_Structure_view");
@@ -754,7 +756,6 @@ Document            doc;
 	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
 	    TtaSetItemOff (document, view, Edit_, BTransform);
 	    TtaSetMenuOff (document, view, Types);
-	    TtaSetMenuOff (document, view, Attributes_);
 	 }
 #endif /* MATHML */
 #ifdef GRAPHML
@@ -767,7 +768,6 @@ Document            doc;
 	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
 	    TtaSetItemOff (document, view, Edit_, BTransform);
 	    TtaSetMenuOff (document, view, Types);
-	    TtaSetMenuOff (document, view, Attributes_);
 	 }
 #endif /* GRAPHML */
        view = TtaGetViewFromName (document, "Alternate_view");
@@ -779,7 +779,6 @@ Document            doc;
 	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
 	    TtaSetMenuOff (document, view, StructTypes);
 	    TtaSetMenuOff (document, view, Types);
-	    TtaSetMenuOff (document, view, Attributes_);
 	 }
        view = TtaGetViewFromName (document, "Links_view");
        if (view != 0 && TtaIsViewOpened (document, view))
@@ -790,7 +789,6 @@ Document            doc;
 	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
 	    TtaSetItemOff (document, view, Edit_, BTransform);
 	    TtaSetMenuOff (document, view, Types);
-	    TtaSetMenuOff (document, view, Attributes_);
 	 }
        view = TtaGetViewFromName (document, "Table_of_contents");
        if (view != 0 && TtaIsViewOpened (document, view))
@@ -801,7 +799,6 @@ Document            doc;
 	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
 	    TtaSetItemOff (document, view, Edit_, BTransform);
 	    TtaSetMenuOff (document, view, Types);
-	    TtaSetMenuOff (document, view, Attributes_);
 	 }
      }
    else
@@ -835,7 +832,6 @@ Document            doc;
        TtaSetMenuOn (document, 1, Links);
        TtaSetMenuOn (document, 1, Style);
        TtaSetMenuOn (document, 1, Special);
-       TtaSetMenuOn (document, 1, Attributes_);
        view = TtaGetViewFromName (document, "Structure_view");
        if (view != 0 && TtaIsViewOpened (document, view))
 	 {
@@ -846,7 +842,6 @@ Document            doc;
 	    TtaSetItemOn (document, view, Edit_, BTransform);
 	    TtaSetMenuOn (document, view, StructTypes);
 	    TtaSetMenuOn (document, view, Types);
-	    TtaSetMenuOn (document, view, Attributes_);
 	 }
 #ifdef MATHML
        view = TtaGetViewFromName (document, "Math_Structure_view");
@@ -858,7 +853,6 @@ Document            doc;
 	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
 	    TtaSetItemOn (document, view, Edit_, BTransform);
 	    TtaSetMenuOn (document, view, Types);
-	    TtaSetMenuOn (document, view, Attributes_);
 	 }
 #endif /* MATHML */
 #ifdef GRAPHML
@@ -871,7 +865,6 @@ Document            doc;
 	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
 	    TtaSetItemOn (document, view, Edit_, BTransform);
 	    TtaSetMenuOn (document, view, Types);
-	    TtaSetMenuOn (document, view, Attributes_);
 	 }
 #endif /* GRAPHML */
        view = TtaGetViewFromName (document, "Alternate_view");
@@ -883,7 +876,6 @@ Document            doc;
 	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
 	    TtaSetMenuOn (document, view, StructTypes);
 	    TtaSetMenuOn (document, view, Types);
-	    TtaSetMenuOn (document, view, Attributes_);
 	 }
        view = TtaGetViewFromName (document, "Links_view");
        if (view != 0 && TtaIsViewOpened (document, view))
@@ -894,7 +886,6 @@ Document            doc;
 	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
 	    TtaSetItemOn (document, view, Edit_, BTransform);
 	    TtaSetMenuOn (document, view, Types);
-	    TtaSetMenuOn (document, view, Attributes_);
 	 }
        view = TtaGetViewFromName (document, "Table_of_contents");
        if (view != 0 && TtaIsViewOpened (document, view))
@@ -905,7 +896,6 @@ Document            doc;
 	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
 	    TtaSetItemOn (document, view, Edit_, BTransform);
 	    TtaSetMenuOn (document, view, Types);
-	    TtaSetMenuOn (document, view, Attributes_);
 	 }
      }
 }
