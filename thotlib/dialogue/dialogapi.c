@@ -297,6 +297,7 @@ char* accelerator;
    char*   pc;
    char*   pw;
    char    word [1024];
+   BOOL    getEquivChar = FALSE;
 
    fVirt = FNOINVERT;
    if (!accelerator || accelerator [0] == EOS)
@@ -307,7 +308,7 @@ char* accelerator;
    while (*pc) {
          while (*pc == SPACE || *pc == TAB)
                pc++;
-         while ((*pc >= 'A' && *pc <= 'Z') || (*pc >= 'a' && *pc <= 'z'))
+         while (*pc != SPACE && *pc != TAB)
                *pw++ = *pc++;
          *pw = EOS;
 
@@ -321,92 +322,140 @@ char* accelerator;
          while (*pc == SPACE || *pc == TAB)			  
                pc++;
 
-         if (*pc++ != '+')
-            return FALSE;
-         else {
-              pw = &word [0];
-              while ((*pc >= 'A' && *pc <= 'Z') || (*pc >= 'a' && *pc <= 'z') || (*pc >= '0' && *pc <= '9'))
+         pw = &word [0];
+         while (*pc && *pc != SPACE && *pc != TAB)
                     *pw++ = *pc++;
-              *pw = EOS;
+         *pw = EOS;
 
-              while (*pc == SPACE || *pc == TAB)			  
-                    pc++;
-
-              if (*pc == '+') {
-                 if (!strcmp (word, "Ctrl")) 
-                    return FALSE;
-                 else if (!strcmp (word, "Alt"))
-                      fVirt |= FALT;
-                 else if (!strcmp (word, "Shift"))
-                      fVirt |= FSHIFT;
-
-                 while (*pc == SPACE || *pc == TAB)			  
-                       pc++;
-
-                 if (*pc++ != '+')
-                    return FALSE;
-
-                 while (*pc == SPACE || *pc == TAB)			  
-                       pc++;
-
-                 pw = &word [0];
-                 while ((*pc >= 'A' && *pc <= 'Z') || (*pc >= 'a' && *pc <= 'z') || (*pc >= '0' && *pc <= '9'))
-                       *pw++ = *pc++;
-                 *pw = EOS;
-              }	
+         if (!strcmp (word, "Ctrl")) 
+            return FALSE;
+         else if (!strcmp (word, "Alt")) {
+              fVirt |= FALT;
+              getEquivChar = TRUE;
+         } else if (!strcmp (word, "Shift")) {
+                fVirt |= FSHIFT;
+                getEquivChar = TRUE;
+         } else {
               if (!strcmp (word, "F1")) {
                  fVirt |= FVIRTKEY;
                  key = VK_F1;
-              } else if (!strcmp (word, "F2")) {
+			  } else if (!strcmp (word, "F2")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F2;
-              } else if (!strcmp (word, "F3")) {
+			  } else if (!strcmp (word, "F3")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F3;
-              } else if (!strcmp (word, "F4")) {
+			  } else if (!strcmp (word, "F4")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F4;
-              } else if (!strcmp (word, "F5")) {
+			  } else if (!strcmp (word, "F5")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F5;
-              } else if (!strcmp (word, "F6")) {
+			  } else if (!strcmp (word, "F6")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F6;
 			  } else if (!strcmp (word, "F7")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F7;
-              } else if (!strcmp (word, "F8")) {
+			  } else if (!strcmp (word, "F8")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F8;
-              } else if (!strcmp (word, "F9")) {
+			  } else if (!strcmp (word, "F9")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F9;
-              } else if (!strcmp (word, "F10")) {
+			  } else if (!strcmp (word, "F10")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F10;
-              } else if (!strcmp (word, "F11")) {
+			  } else if (!strcmp (word, "F11")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F11;
-              } else if (!strcmp (word, "F12")) {
+			  } else if (!strcmp (word, "F12")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F12;
-              } else if (!strcmp (word, "F13")) {
+			  } else if (!strcmp (word, "F13")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F13;
-              } else if (!strcmp (word, "F14")) {
+			  } else if (!strcmp (word, "F14")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F14;
-              } else if (!strcmp (word, "F15")) {
+			  } else if (!strcmp (word, "F15")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F15;
-              } else if (!strcmp (word, "F16")) {
+			  } else if (!strcmp (word, "F16")) {
                      fVirt |= FVIRTKEY;
                      key = VK_F16;
-              } else if (strlen (word) == 1)
+			  } else if (strlen (word) == 1)
                      key = word [0];
-              else
+              else 
                   return FALSE;
-         }
+		 }
+
+         if (getEquivChar) {
+            while (*pc && *pc == SPACE || *pc == TAB)			  
+                  pc++;
+
+            pw = &word [0];
+            while ((*pc >= 'A' && *pc <= 'Z') || (*pc >= 'a' && *pc <= 'z') || (*pc >= '0' && *pc <= '9'))
+                  *pw++ = *pc++;
+            *pw = EOS;
+              	
+            if (!strcmp (word, "F1")) {
+               fVirt |= FVIRTKEY;
+               key = VK_F1;
+            } else if (!strcmp (word, "F2")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F2;
+            } else if (!strcmp (word, "F3")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F3;
+            } else if (!strcmp (word, "F4")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F4;
+            } else if (!strcmp (word, "F5")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F5;
+            } else if (!strcmp (word, "F6")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F6;
+			} else if (!strcmp (word, "F7")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F7;
+            } else if (!strcmp (word, "F8")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F8;
+            } else if (!strcmp (word, "F9")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F9;
+            } else if (!strcmp (word, "F10")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F10;
+            } else if (!strcmp (word, "F11")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F11;
+            } else if (!strcmp (word, "F12")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F12;
+            } else if (!strcmp (word, "F13")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F13;
+            } else if (!strcmp (word, "F14")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F14;
+            } else if (!strcmp (word, "F15")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F15;
+            } else if (!strcmp (word, "F16")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_F16;
+			} else if (!strcmp (word, "Return")) {
+                   fVirt |= FVIRTKEY;
+                   key = VK_RETURN;
+            } else if (strlen (word) == 1)
+                   key = word [0];
+            else
+                return FALSE;
+		 }
+
          while (*pc) 
                pc++;
    }
@@ -5640,6 +5689,7 @@ int                 cattype;
 	/* Recherche le widget parent */
 	if (MainShell == 0 && parent == 0)
 	  {
+#       ifndef _WINDOWS
 	    OK_string = XmStringCreateSimple (Confirm_string);
 	    n = 0;
 	    XtSetArg (args[n], XmNx, (Position) ShowX);
@@ -5651,6 +5701,7 @@ int                 cattype;
 	    XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
 	    n++;
 	    PopShell = XtCreatePopupShell ("", applicationShellWidgetClass, RootShell, args, 0);
+#       endif /* _WINDOWS */
 	  }
 	/*________________________________________________ Feuillet principal __*/
 	else

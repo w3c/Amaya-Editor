@@ -60,6 +60,7 @@
 static BOOL   wndRegistered = FALSE ;
 
 extern LPCTSTR iconID;
+extern int     currentFrame;
 
 #ifdef __STDC__
 LRESULT CALLBACK ThotColorPaletteWndProc (HWND, UINT, WPARAM, LPARAM);
@@ -756,14 +757,17 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
           case WM_LBUTTONDOWN:
 			   if (HIWORD (lParam) >= 45 && HIWORD (lParam) <= 330) 
 			      ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
+               SetFocus (FrRef[currentFrame]);
 			   break;
 
           case WM_MBUTTONDOWN:
 			   ColorsPress (2, LOWORD (lParam), HIWORD (lParam));
+               SetFocus (FrRef[currentFrame]);
 			   break;
 
           case WM_RBUTTONDOWN:
 			   ColorsPress (3, LOWORD (lParam), HIWORD (lParam));
+               SetFocus (FrRef[currentFrame]);
 			   break;
 
           case WM_PAINT:

@@ -467,10 +467,8 @@ LPARAM lParam;
    else
       specialKey = TRUE;
 
-   if (frame < 0) {
-	fprintf (stderr, "unable to get frame of window %X\n", hWnd);
-	return;
-   }
+   if (frame < 0)
+      return;
 
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status))
@@ -1013,7 +1011,12 @@ char               *appliname;
    FILE               *file;
    ThotTranslations      table;
 
+#  ifdef _WINDOWS 
+   text = NULL;
+#  else  /* _WINDOWS */
    text = TtaGetEnvString ("HOME");
+#  endif /* _WINDOWS */
+
    strcpy (name, appliname);
 #  ifdef _WINDOWS
    strcat (name, ".kb");

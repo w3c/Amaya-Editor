@@ -1378,15 +1378,6 @@ LPARAM      lParam;
                        cyTxtZone += 25 ;
                     }
                 }
-/*
-                if (appLogo) {
-				   hDC = GetDC (FrMainRef [frame]);
-				   hMemDC = CreateCompatibleDC (hDC);
-				   SelectObject (hMemDC, appLogo);
-				   BitBlt (hDC, 1, cyTB, bm.bmWidth, bm.bmHeight, hMemDC, 0, 0, SRCCOPY);
-				   DeleteDC (hMemDC);
-				   DeleteDC (hDC);
-				}*/
 
                 /* Adjust status bar size. */
                 if (IsWindowVisible (FrameTable[frame].WdStatus)) {
@@ -1422,20 +1413,7 @@ LPARAM      lParam;
            }
 
            default: 
-#                  if 0
-                   GetWindowRect (WinToolBar[frame], &rWindow) ;
-                   ScreenToClient (hwnd, (LPPOINT) &rWindow.left) ;
-                   ScreenToClient (hwnd, (LPPOINT) &rWindow.right) ;
-                   if ((frame != -1) && appLogo && FrameTable[frame].showLogo) {
-                      hDC = GetDC (FrMainRef [frame]);
-				      hMemDC = CreateCompatibleDC (hDC);
-				      SelectObject (hMemDC, appLogo);
-				      BitBlt (hDC, 1, cyLogo, bm.bmWidth, bm.bmHeight, hMemDC, 0, 0, SRCCOPY);
-				      DeleteDC (hMemDC);
-				      DeleteDC (hDC);
-				   }
-#                  endif /* 0 */
-		    return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
+                    return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
 }
 
@@ -1455,23 +1433,22 @@ LPARAM lParam;
      HDC          saveHdc;	/* Used to save TtDisplay during current event processing */
      int          frame;
      int          status;
+	 int          delta;
+	 int          key;
 	 RECT         rect;
+     RECT         cRect;
 
 	 static POINT ptBegin;
 	 static POINT ptEnd;
 	 static POINT ptCursor;
 	 static BOOL  fBlocking;
+     static BOOL  firstTime = TRUE;
+     static HWND  winCapture = (HWND) 0;
 
      frame = GetFrameNumber (hwnd);
 
-#if 0
-	 if (latestFrame != frame) {
-        DeleteDC (TtDisplay) ;
-		TtDisplay = GetDC (hwnd);
-		latestFrame = frame;
-	 }
-#endif /* 0 */
 	 GetWindowRect (hwnd, &rect);
+     GetClientRect (hwnd, &cRect);
 
      /* do not handle events if the Document is in NoComputedDisplay mode. */
 
@@ -1493,7 +1470,29 @@ LPARAM lParam;
            return (DefWindowProc (hwnd, mMsg, wParam, lParam));
         }
 		
-     }
+     } 
+
+     if (frame != -1 && winCapture != hwnd && fBlocking) {
+        GetCursorPos (&ptCursor);
+		if (ptCursor.y > rect.bottom || ptCursor.y < rect.top) {
+			if (ptCursor.y > rect.bottom) {
+               delta = 13;
+               Y_Pos = cRect.bottom;
+			}
+            if (ptCursor.y < rect.top) {
+               delta = -13;
+               Y_Pos = 0;
+			}
+
+            if (ptCursor.x > rect.right)
+               X_Pos = cRect.right;
+
+            VerticalScroll (frame, delta, TRUE);
+            /* LocateSelectionInView (frame, X_Pos, Y_Pos, 0); */
+            /* if (wParam & MK_LBUTTON) */
+            SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
+		}
+	 }
 
      switch (mMsg) {
             case WM_PAINT: 
@@ -1517,7 +1516,10 @@ LPARAM lParam;
             case WM_KEYDOWN:
             case WM_CHAR:
                  TtaAbortShowDialogue ();
-                 WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
+				 key = (int) wParam;
+                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, &key))
+                    /* WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam); */
+                    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam);
                  return 0;
 
             case WM_LBUTTONDOWN:
@@ -1541,6 +1543,9 @@ LPARAM lParam;
                  return 0;
 
             case WM_LBUTTONUP:
+                 ReleaseCapture ();
+                 winCapture = (HWND) 0;
+                 firstTime = TRUE;
                  if (fBlocking)
                     fBlocking = FALSE;
                  return 0;
@@ -1603,6 +1608,14 @@ LPARAM lParam;
                  }
 				 oldXPos = X_Pos;
 				 oldYPos = Y_Pos;
+                 return 0;
+
+            case WM_NCMOUSEMOVE:
+                 if (firstTime && fBlocking) {
+                     winCapture = GetCapture ();
+					 firstTime = FALSE;
+                     SetCapture (hwnd);
+				 }
                  return 0;
 
             case WM_DESTROY: 

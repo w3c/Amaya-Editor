@@ -1563,6 +1563,8 @@ int                 frame;
                        CreateAlign1DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
 					else if (nbDlgItems == 5)
                          CreateAlign2DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
+                    else if (nbDlgItems == 4)
+                         CreateAlign3DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
 			 }
 #            endif /* _WINDOWS */
 		  }

@@ -63,6 +63,18 @@
 #include "views_f.h"
 
 
+static char*         Enable_Multikey;
+static unsigned char previous_value = 0;
+static int           mk_state = 0;
+static int           TtaKeyboardMapInstalled = 0;
+static unsigned int  previous_state = 0;
+
+#ifdef _WINDOWS
+static char        previous_keysym;
+#else  /* !_WINDOWS */
+static KeySym      previous_keysym;
+#endif /* !_WINDOWS */
+
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Handling of Multikey sequences used to produce ISO-Latin-1.
@@ -73,7 +85,6 @@
   ----------------------------------------------------------------------*/
 /* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
 /* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
-static char        *Enable_Multikey;
 static KeySym       TtaIsoKeySymTab[256] =
 {
    XK_nobreakspace,		/* First keysyms are mapped directly  */
@@ -97,18 +108,25 @@ XK_ocircumflex, XK_otilde, XK_odiaeresis, XK_division, XK_oslash, XK_ugrave,
 XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
    NoSymbol			/* Needed, do not remove ! */
 };
-
+#endif /* !_WINDOWS */
 /*
  * definition of a multi-key sequence, is made of three KeySyms :
  *      - a character,
  *      - a modifier,
  *      - the result.
  */
+
 typedef struct multi_key
   {
+#    ifdef _WINDOWS
+     char                c;
+     char                m;
+     int                 r;
+#    else  /* !_WINDOWS */
      KeySym              c;
      KeySym              m;
      KeySym              r;
+#    endif /* !_WINDOWS */
   }
 Multi_Key;
 
@@ -338,6 +356,61 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_apostrophe, XK_yacute},	/* yacute */
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
 #else /* IV */
+#   ifdef _WINDOWS
+   {'A', '`',  0xC0},	/* Agrave */
+   {'A', '\'', 0xC1},	/* Aacute */
+   {'A', '^',  0xC2},	/* Acircumflex */
+   {'A', '~',  0xC3},	/* Atilde */
+   {'A', '"',  0xC4},	/* Adiaeresis */
+   {'A', '*',  0xC5},	/* Aring */
+   {'a', '`',  0xE0},	/* agrave */
+   {'a', '\'', 0xE1},	/* aacute */
+   {'a', '^',  0xE2},	/* acircumflex */
+   {'a', '~',  0xE3},	/* atilde */
+   {'a', '"',  0xE4},	/* adiaeresis */
+   {'a', '*',  0xE5},	/* aring */
+   {'C', '`',  0xC7},	/* Ccedilla */
+   {'c', '`',  0xE7},	/* ccedilla */
+   {'E', '`',  0xC8},	/* Egrave */
+   {'E', '\'', 0xC9},	/* Eacute */
+   {'E', '^',  0xCA},	/* Ecircumflex */
+   {'E', '"',  0xCB},	/* Ediaeresis */
+   {'e', '`',  0xE8},	/* egrave */
+   {'e', '\'', 0xE9},	/* eacute */
+   {'e', '^',  0xEA},	/* ecircumflex */
+   {'e', '"',  0xEB},	/* ediaeresis */
+   {'I', '`',  0xCC},	/* Igrave */
+   {'I', '\'', 0xCD},	/* Iacute */
+   {'I', '^',  0xCE},	/* Icircumflex */
+   {'I', '"',  0xCF},	/* Idiaeresis */
+   {'i', '`',  0xEC},	/* Igrave */
+   {'i', '\'', 0xED},	/* Iacute */
+   {'i', '^',  0xEE},	/* Icircumflex */
+   {'i', '"',  0xEF},	/* Idiaeresis */
+   {'N', '~',  0xD1},	/* Ntilde */
+   {'n', '~',  0xF1},	/* ntilde */
+   {'O', '`',  0xD2},	/* Ograve */
+   {'O', '\'', 0xD3},	/* Oacute */
+   {'O', '^',  0xD4},	/* Ocircumflex */
+   {'O', '~',  0xD5},	/* Otilde */
+   {'O', '"',  0xD6},	/* Odiaeresis */
+   {'o', '`',  0xF2},	/* Ograve */
+   {'o', '\'', 0xF3},	/* Oacute */
+   {'o', '^',  0xF4},	/* Ocircumflex */
+   {'o', '~',  0xF5},	/* Otilde */
+   {'o', '"',  0xF6},	/* Odiaeresis */
+   {'U', '`',  0xD9},	/* Ugrave */
+   {'U', '\'', 0xDA},	/* Uacute */
+   {'U', '^',  0xDB},	/* Ucircumflex */
+   {'U', '"',  0xDC},	/* Udiaeresis */
+   {'u', '`',  0xF9},	/* Ugrave */
+   {'u', '\'', 0xFA},	/* Uacute */
+   {'u', '^',  0xFB},	/* Ucircumflex */
+   {'u', '"',  0xFC},	/* Udiaeresis */
+   {'Y', '\'', 0xDD},	/* Yacute */
+   {'y', '\'', 0xFD},	/* yacute */
+   {'y', '"',  0xFF},	/* ydiaeresis */
+#   else  /* !_WINDOWS */
    {XK_A, XK_grave, XK_Agrave},	/* Agrave */
    {XK_A, XK_acute, XK_Agrave},	/* Aacute */
    {XK_A, XK_apostrophe, XK_Aacute},	/* Aacute */
@@ -406,16 +479,16 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_acute, XK_yacute},	/* yacute */
    {XK_y, XK_apostrophe, XK_yacute},	/* yacute */
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
+#  endif /* _WINDOWS */
 #endif /* IV */
    {0, 0, 0},
 };
 
-
 #define NB_MK (sizeof(mk_tab) / sizeof(Multi_Key))
 
+#ifndef _WINDOWS
 static Display     *TtaDisplay = NULL;
 static int          TtaNbIsoKeySym = 0;
-static int          TtaKeyboardMapInstalled = 0;
 static int          TtaNbKeySymPerKeyCode = 0;
 static int          TtaModifierNumber = 0;
 static int          TtaMinKeyCode = 0;
@@ -572,6 +645,8 @@ int                 keycode;
 {
    return (TRUE);
 }
+#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
    TtaInstallMultiKey
@@ -593,6 +668,12 @@ int                 keycode;
  */
 void                TtaInstallMultiKey ()
 {
+# ifdef _WINDOWS 
+  Enable_Multikey = TtaGetEnvString ("ENABLE_MULTIKEY");
+  if (Enable_Multikey != NULL && !strcasecmp (Enable_Multikey, "no"))
+      Enable_Multikey = NULL;
+   TtaKeyboardMapInstalled = 1;
+# else  /* _WINDOWS */
   KeySym             *keymap;
   Display            *dpy = TtaGetCurrentDisplay ();
   KeyCode             keycode;
@@ -732,9 +813,10 @@ void                TtaInstallMultiKey ()
 	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] = keysym;
      }
    TtaKeyboardMapInstalled = 1;
-
+# endif /* _WINDOWS */
 }
 
+#ifndef _WINDOWS 
 /*----------------------------------------------------------------------
    TtaGetIsoKeysym
 
@@ -795,10 +877,6 @@ KeySym              keysym;
  * a multiple sequence of event to produce the corresponding
  * keysym.
  */
-static int                 mk_state = 0;
-static KeySym              previous_keysym;
-static unsigned char       previous_value = 0;
-static unsigned int        previous_state = 0;
 
 /*----------------------------------------------------------------------
    TtaHandleMultiKeyEvent
@@ -848,96 +926,6 @@ ThotEvent             *event;
    fprintf (stderr, "Event : key %d, lookup %d, state %X,  KS %X\n", keycode, ret, state, KS);
 #endif
 
-#ifdef IV
-   /* Deal with Keysym definition by typing <AltGraph>#number_of_iso_char */
-   if ((mk_state == 1 && KS >= XK_0 && KS <= XK_9) ||
-       mk_state == 3 || mk_state == 4)
-     {
-	if (ret != 0 && KS >= XK_0 && KS <= XK_9)
-	  {
-	     if (mk_state == 1)
-		mk_state = 2;
-	     /* It's a char of the octal string */
-	     previous_value *= 8;
-	     previous_value += KS - XK_0;
-
-	     /* Octal number cannot be encoded on more than 3 char */
-	     if (mk_state == 4)
-	       {
-		  mk_state = 0;
-		  TtaGetIsoKeysym (event, previous_value);
-		  return (1);
-	       }
-
-	     /* finished with this event */
-	     mk_state++;
-	     return (0);
-	  }
-	else
-	  {
-	     /*
-	      * Simulate an intermediate event for previous char
-	      * and continue.
-	      */
-	     TtaGetIsoKeysym (event, previous_value);
-	     XtDispatchEvent (event);
-	     event->xkey.state = state;
-	     event->xkey.keycode = keycode;
-	     mk_state = 0;
-	  }
-     }
-   else
-      previous_value = 0;
-
-   if (KS == XK_Multi_key || KS == XK_Mode_switch)
-     {
-	/* start of a compose sequence using the Compose key */
-	mk_state = 1;
-	return (0);
-     }
-
-   if (mk_state == 2)
-     {
-	/*
-	 * The have already read the character modified by compose. 
-	 * We look for the result in the list. 
-	 */
-	mk_state = 0;
-	for (index = 0; index < NB_MK; index++)
-	   if ((mk_tab[index].c == previous_keysym) && (mk_tab[index].m == KS))
-	     {
-		/*
-		 * The corresponding sequence is found. 
-		 * Generation of the corresponding character
-		 */
-		TtaGetIsoKeysym (event, mk_tab[index].r);
-		return (1);
-	     }
-
-	/*
-	 * The corresponding sequence does not exist.
-	 * Generation of the character gotten (dead keys).
-	 */
-	TtaGetIsoKeysym (event, previous_value);
-	XtDispatchEvent (event);
-	event->xkey.state = state;
-	event->xkey.keycode = keycode;
-	return (1);
-     }
-
-   if (mk_state == 1)
-     {
-	/* First key of a compose sequence ... */
-	/* Memorize the first element and the fact that the state was changed */
-	previous_keysym = KS;
-	previous_state = state;
-	mk_state++;
-	return (0);
-     }
-   return (1);
-
-#else /* IV */
-
    if (mk_state == 1)
      {
        /* we have already read the stressed character */ 
@@ -986,10 +974,57 @@ ThotEvent             *event;
      }
    else
      return (1);
-   
-#endif /* IV */
 }
 #endif /* !_WINDOWS */
+
+#ifdef _WINDOWS 
+#ifdef __STDC__
+int                 WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, char* k)
+#else  /* __STDC__ */
+int                 WIN_TtaHandleMultiKeyEvent (msg, wParam, lParam, k)
+UINT    msg; 
+WPARAM wParam; 
+LPARAM lParam;
+char*  k;
+#endif /* __STDC__ */
+{
+   int          index;
+   int          keycode;
+   char         KS;
+   unsigned int state;
+
+   if (Enable_Multikey == NULL) /* no multi-key allowed */
+      return 1;
+
+   if (msg == WM_CHAR)
+      KS = (char) wParam;
+   
+   if (mk_state == 1 && msg == WM_CHAR) {
+      /* we have already read the stressed character */ 
+      /* We look for the result in the list */
+
+      mk_state = 0;
+      for (index = 0; index < NB_MK; index++)
+          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (char) wParam))  
+             /*
+              * The corresponding sequence is found. 
+              * Generation of the corresponding character
+              */
+	         *k = mk_tab[index].r;
+
+          return (1);
+   }
+   if (KS == '`' || KS == '\'' || KS == '^' || KS == '~' || KS == '"'|| KS == '*') {
+      /* start of a compose sequence */
+       mk_state = 1;
+       previous_keysym = KS;
+       previous_value  = keycode;
+       previous_state  = state;
+       return (0);
+     }
+     return (1);
+}
+#endif /* _WINDOWS */
 
 /*
  * Global variables : external functions used when the application
@@ -1266,9 +1301,8 @@ void                TtaMainLoop ()
   if (NewInitMainLoop)
     NewInitMainLoop(app_cont);
 
-#  ifndef _WINDOWS
   TtaInstallMultiKey ();
-#  endif /* !_WINDOWS */
+
   UserErrorCode = 0;
   /* Sends the message Init.Pre */
   notifyEvt.event = TteInit;
