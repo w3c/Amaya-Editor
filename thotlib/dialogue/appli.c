@@ -1358,7 +1358,8 @@ LPARAM      lParam;
     currentFrame = frame;
 
   GetWindowRect (hwnd, &rect);
-  switch (mMsg) {
+  switch (mMsg)
+  {
   case WM_CREATE:
     /* Create toolbar  */
     ThotTBBitmap.hInst = hInstance;
@@ -1462,7 +1463,7 @@ LPARAM      lParam;
       buttonCommand = FALSE;
       WIN_ThotCallBack (hwnd, wParam, lParam);
     }
-    return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+    return 0L;
 
   case WM_CLOSE:
        if (frame <= MAX_FRAME) {
@@ -1485,7 +1486,8 @@ LPARAM      lParam;
     PostQuitMessage (0);
     return 0L;
         
-  case WM_SIZE: {
+  case WM_SIZE:
+	{
     int    cx = LOWORD (lParam);
     int    cy = HIWORD (lParam);
     int    cyStatus;
@@ -1498,46 +1500,55 @@ LPARAM      lParam;
     DWORD  dwStyle;
 
     /* Adjust toolbar size. */
-    if (IsWindowVisible (WinToolBar[frame])) {
+    if (IsWindowVisible (WinToolBar[frame]))
+	{
       dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
       
       if (dwStyle & CCS_NORESIZE)
-	MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
+	    MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
       else
-	ToolBar_AutoSize (WinToolBar[frame]);
+	    ToolBar_AutoSize (WinToolBar[frame]);
 
       InvalidateRect (WinToolBar[frame], NULL, TRUE);
       GetWindowRect (WinToolBar[frame], &rWindow);
       ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
       ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
       cyTB = rWindow.bottom - rWindow.top;
-    } else 
+    }
+	else 
       cyTB = 0;
     
     cyTxtZone = cyTB;
 
     /* Adjust text zones */
-    for (index = 0; index < MAX_TEXTZONE; index++) {
-      if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
-	MoveWindow (FrameTable[frame].Label[index], 15, cyTxtZone + 5, 70, 20, TRUE);
-	MoveWindow (FrameTable[frame].Text_Zone[index], 85, cyTxtZone + 5, cx - 100, 20, TRUE);
-	cyTxtZone += 25;
+    for (index = 0; index < MAX_TEXTZONE; index++)
+	{
+      if (FrameTable[frame].Text_Zone[index] &&
+		  IsWindowVisible (FrameTable[frame].Text_Zone[index]))
+	  {
+	    MoveWindow (FrameTable[frame].Label[index], 15, cyTxtZone + 5, 70, 20, TRUE);
+	    MoveWindow (FrameTable[frame].Text_Zone[index], 85, cyTxtZone + 5, cx - 100, 20, TRUE);
+	    cyTxtZone += 25;
       }
     }
 
     /* Adjust status bar size. */
-    if (IsWindowVisible (FrameTable[frame].WdStatus)) {
+    if (IsWindowVisible (FrameTable[frame].WdStatus))
+	{
       GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
       cyStatus = rWindow.bottom - rWindow.top;
       MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE);
-    } else
+    }
+	else
       cyStatus = 0;
 
     /* Adjust Vertical scroll bar */
-    MoveWindow (FrameTable[frame].WdScrollV, cx - 15, cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE);
+    MoveWindow (FrameTable[frame].WdScrollV, cx - 15,
+		cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE);
     
     /* Adjust Hoizontal scroll bar */
-    MoveWindow (FrameTable[frame].WdScrollH, 0, cy - (cyStatus + 15), cx - 15, 15, TRUE);
+    MoveWindow (FrameTable[frame].WdScrollH, 0,
+		cy - (cyStatus + 15), cx - 15, 15, TRUE);
     
     /* Adjust client window size. */
     GetWindowRect (FrameTable[frame].WdScrollV, &rWindow);
@@ -1555,12 +1566,12 @@ LPARAM      lParam;
     SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
     SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
     return 0L;
-  }
+	}
 
   default: 
     return (DefWindowProc (hwnd, mMsg, wParam, lParam));
   }
-  return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+  /*return (DefWindowProc (hwnd, mMsg, wParam, lParam));*/
 }
 
 /* -------------------------------------------------------------------

@@ -190,22 +190,7 @@ DWORD     fdwReason;
 LPVOID    pvReserved;
 #endif /* __STDC__ */
 {
-	static PVOID pvData = NULL;
-	ThotBool fOK = TRUE;
-
-	switch (fdwReason)
-	{
-		case DLL_PROCESS_ATTACH:
-			pvData = HeapAlloc (GetProcessHeap (), 0, 1000);
-			if (pvData == NULL)
-				fOK = FALSE;
-			break;
-		case DLL_PROCESS_DETACH:
-			if (pvData != NULL)
-				HeapFree (GetProcessHeap (), 0, pvData);
-			break;
-	}
-    return fOK;
+  return TRUE;
 }
 
 /* ---------------------------------------------------------------------- *
