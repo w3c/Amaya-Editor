@@ -34,6 +34,7 @@ typedef enum {
    UNICODE_1_1_UTF_7,
    UTF_7,
    UTF_8,
+   UTF_16,
    WINDOWS_1250,
    WINDOWS_1251,
    WINDOWS_1252,
