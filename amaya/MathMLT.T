@@ -1323,19 +1323,25 @@ TextTRANSLATE Grec
 
 SYMBTRANSLATE
         BEGIN
-	'r'	-> '&Sqrt;';
-	'i'     -> '&Integral;';
+        'I'     -> '&Intersection;';
+        'P'     -> '&Product;';
+        'S'     -> '&Sum;';
+        'U'     -> '&Union;';
+	'V'	-> '&DownArrow;';
 	'c'     -> '&ContourIntegral;';
 	'd'	-> '&Integral;&Integral;';
+	'h'	-> '&OverBar;';
+	'i'     -> '&Integral;';
+	'r'	-> '&Sqrt;';
 	't'	-> '&Integral;&Integral;&Integral;';
-        'S'     -> '&Sum;';
-        'P'     -> '&Product;';
-        'U'     -> '&Union;';
-        'I'     -> '&Intersection;';
 	'>'	-> '&RightArrow;';
 	'<'	-> '&LeftArrow;';
 	'^'	-> '&UpArrow;';
-	'V'	-> '&DownArrow;';
         END;
+
+GRAPHTRANSLATE
+	BEGIN
+	'v'	-> '|';
+	END;
 
 END
