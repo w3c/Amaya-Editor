@@ -36,8 +36,8 @@
 #include "labelAllocator.h"
 #include "registry.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
@@ -3538,7 +3538,7 @@ boolean             withEvent;
 	   /* le schema de structure du document prevoit l'exportation     */
 	   /* d'elements. On demande a l'utilisateur s'il veut charger la  */
 	   /* forme complete ou les seuls elements exportables, mais       */
-	   /* seulement si le schema de presentation a une vue EXPORT      */
+	   /* seulement si le schema de presentation a une vue THOT_EXPORT      */
 	  {
 	     createPages = FALSE;
 	     ok = FALSE;
@@ -3548,7 +3548,7 @@ boolean             withEvent;
 		   ok = ok || pPSchema->PsExportView[i];
 	     if (ok)
 	       {
-		  /* une vue EXPORT est prevue */
+		  /* une vue THOT_EXPORT est prevue */
 		  if (skeleton)
 		    {
 		       pDoc->DocExportStructure = TRUE;

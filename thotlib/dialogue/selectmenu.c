@@ -31,8 +31,8 @@
 #include "typemedia.h"
 #include "appdialogue.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "select_tv.h"
 #include "frame_tv.h"

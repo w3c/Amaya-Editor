@@ -45,8 +45,8 @@
 #include "writepivot_f.h"
 #include "viewapi_f.h"
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "edit_tv.h"
 #ifndef NODISPLAY
 #include "frame_tv.h"

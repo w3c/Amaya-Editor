@@ -33,12 +33,12 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "appdialogue_tv.h"
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "page_tv.h"
 
 

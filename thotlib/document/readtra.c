@@ -25,7 +25,7 @@
 #include "typemedia.h"
 #include "fileaccess.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 
 static boolean      error = FALSE;

@@ -24,70 +24,70 @@
 #ifndef NODISPLAY
 
 /* Frames table */
-EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
-EXPORT ThotWindow  FrRef[MAX_FRAME + 2];		/* window references */
-EXPORT ThotColor   BackgroundColor[MAX_FRAME + 2];	/* Background color */
+THOT_EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
+THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];		/* window references */
+THOT_EXPORT ThotColor   BackgroundColor[MAX_FRAME + 2];	/* Background color */
 
-EXPORT int	 DOT_PER_INCHE;	   /* screen resolution		  */
-EXPORT ThotColor Black_Color;      /* Couleur d'ecriture          */
-EXPORT ThotColor White_Color;      /* Couleur de fond             */
-EXPORT ThotColor Scroll_Color;     /* Couleur des bandeaux        */
-EXPORT ThotColor Button_Color;     /* Couleur des boutons         */
-EXPORT ThotColor Select_Color;     /* Couleur de la selection     */
-EXPORT ThotColor BgMenu_Color;     /* Couleur des menus           */
-EXPORT ThotColor Box_Color;        /* Couleur des boites actives  */
-EXPORT ThotColor RO_Color;         /* Couleur du Read Only        */
-EXPORT ThotColor InactiveB_Color;  /* Couleur des boutons inactifs*/
+THOT_EXPORT int	 DOT_PER_INCHE;	   /* screen resolution		  */
+THOT_EXPORT ThotColor Black_Color;      /* Couleur d'ecriture          */
+THOT_EXPORT ThotColor White_Color;      /* Couleur de fond             */
+THOT_EXPORT ThotColor Scroll_Color;     /* Couleur des bandeaux        */
+THOT_EXPORT ThotColor Button_Color;     /* Couleur des boutons         */
+THOT_EXPORT ThotColor Select_Color;     /* Couleur de la selection     */
+THOT_EXPORT ThotColor BgMenu_Color;     /* Couleur des menus           */
+THOT_EXPORT ThotColor Box_Color;        /* Couleur des boites actives  */
+THOT_EXPORT ThotColor RO_Color;         /* Couleur du Read Only        */
+THOT_EXPORT ThotColor InactiveB_Color;  /* Couleur des boutons inactifs*/
 
 #ifdef _WINDOWS
-EXPORT WNDCLASSEX	RootShell;
-EXPORT HFONT      DefaultFont;/* default Font                */
-EXPORT HPALETTE   TtCmap;	/* Table des couleurs pour Thot		*/
-EXPORT WIN_GC_BLK TtWhiteGC;
-EXPORT WIN_GC_BLK TtBlackGC;
-EXPORT WIN_GC_BLK TtInvertGC;
-EXPORT WIN_GC_BLK TtGreyGC;
-EXPORT WIN_GC_BLK TtLineGC;
-EXPORT WIN_GC_BLK TtDialogueGC;
-EXPORT WIN_GC_BLK TtGraphicGC;	/* Graphic context pour les images      */
+THOT_EXPORT WNDCLASSEX	RootShell;
+THOT_EXPORT HFONT      DefaultFont;/* default Font                */
+THOT_EXPORT HPALETTE   TtCmap;	/* Table des couleurs pour Thot		*/
+THOT_EXPORT WIN_GC_BLK TtWhiteGC;
+THOT_EXPORT WIN_GC_BLK TtBlackGC;
+THOT_EXPORT WIN_GC_BLK TtInvertGC;
+THOT_EXPORT WIN_GC_BLK TtGreyGC;
+THOT_EXPORT WIN_GC_BLK TtLineGC;
+THOT_EXPORT WIN_GC_BLK TtDialogueGC;
+THOT_EXPORT WIN_GC_BLK TtGraphicGC;	/* Graphic context pour les images      */
 
 #else /* _WINDOWS */
-EXPORT ThotWidget	RootShell;
-EXPORT XmFontList DefaultFont;  /* default Font                */
-EXPORT Time	  t1;
-EXPORT Display   *TtDisplay;	/* Identification du serveur X 	       	*/
-EXPORT int	  TtScreen; 	/* Identification de l'ecran   		*/
-EXPORT Colormap   TtCmap;	/* Table des couleurs pour Thot		*/
-EXPORT ThotGC     TtWhiteGC;
-EXPORT ThotGC     TtBlackGC;
-EXPORT ThotGC     TtInvertGC;
-EXPORT ThotGC     TtGreyGC;
-EXPORT ThotGC     TtLineGC;
-EXPORT ThotGC     TtDialogueGC;
-EXPORT ThotGC     TtGraphicGC;	/* Graphic context pour les images      */
+THOT_EXPORT ThotWidget	RootShell;
+THOT_EXPORT XmFontList DefaultFont;  /* default Font                */
+THOT_EXPORT Time	  t1;
+THOT_EXPORT Display   *TtDisplay;	/* Identification du serveur X 	       	*/
+THOT_EXPORT int	  TtScreen; 	/* Identification de l'ecran   		*/
+THOT_EXPORT Colormap   TtCmap;	/* Table des couleurs pour Thot		*/
+THOT_EXPORT ThotGC     TtWhiteGC;
+THOT_EXPORT ThotGC     TtBlackGC;
+THOT_EXPORT ThotGC     TtInvertGC;
+THOT_EXPORT ThotGC     TtGreyGC;
+THOT_EXPORT ThotGC     TtLineGC;
+THOT_EXPORT ThotGC     TtDialogueGC;
+THOT_EXPORT ThotGC     TtGraphicGC;	/* Graphic context pour les images      */
 #endif /* !_WINDOWS */
 
-EXPORT ThotWindow TtRootWindow; /* Identification de la fenetre racine 	*/
-EXPORT int        TtWDepth;	/* Nombre de plans de l'ecran  		*/
-EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* Name X-Window 	*/
-EXPORT char       TtPsFontName[MAX_FONT * 8];	/* Name PostScript 	*/
-EXPORT ptrfont    TtFonts[MAX_FONT];/* fontes chargees dans le serveur 	*/
-EXPORT int 	  TtFontFrames[MAX_FONT];
-EXPORT ThotCursor WindowCurs;	/* Curseur de designation de fenetres	*/
-EXPORT ThotCursor WaitCurs;	/* Curseur pour attendre	*/
-EXPORT ThotCursor VCurs;	/* Curseur modification presentation 	*/
-EXPORT ThotCursor HCurs;	/* Curseur modification presentation 	*/
-EXPORT ThotCursor HVCurs;	/* Curseur modification presentation 	*/
+THOT_EXPORT ThotWindow TtRootWindow; /* Identification de la fenetre racine 	*/
+THOT_EXPORT int        TtWDepth;	/* Nombre de plans de l'ecran  		*/
+THOT_EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* Name X-Window 	*/
+THOT_EXPORT char       TtPsFontName[MAX_FONT * 8];	/* Name PostScript 	*/
+THOT_EXPORT ptrfont    TtFonts[MAX_FONT];/* fontes chargees dans le serveur 	*/
+THOT_EXPORT int 	  TtFontFrames[MAX_FONT];
+THOT_EXPORT ThotCursor WindowCurs;	/* Curseur de designation de fenetres	*/
+THOT_EXPORT ThotCursor WaitCurs;	/* Curseur pour attendre	*/
+THOT_EXPORT ThotCursor VCurs;	/* Curseur modification presentation 	*/
+THOT_EXPORT ThotCursor HCurs;	/* Curseur modification presentation 	*/
+THOT_EXPORT ThotCursor HVCurs;	/* Curseur modification presentation 	*/
 
-EXPORT int     DefaultBColor;		/* default background color index   */
-EXPORT int     ActiveFrame;		/* Numero de fenetre document active */
-EXPORT int     ClickFrame;			/* ViewFrame designee par la selection */
-EXPORT int     ClickX;			/* Position X de la selection  */
-EXPORT int     ClickY;			/* Position X de la selection  */
-EXPORT int     ClickIsDone;		/* Indicateur de selection     */
-EXPORT unsigned char	*Xbuffer;	/* Buffer pour echanges avec X */
-EXPORT int		ClipboardLength;
-EXPORT Proc		CurrentCallbackAPI;
+THOT_EXPORT int     DefaultBColor;		/* default background color index   */
+THOT_EXPORT int     ActiveFrame;		/* Numero de fenetre document active */
+THOT_EXPORT int     ClickFrame;			/* ViewFrame designee par la selection */
+THOT_EXPORT int     ClickX;			/* Position X de la selection  */
+THOT_EXPORT int     ClickY;			/* Position X de la selection  */
+THOT_EXPORT int     ClickIsDone;		/* Indicateur de selection     */
+THOT_EXPORT unsigned char	*Xbuffer;	/* Buffer pour echanges avec X */
+THOT_EXPORT int		ClipboardLength;
+THOT_EXPORT Proc		CurrentCallbackAPI;
 
 #ifdef _WINDOWS
 #include <windows.h>

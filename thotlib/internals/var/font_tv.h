@@ -13,13 +13,13 @@
 #ifndef THOT_FONT_VAR
 #define THOT_FONT_VAR
 
-EXPORT ptrfont   FontDialogue;	/* Standard font dialogue */
-EXPORT ptrfont   IFontDialogue;	/* Italics font dialogue  */
-EXPORT ptrfont   LargeFontDialogue;	/* Large font dialogue    */
-EXPORT ptrfont   SmallFontDialogue;	/* Small font dialogue    */
-EXPORT ptrfont   GraphicsIcons;	/* Graphics icons         */
-EXPORT ptrfont   SymbolIcons;	/* Symblol icons          */
-EXPORT int	 MenuSize;	/* Dialogue font size     */
+THOT_EXPORT ptrfont   FontDialogue;	/* Standard font dialogue */
+THOT_EXPORT ptrfont   IFontDialogue;	/* Italics font dialogue  */
+THOT_EXPORT ptrfont   LargeFontDialogue;	/* Large font dialogue    */
+THOT_EXPORT ptrfont   SmallFontDialogue;	/* Small font dialogue    */
+THOT_EXPORT ptrfont   GraphicsIcons;	/* Graphics icons         */
+THOT_EXPORT ptrfont   SymbolIcons;	/* Symblol icons          */
+THOT_EXPORT int	 MenuSize;	/* Dialogue font size     */
 
 
 #endif

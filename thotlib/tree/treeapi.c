@@ -22,8 +22,8 @@
 #include "appdialogue.h"
 #include "labelAllocator.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "modif_tv.h"
 #include "platform_tv.h"

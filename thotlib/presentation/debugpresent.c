@@ -32,7 +32,7 @@
 #include "message.h"
 #include "pschema.h"
 
-#define EXPORT
+#define THOT_EXPORT
 #include "platform_tv.h"
 
 #include "readprs_f.h"
@@ -1363,7 +1363,7 @@ char               *output_file;
 	       {
 		  wrnom (pSc1->PsView[i - 1]);
 		  if (pSc1->PsExportView[i - 1])
-		     fprintf (output, " EXPORT");
+		     fprintf (output, " THOT_EXPORT");
 		  if (pSc1->PsPaginatedView[i - 1])
 		     fprintf (output, " {with pages}");
 		  if (i < pSc1->PsNViews)

@@ -28,8 +28,8 @@
 #include "app.h"
 #include "document.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "appevents_tv.h"
 

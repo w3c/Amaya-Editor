@@ -5,13 +5,13 @@
  *
  */
 
-EXPORT boolean       ImageDriverPrinting;
-EXPORT ThotGC        GCpicture;	 /* for bitmap */
-EXPORT char*         FileExtension[];
-EXPORT THOT_VInfo    THOT_vInfo;
-EXPORT int           HandlersCounter ;
-EXPORT int           InlineHandlers ;
+THOT_EXPORT boolean       ImageDriverPrinting;
+THOT_EXPORT ThotGC        GCpicture;	 /* for bitmap */
+THOT_EXPORT char*         FileExtension[];
+THOT_EXPORT THOT_VInfo    THOT_vInfo;
+THOT_EXPORT int           HandlersCounter ;
+THOT_EXPORT int           InlineHandlers ;
 #ifdef WWW_XWINDOWS
-EXPORT	XVisualInfo* vptr;
-EXPORT	Visual*      theVisual;
+THOT_EXPORT	XVisualInfo* vptr;
+THOT_EXPORT	Visual*      theVisual;
 #endif /* WWW_XWINDOWS */

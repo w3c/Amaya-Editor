@@ -36,8 +36,8 @@
 #include "fileaccess.h"
 #include "labelAllocator.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 
 #ifndef NODISPLAY
 #include "modif_tv.h"

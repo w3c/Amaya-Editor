@@ -31,8 +31,8 @@
 #include "fileaccess.h"
 #include "thotdir.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "modif_tv.h"
 #include "page_tv.h"

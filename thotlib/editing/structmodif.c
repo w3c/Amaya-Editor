@@ -36,11 +36,11 @@
 #include "fileaccess.h"
 #include "appdialogue.h"
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "modif_tv.h"
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "creation_tv.h"
 #include "select_tv.h"
 #include "edit_tv.h"

@@ -28,7 +28,7 @@
 #include "typemedia.h"
 
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 
 #include "exceptions_f.h"

@@ -28,7 +28,7 @@
 #define VDEBORDEMENT 40
 #define HDEBORDEMENT 40
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 
 #include "absboxes_f.h"

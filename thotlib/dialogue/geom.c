@@ -21,8 +21,8 @@
 #include "libmsg.h"
 #include "message.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "frame_tv.h"
 static int          GridSize = 1;
 

@@ -19,8 +19,8 @@
 #include "libmsg.h"
 #include "message.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "platform_tv.h"
 

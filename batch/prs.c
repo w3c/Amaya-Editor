@@ -40,14 +40,14 @@
 #include "fileaccess.h"
 #include "thotdir.h"
 
-#define EXPORT
+#define THOT_EXPORT
 #include "compil_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
 #include "thotpalette_tv.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "analsynt_tv.h"
 #include "compil_tv.h"
 
@@ -2364,13 +2364,13 @@ indLine             wi;
 		     }
 
 	       break;
-	    case KWD_EXPORT /* EXPORT */ :
-	       /* verifie qu'il n'y a pas deja une vue EXPORT */
+	    case KWD_EXPORT /* THOT_EXPORT */ :
+	       /* verifie qu'il n'y a pas deja une vue THOT_EXPORT */
 	       i = 1;
 	       while (i < pPSchema->PsNViews && !pPSchema->PsExportView[i - 1])
 		  i++;
 	       if (pPSchema->PsExportView[i - 1])
-		  CompilerMessage (wi, PRS, FATAL, ONLY_ONE_EXPORT_VIEW_ALLOWED, inputLine, LineNum);	/* deja une vue EXPORT */
+		  CompilerMessage (wi, PRS, FATAL, ONLY_ONE_EXPORT_VIEW_ALLOWED, inputLine, LineNum);	/* deja une vue THOT_EXPORT */
 	       else
 		  pPSchema->PsExportView[pPSchema->PsNViews - 1] = True;
 	       break;

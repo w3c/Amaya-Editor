@@ -41,15 +41,15 @@
 #include "fileaccess.h"
 #include "thotdir.h"
 
-#define EXPORT
+#define THOT_EXPORT
 #include "compil_tv.h"
 #include "platform_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
 #include "thotpalette_tv.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "analsynt_tv.h"
 
 int                 LineNum;	/* compteur de lignes */

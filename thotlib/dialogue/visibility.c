@@ -33,8 +33,8 @@
 
 #define MAX_ARGS 20
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 

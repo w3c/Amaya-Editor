@@ -20,7 +20,7 @@
 #include "strmsg.h"
 #include "message.h"
 
-#define EXPORT
+#define THOT_EXPORT
 #include "platform_tv.h"
 
 static PtrSSchema   pSchStr;
@@ -1205,7 +1205,7 @@ char              **argv;
 	   if (pSc1->SsExport)
 	     {
 		Prem = True;
-		printf ("EXPORT\n");
+		printf ("THOT_EXPORT\n");
 		for (r = PremRegle; r <= pSc1->SsNRules; r++)
 		  {
 		     pRe1 = &pSc1->SsRule[r - 1];

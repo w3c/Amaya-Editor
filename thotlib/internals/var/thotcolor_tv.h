@@ -13,13 +13,13 @@
 #define THOT_COLOR_VAR
 #include "thotcolor.h"
 
-EXPORT int NColors;
-EXPORT ThotColor Pix_Color[MAX_COLOR];
-EXPORT RGBstruct *RGB_Table;
-EXPORT char **Color_Table;
+THOT_EXPORT int NColors;
+THOT_EXPORT ThotColor Pix_Color[MAX_COLOR];
+THOT_EXPORT RGBstruct *RGB_Table;
+THOT_EXPORT char **Color_Table;
 
-EXPORT int NbPatterns;
-EXPORT char **Patterns;
+THOT_EXPORT int NbPatterns;
+THOT_EXPORT char **Patterns;
 
 #endif /* THOT_COLOR_VAR */
 

@@ -30,8 +30,8 @@
 #include "presentation.h"
 #include "message.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "page_tv.h"
 #include "select_tv.h"
 #include "edit_tv.h"

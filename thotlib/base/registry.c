@@ -37,7 +37,7 @@
 #include "registry.h"
 #include "application.h"
 
-#define EXPORT
+#define THOT_EXPORT
 #include "platform_tv.h"
 
 /* DEBUG_REGISTRY enable the Registry debug messages */

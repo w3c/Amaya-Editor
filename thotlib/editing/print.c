@@ -41,13 +41,13 @@
 #define DEF_PAGE_HEIGHT   800	/* hauteur de page par defaut, en points */
 #define DEF_PAGE_WIDTH    482	/* largeur de page par defaut, en points */
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "select_tv.h"
 #include "page_tv.h"
 #include "modif_tv.h"

@@ -31,8 +31,8 @@
 #include "fileaccess.h"
 #include "thotdir.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "modif_tv.h"
 #include "page_tv.h"
@@ -678,7 +678,7 @@ PtrDocument         pDoc;
    boolean             bool, skeleton;
 
    /* si le document a ete charge' sous le forme de ses seuls elements 
-      exporte's, on ouvre la vue EXPORT, sinon, on ouvre la premiere vue. */
+      exporte's, on ouvre la vue THOT_EXPORT, sinon, on ouvre la premiere vue. */
    skeleton = FALSE;
    if (pDoc->DocExportStructure)
      {

@@ -65,8 +65,8 @@ KEY;
 #define K_Next u.s0._K_Next_
 #define K_Modifier u.s1._K_Modifier_
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
 #include "edit_tv.h"

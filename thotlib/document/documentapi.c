@@ -21,13 +21,13 @@
 /*** For the ThotKernel, variables FirstSelectedElement and
      LastSelectedElement, are defined here, to be used at the end of
      function MergeTextElements  ***/
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "select_tv.h"
 #endif
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "platform_tv.h"
 #ifndef NODISPLAY

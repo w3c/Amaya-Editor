@@ -30,8 +30,8 @@
 #include "language.h"
 #include "appdialogue.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "page_tv.h"
 #include "platform_tv.h"
 #include "edit_tv.h"

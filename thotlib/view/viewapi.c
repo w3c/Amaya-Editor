@@ -32,8 +32,8 @@
 #include "thotcolor.h"
 #include "appdialogue.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "page_tv.h"
 #include "select_tv.h"

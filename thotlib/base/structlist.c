@@ -24,8 +24,8 @@
 #include "message.h"
 #include "fileaccess.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "boxes_tv.h"
 

@@ -35,8 +35,8 @@
 
 #define MAX_ARGS 20
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "font_tv.h"
 #include "boxes_tv.h"
@@ -1020,7 +1020,100 @@ ThotEvent             *event;
    return (1);
 }
 
+#endif /* !_WINDOWS */
 
+/*
+ * Global variables : external functions used when the application
+ * overrides the built-in event-handling mechanisms.
+ */
+
+static ExternalMainLoop NewMainLoop = NULL;
+static ExternalFetchEvent NewFetchEvent = NULL;
+static ExternalFetchAvailableEvent NewFetchAvailableEvent = NULL;
+
+/*----------------------------------------------------------------------
+   TtaSetEventHandling
+
+   Provide a new main loop for processing all events in an application.
+
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC
+void                TtaSetMainLoop (ExternalMainLoop loop,
+      ExternalFetchEvent fetch, ExternalFetchAvailableEvent fetchavail)
+#else  /* __STDC__ */
+void                TtaSetMainLoop (loop, fetch, fetchavail)
+ExternalMainLoop    loop;
+ExternalFetchEvent fetch;
+ExternalFetchAvailableEvent fetchavail;
+#endif /* __STDC__ */
+{
+   NewMainLoop = loop;
+   NewFetchEvent = fetch;
+   NewFetchAvailableEvent = fetchavail;
+}
+
+/*----------------------------------------------------------------------
+   TtaFetchOneEvent
+
+   retrieve one X-Windows Event from the queue, this is a blocking call.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaFetchOneEvent (ThotEvent *ev)
+#else  /* __STDC__ */
+void                TtaFetchOneEvent (ev)
+ThotEvent             *ev;
+
+#endif /* __STDC__ */
+{
+    if (NewFetchEvent) {
+        NewFetchEvent(app_cont, ev);
+	return;
+    }
+}
+
+/*----------------------------------------------------------------------
+   TtaFetchOneAvailableEvent
+
+   retrieve one X-Windows Event from the queue if one is immediately
+   available.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             TtaFetchOneAvailableEvent (ThotEvent *ev)
+#else  /* __STDC__ */
+boolean             TtaFetchOneAvailableEvent (ev)
+ThotEvent             *ev;
+
+#endif /* __STDC__ */
+{
+#ifndef _WINDOWS
+   XtInputMask         status;
+#endif /* ! _WINDOWS */
+
+   if (NewFetchAvailableEvent)
+      return(NewFetchAvailableEvent(app_cont, ev));
+
+#ifndef _WINDOWS
+   /* loop: waiting for the pending events */
+   status = XtAppPending (app_cont);
+   while (status != 0)
+     {
+	if (status == XtIMXEvent)
+	  {
+	     XtAppNextEvent (app_cont, ev);
+	     return(TRUE);
+	  }
+	else
+	   XtAppProcessEvent (app_cont, (XtIMAll & (~XtIMXEvent)));
+	status = XtAppPending (app_cont);
+     }
+
+   return(FALSE);
+#endif /* ! _WINDOWS */
+}
+
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaHandleOneEvent
 
@@ -1105,7 +1198,6 @@ ThotEvent             *ev;
 	  }
      }
 }
-
 #endif /* !_WINDOWS */
 
 #ifdef _WINDOWS
@@ -1160,7 +1252,6 @@ void                TtaHandlePendingEvents ()
 #endif /* _WINDOWS */
 }
 
-
 /*----------------------------------------------------------------------
    TtaMainLoop
 
@@ -1172,15 +1263,12 @@ void                TtaMainLoop ()
 {
    NotifyEvent         notifyEvt;
 
-#ifndef _WINDOWS
-   ThotEvent              ev;
-   XtInputMask         status;
-
-#endif /* _WINDOWS */
 #ifdef _WINDOWS
    MSG                 msg;
-
-#endif
+#else /* ! _WINDOWS */
+   ThotEvent              ev;
+   XtInputMask         status;
+#endif /* _WINDOWS */
 
 #ifndef _WINDOWS
    TtaInstallMultiKey ();
@@ -1198,7 +1286,12 @@ void                TtaMainLoop ()
    /* Loop wainting for the events */
    while (1)
      {
-#ifdef WWW_XWINDOWS
+        if (NewMainLoop != NULL) {
+	    NewMainLoop(app_cont);
+	    continue;
+	}
+#ifndef _WINDOWS
+        TtaFetchOneEvent(&ev);
 	status = XtAppPending (app_cont);
 	if (status & XtIMXEvent)
 	  {

@@ -25,8 +25,8 @@
 #include "message.h"
 #include "pattern.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "thotcolor_tv.h"
 

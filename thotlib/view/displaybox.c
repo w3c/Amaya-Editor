@@ -18,7 +18,7 @@
 #include "picture.h"
 #include "appdialogue.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "edit_tv.h"
 #include "frame_tv.h"

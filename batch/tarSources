@@ -788,6 +788,7 @@ Amaya/thotlib/presentation/pschemaapi.c \
 Amaya/thotlib/presentation/specificdriver.c \
 Amaya/thotlib/tree/attributeapi.c \
 Amaya/thotlib/tree/attributes.c \
+Amaya/thotlib/tree/checkaccess.c \
 Amaya/thotlib/tree/draw.c \
 Amaya/thotlib/tree/exceptions.c \
 Amaya/thotlib/tree/labelalloc.c \

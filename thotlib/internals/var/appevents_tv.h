@@ -9,8 +9,8 @@
 #ifndef THOT_APPEVENTS_VAR
 #define THOT_APPEVENTS_VAR
 
-EXPORT PtrEventsSet  SchemasEvents;
-EXPORT PtrEventsSet  EditorEvents;
-EXPORT PtrAction     ActionList;
+THOT_EXPORT PtrEventsSet  SchemasEvents;
+THOT_EXPORT PtrEventsSet  EditorEvents;
+THOT_EXPORT PtrAction     ActionList;
 
 #endif /* THOT_APPEVENTS_VAR */

@@ -30,8 +30,8 @@
 #include "memory_f.h"
 #include "readstr_f.h"
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "appevents_tv.h"
 
 

@@ -32,8 +32,8 @@
 #include "fileaccess.h"
 #include "thotdir.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "appevents_tv.h"
 
 extern PtrEventsSet pAppli;

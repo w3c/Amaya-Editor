@@ -14,8 +14,8 @@
 #include "view.h"
 #include "typecorr.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "select_tv.h"
 extern int          UserErrorCode;

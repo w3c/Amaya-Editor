@@ -48,17 +48,17 @@
 #include "fileaccess_f.h"
 #include "writeapp_f.h"
 
-#define EXPORT
+#define THOT_EXPORT
 #include "platform_tv.h"
 #include "analsynt_tv.h"
 #include "compil_tv.h"
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "appevents_tv.h"
 
-EXPORT int          LineNum;
-EXPORT PtrEventsSet pAppli;
-EXPORT PtrSSchema   pSSchema;
+THOT_EXPORT int          LineNum;
+THOT_EXPORT PtrEventsSet pAppli;
+THOT_EXPORT PtrSSchema   pSSchema;
 extern int          IncNbIdent;
 
 int                 LineNum;	/* lines counter in source file */

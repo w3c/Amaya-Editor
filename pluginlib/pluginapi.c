@@ -34,7 +34,7 @@
 #include "npupp.h"
 #include "pluginbrowse.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "picture_tv.h"
 
 extern XtAppContext     app_cont;

@@ -15,7 +15,7 @@
  *
  */
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "amaya.h"
 #include "AHTBridge_f.h"
 #include "AHTFWrite_f.h"
@@ -24,7 +24,7 @@
 
 #ifdef WWW_XWINDOWS
 /* Amaya's X appcontext */
-extern XtAppContext app_cont;
+extern ThotAppContext app_cont;
 #endif
 
 

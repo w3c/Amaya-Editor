@@ -29,7 +29,7 @@
 #include "message.h"
 #include "appdialogue.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "creation_tv.h"
 #include "boxes_tv.h"
 #include "frame_tv.h"

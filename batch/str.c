@@ -38,12 +38,12 @@ typedef enum
   }
 ContStrExt;
 
-#define EXPORT
+#define THOT_EXPORT
 #include "compil_tv.h"
 #include "platform_tv.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "analsynt_tv.h"
 
 int                 LineNum;	 /* lines counter in source file */
@@ -2926,7 +2926,7 @@ char              **argv;
 	      /* stop the parser */
 	      ParserEnd ();
 	    if (!error)
-	      /* set right rule number when we met the keyword EXPORT */
+	      /* set right rule number when we met the keyword THOT_EXPORT */
 	      if (!pSSchema->SsExport)
 		ChangeRules ();
 	    if (!error)

@@ -16,7 +16,7 @@
 #include "appdialogue.h"
 
 /* variables importees */
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "select_tv.h"
 #include "creation_tv.h"
 #include "modif_tv.h"

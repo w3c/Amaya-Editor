@@ -18,7 +18,7 @@
 /* Without this option, it creates a function ppStartParser that parses a   */
 /* trans file and displays the internal representation of transformations.  */
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "amaya.h"
 #ifdef  PPSTANDALONE
 #define  NAME_LENGTH 20

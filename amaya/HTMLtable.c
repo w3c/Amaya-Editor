@@ -11,7 +11,7 @@
  */
 
 /* Amaya includes  */
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "amaya.h"
 
 static Element      CurrentPastedRow = NULL;

@@ -15,13 +15,40 @@
  *      callback for Progress, Terminate, Redirect and Authentification.
  */
 
-#define EXPORT
+#define THOT_EXPORT
 #include "amaya.h"
 #include "netamaya.h"
 #include "eventamaya.h"
 
-#include "netamaya_f.h"
+/* #include "netamaya_f.h" */
 #include "eventamaya_f.h"
+
+/************************************************************************
+ *									*
+ *		Kaffe Specific stuff, need to be isolated		*
+ *									*
+ ************************************************************************/
+
+#include "gtypes.h"
+#include "access.h"
+#include "object.h"
+#include "constants.h"
+#include "classMethod.h"
+#include "baseClasses.h"
+#include "thread.h"
+#include "support.h"
+#include "slib.h"
+#include "errors.h"
+#include "exception.h"
+
+void
+throwOutOfMemory ()
+{
+        if (OutOfMemoryError != NULL)
+                throwException(OutOfMemoryError);
+        fprintf (stderr, "(Insufficient memory)\n");
+        exit (-1);
+}
 
 /************************************************************************
  *									*
@@ -75,7 +102,146 @@ void                HandleQueuedNetRequests ()
  *									*
  ************************************************************************/
 
+/*----------------------------------------------------------------------
+  AmayaHandleOneEvent
 
+  This routine handle one event fetched from the X-Window socket.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                AmayaHandleOneEvent (ThotEvent *ev)
+#else
+void                AmayaHandleOneEvent (ev)
+ThotEvent *ev;
+#endif
+{
+    TtaHandleOneEvent(ev);
+}
+
+/*----------------------------------------------------------------------
+  AmayaFetchEvent
+
+  This routine poll both the socket used by the Network interface and
+  the X-Windows event queue. As long as no X-Window event is available,
+  it has to handle network traffic. If an X-Window event is available,
+  the routine should fetch it from the queue in the ev argument and return.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                AmayaFetchEvent (ThotAppContext app_ctxt, ThotEvent *ev)
+#else
+void                AmayaFetchEvent (app_ctxt, ev)
+ThotAppContext app_ctxt;
+ThotEvent *ev;
+#endif
+{
+  int status;
+
+#ifdef WWW_XWINDOWS
+  status = XtAppPending (app_ctxt);
+  while (status & XtIMXEvent) {
+     XtAppProcessEvent (app_ctxt, XtIMXEvent);
+     status = XtAppPending (app_ctxt);
+  }
+  XtAppNextEvent (app_ctxt, ev);
+#else  /* WWW_XWINDOWS */
+#endif /* !WWW_XWINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  AmayaFetchAvailableEvent
+
+  This routine look at the socket used by the Network interface and
+  the X-Windows event queue. It first handle changes in the network
+  socket status, and handle them (atomic operations). Once done,
+  if an X-Window event is available, the routine should fetch it from
+  the queue in the ev argument and return TRUE, it returns FALSE otherwise.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             AmayaFetchAvailableEvent (ThotAppContext app_ctxt, ThotEvent *ev)
+#else
+boolean             AmayaFetchAvailableEvent (app_ctxt, ev)
+ThotAppContext app_ctxt;
+ThotEvent *ev;
+#endif
+{
+  int status;
+
+#ifdef WWW_XWINDOWS
+  status = XtAppPending (app_ctxt);
+  while (status & XtIMXEvent) {
+     XtAppProcessEvent (app_ctxt, XtIMXEvent);
+     status = XtAppPending (app_ctxt);
+  }
+  if (status) {
+     XtAppNextEvent (app_ctxt, ev);
+     return(TRUE);
+  }
+  return(FALSE);
+#else  /* WWW_XWINDOWS */
+#endif /* !WWW_XWINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  AmayaEventLoop
+
+  The point where events arriving from the X-Windows socket as well as
+  the network sockets are fetched and dispatched to the correct handlers.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                AmayaEventLoop (ThotAppContext app_ctxt)
+#else
+void                AmayaEventLoop (app_ctxt)
+ThotAppContext app_ctxt;
+#endif
+{
+#ifndef _WINDOWS
+   ThotEvent           ev;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   MSG                 msg;
+#endif
+
+   /* Loop waiting for the events */
+   while (1)
+     {
+        if (NetRequestsAvailable) {
+        }
+#ifdef WWW_XWINDOWS
+        AmayaFetchEvent (app_ctxt, &ev);
+        AmayaHandleOneEvent (&ev);
+#else  /* WWW_XWINDOWS */
+	GetMessage (&msg, NULL, 0, 0);
+	TranslateMessage (&msg);
+	TtaHandleOneWindowEvent (&msg);
+#endif /* !WWW_XWINDOWS */
+     }
+}
+
+/*----------------------------------------------------------------------
+  QueryInit
+  initializes the low-level network interface
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                QueryInit ()
+#else
+void                QueryInit ()
+#endif
+{
+}
+
+/*----------------------------------------------------------------------
+  QueryClose
+  shutdown the low-level network interface
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                QueryClose ()
+#else
+void                QueryClose ()
+#endif
+{
+}
+
+ 
 /************************************************************************
  *									*
  *	FRONT END to the NETWORK ACCESSES using LIBWWW			*

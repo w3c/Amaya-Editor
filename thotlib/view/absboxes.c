@@ -27,7 +27,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "page_tv.h"
 #include "tree_f.h"
 #include "createabsbox_f.h"

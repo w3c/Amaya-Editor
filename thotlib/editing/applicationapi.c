@@ -30,12 +30,12 @@
 #include "appdialogue.h"
 #include "dictionary.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "appevents_tv.h"
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "print_tv.h"
 #include "edit_tv.h"
 #include "thotcolor.h"

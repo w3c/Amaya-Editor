@@ -27,7 +27,7 @@
 #include "typemedia.h"
 #include "fileaccess.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 static BinFile      outfile;
 
 #include "fileaccess_f.h"

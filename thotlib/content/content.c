@@ -34,7 +34,7 @@
 #include "references_f.h"
 #include "callback_f.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "select_tv.h"
 
 

@@ -20,7 +20,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "compil_tv.h"
 
 int                 UserErrorCode;

@@ -31,10 +31,10 @@
 #include "libmsg.h"
 #include "message.h"
 
-#define EXPORT
+#define THOT_EXPORT
 #include "boxes_tv.h"
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "font_tv.h"
 
 #include "appli_f.h"

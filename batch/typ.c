@@ -38,13 +38,13 @@
 #include "thotdir.h"
 
 /* Variables  pour l'analyseur syntaxique */
-#define EXPORT
+#define THOT_EXPORT
 #include "compil_tv.h"
 #include "platform_tv.h"
 
 /* Variables exportees pour l'analyseur syntaxique */
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "analsynt_tv.h"
 
 

@@ -12,7 +12,7 @@
  */
 
 /* Included headerfiles */
-#define EXPORT
+#define THOT_EXPORT
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"

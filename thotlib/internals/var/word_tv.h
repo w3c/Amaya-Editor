@@ -7,7 +7,7 @@
  
 /* convert table for alphabets */
 
-EXPORT short _cType_[1 + 256] = {
+THOT_EXPORT short _cType_[1 + 256] = {
         0,
         _C,     _C,     _C,     _C,     _C,     _C,     _C,     _C,
         _C,     _C|_S,  _C|_S,  _C|_S,  _C|_S,  _C|_S,  _C,     _C,

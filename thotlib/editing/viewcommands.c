@@ -30,16 +30,16 @@
 #include "fileaccess.h"
 #include "appdialogue.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "creation_tv.h"
 #include "platform_tv.h"
 #include "modif_tv.h"
 #include "page_tv.h"
 #include "select_tv.h"
 #include "appdialogue_tv.h"
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "edit_tv.h"
 
 #include "appli_f.h"

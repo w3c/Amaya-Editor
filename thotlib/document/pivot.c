@@ -43,8 +43,8 @@
 #include "externalref_f.h"
 #include "labelalloc_f.h"
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "edit_tv.h"
 
 extern int          UserErrorCode;

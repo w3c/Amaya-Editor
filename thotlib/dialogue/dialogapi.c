@@ -34,7 +34,7 @@
 #include "appli_f.h"
 #include "message.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "thotcolor_tv.h"
 
 /* Catalogues structures */
@@ -96,8 +96,8 @@ struct Cat_List
      struct Cat_Context  Cat_Table[MAX_CAT];
   };
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
@@ -129,8 +129,8 @@ static int          ShowReturn;
 static int          ShowX, ShowY;
 static struct Cat_Context *ShowCat = NULL;
 
-#ifndef WINDOWS
-static XtAppContext Def_AppCont;
+#ifndef _WINDOWS
+static ThotAppContext Def_AppCont;
 static Display     *GDp;
 static XtTranslations TextTranslations;
 #endif
@@ -1234,7 +1234,7 @@ void                MyWarningHandler ()
 void                TtaInitDialogueWindows (char *server, char *txtOK, char *txtRAZ, char *txtDone)
 #else  /* _WINDOWS */
 #ifdef __STDC__
-void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone, XtAppContext * app_context, Display ** Dp)
+void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone, ThotAppContext * app_context, Display ** Dp)
 
 #else  /* __STDC__ */
 void                TtaInitDialogue (server, txtOK, txtRAZ, txtDone, app_context, Dp)
@@ -1242,7 +1242,7 @@ char               *server;
 char               *txtOK;
 char               *txtRAZ;
 char               *txtDone;
-XtAppContext       *app_context;
+ThotAppContext       *app_context;
 Display           **Dp;
 
 #endif /* __STDC__ */

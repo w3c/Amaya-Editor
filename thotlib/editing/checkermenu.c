@@ -37,12 +37,12 @@
 #include "corrmenu.h"
 #include "appdialogue.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "spell_tv.h"
 
 /* les variables locales */

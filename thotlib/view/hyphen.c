@@ -28,7 +28,7 @@
 #include "language.h"
 #include "dictionary.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 
 static char         sepcar[] =

@@ -8,18 +8,18 @@
 #ifndef __PRINT_V_H__
 #define __PRINT_V_H__
 
-EXPORT int	    numOfJobs;
-EXPORT PathBuffer   PSdir;
-EXPORT boolean      PaperPrint;
-EXPORT boolean      ManualFeed;
-EXPORT boolean      NewPaperPrint;
-EXPORT char         pPrinter[MAX_NAME_LENGTH];
-EXPORT PtrDocument  pDocPrint;
-EXPORT char         PageSize[MAX_NAME_LENGTH];
-EXPORT int	    FirstPage;
-EXPORT int	    LastPage;
-EXPORT int	    NbCopies;
-EXPORT int	    Reduction;
-EXPORT int	    PagesPerSheet;
+THOT_EXPORT int	    numOfJobs;
+THOT_EXPORT PathBuffer   PSdir;
+THOT_EXPORT boolean      PaperPrint;
+THOT_EXPORT boolean      ManualFeed;
+THOT_EXPORT boolean      NewPaperPrint;
+THOT_EXPORT char         pPrinter[MAX_NAME_LENGTH];
+THOT_EXPORT PtrDocument  pDocPrint;
+THOT_EXPORT char         PageSize[MAX_NAME_LENGTH];
+THOT_EXPORT int	    FirstPage;
+THOT_EXPORT int	    LastPage;
+THOT_EXPORT int	    NbCopies;
+THOT_EXPORT int	    Reduction;
+THOT_EXPORT int	    PagesPerSheet;
 
 #endif /* __PRINT_V_H__ */

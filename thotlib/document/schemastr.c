@@ -26,7 +26,7 @@
 #include "typemedia.h"
 
 /* variables importees */
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 
 /* procedures importees de l'editeur */

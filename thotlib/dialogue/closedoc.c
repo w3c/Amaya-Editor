@@ -32,8 +32,8 @@
 #include "message.h"
 #include "dialog.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"

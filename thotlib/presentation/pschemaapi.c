@@ -17,8 +17,8 @@
 #include "application.h"
 #include "pschema.h"
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "edit_tv.h"
 
 #include "memory_f.h"

@@ -15,7 +15,7 @@
  */
 
 /* Amaya includes  */
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "amaya.h"
 
 #if defined(__svr4__)
@@ -1028,7 +1028,7 @@ static int          LoopForStop (AHTReqContext * me)
 {
 
 #ifdef WWW_XWINDOWS
-   extern XtAppContext app_cont;
+   extern ThotAppContext app_cont;
    XEvent              ev;
    XtInputMask         status;
 

@@ -21,8 +21,8 @@
 #define MAX_ENTRIES 20
 #include "typemedia.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "modif_tv.h"
 #include "select_tv.h"
 #include "platform_tv.h"

@@ -31,7 +31,7 @@
 #include "xpmP.h"
 #include "xpm.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "picture_tv.h"
 #include "frame_tv.h"
 

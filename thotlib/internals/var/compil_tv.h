@@ -10,15 +10,15 @@
  */
 
 /* message origin */
-EXPORT int		COMPIL;
-EXPORT int        	STR;
-EXPORT int        	PRS;
-EXPORT int        	TRA;
-EXPORT int        	GRM;
-EXPORT int		APP;
+THOT_EXPORT int		COMPIL;
+THOT_EXPORT int        	STR;
+THOT_EXPORT int        	PRS;
+THOT_EXPORT int        	TRA;
+THOT_EXPORT int        	GRM;
+THOT_EXPORT int		APP;
 
 /* a line from the source file being compiled */
-EXPORT lineBuffer 	inputLine;
+THOT_EXPORT lineBuffer 	inputLine;
 
 /* an error has been detected */
-EXPORT boolean 	error;
+THOT_EXPORT boolean 	error;

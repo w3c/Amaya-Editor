@@ -19,7 +19,7 @@
  *      can return.
  */
 
-#define EXPORT
+#define THOT_EXPORT
 #include "amaya.h"
 #include "netamaya.h"
 #include "eventamaya.h"

@@ -22,8 +22,8 @@
 #include "xpmP.h"
 #include "xpm.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "platform_tv.h"
 static char         NoneTxt[] = "None";

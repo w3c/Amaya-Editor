@@ -10,7 +10,7 @@
  */
 
 /* descriptor of first element saved */
-EXPORT PtrPasteElem FirstSavedElement;
+THOT_EXPORT PtrPasteElem FirstSavedElement;
 
 /* the document from which saved elements have been copied or cut */
-EXPORT PtrDocument DocOfSavedElements;
+THOT_EXPORT PtrDocument DocOfSavedElements;

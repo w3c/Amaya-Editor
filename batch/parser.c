@@ -44,10 +44,10 @@ typedef struct _ParserStackItem
   }
 ParserStackItem;
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "compil_tv.h"
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "analsynt_tv.h"
 #include "compilmsg_f.h"
 

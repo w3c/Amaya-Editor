@@ -29,8 +29,8 @@
 #include "constmedia.h"
 #include "typemedia.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "page_tv.h"
 
 

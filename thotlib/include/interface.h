@@ -36,9 +36,22 @@ extern int          TtaUseOwnXLookupString;
 #define Symbol_keyboard			2
 #define Graphic_keyboard		3
 
+#ifdef __STDC__
+typedef void (* ExternalMainLoop)(ThotAppContext app_ctxt);
+typedef void (* ExternalFetchEvent)(ThotAppContext app_ctxt, ThotEvent *ev);
+typedef boolean (* ExternalFetchAvailableEvent)(ThotAppContext app_ctxt, ThotEvent *ev);
+#else
+typedef void (* ExternalMainLoop)();
+typedef void (* ExternalFetchEvent)();
+typedef boolean (* ExternalFetchAvailableEvent)();
+#endif
+
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void         TtaSetMainLoop (ExternalMainLoop loop,
+                                    ExternalFetchEvent fetch,
+				    ExternalFetchAvailableEvent fetchavail);
 
 extern int          TtaAddButton (Document document, View view, Pixmap icon, void (*procedure) (), char *info);
 extern void         TtaSwitchButton (Document document, View view, int index);
@@ -79,6 +92,9 @@ extern void         TtaGiveSelectPosition (Document document, Element element, V
 
 #else  /* __STDC__ */
 
+extern void         TtaSetMainLoop ( /* ExternalMainLoop loop,
+                                    ExternalFetchEvent fetch,
+				    ExternalFetchAvailableEvent fetchavail */ );
 
 extern int          TtaAddButton ( /*Document document, View view, Pixmap icon, void (*procedure) (), char *info */ );
 extern void         TtaSwitchButton ( /*Document document, View view, int index */ );

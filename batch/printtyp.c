@@ -19,7 +19,7 @@
 #include "libmsg.h"
 #include "typmsg.h"
 #include "typetyp.h"
-#define EXPORT
+#define THOT_EXPORT
 #include "platform_tv.h"
 
 #include "memory_f.h"

@@ -38,8 +38,8 @@
 
 /*  */
 #include "picture.h"
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #define MY_NUM_MENU_IMAGE_FRAME		1
 #define MY_NUM_ZONE_DIR_IMAGE		2
 #define MY_NUM_IMAGE_FORM		3
@@ -51,8 +51,8 @@ extern PathBuffer   DocumentPath;
 extern PathBuffer   SchemaPath;
 extern char        *FileExtension[];
 
-#undef EXPORT
-#define EXPORT static
+#undef THOT_EXPORT
+#define THOT_EXPORT static
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
 static boolean      RedisplayPicture;

@@ -42,11 +42,11 @@
 
 typedef char        fname[30];	/* nom de fichier */
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "compil_tv.h"
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "analsynt_tv.h"
 
 #include "compilmsg_f.h"

@@ -24,10 +24,10 @@
    something wrong if c is not an upper case letter. */
 #define TOLOWER(c)	(isupper(c)? tolower(c) : (c))
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "frame_tv.h"
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "font_tv.h"
 
 

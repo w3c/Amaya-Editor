@@ -14,7 +14,7 @@
  *
  */
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "amaya.h"
 
 /*

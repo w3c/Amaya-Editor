@@ -40,8 +40,8 @@
 #define MAX_ARGS 20
 
 /* Declarations des variables */
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "edit_tv.h"

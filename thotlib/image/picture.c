@@ -36,7 +36,7 @@
 #include "thotdir.h"
 #include "png.h"
 #include "fileaccess.h"
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
 #include "font_tv.h"

@@ -34,8 +34,8 @@
 #include "appdialogue.h"
 
 /* variables */
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
 #include "edit_tv.h"

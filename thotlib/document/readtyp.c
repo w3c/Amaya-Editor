@@ -13,7 +13,7 @@
 #include "typemedia.h"
 #include "typetyp.h"
 #include "libmsg.h"
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 
 #include "memory_f.h"

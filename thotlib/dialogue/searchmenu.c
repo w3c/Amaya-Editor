@@ -32,7 +32,7 @@
 #include "interface.h"
 #include "appdialogue.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "edit_tv.h"
 #include "appdialogue_tv.h"

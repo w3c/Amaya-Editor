@@ -24,7 +24,7 @@
 #ifdef STANDALONE
 #include "HTML.h"
 #else
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "amaya.h"
 #endif
 #include "css.h"

@@ -25,7 +25,7 @@
 #include "npupp.h"
 #include "pluginbrowse.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "appli_f.h"
 #include "tree_f.h"

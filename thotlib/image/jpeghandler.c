@@ -33,7 +33,7 @@
 #include "application.h"
 
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "picture_tv.h"
 #include "frame_tv.h"
 #include "picture_f.h"

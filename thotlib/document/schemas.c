@@ -37,7 +37,7 @@ APresentation;
 #include "app.h"
 #include "appdialogue.h"
 
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 

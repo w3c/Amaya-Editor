@@ -20,8 +20,8 @@
 #include "tree.h"
 #include "typecorr.h"
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "edit_tv.h"
 
 #include "tree_f.h"

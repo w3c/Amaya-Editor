@@ -26,7 +26,7 @@
 #include "fileaccess.h"
 
 /* variables importees */
-#define EXPORT extern
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 
 

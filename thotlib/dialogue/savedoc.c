@@ -34,8 +34,8 @@
 #include "document.h"
 #include "fileaccess.h"
 #include "thotdir.h"
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"

@@ -34,11 +34,11 @@
 
 /* ----- LES VARIABLES ----- */
 /* les variables importes des autres modules du correcteur */
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "spell_tv.h"
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "word_tv.h"
 
 extern unsigned char Code[256];

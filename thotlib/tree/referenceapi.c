@@ -22,8 +22,8 @@
 #include "typecorr.h"
 #include "fileaccess.h"
 
-#undef EXPORT
-#define EXPORT
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "edit_tv.h"
 
 #include "references_f.h"

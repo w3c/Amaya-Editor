@@ -12,7 +12,7 @@ extern void TtaInitDialogue ( char *server,
                               char *txtOK,
                               char *txtRAZ,
                               char *txtDone,
-                              XtAppContext * app_context,
+                              ThotAppContext * app_context,
                               Display ** Dp );
 extern void TtaInitDialogueTranslations (XtTranslations translations);
 extern void TtaChangeDialogueFonts ( char *menufont,
@@ -165,7 +165,7 @@ extern void TtaInitDialogue (/* char *server,
                                 char *txtOK,
                                 char *txtRAZ,
                                 char *txtDone,
-                                XtAppContext * app_context,
+                                ThotAppContext * app_context,
                                 Display ** Dp */);
 extern void TtaInitDialogueTranslations (/*XtTranslations translations*/);
 extern void TtaChangeDialogueFonts (/* char *menufont,

@@ -218,61 +218,61 @@ typedef char        AmayaReadChar ();
 #define HTAppName "amaya"
 #define HTAppVersion "V0.95a Beta"
 
-EXPORT int          appArgc;
-EXPORT char       **appArgv;
-EXPORT char         TempFileDirectory[MAX_LENGTH];
-EXPORT char         Answer_text[MAX_LENGTH];
-EXPORT char         Answer_name[NAME_LENGTH];
-EXPORT char         Answer_password[NAME_LENGTH];
-EXPORT char         Display_password[NAME_LENGTH];
-EXPORT int          Lg_password;
-EXPORT int          BaseDialog;
-EXPORT char        *LastURLName;	/* last URL requested               */
-EXPORT char        *DirectoryName;	/* local path of the document       */
-EXPORT char        *DocumentName;	/* document name                    */
-EXPORT char        *ObjectName;		/* document name                    */
-EXPORT char        *SaveImgsURL;	/* where to save remote Images      */
-EXPORT char        *TargetName;
-EXPORT int          CopyImages;		/* should we copy images in Save As */
-EXPORT int          UpdateURLs;		/* should we update URLs in Save As */
-EXPORT boolean      UserAnswer;
-EXPORT int          ReturnOption;
-EXPORT boolean      InNewWindow;
-EXPORT Document     CurrentDocument;
-EXPORT Document     SavingDocument;
-EXPORT Document     SavingObject;
-EXPORT char        *SavingFile;		/* complete path or URL of the document */
-EXPORT Document     AttrHREFdocument;
-EXPORT Element      AttrHREFelement;
-EXPORT char        *AttrHREFvalue;
-EXPORT Document     SelectionDoc;
-EXPORT boolean      SelectionInPRE;
-EXPORT boolean      SelectionInComment;
-EXPORT boolean      SelectionInEM;
-EXPORT boolean      SelectionInSTRONG;
-EXPORT boolean      SelectionInCITE;
-EXPORT boolean      SelectionInDFN;
-EXPORT boolean      SelectionInCODE;
-EXPORT boolean      SelectionInVAR;
-EXPORT boolean      SelectionInSAMP;
-EXPORT boolean      SelectionInKBD;
-EXPORT boolean      SelectionInI;
-EXPORT boolean      SelectionInB;
-EXPORT boolean      SelectionInTT;
-EXPORT boolean      SelectionInSTRIKE;
-EXPORT boolean      SelectionInBIG;
-EXPORT boolean      SelectionInSMALL;
+THOT_EXPORT int          appArgc;
+THOT_EXPORT char       **appArgv;
+THOT_EXPORT char         TempFileDirectory[MAX_LENGTH];
+THOT_EXPORT char         Answer_text[MAX_LENGTH];
+THOT_EXPORT char         Answer_name[NAME_LENGTH];
+THOT_EXPORT char         Answer_password[NAME_LENGTH];
+THOT_EXPORT char         Display_password[NAME_LENGTH];
+THOT_EXPORT int          Lg_password;
+THOT_EXPORT int          BaseDialog;
+THOT_EXPORT char        *LastURLName;	/* last URL requested               */
+THOT_EXPORT char        *DirectoryName;	/* local path of the document       */
+THOT_EXPORT char        *DocumentName;	/* document name                    */
+THOT_EXPORT char        *ObjectName;		/* document name                    */
+THOT_EXPORT char        *SaveImgsURL;	/* where to save remote Images      */
+THOT_EXPORT char        *TargetName;
+THOT_EXPORT int          CopyImages;		/* should we copy images in Save As */
+THOT_EXPORT int          UpdateURLs;		/* should we update URLs in Save As */
+THOT_EXPORT boolean      UserAnswer;
+THOT_EXPORT int          ReturnOption;
+THOT_EXPORT boolean      InNewWindow;
+THOT_EXPORT Document     CurrentDocument;
+THOT_EXPORT Document     SavingDocument;
+THOT_EXPORT Document     SavingObject;
+THOT_EXPORT char        *SavingFile;		/* complete path or URL of the document */
+THOT_EXPORT Document     AttrHREFdocument;
+THOT_EXPORT Element      AttrHREFelement;
+THOT_EXPORT char        *AttrHREFvalue;
+THOT_EXPORT Document     SelectionDoc;
+THOT_EXPORT boolean      SelectionInPRE;
+THOT_EXPORT boolean      SelectionInComment;
+THOT_EXPORT boolean      SelectionInEM;
+THOT_EXPORT boolean      SelectionInSTRONG;
+THOT_EXPORT boolean      SelectionInCITE;
+THOT_EXPORT boolean      SelectionInDFN;
+THOT_EXPORT boolean      SelectionInCODE;
+THOT_EXPORT boolean      SelectionInVAR;
+THOT_EXPORT boolean      SelectionInSAMP;
+THOT_EXPORT boolean      SelectionInKBD;
+THOT_EXPORT boolean      SelectionInI;
+THOT_EXPORT boolean      SelectionInB;
+THOT_EXPORT boolean      SelectionInTT;
+THOT_EXPORT boolean      SelectionInSTRIKE;
+THOT_EXPORT boolean      SelectionInBIG;
+THOT_EXPORT boolean      SelectionInSMALL;
 
 #define DocumentTableLength 10
-EXPORT char        *DocumentURLs[DocumentTableLength];
+THOT_EXPORT char        *DocumentURLs[DocumentTableLength];
 
 /* The whole document is loaded when the corresponding value
    in FilesLoading is equal to 0 */
-EXPORT int          FilesLoading[DocumentTableLength];
-EXPORT Document     W3Loading;	/* the document being loaded */
-EXPORT int          IButton;
-EXPORT int          BButton;
-EXPORT int          TTButton;
+THOT_EXPORT int          FilesLoading[DocumentTableLength];
+THOT_EXPORT Document     W3Loading;	/* the document being loaded */
+THOT_EXPORT int          IButton;
+THOT_EXPORT int          BButton;
+THOT_EXPORT int          TTButton;
 
 #define IMAGE_NOT_LOADED	0
 #define IMAGE_LOCAL		1
@@ -298,10 +298,10 @@ typedef struct _LoadedImageDesc
   }
 LoadedImageDesc;
 
-EXPORT LoadedImageDesc *ImageURLs;
+THOT_EXPORT LoadedImageDesc *ImageURLs;
 
-EXPORT HTList      *conv;	/* List of global converters */
-EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
+THOT_EXPORT HTList      *conv;	/* List of global converters */
+THOT_EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
 
 #define EOS     '\0'
 #define EOL     '\n'

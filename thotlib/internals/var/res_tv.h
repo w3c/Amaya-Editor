@@ -7,27 +7,27 @@
  
 /* res.var */
 	
-EXPORT char BasicStamps [7];
+THOT_EXPORT char BasicStamps [7];
 
-EXPORT char NatureStamp;
-EXPORT char UnitStamp;
-EXPORT char AOD;
-EXPORT char AED;
-EXPORT char LOD;
-EXPORT char LED;
-EXPORT char COD;
-EXPORT char CED;
-EXPORT char ROD;
-EXPORT char RED;
-EXPORT char XOD;
-EXPORT char XED;
-EXPORT char SEP;
-EXPORT char REMPTY;
+THOT_EXPORT char NatureStamp;
+THOT_EXPORT char UnitStamp;
+THOT_EXPORT char AOD;
+THOT_EXPORT char AED;
+THOT_EXPORT char LOD;
+THOT_EXPORT char LED;
+THOT_EXPORT char COD;
+THOT_EXPORT char CED;
+THOT_EXPORT char ROD;
+THOT_EXPORT char RED;
+THOT_EXPORT char XOD;
+THOT_EXPORT char XED;
+THOT_EXPORT char SEP;
+THOT_EXPORT char REMPTY;
 
-EXPORT int COMP, THOTMSG, RESDYNMSG;
+THOT_EXPORT int COMP, THOTMSG, RESDYNMSG;
 
 
-EXPORT TyResdynCt ResdynCt;
+THOT_EXPORT TyResdynCt ResdynCt;
 
 StrListeMem *pListeMem;
 

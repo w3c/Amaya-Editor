@@ -19,7 +19,7 @@
 #include "fileaccess.h"
 #include "message.h"
 
-#define EXPORT
+#define THOT_EXPORT
 #include "platform_tv.h"
 
 #include "readprs_f.h"
@@ -1328,7 +1328,7 @@ char              **argv;
 	       {
 		  wrnom (pSc1->PsView[i - 1]);
 		  if (pSc1->PsExportView[i - 1])
-		     printf (" EXPORT");
+		     printf (" THOT_EXPORT");
 		  if (pSc1->PsPaginatedView[i - 1])
 		     printf (" {with pages}");
 		  if (i < pSc1->PsNViews)

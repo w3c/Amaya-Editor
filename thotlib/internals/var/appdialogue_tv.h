@@ -13,7 +13,7 @@ extern int UserErrorCode;
 /* Table of internal optional Thot operations (actions)		    */
 /* Calling an action: (*ThotLocalActions[i])(ref, datatype, data);  */
 
-EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
+THOT_EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
 
 #ifndef NODISPLAY
 
@@ -26,16 +26,16 @@ EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
 
 #ifdef _WINDOWS
 
-EXPORT WNDCLASSEX       RootShell;
+THOT_EXPORT WNDCLASSEX       RootShell;
 
 #else /* _WINDOWS */
 
-EXPORT XtAppContext	app_cont;
-EXPORT ThotWidget	RootShell;
+THOT_EXPORT ThotAppContext	app_cont;
+THOT_EXPORT ThotWidget	RootShell;
 
 #endif /* !_WINDOWS */
 
-EXPORT Proc		CurrentCallbackAPI;
+THOT_EXPORT Proc		CurrentCallbackAPI;
 
 /* Table of actions related to the menus attached to Application and	  */
 /* Documents windows.							  */
@@ -43,12 +43,12 @@ EXPORT Proc		CurrentCallbackAPI;
 /* keyboard equivalent, windows supposed to call the action.		  */
 /* Calling an action: (*actionptr->Call_Action)(document, view);	  */
 
-EXPORT Action_Ctl	*MenuActionList;
-EXPORT int		MaxMenuAction;
+THOT_EXPORT Action_Ctl	*MenuActionList;
+THOT_EXPORT int		MaxMenuAction;
 
 /* return events for Application and Document windows			  */
 
-EXPORT int      ClickIsDone;
-EXPORT char*    servername ;
+THOT_EXPORT int      ClickIsDone;
+THOT_EXPORT char*    servername ;
 #endif /* !NODISPLAY */
 #endif /* THOT_APPDIALOGUE_VAR */

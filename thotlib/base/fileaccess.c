@@ -20,8 +20,8 @@
 #include "thotdir.h"
 #include "fileaccess.h"
 
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "platform_tv.h"
 
 #include "fileaccess_f.h"

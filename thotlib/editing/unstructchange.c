@@ -37,8 +37,8 @@
 #include "appdialogue.h"
 #include "dialog.h"
 #include "tree.h"
-#undef EXPORT
-#define EXPORT extern
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "creation_tv.h"
 #include "modif_tv.h"
 #include "select_tv.h"
