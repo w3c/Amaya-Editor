@@ -4,7 +4,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Utilizar mapas de imagen</title>
-  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -27,7 +26,7 @@
 </table>
 
 <div id="Client-sid">
-<h1>Utilizar mapas de imagen</h1>
+<h1>Utilizar imagen y mapas de imagen</h1>
 
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>

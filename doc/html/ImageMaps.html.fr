@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Images et Zones actives</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -44,6 +44,14 @@ document séparé et la relier en donnant l'URI comme un descripteur long
 vous pouvez entrer une valeur de <strong>filtre</strong>, et utiliser le
 bouton <strong>filtre</strong>. Ainsi le dialogue listera seulement les
 fichiers qui correspondent à votre critère.</p>
+
+<h3>Remplacer une image</h3>
+
+<p>Pour remplacer une image sélectionnez cette image en dragant sur l'image
+avec la souris. Procédez alors comme pour l'ajout d'une image (voir
+ci-dessus). Lorsqu'une image (et seulement une image) est entièrement
+séelectionnée, la boîte de dialogue des images effectue le remplacement de
+l'image sélectionnée au lieu d'insérer une nouvelle image.</p>
 
 <h3><a name="Alternative">Texte de remplacement et descriptions
 longues</a></h3>
