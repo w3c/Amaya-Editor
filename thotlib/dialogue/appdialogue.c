@@ -2898,6 +2898,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 }
 
 #ifdef _GL
+#ifdef _GTK
 /*----------------------------------------------------------------------
   GetNoAlphaVisual :
      if opengl implementation doesn't support ALPHA BUFFER, allow amaya to work
@@ -2925,6 +2926,7 @@ ThotWidget	 GetNoAlphaVisual ()
 
   return (gtk_gl_area_new (attrlist));
 }
+#endif /* _GTK */
 #endif /* _GL */
 
 /*----------------------------------------------------------------------
