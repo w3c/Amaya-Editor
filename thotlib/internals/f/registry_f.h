@@ -23,6 +23,9 @@ extern void TtaSetEnvBoolean ( STRING name,
 extern void TtaSetEnvString ( STRING name,
                               STRING value,
                               int overwrite );
+extern void TtaSetDefEnvString ( STRING name,
+                                 STRING value,
+                                 int overwrite );
 extern boolean TtaGetDefEnvInt ( CHAR *name,
                                  int *value );
 extern boolean TtaGetDefEnvBoolean ( CHAR *name,
@@ -53,6 +56,9 @@ extern void TtaSetEnvBoolean (/* STRING name,
 extern void TtaSetEnvString (/* STRING name,
                                 STRING value,
                                 int overwrite */);
+extern void TtaSetDefEnvString (/* STRING name,
+                                   STRING value,
+                                   int overwrite */);
 extern boolean TtaGetDefEnvInt (/* CHAR *name,
                                    int *value */);
 extern boolean TtaGetDefEnvBoolean (/* CHAR *name,

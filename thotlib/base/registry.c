@@ -1234,7 +1234,7 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("TOOLTIPDELAY", "500", FALSE);
    TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
    TtaSetDefEnvString ("ForegroundColor", "Black", FALSE);
-#ifdef _WINDOWS
+#ifndef _WINDOWS
    TtaSetDefEnvString ("BackgroundColor", "gainsboro", FALSE);
 #else
    TtaSetDefEnvString ("BackgroundColor", "LightGrey1", FALSE);

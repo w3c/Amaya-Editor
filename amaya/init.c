@@ -4071,11 +4071,11 @@ NotifyEvent        *event;
        /* Create a temporary sub-directory for storing the HTML and image files */
        sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
        if (!TtaCheckDirectory (tempname))
-#         ifdef _WINDOWS
+#ifdef _WINDOWS
           _mkdir (tempname);
-#         else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
           mkdir (tempname, S_IRWXU);
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
      }
 
    /* set path on current directory */
@@ -4123,9 +4123,7 @@ NotifyEvent        *event;
    /* initialize automaton for the HTML parser */
    InitAutomaton ();
    /* initialize the configuration menu context */
-#ifdef CONF_MENU
    InitConfMenu ();
-#endif /* CONF_MENU */
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    /* initialize the libwww */
    QueryInit ();

@@ -173,16 +173,16 @@ NotifyElement      *event;
 	      TtaGiveTextAttributeValue (attr, buff, &length);
 	      ptr = ustrstr (buff, "amaya");
 	      if (ptr == NULL)
-		ptr = strstr (buff, "Amaya");
+		ptr = ustrstr (buff, "Amaya");
 	      if (ptr == NULL)
 		/* it's not a pure Amaya document -> remove the meta element */
 		return TRUE;
 	      else
 		{
 		  /* update the version */
-		  strcpy (buff, HTAppName);
-		  strcat (buff, " ");
-		  strcat (buff, HTAppVersion);
+		  ustrcpy (buff, HTAppName);
+		  ustrcat (buff, " ");
+		  ustrcat (buff, HTAppVersion);
 		  TtaSetAttributeText (attr, buff, event->element, event->document);
 		}
 	    }
@@ -243,7 +243,7 @@ NotifyAttribute    *event;
 #endif /* __STDC__ */
 {
   /* remove quotes before and after the text */
-  QuotedText[strlen (QuotedText) - 1] = EOS;
+  QuotedText[ustrlen (QuotedText) - 1] = EOS;
   TtaSetAttributeText (event->attribute, &QuotedText[1], event->element, event->document);
   TtaFreeMemory (QuotedText);
 }
@@ -376,11 +376,11 @@ STRING              pathname;
 
    /* Dialogue form for saving a document */
    i = 0;
-   strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+   ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   i += ustrlen (&s[i]) + 1;
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += ustrlen (&s[i]) + 1;
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
    TtaNewSheet (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 		TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L', D_CANCEL);
 
@@ -467,7 +467,7 @@ STRING              pathname;
    if (SavingDocument != 0 || SavingObject != 0)
      return;
    SavingObject = document;
-   strncpy (tempSavedObject, object, sizeof (tempSavedObject));
+   ustrncpy (tempSavedObject, object, sizeof (tempSavedObject));
 
 #  ifndef _WINDOWS
    /* Dialogue form for saving as */
@@ -515,9 +515,9 @@ void                DoSaveObjectAs ()
 
    dst_is_local = !IsW3Path (SavePath);
 
-   strcpy (tempfile, SavePath);
-   strcat (tempfile, DIR_STR);
-   strcat (tempfile, ObjectName);
+   ustrcpy (tempfile, SavePath);
+   ustrcat (tempfile, DIR_STR);
+   ustrcat (tempfile, ObjectName);
 
 
    if (!dst_is_local)
@@ -594,16 +594,16 @@ View                view;
    if (SavingDocument == 0)
      {
        SavingDocument = doc;
-       strcpy (tempname, DocumentURLs[doc]);
+       ustrcpy (tempname, DocumentURLs[doc]);
        /* suppress compress suffixes from tempname */
-       i = strlen (tempname) - 1;
-       if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
+       i = ustrlen (tempname) - 1;
+       if (i > 2 && !ustrcmp (&tempname[i-2], ".gz"))
 	 {
 	   tempname[i-2] = EOS;
 	   TtaFreeMemory (DocumentURLs[doc]);
 	   DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
 	 }
-       else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
+       else if (i > 1 && !ustrcmp (&tempname[i-1], ".Z"))
 	 {
 	   tempname[i-1] = EOS;
 	   TtaFreeMemory (DocumentURLs[doc]);
@@ -613,36 +613,45 @@ View                view;
        /* if it is a Web document use the current SavePath */
        if (IsW3Path (tempname))
 	 {
-	   TtaExtractName (tempname, SavePath, SaveName);
+	     TtaExtractName (tempname, SavePath, SaveName);
+	     if (SaveName[0] == EOS)
+	       {
+		 DefaultName = TtaGetEnvString ("DEFAULTNAME");
+		 if (DefaultName == NULL || *DefaultName == EOS)
+		   DefaultName = StdDefaultName;
+		 ustrcpy (SaveName, DefaultName);
+		 ustrcat (tempname, SaveName);
+	       }
+
 	   /* add the suffix .html for HTML documents */
 	   if (!TextFormat &&
-	       (!IsHTMLName (SaveName) || !IsXMLName (SaveName)))
+	       !IsHTMLName (SaveName) && !IsXMLName (SaveName))
 	     {
-	       strcat (SaveName, ".html");
-	       strcpy (tempname, SavePath);
-	       strcat (tempname, URL_STR);
-	       strcat (tempname, SaveName);
+	       ustrcat (SaveName, ".html");
+	       ustrcpy (tempname, SavePath);
+	       ustrcat (tempname, URL_STR);
+	       ustrcat (tempname, SaveName);
  	     }
 	 }
        else
 	 {
 	   TtaGetDocumentDirectory (doc, tempname, MAX_LENGTH);
-	   strcpy (SavePath, tempname);
-	   strcpy (SaveName, TtaGetDocumentName (doc));
-	   strcat (tempname, DIR_STR);
+	   ustrcpy (SavePath, tempname);
+	   ustrcpy (SaveName, TtaGetDocumentName (doc));
+	   ustrcat (tempname, DIR_STR);
 	   /* add the suffix .html for HTML documents */
 	   if (!TextFormat &&
 	       (!IsHTMLName (SaveName) || !IsXMLName (SaveName)))
-	     strcat (SaveName, ".html");
-	   strcat (tempname, SaveName);
+	     ustrcat (SaveName, ".html");
+	   ustrcat (tempname, SaveName);
 	 }
        TtaSetDialoguePosition ();
      }
    else
      {
-       strcpy (tempname, SavePath);
-       strcat (tempname, DIR_STR);
-       strcat (tempname, SaveName);
+       ustrcpy (tempname, SavePath);
+       ustrcat (tempname, DIR_STR);
+       ustrcat (tempname, SaveName);
      }
 
    /* display the dialog box */
@@ -690,11 +699,11 @@ Document            doc;
       buffer[0] = '\0';
       if (useMathML)
 	 {
-	 strcat (buffer, "\n      xmlns:m=\"http://www.w3.org/TR/REC-MathML/\"");
+	 ustrcat (buffer, "\n      xmlns:m=\"http://www.w3.org/TR/REC-MathML/\"");
 	 }
       if (useGraphML)
 	 {
-	 strcat (buffer, "\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\"");
+	 ustrcat (buffer, "\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\"");
 	 }
       /* set the value of attribute Namespaces */
       if (attr == NULL)
@@ -752,9 +761,9 @@ STRING            documentName;
   fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);
 #endif
 
-  strcpy (tempname, directoryName);
-  strcat (tempname, DIR_STR);
-  strcat (tempname, documentName);
+  ustrcpy (tempname, directoryName);
+  ustrcat (tempname, DIR_STR);
+  ustrcat (tempname, documentName);
   /* suspend the redisplay due to the temporary update of attributes
      STYLE and META-CONTENT */
   dispMode = TtaGetDisplayMode (doc);
@@ -776,7 +785,7 @@ STRING            documentName;
 	{
 	  TtaSetDocumentDirectory (doc, directoryName);
 	  /**********/
-	  strcpy (docname, documentName);
+	  ustrcpy (docname, documentName);
 	  ExtractSuffix (docname, tempname);
 	  /* Change the document name in all views */
 	  TtaSetDocumentName (doc, docname);
@@ -808,7 +817,7 @@ boolean           *ok;
    CHAR            documentname[MAX_LENGTH];
    int             len;
 
-  len = strlen (url);
+  len = ustrlen (url);
   TtaExtractName (url, msg, documentname);
   *ok = (documentname[0] != EOS);
   if (*ok)
@@ -816,21 +825,21 @@ boolean           *ok;
   else
     {
       /* the name is not correct for the put operation */
-      strcpy (msg, TtaGetMessage(AMAYA, AM_NO_NAME));
-      strcat (msg, url);
+      ustrcpy (msg, TtaGetMessage(AMAYA, AM_NO_NAME));
+      ustrcat (msg, url);
       if (IsW3Path (url))
 	{
 	  if (url[len -1] != URL_SEP)
-	    strcat (msg, URL_STR);
+	    ustrcat (msg, URL_STR);
 	}
       else if (url[len -1] != DIR_SEP)
-	strcat (msg, DIR_STR);
+	ustrcat (msg, DIR_STR);
       /* get default name */
       DefaultName = TtaGetEnvString ("DEFAULTNAME");
       if (DefaultName == NULL || *DefaultName == EOS)
 	DefaultName = StdDefaultName;
 
-      strcat (msg, DefaultName);
+      ustrcat (msg, DefaultName);
       InitConfirm (document, view, msg);
 
       if (UserAnswer == 0)
@@ -879,7 +888,7 @@ boolean             use_preconditions;
 
   /* Save */
   /* JK: SYNC requests assume that the remotefile name is a static array */
-  strcpy (tempfile, remotefile);
+  ustrcpy (tempfile, remotefile);
 #ifdef AMAYA_JAVA
   mode = AMAYA_SYNC | AMAYA_NOCACHE;
 #else /* AMAYA_JAVA */
@@ -893,7 +902,7 @@ boolean             use_preconditions;
     return (res);
   /* does the user want to verify the PUT? */
   if (!verify_publish || !*verify_publish
-      || strcmp (verify_publish, "yes"))
+      || ustrcmp (verify_publish, "yes"))
     return (0);
 
   /* Refetch */
@@ -902,7 +911,7 @@ boolean             use_preconditions;
 #endif
 
   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), NULL);
-  strcpy (tempURL, remotefile);
+  ustrcpy (tempURL, remotefile);
 #ifdef AMAYA_JAVA
   res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
 		      NULL, NULL, NULL, NULL, NO, NULL);
@@ -923,7 +932,7 @@ boolean             use_preconditions;
 #if 0
   /* Removed this test as libwww already asks the user to confirm the
      redirection */
-  else if (strcmp (remotefile, tempURL))
+  else if (ustrcmp (remotefile, tempURL))
     {
       /* Warning : redirect... */
       sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_REDIRECTED), remotefile, tempURL);
@@ -1097,8 +1106,8 @@ boolean          use_preconditions;
 		   TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
 #endif /* _WINDOWS */
        
-      strcpy (&msg[index], url);
-      len = strlen (url);
+      ustrcpy (&msg[index], url);
+      len = ustrlen (url);
       len++;
       remainder -= len;
       index += len;
@@ -1111,16 +1120,16 @@ boolean          use_preconditions;
 	    {
 	      if (nb > 30)
 		{
-		  strcpy (&msg[index], "...");
-		  len = strlen ("...");
+		  ustrcpy (&msg[index], "...");
+		  len = ustrlen ("...");
 		  len++;
 		  remainder -= len;
 		  index += len;
 		  nb++;
 		  break;
 		}
-	      strcpy (&msg[index], pImage->originalName);
-	      len = strlen (pImage->originalName);
+	      ustrcpy (&msg[index], pImage->originalName);
+	      len = ustrlen (pImage->originalName);
 	      len++;
 	      remainder -= len;
 	      index += len;
@@ -1278,16 +1287,16 @@ View                view;
 
   ok = FALSE;
   /* attempt to save through network if possible */
-  strcpy (tempname, DocumentURLs[doc]);
+  ustrcpy (tempname, DocumentURLs[doc]);
   /* suppress compress suffixes from tempname */
-  i = strlen (tempname) - 1;
-  if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
+  i = ustrlen (tempname) - 1;
+  if (i > 2 && !ustrcmp (&tempname[i-2], ".gz"))
     {
       tempname[i-2] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
     }
-  else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
+  else if (i > 1 && !ustrcmp (&tempname[i-1], ".Z"))
     {
       tempname[i-1] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
@@ -1304,10 +1313,10 @@ View                view;
 	{
 	  ok = TRUE;
 	  /* need to update the document url */
-	  res = strlen(tempname) - 1;
+	  res = ustrlen(tempname) - 1;
 	  if (tempname[res] != URL_SEP)
-	    strcat (tempname, URL_STR);
-	  strcat (tempname, DefaultName);
+	    ustrcat (tempname, URL_STR);
+	  ustrcat (tempname, DefaultName);
 	  TtaFreeMemory (DocumentURLs[doc]);
 	  DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
 	}
@@ -1371,7 +1380,7 @@ void                   BackUpDocs ()
 	/* generate the backup file name */
         SavingDocument = 0;
 	ptr = DocumentURLs[doc];
-	l = strlen (ptr) - 1;
+	l = ustrlen (ptr) - 1;
 	if (IsW3Path (ptr) &&  ptr[l] == URL_SEP)
 	  {
 	    /* it's a directory name */
@@ -1455,22 +1464,22 @@ STRING                 newURL;
    if (imgbase[0] != EOS)
      {
        /* add the separator if needed */
-       buflen = strlen (imgbase) - 1;
+       buflen = ustrlen (imgbase) - 1;
        if (dst_is_local && !IsW3Path (imgbase))
 	 {
 	   if (imgbase[buflen] != DIR_SEP)
-	     strcat (imgbase, DIR_STR);
+	     ustrcat (imgbase, DIR_STR);
 	 }
        else
 	 {
 	   if (imgbase[buflen] != URL_SEP)
-	     strcat (imgbase, URL_STR);
+	     ustrcat (imgbase, URL_STR);
 	 }
      }
 
    /* save the old document path to locate existing images */
-   strcpy (oldpath, DocumentURLs[doc]);
-   buflen = strlen (oldpath) - 1;
+   ustrcpy (oldpath, DocumentURLs[doc]);
+   buflen = ustrlen (oldpath) - 1;
    if (oldpath[buflen] ==  '/')
      oldpath[buflen] = EOS;
    /* path to search image descriptors */
@@ -1528,8 +1537,8 @@ STRING                 newURL;
 	       while (ptr != NULL)
 		 {
 		   /* for next research */
-		   stringStyle = strstr (stringStyle, "url") + 3;
-		   strcpy (url, ptr);
+		   stringStyle = ustrstr (stringStyle, "url") + 3;
+		   ustrcpy (url, ptr);
 		   TtaFreeMemory (ptr);
 		   NormalizeURL (url, 0, tempname, imgname, newURL);
 
@@ -1538,7 +1547,7 @@ STRING                 newURL;
 		   if (ptr != NULL)
 		     {
 		       /* for next research */
-		       oldStyle = strstr (oldStyle, "url") + 3;
+		       oldStyle = ustrstr (oldStyle, "url") + 3;
 		       NormalizeURL (ptr, 0, oldname, imgname, oldpath);
 		       TtaFreeMemory (ptr);
 
@@ -1565,21 +1574,21 @@ STRING                 newURL;
 				     it was a remote image:
 				     we use the local temporary name to do the copy
 				     */
-				   strcpy (oldname, localpath);
-				   strcat (oldname, imgname);
+				   ustrcpy (oldname, localpath);
+				   ustrcat (oldname, imgname);
 				 }
 			       
 			       if (imgbase[0] != EOS)
 				 {
-				   strcpy (tempfile, imgbase);
-				   strcat (tempfile, DIR_STR);
-				   strcat (tempfile, imgname);
+				   ustrcpy (tempfile, imgbase);
+				   ustrcat (tempfile, DIR_STR);
+				   ustrcat (tempfile, imgname);
 				 }
 			       else
 				 {
-				   strcpy (tempfile, SavePath);
-				   strcat (tempfile, DIR_STR);
-				   strcat (tempfile, imgname);
+				   ustrcpy (tempfile, SavePath);
+				   ustrcat (tempfile, DIR_STR);
+				   ustrcat (tempfile, imgname);
 				 }
 			       
 			       TtaFileCopy (oldname, tempfile);
@@ -1594,8 +1603,8 @@ STRING                 newURL;
 				     get the image descriptor to prepare
 				     the saving process
 				     */
-				   strcpy (tempfile, localpath);
-				   strcat (tempfile, imgname);
+				   ustrcpy (tempfile, localpath);
+				   ustrcat (tempfile, imgname);
 				   pImage = SearchLoadedImage (tempfile, doc);
 				   /* update the descriptor */
 				   if (pImage)
@@ -1659,13 +1668,13 @@ STRING                 newURL;
 			       TtaRegisterAttributeReplace (attr, el, doc);
 			       /* save this new style attribute string */
 			       TtaSetAttributeText (attr, ptr, el, doc);
-			       strcpy (url, ptr);
+			       ustrcpy (url, ptr);
 			       TtaFreeMemory (ptr);
 			       /* extract the URL from the new style string */
 			       ptr = GetCSSBackgroundURL (url);
 			       if (ptr != NULL)
 				 {
-				   strcpy (url, ptr);
+				   ustrcpy (url, ptr);
 				   TtaFreeMemory (ptr);
 				   NormalizeURL (url, 0, tempname, imgname, newURL);
 				 }
@@ -1683,18 +1692,18 @@ STRING                 newURL;
 		       else
 			 {
 			   /* extract the old image name and location */
-			   strcpy (url, buf);
+			   ustrcpy (url, buf);
 			   NormalizeURL (url, 0, buf, imgname, oldpath);
 			   /* save the new SRC attr value */
 			   if (imgbase[0] != EOS)
 			     {
 			       /* compose the relative or absolute name */
-			       strcpy (url, imgbase);
-			       strcat (url, imgname);
+			       ustrcpy (url, imgbase);
+			       ustrcat (url, imgname);
 			     }
 			   else
 			     /* in same directory -> local name */
-			     strcpy (url, imgname);
+			     ustrcpy (url, imgname);
 
 			   NormalizeURL (url, 0, tempname, imgname, newURL);
 			   /* register the modification to be able to undo it */
@@ -1728,17 +1737,17 @@ STRING                 newURL;
 				     it was a remote image:
 				     we use the local temporary name to do the copy
 				     */
-				   strcpy (buf, localpath);
-				   strcat (buf, imgname);
+				   ustrcpy (buf, localpath);
+				   ustrcat (buf, imgname);
 				 }
 
 			       if (imgbase[0] != EOS)
-				   strcpy (tempfile, tempname);
+				   ustrcpy (tempfile, tempname);
 			       else
 				 {
-				   strcpy (tempfile, SavePath);
-				   strcat (tempfile, DIR_STR);
-				   strcat (tempfile, imgname);
+				   ustrcpy (tempfile, SavePath);
+				   ustrcat (tempfile, DIR_STR);
+				   ustrcat (tempfile, imgname);
 				 }
 			       TtaFileCopy (buf, tempfile);
 			     }
@@ -1752,8 +1761,8 @@ STRING                 newURL;
 				     get the image descriptor to prepare
 				     the saving process
 				    */
-				   strcpy (tempfile, localpath);
-				   strcat (tempfile, imgname);
+				   ustrcpy (tempfile, localpath);
+				   ustrcat (tempfile, imgname);
 				   pImage = SearchLoadedImage (tempfile, doc);
 				   /* update the descriptor */
 				   if (pImage)
@@ -1823,18 +1832,18 @@ void                DoSaveAs ()
 
   /* New document path */
   documentFile = TtaGetMemory (MAX_LENGTH);
-  strcpy (documentFile, SavePath);
-  len = strlen (documentFile);
+  ustrcpy (documentFile, SavePath);
+  len = ustrlen (documentFile);
   if (documentFile [len -1] != DIR_SEP && documentFile [len - 1] != '/')
     {
      if (dst_is_local)
        {
-	 strcat (documentFile, DIR_STR);
+	 ustrcat (documentFile, DIR_STR);
 	 url_sep = DIR_SEP;
        }
      else
        {
-	 strcat (documentFile, URL_STR);
+	 ustrcat (documentFile, URL_STR);
 	 url_sep = URL_SEP;
        }
     }
@@ -1849,11 +1858,11 @@ void                DoSaveAs ()
       if (AddNoName (SavingDocument, 1, documentFile, &ok))
 	{
 	  ok = TRUE;
-	  res = strlen(SavePath) - 1;
+	  res = ustrlen(SavePath) - 1;
 	  if (SavePath[res] == url_sep)
 	    SavePath[res] = EOS;
 	  /* need to update the document url */
-	  strcpy (SaveName, DefaultName);
+	  ustrcpy (SaveName, DefaultName);
 	}
       else if (!ok)
 	{
@@ -1865,7 +1874,7 @@ void                DoSaveAs ()
 	}
     }
   else
-    strcat (documentFile, SaveName);
+    ustrcat (documentFile, SaveName);
 
   doc = SavingDocument;
   if (ok && dst_is_local)
@@ -1920,7 +1929,7 @@ void                DoSaveAs ()
 	    imagePath = MakeRelativeURL (SaveImgsURL, documentFile);
 	  if (imagePath != NULL)
 	    {
-	      strcpy (imgbase, imagePath);
+	      ustrcpy (imgbase, imagePath);
 	      TtaFreeMemory (imagePath);
 	    }
 	  else
@@ -1932,12 +1941,12 @@ void                DoSaveAs ()
 	      tempname = TtaGetMemory (MAX_LENGTH);
 	      if (imgbase[0] != DIR_SEP)
 		  {
-		    strcpy (tempname, SavePath);
-		    strcat (tempname, DIR_STR);
-		    strcat (tempname, imgbase);
+		    ustrcpy (tempname, SavePath);
+		    ustrcat (tempname, DIR_STR);
+		    ustrcat (tempname, imgbase);
 		  }
 	      else
-		strcpy(tempname, imgbase);
+		ustrcpy(tempname, imgbase);
 	      ok = TtaCheckDirectory (tempname);
 	      if (!ok)
 		{
@@ -1958,7 +1967,7 @@ void                DoSaveAs ()
 	  if (base)
 	    {
 	      imagePath = MakeRelativeURL (SavePath, base);
-	      strcpy (imgbase, imagePath);
+	      ustrcpy (imgbase, imagePath);
 	      TtaFreeMemory (imagePath);
 	    }
 	  else

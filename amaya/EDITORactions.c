@@ -2658,9 +2658,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
-#ifdef CONF_MENU
    AppearanceConfMenu (doc, view);
-#endif /* CONF_MENU */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2678,9 +2676,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
-#ifdef CONF_MENU
    BrEdConfMenu (doc, view);
-#endif /* CONF_MENU */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2698,9 +2694,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
-#ifdef CONF_MENU
   NetworkConfMenu (doc, view);
-#endif /* CONF_MENU */
 #endif /* AMAYA_JAVA */
 }
 

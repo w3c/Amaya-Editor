@@ -1,4 +1,3 @@
-#ifdef CONF_MENU
 /*
  *
  *  (c) COPYRIGHT MIT and INRIA, 1999
@@ -134,7 +133,7 @@ void InitDefEnv ()
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
-  TtaSetDefEnvString ("DEFAULT_NAME", "Overview.html", FALSE);
+  TtaSetDefEnvString ("DEFAULTNAME", "Overview.html", FALSE);
 
   /* network configuration */
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
@@ -216,7 +215,9 @@ int entry;
   if (*value != old)
     /* change the toggle button state */
     {
+#ifdef _WINDOWS
       TtaSetToggleMenu (ref, entry, *value);
+#endif /* WINDOWS */
     }
 }
 
@@ -431,9 +432,10 @@ static void RefreshNetworkMenu ()
   /* verify what happens when the option is NULL */
 
   /* set the menu entries to the current values */
+#ifndef _WINDOWS
   TtaSetToggleMenu (NetworkBase + mToggleCache, 0, EnableCache);
-  TtaSetToggleMenu (NetworkBase + mToggleCache, 1, 
-		    CacheProtectedDocuments);
+  TtaSetToggleMenu (NetworkBase + mToggleCache, 1, CacheProtectedDocuments);
+#endif /* _WINDOWS */
   if (CacheDirectory)
     TtaSetTextForm (NetworkBase + mCacheDirectory, CacheDirectory);
   TtaSetNumberForm (NetworkBase + mCacheSize, CacheSize);
@@ -721,12 +723,13 @@ static void RefreshBrEdMenu ()
   TtaSetNumberForm (BrEdBase + mToolTipDelay, ToolTipDelay);
   TtaSetNumberForm (BrEdBase + mDoubleClickDelay, DoubleClickDelay);
   TtaSetNumberForm (BrEdBase + mZoom, Zoom);
+#ifndef _WINDOWS
   TtaSetToggleMenu (BrEdBase + mMultikey, 0, Multikey);
   TtaSetToggleMenu (BrEdBase + mBgImages, 0, BgImages);
   TtaSetToggleMenu (BrEdBase + mDoubleClick, 0, DoubleClick);
   TtaSetToggleMenu (BrEdBase + mTogglePublish, 0, LostUpdateCheck);
-  TtaSetToggleMenu (BrEdBase + mTogglePublish, 1, 
-		    VerifyPublish);
+  TtaSetToggleMenu (BrEdBase + mTogglePublish, 1, VerifyPublish);
+#endif /* _WINDOWS */
   TtaSetTextForm (BrEdBase + mDefaultName, DefaultName);
   TtaSetTextForm (BrEdBase + mHomePage, HomePage);
   TtaSetTextForm (BrEdBase + mThotPrint, ThotPrint);
@@ -970,10 +973,3 @@ static void GetAppearanceConf ()
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
   GetEnvString ("ForegroundColor", ForegroundColor);
 }
-
-
-#endif /* CONF_MENU */
-
-
-
-

@@ -6,7 +6,25 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void InitDefEnv ( void );
+extern void InitConfMenu ( void );
+extern void NetworkConfMenu ( Document document,
+                              View view );
+extern void BrEdConfMenu ( Document document,
+                           View view );
+extern void AppearanceConfMenu ( Document document,
+                                 View view );
+
 #else /* __STDC__ */
+
+extern void InitDefEnv (/* void */);
+extern void InitConfMenu (/* void */);
+extern void NetworkConfMenu (/* Document document,
+                                View view */);
+extern void BrEdConfMenu (/* Document document,
+                             View view */);
+extern void AppearanceConfMenu (/* Document document,
+                                   View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
