@@ -1231,8 +1231,6 @@ USTRING          mappedName;
 	   spacesDeleted = FALSE;
 	   while (el != NULL)
 	     {
-	       (*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc,
-							&error);
 	       /* If the element closed is a block-element, remove */
 	       /* spaces contained at the end of that element */
 	       /*
@@ -1242,6 +1240,9 @@ USTRING          mappedName;
 
 	       /* Remove the trailing spaces of that element */
 	       RemoveTrailingSpaces (el);
+
+	       (*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc,
+							&error);
 
 	       if (el == XMLcontext.lastElement)
 		 el = NULL;
