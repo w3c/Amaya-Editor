@@ -123,39 +123,29 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
        pFrame->FrClipYBegin = 0;
        pFrame->FrClipYEnd = 0;
      }
+   else if (pFrame->FrClipXBegin == pFrame->FrClipXEnd &&
+	    pFrame->FrClipXBegin == 0xd == xf &&
+	    pFrame->FrClipYBegin == pFrame->FrClipYEnd &&
+	    pFrame->FrClipYBegin == 0)
+     {
+       /* clean up */
+       pFrame->FrClipXBegin = xd;
+       pFrame->FrClipXEnd = xf;
+       pFrame->FrClipYBegin = yd;
+       pFrame->FrClipYEnd = yf;
+     }
    else
      {
-       if (pFrame->FrClipXBegin == pFrame->FrClipXEnd &&
-	   pFrame->FrClipXBegin == 0)
-	 {
-	   /* reinitalize the area redrawn */
-	   pFrame->FrClipXBegin = xd;
-	   pFrame->FrClipXEnd = xf;
-	 }
-       else
-	  {
-	    /* Update the coordinates of the area redrawn */
-	    if (pFrame->FrClipXBegin > xd)
-	      pFrame->FrClipXBegin = xd;
-	    if (pFrame->FrClipXEnd < xf)
-	      pFrame->FrClipXEnd = xf;
-	  }
-
-	if (pFrame->FrClipYBegin == pFrame->FrClipYEnd &&
-		 pFrame->FrClipYBegin == 0)
-	  {
-	    /* reinitalize the area redrawn */
-	     pFrame->FrClipYBegin = yd;
-	     pFrame->FrClipYEnd = yf;
-	  }
-	else
-	  {
-	    /* update the coordinates of the area redrawn */
-	    if (pFrame->FrClipYBegin > yd)
-	      pFrame->FrClipYBegin = yd;
-	    if (pFrame->FrClipYEnd < yf)
-	      pFrame->FrClipYEnd = yf;
-	  }
+       /* Update the coordinates of the area redrawn */
+       if (pFrame->FrClipXBegin > xd)
+	 pFrame->FrClipXBegin = xd;
+       if (pFrame->FrClipXEnd < xf)
+	 pFrame->FrClipXEnd = xf;
+       /* update the coordinates of the area redrawn */
+       if (pFrame->FrClipYBegin > yd)
+	 pFrame->FrClipYBegin = yd;
+       if (pFrame->FrClipYEnd < yf)
+	 pFrame->FrClipYEnd = yf;
      }
 }
 

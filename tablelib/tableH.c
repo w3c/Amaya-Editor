@@ -615,8 +615,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   int                 width, nPercent;
   int                 min, max, sum;
   int                 percent, sumPercent;
-  int                 minOfPercent, maxOfPercent;
-  int                 minOfWidth, maxOfWidth;
+  int                 minOfPercent, minOfWidth;
   int                 mbp, var;
   ThotBool            constraint, useMax;
   ThotBool            addExtra;
@@ -680,9 +679,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   sumPercent = 0;
   sum = 0;
   minOfPercent = 0;
-  maxOfPercent = 0;
   minOfWidth = 0;
-  maxOfWidth = 0;
   min = 0;
   max = 0;
   mbp = 0;
@@ -708,7 +705,6 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 	      sumPercent += colPercent[cRef];
 	      /* min and max replaced by a percent value */
 	      minOfPercent += box->BxMinWidth;
-	      maxOfPercent += box->BxMaxWidth;
 	      nPercent++;
 	    }
 	  else if (colWidth[cRef])
@@ -716,7 +712,6 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 	      sum += colWidth[cRef];
 	      /* min and max replaced by a width value */
 	      minOfWidth += box->BxMinWidth;
-	      maxOfWidth += box->BxMaxWidth;
 	    }
 	  else
 	    {
@@ -731,30 +726,15 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 
   /* get the extra width of the table */
   mbp =  pBox->BxMinWidth - min - minOfWidth - minOfPercent;
-  if (mbp < 0)
-    mbp = 0;
+  /*if (mbp < 0)
+    mbp = 0;*/
   min = min + mbp;
   max = max + mbp;
   if (sumPercent > 0)
     {
-      sumPercent = sumPercent * width / 100;
-      if (min + sum + sumPercent > width)
-	{
-	  /* table contents too large */
-	  for (cRef = 0; cRef < cNumber; cRef++)
-	    if (colPercent[cRef])
-	      {
-		colPercent[cRef] = 0;
-		if (colBox[cRef]->AbBox->BxWidth > colBox[cRef]->AbBox->BxMinWidth)
-		  /* keep the current width */
-		  colWidth[cRef] = colBox[cRef]->AbBox->BxWidth;
-		else
-		  colWidth[cRef] = colBox[cRef]->AbBox->BxMinWidth;
-		sum += colWidth[cRef];
-	      }
-	  sumPercent = 0;
-	}
-      else if (sumPercent < width - sum - max)
+      minOfPercent = sumPercent * width / 100;
+      if (min + sum + minOfPercent > width ||
+	  minOfPercent < width - sum - max)
 	{
 	  delta = width - sum;
 	  /* table contents too narrow */
@@ -769,6 +749,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 	      }
 	  sumPercent = 0;
 	}
+      else
+	sumPercent = minOfPercent;
     }
 #ifdef TAB_DEBUG
 printf ("\nCheckTableWidths (%s)\n", table->AbElement->ElLabel);
@@ -844,81 +826,81 @@ printf ("Specific Widths ...\n");
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
       /* get the space available for stretchable columns */      
       delta = width - sum - sumPercent;
-      /* get the sapce needed for displaying with the maximum or the minimum widths */
-      if (n == 0)
-	{
-	  /* no stretchable columns */
-	  n = cNumber;
-	  addExtra = TRUE;
-	}
-      else
-	addExtra = FALSE;
-      if (max == 0 || max < delta)
-	{
-	  /* extend the maximum of each stretchable column */
-	  useMax = TRUE;
-	  delta = delta - max;
-	}
-      else
-	{
-	  useMax = FALSE;
-	  delta = delta - min;
-	  if (delta)
+	  /* display with the maximum or the minimum widths */
+	  if (n == 0)
 	    {
-	      /* don't increase the min more than the current max */
-	      for (cRef = 0; cRef < cNumber; cRef++)
+	      /* no stretchable columns */
+	      n = cNumber;
+	      addExtra = TRUE;
+	    }
+	  else
+	    addExtra = FALSE;
+	  if (max == 0 || max < delta)
+	    {
+	      /* extend the maximum of each stretchable column */
+	      useMax = TRUE;
+	      delta = delta - max;
+	    }
+	  else
+	    {
+	      useMax = FALSE;
+	      delta = delta - min;
+	      if (delta)
 		{
-		  box = colBox[cRef]->AbBox;
+		  /* don't increase the min more than the current max */
+		  for (cRef = 0; cRef < cNumber; cRef++)
+		    {
+		      box = colBox[cRef]->AbBox;
+		      var = delta * box->BxMaxWidth / max;
+		      if (colPercent[cRef] < 0 &&
+			  var - colPercent[cRef] > box->BxMaxWidth)
+			/* we'll use the max instead of the min + var */
+			delta = delta  + var - box->BxMaxWidth - colPercent[cRef];
+		      else if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+			       box->BxMinWidth + var > box->BxMaxWidth)
+			/* we'll use the max instead of the min + var */
+			delta = delta  + var - box->BxMaxWidth + box->BxMinWidth;
+		    }
+		}
+	    }
+	  for (cRef = 0; cRef < cNumber; cRef++)
+	    {
+	      box = colBox[cRef]->AbBox;
+	      if (colPercent[cRef] > 0)
+		i = ((width - mbp) * colPercent[cRef] / 100);
+	      else if (colWidth[cRef] > 0)
+		i = colWidth[cRef];
+	      else if (useMax)
+		{
+		  if (max)
+		    var = delta * box->BxMaxWidth / max;
+		  else
+		    var = delta / n;
+		  i = box->BxMaxWidth + var;
+		}
+	      else
+		{
 		  var = delta * box->BxMaxWidth / max;
 		  if (colPercent[cRef] < 0 &&
 		      var - colPercent[cRef] > box->BxMaxWidth)
 		    /* we'll use the max instead of the min + var */
-		    delta = delta  + var - box->BxMaxWidth - colPercent[cRef];
-		  else if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
-		      box->BxMinWidth + var > box->BxMaxWidth)
-		    /* we'll use the max instead of the min + var */
-		    delta = delta  + var - box->BxMaxWidth + box->BxMinWidth;
+		    i = box->BxMaxWidth;
+		  else if (box->BxMinWidth + var > box->BxMaxWidth)
+		    /* use the max instead of the min + delta */
+		    i = box->BxMaxWidth;
+		  else if (colPercent[cRef] < 0)
+		    /* colPercent[cRef] = - new min */
+		    i = var - colPercent[cRef];
+		  else
+		    i = box->BxMinWidth + var;
 		}
-	    }
-	}
-      for (cRef = 0; cRef < cNumber; cRef++)
-	{
-	  box = colBox[cRef]->AbBox;
-	  if (colPercent[cRef] > 0)
-	    i = ((width - mbp) * colPercent[cRef] / 100);
-	  else if (colWidth[cRef] > 0)
-	    i = colWidth[cRef];
-	  else if (useMax)
-	    {
-	      if (max)
-		var = delta * box->BxMaxWidth / max;
-	      else
-		var = delta / n;
-	      i = box->BxMaxWidth + var;
-	    }
-	  else
-	    {
-	      var = delta * box->BxMaxWidth / max;
-	      if (colPercent[cRef] < 0 &&
-		  var - colPercent[cRef] > box->BxMaxWidth)
-		/* we'll use the max instead of the min + var */
-		i = box->BxMaxWidth;
-	      else if (box->BxMinWidth + var > box->BxMaxWidth)
-		/* use the max instead of the min + delta */
-		i = box->BxMaxWidth;
-	      else if (colPercent[cRef] < 0)
-		/* colPercent[cRef] = - new min */
-		i = var - colPercent[cRef];
-	      else
-		i = box->BxMinWidth + var;
-	    }
-	  /* update the new inside width */
-	  i = i - box->BxWidth;
-	  ResizeWidth (box, box, NULL, i, 0, 0, 0, frame);
+	      /* update the new inside width */
+	      i -= box->BxWidth;
+	      ResizeWidth (box, box, NULL, i, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
-printf ("Width[%d]=%d\n", cRef, box->BxWidth);
+	      printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 #endif
-	}
+	    }
     }
 
   table->AbBox->BxCycles = 0;
