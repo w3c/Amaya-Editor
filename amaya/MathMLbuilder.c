@@ -1387,7 +1387,7 @@ void CheckMTable (elMTABLE, doc, placeholder)
       }
     row = nextRow;
     }
-  CheckAllRows (elMTABLE, doc, placeholder);
+  CheckAllRows (elMTABLE, doc, placeholder, FALSE);
 }
 
 /*----------------------------------------------------------------------

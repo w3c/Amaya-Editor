@@ -8,7 +8,8 @@
 
 extern void CheckAllRows ( Element table,
                            Document doc,
-                           ThotBool placeholder );
+                           ThotBool placeholder,
+                           ThotBool deleteLastEmptyColumns );
 extern void CheckTable ( Element table,
                          Document doc );
 extern void NewCell ( Element cell,
@@ -41,7 +42,8 @@ extern ThotBool RowspanDelete ( NotifyAttribute * event );
 
 extern void CheckAllRows (/* Element table,
                              Document doc,
-                             ThotBool placeholder */);
+                             ThotBool placeholder,
+                             ThotBool deleteLastEmptyColumns */);
 extern void CheckTable (/* Element table,
                            Document doc */);
 extern void NewCell (/* Element cell,

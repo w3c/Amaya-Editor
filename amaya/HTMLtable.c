@@ -645,7 +645,7 @@ ThotBool     inMath;
 	  if (TtaPrepareUndo (doc))
 	      TtaDeleteTree (colhead, doc);
 	  if (span)
-	     CheckAllRows (table, doc, FALSE);
+	     CheckAllRows (table, doc, FALSE, FALSE);
 	}
     }
   return (empty);
@@ -656,12 +656,14 @@ ThotBool     inMath;
   CheckAllRows
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CheckAllRows (Element table, Document doc, ThotBool placeholder)
+void           CheckAllRows (Element table, Document doc, ThotBool placeholder,
+			     ThotBool deleteLastEmptyColumns)
 #else
-void                CheckAllRows (table, doc, placeholder)
-Element             table;
-Document            doc;
-ThotBool            placeholder;
+void           CheckAllRows (table, doc, placeholder, deleteLastEmptyColumns)
+Element        table;
+Document       doc;
+ThotBool       placeholder;
+ThotBool       deleteLastEmptyColumns;
 #endif
 {
   Element            *colElement;
@@ -986,7 +988,7 @@ ThotBool            placeholder;
     }
 
   /* if there are some empty columns at the end, remove them */
-  if (cNumber > 0)
+  if (deleteLastEmptyColumns && cNumber > 0)
     {
     /* start with the last column of the table */
     colhead = colElement[cNumber - 1];
@@ -1204,7 +1206,7 @@ Document            doc;
 	    firstgroup = tfoot;
 
 	  /* associate each cell with a column */
-	  CheckAllRows (table, doc, FALSE);
+	  CheckAllRows (table, doc, FALSE, FALSE);
 	  CheckTableAfterCellUpdate = TRUE;
 	}
     }
@@ -1500,7 +1502,7 @@ NotifyElement      *event;
    else
      elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (rowgroup, elType);
-   CheckAllRows (table, doc, FALSE);
+   CheckAllRows (table, doc, FALSE, FALSE);
    CheckTableAfterCellUpdate = TRUE;
    /* if it's a row in a math table and if the table has a rowalign attribute,
       distribute the values of that attribute to all rows in the table */
@@ -1741,7 +1743,7 @@ NotifyElement      *event;
     }
   else
     {
-      CheckAllRows (table, doc, FALSE);
+      CheckAllRows (table, doc, FALSE, FALSE);
       CheckTableAfterCellUpdate = FALSE;
       /* avoid processing the cells of the created row */
       CurrentRow = row;
@@ -1798,7 +1800,7 @@ NotifyElement      *event;
     }
   else
     {
-      CheckAllRows (table, doc, FALSE);
+      CheckAllRows (table, doc, FALSE, FALSE);
       CheckTableAfterCellUpdate = FALSE;
     }
   /* if it's a row in a math table and if the table has a rowalign attribute,
@@ -1845,7 +1847,7 @@ Document            doc;
    else
      elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (cell, elType);
-   CheckAllRows (table, doc, FALSE);
+   CheckAllRows (table, doc, FALSE, TRUE);
    CheckTableAfterCellUpdate = TRUE;
 }
 
@@ -1963,7 +1965,7 @@ Document            doc;
    else
      elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (cell, elType);
-   CheckAllRows (table, doc, FALSE);
+   CheckAllRows (table, doc, FALSE, TRUE);
    CheckTableAfterCellUpdate = TRUE;
 }
 

@@ -904,9 +904,9 @@ int                 construct;
 		      else
 			{
 			  sibling = TtaGetParent (sibling);
-			  if (TtaCanInsertSibling (elType, sibling, FALSE, doc))
-			    /* insert a foreignObject element as a sibling of the
-			       parent element */
+			  if (TtaCanInsertSibling (elType, sibling, FALSE,doc))
+			    /* insert a foreignObject element as a sibling of
+			       theparent element */
 			    insertSibling = TRUE;
 			  else
 			    sibling = NULL;
@@ -1225,7 +1225,7 @@ int                 construct;
 		    }
 		}
 	    }
-	  CheckAllRows (el, doc, FALSE);
+	  CheckAllRows (el, doc, FALSE, FALSE);
 	}
 
       /* if the new element is a child of a FencedExpression element,
@@ -1354,7 +1354,8 @@ Document            doc;
 View                view;
 #endif
 {
-  MathButton = TtaAddButton (doc, 1, iconMath, CreateMathMenu, "CreateMathMenu",
+  MathButton = TtaAddButton (doc, 1, iconMath, CreateMathMenu,
+			     "CreateMathMenu",
 			     TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 			     TBSTYLE_BUTTON, TRUE);
 }
@@ -2605,7 +2606,8 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
 			 elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 			 newText = TtaNewElement (doc, elType);
 			 TtaInsertFirstChild (&newText, newEl, doc);
-			 TtaSetTextContent (newText, functionName[func], lang, doc);
+			 TtaSetTextContent (newText, functionName[func],
+					    lang, doc);
 			 MathSetAttributes (newEl, doc, NULL);
 			 TtaRegisterElementCreate (newEl, doc);
 			 if (!firstElChanged)
@@ -3711,6 +3713,7 @@ ThotBool MathElementWillBeDeleted(event)
 
 
 /*----------------------------------------------------------------------
+  DeleteMColumn
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DeleteMColumn (Document document, View view)
@@ -3935,8 +3938,10 @@ void MathElementDeleted(event)
 	   TtaRemoveTree (grandChild, event->document);
 	   TtaInsertSibling (grandChild, parent, TRUE, event->document);
 	   TtaDeleteTree (parent, event->document);
-	   placeholderEl = InsertPlaceholder (grandChild, FALSE, event->document, FALSE/******/);
-	   placeholderEl = InsertPlaceholder (grandChild, TRUE, event->document, FALSE/******/);
+	   placeholderEl = InsertPlaceholder (grandChild, FALSE,
+					      event->document, FALSE/******/);
+	   placeholderEl = InsertPlaceholder (grandChild, TRUE,
+					      event->document, FALSE/******/);
 	   }
 	}
       }

@@ -451,7 +451,8 @@ int              elementT;
        TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &j);
        TtaGiveLastSelectedElement (document, &lastSel, &j, &lastChar);
        el = firstSel;
-       if (firstSel == NULL || firstSel == head || !TtaIsAncestor (firstSel, head))
+       if (firstSel == NULL || firstSel == head ||
+	   !TtaIsAncestor (firstSel, head))
 	 {
 	   /* the current selection is not within the head */
 	   el = TtaGetLastChild (head);
@@ -648,7 +649,8 @@ View                view;
 	     {
 	       /* it's a HTML document search the head element */
 	       elType.ElTypeNum = HTML_EL_HEAD;
-	       head = TtaSearchTypedElement (elType, SearchForward,  TtaGetMainRoot (document));
+	       head = TtaSearchTypedElement (elType, SearchForward,
+					     TtaGetMainRoot (document));
 	     }
 	 }
      }
@@ -719,7 +721,8 @@ Document            document;
 	    if (ancestor)
 	      {
 		elType = TtaGetElementType (ancestor);
-		if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+		if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema),
+			     TEXT("HTML")))
 		  /* this is an HTML element */
 		  return TRUE;
 		sibling = ancestor;
@@ -740,7 +743,8 @@ Document            document;
 	    if (ancestor)
 	      {
 		elType = TtaGetElementType (ancestor);
-		if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+		if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema),
+			     TEXT("HTML")))
 		  /* this is an HTML element */
 		  return TRUE;
 		sibling = ancestor;
@@ -1054,10 +1058,14 @@ View                view;
 #ifdef _WINDOWS
 	   CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
 #else  /* !_WINDOWS */
-	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1), TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
-	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
-	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
-	   TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_BORDER), 0, 50, TRUE);
+	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
+		       TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
+	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
+			     TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
+	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
+			     TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
+	   TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm,
+			     TtaGetMessage (AMAYA, AM_BORDER), 0, 50, TRUE);
 	   TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
 	   TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
 	   TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
@@ -1109,8 +1117,8 @@ View                view;
 	       attrType.AttrTypeNum = HTML_ATTR_Border;
 	       attr = TtaGetAttribute (el, attrType);
 	       if (attr != NULL && TBorder == 0)
-		 /* the table has a Border attribute but the user don't want any
-		    border. Remove the attribute */
+		 /* the table has a Border attribute but the user don't want
+		    any border. Remove the attribute */
 		 TtaRemoveAttribute (el, attr, document);
 	       else
 		 {
@@ -1152,7 +1160,7 @@ View                view;
 		   NumberRows--;
 		 }
 	     } 
-	   CheckAllRows (el, document, FALSE);
+	   CheckAllRows (el, document, FALSE, FALSE);
 	 }
        TtaUnlockTableFormatting ();
        TtaSetDisplayMode (document, DisplayImmediately);
@@ -1620,7 +1628,7 @@ ThotBool           *withinP;
        form = TtaGetTypedAncestor (el, elType);
        if (form == NULL)
 	 {
-	   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+	   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 	     {
 	       /* create the form element */
 	       elType.ElTypeNum = HTML_EL_Form;
@@ -1640,7 +1648,8 @@ ThotBool           *withinP;
 	   while (parent != form
 		  && elType.ElTypeNum != HTML_EL_Paragraph
 		  && elType.ElTypeNum != HTML_EL_Pseudo_paragraph
-		  && !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+		  && !ustrcmp(TtaGetSSchemaName (elType.ElSSchema),
+			      TEXT("HTML")))
 	     {
 	       parent = TtaGetParent (parent);
 	       elType = TtaGetElementType (parent);
@@ -1663,7 +1672,8 @@ ThotBool           *withinP;
 		   len = TtaGetTextLength (el);
 		   if (len == 0)
 		     {
-		       TtaSetTextContent (el, TEXT(" "), TtaGetDefaultLanguage (), doc);
+		       TtaSetTextContent (el, TEXT(" "),
+					  TtaGetDefaultLanguage (), doc);
 		       TtaSelectString (doc, el, 2, 2);
 		     }
 		   
