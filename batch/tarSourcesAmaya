@@ -399,6 +399,7 @@ libwww/config/makexprt.pl \
 libwww/config/missing \
 libwww/config/mkinstalldirs \
 libwww/config/winConfigure.pl \
+libwww/config/depcomp \
  | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tgz
 
 
