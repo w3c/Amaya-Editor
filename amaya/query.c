@@ -144,7 +144,7 @@ PicType contentType;
  HTEncoding        enc;
  HTEncoding        cte;
  HTLanguage        lang;
- double            quality;
+ double            quality = 1.0;
 
  switch (contentType)
    {
