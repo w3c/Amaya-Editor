@@ -3310,8 +3310,6 @@ void *extra;
    PresentationContext context;
    PresentationValue image;
 
-fprintf(stderr,"ParseCSSBackgroundImageCallback\n");
-
    if (callblock == NULL) return;
    target = callblock->target;
    context = &callblock->context.blk;
@@ -3323,6 +3321,7 @@ fprintf(stderr,"ParseCSSBackgroundImageCallback\n");
    if (context->drv->SetBgImage)
        context->drv->SetBgImage (target, context, image);
    TtaFreeMemory(callblock);
+   RedisplayDocument (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3339,9 +3338,78 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseCSSBackgroundImage ");
-   TODO
-      return (attrstr);
+   Element             el;
+   GenericContext        gblock;
+   SpecificContextBlock *sblock;
+   SpecificTarget        elem;
+   char                 *url;
+   char                 *name;
+   BackgroundImageCallbackPtr callblock;
+
+   url = NULL;
+   if (! IS_CASE_WORD (attrstr, "url"))
+       return (attrstr);
+
+   attrstr = ParseHTMLURL (attrstr, &url);
+
+   if (url)
+     {
+       /*
+	* if the background is set on the HTML or BODY element,
+	* set the background color for the full window.
+	*/
+       if (context->drv == &GenericStrategy)
+	 {
+	   gblock = (GenericContext) context;
+	   if ((gblock->type == HTML_EL_HTML) || (gblock->type == HTML_EL_BODY) ||
+	       (gblock->type == HTML_EL_HEAD))
+	     {
+	       callblock = (BackgroundImageCallbackPtr)
+		   TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
+	       if (callblock != NULL) {
+		   callblock->target = target;
+		   memcpy(&callblock->context.generic, gblock,
+			  sizeof(GenericContextBlock));
+
+		   /* fetch and display background image of element */
+		   el = TtaGetMainRoot (gblock->doc);
+
+		   FetchImage (gblock->doc, el, url, 0,
+			       ParseCSSBackgroundImageCallback,
+			       callblock);
+	       }
+	     }
+	 }
+       else if (context->drv == &SpecificStrategy)
+	 {
+	   sblock = (SpecificContextBlock *) context;
+	   elem = (SpecificTarget) target;
+	   name = GetHTML3Name (elem, sblock->doc);
+	   
+	   if ((!strcmp (name, "HTML")) || (!strcmp (name, "BODY")) ||
+	       (!strcmp (name, "HEAD")))
+	     {
+	       callblock = (BackgroundImageCallbackPtr)
+		   TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
+	       if (callblock != NULL) {
+		   callblock->target = target;
+		   memcpy(&callblock->context.specific, sblock,
+			  sizeof(SpecificContextBlock));
+
+		   /* fetch and display background image of element */
+		   el = TtaGetMainRoot (sblock->doc);
+
+		   FetchImage (sblock->doc, el, url, 0,
+			       ParseCSSBackgroundImageCallback,
+			       callblock);
+	       }
+	     }
+	 }
+     }
+
+   if (url)
+     TtaFreeMemory (url);
+   return (attrstr);
 }
 
 /*----------------------------------------------------------------------

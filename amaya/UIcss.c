@@ -214,8 +214,15 @@ Document            doc;
 
 #endif
 {
-  TtaSetDisplayMode (doc, NoComputedDisplay);
-  TtaSetDisplayMode (doc, DisplayImmediately);
+
+  int mode;
+
+  mode = TtaGetDisplayMode(doc);
+  if (mode == DisplayImmediately) {
+      /* TtaSetDisplayMode (doc, DeferredDisplay); */
+      TtaSetDisplayMode (doc, NoComputedDisplay);
+      TtaSetDisplayMode (doc, DisplayImmediately);
+  }
 }
 
 /*----------------------------------------------------------------------
