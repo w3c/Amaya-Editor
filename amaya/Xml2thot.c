@@ -1521,16 +1521,6 @@ static void       StartOfXmlStartElement (char *name)
   static int      old_nslevel;
   PtrParserCtxt   savParserCtxt = NULL;
       
-  /* ignore tag <P> within PRE for Xhtml elements */
-  if (currentParserCtxt != NULL &&
-      (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0) &&
-      (XmlWithinStack (HTML_EL_Preformatted, currentParserCtxt->XMLSSchema)) &&
-      (strcasecmp (elementName, "p") == 0))
-    {
-       UnknownElement = TRUE;
-       return;
-    }
-
   if (stackLevel == MAX_STACK_HEIGHT)
     {
       XmlParseError (errorNotWellFormed, "**FATAL** Too many XML levels", 0);
@@ -1584,7 +1574,14 @@ static void       StartOfXmlStartElement (char *name)
 #endif /* XML_GENERIC */
    }
 
-  if (currentParserCtxt != NULL)
+  /* ignore tag <P> within PRE for Xhtml elements */
+  if (currentParserCtxt != NULL &&
+      (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0) &&
+      (XmlWithinStack (HTML_EL_Preformatted, currentParserCtxt->XMLSSchema)) &&
+      (strcasecmp (elementName, "p") == 0))
+    UnknownElement = TRUE;
+
+  if (currentParserCtxt != NULL && !UnknownElement)
     {
       /* search the XML element name in the corresponding mapping table */
       elType.ElSSchema = NULL;
@@ -1983,7 +1980,7 @@ void PutInXmlElement (char *data, int length)
    i = 0;
    /* Immediately after a start tag, treatment of the leading spaces */
    /* If RemoveLeadingSpace = TRUE, we suppress all leading white-space */
-   /* characters, otherwise, we only suppress the first line break*/
+   /* characters, otherwise, we only suppress the first line break */
    if (ImmediatelyAfterTag)
      {
        if (RemoveLeadingSpace)
@@ -2009,6 +2006,7 @@ void PutInXmlElement (char *data, int length)
    bufferws = TtaGetMemory (length + 1);
    strncpy (bufferws, &data[i], length);
    bufferws[length] = EOS;
+
    /* Convert line-break or tabs into space character */
    i = 0;
    if (RemoveLineBreak)
@@ -3493,20 +3491,12 @@ static void     Hndl_NameSpaceStart (void *userData,
     }
 
   if ((char*) prefix != NULL)
-    {
-      len = strlen ((char*) prefix);
-      Ns_Prefix[Ns_Level] = TtaGetMemory (len + 1);
-      strcpy (Ns_Prefix[Ns_Level], (char*) prefix);
-    }
+    Ns_Prefix[Ns_Level] = TtaStrdup ((char *) prefix);
   else
     Ns_Prefix[Ns_Level] = NULL;
 
   if ((char*) uri != NULL)
-    {
-      len = strlen ((char*) uri);
-      Ns_Uri[Ns_Level] = TtaGetMemory (len + 1);
-      strcpy (Ns_Uri[Ns_Level], (char*) uri);
-    }
+    Ns_Uri[Ns_Level] = TtaStrdup ((char *) uri);
   else
     Ns_Uri[Ns_Level] = NULL;
 
