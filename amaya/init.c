@@ -2951,6 +2951,63 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
+  RestoreOneAmayaDoc restores a saved file
+  docname is the original name of the document.
+  tempdoc is the name of the saved file.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int       RestoreOneAmayaDoc (char *tempdoc, char *docname)
+#else
+int       RestoreOneAmayaDoc (tempdoc, docname)
+char     *tempdoc;
+char     *docname;
+#endif
+{
+  FILE               *f;
+  char                tempfile[MAX_LENGTH];
+  int                 newdoc, len;
+  boolean             aDoc;
+
+  newdoc = InitDocView (0, docname);
+  if (newdoc != 0)
+    {
+      /* load the saved file */
+      W3Loading = newdoc;
+      TtaExtractName (tempdoc, DirectoryName, DocumentName);
+      if (IsW3Path (docname))
+	{
+	  /* it's a remote file */
+	  LoadHTMLDocument (newdoc, docname, NULL, CE_FALSE, 
+			    tempdoc, DocumentName, NULL, FALSE);
+	}
+      else
+	{
+	  /* it's a local file */
+	  tempfile[0] = EOS;
+	  /* load the temporary file */
+	  LoadHTMLDocument (newdoc, tempdoc, NULL, CE_FALSE,
+			    tempfile, DocumentName, NULL, FALSE);
+	  /* change its URL */
+	  TtaFreeMemory (DocumentURLs[newdoc]);
+	  len = strlen (docname) + 1;
+	  DocumentURLs[newdoc] = TtaGetMemory (len);
+	  strcpy (DocumentURLs[newdoc], docname);
+	  TtaSetTextZone (newdoc, 1, 1, docname);
+	  /* change its directory name */
+	  TtaExtractName (docname, DirectoryName, DocumentName);
+	  TtaSetDocumentDirectory (newdoc, DirectoryName);
+	}
+      W3Loading = 0;		/* loading is complete now */
+      FetchAndDisplayImages (newdoc, 0);
+      TtaSetDocumentModified (newdoc);
+      /* almost one file is restored */
+      aDoc = TRUE;
+      /* unlink this saved file */
+      TtaFileUnlink (tempdoc);
+    }
+}
+
+/*----------------------------------------------------------------------
   RestoreAmayaDocs checks if Amaya has previously crashed.
   The file Crash.amaya gives the list of saved files
   ----------------------------------------------------------------------*/
@@ -2982,44 +3039,12 @@ static boolean        RestoreAmayaDocs ()
 	    {
 	      if (UserAnswer)
 		{
-		  newdoc = InitDocView (0, docname);
-		  if (newdoc != 0)
-		    {
-		      /* load the saved file */
-		      W3Loading = newdoc;
-		      TtaExtractName (tempdoc, DirectoryName, DocumentName);
-		      if (IsW3Path (docname))
-			{
-			  /* it's a remote file */
-			  LoadHTMLDocument (newdoc, docname, NULL, CE_FALSE, 
-					    tempdoc, DocumentName, NULL, FALSE);
-			}
-		      else
-			{
-			  /* it's a local file */
-			  tempfile[0] = EOS;
-			  /* load the temporary file */
-			  LoadHTMLDocument (newdoc, tempdoc, NULL, CE_FALSE,
-					    tempfile, DocumentName, NULL, FALSE);
-			  /* change its URL */
-			  TtaFreeMemory (DocumentURLs[newdoc]);
-			  len = strlen (docname) + 1;
-			  DocumentURLs[newdoc] = TtaGetMemory (len);
-			  strcpy (DocumentURLs[newdoc], docname);
-			  TtaSetTextZone (newdoc, 1, 1, docname);
-			  /* change its directory name */
-			  TtaExtractName (docname, DirectoryName, DocumentName);
-			  TtaSetDocumentDirectory (newdoc, DirectoryName);
-			}
-		      W3Loading = 0;		/* loading is complete now */
-		      FetchAndDisplayImages (newdoc, 0);
-		      TtaSetDocumentModified (newdoc);
-		      /* almost one file is restored */
+		  if (RestoreOneAmayaDoc (tempdoc, docname))
 		      aDoc = TRUE;
-		    }
 		}
-	      /* unlink this saved file */
-	      TtaFileUnlink (tempdoc);
+	      else
+		/* unlink this saved file */
+		TtaFileUnlink (tempdoc);
 	      /*next saved file */
 	      tempdoc[0] = EOS;
 	      fscanf (f, "%s %s\n", tempdoc, docname);

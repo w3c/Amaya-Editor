@@ -551,6 +551,7 @@ DBG(fprintf(stderr, "AddNoName :  %s \n", url);)
   SafeSaveFileThroughNet
   Send a file through the Network (using the PUT HTTP method) and double
   check for errors using a following GET.
+  Return 0 if the file has been saved
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          SafeSaveFileThroughNet (Document doc, char *localfile,
@@ -563,12 +564,12 @@ char               *remotefile;
 PicType             filetype;
 #endif
 {
-  char msg[MAX_LENGTH];
-  char tempfile[MAX_LENGTH]; /* Name of the file used to refetch */
-  char tempURL[MAX_LENGTH];  /* May be redirected */
-  char *no_reread_check;
-  char *no_write_check;
-  int res;
+  char              msg[MAX_LENGTH];
+  char              tempfile[MAX_LENGTH]; /* File name used to refetch */
+  char              tempURL[MAX_LENGTH];  /* May be redirected */
+  char             *no_reread_check;
+  char             *no_write_check;
+  int               res;
 
   no_reread_check = TtaGetEnvString("NO_REREAD_CHECK");
   no_write_check = TtaGetEnvString("NO_WRITE_CHECK");
@@ -581,7 +582,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, r
 #else /* AMAYA_JAVA */
   res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
 #endif /* AMAYA_JAVA */
-  if (res)
+  if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);
   if (no_reread_check != NULL)
@@ -598,7 +599,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
 #else /* AMAYA_JAVA */
   res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE, NULL, NULL, NULL, NULL, YES, NULL);
 #endif /* AMAYA_JAVA */
-  if (res)
+  if (res != 0)
     {
       /* The HTTP GET method failed ! */
       sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_RELOAD_FAILED), remotefile);
@@ -741,7 +742,7 @@ boolean             with_images;
 
       res = SafeSaveFileThroughNet (document, tempname,
 				    DocumentURLs[document], unknown_type);
-      if (res)
+      if (res != 0)
 	{
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 	  DocNetworkStatus[document] |= AMAYA_NET_ERROR;
@@ -823,7 +824,7 @@ DBG(fprintf(stderr, "Saving completed\n");)
   TtaFreeMemory (msg);
   if (tempname)
     TtaFreeMemory (tempname);
-  return (res != 0);
+  return (res == 0);
 }
 
 /*----------------------------------------------------------------------

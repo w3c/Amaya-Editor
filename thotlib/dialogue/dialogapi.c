@@ -5310,12 +5310,12 @@ int                 ref;
    else
      {
        /*=====================> Detruit une feuille de saisie ou un formulaire*/
-	if ((catalogue->Cat_Type != CAT_INT)
-	    && (catalogue->Cat_Type != CAT_TEXT)
-	    && (catalogue->Cat_Type != CAT_FORM)
-	    && (catalogue->Cat_Type != CAT_SELECT)
-	    && (catalogue->Cat_Type != CAT_SHEET)
-	    && (catalogue->Cat_Type != CAT_DIALOG))
+	if (catalogue->Cat_Type != CAT_INT
+	    && catalogue->Cat_Type != CAT_TEXT
+	    && catalogue->Cat_Type != CAT_FORM
+	    && catalogue->Cat_Type != CAT_SELECT
+	    && catalogue->Cat_Type != CAT_SHEET
+	    && catalogue->Cat_Type != CAT_DIALOG)
 	   return (1);		/* Ce n'est pas le cas : On ne fait rien */
 	else
 	  {
@@ -5340,9 +5340,9 @@ int                 ref;
 
 		  if (entry >= 0)
 		    {
-		       if ((parentCatalogue->Cat_Type == CAT_FORM)
-			   || (parentCatalogue->Cat_Type == CAT_SHEET)
-			   || (parentCatalogue->Cat_Type == CAT_DIALOG))
+		       if (parentCatalogue->Cat_Type == CAT_FORM
+			   || parentCatalogue->Cat_Type == CAT_SHEET
+			   || parentCatalogue->Cat_Type == CAT_DIALOG)
 			 /*__________________________________________ Dans un formulaire __*/
 			 {
 #                           ifndef _WINDOWS
@@ -5544,6 +5544,13 @@ int                 ref;
 	     /* C'est surement une destruction de formulaire */
 	     if (DestForm (ref) != 0)
 		TtaError (ERR_invalid_reference);
+#            ifndef _WINDOWS
+	     if (PopShell != 0)
+	       {
+		 XtDestroyWidget (PopShell);
+		 PopShell = 0;
+	       }
+#            endif /* _WINDOWS */
 	     return;
 	  }
 
@@ -5560,11 +5567,6 @@ int                 ref;
 #       ifndef _WINDOWS
 	if (catalogue->Cat_Type != CAT_PULL)
 	   XtDestroyWidget (catalogue->Cat_Widget);
-	if (PopShell != 0)
-	  {
-	    XtDestroyWidget (PopShell);
-	    PopShell = 0;
-	  }
 #       endif /* _WINDOWS */
 	/* Libere le catalogue */
 	catalogue->Cat_Widget = 0;

@@ -412,7 +412,6 @@ int                 frame;
 	      }
 	    if (yd < 0)
 	      {
-		/* print vertical lines of tables */
 		height += yd;
 		yd = 0;
 	      }

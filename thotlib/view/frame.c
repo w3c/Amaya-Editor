@@ -24,6 +24,7 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "platform_tv.h"
+#include "picture_tv.h"
 
 #include "absboxes_f.h"
 #include "appli_f.h"
@@ -178,6 +179,7 @@ void                TtaRefresh ()
 
 /*----------------------------------------------------------------------
    RedrawFilledBoxes redraw from top to bottom all filled boxes.
+   Clipping is done by xmin, xmax, ymin, ymax.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RedrawFilledBoxes (int frame, int xmin, int xmax, int ymin, int ymax)
@@ -194,6 +196,8 @@ int                 ymax;
    PtrBox              pBox, pBoxChild;
    ViewFrame          *pFrame;
    int                 x, y;
+   int                 xd, yd;
+   int                 width, height;
 
    pFrame = &ViewFrameTable[frame - 1];
    pAb = pFrame->FrAbstractBox;
@@ -206,6 +210,7 @@ int                 ymax;
      DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground, frame);
 #  ifndef _WINDOWS
    else if (pAb->AbFillBox)
+     /* todo: clip when backgroud will be printed */
      DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
 		    pBox->BxXOrg - x, pBox->BxYOrg - y,
 		    pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
@@ -230,33 +235,84 @@ int                 ymax;
 		 pBoxChild = pBoxChild->BxNexChild;
 	       do
 		 {
-		   if (pBoxChild->BxYOrg + pBoxChild->BxHeight >= ymin
-		       && pBoxChild->BxYOrg <= ymax
-		       && pBoxChild->BxXOrg + pBoxChild->BxWidth >= xmin
-		       && pBoxChild->BxXOrg <= xmax)
+		   xd = pBoxChild->BxXOrg;
+		   yd = pBoxChild->BxYOrg;
+		   width = pBoxChild->BxWidth;
+		   height = pBoxChild->BxHeight;
+		   if (Printing)
+		     {
+		       /* clipping sur l'origine */
+		       if (xd < x)
+			 {
+			   width = width - x + xd;
+			   xd = x;
+			 }
+		       if (yd < y)
+			 {
+			   height = height - y + yd;
+			   yd = y;
+			 }
+		       /* limite la largeur a la valeur du clipping */
+		       if (xd + width > xmax)
+			 width = xmax - xd;
+		       /* limite la hauteur a la valeur du clipping */
+		       if (yd + height > ymax)
+			 height = ymax - yd;
+		     }
+		   if (yd + height >= ymin
+		       && yd <= ymax
+		       && xd + width >= xmin
+		       && xd <= xmax)
 		     if (pAb->AbPictBackground)
 		       DrawPicture (pBoxChild, (PictInfo *) pAb->AbPictBackground, frame);
 		     else
 		       DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-				      pBoxChild->BxXOrg - x, pBoxChild->BxYOrg - y,
-				      pBoxChild->BxWidth, pBoxChild->BxHeight, 0, 0, pAb->AbForeground,
+				      xd - x, yd - y,
+				      width, height, 0, 0, pAb->AbForeground,
 				      pAb->AbBackground, pAb->AbFillPattern);
 		   pBoxChild = pBoxChild->BxNext;
 		 }
 	       while (pBoxChild != NULL && IsParentBox (pBox, pBoxChild));
 	     }
 	 }
-       else if (pBox->BxYOrg + pBox->BxHeight >= ymin
-	   && pBox->BxYOrg <= ymax
-	   && pBox->BxXOrg + pBox->BxWidth >= xmin
-	   && pBox->BxXOrg <= xmax)
-	 if (pAb->AbPictBackground)
-	   DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground, frame);
-	 else
-	   DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-			  pBox->BxXOrg - x, pBox->BxYOrg - y,
-			  pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
-			  pAb->AbBackground, pAb->AbFillPattern);
+       else
+	 {
+	   xd = pBox->BxXOrg;
+	   yd = pBox->BxYOrg;
+	   width = pBox->BxWidth;
+	   height = pBox->BxHeight;
+	   if (Printing)
+	     {
+	       /* clipping sur l'origine */
+	       if (xd < x)
+		 {
+		   width = width - x + xd;
+		   xd = x;
+		 }
+	       if (yd < y)
+		 {
+		   height = height - y + yd;
+		   yd = y;
+		 }
+	       /* limite la largeur a la valeur du clipping */
+	       if (xd + width > xmax)
+		 width = xmax - xd;
+	       /* limite la hauteur a la valeur du clipping */
+	       if (yd + height > ymax)
+		 height = ymax - yd;
+	     }
+	   if (yd + height >= ymin
+	       && yd <= ymax
+	       && xd + width >= xmin
+	       && xd <= xmax)
+	     if (pAb->AbPictBackground)
+	       DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground, frame);
+	     else
+	       DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+			      xd - x, yd - y,
+			      width, height, 0, 0, pAb->AbForeground,
+			      pAb->AbBackground, pAb->AbFillPattern);
+	 }
      }
 }
 
