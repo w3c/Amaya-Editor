@@ -1483,6 +1483,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		       if (pNextBox == pLine->LiFirstBox)
 			 pLine->LiFirstPiece = pBox;
 		     }
+		   else
+			 pBox = pNextBox;
 		 }
 	     }
 	   else if (pNextBox->BxWidth + xi <= maxX)
@@ -1602,6 +1604,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		     /* the first box of the line is a split box now */
 		     if (pNextBox == pLine->LiFirstBox && pLine->LiFirstPiece == NULL)
 		       pLine->LiFirstPiece = pBox;
+			 if (pBox == NULL)
+               pBox = pNextBox;
 		     toCut = FALSE;
 		   }
 	       else if (!toCut)
@@ -1613,6 +1617,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		     {
 		       BreakMainBox (pLine, lastbox, maxLength, pRootAb, TRUE);	/* coupure forcee */
 		       pBox = lastbox->BxNexChild;
+               if (pBox == NULL)
+	             pBox = lastbox;
 		     }
 		   /* Si la boite est seule dans la ligne, laisse deborder */
 		   else if (lastbox == pLine->LiFirstBox)
@@ -1621,6 +1627,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		   else
 		     {
 		       pBox = GetPreviousBox (lastbox->BxAbstractBox);
+               if (pBox == NULL)
+	             pBox = lastbox;
 		       /* Si c'est la premiere boite de la ligne et que celle-ci ets coupee */
 		       if (pBox == pLine->LiFirstBox && pLine->LiFirstPiece != NULL)
 			 pBox = pLine->LiFirstPiece;
@@ -1633,7 +1641,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	 }
      }
 
-
+ 
    /* ajoute toutes les boites de la ligne */
    if (pLine->LiFirstPiece != NULL)
       pNextBox = pLine->LiFirstPiece;
@@ -1652,7 +1660,11 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	if (pNextBox == pBox)
 	   still = FALSE;
 	else
+	{
 	   pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+       if (pNextBox == NULL)
+         still = FALSE;
+	}
      }
 
    /* termine le chainage */
