@@ -1146,7 +1146,7 @@ ThotEvent             *ev;
 	     s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
 	     if (!strcmp (s, "WM_DELETE_WINDOW"))
 	       {
-                  if (FrRef[0] != 0 && XtWindowOfObject (XtParent (FrameTable[frame].WdFrame)) == w)
+                  if (FrRef[0] != 0 && XtWindowOfObject (XtParent (FrameTable[0].WdFrame)) == w)
                      TtcQuit (0, 0);
                   else
                     {
