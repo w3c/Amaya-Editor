@@ -96,6 +96,9 @@ static HTList      *acceptTypes = NULL; /* List of types for the Accept header *
 static HTList      *acceptLanguages = NULL; /* List of language priorities for the Accept header */
 static HTList      *transfer_encodings = NULL;
 static HTList      *content_encodings = NULL;
+/* List of domains where we can do a safe PUT redirect */
+static HTList      *safeput_list = NULL;
+
 static int          object_counter = 0;	/* loaded objects counter */
 static  ThotBool    AmayaAlive_flag; /* set to 1 if the application is active;
 					0 if we have killed */
@@ -119,11 +122,18 @@ static void RecCleanCache (STRING dirname);
 #ifdef _WINDOWS
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
 #endif /* _WINDOWS */
+static void SafePut_init (void);
+static void SafePut_delete (void);
+static ThotBool SafePut_query (char *url);
+
 #else
 static void RecCleanCache (/* char *dirname */);
 #ifdef _WINDOWS
 int WIN_Activate_Request (/* HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar* */);
 #endif /* _WINDOWS */
+static void SafePut_init (/* void */);
+static void SafePut_delete (/* void */);
+static ThotBool SafePut_query (/* char *url */);
 #endif /* __STDC__ */
 
 
@@ -670,9 +680,10 @@ int                 status;
      }
 
    /*
-   ** Only do redirect on GET and HEAD
+   ** Only do redirect on GET, HEAD, and authorized domains for PUT
     */
-   if (!HTMethod_isSafe (method))
+   if ((me->method == METHOD_PUT && !SafePut_query (me->urlName))
+       || (me->method != METHOD_PUT && !HTMethod_isSafe (method)))
      {
        /*
        ** If we got a 303 See Other then change the method to GET.
@@ -1998,6 +2009,91 @@ static void ProxyInit ()
    HTProxy_getEnvVar ();
 }
 
+/*----------------------------------------------------------------------
+  SafePut_init
+  Sets up the domains which are authorized to make a redirect on 
+  a PUT.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SafePut_init (void)
+#else
+static void SafePut_init ()
+#endif /* __STDC__ */
+{
+  STRING strptr;
+  STRING str = NULL;
+  char  *strptrA, *ptr;
+  char *domain;
+
+  /* get the proxy settings from the thot.ini file */
+  strptr = TtaGetEnvString ("SAFE_PUT_REDIRECT");
+  if (strptr && *strptr)
+    {
+      /* Get copy we can mutilate */
+      str = TtaStrdup (strptr);          
+      strptrA = WideChar2ISO (str);
+      /* convert to lowercase */
+      ptr = strptrA;
+      while (*ptr) 
+	{
+	  *ptr = tolower (*ptr);
+	  ptr++;
+	}
+      
+      /* create the list container */
+      safeput_list = HTList_new ();   
+      /* store the domain list */
+      while ((domain = HTNextField (&strptrA)) != NULL)
+	  HTList_addObject (safeput_list, TtaStrdup (domain)); 
+
+      TtaFreeMemory (str);
+    }
+}
+
+/*----------------------------------------------------------------------
+  SafePut_delete
+  Deletes the safeput_list variable
+  ----------------------------------------------------------------------*/
+static void SafePut_delete (void)
+{
+  HTList *cur = safeput_list;
+  char *domain;
+
+  if (!safeput_list) 
+    return;
+
+  while ((domain = (char *) HTList_nextObject (cur))) 
+      TtaFreeMemory (domain);
+   HTList_delete (safeput_list);
+   safeput_list = NULL;
+}
+
+/*----------------------------------------------------------------------
+  SafePut_query
+  returns true if the domain to which belongs the URL accepts an automatic
+  PUT redirect.
+  ----------------------------------------------------------------------*/
+static ThotBool SafePut_query (char *url)
+{
+  HTList *cur;
+  char *me;
+  ThotBool found;
+
+  /* extract the domain path of the url and normalize it */
+  /* domain = url; */
+  cur = safeput_list;
+  found = FALSE;
+  while ((me = (char *) HTList_nextObject (cur))) 
+    {
+      if (strstr (url, me))
+	{
+	  found = TRUE;
+	  break;
+	}
+    }
+
+  return (found);
+}
 
 /*----------------------------------------------------------------------
   AHTProfile_newAmaya
@@ -2062,6 +2158,9 @@ STRING AppVersion;
 
    /* Get any proxy settings */
    ProxyInit ();
+
+   /* Set up the domains where we accept a redirect on PUT */
+   SafePut_init ();
 
    /* Register the default set of converters */
    AHTConverterInit (converters);
@@ -2343,6 +2442,7 @@ void QueryClose ()
  
   HTProxy_deleteAll ();
   HTNoProxy_deleteAll ();
+  SafePut_delete ();
   HTGateway_deleteAll ();
   AHTProfile_delete ();
 }
@@ -3208,6 +3308,12 @@ int status;
   /* first, stop all current requests, as the network
    may make some changes */
   StopAllRequests (docid);
+
+  if (status & AMAYA_SAFEPUT_RESTART)
+    { 
+      SafePut_delete ();
+      SafePut_init ();
+    }
 
   if (status & AMAYA_PROXY_RESTART)
     {

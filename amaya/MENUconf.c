@@ -60,6 +60,7 @@ extern char* ColorName (int num);
 
 static int CacheStatus;
 static int ProxyStatus;
+static int SafePutStatus;
 
 /* Cache menu options */
 #ifdef _WINDOWS
@@ -97,6 +98,7 @@ static ThotBool BgImages;
 static ThotBool DoubleClick;
 static CHAR_T DialogueLang [MAX_LENGTH];
 static int FontMenuSize;
+static CHAR_T HomePage [MAX_LENGTH];
 
 /* Publish menu options */
 #ifdef _WINDOWS
@@ -105,7 +107,7 @@ static HWND PublishHwnd =  NULL;
 static int PublishBase;
 static ThotBool LostUpdateCheck;
 static ThotBool VerifyPublish;
-static CHAR_T HomePage [MAX_LENGTH];
+static CHAR_T SafePutRedirect [MAX_LENGTH];
 
 /* Color menu options */
 #ifdef _WINDOWS
@@ -222,12 +224,14 @@ void InitAmayaDefEnv ()
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
+  
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
   /* A4 size */
   TtaSetDefEnvString ("PAPERSIZE", "0", FALSE);
 #endif
   /* network configuration */
+  TtaSetDefEnvString ("SAFE_PUT_REDIRECT", "", FALSE);
   TtaSetDefEnvString (_ENABLELOSTUPDATECHECK_EVAR_, TEXT("yes"), FALSE);
   TtaSetDefEnvString (_ENABLEPIPELINING_EVAR_, TEXT("yes"), FALSE);
   TtaSetDefEnvString (_NETEVENTTIMEOUT_EVAR_, TEXT("60000"), FALSE);
@@ -1853,6 +1857,7 @@ static void GetPublishConf ()
   TtaGetEnvBoolean (_ENABLELOSTUPDATECHECK_EVAR_, &LostUpdateCheck);
   TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
   GetEnvString ("DEFAULTNAME", DefaultName);
+  GetEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
 }
 
 /*----------------------------------------------------------------------
@@ -1869,6 +1874,7 @@ static void SetPublishConf ()
   TtaSetEnvBoolean (_ENABLELOSTUPDATECHECK_EVAR_, LostUpdateCheck, TRUE);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
   TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
+  TtaSetEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -1888,6 +1894,7 @@ static void GetDefaultPublishConf ()
   GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
 		    PublishBase + mTogglePublish, 1);
   GetDefEnvString ("DEFAULTNAME", DefaultName);
+  GetDefEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
 }
 
 #ifdef _WINDOWS
@@ -1907,6 +1914,7 @@ HWND hwnDlg;
   CheckDlgButton (hwnDlg, IDC_VERIFYPUBLISH, (VerifyPublish)
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName);
+  SetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT, SafePutRedirect);
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -1922,6 +1930,7 @@ static void RefreshPublishMenu ()
   TtaSetToggleMenu (PublishBase + mTogglePublish, 0, LostUpdateCheck);
   TtaSetToggleMenu (PublishBase + mTogglePublish, 1, VerifyPublish);
   TtaSetTextForm (PublishBase + mDefaultName, DefaultName);
+  TtaSetTextForm (PublishBase + mSafePutRedirect, SafePutRedirect);
 }
 #endif /* !_WINDOWS */
 
@@ -1964,6 +1973,12 @@ LPARAM lParam;
 	      GetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName,
 			      sizeof (DefaultName) - 1);
 	      break;
+
+	    case IDC_SAFEPUTREDIRECT:
+	      GetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT, SafePutRedirect,
+			      sizeof (SafePutRedirect) - 1);
+	      SafePutStatus |= AMAYA_SAFEPUT_RESTART;
+	      break;
 	    }
 	}
       switch (LOWORD (wParam))
@@ -1978,16 +1993,20 @@ LPARAM lParam;
 	  /* action buttons */
 	case ID_APPLY:
 	  SetPublishConf ();	  
+	  libwww_updateNetworkConf (SafePutStatus);
 	  /* reset the status flag */
+	  SafePutStatus = 0;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
 	  /* reset the status flag */
+	  SafePutStatus = 0;
 	  PublishHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
 	  /* always signal this as modified */
+	  SafePutStatus |= AMAYA_SAFEPUT_RESTART;
 	  GetDefaultPublishConf ();
 	  WIN_RefreshPublishMenu (hwnDlg);
 	  break;
@@ -2032,11 +2051,19 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetPublishConf ();
+#ifdef AMAYA_JAVA
+#else      
+	      libwww_updateNetworkConf (SafePutStatus);
+#endif /* !AMAYA_JAVA */
+	      /* reset the status flag */
+	      SafePutStatus = 0;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultPublishConf ();
 	      RefreshPublishMenu ();
+	      /* always signal this as modified */
+	      SafePutStatus |= AMAYA_SAFEPUT_RESTART;
 	      break;
 	    default:
 	      break;
@@ -2059,7 +2086,15 @@ STRING              data;
 	  if (data)
 	    ustrcpy (DefaultName, data);
 	  else
-	    DefaultName [0] = EOS;
+	    DefaultName[0] = EOS;
+	  break;
+
+	case mSafePutRedirect:
+	  if (data)
+	    ustrcpy (SafePutRedirect, data);
+	  else
+	    SafePutRedirect[0] = EOS;
+	  SafePutStatus |= AMAYA_SAFEPUT_RESTART;
 	  break;
 
 	default:
@@ -2113,7 +2148,15 @@ STRING              pathname;
 		   20,
 		   1,
 		   FALSE);
+   TtaNewTextForm (PublishBase + mSafePutRedirect,
+		   PublishBase + PublishMenu,
+		   TtaGetMessage (AMAYA, AM_SAFE_PUT_REDIRECT),
+		   20,
+		   1,
+		   FALSE);
 #endif /* !_WINDOWS */
+   /* reset the modified flag */
+   SafePutStatus = 0;
    /* load the current values */
    GetPublishConf ();
 
