@@ -601,7 +601,7 @@ char               *docName;
 	   /* assign the default ressource name */
 	   strcpy (docName, "noname.html");
 	   /* remove DIR_SEP at the end of complete path */
-	   newName[length] = EOS;
+	   /* newName[length] = EOS; */
 	 }
        else
 	 {
@@ -725,8 +725,7 @@ char               *path;
        /* Normalize the suffix */
        ConvertToLowerCase (suffix);
 
-       if ((!strcmp (suffix, "gz")) ||
-	   (!strcmp (suffix, "z")))
+       if (!strcmp (suffix, "gz"))
 	 /* skip the compressed suffix */
 	 {
 	 ExtractSuffix (temppath, suffix);
