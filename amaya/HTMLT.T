@@ -1242,12 +1242,6 @@ ATTRIBUTES
  Cell_valign = Cell_bottom:
 	Create ' valign=bottom';
 
- Cell_height: BEGIN
-	Create ' height="';
-	Create Cell_height;
-	Create DoubleQuote;
-	END;
-
  No_wrap = no_wrap:
 	Create ' nowrap';
 

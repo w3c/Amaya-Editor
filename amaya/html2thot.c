@@ -37,8 +37,8 @@
 #include "zlib.h"
 #endif
 
-#include "parser.h"
 #include "language.h"
+
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
@@ -49,6 +49,8 @@
 #include "XMLparser_f.h"
 #include "HTMLimage_f.h"
 #endif /* STANDALONE */
+
+#include "parser.h"
 
 typedef unsigned char entityName[10];
 typedef struct _ISOlat1entry
@@ -480,16 +482,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"DATA", "", 'A', HTML_ATTR_data},
 #endif
    {"ENCTYPE", "", 'A', HTML_ATTR_ENCTYPE},
-   {"HEIGHT", "APPLET", 'A', HTML_ATTR_Height_},
-   {"HEIGHT", "IMG", 'A', HTML_ATTR_Height_},
-#ifdef COUGAR
-   {"HEIGHT", "OBJECT", 'A', HTML_ATTR_Height_},
-#endif
-   {"HEIGHT", "TD", 'A', HTML_ATTR_Cell_height},
-   {"HEIGHT", "TH", 'A', HTML_ATTR_Cell_height},
-#ifdef GRAPHML
-   {"HEIGHT", "XMLGRAPHICS", 'A', HTML_ATTR_Height_},
-#endif
+   {"HEIGHT", "", 'A', HTML_ATTR_Height_},
    {"HREF", "", 'A', HTML_ATTR_HREF_},
    {"HSPACE", "", 'A', HTML_ATTR_hspace},
    {"HTTP-EQUIV", "", 'A', HTML_ATTR_http_equiv},
@@ -695,9 +688,9 @@ static boolean      StartOfFile = TRUE;	  /* no printable character encountered
 static boolean      AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static boolean      ParsingCSS = FALSE;	  /* reading the content of a STYLE
 					     element */
-static int          WithinTable = 0;  /* <TABLE> has been read */
+static int          WithinTable = 0;      /* <TABLE> has been read */
 static char	    prevChar = EOS;	  /* last character read */
-static char*	    docURL = NULL;	  /* path or URL of the document */
+static char        *docURL = NULL;	  /* path or URL of the document */
 
 /* input buffer */
 #define MaxBufferLength 1000
@@ -958,49 +951,51 @@ SSchema		   *schema;
 Document            doc;
 #endif
 {
-   int                 i;
-   int                 entry;
-   ElementType	       elType;
-   char                *mappedName, content;
-   boolean	       isHTML;
+  int                 i;
+  int                 entry;
+  ElementType	       elType;
+  char                *mappedName, content;
+  boolean	       isHTML;
 
-   entry = -1;
-   if (*schema == NULL)
-      isHTML = FALSE;
-   else
-      isHTML = !(strcmp (TtaGetSSchemaName (*schema), "HTML"));
-   /* first, look at the HTML mapping table */
-   i = 0;
-   if (*schema == NULL || isHTML)
-      do
-	 if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
-	    entry = i;
-	 else
-	    i++;
-      while (entry < 0 && HTMLGIMappingTable[i].htmlGI[0] != EOS);
-
-   if (entry < 0)
-      if (*schema != NULL && isHTML)
-	 *schema = NULL;
+  entry = -1;
+  if (*schema == NULL)
+    isHTML = FALSE;
+  else
+    isHTML = !(strcmp (TtaGetSSchemaName (*schema), "HTML"));
+  /* first, look at the HTML mapping table */
+  i = 0;
+  if (*schema == NULL || isHTML)
+    do
+      if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
+	entry = i;
       else
-         /* not found. Look at the XML mapping tables */
-         {
-         elType.ElTypeNum = 0;
-         elType.ElSSchema = *schema;
-         MapXMLElementType (gi, &elType, &mappedName, &content, doc);
-         if (elType.ElTypeNum == 0)
-	    {
+	i++;
+    while (entry < 0 && HTMLGIMappingTable[i].htmlGI[0] != EOS);
+
+  if (entry < 0)
+    if (*schema != NULL && isHTML)
+      *schema = NULL;
+    else
+      /* not found. Look at the XML mapping tables */
+      {
+	elType.ElTypeNum = 0;
+	elType.ElSSchema = *schema;
+#ifndef STANDALONE
+	MapXMLElementType (gi, &elType, &mappedName, &content, doc);
+#endif
+	if (elType.ElTypeNum == 0)
+	  {
             entry = -1;
 	    elType.ElSSchema = NULL;
 	    *schema = NULL;
-	    }
-         else
-            {
+	  }
+	else
+	  {
             entry = elType.ElTypeNum;
             *schema = elType.ElSSchema;
-            }
-         }
-   return entry;
+	  }
+      }
+  return entry;
 }
 
 /*----------------------------------------------------------------------
@@ -1016,31 +1011,32 @@ ElementType        *elType;
 Document	    doc;
 #endif
 {
-   int                 i;
-   char		       *mappedName, content;
+  int                 i;
+  char		       *mappedName, content;
 
-   elType->ElSSchema = NULL;
-   elType->ElTypeNum = 0;
-   /* First, look at the HTML mapping table */
-   i = 0;
-   do
-     {
-	if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
-	  {
-
-	    if (HTMLSSchema == NULL && ! (doc == (Document) 0))
-	       elType->ElSSchema = TtaGetSSchema ("HTML", doc);
-	    else
-
-	       elType->ElSSchema = HTMLSSchema;
-	    elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
-	    return;
-	  }
-	i++;
-     }
-   while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
-   /* if not found, look at the XML mapping tables */
-   MapXMLElementType (gi, elType, &mappedName, &content, doc);
+  elType->ElSSchema = NULL;
+  elType->ElTypeNum = 0;
+  /* First, look at the HTML mapping table */
+  i = 0;
+  do
+    {
+      if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
+	{
+	  
+	  if (HTMLSSchema == NULL && ! (doc == (Document) 0))
+	    elType->ElSSchema = TtaGetSSchema ("HTML", doc);
+	  else	    
+	    elType->ElSSchema = HTMLSSchema;
+	  elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
+	  return;
+	}
+      i++;
+    }
+  while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
+#ifndef STANDALONE
+  /* if not found, look at the XML mapping tables */
+  MapXMLElementType (gi, elType, &mappedName, &content, doc);
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -1054,28 +1050,30 @@ ElementType elType;
 
 #endif
 {
-   int		i;
-   char		*buffer;
+  int		i;
+  char		*buffer;
 
-   if (elType.ElTypeNum > 0)
-     {
-	i = 0;
-	if (strcmp ("HTML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
-	   do
-	      {
-	      if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
-		  strcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
-		 return (char *) HTMLGIMappingTable[i].htmlGI;
-	      i++;
-	      }
-	   while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
-	else
-	   {
-	   GetXMLElementNameFromThotType (elType, &buffer);
-	   return buffer;
-	   }
-     }
-   return "???";
+  if (elType.ElTypeNum > 0)
+    {
+      i = 0;
+      if (strcmp ("HTML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
+	do
+	  {
+	    if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
+		strcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
+	      return (char *) HTMLGIMappingTable[i].htmlGI;
+	    i++;
+	  }
+	while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
+#ifndef STANDALONE
+      else
+	{
+	  GetXMLElementNameFromThotType (elType, &buffer);
+	  return buffer;
+	}
+#endif
+    }
+  return "???";
 }
 
 /*----------------------------------------------------------------------
@@ -6167,8 +6165,10 @@ Document	doc;
       InputText = HTMLbuf;
       curChar = 0;
       InputFile = NULL;
+#ifndef STANDALONE
       XMLparse (schemaName, doc, lastelem, isclosed,
 		TtaGetDefaultLanguage(), NULL);
+#endif
       }
 }
 
@@ -6237,7 +6237,7 @@ char              **argv;
 		  documentDirectory[0] = EOS;
 	       }
 	     TtaSetDocumentPath (documentDirectory);
-	     docURL = &htmlFileName;
+	     docURL = htmlFileName;
 	     /* create a Thot document of type HTML */
 	     theDocument = TtaNewDocument ("HTML", pivotFileName);
 	     if (theDocument == 0)

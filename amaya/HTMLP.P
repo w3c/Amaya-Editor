@@ -1484,18 +1484,6 @@ BOXES
 		END;
 	END;
 
- VALUE_CELLHEIGHT: BEGIN
-	Content: (Cell_height);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
  ISMAP_S: BEGIN
 	Content: Text ' ismap';
 	Visibility: 0;
@@ -6174,12 +6162,10 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_HEIGHT);
 	CreateBefore(VALUE_HEIGHT);
-#ifdef GRAPHML
-	if XMLGraphics
+	if PICTURE_UNIT
+	   Height: Height_ px;
+	if NOT PICTURE_UNIT
 	   Height: Height_ px min;
-	if NOT XMLGraphics
-#endif /* GRAPHML */
-	Height: Height_ px;
 	IN Structure_view BEGIN
 	   If PICTURE_UNIT
 	        Height: 1 px;
@@ -7008,17 +6994,6 @@ ATTRIBUTES
 		VertPos: Top = Previous . Bottom;
 	END;
 
- Cell_height:
-	BEGIN
-	CreateBefore(ATTR_HEIGHT);
-	CreateBefore(VALUE_CELLHEIGHT);
-	Height: Cell_height px min;
-	IN Structure_view
-		Height: Enclosed . Height;
-	IN Alternate_view
-		Height: Enclosed . Height;
-	END;
-
  No_wrap = no_wrap :
 	BEGIN
 	CreateBefore(ATTR_NOWRAP);
@@ -7074,6 +7049,13 @@ ATTRIBUTES
   height\240(AREA):
 	BEGIN
 	Height: height\240 px UserSpecified;
+	IN Structure_view
+	   Height: Enclosed . Height;
+	END;
+
+  height\240(Table_row):
+	BEGIN
+	Height: height\240 px min;
 	IN Structure_view
 	   Height: Enclosed . Height;
 	END;

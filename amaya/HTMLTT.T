@@ -908,9 +908,6 @@ ATTRIBUTES
 		BEGIN
 		END;
 
- Cell_height: BEGIN
-	END;
-
  No_wrap = no_wrap:
 		BEGIN
 		END;

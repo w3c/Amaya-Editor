@@ -188,7 +188,6 @@ colspan_: colspan
 rowspan_: rowspan
 Cell_align: align
 Cell_valign: valign
-Cell_height: height
 No_wrap: nowrap
 shape: shape
 coords: coords
