@@ -186,4 +186,5 @@ int                 AMAYA;
 #define AM_DOC_BG_COLOR               174
 #define AM_MENU_FG_COLOR              175
 #define AM_MENU_BG_COLOR              176
-#define AMAYA_MSG_MAX                 177
+#define AM_CANT_CREATE_CACHE	      177
+#define AMAYA_MSG_MAX                 178

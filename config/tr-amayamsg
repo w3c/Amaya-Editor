@@ -146,7 +146,7 @@
 145 **Cache protected documents
 146 **Disconnected mode
 147 **Ignore Expires: header
-148 **Cache Directory
+148 **Cache directory
 149 **Cache size (Mb)
 150 **Cache entry size limit (Mb)
 151 **Proxy Preferences
@@ -159,7 +159,7 @@
 158 **Menu font size
 159 **Zoom
 160 **Dialogue language
-161 **Enable multikey
+161 **Enable multi-key
 162 **Show background images
 163 **Double click activates link
 164 **Publishing Preferences
@@ -175,3 +175,4 @@
 174 **Document background color
 175 **Menu foreground color
 176 **Menu background color
+177 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.

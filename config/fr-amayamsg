@@ -146,7 +146,7 @@
 145 Stocker dans le cache les documents protegés
 146 Mode deconnecté
 147 Ignorer l'en-tête Expires:
-148 Répertoire père du cache
+148 Répertoire du cache
 149 Taille du cache (Mo)
 150 Taille maximale des entrées du cache (Mo)
 151 Configuration du Proxy
@@ -159,7 +159,7 @@
 158 Taille des fonts des menus
 159 Zoom
 160 Langage des dialogues
-161 Activer multikey
+161 Activer multi-key (accents)
 162 Montrer les images de fond
 163 Cliquer deux fois pour suivre un lien
 164 Configuration de la Publication
@@ -175,3 +175,4 @@
 174 Couleur arrière plan des documents
 175 Couleur avant plan des menus
 176 Couleur arrière plan des menus
+177 Impossible d'initialiser le cache. Vous avez peut-etre specifie un repertoire invalide ou vous executez un autre Amaya en meme-temps.
