@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ResetSearchInDocument ( PtrDocument pDoc );
 extern void CallbackWhereToSearch ( int ref,
                                     int val );
 extern void CallbackSearchEmptyEl ( int ref,
@@ -40,6 +41,7 @@ extern void SearchLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern void ResetSearchInDocument (/* PtrDocument pDoc */);
 extern void CallbackWhereToSearch (/* int ref,
                                       int val */);
 extern void CallbackSearchEmptyEl (/* int ref,

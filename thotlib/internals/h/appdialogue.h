@@ -5,16 +5,6 @@
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-
 #ifndef _APPDIALOG_H
 #define _APPDIALOG_H
 
@@ -122,9 +112,9 @@ typedef struct _SchemaMenu_Ctl
 #define T_rattrlang	41
 #define T_rselect	42
 #define T_emptybox	43
+#define T_cancelhistory        44
+#define T_closehistory         45
 
-#define T_corrector	44
-#define T_rscorrector	45
 #define T_indexcopy	46
 #define T_indexnew	47
 #define T_indexverif	48
@@ -202,14 +192,12 @@ typedef struct _SchemaMenu_Ctl
 #define T_openhistory                   118
 #define T_addhistory                    119
 #define T_attraddhistory                120
-#define T_cancelhistory                 121
-#define T_closehistory                  122
 
-#define T_lock                          123
-#define T_unlock                        124
-#define T_islock                        125
-#define T_backuponfatal			126
-#define MAX_LOCAL_ACTIONS               127
+#define T_lock                          121
+#define T_unlock                        122
+#define T_islock                        123
+#define T_backuponfatal			124
+#define MAX_LOCAL_ACTIONS               125
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

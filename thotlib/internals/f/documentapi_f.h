@@ -63,8 +63,8 @@ extern SSchema TtaGetSSchema ( CHAR_T* name,
 extern int TtaSameSSchemas ( SSchema schema1,
                              SSchema schema2 );
 extern void TtaGiveSchemasOfDocument ( STRING documentName,
-                                       char* structureName,
-                                       char* presentationName );
+                                       char *structureName,
+                                       char *presentationName );
 extern void TtaNextSchemaExtension ( Document document,
                                      SSchema * extension );
 extern void TtaNextNature ( Document document,
@@ -140,8 +140,8 @@ extern SSchema TtaGetSSchema (/* CHAR_T* name,
 extern int TtaSameSSchemas (/* SSchema schema1,
                                SSchema schema2 */);
 extern void TtaGiveSchemasOfDocument (/* STRING documentName,
-                                         char* structureName,
-                                         char* presentationName */);
+                                         char *structureName,
+                                         char *presentationName */);
 extern void TtaNextSchemaExtension (/* Document document,
                                        SSchema * extension */);
 extern void TtaNextNature (/* Document document,

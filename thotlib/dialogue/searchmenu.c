@@ -34,7 +34,7 @@
 #include "appdialogue_tv.h"
 
 /* pointer to the search domain for the the current command */
-static PtrSearchContext searchDomain = NULL;
+static PtrSearchContext SearchingD = NULL;
 /* document where we are searching a page */
 static PtrDocument  SearchedPageDoc;
 /* document to which the CurrRef belongs */
@@ -123,36 +123,44 @@ static ThotBool     searchEnd;
 /*-----------------------------------------------------------------------
  SearchDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK SearchDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
+LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+				LPARAM lParam)
 {
   switch (msg)
     {
     case WM_INITDIALOG:
       SearchW = hwnDlg;
       SetWindowText (hwnDlg, msgCaption);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SEARCHFOR), TtaGetMessage (LIB, TMSG_SEARCH_FOR));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_UPPERLOWER), TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEGROUP), TtaGetMessage (LIB, TMSG_REPLACE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEDBY), TtaGetMessage (LIB, TMSG_REPLACE_BY));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NOREPLACE), TtaGetMessage (LIB, TMSG_NO_REPLACE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_ONREQUEST), TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_AUTOMATIC), TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_WHEREGROUP), TtaGetMessage (LIB, TMSG_SEARCH_WHERE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC), TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, ID_NOREPLACE), TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
-      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_SEARCHFOR),
+		     TtaGetMessage (LIB, TMSG_SEARCH_FOR));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_UPPERLOWER),
+		     TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEGROUP),
+		     TtaGetMessage (LIB, TMSG_REPLACE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEDBY),
+		     TtaGetMessage (LIB, TMSG_REPLACE_BY));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_NOREPLACE),
+		     TtaGetMessage (LIB, TMSG_NO_REPLACE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_ONREQUEST),
+		     TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_AUTOMATIC),
+		     TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_WHEREGROUP),
+		     TtaGetMessage (LIB, TMSG_SEARCH_WHERE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE),
+		     TtaGetMessage (LIB, TMSG_BEFORE_SEL));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN),
+		     TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER),
+		     TtaGetMessage (LIB, TMSG_AFTER_SEL));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC),
+		     TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, ID_NOREPLACE),
+		     TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
+		     TtaGetMessage (LIB, TMSG_DONE));
       SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, pSearchedString);
       SetDlgItemText (hwnDlg, IDC_REPLACEDIT, pReplaceString);	
      if (SearchAfter)
@@ -303,13 +311,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  CreateSearchDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void        CreateSearchDlgWindow (ThotWindow parent)
-#else  /* !__STDC__ */
-void        CreateSearchDlgWindow (parent)
-ThotWindow  parent;
-BOOL        ok;
-#endif /* __STDC__ */
 {  
   if (SearchW)
     SetFocus (SearchW);
@@ -321,28 +323,47 @@ BOOL        ok;
   InitMenuWhereToSearch 
   inits the "Where to search" submenu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitMenuWhereToSearch (int ref)
-#else  /* __STDC__ */
-static void         InitMenuWhereToSearch (ref)
-int                 ref;
-
-#endif /* __STDC__ */
 {
-   int                 i;
-   CHAR_T                string[200];
+  int                 i;
+  char                string[200];
+  
+  i = 0;
+  usprintf (&string[i], TEXT("%s%s"), "B",
+	    TtaGetMessage (LIB, TMSG_BEFORE_SEL));
+  i += ustrlen (&string[i]) + 1;
+  usprintf (&string[i], TEXT("%s%s"), "B",
+	    TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+  i += ustrlen (&string[i]) + 1;
+  usprintf (&string[i], TEXT("%s%s"), "B",
+	    TtaGetMessage (LIB, TMSG_AFTER_SEL));
+  i += ustrlen (&string[i]) + 1;
+  usprintf (&string[i], TEXT("%s%s"), "B",
+	    TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+  /* sous-menu Ou` rechercher element vide */
+  TtaNewSubmenu (NumMenuOrSearchText, ref, 0,
+		 TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string,
+		 NULL, FALSE);
+  TtaSetMenuForm (NumMenuOrSearchText, 2);
+}
 
-   i = 0;
-   usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-   i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-   i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_AFTER_SEL));
-   i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-   /* sous-menu Ou` rechercher element vide */
-   TtaNewSubmenu (NumMenuOrSearchText, ref, 0, TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string, NULL, FALSE);
-   TtaSetMenuForm (NumMenuOrSearchText, 2);
+
+/*----------------------------------------------------------------------
+  ResetSearchInDocument
+  cleans up the search domain if it refers a closed document.
+  ----------------------------------------------------------------------*/
+void         ResetSearchInDocument (PtrDocument pDoc)
+{
+  if (SearchingD && pDoc == SearchingD->SDocument)
+    {
+      SearchingD->SDocument = NULL;
+#ifdef _WINDOWS
+      EndDialog (SearchW, ID_DONE);
+      SearchW = NULL;
+#else /* _WINDOWS */
+      TtaDestroyDialogue (NumFormSearchText);
+#endif /* _WINDOWS */
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -361,14 +382,7 @@ static void         ActivateMenuWhereToSearch ()
   CallbackWhereToSearch
   callback handler for the "Where to search" submenu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackWhereToSearch (int ref, int val)
-#else  /* __STDC__ */
-void                CallbackWhereToSearch (ref, val)
-int                 val;
-int                 menu;
-
-#endif /* __STDC__ */
 {
    /* determine le point de depart de la recherche et le point */
    /* de terminaison */
@@ -376,7 +390,7 @@ int                 menu;
 	 {
 	    case 0:
 	       /* ElemIsBefore la selection */
-	       searchDomain->SStartToEnd = FALSE;
+	       SearchingD->SStartToEnd = FALSE;
 	       break;
 	    case 1:
 	       /* Dans la selection */
@@ -384,7 +398,7 @@ int                 menu;
 	       break;
 	    case 2:
 	       /* Apres la selection */
-	       searchDomain->SStartToEnd = TRUE;
+	       SearchingD->SStartToEnd = TRUE;
 	       break;
 	    case 3:
 	       /* Dans tout le document */
@@ -392,7 +406,7 @@ int                 menu;
 	       break;
 	 }
    if (StartSearch)
-      InitSearchDomain (val, searchDomain);
+      InitSearchDomain (val, SearchingD);
 }
 
 
@@ -403,14 +417,7 @@ int                 menu;
   If it found such an element, it selections this element and returns
   TRUE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     SearchEmptyElem (PtrElement pCurrEl, PtrSearchContext pContext)
-#else  /* __STDC__ */
-static ThotBool     SearchEmptyElem (pCurrEl, pContext)
-PtrElement          pCurrEl;
-PtrSearchContext    pContext;
-
-#endif /* __STDC__ */
+static ThotBool SearchEmptyElem (PtrElement pCurrEl, PtrSearchContext pContext)
 {
    PtrElement          pEl;
    PtrElement          pParent;
@@ -495,7 +502,7 @@ PtrSearchContext    pContext;
 #ifndef _WINDOWS
    if (ok) /* On prepare la recherche suivante */
      {
-      if (searchDomain->SStartToEnd)
+      if (SearchingD->SStartToEnd)
          TtaSetMenuForm (NumMenuOrSearchText, 2);	/* After selection */
       else
            TtaSetMenuForm (NumMenuOrSearchText, 0);	/* Before selection */
@@ -512,14 +519,7 @@ PtrSearchContext    pContext;
   If it found such an element, it selections this element and returns
   TRUE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     SearchEmptyRefer (PtrElement pCurrEl, PtrSearchContext pContext)
-#else  /* __STDC__ */
-static ThotBool     SearchEmptyRefer (pCurrEl, pContext)
-PtrElement          pCurrEl;
-PtrSearchContext    pContext;
-
-#endif /* __STDC__ */
+static ThotBool SearchEmptyRefer (PtrElement pCurrEl, PtrSearchContext pContext)
 {
    PtrElement          pEl;
    PtrElement          pParent;
@@ -618,7 +618,7 @@ PtrSearchContext    pContext;
 #ifndef _WINDOWS
    if (ok) /* On prepare la recherche suivante */
      {
-      if (searchDomain->SStartToEnd) /* After selection */
+      if (SearchingD->SStartToEnd) /* After selection */
          TtaSetMenuForm (NumMenuOrSearchText, 2);
       else /* Before selection */
            TtaSetMenuForm (NumMenuOrSearchText, 0);
@@ -634,14 +634,7 @@ PtrSearchContext    pContext;
   ref: reference of the dialogue element to process.
   val: value of the dialogue element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackSearchEmptyEl (int ref, int val)
-#else  /* __STDC__ */
-void                CallbackSearchEmptyEl (ref, val)
-int                 ref;
-int                 val;
-
-#endif /* __STDC__ */
 {
   ThotBool            ok;
   PtrElement          pCurrEl;
@@ -651,8 +644,8 @@ int                 val;
   int                 firstChar;
   int                 lastChar;
 
-  if (searchDomain->SDocument != NULL)
-    if (searchDomain->SDocument->DocSSchema != NULL)
+  if (SearchingD->SDocument != NULL)
+    if (SearchingD->SDocument->DocSSchema != NULL)
       /* le document concerne' est toujours la */
       /* feuille de dialogue Rechercher element vide */
       if (val == 1)
@@ -666,7 +659,7 @@ int                 val;
 	  else
 	    {
 	      ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-	      if (!ok || pDocSel != searchDomain->SDocument)
+	      if (!ok || pDocSel != SearchingD->SDocument)
 		/* la selection a change' de document, on refuse */
 		{
 #ifndef _WINDOWS
@@ -675,12 +668,12 @@ int                 val;
 		  StartSearch = TRUE;
 		  return;
 		}
-	      else if (searchDomain->SStartToEnd)
+	      else if (SearchingD->SStartToEnd)
 		pCurrEl = pLastSel;
 	      else
 		pCurrEl = pFirstSel;
 	    }
-	  ok = SearchEmptyElem (pCurrEl, searchDomain);
+	  ok = SearchEmptyElem (pCurrEl, SearchingD);
 
 	  if (ok)
 	    {
@@ -710,14 +703,7 @@ int                 val;
   TtcSearchEmptyElement
   launches the search empty elements command for the pDoc document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcSearchEmptyElement (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSearchEmptyElement (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ThotBool            ok;
    PtrDocument         pDocSel;
@@ -767,12 +753,12 @@ View                view;
 #endif /* !_WINDOWS */
    if (!ok)
      {
-	InitSearchDomain (3, searchDomain);
+	InitSearchDomain (3, SearchingD);
 #ifndef _WINDOWS
 	TtaSetMenuForm (NumMenuOrSearchText, 3);
 #endif /* !_WINDOWS */
      }
-   searchDomain->SDocument = pDoc;
+   SearchingD->SDocument = pDoc;
 }
 
 
@@ -782,14 +768,7 @@ View                view;
   ref: reference of the dialogue element to process.
   val: value of the dialogue element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackSearchEmptyref (int ref, int val)
-#else  /* __STDC__ */
-void                CallbackSearchEmptyref (ref, val)
-int                 ref;
-int                 val;
-
-#endif /* __STDC__ */
 {
    ThotBool            ok;
    PtrElement          pCurrEl;
@@ -799,8 +778,8 @@ int                 val;
    int                 firstChar;
    int                 lastChar;
 
-   if (searchDomain->SDocument != NULL)
-      if (searchDomain->SDocument->DocSSchema != NULL)
+   if (SearchingD->SDocument != NULL)
+      if (SearchingD->SDocument->DocSSchema != NULL)
 	{
 	   /* feuille de dialogue Rechercher reference vide */
 	   if (val == 1)
@@ -814,7 +793,7 @@ int                 val;
 		else
 		  {
 		     ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-		     if (!ok || pDocSel != searchDomain->SDocument)
+		     if (!ok || pDocSel != SearchingD->SDocument)
 			/* la selection a change' de document, on refuse */
 		       {
 #ifndef _WINDOWS
@@ -825,12 +804,12 @@ int                 val;
 			  StartSearch = TRUE;
 			  return;
 		       }
-		     else if (searchDomain->SStartToEnd)
+		     else if (SearchingD->SStartToEnd)
 			pCurrEl = pLastSel;
 		     else
 			pCurrEl = pFirstSel;
 		  }
-		ok = SearchEmptyRefer (pCurrEl, searchDomain);
+		ok = SearchEmptyRefer (pCurrEl, SearchingD);
 		if (ok)
 		  {
 		     StartSearch = FALSE;
@@ -866,14 +845,7 @@ int                 val;
   TtcSearchEmptyReference
   launches the search empty references command for the pDoc document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcSearchEmptyReference (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSearchEmptyReference (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ThotBool            ok;
    PtrDocument         pDocSel;
@@ -925,26 +897,19 @@ View                view;
 #endif /* !_WINDOWS */
    if (!ok)
      {
-	InitSearchDomain (3, searchDomain);
+	InitSearchDomain (3, SearchingD);
 #ifndef _WINDOWS 
 	TtaSetMenuForm (NumMenuOrSearchText, 3);
 #endif /* !_WINDOWS */
      }
-   searchDomain->SDocument = pDoc;
+   SearchingD->SDocument = pDoc;
 }
 
 
 /*----------------------------------------------------------------------
   CallbackReferenceMenu
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                CallbackReferenceMenu (int val)
-#else  /* __STDC__ */
-void                CallbackReferenceMenu (val)
-int                 val;
-
-#endif /* __STDC__ */
 {
    ReturnValueSelectReferMenu = val;
 }
@@ -952,15 +917,7 @@ int                 val;
 /*----------------------------------------------------------------------
   BuildReferenceMenu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                BuildReferenceMenu (STRING bufMenu, int nbEntries, int *selEntry)
-#else  /* __STDC__ */
-void                BuildReferenceMenu (bufMenu, nbEntries, selEntry)
-STRING              bufMenu;
-int                 nbEntries;
-int                *selEntry;
-
-#endif /* __STDC__ */
+void   BuildReferenceMenu (STRING bufMenu, int nbEntries, int *selEntry)
 {
    CHAR_T                bufMenuB[MAX_TXT_LEN];
    STRING              src;
@@ -994,13 +951,7 @@ int                *selEntry;
 /*----------------------------------------------------------------------
   SearchAReference
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SearchAReference (ThotBool docExtNext)
-#else  /* __STDC__ */
-static void         SearchAReference (docExtNext)
-ThotBool            docExtNext;
-
-#endif /* __STDC__ */
 {
    CHAR_T                msg[100];
 
@@ -1033,13 +984,7 @@ ThotBool            docExtNext;
   launches the command to search the references for the selected
   element of pDoc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                BuildSearchReferences (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                BuildSearchReferences (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    PtrElement          pEl;
    PtrElement          pFirstSel;
@@ -1096,14 +1041,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
   TtcSearchReference
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcSearchReference (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSearchReference (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    CHAR_T                BufMenu[100];
@@ -1139,14 +1077,7 @@ View                view;
   CallbackReferenceTo
   callback handler for the "Search reference to' dialogue.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackReferenceTo (int ref, int data)
-#else  /* __STDC__ */
-void                CallbackReferenceTo (ref, data)
-int                 ref;
-int                 data;
-
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
 
@@ -1199,131 +1130,131 @@ int                 data;
   launches the command for searching and/or replacing a text,
   an element type and an attribute for the pDoc document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcSearchText (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSearchText (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
-   PtrDocument         pDocSel;
-   PtrElement          pFirstSel;
-   PtrElement          pLastSel;
-   PtrDocument         pDoc;
-   CHAR_T              bufTitle[200], string[200];
-   int                 firstChar;
-   int                 lastChar, i;
-   ThotBool            ok;
+  PtrDocument         pDocSel;
+  PtrElement          pFirstSel;
+  PtrElement          pLastSel;
+  PtrDocument         pDoc;
+  CHAR_T              bufTitle[200], string[200];
+  int                 firstChar;
+  int                 lastChar, i;
+  ThotBool            ok;
 
-   pDoc = LoadedDocument[document - 1];
-   ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-   if (ok && pDoc != pDocSel)
-     SearchAfter = FALSE;
-   if (!ok)
-     {
-	pDocSel = pDoc;
-	pFirstSel = pLastSel = pDoc->DocRootElement;
-	firstChar = lastChar = 0;
-     }
+  pDoc = LoadedDocument[document - 1];
+  ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+  if (ok && pDoc != pDocSel)
+    SearchAfter = FALSE;
+  if (!ok)
+    {
+      pDocSel = pDoc;
+      pFirstSel = pLastSel = pDoc->DocRootElement;
+      firstChar = lastChar = 0;
+    }
 
-   /* fait disparaitre les autres formulaires de recherche qui sont affiches */
+  /* fait disparaitre les autres formulaires de recherche qui sont affiches */
 #ifndef _WINDOWS
-   TtaDestroyDialogue (NumFormSearchEmptyElement);
-   TtaDestroyDialogue (NumFormSearchEmptyReference);
+  TtaDestroyDialogue (NumFormSearchEmptyElement);
+  TtaDestroyDialogue (NumFormSearchEmptyReference);
 #endif /* _WINDOWS */
-   StartSearch = TRUE;
-
-   /* compose le titre du formulaire "Recherche dans le document..." */
-   ustrcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
-   ustrcat (bufTitle, TEXT(" "));
-   ustrcat (bufTitle, pDoc->DocDName);
+  StartSearch = TRUE;
+  
+  /* compose le titre du formulaire "Recherche dans le document..." */
+  ustrcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
+  ustrcat (bufTitle, TEXT(" "));
+  ustrcat (bufTitle, pDoc->DocDName);
 #ifdef _WINDOWS
-   ustrcpy (msgCaption, bufTitle);
+  ustrcpy (msgCaption, bufTitle);
 #endif /* _WINDOWS */
-   /* feuille de dialogue Rechercher texte et structure */
-   ustrcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-   i = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
-   ustrcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
+  /* feuille de dialogue Rechercher texte et structure */
+  ustrcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+  i = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
+  ustrcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
 #ifndef _WINDOWS
-   TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
-		bufTitle, 2, string, FALSE, 6, TEXT('L'), D_DONE);
-
-   /* zone de saisie du texte a` rechercher */
-   TtaNewTextForm (NumZoneTextSearch, NumFormSearchText,
-		   TtaGetMessage (LIB, TMSG_SEARCH_FOR), 30, 1, FALSE);
-   TtaSetTextForm (NumZoneTextSearch, pSearchedString);
-
-   /* Toggle button "UPPERCASE = lowercase" */
-   i = 0;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
-   TtaNewToggleMenu (NumToggleUpperEqualLower, NumFormSearchText,
-		     NULL, 1, string, NULL, FALSE);
-   TtaSetToggleMenu (NumToggleUpperEqualLower, 0, UpperLower);
-
-   /* zone de saisie du texte de remplacement */
-   TtaNewTextForm (NumZoneTextReplace, NumFormSearchText,
-		   TtaGetMessage (LIB, TMSG_REPLACE_BY), 30, 1, TRUE);
-   TtaSetTextForm (NumZoneTextReplace, pReplaceString);
-
-   /* sous-menu mode de remplacement */
-   if (!pDoc->DocReadOnly)
-     {
-	/* on autorise les remplacement */
-	/* attache le sous-menu remplacement */
-	i = 0;
-	sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_NO_REPLACE));
-	i += ustrlen (&string[i]) + 1;
-	sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
-	i += ustrlen (&string[i]) + 1;
-	sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
-	TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0, TtaGetMessage (LIB, TMSG_REPLACE), 3, string, NULL, FALSE);
-	if (WithReplace) {
-       if (AutoReplace)
+  TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
+	       bufTitle, 2, string, FALSE, 6, TEXT('L'), D_DONE);
+  
+  /* zone de saisie du texte a` rechercher */
+  TtaNewTextForm (NumZoneTextSearch, NumFormSearchText,
+		  TtaGetMessage (LIB, TMSG_SEARCH_FOR), 30, 1, FALSE);
+  TtaSetTextForm (NumZoneTextSearch, pSearchedString);
+  
+  /* Toggle button "UPPERCASE = lowercase" */
+  i = 0;
+  sprintf (&string[i], "%s%s", "B",
+	   TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
+  TtaNewToggleMenu (NumToggleUpperEqualLower, NumFormSearchText,
+		    NULL, 1, string, NULL, FALSE);
+  TtaSetToggleMenu (NumToggleUpperEqualLower, 0, UpperLower);
+  
+  /* zone de saisie du texte de remplacement */
+  TtaNewTextForm (NumZoneTextReplace, NumFormSearchText,
+		  TtaGetMessage (LIB, TMSG_REPLACE_BY), 30, 1, TRUE);
+  TtaSetTextForm (NumZoneTextReplace, pReplaceString);
+  
+  /* sous-menu mode de remplacement */
+  if (!pDoc->DocReadOnly)
+    {
+      /* on autorise les remplacement */
+      /* attache le sous-menu remplacement */
+      i = 0;
+      sprintf (&string[i], "%s%s", "B",
+	       TtaGetMessage (LIB, TMSG_NO_REPLACE));
+      i += ustrlen (&string[i]) + 1;
+      sprintf (&string[i], "%s%s", "B",
+	       TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
+      i += ustrlen (&string[i]) + 1;
+      sprintf (&string[i], "%s%s", "B",
+	       TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
+      TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0,
+		     TtaGetMessage (LIB, TMSG_REPLACE), 3, string,
+		     NULL, FALSE);
+      if (WithReplace) {
+	if (AutoReplace)
           TtaSetMenuForm (NumMenuReplaceMode, 2);
-       else
-            TtaSetMenuForm (NumMenuReplaceMode, 1);
-	} else
-          TtaSetMenuForm (NumMenuReplaceMode, 0);
-     }
-   else
-      TtaNewLabel (NumMenuReplaceMode, NumFormSearchText, " ");
-
-   /* sous-menu Ou` rechercher */
-   InitMenuWhereToSearch (NumFormSearchText);
+	else
+	  TtaSetMenuForm (NumMenuReplaceMode, 1);
+      } else
+	TtaSetMenuForm (NumMenuReplaceMode, 0);
+    }
+  else
+    TtaNewLabel (NumMenuReplaceMode, NumFormSearchText, " ");
+  
+  /* sous-menu Ou` rechercher */
+  InitMenuWhereToSearch (NumFormSearchText);
 #endif /* _WINDOWS */
-
-   WithReplace = FALSE;
-   ReplaceDone = FALSE;
-   AutoReplace = FALSE;
-   ustrcpy (pPrecedentString, TEXT(""));
-
+  
+  WithReplace = FALSE;
+  ReplaceDone = FALSE;
+  AutoReplace = FALSE;
+  ustrcpy (pPrecedentString, TEXT(""));
+  
 #ifdef _WINDOWS
-   SearchAfter = ok;
+  SearchAfter = ok;
 #else /* _WINDOWS */
-   /* efface le label "References dans le document X" */
-   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
+  /* efface le label "References dans le document X" */
+  TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
 #endif /* _WINDOWS */
-   SearchLoadResources ();
-   /* complete la feuille de dialogue avec les menus de recherche de types */
-   /* d'element et d'attributs si la ressource de recherche avec structure */
-   /* est chargee */
-   if (ThotLocalActions[T_strsearchconstmenu] != NULL)
-      (*ThotLocalActions[T_strsearchconstmenu]) (pDoc);
-
-   /* active le formulaire */
-   if (!ok)
-     /* new activation */
-     InitSearchDomain (3, searchDomain);
-   searchDomain->SDocument = pDoc;
-   TextOK = FALSE;
+  SearchLoadResources ();
+  /* complete la feuille de dialogue avec les menus de recherche de types */
+  /* d'element et d'attributs si la ressource de recherche avec structure */
+  /* est chargee */
+  if (ThotLocalActions[T_strsearchconstmenu] != NULL)
+    (*ThotLocalActions[T_strsearchconstmenu]) (pDoc);
+  
+  /* active le formulaire */
+  if (!ok)
+    /* new activation */
+    InitSearchDomain (3, SearchingD);
+  SearchingD->SDocument = pDoc;
+  TextOK = FALSE;
 #ifndef _WINDOWS 
-   TtaShowDialogue (NumFormSearchText, TRUE);
-   if (!ok)
-     TtaSetMenuForm (NumMenuOrSearchText, 3);
+  TtaShowDialogue (NumFormSearchText, TRUE);
+  if (!ok)
+    TtaSetMenuForm (NumMenuOrSearchText, 3);
 #else  /* _WINDOWS */
-   searchEnd = FALSE;
-   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
+  searchEnd = FALSE;
+  CreateSearchDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINDOWS */
 }
 
@@ -1334,15 +1265,7 @@ View                view;
   ref: reference of the dialogue element to process.
   val: value of the dialogue element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackTextReplace (int ref, int val, STRING txt)
-#else  /* __STDC__ */
-void                CallbackTextReplace (ref, val, txt)
-int                 ref;
-int                 val;
-STRING              txt;
-
-#endif /* __STDC__ */
 {
   PtrElement          pFirstSel;
   PtrElement          pLastSel;
@@ -1373,7 +1296,7 @@ STRING              txt;
       ustrcpy (pReplaceString, txt);
       ReplaceStringLen = ustrlen (pReplaceString);
       /* bascule automatiquement le remplacement */
-      if (!WithReplace && !searchDomain->SDocument->DocReadOnly)
+      if (!WithReplace && !SearchingD->SDocument->DocReadOnly)
 	{
 	  WithReplace = TRUE;
 	  DoReplace = TRUE;
@@ -1389,8 +1312,8 @@ STRING              txt;
       break;
     case NumMenuReplaceMode:
       /* sous-menu mode de remplacement */
-      if (searchDomain->SDocument == NULL ||
-	  searchDomain->SDocument->DocReadOnly)
+      if (SearchingD->SDocument == NULL ||
+	  SearchingD->SDocument->DocReadOnly)
 	val = 0;
       switch (val)
 	{
@@ -1419,12 +1342,12 @@ STRING              txt;
 #ifndef _WINDOWS
       TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TEXT(" "));
 #endif /* !_WINDOWS */
-      if (searchDomain->SDocument == NULL)
+      if (SearchingD->SDocument == NULL)
 	{
 	  TtaDestroyDialogue (NumFormSearchText);
 	  return;
 	}
-      if (searchDomain->SDocument->DocSSchema == NULL)
+      if (SearchingD->SDocument->DocSSchema == NULL)
 	return;
       if (val == 2 && WithReplace && !StartSearch)
 	DoReplace = FALSE;
@@ -1434,7 +1357,7 @@ STRING              txt;
 
       selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
 					 &pLastSel, &firstChar, &lastChar);
-      if (!selectionOK || pDocSel != searchDomain->SDocument)
+      if (!selectionOK || pDocSel != SearchingD->SDocument)
 	{
 	  pFirstSel = NULL;
 	  pLastSel = NULL;
@@ -1446,21 +1369,21 @@ STRING              txt;
 
       if (StartSearch)
 	pCurrEl = NULL;
-      else if (searchDomain->SStartToEnd)
+      else if (SearchingD->SStartToEnd)
 	pCurrEl = pLastSel;
       else
 	pCurrEl = pFirstSel;
        
        /* la recherche est demandee, on recupere les parametres */
       if (ThotLocalActions[T_strsearchgetparams] != NULL)
-	(*ThotLocalActions[T_strsearchgetparams]) (&error, searchDomain);
+	(*ThotLocalActions[T_strsearchgetparams]) (&error, SearchingD);
       if (!error || SearchedStringLen != 0)
 	{
 	  found = FALSE;
 	  if (SearchedStringLen == 0)
 	    {
 	      if (ThotLocalActions[T_strsearchonly] != NULL)
-		(*ThotLocalActions[T_strsearchonly]) (pCurrEl, searchDomain,
+		(*ThotLocalActions[T_strsearchonly]) (pCurrEl, SearchingD,
 						      &found);
 	    }
 	  else
@@ -1469,7 +1392,7 @@ STRING              txt;
 	    {
 	      pFirstSel = pCurrEl;
 	      if (AutoReplace)
-		OpenHistorySequence (searchDomain->SDocument, pFirstSel,
+		OpenHistorySequence (SearchingD->SDocument, pFirstSel,
 				     pLastSel, firstChar, lastChar);
 	      do
 		{
@@ -1478,7 +1401,7 @@ STRING              txt;
 		  /* trouve pas le texte cherche' */
 		  if (WithReplace && DoReplace && !StartSearch
 		      && TextOK
-		      && DocTextOK == searchDomain->SDocument
+		      && DocTextOK == SearchingD->SDocument
 		      && ElemTextOK == pFirstSel
 		      && FirstCharTextOK == firstChar
 		      && LastCharTextOK == lastChar)
@@ -1507,16 +1430,16 @@ STRING              txt;
 			    /* register the editing operation for Undo
 			       command) */
 			    if (!AutoReplace)
-			      OpenHistorySequence (searchDomain->SDocument,
+			      OpenHistorySequence (SearchingD->SDocument,
 					       pFirstSel, pFirstSel, firstChar,
 					       firstChar+SearchedStringLen-1);
 			    AddEditOpInHistory (pFirstSel,
-						searchDomain->SDocument,
+						SearchingD->SDocument,
 						TRUE, TRUE);
 			    if (!AutoReplace)
-			      CloseHistorySequence (searchDomain->SDocument);
+			      CloseHistorySequence (SearchingD->SDocument);
 			    /* effectue le remplacement du texte */
-			    ReplaceString (searchDomain->SDocument, pFirstSel,
+			    ReplaceString (SearchingD->SDocument, pFirstSel,
 					   firstChar, SearchedStringLen,
 					   pReplaceString, ReplaceStringLen,
 					   (ThotBool)(!AutoReplace));
@@ -1524,13 +1447,13 @@ STRING              txt;
 			    StartSearch = FALSE;
 			    /* met eventuellement a jour la borne de */
 			    /* fin du domaine de recherche */
-			    if (pFirstSel == searchDomain->SEndElement)
+			    if (pFirstSel == SearchingD->SEndElement)
 			      /* la borne est dans l'element ou` on a */
 			      /* fait le remplacement */
-			      if (searchDomain->SEndChar != 0)
+			      if (SearchingD->SEndChar != 0)
 				/* la borne n'est pas a la fin de */
 				/* l'element, on decale la borne */
-				searchDomain->SEndChar +=
+				SearchingD->SEndChar +=
                                           ReplaceStringLen - SearchedStringLen;
 			    /* recupere les parametres de la nouvelle */
 			    /* chaine */
@@ -1548,38 +1471,38 @@ STRING              txt;
 		      if (pFirstSel == NULL)
 			{
 			  /* debut de recherche */
-			  if (searchDomain->SStartToEnd)
+			  if (SearchingD->SStartToEnd)
 			    {
-			      pFirstSel = searchDomain->SStartElement;
-			      firstChar = searchDomain->SStartChar;
+			      pFirstSel = SearchingD->SStartElement;
+			      firstChar = SearchingD->SStartChar;
 			      if (pFirstSel == NULL)
-				pFirstSel = searchDomain->SDocument->DocRootElement;
+				pFirstSel = SearchingD->SDocument->DocRootElement;
 			    }
 			  else
 			    {
-			      pFirstSel = searchDomain->SEndElement;
-			      firstChar = searchDomain->SEndChar;
+			      pFirstSel = SearchingD->SEndElement;
+			      firstChar = SearchingD->SEndChar;
 			    }
 			}
-		      else if (searchDomain->SStartToEnd)
+		      else if (SearchingD->SStartToEnd)
 			{
 			  pFirstSel = pLastSel;
 			  firstChar = lastChar;
 			}
 		      
-		      if (searchDomain->SStartToEnd)
+		      if (SearchingD->SStartToEnd)
 			{
-			  pLastSel = searchDomain->SEndElement;
-			  lastChar = searchDomain->SEndChar;
+			  pLastSel = SearchingD->SEndElement;
+			  lastChar = SearchingD->SEndChar;
 			}
 		      else
 			{
-			  pLastSel = searchDomain->SStartElement;
-			  lastChar = searchDomain->SStartChar;
+			  pLastSel = SearchingD->SStartElement;
+			  lastChar = SearchingD->SStartChar;
 			}
-		      found = SearchText (searchDomain->SDocument,
+		      found = SearchText (SearchingD->SDocument,
 					  &pFirstSel, &firstChar, &pLastSel,
-					  &lastChar, searchDomain->SStartToEnd,
+					  &lastChar, SearchingD->SStartToEnd,
 					  UpperLower, pSearchedString,
 					  SearchedStringLen);
 		      if (found)
@@ -1604,7 +1527,7 @@ STRING              txt;
 		      if (!AutoReplace)
 			{
 			  /* selectionne la chaine trouvee */
-			  SelectStringWithEvent (searchDomain->SDocument,
+			  SelectStringWithEvent (SearchingD->SDocument,
 						 pFirstSel, firstChar,
 						 lastChar);
 			  /* arrete la boucle de recherche */
@@ -1612,7 +1535,7 @@ STRING              txt;
 			  lastChar++;
 			}
 		      TextOK = TRUE;
-		      DocTextOK = searchDomain->SDocument;
+		      DocTextOK = SearchingD->SDocument;
 		      ElemTextOK = pFirstSel;
 		      FirstCharTextOK = firstChar;
 		      LastCharTextOK = lastChar;
@@ -1621,11 +1544,11 @@ STRING              txt;
 		    {
 		      TextOK = FALSE;
 		      stop = TRUE;
-		      if (searchDomain->SWholeDocument)
+		      if (SearchingD->SWholeDocument)
 			/* il faut rechercher dans tout le document */
 			/* cherche l'arbre a traiter apres celui ou` on */
 			/* n'a pas trouve' */
-			if (NextTree (&pFirstSel, &firstChar, searchDomain))
+			if (NextTree (&pFirstSel, &firstChar, SearchingD))
 			  {
 			    stop = FALSE;
 			    pLastSel = pFirstSel;
@@ -1636,7 +1559,7 @@ STRING              txt;
 		}
 	      while (!stop);
 	      if (AutoReplace)
-		CloseHistorySequence (searchDomain->SDocument);
+		CloseHistorySequence (SearchingD->SDocument);
 	    }
 	  if (found)
 	    {
@@ -1645,7 +1568,7 @@ STRING              txt;
 	     if (!AutoReplace)
 	       {
 		 /* On prepare la recherche suivante */
-		 if (searchDomain->SStartToEnd) /* After selection */
+		 if (SearchingD->SStartToEnd) /* After selection */
 		   TtaSetMenuForm (NumMenuOrSearchText, 2);
 		 else /* Before selection */
 		   TtaSetMenuForm (NumMenuOrSearchText, 0);
@@ -1696,7 +1619,7 @@ STRING              txt;
       break;
     default:
       if (ThotLocalActions[T_strsearchretmenu] != NULL)
-	(*ThotLocalActions[T_strsearchretmenu]) (ref, val, txt, searchDomain);
+	(*ThotLocalActions[T_strsearchretmenu]) (ref, val, txt, SearchingD);
       break;
     }
 }
@@ -1705,16 +1628,8 @@ STRING              txt;
   BuildGoToPageMenu
   handles the Goto Page number command.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView, ThotBool assoc)
-#else  /* __STDC__ */
-void                BuildGoToPageMenu (pDoc, docView, schView, assoc)
-PtrDocument         pDoc;
-int                 docView;
-int                 schView;
-ThotBool            assoc;
-
-#endif /* __STDC__ */
+void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView,
+			ThotBool assoc)
 {
    CHAR_T                buffTitle[200];
 
@@ -1766,14 +1681,7 @@ ThotBool            assoc;
   CallbackGoToPageMenu
   callback handler for the GotoPage menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackGoToPageMenu (int ref, int val)
-#else  /* __STDC__ */
-void                CallbackGoToPageMenu (ref, val)
-int                 ref;
-int                 val;
-
-#endif /* __STDC__ */
 {
    PtrElement          pPage;
 
@@ -1804,12 +1712,7 @@ int                 val;
   SearchLoadResources
   inits the variables of the search commands.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                SearchLoadResources (void)
-#else
-void                SearchLoadResources ()
-#endif				/* __STDC__ */
 {
    if (ThotLocalActions[T_searchtext] == NULL)
      {
@@ -1824,7 +1727,7 @@ void                SearchLoadResources ()
 	CurrRefDoc = NULL;
 	CurrRefElem = NULL;
 	pExtCurrDoc = NULL;
-	GetSearchContext (&searchDomain);
+	GetSearchContext (&SearchingD);
 	pSearchedString[0] = EOS;
 	SearchedStringLen = 0;
 	UpperLower = TRUE;

@@ -10,10 +10,6 @@ extern UCHAR_T NextCharacter ( PtrTextBuffer * buffer,
                                int *rank );
 extern UCHAR_T PreviousCharacter ( PtrTextBuffer * buffer,
                                    int *rank );
-extern ThotBool MotOk ( PtrElement firstEl,
-                        int firstChar,
-                        PtrElement lastEl,
-                        int lastChar );
 extern ThotBool InitSearchDomain ( int domain,
                                    PtrSearchContext context );
 extern void UpdateDuringSearch ( PtrElement pEl,
@@ -37,10 +33,6 @@ extern UCHAR_T NextCharacter (/* PtrTextBuffer * buffer,
                                  int *rank */);
 extern UCHAR_T PreviousCharacter (/* PtrTextBuffer * buffer,
                                      int *rank */);
-extern ThotBool MotOk (/* PtrElement firstEl,
-                          int firstChar,
-                          PtrElement lastEl,
-                          int lastChar */);
 extern ThotBool InitSearchDomain (/* int domain,
                                      PtrSearchContext context */);
 extern void UpdateDuringSearch (/* PtrElement pEl,

@@ -59,13 +59,7 @@
    	AttrValue retourne la valeur que prend l'attribut numerique	
    		pointe' par pAttr.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 AttrValue (PtrAttribute pAttr)
-#else  /* __STDC__ */
-int                 AttrValue (pAttr)
-PtrAttribute        pAttr;
-
-#endif /* __STDC__ */
 {
    int                 ret;
 
@@ -88,13 +82,7 @@ PtrAttribute        pAttr;
    		presentation. Si, a l'appel, pAbb est  un pave qui n'est	
    		pas un pave de presentation, alors pAbb reste inchange'.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FollowNotPres (PtrAbstractBox * pAbb)
-#else  /* __STDC__ */
-static void         FollowNotPres (pAbb)
-PtrAbstractBox     *pAbb;
-
-#endif /* __STDC__ */
 {
    ThotBool            stop;
 
@@ -117,16 +105,7 @@ PtrAbstractBox     *pAbb;
 			  dans la vue view
    			  retourne ce pave dans pAbb ou NULL sinon
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AncestorAbsBox (PtrElement pE, DocViewNumber view, PtrAbstractBox * pAbb, PtrElement * pElAsc)
-#else  /* __STDC__ */
-static void         AncestorAbsBox (pE, view, pAbb, pElAsc)
-PtrElement          pE;
-DocViewNumber       view;
-PtrAbstractBox     *pAbb;
-PtrElement         *pElAsc;
-
-#endif /* __STDC__ */
 {
 
    *pElAsc = pE;
@@ -152,18 +131,7 @@ PtrElement         *pElAsc;
    	qui sert de reference quand on applique la regle d'heritage	
    	pointe par pPRule a l'element pointe par pEl, dans la vue view.	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static PtrAbstractBox AbsBoxInherit (PtrPRule pPRule, PtrElement pEl, DocViewNumber view)
-
-#else  /* __STDC__ */
-static PtrAbstractBox AbsBoxInherit (pPRule, pEl, view)
-PtrPRule            pPRule;
-PtrElement          pEl;
-DocViewNumber       view;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pElInherit;
    PtrAbstractBox      pAbb;
@@ -233,18 +201,7 @@ DocViewNumber       view;
    		par pEl, dans la vue view. On ne considere que l'element	
    		immediatement voisin (pere, frere, fils).		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static PtrAbstractBox AbsBoxInheritImm (PtrPRule pPRule, PtrElement pEl, DocViewNumber view)
-
-#else  /* __STDC__ */
-static PtrAbstractBox AbsBoxInheritImm (pPRule, pEl, view)
-PtrPRule            pPRule;
-PtrElement          pEl;
-DocViewNumber       view;
-
-#endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAbb;
 
@@ -297,13 +254,7 @@ DocViewNumber       view;
   return the character value of the border style whose numeric value
   is borderStyle
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static char  BorderStyleCharValue (int borderStyle)
-#else  /* __STDC__ */
-static char  BorderStyleCharValue (borderStyle)
-int borderStyle;
-#endif /* __STDC__ */
 {
    char ret;
 
@@ -351,13 +302,7 @@ int borderStyle;
   return the numeric value of the border style whose character value
   is borderStyle
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static int BorderStyleIntValue (CHAR_T borderStyle)
-#else  /* __STDC__ */
-static int  BorderStyleIntValue (borderStyle)
-CHAR_T borderStyle;
-#endif /* __STDC__ */
 {
    int ret;
 
@@ -407,19 +352,8 @@ CHAR_T borderStyle;
    		par pEl. Au retour, ok indique si l'evaluation a pu	
    		etre faite. 						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static char         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
-
-#else  /* __STDC__ */
-static char         CharRule (pPRule, pEl, view, ok)
-PtrPRule            pPRule;
-PtrElement          pEl;
-DocViewNumber       view;
-ThotBool           *ok;
-
-#endif /* __STDC__ */
-
+static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
+		      ThotBool * ok)
 {
    PtrAbstractBox      pAbb;
    char                val;
@@ -506,19 +440,7 @@ ThotBool           *ok;
    		auquel elle s'applique est pointe par pEl.		
    		Au result, ok indique si l'evaluation a pu etre faite.	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static BAlignment   AlignRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
-
-#else  /* __STDC__ */
-static BAlignment   AlignRule (pPRule, pEl, view, ok)
-PtrPRule            pPRule;
-PtrElement          pEl;
-DocViewNumber       view;
-ThotBool           *ok;
-
-#endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAbb;
    BAlignment          val;
@@ -557,19 +479,8 @@ ThotBool           *ok;
    		par pEl.						
    		Au result, ok indique si l'evaluation a pu etre faite.	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     BoolRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
-
-#else  /* __STDC__ */
-static ThotBool     BoolRule (pPRule, pEl, view, ok)
-PtrPRule            pPRule;
-PtrElement          pEl;
-DocViewNumber       view;
-ThotBool           *ok;
-
-#endif /* __STDC__ */
-
+static ThotBool BoolRule (PtrPRule pPRule, PtrElement pEl,
+			  DocViewNumber view, ThotBool * ok)
 {
    PtrAbstractBox      pAbb;
    ThotBool            val;
@@ -611,14 +522,7 @@ ThotBool           *ok;
   pEl or one of its ancestors.
   Return NULL is neither pEl nor any of its ancestor have such an attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber, PtrAttribute pAInit)
-#else  /* __STDC__ */
-static PtrAttribute GetEnclosingAttr (pEl, attrNumber, pAInit)
-PtrElement	pEl;
-int		attrNumber;
-PtrAttribute    pAInit;
-#endif /* __STDC__ */
 {
    PtrAttribute        pAttr, pA;
    PtrElement	       pAsc;
@@ -662,19 +566,7 @@ PtrAttribute    pAInit;
 		If the abstract box for which the rule is evaluated exists,
 		it's pAb. Otherwise, pAb is NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok, TypeUnit * unit, PtrAttribute pAttr, PtrAbstractBox pAb)
-#else  /* __STDC__ */
-int                 IntegerRule (pPRule, pEl, view, ok, unit, pAttr, pAb)
-PtrPRule            pPRule;
-PtrElement          pEl;
-DocViewNumber       view;
-ThotBool           *ok;
-TypeUnit           *unit;
-PtrAttribute        pAttr;
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAbb;
    PtrElement          pElInherit;
@@ -1073,20 +965,7 @@ PtrAbstractBox      pAb;
    	Cela permet de determiner le pave pAb par rapport	
    	auquel le pave en cours de traitement va se positionner
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         VerifyAbsBox (ThotBool * found, PtrPSchema pSP, RefKind refKind, int numAbType, ThotBool notType, PtrAbstractBox pAb)
-
-#else  /* __STDC__ */
-static void         VerifyAbsBox (found, pSP, refKind, numAbType, notType, pAb)
-ThotBool           *found;
-PtrPSchema          pSP;
-RefKind             refKind;
-int                 numAbType;
-ThotBool            notType;
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-
 {
    PtrAttribute	    pAttr;
    ThotBool	    attrFound;
@@ -1200,17 +1079,7 @@ PtrAbstractBox      pAb;
    		presentation de l'attribut pointe' par pAttr cree le	
    		pave de presentation pointe' par pAb.			
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb)
-
-#else  /* __STDC__ */
-static ThotBool     AttrCreatePresBox (pAttr, pAb)
-PtrAttribute        pAttr;
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            ret, stop;
    PtrPRule            pPRule;
@@ -1313,21 +1182,9 @@ PtrAbstractBox      pAb;
    		Cela permet de determiner le pave pAb par rapport	
    		auquel le pave en cours de traitement va se positionner	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         VerifyAbsBoxDescent (ThotBool * found, PtrPSchema pSP, RefKind refKind, int numType, ThotBool notType, PtrAbstractBox pAb)
-
-#else  /* __STDC__ */
-static void         VerifyAbsBoxDescent (found, pSP, refKind, numType, notType, pAb)
-ThotBool           *found;
-PtrPSchema          pSP;
-RefKind		    refKind;
-int                 numType;
-ThotBool            notType;
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-
+static void VerifyAbsBoxDescent (ThotBool * found, PtrPSchema pSP,
+				 RefKind refKind, int numType,
+				 ThotBool notType, PtrAbstractBox pAb)
 {
    VerifyAbsBox (found, pSP, refKind, numType, notType, pAb);
    if (!(*found))
@@ -1361,22 +1218,10 @@ PtrAbstractBox      pAb;
    		Au result, la fonction rend NULL si aucun pave ne	
    		correspond.						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType, PtrPSchema pSP, Level level, RefKind refKind, PtrAbstractBox pAbb, PtrAttribute pAttr)
-
-#else  /* __STDC__ */
-static PtrAbstractBox SearchAbsBoxRef (notType, numAbType, pSP, level, refKind, pAbb, pAttr)
-ThotBool            notType;
-int                 numAbType;
-PtrPSchema          pSP;
-Level               level;
-RefKind		    refKind;
-PtrAbstractBox      pAbb;
-PtrAttribute        pAttr;
-
-#endif /* __STDC__ */
-
+static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType,
+				       PtrPSchema pSP, Level level,
+				       RefKind refKind, PtrAbstractBox pAbb,
+				       PtrAttribute pAttr)
 {
    ThotBool            found;
    PtrAbstractBox      pAb;
@@ -1623,16 +1468,7 @@ PtrAttribute        pAttr;
    	GetConstantBuffer   acquiert un buffer de texte pour la constante de	
    		presentation correspondant au pave pointe par pAb.	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                GetConstantBuffer (PtrAbstractBox pAb)
-
-#else  /* __STDC__ */
-void                GetConstantBuffer (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-
 {
    PtrTextBuffer       pBT;
 
@@ -1651,17 +1487,7 @@ PtrAbstractBox      pAb;
    		du pave pAb, en prenant en compte le volume de ce	
    		nouveau pave feuille.					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                UpdateFreeVol (PtrAbstractBox pAb, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                UpdateFreeVol (pAb, pDoc)
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
 {
 
 
@@ -1677,18 +1503,7 @@ PtrDocument         pDoc;
    	FillContent met dans le pave pointe par pAb le contenu de l'element
    		feuille pointe par pEl.					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                FillContent (pEl, pAb, pDoc)
-PtrElement          pEl;
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void   FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 {
   int                 lg, i;
   PtrTextBuffer       pBu1;
@@ -1851,16 +1666,9 @@ PtrDocument         pDoc;
    	contient le type de cette regle,				
    	Sinon, retourne FALSE.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     PageCreateRule (PtrPRule pPRule, PtrPSchema pSPR, PtrAbstractBox pCree, FunctionType * TypeCreation)
-#else  /* __STDC__ */
-static ThotBool     PageCreateRule (pPRule, pSPR, pCree, TypeCreation)
-PtrPRule            pPRule;
-PtrPSchema          pSPR;
-PtrAbstractBox      pCree;
-FunctionType       *TypeCreation;
-
-#endif /* __STDC__ */
+static ThotBool PageCreateRule (PtrPRule pPRule, PtrPSchema pSPR,
+				PtrAbstractBox pCree,
+				FunctionType * TypeCreation)
 {
    ThotBool            stop;
    ThotBool            result;
@@ -1909,15 +1717,8 @@ FunctionType       *TypeCreation;
   TypeCreatedRule retourne le type de la regle de presentation appelee	
   par le pave pAbbCreator et qui a cree le pave pAbbCreated.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-FunctionType        TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator, PtrAbstractBox pAbbCreated)
-#else  /* __STDC__ */
-FunctionType        TypeCreatedRule (pDoc, pAbbCreator, pAbbCreated)
-PtrDocument         pDoc;
-PtrAbstractBox      pAbbCreator;
-PtrAbstractBox      pAbbCreated;
-#endif /* __STDC__ */
-
+FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
+			      PtrAbstractBox pAbbCreated)
 {
    PtrPRule            pPRuleCre;
    FunctionType        result;
@@ -1974,23 +1775,15 @@ PtrAbstractBox      pAbbCreated;
 
 
 /*----------------------------------------------------------------------
-   	SearchPresSchema	cherche le schema de presentation a appliquer a	
-   		l'element pointe par pEl. Retourne dans pSchP un	
-   		pointeur sur ce schema, dans indexElType le numero de	
-   		l'entree correspondant a l'element dans ce schema et	
-   		dans pSchS un pointeur sur le schema de structure auquel
-   		correspond le schema de presentation retourne'.		
+  SearchPresSchema	cherche le schema de presentation a appliquer a	
+  l'element pointe par pEl. Retourne dans pSchP un	
+  pointeur sur ce schema, dans indexElType le numero de	
+  l'entree correspondant a l'element dans ce schema et	
+  dans pSchS un pointeur sur le schema de structure auquel
+  correspond le schema de presentation retourne'.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SearchPresSchema (PtrElement pEl, PtrPSchema * pSchP, int *indexElType, PtrSSchema * pSchS)
-#else  /* __STDC__ */
-void                SearchPresSchema (pEl, pSchP, indexElType, pSchS)
-PtrElement          pEl;
-PtrPSchema         *pSchP;
-int                *indexElType;
-PtrSSchema         *pSchS;
-
-#endif /* __STDC__ */
+void SearchPresSchema (PtrElement pEl, PtrPSchema * pSchP, int *indexElType,
+		       PtrSSchema * pSchS)
 {
    ThotBool            found;
    int                 i;
@@ -2049,16 +1842,9 @@ PtrSSchema         *pSchS;
 }
 
 /*----------------------------------------------------------------------
-   	CheckPPosUser							
+  CheckPPosUser							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
-#else  /* __STDC__ */
-static ThotBool     CheckPPosUser (pAb, pDoc)
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    int                 frame;
    ThotBool            result;
@@ -2073,24 +1859,12 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   	ApplyPos 	applique la regle de position PR-pPRule 	
-   		au pave pAbb1. 						
-   		rend vrai dans appl si la regle a ete appliquee.	
+  ApplyPos 	applique la regle de position PR-pPRule au pave pAbb1.
+  rend vrai dans appl si la regle a ete appliquee.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule, PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1, PtrDocument pDoc, ThotBool * appl)
-#else  /* __STDC__ */
-static void         ApplyPos (PPos, positionRule, pPRule, pAttr, pSchP, pAbb1, pDoc, appl)
-AbPosition         *PPos;
-PosRule            *positionRule;
-PtrPRule            pPRule;
-PtrAttribute        pAttr;
-PtrPSchema          pSchP;
-PtrAbstractBox      pAbb1;
-PtrDocument         pDoc;
-ThotBool           *appl;
-
-#endif /* __STDC__ */
+static void ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule,
+		      PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1,
+		      PtrDocument pDoc, ThotBool * appl)
 {
    PtrAbstractBox      pAbbPos;
    ThotBool            pageBreak;
@@ -2366,19 +2140,9 @@ ThotBool           *appl;
    	ApplyDim	 applique au pave pointe' par pAb la regle	
    		de dimension pointee par pPRule.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb, PtrPSchema pSchP, PtrAttribute pAttr, ThotBool * appl, PtrPRule pPRule, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         ApplyDim (pdimAb, pAb, pSchP, pAttr, appl, pPRule, pDoc)
-AbDimension        *pdimAb;
-PtrAbstractBox      pAb;
-PtrPSchema          pSchP;
-PtrAttribute        pAttr;
-ThotBool           *appl;
-PtrPRule            pPRule;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+static void ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb,
+		      PtrPSchema pSchP, PtrAttribute pAttr, ThotBool * appl,
+		      PtrPRule pPRule, PtrDocument pDoc)
 {
    PtrAbstractBox      pAbbRef;
    PtrAttribute        pA;
@@ -2529,20 +2293,10 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   	ApplyPage 	applique une regle Page				
+  ApplyPage 	applique une regle Page		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch, PtrPRule pPRule, FunctionType pageType)
-
-#else  /* __STDC__ */
-static void         ApplyPage (pDoc, pAb, viewSch, pPRule, pageType)
-PtrDocument         pDoc;
-PtrAbstractBox      pAb;
-int                 viewSch;
-PtrPRule            pPRule;
-FunctionType        pageType;
-#endif /* __STDC__ */
+static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
+		       PtrPRule pPRule, FunctionType pageType)
 {
    PtrElement          pElPage, pEl, pElChild, pPrec;
    PtrAbstractBox      pP;
@@ -2694,19 +2448,8 @@ FunctionType        pageType;
    		Retourne Vrai si un tel pave existe, et dans ce cas pAb	
    		pointe sur le pave trouve'				
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName, PtrAbstractBox * pAb)
-
-#else  /* __STDC__ */
-static ThotBool     FindAbsBox (Ntype, pSchP, presBoxName, pAb)
-int                 Ntype;
-PtrPSchema          pSchP;
-Name                presBoxName;
-PtrAbstractBox     *pAb;
-
-#endif /* __STDC__ */
-
+static ThotBool FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName,
+			    PtrAbstractBox * pAb)
 {
    ThotBool            result;
    PtrAbstractBox      pAbbCur;
@@ -2742,28 +2485,20 @@ PtrAbstractBox     *pAb;
 
 
 /*----------------------------------------------------------------------
-   	SearchElCrPresBoxCopy	cherche dans le sous arbre de l'element pointe' par pEl	
-   		(racine comprise) un element auquel est associee une	
-   		regle de presentation creant une boite du type presBoxType	
-   		definie dans le schema de presentation pointe par pSchP.
-   		Si presBoxType=0, on cherche une regle creant un pave de nom	
-   		presBoxName et au retour, pSchP contient un pointeur sur le	
-   		schema de presentation ou est definie la boite et presBoxType	
-   		contient le numero de type de cette boite.		
-   		Retourne Vrai si un tel element existe et dans ce cas,	
-   		pEl pointe sur l'element trouve'.			
+  SearchElCrPresBoxCopy	cherche dans le sous arbre de l'element pointe' par pEl	
+  (racine comprise) un element auquel est associee une	
+  regle de presentation creant une boite du type presBoxType	
+  definie dans le schema de presentation pointe par pSchP.
+  Si presBoxType=0, on cherche une regle creant un pave de nom	
+  presBoxName et au retour, pSchP contient un pointeur sur le	
+  schema de presentation ou est definie la boite et presBoxType	
+  contient le numero de type de cette boite.		
+  Retourne Vrai si un tel element existe et dans ce cas,	
+  pEl pointe sur l'element trouve'.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP, PtrSSchema * pSchS, Name presBoxName, PtrElement * pEl)
-#else  /* __STDC__ */
-static ThotBool     SearchElCrPresBoxCopy (presBoxType, pSchP, pSchS, presBoxName, pEl)
-int                *presBoxType;
-PtrPSchema         *pSchP;
-PtrSSchema         *pSchS;
-Name                presBoxName;
-PtrElement         *pEl;
-#endif /* __STDC__ */
-
+static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP,
+				       PtrSSchema * pSchS, Name presBoxName,
+				       PtrElement * pEl)
 {
    ThotBool            result, stop;
    PtrElement          pE1;
@@ -2847,18 +2582,8 @@ PtrElement         *pEl;
    		feuilles de texte du sous-arbre de l'element pointe'	
    		par pEC							
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         CopyLeaves (PtrElement pEC, PtrAbstractBox * pAb, PtrTextBuffer * pBuffPrec)
-
-#else  /* __STDC__ */
-static void         CopyLeaves (pEC, pAb, pBuffPrec)
-PtrElement          pEC;
-PtrAbstractBox     *pAb;
-PtrTextBuffer      *pBuffPrec;
-
-#endif /* __STDC__ */
-
+static void CopyLeaves (PtrElement pEC, PtrAbstractBox * pAb,
+			PtrTextBuffer * pBuffPrec)
 {
    PtrTextBuffer       pBuffE;
    PtrAbstractBox      pAbb1;
@@ -2914,27 +2639,15 @@ PtrTextBuffer      *pBuffPrec;
 
 
 /*----------------------------------------------------------------------
-   	SearchElInSubTree cherche dans le sous-arbre dont la racine est	
-   		pointe'e par pElRoot un element de numero de type elType	
-   		defini dans le schema de structure pSS, si typeName est	
-   		nul, de nom de type typeName sinon.			
-   		Retourne un pointeur sur l'element trouve' ou NULL si pas
-   		trouve'							
+  SearchElInSubTree cherche dans le sous-arbre dont la racine est	
+  pointe'e par pElRoot un element de numero de type elType	
+  defini dans le schema de structure pSS, si typeName est	
+  nul, de nom de type typeName sinon.			
+  Retourne un pointeur sur l'element trouve' ou NULL si pas
+  trouve'							
   ----------------------------------------------------------------------*/
-
-
-#ifdef __STDC__
-static PtrElement   SearchElInSubTree (PtrElement pElRoot, int elType, PtrSSchema pSS, Name typeName)
-
-#else  /* __STDC__ */
-static PtrElement   SearchElInSubTree (pElRoot, elType, pSS, typeName)
-PtrElement          pElRoot;
-int                 elType;
-PtrSSchema          pSS;
-Name                typeName;
-
-#endif /* __STDC__ */
-
+static PtrElement SearchElInSubTree (PtrElement pElRoot, int elType,
+				     PtrSSchema pSS, Name typeName)
 {
    PtrElement          pEC, pElChild;
 
@@ -2967,13 +2680,7 @@ Name                typeName;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrPRule     GetRuleCopy (PtrPRule pPRule)
-#else  /* __STDC__ */
-static PtrPRule     GetRuleCopy (pPRule)
-PtrPRule            pPRule;
-
-#endif /* __STDC__ */
 {
    ThotBool            found;
 
@@ -3001,16 +2708,8 @@ PtrPRule            pPRule;
    	ApplyCopy applique une regle de copie.				
    		  Procedure appelee aussi dans modif.c			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb, ThotBool withDescCopy)
-#else  /* __STDC__ */
-void                ApplyCopy (pDoc, pPRule, pAb, withDescCopy)
-PtrDocument         pDoc;
-PtrPRule            pPRule;
-PtrAbstractBox      pAb;
-ThotBool            withDescCopy;
-
-#endif /* __STDC__ */
+void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
+		ThotBool withDescCopy)
 {
    PtrElement          pE, pElSv;
    PtrAbstractBox      pAbbCur;
@@ -3249,17 +2948,8 @@ ThotBool            withDescCopy;
    		appliquee mais qu'elle pourra etre appliquee quand	
    		d'autres paves seront construits.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
-#else  /* __STDC__ */
-ThotBool            ApplyRule (pPRule, pSchP, pAb, pDoc, pAttr)
-PtrPRule            pPRule;
-PtrPSchema          pSchP;
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-
-#endif /* __STDC__ */
+ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
+		    PtrDocument pDoc, PtrAttribute pAttr)
 {
   TypeUnit            unit;
   AbPosition          Posit;
@@ -4078,28 +3768,19 @@ PtrAttribute        pAttr;
 
 
 /*----------------------------------------------------------------------
-   	SearchPresRule	Cherche si la regle de presentation specifique
-   		de type ruleType concernant la vue de numero view existe
-   		pour l'element pEl.
-   		Retourne un pointeur sur cette regle si elle existe,
-   		sinon cree une nouvelle regle de ce type, l'ajoute a la
-   		chaine des regles de presentation specifiques de
-   		l'element et retourne un pointeur sur la nouvelle regle.
-   		Au retour, isNew indique s'il s'agit d'une regle
-   		nouvellement creee ou non.
+  SearchPresRule	Cherche si la regle de presentation specifique
+  de type ruleType concernant la vue de numero view existe
+  pour l'element pEl.
+  Retourne un pointeur sur cette regle si elle existe,
+  sinon cree une nouvelle regle de ce type, l'ajoute a la
+  chaine des regles de presentation specifiques de
+  l'element et retourne un pointeur sur la nouvelle regle.
+  Au retour, isNew indique s'il s'agit d'une regle
+  nouvellement creee ou non.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrPRule            SearchPresRule (PtrElement pEl, PRuleType ruleType, FunctionType funcType, ThotBool * isNew, PtrDocument pDoc, int view)
-#else  /* __STDC__ */
-PtrPRule            SearchPresRule (pEl, ruleType, funcType, isNew, pDoc, view)
-PtrElement          pEl;
-PRuleType           ruleType;
-FunctionType	    funcType;
-ThotBool           *isNew;
-PtrDocument         pDoc;
-int                 view;
-
-#endif /* __STDC__ */
+PtrPRule SearchPresRule (PtrElement pEl, PRuleType ruleType,
+			 FunctionType funcType, ThotBool * isNew,
+			 PtrDocument pDoc, int view)
 {
    PtrPRule            pResultRule;
    PtrPRule            pPRule;
@@ -4172,16 +3853,10 @@ int                 view;
    	RedispAbsBox indique dans le contexte du document que le pave pAb	
    		est a reafficher					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RedispAbsBox (PtrAbstractBox pAb, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                RedispAbsBox (pAb, pDoc)
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
-  if (!AssocView (pAb->AbElement))
-    pDoc->DocViewModifiedAb[pAb->AbDocView - 1] = Enclosing (pAb, pDoc->DocViewModifiedAb[pAb->AbDocView - 1]);
-  else
-    pDoc->DocAssocModifiedAb[pAb->AbElement->ElAssocNum - 1] = Enclosing (pAb, pDoc->DocAssocModifiedAb[pAb->AbElement->ElAssocNum - 1]);
+  int         view;
+
+  view = pAb->AbDocView - 1;
+  pDoc->DocViewModifiedAb[view] = Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
 }

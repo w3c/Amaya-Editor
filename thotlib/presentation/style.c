@@ -1152,15 +1152,15 @@ unsigned int        extra;
 	  if (att == 0 && ctxt->type)
 	    /* the attribute should be attached to that element */
 	    PresRuleAddAttrCond (pRule, ctxt->type);
-	  else if (att < MAX_ANCESTORS && ctxt->name[att])
-	    /* the attribute should be attached to that element */
-	    PresRuleAddAttrCond (pRule, ctxt->name[att]);
-	  /* add the ancesters conditions ... */
+	  /* add other conditions ... */
 	  i = 0;
-	  while (i < MAX_ANCESTORS && ctxt->name[i] != 0)
+	  while (i < MAX_ANCESTORS)
 	    {
-	      if (ctxt->names_nb[i] > 0 && i != att)
+	      if (ctxt->name[i] && ctxt->names_nb[i] > 0 && i != att)
 		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
+	      if (ctxt->attrType[i]  && i != att)
+		/* the attribute should be attached to that element */
+		PresRuleAddAttrCond (pRule, ctxt->attrType[i]);
 	      i++;
 	    }
 

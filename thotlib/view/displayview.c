@@ -404,8 +404,6 @@ void                TCloseDocument (PtrDocument pDoc)
 	{
 	  /* if there is a "Spell checker" menu entry, close the spell checker
 	     dialog box */
-	  if (ThotLocalActions[T_corrector] != NULL)
-	    (*ThotLocalActions[T_rscorrector]) (-1, 0, (STRING) pDoc);
 	  if (ThotLocalActions[T_clearhistory] != NULL)
 	    (*ThotLocalActions[T_clearhistory]) (pDoc);
 	  /* if some dialog boxes for attribute input are displayed

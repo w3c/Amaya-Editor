@@ -157,7 +157,8 @@ static void         RedisplayExternalRefs (PtrDocument pDoc)
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
-Document    TtaInitDocument (CHAR_T* structureSchema, CHAR_T* documentName, Document document)
+Document TtaInitDocument (CHAR_T *structureSchema, CHAR_T *documentName,
+			  Document document)
 { 
   PtrDocument         pDoc;
   int                 i;
@@ -379,7 +380,8 @@ void                LoadDocument (PtrDocument * pDoc, STRING fileName)
    directory est le directory ou il faut creer le document 
    Au retour pDoc est NIL si le document n'a pas ete cree. 
   ----------------------------------------------------------------------*/
-void                NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T* docName, PathBuffer directory)
+void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
+		  PathBuffer directory)
 {
    PtrElement          pEl;
    NotifyDialog        notifyDoc;

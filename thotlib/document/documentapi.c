@@ -68,13 +68,7 @@ static CHAR_T ISObuffer[MAX_NATURES_DOC];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateWithException (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CreateWithException (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    /* If table creation */
    if (ThotLocalActions[T_createtable] != NULL)
@@ -85,12 +79,7 @@ PtrDocument         pDoc;
   TtaGetDocumentCharset gets the document charset
   Returns UNDEFINED_CHARSET when the document uses the default charset.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHARSET     TtaGetDocumentCharset (Document document)
-#else  /* __STDC__ */
-CHARSET     TtaGetDocumentCharset (document)
-Document     document;
-#endif /* __STDC__ */
 {
   PtrDocument pDoc;
 
@@ -115,13 +104,7 @@ Document     document;
 /*----------------------------------------------------------------------
   TtaSetDocumentCharset sets the document charset
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaSetDocumentCharset (Document document, CHARSET charSet)
-#else  /* __STDC__ */
-void         TtaSetDocumentCharset (document, charSet)
-Document     document;
-CHARSET      charSet;
-#endif /* __STDC__ */
 {
   PtrDocument pDoc;
 
@@ -152,15 +135,8 @@ CHARSET      charSet;
 
    Return value:
    the opened document, or 0 if the document cannot be open.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Document            TtaOpenDocument (STRING documentName, int accessMode)
-#else  /* __STDC__ */
-Document            TtaOpenDocument (documentName, accessMode)
-STRING              documentName;
-int                 accessMode;
-#endif /* __STDC__ */
 {
   PtrDocument         pDoc;
   Document            document;
@@ -223,16 +199,8 @@ int                 accessMode;
    TSchemaName: name of the translation schema to be used. The directory
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaExportDocument (Document document, STRING fileName, STRING TSchemaName)
-#else  /* __STDC__ */
-ThotBool            TtaExportDocument (document, fileName, TSchemaName)
-Document            document;
-STRING              fileName;
-STRING              TSchemaName;
-#endif /* __STDC__ */
+ThotBool TtaExportDocument (Document document, STRING fileName, STRING TSchemaName)
 {
   ThotBool ok = FALSE;
 
@@ -266,19 +234,10 @@ STRING              TSchemaName;
    TSchemaName: name of the translation schema to be used. The directory
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaExportDocumentWithNewLineNumbers (Document document,
-							 STRING fileName,
-							 STRING TSchemaName)
-#else  /* __STDC__ */
-ThotBool            TtaExportDocumentWithNewLineNumbers (document, fileName,
-							 TSchemaName)
-Document            document;
-STRING              fileName;
-STRING              TSchemaName;
-#endif /* __STDC__ */
+ThotBool  TtaExportDocumentWithNewLineNumbers (Document document,
+					       STRING fileName,
+					       STRING TSchemaName)
 {
   ThotBool ok = FALSE;
 
@@ -301,12 +260,7 @@ STRING              TSchemaName;
 /*----------------------------------------------------------------------
    UnloadTree free the document tree of pDoc				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UnloadTree (Document document)
-#else  /* __STDC__ */
-void                UnloadTree (document)
-Document            document;
-#endif /* __STDC__ */
 {
   PtrDocument      pDoc;
 
@@ -330,12 +284,7 @@ Document            document;
 /*----------------------------------------------------------------------
    UnloadDocument free the document contexts of pDoc				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UnloadDocument (PtrDocument * pDoc)
-#else  /* __STDC__ */
-void                UnloadDocument (pDoc)
-PtrDocument        *pDoc;
-#endif /* __STDC__ */
 {
   int                 d;
 
@@ -368,17 +317,10 @@ PtrDocument        *pDoc;
 
    Closes a document that is no longer needed and releases all ressources
    allocated to the document. This function does not save the document.
-
    Parameter:
    document: the document to be closed.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaCloseDocument (Document document)
-#else  /* __STDC__ */
-void                TtaCloseDocument (document)
-Document            document;
-#endif /* __STDC__ */
 {
 #ifndef NODISPLAY
   int              nv, numassoc;
@@ -430,18 +372,11 @@ Document            document;
    by the application program (see TtaOpenDocument).
    The first directory in the list is used when a new document is created
    (see TtaNewDocument).
-
    Parameter:
    path: the directory list, where directory names are separated by
    the character PATH_SEP.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetDocumentPath (STRING path)
-#else  /* __STDC__ */
-void                TtaSetDocumentPath (path)
-STRING              path;
-#endif /* __STDC__ */
 {
    UserErrorCode = 0;
    if (ustrlen (path) >= MAX_PATH)
@@ -456,24 +391,13 @@ STRING              path;
    TtaCheckPath
 
    Checks if all directories in a path can be accessed.
-
    Parameter:
    path: the path to be checked
-
    Return value:
    TRUE if all directories are OK, FALSE if at least one cannot be
    accessed.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaCheckPath (char* path)
-
-#else  /* __STDC__ */
-ThotBool            TtaCheckPath (path)
-char*               path;
-
-#endif /* __STDC__ */
-
 {
    int                 i, j;
    PathBuffer          single_directory;
@@ -506,20 +430,10 @@ char*               path;
    TtaIsInDocumentPath
 
    returns TRUE if the directory is in the list of document directories.
-
    Parameter:
    directory: the new directory name.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaIsInDocumentPath (CHAR_T* directory)
-
-#else  /* __STDC__ */
-ThotBool            TtaIsInDocumentPath (directory)
-CHAR_T*             directory;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
    CHAR_T*             ptr;
@@ -542,21 +456,10 @@ CHAR_T*             directory;
 
    Appends a new directory in the list of document directories if this
    directory is not already in the list and if the directory exists.
-
    Parameter:
    directory: the new directory name.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                TtaAppendDocumentPath (CHAR_T* directory)
-
-#else  /* __STDC__ */
-void                TtaAppendDocumentPath (directory)
-CHAR_T*             directory;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
    int                 lg;
@@ -588,22 +491,11 @@ CHAR_T*             directory;
 
    Sets a new list of schema directories. This list replaces the existing one.
    It is used for searching schemas.
-
    Parameter:
    path: the directory list, where directory names are separated by
    the character PATH_SEP.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                TtaSetSchemaPath (STRING path)
-
-#else  /* __STDC__ */
-void                TtaSetSchemaPath (path)
-STRING              path;
-
-#endif /* __STDC__ */
-
 {
    UserErrorCode = 0;
    if (ustrlen (path) >= MAX_PATH)
@@ -618,7 +510,6 @@ STRING              path;
    Adds a new nature in a structure schema and returns the structure schema
    of the new nature. If the nature already exists in that structure schema,
    the function simply returns the structure schema of that nature.
-
    Parameters:
    document: the document of interest
    schema: the structure schema to which the nature is added.
@@ -627,25 +518,12 @@ STRING              path;
    the extension schema. If presentationName is an empty string, the
    default presentation schema is associated. If the nature already
    exists, presentationName is ignored.
-
    Return value:
    the structure schema of the new nature; NULL if the structure schema
    has not been loaded.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-SSchema             TtaNewNature (Document document, SSchema schema, CHAR_T* natureName, CHAR_T* presentationName)
-
-#else  /* __STDC__ */
-SSchema             TtaNewNature (document, schema, natureName, presentationName)
-Document            document; 
-SSchema             schema;
-CHAR_T*             natureName;
-CHAR_T*             presentationName;
-
-#endif /* __STDC__ */
-
+SSchema TtaNewNature (Document document, SSchema schema, CHAR_T* natureName,
+		      CHAR_T* presentationName)
 {
    int                 natureRule;
    PtrSSchema          natureSchema;
@@ -691,29 +569,16 @@ CHAR_T*             presentationName;
    Loads a structure schema extension and associates it with
    a given document.
 
-   Parameters:
    document: the document whose structure schema must be extended.
    extensionName: name of the extension schema.
    presentationName: name of the presentation schema to be associated with
    the extension schema. If presentationName is an empty string, the
    default presentation schema is associated.
-
    Return value:
    the extension schema, NULL if the extension schema has not been loaded.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-SSchema             TtaNewSchemaExtension (Document document, CHAR_T* extensionName, CHAR_T* presentationName)
-
-#else  /* __STDC__ */
-SSchema             TtaNewSchemaExtension (document, extensionName, presentationName)
-Document            document;
-CHAR_T*             extensionName;
-CHAR_T*             presentationName;
-
-#endif /* __STDC__ */
-
+SSchema TtaNewSchemaExtension (Document document, CHAR_T* extensionName,
+			       CHAR_T* presentationName)
 {
    PtrSSchema          extension;
 
@@ -746,21 +611,12 @@ CHAR_T*             presentationName;
 
    Sets or changes the main presentation schema of a document. The document
    must be open, but no view must be open for that document.
-
    Parameters:
    document: the document.
    presentationName: Name of the presentation schema to be associated
    with the document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetPSchema (Document document, CHAR_T* presentationName)
-#else  /* __STDC__ */
-void                TtaSetPSchema (document, presentationName)
-Document            document;
-CHAR_T*             presentationName;
-#endif /* __STDC__ */
-
+void       TtaSetPSchema (Document document, CHAR_T* presentationName)
 {
    PtrDocument         pDoc;
 #ifndef NODISPLAY
@@ -829,20 +685,11 @@ CHAR_T*             presentationName;
    TtaSetDocumentDirectory
 
    Sets the directory to which the document is supposed to be saved.
-
    Parameters:
    document: the document whose directory is set.
    directory: new document directory.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetDocumentDirectory (Document document, CHAR_T* directory)
-#else  /* __STDC__ */
-void                TtaSetDocumentDirectory (document, directory)
-Document            document;
-CHAR_T*             directory;
-#endif /* __STDC__ */
-
+void     TtaSetDocumentDirectory (Document document, CHAR_T* directory)
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -864,20 +711,11 @@ CHAR_T*             directory;
    TtaSetDocumentAccessMode
 
    Sets the access mode for a document.
-
    Parameters:
    document: the document whose access mode is changed.
    accessMode: 0 = read only, 1 = read-write.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetDocumentAccessMode (Document document, int accessMode)
-#else  /* __STDC__ */
-void                TtaSetDocumentAccessMode (document, accessMode)
-Document            document;
-int                 accessMode;
-#endif /* __STDC__ */
-
 {
   PtrDocument      pDoc;
 
@@ -924,45 +762,26 @@ int                 accessMode;
    TtaSetDocumentBackUpInterval
 
    Sets the backup interval for a document.
-
    Parameters:
    document: the document whose backup interval is changed.
    interval:
    0 : the backup mechanism must be disabled
    positive integer : number of characters typed which triggers
    automatic save of the document into a .BAK file.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaSetDocumentBackUpInterval (Document document, int interval)
-
-#else  /* __STDC__ */
-void                TtaSetDocumentBackUpInterval (document, interval)
-Document            document;
-int                 interval;
-
-#endif /* __STDC__ */
-
+void    TtaSetDocumentBackUpInterval (Document document, int interval)
 {
-   UserErrorCode = 0;
-   /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-   if (interval < 0)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      LoadedDocument[document - 1]->DocBackUpInterval = interval;
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (interval < 0)
+    /* parameter document is correct */
+    TtaError (ERR_invalid_parameter);
+  else
+    LoadedDocument[document - 1]->DocBackUpInterval = interval;
 }
 
 /*----------------------------------------------------------------------
@@ -974,33 +793,18 @@ int                 interval;
    notificationMode: 0 = only roots of created and deleted subtrees must
    be notified, 1 = all elements of created and deleted subtrees must
    be notified.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaSetNotificationMode (Document document, int notificationMode)
-
-#else  /* __STDC__ */
-void                TtaSetNotificationMode (document, notificationMode)
-Document            document;
-int                 notificationMode;
-
-#endif /* __STDC__ */
-
+void  TtaSetNotificationMode (Document document, int notificationMode)
 {
-   UserErrorCode = 0;
-   /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-      LoadedDocument[document - 1]->DocNotifyAll = (notificationMode != 0);
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    LoadedDocument[document - 1]->DocNotifyAll = (notificationMode != 0);
 }
 
 /*----------------------------------------------------------------------
@@ -1010,14 +814,7 @@ int                 notificationMode;
    If the previous status of DocUpdated was FALSE the function notifies
    the application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void           SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
-#else  /* __STDC__ */
-void           SetDocumentModified (pDoc, status, length)
-PtrDocument    pDoc;
-ThotBool       satus;
-int            length;
-#endif /* __STDC__ */
+void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
 {
   if (pDoc != NULL)
     {
@@ -1046,17 +843,10 @@ int            length;
 
    Notifies the tool kit that a document has been modified by the application.
    As a consequence, the user will be asked to save the document when closing it.
-
    Parameter:
    document: the document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetDocumentModified (Document document)
-#else  /* __STDC__ */
-void                TtaSetDocumentModified (document)
-Document            document;
-#endif /* __STDC__ */
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -1076,17 +866,10 @@ Document            document;
    by the application or by the user. As a consequence, if no further modification
    is made to that document, the user will not be asked to save the document
    when closing it.
-
    Parameter:
    document: the document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetDocumentUnmodified (Document document)
-#else  /* __STDC__ */
-void                TtaSetDocumentUnmodified (document)
-Document            document;
-#endif /* __STDC__ */
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -1106,17 +889,10 @@ Document            document;
    by the application or by the user. That will allow the application to
    detect if any change will be made on the document
    (see TtaIsDocumentUpdated).
-
    Parameter:
    document: the document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetDocumentUnupdated (Document document)
-#else  /* __STDC__ */
-void                TtaSetDocumentUnupdated (document)
-Document            document;
-#endif /* __STDC__ */
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -1133,24 +909,12 @@ Document            document;
    TtaGetDocumentName
 
    Returns the name of a document.
-
    Parameter:
    document: the document whose name is asked.
-
    Return value:
    name of that document.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 CHAR_T*             TtaGetDocumentName (Document document)
-
-#else  /* __STDC__ */
-CHAR_T*             TtaGetDocumentName (document)
-Document            document;
-
-#endif /* __STDC__ */
-
 {
    UserErrorCode = 0;
    nameBuffer[0] = WC_EOS;
@@ -1176,24 +940,12 @@ Document            document;
    TtaGetDocumentFromName
 
    Returns the document having a given name.
-
    Parameter:
    documentName: the document name.
-
    Return value:
    the document having that name.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 Document            TtaGetDocumentFromName (STRING documentName)
-
-#else  /* __STDC__ */
-Document            TtaGetDocumentFromName (documentName)
-STRING              documentName;
-
-#endif /* __STDC__ */
-
 {
    int                 document;
    ThotBool            found;
@@ -1219,115 +971,67 @@ STRING              documentName;
    TtaGetDocumentDirectory
 
    Returns the directory to which the document is supposed to be saved.
-
    Parameters:
    document: the document whose directory is asked.
    buffer: a buffer provided by the caller.
    bufferLength: the length of that buffer.
-
    Return parameter:
    buffer: the document directory.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaGetDocumentDirectory (Document document, STRING buffer, int bufferLength)
-
-#else  /* __STDC__ */
-void                TtaGetDocumentDirectory (document, buffer, bufferLength)
-Document            document;
-STRING              buffer;
-int                 bufferLength;
-
-#endif /* __STDC__ */
-
+void TtaGetDocumentDirectory (Document document, STRING buffer, int bufferLength)
 {
-   UserErrorCode = 0;
-   nameBuffer[0] = WC_EOS;
-   /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-     {
-	if (ustrlen (LoadedDocument[document - 1]->DocDirectory) >= (size_t) bufferLength)
-	   TtaError (ERR_buffer_too_small);
-	ustrncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
-     }
+  UserErrorCode = 0;
+  nameBuffer[0] = WC_EOS;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    {
+      if (ustrlen (LoadedDocument[document - 1]->DocDirectory) >= (size_t) bufferLength)
+	TtaError (ERR_buffer_too_small);
+      ustrncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
+    }
 }
 
 /*----------------------------------------------------------------------
    TtaGetDocumentSSchema
 
    Returns the main structure schema of a document.
-
    Parameter:
    document: the document for which the structure schema is asked.
-
    Return value:
    the structure schema of that document.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 SSchema             TtaGetDocumentSSchema (Document document)
-
-#else  /* __STDC__ */
-SSchema             TtaGetDocumentSSchema (document)
-Document            document;
-
-#endif /* __STDC__ */
-
 {
-   SSchema             schema;
+  SSchema             schema;
 
-   UserErrorCode = 0;
-   /* verifies the parameter document */
-   schema = NULL;
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-     {
-	schema = (SSchema) LoadedDocument[document - 1]->DocSSchema;
-     }
-   return schema;
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  schema = NULL;
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    schema = (SSchema) LoadedDocument[document - 1]->DocSSchema;
+  return schema;
 }
 
 /*----------------------------------------------------------------------
    TtaGetSSchemaName
 
    Returns the name of a structure schema.
-
    Parameter:
    schema: the structure schema of interest.
-
    Return value:
    name of that structure schema.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 CHAR_T*             TtaGetSSchemaName (SSchema schema)
-
-#else  /* __STDC__ */
-CHAR_T*             TtaGetSSchemaName (schema)
-SSchema             schema;
-
-#endif /* __STDC__ */
-
 {
    UserErrorCode = 0;
    if (schema == NULL)
@@ -1347,19 +1051,12 @@ SSchema             schema;
 
    Returns the name of the presentation schema currently associated
    with a given structure schema.
-
    Parameter:
    schema: the structure schema of interest.
-
    Return value:
    name of the associated presentation schema.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T*              TtaGetPSchemaName (SSchema schema)
-#else  /* __STDC__ */
-CHAR_T*              TtaGetPSchemaName (schema)
-SSchema             schema;
-#endif /* __STDC__ */
 {
    UserErrorCode = 0;
    if (schema == NULL)
@@ -1379,13 +1076,7 @@ SSchema             schema;
   nature schema and extension schema used by pSS. It returns a pointer
   which references this schema or NULL if not found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static SSchema      ChSchStruct (PtrSSchema pSS, CHAR_T* name)
-#else  /* __STDC__ */
-static SSchema      ChSchStruct (pSS, name)
-PtrSSchema          pSS;
-CHAR_T*             name;
-#endif /* __STDC__ */
 {
    int                 nRegle;
    SSchema             ret;
@@ -1417,24 +1108,14 @@ CHAR_T*             name;
 
    Returns a structure schema whose name is known and that is used in a
    given document.
-
    Parameter:
    name: the name of the structure schema of interest.
    document: the document that uses this structure schema.
-
    Return value:
    the structure schema having this name, or NULL if this structure
    schema is not loaded or not used by the document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 SSchema             TtaGetSSchema (CHAR_T* name, Document document)
-#else  /* __STDC__ */
-SSchema             TtaGetSSchema (name, document)
-CHAR_T*             name;
-Document            document;
-#endif /* __STDC__ */
-
 {
    SSchema          schema;
 
@@ -1459,23 +1140,13 @@ Document            document;
    TtaSameSSchemas
 
    Compares two structure schemas.
-
    Parameters:
    schema1: first structure schema.
    schema2: second structure schema.
-
    Return value:
    0 if both schemas are different, 1 if they are identical.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaSameSSchemas (SSchema schema1, SSchema schema2)
-#else  /* __STDC__ */
-int                 TtaSameSSchemas (schema1, schema2)
-SSchema             schema1;
-SSchema             schema2;
-#endif /* __STDC__ */
-
 {
   int                 result;
 
@@ -1494,27 +1165,17 @@ SSchema             schema2;
    Returns the names of the main structure schema and presentation schema
    associated with a given document. The document does not need to be open
    and the schemas are not loaded by this function.
-
    Parameters:
    documentName: Name of the document to be checked (maximum length
    19 characters).
    structureName: buffer.
    presentationName: buffer.
-
    Return value:
    structureName: Name of the document structure schema.
    presentationName: Name of the document presentation schema.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveSchemasOfDocument (STRING documentName, char* structureName, char* presentationName)
-#else  /* __STDC__ */
-void                TtaGiveSchemasOfDocument (documentName, structureName, presentationName)
-STRING              documentName;
-char*               structureName;
-char*               presentationName;
-#endif /* __STDC__ */
-
+void TtaGiveSchemasOfDocument (STRING documentName, char *structureName,
+			       char *presentationName)
 {
    PathBuffer          DirBuffer;
    BinFile             file;
@@ -1618,7 +1279,6 @@ char*               presentationName;
    TtaNextSchemaExtension
 
    Returns a structure schema extension associated with a given document.
-
    Parameters:
    document: the document of interest.
    extension: a schema extension of that document. NULL for accessing
@@ -1627,16 +1287,8 @@ char*               presentationName;
    extension: the schema extension that follows or the first schema
    extension of the document if parameter extension is NULL.
    NULL if there is no more schema extension.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaNextSchemaExtension (Document document, SSchema * extension)
-#else  /* __STDC__ */
-void                TtaNextSchemaExtension (document, extension)
-Document            document;
-SSchema            *extension;
-#endif /* __STDC__ */
-
+void   TtaNextSchemaExtension (Document document, SSchema * extension)
 {
    PtrSSchema          nextExtension;
 
@@ -1662,7 +1314,6 @@ SSchema            *extension;
    TtaNextNature
 
    Returns the structure schema of a nature used in a given document.
-
    Parameters:
    document: the document of interest.
    nature: the structure schema of a nature for that document. NULL for
@@ -1672,16 +1323,8 @@ SSchema            *extension;
    of the first nature of the document if parameter nature was NULL
    when calling.
    NULL if there is no more nature for the document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaNextNature (Document document, SSchema * nature)
-#else  /* __STDC__ */
-void                TtaNextNature (document, nature)
-Document            document;
-SSchema            *nature;
-#endif /* __STDC__ */
-
 {
    PtrSSchema          nextNature;
 #ifndef NODISPLAY
@@ -1752,22 +1395,13 @@ SSchema            *nature;
    Indicates whether a document has been modified by the user or not.
    Modifications made by the application program are not considered,
    except when explicitely notified by TtaDocumentModified.
-
    Parameter:
    document: the document.
-
    Return value:
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaIsDocumentModified (Document document)
-#else  /* __STDC__ */
-int                 TtaIsDocumentModified (document)
-Document            document;
-#endif /* __STDC__ */
-
 {
    int                 modified;
 
@@ -1791,21 +1425,13 @@ Document            document;
    since the last TtaSetDocumentUnupdated or TtaSetDocumentUnmodified.
    Modifications made by the application program are not considered,
    except when explicitely notified by TtaDocumentModified.
-
    Parameter:
    document: the document.
-
    Return value:
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaIsDocumentUpdated (Document document)
-#else  /* __STDC__ */
-int                 TtaIsDocumentModified (document)
-Document            document;
-#endif /* __STDC__ */
 {
    int                 updated;
 
@@ -1826,40 +1452,28 @@ Document            document;
    TtaGetDocumentAccessMode
 
    Returns the access mode for a document.
-
    Parameter:
    document: the document whose access mode is asked.
    Return value:
    0 if access mode is read only, 1 if access mode is read-write.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetDocumentAccessMode (Document document)
-#else  /* __STDC__ */
-int                 TtaGetDocumentAccessMode (document)
-Document            document;
-#endif /* __STDC__ */
 {
-   int                 result;
+  int                 result;
 
-   UserErrorCode = 0;
-   result = 1;
-   /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-   if (LoadedDocument[document - 1]->DocReadOnly)
-      result = 0;
-   else
-      result = 1;
-   return result;
+  UserErrorCode = 0;
+  result = 1;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1]->DocReadOnly)
+    /* parameter document is correct */
+    result = 0;
+  else
+    result = 1;
+  return result;
 }
 
 
@@ -1867,43 +1481,28 @@ Document            document;
    TtaGetDocumentBackUpInterval
 
    Returns backup interval for a document.
-
    Parameters:
    document: the document whose backup interval is asked.
    Return value:
    0 : the backup mechanism is disabled
    positive integer : number of typed characters which trigger an autamatic
    save of the document into a .BAK file.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 TtaGetDocumentBackUpInterval (Document document)
-
-#else  /* __STDC__ */
-int                 TtaGetDocumentBackUpInterval (document)
-Document            document;
-
-#endif /* __STDC__ */
-
 {
-   int                 result;
+  int                 result;
 
-   UserErrorCode = 0;
-   result = 0;
-   /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-      result = LoadedDocument[document - 1]->DocBackUpInterval;
-   return result;
+  UserErrorCode = 0;
+  result = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    result = LoadedDocument[document - 1]->DocBackUpInterval;
+  return result;
 }
 
 
@@ -1911,45 +1510,29 @@ Document            document;
    TtaGetNotificationMode
 
    Returns the ECF notification mode for a document.
-
    Parameters:
    document: the document whose notification mode is asked.
    Return value:
    0 = if only roots of created and deleted subtrees must be notified,
    1 = all elements of created and deleted subtrees must be notified.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 TtaGetNotificationMode (Document document)
-
-#else  /* __STDC__ */
-int                 TtaGetNotificationMode (document)
-Document            document;
-
-#endif /* __STDC__ */
-
 {
-   int                 result;
+  int                 result;
 
-   UserErrorCode = 0;
-   result = 0;
-   /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-   if (LoadedDocument[document - 1]->DocNotifyAll)
-      result = 1;
-   else
-      result = 0;
-   return result;
+  UserErrorCode = 0;
+  result = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1]->DocNotifyAll)
+    /* parameter document is correct */
+    result = 1;
+  else
+    result = 0;
+  return result;
 }
 
 
@@ -1958,27 +1541,14 @@ Document            document;
 
    Returns the current list of the directories used when a document is open
    (see TtaOpenDocument).
-
    Parameters:
    buffer: a buffer provided by the caller.
    bufferLength: the length of that buffer.
-
    Return parameter:
    buffer: the list of directories. Directory names are separated by
    the character PATH_SEP.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                TtaGetDocumentPath (STRING buffer, int bufferLength)
-
-#else  /* __STDC__ */
-void                TtaGetDocumentPath (buffer, bufferLength)
-STRING              buffer;
-int                 bufferLength;
-
-#endif /* __STDC__ */
-
 {
 
    UserErrorCode = 0;
@@ -1991,27 +1561,14 @@ int                 bufferLength;
    TtaGetSchemaPath
 
    Returns the current list of directories used for accessing schemas.
-
    Parameters:
    buffer: a buffer provided by the caller.
    bufferLength: the length of that buffer.
-
    Return parameter:
    buffer: the list of directories. Directory names are separated by
    the character PATH_SEP.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                TtaGetSchemaPath (STRING buffer, int bufferLength)
-
-#else  /* __STDC__ */
-void                TtaGetSchemaPath (buffer, bufferLength)
-STRING              buffer;
-int                 bufferLength;
-
-#endif /* __STDC__ */
-
 {
 
    UserErrorCode = 0;
@@ -2026,24 +1583,13 @@ int                 bufferLength;
 
    Returns the document for which the last Copy or Cut command has been
    issued.
-
    Parameters:
    no parameter.
-
    Return value:
    the document for which the last Copy or Cut command has been issued.
    0 if the clipboard is empty.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 Document            TtaGetDocumentOfSavedElements ()
-
-#else  /* __STDC__ */
-Document            TtaGetDocumentOfSavedElements ()
-
-#endif				/* __STDC__ */
-
 {
    UserErrorCode = 0;
    if (DocOfSavedElements == NULL)
@@ -2056,18 +1602,8 @@ Document            TtaGetDocumentOfSavedElements ()
 /*----------------------------------------------------------------------
    DocToPtr returns the PtrDocument corresponding to a given document
  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 PtrDocument         DocToPtr (Document document)
-
-#else  /* __STDC__ */
-PtrDocument         DocToPtr (document)
-Document            document;
-
-#endif /* __STDC__ */
-
 {
    return LoadedDocument[document - 1];
 }
 
-/* end of module */

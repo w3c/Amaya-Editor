@@ -181,7 +181,7 @@ static char        *NameCode (char* name)
   ----------------------------------------------------------------------*/
 static unsigned int  SpecialKey (char *name, ThotBool *isSpecial)
 {
-	*isSpecial = TRUE;
+   *isSpecial = TRUE;
    /* is it the name of a special character? */
    if (!strcasecmp (name, "Return"))
      return (unsigned int) THOT_KEY_Return;
@@ -299,7 +299,8 @@ static unsigned int  SpecialKey (char *name, ThotBool *isSpecial)
    key  = keysym value or 0
    command = number of the command in MyActions
   ----------------------------------------------------------------------*/
-static void         MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2, ThotBool spec2, int key, int command)
+static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
+		     ThotBool spec2, int key, int command)
 {
    ThotBool            exists;
    KEY                *ptr = NULL;
@@ -540,13 +541,13 @@ void     WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPA
 #else /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   XCharTranslation
+   CharTranslation
    X-Window front-end to the character translation and handling.
    Decodes the X-Window event  and calls the generic character
    handling function.
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-void                XCharTranslation (GdkEventKey * event, gpointer * data)
+void CharTranslation (GdkEventKey * event, gpointer * data)
 {
    int                 status;
    int                 PicMask;
@@ -589,7 +590,7 @@ void                XCharTranslation (GdkEventKey * event, gpointer * data)
    ThotInput (frame, &string[0], event->length, PicMask, KS);
 }
 #else /* _GTK */
-void                XCharTranslation (ThotKeyEvent *event)
+void CharTranslation (ThotKeyEvent *event)
 {
    KeySym              KS;
    UCHAR_T             string[2];
@@ -1107,16 +1108,18 @@ void      TtaSetAccessKeyFunction (Proc procedure)
   The parameter param which will be returned when the access key will be
   activated.
   ----------------------------------------------------------------------*/
-void      TtaAddAccessKey (Document doc, int key, void *param)
+void      TtaAddAccessKey (Document doc, unsigned int key, void *param)
 {
   KEY                *ptr, *next;
+  unsigned int        k;
 
   if (doc)
     {
       /* looks for the current access key in the table */
+      k = tolower (key);
       next = DocAccessKey[doc - 1];
       ptr = NULL;
-      while (next != NULL && next->K_EntryCode != key)
+      while (next != NULL && next->K_EntryCode != k)
 	{
 	  ptr = next;
 	  next = next->K_Other;
@@ -1130,7 +1133,7 @@ void      TtaAddAccessKey (Document doc, int key, void *param)
 	  else
 	    /* the first entry */
 	    DocAccessKey[doc - 1] = next;
-	  next->K_EntryCode = key;
+	  next->K_EntryCode = k;
 	  next->K_Special = FALSE;
 	  next->K_Other = NULL;
 	  next->K_Param = param;
@@ -1165,16 +1168,18 @@ void      TtaRemoveDocAccessKeys (Document doc)
 /*----------------------------------------------------------------------
   TtaRemoveAccessKey removes an access key of a document.
   ----------------------------------------------------------------------*/
-void      TtaRemoveAccessKey (Document doc, int key)
+void      TtaRemoveAccessKey (Document doc, unsigned int key)
 {
   KEY                *ptr, *next;
+  unsigned int        k;
 
   if (doc)
     {
       /* looks for the current access key in the table */
+      k = tolower (key);
       next = DocAccessKey[doc - 1];
       ptr = NULL;
-      while (next != NULL && next->K_EntryCode != key)
+      while (next != NULL && next->K_EntryCode != k)
 	{
 	  ptr = next;
 	  next = next->K_Other;

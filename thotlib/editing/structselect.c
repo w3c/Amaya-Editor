@@ -34,6 +34,7 @@
 #include "applicationapi_f.h"
 #include "boxselection_f.h"
 #include "callback_f.h"
+#include "checkermenu_f.h"
 #include "config_f.h"
 #include "createabsbox_f.h"
 #include "displayselect_f.h"
@@ -43,6 +44,7 @@
 #include "keyboards_f.h"
 #include "scroll_f.h"
 #include "search_f.h"
+#include "searchmenu_f.h"
 #include "searchref_f.h"
 #include "selectionapi_f.h"
 #include "selectmenu_f.h"
@@ -484,7 +486,6 @@ void                CancelSelection ()
 
    If the current selection is in document pDoc, cancel this selection.
   ----------------------------------------------------------------------*/
-
 void                ResetSelection (PtrDocument pDoc)
 {
    if (pDoc == SelectedDocument || pDoc == DocSelectedAttr)
@@ -494,6 +495,9 @@ void                ResetSelection (PtrDocument pDoc)
 	OldSelectedView = 0;
 	OldDocSelectedView = NULL;
      }
+   /* clean up the search and the checkspeller domains */
+   ResetSearchInDocument (pDoc);
+   ResetCheckInDocument (pDoc);
 }
 
 /*----------------------------------------------------------------------

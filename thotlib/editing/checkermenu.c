@@ -43,15 +43,13 @@
 
 /* les variables locales */
 static int          OldNC;
-static int          SpellingBase;
+static int          SpellingBase = 0;
 static ThotBool     FirstStep;
 static ThotBool     ToReplace;
 static CHAR_T       CorrectWord[MAX_WORD_LEN];
 static CHAR_T       CurrentWord[MAX_WORD_LEN];
 static PtrDocument  pDocSel;
 /* static STRING       SpecialChars; */
-
-/* les variables importees de l'editeur */
 
 /* procedures importees de l'editeur */
 #include "spellchecker_f.h"
@@ -75,6 +73,8 @@ static ThotWindow   hwndLanguage;
 static CHAR_T       currentWord [MAX_WORD_LEN];
 static ThotWindow   wordButton;
 static UINT         itemIndex;
+static int          iLocation;
+static int          iIgnore;
 #endif /* _WINDOWS */
 
 
@@ -87,20 +87,46 @@ static void         RemoveSpellForm ()
   if (ChkrRange != NULL)
     {
       FreeSearchContext (&ChkrRange);
+#ifdef _WINDOWS
+      EndDialog (SpellChecker, ID_DONE);
+      hwndLanguage = NULL;
+      SpellChecker = NULL;
+#else /* _WINDOWS */
       TtaDestroyDialogue (SpellingBase + ChkrFormCorrect);
+#endif /* _WINDOWS */
     }
 }
 
 /*----------------------------------------------------------------------
    DisplayWords prepare le selecteur                             
   ----------------------------------------------------------------------*/
-#ifndef _WINDOWS
-#ifdef __STDC__
 static void         DisplayWords (void)
-#else
-static void         DisplayWords ()
-#endif
 {
+#ifdef _WINDOWS
+  int i;
+  
+  SetWindowText (wordButton, ChkrCorrection[0]);
+  SendMessage (hwnListWords, LB_RESETCONTENT, 0, 0);
+  if ((ustrcmp (ChkrCorrection[1], TEXT("$"))) == 0)
+    {
+      currentWord [0] = EOS;
+      SetWindowText (hwndCurrentWord, TEXT(""));
+      SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) (TEXT("")));  
+    }
+  else
+    {
+      usprintf (currentWord, TEXT("%s"), ChkrCorrection[1]);
+      SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
+      for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], TEXT("$")) != 0);
+	   i++)
+	{
+	  SendMessage (hwnListWords, LB_INSERTSTRING, i - 1,
+		       (LPARAM) ((LPCTSTR)ChkrCorrection[i]));  
+	}
+    }
+  OldNC = NC;
+
+#else /* _WINDOWS */
    int                 i, indx, length;
    STRING              entry;
    CHAR_T                BufMenu[MAX_TXT_LEN];
@@ -134,61 +160,18 @@ static void         DisplayWords ()
 
    /* le formulaire est maintenant pret a etre affiche' */
    OldNC = NC;
-}
-#endif /* !_WINDOWS */
-
-#ifdef _WINDOWS
-#ifdef __STDC__
-void WIN_DisplayWords (void)
-#else  /* __STDC__ */
-void WIN_DisplayWords ()
-#endif /* __STDC__ */
-{
-  int i;
-  
-  SetWindowText (wordButton, ChkrCorrection[0]);
-  SendMessage (hwnListWords, LB_RESETCONTENT, 0, 0);
-  if ((ustrcmp (ChkrCorrection[1], TEXT("$"))) == 0)
-    {
-      currentWord [0] = EOS;
-      SetWindowText (hwndCurrentWord, TEXT(""));
-      SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) (TEXT("")));  
-    }
-  else
-    {
-      usprintf (currentWord, TEXT("%s"), ChkrCorrection[1]);
-      SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
-      for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], TEXT("$")) != 0);
-	   i++)
-	{
-	  SendMessage (hwnListWords, LB_INSERTSTRING, i - 1,
-		       (LPARAM) ((LPCTSTR)ChkrCorrection[i]));  
-	}
-    }
-  OldNC = NC;
-}
 #endif /* _WINDOWS */
+}
+
 
 #ifdef _WINDOWS
 /*-----------------------------------------------------------------------
  SpellCheckDlgProc
- Winbdows callback
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-static LRESULT CALLBACK SpellCheckDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   ThotBool ok;	  
   int  val;
-
-  static int  iLocation;
-  static int  iIgnore;
   CHAR_T currentRejectedchars [MAX_REJECTED_CHARS];
 
   switch (msg)
@@ -240,7 +223,7 @@ LPARAM lParam;
       SetDlgItemText (hwnDlg, IDC_EDITIGNORE, RejectedChar);
       iLocation = 2;
       SetWindowText (hwndCurrentWord, TEXT(""));
-      WIN_DisplayWords ();
+      DisplayWords ();
       break;
       
     case WM_CLOSE:
@@ -370,7 +353,7 @@ LPARAM lParam;
 	  
 	case ID_DONE:
 	  SpellChecker = NULL;
-      hwndLanguage = NULL;
+	  hwndLanguage = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;	  
 	}
@@ -384,13 +367,7 @@ LPARAM lParam;
 /*----------------------------------------------------------------------
   TtcSpellCheck  active le formulaire de correction                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcSpellCheck (Document doc, View view)
-#else  /* __STDC__ */
-void                TtcSpellCheck (doc, view)
-Document            doc;
-view                view;
-#endif /* __STDC__ */
 {
    PtrDocument         document;
    int                 i;
@@ -550,25 +527,27 @@ view                view;
 
 
 /*----------------------------------------------------------------------
+  ResetCheckInDocument
+  cleans up the checker domain if it refers a closed document.
+  ----------------------------------------------------------------------*/
+void         ResetCheckInDocument (PtrDocument pDoc)
+{
+  if (ChkrRange && pDoc == ChkrRange->SDocument)
+    RemoveSpellForm ();
+}
+
+
+/*----------------------------------------------------------------------
    SetProposals                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetProposals (Language language)
-#else  /* __STDC__ */
-static void         SetProposals (language)
-Language            language;
-#endif /* __STDC__ */
 {
    CHAR_T             Lab[200];
 
    /* calculer les propositions de correction du mot courant */
    GiveProposal (language, ChkrFileDict);
    /* afficher les mots proposes contenus dans ChkrErrWord */
-#ifndef _WINDOWS
    DisplayWords ();
-#else  /* _WINDOWS */
-   WIN_DisplayWords ();
-#endif /* _WINDOWS */
    /* recopier la premiere proposition dans CorrectWord */
    if (ustrcmp (ChkrCorrection[1], TEXT("$")) != 0)
       ustrcpy (CorrectWord, ChkrCorrection[1]);
@@ -635,14 +614,7 @@ static ThotBool     StartSpellChecker ()
 /*----------------------------------------------------------------------
    ApplyCommand traite l'action de correction demandee.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ApplyCommand (int val)
-
-#else  /* __STDC__ */
-static void         ApplyCommand (val)
-int                 val;
-
-#endif /* __STDC__ */
 {
    ThotBool            change;
    PtrDocument         document;
@@ -656,10 +628,8 @@ int                 val;
    change = CheckChangeSelection ();
 
    if (document != ChkrRange->SDocument || val == 0)
-     {
-       /* ABANDON de la corrrection */
-       RemoveSpellForm ();
-     }
+     /* ABANDON de la corrrection */
+     RemoveSpellForm ();
    else
      {
        change = TRUE;		/* On passe a priori au mot suivant */
@@ -723,25 +693,16 @@ int                 val;
 
 
 /*----------------------------------------------------------------------
-   CallbackCorrector                                                 
+  CallbackChecker
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CallbackCorrector (int ref, int dataType, STRING data)
-#else  /* __STDC__ */
-void                CallbackCorrector (ref, dataType, data)
-int                 ref;
-int                 dataType;
-STRING              data;
-#endif /* __STDC__ */
+void                CallbackChecker (int ref, int dataType, STRING data)
 {
   PtrElement          pEl1, pElN;
   int                 c1, cN;
 
   if (ref == -1)
-    {
       /* detruit le dialogue du correcteur */
       RemoveSpellForm ();
-    }
   else
     switch (ref - SpellingBase)
       {
@@ -784,11 +745,7 @@ STRING              data;
 	if (NC > OldNC && ChkrElement != NULL && CurrentWord[0] != EOS)
 	  SetProposals (ChkrLanguage);
 	else
-#ifndef _WINDOWS 
 	  DisplayWords ();
-#else  /* _WINDOWS */
-	WIN_DisplayWords ();
-#endif /* _WINDOWS */
 	break;
       case ChkrMenuOR:
 	/* definition du sens de correction OU? */
@@ -854,22 +811,17 @@ STRING              data;
 
 
 /*----------------------------------------------------------------------
-   SpellCheckLoadResources charge les ressouces du correcteur       
-   orthographique                                         
+  SpellCheckLoadResources loads resouces of the spellchecker
   ----------------------------------------------------------------------*/
 void                SpellCheckLoadResources ()
 {
-   if (ThotLocalActions[T_corrector] == NULL)
+   if (SpellingBase == 0)
      {
-	TteConnectAction (T_rscorrector, (Proc) CallbackCorrector);
-	TteConnectAction (T_corrector, (Proc) TtcSpellCheck);
 	CORR = TtaGetMessageTable (TEXT("corrdialogue"), MSG_MAX_CHECK);
-	SpellingBase = TtaSetCallback (CallbackCorrector, ChkrMaxDialogue);
+	SpellingBase = TtaSetCallback (CallbackChecker, ChkrMaxDialogue);
 	/* Initialisation des variables globales */
 	ParametrizeChecker ();
 	ChkrFileDict = NULL;
 	ChkrRange = NULL;
      }
 }
-
-

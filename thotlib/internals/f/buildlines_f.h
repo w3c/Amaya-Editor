@@ -20,8 +20,8 @@ extern void ComputeLines ( PtrBox pBox,
 extern void RemoveLines ( PtrBox pBox,
                           int frame,
                           PtrLine pFirstLine,
-                          ThotBool * changeSelectBegin,
-                          ThotBool * changeSelectEnd );
+                          ThotBool *changeSelectBegin,
+                          ThotBool *changeSelectEnd );
 extern void RecomputeLines ( PtrAbstractBox pAb,
                              PtrLine pFirstLine,
                              PtrBox ibox,
@@ -52,8 +52,8 @@ extern void ComputeLines (/* PtrBox pBox,
 extern void RemoveLines (/* PtrBox pBox,
                             int frame,
                             PtrLine pFirstLine,
-                            ThotBool * changeSelectBegin,
-                            ThotBool * changeSelectEnd */);
+                            ThotBool *changeSelectBegin,
+                            ThotBool *changeSelectEnd */);
 extern void RecomputeLines (/* PtrAbstractBox pAb,
                                PtrLine pFirstLine,
                                PtrBox ibox,

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void XCharTranslation ( ThotKeyEvent *event );
+extern void CharTranslation ( ThotKeyEvent *event );
 extern void ThotInput ( int frame,
                         USTRING string,
                         unsigned int nb,
@@ -15,16 +15,16 @@ extern void ThotInput ( int frame,
 extern void FreeTranslations ( void );
 extern void TtaSetAccessKeyFunction ( Proc procedure );
 extern void TtaAddAccessKey ( Document doc,
-                              int key,
+                              unsigned int key,
                               void *param );
 extern void TtaRemoveDocAccessKeys ( Document doc );
 extern void TtaRemoveAccessKey ( Document doc,
-                                 int key );
+                                 unsigned int key );
 extern ThotTranslations InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
 
-extern void XCharTranslation (/* ThotKeyEvent *event */);
+extern void CharTranslation (/* ThotKeyEvent *event */);
 extern void ThotInput (/* int frame,
                           USTRING string,
                           unsigned int nb,
@@ -33,11 +33,11 @@ extern void ThotInput (/* int frame,
 extern void FreeTranslations (/* void */);
 extern void TtaSetAccessKeyFunction (/* Proc procedure */);
 extern void TtaAddAccessKey (/* Document doc,
-                                int key,
+                                unsigned int key,
                                 void *param */);
 extern void TtaRemoveDocAccessKeys (/* Document doc */);
 extern void TtaRemoveAccessKey (/* Document doc,
-                                   int key */);
+                                   unsigned int key */);
 extern ThotTranslations InitTranslations (/* char *appliname */);
 
 #endif /* __STDC__ */

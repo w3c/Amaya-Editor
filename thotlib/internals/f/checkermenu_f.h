@@ -8,18 +8,20 @@
 
 extern void TtcSpellCheck ( Document doc,
                             View view );
-extern void CallbackCorrector ( int ref,
-                                int dataType,
-                                STRING data );
+extern void ResetCheckInDocument ( PtrDocument pDoc );
+extern void CallbackChecker ( int ref,
+                              int dataType,
+                              STRING data );
 extern void SpellCheckLoadResources ( void );
 
 #else /* __STDC__ */
 
 extern void TtcSpellCheck (/* Document doc,
                               View view */);
-extern void CallbackCorrector (/* int ref,
-                                  int dataType,
-                                  STRING data */);
+extern void ResetCheckInDocument (/* PtrDocument pDoc */);
+extern void CallbackChecker (/* int ref,
+                                int dataType,
+                                STRING data */);
 extern void SpellCheckLoadResources (/* void */);
 
 #endif /* __STDC__ */

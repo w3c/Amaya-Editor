@@ -33,17 +33,7 @@ static int          lastCharInitialSelection;
    S'il n'y a pas de caractere suivant retourne le         
    caractere NULL.                                         
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 UCHAR_T       NextCharacter (PtrTextBuffer * buffer, int *rank)
-
-#else  /* __STDC__ */
-UCHAR_T       NextCharacter (buffer, rank)
-PtrTextBuffer      *buffer;
-int                *rank;
-
-#endif /* __STDC__ */
-
 {
 
    if (*buffer == NULL)
@@ -73,17 +63,7 @@ int                *rank;
    S'il n'y a pas de caractere precedent retourne le       
    caractere `\0`.                                         
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 UCHAR_T       PreviousCharacter (PtrTextBuffer * buffer, int *rank)
-
-#else  /* __STDC__ */
-UCHAR_T       PreviousCharacter (buffer, rank)
-PtrTextBuffer      *buffer;
-int                *rank;
-
-#endif /* __STDC__ */
-
 {
 
    if (*buffer == NULL)
@@ -109,22 +89,12 @@ int                *rank;
      }
 }
 
+#ifdef IV
 /*----------------------------------------------------------------------
    MotOk teste que la chaine designee constitue bien un MOT.       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            MotOk (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar)
-
-#else  /* __STDC__ */
-ThotBool            MotOk (firstEl, firstChar, lastEl, lastChar)
-PtrElement          firstEl;
-int                 firstChar;
-PtrElement          lastEl;
-int                 lastChar;
-
-#endif /* __STDC__ */
-
+ThotBool MotOk (PtrElement firstEl, int firstChar, PtrElement lastEl,
+		int lastChar)
 {
    if (lastChar > 0)
      {
@@ -141,7 +111,7 @@ int                 lastChar;
      }
    return (TRUE);
 }
-
+#endif
 
 /*----------------------------------------------------------------------
    InitSearchDomain rend vrai si l'initialisation s'est bien passee   
@@ -153,17 +123,7 @@ int                 lastChar;
    Le parame`tre context pointe sur le contexte de domaine de      
    recherche a` initialiser.                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 ThotBool            InitSearchDomain (int domain, PtrSearchContext context)
-
-#else  /* __STDC__ */
-ThotBool            InitSearchDomain (domain, context)
-int                 domain;
-PtrSearchContext    context;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            ok;
 
@@ -257,17 +217,7 @@ PtrSearchContext    context;
 /*----------------------------------------------------------------------
    UpdateDuringSearch met a jour la selection initiale                
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                UpdateDuringSearch (PtrElement pEl, int len)
-
-#else  /* __STDC__ */
-void                UpdateDuringSearch (pEl, len)
-PtrElement          pEl;
-int                 len;
-
-#endif /* __STDC__ */
-
 {
    if (pEl == lastElInitialSelection)
       /* initial selection is within the element */
@@ -280,14 +230,7 @@ int                 len;
 /*----------------------------------------------------------------------
    RestoreAfterSearch re'tablit la se'lection initiale et nettoie     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                RestoreAfterSearch ()
-
-#else  /* __STDC__ */
-void                RestoreAfterSearch ()
-#endif				/* __STDC__ */
-
 {
    int                 prevLen, endChar;
 
@@ -324,18 +267,7 @@ void                RestoreAfterSearch ()
    elCourant et carCourant representent la position ou il faut     
    relancer la recherche.                                          
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
-
-#else  /* __STDC__ */
-ThotBool            NextTree (pEl, charIndx, context)
-PtrElement         *pEl;
-int                *charIndx;
-PtrSearchContext    context;
-
-#endif /* __STDC__ */
-
+ThotBool NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
 {
    int                 i;
    ThotBool            ret;
@@ -395,19 +327,8 @@ PtrSearchContext    context;
    Le parame`tre context pointe sur le contexte de domaine de      
    recherche concerne' ou NULL si aucun domaine fixe'.             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            SearchNextWord (PtrElement * curEl, int *curChar, CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
-
-#else  /* __STDC__ */
-ThotBool            SearchNextWord (curEl, curChar, word, context)
-PtrElement         *curEl;
-int                *curChar;
-CHAR_T                word[MAX_WORD_LEN];
-PtrSearchContext    context;
-
-#endif /* __STDC__ */
-
+ThotBool SearchNextWord (PtrElement * curEl, int *curChar,
+			 CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 {
    PtrElement          pEl, endEl;
    PtrElement          pAncestor;
@@ -558,19 +479,9 @@ PtrSearchContext    context;
    Le parame`tre context pointe sur le contexte de domaine de      
    recherche concerne' ou NULL si aucun domaine fixe'.             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            SearchPreviousWord (PtrElement * curEl, int *curChar, CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
-
-#else  /* __STDC__ */
-ThotBool            SearchPreviousWord (curEl, curChar, word, context)
-PtrElement         *curEl;
-int                *curChar;
-CHAR_T                word[MAX_WORD_LEN];
-PtrSearchContext    context;
-
-#endif /* __STDC__ */
-
+ThotBool SearchPreviousWord (PtrElement * curEl, int *curChar,
+			     CHAR_T word[MAX_WORD_LEN],
+			     PtrSearchContext context)
 {
    PtrElement          pEl, endEl;
    PtrElement          pAncestor;

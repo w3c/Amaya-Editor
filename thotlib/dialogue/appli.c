@@ -1870,7 +1870,7 @@ void                FrameCallback (int frame, void *evnt)
        t1 = 0;
        TtaAbortShowDialogue ();
 #ifndef _GTK
-       XCharTranslation ((ThotKeyEvent *)ev);
+       CharTranslation ((ThotKeyEvent *)ev);
 #endif /* _GTK */
        break;
 

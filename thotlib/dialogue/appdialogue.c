@@ -2148,7 +2148,7 @@ gint ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data)
 gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
     TtaAbortShowDialogue ();
-    XCharTranslation (event, data);
+    CharTranslation (event, data);
  return FALSE;
 }
 
@@ -2295,7 +2295,7 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
        /*    case KeyPress:
        t1 = 0;
        TtaAbortShowDialogue ();
-       XCharTranslation (ev);
+       CharTranslation (ev);
        break;
 
      case EnterNotify:
@@ -3138,14 +3138,11 @@ void                DestroyFrame (int frame)
 	     i++;
 	  }
 
-
 	/* Annule eventuellement les formulaires attaches a la fenetre */
 	if (ThotLocalActions[T_rszoom] != NULL)
 	   (*ThotLocalActions[T_rszoom]) (frame);
 	if (ThotLocalActions[T_rsvisibility] != NULL)
 	   (*ThotLocalActions[T_rsvisibility]) (frame);
-	if (ThotLocalActions[T_rscorrector] != NULL)
-	   (*ThotLocalActions[T_rscorrector]) (frame);
 	if (ThotLocalActions[T_rsindex] != NULL)
 	   (*ThotLocalActions[T_rsindex]) (frame);
 

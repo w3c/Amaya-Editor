@@ -78,43 +78,6 @@
 #include "undo_f.h"
 #include "views_f.h"
 
-#ifdef IV
-
-/*----------------------------------------------------------------------
-   AppendToFreeList append element pFree to the element list	
-   anchored at pAnchor						
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         AppendToFreeList (PtrElement pFree, PtrElement * pAnchor)
-
-#else  /* __STDC__ */
-static void         AppendToFreeList (pFree, pAnchor)
-PtrElement          pFree;
-PtrElement         *pAnchor;
-
-#endif /* __STDC__ */
-
-{
-  PtrElement          pEl;
-
-  if (pFree != NULL)
-    {
-      pFree->ElNext = NULL;
-      if (*pAnchor == NULL)
-	*pAnchor = pFree;
-      else
-	{
-	  pEl = *pAnchor;
-	  while (pEl->ElNext != NULL)
-	    pEl = pEl->ElNext;
-	  pEl->ElNext = pFree;
-	}
-    }
-}
-#endif /* IV */
-
-
 /*----------------------------------------------------------------------
    PasteBeforeOrAfter
 
@@ -135,7 +98,6 @@ PtrElement         *pAnchor;
    Si typeNum n'est pas nul, on essaie de donner a l'element colle' le type
    de numero typeNum defini dans le schema de structure pSS
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 					PtrDocument pDoc, PtrElement pEl,
 					ThotBool before, ThotBool updateVol,
@@ -143,21 +105,6 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 					PtrElement * pFirstFree,
 					int *firstPastedChar, int typeNum,
 					PtrSSchema pSS)
-#else  /* __STDC__ */
-static void         PasteBeforeOrAfter (pFirstPastedEl, pDoc, pEl, before,
-					updateVol, pSavedEl, pFirstFree,
-					firstPastedChar, typeNum, pSS)
-PtrElement         *pFirstPastedEl;
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            before;
-ThotBool            updateVol;
-PtrElement          pSavedEl;
-PtrElement         *pFirstFree;
-int                *firstPastedChar;
-int                 typeNum;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
 {
    PtrSSchema          pSSSibling;
    PtrElement          pSavedChild, pSibling, pPastedEl, pDescRoot,
@@ -647,16 +594,8 @@ PtrSSchema          pSS;
    d'elements a liberer apres reaffichage. Ce sont les elements supprimes par
    fusion d'elements texte voisins.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc, PtrElement pEl, PtrElement * pFirstFree)
-#else  /* __STDC__ */
-void                PasteWithin (pFirstPastedEl, pDoc, pEl, pFirstFree)
-PtrElement         *pFirstPastedEl;
-PtrDocument         pDoc;
-PtrElement          pEl;
-PtrElement         *pFirstFree;
-
-#endif /* __STDC__ */
+void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
+		  PtrElement pEl, PtrElement * pFirstFree)
 {
    PtrElement          pPastedEl, pDescRoot, pSavedEl, pSavedChild, pElem,
                        pParent, pDesc, pSibling, pSib, pChild, pCopy, pElAttr;
@@ -983,20 +922,8 @@ PtrElement         *pFirstFree;
    indique'e en parametre.
    Rend le resultat dans la variable result.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                CanCopyOrCut (ThotBool * result, PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstChar, int lastChar)
-#else  /* __STDC__ */
-void                CanCopyOrCut (result, pDoc, firstSel, lastSel, firstChar, lastChar)
-ThotBool           *result;
-PtrDocument         pDoc;
-PtrElement          firstSel;
-PtrElement          lastSel;
-int                 firstChar;
-int                 lastChar;
-
-#endif /* __STDC__ */
-
+void CanCopyOrCut (ThotBool *result, PtrDocument pDoc, PtrElement firstSel,
+		   PtrElement lastSel, int firstChar, int lastChar)
 {
    PtrElement          pParent, pEl;
    int                 elemType, elemTypeId;
@@ -1266,7 +1193,6 @@ void                StructReturnKey ()
    StructureLoadResources
    connects specific editing and selection functions.
   ----------------------------------------------------------------------*/
-
 void                StructSelectLoadResources ()
 {
    if (ThotLocalActions[T_selecbox] == NULL)

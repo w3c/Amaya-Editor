@@ -73,7 +73,6 @@ extern void       TtaHandleOneEvent (ThotEvent*);
 extern ThotWindow TtaGetThotWindow (int);
 extern BinFile    TtaReadOpen (CONST CHAR_T*);
 extern ThotWindow GetCurrentWindow ();
-extern void       WIN_DisplayWords (void);
 extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);
 extern void       CheckTtCmap ();
 

@@ -6,39 +6,39 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char* SkipBlanksAndComments ( char* ptr );
-extern CHAR_T* SkipWCBlanksAndComments ( CHAR_T* ptr );
-extern CHAR_T* SkipProperty ( CHAR_T* ptr );
-extern CHAR_T* ParseNumber ( CHAR_T* cssRule,
-                             PresentationValue *pval );
-extern CHAR_T *ParseCSSUnit ( CHAR_T* cssRule,
-                              PresentationValue *pval );
+extern char *SkipBlanksAndComments ( char *ptr );
+extern char *SkipWCBlanksAndComments ( char *ptr );
+extern char *SkipProperty ( char *ptr );
+extern char *ParseNumber ( char *cssRule,
+                           PresentationValue *pval );
+extern char *ParseCSSUnit ( char *cssRule,
+                            PresentationValue *pval );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
                                               STRING file,
                                               void *extra );
-extern CHAR_T* GetCSSBackgroundURL ( CHAR_T* styleString );
+extern char *GetCSSBackgroundURL ( char *styleString );
 extern void PToCss ( PresentationSetting settings,
-                     CHAR_T* buffer,
+                     char *buffer,
                      int len,
                      Element el );
 extern void ParseHTMLSpecificStyle ( Element el,
-                                     CHAR_T* cssRule,
+                                     char *cssRule,
                                      Document doc,
                                      int isCSS,
                                      ThotBool destroy );
-extern int IsImplicitClassName ( CHAR_T* class,
+extern int IsImplicitClassName ( char *class,
                                  Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element el,
-                                     CHAR_T* color );
+                                     char *color );
 extern void HTMLSetBackgroundImage ( Document doc,
                                      Element el,
                                      int repeat,
-                                     CHAR_T* image );
+                                     char *image );
 extern void HTMLSetForegroundColor ( Document doc,
                                      Element el,
-                                     CHAR_T* color );
+                                     char *color );
 extern void HTMLResetBackgroundColor ( Document doc,
                                        Element el );
 extern void HTMLResetBackgroundImage ( Document doc,
@@ -46,58 +46,58 @@ extern void HTMLResetBackgroundImage ( Document doc,
 extern void HTMLResetForegroundColor ( Document doc,
                                        Element el );
 extern void HTMLSetAlinkColor ( Document doc,
-                                CHAR_T* color );
+                                char *color );
 extern void HTMLSetAactiveColor ( Document doc,
-                                  CHAR_T* color );
+                                  char *color );
 extern void HTMLSetAvisitedColor ( Document doc,
-                                   CHAR_T* color );
+                                   char *color );
 extern void HTMLResetAlinkColor ( Document doc );
 extern void HTMLResetAactiveColor ( Document doc );
 extern void HTMLResetAvisitedColor ( Document doc );
 extern void ApplyCSSRules ( Element el,
-                            CHAR_T* cssRule,
+                            char *cssRule,
                             Document doc,
                             ThotBool destroy );
-extern CHAR_T ReadCSSRules ( Document docRef,
-                             CSSInfoPtr css,
-                             CHAR_T* buffer,
-                             ThotBool withUndo );
+extern char ReadCSSRules ( Document docRef,
+                           CSSInfoPtr css,
+                           char *buffer,
+                           ThotBool withUndo );
 
 #else /* __STDC__ */
 
-extern char* SkipBlanksAndComments (/* char* ptr */);
-extern CHAR_T* SkipWCBlanksAndComments (/* CHAR_T* ptr */);
-extern CHAR_T* SkipProperty (/* CHAR_T* ptr */);
-extern CHAR_T* ParseNumber (/* CHAR_T* cssRule,
-                               PresentationValue *pval */);
-extern CHAR_T *ParseCSSUnit (/* CHAR_T* cssRule,
-                                PresentationValue *pval */);
+extern char *SkipBlanksAndComments (/* char *ptr */);
+extern char *SkipWCBlanksAndComments (/* char *ptr */);
+extern char *SkipProperty (/* char *ptr */);
+extern char *ParseNumber (/* char *cssRule,
+                             PresentationValue *pval */);
+extern char *ParseCSSUnit (/* char *cssRule,
+                              PresentationValue *pval */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
                                                 STRING file,
                                                 void *extra */);
-extern CHAR_T* GetCSSBackgroundURL (/* CHAR_T* styleString */);
+extern char *GetCSSBackgroundURL (/* char *styleString */);
 extern void PToCss (/* PresentationSetting settings,
-                       CHAR_T* buffer,
+                       char *buffer,
                        int len,
                        Element el */);
 extern void ParseHTMLSpecificStyle (/* Element el,
-                                       CHAR_T* cssRule,
+                                       char *cssRule,
                                        Document doc,
                                        int isCSS,
                                        ThotBool destroy */);
-extern int IsImplicitClassName (/* CHAR_T* class,
+extern int IsImplicitClassName (/* char *class,
                                    Document doc */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element el,
-                                       CHAR_T* color */);
+                                       char *color */);
 extern void HTMLSetBackgroundImage (/* Document doc,
                                        Element el,
                                        int repeat,
-                                       CHAR_T* image */);
+                                       char *image */);
 extern void HTMLSetForegroundColor (/* Document doc,
                                        Element el,
-                                       CHAR_T* color */);
+                                       char *color */);
 extern void HTMLResetBackgroundColor (/* Document doc,
                                          Element el */);
 extern void HTMLResetBackgroundImage (/* Document doc,
@@ -105,22 +105,22 @@ extern void HTMLResetBackgroundImage (/* Document doc,
 extern void HTMLResetForegroundColor (/* Document doc,
                                          Element el */);
 extern void HTMLSetAlinkColor (/* Document doc,
-                                  CHAR_T* color */);
+                                  char *color */);
 extern void HTMLSetAactiveColor (/* Document doc,
-                                    CHAR_T* color */);
+                                    char *color */);
 extern void HTMLSetAvisitedColor (/* Document doc,
-                                     CHAR_T* color */);
+                                     char *color */);
 extern void HTMLResetAlinkColor (/* Document doc */);
 extern void HTMLResetAactiveColor (/* Document doc */);
 extern void HTMLResetAvisitedColor (/* Document doc */);
 extern void ApplyCSSRules (/* Element el,
-                              CHAR_T* cssRule,
+                              char *cssRule,
                               Document doc,
                               ThotBool destroy */);
-extern CHAR_T ReadCSSRules (/* Document docRef,
-                               CSSInfoPtr css,
-                               CHAR_T* buffer,
-                               ThotBool withUndo */);
+extern char ReadCSSRules (/* Document docRef,
+                             CSSInfoPtr css,
+                             char *buffer,
+                             ThotBool withUndo */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

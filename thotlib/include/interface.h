@@ -47,7 +47,7 @@ extern void      TtaSetAccessKeyFunction (void (*procedure) ());
   The parameter param which will be returned when the access key will be
   activated.
   ----------------------------------------------------------------------*/
-extern void      TtaAddAccessKey (Document doc, int key, void *param);
+extern void      TtaAddAccessKey (Document doc, unsigned int key, void *param);
 
 /*----------------------------------------------------------------------
   TtaRemoveDocAccessKeys removes all access keys of a document.
@@ -57,7 +57,7 @@ extern void      TtaRemoveDocAccessKeys (Document doc);
 /*----------------------------------------------------------------------
   TtaRemoveAccessKey removes an access key of a document.
   ----------------------------------------------------------------------*/
-extern void      TtaRemoveAccessKey (Document doc, int key);
+extern void      TtaRemoveAccessKey (Document doc, unsigned int key);
 
 /*----------------------------------------------------------------------
    TtaAddButton

@@ -50,13 +50,7 @@
    DocumentOfElement
    returns the document to which a pEl element belongs.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrDocument         DocumentOfElement (PtrElement pEl)
-#else  /* __STDC__ */
-PtrDocument         DocumentOfElement (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrElement          pE;
    int                 i, j;
@@ -93,13 +87,7 @@ PtrElement          pEl;
    ProtectElement
    sets the ElIsCopy flag in the elements of the subtree of pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ProtectElement (PtrElement pEl)
-#else  /* __STDC__ */
-void                ProtectElement (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    pEl->ElIsCopy = TRUE;
    if (!pEl->ElTerminal)
@@ -118,13 +106,7 @@ PtrElement          pEl;
    GetOtherPairedElement
    returns a pointer on the mark which is pair to the one pointed to by pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          GetOtherPairedElement (PtrElement pEl)
-#else  /* __STDC__ */
-PtrElement          GetOtherPairedElement (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrElement          pOther;
    PtrSSchema          pSS;
@@ -192,13 +174,7 @@ PtrElement          pEl;
    returns TRUE if the element pointed by pEl is hidden to the user, or 
    if it belongs to a hidden tree.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ElementIsHidden (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            ElementIsHidden (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
 register Proc HiFunction;
 
@@ -219,13 +195,7 @@ ThotBool isHI;
    returns TRUE if the element pointed by pEl is protected against user
    modifications, or if it belongs to a protected tree.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ElementIsReadOnly (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            ElementIsReadOnly (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
   Proc              Rofunction;
   ThotBool          isRO;
@@ -252,14 +222,7 @@ PtrElement          pEl;
    Rules to authorize or not such insertion depends of the
    application criteria.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            CannotInsertNearElement (PtrElement pEl, ThotBool beforeElement)
-#else  /* __STDC__ */
-ThotBool            CannotInsertNearElement (pEl, beforeElement)
-PtrElement          pEl;
-ThotBool beforeElement;
-#endif /* __STDC__ */
-
 {
 register Proc InsertNearFunction;
 
@@ -278,15 +241,8 @@ ThotBool isForbidden;
 /*----------------------------------------------------------------------
    FwdSearchTypeNameInSubtree					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   FwdSearchTypeNameInSubtree (PtrElement pEl, ThotBool test, STRING typeName)
-#else  /* __STDC__ */
-static PtrElement   FwdSearchTypeNameInSubtree (pEl, test, typeName)
-PtrElement          pEl;
-ThotBool            test;
-STRING              typeName;
-#endif /* __STDC__ */
-
+static PtrElement FwdSearchTypeNameInSubtree (PtrElement pEl, ThotBool test,
+					      STRING typeName)
 {
    PtrElement          pRet, pChild;
 
@@ -314,14 +270,7 @@ STRING              typeName;
    Pel,  of an element having the name typeName. The function returns a
    pointer to the element if there's a hit, NULL otherwise.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          FwdSearchElemByTypeName (PtrElement pEl, STRING typeName)
-#else  /* __STDC__ */
-PtrElement          FwdSearchElemByTypeName (pEl, typeName)
-PtrElement          pEl;
-STRING              typeName;
-#endif /* __STDC__ */
-
 {
    PtrElement          pRet, pCur, pAsc;
    ThotBool            stop;
@@ -379,14 +328,7 @@ STRING              typeName;
 /*----------------------------------------------------------------------
    BackSearchTypeNameInSubtree				       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, STRING typeName)
-#else  /* __STDC__ */
-static PtrElement   BackSearchTypeNameInSubtree (pEl, typeName)
-PtrElement          pEl;
-STRING              typeName;
-#endif /* __STDC__ */
-
 {
    PtrElement          pRet, pChild;
 
@@ -419,14 +361,7 @@ STRING              typeName;
    If it finds the  element, it returns a pointer to it. Otherwise, it
    NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          BackSearchElemByTypeName (PtrElement pEl, STRING typeName)
-#else  /* __STDC__ */
-PtrElement          BackSearchElemByTypeName (pEl, typeName)
-PtrElement          pEl;
-STRING              typeName;
-#endif /* __STDC__ */
-
 {
    PtrElement          pRet, pCur;
 
@@ -458,14 +393,7 @@ STRING              typeName;
 /*----------------------------------------------------------------------
    BackSearchVisibleSubtree                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   BackSearchVisibleSubtree (PtrElement pEl, int *view)
-#else  /* __STDC__ */
-static PtrElement   BackSearchVisibleSubtree (pEl, view)
-PtrElement          pEl;
-int                *view;
-#endif /* __STDC__ */
-
 {
    PtrElement          pRet, pChild;
 
@@ -497,17 +425,8 @@ int                *view;
    Returns TRUE if the element pointed by pEL is the one we are looking
    for, FALSE otherwise.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     AttrFound (PtrElement pEl, STRING textVal, int val, int attrNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-static ThotBool     AttrFound (pEl, textVal, val, attrNum, pSS)
-PtrElement          pEl;
-STRING              textVal;
-int                 val;
-int                 attrNum;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
+static ThotBool AttrFound (PtrElement pEl, STRING textVal, int val,
+			   int attrNum, PtrSSchema pSS)
 {
    PtrAttribute        pAttr;
    ThotBool            ret;
@@ -560,19 +479,9 @@ PtrSSchema          pSS;
 /*----------------------------------------------------------------------
    FwdSearchAttrInSubtree                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   FwdSearchAttrInSubtree (PtrElement pEl, ThotBool test, PtrSSchema pSS, int attrNum, int val, STRING textVal)
-#else  /* __STDC__ */
-static PtrElement   FwdSearchAttrInSubtree (pEl, test, pSS, attrNum, val, textVal)
-PtrElement          pEl;
-ThotBool            test;
-PtrSSchema          pSS;
-int                 attrNum;
-int                 val;
-STRING              textVal;
-
-#endif /* __STDC__ */
-
+static PtrElement FwdSearchAttrInSubtree (PtrElement pEl, ThotBool test,
+					  PtrSSchema pSS, int attrNum,
+					  int val, STRING textVal)
 {
    PtrElement          pRet, pChild;
 
@@ -597,17 +506,8 @@ STRING              textVal;
 /*----------------------------------------------------------------------
    BackSearchAttrInSubtree                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   BackSearchAttrInSubtree (PtrElement pEl, STRING textVal, int val, int attrNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-static PtrElement   BackSearchAttrInSubtree (pEl, textVal, val, attrNum, pSS)
-PtrElement          pEl;
-STRING              textVal;
-int                 val;
-int                 attrNum;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
+static PtrElement BackSearchAttrInSubtree (PtrElement pEl, STRING textVal,
+					   int val, int attrNum, PtrSSchema pSS)
 {
    PtrElement          pRet, pChild;
    PtrAttribute        pAttr;
@@ -678,14 +578,7 @@ PtrSSchema          pSS;
    reference element (Kind = 2), or if its a pair element (Kind = 3).
    Returns TRUE or FALSE, according to the result of the test.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ElemIsEmptyOrRefOrPair (PtrElement pEl, int Kind)
-#else  /* __STDC__ */
-static ThotBool     ElemIsEmptyOrRefOrPair (pEl, Kind)
-PtrElement          pEl;
-int                 Kind;
-#endif /* __STDC__ */
-
 {
    ThotBool            ret;
 
@@ -744,15 +637,7 @@ int                 Kind;
 /*----------------------------------------------------------------------
    FwdSearchEmptyInSubtree						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   FwdSearchEmptyInSubtree (PtrElement pEl, ThotBool test, int Kind)
-#else  /* __STDC__ */
-static PtrElement   FwdSearchEmptyInSubtree (pEl, test, Kind)
-PtrElement          pEl;
-ThotBool            test;
-int                 Kind;
-#endif /* __STDC__ */
-
+static PtrElement FwdSearchEmptyInSubtree (PtrElement pEl, ThotBool test, int Kind)
 {
    PtrElement          pRet, pChild;
 
@@ -782,14 +667,7 @@ int                 Kind;
    If it finds an element, it returns a pointer to it. Otherwise, it
    returns NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          FwdSearchRefOrEmptyElem (PtrElement pEl, int Kind)
-#else  /* __STDC__ */
-PtrElement          FwdSearchRefOrEmptyElem (pEl, Kind)
-PtrElement          pEl;
-int                 Kind;
-#endif /* __STDC__ */
-
 {
    PtrElement          pRet, pCur, pAsc;
    ThotBool            stop;
@@ -843,14 +721,7 @@ int                 Kind;
 /*----------------------------------------------------------------------
    BackSearchEmptyInSubtree					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   BackSearchEmptyInSubtree (PtrElement pEl, int Kind)
-#else  /* __STDC__ */
-static PtrElement   BackSearchEmptyInSubtree (pEl, Kind)
-PtrElement          pEl;
-int                 Kind;
-#endif /* __STDC__ */
-
 {
    PtrElement          pRet, pChild;
 
@@ -884,14 +755,7 @@ int                 Kind;
    If it finds an element, it returns a pointer to it. Otherwise, it
    returns NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          BackSearchRefOrEmptyElem (PtrElement pEl, ThotBool Kind)
-#else  /* __STDC__ */
-PtrElement          BackSearchRefOrEmptyElem (pEl, Kind)
-PtrElement          pEl;
-ThotBool            Kind;
-#endif /* __STDC__ */
-
 {
    PtrElement          pRet, pCur;
 
@@ -926,14 +790,7 @@ ThotBool            Kind;
    changes the language for all the text leaves in the
    subtree of the element pointed by pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
-#else  /* __STDC__ */
-void         ChangeLanguageLeaves (pEl, lang)
-PtrElement          pEl;
-Language            lang;
-#endif /* __STDC__ */
-
 {
    PtrElement          pChild;
 
@@ -970,13 +827,7 @@ Language            lang;
    defined by Language attribute of pEl or, if it does not have one,
    by that of one of his ancestors.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         LeavesInheritLanguage (PtrElement pEl)
-#else  /* __STDC__ */
-static void         LeavesInheritLanguage (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrAttribute        pAttr;
    PtrElement          pElAttr;
@@ -1007,14 +858,7 @@ PtrElement          pEl;
    Inserts the element pointed by pNew (and his next siblings), after
    the last element following the one pointed by pOld.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InsertElemAfterLastSibling (PtrElement pOld, PtrElement pNew)
-#else  /* __STDC__ */
-void                InsertElemAfterLastSibling (pOld, pNew)
-PtrElement          pOld;
-PtrElement          pNew;
-#endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    PtrElement          pAsc;
@@ -1058,17 +902,7 @@ PtrElement          pNew;
    If Check is TRUE, check that the target document uses the structure
    schemas that define the attributes to be copied.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocument pSourceDoc, PtrDocument pTargetDoc, ThotBool Check)
-#else  /* __STDC__ */
-static void         CopyAttributes (pEl1, pEl2, pSourceDoc, pTargetDoc, Check)
-PtrElement          pEl1;
-PtrElement          pEl2;
-PtrDocument	    pSourceDoc;
-PtrDocument	    pTargetDoc;
-ThotBool            Check;
-#endif /* __STDC__ */
-
 {
    PtrAttribute        pAttr1, pAttr2, pPrevAttr;
    PtrReference        rf;
@@ -1176,14 +1010,7 @@ ThotBool            Check;
   copies the specific presentation rules of the source element pointed
   by pEl into the target element pointed by pEl2.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CopyPresRules (PtrElement pEl, PtrElement pEl2)
-#else  /* __STDC__ */
-static void         CopyPresRules (pEl, pEl2)
-PtrElement          pEl;
-PtrElement          pEl2;
-#endif /* __STDC__ */
-
 {
    PtrPRule            pRC1, pRC2, pRS;
 
@@ -1216,14 +1043,7 @@ PtrElement          pEl2;
    returns TRUE if the element pointed by pEl belongs to the subtree
    whose root is given by pRoot.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ElemIsWithinSubtree (PtrElement pEl, PtrElement pRoot)
-#else  /* __STDC__ */
-ThotBool            ElemIsWithinSubtree (pEl, pRoot)
-PtrElement          pEl;
-PtrElement          pRoot;
-#endif /* __STDC__ */
-
 {
    ThotBool            within;
 
@@ -1244,15 +1064,7 @@ PtrElement          pRoot;
    EquivalentType                                                          
    Tests if the type of pEl is coherent with typeNum.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-ThotBool            EquivalentType (pEl, typeNum, pSS)
-PtrElement          pEl;
-int                 typeNum;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
+ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
    ThotBool            ok;
    SRule              *pRe1;
@@ -1321,14 +1133,7 @@ PtrSSchema          pSS;
    element pointed by pEl2. The element itself and its ancestors are not
    taken into account during this test.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ElemIsBefore (PtrElement pEl1, PtrElement pEl2)
-#else  /* __STDC__ */
-ThotBool            ElemIsBefore (pEl1, pEl2)
-PtrElement          pEl1;
-PtrElement          pEl2;
-#endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    ThotBool            found;
@@ -1360,14 +1165,7 @@ PtrElement          pEl2;
   returns TRUE if the element pointed by pEl1 is an ancestor of the
   element pointed by pEl2.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ElemIsAnAncestor (PtrElement pEl1, PtrElement pEl2)
-#else  /* __STDC__ */
-ThotBool            ElemIsAnAncestor (pEl1, pEl2)
-PtrElement          pEl1;
-PtrElement          pEl2;
-#endif /* __STDC__ */
-
 {
    PtrElement          p;
    ThotBool            found;
@@ -1397,14 +1195,7 @@ PtrElement          pEl2;
    Returns a pointed to the root of this subtree or NULL if pEl1 and
    pEl2 are not in the same tree.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          CommonAncestor (PtrElement pEl1, PtrElement pEl2)
-#else  /* __STDC__ */
-PtrElement          CommonAncestor (pEl1, pEl2)
-PtrElement          pEl1;
-PtrElement          pEl2;
-#endif /* __STDC__ */
-
 {
    PtrElement          pAsc;
    ThotBool            stop;
@@ -1433,13 +1224,7 @@ PtrElement          pEl2;
    returns a pointer to the first element without descendants in the
    subtree of the element  pointed by pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          FirstLeaf (PtrElement pEl)
-#else  /* __STDC__ */
-PtrElement          FirstLeaf (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrElement          pE;
    ThotBool            stop;
@@ -1479,13 +1264,7 @@ PtrElement          pEl;
    returns a pointer to the last element without descendants in the
    subtree of the element pointed by pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          LastLeaf (PtrElement pRoot)
-#else  /* __STDC__ */
-PtrElement          LastLeaf (pRoot)
-PtrElement          pRoot;
-#endif /* __STDC__ */
-
 {
    PtrElement          pEl;
 
@@ -1509,15 +1288,7 @@ PtrElement          pRoot;
    element of pEl having type typeNum of the structure scheme pSS.
    Returns NULL if no such element exists.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          GetTypedAncestor (PtrElement pEl, int typeNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrElement          GetTypedAncestor (pEl, typeNum, pSS)
-PtrElement          pEl;
-int                 typeNum;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
+PtrElement  GetTypedAncestor (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
    ThotBool            found;
    PtrElement          pEl1;
@@ -1563,39 +1334,32 @@ PtrSSchema          pSS;
 /*----------------------------------------------------------------------
    FwdSearch2TypesInSubtree                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   FwdSearch2TypesInSubtree (PtrElement pEl, ThotBool test, int typeNum2, int typeNum1, PtrSSchema pSS2, PtrSSchema pSS1)
-#else  /* __STDC__ */
-static PtrElement   FwdSearch2TypesInSubtree (pEl, test, typeNum2, typeNum1, pSS2, pSS1)
-PtrElement          pEl;
-ThotBool            test;
-int                 typeNum2;
-int                 typeNum1;
-PtrSSchema          pSS2;
-PtrSSchema          pSS1;
-#endif /* __STDC__ */
-
+static PtrElement FwdSearch2TypesInSubtree (PtrElement pEl, ThotBool test,
+					    int typeNum2, int typeNum1,
+					    PtrSSchema pSS2, PtrSSchema pSS1)
 {
-   PtrElement          pRet, pChild;
+  PtrElement          pRet, pChild;
 
-   pRet = NULL;
-   if (test)
-     {
-	if (EquivalentType (pEl, typeNum1, pSS1) || EquivalentType (pEl, typeNum2, pSS2) || typeNum1 == 0)
-	   /* element found */
-	   pRet = pEl;
-     }
-   if (pRet == NULL && !pEl->ElTerminal)
-      /* search the children */
-     {
-	pChild = pEl->ElFirstChild;
-	while (pChild != NULL && pRet == NULL)
-	  {
-	     pRet = FwdSearch2TypesInSubtree (pChild, TRUE, typeNum2, typeNum1, pSS2, pSS1);
-	     pChild = pChild->ElNext;
-	  }
-     }
-   return pRet;
+  pRet = NULL;
+  if (test)
+    {
+      if (EquivalentType (pEl, typeNum1, pSS1) ||
+	  EquivalentType (pEl, typeNum2, pSS2) || typeNum1 == 0)
+	/* element found */
+	pRet = pEl;
+    }
+  if (pRet == NULL && !pEl->ElTerminal)
+    /* search the children */
+    {
+      pChild = pEl->ElFirstChild;
+      while (pChild != NULL && pRet == NULL)
+	{
+	  pRet = FwdSearch2TypesInSubtree (pChild, TRUE, typeNum2, typeNum1,
+					   pSS2, pSS1);
+	  pChild = pChild->ElNext;
+	}
+    }
+  return pRet;
 }
 
 
@@ -1611,17 +1375,8 @@ PtrSSchema          pSS1;
    stringsm symbols, graphic elements, ...
    The function returns a pointed to the found element or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2, PtrSSchema pSS1, PtrSSchema pSS2)
-#else  /* __STDC__ */
-PtrElement          FwdSearchElem2Types (pEl, typeNum1, typeNum2, pSS1, pSS2)
-PtrElement          pEl;
-int                 typeNum1;
-int                 typeNum2;
-PtrSSchema          pSS1;
-PtrSSchema          pSS2;
-
-#endif /* __STDC__ */
+PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
+				PtrSSchema pSS1, PtrSSchema pSS2)
 {
    PtrElement          pRet, pCur, pAsc;
    ThotBool            stop;
@@ -1682,15 +1437,7 @@ PtrSSchema          pSS2;
    stringsm symbols, graphic elements, ...
    The function returns a pointed to the found element or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          FwdSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrElement          FwdSearchTypedElem (pEl, typeNum, pSS)
-PtrElement          pEl;
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
 {
    return FwdSearchElem2Types (pEl, typeNum, 0, pSS, NULL);
 }
@@ -1699,17 +1446,7 @@ PtrSSchema          pSS;
 /*----------------------------------------------------------------------
    BackSearch2TypesInSubtree                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2, int typeNum1, PtrSSchema pSS2, PtrSSchema pSS1)
-#else  /* __STDC__ */
-static PtrElement   BackSearch2TypesInSubtree (pEl, typeNum2, typeNum1, pSS2, pSS1)
-PtrElement          pEl;
-int                 typeNum2;
-int                 typeNum1;
-PtrSSchema          pSS2;
-PtrSSchema          pSS1;
-#endif /* __STDC__ */
-
 {
    PtrElement          pRet, pChild;
 
@@ -1749,17 +1486,7 @@ PtrSSchema          pSS1;
    stringsm symbols, graphic elements, ...
    The function returns a pointed to the found element or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          BackSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2, PtrSSchema pSS1, PtrSSchema pSS2)
-#else  /* __STDC__ */
-PtrElement          BackSearchElem2Types (pEl, typeNum1, typeNum2, pSS1, pSS2)
-PtrElement          pEl;
-int                 typeNum1;
-int                 typeNum2;
-PtrSSchema          pSS1;
-PtrSSchema          pSS2;
-
-#endif /* __STDC__ */
 {
    PtrElement          pRet, pCur;
 
@@ -1798,15 +1525,7 @@ PtrSSchema          pSS2;
    stringsm symbols, graphic elements, ...
    The function returns a pointed to the found element or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          BackSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrElement          BackSearchTypedElem (pEl, typeNum, pSS)
-PtrElement          pEl;
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
+PtrElement BackSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
    return BackSearchElem2Types (pEl, typeNum, 0, pSS, NULL);
 }
@@ -1819,15 +1538,7 @@ PtrSSchema          pSS;
    view "view".
    Returns a pointer to that element or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          BackSearchVisibleElem (PtrElement pRoot, PtrElement pEl, int view)
-#else  /* __STDC__ */
-PtrElement          BackSearchVisibleElem (pRoot, pEl, view)
-PtrElement          pRoot;
-PtrElement          pEl;
-int                 view;
-
-#endif /* __STDC__ */
+PtrElement BackSearchVisibleElem (PtrElement pRoot, PtrElement pEl, int view)
 {
    PtrElement          pRet, pCur;
 
@@ -1860,17 +1571,8 @@ int                 view;
    regardless of its value. 
    The function returns a pointer to the found element or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          FwdSearchAttribute (PtrElement pEl, int attrNum, int val, STRING textVal, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrElement          FwdSearchAttribute (pEl, attrNum, val, textVal, pSS)
-PtrElement          pEl;
-int                 attrNum;
-int                 val;
-STRING              textVal;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
+PtrElement FwdSearchAttribute (PtrElement pEl, int attrNum, int val,
+			       STRING textVal, PtrSSchema pSS)
 {
    PtrElement          pRet, pCur, pAsc;
    ThotBool            stop;
@@ -1932,17 +1634,8 @@ PtrSSchema          pSS;
    regardless of its value. 
    The function returns a pointer to the found element or NULL.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          BackSearchAttribute (PtrElement pEl, int attNum, int val, STRING textVal, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrElement          BackSearchAttribute (pEl, attNum, val, textVal, pSS)
-PtrElement          pEl;
-int                 attNum;
-int                 val;
-STRING              textVal;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
+PtrElement BackSearchAttribute (PtrElement pEl, int attNum, int val,
+				STRING textVal, PtrSSchema pSS)
 {
    PtrElement          pRet, pCur;
 
@@ -1973,13 +1666,7 @@ PtrSSchema          pSS;
    from a page break.
    Does not do anything if pEl does not point to a page break.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FwdSkipPageBreak (PtrElement * pEl)
-#else  /* __STDC__ */
-void                FwdSkipPageBreak (pEl)
-PtrElement         *pEl;
-#endif /* __STDC__ */
-
 {
    ThotBool            stop;
 
@@ -2011,13 +1698,7 @@ PtrElement         *pEl;
    Does not do anything if pEl does not point to a page break nor an
    extension element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FwdSkipPageBreakAndExtension (PtrElement * pEl)
-#else  /* __STDC__ */
-void                FwdSkipPageBreakAndExtension (pEl)
-PtrElement         *pEl;
-#endif /* __STDC__ */
-
 {
    ThotBool            stop;
 
@@ -2049,13 +1730,7 @@ PtrElement         *pEl;
    that break.It does not do anything if pEl does not point
    to a begin page break.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SkipPageBreakBegin (PtrElement * pEl)
-#else  /* __STDC__ */
-void                SkipPageBreakBegin (pEl)
-PtrElement         *pEl;
-#endif /* __STDC__ */
-
 {
    ThotBool            stop;
    PtrElement          pPrev;
@@ -2092,13 +1767,7 @@ PtrElement         *pEl;
    from a page break.
    Does not do anything if pEl does not point to a page break.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                BackSkipPageBreak (PtrElement * pEl)
-#else  /* __STDC__ */
-void                BackSkipPageBreak (pEl)
-PtrElement         *pEl;
-#endif /* __STDC__ */
-
 {
    ThotBool            stop;
 
@@ -2123,13 +1792,7 @@ PtrElement         *pEl;
    returns a pointer to the element following the one pointed by
    pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          NextElement (PtrElement pEl)
-#else  /* __STDC__ */
-PtrElement          NextElement (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    if (pEl == NULL)
       return NULL;
@@ -2142,13 +1805,7 @@ PtrElement          pEl;
    PreviousLeaf
    returns a pointer to the first leaf preceding the pEl element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          PreviousLeaf (PtrElement pEl)
-#else  /* __STDC__ */
-PtrElement          PreviousLeaf (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrElement          pEl1;
 
@@ -2174,13 +1831,7 @@ PtrElement          pEl;
    NextLeaf   
    returns a pointer to the first leaf following the element pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          NextLeaf (PtrElement pEl)
-#else  /* __STDC__ */
-PtrElement          NextLeaf (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrElement          pEl1;
 
@@ -2203,14 +1854,7 @@ PtrElement          pEl;
    inserts the pNew element (and its next siblings), before the pOld
    element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InsertElementBefore (PtrElement pOld, PtrElement pNew)
-#else  /* __STDC__ */
-void                InsertElementBefore (pOld, pNew)
-PtrElement          pOld;
-PtrElement          pNew;
-#endif /* __STDC__ */
-
+void      InsertElementBefore (PtrElement pOld, PtrElement pNew)
 {
    PtrElement          pE;
    PtrElement          pAsc;
@@ -2267,14 +1911,7 @@ PtrElement          pNew;
    InsertElementAfter
    inserts the pNew element (and its next siblings) after the pOld element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InsertElementAfter (PtrElement pOld, PtrElement pNew)
-#else  /* __STDC__ */
-void                InsertElementAfter (pOld, pNew)
-PtrElement          pOld;
-PtrElement          pNew;
-#endif /* __STDC__ */
-
 {
    PtrElement          pE;
    PtrElement          pAsc;
@@ -2323,14 +1960,7 @@ PtrElement          pNew;
    Inserts the pNew element (and its next siblings), as the first
    child of the pOld element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InsertFirstChild (PtrElement pOld, PtrElement pNew)
-#else  /* __STDC__ */
-void                InsertFirstChild (pOld, pNew)
-PtrElement          pOld;
-PtrElement          pNew;
-#endif /* __STDC__ */
-
 {
    PtrElement          pE;
    PtrElement          pAsc;
@@ -2372,16 +2002,8 @@ PtrElement          pNew;
    the structure scheme or an associate element.
    In this case, the new element is inserted as pEl's first child.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc, ThotBool del)
-#else  /* __STDC__ */
-void                InsertElemInChoice (pEl, pNew, pDoc, del)
-PtrElement          pEl;
-PtrElement         *pNew;
-PtrDocument         pDoc;
-ThotBool            del;
-#endif /* __STDC__ */
-
+void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
+			 ThotBool del)
 {
   ThotBool            replace;
   PtrAttribute        pAttr;
@@ -2569,17 +2191,8 @@ ThotBool            del;
    Attaches to the pEl Element the required attributes specified by the
    pRe1 rule of the structure scheme pSS.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AttachRequiredAttributes (PtrElement pEl, SRule * pSRule, PtrSSchema pSS, ThotBool withAttr, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                AttachRequiredAttributes (pEl, pSRule, pSS, withAttr, pDoc)
-PtrElement          pEl;
-SRule              *pSRule;
-PtrSSchema          pSS;
-ThotBool            withAttr;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+void AttachRequiredAttributes (PtrElement pEl, SRule * pSRule, PtrSSchema pSS,
+			       ThotBool withAttr, PtrDocument pDoc)
 {
    int                 i;
    int                 att;
@@ -2632,12 +2245,7 @@ PtrDocument         pDoc;
   IsConstantConstructor returns TRUE is the element uses the constructor
   CsConstant.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool          IsConstantConstructor (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool          IsConstantConstructor (pEl)
-PtrElement        pEl;
-#endif /* __STDC__ */
 {
   SRule              *pSRule;
 
@@ -2681,23 +2289,9 @@ PtrElement        pEl;
    the function does not create them (case of a pivot read).
    withLabel tells if one must give the element a new label.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 				int assocNum, ThotBool Desc, ThotBool Root,
 				ThotBool withAttr, ThotBool withLabel)
-#else  /* __STDC__ */
-PtrElement          NewSubtree (typeNum, pSS, pDoc, assocNum, Desc, Root,
-				withAttr, withLabel)
-int                 typeNum;
-PtrSSchema          pSS;
-PtrDocument         pDoc;
-int                 assocNum;
-ThotBool            Desc;
-ThotBool            Root;
-ThotBool            withAttr;
-ThotBool            withLabel;
-#endif /* __STDC__ */
-
 {  
   PtrElement          pEl, t1, t2;
   int                 i;
@@ -2971,14 +2565,7 @@ ThotBool            withLabel;
    RemoveExcludedElem
    removes the excluded elements of the subtree pointed to by pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                RemoveExcludedElem (pEl, pDoc)
-PtrElement         *pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 {
    SRule              *pRule;
    SRule              *pRuleExcl;
@@ -3085,13 +2672,7 @@ PtrDocument         pDoc;
    RemoveElement
    removes the subtree whose root is pointed by pEl
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RemoveElement (PtrElement pEl)
-#else  /* __STDC__ */
-void                RemoveElement (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrElement          pAsc;
 
@@ -3124,14 +2705,7 @@ PtrElement          pEl;
    removes from the pEl element the pAttr attribute, without freeing
    this attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RemoveAttribute (PtrElement pEl, PtrAttribute pAttr)
-#else  /* __STDC__ */
-void                RemoveAttribute (pEl, pAttr)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
-
 {
    PtrAttribute        pPrevAttr;
    ThotBool            stop;
@@ -3176,14 +2750,7 @@ PtrAttribute        pAttr;
    The function also removes from the element all the
    specific presentation rules associated to the attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
-#else  /* __STDC__ */
-void                DeleteAttribute (pEl, pAttr)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
-
 {
    PtrPRule            pPR, pPRprev, pPRnext;
    PtrTextBuffer       buf, nextbuf;
@@ -3257,14 +2824,7 @@ PtrAttribute        pAttr;
    For each freed element, all corresponding abstract boxes, in all views,
    are also freed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                DeleteElement (pEl, pDoc)
-PtrElement         *pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
 {
    PtrElement          pChild, pNextChild;
    PtrTextBuffer       pBuf, pNextBuf;
@@ -3488,19 +3048,9 @@ PtrDocument         pDoc;
    If shareRef is TRUE, the referenced elements of the copy share their
    referenced element descriptor with the source.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          CopyTree (PtrElement pSource, PtrDocument pDocSource, int assocNum, PtrSSchema pSSchema, PtrDocument pDocCopy, PtrElement pParent, ThotBool checkAttr, ThotBool shareRef)
-#else  /* __STDC__ */
-PtrElement          CopyTree (pSource, pDocSource, assocNum, pSSchema, pDocCopy, pParent, checkAttr, shareRef)
-PtrElement          pSource;
-PtrDocument         pDocSource;
-int                 assocNum;
-PtrSSchema          pSSchema;
-PtrDocument         pDocCopy;
-PtrElement          pParent;
-ThotBool            checkAttr;
-ThotBool            shareRef;
-#endif /* __STDC__ */
+PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
+		     int assocNum, PtrSSchema pSSchema, PtrDocument pDocCopy,
+		     PtrElement pParent, ThotBool checkAttr, ThotBool shareRef)
 {
   PtrElement          pEl, pS2, pC1, pC2;
   PtrReference        rf;
@@ -3772,15 +3322,7 @@ ThotBool            shareRef;
   structure scheme pSS, belonging to document pDoc. Returns NULL if no
   such element exists.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          FirstAssociatedElement (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrElement          FirstAssociatedElement (pDoc, typeNum, pSS)
-PtrDocument         pDoc;
-int                 typeNum;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
+PtrElement FirstAssociatedElement (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
 {
    int                 a;
    PtrElement          pEl, pEl2;
@@ -3816,14 +3358,7 @@ PtrSSchema          pSS;
    gives new labels to all the elements of the pEl subtree, excluding
    pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ChangeLabels (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         ChangeLabels (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
 {
    PtrElement          pE;
 
@@ -3847,14 +3382,7 @@ PtrDocument         pDoc;
    pEl points to an element representing an inclusing.
    pDoc points to the document to which pEl belongs to.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CopyIncludedElem (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
 {
    PtrReference        pRef;
    PtrElement          pSource, pS2, pC1, pC2, pE;
@@ -4035,14 +3563,7 @@ PtrDocument         pDoc;
    ReplicateElement
    copies a node without copying its children.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-PtrElement          ReplicateElement (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
 {
    PtrElement          pNew;
    int                 view;
@@ -4082,15 +3603,7 @@ PtrDocument         pDoc;
    to the pEl element. 
    Returns a pointer to the attribute or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAttribute        GetTypedAttrForElem (PtrElement pEl, int attrNum, PtrSSchema pSSattr)
-#else  /* __STDC__ */
-PtrAttribute        GetTypedAttrForElem (pEl, attrNum, pSSattr)
-PtrElement          pEl;
-int                 attrNum;
-PtrSSchema          pSSattr;
-#endif /* __STDC__ */
-
+PtrAttribute GetTypedAttrForElem (PtrElement pEl, int attrNum, PtrSSchema pSSattr)
 {
    ThotBool            found;
    PtrAttribute        pAttr;
@@ -4125,17 +3638,8 @@ PtrSSchema          pSSattr;
    of type attrNum. The function returns pElAttr if
    the search is succesful, NULL otherwise.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAttribute        GetTypedAttrAncestor (PtrElement pEl, int attrNum,
+PtrAttribute GetTypedAttrAncestor (PtrElement pEl, int attrNum,
 				   PtrSSchema pSSattr, PtrElement * pElAttr)
-#else  /* __STDC__ */
-PtrAttribute        GetTypedAttrAncestor (pEl, attrNum, pSSattr, pElAttr)
-PtrElement          pEl;
-int                 attrNum;
-PtrSSchema          pSSattr;
-PtrElement         *pElAttr;
-#endif /* __STDC__ */
-
 {
    PtrElement          pElAtt;
    PtrAttribute        pAttr;
@@ -4161,14 +3665,7 @@ PtrElement         *pElAttr;
    verifies that the root pEl has a language attribute. If not, we
    we add one.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
-#else  /* __STDC__ */
-void                CheckLanguageAttr (pDoc, pEl)
-PtrDocument         pDoc;
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrAttribute        pAttr, pA;
    int                 len;
@@ -4224,12 +3721,7 @@ PtrElement          pEl;
    Return value:
    the root element of the main abstract tree.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetMainRoot (Document document)
-#else  /* __STDC__ */
-Element             TtaGetMainRoot (document)
-Document            document;
-#endif /* __STDC__ */
 {
    PtrElement          element;
 
@@ -4250,21 +3742,13 @@ Document            document;
    TtaGetDocument
 
    Returns the document containing a given element
-
    Parameters:
    element: the element for which document is asked.
-
    Return value:
    the document containing that element or 0 if the element does not
    belong to any document.
-
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Document            TtaGetDocument (Element element)
-#else  /* __STDC__ */
-Document            TtaGetDocument (element)
-Element             element;
-#endif /* __STDC__ */
 {
 
    PtrDocument         pDoc;
@@ -4292,12 +3776,7 @@ Element             element;
    Return value:
    the parent element, or NULL if there is no parent (root).
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetParent (Element element)
-#else  /* __STDC__ */
-Element             TtaGetParent (element)
-Element             element;
-#endif /* __STDC__ */
 {
    PtrElement          parent;
 
@@ -4321,12 +3800,7 @@ Element             element;
    Return value:
    type of the element.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 ElementType         TtaGetElementType (Element element)
-#else  /* __STDC__ */
-ElementType         TtaGetElementType (element)
-Element             element;
-#endif /* __STDC__ */
 {
    ElementType         elementType;
 
@@ -4350,7 +3824,6 @@ Element             element;
    Returns the first element of a given type. Searching can be done in
    a tree or starting from a given element towards the beginning or the
    end of the abstract tree.
-
    Parameters:
    searchedType: type of element to be searched. If searchedType.ElSSchema
    is NULL, searchedType must be a basic type ; then the next basic
@@ -4360,19 +3833,11 @@ Element             element;
    element: the element that is the root of the tree
    (if scope = SearchInTree) or the starting element
    (if scope = SearchForward or SearchBackward).
-
    Return value:
    the element found, or NULL if no element has been found.
-
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-Element             TtaSearchTypedElement (ElementType searchedType, SearchDomain scope, Element element)
-#else  /* __STDC__ */
-Element             TtaSearchTypedElement (searchedType, scope, element)
-ElementType         searchedType;
-SearchDomain        scope;
-Element             element;
-#endif /* __STDC__ */
+Element TtaSearchTypedElement (ElementType searchedType, SearchDomain scope,
+			       Element element)
 {
    PtrElement          pEl;
    PtrElement          elementFound;
@@ -4433,7 +3898,6 @@ Element             element;
    a tree or starting from a given element towards the beginning or the
    end of the abstract tree. In any case the returned element must be
    part of the parent tree.
-
    Parameters:
    searchedType: type of element to be searched. If searchedType.ElSSchema
    is NULL, searchedType must be a basic type ; then the next basic
@@ -4444,20 +3908,12 @@ Element             element;
    element: the element that is the root of the tree
    (if scope = SearchInTree) or the starting element
    (if scope = SearchForward or SearchBackward).
-
    Return value:
    the element found, or NULL if no element has been found.
-
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-Element             TtaSearchTypedElementInTree (ElementType searchedType, SearchDomain scope, Element parent, Element element)
-#else  /* __STDC__ */
-Element             TtaSearchTypedElementInTree (searchedType, scope, parent, element)
-ElementType         searchedType;
-SearchDomain        scope;
-Element             parent;
-Element             element;
-#endif /* __STDC__ */
+Element TtaSearchTypedElementInTree (ElementType searchedType,
+				     SearchDomain scope, Element parent,
+				     Element element)
 {
    PtrElement          pEl = NULL;
    PtrElement          elementFound;
@@ -4529,12 +3985,7 @@ Element             element;
    Return value:
    element volume.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 int                 TtaGetElementVolume (Element element)
-#else  /* __STDC__ */
-int                 TtaGetElementVolume (element)
-Element             element;
-#endif /* __STDC__ */
 {
    int                 vol = 0;
 
