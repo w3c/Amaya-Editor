@@ -14,6 +14,8 @@ cd ~
 mv libwww libwww-opera (or destroy it)
 
 cvs -d :pserver:anonymous@dev.w3.org:/sources/public login
+---> you'll be asked for a password. Type anoynmous.
+
 cvs -d :pserver:anonymous@dev.w3.org:/sources/public -z3 checkout -rAmaya libwww
 
 === Bootstrap libwww
