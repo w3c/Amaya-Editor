@@ -4004,7 +4004,7 @@ BOXES
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosing . Width;
-	Height: Enclosed . Height;
+	Height: Enclosing . Height;
 	Foreground: Black;
 	LineWeight: 1 px;
 	Visibility: 0;
