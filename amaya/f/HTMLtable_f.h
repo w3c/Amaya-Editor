@@ -58,11 +58,14 @@ extern void CopyRow ( Element copyRow,
 extern void CopyCell ( Element cell,
                        Document doc,
                        ThotBool inRow );
+extern void NextCellInColumn ( Element* cell,
+			       Element* row,
+			       Element colHead,
+			       Document doc,
+			       ThotBool* fake );
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement *event );
 extern void RowPasted ( NotifyElement * event );
-extern Element NextCellInRow ( Element cell,
-                               ThotBool inMath );
 extern int GetActualColspan ( Element cell,
                               ThotBool inMath );
 extern void ChangeColspan ( Element cell,
@@ -73,8 +76,6 @@ extern void ColspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterColspan ( NotifyAttribute * event );
 extern void ColspanModified ( NotifyAttribute * event );
 extern void ColspanDeleted ( NotifyAttribute * event );
-extern Element NextCellInColumn ( Element cell,
-                                  ThotBool inMath );
 extern int GetActualRowspan ( Element cell,
                               ThotBool inMath );
 extern void ChangeRowspan ( Element cell,
@@ -140,11 +141,14 @@ extern void CopyRow ( Element copyRow,
 extern void CopyCell ( Element cell,
                          Document doc,
                          ThotBool inRow );
+extern void NextCellInColumn ( Element* cell,
+			       Element* row,
+			       Element colHead,
+			       Document doc,
+			       ThotBool* fake );
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement *event );
 extern void RowPasted ( NotifyElement * event );
-extern Element NextCellInRow ( Element cell,
-                                 ThotBool inMath );
 extern int GetActualColspan ( Element cell,
                                 ThotBool inMath );
 extern void ChangeColspan ( Element cell,
@@ -155,8 +159,6 @@ extern void ColspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterColspan ( NotifyAttribute * event );
 extern void ColspanModified ( NotifyAttribute * event );
 extern void ColspanDeleted ( NotifyAttribute * event );
-extern Element NextCellInColumn ( Element cell,
-                                    ThotBool inMath );
 extern int GetActualRowspan ( Element cell,
                                 ThotBool inMath );
 extern void ChangeRowspan ( Element cell,

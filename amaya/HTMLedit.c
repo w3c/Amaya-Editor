@@ -1893,7 +1893,7 @@ static void CheckPseudoParagraph (Element el, Document doc)
   Attribute             attr;
   ElementType		elType;
   SSchema               htmlSchema;
-  
+
   elType = TtaGetElementType (el);
   htmlSchema = TtaGetSSchema ("HTML", doc);
   if (!htmlSchema || elType.ElSSchema != htmlSchema)
@@ -1942,7 +1942,9 @@ static void CheckPseudoParagraph (Element el, Document doc)
 	    if (elType.ElTypeNum == HTML_EL_List_Item ||
 		elType.ElTypeNum == HTML_EL_Definition ||
 		elType.ElTypeNum == HTML_EL_Data_cell ||
-		elType.ElTypeNum == HTML_EL_Heading_cell)
+		elType.ElTypeNum == HTML_EL_Heading_cell ||
+		elType.ElTypeNum == HTML_EL_Object_Content ||
+		elType.ElTypeNum == HTML_EL_map)
 		TtaChangeElementType (el, HTML_EL_Pseudo_paragraph);
 	    }
 	 }

@@ -2489,8 +2489,8 @@ void TablePasted (NotifyElement * event)
 
 /*----------------------------------------------------------------------
   CopyRow:
-  A table row of has been copied. Generate empty cells where appropriate
-  in the new copy.
+  A table row has been copied. Generate empty cells in the copy where the
+  row is crossed by spanning cells from the rows above.
   This function is called only by command Copy, not by command Cut.
   ----------------------------------------------------------------------*/
 void CopyRow (Element copyRow, Element origRow, Document doc)
@@ -2644,6 +2644,145 @@ void CopyCell (Element cell, Document doc, ThotBool inRow)
       if (attr)
 	TtaRemoveAttribute (cell, attr, doc);
     }
+}
+
+/*----------------------------------------------------------------------
+  NextCellInColumn:
+  Return the cell in column colHead and in the row that follows the
+  given row. If there is no cell at that position, create an empty
+  cell and return it. In that case the value returned for fake is TRUE.
+  If a cell exists, the value returned for fake is FALSE.
+  If row is NULL, get the first row of the table and return the cell
+  in that row and in the given column (or an empty cell).
+  If row is the last row of the table, return cell = NULL and row = NULL.
+  ----------------------------------------------------------------------*/
+void NextCellInColumn (Element* cell, Element* row, Element colHead,
+		       Document doc, ThotBool* fake)
+{
+  Element            nextCell, table, block, nextBlock, parent;
+  ElementType        elType, blockType;
+  int                rowType;
+  ThotBool           inMath;
+
+  nextCell = NULL;
+  *fake = FALSE;
+  if (colHead)
+    {
+      elType = TtaGetElementType (colHead);
+      inMath = strcmp ((char *)TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0;
+      if (*row)
+        /* get the row that follows the given row in the same table */
+	{
+	  /* in MathML table, there are no blocks. All rows are siblings */
+	  if (!inMath)
+	    /* remember the parent (a block) of the given row */
+	    block = TtaGetParent (*row);
+          /* get the next row among the siblings */
+	  *row = GetSiblingRow (*row, FALSE, inMath);
+	  if (*row == NULL && !inMath && block)
+	    /* there is no sibling row. let's check the next block (thead,
+	       tbody, tfoot) */
+	    {
+	      /* remember the type of the block of the current row */
+	      blockType = TtaGetElementType (block);
+	      /* get the sibling block */
+	      nextBlock = block;
+	      do
+		{
+		  TtaNextSibling (&nextBlock);
+		  if (nextBlock)
+		    elType = TtaGetElementType (nextBlock);
+		}
+	      while (nextBlock && (elType.ElTypeNum != HTML_EL_thead &&
+				   elType.ElTypeNum != HTML_EL_tfoot &&
+				   elType.ElTypeNum != HTML_EL_tbody &&
+				   elType.ElTypeNum != HTML_EL_Table_body));
+	      if (!nextBlock && blockType.ElTypeNum == HTML_EL_tbody)
+		/* there is no sibling block, but the block was a tbody */
+		/* skip the Table_body parent and get the following block */
+		{
+		  parent = TtaGetParent (block);
+		  elType = TtaGetElementType (parent);
+		  if (elType.ElTypeNum == HTML_EL_Table_body)
+		    {
+		      /* get the block (thead or tfoot) that follows the
+			 Table_body */
+		      nextBlock = parent;
+		      do
+			{
+			  TtaNextSibling (&nextBlock);
+			  if (nextBlock)
+			    elType = TtaGetElementType (nextBlock);
+			}
+		      while (nextBlock && (elType.ElTypeNum != HTML_EL_thead &&
+					   elType.ElTypeNum != HTML_EL_tfoot));
+		    }
+		}
+	      if (nextBlock && elType.ElTypeNum == HTML_EL_Table_body)
+		/* if the block found is a Table_body, get its first tbody
+		   child */
+		{
+		  nextBlock = TtaGetFirstChild (nextBlock);
+		  if (nextBlock)
+		    elType = TtaGetElementType (nextBlock);
+		  while (nextBlock && elType.ElTypeNum != HTML_EL_tbody)
+		    {
+		      TtaNextSibling (&nextBlock);
+		      if (nextBlock)
+			elType = TtaGetElementType (nextBlock);
+		    }
+		}
+	      if (nextBlock)
+		/* we have found a block. Get the first row in its children */
+		{
+		  *row = TtaGetFirstChild (nextBlock);
+		  if (*row)
+		    elType = TtaGetElementType (*row);
+		  while (*row && elType.ElTypeNum != HTML_EL_Table_row)
+		    {
+		      TtaNextSibling (row);
+		      if (*row)
+			elType = TtaGetElementType (*row);
+		    }
+		}
+	    }
+	}
+      else
+	/* Parameter row is NULL. Get the first row in the table */
+	{
+	  if (inMath)
+	    {
+	      elType.ElTypeNum = MathML_EL_MTABLE;
+	      rowType = MathML_EL_TableRow;
+	    }
+	  else
+	    {
+	      elType.ElTypeNum = HTML_EL_Table;
+	      rowType = HTML_EL_Table_row;
+	    }
+	  table = TtaGetTypedAncestor (colHead, elType);
+	  elType.ElTypeNum = rowType;
+	  *row = TtaSearchTypedElement (elType, SearchInTree, table);
+	} 
+      if (*row)
+	/* we have found a row. Get the cell in that row that is linked to
+	   the given column head */
+	{
+	  nextCell = GetCellFromColumnHead (*row, colHead, inMath);
+	  if (!nextCell)
+	    /* there is no cell at that position in the table */
+	    {
+	      *fake = TRUE;
+	      if (inMath)
+	        elType.ElTypeNum = MathML_EL_MTD;
+	      else
+		elType.ElTypeNum = HTML_EL_Data_cell;
+	      /* generate an empty cell */
+	      nextCell = TtaNewTree (doc, elType, "");
+	    }
+	}
+    }
+  *cell = nextCell;
 }
 
 /*----------------------------------------------------------------------
@@ -2969,15 +3108,6 @@ static void MoveCellContents (Element nextCell, Element cell,
     }
   /* delete the cell */
   TtaDeleteTree (nextCell, doc);
-}
-
-/*----------------------------------------------------------------------
-  NextCellInRow
-  Return the cell that follows a given cell in the same row.
-  ----------------------------------------------------------------------*/
-Element NextCellInRow (Element cell, ThotBool inMath)
-{
-  return  GetSiblingCell (cell, FALSE, inMath);
 }
 
 /*----------------------------------------------------------------------
@@ -3371,43 +3501,6 @@ void ColspanDeleted (NotifyAttribute * event)
 				TtaGetSSchema ("MathML", event->document));
       SetColExt (event->element, 1, event->document, inMath, FALSE);
     }
-}
-
-/*----------------------------------------------------------------------
-  NextCellInColumn
-  Return the cell that follows a given cell in the same column.
-  ----------------------------------------------------------------------*/
-Element NextCellInColumn (Element cell, ThotBool inMath)
-{
-  Element            colhead, row, nextCell;
-  ElementType        elType;
-  Attribute          attr;
-  AttributeType      attrType;
-  char               name[50];
-  Document           refdoc;
-
-  nextCell = NULL;
-  colhead = NULL;
-  elType = TtaGetElementType (cell);
-  attrType.AttrSSchema = elType.ElSSchema;
-  if (inMath)
-    attrType.AttrTypeNum = MathML_ATTR_MRef_column;
-  else
-    attrType.AttrTypeNum = HTML_ATTR_Ref_column;
-  attr = TtaGetAttribute (cell, attrType);
-  if (attr)
-    TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
-  if (colhead)
-    {
-      row = TtaGetParent (cell);
-      while (row && !nextCell)
-	{
-	  row = GetSiblingRow (row, FALSE, inMath);
-	  if (row)
-	    nextCell = GetCellFromColumnHead (row, colhead, inMath);
-	}
-    }
-  return nextCell;
 }
 
 /*----------------------------------------------------------------------

@@ -50,6 +50,14 @@ extern void TtaSetCopyCellFunction (void (*procedure) (void *,void *,void *));
 extern void TtaSetCopyRowFunction (void (*procedure) (void *,void *,void *));
 
 /*----------------------------------------------------------------------
+  TtaSetNextCellInColumnFunction registers the function to be called when
+  a table cell row is copied:
+  void procedure (Element* cell, Element* row, Element colHead, Document doc,
+  ThotBool* fake)
+  ----------------------------------------------------------------------*/
+extern void TtaSetNextCellInColumnFunction (void (*procedure) (void *,void *,void *,void *,void *));
+
+/*----------------------------------------------------------------------
   TtaSetAccessKeyFunction registers the access key function.
   ----------------------------------------------------------------------*/
 extern void TtaSetAccessKeyFunction (void (*procedure) ());

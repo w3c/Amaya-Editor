@@ -6924,6 +6924,7 @@ void InitAmaya (NotifyEvent * event)
    TtaSetCopyAndCutFunction ((Proc) RegisterURLSavedElements);
    TtaSetCopyCellFunction ((Proc3) CopyCell);
    TtaSetCopyRowFunction ((Proc3) CopyRow);
+   TtaSetNextCellInColumnFunction ((Proc5) NextCellInColumn);
    /* Initialize the Amaya user and tmp directories */
    s = TtaGetEnvString ("APP_TMPDIR");
    if (!CheckMakeDirectory (s, TRUE))
