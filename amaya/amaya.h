@@ -34,7 +34,7 @@
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
 #define HTAppName "amaya"
-#define HTAppVersion "V1.0 Alpha"
+#define HTAppVersion "V1.0a Beta"
 
 /* How are Network accesses provided ? */
 #ifdef AMAYA_JAVA
