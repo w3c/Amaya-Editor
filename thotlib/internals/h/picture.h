@@ -53,6 +53,7 @@ typedef struct
   char          *PicFileName; 
 #ifndef _GL
 #ifdef _GTK
+  GdkImlibImage     *im;
   GdkPixmap      *PicPixmap;
   Pixmap         PicAlpha;
 #else /* _GTK*/
