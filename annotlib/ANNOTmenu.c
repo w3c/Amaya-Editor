@@ -960,7 +960,7 @@ View                view;
   /* the * = filter message */
   TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
 	       AnnotFilterBase + AnnotFilterMenu,
-	       TEXT("     a * prefix means hidden"));
+	       TEXT("* means hidden, - means partially hidden"));
 	       
   /* create the radio buttons for choosing a selector */
   i = 0;
