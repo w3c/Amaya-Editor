@@ -733,8 +733,8 @@ int CharacterAscent (int c, PtrFont font)
   if (font == NULL)
     return (0);
 #ifdef _GL
-else
-   ascent = gl_font_char_ascent (font, (CHAR_T *) &c);
+  else
+    ascent = gl_font_char_ascent (font, (CHAR_T *) &c);
 #ifndef _WINDOWS
   if (c == 244)
     {

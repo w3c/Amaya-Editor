@@ -1241,8 +1241,9 @@ GL_Drawing = TRUE;
 void GL_realize (int frame)
 {
   GL_Drawing = FALSE;
-  FrameTable[frame].DblBuffNeedSwap = FALSE;
-  GL_Swap (frame);
+FrameTable[frame].DblBuffNeedSwap = TRUE;
+/* FrameTable[frame].DblBuffNeedSwap = FALSE;
+   GL_Swap (frame);*/
   return;
 }
 /*----------------------------------------------------------------------
@@ -1636,7 +1637,8 @@ void gl_window_resize (int frame, int width, int height)
 	FrameRedraw (frame, width, height);
 	glFlush();
 	glFinish ();
-	GL_Swap (frame);
+FrameTable[frame].DblBuffNeedSwap = TRUE;
+GL_Swap (frame);
       }
 
 }

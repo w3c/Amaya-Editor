@@ -682,7 +682,8 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	FrameRedraw (frame, width, height);
 	glFlush();
 	glFinish ();
-	GL_Swap (frame);
+FrameTable[frame].DblBuffNeedSwap = TRUE;
+	/*GL_Swap (frame);*/
       }
   return TRUE;
 }
