@@ -247,7 +247,7 @@ void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
 
 #ifndef _WINDOWS
   // force the focus because on debian woody, the focus do not come in when clicking on the canvas
-  SetFocus();
+  TtaRedirectFocus();
 #endif /* _WINDOWS */
 }
 
@@ -378,13 +378,8 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
 			 thot_mod_mask,
 			 event.GetX(), event.GetY() );
 
-#ifndef _WINDOWS
-  // force the focus because on debian woody, the focus do not come in when clicking on the canvas
-  SetFocus();
-#else
   // force the focus when clicking on the canvas because the focus is locked on panel buttons
   TtaRedirectFocus();
-#endif /* _WINDOWS */
 }
 
 /*
@@ -425,13 +420,8 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 			   thot_mod_mask,
 			   event.GetX(), event.GetY() );
 
-#ifndef _WINDOWS
-  // force the focus because on debian woody, the focus do not come in when clicking on the canvas
-  SetFocus();
-#else
   // force the focus when clicking on the canvas because the focus is locked on panel buttons
   TtaRedirectFocus();
-#endif /* _WINDOWS */
 }
 
 /*
