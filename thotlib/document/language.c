@@ -874,6 +874,7 @@ char               *TtaGetLanguageCode (Language languageId)
 char               *TtaGetLanguageCode (languageId)
 Language            languageId;
 #endif /* __STDC__ */
+
 {
    int                 i;
 

@@ -386,13 +386,12 @@ LPBITMAPINFO* lpBmpInfo;
 #endif /* __STDC__ */
 {
    HDC      hDC = GetDC (currentWindow);
-   HDC      hNewDC;
    HDC      hImageDC;
    HDC      hOrDC;
    HDC      hAndDC;
    HDC      hInvAndDC;
    HDC      hDestDC;
-   HBITMAP  bitmap, newBmp;
+   HBITMAP  bitmap;
    HBITMAP  bitmapOr;
    HBITMAP  pOldBitmapOr;
    HBITMAP  bitmapAnd;
@@ -404,15 +403,20 @@ LPBITMAPINFO* lpBmpInfo;
    COLORREF crColor = RGB (red, green, blue);
    COLORREF crOldBkColor ;
    LPBYTE   lpBits;
+   HBRUSH   hBrush, hOldBrush;
+
+   hBrush = CreateSolidBrush (RGB (255, 255, 255));
 
    hImageDC = CreateCompatibleDC (hDC);
    bitmap   = SelectObject (hImageDC, pixmap);
    SetMapMode (hImageDC, GetMapMode (hDC));
    
-   hNewDC = CreateCompatibleDC (hDC);
-   newBmp = SelectObject (hNewDC, pixmap);
-   SetMapMode (hImageDC, GetMapMode (hDC));
-   SetBkColor (hNewDC, RGB (255, 255, 255));
+   /* newBmp = SelectObject (hNewDC, pixmap);
+   SetMapMode (hNewDC, GetMapMode (hDC)); */
+
+
+   /* SetBkMode (hNewDC, OPAQUE);
+   SetBkColor (hNewDC, PALETTERGB (255, 255, 255)); */
    
    hOrDC = CreateCompatibleDC (hDC);
    SetMapMode (hOrDC, GetMapMode (hDC));
@@ -440,10 +444,14 @@ LPBITMAPINFO* lpBmpInfo;
 
    hDestDC = CreateCompatibleDC (hDC);
    SetMapMode (hDestDC, GetMapMode (hDC));
+   /*******/
+   hOldBrush = SelectObject (hDestDC, hBrush);
+   PatBlt (hDestDC, 0, 0, width, height, PATCOPY);
+   /*******/
    bitmapDest = CreateCompatibleBitmap (hImageDC, width, height);
    pOldBitmapDest = SelectObject (hDestDC, bitmapDest);
-   /* BitBlt (hDestDC, 0, 0, width, height, hDC, x, y, SRCCOPY); */
-   BitBlt (hDestDC, 0, 0, width, height, hNewDC, x, y, SRCCOPY);
+   /* BitBlt (hDestDC, 0, 0, width, height, hDC, x * ScreenDPI / PrinterDPI, y * ScreenDPI / PrinterDPI, SRCCOPY); */
+   BitBlt (hDestDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
 
    BitBlt (hDestDC, 0, 0, width, height, hAndDC, 0, 0, SRCAND);
 
@@ -478,7 +486,6 @@ LPBITMAPINFO* lpBmpInfo;
       WinErrorBox (WIN_Main_Wd);
    if (!DeleteDC (hDC))
       WinErrorBox (WIN_Main_Wd);
-
    if (!DeleteObject (bitmap))
       WinErrorBox (WIN_Main_Wd);
    if (!DeleteObject (bitmapOr))
@@ -1672,7 +1679,7 @@ int                 frame;
 
         LoadPicture2Print (frame, box, imageDesc);
 
-        /* if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) { */
+        if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
            lpBmpInfo = CreateBitmapInfoStruct(FrRef [frame], imageDesc->PicPixmap);
 
            lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
@@ -1681,13 +1688,14 @@ int                 frame;
 
            if (!GetDIBits (TtDisplay, (HBITMAP) imageDesc->PicPixmap, 0, (WORD)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS))
               WinErrorBox (NULL);
-		/* } else 
-             lpBits = GetTransparentDIBits (frame, (HBITMAP) imageDesc->PicPixmap, xFrame, yFrame, imageDesc->PicWidth, imageDesc->PicHeight, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue, &lpBmpInfo); */
+		} else 
+             lpBits = GetTransparentDIBits (frame, (HBITMAP) imageDesc->PicPixmap, xFrame, yFrame, imageDesc->PicWidth, imageDesc->PicHeight, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue, &lpBmpInfo);
 
 		/* pBuf = (LPSTR) TtaGetMemory (picWArea * picHArea * 32); */
         /* nbLines = GetDIBits (TtDisplay, imageDesc->PicPixmap, 0, picWArea * picHArea, pBuf, lpBmpInfoHeader, DIB_RGB_COLORS); */
         /* PrintDIB (&lpBmpInfo->bmiHeader, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ; */
-        PrintDIB (lpBmpInfo, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ;
+        /* PrintDIB (lpBmpInfo, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ; */
+        PrintDIB (lpBmpInfo, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, box->BxWidth, box->BxHeight) ;
 	 } else {
            (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xFrame, yFrame, wFrame, hFrame, picXArea,
 							                                       picYArea, picWArea, picHArea,
