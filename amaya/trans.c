@@ -2603,7 +2603,7 @@ void TransformType (Document doc, View view)
 					      i, menuBuf);
 	  FormVal = 0;
 	  if (created)
-	    TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
+	    TtaShowDialogue (TransBaseDialog + TransForm, TRUE);
 #else /* _WX */
 	  /* if some transformations have been matched, shows the menu */
 	  TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
