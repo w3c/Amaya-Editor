@@ -1268,7 +1268,7 @@ ThotBool            isHTML;
        weight.typed_data.value = STYLE_WEIGHT_NORMAL;
 
    /* install the new presentation */
-   TtaSetStylePresentation (PRStyle, element, tsch, context, weight);
+   TtaSetStylePresentation (PRWeight, element, tsch, context, weight);
    return (cssRule);
 }
 

@@ -1817,6 +1817,9 @@ ThotBool           *absolute;
     case PRStyle:
       *intRule = PtStyle;
       break;
+    case PRWeight:
+      *intRule = PtWeight;
+      break;
     case PRAdjust:
       *intRule = PtAdjust;
       break;
