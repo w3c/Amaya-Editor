@@ -367,10 +367,13 @@ libwww/modules/expat/expat.html \
 libwww/modules/expat/gplelect.html \
 libwww/modules/expat/MPL-1_0.html \
 libwww/modules/expat/Makefile.am \
+libwww/modules/expat/Makefile.in \
 libwww/modules/expat/xmlparse/Makefile.am \
+libwww/modules/expat/xmlparse/Makefile.in \
 libwww/modules/expat/xmlparse/*.c \
 libwww/modules/expat/xmlparse/*.h \
 libwww/modules/expat/xmltok/Makefile.am \
+libwww/modules/expat/xmltok/Makefile.in \
 libwww/modules/expat/xmltok/*.c \
 libwww/modules/expat/xmltok/*.h \
 libwww/config/Makefile.am \
