@@ -60,6 +60,10 @@ extern void TtaSearchAttributes ( AttributeType searchedAtt1,
                                   Element element,
                                   Element *elementFound,
                                   Attribute *attributeFound );
+extern Attribute TtaGetTypedAttrAncestor ( Element pEl,
+                                           int attNum,
+                                           SSchema pSSattr,
+                                           Element *pElAttr );
 
 #else /* __STDC__ */
 
@@ -117,6 +121,10 @@ extern void TtaSearchAttributes (/* AttributeType searchedAtt1,
                                     Element element,
                                     Element *elementFound,
                                     Attribute *attributeFound */);
+extern Attribute TtaGetTypedAttrAncestor (/* Element pEl,
+                                             int attNum,
+                                             SSchema pSSattr,
+                                             Element *pElAttr */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

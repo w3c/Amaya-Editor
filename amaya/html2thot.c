@@ -6434,8 +6434,8 @@ void ParseIncludedHTML (Element elem, char *closingTag)
    ParseSubTree
    
   ----------------------------------------------------------------------*/
-void ParseSubTree (char* HTMLbuf, Element lastelem, ThotBool isclosed,
-		   Document doc)
+void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
+		   ThotBool isclosed, Document doc)
 {
    ElementType  elType;
    char        *schemaName;
@@ -6447,6 +6447,8 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, ThotBool isclosed,
      /* parse an HTML subtree */
      {
        InitializeHTMLParser (lastelem, isclosed, doc);
+       /* Initialize the language context with the 'lastelem' language*/
+       HTMLcontext.language = language;
        /* We set number line with 0 when we are parsing a sub-tree */
        NumberOfLinesRead = 0;
        HTMLparse (NULL, HTMLbuf);
@@ -6457,7 +6459,7 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, ThotBool isclosed,
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
        if (!ParseXmlSubTree (InputText, NULL, lastelem, isclosed,
-			     doc, TtaGetDefaultLanguage(), NULL))
+			     doc, language, NULL))
 	 StopParsing (doc);
       }
 }

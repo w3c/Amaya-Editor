@@ -1372,7 +1372,8 @@ static void  NsGiveName (char *ns_uri, char **ns_name)
 
   for (i = 0; i < Ns_Level; i++)
     {
-      if (strcmp (ns_uri, Ns_Uri[i]) == 0)
+      if ((Ns_Uri[i] != NULL) && 
+	  (strcmp (ns_uri, Ns_Uri[i]) == 0))
 	{
 	  *ns_name = Ns_Prefix[i];
 	  i = Ns_Level;
@@ -2609,6 +2610,7 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
 
    if (currentParserCtxt != NULL)
      {
+#ifdef XML_GENERIC
        if (currentParserCtxt == GenericXmlParserCtxt)
 	 {
 	   if (uriName != NULL)
@@ -2616,18 +2618,17 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
 	       isnew = FALSE;
 	       attrType.AttrSSchema = GetGenericXMLSSchemaByUri (uriName, XMLcontext.doc, &isnew);
 	       if (isnew)
-		 TtaChangeGenericSchemaNames (uriName, NULL, XMLcontext.doc);
+		 TtaChangeGenericSchemaNames (uriName, attrName, XMLcontext.doc);
 	     }
 	   else
 	     {
 	       elType = TtaGetElementType (XMLcontext.lastElement);
 	       attrType.AttrSSchema = elType.ElSSchema;
 	     }
-#ifdef XML_GENERIC
 	   MapGenericXmlAttribute (attrName, &attrType, doc);
-#endif /* XML_GENERIC */
 	 }
        else
+#endif /* XML_GENERIC */
 	 {
 	   if (currentParserCtxt->MapAttribute)
 	     (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
@@ -2682,7 +2683,7 @@ static void      EndOfAttributeName (char *xmlName)
    UnknownAttr = FALSE;
    HTMLStyleAttribute = FALSE;
    XMLSpaceAttribute = FALSE;
- 
+
    if (UnknownElement)
      /* The corresponding element doesn't belong to the current DTD */ 
      return;
@@ -2712,47 +2713,11 @@ static void      EndOfAttributeName (char *xmlName)
 	   if (currentParserCtxt != NULL &&
 	       strcmp (buffer, currentParserCtxt->UriName))
 	     ChangeXmlParserContextByUri (buffer);
-
-	   if (currentParserCtxt == NULL)
-	     {
-#ifdef XML_GENERIC
-	       /* Select root context */
-	       s = TtaGetSSchemaName (DocumentSSchema);
-	       if ((strcmp (s, "HTML") == 0) ||
-		   (strcmp (s, "SVG") == 0) ||
-		   (strcmp (s, "MathML") == 0) ||
-		   (strcmp (s, "Annot") == 0))
-		   /* It is not a generic xml document, just ignore the namespace */
-		 {
-		   currentParserCtxt = savParserCtxt;
-		   sprintf (msgBuffer, 
-			    "Namespace not supported for the attribute \"%s\"",
-			    xmlName);
-		   XmlParseError (errorParsing, msgBuffer, 0);
-		   sprintf (msgBuffer, attrName);
-		   UnknownXmlAttribute (msgBuffer);
-		   UnknownAttr = TRUE;
-		 }
-	       else
-		 /* We assign the generic XML context by default */ 
-		 currentParserCtxt = GenericXmlParserCtxt;
-#else /* XML_GENERIC */
-	       currentParserCtxt = savParserCtxt;
-	       sprintf (msgBuffer, 
-			"Namespace not supported for the attribute \"%s\"",
-			xmlName);
-	       XmlParseError (errorParsing, msgBuffer, 0);
-	       /* Create an unknown attribute  */
-	       sprintf (msgBuffer, attrName);
-	       UnknownXmlAttribute (msgBuffer);
-	       UnknownAttr = TRUE;
-#endif /* XML_GENERIC */  
-	     }
 	 }
      }
    else
      {
-       /* This attribute belongs to a same namespace that the element */
+       /* This attribute belongs to a same namespace than the element */
        attrName = TtaGetMemory (strlen (buffer) + 1);
        strcpy (attrName, buffer);
        if (UnknownNS)
@@ -2765,6 +2730,42 @@ static void      EndOfAttributeName (char *xmlName)
 	   UnknownXmlAttribute (attrName);
 	   UnknownAttr = TRUE;
 	 }
+     }
+   
+   if (currentParserCtxt == NULL)
+     {
+#ifdef XML_GENERIC
+       /* Select root context */
+       s = TtaGetSSchemaName (DocumentSSchema);
+       if ((strcmp (s, "HTML") == 0) ||
+	   (strcmp (s, "SVG") == 0) ||
+	   (strcmp (s, "MathML") == 0) ||
+	   (strcmp (s, "Annot") == 0))
+	 /* It is not a generic xml document, just ignore the namespace */
+	 {
+	   currentParserCtxt = savParserCtxt;
+	   sprintf (msgBuffer, 
+		    "Namespace not supported for the attribute \"%s\"",
+		    xmlName);
+	   XmlParseError (errorParsing, msgBuffer, 0);
+	   sprintf (msgBuffer, attrName);
+	   UnknownXmlAttribute (msgBuffer);
+	   UnknownAttr = TRUE;
+	 }
+       else
+	 /* We assign the generic XML context by default */ 
+	 currentParserCtxt = GenericXmlParserCtxt;
+#else /* XML_GENERIC */
+       currentParserCtxt = savParserCtxt;
+       sprintf (msgBuffer, 
+		"Namespace not supported for the attribute \"%s\"",
+		xmlName);
+       XmlParseError (errorParsing, msgBuffer, 0);
+       /* Create an unknown attribute  */
+       sprintf (msgBuffer, attrName);
+       UnknownXmlAttribute (msgBuffer);
+       UnknownAttr = TRUE;
+#endif /* XML_GENERIC */  
      }
 
    /* Is it a xml:space attribute */

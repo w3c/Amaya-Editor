@@ -17,6 +17,7 @@
 #include "message.h"
 #include "trans.h"
 #include "tree.h"
+#include "attribute.h"
 #include "fetchHTMLname.h"
 
 #include "fetchHTMLname_f.h"
@@ -828,7 +829,12 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
    ElementType         typeEl;
    ThotBool            res;
    SSchema             selSch, courSch;
- 
+   Attribute           heritAttr;
+   Element             elAttr;
+   Language            language;
+   char               *attrValue;
+   int                 l;
+
    res = TRUE;
    prevMatch = NULL;
    DMatch = sMatch;
@@ -888,12 +894,25 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
        printf("%s\n\n", bufHTML);
 #endif
 	TtaSetStructureChecking (0, doc);
+	/* Get the current language */
+	heritAttr = TtaGetTypedAttrAncestor (myFirstSelect, 1, NULL, &elAttr);
+	if (heritAttr)
+	  {
+	    l = TtaGetTextAttributeLength (heritAttr);
+	    attrValue = TtaGetMemory (l+1);
+	    TtaGiveTextAttributeValue (heritAttr, attrValue, &l);
+	    /* Convert the attribute value into a language name */
+	    language = TtaGetLanguageIdFromName (attrValue);
+	    TtaFreeMemory (attrValue);
+	  }
+	else
+	  language = TtaGetDefaultLanguage();
 	/* Calling of the appropriate parser */
 	if (DocumentMeta[doc]->xmlformat)
 	  ParseXmlSubTree (bufHTML, NULL, myFirstSelect, isClosed,
-			   doc, TtaGetDefaultLanguage(), NULL);
+			   doc, language, NULL);
 	else
-	  ParseSubTree (bufHTML, myFirstSelect, isClosed, doc);
+	  ParseSubTree (bufHTML, myFirstSelect, language, isClosed, doc);
 
 	courEl = myFirstSelect;
 	if (isClosed)

@@ -1220,3 +1220,28 @@ void TtaSearchAttributes (AttributeType searchedAtt1, AttributeType searchedAtt2
       }
     }
 }
+
+/*----------------------------------------------------------------------
+   TtaGetTypedAttrAncestor
+
+   returns a pointer to the attribute of the first
+   element which encloses pEl and that has an attribute
+   of type attNum. The function returns pElAttr if
+   the search is succesful, NULL otherwise.
+  ----------------------------------------------------------------------*/
+Attribute  TtaGetTypedAttrAncestor (Element pEl, int attNum,
+				    SSchema pSSattr, Element *pElAttr)
+{
+  PtrAttribute    pAttr;
+
+  UserErrorCode = 0;
+  pAttr = NULL;
+  if (pEl == NULL)
+    TtaError (ERR_invalid_parameter);
+   else if (attNum == 0)
+    TtaError (ERR_invalid_attribute_type);
+  else
+    pAttr = GetTypedAttrAncestor ((PtrElement) pEl, attNum,
+				  (PtrSSchema) pSSattr, (PtrElement *) pElAttr);
+  return ((Attribute) pAttr);
+}

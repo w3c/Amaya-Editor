@@ -310,7 +310,21 @@ extern void TtaSearchAttribute (AttributeType searchedAttribute, SearchDomain sc
    elementFound: the element found, or NULL if not found.
    attributeFound: the searched attribute, or NULL if not 
    ---------------------------------------------------------------------- */
-extern void TtaSearchAttributes (AttributeType searchedAtt1, AttributeType searchedAtt2, SearchDomain scope, Element element, Element *elementFound, Attribute *attributeFound);
+extern void TtaSearchAttributes (AttributeType searchedAtt1,
+				 AttributeType searchedAtt2,
+				 SearchDomain scope, Element element,
+				 Element *elementFound, Attribute *attributeFound);
+
+/*----------------------------------------------------------------------
+   TtaGetTypedAttrAncestor
+
+   returns a pointer to the attribute of the first
+   element which encloses pEl and that has an attribute
+   of type attNum. The function returns pElAttr if
+   the search is succesful, NULL otherwise.
+  ----------------------------------------------------------------------*/
+Attribute  TtaGetTypedAttrAncestor (Element pEl, int attNum,
+				    SSchema pSSattr, Element *pElAttr);
 
 #endif /* __CEXTRACT__ */
 

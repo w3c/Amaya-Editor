@@ -58,6 +58,7 @@ extern void ParseIncludedHTML ( Element elem,
                                 char *closingTag );
 extern void ParseSubTree ( char* HTMLbuf,
                            Element lastelem,
+                           Language language,
                            ThotBool isclosed,
                            Document doc );
 extern void StartParser ( Document doc,
@@ -121,6 +122,7 @@ extern void ParseIncludedHTML (/* Element elem,
                                   char *closingTag */);
 extern void ParseSubTree (/* char* HTMLbuf,
                              Element lastelem,
+                             Language language,
                              ThotBool isclosed,
                              Document doc */);
 extern void StartParser (/* Document doc,
