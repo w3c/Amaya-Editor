@@ -616,7 +616,8 @@ View                view;
       return;
 
    TtaSetDisplayMode (doc, DeferredDisplay);
-
+   /* disable structure checking */
+   TtaSetStructureChecking (FALSE, doc);
    /* Start a new sequence in the Redo queue */
    /***********/
 
@@ -626,6 +627,8 @@ View                view;
       {
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
 	 {
+	 /* enable structure checking */
+	 TtaSetStructureChecking (TRUE, doc);
 	 /* end of undo sequence */
 	 TtaSetDisplayMode (doc, DisplayImmediately);
          /* set the selection that is recorded */

@@ -2863,7 +2863,7 @@ boolean             isHTML;
 	    {
 	      cssRule++;
 	      base = cssRule;
-	      while (*cssRule != EOS && *cssRule != ')')
+	      while (*cssRule != EOS && *cssRule != '"')
 		cssRule++;
 	    }
 	  else
@@ -3302,8 +3302,13 @@ boolean             isHTML;
 	  
 	  /* Update the rendering */
 	  if (context->drv->UpdatePresentation != NULL)
-	    context->drv->UpdatePresentation (target, context, unused);
-
+	    {
+	      context->drv->UpdatePresentation (target, context, unused);
+	      /* case of specific rules on BODY element */
+	      if (context->type == HTML_EL_BODY && isHTML && !css)
+		context->drv->UpdatePresentation ((PresentationTarget) TtaGetMainRoot (context->doc), context, unused);
+	    }
+	    
 	  /* update index and skip the ";" separator if present */
 	  cssRule = p;
 	}

@@ -438,8 +438,8 @@ static void         SortEnv ()
 	{
 	  /* sorting order : First by appli name, then by entry name */
 	  cmp = ustrcasecmp (cour->appli, (*start)->appli);
-	  if ((cmp <= 0) ||
-	      ((cmp == 0) &&
+	  if (cmp <= 0 ||
+	      (cmp == 0 &&
 	       (ustrcasecmp (cour->name, (*start)->name) < 0)))
 	    {
 	      /* swap *start and cour */

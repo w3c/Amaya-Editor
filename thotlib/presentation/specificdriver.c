@@ -156,9 +156,7 @@ PresentationValue   v;
    doc = ctxt->doc;
    pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
 
-   /*
-    * The PRule list is directly associated to the element.
-    */
+   /* The PRule list is directly associated to the element */
    type = TtaGetElementType(elem);
    elType = type.ElTypeNum;
    pRule = ((PtrElement) elem)->ElFirstPRule;

@@ -260,7 +260,8 @@ Document            document;
 	    if (((PtrElement) element)->ElParent == NULL)
 	      if (pAttr->AeAttrNum == 1)
 		mandatory = TRUE;
-	  if (mandatory)
+	  if (mandatory &&
+	      (LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
 	    /* The attribute is required for this kind of element */
 	    TtaError (ERR_mandatory_attribute);
 	  else

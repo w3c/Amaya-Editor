@@ -16,7 +16,6 @@
 #include "amaya.h"
 #include "trans.h"
 #include "tree.h"
-#include "undo.h"
 
 #include "HTMLimage_f.h"
 #include "html2thot_f.h"

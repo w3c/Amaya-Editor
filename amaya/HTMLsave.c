@@ -15,12 +15,6 @@
 
 /* DEBUG_AMAYA_SAVE Print out debug information when saving */
 
-#ifdef AMAYA_DEBUG
-#define DBG(a) a
-#else
-#define DBG(a)
-#endif
-
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -276,7 +270,9 @@ STRING              newpath;
   int                 index, max;
   int                 len;
 
-DBG(fprintf(stderr, "SetRelativeURLs\n");)
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "SetRelativeURLs\n");
+#endif
 
   root = TtaGetMainRoot (document);
   /* handle style elements */
@@ -299,6 +295,8 @@ DBG(fprintf(stderr, "SetRelativeURLs\n");)
 					  NULL, CSSbuffer);
       if (new_url != NULL)
 	{
+	  /* register the modification to be able to undo it */
+	  TtaRegisterElementReplace (content, document);
 	  TtaSetTextContent (content, new_url, lang, document);
 	  TtaFreeMemory (new_url);
 	}
@@ -330,6 +328,8 @@ DBG(fprintf(stderr, "SetRelativeURLs\n");)
 		  new_url = UpdateCSSBackgroundImage (DocumentURLs[document], newpath, NULL, old_url);
 		  if (new_url != NULL)
 		    {
+		      /* register the modification to be able to undo it */
+		      TtaRegisterAttributeReplace (attr, el, document);
 		      TtaSetAttributeText (attr, new_url, el, document);
 		      TtaFreeMemory (new_url);
 		    }
@@ -339,7 +339,11 @@ DBG(fprintf(stderr, "SetRelativeURLs\n");)
 		{
 		  NormalizeURL (old_url, document, oldpath, tempname, NULL);
 		  new_url = MakeRelativeURL (oldpath, newpath);
-DBG(fprintf(stderr, "Changed URL from %s to %s\n", old_url, new_url);)
+#ifdef AMAYA_DEBUG
+		  fprintf(stderr, "Changed URL from %s to %s\n", old_url, new_url);
+#endif
+		  /* register the modification to be able to undo it */
+		  TtaRegisterAttributeReplace (attr, el, document);
                   /* save the new attribute value */
 		  TtaSetAttributeText (attr, new_url, el, document);
 		  TtaFreeMemory (new_url);
@@ -579,7 +583,9 @@ STRING            documentName;
   CHAR                docname[100];
   boolean             ok;
 
-DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);)
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);
+#endif
 
   strcpy (tempname, directoryName);
   strcat (tempname, DIR_STR);
@@ -703,7 +709,9 @@ boolean             use_preconditions;
     verify_publish = "yes";
   
   
-DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);)
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);
+#endif
 
   /* Save */
   /* JK: SYNC requests assume that the remotefile name is a static array */
@@ -725,7 +733,9 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, r
     return (0);
 
   /* Refetch */
-DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);
+#endif
 
   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), NULL);
   strcpy (tempURL, remotefile);
@@ -763,7 +773,9 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
   if (res == 0)
     {
       /* Compare content. */
-DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile, localfile);)
+#ifdef AMAYA_DEBUG
+      fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile, localfile);
+#endif
 #ifdef AMAYA_JAVA
 #endif /* AMAYA_JAVA */
       if (! TtaCompareFiles(tempfile, localfile))
@@ -977,7 +989,9 @@ boolean             use_preconditions;
       ResetStop (document);
     }
 
-DBG(fprintf(stderr, "Saving completed\n");)
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "Saving completed\n");
+#endif
   TtaFreeMemory (msg);
   if (tempname)
     TtaFreeMemory (tempname);
@@ -1033,7 +1047,9 @@ View                view;
        DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
      }
 
-DBG(fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);)
+#ifdef AMAYA_DEBUG
+   fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);
+#endif
 
    if (IsW3Path (tempname))
      {
@@ -1049,8 +1065,6 @@ DBG(fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);)
 	   DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
 	 }
 
-DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
-
        if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE, TRUE))
 	 {
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
@@ -1061,9 +1075,6 @@ DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
        }
    else
      {
-
-DBG(fprintf(stderr, "SaveDocument : local saving\n");)
-
        SetNamespacesAndDTD (SavingDocument);
        ok = TtaExportDocument (document, tempname, "HTMLT");
        if (ok)
@@ -1260,6 +1271,8 @@ STRING                 newURL;
 	   sStyle = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, CSSbuffer);
 	   if (sStyle != NULL)
 	     {
+	       /* register the modification to be able to undo it */
+	       TtaRegisterElementReplace (content, SavingDocument);
 	       /* save this new style element string */
 	       TtaSetTextContent (content, sStyle, lang, SavingDocument);
 
@@ -1398,6 +1411,8 @@ STRING                 newURL;
 			   ptr = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, buf);
 			   if (ptr != NULL)
 			     {
+			       /* register the modification to be able to undo it */
+			       TtaRegisterAttributeReplace (attr, el, SavingDocument);
 			       /* save this new style attribute string */
 			       TtaSetAttributeText (attr, ptr, el, SavingDocument);
 			       strcpy (url, ptr);
@@ -1438,6 +1453,8 @@ STRING                 newURL;
 			     strcpy (url, imgname);
 
 			   NormalizeURL (url, SavingDocument, tempname, imgname, NULL);
+			   /* register the modification to be able to undo it */
+			   TtaRegisterAttributeReplace (attr, el, SavingDocument);
 			   TtaSetAttributeText (attr, url, el, SavingDocument);
 			 }
 
@@ -1450,7 +1467,9 @@ STRING                 newURL;
 			 */
 		       if (url[0] != EOS && buf[0] != EOS)
 			 {
-DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
+#ifdef AMAYA_DEBUG
+			   fprintf(stderr, "     SRC from %s to %s\n", buf, url);
+#endif
 			   if ((src_is_local) && (!dst_is_local))
 			     /* add the localfile to the images list */
 			     AddLocalImage (buf, imgname, tempname, SavingDocument, &pImage);
@@ -1542,23 +1561,20 @@ void                DoSaveAs ()
   STRING              tempname, localPath;
   STRING              imagePath, base;
   CHAR                imgbase[MAX_LENGTH];
-#ifndef IV
-  CHAR                backupName[MAX_LENGTH], backupFile[MAX_LENGTH];
-#else
-  Element             copy;
-#endif
   CHAR                url_sep;
   int                 res;
   int                 len;
   boolean             src_is_local;
   boolean             dst_is_local, ok;
-  boolean	      docModified;
+  boolean	      docModified, toUndo;
 
   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
   dst_is_local = !IsW3Path (SavePath);
   ok = TRUE;
 
-DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], SavePath, SaveName, (int) CopyImages);)
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], SavePath, SaveName, (int) CopyImages);
+#endif
 
   /* New document path */
   documentFile = TtaGetMemory (MAX_LENGTH);
@@ -1715,99 +1731,79 @@ DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentUR
   if (ok)
     {
       docModified = TtaIsDocumentModified (doc);
-#ifndef IV
-      strcpy (backupName, DocumentURLs[doc]);
-      sprintf (backupFile, "%s%cbackup.html", TempFileDirectory, DIR_SEP);
-      ok = TtaExportDocument (doc, backupFile, "HTMLT");
-#else
-      copy = TtaCopyTree (root, doc, doc, NULL);
-#endif
-    }
-
-  if (ok)
-    {
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       /* Transform all URLs to absolute ones */
-        if (UpdateURLs)
-	  {
-	    if (base)
-	      /* URLs are still relative to the document base */
-	      SetRelativeURLs (doc, base);
-	    else
-	      /* URLs are relative to the new document directory */
-	      SetRelativeURLs (doc, documentFile);
-	  }
-	/* now free base */
-	if (base)
-	  TtaFreeMemory (base);
+      if (UpdateURLs)
+	{
+	  if (base)
+	    /* URLs are still relative to the document base */
+	    SetRelativeURLs (doc, base);
+	  else
+	    /* URLs are relative to the new document directory */
+	    SetRelativeURLs (doc, documentFile);
+	}
+      /* now free base */
+      if (base)
+	TtaFreeMemory (base);
 	
-	if (!src_is_local)
-	  /* store the name of the local temporary file */
-	  localPath = GetLocalPath (doc, DocumentURLs[doc]);
-	else
-	  localPath = NULL;
-	/* Change the document URL and if CopyImage is TRUE change all
-	 * picture SRC attribute. If pictures are saved locally, make the copy
-	 * else add them to the list of remote images to be copied.
-	 */
-	UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
-	  
-	if (dst_is_local)
-	  {
-	    /* Local to Local or Remote to Local */
-DBG(fprintf(stderr, "   Saving document locally : to %s\n", documentFile);)
-
-	    /* save the local document */
-	    ok = SaveDocumentLocally (SavePath, SaveName);
-	  }
-	else
-	  {
-	    /* Local to Remote or Remote to Remote */
-DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
-
-	    /* now save the file as through the normal process of saving */
-	    /* to a remote URL. */
-	    ok = SaveDocumentThroughNet (doc, 1, TRUE, CopyImages, FALSE);
-	  }
-
-	    
-	SavingDocument = 0;
-	if (ok)
-	  {
-	    /* Sucess of the operation */
-	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
-	    TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
-	    /* remove the previous temporary file */
-	    if (localPath)
-	      {
-		TtaFileUnlink (localPath);
-		TtaFreeMemory (localPath);
-	      }
-	  }
-	else
-	  {
-	    /*
-	      Operation failed:
-	      restore the previous contents of the document
-	      */
-#ifndef IV
-	    /* allow Amaya to replace the current document */
-	    TtaSetDocumentUnmodified (doc);
-	    doc = RestoreOneAmayaDoc (doc, backupFile, backupName);
-#else
-	    TtaDeleteTree (root, doc);
-	    TtaAttachNewTree(copy, doc);
-#endif
-	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
-	    /* restore the previous status of the document */
-	    if (!docModified)
-	      TtaSetDocumentUnmodified (doc);
-	    if (localPath)
+      if (!src_is_local)
+	/* store the name of the local temporary file */
+	localPath = GetLocalPath (doc, DocumentURLs[doc]);
+      else
+	localPath = NULL;
+      /* Change the document URL and if CopyImage is TRUE change all
+       * picture SRC attribute. If pictures are saved locally, make the copy
+       * else add them to the list of remote images to be copied.
+       */
+      UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
+      toUndo = TtaCloseUndoSequence (doc);
+      
+      if (dst_is_local)
+	{
+	  /* Local to Local or Remote to Local */
+	  /* save the local document */
+	  ok = SaveDocumentLocally (SavePath, SaveName);
+	}
+      else
+	{
+	  /* Local to Remote or Remote to Remote */
+	  /* now save the file as through the normal process of saving */
+	  /* to a remote URL. */
+	  ok = SaveDocumentThroughNet (doc, 1, TRUE, CopyImages, FALSE);
+	}
+      
+      SavingDocument = 0;
+      if (ok)
+	{
+	  if (toUndo)
+	    TtaCancelLastRegisteredOperation (doc);
+	  /* Sucess of the operation */
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
+	  TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
+	  /* remove the previous temporary file */
+	  if (localPath)
+	    {
+	      TtaFileUnlink (localPath);
 	      TtaFreeMemory (localPath);
-	    /* propose to save a second time */
-	    SaveDocumentAs(doc, 1);
-	  }
-
-
+	    }
+	}
+      else
+	{
+	  /*
+	    Operation failed:
+	    restore the previous contents of the document
+	    */
+	  if (toUndo)
+	    TtcUndo (doc, 1);
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
+	  /* restore the previous status of the document */
+	  if (!docModified)
+	    TtaSetDocumentUnmodified (doc);
+	  if (localPath)
+	    TtaFreeMemory (localPath);
+	  /* propose to save a second time */
+	  SaveDocumentAs(doc, 1);
+	}
     }
   TtaFreeMemory (documentFile);
 }

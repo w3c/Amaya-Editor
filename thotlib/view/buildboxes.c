@@ -1107,6 +1107,7 @@ int                 frame;
 {
   PtrBox            pFilledBox;
   PtrAbstractBox    pAb;
+  int               color;
 
   if (pBox != pMainBox)
     {
@@ -1132,6 +1133,16 @@ int                 frame;
 	      pFilledBox->BxNextBackground = pBox;
 	    }
 	}
+    }
+  else
+    {
+      color = pBox->BxAbstractBox->AbBackground;
+      if (BackgroundColor[frame] != color)
+        {
+          /* change the window background color */
+          BackgroundColor[frame] = color;
+          SetMainWindowBackgroundColor (frame, color);
+        }
     }
 }
 
@@ -1163,11 +1174,11 @@ int                 frame;
 	  pBox->BxNextBackground = NULL;
 	}
     }
-  /***  else
+  else
     {
       BackgroundColor[frame] = DefaultBColor;
       SetMainWindowBackgroundColor (frame, DefaultBColor);
-    }****/
+    }
 }
 
 
