@@ -5047,7 +5047,7 @@ char               *GIname;
   ElementType         elType;
   Element             el;
   int                 entry;
-  char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
+  char                msgBuffer[MaxBufferLength];
   boolean             sameLevel;
 
   /* search the MathML element name in the mapping table */
@@ -5059,7 +5059,6 @@ char               *GIname;
       sprintf (msgBuffer, "Unknown tag <%s>", GIname);
       ParseHTMLError (theDocument, msgBuffer);
       UnknownTag = TRUE;
-	  TtaFreeMemory (msgBuffer);
     }
   else
     {
@@ -5119,7 +5118,7 @@ char               *GIname;
   ElementType         elType;
   Element             el;
   int                 entry;
-  char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
+  char                msgBuffer[MaxBufferLength];
   PtrClosedElement    pClose;
   boolean             sameLevel;
   SSchema	      schema;
@@ -5209,7 +5208,6 @@ char               *GIname;
 	      }
 	  }
      }
-  TtaFreeMemory (msgBuffer);
 }
 
 
@@ -5273,7 +5271,7 @@ static void         EndOfEndMathTag ()
 #endif
 {
    int                 entry;
-   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
+   char                msgBuffer[MaxBufferLength];
 
    /* seach the HTML tag in the mapping table */
    entry = MapMathGI (inputBuffer);
@@ -5290,7 +5288,6 @@ static void         EndOfEndMathTag ()
 	ParseHTMLError (theDocument, msgBuffer);
      }
    InitBuffer ();
-   TtaFreeMemory (msgBuffer);
 }
 #endif /* MATHML */
 
@@ -5306,11 +5303,11 @@ char                c;
 
 #endif
 {
+   SSchema	       schema;
+   char                msgBuffer[MaxBufferLength];
    int                 entry;
    int                 i;
    boolean             ok;
-   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
-   SSchema	       schema;
 
    CloseBuffer ();
 #ifdef MATHML
@@ -5385,7 +5382,6 @@ char                c;
 	  }
      }
    InitBuffer ();
-   TtaFreeMemory (msgBuffer);
 }
 
 
@@ -5448,7 +5444,7 @@ char                c;
    Attribute           attr;
    SSchema	       schema;
    char                translation;
-   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
+   char                msgBuffer[MaxBufferLength];
 
    CloseBuffer ();
    /* inputBuffer contains the attribute name */
@@ -5531,7 +5527,6 @@ char                c;
 	      }
      }
    InitBuffer ();
-   TtaFreeMemory (msgBuffer);
 }
 
 
@@ -5694,18 +5689,18 @@ char                c;
 
 #endif
 {
-   int                 attrKind;
    AttributeType       attrType;
-   int                 val;
-   int                 length;
-   char               *buffer;
-   char               *attrName;
-   boolean             done;
    Element             child;
+   Language	       lang;
    char                translation;
    char                shape;
-   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
-   Language	       lang;
+   char                msgBuffer[MaxBufferLength];
+   char               *buffer;
+   char               *attrName;
+   int                 val;
+   int                 length;
+   int                 attrKind;
+   boolean             done;
 
    if (IgnoreAttr)
       /* this is the end of value of an invalid attribute. Keep the */
@@ -5899,7 +5894,6 @@ char                c;
 #endif /* !STANDALONE */
      }
    InitBuffer ();
-   TtaFreeMemory (msgBuffer);
 }
 
 /*----------------------------------------------------------------------
@@ -5994,7 +5988,7 @@ char                c;
 #endif
 {
    int                 i;
-   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
+   char                msgBuffer[MaxBufferLength];
 
    EntityName[LgEntityName] = EOS;
    if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
@@ -6011,7 +6005,6 @@ char                c;
 	/* print an error message */
 	sprintf (msgBuffer, "Invalid entity \"&%s;\"", EntityName);
 	ParseHTMLError (theDocument, msgBuffer);
-	TtaFreeMemory (msgBuffer);
      }
    LgEntityName = 0;
    ReadingHTMLentity = FALSE;
@@ -6030,7 +6023,7 @@ unsigned char       c;
 #endif
 {
    int                 i;
-   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
+   char               msgBuffer[MaxBufferLength];
    boolean	       OK;
 
    if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
@@ -6120,7 +6113,6 @@ unsigned char       c;
 	        EntityName[LgEntityName++] = EOS;
 	        sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
 	        ParseHTMLError (theDocument, msgBuffer);
-			TtaFreeMemory (msgBuffer);
 		}
 	     /* next state is the return state from the entity subautomaton,
 		not the state computed by the automaton.
@@ -6167,7 +6159,7 @@ char                c;
 #endif
 {
    int                 i;
-   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
+   char                msgBuffer[MaxBufferLength];
 
 #ifdef MATHML
    if (WithinMathML && !ReadingHTMLentity)
@@ -6190,7 +6182,6 @@ char                c;
 	/* print an error message */
 	sprintf (msgBuffer, "Invalid entity \"&%s;\"", EntityName);
 	ParseHTMLError (theDocument, msgBuffer);
-	TtaFreeMemory (msgBuffer);
      }
    LgEntityName = 0;
 }
@@ -6208,7 +6199,7 @@ unsigned char       c;
 #endif
 {
    int                 i;
-   char*               msgBuffer; /* [MaxBufferLength];*/
+   char                msgBuffer[MaxBufferLength];
    boolean	       OK;
 
 #ifdef MATHML
@@ -6270,10 +6261,8 @@ unsigned char       c;
 	        /* print an error message */
 	        EntityName[LgEntityName++] = c;
 	        EntityName[LgEntityName++] = EOS;
-			msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
 	        sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
 	        ParseHTMLError (theDocument, msgBuffer);
-			TtaFreeMemory (msgBuffer);
 		}
 	     /* next state is the return state from the entity subautomaton,
 		not the state computed by the automaton.
