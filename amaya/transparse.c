@@ -36,7 +36,7 @@ typedef struct _parChoice
      ThotBool            optional;
 } parChoice;
 
-static char            ParsedName[20];
+static char            ParsedName[TRANSNAME];
 static parChoice      *ParsedChoice;	/* current forest descriptor */
 static parForest      *ParsedForest;	/* cuurent forest descriptor */
 static parChoice      *ParsedLastChoice;
@@ -2143,7 +2143,7 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
    char                msg[200];
    char	               fileName[MAX_LENGTH];
    char                pathes[MAX_LENGTH];
-   char               *next, *cour;
+   char               *next, *cour, *lan;
    ThotBool            found = FALSE;
    struct stat        *StatBuffer;
    int                 len, status;
@@ -2151,7 +2151,8 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
    /* searches if a transformation set is already allocated */
    /* for the file to be parsed */
    ParsedTransSet = strMatchEnv.TransSets;
-   while (ParsedTransSet != NULL && (strcmp ((char *)ParsedTransSet->TransFileName, (char *)name) != 0))
+   while (ParsedTransSet != NULL &&
+	  (strcmp ((char *)ParsedTransSet->TransFileName, (char *)name) != 0))
      ParsedTransSet = ParsedTransSet->Next;
    if (ParsedTransSet == NULL)
      {
@@ -2167,7 +2168,6 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
      }
 
    /* build the transformation file name from schema directory and schema name */
-   
    TtaGetSchemaPath (pathes, MAX_LENGTH);
    cour = pathes;
    while (!found && cour != NULL)
@@ -2180,18 +2180,26 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
             strncpy (fileName, cour, (size_t)(next - cour)); 
 	    fileName[(next - cour)] = EOS;
           }
-        len = strlen(fileName);
-        if (fileName[len]!= DIR_SEP)
+        len = strlen (fileName);
+        if (fileName[len] != DIR_SEP)
+	  /* add a file separator */
           strcat (fileName, DIR_STR);
         strcat (fileName,name);
         strcat (fileName, ".trans");
+        len = strlen (fileName);
+	strcat (fileName, ".");
+	lan = TtaGetVarLANG ();
+        strcat (fileName, lan);
+	if (!TtaFileExist(fileName))
+	  /* remove the language specificity */
+	  fileName[len] = EOS;
 	found = (TtaFileExist(fileName) == 1);
 	if (!found)
 	  {
 	   if (next == NULL)
 	      cour = NULL;
 	   else
-	      cour = next+1;
+	      cour = next + 1;
 	  }
      }
    
@@ -2206,7 +2214,7 @@ int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
 	   SetTransValid (ParsedTransSet);
 	else
 	  {
-       	/* the file xxx.trans has been touched, parsing it */
+	    /* the file xxx.trans has been touched, parsing it */
 	     ParsedTransSet->timeLastWrite = StatBuffer->st_mtime;
 	     infile = TtaReadOpen(fileName);
 	   if (infile == 0)

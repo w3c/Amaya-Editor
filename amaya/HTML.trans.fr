@@ -68,12 +68,12 @@
 ! Transformation rules 
 !!!!!!!!!!!!!!!!!!!!!!
 
-Address:(p{*+})+;
+Adresse:(p{*+})+;
 	{
 	* > address:*;
 	}
 
-Paragraph:(address{*+});
+Paragraphe:(address{*+});
 	{
 	* > p:*;
 	}
@@ -81,36 +81,36 @@ Paragraph:(address{*+});
 !between lists
 !!!!!!!!!!!!!!
 
-Definition list:*{(li{(list:*{(li2:li)+}|other:*)+})+};
+Liste de définition:*{(li{(list:*{(li2:li)+}|other:*)+})+};
 	{
 	other > dl:dt;
 	list > dl:dd;
 	li2 > dl.dd:;
 	}
 
-Bulleted list:(dl{(dt|dd{(*)+})+})+;
+Liste à puces:(dl{(dt|dd{(*)+})+})+;
 	{
 	dt > ul:li;
 	* > ul.li.ul:li.*;
 	}
 
-Numbered list:(dl{(dt|dd{(*)+})+})+;
+Liste numérotée:(dl{(dt|dd{(*)+})+})+;
 	{
 	dt > ol:li;
 	* > ol.li.ol:li.*;
 	}
 
-Bulleted list:(ol{(li{(*)+})+})+;
+Liste à puces:(ol{(li{(*)+})+})+;
         {
         * > ul:li.*;
         }
 
-Numbered list:(ul{(li{(*)+})+})+;
+Liste numérotée:(ul{(li{(*)+})+})+;
         {
 	* > ol:li.*;
         }
 
-Remove definition list: (dl{(dt{(dtc:*)+}|dd{(ddc:*)+})+})+;
+Retirer la liste de définition: (dl{(dt{(dtc:*)+}|dd{(ddc:*)+})+})+;
 	{
 	 dtc > :<* style="font-weight:bold">;
 	 ddc > :*;
@@ -119,7 +119,7 @@ Remove definition list: (dl{(dt{(dtc:*)+}|dd{(ddc:*)+})+})+;
 !flattering headings 
 !!!!!!!!!!!!!!!!!!!!
 
-Paragraphs: 
+Paragraphes: 
 (h1|h2|h3|h4|h5|h6|*{(li{(il:*)+})+}),(h1|h2|h3|h4|h5|h6|p|*{(li{(il:*)+})+})+;
 	{ 
 	h1 > :p;
@@ -135,12 +135,12 @@ Paragraphs:
 ! Preformatted to/from paragraphs
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Preformatted: p+;
+Preformaté: p+;
 	{
 	p > :pre;
 	}
 
-Paragraph: pre+;
+Paragraphe: pre+;
 	{
 	pre > :p;
 	}
@@ -162,7 +162,7 @@ Table: dl{(dt|dd)+};
 	dd > table.tbody.tr:td;
 	}
 
-Numbered List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+Liste numérotée:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
   	{
 	caption > :ol.li.strong;
 	block > :ol;
@@ -173,7 +173,7 @@ Numbered List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 	th2 > ol.li.ul:li;
 	}
 
-Bulleted List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+Liste à puces:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 	{
 	caption > :ul.li.strong;
 	block > :ul;
@@ -184,7 +184,7 @@ Bulleted List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 	th2 > ul.li.ul:li;
 	}
 
-Definition List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+Liste de définition:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
         {
         caption > :dl.dt;
         block   > :dl;
@@ -197,55 +197,55 @@ Definition List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 ! Other transformations
 !!!!!!!!!!!!!!!!!!!!!!
 
-Merge items: li,(li2:li)+;
+Réunin les items: li,(li2:li)+;
 	{
 	li > li:;
 	li2 > li:;
 	}
-Remove the paragraph level: li{p{(cont:*)+},?(next:*)+};
+Retirer le niveau paragraphe: li{p{(cont:*)+},?(next:*)+};
 	{
      	li > li:;
      	cont > *;
      	next > *;
      	}
-Remove the Underline: (u{*+})+;
+Retirer le souligné: (u{*+})+;
         {
         * > :*;
         }
 
-Split items: (li{a:*,(b:*)+})+;
+Couper l'item de liste: (li{a:*,(b:*)+})+;
 	{
 	a > :li.*;
 	b > :li.*;
 	}
 
-Merge lists: ul{li+},(ul{li+})+;
+Réunir les listes: ul{li+},(ul{li+})+;
 	{
 	li > ul:li;
 	}
 
-Merge lists: ol{li+},(ol{li+})+;
+Réunir les listes: ol{li+},(ol{li+})+;
 	{
 	li > ol:li;
 	}
 
-Merge lists: dl{(dt|dd)+},(dl{(dt|dd)+})+;
+Réunir les listes: dl{(dt|dd)+},(dl{(dt|dd)+})+;
 	{
 	dt > dl:dt;
 	dd > dl:dd;
 	}
 
-!Paragraph: *{(li{(cont:*)+})+};
+!Paragraphe: *{(li{(cont:*)+})+};
 !	{
 !	cont > :*;
 !	}
 
-Paragraph: *{(li{(*{?(li{(lev2:*)+})+})+})+};
+Paragraphe: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 	{
 	lev2 > :*;
 	}
 
-Paragraphs: (ol{(li{(h1|h2|h3|h4|h5|h6|p|*)+})+})+;
+Paragraphes: (ol{(li{(h1|h2|h3|h4|h5|h6|p|*)+})+})+;
 	{
 	h1 > :h1;
 	h2 > :h2;
@@ -257,7 +257,7 @@ Paragraphs: (ol{(li{(h1|h2|h3|h4|h5|h6|p|*)+})+})+;
 	* > :p.*;
 	}
 
-Paragraphs: (ul{(li{(h1|h2|h3|h4|h5|h6|p|*)+})+})+;
+Paragraphes: (ul{(li{(h1|h2|h3|h4|h5|h6|p|*)+})+})+;
 	{
 	h1 > :h1;
 	h2 > :h2;
@@ -269,7 +269,7 @@ Paragraphs: (ul{(li{(h1|h2|h3|h4|h5|h6|p|*)+})+})+;
 	* > :p.*;
 	}
 
-Remove two list levels: *{(li{(*{?(li{(lev2:*)+})+})+})+};
+Retirer 2 niveaux de liste: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 	{
 	lev2 > :*;
 	}
@@ -277,17 +277,17 @@ Remove two list levels: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 ! Forms to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-Enclosing into Form: *+;
+Eglober dans Formulaire: *+;
 	{
 	* > Form:*;
 	}
 
-Remove the Form: form{?*+};
+Retirer Formulaire: form{?*+};
 	{
 	* > :*;
 	}
 
-Remove the submenu: (optgroup{*+})+;
+Retirer le sous-menu: (optgroup{*+})+;
 	{
         * > :*;
 	}
@@ -295,7 +295,7 @@ Remove the submenu: (optgroup{*+})+;
 ! Lists to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-Bulleted list: (p|ol|menu|dir|pre|form)+;
+Liste à puces: (p|ol|menu|dir|pre|form)+;
    	{
         p > ul:<li style=p.style>;
         ol > ul;
@@ -303,7 +303,7 @@ Bulleted list: (p|ol|menu|dir|pre|form)+;
         form > ul:li.form;
         }
 
-Numbered list:(p|ul|menu|dir|pre|form)+;
+Liste numérotée:(p|ul|menu|dir|pre|form)+;
 	   {
         p > ol:li;
         ul > ol;
@@ -314,18 +314,18 @@ Numbered list:(p|ul|menu|dir|pre|form)+;
 ! Tables to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-Vertical table: *+;
+Table verticale: *+;
 	{
 	* > <table border="1">:tr.td.*;
 	}
 
-Horizontal table : *+;
+Table horizontale: *+;
 	{
 	* > <table border="1">.tr:td.*;
 	}
 
 
-Remove the table:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+Retirer la table:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
         {
         caption > :div.p;
         block   > :div;
@@ -341,7 +341,7 @@ Remove the table:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 !	cell_content > :*;
 !	}
 
-Transpose the table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
+Transposer la table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
 	{
 	td > <table border=table.border>:tr.td;
 	th > table:tr.td;
@@ -349,12 +349,12 @@ Transpose the table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
 	th2 > table.tr:td;
 	}
 
-Heading cell :?(td|th)+,td,?(td|th)+;
+Cellule titre :?(td|th)+,td,?(td|th)+;
 	{
 	$CreateHeadingCell;
 	}
 
-Data cell :?(td|th)+,th,?(td|th)+;
+Cellule :?(td|th)+,th,?(td|th)+;
 	{
 	$CreateDataCell;
 	}
@@ -362,7 +362,7 @@ Data cell :?(td|th)+,th,?(td|th)+;
 !headings to/from definitions
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Definition list:((h1|h2|h3|h4|h5|h6),*+)+;
+Liste de définition:((h1|h2|h3|h4|h5|h6),*+)+;
 	{
 	h1 > dl:dt;
 	h2 > dl:dt;
@@ -374,7 +374,7 @@ Definition list:((h1|h2|h3|h4|h5|h6),*+)+;
 	* > dl.dd:*;
 	}
 
-Definition list:(h1,?hr,?(level1:*)+,?(h2,?(level2:*)+,?((h3|h4|h5|h6),(level3:*)+)+)+)+;
+Liste de définition:(h1,?hr,?(level1:*)+,?(h2,?(level2:*)+,?((h3|h4|h5|h6),(level3:*)+)+)+)+;
 	{
 	h1 > dl:dt;
 	level1>dl.dd:*;
@@ -387,7 +387,7 @@ Definition list:(h1,?hr,?(level1:*)+,?(h2,?(level2:*)+,?((h3|h4|h5|h6),(level3:*
 	level3 > dl.dd.dl.dd.dl.dd:*;
 	}
 
-Definition list:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)+)+;
+Liste de définition:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)+)+;
 	{
 	h2 > dl:dt;
 	level1 > dl.dd:*;
@@ -399,7 +399,7 @@ Definition list:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)
 	level3 > dl.dd.dl.dd.dl.dd:*;
 	}
 
-Definition list:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)+;
+Liste de définition:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)+;
 	{
 	h3 > dl:dt;
 	level1 > dl.dd:*;
@@ -410,7 +410,7 @@ Definition list:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)
 	level3 > dl.dd.dl.dd.dl.dd:*;
 	}
 
-Multi-level definition list:(h4,?hr,?(level1:*)+,(h5,?(level2:*)+,((h6)+,(level3:*)+)+)+)+;
+Liste de définition multi-niveaux:(h4,?hr,?(level1:*)+,(h5,?(level2:*)+,((h6)+,(level3:*)+)+)+)+;
 	{
 	h4 > dl:dt;
 	level1 > dl.dd:*;
@@ -420,7 +420,7 @@ Multi-level definition list:(h4,?hr,?(level1:*)+,(h5,?(level2:*)+,((h6)+,(level3
 	level3 > dl.dd.dl.dd.dl.dd:*;
 	}
 
-Headings h1:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
+Titre h1:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
 	{
 	dt1 > :h1;
 	dt2 > :h2;
@@ -428,7 +428,7 @@ Headings h1:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*
 	content > :*;
 	}
 
-Headings h2:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
+Titre h2:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
 	{
 	dt1 > :h2;
 	dt2 > :h3;
@@ -436,7 +436,7 @@ Headings h2:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*
 	content > :*;
 	}
 
-Headings h3:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
+Titre h3:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
 	{
 	dt1 > :h3;
 	dt2 > :h4;
@@ -444,58 +444,58 @@ Headings h3:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*
 	content > :*;
 	}
 
-Definition list: p,*+;
+Liste de définition: p,*+;
 	{
 	p > dl:dt;
 	* > dl.dd:*;
 	}
 
-Remove the division: (div{*+})+;
+Retirer la division: (div{*+})+;
 	{
         * > :*;
 	}
 
-Remove the Center element: (center{*+})+;
+Retirer le Centrer: (center{*+})+;
 	{
         * > :*;
 	}
 
-Remove the paragraph level: p{img};
+Retirer le niveau paragraphe: p{img};
      	{
         img > :*;
      	}
 
-Remove the BlockQuote element: blockquote{*+};
+Retirer le BlockQuote: blockquote{*+};
 	{
 	* > :*;
 	}
 
-Remove the font element: font{*+};
+Retirer l'élément font: font{*+};
 	{
 	* > :*;
 	}
 
-Remove the span element: span{*+};
+Retirer l'élément span: span{*+};
 	{
 	* > :*;
 	}
 
-Remove the Subscript: sub{*+};
+Retirer le Subscript: sub{*+};
 	{
 	* > :*;
 	}
 	
-Remove the Superscript: sup{*+};
+Retirer le Superscript: sup{*+};
 	{
 	* > :*;
 	}
 	
-Remove the Quotation: q{*+};
+Retirer la Quotation: q{*+};
 	{
         * > :*;
 	}
 
-Remove the BiDi: bdo{*+};
+Retirer le BiDi: bdo{*+};
 	{
         * > :*;
 	}

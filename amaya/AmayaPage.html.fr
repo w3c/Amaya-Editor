@@ -159,9 +159,10 @@ MathML (Mathematical Markup Language), SVG (Scalable Vector Graphics), CSS
 <p>Les versions OpenGL implémentent les transformations, la transparence et
 l'animation des éléments SVG. Comme Amaya supporte complètement les documents
 composés, toutes ces nouvelles propriétés s'appliquent aussi aux éléments
-XHTML et MathML inclus. Vous pouvez voir une <a href="Amaya.svg">démonstation
-d'animation</a> si vous avez téléchagé une version OpenGL d'Amaya. Cette
-version inclut aussi le support de la propriété float de CSS.</p>
+XHTML et MathML inclus. Vous pouvez voir une <a
+href="Amaya.svg">démonstration d'animation</a> si vous avez téléchagé une
+version OpenGL d'Amaya. Cette version inclut aussi le support de la propriété
+float de CSS.</p>
 </div>
 
 <div>

@@ -82,7 +82,7 @@ static ThotBool      isClosed;
 
 /* correspondance table between the transformations proposed to the user */
 /* and the matching descriptors */
-static strMatch     *menuTrans[20];
+static strMatch     *menuTrans[TRANSNAME];
 /* did the transformation succed ? */
 static ThotBool      ResultTrans;
 
@@ -2566,7 +2566,7 @@ void TransformType (Document doc, View view)
   ----------------------------------------------------------------------*/
 ThotBool TransformIntoType (ElementType * resultType, Document doc)
 {
-  char                DestTag[20];
+  char                DestTag[TRANSNAME];
   ThotBool            ok, chglev;
   int                 i,last,best;
   Element             elemSelect;
