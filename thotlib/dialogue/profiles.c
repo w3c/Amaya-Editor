@@ -637,7 +637,7 @@ void Prof_InitTable (char *prof_file)
 	  profFile = fopen (buffer, "r");
 	  /* what is the current active profile */  
 	  ptr = TtaGetEnvString ("Profile");
-	  if (ptr && *ptr)
+	  if (ptr && *ptr != EOS)
 	    strcpy (UserProfile, ptr);	
 	  else
 	    strcpy (UserProfile, "Editor");

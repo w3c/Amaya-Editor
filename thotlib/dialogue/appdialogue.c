@@ -904,7 +904,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   int                 i, j;
   int                 lg, sref;
   int                 item, profile;
-  int                 action, entries;
+  int                 action, entries, index;
   ThotBool            withEquiv, hidden;
 
   /* Construit le sous-menu attache a l'item */
@@ -918,6 +918,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   equiv[0] = EOS;
   string[0] = EOS;
   entries = 0;
+  index = 0;
   ptritem = ptrmenu->ItemsList;
   /*
     In the previous version hidden entries were removed,
@@ -959,7 +960,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	      if (update)
 		{
 		  /* activate the entry */
-		  TtaRedrawMenuEntry (sref, entries, NULL, -1, 1);
+		  TtaRedrawMenuEntry (sref, index, NULL, -1, 1);
 		  MenuActionList[action].ActionActive[frame] = TRUE;
 		}
 	      if (ptritem[item].ItemType == 'D')
@@ -975,7 +976,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	      if (update)
 		{
 		  /* desactivate the entry */
-		  TtaRedrawMenuEntry (sref, entries, NULL, InactiveB_Color, 0);
+		  TtaRedrawMenuEntry (sref, index, NULL, InactiveB_Color, 0);
 		  MenuActionList[action].ActionActive[frame] = FALSE;
 		}
 	      /* doesn't count this entry */
@@ -1014,19 +1015,19 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	  LastItemType = ptrmenu->ItemsList[item].ItemType;
 	  entries++;
 	}
+	  index++;
       item++;
     }
 
   /* Creation of the submenu with or whithout equiv */
   if (entries == 0)
     TtaRedrawMenuEntry (ref, entry, NULL, InactiveB_Color, 0);
-  else if (!update)
-    {
-      if (withEquiv)
+  else if (update)
+    TtaRedrawMenuEntry (ref, entry, NULL, -1, 1);
+  else if (withEquiv)
 	TtaNewSubmenu (sref, ref, entry, NULL, entries, string, equiv, FALSE);
-      else
+  else
 	TtaNewSubmenu (sref, ref, entry, NULL, entries, string, NULL, FALSE);
-    }
 }
 
 
@@ -1109,8 +1110,11 @@ static void BuildPopdown (Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 				       profile, RO))
 	    {
 	      /* this entry is shown */
-	      if (update)
-		{
+	      if (update &&
+			  strcmp (MenuActionList[action].ActionName, "TtcPaste") &&
+			  strcmp (MenuActionList[action].ActionName, "TtcUndo") &&
+			  strcmp (MenuActionList[action].ActionName, "TtcRedo"))
+		  {
 		  /* activate the entry */
 		  TtaRedrawMenuEntry (ref, entries, NULL, -1, 1);
 		  MenuActionList[action].ActionActive[frame] = TRUE;
@@ -3924,10 +3928,12 @@ void TtaSetMenuOn (Document document, View view, int menuID)
      return;
 
    menu = FindMenu (frame, menuID, &ptrmenu);
-   if (menu != -1) {
+   if (menu != -1)
+   {
        menu--;
 #ifndef _WINDOWS
-       if (!FrameTable[frame].EnabledMenus[menu]) {
+       if (!FrameTable[frame].EnabledMenus[menu])
+	   {
 #endif /* _WINDOWS */
           /* Get the button widget */
           w = FrameTable[frame].WdMenus[menu];
