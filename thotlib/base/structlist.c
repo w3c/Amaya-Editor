@@ -41,6 +41,7 @@ static PtrPSchema   pSc1;
 char                mbsTmpStr[MAX_TXT_LEN];
 
 #include "absboxes_f.h"
+#include "content_f.h"
 #include "fileaccess_f.h"
 #include "presrules_f.h"
 #include "schemas_f.h"

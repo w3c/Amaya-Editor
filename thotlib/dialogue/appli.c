@@ -1085,8 +1085,6 @@ void TtcPageTop (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
-#else   /* _WINDOWS && GTK */
-   int                       delta;
 #endif  /* !_WINDOWS && GTK */
   int                        frame;
 
@@ -1110,8 +1108,6 @@ void TtcPageEnd (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
-#else   /* _WINDOWS && GTK */
-   int                       delta;
 #endif  /* !_WINDOWS && GTK */
   int                        frame;
 
