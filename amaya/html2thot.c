@@ -1661,19 +1661,26 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
       /* get the media specification */
       attrType.AttrTypeNum = HTML_ATTR_media;
       attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
+      if (attr)
 	{
 	  length = TtaGetTextAttributeLength (attr);
 	  buff = TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, buff, &length);
-	  if (!strcasecmp (buff, "screen"))
-	    media = CSS_SCREEN;
-	  else if (!strcasecmp (buff, "print"))
-	    media = CSS_PRINT;
-	  else if (!strcasecmp (buff, "all"))
+	  if (strstr (buff, "all") || strstr (buff, "ALL"))
 	    media = CSS_ALL;
 	  else
-	    media = CSS_OTHER;
+	    {
+	      media = CSS_OTHER;
+	      if (strstr (buff, "screen") || strstr (buff, "SCREEN"))
+		media = CSS_SCREEN;
+	      if (strstr (buff, "print") || strstr (buff, "PRINT"))
+		{
+		  if (media == CSS_OTHER)
+		    media = CSS_PRINT;
+		  else
+		    media = CSS_ALL;
+		}
+	    }
 	  TtaFreeMemory (buff);
 	}
       else
