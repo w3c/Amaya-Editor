@@ -348,6 +348,7 @@ redland_config: @MAKEREDLAND@ force
 			--with-www=none \
 			--without-libwww \
 			--without-openssl-digests \
+			--without-mysql \
 		        --cache-file=$$localdir/config.cache; \
 		$(ECHO) "redland is configured" ; \
 	        cd raptor ; \

@@ -1,0 +1,11 @@
+diff -Naur Amaya/Makefile.in.old Amaya/Makefile.in
+--- Amaya/Makefile.in.old	Mon Aug 16 12:31:47 2004
++++ Amaya/Makefile.in	Mon Aug 16 12:32:30 2004
+@@ -348,6 +348,7 @@
+ 			--with-www=none \
+ 			--without-libwww \
+ 			--without-openssl-digests \
++			--without-mysql \
+ 		        --cache-file=$$localdir/config.cache; \
+ 		$(ECHO) "redland is configured" ; \
+ 	        cd raptor ; \

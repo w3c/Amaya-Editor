@@ -1,6 +1,6 @@
 Package: 	amaya
 Version:	8.6
-Revision:	1
+Revision:	2
 Maintainer:	Stephane GULLY <stephane.gully@inrialpes.fr>
 Depends:	glib-shlibs, imlib-shlibs (>= 1.9.14-2), gtk+-shlibs, gettext, libjpeg-shlibs, libpng3-shlibs
 BuildDepends:   glib, gtk+, imlib (>= 1.9.14-2), libjpeg, libpng3, gettext-bin, gettext-dev
@@ -14,6 +14,7 @@ CustomMirror: <<
 SourceDirectory: Amaya
 NoSetLDFLAGS: true
 GCC: 3.3
+PatchScript:    cd .. && sed 's|@FINK@|%p|g' < %a/%n.patch | patch -p0
 CompileScript: <<
 	mkdir Darwin
 	cd 'Darwin' && ../configure --with-gtk --with-dav --enable-bookmarks --prefix=%p/share --bindir=%p/bin && make
