@@ -1563,7 +1563,10 @@ void TtaInitializeAppRegistry (char *appArgv0)
        sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
 #else /* _UNIX */
 #if defined(_WX) /* SG TODO : a valider */
-	   wxString homedir = wxGetHomeDir();
+	   wxString homedir;
+	   homedir = wxGetenv(wxT("USERPROFILE"));
+	   if (homedir.IsEmpty())
+         homedir = wxGetHomeDir();
 #ifdef _WINDOWS
 	   sprintf (app_home, "%s%c%s", homedir.mb_str (*wxConvCurrent),
 		    DIR_SEP, AppNameW);
