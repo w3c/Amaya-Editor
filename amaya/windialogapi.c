@@ -1504,10 +1504,10 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	
-	SetDlgItemText (hwnDlg, IDC_GETURL, "");
-	UrlToOpen[0] = 0;
+	SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
+	UrlToOpen[0] = EOS;
 	SetDlgItemText (hwnDlg, IDC_GETALT, "");
-	AltText[0] = 0;
+	AltText[0] = EOS;
 	break;
 	
       case WM_COMMAND:
