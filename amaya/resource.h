@@ -248,6 +248,7 @@
 #define ANNOTFILTERMENU                 544
 #define MAKEIDMENU                      545
 #define SAVEASDIALOG1                   546
+#define DOCINFOMENU                     547
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -681,6 +682,14 @@
 #define IDC_ACTRL                       1548
 #define IDC_ANONE                       1549
 #define IDC_ACCESSKEY                   1550
+#define IDC_DIURL                       1551
+#define IDC_DICONTENTTYPE               1552
+#define IDC_DICHARSET                   1553
+#define IDC_DICONTENTLEN                1554
+#define IDC_DICONTENTTYPE_VAL           1556
+#define IDC_DICHARSET_VAL               1557
+#define IDC_DICONTENTLEN_VAL            1558
+#define IDC_DIURL_VAL                   1559
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -725,9 +734,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        547
+#define _APS_NEXT_RESOURCE_VALUE        548
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1551
+#define _APS_NEXT_CONTROL_VALUE         1560
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

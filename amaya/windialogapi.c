@@ -191,7 +191,7 @@ ThotWindow          ghwndMain;
 ThotWindow          MakeIDHwnd;
 ThotBool            gbAbort;
 
-Document            tmpDoc; /* used to pass the Document id to the
+Document            TmpDoc; /* used to pass the Document id to the
 			       callback when setting up a menu */
 
 /* ------------------------------------------------------------------------ *
@@ -2965,14 +2965,35 @@ LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPAR
 }
 
 /*-----------------------------------------------------------------------
- MakeIDDlgProc
+ ResetDocInfo
+ Clears the value of the window handler for a given doc info window.
  ------------------------------------------------------------------------*/
-#if 0
-LRESULT CALLBACK DocumentInfoDlgPro (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+static void ResetDocInfo (ThotWindow hwnDlg)
 {
+  Document doc;
+
+  for (doc = 0; doc < DocumentTableLength ; doc++)
+  {
+    if (DocInfo[doc] == hwnDlg)
+	{
+        DocInfo[doc] = NULL;
+ 	    break;
+	}
+  }
+}
+
+/*-----------------------------------------------------------------------
+ DocumentInfoDlgProc
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+  Document doc;
+
   switch (msg)
     {
     case WM_INITDIALOG:
+	  /* copy the doc id parameter (from the global variable) */
+	  doc = TmpDoc;
       DocInfo[doc] = hwnDlg;
       /* init the dialog's text */
       SetWindowText (hwnDlg, TEXT("Document Info"));
@@ -2986,8 +3007,8 @@ LRESULT CALLBACK DocumentInfoDlgPro (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetDlgItemText (hwnDlg, IDC_DIURL_VAL, DocumentURLs[doc]);
 
       /* MIME type */
-      SetDlgItemText (hwnDlg, IDC_DIMIMETYPE, TEXT("MIME type:"));
-      SetDlgItemText (hwnDlg, IDC_DIMIMETYPE_VAL, 
+      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, TEXT("Content Type:"));
+      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, 
 		      DocumentMeta[doc]->content_type);
 
       /* charset */
@@ -2995,13 +3016,13 @@ LRESULT CALLBACK DocumentInfoDlgPro (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, DocumentMeta[doc]->charset);
 
       /* content length */
-      SetDlgItemText (hwnDlg, IDC_DICHARSET, TEXT("Content Length:"));
-      SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, DocumentMeta[doc]->charset);
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, TEXT("Content Length:"));
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, 0);
       break;
 
     case WM_CLOSE:
     case WM_DESTROY:
-      DocInfo[doc] = NULL;
+	  ResetDocInfo (hwnDlg);
       EndDialog (hwnDlg, ID_DONE);
       break;
       
@@ -3011,7 +3032,7 @@ LRESULT CALLBACK DocumentInfoDlgPro (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  /* action buttons */
 	case ID_DONE:
-	  MakeIDHwnd[doc] = NULL;
+	  ResetDocInfo (hwnDlg);
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	}
@@ -3021,7 +3042,6 @@ LRESULT CALLBACK DocumentInfoDlgPro (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
-#endif
 
 /*-----------------------------------------------------------------------
  CreateAltDlgWindow
@@ -3442,14 +3462,13 @@ void CreateMakeIDDlgWindow (ThotWindow parent)
  ------------------------------------------------------------------------*/
 void CreateDocumentInfoDlgWindow (ThotWindow parent, const Document doc)
 {  
-  /*
   if (DocInfo[doc])
     SetFocus (DocInfo[doc]);
   else
     {
-      tmpDoc = doc;
-      DialogBox (hInstance, MAKEINTRESOURCE (DOCUMENTINFODIALOG), parent, (DLGPROC) DocumentInfoDlgProc);
+	  /* copy the value so that we can find it in the callback */
+      TmpDoc = doc;
+      DialogBox (hInstance, MAKEINTRESOURCE (DOCINFOMENU), NULL, (DLGPROC) DocumentInfoDlgProc);
     }
-  */
 }
 #endif /* _WINDOWS */

@@ -406,10 +406,8 @@ void                DocumentInfo (Document document, View view)
    TtaShowDialogue (BaseDialog + DocInfoForm, TRUE);
 
 #else /* _WINDOWS */
-   /*
    CreateDocumentInfoDlgWindow (TtaGetViewFrame (document, view),
 				document);
-   */
 #endif /* _WINDOWS */
 }
 
