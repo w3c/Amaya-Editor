@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void XmlSetElemLineNumber ( Element el );
 extern void XmlParseError ( ErrorType type,
                             unsigned char *msg,
@@ -62,6 +63,7 @@ extern void StartXmlParser ( Document doc,
                              ThotBool externalDoc );
 
 #else /* __STDC__ */
+
 extern void XmlSetElemLineNumber ( Element el );
 extern void XmlParseError ( ErrorType type,
                               unsigned char *msg,

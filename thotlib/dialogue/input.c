@@ -547,7 +547,7 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
 			      LPARAM lParam, ThotBool isSpecial)
 {
    int  keyboard_mask = 0;   
-   int  status;
+   int  status, ret;
 
    if (frame < 0)
      return FALSE;
@@ -632,7 +632,8 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
 	 /* Return should generate a linefeed key
         Removing this test will break Ctrl Return */
 	 wParam = 0x0D;
-   return (ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam));
+   ret = ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam);
+   return (ret == 1);
 }
 
 #endif /* _WINGUI */
@@ -950,16 +951,20 @@ static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
 /*----------------------------------------------------------------------
   ThotInput handles the unicode character v and the command command.
   The parameter PicMask gives current modifiers.
-  Returns TRUE when an access key is handled.
+  Returns:
+   - 0 when nothing is done
+   - 1 when an access key is handled
+   - 2 when an action is done
+   - 3 when a character is inserted
   ----------------------------------------------------------------------*/
-ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
+int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 {
   KEY                *ptr;
   Document            document;
   View                view;
   int                 modtype;
   int                 mainframe;
-  int                 index = -1;
+  int                 index = -1, ret = 0;
   ThotBool            found, done;
 
 #ifdef _WX
@@ -989,7 +994,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	  ClickFrame = 0;
 	  ClickX = 0;
 	  ClickY = 0;
-	  return FALSE;
+	  return 0;
 	}
       command = 0;	   
       /* Set the right indicator */
@@ -1060,7 +1065,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		      (*(Proc2)AccessKeyFunction) (
 				(void *)document,
 				(void *)ptr->K_Param);
-		      return TRUE;
+		      return 1;
 		    }
 		}
 	      ptr = Automata_ctrl;
@@ -1083,7 +1088,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		      (*(Proc2)AccessKeyFunction) (
 				(void *)document,
 				(void *)ptr->K_Param);
-		      return TRUE;
+		      return 1;
 		    }
 		}
 	      ptr = Automata_alt;
@@ -1123,7 +1128,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	    }
 	}
     }
-  
+  /* found, key */
+
+  /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 #ifdef _WINGUI
   if (Special && !found)
 #endif /* _WINGUI */
@@ -1175,11 +1182,10 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 #ifdef _WINGUI
 	 /* Nothing to do */ 
 	  Automata_current = NULL;
-	  return FALSE;
+	  return 0;
 #endif /* _WINGUI */
 	  break;
 	}
-
       if (index >= 0)
 	{
 	  found = TRUE;
@@ -1194,10 +1200,11 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	  Automata_current = NULL;
 	  if (command == -1)
 		  /* NOP */
-		  return FALSE;
+		  return 0;
 	}
     }
 
+  /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
   if (Automata_current == NULL)
     {
       /* don't accept to insert a character when there is CTRL
@@ -1205,7 +1212,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
       if (!found &&
 	  (modtype == THOT_MOD_CTRL || modtype == THOT_MOD_S_CTRL ||
 	   modtype == THOT_MOD_ALT || modtype == THOT_MOD_S_ALT))
-	return FALSE;
+	return 0;
 	  
       /* Appel d'une action Thot */
       mainframe = GetWindowNumber (document, 1);
@@ -1247,45 +1254,57 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	    {
 	      /* available action for this frame or the main frame */
 	      if (MenuActionList[command].Call_Action)
-		(*(Proc2)MenuActionList[command].Call_Action) (
+		{
+		  (*(Proc2)MenuActionList[command].Call_Action) (
 			(void *)document,
 			(void *)view);
+		  done = TRUE;
+		}
 
 	      /* ***Check events TteElemReturn and TteElemTab*** */
 	      if (LoadedDocument[document - 1] == SelectedDocument &&
 		  command == CMD_CreateElement)
 		/* post treatment for the application */
-		APPKey (TteElemReturn, FirstSelectedElement, document, FALSE);
+		done = APPKey (TteElemReturn, FirstSelectedElement, document, FALSE);
 	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
 		       command == CMD_CreateElement)
 		/* check if the application wants to handle the return */
-		APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement,
+		done = APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement,
 			document, FALSE);
 	      else if (LoadedDocument[document - 1] == SelectedDocument &&
 		       value == TAB)
 		/* post treatment for the application */
-		APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
+		done = APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
 	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
 		       value == TAB)
 		/* check if the application wants to handle the Tab */
-		APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document,
+		done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document,
 			FALSE);
 	    }
+	  if (done)
+	    return 2;
 	}
       /* Traitement des caracteres au cas par cas */
       else
 	{
 	  if (key/*value*/ == THOT_KEY_Escape)
-	    TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
+	    {
+	      TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
+	      return 0;
+	    }
 	  else if (value == 8 || value == 127)
 	    {
 	      /* Par defaut BackSpace detruit le caractere precedent */
 	      /* sans se soucier de la langue courante */
 	      if (MenuActionList[CMD_DeletePrevChar].Call_Action)
-		(*(Proc2)MenuActionList[CMD_DeletePrevChar].Call_Action) (
+		{
+		  (*(Proc2)MenuActionList[CMD_DeletePrevChar].Call_Action) (
 			(void *)document,
 			(void *)view);
-	      return FALSE;
+		  return 2;
+		}
+	      else
+		return 0;
 	    }
       
 	  /*** Sequence de traitement des espaces ***/
@@ -1293,10 +1312,13 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	      value == FOUR_PER_EM || value == UNBREAKABLE_SPACE)
 	    {
 	      if (MenuActionList[0].Call_Action)
-		(*(Proc3)MenuActionList[0].Call_Action) (
+		{
+		  (*(Proc3)MenuActionList[0].Call_Action) (
 			(void *)document,
 			(void *)view,
 			(void *)value);
+		  done = TRUE;
+		}
 	    }
 	  else if (value == 9 || value >= 32)
 	    {
@@ -1314,23 +1336,28 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 		done = FALSE;
 	      /* on insere un caractere valide quelque soit la langue */
 	      if (!done && MenuActionList[0].Call_Action)
-		(*(Proc3)MenuActionList[0].Call_Action) (
+		{
+		  (*(Proc3)MenuActionList[0].Call_Action) (
 			(void *)document,
 			(void *)view,
 			(void *)value);
+		  done = TRUE;
+		}
 	      if (LoadedDocument[document - 1] == SelectedDocument &&
 		  value == TAB)
 		/* post treatment for the application */
-		APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
+		done = APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
 	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
 		       value == TAB)
 		/* check if the application wants to handle the TAB */
-		APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document,
+		done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document,
 			FALSE);
 	    }
+	  if (done)
+	    return 3;
 	}
     }
-  return FALSE;
+  return 0;
 }
 
 

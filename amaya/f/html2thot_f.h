@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern char *SkipSep ( char *ptr );
 extern char *SkipInt ( char *ptr );
 extern void ParseAreaCoords ( Element element,
@@ -18,7 +19,7 @@ extern int IsWithinHtmlTable ( void );
 extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
                              char* msg,
-			     int lineNumber );
+                             int lineNumber );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern ThotBool IsBlockElement ( Element el );
 extern void BlockInCharLevelElem ( Element el );
@@ -73,6 +74,7 @@ extern void StartParser ( Document doc,
                           ThotBool external_doc );
 
 #else /* __STDC__ */
+
 extern char *SkipSep ( char *ptr );
 extern char *SkipInt ( char *ptr );
 extern void ParseAreaCoords ( Element element,
@@ -86,7 +88,7 @@ extern int IsWithinHtmlTable ( void );
 extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
                                char* msg,
-			       int lineNumber );
+                               int lineNumber );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern ThotBool IsBlockElement ( Element el );
 extern void BlockInCharLevelElem ( Element el );

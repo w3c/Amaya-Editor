@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc ( HWND hwnd,
                                                       UINT uMsg,
                                                       WPARAM wParam,
@@ -13,6 +14,7 @@ extern ThotBool AHTEventInit ( void );
 extern PUBLIC BOOL AHTEventTerminate ( void );
 
 #else /* __STDC__ */
+
 extern PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc ( HWND hwnd,
                                                         UINT uMsg,
                                                         WPARAM wParam,

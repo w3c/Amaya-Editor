@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
 extern void HTTP_headers_set ( HTRequest *request,
@@ -66,6 +67,7 @@ extern void InitAmayaCache ( void );
 extern void ClearCacheEntry ( char *url );
 
 #else /* __STDC__ */
+
 extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                            HTList * documents );
 extern void HTTP_headers_set ( HTRequest *request,

@@ -10,11 +10,11 @@ extern void CharTranslationWX ( int frame,
                                 int thot_mask,
                                 ThotKeySym thot_keysym,
                                 unsigned int value );
-extern ThotBool ThotInput ( int frame,
-                            unsigned int value,
-                            int command,
-                            int PicMask,
-                            int key );
+extern int ThotInput ( int frame,
+                       unsigned int value,
+                       int command,
+                       int PicMask,
+                       int key );
 extern void FreeTranslations ( void );
 extern void TtaSetAccessKeyFunction ( Proc procedure );
 extern void TtaAddAccessKey ( Document doc,
@@ -33,11 +33,11 @@ extern void CharTranslationWX ( int frame,
                                   int thot_mask,
                                   ThotKeySym thot_keysym,
                                   unsigned int value );
-extern ThotBool ThotInput ( int frame,
-                              unsigned int value,
-                              int command,
-                              int PicMask,
-                              int key );
+extern int ThotInput ( int frame,
+                         unsigned int value,
+                         int command,
+                         int PicMask,
+                         int key );
 extern void FreeTranslations ( void );
 extern void TtaSetAccessKeyFunction ( Proc procedure );
 extern void TtaAddAccessKey ( Document doc,
