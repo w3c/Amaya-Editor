@@ -16,7 +16,6 @@
  
 #ifndef THOT_GUI_H
 #define THOT_GUI_H
-
 #define MAX_LENGTH     512
 #define MAX_EXT         10
 
@@ -86,11 +85,6 @@ typedef HWND           Drawable;
 typedef POINT          ThotPoint;
 #else /* _GL */
 typedef unsigned char* Drawable;
-typedef struct GL_point 
-{
-  double x;
-  double y;
-} ThotPoint;
 #endif /*_GL*/
 
 typedef MSG            ThotEvent;

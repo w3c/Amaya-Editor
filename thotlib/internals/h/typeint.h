@@ -315,6 +315,12 @@ typedef struct _ThotDblePoint {
   double         z;
 } ThotDblePoint;
 
+typedef struct GL_point 
+{
+  double x;
+  double y;
+} ThotPoint;
+
 /*Structure describing points 
 resulting of tesselation
 (linked list)*/
