@@ -470,8 +470,16 @@ void AmayaFrame::SetFrameTitle(const wxString & frame_name)
       {
 	int page_id = p_notebook->GetPageId(p_page);
 	if (page_id >= 0)
-	  p_notebook->SetPageText( page_id,
-				   wxString(m_FrameTitle).Truncate(10) + (m_FrameTitle.Len() > 10 ? _T("...") : _T("")) );
+	  {
+	    // setup the page tooltip
+	    // the tooltip should be shown only when the mouse is over the tab,
+	    // maybe hook the tooltip to an image which could be shown into each tab. (as mozilla do)
+	    // p_page->SetToolTip( m_FrameTitle );
+
+	    // setup the tab title
+	    p_notebook->SetPageText( page_id,
+				     wxString(m_FrameTitle).Truncate(15) + (m_FrameTitle.Len() > 15 ? _T("...") : _T("")) );
+	  }
       }
   }
 

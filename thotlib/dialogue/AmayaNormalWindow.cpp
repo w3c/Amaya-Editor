@@ -531,7 +531,15 @@ void AmayaNormalWindow::SetMenuBar( wxMenuBar * p_menu_bar )
     {
       // setup the dummy menubar
       wxFrame::SetMenuBar( m_pDummyMenuBar );
-      m_pDummyMenuBar->Disable();
+
+      // disable dummy menu entries
+      // this should be done after SetMenuBar because on MSW it does'nt work before. 
+      int menu_id = 0;
+      while ( menu_id < m_pDummyMenuBar->GetMenuCount() )
+	{
+	  m_pDummyMenuBar->EnableTop(menu_id, FALSE);
+	  menu_id++;
+	}
     }
 }
 
