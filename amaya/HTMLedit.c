@@ -1888,22 +1888,6 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   AttrSvgModifed  An attribute SvgWidth or SvgHeight has been created or
-   modified.
-   Create or change the corresponding presentation rule.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AttrSvgModified (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                AttrSvgModifed (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
-{
-  ParseWidthHeightAttribute (event->attribute, event->element, event->document);
-}
-
-/*----------------------------------------------------------------------
    an HTML attribute "size" has been created for a Font element.   
    Create the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/

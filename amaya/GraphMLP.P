@@ -55,6 +55,17 @@ DEFAULT
 
 BOXES
 
+   SVG_S: BEGIN
+	Content: Text 'svg';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
    DESC_S:
 	BEGIN
 	Content: Text 'desc';
@@ -844,15 +855,24 @@ RULES
 
    GraphML:
 	BEGIN
-        Width: Enclosing . Width;
-        Height: Enclosing . Height;
+	CreateBefore(SVG_S);
+        CreateWith(VerticalLine);
+        Width: Enclosed . Width;
+        Height: Enclosed . Height;
+        if NOT within GraphML
+	   BEGIN
+           VertPos: Top = Previous . Bottom;
+	   MarginTop: 0.4;
+	   MarginBottom: 0.4;
+	   END;
 	PageBreak: No;
 	LineBreak: No;
 	Justify: No;
 	Hyphenate: No;
 	LineWeight: 1 pt;
 	IN Graph_Structure_view BEGIN
-		Width: Enclosing . Width;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
         	Height	: Enclosed . Height;
 		Visibility: 10;
 		END;

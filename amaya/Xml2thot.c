@@ -1031,9 +1031,6 @@ USTRING          mappedName;
 	         i--;
 	       }
 
-	   if (stackLevel > 0)
-	     XMLcontext.language = languageStack[stackLevel - 1];
-
 	   /* complete all closed elements */
 	   if (el != XMLcontext.lastElement)
 	       if (!TtaIsAncestor(el, XMLcontext.lastElement))
@@ -1052,6 +1049,12 @@ USTRING          mappedName;
 		 el = NULL;
 	       else
 		 el = TtaGetParent (el);
+	     }
+
+	   if (stackLevel > 1)
+	     {
+	       XMLcontext.language = languageStack[stackLevel - 1];
+	       currentParserCtxt = parserCtxtStack[stackLevel - 1];
 	     }
 	 }
      }
@@ -1382,7 +1385,6 @@ CHAR_T     *GIname;
 #endif
 {
    ElementType    elType;
-   PtrParserCtxt  elementParserCtxt;
    CHAR_T         msgBuffer[MaxMsgLength];
    STRING         mappedName;
    int            i, error;
@@ -1395,21 +1397,10 @@ CHAR_T     *GIname;
 	   return;
    
    /* search the XML tag in the mapping table */
-   /* For <math> and <svg> tags, research is made with Xhtml Context */
-   /**** elementParserCtxt = currentParserCtxt; ****/
-   if (ustrcmp (GIname, TEXT("math")) == 0 ||
-       ustrcmp (GIname, TEXT("svg")) == 0)
-     currentParserCtxt = xhtmlParserCtxt;
-   /**** il faut le bon contexte pour CloseElement qui doit appeller la
-         bonne procedure ElementComplete ****/ 
-   /****/ elementParserCtxt = currentParserCtxt;  /*******/
-
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
    GetXmlElType (GIname, &elType, &mappedName,
 		 &currentElementContent, XMLcontext.doc);
-   /* restore Context */
-   currentParserCtxt = elementParserCtxt;
    if (ParsingLevel[XMLcontext.doc] != L_Transitional && mappedName == NULL)
       /* doesn't process that element */
       return;
@@ -2264,16 +2255,6 @@ CHAR_T     *attrValue;
 	 CreateAttrWidthPercentPxl (attrValue, lastAttrElement,
 				    XMLcontext.doc, -1);
       else
-	if (lastMappedAttr->ThotAttribute == HTML_ATTR_SvgWidth)
-	  /* attribute "width" for a <svg> tag */
-          ParseWidthHeightAttribute (lastAttribute, lastAttrElement,
-				     XMLcontext.doc);
-      else
-	if (lastMappedAttr->ThotAttribute == HTML_ATTR_SvgHeight)
-          /* attribute "height" for a <svg> tag */
-          ParseWidthHeightAttribute (lastAttribute, lastAttrElement,
-				     XMLcontext.doc);
-       else
 	 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("size")))
 	   {
 	     TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
@@ -2282,8 +2263,8 @@ CHAR_T     *attrValue;
 				    lastAttrElement,
 				    XMLcontext.doc);
 	   }
-	 else
-	   if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("shape")))
+      else
+	 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("shape")))
 	     {
 	       child = TtaGetFirstChild (lastAttrElement);
 	       if (child != NULL)
@@ -2926,11 +2907,6 @@ const XML_Char **attlist;
 	 }
        elementParserCtxt = currentParserCtxt;
 
-       /* The <math> or <svg> tag is treated with the XHTML context */
-       if (ustrcmp (bufName, TEXT("math")) == 0 ||
-	   ustrcmp (bufName, TEXT("svg")) == 0)
-	   currentParserCtxt = xhtmlParserCtxt;	 
-	   
        /* Treatment called at the beginning of start tag */
        StartOfXmlStartTag (bufName);
    
@@ -2967,15 +2943,10 @@ const XML_Char **attlist;
 	  by the treatment of the attributes) */
        currentParserCtxt = elementParserCtxt;
    
-       /* Treatment called at the end of start tag */
+       /* Special treatment called at the end of start tag for some
+	  XHTML elements */
        EndOfXmlStartTag (bufName);
 
-       /* if it's a <math> or <svg> tag, set the appropriate context */
-       if (ustrcmp (bufName, TEXT("math")) == 0)
-	  ChangeXmlParserContext (TEXT("MathML"));
-       else if (ustrcmp (bufName, TEXT("svg")) == 0)
-	  ChangeXmlParserContext (TEXT("GraphML"));
-	   
        TtaFreeMemory (bufName);
        TtaFreeMemory (buffer);
      }

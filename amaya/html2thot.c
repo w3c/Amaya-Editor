@@ -1082,8 +1082,6 @@ Element             el;
 {
    ElementType         elType;
    int                 i;
-   AttributeType       attrType;
-   Attribute	       attr;
    ThotBool            ret;
 
    ret = FALSE;
@@ -1093,19 +1091,7 @@ Element             el;
 	  CharLevelElement[i] != elType.ElTypeNum)
       i++;
    if (CharLevelElement[i] == elType.ElTypeNum)
-      {
-	ret = TRUE;
-	/* a Math element is a block element if it has an attribute mode=display */
-	if (elType.ElTypeNum == HTML_EL_Math)
-	  {
-	    attrType.AttrSSchema = elType.ElSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_mode;
-	    attr = TtaGetAttribute (el, attrType);
-	    if (attr)
-	      if (TtaGetAttributeValue (attr) == HTML_ATTR_mode_VAL_display)
-		ret = FALSE;
-	  }
-      }
+      ret = TRUE;
    return ret;
 }
 
@@ -2753,34 +2739,12 @@ CHAR_T                c;
   Attribute           attr;
   int                 length;
   STRING              text;
-  ThotBool	      math;
 
   UnknownTag = FALSE;
   if ((HTMLcontext.lastElement != NULL) && (lastElemEntry != -1))
     {
-      math = FALSE;
       if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("math")))
 	/* a <math> tag has been read */
-	math = TRUE;
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("mathdisp")))
-	/* a <mathdisp> tag has been read.  add an attribute "mode=display"
-	   (for compatibility with old MathML version WD-math-970704 */
-	{
-	  math = TRUE;
-	  elType = TtaGetElementType (HTMLcontext.lastElement);
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_mode;
-	  attr = TtaGetAttribute (HTMLcontext.lastElement, attrType);
-	  if (attr == NULL)
-	    /* create a new attribute and attach it to the element */
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (HTMLcontext.lastElement, attr, HTMLcontext.doc);
-	    }
-	  TtaSetAttributeValue (attr, HTML_ATTR_mode_VAL_display,
-				HTMLcontext.lastElement, HTMLcontext.doc);
-	}
-      if (math)
 	{
 #ifndef EXPAT_PARSER
 	  /* Parse the MathML structure */
@@ -3975,14 +3939,6 @@ CHAR_T              c;
          /* IntWidthPxl */
          CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, HTMLcontext.doc,
 				    -1);
-      else if (lastAttrEntry->ThotAttribute == HTML_ATTR_SvgWidth)
-         /* attribute "width" for a <svg> tag */
-         ParseWidthHeightAttribute (lastAttribute, lastAttrElement,
-				    HTMLcontext.doc);
-      else if (lastAttrEntry->ThotAttribute == HTML_ATTR_SvgHeight)
-         /* attribute "height" for a <svg> tag */
-         ParseWidthHeightAttribute (lastAttribute, lastAttrElement,
-				    HTMLcontext.doc);
       else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("size")))
 	 {
 	 TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);

@@ -71,6 +71,17 @@ DEFAULT
 
 BOXES
 
+ Math_S: BEGIN
+	Content: Text 'math';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  MROW_S: BEGIN
 	Content: Text 'mrow';
 	Visibility: 0;
@@ -2257,14 +2268,17 @@ RULES
 
    MathML:
 	BEGIN
+	CreateBefore(Math_S);
+	CreateWith(VerticalLine);
 	PageBreak: No;
 	LineBreak: No;
 	LineWeight: 1 pt;
 	VertPos: Top = Previous . Bottom;
 	HorizPos: Left = Enclosing . Left;
-	Visibility: Enclosing - 2;
+        HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
-		Width: Enclosing . Width;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Visibility: 10;
 		END;
 	END;

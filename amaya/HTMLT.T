@@ -482,29 +482,9 @@ RULES
 	END;
 
  Math: BEGIN
-#ifdef XML
-	Create '<math xmlns="http://www.w3.org/1998/Math/MathML"';
-#else
-	Create '<math';
-#endif
-	Create Attributes;
-	Create '>\12';
-	indent +2;
-	indent -2 after;
-	Create '</math>\12' After;
 	END;
 
  XMLGraphics: BEGIN
-#ifdef XML
-	Create '<svg xmlns="http://www.w3.org/2000/svg"';
-#else
-	Create '<svg';
-#endif
-	Create Attributes;
-	Create '>\12';
-	indent +2;
-	indent -2 after;
-	Create '</svg>\12' After;
 	END;
 
  Paragraph: BEGIN
@@ -1850,23 +1830,6 @@ ATTRIBUTES
  coords: BEGIN
 	Create ' coords="';
 	Create coords;
-	Create DoubleQuote;
-	END;
-
- mode = inline_math:
-	Create ' mode="inline"';
- mode = display:
-	Create ' mode="display"';
-
- SvgHeight: BEGIN
-	Create ' height="';
-	Create SvgHeight;
-	Create DoubleQuote;
-	END;
-
- SvgWidth: BEGIN
-	Create ' width="';
-	Create SvgWidth;
 	Create DoubleQuote;
 	END;
 

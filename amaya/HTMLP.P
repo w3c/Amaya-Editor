@@ -1649,25 +1649,6 @@ BOXES
 		END;
 	END;
 
- Math_S: BEGIN
-	Content: Text 'math';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
- Graph_S: BEGIN
-	Content: Text 'svg';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
-
  P_S: BEGIN
 	Content: Text 'p';
 	Visibility: 0;
@@ -5547,79 +5528,6 @@ BOXES
 		END;
 	END;
 
-  ATTR_MODE_DISPLAY: BEGIN
-	Content: Text ' mode=display';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-  ATTR_MODE_INLINE: BEGIN
-	Content: Text ' mode=inline';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-  ATTR_SVGHEIGHT: BEGIN
-	Content: Text ' height=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-  VALUE_SVGHEIGHT: BEGIN
-	Content: (SvgHeight);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
-  ATTR_SVGWIDTH: BEGIN
-	Content: Text ' width=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-
-  VALUE_SVGWIDTH: BEGIN
-	Content: (SvgWidth);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
 { ---- Pages ---- }
 
 #ifdef PAGE
@@ -6954,41 +6862,20 @@ RULES
 	END;
 
  Math: BEGIN
-	CreateBefore(Math_S);
-	CreateWith(VerticalLine);
 	VertPos: Top = Previous NOT MAP . Bottom;
 	IF Immediately within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
 	LineBreak: No;
         IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left;
                 VertPos: Top = Previous . Bottom;
                 END;
 	IN Alternate_view
 		Visibility: 0;
 	END;
 
- MathML:
-        BEGIN
-        PageBreak: No;
-        LineBreak: No;
-        LineWeight: 1 pt;
-	IN Structure_view
-		BEGIN
-		{***** Next rule specifies the width of a MathML in
-		Math_structure_view.  Thot is confusing the Structure_view
-		defined in the present schema and the Math_structure_view
-		defined in schema MathMLP. ******}
-		Width: Enclosing . Width;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-        END;
-
  XMLGraphics: BEGIN
-	CreateBefore(Graph_S);
-        CreateWith(VerticalLine);
 	VertPos: Top = Previous NOT MAP . Bottom;
 	Gather: Yes;
 	MarginTop: 0.4;
@@ -6997,12 +6884,13 @@ RULES
 	Justify: No;
 	Hyphenate: No;
         IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left;
                 VertPos: Top = Previous . Bottom;
                 END;
 	IN Alternate_view BEGIN
 		Width: Enclosing . Width;
+                VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
@@ -10212,33 +10100,6 @@ ATTRIBUTES
   	BEGIN
 	CreateBefore(ATTR_TYPE);
 	CreateBefore(VALUE_NOTATION);
-	END;
-
-  mode = display:
-	BEGIN
-	CreateBefore(ATTR_MODE_DISPLAY);
-	MarginTop: 0.4;
-	LineBreak: No;
-        IN Structure_view
-		MarginTop: 0;
-	END;
-
-  mode = inline_math:
-	BEGIN
-	CreateBefore(ATTR_MODE_INLINE);
-	MarginTop: 0;
-	END;
-
-  SvgHeight:
-	BEGIN
-	CreateBefore(ATTR_SVGHEIGHT);
-	CreateBefore(VALUE_SVGHEIGHT);
-	END;
-
-  SvgWidth:
-	BEGIN
-	CreateBefore(ATTR_SVGWIDTH);
-	CreateBefore(VALUE_SVGWIDTH);
 	END;
 
   Class:

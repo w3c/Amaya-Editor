@@ -23,6 +23,12 @@ RULES
 
    MathML:
 	begin
+	Create '<math xmlns="http://www.w3.org/1998/Math/MathML"';
+	Create Attributes;
+	Create '>\12';
+	indent +2;
+	indent -2 after;
+	Create '</math>\12' After;
 	end;
 
    XMLcomment:

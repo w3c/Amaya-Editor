@@ -369,9 +369,6 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {HTML_ATTR_Button_type, TEXT("submit"), HTML_ATTR_Button_type_VAL_submit},
    {HTML_ATTR_Button_type, TEXT("reset"), HTML_ATTR_Button_type_VAL_reset},
 
-   {HTML_ATTR_mode, TEXT("display"), HTML_ATTR_mode_VAL_display},
-   {HTML_ATTR_mode, TEXT("inline"), HTML_ATTR_mode_VAL_inline_math},
-
    {HTML_ATTR_frame, TEXT("void"), HTML_ATTR_frame_VAL_void},
    {HTML_ATTR_frame, TEXT("above"), HTML_ATTR_frame_VAL_above},
    {HTML_ATTR_frame, TEXT("below"), HTML_ATTR_frame_VAL_below},
@@ -940,6 +937,61 @@ STRING     elementName;
 	   ustrcpy (DTDname, TEXT("HTML"));
        else
 	 ustrcpy (DTDname, TEXT(""));
+#endif /* EXPAT_PARSER */
+}
+
+/*----------------------------------------------------------------------
+   XhtmlMapAttribute
+   Search in the Attribute Mapping Table the entry for the attribute
+   of name Attr and returns the corresponding Thot attribute type.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+AttributeMapping*     XhtmlMapAttribute (CHAR_T* attrName,
+					 AttributeType* attrType,
+					 CHAR_T* elementName,
+					 Document doc)
+#else
+AttributeMapping*     XhtmlMapAttribute (attrName,
+					 attrType,
+					 elementName,
+					 doc)
+CHAR_T*         attrName;
+AttributeType*  attrType;
+CHAR_T*         elementName;
+Document        doc;
+#endif
+{
+#ifdef EXPAT_PARSER
+   int                 i;
+
+   attrType->AttrTypeNum = 0;
+   attrType->AttrSSchema = NULL;
+   i = 0;
+
+   do
+     if (ustrcasecmp (XhtmlAttributeMappingTable[i].XMLattribute, attrName))
+	 i++;
+     else
+	 if (XhtmlAttributeMappingTable[i].XMLelement[0] == EOS)
+	   {
+	     attrType->AttrTypeNum = XhtmlAttributeMappingTable[i].ThotAttribute;
+	     attrType->AttrSSchema = GetXHTMLSSchema (doc);
+	   }
+	 else
+	   if (!ustrcasecmp (XhtmlAttributeMappingTable[i].XMLelement, elementName))
+	     {
+	       attrType->AttrTypeNum = XhtmlAttributeMappingTable[i].ThotAttribute;
+	       attrType->AttrSSchema = GetXHTMLSSchema (doc);
+	     }
+	   else
+	     i++;
+   while (attrType->AttrTypeNum <= 0 &&
+	  XhtmlAttributeMappingTable[i].AttrOrContent != EOS);
+
+   if (XhtmlAttributeMappingTable[i].AttrOrContent == EOS)
+       return (NULL);
+   else
+       return (&XhtmlAttributeMappingTable[i]);
 #endif /* EXPAT_PARSER */
 }
 

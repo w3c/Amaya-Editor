@@ -111,9 +111,6 @@ AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("frameborder"), TEXT(""), 'A', HTML_ATTR_frameborder, L_Transitional},
 
    {TEXT("headers"), TEXT(""), 'A', HTML_ATTR_headers, L_Transitional},
-#ifdef GRAPHML
-   {TEXT("height"), TEXT("svg"), 'A', HTML_ATTR_SvgHeight, L_Transitional},
-#endif /* GRAPHML */
    {TEXT("height"), TEXT("img"), 'A', HTML_ATTR_Height_, L_Basic},
    {TEXT("height"), TEXT("object"), 'A', HTML_ATTR_Height_, L_Basic},
    {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_, L_Transitional},
@@ -136,7 +133,6 @@ AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("maxlength"), TEXT(""), 'A', HTML_ATTR_MaxLength, L_Basic},
    {TEXT("media"), TEXT(""), 'A', HTML_ATTR_media, L_Basic},
    {TEXT("method"), TEXT(""), 'A', HTML_ATTR_METHOD, L_Basic},
-   {TEXT("mode"), TEXT(""), 'A', HTML_ATTR_mode, L_Basic},
    {TEXT("multiple"), TEXT(""), 'A', HTML_ATTR_Multiple, L_Basic},
 
    {TEXT("N"), TEXT(""), 'C', 0, L_Basic},
@@ -245,15 +241,9 @@ AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("width"), TEXT("img"), 'A', HTML_ATTR_Width__, L_Basic},
    {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__, L_Basic},
    {TEXT("width"), TEXT("pre"), 'A', HTML_ATTR_Width__, L_Transitional},
-#ifdef GRAPHML
-   {TEXT("width"), TEXT("svg"), 'A', HTML_ATTR_SvgWidth, L_Strict},
-#endif /* GRAPHML */
    {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("th"), 'A', HTML_ATTR_Width__, L_Transitional},
-#ifdef GRAPHML
-   {TEXT("width"), TEXT("xmlgraphics"), 'A', HTML_ATTR_Width__, L_Transitional},
-#endif /* GRAPHML */
 
    {TEXT("zzghost"), TEXT(""), 'A', HTML_ATTR_Ghost_restruct, L_Basic},
    {TEXT(""), TEXT(""), EOS, 0, L_Undefined}		/* Last entry. Mandatory */

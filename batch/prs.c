@@ -2369,12 +2369,14 @@ indLine             wi;
       /* regles de creation seulement dans la vue principale */
       CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine,
 		       LineNum);
+      /* pas de creation avant, apres ou au-dessus de la racine */
+   /****
    else if ((creatFonct == FnCreateBefore || creatFonct == FnCreateAfter ||
 	     creatFonct == FnCreateWith || creatFonct == FnCreateEnclosing) &&
 	    CurType == pSSchema->SsRootElem)
-      /* pas de creation avant, apres ou au-dessus de la racine */
       CompilerMessage (wi, PRS, FATAL, PRS_INVALID_RULE_FOR_ROOT_ELEM,
 		       inputLine, LineNum);
+   ****/
    else
      {
 	CreatePRule (PtFunction, wi);

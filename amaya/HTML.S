@@ -151,13 +151,8 @@ STRUCT
 		{ hspace            vspace }
 	Object;							{ OBJECT }
 	Applet;							{ APPLET }
-	Math							{ MATH }
-	    (ATTR mode = display, inline_math) =
-		MathML;
-        XMLGraphics                                             { SVG }
-	    (ATTR !SvgHeight = Text; !SvgWidth = Text) =
-                {  height             width }
-	    GraphML with SvgHeight ?= '5cm', SvgWidth ?= '100%'; 
+	Math = MathML;					        { MATH }
+        XMLGraphics =  GraphML;                                 { SVG }
 	MAP;							{ MAP }
 	END;
 
@@ -828,7 +823,8 @@ EXCEPT
 	SCRIPT:		ReturnCreateNL;
 	Text_Area:	ReturnCreateNL;
 	HTMLfragment:	NoMove, NoResize, Hidden;
-	XMLGraphics:    MoveResize, NoMove;
+        Math:	        Hidden; 
+	XMLGraphics:    NoResize, NoMove, Hidden;
 
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;

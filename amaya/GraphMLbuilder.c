@@ -977,11 +977,9 @@ Document	doc;
       {
       /* decide of the presentation rule to be created or updated */
       TtaGiveAttributeType (attr, &attrType, &attrKind);
-      if (attrType.AttrTypeNum == GraphML_ATTR_width_ ||
-          attrType.AttrTypeNum == HTML_ATTR_SvgWidth)
+      if (attrType.AttrTypeNum == GraphML_ATTR_width_)
          ruleType = PRWidth;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_height_ ||
-	       attrType.AttrTypeNum == HTML_ATTR_SvgHeight)
+      else if (attrType.AttrTypeNum == GraphML_ATTR_height_)
          ruleType = PRHeight;
       else
 	 return;
@@ -996,12 +994,8 @@ Document	doc;
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	 {
          if (pval.typed_data.value == 0)
-	    {
-	    if (attrType.AttrTypeNum == HTML_ATTR_SvgWidth ||
-		attrType.AttrTypeNum == HTML_ATTR_SvgHeight)
-	      /* disable rendering of this svg graphics */
-	      ruleType = PRVisibility;
-	    }
+	    /* disable rendering of this svg graphics */
+	    ruleType = PRVisibility;
 	 else
 	    {
 	    ctxt->destroy = TRUE;

@@ -81,7 +81,6 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("link"), 'E', HTML_EL_LINK, L_Basic},
    {TEXT("listing"), SPACE, HTML_EL_Preformatted, L_Transitional}, /*converted to PRE */
    {TEXT("map"), SPACE, HTML_EL_MAP, L_Transitional},
-   {TEXT("math"), SPACE, HTML_EL_Math, L_Transitional},
    {TEXT("menu"), SPACE, HTML_EL_Menu, L_Transitional},
    {TEXT("meta"), 'E', HTML_EL_META, L_Basic},
    {TEXT("noframes"), SPACE, HTML_EL_NOFRAMES, L_Transitional},
@@ -107,9 +106,6 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("style"), SPACE, HTML_EL_STYLE_, L_Transitional},
    {TEXT("sub"), SPACE, HTML_EL_Subscript, L_Transitional},
    {TEXT("sup"), SPACE, HTML_EL_Superscript, L_Transitional},
-#ifdef GRAPHML
-   {TEXT("svg"), SPACE, HTML_EL_XMLGraphics, L_Transitional},
-#endif
    {TEXT("table"), SPACE, HTML_EL_Table, L_Basic},
    {TEXT("tbody"), SPACE, HTML_EL_tbody, L_Basic},
    {TEXT("td"), SPACE, HTML_EL_Data_cell, L_Basic},
@@ -123,9 +119,6 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("u"), SPACE, HTML_EL_Underlined_text, L_Transitional},
    {TEXT("ul"), SPACE, HTML_EL_Unnumbered_List, L_Basic},
    {TEXT("var"), SPACE, HTML_EL_Variable, L_Basic},
-#ifdef GRAPHML
-   {TEXT("xmlgraphics"), SPACE, HTML_EL_XMLGraphics, L_Transitional},
-#endif
    {TEXT("xmp"), SPACE, HTML_EL_Preformatted, L_Transitional},  /* converted to PRE */
    {TEXT(""), SPACE, 0, L_Basic}	/* Last entry. Mandatory */
 };
@@ -141,6 +134,7 @@ static ElemMapping    MathMLElemMappingTable[] =
    {TEXT("XMLcomment_line"), SPACE, MathML_EL_XMLcomment_line, L_Undefined},
    {TEXT("maligngroup"), 'E', MathML_EL_MALIGNGROUP, L_Undefined},
    {TEXT("malignmark"), 'E', MathML_EL_MALIGNMARK, L_Undefined},
+   {TEXT("math"), SPACE, MathML_EL_MathML, L_Undefined},
    {TEXT("mchar"), 'E', MathML_EL_MCHAR, L_Undefined},
    {TEXT("menclose"), SPACE, MathML_EL_MENCLOSE, L_Undefined},
    {TEXT("merror"), SPACE, MathML_EL_MERROR, L_Undefined},
@@ -200,8 +194,10 @@ static ElemMapping    GraphMLElemMappingTable[] =
    {TEXT("rect"), SPACE, GraphML_EL_Rectangle, L_Undefined},
    {TEXT("roundrect"), SPACE, GraphML_EL_RoundRect, L_Undefined},
    {TEXT("spline"), 'E', GraphML_EL_Spline, L_Undefined},
+   {TEXT("svg"), SPACE, GraphML_EL_GraphML, L_Undefined},
    {TEXT("text"), 'X', GraphML_EL_Text_, L_Undefined},  /* see function GraphMLGetDTDName */
    {TEXT("title"), SPACE, GraphML_EL_title, L_Undefined},
+   {TEXT("xmlgraphics"), SPACE, GraphML_EL_GraphML, L_Undefined},
    {TEXT(""), SPACE, 0, L_Undefined}	/* Last entry. Mandatory */
 };
 #else /* GRAPHML */

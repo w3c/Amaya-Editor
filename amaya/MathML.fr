@@ -17,6 +17,7 @@ PICTURE_UNIT: IMG
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Saut_de_page
 
+MathML: math
 XMLcomment: comment
 MTEXT: mtext
 MI: mi

@@ -1060,15 +1060,6 @@ ATTRIBUTES
  coords: BEGIN
 	END;
 
- mode = inline_math:
-	BEGIN
-	END;
- mode = display:
-	BEGIN
-	create '\12';
-	create '\12' after;
-	END;
-
  summary: BEGIN
 	END;
 

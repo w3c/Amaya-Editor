@@ -378,7 +378,7 @@ STRUCT
 
 EXCEPT
 
-   MathML:		Hidden, NoMove, NoResize;
+   MathML:		NoMove, NoResize;
    XMLcomment_line:	Hidden;
    Construct:		Hidden;
    Numerator:		Hidden;

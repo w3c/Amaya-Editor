@@ -189,18 +189,6 @@ ATTRIBUTES
 	AttrDelete.Pre ->  AttrWidthDelete;	
 	END;
 
-   SvgWidth:
-	BEGIN
-	AttrCreate.Post -> AttrSvgModified;
-	AttrModify.Post -> AttrSvgModified;
-	END;
-
-   SvgHeight:
-	BEGIN
-	AttrCreate.Post -> AttrSvgModified;
-	AttrModify.Post -> AttrSvgModified;
-	END;
-
    Font_size:
 	BEGIN
 	AttrCreate.Post -> AttrFontSizeCreated;

@@ -22,6 +22,12 @@ RULES
 
    GraphML:
 	BEGIN
+	Create '<svg xmlns="http://www.w3.org/2000/svg"';
+	Create Attributes;
+	Create '>\12';
+	indent +2;
+	indent -2 after;
+	Create '</svg>\12' After;
 	END;
 
    XMLcomment:

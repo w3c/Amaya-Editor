@@ -18,7 +18,11 @@ ATTR
 
 STRUCT
 
-   GraphML = LIST OF (GraphicsElement) + (XMLcomment);
+   GraphML
+	    (ATTR !height_ = Text; !width_ = Text)
+                {  height           width }
+	        = LIST OF (GraphicsElement) + (XMLcomment)
+	            with height_ ?= '5cm', width_ ?= '10cm';
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
@@ -46,9 +50,9 @@ STRUCT
                                 IntPosX; IntPosY;    { OBSOLETE }
                       x = text;                      { NEW }
                       y = text;                      { NEW }
-                      width_ = text;
+                      width_;
                                 IntWidth;            { OBSOLETE }
-                      height_ = text;
+                      height_;
                                 IntHeight;           { OBSOLETE }
 	              fill = text;                   { NEW }
 	              stroke = text;                 { NEW }
@@ -255,7 +259,7 @@ STRUCT
 
 EXCEPT
 
-   GraphML:             IsDraw, NoMove, NoResize, Hidden;
+   GraphML:             IsDraw;
    Label:               NoMove, NoResize, NoShowBox;
    Line_:               MoveResize, HighlightChildren, NoShowBox;
    Rectangle:           MoveResize, HighlightChildren, NoShowBox;
