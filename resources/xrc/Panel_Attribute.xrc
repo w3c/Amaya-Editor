@@ -23,7 +23,7 @@
                       </object>
                       <object class="sizeritem">
                         <object class="wxStaticText" name="wxID_LABEL_TITLE">
-                          <label>Attribute</label>
+                          <label>*Attribute*</label>
                           <style>wxALIGN_CENTRE</style>
                         </object>
                         <option>1</option>
@@ -83,7 +83,7 @@
                                             </object>
                                             <object class="sizeritem">
                                               <object class="wxStaticText" name="wxID_ATTR_LABEL_LANG_INHER">
-                                                <label>Inherited language: French</label>
+                                                <label>*Inherited language: French*</label>
                                               </object>
                                             </object>
                                           </object>
@@ -98,7 +98,6 @@
                                             <orient>wxVERTICAL</orient>
                                             <object class="sizeritem">
                                               <object class="wxTextCtrl" name="wxID_ATTR_TEXT_VALUE">
-                                                <value></value>
                                                 <style></style>
                                               </object>
                                               <option>0</option>
@@ -146,7 +145,7 @@
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxCheckBox" name="wxID_CHECK_AUTOREF">
-                                    <label>_Auto refresh_</label>
+                                    <label>*Auto refresh*</label>
                                     <checked>1</checked>
                                   </object>
                                   <option>0</option>
@@ -155,7 +154,7 @@
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxButton" name="wxID_OK">
-                                    <label>_Apply_</label>
+                                    <label>*Apply*</label>
                                     <default>1</default>
                                   </object>
                                   <flag>wxALL|wxEXPAND</flag>

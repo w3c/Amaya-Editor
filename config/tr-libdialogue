@@ -65,105 +65,109 @@
 63 Kapat, kaydetme
 64 Karakter tarzı
 65 Renkler
-66 Sil
-67 Çıktı
-68 PostScript dosya
-69 Yazıcı
-70 Metin arama
-71 BÜYÜK HARF = küçük harf
-72 ile değiştir
-73 Değiştir
-74 Değiştirme
-75 İstek üzerine değiştir
-76 Otomatik olarak değiştir
-77 Arama nerede
-78 Seçimden önce
-79 Seçim içi
-80 Seçimden sonra
-81 Tüm belgede
-82 Değiştirme
-83 Öntanımlı renkler
-84 kapamadan önce
-85 Belgeyi kapa
-86 Matematik sembolleri
-87 Grafik
-88 Latin alfabesi
-89 Yunan alfabesi
-90 Kaydet
-91 Metin
-92 Grafik
-93 Simge
-94 Görüntü
-95 Birim tipi
-96 önce
-97 sonra
-98 civarında
-99 Ekle
-100 Yapıştır
-101 Yapılmalıdır
-102 Ekle
-103 Sayfa kesmesi
-104 Birimin dili
-105 Alınan dil
-106 Bulunamadı
-107 Ara
+66 XHTML
+67 Sil
+68 Çıktı
+69 PostScript dosya
+70 Yazıcı
+71 Metin arama
+72 BÜYÜK HARF = küçük harf
+73 ile değiştir
+74 Değiştir
+75 Değiştirme
+76 İstek üzerine değiştir
+77 Otomatik olarak değiştir
+78 Arama nerede
+79 Seçimden önce
+80 Seçim içi
+81 Seçimden sonra
+82 Tüm belgede
+83 Değiştirme
+84 Öntanımlı renkler
+85 kapamadan önce
+86 Belgeyi kapa
+87 Matematik sembolleri
+88 Grafik
+89 Latin alfabesi
+90 Yunan alfabesi
+91 Kaydet
+92 Metin
+93 Grafik
+94 Simge
+95 Görüntü
+96 Birim tipi
+97 önce
+98 sonra
+99 civarında
+100 Ekle
+101 Yapıştır
+102 Yapılmalıdır
+103 Ekle
+104 Sayfa kesmesi
+105 Birimin dili
+106 Alınan dil
+107 Bulunamadı
 108 Ara
-109 Salt-oku birim
-110 Değiştirilecek bir şey yok
-111 Standart karakterler
-112 Standart grafikler
-113 Standart biçim
-114 Standart geometri
-115 pt
-116 Çizgi tarzı
-117 Çizgi ağırlığı
-118 Doldurma şekli
-119 Ayır
-120 Nesne türü
-121 Numaralı sayfaya git
-122 Herhangi
-123 Aranacak olan özellik
-124 Aranacak olan tip
-125 özellikler
-126 Özellik değeri
-127 Bilinmeyen özellik
-128 Vazgeç
-129 PostScript dönüşümünde hata
-130 Komut "%s" tarafından reddedildi.
-131 "%s" yaratılamadı
-132 Üstçizgi
-133 Dokümanın forması
-134 Olaylar
-135 Özeliği sil
-136 Sol düğme seçilin rengini değiştiriyor
-137 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
-138 Diğer...
-139 Yenilendir
-140 Renk
-141 **No element can be inserted
-142 Önerilerin sayısı
-143 Kontrol ediliyor
-144 Atla ve sonraki
-145 Değiştir (+ sözlük)
-146 Değiştir
-147 Başka dil
-148 Atla (+ sözlük)
-149 Karakterleri içeren:
-150 Yazım hataları düzelt...
-151 Roma rakamları
-152 Aldırma
-153 Hepsi büyük harf olan sözcükler
-154 Rakam içeren sözcükler
-155 Parametre dosya hatası
-156 Tuştakımı dosyası yok
-157 Belge sözlüğü kaydedilemiyor
-158 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
-159 "%s" sözcüğü belge sözlüğüne eklendi
-160 Yazım hataları arama sonu
-161 Yazım hatası araması iptal edildi
-162 Lütfen bir belge seçin
-163 Belge sözlüğü kaydedildi: %s
-164 **Not available in this version
-165 **Enable/Disable palette
-166 **Tools
-167 **Auto refresh
+109 Ara
+110 Salt-oku birim
+111 Değiştirilecek bir şey yok
+112 Standart karakterler
+113 Standart grafikler
+114 Standart biçim
+115 Standart geometri
+116 pt
+117 Çizgi tarzı
+118 Çizgi ağırlığı
+119 Doldurma şekli
+120 Ayır
+121 Nesne türü
+122 Numaralı sayfaya git
+123 Herhangi
+124 Aranacak olan özellik
+125 Aranacak olan tip
+126 özellikler
+127 Özellik değeri
+128 Bilinmeyen özellik
+129 Vazgeç
+130 PostScript dönüşümünde hata
+131 Komut "%s" tarafından reddedildi.
+132 "%s" yaratılamadı
+133 Üstçizgi
+134 Dokümanın forması
+135 Olaylar
+136 Özeliği sil
+137 Sol düğme seçilin rengini değiştiriyor
+138 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
+139 Diğer...
+140 Yenilendir
+141 Renk
+142 **Background color
+143 **Foreground color
+144 **Switch colors
+145 **No element can be inserted
+146 Önerilerin sayısı
+147 Kontrol ediliyor
+148 Atla ve sonraki
+149 Değiştir (+ sözlük)
+150 Değiştir
+151 Başka dil
+152 Atla (+ sözlük)
+153 Karakterleri içeren:
+154 Yazım hataları düzelt...
+155 Roma rakamları
+156 Aldırma
+157 Hepsi büyük harf olan sözcükler
+158 Rakam içeren sözcükler
+159 Parametre dosya hatası
+160 Tuştakımı dosyası yok
+161 Belge sözlüğü kaydedilemiyor
+162 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
+163 "%s" sözcüğü belge sözlüğüne eklendi
+164 Yazım hataları arama sonu
+165 Yazım hatası araması iptal edildi
+166 Lütfen bir belge seçin
+167 Belge sözlüğü kaydedildi: %s
+168 **Not available in this version
+169 **Enable/Disable palette
+170 **Tools
+171 **Auto refresh

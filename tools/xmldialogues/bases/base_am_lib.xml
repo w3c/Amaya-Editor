@@ -734,6 +734,17 @@
 	<message xml:lang="fi">Värit</message>
 	<message xml:lang="ru">Удалить</message>
 </label>
+<label define="TMSG_XHTML">
+	<message xml:lang="en">XHTML</message>
+	<message xml:lang="fr">XHTML</message>
+	<message xml:lang="de">XHTML</message>
+	<message xml:lang="it">XHTML</message>
+	<message xml:lang="tr">XHTML</message>
+	<message xml:lang="es">XHTML</message>
+	<message xml:lang="pt">XHTML</message>
+	<message xml:lang="fi">XHTML</message>
+	<message xml:lang="ru">XHTML</message>
+</label>
 <label define="TMSG_DEL">
 	<message xml:lang="en">Delete</message>
 	<message xml:lang="fr">Supprimer</message>
@@ -1559,6 +1570,18 @@
 	<message xml:lang="tr">Renk</message>
 	<message xml:lang="ru">Цвет</message>
 </label>
+<label define="TMSG_CPCOLORBG">
+	<message xml:lang="en">Background color</message>
+	<message xml:lang="fr">Couleur de l'arrière-plan</message>
+</label>
+<label define="TMSG_CPCOLORFG">
+	<message xml:lang="en">Foreground color</message>
+	<message xml:lang="fr">Couleur du premier plan</message>
+</label>
+<label define="TMSG_CPCOLORSWITCH">
+	<message xml:lang="en">Switch colors</message>
+	<message xml:lang="fr">Echanger les couleurs</message>
+</label>
 <label define="TMSG_NO_ELEMENT">
 	<message xml:lang="en">No element can be inserted</message>
 	<message xml:lang="fr">Pas d'élément à insérer</message>
@@ -1822,7 +1845,7 @@
 </label>
 <label define="TMSG_AUTOREFRESH">
 	<message xml:lang="en">Auto refresh</message>
-	<message xml:lang="fr">Auto mise � jour</message>
+	<message xml:lang="fr">Auto mise à jour</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

@@ -88,7 +88,6 @@ public:
   wxCheckListBox *    m_pAttrList;
   wxCheckBox *        m_pAutoRefresh;
   wxButton *          m_pModifyButton;
-  wxStaticText *      m_pTitleText;
   wxPanel *           m_pPanel_Lang;
   wxPanel *           m_pPanel_Num;
   wxPanel *           m_pPanel_Text;

@@ -65,105 +65,109 @@
 63 Fechar sem salvar
 64 Estilo de carácter
 65 Cores
-66 Suprimir
-67 Destino (Output)
-68 Arquivo PostScript
-69 Impressora
-70 Buscar
-71 Ignore o caso 
-72 Substituir por
-73 Substituir
-74 Não substituir
-75 Substituir sob demanda
-76 Substituição Automática
-77 Onde buscar
-78 Antes da seleção
-79 Dentro da seleção
-80 Depois da seleção
-81 No documento todo
-82 Não substituir
-83 Cores padrão
-84 antes de fechá-lo
-85 Fechar um documento
-86 Símbolos matemáticos
-87 Gráficos
-88 Alfabeto Latino
-89 Alfabeto Grego
-90 Salvar
-91 Texto
-92 Gráfico
-93 Símbolo
-94 Imagem
-95 Tipo de elemento
-96 depois
-97 antes
-98 em torno de
-99 Incluir
-100 Colar
-101 criar
-102 Inserir
-103 Quebra de página
-104 Idioma do elemento
-105 Idioma herdado:
-106 Não encontrado
-107 Buscar em
-108 Buscar
-109 elemento somente de leitura
-110 Nada a substituir
-111 Caracteres padrão
-112 Gráficos padrão
-113 Formato padrão
-114 Geometria padrão
-115 pt
-116 Estilo de linha
-117 espessura da linha
-118 Padrão de preenchimento
-119 Dividir
-120 Tipo de objeto
-121 Ir à página número:
-122 Qualquer
-123 Atributo a buscar
-124 Tipo a buscar
-125 Naturezas
-126 Valor do atributo
-127 Atributo desconhecido
-128 Cancelar
-129 Erro em tradução PostScript
-130 Comando recusado pelo spooler "%s"
-131 Não é possível criar "%s"
-132 Sobrelinhado (Overline)
-133 Formato de documento
-134 Eventos
-135 Remover atributo
-136 Botão esquerdo fixa a cor da seleção
-137 Botão do meio ou da direita fixa a cor do cursor
-138 Mais ...
-139 Comece
-140 Cor
-141 **No element can be inserted
-142 Número de propostas
-143 Verificação
-144 Buscar/Pular
-145 Substituir (+ dic)
-146 Substituir e próximo
-147 Outro idioma
-148 Pular (+ dic)
-149 Palavras contendo:
-150 Verificar ortografia...
-151 Numerais romanos
-152 Ignorar
-153 palavras todas maíusculas
-154 palavras com dígitos
-155 Erro em arquivo de parâmetros
-156 Não há arquivo de teclado
-157 Não é possível salvar o dicionário do documento
-158 Palavra incorreta "%s" recusada neste dicionário
-159 Palavra "%s" adicionada ao dicionário do documento
-160 Fim da verificação ortográfica
-161 Abortada a verificação ortográfica
-162 Por favor selecione um documento
-163 Dicionário do documento salvo: %s
-164 **Not available in this version
-165 **Enable/Disable palette
-166 **Tools
-167 **Auto refresh
+66 XHTML
+67 Suprimir
+68 Destino (Output)
+69 Arquivo PostScript
+70 Impressora
+71 Buscar
+72 Ignore o caso 
+73 Substituir por
+74 Substituir
+75 Não substituir
+76 Substituir sob demanda
+77 Substituição Automática
+78 Onde buscar
+79 Antes da seleção
+80 Dentro da seleção
+81 Depois da seleção
+82 No documento todo
+83 Não substituir
+84 Cores padrão
+85 antes de fechá-lo
+86 Fechar um documento
+87 Símbolos matemáticos
+88 Gráficos
+89 Alfabeto Latino
+90 Alfabeto Grego
+91 Salvar
+92 Texto
+93 Gráfico
+94 Símbolo
+95 Imagem
+96 Tipo de elemento
+97 depois
+98 antes
+99 em torno de
+100 Incluir
+101 Colar
+102 criar
+103 Inserir
+104 Quebra de página
+105 Idioma do elemento
+106 Idioma herdado:
+107 Não encontrado
+108 Buscar em
+109 Buscar
+110 elemento somente de leitura
+111 Nada a substituir
+112 Caracteres padrão
+113 Gráficos padrão
+114 Formato padrão
+115 Geometria padrão
+116 pt
+117 Estilo de linha
+118 espessura da linha
+119 Padrão de preenchimento
+120 Dividir
+121 Tipo de objeto
+122 Ir à página número:
+123 Qualquer
+124 Atributo a buscar
+125 Tipo a buscar
+126 Naturezas
+127 Valor do atributo
+128 Atributo desconhecido
+129 Cancelar
+130 Erro em tradução PostScript
+131 Comando recusado pelo spooler "%s"
+132 Não é possível criar "%s"
+133 Sobrelinhado (Overline)
+134 Formato de documento
+135 Eventos
+136 Remover atributo
+137 Botão esquerdo fixa a cor da seleção
+138 Botão do meio ou da direita fixa a cor do cursor
+139 Mais ...
+140 Comece
+141 Cor
+142 **Background color
+143 **Foreground color
+144 **Switch colors
+145 **No element can be inserted
+146 Número de propostas
+147 Verificação
+148 Buscar/Pular
+149 Substituir (+ dic)
+150 Substituir e próximo
+151 Outro idioma
+152 Pular (+ dic)
+153 Palavras contendo:
+154 Verificar ortografia...
+155 Numerais romanos
+156 Ignorar
+157 palavras todas maíusculas
+158 palavras com dígitos
+159 Erro em arquivo de parâmetros
+160 Não há arquivo de teclado
+161 Não é possível salvar o dicionário do documento
+162 Palavra incorreta "%s" recusada neste dicionário
+163 Palavra "%s" adicionada ao dicionário do documento
+164 Fim da verificação ortográfica
+165 Abortada a verificação ortográfica
+166 Por favor selecione um documento
+167 Dicionário do documento salvo: %s
+168 **Not available in this version
+169 **Enable/Disable palette
+170 **Tools
+171 **Auto refresh

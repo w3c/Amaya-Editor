@@ -65,105 +65,109 @@
 63 Nicht Speichern
 64 Schräge
 65 Farbe
-66 Löschen
-67 Ausgabe
-68 PostScript-Datei
-69 Drucker
-70 Suchen nach
-71 Buchstabenlage ignorieren
-72 Ersetzen durch
-73 Modus
-74 Nicht ersetzen
-75 Bestätigen
-76 Alle ersetzen
-77 Suchraum
-78 Oberhalb der Markierung
-79 Innerhalb der Markierung
-80 Unterhalb der Markierung
-81 Im gesamten Dokument
-82 Überspringen
-83 Standardfarbe
-84 vorher speichern?
-85 Dokument schließen
-86 Formelsatz
-87 Grafik
-88 Lateinisches Alphabet
-89 Griechiches Alphabet
-90 Speichern
-91 Text
-92 Zeichnung
-93 Symbol
-94 Bild
-95 Art des Elements
-96 nach
-97 vor
-98 um
-99 Einfügen
+66 XHTML
+67 Löschen
+68 Ausgabe
+69 PostScript-Datei
+70 Drucker
+71 Suchen nach
+72 Buchstabenlage ignorieren
+73 Ersetzen durch
+74 Modus
+75 Nicht ersetzen
+76 Bestätigen
+77 Alle ersetzen
+78 Suchraum
+79 Oberhalb der Markierung
+80 Innerhalb der Markierung
+81 Unterhalb der Markierung
+82 Im gesamten Dokument
+83 Überspringen
+84 Standardfarbe
+85 vorher speichern?
+86 Dokument schließen
+87 Formelsatz
+88 Grafik
+89 Lateinisches Alphabet
+90 Griechiches Alphabet
+91 Speichern
+92 Text
+93 Zeichnung
+94 Symbol
+95 Bild
+96 Art des Elements
+97 nach
+98 vor
+99 um
 100 Einfügen
-101 Erzeugen
-102 Einfügen
-103 Seitenumbruch
-104 Sprache des Elements
-105 Sprachvoreinstellung:
-106 Suche beendet
-107 Suche in
-108 Suche
-109 Schreibgeschütztes Dokument
-110 Suche beendet
-111 Standardzeichensatz
-112 Standardgrafik
-113 Standardformat
-114 Standardgeometrie
-115 pt
-116 Linienart
-117 Linienstärke
-118 Füllmuster
-119 Teilen
-120 Objekttyp
-121 Gehe zu Seite Nr.:
-122 egal
-123 Attribut suchen
-124 Suche nach Typ
-125 Dokumenttyp
-126 Wert des Attributs
-127 Unbekanntes Attribut
-128 Abbrechen
-129 Fehler in der PostScript-Erkennung
-130 Auftrag vom Druckspooler "%s" zurückgewiesen
-131 Kann "%s" nicht erzeugen
-132 Überstrichen
-133 Format
-134 Ereignisse (Events)
-135 Löschen
-136 Linke Maustaste: Farbe für markierten Text
-137 Mittlere oder rechte Maustaste: Cursorfarbe
-138 Weiter ...
-139 Holen
-140 Farbe
-141 Es kann kein Element eingefügt werden
-142 Anzahl Vorschläge
-143 Überprüfe
-144 Suchen
-145 Ersetzen (PW)
-146 Ersetzen
-147 Sprache
-148 Überspringen (PW)
-149 Worte mit
-150 Rechtschreibprüfung
-151 Römische Zahlen
-152 Ignorieren
-153 Worte in Großbuchstaben
-154 Worte mit Ziffern
-155 Fehler in der Parameterdatei
-156 Tastaturdatei fehlt
-157 Kann das Dokumentwörterbuch nicht speichern
-158 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
-159 Wort "%s" zum Dokumentwörterbuch hinzugefügt
-160 Rechtschreibprüfung beendet
-161 Rechtschreibprüfung abgebrochen
-162 Bitte ein Dokument auswählen
-163 Dokumentwörterbuch unter %s gespeichert
-164 **Not available in this version
-165 **Enable/Disable palette
-166 **Tools
-167 **Auto refresh
+101 Einfügen
+102 Erzeugen
+103 Einfügen
+104 Seitenumbruch
+105 Sprache des Elements
+106 Sprachvoreinstellung:
+107 Suche beendet
+108 Suche in
+109 Suche
+110 Schreibgeschütztes Dokument
+111 Suche beendet
+112 Standardzeichensatz
+113 Standardgrafik
+114 Standardformat
+115 Standardgeometrie
+116 pt
+117 Linienart
+118 Linienstärke
+119 Füllmuster
+120 Teilen
+121 Objekttyp
+122 Gehe zu Seite Nr.:
+123 egal
+124 Attribut suchen
+125 Suche nach Typ
+126 Dokumenttyp
+127 Wert des Attributs
+128 Unbekanntes Attribut
+129 Abbrechen
+130 Fehler in der PostScript-Erkennung
+131 Auftrag vom Druckspooler "%s" zurückgewiesen
+132 Kann "%s" nicht erzeugen
+133 Überstrichen
+134 Format
+135 Ereignisse (Events)
+136 Löschen
+137 Linke Maustaste: Farbe für markierten Text
+138 Mittlere oder rechte Maustaste: Cursorfarbe
+139 Weiter ...
+140 Holen
+141 Farbe
+142 **Background color
+143 **Foreground color
+144 **Switch colors
+145 Es kann kein Element eingefügt werden
+146 Anzahl Vorschläge
+147 Überprüfe
+148 Suchen
+149 Ersetzen (PW)
+150 Ersetzen
+151 Sprache
+152 Überspringen (PW)
+153 Worte mit
+154 Rechtschreibprüfung
+155 Römische Zahlen
+156 Ignorieren
+157 Worte in Großbuchstaben
+158 Worte mit Ziffern
+159 Fehler in der Parameterdatei
+160 Tastaturdatei fehlt
+161 Kann das Dokumentwörterbuch nicht speichern
+162 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
+163 Wort "%s" zum Dokumentwörterbuch hinzugefügt
+164 Rechtschreibprüfung beendet
+165 Rechtschreibprüfung abgebrochen
+166 Bitte ein Dokument auswählen
+167 Dokumentwörterbuch unter %s gespeichert
+168 **Not available in this version
+169 **Enable/Disable palette
+170 **Tools
+171 **Auto refresh

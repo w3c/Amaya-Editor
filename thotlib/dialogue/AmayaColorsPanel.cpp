@@ -53,9 +53,13 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
 {
   wxLogDebug( _T("AmayaColorsPanel::AmayaColorsPanel") );
 
-  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+  //  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
 
+  // setup labels
   RefreshToolTips();
+  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_COLORS)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_MODIFYCOLOR", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_GETCOLOR", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPGETBUTTON)));
 
   m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "empty.gif" ) );
   m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "default_color.gif" ) );
@@ -100,6 +104,10 @@ int AmayaColorsPanel::GetPanelType()
  */
 void AmayaColorsPanel::RefreshToolTips()
 {  
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_DEFAULTCOLORS", wxButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_STD_COLORS)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_SWITCHCOLORS", wxButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORSWITCH)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORBG)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORFG)));
 }
 
 /*

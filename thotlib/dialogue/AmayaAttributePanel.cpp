@@ -54,7 +54,7 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
 {
   wxLogDebug( _T("AmayaAttributePanel::AmayaAttributePanel") );
 
-  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+  //  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
   m_pVPanelParent       = XRCCTRL(*m_pPanel, "wxID_PANEL_ATTRVALUE", wxPanel);
   m_pVPanelSizer  = m_pVPanelParent->GetSizer();
 
@@ -65,7 +65,6 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
   m_pPanel_Enum   = XRCCTRL(*m_pVPanelParent, "wxID_ATTRIBUTE_ENUM", wxPanel);
   m_pPanel_Num    = XRCCTRL(*m_pVPanelParent, "wxID_ATTRIBUTE_NUM", wxPanel);
   m_pModifyButton = XRCCTRL(*m_pPanel, "wxID_OK", wxButton);
-  m_pTitleText    = XRCCTRL(*m_pPanel, "wxID_LABEL_TITLE", wxStaticText);
 
   // setup labels
   m_pModifyButton->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));

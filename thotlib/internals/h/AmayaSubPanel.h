@@ -88,6 +88,7 @@ class AmayaSubPanel : public wxPanel
   wxPanel *            m_pPanelContentDetach;
   wxPanel *            m_pPanelTitle;
   AmayaFloatingPanel * m_pFloatingPanel;
+  wxStaticText *       m_pTitleText;
 
   unsigned int m_State; /* bit field of wxAMAYA_SPANEL_STATE */  
   bool         m_IsExpBeforeDetach; /* wxAMAYA_SPANEL_FLOATING == true && wxAMAYA_SPANEL_EXPANDED == true */

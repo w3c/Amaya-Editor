@@ -65,105 +65,109 @@
 63 Close, don't save
 64 Character style
 65 Colors
-66 Delete
-67 Output
-68 PostScript file
-69 Printer
-70 Search for
-71 Ignore case
-72 Replace by
-73 Replace
-74 No replace
-75 Replace on request
-76 Automatic replace
-77 Search where
-78 Before selection
-79 Within selection
-80 After selection
-81 In the whole document
-82 Do not replace
-83 Default colors
-84 before closing it
-85 Close a document
-86 Math symbols
-87 Graphics
-88 Latin alphabet
-89 Greek alphabet
-90 Save
-91 Text
-92 Graphic
-93 Symbol
-94 Image
-95 Element type
-96 after
-97 before
-98 around
-99 Include
-100 Paste
-101 to create
-102 Insert
-103 Page break
-104 Language of element
-105 Inherited language:
-106 Not found
-107 Search in
-108 Search
-109 Read only element
-110 Nothing to replace
-111 Standard characters
-112 Standard graphics
-113 Standard format
-114 Standard geometry
-115 pt
-116 Line style
-117 Line weight
-118 Fill pattern
-119 Split
-120 Object type
-121 Goto page number:
-122 Any
-123 Attribute to search
-124 Type to search
-125 Natures
-126 Attribute value
-127 Unknown attribute
-128 Cancel
-129 Error in PostScript translation
-130 Command refused by the spooler "%s"
-131 Cannot create "%s"
-132 Overline
-133 Document format
-134 Events
-135 Remove attribute
-136 Left button sets the selection color
-137 Middle or Right button sets the caret color
-138 More ...
-139 Get
-140 Color
-141 No element can be inserted
-142 Number of proposals
-143 Checking
-144 Search/Skip
-145 Replace (+ dic)
-146 Replace and next
-147 Other language
-148 Skip (+ dic)
-149 words containing:
-150 Spell checking ...
-151 Roman numerals
-152 Ignore
-153 words that are all caps
-154 words with digits
-155 Parameter file error
-156 No keyboard file
-157 Cannot save the document dictionary
-158 Incorrect word "%s" refused in this dictionary
-159 Word "%s" added in the document dictionary
-160 End of spell checking
-161 Spell checking aborted
-162 Please select a document
-163 Document dictionary saved: %s
-164 Not available in this version
-165 Enable/Disable palette
-166 Tools
-167 Auto refresh
+66 XHTML
+67 Delete
+68 Output
+69 PostScript file
+70 Printer
+71 Search for
+72 Ignore case
+73 Replace by
+74 Replace
+75 No replace
+76 Replace on request
+77 Automatic replace
+78 Search where
+79 Before selection
+80 Within selection
+81 After selection
+82 In the whole document
+83 Do not replace
+84 Default colors
+85 before closing it
+86 Close a document
+87 Math symbols
+88 Graphics
+89 Latin alphabet
+90 Greek alphabet
+91 Save
+92 Text
+93 Graphic
+94 Symbol
+95 Image
+96 Element type
+97 after
+98 before
+99 around
+100 Include
+101 Paste
+102 to create
+103 Insert
+104 Page break
+105 Language of element
+106 Inherited language:
+107 Not found
+108 Search in
+109 Search
+110 Read only element
+111 Nothing to replace
+112 Standard characters
+113 Standard graphics
+114 Standard format
+115 Standard geometry
+116 pt
+117 Line style
+118 Line weight
+119 Fill pattern
+120 Split
+121 Object type
+122 Goto page number:
+123 Any
+124 Attribute to search
+125 Type to search
+126 Natures
+127 Attribute value
+128 Unknown attribute
+129 Cancel
+130 Error in PostScript translation
+131 Command refused by the spooler "%s"
+132 Cannot create "%s"
+133 Overline
+134 Document format
+135 Events
+136 Remove attribute
+137 Left button sets the selection color
+138 Middle or Right button sets the caret color
+139 More ...
+140 Get
+141 Color
+142 Background color
+143 Foreground color
+144 Switch colors
+145 No element can be inserted
+146 Number of proposals
+147 Checking
+148 Search/Skip
+149 Replace (+ dic)
+150 Replace and next
+151 Other language
+152 Skip (+ dic)
+153 words containing:
+154 Spell checking ...
+155 Roman numerals
+156 Ignore
+157 words that are all caps
+158 words with digits
+159 Parameter file error
+160 No keyboard file
+161 Cannot save the document dictionary
+162 Incorrect word "%s" refused in this dictionary
+163 Word "%s" added in the document dictionary
+164 End of spell checking
+165 Spell checking aborted
+166 Please select a document
+167 Document dictionary saved: %s
+168 Not available in this version
+169 Enable/Disable palette
+170 Tools
+171 Auto refresh

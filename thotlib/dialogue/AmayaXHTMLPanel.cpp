@@ -47,10 +47,12 @@ AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow 
 {
   wxLogDebug( _T("AmayaXHTMLPanel::AmayaXHTMLPanel") );
 
-  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+  //  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
 
+  // setup labels
   RefreshToolTips();
-  
+  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_XHTML)));
+
   m_OffColour = XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
   m_OnColour  = wxColour(250, 200, 200);
 

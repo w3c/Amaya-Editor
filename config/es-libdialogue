@@ -65,105 +65,109 @@
 63 Cerrar, no guardar
 64 Estilo de carácter
 65 Colores
-66 Borrar
-67 Salida
-68 Archivo PostScript
-69 Impresora
-70 Buscar:
-71 No haga caso del caso
-72 Reemplazar por:
-73 Reemplazar
-74 No reemplazar
-75 Solicitar confirmación
-76 Reemplazar automáticamente
-77 Dónde buscar
-78 Antes de la selección
-79 En la selección
-80 Tras la selección
-81 En todo el documento
-82 No reemplazar
-83 Colores por omisión
-84 antes de cerrarlo
-85 Cerrar un documento
-86 Símbolos matemáticos
-87 Gráficos
-88 Alfabeto latino
-89 Alfabeto griego
-90 Guardar
-91 Texto
-92 Gráfico
-93 Símbolo
-94 Imagen
-95 Tipo de elemento
-96 después
-97 antes
-98 alrededor
-99 Incluir
-100 Pegar
-101 para crear
-102 Insertar
-103 Salto de página
-104 Idioma del elemento
-105 Idioma heredado:
-106 No encontrado
-107 Buscar en
-108 Buscar
-109 Elemento de sólo lectura
-110 Nada que sustituir
-111 Caracteres estándar
-112 Gráficos estándar
-113 Formato estándar
-114 Geometría estándar
-115 pt
-116 Estilo de línea
-117 Grosor de línea
-118 Patrón de relleno
-119 Dividir
-120 Tipo de objeto
-121 Ir a página número:
-122 Cualquiera
-123 Atributo a buscar
-124 Tipo a buscar
-125 Natures
-126 Valores de atributo
-127 Atributo desconocido
-128 Cancelar
-129 Error en traducción PostScript
-130 Orden rechazada por el spooler "%s"
-131 No puedo crear "%s"
-132 Overline
-133 Formato de documento
-134 Eventos
-135 Eliminar atributo
-136 El botón izquierdo fija el color de texto de la selección
-137 El botón central o derecho fija el color de fondo de la selección
-138 Más ...
-139 Obtener
-140 Color
-141 No se puede insertar ningún elemento
-142 Número de propuestas:
-143 Comprobar
-144 Buscar/Saltar
-145 Reemplazar (+ dic)
-146 Reemplazar y siguiente
-147 Otro idioma
-148 Saltar (+ dic)
-149 Palabras que contengan:
-150 Verificar ortografía
-151 Números romanos
-152 Ignorar
-153 Palabras en mayúsculas
-154 Palabras con dígitos
-155 Error en archivo de parámetro
-156 No hay archivo de teclado
-157 No puedo guardar el diccionario del documento
-158 Palabra incorrecta "%s" rechazada en este diccionario
-159 Palabra "%s" añadida al diccionario del documento
-160 Fin de la corrección ortográfica
-161 Corrección ortográfica abortada
-162 Por favor, seleccione un documento
-163 Diccionario del documento guardado: %s
-164 **Not available in this version
-165 **Enable/Disable palette
-166 **Tools
-167 **Auto refresh
+66 XHTML
+67 Borrar
+68 Salida
+69 Archivo PostScript
+70 Impresora
+71 Buscar:
+72 No haga caso del caso
+73 Reemplazar por:
+74 Reemplazar
+75 No reemplazar
+76 Solicitar confirmación
+77 Reemplazar automáticamente
+78 Dónde buscar
+79 Antes de la selección
+80 En la selección
+81 Tras la selección
+82 En todo el documento
+83 No reemplazar
+84 Colores por omisión
+85 antes de cerrarlo
+86 Cerrar un documento
+87 Símbolos matemáticos
+88 Gráficos
+89 Alfabeto latino
+90 Alfabeto griego
+91 Guardar
+92 Texto
+93 Gráfico
+94 Símbolo
+95 Imagen
+96 Tipo de elemento
+97 después
+98 antes
+99 alrededor
+100 Incluir
+101 Pegar
+102 para crear
+103 Insertar
+104 Salto de página
+105 Idioma del elemento
+106 Idioma heredado:
+107 No encontrado
+108 Buscar en
+109 Buscar
+110 Elemento de sólo lectura
+111 Nada que sustituir
+112 Caracteres estándar
+113 Gráficos estándar
+114 Formato estándar
+115 Geometría estándar
+116 pt
+117 Estilo de línea
+118 Grosor de línea
+119 Patrón de relleno
+120 Dividir
+121 Tipo de objeto
+122 Ir a página número:
+123 Cualquiera
+124 Atributo a buscar
+125 Tipo a buscar
+126 Natures
+127 Valores de atributo
+128 Atributo desconocido
+129 Cancelar
+130 Error en traducción PostScript
+131 Orden rechazada por el spooler "%s"
+132 No puedo crear "%s"
+133 Overline
+134 Formato de documento
+135 Eventos
+136 Eliminar atributo
+137 El botón izquierdo fija el color de texto de la selección
+138 El botón central o derecho fija el color de fondo de la selección
+139 Más ...
+140 Obtener
+141 Color
+142 **Background color
+143 **Foreground color
+144 **Switch colors
+145 No se puede insertar ningún elemento
+146 Número de propuestas:
+147 Comprobar
+148 Buscar/Saltar
+149 Reemplazar (+ dic)
+150 Reemplazar y siguiente
+151 Otro idioma
+152 Saltar (+ dic)
+153 Palabras que contengan:
+154 Verificar ortografía
+155 Números romanos
+156 Ignorar
+157 Palabras en mayúsculas
+158 Palabras con dígitos
+159 Error en archivo de parámetro
+160 No hay archivo de teclado
+161 No puedo guardar el diccionario del documento
+162 Palabra incorrecta "%s" rechazada en este diccionario
+163 Palabra "%s" añadida al diccionario del documento
+164 Fin de la corrección ortográfica
+165 Corrección ortográfica abortada
+166 Por favor, seleccione un documento
+167 Diccionario del documento guardado: %s
+168 **Not available in this version
+169 **Enable/Disable palette
+170 **Tools
+171 **Auto refresh

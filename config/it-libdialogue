@@ -65,105 +65,109 @@
 63 Chiudi, non salvare
 64 Stile dei caratteri
 65 Colori
-66 Cancella
-67 Destinazione
-68 File PostScript
-69 Stampante
-70 Cerca
-71 Ignori il caso
-72 Rimpiazza con
-73 Rimpiazza
-74 Non rimpiazzare
-75 Rimpiazza su richiesta
-76 Rimpiazzamento automatico
-77 Dove cercare
-78 Prima della selezione
-79 Nella selezione
-80 Dopo la selezione
-81 L\'intero documento
-82 Non rimpiazzare
-83 Colori di default
-84 prima di chiuderlo
-85 Chiudi un documento
-86 Simboli matematici
-87 Grafica
-88 Alfabeto latino
-89 Alfabeto greco
-90 Salva
-91 Testo
-92 Grafica
-93 Simbolo
-94 Immagine
-95 Tipo di elemento
-96 dopo
-97 prima
-98 intorno
-99 Includi
-100 Incolla
-101 da creare
-102 Inserisci
-103 Salto pagina
-104 Lingua dell'elemento
-105 Lingua ereditata:
-106 Non trovato
-107 Cerca in
-108 Cerca
-109 Elemento a sola lettura
-110 Nulla da rimpiazzare
-111 Caratteri standard
-112 Grafica standard
-113 Formato standard
-114 Geometria standard
-115 pt
-116 Stile delle linee
-117 Spessore delle linee
-118 Motivo di riempimento
-119 Dividi
-120 Tipo di oggetto
-121 Vai a pagina numero:
-122 Any
-123 Attributo da cercare
-124 Tipo da cercare
-125 Nature
-126 Valore dell\'attributo
-127 Attributo sconosciuto
-128 Annulla
-129 Errore nella traduzione in PostScript
-130 Comando rifiutato dallo spooler "%s"
-131 Impossibile creare "%s"
-132 Soprassegnato
-133 Formato del documento
-134 Eventi
-135 Rimuovi l\'attributo
-136 Il tasto di sinistra setta il colore della selezione
-137 l tasto centrale o di destra setta il colore del cursore
-138 Encora ...
-139 Usa colori
-140 Colore
-141 Non si possono inserire elementi
-142 Numero di proposte alternative
-143 Controlla
-144 Cerca
-145 Sostituisci (+ diz)
-146 Sostituisci e continua
-147 Altra lingua
-148 Salta (+ diz)
-149 parole contenenti:
-150 Controllo ortografico...
-151 numerali romani
-152 Ignora
-153 parole tutte maiuscole
-154 parole contenenti cifre
-155 Errore nel file dei parametri
-156 Il file della tastiera non esiste
-157 Impossibile salvare il dizionario del documento
-158 Parola scorretta "%s" rifiutata in questo dizionario
-159 Parola "%s" aggiunta nel dizionario del documento
-160 Fine controllo ortografico
-161 Controllo ortografico interrotto
-162 Seleziona un documento
-163 Dizionario del documento salvato: %s
-164 **Not available in this version
-165 **Enable/Disable palette
-166 **Tools
-167 **Auto refresh
+66 XHTML
+67 Cancella
+68 Destinazione
+69 File PostScript
+70 Stampante
+71 Cerca
+72 Ignori il caso
+73 Rimpiazza con
+74 Rimpiazza
+75 Non rimpiazzare
+76 Rimpiazza su richiesta
+77 Rimpiazzamento automatico
+78 Dove cercare
+79 Prima della selezione
+80 Nella selezione
+81 Dopo la selezione
+82 L\'intero documento
+83 Non rimpiazzare
+84 Colori di default
+85 prima di chiuderlo
+86 Chiudi un documento
+87 Simboli matematici
+88 Grafica
+89 Alfabeto latino
+90 Alfabeto greco
+91 Salva
+92 Testo
+93 Grafica
+94 Simbolo
+95 Immagine
+96 Tipo di elemento
+97 dopo
+98 prima
+99 intorno
+100 Includi
+101 Incolla
+102 da creare
+103 Inserisci
+104 Salto pagina
+105 Lingua dell'elemento
+106 Lingua ereditata:
+107 Non trovato
+108 Cerca in
+109 Cerca
+110 Elemento a sola lettura
+111 Nulla da rimpiazzare
+112 Caratteri standard
+113 Grafica standard
+114 Formato standard
+115 Geometria standard
+116 pt
+117 Stile delle linee
+118 Spessore delle linee
+119 Motivo di riempimento
+120 Dividi
+121 Tipo di oggetto
+122 Vai a pagina numero:
+123 Any
+124 Attributo da cercare
+125 Tipo da cercare
+126 Nature
+127 Valore dell\'attributo
+128 Attributo sconosciuto
+129 Annulla
+130 Errore nella traduzione in PostScript
+131 Comando rifiutato dallo spooler "%s"
+132 Impossibile creare "%s"
+133 Soprassegnato
+134 Formato del documento
+135 Eventi
+136 Rimuovi l\'attributo
+137 Il tasto di sinistra setta il colore della selezione
+138 l tasto centrale o di destra setta il colore del cursore
+139 Encora ...
+140 Usa colori
+141 Colore
+142 **Background color
+143 **Foreground color
+144 **Switch colors
+145 Non si possono inserire elementi
+146 Numero di proposte alternative
+147 Controlla
+148 Cerca
+149 Sostituisci (+ diz)
+150 Sostituisci e continua
+151 Altra lingua
+152 Salta (+ diz)
+153 parole contenenti:
+154 Controllo ortografico...
+155 numerali romani
+156 Ignora
+157 parole tutte maiuscole
+158 parole contenenti cifre
+159 Errore nel file dei parametri
+160 Il file della tastiera non esiste
+161 Impossibile salvare il dizionario del documento
+162 Parola scorretta "%s" rifiutata in questo dizionario
+163 Parola "%s" aggiunta nel dizionario del documento
+164 Fine controllo ortografico
+165 Controllo ortografico interrotto
+166 Seleziona un documento
+167 Dizionario del documento salvato: %s
+168 **Not available in this version
+169 **Enable/Disable palette
+170 **Tools
+171 **Auto refresh

@@ -65,105 +65,109 @@
 63 Fermer sans sauver
 64 Style des caractères
 65 Couleurs
-66 Supprimer
-67 Destination
-68 Fichier PostScript
-69 Imprimante
-70 Texte à chercher
-71 Ignorer la casse
-72 Texte de remplacement
-73 Remplacement
-74 Sans remplacement
-75 Remplacement à la demande
-76 Remplacement automatique
-77 Où rechercher
-78 Avant la sélection
-79 Dans la sélection
-80 Après la sélection
-81 Dans tout le document
-82 Sauter
-83 Couleurs par défaut
-84 avant de le fermer
-85 Fermer un document
-86 Symboles mathématiques
-87 Graphiques
-88 Alphabet latin
-89 Alphabet grec
-90 Sauver
-91 Texte
-92 Graphique
-93 Symbole
-94 Image
-95 Type d'élément
-96 après
-97 avant
-98 autour
-99 Inclure
-100 Coller
-101 à créer
-102 Insérer
-103 Saut de page
-104 Langue de l'élément
-105 Langue héritée :
-106 Pas trouvé
-107 Recherche dans
-108 Recherche
-109 Elément en lecture seule
-110 Plus de remplacements
-111 Caractères standard
-112 Graphiques standard
-113 Format standard
-114 Géométrie standard
-115 pt
-116 Style des traits
-117 Epaisseur des traits
-118 Motif de remplissage
-119 Diviser
-120 Type d'objet
-121 Aller page numéro :
-122 any
-123 Attribut à chercher
-124 Type à chercher
-125 Natures
-126 Valeur de l'attribut
-127 Attribut inconnu
-128 Annuler
-129 Erreur dans la traduction en PostScript
-130 Commande refusée par le spooler : %s
-131 Création impossible : %s
-132 Surligné
-133 Format de document
-134 Événements
-135 Retire l'attribut
-136 Bouton gauche change la couleur de sélection
-137 Bouton milieu ou droit change la couleur du curseur
-138 Autres ...
-139 Actualiser
-140 Couleur
-141 Pas d'élément à insérer
-142 Nombre de propositions
-143 Où corriger
-144 Chercher/Suivant
-145 Remplacer (+ dic)
-146 Remplacer
-147 Autre langue
-148 Suivant (+ dic)
-149 incluant les caractères :
-150 Corriger...
-151 en chiffres romains
-152 Ignorer les mots
-153 en lettres capitales
-154 incluant des chiffres
-155 Erreur dans le fichier des paramètres
-156 Absence de fichier clavier
-157 Impossible d\'enregistrer le dictionnaire du document
-158 Mot "%s" incorrect refusé dans ce dictionnaire
-159 Mot "%s" ajouté dans le dictionnaire du document
-160 Correction terminée
-161 Correction interrompue
-162 Rien à corriger : sélectionnez un document
-163 Sauvegarde du dictionnaire "%s"
-164 Pas disponible dans cette version
-165 Activer/Desactiver palette
-166 Outils
-167 Auto mise  jour
+66 XHTML
+67 Supprimer
+68 Destination
+69 Fichier PostScript
+70 Imprimante
+71 Texte à chercher
+72 Ignorer la casse
+73 Texte de remplacement
+74 Remplacement
+75 Sans remplacement
+76 Remplacement à la demande
+77 Remplacement automatique
+78 Où rechercher
+79 Avant la sélection
+80 Dans la sélection
+81 Après la sélection
+82 Dans tout le document
+83 Sauter
+84 Couleurs par défaut
+85 avant de le fermer
+86 Fermer un document
+87 Symboles mathématiques
+88 Graphiques
+89 Alphabet latin
+90 Alphabet grec
+91 Sauver
+92 Texte
+93 Graphique
+94 Symbole
+95 Image
+96 Type d'élément
+97 après
+98 avant
+99 autour
+100 Inclure
+101 Coller
+102 à créer
+103 Insérer
+104 Saut de page
+105 Langue de l'élément
+106 Langue héritée :
+107 Pas trouvé
+108 Recherche dans
+109 Recherche
+110 Elément en lecture seule
+111 Plus de remplacements
+112 Caractères standard
+113 Graphiques standard
+114 Format standard
+115 Géométrie standard
+116 pt
+117 Style des traits
+118 Epaisseur des traits
+119 Motif de remplissage
+120 Diviser
+121 Type d'objet
+122 Aller page numéro :
+123 any
+124 Attribut à chercher
+125 Type à chercher
+126 Natures
+127 Valeur de l'attribut
+128 Attribut inconnu
+129 Annuler
+130 Erreur dans la traduction en PostScript
+131 Commande refusée par le spooler : %s
+132 Création impossible : %s
+133 Surligné
+134 Format de document
+135 Événements
+136 Retire l'attribut
+137 Bouton gauche change la couleur de sélection
+138 Bouton milieu ou droit change la couleur du curseur
+139 Autres ...
+140 Actualiser
+141 Couleur
+142 Couleur de l'arrière-plan
+143 Couleur du premier plan
+144 Echanger les couleurs
+145 Pas d'élément à insérer
+146 Nombre de propositions
+147 Où corriger
+148 Chercher/Suivant
+149 Remplacer (+ dic)
+150 Remplacer
+151 Autre langue
+152 Suivant (+ dic)
+153 incluant les caractères :
+154 Corriger...
+155 en chiffres romains
+156 Ignorer les mots
+157 en lettres capitales
+158 incluant des chiffres
+159 Erreur dans le fichier des paramètres
+160 Absence de fichier clavier
+161 Impossible d\'enregistrer le dictionnaire du document
+162 Mot "%s" incorrect refusé dans ce dictionnaire
+163 Mot "%s" ajouté dans le dictionnaire du document
+164 Correction terminée
+165 Correction interrompue
+166 Rien à corriger : sélectionnez un document
+167 Sauvegarde du dictionnaire "%s"
+168 Pas disponible dans cette version
+169 Activer/Desactiver palette
+170 Outils
+171 Auto mise à jour

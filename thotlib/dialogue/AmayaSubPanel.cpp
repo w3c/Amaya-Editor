@@ -75,6 +75,7 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
   // get reference of these usefull childs
   m_pPanelContent       = XRCCTRL(*this, "wxID_PANEL_CONTENT", wxPanel);
   m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+  m_pTitleText          = XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText);
   
   // load bitmaps
   m_Bitmap_DetachOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "detach_floating.gif" ) );
