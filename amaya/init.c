@@ -1996,9 +1996,12 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 {
   View          mainView, structView, altView, linksView, tocView;
   Document      old_doc;
-  char         *tmp;
+  Element       root, comment, leaf;
+  ElementType   elType;
+  char         *tmp, buffer[MAX_LENGTH];
   int           x, y, w, h;
   int           requested_doc;
+  Language	lang;
   ThotBool      isOpen, reinitialized, show;
 
 #ifdef _WINDOWS
@@ -2111,7 +2114,27 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   else
 	     TtaSetPSchema (doc, "HTMLPBW");
 	 }
-
+       if (docType == docSVG || docType == docMath)
+	 /* add a comment proudly claiming that the document was created by
+	    Amaya */
+	 {
+	   root = TtaGetRootElement (doc);
+	   elType = TtaGetElementType (root);
+	   if (docType == docSVG)
+	     elType.ElTypeNum = SVG_EL_XMLcomment;
+	   else
+	     elType.ElTypeNum = MathML_EL_XMLcomment;
+	   comment = TtaNewTree (doc, elType, "");
+	   TtaInsertFirstChild (&comment, root, doc);
+	   strcpy (buffer, " Created by ");
+	   strcat (buffer, HTAppName);
+	   strcat (buffer, " ");
+	   strcat (buffer, HTAppVersion);
+	   strcat (buffer, ", see http://www.w3.org/Amaya/ ");
+	   leaf = TtaGetFirstLeaf (comment);
+	   lang = TtaGetLanguageIdFromAlphabet('L');
+	   TtaSetTextContent (leaf, buffer, lang, doc);
+	 }
        TtaSetNotificationMode (doc, 1);
        /* get the geometry of the main view */
        if (docType == docAnnot)
@@ -2131,7 +2154,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
        else if (docType == docMath)
 	 {
 	   h = 300;
-	   w = 550;
+	   w = 580;
 	 }
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */

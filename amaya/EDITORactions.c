@@ -311,8 +311,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /*-------------  New MathML document ------------*/
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
-
-      /* Search the first element to set initial selection */
+      /* Search the first Construct to set the initial selection */
       elType.ElTypeNum = MathML_EL_Construct;
       el = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* set the initial selection */
@@ -327,11 +326,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /*-------------  New SVG document ------------*/
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
-
-      /* Search the first element to set initial selection */
-      elType.ElTypeNum = SVG_EL_GraphicsElement;
-      el = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      el = TtaGetFirstLeaf (el);
+      /* Search the last element to set the initial selection */
+      el = TtaGetLastLeaf (docEl);
       /* set the initial selection */
       TtaSelectElement (doc, el);
       if (SelectionDoc != 0)
@@ -348,7 +344,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (root, attr, doc);
-
       /* insert the Document_URL element */
       el = TtaGetFirstChild (root);
       if (el == NULL)
