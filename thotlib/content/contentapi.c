@@ -2440,7 +2440,7 @@ void TtaAddAnimFrom (void *info, void *anim)
   ((Animated_Element *) anim)->from = info;
 }
 /*----------------------------------------------------------------------
-   TtaAddAnimFill
+   TtaAddAnimFreeze
   ----------------------------------------------------------------------*/
 void TtaAddAnimFreeze (void *anim)
 {
@@ -2455,7 +2455,7 @@ void TtaAddAnimRemove (void *anim)
   ((Animated_Element *) anim)->Fill = Otherfill;
 }
 /*----------------------------------------------------------------------
-   TtaAddAnimFill
+   TtaAddAnimRepeatCount
   ----------------------------------------------------------------------*/
 void TtaAddAnimRepeatCount (int repeat, void *anim)
 {

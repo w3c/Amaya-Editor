@@ -1487,31 +1487,6 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   free (points);
 }
 
-/*----------------------------------------------------------------------
-  DrawCurrent
-  Draws the polyline or polygon corresponding to the list of points
-  contained in buffer points.
-  Parameter path is a pointer to the list of path segments
-  fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-static void  DrawCurrent (int frame, int thick, int style,
-			  ThotPoint *points, int npoints,
-			  int fg, int bg, int pattern)
-{
-  if (npoints > 1)
-    {
-      if (npoints == 2)
-	/* only two points, that's a single segment */
-	{
-	  InitDrawing (style, thick, fg);
-	  DoDrawOneLine (frame, points[0].x, points[0].y,
-			 points[1].x, points[1].y);
-	}
-      else
-	/* draw a polyline or a polygon */
-	DoDrawLines (frame, thick, style, points, npoints, fg, bg, pattern);
-    }
-}
 
 
 void PolySplit2 (float a1, float b1, float a2, float b2,

@@ -463,7 +463,7 @@ void DrawBoxSelection (int frame, PtrBox pBox)
 	}
       else
 	/* display other elements */
-#ifndef _GLTRANSFORMATION
+#ifndef _GLTRANSFORMATION2
 	DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		 pBox->BxXOrg + pBox->BxWidth,
 		 pBox->BxYOrg + pBox->BxHeight);

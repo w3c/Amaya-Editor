@@ -143,7 +143,7 @@ void ResetMainWindowBackgroundColor (int frame);
 void FreeGlTexture (void *Image);
 unsigned char *test_gradien_linear (); 
 
-#ifdef _SHARELIST
+#ifndef _NOSHARELIST
 int GetSharedContext ();
 void SetSharedContext (int frame);
 #endif /* _SHARELIST */

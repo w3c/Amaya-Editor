@@ -393,8 +393,9 @@ extern void TtaAppendAnim (Element element, void *anim);
 
 extern void TtaSetAnimationTime (void *anim_info, double start, double duration);
 
-extern void TtaAddAnimFill (void *anim);
+extern void TtaAddAnimFreeze (void *anim);
 extern void TtaAddAnimRemove (void *anim);
+
 extern void TtaAddAnimRepeatCount (int repeat, void *anim);
 
 extern void TtaAddAnimTo (void *info, void *anim);
