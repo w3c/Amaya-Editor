@@ -28,12 +28,6 @@ ELEMENTS
 	ElemTextModify.Post ->  TextChangedInGroup;
 	END;
 ***}
-   rect:
-	ElemGraphModify.Post -> GraphicsChanged;
-   circle:
-	ElemGraphModify.Post -> GraphicsChanged;
-   ellipse:
-	ElemGraphModify.Post -> GraphicsChanged;
    polyline:
 	ElemGraphModify.Post -> ControlPointChanged;
    polygon:
@@ -51,10 +45,7 @@ ELEMENTS
 	ElemDelete.Pre ->       DeleteStyle;
 	END;
    foreignObject:
-	BEGIN
 	ElemExport.Pre ->       ExportForeignObject;
-	ElemGraphModify.Post -> GraphicsChanged;
-	END;
 
    GRAPHICS_UNIT:
 	ElemDelete.Post ->      GraphLeafDeleted;

@@ -1010,21 +1010,6 @@ ThotBool GlobalSVGAttrInMenu (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
- GraphicsChanged
- A GRAPHIC base element has been changed by the user.
- -----------------------------------------------------------------------*/
-void GraphicsChanged (NotifyOnValue *event)
-{
-  if (InCreation)
-    /* don't check anything during the creation */
-    return;
-
-    /* check that the enclosing svg element still encompasses the
-       element whose size or position has just been changed */
-  CheckSVGRoot (event->document, event->element);
-}
-
-/*----------------------------------------------------------------------
  UpdateStyleOrSvgAttr
  update (or create) the style attribute or the SVG attribute corresponding
  the presentation rule of type presType for element el.
