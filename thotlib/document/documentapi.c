@@ -673,9 +673,15 @@ void TtaSetDocumentAccessMode (Document document, int accessMode)
 	   if (accessMode == 0)
 	     /* disable the Paste command */
 	     SwitchPaste (pDoc, FALSE);
+#ifdef _WINDOWS
+	   else
+	     /* enable the Paste command */
+	     SwitchPaste (pDoc, TRUE);
+#else /* _WINDOWS */
 	   else if (FirstSavedElement != NULL || ClipboardThot.BuLength != 0)
 	     /* enable the Paste command */
 	     SwitchPaste (pDoc, TRUE);
+#endif /* _WINDOWS */
 	   SetAccessMode (pDoc, accessMode);
 #endif
 	 }

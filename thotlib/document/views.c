@@ -579,12 +579,19 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
       DisplayFrame (frame);
       /* Update Paste entry in menu */
+#ifdef _WINDOWS
+	  if (pDoc->DocReadOnly)
+	SwitchPaste (pDoc, FALSE);
+      else
+	SwitchPaste(pDoc, TRUE);
+#else /* _WINDOWS */
       if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
 	  pDoc->DocReadOnly)
 	SwitchPaste (pDoc, FALSE);
       else
 	SwitchPaste(pDoc, TRUE);
-      
+#endif /* _WINDOWS */
+
       /* check the Undo state of the document */
       if (pDoc->DocNbEditsInHistory == 0)
 	SwitchUndo (pDoc, FALSE);
