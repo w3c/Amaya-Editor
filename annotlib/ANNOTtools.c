@@ -2048,55 +2048,131 @@ char * ANNOT_PreparePostBody (Document doc)
    StrDupDate
    Returns a pointer to a memalloc'd string containing the current date.
    It's up to the caller to free this memory.
-   @@ JK: Ralph, you need to add the TZ info here.
    ------------------------------------------------------------*/
 char *StrdupDate (void)
 {
   time_t      curDate;
   struct tm   *localDate;
   char      *strDate;
+  int        UTCoffset;
+  int        UTChourOffset;
+  int        UTCminOffset;
   
   curDate = time (&curDate);
   localDate = localtime (&curDate);
+
+#ifdef _WINDOWS
+  UTCoffset = _timezone;	/* global, set by localtime() */
+#else
+  UTCoffset = timezone;		/* global, set by localtime() */
+#endif /* _WINDOWS */
+
+  UTChourOffset = UTCminOffset = abs(UTCoffset)/60; /* UTCoffset is seconds */
+  UTChourOffset /= 60;
+  UTCminOffset %= 60;
+
   /* @@ possible memory bug */
-  strDate = TtaGetMemory (25);
+  strDate = TtaGetMemory (26);
   sprintf (strDate,
-	   "%04d-%02d-%02dT%02d:%02d:%02d",
+	   "%04d-%02d-%02dT%02d:%02d:%02d%c%02d:%02d",
 	   localDate->tm_year+1900,
 	   localDate->tm_mon+1,
 	   localDate->tm_mday, 
            localDate->tm_hour,
 	   localDate->tm_min,
-	   localDate->tm_sec);
+	   localDate->tm_sec,
+	   (UTCoffset > 0) ? '-' : '+',
+	   UTChourOffset,
+	   UTCminOffset);
   return (strDate);
 }
 
 /* ------------------------------------------------------------
    StrDateToCalTime
-   Converts a string date of form:
-   YYYY-MM-DDTHH:MM:SS
+   Converts a string date of form: (see http://www.w3.org/TR/NOTE-datetime)
+   YYYY-MM-DDTHH:MM[:SS[.S]]
+   YYYY-MM-DDTHH:MM[:SS[.S]]Z
+   YYYY-MM-DDTHH:MM[:SS[.S]]+HH:MM
+   YYYY-MM-DDTHH:MM[:SS[.S]]-HH:MM
    into calendar time represenation (that is, number of seconds
-   since the Unix epoch).
+   since the Unix epoch).  At most 12 to 14 fractional digital are ignored.
+
+   The first case (no time zone designator) is for backwards
+   compatibility only; it is assumed to be in the local timezone.
    ------------------------------------------------------------*/
 time_t StrDateToCalTime (char *strDate)
 {
   struct tm scanLocal;
   time_t cal_date;
+  char tzdata[20];
+  char *tzdataP;
+  int UTCoffset = 1;
+  int UTChourOffset = 0;
+  int UTCminuteOffset = 0;
 
   memset (&scanLocal, 0, sizeof (scanLocal));
-  
-  sscanf (strDate, "%04d-%02d-%02dT%02d:%02d:%02d",
+  memset (tzdata, 0, sizeof (tzdata));
+
+  sscanf (strDate, "%04d-%02d-%02dT%02d:%02d%19s",
 	  &scanLocal.tm_year,
 	  &scanLocal.tm_mon,
 	  &scanLocal.tm_mday,
 	  &scanLocal.tm_hour,
 	  &scanLocal.tm_min,
-	  &scanLocal.tm_sec);
+	  tzdata);
 
   scanLocal.tm_year -= 1900;
   scanLocal.tm_mon--;
 
+  tzdataP = &tzdata[0];
+  if (*tzdataP == ':') {
+    if (sscanf (tzdataP, ":%02d", &scanLocal.tm_sec)) {
+      tzdataP += 3;
+    }
+  }
+
+  if (*tzdataP == '.') {	/* ignore fractional seconds */
+    tzdataP++;
+    while (*tzdataP >= '0' && *tzdataP <= '9') {tzdataP++;}
+  }
+
   cal_date = mktime(&scanLocal);
+
+  /* mktime has already included the UTC offset for that date;
+     if a time zone designator was specified, we must drop out the
+     UTC offset and add the designated offset */
+
+  switch (*tzdataP)
+    {
+    case 0:			/* no timezone designator */
+      break;
+
+    case '+':			/* a designated offset */
+      UTCoffset = -1;		/* UTC is behind local time */
+      /* fall through */
+
+    case '-':			/* UTC is ahead of local time */
+      /* UTCoffset was initialized to +1 */
+      tzdataP++;
+      sscanf (tzdataP, "%02d:%02d",
+	      &UTChourOffset,
+	      &UTCminuteOffset);
+      cal_date += UTCoffset * ((UTChourOffset * 60) + UTCminuteOffset) * 60;
+      /* fall through */
+
+    case 'Z':			/* subtract mktime()'s UTC offset */
+    case 'z':
+      (void)localtime( &cal_date ); /* set timezone global */
+
+#ifdef _WINDOWS
+      UTCoffset = _timezone;	/* global, set by localtime() */
+#else
+      UTCoffset = timezone;	/* global, set by localtime() */
+#endif /* _WINDOWS */
+
+      cal_date -= UTCoffset;
+      break;
+    }
 
   return (cal_date);
 }
