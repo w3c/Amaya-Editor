@@ -1489,10 +1489,12 @@ void TtaRemoveAccessKey (Document doc, unsigned int key)
 void TtaListShortcuts (Document doc, FILE *fileDescriptor)
 {
   KEY                *next, *ptr;
-  char               *s, *k1, *k2;
+  char               *s, *k1, sk1[50], *k2, sk2[50];
   int                 i;
 
   s = TtaGetEnvString ("ACCESSKEY_MOD");
+  k1 = &sk1[0];
+  k2 = &sk2[0];
   if (doc)
     {
       /* display current access keys table */
@@ -1543,7 +1545,7 @@ void TtaListShortcuts (Document doc, FILE *fileDescriptor)
 
 	  while (next)
 	    {
-	      k1 = KeyName (next->K_EntryCode);
+	      strcpy (k1, KeyName (next->K_EntryCode));
 	      ptr = next->K_Next;
 	      if (ptr == NULL)
 		{
@@ -1559,7 +1561,7 @@ void TtaListShortcuts (Document doc, FILE *fileDescriptor)
 		    /* display the shortcut sequence */
 		    if (MenuActionList[ptr->K_Command].ActionName)
 		      {
-			k2 = KeyName (ptr->K_EntryCode);
+			strcpy (k2, KeyName (ptr->K_EntryCode));
 			fprintf (fileDescriptor, " %s%s %s%s -> %s\n", s, k1,
 				 s, k2,
 				 MenuActionList[ptr->K_Command].ActionName);
