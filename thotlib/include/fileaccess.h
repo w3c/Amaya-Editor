@@ -67,7 +67,8 @@ typedef long ThotFileOffset;
 
 extern int TtaFileExist ( CONST CHAR_T* filename );
 extern int TtaFileUnlink ( CONST CHAR_T* filename );
-extern int TtaFileClose ( ThotFileHandle handle );
+extern ThotFileHandle TtaFileOpen ( CONST STRING name,
+                                    ThotFileMode mode );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileRead ( ThotFileHandle handle,
                          void *buffer,
@@ -116,7 +117,7 @@ extern ThotBool TtaCheckDirectory ( CHAR_T* directory );
 
 extern int TtaFileExist (/* CONST CHAR_T* filename */);
 extern int TtaFileUnlink (/* CONST CHAR_T *filename */);
-extern ThotFileHandle TtaFileOpen (/* CONST char *name,
+extern ThotFileHandle TtaFileOpen (/* CONST CHAR_T* *name,
                                       ThotFileMode mode */);
 extern int TtaFileClose (/* ThotFileHandle handle */);
 extern int TtaFileRead (/* ThotFileHandle handle,

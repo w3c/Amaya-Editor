@@ -63,7 +63,7 @@ CONST CHAR_T*       filename;
 
    wcstombs (mbs_filename, filename, 2 * MAX_TXT_LEN);
 #else  /* !_I18N_ */
-   char*       mbs_filename = filename;
+   CONST char*       mbs_filename = filename;
 #endif /* !_I18N_ */
 
    filedes = open (mbs_filename, O_RDONLY);
