@@ -242,6 +242,56 @@ static void ApplyHeightToAllBoxes (PtrAbstractBox pAb, float result)
     }
 }
 /*----------------------------------------------------------------------
+   : Recursivly apply the property
+  ----------------------------------------------------------------------*/
+static void ApplyFontSizeToAllBoxes (PtrAbstractBox pAb, int result)
+{
+
+  while (pAb != NULL)
+    {      
+      pAb->AbBox->VisibleModification = TRUE;
+      ChangeFontsetSize ((int) result, pAb->AbBox, Animated_Frame);
+      ApplyFontSizeToAllBoxes (pAb->AbFirstEnclosed, result);
+      pAb = pAb->AbNext;
+    }
+}
+
+/*----------------------------------------------------------------------
+  animate_box_color : Animate the color propoerty
+  ----------------------------------------------------------------------*/
+static void animate_box_color (PtrElement El,
+			       Animated_Element *animated,
+			       AnimTime current_time)
+{
+  int doc, view;
+  PtrAbstractBox pAb = NULL;
+  unsigned short fromred, fromgreen, fromblue, 
+    tored, togreen, toblue, 
+    resultred, resultgreen, resultblue;
+  double         proportion;
+  int            result;
+
+  proportion = current_time / animated->duration;
+  TtaGiveRGB ((char *) animated->from, &fromred, &fromgreen, &fromblue);
+  TtaGiveRGB ((char *) animated->to, &tored, &togreen, &toblue);
+  resultred = (unsigned short) (fromred + proportion * (tored - fromred));
+  resultgreen = (unsigned short) (fromgreen + proportion * (togreen - fromgreen));
+  resultblue = (unsigned short) (fromblue + proportion * (toblue - fromblue));
+  result = TtaGetThotColor (resultred, resultgreen, resultblue);
+  FrameToView (Animated_Frame, &doc, &view);
+  pAb = El->ElAbstractBox[view - 1];
+  if (pAb)
+    if (pAb->AbFirstEnclosed)
+      {	    	
+	if (strcasecmp (animated->AttrName, "fill") == 0)
+	  ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
+	else if (strcasecmp (animated->AttrName, "stroke") == 0)
+	  ApplyStrokeColorToAllBoxes (pAb->AbFirstEnclosed, result);	   
+	UpdateClipping (pAb->AbFirstEnclosed);
+      }
+}
+
+/*----------------------------------------------------------------------
   animate_box_animate : Animate any property of an element				
   ----------------------------------------------------------------------*/
 static void animate_box_animate (PtrElement El,
@@ -353,6 +403,30 @@ else if (strcasecmp (animated->AttrName, "height") == 0)
 	    
 	  }
       
+    }
+  else if (strcasecmp (animated->AttrName, "font-size") == 0)
+    {
+      FrameToView (Animated_Frame, &doc, &view);
+      pAb = El->ElAbstractBox[view - 1];
+      if (pAb)
+	if (pAb->AbFirstEnclosed)
+	  {	  
+	    
+	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	    result = interpolate_double_value (atof ((char *) animated->from), 
+					       atof ((char *) animated->to),
+					       current_time,
+					       animated->duration);
+	    /* ApplyFontSizeToAllBoxes (pAb->AbFirstEnclosed, (int) result); */	   
+	    UpdateClipping (pAb->AbFirstEnclosed);
+	    
+	  }
+      
+    }
+  else if (strcasecmp (animated->AttrName, "fill") == 0 || 
+	   strcasecmp (animated->AttrName, "stroke") == 0)
+    {
+      animate_box_color (El, animated, current_time);    
     }
 }
 /*----------------------------------------------------------------------
@@ -634,40 +708,6 @@ static void animate_box_transformation (PtrElement El,
       
       break;
     }  
-}
-/*----------------------------------------------------------------------
-  animate_box_color : Animate the color propoerty
-  ----------------------------------------------------------------------*/
-static void animate_box_color (PtrElement El,
-			       Animated_Element *animated,
-			       AnimTime current_time)
-{
-  int doc, view;
-  PtrAbstractBox pAb = NULL;
-  unsigned short fromred, fromgreen, fromblue, 
-    tored, togreen, toblue, 
-    resultred, resultgreen, resultblue;
-  double         proportion;
-  int            result;
-
-  proportion = current_time / animated->duration;
-  TtaGiveRGB ((char *) animated->from, &fromred, &fromgreen, &fromblue);
-  TtaGiveRGB ((char *) animated->to, &tored, &togreen, &toblue);
-  resultred = (unsigned short) (fromred + proportion * (tored - fromred));
-  resultgreen = (unsigned short) (fromgreen + proportion * (togreen - fromgreen));
-  resultblue = (unsigned short) (fromblue + proportion * (toblue - fromblue));
-  result = TtaGetThotColor (resultred, resultgreen, resultblue);
-  FrameToView (Animated_Frame, &doc, &view);
-  pAb = El->ElAbstractBox[view - 1];
-  if (pAb)
-    if (pAb->AbFirstEnclosed)
-      {	    	
-	if (strcasecmp (animated->AttrName, "fill") == 0)
-	  ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
-	else if (strcasecmp (animated->AttrName, "stroke") == 0)
-	  ApplyStrokeColorToAllBoxes (pAb->AbFirstEnclosed, result);	   
-	UpdateClipping (pAb->AbFirstEnclosed);
-      }
 }
 /*----------------------------------------------------------------------
   animate_box_motion : Animate the position of a box using a path

@@ -22,13 +22,6 @@ ELEMENTS
 	ElemExport.Pre ->       SetEmptyShapeAttribute;
 	ElemDelete.Pre ->       SVGWillBeDeleted;
 	END;
-{*** Only for SVG "animation" demo. See end of file SVGedit.c ***
-   g:
-	BEGIN
-	ElemTextModify.Pre ->   TextWillChangeInGroup;
-	ElemTextModify.Post ->  TextChangedInGroup;
-	END;
-***}
    polyline:
 	ElemGraphModify.Post -> ControlPointChanged;
    polygon:

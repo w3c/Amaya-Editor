@@ -1646,6 +1646,35 @@ void *LoadStixFont (int family, int size)
 				    FALSE, FALSE));
 }
 /*----------------------------------------------------------------------
+  ChangeFontsetSize : Change fontset size
+  ----------------------------------------------------------------------*/
+void ChangeFontsetSize (int size, PtrBox box, int frame)
+{
+  SpecFont fontset, fontsetbase = box->BxFont;
+  char code = box->BxScript;
+
+  fontset = fontsetbase;
+  if (fontset)
+    {
+      while (fontset)
+	{
+	  if (fontset->FontSize == size)
+	    break;
+	  fontset = fontset->NextFontSet;
+	}
+      if (fontset)
+	box->BxFont = fontset;
+      else
+	fontset = fontsetbase;
+      fontset->FontSize = size;
+      fontset->FontIso_1 = LoadNearestFont (code,
+					    fontset->FontFamily,
+					    fontset->FontHighlight,
+					    size, size,
+					    frame, TRUE, TRUE);
+    }
+}
+/*----------------------------------------------------------------------
   GetFontAndIndexFromSpec return the glyph index and the font
   used to display the wide character c;
   ----------------------------------------------------------------------*/

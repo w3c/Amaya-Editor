@@ -2654,6 +2654,9 @@ static void Build_timeline (Document basedoc, char* timelineName)
   TtaSetStructureChecking (0, dt[basedoc].timelinedoc);
 
   root = TtaGetRootElement (dt[basedoc].timelinedoc);
+
+  TtaSetElCoordinateSystem (root);
+
   baseroot = TtaGetRootElement (basedoc);
 
 
@@ -2972,7 +2975,7 @@ void AddAnimButton (Document doc, View view)
 void ShowSourceOfTimeline (Document document, View view)
 {
 #ifdef _SVGANIM
-  /* this function is temporary, only for debugging purposes
+  /* this function is temporary, only for debugging purposes*/
      CHARSET          charset;
      char            *tempdocument;
      char            *s;
@@ -3086,7 +3089,7 @@ void ShowSourceOfTimeline (Document document, View view)
      SynchronizeSourceView (&event);
      }
      TtaFreeMemory (tempdocument);
-     } */
+     }
 #endif /* _SVGANIM */
 }
 

@@ -2171,7 +2171,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   else
 		     {
 		       ptr++;
-		       TtaAppendTransform (leaf, 
+		       TtaReplaceTransform (leaf, 
 					   TtaNewTransformMatrix (a, b, c,
 								  d, e, f),
 					   doc);
@@ -2204,7 +2204,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		     ptr++;
 		   else
 		     error = TRUE;
-		   TtaAppendTransform (leaf, 
+		   TtaReplaceTransform (leaf, 
 				       TtaNewTransformTranslate (x, y, FALSE),
 				       doc);
 		 }
@@ -2234,7 +2234,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   if (*ptr == ')')
 		     {
 		       ptr++;
-		       TtaAppendTransform (leaf, 
+		       TtaReplaceTransform (leaf, 
 					   TtaNewTransformScale (scaleX, 
 								 scaleY,
 								 FALSE),
@@ -2278,7 +2278,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   if (*ptr == ')')
 		     {
 		       ptr++;
-		       TtaAppendTransform (leaf, 
+		       TtaReplaceTransform (leaf, 
 					   TtaNewTransformRotate (angle, x, y),
 					   doc);
 		     }
@@ -2300,7 +2300,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   if (*ptr == ')')
 		     {
 		       ptr++;
-		       TtaAppendTransform (leaf, 
+		       TtaReplaceTransform (leaf, 
 					   TtaNewTransformSkewX (x),
 					   doc);
 		     }
@@ -2322,7 +2322,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   if (*ptr == ')')
 		     {
 		       ptr++;
-		       TtaAppendTransform (leaf, 
+		       TtaReplaceTransform (leaf, 
 					   TtaNewTransformSkewY (y),
 					   doc);
 		     }
