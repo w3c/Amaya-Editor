@@ -1069,10 +1069,10 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
 			    {
 			      /* remove a PtFunction rule */
 			      RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
-			      if (pRP != NULL && pRP != pCurrentRule)
+			      if (pRP && pRP != pCurrentRule)
 				ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 			    }
-			  else if (pRP != NULL)
+			  else if (pRP && (!remove || pRP != pCurrentRule))
 			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 			}
 		    }

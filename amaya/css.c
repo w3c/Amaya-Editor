@@ -192,24 +192,31 @@ void AttrMediaChanged (NotifyAttribute *event)
     {
       /* avoid too many redisplay */
       dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (doc, DeferredDisplay);
       /* something changed and we are not printing */
-      if ((media == CSS_ALL || media == CSS_SCREEN) &&
-	  (pInfo->PiMedia == CSS_PRINT || pInfo->PiMedia == CSS_OTHER))
-	LoadStyleSheet (completeURL, doc, el, NULL, media,
-			pInfo->PiCategory == CSS_USER_STYLE);
+      if (media == CSS_ALL || media == CSS_SCREEN)
+	{
+	  if (dispMode != NoComputedDisplay)
+	    TtaSetDisplayMode (doc, NoComputedDisplay);
+	  LoadStyleSheet (completeURL, doc, el, NULL, media,
+			  pInfo->PiCategory == CSS_USER_STYLE);
+	  /* restore the display mode */
+	  if (dispMode != NoComputedDisplay)
+	    TtaSetDisplayMode (doc, dispMode);
+	}
       else
 	{
-	  if ((media == CSS_PRINT || media == CSS_OTHER) &&
-	      (pInfo->PiMedia == CSS_ALL || pInfo->PiMedia == CSS_SCREEN))
-	    UnlinkCSS (css, doc, el, TRUE, FALSE);
+	  if (media == CSS_PRINT || media == CSS_OTHER)
+	    {
+	      if (dispMode != NoComputedDisplay)
+		TtaSetDisplayMode (doc, NoComputedDisplay);
+	      UnlinkCSS (css, doc, el, TRUE, FALSE);
+	      /* restore the display mode */
+	      if (dispMode != NoComputedDisplay)
+		TtaSetDisplayMode (doc, dispMode);
+	    }
 	  /* only update the CSS media info */
 	  pInfo->PiMedia = media;
 	}
-      /* restore the display mode */
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (doc, dispMode);
     }
 }
 
@@ -749,12 +756,8 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
 	      while (pIS)
 		{
 		  if (pIS->PiPSchema)
-		    {
-		      TtaCleanStylePresentation (pIS->PiPSchema, doc,
-						 pIS->PiSSchema);
-		      TtaUnlinkPSchema (pIS->PiPSchema, doc,
-					pIS->PiSSchema);
-		    }
+		    TtaUnlinkPSchema (pIS->PiPSchema, doc,
+				      pIS->PiSSchema);
 		  pInfo->PiSchemas = pIS->PiSNext;
 		  TtaFreeMemory (pIS);
 		  pIS = pInfo->PiSchemas;

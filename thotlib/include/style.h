@@ -149,13 +149,6 @@ extern void TtaCleanElementPresentation (Element el, Document doc);
 extern char *TtaGetStyledAttributeValues (PSchema tsch, int attrType);
 
 /*----------------------------------------------------------------------
-  TtaCleanStylePresentation
-  Remove all presentation for the extended presentation schema tsch associated
-  with structure schema sSch in document doc
-  ----------------------------------------------------------------------*/
-extern void TtaCleanStylePresentation (PSchema tsch, Document doc, SSchema sSch);
-
-/*----------------------------------------------------------------------
    TtaListStyleSchemas
 
    Produces in a file a human-readable form of style schemas applied to 
