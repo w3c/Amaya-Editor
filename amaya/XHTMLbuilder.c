@@ -22,8 +22,10 @@
 
 #include "css_f.h"
 #include "fetchXMLname_f.h"
+#include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLform_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLimage_f.h"

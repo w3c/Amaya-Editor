@@ -4136,12 +4136,12 @@ ThotWindow  parent;
  CreateAuthentificationDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateAuthenticationDlgWindow (ThotWindow parent, STRING realm, STRING server)
+void         CreateAuthenticationDlgWindow (ThotWindow parent, const STRING realm, STRING server)
 #else  /* !__STDC__ */
-void CreateAuthenticationDlgWindow (parent, realm, server)
-ThotWindow  parent;
-STRING realm;
-STRING server;
+void         CreateAuthenticationDlgWindow (parent, realm, server)
+ThotWindow   parent;
+const STRING realm;
+STRING       server;
 #endif /* __STDC__ */
 {  
   string_par1 = realm;

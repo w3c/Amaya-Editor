@@ -3110,9 +3110,9 @@ const XML_Char **attlist;
 
 {
    int             nbatts;
-   CHAR_T         *buffer;
+   CHAR_T         *buffer = NULL;
    CHAR_T         *bufAttr;
-   CHAR_T         *bufName;
+   CHAR_T         *bufName = NULL;
    CHAR_T         *ptr;
    PtrParserCtxt   elementParserCtxt = NULL;
    CHAR_T          msgBuffer[MaxMsgLength];
@@ -3154,7 +3154,7 @@ const XML_Char **attlist;
 	 }
        else
 	 {
-	   bufName = TtaGetMemory (strlen (buffer));
+	   bufName = TtaGetMemory (strlen (buffer) + 1);
 	   ustrcpy (bufName, buffer);
 	   if (currentParserCtxt == NULL)
 	     ChangeXmlParserContextTagName (bufName);

@@ -2291,7 +2291,7 @@ int             *error;
 
 #endif
 {
-   ElementType		elType, parentType, childType;
+   ElementType		elType, parentType;
    Element		child, parent, new, prev, next;
    AttributeType	attrType;
    Attribute		attr;
