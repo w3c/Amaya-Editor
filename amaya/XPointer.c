@@ -175,7 +175,7 @@ static char * GetIdValue (Element el)
 static ThotBool TestIdValue (Element el, char *val)
 {
   char *id_value;
-  int result;
+  int result = FALSE;
 
   id_value = GetIdValue (el);
 
@@ -185,8 +185,6 @@ static ThotBool TestIdValue (Element el, char *val)
 	result = TRUE;
       TtaFreeMemory (id_value);
     }
-  else
-    result = FALSE;
 
   return (result);
 }
@@ -289,23 +287,32 @@ static void PreviousSibling (Element *el)
   ----------------------------------------------------------------------*/
 Element SearchAttrId (Element root, char *val)
 {
-  Element sibling, result;
+  Element el, result;
 
-  if (root && TestIdValue (root, val))
-    return root;
-  else if (!root)
-    return NULL;
-  
-  sibling = root;
+  if (!root && !val && *val == EOS)
+    return (Element) NULL;
+
   result = 0;
-  while (!result && sibling)
+  while (root) 
     {
-      result = SearchAttrId (sibling, val);
+      /* test the current root element */
+      if (TestIdValue (root, val))
+	{
+	  result = root;
+	  break;
+	}
+      
+      /* recursive search all the children of root */
+      el = TtaGetFirstChild (root);
+      if (!el)
+	break;
+      result = SearchAttrId (el, val);
       if (result)
 	break;
-      TtaNextSibling (&sibling);
+      /* try the same procedure on all the siblings of root */
+      TtaNextSibling (&root);
     }
-  
+
   return result;
 }
 
@@ -335,14 +342,9 @@ Element SearchSiblingIndex (Element root, char *el_name, int *index)
 	    result = SearchSiblingIndex (sibling, el_name, index);
 	    if (result)
 	      return result;
-	    else
-	      {
-		TtaNextSibling (&sibling);
-		continue;
-	      }
 	  }
       /* test the current node */
-      if (TestElName (sibling, el_name))
+      else if (TestElName (sibling, el_name))
 	{
 	  /* we found the element */
 	  if (*index == 1)
@@ -350,7 +352,7 @@ Element SearchSiblingIndex (Element root, char *el_name, int *index)
 	  (*index)--;
 	}
       /* go to the next sibling */
-	TtaNextSibling (&sibling);
+      TtaNextSibling (&sibling);
     }
   return (sibling);
 }

@@ -259,13 +259,15 @@ static void GotoId (parserContextPtr ctx, char *id)
 
   /* syntax analysis */
   if (curNode->el)
-    CtxAddError (ctx, "GotoId: id function is not at the beginning of the expression");
+    {
+      CtxAddError (ctx, "GotoId: id function is not at the beginning of the expression");
+      return;
+    }
 
   /* thot tree search for id */
   curNode->el = SearchAttrId (ctx->root, id);
   if (!curNode->el)
     CtxAddError (ctx, "GotoId: no such id\n");
-  curNode->el++;
 }
 
 static void RangeTo (parserContextPtr ctx)
