@@ -122,7 +122,11 @@ void SearchDlgWX::OnConfirmButton( wxCommandEvent& event )
   ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
   ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) m_iarea);
   ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
-
+  if (m_iarea == 3)
+    {
+      XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetSelection(2);
+      m_iarea = 2;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -142,6 +146,11 @@ void SearchDlgWX::OnNoReplaceButton( wxCommandEvent& event )
   ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) 0);
   ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) m_iarea);
   ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
+  if (m_iarea == 3)
+    {
+      XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetSelection(2);
+      m_iarea = 2;
+    }
 
 }
 
