@@ -2035,7 +2035,7 @@ char * ANNOT_PreparePostBody (Document doc)
   if (IsW3Path (DocumentURLs[doc]))
     {
       /* we're saving a modification to an existing annotation */
-      fprintf (fp, "<r:Description about=\"%s\">\n", annot->annot_url);
+      fprintf (fp, "<r:Description r:about=\"%s\">\n", annot->annot_url);
       new_annotation = FALSE;
     }
   else
@@ -2060,7 +2060,7 @@ char * ANNOT_PreparePostBody (Document doc)
   else
     {
       fprintf (fp,
-	       "<r:Description about=\"%s\">\n",
+	       "<r:Description r:about=\"%s\">\n",
 	       DocumentURLs[doc]);
     }
 
