@@ -3551,6 +3551,7 @@ void TtcInclude (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPasteFromClipboard (Document document, View view)
 {
+#ifndef _GTK
    DisplayMode         dispMode;
    int                 frame;
 #ifndef _WINDOWS
@@ -3600,6 +3601,9 @@ void TtcPasteFromClipboard (Document document, View view)
      (*ThotLocalActions[T_unlock]) ();
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (document, dispMode);
+#else /* _GTK */
+   TtcPaste (document, view);
+#endif /* !_GTK */
 }
 
 

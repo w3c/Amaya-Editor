@@ -2370,12 +2370,17 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  /*	  printf("GDK_MOTION_NOTIFY\n");*/
 	  /* if a selection is doing, extend the current selection */
 	  LocateSelectionInView (frame, event->x, event->y, 0);
+	  FrameToView (frame, &document, &view);
+	  TtcCopyToClipboard (document, view);
 	  break;
       	case GDK_BUTTON_RELEASE:
 	  /*	  printf("GDK_BUTTON_RELEASE\n");*/
 	  /* if a button release, we save the selection in the clipboard */
-	  FrameToView (frame, &document, &view);
-	  TtcCopyToClipboard (document, view);
+/* a selection extension */
+	  //	      TtaAbortShowDialogue ();
+	  //   LocateSelectionInView (frame, event->x, event->y, 0);
+	  //  FrameToView (frame, &document, &view);
+	  //  TtcCopyToClipboard (document, view);
 	  break;
 	case GDK_KEY_PRESS:
 	  /*	  printf("GDK_KEY_PRESS\n");*/
