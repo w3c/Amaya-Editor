@@ -187,7 +187,6 @@ ThotBool            display;
    int                 view;
    PtrAbstractBox      pAbbCur;
    PtrPRule            pPRule;
-   ThotBool            stop;
    PtrPSchema          pSchP;
    PtrAttribute        pAttrib;
 

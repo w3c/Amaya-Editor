@@ -944,7 +944,6 @@ STRING            directoryName;
 STRING            documentName;
 #endif
 {
-  DisplayMode         dispMode;
   STRING              ptr;
   CHAR_T              tempname[MAX_LENGTH];
   CHAR_T              docname[100];
@@ -957,11 +956,7 @@ STRING            documentName;
   ustrcpy (tempname, directoryName);
   ustrcat (tempname, WC_DIR_STR);
   ustrcat (tempname, documentName);
-  /* suspend the redisplay due to the temporary update of attributes
-     STYLE and META-CONTENT */
-  dispMode = TtaGetDisplayMode (doc);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
+
   if (SaveAsText) 
     {
       SetInternalLinks (doc);
@@ -995,8 +990,6 @@ STRING            documentName;
 	  TtaFreeMemory (ptr);
 	}
     }
-  /* retore the redisplay */
-  TtaSetDisplayMode (doc, dispMode);
   return (ok);
 }
 
@@ -1176,13 +1169,15 @@ ThotBool            use_preconditions;
   if (DocumentTypes[document] == docSource ||
       DocumentTypes[document] == docSourceRO)
       /* it's a source file, renumber lines */
-      TtaExportDocumentWithNewLineNumbers (document, tempname, TEXT("TextFileT"));
+      TtaExportDocumentWithNewLineNumbers (document, tempname,
+					   TEXT("TextFileT"));
   else
       TtaExportDocument (document, tempname, TEXT("TextFileT"));
 
   ActiveTransfer (document);
   TtaHandlePendingEvents ();
-  res = SafeSaveFileThroughNet (document, tempname, url, unknown_type, use_preconditions);
+  res = SafeSaveFileThroughNet (document, tempname, url, unknown_type,
+				use_preconditions);
   if (res != 0)
     {
       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
@@ -1430,7 +1425,6 @@ Document       sourceDoc;
   return htmlDoc;
 }
 
-
 /*----------------------------------------------------------------------
    Synchronize
    save the current view (source/html) in a temporary file and update
@@ -1448,6 +1442,7 @@ View                view;
    CHAR_T*             tempdocument = NULL;
    CHAR_T              documentname[MAX_LENGTH];
    CHAR_T              tempdir[MAX_LENGTH];
+   DisplayMode         dispMode;
    Document            htmlDoc, otherDoc;
 
    if (!DocumentURLs[document])
@@ -1473,6 +1468,12 @@ View                view;
 	  /* save the other view */
 	  document = otherDoc;
      }
+
+   /* change display mode to avoid flicker due to callbacks executed when
+      saving some elements, for instance META */
+   dispMode = TtaGetDisplayMode (document);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (document, DeferredDisplay);
 
    if (DocumentTypes[document] == docHTML ||
        DocumentTypes[document] == docHTMLRO)
@@ -1504,6 +1505,9 @@ View                view;
        FetchAndDisplayImages (htmlDoc, AMAYA_LOAD_IMAGE);
        DocNetworkStatus[htmlDoc] = AMAYA_NET_INACTIVE;
      }
+   /* restore original display mode */
+   TtaSetDisplayMode (document, dispMode);
+
    /* the other document is now different from the original file. It can
       be saved */
    TtaSetDocumentModified (otherDoc);
@@ -1542,6 +1546,7 @@ View                view;
   CHAR_T*             ptr;
   int                 i, res;
   Document	      htmlDoc;
+  DisplayMode         dispMode;
   ThotBool            ok, newLineNumbers;
 
 #ifdef ANNOTATIONS
@@ -1604,6 +1609,12 @@ View                view;
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "SaveDocument : %d to %s\n", doc, tempname);
 #endif
+
+  /* change display mode to avoid flicker due to callbacks executed when
+     saving some elements, for instance META */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
 
   /* the suffix fixes the output format of HTML saved document */
   SaveAsXHTML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
@@ -1712,6 +1723,9 @@ View                view;
       TtaFileCopy (tempname, ptr);
       TtaFreeMemory (ptr);
     }
+
+  /* restore original display mode */
+  TtaSetDisplayMode (doc, dispMode);
 
   SavingDocument = 0;
   if (newLineNumbers)
@@ -2221,9 +2235,10 @@ void                DoSaveAs ()
   CHAR_T              url_sep;
   int                 res;
   int                 len;
+  DisplayMode         dispMode;
   ThotBool            src_is_local;
   ThotBool            dst_is_local, ok;
-  ThotBool	          docModified, toUndo;
+  ThotBool	      docModified, toUndo;
   ThotBool            new_put_def_name;
   ThotBool            old_put_def_name;
 
@@ -2401,6 +2416,12 @@ void                DoSaveAs ()
       oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
       newLocal = GetLocalPath (doc, SavePath);
 
+      /* change display mode to avoid flicker due to callbacks executed when
+	 saving some elements, for instance META */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+
       if (TextFormat)
 	{
 	  if (dst_is_local)
@@ -2452,9 +2473,13 @@ void                DoSaveAs ()
 	      /* to a remote URL. */
 	      /* update the flag that says if we're using a default name */
 	      DocumentMeta[doc]->put_default_name = new_put_def_name;
-	      ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE, CopyImages, FALSE);
+	      ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE,
+					   CopyImages, FALSE);
 	    }
 	}
+
+      /* restore original display mode */
+      TtaSetDisplayMode (doc, dispMode);
 
       /* the saving operation is finished now */
       SavingDocument = 0;
