@@ -4137,6 +4137,7 @@ boolean             withUndo;
   CHAR                c;
   STRING              cssRule, base;
   STRING              schemaName;
+  DisplayMode         dispMode;
   int                 lg, index;
   int                 CSSindex;
   int                 CSScomment;
@@ -4160,6 +4161,10 @@ boolean             withUndo;
   openRule = 0;
   c = SPACE;
   index = 0;
+  /* avoid too many redisplay */
+  dispMode = TtaGetDisplayMode (docRef);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (docRef, DeferredDisplay);
   if (doc != 0)
     {
       parent = TtaGetMainRoot (doc);
@@ -4224,7 +4229,7 @@ boolean             withUndo;
 	el = TtaGetLastChild (parent);
       else
 	/* it's an unknown document */
-	return (c);
+	eof = TRUE;
     }
   else
       el = NULL;
@@ -4407,5 +4412,8 @@ boolean             withUndo;
 	  CSSindex = 0;
 	}
     }
+  /* restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (docRef, dispMode);
   return (c);
 }

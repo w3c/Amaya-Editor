@@ -83,8 +83,8 @@ Extensions 2.0:
     the Special/Preferences menu.
   - and other temporary files and directories used by Amaya.
 
-* After a paste command, the selection is now set at the end of the inserted
-  element where the user could continue to insert text.
+* After a paste command, the selection is now set at the end of the pasted
+  text where the user could continue to insert text.
 
 Fixed bugs 2.0:
 ---------------

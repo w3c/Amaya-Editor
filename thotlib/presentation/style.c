@@ -2124,6 +2124,8 @@ Document            doc;
 
   if (doc == 0)
     return;
+
+  /* avoid too many redisplay */
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
@@ -2203,7 +2205,9 @@ Document            doc;
 	    }
 	}
     }
-  TtaSetDisplayMode (doc, dispMode);
+  /* restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -2233,6 +2237,7 @@ PresentationContext c;
      return;
 
    doc = c->doc;
+  /* avoid too many redisplay */
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
@@ -2271,7 +2276,9 @@ PresentationContext c;
        if (pRule != NULL)
 	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
      }
-   TtaSetDisplayMode (doc, dispMode);
+   /* restore the display mode */
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
