@@ -49,6 +49,6 @@ EXPORT int		MaxMenuAction;
 /* return events for Application and Document windows			  */
 
 EXPORT int      ClickIsDone;
-
+EXPORT char*    servername ;
 #endif /* !NODISPLAY */
 #endif /* THOT_APPDIALOGUE_VAR */
