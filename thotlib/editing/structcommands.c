@@ -2039,28 +2039,29 @@ void TtaSetNextCellInColumnFunction (Proc5 procedure)
   ----------------------------------------------------------------------*/
 ThotBool EmptyElement (PtrElement pEl)
 {
-   ThotBool            empty;
-   PtrElement          pChild;
+  ThotBool            empty;
+  PtrElement          pChild;
 
-   if (pEl->ElVolume == 0)
+  if (pEl->ElVolume == 0)
+    empty = TRUE;
+  else if (TypeHasException (ExcEmptyGraphic, pEl->ElTypeNumber, pEl->ElStructSchema))
+    empty = TRUE;
+  else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
+    empty = TRUE;
+  else if (pEl->ElTerminal)
+    empty = FALSE;
+  else
+    {
       empty = TRUE;
-   else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
-      empty = TRUE;
-   else if (pEl->ElTerminal)
-      empty = FALSE;
-   else
-     {
-	empty = TRUE;
-	pChild = pEl->ElFirstChild;
-	while (pChild != NULL && empty)
-	  {
-	     empty = EmptyElement (pChild);
-	     pChild = pChild->ElNext;
-	  }
-     }
-   return empty;
+      pChild = pEl->ElFirstChild;
+      while (pChild != NULL && empty)
+	{
+	  empty = EmptyElement (pChild);
+	  pChild = pChild->ElNext;
+	}
+    }
+  return empty;
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -3213,6 +3214,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			/* verifie si l'element a detruire porte l'exception
 			   NoCut */
 			if (TypeHasException (ExcNoCut, pEl->ElTypeNumber,
+					      pEl->ElStructSchema) ||
+			    TypeHasException (ExcEmptyGraphic, pEl->ElTypeNumber,
 					      pEl->ElStructSchema))
 			   empty = FALSE;
 		        else

@@ -49,6 +49,7 @@
 #include "MENUconf_f.h"
 #include "styleparser_f.h"
 #include "UIcss_f.h"
+#include "SVGbuilder_f.h"
 #include "XHTMLbuilder_f.h"
 
 #ifdef DAV
@@ -1114,70 +1115,90 @@ void CreateDate (Document doc, View view)
   char                tm[500];
   int                 first, last;
 
+  if (!TtaGetDocumentAccessMode (doc))
+    /* the document is in ReadOnly mode */
+    return;
   TtaGiveFirstSelectedElement (doc, &el, &first, &last);
   if (el)
     {
-      /* get the structure schema of the parent element */
-      parent = TtaGetParent (el);
-      if (parent)
-	el = parent;
       elType = TtaGetElementType (el);
-    }
-  else
-    elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  s = TtaGetSSchemaName (elType.ElSSchema);
-  if (!strcmp (s, "MathML"))
-    elType.ElTypeNum = MathML_EL_XMLcomment;
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      if (!strcmp (s, "HTML"))
+	elType.ElTypeNum = HTML_EL_Comment_;
 #ifdef _SVG
-  else if (!strcmp (s, "SVG"))
-    elType.ElTypeNum = SVG_EL_XMLcomment;
+      else if (!strcmp (s, "SVG"))
+	elType.ElTypeNum = SVG_EL_XMLcomment;
 #endif /* _SVG */
-  else
-    elType.ElTypeNum = HTML_EL_Comment_;
-
-  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-  /* insert the text element */
-  elTypeText.ElSSchema = elType.ElSSchema;
-  elTypeText.ElTypeNum = HTML_EL_TEXT_UNIT;
-  TtaInsertElement (elTypeText, doc);
-  TtaGiveFirstSelectedElement (doc, &el, &first, &last);
-  TtaGetTime (tm, UTF_8);
-  TtaSetTextContent (el, (unsigned char*)tm, UTF_8, doc);
-  TtaExtendUndoSequence (doc);
-
-  /* insert the first comment */
-  comment = TtaNewTree (doc, elType, "");
-  TtaInsertSibling (comment, el, TRUE, doc);
-  child = text = comment;
-  while (child)
-    {
-      text = child;
-      child = TtaGetFirstChild (text);
+#ifdef XML_GENERIC
+      else if (!strcmp (s, "XML"))
+	elType.ElTypeNum = XML_EL_xmlcomment;
+#endif /* XML_GENERIC */
+      else
+	{
+	  /* look for an HTML parent element */
+	  parent = TtaGetParent (el);
+	  el = NULL;
+	  while (parent)
+	    {
+	      elType = TtaGetElementType (parent);
+	      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		{
+		  el = parent;
+		  parent = NULL;
+		  elType.ElTypeNum = HTML_EL_Comment_;
+		}
+	      else
+		parent = TtaGetParent (parent);
+	    }
+	}
     }
-  TtaSetTextContent (text, (unsigned char*)"$date=", UTF_8, doc);
-  TtaRegisterElementCreate (comment, doc);
-  text = TtaNewTree (doc, elTypeText, "");
-  TtaInsertSibling (text, comment, TRUE, doc);
-  TtaSetTextContent (text, (unsigned char*)" ", UTF_8, doc);
-  TtaRegisterElementCreate (text, doc);
 
-  /* insert the last comment */
-  comment = TtaNewTree (doc, elType, "");
-  TtaInsertSibling (comment, el, FALSE, doc);
-  child = text = comment;
-  while (child)
+  if (el)
     {
-      text = child;
-      child = TtaGetFirstChild (text);
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+      /* insert the text element */
+      elTypeText.ElSSchema = elType.ElSSchema;
+      elTypeText.ElTypeNum = HTML_EL_TEXT_UNIT;
+      TtaInsertElement (elTypeText, doc);
+      TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+      TtaGetTime (tm, UTF_8);
+      TtaSetTextContent (el, (unsigned char*)tm, UTF_8, doc);
+      TtaExtendUndoSequence (doc);
+
+      /* insert the first comment */
+      comment = TtaNewTree (doc, elType, "");
+      TtaInsertSibling (comment, el, TRUE, doc);
+      child = text = comment;
+      while (child)
+	{
+	  text = child;
+	  child = TtaGetFirstChild (text);
+	}
+      TtaSetTextContent (text, (unsigned char*)"$date=", UTF_8, doc);
+      TtaRegisterElementCreate (comment, doc);
+      text = TtaNewTree (doc, elTypeText, "");
+      TtaInsertSibling (text, comment, TRUE, doc);
+      TtaSetTextContent (text, (unsigned char*)" ", UTF_8, doc);
+      TtaRegisterElementCreate (text, doc);
+
+      /* insert the last comment */
+      comment = TtaNewTree (doc, elType, "");
+      TtaInsertSibling (comment, el, FALSE, doc);
+      child = text = comment;
+      while (child)
+	{
+	  text = child;
+	  child = TtaGetFirstChild (text);
+	}
+      TtaSetTextContent (text, (unsigned char*)"$", UTF_8, doc);
+      TtaRegisterElementCreate (comment, doc);
+      text = TtaNewTree (doc, elTypeText, "");
+      TtaInsertSibling (text, comment, FALSE, doc);
+      TtaSetTextContent (text, (unsigned char*)" ", UTF_8, doc);
+      TtaRegisterElementCreate (text, doc);
+      TtaCloseUndoSequence (doc);
+      TtaSelectElement (doc, el);
     }
-  TtaSetTextContent (text, (unsigned char*)"$", UTF_8, doc);
-  TtaRegisterElementCreate (comment, doc);
-  text = TtaNewTree (doc, elTypeText, "");
-  TtaInsertSibling (text, comment, FALSE, doc);
-  TtaSetTextContent (text, (unsigned char*)" ", UTF_8, doc);
-  TtaRegisterElementCreate (text, doc);
-  TtaCloseUndoSequence (doc);
-  TtaSelectElement (doc, el);
 }
 
 /*----------------------------------------------------------------------
@@ -1285,25 +1306,103 @@ void CreateScript (Document doc, View view)
 /*----------------------------------------------------------------------
   HTMLelementAllowed
   ----------------------------------------------------------------------*/
-static ThotBool HTMLelementAllowed (Document document)
+static ThotBool HTMLelementAllowed (Document doc)
 {
   ElementType         elType;
   Element             el, ancestor, sibling;
+  Element             child, foreignObj, leaf, altText;
+  Attribute           attr;
+  AttributeType       attrType;
+  Language            lang;
+  SSchema             htmlSchema;
+  char               *s;
   int                 firstChar, lastChar;
 
-  if (!TtaGetDocumentAccessMode (document))
+  if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
     return FALSE;
 
-  TtaGiveFirstSelectedElement (document, &el, &firstChar, &lastChar);
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   if (el == NULL)
     /* no selection */
     return FALSE;
          
   elType = TtaGetElementType (el);
-  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "HTML") == 0)
     /* within an HTML element */
     return TRUE;
+#ifdef _SVG
+  else if (strcmp (s, "SVG") == 0)
+    {
+      elType.ElTypeNum = SVG_EL_switch;
+      sibling = el;
+      if (!TtaCanInsertSibling (elType, sibling, FALSE, doc))
+	/* cannot insert a switch element as a sibling */
+	{
+	  child = TtaGetLastChild (sibling);
+	  if (TtaCanInsertSibling (elType, child, FALSE, doc))
+	    /* insert a switch element as a child */
+	    sibling = child;
+	  else
+	    {
+	      sibling = TtaGetParent (sibling);
+	      if (!TtaCanInsertSibling (elType, sibling, FALSE,doc))
+		/* cannot insert a switch element as a sibling of
+		   the parent element */
+		sibling = NULL;
+	    }
+	}
+      if (sibling)
+	{
+	  /* create a switch element and insert it */
+	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	  el = TtaNewElement (doc, elType);
+	  TtaInsertSibling (el, sibling, FALSE, doc);
+	  /* create a foreignObject element and insert it as
+	     a child of the new switch element */
+	  elType.ElTypeNum = SVG_EL_foreignObject;
+	  TtaAskFirstCreation ();
+	  foreignObj = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&foreignObj, el, doc);
+	  /* associate a requiredExtensions attribute with the
+	     foreignObject element */
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = SVG_ATTR_requiredExtensions;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (foreignObj, attr, doc);
+	  TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
+	  /* create an alternate SVG text element for viewers
+	     that can't display embedded MathML */
+	  elType.ElTypeNum = SVG_EL_text_;
+	  altText = TtaNewElement (doc, elType);
+	  TtaInsertSibling (altText, foreignObj, FALSE, doc);
+	  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+	  leaf = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&leaf, altText, doc);
+	  lang = TtaGetLanguageIdFromScript('L');
+	  TtaSetTextContent (leaf, (unsigned char *)"<html>", lang, doc);
+	  /* set the visibility of the alternate text */
+	  EvaluateTestAttrs (el, doc);
+	  /* update depth of SVG elements */
+	  SetGraphicDepths (doc, el);
+	  /* create the root division */
+	  TtaSetStructureChecking (0, doc);
+	  htmlSchema = TtaNewNature (doc, elType.ElSSchema, "HTML", "HTMLP");
+	  elType.ElSSchema = htmlSchema;
+	  elType.ElTypeNum = HTML_EL_Division;
+	  child = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&child, foreignObj, doc);
+	  TtaSetStructureChecking (1, doc);
+	  /* register the switch element in the Undo queue*/
+	  TtaRegisterElementCreate (el, doc);
+	  TtaSelectElement (doc, child);
+	  return TRUE;
+	}
+      else
+	return FALSE;
+    }
+#endif /* _SVG */
   else
     /* not within an HTML element */
     {
@@ -1325,7 +1424,7 @@ static ThotBool HTMLelementAllowed (Document document)
 	      if (ancestor)
 		{
 		  elType = TtaGetElementType (ancestor);
-		  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 		    /* this is an HTML element */
 		    return TRUE;
 		  sibling = ancestor;
@@ -1347,7 +1446,7 @@ static ThotBool HTMLelementAllowed (Document document)
 	      if (ancestor)
 		{
 		  elType = TtaGetElementType (ancestor);
-		  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 		    /* this is an HTML element */
 		    return TRUE;
 		  sibling = ancestor;
