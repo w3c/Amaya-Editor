@@ -745,10 +745,12 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
    ThotWindow          w;
    PtrFont             font;
+   SpecFont            spec;
    char               *ptcar;
    int                 xcour, width, nb;
 
-   font = ThotLoadFont ('L', 1, 0, 6, UnPoint, frame);
+   spec = ThotLoadFont ('L', 1, 0, 6, UnPoint, frame);
+   GetFontAndIndexFromSpec (SPACE, spec, &font);
    if (boxWidth > 0)
      {
 	w = FrRef[frame];
