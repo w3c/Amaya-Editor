@@ -3540,7 +3540,8 @@ int                 frame;
 	     }
 	   else if (pAb->AbEnclosing->AbInLine)
 	      EncloseInLine (pBox, frame, pAb->AbEnclosing);
-	   else if (pAb->AbEnclosing->AbBox->BxType == BoGhost)
+	   else if (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+		    pAb->AbEnclosing->AbBox->BxType == BoBlock)
 	     {
 		/* Il faut remonter au pave de mise en lignes */
 		while (pAb->AbEnclosing->AbBox->BxType == BoGhost)
