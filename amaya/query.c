@@ -367,10 +367,13 @@ int                 status;
 #endif
 {
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
-  HTAtom *tmp_atom, *unk_atom;
+  HTAtom *tmp_atom;
+#if 0
+  HTAtom *unk_atom;
+#endif
   char *tmp_char;
   CHAR_T tmp_wchar[MAX_LENGTH];
-  HTParentAnchor *anchor;
+  HTParentAnchor *anchor = NULL;
   ThotBool  use_anchor = FALSE;
 
   /* @@@ JK: we need a function here to specify which headers we
@@ -381,11 +384,11 @@ int                 status;
     return;
 
   /* copy the content_type */
+  tmp_atom =  HTResponse_format (response);
+#if 0
   /* @@JK :a complete hack, until I find out how to fix the cache 
      return type */
   unk_atom = HTAtom_for ("www/unknown");
-  tmp_atom =  HTResponse_format (response);
-#if 0
   if (!tmp_atom || tmp_atom == unk_atom)
     {
       use_anchor = TRUE;
@@ -410,10 +413,6 @@ int                 status;
 	  /* if it's not a file downloaded from FTP, initialize the
 	     content type to text/html by default */
 	  me->http_headers.content_type = NULL;
-	  /*
-	  if (ustrncmp (me->urlName, TEXT("ftp:"), 4))
-	    me->http_headers.content_type = TtaWCSdup (TEXT("text/html"));
-	  */
 	}
       else 
 	{
