@@ -1,0 +1,14 @@
+{
+if ($0 == "frstpage")
+  i = 1;
+else
+  if ($0 == "EndThot")
+    i = 0;
+  else
+    if (i == 1)
+      {
+      if ($1 == "%%Page") p++;
+      print $0;
+      } 
+}
+END { if ( p%2 == 1) printf("\n0 0 0 nwpage\n\n"); }

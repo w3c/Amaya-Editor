@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#
+# concatps [ nom_de_fichier ...]
+# (c) Laurent Boivin - Juin 1994
+#
+# Script permettant de concatener (sur la sortie standard) des fichiers
+# PostScript produits par Thot pour obtenir un seul fichier PostScript.
+# Les en-tetes PostScript ne sont pas repetees.
+# Chaque fichier commence sur une page impaire.
+#
+# ATTENTION : ce fichier utilise concatps_sup1 et concatps_sup2 dont les
+#             contenus sont ci-dessous (en cas d'accident) :
+#
+thotlibdir=/usr/local/applis/thot/Current/bin
+
+if [ "$#" -eq "0" ]
+then
+  echo "Usage: $0 file1 file2 ..."
+  echo "     Concat PostScript files produced by Thot in a unique file."
+  echo "     The result is build in the standard output."
+  exit 1
+fi
+
+
+awk -f $thotlibdir/concatps_sup1 $1
+shift
+
+while [ "$#" -ne "0" ]
+do
+	awk -f $thotlibdir/concatps_sup2 $1
+	shift
+done
+
+echo ""
+echo "EndThot"
