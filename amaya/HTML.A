@@ -51,6 +51,11 @@ ELEMENTS
 	ElemSelect.Pre -> SelectIncludedText;
 	END;
 
+   Text_With_Frame:
+	BEGIN
+	ElemDelete.Pre -> DeleteText;
+	END;
+
    TITLE:
 	ElemTextModify.Post -> TitleModified;
 

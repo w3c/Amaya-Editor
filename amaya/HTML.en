@@ -77,9 +77,9 @@ Checkbox_Input: INPUT
 Radio_Menu: radio menu
 Radio_Item: radio item
 Radio_Input: INPUT
-Text_Input_Line: line
+Text_Input_Line: P
 Text_Input: INPUT
-Command_Line: line
+Command_Line: P
 Reset_Input: INPUT
 Space: space
 Submit_Input: INPUT

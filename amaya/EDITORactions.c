@@ -36,8 +36,8 @@ Document            document;
 View                view;
 #endif /* __STDC__ */
 {
-   char*               tempfile = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char));
-   char*               suffix = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char));
+   char*               tempfile = (char *) TtaGetMemory (MAX_LENGTH);
+   char*               suffix = (char *) TtaGetMemory (MAX_LENGTH);
    int                 val, i, j;
    Document            doc;
    boolean             exist;
@@ -1041,44 +1041,154 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  InsertForm creates a form element if there is no parent element
+  which is a form.
+  Return
+   - the new created form element,
+   - NULL if these element cannot be created
+   - or the current selected element if there is already a parent form.
+
+   withinP is TRUE if the current selection is within a paragraph in a form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateForm (Document document, View view)
+static Element      InsertForm (Document doc, View view, boolean *withinP)
 #else  /* __STDC__ */
-void                CreateForm (document, view)
-Document            document;
+static Element      InsertForm (doc, view, withinP)
+Document            doc;
 View                view;
-
+boolean            *withinP;
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el, parent, form;
+   int                 firstchar, lastchar;
+   int                 len;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   /* get the first selected element */
+   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+   *withinP = FALSE;
+   if (el != NULL)
      {
-       elType.ElTypeNum = HTML_EL_Form;
-       TtaCreateElement (elType, document);
+       elType = TtaGetElementType (el);
+       /* within HTML element */
+       form = el;
+       while (form != NULL && elType.ElTypeNum != HTML_EL_Form)
+	 {
+	   form = TtaGetParent (form);
+	   if (form != NULL)
+	     elType = TtaGetElementType (form);
+	 }
+
+       if (form == NULL)
+	 {
+	   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	     {
+	       /* create the form element */
+	       elType.ElTypeNum = HTML_EL_Form;
+	       TtaCreateElement (elType, doc);
+	       /* get the new created element */
+	       TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+	       form = el;
+	     }
+	   else
+	     /* cannot create a form element here */
+	     el = NULL;
+	 }
+       else
+	 {
+	   /* there is a parent form element */
+	   parent = el;
+	   while (parent != form && elType.ElTypeNum != HTML_EL_Paragraph
+		  && elType.ElTypeNum != HTML_EL_Text_Input_Line
+		  && elType.ElTypeNum != HTML_EL_Command_Line
+		  && elType.ElTypeNum != HTML_EL_Toggle_Menu
+		  && elType.ElTypeNum != HTML_EL_Radio_Menu
+		  && !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	     {
+	       parent = TtaGetParent (parent);
+	       elType = TtaGetElementType (parent);
+	     }
+	   /* check whether the selected element is within a P element */
+	   *withinP = (parent != form);
+	   if (*withinP)
+	     {
+	       elType = TtaGetElementType (el);
+	       if (elType.ElTypeNum == HTML_EL_Basic_Set)
+		 {
+		   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		   parent = el;
+		   el = TtaNewElement (doc, elType);
+		   TtaInsertFirstChild (&el, parent, doc);
+		 }
+	       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		 {
+		   /* add a space if necessary */
+		   len = TtaGetTextLength (el);
+		   if (len == 0)
+		     {
+		       TtaSetTextContent (el, " ", TtaGetDefaultLanguage (), doc);
+		       TtaSelectString (doc, el, 2, 2);
+		     }
+		   
+		 }
+	     }
+	 }
      }
+   return (el);
 }
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateToggle (Document document, View view)
+void                CreateForm (Document doc, View view)
 #else  /* __STDC__ */
-void                CreateToggle (document, view)
-Document            document;
+void                CreateForm (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+  Element           el;
+  boolean           withinP;
+
+  el = InsertForm (doc, view, &withinP);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateToggle (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateToggle (doc, view)
+Document            doc;
 View                view;
 
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el, input;
+   boolean             withinP;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   /* create the form if necessary */
+   el = InsertForm (doc, view, &withinP);
+   if (el != NULL)
      {
-       elType.ElTypeNum = HTML_EL_Toggle_Item;
-       TtaInsertElement (elType, document);
+       /* the element can be created */
+       elType = TtaGetElementType (el);
+       elType.ElTypeNum = HTML_EL_Checkbox_Input;
+       TtaInsertElement (elType, doc);
+       if (withinP)
+	 {
+	   /* Insert a text element after */
+	   input = TtaSearchTypedElement (elType, SearchForward, el);
+	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	   el = TtaNewElement (doc, elType);
+	   TtaInsertSibling (el, input, FALSE, doc);
+	   /* Select this new element */
+	   TtaSelectElement (doc, el);
+	 }
      }
 }
 
@@ -1086,21 +1196,36 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateRadio (Document document, View view)
+void                CreateRadio (Document doc, View view)
 #else  /* __STDC__ */
-void                CreateRadio (document, view)
-Document            document;
+void                CreateRadio (doc, view)
+Document            doc;
 View                view;
 
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el, input;
+   boolean             withinP;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   /* create the form if necessary */
+   el = InsertForm (doc, view, &withinP);
+   if (el != NULL)
      {
-       elType.ElTypeNum = HTML_EL_Radio_Item;
-       TtaInsertElement (elType, document);
+       /* the element can be created */
+       elType = TtaGetElementType (el);
+       elType.ElTypeNum = HTML_EL_Radio_Input;
+       TtaInsertElement (elType, doc);
+       if (withinP)
+	 {
+	   /* Insert a text element after */
+	   input = TtaSearchTypedElement (elType, SearchForward, el);
+	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	   el = TtaNewElement (doc, elType);
+	   TtaInsertSibling (el, input, FALSE, doc);
+	   /* Select this new element */
+	   TtaSelectElement (doc, el);
+	 }
      }
 }
 
@@ -1153,10 +1278,10 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateOption (Document document, View view)
+void                CreateOption (Document doc, View view)
 #else  /* __STDC__ */
-void                CreateOption (document, view)
-Document            document;
+void                CreateOption (doc, view)
+Document            doc;
 View                view;
 
 #endif /* __STDC__ */
@@ -1164,15 +1289,22 @@ View                view;
    ElementType         elType;
    Element             el;
    int                 firstchar, lastchar;
+   boolean             withinP;
 
-   el = GetEnclosingForm (document, view);
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   /* create the form if necessary */
+   el = InsertForm (doc, view, &withinP);
+   if (el != NULL)
      {
-       elType.ElTypeNum = HTML_EL_Option;
-       TtaInsertElement (elType, document);
-       TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-       OnlyOneOptionSelected (el, document, FALSE);
+       /* the element can be created */
+       el = GetEnclosingForm (doc, view);
+       elType.ElSSchema = TtaGetDocumentSSchema (doc);
+       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	 {
+	   elType.ElTypeNum = HTML_EL_Option;
+	   TtaInsertElement (elType, doc);
+	   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+	   OnlyOneOptionSelected (el, doc, FALSE);
+	 }
      }
 }
 
@@ -1180,41 +1312,76 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateTextInput (Document document, View view)
+void                CreateTextInput (Document doc, View view)
 #else  /* __STDC__ */
-void                CreateTextInput (document, view)
-Document            document;
+void                CreateTextInput (doc, view)
+Document            doc;
 View                view;
 
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el, input;
+   boolean             withinP;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Text_Input_Line;
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-     TtaInsertElement (elType, document);
+   /* create the form if necessary */
+   el = InsertForm (doc, view, &withinP);
+   if (el != NULL)
+     {
+       /* the element can be created */
+       elType = TtaGetElementType (el);
+       if (withinP)
+	 {
+	   /* create only the paragraph */
+	   elType.ElTypeNum = HTML_EL_Text_Input;
+	   TtaInsertElement (elType, doc);
+	   /* Insert a text element after */
+	   input = TtaSearchTypedElement (elType, SearchForward, el);
+	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	   el = TtaNewElement (doc, elType);
+	   TtaInsertSibling (el, input, FALSE, doc);
+	 }
+       else
+	 {
+	   /* create the text and the paragraph */
+	   elType.ElTypeNum = HTML_EL_Text_Input_Line;
+	   TtaInsertElement (elType, doc);
+	 }
+     }
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateTextArea (Document document, View view)
+void                CreateTextArea (Document doc, View view)
 #else  /* __STDC__ */
-void                CreateTextArea (document, view)
-Document            document;
+void                CreateTextArea (doc, view)
+Document            doc;
 View                view;
 
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el, input;
+   boolean             withinP;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   /* create the form if necessary */
+   el = InsertForm (doc, view, &withinP);
+   if (el != NULL)
      {
+       /* the element can be created */
+       elType = TtaGetElementType (el);
        elType.ElTypeNum = HTML_EL_Text_Area;
-       TtaInsertElement (elType, document);
+       TtaInsertElement (elType, doc);
+       if (withinP)
+	 {
+	   /* Insert a text element after */
+	   input = TtaSearchTypedElement (elType, SearchForward, el);
+	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	   el = TtaNewElement (doc, elType);
+	   TtaInsertSibling (el, input, FALSE, doc);
+	 }
      }
 }
 
@@ -1222,21 +1389,26 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateCommandLine (Document document, View view)
+void                CreateCommandLine (Document doc, View view)
 #else  /* __STDC__ */
-void                CreateCommandLine (document, view)
-Document            document;
+void                CreateCommandLine (doc, view)
+Document            doc;
 View                view;
 
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el;
+   boolean             withinP;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   /* create the form if necessary */
+   el = InsertForm (doc, view, &withinP);
+   if (el != NULL)
      {
+       /* the element can be created */
+       elType = TtaGetElementType (el);
        elType.ElTypeNum = HTML_EL_Command_Line;
-       TtaInsertElement (elType, document);
+       TtaInsertElement (elType, doc);
      }
 }
 
@@ -1264,7 +1436,6 @@ int                 attrNum;
    int                 w, h;
    int                 length, shape, i;
 
-   buffer = (char*) TtaGetMemory (100 * sizeof (char));
    /* Is it an AREA element */
    elType = TtaGetElementType (element);
    if (elType.ElTypeNum != HTML_EL_AREA)
@@ -1377,15 +1548,16 @@ int                 attrNum;
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
+	     buffer = (char *) TtaGetMemory (100);
 	     sprintf (buffer, "%d,%d", x1, y1);
 	     strcat (text, buffer);
+	     TtaFreeMemory (buffer);
 	     if (i < length)
 	       strcat (text, ",");
 	     i++;
 	  }
      }
    TtaSetAttributeText (attrCoords, text, element, document);
-   TtaFreeMemory (buffer);
    TtaFreeMemory (text);
 }
 
@@ -1405,32 +1577,30 @@ char               *shape;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape;
-   char*                url = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char));
+   char               *url;
    int                 length, w, h;
    int                 firstchar, lastchar;
    DisplayMode         dispMode;
 
    dispMode = TtaGetDisplayMode (doc);
+   url = NULL;
    /* ask Thot to stop displaying changes made in the document */
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-   if (el == NULL) {
-	  TtaFreeMemory (url);
-      /* no selection */
-      return;
-   }
+   if (el == NULL)
+     /* no selection */
+     return;
 
    elType = TtaGetElementType (el);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0) {
-	  TtaFreeMemory (url);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
      /* not within HTML element */
      return;
-   }
    else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
+        url = (char*) TtaGetMemory (MAX_LENGTH);
 	/* The selection is on a IMG */
 	image = el;
 	/* Search the USEMAP attribute */
@@ -1481,6 +1651,7 @@ char               *shape;
 	     TtaAttachAttribute (map, attr, doc);
 	     TtaSetAttributeReference (attr, map, doc, image, doc);
 	  }
+	TtaFreeMemory (url);
      }
    else
      {
@@ -1494,11 +1665,9 @@ char               *shape;
 	   map = TtaGetParent (el);
 	else if (elType.ElTypeNum == HTML_EL_MAP)
 	   map = el;
-	else {
+	else
 	   /* cannot create the AREA */
-		TtaFreeMemory (url);
 	   return;
-	}
 
 	/* Search the Ref_IMG attribute */
 	attrType.AttrSSchema = elType.ElSSchema;
@@ -1509,7 +1678,9 @@ char               *shape;
 	  {
 	     /* Search the IMAGE element associated with the MAP */
 	     length = MAX_LENGTH;
+	     url = (char*) TtaGetMemory (MAX_LENGTH);
 	     TtaGiveReferenceAttributeValue (attr, &image, url, &length);
+	     TtaFreeMemory (url);
 	  }
      }
 
@@ -1567,7 +1738,6 @@ char               *shape;
 	/* FrameUpdating creation of Area and selection of destination */
 	SelectDestination (doc, el);
      }
-   TtaFreeMemory (url);
 }
 
 /*----------------------------------------------------------------------

@@ -5162,7 +5162,7 @@ RULES
 #endif
 	IN Structure_view BEGIN
 		Width: 1 pt;
-		Height: 1 pt;
+		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
 		END;
 	END;
@@ -5171,8 +5171,10 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Hidden);
 	Visibility: 0;
-	IN Structure_view
+	IN Structure_view BEGIN
 		Visibility: Enclosing =;
+		Height: DOC_FONTSIZE;
+		END;
 	END;
 
  Password_Input: BEGIN
@@ -5189,7 +5191,7 @@ RULES
 #endif
 	IN Structure_view BEGIN
 		Width: 1 pt;
-		Height: 1 pt;
+		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
 		END;
 	END;

@@ -5204,7 +5204,7 @@ fi
 
 
 THOT_VER="2.1d"
-AMAYA_VER="1.1a"
+AMAYA_VER="1.1b"
 KAFFE_VER="0.9.2"
 LIBWWW_VER="5.0a"
 
@@ -5363,10 +5363,10 @@ fi
 
 
 if test "$with_plugin" = "" ; then
-  if test "$enable_plugin" = "no" ; then
-    with_plugin="no"
-  else
+  if test "$enable_plugin" = "yes" ; then
     with_plugin="yes"
+  else
+    with_plugin="no"
   fi
 fi  
 

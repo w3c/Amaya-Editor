@@ -457,14 +457,14 @@ if test "$enable_java" = "yes" ; then
 fi
 
 dnl
-dnl plugins support is enabled by default
+dnl plugins support is disabled by default
 dnl
 
 if test "$with_plugin" = "" ; then
-  if test "$enable_plugin" = "no" ; then
-    with_plugin="no"
-  else
+  if test "$enable_plugin" = "yes" ; then
     with_plugin="yes"
+  else
+    with_plugin="no"
   fi
 fi  
 

@@ -47,7 +47,7 @@ extern char               *GetActiveImageInfo (Document document, Element elemen
 #ifdef __STDC__
 boolean SaveDocumentStatus (NotifyOnTarget *event)
 #else /* __STDC__*/
-boolean SaveDocumentStatus(event)
+boolean SaveDocumentStatus (event)
      NotifyOnTarget *event;
 #endif /* __STDC__*/
 {
@@ -62,13 +62,27 @@ boolean SaveDocumentStatus(event)
 #ifdef __STDC__
 void RestoreDocumentStatus (NotifyOnTarget *event)
 #else /* __STDC__*/
-void RestoreDocumentStatus(event)
+void RestoreDocumentStatus (event)
      NotifyOnTarget *event;
 #endif /* __STDC__*/
 {
-  /* restore the document status */
-  if (!documentStatus)
-    TtaSetDocumentUnmodified (event->document);
+}
+ 
+ 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/ 
+#ifdef __STDC__
+boolean DeleteText (NotifyElement *event)
+#else /* __STDC__*/
+boolean DeleteText (event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+  Element             parent;
+
+  parent = TtaGetParent (event->element);
+  TtaDeleteTree (parent, event->document);
+  return TRUE;                /* don't let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
