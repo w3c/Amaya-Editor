@@ -1269,7 +1269,7 @@
 </label>
 <label define="BCellVExtend">
 	<message xml:lang="en">Join with the cell below</message>
-	<message xml:lang="fr">Joindre avecla cellule au-dessous</message>
+	<message xml:lang="fr">Joindre avec la cellule au-dessous</message>
 </label>
 <label define="BCellHShrink">
 	<message xml:lang="en">Shrink horizontal extend</message>

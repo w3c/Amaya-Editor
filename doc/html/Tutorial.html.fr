@@ -1004,16 +1004,16 @@ ligne :</p>
 l'extension de cellules&nbsp;:</p>
 <ul>
   <li><strong>Joindre avec la cellule à droite</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl =</code>) étend la cellule
+    <strong>Table</strong> (<code>Ctrl t Ctrl e</code>) étend la cellule
     d'une position à droite et colle le contenu des deux cellules.</li>
   <li><strong>Joindre avec la cellule au-dessous</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl j</code>)étend la cellule d'une
     position vers le bas et colle le contenu des deux cellules.</li>
   <li><strong>Réduire extension horizontale</strong> (<code>Ctrl t Ctrl
-    -</code>) réduit l'extension horizontale de la cellule d'une position et
+    s</code>) réduit l'extension horizontale de la cellule d'une position et
     engendre une cellule vide.</li>
   <li><strong>Réduire extension verticale</strong> (<code>Ctrl t Ctrl
-    s</code>) réduit l'extension verticale de la cellule d'une position et
+    m</code>) réduit l'extension verticale de la cellule d'une position et
     engendre une cellule vide.</li>
 </ul>
 
@@ -1203,7 +1203,7 @@ charger le document comme un document HTML au lieu de XHTML.</p>
 
 <p>Erreur d'encodage</p>
 <address>
-  <p>Irène Vatton $date: Wednesday 31 December 2003 - 15:38:46$</p>
+  <p>Irène Vatton $date: Wednesday 07 January 2004 - 17:52:07$</p>
 
 </address>
 
