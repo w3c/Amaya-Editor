@@ -941,8 +941,6 @@ static void ChangeTableWidth (PtrAbstractBox table, int frame)
       /* Now check the table size */
       CheckTableWidths (table, frame, FALSE);
       CheckRowHeights (table, frame);
-      ComputeMBP (table, frame, TRUE, TRUE);
-      ComputeMBP (table, frame, FALSE, TRUE);
     }
 }
 
