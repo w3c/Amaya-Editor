@@ -32,15 +32,16 @@
 
 
 5;#Cyrillic
-1;1=/usr/X11R6/lib/X11/fonts/TTF/luxirr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luxirb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luxirri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luxirbi.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TTF/luxisr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luxisb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luxisri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luxisbi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TTF/luximr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luximb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luximri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luximbi.ttf;
+1;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
+2;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
+3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
 
 
 6;#Arabic
-1;1=/usr/X11R6/lib/X11/fonts/TTF/luxirr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luxirb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luxirri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luxirbi.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TTF/luxisr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luxisb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luxisri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luxisbi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TTF/luximr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luximb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luximri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luximbi.ttf;
+1;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
+2;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
+3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+
 
 
 7;#Greek
@@ -50,9 +51,9 @@
 
 
 8;#Hebrew
-1;1=/usr/X11R6/lib/X11/fonts/TTF/luxirr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luxirb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luxirri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luxirbi.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TTF/luxisr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luxisb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luxisri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luxisbi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TTF/luximr.ttf;2=/usr/X11R6/lib/X11/fonts/TTF/luximb.ttf;3=/usr/X11R6/lib/X11/fonts/TTF/luximri.ttf;4=/usr/X11R6/lib/X11/fonts/TTF/luximbi.ttf;
+1;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
+2;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
+3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
 
 
 9;#Latin5 (Turkish)
