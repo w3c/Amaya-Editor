@@ -1968,7 +1968,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    /* initilize the imlib, gtkv2.0 dont use imlib , it uses gdkpixbuf */
    /* _GTK2 gdk_rgb_init(); */
 #ifndef _GL
-   gdk_imlib_init();
+   gdk_imlib_init ();
 #endif /* _GL */
 #endif /* _GTK */
    CurrentWait = 0;

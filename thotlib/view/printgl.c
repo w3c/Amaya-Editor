@@ -7,16 +7,6 @@
 #include "glprint.h"
 
 
-#define FORMAT GL_PS
-
-#undef GL_LANDSCAPE
-#define GL_LANDSCAPE 0
-
-#undef GL_DRAW_BACKGROUND
-#define GL_DRAW_BACKGROUND 0
-
-#undef GL_NO_PS3_SHADING
-#define GL_NO_PS3_SHADING 0
 
 
 /* The GL context. GL is not thread safe (we should create a
@@ -44,9 +34,9 @@ static void GLFree (void *ptr)
   free(ptr);
 }
 
-#define GLSameColor(rgba1, rgba2) (!(rgba1[0] != rgba2[0] || \
-                                                    rgba1[1] != rgba2[1] || \
-						    rgba1[2] != rgba2[2]))
+#define GLSameColor(rgb1, rgb2) (!(rgb1[0] != rgb2[0] || \
+                                                    rgb1[1] != rgb2[1] || \
+						    rgb1[2] != rgb2[2]))
 
 
 /* PostScript writings. */
@@ -62,7 +52,7 @@ static void GLWriteByte (FILE *stream, unsigned char byte)
 
 static void GLPrintPostScriptHeader(void)
 {
-  GLfloat rgba[4];
+  GLfloat rgb[4];
   time_t now;
 
   time(&now);
@@ -102,37 +92,28 @@ static void GLPrintPostScriptHeader(void)
 	   (GL_LANDSCAPE) ? GL->viewport[3] : GL->viewport[2],
 	   (GL_LANDSCAPE) ? GL->viewport[2] : GL->viewport[3]);
 
-  /* RGB color: r g b C (replace C by G in output to change from rgb to gray)
-     Grayscale: r g b G
+  /* RGB color: r g b
      Font choose: size fontname FC
      String primitive: (string) x y size fontname S
      Point primitive: x y size P
      Line width: width W
      Flat-shaded line: x2 y2 x1 y1 L
-     Smooth-shaded line: x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 SL
-     Flat-shaded triangle: x3 y3 x2 y2 x1 y1 T
-     Smooth-shaded triangle: x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 ST */
+     Flat-shaded triangle: x3 y3 x2 y2 x1 y1 T*/
 
   fprintf (GL->stream,
 	   "%%%%BeginProlog\n"
 	   "/GLdict 64 dict def GLdict begin\n"
 	   "1 setlinecap 1 setlinejoin\n"
-	   "/tryPS3shading %s def %% set to false to force subdivision\n"
-	   "/rThreshold %g def %% red component subdivision threshold\n"
-	   "/gThreshold %g def %% green component subdivision threshold\n"
-	   "/bThreshold %g def %% blue component subdivision threshold\n"
 	   "/BD { bind def } bind def\n"
 	   "/C  { setrgbcolor } BD\n"
-	   "/G  { 0.082 mul exch 0.6094 mul add exch 0.3086 mul add neg 1.0 add setgray } BD\n"
+	   "/G  { setgray } BD\n"
 	   "/W  { setlinewidth } BD\n"
 	   "/FC { findfont exch scalefont setfont } BD\n"
 	   "/S  { FC moveto show } BD\n"
 	   "/P  { newpath 0.0 360.0 arc closepath fill } BD\n"
 	   "/L  { newpath moveto lineto stroke } BD\n"
 	   "/SL { C moveto C lineto stroke } BD\n"
-	   "/T  { newpath moveto lineto lineto closepath fill } BD\n",
-	   (GL_NO_PS3_SHADING) ? "false" : "true",
-	   GL->threshold[0], GL->threshold[1], GL->threshold[2]);
+	   "/T  { newpath moveto lineto lineto closepath fill } BD\n");
 
   /* Flat-shaded triangle with middle color:
      x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 Tm */
@@ -145,15 +126,6 @@ static void GLPrintPostScriptHeader(void)
 	   "      3 -1 roll 6 -1 roll 9 -1 roll add add 3 div" /* b = (b1+b2+b3)/3 */
 	   /* stack : x3 y3 x2 y2 x1 y1 r g b */
 	   " C T } BD\n");
-
-  fprintf (GL->stream,
-	   "tryPS3shading\n"
-	   "{ /shfill where\n"
-	   "  { /ST { STshfill } BD }\n"
-	   "  { /ST { STnoshfill } BD }\n"
-	   "  ifelse }\n"
-	   "{ /ST { STnoshfill } BD }\n"
-	   "ifelse\n");
 
   fprintf (GL->stream,
 	   "end\n"
@@ -173,27 +145,32 @@ static void GLPrintPostScriptHeader(void)
 	  
   if(GL_DRAW_BACKGROUND)
     {
-      glGetFloatv(GL_COLOR_CLEAR_VALUE, rgba);
+      glGetFloatv(GL_COLOR_CLEAR_VALUE, rgb);
 
       fprintf (GL->stream,
 	       "%g %g %g C\n"
 	       "newpath %d %d moveto %d %d lineto %d %d lineto %d %d lineto\n"
 	       "closepath fill\n",
-	       rgba[0], rgba[1], rgba[2], 
+	       rgb[0], rgb[1], rgb[2], 
 	       GL->viewport[0], GL->viewport[1], GL->viewport[2], 
 	       GL->viewport[1], GL->viewport[2], GL->viewport[3], 
 	       GL->viewport[0], GL->viewport[3]);
     }
 }
 
-static void GLPrintPostScriptColor(GLrgba rgba)
+
+void GLPrintPostScriptColor(GLrgb rgb)
 {
-  if (!GLSameColor(GL->lastrgba, rgba))
+  if (!GLSameColor(GL->lastrgb, rgb))
     {
-      GL->lastrgba[0] = rgba[0];
-      GL->lastrgba[1] = rgba[1];
-      GL->lastrgba[2] = rgba[2];
-      fprintf (GL->stream, "%g %g %g C\n", rgba[0], rgba[1], rgba[2]);
+      GL->lastrgb[0] = rgb[0];
+      GL->lastrgb[1] = rgb[1];
+      GL->lastrgb[2] = rgb[2];
+
+      if (rgb[0] == 0 && rgb[1] == 0 && rgb[2] == 0)
+	fprintf (GL->stream, "0 G\n");
+      else
+	fprintf (GL->stream, "%g %g %g C\n", rgb[0], rgb[1], rgb[2]);
     }
 }
 
@@ -213,7 +190,7 @@ static void GLPrintPostScriptFooter(void)
 
 static void GLPrintPostScriptBeginViewport(GLint viewport[4])
 {
-  GLfloat rgba[4];
+  GLfloat rgb[4];
   int x = viewport[0], y = viewport[1], w = viewport[2], h = viewport[3];
 
   glRenderMode (GL_FEEDBACK);
@@ -224,13 +201,13 @@ static void GLPrintPostScriptBeginViewport(GLint viewport[4])
 	  
   if (GL_DRAW_BACKGROUND)
     {
-      glGetFloatv(GL_COLOR_CLEAR_VALUE, rgba);
+      glGetFloatv(GL_COLOR_CLEAR_VALUE, rgb);
      
       fprintf (GL->stream,
 	       "%g %g %g C\n"
 	       "newpath %d %d moveto %d %d lineto %d %d lineto %d %d lineto\n"
 	       "closepath fill\n",
-	       rgba[0], rgba[1], rgba[2], 
+	       rgb[0], rgb[1], rgb[2], 
 	       x, y, x+w, y, x+w, y+h, x, y+h);
       fprintf (GL->stream,
 	       "newpath %d %d moveto %d %d lineto %d %d lineto %d %d lineto\n"
@@ -252,10 +229,10 @@ static GLint GLGetVertex(GLvertex *v, GLfloat *p)
   v->xyz[0] = p[0];
   v->xyz[1] = p[1];
   v->xyz[2] = 0;
-  v->rgba[0] = p[3];
-  v->rgba[1] = p[4];
-  v->rgba[2] = p[5];
-  v->rgba[3] = p[6]; 
+  v->rgb[0] = p[3];
+  v->rgb[1] = p[4];
+  v->rgb[2] = p[5];
+  v->rgb[3] = p[6]; 
   return 7;
 }
 
@@ -280,7 +257,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      current += i;
 	      used    -= i;
 
-	      GLPrintPostScriptColor (vertices[0].rgba);
+	      GLPrintPostScriptColor (vertices[0].rgb);
 	      fprintf (GL->stream, "%g %g %g P\n", 
 		       vertices[0].xyz[0], vertices[0].xyz[1], 0.5*psize);
 
@@ -306,7 +283,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		{
 		  fprintf (GL->stream, "[%d] 0 setdash\n", dash);
 		}
-	      GLPrintPostScriptColor (vertices[0].rgba);
+	      GLPrintPostScriptColor (vertices[0].rgb);
 	      fprintf (GL->stream, "%g %g %g %g L\n",
 		       vertices[1].xyz[0], vertices[1].xyz[1],
 		       vertices[0].xyz[0], vertices[0].xyz[1]);   
@@ -331,7 +308,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		  if (v == 2)
 		    {
                       flag = 0;
-		      GLPrintPostScriptColor (vertices[0].rgba);
+		      GLPrintPostScriptColor (vertices[0].rgb);
 		      fprintf (GL->stream, "%g %g %g %g %g %g T\n",
 			       vertices[2].xyz[0], vertices[2].xyz[1],
 			       vertices[1].xyz[0], vertices[1].xyz[1],
@@ -408,11 +385,8 @@ GLint GLBeginPage (const char *title, const char *producer,
   GL->title = title;
   GL->producer = producer;
   GL->filename = filename;
-  GL->threshold[0] = 0.032;
-  GL->threshold[1] = 0.017;
-  GL->threshold[2] = 0.05;
   for (i = 0; i < 4; i++)
-      GL->lastrgba[i] = -1.;
+      GL->lastrgb[i] = -1.;
   for (i = 0; i < 4; i++)
       GL->viewport[i] = viewport[i];
   GL->lastlinewidth = -1.;
@@ -460,16 +434,14 @@ GLint GLText (const char *str,
 	      GLshort fontsize, 
 	      GLfloat x, GLfloat y)
 {
-  GLfloat rgba[4];
-
-  glGetFloatv (GL_CURRENT_RASTER_COLOR, rgba);
-  GLPrintPostScriptColor (rgba);
 
   fprintf (GL->stream, "(%s) %g %g %d /%s S\n",
-	   str, x, y,
-	   fontsize, fontname);
+	   str, 
+	   x, y,
+	   fontsize, 
+	   fontname);
 
-  return GL_SUCCESS;
+  return 1;
 }
 
 

@@ -1101,10 +1101,10 @@ PtrFont LoadFont (char *name)
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
- GeneratePoscriptFont : 
+ GeneratePostcriptFont : 
  As poscript name serves also for the font cache
  ----------------------------------------------------------------------*/
-void GeneratePoscriptFont (char r_name[10], char script, int family,
+void GeneratePostcriptFont (char r_name[10], char script, int family,
 			   int highlight, int size)
 {
   
@@ -1169,7 +1169,7 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       highlight=4;
       sprintf (r_nameX, "%s-%s-%s-normal-*-%d-173-100-100-p-106-iso10646-1",
 		 ffamily, wght, slant, size);
-   GeneratePoscriptFont (r_name, script, family, highlight, size);
+   GeneratePostcriptFont (r_name, script, family, highlight, size);
 #ifndef _WINDOWS
    ptfont = LoadFont (r_nameX);
 #endif /*_WINDOWS*/
@@ -1310,7 +1310,7 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
 	       ffamily, wght, slant, size);
     }
-  GeneratePoscriptFont (r_name, script, family, highlight, size);
+  GeneratePostcriptFont (r_name, script, family, highlight, size);
   
     }
 }
@@ -1369,7 +1369,7 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 	  while (i < j && result[i] != '-')
 	    i++;
 	  strcat (textX, result + i);  
-	  GeneratePoscriptFont (text, script, family, highlight, internalsize);
+	  GeneratePostcriptFont (text, script, family, highlight, internalsize);
 	}
     }
 #endif /*_WINDOWS && _GL*/
@@ -1391,6 +1391,67 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
 #else  /* _WINDOWS */
   return NULL;
 #endif /* _WINDOWS */
+}
+ 
+/*----------------------------------------------------------------------
+  GetPostscriptNameFromFont : Get Postscript Font name from the font 
+  pointer indentification
+  ----------------------------------------------------------------------*/
+char *GetPostscriptNameFromFont (void * font, char *fontname)
+{
+ int                 i, result;
+ char                c0, c1, c2;
+  
+  /* browse the table of fonts */
+  i = 0;
+  result = 0;
+  while (TtFonts[i] != font && i < MAX_FONT)
+    i++;
+  if (i >= MAX_FONT)
+    i = 0;
+  i = i * 8;
+/*   if (font != PostscriptFont) */
+/*     { */
+/*       PostscriptFont = font; */
+      if (TtPsFontName[i] == 'g')  /* Greek script */
+	{
+	  c0 = TtPsFontName[i];
+	  c1 = TtPsFontName[i];
+	  c2 = 'r';	     /* Symbol only has one style available */
+	  result = 1;
+	}
+      else
+	{
+	  /* Latin Script */
+	  c0 = 'l';
+	  c1 = TtPsFontName[i + 1]; /* font Helvetica Times Courrier */
+	  /* convert lowercase to uppercase */
+	  c2 = TtPsFontName[i + 2]; /* Style normal bold italique */
+	  result = 0;
+	}
+      
+      sprintf (fontname, 
+	       "%c%c%c", c0, c1, c2);
+      return result;
+   /*  } */
+
+
+ /*  int deb = 0, i = 0; */
+ 
+/*  while (i < FirstFreeFont) */
+/*     { */
+/*       if (TtFonts[i] == font) */
+/* 	return 	&TtFontName[deb]; */
+/*       else if  (TtFonts[i] == NULL) */
+/* 	/\* check if we forgot to update FirstFreeFont *\/ */
+/* 	FirstFreeFont = i; */
+/*       else */
+/* 	{ */
+/* 	  i++; */
+/* 	  deb += MAX_FONTNAME; */
+/* 	} */
+/*     } */
+ return NULL;
 }
 
 /*----------------------------------------------------------------------

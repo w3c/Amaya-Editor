@@ -47,43 +47,56 @@
 #define GL_END_LINE_STIPPLE           6
 #define GL_SET_POINT_SIZE             7
 #define GL_SET_LINE_WIDTH             8
+ 
+#define FORMAT GL_PS
 
-typedef GLfloat GLrgba[4];
+#undef GL_LANDSCAPE
+#define GL_LANDSCAPE 0
+
+#undef GL_DRAW_BACKGROUND
+#define GL_DRAW_BACKGROUND 0
+
+typedef GLfloat GLrgb[4];
 typedef GLfloat GLxyz[3];
 
-typedef struct {
-  GLxyz xyz;
-  GLrgba rgba;
+typedef struct 
+{
+  GLxyz   xyz;
+  GLrgb   rgb;
 } GLvertex;
 
 typedef struct {
-  GLshort fontsize;
-  char *str, *fontname;
+  GLshort     fontsize;
+  char        *str, *fontname;
 } GLstring;
 
-typedef struct {
-  GLsizei width, height;
-  GLenum format, type;
-  GLfloat *pixels;
+typedef struct 
+{
+  GLsizei  width, height;
+  GLenum   format, type;
+  GLfloat  *pixels;
 } GLimage;
 
-typedef struct {
-  GLshort type, numverts;
-  char boundary, dash, culled;
-  GLfloat width, depth;
-  GLvertex *verts;
-  GLstring *text;
-  GLimage *image;
+
+typedef struct 
+{
+  GLshort   type, numverts;
+  char      boundary, dash, culled;
+  GLfloat   width, depth;
+  GLvertex  *verts;
+  GLstring  *text;
+  GLimage   *image;
 } GLprimitive;
 
-typedef struct {
-  GLint buffersize;
-  const char *title, *producer, *filename;
-  GLfloat *feedback;
-  GLint viewport[4];
-  GLrgba lastrgba, threshold;
-  float lastlinewidth;
-  FILE *stream;
+typedef struct 
+{
+  GLint       buffersize;
+  float       lastlinewidth;
+  GLfloat     *feedback;
+  GLrgb       lastrgb, threshold;
+  GLint       viewport[4];
+  char        *title, *producer, *filename;
+  FILE        *stream;
 } GLcontext;
 
 /* public functions */
@@ -109,6 +122,8 @@ GLint GLLineWidth (GLfloat value);
 /*Graphic stuff*/
 GLint GLParseFeedbackBuffer (GLfloat *current);
 
+void GLPrintPostScriptColor(GLrgb rgb);
+
 /*Text*/
 GLint GLText (const char *str, const char *fontname, GLshort fontsize, 
 	      GLfloat x, GLfloat y);
@@ -117,6 +132,8 @@ GLint GLText (const char *str, const char *fontname, GLshort fontsize,
 GLint GLDrawPixels (GLsizei width, GLsizei height,
 				   GLint xorig, GLint yorig,
 				   GLenum format, GLenum type, const void *pixels);
+
+
 #ifdef __cplusplus
 };
 #endif

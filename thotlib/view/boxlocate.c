@@ -2812,6 +2812,8 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 			  send = TRUE;
 			}
 		    }
+
+
 		  /* redisplay the box */
 #ifndef _GL
 		  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,

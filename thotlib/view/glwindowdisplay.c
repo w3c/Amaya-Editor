@@ -685,11 +685,11 @@ static void GL_SetupPixelFormat (HDC hDC)
       /*PFD_DEPTH_DONTCARE |  */          /* If Depth is obligated by hardware*/
       /*PFD_GENERIC_ACCELERATED*/ ,       /* We try to get hardware here => PFD_GENERIC_ACCELERATED*/       
       PFD_TYPE_RGBA,                  /* color type */
-      24,                             /* prefered color depth */
+      32,                             /* prefered color depth */
       0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
       1,                              /* alpha buffer */
       0,                              /* alpha bits (ignored) */
-      0,                              /* accumulation buffer */
+      0,                              /* no accumulation buffer */
       0, 0, 0, 0,                     /* accum bits (ignored) */
       0,                              /* depth buffer */
       1,                              /* stencil buffer */
@@ -945,6 +945,19 @@ void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
   *width = width_previous_clip;
   *height= height_previous_clip;
 }
+void GL_SetPrintForeground (int fg)
+{
+  unsigned short red, green, blue;
+  float rgb[3];
+
+  TtaGiveThotRGB (fg, &red, &green, &blue);
+  rgb[0] = (float) red;
+  rgb[1] = (float) green;
+  rgb[2] = (float) blue;
+ 
+  GLPrintPostScriptColor(rgb);
+    
+} 
 /*----------------------------------------------------------------------
   GL_SetForeground : set color before drawing a or many vertex
   ----------------------------------------------------------------------*/
@@ -1478,24 +1491,29 @@ int GL_UnicodeDrawString (int fg,
 			  int end)
 {
   int width;
+  char fontname[3];
 
   if (end <= 0 || fg < 0 || GL_font == NULL)
     return 0;
   str[end] = EOS;
   TranslateChars (str);
-  
-  GL_SetForeground (fg); 
 
   if (GL_Printing ())
     {
+      GL_SetPrintForeground (fg); 
+
+      GetPostscriptNameFromFont (GL_font, fontname);
+
       GLText ((char *)str, 
-	      "ptmr", 
-	      12, 
+	      fontname, 
+	      GL_Font_Get_Size (GL_font), 
 	      x, 
 	      y);
     }
   else
     {
+      GL_SetForeground (fg); 
+
       width = UnicodeFontRender (GL_font, str, 
 				 x, y, end);
       if (hyphen)
@@ -2034,7 +2052,7 @@ ThotBool GL_NotInFeedbackMode ()
 }
 
 #ifdef _GLPRINT
-static ThotBool TransText = TRUE;
+static ThotBool TransText = FALSE;
 #else /* _GLPRINT */
 static ThotBool TransText = FALSE;
 #endif /* _GLPRINT */
@@ -2062,8 +2080,8 @@ void GL_SetTransText (ThotBool value)
   PrintBox :  	    
   ----------------------------------------------------*/
 void PrintBox (PtrBox box, int frame, 
-			 int xmin, int xmax, 
-			 int ymin, int ymax)
+	       int xmin, int xmax, 
+	       int ymin, int ymax)
 {
   GLfloat feedBuffer[FEEDBUFFERSIZE];
 
@@ -2196,6 +2214,7 @@ static ThotBool NeedRedraw (int frame)
   ----------------------------------------------------------------------*/
 void WinGL_Swap (HDC hDC)
 {
+  /* glSwapBuffers (hDC); */
   SwapBuffers (hDC);
 }
 #endif /*_WINDOWS*/
@@ -2209,18 +2228,25 @@ void GL_Swap (int frame)
       NeedRedraw (frame))
     {
       /* gl_synchronize ();  */
-      glFinish ();
+      /* glFinish (); */
       /* glFlush (); */      
       glDisable (GL_SCISSOR_TEST);
+
+      /* glReadBuffer(GL_BACK); */
+      /* glAccum (GL_LOAD, 1); */
+
 #ifdef _WINDOWS
 
-if (FrRef[frame])
-      if (GL_Windows[frame])
+      if (FrRef[frame])
+	if (GL_Windows[frame])
 	  {
 	    /*GL_Windows[frame] = GetDC (FrRef[frame]);*/
-		/*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);*/
-	  	SwapBuffers (GL_Windows[frame]);
-		ReleaseDC (FrRef[frame], GL_Windows[frame] );
+	    /*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);*/
+	    SwapBuffers (GL_Windows[frame]);
+	    /*or*/
+	    /* glSwapBuffers(GL_Windows[frame]); */
+
+	    ReleaseDC (FrRef[frame], GL_Windows[frame] );
 	  }
 #else
       if (FrameTable[frame].WdFrame)
@@ -2228,6 +2254,19 @@ if (FrRef[frame])
 	  gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
 	}
 #endif /*_WINDOWS*/
+
+
+      /* glDrawBuffer(GL_BACK); */
+      /* glAccum (GL_RETURN, 1); */
+
+      /* glReadBuffer (GL_FRONT); */
+      /*       glRasterPos2i (0, 0); */
+      /*       glCopyPixels (0, 0,  */
+      /* 		    FrameTable[frame].FrWidth, FrameTable[frame].FrHeight,  */
+      /* 		    GL_COLOR); */
+      /*       glDrawBuffer (GL_BACK); */
+      /*       glReadBuffer (GL_BACK); */
+
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
     }
@@ -2246,12 +2285,12 @@ ThotBool GL_prepare (int frame)
       if (FrRef[frame])
 #ifdef _WINDOWS
 	if (GL_Windows[frame])
-	{
-      GL_Windows[frame] = GetDC (FrRef[frame]);
-	  wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 
-	/*	ReleaseDC (FrRef[frame], GL_Windows[frame] ); */
-	  return TRUE;
-	}
+	  {
+	    GL_Windows[frame] = GetDC (FrRef[frame]);
+	    wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 
+	    /*	ReleaseDC (FrRef[frame], GL_Windows[frame] ); */
+	    return TRUE;
+	  }
 #else /*_WINDOWS*/
       if (FrameTable[frame].WdFrame)
 	if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
@@ -2300,22 +2339,22 @@ static void TtaChangePlay (int frame)
 	    if (AnimTimer == 0)
 #ifdef _GTK
 	      AnimTimer = gtk_timeout_add (FRAME_TIME,
-				       (gpointer) GL_DrawAll, 
-				       (gpointer)   NULL); 
+					   (gpointer) GL_DrawAll, 
+					   (gpointer)   NULL); 
 	   	      
 #else /*_GTK*/
 #ifdef _WINDOWS
 	    {
-	     /* SetTimer(FrMainRef[frame],                
-		       frame,               
-		       FRAME_TIME,                     
-		       (TIMERPROC) MyTimerProc); 
+	      /* SetTimer(FrMainRef[frame],                
+		 frame,               
+		 FRAME_TIME,                     
+		 (TIMERPROC) MyTimerProc); 
 
-	      AnimTimer = frame;*/
-          AnimTimer = SetTimer (NULL,                
-		       frame,               
-		       FRAME_TIME,                     
-		       (TIMERPROC) MyTimerProc);
+		 AnimTimer = frame;*/
+	      AnimTimer = SetTimer (NULL,                
+				    frame,               
+				    FRAME_TIME,                     
+				    (TIMERPROC) MyTimerProc);
 	    }    
 #endif /*_WINDOWS*/
 #endif /*_GTK*/
@@ -2327,10 +2366,10 @@ static void TtaChangePlay (int frame)
 	    {
 	      remove = FALSE;
 	      for (frame = 0; frame < MAX_FRAME; frame++)
-		  {
-		     if (FrameTable[frame].Anim_play)
-		        remove = TRUE;
-		  }
+		{
+		  if (FrameTable[frame].Anim_play)
+		    remove = TRUE;
+		}
 	      if (remove)
 		{
 
@@ -2453,11 +2492,43 @@ void TtaPause (int frame)
       }
 }
 /*----------------------------------------------------------------------
-  SetCurrentTime : Position current time
+  SetFrameCurrentTime : Position current time
   ----------------------------------------------------------------------*/
-void SetAmayaCurrentTime (AnimTime current_time, int frame)
+void TtaSetFrameCurrentTime (AnimTime current_time, int frame)
 {
   FrameTable[frame].LastTime = current_time;
+}
+/*----------------------------------------------------------------------
+  SetDocumentCurrentTime : Position current time
+  ----------------------------------------------------------------------*/
+void TtaSetDocumentCurrentTime (double current_time, Document doc)
+{
+  int frame;
+
+  frame = GetWindowNumber (doc, 1);  
+  Animate_boxes (frame, current_time);
+  FrameTable[frame].LastTime = current_time;
+  GL_DrawAll ();
+}
+
+#define MAX_TIMEFUNC 50
+static void (*TimeFunc[MAX_TIMEFUNC]) (Document doc, double current_time);
+static int i_func_index = 0;
+
+/*----------------------------------------------------------------------
+  TtaRegisterTimeEven : Register function called on time change
+  ----------------------------------------------------------------------*/
+void TtaRegisterTimeEvent(void (*pfunc) (Document doc, double current_time))
+{
+  int i = 0;
+
+  while (i < i_func_index)
+    {
+      if (TimeFunc[i_func_index] == pfunc)
+	return;
+      i++;
+    }
+  TimeFunc[i_func_index++] = pfunc;
 }
 /*----------------------------------------------------------------------
   GetCurrentTime : Get Current Time
@@ -2470,6 +2541,8 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
   struct timeb	after;
 #endif /*_GTK*/
   AnimTime current_time; 
+  Document doc;
+  int i;
 
   if (FrameTable[frame].Anim_play) 
     {   
@@ -2492,6 +2565,10 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
       current_time -= FrameTable[frame].BeginTime; 
       if (current_time - FrameTable[frame].LastTime < INTERVAL)
 	current_time = -1;
+
+      for (i = 0; i < i_func_index; i++)
+	if (TimeFunc[i])
+	  (*TimeFunc[i]) (FrameTable[frame].FrDoc, current_time); 
     }
   else
     current_time = FrameTable[frame].LastTime; 
@@ -2620,6 +2697,21 @@ void SetGlPipelineState ()
   /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
   g_print ("\nGLU Version : %s", 
 	   (char *)gluGetString (GLU_VERSION));
+
+
+  {
+    int auxnumBuffers, acred, acgreen, acblue, acalpha;
+
+    glGetIntegerv (GL_AUX_BUFFERS, &auxnumBuffers);
+
+    glGetIntegerv (GL_ACCUM_RED_BITS, &acred);
+    glGetIntegerv (GL_ACCUM_GREEN_BITS, &acgreen); 
+    glGetIntegerv (GL_ACCUM_BLUE_BITS, &acblue); 
+    glGetIntegerv (GL_ACCUM_ALPHA_BITS, &acalpha);
+
+    g_print ("\n Aux buffers count %i \nAcumm rgba : %i %i %i %i", 
+	     auxnumBuffers, acred, acgreen, acblue, acalpha);
+  }
 #endif /*_PCLDEBUG*/
   /*glClearColor (1, 0, 0, 0);*/
   /* no fog*/
@@ -2816,7 +2908,8 @@ void GL_window_copy_area (int frame,
 	}
 
       /* Copy from backbuffer to backbuffer */
-      glFinish ();
+      glFlush ();
+      /* glFinish (); */
       glDisable (GL_BLEND);
 
       GL_UnsetClipping  (0, 0, 0, 0);
@@ -2920,7 +3013,7 @@ void saveBuffer (char *filename, int width, int height)
   unsigned char *Data;
 
   glFlush ();
-  glFinish ();
+  /* glFinish (); */
   Data = TtaGetMemory (sizeof (unsigned char) * width * height * 4);
   glReadPixels (0, 0, width, height, 
 		GL_RGBA, 

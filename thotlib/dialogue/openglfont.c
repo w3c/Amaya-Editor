@@ -75,7 +75,7 @@ static GL_font* FontAlreadyLoaded (const char *font_filename,
 	i = 0;
 	while (i < 1023)
 	{
-	  if (FontTab[i].ref)
+	  if (FontTab[i].ref > 0)
 	    if (size == FontTab[i].size)
 	      if (strcasecmp (font_filename, FontTab[i].name) == 0)			
 		{
@@ -88,7 +88,7 @@ static GL_font* FontAlreadyLoaded (const char *font_filename,
 }
 /*----------------------------------------------------------
   GetFirstFont  : Get anyway a font, 
-  best is according to size
+  best is according to size first
 ------------------------------------------------------------*/
 void  *GetFirstFont (int size)
 {
@@ -97,7 +97,7 @@ void  *GetFirstFont (int size)
   i = 0;
   while (i < 1023)
     {
-      if (FontTab[i].ref)
+      if (FontTab[i].ref > 0)
 	if (size == FontTab[i].size)
 	  {
 	    return FontTab[i].font;
@@ -107,7 +107,7 @@ void  *GetFirstFont (int size)
   i = 0;
   while (i < 1023)
     {
-      if (FontTab[i].ref)
+      if (FontTab[i].ref > 0)
 	return FontTab[i].font;
       i++;
     }
@@ -123,7 +123,7 @@ static void FontCache (GL_font *font,
   int i;
 	
   i = 0;
-  while (FontTab[i].ref != 0 && i < 1023)
+  while (FontTab[i].ref > 0 && i < 1023)
     i++;
   FontTab[i].font = font;
   FontTab[i].font->Cache_index = i;
@@ -303,13 +303,13 @@ static int FTLibraryInit ()
     }
   i = 0;
   while (i < 1024)
-  {
-	FontTab[i].ref = 0;
-	FontTab[i].name = NULL;
-	FontTab[i].font = NULL;
-	FontTab[i].size = 0;
-	i++;
-  }
+    {
+      FontTab[i].ref = 0;
+      FontTab[i].name = NULL;
+      FontTab[i].font = NULL;
+      FontTab[i].size = 0;
+      i++;
+    }
   return TRUE;
 }
 
@@ -559,7 +559,10 @@ void *gl_font_init (const char *font_filename,
 }
 
 /************** Generic Calls *****************/ 
-
+unsigned int GL_Font_Get_Size (void *font)
+{
+  return ((GL_font *)font)->size;
+}
 void GL_Font_Change_Height (void *font, int size)
 {
   FontFaceSize ((GL_font *) font,

@@ -2922,7 +2922,7 @@ ThotWidget	 GetNoAlphaVisual ()
       GDK_GL_RED_SIZE,1,
       GDK_GL_GREEN_SIZE,1,
       GDK_GL_BLUE_SIZE,1,
-      /* GDK_GL_ALPHA_SIZE,1, */
+      GDK_GL_ALPHA_SIZE,1,
       GDK_GL_STENCIL_SIZE, 1,
       GDK_GL_DOUBLEBUFFER,
       GDK_GL_NONE
@@ -3988,11 +3988,26 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
        UpdateWindow (Main_Wd);
        InitCommonControls ();
 #endif /* _WINDOWS */
+#ifdef _GL
+       FrameTable[frame].Scroll_enabled = TRUE;
+#endif /* _GL */
      }
    return (frame);
 }
+/*----------------------------------------------------------------------
+ TtaDisableScrollbars  : Disable scrollbars for this view                 
+  ----------------------------------------------------------------------*/
+void TtaDisableScrollbars (Document doc, View view)
+{
+  int frame;
 
-
+  frame = GetWindowNumber (doc, view);
+  FrameTable[frame].WdScrollH = NULL;
+  FrameTable[frame].WdScrollV = NULL;
+#ifdef _GL
+  FrameTable[frame].Scroll_enabled = FALSE;
+#endif /* _GL */
+}
 /*----------------------------------------------------------------------
    Si l'entree existe :                                             
    Ferme la fenetre, detruit le fichier et libere l'entree.      

@@ -3468,6 +3468,10 @@ void UpdateScrollbars (int frame)
       documentDisplayMode[FrameTable[frame].FrDoc - 1] 
       == NoComputedDisplay)
     return;
+#ifdef _GL
+  if (FrameTable[frame].Scroll_enabled == FALSE)
+    return;
+#endif _GL
   /* Get the displayed volume */
   ComputeDisplayedChars (frame, &x, &y, &width, &height);
   hscroll = FrameTable[frame].WdScrollH;

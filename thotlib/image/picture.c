@@ -2559,7 +2559,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
       imageDesc->TextureBind = 0; 
       imageDesc->PicPixmap = NULL;
       glFlush ();
-      glFinish ();
+      /* glFinish (); */
       glReadBuffer (GL_BACK);   
 
       if (1 

@@ -426,6 +426,11 @@ extern void TtaSetAnimTypetoTransform (void *anim);
 extern void TtaSetAnimTypetoMotion (void *anim);
 
 extern void TtaFreeAnimation (void *anim);
+extern void TtaSetDocumentCurrentTime (double current_time, Document basedoc);
+extern void TtaDisableScrollbars (Document doc, View view);
+
+extern void TtaRegisterTimeEvent(void (*pfunc) (Document doc, double current_time));
+
 /*----------------------------------------------------------------------
    TtaCopyAnim : Copy anim linked list 
   ----------------------------------------------------------------------*/

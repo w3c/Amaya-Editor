@@ -268,6 +268,8 @@ static double current_timeline_end; /* end timing (s) */
 static int tmp_previous_x;
 static int previous_slider_position;
 
+void Set_slider_position_from_doc(Document doc, double curtime);
+
 #endif /* _SVGANIM */
 
 
@@ -423,7 +425,7 @@ void Free_timeline_of_doc(Document doc)
 #endif /* _SVGANIM */
 }
 
- 
+
 
 /*----------------------------------------------------------------------
   InitSVGAnim 
@@ -438,7 +440,11 @@ void InitSVGAnim ()
   iconAnim = TtaCreatePixmapLogo (Anim_xpm);
   iconAnimNo = TtaCreatePixmapLogo (AnimNo_xpm);
 #  endif /* _WINDOWS */
-   
+  
+#ifdef _GL
+  TtaRegisterTimeEvent (&Set_slider_position_from_doc);
+#endif /* _GL */
+
   for (k=0; k<DocumentTableLength; k++)
     Init_timeline_struct(k);
 
@@ -2945,7 +2951,11 @@ void ShowTimeLineWindow (Document document, View view)
   if (t)
     TtaRaiseView (dt[document].timelinedoc, v);
   else 
-    Build_timeline (document, TtaGetMessage (AMAYA, AM_BUTTON_ANIM));
+    {
+      Build_timeline (document, TtaGetMessage (AMAYA, AM_BUTTON_ANIM));
+      Get_timeline_of_doc (document, &t, &v);
+      TtaDisableScrollbars (t, v);
+    }
 #endif /* _SVGANIM */
 }
 
@@ -3203,10 +3213,43 @@ void Set_slider_position (Document basedoc, Document timelinedoc, double f)
 
   if (x>ct_left_bar+current_timeline_width)
     Enlarge_timeline (basedoc, timelinedoc, x);
+
 	
 #endif /* _SVGANIM */
 }
 
+/*----------------------------------------------------------------------
+  Set_slider_position_from_doc
+  unit of param f is second
+  ----------------------------------------------------------------------*/
+void Set_slider_position_from_doc (Document basedoc,  double f)
+{
+  char buffer[512];
+  Document timelinedoc;
+  View timelineview;
+  Element tm = dt[basedoc].timing_text;
+  int  x = (int) (f*time_sep + ct_left_bar - 6);
+ 
+  Get_timeline_of_doc (basedoc, &timelinedoc, &timelineview);
+  /* Modulo */
+  if (x > ct_left_bar + current_timeline_width)
+  {
+    f = fmod (f, (double)current_timeline_width / time_sep);
+    x = (int) (f*time_sep + ct_left_bar - 6);
+  }
+  /* Update timing_text */
+  if (tm)
+    {
+      Element child = TtaGetFirstChild (tm);
+      Language lang = TtaGetDefaultLanguage ();
+      double d;
+	    
+      d = (x + 6 - ct_left_bar) / time_sep;
+      sprintf (buffer, "%.2fs", (float) d);
+      TtaSetTextContent (child, buffer, lang, timelinedoc);
+    }
+  Set_slider_position (basedoc, timelinedoc, f);
+}
 
 
 /*----------------------------------------------------------------------
@@ -3780,6 +3823,7 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
   DisplayMode dp;
   double end;
   Element new_period;
+  double d;
 
   /* move the slider and enlarge timeline if necessary */
   x = Apply_hpos_mini (basedoc, event->element, ct_left_bar-6);
@@ -3789,17 +3833,21 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
   end = (x+6-(ct_left_bar+1))/time_sep;
 	
   /* update timing_text */
+  d = (x+6-ct_left_bar)/time_sep;
   if (tm)
     {
       Element child = TtaGetFirstChild (tm);
       Language lang = TtaGetDefaultLanguage();
-      double d;
 	    
-      d = (x+6-ct_left_bar)/time_sep;
+      
       sprintf (buffer, "%.2fs", (float) d);
       TtaSetTextContent (child, buffer, lang, event->document);
     }
-	
+
+#ifdef _GL	
+  TtaSetDocumentCurrentTime (d, basedoc);
+#endif /* _GL */
+
   /* editing modes */
 	
   if ((dt[basedoc].definition_of_motion_period) || 

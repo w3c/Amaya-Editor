@@ -9,6 +9,7 @@ int   gl_font_char_ascent (void *gl_void_font, wchar_t *c);
 void  *GetFirstFont (int size);
 
 void GL_Font_Change_Height (void *font, int size);
+unsigned int GL_Font_Get_Size (void *font);
 
 int   UnicodeFontRender (void *gl_font, wchar_t *string, 
 			 float x, float y, int size);

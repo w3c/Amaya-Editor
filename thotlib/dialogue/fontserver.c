@@ -348,7 +348,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	 if (script == 'E')
 	   if (strstr (filename, "esstix") == NULL)
 	     ok = 0;
-#ifdef _PCLFONTDEBUG
+#ifdef _PCLFONTDEBUG 
 	 g_print ("\n %s \t[script : %c (%i) family : %i] \t=> %i", 
 		  filename, script, script, family, ok);
 #endif /*_PCLFONTDEBUG*/
@@ -365,9 +365,9 @@ int GetFontFilename (char script, int family, int highlight, int size,
   GetWindowsDirectory (filename , 1024);  
   strcat (filename, "\\fonts\\"); 
   if (script == 'G' || family == 0)
-  {
-	  strcat (filename, "Symbol");
-  }
+    {
+      strcat (filename, "Symbol");
+    }
   else if (script == 'E')
     {
       switch (family)
@@ -383,53 +383,53 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  break;
 	default:
    	  break;
-  }
-  }
+	}
+    }
   else if (script == 'Z')
-	{
-     /*strcat (filename, "msmincho");
-	 strcat (filename, ".ttc\0");*/
-	 strcat (filename, "arialu");
-	 strcat (filename, ".ttf\0");
-	 return 1;
-	}
+    {
+      /*strcat (filename, "msmincho");
+	strcat (filename, ".ttc\0");*/
+      strcat (filename, "arialu");
+      strcat (filename, ".ttf\0");
+      return 1;
+    }
   else
+    {
+      /*charset ???*/
+      switch (family)
 	{
-  /*charset ???*/
-  switch (family)
-     {
-     case 0:		 
-       strcat (filename, "Symbol");
-       break;
-     case 1:
-       strcat (filename, "Times");
-       break;
-     case 2:       
-       strcat (filename, "Arial");
-       break;
-     case 3:
-       strcat (filename, "Cour");
-       break;
-     default:
-       strcat (filename, "Verdana");
-     }
-  switch (highlight)
-     {
-     case 0:
-       break;
-     case 2:
-     case 3:
-       strcat (filename, "i");
-       break;
-     case 1:
-     case 4:
-     case 5:
-       strcat (filename, "bd");
-       break;
-     default:
-       break;
+	case 0:		 
+	  strcat (filename, "Symbol");
+	  break;
+	case 1:
+	  strcat (filename, "Times");
+	  break;
+	case 2:       
+	  strcat (filename, "Arial");
+	  break;
+	case 3:
+	  strcat (filename, "Cour");
+	  break;
+	default:
+	  strcat (filename, "Verdana");
 	}
+      switch (highlight)
+	{
+	case 0:
+	  break;
+	case 2:
+	case 3:
+	  strcat (filename, "i");
+	  break;
+	case 1:
+	case 4:
+	case 5:
+	  strcat (filename, "bd");
+	  break;
+	default:
+	  break;
 	}
+    }
   strcat (filename, ".ttf\0");
   return 1;
 #endif /* _GTK */

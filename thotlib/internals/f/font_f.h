@@ -34,11 +34,11 @@ extern int BoxFontBase ( SpecFont specfont );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
 extern PtrFont LoadFont ( char *name );
-extern void GeneratePoscriptFont ( char r_name[10],
-                                   char script,
-                                   int family,
-                                   int highlight,
-                                   int size );
+extern void GeneratePostcriptFont ( char r_name[10],
+                                    char script,
+                                    int family,
+                                    int highlight,
+                                    int size );
 extern void GetFontIdentifier ( char script,
                                 int family,
                                 int highlight,
@@ -51,33 +51,6 @@ extern PtrFont ReadFont ( char script,
                           int highlight,
                           int size,
                           TypeUnit unit );
-extern void *LoadStixFont ( int family,
-                            int size );
-extern void ChangeFontsetSize ( int size,
-                                PtrBox box,
-                                int frame );
-extern int GetFontAndIndexFromSpec ( CHAR_T c,
-                                     SpecFont fontset,
-                                     PtrFont *font );
-extern SpecFont ThotLoadFont ( char script,
-                               int family,
-                               int highlight,
-                               int size,
-                               TypeUnit unit,
-                               int frame );
-extern void TtaSetFontZoom ( int zoom );
-extern void InitDialogueFonts ( char *name );
-extern void ThotFreeFont ( int frame );
-extern void ThotFreeAllFonts ( void );
-extern void LoadingArabicFont ( SpecFont fontset,
-                                PtrFont *font );
-extern int Char_Width ( int x );
-extern void Put_Char_Width ( int car,
-                             int l );
-extern int BoxArabicCharacterWidth ( CHAR_T c,
-                                     PtrTextBuffer *adbuff,
-                                     int *ind,
-                                     SpecFont specfont );
 
 #else /* __STDC__ */
 
@@ -109,11 +82,11 @@ extern int BoxFontBase (/* SpecFont specfont */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
 extern PtrFont LoadFont (/* char *name */);
-extern void GeneratePoscriptFont (/* char r_name[10],
-                                     char script,
-                                     int family,
-                                     int highlight,
-                                     int size */);
+extern void GeneratePostcriptFont (/* char r_name[10],
+                                      char script,
+                                      int family,
+                                      int highlight,
+                                      int size */);
 extern void GetFontIdentifier (/* char script,
                                   int family,
                                   int highlight,
@@ -126,33 +99,6 @@ extern PtrFont ReadFont (/* char script,
                             int highlight,
                             int size,
                             TypeUnit unit */);
-extern void *LoadStixFont (/* int family,
-                              int size */);
-extern void ChangeFontsetSize (/* int size,
-                                  PtrBox box,
-                                  int frame */);
-extern int GetFontAndIndexFromSpec (/* CHAR_T c,
-                                       SpecFont fontset,
-                                       PtrFont *font */);
-extern SpecFont ThotLoadFont (/* char script,
-                                 int family,
-                                 int highlight,
-                                 int size,
-                                 TypeUnit unit,
-                                 int frame */);
-extern void TtaSetFontZoom (/* int zoom */);
-extern void InitDialogueFonts (/* char *name */);
-extern void ThotFreeFont (/* int frame */);
-extern void ThotFreeAllFonts (/* void */);
-extern void LoadingArabicFont (/* SpecFont fontset,
-                                  PtrFont *font */);
-extern int Char_Width (/* int x */);
-extern void Put_Char_Width (/* int car,
-                               int l */);
-extern int BoxArabicCharacterWidth (/* CHAR_T c,
-                                       PtrTextBuffer *adbuff,
-                                       int *ind,
-                                       SpecFont specfont */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
