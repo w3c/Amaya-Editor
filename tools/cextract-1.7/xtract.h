@@ -50,7 +50,7 @@
 /* the command to perform the C preprocessing (full path best) */
 #ifndef CPP
 #ifndef VMS
-#define CPP "/lib/cpp"
+#define CPP "cpp"
 #else
 #define CPP "cc"
 #endif /* VMS */

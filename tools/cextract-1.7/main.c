@@ -622,11 +622,6 @@ main (argc, argv)
   char **argv;
 {
   char cur_argstr[MID_SIZE], sysl_out[MID_SIZE];
-#ifdef HPUX
-  extern pid_t getpid();
-#else
-  extern int getpid();
-#endif
   struct stat fst;
   int count, j, len;
 
