@@ -3113,10 +3113,10 @@ STRING              pathname;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (LanNegBase + LanNegMenu, TtaGetViewFrame (document, view),
-		"Language Negotiation Menu", 2, s, TRUE, 1, 'L', D_DONE);
+		TtaGetMessage (1, BConfigLanNeg), 2, s, TRUE, 1, 'L', D_DONE);
    /* first line */
    TtaNewTextForm (LanNegBase + mLanNeg, LanNegBase + LanNegMenu,
-		   "Language Negotiation",
+		   TtaGetMessage (AMAYA, AM_LANG_NEGOTIATION),
 		   20, 1, FALSE);
 #endif /* !_WINDOWS */
  

@@ -27,6 +27,9 @@
 /* URL of the script providing templates (for reload) */
 static STRING script_URL;
 
+#include "init_f.h"
+
+
 /*----------------------------------------------------------------------
    NewTemplate: Opens a template form on the remote template server
   ----------------------------------------------------------------------*/

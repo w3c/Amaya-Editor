@@ -44,6 +44,7 @@
 #include "XMLparser_f.h"
 #include "HTMLimage_f.h"
 #include "styleparser_f.h"
+#include "templates_f.h"
 #endif /* STANDALONE */
 
 #include "parser.h"
