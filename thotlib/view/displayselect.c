@@ -18,180 +18,110 @@
 #include "font_f.h"
 #include "exceptions_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    VisuPartiel trace le contour de la boite de texte pBox          | */
-/* |            dans les limitesde la fenetre entre x1 et x2.           | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static void         VisuPartiel (int frame, int x1, int x2, PtrBox pBox)
-#else  /* __STDC__ */
-static void         VisuPartiel (frame, x1, x2, pBox)
-int                 frame;
-int                 x1;
-int                 x2;
-PtrBox            pBox;
-
-#endif /* __STDC__ */
-{
-   int                 larg, haut;
-   int                 yh, h;
-   PtrBox            boxmere;
-   ViewFrame            *pFrame;
-   PtrAbstractBox             pAbbox1;
-
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pBox->BxAbstractBox != NULL)
-      /* On limite la visibilite de la selection aux portions de texte */
-      /* affichees dans les paragraphes.                               */
-     {
-	/* Si on holophraste la racine du document */
-	/* le texte n'a pas de pave englobant */
-	if (pBox->BxAbstractBox->AbEnclosing == NULL)
-	   boxmere = pBox;
-	else
-	  {
-	     boxmere = pBox->BxAbstractBox->AbEnclosing->AbBox;
-	     while (boxmere->BxType == BoGhost)
-	       {
-		  pAbbox1 = boxmere->BxAbstractBox;
-		  if (pAbbox1->AbEnclosing == NULL)
-		     boxmere = pBox;
-		  else
-		     boxmere = pAbbox1->AbEnclosing->AbBox;
-	       }
-	  }
-	/* clipping par rapport a la boite englobante */
-	haut = boxmere->BxYOrg + boxmere->BxHeight - pFrame->FrYOrg;
-	/* +2 pour le curseur de fin de ligne */
-	larg = boxmere->BxXOrg + boxmere->BxWidth + 2 - pFrame->FrXOrg;
-
-	yh = pBox->BxYOrg - pFrame->FrYOrg;
-	h = pBox->BxHeight;
-	if (yh > haut)
-	   h = 0;
-	else if (yh + h > haut)
-	   h = haut - yh;
-
-	x1 = x1 + pBox->BxXOrg - pFrame->FrXOrg;
-	if (x1 > larg)
-	   larg = 0;
-	else
-	  {
-	     x2 = x2 + pBox->BxXOrg - pFrame->FrXOrg;
-	     if (x2 > larg)
-		larg -= x1;
-	     else
-		larg = x2 - x1;
-	  }
-	Invideo (frame, larg, h, x1, yh);
-     }
-}
-
 
 /* ---------------------------------------------------------------------- */
-/* |    VisuBoite trace le contour de la boite pBox dans les limites de | */
-/* |            la fenetre.                                             | */
+/* |    DisplayBoxSelection trace le contour de la boite pBox dans les   | */
+/* |            limites de la fenetre.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         VisuBoite (int frame, PtrBox pBox, int pointselect)
+static void         DisplayBoxSelection (int frame, PtrBox pBox, int pointselect)
 #else  /* __STDC__ */
-static void         VisuBoite (frame, pBox, pointselect)
+static void         DisplayBoxSelection (frame, pBox, pointselect)
 int                 frame;
 PtrBox            pBox;
 int                 pointselect;
 
 #endif /* __STDC__ */
 {
-   int                 xgauche, yhaut;
-   int                 xmin;
-   int                 xdroit, ybas, i;
-   int                 yhmoyen;
-   int                 j, nb;
-   PtrTextBuffer      adbuff;
-   PtrBox            box1;
+   PtrBox            pChildBox;
    ViewFrame            *pFrame;
-   PtrAbstractBox             pAbbox1;
-
+   PtrAbstractBox             pAb;
+   PtrTextBuffer      pBuffer;
+   int                 leftX, rightX;
+   int                 topY, bottomY;
+   int                 minX;
+   int                 middleY;
+   int                 i, j, n;
 
    if (pBox != NULL)
      {
 	pFrame = &ViewFrameTable[frame - 1];
-	pAbbox1 = pBox->BxAbstractBox;
+	pAb = pBox->BxAbstractBox;
 
 	if (pBox->BxType == BoGhost
-	    || (pAbbox1 != NULL
-		&& TypeHasException (ExcHighlightChildren, pAbbox1->AbElement->ElTypeNumber, pAbbox1->AbElement->ElStructSchema)))
+	    || (pAb != NULL
+		&& TypeHasException (ExcHighlightChildren, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema)))
 	  {
 	     /* -> La boite est eclatee (boite fantome) */
 	     /* On visualise toutes les boites filles */
-	     box1 = pAbbox1->AbFirstEnclosed->AbBox;
-	     while (box1 != NULL)
+	     pChildBox = pAb->AbFirstEnclosed->AbBox;
+	     while (pChildBox != NULL)
 	       {
-		  VisuBoite (frame, box1, 0);
-		  pAbbox1 = box1->BxAbstractBox;
-		  if (pAbbox1->AbNext != NULL)
-		     box1 = pAbbox1->AbNext->AbBox;
+		  DisplayBoxSelection (frame, pChildBox, 0);
+		  pAb = pChildBox->BxAbstractBox;
+		  if (pAb->AbNext != NULL)
+		     pChildBox = pAb->AbNext->AbBox;
 		  else
-		     box1 = NULL;
+		     pChildBox = NULL;
 	       }
 	  }
 	else if (pBox->BxType != BoSplit)
 	  {
 	     /* La boite est entiere */
-	     xgauche = pBox->BxXOrg - pFrame->FrXOrg;
-	     yhaut = pBox->BxYOrg - pFrame->FrYOrg;
-	     ybas = yhaut + pBox->BxHeight;
-	     xdroit = xgauche + pBox->BxWidth;
-	     xmin = xgauche + pBox->BxWidth / 2;
-	     yhmoyen = yhaut + pBox->BxHeight / 2;
+	     leftX = pBox->BxXOrg - pFrame->FrXOrg;
+	     topY = pBox->BxYOrg - pFrame->FrYOrg;
+	     bottomY = topY + pBox->BxHeight;
+	     rightX = leftX + pBox->BxWidth;
+	     minX = leftX + pBox->BxWidth / 2;
+	     middleY = topY + pBox->BxHeight / 2;
 
-	     if (pAbbox1 == NULL)
+	     if (pAb == NULL)
 		/* C'est une boite sans pave */
-		Invideo (frame, xdroit - xgauche, ybas - yhaut, xgauche, yhaut);
-	     else if (pAbbox1->AbLeafType == LtPlyLine && pBox->BxNChars > 1)
+		Invideo (frame, rightX - leftX, bottomY - topY, leftX, topY);
+	     else if (pAb->AbLeafType == LtPlyLine && pBox->BxNChars > 1)
 	       {
 		  /* C'est une boite polyline */
 		  /* On marque le(s) point(s) caracteristique(s) de la polyline */
 		  /* si la polyline contient au moins 1 point (effectif) */
-		  adbuff = pBox->BxBuffer;
-		  xgauche = pBox->BxXOrg - pFrame->FrXOrg;
-		  yhaut = pBox->BxYOrg - pFrame->FrYOrg;
+		  pBuffer = pBox->BxBuffer;
+		  leftX = pBox->BxXOrg - pFrame->FrXOrg;
+		  topY = pBox->BxYOrg - pFrame->FrYOrg;
 		  j = 1;
-		  nb = pBox->BxNChars;
-		  for (i = 1; i < nb; i++)
+		  n = pBox->BxNChars;
+		  for (i = 1; i < n; i++)
 		    {
-		       if (j >= adbuff->BuLength)
+		       if (j >= pBuffer->BuLength)
 			 {
-			    if (adbuff->BuNext != NULL)
+			    if (pBuffer->BuNext != NULL)
 			      {
 				 /* Changement de buffer */
-				 adbuff = adbuff->BuNext;
+				 pBuffer = pBuffer->BuNext;
 				 j = 0;
 			      }
 			 }
 		       if (pointselect == 0 || pointselect == i)
 			  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH,
-				   xgauche + PointToPixel (adbuff->BuPoints[j].XCoord / 1000) - 2,
-				   yhaut + PointToPixel (adbuff->BuPoints[j].YCoord / 1000) - 2);
+				   leftX + PointToPixel (pBuffer->BuPoints[j].XCoord / 1000) - 2,
+				   topY + PointToPixel (pBuffer->BuPoints[j].YCoord / 1000) - 2);
 		       j++;
 		    }
 	       }
-	     else if (pAbbox1->AbLeafType == LtPicture)
+	     else if (pAb->AbLeafType == LtPicture)
 	       {
 		  /* 4 points caracteristiques */
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, yhaut - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhaut - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhmoyen - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhmoyen - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, ybas - 3);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, ybas - 3);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 3);
+		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
+		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
+		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 	       }
-	     else if (pAbbox1->AbLeafType == LtGraphics && pAbbox1->AbVolume != 0)
+	     else if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
 		/* C'est une boite graphique */
 		/* On marque en noir les points caracteristiques de la boite */
-		switch (pAbbox1->AbRealShape)
+		switch (pAb->AbRealShape)
 		      {
 			 case ' ':
 			 case 'R':
@@ -205,14 +135,14 @@ int                 pointselect;
 			 case '7':
 			 case '8':
 			    /* 8 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhmoyen - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhmoyen - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, ybas - 3);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, ybas - 3);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 			    break;
 			 case 'C':
 			 case 'L':
@@ -220,100 +150,100 @@ int                 pointselect;
 			 case 'P':
 			 case 'Q':
 			    /* 4 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhmoyen - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhmoyen - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, ybas - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
 			    break;
 			 case 'W':
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
 			    break;
 			 case 'X':
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, ybas - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
 			    break;
 			 case 'Y':
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, ybas - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
 			    break;
 			 case 'Z':
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, ybas - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhaut - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
 			    break;
 
 			 case 'h':
 			 case '<':
 			 case '>':
 			    /* 2 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhmoyen - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhmoyen - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
 			    break;
 			 case 't':
 			    /* 3 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhaut - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
 			    break;
 			 case 'b':
 			    /* 3 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, ybas - 3);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, ybas - 3);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 			    break;
 			 case 'v':
 			 case '^':
 			 case 'V':
 			    /* 2 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, ybas - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
 			    break;
 			 case 'l':
 			    /* 3 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhmoyen - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, ybas - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
 			    break;
 			 case 'r':
 			    /* 3 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhmoyen - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 			    break;
 			 case '\\':
 			 case 'O':
 			 case 'e':
 			    /* 2 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 			    break;
 			 case '/':
 			 case 'o':
 			 case 'E':
 			    /* 2 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, yhaut - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, ybas - 3);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
 			    break;
 			 default:
 			    break;
 		      }
 	     /* C'est une boite d'un autre type */
 	     else
-		Invideo (frame, xdroit - xgauche, ybas - yhaut, xgauche, yhaut);
+		Invideo (frame, rightX - leftX, bottomY - topY, leftX, topY);
 	  }
 	else
 	  {
 	     /* La boite est coupee */
 	     /* Calcul des points caracteristiques de la premiere boite coupee */
-	     box1 = pBox->BxNexChild;
-	     while (box1 != NULL)
+	     pChildBox = pBox->BxNexChild;
+	     while (pChildBox != NULL)
 	       {
-		  VisuBoite (frame, box1, 0);
-		  box1 = box1->BxNexChild;
+		  DisplayBoxSelection (frame, pChildBox, 0);
+		  pChildBox = pChildBox->BxNexChild;
 	       }
 	  }
      }
@@ -321,21 +251,20 @@ int                 pointselect;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MajPavSelect parcourt l'arborescence pour basculer la mise en   | */
-/* |            evidence de la selection et forcer le nouvel Etat de    | */
-/* |            selection.                                              | */
+/* |  SetNewSelectionStatus parcourt l'arborescence pour basculer la    | */
+/* |            mise en evidence de la selection et forcer le nouvel    | */
+/* |            etat de selection.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajPavSelect (int frame, PtrAbstractBox pAb, boolean Etat)
+void                MajPavSelect (int frame, PtrAbstractBox pAb, boolean status)
 #else  /* __STDC__ */
-void                MajPavSelect (frame, pAb, Etat)
+void                MajPavSelect (frame, pAb, status)
 int                 frame;
-PtrAbstractBox             pAb;
-boolean             Etat;
-
+PtrAbstractBox      pAb;
+boolean             status;
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox        pChildAb;
    ViewFrame            *pFrame;
 
    if (pAb != NULL)
@@ -347,45 +276,113 @@ boolean             Etat;
 	     /* On ne visualise pas les bornes de la selection */
 	     if (pFrame->FrSelectionBegin.VsBox == NULL ||
 		 pFrame->FrSelectionEnd.VsBox == NULL)
-		VisuBoite (frame, pAb->AbBox, 0);
+		DisplayBoxSelection (frame, pAb->AbBox, 0);
 	     else if (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
 		      pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
-		VisuBoite (frame, pAb->AbBox, 0);
-	     pAb->AbSelected = Etat;
+		DisplayBoxSelection (frame, pAb->AbBox, 0);
+	     pAb->AbSelected = status;
 	  }
 	else
 	   /* Sinon on parcours le sous-arbre */
 	  {
-	     pavefils = pAb->AbFirstEnclosed;
-	     while (pavefils != NULL)
+	     pChildAb = pAb->AbFirstEnclosed;
+	     while (pChildAb != NULL)
 	       {
-		  MajPavSelect (frame, pavefils, Etat);
-		  pavefils = pavefils->AbNext;
+		  MajPavSelect (frame, pChildAb, status);
+		  pChildAb = pChildAb->AbNext;
 	       }
 	  }
      }
 }
 
-
 /* ---------------------------------------------------------------------- */
-/* |    VisuSel visualise ou efface la selection courante dans la       | */
-/* |            frame.                                          | */
+/* |    DisplayStringSelection trace le contour de la boite de texte    | */
+/* |         pBox dans les limitesde la fenetre entre leftX et rightX.  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                VisuSel (int frame, boolean Etat)
+static void         DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 #else  /* __STDC__ */
-void                VisuSel (frame, Etat)
+static void         DisplayStringSelection (frame, leftX, rightX, pBox)
 int                 frame;
-boolean             Etat;
+int                 leftX;
+int                 rightX;
+PtrBox            pBox;
+#endif /* __STDC__ */
+{
+   PtrBox            pParentBox;
+   ViewFrame            *pFrame;
+   PtrAbstractBox             pAb;
+   int                 width, height;
+   int                 topY, h;
+
+   pFrame = &ViewFrameTable[frame - 1];
+   if (pBox->BxAbstractBox != NULL)
+      /* On limite la visibilite de la selection aux portions de texte */
+      /* affichees dans les paragraphes.                               */
+     {
+	/* Si on holophraste la racine du document */
+	/* le texte n'a pas de pave englobant */
+	if (pBox->BxAbstractBox->AbEnclosing == NULL)
+	   pParentBox = pBox;
+	else
+	  {
+	     pParentBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+	     while (pParentBox->BxType == BoGhost)
+	       {
+		  pAb = pParentBox->BxAbstractBox;
+		  if (pAb->AbEnclosing == NULL)
+		     pParentBox = pBox;
+		  else
+		     pParentBox = pAb->AbEnclosing->AbBox;
+	       }
+	  }
+	/* clipping par rapport a la boite englobante */
+	height = pParentBox->BxYOrg + pParentBox->BxHeight - pFrame->FrYOrg;
+	/* +2 pour le curseur de fin de ligne */
+	width = pParentBox->BxXOrg + pParentBox->BxWidth + 2 - pFrame->FrXOrg;
+
+	topY = pBox->BxYOrg - pFrame->FrYOrg;
+	h = pBox->BxHeight;
+	if (topY > height)
+	   h = 0;
+	else if (topY + h > height)
+	   h = height - topY;
+
+	leftX = leftX + pBox->BxXOrg - pFrame->FrXOrg;
+	if (leftX > width)
+	   width = 0;
+	else
+	  {
+	     rightX = rightX + pBox->BxXOrg - pFrame->FrXOrg;
+	     if (rightX > width)
+		width -= leftX;
+	     else
+		width = rightX - leftX;
+	  }
+	Invideo (frame, width, h, leftX, topY);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |  DisplayCurrentSelection visualise ou efface la selection courante | */
+/* |             dans le frame.                                         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                VisuSel (int frame, boolean status)
+#else  /* __STDC__ */
+void                VisuSel (frame, status)
+int                 frame;
+boolean             status;
 
 #endif /* __STDC__ */
 {
    PtrBox            pBox;
-   PtrAbstractBox             pAb;
-   ViewFrame            *pFrame;
-   ViewSelection            *pViewSel;
-   PtrBox            pBo1;
-   ViewSelection            *pMa2;
+   PtrBox            pSelBox;
+   PtrAbstractBox    pAb;
+   ViewFrame        *pFrame;
+   ViewSelection    *pViewSel;
+   ViewSelection    *pViewSelEnd;
 
    /* On ne visualise la selection que si la selection est coherente */
    pFrame = &ViewFrameTable[frame - 1];
@@ -396,71 +393,70 @@ boolean             Etat;
 	if (pFrame->FrSelectionEnd.VsBox == pViewSel->VsBox)
 	   if (!StructSelectionMode && pFrame->FrSelectOnePosition)
 	      /* on ne visualise que la position */
-	      VisuPartiel (frame, pViewSel->VsXPos, pViewSel->VsXPos + 2, pViewSel->VsBox);
+	      DisplayStringSelection (frame, pViewSel->VsXPos, pViewSel->VsXPos + 2, pViewSel->VsBox);
 	   else if (pViewSel->VsBuffer == NULL
 		    || (pViewSel->VsBox->BxNChars == 0 && pViewSel->VsBox->BxType == BoComplete))
-	      VisuBoite (frame, pViewSel->VsBox, pViewSel->VsIndBox);
+	      DisplayBoxSelection (frame, pViewSel->VsBox, pViewSel->VsIndBox);
 	   else
-	      VisuPartiel (frame, pViewSel->VsXPos, pFrame->FrSelectionEnd.VsXPos, pViewSel->VsBox);
+	      DisplayStringSelection (frame, pViewSel->VsXPos, pFrame->FrSelectionEnd.VsXPos, pViewSel->VsBox);
 	else
 	   /* Les marques de selection sont dans deux boites differentes */
 	   /* Si les deux bornes de la selection sont compatibles */
 	  {
 	     pAb = NULL;
-	     pBo1 = pViewSel->VsBox;
-	     if (pViewSel->VsBuffer == NULL || pBo1->BxNChars == 0)
-		VisuBoite (frame, pViewSel->VsBox, 0);
+	     pSelBox = pViewSel->VsBox;
+	     if (pViewSel->VsBuffer == NULL || pSelBox->BxNChars == 0)
+		DisplayBoxSelection (frame, pViewSel->VsBox, 0);
 	     else
 	       {
-		  pAb = pBo1->BxAbstractBox;
+		  pAb = pSelBox->BxAbstractBox;
 		  /* Est-ce que la selection debute en fin de boite ? */
-		  if (pViewSel->VsXPos == pBo1->BxWidth)
-		     VisuPartiel (frame, pViewSel->VsXPos,
-				  pBo1->BxWidth + 2, pViewSel->VsBox);
+		  if (pViewSel->VsXPos == pSelBox->BxWidth)
+		     DisplayStringSelection (frame, pViewSel->VsXPos,
+				  pSelBox->BxWidth + 2, pViewSel->VsBox);
 		  else
-		     VisuPartiel (frame, pViewSel->VsXPos, pBo1->BxWidth,
+		     DisplayStringSelection (frame, pViewSel->VsXPos, pSelBox->BxWidth,
 				  pViewSel->VsBox);
 		  /* Parcours les boites coupees soeurs */
-		  if (pBo1->BxType == BoPiece || pBo1->BxType == BoDotted)
+		  if (pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
 		    {
-		       pBox = pBo1->BxNexChild;
+		       pBox = pSelBox->BxNexChild;
 		       while (pBox != NULL &&
 			      pBox != pFrame->FrSelectionEnd.VsBox)
 			 {
 			    if (pBox->BxNChars > 0)
-			       VisuBoite (frame, pBox, 0);
+			       DisplayBoxSelection (frame, pBox, 0);
 			    pBox = pBox->BxNexChild;
 			 }
 		    }
 	       }
-	     pMa2 = &pFrame->FrSelectionEnd;
-	     pBo1 = pMa2->VsBox;
-	     if (pMa2->VsBuffer == NULL || pBo1->BxNChars == 0)
-		VisuBoite (frame, pMa2->VsBox, 0);
+	     pViewSelEnd = &pFrame->FrSelectionEnd;
+	     pSelBox = pViewSelEnd->VsBox;
+	     if (pViewSelEnd->VsBuffer == NULL || pSelBox->BxNChars == 0)
+		DisplayBoxSelection (frame, pViewSelEnd->VsBox, 0);
 	     else
 	       {
 		  /* Parcours les boites coupees soeurs */
-		  if ((pBo1->BxType == BoPiece || pBo1->BxType == BoDotted)
-		      && pBo1->BxAbstractBox != pAb)
+		  if ((pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
+		      && pSelBox->BxAbstractBox != pAb)
 		    {
-		       pBox = pBo1->BxAbstractBox->AbBox->BxNexChild;
+		       pBox = pSelBox->BxAbstractBox->AbBox->BxNexChild;
 		       while (pBox != NULL &&
-			      pBox != pMa2->VsBox)
+			      pBox != pViewSelEnd->VsBox)
 			 {
-			    VisuBoite (frame, pBox, 0);
+			    DisplayBoxSelection (frame, pBox, 0);
 			    pBox = pBox->BxNexChild;
 			 }
 		    }
-		  VisuPartiel (frame, 0, pMa2->VsXPos, pMa2->VsBox);
+		  DisplayStringSelection (frame, 0, pViewSelEnd->VsXPos, pViewSelEnd->VsBox);
 	       }
 	  }
 	/* Bascule l'indicateur de la selection allumee */
 	pFrame->FrSelectShown = !pFrame->FrSelectShown;
 
-	MajPavSelect (frame, pFrame->FrAbstractBox, Etat);
+	MajPavSelect (frame, pFrame->FrAbstractBox, status);
      }
-   else if (Etat == FALSE)
+   else if (status == FALSE)
       /* Annule la selection meme s'il n'y a plus de boite selectionnee */
       pFrame->FrSelectShown = FALSE;
 }
-/* End Of Module visu */
