@@ -1429,8 +1429,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     ThotTBBitmap.hInst = hInstance;
     ThotTBBitmap.nID  = IDR_TOOLBAR;
     dwToolBarStyles = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
-    if (!IS_WIN95)
-      dwToolBarStyles = dwToolBarStyles | TBSTYLE_FLAT;
+    dwToolBarStyles = dwToolBarStyles | TBSTYLE_FLAT;
     ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
 			    0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
