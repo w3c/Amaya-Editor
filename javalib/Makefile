@@ -10,8 +10,6 @@ JAVAC=../$(MACHINE)/bin/javac
 KAFFEH=../$(MACHINE)/bin/kaffeh
 #KAFFEH=kaffeh
 
-CLASSPATH=.:../classes:../classes/classes.zip:../classes/biss.zip:../classes/jigsaw.zip
-
 APICLASSES=Application Document Tree Content Attribute Reference \
         Language Presentation View Selection Interface Registry \
 	Dialog LibMsg
@@ -22,7 +20,11 @@ CLASSES=Element SSchema Document ElementType Attribute \
 AMAYAAPI_CLASSES=JavaAmaya AmayaMsg
 AMAYA_CLASSES=HTTPRequest
 
-all : thotlib_itf amaya_itf
+all :
+	@(echo Do not run make here, type \"make stubs\" from the platform directory ;\
+	  exit 1)
+
+stubs : thotlib_itf amaya_itf
 
 thotlib_itf:
 	@(mv -f JavaTypes.err JavaTypes.err.old ; \
