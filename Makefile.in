@@ -95,7 +95,7 @@ classes: force
 	  if test -d $$PWD/$(THOTDIR) ; then CLASSES=$$PWD/$(THOTDIR)/classes;\
 	  else CLASSES=$(THOTDIR)/classes ; fi ; \
 	  CLASSPATH=".:$$CLASSES:$$CLASSES/classes.zip:$$CLASSES/thotlib.zip:$$CLASSES/jigsaw.zip:$$CLASSES/amaya.zip:$$CLASSES/biss.zip";export CLASSPATH;\
-	  cd $(THOTDIR)/classes ; make)
+	  cd $(THOTDIR)/classes ; $(MAKE) )
 
 zips: force
 	@(PWD=`pwd` ; PATH="$$PWD/bin:$$PATH" ; export PATH ; \
@@ -103,7 +103,7 @@ zips: force
 	  else CLASSES=$(THOTDIR)/classes ; fi ; \
 	  CLASSPATH=".:$$CLASSES:$$CLASSES/classes.zip:$$CLASSES/thotlib.zip:\
 $$CLASSES/jigsaw.zip:$$CLASSES/amaya.zip:$$CLASSES/biss.zip";export CLASSPATH;\
-	  cd $(THOTDIR)/classes ; make zips)
+	  cd $(THOTDIR)/classes ; $(MAKE) zips)
 
 tools/mkdep/mkdep :
 	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" mkdep)
@@ -122,6 +122,10 @@ proto : rebuild bin/cextract
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" proto ; \
 	  cd .. ; fi ;done )
+
+mkid : 
+	@(echo rebuilding $(THOTDIR)/ID reference file)
+	@(cd $(THOTDIR); mkid --lang-map=$(THOTDIR)/makes/id-lang.map)
 
 #
 # Rule du rebuild the Thot schemas

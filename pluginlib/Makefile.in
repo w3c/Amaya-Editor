@@ -66,7 +66,7 @@ libThotPlugin.a : $(PLUGIN_OBJ)
 CEXTRACT= ../bin/cextract
 
 $(CEXTRACT) :
-	@(cd ../tools/cextract-$(CEXTRACT_VER) ; make)
+	@(cd ../tools/cextract-$(CEXTRACT_VER) ; $(MAKE) )
 
 proto : ../bin/cextract
 	@(for i in @srcdir@/*.c ; \

@@ -69,6 +69,7 @@ typedef struct Classthotlib_APIPresentation {
 HandleTo(thotlib_APIPresentation);
 
 extern jlong thotlib_APIPresentation_TtaNewPRule(struct Hthotlib_APIPresentation*, jint, jint, jint);
+extern jlong thotlib_APIPresentation_TtaNewPRuleForView(struct Hthotlib_APIPresentation*, jint, jint, jint);
 extern jlong thotlib_APIPresentation_TtaNewPRuleForNamedView(struct Hthotlib_APIPresentation*, jint, struct Hjava_lang_String*, jint);
 extern jlong thotlib_APIPresentation_TtaCopyPRule(struct Hthotlib_APIPresentation*, jlong);
 extern void thotlib_APIPresentation_TtaAttachPRule(struct Hthotlib_APIPresentation*, jlong, jlong, jint);

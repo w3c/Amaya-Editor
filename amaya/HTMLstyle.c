@@ -2865,7 +2865,7 @@ char               *attrstr;
    attrstr = ParseHTML3Unit (attrstr, &lead);
    if (lead.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
-	MSG ("invalid font leading\n");
+	MSG ("invalid line spacing\n");
 	return (attrstr);
      }
    /*

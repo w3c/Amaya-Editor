@@ -144,7 +144,9 @@ typedef struct Classamaya_APIAmayaMsg {
 #define amaya_APIAmayaMsg_AM_REPEAT_X 130
 #define amaya_APIAmayaMsg_AM_REPEAT_Y 131
 #define amaya_APIAmayaMsg_AM_NO_REPEAT 132
-#define amaya_APIAmayaMsg_AMAYA_MSG_MAX 133
+#define amaya_APIAmayaMsg_AM_ABOUT1 133
+#define amaya_APIAmayaMsg_AM_ABOUT2 134
+#define amaya_APIAmayaMsg_AMAYA_MSG_MAX 136
 	int __DUMMY__;
 } Classamaya_APIAmayaMsg;
 HandleTo(amaya_APIAmayaMsg);

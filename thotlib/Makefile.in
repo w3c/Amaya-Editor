@@ -11,7 +11,7 @@ THOTDIR = @top_srcdir@
 
 include ../Options
 
-INCLUDES= -DHAVE_CONFIG_H -I.. $(THOTINCLUDES) $(X_CFLAGS)
+INCLUDES= -DHAVE_CONFIG_H -I.. @THOTINCLUDES@ $(X_FLAGS)
 LIBS	= -L../tablelib -L. -L.. $(IMGLIBS) $(X_LIBS) -lXext $(X_PRE_LIBS) \
           -lX11 $(X_EXTRA_LIBS) @LIBS@ $(EXTRA_LIBS) -lm 
 
@@ -308,7 +308,7 @@ print : ../bin/print
 CEXTRACT= ../bin/cextract
 
 $(CEXTRACT) :
-	@(cd ../tools/cextract-$(CEXTRACT_VER) ; make)
+	@(cd ../tools/cextract-$(CEXTRACT_VER) ; $(MAKE) )
 
 proto : ../bin/cextract
 	@(for i in @srcdir@/*/*.c ; \
