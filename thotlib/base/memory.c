@@ -671,7 +671,6 @@ void GetAttribute (PtrAttribute * pAttr)
 {
    PtrAttribute        pNewAttr;
 
-
    if (PtFree_Attr == NULL)
       pNewAttr = (PtrAttribute) TtaGetMemory (sizeof (TtAttribute));
    else
@@ -699,17 +698,16 @@ void GetAttribute (PtrAttribute * pAttr)
   ----------------------------------------------------------------------*/
 void FreeAttribute (PtrAttribute pAttr)
 {
-
 #ifdef DEBUG_MEMORY
-       TtaFreeMemory (pAttr);
+  TtaFreeMemory (pAttr);
 #else
-   pAttr->AeNext = PtFree_Attr;
-   pAttr->AeAttrSSchema = NULL;
-   pAttr->AeAttrNum = 0;
-   PtFree_Attr = pAttr;
-   NbFree_Attr++;
+  pAttr->AeNext = PtFree_Attr;
+  pAttr->AeAttrSSchema = NULL;
+  pAttr->AeAttrNum = 0;
+  PtFree_Attr = pAttr;
+  NbFree_Attr++;
 #endif
-   NbUsed_Attr--;
+  NbUsed_Attr--;
 }
 
 /*----------------------------------------------------------------------
@@ -749,13 +747,7 @@ void FreeReferredDescr (PtrReferredDescr pDR)
 {
   if (pDR != NULL)
     {
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pDR);
-#else
-      pDR->ReNext = PtFree_DescRef;
-      PtFree_DescRef = pDR;
-      NbFree_DescRef++;
-#endif
+      TtaFreeMemory (pDR);
       NbUsed_DescRef--;
     }
 }
@@ -793,14 +785,8 @@ void GetDescCopy (PtrCopyDescr * pDC)
   ----------------------------------------------------------------------*/
 void FreeDescCopy (PtrCopyDescr pDC)
 {
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pDC);
-#else
-   pDC->CdNext = PtFree_DescCopy;
-   PtFree_DescCopy = pDC;
-   NbFree_DescCopy++;
-#endif
-   NbUsed_DescCopy--;
+  TtaFreeMemory (pDC);
+  NbUsed_DescCopy--;
 }
 
 /*----------------------------------------------------------------------
@@ -835,14 +821,8 @@ void GetExternalDoc (PtrExternalDoc * pDE)
 void FreeExternalDoc (PtrExternalDoc pDE)
 {
 
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pDE);
-#else
-   pDE->EdNext = PtFree_ExternalDoc;
-   PtFree_ExternalDoc = pDE;
-   NbFree_ExternalDoc++;
-#endif
-   NbUsed_ExternalDoc--;
+  TtaFreeMemory (pDE);
+  NbUsed_ExternalDoc--;
 }
 
 /*----------------------------------------------------------------------
@@ -881,14 +861,8 @@ void GetReference (PtrReference * pRef)
 void FreeReference (PtrReference pRef)
 {
 
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pRef);
-#else
-   pRef->RdNext = PtFree_Reference;
-   PtFree_Reference = pRef;
-   NbFree_Reference++;
-#endif
-   NbUsed_Reference--;
+  TtaFreeMemory (pRef);
+  NbUsed_Reference--;
 }
 
 /*----------------------------------------------------------------------
@@ -1120,13 +1094,7 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
 	  pHostView = pNextHostView;
 	}
     }
-#ifdef DEBUG_MEMORY
   TtaFreeMemory (pSP);
-#else
-  pSP->PsNext = PtFree_SchPres;
-  PtFree_SchPres = pSP;
-  NbFree_SchPres++;
-#endif
   NbUsed_SchPres--;
 }
 
@@ -1163,16 +1131,8 @@ void GetHandleSchPres (PtrHandlePSchema * pHSP)
   ----------------------------------------------------------------------*/
 void FreeHandleSchPres (PtrHandlePSchema pHSP)
 {
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pHSP);
-#else
-   pHSP->HdPrevPSchema = NULL;
-   pHSP->HdPSchema = NULL;
-   pHSP->HdNextPSchema = PtFree_HandleSchPres;
-   PtFree_HandleSchPres = pHSP;
-   NbFree_HandleSchPres++;
-#endif
-   NbUsed_HandleSchPres--;
+  TtaFreeMemory (pHSP);
+  NbUsed_HandleSchPres--;
 }
 
 
@@ -1206,16 +1166,7 @@ void GetDocSchemasDescr (PtrDocSchemasDescr * pPFS)
   ----------------------------------------------------------------------*/
 void FreeDocSchemasDescr (PtrDocSchemasDescr pPFS)
 {
-#ifdef DEBUG_MEMORY
    TtaFreeMemory (pPFS);
-#else
-   pPFS->PfSSchema = NULL;
-   pPFS->PfPSchema = NULL;
-   pPFS->PfFirstPSchemaExtens = NULL;
-   pPFS->PfNext = PtFree_DocSchemasDescr;
-   PtFree_DocSchemasDescr = pPFS;
-   NbFree_DocSchemasDescr++;
-#endif
    NbUsed_DocSchemasDescr--;
 }
 
@@ -1381,17 +1332,10 @@ void FreeSchStruc (PtrSSchema pSS)
   pSS->SsExtension = FALSE;
   pSS->SsNExtensRules = 0;
   pSS->SsExtensBlock = NULL;
-#ifdef DEBUG_MEMORY
-  int i;
   for (i = 0; i < pSS->SsNAttributes; i++)
     free (pSS->SsAttribute->TtAttr[i]);
   free (pSS->SsAttribute);
   TtaFreeMemory (pSS);
-#else
-  pSS->SsNextExtens = PtFree_SchStruct;
-  PtFree_SchStruct = pSS;
-  NbFree_SchStruct++;
-#endif
   for (i = 0; i < MAX_RULES_SSCHEMA + 2; i++)
     {
       if (pSS->SsRule[i].SrLocalAttr)
@@ -1443,13 +1387,7 @@ void FreePresentRule (PtrPRule pRP)
 	FreePresentRuleCond (pCond);
 	pCond = nextCond;
      }
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pRP);
-#else
-   pRP->PrNextPRule = PtFree_PresRule;
-   PtFree_PresRule = pRP;
-   NbFree_PresRule++;
-#endif
+   TtaFreeMemory (pRP);
    NbUsed_PresRule--;
 }
 
@@ -1486,13 +1424,7 @@ void GetPresentRuleCond (PtrCondition * pCond)
   ----------------------------------------------------------------------*/
 void FreePresentRuleCond (PtrCondition pCond)
 {
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pCond);
-#else
-   pCond->CoNextCondition = PtFree_CondPresRule;
-   PtFree_CondPresRule = pCond;
-   NbFree_CondPresRule++;
-#endif
+  TtaFreeMemory (pCond);
    NbUsed_CondPresRule--;
 }
 

@@ -554,254 +554,255 @@ static void wrRef (PtrReference pRef, FILE *fileDescriptor)
 static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 		    ThotBool premierfils)
 {
-   int                 i;
-   PtrElement          f;
-   PtrAttribute        pAttr;
-   PtrPRule            pRule;
-   SRule              *pRe1;
-   PtrTtAttribute      pAttr1;
+  PtrElement          f;
+  PtrAttribute        pAttr;
+  PtrPRule            pRule;
+  SRule              *pRe1;
+  PtrTtAttribute      pAttr1;
+  char                text[100];
+  int                 i;
 
-   if (pNode != NULL)
-     {
-       /* ecrit les blancs de l'indentation */
-       for (i = 1; i <= Indent; i++)
-	 fprintf (fileDescriptor, " ");
-       /* si l'element est la copie par inclusion d'un autre element, */
-       /* ecrit la reference a cet autre element */
-       if (pNode->ElSource != NULL)
-	 {
-	   wrRef (pNode->ElSource, fileDescriptor);
-	   fprintf (fileDescriptor, "\n");
-	   for (i = 1; i <= Indent; i++)
-	     fprintf (fileDescriptor, " ");
-	 }
-       i = 1;
-       /* ecrit le nom du type de l'element */
-       if (pNode->ElStructSchema == NULL)
-	 fprintf (fileDescriptor, "*ElStructSchema=NULL*");
-       else
-	 {
-	   pRe1 = &pNode->ElStructSchema->SsRule[pNode->ElTypeNumber - 1];
-	   fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
-	   /* ecrit le nom du schema de structure de l'element */
-	   fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
-		    (unsigned int)pNode->ElStructSchema);
-	 }
-       /* ecrit l'URI associee au schema de structure */
-       if (pNode->ElStructSchema->SsUriName == NULL)
-	 fprintf (fileDescriptor, " Uri=NULL");
-       else
-	 fprintf (fileDescriptor, " Uri=%s", pNode->ElStructSchema->SsUriName);
-       fprintf (fileDescriptor, " Label=%s", pNode->ElLabel);
-       /* ecrit le volume de l'element */
-       fprintf (fileDescriptor, " Vol=%d", pNode->ElVolume);
-       fprintf (fileDescriptor, " Lin=%d", pNode->ElLineNb);
-       if (pNode->ElIsCopy)
-	 fprintf (fileDescriptor, " Copy");
-       switch (pNode->ElAccess)
-	 {
-	 case AccessReadOnly:
-	   fprintf (fileDescriptor, " Right=RO");
-	   break;
-	 case AccessReadWrite:
-	   fprintf (fileDescriptor, " Right=R/W");
-	   break;
-	 case AccessHidden:
-	   fprintf (fileDescriptor, " Right=Hidden");
-	   break;
-	 default:
-	   break;
-	 }
-       if (pNode->ElHolophrast)
-	 fprintf (fileDescriptor, " Holophrast");
+  if (pNode != NULL)
+    {
+      /* ecrit les blancs de l'indentation */
+      for (i = 1; i <= Indent; i++)
+	fprintf (fileDescriptor, " ");
+      /* si l'element est la copie par inclusion d'un autre element, */
+      /* ecrit la reference a cet autre element */
+      if (pNode->ElSource != NULL)
+	{
+	  wrRef (pNode->ElSource, fileDescriptor);
+	  fprintf (fileDescriptor, "\n");
+	  for (i = 1; i <= Indent; i++)
+	    fprintf (fileDescriptor, " ");
+	}
+      i = 1;
+      /* ecrit le nom du type de l'element */
+      if (pNode->ElStructSchema == NULL)
+	fprintf (fileDescriptor, "*ElStructSchema=NULL*");
+      else
+	{
+	  pRe1 = &pNode->ElStructSchema->SsRule[pNode->ElTypeNumber - 1];
+	  fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
+	  /* ecrit le nom du schema de structure de l'element */
+	  fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
+		   (unsigned int)pNode->ElStructSchema);
+	}
+      /* ecrit l'URI associee au schema de structure */
+      if (pNode->ElStructSchema->SsUriName == NULL)
+	fprintf (fileDescriptor, " Uri=NULL");
+      else
+	fprintf (fileDescriptor, " Uri=%s", pNode->ElStructSchema->SsUriName);
+      fprintf (fileDescriptor, " Label=%s", pNode->ElLabel);
+      /* ecrit le volume de l'element */
+      fprintf (fileDescriptor, " Vol=%d", pNode->ElVolume);
+      fprintf (fileDescriptor, " Lin=%d", pNode->ElLineNb);
+      if (pNode->ElIsCopy)
+	fprintf (fileDescriptor, " Copy");
+      switch (pNode->ElAccess)
+	{
+	case AccessReadOnly:
+	  fprintf (fileDescriptor, " Right=RO");
+	  break;
+	case AccessReadWrite:
+	  fprintf (fileDescriptor, " Right=R/W");
+	  break;
+	case AccessHidden:
+	  fprintf (fileDescriptor, " Right=Hidden");
+	  break;
+	default:
+	  break;
+	}
+      if (pNode->ElHolophrast)
+	fprintf (fileDescriptor, " Holophrast");
        
-       /* ecrit les attributs de l'element */
-       if (pNode->ElFirstAttr != NULL)
-	 {
-	   fprintf (fileDescriptor, " (ATTR ");
-	   pAttr = pNode->ElFirstAttr;
-	   while (pAttr != NULL)
-	     {
-	       pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
-	       fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
-	       switch (pAttr1->AttrType)
-		 {
-		 case AtNumAttr:
-		   fprintf (fileDescriptor, "%d", pAttr->AeAttrValue);
-		   break;
-		 case AtTextAttr:
-		   if (pAttr->AeAttrText != NULL)
-		     {
-		       fprintf (fileDescriptor, "%s",
-				pAttr->AeAttrText->BuContent);
-		       if (pAttr->AeAttrText->BuNext != NULL)
-			 fprintf (fileDescriptor, "...");
-		     }
-		   break;
-		 case AtReferenceAttr:
-		   if (pAttr->AeAttrReference == NULL)
-		     fprintf (fileDescriptor, "*AeAttrReference=NULL*");
-		   else if (pAttr->AeAttrReference->RdReferred == NULL)
-		     fprintf (fileDescriptor, "*RdReferred=NULL*");
-		   else
-		     wrRef (pAttr->AeAttrReference, fileDescriptor);
-		   break;
-		 case AtEnumAttr:
-		   fprintf (fileDescriptor, "%s",
-			    pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
-		   break;
-		 default:
-		   fprintf (fileDescriptor, "AttrType ????");
-		   break;
-		 }
+      /* ecrit les attributs de l'element */
+      if (pNode->ElFirstAttr != NULL)
+	{
+	  fprintf (fileDescriptor, " (ATTR ");
+	  pAttr = pNode->ElFirstAttr;
+	  while (pAttr != NULL)
+	    {
+	      pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
+	      fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
+	      switch (pAttr1->AttrType)
+		{
+		case AtNumAttr:
+		  fprintf (fileDescriptor, "%d", pAttr->AeAttrValue);
+		  break;
+		case AtTextAttr:
+		  if (pAttr->AeAttrText)
+		    {
+		      CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
+		      fprintf (fileDescriptor, "%s", text);
+		      if (pAttr->AeAttrText->BuNext)
+			fprintf (fileDescriptor, "...");
+		    }
+		  break;
+		case AtReferenceAttr:
+		  if (pAttr->AeAttrReference == NULL)
+		    fprintf (fileDescriptor, "*AeAttrReference=NULL*");
+		  else if (pAttr->AeAttrReference->RdReferred == NULL)
+		    fprintf (fileDescriptor, "*RdReferred=NULL*");
+		  else
+		    wrRef (pAttr->AeAttrReference, fileDescriptor);
+		  break;
+		case AtEnumAttr:
+		  fprintf (fileDescriptor, "%s",
+			   pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
+		  break;
+		default:
+		  fprintf (fileDescriptor, "AttrType ????");
+		  break;
+		}
 	       
-	       if (pAttr->AeNext != NULL)
-		 fprintf (fileDescriptor, ", ");
-	       pAttr = pAttr->AeNext;
-	     }
+	      if (pAttr->AeNext != NULL)
+		fprintf (fileDescriptor, ", ");
+	      pAttr = pAttr->AeNext;
+	    }
 	   fprintf (fileDescriptor, ")");
-	 }
-       /* ecrit les regles de presentation specifiques de l'element */
-       if (pNode->ElFirstPRule != NULL)
-	 {
-	   fprintf (fileDescriptor, " Pres(");
-	   pRule = pNode->ElFirstPRule;
-	   while (pRule != NULL)
-	     {
-	       if (pRule != pNode->ElFirstPRule)
-		 fprintf (fileDescriptor, ", ");
-	       WrPRuleType (pRule, fileDescriptor);
-	       if (pRule->PrSpecifAttr > 0)
-		 fprintf (fileDescriptor, "[%s]", pRule->PrSpecifAttrSSchema->
-			  SsAttribute->TtAttr[pRule->PrSpecifAttr - 1]->AttrOrigName);
-	       fprintf (fileDescriptor, " view%d", pRule->PrViewNum);
-	       pRule = pRule->PrNextPRule;
-	     }
-	   fprintf (fileDescriptor, ")");
-	   /* ecrit le contenu de l'element */
-	 }
-       if (pNode->ElTerminal)
-	 switch (pNode->ElLeafType)
-	   {
-	   case LtPicture:
-	     fprintf (fileDescriptor, " Lg=%d\n", pNode->ElTextLength);
-	     for (i = 1; i <= Indent; i++)
-	       fprintf (fileDescriptor, " ");
-	     fprintf (fileDescriptor, "\'");
-	     WrText (pNode->ElText, 72 - Indent, fileDescriptor);
-	     fprintf (fileDescriptor, "\'\n");
-	     break;
-	   case LtText:
-	     fprintf (fileDescriptor, " Lg=%d Language=%s\n",
-		      pNode->ElTextLength,
-		      TtaGetLanguageName (pNode->ElLanguage));
-	     for (i = 1; i <= Indent; i++)
-	       fprintf (fileDescriptor, " ");
-	     fprintf (fileDescriptor, "\'");
-	     WrText (pNode->ElText, 72 - Indent, fileDescriptor);
-	     fprintf (fileDescriptor, "\'\n");
-	     break;
-	   case LtPolyLine:
-	     fprintf (fileDescriptor, " Type=%c %d points\n",
-		      pNode->ElPolyLineType,
-		      pNode->ElNPoints);
-	     for (i = 1; i <= Indent; i++)
-	       fprintf (fileDescriptor, " ");
-	     for (i = 0; i < pNode->ElNPoints && i < 8; i++)
-	       {
-		 fprintf (fileDescriptor, "%d,%d ",
-			  pNode->ElPolyLineBuffer->BuPoints[i].XCoord,
-			  pNode->ElPolyLineBuffer->BuPoints[i].YCoord);
-	       }
-	     if (i < pNode->ElNPoints)
-	       fprintf (fileDescriptor, "...");
-	     fprintf (fileDescriptor, "\n");
-	     break;
-	   case LtPath:
-	     fprintf (fileDescriptor, " path:\n");
-	     for (i = 1; i <= Indent; i++)
-	       fprintf (fileDescriptor, " ");
-	     WrPath (pNode->ElFirstPathSeg, 72 - Indent, fileDescriptor);
-	     fprintf (fileDescriptor, "\n");
-	     break;
-	   case LtSymbol:
-	     fprintf (fileDescriptor, " \'%c\'", pNode->ElGraph);
-	     if (pNode->ElGraph == '?')
-	       fprintf (fileDescriptor, " wc=%d",
-			(int)pNode->ElWideChar);
-	     fprintf (fileDescriptor, "\n");
-	     break;
-	   case LtGraphics:
-	   case LtCompound:
-	     fprintf (fileDescriptor, " \'%c\'\n", pNode->ElGraph);
-	     break;
-	   case LtPageColBreak:
-	     fprintf (fileDescriptor, " Number=%d View=%d",
-		      pNode->ElPageNumber,
-		      pNode->ElViewPSchema);
-	     switch (pNode->ElPageType)
-	       {
-	       case PgComputed:
-		 fprintf (fileDescriptor, " Computed page");
-		 break;
-	       case PgBegin:
-		 fprintf (fileDescriptor, " Begin of element");
-		 break;
-	       case PgUser:
-		 fprintf (fileDescriptor, " Page put by user");
-		 break;
-	       case ColComputed:
-		 fprintf (fileDescriptor, " Computed column");
-		 break;
-	       case ColBegin:
-		 fprintf (fileDescriptor, " First column");
-		 break;
-	       case ColUser:
-		 fprintf (fileDescriptor, " Column put by user");
-		 break;
-	       case ColGroup:
-		 fprintf (fileDescriptor, " Grouped column");
-		 break;
-	       default:
-		 break;
-	       }
-	     fprintf (fileDescriptor, "\n");
-	     break;
-	   case LtReference:
-	     if (pNode->ElReference == NULL)
-	       fprintf (fileDescriptor, " *ElReference=NULL*\n");
-	     else
-	       {
-		 fprintf (fileDescriptor, " ");
-		 wrRef (pNode->ElReference, fileDescriptor);
-		 fprintf (fileDescriptor, "\n");
-	       }
-	     break;
-	   case LtPairedElem:
-	     fprintf (fileDescriptor, "(Id=%d)", pNode->ElPairIdent);
-	     if (pNode->ElOtherPairedEl == NULL)
-	       fprintf (fileDescriptor, " ElOtherPairedEl=NULL");
-	     fprintf (fileDescriptor, "\n");
-	     break;
-	   default:
-	     fprintf (fileDescriptor, "ElLeafType ????\n");
-	     break;
-	   }
-       else
-	 {
-	   fprintf (fileDescriptor, "\n");
-	   /* element non terminal, on ecrit sa descendance */
-	   f = pNode->ElFirstChild;
-	   while (f != NULL)
-	     {
-	       WrTree (f, Indent + 2, fileDescriptor, premierfils);
-	       if (!premierfils)
-		 f = f->ElNext;
-	       else
-		 f = NULL;
-	     }
-	 }
-     }
+	}
+      /* ecrit les regles de presentation specifiques de l'element */
+      if (pNode->ElFirstPRule != NULL)
+	{
+	  fprintf (fileDescriptor, " Pres(");
+	  pRule = pNode->ElFirstPRule;
+	  while (pRule != NULL)
+	    {
+	      if (pRule != pNode->ElFirstPRule)
+		fprintf (fileDescriptor, ", ");
+	      WrPRuleType (pRule, fileDescriptor);
+	      if (pRule->PrSpecifAttr > 0)
+		fprintf (fileDescriptor, "[%s]", pRule->PrSpecifAttrSSchema->
+			 SsAttribute->TtAttr[pRule->PrSpecifAttr - 1]->AttrOrigName);
+	      fprintf (fileDescriptor, " view%d", pRule->PrViewNum);
+	      pRule = pRule->PrNextPRule;
+	    }
+	  fprintf (fileDescriptor, ")");
+	  /* ecrit le contenu de l'element */
+	}
+      if (pNode->ElTerminal)
+	switch (pNode->ElLeafType)
+	  {
+	  case LtPicture:
+	    fprintf (fileDescriptor, " Lg=%d\n", pNode->ElTextLength);
+	    for (i = 1; i <= Indent; i++)
+	      fprintf (fileDescriptor, " ");
+	    fprintf (fileDescriptor, "\'");
+	    WrText (pNode->ElText, 72 - Indent, fileDescriptor);
+	    fprintf (fileDescriptor, "\'\n");
+	    break;
+	  case LtText:
+	    fprintf (fileDescriptor, " Lg=%d Language=%s\n",
+		     pNode->ElTextLength,
+		     TtaGetLanguageName (pNode->ElLanguage));
+	    for (i = 1; i <= Indent; i++)
+	      fprintf (fileDescriptor, " ");
+	    fprintf (fileDescriptor, "\'");
+	    WrText (pNode->ElText, 72 - Indent, fileDescriptor);
+	    fprintf (fileDescriptor, "\'\n");
+	    break;
+	  case LtPolyLine:
+	    fprintf (fileDescriptor, " Type=%c %d points\n",
+		     pNode->ElPolyLineType,
+		     pNode->ElNPoints);
+	    for (i = 1; i <= Indent; i++)
+	      fprintf (fileDescriptor, " ");
+	    for (i = 0; i < pNode->ElNPoints && i < 8; i++)
+	      {
+		fprintf (fileDescriptor, "%d,%d ",
+			 pNode->ElPolyLineBuffer->BuPoints[i].XCoord,
+			 pNode->ElPolyLineBuffer->BuPoints[i].YCoord);
+	      }
+	    if (i < pNode->ElNPoints)
+	      fprintf (fileDescriptor, "...");
+	    fprintf (fileDescriptor, "\n");
+	    break;
+	  case LtPath:
+	    fprintf (fileDescriptor, " path:\n");
+	    for (i = 1; i <= Indent; i++)
+	      fprintf (fileDescriptor, " ");
+	    WrPath (pNode->ElFirstPathSeg, 72 - Indent, fileDescriptor);
+	    fprintf (fileDescriptor, "\n");
+	    break;
+	  case LtSymbol:
+	    fprintf (fileDescriptor, " \'%c\'", pNode->ElGraph);
+	    if (pNode->ElGraph == '?')
+	      fprintf (fileDescriptor, " wc=%d",
+		       (int)pNode->ElWideChar);
+	    fprintf (fileDescriptor, "\n");
+	    break;
+	  case LtGraphics:
+	  case LtCompound:
+	    fprintf (fileDescriptor, " \'%c\'\n", pNode->ElGraph);
+	    break;
+	  case LtPageColBreak:
+	    fprintf (fileDescriptor, " Number=%d View=%d",
+		     pNode->ElPageNumber,
+		     pNode->ElViewPSchema);
+	    switch (pNode->ElPageType)
+	      {
+	      case PgComputed:
+		fprintf (fileDescriptor, " Computed page");
+		break;
+	      case PgBegin:
+		fprintf (fileDescriptor, " Begin of element");
+		break;
+	      case PgUser:
+		fprintf (fileDescriptor, " Page put by user");
+		break;
+	      case ColComputed:
+		fprintf (fileDescriptor, " Computed column");
+		break;
+	      case ColBegin:
+		fprintf (fileDescriptor, " First column");
+		break;
+	      case ColUser:
+		fprintf (fileDescriptor, " Column put by user");
+		break;
+	      case ColGroup:
+		fprintf (fileDescriptor, " Grouped column");
+		break;
+	      default:
+		break;
+	      }
+	    fprintf (fileDescriptor, "\n");
+	    break;
+	  case LtReference:
+	    if (pNode->ElReference == NULL)
+	      fprintf (fileDescriptor, " *ElReference=NULL*\n");
+	    else
+	      {
+		fprintf (fileDescriptor, " ");
+		wrRef (pNode->ElReference, fileDescriptor);
+		fprintf (fileDescriptor, "\n");
+	      }
+	    break;
+	  case LtPairedElem:
+	    fprintf (fileDescriptor, "(Id=%d)", pNode->ElPairIdent);
+	    if (pNode->ElOtherPairedEl == NULL)
+	      fprintf (fileDescriptor, " ElOtherPairedEl=NULL");
+	    fprintf (fileDescriptor, "\n");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "ElLeafType ????\n");
+	    break;
+	  }
+      else
+	{
+	  fprintf (fileDescriptor, "\n");
+	  /* element non terminal, on ecrit sa descendance */
+	  f = pNode->ElFirstChild;
+	  while (f != NULL)
+	    {
+	      WrTree (f, Indent + 2, fileDescriptor, premierfils);
+	      if (!premierfils)
+		f = f->ElNext;
+	      else
+		f = NULL;
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
