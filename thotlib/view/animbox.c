@@ -254,16 +254,21 @@ static void SetBaseClipping ()
 /*----------------------------------------------------------------------
   UpdateClipping : Define Area to be recomputed by animation
   ----------------------------------------------------------------------*/
-static void UpdateClipping (PtrAbstractBox pAb)
+static void UpdateClipping (PtrAbstractBox pAb, int w, int h)
 {
-
-  Min (Clipx, pAb->AbEnclosing->AbBox->BxClipX);		    
-  Max (ClipxMax, 
-       (pAb->AbEnclosing->AbBox->BxClipX + pAb->AbEnclosing->AbBox->BxClipW));
-
-  Min (Clipy, pAb->AbEnclosing->AbBox->BxClipY);		    
-  Max (ClipyMax, 
-       (pAb->AbEnclosing->AbBox->BxClipY + pAb->AbEnclosing->AbBox->BxClipH));
+  /*  PtrBox box = pAb->AbEnclosing->AbBox; */
+  PtrBox box = pAb->AbBox;
+  if (box &&
+      (box->BxClipX + box->BxClipW) > 0 &&
+      (box->BxClipY + box->BxClipH) > 0 &&
+      box->BxClipX < w &&
+      box->BxClipY < h)
+    {
+      Min (Clipx, box->BxClipX);		    
+      Max (ClipxMax, (box->BxClipX + box->BxClipW));
+      Min (Clipy, box->BxClipY);		    
+      Max (ClipyMax, (box->BxClipY + box->BxClipH));
+    }
 }
 /*----------------------------------------------------------------------
   interpolate_double_value : Compute a the value corresponding to a time
@@ -1023,27 +1028,42 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 {
   Animated_Element *animated = NULL;
   AnimTime          rel_time;
-  ThotBool          isnotfinished;
+  ThotBool          isnotfinished, willbenotfinished;
   int               animating_state;
   PtrAbstractBox    pAb;
-
+  int               w,h;
+  
   isnotfinished = FALSE;
+  willbenotfinished = FALSE;
   if (El)
     if (El->ElAnimation)
-      {      
-	animated = (Animated_Element *) El->ElAnimation;
-	while (animated)
+      {    
+	pAb = El->ElAbstractBox[0];
+	if (pAb)
 	  {
-	    rel_time = current_time;
-            animating_state = is_animated_now (animated, &rel_time);
-	    if (animating_state == WILL_BE_ANIMATING)
-	      isnotfinished = TRUE;
-	    if (animating_state == ANIMATING)
+
+	    w = FrameTable[Animated_Frame].FrWidth;
+	    h = FrameTable[Animated_Frame].FrHeight;
+	    animated = (Animated_Element *) El->ElAnimation;
+
+	    while (animated)
 	      {
-		pAb = El->ElAbstractBox[0];
-		if (pAb)
+		rel_time = current_time;
+		animating_state = is_animated_now (animated, &rel_time);
+		if (animating_state == WILL_BE_ANIMATING)
 		  {
-		    UpdateClipping (pAb);
+		    willbenotfinished = TRUE;
+		  }
+		if (animating_state == ANIMATING)
+		  {
+		    /* 		pAb = El->ElAbstractBox[0]; */
+		    /* 		if (pAb) */
+		    /* 		  { */
+		    if (!isnotfinished)
+		      {
+			isnotfinished = TRUE;
+			UpdateClipping (pAb, w, h);
+		      }
 		    switch (animated->AnimType)
 		      {
 		      case Color:
@@ -1077,17 +1097,20 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 		      default:
 			break;      
 		      }
-		    ComputeABoundingBox (pAb, Animated_Frame);
-		    UpdateClipping (pAb);
+		    /*  } */
+		    /*Store last animation render success*/
+		    animated->action_time = rel_time;
 		  }
-		isnotfinished = TRUE;
-		/*Store last animation render success*/
-		animated->action_time = rel_time;
+		animated = animated->next;	      
 	      }
-	    animated = animated->next;	      
+	    if (isnotfinished)
+	      {
+		ComputeABoundingBox (pAb, Animated_Frame);
+		UpdateClipping (pAb, w, h);
+	      }
 	  }
       }
-  return isnotfinished;    
+  return (isnotfinished || willbenotfinished);    
 }
 #endif /* _GL */
 /*----------------------------------------------------------------------

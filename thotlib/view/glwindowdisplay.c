@@ -1884,7 +1884,7 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
   h = (double) *yorig + *horig;  
   TotalHeight = (double) FrameTable[frame].FrHeight;  
   count = size;
-  while (count) 
+  while (count > 0) 
     {
       token = (GLint) buffer[size-count]; 
       count--;
@@ -1924,11 +1924,6 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
   *yorig = (int) y;
   *worig = (int) (w - x) + 1;
   *horig = (int) (h - y) + 1;
-
-  /* if (*xorig > 0) */
-/*     *xorig += 1; */
-/*   if (*yorig > 0) */
-/*     *yorig += 1; */
 }
 /*---------------------------------------------------
   GL_NotInFeedbackMode : if all openGL operation are
@@ -1938,6 +1933,9 @@ ThotBool GL_NotInFeedbackMode ()
 {
   return NotFeedBackMode;
 }
+
+#define FEEDBUFFERSIZE 16384
+
 /*---------------------------------------------------
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
@@ -1945,10 +1943,10 @@ ThotBool GL_NotInFeedbackMode ()
   ----------------------------------------------------*/
 void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
-  GLfloat feedBuffer[4096];
+  GLfloat feedBuffer[FEEDBUFFERSIZE];
   GLint   size;
     
-  glFeedbackBuffer (4096, GL_2D, feedBuffer);
+  glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
   NotFeedBackMode = FALSE;  
   glRenderMode (GL_FEEDBACK);
   DisplayBox (box, frame, xmin, xmax, ymin, ymax);
@@ -1956,8 +1954,8 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
   NotFeedBackMode = TRUE;
   if (size > 0)
     {
-      if (size > 4096)
-	size = 4096;
+      if (size > FEEDBUFFERSIZE)
+	size = FEEDBUFFERSIZE;
 
       box->BxClipX = -1;
       box->BxClipY = -1;
@@ -2304,11 +2302,13 @@ ThotBool GL_DrawAll ()
 		      current_time = ComputeAmayaCurrentTime (frame);  
 		      if ((current_time + 1) > 0.0001)
 			{
+			  glDisable (GL_SCISSOR_TEST);
 			  if (Animate_boxes (frame, current_time))
 			    TtaPause (frame);
 			  else
 			    was_animation = TRUE;
 			  FrameTable[frame].LastTime = current_time;
+			  glEnable (GL_SCISSOR_TEST);
 			}
 		      else
 			{
