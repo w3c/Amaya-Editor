@@ -720,6 +720,8 @@ PtrElement          viewRoot;
    freeView = 0;
    assoc = 0;
    assocPresent = FALSE;
+   firstSel = NULL;
+
    if (v == 0)
       /* c'est une vue pour des elements associes */
       {
