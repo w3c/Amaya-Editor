@@ -289,6 +289,17 @@ extern void         TtaInsertElement (ElementType elementType, Document document
 extern void         TtaRemoveTree (Element element, Document document);
 
 /* ----------------------------------------------------------------------
+   TtaSetElementLineNumber
+ 
+   Set the line number of a given element.
+ 
+   Parameter:
+   element: the element.
+   nb: line number of the element.
+   ---------------------------------------------------------------------- */
+extern void         TtaSetElementLineNumber (Element element, int nb);
+
+/* ----------------------------------------------------------------------
    TtaSetAccessRight
 
    Sets the access rights for a given element.  Access rights apply only during
@@ -695,6 +706,19 @@ extern int          TtaSameTypes (ElementType type1, ElementType type2);
 
    ---------------------------------------------------------------------- */
 extern STRING        TtaGetElementLabel (Element element);
+
+/* ----------------------------------------------------------------------
+   TtaGetElementLineNumber
+ 
+   Returns the line number of a given element.
+
+   Parameter:
+   element: the element.
+
+   Return value:
+   line number of the element.
+   ---------------------------------------------------------------------- */
+extern int            TtaGetElementLineNumber (Element element);
 
 /* ----------------------------------------------------------------------
    TtaGetElementVolume
@@ -1190,6 +1214,7 @@ extern void         TtaInsertFirstChild ( /* Element *newElement, Element parent
 extern void         TtaCreateElement ( /* ElementType elementType, Document document */ );
 extern void         TtaInsertElement ( /* ElementType elementType, Document document */ );
 extern void         TtaRemoveTree ( /* Element element, Document document */ );
+extern void         TtaSetElementLineNumber ( /* Element element, int nb */ );
 extern void         TtaSetAccessRight ( /* Element element, AccessRight right, Document document */ );
 extern void         TtaHolophrastElement ( /* Element element, ThotBool holophrast, Document document */ );
 extern void         TtaSetMandatoryInsertion ( /* ThotBool on, Document document */ );
@@ -1215,6 +1240,7 @@ extern STRING       TtaGetElementTypeName ( /* ElementType elementType */ );
 extern void         TtaGiveTypeFromName ( /* ElementType *elementType, char *name */ );
 extern int          TtaSameTypes ( /* ElementType type1, ElementType type2 */ );
 extern STRING       TtaGetElementLabel ( /* Element element */ );
+extern int          TtaGetElementLineNumber ( /* Element element */ );
 extern int          TtaGetElementVolume ( /* Element element */ );
 extern int          TtaIsConstant ( /* ElementType elementType */ );
 extern int          TtaIsLeaf ( /* ElementType elementType */ );

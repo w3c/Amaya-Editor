@@ -566,7 +566,7 @@ void *context;
 				 DocumentMeta[doc]->method);
 		}
 	      /* show the target element in all views */
-	      for (view = 1; view < 4; view++)
+	      for (view = 1; view < 6; view++)
 		if (TtaIsViewOpened (targetDocument, view))
 		  TtaShowElement (targetDocument, view, elFound, 0);
 	    }
@@ -1048,7 +1048,9 @@ Document       doc;
 #endif /* __STDC__ */
 {
   STRING             tempdocument;
+  Document	     sourceDoc;
   CHAR_T               htmlErrFile [80];
+  int			i;
 
   if (doc == 0)
     return;
@@ -1079,14 +1081,29 @@ Document       doc;
       if (DocumentTypes[doc] == docImage)
 	DocumentTypes[doc] = docHTML;
       else if (DocumentTypes[doc] == docImageRO)
-	DocumentTypes[doc] = docReadOnly;
+	DocumentTypes[doc] = docHTMLRO;
 
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
-      if (DocumentMeta[doc]->form_data)
-	TtaFreeMemory (DocumentMeta[doc]->form_data);
-      TtaFreeMemory (DocumentMeta[doc]);
-      DocumentMeta[doc] = NULL;
+      if (DocumentMeta[doc])
+	{
+        if (DocumentMeta[doc]->form_data)
+	  TtaFreeMemory (DocumentMeta[doc]->form_data);
+        TtaFreeMemory (DocumentMeta[doc]);
+        DocumentMeta[doc] = NULL;
+	}
+      if (DocumentSource[doc])
+	{
+	sourceDoc = DocumentSource[doc];
+	TtcCloseDocument (sourceDoc, 1);
+	FreeDocumentResource (sourceDoc);
+        DocumentSource[doc] = 0;
+	}
+      /* is this document the source of another document? */
+      for (i = 1; i < DocumentTableLength; i++)
+         if (DocumentURLs[i] != NULL)
+	    if (DocumentSource[i] == doc)
+	       DocumentSource[i] = 0;
       RemoveDocCSSs (doc);
       /* avoid to free images of backup documents */
       if (BackupDocument != doc)
@@ -1551,6 +1568,161 @@ Document            doc
 }
 
 /*----------------------------------------------------------------------
+   LineNumberOfEl
+   Returns the line number (position in the source file) of element el.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int LineNumberOfEl (Element el)
+#else  /* __STDC__ */
+static int LineNumberOfEl (el)
+Element	el;
+#endif /* __STDC__ */
+{
+   int		ln;
+   Element	child, sibling, uncle, ancestor;
+
+   ln = TtaGetElementLineNumber (el);
+   if (ln == 0)
+      /* there is no line number associated with this element: the element
+         does not exist in the source file */
+      {
+      /* get the first line number associated with its descendants */
+      child = TtaGetFirstChild (el);
+      while (child && ln == 0)
+	 {
+	 ln = LineNumberOfEl (child);
+	 if (ln == 0)
+	    TtaNextSibling (&child);
+	 }
+      if (ln == 0)
+         /* Descendants don't have any line number. Get the first line number
+	    associated with its following siblings */
+	 {
+	 sibling = el;
+	 do
+	    {
+	    TtaNextSibling (&sibling);
+	    if (sibling)
+	       ln = LineNumberOfEl (sibling);
+	    }
+	 while (sibling && ln == 0);
+	 }
+      if (ln == 0)
+         /* Siblings don't have any line number. Get the first line number
+	    associated with the following siblings of its ancestors */
+	 {
+	 ancestor = el;
+	 do
+	    {
+	    ancestor = TtaGetParent (ancestor);
+	    if (ancestor)
+	       {
+	       uncle = ancestor;
+	       do
+		  {
+	          TtaNextSibling (&uncle);
+	          if (uncle)
+		     ln = LineNumberOfEl (uncle);
+		  }
+	       while (uncle && ln == 0);
+	       }
+	    }
+	 while (ancestor && ln == 0);
+	 }
+      }
+   return ln;
+}
+
+/*----------------------------------------------------------------------
+   SynchronizeSourceView
+   A new element has been selected. If the Source view is open,
+   synchronize it with the new selection.      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SynchronizeSourceView (NotifyElement * event)
+#else  /* __STDC__ */
+void                SynchronizeSourceView (event)
+NotifyElement* event;
+#endif				/* __STDC__ */
+{
+   Element             firstSel, el, child, prevChild, otherEl;
+   int                 firstChar, lastChar, line, i, view;
+   Document	       doc, otherDoc;
+
+   doc = event->document;
+   /* first, get the other Thot document to be synchronized with the one
+      where the user clicked */
+   otherDoc = 0;
+   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
+      /* the user clicked on a HTML document, the other doc is the
+         corresponding source document */
+      otherDoc = DocumentSource[doc];
+   else if (DocumentTypes[doc] == docSource ||
+	    DocumentTypes[doc] == docSourceRO)
+      /* the user clicked on a source document, the other doc is the
+         corresponding HTML document */
+      {
+      for (i = 1; i < DocumentTableLength; i++)
+         if (DocumentURLs[i] != NULL)
+	    if (DocumentTypes[i] == docHTML ||
+		DocumentTypes[i] == docHTMLRO)
+	       if (DocumentSource[i] == doc)
+		  {
+	          otherDoc = i;
+		  i = DocumentTableLength;
+		  }
+      }
+   if (otherDoc)
+      /* looks for the element in the other document that corresponds to
+         the clicked element */
+      {
+      TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
+      if (firstSel)
+	 {
+	 otherEl = NULL;
+	 /* Get the line number associated with the clicked element */
+	 line = LineNumberOfEl (firstSel);
+	 if (line == 0)
+	    return;
+	 /* look for an element with the same line number in the other doc */
+	 /* line numbers are increasing in document order */
+	 el = TtaGetMainRoot (otherDoc);
+	 do
+	    {
+	    if (TtaGetElementLineNumber (el) >= line)
+	       /* that's the right element */
+	       otherEl = el;
+	    else
+	       {
+	       child = TtaGetFirstChild (el);
+	       if (!child)
+		  otherEl = el;
+	       else
+		  {
+		  do
+		     {
+		     el = child;
+		     TtaNextSibling (&child);
+		     }
+		  while (child && LineNumberOfEl (child) <= line);
+	          }
+	       }
+	    }
+	 while (!otherEl && el);
+
+	 if (otherEl)
+	    /* element found. Scroll all views where it appears to show
+	       it at the top of the window */
+	    {
+	    for (view = 1; view < 6; view++)
+	       if (TtaIsViewOpened (otherDoc, view))
+		  TtaShowElement (otherDoc, view, otherEl, 0);
+	    }
+	 }
+      }
+}
+
+/*----------------------------------------------------------------------
    A new element has been selected. Update menus accordingly.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1570,6 +1742,7 @@ NotifyElement      *event;
 	SelectionDoc = event->document;
      }
    UpdateContextSensitiveMenus (event->document);
+   SynchronizeSourceView (event);
    TtaSelectView (SelectionDoc, 1);
 }
 #ifdef IV

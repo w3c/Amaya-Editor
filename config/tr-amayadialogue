@@ -130,71 +130,72 @@
 129 Alternatif gösterim
 130 Baðlantýlarý göster
 131 Ýçindekileri göster
-132 Karakter tarzý...
-133 Renkler...
-134 Biçim...
-135 Arkaplan görüntüsü...
-136 Kural yarat...
-137 \'class\' uygula...
-138 Tarzý tanýmlarý
-139 **Link a new one...
-140 **Open...
-141 **Disable...
-142 **Enable...
-143 **Remove...
-144 Bilgi türü
-145 Vurgu
-146 Kuvvetli
-147 Cite
-148 Taným
-149 Kod
-150 Deðiþken
-151 Örnek
-152 Tuþtakýmý
-153 **Abbreviation
-154 **Acronym
-155 **Insertion
-156 **Deletion
-157 Karakter birimi
-158 Ýtalik
-159 Kalýn
-160 Teletype
-161 Büyük
-162 Küçük
-163 Alt
-164 Üst
-165 **Quotation
-166 **BDO
-167 Bölüm numaralandýrmasý
-168 Kitap yap
-169 **Show log file
-170 **Preferences
-171 **General...
-172 **Publishing...
-173 **Cache...
-174 **Proxy...
-175 **Colors...
-176 **Geometry...
-177 **Language Negotiation...
-178 **Profile...
-179 **Templates...
-180 Amaya hakkýnda
-181 **About Amaya at W3C
-182 Tarama
-183 Seçme
-184 Arama
-185 Görünümler
-186 Birim yaratma
-187 Baðlantýlar
-188 Yeniden yapýlandýrma
-189 Tablolar
-190 Matematik
-191 Görüntü haritalarý
-192 Tarz tanýmlarý
-193 Özellikler
-194 Yazým hatalarý aranýyor
-195 Sayfa yerleþtirme
-196 Bastýrma
-197 Numaralandýrmasý
-198 Kitap oluþturma
-199 Amaya yapýlandýrmasý
+132 **Show source
+133 Karakter tarzý...
+134 Renkler...
+135 Biçim...
+136 Arkaplan görüntüsü...
+137 Kural yarat...
+138 \'class\' uygula...
+139 Tarzý tanýmlarý
+140 **Link a new one...
+141 **Open...
+142 **Disable...
+143 **Enable...
+144 **Remove...
+145 Bilgi türü
+146 Vurgu
+147 Kuvvetli
+148 Cite
+149 Taným
+150 Kod
+151 Deðiþken
+152 Örnek
+153 Tuþtakýmý
+154 **Abbreviation
+155 **Acronym
+156 **Insertion
+157 **Deletion
+158 Karakter birimi
+159 Ýtalik
+160 Kalýn
+161 Teletype
+162 Büyük
+163 Küçük
+164 Alt
+165 Üst
+166 **Quotation
+167 **BDO
+168 Bölüm numaralandýrmasý
+169 Kitap yap
+170 **Show log file
+171 **Preferences
+172 **General...
+173 **Publishing...
+174 **Cache...
+175 **Proxy...
+176 **Colors...
+177 **Geometry...
+178 **Language Negotiation...
+179 **Profile...
+180 **Templates...
+181 Amaya hakkýnda
+182 **About Amaya at W3C
+183 Tarama
+184 Seçme
+185 Arama
+186 Görünümler
+187 Birim yaratma
+188 Baðlantýlar
+189 Yeniden yapýlandýrma
+190 Tablolar
+191 Matematik
+192 Görüntü haritalarý
+193 Tarz tanýmlarý
+194 Özellikler
+195 Yazým hatalarý aranýyor
+196 Sayfa yerleþtirme
+197 Bastýrma
+198 Numaralandýrmasý
+199 Kitap oluþturma
+200 Amaya yapýlandýrmasý

@@ -6,6 +6,7 @@ DEFAULT
 	DocSave.Pre -> DocumentToSave;
 	PRuleCreate.Pre -> ChangePRule;
 	PRuleModify.Pre -> ChangePRule;
+	ElemSelect.Post -> SynchronizeSourceView;
    END;
 
 END

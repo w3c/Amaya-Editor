@@ -130,71 +130,72 @@
 129 Show alternate
 130 Show links
 131 Show table of contents
-132 Character style...
-133 Colors...
-134 Format...
-135 Background image...
-136 Create rule...
-137 Apply class...
-138 Style sheets
-139 Link...
-140 Open...
-141 Disable...
-142 Enable...
-143 Remove...
-144 Information type
-145 Emphasis
-146 Strong
-147 Cite
-148 Definition
-149 Code
-150 Variable
-151 Sample
-152 Keyboard
-153 Abbreviation
-154 Acronym
-155 Insertion
-156 Deletion
-157 Character element
-158 Italic
-159 Bold
-160 Teletype
-161 Big
-162 Small
-163 Subscript
-164 Superscript
-165 Quotation
-166 BiDi override
-167 Section numbering
-168 Make book
-169 Show log file
-170 Preferences
-171 General...
-172 Publishing...
-173 Cache...
-174 Proxy...
-175 Colors...
-176 Geometry...
-177 Language Negotiation...
-178 Profile...
-179 Templates...
-180 About Amaya
-181 About Amaya at W3C
-182 Browsing
-183 Selecting
-184 Searching
-185 Views
-186 Creating elements
-187 Links
-188 Restructuring
-189 Tables
-190 Math
-191 Image maps
-192 Style sheets
-193 Attributes
-194 Spell Checking
-195 Publishing
-196 Printing
-197 Numbering
-198 Making books
-199 Configuring Amaya
+132 Show source
+133 Character style...
+134 Colors...
+135 Format...
+136 Background image...
+137 Create rule...
+138 Apply class...
+139 Style sheets
+140 Link...
+141 Open...
+142 Disable...
+143 Enable...
+144 Remove...
+145 Information type
+146 Emphasis
+147 Strong
+148 Cite
+149 Definition
+150 Code
+151 Variable
+152 Sample
+153 Keyboard
+154 Abbreviation
+155 Acronym
+156 Insertion
+157 Deletion
+158 Character element
+159 Italic
+160 Bold
+161 Teletype
+162 Big
+163 Small
+164 Subscript
+165 Superscript
+166 Quotation
+167 BiDi override
+168 Section numbering
+169 Make book
+170 Show log file
+171 Preferences
+172 General...
+173 Publishing...
+174 Cache...
+175 Proxy...
+176 Colors...
+177 Geometry...
+178 Language Negotiation...
+179 Profile...
+180 Templates...
+181 About Amaya
+182 About Amaya at W3C
+183 Browsing
+184 Selecting
+185 Searching
+186 Views
+187 Creating elements
+188 Links
+189 Restructuring
+190 Tables
+191 Math
+192 Image maps
+193 Style sheets
+194 Attributes
+195 Spell Checking
+196 Publishing
+197 Printing
+198 Numbering
+199 Making books
+200 Configuring Amaya

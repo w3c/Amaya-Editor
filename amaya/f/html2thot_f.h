@@ -38,6 +38,7 @@ extern void CreateAttrIntSize ( STRING buffer,
                                 Document doc );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
+extern void SetElemLineNumber ( Element el );
 extern CHAR_T GetNextInputChar ( FILE *infile,
                                  int *index,
                                  ThotBool *endOfFile );
@@ -90,6 +91,7 @@ extern void CreateAttrIntSize (/* STRING buffer,
                                   Document doc */);
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
+extern void SetElemLineNumber (/* Element el */);
 extern CHAR_T GetNextInputChar (/* FILE *infile,
                                    int *index,
                                    ThotBool *endOfFile */);

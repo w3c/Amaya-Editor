@@ -249,13 +249,15 @@ THOT_EXPORT ThotBool     HTMLErrorsFound;
 typedef enum
 {
   docHTML,
-  docReadOnly,
+  docHTMLRO,
   docText,
   docTextRO,
   docImage,
   docImageRO,
   docCSS,
-  docCSSRO
+  docCSSRO,
+  docSource,
+  docSourceRO
 } DocumentType;
 
 
@@ -267,18 +269,19 @@ typedef struct _DocumentMetaDataElement
 } DocumentMetaDataElement;
 
 #define DocumentTableLength 10
+/* URL of each loaded document */
 THOT_EXPORT STRING     DocumentURLs[DocumentTableLength];
 /* Any formdata associated with a URL */
 THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
-/* TRUE if the document is displayed by help commands */
+/* Type of document */
 THOT_EXPORT DocumentType DocumentTypes[DocumentTableLength];
-/* The whole document is loaded when the corresponding value
-   in FilesLoading is equal to 0 */
+/* identifier of the document displaying the source code */
+THOT_EXPORT Document DocumentSource[DocumentTableLength];
+/* The whole document is loaded when the corresponding entry in FilesLoading is 0 */
 THOT_EXPORT int          FilesLoading[DocumentTableLength];
-/* Gives the status (error, success) of the download of the objects of
-   a document */
-
+/* Status (error, success) of the download of the objects of a document */
 THOT_EXPORT int          DocNetworkStatus[DocumentTableLength];
+
 THOT_EXPORT Document     W3Loading;	/* the document being loaded */
 THOT_EXPORT Document     BackupDocument;	/* the current backup */
 

@@ -166,6 +166,7 @@ MENUS
 	view:1 Views button:BShowAlternate -> ShowAlternate;
 	view:1 Views button:BShowLinks -> ShowLinks;
 	view:1 Views button:BShowToC -> ShowToC;
+	view:1 Views button:BShowSource -> ShowSource;
 
         view:1 Style button:BCharacterStyle -> TtcChangeCharacters;
         view:1 Style button:BColors -> TtcChangeColors;

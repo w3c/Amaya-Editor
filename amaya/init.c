@@ -710,7 +710,7 @@ Document            doc;
 #endif /* _WINDOWS */
        /* change the document status */
        if (DocumentTypes[document] == docHTML)
-	 DocumentTypes[document] = docReadOnly;
+	 DocumentTypes[document] = docHTMLRO;
        else if (DocumentTypes[document] == docImage)
 	 DocumentTypes[document] = docImageRO;
        else if (DocumentTypes[document] == docCSS)
@@ -837,7 +837,7 @@ Document            doc;
 #endif /* _WINDOWS */
 
        /* change the document status */
-       if (DocumentTypes[document] == docReadOnly)
+       if (DocumentTypes[document] == docHTMLRO)
 	 DocumentTypes[document] = docHTML;
        else if (DocumentTypes[document] == docImageRO)
 	 DocumentTypes[document] = docImage;
@@ -1450,7 +1450,7 @@ ThotBool     logFile;
   old_doc = doc;		/* previous document */
   if (doc != 0 && !TtaIsDocumentModified (doc))
     {
-      if (DocumentTypes[doc] == docReadOnly || DocumentTypes[doc] == docHTML)
+      if (DocumentTypes[doc] == docHTMLRO || DocumentTypes[doc] == docHTML)
 	{
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
@@ -1495,7 +1495,8 @@ ThotBool     logFile;
 
    /* open the main view */
    if (docType == docText || docType == docTextRO ||
-       docType == docCSS || docType == docCSSRO)
+       docType == docCSS || docType == docCSSRO ||
+       docType == docSource || docType == docSourceRO)
      doc = TtaNewDocument (TEXT("TextFile"), docname);
    else
      doc = TtaNewDocument (TEXT("HTML"), docname);
@@ -1507,7 +1508,8 @@ ThotBool     logFile;
    else if (doc > 0)
      {
        if (docType == docText || docType == docTextRO||
-	   docType == docCSS || docType == docCSSRO)
+	   docType == docCSS || docType == docCSSRO ||
+           docType == docSource || docType == docSourceRO)
 	   TtaSetPSchema (doc, TEXT("TextFileP"));
        else
 	 {
@@ -1674,7 +1676,7 @@ ThotBool     logFile;
    reinitialized = FALSE;
    if (docType == docImage)        /* -------->loading an image */
      {
-       if (DocumentTypes[doc] == docReadOnly ||
+       if (DocumentTypes[doc] == docHTMLRO ||
 	   DocumentTypes[doc] == docTextRO ||
 	   DocumentTypes[doc] == docCSSRO)
 	 {
@@ -1700,7 +1702,7 @@ ThotBool     logFile;
      }
    else if (docType == docCSS)      /* -------->loading a CSS file */
      {
-       if (DocumentTypes[doc] == docReadOnly ||
+       if (DocumentTypes[doc] == docHTMLRO ||
 	   DocumentTypes[doc] == docImageRO)
 	 {
 	   /* we need to update menus and buttons */
@@ -1730,7 +1732,7 @@ ThotBool     logFile;
      }
    else if (docType == docText)      /* -------->loading a Text file */
      {
-       if (DocumentTypes[doc] == docReadOnly ||
+       if (DocumentTypes[doc] == docHTMLRO ||
 	   DocumentTypes[doc] == docImageRO)
 	 {
 	   /* we need to update menus and buttons */
@@ -1758,10 +1760,10 @@ ThotBool     logFile;
        /* document in ReadOnly mode */
        DocumentTypes[doc] = docTextRO;
      }
-   else if (docType == docReadOnly) /* -------->loading HTML in ReadOnly */
+   else if (docType == docHTMLRO) /* -------->loading HTML in ReadOnly */
      {
        /* document in ReadOnly mode */
-       DocumentTypes[doc] = docReadOnly;
+       DocumentTypes[doc] = docHTMLRO;
      }
    else 			/* -------->loading a HTML file */
      {
@@ -1772,7 +1774,7 @@ ThotBool     logFile;
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
 	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docReadOnly;
+	   DocumentTypes[doc] = docHTMLRO;
 	 }
        else if (DocumentTypes[doc] == docText ||
 		DocumentTypes[doc] == docImage ||
@@ -1787,7 +1789,7 @@ ThotBool     logFile;
 
    if (reinitialized || !opened)
      /* now update menus and buttons according to the document status */
-     if (DocumentTypes[doc] == docReadOnly ||
+     if (DocumentTypes[doc] == docHTMLRO ||
 	 DocumentTypes[doc] == docImageRO ||
 	 DocumentTypes[doc] == docText ||
 	 DocumentTypes[doc] == docTextRO ||
@@ -1817,7 +1819,9 @@ ThotBool     logFile;
 	 if (DocumentTypes[doc] == docText ||
 	     DocumentTypes[doc] == docTextRO ||
 	     DocumentTypes[doc] == docCSS ||
-	     DocumentTypes[doc] == docCSSRO)
+	     DocumentTypes[doc] == docCSSRO ||
+	     DocumentTypes[doc] == docSource ||
+	     DocumentTypes[doc] == docSourceRO)
 	   {
 	     TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	     TtaSetItemOff (doc, 1, Views, TShowTargets);
@@ -1825,6 +1829,7 @@ ThotBool     logFile;
 	     TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	     TtaSetItemOff (doc, 1, Views, BShowLinks);
 	     TtaSetItemOff (doc, 1, Views, BShowToC);
+	     TtaSetItemOff (doc, 1, Views, BShowSource);
 	   }
 	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
 	 TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
@@ -1888,6 +1893,7 @@ ThotBool     logFile;
 	     TtaSetItemOn (doc, 1, Views, BShowAlternate);
 	     TtaSetItemOn (doc, 1, Views, BShowLinks);
 	     TtaSetItemOn (doc, 1, Views, BShowToC);
+	     TtaSetItemOn (doc, 1, Views, BShowSource);
 
 	     TtaSetMenuOn (doc, 1, Types);
 	     TtaSetMenuOn (doc, 1, Links);
@@ -2208,7 +2214,7 @@ ThotBool	    history;
 	      ActiveTransfer (newdoc);
 	    }
 	  else if (method != CE_INIT 
-		   || (docType != docHTML && docType != docReadOnly))
+		   || (docType != docHTML && docType != docHTMLRO))
 	    newdoc = InitDocView (doc, documentname, docType, FALSE);
 	  else
 	    newdoc = doc;
@@ -2316,6 +2322,7 @@ ThotBool	    history;
       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
       DocumentMeta[newdoc]->method = (ClickEvent) method;
+      DocumentSource[newdoc] = 0;
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
@@ -2341,7 +2348,9 @@ ThotBool	    history;
       plainText = (DocumentTypes[newdoc] == docText ||
 		   DocumentTypes[newdoc] == docTextRO ||
 		   DocumentTypes[newdoc] == docCSS ||
-		   DocumentTypes[newdoc] == docCSSRO);
+		   DocumentTypes[newdoc] == docCSSRO ||
+		   DocumentTypes[newdoc] == docSource ||
+		   DocumentTypes[newdoc] == docSourceRO);
       /* Now we forget the method CE_INIT. It's a standard method */
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
@@ -2413,7 +2422,7 @@ void *context;
        res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, 
 			       documentname, content_type, FALSE);
 	W3Loading = 0;		/* loading is complete now */
-	if (DocumentTypes[res] == docReadOnly)
+	if (DocumentTypes[res] == docHTMLRO)
 	  SetHTMLReadOnly (res);
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
@@ -2486,7 +2495,7 @@ View                view;
 
    if (!IsW3Path (pathname) && !TtaFileExist (pathname))
      {
-       /* Free Memory ***/
+       /* Free Memory */
        TtaFreeMemory (pathname);
        TtaFreeMemory (documentname);
        /* cannot reload this document */
@@ -2727,6 +2736,51 @@ int                 delta;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                ShowSource (Document document, View view)
+#else
+void                ShowSource (document, view)
+Document            document;
+View                view;
+#endif
+{
+   STRING       tempdocument, s;
+   CHAR_T	documentname[MAX_LENGTH];
+   CHAR_T	tempdir[MAX_LENGTH];
+   Document	sourceDoc;
+
+   if (DocumentSource[document])
+     TtaRaiseView (DocumentSource[document], 1);
+   else
+     {
+     tempdocument = TtaAllocString (MAX_LENGTH);   
+     if (IsW3Path (DocumentURLs[document]))
+        tempdocument = GetLocalPath (document, DocumentURLs[document]);
+     else
+        ustrcpy (tempdocument, DocumentURLs[document]);
+     TtaExtractName (tempdocument, tempdir, documentname);
+     sourceDoc = InitDocView (0, documentname, docSource, FALSE);   
+     if (sourceDoc > 0)
+        {
+        DocumentSource[document] = sourceDoc;
+        s = TtaStrdup (DocumentURLs[document]);
+        DocumentURLs[sourceDoc] = s;
+        DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+        DocumentMeta[sourceDoc]->form_data = NULL;
+        DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
+        DocumentTypes[sourceDoc] = docSource;
+        DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
+        StartParser (sourceDoc, tempdocument, documentname, tempdir,
+		     tempdocument, TRUE);
+        TtaSetItemOff (sourceDoc, 1, File, BTemplate);
+        /***** TtaShowElement (sourceDoc, i, el, 0); ******/
+        }
+     TtaFreeMemory (tempdocument);
+     }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                ShowStructure (Document document, View view)
 #else
 void                ShowStructure (document, view)
@@ -2754,7 +2808,7 @@ View                view;
 	 {
 	   TtcSwitchButtonBar (document, structView);
 	   TtcSwitchCommands (document, structView);
-	   if (DocumentTypes[document] == docReadOnly ||
+	   if (DocumentTypes[document] == docHTMLRO ||
 	       DocumentTypes[document] == docImageRO)
 	     {
 	       TtaSetItemOff (document, structView, Edit_, BCut);
@@ -2781,7 +2835,7 @@ View                view;
 	 {
 	   TtcSwitchButtonBar (document, mathView);
 	   TtcSwitchCommands (document, mathView);
-	   if (DocumentTypes[document] == docReadOnly ||
+	   if (DocumentTypes[document] == docHTMLRO ||
 	       DocumentTypes[document] == docImageRO)
 	     {
 	       TtaSetItemOff (document, mathView, Edit_, BCut);
@@ -2809,7 +2863,7 @@ View                view;
 	 {
 	   TtcSwitchButtonBar (document, graphView);
 	   TtcSwitchCommands (document, graphView);
-	   if (DocumentTypes[document] == docReadOnly ||
+	   if (DocumentTypes[document] == docHTMLRO ||
 	       DocumentTypes[document] == docImageRO)
 	     {
 	       TtaSetItemOff (document, graphView, Edit_, BCut);
@@ -2854,7 +2908,7 @@ View                view;
 	  {
 	    TtcSwitchButtonBar (document, altView);
 	    TtcSwitchCommands (document, altView);
-	    if (DocumentTypes[document] == docReadOnly ||
+	    if (DocumentTypes[document] == docHTMLRO ||
 		DocumentTypes[document] == docImageRO)
 	      {
 		TtaSetItemOff (document, altView, Edit_, BCut);
@@ -2897,7 +2951,7 @@ View                view;
 	  {
 	    TtcSwitchButtonBar (document, linksView);
 	    TtcSwitchCommands (document, linksView);
-	    if (DocumentTypes[document] == docReadOnly ||
+	    if (DocumentTypes[document] == docHTMLRO ||
 		DocumentTypes[document] == docImageRO)
 	      {
 		TtaSetItemOff (document, linksView, Edit_, BCut);
@@ -2941,7 +2995,7 @@ View                view;
 	  {
 	    TtcSwitchButtonBar (document, tocView);
 	    TtcSwitchCommands (document, tocView);
-	    if (DocumentTypes[document] == docReadOnly ||
+	    if (DocumentTypes[document] == docHTMLRO ||
 		DocumentTypes[document] == docImageRO)
 	      {
 		TtaSetItemOff (document, tocView, Edit_, BCut);
@@ -3127,7 +3181,7 @@ void *context;
 	 {
 	   if (DocumentURLs[newdoc] == NULL)
 	     {
-	       /* save the document name into the document table @@@ */
+	       /* save the document name into the document table */
 	       i = ustrlen (pathname) + 1;
 	       s = TtaAllocString (i);
 	       ustrcpy (s, pathname);
@@ -3143,6 +3197,7 @@ void *context;
 	       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
 	       DocumentMeta[newdoc]->method = method;
+	       DocumentSource[newdoc] = 0;
 	       ResetStop(newdoc);
 	     }
 	   W3Loading = 0;	/* loading is complete now */
@@ -3178,7 +3233,7 @@ void *context;
    if (form_data)
      TtaFreeMemory (form_data);
    TtaFreeMemory (ctx);
-   if (DocumentTypes[newdoc] == docReadOnly)
+   if (DocumentTypes[newdoc] == docHTMLRO)
      SetHTMLReadOnly (newdoc);
 }
 
@@ -3326,7 +3381,7 @@ void               *ctx_cbf;
 	       if (CE_event == CE_LOG)
 		   newdoc = InitDocView (doc, documentname, docTextRO, TRUE);
 	       else if (CE_event == CE_HELP)
-		   newdoc = InitDocView (doc, documentname, docReadOnly, FALSE);
+		   newdoc = InitDocView (doc, documentname, docHTMLRO, FALSE);
 	       else
 		   newdoc = InitDocView (doc, documentname, docHTML, FALSE);
 	       if (newdoc == 0)
@@ -4045,7 +4100,6 @@ STRING           docname;
 DocumentType     docType;
 #endif
 
-
 {
   CHAR_T              tempfile[MAX_LENGTH];
   int                 newdoc, len;
@@ -4082,6 +4136,7 @@ DocumentType     docType;
 	  len = ustrlen (docname) + 1;
 	  DocumentURLs[newdoc] = TtaAllocString (len);
 	  ustrcpy (DocumentURLs[newdoc], docname);
+	  DocumentSource[newdoc] = 0;
 	  TtaSetTextZone (newdoc, 1, 1, docname);
 	  /* change its directory name */
 	  TtaSetDocumentDirectory (newdoc, DirectoryName);
@@ -4151,6 +4206,7 @@ int              modified;
 	  len = ustrlen (docname) + 1;
 	  DocumentURLs[newdoc] = TtaAllocString (len);
 	  ustrcpy (DocumentURLs[newdoc], docname);
+	  DocumentSource[newdoc] = 0;
 	  TtaSetTextZone (newdoc, 1, 1, docname);
 	  /* change its directory name */
 	  TtaSetDocumentDirectory (newdoc, DirectoryName);
@@ -4558,6 +4614,7 @@ NotifyEvent        *event;
        /* initialize document table */
        DocumentURLs[i] = NULL;
        DocumentTypes[i] = docHTML;
+       DocumentSource[i] = 0;
        DocumentMeta[i] = NULL;
        /* initialize history */
        InitDocHistory (i);

@@ -279,6 +279,7 @@ Language lang;
   elType = TtaGetElementType (currentElement);
   elType.ElTypeNum = 1;	/* Text element */
   newElement = TtaNewElement (currentDocument, elType);
+  SetElemLineNumber (newElement);
   XMLInsertElement (newElement);
   TtaSetTextContent (newElement, text, lang, currentDocument);
   currentElement = newElement;
@@ -621,6 +622,7 @@ CHAR_T                c;
        else
 	  {
 	  newElement = TtaNewElement (currentDocument, elType);
+	  SetElemLineNumber (newElement);
 	  XMLInsertElement (newElement);
 	  currentElement = newElement;
           currentElementClosed = FALSE;
@@ -1196,17 +1198,21 @@ CHAR_T                c;
    else
      {
        commentEl = TtaNewElement (currentDocument, elType);
+       SetElemLineNumber (commentEl);
        XMLInsertElement (commentEl);
        /* create a XMLcomment_line element as the first child of */
        /* element XMLcomment */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName, &cont, currentDocument);
+       GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName,
+			  &cont, currentDocument);
        commentLineEl = TtaNewElement (currentDocument, elType);
+       SetElemLineNumber (commentLineEl);
        TtaInsertFirstChild (&commentLineEl, commentEl, currentDocument);
        /* create a TEXT element as the first child of element XMLcomment_line */
        elType.ElTypeNum = 1;
        commentText = TtaNewElement (currentDocument, elType);
+       SetElemLineNumber (commentText);
        TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
        TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage, currentDocument);
        currentElement = commentEl;
@@ -1245,14 +1251,17 @@ UCHAR_T       c;
 	 elType.ElTypeNum = 0;
 	 GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName, &cont, currentDocument);
 	 commentLineEl = TtaNewElement (currentDocument, elType);
+         SetElemLineNumber (commentLineEl);
 	 /* inserts the new XMLcomment_line after the previous one */
 	 TtaInsertSibling (commentLineEl, TtaGetParent (commentText), FALSE,
 			   currentDocument);
 	 /* create a TEXT element as the first child of element XMLcomment_line */
 	 elType.ElTypeNum = 1;
 	 commentText = TtaNewElement (currentDocument, elType);
+         SetElemLineNumber (commentText);
 	 TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
-	 TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage, currentDocument);
+	 TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage,
+			    currentDocument);
        }
      else
        {

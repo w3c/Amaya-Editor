@@ -1286,6 +1286,31 @@ Document            document;
 
 
 /* ----------------------------------------------------------------------
+   TtaSetElementLineNumber
+
+   Set the line number of a given element.
+
+   Parameter:
+   element: the element.
+   nb: line number of the element.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSetElementLineNumber (Element element, int nb)
+#else  /* __STDC__ */
+void                TtaSetElementLineNumber (element, nb)
+Element             element;
+int		    int;
+#endif /* __STDC__ */
+{
+   UserErrorCode = 0;
+   if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+   else
+	((PtrElement) element)->ElLineNb = nb;
+}
+
+
+/* ----------------------------------------------------------------------
    TtaSetAccessRight
 
    Sets the access rights for a given element.  Access rights apply only during
@@ -2234,6 +2259,33 @@ Element             element;
    else
 	ustrncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
    return nameBuffer;
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetElementLineNumber
+
+   Returns the line number of a given element.
+   Parameter:
+   element: the element.
+   Return value:
+   line number of the element.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 TtaGetElementLineNumber (Element element)
+#else  /* __STDC__ */
+int                 TtaGetElementLineNumber (element)
+Element             element;
+#endif /* __STDC__ */
+{
+   int	lineNb;
+
+   UserErrorCode = 0;
+   lineNb = 0;
+   if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+   else
+	lineNb = ((PtrElement) element)->ElLineNb;
+   return lineNb;
 }
 
 /* ----------------------------------------------------------------------

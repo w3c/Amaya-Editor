@@ -1711,6 +1711,9 @@ static STRING       docURL = NULL;	  /* path or URL of the document */
 static UCHAR_T      inputBuffer[MaxBufferLength];
 static int          LgBuffer = 0;	  /* actual length of text in input
 					     buffer */
+static int	    BufferLineNumber = 0; /* line number in the source file of
+					     the beginning of the text
+					     contained in the buffer */
 
 /* information about the Thot document under construction */
 static Document     theDocument = 0;	  /* the Thot document */
@@ -2665,6 +2668,7 @@ static void         TextToDocument ()
 		  elType.ElSSchema = DocumentSSchema;
 		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 		  elText = TtaNewElement (theDocument, elType);
+		  TtaSetElementLineNumber (elText, BufferLineNumber);
 		  InsertElement (&elText);
 		  lastElementClosed = TRUE;
 		  MergeText = TRUE;
@@ -2726,10 +2730,12 @@ UCHAR_T               c;
 	  LgBuffer = 0;
 	}
 
+      if (LgBuffer == 0)
+	BufferLineNumber = NumberOfLinesRead;
+
       if (len == 1)
-	{
 	inputBuffer[LgBuffer++] = c;
-      }else
+      else
 	/* HT */
 	do
 	  {
@@ -2823,6 +2829,7 @@ Element             parent;
 	      newElType.ElSSchema = DocumentSSchema;
 	      newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	      newEl = TtaNewElement (theDocument, newElType);
+	      TtaSetElementLineNumber (newEl, NumberOfLinesRead);
 	      /* insert the new Pseudo_paragraph element */
 	      InsertElement (&newEl);
 	      if (newEl != NULL)
@@ -2866,6 +2873,7 @@ Element             parent;
 	     newElType.ElSSchema = DocumentSSchema;
 	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
 	     newEl = TtaNewElement (theDocument, newElType);
+	     TtaSetElementLineNumber (newEl, NumberOfLinesRead);
 	     InsertElement (&newEl);
 	     if (newEl != NULL)
 	       {
@@ -3370,6 +3378,7 @@ Element             el;
 		    newElType.ElSSchema = DocumentSSchema;
 		    newElType.ElTypeNum = HTML_EL_Frames;
 		    elFrames = TtaNewElement (theDocument, newElType);
+		    TtaSetElementLineNumber (elFrames, NumberOfLinesRead);
 		    TtaInsertSibling (elFrames, child, TRUE, theDocument);
 		 }
 	       /* move the element as the last child of the Frames element */
@@ -3388,6 +3397,7 @@ Element             el;
 	/* Create a child of type Text_Input */
 	elType.ElTypeNum = HTML_EL_Text_Input;
 	child = TtaNewTree (theDocument, elType, _EMPTYSTR_);
+	TtaSetElementLineNumber (child, NumberOfLinesRead);
 	TtaInsertFirstChild (&child, el, theDocument);
 	/* now, process it like a Text_Input element */
     case HTML_EL_Text_Input:
@@ -3915,6 +3925,7 @@ STRING              val;
 	     elType.ElSSchema = DocumentSSchema;
 	     elType.ElTypeNum = value;
 	     newChild = TtaNewTree (theDocument, elType, _EMPTYSTR_);
+	     TtaSetElementLineNumber (newChild, NumberOfLinesRead);
 	     TtaInsertFirstChild (&newChild, lastElement, theDocument);
 	  }
      }
@@ -4348,12 +4359,14 @@ ThotBool		    position;
    elType.ElSSchema = DocumentSSchema;
    elType.ElTypeNum = HTML_EL_Invalid_element;
    elInv = TtaNewElement (theDocument, elType);
+   TtaSetElementLineNumber (elInv, NumberOfLinesRead);
    InsertElement (&elInv);
    if (elInv != NULL)
      {
 	lastElementClosed = TRUE;
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	elText = TtaNewElement (theDocument, elType);
+	TtaSetElementLineNumber (elText, NumberOfLinesRead);
 	TtaInsertFirstChild (&elText, elInv, theDocument);
 	TtaSetTextContent (elText, content, currentLanguage, theDocument);
 	TtaSetAccessRight (elText, ReadOnly, theDocument);
@@ -4454,6 +4467,7 @@ STRING              GIname;
 		      /* the HTML element may have children. Create only */
 		      /* the corresponding Thot element, without any child */
 		      el = TtaNewElement (theDocument, elType);
+		    TtaSetElementLineNumber (el, NumberOfLinesRead);
 		    sameLevel = InsertElement (&el);
 		    if (el != NULL)
 		      {
@@ -5752,6 +5766,7 @@ CHAR_T                c;
    elType.ElSSchema = DocumentSSchema;
    elType.ElTypeNum = HTML_EL_Comment_;
    elComment = TtaNewElement (theDocument, elType);
+   TtaSetElementLineNumber (elComment, NumberOfLinesRead);
    if (lastElementClosed && (lastElement == rootElement))
       /* a comment after the tag </html> */
       /* insert it as the last child of the root element */
@@ -5774,10 +5789,12 @@ CHAR_T                c;
      {
 	elType.ElTypeNum = HTML_EL_Comment_line;
 	elCommentLine = TtaNewElement (theDocument, elType);
+	TtaSetElementLineNumber (elCommentLine, NumberOfLinesRead);
 	TtaInsertFirstChild (&elCommentLine, elComment, theDocument);
 	/* create a TEXT element as the first child of element Comment_line */
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	CommentText = TtaNewElement (theDocument, elType);
+	TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	TtaInsertFirstChild (&CommentText, elCommentLine, theDocument);
 	TtaSetTextContent (CommentText, _EMPTYSTR_, currentLanguage, theDocument);
      }
@@ -5811,6 +5828,7 @@ UCHAR_T             c;
 	   elType.ElSSchema = DocumentSSchema;
 	   elType.ElTypeNum = HTML_EL_Comment_line;
 	   elCommentLine = TtaNewElement (theDocument, elType);
+	   TtaSetElementLineNumber (elCommentLine, NumberOfLinesRead);
 	   /* inserts the new Comment_line element after the previous one */
 	   prevElCommentLine = TtaGetParent (CommentText);
 	   TtaInsertSibling (elCommentLine, prevElCommentLine, FALSE,
@@ -5819,6 +5837,7 @@ UCHAR_T             c;
 	      Comment_line */
 	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	   CommentText = TtaNewElement (theDocument, elType);
+	   TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	   TtaInsertFirstChild (&CommentText, elCommentLine, theDocument);
 	   TtaSetTextContent (CommentText, _EMPTYSTR_, currentLanguage, theDocument);
 	}
@@ -6289,6 +6308,21 @@ ThotBool         *endOfFile;
 }
 
 /*----------------------------------------------------------------------
+   SetElemLineNumber
+   assigns the current line number (number of latest line read from the
+   input file) to element el.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void            SetElemLineNumber (Element el)
+#else
+void            SetElemLineNumber (el)
+Element		el;
+#endif
+{
+  TtaSetElementLineNumber (el, NumberOfLinesRead);
+}
+
+/*----------------------------------------------------------------------
    GetNextInputChar        returns the next non-null character in the
    input file or buffer.
   ----------------------------------------------------------------------*/
@@ -6373,8 +6407,6 @@ STRING              HTMLbuf;
       {
       InputText = HTMLbuf;
       endOfFile = FALSE;
-      NumberOfCharRead = 0;
-      NumberOfLinesRead = 1;
       }
    charRead = EOS;
    HTMLrootClosed = FALSE;
@@ -6642,6 +6674,7 @@ STRING	           pathURL;
       /* insert the BODY element */
       elType.ElTypeNum = TextFile_EL_BODY;
       el = TtaNewElement (doc, elType);
+      TtaSetElementLineNumber (el, NumberOfLinesRead);      
       if (prev != NULL)
         TtaInsertSibling (el, prev,  FALSE, doc);
       else
@@ -6658,6 +6691,7 @@ STRING	           pathURL;
 	  /* create a new line */
 	  elType.ElTypeNum = TextFile_EL_Line_;
 	  el = TtaNewTree (doc, elType, _EMPTYSTR_);
+	  TtaSetElementLineNumber (el, NumberOfLinesRead);      
 	  if (prev != NULL)
 	    /* new line after the previous */
 	    TtaInsertSibling (el, prev,  FALSE, doc);
@@ -6667,6 +6701,7 @@ STRING	           pathURL;
 	  prev = el;
 	  /* get the text element */
 	  el = TtaGetFirstChild (el);
+	  TtaSetElementLineNumber (el, NumberOfLinesRead);      
 	}
 
       /* Check the character read */
@@ -7763,6 +7798,8 @@ Document            doc;
 	lastElement = rootElement;
 	lastElementClosed = FALSE;
      }
+   NumberOfCharRead = 0;
+   NumberOfLinesRead = 1;
    /* input file is supposed to be HTML */
    GINumberStack[0] = -1;
    ElementStack[0] = rootElement;

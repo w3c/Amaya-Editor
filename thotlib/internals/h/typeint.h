@@ -298,6 +298,7 @@ typedef struct _ElementDescr
 					   element is a copy by inclusion,
 					   NULL if the element is not a copy
 					   by inclusion */
+    int			ElLineNb;	/* line number in the source file */
     LabelString		ElLabel;	/* element unique identifier */
     PtrElement		ElCopy;		/* copy of the element made by the
 					   latest call to function CopyTree */

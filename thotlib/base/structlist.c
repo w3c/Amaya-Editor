@@ -488,6 +488,7 @@ ThotBool            premierfils;
 	fprintf (fileDescriptor, " Label=%s", pNode->ElLabel);
 	/* ecrit le volume de l'element */
 	fprintf (fileDescriptor, " Vol=%d", pNode->ElVolume);
+	fprintf (fileDescriptor, " Lin=%d", pNode->ElLineNb);
 	if (pNode->ElAssocNum != 0)
 	   fprintf (fileDescriptor, " Assoc=%d", pNode->ElAssocNum);
 	if (pNode->ElIsCopy)

@@ -702,6 +702,7 @@ PtrElement         *pEl;
        pNewEl->ElTransPres = FALSE;
        pNewEl->ElTerminal = FALSE;
        pNewEl->ElFirstChild = NULL;
+       pNewEl->ElLineNb = 0;
        NbUsed_Element++;
      }
 }

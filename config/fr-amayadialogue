@@ -130,71 +130,72 @@
 129 Montrer la vue altern\351e
 130 Montrer les liens
 131 Montrer la table des mati\350res
-132 Style de caract\350res...
-133 Couleurs...
-134 Format...
-135 Image de fond...
-136 Cr\351er une r\350gle...
-137 Appliquer une classe...
-138 Feuilles de style
-139 Ajouter...
-140 Ouvrir...
-141 D\351sactiver...
-142 R\351activer...
-143 Retirer...
-144 Types information
-145 Emphase
-146 Strong
-147 Cite
-148 D\351finition
-149 Code
-150 Variable
-151 Sample
-152 Keyboard
-153 Abr\351viation
-154 Acronyme
-155 Insertion
-156 Suppression
-157 El\351ments caract\350res
-158 Italique
-159 Gras
-160 T\351l\351type
-161 Gros
-162 Petit
-163 Indice
-164 Exposant
-165 Citation (Q)
-166 BiDi (BDO)
-167 Num\351roter les sections
-168 Construire un livre
-169 Ouvrir fichier log
-170 Pr\351ferences
-171 G\351n\351rale...
-172 Publication...
-173 Cache...
-174 Proxy...
-175 Couleurs...
-176 G\351om\351trie...
-177 N\351gotiation de Langues...
-178 Profile...
-179 Modèles de page
-180 A propos de Amaya
-181 A propos de Amaya au W3C
-182 Navigation
-183 S\351lection
-184 Chercher
-185 Vues
-186 Cr\351ation
-187 Liens
-188 Transformer
-189 Tables
-190 Math
-191 Zones actives
-192 Feuilles de style
-193 Attributs
-194 Corriger
-195 Publier
-196 Imprimer
-197 Num\351roter
-198 Construire un livre
-199 Configurer Amaya
+132 Montrer le source
+133 Style de caract\350res...
+134 Couleurs...
+135 Format...
+136 Image de fond...
+137 Cr\351er une r\350gle...
+138 Appliquer une classe...
+139 Feuilles de style
+140 Ajouter...
+141 Ouvrir...
+142 D\351sactiver...
+143 R\351activer...
+144 Retirer...
+145 Types information
+146 Emphase
+147 Strong
+148 Cite
+149 D\351finition
+150 Code
+151 Variable
+152 Sample
+153 Keyboard
+154 Abr\351viation
+155 Acronyme
+156 Insertion
+157 Suppression
+158 El\351ments caract\350res
+159 Italique
+160 Gras
+161 T\351l\351type
+162 Gros
+163 Petit
+164 Indice
+165 Exposant
+166 Citation (Q)
+167 BiDi (BDO)
+168 Num\351roter les sections
+169 Construire un livre
+170 Ouvrir fichier log
+171 Pr\351ferences
+172 G\351n\351rale...
+173 Publication...
+174 Cache...
+175 Proxy...
+176 Couleurs...
+177 G\351om\351trie...
+178 N\351gotiation de Langues...
+179 Profile...
+180 Modèles de page
+181 A propos de Amaya
+182 A propos de Amaya au W3C
+183 Navigation
+184 S\351lection
+185 Chercher
+186 Vues
+187 Cr\351ation
+188 Liens
+189 Transformer
+190 Tables
+191 Math
+192 Zones actives
+193 Feuilles de style
+194 Attributs
+195 Corriger
+196 Publier
+197 Imprimer
+198 Num\351roter
+199 Construire un livre
+200 Configurer Amaya

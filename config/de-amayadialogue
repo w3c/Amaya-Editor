@@ -130,71 +130,72 @@
 129 Textbrowserfenster
 130 Verknüpfungsfenster
 131 Inhaltsverzeichnisfenster
-132 Zeichen...
-133 Farben...
-134 Ausrichtung...
-135 Hintergrundbild...
-136 Format in Stylesheet übernehmen...
-137 Klasse anwenden...
-138 Stylesheets bearbeiten
-139 **Link a new one...
-140 **Open...
-141 **Disable...
-142 **Enable...
-143 **Remove...
-144 Logische Formate
-145 Betont (EM)
-146 Hervorgehoben (STRONG)
-147 Zitat (CITE)
-148 Definition (DFN)
-149 Programmtext (CODE)
-150 Variablenwert (VAR)
-151 Beispiel (SAMP)
-152 Tastatureingabe (KBD)
-153 Abkürzung (ABBR)
-154 Akronym (ACRONYM)
-155 Eingefügte Version (INS)
-156 Veraltete Version (DEL)
-157 Direkte Formate
-158 Kursiv (I)
-159 Fett (B)
-160 Schreibmaschinenschrift (TT)
-161 Größer (BIG)
-162 Kleiner (SMALL)
-163 Tiefgestellt (SUB)
-164 Hochgestellt (SUP)
-165 Zitat im Fließtext (Q)
-166 Textrichtung LTR/RTL (BDO)
-167 Abschnittsnummern
-168 Buch zusammenfügen
-169 Logdatei anzeigen
-170 **Preferences
-171 **General...
-172 **Publishing...
-173 **Cache...
-174 **Proxy...
-175 **Colors...
-176 **Geometry...
-177 **Language Negotiation...
-178 **Profiles...
-179 **Templates...
-180 Info
-181 ** About Amaya at W3C
-182 Verknüpfungen folgen/Dokumente öffnen
-183 Auswählen
-184 Suchen
-185 Ansichten
-186 Einfügen von Elementen
-187 Verknüpfungen bearbeiten
-188 Umformatieren
-189 Tabellen
-190 Formeln
-191 Aktive Grafikbereiche
-192 Formate/Stylesheets
-193 Attribute
-194 Rechtschreibung
-195 Speichern/Publizieren
-196 Drucken
-197 Abschnittsnummern
-198 Buch zusammenfügen
-199 Konfiguration
+132 **Source window
+133 Zeichen...
+134 Farben...
+135 Ausrichtung...
+136 Hintergrundbild...
+137 Format in Stylesheet übernehmen...
+138 Klasse anwenden...
+139 Stylesheets bearbeiten
+140 **Link a new one...
+141 **Open...
+142 **Disable...
+143 **Enable...
+144 **Remove...
+145 Logische Formate
+146 Betont (EM)
+147 Hervorgehoben (STRONG)
+148 Zitat (CITE)
+149 Definition (DFN)
+150 Programmtext (CODE)
+151 Variablenwert (VAR)
+152 Beispiel (SAMP)
+153 Tastatureingabe (KBD)
+154 Abkürzung (ABBR)
+155 Akronym (ACRONYM)
+156 Eingefügte Version (INS)
+157 Veraltete Version (DEL)
+158 Direkte Formate
+159 Kursiv (I)
+160 Fett (B)
+161 Schreibmaschinenschrift (TT)
+162 Größer (BIG)
+163 Kleiner (SMALL)
+164 Tiefgestellt (SUB)
+165 Hochgestellt (SUP)
+166 Zitat im Fließtext (Q)
+167 Textrichtung LTR/RTL (BDO)
+168 Abschnittsnummern
+169 Buch zusammenfügen
+170 Logdatei anzeigen
+171 **Preferences
+172 **General...
+173 **Publishing...
+174 **Cache...
+175 **Proxy...
+176 **Colors...
+177 **Geometry...
+178 **Language Negotiation...
+179 **Profiles...
+180 **Templates...
+181 Info
+182 ** About Amaya at W3C
+183 Verknüpfungen folgen/Dokumente öffnen
+184 Auswählen
+185 Suchen
+186 Ansichten
+187 Einfügen von Elementen
+188 Verknüpfungen bearbeiten
+189 Umformatieren
+190 Tabellen
+191 Formeln
+192 Aktive Grafikbereiche
+193 Formate/Stylesheets
+194 Attribute
+195 Rechtschreibung
+196 Speichern/Publizieren
+197 Drucken
+198 Abschnittsnummern
+199 Buch zusammenfügen
+200 Konfiguration
