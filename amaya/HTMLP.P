@@ -2811,6 +2811,7 @@ BOXES
 	Width: TableDoubleHSpace;
 	VertPos: Top = Enclosing . Top;
 	Height: Bottom = Creator . Bottom + TableSimpleVSpace;
+	VertOverflow: Yes;
 	LineStyle: Solid;
 	LineWeight: Creator =;
 	IN Structure_view
@@ -2829,6 +2830,7 @@ BOXES
 	Width: TableSimpleHSpace;
 	VertPos: Top = Enclosing . Top;
 	Height: Bottom = Creator . Bottom + TableSimpleVSpace;
+	VertOverflow: Yes;
 	LineStyle: Solid;
 	LineWeight: Creator =;
 	IN Structure_view
@@ -4518,8 +4520,6 @@ RULES
 	END;
 
  Block_Quote: BEGIN
-	Line;
-	LineBreak: No;
 	CreateBefore(BLOCKQUOTE_S);
 	CreateWith(VerticalLine);
 	HorizPos: Left = Enclosing . Left + 2;	
@@ -4529,7 +4529,6 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
-		NoLine;
 		END;
 	END;
 
@@ -4782,7 +4781,8 @@ RULES
 	Width: 2 cm;
 	Adjust: Enclosing =;
 	CreateBefore(TD_S);
-	CreateAfter (CellFooter);
+	if not rowspan
+	   CreateAfter (CellFooter);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
