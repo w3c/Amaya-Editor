@@ -1,3 +1,8 @@
+{HTMLTT -> HTML to Text translator rules}
+{(c) COPYRIGHT MIT and INRIA, 1996. }
+{Please first read the full copyright statement in file COPYRIGHT.}
+{ Authors: J. Kahan/V. Quint 1996 }
+
 TRANSLATION HTML;
 
 LINELENGTH 78;
@@ -20,18 +25,21 @@ RULES
 	END;
 
  HEAD:	BEGIN
+	Create In TmpFile '\12' After;
 	END;
 
  Document_URL:
 	BEGIN
-	Create In TmpFile 'The URL of the document is:  ';
+	NoLineBreak;
+	Create In TmpFile 'Document''s URL:  ';
 	Create In TmpFile Content;
 	Create In TmpFile '\12' After;
 	Remove;
 	END;
 
  TITLE:	BEGIN
-	Create '\12' After;
+	Create 'Document''s Title: ';
+	Create '\12\12' After;
 	END;
 
  ISINDEX: BEGIN
@@ -39,7 +47,8 @@ RULES
 	END;
 
  BASE:	BEGIN
-        Create IN TmpFile 'The base of the document is: ';
+	NoLineBreak;
+        Create IN TmpFile 'Document''s BASE: ';
         Create Attributes;
         Create IN TmpFile '\12' After;
 	END;
@@ -82,35 +91,35 @@ RULES
  H1:	BEGIN
 	Indent -4;
 	Indent +4 After;
-	Create '\12' After;
+	Create '\12\12' After;
 	END;
 
  H2:	BEGIN
 	Indent -2;
 	Indent +2 After;
-	Create '\12' After;
+	Create '\12\12' After;
 	END;
 
  H3:	BEGIN
-	Create '\12' After;
+	Create '\12\12' After;
 	END;
 
  H4:	BEGIN
 	Indent +2;
 	Indent -2 After;
-	Create '\12' After;
+	Create '\12\12' After;
 	END;
 
  H5:	BEGIN
 	Indent +4;
 	Indent -4 After;
-	Create '\12' After;
+	Create '\12\12' After;
 	END;
 
  H6:	BEGIN
 	Indent +6;
 	Indent -6 After;
-	Create '\12' After;
+	Create '\12\12' After;
 	END;
 
  BaseFont:
@@ -200,16 +209,12 @@ RULES
 #endif
  Paragraph:
 	BEGIN
-	If Empty 
-           Remove; 
-  	Create '\12' After;
+  	Create '\12\12' After;
 	END;
 
  Pseudo_paragraph:
 	BEGIN
-        If Empty
-           Remove;
-        Create '\12' After;
+        Create '\12\12' After;
         END;
 
  TEXT_UNIT: BEGIN
@@ -249,6 +254,7 @@ RULES
 
  Address: BEGIN
 	Create Attributes;
+	Create '\12\12' After;
 	END;
 
  Menu:	BEGIN
@@ -270,11 +276,12 @@ RULES
  Preformatted: BEGIN
 	NoLineBreak;
 	Create Attributes;
+	Create '\12\12' After;
 	END;
 
  Horizontal_Rule: BEGIN
 	Create (DashLine) After;
-	Create '\12' After;
+	Create '\12\12' After;
 	Remove;
 	END;
 
@@ -285,9 +292,8 @@ RULES
 	END;
 
  Option: BEGIN
-	If NOT Selected
-  	   Remove;
-	Create Content;
+	If Selected = Yes_
+	   Create Content;
 	Remove;
 	END;
 
@@ -295,12 +301,20 @@ RULES
 	END;
 
  Toggle_Item: BEGIN
+        If NOT Selected
+           Remove;
+	Create Content;
+	Remove;
 	END;
 
  Radio_Menu: BEGIN
 	END;
 
  Radio_Item: BEGIN
+       If NOT Selected
+           Remove;
+        Create Content;
+        Remove;
 	END;
 
  Text_Input_Line: BEGIN
@@ -324,10 +338,10 @@ RULES
 	END;
 
  Radio_Input: BEGIN
-	If Checked 
-	   Create '[x]';
-	If NOT Checked
-           Create '[ ]';
+	If Checked =  Yes_
+	   Create '(x)';
+	If Checked = No_
+           Create '( )';
 	Remove;
 	END;
 
@@ -350,18 +364,18 @@ RULES
 	END;
 
  Reset_Input: BEGIN
-	Create '(';
+	Create '<<';
 	Create Value_;
-	Create ')';
+	Create '>>';
 	If Last
   	   Create '\12';
 	Remove;
 	END;
 
  Submit_Input: BEGIN
-	Create '(';
+	Create '<<';
 	Create Value_;
-	Create ')';
+	Create '>>';
 	If Last
   	   Create '\12';
 	Remove;
@@ -393,6 +407,7 @@ RULES
 	  BEGIN
 	    Add AnchorCounter 1;
 	    Create In TmpFile  OUT_AnchorCounter;
+	    Create In TmpFile ' ';
  	    Create Attributes;
 	    Create IN TmpFile '\12' After;
 #ifdef ANCHOR_PREFIX
@@ -618,7 +633,8 @@ ATTRIBUTES
 	END;
 
  Class: BEGIN
-	{Remove; }
+	If Empty
+	   Remove; 
 	END;
 
  Style\240: BEGIN
@@ -645,7 +661,6 @@ ATTRIBUTES
 	Create (Value(ItemCounter, URoman) '. ');
 
  Start: BEGIN
-	Remove;
 	END;
 
  ItemValue: BEGIN
