@@ -2754,6 +2754,9 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		    /* Pas trouve' de regle List. On cherche une regle 
 		       Aggregate */
 		    ancestorRule = AggregateRuleOfElem (rule, pSS);
+		  if (ancestorRule > 0 && ancestorRule == pSS->SsRootElem)
+		    /* don't create a root element */
+		    ancestorRule = 0;
 		  if (ancestorRule == 0)
 		    rule = 0;
 		  else
