@@ -3980,7 +3980,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		}
 	      else if (pAb->AbDisplay == 'L')
 		/* display: list-item */
-		CreateListItemMarker (pPRule, pAb, pDoc, pAttr, pSchP);
+		appl = CreateListItemMarker (pPRule, pAb, pDoc, pAttr, pSchP);
 	      else if (pAb->AbDisplay != 'U')
 		{
 		  /* display: block */

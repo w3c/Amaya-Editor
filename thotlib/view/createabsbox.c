@@ -791,7 +791,7 @@ void GetDelayedRule (PtrPRule *pR, PtrPSchema *pSP, PtrAbstractBox *pAbb,
   ----------------------------------------------------------------------*/
 void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 {
-   PtrPRule            pRule;
+   PtrPRule            pRule, checkedRule;
    PtrPSchema          pSPres;
    PtrAttribute        pAttr;
    PtrAbstractBox      pAb, pAbb;
@@ -814,30 +814,55 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 		   pAb = pAb->AbEnclosing->AbEnclosing;
 		else
 		   pAb = pAb->AbEnclosing;
+		checkedRule = NULL;
 		do
 		  {
-		     /* la procedure ApplyRule modifie pAb, on le retablit */
-		     pAbb = pAb;
-		     GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
-		     if (pRule)
-		       if (ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
-			 if (pAbb->AbElement != pEl && !pAbb->AbNew)
-			   switch (pRule->PrType)
-			     {
-			     case PtWidth: pAbb->AbWidthChange = TRUE;
-			       break;
-			     case PtHeight: pAbb->AbHeightChange = TRUE;
-			       break;
-			     case PtHorizPos: pAbb->AbHorizPosChange = TRUE;
-			       break;
-			     case PtVertPos: pAbb->AbVertPosChange = TRUE;
-			       break;
-			     case PtHorizRef: pAbb->AbHorizRefChange = TRUE;
-			       break;
-			     case PtVertRef: pAbb->AbVertRefChange = TRUE;
-			       break;
-			     default: break;
-			     }
+		    /* la procedure ApplyRule modifie pAb, on le retablit */
+		    pAbb = pAb;
+		    if (pAb->AbDelayedPRule &&
+			pAb->AbDelayedPRule->DpPRule == checkedRule)
+		      pRule = NULL;
+		    else
+		      {
+			GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
+			if (pRule)
+			  {
+			    if (ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
+			      {
+				if (pAbb->AbElement != pEl && !pAbb->AbNew)
+				  switch (pRule->PrType)
+				    {
+				    case PtWidth:
+				      pAbb->AbWidthChange = TRUE;
+				      break;
+				    case PtHeight:
+				      pAbb->AbHeightChange = TRUE;
+				      break;
+				    case PtHorizPos:
+				      pAbb->AbHorizPosChange = TRUE;
+				      break;
+				    case PtVertPos:
+				      pAbb->AbVertPosChange = TRUE;
+				      break;
+				    case PtHorizRef:
+				      pAbb->AbHorizRefChange = TRUE;
+				      break;
+				    case PtVertRef:
+				      pAbb->AbVertRefChange = TRUE;
+				      break;
+				    default: break;
+				    }
+			      }
+			    else
+			      {
+				Delay (pRule, pSPres, pAbb, pAttr, pAbb);
+				if (checkedRule == NULL)
+				  /* first rule already checked and re-inserted
+				     in the delay list */
+				  checkedRule = pRule;
+			      }
+			  }
+		      }
 		  }
 		while (pRule);
 	     }
@@ -1679,9 +1704,9 @@ PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
    CreateListItemMarker generate a presentation box representing a
    list item marker for box pAb which has "display: list-item".
   ----------------------------------------------------------------------*/
-void CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
-			   PtrDocument pDoc, PtrAttribute pAttr,
-			   PtrPSchema pSchP)
+ThotBool CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
+			       PtrDocument pDoc, PtrAttribute pAttr,
+			       PtrPSchema pSchP)
 {
   PtrElement       pEl;
   PtrAbstractBox   pMarkerAb, pDescAb, pNextAb;
@@ -1691,33 +1716,29 @@ void CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
 
   if (pAb->AbListStyleType == 'N')
     /* a rule "list-style-type: none" applies */
-    return;
+    return TRUE;
   viewNb = pAb->AbDocView;
   pEl = pAb->AbElement;
   if (pAb->AbListStylePosition == 'I')
     /* list-style-position: inside */
     {
       if (pEl->ElHolophrast || pEl->ElTerminal)
-	return;
+	return TRUE;
       if (pAb->AbFirstEnclosed == NULL)
 	/* no abstract box for the descendant of the element. Can't apply
 	   rule yet */
-	{
-	  if (pPRule && pSchP)
-	    Delay (pPRule, pSchP, pAb, pAttr, pAb);
-	  return;
-	}
+	return FALSE;
     }
   if (pAb->AbListStylePosition == 'O')
     /* list-style-position: outside */
     if (pAb->AbEnclosing == NULL)
       /* can't create a sibling box if it's the root box */
-      return;
+      return TRUE;
   if (pDoc->DocViewSubTree[viewNb -1] != NULL)
     /* this view only displays a sub-tree */
     if (ElemIsAnAncestor (pEl, pDoc->DocViewSubTree[viewNb -1]))
       /* the element is an ancestor of the displayed sub-tree */
-      return;
+      return TRUE;
 
   /* create a presentation box for the list item marker */
   pMarkerAb = InitAbsBoxes (pEl, viewNb, pAb->AbVisibility, pDoc->DocReadOnly);
@@ -1967,6 +1988,7 @@ void CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
 	  ComputeListItemNumber (pMarkerAb);
 	}
     }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
