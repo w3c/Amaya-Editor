@@ -1583,7 +1583,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    /* it's within the current selection */
 		    DisplayBgBoxSelection (frame, pBox);
 		}
-	      else
+	      else if (!pFrame->FrSelectOnePosition)
 		DisplayBgBoxSelection (frame, pBox);
 	    }
 	  else

@@ -12,9 +12,6 @@ extern void InitFloats ( PtrBox pBlock,
                          PtrLine pLine,
                          PtrBox *floatL,
                          PtrBox *floatR );
-extern void ChechBlockHeight ( PtrBox pBlock,
-                               ThotBool yAbs,
-                               int *height );
 extern int SetFloat ( PtrBox box,
                       PtrBox pBlock,
                       PtrLine pLine,
@@ -59,9 +56,6 @@ extern void InitFloats (/* PtrBox pBlock,
                            PtrLine pLine,
                            PtrBox *floatL,
                            PtrBox *floatR */);
-extern void ChechBlockHeight (/* PtrBox pBlock,
-                                 ThotBool yAbs,
-                                 int *height */);
 extern int SetFloat (/* PtrBox box,
                         PtrBox pBlock,
                         PtrLine pLine,

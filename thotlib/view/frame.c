@@ -339,7 +339,7 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	}
       else
 	{
-	  if (!setWindow && pBox->BxFill)
+	  if (!setWindow && pBox->BxFill && pAb->AbFillPattern)
 	    /* draw the box background */
 	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
 			   pAb->AbForeground, pAb->AbBackground,

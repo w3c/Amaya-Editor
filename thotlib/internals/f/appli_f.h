@@ -17,9 +17,6 @@ extern void XFlushOutput ( int frame );
 extern void FrameToRedisplay ( ThotWindow w,
                                int frame,
                                void *ev );
-extern void FrameRedraw ( int frame,
-                          Dimension width,
-                          Dimension height );
 extern void FrameResized ( int *w,
                            int frame,
                            int *info );
@@ -102,9 +99,6 @@ extern void XFlushOutput (/* int frame */);
 extern void FrameToRedisplay (/* ThotWindow w,
                                  int frame,
                                  void *ev */);
-extern void FrameRedraw (/* int frame,
-                            Dimension width,
-                            Dimension height */);
 extern void FrameResized (/* int *w,
                              int frame,
                              int *info */);

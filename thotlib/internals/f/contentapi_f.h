@@ -161,6 +161,7 @@ extern void TtaInsertTransform ( Element element,
 extern void TtaSetElCoordinateSystem ( Element element );
 extern void TtaAppendAnim ( Element element,
                             void *anim );
+extern void *TtaCopyPath ( void *void_src );
 extern void *TtaCopyAnim ( void *void_src );
 extern void *TtaNewAnimPath ( Document doc );
 extern void TtaAppendPathSegToAnim ( void *anim,
@@ -379,6 +380,7 @@ extern void TtaInsertTransform (/* Element element,
 extern void TtaSetElCoordinateSystem (/* Element element */);
 extern void TtaAppendAnim (/* Element element,
                               void *anim */);
+extern void *TtaCopyPath (/* void *void_src */);
 extern void *TtaCopyAnim (/* void *void_src */);
 extern void *TtaNewAnimPath (/* Document doc */);
 extern void TtaAppendPathSegToAnim (/* void *anim,

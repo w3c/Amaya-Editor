@@ -563,80 +563,81 @@ void XFlushOutput (int frame)
   ----------------------------------------------------------------------*/
 void FrameToRedisplay (ThotWindow w, int frame, void *ev)
 {
- XExposeEvent       *event = (XExposeEvent *) ev;
- ViewFrame          *pFrame;
- int                 xmin, xmax, ymin, ymax;
- int                 x, y, l, h;
+  XExposeEvent       *event = (XExposeEvent *) ev;
+  ViewFrame          *pFrame;
+  int                 xmin, xmax, ymin, ymax;
+  int                 x, y, l, h;
 
- x = event->x;
- y = event->y;
- l = event->width;
- h = event->height;
- if (frame > 0 && frame <= MAX_FRAME && FrameTable[frame].FrDoc > 0 &&
-     /* don't handle a document in mode NoComputedDisplay */
-     documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
-   {
-	 /* save the previous clipping */
-     pFrame = &ViewFrameTable[frame - 1];
-	 xmin = pFrame->FrClipXBegin;
-	 xmax = pFrame->FrClipXEnd;
-	 ymin = pFrame->FrClipYBegin;
-	 ymax = pFrame->FrClipYEnd;
-     pFrame = &ViewFrameTable[frame - 1];
-	 pFrame->FrClipXBegin = 0;
-	 pFrame->FrClipXEnd = 0;
-	 pFrame->FrClipYBegin = 0;
-     DefRegion (frame, x, y, x + l, y + h);
-     RedrawFrameBottom (frame, 0, NULL);
-	 /* restore the previous clipping */
-     pFrame = &ViewFrameTable[frame - 1];
-	 pFrame->FrClipXBegin = xmin;
-	 pFrame->FrClipXEnd = xmax;
-	 pFrame->FrClipYBegin = ymin;
-	 pFrame->FrClipYEnd = ymax;
-   }
+  x = event->x;
+  y = event->y;
+  l = event->width;
+  h = event->height;
+  if (frame > 0 && frame <= MAX_FRAME && FrameTable[frame].FrDoc > 0 &&
+      /* don't handle a document in mode NoComputedDisplay */
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
+    {
+      /* save the previous clipping */
+      pFrame = &ViewFrameTable[frame - 1];
+      xmin = pFrame->FrClipXBegin;
+      xmax = pFrame->FrClipXEnd;
+      ymin = pFrame->FrClipYBegin;
+      ymax = pFrame->FrClipYEnd;
+      pFrame = &ViewFrameTable[frame - 1];
+      pFrame->FrClipXBegin = 0;
+      pFrame->FrClipXEnd = 0;
+      pFrame->FrClipYBegin = 0;
+      DefRegion (frame, x, y, x + l, y + h);
+      RedrawFrameBottom (frame, 0, NULL);
+      /* restore the previous clipping */
+      pFrame = &ViewFrameTable[frame - 1];
+      pFrame->FrClipXBegin = xmin;
+      pFrame->FrClipXEnd = xmax;
+      pFrame->FrClipYBegin = ymin;
+      pFrame->FrClipYEnd = ymax;
+    }
 }
 
 
 /*----------------------------------------------------------------------
   FrameRedraw
   ----------------------------------------------------------------------*/
-void FrameRedraw (int frame, Dimension width, Dimension height)
+static void FrameRedraw (int frame, Dimension width, Dimension height)
 {
-   int                 dx, dy, view;
-   NotifyWindow        notifyDoc;
-   Document            doc;
+  int                 dx, dy, view;
+  NotifyWindow        notifyDoc;
+  Document            doc;
 
-   if (FrameTable[frame].FrDoc == 0)
-     return;
-   if ((width > 0) && (height > 0) && 
-       documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
-     /* ne pas traiter si le document est en mode NoComputedDisplay */
-     {
-       notifyDoc.event = TteViewResize;
-       FrameToView (frame, &doc, &view);
-       notifyDoc.document = doc;
-       notifyDoc.view = view;
-       dx = width - FrameTable[frame].FrWidth;
-       dy = height - FrameTable[frame].FrHeight;
-       notifyDoc.verticalValue = dy;
-       notifyDoc.horizontalValue = dx;
-       if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-	 {
-	   FrameTable[frame].FrWidth = (int) width;
-	   FrameTable[frame].FrHeight = (int) height;	   
-	   /* Il faut reevaluer le contenu de la fenetre */
-	   RebuildConcreteImage (frame);	   
-	   /* recompute the scroll bars */
-	   UpdateScrollbars (frame);
-	   notifyDoc.event = TteViewResize;
-	   notifyDoc.document = doc;
-	   notifyDoc.view = view;
-	   notifyDoc.verticalValue = dy;
-	   notifyDoc.horizontalValue = dx;
-	   CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	 }
-     }
+  if (FrameTable[frame].FrDoc == 0)
+    return;
+  if (width > 0 && height > 0 && 
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
+    /* ne pas traiter si le document est en mode NoComputedDisplay */
+    {
+      notifyDoc.event = TteViewResize;
+      FrameToView (frame, &doc, &view);
+      notifyDoc.document = doc;
+      notifyDoc.view = view;
+      dx = width - FrameTable[frame].FrWidth;
+      dy = height - FrameTable[frame].FrHeight;
+      notifyDoc.verticalValue = dy;
+      notifyDoc.horizontalValue = dx;
+      if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+	{
+	  /* close current insertion */
+	  FrameTable[frame].FrWidth = (int) width;
+	  FrameTable[frame].FrHeight = (int) height;
+	  /* Il faut reevaluer le contenu de la fenetre */
+	  RebuildConcreteImage (frame);	   
+	  /* recompute the scroll bars */
+	  UpdateScrollbars (frame);
+	  notifyDoc.event = TteViewResize;
+	  notifyDoc.document = doc;
+	  notifyDoc.view = view;
+	  notifyDoc.verticalValue = dy;
+	  notifyDoc.horizontalValue = dx;
+	  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	}
+    }
 }
 
 

@@ -20,6 +20,7 @@ extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( char *data,
                               int length );
+extern void LoadXmlStyleSheet ( Document doc );
 extern void XmlStyleSheetPi ( char *PiData,
                               Element piEl );
 extern void FreeXmlParserContexts ( void );
@@ -76,6 +77,7 @@ extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* char *data,
                                 int length */);
+extern void LoadXmlStyleSheet (/* Document doc */);
 extern void XmlStyleSheetPi (/* char *PiData,
                                 Element piEl */);
 extern void FreeXmlParserContexts (/* void */);
