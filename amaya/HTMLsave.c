@@ -797,6 +797,7 @@ Document     doc;
       useGraphML = TRUE;
 
    root = TtaGetMainRoot (doc);
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
    /* looks for a FRAMESET element and set attribute HtmlDTD */
    useFrames = FALSE;
    el = TtaGetFirstChild (root);
@@ -810,7 +811,6 @@ Document     doc;
          TtaNextSibling (&el);
       }
 
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
    attrType.AttrTypeNum = HTML_ATTR_Namespaces;
    attr = TtaGetAttribute (root, attrType);
    if (!useMathML && !useGraphML)

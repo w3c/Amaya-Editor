@@ -325,12 +325,13 @@ NotifyAttribute *event;
  update attribute "points" for element el according its content
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void TranslatePointsAttribute (Element el, Document doc, int delta, ThotBool horiz)
+static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeUnit unit, ThotBool horiz)
 #else /* __STDC__*/
-static void TranslatePointsAttribute (el, doc, delta, horiz)
+static void TranslatePointsAttribute (el, doc, delta, unit, horiz)
 Element     el;
 Document    doc;
 int         delta;
+TypeUnit    unit;
 ThotBool    horiz;
 #endif /* __STDC__*/
 {
@@ -338,7 +339,6 @@ ThotBool    horiz;
   ElementType		elType;
   AttributeType	        attrType;
   Attribute		attr;
-  TypeUnit		unit;
   CHAR_T		buffer[512], buffer1[8];
   int			nbPoints, point, x, y, posX, posY;
 
@@ -832,7 +832,7 @@ Element          el;
 		  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 		  elType.ElTypeNum == GraphML_EL_polyline ||
 		  elType.ElTypeNum == GraphML_EL_polygon)
-		TranslatePointsAttribute (el, doc, val, TRUE);
+		TranslatePointsAttribute (el, doc, val, unit, TRUE);
 	      else
 		{
 		  if (elType.ElTypeNum == GraphML_EL_circle ||
@@ -899,7 +899,7 @@ Element          el;
 		  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 		  elType.ElTypeNum == GraphML_EL_polyline ||
 		  elType.ElTypeNum == GraphML_EL_polygon)
-		TranslatePointsAttribute (el, doc, val, FALSE);
+		TranslatePointsAttribute (el, doc, val, unit, FALSE);
 	      else
 		{
 		  if (elType.ElTypeNum == GraphML_EL_circle ||
@@ -1045,31 +1045,27 @@ NotifyPresentation *event;
       TtaGiveBoxSize (el, doc, 1, unit, &width, &height);
       if (presType == PRVertPos)
 	{
+	  /* the new value is the old one plus the difference */
+	  y = TtaGetPRuleValue (presRule);
 	  if (elType.ElTypeNum == GraphML_EL_Spline ||
 	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 	      elType.ElTypeNum == GraphML_EL_polyline ||
 	      elType.ElTypeNum == GraphML_EL_polygon)
-	    TranslatePointsAttribute (el, doc, y, FALSE);
+	    TranslatePointsAttribute (el, doc, y, unit, FALSE);
 	  else
-	    {
-	      /* the new value is the old one plus the difference */
-	      y = TtaGetPRuleValue (presRule);
-	      UpdatePositionAttribute (el, doc, y, height, FALSE);
-	    }
+	    UpdatePositionAttribute (el, doc, y, height, FALSE);
 	}
       else if (presType == PRHorizPos)
 	{
+	  /* the new value is the old one plus the difference */
+	  x = TtaGetPRuleValue (presRule);
 	  if (elType.ElTypeNum == GraphML_EL_Spline ||
 	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 	      elType.ElTypeNum == GraphML_EL_polyline ||
 	      elType.ElTypeNum == GraphML_EL_polygon)
-	    TranslatePointsAttribute (el, doc, x, TRUE);
+	    TranslatePointsAttribute (el, doc, x, unit, TRUE);
 	  else
-	    {
-	      /* the new value is the old one plus the difference */
-	      x = TtaGetPRuleValue (presRule);
-	      UpdatePositionAttribute (el, doc, x, width, TRUE);
-	    }
+	    UpdatePositionAttribute (el, doc, x, width, TRUE);
 	}
       else if (presType == PRHeight &&
 	       (elType.ElTypeNum == GraphML_EL_Spline ||
