@@ -982,15 +982,9 @@ View                view;
    if (IsW3Path (pathname))
      {
 	/* load the document from the Web */
-#      ifndef __TEST_WIN_WWW
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile,
 			       AMAYA_SYNC | AMAYA_NOCACHE,
 			       NULL, NULL, NULL, NULL, YES);
-#      else  /* __TEST_WIN_WWW */
-       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile,
-			       AMAYA_SYNC | AMAYA_NOCACHE,
-			       NULL, NULL, NULL, NULL, YES);
-#      endif /* __TEST_WIN_WWW */
 	TtaHandlePendingEvents ();
      }
    if (toparse != -1)
@@ -1373,6 +1367,7 @@ DoubleClickEvent    DC_event;
 		    toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
 					    AMAYA_FORM_POST | AMAYA_SYNC,
 					    NULL, NULL, NULL, NULL, YES);
+
 		  else
 		    {
 		      if (!strcmp (documentname, "noname.html"))
@@ -1380,7 +1375,9 @@ DoubleClickEvent    DC_event;
 			  slash = strlen (pathname);
 			  if (slash && pathname[slash - 1] != DIR_SEP)
 			    strcat (pathname, DIR_STR);
+
 			  toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+
 			  /* keep the real name */
 			  NormalizeURL (pathname, 0, tempdocument, documentname);
 			}
@@ -1915,6 +1912,7 @@ NotifyEvent        *event;
       strcpy (TempFileDirectory, s);
    else
 #  ifdef _WINDOWS
+#if 0
      {
 	s = (char *) TtaGetEnvString ("TEMP");
 	if (s)
@@ -1924,6 +1922,8 @@ NotifyEvent        *event;
      }
    strcat (TempFileDirectory, DIR_STR);
    strcat (TempFileDirectory, ".amaya");
+#endif /* 0 */
+   strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
    i = _mkdir (TempFileDirectory);
    if (i != 0 && errno != EEXIST)
      {

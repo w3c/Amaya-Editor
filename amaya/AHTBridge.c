@@ -14,7 +14,6 @@
  * Author: J Kahan
  *
  */
-
 #ifndef AMAYA_JAVA
 
 #define THOT_EXPORT extern
@@ -29,6 +28,29 @@
 extern ThotAppContext app_cont;
 #endif
 
+#ifdef _WINDOWS
+static HWND HTSocketWin;
+static unsigned long HTwinMsg;
+
+#ifdef __GNUC__
+#define WSADESCRIPTION_LEN      256
+#define WSASYS_STATUS_LEN       128
+#define DESIRED_WINSOCK_VERSION 0x0101  /* we'd like winsock ver 1.1... */
+#define MINIMUM_WINSOCK_VERSION 0x0101  /* ...but we'll take ver 1.1 :) */
+
+typedef struct WSAData {
+        WORD                    wVersion;
+        WORD                    wHighVersion;
+        char                    szDescription[WSADESCRIPTION_LEN+1];
+        char                    szSystemStatus[WSASYS_STATUS_LEN+1];
+        unsigned short          iMaxSockets;
+        unsigned short          iMaxUdpDg;
+        char FAR *              lpVendorInfo;
+} WSADATA;
+
+typedef WSADATA FAR *LPWSADATA;
+#endif /* __GNUC__ */
+#endif /* _WINDOWS */
 
 /*
  * Private functions
@@ -54,7 +76,8 @@ static void         RequestKillExceptXtevent ();
 #ifdef _WINDOWS
 static void         WIN_ResetMaxSock (void);
 static int          WIN_ProcessFds (fd_set * fdsp, SockOps ops);
-
+static int          VerifySocketState (AHTReqContext *me, SOCKET sock);
+PUBLIC LRESULT CALLBACK ASYNCWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif /* _WINDOWS */
 
 /*
@@ -479,12 +502,20 @@ SOCKET sock;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
+    /*
     FD_SET (sock, &read_fds);
     FD_SET (sock, &all_fds);
+    */
+    
     me->read_sock = sock;
+    me->read_fd_state |= FD_READ;
 
-    if (sock > maxfds) 
-        maxfds = sock;
+    WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->read_fd_state);
+
+    /*
+      if (sock > maxfds) 
+      maxfds = sock;
+      */
 #else
   if (me->read_xtinput_id)
     {
@@ -520,12 +551,25 @@ AHTReqContext      *me;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
-    if(me->except_sock != INVSOC) 
+int new_fd;
+
+    if(me->read_sock != INVSOC) 
 	{
-	    FD_CLR (me->read_sock, &read_fds);
-	    FD_CLR (me->read_sock, &all_fds);
+	    /*
+	      FD_CLR (me->read_sock, &read_fds);
+	      FD_CLR (me->read_sock, &all_fds);
+	      */
+	    me->read_fd_state &= ~FD_READ;
+	    
+	    new_fd = VerifySocketState (me, me->read_sock);
+
+	    if (new_fd)
+		WSAAsyncSelect (me->read_sock, HTSocketWin, HTwinMsg, new_fd);
+	    else 
+		WSAAsyncSelect (me->read_sock, HTSocketWin, 0, 0);
 	    me->read_sock = INVSOC;
-	    WIN_ResetMaxSock();
+	    /* WIN_ResetMaxSock();
+	     */
 	}
 #else
    if (me->read_xtinput_id)
@@ -552,13 +596,18 @@ SOCKET              sock;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
+    /*
     FD_SET (sock, &write_fds);
     FD_SET (sock, &all_fds);
     me->write_sock = sock;
 
     if (sock > maxfds) 
         maxfds = sock ;
+    */
+    me->write_sock = sock;
+    me->write_fd_state |= FD_WRITE;
 
+    WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->write_fd_state);
 #else
    if (me->write_xtinput_id)
     {
@@ -594,12 +643,24 @@ AHTReqContext      *me;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
-    if(me->except_sock != INVSOC) 
+int new_fd;
+
+    if(me->write_sock != INVSOC) 
 	{
+	    /*
 	    FD_CLR (me->write_sock, &write_fds);
 	    FD_CLR (me->write_sock, &all_fds);
+	    */
+	    me->write_fd_state &= ~FD_WRITE;
+	    
+	    new_fd = VerifySocketState (me, me->write_sock);
+
+	    if (new_fd)
+		WSAAsyncSelect (me->write_sock, HTSocketWin, HTwinMsg, new_fd);
+	    else 
+		WSAAsyncSelect (me->write_sock, HTSocketWin, 0, 0);
 	    me->write_sock = INVSOC;
-	    WIN_ResetMaxSock();
+	    /* WIN_ResetMaxSock(); */
 	}
 #else
    if (me->write_xtinput_id)
@@ -626,12 +687,19 @@ SOCKET              sock;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
+    /*
     FD_SET (sock, &except_fds);
     FD_SET (sock, &all_fds);
     me->except_sock = sock;
 
     if (sock > maxfds) 
         maxfds = sock ;
+    */
+    me->except_sock = sock;
+    me->except_fd_state |= FD_OOB;
+
+    WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->except_fd_state);
+
 #else
    if (me->except_xtinput_id)
      {
@@ -668,12 +736,24 @@ AHTReqContext      *me;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
+int new_fd;
     if(me->except_sock != INVSOC) 
 	{
+	    /*
 	    FD_CLR (me->except_sock, &except_fds);
 	    FD_CLR (me->except_sock, &all_fds);
+	    */
+
+	    me->except_fd_state &= ~FD_WRITE;
+	    
+	    new_fd = VerifySocketState (me, me->except_sock);
+
+	    if (new_fd)
+		WSAAsyncSelect (me->except_sock, HTSocketWin, HTwinMsg, new_fd);
+	    else 
+		WSAAsyncSelect (me->except_sock, HTSocketWin, 0, 0);
 	    me->except_sock = INVSOC;
-	    WIN_ResetMaxSock();
+	    /* WIN_ResetMaxSock(); */
 	}
 #else
    if (me->except_xtinput_id)
@@ -704,11 +784,7 @@ static void WIN_ResetMaxSock(void)
     maxfds = t_max ;
 }
 
-#ifdef __STDC__
 void         WIN_ProcessSocketActivity (void)
-#else
-void         WIN_ProcessSocketActivity ()
-#endif /* __STDC */
 {
     int active_sockets;
     SOCKET s;
@@ -723,6 +799,9 @@ void         WIN_ProcessSocketActivity ()
     /* do a non-blocking select */
     tv.tv_sec = 0; 
     tv.tv_usec = 0;
+
+    if (maxfds == 0)
+	return; /* there are no active connections */
 
     active_sockets = select(maxfds+1, &treadset, &twriteset, &texceptset, 
 				(struct timeval *) &tv);
@@ -767,6 +846,90 @@ void         WIN_ProcessSocketActivity ()
 	}
 }
 
+void         WIN_InitializeSockets (void)
+{
+    maxfds = 0 ;
+
+    FD_ZERO(&read_fds);
+    FD_ZERO(&write_fds);
+    FD_ZERO(&except_fds) ;
+    FD_ZERO(&all_fds);
+    AHTEventInit ();
+}
+
+static BOOL AHTEventInit (void)
+{
+    /*
+    **	We are here starting a hidden window to take care of events from
+    **  the async select() call in the async version of the event loop in
+    **	the Internal event manager (HTEvntrg.c)
+    */
+    static char className[] = "AsyncWindowClass";
+    WNDCLASS wc;
+    OSVERSIONINFO osInfo;
+    WSADATA       wsadata;
+    
+    wc.style=0;
+    wc.lpfnWndProc=(WNDPROC)ASYNCWindowProc;
+    wc.cbClsExtra=0;
+    wc.cbWndExtra=0;
+    wc.hIcon=0;
+    wc.hCursor=0;
+    wc.hbrBackground=0;
+    wc.lpszMenuName=(LPSTR)0;
+    wc.lpszClassName=className;
+
+    osInfo.dwOSVersionInfoSize = sizeof(osInfo);
+    GetVersionEx(&osInfo);
+    if (osInfo.dwPlatformId == VER_PLATFORM_WIN32s /*|| osInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS*/)
+	wc.hInstance=GetModuleHandle(NULL); /* 95 and non threaded platforms */
+    else
+	wc.hInstance=GetCurrentProcess(); /* NT and hopefully everything following */
+
+    RegisterClass(&wc);
+    if (!(HTSocketWin = CreateWindow(className, "WWW_WIN_ASYNC", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 
+                                     CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, wc.hInstance,0))) {
+    	return NO;
+    }
+    HTwinMsg = WM_USER;  /* use first available message since app uses none */
+
+    /*
+    ** Initialise WinSock DLL. This must also be shut down! PMH
+    */
+    if (WSAStartup(DESIRED_WINSOCK_VERSION, &wsadata)) {
+	WSACleanup();
+	return NO;
+    }
+    if (wsadata.wVersion < MINIMUM_WINSOCK_VERSION) {
+	WSACleanup();
+	return NO;
+    }
+    
+    return YES;
+}
+
+PUBLIC LRESULT CALLBACK ASYNCWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    WORD event;
+    SOCKET sock;
+
+    if (uMsg != HTwinMsg)	/* not our async message */
+    	return (DefWindowProc(hwnd, uMsg, wParam, lParam));
+
+    event = LOWORD(lParam);
+    sock = (SOCKET)wParam;
+
+    if (event & (FD_READ | FD_ACCEPT | FD_CLOSE))
+    	WIN_AHTCallback_bridge (FD_READ, &sock);
+
+    if (event & (FD_WRITE | FD_CONNECT))
+    	WIN_AHTCallback_bridge (FD_WRITE, &sock);
+
+    if (event & FD_OOB)
+    	WIN_AHTCallback_bridge (FD_OOB, &sock);
+
+    return (0);
+}
 
 static int WIN_ProcessFds( fd_set * fdsp, SockOps ops)
 {
@@ -781,6 +944,23 @@ static int WIN_ProcessFds( fd_set * fdsp, SockOps ops)
     }
     return HT_OK;
 }
+
+static int VerifySocketState (AHTReqContext *me, SOCKET sock)
+{
+ int fd_state = 0;
+
+ if (sock == me->read_sock)
+     fd_state |= me->read_fd_state;
+
+ if (sock == me->write_sock)
+     fd_state |= me->write_fd_state;
+
+ if (sock == me->except_sock)
+     fd_state |= me->except_fd_state;
+
+ return (fd_state);
+}
+
 
 #endif /* _WINDOWS */
 /*

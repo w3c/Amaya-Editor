@@ -229,6 +229,9 @@ int                 docid;
    me->read_sock = INVSOC;
    me->write_sock = INVSOC;
    me->except_sock = INVSOC;
+   me->read_fd_state  = 0;
+   me->write_fd_state  = 0;
+   me->except_fd_state  = 0;
 
    /* Update the global context */
    HTList_appendObject (Amaya->reqlist, (void *) me);
@@ -390,9 +393,7 @@ static void         Thread_deleteAll ()
 	       {
 		  if (me->request)
 		    {
-#                      ifndef _WINDOWS
 		       RequestKillAllXtevents (me);
-#                      endif /* !_WINDOWS */
 		       AHTReqContext_delete (me);
 		    }
 	       }		/* while */
@@ -1132,6 +1133,10 @@ void                QueryInit ()
 
    HTEvent_setRegisterCallback (AHTEvent_register);
    HTEvent_setUnregisterCallback (AHTEvent_unregister);
+   
+#  ifdef _WINDOWS
+   WIN_InitializeSockets ();
+#  endif _WINDOWS;
 
    /* Setup authentication manager */
     /***
@@ -1228,7 +1233,7 @@ static int          LoopForStop (AHTReqContext * me)
              TtaHandleOneEvent (&ev);
           }
 #       else  /* _WINDOWS */
-	WIN_ProcessSocketActivity ();	
+	/* WIN_ProcessSocketActivity ();	*/
 	/**	if (GetMessage (&ev, NULL, 0, 0))
 	   TtaHandleOneWindowEvent (&ev); **/
 #       endif /* !_WINDOWS */
@@ -1533,8 +1538,11 @@ boolean error_html;
    me->context_tcbf = context_tcbf;
    me->output = tmp_fp;
 
+#                         ifndef _WINDOWS  /* TEST TEST */
    HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-
+#else
+   HTRequest_setOutputStream (me->request, HTFWriter_new (me->request, me->output, YES));
+#endif /* _WINDOWS */
 
    /*for the async. request modes, we need to have our
       own copy of outputfile and urlname
@@ -1650,7 +1658,9 @@ generated
 			  if (THD_TRACE)
 			     fprintf (stderr, "GetObjectWWW: %s is pending. Closing fd %d\n", me->urlName, (int) me->output);
 			  /* free the allocated stream object */
+#                         ifndef _WINDOWS  /* TEST TEST */
 			  AHTFWriter_FREE (HTRequest_outputStream(me->request));
+#                         endif /* _WINDOWS  */
 			  HTRequest_setOutputStream (me->request, (HTStream *) NULL);
 			  fclose (me->output);
 			  me->output = NULL;
@@ -1725,7 +1735,7 @@ void               *context_tcbf;
    /*AHTReqContext      *me; */
    int                 status;
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    int                 fd;
    struct stat         file_stat;
    char               *mem_ptr;
@@ -1790,7 +1800,7 @@ void               *context_tcbf;
    TtaFreeMemory (mem_ptr);
    TtaHandlePendingEvents ();
 
-#endif /*!_WINDOWS */
+#  endif /*!_WINDOWS */
 
    return (status);
 }
@@ -2021,10 +2031,13 @@ char               *outputfile;
       output stream */
 
    HTRequest_setPostCallback (me->request, AHTUpload_callback);
-
+#  ifndef _WINDOWS  /* TEST TEST */
+   HTRequest_setOutputStream (me->request,
+			      AHTFWriter_new (me->request, me->output, YES));
+#  else
    HTRequest_setOutputStream (me->request,
 			      HTFWriter_new (me->request, me->output, YES));
-
+#endif /* WINDOWS */
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (urlName);
 
    /* Set the Content-Type of the file we are uploading */

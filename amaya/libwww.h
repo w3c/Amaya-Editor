@@ -92,6 +92,11 @@ typedef struct _AHTReqContext
      SOCKET             read_sock;              /* read socket associated with the request */
      SOCKET             write_sock;             /* write socket associated with the request */
      SOCKET             except_sock;            /* except socket associated with the request */
+#ifdef _WINDOWS
+     int                read_fd_state;               /* gives the current state of the sockets */        
+     int                write_fd_state;               /* gives the current state of the sockets */        
+     int                except_fd_state;               /* gives the current state of the sockets */        
+#endif      
     /*** End of experimental stuff ****/
 
      char               *outputfile;	/* file to receive incoming data         */

@@ -323,7 +323,7 @@ int   status;
 int   status;
 #endif /* __STDC__ */
 {
-#ifndef AMAYA_JAVA
+#   ifndef AMAYA_JAVA
     AHTReqContext* context = (AHTReqContext*) ctxt;
     struct stat    sbuf;
     static FILE*   fptr = NULL;
@@ -382,7 +382,7 @@ int   status;
 	  /*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), progressStream, file); */
        }
     }
-#endif /* AMAYA_JAVA */
+#   endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -396,7 +396,7 @@ void        *ctxt;
 int          status;
 #endif /* __STDC__ */
 {
-#ifndef AMAYA_JAVA
+#   ifndef AMAYA_JAVA
     AHTReqContext      *context = (AHTReqContext *) ctxt;
     char* file;
     struct stat sbuf;
@@ -427,7 +427,7 @@ int          status;
 										      &stype); 
        Ap_Normal ((NPP) (instance), stream, file); 
     }
-#endif /* AMAYA_JAVA */
+#   endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -964,21 +964,21 @@ int indexHandler;
 #   endif
     pluginTable[indexHandler]->pluginFunctionsTable->size = ((uint16) (sizeof (NPPluginFuncs)));
   
-#ifdef _WINDOWS
+#   ifdef _WINDOWS
     ptr_NP_Initialize = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
     if (ptr_NP_Initialize == NULL) {
        message (char*) malloc (65 + strlen (pluginTable [indexHandler]->pluginDL));
        sprintf (message, "relocation error: symbol not found: NP_Initialize referenced in %s", pluginTable [indexHandler]->pluginDL);
     } else
          ret = (*ptr_NP_Initialize) (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
-#else  /* _WINDOWS */
+#   else  /* _WINDOWS */
     ptr_NP_Initialize = (int (*) (NPNetscapeFuncs*, NPPluginFuncs*)) dlsym (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
     message = (char*) dlerror ();    
     if (message) 
        printf ("ERROR at Initialization: %s\n", message);
   
     ret = ptr_NP_Initialize (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
-#endif /* _WINDOWS */
+#   endif /* _WINDOWS */
 }
 
 
@@ -1002,16 +1002,16 @@ int   indexHandler;
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_InitializePlugin *****\n");
 #   endif
-#ifdef _WINDOWS
+#   ifdef _WINDOWS
     pluginTable [indexHandler]->pluginHandle = LoadLibrary (path);
     if (pluginTable [indexHandler]->pluginHandle == NULL) {
 	message = (char*) malloc (12 + strlen (path));
         sprintf (message, "Cannot open library %s", path);
     }
-#else  /* _WINDOWS */
-    pluginTable [indexHandler]->pluginHandle = dlopen (path, RTLD_NOW);
+#   else  /* _WINDOWS */
+    pluginTable [indexHandler]->pluginHandle = dlopen (path, RTLD_LAZY);
     message = (char*) dlerror ();
-#endif /* _WINDOWS */
+#   endif /* _WINDOWS */
     
     if (message) {
 	printf ("ERROR: %s\n", message);
@@ -1019,7 +1019,7 @@ int   indexHandler;
     } 
 
     /* get the symbols from the dynamic library */
-#ifdef _WINDOWS
+#   ifdef _WINDOWS
     ptr_NPP_Initialize = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NPP_Initialize");
     if (ptr_NPP_Initialize == NULL) {
        message (char*) malloc (65 + strlen (pluginTable [indexHandler]->pluginDL));
@@ -1027,7 +1027,7 @@ int   indexHandler;
     } else
           ret = (*ptr_NPP_Initialize) ();
     ptr_NPP_GetMIMEDescription = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NPP_GetMIMEDescription");
-#else  /* _WINDOWS */
+#   else  /* _WINDOWS */
     ptr_NPP_Initialize = (int (*) ()) dlsym (pluginTable [indexHandler]->pluginHandle, "NPP_Initialize");
     message = (char*) dlerror ();    
     if (message) 
@@ -1035,7 +1035,7 @@ int   indexHandler;
 
     ret = (*ptr_NPP_Initialize) ();
     ptr_NPP_GetMIMEDescription = (int(*) ()) dlsym (pluginTable [indexHandler]->pluginHandle, "NPP_GetMIMEDescription");
-#endif /* _WINDOWS */
+#   endif /* _WINDOWS */
 
     pluginMimeType = (NPMIMEType) (*ptr_NPP_GetMIMEDescription) ();
     pluginTable [indexHandler]->pluginMimeType = (char*) malloc (strlen (pluginMimeType) + 1);
@@ -1151,9 +1151,9 @@ int       type;
     pwindow->clipRect.bottom = imageDesc->PicWArea;
     pwindow->clipRect.right  = imageDesc->PicHArea;
 
-#ifdef XP_UNIX
+#   ifdef XP_UNIX
     pwindow->ws_info = (NPSetWindowCallbackStruct*) malloc (sizeof (NPSetWindowCallbackStruct));
-#endif /* XP_UNIX */
+#   endif /* XP_UNIX */
     
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->display  = display;
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->visual   = DefaultVisual(display, DefaultScreen (display));
@@ -1214,6 +1214,6 @@ int       type;
     }
 
     (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url);
-    /* (*(pluginTable [indexPlug]->pluginFunctionsTable->destroystream)) ((NPP)(imageDesc->pluginInstance), stream, NPRES_DONE);*/
+    (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->destroystream)) ((NPP)(imageDesc->pluginInstance), stream, NPRES_DONE);
  }
 
