@@ -10,7 +10,7 @@
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" summary="toc">
   <tbody>
@@ -28,8 +28,22 @@
   </tbody>
 </table>
 
+<div class="toc">
+<ul>
+  <li><a href="#Editer">Editer des attributs</a>
+    <ul>
+      <li><a href="#Editer1">Editer des attributs par le biais de l'outil
+        Attributs</a></li>
+      <li><a href="#Editer2">Editer des attributs dans la vue
+      structure</a></li>
+      <li><a href="#Copier">Copier des attributs</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <div id="Attributes">
-<h2>Editer des attributs</h2>
+<h2 id="Editer">Editer des attributs</h2>
 
 <p>Il y a deux manières d'éditer des attributs :</p>
 <ul>
@@ -37,7 +51,7 @@
   <li>Directement dans la Vue structure</li>
 </ul>
 
-<h3><a name="L1073">Editer des attributs par le biais de l'outil
+<h3 id="Editer1"><a name="L1073">Editer des attributs par le biais de l'outil
 Attributs</a></h3>
 
 <p>L'outil <strong>Attributs</strong> présente la liste de tous les attributs
@@ -45,66 +59,109 @@ qui peuvent être associés à l'élément sélectionné. Il peut être utilisé pour
 créer un attribut, pour changer la valeur d'un attribut existant ou pour
 effacer un attribut.</p>
 
-<p>Pour éditer un attribut :</p>
+<p class="ProcedureCaption">Pour créer un attribut :</p>
 <ol>
   <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
     l'élément entier et pas seulement un caractère à l'intérieur de
-    l'élément. Pour cela, utilisez <a href="Selecting.html.fr#Selecting1">la
-    touche F2</a> .</li>
-  <li>Une fois l'élément sélectionné, choisissez l'attribut en cliquant sur
-    le [X] de l'entrée pour supprimer l'attribut <strong>style</strong>, ou
-    vous cliquez sur l'entrée et éditez sa valeur puis confirmez avec le
-    bouton appliquer (<img alt="ok" src="../../resources/icons/16x16/ok.png"
-    />).</li>
+    l'élément. Pour cela, utilisez la touche F2 .</li>
+  <li>Une fois l'élément sélectionné, cliquez sur le [ ] qui précède l'entrée
+    pour ajouter l'attribut. Ce<span class=""></span>t attribut est
+    maintenant activé [x].</li>
+  <li>Pour les attributs bouléens ( comme <strong>ismap</strong> pour une
+    image), la commande est terminée.</li>
+  <li>Pour les autres attributs, vous devez éditer la valeur puis confirmez
+    avec le bouton appliquer (<img alt="ok"
+    src="../../resources/icons/16x16/ok.png" />).</li>
 </ol>
-<ul>
-  <li>Si c'est un attribut bouléen ( comme <code>ismap</code> pour une image)
-    la commande est achevée. Choisir cet attribut dans le menu supprime
-    l'attribut de l'élément sélectionné, s'il est présent, et l'ajoute s'il
-    n'y est pas.</li>
-  <li>Si c'est un attribut avec une série limitée de valeurs ( comme
-    <code>align</code> pour un paragraphe ou une en-tête), une boîte de
-    dialogue apparaît. Elle contient trois boutons et un menu des valeurs
-    disponibles.
+
+<p class="ProcedureCaption">Pour éditer un attribut :</p>
+<ol>
+  <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
+    l'élément entier et pas seulement un caractère à l'intérieur de
+    l'élément. Pour cela, utilisez la touche F2 .</li>
+  <li>Une fois l'élément sélectionné avec cet attribut actif (le nom est
+    précédé par un [x]), cliquez sur le le nom de l'attribut pour afficher sa
+    valeur courante.</li>
+  <li>Pour les attributs avec une série limitée de valeurs ( comme
+    <strong>align</strong> pour un paragraphe ou une en-tête), Amaya affiche :
     <ul>
-      <li>Si vous voulez créer cet attribut ou changer sa valeur, choisissez
-        dans le menu la valeur désirée et cliquer sur le bouton
-        <strong>Appliquer</strong>.</li>
-      <li>Si vous voulez supprimer l'attribut, cliquez sur le bouton
-        <strong>Retire attribut</strong>.</li>
+      <li>Un ensemble de boutons radio proposant la liste des valeurs
+        possibles. Une longue liste (comme <strong>lang</strong>) est
+        présentée avec une liste déroulante.</li>
+      <li>Un bouton appliquer (<img alt="ok"
+        src="../../resources/icons/16x16/ok.png" />) pour confirmer la valeur
+        selectionnée.</li>
+      <li>Un bouton poubelle (<img alt="trash"
+        src="../../resources/icons/16x16/trash.png" />) pour retirer
+        l'attribut.</li>
     </ul>
   </li>
-  <li>Si c'est un attribut avec une valeur libre (comme <code>href</code>
-    pour une ancre), une boîte de dialogue apparaît. Dans cette boîte de
-    dialogue, vous pouvez éditer la valeur de l'attribut. Achevez la commande
-    avec le bouton <strong>Appliquer.</strong> Pour supprimer l'attribut,
-    cliquez sur le bouton <strong>Retire attribut</strong>.</li>
+  <li>Pour les attributs à valeur libre (comme <strong>href</strong> pour une
+    ancre), Amaya affiche :
+    <ul>
+      <li>Une boîte de saisie pour insérer la valeur.</li>
+      <li>Un bouton appliquer (<img alt="ok"
+        src="../../resources/icons/16x16/ok.png" />) pour confirmer la valeur
+        saisie.</li>
+      <li>Un bouton poubelle (<img alt="trash"
+        src="../../resources/icons/16x16/trash.png" />) pour retirer
+        l'attribut.</li>
+    </ul>
+  </li>
+</ol>
+
+<p class="ProcedureCaption">Pour retirer un attribut :</p>
+<ol>
+  <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
+    l'élément entier et pas seulement un caractère à l'intérieur de
+    l'élément. Pour cela, utilisez la touche F2 .</li>
+  <li>Une fois l'élément sélectionné, cliquez sur le [x] qui précède l'entrée
+    pour retirer l'attribut.</li>
+  <li>Vous pouvez aussi sélectionner l'attribut et cliquer sur le bouton
+    poubelle (<img alt="trash" src="../../resources/icons/16x16/trash.png"
+    />) pour retirer l'attribut.</li>
+</ol>
+
+<h3 id="Editer2"><a name="Editing" id="Editing">Editer des attributs dans la
+vue structure</a></h3>
+
+<p>Tous les attributs sont affichés dans la Vue structure. Les attributs
+peuvent être affichés en bleu ou en rose. Quand un attribut est affiché en
+bleu, vous pouvez seulement le modifier avec l'outil
+<strong>Attributs</strong>. Ceci assure que seules des valeurs correctes
+soient choisies.</p>
+
+<p>Les attributs à valeur libre peuvent être édités dans la vue structure.</p>
+<ul>
+  <li>Vous pouvez cliquez dans la valeur (affichée en rose) et éditer la
+    valeur comme n'importe quelle autre chaîne de caractères.</li>
+  <li>Pour sélectionner la valeur entière l'attribut, vous pouvez cliquer
+    dans la valeur puis presser la touche <code>F2</code>.</li>
+  <li>Pour retirer l'attribut, vous pouvez sélectionner la valeur entière,
+    puis presser deux la touche <code>Delete</code>. Le premier
+    <code>Delete</code> va retirer la valeur de l'attribut et le second va
+    détruire l'attribut.</li>
 </ul>
 
-<h3><a name="Copying">Copier des attribut</a></h3>
+<h3 id="Copier"><a name="Copying">Copier des attributs</a></h3>
 
-<p>Un attribut n'est pas un élément. Il ne peut pas être copié à l'aide des
-commandes Copier/Coller. Pour copier un attribut, vous devez utiliser le menu
-Attribut.Vous devez d'abord sélectionner l'élément qui contient l'attribut
-que vous voulez copier. Sélectionnez l'entrée de l'attribut approprié dans le
-menu Attributs. Puis sélectionnez le nouvel élément auquel vous voulez
-associer l'attribut en cours et cliquez sur le bouton
-<strong>Appliquer.</strong></p>
+<p>Un attribut n'est pas la même chose qu'un élément et un attribut ne peut
+pas être copié à l'aide des commandes
+<strong>Copier</strong>/<strong>Coller</strong> du menu
+<strong>Edition</strong>.</p>
 
-<h3><a name="Editing">Editer des attributs dans la Vue structure</a></h3>
-
-<p>Tous les attributs sont affichés dans la Vue structure. Les attributs dont
-la valeur peut être choisie librement sont affichés en noir et vous pouvez
-éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand
-la valeur de l'attribut est affichée en bleu, vous pouvez seulement la
-changer à l'aide du menu <strong>Attributs</strong>. Ceci assure que seules
-des valeurs correctes soient choisies.</p>
+<p>Pour copier un attribut, vous devez utiliser l'outil
+<strong>Attributs</strong>.</p>
+<ol>
+  <li>Sélectionnez l'élément qui contient l'attribut que vous voulez
+  copier.</li>
+  <li>Sélectionnez l'entrée de l'attribut appropriée dans l'outil
+    <strong>Attributs</strong>.</li>
+  <li>Puis sélectionnez le nouvel élément auquel vous voulez associer
+    l'attribut courant.</li>
+  <li>Cliquez sur le bouton appliquer (<img alt="ok"
+    src="../../resources/icons/16x16/ok.png" />).</li>
+</ol>
 </div>
-
-<p><a href="Creating.html.fr#Creating"><img alt="previous"
-src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="EditChar.html.fr#Keyboard"><img
-alt="next" src="../images/right.gif" /></a></p>
-<hr />
 </body>
 </html>

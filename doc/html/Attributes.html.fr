@@ -89,7 +89,7 @@ associer l'attribut en cours et cliquez sur le bouton
 <h3><a name="Editing">Editer des attributs dans la Vue structure</a></h3>
 
 <p>Tous les attributs sont affichés dans la Vue structure. Les attributs dont
-la valeur peut être choisie librement sont affichés en noir et vous pouvez
+la valeur peut être choisie librement sont affichés en rose et vous pouvez
 éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand
 la valeur de l'attribut est affichée en bleu, vous pouvez seulement la
 changer à l'aide du menu <strong>Attributs</strong>. Ceci assure que seules
