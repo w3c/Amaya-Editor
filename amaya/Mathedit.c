@@ -837,11 +837,12 @@ static Element AppendEmptyText (Element el, Document doc)
 	      parentType.ElTypeNum == HTML_EL_Term ||
 	      parentType.ElTypeNum == HTML_EL_CAPTION)
 	    {
+	      elType.ElSSchema = parentType.ElSSchema;
+	      elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 	      sibling = el;
 	      TtaPreviousSibling (&sibling);
 	      if (!sibling)
 		{
-		  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 		  emptyLeaf = TtaNewElement (doc, elType);
 		  TtaInsertSibling (emptyLeaf, el, TRUE, doc);
 		}
@@ -849,7 +850,6 @@ static Element AppendEmptyText (Element el, Document doc)
 	      TtaNextSibling (&sibling);
 	      if (!sibling)
 		{
-		  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 		  emptyLeaf = TtaNewElement (doc, elType);
 		  TtaInsertSibling (emptyLeaf, el, FALSE, doc);
 		}
@@ -2234,31 +2234,38 @@ void MathSelectionChanged (NotifyElement *event)
     {
       el = event->element;
       elType = TtaGetElementType (el);
-      if (elType.ElTypeNum != MathML_EL_MathML)
-	/* get the ancestor <math> element */
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML"))
+	/* it's not a MathML element */
+	UnFrameMath ();
+      else
 	{
-	  elType.ElTypeNum = MathML_EL_MathML;
-	  el = TtaGetTypedAncestor (el, elType);
-	}
-      if (el)
-	{
-	  /* if another formula is already highlighted, remove its frame and
-	     frame the new one */
-	  if (el != MathElementSelected)
+	  if (elType.ElTypeNum != MathML_EL_MathML)
+	    /* get the ancestor <math> element */
 	    {
-	      UnFrameMath ();
-	      /* associate an attribute IntSelected with the new <math> elem */
-	      attrType.AttrSSchema = elType.ElSSchema;
-	      attrType.AttrTypeNum = MathML_ATTR_IntSelected;
-	      attr = TtaNewAttribute (attrType);
-	      if (attr)
+	      elType.ElTypeNum = MathML_EL_MathML;
+	      el = TtaGetTypedAncestor (el, elType);
+	    }
+	  if (el)
+	    {
+	      /* if another formula is already highlighted, remove its frame
+		 and frame the new one */
+	      if (el != MathElementSelected)
 		{
-		  TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
-					el, event->document);
-		  TtaAttachAttribute (el, attr, event->document);
+		  UnFrameMath ();
+		  /* associate an attribute IntSelected with the new <math>
+		     element */
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = MathML_ATTR_IntSelected;
+		  attr = TtaNewAttribute (attrType);
+		  if (attr)
+		    {
+		      TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
+					    el, event->document);
+		      TtaAttachAttribute (el, attr, event->document);
+		    }
+		  MathElementSelected = el;
+		  DocMathElementSelected = event->document;
 		}
-	      MathElementSelected = el;
-	      DocMathElementSelected = event->document;
 	    }
 	}
     }

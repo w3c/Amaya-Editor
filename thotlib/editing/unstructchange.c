@@ -1125,8 +1125,7 @@ void PasteCommand ()
 		if (!pSel->ElTerminal)
 		  pSel = LastLeaf (pSel);
 	      if (pSel)
-		SelectString (pDoc, pSel, pSel->ElTextLength + 1,
-			      pSel->ElTextLength);
+		SelectPositionWithEvent (pDoc, pSel, pSel->ElTextLength+1);
 
 	      SetDocumentModified (pDoc, TRUE, 20);
 
