@@ -7526,6 +7526,21 @@ ThotBool            plainText;
 		isHTML = FALSE;
 	      }
 	    rootElement = TtaGetMainRoot (doc);
+#ifndef STANDALONE
+	    if (DocumentTypes[doc] == docSource ||
+		DocumentTypes[doc] == docSourceRO)
+	      {
+		/* add the attribute Source */
+		attrType.AttrSSchema = DocumentSSchema;
+		attrType.AttrTypeNum = TextFile_ATTR_Source;
+		attr = TtaGetAttribute (rootElement, attrType);
+		if (attr == 0)
+		  {
+		    attr = TtaNewAttribute (attrType);
+		    TtaAttachAttribute (rootElement, attr, doc);
+		  }
+	      }
+#endif /* STANDALONE */
 	    
 	    /* add the default attribute PrintURL */
 	    attrType.AttrSSchema = DocumentSSchema;

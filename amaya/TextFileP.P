@@ -221,9 +221,6 @@ RULES
 #ifdef PAGE
 	Width: Enclosing . Width;
 #else
-	CreateBefore (LineNum);
-	VertPos: HRef = Previous LineNum . HRef;
-	HorizPos: Left = Enclosing . Left + 3;
 	Width: Enclosed . Width;
 #endif
 	END;
@@ -234,6 +231,13 @@ RULES
 ATTRIBUTES
 
 #ifndef PAGE
+  Source (Line\240):
+	BEGIN
+	CreateBefore (LineNum);
+	VertPos: HRef = Previous LineNum . HRef;
+	HorizPos: Left = Enclosing . Left + 3;
+	END;
+
   Highlight:
 	CreateFirst (IndexBox);
 #endif
