@@ -192,8 +192,11 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       /* initialize the ignore case button */
       CheckDlgButton (hwnDlg, IDC_UPPERLOWER, (UpperLower)
 		      ? BST_CHECKED : BST_UNCHECKED);
-      
+
+      /* put the focus on the first item */
       SetFocus (GetDlgItem (hwnDlg, IDC_SEARCHEDIT));
+	  /* if we don't return false, Windows will override our SetFocus */
+	  return FALSE;
       break;
 	    
     case WM_CLOSE:
