@@ -432,6 +432,12 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		    script = embed = 'A';
 		  else if (dir == 'L' && (newscript == 'A' || newscript == 'H'))
 		    script = embed = 'L';
+		  else
+		    {
+		      script = newscript;
+		      if (embed == '*')
+			embed = script;
+		    }
 		}
 	      else
 		{
@@ -2073,9 +2079,11 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
    /* Traitement sur la boite passee en parametre */
    savpropage = Propagate;
    pAb = pBox->BxAbstractBox;
-   /* Mise a jour de la boite elle-meme */
-   if (pAb->AbLeafType == LtText)
+   /* update the box itself */
+   if (pAb->AbLeafType == LtText &&
+       (charDelta > 0 || !splitBox))
      {
+       /* when a character between 2 boxes are removed the box is unchanged */
 	pBox->BxNSpaces += spaceDelta;
 	pBox->BxNChars += charDelta;
      }

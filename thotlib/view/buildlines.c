@@ -877,6 +877,15 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	  i++;		/* number of managed characters */
 	  newWidth += carWidth;
 	  width += spaceWidth;
+	  if (charIndex == pBuffer->BuLength - 1 && pBuffer->BuNext == NULL)
+	    {
+	      /* last character of the box */
+	      still = FALSE;
+	      dummySpaces = 1;
+	      (*newIndex)++;
+	      dummySpaces = 1;
+	      *nSpaces = spaceCount - 1;
+	    }
 	}
       else
 	{
@@ -897,16 +906,18 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 		{
 		  /* end of the box */
 		  still = FALSE;
-		  /* Select the first character after the break */
 		  *pNewBuff = NULL;
 		  *newIndex = charIndex;
 		  *boxWidth = pBox->BxW;
 		  *boxLength = pBox->BxNChars;
 		  *nSpaces = pBox->BxNSpaces;
 		}
-	      /* next buffer */
-	      pBuffer = pBuffer->BuNext;
-	      charIndex = 0;
+	      else
+		{
+		  /* next buffer */
+		  pBuffer = pBuffer->BuNext;
+		  charIndex = 0;
+		}
 	    }
 	}
     }
@@ -933,7 +944,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	      /* points the last character of the box */
 	      *pNewBuff = pBuffer;
 	      *newIndex = charIndex + 1;
-	    }	  
+	    }
 	  /* previous char */
 	  if (charIndex == 0)
 	    {
@@ -961,7 +972,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
     {
       /* the end of the box was reached */
       *pNewBuff = pBuffer;
-      *newIndex = charIndex;
+      *newIndex = charIndex + 1;
     }
   else if (max < pBox->BxWidth && CanHyphen (pBox) &&
 	   wordLength > 1 && !TextInserting)
@@ -1481,7 +1492,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	     *adjust = FALSE;
 	     still = FALSE;
 	     *breakLine = TRUE;
-	     if (pBox->BxNChars > 1)
+	     /*if (pBox->BxNChars > 1)*/
 	       ManageBreakLine (pBox, width, breakWidth, boxLength,
 				nSpaces, newIndex, pNewBuff, pRootAb);
 	  }
@@ -1913,12 +1924,14 @@ static void RemoveAdjustement (PtrBox pBox, int spaceWidth)
 static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 			  ThotBool *changeSelectEnd)
 {
+  PtrTextBuffer       pBuffer;
   PtrBox              ibox1;
   PtrBox              ibox2;
   PtrBox              pNextBox;
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel, *pViewSelEnd;
+  CHAR_T              c;
   int                 x, width = 0;
   int                 nspace = 0;
   int                 lost = 0;
@@ -2020,10 +2033,23 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		      diff = ibox1->BxFirstChar - lost;
 		      if (diff > 0)
 			{
-			  /* add skipped spaces */
-			  width += diff * x;
-			  nspace += diff;
-			  nchar += diff;
+			  c = EOS;
+			  pBuffer = ibox1->BxBuffer;
+			  if (ibox1->BxIndChar > 0 && pBuffer)
+			    c = pBuffer->BuContent[ibox1->BxIndChar - 1];
+			  else if (ibox1->BxIndChar == 0 && pBuffer &&
+				   pBuffer->BuPrevious)
+			    c = pBuffer->BuPrevious->BuContent[pBuffer->BuPrevious->BuLength - 1];
+			  if (c == EOS)
+			    /* characters between two boxes were removed */
+			    diff = 0;
+			  else
+			    {
+			      nchar += diff;
+			      /* add skipped spaces */
+			      width += diff * x;
+			      nspace += diff;
+			    }
 			}
 		      else if (ibox1->BxType == BoDotted)
 			/* remove the hyphen width */

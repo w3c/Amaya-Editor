@@ -419,10 +419,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
 	    x = 0;
 	  else
 	    x = pBox->BxW;
-	  if (pBox->BxNexChild)
-	    spaces = pBox->BxNSpaces + pBox->BxNexChild->BxFirstChar - pBox->BxFirstChar - pBox->BxNChars;
-	  else
-	    spaces = pBox->BxNSpaces;
+	  spaces = pBox->BxNSpaces;
 	}
       else
 	{
