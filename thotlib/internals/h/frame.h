@@ -20,7 +20,7 @@
 
 typedef struct _Frame_Ctl {
   short      FrTopMargin;               /* Window Top Margin                      */
-  short      FrLeftMargin;              /* Window Left Margin                     */
+  short      FrScrollWidth;             /* Scrolled width                     */
   short      FrWidth;                   /* Window Width                           */
   short      FrHeight;                  /* Window Height                          */
   int        FrDoc;                     /* Document ID                            */

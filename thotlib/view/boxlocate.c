@@ -983,13 +983,15 @@ int                 yDelta;
 #endif /* __STDC__ */
 {
   int                 i;
-  PtrBox              pBox, pLimitBox;
+  PtrBox              pBox, pLimitBox, lastBox;
   PtrLine             pLine;
   int                 max;
-  int                 h;
+  int                 h, lastY;
   ThotBool            found;
 
   found = FALSE;
+  lastBox = NULL;
+  lastY = *y;
   while (!found)
     {
       pBox = pSourceBox;
@@ -1072,8 +1074,15 @@ int                 yDelta;
 		}
 	      else
 		{
-		  *y = pBox->BxYOrg + yDelta;
-		  found = FALSE;
+		  /* avoid to loop on the last box */
+		  if (*y != lastY || lastBox != pBox)
+		    {
+		      lastY = *y;
+		      lastBox = pBox;
+		      /* continue the search */
+		      *y = pBox->BxYOrg + yDelta;
+		      found = FALSE;
+		    }
 		}
 	    }
 	  else if (pBox->BxAbstractBox->AbLeafType != LtText && pBox->BxNChars != 0)

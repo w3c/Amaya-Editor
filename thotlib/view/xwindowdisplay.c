@@ -224,10 +224,6 @@ int                 y2;
 
 #endif /* __STDC__ */
 {
-   x1 += FrameTable[frame].FrLeftMargin;
-   y1 += FrameTable[frame].FrTopMargin;
-   x2 += FrameTable[frame].FrLeftMargin;
-   y2 += FrameTable[frame].FrTopMargin;
 #ifdef _GTK
    gdk_draw_line (FrRef[frame], TtLineGC, x1, y1, x2, y2);
 #else /* _GTK */
@@ -308,13 +304,13 @@ int                 fg;
 
 #ifdef _GTK
    gdk_draw_string (w, font, TtLineGC, 
-		    x + FrameTable[frame].FrLeftMargin, 
+		    x, 
 		    y + FrameTable[frame].FrTopMargin + FontBase (font), 
 		    &car);
 
 #else /* _GTK */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
-   XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
+   XDrawString (TtDisplay, w, TtLineGC, x, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
 #endif /* _GTK */
 
    FinishDrawing (0, RO, active);
@@ -399,10 +395,10 @@ int                 shadow;
 	     SpaceToChar (ptcar);	/* substitute spaces */
 	   }
 #ifdef _GTK
-	     gdk_draw_string ( w, font,TtLineGC, x + FrameTable[frame].FrLeftMargin, 
+	     gdk_draw_string ( w, font,TtLineGC, x, 
 			       y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar);
 #else /* _GTK */
-         XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+         XDrawString (TtDisplay, w, TtLineGC, x, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #endif /* _GTK */
          TtaFreeMemory (ptcar);
       } else {
@@ -415,11 +411,11 @@ int                 shadow;
 #ifdef _GTK
 	     car = ptcar[lg];
 	     ptcar[lg] = EOS;
-	     gdk_draw_string ( w, font,TtLineGC, x + FrameTable[frame].FrLeftMargin, 
+	     gdk_draw_string ( w, font,TtLineGC, x, 
 			       y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar);
 	     ptcar[lg] = car;
 #else /* _GTK */
-	      XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+	      XDrawString (TtDisplay, w, TtLineGC, x, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #endif /* _GTK */
 	     }
 	}
@@ -428,10 +424,10 @@ int                 shadow;
 	{
          /* draw the hyphen */
 #ifdef _GTK
-     	  gdk_draw_string (w, font,TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
+     	  gdk_draw_string (w, font,TtLineGC, x + width,
 			   y + FrameTable[frame].FrTopMargin + FontBase (font), "\255");
 #else /* _GTK */
-         XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
+         XDrawString (TtDisplay, w, TtLineGC, x + width,
          y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
 #endif /* _GTK */
 	}
@@ -505,6 +501,7 @@ int                 fg;
 	ascent = FontAscent (font);
 	thickness = ((fheight / 20) + 1) * (thick + 1);
 	shift = thick * thickness;
+	y += FrameTable[frame].FrTopMargin;
 	height = y + shift;
 	bottom = y + ascent + 2 + shift;
 	middle = y + fheight / 2 - shift;
@@ -571,7 +568,6 @@ int                 fg;
    if (lgboite > 0)
      {
 	w = FrRef[frame];
-
 	ptcar = TEXT(" .");
 
 	/* compute lenght of the string " ." */
@@ -579,8 +575,8 @@ int                 fg;
 
 	/* compute the number of string to write */
 	nb = lgboite / width;
-	xcour = x + FrameTable[frame].FrLeftMargin + (lgboite % width);
-	y += FrameTable[frame].FrTopMargin - FontBase (font);
+	xcour = x + (lgboite % width);
+	y = y + FrameTable[frame].FrTopMargin - FontBase (font);
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 	LoadColor (0, RO, active, fg);
 
@@ -629,6 +625,7 @@ int                 fg;
    fh = FontHeight (font);
    xm = x + (fh / 2);
    xp = x + (fh / 4);
+   y += FrameTable[frame].FrTopMargin;
    InitDrawing (0, 0, 0, RO, active, fg);
    /* vertical part */
    DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
@@ -778,6 +775,7 @@ int                 fg;
      }
    else
      {
+        y += FrameTable[frame].FrTopMargin;
 	xm = x + (l / 3);
 	ym = y + (h / 2) - 1;
 	InitDrawing (0, 0, 0, RO, active, fg);
@@ -824,6 +822,7 @@ int                 fg;
      }
    else
      {
+        y += FrameTable[frame].FrTopMargin;
 	InitDrawing (0, 0, 0, RO, active, fg);
 	/* Vertical part */
 	DoDrawOneLine (frame, x + 2, y + 1, x + 2, y + h);
@@ -867,6 +866,7 @@ int                 fg;
      }
    else
      {
+        y += FrameTable[frame].FrTopMargin;
 	/* radius of arcs is 6mm */
 	arc = h / 4;
 	InitDrawing (0, 0, 2, RO, active, fg);
@@ -915,6 +915,7 @@ int                 fg;
      }
    else
      {
+        y += FrameTable[frame].FrTopMargin;
 	/* radius of arcs is 3mm */
 	arc = h / 4;
 	InitDrawing (0, 0, 2, RO, active, fg);
@@ -936,12 +937,12 @@ int                 fg;
 }
 
 /*----------------------------------------------------------------------
-  TraceFleche draw the end of an arrow.
+  ArrowDrawing draw the end of an arrow.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TraceFleche (int frame, int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
+static void         ArrowDrawing (int frame, int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
 #else  /* __STDC__ */
-static void         TraceFleche (frame, x1, y1, x2, y2, thick, RO, active, fg)
+static void         ArrowDrawing (frame, x1, y1, x2, y2, thick, RO, active, fg)
 int                 frame;
 int                 x1, y1, x2, y2;
 int                 thick;
@@ -957,7 +958,7 @@ int                 fg;
    Pixmap              pattern;
    ThotPoint           point[3];
 
-   width = (float)(5 + thick);
+   width = (float) (5 + thick);
    height = 10;
    dx = (float) (x2 - x1);
    dy = (float) (y1 - y2);
@@ -1029,6 +1030,7 @@ int                 fg;
 
    if (thick <= 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
    xm = x + ((l - thick) / 2);
    xf = x + l - 1;
    ym = y + ((h - thick) / 2);
@@ -1039,45 +1041,45 @@ int                 fg;
      {
 	/* draw a right arrow */
 	DoDrawOneLine (frame, x, ym, xf, ym);
-	TraceFleche (frame, x, ym, xf, ym, thick, RO, active, fg);
+	ArrowDrawing (frame, x, ym, xf, ym, thick, RO, active, fg);
      }
    else if (orientation == 45)
      {
 	DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
-	TraceFleche (frame, x, yf, xf - thick + 1, y, thick, RO, active, fg);
+	ArrowDrawing (frame, x, yf, xf - thick + 1, y, thick, RO, active, fg);
      }
    else if (orientation == 90)
      {
 	/* draw a bottom-up arrow */
 	DoDrawOneLine (frame, xm, y, xm, yf);
-	TraceFleche (frame, xm, yf, xm, y, thick, RO, active, fg);
+	ArrowDrawing (frame, xm, yf, xm, y, thick, RO, active, fg);
      }
    else if (orientation == 135)
      {
 	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
-	TraceFleche (frame, xf - thick + 1, yf, x, y, thick, RO, active, fg);
+	ArrowDrawing (frame, xf - thick + 1, yf, x, y, thick, RO, active, fg);
      }
    else if (orientation == 180)
      {
 	/* draw a left arrow */
 	DoDrawOneLine (frame, x, ym, xf, ym);
-	TraceFleche (frame, xf, ym, x, ym, thick, RO, active, fg);
+	ArrowDrawing (frame, xf, ym, x, ym, thick, RO, active, fg);
      }
    else if (orientation == 225)
      {
 	DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
-	TraceFleche (frame, xf - thick + 1, y, x, yf, thick, RO, active, fg);
+	ArrowDrawing (frame, xf - thick + 1, y, x, yf, thick, RO, active, fg);
      }
    else if (orientation == 270)
      {
 	/* draw a top-down arrow */
 	DoDrawOneLine (frame, xm, y, xm, yf);
-	TraceFleche (frame, xm, y, xm, yf, thick, RO, active, fg);
+	ArrowDrawing (frame, xm, y, xm, yf, thick, RO, active, fg);
      }
    else if (orientation == 315)
      {
 	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
-	TraceFleche (frame, x, y, xf - thick + 1, yf, thick, RO, active, fg);
+	ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, RO, active, fg);
      }
    FinishDrawing (0, RO, active);
 }
@@ -1453,7 +1455,7 @@ int                 pattern;
    if (height > thick + 1)
      height = height - thick - 1;
    x += thick / 2;
-   y += thick / 2;
+   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
@@ -1461,14 +1463,13 @@ int                 pattern;
 #ifdef _GTK
      gdk_gc_set_tile ( TtGreyGC, pat);    
      gdk_draw_rectangle ( FrRef[frame], TtGreyGC, TRUE, 
-			  x + FrameTable[frame].FrLeftMargin, 
-			  y + FrameTable[frame].FrTopMargin, width-1, height-1);
+			  x, y, width-1, height-1);
      gdk_pixmap_unref (pat);
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
     
       XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
-                      x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+                      x, y, width, height);
       XFreePixmap (TtDisplay, pat);
 #endif /* _GTK */
    }
@@ -1479,11 +1480,10 @@ int                 pattern;
 	InitDrawing (0, style, thick, RO, active, fg); 
 #ifdef _GTK
 	gdk_draw_rectangle ( FrRef[frame],TtLineGC,FALSE, 
-			     x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, 
-			     width, height);
+			     x, y, width, height);
 
 #else /* _GTK */
-	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height);
 #endif /* _GTK */
 	FinishDrawing (0, RO, active);
    }
@@ -1525,17 +1525,17 @@ int                 pattern;
    if (height > thick + 1)
      height = height - thick - 1;
    x += thick / 2;
-   y += thick / 2;
+   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
-   point[0].x = x + (width / 2) + FrameTable[frame].FrLeftMargin;
-   point[0].y = y + FrameTable[frame].FrTopMargin;
+   point[0].x = x + (width / 2);
+   point[0].y = y;
    point[4].x = point[0].x;
    point[4].y = point[0].y;
-   point[1].x = x + width + FrameTable[frame].FrLeftMargin;
-   point[1].y = y + (height / 2) + FrameTable[frame].FrTopMargin;
+   point[1].x = x + width;
+   point[1].y = y + (height / 2);
    point[2].x = point[0].x;
-   point[2].y = y + height + FrameTable[frame].FrTopMargin;
-   point[3].x = x + FrameTable[frame].FrLeftMargin;
+   point[2].y = y + height;
+   point[3].x = x;
    point[3].y = point[1].y;
 
    /* Fill in the diamond */
@@ -1561,8 +1561,7 @@ int                 pattern;
 #ifdef _GTK
 	gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, point, 5);
 #else /* _GTK */
-	XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
-		    point, 5, CoordModeOrigin);
+	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, point, 5, CoordModeOrigin);
 #endif /* _GTK */
 	FinishDrawing (0, RO, active);
      }
@@ -1612,6 +1611,7 @@ int                 arrow;
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
    for (i = 1; i < nb; i++)
      {
@@ -1624,30 +1624,39 @@ int                 arrow;
 		  j = 0;
 	       }
 	  }
-	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+	points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	j++;
      }
 
 
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
-      TraceFleche (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
+      ArrowDrawing (frame,
+		   points[1].x, points[1].y,
+		   points[0].x, points[0].y,
+		   thick, RO, active, fg);
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
    for (k=0;k< nb-2;k++){
-     gdk_draw_line (FrRef[frame], TtLineGC,points[k].x,points[k].y,points[k+1].x,points[k+1].y);
+     gdk_draw_line (FrRef[frame], TtLineGC,
+		    points[k].x, points[k].y,
+		    points[k+1].x, points[k+1].y);
    }
 #else /* _GTK */
-   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1, CoordModeOrigin);
+   XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
+	       points, nb - 1, CoordModeOrigin);
 #endif /* _GTK */
    FinishDrawing (0, RO, active);
 
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
-      TraceFleche (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
+      ArrowDrawing (frame,
+		   points[nb - 3].x, points[nb - 3].y,
+		   points[nb - 2].x, points[nb - 2].y,
+		   thick, RO, active, fg);
 
    /* free the table of points */
    free (points);
@@ -1693,6 +1702,7 @@ int                 pattern;
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
    for (i = 1; i < nb; i++)
      {
@@ -1705,8 +1715,8 @@ int                 pattern;
 		  j = 0;
 	       }
 	  }
-	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+	points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	j++;
      }
    /* Close the polygone */
@@ -1928,20 +1938,24 @@ C_points           *controls;
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
 
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
-   x1 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y1 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+   x1 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y1 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
    j++;
-   cx1 = (controls[j].lx * 3 + x1 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
-   cy1 = (controls[j].ly * 3 + y1 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
-   x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx2 = (controls[j].lx * 3 + x2 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
-   cy2 = (controls[j].ly * 3 + y2 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
+   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
+   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
+   x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
+   cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
 
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
-      TraceFleche (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, RO, active, fg);
+      ArrowDrawing (frame,
+		   FloatToInt (cx1), FloatToInt (cy1),
+		   (int) x1, (int) y1,
+		   thick, RO, active, fg);
 
    for (i = 2; i < nb; i++)
      {
@@ -1950,8 +1964,8 @@ C_points           *controls;
 	/* skip to next points */
 	x1 = x2;
 	y1 = y2;
-	cx1 = controls[i].rx + x + FrameTable[frame].FrLeftMargin;
-	cy1 = controls[i].ry + y + FrameTable[frame].FrTopMargin;
+	cx1 = controls[i].rx + x;
+	cy1 = controls[i].ry + y;
 	if (i < nb - 1)
 	  {
 	     /* not finished */
@@ -1965,19 +1979,19 @@ C_points           *controls;
 		       j = 0;
 		    }
 	       }
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+	     x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+	     y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
 	     if (i == nb - 2)
 	       {
-		  cx1 = (controls[i].rx * 3 + x1 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
-		  cy1 = (controls[i].ry * 3 + y1 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
-		  cx2 = (controls[i].rx * 3 + x2 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
-		  cy2 = (controls[i].ry * 3 + y2 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
+		  cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
+		  cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
+		  cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
+		  cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
 	       }
 	     else
 	       {
-		  cx2 = controls[i + 1].lx + x + FrameTable[frame].FrLeftMargin;
-		  cy2 = controls[i + 1].ly + y + FrameTable[frame].FrTopMargin;
+		  cx2 = controls[i + 1].lx + x;
+		  cy2 = controls[i + 1].ly + y;
 	       }
 	  }
      }
@@ -1992,7 +2006,10 @@ C_points           *controls;
 #endif /* _GTK */
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
-      TraceFleche (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
+      ArrowDrawing (frame,
+		   FloatToInt (cx2), FloatToInt (cy2),
+		   (int) x2, (int) y2,
+		   thick, RO, active, fg);
 
    FinishDrawing (0, RO, active);
    /* free the table of points */
@@ -2043,16 +2060,17 @@ C_points           *controls;
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
 
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
-   x1 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y1 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx1 = controls[j].rx + x + FrameTable[frame].FrLeftMargin;
-   cy1 = controls[j].ry + y + FrameTable[frame].FrTopMargin;
+   x1 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y1 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+   cx1 = controls[j].rx + x;
+   cy1 = controls[j].ry + y;
    j++;
-   x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx2 = controls[j].lx + x + FrameTable[frame].FrLeftMargin;
-   cy2 = controls[j].ly + y + FrameTable[frame].FrTopMargin;
+   x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+   cx2 = controls[j].lx + x;
+   cy2 = controls[j].ly + y;
 
    for (i = 2; i < nb; i++)
      {
@@ -2061,8 +2079,8 @@ C_points           *controls;
 	/* next points */
 	x1 = x2;
 	y1 = y2;
-	cx1 = controls[i].rx + x + FrameTable[frame].FrLeftMargin;
-	cy1 = controls[i].ry + y + FrameTable[frame].FrTopMargin;
+	cx1 = controls[i].rx + x;
+	cy1 = controls[i].ry + y;
 	if (i < nb - 1)
 	  {
 	     /* not the last loop */
@@ -2076,18 +2094,18 @@ C_points           *controls;
 		       j = 0;
 		    }
 	       }
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-	     cx2 = controls[i + 1].lx + x + FrameTable[frame].FrLeftMargin;
-	     cy2 = controls[i + 1].ly + y + FrameTable[frame].FrTopMargin;
+	     x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+	     y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+	     cx2 = controls[i + 1].lx + x;
+	     cy2 = controls[i + 1].ly + y;
 	  }
 	else
 	  {
 	     /* loop around the origin point */
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (buffer->BuPoints[1].XCoord / 1000));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (buffer->BuPoints[1].YCoord / 1000));
-	     cx2 = controls[1].lx + x + FrameTable[frame].FrLeftMargin;
-	     cy2 = controls[1].ly + y + FrameTable[frame].FrTopMargin;
+	     x2 = (float) (x + PointToPixel (buffer->BuPoints[1].XCoord / 1000));
+	     y2 = (float) (y + PointToPixel (buffer->BuPoints[1].YCoord / 1000));
+	     cx2 = controls[1].lx + x;
+	     cy2 = controls[1].ly + y;
 	  }
      }
 
@@ -2162,20 +2180,20 @@ int                 pattern;
    width -= thick;
    height -= thick;
    x += thick / 2;
-   y += thick / 2;
+   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
    /* radius of arcs is 3mm */
    arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
    xf = x + width - 1;
    yf = y + height - 1;
 
-   xarc[0].x = x + FrameTable[frame].FrLeftMargin;
-   xarc[0].y = y + FrameTable[frame].FrTopMargin;
+   xarc[0].x = x;
+   xarc[0].y = y;
    xarc[0].width = arc * 2;
    xarc[0].height = xarc[0].width;
    xarc[0].angle1 = 90 * 64;
    xarc[0].angle2 = 90 * 64;
 
-   xarc[1].x = xf - arc * 2 + FrameTable[frame].FrLeftMargin;
+   xarc[1].x = xf - arc * 2;
    xarc[1].y = xarc[0].y;
    xarc[1].width = xarc[0].width;
    xarc[1].height = xarc[0].width;
@@ -2183,7 +2201,7 @@ int                 pattern;
    xarc[1].angle2 = xarc[0].angle2;
 
    xarc[2].x = xarc[0].x;
-   xarc[2].y = yf - arc * 2 + FrameTable[frame].FrTopMargin;
+   xarc[2].y = yf - arc * 2;
    xarc[2].width = xarc[0].width;
    xarc[2].height = xarc[0].width;
    xarc[2].angle1 = 180 * 64;
@@ -2196,22 +2214,22 @@ int                 pattern;
    xarc[3].angle1 = 270 * 64;
    xarc[3].angle2 = xarc[0].angle2;
 
-   seg[0].x1 = x + arc + FrameTable[frame].FrLeftMargin;
-   seg[0].x2 = xf - arc + FrameTable[frame].FrLeftMargin;
-   seg[0].y1 = y + FrameTable[frame].FrTopMargin;
+   seg[0].x1 = x + arc;
+   seg[0].x2 = xf - arc;
+   seg[0].y1 = y;
    seg[0].y2 = seg[0].y1;
 
-   seg[1].x1 = xf + FrameTable[frame].FrLeftMargin;
+   seg[1].x1 = xf;
    seg[1].x2 = seg[1].x1;
-   seg[1].y1 = y + arc + FrameTable[frame].FrTopMargin;
-   seg[1].y2 = yf - arc + FrameTable[frame].FrTopMargin;
+   seg[1].y1 = y + arc;
+   seg[1].y2 = yf - arc;
 
    seg[2].x1 = seg[0].x1;
    seg[2].x2 = seg[0].x2;
-   seg[2].y1 = yf + FrameTable[frame].FrTopMargin;
+   seg[2].y1 = yf;
    seg[2].y2 = seg[2].y1;
 
-   seg[3].x1 = x + FrameTable[frame].FrLeftMargin;
+   seg[3].x1 = x;
    seg[3].x2 = seg[3].x1;
    seg[3].y1 = seg[1].y1;
    seg[3].y2 = seg[1].y2;
@@ -2332,8 +2350,8 @@ int                 pattern;
 
    width -= thick + 1;
    height -= thick + 1;
-   x += thick / 2 + FrameTable[frame].FrLeftMargin;
-   y += thick / 2 + FrameTable[frame].FrTopMargin;
+   x += thick / 2;
+   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
 
@@ -2395,6 +2413,7 @@ int                 fg;
 {
    register int        Y;
 
+   y += FrameTable[frame].FrTopMargin;
    if (align == 1)
       Y = y + (h - thick) / 2;
    else if (align == 2)
@@ -2445,6 +2464,7 @@ int                 fg;
    else
       X = x;
 
+   y += FrameTable[frame].FrTopMargin;
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
@@ -2481,6 +2501,7 @@ int                 fg;
 {
    int                 xf, yf;
 
+   y += FrameTable[frame].FrTopMargin;
    xf = x + l - 1 - thick;
    yf = y + h - 1 - thick;
    if (thick > 0)
@@ -2526,11 +2547,9 @@ int                 fg;
    if (thick <= 0)
       return;
 
-   x += FrameTable[frame].FrLeftMargin;
    y += FrameTable[frame].FrTopMargin;
    xf = x + l - thick;
    yf = y + h - thick;
-
    InitDrawing (0, style, thick, RO, active, fg);
    switch (corner)
 	 {
@@ -2570,8 +2589,7 @@ int                 fg;
 #ifdef _GTK
    gdk_draw_lines (FrRef[frame], TtLineGC, point, 3);
 #else /* _GTK */
-   XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
-	       point, 3, CoordModeOrigin);
+   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, point, 3, CoordModeOrigin);
 #endif /* _GTK */
    FinishDrawing (0, RO, active);
 }
@@ -2611,8 +2629,8 @@ int                 pattern;
 
    width -= thick;
    height -= thick;
-   x += FrameTable[frame].FrLeftMargin + thick / 2;
-   y += FrameTable[frame].FrTopMargin + thick / 2;
+   x += thick / 2;
+   y = y + FrameTable[frame].FrTopMargin + thick / 2;
    /* radius of arcs is 3mm */
    arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
    arc2 = 2 * arc;
@@ -2745,7 +2763,6 @@ int                 pattern;
      }
 
    /* Draw the border */
-
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
@@ -2776,6 +2793,7 @@ int                 pattern;
      }
 }
 
+
 /*----------------------------------------------------------------------
   DrawEllipsFrame draw an ellipse at 7mm under the top of the
   enclosing box.
@@ -2784,8 +2802,6 @@ int                 pattern;
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawEllipsFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
@@ -2813,8 +2829,8 @@ int                 pattern;
 
    width -= thick + 1;
    height -= thick + 1;
-   x += FrameTable[frame].FrLeftMargin + thick / 2;
-   y += FrameTable[frame].FrTopMargin + thick / 2;
+   x += thick / 2;
+   y = y + FrameTable[frame].FrTopMargin + thick / 2;
 
    /* Fill in the rectangle */
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
@@ -2933,9 +2949,9 @@ int                 y;
    if (w != None)
      {
 #ifdef _GTK
-       gdk_window_clear_area (w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+       gdk_window_clear_area (w, x, y + FrameTable[frame].FrTopMargin, width, height);
 #else /* _GTK */
-	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
+	XClearArea (TtDisplay, w, x, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
 #endif /* _GTK */
      }
 }
@@ -2988,10 +3004,10 @@ int                 y;
 
    if (w != None)
 #ifdef _GTK
-      gdk_draw_rectangle (w, TtInvertGC, TRUE, x + FrameTable[frame].FrLeftMargin, 
+      gdk_draw_rectangle (w, TtInvertGC, TRUE, x, 
 			  y + FrameTable[frame].FrTopMargin, width, height);
 #else /* _GTK */
-     XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+     XFillRectangle (TtDisplay, w, TtInvertGC, x, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* _GTK */
 }
 
@@ -3016,15 +3032,17 @@ int yf;
    if (FrRef[frame] != None) {
 #ifdef _GTK
       gdk_window_copy_area (FrRef[frame], TtWhiteGC,
-			   xf + FrameTable[frame].FrLeftMargin,
+			   xf,
 			   yf + FrameTable[frame].FrTopMargin,
 			   FrRef[frame],
-			   xd + FrameTable[frame].FrLeftMargin,
+			   xd,
 			   yd + FrameTable[frame].FrTopMargin,
 			   width,
 			   height);
 #else /* _GTK */
-      XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
+      XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC,
+		 xd, yd + FrameTable[frame].FrTopMargin, width, height,
+		 xf, yf + FrameTable[frame].FrTopMargin);
 #endif /* _GTK */
    }
 }
@@ -3115,10 +3133,10 @@ int                 pattern;
 	} else {
 #ifdef _GTK
 	  gdk_draw_rectangle (FrRef[frame], TtGreyGC, TRUE,
-			      x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, 
+			      x, y + FrameTable[frame].FrTopMargin, 
 			      width, height);
 #else /* _GTK */
-	  XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+	  XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* _GTK */
 	}
 #ifdef _GTK

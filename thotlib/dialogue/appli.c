@@ -402,7 +402,6 @@ int bottom_delta;
 
    FrameToView (frame, &doc, &view);
    FrameTable[frame].FrTopMargin = top_delta;
-   FrameTable[frame].FrLeftMargin = 0;
 
    /* FrameTable[frame].FrWidth = (int) width - bottom_delta; */
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
@@ -2528,7 +2527,7 @@ int                 raz;
 	clipheight = *yf - *yd;
 #ifndef _WINDOWS
 #ifdef _GTK 
-	rect.x = clipx + FrameTable[frame].FrLeftMargin;
+	rect.x = clipx;
 	rect.y = clipy + FrameTable[frame].FrTopMargin;
 	rect.width = clipwidth;
 	rect.height = clipheight;
@@ -2544,23 +2543,23 @@ int                 raz;
 	rect.y = 0;
 	rect.width = clipwidth;
 	rect.height = clipheight;
-	XSetClipRectangles (TtDisplay, TtLineGC, clipx + FrameTable[frame].FrLeftMargin,
+	XSetClipRectangles (TtDisplay, TtLineGC, clipx,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-	XSetClipRectangles (TtDisplay, TtGreyGC, clipx + FrameTable[frame].FrLeftMargin,
+	XSetClipRectangles (TtDisplay, TtGreyGC, clipx,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx + FrameTable[frame].FrLeftMargin,
+	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #endif /* _GTK */
 #else  /* _WINDOWS */ 
     if (TtDisplay == (HDC) 0)
        WIN_GetDeviceContext (frame);
-    if (!(clipRgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
-                             clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight)))
+    if (!(clipRgn = CreateRectRgn (clipx, clipy + FrameTable[frame].FrTopMargin, 
+                             clipx + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight)))
        WinErrorBox (NULL);
 #endif /* _WINDOWS */
 	if (raz > 0)
 #ifdef _WINDOWS 
-	   Clear (frame, clipwidth, clipheight, clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin);
+	   Clear (frame, clipwidth, clipheight, clipx, clipy + FrameTable[frame].FrTopMargin);
 #else  /* _WINDOWS */
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
 #endif /* _WINDOWS */

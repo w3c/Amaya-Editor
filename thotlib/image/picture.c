@@ -1540,7 +1540,7 @@ int                 hlogo;
    XCopyArea (TtDisplay, imageDesc->PicPixmap, pixmap, TtDialogueGC, picXOrg, picYOrg, wFrame, hFrame, xFrame, yFrame);
 #endif /* _WINDOWS */
    GetXYOrg (frame, &XOrg, &YOrg);
-   xFrame = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
+   xFrame = box->BxXOrg - XOrg;
    yFrame = box->BxYOrg + FrameTable[frame].FrTopMargin - YOrg;
    wFrame = box->BxWidth;
    hFrame = box->BxHeight;
@@ -1762,7 +1762,7 @@ int                 frame;
    GetPictureFileName (imageDesc->PicFileName, fileName);
 
    pres = imageDesc->PicPresent;
-   xFrame = box->BxXOrg + FrameTable[frame].FrLeftMargin - x;
+   xFrame = box->BxXOrg - x;
    yFrame = box->BxYOrg + FrameTable[frame].FrTopMargin - y;
    wFrame = box->BxWidth;
    hFrame = box->BxHeight;

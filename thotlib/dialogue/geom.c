@@ -192,7 +192,7 @@ int                *y3;
             j = 0;
 		 }
 	  }
-      points[i].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+      points[i].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
       points[i].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
       /* write down predecessor and sucessor of point */
       if (i + 1 == point) {
@@ -526,7 +526,7 @@ int                 maxPoints;
 # ifdef _WINDOWS
   GetWindowRect (w, &rect);
   /* The grid stepping begins at the origin */
-  lastx = x + rect.left + FrameTable[frame].FrLeftMargin; 
+  lastx = x + rect.left; 
   lasty = y + rect.top + FrameTable[frame].FrTopMargin;
   if (!SetCursorPos (lastx, lasty))
     WinErrorBox (FrRef[frame]);
@@ -536,7 +536,7 @@ int                 maxPoints;
   XFlush (TtDisplay);
   ThotGrab (w, HVCurs, e, 0);
   /* The grid stepping begins at the origin */
-  lastx = x + FrameTable[frame].FrLeftMargin; 
+  lastx = x; 
   lasty = y + FrameTable[frame].FrTopMargin;
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
   XFlush (TtDisplay);
@@ -557,7 +557,7 @@ int                 maxPoints;
          GetCursorPos (&cursorPos);
          /* current pointer position */
          /* coordinate checking */
-         newx = DO_ALIGN (cursorPos.x - FrameTable[frame].FrLeftMargin - x);
+         newx = DO_ALIGN (cursorPos.x - x);
          newx += x;
          newy = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - y);
          newy += y;
@@ -565,11 +565,11 @@ int                 maxPoints;
             /* CHKR_LIMIT to size of the box */
             /* new X valid position */
             if (newx - rect.left < x)
-               newx = x + FrameTable[frame].FrLeftMargin + rect.left;
+               newx = x + rect.left;
             else if (newx - rect.left > x + width)
-                 newx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
+                 newx = x + width + rect.left;
             else
-                 newx += FrameTable[frame].FrLeftMargin + rect.left;
+                 newx += rect.left;
 	  
             /* new Y valid position */
             if (newy - rect.top < y)
@@ -581,10 +581,9 @@ int                 maxPoints;
 	  
             if (!SetCursorPos (newx, newy))
                WinErrorBox (FrRef [frame]);
-		 } else {
-              newx += FrameTable[frame].FrLeftMargin;
+		 } else 
               newy += FrameTable[frame].FrTopMargin;
-		 }
+		 
 
          /* refresh the display of teh two adjacent segments */
          if (x1 != -1 && (newx != lastx || newy != lasty)) {
@@ -609,16 +608,16 @@ int                 maxPoints;
          lasty = newy;
 	  } else {
            /* coordinate checking */
-           newx = x + DO_ALIGN ((int) cursorPos.x - FrameTable[frame].FrLeftMargin - x);
+           newx = x + DO_ALIGN ((int) cursorPos.x - x);
            newy = y + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - y);
            /* CHKR_LIMIT to size of the box */
            /* new X valid position */
            if (newx - rect.left < x)
-              lastx = x + FrameTable[frame].FrLeftMargin + rect.left;
+              lastx = x + rect.left;
            else if (newx - rect.left > x + width)
-                lastx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
+                lastx = x + width + rect.left;
            else
-                lastx = newx + FrameTable[frame].FrLeftMargin;
+                lastx = newx;
 	
            /* new Y valid position */
            if (newy - rect.top< y)
@@ -653,7 +652,7 @@ int                 maxPoints;
                           /* nbpoints++; */
 	  
                           /* update the box buffer */
-                          newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x - rect.left) * 1000;
+                          newx = PixelToPoint (lastx - x - rect.left) * 1000;
                           newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y - rect.top) * 1000;
                           /* register the min and the max */
                           if (newx < xMin)
@@ -693,7 +692,7 @@ int                 maxPoints;
 	  /* current pointer position */
 	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
 	  /* coordinate checking */
-	  newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
+	  newx = DO_ALIGN (newx - x);
 	  newx += x;
 	  newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
 	  newy += y;
@@ -702,11 +701,9 @@ int                 maxPoints;
 	      /* CHKR_LIMIT to size of the box */
 	      /* new X valid position */
 	      if (newx < x)
-		newx = x + FrameTable[frame].FrLeftMargin;
+		newx = x;
 	      else if (newx > x + width)
-		newx = x + width + FrameTable[frame].FrLeftMargin;
-	      else
-		newx += FrameTable[frame].FrLeftMargin;
+		newx = x + width;
 
 	      /* new Y valid position */
                if (newy < y)
@@ -718,10 +715,7 @@ int                 maxPoints;
                XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
             }
 	  else
-	    {
-	      newx += FrameTable[frame].FrLeftMargin;
-	      newy += FrameTable[frame].FrTopMargin;
-            }
+	    newy += FrameTable[frame].FrTopMargin;
 
 	  /* refresh the display of teh two adjacent segments */
 	  if (x1 != -1 && (newx != lastx || newy != lasty))
@@ -737,16 +731,16 @@ int                 maxPoints;
 	{
 	  XNextEvent (TtDisplay, &event);
 	  /* coordinate checking */
-	  newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
+	  newx = x + DO_ALIGN ((int) event.xmotion.x - x);
 	  newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
 	  /* CHKR_LIMIT to size of the box */
 	  /* new X valid position */
 	  if (newx < x)
-	    lastx = x + FrameTable[frame].FrLeftMargin;
+	    lastx = x;
 	  else if (newx > x + width)
-	    lastx = x + width + FrameTable[frame].FrLeftMargin;
+	    lastx = x + width;
 	  else
-	    lastx = newx + FrameTable[frame].FrLeftMargin;
+	    lastx = newx;
 
 	  /* new Y valid position */
 	  if (newy < y)
@@ -773,7 +767,7 @@ int                 maxPoints;
 		  nbpoints++;
 
 		  /* update the box buffer */
-		  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+		  newx = PixelToPoint (lastx - x) * 1000;
 		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 		  /* register the min and the max */
 		  if (newx < xMin)
@@ -954,18 +948,17 @@ ThotBool            close;
       GetCursorPos (&cursorPos);
       
       /* check the coordinates */
-      newx = x + DO_ALIGN (cursorPos.x - FrameTable[frame].FrLeftMargin - x);
+      newx = x + DO_ALIGN (cursorPos.x - x);
       newy = y + DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - y);
       /* are limited to the box size */
       /* Update the X position */
       if (newx - rect.left < x) {
-         newx = x + FrameTable[frame].FrLeftMargin + rect.left;
+         newx = x + rect.left;
          wrap = TRUE;
 	  } else if (newx - rect.left > x + width) {
-             newx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
+             newx = x + width + rect.left;
              wrap = TRUE;
-	  } else
-             newx += FrameTable[frame].FrLeftMargin;
+	  }
       
       /* Update the Y position */
       if (newy - rect.top < y) {
@@ -983,7 +976,7 @@ ThotBool            close;
                   lastx = newx - rect.left;
                   lasty = newy - rect.top;
                   /* update the box buffer */
-                  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+                  newx = PixelToPoint (lastx - x) * 1000;
                   newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
                   /* register the min and the max */
                   if (newx < xMin)
@@ -1076,22 +1069,20 @@ ThotBool            close;
       XNextEvent (TtDisplay, &event);
       
       /* check the coordinates */
-      newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
+      newx = x + DO_ALIGN ((int) event.xmotion.x - x);
       newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
       /* are limited to the box size */
       /* Update the X position */
       if (newx < x)
 	{
-	  newx = x + FrameTable[frame].FrLeftMargin;
+	  newx = x;
 	  wrap = TRUE;
 	}
       else if (newx > x + width)
 	{
-	  newx = x + width + FrameTable[frame].FrLeftMargin;
+	  newx = x + width;
 	  wrap = TRUE;
 	}
-      else
-	newx += FrameTable[frame].FrLeftMargin;
       
       /* Update the Y position */
       if (newy < y)
@@ -1113,7 +1104,7 @@ ThotBool            close;
 	  lastx = newx;
 	  lasty = newy;
 	  /* update the box buffer */
-	  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+	  newx = PixelToPoint (lastx - x) * 1000;
 	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 	  /* register the min and the max */
 	  if (newx < xMin)
@@ -1308,7 +1299,7 @@ ThotBool            close;
 	  /* current cursor location */
 	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
 	  /* check the coordinates */
-	  newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
+	  newx = DO_ALIGN (newx - x);
 	  newx += x;
 	  newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
 	  newy += y;
@@ -1317,11 +1308,9 @@ ThotBool            close;
 	      /* CHKR_LIMIT them to the box area */
 	      /* new X valid position */
 	      if (newx < x)
-		newx = x + FrameTable[frame].FrLeftMargin;
+		newx = x;
 	      else if (newx > x + width)
-		newx = x + width + FrameTable[frame].FrLeftMargin;
-	      else
-		newx += FrameTable[frame].FrLeftMargin;
+		newx = x + width;
 	      
 	      /* new Y valid position */
 	      if (newy < y)
@@ -1333,10 +1322,7 @@ ThotBool            close;
 	      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
 	    }
 	  else
-	    {
-	      newx += FrameTable[frame].FrLeftMargin;
-	      newy += FrameTable[frame].FrTopMargin;
-	    }
+	    newy += FrameTable[frame].FrTopMargin;
 	  
 	  /* Draw the new segments resulting of the new point */
 	  if (newx != lastx || newy != lasty)
@@ -1362,21 +1348,19 @@ ThotBool            close;
 	  XNextEvent (TtDisplay, &event);
 	  
 	  /* check the coordinates */
-	  newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
+	  newx = x + DO_ALIGN ((int) event.xmotion.x - x);
 	  newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
 	  /* CHKR_LIMIT them to the box area */
 	  if (newx < x)
 	    {
-	      newx = x + FrameTable[frame].FrLeftMargin;
+	      newx = x;
 	      wrap = TRUE;
 	    }
 	  else if (newx > x + width)
 	    {
-	      newx = x + width + FrameTable[frame].FrLeftMargin;
+	      newx = x + width;
 	      wrap = TRUE;
 	    }
-	  else
-	    newx += FrameTable[frame].FrLeftMargin;
 
 	  if (newy < y)
 	    {
@@ -1417,7 +1401,7 @@ ThotBool            close;
 		  point++;
 		  start = FALSE;
 		  /* update the box buffer */
-		  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+		  newx = PixelToPoint (lastx - x) * 1000;
 		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 		  /* register the min and the max */
 		  if (newx < xMin)
@@ -1562,7 +1546,7 @@ int                 percentH;
     WinErrorBox (FrRef [frame]);
 #else  /* !_WINDOWS */
   XMapRaised (TtDisplay, w);
-  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
+  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
   XFlush (TtDisplay);
 #endif /* !_WINDOWS */
 
@@ -1580,7 +1564,7 @@ int                 percentH;
       if (event.message == WM_MOUSEMOVE) {
          GetCursorPos (&cursorPos);
          /* check the coordinates are withing limits */
-         nx = DO_ALIGN (cursorPos.x - FrameTable[frame].FrLeftMargin - xmin);
+         nx = DO_ALIGN (cursorPos.x - xmin);
          nx += xmin;
          ny = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
          ny += ymin;
@@ -1605,7 +1589,7 @@ int                 percentH;
                     case WM_RBUTTONDOWN:	  
                          GetCursorPos (&cursorPos);
                          if (PosX)
-                            xm = xmin + DO_ALIGN ((int) cursorPos.x - FrameTable[frame].FrLeftMargin - xmin);
+                            xm = xmin + DO_ALIGN ((int) cursorPos.x - xmin);
                          else
                               xm = *x;
                          if (PosY)
@@ -1631,12 +1615,12 @@ int                 percentH;
 	  /* get the cursor location */
 	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &nx, &ny, &e);
 	  /* check the coordinates are withing limits */
-	  nx = DO_ALIGN (nx - FrameTable[frame].FrLeftMargin - xmin);
+	  nx = DO_ALIGN (nx - xmin);
 	  nx += xmin;
 	  ny = DO_ALIGN (ny - FrameTable[frame].FrTopMargin - ymin);
 	  ny += ymin;
 	  if (nx < xmin || nx > xmax || ny < ymin || ny > ymax)
-	    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
+	    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
 	  else if ((nx != *x && PosX) || (ny != *y && PosY))
 	    {
 	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
@@ -1649,7 +1633,7 @@ int                 percentH;
 	      XFlush (TtDisplay);
 	      /* the postion is fixed */
 	      if (!PosX || !PosY)
-		XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
+		XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
             }
 	}
       else
@@ -1661,7 +1645,7 @@ int                 percentH;
 	    {
 	    case ButtonPress:
 	      if (PosX)
-		xm = xmin + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - xmin);
+		xm = xmin + DO_ALIGN ((int) event.xmotion.x - xmin);
 	      else
 		xm = *x;
 	      if (PosY)
@@ -1673,7 +1657,7 @@ int                 percentH;
 	      if (xm < xmin || xm > xmax || !PosX || ym < ymin || ym > ymax || !PosY)
 		{
 		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0,
-				xm + FrameTable[frame].FrLeftMargin,
+				xm,
 				ym + FrameTable[frame].FrTopMargin);
 		  if (!PosX && !PosY)
 		    ret = 1;
@@ -1704,7 +1688,6 @@ int                 percentH;
 #endif /* _WINDOWS */
   xr = 2;
   yr = 2;
-  xm += FrameTable[frame].FrLeftMargin;
   ym += FrameTable[frame].FrTopMargin;
   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
   /* indicate that the original position is the reference */
@@ -1875,7 +1858,7 @@ int                 percentH;
                 /* should we move the cursor */
                 if (warpx >= 0 || warpy >= 0) {
                    if (warpx >= 0)
-                      xm = warpx + FrameTable[frame].FrLeftMargin;
+                      xm = warpx;
                    if (warpy >= 0)
                       ym = warpy + FrameTable[frame].FrTopMargin;
                    if (!SetCursorPos (xm, ym))
@@ -2089,7 +2072,7 @@ int                 percentH;
 	if (warpx >= 0 || warpy >= 0)
 	  {
 	    if (warpx >= 0)
-	      xm = warpx + FrameTable[frame].FrLeftMargin;
+	      xm = warpx;
 	    if (warpy >= 0)
 	      ym = warpy + FrameTable[frame].FrTopMargin;
 	    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
@@ -2150,7 +2133,6 @@ int                 ym;
 #  endif /* _WINDOWS */
 
    /* reset the cursor coordinate in the frame */
-   xm += FrameTable[frame].FrLeftMargin;
    ym += FrameTable[frame].FrTopMargin;
 
    /* Slight shift for drawing */
@@ -2492,7 +2474,6 @@ int                 percentH;
     }
 
   /* reset the cursor coordinate in the frame */
-  xm += FrameTable[frame].FrLeftMargin;
   ym += FrameTable[frame].FrTopMargin;
 
   /* Shows the initial box size */

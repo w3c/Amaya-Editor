@@ -203,7 +203,7 @@ int                 fg;
    if (pattern != 0) {
       hPen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
 
-      hOldPen = SelectObject (TtPrinterDC, hPen) ;
+      hOldPen = SelectObject (TtPrinterDC, hPen);
       Polyline (TtPrinterDC, point, 4);
       SelectObject (TtPrinterDC, hOldPen);
 	  if (!DeleteObject (hPen))
@@ -1270,7 +1270,6 @@ int                 fg;
       return;
 
    y += FrameTable[frame].FrTopMargin;
-
    xm = x + ((l - thick) / 2);
    xf = x + l - 1;
    ym = y + ((h - thick) / 2);
@@ -1617,7 +1616,6 @@ int                 fg;
    DrawRectangle (frame, 1, 0, x, y, l, h, 0, 0, fg, 0, 0); */
 
    y += FrameTable[frame].FrTopMargin;
-
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
@@ -1784,6 +1782,7 @@ int                 arrow;
    if (thick == 0)
       return;
 
+   y += FrameTable[frame].FrTopMargin;
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
    adbuff = buffer;
@@ -1796,8 +1795,8 @@ int                 arrow;
             j = 0;
 		 }
 	   }
-       points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-       points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+       points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+       points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
        j++;
    }
 
@@ -1926,6 +1925,7 @@ int                 pattern;
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
    for (i = 1; i < nb; i++) {
        if (j >= adbuff->BuLength) {
@@ -1935,8 +1935,8 @@ int                 pattern;
              j = 0;
 		  }
 	   }
-       points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-       points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+       points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+       points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
        j++;
    }
    /* Close the polygone */
@@ -3038,6 +3038,7 @@ int                 fg;
    int                 xf, yf;
 
 #  ifdef _WINDOWS 
+   y += FrameTable[frame].FrTopMargin;
    xf = x + l - 1 - thick;
    yf = y + h - 1 - thick;
    if (thick > 0) {

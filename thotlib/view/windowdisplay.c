@@ -178,10 +178,6 @@ int                 y2;
    HPEN     hOldPen;
    LOGBRUSH logBrush;
 
-   x1 += FrameTable[frame].FrLeftMargin;
-   y1 += FrameTable[frame].FrTopMargin;
-   x2 += FrameTable[frame].FrLeftMargin;
-   y2 += FrameTable[frame].FrTopMargin;
    WIN_GetDeviceContext (frame);
 
    if (TtLineGC.thick <= 1) {
@@ -301,7 +297,7 @@ int                 fg;
    result = SelectClipRgn (TtDisplay, clipRgn); 
    if (result == ERROR)
       ClipError (frame);
-   TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
+   TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
    SelectObject (TtDisplay, hOldFont);
    DeleteObject (currentActiveFont);
    currentActiveFont = (HFONT)0;
@@ -438,10 +434,10 @@ int                 shadow;
 
          GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
 
-         ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); 
+         ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); 
 #        else  /* !_I18N_ */
-         /* ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, 0, &rect, (USTRING) ptcar, lg, NULL);  */
-         TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
+         /* ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, 0, &rect, (USTRING) ptcar, lg, NULL);  */
+         TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
 #        endif /* !_I18N_ */
          TtaFreeMemory (ptcar);
       } else {
@@ -494,9 +490,9 @@ int                 shadow;
                 results.nMaxFit     = 0;
 	            GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
 
-                ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX);
+                ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX);
 #               else  /* !_I18N_ */
-                TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
+                TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
 #               endif /* !_18N_ */
 			 } 
 	  } 
@@ -504,7 +500,7 @@ int                 shadow;
       if (hyphen) {
          /* draw the hyphen */
          /* GetClipRgn(TtDisplay, clipRgn); */
-         TextOut (TtDisplay, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, TEXT("\255"), 1);
+         TextOut (TtDisplay, x + width, y + FrameTable[frame].FrTopMargin, TEXT("\255"), 1);
 	  } 
       FinishDrawing (0, RO, active);
       SelectObject (TtDisplay, hOldFont);
@@ -579,6 +575,7 @@ int                 fg;
 	ascent = FontAscent (font);
 	thickness = ((fheight / 20) + 1) * (thick + 1);
 	shift = thick * thickness;
+	y += FrameTable[frame].FrTopMargin;
 	height = y + shift;
 	bottom = y + ascent + 2 + shift;
 	middle = y + fheight / 2 - shift;
@@ -645,7 +642,6 @@ int                 fg;
    if (lgboite > 0)
      {
 	w = FrRef[frame];
-
 	ptcar = TEXT(" .");
 
 	/* compute lenght of the string " ." */
@@ -653,8 +649,8 @@ int                 fg;
 
 	/* compute the number of string to write */
 	nb = lgboite / width;
-	xcour = x + FrameTable[frame].FrLeftMargin + (lgboite % width);
-	y += FrameTable[frame].FrTopMargin - FontBase (font);
+	xcour = x + (lgboite % width);
+	y = y + FrameTable[frame].FrTopMargin - FontBase (font);
 	LoadColor (0, RO, active, fg);
 
 	/* draw the points */
@@ -697,6 +693,7 @@ int                 fg;
    fh = FontHeight (font);
    xm = x + (fh / 2);
    xp = x + (fh / 4);
+   y += FrameTable[frame].FrTopMargin;
    InitDrawing (0, 0, 0, RO, active, fg);
    /* vertical part */
    DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
@@ -848,6 +845,7 @@ int                 fg;
      }
    else
      {
+        y += FrameTable[frame].FrTopMargin;
 	xm = x + (l / 3);
 	ym = y + (h / 2) - 1;
 	InitDrawing (0, 0, 0, RO, active, fg);
@@ -894,6 +892,7 @@ int                 fg;
      }
    else
      {
+        y += FrameTable[frame].FrTopMargin;
 	InitDrawing (0, 0, 0, RO, active, fg);
 	/* Vertical part */
 	DoDrawOneLine (frame, x + 2, y + 1, x + 2, y + h);
@@ -928,6 +927,8 @@ int                 fg;
 #endif /* __STDC__ */
 {
    int                 arc, fh;
+   HPEN                pen;
+   HPEN                hOldPen;
 
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\307', font))
@@ -937,6 +938,7 @@ int                 fg;
      }
    else
      {
+	y = y + FrameTable[frame].FrTopMargin;
 	/* radius of arcs is 6mm */
 	arc = h / 4;
 	InitDrawing (0, 0, 2, RO, active, fg);
@@ -945,6 +947,13 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
 
 	/* Upper part */
+        pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+        hOldPen = SelectObject (TtPrinterDC, pen);
+        Arc (TtPrinterDC, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
+        SelectObject (TtPrinterDC, hOldPen);
+        if (!DeleteObject (pen))
+          WinErrorBox (WIN_Main_Wd);
+        pen = (HPEN) 0;
 	FinishDrawing (0, RO, active);
      }
 }
@@ -971,7 +980,7 @@ int                 fg;
 #endif /* __STDC__ */
 {
    int                 arc, fh;
-   HPEN                pen ;
+   HPEN                pen;
    HPEN                hOldPen;
 
    fh = FontHeight (font);
@@ -982,6 +991,7 @@ int                 fg;
      }
    else
      {
+	y = y + FrameTable[frame].FrTopMargin;
 	/* radius of arcs is 3mm */
 	arc = h / 4;
 	InitDrawing (0, 0, 2, RO, active, fg);
@@ -990,24 +1000,26 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
 
 	/* Lower part */
-    pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-    hOldPen = SelectObject (TtPrinterDC, pen);
-    Arc (TtPrinterDC, x + 1, y + h - arc , x + l - 2, y + h, x + 1, y + h - arc, x + l - 2, y + h - arc);
-    SelectObject (TtPrinterDC, hOldPen);
-    if (!DeleteObject (pen))
-       WinErrorBox (WIN_Main_Wd);
-    pen = (HPEN) 0;
+        pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+        hOldPen = SelectObject (TtPrinterDC, pen);
+	y += h;
+        Arc (TtPrinterDC, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
+        SelectObject (TtPrinterDC, hOldPen);
+        if (!DeleteObject (pen))
+          WinErrorBox (WIN_Main_Wd);
+        pen = (HPEN) 0;
+	FinishDrawing (0, RO, active);
      }
 }
 #endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
-  TraceFleche draw the end of an arrow.
+  ArrowDrawing draw the end of an arrow.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TraceFleche (int frame, int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
+static void         ArrowDrawing (int frame, int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
 #else  /* __STDC__ */
-static void         TraceFleche (frame, x1, y1, x2, y2, thick, RO, active, fg)
+static void         ArrowDrawing (frame, x1, y1, x2, y2, thick, RO, active, fg)
 int                 frame;
 int                 x1, y1, x2, y2;
 int                 thick;
@@ -1026,7 +1038,7 @@ int                 fg;
    ThotPoint           point[4];
    int                 result;
 
-   width = (float)(5 + thick);
+   width = (float) (5 + thick);
    height = 10;
    dx = (float) (x2 - x1);
    dy = (float) (y1 - y2);
@@ -1107,6 +1119,7 @@ int                 fg;
 
    if (thick <= 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
    xm = x + ((l - thick) / 2);
    xf = x + l - 1;
    ym = y + ((h - thick) / 2);
@@ -1117,45 +1130,45 @@ int                 fg;
      {
 	/* draw a right arrow */
 	DoDrawOneLine (frame, x, ym, xf, ym);
-	TraceFleche (frame, x, ym, xf, ym, thick, RO, active, fg);
+	ArrowDrawing (frame, x, ym, xf, ym, thick, RO, active, fg);
      }
    else if (orientation == 45)
      {
 	DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
-	TraceFleche (frame, x, yf, xf - thick + 1, y, thick, RO, active, fg);
+	ArrowDrawing (frame, x, yf, xf - thick + 1, y, thick, RO, active, fg);
      }
    else if (orientation == 90)
      {
 	/* draw a bottom-up arrow */
 	DoDrawOneLine (frame, xm, y, xm, yf);
-	TraceFleche (frame, xm, yf, xm, y, thick, RO, active, fg);
+	ArrowDrawing (frame, xm, yf, xm, y, thick, RO, active, fg);
      }
    else if (orientation == 135)
      {
 	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
-	TraceFleche (frame, xf - thick + 1, yf, x, y, thick, RO, active, fg);
+	ArrowDrawing (frame, xf - thick + 1, yf, x, y, thick, RO, active, fg);
      }
    else if (orientation == 180)
      {
 	/* draw a left arrow */
 	DoDrawOneLine (frame, x, ym, xf, ym);
-	TraceFleche (frame, xf, ym, x, ym, thick, RO, active, fg);
+	ArrowDrawing (frame, xf, ym, x, ym, thick, RO, active, fg);
      }
    else if (orientation == 225)
      {
 	DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
-	TraceFleche (frame, xf - thick + 1, y, x, yf, thick, RO, active, fg);
+	ArrowDrawing (frame, xf - thick + 1, y, x, yf, thick, RO, active, fg);
      }
    else if (orientation == 270)
      {
 	/* draw a top-down arrow */
 	DoDrawOneLine (frame, xm, y, xm, yf);
-	TraceFleche (frame, xm, y, xm, yf, thick, RO, active, fg);
+	ArrowDrawing (frame, xm, y, xm, yf, thick, RO, active, fg);
      }
    else if (orientation == 315)
      {
 	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
-	TraceFleche (frame, x, y, xf - thick + 1, yf, thick, RO, active, fg);
+	ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, RO, active, fg);
      }
    FinishDrawing (0, RO, active);
 }
@@ -1544,7 +1557,7 @@ int                 pattern;
    if (height > thick + 1)
      height = height - thick - 1;
    x = x + (thick+1) / 2;
-   y = y + (thick+1) / 2;
+   y = y + (thick+1) / 2 + FrameTable[frame].FrTopMargin;
 
    WinLoadGC (TtDisplay, fg, RO);
    if (pat != 0) {
@@ -1591,7 +1604,7 @@ int                 pattern;
    result = SelectClipRgn (TtDisplay, clipRgn); 
    if (result == ERROR)
       ClipError (frame);
-   if (!Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height))
+   if (!Rectangle (TtDisplay, x, y, x + width, y + FrameTable[frame].FrTopMargin + height))
       WinErrorBox (FrRef  [frame]);
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
@@ -1683,6 +1696,7 @@ int                 arrow;
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
    for (i = 1; i < nb; i++)
      {
@@ -1695,15 +1709,15 @@ int                 arrow;
 		  j = 0;
 	       }
 	  }
-	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+	points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	j++;
      }
 
 
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
-      TraceFleche (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
+      ArrowDrawing (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
@@ -1714,7 +1728,7 @@ int                 arrow;
 
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
-      TraceFleche (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
+      ArrowDrawing (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
 
    /* free the table of points */
    free (points);
@@ -1762,6 +1776,7 @@ int                 pattern;
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
    for (i = 1; i < nb; i++)
      {
@@ -1774,8 +1789,8 @@ int                 pattern;
 		  j = 0;
 	       }
 	  }
-	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+	points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	j++;
      }
    /* Close the polygone */
@@ -1998,20 +2013,21 @@ C_points           *controls;
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
 
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
-   x1 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y1 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+   x1 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y1 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
    j++;
-   cx1 = (controls[j].lx * 3 + x1 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
-   cy1 = (controls[j].ly * 3 + y1 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
-   x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx2 = (controls[j].lx * 3 + x2 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
-   cy2 = (controls[j].ly * 3 + y2 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
+   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
+   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
+   x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
+   cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
 
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
-      TraceFleche (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, RO, active, fg);
+      ArrowDrawing (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, RO, active, fg);
 
    for (i = 2; i < nb; i++)
      {
@@ -2020,8 +2036,8 @@ C_points           *controls;
 	/* skip to next points */
 	x1 = x2;
 	y1 = y2;
-	cx1 = controls[i].rx + x + FrameTable[frame].FrLeftMargin;
-	cy1 = controls[i].ry + y + FrameTable[frame].FrTopMargin;
+	cx1 = controls[i].rx + x;
+	cy1 = controls[i].ry + y;
 	if (i < nb - 1)
 	  {
 	     /* not finished */
@@ -2035,19 +2051,19 @@ C_points           *controls;
 		       j = 0;
 		    }
 	       }
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+	     x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+	     y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
 	     if (i == nb - 2)
 	       {
-		  cx1 = (controls[i].rx * 3 + x1 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
-		  cy1 = (controls[i].ry * 3 + y1 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
-		  cx2 = (controls[i].rx * 3 + x2 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
-		  cy2 = (controls[i].ry * 3 + y2 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
+		  cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
+		  cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
+		  cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
+		  cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
 	       }
 	     else
 	       {
-		  cx2 = controls[i + 1].lx + x + FrameTable[frame].FrLeftMargin;
-		  cy2 = controls[i + 1].ly + y + FrameTable[frame].FrTopMargin;
+		  cx2 = controls[i + 1].lx + x;
+		  cy2 = controls[i + 1].ly + y;
 	       }
 	  }
      }
@@ -2060,7 +2076,7 @@ C_points           *controls;
 
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
-      TraceFleche (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
+      ArrowDrawing (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
 
    FinishDrawing (0, RO, active);
    /* free the table of points */
@@ -2115,16 +2131,17 @@ C_points           *controls;
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
 
    adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
    j = 1;
-   x1 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y1 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx1 = controls[j].rx + x + FrameTable[frame].FrLeftMargin;
-   cy1 = controls[j].ry + y + FrameTable[frame].FrTopMargin;
+   x1 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y1 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+   cx1 = controls[j].rx + x;
+   cy1 = controls[j].ry + y;
    j++;
-   x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx2 = controls[j].lx + x + FrameTable[frame].FrLeftMargin;
-   cy2 = controls[j].ly + y + FrameTable[frame].FrTopMargin;
+   x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+   cx2 = controls[j].lx + x;
+   cy2 = controls[j].ly + y;
 
    for (i = 2; i < nb; i++)
      {
@@ -2133,8 +2150,8 @@ C_points           *controls;
 	/* next points */
 	x1 = x2;
 	y1 = y2;
-	cx1 = controls[i].rx + x + FrameTable[frame].FrLeftMargin;
-	cy1 = controls[i].ry + y + FrameTable[frame].FrTopMargin;
+	cx1 = controls[i].rx + x;
+	cy1 = controls[i].ry + y;
 	if (i < nb - 1)
 	  {
 	     /* not the last loop */
@@ -2148,18 +2165,18 @@ C_points           *controls;
 		       j = 0;
 		    }
 	       }
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-	     cx2 = controls[i + 1].lx + x + FrameTable[frame].FrLeftMargin;
-	     cy2 = controls[i + 1].ly + y + FrameTable[frame].FrTopMargin;
+	     x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+	     y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
+	     cx2 = controls[i + 1].lx + x;
+	     cy2 = controls[i + 1].ly + y;
 	  }
 	else
 	  {
 	     /* loop around the origin point */
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (buffer->BuPoints[1].XCoord / 1000));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (buffer->BuPoints[1].YCoord / 1000));
-	     cx2 = controls[1].lx + x + FrameTable[frame].FrLeftMargin;
-	     cy2 = controls[1].ly + y + FrameTable[frame].FrTopMargin;
+	     x2 = (float) (x + PointToPixel (buffer->BuPoints[1].XCoord / 1000));
+	     y2 = (float) (y + PointToPixel (buffer->BuPoints[1].YCoord / 1000));
+	     cx2 = controls[1].lx + x;
+	     cy2 = controls[1].ly + y;
 	  }
      }
 
@@ -2256,7 +2273,7 @@ int                 pattern;
    if (height > thick + 1)
      height = height - thick - 1;
    x += thick / 2;
-   y += thick / 2;
+   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
    WinLoadGC (TtDisplay, fg, RO);
@@ -2300,7 +2317,7 @@ int                 pattern;
    result = SelectClipRgn (TtDisplay, clipRgn); 
    if (result == ERROR)
       ClipError (frame);
-   if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
+   if (!RoundRect (TtDisplay, x, y, x + width, y + height, arc * 2, arc * 2))
       WinErrorBox (FrRef  [frame]);
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
@@ -2355,8 +2372,8 @@ int                 pattern;
 
    width -= thick + 1;
    height -= thick + 1;
-   x += thick / 2 + FrameTable[frame].FrLeftMargin;
-   y += thick / 2 + FrameTable[frame].FrTopMargin;
+   x += thick / 2;
+   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
 
@@ -2477,6 +2494,7 @@ int                 fg;
 {
    register int        Y;
 
+   y += FrameTable[frame].FrTopMargin;
    if (align == 1)
       Y = y + (h - thick) / 2;
    else if (align == 2)
@@ -2527,6 +2545,7 @@ int                 fg;
    else
       X = x;
 
+   y += FrameTable[frame].FrTopMargin;
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
@@ -2563,6 +2582,7 @@ int                 fg;
 {
    int                 xf, yf;
 
+   y += FrameTable[frame].FrTopMargin;
    xf = x + l - 1 - thick;
    yf = y + h - 1 - thick;
    if (thick > 0)
@@ -2610,11 +2630,9 @@ int                 fg;
    if (thick <= 0)
       return;
 
-   x += FrameTable[frame].FrLeftMargin;
    y += FrameTable[frame].FrTopMargin;
    xf = x + l - thick;
    yf = y + h - thick;
-
    InitDrawing (0, style, thick, RO, active, fg);
    switch (corner)
 	 {
@@ -2796,7 +2814,7 @@ int                 y;
 	WIN_GetDeviceContext (frame);
 	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
 	hOldBrush = SelectObject (TtDisplay, hBrush);
-	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
+	PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
 	SelectObject (TtDisplay, hOldBrush);
     WIN_ReleaseDeviceContext ();
 	if (!DeleteObject (hBrush))
@@ -2865,7 +2883,7 @@ int                 y;
          WIN_ReleaseDeviceContext ();
        
       WIN_GetDeviceContext (frame); 
-      PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
+      PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
       WIN_ReleaseDeviceContext ();
    }
 }

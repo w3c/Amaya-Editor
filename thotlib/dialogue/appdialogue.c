@@ -2808,12 +2808,11 @@ int                 doc;
        else if (FrameTable[frame].WdFrame == 0)
 	 {
 	   /* il faut creer effectivement la fenetre */
-	   FrameTable[frame].FrLeftMargin = 0;
 	   FrameTable[frame].FrTopMargin = 0;
 	   /* Verification des dimensions */
 	   if (large == 0)
 	     large = 180;	/* largeur en mm */
-	   large = mmtopixel (large, 1) + FrameTable[frame].FrLeftMargin;
+	   large = mmtopixel (large, 1);
 	   if (haut == 0)
 	     haut = 240;	/* hauteur en mm */
 	   haut = mmtopixel (haut, 0) + FrameTable[frame].FrTopMargin;
