@@ -144,8 +144,11 @@ boolean            *CSSparsing;
 		}
 	    }
 	  else if (c == '/')
-	    /* Ok we consider this as a closing tag ! */
-	    *CSSparsing = FALSE;
+	    {
+	      CSSindex--;
+	      /* Ok we consider this as a closing tag ! */
+	      *CSSparsing = FALSE;
+	    }
 	  else if (c == EOS)
 	    CSSindex++;
 	  break;

@@ -501,15 +501,11 @@ Document            doc;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType, selType;
-  char               *stylestring;
+  char                stylestring[1000];
   char               *a_class;
   int                 len, base;
 
   /* check whether it's the element type or a godd class name */
-  stylestring = (char *) TtaGetMemory (1000 * sizeof (char));
-  if (stylestring == NULL)
-    return;
-
   stylestring[0] = EOS;
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
@@ -552,8 +548,10 @@ Document            doc;
       TtaSetAttributeText (attr, a_class, ClassReference, doc);
     }
   /* parse and apply this new CSS to the current document */
-  ParseHTMLStyleHeader (NULL, stylestring, doc, FALSE);
-  TtaFreeMemory (stylestring);
+  if (stylestring[0] == '.')
+    ParseHTMLStyleHeader (NULL, stylestring, doc, TRUE);
+  else
+    ParseHTMLStyleHeader (NULL, stylestring, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------
