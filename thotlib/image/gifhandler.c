@@ -1587,7 +1587,7 @@ ThotBitmap         *mask1;
 {
   int                 w, h;
   Pixmap              pixmap;
-  int                 i;
+  int                 i, ratio;
   ThotColorStruct     colrs[256];
   unsigned char      *buffer, *buffer2;
   int                 ncolors, cpp;
@@ -1613,20 +1613,26 @@ ThotBitmap         *mask1;
   if (*xif != 0 && *yif == 0)
     *yif = h;
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
-    {   
-      /* xif and yif contain width and height of the box */
-      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-      TtaFreeMemory(buffer);
-      buffer = buffer2;
-      buffer2 = NULL;
-      w = *xif;
-      h = *yif;
-    }
+      {   
+	  /* xif and yif contain width and height of the box */
+	  
+	  if ((*xif * *yif) > 4000000 ) {
+	      ratio = 4000000 / (*xif * *yif);
+	      *xif = ratio * *xif;
+	      *yif = ratio * *yif;
+	  }
+	  buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+	  TtaFreeMemory(buffer);
+	  buffer = buffer2;
+	  buffer2 = NULL;
+	  w = *xif;
+	  h = *yif;
+      }
 
-  /*
-   if (buffer == NULL)
-     return ThotBitmapNone;
-	*/
+  
+  if (buffer == NULL)
+      return ThotBitmapNone;
+	
    if (Gif89.transparent != -1)
      {
        if (Gif89.transparent < 0)
@@ -1636,8 +1642,7 @@ ThotBitmap         *mask1;
 #      ifndef _WINDOWS
        *mask1 = MakeMask (TtDisplay, buffer, w, h, i);
 #      else  /* _WINDOWS */
-	   /* WIN_MakeMask (buffer, w, h, i); */
-       bgRed   = colrs[i].red;
+           bgRed   = colrs[i].red;
 	   bgGreen = colrs[i].green;
 	   bgBlue  = colrs[i].blue;
 #      endif /* _WINDOWS */

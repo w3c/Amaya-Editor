@@ -265,8 +265,8 @@ int *bg;
     if (abs ((2.2 * gamma_correction) - 1) > 0.011)
        png_set_gamma (png_ptr, (double) 2.2, gamma_correction);
     
-    if (info_ptr->valid & PNG_INFO_bKGD)
-       png_set_background (png_ptr, &(info_ptr->background), PNG_BACKGROUND_GAMMA_FILE, 1, gamma_correction);
+    /*    if (info_ptr->valid & PNG_INFO_bKGD)
+       png_set_background (png_ptr, &(info_ptr->background), PNG_BACKGROUND_GAMMA_FILE, 1, gamma_correction);*/
      /* else 
 	     {   
 	         color_background.index = 0;
@@ -422,9 +422,10 @@ int *bg;
 		    *bg = ((info_ptr->trans_values.gray)& 0xff) >> 4;
 		    break;
 	      case PNG_COLOR_TYPE_RGB:
-		   xr = (info_ptr->trans_values.red) & 0xff;
-		   xg = (info_ptr->trans_values.green) & 0xff;
-		   xb = (info_ptr->trans_values.blue) & 0xff;
+		   xr = info_ptr->trans_values.red;
+		   xg = info_ptr->trans_values.green;
+		   xb = info_ptr->trans_values.blue;
+		   xr = xr & 0xff; xg = xg & 0xff; xb = xb & 0xff;
 					    
 		   xr = min(xr, 255) & 0xC0;
 		   xg = min(xg, 255) & 0xE0;
