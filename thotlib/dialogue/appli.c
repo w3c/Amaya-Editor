@@ -161,9 +161,9 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 	     WIN_curHdc = BeginPaint (w, &ps);
 	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top,
 			ps.rcPaint.right, ps.rcPaint.bottom);
-	     SetSelect (frame, FALSE);
+	     SwitchSelection (frame, FALSE);
 	     AfFinFenetre (frame, 0);
-	     SetSelect (frame, TRUE);
+	     SwitchSelection (frame, TRUE);
 	     EndPaint (w, &ps);
 	  }
      }
@@ -201,9 +201,9 @@ XExposeEvent       *event;
 	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 	  {
 	     DefRegion (frame, x, y, x + l, y + h);
-	     SetSelect (frame, FALSE);
+	     SwitchSelection (frame, FALSE);
 	     AfFinFenetre (frame, 0);
-	     SetSelect (frame, TRUE);
+	     SwitchSelection (frame, TRUE);
 	  }
      }
 }
@@ -989,7 +989,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		    DesFen = frame;
 		    DesX = LOWORD (lParam);
 		    DesY = HIWORD (lParam);
-		    PoseMrq (frame, DesX, DesY, 2);
+		    LocateSelectionInView (frame, DesX, DesY, 2);
 		 }
 	       return (0);
 
@@ -1000,7 +1000,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		  if (mMask == MK_LBUTTON)
 		    {
-		       PoseMrq (frame, LOWORD (lParam), HIWORD (lParam), 0);
+		       LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
 		       return (0);
 		    }
 		  break;
@@ -1014,7 +1014,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	       DesFen = frame;
 	       DesX = LOWORD (lParam);
 	       DesY = HIWORD (lParam);
-	       PoseMrq (frame, DesX, DesY, 3);
+	       LocateSelectionInView (frame, DesX, DesY, 3);
 	       return (0);
 
 
@@ -1033,7 +1033,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	       else
 		 {
 		    TtaAbortShowDialogue ();
-		    PoseMrq (frame, LOWORD (lParam), HIWORD (lParam), 0);
+		    LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
 		 }
 	       return (0);
 
@@ -1154,7 +1154,7 @@ XEvent             *ev;
 				DesFen = frame;
 				DesX = ev->xbutton.x;
 				DesY = ev->xbutton.y;
-				PoseMrq (frame, DesX, DesY, 3);
+				LocateSelectionInView (frame, DesX, DesY, 3);
 			     }
 			   /* Sinon c'est une selection normale */
 			   else
@@ -1163,7 +1163,7 @@ XEvent             *ev;
 				DesFen = frame;
 				DesX = ev->xbutton.x;
 				DesY = ev->xbutton.y;
-				PoseMrq (frame, DesX, DesY, 2);
+				LocateSelectionInView (frame, DesX, DesY, 2);
 
 				/* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
 				comm = 0;	/* il n'y a pas de drag */
@@ -1175,7 +1175,7 @@ XEvent             *ev;
 				     if (event.type == MotionNotify
 					 && (dx > 2 || dx < -2 || dy > 2 || dy < -2))
 				       {
-					  PoseMrq (frame, event.xbutton.x, event.xbutton.y, 1);
+					  LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
 					  comm = 1;	/* il y a un drag */
 				       }
 				     TtaHandleOneEvent (&event);
@@ -1185,7 +1185,7 @@ XEvent             *ev;
 
 				/* S'il y a un drag on termine la selection */
 				if (comm == 1)
-				   PoseMrq (frame, event.xbutton.x, event.xbutton.y, 0);
+				   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
 			     }	/*else */
 			   break;
 
@@ -1203,7 +1203,7 @@ XEvent             *ev;
 			   else
 			     {
 				TtaAbortShowDialogue ();
-				PoseMrq (frame, ev->xbutton.x, ev->xbutton.y, 0);
+				LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
 			     }	/*else */
 			   break;
 

@@ -626,7 +626,7 @@ PtrElement         *pEl;
    NbOccElement++;
    pEl1 = *pEl;
    memset (pEl1, 0, sizeof (ElementDescr));
-   pEl1->ElSructSchema = NULL;
+   pEl1->ElStructSchema = NULL;
    pEl1->ElTypeNumber = 0;
    pEl1->ElAssocNum = 0;
    pEl1->ElFirstAttr = NULL;
@@ -1778,7 +1778,7 @@ void                MemInit ()
    /* Toutes les frames sont libres */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-	pFrame = &FntrTable[i - 1];
+	pFrame = &ViewFrameTable[i - 1];
 	pFrame->FrAbstractBox = NULL;
 	pFrame->FrXOrg = 0;
 	pFrame->FrYOrg = 0;
@@ -1801,8 +1801,8 @@ void                MemInit ()
    PtFreeLine = NULL;
    NbLibLine = 0;
    NbOccLine = 0;
-   Complete = FALSE;
-   Insert = FALSE;
+   FrameUpdating = FALSE;
+   TextInserting = FALSE;
 
 }
 

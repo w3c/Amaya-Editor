@@ -1701,9 +1701,9 @@ int                *infos;
 /* | - L'indice de la fenetre allouee ou 0 en cas d'echec.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 CreeFenetre (char *schema, int view, char *name, int X, int Y, int large, int haut, int *volume, int doc)
+int                 MakeFrame (char *schema, int view, char *name, int X, int Y, int large, int haut, int *volume, int doc)
 #else  /* __STDC__ */
-int                 CreeFenetre (schema, view, name, X, Y, large, haut, volume, doc)
+int                 MakeFrame (schema, view, name, X, Y, large, haut, volume, doc)
 char               *schema;
 int                 view;
 char               *name;
@@ -2326,9 +2326,9 @@ int                 doc;
 /* |    Libere toutes les boites allouees a la fenetre.                   | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DetruitFenetre (int frame)
+void                DestroyFrame (int frame)
 #else  /* __STDC__ */
-void                DetruitFenetre (frame)
+void                DestroyFrame (frame)
 int                 frame;
 
 #endif /* __STDC__ */

@@ -657,7 +657,7 @@ PtrBox            pBox;
 {
    Language            langue;
 
-   if (!Insert && pBox->BxAbstractBox->AbHyphenate)
+   if (!TextInserting && pBox->BxAbstractBox->AbHyphenate)
      {
 	langue = pBox->BxAbstractBox->AbLanguage;
 /*PhL */ if (TtaExistPatternList (langue))

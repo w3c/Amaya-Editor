@@ -71,10 +71,10 @@ char               *BufItemSplit;
 	     pEl = ElemADupliquer;
 	     /* si c'est un choix, on utilise le type du fils */
 	     if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
-		if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+		if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
 		   pEl = pEl->ElFirstChild;
 	     sprintf (BufItemSplit, "%s %s", TtaGetMessage (LIB, SPLIT),
-		    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	  }
      }
 }

@@ -130,7 +130,7 @@ PtrElement          pEl;
 
    pOther = NULL;
    if (pEl != NULL)
-      if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	/* check if it's a pair element */
 	 if (pEl->ElOtherPairedEl != NULL)
 	    /* the element already has a pointer to the other element of the
@@ -139,8 +139,8 @@ PtrElement          pEl;
 	 else
 	   {
 	      /* searchs the mark having the same type and number */
-	      pSS = pEl->ElSructSchema;
-	      begin = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair;
+	      pSS = pEl->ElStructSchema;
+	      begin = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair;
 	      if (begin)
 		 /* pEl has a begin mark, so we search the end mark */
 		 typeNum = pEl->ElTypeNumber + 1;
@@ -265,7 +265,7 @@ char               *typeName;
 
    pRet = NULL;
    if (test)
-      if (strcmp (typeName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+      if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 	/* got a hit on the element */
 	 pRet = pEl;		
    if (pRet == NULL && !pEl->ElTerminal)
@@ -338,7 +338,7 @@ char               *typeName;
 		    {
 		       pAsc = pAsc->ElNext;
 		       if (pAsc != NULL)
-			  if (strcmp (typeName, pAsc->ElSructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
+			  if (strcmp (typeName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
 			    /* found */
 			     pRet = pAsc; 
 			  else
@@ -384,7 +384,7 @@ char               *typeName;
      }
    if (pRet == NULL)
      {
-	if (strcmp (typeName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+	if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 	   pRet = pEl;		/* found ! C'est l'element lui-meme */
      }
    return pRet;
@@ -426,7 +426,7 @@ char               *typeName;
 	   if (pEl->ElParent != NULL)
 	     {
 		pEl = pEl->ElParent;
-		if (strcmp (typeName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 		   pRet = pEl;	/* found, c'est le pere */
 		else
 		   pRet = BackSearchElemByTypeName (pEl, typeName);
@@ -1084,7 +1084,7 @@ int                 assocNum;
 	if (pDoc->DocParameters[par] != NULL)
 	  {
 	     pPar = pDoc->DocParameters[par];
-	     if (pPar->ElTypeNumber == elemType && pPar->ElSructSchema == pSS)
+	     if (pPar->ElTypeNumber == elemType && pPar->ElStructSchema == pSS)
 		found = TRUE;
 	  }
 	par++;
@@ -1113,7 +1113,7 @@ int                 assocNum;
 	     pEl->ElIsCopy = TRUE;	/* l'element est non modifiable */
 
 	     i = 1;
-	     pR = &pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1];
+	     pR = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
 	     pEl->ElText->BuContent[0] = '$';
 	     do
 	       {
@@ -1194,7 +1194,7 @@ boolean             Check;
 		  pAsc = pEl2;
 		  do
 
-		     if (pAsc->ElSructSchema == pAttr2->AeAttrSSchema)
+		     if (pAsc->ElStructSchema == pAttr2->AeAttrSSchema)
 			found = TRUE;
 		     else
 			pAsc = pAsc->ElParent;
@@ -1206,10 +1206,10 @@ boolean             Check;
 		    {
 		       pAsc = pEl2;
 		       do
-			  if (strcmp (pAsc->ElSructSchema->SsName, pAttr2->
+			  if (strcmp (pAsc->ElStructSchema->SsName, pAttr2->
 				      AeAttrSSchema->SsName) == 0)
 			    {
-			       pAttr2->AeAttrSSchema = pAsc->ElSructSchema;
+			       pAttr2->AeAttrSSchema = pAsc->ElStructSchema;
 			       found = TRUE;
 			    }
 			  else
@@ -1378,7 +1378,7 @@ PtrSSchema        pSS;
       SSok = TRUE;		/* n'importe quel schema de struct. convient */
    else
       /* compare l'identificateur du schema de structure */
-      SSok = pEl->ElSructSchema->SsCode == pSS->SsCode;
+      SSok = pEl->ElStructSchema->SsCode == pSS->SsCode;
    if (SSok && pEl->ElTypeNumber == typeNum)
       ok = TRUE;
    else if (pSS != NULL)
@@ -1397,15 +1397,15 @@ PtrSSchema        pSS;
 		     /* compare le type de l'element aux options du choix */
 		    {
 		       if (pEl->ElTypeNumber == pRe1->SrChoice[i])
-			  ok = pEl->ElSructSchema->SsCode == pSS->SsCode;
+			  ok = pEl->ElStructSchema->SsCode == pSS->SsCode;
 		       else
 			 {
 			    pRe2 = &pSS->SsRule[pRe1->SrChoice[i] - 1];
 			    if (pRe2->SrConstruct == CsNatureSchema)
 			       /* l'option du choix est un changement de nature */
 			       /* retient les elements racines de cette nature */
-			       if (pEl->ElSructSchema == pRe2->SrSSchemaNat)
-				  ok = pEl->ElTypeNumber == pEl->ElSructSchema->SsRootElem;
+			       if (pEl->ElStructSchema == pRe2->SrSSchemaNat)
+				  ok = pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem;
 			 }
 		       i++;
 		    }
@@ -1417,7 +1417,7 @@ PtrSSchema        pSS;
 	  {
 	     /* le type cherche' est un changement de nature, on */
 	     /* retient les elements racines de cette nature */
-	     if (pEl->ElSructSchema == pRe1->SrSSchemaNat)
+	     if (pEl->ElStructSchema == pRe1->SrSSchemaNat)
 		if (pEl->ElTypeNumber == pRe1->SrSSchemaNat->SsRootElem)
 		   ok = TRUE;
 	  }
@@ -1659,14 +1659,14 @@ PtrSSchema        pSS;
 	   if (pSS->SsRule[typeNum - 1].SrConstruct == CsNatureSchema)
 	     {
 		/* le type cherche' est une nature donnee */
-		if (pEl1->ElTypeNumber == pEl1->ElSructSchema->SsRootElem)
+		if (pEl1->ElTypeNumber == pEl1->ElStructSchema->SsRootElem)
 		   /* l'element courant est la racine d'une nature, l'element    */
 		   /* courant convient si ce sont les memes schemas de structure */
-		   found = (strcmp (pEl1->ElSructSchema->SsName,
+		   found = (strcmp (pEl1->ElStructSchema->SsName,
 				 pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
 	     }
 	   else
-	      found = EquivalentSRules (typeNum, pSS, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl);
+	      found = EquivalentSRules (typeNum, pSS, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl);
 	   if (!found)
 	      pEl = pEl->ElParent;	/* passe au niveau superieur */
 	}
@@ -1679,7 +1679,7 @@ PtrSSchema        pSS;
 	if (typeNum != pEl->ElTypeNumber)
 	   if (pEl->ElParent != NULL)
 	      if (pEl->ElParent->ElTypeNumber == typeNum)
-		 if (pEl->ElParent->ElSructSchema->SsCode == pSS->SsCode)
+		 if (pEl->ElParent->ElStructSchema->SsCode == pSS->SsCode)
 		    pEl = pEl->ElParent;
 	pAsc = pEl;
      }
@@ -2508,22 +2508,22 @@ boolean             del;
    replace = TRUE;
    if (pEl->ElParent != NULL)
       /* ...sauf si le choix est un element d'agregat */
-	if (pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
-	    pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
+	if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
+	    pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
 	   replace = FALSE;
    /* sauf si le choix porte des exceptions */
-   pSRule = &pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1];
+   pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
    if (pSRule->SrNInclusions > 0 || pSRule->SrNExclusions > 0)
       replace = FALSE;
    /* sauf si c'est la racine du schema de structure */
-   if (pEl->ElTypeNumber == pEl->ElSructSchema->SsRootElem)
+   if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
       replace = FALSE;
    /* sauf si c'est la racine d'un element associe */
-   if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
+   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
       replace = FALSE;
    if (!replace)
       if (pEl->ElTypeNumber == (*pNew)->ElTypeNumber)
-	 if (pEl->ElSructSchema->SsCode == (*pNew)->ElSructSchema->SsCode)
+	 if (pEl->ElStructSchema->SsCode == (*pNew)->ElStructSchema->SsCode)
 	    /* les deux elements sont de meme type; l'un remplacera l'autre */
 	    replace = TRUE;
    if (del)
@@ -2535,11 +2535,11 @@ boolean             del;
       /* met le nouvel element a la place de l'element CsChoice */
      {
 	/* Echange les types des deux elements */
-	pSS = pEl->ElSructSchema;
+	pSS = pEl->ElStructSchema;
 	T = pEl->ElTypeNumber;
-	pEl->ElSructSchema = (*pNew)->ElSructSchema;
+	pEl->ElStructSchema = (*pNew)->ElStructSchema;
 	pEl->ElTypeNumber = (*pNew)->ElTypeNumber;
-	(*pNew)->ElSructSchema = pSS;
+	(*pNew)->ElStructSchema = pSS;
 	(*pNew)->ElTypeNumber = T;
 	if ((*pNew)->ElReferredDescr != NULL)
 	   /* supprime toutes les references a l'element CHOIX et le */
@@ -2828,7 +2828,7 @@ boolean             withLabel;
 		/* on cree un element construit selon la regle racine de */
 		/* son schema de structure, on incremente le compteur */
 		pSS->SsNObjects++;
-	     pEl->ElSructSchema = pSS;
+	     pEl->ElStructSchema = pSS;
 	     pEl->ElTypeNumber = typeNum;
 	     pEl->ElAssocNum = assocNum;
 	     if (withLabel)
@@ -3062,7 +3062,7 @@ PtrElement         *pEl;
 	  {
 	     /* examine toutes les exclusions definies pour ce type d'element */
 	     /* accede d'abord a la regle de structuration */
-	     pSS = pAsc->ElSructSchema;
+	     pSS = pAsc->ElStructSchema;
 	     pRule = &pSS->SsRule[pAsc->ElTypeNumber - 1];
 	     pExtSSch = NULL;
 	     do
@@ -3079,11 +3079,11 @@ PtrElement         *pEl;
 				exclus = TRUE;
 			     else
 				/* compare les identificateurs des schemas de structure */
-			     if (pSS->SsCode == (*pEl)->ElSructSchema->SsCode)
+			     if (pSS->SsCode == (*pEl)->ElStructSchema->SsCode)
 				/* memes schemas de structure, type exclus */
 				exclus = TRUE;
 			  if (!exclus)
-			     if ((*pEl)->ElTypeNumber == (*pEl)->ElSructSchema->SsRootElem)
+			     if ((*pEl)->ElTypeNumber == (*pEl)->ElStructSchema->SsRootElem)
 				/* l'element traite' est l'element racine de son */
 				/* schema de structure : c'est une nature. */
 			       {
@@ -3092,7 +3092,7 @@ PtrElement         *pEl;
 				  if (pRuleExcl->SrConstruct == CsNatureSchema)
 				     /* l'exclusion traitee est une nature, l'exclusion */
 				     /* s'applique si les noms de nature sont les memes */
-				     exclus = (strcmp ((*pEl)->ElSructSchema->SsName,
+				     exclus = (strcmp ((*pEl)->ElStructSchema->SsName,
 						pRuleExcl->SrName) == 0);
 			       }
 			  /* le 2eme element d'une paire est exclus si le 1er est exclus */
@@ -3100,11 +3100,11 @@ PtrElement         *pEl;
 			     /* on n'a pas encore exclus notre element */
 			     if (pRule->SrExclusion[i - 1] + 1 == (*pEl)->ElTypeNumber)
 				/* le type precedent est exclus */
-				if (pSS->SsCode == (*pEl)->ElSructSchema->SsCode)
+				if (pSS->SsCode == (*pEl)->ElStructSchema->SsCode)
 				   /* on est bien dans le bon schema de structure */
-				   if ((*pEl)->ElSructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+				   if ((*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 				      /* l'element est un membre de paire */
-				      if (!(*pEl)->ElSructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrFirstOfPair)
+				      if (!(*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrFirstOfPair)
 					 /* c'est le 2eme membre de la paire */
 					 exclus = TRUE;
 		       }
@@ -3118,7 +3118,7 @@ PtrElement         *pEl;
 		    {
 		       pSS = pExtSSch;
 		       /* cherche dans ce schema la regle d'extension pour l'ascendant */
-		       pRule = ExtensionRule (pAsc->ElSructSchema, pAsc->ElTypeNumber, pExtSSch);
+		       pRule = ExtensionRule (pAsc->ElStructSchema, pAsc->ElTypeNumber, pExtSSch);
 		    }
 	       }
 	     while (pExtSSch != NULL);
@@ -3461,19 +3461,19 @@ PtrElement         *pEl;
 	pEl1->ElReferredDescr = NULL;
 	/* decremente le nombre d'objets si c'est un element construit selon */
 	/* la regle racine de son schema de structure. */
-	if (pEl1->ElTypeNumber == pEl1->ElSructSchema->SsRootElem)
+	if (pEl1->ElTypeNumber == pEl1->ElStructSchema->SsRootElem)
 	   /* l'element est construit selon la regle racine de son schema */
 	  {
-	     pEl1->ElSructSchema->SsNObjects--;
-	     if (pEl1->ElSructSchema->SsNObjects == 0)	/* c'etait le dernier objet */
+	     pEl1->ElStructSchema->SsNObjects--;
+	     if (pEl1->ElStructSchema->SsNObjects == 0)	/* c'etait le dernier objet */
 		/* libere la nature */
 	       {
 		  pAsc = pEl1->ElParent;
 		  ok = FALSE;
 		  while ((!ok) && (pAsc != NULL))
 		    {
-		       pSS = pEl1->ElSructSchema;
-		       ok = LibNature (pAsc->ElSructSchema, pSS);
+		       pSS = pEl1->ElStructSchema;
+		       ok = LibNature (pAsc->ElStructSchema, pSS);
 		       if (ok)
 			  /* le schema de structure a ete libere'. Il faut le */
 			  /* supprimer de la table des natures du document */
@@ -3505,14 +3505,14 @@ PtrElement         *pEl;
 			  /* immediatement superieur, cherche un autre schema de */
 			  /* structure englobant, ou` cette nature est une unite' */
 			 {
-			    pSS = pAsc->ElSructSchema;
+			    pSS = pAsc->ElStructSchema;
 			    stop = FALSE;
 			    do
 			      {
 				 pAsc = pAsc->ElParent;
 				 if (pAsc == NULL)
 				    stop = TRUE;
-				 else if (pAsc->ElSructSchema != pSS)
+				 else if (pAsc->ElStructSchema != pSS)
 				    stop = TRUE;
 			      }
 			    while (!stop);
@@ -3593,23 +3593,23 @@ boolean             shareRef;
 	   /* cet element est une copie-inclusion */
 	   /* on ne le copie pas s'il a ete engendre' avant ou apres une */
 	   /* marque de page (comme les tetieres de tableau par exemple) */
-	   if (TypeHasException (ExcPageBreakRepBefore, pSource->ElTypeNumber, pSource->ElSructSchema))
+	   if (TypeHasException (ExcPageBreakRepBefore, pSource->ElTypeNumber, pSource->ElStructSchema))
 	      doCopy = FALSE;
-	   else if (TypeHasException (ExcPageBreakRepetition, pSource->ElTypeNumber, pSource->ElSructSchema))
+	   else if (TypeHasException (ExcPageBreakRepetition, pSource->ElTypeNumber, pSource->ElStructSchema))
 	      doCopy = FALSE;
 	if (doCopy)
 	  {
 	     copyType = pSource->ElTypeNumber;
-	     if (strcmp (pSource->ElSructSchema->SsName, pSSchema->SsName) != 0)
+	     if (strcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
 		/* changement de structure generique */
-		if (pSource->ElSructSchema->SsRule[pSource->ElTypeNumber - 1].SrUnitElem ||
-		    pSource->ElSructSchema->SsExtension || pSource->ElTypeNumber <= MAX_BASIC_TYPE)
+		if (pSource->ElStructSchema->SsRule[pSource->ElTypeNumber - 1].SrUnitElem ||
+		    pSource->ElStructSchema->SsExtension || pSource->ElTypeNumber <= MAX_BASIC_TYPE)
 		   /* l'element source est une unite' ou un element defini dans une */
 		   /* extension de schema */
 		   if (!checkAttr)
 		      /* on ne verifie pas les unites. La copie aura le meme */
 		      /* schema de structure que la source */
-		      pSSchema = pSource->ElSructSchema;
+		      pSSchema = pSource->ElStructSchema;
 		   else
 		     {
 			/* cherche si la future ascendance de la copie comporte */
@@ -3623,27 +3623,27 @@ boolean             shareRef;
 			if (pAsc != NULL && !sameSSchema)
 			   do
 			     {
-				if (pSource->ElSructSchema->SsCode ==
-				    pAsc->ElSructSchema->SsCode)
+				if (pSource->ElStructSchema->SsCode ==
+				    pAsc->ElStructSchema->SsCode)
 				  {
 				     /* la copie aura le schema de structure de son doc. */
-				     pSSchema = pAsc->ElSructSchema;
+				     pSSchema = pAsc->ElStructSchema;
 				     sameSSchema = TRUE;
 				  }
-				else if (pSource->ElSructSchema->SsExtension)
+				else if (pSource->ElStructSchema->SsExtension)
 				   /* verifie si l'ascendant a cette extension de schema */
 				  {
-				     pSSchema = pSource->ElSructSchema;
+				     pSSchema = pSource->ElStructSchema;
 				     if (ValidExtension (pAsc, &pSSchema))
 					sameSSchema = TRUE;
 				  }
-				else if (pAsc->ElSructSchema->SsExtension)
+				else if (pAsc->ElStructSchema->SsExtension)
 				   /* l'ascendant est une extension */
 				  {
-				     pSS = pAsc->ElSructSchema;
+				     pSS = pAsc->ElStructSchema;
 				     if (ValidExtension (pSource, &pSS))
 				       {
-					  pSSchema = pSource->ElSructSchema;
+					  pSSchema = pSource->ElStructSchema;
 					  sameSSchema = TRUE;
 				       }
 				  }
@@ -3657,7 +3657,7 @@ boolean             shareRef;
 			   /* structure, l'unite' est invalide. */
 			  {
 #ifdef IV
-			     if (ResdynCt.ElSour != NULL && !pSource->ElSructSchema->SsExtension)
+			     if (ResdynCt.ElSour != NULL && !pSource->ElStructSchema->SsExtension)
 				/* Si on est en cours de restructuration on recherche */
 				/* une unite compatible */
 				GDRCompatibleUnit ((Element) pSource, (Element) pParent,
@@ -3674,7 +3674,7 @@ boolean             shareRef;
 		     /* charge les schemas de structure et present. pour la copie */
 		     PSchName[0] = '\0';
 		     /* pas de preference pour le schema de presentation */
-		     nR = CreeNature (pSource->ElSructSchema->SsName, PSchName, pSSchema);
+		     nR = CreeNature (pSource->ElStructSchema->SsName, PSchName, pSSchema);
 		     if (nR == 0)
 			/* echec de chargement des schemas */
 			copyType = 0;
@@ -3690,9 +3690,9 @@ boolean             shareRef;
 		  /* acquiert un element pour la copie */
 		  GetElement (&pEl);
 		  /* remplit la copie */
-		  pEl->ElSructSchema = pSSchema;
+		  pEl->ElStructSchema = pSSchema;
 		  pEl->ElTypeNumber = copyType;
-		  if (pEl->ElTypeNumber == pEl->ElSructSchema->SsRootElem)
+		  if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
 		     /* on cree un element construit selon la regle racine de */
 		     /* son schema de structure, on incremente le compteur */
 		     pSSchema->SsNObjects++;
@@ -3848,7 +3848,7 @@ PtrSSchema        pSS;
 		FwdSkipPageBreak (&pEl2);
 		if (pEl2 != NULL)
 		   if (pEl2->ElTypeNumber == typeNum &&
-		       pEl2->ElSructSchema->SsCode == pSS->SsCode)
+		       pEl2->ElStructSchema->SsCode == pSS->SsCode)
 		     {
 			pEl = pEl2;
 			stop = TRUE;
@@ -4022,13 +4022,13 @@ PtrDocument         pDoc;
 			      default:
 				 break;
 			   }
-		  else if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice
+		  else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice
 			   && (pEl->ElTypeNumber != pSource->ElTypeNumber
-			       || pEl->ElSructSchema->SsCode !=
-			       pSource->ElSructSchema->SsCode))
+			       || pEl->ElStructSchema->SsCode !=
+			       pSource->ElStructSchema->SsCode))
 		    {
 		       pC1 = CopyTree (pSource, pDocSource, pEl->ElAssocNum, pEl
-				      ->ElSructSchema, pDoc, pEl, TRUE, TRUE);
+				      ->ElStructSchema, pDoc, pEl, TRUE, TRUE);
 		       if (pC1 != NULL)
 			 {
 			    pC1->ElReferredDescr = NULL;
@@ -4044,7 +4044,7 @@ PtrDocument         pDoc;
 		       do
 			 {
 			    pC2 = CopyTree (pS2, pDocSource, pEl->ElAssocNum,
-				   pEl->ElSructSchema, pDoc, pEl, TRUE, TRUE);
+				   pEl->ElStructSchema, pDoc, pEl, TRUE, TRUE);
 			    if (pC2 != NULL)
 			      {
 				 if (pC1 == NULL)
@@ -4091,10 +4091,10 @@ PtrDocument         pDoc;
 
    GetElement (&pNew);
    *pNew = *pEl;
-   if (pNew->ElTypeNumber == pNew->ElSructSchema->SsRootElem)
+   if (pNew->ElTypeNumber == pNew->ElStructSchema->SsRootElem)
       /* on cree un element construit selon la regle racine de */
       /* son schema de structure, on incremente le compteur */
-      pNew->ElSructSchema->SsNObjects++;
+      pNew->ElStructSchema->SsNObjects++;
    /* calcule la valeur du label */
    LabelIntToString (NewLabel (pDoc), pNew->ElLabel);
    /* copie les attributs sans verification puisqu'on reste dans le meme */

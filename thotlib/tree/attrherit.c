@@ -47,16 +47,16 @@ PtrElement          pEl;
 	/* memory exhausted */
 	return;
    for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
-   if (pEl->ElSructSchema->SsPSchema != NULL)
+   if (pEl->ElStructSchema->SsPSchema != NULL)
      {
-	pEl->ElSructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
+	pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
 	/* for all attributes defined in the structure schema */
-	for (attr = 0; attr < pEl->ElSructSchema->SsNAttributes; attr++)
+	for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
 	   {
-	   pAttrPR = pEl->ElSructSchema->SsPSchema->PsAttrPRule[attr];
+	   pAttrPR = pEl->ElStructSchema->SsPSchema->PsAttrPRule[attr];
 	   if (pAttrPR != NULL)
 	      /* check all presentation rules associated with that attribute */
-	      for (rule = 0; rule < pEl->ElSructSchema->SsPSchema->PsNAttrPRule[attr]; rule++)
+	      for (rule = 0; rule < pEl->ElStructSchema->SsPSchema->PsNAttrPRule[attr]; rule++)
 		{
 		  if (pAttrPR->ApElemType == pEl->ElTypeNumber)
 		    (*table)[attr] = TRUE;
@@ -195,10 +195,10 @@ PtrSSchema        pSS;
 			       /* l'attribut dans son schema de structure */
 			       att = 0;
 			       found = FALSE;
-			       while (att < pIncludedEl->ElSructSchema->SsNAttributes &&
+			       while (att < pIncludedEl->ElStructSchema->SsNAttributes &&
 				      !found)
 				 {
-				    AttrDef = &(pIncludedEl->ElSructSchema->SsAttribute[att++]);
+				    AttrDef = &(pIncludedEl->ElStructSchema->SsAttribute[att++]);
 				    if (AttrDef->AttrType == AtTextAttr)
 				       /* c'est un attribut textuel */
 				       if (strcmp (AttrDef->AttrOrigName, attrName) == 0)
@@ -210,7 +210,7 @@ PtrSSchema        pSS;
 				    /* l'attribut est bien defini dans le schema */
 				    /* de structure du document inclus */
 				    GetAttr (&pAttr);
-				    pAttr->AeAttrSSchema = pIncludedEl->ElSructSchema;
+				    pAttr->AeAttrSSchema = pIncludedEl->ElStructSchema;
 				    pAttr->AeAttrNum = att;
 				    pAttr->AeAttrType = AtTextAttr;
 				    GetBufTexte (&pAttr->AeAttrText);
@@ -275,7 +275,7 @@ PtrDocument         pDoc;
    Counter           *pCounter;
 
    if (pEl != NULL)
-      if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
 	{
 	   /* c'est un lien d'inclusion d'un document externe */
 	   /* cherche le schema de presentation qui s'applique a` l'element */
@@ -346,9 +346,9 @@ PtrDocument         pDoc;
    if (pTransmEl != NULL)
       while (pEl != NULL)
 	{
-	   pEl = FwdSearchTypedElem (pEl, pTransmEl->ElTypeNumber, pTransmEl->ElSructSchema);
+	   pEl = FwdSearchTypedElem (pEl, pTransmEl->ElTypeNumber, pTransmEl->ElStructSchema);
 	   if (pEl != NULL)
-	      if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
+	      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
 		ApplyTransmitRules (pEl, pDoc);
 	}
 }

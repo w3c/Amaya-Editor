@@ -423,9 +423,9 @@ boolean             Visible;
 }
 
 #ifdef __STDC__
-void                SetSelect (int frame, boolean Allume)
+void                SwitchSelection (int frame, boolean Allume)
 #else  /* __STDC__ */
-void                SetSelect (frame, Allume)
+void                SwitchSelection (frame, Allume)
 int                 frame;
 boolean             Allume;
 
@@ -460,9 +460,9 @@ boolean             dernier;
 }
 
 #ifdef __STDC__
-void                ResetSelect (int frame)
+void                ClearViewSelection (int frame)
 #else  /* __STDC__ */
-void                ResetSelect (frame)
+void                ClearViewSelection (frame)
 int                 frame;
 
 #endif /* __STDC__ */
@@ -485,9 +485,9 @@ boolean             Controle;
 }
 
 #ifdef __STDC__
-void                ReevalMrq (ViewSelection * marque)
+void                ComputeViewSelMarks (ViewSelection * marque)
 #else  /* __STDC__ */
-void                ReevalMrq (marque)
+void                ComputeViewSelMarks (marque)
 ViewSelection            *marque;
 
 #endif /* __STDC__ */
@@ -556,9 +556,9 @@ int                 frame;
 }
 
 #ifdef __STDC__
-boolean             PaveAffiche (PtrAbstractBox pav, int frame)
+boolean             IsAbstractBoxDisplayed (PtrAbstractBox pav, int frame)
 #else  /* __STDC__ */
-boolean             PaveAffiche (pav, frame)
+boolean             IsAbstractBoxDisplayed (pav, frame)
 PtrAbstractBox             pav;
 int                 frame;
 

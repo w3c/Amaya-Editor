@@ -42,15 +42,15 @@ LabelString         strng;
 
 
 /* ---------------------------------------------------------------------- */
-/* |     rdLabel reads a label from a file				| */
+/* |     ReadLabel reads a label from a file				| */
 /* |		The label type is specified by labelType.		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                rdLabel (char labelType, LabelString label, BinFile file)
+void                ReadLabel (char labelType, LabelString label, BinFile file)
 
 #else  /* __STDC__ */
-void                rdLabel (labelType, label, file)
+void                ReadLabel (labelType, label, file)
 char                labelType;
 LabelString         label;
 BinFile             file;
@@ -96,7 +96,7 @@ BinFile             file;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChargeExt lit le fichier de references externes.EXT et		| */
+/* |    LoadEXTfile lit le fichier de references externes.EXT et		| */
 /* |            charge son contenu pour le document pDoc, si pDoc	| */
 /* |            n'est pas NULL. Si pDoc est NULL, met le contenu du	| */
 /* |            fichier dans une chaine de descripteurs d'elements      | */
@@ -106,10 +106,10 @@ BinFile             file;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ChargeExt (BinFile file, PtrDocument pDoc, PtrReferredDescr * Anchor, boolean labelsOnly)
+void                LoadEXTfile (BinFile file, PtrDocument pDoc, PtrReferredDescr * Anchor, boolean labelsOnly)
 
 #else  /* __STDC__ */
-void                ChargeExt (file, pDoc, Anchor, labelsOnly)
+void                LoadEXTfile (file, pDoc, Anchor, labelsOnly)
 BinFile             file;
 PtrDocument         pDoc;
 PtrReferredDescr   *Anchor;
@@ -134,7 +134,7 @@ boolean             labelsOnly;
       *Anchor = NULL;
    while (!error)
      {
-	rdLabel (c, label, file);
+	ReadLabel (c, label, file);
 	if (pDoc == NULL)
 	  {
 	     /* acquiert un descripteur d'element reference' */
@@ -220,16 +220,16 @@ boolean             labelsOnly;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ChargeRef lit le fichier de mise a` jour des references		| */
+/* |    LoadREFfile lit le fichier de mise a` jour des references		| */
 /* |            sortantes .REF et met le contenu du fichier dans	| */
 /* |            une chaine de descripteurs dont l'ancre est Anchor.	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ChargeRef (BinFile file, PtrChangedReferredEl * Anchor)
+void                LoadREFfile (BinFile file, PtrChangedReferredEl * Anchor)
 
 #else  /* __STDC__ */
-void                ChargeRef (file, Anchor)
+void                LoadREFfile (file, Anchor)
 BinFile             file;
 PtrChangedReferredEl     *Anchor;
 
@@ -251,7 +251,7 @@ PtrChangedReferredEl     *Anchor;
 
      {
 	/* read old label */
-	rdLabel (c, label, file);
+	ReadLabel (c, label, file);
 	/* acquiert un nouveau descripteur */
 	GetElemRefChng (&pChnRef);
 	/* le chaine en queue */
@@ -266,7 +266,7 @@ PtrChangedReferredEl     *Anchor;
 	/* lit le nouveau label */
 	if (!BIOreadByte (file, &c))
 	   error = TRUE;
-	rdLabel (c, label, file);
+	ReadLabel (c, label, file);
 	if (!error)
 	  {
 	     strncpy (pChnRef->CrNewLabel, label, MAX_LABEL_LEN);
@@ -310,16 +310,16 @@ PtrChangedReferredEl     *Anchor;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    MiseAJourRef execute les demandes de mise a` jour de references | */
+/* |    UpdateREFdescriptors execute les demandes de mise a` jour de references | */
 /* |            contenues dans la chaine de descripteurs dont l'ancre   | */
 /* |            est Anchor et qui concernent le document pDoc.          | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                MiseAJourRef (PtrChangedReferredEl Anchor, PtrDocument pDoc)
+void                UpdateREFdescriptors (PtrChangedReferredEl Anchor, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                MiseAJourRef (Anchor, pDoc)
+void                UpdateREFdescriptors (Anchor, pDoc)
 PtrChangedReferredEl      Anchor;
 PtrDocument         pDoc;
 

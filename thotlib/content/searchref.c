@@ -299,7 +299,7 @@ void                FindReferredEl ()
 	     {
 		pRefTable[nMenuItems] = firstSel->ElReference;
 		nMenuItems++;
-		strcpy (menuBuf + menuBufLen, firstSel->ElSructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
+		strcpy (menuBuf + menuBufLen, firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
 		menuBufLen += strlen (menuBuf) + 1;
 	     }
 	if (firstSel->ElSource != NULL)
@@ -357,7 +357,7 @@ void                FindReferredEl ()
 		       {
 			  CopyIdentDoc (&pDoc->DocIdent, docIdent);
 			  /* annule la selection */
-			  RazSelect ();
+			  ClearAllViewSelection ();
 			  LoadDocument (&pDoc, NULL);
 		       }
 		     if (pDoc != NULL)

@@ -268,12 +268,12 @@ int                 level;
 	  {
 	     fprintf (outfile, "L'arbre ");
 	     /* ecrit le nom du type de l'element */
-	     if (pEl->ElSructSchema != NULL)
+	     if (pEl->ElStructSchema != NULL)
 	       {
-		  pRe1 = &pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1];
+		  pRe1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
 		  fprintf (outfile, "%s", pRe1->SrName);
 		  /* ecrit le nom du schema de structure de l'element */
-		  fprintf (outfile, "(%s) ", pEl->ElSructSchema->SsName);
+		  fprintf (outfile, "(%s) ", pEl->ElStructSchema->SsName);
 	       }
 	     fprintf (outfile, "contient %d elements, dont %d feuilles\n\n", NbNoeuds, NbFeuilles);
 
@@ -406,14 +406,14 @@ boolean             premierfils;
 	  }
 	i = 1;
 	/* ecrit le nom du type de l'element */
-	if (Noeud->ElSructSchema == NULL)
-	   fprintf (outfile, "*ElSructSchema=NULL*");
+	if (Noeud->ElStructSchema == NULL)
+	   fprintf (outfile, "*ElStructSchema=NULL*");
 	else
 	  {
-	     pRe1 = &Noeud->ElSructSchema->SsRule[Noeud->ElTypeNumber - 1];
+	     pRe1 = &Noeud->ElStructSchema->SsRule[Noeud->ElTypeNumber - 1];
 	     fprintf (outfile, "%s", pRe1->SrName);
 	     /* ecrit le nom du schema de structure de l'element */
-	     fprintf (outfile, "(%s)", Noeud->ElSructSchema->SsName);
+	     fprintf (outfile, "(%s)", Noeud->ElStructSchema->SsName);
 	  }
 	fprintf (outfile, " Label=%s", Noeud->ElLabel);
 	/* ecrit le volume de l'element */
@@ -969,7 +969,7 @@ FILE               *outfile;
 	for (i = 1; i <= Indent; i++)
 	   fprintf (outfile, " ");
 	pRe1 = &pPa1->AbElement->
-	   ElSructSchema->SsRule[pPa1->AbElement->ElTypeNumber - 1];
+	   ElStructSchema->SsRule[pPa1->AbElement->ElTypeNumber - 1];
 	fprintf (outfile, "%s", pRe1->SrName);
 	fprintf (outfile, " ");
 	if (pPa1->AbElement->ElTypeNumber == PageBreak + 1)

@@ -431,7 +431,7 @@ int                 ActiveAttr[];
 	/* du premier element selectionne' (lui-meme compris) */
 	while (pEl != NULL)
 	  {
-	     pSS = pEl->ElSructSchema;	/* schema de struct de l'element courant */
+	     pSS = pEl->ElStructSchema;	/* schema de struct de l'element courant */
 	     /* on parcourt toutes les extensions de schema de ce schema */
 	     do
 	       {
@@ -476,7 +476,7 @@ int                 ActiveAttr[];
 	  }
 
 	/* cherche les attributs locaux du premier element selectionne' */
-	pSS = PremSel->ElSructSchema;
+	pSS = PremSel->ElStructSchema;
 	pRe1 = &pSS->SsRule[PremSel->ElTypeNumber - 1];
 	pSchExt = SelDoc->DocSSchema;
 	do
@@ -503,7 +503,7 @@ int                 ActiveAttr[];
 	     if (pSchExt != NULL)
 	       {
 		  pSS = pSchExt;
-		  pRe1 = ExtensionRule (PremSel->ElSructSchema, PremSel->ElTypeNumber,
+		  pRe1 = ExtensionRule (PremSel->ElStructSchema, PremSel->ElTypeNumber,
 				      pSchExt);
 	       }
 	  }

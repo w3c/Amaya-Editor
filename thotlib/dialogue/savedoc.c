@@ -441,7 +441,7 @@ View                view;
 	       }
 	     frame = GetWindowNumber (document, view);
 	     if (ThotLocalActions[T_updateparagraph] != NULL)
-		(*ThotLocalActions[T_updateparagraph]) (FntrTable[frame - 1].FrAbstractBox, frame);
+		(*ThotLocalActions[T_updateparagraph]) (ViewFrameTable[frame - 1].FrAbstractBox, frame);
 	     SauveDocComme (pDoc);
 	  }
      }
@@ -469,7 +469,7 @@ View                view;
 	  {
 	     frame = GetWindowNumber (document, view);
 	     if (ThotLocalActions[T_updateparagraph] != NULL)
-		(*ThotLocalActions[T_updateparagraph]) (FntrTable[frame - 1].FrAbstractBox, frame);
+		(*ThotLocalActions[T_updateparagraph]) (ViewFrameTable[frame - 1].FrAbstractBox, frame);
 	     pDoc->DocModified = !SauveDocument (pDoc, 4);
 	  }
      }

@@ -495,7 +495,7 @@ PtrBox            pBox;
 	/* il faut liberer les buffers */
 	pBox->BxNChars = pBox->BxAbstractBox->AbVolume;
 	pBox->BxXRatio = 1;
-	pBox->BxYRation = 1;
+	pBox->BxYRatio = 1;
 	pBuffer = pBox->BxBuffer;
 	while (pBuffer != NULL)
 	  {
@@ -645,14 +645,14 @@ int                *height;
 		  pLine->LiFirstBox = pBox;
 		  pLine->LiXMax = 3000;	/* Dimension maximale possible */
 #ifdef __COLPAGE__
-		  FillLine (pLine, FntrTable[frame - 1].FrAbstractBox, pAb->AbTruncatedTail, &still, &toJustify);
+		  FillLine (pLine, ViewFrameTable[frame - 1].FrAbstractBox, pAb->AbTruncatedTail, &still, &toJustify);
 #else  /* __COLPAGE__ */
-		  FillLine (pLine, FntrTable[frame - 1].FrAbstractBox, &still, &toJustify);
+		  FillLine (pLine, ViewFrameTable[frame - 1].FrAbstractBox, &still, &toJustify);
 #endif /* __COLPAGE__ */
 		  pLine->LiXMax = pLine->LiRealLength;
 
 		  /* evalue si le positionnement en X et en Y doit etre absolu */
-		  XYEnAbsolu (pCurrentBox, &orgXComplete, &orgYComplete);
+		  IsXYPosComplete (pCurrentBox, &orgXComplete, &orgYComplete);
 
 		  Align (pCurrentBox, pLine, 0, frame, orgXComplete, orgYComplete);
 		  *width = pLine->LiXMax;
@@ -709,7 +709,7 @@ int                *height;
 			 {
 			    pCurrentAb = pBox->BxAbstractBox;
 			    if (pCurrentAb->AbHorizPos.PosAbRef == NULL)
-			       DepOrgX (pChildBox, NULL, x - pChildBox->BxXOrg, frame);
+			       XMove (pChildBox, NULL, x - pChildBox->BxXOrg, frame);
 			 }
 		    }
 		  /* Faut-il mettre a jour la position du pave ? */
@@ -722,7 +722,7 @@ int                *height;
 			 {
 			    pCurrentAb = pBox->BxAbstractBox;
 			    if (pCurrentAb->AbVertPos.PosAbRef == NULL)
-			       DepOrgY (pChildBox, NULL, y - pChildBox->BxYOrg, frame);
+			       YMove (pChildBox, NULL, y - pChildBox->BxYOrg, frame);
 			 }
 		    }
 	       }
@@ -762,7 +762,7 @@ int                *height;
 	*height -= y;
 	/* Decale les boites incluses dont la position depend des dimensions */
 	pChildAb = pFirstAb;
-	if (Propage == ToSiblings)
+	if (Propagate == ToSiblings)
 	   while (pChildAb != NULL)
 	     {
 		pChildBox = pChildAb->AbBox;
@@ -770,7 +770,7 @@ int                *height;
 		  {
 		     /* La position horizontale du pave depend de la largeur calculee? */
 		     if (pCurrentBox->BxContentWidth
-			 && !XEnAbsolu (pCurrentBox)
+			 && !IsXPosComplete (pCurrentBox)
 			 && pChildAb->AbHorizPos.PosAbRef == pAb)
 		       {
 			  val = pChildBox->BxXOrg;	/* origine de la boite a deplacer */
@@ -782,18 +782,18 @@ int                *height;
 			  if (pChildAb->AbHorizPos.PosRefEdge == VertMiddle)
 			    {
 			       if (!pChildBox->BxHorizFlex)
-				  DepOrgX (pChildBox, NULL, x + *width / 2 - val, frame);
+				  XMove (pChildBox, NULL, x + *width / 2 - val, frame);
 			    }
 			  else if (pChildAb->AbHorizPos.PosRefEdge == Right)
 			    {
 			       if (!pChildBox->BxHorizFlex)
-				  DepOrgX (pChildBox, NULL, x + *width - val, frame);
+				  XMove (pChildBox, NULL, x + *width - val, frame);
 			    }
 		       }
 
 		     /* La position verticale du pave depend de la hauteur calculee ? */
 		     if (pCurrentBox->BxContentHeight
-			 && !YEnAbsolu (pCurrentBox)
+			 && !IsYPosComplete (pCurrentBox)
 			 && pChildAb->AbVertPos.PosAbRef == pAb)
 		       {
 			  val = pChildBox->BxYOrg;	/* origine de la boite a deplacer */
@@ -805,12 +805,12 @@ int                *height;
 			  if (pChildAb->AbVertPos.PosRefEdge == HorizMiddle)
 			    {
 			       if (!pChildBox->BxVertFlex)
-				  DepOrgY (pChildBox, NULL, y + *height / 2 - val, frame);
+				  YMove (pChildBox, NULL, y + *height / 2 - val, frame);
 			    }
 			  else if (pChildAb->AbVertPos.PosRefEdge == Bottom)
 			    {
 			       if (!pChildBox->BxVertFlex)
-				  DepOrgY (pChildBox, NULL, y + *height - val, frame);
+				  YMove (pChildBox, NULL, y + *height - val, frame);
 			    }
 		       }
 		  }
@@ -992,11 +992,11 @@ int                *carIndex;
    if (pAb->AbDead)
       return (NULL);
 
-   pMainBox = FntrTable[frame - 1].FrAbstractBox->AbBox;
+   pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
    /* Chargement de la fonte attachee au pave */
    height = pAb->AbSize;
    unit = pAb->AbSizeUnit;
-   height += FntrTable[frame - 1].FrMagnification;
+   height += ViewFrameTable[frame - 1].FrMagnification;
 
    if (pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol || pAb->AbLeafType == LtCompound)
      {
@@ -1104,9 +1104,9 @@ int                *carIndex;
 
 			 /* Il faut se proteger des boites de taille negative */
 			 if (pCurrentBox->BxWidth < 0)
-			    ChangeLargeur (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxWidth, 0, frame);
+			    ChangeWidth (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxWidth, 0, frame);
 			 if (pCurrentBox->BxHeight < 0)
-			    ChangeHauteur (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxHeight, frame);
+			    ChangeHeight (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxHeight, frame);
 		      }
 
 		    if (picture->PicPixmap == None)
@@ -1132,7 +1132,7 @@ int                *carIndex;
 		    pCurrentBox->BxNChars = pAb->AbVolume;	/* Nombre de points */
 		    pCurrentBox->BxPictInfo = NULL;
 		    pCurrentBox->BxXRatio = 1;
-		    pCurrentBox->BxYRation = 1;
+		    pCurrentBox->BxYRatio = 1;
 		    GivePolylineSize (pAb, &width, &height);
 		    break;
 		 case LtCompound:
@@ -1158,13 +1158,13 @@ int                *carIndex;
 	      }
 
 	/* Dimensionnement de la boite par le contenu ? */
-	ChangeLgContenu (pCurrentBox, pCurrentBox, width, 0, frame);
+	ChangeDefaultWidth (pCurrentBox, pCurrentBox, width, 0, frame);
 	/* Il est possible que le changement de largeur de la boite modifie */
 	/* indirectement (parce que la boite contient un bloc de ligne) la  */
 	/* hauteur du contenu de la boite.                                  */
 	if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
 	   GiveEnclosureSize (pAb, frame, &width, &height);
-	ChangeHtContenu (pCurrentBox, pCurrentBox, height, frame);
+	ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
 
 	/* Positionnement des axes de la boite construite */
 	ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
@@ -1368,13 +1368,13 @@ boolean           splitBox;
 	if (pPosAb->PosAbRef == NULL)
 	  {
 	     j = FontBase (pMainBox->BxFont) - pMainBox->BxHorizRef;
-	     DepBase (pAb->AbBox, NULL, j, frame);
+	     MoveHorizRef (pAb->AbBox, NULL, j, frame);
 	  }
 	else if (pPosAb->PosAbRef == pMainBox->BxAbstractBox)
 	   if (pPosAb->PosRefEdge == HorizMiddle)
-	      DepBase (pAb->AbBox, NULL, hDelta / 2, frame);
+	      MoveHorizRef (pAb->AbBox, NULL, hDelta / 2, frame);
 	   else if (pPosAb->PosRefEdge == Bottom)
-	      DepBase (pAb->AbBox, NULL, hDelta, frame);
+	      MoveHorizRef (pAb->AbBox, NULL, hDelta, frame);
 
 	/* Mise a jour des positions des boites suivantes */
 	box1 = pBox->BxNexChild;
@@ -1411,15 +1411,15 @@ boolean           splitBox;
    /* Box coupee */
       else if (pBox->BxType == BoSplit)
 	{
-	   savpropage = Propage;
-	   Propage = ToSiblings;
+	   savpropage = Propagate;
+	   Propagate = ToSiblings;
 	   if (wDelta != 0)
-	      ChangeLgContenu (pBox, pBox, pBox->BxWidth + wDelta, 0, frame);
+	      ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + wDelta, 0, frame);
 	   if (hDelta != 0)
-	      ChangeHtContenu (pBox, pBox, pBox->BxHeight + hDelta, frame);
-	   Propage = savpropage;
+	      ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
+	   Propagate = savpropage;
 	   /* Faut-il mettre a jour le bloc de ligne englobant ? */
-	   if (Propage == ToAll)
+	   if (Propagate == ToAll)
 	     {
 		ligne = SearchLine (pBox->BxNexChild);
 		RecomputeLines (pAb->AbEnclosing, ligne, pBox, frame);
@@ -1429,17 +1429,17 @@ boolean           splitBox;
       else
 	{
 	   if (adjustDelta != 0)
-	      ChangeLgContenu (pBox, pBox, pBox->BxWidth + adjustDelta, spaceDelta, frame);
+	      ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + adjustDelta, spaceDelta, frame);
 	   else if (wDelta != 0)
-	      ChangeLgContenu (pBox, pBox, pBox->BxWidth + wDelta, spaceDelta, frame);
+	      ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + wDelta, spaceDelta, frame);
 	   if (hDelta != 0)
-	      ChangeHtContenu (pBox, pBox, pBox->BxHeight + hDelta, frame);
+	      ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
 	}
    else if (pBox->BxContentHeight || (!pBox->BxAbstractBox->AbHeight.DimIsPosition && pBox->BxAbstractBox->AbHeight.DimMinimum))
      {
 	/* La hauteur de la boite depend de son contenu */
 	if (hDelta != 0)
-	   ChangeHtContenu (pBox, pBox, pBox->BxHeight + hDelta, frame);
+	   ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
      }
    else if (pBox->BxWidth > 0 && pBox->BxHeight > 0)
       /* Si la largeur de la boite ne depend pas de son contenu  */
@@ -1486,10 +1486,10 @@ int                 frame;
 	       {
 		  /* Faut-il restaurer les regles d'une boite elastique */
 		  if (pCurrentBox->BxHorizFlex && pCurrentBox->BxHorizInverted)
-		     HorizInverse (pCurrentBox, OpHorizDep);
+		     XEdgesExchange (pCurrentBox, OpHorizDep);
 
 		  if (pCurrentBox->BxVertFlex && pCurrentBox->BxVertInverted)
-		     VertInverse (pCurrentBox, OpVertDep);
+		     YEdgesExchange (pCurrentBox, OpVertDep);
 	       }
 
 	     /* Liberation des boites des paves inclus */
@@ -1500,10 +1500,10 @@ int                 frame;
 	       }
 
 	     /* Suppression des references a pCurrentBox dans la selection */
-	     if (FntrTable[frame - 1].FrSelectionBegin.VsBox == pCurrentBox)
-		FntrTable[frame - 1].FrSelectionBegin.VsBox = NULL;
-	     if (FntrTable[frame - 1].FrSelectionEnd.VsBox == pCurrentBox)
-		FntrTable[frame - 1].FrSelectionEnd.VsBox = NULL;
+	     if (ViewFrameTable[frame - 1].FrSelectionBegin.VsBox == pCurrentBox)
+		ViewFrameTable[frame - 1].FrSelectionBegin.VsBox = NULL;
+	     if (ViewFrameTable[frame - 1].FrSelectionEnd.VsBox == pCurrentBox)
+		ViewFrameTable[frame - 1].FrSelectionEnd.VsBox = NULL;
 
 	     /* Liberation des liens eventuels hors hierarchie */
 	     ClearXOutOfStructRelation (pCurrentBox);
@@ -1620,7 +1620,7 @@ int                 frame;
    boolean           orgXComplete;
    boolean           orgYComplete;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    pLastBox = NULL;
    nSpaces = 0;			/* nombre de blancs */
    charDelta = 0;			/* nombre de caracteres */
@@ -1704,12 +1704,12 @@ int                 frame;
 	  }
 
 	/* Faut-il dechainer la boite englobante ? */
-	EvalAffich = FALSE;	/* On arrete l'evaluation du reaffichage */
-	savpropage = Propage;
-	Propage = ToSiblings;	/* Limite la propagation sur le descendance */
+	ReadyToDisplay = FALSE;	/* On arrete l'evaluation du reaffichage */
+	savpropage = Propagate;
+	Propagate = ToSiblings;	/* Limite la propagation sur le descendance */
 	pBox = CreateBox (pAb, frame, condition, &i);
 
-	EvalAffich = TRUE;	/* On retablit l'evaluation du reaffichage */
+	ReadyToDisplay = TRUE;	/* On retablit l'evaluation du reaffichage */
 
 	/* Mise a jour de la liste des boites terminales */
 	if (pMainBox != NULL && pNextBox != NULL)
@@ -1727,13 +1727,13 @@ int                 frame;
 
 	/* Si la boite a ete creee (pSiblingBox<>NULL) */
 	if (pBox == NULL)
-	   Propage = savpropage;	/* Restaure la regle de propagation */
+	   Propagate = savpropage;	/* Restaure la regle de propagation */
 	else
 	  {
 	     /* place les origines des boites par rapport a la racine de la vue */
 	     /* si la boite n'a pas deja ete placee en absolu */
-	     XYEnAbsolu (pBox, &orgXComplete, &orgYComplete);
-	     Propage = savpropage;	/* Restaure la regle de propagation */
+	     IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
+	     Propagate = savpropage;	/* Restaure la regle de propagation */
 	     if (!orgXComplete || !orgYComplete)
 	       {
 		  /* Initialise le placement des boites creees */
@@ -1969,7 +1969,7 @@ int                 frame;
 					pSiblingBox = pSiblingAb->AbBox;
 					if (pSiblingBox->BxHorizFlex || pSiblingBox->BxVertFlex)
 					  {
-					     AjusteTrace (pAb, pSiblingBox->BxHorizInverted, pSiblingBox->BxVertInverted, FALSE);
+					     MirrorShape (pAb, pSiblingBox->BxHorizInverted, pSiblingBox->BxVertInverted, FALSE);
 					     pSiblingAb = NULL;	/* on arrete */
 					  }
 					else
@@ -1994,7 +1994,7 @@ int                 frame;
 					pSiblingBox = pSiblingAb->AbBox;
 					if (pSiblingBox->BxHorizFlex || pSiblingBox->BxVertFlex)
 					  {
-					     AjusteTrace (pAb, pSiblingBox->BxHorizInverted, pSiblingBox->BxVertInverted, FALSE);
+					     MirrorShape (pAb, pSiblingBox->BxHorizInverted, pSiblingBox->BxVertInverted, FALSE);
 					     pSiblingAb = NULL;	/* on arrete */
 					  }
 					else
@@ -2095,7 +2095,7 @@ int                 frame;
 			}
 
 		  /* Mise a jour de la largeur du contenu */
-		  ChangeLgContenu (pBox, NULL, width, 0, frame);
+		  ChangeDefaultWidth (pBox, NULL, width, 0, frame);
 		  result = TRUE;
 	       }
 	     /* La boite ne depend pas de son contenu */
@@ -2145,7 +2145,7 @@ int                 frame;
 
 
 		  /* Mise a jour de la hauteur du contenu */
-		  ChangeHtContenu (pBox, NULL, height, frame);
+		  ChangeDefaultHeight (pBox, NULL, height, frame);
 		  result = TRUE;
 	       }
 	     /* La boite ne depend pas de son contenu */
@@ -2282,7 +2282,7 @@ boolean             horizRef;
 
    /* On recherche une entree libre */
    pPreviousDimRel = NULL;
-   pDimRel = RetardeEngl;
+   pDimRel = DifferedPackBlocks;
    toCreate = TRUE;
    i = 0;
    while (toCreate && pDimRel != NULL)
@@ -2310,7 +2310,7 @@ boolean             horizRef;
      {
 	GetBDim (&pDimRel);
 	if (pPreviousDimRel == NULL)
-	   RetardeEngl = pDimRel;
+	   DifferedPackBlocks = pDimRel;
 	else
 	   pPreviousDimRel->DimRNext = pDimRel;
      }
@@ -2336,7 +2336,7 @@ int                 frame;
 
    /* Il faut reevaluer la dimension des boites dont le contenu est */
    /* englobe et depend de relations hors-structure.                */
-   pDimRel = RetardeEngl;
+   pDimRel = DifferedPackBlocks;
    while (pDimRel != NULL)
      {
 	/* On traite toutes les boites enregistrees */
@@ -2348,9 +2348,9 @@ int                 frame;
 	     else if (pDimRel->DimRTable[i - 1]->BxAbstractBox == NULL)
 		;		/* le pave n'existe plus */
 	     else if (pDimRel->DimRSame[i - 1])
-		Englobx (pDimRel->DimRTable[i - 1]->BxAbstractBox, NULL, frame);
+		WidthPack (pDimRel->DimRTable[i - 1]->BxAbstractBox, NULL, frame);
 	     else
-		Engloby (pDimRel->DimRTable[i - 1]->BxAbstractBox, NULL, frame);
+		HeightPack (pDimRel->DimRTable[i - 1]->BxAbstractBox, NULL, frame);
 	     /* Entree suivante */
 	     i++;
 	  }
@@ -2360,10 +2360,10 @@ int                 frame;
      }
 
    /* On libere les blocs */
-   while (RetardeEngl != NULL)
+   while (DifferedPackBlocks != NULL)
      {
-	pDimRel = RetardeEngl;
-	RetardeEngl = RetardeEngl->DimRNext;
+	pDimRel = DifferedPackBlocks;
+	DifferedPackBlocks = DifferedPackBlocks->DimRNext;
 	FreeBDim (&pDimRel);
      }
 }
@@ -2387,7 +2387,7 @@ int                 frame;
    PtrBox            pCurrentBox;
    int               width, height;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
 	pAb = pFrame->FrAbstractBox;
@@ -2406,7 +2406,7 @@ int                 frame;
 		  if (!condition)
 		    {
 		       GiveEnclosureSize (pAb, frame, &width, &height);
-		       ChangeLgContenu (pCurrentBox, pCurrentBox, width, 0, frame);
+		       ChangeDefaultWidth (pCurrentBox, pCurrentBox, width, 0, frame);
 		    }
 	       }
 	     if (!pCurrentBox->BxContentHeight
@@ -2418,7 +2418,7 @@ int                 frame;
 		  if (!condition)
 		    {
 		       GiveEnclosureSize (pAb, frame, &width, &height);
-		       ChangeHtContenu (pCurrentBox, pCurrentBox, height, frame);
+		       ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
 		    }
 	       }
 
@@ -2447,7 +2447,7 @@ int                 frame;
 	     ComputeEnclosing (frame);
 
 	     /* RemoveElement la selection eventuelle */
-	     SetSelect (frame, FALSE);
+	     SwitchSelection (frame, FALSE);
 	     /* Affichage de toute la fenetre */
 	     AfFinFenetre (frame, 0);
 	     /* Restaure la selection */
@@ -2489,13 +2489,13 @@ int                 frame;
 	     if (pAb->AbHorizPosChange)
 	       {
 		  ClearPosRelation (pCurrentBox, TRUE);
-		  DepOrgX (pCurrentBox, NULL, -pCurrentBox->BxXOrg, frame);
+		  XMove (pCurrentBox, NULL, -pCurrentBox->BxXOrg, frame);
 	       }
 
 	     /* Annulation ancienne largeur */
 	     ClearDimRelation (pCurrentBox, TRUE, frame);
 	     /* Reinitialisation du trace reel */
-	     AjusteTrace (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
+	     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
 	  }
 
 	if (pCurrentBox->BxVertFlex && pAb->AbHeightChange)
@@ -2507,13 +2507,13 @@ int                 frame;
 	     if (pAb->AbVertPosChange)
 	       {
 		  ClearPosRelation (pCurrentBox, FALSE);
-		  DepOrgY (pCurrentBox, NULL, -pCurrentBox->BxYOrg, frame);
+		  YMove (pCurrentBox, NULL, -pCurrentBox->BxYOrg, frame);
 	       }
 
 	     /* Annulation ancienne hauteur */
 	     ClearDimRelation (pCurrentBox, FALSE, frame);
 	     /* Reinitialisation du trace reel */
-	     AjusteTrace (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
+	     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
 	  }
 
 	/* Traitement des paves fils */
@@ -2539,13 +2539,13 @@ int                 frame;
 {
    ViewFrame        *pFrame;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
 	pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
 	/* Faut-il retirer les marques de selection dans la fenetre */
 	EndInsert ();
-	ResetSelect (frame);
+	ClearViewSelection (frame);
 	/* Liberation de la hierarchie */
 	RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);
 	pFrame->FrAbstractBox = NULL;
@@ -2586,17 +2586,17 @@ int                 frame;
    else if (pAb->AbDead || pAb->AbNew)
      {
 	result = ComputeUpdates (pAb, frame);
-	propStatus = Propage;
-	Propage = ToAll;	/* On passe en mode normal de propagation */
+	propStatus = Propagate;
+	Propagate = ToAll;	/* On passe en mode normal de propagation */
 	CheckDefaultPositions (pAb, frame);
-	Propage = propStatus;
+	Propagate = propStatus;
      }
    /* On traite tous les paves descendants modifies avant le pave lui-meme */
    else
      {
 	/* On limite l'englobement a la boite courante */
-	pBox = Englobement;
-	Englobement = pAb->AbBox;
+	pBox = PackBoxRoot;
+	PackBoxRoot = pAb->AbBox;
 
 	/* Traitement des creations */
 	pChildAb = pAb->AbFirstEnclosed;
@@ -2662,7 +2662,7 @@ int                 frame;
 	  }
 
 	/* On restaure l'ancienne limite de l'englobement */
-	Englobement = pBox;
+	PackBoxRoot = pBox;
 
 	/* Faut-il reevaluer la boite composee ? */
 	result = ComputeUpdates (pAb, frame);
@@ -2716,8 +2716,8 @@ int                 frame;
 		      && pAb->AbBox->BxType != BoGhost
 		      && pAb->AbLeafType == LtCompound)
 	       {
-		  Englobx (pAb, pAb->AbBox, frame);
-		  Engloby (pAb, pAb->AbBox, frame);
+		  WidthPack (pAb, pAb->AbBox, frame);
+		  HeightPack (pAb, pAb->AbBox, frame);
 	       }
 	  }
      }
@@ -2731,17 +2731,17 @@ int                 frame;
 /* | ChangeConcreteImage traite la mise a jour d'une hierachie de paves | */
 /* |            Pendant la creation d'une arborescence de boites on     | */
 /* |            place chaque boite a` l'interieur de son englobante     | */
-/* |            (Propage=ToSiblings).                                   | */
+/* |            (Propagate=ToSiblings).                                   | */
 /* |            Quand tous les placements relatifs sont termine's on    | */
 /* |            place les boites dans la vue entiere du document en     | */
 /* |            cumulant les placements relatifs.                       | */
 /* |            Les autre modifications vont provoquer des mises a` jour| */
-/* |            sur la descendance (Propage = ToChildren) puis en fin de| */
+/* |            sur la descendance (Propagate = ToChildren) puis en fin de| */
 /* |            traitement seulement, la mise a` jour des boites        | */
 /* |            englobantes.                                            | */
 /* |            En fonctionnement normal les modifications sont         | */
 /* |            immediatement propagees sur toutes les boites           | */
-/* |            (Propage = ToAll).                                      | */
+/* |            (Propagate = ToAll).                                      | */
 /* |            Si le parametre pageHeight est non nul, il indique la hauteur | */
 /* |            maximum d'une page (ce parametre est eventuellement mis | */
 /* |            a` jour au retour).                                     | */
@@ -2781,7 +2781,7 @@ PtrAbstractBox      pAb;
       TtaDisplaySimpleMessage (INFO, LIB, BAD_FRAME_NB);
    else
      {
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	/* La vue n'est pas cree a la racine */
 	if (pFrame->FrAbstractBox == NULL && (pAb->AbEnclosing != NULL
 		 || pAb->AbPrevious != NULL || pAb->AbNext != NULL))
@@ -2829,7 +2829,7 @@ PtrAbstractBox      pAb;
 		  savezoom = pFrame->FrMagnification;
 		  pFrame->FrMagnification = 0;
 	       }
-	     Propage = ToChildren;	/* Limite la propagation */
+	     Propagate = ToChildren;	/* Limite la propagation */
 	     /* On note le premier pave a examiner pour l'englobante */
 	     pParentAb = pAb->AbEnclosing;
 
@@ -2837,7 +2837,7 @@ PtrAbstractBox      pAb;
 	     if ((pParentAb != NULL) && (pParentAb->AbBox != NULL))
 	       {
 		  /* L'englobement doit etre repris a partir de boite du pave pere */
-		  Englobement = pParentAb->AbBox;
+		  PackBoxRoot = pParentAb->AbBox;
 
 		  /* On est dans une boite eclatee, on remonte jusqu'au bloc de lignes */
 		  while (pParentAb->AbBox->BxType == BoGhost)
@@ -2882,14 +2882,14 @@ PtrAbstractBox      pAb;
 	     change = IsAbstractBoxUpdated (pAb, frame);
 
 	     /* Les modifications sont traitees */
-	     Propage = ToAll;	/* On passe en mode normal de propagation */
+	     Propagate = ToAll;	/* On passe en mode normal de propagation */
 
 	     /* Traitement des englobements retardes */
 	     ComputeEnclosing (frame);
 
 
 	     /* On ne limite plus le traitement de l'englobement */
-	     Englobement = NULL;
+	     PackBoxRoot = NULL;
 
 	     /* Si l'image concrete est videe de son contenu */
 	     if (pFrame->FrAbstractBox->AbBox->BxNext == NULL)
@@ -2930,8 +2930,8 @@ PtrAbstractBox      pAb;
 			    pChildAb = pChildAb->AbNext;
 			 }
 
-		       Englobx (pParentAb, NULL, frame);
-		       Engloby (pParentAb, NULL, frame);
+		       WidthPack (pParentAb, NULL, frame);
+		       HeightPack (pParentAb, NULL, frame);
 		    }
 	       }
 	     /* Est-ce que l'on a de nouvelles boites dont le contenu est */

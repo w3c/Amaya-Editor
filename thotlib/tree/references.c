@@ -1003,7 +1003,7 @@ boolean             withAppEvent;
    ret = FALSE;
    if (pRefEl != NULL)
      {
-	if (pRefEl->ElSructSchema->SsRule[pRefEl->ElTypeNumber - 1].SrRefImportedDoc)
+	if (pRefEl->ElStructSchema->SsRule[pRefEl->ElTypeNumber - 1].SrRefImportedDoc)
 	   /* c'est une inclusion d'un document externe */
 	   if (pDoc == pTargetDoc)
 	      /* reference et element reference' sont dans le meme document */
@@ -1152,7 +1152,7 @@ boolean             withAppEvent;
 		       pRef->RdReferred->ReFirstReference = pRef;
 		    }
 		  if (pRefEl != NULL)
-		     if (pRefEl->ElSructSchema->SsRule[pRefEl->ElTypeNumber - 1].
+		     if (pRefEl->ElStructSchema->SsRule[pRefEl->ElTypeNumber - 1].
 			 SrRefImportedDoc)
 			/* c'est un renvoi a un document importe' */
 		       {

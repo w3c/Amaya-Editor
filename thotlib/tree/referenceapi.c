@@ -203,7 +203,7 @@ Document            targetDocument;
       /* parametre targetDocument correct */
      {
 	inclusion = NewSubtree (((PtrElement) target)->ElTypeNumber,
-				((PtrElement) target)->ElSructSchema,
+				((PtrElement) target)->ElStructSchema,
 				LoadedDocument[document - 1], 0, FALSE,
 				TRUE, TRUE, TRUE);
 	GetReference (&inclusion->ElSource);

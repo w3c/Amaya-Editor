@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern unsigned char CarSuivant ( PtrTextBuffer * buffer,
+extern unsigned char NextCharacter ( PtrTextBuffer * buffer,
                                   int *rank );
-extern unsigned char CarPrecedent ( PtrTextBuffer * buffer,
+extern unsigned char PreviousCharacter ( PtrTextBuffer * buffer,
                                     int *rank );
 extern boolean MotOk ( PtrElement firstEl,
                        int firstChar,
@@ -19,7 +19,7 @@ extern boolean InitSearchDomain ( int domain,
 extern void UpdateDuringSearch ( PtrElement pEl,
                                  int len );
 extern void RestoreAfterSearch ( void );
-extern boolean ArbreSuivant ( PtrElement * pEl,
+extern boolean NextTree ( PtrElement * pEl,
                               int *charIndx,
                               PtrSearchContext context );
 extern boolean SearchNextWord ( PtrElement * curEl,
@@ -33,9 +33,9 @@ extern boolean SearchPreviousWord ( PtrElement * curEl,
 
 #else /* __STDC__ */
 
-extern unsigned char CarSuivant (/* PtrTextBuffer * buffer,
+extern unsigned char NextCharacter (/* PtrTextBuffer * buffer,
                                     int *rank */);
-extern unsigned char CarPrecedent (/* PtrTextBuffer * buffer,
+extern unsigned char PreviousCharacter (/* PtrTextBuffer * buffer,
                                       int *rank */);
 extern boolean MotOk (/* PtrElement firstEl,
                          int firstChar,
@@ -46,7 +46,7 @@ extern boolean InitSearchDomain (/* int domain,
 extern void UpdateDuringSearch (/* PtrElement pEl,
                                    int len */);
 extern void RestoreAfterSearch (/* void */);
-extern boolean ArbreSuivant (/* PtrElement * pEl,
+extern boolean NextTree (/* PtrElement * pEl,
                                 int *charIndx,
                                 PtrSearchContext context */);
 extern boolean SearchNextWord (/* PtrElement * curEl,

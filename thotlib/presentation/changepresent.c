@@ -627,15 +627,15 @@ boolean  PavResizable(pAb, Horiz)
       if (ElementIsReadOnly(pEl))
 	result = FALSE;
       else
-        if (TypeHasException(ExcNoResize, pEl->ElTypeNumber, pEl->ElSructSchema))
+        if (TypeHasException(ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
 	  result = FALSE;
         else
 	  if (Horiz)
 	    result = 
-	      !TypeHasException(ExcNoHResize, pEl->ElTypeNumber, pEl->ElSructSchema);
+	      !TypeHasException(ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema);
 	  else
 	    result = 
-	      !TypeHasException(ExcNoVResize, pEl->ElTypeNumber, pEl->ElSructSchema);
+	      !TypeHasException(ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema);
   return result;
 }
 
@@ -674,15 +674,15 @@ boolean PavMovable(pAb, Horiz)
       if (ElementIsReadOnly(pEl))
 	result = FALSE;
       else
-        if (TypeHasException(ExcNoMove, pEl->ElTypeNumber, pEl->ElSructSchema))
+        if (TypeHasException(ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
 	  result = FALSE;
         else
 	  if (Horiz)
 	    result = 
-	      !TypeHasException(ExcNoHMove, pEl->ElTypeNumber, pEl->ElSructSchema);
+	      !TypeHasException(ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema);
 	  else
 	    result = 
-	      !TypeHasException(ExcNoVMove, pEl->ElTypeNumber, pEl->ElSructSchema);
+	      !TypeHasException(ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema);
   return result;
 }
 
@@ -735,7 +735,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel il appartient */ 
   /* numero de cette vue */ 
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, pAb->AbDocView);
+  VueSch = AppliedView(pEl, NULL, pDoc, pAb->AbDocView);
   /* le pave est-il dans une mise en lignes ? */
   lignes = FALSE;	/* a priori non */
   doit = FALSE;
@@ -886,7 +886,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 			PavReaff(pP, pDoc);
 			reaff = TRUE;	
 			/* il faut reafficher le pave */
-			if (!VueAssoc(pEl))
+			if (!AssocView(pEl))
 			  updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
 			else
 			  updateframe[vue -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
@@ -1027,7 +1027,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 			pP->AbHorizPosChange = TRUE;
 			PavReaff(pP, pDoc); /* indique le pave a reafficher */
 			reaff = TRUE;	/* il faut reafficher le pave */
-			if (!VueAssoc(pEl))
+			if (!AssocView(pEl))
 			  updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
 			else
 			  updateframe[vue -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
@@ -1047,13 +1047,13 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	  if (updateframe[vue -1] > 0)
 	    /* eteint la selection dans la vue traitee */
-	    SetSelect(updateframe[vue -1], FALSE);
+	    SwitchSelection(updateframe[vue -1], FALSE);
         AbstractImageUpdated(pDoc);	/* met a jour l'image abstraite */
         RedisplayDocViews(pDoc);	/* fait reafficher ce qui doit l'etre */
         for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	  if (updateframe[vue -1] > 0)
 	    /* rallume la selection dans la vue traitee */
-	    SetSelect(updateframe[vue -1], TRUE);
+	    SwitchSelection(updateframe[vue -1], TRUE);
 	}
     }
 }
@@ -1107,7 +1107,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel appartient le pave */ 
   /* numero de cette vue dans le schema de presentation qui la definit */
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, pAb->AbDocView);
+  VueSch = AppliedView(pEl, NULL, pDoc, pAb->AbDocView);
   doit = FALSE;
 
   /* traite le changement de largeur */
@@ -1260,7 +1260,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			    /* la position vert.du pave a change' */
 			    PavReaff(pP, pDoc); /* indique le pave a reafficher */
 			    reaff = TRUE;   /* il faut reafficher le pave */
-			    if (!VueAssoc(pEl))
+			    if (!AssocView(pEl))
 			      updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
 			    else
 			      updateframe[vue -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
@@ -1422,7 +1422,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			    pP->AbHeightChange = TRUE;
 			    PavReaff(pP, pDoc); /* indique le pave a reafficher */
 			    reaff = TRUE;   /* il faut reafficher */
-			    if (!VueAssoc(pEl))
+			    if (!AssocView(pEl))
 			      updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
 			    else
 			      updateframe[vue -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
@@ -1442,13 +1442,13 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	    if (updateframe[vue -1] > 0)
 	      /* eteint la selection dans la vue traitee */
-	      SetSelect(updateframe[vue -1], FALSE);
+	      SwitchSelection(updateframe[vue -1], FALSE);
 	  AbstractImageUpdated(pDoc);     /* mise a jour de l'image abstraite */
 	  RedisplayDocViews(pDoc);  /* reafficher ce qu'il faut */
 	  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	    if (updateframe[vue -1] > 0)
 	      /* rallume la selection dans la vue traitee */
-	      SetSelect(updateframe[vue -1], TRUE);
+	      SwitchSelection(updateframe[vue -1], TRUE);
 	}
     }
 }
@@ -1804,7 +1804,7 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
 	PtrPRule	pRegle;
 	int		VueSch;
   
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, VueTraitee); /* numero de cette vue */
+  VueSch = AppliedView(pEl, NULL, pDoc, VueTraitee); /* numero de cette vue */
   /* style des traits dans le graphique */
   if (ChngStyleTrait)
     {
@@ -1927,7 +1927,7 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
   int             VueSch;
   NotifyPresentation notifyPres;
 
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, VueTraitee); /* type de cette vue */
+  VueSch = AppliedView(pEl, NULL, pDoc, VueTraitee); /* type de cette vue */
   pRegle = pEl->ElFirstPRule;
   pR = NULL;		
   /* parcourt les regles de presentation specifiques de l'element */
@@ -2008,7 +2008,7 @@ void ChangeCouleur(numCouleur, Fond)
     TtaDisplaySimpleMessage (INFO, LIB,RO_DOC_FORBIDDEN);
   else
     {
-      RazSelect();
+      ClearAllViewSelection();
       /* Coupe les elements du debut et de la fin de la selection*/
       /* s'ils sont partiellement selectionnes */
       if (premcar > 1 || dercar > 0)
@@ -2098,7 +2098,7 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
 	PtrPRule	pRegle;
 	int		VueSch;
   
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, VueTraitee); /* numero de cette vue*/
+  VueSch = AppliedView(pEl, NULL, pDoc, VueTraitee); /* numero de cette vue*/
   /* applique les choix de l'utilisateur */
   /* Famille de polices de caracteres */
   if (ChngFamille)
@@ -2279,7 +2279,7 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
   PtrPRule    pRegle;
   int             VueSch;
   
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, VueTraitee); /* Le type de cette vue */
+  VueSch = AppliedView(pEl, NULL, pDoc, VueTraitee); /* Le type de cette vue */
   /* applique les choix de l'utilisateur */
   if (ChngCadr && Cadr > 0)
     {

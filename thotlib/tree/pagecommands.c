@@ -176,7 +176,7 @@ PtrPSchema         *pSchP;
 #ifndef __COLPAGE__
 
 /* ---------------------------------------------------------------------- */
- /* |   HautPage met a jour les variables HauteurPage et HauteurBasPage | */
+ /* |   HautPage met a jour les variables PageHeight et PageFooterHeight | */
 /* |            selon le type de page auquel appartient l'element       | */
 /* |            Marque Page pointe par pElPage.                         | */
 /* |            Vue indique le numero de la vue dans le schema de       | */
@@ -214,12 +214,12 @@ PtrPSchema         *pSchP;
 	  {
 	     *b = pR->PrPresBox[0];	/* parametre retour */
 	     /* Hauteur minimum du bas de page */
-	     HauteurBasPage = pSP->PsPresentBox[(*b) - 1].PbFooterHeight;
+	     PageFooterHeight = pSP->PsPresentBox[(*b) - 1].PbFooterHeight;
 	     /* cherche la regle de hauteur de la boite page */
 	     pR = RegleType_HautPage (PtHeight, *b, pSP);
 	     if (pR != NULL)
 		if (!pR->PrDimRule.DrPosition)
-		   HauteurPage = pR->PrDimRule.DrValue - HauteurBasPage;
+		   PageHeight = pR->PrDimRule.DrValue - PageFooterHeight;
 	     *pSchP = pSP;	/* parametre retour */
 	  }
      }
@@ -379,9 +379,9 @@ int                 VueNb;
 	/* signale les paves morts au Mediateur */
 	/* si pas de destruction, on appelle ChangeConcreteImage pour positionner ret */
 	/* et refait evaluer la coupure de page */
-	Hauteurffective = HauteurCoupPage;
+	RealPageHeight = BreakPageHeight;
 	ChangeRHPage (PavRac, pDoc, VueNb);
-	ret = ChangeConcreteImage (frame, &Hauteurffective, PavRac);
+	ret = ChangeConcreteImage (frame, &RealPageHeight, PavRac);
 	if (det)
 	   /* libere tous les paves morts de la vue */
 	   FreeDeadAbstractBoxes (PavRac);
@@ -502,8 +502,8 @@ int                 VueNb;
 	pAb = pAb->AbEnclosing;
      }
    /* signale les paves morts au Mediateur */
-   Hauteurffective = HauteurPage;
-   ret = ChangeConcreteImage (frame, &Hauteurffective, PavRac);
+   RealPageHeight = PageHeight;
+   ret = ChangeConcreteImage (frame, &RealPageHeight, PavRac);
    /* libere tous les paves morts de la vue */
    FreeDeadAbstractBoxes (PavRac);
    return ret;

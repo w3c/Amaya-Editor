@@ -61,7 +61,7 @@ int                 frame;
 
    DrawPage ((FILE *) FrRef[frame]);
 
-   if (pBox->BxAbstractBox->AbVisibility >= FntrTable[frame - 1].FrVisibility)
+   if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
      {
 	if (pBox->BxAbstractBox->AbSensitive)
 	   op = 1;
@@ -107,7 +107,7 @@ int                 frame;
 
 	DrawImage (pBox, (PictInfo *) pBox->BxPictInfo, frame);
 
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	/* Should the end of de line be filled with dots */
 	if (pBox->BxEndOfBloc > 0)
 	  {
@@ -159,7 +159,7 @@ int                 frame;
    fg = pBox->BxAbstractBox->AbForeground;
    bg = pBox->BxAbstractBox->AbBackground;
    withbackground = (pBox->BxAbstractBox->AbFillPattern == 2);
-   if (pBox->BxAbstractBox->AbVisibility >= FntrTable[frame - 1].FrVisibility)
+   if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
       if (mbox->BxXOrg + mbox->BxWidth > pBox->BxXOrg
 	  && mbox->BxYOrg + mbox->BxHeight > pBox->BxYOrg)
 	{
@@ -167,7 +167,7 @@ int                 frame;
 	   if (font != NULL)
 	     {
 		/* Position in the frame */
-		pFrame = &FntrTable[frame - 1];
+		pFrame = &ViewFrameTable[frame - 1];
 		xd = pBox->BxXOrg - pFrame->FrXOrg;
 		yd = pBox->BxYOrg - pFrame->FrYOrg;
 		if (pBox->BxAbstractBox->AbSensitive)
@@ -253,7 +253,7 @@ int                 frame;
 		/* Should the end of de line be filled with dots */
 		if (pBox->BxEndOfBloc > 0)
 		  {
-		     pFrame = &FntrTable[frame - 1];
+		     pFrame = &ViewFrameTable[frame - 1];
 		     /* Compute the origin alignment */
 		     yd += pBox->BxHorizRef;
 		     DrawPoints (frame, xd + pBox->BxWidth, yd, pBox->BxEndOfBloc, RO, op, fg);
@@ -296,7 +296,7 @@ char                modele;
 	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
      }
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
       if (mbox->BxXOrg + mbox->BxWidth > pBox->BxXOrg
 	  && mbox->BxYOrg + mbox->BxHeight > pBox->BxYOrg)
@@ -361,11 +361,11 @@ int                 frame;
 
    fg = pBox->BxAbstractBox->AbForeground;
    bg = pBox->BxAbstractBox->AbBackground;
-   if (pBox->BxAbstractBox->AbVisibility >= FntrTable[frame - 1].FrVisibility)
+   if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
       if (mbox->BxXOrg + mbox->BxWidth >= pBox->BxXOrg
 	  && mbox->BxYOrg + mbox->BxHeight >= pBox->BxYOrg)
 	{
-	   pFrame = &FntrTable[frame - 1];
+	   pFrame = &ViewFrameTable[frame - 1];
 	   xd = pBox->BxXOrg - pFrame->FrXOrg;
 	   yd = pBox->BxYOrg - pFrame->FrYOrg;
 	   if (pBox->BxAbstractBox->AbSensitive)
@@ -586,9 +586,9 @@ PtrBox            pBox;
    if (val != pBox->BxBuffer->BuPoints[0].YCoord
        && pBox->BxBuffer->BuPoints[0].YCoord > 0)
      {
-	pointIndex = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRation;
+	pointIndex = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRatio;
 	/* save the new distortion ratio between box and abstract box */
-	pBox->BxYRation = (float) val / pointIndex;
+	pBox->BxYRatio = (float) val / pointIndex;
 	/* ratio applied to the box */
 	yRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].YCoord;
 	pBox->BxBuffer->BuPoints[0].YCoord = val;
@@ -667,11 +667,11 @@ int                 frame;
 
    fg = pBox->BxAbstractBox->AbForeground;
    bg = pBox->BxAbstractBox->AbBackground;
-   if (pBox->BxAbstractBox->AbVisibility >= FntrTable[frame - 1].FrVisibility)
+   if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
       if (mbox->BxXOrg + mbox->BxWidth >= pBox->BxXOrg
 	  && mbox->BxYOrg + mbox->BxHeight >= pBox->BxYOrg)
 	{
-	   pFrame = &FntrTable[frame - 1];
+	   pFrame = &ViewFrameTable[frame - 1];
 	   xd = pBox->BxXOrg - pFrame->FrXOrg;
 	   yd = pBox->BxYOrg - pFrame->FrYOrg;
 	   if (pBox->BxAbstractBox->AbSensitive)
@@ -844,13 +844,13 @@ int                 frame;
    withbackground = (pBox->BxAbstractBox->AbFillPattern == 2);
 
    if (pBox->BxNChars > 0)
-      if (pBox->BxAbstractBox->AbVisibility >= FntrTable[frame - 1].FrVisibility)
+      if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
 	 if (mbox->BxXOrg + mbox->BxWidth > pBox->BxXOrg
 	     && mbox->BxYOrg + mbox->BxHeight > pBox->BxYOrg)
 	   {
 	      /* Initialization */
 	      /* -------------- */
-	      pFrame = &FntrTable[frame - 1];
+	      pFrame = &ViewFrameTable[frame - 1];
 	      x = pBox->BxXOrg - pFrame->FrXOrg;
 	      y = pBox->BxYOrg - pFrame->FrYOrg;
 	      bl = 0;
@@ -1023,7 +1023,7 @@ int                 frame;
 	      /* Should the end of de line be filled with dots */
 	      if (pBox->BxEndOfBloc > 0)
 		{
-		   pFrame = &FntrTable[frame - 1];
+		   pFrame = &ViewFrameTable[frame - 1];
 		   /* Compute the origin alignment */
 		   y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 		   DrawPoints (frame, pBox->BxXOrg + pBox->BxWidth - pFrame->FrXOrg, y,

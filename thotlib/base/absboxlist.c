@@ -496,7 +496,7 @@ int                 frame;
 
    ViewFrame            *pFrame;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (frame != 0 && pFrame->FrAbstractBox != NULL)
       /* Une petite cuisine pour passer le nom du fichier en parametre */
      {

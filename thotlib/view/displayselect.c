@@ -39,7 +39,7 @@ PtrBox            pBox;
    ViewFrame            *pFrame;
    PtrAbstractBox             pAbbox1;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (pBox->BxAbstractBox != NULL)
       /* On limite la visibilite de la selection aux portions de texte */
       /* affichees dans les paragraphes.                               */
@@ -115,12 +115,12 @@ int                 pointselect;
 
    if (pBox != NULL)
      {
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	pAbbox1 = pBox->BxAbstractBox;
 
 	if (pBox->BxType == BoGhost
 	    || (pAbbox1 != NULL
-		&& TypeHasException (ExcHighlightChildren, pAbbox1->AbElement->ElTypeNumber, pAbbox1->AbElement->ElSructSchema)))
+		&& TypeHasException (ExcHighlightChildren, pAbbox1->AbElement->ElTypeNumber, pAbbox1->AbElement->ElStructSchema)))
 	  {
 	     /* -> La boite est eclatee (boite fantome) */
 	     /* On visualise toutes les boites filles */
@@ -343,7 +343,7 @@ boolean             Etat;
 	/* Le pave est selectionne */
 	if (pAb->AbSelected)
 	  {
-	     pFrame = &FntrTable[frame - 1];
+	     pFrame = &ViewFrameTable[frame - 1];
 	     /* On ne visualise pas les bornes de la selection */
 	     if (pFrame->FrSelectionBegin.VsBox == NULL ||
 		 pFrame->FrSelectionEnd.VsBox == NULL)
@@ -388,7 +388,7 @@ boolean             Etat;
    ViewSelection            *pMa2;
 
    /* On ne visualise la selection que si la selection est coherente */
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    pViewSel = &pFrame->FrSelectionBegin;
    if (pViewSel->VsBox != NULL && pFrame->FrSelectionEnd.VsBox != NULL)
      {

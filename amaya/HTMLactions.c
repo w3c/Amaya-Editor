@@ -897,7 +897,7 @@ int                 eltype;
   /* process all selected elements */
   firstSelectedElem = selectedEl;
   firstSelectedChar = firstChar;
-  RazSelect ();
+  ClearAllViewSelection ();
   while (selectedEl != NULL)
     {
       /* get the element to be processed after the current element: the */

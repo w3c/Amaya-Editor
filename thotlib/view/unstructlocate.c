@@ -71,7 +71,7 @@ int                *pointselect;
    pBox = NULL;
    sbox = NULL;
    distmax = 2000;		/* au-dela, on n'accepte pas la selection */
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
 
    if (pFrame->FrAbstractBox != NULL)
       pBox = pFrame->FrAbstractBox->AbBox;

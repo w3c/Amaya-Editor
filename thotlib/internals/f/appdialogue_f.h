@@ -62,7 +62,7 @@ extern void TtcSwitchCommands ( Document document,
 extern void DrawingInput ( int *w,
                            int frame,
                            int *infos );
-extern int CreeFenetre ( char *schema,
+extern int MakeFrame ( char *schema,
                          int view,
                          char *name,
                          int X,
@@ -71,7 +71,7 @@ extern int CreeFenetre ( char *schema,
                          int haut,
                          int *volume,
                          int doc );
-extern void DetruitFenetre ( int frame );
+extern void DestroyFrame ( int frame );
 extern int FindMenu ( int frame,
                       int menuID,
                       Menu_Ctl ** ctxmenu );
@@ -158,7 +158,7 @@ extern void TtcSwitchCommands (/* Document document,
 extern void DrawingInput (/* int *w,
                              int frame,
                              int *infos */);
-extern int CreeFenetre (/* char *schema,
+extern int MakeFrame (/* char *schema,
                            int view,
                            char *name,
                            int X,
@@ -167,7 +167,7 @@ extern int CreeFenetre (/* char *schema,
                            int haut,
                            int *volume,
                            int doc */);
-extern void DetruitFenetre (/* int frame */);
+extern void DestroyFrame (/* int frame */);
 extern int FindMenu (/* int frame,
                         int menuID,
                         Menu_Ctl ** ctxmenu */);

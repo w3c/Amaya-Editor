@@ -8,32 +8,32 @@
 
 extern void LabelIntToString ( int num,
                                LabelString strn );
-extern void rdLabel ( char c,
+extern void ReadLabel ( char c,
                       LabelString lab,
                       BinFile fich );
-extern void ChargeExt ( BinFile fich,
+extern void LoadEXTfile ( BinFile fich,
                         PtrDocument pDocu,
                         PtrReferredDescr * Ancre,
                         boolean LabelSeul );
-extern void ChargeRef ( BinFile fich,
+extern void LoadREFfile ( BinFile fich,
                         PtrChangedReferredEl * Ancre );
-extern void MiseAJourRef ( PtrChangedReferredEl Ancre,
+extern void UpdateREFdescriptors ( PtrChangedReferredEl Ancre,
                            PtrDocument pDoc );
 
 #else /* __STDC__ */
 
 extern void LabelIntToString (/* int num,
                                  LabelString strn */);
-extern void rdLabel (/* char c,
+extern void ReadLabel (/* char c,
                         LabelString lab,
                         BinFile fich */);
-extern void ChargeExt (/* BinFile fich,
+extern void LoadEXTfile (/* BinFile fich,
                           PtrDocument pDocu,
                           PtrReferredDescr * Ancre,
                           boolean LabelSeul */);
-extern void ChargeRef (/* BinFile fich,
+extern void LoadREFfile (/* BinFile fich,
                           PtrChangedReferredEl * Ancre */);
-extern void MiseAJourRef (/* PtrChangedReferredEl Ancre,
+extern void UpdateREFdescriptors (/* PtrChangedReferredEl Ancre,
                              PtrDocument pDoc */);
 
 #endif /* __STDC__ */

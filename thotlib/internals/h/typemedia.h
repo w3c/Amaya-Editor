@@ -187,7 +187,7 @@ typedef struct _Box
 #define BxFirstChar u.s0._BxFirstChar_
 #define BxPictInfo u.s1._BxImageDescriptor_
 #define BxXRatio u.s1._BxXRatio_
-#define BxYRation u.s1._BxYRation_
+#define BxYRatio u.s1._BxYRation_
 #define BxFirstLine u.s2._BxFirstLine_
 #define BxLastLine u.s2._BxLastLine_
 

@@ -182,7 +182,7 @@ Document            document;
 #ifdef NODISPLAY
 		  FreeBufTexte (pBuf);
 #else
-		  DestBuff (pBuf, ActifFen);
+		  DeleteBuffer (pBuf, ActifFen);
 #endif
 		  pBuf =pNextBuff;
 	       }
@@ -606,7 +606,7 @@ Document            document;
 #ifdef NODISPLAY
 		  FreeBufTexte (pBufLast);
 #else
-		  DestBuff (pBufLast, ActifFen);
+		  DeleteBuffer (pBufLast, ActifFen);
 #endif
 		  pBufLast = pBufNext;
 	       }
@@ -658,7 +658,7 @@ Document            document;
 #ifdef NODISPLAY
 	     FreeBufTexte (pBufFirst);
 #else
-	     DestBuff (pBufFirst, ActifFen);
+	     DeleteBuffer (pBufFirst, ActifFen);
 #endif
 	  }
 	if (pBufFirst != pBufLast)
@@ -675,7 +675,7 @@ Document            document;
 #ifdef NODISPLAY
 		FreeBufTexte (pBufLast);
 #else
-		DestBuff (pBufLast, ActifFen);
+		DeleteBuffer (pBufLast, ActifFen);
 #endif
 	     }
 	/* Updates the volumes of the ancestors */
@@ -830,11 +830,11 @@ Document            document;
       /* parameter document is correct */
      {
 	pEl2 = ((PtrElement) element)->ElNext;
-	if (((PtrElement) element)->ElSructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsConstant)
+	if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsConstant)
 	   if (pEl2 != NULL)
 	      if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
 		 if (pEl2->ElLanguage == ((PtrElement) element)->ElLanguage)
-		    if (pEl2->ElSructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+		    if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
 		       if (MemesAttributs ((PtrElement) element, pEl2))
 			  if (((PtrElement) element)->ElSource == NULL && pEl2->ElSource == NULL)
 			     if (MemesRegleSpecif ((PtrElement) element, pEl2))

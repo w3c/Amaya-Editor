@@ -125,7 +125,7 @@ static void         AppliqueModPresent ()
 	 /* ete ferme' */
 	{
 	   /* eteint la selection courante */
-	   RazSelect ();
+	   ClearAllViewSelection ();
 	   /* si une chaine de caracteres complete est selectionnee, */
 	   /* selectionne l'element TEXTE */
 	   if (PremSel->ElTerminal && PremSel->ElLeafType == LtText &&

@@ -67,7 +67,7 @@ PtrAbstractBox             pAb;
      {
 	if (pAb->AbPresentationBox)
 	  {
-	     pR = &pAb->AbElement->ElSructSchema->SsRule[pAb->AbElement->ElTypeNumber - 1];
+	     pR = &pAb->AbElement->ElStructSchema->SsRule[pAb->AbElement->ElTypeNumber - 1];
 	     /* copie le nom du type d'element structure qui a cree la boite */
 	     strcpy (text, pR->SrName);
 	     strcat (text, ".");
@@ -79,7 +79,7 @@ PtrAbstractBox             pAb;
 	   /* pave d'un element de structure */
 	  {
 	     pEl = pAb->AbElement;
-	     strcpy (text, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	     strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	  }
      }
    return (text);
@@ -133,7 +133,7 @@ PtrAbstractBox             pAb;
 	if (pAbbox1->AbBox != NULL)
 	  {
 	     pEl = pAbbox1->AbElement;
-	     printf ("Box non liberee: %s", pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	     printf ("Box non liberee: %s", pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	     if (pAbbox1->AbPresentationBox)
 		printf (".%s\n", pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName);
 	     else
@@ -505,10 +505,10 @@ boolean             head;
 	/* cree les paves de la partie coupee jusqu'a concurrence du volume libre */
 	pEl = pAbbRoot->AbElement;
 	pAbbox1 = pAbbRoot;
-	pAb = CreePaves (pEl, pDoc, pAbbox1->AbDocView, !head, TRUE, &complete);
+	pAb = AbsBoxesCreate (pEl, pDoc, pAbbox1->AbDocView, !head, TRUE, &complete);
 	/* on reapplique les regles  a tous les paves */
 	/* TO DO a affiner ! */ RecursEvalCP (pAbbRoot, pDoc);
-	if (VueAssoc (pEl))
+	if (AssocView (pEl))
 	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = pAbbRoot;
 	else
 	   pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1] = pAbbRoot;
@@ -528,7 +528,7 @@ boolean             head;
      {
 	/* cree les paves de la partie coupee jusqu'a concurence du volume libre */
 	pAbbox1 = pAbbRoot;
-	pAb = CreePaves (pAbbox1->AbElement, pDoc, pAbbox1->AbDocView, !head, TRUE, &complete);
+	pAb = AbsBoxesCreate (pAbbox1->AbElement, pDoc, pAbbox1->AbDocView, !head, TRUE, &complete);
 	/* recherche tous les paves crees, a partir du premier pave de plus */
 	/* haut niveau cree', et aux niveaux inferieurs. */
 	while (pAb != NULL)
@@ -566,7 +566,7 @@ boolean             head;
 	     pAbbReDisp = Englobant (pAbbReDisp, pAbbR);	/* conserve le pointeur sur le pave a reafficher */
 
 	     pEl = pAbbRoot->AbElement;
-	     if (VueAssoc (pAbbRoot->AbElement))
+	     if (AssocView (pAbbRoot->AbElement))
 		pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 		   Englobant (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	     else
@@ -1561,7 +1561,7 @@ int                *dvol;
 			  else
 			     pAbb = pAbb->AbPrevious;
 		    }
-		  if (VueAssoc (pAbbRoot->AbElement))
+		  if (AssocView (pAbbRoot->AbElement))
 		     pDoc->DocAssocModifiedAb[pAbbRoot->AbElement->ElAssocNum - 1] = pAbbRoot;
 
 		  else
@@ -1606,7 +1606,7 @@ int                *dvol;
 		  SuppRfPave (pAb, &pAbbR, pDoc);
 		  pAbbReDisp = Englobant (pAbbReDisp, pAbbR);
 		  pEl1 = pAbbRoot->AbElement;
-		  if (VueAssoc (pAbbRoot->AbElement))
+		  if (AssocView (pAbbRoot->AbElement))
 		     pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1] =
 			Englobant (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1]);
 		  else
@@ -1766,7 +1766,7 @@ PtrDocument         pDoc;
 
    if (pEl != NULL && pDoc != NULL)
      {
-	if (!VueAssoc (pEl))
+	if (!AssocView (pEl))
 	   /* une vue de l'arbre principal */
 	   for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	     {
@@ -1897,8 +1897,8 @@ int                 frame;
 	/*  test si vue paginee */
 	pEl = pElRoot->ElFirstChild;
 	/* recherche le numero de vue defini dans le schema de presentation */
-	/* Attention il faut appeler VueAAppliquer avec pElRoot */
-	viewSch = VueAAppliquer (pElRoot, NULL, pDoc, vue);
+	/* Attention il faut appeler AppliedView avec pElRoot */
+	viewSch = AppliedView (pElRoot, NULL, pDoc, vue);
 	if (TypeBPage (pEl, viewSch, &pSchPage) != 0)
 
 	   /* le document est-il pagine dans cette vue ? */
@@ -1928,9 +1928,9 @@ int                 frame;
 
 	     /* signale au Mediateur les paves crees et detruits */
 #ifdef __COLPAGE__
-	     h = HauteurCoupPage;
+	     h = BreakPageHeight;
 #else  /* __COLPAGE__ */
-	     h = HauteurPage;
+	     h = PageHeight;
 #endif /* __COLPAGE__ */
 	     if (assoc)
 	       {
@@ -2026,7 +2026,7 @@ int                 frame;
 	     SupprAbsBoxes (pAb, pDoc, inHead, &dVol);
 #ifdef __COLPAGE__
 	     /* signale au Mediateur les paves modifies */
-	     h = HauteurCoupPage;
+	     h = BreakPageHeight;
 	     /* appel de modifVue depuis la racine car de nouvelles */
 	     /* pages ont pu etre detruites */
 	     (void) ChangeConcreteImage (frame, &h, pAb);
@@ -2040,7 +2040,7 @@ int                 frame;
 	  }
 #else  /* __COLPAGE__ */
 	     /* signale au Mediateur les paves modifies */
-	     h = HauteurPage;
+	     h = PageHeight;
 	     if (assoc)
 	       {
 		  if (pDoc->DocAssocModifiedAb[vue - 1] != NULL)
@@ -2113,7 +2113,7 @@ int                 frame;
 	{
 	   nAssoc = pEl->ElAssocNum;
 	   /* verifie si la vue a ete creee */
-	   if (VueAssoc (pEl))
+	   if (AssocView (pEl))
 	      /* element associe qui s'affiche dans une autre vue que */
 	      /* la vue principale */
 	     {
@@ -2137,8 +2137,8 @@ int                 frame;
 	   /*  test si vue paginee */
 	   pEl1 = pElRoot->ElFirstChild;
 	   /* recherche le numero de vue defini dans le schema de presentation */
-	   /* Attention il faut appeler VueAAppliquer avec pElRoot */
-	   viewSch = VueAAppliquer (pElRoot, NULL, pDoc, Vue);
+	   /* Attention il faut appeler AppliedView avec pElRoot */
+	   viewSch = AppliedView (pElRoot, NULL, pDoc, Vue);
 	   if (TypeBPage (pEl1, viewSch, &pSchPage) != 0)
 	      VuePaginee = TRUE;
 	   acreer = vueexiste;
@@ -2179,7 +2179,7 @@ int                 frame;
 		if (acreer)
 		   /* si c'est un element associe qui s'affiche en haut ou bas de page */
 		   /* il faut rechercher la premiere reference et afficher la page */
-		   /* de cet element reference. CreePaves creera les paves de l'element */
+		   /* de cet element reference. AbsBoxesCreate creera les paves de l'element */
 		   /* associe par appel de CrPavHB */
 		   if (nAssoc != 0 && vueassoc == FALSE)
 		      /* on recherche l'ascendant qui est l'element reference (pEl peut */
@@ -2263,7 +2263,7 @@ int                 frame;
 				  && pEl->ElViewPSchema != viewSch)))
 			  {
 			     printf ("peut etre erreur VerifAbsBoxe : pas trouve de marque page %s",
-				     pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+				     pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 			     printf ("\n");
 			     acreer = FALSE;
 			  }
@@ -2294,7 +2294,7 @@ int                 frame;
 		     else
 		       {
 			  /* la racine n'a pas de pave, on le cree (sans la descendance) */
-			  pAbbRoot = CreePaves (pElRoot, pDoc, Vue, TRUE,
+			  pAbbRoot = AbsBoxesCreate (pElRoot, pDoc, Vue, TRUE,
 						 FALSE, &complete);
 			  pDoc->DocViewRootAb[Vue - 1] = pAbbRoot;
 			  pAbbRoot->AbTruncatedHead = TRUE;
@@ -2302,11 +2302,11 @@ int                 frame;
 		       }
 		  }
 		/* on cree les paves de la Marque Page */
-		/* par construction (cf. CreePaves), ils seront mis sous */
+		/* par construction (cf. AbsBoxesCreate), ils seront mis sous */
 		/* la racine */
 		if (trouve)
 		  {
-		     pPavPage = CreePaves (pElPage, pDoc, Vue, TRUE, TRUE, &complete);
+		     pPavPage = AbsBoxesCreate (pElPage, pDoc, Vue, TRUE, TRUE, &complete);
 		     /* on cree les paves de ses ascendants en les marquant CT et CQ */
 		     pElAscent = pElPage->ElParent;
 		     pFils = pElPage;
@@ -2340,13 +2340,13 @@ int                 frame;
 		       {
 			  /* cree juste le pave, sans sa descendance et sans lui */
 			  /* appliquer les regles de presentation. */
-			  pPrevious = CreePaves (pAsc[i - 1], pDoc, Vue, TRUE, FALSE,
+			  pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, Vue, TRUE, FALSE,
 					     &complete);
 			  pPrevious = pAsc[i - 1]->ElAbstractBox[Vue - 1];
 			  if (pPrevious != NULL)
 			    {
 			       /* il faudra appliquer au pave ses */
-			       /* regles de presentation (sera fait par CreePaves) */
+			       /* regles de presentation (sera fait par AbsBoxesCreate) */
 			       pPrevious->AbSize = -1;
 			       /* on le marque coupe */
 			       pPrevious->AbTruncatedHead = TRUE;
@@ -2419,7 +2419,7 @@ int                 frame;
 	   {
 	      nAssoc = pEl->ElAssocNum;
 	      /* verifie si la vue a ete creee */
-	      if (VueAssoc (pEl))
+	      if (AssocView (pEl))
 		 /* element associe */
 		 vueexiste = pDoc->DocAssocFrame[nAssoc - 1] != 0 && Vue == 1;
 	      else
@@ -2432,10 +2432,10 @@ int                 frame;
 		    /* c'est un element associe */
 		    /* nR: type des elements associes */
 		   {
-		      nR = pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrListItem;
+		      nR = pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrListItem;
 		      /* si les elements associes s'affichent en haut ou en bas de */
 		      /* page, la racine n'a jamais de pave */
-		      vueexiste = !pEl1->ElSructSchema->SsPSchema->PsInPageHeaderOrFooter[nR - 1];
+		      vueexiste = !pEl1->ElStructSchema->SsPSchema->PsInPageHeaderOrFooter[nR - 1];
 		      /* si la vue n'est pas creee, il n'y a rien a faire */
 		   }
 	      if (vueexiste)
@@ -2461,7 +2461,7 @@ int                 frame;
 			   pAsc[NumAsc - 1] = pElAscent;
 			   /* passe a l'ascendant */
 			   pEl1 = pElAscent;
-			   if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrAssocElem)
+			   if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrAssocElem)
 			      /* on vient de traiter un element associe' */
 			      /* Serait-ce un element qui s'affiche dans une boite de */
 			      /* haut ou de bas de page ? */
@@ -2524,13 +2524,13 @@ int                 frame;
 
 			     /* cree juste le pave, sans sa descendance et sans lui */
 			     /* appliquer les regles de presentation. */
-			     pPrevious = CreePaves (pAsc[i - 1], pDoc, Vue, TRUE, FALSE, &complete);
+			     pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, Vue, TRUE, FALSE, &complete);
 			     if (pEl1->ElAbstractBox[Vue - 1] != NULL)
 				pPrevious = pEl1->ElAbstractBox[Vue - 1];
 			     if (pPrevious != NULL)
 
 				/* marque sur le pave cree qu'il faudra lui appliquer ses */
-				/* regles de presentation (ce sera fait par CreePaves) */
+				/* regles de presentation (ce sera fait par AbsBoxesCreate) */
 				pPrevious->AbSize = -1;
 
 			     if (pPrevious != NULL)
@@ -2693,13 +2693,13 @@ int                 frame;
 			do
 			  {
 			     pEl1 = pAsc[i - 1];
-			     if (pEl1->ElSructSchema->SsPSchema->PsBuildAll[pEl1
+			     if (pEl1->ElStructSchema->SsPSchema->PsBuildAll[pEl1
 							      ->ElTypeNumber - 1])
 				/* cet element a la regle Gather */
 				/* cree le pave avec toute sa descendance, si */
 				/* ce n'est pas encore fait */
 			       {
-				  pPrevious = CreePaves (pAsc[i - 1], pDoc, Vue, TRUE, TRUE, &complete);
+				  pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, Vue, TRUE, TRUE, &complete);
 				  i = 1;
 			       }
 			     i--;
@@ -3049,23 +3049,23 @@ int                 frame;
 	{
 	   pEl = pAb->AbElement;
 	   printf ("contexte pAb = %x", (int) pAb, " %s",
-		   pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		   pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	   printf ("pres = %d", pAb->AbPresentationBox);
 	   printf ("\n");
 	   printf ("pere = %x", (int) pAb->AbEnclosing);
 	   if (pAb->AbEnclosing != NULL)
 	      printf (" %s",
-		      pAb->AbEnclosing->AbElement->ElSructSchema->SsRule[pAb->AbEnclosing->AbElement->ElTypeNumber - 1].SrName);
+		      pAb->AbEnclosing->AbElement->ElStructSchema->SsRule[pAb->AbEnclosing->AbElement->ElTypeNumber - 1].SrName);
 	   printf ("\n");
 	   printf ("frere avant = %x", (int) pAb->AbPrevious);
 	   if (pAb->AbPrevious != NULL)
 	      printf (" %s",
-		      pAb->AbPrevious->AbElement->ElSructSchema->SsRule[pAb->AbPrevious->AbElement->ElTypeNumber - 1].SrName);
+		      pAb->AbPrevious->AbElement->ElStructSchema->SsRule[pAb->AbPrevious->AbElement->ElTypeNumber - 1].SrName);
 	   printf ("\n");
 	   printf ("frere after  = %x", (int) pAb->AbNext);
 	   if (pAb->AbNext != NULL)
 	      printf (" %s",
-		      pAb->AbNext->AbElement->ElSructSchema->SsRule[pAb->AbNext->AbElement->ElTypeNumber
+		      pAb->AbNext->AbElement->ElStructSchema->SsRule[pAb->AbNext->AbElement->ElTypeNumber
 							     - 1].SrName);
 	   printf ("\n");
 	   if (pAb->AbPreviousRepeated != NULL)
@@ -3134,7 +3134,7 @@ int                 frame;
 	     {
 		correct = FALSE;
 		printf ("Erreur dans i.a : l'elem n'a que des paves pres %s",
-		    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		printf ("\n");
 	     }
 	}
@@ -3145,7 +3145,7 @@ int                 frame;
 	{
 	   correct = FALSE;
 	   printf ("Erreur dans l'i.a. : pave de pres duplique %s",
-		   pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		   pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	   printf ("\n");
 	}
       /* deuxieme verification */
@@ -3156,7 +3156,7 @@ int                 frame;
 	     {
 		correct = FALSE;
 		printf ("Erreur dans l'i.a.:l'elem pointe sur pAb %s",
-		    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		printf ("\n");
 	     }
 	}
@@ -3171,7 +3171,7 @@ int                 frame;
 	     {
 		correct = FALSE;
 		printf ("Erreur dans l'i.a.: la racine a des dupliques %s",
-		    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		printf ("\n");
 	     }
 	   else
@@ -3184,7 +3184,7 @@ int                 frame;
 			  /*cas d'erreur */
 			  correct = FALSE;
 			  printf ("Erreur dans l'i.a.: l'ascendant devrait etre dup %s",
-				  pAbb->AbElement->ElSructSchema->SsRule[pAbb->AbElement->ElTypeNumber
+				  pAbb->AbElement->ElStructSchema->SsRule[pAbb->AbElement->ElTypeNumber
 							     - 1].SrName);
 			  printf ("\n");
 		       }
@@ -3195,7 +3195,7 @@ int                 frame;
 		  {
 		     correct = FALSE;
 		     printf ("Erreur i.a.: dup en dehors un corps de page %s",
-		     pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		     pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		     printf ("\n");
 		  }
 	     }

@@ -945,7 +945,7 @@ boolean             subTree;
    if (pEl1->ElSource == NULL)
       /* on n'ecrit pas le contenu d'un element inclus */
      {
-	pSS = pEl1->ElSructSchema;
+	pSS = pEl1->ElStructSchema;
 	if (pEl1->ElTerminal)
 	  {
 	     if (write)
@@ -1004,8 +1004,8 @@ boolean             subTree;
 						    if ((*pEl)->ElNext->ElLanguage == (*pEl)->ElLanguage)
 						       if ((*pEl)->ElNext->ElSource == NULL)
 							  /* le suivant n'est pas une inclusion */
-							  if ((*pEl)->ElSructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct != CsConstant)
-							     if ((*pEl)->ElNext->ElSructSchema->SsRule[(*pEl)->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant)
+							  if ((*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct != CsConstant)
+							     if ((*pEl)->ElNext->ElStructSchema->SsRule[(*pEl)->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant)
 								if (MemesAttributs (*pEl, (*pEl)->ElNext))
 								   /* il a les memes attributs */
 								   if (MemesRegleSpecif (*pEl, (*pEl)->ElNext))
@@ -1094,15 +1094,15 @@ boolean             subTree;
 		     notifyEl.document = (Document) IdentDocument (pDoc);
 		     notifyEl.element = (Element) pChild;
 		     notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
-		     notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElSructSchema);
+		     notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
 		     notifyEl.position = 0;
 		     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* Ecrit d'abord le numero de la structure generique s'il y */
 			  /* a changement de schema de structure par rapport au pere */
-			  if (pEl1->ElSructSchema != pChild->ElSructSchema)
-			     EcritNat (pChild->ElSructSchema, pivFile, pDoc);
+			  if (pEl1->ElStructSchema != pChild->ElStructSchema)
+			     EcritNat (pChild->ElStructSchema, pivFile, pDoc);
 			  /* Ecrit un element fils */
 			  Externalise (pivFile, &pChild, pDoc, subTree);
 			  /* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1111,7 +1111,7 @@ boolean             subTree;
 			  notifyEl.document = (Document) IdentDocument (pDoc);
 			  notifyEl.element = (Element) pChild;
 			  notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
-			  notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElSructSchema);
+			  notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
 			  notifyEl.position = 0;
 			  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		       }
@@ -1179,7 +1179,7 @@ PtrDocument         pDoc;
 			pSaved = FirstSavedElement->PeElement;
 			do
 			  {
-			     if (pSaved->ElSructSchema == pSRule->SrSSchemaNat
+			     if (pSaved->ElStructSchema == pSRule->SrSSchemaNat
 				 && pSaved->ElTypeNumber == pSRule->SrSSchemaNat->SsRootElem)
 				nObjects--;
 			     pSaved = FwdSearchTypedElem (pSaved, pSRule->SrSSchemaNat->SsRootElem,
@@ -1424,14 +1424,14 @@ PtrDocument         pDoc;
       if (pDoc->DocParameters[i] != NULL)
 	{
 	   pEl = pDoc->DocParameters[i];
-	   pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrParamElem = FALSE;
+	   pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrParamElem = FALSE;
 	   /* envoie l'evenement ElemSave.Pre a l'application, si */
 	   /* elle le demande */
 	   notifyEl.event = TteElemSave;
 	   notifyEl.document = (Document) IdentDocument (pDoc);
 	   notifyEl.element = (Element) pEl;
 	   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	   notifyEl.position = 0;
 	   if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	      /* l'application accepte que Thot sauve l'element */
@@ -1445,11 +1445,11 @@ PtrDocument         pDoc;
 		notifyEl.document = (Document) IdentDocument (pDoc);
 		notifyEl.element = (Element) pEl;
 		notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-		notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+		notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		notifyEl.position = 0;
 		CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	     }
-	   pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrParamElem = TRUE;
+	   pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrParamElem = TRUE;
 	}
    /* ecrit la representation pivot de tous les arbres d'elements */
    /* associes qui ne sont pas vides */
@@ -1480,7 +1480,7 @@ PtrDocument         pDoc;
 		     notifyEl.document = (Document) IdentDocument (pDoc);
 		     notifyEl.element = (Element) pEl;
 		     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-		     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+		     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		     notifyEl.position = 0;
 		     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 			/* l'application accepte que Thot sauve l'element */
@@ -1490,8 +1490,8 @@ PtrDocument         pDoc;
 			  /* si ces elements associes sont definis dans une extension */
 			  /* du schema de structure du document, on ecrit un */
 			  /* changement de nature */
-			  if (pEl->ElSructSchema != pDoc->DocSSchema)
-			     EcritNat (pEl->ElSructSchema, pivFile, pDoc);
+			  if (pEl->ElStructSchema != pDoc->DocSSchema)
+			     EcritNat (pEl->ElStructSchema, pivFile, pDoc);
 			  /* Ecrit l'element */
 			  Externalise (pivFile, &pEl, pDoc, TRUE);
 			  /* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1500,7 +1500,7 @@ PtrDocument         pDoc;
 			  notifyEl.document = (Document) IdentDocument (pDoc);
 			  notifyEl.element = (Element) pEl;
 			  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-			  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+			  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 			  notifyEl.position = 0;
 			  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		       }
@@ -1517,7 +1517,7 @@ PtrDocument         pDoc;
 	notifyEl.document = (Document) IdentDocument (pDoc);
 	notifyEl.element = (Element) pEl;
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	notifyEl.position = 0;
 	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
@@ -1531,7 +1531,7 @@ PtrDocument         pDoc;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
@@ -1832,7 +1832,7 @@ PtrDocument         pDoc;
 	     if (extFile != 0)
 	       {
 		  /* le fichier .EXT existe, on le charge */
-		  ChargeExt (extFile, NULL, &pFirstRefD, FALSE);
+		  LoadEXTfile (extFile, NULL, &pFirstRefD, FALSE);
 		  BIOreadClose (extFile);
 	       }
 	  }
@@ -2048,7 +2048,7 @@ PtrDocument         pDoc;
 	     if (extFile != 0)
 		/* ce fichier existe, on le charge */
 	       {
-		  ChargeExt (extFile, NULL, &(pExtFileD->ErFirstReferredEl), FALSE);
+		  LoadEXTfile (extFile, NULL, &(pExtFileD->ErFirstReferredEl), FALSE);
 		  BIOreadClose (extFile);
 	       }
 	  }
@@ -2156,7 +2156,7 @@ PtrDocument         pDoc;
 			    if (refFile != 0)
 			      {
 				 /* le fichier .REF existe, on le charge */
-				 ChargeRef (refFile, &pChnRefRead);
+				 LoadREFfile (refFile, &pChnRefRead);
 				 BIOreadClose (refFile);
 				 pFile->RcFirstChange = pChnRefRead;
 			      }
@@ -2379,7 +2379,7 @@ boolean             copyDoc;
 		       if (extFile != 0)
 			 {
 			    /* ce fichier existe, on le charge */
-			    ChargeExt (extFile, NULL, &pFirstRefD, FALSE);
+			    LoadEXTfile (extFile, NULL, &pFirstRefD, FALSE);
 			    BIOreadClose (extFile);
 			 }
 		    }
@@ -2555,7 +2555,7 @@ Name                 newName;
 	     if (refFile != 0)
 	       {
 		  /* le fichier .REF du document referencant existe, on le charge */
-		  ChargeRef (refFile, &(pFile->RcFirstChange));
+		  LoadREFfile (refFile, &(pFile->RcFirstChange));
 		  BIOreadClose (refFile);
 	       }
 	  }

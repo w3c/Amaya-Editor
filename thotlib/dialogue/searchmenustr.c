@@ -679,7 +679,7 @@ PtrAttribute        *AttrTrouve;
       if (context->SWholeDocument)
 	 /* il faut rechercher dans tout le document */
 	 /* cherche l'arbre a traiter apres celui ou` on n'a pas trouve' */
-	 if (ArbreSuivant (&ElSuiv, &i, context))
+	 if (NextTree (&ElSuiv, &i, context))
 	    /* il y a un autre arbre a traiter, on continue avec le */
 	    /* debut de ce nouvel arbre */
 	    pEl = ChTypeAttr (ElSuiv, context, NomType,
@@ -829,7 +829,7 @@ PtrSearchContext           DomaineCherche;
 		 /* il faut rechercher dans tout le document */
 		 /* cherche l'arbre a traiter apres celui ou` on */
 		 /* n'a pas trouve' */
-		 if (ArbreSuivant (&elCour, &i, DomaineCherche))
+		 if (NextTree (&elCour, &i, DomaineCherche))
 		    /* relance la recherche dans le nouvel arbre */
 		    stop = FALSE;
 	}
@@ -851,7 +851,7 @@ PtrSearchContext           DomaineCherche;
 		 /* il faut rechercher dans tout le document */
 		 /* cherche l'arbre a traiter apres celui ou` on */
 		 /* n'a pas trouve' */
-		 if (ArbreSuivant (&elCour, &i, DomaineCherche))
+		 if (NextTree (&elCour, &i, DomaineCherche))
 		    /* relance la recherche dans le nouvel arbre */
 		    stop = FALSE;
 	}
@@ -878,7 +878,7 @@ boolean            *ok;
 	pAsc = premsel;
 	do
 	  {
-	     trouve = (strcmp (NomTypeAChercher, pAsc->ElSructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0);
+	     trouve = (strcmp (NomTypeAChercher, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0);
 	     if (!trouve)
 		pAsc = pAsc->ElParent;
 	  }

@@ -835,7 +835,7 @@ static boolean AttributCreeBoite(pAttr, pAb)
 	  {
 	  /* cherche dans ce schema de presentation le debut de la chaine */
 	  /* des regles de presentation de l'attribut */
-	  pRegle = ReglePresAttr(pAttr, pAb->AbElement, FALSE, NULL, pSchP);
+	  pRegle = AttrPresRule(pAttr, pAb->AbElement, FALSE, NULL, pSchP);
 	  /* saute les regles precedant les  fonctions */
 	  stop = FALSE;
 	  do
@@ -1268,7 +1268,7 @@ void MajVolLibre(pAb, pDoc)
 {
 
   
-  if (!VueAssoc(pAb->AbElement)) 
+  if (!AssocView(pAb->AbElement)) 
     /* vue de l'arbre principal */ 
     pDoc->DocViewFreeVolume[pAb->AbDocView - 1] -= pAb->AbVolume;
   else			
@@ -1306,7 +1306,7 @@ static void Contenu(pEl, pAb, pDoc)
     pAb->AbLanguage = TtaGetDefaultLanguage();
     pBu1 = pAb->AbText;
     CopyStringToText("<", pBu1, &lg);
-    CopyStringToText(pEl->ElSructSchema->SsRule[pEl->ElTypeNumber-1].SrName,
+    CopyStringToText(pEl->ElStructSchema->SsRule[pEl->ElTypeNumber-1].SrName,
 			 pBu1, &i);
     lg += i;
     CopyStringToText(">", pBu1, &i);
@@ -1413,7 +1413,7 @@ static void Contenu(pEl, pAb, pDoc)
 	  GetBufConst(pAb);
 	  pAb->AbLanguage = TtaGetDefaultLanguage();
 	  pBu1 = pAb->AbText;
-	  if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair)
+	  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair)
 	    {
 	      pBu1->BuContent[0] = '<';
 	      pBu1->BuContent[1] = '<';
@@ -1439,7 +1439,7 @@ static void Contenu(pEl, pAb, pDoc)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	RegleCreation	cherche dans la chaine de regles de presentation| */
+/* |	PageCreateRule	cherche dans la chaine de regles de presentation| */
 /* |	qui commence par pRe et qui appartient au schema de		| */
 /* |	presentation pointe' par pSPR, la regle de creation qui		| */
 /* |	engendre le pave pCree.						| */
@@ -1448,9 +1448,9 @@ static void Contenu(pEl, pAb, pDoc)
 /* |	Sinon, retourne FALSE.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean RegleCreation(PtrPRule pRe, PtrPSchema pSPR, PtrAbstractBox pCree, FunctionType *TypeCreation)
+static boolean PageCreateRule(PtrPRule pRe, PtrPSchema pSPR, PtrAbstractBox pCree, FunctionType *TypeCreation)
 #else /* __STDC__ */
-static boolean RegleCreation(pRe, pSPR, pCree, TypeCreation)
+static boolean PageCreateRule(pRe, pSPR, pCree, TypeCreation)
 	PtrPRule pRe;
 	PtrPSchema pSPR;
 	PtrAbstractBox pCree;
@@ -1528,7 +1528,7 @@ FunctionType RegleCree(pDoc, pCreateur, pCree)
   Ret = FnLine;	
   /* cherche les regles de creation en ignorant les attributs */
   pRCre = LaRegle(pDoc, pCreateur, &pSPR, PtFunction, FALSE, &pAttr);
-  if (!RegleCreation(pRCre, pSPR, pCree, &Ret))
+  if (!PageCreateRule(pRCre, pSPR, pCree, &Ret))
     /* on n'a pas trouve la regle qui cree la bonne boite */
     /* on cherche les regles de creation associees aux attributs */
     /* de l'element createur */
@@ -1545,8 +1545,8 @@ FunctionType RegleCree(pDoc, pCreateur, pCree)
         {
 	/* cherche la premiere regle de presentation pour cet attribut */
 	/* dans ce schema de presentation */
-	pRCre = ReglePresAttr(pA, pCreateur->AbElement, FALSE, NULL, pSchP);
-	ok = RegleCreation(pRCre, pSchP, pCree, &Ret);
+	pRCre = AttrPresRule(pA, pCreateur->AbElement, FALSE, NULL, pSchP);
+	ok = PageCreateRule(pRCre, pSchP, pCree, &Ret);
 	if (pHd == NULL)
 	  /* on n'a pas encore traite' les schemas de presentation additionnels
 	  On prend le premier schema additionnel. */
@@ -1696,8 +1696,8 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
        /* le premier pave qui n'est pas de presentation est l'englobant */
        /* sauf si le pere est la racine : dans ce cas, l'englobant est */
        /* le pave de la marque de page precedente */
-       if ((!VueAssoc(pEl) && (pE == pDoc->DocRootElement))
-            || (VueAssoc(pEl)
+       if ((!AssocView(pEl) && (pE == pDoc->DocRootElement))
+            || (AssocView(pEl)
             && (pE == pDoc->DocAssocRoot[pEl->ElAssocNum - 1])))
          /* cas ou le pere est la racine */
          /* recherche du pave page ou le pave pAb doit etre inclus */
@@ -2232,8 +2232,8 @@ void ChSchemaPres(pEl, pSchP, NumEntree, pSchS)
     }
   else
     {
-    *pSchP = pEl->ElSructSchema->SsPSchema;
-    *pSchS = pEl->ElSructSchema;
+    *pSchP = pEl->ElStructSchema->SsPSchema;
+    *pSchS = pEl->ElStructSchema;
     /* premiere regle de presentation specifique a ce type d'element */
     *NumEntree = pEl->ElTypeNumber;
     /* s'il s'agit de l'element racine d'une nature, on prend les regles */
@@ -2243,11 +2243,11 @@ void ChSchemaPres(pEl, pSchP, NumEntree, pSchS)
     if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
       if (pEl->ElParent != NULL) 
         /* il y a un englobant */ 
-        if (pEl->ElParent->ElSructSchema != pEl->ElSructSchema)
+        if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)
 	  /* cherche la regle introduisant la nature dans le schema de */
 	  /* structure de l'englobant. */
 	  {
-	  pSc1 = pEl->ElParent->ElSructSchema;
+	  pSc1 = pEl->ElParent->ElStructSchema;
 	  trouve = FALSE;
 	  i = 0;
 	  do
@@ -2255,7 +2255,7 @@ void ChSchemaPres(pEl, pSchP, NumEntree, pSchS)
 	      i++;
 	      pRe1 = &pSc1->SsRule[i - 1];
 	      if (pRe1->SrConstruct == CsNatureSchema)
-		if (pRe1->SrSSchemaNat == pEl->ElSructSchema)
+		if (pRe1->SrSSchemaNat == pEl->ElStructSchema)
 		  trouve = TRUE;
 	    }
 	  while (!(trouve || i >= pSc1->SsNRules));
@@ -2265,7 +2265,7 @@ void ChSchemaPres(pEl, pSchP, NumEntree, pSchS)
 	      {
 		*pSchP = pSc1->SsPSchema;
 		*NumEntree = i;
-		*pSchS = pEl->ElParent->ElSructSchema;
+		*pSchS = pEl->ElParent->ElStructSchema;
 	      }
 	  }
     }
@@ -2285,11 +2285,11 @@ static boolean CheckPPosUser(pAb, pDoc)
   int		frame;
   boolean	ret;
 
-  if (VueAssoc(pAb->AbElement))
+  if (AssocView(pAb->AbElement))
     frame = pDoc->DocAssocFrame[pAb->AbElement->ElAssocNum - 1];
   else
     frame = pDoc->DocViewFrame[pAb->AbDocView - 1];
-  ret = PaveAffiche(pAb, frame);
+  ret = IsAbstractBoxDisplayed(pAb, frame);
   return ret;
 }
 
@@ -2319,7 +2319,7 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
   PosRule       *pRe1;
   PtrPRule	  pRSpec;
   PtrPSchema 	  pSchPPage;
-  int		  b, HauteurHautPage;
+  int		  b, PageHeaderHeight;
   
   *appl = FALSE;		
   /* on n'a pas (encore) applique' la regle */
@@ -2451,10 +2451,10 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 		      b = TypeBPage (pavpere->AbFirstEnclosed->AbElement,
 			      pavpere->AbFirstEnclosed->AbElement->ElViewPSchema,
 			      &pSchPPage);
-		      HauteurHautPage = pSchPPage->PsPresentBox[b - 1].PbHeaderHeight;
+		      PageHeaderHeight = pSchPPage->PsPresentBox[b - 1].PbHeaderHeight;
 		       /* PbHeaderHeight toujours en points typo */
-		       if (PPos->PosDistance - HauteurHautPage >= 0)
-		         PPos->PosDistance = PPos->PosDistance - HauteurHautPage;
+		       if (PPos->PosDistance - PageHeaderHeight >= 0)
+		         PPos->PosDistance = PPos->PosDistance - PageHeaderHeight;
 		    }
 		  PPos->PosUserSpecified = FALSE;
 		}
@@ -2829,7 +2829,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		    {  
 		      /* si l'element ColGroup existe, on ne cree rien */
 		      /* sinon, on cree l'element ColGroup */
-	              pElGrCols = NewSubtree(PageBreak + 1, pEl->ElSructSchema,
+	              pElGrCols = NewSubtree(PageBreak + 1, pEl->ElStructSchema,
 			pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE,TRUE);
 	              InsertElementBefore (pElCol, pElGrCols);
 		      pElGrCols->ElPageType = ColGroup;
@@ -2892,7 +2892,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		               /* l'element ColGroup existe, on ne cree rien */
 		              {
 		                /* on cree l'element ColGroup */
-	                        pElGrCols = NewSubtree(PageBreak + 1, pEl->ElSructSchema,
+	                        pElGrCols = NewSubtree(PageBreak + 1, pEl->ElStructSchema,
 			           pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	                        InsertElementBefore (pElCol, pElGrCols);
 		                pElGrCols->ElPageType = ColGroup;
@@ -2916,7 +2916,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 			    if (pEl->ElNext == NULL
 			      || pEl->ElNext->ElTypeNumber != PageBreak+1)
 			      {
-			      pEl1 = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
+			      pEl1 = NewSubtree(PageBreak + 1, pEl->ElStructSchema, pDoc, 
 				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		              InsertElementAfter(pEl, pEl1);
 		              pEl1->ElPageType = ColComputed;
@@ -2925,7 +2925,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	                       /* numero attribue pour les colonnes gauche */
 
 		               /* on cree une marque groupe de colonnes */
-		              pElGr1 = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
+		              pElGr1 = NewSubtree(PageBreak + 1, pEl->ElStructSchema, pDoc, 
 			       pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		               InsertElementAfter(pEl, pElGr1);
 		               pElGr1->ElPageType = ColGroup;
@@ -2940,13 +2940,13 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	  }
 	
 	if (!colexiste &&
-	    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsChoice)
+	    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsChoice)
 	  {
 	    /* on cree une marque de colonne */
 	    /* et une marque groupe de colonnes Cols */
-	    pElGrCols = NewSubtree(PageBreak + 1, pEl->ElSructSchema,
+	    pElGrCols = NewSubtree(PageBreak + 1, pEl->ElStructSchema,
 			    pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-	    pElCol = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
+	    pElCol = NewSubtree(PageBreak + 1, pEl->ElStructSchema, pDoc, 
 				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	    if (pElCol != NULL)
 		/* on a cree une marque de colonne */
@@ -3001,9 +3001,9 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		      /* on cree une marque colonne et une marque groupe */
 		      /* de colonnes apres pour revenir */
 		      /* a l'ancienne regle apres l'element */
-		      pEl1 = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
+		      pEl1 = NewSubtree(PageBreak + 1, pEl->ElStructSchema, pDoc, 
 				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-		      pElGr1 = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
+		      pElGr1 = NewSubtree(PageBreak + 1, pEl->ElStructSchema, pDoc, 
 				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		      InsertElementAfter(pEl, pElGr1);
 		      InsertElementAfter(pElGr1, pEl1);
@@ -3038,7 +3038,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	       SuppRfPave(pP, &PavR, pDoc);
 	       pP = pP->AbNext;
 	     }
-           if (VueAssoc(pEl))
+           if (AssocView(pEl))
 	     {
 	     pP = pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0];
 	     frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
@@ -3060,9 +3060,9 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	      
             /* cree les paves de la marque de colonne et groupe de colonnes */
             /* correspondant a la regle Column */
-	    pP = CreePaves(pElGrCols, pDoc, Vue, TRUE, TRUE, &complet);
+	    pP = AbsBoxesCreate(pElGrCols, pDoc, Vue, TRUE, TRUE, &complet);
 	    if (pElGrCols->ElAbstractBox[Vue-1] != NULL)
-	      pP = CreePaves(pElCol, pDoc, Vue, TRUE, TRUE, &complet);
+	      pP = AbsBoxesCreate(pElCol, pDoc, Vue, TRUE, TRUE, &complet);
 	  } /* fin AvantpEl */
 
         } /* fin pEl marque page non debut */
@@ -3241,10 +3241,10 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	}
 	
 	if (!pageexiste &&
-	    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsChoice)
+	    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsChoice)
 	{
 	    /* on cree une marque de page */
-	    pElPage = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
+	    pElPage = NewSubtree(PageBreak + 1, pEl->ElStructSchema, pDoc, 
 				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	    if (pElPage != NULL)
 		/* on a cree une marque de page */
@@ -3263,7 +3263,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 		    cpt = CptPage(pElPage, pEl1->ElViewPSchema, &pSchP);
 		    if (cpt > 0)
 		        /* calcule la valeur du compteur de pages */
-		        pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElSructSchema, pSchP, pElPage,
+		        pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP, pElPage,
 					       pEl1->ElViewPSchema);
 		    else	
 		        /* page non numerotee */
@@ -3281,7 +3281,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	          cpt = CptPage(pElPage, pEl1->ElViewPSchema, &pSchP);
 	          if (cpt > 0)
 	            /* calcule la valeur du compteur de pages */
-	            pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElSructSchema, pSchP, pElPage,
+	            pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP, pElPage,
 	                                        pEl1->ElViewPSchema);
 	          else       
 	            /* page non numerotee */
@@ -3300,7 +3300,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	          if (!pAb->AbNew)
 	            /* on previent le mediateur */
 	            {
-	              if (VueAssoc(pEl))
+	              if (AssocView(pEl))
 	                {
 	                  pP = (pDoc->DocAssocRoot[pEl->ElAssocNum - 1])->ElAbstractBox[0];
 	                  frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
@@ -3322,11 +3322,11 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	   regle appliquee */
 	PagePleine(Vue, pDoc, pElPage, TRUE);
 	if (pElPage != NULL
-	    && !VuePleine (Vue, pDoc, pElPage))
+	    && !IsViewFull (Vue, pDoc, pElPage))
             /* cree les paves de la marque de page */
             /* correspondant a la regle page */
 	    /* si la vue n'est pas pleine */
-	  pP = CreePaves(pElPage, pDoc, Vue, TRUE, TRUE, &complet);
+	  pP = AbsBoxesCreate(pElPage, pDoc, Vue, TRUE, TRUE, &complet);
 	/* on met a jour les numeros des pages suivantes */
         MajNumeros(NextElement(pElPage), pElPage, pDoc, TRUE);
        }  /* fin de !pageexiste */
@@ -3346,7 +3346,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 		cpt = CptPage(pElPage, pEl1->ElViewPSchema, &pSchP);
 		if (cpt > 0)
 		    /* calcule la valeur du compteur de pages */
-		    pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElSructSchema, pSchP, pElPage,
+		    pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP, pElPage,
 					       pEl1->ElViewPSchema);
 		else	
 		    /* page non numerotee */
@@ -3368,7 +3368,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 		}
 		if (cree)
 		    /* cree les paves de la marque de page */
-		    pP = CreePaves(pElPage, pDoc, pAb->AbDocView, TRUE, TRUE, &complet);
+		    pP = AbsBoxesCreate(pElPage, pDoc, pAb->AbDocView, TRUE, TRUE, &complet);
 		/* on met a jour les numeros des pages suivantes */
 		MajNumeros(NextElement(pElPage), pElPage, pDoc, TRUE);
 	    }
@@ -3638,13 +3638,13 @@ static PtrElement ChercheDansSArbre(pRac, TypeEl, pSS, NomType)
 	if (NomType[0] != '\0')
 	  /* on compare les noms de type */
 	  {
-	    if (strcmp(NomType, pRac->ElSructSchema->SsRule[pRac->ElTypeNumber - 1].SrName) == 0)
+	    if (strcmp(NomType, pRac->ElStructSchema->SsRule[pRac->ElTypeNumber - 1].SrName) == 0)
 	       pEC = pRac;
 	  }
 	else
 	  /* on compare les numero de type et code de schema de structure */
 	  if (pRac->ElTypeNumber == TypeEl 
-	      && pRac->ElSructSchema->SsCode == pSS->SsCode)
+	      && pRac->ElStructSchema->SsCode == pSS->SsCode)
 	      /* c'est l'element cherche' */
 	      pEC = pRac;
 	if (pEC == NULL)	
@@ -3731,7 +3731,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
   pEl1 = pAb->AbElement;
   pE = NULL;
   Ref = FALSE;
-  if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference)
+  if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference)
     {
       /* la regle Copy s'applique a un pave' d'un element reference */
       Ref = TRUE;
@@ -3757,7 +3757,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 	if (pRegle->PrElement)
 	  /* il faut copier le contenu d'un element structure' contenu */
 	  /* dans l'element reference'. On cherche cet element */
-	  pE = ChercheDansSArbre(pE, pRegle->PrPresBox[0], pEl1->ElSructSchema,
+	  pE = ChercheDansSArbre(pE, pRegle->PrPresBox[0], pEl1->ElStructSchema,
 				 pRegle->PrPresBoxName);
 	else	
 	  /* il faut copier une boite de presentation */
@@ -3864,7 +3864,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
       {
       /*cherche d'abord l'element a copier a l'interieur de l'element copieur*/
       pE = ChercheDansSArbre(pAb->AbElement, pRegle->PrPresBox[0],
-			     pEl1->ElSructSchema, pRegle->PrPresBoxName);
+			     pEl1->ElStructSchema, pRegle->PrPresBoxName);
 
       if (pE == NULL)
 	/* on n'a pas trouve' l'element a copier */
@@ -3885,26 +3885,26 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 	    /*  On cherche dans cet element */
 	    if (pEl != NULL)
 	      pE = ChercheDansSArbre(pEl, pRegle->PrPresBox[0],
-				    pEl->ElSructSchema, pRegle->PrPresBoxName);
+				    pEl->ElStructSchema, pRegle->PrPresBoxName);
 	    if (pE == NULL)
 	      /* si on n'a pas trouve pE, c'est que c'etait une marque */
 	      /* page qui avait ete genere par la racine : elle a ete */
 	      /* placee comme premier fils : on applique lors le code */
 	      /* de la V3 (recherche sur le pere)  */
 	      pE = ChercheDansSArbre(pEl1->ElParent, pRegle->PrPresBox[0],
-	       		    pEl1->ElSructSchema, pRegle->PrPresBoxName);
+	       		    pEl1->ElStructSchema, pRegle->PrPresBoxName);
 	   }
 #else /* __COLPAGE__ */
 	     /* on travaille pour une marque de page qui est engendree par */
 	     /* le debut d'un element. On cherche dans cet element */
 	     pE = ChercheDansSArbre(pEl1->ElParent, pRegle->PrPresBox[0],
-				    pEl1->ElSructSchema, pRegle->PrPresBoxName);
+				    pEl1->ElStructSchema, pRegle->PrPresBoxName);
 #endif /* __COLPAGE__ */
       /* si on n'a pas trouve', on cherche en arriere l'element a copier */
       if (pE == NULL)
         if (pRegle->PrNPresBoxes > 0)
 	  /* la boite a copier est definie par son numero de type */
-          pE = BackSearchTypedElem(pAb->AbElement, pRegle->PrPresBox[0], pEl1->ElSructSchema);
+          pE = BackSearchTypedElem(pAb->AbElement, pRegle->PrPresBox[0], pEl1->ElStructSchema);
 /*        else */
 	  /* la boite a copier est definie par son nom */
 	  /* non implemente' */
@@ -3919,7 +3919,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
       pPa1->AbVolume = 0;
       pBuffPrec = NULL;
       /* pas de buffer precedent */
-      if (TypeHasException(1207, pPa1->AbElement->ElTypeNumber, pPa1->AbElement->ElSructSchema))
+      if (TypeHasException(1207, pPa1->AbElement->ElTypeNumber, pPa1->AbElement->ElStructSchema))
 	{
 	  if (ThotLocalActions[T_indexcopy] != NULL)
 	    (*ThotLocalActions[T_indexcopy])(pE, &pAb, &pBuffPrec);
@@ -3929,7 +3929,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 	/* si l'element a copier est lui-meme une reference qui copie un */
 	/* autre element, c'est cet autre element qu'on copie */
 	pRP = NULL;
-	if (pE->ElSructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
+	if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
 	   {
 	   pRP = ReglePEl(pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pAttr);
 	   pRP = GetRegleCopy(pRP);
@@ -4019,7 +4019,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
     if (pAb->AbElement != NULL)
     {
       pPa1 = pAb;
-      VueSch = VueAAppliquer(pPa1->AbElement, pAttr, pDoc, pPa1->AbDocView);
+      VueSch = AppliedView(pPa1->AbElement, pAttr, pDoc, pPa1->AbDocView);
       switch (pRegle->PrType)
 	{
 	case PtWidth:
@@ -4428,7 +4428,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	        applCopie(pDoc, pRegle, pAb, TRUE);
 	      break;
 	  case FnContentRef:
-	      CopieConstante(pRegle->PrPresBox[0], pSchP, pAb);
+	      ConstantCopy(pRegle->PrPresBox[0], pSchP, pAb);
 	      break;
           default:
 	      break;
@@ -4544,7 +4544,7 @@ void PavReaff(pAb, pDoc)
   
   pDo1 = pDoc;
   pPa1 = pAb;
-  if (!VueAssoc(pPa1->AbElement))
+  if (!AssocView(pPa1->AbElement))
     pDo1->DocViewModifiedAb[pPa1->AbDocView - 1] =
       Englobant(pAb, pDo1->DocViewModifiedAb[pPa1->AbDocView-1]);
   else
@@ -4599,7 +4599,7 @@ void NouvDimImage(pAb)
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel appartient le pave */ 
   Vue = pAb->AbDocView;		/* la vue concernee */
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, Vue);/* type de cette vue dans le schema P */
+  VueSch = AppliedView(pEl, NULL, pDoc, Vue);/* type de cette vue dans le schema P */
   
   /* les deltas de dimension que l'on va appliquer sont ceux 
      de la boite par defaut avec laquelle on a cree l'image */
@@ -4721,7 +4721,7 @@ void NouvDimImage(pAb)
 		      pP->AbHeightChange = TRUE;
 		  
 		  PavReaff(pP, pDoc); /* indique le pave a reafficherv */
-		  if (!VueAssoc(pEl))
+		  if (!AssocView(pEl))
 		    frame[VueDoc -1] = pDoc->DocViewFrame[VueDoc -1];
 		  else
 		    frame[VueDoc -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];

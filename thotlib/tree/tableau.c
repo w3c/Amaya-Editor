@@ -65,10 +65,10 @@ boolean             *InCutBuffer;
   *InCutBuffer = FALSE;
    /* cherche l'attribut La_colonne de la cellule */
    pCol = NULL;
-   attr = GetAttrWithException (EXC_ID_Ref_Colonne, pCell->ElSructSchema);
+   attr = GetAttrWithException (EXC_ID_Ref_Colonne, pCell->ElStructSchema);
    pAttr = pCell->ElFirstAttr;
    while (pAttr != NULL)
-      if (pAttr->AeAttrSSchema == pCell->ElSructSchema && pAttr->AeAttrNum == attr)
+      if (pAttr->AeAttrSSchema == pCell->ElStructSchema && pAttr->AeAttrNum == attr)
 	 /* C'est l'attribut La_colonne */
 	{
 	   if (pAttr->AeAttrReference != NULL	/* attribut reference */
@@ -121,13 +121,13 @@ PtrDocument         SelDoc;
 
    if (FirstSelectedElement == LastSelectedElement)
      {
-	if (TypeHasException (EXC_ID_Cellule, FirstSelectedElement->ElTypeNumber, FirstSelectedElement->ElSructSchema))
+	if (TypeHasException (EXC_ID_Cellule, FirstSelectedElement->ElTypeNumber, FirstSelectedElement->ElStructSchema))
 	  {
 	     /* cherche l'attribut La_colonne de la cellule */
-	     attr = GetAttrWithException (EXC_ID_Ref_Colonne, FirstSelectedElement->ElSructSchema);
+	     attr = GetAttrWithException (EXC_ID_Ref_Colonne, FirstSelectedElement->ElStructSchema);
 	     pAttr = FirstSelectedElement->ElFirstAttr;
 	     while (pAttr != NULL)
-		if (pAttr->AeAttrSSchema == FirstSelectedElement->ElSructSchema && pAttr->AeAttrNum == attr)
+		if (pAttr->AeAttrSSchema == FirstSelectedElement->ElStructSchema && pAttr->AeAttrNum == attr)
 		   /* C'est l'attribut La_colonne */
 		  {
 		     if (pAttr->AeAttrReference != NULL
@@ -164,12 +164,12 @@ PtrDocument         SelDoc;
    PtrAttribute         pAttr;
    boolean             PasDExtension;
 
-   if (TypeHasException (EXC_TR_Cellule_ATTRIBUT, pEl->ElTypeNumber, pEl->ElSructSchema))
+   if (TypeHasException (EXC_TR_Cellule_ATTRIBUT, pEl->ElTypeNumber, pEl->ElStructSchema))
      {
 	/* Les attributs d'alignement vertical et d'extension verticale */
 	/* des cellules sont exclusifs */
 	PasDExtension = TRUE;
-	if (pAttrCell->AeAttrNum == GetAttrWithException (EXC_ID_Align_Vertic, pEl->ElSructSchema))
+	if (pAttrCell->AeAttrNum == GetAttrWithException (EXC_ID_Align_Vertic, pEl->ElStructSchema))
 	   /* on veut mettre un attribut d'alignement vertical */
 	  {
 	     pAttr = pEl->ElFirstAttr;
@@ -216,8 +216,8 @@ PtrDocument         pDoc;
    AttributeBlock          AttrCell;
    PtrAttribute         pAttrCell;
 
-   if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElSructSchema)
-   && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElSructSchema))
+   if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElStructSchema)
+   && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElStructSchema))
      {
 	DetrPaves (pEl, pDoc, FALSE);
 	AbstractImageUpdated (pDoc);
@@ -225,21 +225,21 @@ PtrDocument         pDoc;
 	AbstractImageUpdated (pDoc);
      }
 
-   else if (AttrHasException (EXC_ID_Align_HorizDistrib, pAttr->AeAttrNum, pEl->ElSructSchema))
+   else if (AttrHasException (EXC_ID_Align_HorizDistrib, pAttr->AeAttrNum, pEl->ElStructSchema))
      {
 	/* distribution sur les elements cellule inclus d'un attribut Alignement horizontal */
 	pAttrCell = &AttrCell;
 	AttrCell = *pAttr;
-	AttrCell.AeAttrNum = GetAttrWithException (EXC_ID_Align_Horiz, pEl->ElSructSchema);
+	AttrCell.AeAttrNum = GetAttrWithException (EXC_ID_Align_Horiz, pEl->ElStructSchema);
 	Tableau_DistribAlignHorizVertic (pEl, pAttrCell, pDoc);
      }
 
-   else if (AttrHasException (EXC_ID_Align_VerticDistrib, pAttr->AeAttrNum, pEl->ElSructSchema))
+   else if (AttrHasException (EXC_ID_Align_VerticDistrib, pAttr->AeAttrNum, pEl->ElStructSchema))
      {
 	/* distribution sur les elements cellule inclus d'un attribut Alignement Vertical */
 	pAttrCell = &AttrCell;
 	AttrCell = *pAttr;
-	AttrCell.AeAttrNum = GetAttrWithException (EXC_ID_Align_Vertic, pEl->ElSructSchema);
+	AttrCell.AeAttrNum = GetAttrWithException (EXC_ID_Align_Vertic, pEl->ElStructSchema);
 	Tableau_DistribAlignHorizVertic (pEl, pAttrCell, pDoc);
      }
 }
@@ -268,8 +268,8 @@ PtrSSchema        pSS;
      {
 	/* on est dans un tableau sur un element necessitant
 	   un traitement particulier lors de son insertion dans un menu d'insertion */
-	attr = GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElSructSchema);
-	if ((pAttrTab = GetTypedAttrAncestor (pEl, attr, pEl->ElSructSchema, &pElAttr)))
+	attr = GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElStructSchema);
+	if ((pAttrTab = GetTypedAttrAncestor (pEl, attr, pEl->ElStructSchema, &pElAttr)))
 	  {
 	     /* le tableau porte bien un attribut Type_Tableau */
 
@@ -337,12 +337,12 @@ PtrDocument         pDoc;
    pE = pTitre;
    do				/* remonte a la racine du tableau */
       pE = pE->ElParent;
-   while (!TypeHasException (EXC_ID_Tableau, pE->ElTypeNumber, pE->ElSructSchema));
+   while (!TypeHasException (EXC_ID_Tableau, pE->ElTypeNumber, pE->ElStructSchema));
 
    pTitreTableau = pE->ElFirstChild->ElFirstChild;
    if (pTitreTableau != NULL)
      {
-	if (!TypeHasException (EXC_ID_Titre_Tableau, pTitreTableau->ElTypeNumber, pE->ElSructSchema))
+	if (!TypeHasException (EXC_ID_Titre_Tableau, pTitreTableau->ElTypeNumber, pE->ElStructSchema))
 	  {
 	     printf ("On ne trouve pas le Titre du Tableau.\n");
 	     return;
@@ -357,10 +357,10 @@ PtrDocument         pDoc;
    /* Titre de ligne pour calculer la valeur de l'attribut */
    pourcent = 100;
    pE = pTitre;
-   while (!TypeHasException (EXC_ID_Les_Lignes, pE->ElTypeNumber, pE->ElSructSchema))
+   while (!TypeHasException (EXC_ID_Les_Lignes, pE->ElTypeNumber, pE->ElStructSchema))
       /* on n'est pas encore arrive' a l'element Les_lignes */
      {
-	if (TypeHasException (EXC_ID_Ligne_Composee, pE->ElTypeNumber, pE->ElSructSchema))
+	if (TypeHasException (EXC_ID_Ligne_Composee, pE->ElTypeNumber, pE->ElStructSchema))
 	   /* c'est une ligne composee */
 	   pourcent = pourcent / 2;
 	pE = pE->ElParent;
@@ -368,7 +368,7 @@ PtrDocument         pDoc;
    pAttr->AeAttrValue = pourcent;
 
    /* traite tous les titres de ligne imbriques */
-   if (TypeHasException (EXC_ID_Titre_Ligne_Comp, pTitre->ElTypeNumber, pTitre->ElSructSchema))
+   if (TypeHasException (EXC_ID_Titre_Ligne_Comp, pTitre->ElTypeNumber, pTitre->ElStructSchema))
       /* c'est un titre de ligne composee, il y a donc des titres de ligne imbriques */
      {
 	pE = pTitre->ElNext;	/* passe a l'element Sous_lignes */
@@ -380,8 +380,8 @@ PtrDocument         pDoc;
 		  pT = pE->ElFirstChild;	/* passe au titre de la ligne imbriquee */
 		  if (pT != NULL)
 		    {
-		       if (TypeHasException (EXC_ID_Titre_Ligne, pT->ElTypeNumber, pT->ElSructSchema) ||
-			   TypeHasException (EXC_ID_Titre_Ligne_Comp, pT->ElTypeNumber, pT->ElSructSchema))
+		       if (TypeHasException (EXC_ID_Titre_Ligne, pT->ElTypeNumber, pT->ElStructSchema) ||
+			   TypeHasException (EXC_ID_Titre_Ligne_Comp, pT->ElTypeNumber, pT->ElStructSchema))
 			  /* c'est bien un element Titre_ligne ou Titre_ligne_comp, */
 			  /* on verifie ses attributs */
 			  Tableau_MetAttrTitreLigne (pT, pDoc);
@@ -410,7 +410,7 @@ PtrDocument         pDoc;
    pAttr = AttachAttrByExceptNum (EXC_ID_Filet_Bas_LigSimp, pLigne, NULL, pDoc);
    pAttr->AeAttrValue = 2;
 
-   if (TypeHasException (EXC_ID_Ligne_Composee, pLigne->ElTypeNumber, pLigne->ElSructSchema))
+   if (TypeHasException (EXC_ID_Ligne_Composee, pLigne->ElTypeNumber, pLigne->ElStructSchema))
      {
 	pAttr = AttachAttrByExceptNum (EXC_ID_Filet_Droit_LigComp, pLigne, NULL, pDoc);
 	pAttr->AeAttrValue = 2;
@@ -611,7 +611,7 @@ PtrDocument         pDoc;
    CreeTousPaves (pEl, pDoc);
 
    /* remonte a l'element En_Tetes */
-   NType = GetElemWithException (EXC_ID_En_Tetes, pEl->ElSructSchema);
+   NType = GetElemWithException (EXC_ID_En_Tetes, pEl->ElStructSchema);
    pE = pEl->ElParent;
    while (pE->ElTypeNumber != NType)
       pE = pE->ElParent;
@@ -620,19 +620,19 @@ PtrDocument         pDoc;
 
    /* verifie s'il y a des colonnes simples qui precedent la nouvelle */
    /* colonne simple */
-   pCol = FwdSearchTypedElem (pE, pEl->ElTypeNumber, pEl->ElSructSchema);
+   pCol = FwdSearchTypedElem (pE, pEl->ElTypeNumber, pEl->ElStructSchema);
    PremCol = (pCol == pEl);
 
    /* numero du type d'element Ligne_simple */
-   NType = GetElemWithException (EXC_ID_Ligne_Simple, pEl->ElSructSchema);
+   NType = GetElemWithException (EXC_ID_Ligne_Simple, pEl->ElStructSchema);
    /* numero du type d'element Cellule */
-   TypeCell = GetElemWithException (EXC_ID_Cellule, pEl->ElSructSchema);
+   TypeCell = GetElemWithException (EXC_ID_Cellule, pEl->ElStructSchema);
 
    /* Cherche toutes les lignes simples */
    pLigne = pLesLignes;
    while (pLigne != NULL)
      {
-	pLigne = FwdSearchTypedElem (pLigne, NType, pEl->ElSructSchema);
+	pLigne = FwdSearchTypedElem (pLigne, NType, pEl->ElStructSchema);
 	if (pLigne != NULL)
 	   if (!ElemIsWithinSubtree (pLigne, pLesLignes))
 	      /* la ligne trouvee ne fait pas partie du tableau */
@@ -643,7 +643,7 @@ PtrDocument         pDoc;
 		/* on passe a la premiere cellule de la ligne */
 		pCell = pLigne->ElFirstChild->ElNext->ElFirstChild;
 		/* on cree une nouvelle cellule */
-		pNCell = NewSubtree (TypeCell, pEl->ElSructSchema, pDoc,
+		pNCell = NewSubtree (TypeCell, pEl->ElStructSchema, pDoc,
 			 pLigne->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		/* on insere cette nouvelle cellule dans l'arbre */
 		if (pCell == NULL)
@@ -657,7 +657,7 @@ PtrDocument         pDoc;
 		   /* on saute les premieres cellules */
 		  {
 		     /* cherche d'abord le numero de l'attribut La_colonne */
-		     attr = GetAttrWithException (EXC_ID_Ref_Colonne, pCell->ElSructSchema);
+		     attr = GetAttrWithException (EXC_ID_Ref_Colonne, pCell->ElStructSchema);
 		     /* on saute les cellules correspondant aux colonnes simples */
 		     /* precedant notre colonne */
 		     while (pCell != NULL)
@@ -666,7 +666,7 @@ PtrDocument         pDoc;
 			  pAttr = pCell->ElFirstAttr;
 			  attrtrouve = FALSE;
 			  while (!attrtrouve && pAttr != NULL)
-			     if (pAttr->AeAttrNum == attr && pAttr->AeAttrSSchema == pCell->ElSructSchema)
+			     if (pAttr->AeAttrNum == attr && pAttr->AeAttrSSchema == pCell->ElStructSchema)
 				attrtrouve = TRUE;
 			     else
 				pAttr = pAttr->AeNext;
@@ -744,13 +744,13 @@ PtrDocument         pDoc;
 
    /* remonte a l'element Les_lignes */
    pE = pEl->ElParent;
-   while (!TypeHasException (EXC_ID_Les_Lignes, pE->ElTypeNumber, pEl->ElSructSchema))
+   while (!TypeHasException (EXC_ID_Les_Lignes, pE->ElTypeNumber, pEl->ElStructSchema))
       pE = pE->ElParent;
    /*pLigne = pE; */
    /* l'element Les_colonnes */
    pLesCol = pE->ElPrevious->ElFirstChild->ElNext;
    /* cherche le numero du type d'element Colonne_simple */
-   TypeCol = GetElemWithException (EXC_ID_Colonne_Simple, pEl->ElSructSchema);
+   TypeCol = GetElemWithException (EXC_ID_Colonne_Simple, pEl->ElStructSchema);
 
    /* cherche la premiere cellule dans la nouvelle ligne */
    pCell = pEl->ElFirstChild->ElNext->ElFirstChild; 
@@ -758,7 +758,7 @@ PtrDocument         pDoc;
    pCol = pLesCol;
    while (pCol != NULL)
      {
-	pCol = FwdSearchTypedElem (pCol, TypeCol, pEl->ElSructSchema);
+	pCol = FwdSearchTypedElem (pCol, TypeCol, pEl->ElStructSchema);
 	if (pCol != NULL)
 	   if (!ElemIsWithinSubtree (pCol, pLesCol))
 	      /* la colonne trouvee ne fait pas partie du tableau */
@@ -769,7 +769,7 @@ PtrDocument         pDoc;
 		if (pCell == NULL && pCellPrec != NULL)
 		  {
 		     /* on cree une nouvelle cellule */
-		     NewSubtree (pCellPrec->ElTypeNumber, pEl->ElSructSchema, pDoc,
+		     NewSubtree (pCellPrec->ElTypeNumber, pEl->ElStructSchema, pDoc,
 				 pCellPrec->ElAssocNum, TRUE, TRUE,
 				 TRUE, TRUE);
 		     /* on insere cette nouvelle cellule dans l'arbre */
@@ -816,7 +816,7 @@ PtrDocument         pDoc;
    PtrSSchema        pSS;
 
 
-   pSS = pEl->ElSructSchema;
+   pSS = pEl->ElStructSchema;
    /* met les attribut sur l'element Table */
    Tableau_MetAttrTable (pEl, pDoc);
    /* passe a l'element En_Tetes */
@@ -919,18 +919,18 @@ PtrDocument         pDoc;
    boolean             trouve;
 
    if (pBasPage != NULL && pLigne != NULL)
-      if (TypeHasException (EXC_ID_BasTableau, pBasPage->ElTypeNumber, pBasPage->ElSructSchema))
+      if (TypeHasException (EXC_ID_BasTableau, pBasPage->ElTypeNumber, pBasPage->ElStructSchema))
 	 /* le bas de page est bien un bas de page */
-	 if (TypeHasException (EXC_ID_Ligne_Simple, pLigne->ElTypeNumber, pLigne->ElSructSchema) ||
-	     TypeHasException (EXC_ID_Ligne_Composee, pLigne->ElTypeNumber, pLigne->ElSructSchema))
+	 if (TypeHasException (EXC_ID_Ligne_Simple, pLigne->ElTypeNumber, pLigne->ElStructSchema) ||
+	     TypeHasException (EXC_ID_Ligne_Composee, pLigne->ElTypeNumber, pLigne->ElStructSchema))
 	    /* la ligne est bien une ligne de tableau */
 	   {
 	      /* cherche l'attribut Filet_Bas de la ligne */
-	      attr = GetAttrWithException (EXC_ID_Filet_Bas_LigSimp, pLigne->ElSructSchema);
+	      attr = GetAttrWithException (EXC_ID_Filet_Bas_LigSimp, pLigne->ElStructSchema);
 	      pAttr = pLigne->ElFirstAttr;
 	      trouve = FALSE;
 	      while (pAttr != NULL && !trouve)
-		 if (pAttr->AeAttrSSchema == pLigne->ElSructSchema &&
+		 if (pAttr->AeAttrSSchema == pLigne->ElStructSchema &&
 		     pAttr->AeAttrNum == attr)
 		    /* C'est l'attribut Filet_Bas */
 		    trouve = TRUE;
@@ -970,15 +970,15 @@ PtrDocument         pDoc;
 
 
    /* il s'agit bien de la creation d'un element de table */
-   if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElSructSchema))
+   if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* c'est la creation d'un tableau */
       Cree_Tableau (pEl, pDoc);
 
-   else if (TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber, pEl->ElSructSchema))
+   else if (TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* creation d'une Colonne_simple */
       Tableau_CreeColSimple (pEl, pDoc);
 
-   else if (TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber, pEl->ElSructSchema))
+   else if (TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* creation d'une Colonne_composee */
      {
 	/* met les attributs de la colonne composee */
@@ -990,21 +990,21 @@ PtrDocument         pDoc;
 	AbstractImageUpdated (pDoc);
 	/* descend a la premiere Colonne */
 	pE = pEl->ElFirstChild->ElNext->ElFirstChild;
-	if (!TypeHasException (EXC_ID_Colonne, pE->ElTypeNumber, pE->ElSructSchema) &&
-	    !TypeHasException (EXC_ID_Colonne_Simple, pE->ElTypeNumber, pE->ElSructSchema) &&
-	    !TypeHasException (EXC_ID_Colonne_Composee, pE->ElTypeNumber, pE->ElSructSchema))
+	if (!TypeHasException (EXC_ID_Colonne, pE->ElTypeNumber, pE->ElStructSchema) &&
+	    !TypeHasException (EXC_ID_Colonne_Simple, pE->ElTypeNumber, pE->ElStructSchema) &&
+	    !TypeHasException (EXC_ID_Colonne_Composee, pE->ElTypeNumber, pE->ElStructSchema))
 	   printf ("On ne trouve pas la 1ere Colonne\n");
 	else
 	  {
 	     /* traite toutes les colonnes creees */
 	     /* numero du type Colonne_simple */
-	     NType = GetElemWithException (EXC_ID_Colonne_Simple, pEl->ElSructSchema);
+	     NType = GetElemWithException (EXC_ID_Colonne_Simple, pEl->ElStructSchema);
 	     do
 	       {
-		  if (TypeHasException (EXC_ID_Colonne, pE->ElTypeNumber, pE->ElSructSchema))
+		  if (TypeHasException (EXC_ID_Colonne, pE->ElTypeNumber, pE->ElStructSchema))
 		    {
 		       /* transforme la Colonne en Colonne_simple */
-		       pC = NewSubtree (NType, pEl->ElSructSchema, pDoc, pEl->ElAssocNum,
+		       pC = NewSubtree (NType, pEl->ElStructSchema, pDoc, pEl->ElAssocNum,
 					TRUE, TRUE, TRUE, TRUE);
 		       InsertOption (pE, &pC, pDoc);
 		       /* traite les attributs requis */
@@ -1017,11 +1017,11 @@ PtrDocument         pDoc;
 	  }
      }
 
-   else if (TypeHasException (EXC_ID_Ligne_Simple, pEl->ElTypeNumber, pEl->ElSructSchema))
+   else if (TypeHasException (EXC_ID_Ligne_Simple, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* creation d'une Ligne_simple */
       Tableau_CreeLigneSimple (pEl, pDoc);
 
-   else if (TypeHasException (EXC_ID_Ligne_Composee, pEl->ElTypeNumber, pEl->ElSructSchema))
+   else if (TypeHasException (EXC_ID_Ligne_Composee, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* creation d'une Ligne_composee */
      {
 	/* met l'attribut Filet_horizontal */
@@ -1030,17 +1030,17 @@ PtrDocument         pDoc;
 	Tableau_MetAttrTitreLigne (pEl->ElFirstChild, pDoc);
 	/* descend a la premiere Line */
 	pE = pEl->ElFirstChild->ElNext->ElFirstChild;
-	if (!TypeHasException (EXC_ID_Ligne, pE->ElTypeNumber, pE->ElSructSchema))
+	if (!TypeHasException (EXC_ID_Ligne, pE->ElTypeNumber, pE->ElStructSchema))
 	   printf ("On ne trouve pas la 1ere Line\n");
 	else
 	  {
 	     /* traite toutes les lignes creees */
 	     /* numero du type Ligne_simple */
-	     NType = GetElemWithException (EXC_ID_Ligne_Simple, pEl->ElSructSchema);
+	     NType = GetElemWithException (EXC_ID_Ligne_Simple, pEl->ElStructSchema);
 	     do
 	       {
 		  /* transforme la Line en Ligne_simple */
-		  pC = NewSubtree (NType, pEl->ElSructSchema, pDoc, pEl->ElAssocNum,
+		  pC = NewSubtree (NType, pEl->ElStructSchema, pDoc, pEl->ElAssocNum,
 				   TRUE, TRUE, TRUE, TRUE);
 		  InsertOption (pE, &pC, pDoc);
 		  /* traite les attributs requis */
@@ -1076,7 +1076,7 @@ PtrDocument         pDoc;
    PtrElement          pE;
 
    if (pEl != NULL)
-      if (TypeHasException (EXC_TR_Tableau_CREATION, pEl->ElTypeNumber, pEl->ElSructSchema))
+      if (TypeHasException (EXC_TR_Tableau_CREATION, pEl->ElTypeNumber, pEl->ElStructSchema))
 	 Tableau_Creation_DoIt (pEl, pDoc);
       else
 	{
@@ -1113,18 +1113,18 @@ PtrElement          pEl;
    if (pEl != NULL)
      {
 	/* remonte a l'element En_Tetes */
-	NType = GetElemWithException (EXC_ID_En_Tetes, pEl->ElSructSchema);
+	NType = GetElemWithException (EXC_ID_En_Tetes, pEl->ElStructSchema);
 	pE = pEl->ElParent;
 	while (pE->ElTypeNumber != NType)
 	   pE = pE->ElParent;
 	/* l'element apres En_Tetes est Les_lignes */
 	pLesLignes = pE->ElNext;
 	/* numero du type d'element Ligne_simple */
-	NType = GetElemWithException (EXC_ID_Ligne_Simple, pEl->ElSructSchema);
+	NType = GetElemWithException (EXC_ID_Ligne_Simple, pEl->ElStructSchema);
 	/* numero de l'attribut Ref_colonne */
-	attr = GetAttrWithException (EXC_ID_Ref_Colonne, pEl->ElSructSchema);
+	attr = GetAttrWithException (EXC_ID_Ref_Colonne, pEl->ElStructSchema);
 	/* cherche la premiere ligne du tableau */
-	pLigne = FwdSearchTypedElem (pEl, NType, pEl->ElSructSchema);
+	pLigne = FwdSearchTypedElem (pEl, NType, pEl->ElStructSchema);
 	if (pLigne != NULL)
 	   if (!ElemIsWithinSubtree (pLigne, pLesLignes))
 	      /* la ligne trouvee ne fait pas partie du meme tableau */
@@ -1134,7 +1134,7 @@ PtrElement          pEl;
 	while (pLigne != NULL)
 	  {
 	     /* on commence par chercher la ligne suivante */
-	     pLigneSuiv = FwdSearchTypedElem (pLigne, NType, pEl->ElSructSchema);
+	     pLigneSuiv = FwdSearchTypedElem (pLigne, NType, pEl->ElStructSchema);
 	     if (pLigneSuiv != NULL)
 		if (!ElemIsWithinSubtree (pLigneSuiv, pLesLignes))
 		   /* la ligne trouvee ne fait pas partie du meme tableau */
@@ -1152,7 +1152,7 @@ PtrElement          pEl;
 		  pAttr = pCell->ElFirstAttr;
 		  /* cherche l'attribut La_colonne de la cellule */
 		  while (pAttr != NULL)
-		     if (pAttr->AeAttrSSchema == pEl->ElSructSchema && pAttr->AeAttrNum == attr)
+		     if (pAttr->AeAttrSSchema == pEl->ElStructSchema && pAttr->AeAttrNum == attr)
 			/* C'est l'attribut La_colonne */
 		       {
 			  if (pAttr->AeAttrReference != NULL)
@@ -1208,11 +1208,11 @@ boolean             *ret;
 	  {
 	     /* il y a deja une selection */
 	     pEl = FirstSelectedElement;
-	     if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElSructSchema))
+	     if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElStructSchema))
 		/* Deja une colonne selectionnee, on refuse l'extension */
 		*ret = FALSE;
 	  }
-	if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElSructSchema))
+	if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElStructSchema))
 	   /* l'element a ajouter dans la selection est une colonne, refus */
 	   *ret = FALSE;
      }
@@ -1220,10 +1220,10 @@ boolean             *ret;
    else
      {
 	/* c'est une nouvelle  selection */
-	if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElSructSchema))
+	if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElStructSchema))
 	   /* il s'agit bien d'un element demandant une selection speciale */
 
-	   if (TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber, pEl->ElSructSchema))
+	   if (TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber, pEl->ElStructSchema))
 	     {
 		/* selection d'un element Colonne_simple */
 		Tableau_SelectColSimple (pEl);
@@ -1232,7 +1232,7 @@ boolean             *ret;
 
 	   else
 	     {
-		if (TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber, pEl->ElSructSchema))
+		if (TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber, pEl->ElStructSchema))
 		   /* selection d'un element Colonne_composee */
 		  {
 		     if (pEl->ElFirstChild != NULL)
@@ -1240,18 +1240,18 @@ boolean             *ret;
 			   /* descend a la premiere sous-colonne */
 			   pE = pEl->ElFirstChild->ElNext->ElFirstChild;
 		  }
-		else if (TypeHasException (EXC_ID_Sous_Colonnes, pEl->ElTypeNumber, pEl->ElSructSchema))
+		else if (TypeHasException (EXC_ID_Sous_Colonnes, pEl->ElTypeNumber, pEl->ElStructSchema))
 		   /* selection d'un element Sous Colonne */
 		   pE = pEl->ElFirstChild;
 
-		else if (TypeHasException (EXC_ID_Les_Colonnes, pEl->ElTypeNumber, pEl->ElSructSchema))
+		else if (TypeHasException (EXC_ID_Les_Colonnes, pEl->ElTypeNumber, pEl->ElStructSchema))
 		   /* selection d'un element Les Colonne */
 		   pE = pEl->ElFirstChild;
 
 		/* traite toutes les sous-colonnes */
 		while (pE != NULL && ret)
 		  {
-		     if (TypeHasException (EXC_ID_Colonne_Simple, pE->ElTypeNumber, pE->ElSructSchema))
+		     if (TypeHasException (EXC_ID_Colonne_Simple, pE->ElTypeNumber, pE->ElStructSchema))
 			/* c'est une colonne simple */
 			Tableau_SelectColSimple (pE);
 		     else
@@ -1282,10 +1282,10 @@ boolean             *ret;
 {
 
    /* est-ce un element Colonne_simple ? */
-   *ret = TypeHasException (EXC_ID_Colonne_Simple, pElSv->ElTypeNumber, pElSv->ElSructSchema);
+   *ret = TypeHasException (EXC_ID_Colonne_Simple, pElSv->ElTypeNumber, pElSv->ElStructSchema);
 
    if ((*ret))			/* est-ce un element Colonne_composee ? */
-      *ret = TypeHasException (EXC_ID_Colonne_Composee, pElSv->ElTypeNumber, pElSv->ElSructSchema);
+      *ret = TypeHasException (EXC_ID_Colonne_Composee, pElSv->ElTypeNumber, pElSv->ElStructSchema);
 }
 
 
@@ -1318,16 +1318,16 @@ PtrDocument         pDoc;
 
 
    NbCellCollees = 0;
-   TypeCell = GetElemWithException (EXC_ID_Cellule, pCol->ElSructSchema);	/* numero du type Cellule */
-   TypeLigne = GetElemWithException (EXC_ID_Les_Lignes, pCol->ElSructSchema);	/* numero du type Les_lignes */
-   pLesLignes = FwdSearchTypedElem (pCol, TypeLigne, pCol->ElSructSchema);		/* cherche l'element Les_lignes */
-   TypeLigne = GetElemWithException (EXC_ID_Ligne_Simple, pCol->ElSructSchema);	/* numero du type Ligne_simple */
+   TypeCell = GetElemWithException (EXC_ID_Cellule, pCol->ElStructSchema);	/* numero du type Cellule */
+   TypeLigne = GetElemWithException (EXC_ID_Les_Lignes, pCol->ElStructSchema);	/* numero du type Les_lignes */
+   pLesLignes = FwdSearchTypedElem (pCol, TypeLigne, pCol->ElStructSchema);		/* cherche l'element Les_lignes */
+   TypeLigne = GetElemWithException (EXC_ID_Ligne_Simple, pCol->ElStructSchema);	/* numero du type Ligne_simple */
 
    /* parcourt les lignes simples du tableau */
    pLigne = pLesLignes;
    while (pLigne != NULL)
      {
-	pLigne = FwdSearchTypedElem (pLigne, TypeLigne, pCol->ElSructSchema);
+	pLigne = FwdSearchTypedElem (pLigne, TypeLigne, pCol->ElStructSchema);
 	if (pLigne != NULL)
 	   if (!ElemIsWithinSubtree (pLigne, pLesLignes))	/* la ligne trouvee ne fait pas partie du tableau */
 	      pLigne = NULL;
@@ -1341,7 +1341,7 @@ PtrDocument         pDoc;
 		  {
 		     /* on cree une copie de la cellule a coller */
 		     pNCell = CopyTree (*pSvCell, DocOfSavedElements, pCol->ElAssocNum,
-				pCol->ElSructSchema, pDoc, pPere, TRUE, TRUE);
+				pCol->ElStructSchema, pDoc, pPere, TRUE, TRUE);
 		     NbCellCollees++;
 		     *pSvCell = (*pSvCell)->ElNext;
 		  }
@@ -1349,7 +1349,7 @@ PtrDocument         pDoc;
 		  {
 		     /* on a deja colle' le nombre de cellules voulu, on cree une
 		        cellule vide pour completer la colonne */
-		     pNCell = NewSubtree (TypeCell, pPere->ElSructSchema, pDoc,
+		     pNCell = NewSubtree (TypeCell, pPere->ElStructSchema, pDoc,
 				 pPere->ElAssocNum, TRUE, TRUE, TRUE,
 					  TRUE);
 		     /* on met les attributs a la nouvelle cellule */
@@ -1410,7 +1410,7 @@ PtrDocument         pDoc;
    PtrElement          pEl1;
 
 
-   TypeColSimple = GetElemWithException (EXC_ID_Colonne_Simple, pCol->ElSructSchema);
+   TypeColSimple = GetElemWithException (EXC_ID_Colonne_Simple, pCol->ElStructSchema);
    if (pCol->ElTypeNumber == TypeColSimple)
      {
 	/* c'est une colonne simple */
@@ -1419,7 +1419,7 @@ PtrDocument         pDoc;
 	  {
 	     /* cree une cellule */
 	     pEl1 = *pCellPrec;
-	     *pCell = NewSubtree (pEl1->ElTypeNumber, pEl1->ElSructSchema, pDoc,
+	     *pCell = NewSubtree (pEl1->ElTypeNumber, pEl1->ElStructSchema, pDoc,
 			   pEl1->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	     /* insere cette cellule a la suite de la cellule precedente */
 	     InsertElementAfter (*pCellPrec, *pCell);
@@ -1472,12 +1472,12 @@ PtrDocument         pDoc;
 
    /* accede au titre de la ligne */
    pTitreL = pLigne->ElFirstChild;
-   if (TypeHasException (EXC_ID_Titre_Ligne, pTitreL->ElTypeNumber, pTitreL->ElSructSchema)
-       || TypeHasException (EXC_ID_Titre_Ligne_Comp, pTitreL->ElTypeNumber, pTitreL->ElSructSchema))
+   if (TypeHasException (EXC_ID_Titre_Ligne, pTitreL->ElTypeNumber, pTitreL->ElStructSchema)
+       || TypeHasException (EXC_ID_Titre_Ligne_Comp, pTitreL->ElTypeNumber, pTitreL->ElStructSchema))
       /* c'est bien un element Titre_ligne ou Titre_ligne_comp */
       Tableau_MetAttrTitreLigne (pTitreL, pDoc);
 
-   TypeLigneSimple = GetElemWithException (EXC_ID_Ligne_Simple, pLigne->ElSructSchema);
+   TypeLigneSimple = GetElemWithException (EXC_ID_Ligne_Simple, pLigne->ElStructSchema);
    if (pLigne->ElTypeNumber == TypeLigneSimple)	/* c'est une ligne simple on la traite */
      {
 	pCell = pLigne->ElFirstChild;	/* accede a la premiere cellule */
@@ -1543,18 +1543,18 @@ PtrDocument         pDoc;
    int                 TypeColSimple, TypeColComposee, NType;
 
 
-   if (TypeHasException (EXC_TR_Tableau_COLLER, pColle->ElTypeNumber, pColle->ElSructSchema))
+   if (TypeHasException (EXC_TR_Tableau_COLLER, pColle->ElTypeNumber, pColle->ElStructSchema))
       /* Il s'agit d'un element de tableau devant faire l'objet d'un */
       /* traitement special pour la commande Coller (voir Tableau.SCH). */
      {
-	TypeColSimple = GetElemWithException (EXC_ID_Colonne_Simple, pColle->ElSructSchema);
-	TypeColComposee = GetElemWithException (EXC_ID_Colonne_Composee, pColle->ElSructSchema);
+	TypeColSimple = GetElemWithException (EXC_ID_Colonne_Simple, pColle->ElStructSchema);
+	TypeColComposee = GetElemWithException (EXC_ID_Colonne_Composee, pColle->ElStructSchema);
 
 	if (pColle->ElTypeNumber == TypeColSimple || pColle->ElTypeNumber == TypeColComposee)
 	  {
 	     /* c'est un element Colonne_simple ou Colonne_composee qui a ete colle' */
 	     /* remonte a l'element Les_colonnes */
-	     NType = GetElemWithException (EXC_ID_Les_Colonnes, pColle->ElSructSchema);
+	     NType = GetElemWithException (EXC_ID_Les_Colonnes, pColle->ElStructSchema);
 	     pE = pColle->ElParent;
 	     while (pE->ElTypeNumber != NType)
 		pE = pE->ElParent;
@@ -1565,7 +1565,7 @@ PtrDocument         pDoc;
 	     pColSimple = pE;
 	     do
 	       {
-		  pColSimple = FwdSearchTypedElem (pColSimple, TypeColSimple, pColle->ElSructSchema);
+		  pColSimple = FwdSearchTypedElem (pColSimple, TypeColSimple, pColle->ElStructSchema);
 		  if (ElemIsWithinSubtree (pColSimple, pColle))
 		     pColSimple = NULL;
 		  else		/* on trouve' une colonne simple */
@@ -1585,7 +1585,7 @@ PtrDocument         pDoc;
 	     /* a priori, c'est un element Colonne_simple qui a ete colle' */
 	     NbColCollees = 1;
 	     pColSimple = pColle;
-	     if (TypeHasException (EXC_ID_Colonne_Composee, pColle->ElTypeNumber, pColle->ElSructSchema))
+	     if (TypeHasException (EXC_ID_Colonne_Composee, pColle->ElTypeNumber, pColle->ElStructSchema))
 		/* c'est un element Colonne_composee */
 		/* compte les elements Colonne_simple contenus dans l'element colle': NbColCollees. */
 	       {
@@ -1594,7 +1594,7 @@ PtrDocument         pDoc;
 		  pE = pColle;
 		  while (pE != NULL)
 		    {
-		       pE = FwdSearchTypedElem (pE, TypeColSimple, pColle->ElSructSchema);
+		       pE = FwdSearchTypedElem (pE, TypeColSimple, pColle->ElStructSchema);
 		       if (pE != NULL)	/* on a trouve' une colonne simple */
 			  if (ElemIsWithinSubtree (pE, pColle))
 			    {
@@ -1615,7 +1615,7 @@ PtrDocument         pDoc;
 	       {
 		  Tableau_ColleCellules (pColSimple, NbColPreced, NbCellParCol, pElSv, pDoc);
 		  NbColPreced++;
-		  pColSimple = FwdSearchTypedElem (pColSimple, TypeColSimple, pColle->ElSructSchema);
+		  pColSimple = FwdSearchTypedElem (pColSimple, TypeColSimple, pColle->ElStructSchema);
 	       }
 	     *pElSv = NULL;	/* empeche ColleVoisin de coller les cellules */
 	  }
@@ -1623,8 +1623,8 @@ PtrDocument         pDoc;
 	else
 	   /* ce n'est ni un element Colonne_simple ni un element
 	      Colonne_composee qui a ete colle' */
-	   if (TypeHasException (EXC_ID_Ligne_Simple, pColle->ElTypeNumber, pColle->ElSructSchema)
-	       || TypeHasException (EXC_ID_Ligne_Composee, pColle->ElTypeNumber, pColle->ElSructSchema))
+	   if (TypeHasException (EXC_ID_Ligne_Simple, pColle->ElTypeNumber, pColle->ElStructSchema)
+	       || TypeHasException (EXC_ID_Ligne_Composee, pColle->ElTypeNumber, pColle->ElStructSchema))
 	   /* c'est un element Ligne_simple ou Ligne_composee qui a ete colle' */
 	   /* Pour chaque ligne simple collee, on verifie que chaque */
 	   /* cellule a bien un attribut La_colonne (si elle ne l'a pas, */
@@ -1633,13 +1633,13 @@ PtrDocument         pDoc;
 	   /* cellules excedentaires ou on cree les cellules manquantes. */
 	   /* remonte d'abord a l'element Les_lignes */
 	  {
-	     NType = GetElemWithException (EXC_ID_Les_Lignes, pColle->ElSructSchema);
+	     NType = GetElemWithException (EXC_ID_Les_Lignes, pColle->ElStructSchema);
 	     pE = pColle->ElParent;
 	     while (pE->ElTypeNumber != NType)
 		pE = pE->ElParent;
 	     /* retrouve l'element Les_colonnes */
 	     pE = pE->ElPrevious->ElFirstChild->ElNext;
-	     if (TypeHasException (EXC_ID_Les_Colonnes, pE->ElTypeNumber, pE->ElSructSchema))
+	     if (TypeHasException (EXC_ID_Les_Colonnes, pE->ElTypeNumber, pE->ElStructSchema))
 		/* c'est bien Les_colonnes */
 		Tableau_VerifieLigne (pColle, pE, pDoc);
 	  }
@@ -1693,7 +1693,7 @@ boolean            *DetruirePage;
 		   if (Prec == NULL)
 		      stop = TRUE;	/* pas d'autre element precedent */
 		   else if (!TypeHasException (ExcPageBreakRepBefore, Prec->ElTypeNumber,
-					     Prec->ElSructSchema))
+					     Prec->ElStructSchema))
 		      /* l'element precedent n'est pas une repetition */
 		      stop = TRUE;
 		   else if (Prec->ElSource == NULL)
@@ -1717,7 +1717,7 @@ boolean            *DetruirePage;
 		   if (Suiv == NULL)
 		      stop = TRUE;	/* pas d'autre element suivant */
 		   else if (!TypeHasException (ExcPageBreakRepetition, Suiv->ElTypeNumber,
-					     Suiv->ElSructSchema))
+					     Suiv->ElStructSchema))
 		      /* l'element suivant n'est pas une repetition */
 		      stop = TRUE;
 		   else if (Suiv->ElSource == NULL)
@@ -1754,7 +1754,7 @@ PtrDocument         pDoc;
    int                 SauveType;
 
    if (TypeHasException (EXC_ID_BasTableau, pBasTableau->ElTypeNumber,
-		       pBasTableau->ElSructSchema))
+		       pBasTableau->ElStructSchema))
       /* c'est un element Bas_tableau */
      {
 	/* reapplique les regles de hauteur des filets */
@@ -1831,7 +1831,7 @@ boolean             SupprimeAttr;
 	/* parcourt les elements auxquels il faut appliquer l'attribut */
 	while (pEl != NULL && !erreur)
 	  {
-	     if (!TypeHasException (EXC_ID_Cellule, pEl->ElTypeNumber, pEl->ElSructSchema))
+	     if (!TypeHasException (EXC_ID_Cellule, pEl->ElTypeNumber, pEl->ElStructSchema))
 		/* l'element n'est pas une cellule, erreur */
 		erreur = TRUE;
 	     else if (!ElemIsBefore (pEl, pElRef))
@@ -1848,7 +1848,7 @@ boolean             SupprimeAttr;
 	     stop = FALSE;
 	     while (!stop && pEl != NULL)
 	       {
-		  if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElSructSchema))
+		  if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElStructSchema))
 		     stop = TRUE;	/* trouve' */
 		  else
 		     pEl = pEl->ElParent;
@@ -1888,23 +1888,23 @@ boolean *ret;
 
    *ret = TRUE;
    /* on n'holophraste pas les entetes de tableau */
-   if (TypeHasException (EXC_ID_En_Tetes, pEl->ElTypeNumber, pEl->ElSructSchema))
+   if (TypeHasException (EXC_ID_En_Tetes, pEl->ElTypeNumber, pEl->ElStructSchema))
       *ret = FALSE;
    /* on n'holophraste pas les colonnes composees */
    else if (TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber,
-			    pEl->ElSructSchema))
+			    pEl->ElStructSchema))
       *ret = FALSE;
    /* on n'holophraste pas les colonnes */
    else if (TypeHasException (EXC_ID_Les_Colonnes, pEl->ElTypeNumber,
-			    pEl->ElSructSchema))
+			    pEl->ElStructSchema))
       *ret = FALSE;
    /* on n'holophraste pas les colonnes simples */
    else if (TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber,
-			    pEl->ElSructSchema))
+			    pEl->ElStructSchema))
       *ret = FALSE;
    /* on n'holophraste pas les sous-colonnes */
    else if (TypeHasException (EXC_ID_Sous_Colonnes, pEl->ElTypeNumber,
-			    pEl->ElSructSchema))
+			    pEl->ElStructSchema))
       *ret = FALSE;
 }
 /** fin ajout */
@@ -1923,7 +1923,7 @@ static void Tableau_Except(pEl, ret)
 #endif /* __STDC__ */
 {
        *ret = (TypeHasException(EXC_ID_Tableau, pEl->ElTypeNumber,
-			  (pEl->ElSructSchema)));
+			  (pEl->ElStructSchema)));
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1940,7 +1940,7 @@ static void Tableau_Except_CR(pEl, ret)
 #endif /* __STDC__ */
 {
        *ret = (TypeHasException(EXC_TR_Tableau_CREATION, pEl->ElTypeNumber,
-			  (pEl->ElSructSchema)));
+			  (pEl->ElStructSchema)));
 }
 
 /* ---------------------------------------------------------------------- */

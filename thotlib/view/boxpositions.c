@@ -220,7 +220,7 @@ boolean             EnY;
 			newX = FALSE;
 		     else if (box1->BxHorizFlex && box1 != pBo1)
 			/* Le decalage des boites voisines liees a la boite elastique */
-			/* est deja effectue par l'appel de ChngBElast */
+			/* est deja effectue par l'appel de MoveBoxEdge */
 			newX = FALSE;
 		     else
 			newX = TRUE;
@@ -230,12 +230,12 @@ boolean             EnY;
 		       {
 			  if (newX)
 			    {
-			       /* Si le deplacement est nul on ne peut executer DepOrgX */
+			       /* Si le deplacement est nul on ne peut executer XMove */
 			       if (x == 0)
 				  newX = FALSE;
 			    }
 			  /* Il faut placer les boites positionnees par rapport la racine */
-			  else if (pChildAb->AbHorizPos.PosAbRef == FntrTable[frame - 1].FrAbstractBox)
+			  else if (pChildAb->AbHorizPos.PosAbRef == ViewFrameTable[frame - 1].FrAbstractBox)
 			     placeenX = TRUE;
 		       }
 		     else
@@ -250,7 +250,7 @@ boolean             EnY;
 			newY = FALSE;
 		     else if (box1->BxVertFlex && box1 != pBo1)
 			/* Le decalage des boites voisines liees a la boite elastique */
-			/* est deja effectue par l'appel de ChngBElast */
+			/* est deja effectue par l'appel de MoveBoxEdge */
 			newY = FALSE;
 		     else
 			newY = TRUE;
@@ -261,12 +261,12 @@ boolean             EnY;
 
 			  if (newY)
 			    {
-			       /* Si le deplacement est nul on ne peut executer DepOrgY */
+			       /* Si le deplacement est nul on ne peut executer YMove */
 			       if (y == 0)
 				  newY = FALSE;
 			    }
 			  /* Il faut placer les boites positionnee par rapport la racine */
-			  else if (pChildAb->AbVertPos.PosAbRef == FntrTable[frame - 1].FrAbstractBox)
+			  else if (pChildAb->AbVertPos.PosAbRef == ViewFrameTable[frame - 1].FrAbstractBox)
 			     placeenY = TRUE;
 		       }
 		     else
@@ -322,12 +322,12 @@ boolean             EnY;
 			       box1->BxMoved = NULL;
 			       /* Pas de deplacement du contenu des boites qui */
 			       /*  dependent de la boite elastique             */
-			       ChngBElast (pBo1, box1, OpHorizDep, x, frame, TRUE);
+			       MoveBoxEdge (pBo1, box1, OpHorizDep, x, frame, TRUE);
 			    }
 /**BE:AOUT*/ 
 			  else if (!placeenX)
 			     /**BE:AOUT*//* il faut deplacer tout le contenu de la boite */
-/**BE:AOUT*/ DepXContenu (pBo1, x, frame);
+/**BE:AOUT*/ XMoveAllEnclosed (pBo1, x, frame);
 			  else
 			     pBo1->BxXOrg += x;
 
@@ -367,9 +367,9 @@ boolean             EnY;
 						&& pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pChildAb)
 					      {
 						 if (pRelation->ReBox->BxHorizFlex)
-						    ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
+						    MoveBoxEdge (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
 						 else
-						    DepOrgX (pRelation->ReBox, pBo1, x, frame);
+						    XMove (pRelation->ReBox, pBo1, x, frame);
 						 /* La boite distante est placee */
 						 pRelation->ReBox->BxXToCompute = FALSE;
 					      }
@@ -378,7 +378,7 @@ boolean             EnY;
 					      {
 						 /* Pas de deplacement du contenu des boites qui */
 						 /*  dependent de la boite elastique             */
-						 ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
+						 MoveBoxEdge (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
 					      }
 					 }
 				       i++;
@@ -414,12 +414,12 @@ boolean             EnY;
 			       box1->BxMoved = NULL;
 			       /* Pas de deplacement du contenu des boites qui */
 			       /*  dependent de la boite elastique             */
-			       ChngBElast (pBo1, box1, OpVertDep, y, frame, FALSE);
+			       MoveBoxEdge (pBo1, box1, OpVertDep, y, frame, FALSE);
 			    }
 /**BE:AOUT*/ 
 			  else if (!placeenY)
 			     /**BE:AOUT*//* il faut deplacer tout le contenu de la boite */
-/**BE:AOUT*/ DepYContenu (pBo1, y, frame);
+/**BE:AOUT*/ YMoveAllEnclosed (pBo1, y, frame);
 			  else
 			     pBo1->BxYOrg += y;
 			  pBo1->BxYToCompute = FALSE;	/* La boite est placee */
@@ -457,9 +457,9 @@ boolean             EnY;
 						&& pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pChildAb)
 					      {
 						 if (pRelation->ReBox->BxVertFlex)
-						    ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
+						    MoveBoxEdge (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
 						 else
-						    DepOrgY (pRelation->ReBox, pBo1, y, frame);
+						    YMove (pRelation->ReBox, pBo1, y, frame);
 						 /* La boite distante est placee */
 						 pRelation->ReBox->BxYToCompute = FALSE;
 					      }
@@ -468,7 +468,7 @@ boolean             EnY;
 					      {
 						 /* Pas de deplacement du contenu des boites qui */
 						 /*  dependent de la boite elastique             */
-						 ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
+						 MoveBoxEdge (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
 					      }
 					 }
 				       i++;

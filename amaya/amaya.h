@@ -293,7 +293,7 @@ extern int              Add_NewSocket_to_Loop (HTRequest*, HTAlertOpcode, int, c
 extern void             CreateAnchor (Document, View, boolean) ;
 extern void             SetCharFontOrPhrase (int, int) ;
 extern void             InsertChar (unsigned char, int);
-extern void             RazSelect (void);
+extern void             ClearAllViewSelection (void);
 extern int              RemoveFile (char *);
 extern void             QuitEditor (void);
 extern void             EndInsert (void);
@@ -336,7 +336,7 @@ extern int              Add_NewSocket_to_Loop ();
 extern void             CreateAnchor () ;
 extern void             SetCharFontOrPhrase () ;
 extern void             InsertChar ();
-extern void             RazSelect ();
+extern void             ClearAllViewSelection ();
 extern int              RemoveFile ();
 extern void             QuitEditor ();
 extern void             EndInsert ();

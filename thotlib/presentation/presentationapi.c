@@ -240,7 +240,7 @@ Document            document;
 	     {
 		pEl = pDoc->DocAssocRoot[v - 1];
 		if (pEl != NULL)
-		   if (strcmp (viewName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		   if (strcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 		      vue = 1;
 	     }
 	if (vue == 0)

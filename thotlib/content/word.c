@@ -21,17 +21,17 @@ static int          lastCharInitialSelection;
 #include "hyphen_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* | CarSuivant retourne le caractere qui suit le caractere courant     | */
+/* | NextCharacter retourne le caractere qui suit le caractere courant     | */
 /* |            buffer[rank] et met a jour buffer et rank.              | */
 /* |            S'il n'y a pas de caractere suivant retourne le         | */
 /* |            caractere NULL.                                         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-unsigned char       CarSuivant (PtrTextBuffer * buffer, int *rank)
+unsigned char       NextCharacter (PtrTextBuffer * buffer, int *rank)
 
 #else  /* __STDC__ */
-unsigned char       CarSuivant (buffer, rank)
+unsigned char       NextCharacter (buffer, rank)
 PtrTextBuffer     *buffer;
 int                *rank;
 
@@ -61,17 +61,17 @@ int                *rank;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | CarPrecedent retourne le caractere qui precede le caractere        | */
+/* | PreviousCharacter retourne le caractere qui precede le caractere        | */
 /* |            courant buffer[rank] et met a jour buffer et rank.      | */
 /* |            S'il n'y a pas de caractere precedent retourne le       | */
 /* |            caractere `\0`.                                         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-unsigned char       CarPrecedent (PtrTextBuffer * buffer, int *rank)
+unsigned char       PreviousCharacter (PtrTextBuffer * buffer, int *rank)
 
 #else  /* __STDC__ */
-unsigned char       CarPrecedent (buffer, rank)
+unsigned char       PreviousCharacter (buffer, rank)
 PtrTextBuffer     *buffer;
 int               *rank;
 
@@ -306,7 +306,7 @@ void                RestoreAfterSearch ()
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ArbreSuivant Pour le contexte de recherche context, cherche le  | */
+/* |    NextTree Pour le contexte de recherche context, cherche le  | */
 /* |    prochain arbre a traiter, lorsqu'on est dans une recherche qui  | */
 /* |    porte sur tout le document.                                     | */
 /* |    Met a jour le contexte de recherche pour pouvoir relancer la    | */
@@ -317,10 +317,10 @@ void                RestoreAfterSearch ()
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             ArbreSuivant (PtrElement * pEl, int *charIndx, PtrSearchContext context)
+boolean             NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             ArbreSuivant (pEl, charIndx, context)
+boolean             NextTree (pEl, charIndx, context)
 PtrElement         *pEl;
 int                *charIndx;
 PtrSearchContext           context;
@@ -462,7 +462,7 @@ PtrSearchContext    context;
 	   if (context->SWholeDocument)
 	     {
 		/* get the next tree to process */
-		if (ArbreSuivant (&pEl, &iChar, context))
+		if (NextTree (&pEl, &iChar, context))
 		   if (pEl->ElTypeNumber != CharString + 1)
 		      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	     }
@@ -507,7 +507,7 @@ PtrSearchContext    context;
 	while (charact != 0 && SeparateurMot (charact)
 	       && (pEl != endEl || iChar < endChar))
 	  {
-	     charact = CarSuivant (&pBuf, &index);
+	     charact = NextCharacter (&pBuf, &index);
 	     iChar++;
 	  }
 
@@ -518,7 +518,7 @@ PtrSearchContext    context;
 	       && (pEl != endEl || iChar < endChar))
 	  {
 	     word[len++] = charact;
-	     charact = CarSuivant (&pBuf, &index);
+	     charact = NextCharacter (&pBuf, &index);
 	     iChar++;
 	  }
 
@@ -626,7 +626,7 @@ PtrSearchContext    context;
 	   if (context->SWholeDocument)
 	     {
 		/* cherche l'arbre a traiter avant celui ou` on n'a pas trouve' */
-		if (ArbreSuivant (&pEl, &iChar, context))
+		if (NextTree (&pEl, &iChar, context))
 		   /* Il se peut que l'element rendu soit de type texte */
 		   if (pEl->ElTypeNumber != CharString + 1)
 		      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
@@ -674,7 +674,7 @@ PtrSearchContext    context;
 	while (charact != 0 && iChar >= 0 && SeparateurMot (charact)
 	       && (pEl != endEl || iChar >= endChar))
 	  {
-	     charact = CarPrecedent (&pBuf, &index);
+	     charact = PreviousCharacter (&pBuf, &index);
 	     iChar--;
 	  }
 
@@ -684,7 +684,7 @@ PtrSearchContext    context;
 	       && (pEl != endEl || iChar >= endChar))
 	  {
 	     reverse[len++] = charact;
-	     charact = CarPrecedent (&pBuf, &index);
+	     charact = PreviousCharacter (&pBuf, &index);
 	     iChar--;
 	  }
 

@@ -661,7 +661,7 @@ int                *attrKind;
 	while (pEl != NULL && !found)
 	  {
 	     /* the structure schema of the current element */
-	     pSS = pEl->ElSructSchema;
+	     pSS = pEl->ElStructSchema;
 	     /* one go throw all extension schemas of this one */
 	     do
 	       {
@@ -701,7 +701,7 @@ int                *attrKind;
 	  {
 	     /* looks in the local attributes of the element */
 	     /* at first, looks at the rule defining this element */
-	     pSS = ((PtrElement) element)->ElSructSchema;
+	     pSS = ((PtrElement) element)->ElStructSchema;
 	     pRe1 = &pSS->SsRule[((PtrElement) element)->ElTypeNumber - 1];
 	     do
 	       {
@@ -719,7 +719,7 @@ int                *attrKind;
 		       pSS = pSS->SsNextExtens;
 		       /* looks in schema extension the extension rule for the element */
 		       if (pSS != NULL)
-			  pRe1 = ExtensionRule (((PtrElement) element)->ElSructSchema,
+			  pRe1 = ExtensionRule (((PtrElement) element)->ElStructSchema,
 				       ((PtrElement) element)->ElTypeNumber, pSS);
 		    }
 	       }

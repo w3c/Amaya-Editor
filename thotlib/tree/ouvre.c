@@ -169,7 +169,7 @@ boolean             withAppEvent;
 		       pivotFile = BIOreadOpen (text);
 		       if (pivotFile != 0)
 			 {
-			    ChargeExt (pivotFile, pDoc, NULL, FALSE);
+			    LoadEXTfile (pivotFile, pDoc, NULL, FALSE);
 			    BIOreadClose (pivotFile);
 			 }
 		       /* lit le fichier de mise a jour des references sortantes */
@@ -178,12 +178,12 @@ boolean             withAppEvent;
 		       pivotFile = BIOreadOpen (text);
 		       if (pivotFile != 0)
 			 {
-			    ChargeRef (pivotFile, &pChngRef);
+			    LoadREFfile (pivotFile, &pChngRef);
 			    BIOreadClose (pivotFile);
 			    /* traite les mises a jour de */
 			    /* references sortantes */
 			    if (pChngRef != NULL)
-			       MiseAJourRef (pChngRef, pDoc);
+			       UpdateREFdescriptors (pChngRef, pDoc);
 			 }
 		       /* libere les descripteurs d'element reference' inutilise's */
 		       FreeUnusedReferredElemDesc (pDoc);

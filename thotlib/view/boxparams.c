@@ -52,7 +52,7 @@ int                 Zoom;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	pFrame->FrVisibility = Visibilite;
 	pFrame->FrMagnification = Zoom;
      }
@@ -80,7 +80,7 @@ int                *Zoom;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	*Visibilite = pFrame->FrVisibility;
 	*Zoom = pFrame->FrMagnification;
      }
@@ -121,10 +121,10 @@ int                 Zoom;
    c1 = 0;
    cN = 0;
    /* On enregistre le seuil de visibilite et facteur de zoom de la fenetre */
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    pFrame->FrVisibility = Visibilite;
    pFrame->FrMagnification = Zoom;
-   EvalAffich = FALSE;
+   ReadyToDisplay = FALSE;
    if (pFrame->FrAbstractBox != NULL)
       /* On sauvegarde la selection courante dans la fenetre */
      {
@@ -174,18 +174,18 @@ int                 Zoom;
 	DisplayFrame (frame);
 	/* On restaure la selection courante dans la fenetre */
 	if (unique)
-	   PoseSelect (frame, pv1, c1, cN, TRUE, TRUE, unique);
+	   InsertViewSelMarks (frame, pv1, c1, cN, TRUE, TRUE, unique);
 	/* La selection porte sur plusieurs paves */
 	else
 	  {
 	     if (pv1 != NULL)
-		PoseSelect (frame, pv1, c1, 0, TRUE, FALSE, FALSE);
+		InsertViewSelMarks (frame, pv1, c1, 0, TRUE, FALSE, FALSE);
 	     if (pvN != NULL)
-		PoseSelect (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
+		InsertViewSelMarks (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
 	     /* On visualise la selection que l'on vient de poser */
 	  }
-	SetSelect (frame, TRUE);
+	SwitchSelection (frame, TRUE);
      }
-   EvalAffich = TRUE;
+   ReadyToDisplay = TRUE;
 }
 /* End Of Module option */

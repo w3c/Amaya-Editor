@@ -201,7 +201,7 @@ boolean             select;
 	  {
 	     visible = TRUE;
 	     pAb->AbChange = TRUE;
-	     if (!VueAssoc (pEl))
+	     if (!AssocView (pEl))
 		pDoc->DocViewModifiedAb[view] = Englobant (pAb, pDoc->DocViewModifiedAb[view]);
 	     else
 		pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
@@ -217,7 +217,7 @@ boolean             select;
 	  }
      }
    /* reaffiche toutes les views */
-   RazSelect ();
+   ClearAllViewSelection ();
    if (visible)
      {
 	AbstractImageUpdated (pDoc);

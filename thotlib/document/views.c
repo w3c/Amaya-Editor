@@ -142,7 +142,7 @@ boolean             assoc;
 	if (ElAssoc == NULL)
 	   paginer = FALSE;
 	else
-	   paginer = ElAssoc->ElSructSchema->SsPSchema->
+	   paginer = ElAssoc->ElStructSchema->SsPSchema->
 	      PsAssocPaginated[ElAssoc->ElTypeNumber - 1];
      }
    else
@@ -479,7 +479,7 @@ AvailableView           LesVues;
 				  a++;
 				  if (pDoc->DocAssocRoot[a - 1] != NULL)
 				     if (pDoc->DocAssocRoot[a - 1]->ElTypeNumber == r)
-					if (pDoc->DocAssocRoot[a - 1]->ElSructSchema == pSc1)
+					if (pDoc->DocAssocRoot[a - 1]->ElStructSchema == pSc1)
 					   /* il existe des elements associes de ce type */
 					  {
 					     assocexiste = TRUE;
@@ -815,7 +815,7 @@ PtrDocument         pDoc;
    PtrElement          pEl1;
 
    /* conserve la liste des vues ou l'element a des paves */
-   if (!VueAssoc (pEl))
+   if (!AssocView (pEl))
       for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	 ACreer[vue - 1] = pEl->ElAbstractBox[vue - 1] != NULL;
    else
@@ -875,7 +875,7 @@ PtrDocument         pDoc;
    CopyIncludedElem (pEl, pDoc);
    /* cree les paves de la nouvelle copie dans les vues ou il y avait */
    /* deja des paves */
-   if (!VueAssoc (pEl))
+   if (!AssocView (pEl))
      {
 	for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	   if (ACreer[vue - 1])
@@ -892,7 +892,7 @@ PtrDocument         pDoc;
 	   pDoc->DocAssocVolume[pEl->ElAssocNum - 1];
 	CrPaveNouv (pEl, pDoc, 1);
      }
-   ApplReglesRetard (pEl, pDoc);
+   ApplDelayedRule (pEl, pDoc);
    /* reaffiche l'element dans toutes les vues ou il existe */
    AbstractImageUpdated (pDoc);
    RedisplayDocViews (pDoc);
@@ -953,7 +953,7 @@ PtrDocument         pDoc;
 				   /* ete fait */
 				   if (!RestaureSel)
 				     {
-					RazSelect ();
+					ClearAllViewSelection ();
 					RestaureSel = TRUE;
 				     }
 				   /* refait la copie de l'element inclus */
@@ -1017,7 +1017,7 @@ char               *Nm;
 	 if (pDoc->DocAssocFrame[vue - 1] != 0)
 	    /* met dans le buffer le nom des elements associes */
 	   {
-	      strncpy (&texte[lg], pDoc->DocAssocRoot[vue - 1]->ElSructSchema->SsRule[pDoc->DocAssocRoot[vue - 1]->ElTypeNumber - 1].SrName,
+	      strncpy (&texte[lg], pDoc->DocAssocRoot[vue - 1]->ElStructSchema->SsRule[pDoc->DocAssocRoot[vue - 1]->ElTypeNumber - 1].SrName,
 		       MAX_NAME_LENGTH);
 	      /* change le titre de la fenetre */
 	      ChangeTitre (pDoc->DocAssocFrame[vue - 1], texte);
@@ -1416,7 +1416,7 @@ int                 nframe;
 	/* desactive la vue si elle est active */
 	DesactVue (pD, nv, assoc);
 	/* detruit la fenetre */
-	DetruitFenetre (nframe);
+	DestroyFrame (nframe);
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	/* detruit le contexte de la vue */
 	detruit (pD, nv, assoc, TRUE);
@@ -1572,7 +1572,7 @@ PtrDocument         pDoc;
 		  pDoc->DocViewFreeVolume[0] = THOT_MAXINT;
 	       }
 #endif /* __COLPAGE__ */
-	     pDoc->DocViewRootAb[0] = CreePaves (pDoc->DocRootElement, pDoc, 1,
+	     pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement, pDoc, 1,
 						TRUE, TRUE, &complet);
 #ifdef __COLPAGE__
 	     /* sauvegarde de l'image abstraite pour tests */
@@ -1960,7 +1960,7 @@ PtrElement          RacineVue;
 	       {
 		  elass++;
 		  if (pDoc->DocAssocRoot[elass - 1] != NULL)
-		     if (pDoc->DocAssocRoot[elass - 1]->ElSructSchema->SsCode
+		     if (pDoc->DocAssocRoot[elass - 1]->ElStructSchema->SsCode
 			 == pSS->SsCode)
 			assocexiste = pDoc->DocAssocRoot[elass - 1]->ElTypeNumber == r;
 	       }
@@ -2071,7 +2071,7 @@ PtrElement          RacineVue;
 		     debut = TRUE;
 	       }
 	     if (debut)
-		pAb = CreePaves (pDoc->DocAssocRoot[elass - 1], pDoc, 1, TRUE, TRUE, &complet);
+		pAb = AbsBoxesCreate (pDoc->DocAssocRoot[elass - 1], pDoc, 1, TRUE, TRUE, &complet);
 	     else
 		/* on cree l'image abstraite autour du premier */
 		/* element selectionne' */
@@ -2115,7 +2115,7 @@ PtrElement          RacineVue;
 	   /* le debut du document */
 
 	   pDoc->DocViewRootAb[vuelibre - 1] =
-	      CreePaves (pDoc->DocRootElement, pDoc, vuelibre, TRUE, TRUE, &complet);
+	      AbsBoxesCreate (pDoc->DocRootElement, pDoc, vuelibre, TRUE, TRUE, &complet);
 
 	else
 	  {
@@ -2150,7 +2150,7 @@ PtrElement          RacineVue;
 		     /* document, on cree la nouvelle image depuis */
 		     /* le debut du document */
 
-		     pDoc->DocViewRootAb[vuelibre - 1] = CreePaves (pDoc->DocRootElement,
+		     pDoc->DocViewRootAb[vuelibre - 1] = AbsBoxesCreate (pDoc->DocRootElement,
 				      pDoc, vuelibre, TRUE, TRUE, &complet);
 
 		  else
@@ -2229,7 +2229,7 @@ int                 H;
 	  {
 	     VueSch = 1;
 	     pEl = pDoc->DocAssocRoot[vue - 1];
-	     strncpy (nom, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+	     strncpy (nom, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	  }
 	else
 	  {
@@ -2662,9 +2662,9 @@ boolean             assoc;
 		  DesactVue (pDoc, nv, assoc);
 		  /* fait detruire la fenetre par le mediateur */
 		  if (assoc)
-		     DetruitFenetre (pDoc->DocAssocFrame[nv - 1]);
+		     DestroyFrame (pDoc->DocAssocFrame[nv - 1]);
 		  else
-		     DetruitFenetre (pDoc->DocViewFrame[nv - 1]);
+		     DestroyFrame (pDoc->DocViewFrame[nv - 1]);
 		  notifyDoc.event = TteViewClose;
 		  notifyDoc.document = (Document) IdentDocument (pDoc);
 		  if (assoc)

@@ -137,7 +137,7 @@ boolean             withAppEvent;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) (pEl->ElParent);
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     pSibling = pEl;
 	     nSiblings = 1;
 	     while (pSibling->ElPrevious != NULL)
@@ -257,7 +257,7 @@ boolean             withAppEvent;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl2;
 	     notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElSructSchema);
+	     notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
 	     notifyEl.position = 0;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
@@ -307,8 +307,8 @@ boolean             withAppEvent;
 	   if (pEl2->ElLeafType == LtText && pEl2->ElTerminal)
 	      if (pEl2->ElLanguage == pEl->ElLanguage)
 		 if (pEl1->ElSource == NULL && pEl2->ElSource == NULL)
-		    if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant)
-		       if (pEl2->ElSructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+		    if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant)
+		       if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
 			 {
 			    merge = TRUE;
 			    if (withAppEvent)
@@ -319,7 +319,7 @@ boolean             withAppEvent;
 				 notifyEl.document = (Document) IdentDocument (pDoc);
 				 notifyEl.element = (Element) pEl2;
 				 notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
-				 notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElSructSchema);
+				 notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
 				 notifyEl.position = 1;
 				 if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 				    /* l'application refuse la destruction, on ne fait rien */
@@ -446,7 +446,7 @@ boolean             withAppEvent;
 				      notifyEl.document = (Document) IdentDocument (pDoc);
 				      notifyEl.element = (Element) (pEl2->ElParent);
 				      notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
-				      notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElSructSchema);
+				      notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
 				      nSiblings = 0;
 				      pSibling = pEl2;
 				      while (pSibling->ElPrevious != NULL)

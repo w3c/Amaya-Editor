@@ -127,8 +127,8 @@ ElementType         elementType;
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 	     LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
-	if (element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-	   if (!element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
+	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
      }
    return ((Element) element);
@@ -194,8 +194,8 @@ char               *label;
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 		     LoadedDocument[document - 1], 0, TRUE, TRUE, TRUE,
 			      (*label) == '\0');
-	if (element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-	   if (!element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
+	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
 	if (*label != '\0')
 	   strncpy (element->ElLabel, label, MAX_LABEL_LEN);
@@ -352,25 +352,25 @@ Element             parent;
      {
 	/* cherche le schema de structure a utiliser pour la copie */
 	if (sourceDocument == destinationDocument)
-	   pSS = ((PtrElement) sourceElement)->ElSructSchema;
+	   pSS = ((PtrElement) sourceElement)->ElStructSchema;
 	else
 	  {
 	     pSS = NULL;
 	     ancestor = (PtrElement) parent;
 	     while (pSS == NULL && ancestor != NULL)
-		if (ancestor->ElSructSchema->SsCode ==
-		    ((PtrElement) sourceElement)->ElSructSchema->SsCode)
-		   pSS = ancestor->ElSructSchema;
+		if (ancestor->ElStructSchema->SsCode ==
+		    ((PtrElement) sourceElement)->ElStructSchema->SsCode)
+		   pSS = ancestor->ElStructSchema;
 		else
 		   ancestor = ancestor->ElParent;
 	     if (pSS == NULL)
 		if (LoadedDocument[destinationDocument - 1]->DocSSchema->SsCode ==
-		    ((PtrElement) sourceElement)->ElSructSchema->SsCode)
+		    ((PtrElement) sourceElement)->ElStructSchema->SsCode)
 		   pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
 		else if (((PtrElement) sourceElement)->ElTerminal)
-		   pSS = ((PtrElement) parent)->ElSructSchema;
+		   pSS = ((PtrElement) parent)->ElStructSchema;
 		else
-		   pSS = ((PtrElement) sourceElement)->ElSructSchema;
+		   pSS = ((PtrElement) sourceElement)->ElStructSchema;
 	  }
 	/* effectue la copie */
 	element = CopyTree (((PtrElement) sourceElement),
@@ -467,7 +467,7 @@ boolean             withContent;
 	if (!pEl->ElTerminal)
 	   /* on ne cree pas de descendance dans une copie */
 	   if (!pEl->ElIsCopy)
-	      firstCreated = CreateDescendant (pEl->ElTypeNumber, pEl->ElSructSchema,
+	      firstCreated = CreateDescendant (pEl->ElTypeNumber, pEl->ElStructSchema,
 		  LoadedDocument[document - 1], &lastCreated, pEl->ElAssocNum,
 					  elementType.ElTypeNum,
 				    (PtrSSchema) (elementType.ElSSchema));
@@ -496,7 +496,7 @@ boolean             withContent;
 	     lastNew = firstCreated;
 	     while (lastNew->ElNext != NULL)
 		lastNew = lastNew->ElNext;
-	     if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+	     if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
 	       {
 		  if (lastCreated == firstCreated)
 		     ident = TRUE;
@@ -514,7 +514,7 @@ boolean             withContent;
 	     else
 	       {
 		  if (AllowedFirstChild (pEl, LoadedDocument[document - 1],
-			    firstCreated->ElTypeNumber, firstCreated->ElSructSchema,
+			    firstCreated->ElTypeNumber, firstCreated->ElStructSchema,
 					   FALSE, FALSE))
 		    {
 		       pFils = pEl->ElFirstChild;
@@ -539,7 +539,7 @@ boolean             withContent;
 		       while (pFils != NULL && !ok)
 			 {
 			    if (AllowedSibling (pFils, LoadedDocument[document - 1],
-			    firstCreated->ElTypeNumber, firstCreated->ElSructSchema,
+			    firstCreated->ElTypeNumber, firstCreated->ElStructSchema,
 						FALSE, FALSE, FALSE))
 			       /* notre arbre peut se placer apres pFils */
 			       if (pFils->ElNext == NULL)
@@ -551,7 +551,7 @@ boolean             withContent;
 				  ok = AllowedSibling (pFils->ElNext,
 						 LoadedDocument[document - 1],
 						       firstCreated->ElTypeNumber,
-						  firstCreated->ElSructSchema,
+						  firstCreated->ElStructSchema,
 						       TRUE, FALSE, FALSE);
 			    if (!ok)
 			       pFils = pFils->ElNext;
@@ -574,9 +574,9 @@ boolean             withContent;
 #endif
 		  if (withContent)
 		     if (!lastCreated->ElTerminal)
-			if (lastCreated->ElSructSchema->SsRule[lastCreated->ElTypeNumber - 1].SrConstruct != CsChoice)
+			if (lastCreated->ElStructSchema->SsRule[lastCreated->ElTypeNumber - 1].SrConstruct != CsChoice)
 			  {
-			     pFils = NewSubtree (lastCreated->ElTypeNumber, lastCreated->ElSructSchema, LoadedDocument[document - 1], lastCreated->ElAssocNum, TRUE, FALSE, TRUE, TRUE);
+			     pFils = NewSubtree (lastCreated->ElTypeNumber, lastCreated->ElStructSchema, LoadedDocument[document - 1], lastCreated->ElAssocNum, TRUE, FALSE, TRUE, TRUE);
 			     if (pFils != NULL)
 				InsertFirstChild (lastCreated, pFils);
 			  }
@@ -800,16 +800,16 @@ Document            document;
 	/* verifie que le type de l'arbre est defini dans le schema */
 	/* du document ou dans l'une de ses extensions */
 	trouve = FALSE;
-	if (pDoc->DocSSchema->SsCode == pRoot->ElSructSchema->SsCode)
+	if (pDoc->DocSSchema->SsCode == pRoot->ElStructSchema->SsCode)
 	   /* schema du document */
 	   trouve = TRUE;
-	else if (pRoot->ElSructSchema->SsExtension)
+	else if (pRoot->ElStructSchema->SsExtension)
 	   /* l'arbre est defini par une extension de schema */
 	   /* Est-ce une extension de ce document ? */
 	  {
 	     curExtension = pDoc->DocSSchema->SsNextExtens;
 	     while (!trouve && curExtension != NULL)
-		if (pRoot->ElSructSchema->SsCode == curExtension->SsCode)
+		if (pRoot->ElStructSchema->SsCode == curExtension->SsCode)
 		   trouve = TRUE;
 		else
 		   curExtension = curExtension->SsNextExtens;
@@ -822,7 +822,7 @@ Document            document;
 	  }
 	else
 	  {
-	     if (pRoot->ElTypeNumber == pRoot->ElSructSchema->SsRootElem)
+	     if (pRoot->ElTypeNumber == pRoot->ElStructSchema->SsRootElem)
 		/* c'est l'arbre principal */
 	       {
 #ifndef NODISPLAY
@@ -843,7 +843,7 @@ Document            document;
 	     else
 	       {
 		  /* on accede a la regle qui definit la racine de l'arbre */
-		  pRegle = &pRoot->ElSructSchema->SsRule[pRoot->ElTypeNumber - 1];
+		  pRegle = &pRoot->ElStructSchema->SsRule[pRoot->ElTypeNumber - 1];
 		  if (pRegle->SrConstruct != CsList)
 		     /* ce n'est pas une liste, erreur */
 		    {
@@ -854,7 +854,7 @@ Document            document;
 		    {
 		       /* on accede a la regle qui definit les elements de */
 		       /* la liste */
-		       pRegle = &pRoot->ElSructSchema->SsRule[pRegle->SrListItem - 1];
+		       pRegle = &pRoot->ElStructSchema->SsRule[pRegle->SrListItem - 1];
 		       if (!pRegle->SrAssocElem)
 			  /* les elements de la liste ne sont pas des */
 			  /* elements associes, erreur */
@@ -981,7 +981,7 @@ Document            document;
       if (AvecControleStruct && !AllowedSibling ((PtrElement) sibling,
 						 LoadedDocument[document - 1],
 					  ((PtrElement) newElement)->ElTypeNumber,
-				     ((PtrElement) newElement)->ElSructSchema,
+				     ((PtrElement) newElement)->ElStructSchema,
 						 before, FALSE, FALSE))
      {
 	TtaError (ERR_element_does_not_match_DTD);
@@ -1018,7 +1018,7 @@ Document            document;
 				      LoadedDocument[document - 1]);
 	     /* s'il s'agit d'un element de paire, etablit le */
 	     /* chainage avec son homologue */
-	     if (((PtrElement) newElement)->ElSructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+	     if (((PtrElement) newElement)->ElStructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 		GetOtherPairedElement ((PtrElement) newElement);
 #ifndef NODISPLAY
 	     /* traite les attributs requis des elements crees */
@@ -1097,7 +1097,7 @@ Document            document;
    else
      {
 
-	if (((PtrElement) parent)->ElSructSchema->SsRule[((PtrElement) parent)->ElTypeNumber - 1].SrConstruct == CsChoice)
+	if (((PtrElement) parent)->ElStructSchema->SsRule[((PtrElement) parent)->ElTypeNumber - 1].SrConstruct == CsChoice)
 	  {
 	     ((PtrElement) (*newElement))->ElAssocNum = ((PtrElement) parent)->ElAssocNum;
 #ifndef NODISPLAY
@@ -1110,7 +1110,7 @@ Document            document;
 	  }
 	else if (AvecControleStruct
 		 && !AllowedFirstChild ((PtrElement) parent, LoadedDocument[document - 1],
-					  ((PtrElement) (*newElement))->ElTypeNumber, ((PtrElement) (*newElement))->ElSructSchema, FALSE, FALSE))
+					  ((PtrElement) (*newElement))->ElTypeNumber, ((PtrElement) (*newElement))->ElStructSchema, FALSE, FALSE))
 	   TtaError (ERR_element_does_not_match_DTD);
 	else
 	  {
@@ -2098,7 +2098,7 @@ Element             element;
      }
    else
      {
-	elementType.ElSSchema = (SSchema) ((PtrElement) element)->ElSructSchema;
+	elementType.ElSSchema = (SSchema) ((PtrElement) element)->ElStructSchema;
 	elementType.ElTypeNum = ((PtrElement) element)->ElTypeNumber;
      }
    return elementType;
@@ -2864,11 +2864,11 @@ Element             element;
      {
 	TtaError (ERR_invalid_parameter);
      }
-   else if (((PtrElement) element)->ElSructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsPairedElement)
+   else if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsPairedElement)
      {
 	TtaError (ERR_invalid_element_type);
      }
-   else if (((PtrElement) element)->ElSructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrFirstOfPair)
+   else if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrFirstOfPair)
       result = 1;
    return result;
 }
@@ -3356,7 +3356,7 @@ Element             element;
      {
 	TtaError (ERR_invalid_parameter);
      }
-   else if (((PtrElement) element)->ElSructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsPairedElement)
+   else if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsPairedElement)
      {
 	TtaError (ERR_invalid_element_type);
      }

@@ -66,7 +66,7 @@ char                BufMenu[MAX_TXT_LEN];
    strcpy (&BufMenu[i], "B^ ");
    pEl = SelMenuParentEl;
    if (pEl != NULL)
-      strcat (&BufMenu[i], pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+      strcat (&BufMenu[i], pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
    i += strlen (&BufMenu[i]) + 1;
 
    /* element selectionable precedent */
@@ -79,7 +79,7 @@ char                BufMenu[MAX_TXT_LEN];
 	   NomElem = TypePageCol (pEl);
 	else
 #else  /* __COLPAGE__ */
-	NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
 #endif /* __COLPAGE__ */
      }
@@ -95,7 +95,7 @@ char                BufMenu[MAX_TXT_LEN];
 	   NomElem = TypePageCol (pEl);
 	else
 #else  /* __COLPAGE__ */
-	NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
 #endif /* __COLPAGE__ */
      }
@@ -111,7 +111,7 @@ char                BufMenu[MAX_TXT_LEN];
 	   NomElem = TypePageCol (pEl);
 	else
 #else  /* __COLPAGE__ */
-	NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
 #endif /* __COLPAGE__ */
      }
@@ -205,7 +205,7 @@ char                BufMenu[MAX_TXT_LEN];
 	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
-	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	   NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
 	SelMenuPageColParent = pEl;
      }
@@ -295,7 +295,7 @@ char                BufMenu[MAX_TXT_LEN];
 	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
-	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	   NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
 	SelMenuPageColPrev = pEl;
      }
@@ -379,7 +379,7 @@ char                BufMenu[MAX_TXT_LEN];
 	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
-	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	   NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
 	SelMenuPageColNext = pEl;
      }
@@ -469,7 +469,7 @@ char                BufMenu[MAX_TXT_LEN];
 	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
-	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	   NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
 	SelMenuPageColChild = pEl;
      }

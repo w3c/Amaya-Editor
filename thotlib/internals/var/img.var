@@ -2,11 +2,11 @@
  * Global variables for building Concrete Images
  */
 
-EXPORT ViewFrame 	FntrTable[MAX_FRAME];
-EXPORT Propagation	Propage;/* Fix limits of the updates propagation */
-EXPORT boolean 	EvalAffich;
-EXPORT boolean 	Complete;	/* The frame is currently updated */
-EXPORT boolean 	Insert;		/* Text is currently inserted */
-EXPORT boolean	EnCreation;	/* Boxes are currently created */
-EXPORT PtrBox 	Englobement;	/* Root box to repack */
-EXPORT PtrDimRelations RetardeEngl;/* Differed packing */
+EXPORT ViewFrame 	ViewFrameTable[MAX_FRAME];
+EXPORT Propagation	Propagate;/* Fix limits of the updates propagation */
+EXPORT boolean 	ReadyToDisplay;
+EXPORT boolean 	FrameUpdating;	/* The frame is currently updated */
+EXPORT boolean 	TextInserting;		/* Text is currently inserted */
+EXPORT boolean	BoxCreating;	/* Boxes are currently created */
+EXPORT PtrBox 	PackBoxRoot;	/* Root box to repack */
+EXPORT PtrDimRelations DifferedPackBlocks;/* Differed packing */

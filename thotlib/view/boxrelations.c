@@ -338,7 +338,7 @@ boolean             enclosed;
 	  {
 	     /* Dependance de position */
 	     pBox->BxXOutOfStruct = status;
-	     /* Propage aussi le non englobement */
+	     /* Propagate aussi le non englobement */
 	     if (pAb->AbEnclosing == pCurrentAb->AbEnclosing)
 		/* une boite soeur positionnee par rapport a une boite */
 		/* elastique non englobee n'est pas englobee elle-meme */
@@ -387,7 +387,7 @@ boolean             enclosed;
 	else if (pAb->AbVertPos.PosAbRef == pCurrentAb && !pAb->AbVertPosChange)
 	  {
 	     pBox->BxYOutOfStruct = status;
-	     /* Propage aussi le non englobement */
+	     /* Propagate aussi le non englobement */
 	     if (pAb->AbEnclosing == pCurrentAb->AbEnclosing)
 		/* une boite soeur positionnee par rapport a une boite */
 		/* elastique non englobee n'est pas englobee elle-meme */
@@ -517,7 +517,7 @@ boolean           horizRef;
 		  if (pAb->AbEnclosing != pCurrentAb->AbEnclosing)
 		    {
 		       /* La boite est liee a une boite hors-structure */
-		       if (!XEnAbsolu (pBox))
+		       if (!IsXPosComplete (pBox))
 			  /* la boite  devient maintenant placee en absolu */
 			  pBox->BxXToCompute = TRUE;
 		       pBox->BxXOutOfStruct = TRUE;
@@ -531,7 +531,7 @@ boolean           horizRef;
 			 {
 			    /* La boite herite la relation hors-structure */
 			    /* ou bien elle est liee a une dimension hors-structure */
-			    if (!XEnAbsolu (pBox))
+			    if (!IsXPosComplete (pBox))
 			       /* la boite  devient maintenant placee en absolu */
 			       pBox->BxXToCompute = TRUE;
 			    pBox->BxXOutOfStruct = TRUE;
@@ -626,7 +626,7 @@ boolean           horizRef;
 		  if (pAb->AbEnclosing != pCurrentAb->AbEnclosing)
 		    {
 		       /* La boite est liee a une boite hors-structure */
-		       if (!YEnAbsolu (pBox))
+		       if (!IsYPosComplete (pBox))
 			  /* la boite  est maintenant placee en absolu */
 			  pBox->BxYToCompute = TRUE;
 		       pBox->BxYOutOfStruct = TRUE;
@@ -640,7 +640,7 @@ boolean           horizRef;
 			 {
 			    /* La boite herite la relation hors-structure */
 			    /* ou bien elle est liee a une dimension hors-structure */
-			    if (!YEnAbsolu (pBox))
+			    if (!IsYPosComplete (pBox))
 			       /* la boite  est maintenant placee en absolu */
 			       pBox->BxYToCompute = TRUE;
 			    pBox->BxYOutOfStruct = TRUE;
@@ -790,10 +790,10 @@ boolean           horizRef;
 	 }
 
    /* regarde si la position depend d'une boite invisible */
-   if (pBox->BxAbstractBox->AbVisibility < FntrTable[frame - 1].FrVisibility)
+   if (pBox->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
       dist = 0;
    else if (pAb != NULL)
-      if (pAb->AbVisibility < FntrTable[frame - 1].FrVisibility)
+      if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
 	 dist = 0;
 
    /* Met a jour l'origine de la boite suivant la relation indiquee */
@@ -804,9 +804,9 @@ boolean           horizRef;
 	     x = x + dist - pBox->BxXOrg;
 	     if (x == 0 && pBox->BxXToCompute)
 		/* Force le placement des boites filles */
-		DepXContenu (pBox, x, frame);
+		XMoveAllEnclosed (pBox, x, frame);
 	     else
-		DepOrgX (pBox, NULL, x, frame);
+		XMove (pBox, NULL, x, frame);
 	  }
 	/* la regle de position est interpretee */
 	pCurrentAb->AbHorizPosChange = FALSE;
@@ -818,9 +818,9 @@ boolean           horizRef;
 	     y = y + dist - pBox->BxYOrg;
 	     if (y == 0 && pBox->BxYToCompute)
 		/* Force le placement des boites filles */
-		DepYContenu (pBox, y, frame);
+		YMoveAllEnclosed (pBox, y, frame);
 	     else
-		DepOrgY (pBox, NULL, y, frame);
+		YMove (pBox, NULL, y, frame);
 	  }
 	/* la regle de position est interpretee */
 	pCurrentAb->AbVertPosChange = FALSE;
@@ -833,9 +833,9 @@ boolean           horizRef;
 	pCurrentBox->BxMoved = NULL;
 
 	if (horizRef && pBox->BxHorizFlex)
-	   ChngBElast (pBox, pCurrentBox, op, x + dist - pBox->BxXOrg, frame, TRUE);
+	   MoveBoxEdge (pBox, pCurrentBox, op, x + dist - pBox->BxXOrg, frame, TRUE);
 	else if (!horizRef && pBox->BxVertFlex)
-	   ChngBElast (pBox, pCurrentBox, op, y + dist - pBox->BxYOrg, frame, FALSE);
+	   MoveBoxEdge (pBox, pCurrentBox, op, y + dist - pBox->BxYOrg, frame, FALSE);
      }
 }
 
@@ -1135,7 +1135,7 @@ boolean             horizRef;
    defaultDim = FALSE;
 
    /* On verifie que la boite est visible */
-   if (pAb->AbVisibility >= FntrTable[frame - 1].FrVisibility)
+   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
      {
 	pParentAb = pAb->AbEnclosing;
 	/* Les cas de coherence sur les boites elastiques */
@@ -1252,7 +1252,7 @@ boolean             horizRef;
 			     val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val);
 			  else
 			     val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
-			  ModLarg (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
+			  ResizeWidth (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
 		       }
 		  }
 	     /* la hauteur est contrainte (par heritage ou imposee) ? */
@@ -1269,7 +1269,7 @@ boolean             horizRef;
 			     val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val);
 			  else
 			     val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
-			  ModHaut (pBox, pBox, NULL, val - pBox->BxHeight, frame);
+			  ResizeHeight (pBox, pBox, NULL, val - pBox->BxHeight, frame);
 		       }
 		  }
 
@@ -1297,7 +1297,7 @@ boolean             horizRef;
 			       }
 			     else
 				delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
-			     ModLarg (pBox, pBox, NULL, delta - pBox->BxWidth, 0, frame);
+			     ResizeWidth (pBox, pBox, NULL, delta - pBox->BxWidth, 0, frame);
 			  }
 		  /* Deuxieme cas de coherence */
 		  /* La boite ne peut pas prendre la taille de son englobante si : */
@@ -1367,7 +1367,7 @@ boolean             horizRef;
 					    val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val);
 					 else
 					    val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
-					 ModLarg (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
+					 ResizeWidth (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
 					 /* On teste si la relation est hors structure */
 					 if (pDimAb->DimAbRef != pParentAb
 					     && pDimAb->DimAbRef->AbEnclosing != pParentAb)
@@ -1396,7 +1396,7 @@ boolean             horizRef;
 			     delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxHeight);
 			  else
 			     delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
-			  ModHaut (pBox, pBox, NULL, delta - pBox->BxHeight, frame);
+			  ResizeHeight (pBox, pBox, NULL, delta - pBox->BxHeight, frame);
 		       }
 		  /* Deuxieme cas de coherence */
 		  /* La boite ne peut pas prendre la taille de son englobante si : */
@@ -1480,7 +1480,7 @@ boolean             horizRef;
 					 val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val);
 				      else
 					 val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
-				      ModHaut (pBox, pBox, NULL, val - pBox->BxHeight, frame);
+				      ResizeHeight (pBox, pBox, NULL, val - pBox->BxHeight, frame);
 				      /* On teste si la relation est hors structure */
 				      if (pDimAb->DimAbRef != pParentAb
 					  && pDimAb->DimAbRef->AbEnclosing != pParentAb)
@@ -1531,7 +1531,7 @@ boolean             horizRef;
 			    if (pChildAb->AbHorizPos.PosAbRef == pAb
 			      && pChildAb->AbHorizPos.PosRefEdge != Left)
 			      {
-				 if (!XEnAbsolu (pChildAb->AbBox))
+				 if (!IsXPosComplete (pChildAb->AbBox))
 				    /* la boite  est maintenant placee en absolu */
 				    pChildAb->AbBox->BxXToCompute = TRUE;
 				 pChildAb->AbBox->BxXOutOfStruct = TRUE;
@@ -1545,7 +1545,7 @@ boolean             horizRef;
 				&& pAb->AbLeafType == LtCompound
 				&& pAb->AbInLine)
 			      {
-				 if (!YEnAbsolu (pChildAb->AbBox))
+				 if (!IsYPosComplete (pChildAb->AbBox))
 				    /* la boite  est maintenant placee en absolu */
 				    pChildAb->AbBox->BxYToCompute = TRUE;
 				 pChildAb->AbBox->BxYOutOfStruct = TRUE;
@@ -1572,7 +1572,7 @@ boolean             horizRef;
 	     if (pRefBox != NULL)
 	       {
 		  /* regarde si la position depend d'une boite invisible */
-		  if (pPosAb->PosAbRef->AbVisibility < FntrTable[frame - 1].FrVisibility)
+		  if (pPosAb->PosAbRef->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
 		     delta = 0;
 		  else if (pPosAb->PosUnit == UnPercent)
 		    {
@@ -1611,13 +1611,13 @@ boolean             horizRef;
 		  pBox->BxHorizEdge = NoEdge;
 		  InsertPosRelation (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
 
-		  if (!XEnAbsolu (pBox))
+		  if (!IsXPosComplete (pBox))
 		     /* la boite  devient maintenant placee en absolu */
 		     pBox->BxXToCompute = TRUE;
 		  /* La boite est marquee elastique */
 		  pBox->BxHorizFlex = TRUE;
 		  pRefBox->BxMoved = NULL;
-		  ChngBElast (pBox, pRefBox, op, val, frame, TRUE);
+		  MoveBoxEdge (pBox, pRefBox, op, val, frame, TRUE);
 	       }
 	  }
 	else
@@ -1645,7 +1645,7 @@ boolean             horizRef;
 			  if (pChildAb->AbVertPos.PosAbRef == pAb
 			      && pChildAb->AbVertPos.PosRefEdge != Top)
 			    {
-			       if (!YEnAbsolu (pChildAb->AbBox))
+			       if (!IsYPosComplete (pChildAb->AbBox))
 				  /* la boite  est maintenant placee en absolu */
 				  pChildAb->AbBox->BxYToCompute = TRUE;
 			       pChildAb->AbBox->BxYOutOfStruct = TRUE;
@@ -1670,7 +1670,7 @@ boolean             horizRef;
 	     if (pRefBox != NULL)
 	       {
 		  /* regarde si la position depend d'une boite invisible */
-		  if (pPosAb->PosAbRef->AbVisibility < FntrTable[frame - 1].FrVisibility)
+		  if (pPosAb->PosAbRef->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
 		     delta = 0;
 		  else if (pPosAb->PosUnit == UnPercent)
 		    {
@@ -1707,13 +1707,13 @@ boolean             horizRef;
 		  pBox->BxVertEdge = NoEdge;
 		  InsertPosRelation (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
 
-		  if (!YEnAbsolu (pBox))
+		  if (!IsYPosComplete (pBox))
 		     /* la boite  devient maintenant placee en absolu */
 		     pBox->BxYToCompute = TRUE;
 		  /* La boite est marquee elastique */
 		  pBox->BxVertFlex = TRUE;
 		  pRefBox->BxMoved = NULL;
-		  ChngBElast (pBox, pRefBox, op, val, frame, FALSE);
+		  MoveBoxEdge (pBox, pRefBox, op, val, frame, FALSE);
 	       }
 	  }
      }
@@ -1845,7 +1845,7 @@ boolean           horizRef;
 	y = 0;
      }
    /* L'axe est place par rapport a une incluse */
-   else if (Propage != ToSiblings)
+   else if (Propagate != ToSiblings)
      {
 	/* Il faut peut-etre envisager que pCurrentBox soit une boite coupee */
 	x = pCurrentBox->BxXOrg - pBox->BxXOrg;
@@ -1888,7 +1888,7 @@ boolean           horizRef;
    if (horizRef)
      {
 	x = x + dist - pBox->BxVertRef;
-	DepAxe (pBox, NULL, x, frame);
+	MoveVertRef (pBox, NULL, x, frame);
 	/* la regle axe de reference est interpretee */
 	pCurrentAb->AbVertRefChange = FALSE;
 	if (pCurrentBox != NULL)
@@ -1897,7 +1897,7 @@ boolean           horizRef;
    else
      {
 	y = y + dist - pBox->BxHorizRef;
-	DepBase (pBox, NULL, y, frame);
+	MoveHorizRef (pBox, NULL, y, frame);
 	/* la regle axe de reference est interpretee */
 	pCurrentAb->AbHorizRefChange = FALSE;
 	if (pCurrentBox != NULL)
@@ -2593,7 +2593,7 @@ int                 frame;
 		       pOrginBox->BxHorizFlex = FALSE;
 
 		       /* Annule la largeur de la boite */
-		       ModLarg (pOrginBox, NULL, NULL, -pOrginBox->BxWidth, 0, frame);
+		       ResizeWidth (pOrginBox, NULL, NULL, -pOrginBox->BxWidth, 0, frame);
 
 		    }
 		  /* La dimension n'est pas elastique en X */
@@ -2632,7 +2632,7 @@ int                 frame;
 		       pOrginBox->BxVertFlex = FALSE;
 
 		       /* Annule la hauteur de la boite */
-		       ModHaut (pOrginBox, NULL, NULL, -pOrginBox->BxHeight, frame);
+		       ResizeHeight (pOrginBox, NULL, NULL, -pOrginBox->BxHeight, frame);
 		    }
 		  /* La dimension n'est pas elastique en Y */
 		  else
@@ -2686,7 +2686,7 @@ int                 frame;
 	     pOrginBox->BxHorizEdge = pOrginBox->BxAbstractBox->AbHorizPos.PosEdge;
 
 	     /* Annule la largeur de la boite */
-	     ModLarg (pOrginBox, NULL, NULL, -pOrginBox->BxWidth, 0, frame);
+	     ResizeWidth (pOrginBox, NULL, NULL, -pOrginBox->BxWidth, 0, frame);
 	  }
 
 	/* La dimension est elastique en Y ? */
@@ -2702,7 +2702,7 @@ int                 frame;
 	     pOrginBox->BxVertEdge = pOrginBox->BxAbstractBox->AbVertPos.PosEdge;
 
 	     /* Annule la hauteur de la boite */
-	     ModHaut (pOrginBox, NULL, NULL, -pOrginBox->BxHeight, frame);
+	     ResizeHeight (pOrginBox, NULL, NULL, -pOrginBox->BxHeight, frame);
 	  }
      }
 

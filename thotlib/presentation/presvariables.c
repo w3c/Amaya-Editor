@@ -115,7 +115,7 @@ PtrSSchema        pSchStr;
    for (i = 0; i < pCompteur->CnNItems; i++)
       if (pCompteur->CnItem[i].CiCntrOp == op)
 	 if (EquivalentType (pEl, pCompteur->CnItem[i].CiElemType, pSchStr)
-	     || EquivalentSRules (pEl->ElTypeNumber, pEl->ElSructSchema,
+	     || EquivalentSRules (pEl->ElTypeNumber, pEl->ElStructSchema,
 			pCompteur->CnItem[i].CiElemType, pSchStr, pEl))
 	    if (pCompteur->CnItem[i].CiElemType != PageBreak + 1
 		|| pEl->ElViewPSchema == pCompteur->CnItem[i].CiViewNum)
@@ -247,7 +247,7 @@ boolean             Maximum;
 		  pEl2 = pEl;
 		  while (pEl2->ElParent != NULL)
 		     pEl2 = pEl2->ElParent;
-		  pSSpr = pEl2->ElSructSchema;
+		  pSSpr = pEl2->ElStructSchema;
 		  /* vue a laquelle appartient la marque de page cherchee */
 		  if (pCo1->CnItem[0].CiViewNum > 0)
 		     Vue = pCo1->CnItem[0].CiViewNum;
@@ -263,14 +263,14 @@ boolean             Maximum;
 			  stop = TRUE;
 		       else
 			 {
-			    if (pElNum->ElSructSchema->SsCode != pSSpr->SsCode)
+			    if (pElNum->ElStructSchema->SsCode != pSSpr->SsCode)
 			       /* Saut de page d'une vue squelette */
 			       /* on ne que compte les pages etrangeres au schema */
 			       /* principal */
-			       pstop = pEl->ElSructSchema->SsCode !=
+			       pstop = pEl->ElStructSchema->SsCode !=
 				  pSSpr->SsCode;
 			    else
-			       pstop = pEl->ElSructSchema->SsCode ==
+			       pstop = pEl->ElStructSchema->SsCode ==
 				  pSSpr->SsCode;
 
 			    /* on ignore les pages qui ne concernent pas la vue */
@@ -344,7 +344,7 @@ boolean             Maximum;
 			  /* l'element dont on veut le rang n'a pas de frere... */
 			  if (pEl->ElParent != NULL)
 			     /* ... mais il a un pere... */
-			     if (pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->
+			     if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->
 						ElTypeNumber - 1].SrConstruct == CsChoice)
 				/* ... et son pere est un choix */
 				/* on prendra le rang du pere */
@@ -418,7 +418,7 @@ boolean             Maximum;
 		do
 		  {
 		     pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber, pSchIncr,
-				       pElNum->ElSructSchema);
+				       pElNum->ElStructSchema);
 		     if (pEl != NULL)
 			if (EquivalentType (pEl, TypeIncr, pSchIncr))
 			   /* on a trouve' un element du type qui incremente */
@@ -489,7 +489,7 @@ int                 Vue;
 	while (pEl != NULL)
 	  {
 	     if (pEl->ElTypeNumber == TypeRLevel &&
-	     pEl->ElSructSchema->SsCode == pElNum->ElSructSchema->SsCode)
+	     pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
 		/* cet element englobant a le type qui increment le compteur */
 		val++;		/* incremente le compteur */
 	     pEl = pEl->ElParent;
@@ -510,7 +510,7 @@ int                 Vue;
 	     pEl2 = pEl;
 	     while (pEl2->ElParent != NULL)
 		pEl2 = pEl2->ElParent;
-	     pSSpr = pEl2->ElSructSchema;
+	     pSSpr = pEl2->ElStructSchema;
 	     if (pCo1->CnItem[0].CiViewNum > 0)
 		/* vue a laquelle appartient la marque de page cherchee */
 		Vue = pCo1->CnItem[0].CiViewNum;
@@ -526,12 +526,12 @@ int                 Vue;
 		     stop = TRUE;
 		  else
 		    {
-		       if (pElNum->ElSructSchema->SsCode != pSSpr->SsCode)
+		       if (pElNum->ElStructSchema->SsCode != pSSpr->SsCode)
 			  /* Saut de page d'une vue squelette */
 			  /*on ne que compte les pages etrangeres au schema principal */
-			  pstop = pEl->ElSructSchema->SsCode != pSSpr->SsCode;
+			  pstop = pEl->ElStructSchema->SsCode != pSSpr->SsCode;
 		       else
-			  pstop = pEl->ElSructSchema->SsCode == pSSpr->SsCode;
+			  pstop = pEl->ElStructSchema->SsCode == pSSpr->SsCode;
 
 		       /* on ignore les pages qui ne concernent pas la vue */
 #ifdef __COLPAGE__
@@ -600,8 +600,8 @@ int                 Vue;
 		  while (level > 0 && pEl != NULL)
 		    {
 		       if (pEl->ElTypeNumber == TypeRank &&
-			   pEl->ElSructSchema->SsCode ==
-			   pElNum->ElSructSchema->SsCode)
+			   pEl->ElStructSchema->SsCode ==
+			   pElNum->ElStructSchema->SsCode)
 			  /* cet element englobant a le type qui incremente le compteur */
 			 {
 			    level--;
@@ -622,7 +622,7 @@ int                 Vue;
 		     /* l'element dont on veut le rang n'a pas de frere... */
 		     if (pEl->ElParent != NULL)
 			/* ... mais il a un pere... */
-			if (pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct
+			if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct
 			    == CsChoice)
 			   /* ... et son pere est un choix */
 			   /* on prendra le rang du pere */
@@ -704,7 +704,7 @@ int                 Vue;
 	   do
 	     {
 		pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber, pSchIncr,
-				  pElNum->ElSructSchema);
+				  pElNum->ElStructSchema);
 		if (pEl != NULL)
 		   if (EquivalentType (pEl, TypeIncr, pSchIncr))
 		      /* on a trouve' un element du type qui incremente */
@@ -980,7 +980,7 @@ PtrDocument         pDoc;
 		 case VarElemName:
 		    /* Name de l'element */
 		    pEl = pAb->AbElement;
-		    CopyStringToText (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].
+		    CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
 					  SrName, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;

@@ -82,10 +82,10 @@ PtrSSchema        schStruct;
 	    element = (Element) ((PtrElement) element)->ElParent;
 	  while (status && element != 0)
 	    {
-	      status = (schStruct == ((PtrElement) element)->ElSructSchema);
+	      status = (schStruct == ((PtrElement) element)->ElStructSchema);
 	      if (!status)
 		/* a new schema */
-		schStruct = ((PtrElement) element)->ElSructSchema;
+		schStruct = ((PtrElement) element)->ElStructSchema;
 	      else
 		element = (Element) ((PtrElement) element)->ElParent;
 	    }
@@ -206,7 +206,7 @@ boolean             pre;
 		 {
 		    element = ((NotifyElement *) notifyEvent)->element;
 		    elType = ((PtrElement) element)->ElTypeNumber;
-		    schStruct = ((PtrElement) element)->ElSructSchema;
+		    schStruct = ((PtrElement) element)->ElStructSchema;
 		 }
 	       break;
 	    case TteElemDelete:
@@ -214,7 +214,7 @@ boolean             pre;
 		 {
 		    element = ((NotifyElement *) notifyEvent)->element;
 		    elType = ((PtrElement) element)->ElTypeNumber;
-		    schStruct = ((PtrElement) element)->ElSructSchema;
+		    schStruct = ((PtrElement) element)->ElStructSchema;
 		 }
 	       else
 		 {
@@ -233,39 +233,39 @@ boolean             pre;
 	    case TteElemMove:
 	       element = ((NotifyElement *) notifyEvent)->element;
 	       elType = ((PtrElement) element)->ElTypeNumber;
-	       schStruct = ((PtrElement) element)->ElSructSchema;
+	       schStruct = ((PtrElement) element)->ElStructSchema;
 	       break;
 	    case TteElemSetReference:
 	    case TteElemTextModify:
 	       element = ((NotifyOnTarget *) notifyEvent)->element;
 	       elType = ((PtrElement) element)->ElTypeNumber;
-	       schStruct = ((PtrElement) element)->ElSructSchema;
+	       schStruct = ((PtrElement) element)->ElStructSchema;
 	       break;
 	    case TteElemPaste:
 	       if (pre)
 		 {
 		    element = ((NotifyOnValue *) notifyEvent)->target;
 		    elType = ((PtrElement) element)->ElTypeNumber;
-		    schStruct = ((PtrElement) element)->ElSructSchema;
+		    schStruct = ((PtrElement) element)->ElStructSchema;
 		 }
 	       else
 		 {
 		    element = ((NotifyElement *) notifyEvent)->element;
 		    elType = ((PtrElement) element)->ElTypeNumber;
-		    schStruct = ((PtrElement) element)->ElSructSchema;
+		    schStruct = ((PtrElement) element)->ElStructSchema;
 		 }
 	       break;
 	    case TteElemGraphModify:
 	       element = ((NotifyOnValue *) notifyEvent)->element;
 	       elType = ((PtrElement) element)->ElTypeNumber;
-	       schStruct = ((PtrElement) element)->ElSructSchema;
+	       schStruct = ((PtrElement) element)->ElStructSchema;
 	       break;
 	    case TtePRuleCreate:
 	    case TtePRuleModify:
 	    case TtePRuleDelete:
 	       element = ((NotifyPresentation *) notifyEvent)->element;
 	       elType = ((PtrElement) element)->ElTypeNumber;
-	       schStruct = ((PtrElement) element)->ElSructSchema;
+	       schStruct = ((PtrElement) element)->ElStructSchema;
 	       break;
 	    case TteDocOpen:
 	    case TteDocCreate:

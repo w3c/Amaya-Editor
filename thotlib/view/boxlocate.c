@@ -50,9 +50,9 @@
 /* |    - 3 s'il s'agit d'un double clic.                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PoseMrq (int frame, int x, int y, int button)
+void                LocateSelectionInView (int frame, int x, int y, int button)
 #else  /* __STDC__ */
-void                PoseMrq (frame, x, y, button)
+void                LocateSelectionInView (frame, x, y, button)
 int                 frame;
 int                 x;
 int                 y;
@@ -70,7 +70,7 @@ int                 button;
    if (frame >= 1)
      {
 	/* recherche si une boite terminale est designee */
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	x += pFrame->FrXOrg;
 	y += pFrame->FrYOrg;
 	pAb = pFrame->FrAbstractBox;
@@ -808,7 +808,7 @@ int                 yRef;
    PtrBox            pBox;
    int               pointselect;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    pBox = NULL;
    if (pFrame->FrAbstractBox != NULL)
       if (ThotLocalActions[T_selecbox] != NULL)
@@ -1115,7 +1115,7 @@ int                 yRef;
    pSelBox = NULL;
    /* au-dela de max, on n'accepte pas la selection */
    max = 2000;
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
 
    if (pFrame->FrAbstractBox != NULL)
       pBox = pFrame->FrAbstractBox->AbBox;
@@ -1200,7 +1200,7 @@ int                *max;
    *max = 100000;
 
    /* C'est la boite racine */
-   if (pAb == FntrTable[frame - 1].FrAbstractBox)
+   if (pAb == ViewFrameTable[frame - 1].FrAbstractBox)
      {
 	if (horizRef)
 	  {
@@ -1223,7 +1223,7 @@ int                *max;
 	if (pAb->AbHorizEnclosing)
 	   pParentAb = pAb->AbEnclosing;
 	else
-	   pParentAb = FntrTable[frame - 1].FrAbstractBox;
+	   pParentAb = ViewFrameTable[frame - 1].FrAbstractBox;
 
 	/* A priori limite dans l'espace de la boite englobante */
 	*min = pParentAb->AbBox->BxXOrg;
@@ -1252,7 +1252,7 @@ int                *max;
 	if (pAb->AbVertEnclosing)
 	   pParentAb = pAb->AbEnclosing;
 	else
-	   pParentAb = FntrTable[frame - 1].FrAbstractBox;
+	   pParentAb = ViewFrameTable[frame - 1].FrAbstractBox;
 
 	/* A priori limite dans l'espace de la boite englobante */
 	*min = pParentAb->AbBox->BxYOrg;
@@ -1309,7 +1309,7 @@ int                *max;
 
 #ifndef STRUCT_EDIT
    /* For Amaya only !!!!!!!!!!!! */
-   if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElSructSchema))
+   if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
       ok = FALSE;
    else
 #endif
@@ -1451,7 +1451,7 @@ int                 ym;
    ViewFrame            *pFrame;
    int                 pointselect;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    /* pas de point selectionne */
    pointselect = 0;
    if (pFrame->FrAbstractBox != NULL)
@@ -1535,7 +1535,7 @@ int                 ym;
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
 		       AfFinFenetre (frame, 0);
 		       /* Reaffiche la selection */
-		       SetSelect (frame, FALSE);
+		       SwitchSelection (frame, FALSE);
 		       NewContent (pAb);
 		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, FALSE);
 		    }
@@ -1635,7 +1635,7 @@ int                *max;
 
 #ifndef STRUCT_EDIT
    /* For Amaya only !!!!!!!!!!!! */
-   if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElSructSchema))
+   if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
       ok = FALSE;
    else
 #endif
@@ -1727,7 +1727,7 @@ int                 ym;
 
    okH = FALSE;
    okV = FALSE;
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
 	/* On note les coordonnees par rapport a l'image concrete */
@@ -1874,12 +1874,12 @@ int                 frame;
    boolean             modPosition, modDimension;
 
    /* Il ne faut realiser qu'une seule creation interactive a la fois */
-   if (EnCreation)
+   if (BoxCreating)
       return;
    else
-      EnCreation = TRUE;
+      BoxCreating = TRUE;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
 
    /* Il faut verifier que la boite reste visible dans la fenetre */
    DimFenetre (frame, &width, &height);
@@ -1985,7 +1985,7 @@ int                 frame;
      }
 
    /* Traitement de la creation interactive termine */
-   EnCreation = FALSE;
+   BoxCreating = FALSE;
 }
 
 

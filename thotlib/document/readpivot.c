@@ -772,7 +772,7 @@ BinFile             fich;
 		  PivotError (fich);
 	       }
 	     /* lit la valeur du label */
-	     rdLabel (c, lab, fich);
+	     ReadLabel (c, lab, fich);
 	     if (*RExt && lab[0] != '\0')
 		/* lit le nom du document contenant l'element reference' */
 		BIOreadIdentDoc (fich, I);
@@ -821,7 +821,7 @@ BinFile             fich;
 	     PivotError (fich);
 	  }
 	/* lit la valeur du label */
-	rdLabel (c, lab, fich);
+	ReadLabel (c, lab, fich);
 	if (*RExt && lab[0] != '\0')
 	   /* lit l'identificateur du document contenant l'element reference' */
 	   BIOreadIdentDoc (fich, I);
@@ -1200,7 +1200,7 @@ PtrDocument         pDoc;
      {
 	/* traite d'abord les attributs requis par la regle de structure */
 	/* qui definit l'element */
-	pSS = pEl->ElSructSchema;
+	pSS = pEl->ElStructSchema;
 	pRegle = &pSS->SsRule[pEl->ElTypeNumber - 1];
 	VerifAttrRequis1Regle (pEl, pRegle, pSS);
 	/* traite les attributs requis par toutes les regles d'extension de */
@@ -1214,7 +1214,7 @@ PtrDocument         pDoc;
 	       {
 		  /* cherche dans ce schema d'extension la regle qui concerne */
 		  /* le type de l'element */
-		  pRegle = ExtensionRule (pEl->ElSructSchema, pEl->ElTypeNumber, pSS);
+		  pRegle = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber, pSS);
 		  if (pRegle != NULL)
 		     /* il y a une regle d'extension, on la traite */
 		     VerifAttrRequis1Regle (pEl, pRegle, pSS);
@@ -2146,7 +2146,7 @@ boolean             creedesc;
 	   if (*marque == (char) C_PIV_SHORT_LABEL || *marque == (char) C_PIV_LONG_LABEL ||
 	       *marque == (char) C_PIV_LABEL)
 	     {
-		rdLabel (*marque, lab, fichpiv);
+		ReadLabel (*marque, lab, fichpiv);
 		/* lit la marque qui suit le label */
 		if (!BIOreadByte (fichpiv, marque))
 		   PivotError (fichpiv);
@@ -2627,18 +2627,18 @@ boolean             creedesc;
 						   {
 						      if (!creetout)
 							 if (p->ElTypeNumber != PageBreak + 1)
-							    if (p->ElSructSchema != pEl->ElSructSchema)
+							    if (p->ElStructSchema != pEl->ElStructSchema)
 							       /* l'element a inserer dans l'arbre appartient       */
 							       /* a un schema different de celui de son pere        */
-							       if (p->ElTypeNumber != p->ElSructSchema->SsRootElem)
+							       if (p->ElTypeNumber != p->ElStructSchema->SsRootElem)
 								  /* ce n'est pas la racine d'une nature, on ajoute  */
 								  /* un element intermediaire */
 								 {
 								    pEl2 = p;
 								    /* il ne faut pas que le label */
 								    /* max. du document augmente */
-								    pElInt = NewSubtree (pEl2->ElSructSchema->SsRootElem,
-											 pEl2->ElSructSchema,
+								    pElInt = NewSubtree (pEl2->ElStructSchema->SsRootElem,
+											 pEl2->ElStructSchema,
 											 pDoc, NAssoc, FALSE, TRUE, FALSE, FALSE);
 
 								    pElInt->ElLabel[0] = '\0';
@@ -2682,7 +2682,7 @@ boolean             creedesc;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
@@ -2715,24 +2715,24 @@ PtrDocument         pDoc;
       if (pEl->ElPrevious != NULL)
 	{
 	  if (!AllowedSibling (pEl->ElPrevious, pDoc, pEl->ElTypeNumber,
-			       pEl->ElSructSchema, FALSE, FALSE, TRUE))
+			       pEl->ElStructSchema, FALSE, FALSE, TRUE))
 	    {
 	      ok = FALSE;
 	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, INVALID_SIBLING),
-				 pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-				 pEl->ElPrevious->ElSructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
+				 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+				 pEl->ElPrevious->ElStructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
 				 pEl->ElLabel);
 	    }
 	}
       else if (pEl->ElParent != NULL)
 	{
 	  if (!AllowedFirstChild (pEl->ElParent, pDoc, pEl->ElTypeNumber,
-				    pEl->ElSructSchema, FALSE, TRUE))
+				    pEl->ElStructSchema, FALSE, TRUE))
 	    {
 	      ok = FALSE;
 	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, INVALID_CHILD),
-				 pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-				 pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
+				 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+				 pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
 				 pEl->ElLabel);
 	    }
 	}
@@ -2773,7 +2773,7 @@ PtrElement          pRacine;
 	pEl1 = FwdSearchRefOrEmptyElem (pEl1, 3);
 	if (pEl1 != NULL)
 	   /* on a trouve' un element de paire */
-	   if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrFirstOfPair)
+	   if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrFirstOfPair)
 	      /* c'est un element de debut de paire */
 	     {
 		/* on cherche l'element de fin correspondant */
@@ -2781,7 +2781,7 @@ PtrElement          pRacine;
 		trouve = FALSE;
 		do
 		  {
-		     pEl2 = FwdSearchTypedElem (pEl2, pEl1->ElTypeNumber + 1, pEl1->ElSructSchema);
+		     pEl2 = FwdSearchTypedElem (pEl2, pEl1->ElTypeNumber + 1, pEl1->ElStructSchema);
 		     if (pEl2 != NULL)
 			/* on a trouve' un element du type cherche' */
 			/* c'est le bon s'il a le meme identificateur */
@@ -3184,7 +3184,7 @@ char               *marque;
    if (!error && (*marque == (char) C_PIV_SHORT_LABEL || *marque == (char) C_PIV_LONG_LABEL
 		  || *marque == (char) C_PIV_LABEL))
      {
-	rdLabel (*marque, lab, fich);
+	ReadLabel (*marque, lab, fich);
 	LabelStringToInt (lab, &i);
 	SetCurrentLabel (pDoc, i);
 	if (!BIOreadByte (fich, marque))
@@ -3320,7 +3320,7 @@ boolean             WithAPPEvent;
 	fichext = BIOreadOpen (texte);
 	if (fichext != 0)
 	  {
-	     ChargeExt (fichext, NULL, &pDoc->DocLabels, TRUE);
+	     LoadEXTfile (fichext, NULL, &pDoc->DocLabels, TRUE);
 	     BIOreadClose (fichext);
 	  }
 	else
@@ -3537,7 +3537,7 @@ boolean             WithAPPEvent;
 			   /* rien n'a ete cree */
 			   p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
 					   FALSE, TRUE, TRUE, TRUE);
-			else if (p->ElSructSchema != pDoc->DocSSchema
+			else if (p->ElStructSchema != pDoc->DocSSchema
 				 || p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
 			   /* ce n'est pas la racine attendue */
 			  {
@@ -3683,7 +3683,7 @@ boolean             WithAPPEvent;
 						 }
 					    }
 				    pEl1 = pRef->RdElement;
-				    pRe1 = &pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1];
+				    pRe1 = &pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1];
 				    /*TODO *//* mis en commentaire cas instruction if sans corps */
 				    /* if (pRe1->SrConstruct == CsReference) */
 				    /* il s'agit d'un element reference */

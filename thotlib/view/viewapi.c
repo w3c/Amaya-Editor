@@ -443,7 +443,7 @@ View                view;
 	      TtaError (ERR_invalid_parameter);
 	   else
 	     {
-		DetruitFenetre (pDoc->DocViewFrame[view - 1]);
+		DestroyFrame (pDoc->DocViewFrame[view - 1]);
 		detruit (pDoc, view, FALSE, FALSE);
 	     }
 	else
@@ -454,7 +454,7 @@ View                view;
 		TtaError (ERR_invalid_parameter);
 	     else
 	       {
-		  DetruitFenetre (pDoc->DocAssocFrame[numAssoc - 1]);
+		  DestroyFrame (pDoc->DocAssocFrame[numAssoc - 1]);
 		  detruit (pDoc, numAssoc, TRUE, FALSE);
 	       }
 	  }
@@ -505,7 +505,7 @@ boolean             complete;
 	ChangeConcreteImage (frame, &h, pAbbRoot);
 	detruit (pDoc, Vue, Assoc, TRUE);
 	FrameTable[frame].FrDoc = 0;
-	/*FntrTable[frame - 1].FrAbstractBox = NULL; */
+	/*ViewFrameTable[frame - 1].FrAbstractBox = NULL; */
      }
    else
      {
@@ -518,7 +518,7 @@ boolean             complete;
 #ifdef __COLPAGE__
 	/* vide la chaine des regles en retard sur la racine */
 	/* normalement doit etre deja vide ! */
-	ApplReglesRetard (pAbbRoot->AbFirstEnclosed->AbElement, pDoc);
+	ApplDelayedRule (pAbbRoot->AbFirstEnclosed->AbElement, pDoc);
 	/* libere tous les paves morts de la vue */
 	/* ceci est signale au Mediateur */
 	/* ceci est signale au Mediateur */
@@ -537,7 +537,7 @@ boolean             complete;
 #ifdef __COLPAGE__
 	pAbbRoot->AbTruncatedTail = TRUE;
 #endif /* __COLPAGE__ */
-	/* on marque le pave racine complet en tete pour que CreePaves */
+	/* on marque le pave racine complet en tete pour que AbsBoxesCreate */
 	/* engendre effectivement les paves de presentation cree's en tete */
 	if (pAbbRoot->AbLeafType == LtCompound)
 	   pAbbRoot->AbTruncatedHead = FALSE;
@@ -1032,7 +1032,7 @@ View                view;
 	       {
 		  pEl = pDoc->DocAssocRoot[numAssoc - 1];
 		  if (pEl != NULL)
-		     strncpy (nameBuffer, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+		     strncpy (nameBuffer, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	       }
 	  }
      }
@@ -1165,7 +1165,7 @@ char               *viewName;
 		pEl = pDoc->DocAssocRoot[vue - 1];
 		if (pEl != NULL)
 		   if (pDoc->DocAssocFrame[vue - 1] != 0)
-		      if (strcmp (viewName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		      if (strcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 			 view = vue + 100;
 	     }
      }
@@ -1383,10 +1383,10 @@ boolean             Allume;
 
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
       if (pDoc->DocView[vue - 1].DvPSchemaView > 0)
-	 SetSelect (pDoc->DocViewFrame[vue - 1], Allume);
+	 SwitchSelection (pDoc->DocViewFrame[vue - 1], Allume);
    for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
       if (pDoc->DocAssocFrame[assoc - 1] > 0)
-	 SetSelect (pDoc->DocAssocFrame[assoc - 1], Allume);
+	 SwitchSelection (pDoc->DocAssocFrame[assoc - 1], Allume);
 }
 
 
@@ -1447,7 +1447,7 @@ PtrDocument         pDoc;
 	pElRacine = pDoc->DocAssocRoot[Vue - 1];
 	pAbbRoot = pElRacine->ElAbstractBox[0];
 	frame = pDoc->DocAssocFrame[Vue - 1];
-	CreePaves (pElRacine, pDoc, 1, TRUE, TRUE, &complet);
+	AbsBoxesCreate (pElRacine, pDoc, 1, TRUE, TRUE, &complet);
 	h = 0;
 	ChangeConcreteImage (frame, &h, pAbbRoot);
      }
@@ -1462,7 +1462,7 @@ PtrDocument         pDoc;
 #endif /* __COLPAGE__ */
 	pAbbRoot = pDoc->DocViewRootAb[Vue - 1];
 	frame = pDoc->DocViewFrame[Vue - 1];
-	CreePaves (pElRacine, pDoc, Vue, TRUE, TRUE, &complet);
+	AbsBoxesCreate (pElRacine, pDoc, Vue, TRUE, TRUE, &complet);
 	h = 0;
 	ChangeConcreteImage (frame, &h, pAbbRoot);
      }
@@ -1530,7 +1530,7 @@ boolean             creation;
       PlusPremDer (sibling, pDoc, first, TRUE);
    /* on ne cree les paves que s'ils tombent dans la partie de l'image */
    /* du document deja construite */
-   if (!VueAssoc (newElement))
+   if (!AssocView (newElement))
       /* nombre de vues du document */
       for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	{
@@ -1558,7 +1558,7 @@ boolean             creation;
 	   CrPaveNouv (newElement, pDoc, 0);
 	}
    /* applique les regles retardees concernant les paves cree's */
-   ApplReglesRetard (newElement, pDoc);
+   ApplDelayedRule (newElement, pDoc);
    AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
    if (creation)
@@ -1665,7 +1665,7 @@ boolean             newPavModif;
    /* demande au mediateur si une couleur est associee a ReadOnly */
    /* si oui, il faut reafficher les paves modifie's */
    reaffiche = ShowReadOnly ();
-   if (!VueAssoc (pEl))
+   if (!AssocView (pEl))
       /* on traite toutes les vues du document */
       for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	{
@@ -1961,16 +1961,16 @@ Document            document;
    if (pNext != NULL)
      {
 	/* il ne faut pas reafficher les numeros mis a jour si on est */
-	/* en mode d'affichage differe'. Or, lorsque HauteurPage != 0, */
+	/* en mode d'affichage differe'. Or, lorsque PageHeight != 0, */
 	/* MajNumeros ne reaffiche pas les numeros qui changent. */
 #ifdef __COLPAGE__
-	SauveHauteurPage = HauteurCoupPage;
+	SauveHauteurPage = BreakPageHeight;
 	if (documentDisplayMode[document - 1] == DeferredDisplay)
-	   HauteurCoupPage = 1;
+	   BreakPageHeight = 1;
 #else  /* __COLPAGE__ */
-	SauveHauteurPage = HauteurPage;
+	SauveHauteurPage = PageHeight;
 	if (documentDisplayMode[document - 1] == DeferredDisplay)
-	   HauteurPage = 1;
+	   PageHeight = 1;
 #endif /* __COLPAGE__ */
 	while (pE != NULL)
 	  {
@@ -1978,9 +1978,9 @@ Document            document;
 	     pE = pE->ElNext;
 	  }
 #ifdef __COLPAGE__
-	HauteurCoupPage = SauveHauteurPage;
+	BreakPageHeight = SauveHauteurPage;
 #else  /* __COLPAGE__ */
-	HauteurPage = SauveHauteurPage;
+	PageHeight = SauveHauteurPage;
 #endif /* __COLPAGE__ */
      }
    if (pNext != NULL)
@@ -2035,7 +2035,7 @@ Document            document;
 	ReaffRef (pEl, &pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
 	/* Retransmet les valeurs des compteurs et attributs TRANSMIT */
 	/* s'il y a des elements apres */
-	if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
+	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
 	   RepApplyTransmitRules (pEl, pSS, pDoc);
      }
 }
@@ -2071,7 +2071,7 @@ Document            document;
    AbstractImageUpdated (pDoc);
    /* on ne cree les paves que s'ils tombent dans la partie de l'image */
    /* du document deja construite */
-   if (!VueAssoc (pEl))
+   if (!AssocView (pEl))
       /* nombre de vues du document */
       for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	{
@@ -2235,7 +2235,7 @@ int                 delta;
 		     pAbb = pAbb->AbEnclosing;
 		  }
 	     }
-	   if (VueAssoc (element))
+	   if (AssocView (element))
 	      pDoc->DocAssocModifiedAb[element->ElAssocNum - 1] = NULL;
 	   else
 	      pDoc->DocViewModifiedAb[v - 1] = NULL;
@@ -2273,7 +2273,7 @@ int                 delta;
 		       break;
 		 }
 	   /* memorise le pave a reafficher */
-	   if (VueAssoc (element))
+	   if (AssocView (element))
 	      pDoc->DocAssocModifiedAb[element->ElAssocNum - 1] = element->ElAbstractBox[v - 1];
 	   else
 	      pDoc->DocViewModifiedAb[v - 1] = element->ElAbstractBox[v - 1];
@@ -2288,7 +2288,7 @@ int                 delta;
 	   if (element->ElAbstractBox[v - 1] != NULL)
 	     {
 		/* un pave correspondant existe dans la vue v */
-		if (VueAssoc (element))
+		if (AssocView (element))
 		  {
 		     /* vue d'element associe */
 		     frame = pDoc->DocAssocFrame[element->ElAssocNum - 1];
@@ -2376,7 +2376,7 @@ Document            document;
 	     dvol = pEl->ElTextLength - pAb->AbVolume;
 	     pAb->AbVolume += dvol;
 	     pAb->AbChange = TRUE;
-	     if (!VueAssoc (pEl))
+	     if (!AssocView (pEl))
 		pDoc->DocViewModifiedAb[vue - 1] =
 		   Englobant (pAb, pDoc->DocViewModifiedAb[vue - 1]);
 	     else
@@ -2444,7 +2444,7 @@ Document            document;
 	     dvol = pEl->ElTextLength - pAb->AbVolume;
 	     pAb->AbVolume += dvol;
 	     pAb->AbChange = TRUE;
-	     if (!VueAssoc (pEl))
+	     if (!AssocView (pEl))
 	       {
 		  pDoc->DocViewModifiedAb[vue - 1] =
 		     Englobant (pAb, pDoc->DocViewModifiedAb[vue - 1]);
@@ -2608,7 +2608,7 @@ Document            document;
       /* faut mettre a jour les boites utilisant ce compteur */
       UpdateCountersByAttr (pEl, pAttr, LoadedDocument[document - 1]);
    /* on applique les regles retardee */
-   ApplReglesRetard (pEl, LoadedDocument[document - 1]);
+   ApplDelayedRule (pEl, LoadedDocument[document - 1]);
    AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */

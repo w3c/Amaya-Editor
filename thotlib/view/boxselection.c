@@ -72,9 +72,9 @@ PtrAbstractBox             pAb;
 /* |            - ou si toShow est Faux et la se'lection allume'e.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                SetSelect (int frame, boolean toShow)
+void                SwitchSelection (int frame, boolean toShow)
 #else  /* __STDC__ */
-void                SetSelect (frame, toShow)
+void                SwitchSelection (frame, toShow)
 int                 frame;
 boolean             toShow;
 #endif /* __STDC__ */
@@ -84,9 +84,9 @@ boolean             toShow;
      {
        frame--;
 	/* compare le booleen toShow et l'etat de la selection */
-	if (toShow && !FntrTable[frame].FrSelectShown)
+	if (toShow && !ViewFrameTable[frame].FrSelectShown)
 	   VisuSel (frame, TRUE);
-	else if (!toShow && FntrTable[frame].FrSelectShown)
+	else if (!toShow && ViewFrameTable[frame].FrSelectShown)
 	   VisuSel (frame, TRUE);
      }
 }
@@ -96,9 +96,9 @@ boolean             toShow;
 /* |  ClearViewSelMarks annule la selection courante dans la fenetre.   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AnnuleMrq (int frame)
+void                ClearViewSelMarks (int frame)
 #else  /* __STDC__ */
-void                AnnuleMrq (frame)
+void                ClearViewSelMarks (frame)
 int                 frame;
 #endif /* __STDC__ */
 {
@@ -106,7 +106,7 @@ int                 frame;
 
    if (frame > 0)
      {
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	if (pFrame->FrAbstractBox != NULL)
 	   ClearAbstractBoxSelection (pFrame->FrAbstractBox);
 	pFrame->FrSelectOneBox = FALSE;
@@ -121,9 +121,9 @@ int                 frame;
 /* |            selection dans la fenetre.                              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ResetSelect (int frame)
+void                ClearViewSelection (int frame)
 #else  /* __STDC__ */
-void                ResetSelect (frame)
+void                ClearViewSelection (frame)
 int                 frame;
 
 #endif /* __STDC__ */
@@ -132,7 +132,7 @@ int                 frame;
 
    if (frame > 0)
      {
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	/* eteint la selection ssi elle est allumee */
 	if (pFrame->FrSelectShown)
 	   VisuSel (frame, FALSE);
@@ -149,14 +149,14 @@ int                 frame;
 /* |  ClearAllViewSelection annule et bascule toutes les selections     | */
 /* |            courantes visualisees.                                  | */
 /* ---------------------------------------------------------------------- */
-void                RazSelect ()
+void                ClearAllViewSelection ()
 {
    int              frame;
 
    /* annule et on bascule dans chaque frame la selection courante */
    for (frame = 0; frame < MAX_FRAME; frame++)
-      if (FntrTable[frame].FrAbstractBox != NULL)
-	 ResetSelect (frame+1);
+      if (ViewFrameTable[frame].FrAbstractBox != NULL)
+	 ClearViewSelection (frame+1);
 }
 
 
@@ -165,9 +165,9 @@ void                RazSelect ()
 /* |            apres insertion ou destruction de caracteres.           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajMrq (int frame, int xDelta, int spaceDelta, int charDelta)
+void                UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta)
 #else  /* __STDC__ */
-void                MajMrq (frame, xDelta, spaceDelta, charDelta)
+void                UpdateViewSelMarks (frame, xDelta, spaceDelta, charDelta)
 int                 frame;
 int                 xDelta;
 int                 spaceDelta;
@@ -177,7 +177,7 @@ int                 charDelta;
    ViewFrame            *pFrame;
    ViewSelection        *pViewSel;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    pViewSel = &pFrame->FrSelectionBegin;
    pViewSel->VsXPos += xDelta;
    pViewSel->VsIndBox += charDelta;
@@ -197,9 +197,9 @@ int                 charDelta;
 /* |    selection et rend le pointeur sur le buffer precedent.          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrTextBuffer      DestBuff (PtrTextBuffer pBuffer, int frame)
+PtrTextBuffer      DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 #else  /* __STDC__ */
-PtrTextBuffer      DestBuff (pBuffer, frame)
+PtrTextBuffer      DeleteBuffer (pBuffer, frame)
 PtrTextBuffer      pBuffer;
 int                frame;
 #endif /* __STDC__ */
@@ -222,7 +222,7 @@ int                frame;
       pNextBuffer->BuPrevious = pPreviousBuffer;
 
    /* Mise a jour des marques de selection courante */
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    pViewSel = &pFrame->FrSelectionBegin;
    if (pViewSel->VsBuffer == pBuffer)
      {
@@ -309,9 +309,9 @@ int               *index;
 /* |            et la ligne contenant la boite VsLine.                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ReevalMrq (ViewSelection *selMark)
+void                ComputeViewSelMarks (ViewSelection *selMark)
 #else  /* __STDC__ */
-void                ReevalMrq (selMark)
+void                ComputeViewSelMarks (selMark)
 ViewSelection      *selMark;
 #endif /* __STDC__ */
 {
@@ -451,9 +451,9 @@ ViewSelection      *selMark;
 /* |            donc visualisee porte sur un seul et unique pave.       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PoseSelect (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, boolean startSelection, boolean endSelection, boolean alone)
+void                InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, boolean startSelection, boolean endSelection, boolean alone)
 #else  /* __STDC__ */
-void                PoseSelect (frame, pAb, firstChar, lastChar, startSelection, endSelection, alone)
+void                InsertViewSelMarks (frame, pAb, firstChar, lastChar, startSelection, endSelection, alone)
 int                 frame;
 PtrAbstractBox      pAb;
 int                 firstChar;
@@ -477,7 +477,7 @@ boolean             alone;
 
    if (pAb != NULL && frame > 0)
      {
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	if (pAb->AbBox != NULL)
 	  {
 	     /* eteint la selection */
@@ -589,7 +589,7 @@ boolean             alone;
 		       pViewSel->VsIndBox = charIndex;
 		       pViewSel->VsIndBuf = ind;
 		       pViewSel->VsBuffer = pBuffer;
-		       ReevalMrq (&pFrame->FrSelectionBegin);
+		       ComputeViewSelMarks (&pFrame->FrSelectionBegin);
 		    }
 		  /* met a jour la fin de selection */
 		  if (endSelection)
@@ -632,7 +632,7 @@ boolean             alone;
 			    pViewSel->VsIndBox = charIndex;
 			    pViewSel->VsIndBuf = ind;
 			    pViewSel->VsBuffer = pBuffer;
-			    ReevalMrq (&pFrame->FrSelectionEnd);
+			    ComputeViewSelMarks (&pFrame->FrSelectionEnd);
 			 }
 
 		       /* recherche la position limite du caractere */
@@ -660,9 +660,9 @@ boolean             alone;
 /* |            dans le frame.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             PaveAffiche (PtrAbstractBox pAb, int frame)
+boolean             IsAbstractBoxDisplayed (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-boolean             PaveAffiche (pAb, frame)
+boolean             IsAbstractBoxDisplayed (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
 #endif /* __STDC__ */
@@ -681,7 +681,7 @@ int                 frame;
 
    /* regarde si le pavee est affiche dans la fenetre */
    DimFenetre (frame, &min, &max);
-   min = FntrTable[frame - 1].FrYOrg;
+   min = ViewFrameTable[frame - 1].FrYOrg;
    max += min;
    if (pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight < min || pAb->AbBox->BxYOrg > max)
       return FALSE;

@@ -41,7 +41,7 @@ int                *YOrg;
 {
    ViewFrame            *pFrame;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    *XOrg = pFrame->FrXOrg;
    *YOrg = pFrame->FrYOrg;
 }
@@ -70,7 +70,7 @@ int                 yf;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
-	pFrame = &FntrTable[frame - 1];
+	pFrame = &ViewFrameTable[frame - 1];
 	/* Faut-il prendre toute la largeur de la fenetre? */
 	if (xd == xf && xd == -1)
 	  {
@@ -150,7 +150,7 @@ int                 yf;
    ViewFrame            *pFrame;
 
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    DefClip (frame, xd + pFrame->FrXOrg, yd + pFrame->FrYOrg, xf + pFrame->FrXOrg, yf + pFrame->FrYOrg);
 }
 
@@ -164,7 +164,7 @@ void                TtaRefresh ()
 
    for (frame = 1; frame <= MAX_FRAME; frame++)
      {
-	if (FntrTable[frame - 1].FrAbstractBox != NULL)
+	if (ViewFrameTable[frame - 1].FrAbstractBox != NULL)
 	  {
 	     /* force le reaffichage de toute la fenetre */
 	     DefClip (frame, -1, -1, -1, -1);
@@ -212,7 +212,7 @@ int                 delta;
 
    /* A priori on n'ajoute pas de nouveaux paves */
    ajoute = FALSE;
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrReady && pFrame->FrAbstractBox != NULL
        && pFrame->FrClipXBegin < pFrame->FrClipXEnd
        && pFrame->FrClipYBegin < pFrame->FrClipYEnd)
@@ -317,10 +317,10 @@ int                 delta;
 
 	     /* On complete eventuellement l'image partielle */
 	     pBox = pFrame->FrAbstractBox->AbBox;
-	     if (!Complete && !Insert)
+	     if (!FrameUpdating && !TextInserting)
 	       {
 		  pBo1 = pBox;
-		  Complete = TRUE;
+		  FrameUpdating = TRUE;
 		  /* On est en train de completer l'image */
 		  y = haut - pBo1->BxYOrg;
 		  x = h / 2;
@@ -409,7 +409,7 @@ int                 delta;
 			  pFrame->FrYOrg = 0;
 
 		       /* On a fini de completer l'image */
-		       Complete = FALSE;
+		       FrameUpdating = FALSE;
 		       audessous = AfDebFenetre (frame, 0);
 		    }
 
@@ -429,7 +429,7 @@ int                 delta;
 		       IncreaseVolume (FALSE, vol, frame);
 		       y -= pFrame->FrAbstractBox->AbVolume;
 		       /* On a fini de completer l'image */
-		       Complete = FALSE;
+		       FrameUpdating = FALSE;
 		       if (y == 0)
 			  printf ("ERR: Il n'y a rien a ajouter\n");
 		       else
@@ -441,7 +441,7 @@ int                 delta;
 		  else
 		     pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
 		  /* On a fini de completer l'image */
-		  Complete = FALSE;
+		  FrameUpdating = FALSE;
 	       }
 	  }
 	else
@@ -511,7 +511,7 @@ int                 frame;
    /* Enregistrement de la boite a creer s'il n'y en a pas une  */
    /* englobante enregistree et si la boite a creer est visible */
    if (*acreer == NULL
-       && pBox->BxAbstractBox->AbVisibility >= FntrTable[frame - 1].FrVisibility)
+       && pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
       *acreer = pBox;
 }				/*function AjouteACreer */
 
@@ -561,7 +561,7 @@ int                 delta;
    /* A priori on n'a pas besoin de creer interactivement des boites */
    ACreer = NULL;
 
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrReady && pFrame->FrAbstractBox != NULL
        && pFrame->FrClipXBegin < pFrame->FrClipXEnd
        && pFrame->FrClipYBegin < pFrame->FrClipYEnd)
@@ -713,15 +713,15 @@ int                 delta;
 
 	/* On complete eventuellement l'image partielle */
 	pBox = pFrame->FrAbstractBox->AbBox;
-	if (!Complete && (!Insert || delta > 0))
+	if (!FrameUpdating && (!TextInserting || delta > 0))
 	  {
 	     pBo1 = pBox;
-	     Complete = TRUE;
+	     FrameUpdating = TRUE;
 	     /* On est en train de completer l'image */
 	     y = haut - pBo1->BxYOrg;
 
 	     if (pFrame->FrAbstractBox->AbInLine)
-		Complete = FALSE;
+		FrameUpdating = FALSE;
 
 	     /* Il manque un morceau d'image concrete en haut de la fenetre */
 	     else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
@@ -823,7 +823,7 @@ int                 delta;
 		  IncreaseVolume (FALSE, vol, frame);
 		  y -= pFrame->FrAbstractBox->AbVolume;
 		  /* On a fini de completer l'image */
-		  Complete = FALSE;
+		  FrameUpdating = FALSE;
 		  if (y == 0)
 		     printf ("ERR: Il n'y a rien a ajouter\n");
 		  else
@@ -841,7 +841,7 @@ int                 delta;
 	       }
 
 	     /* On a fini de completer l'image */
-	     Complete = FALSE;
+	     FrameUpdating = FALSE;
 	  }
 
 
@@ -879,7 +879,7 @@ int                 frame;
    int                 l, h;
 
    /* Est-ce que la vue existe et n'est pas en cours d'evaluation? */
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
 	/* Affichage du rectangle mis a jour */

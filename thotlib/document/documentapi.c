@@ -445,14 +445,14 @@ Document            document;
 	for (nv = 1; nv <= MAX_VIEW_DOC; nv++)
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	     {
-		DetruitFenetre (pDoc->DocViewFrame[nv - 1]);
+		DestroyFrame (pDoc->DocViewFrame[nv - 1]);
 		detruit (pDoc, nv, FALSE, FALSE);
 	     }
 	/* Then one close frames of associated elements */
 	for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
 	   if (pDoc->DocAssocFrame[numassoc - 1] != 0)
 	     {
-		DetruitFenetre (pDoc->DocAssocFrame[numassoc - 1]);
+		DestroyFrame (pDoc->DocAssocFrame[numassoc - 1]);
 		detruit (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
@@ -546,14 +546,14 @@ Document            document;
 	for (nv = 1; nv <= MAX_VIEW_DOC; nv++)
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	     {
-		DetruitFenetre (pDoc->DocViewFrame[nv - 1]);
+		DestroyFrame (pDoc->DocViewFrame[nv - 1]);
 		detruit (pDoc, nv, FALSE, FALSE);
 	     }
 	/* Then, we close the associated elements views */
 	for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
 	   if (pDoc->DocAssocFrame[numassoc - 1] != 0)
 	     {
-		DetruitFenetre (pDoc->DocAssocFrame[numassoc - 1]);
+		DestroyFrame (pDoc->DocAssocFrame[numassoc - 1]);
 		detruit (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
@@ -936,7 +936,7 @@ int                *removedAttributes;
    if (*pEl != NULL)
      {
 	pDoc = LoadedDocument[document - 1];
-	if ((*pEl)->ElSructSchema == pSSExt)
+	if ((*pEl)->ElStructSchema == pSSExt)
 	   /* this element belongs to the extension schema to be removed */
 	  {
 	     RegisterExternalRef (*pEl, pDoc, FALSE);
@@ -1916,7 +1916,7 @@ char               *presentationName;
 	if (!error && (charGotten == (char) C_PIV_SHORT_LABEL || charGotten == (char) C_PIV_LONG_LABEL ||
 		       charGotten == (char) C_PIV_LABEL))
 	  {
-	     rdLabel (charGotten, lab, file);
+	     ReadLabel (charGotten, lab, file);
 	     if (!BIOreadByte (file, &charGotten))
 		error = TRUE;
 	  }

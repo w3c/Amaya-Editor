@@ -86,18 +86,18 @@ extern void InsertOption ( PtrElement pEl,
                            PtrDocument pDoc );
 extern void VisuSelect ( PtrAbstractBox PavRac,
                          boolean Visible );
-extern void SetSelect ( int frame,
+extern void SwitchSelection ( int frame,
                         boolean Allume );
 extern PtrElement SelSuivant ( PtrElement pEl,
                                PtrElement PcLast );
 extern void SelAjoute ( PtrElement pEl,
                         boolean dernier );
-extern void ResetSelect ( int frame );
+extern void ClearViewSelection ( int frame );
 extern void SelectEl ( PtrDocument pDoc,
                        PtrElement pEl,
                        boolean Debut,
                        boolean Controle );
-extern void ReevalMrq ( ViewSelection * marque );
+extern void ComputeViewSelMarks ( ViewSelection * marque );
 extern void AllumeSelection ( boolean DebVisible,
                               boolean drag );
 extern void AnnuleSelect ( void );
@@ -111,7 +111,7 @@ extern void MajPavSelect ( int frame,
                            boolean Etat );
 extern void ModeCreation ( PtrBox pBox,
                            int frame );
-extern boolean PaveAffiche ( PtrAbstractBox pav,
+extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
                              int frame );
 extern void Clear ( int frame,
                     int larg,
@@ -255,18 +255,18 @@ extern void InsertOption (/* PtrElement pEl,
                              PtrDocument pDoc */);
 extern void VisuSelect (/* PtrAbstractBox PavRac,
                            boolean Visible */);
-extern void SetSelect (/* int frame,
+extern void SwitchSelection (/* int frame,
                           boolean Allume */);
 extern PtrElement SelSuivant (/* PtrElement pEl,
                                  PtrElement PcLast */);
 extern void SelAjoute (/* PtrElement pEl,
                           boolean dernier */);
-extern void ResetSelect (/* int frame */);
+extern void ClearViewSelection (/* int frame */);
 extern void SelectEl (/* PtrDocument pDoc,
                          PtrElement pEl,
                          boolean Debut,
                          boolean Controle */);
-extern void ReevalMrq (/* ViewSelection * marque */);
+extern void ComputeViewSelMarks (/* ViewSelection * marque */);
 extern void AllumeSelection (/* boolean DebVisible,
                                 boolean drag */);
 extern void AnnuleSelect (/* void */);
@@ -280,7 +280,7 @@ extern void MajPavSelect (/* int frame,
                              boolean Etat */);
 extern void ModeCreation (/* PtrBox pBox,
                              int frame */);
-extern boolean PaveAffiche (/* PtrAbstractBox pav,
+extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
                                int frame */);
 extern void Clear (/* int frame,
                       int larg,

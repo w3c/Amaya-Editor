@@ -267,7 +267,7 @@ typedef struct _ElementDescr
 					l'element */
     PtrAbstractBox         	ElAbstractBox[MAX_VIEW_DOC]; /* pour chaque vue, pointeur sur le 
 					1er pave correspondant a l'element */
-    PtrSSchema    	ElSructSchema;	/* pointeur sur le schema de nature
+    PtrSSchema    	ElStructSchema;	/* pointeur sur le schema de nature
 					ou de document */
     int     	ElTypeNumber;		/* numero de la regle definissant le
 					type de l'element dans le schema de

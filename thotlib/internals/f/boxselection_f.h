@@ -6,64 +6,64 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void AnnuleMrq ( int frame );
-extern void SetSelect ( int frame,
+extern void ClearViewSelMarks ( int frame );
+extern void SwitchSelection ( int frame,
                         boolean allume );
-extern void ResetSelect ( int frame );
-extern void RazSelect ( void );
-extern PtrTextBuffer DestBuff ( PtrTextBuffer adbuff,
+extern void ClearViewSelection ( int frame );
+extern void ClearAllViewSelection ( void );
+extern PtrTextBuffer DeleteBuffer ( PtrTextBuffer adbuff,
                                 int frame );
-extern void MajMrq ( int frame,
+extern void UpdateViewSelMarks ( int frame,
                      int dx,
                      int dblanc,
                      int dcar );
-extern void ReevalMrq ( ViewSelection * marque );
-extern void PoseSelect ( int frame,
+extern void ComputeViewSelMarks ( ViewSelection * marque );
+extern void InsertViewSelMarks ( int frame,
                          PtrAbstractBox Pav,
                          int c1,
                          int cN,
                          boolean Debut,
                          boolean Fin,
                          boolean Unique );
-extern void PoseMrq ( int frame,
+extern void LocateSelectionInView ( int frame,
                       int x,
                       int y,
                       int bouton );
 extern int PavPosFen ( PtrAbstractBox pav,
                        int frame,
                        int axe );
-extern boolean PaveAffiche ( PtrAbstractBox pav,
+extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
                              int frame );
 
 #else /* __STDC__ */
 
-extern void AnnuleMrq (/* int frame */);
-extern void SetSelect (/* int frame,
+extern void ClearViewSelMarks (/* int frame */);
+extern void SwitchSelection (/* int frame,
                           boolean allume */);
-extern void ResetSelect (/* int frame */);
-extern void RazSelect (/* void */);
-extern PtrTextBuffer DestBuff (/* PtrTextBuffer adbuff,
+extern void ClearViewSelection (/* int frame */);
+extern void ClearAllViewSelection (/* void */);
+extern PtrTextBuffer DeleteBuffer (/* PtrTextBuffer adbuff,
                                   int frame */);
-extern void MajMrq (/* int frame,
+extern void UpdateViewSelMarks (/* int frame,
                        int dx,
                        int dblanc,
                        int dcar */);
-extern void ReevalMrq (/* ViewSelection * marque */);
-extern void PoseSelect (/* int frame,
+extern void ComputeViewSelMarks (/* ViewSelection * marque */);
+extern void InsertViewSelMarks (/* int frame,
                            PtrAbstractBox Pav,
                            int c1,
                            int cN,
                            boolean Debut,
                            boolean Fin,
                            boolean Unique */);
-extern void PoseMrq (/* int frame,
+extern void LocateSelectionInView (/* int frame,
                         int x,
                         int y,
                         int bouton */);
 extern int PavPosFen (/* PtrAbstractBox pav,
                          int frame,
                          int axe */);
-extern boolean PaveAffiche (/* PtrAbstractBox pav,
+extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
                                int frame */);
 
 #endif /* __STDC__ */

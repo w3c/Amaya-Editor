@@ -113,7 +113,7 @@ PtrDocument         pDoc;
    PtrSSchema        pSS;
 
    /* cherche d'abord le numero de l'attribut */
-   pSS = pEl->ElSructSchema;
+   pSS = pEl->ElStructSchema;
    attrNum = GetAttrWithException (ExceptNum, pSS);
    if (attrNum == 0)
       /* pas trouve' dans le schema de l'element, on cherche dans les */
@@ -247,21 +247,21 @@ PtrAttribute         pAttr;
 	      /* la variable de presentation a change' de valeur */
 	     {
 		pAbsBox->AbChange = TRUE;
-		if (VueAssoc (pEl))
+		if (AssocView (pEl))
 		   frame = (pDoc)->DocAssocFrame[(pEl)->ElAssocNum - 1];
 		else
 		   frame = (pDoc)->DocViewFrame[view - 1];
 #ifdef __COLPAGE__
-		height = HauteurCoupPage;
+		height = BreakPageHeight;
 #else  /* __COLPAGE__ */
-		height = HauteurPage;
+		height = PageHeight;
 #endif /* __COLPAGE__ */
 		ChangeConcreteImage (frame, &height, pAbsBox);
 		/* on ne reaffiche pas si on est en train de calculer les pages */
 #ifdef __COLPAGE__
-		if (HauteurCoupPage == 0)
+		if (BreakPageHeight == 0)
 #else  /* __COLPAGE__ */
-		if (HauteurPage == 0)
+		if (PageHeight == 0)
 #endif /* __COLPAGE__ */
 		   DisplayFrame (frame);
 	     }
@@ -383,7 +383,7 @@ int                *lastChar;
 
 	   /* prepare la creation des paves de la 2eme partie */
 	   for (view = 0; view < MAX_VIEW_DOC; view++)
-		if (!VueAssoc (*pFirstSel))
+		if (!AssocView (*pFirstSel))
 		  {
 		     if (pDoc->DocView[view].DvPSchemaView > 0)
 			/* la vue est ouverte */
@@ -394,7 +394,7 @@ int                *lastChar;
 			pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
 	   /* cree les paves de la deuxieme partie */
 	   CrPaveNouv (*pFirstSel, pDoc, 0);
-	   ApplReglesRetard (*pFirstSel, pDoc);
+	   ApplDelayedRule (*pFirstSel, pDoc);
 	}
    if (*lastChar > 0)
       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
@@ -509,22 +509,22 @@ PtrAttribute         pAttr;
 	/* on traite d'abord tout le sous-arbre */
 	if (!pEl->ElTerminal)
 	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
-	      if (pChild->ElSructSchema == pEl->ElSructSchema)
+	      if (pChild->ElStructSchema == pEl->ElStructSchema)
 		 /* same structure schema */
 		 ApplyAttrPRulesToSubtree (pChild, pDoc, pAttr);
 
 	/* on traite l'element lui-meme */
 	/* on cherche d'abord si pEl herite de pAttr */
-	if (pEl->ElSructSchema->SsPSchema != NULL)
-	   if (pEl->ElSructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	if (pEl->ElStructSchema->SsPSchema != NULL)
+	   if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
 	     {
 		/* pEl peut heriter d'un attribut */
-		if ((inheritedAttr = pEl->ElSructSchema->SsPSchema->
+		if ((inheritedAttr = pEl->ElStructSchema->SsPSchema->
 		     PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
 		  {
 		     /* la table d'heritage n'existe pas. On la cree */
 		     CreateInheritedAttrTable (pEl);
-		     inheritedAttr = pEl->ElSructSchema->SsPSchema->
+		     inheritedAttr = pEl->ElStructSchema->SsPSchema->
 			PsInheritedAttr[pEl->ElTypeNumber - 1];
 		  }
 		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
@@ -565,25 +565,25 @@ PtrAttribute         pAttr;
 	/* on traite d'abord les descendants */
 	if (!pEl->ElTerminal)
 	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
-	      if (pChild->ElSructSchema == pEl->ElSructSchema)
+	      if (pChild->ElStructSchema == pEl->ElStructSchema)
 		 /* meme schema de structure */
 		 ApplyAttrPRules (pChild, pDoc, pAttr);
      }
 
    /* on traite l'element lui-meme */
    /* cherche si pEl possede un attribut se comparant a pAttr */
-   if (pEl->ElSructSchema->SsPSchema != NULL)
+   if (pEl->ElStructSchema->SsPSchema != NULL)
      {
-	if ((attrValComp = pEl->ElSructSchema->SsPSchema->
+	if ((attrValComp = pEl->ElStructSchema->SsPSchema->
 	     PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
 	  {
 	     /* la table de comparaison n'existe pas. On la creee */
 	     CreateComparAttrTable (pAttr);
-	     attrValComp = pEl->ElSructSchema->SsPSchema->
+	     attrValComp = pEl->ElStructSchema->SsPSchema->
 		PsComparAttr[pAttr->AeAttrNum - 1];
 	  }
 	if (attrValComp != NULL)
-	   for (i = pEl->ElSructSchema->SsNAttributes; i > 0; i--)
+	   for (i = pEl->ElStructSchema->SsNAttributes; i > 0; i--)
 	     {
 		if ((*attrValComp)[i - 1])
 		   /* l'attribut de rang i se compare a pAttr */
@@ -678,7 +678,7 @@ boolean             force;
 			pAbsBox->AbLanguage = lang;
 			pAbsBox->AbChange = TRUE;
 			/* conserve le pointeur sur le pave a reafficher */
-			if (VueAssoc (pEl))
+			if (AssocView (pEl))
 			   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 			      Englobant (pAbsBox, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 			else
@@ -738,7 +738,7 @@ PtrDocument         pDoc;
 		      ReNumPages (pEl, pCnt->CnItem[1].CiViewNum);
 		   /* fait reafficher toutes les boites de presentation dependant */
 		   /* de la valeur de ce compteur */
-		   ChngBtCompt (pEl, pDoc, counter+1, pPS, pEl->ElSructSchema);
+		   ChngBtCompt (pEl, pDoc, counter+1, pPS, pEl->ElStructSchema);
 		}
 	   }
    }
@@ -808,21 +808,21 @@ PtrAttribute         pAttr;
 	/* process the subtree */
 	if (!pEl->ElTerminal)
 	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
-	      if (pChild->ElSructSchema == pEl->ElSructSchema)
+	      if (pChild->ElStructSchema == pEl->ElStructSchema)
 		 /* same structure schema */
 		 RemoveInheritedAttrPresent (pChild, pDoc, pAttr);
 
 	/* process element pEl itself */
-	if (pEl->ElSructSchema->SsPSchema != NULL)
-	   if (pEl->ElSructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	if (pEl->ElStructSchema->SsPSchema != NULL)
+	   if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
 	     {
 		/* pEl can inherit some presentation rules from attributes */
-		if ((inheritedAttr = pEl->ElSructSchema->SsPSchema->
+		if ((inheritedAttr = pEl->ElStructSchema->SsPSchema->
 		     PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
 		  {
 		     /* la table d'heritage n'existe pas. On la cree */
 		     CreateInheritedAttrTable (pEl);
-		     inheritedAttr = pEl->ElSructSchema->SsPSchema->
+		     inheritedAttr = pEl->ElStructSchema->SsPSchema->
 			PsInheritedAttr[pEl->ElTypeNumber - 1];
 		  }
 		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
@@ -862,25 +862,25 @@ PtrAttribute         pAttr;
 	/* on traite d'abord les descendants */
 	if (!pEl->ElTerminal)
 	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
-	      if (pChild->ElSructSchema == pEl->ElSructSchema)
+	      if (pChild->ElStructSchema == pEl->ElStructSchema)
 		 /* meme schema de structure */
 		 RemoveComparAttrPresent (pChild, pDoc, pAttr);
      }
 
    /* on traite l'element lui-meme */
    /* cherche si pEl possede un attribut se comparant a pAttr */
-   if (pEl->ElSructSchema->SsPSchema != NULL)
+   if (pEl->ElStructSchema->SsPSchema != NULL)
      {
-	if ((attrValComp = pEl->ElSructSchema->SsPSchema->
+	if ((attrValComp = pEl->ElStructSchema->SsPSchema->
 	     PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
 	  {
 	     /* la table de comparaison n'existe pas. On la creee */
 	     CreateComparAttrTable (pAttr);
-	     attrValComp = pEl->ElSructSchema->SsPSchema->
+	     attrValComp = pEl->ElStructSchema->SsPSchema->
 		PsComparAttr[pAttr->AeAttrNum - 1];
 	  }
 	if (attrValComp != NULL)
-	   for (i = pEl->ElSructSchema->SsNAttributes; i > 0; i--)
+	   for (i = pEl->ElStructSchema->SsNAttributes; i > 0; i--)
 	     {
 		if ((*attrValComp)[i - 1])
 		   /* l'attribut de rang i se compare a pAttr */
@@ -1234,7 +1234,7 @@ PtrDocument         pDoc;
    int                 i;
 
    /* eteint d'abord la selection */
-   RazSelect ();
+   ClearAllViewSelection ();
    /* Coupe les elements du debut et de la fin de la selection s'ils */
    /* sont partiellement selectionnes */
    CutSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
@@ -1495,7 +1495,7 @@ PtrDocument         pDoc;
      {
 	/* traite d'abord les attributs requis par la regle de structure qui */
 	/* definit l'element */
-	pSS = pEl->ElSructSchema;
+	pSS = pEl->ElStructSchema;
 	pSRule = &pSS->SsRule[pEl->ElTypeNumber - 1];
 	AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
 	/* traite toutes les regles d'extension de ce type d'element */
@@ -1508,7 +1508,7 @@ PtrDocument         pDoc;
 	       {
 		  /* cherche dans ce schema d'extension la regle qui concerne */
 		  /* le type de l'element */
-		  pSRule = ExtensionRule (pEl->ElSructSchema, pEl->ElTypeNumber, pSS);
+		  pSRule = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber, pSS);
 		  if (pSRule != NULL)
 		     /* il y a une regle d'extension, on la traite */
 		     AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
@@ -1561,9 +1561,9 @@ int                 ExceptNum;
    boolean             found;
    int                 attrNum;
 
-   pSS = pEl->ElSructSchema;
+   pSS = pEl->ElStructSchema;
    /* on recupere le numero d'attribut associe a l'exception */
-   attrNum = GetAttrWithException (ExceptNum, pEl->ElSructSchema);
+   attrNum = GetAttrWithException (ExceptNum, pEl->ElStructSchema);
    if (attrNum != 0)
      {
 	/* on cherche un attribut sur l'element */
@@ -1605,8 +1605,8 @@ int                 ExceptNum;
    GetAttr (&pAttr);
    if (pAttr != NULL)
      {
-       pAttr->AeAttrSSchema = pEl->ElSructSchema;
-       pAttr->AeAttrNum = GetAttrWithException (ExceptNum, pEl->ElSructSchema);
+       pAttr->AeAttrSSchema = pEl->ElStructSchema;
+       pAttr->AeAttrNum = GetAttrWithException (ExceptNum, pEl->ElStructSchema);
        pAttr->AeDefAttr = FALSE;
        pAttr->AeAttrType = AtEnumAttr;
        pAttr->AeAttrValue = attrVal;

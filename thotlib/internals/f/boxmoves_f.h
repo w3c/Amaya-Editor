@@ -6,167 +6,167 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void XYEnAbsolu ( PtrBox pBox,
+extern void IsXYPosComplete ( PtrBox pBox,
                          boolean *horizRef,
                          boolean *vertRef );
-extern boolean XEnAbsolu ( PtrBox pBox );
-extern boolean YEnAbsolu ( PtrBox pBox );
+extern boolean IsXPosComplete ( PtrBox pBox );
+extern boolean IsYPosComplete ( PtrBox pBox );
 extern boolean IsParentBox ( PtrBox pBox,
                              PtrBox pRefBox );
-extern void AjusteTrace ( PtrAbstractBox pAb,
+extern void MirrorShape ( PtrAbstractBox pAb,
                           boolean horizRef,
                           boolean vertRef,
                           boolean inAbtractBox );
-extern void HorizInverse ( PtrBox pBox,
+extern void XEdgesExchange ( PtrBox pBox,
                            OpRelation op );
-extern void VertInverse ( PtrBox pBox,
+extern void YEdgesExchange ( PtrBox pBox,
                           OpRelation op );
-extern void ChangeHtContenu ( PtrBox pBox,
+extern void ChangeDefaultHeight ( PtrBox pBox,
                               PtrBox pSourceBox,
                               int height,
                               int frame );
-extern void ChangeLgContenu ( PtrBox pBox,
+extern void ChangeDefaultWidth ( PtrBox pBox,
                               PtrBox pSourceBox,
                               int width,
                               int spaceDelta,
                               int frame );
-extern void ChangeLargeur ( PtrBox pBox,
+extern void ChangeWidth ( PtrBox pBox,
                             PtrBox pSourceBox,
                             PtrBox pFromBox,
                             int delta,
                             int spaceDelta,
                             int frame );
-extern void ChangeHauteur ( PtrBox pBox,
+extern void ChangeHeight ( PtrBox pBox,
                             PtrBox pSourceBox,
                             PtrBox pFromBox,
                             int delta,
                             int frame );
-extern void ChngBElast ( PtrBox pBox,
+extern void MoveBoxEdge ( PtrBox pBox,
                          PtrBox pSourceBox,
                          OpRelation op,
                          int delta,
                          int frame,
                          boolean EnX );
-extern void DepXContenu ( PtrBox pBox,
+extern void XMoveAllEnclosed ( PtrBox pBox,
                           int delta,
                           int frame );
-extern void DepYContenu ( PtrBox pBox,
+extern void YMoveAllEnclosed ( PtrBox pBox,
                           int delta,
                           int frame );
-extern void DepAxe ( PtrBox pBox,
+extern void MoveVertRef ( PtrBox pBox,
                      PtrBox pFromBox,
                      int delta,
                      int frame );
-extern void DepBase ( PtrBox pBox,
+extern void MoveHorizRef ( PtrBox pBox,
                       PtrBox pFromBox,
                       int delta,
                       int frame );
-extern void ModLarg ( PtrBox pBox,
+extern void ResizeWidth ( PtrBox pBox,
                       PtrBox pSourceBox,
                       PtrBox pFromBox,
                       int delta,
                       int spaceDelta,
                       int frame );
-extern void ModHaut ( PtrBox pBox,
+extern void ResizeHeight ( PtrBox pBox,
                       PtrBox pSourceBox,
                       PtrBox pFromBox,
                       int delta,
                       int frame );
-extern void DepOrgX ( PtrBox pBox,
+extern void XMove ( PtrBox pBox,
                       PtrBox pFromBox,
                       int delta,
                       int frame );
-extern void DepOrgY ( PtrBox pBox,
+extern void YMove ( PtrBox pBox,
                       PtrBox pFromBox,
                       int delta,
                       int frame );
-extern void Englobx ( PtrAbstractBox pAb,
+extern void WidthPack ( PtrAbstractBox pAb,
                       PtrBox pSourceBox,
                       int frame );
-extern void Engloby ( PtrAbstractBox pAb,
+extern void HeightPack ( PtrAbstractBox pAb,
                       PtrBox pSourceBox,
                       int frame );
 
 #else /* __STDC__ */
 
-extern void XYEnAbsolu (/* PtrBox pBox,
+extern void IsXYPosComplete (/* PtrBox pBox,
                            boolean *horizRef,
                            boolean *vertRef */);
-extern boolean XEnAbsolu (/* PtrBox pBox */);
-extern boolean YEnAbsolu (/* PtrBox pBox */);
+extern boolean IsXPosComplete (/* PtrBox pBox */);
+extern boolean IsYPosComplete (/* PtrBox pBox */);
 extern boolean IsParentBox (/* PtrBox pBox,
                                PtrBox pRefBox */);
-extern void AjusteTrace (/* PtrAbstractBox pAb,
+extern void MirrorShape (/* PtrAbstractBox pAb,
                             boolean horizRef,
                             boolean vertRef,
                             boolean inAbtractBox */);
-extern void HorizInverse (/* PtrBox pBox,
+extern void XEdgesExchange (/* PtrBox pBox,
                              OpRelation op */);
-extern void VertInverse (/* PtrBox pBox,
+extern void YEdgesExchange (/* PtrBox pBox,
                             OpRelation op */);
-extern void ChangeHtContenu (/* PtrBox pBox,
+extern void ChangeDefaultHeight (/* PtrBox pBox,
                                 PtrBox pSourceBox,
                                 int height,
                                 int frame */);
-extern void ChangeLgContenu (/* PtrBox pBox,
+extern void ChangeDefaultWidth (/* PtrBox pBox,
                                 PtrBox pSourceBox,
                                 int width,
                                 int spaceDelta,
                                 int frame */);
-extern void ChangeLargeur (/* PtrBox pBox,
+extern void ChangeWidth (/* PtrBox pBox,
                               PtrBox pSourceBox,
                               PtrBox pFromBox,
                               int delta,
                               int spaceDelta,
                               int frame */);
-extern void ChangeHauteur (/* PtrBox pBox,
+extern void ChangeHeight (/* PtrBox pBox,
                               PtrBox pSourceBox,
                               PtrBox pFromBox,
                               int delta,
                               int frame */);
-extern void ChngBElast (/* PtrBox pBox,
+extern void MoveBoxEdge (/* PtrBox pBox,
                            PtrBox pSourceBox,
                            OpRelation op,
                            int delta,
                            int frame,
                            boolean EnX */);
-extern void DepXContenu (/* PtrBox pBox,
+extern void XMoveAllEnclosed (/* PtrBox pBox,
                             int delta,
                             int frame */);
-extern void DepYContenu (/* PtrBox pBox,
+extern void YMoveAllEnclosed (/* PtrBox pBox,
                             int delta,
                             int frame */);
-extern void DepAxe (/* PtrBox pBox,
+extern void MoveVertRef (/* PtrBox pBox,
                        PtrBox pFromBox,
                        int delta,
                        int frame */);
-extern void DepBase (/* PtrBox pBox,
+extern void MoveHorizRef (/* PtrBox pBox,
                         PtrBox pFromBox,
                         int delta,
                         int frame */);
-extern void ModLarg (/* PtrBox pBox,
+extern void ResizeWidth (/* PtrBox pBox,
                         PtrBox pSourceBox,
                         PtrBox pFromBox,
                         int delta,
                         int spaceDelta,
                         int frame */);
-extern void ModHaut (/* PtrBox pBox,
+extern void ResizeHeight (/* PtrBox pBox,
                         PtrBox pSourceBox,
                         PtrBox pFromBox,
                         int delta,
                         int frame */);
-extern void DepOrgX (/* PtrBox pBox,
+extern void XMove (/* PtrBox pBox,
                         PtrBox pFromBox,
                         int delta,
                         int frame */);
-extern void DepOrgY (/* PtrBox pBox,
+extern void YMove (/* PtrBox pBox,
                         PtrBox pFromBox,
                         int delta,
                         int frame */);
-extern void Englobx (/* PtrAbstractBox pAb,
+extern void WidthPack (/* PtrAbstractBox pAb,
                         PtrBox pSourceBox,
                         int frame */);
-extern void Engloby (/* PtrAbstractBox pAb,
+extern void HeightPack (/* PtrAbstractBox pAb,
                         PtrBox pSourceBox,
                         int frame */);
 

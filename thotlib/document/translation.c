@@ -351,7 +351,7 @@ PtrDocument         pDoc;
    if (!(pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol ||
 	 pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPlyLine)
        || !transChar)
-      pTSch = SchemaTrad (pEl->ElSructSchema);
+      pTSch = SchemaTrad (pEl->ElStructSchema);
    else
       /* En examinant les elements englobants, on cherche un schema de */
       /* traduction qui contienne des regles pour ce type de feuille */
@@ -362,10 +362,10 @@ PtrDocument         pDoc;
 	pAncestor = pEl;
 	do
 	  {
-	     if (pSS != pAncestor->ElSructSchema)
+	     if (pSS != pAncestor->ElStructSchema)
 		/* un schema de structure different du precedent */
 	       {
-		  pSS = pAncestor->ElSructSchema;
+		  pSS = pAncestor->ElStructSchema;
 		  /* schema de traduction de cette structure */
 		  pTSch = SchemaTrad (pSS);
 		  if (pTSch != NULL)
@@ -940,15 +940,15 @@ PtrDocument         pDoc;
 			    if (Cond->TcAscendNature[0] == '\0')
 			       /* le type de l'ascendant est defini dans le meme schema de
 			          structure que l'element traite' */
-			       typeOK = EquivalentSRules (Cond->TcAscendType, pEl->ElSructSchema,
-						    pElem->ElTypeNumber, pElem->ElSructSchema, pElem->ElParent);
+			       typeOK = EquivalentSRules (Cond->TcAscendType, pEl->ElStructSchema,
+						    pElem->ElTypeNumber, pElem->ElStructSchema, pElem->ElParent);
 			    else
 			       /* le type de l'ascendant est defini dans un autre schema */
 			       if (strcmp (Cond->TcAscendNature,
-					pElem->ElSructSchema->SsName) == 0)
+					pElem->ElStructSchema->SsName) == 0)
 			       typeOK = EquivalentSRules (Cond->TcAscendType,
-					  pElem->ElSructSchema, pElem->ElTypeNumber,
-					 pElem->ElSructSchema, pElem->ElParent);
+					  pElem->ElStructSchema, pElem->ElTypeNumber,
+					 pElem->ElStructSchema, pElem->ElParent);
 			    pElem = pElem->ElParent;
 			 }
 		    }
@@ -994,7 +994,7 @@ PtrDocument         pDoc;
 					{
 					   pEl1 = pDoc->DocParameters[par - 1];
 					   ret = pEl1->ElTypeNumber == pElem->ElTypeNumber &&
-					      pEl1->ElSructSchema->SsCode == pElem->ElSructSchema->SsCode;
+					      pEl1->ElStructSchema->SsCode == pElem->ElStructSchema->SsCode;
 					}
 				   }
 				 while (!ret && par < MAX_PARAM_DOC);
@@ -1024,7 +1024,7 @@ PtrDocument         pDoc;
 					 /* l'element n'est pas reference' */
 					{
 					   /* l'element peut-il etre designe' par une reference? */
-					   pRefSS = pEl1->ElSructSchema;
+					   pRefSS = pEl1->ElStructSchema;
 					   /* on cherche toutes les references dans le schema de */
 					   /* structure de l'element */
 					   possibleRef = FALSE;
@@ -1129,7 +1129,7 @@ PtrDocument         pDoc;
 					   if (Cond->TcElemNature[0] == '\0')
 					      /* le type de l'ascendant est defini dans le meme schema de
 					         structure que l'element traite' */
-					      pSS = pEl->ElSructSchema;
+					      pSS = pEl->ElStructSchema;
 					   else
 					      /* le type de l'ascendant est defini dans un autre schema */
 					      pSS = NULL;
@@ -1143,10 +1143,10 @@ PtrDocument         pDoc;
 						{
 						   if (pSS != NULL)
 						      typeOK = EquivalentSRules (Cond->TcElemType, pSS,
-									   pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
-						   else if (strcmp (Cond->TcElemNature, pEl1->ElSructSchema->SsName) == 0)
+									   pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+						   else if (strcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
 						      typeOK = EquivalentSRules (Cond->TcElemType,
-									   pEl1->ElSructSchema, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
+									   pEl1->ElStructSchema, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
 						   else
 						      typeOK = FALSE;
 						   if (typeOK)
@@ -1164,10 +1164,10 @@ PtrDocument         pDoc;
 						{
 						   if (pSS != NULL)
 						      typeOK = EquivalentSRules (Cond->TcElemType, pSS,
-									   pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
-						   else if (strcmp (Cond->TcElemNature, pEl1->ElSructSchema->SsName) == 0)
+									   pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+						   else if (strcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
 						      typeOK = EquivalentSRules (Cond->TcElemType,
-									   pEl1->ElSructSchema, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
+									   pEl1->ElStructSchema, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
 						   else
 						      typeOK = FALSE;
 						   if (typeOK)
@@ -1188,7 +1188,7 @@ PtrDocument         pDoc;
 				 /* cherche si l'element ou un de ses ascendants possede */
 				 /* l'attribut cherche' avec la valeur cherchee */
 				 ret = FALSE;
-				 pSS = pEl->ElSructSchema;
+				 pSS = pEl->ElStructSchema;
 				 pEl1 = pElem;
 				 while (pEl1 != NULL && !ret)
 				   {
@@ -1404,7 +1404,7 @@ PtrElement          pElNum;
 	     while (pEl != NULL)
 	       {
 		  if (pEl->ElTypeNumber == pCntr->TnElemType1 &&
-		      pEl->ElSructSchema == pElNum->ElSructSchema)
+		      pEl->ElStructSchema == pElNum->ElStructSchema)
 		     /* l'element rencontre' a la meme type que l'element traite' */
 		     val++;	/* incremente le compteur */
 		  pEl = pEl->ElParent;
@@ -1421,7 +1421,7 @@ PtrElement          pElNum;
 	     else
 	       {
 		  /* schema de structure du compteur */
-		  pSSch = pElNum->ElSructSchema;
+		  pSSch = pElNum->ElStructSchema;
 		  if (pCntr->TnOperation != TCntrRank || pCntr->TnAcestorLevel == 0)
 		     /* Cherche le premier element de type TnElemType1 */
 		     /* englobant l'element a numeroter */
@@ -1443,7 +1443,7 @@ PtrElement          pElNum;
 		       while (level > 0 && pEl != NULL)
 			 {
 			    if (pEl->ElTypeNumber == pCntr->TnElemType1 &&
-				pEl->ElSructSchema->SsCode == pElNum->ElSructSchema->SsCode)
+				pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
 			       /* cet element englobant a le type qui incremente le compteur */
 			      {
 				 level--;
@@ -1511,7 +1511,7 @@ PtrElement          pElNum;
 		  do
 		    {
 		       pEl = FwdSearchElem2Types (pEl, pCntr->TnElemType2, pElNum->ElTypeNumber, pSSch,
-					 pElNum->ElSructSchema);
+					 pElNum->ElStructSchema);
 		       if (pEl != NULL)
 			    if (EquivalentType (pEl, pCntr->TnElemType2, pSSch))
 			       /* on ignore les pages qui ne concernent */
@@ -1567,12 +1567,12 @@ Name                schemaName;
 	     /* le fils a-t-il le type cherche' ? */
 	     if (pSS == NULL)
 	       {
-		  SSchemaOK = strcmp (schemaName, pChild->ElSructSchema->SsName) == 0;
-		  pSSchema = pChild->ElSructSchema;
+		  SSchemaOK = strcmp (schemaName, pChild->ElStructSchema->SsName) == 0;
+		  pSSchema = pChild->ElStructSchema;
 	       }
 	     else
 	       {
-		  SSchemaOK = pChild->ElSructSchema->SsCode == pSS->SsCode;
+		  SSchemaOK = pChild->ElStructSchema->SsCode == pSS->SsCode;
 		  pSSchema = pSS;
 	       }
 	     if (SSchemaOK && EquivalentSRules (typeNum, pSSchema, pChild->ElTypeNumber, pSSchema, *pEl))
@@ -1830,7 +1830,7 @@ PtrDocument         pDoc;
      }
    /* produit la traduction des attributs des elements ascendants qui */
    /* s'appliquent aux elements du type de notre element */
-   pTSch = SchemaTrad (pEl->ElSructSchema);
+   pTSch = SchemaTrad (pEl->ElStructSchema);
    if (pTSch != NULL)
       if (pTSch->TsInheritAttr[pEl->ElTypeNumber - 1])
 	 /* il y a effectivement heritage d'attribut pour ce type d'element */
@@ -1838,7 +1838,7 @@ PtrDocument         pDoc;
 	   /* cherche tous les attributs dont ce type d'element peut */
 	   /* heriter. */
 	   /* balaye la table des attributs */
-	   for (att = 1; att <= pEl->ElSructSchema->SsNAttributes; att++)
+	   for (att = 1; att <= pEl->ElStructSchema->SsNAttributes; att++)
 	      if (pTSch->TsAttrTRule[att - 1].AtrElemType == pEl->ElTypeNumber)
 		 /* cet attribut s'applique a ce type d'element */
 		{
@@ -1849,7 +1849,7 @@ PtrDocument         pDoc;
 			/* parcourt les attributs de chaque ascendant */
 			pAttr = pAsc->ElFirstAttr;
 			while (pAttr != NULL)
-			   if (pAttr->AeAttrSSchema == pEl->ElSructSchema &&
+			   if (pAttr->AeAttrSSchema == pEl->ElStructSchema &&
 			       pAttr->AeAttrNum == att)
 			      /* on a trouve' */
 			     {
@@ -1907,7 +1907,7 @@ PtrDocument         pDoc;
 #define MAX_PRULE_TABLE 50
    PtrPRule        PRuleTable[MAX_PRULE_TABLE];
 
-   pTSch = SchemaTrad (pEl->ElSructSchema);
+   pTSch = SchemaTrad (pEl->ElStructSchema);
    if (pTSch == NULL)
       return;
    /* 1ere regle de presentation specifique de l'element */
@@ -2001,7 +2001,7 @@ PtrDocument         pDoc;
 				  *lineBreak = FALSE;
 			       else
 				  /* on applique la regle */
-				  ApplyTRule (pTRule, pTSch, pEl->ElSructSchema, pEl, *transChar, *lineBreak, removeEl, pPRule, pAttr, pDoc);
+				  ApplyTRule (pTRule, pTSch, pEl->ElStructSchema, pEl, *transChar, *lineBreak, removeEl, pPRule, pAttr, pDoc);
 			    /* passe a la regle suivante */
 			    pTRule = pTRule->TrNextTRule;
 			 }
@@ -2351,7 +2351,7 @@ boolean           *removeEl;
 			   /* cherche si l'element ou un de ses ascendants possede */
 			   /* l'attribut a sortir */
 			   found = FALSE;
-			   pSS = pEl->ElSructSchema;
+			   pSS = pEl->ElStructSchema;
 			   while (pEl != NULL && !found)
 			     {
 				pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
@@ -2488,7 +2488,7 @@ boolean           *removeEl;
 
 			case ToPairId:
 			   /* traduit l'identificateur d'une paire */
-			   if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+			   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 			      /* l'element est bien une paire */
 			      PutInt (pEl->ElPairIdent, fileNum, NULL, pDoc, lineBreak);
 			   break;
@@ -2601,16 +2601,16 @@ boolean           *removeEl;
 				   /* On le prend s'il a le type voulu */
 				  {
 				     if (pTRule->TrObjectNature[0] == '\0')
-					pSS = pEl->ElSructSchema;
+					pSS = pEl->ElStructSchema;
 				     else
 					pSS = NULL;
 				     if (!((pSS != NULL &&
-					    EquivalentSRules (pTRule->TrObjectNum, pSS, pRefEl->ElTypeNumber, pRefEl->ElSructSchema, pRefEl->ElParent)
+					    EquivalentSRules (pTRule->TrObjectNum, pSS, pRefEl->ElTypeNumber, pRefEl->ElStructSchema, pRefEl->ElParent)
 					   )
 					   || (pSS == NULL &&
-					       strcmp (pTRule->TrObjectNature, pRefEl->ElSructSchema->SsName) == 0
-					       && EquivalentSRules (pTRule->TrObjectNum, pRefEl->ElSructSchema,
-							      pRefEl->ElTypeNumber, pRefEl->ElSructSchema, pRefEl->ElParent)
+					       strcmp (pTRule->TrObjectNature, pRefEl->ElStructSchema->SsName) == 0
+					       && EquivalentSRules (pTRule->TrObjectNum, pRefEl->ElStructSchema,
+							      pRefEl->ElTypeNumber, pRefEl->ElStructSchema, pRefEl->ElParent)
 					   )
 					 )
 					)
@@ -2646,14 +2646,14 @@ boolean           *removeEl;
 				else
 				  {
 				     /* l'element est-il une reference ? */
-				     if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference)
+				     if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference)
 					pRef = pEl->ElReference;
 				     /* ou est-il defini comme identique a une reference */
-				     else if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsIdentity)
+				     else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsIdentity)
 				       {
-					  i = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrIdentRule;
-					  if (pEl->ElSructSchema->SsRule[i - 1].SrConstruct == CsBasicElement
-					      && pEl->ElSructSchema->SsRule[i - 1].SrBasicType == CsReference)
+					  i = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrIdentRule;
+					  if (pEl->ElStructSchema->SsRule[i - 1].SrConstruct == CsBasicElement
+					      && pEl->ElStructSchema->SsRule[i - 1].SrBasicType == CsReference)
 					     pRef = pEl->ElReference;
 				       }
 				  }
@@ -2686,7 +2686,7 @@ boolean           *removeEl;
 				pElGet = pEl;
 				do
 				  {
-				     pSS = pElGet->ElSructSchema;
+				     pSS = pElGet->ElStructSchema;
 				     possibleRef = FALSE;
 				     /* l'element est-il reference'? */
 				     if (pElGet->ElReferredDescr != NULL)
@@ -2795,10 +2795,10 @@ boolean           *removeEl;
 			   /* cherche ensuite parmi les freres successifs */
 			   found = FALSE;
 			   do
-				if ((pElGet->ElSructSchema == pEl->ElSructSchema ||
-				     (strcmp (pTRule->TrElemNature, pElGet->ElSructSchema->SsName) == 0))
-				    && EquivalentSRules (pTRule->TrElemType, pElGet->ElSructSchema,
-						   pElGet->ElTypeNumber, pElGet->ElSructSchema, pElGet->ElParent))
+				if ((pElGet->ElStructSchema == pEl->ElStructSchema ||
+				     (strcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0))
+				    && EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
+						   pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent))
 				   found = TRUE;
 				else
 				   pElGet = pElGet->ElNext;
@@ -2807,7 +2807,7 @@ boolean           *removeEl;
 			case RpDescend:
 			   /* Cherche dans le sous-arbre un element ayant le type voulu. */
 			   if (pTRule->TrElemNature[0] == '\0')
-			      pSS = pEl->ElSructSchema;
+			      pSS = pEl->ElStructSchema;
 			   else
 			      pSS = NULL;
 			   SearchDescent (&pElGet, pTRule->TrElemType, pSS, pTRule->TrElemNature);
@@ -2837,16 +2837,16 @@ boolean           *removeEl;
 			      /* a le type voulu */
 			     {
 				if (pTRule->TrElemNature[0] == '\0')
-				   pSS = pEl->ElSructSchema;
+				   pSS = pEl->ElStructSchema;
 				else
 				   pSS = NULL;
 				if (!((pSS != NULL &&
-				       EquivalentSRules (pTRule->TrElemType, pSS, pElGet->ElTypeNumber, pElGet->ElSructSchema, pElGet->ElParent)
+				       EquivalentSRules (pTRule->TrElemType, pSS, pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent)
 				      )
 				      || (pSS == NULL &&
-					  strcmp (pTRule->TrElemNature, pElGet->ElSructSchema->SsName) == 0
-					  && EquivalentSRules (pTRule->TrElemType, pElGet->ElSructSchema,
-							 pElGet->ElTypeNumber, pElGet->ElSructSchema, pElGet->ElParent)
+					  strcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0
+					  && EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
+							 pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent)
 				      )
 				    )
 				   )
@@ -3046,11 +3046,11 @@ boolean             enforce;
    if (!pEl->ElTransContent || enforce)
      {
 	/* cherche le schema de traduction qui s'applique a l'element */
-	pTSch = SchemaTrad (pEl->ElSructSchema);
+	pTSch = SchemaTrad (pEl->ElStructSchema);
 	if (pTSch == NULL)
 	   return;
 	removeEl = FALSE;
-	pSS = pEl->ElSructSchema;
+	pSS = pEl->ElStructSchema;
 	elemType = pEl->ElTypeNumber;
 	/* envoie l'evenement ElemExport.Pre a l'application, si elle */
 	/* le demande */
@@ -3074,31 +3074,31 @@ boolean             enforce;
 	if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
 	   if (pEl->ElParent != NULL)
 	      /* il y a un englobant */
-	      if (pEl->ElParent->ElSructSchema != pEl->ElSructSchema)
+	      if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)
 		 /* cherche la regle introduisant la nature dans le schema de */
 		 /* structure de l'englobant. */
 		{
-		   pParentSS = pEl->ElParent->ElSructSchema;
+		   pParentSS = pEl->ElParent->ElStructSchema;
 		   found = FALSE;
 		   i = 0;
 		   do
 		     {
 			pSRule = &pParentSS->SsRule[i++];
 			if (pSRule->SrConstruct == CsNatureSchema)
-			   if (pSRule->SrSSchemaNat == pEl->ElSructSchema)
+			   if (pSRule->SrSSchemaNat == pEl->ElStructSchema)
 			      found = TRUE;
 		     }
 		   while (!found && i < pParentSS->SsNRules);
 		   if (found)
 		     {
-			pTS = SchemaTrad (pEl->ElParent->ElSructSchema);
+			pTS = SchemaTrad (pEl->ElParent->ElStructSchema);
 			if (pTS != NULL)
 			   if (pTS->TsElemTRule[i - 1] != NULL)
 			      /* il y a des regles de traduction pour la nature, on */
 			      /* les prend */
 			     {
 				pTSch = pTS;
-				pSS = pEl->ElParent->ElSructSchema;
+				pSS = pEl->ElParent->ElStructSchema;
 				elemType = i;
 			     }
 		     }
@@ -3178,7 +3178,7 @@ boolean             enforce;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }

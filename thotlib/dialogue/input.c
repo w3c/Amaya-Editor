@@ -742,7 +742,7 @@ int                 key;
 	/* Traitemet des caracteres au cas par cas */
 	else
 	  {
-	     if (!StructSelectionMode && !FntrTable[frame - 1].FrSelectOnePosition)
+	     if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
 	       {
 		  /* Delete the current selection */
 		  EndInsert ();

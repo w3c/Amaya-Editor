@@ -1170,7 +1170,7 @@ char          *shape;
 	 InsertChar ('p', 1);
       /* Compute coords attribute */
       SetAreaCoords (doc, el);
-      /* Complete creation of Area and selection of destination */
+      /* FrameUpdating creation of Area and selection of destination */
       SelectDestination (doc, el);
    }
 }

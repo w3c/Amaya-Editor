@@ -66,7 +66,7 @@ static int      HauteurRefBasPage;	/* Hauteur minimum des bas de page */
 static int      HauteurRefHautPage;     /* Hauteur minimum des hauts de page */
 #endif /* __COLPAGE__ */
 static int      CompteurPages;
-/* Hauteurffective est declaree dans page.var (car modifiee par traitepage.c) */
+/* RealPageHeight est declaree dans page.var (car modifiee par traitepage.c) */
 
 #ifdef __STDC__
 extern void DisplayFrame (int) ;
@@ -176,7 +176,7 @@ static void ChangeRHPage(PavRacine, pDoc, VueNb)
        {
      	pPosV = &pP->AbVertPos;
 	    	pPosV->PosAbRef = NULL;
-		pPosV->PosDistance = HauteurTotalePage + 10;
+		pPosV->PosDistance = WholePageHeight + 10;
 		pPosV->PosUnit == UnPoint;
 		pPosV->PosUserSpecified = FALSE;
 		pP->AbVertPosChange = TRUE;
@@ -407,7 +407,7 @@ static void SupprMarquePage(pPage, pDoc, pLib)
   notifyEl.document = (Document)IdentDocument(pDoc);
   notifyEl.element = (Element)(pPage);
   notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
-  notifyEl.elementType.ElSSchema = (SSchema)(pPage->ElSructSchema);
+  notifyEl.elementType.ElSSchema = (SSchema)(pPage->ElStructSchema);
   notifyEl.position = 1;
   if (!CallEventType((NotifyEvent *)&notifyEl, TRUE))
     {
@@ -421,7 +421,7 @@ static void SupprMarquePage(pPage, pDoc, pLib)
     notifyEl.document = (Document)IdentDocument(pDoc);
     notifyEl.element = (Element)(pPage->ElParent);
     notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
-    notifyEl.elementType.ElSSchema = (SSchema)(pPage->ElSructSchema);
+    notifyEl.elementType.ElSSchema = (SSchema)(pPage->ElStructSchema);
     nbFreres = 0;
     DeleteElement(&pPage);
     *pLib = NULL;
@@ -535,7 +535,7 @@ static	void AffMsgPage (pDoc, pElRacine, pEl, VueSch, Assoc, prempage)
   /* affiche un message avec le numero de page */
   /* affiche d'abord le nom de la vue */
   if (Assoc)
-    name = pElRacine->ElSructSchema->SsRule[pElRacine->ElTypeNumber -1].SrName;
+    name = pElRacine->ElStructSchema->SsRule[pElRacine->ElTypeNumber -1].SrName;
   else
     name = pDoc->DocSSchema->SsPSchema->PsView[VueSch -1];
 
@@ -585,12 +585,12 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
   /* reconstruit l'image de la vue et l'affiche */
   /* si on n'est pas en batch */
 #ifdef __COLPAGE__ 
-  HauteurCoupPage = 0;
-  HauteurTotalePage = 0;
+  BreakPageHeight = 0;
+  WholePageHeight = 0;
   HauteurRefBasPage = 0;
 #else /* __COLPAGE__ */
-  HauteurPage = 0;
-  HauteurBasPage = 0;
+  PageHeight = 0;
+  PageFooterHeight = 0;
 #endif /* __COLPAGE__ */
 
   /* cree l'image abstraite des vues concernees */
@@ -605,7 +605,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
           pElRacine = pDoc->DocAssocRoot[Vue - 1];
           PavRacine = pElRacine->ElAbstractBox[0];
           frame = pDoc->DocAssocFrame[Vue - 1];
-	  CreePaves(pElRacine, pDoc, 1, TRUE, TRUE, &complet);
+	  AbsBoxesCreate(pElRacine, pDoc, 1, TRUE, TRUE, &complet);
           h = 0;
           (void) ChangeConcreteImage(frame, &h, PavRacine);
           if (!sel)
@@ -614,7 +614,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
       else
         {
           pElRacine = pDoc->DocRootElement;
-          VueSch = VueAAppliquer(pDoc->DocRootElement, NULL, pDoc, Vue);
+          VueSch = AppliedView(pDoc->DocRootElement, NULL, pDoc, Vue);
       	  for (v = 1; v <= MAX_VIEW_DOC; v++)
 	    if (pDoc->DocView[v - 1].DvPSchemaView == VueSch)
 	      {
@@ -626,7 +626,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
 #endif /* __COLPAGE__ */
           	PavRacine = pDoc->DocViewRootAb[v - 1];
           	frame = pDoc->DocViewFrame[v - 1];
-	  	CreePaves(pElRacine, pDoc, v, TRUE, TRUE, &complet);
+	  	AbsBoxesCreate(pElRacine, pDoc, v, TRUE, TRUE, &complet);
                 h = 0;
                 (void) ChangeConcreteImage(frame, &h, PavRacine);
                 if (!sel)
@@ -678,7 +678,7 @@ static	void Coupe(pEl, CarCoupe, pDoc, VueNb)
     {
       /* le pave a change' : il est plus petit */
       pP->AbChange = TRUE;
-      if (!VueAssoc(pEl))
+      if (!AssocView(pEl))
 	pDoc->DocViewModifiedAb[VueNb-1] = Englobant(pP, pDoc->DocViewModifiedAb[VueNb-1]);
       else
 	  pDoc->DocAssocModifiedAb[pEl->ElAssocNum-1] =  
@@ -694,7 +694,7 @@ static	void Coupe(pEl, CarCoupe, pDoc, VueNb)
       while (!(pP == NULL));
     }
   /* prepare la creation des paves de la 2eme partie */
-  if (!VueAssoc(pEl))
+  if (!AssocView(pEl))
       if (pDoc->DocView[VueNb-1].DvPSchemaView > 0)
         pDoc->DocViewFreeVolume[VueNb-1] = THOT_MAXINT;
   else
@@ -702,7 +702,7 @@ static	void Coupe(pEl, CarCoupe, pDoc, VueNb)
 	pDoc->DocAssocFreeVolume[pEl->ElAssocNum-1] = THOT_MAXINT;
   /* cree les paves de la deuxieme partie */
   CrPaveNouv(pEl->ElNext, pDoc, VueNb);
-  ApplReglesRetard(pEl->ElNext, pDoc);
+  ApplDelayedRule(pEl->ElNext, pDoc);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -893,7 +893,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 		|| pP->AbElement->ElPageType == PgUser)))
    {
 #else /* __COLPAGE__ */ 
-  RefAssocHautPage = NULL;
+  PageHeaderRefAssoc = NULL;
   pElPage = NULL;
   pP = pAb;
 #endif /* __COLPAGE__ */
@@ -956,7 +956,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
            stop = TRUE;
         else
            if (pEl1->ElPrevious->ElIsCopy &&
-               TypeHasException(ExcPageBreakRepetition, pEl1->ElPrevious->ElTypeNumber, pEl1->ElPrevious->ElSructSchema))
+               TypeHasException(ExcPageBreakRepetition, pEl1->ElPrevious->ElTypeNumber, pEl1->ElPrevious->ElStructSchema))
               pEl1 = pEl1->ElPrevious;
            else
               stop = TRUE;
@@ -1032,7 +1032,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   notifyEl.document = (Document)IdentDocument(pDoc);
   notifyEl.element = (Element)(pEl->ElParent);
   notifyEl.elementType.ElTypeNum = PageBreak+1;
-  notifyEl.elementType.ElSSchema = (SSchema)(ElRacine->ElSructSchema);
+  notifyEl.elementType.ElSSchema = (SSchema)(ElRacine->ElStructSchema);
   nbFreres = 0;
   pF = pEl1;
   while (pF->ElPrevious != NULL)
@@ -1045,7 +1045,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   notifyEl.position = nbFreres;
   CallEventType((NotifyEvent *)&notifyEl, TRUE);
   /* cree l'element Marque de Page */
-  pElPage = NewSubtree(PageBreak+1, ElRacine->ElSructSchema,
+  pElPage = NewSubtree(PageBreak+1, ElRacine->ElStructSchema,
 		       pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
   /* insere l'element dans l'arbre abstrait */
   if (pEl1->ElParent != NULL)
@@ -1095,7 +1095,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 		   /* il faut creer une nouvelle marque de page, */
 		   pEl1->ElPageType = PgComputed;
 	            /* creer une nouvelle marque de colonnes ColGroup */
-	           pElColG = NewSubtree(PageBreak+1, ElRacine->ElSructSchema,
+	           pElColG = NewSubtree(PageBreak+1, ElRacine->ElStructSchema,
 	                       pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		   /* insere l'element dans l'arbre abstrait */
 	           InsertElementAfter(pEl1, pElColG);
@@ -1103,7 +1103,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 		   pElColG->ElPageNumber = 0;
 		   pElColG->ElViewPSchema = VueSch;   
 		   /* et creer une nouvelle marque de colonne gauche */
-	           pElCol = NewSubtree(PageBreak+1, ElRacine->ElSructSchema,
+	           pElCol = NewSubtree(PageBreak+1, ElRacine->ElStructSchema,
 	                       pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		   /* insere l'element dans l'arbre abstrait */
 	           InsertElementAfter(pElColG, pElCol);
@@ -1127,14 +1127,14 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
               /* message indiquant la progression du formatage */
               pEl1->ElPageNumber = CompteurPages;
             else  /* calcule le numero de page */
-              pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElSructSchema, pSchP,
+              pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP,
                                pElPage, VueSch);
    }	    
   /* envoie l'evenement ElemNew.Post */
 #ifndef PAGINEETIMPRIME
   NotifySubTree(TteElemNew, pDoc, pElPage, 0);
 #endif PAGINEETIMPRIME
- NbBoiteHautPageACreer = 0;
+ NbBoxesPageHeaderToCreate = 0;
  /* code de creation des hauts de page supprime */
 
  /* on ne peut creer les paves de la nouvelle marque de page */
@@ -1208,10 +1208,10 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   /* cree les paves de l'element Marque de Page qu'on vient */
   /* d'inserer */
 
- /* creation par appel de CreePaves et non CrPaveNouv car il n'y */
+ /* creation par appel de AbsBoxesCreate et non CrPaveNouv car il n'y */
  /* a plus de localite dans l'i.a. (les paves de page sont sous */
  /* la racine) */
- if (VueAssoc(pEl))
+ if (AssocView(pEl))
    {
      pElRacine = pDoc->DocAssocRoot[pEl->ElAssocNum - 1];
      pRacine = pElRacine->ElAbstractBox[0];
@@ -1225,20 +1225,20 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
  h = -1; /* changement de signification de la valeur de h */
  bool = ChangeConcreteImage(frame, &h, pRacine);
  FreeDeadAbstractBoxes(pRacine);
- /* appel de CreePaves */
+ /* appel de AbsBoxesCreate */
  /* TODO : a mettre en coherence ->CrPaveNouv pour appel ApplRegleRet */
- pPa1 = CreePaves(pElPage, pDoc, VueNb, TRUE, TRUE, &complet);
- ApplReglesRetard(pElPage, pDoc);
+ pPa1 = AbsBoxesCreate(pElPage, pDoc, VueNb, TRUE, TRUE, &complet);
+ ApplDelayedRule(pElPage, pDoc);
  /* si on a cree  une marque colonne groupees, on cree son pave */
  if (pElColG != NULL)
    {
-     pPa1 = CreePaves(pElColG, pDoc, VueNb, TRUE, TRUE, &complet);
-     ApplReglesRetard(pElColG, pDoc);
+     pPa1 = AbsBoxesCreate(pElColG, pDoc, VueNb, TRUE, TRUE, &complet);
+     ApplDelayedRule(pElColG, pDoc);
    }
  if (pElCol != NULL)
    {
-     pPa1 = CreePaves(pElCol, pDoc, VueNb, TRUE, TRUE, &complet);
-     ApplReglesRetard(pElCol, pDoc);
+     pPa1 = AbsBoxesCreate(pElCol, pDoc, VueNb, TRUE, TRUE, &complet);
+     ApplDelayedRule(pElCol, pDoc);
      /* on a cree aussi une marque colonne, on cree son pave */
    }
  /* AbstractBox modifie au niveau de la racine */
@@ -1246,8 +1246,8 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
     /* TODO utile ? ... a supprimer */
   /* la coupure de page pour le cas ou on traite des colonnes */
   ChangeRHPage (pRacine, pDoc, VueNb);
-  Hauteurffective = HauteurCoupPage;
-  bool = ChangeConcreteImage(frame, &Hauteurffective, pRacine);
+  RealPageHeight = BreakPageHeight;
+  bool = ChangeConcreteImage(frame, &RealPageHeight, pRacine);
   pPa1 = pElPage->ElAbstractBox[VueNb-1];
  /* tous les paves de la page prec ne sont plus marques surpage et horspage */
  /* inutile .... et incomplet: il faudrait faire toute la hierarchie */
@@ -1283,7 +1283,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
       pEl1->ElPageNumber = CompteurPages;
     } 
   else	/* calcule le numero de page */
-    pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElSructSchema, pSchP,
+    pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP,
 			       pElPage, VueSch);
   /* envoie l'evenement ElemNew.Post */
 #ifndef PAGINEETIMPRIME
@@ -1292,14 +1292,14 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 
   /* Si la page precedente prevoit des elements associes en haut de */
   /* page, on peut les creer maintenant */
-  if (NbBoiteHautPageACreer > 0)
+  if (NbBoxesPageHeaderToCreate > 0)
     /* cherche d'abord la boite du filet de separation de pages: */
     /* c'est la premiere boite contenue dans la boite de saut de page */
     /* qui n'est pas une boite de presentation. */
     {
-      if (PageConcernee->ElAbstractBox[VueNb-1] != NULL)
+      if (WorkingPage->ElAbstractBox[VueNb-1] != NULL)
 	{
-	  pP1 = PageConcernee->ElAbstractBox[VueNb-1]->AbFirstEnclosed;
+	  pP1 = WorkingPage->ElAbstractBox[VueNb-1]->AbFirstEnclosed;
 	  stop = FALSE;
 	  do
 	    if (pP1 == NULL)
@@ -1309,19 +1309,19 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 	    else
 	      pP1 = pP1->AbNext;
 	  while (!(stop));
-	  SauvePavPage = PageConcernee->ElAbstractBox[VueNb-1];
-	  PageConcernee->ElAbstractBox[VueNb-1] = pP1;
-	  RefAssocHautPage = NULL;
-	  /* au retour de CrPavPres, */
-	  /* RefAssocHautPage pointera sur la premiere reference */
+	  SauvePavPage = WorkingPage->ElAbstractBox[VueNb-1];
+	  WorkingPage->ElAbstractBox[VueNb-1] = pP1;
+	  PageHeaderRefAssoc = NULL;
+	  /* au retour de CrAbsBoxesPres, */
+	  /* PageHeaderRefAssoc pointera sur la premiere reference */
 	  /* qui designe le premier element associe' mis dans la */
 	  /* boite de haut de page */
-	  PavHautPage = CrPavPres(PageConcernee, pDoc, RegleCreation, 
-				  PageConcernee->ElSructSchema, NULL, VueNb,
-				  SchPresRegle, FALSE, TRUE);
-	  PageConcernee->ElAbstractBox[VueNb-1] = SauvePavPage;
+	  PavHautPage = CrAbsBoxesPres(WorkingPage, pDoc, PageCreateRule, 
+				  WorkingPage->ElStructSchema, NULL, VueNb,
+				  PageSchPresRule, FALSE, TRUE);
+	  WorkingPage->ElAbstractBox[VueNb-1] = SauvePavPage;
 	  if (PavHautPage == NULL)
-	    RefAssocHautPage = NULL;
+	    PageHeaderRefAssoc = NULL;
 	  else
 	    /* signale ces paves au Mediateur, sans faire reevaluer la coupure de page. */
 	    {
@@ -1329,7 +1329,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 	      (void) ChangeConcreteImage(frame, &h, PavHautPage);
 	    }
 	}
-      NbBoiteHautPageACreer = 0;
+      NbBoxesPageHeaderToCreate = 0;
     }
   /* cree les paves de l'element Marque de Page qu'on vient */
   /* d'inserer, mais sans les paves des eventuels elements associes */
@@ -1345,7 +1345,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
     (*ThotLocalActions[T_insertpage])(pElPage, pDoc, VueNb, &coupe);
   if (!coupe)
     CrPaveNouv(pElPage, pDoc, VueNb);
-  if (!VueAssoc(pEl))
+  if (!AssocView(pEl))
     PavModifie = pDoc->DocViewModifiedAb[VueNb-1];
   else
     PavModifie = pDoc->DocAssocModifiedAb[pEl->ElAssocNum-1];
@@ -1441,7 +1441,7 @@ static int DeplCoupure(pAb, NoBr1, VueSch)
 		else
 		  i = pRe1->PrMinValue;
 		Min = PixelValue(i, pRe1->PrMinUnit, pAb);
-		if (Hauteurffective-PosV < Min)
+		if (RealPageHeight-PosV < Min)
 		  /* la hauteur minimum n'y est pas, on deplace la */
 		  /* hauteur de page en haut du pave */
 		  ret = PosV;
@@ -1479,7 +1479,7 @@ static int DeplCoupure(pAb, NoBr1, VueSch)
 		else
 		  i = pRe1->PrMinValue;
 		Min = PixelValue(i, pRe1->PrMinUnit, pAb);
-		if (PosV + Hauteur - Hauteurffective < Min)
+		if (PosV + Hauteur - RealPageHeight < Min)
 		  /* la frontiere de page passe trop pres du bas du */
 		  /* pave, on la ramene en haut de la zone autorisee */
 		  ret = PosV + Hauteur - Min;
@@ -1793,14 +1793,14 @@ static void PlacePage(pPage, frame, PaveCoupeOrig, PaveTropHaut, pDoc, VueSch, V
 	  NouvHPage = DeplCoupure(ElRacine->ElAbstractBox[VueNb-1], NoBr1, VueSch);
 	  if (NouvHPage != 0)
 	    {
-	      AncienHPage = Hauteurffective;
-	      Hauteurffective = NouvHPage;
+	      AncienHPage = RealPageHeight;
+	      RealPageHeight = NouvHPage;
 	      /* demande au mediateur de positionner la nouvelle */
 	      /* frontiere de page par rapport a tous les paves de la vue */
-	      (void) MarqueCoupure(ElRacine->ElAbstractBox[VueNb-1],&Hauteurffective);
+	      (void) MarqueCoupure(ElRacine->ElAbstractBox[VueNb-1],&RealPageHeight);
 	      /* verifie que le mediateur a effectivement change' la */
 	      /* hauteur de page */
-	      if (Hauteurffective == AncienHPage)
+	      if (RealPageHeight == AncienHPage)
 		/* pas de changement, inutile de continuer sinon ca va */
 		/* boucler indefiniment */
 		NouvHPage = 0;
@@ -1872,7 +1872,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
  
   pPage = NULL;
   PaveTropHaut = FALSE;
-  VueSch = VueAAppliquer(ElRacine, NULL, pDoc, VueNb);
+  VueSch = AppliedView(ElRacine, NULL, pDoc, VueNb);
   /* on recherche le pave de plus haut niveau qui soit insecable et */
   /* traverse' par la frontiere normale de page. On aura besoin de */
   /* connaitre ce pave' s'il est plus haut qu'une page et qu'on doit */
@@ -1922,7 +1922,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
  /* dans la version de Vincent, ChangeConcreteImage est appelee avec une */
  /* Hauteur de Page fixe : maintenamt, on va chercher a la mettre a */
  /* jour a chaque fois que on ajoutera un elt associe en bas */
- /* de page ; ce sera fait dans CreePaves */
+ /* de page ; ce sera fait dans AbsBoxesCreate */
   PlacePage(&pPage, frame, &PaveCoupeOrig, &PaveTropHaut, pDoc,
 	    VueSch, VueNb, ElRacine);
 #ifdef __COLPAGE__
@@ -1973,11 +1973,11 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 	  /* demande au mediateur la position verticale de cette boite filet */
 	  HautCoupure(pAb, TRUE, &Hauteur, &PosVFilet, &CarCoupe);
 	/* verifie la hauteur de la page */
-	if (PosVFilet > HauteurPage + HauteurBasPage)
+	if (PosVFilet > PageHeight + PageFooterHeight)
 	  /* la page est trop haute */
 	  /* dh: hauteur qui depasse de la page standard */
 	  {
-	    dh = PosVFilet-HauteurPage - HauteurBasPage;
+	    dh = PosVFilet-PageHeight - PageFooterHeight;
 	    /* cherche le pave qui precede la marque de page */
 	    PavPrec = pPage->ElAbstractBox[VueNb-1];
 	    stop = FALSE;
@@ -1993,41 +1993,41 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 	      /* la page n'est pas vide */
 	      /* sauve la hauteur de page normale */
 	      {
-		HPageNormale = HauteurPage;
+		HPageNormale = PageHeight;
 		/* reduit la hauteur de page */
-		HauteurPage = Hauteurffective - dh;
-		if (RefAssocHautPage != NULL)
-		 if (RefAssocHautPage->ElAbstractBox[VueNb-1] != NULL)
+		PageHeight = RealPageHeight - dh;
+		if (PageHeaderRefAssoc != NULL)
+		 if (PageHeaderRefAssoc->ElAbstractBox[VueNb-1] != NULL)
 		  /* la page deborde parce qu'on vient de creer dans la boite */
 		  /* de saut de page precedente une boite de haut de page */
 		  /* contenant des elements associes. On deplace la marque de */
 		  /* page courante juste au-dessus de la premiere reference au */
 		  /* premier element associe' du haut de page. */
 		  {
-		    HautCoupure(RefAssocHautPage->ElAbstractBox[VueNb-1], TRUE,
+		    HautCoupure(PageHeaderRefAssoc->ElAbstractBox[VueNb-1], TRUE,
 				&Hauteur,&PosV,&CarCoupe);
 		    if (HPageNormale < PosV)
-		      HauteurPage = PosV;
+		      PageHeight = PosV;
 		    else	
-		      HauteurPage = HPageNormale;
+		      PageHeight = HPageNormale;
 		  }
-		if (HauteurPage < HMinPage)
-		  HauteurPage = HMinPage;
+		if (PageHeight < HMinPage)
+		  PageHeight = HMinPage;
 		/* detruit le saut de page et ses paves */
 		DetPavVue(pPage, pDoc, FALSE, VueNb);
 		/* traitement des elements demandant des coupures speciales */
 		if (ThotLocalActions[T_deletepageab]!= NULL)
 		  (*ThotLocalActions[T_deletepageab])
 		      (pPage, pDoc, VueNb);
-		if (PageConcernee == pPage)
-		  NbBoiteHautPageACreer = 0;
+		if (WorkingPage == pPage)
+		  NbBoxesPageHeaderToCreate = 0;
 		/* signale les paves morts au Mediateur */
-		if (!VueAssoc(ElRacine))
+		if (!AssocView(ElRacine))
 		  PavReaff = pDoc->DocViewModifiedAb[VueNb-1];
 		else	
 		  PavReaff = pDoc->DocAssocModifiedAb[ElRacine->ElAssocNum-1];
-		Hauteurffective = HauteurPage;
-		(void) ChangeConcreteImage(frame, &Hauteurffective, PavReaff);
+		RealPageHeight = PageHeight;
+		(void) ChangeConcreteImage(frame, &RealPageHeight, PavReaff);
 		/* libere tous les paves morts de la vue */ 
 		FreeDeadAbstractBoxes(pAb);
 		/* detruit la marque de page a liberer dans l'arbre abstrait */
@@ -2035,13 +2035,13 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		/* signale au Mediateur les paves morts par suite de */
 		/* fusion des elements precedent et suivant les marques */
 		/* supprimees. */
-		if (!VueAssoc(ElRacine))
+		if (!AssocView(ElRacine))
 		  PavReaff = pDoc->DocViewModifiedAb[VueNb-1];
 		else	
 		  PavReaff = pDoc->DocAssocModifiedAb[ElRacine->ElAssocNum-1];
 		if (PavReaff != NULL)
 		  {
-		    h = Hauteurffective; 
+		    h = RealPageHeight; 
 		    (void) ChangeConcreteImage(frame, &h, PavReaff);
 		  }
 		/* libere les elements rendus inutiles par les fusions */
@@ -2052,7 +2052,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		PlacePage(&pPage, frame, &PaveCoupeOrig, &
 			  PaveTropHaut, pDoc, VueSch, VueNb, ElRacine);
 		/* retablit la hauteur de page */
-		HauteurPage = HPageNormale;
+		PageHeight = HPageNormale;
 	      }
 	  }
       }
@@ -2064,13 +2064,13 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 
 #ifdef __COLPAGE__
 /* ---------------------------------------------------------------------- */
-/* | HautPage met a jour les variables HauteurCoupPage et HauteurBasPage| */
+/* | HautPage met a jour les variables BreakPageHeight et PageFooterHeight| */
 /* |		selon le type de page auquel appartient l'element	| */
 /* |		Marque Page pointe par pElPage.				| */
 /* |		Vue indique le numero de la vue pour laquelle on	| */
 /* |		construit des pages.					| */
  /*      VueSch indique le numero de la vue dans le schema.      | */
- /*      HauteurCoupPage : variable globale de thot (partagee    | */
+ /*      BreakPageHeight : variable globale de thot (partagee    | */
  /*      entre page.c et crimabs.c).		     		| */
  /*      HauteurRefBasPage : variable globale du module page.	| */
  /*      Cette procedure ne fait rien si pElPage est une marque  | */
@@ -2169,9 +2169,9 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
 	  if (pR != NULL)
 	    if (pR->PrType == PtHeight)
 	      if (!pR->PrDimRule.DrPosition)
-         HauteurTotalePage = pR->PrDimRule.DrValue +
+         WholePageHeight = pR->PrDimRule.DrValue +
                              HauteurRefHautPage + HauteurRefBasPage ;
-         /* HauteurTotalePage = hauteur max totale de la page */
+         /* WholePageHeight = hauteur max totale de la page */
          /* definie par l'utilisateur ; exemple A4 = 29.7 cm */
 	  	/* toujours exprimee en unite fixe (verifie par le compilo) */
 	}
@@ -2237,7 +2237,7 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
        }
      /* change le parametre de la regle */
      pRegleDimV->PrDimRule.DrValue =
-             HauteurTotalePage - HauteurRefBasPage - HauteurRefHautPage;
+             WholePageHeight - HauteurRefBasPage - HauteurRefHautPage;
      /* pCorps = pave du corps de page */
      /* applique la nouvelle regle specifique Verticale */
      if (pRegleDimV != NULL)
@@ -2249,14 +2249,14 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
 
  /* A chaque nouvel element Marque Page, on met a jour les */
  /* hauteurs significatives de la page */
- HauteurCoupPage = HauteurTotalePage - HauteurRefBasPage;
-         /* HauteurCoupPage = hauteur haut de page + hauteur du corps */
+ BreakPageHeight = WholePageHeight - HauteurRefBasPage;
+         /* BreakPageHeight = hauteur haut de page + hauteur du corps */
          /* Attention on suppose que le haut de page ne peut pas */
-         /* depasser la valeur HauteurCoupPage ... faut-il prevoir */
+         /* depasser la valeur BreakPageHeight ... faut-il prevoir */
          /* des controles pour le verifier (cas des schemas !) ? */
 
- HauteurBasPage = HauteurRefBasPage;
- HauteurHautPage = HauteurRefHautPage;
+ PageFooterHeight = HauteurRefBasPage;
+ PageHeaderHeight = HauteurRefHautPage;
  } /* fin cas ou pElPage est une marque page */
 }
 
@@ -2323,7 +2323,7 @@ static void DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch)
 #ifdef __COLPAGE__
  /* vide la chaine des regles en retard sur la racine */
  /* normalement doit etre deja vide ! */
- ApplReglesRetard(PavRacine->AbFirstEnclosed->AbElement, pDoc);
+ ApplDelayedRule(PavRacine->AbFirstEnclosed->AbElement, pDoc);
  /* libere tous les paves morts de la vue */
   /* ceci est signale au Mediateur */
  h = -1; /* changement de signification de h */
@@ -2340,7 +2340,7 @@ static void DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch)
 #ifdef __COLPAGE__
  PavRacine->AbTruncatedTail = TRUE;
 #endif /* __COLPAGE__ */
-  /* on marque le pave racine complet en tete pour que CreePaves */
+  /* on marque le pave racine complet en tete pour que AbsBoxesCreate */
   /* engendre effectivement les paves de presentation cree's en tete */
   /* par l'element racine (regles CreateFirst). */
   if (PavRacine->AbLeafType == LtCompound)
@@ -2441,7 +2441,7 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
         notifyEl.document = (Document)IdentDocument(pDoc);
         notifyEl.element = (Element)(pEl->ElParent);
         notifyEl.elementType.ElTypeNum = PageBreak+1;
-        notifyEl.elementType.ElSSchema = (SSchema)(pElRacine->ElSructSchema);
+        notifyEl.elementType.ElSSchema = (SSchema)(pElRacine->ElStructSchema);
         notifyEl.position = nbFreres;
         ok = !CallEventType((NotifyEvent *)&notifyEl, TRUE);
 	}
@@ -2450,7 +2450,7 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
       if (ok)
 	{
 	/* cree l'element marque de page */
-	pElPage = NewSubtree(PageBreak+1, pElRacine->ElSructSchema, pDoc,
+	pElPage = NewSubtree(PageBreak+1, pElRacine->ElStructSchema, pDoc,
 			     pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	/* insere la nouvelle marque de page apres le dernier fils */
 	InsertElementAfter(pEl, pElPage);	/* remplit cette marque de page */
@@ -2463,7 +2463,7 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
 	   pElPage->ElPageNumber = 1;
 	else
 	   /* calcule le numero de page */
-	   pElPage->ElPageNumber = ComptVal(cpt, pElPage->ElSructSchema, pSchP,
+	   pElPage->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP,
 					 pElPage, VueSch);
 #ifndef PAGINEETIMPRIME
 	/* envoie l'evenement ElemNew.Post */
@@ -2615,7 +2615,7 @@ PtrPSchema	pSchPage;
   int		h;
 #endif PAGINEETIMPRIME
 
-  PaginationEnCours = TRUE;
+  RunningPaginate = TRUE;
 #ifdef __COLPAGE__
   CompteurPages = 0;
 #endif /* __COLPAGE__ */
@@ -2623,7 +2623,7 @@ PtrPSchema	pSchPage;
   CompteurPages = 1;
   PremPage = NULL;
  pavPagePrec = NULL;
-  NbBoiteHautPageACreer = 0;
+  NbBoxesPageHeaderToCreate = 0;
   if (Assoc)	/* c'est une vue d'elements associes */
     		/* le nuemero d'element associe est Vue */
     {
@@ -2636,7 +2636,7 @@ PtrPSchema	pSchPage;
     {
       VueNb = Vue;	/* numero dans le document de la vue a paginer */
       /* numero dans le schema de la vue a paginer */
-      VueSch = VueAAppliquer(pDoc->DocRootElement, NULL, pDoc, VueNb);
+      VueSch = AppliedView(pDoc->DocRootElement, NULL, pDoc, VueNb);
       pElRacine = pDoc->DocRootElement;
       frame = pDoc->DocViewFrame[Vue - 1];
     }
@@ -2673,8 +2673,8 @@ PtrPSchema	pSchPage;
 
 #ifdef __COLPAGE__
  /* la suite du code est different */
-  HauteurCoupPage = 0;
-HauteurTotalePage = 0;
+  BreakPageHeight = 0;
+WholePageHeight = 0;
   HauteurRefBasPage = 0;	/* cree les paves du debut de la vue */
  pPageTraitee = NULL;
   if (Assoc)
@@ -2691,8 +2691,8 @@ HauteurTotalePage = 0;
    if (pDoc->DocViewFreeVolume[Vue - 1] < 100)
      pDoc->DocViewFreeVolume[Vue - 1] = 100;
  }
- /* on fait evaluer HauteurCoupPage avant d'appeler CreePaves */
- /* car HauteurCoupPage peut eventuellement dynamiquement changer si */
+ /* on fait evaluer BreakPageHeight avant d'appeler AbsBoxesCreate */
+ /* car BreakPageHeight peut eventuellement dynamiquement changer si */
  /* il y a des elements en bas de page */
  /* pElPage1 contient le 1er element marquepage de cette vue */
  /* attention Vue = no d'elt associe (si vue assoc) */
@@ -2700,16 +2700,16 @@ HauteurTotalePage = 0;
  /*           VueNb = vue d'affichage (tj 1 si vue assoc) */
  /* mis en commentaire pour tester l'equilibrage ?? */
  /* HautPage(pElPage1, VueNb, VueSch, frame, pDoc); */
- ArretAvantCreation = FALSE;  /*  on veut creer la 1ere MP */
- TrouveMPHB = FALSE; /* pour savoir la cause de l'arret de */
- A_Equilibrer = TRUE;
+ StopBeforeCreation = FALSE;  /*  on veut creer la 1ere MP */
+ FoundPageHF = FALSE; /* pour savoir la cause de l'arret de */
+ ToBalance = TRUE;
  /* creation des paves: soit volume soit MP ou d'un elt asscoc HB */
-  /* CreePaves doit s'arreter apres creation d'1 MP ou elt assoc */
- /* le booleen TrouveMPHB n'est jamais mis a faux par CreePaves */
+  /* AbsBoxesCreate doit s'arreter apres creation d'1 MP ou elt assoc */
+ /* le booleen FoundPageHF n'est jamais mis a faux par AbsBoxesCreate */
  /* il est seulement affecte a vrai lorsqu'une MP ou un elt assoc */
- /* est trouve par CreePaves. C'est a Page de le remettre a faux */
-     RefAssocHBPage = NULL; /* on initialise RefAssocHBPage */
-  pP = CreePaves(pElRacine, pDoc, VueNb, TRUE, TRUE, &complet);
+ /* est trouve par AbsBoxesCreate. C'est a Page de le remettre a faux */
+     HFPageRefAssoc = NULL; /* on initialise HFPageRefAssoc */
+  pP = AbsBoxesCreate(pElRacine, pDoc, VueNb, TRUE, TRUE, &complet);
  /* mise a jour de PavRacine apres la creation des paves */
  /* dans le cas de l'appel depuis print, il n'y avait aucun pave cree */
   if (Assoc) 
@@ -2722,8 +2722,8 @@ HauteurTotalePage = 0;
  /* pour permettre a ChangeConcreteImage de determiner la coupure de page */
  ChangeRHPage (PavRacine, pDoc, VueNb);
   /* fait calculer l'image par le Mediateur */
-  Hauteurffective = HauteurCoupPage;
-  tropcourt = ChangeConcreteImage(frame, &Hauteurffective, PavRacine);
+  RealPageHeight = BreakPageHeight;
+  tropcourt = ChangeConcreteImage(frame, &RealPageHeight, PavRacine);
   /* cherche le pave de la premiere marque de page */
   pPageATraiter = PavRacine->AbFirstEnclosed;
  /* c'est le premier fils de la racine */
@@ -2736,7 +2736,7 @@ HauteurTotalePage = 0;
  /* On prend la hauteur de ce type de page */
  /* cette hauteur change si la page est une PgBegin (nouveau */
  /* type de marque page) */
- /* sinon, HautPage positionne HauteurCoupPage a la valeur donnee */
+ /* sinon, HautPage positionne BreakPageHeight a la valeur donnee */
  /* par la regle courante. Remise a jour necessaire car la page */
  /* precedente pouvait avoir des elements en bas de page qui */
  /* ont fait changer la hauteur de page. Cf. CrPavHB */
@@ -2766,7 +2766,7 @@ HauteurTotalePage = 0;
    }
  else        /* calcule le numero de page */
    pEl1->ElPageNumber =
-     ComptVal(cpt, pEl1->ElSructSchema, pSchP, pP->AbElement,VueSch);
+     ComptVal(cpt, pEl1->ElStructSchema, pSchP, pP->AbElement,VueSch);
         /* affiche un message avec le numero de page */
  AffMsgPage (pDoc, pElRacine, pP->AbElement, VueSch, Assoc, &prempage)
 
@@ -2800,17 +2800,17 @@ HauteurTotalePage = 0;
      /* des elements associes en haut et bas de page */
      /* c'est dans cette boucle que l'on cree les colonnes */
      /* car on n'utilise pas pPageATraiter pour les colonnes */
-     ArretAvantCreation = TRUE; /* var globale pour CreePaves */
-                      /* CreePaves doit s'arreter AVANT creation */
+     StopBeforeCreation = TRUE; /* var globale pour AbsBoxesCreate */
+                      /* AbsBoxesCreate doit s'arreter AVANT creation */
                       /* d'1 MP ou d'un elt asscoc HB */
-	    A_Equilibrer = TRUE;
+	    ToBalance = TRUE;
      while (pPageATraiter == NULL && PavRacine->AbTruncatedTail
             && tropcourt)
        /* boucle d'ajout des paves */
        {
-         RefAssocHBPage = NULL; /* on reinitialise RefAssocHBPage */
-         PavAssocADetruire = NULL; /* et PavAssocADetruire */
-         TrouveMPHB = FALSE; /* pour savoir la cause de l'arret de */
+         HFPageRefAssoc = NULL; /* on reinitialise HFPageRefAssoc */
+         AbsBoxAssocToDestroy = NULL; /* et AbsBoxAssocToDestroy */
+         FoundPageHF = FALSE; /* pour savoir la cause de l'arret de */
          /* creation des paves: soit volume soit MP soit elt assoc HB */
          /* on boucle jusqu'a avoir assez de paves pour faire */
          /* une page */
@@ -2834,7 +2834,7 @@ HauteurTotalePage = 0;
                     volprec = PavRacine->AbVolume;
                     /* volume de la vue avant */
                     /* demande la creation de paves supplementaires */
-		    ArretColGroupee = FALSE;
+		    StopGroupCol = FALSE;
              list = fopen("/perles/roisin/debug/avajoutpage","w");
              if (list != NULL)
                {
@@ -2843,12 +2843,12 @@ HauteurTotalePage = 0;
                  fclose(list);
               }		
                     AddAbsBoxes(PavRacine, pDoc, FALSE);
-		    if (A_Equilibrer && ArretColGroupee)
+		    if (ToBalance && StopGroupCol)
 		      {
-		        /* mise a jour de ArretColGroupee et du vollibre */
+		        /* mise a jour de StopGroupCol et du vollibre */
 		        /* pour permettre la creation des paves dans la */
 		        /* procedure d'equilibrage */
-		        ArretColGroupee = FALSE;
+		        StopGroupCol = FALSE;
                         if (Assoc)
                  /* ATTENTION si Assoc est vrai, il faut utiliser Vue */
                  /* et non VueNb, car Vue est le numero d'element associe */
@@ -2856,7 +2856,7 @@ HauteurTotalePage = 0;
                         else
 	                  pDoc->DocViewFreeVolume[VueNb - 1] = volume;
 		        Equilibrer_Col (pDoc, PavRacine, VueNb, VueSch);
-		 /*       A_Equilibrer = FALSE; */ /* TODO A revoir */
+		 /*       ToBalance = FALSE; */ /* TODO A revoir */
 		               /* pour ne pas recommencer */
 		               /* si l'equilibrage a deja ete fait */
 		      }
@@ -2864,14 +2864,14 @@ HauteurTotalePage = 0;
                       /* rien n'a ete cree, augmente le
                          volume de ce qui peut etre cree' */
               /* et on deverrouille la creation avec */
-              /* ArretAvantCreation */
+              /* StopBeforeCreation */
               /* (cas ou le premier element a ajouter est une */
               /* MP ou un elt assoc HB) */
               {
                        volume = 2 * volume;
-                ArretAvantCreation = FALSE;
-                TrouveMPHB = FALSE;
-               /* CreePaves doit s'arreter apres creation d'1 MP */
+                StopBeforeCreation = FALSE;
+                FoundPageHF = FALSE;
+               /* AbsBoxesCreate doit s'arreter apres creation d'1 MP */
                /* ou d'un elt asscoc HB */
               }
                   }
@@ -2881,25 +2881,25 @@ HauteurTotalePage = 0;
                 /* appelle ChangeConcreteImage pour savoir si au moins une boite est */
                 /* traversee par une frontiere de page apres l'ajout des
                    paves supplementaires */
-                Hauteurffective = HauteurCoupPage;
+                RealPageHeight = BreakPageHeight;
          /* on change la regle des paves corps de page (sauf si MP mise */
          /* par l'utilisateur) : hauteur = celle du contenu */
          /* et on decale la position du bas et du filet de page */
          ChangeRHPage (PavRacine, pDoc, VueNb);
                 tropcourt =
-           ChangeConcreteImage(frame, &Hauteurffective, PavRacine);
+           ChangeConcreteImage(frame, &RealPageHeight, PavRacine);
          /* si tropcourt, et si l'arret de creation est du^ */
-         /* a un element MP ou ref assoc HB (TrouveMPHB = vrai) */
-         /* on bascule ArretAvantCreation pour permettre */
+         /* a un element MP ou ref assoc HB (FoundPageHF = vrai) */
+         /* on bascule StopBeforeCreation pour permettre */
          /* de continuer le calcul de l'i.a. (la creation */
          /* s'etait arretee avant ou apres une MP ou une ref */
          /* d'un elt assoc a placer en haut ou bas de page */
-         if (tropcourt && TrouveMPHB)
+         if (tropcourt && FoundPageHF)
            {
-             ArretAvantCreation = !ArretAvantCreation;
-             TrouveMPHB = FALSE; /* pour le tour suivant*/
+             StopBeforeCreation = !StopBeforeCreation;
+             FoundPageHF = FALSE; /* pour le tour suivant*/
            }
-         if (!tropcourt && TrouveMPHB && RefAssocHBPage != NULL)
+         if (!tropcourt && FoundPageHF && HFPageRefAssoc != NULL)
            /* si on a cree une reference a un element associe */
            /* qui a provoque la creation des paves de cet element */
            /* associe en faisant deborder la page, il faut */
@@ -2909,10 +2909,10 @@ HauteurTotalePage = 0;
            /* dans la page) les paves de l'elt assoc et/ou de */
            /* l'englobant si pas d'autre elt assoc dans la page */
            {
-            if (PavAssocADetruire != NULL)
+            if (AbsBoxAssocToDestroy != NULL)
               {
                 /* on detruit le pave et ses eventuels paves de pres */
-                pP = PavAssocADetruire;
+                pP = AbsBoxAssocToDestroy;
                 while (pP->AbPrevious != NULL 
                     && pP->AbPrevious->AbElement == pP->AbElement) 
                     {
@@ -2920,7 +2920,7 @@ HauteurTotalePage = 0;
                       TuePave(pP);
                       SuppRfPave (pP, &PavR, pDoc);
                     }
-                pP = PavAssocADetruire;
+                pP = AbsBoxAssocToDestroy;
                 while (pP->AbNext != NULL 
                     && pP->AbNext->AbElement == pP->AbElement)
                     {
@@ -2928,14 +2928,14 @@ HauteurTotalePage = 0;
                       TuePave(pP);
                       SuppRfPave (pP, &PavR, pDoc);
                     }
-                TuePave(PavAssocADetruire);
-                SuppRfPave (PavAssocADetruire, &PavR, pDoc);
+                TuePave(AbsBoxAssocToDestroy);
+                SuppRfPave (AbsBoxAssocToDestroy, &PavR, pDoc);
                 /* on signale les paves detruits au mediateur */
                 h = -1; /* changement de signification de h */
                 tropcourt = ChangeConcreteImage(frame, &h, PavRacine);
                 /* on libere les paves */
-		       pP = PavAssocADetruire->AbEnclosing;
-                FreeDeadAbstractBoxes (PavAssocADetruire->AbEnclosing);
+		       pP = AbsBoxAssocToDestroy->AbEnclosing;
+                FreeDeadAbstractBoxes (AbsBoxAssocToDestroy->AbEnclosing);
                 /* on recherche le pave englobant haut ou bas de page */
 		       while (pP->AbElement != pCorps->AbElement)
 			 pP = pP->AbEnclosing;
@@ -2944,11 +2944,11 @@ HauteurTotalePage = 0;
 	               /* Hauteur = dim verticale du haut (ou bas) de page */
                 if (pP->AbPrevious == pCorps) 
 			/* des paves ont ete ajoutes en bas de page */
-	                 HauteurBasPage = Hauteur;
+	                 PageFooterHeight = Hauteur;
 	               else /* des paves ont ete ajoutes en haut de page */
-	                 HauteurHautPage = Hauteur;
-	               /* HauteurCoupPage = hauteur totale - hauteur bas */
-	               HauteurCoupPage = HauteurTotalePage - HauteurBasPage;
+	                 PageHeaderHeight = Hauteur;
+	               /* BreakPageHeight = hauteur totale - hauteur bas */
+	               BreakPageHeight = WholePageHeight - PageFooterHeight;
 
                 /* on modifie la regle de presentation specifique */
                 /* du corps de page */
@@ -2956,10 +2956,10 @@ HauteurTotalePage = 0;
                                 PtHeight, &nouveau, pDoc, VueNb);
                 /* change le parametre de la regle */
                 pRegleDimV->PrDimRule.DrValue =
-                    HauteurTotalePage - HauteurBasPage -HauteurHautPage;
+                    WholePageHeight - PageFooterHeight -PageHeaderHeight;
              }
            /* on fait evaluer la position du pave reference */
-            HautCoupure(RefAssocHBPage->ElAbstractBox[VueNb-1], TRUE,
+            HautCoupure(HFPageRefAssoc->ElAbstractBox[VueNb-1], TRUE,
                        &Hauteur, &PosV, &CarCoupe);
            /* on force la coupure a cette hauteur */
            h = PosV;
@@ -2982,9 +2982,9 @@ HauteurTotalePage = 0;
          volprec = PavRacine->AbVolume;
 	        /* Insere un element marque page a la frontiere de page et */
 	        /* detruit tous les paves qui precedent cette frontiere. */
-         /* on repositionne ArretAvantCreation a faux pour */
+         /* on repositionne StopBeforeCreation a faux pour */
          /* permettre la creation des paves du nouvel elt MP */
-         ArretAvantCreation = FALSE;
+         StopBeforeCreation = FALSE;
           list = fopen("/perles/roisin/debug/posemarque","w");
           if (list != NULL)
             {
@@ -3017,7 +3017,7 @@ HauteurTotalePage = 0;
  /* ajoute une marque de page a la fin s'il n'y en a pas deja une */
  /* ce n'est plus necessaire : code supprime */
 
-  PaginationEnCours = FALSE;
+  RunningPaginate = FALSE;
   /* detruit l'image abstraite de la fin du document */
   DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch);
   /* reconstruit l'image de la vue et l'affiche */
@@ -3029,13 +3029,13 @@ HauteurTotalePage = 0;
 
 #else /* __COLPAGE__ */
 
-  HauteurPage = 0;
-  HauteurBasPage = 0;	/* cree les paves du debut de la vue */
+  PageHeight = 0;
+  PageFooterHeight = 0;	/* cree les paves du debut de la vue */
   if (Assoc)
     pDoc->DocAssocFreeVolume[Vue - 1] = pDoc->DocAssocVolume[Vue - 1];
   else
     pDoc->DocViewFreeVolume[Vue - 1] = pDoc->DocViewVolume[Vue - 1];
-  pP = CreePaves(pElRacine, pDoc, VueNb, TRUE, TRUE, &complet);
+  pP = AbsBoxesCreate(pElRacine, pDoc, VueNb, TRUE, TRUE, &complet);
   volume = 0;
  /* mise a jour de PavRacine apres la creation des paves */
  /* dans le cas de l'appel depuis print, il n'y avait aucun pave cree */
@@ -3064,8 +3064,8 @@ HauteurTotalePage = 0;
       /* la hauteur de ce type de page */
       HautPage(pP->AbElement, VueSch, &b, &pSchPage);
   /* fait calculer l'image par le Mediateur */
-  Hauteurffective = HauteurPage;
-  tropcourt = ChangeConcreteImage(frame, &Hauteurffective, PavRacine);
+  RealPageHeight = PageHeight;
+  tropcourt = ChangeConcreteImage(frame, &RealPageHeight, PavRacine);
   do	
     /* traite une page apres l'autre */
     {
@@ -3127,7 +3127,7 @@ HauteurTotalePage = 0;
 		  {
 		    /* calcule le numero de page */
 		    pEl1->ElPageNumber = 
-		      ComptVal(cpt, pEl1->ElSructSchema, pSchP, pP->AbElement, VueSch);
+		      ComptVal(cpt, pEl1->ElStructSchema, pSchP, pP->AbElement, VueSch);
 		    /* on met a jour les boites de presentation des compteurs des */
 		    /* pages suivantes dans le cas de la pagination depuis l'impression */
 		    /* cet appel est fait tout a la fin dans le cas d'une pagination */
@@ -3136,7 +3136,7 @@ HauteurTotalePage = 0;
 #ifdef PAGINEETIMPRIME
 		    MajNumeros(NextElement(pEl1), pEl1, pDoc, TRUE);
 		    /* serait-ce plus rapide si on faisait durectement l'appel : */
-		    /* ChngBoiteCompteur(pEl1, pDoc, cpt, pSchP, pEl1->ElSructSchema, TRUE); */
+		    /* ChngBoiteCompteur(pEl1, pDoc, cpt, pSchP, pEl1->ElStructSchema, TRUE); */
 #endif PAGINEETIMPRIME
 		  }
 #ifndef PAGINEETIMPRIME
@@ -3226,19 +3226,19 @@ HauteurTotalePage = 0;
 	  /* appelle ChangeConcreteImage pour savoir si au moins une boite est */
 	  /* traversee par une frontiere de page apres l'ajout des
 	     paves supplementaires */
-	  Hauteurffective = HauteurPage;
+	  RealPageHeight = PageHeight;
 	  if (Assoc)
 	    {
 	      if (pDoc->DocAssocModifiedAb[Vue-1] != NULL)
 	        {
 	  	  tropcourt = 
-		  ChangeConcreteImage(frame, &Hauteurffective, pDoc->DocAssocModifiedAb[Vue-1]);
+		  ChangeConcreteImage(frame, &RealPageHeight, pDoc->DocAssocModifiedAb[Vue-1]);
 		  pDoc->DocAssocModifiedAb[Vue-1] = NULL;
 	        } 
 	    }
 	  else if (pDoc->DocViewModifiedAb[Vue-1] != NULL)
 	    {
-	      tropcourt = ChangeConcreteImage(frame, &Hauteurffective, pDoc->DocViewModifiedAb[Vue-1]);
+	      tropcourt = ChangeConcreteImage(frame, &RealPageHeight, pDoc->DocViewModifiedAb[Vue-1]);
 	      pDoc->DocViewModifiedAb[Vue-1] = NULL;
 	      /* si de nouveaux paves ont ete crees, on refait un tour pour */
 	      /* traiter les marques de pages qu'ils contiennent */
@@ -3303,7 +3303,7 @@ HauteurTotalePage = 0;
  }
 #endif PAGINEETIMPRIME
 
-  PaginationEnCours = FALSE;
+  RunningPaginate = FALSE;
   /* detruit l'image abstraite de la fin du document */
   DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch);
   /* reconstruit l'image de la vue et l'affiche */

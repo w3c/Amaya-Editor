@@ -103,7 +103,7 @@ PtrDocument         pDoc;
 
    ret = FALSE;
    if (pEl->ElParent != NULL)
-      if (TypeHasException (ExcExtendedSelection, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
+      if (TypeHasException (ExcExtendedSelection, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElStructSchema))
 	 /* l'element est dans un Dessin ou dans un Groupe a l'interieur */
 	 /* d'un dessin */
 	{
@@ -223,7 +223,7 @@ PtrElement          pEl;
 
 
    if (pEl->ElParent != NULL)
-      if (TypeHasException (ExcIsDraw, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
+      if (TypeHasException (ExcIsDraw, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElStructSchema))
 	 /* l'element est dans un Dessin ou dans un Groupe a l'interieur */
 	 /* d'un dessin */
 	 /* Les quatre attributs de position verticale (PositionV, */
@@ -423,7 +423,7 @@ PtrElement          pEl;
 
    if (pEl != NULL)
       if (pEl->ElParent != NULL)
-	 if (TypeHasException (ExcIsDraw, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
+	 if (TypeHasException (ExcIsDraw, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElStructSchema))
 	    /* l'element est dans un Dessin ou dans un Groupe a l'interieur */
 	    /* d'un dessin */
 	    /* Un au moins des attributs suivants doit etre present : PositionV, */

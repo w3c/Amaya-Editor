@@ -1371,7 +1371,7 @@ int                *Y;
 	else
 	  {
 	     /* calcule la position de la souris dans la boite designee */
-	     pFrame = &FntrTable[frame - 1];
+	     pFrame = &ViewFrameTable[frame - 1];
 	     pAb = ((PtrElement) element)->ElAbstractBox[view - 1];
 	     if (pAb == NULL)
 		TtaError (ERR_no_selection_in_view);

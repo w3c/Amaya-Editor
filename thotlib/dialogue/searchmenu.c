@@ -287,7 +287,7 @@ PtrSearchContext           context;
       if (context->SWholeDocument)
 	 /* il faut rechercher dans tout le document */
 	 /* cherche l'arbre a traiter apres celui ou` on n'a pas trouve' */
-	 if (ArbreSuivant (&ElSuiv, &i, context))
+	 if (NextTree (&ElSuiv, &i, context))
 	    /* il y a un autre arbre a traiter, on continue avec le */
 	    /* debut de ce nouvel arbre */
 	    ok = ChElemVide (ElSuiv, context);
@@ -399,7 +399,7 @@ PtrSearchContext           context;
       if (context->SWholeDocument)
 	 /* il faut rechercher dans tout le document */
 	 /* cherche l'arbre a traiter apres celui ou` on n'a pas trouve' */
-	 if (ArbreSuivant (&ElSuiv, &i, context))
+	 if (NextTree (&ElSuiv, &i, context))
 	    /* il y a un autre arbre a traiter, on continue avec le */
 	    /* debut de ce nouvel arbre */
 	    ok = ChReferVide (ElSuiv, context);
@@ -836,7 +836,7 @@ PtrDocument         pDoc;
 	     /* l'element reference' */
 	     strcpy (buftext, TtaGetMessage (LIB, EARCH_REF_TO_EL));
 	     strcat (buftext, " ");
-	     strcat (buftext, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	     strcat (buftext, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	     TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
 			  buftext);
 	     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference,
@@ -1354,7 +1354,7 @@ char               *txt;
 					    /* il faut rechercher dans tout le document */
 					    /* cherche l'arbre a traiter apres celui ou` on */
 					    /* n'a pas trouve' */
-					    if (ArbreSuivant (&premsel, &premcar, DomaineCherche))
+					    if (NextTree (&premsel, &premcar, DomaineCherche))
 					      {
 						 stop = FALSE;
 						 dersel = premsel;
@@ -1436,7 +1436,7 @@ boolean             Assoc;
      {
 	/* cherche le numero de vue dans le schema de presentation */
 	/* applique' au document */
-	VueSchPageCherchee = VueAAppliquer (pDoc->DocRootElement, NULL, pDoc,
+	VueSchPageCherchee = AppliedView (pDoc->DocRootElement, NULL, pDoc,
 					    VueDoc);
 	RacinePageCherchee = pDoc->DocRootElement;
      }
@@ -1486,7 +1486,7 @@ int                 func;
 	   /* c'est une vue de l'arbre principal */
 	   /* cherche le numero de vue dans le schema */
 	   /* de presentation applique' au document */
-	   VueSch = VueAAppliquer (docsel->DocRootElement,
+	   VueSch = AppliedView (docsel->DocRootElement,
 				   NULL, docsel, VueDoc);
 	premv = FirstVisible (docsel, VueDoc, assoc);
 	if (func >= 1 && func <= 5 && premv != NULL)

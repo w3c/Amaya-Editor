@@ -68,7 +68,7 @@ int                *pointselect;
 
    /* On admet une erreur de precision de DELTA_SEL dans la designation */
    distmax = x - DELTA_SEL;
-   pFrame = &FntrTable[frame - 1];
+   pFrame = &ViewFrameTable[frame - 1];
    sbox = NULL;
    pav = pAb;
    while (pav != NULL)

@@ -470,7 +470,7 @@ Element            *elementRead;
 	else
 	  {
 	     NumAssoc = ((PtrElement) element)->ElAssocNum;
-	     pSS = ((PtrElement) element)->ElSructSchema;
+	     pSS = ((PtrElement) element)->ElStructSchema;
 	  }
 	*elementRead = (Element) Internalise (pivotFile, pSS,
 				 LoadedDocument[document - 1], byte, NumAssoc,
@@ -528,7 +528,7 @@ Document            document;
 	notifyEl.document = document;
 	notifyEl.element = element;
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	notifyEl.position = 0;
 	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
@@ -536,8 +536,8 @@ Document            document;
 	     /* Ecrit d'abord le numero de la structure generique s'il y */
 	     /* a changement de schema de structure par rapport au pere */
 	     if (pEl->ElParent != NULL)
-		if (pEl->ElParent->ElSructSchema != pEl->ElSructSchema)
-		   EcritNat (pEl->ElSructSchema, pivotFile, LoadedDocument[document - 1]);
+		if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)
+		   EcritNat (pEl->ElStructSchema, pivotFile, LoadedDocument[document - 1]);
 	     Externalise (pivotFile, &pEl, LoadedDocument[document - 1], TRUE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
@@ -545,7 +545,7 @@ Document            document;
 	     notifyEl.document = document;
 	     notifyEl.element = element;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
@@ -601,7 +601,7 @@ Document            document;
 	notifyEl.document = document;
 	notifyEl.element = element;
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	notifyEl.position = 0;
 	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
@@ -609,8 +609,8 @@ Document            document;
 	     /* Ecrit d'abord le numero de la structure generique s'il y */
 	     /* a changement de schema de structure par rapport au pere */
 	     if (pEl->ElParent != NULL)
-		if (pEl->ElParent->ElSructSchema != pEl->ElSructSchema)
-		   EcritNat (pEl->ElSructSchema, pivotFile, LoadedDocument[document - 1]);
+		if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)
+		   EcritNat (pEl->ElStructSchema, pivotFile, LoadedDocument[document - 1]);
 	     Externalise (pivotFile, &pEl, LoadedDocument[document - 1], FALSE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
@@ -618,7 +618,7 @@ Document            document;
 	     notifyEl.document = document;
 	     notifyEl.element = element;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
+	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
@@ -730,7 +730,7 @@ char               *labelRead;
 
 {
    UserErrorCode = 0;
-   rdLabel (byte, labelRead, pivotFile);
+   ReadLabel (byte, labelRead, pivotFile);
 }
 
 

@@ -143,7 +143,7 @@ PtrPRule       *pRule;
 	     if (pR->PrViewNum == view)
 		/* pour la vue voulue */
 		if (pR->PrCond == NULL ||
-		    CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElSructSchema))
+		    CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElStructSchema))
 		   /* les conditions d'application de la regle sont satisfaites */
 		   found = TRUE;
 	     if (!found)
@@ -151,7 +151,7 @@ PtrPRule       *pRule;
 		  if (pR->PrViewNum == 1 && *pRuleView1 == NULL)
 		     /* regle du type cherche' pour la vue 1 */
 		     if (pR->PrCond == NULL ||
-			 CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElSructSchema))
+			 CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElStructSchema))
 			/* les conditions d'application de la regle sont satisfaites */
 			/* on la garde pour le cas ou on ne trouve pas mieux */
 			*pRuleView1 = pR;
@@ -307,7 +307,7 @@ PtrAttribute        *pAttr;
 		  while (pR == NULL && pSP != NULL)
 		    {
 		       /* premiere regle de presentation de cet attribut */
-		       pR = ReglePresAttr (pA, pEl, FALSE, NULL, pSP);
+		       pR = AttrPresRule (pA, pEl, FALSE, NULL, pSP);
 		       /* parcourt les regles de presentation de l'attribut */
 		       stop = FALSE;
 		       while (pR != NULL && !stop)
@@ -361,23 +361,23 @@ PtrAttribute        *pAttr;
 	   /* presentation des attributs herites */
 	   if (presNum == 0)
 	     {
-		if (pEl->ElSructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+		if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
 		  {
 		     /* il y a heritage possible */
-		     if ((inheritTable = pEl->ElSructSchema->SsPSchema->
+		     if ((inheritTable = pEl->ElStructSchema->SsPSchema->
 			  PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
 		       {
 			  /* cette table n'existe pas on la genere */
 			  CreateInheritedAttrTable (pEl);
-			  inheritTable = pEl->ElSructSchema->SsPSchema->
+			  inheritTable = pEl->ElStructSchema->SsPSchema->
 			     PsInheritedAttr[pEl->ElTypeNumber - 1];
 		       }
-		     for (l = 1; l <= pEl->ElSructSchema->SsNAttributes && *pSPR == NULL;
+		     for (l = 1; l <= pEl->ElStructSchema->SsNAttributes && *pSPR == NULL;
 			  l++)
 			if ((*inheritTable)[l - 1])
 			   /* pEl herite de l'attribut l */
 			   /* cherche si l'attribut l existe au dessus */
-			   if ((*pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElSructSchema,
+			   if ((*pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
 							 &pElAttr)) != NULL)
 			     {
 				/* on traite d'abord les schemas de presentation */
@@ -403,7 +403,7 @@ PtrAttribute        *pAttr;
 				  {
 				     /* premiere regle de presentation de cet attribut dans */
 				     /* ce schema de presentation */
-				     pRule = ReglePresAttr (*pAttr, pEl, TRUE, NULL, pSP);
+				     pRule = AttrPresRule (*pAttr, pEl, TRUE, NULL, pSP);
 				     /* parcourt les regles de presentation de l'attribut */
 				     while (pRule != NULL && !stop)
 				       {
@@ -454,7 +454,7 @@ PtrAttribute        *pAttr;
 	  {
 	     /* on n'a pas encore trouve' */
 	     *pAttr = NULL;
-	     pSchS = pEl->ElSructSchema;
+	     pSchS = pEl->ElStructSchema;
 #ifdef __COLPAGE__
 	     if (presNum == 0 && pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak)
 	       {
@@ -471,7 +471,7 @@ PtrAttribute        *pAttr;
 		  /* on cherche le type de la boite page */
 		  presNum = TypeBPage (pEl, view, &pSchP);
 #endif /* __COLPAGE__ */
-		  pSchS = pEl->ElSructSchema;
+		  pSchS = pEl->ElStructSchema;
 		  index = pEl->ElTypeNumber;
 	       }
 	     else if (presNum == 0 || pSchP == NULL)
@@ -1643,7 +1643,7 @@ boolean             first;
 				for (view = 1; view <= MAX_VIEW_DOC; view++)
 				   /* cree le pave de presentation dans la vue */
 				  {
-				     pAb = CrPavPres (pEl, pDoc, pRule, pEl->ElSructSchema,
+				     pAb = CrAbsBoxesPres (pEl, pDoc, pRule, pEl->ElStructSchema,
 					    pAttr, view, pSchP, FALSE, TRUE);
 				     if (pAb != NULL)
 					/* un pave de presentation a ete cree */
@@ -1653,7 +1653,7 @@ boolean             first;
 					  NouvRfPave (pAb, pAb, &pAbbReDisp, pDoc);
 					  pAbbReDisp = Englobant (pAb, pAbbReDisp);
 					  /* conserve le pointeur sur le pave a reafficher */
-					  if (VueAssoc (pEl))
+					  if (AssocView (pEl))
 					     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 						Englobant (pAbbReDisp,
 						  pDoc->DocAssocModifiedAb[pEl->
@@ -1679,7 +1679,7 @@ boolean             first;
 					  SuppRfPave (pAb, &pAbbReDisp, pDoc);
 					  pAbbReDisp = Englobant (pAb, pAbbReDisp);
 					  /* conserve le pointeur sur le pave a reafficher */
-					  if (VueAssoc (pEl))
+					  if (AssocView (pEl))
 					     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 						Englobant (pAbbReDisp, pDoc->
 							   DocAssocModifiedAb[pEl->ElAssocNum - 1]);
@@ -1749,24 +1749,24 @@ boolean             change;
 	     ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change, first);
 	     /* l'element herite-t-il d'attributs qui ont des fonctions de */
 	     /* presentation */
-	     if (pEl->ElSructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	     if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
 	       {
 		  /* il y a heritage possible */
 		  if ((inheritTable =
-		       pEl->ElSructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		       pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
 		    {
 		       /* cette table n'existe pas on la genere */
 		       CreateInheritedAttrTable (pEl);
-		       inheritTable = pEl->ElSructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1];
+		       inheritTable = pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1];
 		    }
-		  for (l = 1; l <= pEl->ElSructSchema->SsNAttributes; l++)
+		  for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 		     if ((*inheritTable)[l - 1])	/* pEl herite de l'attribut l */
 			/* cherche si l existe au dessus */
-			if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElSructSchema,
+			if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
 							 &pElAttr)) != NULL)
 			  {
 			     pSchP = pAttr->AeAttrSSchema->SsPSchema;
-			     pRPres = ReglePresAttr (pAttr, pEl, TRUE, NULL, pSchP);
+			     pRPres = AttrPresRule (pAttr, pEl, TRUE, NULL, pSchP);
 			     /* traite les regles de creation associees a l'attribut */
 			     ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change, first);
 			  }
@@ -1781,7 +1781,7 @@ boolean             change;
 		  pSchP = pAttr->AeAttrSSchema->SsPSchema;
 		  /* cherche le debut des regles de presentation associees a */
 		  /* l'attribut */
-		  pRPres = ReglePresAttr (pAttr, pEl, FALSE, NULL, pSchP);
+		  pRPres = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchP);
 		  /* traite les regles de creation associees a l'attribut */
 		  ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change, first);
 		  /* passe a l'attribut suivant de l'element */
@@ -1830,7 +1830,7 @@ int                *boxType;
    /* cherche le schema de presentation a appliquer a l'element */
    ChSchemaPres (pEl, &pSchP, &index, &pSchS);
    if (pSchP != NULL)
-      if (!VueAssoc (pEl))
+      if (!AssocView (pEl))
 	 /* il s'agit d'un element associe' a afficher dans une boite de */
 	 /* haut ou de bas de page */
 	{
@@ -1971,7 +1971,7 @@ int                *boxType;
 			pAsc = pElPage;
 			stop = FALSE;
 			do
-			   if (pAsc->ElSructSchema->
+			   if (pAsc->ElStructSchema->
 			       SsRule[pAsc->ElTypeNumber - 1].SrAssocElem)
 			      stop = TRUE;
 			   else
@@ -2123,8 +2123,8 @@ PtrAbstractBox            *pAbbReDisp;
 		       if (pRule != NULL)
 			 {
 			    pElPage->ElAbstractBox[viewNb - 1] = PavFilet;
-			    PavBoitePage = CrPavPres (pElPage, pDoc, pRule,
-						 pElPage->ElSructSchema, NULL,
+			    PavBoitePage = CrAbsBoxesPres (pElPage, pDoc, pRule,
+						 pElPage->ElStructSchema, NULL,
 						 viewNb, pSchP, FALSE, TRUE);
 			    *pAbbReDisp = PavBoitePage;
 			    /* il faut reafficher ce pave */
@@ -2348,7 +2348,7 @@ PtrDocument         pDoc;
    int                 vue;
 
    /* indique qu'il faut creer tous les paves sans limite de volume */
-   if (!VueAssoc (pE))
+   if (!AssocView (pE))
       /* nombre de vues du document */
       for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	{
@@ -2363,7 +2363,7 @@ PtrDocument         pDoc;
    /* cree effectivement les paves dans toutes les vues existantes */
    CrPaveNouv (pE, pDoc, 0);
    /* applique les regles retardees concernant les paves cree's */
-   ApplReglesRetard (pE, pDoc);
+   ApplDelayedRule (pE, pDoc);
 }
 
 
@@ -2424,7 +2424,7 @@ int                 viewNb;
 	/* nouveaux paves */
 	for (vue = premvue; vue <= dervue; vue++)
 	  {
-	     assoc = VueAssoc (pEl);
+	     assoc = AssocView (pEl);
 	     if (!assoc)
 		/* l'element ne s'affiche pas dans une vue */
 		/* d'elements associes */
@@ -2558,12 +2558,12 @@ int                 viewNb;
 			    FirstCreation = FALSE;
 			    /* on cree les paves de l'element ainsi que des */
 			    /* elements contenus dans la page */
-			    pAb = CreePaves (pAbbRoot->AbElement, pDoc, vue, TRUE,
+			    pAb = AbsBoxesCreate (pAbbRoot->AbElement, pDoc, vue, TRUE,
 					      TRUE, &complete);
 			 }	/* fin cas ContientEl != NULL */
 		       /* ou regle page ou colonne pour pEl */
 		       else
-			  pAb = CreePaves (pEl, pDoc, vue, TRUE, TRUE, &complete);
+			  pAb = AbsBoxesCreate (pEl, pDoc, vue, TRUE, TRUE, &complete);
 		       if (pEl->ElAbstractBox[vue - 1] != NULL
 			   && pEl->ElTypeNumber != PageBreak + 1)
 			  /* l'element a au moins un pave dans la vue */
@@ -2574,7 +2574,7 @@ int                 viewNb;
 			    /* cas modif 622 non traitee : pb. comment detecter */
 			    /* que des paves des descendants ont ete crees alors */
 			    /* que pEl a une visibilite nulle : la valeur pAb */
-			    /* retournee par CreePaves n'est pas significative ! */
+			    /* retournee par AbsBoxesCreate n'est pas significative ! */
 			    /* cherche le dernier pave cree pour le nouvel element */
 			    /* il peut etre sur une autre page si l'element */
 			    /* a une marque page comme fils */
@@ -2738,16 +2738,16 @@ int                 viewNb;
 			      }	/* fin pAbbLast != NULL */
 			 }	/* fin pEl != marquepage */
 		       /* modifie les paves qui peuvent se referer aux nouveaux paves */
-		       /* fait dans CreePaves car les paves pAbbFirst et pAbbLast ne sont */
+		       /* fait dans AbsBoxesCreate car les paves pAbbFirst et pAbbLast ne sont */
 		       /* pas toujours freres */
 		       /* NouvRfPave(pAbbFirst, pAbbLast, &pAbbR, pDoc); */
 		       /* conserve le pointeur sur le pave a reafficher */
 		       /* c'est la racine */
-		       if (VueAssoc (pEl))
+		       if (AssocView (pEl))
 			  pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = pAbbRoot;
 		       else
 			  pDoc->DocViewModifiedAb[vue - 1] = pAbbRoot;
-		       ApplReglesRetard (pEl, pDoc);
+		       ApplDelayedRule (pEl, pDoc);
 		    }		/* fin pEl != assoc en haut ou bas de page */
 	       }		/* fin vueexiste */
 	  }			/* boucle for sur les vues */
@@ -2804,7 +2804,7 @@ int                 viewNb;
 	/* nouveaux paves */
 	for (vue = premvue; vue <= dervue; vue++)
 	  {
-	     assoc = VueAssoc (pEl);
+	     assoc = AssocView (pEl);
 	     if (!assoc)
 		/* l'element ne s'affiche pas dans une vue */
 		/* d'elements associes */
@@ -2828,7 +2828,7 @@ int                 viewNb;
 		  /* cree et chaine les paves correspondant a l'element, si ca n'a */
 		  /* pas deja ete fait par BoiteElAssoc */
 		  if (pAbbReDisp == NULL)
-		     pAb = CreePaves (pEl, pDoc, vue, TRUE, TRUE, &complete);
+		     pAb = AbsBoxesCreate (pEl, pDoc, vue, TRUE, TRUE, &complete);
 		  else
 		     pAb = NULL;
 
@@ -2999,10 +2999,10 @@ int                 viewNb;
 		     /* modifie les paves qui peuvent se referer aux nouveaux paves */
 		    {
 		       NouvRfPave (pAbbFirst, pAbbLast, &pAbbR, pDoc);
-		       ApplReglesRetard (pEl, pDoc);
+		       ApplDelayedRule (pEl, pDoc);
 		       pAbbReDisp = Englobant (pAbbR, pAbbReDisp);
 		       /* conserve le pointeur sur le pave a reafficher */
-		       if (VueAssoc (pEl))
+		       if (AssocView (pEl))
 			  pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 			     Englobant (pAbbReDisp,
 				 pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
@@ -3136,7 +3136,7 @@ int                 vue;
 			     pElAscent = pAb->AbEnclosing;
 			     while (pElAscent != NULL)
 			       {
-				  pAbb = PaveCoupe (pElAscent, FALSE, TRUE, pDoc);
+				  pAbb = TruncateOrCompleteAbsBox (pElAscent, FALSE, TRUE, pDoc);
 				  if (pAbb != NULL)
 				     pAbbReDisp = Englobant (pAbbReDisp, pAbb);
 				  if (pElAscent->AbElement->ElPrevious != NULL)
@@ -3154,7 +3154,7 @@ int                 vue;
 			     pElAscent = pAb->AbEnclosing;
 			     while (pElAscent != NULL)
 			       {
-				  pAbb = PaveCoupe (pElAscent, FALSE, FALSE, pDoc);
+				  pAbb = TruncateOrCompleteAbsBox (pElAscent, FALSE, FALSE, pDoc);
 				  if (pAbb != NULL)
 				     pAbbReDisp = Englobant (pAbbReDisp, pAbb);
 				  pElAscent = pElAscent->AbEnclosing;
@@ -3210,7 +3210,7 @@ int                 vue;
 	   /* il y a plusieurs paves pour cet element, on reaffichera */
 	   /* le pave englobant */
 	   pAbbReDisp = Englobant (pAbbReDisp, PcFirst->AbEnclosing);
-	if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
+	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
 	   if (PcFirst->AbPSchema->PsInPageHeaderOrFooter[pEl->ElTypeNumber - 1])
 	      /* c'est un element qui s'affiche en haut ou bas de page */
 	      /* cherche si le pave englobant est vide (ne contient */
@@ -3272,7 +3272,7 @@ int                 vue;
 	  }
 	while (!(pAb == NULL));
 	/* conserve le pointeur sur le pave a reafficher */
-	if (VueAssoc (pEl))
+	if (AssocView (pEl))
 	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 	      Englobant (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	else
@@ -3348,7 +3348,7 @@ int                 vue;
 	      if (pAb->AbEnclosing->AbElement == pAb->AbElement)
 		 pAb = pAb->AbEnclosing;
 	pEl1 = pEl;
-	if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrAssocElem)
+	if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrAssocElem)
 	   /* traitement particulier des elements associes : le pere */
 	   /* de l'element a pour pave le pave englobant de l'element. */
 	   /* Dans le cas ou ces elements associes sont affiches dans */
@@ -3373,7 +3373,7 @@ int                 vue;
 			     pElAscent = pAb->AbEnclosing;
 			     while (pElAscent != NULL)
 			       {
-				  pAbb = PaveCoupe (pElAscent, FALSE, TRUE, pDoc);
+				  pAbb = TruncateOrCompleteAbsBox (pElAscent, FALSE, TRUE, pDoc);
 				  if (pAbb != NULL)
 				     pAbbReDisp = Englobant (pAbbReDisp, pAbb);
 				  if (pElAscent->AbElement->ElPrevious != NULL)
@@ -3389,7 +3389,7 @@ int                 vue;
 			     pElAscent = pAb->AbEnclosing;
 			     while (pElAscent != NULL)
 			       {
-				  pAbb = PaveCoupe (pElAscent, FALSE, FALSE, pDoc);
+				  pAbb = TruncateOrCompleteAbsBox (pElAscent, FALSE, FALSE, pDoc);
 				  if (pAbb != NULL)
 				     pAbbReDisp = Englobant (pAbbReDisp, pAbb);
 				  pElAscent = pElAscent->AbEnclosing;
@@ -3425,7 +3425,7 @@ int                 vue;
 	   pAbbReDisp = Englobant (pAbbReDisp, PcFirst->AbEnclosing);
 	/* Est-ce un pave d'un element associe qui s'affiche en haut */
 	/* ou en bas de page ? */
-	if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
+	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
 	   if (PcFirst->AbEnclosing->AbElement->ElTypeNumber == PageBreak + 1)
 	      /* le pave englobant est une boite de page */
 	      /* cherche si le pave englobant est vide (ne contient */
@@ -3470,7 +3470,7 @@ int                 vue;
 	  }
 	while (!(pAb == NULL));
 	/* conserve le pointeur sur le pave a reafficher */
-	if (VueAssoc (pEl))
+	if (AssocView (pEl))
 	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 	      Englobant (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	else
@@ -3512,7 +3512,7 @@ boolean             Verif;
       for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	 /* teste si la vue  existe */
 	{
-	   if (!VueAssoc (pEl))
+	   if (!AssocView (pEl))
 	      /* ce n'est pas un element associe */
 	      vueexiste = pDoc->DocView[vue - 1].DvPSchemaView > 0;
 	   else
@@ -3600,7 +3600,7 @@ PtrDocument         pDocRef;
 		 /* indique le volume que pourront prendre les paves cree's */
 		{
 		   pDo1 = pDocRef;
-		   if (!VueAssoc (pElRef))
+		   if (!AssocView (pElRef))
 		     {
 			if (pDo1->DocView[v - 1].DvPSchemaView > 0)
 #ifdef __COLPAGE__
@@ -3649,7 +3649,7 @@ PtrDocument         pDocRef;
 			      pDo1->DocAssocVolume[pEl1->ElAssocNum - 1];
 #endif /* __COLPAGE__ */
 		     }
-		   pAbb = CreePaves (pElRef, pDocRef, v, TRUE, TRUE, &complete);
+		   pAbb = AbsBoxesCreate (pElRef, pDocRef, v, TRUE, TRUE, &complete);
 		   reaff = pAbb != NULL;
 		}
 	      else
@@ -3720,22 +3720,22 @@ PtrDocument         pDocRef;
 		 if (!pPavRef->AbNew)
 		   {
 		      pPavRef->AbChange = TRUE;
-		      if (VueAssoc (pElRef))
+		      if (AssocView (pElRef))
 			 frame = pDocRef->DocAssocFrame[pElRef->ElAssocNum - 1];
 		      else
 			 frame = pDocRef->DocViewFrame[v - 1];
 #ifdef __COLPAGE__
-		      h = HauteurCoupPage;
+		      h = BreakPageHeight;
 #else  /* __COLPAGE__ */
-		      h = HauteurPage;
+		      h = PageHeight;
 #endif /* __COLPAGE__ */
 		      (void) ChangeConcreteImage (frame, &h, pPavRef);
 		      /* on ne reaffiche pas si on est en train de calculer */
 		      /* les pages */
 #ifdef __COLPAGE__
-		      if (HauteurCoupPage == 0)
+		      if (BreakPageHeight == 0)
 #else  /* __COLPAGE__ */
-		      if (HauteurPage == 0)
+		      if (PageHeight == 0)
 #endif /* __COLPAGE__ */
 			 DisplayFrame (frame);
 		   }
@@ -3831,7 +3831,7 @@ boolean             Pres;
 	else if (!pAbbox1->AbPresentationBox
 		 && pAbbox1->AbElement->ElTypeNumber == Typ
 		 && (pSchStr == NULL
-		     || pAbbox1->AbElement->ElSructSchema == pSchStr))
+		     || pAbbox1->AbElement->ElStructSchema == pSchStr))
 	   p = pAbb1;
      }
    if (p == NULL)
@@ -3922,7 +3922,7 @@ PtrSSchema        pSchStr;
 			    else if (!pAbbox1->AbPresentationBox
 				     && pAbbox1->AbElement->ElTypeNumber == Typ
 				     && (pSchStr == NULL
-			       || pAbbox1->AbElement->ElSructSchema == pSchStr))
+			       || pAbbox1->AbElement->ElStructSchema == pSchStr))
 			       pt = pp;
 			    /* trouve */
 			    if (pt == NULL)
@@ -4026,7 +4026,7 @@ int                 vue;
 	     else
 		/* calcule le nouveau numero de page */
 	       {
-		  pEl1->ElPageNumber = ComptVal (cpt, pPage->ElSructSchema, pSchP, pPage, vue);
+		  pEl1->ElPageNumber = ComptVal (cpt, pPage->ElStructSchema, pSchP, pPage, vue);
 		  if (pEl1->ElPageNumber == numpageprec)
 		     /* le numero de page n'a pas change', on s'arrete */
 		     stop = TRUE;
@@ -4076,22 +4076,22 @@ boolean             reaff;
 	      if (!pAb->AbNew)
 		{
 		   pAbbox1->AbChange = TRUE;
-		   if (VueAssoc (pElDebut))
+		   if (AssocView (pElDebut))
 		      frame = pDoc->DocAssocFrame[pElDebut->ElAssocNum - 1];
 		   else
 		      frame = pDoc->DocViewFrame[nv - 1];
 #ifdef __COLPAGE__
-		   h = HauteurCoupPage;
+		   h = BreakPageHeight;
 #else  /* __COLPAGE__ */
-		   h = HauteurPage;
+		   h = PageHeight;
 #endif /* __COLPAGE__ */
 		   ChangeConcreteImage (frame, &h, pAb);
 		   /* on ne reaffiche pas si on est en train de calculer les */
 		   /* pages */
 #ifdef __COLPAGE__
-		   if (HauteurCoupPage == 0 && reaff)
+		   if (BreakPageHeight == 0 && reaff)
 #else  /* __COLPAGE__ */
-		   if (HauteurPage == 0 && reaff)
+		   if (PageHeight == 0 && reaff)
 #endif /* __COLPAGE__ */
 		      DisplayFrame (frame);
 		   /* cherche le pave de presentation suivant de ce type */
@@ -4181,7 +4181,7 @@ boolean             reaff;
 	     if (found)
 		/* reevalue les conditions d'application de la regle */
 		if (!CondPresentation (pRCre->PrCond, pAb->AbElement, NULL, viewSch,
-				       pAb->AbElement->ElSructSchema))
+				       pAb->AbElement->ElStructSchema))
 		   /* On va detruire le pave, on cherche d'abord le pave de */
 		   /* presentation suivant de meme type */
 		  {
@@ -4189,22 +4189,22 @@ boolean             reaff;
 		     /* tue le pave */
 		     TuePave (pAb);
 		     /* signale le pave mort au mediateur */
-		     if (VueAssoc (pElDebut))
+		     if (AssocView (pElDebut))
 			frame = pDoc->DocAssocFrame[pElDebut->ElAssocNum - 1];
 		     else
 			frame = pDoc->DocViewFrame[nv - 1];
 #ifdef __COLPAGE__
-		     h = HauteurCoupPage;
+		     h = BreakPageHeight;
 #else  /* __COLPAGE__ */
-		     h = HauteurPage;
+		     h = PageHeight;
 #endif /* __COLPAGE__ */
 		     ChangeConcreteImage (frame, &h, pAb);
 		     /* on ne reaffiche pas si on est en train de calculer les */
 		     /* pages */
 #ifdef __COLPAGE__
-		     if (HauteurCoupPage == 0 && reaff)
+		     if (BreakPageHeight == 0 && reaff)
 #else  /* __COLPAGE__ */
-		     if (HauteurPage == 0 && reaff)
+		     if (PageHeight == 0 && reaff)
 #endif /* __COLPAGE__ */
 			DisplayFrame (frame);
 		     /* libere le pave tue' */
@@ -4362,7 +4362,7 @@ boolean             reaff;
 			       if (depend)
 				  /* reevalue les conditions d'application de la regle */
 				  if (CondPresentation (pRCre->PrCond, pAb->AbElement,
-							NULL, viewSch, pAb->AbElement->ElSructSchema))
+							NULL, viewSch, pAb->AbElement->ElStructSchema))
 				     /* cherche si le pave est deja cree' */
 				    {
 				       dejacree = FALSE;
@@ -4374,7 +4374,7 @@ boolean             reaff;
 					    /* cas particulier des paves de presentation de */
 					    /* la racine : ils sont sous la premiere et la */
 					    /* derniere page si le document est pagine */
-					    if (VueAssoc (pAb->AbElement))
+					    if (AssocView (pAb->AbElement))
 					      {
 						 pElRac = pDoc->
 						    DocAssocRoot[pAb->AbElement->ElAssocNum - 1];
@@ -4514,29 +4514,29 @@ boolean             reaff;
 					    else
 					       pAbbNext = NULL;
 #endif /* __COLPAGE__ */
-					    pAbb = CrPavPres (pEl, pDoc, pRCre, pSS, pAttr,
+					    pAbb = CrAbsBoxesPres (pEl, pDoc, pRCre, pSS, pAttr,
 						    nv, pSchP, FALSE, TRUE);
 					    if (pAbbNext != NULL)
 					       pEl->ElAbstractBox[nv - 1] = pAbbNext;
 					    if (pAbb != NULL)
 					      {
-						 if (VueAssoc (pElDebut))
+						 if (AssocView (pElDebut))
 						    frame =
 						       pDoc->DocAssocFrame[pElDebut->ElAssocNum - 1];
 						 else
 						    frame = pDoc->DocViewFrame[nv - 1];
 #ifdef __COLPAGE__
-						 h = HauteurCoupPage;
+						 h = BreakPageHeight;
 #else  /* __COLPAGE__ */
-						 h = HauteurPage;
+						 h = PageHeight;
 #endif /* __COLPAGE__ */
 						 ChangeConcreteImage (frame, &h, pAbb);
 						 /* on ne reaffiche pas si on est en
 						    train de calculer les pages */
 #ifdef __COLPAGE__
-						 if (HauteurCoupPage == 0 && reaff)
+						 if (BreakPageHeight == 0 && reaff)
 #else  /* __COLPAGE__ */
-						 if (HauteurPage == 0 && reaff)
+						 if (PageHeight == 0 && reaff)
 #endif /* __COLPAGE__ */
 						    DisplayFrame (frame);
 						 /* on passe a la regle suivante */
@@ -4597,10 +4597,10 @@ PtrSSchema        pSchS;
 	/* son schema de structure */
 	att = 0;
 	found = FALSE;
-	while (att < pElInclus->ElSructSchema->SsNAttributes && !found)
+	while (att < pElInclus->ElStructSchema->SsNAttributes && !found)
 	  {
 	     att++;
-	     DefAttr = &(pElInclus->ElSructSchema->SsAttribute[att - 1]);
+	     DefAttr = &(pElInclus->ElStructSchema->SsAttribute[att - 1]);
 	     if (DefAttr->AttrType == AtNumAttr)
 		/* c'est un attribut numerique */
 		if (strncmp (DefAttr->AttrOrigName, NmAttr, sizeof (Name)) == 0)
@@ -4612,7 +4612,7 @@ PtrSSchema        pSchS;
 	     /* l'attribut est bien defini dans le schema de structure du */
 	     /* document inclus, on le met sur la racine */
 	     GetAttr (&pAttr);
-	     pAttr->AeAttrSSchema = pElInclus->ElSructSchema;
+	     pAttr->AeAttrSSchema = pElInclus->ElStructSchema;
 	     pAttr->AeAttrNum = att;
 	     pAttr->AeAttrType = AtNumAttr;
 	     pAttr->AeAttrValue = ComptVal (cpt, pSchS, pSchP, pEl, 1);
@@ -4654,7 +4654,7 @@ PtrSSchema        pSchS;
 
    /* verifie d'abord qu'il s'agit bien d'une inclusion de document */
    {
-      if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference)
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference)
 	 pRef = pEl->ElReference;
       else
 	 pRef = pEl->ElSource;
@@ -4703,7 +4703,7 @@ boolean             reaff;
    /* On traite toutes les boites qui utilisent ce compteur comme contenu */
    pCo1 = &pSchP->PsCounter[cpt - 1];
    for (util = 1; util <= pCo1->CnNPresBoxes; util++)
-      if (VueAssoc (pElDebut))
+      if (AssocView (pElDebut))
 	 traiteContenu (pCo1->CnPresBox[util - 1], 1, pDoc, pSS, pSchP, pElDebut,
 			reaff);
       else
@@ -4738,7 +4738,7 @@ boolean             reaff;
    /* On traite toutes les boites dont la creation est conditionnee par */
    /* la valeur de ce compteur */
    for (util = 1; util <= pCo1->CnNCreatedBoxes; util++)
-      if (VueAssoc (pElDebut))
+      if (AssocView (pElDebut))
 	 traiteBoiteCreee (pCo1->CnCreatedBox[util - 1], 1, pSchP, pDoc, pElDebut,
 			   reaff);
       else
@@ -4773,7 +4773,7 @@ boolean             reaff;
    /* On traite toutes les boites qui creent d'autres boites selon la */
    /* valeur de ce compteur */
    for (util = 1; util <= pCo1->CnNCreators; util++)
-      if (VueAssoc (pElDebut))
+      if (AssocView (pElDebut))
 	 traiteCreation (pCo1->CnCreator[util - 1],
 			 pCo1->CnPresBoxCreator[util - 1], cpt, 1, pSS, pSchP,
 			 pDoc, pElDebut, reaff);
@@ -5327,7 +5327,7 @@ PtrAttribute         pAttrComp;
    while (pSchP != NULL)
      {
 	/* pR: premiere regle correspondant a l'attribut */
-	pR = ReglePresAttr (pAttr, pEl1, herit, pAttrComp, pSchP);
+	pR = AttrPresRule (pAttr, pEl1, herit, pAttrComp, pSchP);
 	if (pR != NULL)
 	  {
 	     typeRule = pR->PrType;
@@ -5357,14 +5357,14 @@ PtrAttribute         pAttrComp;
 	     for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	       {
 		  /* verifie d'abord si la vue existe */
-		  if (VueAssoc (pEl))
+		  if (AssocView (pEl))
 		     /* element associe */
 		     vueexiste = pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0 && vue == 1;
 		  else
 		     vueexiste = pDoc->DocView[vue - 1].DvPSchemaView > 0;
 		  if (vueexiste)
 		    {
-		       viewSch = VueAAppliquer (pEl, pAttr, pDoc, vue);
+		       viewSch = AppliedView (pEl, pAttr, pDoc, vue);
 		       /* on ne considere les schemas de presentation additionnels que */
 		       /* pour la vue principale */
 		       vueexiste = (pHd == NULL || viewSch == 1);
@@ -5417,7 +5417,7 @@ PtrAttribute         pAttrComp;
 			       /* cette regle rend le pave visible et ce n'est pas une suppression
 			          ou c'est une suppression et le pave etait rendu invisible par la regle
 			          on cree le pave et ses paves de presentation eventuels */
-			       pAbb = CreePaves (pEl, pDoc, vue, TRUE, TRUE, &complete);
+			       pAbb = AbsBoxesCreate (pEl, pDoc, vue, TRUE, TRUE, &complete);
 			 }
 		       if (pEl1->ElAbstractBox[vue - 1] != NULL && typeRule == PtFunction
 			   && (TFonct == FnCreateBefore || TFonct == FnCreateAfter
@@ -5427,11 +5427,11 @@ PtrAttribute         pAttrComp;
 			 || TFonct == FnCreateFirst || TFonct == FnCreateLast)
 			   && !Suppr)
 			  /* il faut creer un pave de presentation */
-			  pAbb = CrPavPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, vue,
+			  pAbb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, vue,
 					  pSchP, FALSE, TRUE);
 		       /* traite les paves crees par la regle de visibilite ou de */
 		       /* creation */
-		       /* code inutile et incorrect (fait dans CreePaves) si saut de page */
+		       /* code inutile et incorrect (fait dans AbsBoxesCreate) si saut de page */
 		       /* il reste correct si on a cree seulement des paves de presentation */
 		       if (pAbb != NULL)
 			 {
@@ -5699,7 +5699,7 @@ PtrAttribute         pAttrComp;
 		       /* conserve le pointeur sur le pave a reafficher */
 		       if (pReaff != NULL)
 			 {
-			    if (VueAssoc (pEl))
+			    if (AssocView (pEl))
 			       pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1] =
 				  Englobant (pReaff, pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1]);
 			    else
@@ -5788,9 +5788,9 @@ PtrElement         *pLib;
 		    if (MemesAttributs (pEl, pEl2))
 		       if (pEl->ElSource == NULL && pEl2->ElSource == NULL)
 			  if (MemesRegleSpecif (pEl, pEl2))
-			     if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct !=
+			     if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct !=
 				 CsConstant)
-				if (pEl2->ElSructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct
+				if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct
 				    != CsConstant)
 				  {
 				     egal = TRUE;
@@ -5822,7 +5822,7 @@ PtrElement         *pLib;
 					  if (pAb != NULL)
 					    {
 					       pAb->AbChange = TRUE;
-					       if (!VueAssoc (pEl))
+					       if (!AssocView (pEl))
 						  pDoc->DocViewModifiedAb[vue - 1] =
 						     Englobant (pAb, pDoc->DocViewModifiedAb[vue - 1]);
 					       else
