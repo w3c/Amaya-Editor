@@ -137,13 +137,12 @@
                   <object class="sizeritem">
                     <object class="wxComboBox" name="wxID_CHARSET_CB">
                       <content>
-		        <item></item>
-		        <item></item>
-		        <item></item>
                       </content>
                       <size>130</size>
                       <style>wxCB_READONLY</style>
                     </object>
+                    <flag>wxEXPAND</flag>
+                    <border>5</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_MIME_TYPE">
@@ -155,16 +154,11 @@
                   <object class="sizeritem">
                     <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
                       <content>
-		        <item></item>
-		        <item></item>
-		        <item></item>
-		        <item></item>
-		        <item></item>
-		        <item></item>
-		        <item></item>
                       </content>
                       <size>180</size>
                     </object>
+                    <flag>wxEXPAND</flag>
+                    <border>5</border>
                   </object>
                 </object>
               </object>

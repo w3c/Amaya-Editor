@@ -89,29 +89,29 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   if (!strcmp (UserCharset, "us-ascii"))
     {
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (0, TtaConvMessageToWX( "us-ascii" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "us-ascii" ) );
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (1, TtaConvMessageToWX( "iso-8859-1" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "iso-8859-1" ) );
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (2, TtaConvMessageToWX( "UTF-8" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "UTF-8" ) );
     }
   else if (!strcmp (UserCharset, "iso-8859-1"))
     {
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (0, TtaConvMessageToWX( "iso-8859-1" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "iso-8859-1" ) );
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (1, TtaConvMessageToWX( "us-ascii" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "us-ascii" ) );
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (2, TtaConvMessageToWX( "UTF-8" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "UTF-8" ) );
     }
   else
     {
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (0, TtaConvMessageToWX( "UTF-8" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "UTF-8" ) );
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (1, TtaConvMessageToWX( "us-ascii" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "us-ascii" ) );
       XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetString (2, TtaConvMessageToWX( "iso-8859-1" ) );
+	      wxComboBox)->Append ( TtaConvMessageToWX( "iso-8859-1" ) );
     }
       XRCCTRL(*this, "wxID_CHARSET_CB",
 	      wxComboBox)->SetSelection (0);
@@ -121,67 +121,99 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_label );
 
   doc_type = DocumentTypes[doc];
+  wxString wx_mime_type = TtaConvMessageToWX( UserMimeType );
   if (doc_type == docImage)
     {
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(0, TtaConvMessageToWX( "image/png" ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(1, TtaConvMessageToWX( "image/jpeg" ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(2, TtaConvMessageToWX( "image/gif" ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(3, TtaConvMessageToWX( "image/x-bitmap" ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(4, TtaConvMessageToWX( "image/x-xpicmap" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->Append( wx_mime_type );
+      if (strcmp (UserMimeType, "image/png"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "image/png" ) );
+      if (strcmp (UserMimeType, "image/jpeg"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "image/jpeg" ) );
+      if (strcmp (UserMimeType, "image/gif"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "image/gif" ) );
+      if (strcmp (UserMimeType, "image/x-bitmap"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "image/x-bitmap" ) );
+      if (strcmp (UserMimeType, "image/x-xpicmap"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "image/x-xpicmap" ) );
     }
   else if (doc_type == docSVG)
     {
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(0, TtaConvMessageToWX( AM_SVG_MIME_TYPE ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(1, TtaConvMessageToWX( "application/xml" ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(2, TtaConvMessageToWX( "text/xml" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->Append( wx_mime_type );
+      if (strcmp (UserMimeType, AM_SVG_MIME_TYPE))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( AM_SVG_MIME_TYPE ) );
+      if (strcmp (UserMimeType, "application/xml"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "application/xml" ) );
+      if (strcmp (UserMimeType, "text/xml"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "text/xml" ) );
     }
   else if (doc_type == docMath)
     {
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(0, TtaConvMessageToWX( AM_MATHML_MIME_TYPE ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(1, TtaConvMessageToWX( "application/xml" ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(2, TtaConvMessageToWX( "text/xml" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->Append( wx_mime_type );
+      if (strcmp (UserMimeType, AM_MATHML_MIME_TYPE))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( AM_MATHML_MIME_TYPE ) );
+      if (strcmp (UserMimeType, "application/xml"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "application/xml" ) );
+      if (strcmp (UserMimeType, "text/xml"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "text/xml" ) );
     }
   else if (doc_type == docHTML && DocumentMeta[doc] &&
 	   DocumentMeta[doc]->xmlformat)
     {
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(0, TtaConvMessageToWX( AM_XHTML_MIME_TYPE ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(1, TtaConvMessageToWX( "text/html" ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(2, TtaConvMessageToWX( "application/xml" ) );
-  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	  wxComboBox)->SetString(3, TtaConvMessageToWX( "text/xml" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->Append( wx_mime_type );
+      if (strcmp (UserMimeType, AM_XHTML_MIME_TYPE))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( AM_XHTML_MIME_TYPE ) );
+      if (strcmp (UserMimeType, "text/html"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "text/html" ) );
+      if (strcmp (UserMimeType, "application/xml"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "application/xml" ) );
+      if (strcmp (UserMimeType, "text/xml"))
+	XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+		wxComboBox)->Append( TtaConvMessageToWX( "text/xml" ) );
     }
   else
     {
       XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	      wxComboBox)->SetString(0, TtaConvMessageToWX( "text/html" ) );
+	      wxComboBox)->Append( wx_mime_type );
+      if (strcmp (UserMimeType, "text/html"))
       XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	      wxComboBox)->SetString(1, TtaConvMessageToWX( AM_XHTML_MIME_TYPE ) );
+	      wxComboBox)->Append( TtaConvMessageToWX( "text/html" ) );
+      if (strcmp (UserMimeType, AM_XHTML_MIME_TYPE))
       XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	      wxComboBox)->SetString(2, TtaConvMessageToWX( "application/xml" ) );
+	      wxComboBox)->Append( TtaConvMessageToWX( AM_XHTML_MIME_TYPE ) );
+      if (strcmp (UserMimeType, "application/xml"))
       XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	      wxComboBox)->SetString(3, TtaConvMessageToWX( "text/xml" ) );
+	      wxComboBox)->Append( TtaConvMessageToWX( "application/xml" ) );
+      if (strcmp (UserMimeType, "text/xml"))
       XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	      wxComboBox)->SetString(4, TtaConvMessageToWX( "text/plain" ) );
+	      wxComboBox)->Append( TtaConvMessageToWX( "text/xml" ) );
+      if (strcmp (UserMimeType, "text/plain"))
       XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	      wxComboBox)->SetString(5, TtaConvMessageToWX( "text/css" ) );
+	      wxComboBox)->Append( TtaConvMessageToWX( "text/plain" ) );
+      if (strcmp (UserMimeType, "text/css"))
       XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	      wxComboBox)->SetString(6, TtaConvMessageToWX( "application/smil" ) );
+	      wxComboBox)->Append( TtaConvMessageToWX( "text/css" ) );
+      if (strcmp (UserMimeType, "application/smil"))
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->Append( TtaConvMessageToWX( "application/smil" ) );
     }
-  wxString wx_mime_type = TtaConvMessageToWX( UserMimeType );
   XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( wx_mime_type );
 
   // buttons
