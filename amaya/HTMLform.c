@@ -1009,6 +1009,8 @@ Element             element;
 	   ParseForm (doc, ancestor, elForm, button_type, withinForm);   
 	   DoSubmit (doc, method, action);
 	 }
+       else
+	 InitConfirm3L (doc, 1, TEXT("Impossible to submit the form: missing action"), NULL, NULL, NO);
      }
    else
      ParseForm (doc, ancestor, elForm, button_type, withinForm);   
