@@ -2085,9 +2085,6 @@ PtrTextBuffer       clipboard;
 	       pFrame->FrSelectOnePosition = TRUE;
 	       /* the new selection is not shown */
 	       pFrame->FrSelectShown = FALSE;
-	       /* Si la boite etait vide */
-	       if (pAb->AbVolume == charsDelta)
-		  xDelta -= width;
 	       if (pBox->BxSpaceWidth != 0)
 		 {
 		    /* Si la boite est adjustifiee */
