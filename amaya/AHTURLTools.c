@@ -396,108 +396,124 @@ char               *docName;
 #endif /* __STDC__ */
 {
    char                basename[MAX_LENGTH];
-   char                tempname[MAX_LENGTH];
-   int                 i;
+   char                tempOrgName[MAX_LENGTH];
    char               *ptr;
-   char               *basename_ptr;
-   int                 basename_flag;
    Element             el;
    ElementType         elType;
    AttributeType       attrType;
-   Attribute           attrHREF;
+   Attribute           attrHREF = NULL;
    int                 length;
 
-   /* Fix up orgName, by erasing leading and trailing white space */
    if (!newName || !docName)
       return;
+
+   /*
+   ** First Step: Clean orgName
+   ** Make sure we have a complete orgName, without any leading or trailing
+   ** white spaces, or trailinbg new lines
+   */
+
    ptr = orgName;
-   while (*ptr == ' ' && *ptr++ != EOS) ;
-   strcpy (tempname, ptr);
-   ptr = strchr (tempname, ' ');
+   /* skip leading white space and new line characters */
+   while ((*ptr == ' ' || *ptr == '\n') && *ptr++ != EOS);
+   strcpy (tempOrgName, ptr);
+   /* clean trailing white space */
+   ptr = strchr (tempOrgName, ' ');
+   if (ptr)
+      *ptr = EOS;
+   /* clean trailing new lines */
+   ptr = strchr (tempOrgName, '\n');
    if (ptr)
       *ptr = EOS;
 
-   if (IsW3Path (tempname))
-     /* the name is complete */
-     strcpy (newName, tempname);
+   /*
+   ** Second Step: make orgName a complete URL
+   ** If the URL does not include a protocol, then
+   ** try to calculate one using the doc's base element 
+   ** (if it exists),
+   */
+
+   if (tempOrgName[0] == EOS || IsW3Path (tempOrgName) || doc == 0)
+     /* the name is complete, go to the Fifth Step */
+     strcpy (newName, tempOrgName);
    else
      {
-       if (doc == 0)
-	 {
-	   basename_ptr = "";
-	   basename_flag = FALSE;
-	 }
-       else
-	 {
-	   /* take into account the BASE element. */
-	   length = MAX_LENGTH;
-	   /* get the root element    */
-	   el = TtaGetMainRoot (doc);
+       /* take into account the BASE element. */
+       length = MAX_LENGTH;
+       /* get the root element    */
+       el = TtaGetMainRoot (doc);
 	   
-	   /* search the BASE element */
-	   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-	   elType.ElTypeNum = HTML_EL_BASE;
-	   el = TtaSearchTypedElement (elType, SearchInTree, el);
-	   if (el)
+       /* search the BASE element */
+       elType.ElSSchema = TtaGetDocumentSSchema (doc);
+       elType.ElTypeNum = HTML_EL_BASE;
+       el = TtaSearchTypedElement (elType, SearchInTree, el);
+       if (el)
+	 {
+	   /* 
+	   ** The document has a BASE element 
+	   ** Get the HREF attribute of the BASE Element 
+	   */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	   attrHREF = TtaGetAttribute (el, attrType);
+	   if (attrHREF)
 	     {
-	       /* 
-	       ** The document has a BASE element 
-	       ** Get the HREF attribute of the BASE Element 
-	       */
-	       attrType.AttrSSchema = elType.ElSSchema;
-	       attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	       attrHREF = TtaGetAttribute (el, attrType);
-	       if (attrHREF)
+	       /* Use the base path of the document */
+	       TtaGiveTextAttributeValue (attrHREF, basename, &length);
+	       /* base and orgName have to be separated by a DIR_SEP */
+	       if (basename[0] != EOS && basename[length] != '/') 
+		 /* verify if the base has the form "protocol://server:port" */
 		 {
-		   /* Use the base path of the document */
-		   TtaGiveTextAttributeValue (attrHREF, basename, &length);
-		   /* base and orgName have to be separated by a DIR_SEP */
-		   if (basename[strlen (basename) - 1] != DIR_SEP)
+		   ptr = HTParse (basename, "", PARSE_ACCESS | PARSE_HOST |
+				                PARSE_PUNCTUATION);
+		   if (ptr && !strcmp (ptr, basename))
 		     {
-		       if (IsHTMLName (basename))
-			 {
-			   /* remove the document name from basename */
-			   length = strlen (basename) - 1;
-			   while (basename[length] != DIR_SEP)
-			     basename[length--] = EOS;
-			 }
-		       else if (tempname[0] != DIR_SEP)
-			 strcat (basename, DIR_STR);
+		     /* it has this form, we complete it by adding a "/"  */
+		     strcat (basename, "/");
+		     length++;
 		     }
+		   if (ptr)
+		     HT_FREE (ptr);
 		 }
-	       else
-		 basename[0] = EOS;
+	       /* search for the first DIR_SEP char */
+	       while (length >= 0  && basename[length] != DIR_SEP)
+		 basename[length--] = EOS;		   
 	     }
 	   else
 	     basename[0] = EOS;
-       
-	   if (basename[0] == EOS)
+	 }
+       else
+	 basename[0] = EOS;
+
+       /*
+       ** Third Step: 
+       ** If there's no base element, and if we're following
+       ** a link, use the URL of the current document as a base
+       */
+
+       if (!attrHREF)
+	 {
+	   if (DocumentURLs[(int) doc])
 	     {
-	       /* there is no BASE element in that document. */
-	       if (DocumentURLs[(int) doc])
-		 {
-		   basename_ptr = HTParse (DocumentURLs[(int) doc], "", PARSE_ALL);
-		   basename_flag = TRUE;
-		 }
-	       else
-		 {
-		   basename_ptr = "";
-		   basename_flag = FALSE;
-		 }
+	       strcpy (basename, DocumentURLs[(int) doc]);
+	       /* base and orgName have to be separated by a DIR_SEP */
+	       length = strlen (basename) - 1;
+	       /* search for the first DIR_SEP char */
+	       while (length >= 0  && basename[length] != DIR_SEP)
+		 basename[length--] = EOS;		   
 	     }
 	   else
 	     {
-	       basename_ptr = HTParse (basename, "", PARSE_ALL);
-	       basename_flag = TRUE;
+	       basename [0] = EOS;
 	     }
 	 }
+  
+       /*
+       ** Fourth Step, calculate the absolute URL, using the base
+       */
 
-       if (tempname[0] == '/' && doc)
-	 ptr = HTParse (tempname, basename_ptr, PARSE_ACCESS | PARSE_PUNCTUATION | PARSE_HOST);
-       else
-	 ptr = HTParse (tempname, basename_ptr, PARSE_ALL);
-       if (basename_flag)
-	 HT_FREE (basename_ptr);
+       ptr = HTParse (tempOrgName, basename, PARSE_ALL);
+
        if (ptr)
 	 {
 	   ptr = HTSimplify (&ptr);
@@ -505,28 +521,40 @@ char               *docName;
 	   HT_FREE (ptr);
 	 }
        else
-	 newName[0] = EOS;
+	   newName[0] = EOS;
      }
 
-   i = strlen (newName) - 1;
-   if (i > 0)
+   /*
+   ** Fifth step:
+   ** Prepare the docname that will refer to this ressource in the
+   ** .amaya directory. If the new URL finishes on "/", then use
+   ** noname.html as a default ressource name
+   */
+   length = strlen (newName) - 1;
+   if (length > 0)
      {
-       /* search now the document name */
-       ptr = strrchr (newName, DIR_SEP);
-       if (ptr)
-	 ptr++;
-       if (ptr && *ptr != EOS)
-	 strcpy (docName, ptr);
+       if (newName[length] == DIR_SEP)
+	 {
+	   /* docname was not comprised inside the URL, so let's */
+	   /* assign the default ressource name */
+	   strcpy (docName, "noname.html");
+	   /* remove DIR_SEP at the end of complete path */
+	   newName[length] = EOS;
+	 }
        else
-	 /* the docname was not comprised inside the URL, so let's */
-	 /* assign a "noname.html" name :) */
-	 strcpy (docName, "noname.html");
-       
-	/* remove DIR_SEP at the end of complete path */
-	if (newName[i] == DIR_SEP)
-	   newName[i] = EOS;
+	 {
+	   /* docname is comprised inside the URL */
+	   while (length >= 0  && newName[length] != DIR_SEP)
+	     length--;
+	   if (length < 0)
+	     strcpy (docName, newName);
+	   else
+	     strcpy (docName, &newName[length+1]);
+	 }
      }
-}
+   else
+     docName[0] = EOS;
+} 
 
 /*----------------------------------------------------------------------
   IsSameHost                                                         
