@@ -614,9 +614,6 @@ ATTRIBUTES
  content_type: BEGIN
 	END;
 
- script_language: BEGIN
-	END;
-
  script_src: BEGIN
 	END;
 

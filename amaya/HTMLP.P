@@ -5121,11 +5121,6 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
- script_language: BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
-
  script_src: BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);

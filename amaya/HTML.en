@@ -160,7 +160,6 @@ ActiveLinkColor: alink
 Prompt: prompt
 Notation: type
 content_type: type
-script_language: language
 script_src: src
 for_: for
 http_equiv: http-equiv

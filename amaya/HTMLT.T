@@ -1211,12 +1211,6 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- script_language: BEGIN
-	Create ' language="';
-	Create script_language;
-	Create DoubleQuote;
-	END;
-
  script_src: BEGIN
 	Create ' src="';
 	Create script_src;
