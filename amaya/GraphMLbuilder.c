@@ -26,7 +26,6 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
    {"unknown_attr", "", 'A', GraphML_ATTR_Invalid_attribute},
-   {"ZZGHOST", "", 'A', GraphML_ATTR_Ghost_restruct},
 
    {"align", "", 'A', GraphML_ATTR_align},
    {"arrowhead", "", 'A', GraphML_ATTR_arrowhead},
@@ -45,6 +44,7 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    {"valign", "", 'A', GraphML_ATTR_valign},
    {"vspace", "", 'A', GraphML_ATTR_vspace},
    {"width", "", 'A', GraphML_ATTR_width_},
+   {"zzghost", "", 'A', GraphML_ATTR_Ghost_restruct},
 
    {"", "", EOS, 0}		/* Last entry. Mandatory */
 };

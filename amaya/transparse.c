@@ -708,7 +708,7 @@ UCHAR_T       c;
    if (sizeStack < 1 || opStack[sizeStack - 1] != '(')
      {
 	ppError = TRUE;
-	ErrorMessage (TEXT("mismatched parenthesises"));
+	ErrorMessage (TEXT("mismatched parentheses"));
      }
    else
      {
@@ -916,7 +916,7 @@ UCHAR_T       c;
    if (sizeStack < 1 || opStack[sizeStack - 1] != '{')
      {
 	ppError = TRUE;
-	ErrorMessage (TEXT("mismatched parenthesizes"));
+	ErrorMessage (TEXT("mismatched parentheses"));
      }
    else
      {
@@ -1766,7 +1766,7 @@ UCHAR_T       c;
 		  ppAttr->Next = NULL;
 		}
 	    }
-	  ustrcpy (ppAttr->NameAttr, TEXT("ZZGHOST"));
+	  ustrcpy (ppAttr->NameAttr, TEXT("zzghost"));
 	  ppAttr->ThotAttr = HTML_ATTR_Ghost_restruct;
 	  ppAttr->IsInt = FALSE;
 	  ppAttr->IsTransf = FALSE;

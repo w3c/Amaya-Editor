@@ -24,7 +24,6 @@
 #include "fetchHTMLname.h"
 #include "zlib.h"
 #include "parser.h"
-
 #include "css_f.h"
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
@@ -50,263 +49,6 @@ CharEntityEntry;
 
 CharEntityEntry        CharEntityTable[] =
 {
-#if defined(_I18N_) || defined(__JIS__)
-{L"AElig", 198},		/* latin capital letter AE = latin capital ligature AE, U+00C6 ISOlat1 */
-{L"Aacute", 193},	/* latin capital letter A with acute, U+00C1 ISOlat1 */
-{L"Acirc", 194},		/* latin capital letter A with circumflex, U+00C2 ISOlat1 */
-{L"Agrave", 192},	/* latin capital letter A with grave = latin capital letter A grave, U+00C0 ISOlat1 */
-{L"Alpha", 913},		/* greek capital letter alpha, U+0391 */
-{L"Aring", 197},		/* latin capital letter A with ring above = latin capital letter A ring, U+00C5 ISOlat1 */
-{L"Atilde", 195},	/* latin capital letter A with tilde, U+00C3 ISOlat1 */
-{L"Auml", 196},		/* latin capital letter A with diaeresis, U+00C4 ISOlat1 */
-{L"Beta", 914},		/* greek capital letter beta, U+0392 */
-{L"Ccedil", 199},	/* latin capital letter C with cedilla, U+00C7 ISOlat1 */
-{L"Chi", 935},		/* greek capital letter chi, U+03A7 */
-{L"Dagger", 8225},	/* double dagger, U+2021 ISOpub */
-{L"Delta", 916},		/* greek capital letter delta, U+0394 ISOgrk3 */
-{L"ETH", 208},		/* latin capital letter ETH, U+00D0 ISOlat1 */
-{L"Eacute", 201},	/* latin capital letter E with acute, U+00C9 ISOlat1 */
-{L"Ecirc", 202},		/* latin capital letter E with circumflex, U+00CA ISOlat1 */
-{L"Egrave", 200},	/* latin capital letter E with grave, U+00C8 ISOlat1 */
-{L"Epsilon", 917},	/* greek capital letter epsilon, U+0395 */
-{L"Eta", 919},		/* greek capital letter eta, U+0397 */
-{L"Euml", 203},		/* latin capital letter E with diaeresis, U+00CB ISOlat1 */
-{L"Gamma", 915},		/* greek capital letter gamma, U+0393 ISOgrk3 */
-{L"Iacute", 205},	/* latin capital letter I with acute, U+00CD ISOlat1 */
-{L"Icirc", 206},		/* latin capital letter I with circumflex, U+00CE ISOlat1 */
-{L"Igrave", 204},	/* latin capital letter I with grave, U+00CC ISOlat1 */
-{L"Iota", 921},		/* greek capital letter iota, U+0399 */
-{L"Iuml", 207},		/* latin capital letter I with diaeresis, U+00CF ISOlat1 */
-{L"Kappa", 922},		/* greek capital letter kappa, U+039A */
-{L"Lambda", 923},	/* greek capital letter lambda, U+039B ISOgrk3 */
-{L"Mu", 924},		/* greek capital letter mu, U+039C */
-{L"Ntilde", 209},	/* latin capital letter N with tilde, U+00D1 ISOlat1 */
-{L"Nu", 925},		/* greek capital letter nu, U+039D */
-{L"OElig", 338},		/* latin capital ligature OE, U+0152 ISOlat2 */
-{L"Oacute", 211},	/* latin capital letter O with acute, U+00D3 ISOlat1 */
-{L"Ocirc", 212},		/* latin capital letter O with circumflex, U+00D4 ISOlat1 */
-{L"Ograve", 210},	/* latin capital letter O with grave, U+00D2 ISOlat1 */
-{L"Omega", 937},		/* greek capital letter omega, U+03A9 ISOgrk3 */
-{L"Omicron", 927},	/* greek capital letter omicron, U+039F */
-{L"Oslash", 216},	/* latin capital letter O with stroke = latin capital letter O slash, U+00D8 ISOlat1 */
-{L"Otilde", 213},	/* latin capital letter O with tilde, U+00D5 ISOlat1 */
-{L"Ouml", 214},		/* latin capital letter O with diaeresis, U+00D6 ISOlat1 */
-{L"Phi", 934},		/* greek capital letter phi, U+03A6 ISOgrk3 */
-{L"Pi", 928},		/* greek capital letter pi, U+03A0 ISOgrk3 */
-{L"Prime", 8243},	/* double prime = seconds = inches, U+2033 ISOtech */
-{L"Psi", 936},		/* greek capital letter psi, U+03A8 ISOgrk3 */
-{L"Rho", 929},		/* greek capital letter rho, U+03A1 */
-{L"Scaron", 352},	/* latin capital letter S with caron, U+0160 ISOlat2 */
-{L"Sigma", 931},		/* greek capital letter sigma, U+03A3 ISOgrk3 */
-{L"THORN", 222},		/* latin capital letter THORN, U+00DE ISOlat1 */
-{L"Tau", 932},		/* greek capital letter tau, U+03A4 */
-{L"Theta", 920},		/* greek capital letter theta, U+0398 ISOgrk3 */
-{L"Uacute", 218},	/* latin capital letter U with acute, U+00DA ISOlat1 */
-{L"Ucirc", 219},		/* latin capital letter U with circumflex, U+00DB ISOlat1 */
-{L"Ugrave", 217},	/* latin capital letter U with grave, U+00D9 ISOlat1 */
-{L"Upsilon", 933},	/* greek capital letter upsilon, U+03A5 ISOgrk3 */
-{L"Uuml", 220},		/* latin capital letter U with diaeresis, U+00DC ISOlat1 */
-{L"Xi", 926},		/* greek capital letter xi, U+039E ISOgrk3 */
-{L"Yacute", 221},	/* latin capital letter Y with acute, U+00DD ISOlat1 */
-{L"Yuml", 376},		/* latin capital letter Y with diaeresis, U+0178 ISOlat2 */
-{L"Zeta", 918},		/* greek capital letter zeta, U+0396 */
-{L"aacute", 225},	/* latin small letter a with acute, U+00E1 ISOlat1 */
-{L"acirc", 226},		/* latin small letter a with circumflex, U+00E2 ISOlat1 */
-{L"acute", 180},		/* acute accent = spacing acute, U+00B4 ISOdia */
-{L"aelig", 230},		/* latin small letter ae = latin small ligature ae, U+00E6 ISOlat1 */
-{L"agrave", 224},	/* latin small letter a with grave = latin small letter a grave, U+00E0 ISOlat1 */
-{L"alefsym", 8501},	/* alef symbol = first transfinite cardinal, U+2135 NEW */
-{L"alpha", 945},		/* greek small letter alpha, U+03B1 ISOgrk3 */
-{L"amp", 38},		/* ampersand, U+0026 ISOnum */
-{L"and", 8743},		/* logical and = wedge, U+2227 ISOtech */
-{L"ang", 8736},		/* angle, U+2220 ISOamso */
-{L"aring", 229},		/* latin small letter a with ring above = latin small letter a ring, U+00E5 ISOlat1 */
-{L"asymp", 8776},	/* almost equal to = asymptotic to, U+2248 ISOamsr */
-{L"atilde", 227},	/* latin small letter a with tilde, U+00E3 ISOlat1 */
-{L"auml", 228},		/* latin small letter a with diaeresis, U+00E4 ISOlat1 */
-{L"bdquo", 8222},	/* double low-9 quotation mark, U+201E NEW */
-{L"beta", 946},		/* greek small letter beta, U+03B2 ISOgrk3 */
-{L"brvbar", 166},	/* broken bar = broken vertical bar, U+00A6 ISOnum */
-{L"bull", 8226},		/* bullet = black small circle, U+2022 ISOpub */
-{L"cap", 8745},		/* intersection = cap, U+2229 ISOtech */
-{L"ccedil", 231},	/* latin small letter c with cedilla, U+00E7 ISOlat1 */
-{L"cedil", 184},		/* cedilla = spacing cedilla, U+00B8 ISOdia */
-{L"cent", 162},		/* cent sign, U+00A2 ISOnum */
-{L"chi", 967},		/* greek small letter chi, U+03C7 ISOgrk3 */
-{L"circ", 710},		/* modifier letter circumflex accent, U+02C6 ISOpub */
-{L"clubs", 9827},	/* black club suit = shamrock, U+2663 ISOpub */
-{L"cong", 8773},		/* approximately equal to, U+2245 ISOtech */
-{L"copy", 169},		/* copyright sign, U+00A9 ISOnum */
-{L"crarr", 8629},	/* downwards arrow with corner leftwards = carriage return, U+21B5 NEW */
-{L"cup", 8746},		/* union = cup, U+222A ISOtech */
-{L"curren", 164},	/* currency sign, U+00A4 ISOnum */
-{L"dArr", 8659},		/* downwards double arrow, U+21D3 ISOamsa */
-{L"dagger", 8224},	/* dagger, U+2020 ISOpub */
-{L"darr", 8595},		/* downwards arrow, U+2193 ISOnum */
-{L"deg", 176},		/* degree sign, U+00B0 ISOnum */
-{L"delta", 948},		/* greek small letter delta, U+03B4 ISOgrk3 */
-{L"diams", 9830},	/* black diamond suit, U+2666 ISOpub */
-{L"divide", 247},	/* division sign, U+00F7 ISOnum */
-{L"eacute", 233},	/* latin small letter e with acute, U+00E9 ISOlat1 */
-{L"ecirc", 234},		/* latin small letter e with circumflex, U+00EA ISOlat1 */
-{L"egrave", 232},	/* latin small letter e with grave, U+00E8 ISOlat1 */
-{L"empty", 8709},	/* empty set = null set = diameter, U+2205 ISOamso */
-{L"emsp", 8195},		/* em space, U+2003 ISOpub */
-{L"ensp", 8194},		/* en space, U+2002 ISOpub */
-{L"epsilon", 949},	/* greek small letter epsilon, U+03B5 ISOgrk3 */
-{L"equiv", 8801},	/* identical to, U+2261 ISOtech */
-{L"eta", 951},		/* greek small letter eta, U+03B7 ISOgrk3 */
-{L"eth", 240},		/* latin small letter eth, U+00F0 ISOlat1 */
-{L"euml", 235},		/* latin small letter e with diaeresis, U+00EB ISOlat1 */
-{L"euro", 8364},		/* euro sign, U+20AC NEW */
-{L"exist", 8707},	/* there exists, U+2203 ISOtech */
-{L"fnof", 402},		/* latin small f with hook = function = florin, U+0192 ISOtech */
-{L"forall", 8704},	/* for all, U+2200 ISOtech */
-{L"frac12", 189},	/* vulgar fraction one half = fraction one half, U+00BD ISOnum */
-{L"frac14", 188},	/* vulgar fraction one quarter = fraction one quarter, U+00BC ISOnum */
-{L"frac34", 190},	/* vulgar fraction three quarters = fraction three quarters, U+00BE ISOnum */
-{L"frasl", 8260},	/* fraction slash, U+2044 NEW */
-{L"gamma", 947},		/* greek small letter gamma, U+03B3 ISOgrk3 */
-{L"ge", 8805},		/* greater-than or equal to, U+2265 ISOtech */
-{L"gt", 62},		/* greater-than sign, U+003E ISOnum */
-{L"hArr", 8660},		/* left right double arrow, U+21D4 ISOamsa */
-{L"harr", 8596},		/* left right arrow, U+2194 ISOamsa */
-{L"hearts", 9829},	/* black heart suit = valentine, U+2665 ISOpub */
-{L"hellip", 8230},	/* horizontal ellipsis = three dot leader, U+2026 ISOpub */
-{L"hyphen", 173},	/* hyphen = discretionary hyphen, U+00AD ISOnum */
-{L"iacute", 237},	/* latin small letter i with acute, U+00ED ISOlat1 */
-{L"icirc", 238},		/* latin small letter i with circumflex, U+00EE ISOlat1 */
-{L"iexcl", 161},		/* inverted exclamation mark, U+00A1 ISOnum */
-{L"igrave", 236},	/* latin small letter i with grave, U+00EC ISOlat1 */
-{L"image", 8465},	/* blackletter capital I = imaginary part, U+2111 ISOamso */
-{L"infin", 8734},	/* infinity, U+221E ISOtech */
-{L"int", 8747},		/* integral, U+222B ISOtech */
-{L"iota", 953},		/* greek small letter iota, U+03B9 ISOgrk3 */
-{L"iquest", 191},	/* inverted question mark = turned question mark, U+00BF ISOnum */
-{L"isin", 8712},		/* element of, U+2208 ISOtech */
-{L"iuml", 239},		/* latin small letter i with diaeresis, U+00EF ISOlat1 */
-{L"kappa", 954},		/* greek small letter kappa, U+03BA ISOgrk3 */
-{L"lArr", 8656},		/* leftwards double arrow, U+21D0 ISOtech */
-{L"lambda", 955},	/* greek small letter lambda, U+03BB ISOgrk3 */
-{L"lang", 9001},		/* left-pointing angle bracket = bra, U+2329 ISOtech */
-{L"laquo", 171},		/* left-pointing double angle quotation mark = left pointing guillemet, U+00AB ISOnum */
-{L"larr", 8592},		/* leftwards arrow, U+2190 ISOnum */
-{L"lceil", 8968},	/* left ceiling = apl upstile, U+2308 ISOamsc */
-{L"ldquo", 8220},	/* left double quotation mark, U+201C ISOnum */
-{L"le", 8804},		/* less-than or equal to, U+2264 ISOtech */
-{L"lfloor", 8970},	/* left floor = apl downstile, U+230A ISOamsc */
-{L"lowast", 8727},	/* asterisk operator, U+2217 ISOtech */
-{L"loz", 9674},		/* lozenge, U+25CA ISOpub */
-{L"lrm", 8206},		/* left-to-right mark, U+200E NEW RFC 2070 */
-{L"lsaquo", 8249},	/* single left-pointing angle quotation mark, U+2039 ISO proposed */
-{L"lsquo", 8216},	/* left single quotation mark, U+2018 ISOnum */
-{L"lt", 60},		/* less-than sign, U+003C ISOnum */
-{L"macr", 175},		/* macron = spacing macron = overline = APL overbar, U+00AF ISOdia */
-{L"mdash", 8212},	/* em dash, U+2014 ISOpub */
-{L"micro", 181},		/* micro sign, U+00B5 ISOnum */
-{L"middot", 183},	/* middle dot = Georgian comma = Greek middle dot, U+00B7 ISOnum */
-{L"minus", 8722},	/* minus sign, U+2212 ISOtech */
-{L"mu", 956},		/* greek small letter mu, U+03BC ISOgrk3 */
-{L"nabla", 8711},	/* nabla = backward difference, U+2207 ISOtech */
-{L"nbsp", 160},		/* no-break space = non-breaking space, U+00A0 ISOnum */
-{L"ndash", 8211},	/* en dash, U+2013 ISOpub */
-{L"ne", 8800},		/* not equal to, U+2260 ISOtech */
-{L"ni", 8715},		/* contains as member, U+220B ISOtech */
-{L"not", 172},		/* not sign, U+00AC ISOnum */
-{L"notin", 8713},	/* not an element of, U+2209 ISOtech */
-{L"nsub", 8836},		/* not a subset of, U+2284 ISOamsn */
-{L"ntilde", 241},	/* latin small letter n with tilde, U+00F1 ISOlat1 */
-{L"nu", 957},		/* greek small letter nu, U+03BD ISOgrk3 */
-{L"oacute", 243},	/* latin small letter o with acute, U+00F3 ISOlat1 */
-{L"ocirc", 244},		/* latin small letter o with circumflex, U+00F4 ISOlat1 */
-{L"oelig", 339},		/* latin small ligature oe, U+0153 ISOlat2 */
-{L"ograve", 242},	/* latin small letter o with grave, U+00F2 ISOlat1 */
-{L"oline", 8254},	/* overline = spacing overscore, U+203E NEW */
-{L"omega", 969},		/* greek small letter omega, U+03C9 ISOgrk3 */
-{L"omicron", 959},	/* greek small letter omicron, U+03BF NEW */
-{L"oplus", 8853},	/* circled plus = direct sum, U+2295 ISOamsb */
-{L"or", 8744},		/* logical or = vee, U+2228 ISOtech */
-{L"ordf", 170},		/* feminine ordinal indicator, U+00AA ISOnum */
-{L"ordm", 186},		/* masculine ordinal indicator, U+00BA ISOnum */
-{L"oslash", 248},	/* latin small letter o with stroke, = latin small letter o slash, U+00F8 ISOlat1 */
-{L"otilde", 245},	/* latin small letter o with tilde, U+00F5 ISOlat1 */
-{L"otimes", 8855},	/* circled times = vector product, U+2297 ISOamsb */
-{L"ouml", 246},		/* latin small letter o with diaeresis, U+00F6 ISOlat1 */
-{L"para", 182},		/* pilcrow sign = paragraph sign, U+00B6 ISOnum */
-{L"part", 8706},		/* partial differential, U+2202 ISOtech */
-{L"permil", 8240},	/* per mille sign, U+2030 ISOtech */
-{L"perp", 8869},		/* up tack = orthogonal to = perpendicular, U+22A5 ISOtech */
-{L"phi", 966},		/* greek small letter phi, U+03C6 ISOgrk3 */
-{L"pi", 960},		/* greek small letter pi, U+03C0 ISOgrk3 */
-{L"piv", 982},		/* greek pi symbol, U+03D6 ISOgrk3 */
-{L"plusmn", 177},	/* plus-minus sign = plus-or-minus sign, U+00B1 ISOnum */
-{L"pound", 163},		/* pound sign, U+00A3 ISOnum */
-{L"prime", 8242},	/* prime = minutes = feet, U+2032 ISOtech */
-{L"prod", 8719},		/* n-ary product = product sign, U+220F ISOamsb */
-{L"prop", 8733},		/* proportional to, U+221D ISOtech */
-{L"psi", 968},		/* greek small letter psi, U+03C8 ISOgrk3 */
-{L"quot", 34},		/* quotation mark = APL quote, U+0022 ISOnum */
-{L"rArr", 8658},		/* rightwards double arrow, U+21D2 ISOtech */
-{L"radic", 8730},	/* square root = radical sign, U+221A ISOtech */
-{L"rang", 9002},		/* right-pointing angle bracket = ket, U+232A ISOtech */
-{L"raquo", 187},		/* right-pointing double angle quotation mark = right pointing guillemet, U+00BB ISOnum */
-{L"rarr", 8594},		/* rightwards arrow, U+2192 ISOnum */
-{L"rceil", 8969},	/* right ceiling, U+2309 ISOamsc */
-{L"rdquo", 8221},	/* right double quotation mark, U+201D ISOnum */
-{L"real", 8476},		/* blackletter capital R = real part symbol, U+211C ISOamso */
-{L"reg", 174},		/* registered sign = registered trade mark sign, U+00AE ISOnum */
-{L"rfloor", 8971},	/* right floor, U+230B ISOamsc */
-{L"rho", 961},		/* greek small letter rho, U+03C1 ISOgrk3 */
-{L"rlm", 8207},		/* right-to-left mark, U+200F NEW RFC 2070 */
-{L"rsaquo", 8250},	/* single right-pointing angle quotation mark, U+203A ISO proposed */
-{L"rsquo", 8217},	/* right single quotation mark, U+2019 ISOnum */
-{L"sbquo", 8218},	/* single low-9 quotation mark, U+201A NEW */
-{L"scaron", 353},	/* latin small letter s with caron, U+0161 ISOlat2 */
-{L"sdot", 8901},		/* dot operator, U+22C5 ISOamsb */
-{L"sect", 167},		/* section sign, U+00A7 ISOnum */
-{L"shy", 173},		/* soft hyphen = discretionary hyphen, U+00AD ISOnum */
-{L"sigma", 963},		/* greek small letter sigma, U+03C3 ISOgrk3 */
-{L"sigmaf", 962},	/* greek small letter final sigma, U+03C2 ISOgrk3 */
-{L"sim", 8764},		/* tilde operator = varies with = similar to, U+223C ISOtech */
-{L"spades", 9824},	/* black spade suit, U+2660 ISOpub */
-{L"sub", 8834},		/* subset of, U+2282 ISOtech */
-{L"sube", 8838},		/* subset of or equal to, U+2286 ISOtech */
-{L"sum", 8721},		/* n-ary sumation, U+2211 ISOamsb */
-{L"sup", 8835},		/* superset of, U+2283 ISOtech */
-{L"sup1", 185},		/* superscript one = superscript digit one, U+00B9 ISOnum */
-{L"sup2", 178},		/* superscript two = superscript digit two = squared, U+00B2 ISOnum */
-{L"sup3", 179},		/* superscript three = superscript digit three = cubed, U+00B3 ISOnum */
-{L"supe", 8839},		/* superset of or equal to, U+2287 ISOtech */
-{L"szlig", 223},		/* latin small letter sharp s = ess-zed, U+00DF ISOlat1 */
-{L"tau", 964},		/* greek small letter tau, U+03C4 ISOgrk3 */
-{L"there4", 8756},	/* therefore, U+2234 ISOtech */
-{L"theta", 952},		/* greek small letter theta, U+03B8 ISOgrk3 */
-{L"thetasym", 977},	/* greek small letter theta symbol, U+03D1 NEW */
-{L"thinsp", 8201},	/* thin space, U+2009 ISOpub */
-{L"thorn", 254},		/* latin small letter thorn with, U+00FE ISOlat1 */
-{L"tilde", 732},		/* small tilde, U+02DC ISOdia */
-{L"times", 215},		/* multiplication sign, U+00D7 ISOnum */
-{L"trade", 8482},	/* trade mark sign, U+2122 ISOnum */
-{L"uArr", 8657},		/* upwards double arrow, U+21D1 ISOamsa */
-{L"uacute", 250},	/* latin small letter u with acute, U+00FA ISOlat1 */
-{L"uarr", 8593},		/* upwards arrow, U+2191 ISOnum*/
-{L"ucirc", 251},		/* latin small letter u with circumflex, U+00FB ISOlat1 */
-{L"ugrave", 249},	/* latin small letter u with grave, U+00F9 ISOlat1 */
-{L"uml", 168},		/* diaeresis = spacing diaeresis, U+00A8 ISOdia */
-{L"upsih", 978},		/* greek upsilon with hook symbol, U+03D2 NEW */
-{L"upsilon", 965},	/* greek small letter upsilon, U+03C5 ISOgrk3 */
-{L"uuml", 252},		/* latin small letter u with diaeresis, U+00FC ISOlat1 */
-{L"weierp", 8472},	/* script capital P = power set = Weierstrass p, U+2118 ISOamso */
-{L"xi", 958},		/* greek small letter xi, U+03BE ISOgrk3 */
-{L"yacute", 253},	/* latin small letter y with acute, U+00FD ISOlat1 */
-{L"yen", 165},		/* yen sign = yuan sign, U+00A5 ISOnum */
-{L"yuml", 255},		/* latin small letter y with diaeresis, U+00FF ISOlat1 */
-{L"zeta", 950},		/* greek small letter zeta, U+03B6 ISOgrk3 */
-{L"zwj", 8205},		/* zero width joiner, U+200D NEW RFC 2070 */
-{L"zwnj", 8204},		/* zero width non-joiner, U+200C NEW RFC 2070 */
-
-{L"zzzz", 0}			/* this last entry is required */
-#else /* !defined(_I18N_) && defined(__JIS__) */
    /* This table MUST be in alphabetical order */
 {"AElig", 198},		/* latin capital letter AE = latin capital ligature AE, U+00C6 ISOlat1 */
 {"Aacute", 193},	/* latin capital letter A with acute, U+00C1 ISOlat1 */
@@ -563,7 +305,6 @@ CharEntityEntry        CharEntityTable[] =
 {"zwnj", 8204},		/* zero width non-joiner, U+200C NEW RFC 2070 */
 
 {"zzzz", 0}			/* this last entry is required */
-#endif /* defined(_I18N_) || defined(__JIS__) */
 };
 
 typedef struct _UnicodeFallbackEntry
@@ -821,17 +562,10 @@ static int          BlockLevelElement[] =
 typedef CHAR_T        oneLine[100];
 static oneLine      EquivEndingElem[] =
 {
-#  if defined(_I18N_) || defined(__JIS__)
-   L"DT DD LI OPTION",
-   L"H1 H2 H3 H4 H5 H6",
-   L"OL MENU DIR ADDRESS PRE LISTING XMP",
-   L""
-#  else /* !defined(_I18N_) && !defined(__JIS__) */
-   "DT DD LI OPTION",
-   "H1 H2 H3 H4 H5 H6",
-   "OL MENU DIR ADDRESS PRE LISTING XMP",
+   "dt dd li option",
+   "h1 h2 h3 h4 h5 h6",
+   "ol menu dir address pre listing xmp",
    ""
-#  endif /* defined(_I18N_) || defined(__JIS__) */
 };
 /* acording the HTML DTD, HR should be added to the 2nd line above, as it */
 /* is not allowed within a H1, H2, H3, etc. But we should tolerate that case */
@@ -840,95 +574,49 @@ static oneLine      EquivEndingElem[] =
 /* start tags that imply the end of current element */
 static oneLine      StartTagEndingElem[] =
 {
-#  if defined(_I18N_) || defined(__JIS__)
-   L"FORM closes FORM P P* HR H1 H2 H3 H4 H5 H6 DL UL OL MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   L"HEAD closes P P*",
-   L"TITLE closes P P*",
-   L"BODY closes HEAD STYLE LINK TITLE P P*",
-   L"LI closes P P* H1 H2 H3 H4 H5 H6 DL ADDRESS PRE LISTING XMP HEAD",
-   L"HR closes P P* HEAD",
-   L"H1 closes P P* HEAD",
-   L"H2 closes P P* HEAD",
-   L"H3 closes P P* HEAD",
-   L"H4 closes P P* HEAD",
-   L"H5 closes P P* HEAD",
-   L"H6 closes P P* HEAD",
-   L"DIR closes P P* HEAD",
-   L"ADDRESS closes P P* HEAD UL",
-   L"PRE closes P P* HEAD UL",
-   L"LISTING closes P P* HEAD",
-   L"XMP closes P P* HEAD",
-   L"BLOCKQUOTE closes P P* HEAD",
-   L"DL closes P P* DT MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   L"DT closes P P* MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   L"DD closes P P* MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   L"UL closes P P* HEAD OL MENU DIR ADDRESS PRE LISTING XMP",
-   L"OL closes P P* HEAD UL",
-   L"MENU closes P P* HEAD UL",
-   L"P closes P P* HEAD H1 H2 H3 H4 H5 H6",
-   L"P* closes P P* HEAD",
-   L"DIV closes P P* HEAD",
-   L"NOSCRIPT closes P P* HEAD",
-   L"CENTER closes FONT B I P P* HEAD",
-   L"A closes A",
-   L"CAPTION closes P P*",
-   L"COLGROUP closes CAPTION COLGROUP COL P P*",
-   L"COL closes CAPTION COL P P*",
-   L"TABLE closes P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP A",
-   L"TH closes TH TD",
-   L"TD closes TH TD",
-   L"TR closes TH TD TR CAPTION COL COLGROUP",
-   L"THEAD closes CAPTION COL COLGROUP",
-   L"TFOOT closes TH TD TR CAPTION COL COLGROUP THEAD TBODY",
-   L"TBODY closes TH TD TR CAPTION COL COLGROUP THEAD TFOOT TBODY",
-   L"OPTGROUP closes OPTION",
-   L"FIELDSET closes LEGEND P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP A",
-   L""
-#  else /* !defined(_I18N_) && !defined(__JIS__) */
-   "FORM closes FORM P P* HR H1 H2 H3 H4 H5 H6 DL UL OL MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "HEAD closes P P*",
-   "TITLE closes P P*",
-   "BODY closes HEAD STYLE LINK TITLE P P*",
-   "LI closes P P* H1 H2 H3 H4 H5 H6 DL ADDRESS PRE LISTING XMP HEAD",
-   "HR closes P P* HEAD",
-   "H1 closes P P* HEAD",
-   "H2 closes P P* HEAD",
-   "H3 closes P P* HEAD",
-   "H4 closes P P* HEAD",
-   "H5 closes P P* HEAD",
-   "H6 closes P P* HEAD",
-   "DIR closes P P* HEAD",
-   "ADDRESS closes P P* HEAD UL",
-   "PRE closes P P* HEAD UL",
-   "LISTING closes P P* HEAD",
-   "XMP closes P P* HEAD",
-   "BLOCKQUOTE closes P P* HEAD",
-   "DL closes P P* DT MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "DT closes P P* MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "DD closes P P* MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "UL closes P P* HEAD OL MENU DIR ADDRESS PRE LISTING XMP",
-   "OL closes P P* HEAD UL",
-   "MENU closes P P* HEAD UL",
-   "P closes P P* HEAD H1 H2 H3 H4 H5 H6",
-   "P* closes P P* HEAD",
-   "DIV closes P P* HEAD",
-   "NOSCRIPT closes P P* HEAD",
-   "CENTER closes FONT B I P P* HEAD",
-   "A closes A",
-   "CAPTION closes P P*",
-   "COLGROUP closes CAPTION COLGROUP COL P P*",
-   "COL closes CAPTION COL P P*",
-   "TABLE closes P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP A",
-   "TH closes TH TD",
-   "TD closes TH TD",
-   "TR closes TH TD TR CAPTION COL COLGROUP",
-   "THEAD closes CAPTION COL COLGROUP",
-   "TFOOT closes TH TD TR CAPTION COL COLGROUP THEAD TBODY",
-   "TBODY closes TH TD TR CAPTION COL COLGROUP THEAD TFOOT TBODY",
-   "OPTGROUP closes OPTION",
-   "FIELDSET closes LEGEND P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP A",
+   "form closes form p p* hr h1 h2 h3 h4 h5 h6 dl ul ol menu dir address pre listing xmp head",
+   "head closes p p*",
+   "title closes p p*",
+   "body closes head style link title p p*",
+   "li closes p p* h1 h2 h3 h4 h5 h6 dl address pre listing xmp head",
+   "hr closes p p* head",
+   "h1 closes p p* head",
+   "h2 closes p p* head",
+   "h3 closes p p* head",
+   "h4 closes p p* head",
+   "h5 closes p p* head",
+   "h6 closes p p* head",
+   "dir closes p p* head",
+   "address closes p p* head ul",
+   "pre closes p p* head ul",
+   "listing closes p p* head",
+   "xmp closes p p* head",
+   "blockquote closes p p* head",
+   "dl closes p p* dt menu dir address pre listing xmp head",
+   "dt closes p p* menu dir address pre listing xmp head",
+   "dd closes p p* menu dir address pre listing xmp head",
+   "ul closes p p* head ol menu dir address pre listing xmp",
+   "ol closes p p* head ul",
+   "menu closes p p* head ul",
+   "p closes p p* head h1 h2 h3 h4 h5 h6",
+   "p* closes p p* head",
+   "div closes p p* head",
+   "noscript closes p p* head",
+   "center closes font b i p p* head",
+   "a closes a",
+   "caption closes p p*",
+   "colgroup closes caption colgroup col p p*",
+   "col closes caption col p p*",
+   "table closes p p* head h1 h2 h3 h4 h5 h6 pre listing xmp a",
+   "th closes th td",
+   "td closes th td",
+   "tr closes th td tr caption col colgroup",
+   "thead closes caption col colgroup",
+   "tfoot closes th td tr caption col colgroup thead tbody",
+   "tbody closes th td tr caption col colgroup thead tfoot tbody",
+   "optgroup closes option",
+   "fieldset closes legend p p* head h1 h2 h3 h4 h5 h6 pre listing xmp a",
    ""
-#endif /* defined(_I18N_) || defined(__JIS__) */
 };
 
 
@@ -936,27 +624,27 @@ static oneLine      StartTagEndingElem[] =
 
 static AttrValueMapping HTMLAttrValueMappingTable[] =
 {
-   {HTML_ATTR_dir, TEXT("LTR"), HTML_ATTR_dir_VAL_ltr},
-   {HTML_ATTR_dir, TEXT("RTL"), HTML_ATTR_dir_VAL_rtl},
+   {HTML_ATTR_dir, TEXT("ltr"), HTML_ATTR_dir_VAL_ltr},
+   {HTML_ATTR_dir, TEXT("rtl"), HTML_ATTR_dir_VAL_rtl},
 
-   {HTML_ATTR_TextAlign, TEXT("LEFT"), HTML_ATTR_TextAlign_VAL_left_},
-   {HTML_ATTR_TextAlign, TEXT("CENTER"), HTML_ATTR_TextAlign_VAL_center_},
-   {HTML_ATTR_TextAlign, TEXT("RIGHT"), HTML_ATTR_TextAlign_VAL_right_},
-   {HTML_ATTR_TextAlign, TEXT("JUSTIFY"), HTML_ATTR_TextAlign_VAL_justify_},
+   {HTML_ATTR_TextAlign, TEXT("left"), HTML_ATTR_TextAlign_VAL_left_},
+   {HTML_ATTR_TextAlign, TEXT("center"), HTML_ATTR_TextAlign_VAL_center_},
+   {HTML_ATTR_TextAlign, TEXT("right"), HTML_ATTR_TextAlign_VAL_right_},
+   {HTML_ATTR_TextAlign, TEXT("justify"), HTML_ATTR_TextAlign_VAL_justify_},
 
-   {HTML_ATTR_Align, TEXT("LEFT"), HTML_ATTR_Align_VAL_left_},
-   {HTML_ATTR_Align, TEXT("CENTER"), HTML_ATTR_Align_VAL_center_},
-   {HTML_ATTR_Align, TEXT("RIGHT"), HTML_ATTR_Align_VAL_right_},
+   {HTML_ATTR_Align, TEXT("left"), HTML_ATTR_Align_VAL_left_},
+   {HTML_ATTR_Align, TEXT("center"), HTML_ATTR_Align_VAL_center_},
+   {HTML_ATTR_Align, TEXT("right"), HTML_ATTR_Align_VAL_right_},
 
-   {HTML_ATTR_LAlign, TEXT("TOP"), HTML_ATTR_LAlign_VAL_Top_},
-   {HTML_ATTR_LAlign, TEXT("BOTTOM"), HTML_ATTR_LAlign_VAL_Bottom_},
-   {HTML_ATTR_LAlign, TEXT("LEFT"), HTML_ATTR_LAlign_VAL_Left_},
-   {HTML_ATTR_LAlign, TEXT("RIGHT"), HTML_ATTR_LAlign_VAL_Right_},
+   {HTML_ATTR_LAlign, TEXT("top"), HTML_ATTR_LAlign_VAL_Top_},
+   {HTML_ATTR_LAlign, TEXT("bottom"), HTML_ATTR_LAlign_VAL_Bottom_},
+   {HTML_ATTR_LAlign, TEXT("left"), HTML_ATTR_LAlign_VAL_Left_},
+   {HTML_ATTR_LAlign, TEXT("right"), HTML_ATTR_LAlign_VAL_Right_},
 
-   {HTML_ATTR_Clear, TEXT("LEFT"), HTML_ATTR_Clear_VAL_Left_},
-   {HTML_ATTR_Clear, TEXT("RIGHT"), HTML_ATTR_Clear_VAL_Right_},
-   {HTML_ATTR_Clear, TEXT("ALL"), HTML_ATTR_Clear_VAL_All_},
-   {HTML_ATTR_Clear, TEXT("NONE"), HTML_ATTR_Clear_VAL_None},
+   {HTML_ATTR_Clear, TEXT("left"), HTML_ATTR_Clear_VAL_Left_},
+   {HTML_ATTR_Clear, TEXT("right"), HTML_ATTR_Clear_VAL_Right_},
+   {HTML_ATTR_Clear, TEXT("all"), HTML_ATTR_Clear_VAL_All_},
+   {HTML_ATTR_Clear, TEXT("none"), HTML_ATTR_Clear_VAL_None},
 
    {HTML_ATTR_NumberStyle, TEXT("1"), HTML_ATTR_NumberStyle_VAL_Arabic_},
    {HTML_ATTR_NumberStyle, TEXT("a"), HTML_ATTR_NumberStyle_VAL_LowerAlpha},
@@ -964,114 +652,114 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_NumberStyle, TEXT("i"), HTML_ATTR_NumberStyle_VAL_LowerRoman},
    {HTML_ATTR_NumberStyle, TEXT("I"), HTML_ATTR_NumberStyle_VAL_UpperRoman},
 
-   {HTML_ATTR_BulletStyle, TEXT("DISC"), HTML_ATTR_BulletStyle_VAL_disc},
-   {HTML_ATTR_BulletStyle, TEXT("SQUARE"), HTML_ATTR_BulletStyle_VAL_square},
-   {HTML_ATTR_BulletStyle, TEXT("CIRCLE"), HTML_ATTR_BulletStyle_VAL_circle},
+   {HTML_ATTR_BulletStyle, TEXT("disc"), HTML_ATTR_BulletStyle_VAL_disc},
+   {HTML_ATTR_BulletStyle, TEXT("square"), HTML_ATTR_BulletStyle_VAL_square},
+   {HTML_ATTR_BulletStyle, TEXT("circle"), HTML_ATTR_BulletStyle_VAL_circle},
 
    {HTML_ATTR_ItemStyle, TEXT("1"), HTML_ATTR_ItemStyle_VAL_Arabic_},
    {HTML_ATTR_ItemStyle, TEXT("a"), HTML_ATTR_ItemStyle_VAL_LowerAlpha},
    {HTML_ATTR_ItemStyle, TEXT("A"), HTML_ATTR_ItemStyle_VAL_UpperAlpha},
    {HTML_ATTR_ItemStyle, TEXT("i"), HTML_ATTR_ItemStyle_VAL_LowerRoman},
    {HTML_ATTR_ItemStyle, TEXT("I"), HTML_ATTR_ItemStyle_VAL_UpperRoman},
-   {HTML_ATTR_ItemStyle, TEXT("DISC"), HTML_ATTR_ItemStyle_VAL_disc},
-   {HTML_ATTR_ItemStyle, TEXT("SQUARE"), HTML_ATTR_ItemStyle_VAL_square},
-   {HTML_ATTR_ItemStyle, TEXT("CIRCLE"), HTML_ATTR_ItemStyle_VAL_circle},
+   {HTML_ATTR_ItemStyle, TEXT("disc"), HTML_ATTR_ItemStyle_VAL_disc},
+   {HTML_ATTR_ItemStyle, TEXT("square"), HTML_ATTR_ItemStyle_VAL_square},
+   {HTML_ATTR_ItemStyle, TEXT("circle"), HTML_ATTR_ItemStyle_VAL_circle},
 
-   {HTML_ATTR_Button_type, TEXT("BUTTON"), HTML_ATTR_Button_type_VAL_button},
-   {HTML_ATTR_Button_type, TEXT("SUBMIT"), HTML_ATTR_Button_type_VAL_submit},
-   {HTML_ATTR_Button_type, TEXT("RESET"), HTML_ATTR_Button_type_VAL_reset},
+   {HTML_ATTR_Button_type, TEXT("button"), HTML_ATTR_Button_type_VAL_button},
+   {HTML_ATTR_Button_type, TEXT("submit"), HTML_ATTR_Button_type_VAL_submit},
+   {HTML_ATTR_Button_type, TEXT("reset"), HTML_ATTR_Button_type_VAL_reset},
 
-   {HTML_ATTR_mode, TEXT("DISPLAY"), HTML_ATTR_mode_VAL_display},
-   {HTML_ATTR_mode, TEXT("INLINE"), HTML_ATTR_mode_VAL_inline_math},
+   {HTML_ATTR_mode, TEXT("display"), HTML_ATTR_mode_VAL_display},
+   {HTML_ATTR_mode, TEXT("inline"), HTML_ATTR_mode_VAL_inline_math},
 
-   {HTML_ATTR_frame, TEXT("VOID"), HTML_ATTR_frame_VAL_void},
-   {HTML_ATTR_frame, TEXT("ABOVE"), HTML_ATTR_frame_VAL_above},
-   {HTML_ATTR_frame, TEXT("BELOW"), HTML_ATTR_frame_VAL_below},
-   {HTML_ATTR_frame, TEXT("HSIDES"), HTML_ATTR_frame_VAL_hsides},
-   {HTML_ATTR_frame, TEXT("LHS"), HTML_ATTR_frame_VAL_lhs},
-   {HTML_ATTR_frame, TEXT("RHS"), HTML_ATTR_frame_VAL_rhs},
-   {HTML_ATTR_frame, TEXT("VSIDES"), HTML_ATTR_frame_VAL_vsides},
-   {HTML_ATTR_frame, TEXT("BOX"), HTML_ATTR_frame_VAL_box},
-   {HTML_ATTR_frame, TEXT("BORDER"), HTML_ATTR_frame_VAL_border},
+   {HTML_ATTR_frame, TEXT("void"), HTML_ATTR_frame_VAL_void},
+   {HTML_ATTR_frame, TEXT("above"), HTML_ATTR_frame_VAL_above},
+   {HTML_ATTR_frame, TEXT("below"), HTML_ATTR_frame_VAL_below},
+   {HTML_ATTR_frame, TEXT("hsides"), HTML_ATTR_frame_VAL_hsides},
+   {HTML_ATTR_frame, TEXT("lhs"), HTML_ATTR_frame_VAL_lhs},
+   {HTML_ATTR_frame, TEXT("rhs"), HTML_ATTR_frame_VAL_rhs},
+   {HTML_ATTR_frame, TEXT("vsides"), HTML_ATTR_frame_VAL_vsides},
+   {HTML_ATTR_frame, TEXT("box"), HTML_ATTR_frame_VAL_box},
+   {HTML_ATTR_frame, TEXT("border"), HTML_ATTR_frame_VAL_border},
 
    {HTML_ATTR_frameborder, TEXT("0"), HTML_ATTR_frameborder_VAL_Border0},
    {HTML_ATTR_frameborder, TEXT("1"), HTML_ATTR_frameborder_VAL_Border1},
 
-   {HTML_ATTR_scrolling, TEXT("YES"), HTML_ATTR_scrolling_VAL_Yes_},
-   {HTML_ATTR_scrolling, TEXT("NO"), HTML_ATTR_scrolling_VAL_No_},
-   {HTML_ATTR_scrolling, TEXT("AUTO"), HTML_ATTR_scrolling_VAL_auto},
+   {HTML_ATTR_scrolling, TEXT("yes"), HTML_ATTR_scrolling_VAL_Yes_},
+   {HTML_ATTR_scrolling, TEXT("no"), HTML_ATTR_scrolling_VAL_No_},
+   {HTML_ATTR_scrolling, TEXT("auto"), HTML_ATTR_scrolling_VAL_auto},
 
-   {HTML_ATTR_rules_, TEXT("NONE"), HTML_ATTR_rules__VAL_none},
-   {HTML_ATTR_rules_, TEXT("GROUPS"), HTML_ATTR_rules__VAL_groups},
-   {HTML_ATTR_rules_, TEXT("ROWS"), HTML_ATTR_rules__VAL_rows},
-   {HTML_ATTR_rules_, TEXT("COLS"), HTML_ATTR_rules__VAL_cols},
-   {HTML_ATTR_rules_, TEXT("ALL"), HTML_ATTR_rules__VAL_all},
+   {HTML_ATTR_rules_, TEXT("none"), HTML_ATTR_rules__VAL_none},
+   {HTML_ATTR_rules_, TEXT("groups"), HTML_ATTR_rules__VAL_groups},
+   {HTML_ATTR_rules_, TEXT("rows"), HTML_ATTR_rules__VAL_rows},
+   {HTML_ATTR_rules_, TEXT("cols"), HTML_ATTR_rules__VAL_cols},
+   {HTML_ATTR_rules_, TEXT("all"), HTML_ATTR_rules__VAL_all},
 
-   {HTML_ATTR_Cell_align, TEXT("LEFT"), HTML_ATTR_Cell_align_VAL_Cell_left},
-   {HTML_ATTR_Cell_align, TEXT("CENTER"), HTML_ATTR_Cell_align_VAL_Cell_center},
-   {HTML_ATTR_Cell_align, TEXT("RIGHT"), HTML_ATTR_Cell_align_VAL_Cell_right},
-   {HTML_ATTR_Cell_align, TEXT("JUSTIFY"), HTML_ATTR_Cell_align_VAL_Cell_justify},
-   {HTML_ATTR_Cell_align, TEXT("CHAR"), HTML_ATTR_Cell_align_VAL_Cell_char},
+   {HTML_ATTR_Cell_align, TEXT("left"), HTML_ATTR_Cell_align_VAL_Cell_left},
+   {HTML_ATTR_Cell_align, TEXT("center"), HTML_ATTR_Cell_align_VAL_Cell_center},
+   {HTML_ATTR_Cell_align, TEXT("right"), HTML_ATTR_Cell_align_VAL_Cell_right},
+   {HTML_ATTR_Cell_align, TEXT("justify"), HTML_ATTR_Cell_align_VAL_Cell_justify},
+   {HTML_ATTR_Cell_align, TEXT("char"), HTML_ATTR_Cell_align_VAL_Cell_char},
 
-   {HTML_ATTR_Alignment, TEXT("TOP"), HTML_ATTR_Alignment_VAL_Top_},
-   {HTML_ATTR_Alignment, TEXT("MIDDLE"), HTML_ATTR_Alignment_VAL_Middle_},
-   {HTML_ATTR_Alignment, TEXT("BOTTOM"), HTML_ATTR_Alignment_VAL_Bottom_},
-   {HTML_ATTR_Alignment, TEXT("LEFT"), HTML_ATTR_Alignment_VAL_Left_},
-   {HTML_ATTR_Alignment, TEXT("RIGHT"), HTML_ATTR_Alignment_VAL_Right_},
+   {HTML_ATTR_Alignment, TEXT("top"), HTML_ATTR_Alignment_VAL_Top_},
+   {HTML_ATTR_Alignment, TEXT("middle"), HTML_ATTR_Alignment_VAL_Middle_},
+   {HTML_ATTR_Alignment, TEXT("botton"), HTML_ATTR_Alignment_VAL_Bottom_},
+   {HTML_ATTR_Alignment, TEXT("left"), HTML_ATTR_Alignment_VAL_Left_},
+   {HTML_ATTR_Alignment, TEXT("right"), HTML_ATTR_Alignment_VAL_Right_},
 
-   {HTML_ATTR_METHOD, TEXT("GET"), HTML_ATTR_METHOD_VAL_Get_},
-   {HTML_ATTR_METHOD, TEXT("POST"), HTML_ATTR_METHOD_VAL_Post_},
+   {HTML_ATTR_METHOD, TEXT("get"), HTML_ATTR_METHOD_VAL_Get_},
+   {HTML_ATTR_METHOD, TEXT("post"), HTML_ATTR_METHOD_VAL_Post_},
 
-   {HTML_ATTR_Position, TEXT("TOP"), HTML_ATTR_Position_VAL_Position_top},
-   {HTML_ATTR_Position, TEXT("BOTTOM"), HTML_ATTR_Position_VAL_Position_bottom},
-   {HTML_ATTR_Position, TEXT("LEFT"), HTML_ATTR_Position_VAL_Position_left},
-   {HTML_ATTR_Position, TEXT("RIGHT"), HTML_ATTR_Position_VAL_Position_right},
+   {HTML_ATTR_Position, TEXT("top"), HTML_ATTR_Position_VAL_Position_top},
+   {HTML_ATTR_Position, TEXT("botton"), HTML_ATTR_Position_VAL_Position_bottom},
+   {HTML_ATTR_Position, TEXT("left"), HTML_ATTR_Position_VAL_Position_left},
+   {HTML_ATTR_Position, TEXT("right"), HTML_ATTR_Position_VAL_Position_right},
 
-   {HTML_ATTR_Row_valign, TEXT("TOP"), HTML_ATTR_Row_valign_VAL_Row_top},
-   {HTML_ATTR_Row_valign, TEXT("MIDDLE"), HTML_ATTR_Row_valign_VAL_Row_middle},
-   {HTML_ATTR_Row_valign, TEXT("BOTTOM"), HTML_ATTR_Row_valign_VAL_Row_bottom},
-   {HTML_ATTR_Row_valign, TEXT("BASELINE"), HTML_ATTR_Row_valign_VAL_Row_baseline},
+   {HTML_ATTR_Row_valign, TEXT("top"), HTML_ATTR_Row_valign_VAL_Row_top},
+   {HTML_ATTR_Row_valign, TEXT("middle"), HTML_ATTR_Row_valign_VAL_Row_middle},
+   {HTML_ATTR_Row_valign, TEXT("botton"), HTML_ATTR_Row_valign_VAL_Row_bottom},
+   {HTML_ATTR_Row_valign, TEXT("baseline"), HTML_ATTR_Row_valign_VAL_Row_baseline},
 
-   {HTML_ATTR_Cell_valign, TEXT("TOP"), HTML_ATTR_Cell_valign_VAL_Cell_top},
-   {HTML_ATTR_Cell_valign, TEXT("MIDDLE"), HTML_ATTR_Cell_valign_VAL_Cell_middle},
-   {HTML_ATTR_Cell_valign, TEXT("BOTTOM"), HTML_ATTR_Cell_valign_VAL_Cell_bottom},
-   {HTML_ATTR_Cell_valign, TEXT("BASELINE"), HTML_ATTR_Cell_valign_VAL_Cell_baseline},
+   {HTML_ATTR_Cell_valign, TEXT("top"), HTML_ATTR_Cell_valign_VAL_Cell_top},
+   {HTML_ATTR_Cell_valign, TEXT("middle"), HTML_ATTR_Cell_valign_VAL_Cell_middle},
+   {HTML_ATTR_Cell_valign, TEXT("botton"), HTML_ATTR_Cell_valign_VAL_Cell_bottom},
+   {HTML_ATTR_Cell_valign, TEXT("baseline"), HTML_ATTR_Cell_valign_VAL_Cell_baseline},
 
-   {HTML_ATTR_shape, TEXT("RECT"), HTML_ATTR_shape_VAL_rectangle},
-   {HTML_ATTR_shape, TEXT("CIRCLE"), HTML_ATTR_shape_VAL_circle},
-   {HTML_ATTR_shape, TEXT("POLY"), HTML_ATTR_shape_VAL_polygon},
+   {HTML_ATTR_shape, TEXT("rect"), HTML_ATTR_shape_VAL_rectangle},
+   {HTML_ATTR_shape, TEXT("circle"), HTML_ATTR_shape_VAL_circle},
+   {HTML_ATTR_shape, TEXT("ploy"), HTML_ATTR_shape_VAL_polygon},
 
-   {HTML_ATTR_valuetype, TEXT("DATA"), HTML_ATTR_valuetype_VAL_data_},
-   {HTML_ATTR_valuetype, TEXT("REF"), HTML_ATTR_valuetype_VAL_ref},
-   {HTML_ATTR_valuetype, TEXT("OBJECT"), HTML_ATTR_valuetype_VAL_object_},
+   {HTML_ATTR_valuetype, TEXT("data"), HTML_ATTR_valuetype_VAL_data_},
+   {HTML_ATTR_valuetype, TEXT("ref"), HTML_ATTR_valuetype_VAL_ref},
+   {HTML_ATTR_valuetype, TEXT("object"), HTML_ATTR_valuetype_VAL_object_},
 
 /* HTML attribute TYPE generates a Thot element */
-   {DummyAttribute, TEXT("BUTTON"), HTML_EL_Button_Input},
-   {DummyAttribute, TEXT("CHECKBOX"), HTML_EL_Checkbox_Input},
-   {DummyAttribute, TEXT("FILE"), HTML_EL_File_Input},
-   {DummyAttribute, TEXT("HIDDEN"), HTML_EL_Hidden_Input},
-   {DummyAttribute, TEXT("IMAGE"), HTML_EL_PICTURE_UNIT},
-   {DummyAttribute, TEXT("PASSWORD"), HTML_EL_Password_Input},
-   {DummyAttribute, TEXT("RADIO"), HTML_EL_Radio_Input},
-   {DummyAttribute, TEXT("RESET"), HTML_EL_Reset_Input},
-   {DummyAttribute, TEXT("SUBMIT"), HTML_EL_Submit_Input},
-   {DummyAttribute, TEXT("TEXT"), HTML_EL_Text_Input},
+   {DummyAttribute, TEXT("button"), HTML_EL_Button_Input},
+   {DummyAttribute, TEXT("checkbox"), HTML_EL_Checkbox_Input},
+   {DummyAttribute, TEXT("file"), HTML_EL_File_Input},
+   {DummyAttribute, TEXT("hidden"), HTML_EL_Hidden_Input},
+   {DummyAttribute, TEXT("image"), HTML_EL_PICTURE_UNIT},
+   {DummyAttribute, TEXT("password"), HTML_EL_Password_Input},
+   {DummyAttribute, TEXT("radio"), HTML_EL_Radio_Input},
+   {DummyAttribute, TEXT("reset"), HTML_EL_Reset_Input},
+   {DummyAttribute, TEXT("submit"), HTML_EL_Submit_Input},
+   {DummyAttribute, TEXT("text"), HTML_EL_Text_Input},
 
 /* The following declarations allow the parser to accept boolean attributes */
 /* written "checked=CHECKED"), for instance */
-   {HTML_ATTR_ISMAP, TEXT("ISMAP"), HTML_ATTR_ISMAP_VAL_Yes_},
-   {HTML_ATTR_nohref, TEXT("NOHREF"), HTML_ATTR_nohref_VAL_Yes_},
-   {HTML_ATTR_COMPACT, TEXT("COMPACT"), HTML_ATTR_COMPACT_VAL_Yes_},
-   {HTML_ATTR_Multiple, TEXT("MULTIPLE"), HTML_ATTR_Multiple_VAL_Yes_},
-   {HTML_ATTR_Selected, TEXT("SELECTED"), HTML_ATTR_Selected_VAL_Yes_},
-   {HTML_ATTR_Checked, TEXT("CHECKED"), HTML_ATTR_Checked_VAL_Yes_},
-   {HTML_ATTR_No_wrap, TEXT("NOWRAP"), HTML_ATTR_No_wrap_VAL_no_wrap},
-   {HTML_ATTR_NoShade, TEXT("NOSHADE"), HTML_ATTR_NoShade_VAL_NoShade_},
-   {HTML_ATTR_declare, TEXT("DECLARE"), HTML_ATTR_declare_VAL_Yes_},
-   {HTML_ATTR_defer, TEXT("DEFER"), HTML_ATTR_defer_VAL_Yes_},
-   {HTML_ATTR_disabled, TEXT("DISABLED"), HTML_ATTR_disabled_VAL_Yes_},
-   {HTML_ATTR_readonly, TEXT("READONLY"), HTML_ATTR_readonly_VAL_Yes_},
-   {HTML_ATTR_no_resize, TEXT("NORESIZE"), HTML_ATTR_no_resize_VAL_Yes_},
+   {HTML_ATTR_ISMAP, TEXT("ismap"), HTML_ATTR_ISMAP_VAL_Yes_},
+   {HTML_ATTR_nohref, TEXT("nohref"), HTML_ATTR_nohref_VAL_Yes_},
+   {HTML_ATTR_COMPACT, TEXT("compact"), HTML_ATTR_COMPACT_VAL_Yes_},
+   {HTML_ATTR_Multiple, TEXT("multiple"), HTML_ATTR_Multiple_VAL_Yes_},
+   {HTML_ATTR_Selected, TEXT("selected"), HTML_ATTR_Selected_VAL_Yes_},
+   {HTML_ATTR_Checked, TEXT("checked"), HTML_ATTR_Checked_VAL_Yes_},
+   {HTML_ATTR_No_wrap, TEXT("nowrap"), HTML_ATTR_No_wrap_VAL_no_wrap},
+   {HTML_ATTR_NoShade, TEXT("noshade"), HTML_ATTR_NoShade_VAL_NoShade_},
+   {HTML_ATTR_declare, TEXT("declare"), HTML_ATTR_declare_VAL_Yes_},
+   {HTML_ATTR_defer, TEXT("defer"), HTML_ATTR_defer_VAL_Yes_},
+   {HTML_ATTR_disabled, TEXT("disabled"), HTML_ATTR_disabled_VAL_Yes_},
+   {HTML_ATTR_readonly, TEXT("readonly"), HTML_ATTR_readonly_VAL_Yes_},
+   {HTML_ATTR_no_resize, TEXT("noresize"), HTML_ATTR_no_resize_VAL_Yes_},
    {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 
@@ -1389,7 +1077,7 @@ ElementType elType;
 	do
 	  {
 	    if (pHTMLGIMapping[i].ThotType == elType.ElTypeNum &&
-		ustrcmp (pHTMLGIMapping[i].htmlGI, TEXT("LISTING")))	/* use PRE */
+		ustrcmp (pHTMLGIMapping[i].htmlGI, TEXT("listing")))	/* use PRE */
 	      return (STRING) pHTMLGIMapping[i].htmlGI;
 	    i++;
 	  }
@@ -2851,7 +2539,7 @@ Element             el;
 	    length = TtaGetTextAttributeLength (attr);
 	    name1 = TtaAllocString (length + 1);
 	    TtaGiveTextAttributeValue (attr, name1, &length);
-	    if (!ustrcasecmp (name1, TEXT("STYLESHEET")) || !ustrcasecmp (name1, TEXT("STYLE")))
+	    if (!ustrcasecmp (name1, TEXT("stylesheet")) || !ustrcasecmp (name1, TEXT("style")))
 	      {
 		 /* it's a link to a style sheet. Load that style sheet */
 		 attrType.AttrSSchema = DocumentSSchema;
@@ -3011,18 +2699,18 @@ ThotBool            onStartTag;
        if (start < 0)
 	 /* Explicit close */
 	 {
-	   /* If we meet the end tag of a FORM, FONT or CENTER
+	   /* If we meet the end tag of a form, font or center
 	      looks for that element in the stack, but not at
 	      a higher level as a table element */
 	   if (!onStartTag &&
-	       (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("FORM")) ||
-		!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("FONT")) ||
-		!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("CENTER"))))
+	       (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("form")) ||
+		!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("font")) ||
+		!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("center"))))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TBODY")) ||
-		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TR")) ||
-		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TH")) ||
-		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TD")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("tbody")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("tr")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("th")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("td")))
 		 {
 		   /* ignore this end tag */
 		   ret = FALSE;
@@ -3043,33 +2731,33 @@ ThotBool            onStartTag;
 	      equivalent), looks for that element in the
 	      stack, but not at a higher level as the list (or
 	      equivalent) element */
-	   if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("LI")))
+	   if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("li")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("OL")) ||
-		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("UL")) ||
-		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("DIR")) ||
-		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("MENU")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("ol")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("ul")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("dir")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("menu")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("OPTION")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("option")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("SELECT")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("select")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("DD")) ||
-		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("DT")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("dd")) ||
+		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("dt")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("DL")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("dl")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("TR")) ||
-		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("TD")) ||
-		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("TH")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("tr")) ||
+		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("td")) ||
+		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("th")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TABLE")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("table")))
 		 stop = TRUE;
 	       else
 		 i--;
@@ -3230,7 +2918,7 @@ STRING              val;
     {
       if (ustrlen (val) > MaxMsgLength - 40)
 	 val[MaxMsgLength - 40] = EOS;
-      usprintf (msgBuffer, TEXT("Unknown attribute value \"TYPE = %s\""), val);
+      usprintf (msgBuffer, TEXT("Unknown attribute value \"type = %s\""), val);
       ParseHTMLError (theDocument, msgBuffer);
       attrType.AttrSSchema = DocumentSSchema;
       attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
@@ -3244,7 +2932,7 @@ STRING              val;
 	{
         if (ustrlen (val) > MaxMsgLength - 40)
 	   val[MaxMsgLength - 40] = EOS;
-	usprintf (msgBuffer, TEXT("Duplicate attribute \"TYPE = %s\""), val);
+	usprintf (msgBuffer, TEXT("Duplicate attribute \"type = %s\""), val);
 	}
       else
 	{
@@ -3436,11 +3124,11 @@ CHAR_T                c;
   if ((lastElement != NULL) && (lastElemEntry != -1))
     {
       math = FALSE;
-      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("MATH")))
-	/* a <MATH> tag has been read */
+      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("math")))
+	/* a <math> tag has been read */
 	math = TRUE;
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("MATHDISP")))
-	/* a <MATHDISP> tag has been read.  add an attribute "mode=display"
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("mathdisp")))
+	/* a <mathdisp> tag has been read.  add an attribute "mode=display"
 	   (for compatibility with old MathML version WD-math-970704 */
 	{
 	  math = TRUE;
@@ -3468,7 +3156,7 @@ CHAR_T                c;
 	     been read */
 	  (void) CloseElement (lastElemEntry, -1, FALSE);
 	}
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("XMLGRAPHICS")))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("xmlgraphics")))
 	/* a <XMLGRAPHICS> tag has been read */
         {
 	  /* Parse the GraphML structure */
@@ -3480,12 +3168,12 @@ CHAR_T                c;
 	     been read */
 	  (void) CloseElement (lastElemEntry, -1, FALSE);	   
 	}
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("PRE")) ||
-	       !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("STYLE")) ||
-	       !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("SCRIPT")) )
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("pre")) ||
+	       !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("style")) ||
+	       !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("script")) )
 	/* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	AfterTagPRE = TRUE;
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("TABLE")))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("table")))
 	/* <TABLE> has been read */
 	WithinTable++;
       else if (pHTMLGIMapping[lastElemEntry].htmlContents == 'E')
@@ -3556,29 +3244,29 @@ int                 entry;
      {
        ok = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
-       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TR")))
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TH")) &&
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TD")))
+       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tr")))
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")) &&
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")))
 	   ok = FALSE;
        if (ok)
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
-	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TABLE")))
-	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("CAPTION")) &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("THEAD")) &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TFOOT")) &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TBODY")) &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("COLGROUP")) &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("COL")) &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TR")))
-	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TD")) ||
-		 !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TH")))
-	       /* Table cell within a TABLE, without a TR. Assume TR */
+	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("table")))
+	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("caption")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("thead")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tfoot")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tbody")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("colgroup")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("col")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tr")))
+	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")) ||
+		 !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")))
+	       /* Table cell within a table, without a tr. Assume tr */
 	       {
 		/* save the last last GI read from the input file */
 		saveLastElemEntry = lastElemEntry;
 		/* simulate a <TR> tag */
-	        ProcessStartGI (TEXT("TR"));
+	        ProcessStartGI (TEXT("tr"));
 		/* restore the last tag that has actually been read */
 		lastElemEntry = saveLastElemEntry;
 	       }
@@ -3587,28 +3275,28 @@ int                 entry;
        if (ok)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("CAPTION")) == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("THEAD")) == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TFOOT")) == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TBODY")) == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("COLGROUP")) == 0)
-	   if (ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TABLE")) != 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("caption")) == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("thead")) == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tfoot")) == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tbody")) == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("colgroup")) == 0)
+	   if (ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("table")) != 0)
 	      ok = FALSE;
        if (ok)
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("THEAD")) ||
-	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TFOOT")) ||
-	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TBODY")))
-	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TR")))
-	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TD")) ||
-		 !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TH")))
-	       /* Table cell within a THEAD, TFOOT or TBODY without a TR. */
-	       /* Assume TR */
+	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("thead")) ||
+	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tfoot")) ||
+	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tbody")))
+	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tr")))
+	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")) ||
+		 !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")))
+	       /* Table cell within a thead, tfoot or tbody without a tr. */
+	       /* Assume tr */
 	       {
 		/* save the last last GI read from the input file */
 		saveLastElemEntry = lastElemEntry;
-		/* simulate a <TR> tag */
-	        ProcessStartGI (TEXT("TR"));
+		/* simulate a <tr> tag */
+	        ProcessStartGI (TEXT("tr"));
 		/* restore the last tag that has actually been read */
 		lastElemEntry = saveLastElemEntry;
 	       }
@@ -3616,17 +3304,17 @@ int                 entry;
 	       ok = FALSE;
        if (ok)
 	 /* refuse BODY within BODY */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("BODY")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("body")) == 0)
 	   if (Within (HTML_EL_BODY, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("HEAD")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("head")) == 0)
 	   if (Within (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("STYLE")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("style")) == 0)
 	   if (Within (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
        return ok;
@@ -3738,7 +3426,7 @@ STRING              GIname;
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, DocumentSSchema))
-    if (ustrcasecmp (GIname, TEXT("P")) == 0)
+    if (ustrcasecmp (GIname, TEXT("p")) == 0)
       return;
 
   /* search the HTML element name in the mapping table */
@@ -3930,9 +3618,9 @@ CHAR_T                c;
    CloseBuffer ();
 
    if (ParsingTextArea)
-      if (ustrcasecmp (inputBuffer, TEXT("TEXTAREA")) != 0)
-         /* We are parsing the contents of a TEXTAREA element. The end
-	    tag is not the one closing the current TEXTAREA, consider it
+      if (ustrcasecmp (inputBuffer, TEXT("textarea")) != 0)
+         /* We are parsing the contents of a textarea element. The end
+	    tag is not the one closing the current textarea, consider it
 	    as plain text */
 	 {
          /* next state is state 0, not the state computed by the automaton */
@@ -4010,19 +3698,19 @@ CHAR_T                c;
 	     while (i <= 6 && !ok);
 	  }
 	if (!ok &&
-	    (!ustrcasecmp (inputBuffer, TEXT("OL")) ||
-	     !ustrcasecmp (inputBuffer, TEXT("UL")) ||
-	     !ustrcasecmp (inputBuffer, TEXT("MENU")) ||
-	     !ustrcasecmp (inputBuffer, TEXT("DIR"))))
+	    (!ustrcasecmp (inputBuffer, TEXT("ol")) ||
+	     !ustrcasecmp (inputBuffer, TEXT("ul")) ||
+	     !ustrcasecmp (inputBuffer, TEXT("menu")) ||
+	     !ustrcasecmp (inputBuffer, TEXT("dir"))))
 	  /* the end tag is supposed to close a list */
 	  /* try to close another type of list */
 	  {
 	    ok = TRUE;
 	    schema = DocumentSSchema;
-	    if (!CloseElement (MapGI (TEXT("OL"), &schema, theDocument), -1, FALSE) &&
-		!CloseElement (MapGI (TEXT("UL"), &schema, theDocument), -1, FALSE) &&
-		!CloseElement (MapGI (TEXT("MENU"), &schema, theDocument), -1, FALSE) &&
-		!CloseElement (MapGI (TEXT("DIR"), &schema, theDocument), -1, FALSE))
+	    if (!CloseElement (MapGI (TEXT("ol"), &schema, theDocument), -1, FALSE) &&
+		!CloseElement (MapGI (TEXT("ul"), &schema, theDocument), -1, FALSE) &&
+		!CloseElement (MapGI (TEXT("menu"), &schema, theDocument), -1, FALSE) &&
+		!CloseElement (MapGI (TEXT("dir"), &schema, theDocument), -1, FALSE))
 	      ok = FALSE;
 	  }
 	if (!ok)
@@ -4478,7 +4166,7 @@ CHAR_T                c;
       /* an attribute after the tag </html>, ignore it */
       done = TRUE;
    /* treatments of some particular HTML attributes */
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("STYLE")))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("style")))
      {
 #ifndef STANDALONE
 	TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
@@ -4488,11 +4176,11 @@ CHAR_T                c;
 	done = TRUE;
      }
 #ifndef STANDALONE
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("LINK")))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("link")))
       HTMLSetAlinkColor (theDocument, inputBuffer);
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("ALINK")))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("alink")))
       HTMLSetAactiveColor (theDocument, inputBuffer);
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("VLINK")))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("vlink")))
       HTMLSetAvisitedColor (theDocument, inputBuffer);
 #endif
 
@@ -4542,7 +4230,7 @@ CHAR_T                c;
 		  case 1:	/* integer */
 		     if (attrType.AttrTypeNum == HTML_ATTR_Border &&
 			 !ustrcasecmp (inputBuffer, TEXT("border")) )
-			/* BORDER="BORDER" for a TABLE */
+			/* border="border" for a table */
 			{
 			val = 1;
 			TtaSetAttributeValue (lastAttribute, val,
@@ -4622,18 +4310,18 @@ CHAR_T                c;
 	}
 
      if (lastAttrEntry->ThotAttribute == HTML_ATTR_Width__)
-        /* HTML attribute "width" for a Table or a HR */
+        /* HTML attribute "width" for a table or a hr */
         /* create the corresponding attribute IntWidthPercent or */
         /* IntWidthPxl */
         CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument, -1);
 
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("SIZE")))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("size")))
        {
        TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
        if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
 	  CreateAttrIntSize (inputBuffer, lastAttrElement, theDocument);
        }
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("SHAPE")))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("shape")))
        {
        child = TtaGetFirstChild (lastAttrElement);
        if (child != NULL)
@@ -4656,7 +4344,7 @@ CHAR_T                c;
      	  TtaSetGraphicsShape (child, shape, theDocument);
           }
        }
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("VALUE")))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("value")))
        {
        elType = TtaGetElementType (lastAttrElement);
        if (elType.ElTypeNum == HTML_EL_Text_Input ||
@@ -4678,17 +4366,17 @@ CHAR_T                c;
      /*      bgcolor        ->                   background         */
      /*      text           ->                   color              */
      /*      color          ->                   color              */
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("BACKGROUND")))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("background")))
         {
         if (ustrlen (inputBuffer) > MaxMsgLength - 30)
             inputBuffer[MaxMsgLength - 30] = EOS;
         usprintf (msgBuffer, TEXT("background: url(%s)"), inputBuffer);
         ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
         }
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("BGCOLOR")))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("bgcolor")))
         HTMLSetBackgroundColor (theDocument, lastElement, inputBuffer);
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("TEXT")) ||
-	      !ustrcmp (lastAttrEntry->XMLattribute, TEXT("COLOR")))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("text")) ||
+	      !ustrcmp (lastAttrEntry->XMLattribute, TEXT("color")))
         HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
 #endif /* !STANDALONE */
      }
@@ -5877,7 +5565,7 @@ STRING              HTMLbuf;
 		      if (currentState == 6 || currentState == 9)
 			/* within an attribute value between quotes */
 			if (lastAttrEntry != NULL &&
-			    !ustrcmp (lastAttrEntry->XMLattribute, TEXT("SRC")))
+			    !ustrcmp (lastAttrEntry->XMLattribute, TEXT("src")))
 			   /* value of an SRC attribute */
 			   /* consider new line as an empty char*/
 			   charRead = EOS;

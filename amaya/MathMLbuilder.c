@@ -434,7 +434,6 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
    {TEXT ("unknown_attr"), _EMPTYSTR_, 'A', MathML_ATTR_Invalid_attribute},
-   {TEXT ("ZZGHOST"), _EMPTYSTR_, 'A', MathML_ATTR_Ghost_restruct},
    {TEXT ("accent"), TEXT (""), 'A', MathML_ATTR_accent},
    {TEXT ("accentunder"), TEXT (""), 'A', MathML_ATTR_accentunder},
    {TEXT ("actiontype"), TEXT (""), 'A', MathML_ATTR_actiontype},
@@ -492,6 +491,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT ("superscriptshift"), TEXT (""), 'A', MathML_ATTR_superscriptshift},
    {TEXT ("symmetric"), TEXT (""), 'A', MathML_ATTR_symmetric},
    {TEXT ("width"), TEXT (""), 'A', MathML_ATTR_width_},
+   {TEXT ("zzghost"), _EMPTYSTR_, 'A', MathML_ATTR_Ghost_restruct},
 
     {TEXT (""), TEXT (""), EOS, 0}		/* Last entry. Mandatory */
 };

@@ -177,7 +177,7 @@ Document            doc;
        /* get a buffer for the attribute value */
        length = MAX_LENGTH;
        TtaGiveTextAttributeValue (attr, buffer, &length);
-       if (!ustrcasecmp (buffer, TEXT("STYLESHEET")) || !ustrcasecmp (buffer, TEXT("STYLE")))
+       if (!ustrcasecmp (buffer, TEXT("stylesheet")) || !ustrcasecmp (buffer, TEXT("style")))
 	 {
 	   /* it's a link to a style sheet. Remove that style sheet */
 	   attrType.AttrTypeNum = HTML_ATTR_HREF_;

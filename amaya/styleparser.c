@@ -3656,7 +3656,7 @@ STRING              color;
 {
    CHAR_T                css_command[100];
 
-   usprintf (css_command, TEXT("A:link { color : %s }"), color);
+   usprintf (css_command, TEXT("a:link { color : %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -3673,7 +3673,7 @@ STRING              color;
 {
    CHAR_T                css_command[100];
 
-   usprintf (css_command, TEXT("A:active { color : %s }"), color);
+   usprintf (css_command, TEXT("a:active { color : %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -3690,7 +3690,7 @@ STRING              color;
 {
    CHAR_T                css_command[100];
 
-   usprintf (css_command, TEXT("A:visited { color : %s }"), color);
+   usprintf (css_command, TEXT("a:visited { color : %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -3706,7 +3706,7 @@ Document            doc;
 {
    CHAR_T                css_command[100];
 
-   usprintf (css_command, TEXT("A:link { color : red }"));
+   usprintf (css_command, TEXT("a:link { color : red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -3722,7 +3722,7 @@ Document            doc;
 {
    CHAR_T                css_command[100];
 
-   usprintf (css_command, TEXT("A:active { color : red }"));
+   usprintf (css_command, TEXT("a:active { color : red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -3738,7 +3738,7 @@ Document            doc;
 {
    CHAR_T                css_command[100];
 
-   usprintf (css_command, TEXT("A:visited { color : red }"));
+   usprintf (css_command, TEXT("a:visited { color : red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 

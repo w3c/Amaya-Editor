@@ -33,15 +33,6 @@ EntityDictEntry;
 static EntityDictEntry XMLpredifinedEntities[] =
 {
    /* This table MUST be in alphabetical order */
-#  if defined (_I18N_) || defined (__JIS__)
-   {L"amp", 38},
-   {L"apos", 39},
-   {L"gt", 62},
-   {L"lt", 60},
-   {L"quot", 34},
-
-   {L"zzzz", 0}			/* this last entry is required */
-#  else /* ! defined (_I18N_) && !defined (__JIS__) */
    {"amp", 38},
    {"apos", 39},
    {"gt", 62},
@@ -49,7 +40,6 @@ static EntityDictEntry XMLpredifinedEntities[] =
    {"quot", 34},
 
    {"zzzz", 0}			/* this last entry is required */
-#  endif /* defined (_I18N_) || defined (__JIS__) */
 };
 
 typedef int         state;	/* a state of the parser automaton */

@@ -1326,7 +1326,7 @@ Document            doc;
    while (elCour != NULL && elCour != elLast)
      { 	/* Copies the children of elCour into the result instance */		
 	CopySubTreeChildren (elCour, doc);
-	/* searches for a ZZGHOST ettribute */
+	/* search for a zzghost attribute */
 	attrFound = TtaGetAttribute (elCour, attrType);	
 	if (attrFound != NULL)
 	  {
@@ -1444,7 +1444,7 @@ strNode            *TN;
       /* create a ghost attribute with the identifier of the node */     
       NS->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
       NS->Attributes->NameAttr = TtaAllocString (NAME_LENGTH);
-      ustrcpy (NS->Attributes->NameAttr, TEXT("ZZGHOST"));
+      ustrcpy (NS->Attributes->NameAttr, TEXT("zzghost"));
       NS->Attributes->IsInt = TRUE;
       NS->Attributes->IsTransf = FALSE;
       NS->Attributes->IntVal = NS->Idf;
@@ -1558,7 +1558,7 @@ strNode            *TN;
   res = res && PutInHtmlBuffer (TEXT(">"));
   if (TransferMode == ByAttribute)
     {
-      /*free the ZZGHOST attribute */
+      /*free the zzghost attribute */
       TtaFreeMemory ( NS->Attributes->NameAttr);
       TtaFreeMemory ( NS->Attributes);
     }
@@ -1580,9 +1580,9 @@ strGenStack *ND;
 {
   ThotBool res = TRUE;
 
-  if (ustrcmp (ND->Tag, TEXT("HR")) && 
-      ustrcmp (ND->Tag, TEXT("BR")) &&
-      ustrcmp (ND->Tag, TEXT("IMG")))
+  if (ustrcmp (ND->Tag, TEXT("hr")) && 
+      ustrcmp (ND->Tag, TEXT("br")) &&
+      ustrcmp (ND->Tag, TEXT("img")))
     {
       res = res && PutInHtmlBuffer (TEXT("</"));
       res = res && PutInHtmlBuffer (ND->Tag);
@@ -2148,7 +2148,7 @@ STRING              prevtag;
       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	result = TRUE;
       else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
-	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("P*")) ||
+	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("p*")) ||
 	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
 	result = IsValidHtmlChild (subTypes[0], tag, _EMPTYSTR_);
       break;
@@ -2159,7 +2159,7 @@ STRING              prevtag;
 	  if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
 	    result = TRUE;
 	  else if (!ustrcmp (GITagNameByType (subTypes[i]),TEXT("???")) ||
-		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("P*")) ||
+		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
 	    result = IsValidHtmlChild (subTypes[i], tag, _EMPTYSTR_);
 	}
@@ -2175,7 +2175,7 @@ STRING              prevtag;
 	  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
 	    found = TRUE;
 	  else if (ustrcmp (GITagNameByType (subTypes[i]),TEXT("???")) ||
-		   ustrcmp (GITagNameByType (subTypes[i]), TEXT("P*")) ||
+		   ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		   ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
 	    i = cardinal;
 	}
@@ -2186,12 +2186,12 @@ STRING              prevtag;
 	      if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 		result = TRUE;
 	      else if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-		       !ustrcmp (GITagNameByType (subTypes[i]), TEXT("P*")) ||
+		       !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		       !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
 		result = IsValidHtmlChild (subTypes[i], tag, _EMPTYSTR_);
 	      if (!result)
 		if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("P*")) ||
+		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")) ||
 		    TtaIsOptionalInAggregate(i,elemType)) 
 		  i++;
@@ -2206,7 +2206,7 @@ STRING              prevtag;
 	  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 	    result = TRUE;
 	  else if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("P*")) ||
+		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
 	    result = IsValidHtmlChild (subTypes[i], tag, _EMPTYSTR_);
 	  if (!result)
@@ -2224,7 +2224,7 @@ STRING              prevtag;
 	    if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
 	      result = TRUE;
 	    else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
-		     !ustrcmp (GITagNameByType (subTypes[0]), TEXT("P*")) ||
+		     !ustrcmp (GITagNameByType (subTypes[0]), TEXT("p*")) ||
 		     !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
 	    result = IsValidHtmlChild (subTypes[0], tag, _EMPTYSTR_);
 	  }

@@ -64,34 +64,34 @@
 ! Transformation rules 
 !!!!!!!!!!!!!!!!!!!!!!
 
-Address:(P{*+})+;
+Address:(p{*+})+;
 	{
-	* > ADDRESS:*;
+	* > address:*;
 	}
 
 !between lists
 !!!!!!!!!!!!!!
 
-Definition list:*{(LI{(list:*{(li2:LI)+}|other:*)+})+};
+Definition list:*{(li{(list:*{(li2:li)+}|other:*)+})+};
 	{
-	other > DL:DT;
-	list > DL:DD;
-	li2 > DL.DD:;
+	other > dl:dt;
+	list > dl:dd;
+	li2 > dl.dd:;
 	}
 
-Bulleted list:(DL{(DT|DD{(*)+})+})+;
+Bulleted list:(dl{(dt|dd{(*)+})+})+;
 	{
-	DT > UL:LI;
-	* > UL.LI.UL:LI.*;
+	dt > ul:li;
+	* > ul.li.ul:li.*;
 	}
 
-Numbered list:(DL{(DT|DD{(*)+})+})+;
+Numbered list:(dl{(dt|dd{(*)+})+})+;
 	{
-	DT > OL:LI;
-	* > OL.LI.OL:LI.*;
+	dt > ol:li;
+	* > ol.li.ol:li.*;
 	}
 
-Remove DL: (DL{(DT{(dtc:*)+}|DD{(ddc:*)+})+})+;
+Remove dl: (dl{(dt{(dtc:*)+}|dd{(ddc:*)+})+})+;
 	{
 	 dtc > :<* style="font-weight:bold">;
 	 ddc > :*;
@@ -101,126 +101,124 @@ Remove DL: (DL{(DT{(dtc:*)+}|DD{(ddc:*)+})+})+;
 !!!!!!!!!!!!!!!!!!!!
 
 Paragraphs: 
-(H1|H2|H3|H4|H5|H6|*{(LI{(il:*)+})+}),(H1|H2|H3|H4|H5|H6|P|*{(LI{(il:*)+})+})+;
+(h1|h2|h3|h4|h5|h6|*{(li{(il:*)+})+}),(h1|h2|h3|h4|h5|h6|p|*{(li{(il:*)+})+})+;
 	{ 
-	H1 > :P;
-	H2 > :P;
-	H3 > :P;
-	H4 > :P;
-	H5 > :P;
-	H6 > :P;
-	P > :P;
-	il > :P;
+	h1 > :p;
+	h2 > :p;
+	h3 > :p;
+	h4 > :p;
+	h5 > :p;
+	h6 > :p;
+	p > :p;
+	il > :p;
 	}
 
 ! Preformatted to/from paragraphs
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!Preformatted: P+;
+!Preformatted: p+;
 !	{
-!	P>:PRE;
+!	p>:pre;
 !	}
 
-!Paragraph: PRE+;
+!Paragraph: pre+;
 !	{
-!	PRE>:P;
+!	pre>:p;
 !	}
-
-
 
 
 !Tables to/from lists
 !!!!!!!!!!!!!!!!!!!!
 
-Table: *{(lev1:LI{?(*{(lev2:LI)+}|elem:*)+})+};
+Table: *{(lev1:li{?(*{(lev2:li)+}|elem:*)+})+};
 	{
-	lev1 > <TABLE border=1>:TR;
-	elem > TABLE.TR:TD.*;
-	lev2 > TABLE.TR:TD;
+	lev1 > <table border="1">:tr;
+	elem > table.tr:td.*;
+	lev2 > table.tr:td;
 	}
 
-Table: DL{(DT|DD)+};
+Table: dl{(dt|dd)+};
 	{
-	DT > <TABLE border=1>.TBODY:TR.TD;
-	DD > TABLE.TBODY.TR:TD;
+	dt > <table border="1">.tbody:tr.td;
+	dd > table.tbody.tr:td;
 	}
 
-Numbered List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
+Numbered List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
   	{
-	CAPTION > :OL.LI.STRONG;
-	block > :OL;
-	TR > OL:LI;
-	TD > OL.LI:;
-	TH > OL.LI:;
-	TD2 >OL.LI.UL:LI;
-	TH2 >OL.LI.UL:LI;
+	caption > :ol.li.strong;
+	block > :ol;
+	tr > ol:li;
+	td > ol.li:;
+	th > ol.li:;
+	td2 >ol.li.ul:li;
+	th2 >ol.li.ul:li;
 	}
 
-Bulleted List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
+Bulleted List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 	{
-	CAPTION > :UL.LI.STRONG;
-	block > :UL;
-	TR > UL:LI;
-	TD > UL.LI:;
-	TH > UL.LI:;
-	TD2 >UL.LI.UL:LI;
-	TH2 >UL.LI.UL:LI;
+	caption > :ul.li.strong;
+	block > :ul;
+	tr > ul:li;
+	td > ul.li:;
+	th > ul.li:;
+	td2 >ul.li.ul:li;
+	th2 >ul.li.ul:li;
 	}
-Definition List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
+Definition List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
         {
-        CAPTION > :DL.DT;
-        block   > :DL;
-        TD      > DL:DT;
-        TH      > DL:DT;
-        TD2     > DL:DD;
-        TH2     > DL:DD;
+        caption > :dl.dt;
+        block   > :dl;
+        td      > dl:dt;
+        th      > dl:dt;
+        td2     > dl:dd;
+        th2     > dl:dd;
         }
 
 ! List transformations
 !!!!!!!!!!!!!!!!!!!!!!
 
-Remove one level: *{(LI{(cont:*)+})+};
+Remove one level: *{(li{(cont:*)+})+};
 	{
 	cont > :*;
 	}
 
-Remove two levels: *{(LI{(*{?(LI{(Lev2:*)+})+})+})+};
+Remove two levels: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 	{
-	Lev2 > :*;
+	lev2 > :*;
 	}
 
-Merge Items: LI,(LI2:LI)+;
+Merge Items: li,(li2:li)+;
 	{
-	LI > LI:;
-	LI2 > LI:;
+	li > li:;
+	li2 > li:;
 	}
-Remove Paragraph level: LI{P{(cont:*)+},?(next:*)+};
+Remove Paragraph level: li{p{(cont:*)+},?(next:*)+};
 	{
-     	LI > LI:;
+     	li > li:;
      	cont > *;
      	next > *;
      	}
 
-Split Items: (LI{a:*,(b:*)+})+;
+Split Items: (li{a:*,(b:*)+})+;
 	{
-	a > :LI.*;
-	b > :LI.*;
+	a > :li.*;
+	b > :li.*;
 	}
 
-Merge Lists: UL{LI+},(UL{LI+})+;
+Merge Lists: ul{li+},(ul{li+})+;
 	{
-	LI > UL:LI;
+	li > ul:li;
 	}
 
-Merge Lists: OL{LI+},(OL{LI+})+;
+Merge Lists: ol{li+},(ol{li+})+;
 	{
-	LI > OL:LI;
+	li > ol:li;
 	}
 
-Merge Lists: DL{(DT|DD)+},(DL{(DT|DD)+})+;
+Merge Lists: dl{(dt|dd)+},(dl{(dt|dd)+})+;
 	{
-	DT > DL:DT;
-	DD > DL:DD;
+	dt > dl:dt;
+	dd > dl:dd;
 	}
 
 ! Forms to/from elements
@@ -231,12 +229,12 @@ Form: *+;
 	*>Form:*;
 	}
 
-Remove Form: FORM{*+};
+Remove Form: form{*+};
 	{
 	*>:*;
 	}
 
-Remove submenu: (OPTGROUP{*+})+;
+Remove submenu: (optgroup{*+})+;
 	{
         * > :*;
 	}
@@ -244,214 +242,214 @@ Remove submenu: (OPTGROUP{*+})+;
 ! Lists to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-Bulleted list: (P|OL|MENU|DIR|PRE|FORM)+;
+Bulleted list: (p|ol|menu|dir|pre|form)+;
    	{
-        P > UL:<LI style=P.style>;
-        OL> UL;
-        MENU> UL:LI.MENU;
-        DIR> UL:LI.DIR;
-        PRE> UL:LI.PRE;
-        FORM> UL:LI.FORM;
+        p > ul:<li style=p.style>;
+        ol> ul;
+        menu> ul:li.menu;
+        dir> ul:li.dir;
+        pre> ul:li.pre;
+        form> ul:li.form;
         }
 
-Numbered list:(P|UL|MENU|DIR|PRE|FORM)+;
+Numbered list:(p|ul|menu|dir|pre|form)+;
 	   {
-        P > OL:LI;
-        UL> OL;
-        MENU> OL:LI.MENU;
-        DIR> OL:LI.DIR;
-        PRE> OL:LI.PRE;
-        FORM> OL:LI.FORM;
+        p > ol:li;
+        ul> ol;
+        menu> ol:li.menu;
+        dir> ol:li.dir;
+        pre> ol:li.pre;
+        form> ol:li.form;
         }
 
 ! Tables to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-!Table: (H:H1|H:H2|H:H3|H:H4|H:H5|H:H6|P),(H:H1|H:H2|H:H3|H:H4|H:H5|H:H6|*)+;
+!Table: (h:h1|h:h2|h:h3|h:h4|h:h5|h:h6|p),(h:h1|h:h2|h:h3|h:h4|h:h5|h:h6|*)+;
 !	{
-!	P> <TABLE border=1>.TR.TD:P;
-!	H> <TABLE border=1>:TR.TD.*;
-!	*> <TABLE border=1>.TR:TD.*;
+!	p> <table border="1">.tr.td:p;
+!	h> <table border="1">:tr.td.*;
+!	*> <table border="1">.tr:td.*;
 !	}
 
 
 Vertical Table: *+;
 	{
-	*><TABLE border=1>:TR.TD.*;
+	*><table border="1">:tr.td.*;
 	}
 
 Horizontal Table : *+;
 	{
-	*><TABLE border=1>.TR:TD.*;
+	*><table border="1">.tr:td.*;
 	}
 
-Remove Table:TABLE{?CAPTION,?(body:*{(TR{(*{(?cell_content:*)+})+})+})+};
+Remove Table:table{?caption,?(body:*{(tr{(*{(?cell_content:*)+})+})+})+};
 	{
-	CAPTION>H3;
+	caption>h3;
 	cell_content>:*;
 	}
 
-Transpose Table:TABLE{TBODY{TR{(TD|TH)+}|(TR{td2:TD|th2:TH})+}};
+Transpose Table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
 	{
-	TD><TABLE BORDER=TABLE.BORDER>:TR.TD;
-	TH>TABLE:TR.TD;
-	td2><TABLE BORDER=TABLE.BORDER>.TR:TD;
-	th2>TABLE.TR:TD;
+	td><table border=table.border>:tr.td;
+	th>table:tr.td;
+	td2><table border=table.border>.tr:td;
+	th2>table.tr:td;
 	}
 
-Heading Cell :?(TD|TH)+,TD,?(TD|TH)+;
+Heading Cell :?(td|th)+,td,?(td|th)+;
 	{
-	TD>:TH;
+	td>:th;
 	}
 
-Data Cell :?(TD|TH)+,TH,?(TD|TH)+;
+Data Cell :?(td|th)+,th,?(td|th)+;
 	{
-	TH>:TD;
+	th>:td;
 	}
 
 !headings to/from definitions
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Definition list:((H1|H2|H3|H4|H5|H6),*+)+;
+Definition list:((h1|h2|h3|h4|h5|h6),*+)+;
 	{
-	H1 > DL:DT;
-	H2 > DL:DT;
-	H2 > DL:DT;
-	H3 > DL:DT;
-	H4 > DL:DT;
-	H5 > DL:DT;
-	H6 > DL:DT;
-	* > DL.DD:*;
+	h1 > dl:dt;
+	h2 > dl:dt;
+	h2 > dl:dt;
+	h3 > dl:dt;
+	h4 > dl:dt;
+	h5 > dl:dt;
+	h6 > dl:dt;
+	* > dl.dd:*;
 	}
 
 
-Definition list:(H1,?HR,?(level1:*)+,?(H2,?(level2:*)+,?((H3|H4|H5|H6),(level3:*)+)+)+)+;
+Definition list:(h1,?hr,?(level1:*)+,?(h2,?(level2:*)+,?((h3|h4|h5|h6),(level3:*)+)+)+)+;
 	{
-	H1 > DL:DT;
-	level1>DL.DD:*;
-	H2 > DL.DD:DL.DT ;
-	level2 > DL.DD.DL.DD:*;
-	H3 > DL.DD.DL.DD:DL.DT ;
-	H4 > DL.DD.DL.DD:DL.DT ;
-	H5 > DL.DD.DL.DD:DL.DT ;
-	H6 > DL.DD.DL.DD:DL.DT ;
-	level3 > DL.DD.DL.DD.DL.DD:*;
+	h1 > dl:dt;
+	level1>dl.dd:*;
+	h2 > dl.dd:dl.dt ;
+	level2 > dl.dd.dl.dd:*;
+	h3 > dl.dd.dl.dd:dl.dt ;
+	h4 > dl.dd.dl.dd:dl.dt ;
+	h5 > dl.dd.dl.dd:dl.dt ;
+	h6 > dl.dd.dl.dd:dl.dt ;
+	level3 > dl.dd.dl.dd.dl.dd:*;
 	}
 
-Definition list:(H2,?HR,?(level1:*)+,(H3,?(level2:*)+,((H4|H5|H6),(level3:*)+)+)+)+;
+Definition list:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)+)+;
 	{
-	H2 > DL:DT;
-	level1>DL.DD:*;
-	H3 > DL.DD:DL.DT ;
-	level2 > DL.DD.DL.DD:*;
-	H4 > DL.DD.DL.DD:DL.DT ;
-	H5 > DL.DD.DL.DD:DL.DT ;
-	H6 > DL.DD.DL.DD:DL.DT ;
-	level3 > DL.DD.DL.DD.DL.DD:*;
-	}
-
-
-
-Definition list:(H3,?HR,?(level1:*)+,?(H4,?(level2:*)+,((H5|H6),(level3:*)+)+)+)+;
-	{
-	H3 > DL:DT;
-	level1>DL.DD:*;
-	H4 > DL.DD:DL.DT ;
-	level2 > DL.DD.DL.DD:*;
-	H5 > DL.DD.DL.DD:DL.DT ;
-	H6 > DL.DD.DL.DD:DL.DT ;
-	level3 > DL.DD.DL.DD.DL.DD:*;
-	}
-
-Multi level Definition list:(H4,?HR,?(level1:*)+,(H5,?(level2:*)+,((H6)+,(level3:*)+)+)+)+;
-	{
-	H4 > DL:DT;
-	level1>DL.DD:*;
-	H5 > DL.DD:DL.DT ;
-	level2 > DL.DD.DL.DD:*;
-	H6 > DL.DD.DL.DD:DL.DT ;
-	level3 > DL.DD.DL.DD.DL.DD:*;
+	h2 > dl:dt;
+	level1>dl.dd:*;
+	h3 > dl.dd:dl.dt ;
+	level2 > dl.dd.dl.dd:*;
+	h4 > dl.dd.dl.dd:dl.dt ;
+	h5 > dl.dd.dl.dd:dl.dt ;
+	h6 > dl.dd.dl.dd:dl.dt ;
+	level3 > dl.dd.dl.dd.dl.dd:*;
 	}
 
 
 
-Headings H1:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
+Definition list:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)+;
 	{
-	dt1 > :H1;
-	dt2 > :H2;
-	dt3 > :H3;
+	h3 > dl:dt;
+	level1>dl.dd:*;
+	h4 > dl.dd:dl.dt ;
+	level2 > dl.dd.dl.dd:*;
+	h5 > dl.dd.dl.dd:dl.dt ;
+	h6 > dl.dd.dl.dd:dl.dt ;
+	level3 > dl.dd.dl.dd.dl.dd:*;
+	}
+
+Multi level Definition list:(h4,?hr,?(level1:*)+,(h5,?(level2:*)+,((h6)+,(level3:*)+)+)+)+;
+	{
+	h4 > dl:dt;
+	level1>dl.dd:*;
+	h5 > dl.dd:dl.dt ;
+	level2 > dl.dd.dl.dd:*;
+	h6 > dl.dd.dl.dd:dl.dt ;
+	level3 > dl.dd.dl.dd.dl.dd:*;
+	}
+
+
+
+Headings h1:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
+	{
+	dt1 > :h1;
+	dt2 > :h2;
+	dt3 > :h3;
 	content > :*;
 	}
 
-Headings H2:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
+Headings h2:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
 	{
-	dt1 > :H2;
-	dt2 > :H3;
-	dt3 > :H4;
+	dt1 > :h2;
+	dt2 > :h3;
+	dt3 > :h4;
 	content > :*;
 	}
 
 
-Headings H3:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
+Headings h3:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
 	{
-	dt1 > :H3;
-	dt2 > :H4;
-	dt3 > :H5;
+	dt1 > :h3;
+	dt2 > :h4;
+	dt3 > :h5;
 	content > :*;
 	}
 
-Definition list: P,*+;
+Definition list: p,*+;
 	{
-	P > DL:DT;
-	* > DL.DD:*;
+	p > dl:dt;
+	* > dl.dd:*;
 	}
 
-Remove Div: (DIV{*+})+;
+Remove Div: (div{*+})+;
 	{
         * > :*;
 	}
 
-Remove Center: (CENTER{*+})+;
+Remove Center: (center{*+})+;
 	{
         * > :*;
 	}
 
-Remove Paragraph level: P{IMG};
+Remove Paragraph level: p{img};
      	{
-        IMG > :*;
+        img > :*;
      	}
 
-Remove BlockQuote: BLOCKQUOTE{*+};
+Remove BlockQuote: blockquote{*+};
 	{
 	* > :*;
 	}
 
-Remove FONT: FONT{*+};
+Remove font: font{*+};
 	{
 	* > :*;
 	}
 
-Remove SPAN: SPAN{*+};
+Remove span: span{*+};
 	{
 	*>:*;
 	}
 
-Remove Subscript: SUB{*+};
+Remove Subscript: sub{*+};
 	{
 	* > :*;
 	}
 	
-Remove Superscript: SUP{*+};
+Remove Superscript: sup{*+};
 	{
 	* > :*;
 	}
 	
-Remove Quotation: Q{*+};
+Remove Quotation: q{*+};
 	{
         * > :*;
 	}
 
-Remove BiDi: BDO{*+};
+Remove BiDi: bdo{*+};
 	{
         * > :*;
 	}
@@ -460,13 +458,13 @@ Remove BiDi: BDO{*+};
 ! Global Document transformation tests !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-DistrThot: BODY{*+}
+DistrThot: body{*+}
 	{
-	BODY > 	<TABLE border=0 with="100%">.TBODY.TR.<TD with="30%">.<A href="http://opera.inrialpes.fr/OPERA/Thot.en.html"><IMG src="thot.gif" alt="Thot Editor" border=0 align="middle">;
-	BODY > TABLE.TBODY.TR.TD:<A href = "http://opera.inrialpes.fr">.<IMG src="opera.gif" alt="Opera project" border=0 align="middle">;
-	BODY > TABLE.TBODY.TR:TD.<IMG src="guide.gif" alt="Documentation" border=0 align="middle">;
-	BODY > TABLE.TBODY.TR.TD:H1."Title of the page";
-	BODY > :<TABLE border=0 with="100%">.TBODY.TR.<TD with="30%">.H2.<A href="Index.html">."Home";
-	* > TABLE.TBODY.TR:TD.*;
+	body > 	<table border="0" with="100%">.tbody.tr.<td with="30%">.<a href="http://opera.inrialpes.fr/OPERA/Thot.en.html"><img src="thot.gif" alt="Thot Editor" border="0" align="middle">;
+	body > table.tbody.tr.td:<a href="http://opera.inrialpes.fr">.<img src="opera.gif" alt="Opera project" border="0" align="middle">;
+	body > table.tbody.tr:td.<img src="guide.gif" alt="Documentation" border="0" align="middle">;
+	body > table.tbody.tr.td:h1."Title of the page";
+	body > :<table border="0" with="100%">.tbody.tr.<td with="30%">.h2.<a href="Index.html">."Home";
+	* > table.tbody.tr:td.*;
 	}
 
