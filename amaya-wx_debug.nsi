@@ -136,6 +136,7 @@ Section "Amaya" SecAmaya
 
   SetOutPath "$INSTDIR\resources\icons"
   File resources\icons\*.png
+  File resources\icons\*.gif
   SetOutPath "$INSTDIR\resources\xrc"
   File resources\xrc\*.xrc
 
