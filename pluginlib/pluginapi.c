@@ -26,12 +26,9 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "lost.xpm"
 #include "picture.h"
 #include "frame.h"
-#include "epsflogo.h"
 #include "interface.h"
-#include "png.h"
 #include "view.h"
 
 #include "npapi.h"
@@ -594,7 +591,7 @@ char*    filename;
     int         ret;
     
     char* argn[3] = {"SRC", "WIDTH", "HEIGHT"}; 
-    char* argv[3] = { filename, "300", "500"};
+    char* argv[3] = { filename, "400", "400"};
     int16 argc    = 3;
     
     /* Prepare window information and "instance" structure */

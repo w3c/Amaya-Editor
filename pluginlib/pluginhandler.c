@@ -17,12 +17,9 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "lost.xpm"
 #include "picture.h"
 #include "frame.h"
-#include "epsflogo.h"
 #include "interface.h"
-#include "png.h"
 
 #include "npapi.h"
 #include "npupp.h"
@@ -40,14 +37,7 @@
 #include "font_f.h"
 #include "frame_f.h"
 #include "picture_f.h"
-#include "presrules_f.h"
 #include "inites_f.h"
-#include "gifhandler_f.h"
-#include "jpeghandler_f.h"
-#include "xbmhandler_f.h"
-#include "xpmhandler_f.h"
-#include "pnghandler_f.h"
-#include "epshandler_f.h"
 #include "fileaccess_f.h"
 #include "pluginbrowse_f.h"
 
@@ -175,8 +165,8 @@ char*     fileName;
   Arg     arg[10];
     
   n = 0;
-  XtSetArg (arg[n], XmNwidth, 300); n++;
-  XtSetArg (arg[n], XmNheight, 500); n++;
+  XtSetArg (arg[n], XmNwidth, 400); n++;
+  XtSetArg (arg[n], XmNheight, 400); n++;
   XtSetArg (arg[n], XmNborderWidth, 0); n++;
   XtSetArg (arg[n], XmNmarginWidth, 0); n++;
   XtSetArg (arg[n], XmNmarginHeight, 0); n++;
@@ -187,7 +177,7 @@ char*     fileName;
 
   /*CreateInstance(XtWindow((Widget)canvas), TtDisplay, fileName);*/
 
-  bitmap = XCreatePixmap (TtDisplay, TtRootWindow, 300, 500, TtWDepth);
+  bitmap = XCreatePixmap (TtDisplay, TtRootWindow, 400, 400, TtWDepth);
   
   if (bitmap == None) 
      return (Drawable) None;
@@ -196,8 +186,8 @@ char*     fileName;
        imageDesc->PicMask     = None;
        imageDesc->PicXArea    = 0;
        imageDesc->PicYArea    = 0;
-       imageDesc->PicWArea    = 300;
-       imageDesc->PicHArea    = 500;
+       imageDesc->PicWArea    = 400;
+       imageDesc->PicHArea    = 400;
        /* imageDesc->created     = FALSE;*/ /* A VERIFIER */
        imageDesc->mapped      = FALSE;
        return (Drawable) bitmap;
