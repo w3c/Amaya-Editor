@@ -54,7 +54,7 @@ typedef struct
   Pixmap         PicPixmap;
   Pixmap         PicAlpha;
 #ifdef _GL
-  Gluint         TextureBind;
+  unsigned int         TextureBind;
   int            DisplayList;
   int            xorig;
   int            yorig;
