@@ -50,6 +50,7 @@ echo "Platform -------> GTK"
    ${AMAYADIR}/README.amaya \
    ${AMAYADIR}/amaya/COPYRIGHT* \
    ${AMAYADIR}/amaya/AmayaPage.html* \
+   ${AMAYADIR}/amaya/AmayaPage_WX.html* \
    ${AMAYADIR}/amaya/Amaya.svg \
    ${AMAYADIR}/amaya/*.PRS \
    ${AMAYADIR}/amaya/*.STR \
@@ -108,7 +109,6 @@ echo "Platform -------> GTK"
    ${AMAYADIR}/doc/images/w3c_home \
    ${AMAYADIR}/fonts/Families.list \
    ${AMAYADIR}/fonts/fonts.dir \
-   ${AMAYADIR}/fonts/icones* \
    ${AMAYADIR}/GTK/bin/amaya \
    ${AMAYADIR}/GTK/bin/print
 
@@ -117,6 +117,7 @@ echo "Platform -------> WX"
    ${AMAYADIR}/README.amaya \
    ${AMAYADIR}/amaya/COPYRIGHT* \
    ${AMAYADIR}/amaya/AmayaPage.html* \
+   ${AMAYADIR}/amaya/AmayaPage_WX.html* \
    ${AMAYADIR}/amaya/Amaya.svg \
    ${AMAYADIR}/amaya/*.PRS \
    ${AMAYADIR}/amaya/*.STR \
@@ -176,6 +177,8 @@ echo "Platform -------> WX"
    ${AMAYADIR}/fonts/Families.list \
    ${AMAYADIR}/fonts/fonts.dir \
    ${AMAYADIR}/fonts/icones* \
+   ${AMAYADIR}/fonts/*.ttf \
+   ${AMAYADIR}/fonts/*.TTF \
    ${AMAYADIR}/resources/xrc/*.xrc \
    ${AMAYADIR}/resources/icons/*.gif \
    ${AMAYADIR}/WX/bin/amaya \

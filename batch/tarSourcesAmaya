@@ -180,6 +180,7 @@ ${AMAYADIR}/batch/tarAmaya \
 ${AMAYADIR}/amaya/COPYRIGHT* \
 ${AMAYADIR}/amaya/Makefile.* \
 ${AMAYADIR}/amaya/AmayaPage.html* \
+${AMAYADIR}/amaya/AmayaPage_WX.html* \
 ${AMAYADIR}/amaya/Amaya.svg \
 ${AMAYADIR}/amaya/Text_SGML.inc \
 ${AMAYADIR}/amaya/*.A \
@@ -285,6 +286,8 @@ ${AMAYADIR}/doc/images/w3c_home \
 ${AMAYADIR}/fonts/Families.list \
 ${AMAYADIR}/fonts/fonts.dir \
 ${AMAYADIR}/fonts/icones* \
+${AMAYADIR}/fonts/*.ttf \
+${AMAYADIR}/fonts/*.TTF \
 ${AMAYADIR}/thotlib/Makefile.in \
 ${AMAYADIR}/thotlib/include/Makefile.in \
 ${AMAYADIR}/thotlib/base/*.c \

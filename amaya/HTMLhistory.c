@@ -877,11 +877,10 @@ void HelpLocal (Document doc, View view)
   if (s != NULL)
     {
       /* get the welcome in the current language */
-      sprintf (localname, "%s%camaya%cAmayaPage.html.%s", s, DIR_SEP, DIR_SEP, lang);
-
+      sprintf (localname, "%s%camaya%c%s.%s", s, DIR_SEP, DIR_SEP,AMAYA_PAGE, lang);
       if (!TtaFileExist (localname))
 	/* get the standard english documentation */
-	sprintf (localname, "%s%camaya%cAmayaPage.html", s, DIR_SEP, DIR_SEP);
+	sprintf (localname, "%s%camaya%c%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
     }
   document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
 			  FALSE, NULL, NULL);
