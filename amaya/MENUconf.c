@@ -639,6 +639,58 @@ CHAR_T* name;
 }
 
 #ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  ConvertSpaceNLI
+  Converts spaces in source into \n if the toNL is TRUE. Otherwise, does
+  the opposite convertion.
+  Returns 1 if it did any substitutions, 0 otherwise.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int ConvertSpaceNL(CHAR_T* source, ThotBool toNL)
+#else
+static int ConvertSpaceNL (name)
+CHAR_T* name;
+#endif
+{
+  int result;
+  CHAR_T target[MAX_LENGTH];
+  CHAR_T *s, *t;
+
+  result = 0;
+  if (source) 
+    {
+	  s = source;
+	  t = target;
+      while (*s)
+	  {
+		  if (toNL && *s == ' ')
+		  {
+			  *t++ = 13;
+			  *t++ = 10;
+			  s++;
+			  result = 1;
+		  }
+		  else if (!toNL && *s == 13)
+		  {
+		     *t++ = ' ';
+			  s++;
+			  s++;
+			  result = 1;
+		  }
+		  else 
+		  {
+	          *t++ = *s++;
+		  }
+	  }
+	  *t = *s;
+	  if (result)
+		  ustrcpy (source, target);
+  }
+  return result;
+}
+#endif /*_WINDOWS */
+
+#ifdef _WINDOWS
 
 /*----------------------------------------------------------------------
   WIN_SetCommonText
@@ -4015,6 +4067,11 @@ static void GetAnnotConf ()
   GetEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
   GetEnvString ("ANNOT_SERVERS", AnnotServers);
   TtaGetEnvBoolean ("ANNOT_AUTOLOAD", &AnnotAutoLoad);
+
+#ifdef _WINDOWS
+  /* we substitute spaces into \r for the configuration widget menu */
+  ConvertSpaceNL (AnnotServers, TRUE);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -4027,6 +4084,11 @@ static void SetAnnotConf (void)
 static void SetAnnotConf ()
 #endif /* __STDC__ */
 {
+#ifdef _WINDOWS
+	/* we remove the \n added for the configuration menu widget */
+  ConvertSpaceNL (AnnotServers, FALSE);
+#endif /* _WINDOWS */
+
   TtaSetEnvString ("ANNOT_USER", AnnotUser, TRUE);
   TtaSetEnvString ("ANNOT_POST_SERVER", AnnotPostServer, TRUE);
   TtaSetEnvString ("ANNOT_SERVERS", AnnotServers, TRUE);
@@ -4056,6 +4118,10 @@ static void GetDefaultAnnotConf ()
   GetDefEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
   GetDefEnvString ("ANNOT_SERVERS", AnnotServers);
   TtaGetDefEnvBoolean ("ANNOT_AUTOLOAD", &AnnotAutoLoad);
+#ifdef _WINDOWS
+  /* we substitute spaces into \n for the configuration widget menu */
+  ConvertSpaceNL (AnnotServers, TRUE);
+#endif /* _WINDOWS */
 }
 
 #ifdef _WINDOWS
