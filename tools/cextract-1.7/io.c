@@ -448,14 +448,14 @@ cxt_close()
     fput_string(tmp_str, fpout);
   }
   if (get_option(OPT_COMPACT)) {
-    fput_string("#if __STDC__\n", fpout);
+    fput_string("#ifdef __STDC__\n", fpout);
     fput_string("#define PL_(x) x\n", fpout);
     fput_string("#else\n", fpout);
     fput_string("#define PL_(x) ( )\n", fpout);
     fput_string("#endif /* __STDC__ */\n", fpout);
   } else if (get_option(OPT_BOTHUSE) ||
 	     get_option(OPT_STDCUSE)) {
-    fput_string("#if __STDC__\n", fpout);
+    fput_string("#ifdef __STDC__\n", fpout);
   }
 
   /* first region */
