@@ -1027,6 +1027,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 2:
     case 4:
 	case 8:
+      sdata  = (unsigned short *) data;
       /* translate image palette to the system palette  */
       for (ind = 0; ind < ncolors; ind++)
 	colrs[ind].pixel = GetSystemColorIndex (colrs[ind].red,
