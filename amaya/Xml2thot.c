@@ -1686,9 +1686,10 @@ static ThotBool  IsLeadingSpaceUseless ()
        elType = TtaGetElementType (parent);
        elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
        if (IsXMLElementInline (XMLcontext.lastElement) &&
-	   (ustrcmp (TEXT("HTML"), elSchemaName) == 0) &&
-	   (elType.ElTypeNum != HTML_EL_Option_Menu) &&
-	   (elType.ElTypeNum != HTML_EL_OptGroup))
+	   ((ustrcmp (TEXT("HTML"), elSchemaName) != 0) ||
+	   ((ustrcmp (TEXT("HTML"), elSchemaName) == 0) &&
+	    (elType.ElTypeNum != HTML_EL_Option_Menu) &&
+	    (elType.ElTypeNum != HTML_EL_OptGroup))))
 	 {
 	   removeLeadingSpaces = FALSE;
 	   elType = TtaGetElementType (XMLcontext.lastElement);
