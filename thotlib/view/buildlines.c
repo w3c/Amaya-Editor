@@ -2978,7 +2978,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 			      if (c == 0xA /* LINEFEED */)
 				{
 				  diff -= 1;
-				  width += BoxCharacterWidth (c, ibox1->BxFont);
+				  width += BoxCharacterWidth ((CHAR_T)c, ibox1->BxFont);
 				}
 			      width = width + (diff * x);
 			      nspace += diff;

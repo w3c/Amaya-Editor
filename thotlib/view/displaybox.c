@@ -1713,7 +1713,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (transc == SHOWN_SPACE || transc == SHOWN_TAB ||
 			  transc == SHOWN_UNBREAKABLE_SPACE || transc == SHOWN_HALF_EM)
 			/* a new space is handled */
-			DrawChar (val, frame, x, y1, nextfont, BgSelColor);
+			DrawChar ((char)val, frame, x, y1, nextfont, BgSelColor);
 		      else
 			bl++;
 		      nbcar = 0;
