@@ -1,5 +1,4 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 #ifndef _FRAME_H
 #define _FRAME_H
 
@@ -7,9 +6,9 @@
 
 #include "constmenu.h"
 
-#define MAX_NFONT   10
 #define MAX_FONT    60
-#define MAX_BUTTON 25
+#define MAX_NFONT   10
+#define MAX_BUTTON  25
 #define MAX_TEXTZONE 3
 typedef struct _Frame_Ctl
 {
@@ -17,7 +16,7 @@ typedef struct _Frame_Ctl
   short         FrLeftMargin;   /* Marge a bas de la fenetre		*/
   short 	FrWidth;	/* Largeur de la fenetre                */
   short 	FrHeight;      	/* Hauteur de la fenetre                */
-  int		FrDoc;		/* CsIdentity du document affiche		*/
+  int		FrDoc;		/* Ident du document affiche      	*/
   int		FrView;		/* Vue du document affichee		*/
   ThotWidget	WdScrollV;	/* Le widget Scroll Vertical            */
   ThotWidget 	WdScrollH;	/* Le widget Scroll Horizontal          */

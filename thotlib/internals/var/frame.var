@@ -1,9 +1,13 @@
+/*
+ * Global variables for frame management
+ */
+
 
 #ifndef THOT_FRAME_VAR
 #define THOT_FRAME_VAR
 
 #ifndef NODISPLAY
-/* TABLE DES CADRES des fenetres Application et Documents */
+/* Frames table */
 EXPORT Frame_Ctl        FrameTable[MAX_FRAME+1];
 EXPORT ThotWindow  FrRef[MAX_FRAME + 1 + 1]; /* ref des fenetres de travail */
 EXPORT ThotColor BackgroundColor[MAX_FRAME + 1 + 1]; /* Background colors   */
@@ -60,7 +64,7 @@ EXPORT ThotCursor HCurs;	/* Curseur modification presentation 	*/
 EXPORT ThotCursor HVCurs;	/* Curseur modification presentation 	*/
 
 EXPORT int     DefaultBColor;		/* default background color index   */
-EXPORT int 	ActifFen;		/* Numero de fenetre document active */
+EXPORT int     ActifFen;		/* Numero de fenetre document active */
 EXPORT int     DesFen;			/* ViewFrame designee par la selection */
 EXPORT int     DesX;			/* Position X de la selection  */
 EXPORT int     DesY;			/* Position X de la selection  */
