@@ -633,11 +633,6 @@ void FrameRedraw (int frame, unsigned int width, unsigned int height)
 	  RebuildConcreteImage (frame);
 	  /* recompute the scroll bars */
 	  UpdateScrollbars (frame);
-
-	  /* Ok now allow next UpdateScrollbar to hide/show scrollbars 
-	   * At this point, UpdateScrollbar is not more called, so infinite loop cannot apend */
-	  ComputeScrollBar = TRUE;
-
 	  notifyDoc.event = TteViewResize;
 	  notifyDoc.document = doc;
 	  notifyDoc.view = view;
@@ -1072,6 +1067,11 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
   else
     ComputeScrollBar = TRUE;
 #ifdef _GL
+  /* store new frame size */
+  FrameTable[frame].FrWidth  = new_width;
+  FrameTable[frame].FrHeight = new_height;
+
+  /* redraw */
   if (GL_prepare( frame))
     {
       /* prevent flickering*/
@@ -1085,6 +1085,11 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
 #else /* _GL*/
   FrameRedraw (frame, new_width, new_height);
 #endif /* _GL */
+  
+  /* Ok now allow next UpdateScrollbar to hide/show scrollbars 
+   * At this point, UpdateScrollbar is not more called, so infinite loop cannot apend */
+  ComputeScrollBar = TRUE;
+
   return TRUE;
 }
 
