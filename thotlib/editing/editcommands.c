@@ -1211,79 +1211,6 @@ PtrBox              pBox;
 
 
 /*----------------------------------------------------------------------
-   TtcInsertChar insert a character                                
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcInsertChar (Document document, View view, CHAR_T c)
-#else  /* __STDC__ */
-void                TtcInsertChar (document, view, c)
-Document            document;
-View                view;
-CHAR_T                c;
-
-#endif /* __STDC__ */
-{
-   ViewSelection      *pViewSel;
-   PtrAbstractBox      pAb;
-   DisplayMode         dispMode;
-   int                 frame;
-
-   if (document != 0)
-     {
-	frame = GetWindowNumber (document, view);
-	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-	if (pViewSel->VsBox != NULL &&
-	    pViewSel->VsBox->BxAbstractBox != NULL &&
-	    pViewSel->VsBox->BxAbstractBox->AbReadOnly)
-	  /* nothing to do */
-	  return;
-	/* Check if we are changing the active frame */
-	if (frame != ActiveFrame)
-	  {
-	    /* yes close the previous insertion */
-	    CloseInsertion ();
-	    ActiveFrame = frame;
-	  }
-	/* avoid to redisplay step by step */
-	dispMode = TtaGetDisplayMode (document);
-	if (dispMode == DisplayImmediately)
-	  TtaSetDisplayMode (document, DeferredDisplay);
-
-	if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
-	  {
-	    /* Delete the current selection */
-	    CloseInsertion ();
-	    if (pViewSel->VsBox != NULL)
-	      {
-		pAb = pViewSel->VsBox->BxAbstractBox;
-	      if (pAb->AbLeafType == LtPicture
-		  ||  pAb->AbLeafType == LtSymbol
-		  ||  pAb->AbLeafType == LtGraphics
-		  ||  pAb->AbLeafType == LtText)
-		{
-		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL)
-		    {
-		      if (((*MenuActionList[CMD_DeleteSelection].User_Action) (
-			     MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
-                          (MenuActionList[CMD_DeleteSelection].Call_Action != NULL))
-		          (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-		    }
-		  else if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-		}
-	      else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
-		TtcPreviousChar (document, view);
-	      }
-	  }
-	InsertChar (frame, c, -1);
-	/* restore the display mode */
-	if (dispMode == DisplayImmediately)
-	  TtaSetDisplayMode (document, dispMode);
-     }
-}
-
-
-/*----------------------------------------------------------------------
    TtcInsertGraph insert a graphics                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2792,7 +2719,7 @@ int                 keyboard;
 	  if (pViewSel->VsBox != 0)
 	    {
 	      pAb = pViewSel->VsBox->BxAbstractBox;
-	      CloseInsertion ();
+	      CloseTextInsertion ();
 	      if (ThotLocalActions[T_deletenextchar] != NULL)
 		(*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, TRUE);
 	    }
@@ -2863,7 +2790,7 @@ int                 keyboard;
 			/* n'a rien a detruire */
 			if (beginOfBox)
 			  {
-			    CloseInsertion ();
+			    CloseTextInsertion ();
 			    if (ThotLocalActions[T_deletenextchar] != NULL)
 			      (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, TRUE);
 			    pFrame->FrReady = TRUE;
@@ -3495,6 +3422,69 @@ int                 nbytes;
 
 
 /*----------------------------------------------------------------------
+   TtcInsertChar insert a character                                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcInsertChar (Document document, View view, CHAR_T c)
+#else  /* __STDC__ */
+void                TtcInsertChar (document, view, c)
+Document            document;
+View                view;
+CHAR_T                c;
+
+#endif /* __STDC__ */
+{
+   ViewSelection      *pViewSel;
+   PtrAbstractBox      pAb;
+   DisplayMode         dispMode;
+   int                 frame;
+
+   if (document != 0)
+     {
+	frame = GetWindowNumber (document, view);
+	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	if (pViewSel->VsBox != NULL &&
+	    pViewSel->VsBox->BxAbstractBox != NULL &&
+	    pViewSel->VsBox->BxAbstractBox->AbReadOnly)
+	  /* nothing to do */
+	  return;
+	/* Check if we are changing the active frame */
+	if (frame != ActiveFrame)
+	  {
+	    /* yes close the previous insertion */
+	    CloseTextInsertion ();
+	    ActiveFrame = frame;
+	  }
+	/* avoid to redisplay step by step */
+	dispMode = TtaGetDisplayMode (document);
+	if (dispMode == DisplayImmediately)
+	  TtaSetDisplayMode (document, DeferredDisplay);
+
+	if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
+	  {
+	    /* Delete the current selection */
+	    CloseTextInsertion ();
+	    if (pViewSel->VsBox != NULL)
+	      {
+		pAb = pViewSel->VsBox->BxAbstractBox;
+	      if (pAb->AbLeafType == LtPicture
+		  ||  pAb->AbLeafType == LtSymbol
+		  ||  pAb->AbLeafType == LtGraphics
+		  ||  pAb->AbLeafType == LtText)
+		ContentEditing (TEXT_SUP);
+	      else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
+		TtcPreviousChar (document, view);
+	      }
+	  }
+	InsertChar (frame, c, -1);
+	/* restore the display mode */
+	if (dispMode == DisplayImmediately)
+	  TtaSetDisplayMode (document, dispMode);
+     }
+}
+
+
+/*----------------------------------------------------------------------
    TtcCutSelection                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3578,7 +3568,7 @@ View                view;
 	else
 	  {
 	    /* delete the current selection instead of the previous char */
-	    CloseInsertion ();
+	    CloseTextInsertion ();
 	    /* by default doen't change the selection after the delete */
 	    moveAfter = FALSE;
 	    if (pViewSel->VsBox != NULL)

@@ -428,18 +428,20 @@ ThotBool            extendSel;
 	 case 7:	/* Next line (^N) */
 	   if (pBox != NULL)
 	     {
-	       /*******/
-	       if (extendSel)
-		 {
-		   RightExtended = TRUE;
-		 }
 	       pBox = pViewSelEnd->VsBox;
-	       x = pViewSelEnd->VsXPos + pBox->BxXOrg - pFrame->FrXOrg;
-	       if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
-	       x = x - CharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
 	       y = pBox->BxYOrg + pBox->BxHeight;
 	       yDelta = 10;
-	       LocateLeafBox (frame, x, y, 0, yDelta, NULL, extendSel);
+	       if (extendSel)
+		   RightExtended = TRUE;
+	       else if (!SelPosition)
+		 {	       
+		   /* store the end position of the selection as the new reference */
+		   x = pViewSelEnd->VsXPos + pBox->BxXOrg;
+		   if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
+		     x = x - CharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
+		   ClickX = x;
+		 }
+	       LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
 	       ok = FALSE;
 	     }
 	   else
