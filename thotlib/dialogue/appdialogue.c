@@ -2186,11 +2186,11 @@ ThotBool TtaIsButtonActivated (Document document, View view)
   return (ActivatedButton);
 }
 
-#if defined(_MOTIF) || defined(_WINDOWS)
 /*----------------------------------------------------------------------
  ----------------------------------------------------------------------*/
 void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 {
+#if defined(_MOTIF) || defined(_WINDOWS)
   Document            doc;
   View                view;
 #ifdef _MOTIF
@@ -2221,8 +2221,8 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 		(void*)view,
 		(void*)text);
     }
-}
 #endif /* defined(_MOTIF) || defined(_WINDOWS) */
+}
 
 #ifdef _GTK
 /*----------------------------------------------------------------------

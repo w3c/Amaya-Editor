@@ -76,7 +76,9 @@ extern void TtaExecuteMenuAction (char *actionName, Document doc, View view);
    state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
-extern int TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), char* functionName, char *info, unsigned char type, ThotBool state);
+extern int TtaAddButton (Document document, View view, ThotIcon picture,
+						 void (*procedure) (), char* functionName, char *info,
+						 unsigned char type, ThotBool state);
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
@@ -165,7 +167,8 @@ extern void TtaSetMenuOn (Document document, View view, int menuID);
    TtaSetToggleItem positionne l'item du menu de la vue du document   
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
-extern void TtaSetToggleItem (Document document, View view, int menuID, int itemID, ThotBool on);
+extern void TtaSetToggleItem (Document document, View view, int menuID,
+							  int itemID, ThotBool on);
 
 /*----------------------------------------------------------------------
    TtaSetItemOff desactive l'item actionName de la vue du document  
@@ -337,7 +340,11 @@ extern int TtaMakeWindow( );
     + the frame id
     + -1 if too much created views
   ----------------------------------------------------------------------*/
-extern int TtaMakeFrame( Document doc );
+extern int TtaMakeFrame( Document doc,
+                          int view,
+                          int width,
+                          int height,
+                          int * volume );
 
 /*----------------------------------------------------------------------
    TtaListShortcuts

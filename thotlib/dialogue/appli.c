@@ -1505,33 +1505,6 @@ void FrameVScrolled (int *w, int frame, int *param)
 void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 {
   FrameVScrolledCallback (frame, w->value);
-/*
-  int        delta, x, y, width, height, viewed, left;
-
-  if (FrameTable[frame].FrDoc &&
-      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return;
-  ComputeDisplayedChars (frame, &x, &y, &width, &height);
-  delta = (int) w->value - y;
-  viewed = abs (delta) / height;
-  left = abs (delta) - (height * viewed);
-  if (viewed <= 3)
-    {
-      if (delta > 0)
-	delta = viewed * FrameTable[frame].FrHeight 
-	  + (int) ((left * FrameTable[frame].FrHeight) / height);
-      else 
-	delta = -(viewed * FrameTable[frame].FrHeight 
-		  + (int) ((left * FrameTable[frame].FrHeight) / height));
-      if (delta)
-	VerticalScroll (frame, delta, 1);
-    } 
-  else 
-    {
-      delta = (int) ((w->value / (float)FrameTable[frame].FrHeight) * 100);
-      JumpIntoView (frame, delta);
-    }
-    */
 }
 #endif /*_GTK*/
 
@@ -2915,8 +2888,6 @@ ThotBool FrameButtonUpCallback(
     int thot_mod_mask,
     int x, int y )
 {
-  Document   document;
-  View       view;
 
   /* if a button release, we save the selection in the clipboard */
   /* drag is finished */
@@ -2924,11 +2895,13 @@ ThotBool FrameButtonUpCallback(
 /*  Selecting = FALSE;
     if (timer != None)
   {
+  Document   document;
+  View       view;
     gtk_timeout_remove (timer);
     timer = None;
     FrameToView (frame, &document, &view);
     TtcCopyToClipboard (document, view);
-  } 
+  }
   else */
   if (thot_button_id == THOT_LEFT_BUTTON)
   {

@@ -227,11 +227,11 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
 
    pBuffer = buffer;
    j = 1;
-   x1 = pBuffer->BuPoints[j].XCoord;
-   y1 = pBuffer->BuPoints[j].YCoord;
+   x1 = (float) pBuffer->BuPoints[j].XCoord;
+   y1 = (float) pBuffer->BuPoints[j].YCoord;
    j++;
-   x2 = pBuffer->BuPoints[j].XCoord;
-   y2 = pBuffer->BuPoints[j].YCoord;
+   x2 = (float) pBuffer->BuPoints[j].XCoord;
+   y2 = (float) pBuffer->BuPoints[j].YCoord;
    if (nb < 3)
      {
 	/* cas particulier des courbes avec 2 points */
@@ -241,8 +241,8 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
    else
      {
 	j++;
-	x3 = pBuffer->BuPoints[j].XCoord;
-	y3 = pBuffer->BuPoints[j].YCoord;
+	x3 = (float) pBuffer->BuPoints[j].XCoord;
+	y3 = (float) pBuffer->BuPoints[j].YCoord;
      }
 
    dx = x1 - x2;
@@ -300,8 +300,8 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
 		       j = 0;
 		    }
 	       }
-	     x3 = pBuffer->BuPoints[j].XCoord;
-	     y3 = pBuffer->BuPoints[j].YCoord;
+	     x3 = (float) pBuffer->BuPoints[j].XCoord;
+	     y3 = (float) pBuffer->BuPoints[j].YCoord;
 	  }
 	dx = x3 - x2;
 	dy = y2 - y3;
