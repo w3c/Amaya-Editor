@@ -232,6 +232,13 @@
 	<message xml:lang="it">Sincronizza</message>
 	<message xml:lang="es">Sinchronizar</message>
 </label>
+<label define="BDocInfo">
+	<message xml:lang="en">Document Info</message>
+	<message xml:lang="fr">Infos document</message>
+	<message xml:lang="de">Infos Dokument</message>
+	<message xml:lang="it">Infos documento</message>
+	<message xml:lang="es">Infos documento</message>
+</label>
 <label define="BSetUpandPrint">
 	<message xml:lang="en">Setup and Print...</message>
 	<message xml:lang="fr">Paramétrer et imprimer...</message>

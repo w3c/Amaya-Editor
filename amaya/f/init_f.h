@@ -7,6 +7,8 @@
 #ifdef __STDC__
 
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
+extern void DocumentInfo ( Document document,
+                           View view );
 extern Document IsDocumentLoaded ( char *documentURL,
                                    char *form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
@@ -170,6 +172,8 @@ extern void AmayaClose ( Document document,
 #else /* __STDC__ */
 
 extern void DocumentMetaClear (/* DocumentMetaDataElement *me */);
+extern void DocumentInfo (/* Document document,
+                             View view */);
 extern Document IsDocumentLoaded (/* char *documentURL,
                                      char *form_data */);
 extern ThotBool CanReplaceCurrentDocument (/* Document document,

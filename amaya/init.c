@@ -277,7 +277,6 @@ typedef enum
 
 TypeBrowserFile WidgetParent;
 
-
 /*----------------------------------------------------------------------
    DocumentMetaClear
    Clears the dynamically allocated memory associated to a metadata
@@ -297,6 +296,14 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
     }
 }
 
+/*----------------------------------------------------------------------
+   DocumentInfo
+   Displays the document informations given by the header
+  ----------------------------------------------------------------------*/
+void                DocumentInfo (Document document, View view)
+{
+  printf ("\nBe patient, please\n");
+}
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
