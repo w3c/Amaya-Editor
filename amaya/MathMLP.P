@@ -2775,9 +2775,9 @@ ATTRIBUTES
 
   fontsize:
 	BEGIN
+	{ aspect set by function MathAttrFontsizeCreated }
 	CreateBefore(ATTR_fontsize);
 	CreateBefore(VALUE_fontsize);
-	{ *** change font size in the main view *** }
 	IN Math_Structure_view
 		Size: Enclosing =;
 	END;
@@ -2814,18 +2814,18 @@ ATTRIBUTES
 
   fontfamily:
 	BEGIN
+	{ aspect set by function MathAttrFontfamilyCreated }
 	CreateBefore(ATTR_fontfamily);
 	CreateBefore(VALUE_fontfamily);
-	{ *** change font in the main view *** }
 	IN Math_Structure_view
 		Font: Enclosing =;
 	END;
 
   color:
 	BEGIN
+	{ aspect set by function MathAttrColorCreated }
 	CreateBefore(ATTR_color);
 	CreateBefore(VALUE_color);
-	{ *** change foreground color in the main view *** }
 	IN Math_Structure_view
 		Foreground: Enclosing =;
 	END;
@@ -2896,6 +2896,18 @@ ATTRIBUTES
   accent = false:
 	CreateBefore(ATTR_accent_false);
 
+  lquote:
+	BEGIN
+	CreateBefore(ATTR_lquote);
+	CreateBefore(VALUE_lquote);
+	END;
+
+  rquote:
+	BEGIN
+	CreateBefore(ATTR_rquote);
+	CreateBefore(VALUE_rquote);
+	END;
+
   width\240:
 	BEGIN
 	CreateBefore(ATTR_width);
@@ -2914,18 +2926,6 @@ ATTRIBUTES
 	CreateBefore(VALUE_depth);
 	END;
 
-  lquote:
-	BEGIN
-	CreateBefore(ATTR_lquote);
-	CreateBefore(VALUE_lquote);
-	END;
-
-  rquote:
-	BEGIN
-	CreateBefore(ATTR_rquote);
-	CreateBefore(VALUE_rquote);
-	END;
-
   linethickness:
 	BEGIN
 	CreateBefore(ATTR_linethickness);
@@ -2937,11 +2937,6 @@ ATTRIBUTES
 	CreateBefore(ATTR_scriptlevel);
 	CreateBefore(VALUE_scriptlevel);
 	END;
-
-  displaystyle = true:
-	CreateBefore(ATTR_displaystyle_true);
-  displaystyle = false:
-	CreateBefore(ATTR_displaystyle_false);
 
   scriptsizemultiplier:
 	BEGIN
@@ -2957,6 +2952,7 @@ ATTRIBUTES
 
   background\240:
 	BEGIN
+	{ aspect set by function MathAttrBackgroundCreated }
 	CreateBefore(ATTR_background);
 	CreateBefore(VALUE_background);
 	END;
@@ -2978,6 +2974,7 @@ ATTRIBUTES
 	CreateBefore(ATTR_separators);
 	CreateBefore(VALUE_separators);
 	END;
+
   subscriptshift:
 	BEGIN
 	CreateBefore(ATTR_subscriptshift);
@@ -3074,6 +3071,23 @@ ATTRIBUTES
 	CreateBefore(VALUE_equalcolumns);
 	END;
 
+  displaystyle = true:
+	CreateBefore(ATTR_displaystyle_true);
+  displaystyle = false:
+	CreateBefore(ATTR_displaystyle_false);
+
+  actiontype:
+	BEGIN
+	CreateBefore(ATTR_actiontype);
+	CreateBefore(VALUE_actiontype);
+	END;
+
+  selection:
+	BEGIN
+	CreateBefore(ATTR_selection);
+	CreateBefore(VALUE_selection);
+	END;
+
   rowspan\240:
 	BEGIN
 	CreateBefore(ATTR_rowspan);
@@ -3090,18 +3104,6 @@ ATTRIBUTES
 	CreateBefore(ATTR_edge_left);
   edge = right\240:
 	CreateBefore(ATTR_edge_right);
-
-  actiontype:
-	BEGIN
-	CreateBefore(ATTR_actiontype);
-	CreateBefore(VALUE_actiontype);
-	END;
-
-  selection:
-	BEGIN
-	CreateBefore(ATTR_selection);
-	CreateBefore(VALUE_selection);
-	END;
 
   EntityName:
 	BEGIN
@@ -3294,3 +3296,6 @@ ATTRIBUTES
 	END;
 
 END
+
+
+
