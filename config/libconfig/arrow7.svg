@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- <!DOCTYPE svg SYSTEM "svg-19991203.dtd" > -->
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="100">
   <g id="Arrow7">
     <polygon points="1,0 80,28 0,56 24,28"/>
   </g>
