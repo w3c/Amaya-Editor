@@ -5024,7 +5024,7 @@ CHAR_T                c;
 	CommentText = TtaNewElement (theDocument, elType);
 	TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	TtaInsertFirstChild (&CommentText, elCommentLine, theDocument);
-	TtaSetTextContent (CommentText, _EMPTYSTR_, currentLanguage, theDocument);
+	TtaSetTextContent (CommentText, TEXT(""), currentLanguage, theDocument);
      }
    InitBuffer ();
 }
@@ -5066,7 +5066,7 @@ UCHAR_T             c;
 	   CommentText = TtaNewElement (theDocument, elType);
 	   TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	   TtaInsertFirstChild (&CommentText, elCommentLine, theDocument);
-	   TtaSetTextContent (CommentText, _EMPTYSTR_, currentLanguage, theDocument);
+	   TtaSetTextContent (CommentText, TEXT(""), currentLanguage, theDocument);
 	}
       else
 	{
@@ -5517,7 +5517,7 @@ ThotBool*       endOfFile;
          }
          if (*endOfFile == FALSE) {
             char* mbsBuff = &FileBuffer[(*index)];
-            (*index) += GetNextWideCharFromMultibyteString (&charRead, &mbsBuff);
+            (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff);
             if (*index > LastCharInFileBuffer)
                *index = 0;
          }
@@ -5640,7 +5640,7 @@ char*              HTMLbuf;
 
 #endif
 {
-   CHAR_T              charRead;
+   UCHAR_T             charRead;
    ThotBool            match;
    PtrTransition       trans;
    ThotBool            endOfFile;
