@@ -167,7 +167,7 @@ static ThotBool    UnknownAttr = FALSE;
 /* information about the Thot document under construction */
 static CHAR_T	    currentElementContent = ' ';
 static CHAR_T	    previousElementContent = ' ';
-static CHAR_T	    currentMappedName[16];
+static CHAR_T	    currentMappedName[40];
 static Attribute    currentAttribute = NULL;
 static ThotBool	    HTMLStyleAttribute = FALSE;
 static ThotBool	    XMLrootClosed = FALSE;
@@ -1080,8 +1080,7 @@ CHAR_T   *name;
 
   UnknownTag = FALSE;
 
-  if ((XMLcontext.lastElement != NULL) &&
-      (currentMappedName != NULL))
+  if (XMLcontext.lastElement != NULL && currentMappedName[0] != WC_EOS)
     {
       if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("pre"))   ||
 	  !ustrcmp (nameElementStack[stackLevel - 1], TEXT("style")) ||
@@ -1297,7 +1296,7 @@ CHAR_T*             GIname;
 	  UnknownTag = TRUE;
 	  nameElementStack[stackLevel] = NULL;
 	  elementStack[stackLevel] = NULL;
-	  elInStack = TRUE;
+	  elInStack = FALSE;
 	}
       else
 	{
@@ -1306,7 +1305,7 @@ CHAR_T*             GIname;
 	    /* element not allowed in the current structural context */
 	    {
 	      usprintf (msgBuffer,
-			TEXT("Tag <%s> is not allowed here"), GIname);
+			TEXT("Tag %s is not allowed here"), GIname);
 	      XmlParseError (XMLcontext.doc, msgBuffer, 0);
 	      UnknownTag = TRUE;
 	      nameElementStack[stackLevel] = NULL;
@@ -1420,8 +1419,7 @@ CHAR_T     *GIname;
      {
        if (ustrlen (GIname) > MaxMsgLength - 20)
 	 GIname[MaxMsgLength - 20] = WC_EOS;
-       usprintf (msgBuffer,
-		 TEXT("Unknown XML element </%s>"), GIname);
+       usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
    else
@@ -1430,7 +1428,7 @@ CHAR_T     *GIname;
 	 /* the end tag does not close any current element */
 	 {
 	   usprintf (msgBuffer,
-		     TEXT("Unexpected end tag </%s>"), GIname);
+		     TEXT("Unexpected end tag %s"), GIname);
 	   XmlParseError (XMLcontext.doc, msgBuffer, 0);
 	 }
      }
@@ -1700,7 +1698,7 @@ CHAR_T         *attrName;
 	   if (ustrlen (attrName) > MaxMsgLength - 30)
 	     attrName[MaxMsgLength - 30] = WC_EOS;
 	   usprintf (msgBuffer,
-		     TEXT("Unknown attribute \"%s\""),
+		     TEXT("Unknown attribute %s"),
 		     attrName);
 	   XmlParseError (XMLcontext.doc, msgBuffer, 0);
 	   /* attach an Invalid_attribute to the current element */
@@ -1819,7 +1817,7 @@ CHAR_T         *attrName;
        if (ustrlen (attrName) > MaxMsgLength - 30)
 	   attrName[MaxMsgLength - 30] = WC_EOS;
        usprintf (msgBuffer,
-		 TEXT("Unknown attribute \"%s\""),
+		 TEXT("Unknown attribute %s"),
 		 attrName);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
        UnknownAttr = TRUE;
@@ -1833,7 +1831,7 @@ CHAR_T         *attrName;
 	 {
            /* this attribute already exists for the current element */
            usprintf (msgBuffer,
-		     TEXT("Duplicate XML attribute %s"),
+		     TEXT("Duplicate attribute %s"),
 		     attrName);
            XmlParseError (XMLcontext.doc, msgBuffer, 0);	
 	 }
@@ -1973,7 +1971,7 @@ CHAR_T*             val;
     {
       if (ustrlen (val) > MaxMsgLength - 40)
           val[MaxMsgLength - 40] = WC_EOS;
-      usprintf (msgBuffer, TEXT("Unknown attribute value \"type = %s\""), val);
+      usprintf (msgBuffer, TEXT("Unknown attribute value \"type=%s\""), val);
       XmlParseError (XMLcontext.doc, msgBuffer, 0);
       usprintf (msgBuffer, TEXT("type=%s"), val);
       XhtmlMapAttribute (TEXT("unknown_attr"), &attrType,
@@ -2035,7 +2033,7 @@ CHAR_T     *attrValue;
 	   if (val <= 0)
 	     {
 	       usprintf (msgBuffer,
-			 TEXT("Unknown XML attribute value: %s"), attrValue);
+			 TEXT("Unknown attribute value %s"), attrValue);
 	       XmlParseError (XMLcontext.doc, msgBuffer, 0);	
 	     }
 	   else
@@ -2521,7 +2519,7 @@ STRING              entityName;
        lang = -1;
        /* print an error message */
        usprintf (msgBuffer,
-		 TEXT("Unknown XML entity \"&%s;\""),
+		 TEXT("Unknown entity &%s;"),
 		 entityName);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
@@ -2574,7 +2572,7 @@ CHAR_T     *commentValue;
    if (elType.ElTypeNum <= 0)
      {
        usprintf (msgBuffer,
-		 TEXT("Unknown XML element %s"),
+		 TEXT("Unknown element %s"),
 		 commentValue);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
