@@ -960,7 +960,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-O2"
+    CFLAGS="-g"
   else
     CFLAGS="-g"
   fi
@@ -6849,12 +6849,7 @@ AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
 
-# only include the IMG libraries if we are not in pure GTK mode (without GL)
-if test "${with_gtk}" = "yes" -a "${with_gl}" != "yes" ; then
-  IMGLIBS=
-else
-  IMGLIBS="-ljpeg -lpng -lz"
-fi
+IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
 
 
