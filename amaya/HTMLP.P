@@ -9379,7 +9379,7 @@ ATTRIBUTES
 	END;
  cellspacing (Column_head) > 0:
 	BorderRightWidth: Border px;
- cellspacing (thead):
+ cellspacing (thead) > 0:
 	BEGIN
 	VertPos: Top = Previous . Bottom + cellspacing px;
 	BorderTopWidth: Border px;
@@ -9421,7 +9421,7 @@ ATTRIBUTES
 		BorderRightWidth: 0;
 		END;
 	END;
- cellspacing (tbody):
+ cellspacing (tbody) > 0:
 	BEGIN
 	VertPos: Top = Previous tbody . Bottom + cellspacing px;
 	BorderTopWidth: Border px;
@@ -9449,7 +9449,7 @@ ATTRIBUTES
 		PaddingLeft: 0;
 		END;
 	END;
- cellspacing (tfoot):
+ cellspacing (tfoot) > 0:
 	BEGIN
 	VertPos: Top = Previous . Bottom + cellspacing px;
 	BorderTopWidth: Border px;
