@@ -2810,7 +2810,7 @@ RULES
 	END;
 
  Definition_Item: BEGIN
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
 	END;
 
  Term_List: BEGIN
@@ -2834,7 +2834,7 @@ RULES
 	END;
 
  Definitions: BEGIN
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
 	END;
 
  Definition: BEGIN

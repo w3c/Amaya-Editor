@@ -2033,25 +2033,53 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		      /* check if the relative box is not already dead */
 		      if (pDimAb->DimUnit == UnAuto)
 			{
-			  if (pAb->AbFloat != 'N' ||
-			      pAb->AbNotInLine ||
-			      pAb->AbDisplay == 'I' ||
-			      /* if the parent inherits from contents */
-			      (!pParentAb->AbWidthChange &&
-			       pParentAb->AbWidth.DimUnit == UnAuto &&
-			       pParentAb->AbWidth.DimAbRef != pParentAb->AbEnclosing &&
-			       pParentAb->AbWidth.DimValue == -1) ||
-			      /* check the parent rule */
-			      (pParentAb->AbWidthChange &&
-			       pParentAb->AbEnclosing &&
-			       pParentAb->AbEnclosing->AbWidth.DimUnit == UnAuto &&
-			       pParentAb->AbEnclosing->AbWidth.DimAbRef != pParentAb->AbEnclosing->AbEnclosing &&
-			       pParentAb->AbEnclosing->AbWidth.DimValue == -1))
+			  if (pAb->AbFloat == 'N' && pAb->AbDisplay == 'B')
+			    {
+			      /* inherit from the parent box */
+			      pDimAb->DimAbRef = pAb->AbEnclosing;
+			      pDimAb->DimValue = 0;		  
+			      pBox->BxContentWidth = FALSE;
+			    }
+			  else if (pAb->AbFloat != 'N'||
+				   pAb->AbNotInLine ||
+				   pAb->AbDisplay == 'I' ||
+				   /* if the parent inherits from contents */
+				   (!pParentAb->AbWidthChange &&
+				    pParentAb->AbWidth.DimUnit == UnAuto &&
+				    pParentAb->AbWidth.DimAbRef != pParentAb->AbEnclosing &&
+				    pParentAb->AbWidth.DimValue == -1))
 			    {
 			      /* inherit from contents */
 			      pDimAb->DimAbRef = NULL;
 			      pDimAb->DimValue = -1;		  
 			      pBox->BxContentWidth = TRUE;
+			    }
+			  else if (pAb->AbFloat != 'N'||
+				   pAb->AbNotInLine ||
+				   pAb->AbDisplay == 'I' ||
+				   /* when the parent rule changes check upper levels */
+				   (pParentAb->AbWidthChange &&
+				    pParentAb->AbWidth.DimUnit == UnAuto))
+			    {
+			      PtrAbstractBox parent;
+			      parent = pParentAb->AbEnclosing;
+			      while (parent && parent->AbWidthChange &&
+				     parent->AbWidth.DimUnit == UnAuto)
+				parent = parent->AbEnclosing;
+			      if (parent->AbFloat == 'N' && parent->AbDisplay == 'B')
+				{
+				  /* inherit from the parent box */
+				  pDimAb->DimAbRef = pAb->AbEnclosing;
+				  pDimAb->DimValue = 0;		  
+				  pBox->BxContentWidth = FALSE;
+				}
+			      else
+				{
+				  /* inherit from the parent box */
+				  pDimAb->DimAbRef = pAb->AbEnclosing;
+				  pDimAb->DimValue = 0;		  
+				  pBox->BxContentWidth = FALSE;
+				}
 			    }
 			  else
 			    {
