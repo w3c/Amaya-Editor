@@ -2104,9 +2104,11 @@ ThotBool	    history;
   int                 i, j;
   ThotBool	      otherFile;
   ThotBool            plainText;
+  ThotBool            XHTMLdoc;
 
   docType = docHTML;
   otherFile = TRUE;
+  XHTMLdoc = FALSE;
   tempdir = tempdocument = NULL;
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
@@ -2124,7 +2126,10 @@ ThotBool	    history;
 	/* it's a document written in XML: check its doctype */
 	  if ((tempfile[0] != EOS && IsXHTMLDocType (tempfile)) ||
 	      (tempfile[0] == EOS && IsXHTMLDocType (pathname)))
+	    {
 	    docType = docHTML;
+	    XHTMLdoc = TRUE;
+	    }
 	  else
 	    docType = docText;
 	  otherFile = FALSE;
@@ -2175,7 +2180,10 @@ ThotBool	    history;
 		   /* it's a document written in XML: check its doctype */
 		   if ((tempfile[0] != EOS && IsXHTMLDocType (tempfile)) ||
 		       (tempfile[0] == EOS && IsXHTMLDocType (pathname)))
+		     {
 		     docType = docHTML;
+		     XHTMLdoc = TRUE;
+		     }
 		   else
 		     docType = docText;
 		   otherFile = FALSE;
@@ -2374,7 +2382,7 @@ ThotBool	    history;
       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentMeta[newdoc]->put_default_name = FALSE;
-      DocumentMeta[newdoc]->xmlformat = FALSE;
+      DocumentMeta[newdoc]->xmlformat = XHTMLdoc;
       DocumentSource[newdoc] = 0;
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
@@ -2792,7 +2800,7 @@ View                view;
 	 DocumentMeta[sourceDoc]->form_data = NULL;
 	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
 	 DocumentMeta[sourceDoc]->put_default_name = DocumentMeta[document]->put_default_name;
-	 DocumentMeta[sourceDoc]->xmlformat = DocumentMeta[document]->xmlformat;
+	 DocumentMeta[sourceDoc]->xmlformat = FALSE;
 	 DocumentTypes[sourceDoc] = docSource;
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,

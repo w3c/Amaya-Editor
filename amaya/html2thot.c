@@ -6178,31 +6178,29 @@ STRING              fileName;
 	    endOfFile = TRUE;
 	  else
 	    FileBuffer[res] = EOS;
-	  /* if we are reading a file with "<!DOCTYPE HTML" */
+	  /* if we are reading a file with "<html ...>" */
 	  i = 0;
 	  while (!endOfFile && i < res)
 	    {
-	      if (ustrncasecmp(&FileBuffer[i], TEXT("<!DOCTYPE"), 9))
+	      if (ustrncasecmp(&FileBuffer[i], TEXT("<html"), 5))
 		i++;
 	      else
 		{
 		  /* we've found the document type */
-		  i += 9;
+		  i += 5;
 		  /* stop the research */
 		  endOfFile = TRUE;
-		  /* skip spaces */
-		  while (FileBuffer[i] == SPACE ||
+		  if (FileBuffer[i] == SPACE ||
 			 FileBuffer[i] == BSPACE ||
 			 FileBuffer[i] == EOL ||
 			 FileBuffer[i] == TAB ||
-			 FileBuffer[i] == __CR__)
-		    i++;
-		  if (!ustrncasecmp(&FileBuffer[i], TEXT("html"), 4))
-		    isXHTML = TRUE;
+			 FileBuffer[i] == __CR__ ||
+			 FileBuffer[i] == '>')
+		     isXHTML = TRUE;
 		}
 	    }
 	}
-	  gzclose (stream);
+      gzclose (stream);
     }
   return (isXHTML);
 }

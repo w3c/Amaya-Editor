@@ -390,7 +390,7 @@ STRING              pathname;
        SaveAsXHTML = FALSE;
        SaveAsText = TRUE;
      }
-   else if (IsXMLName (pathname))
+   else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat)
      {
        SaveAsHTML = FALSE;
        SaveAsXHTML = TRUE;
@@ -824,9 +824,15 @@ STRING            documentName;
     {
       SetNamespacesAndDTD (doc);
       if (SaveAsXHTML)
+	{
 	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
+	DocumentMeta[doc]->xmlformat = TRUE;
+	}
       else
+	{
 	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
+	DocumentMeta[doc]->xmlformat = FALSE;
+	}
       if (ok)
 	{
 	  TtaSetDocumentDirectory (doc, directoryName);
@@ -1129,9 +1135,15 @@ ThotBool         use_preconditions;
   /* First step : generate the output file and ask for confirmation */
   SetNamespacesAndDTD (doc);
   if (SaveAsXHTML)
+    {
     TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
+    DocumentMeta[doc]->xmlformat = TRUE;
+    }
   else
+    {
     TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
+    DocumentMeta[doc]->xmlformat = FALSE;
+    }
 
   res = 0;
   if (confirm && with_images)
@@ -1454,7 +1466,7 @@ View                view;
 #endif
 
   /* the suffix fixes the output format of HTML saved document */
-  SaveAsXHTML = IsXMLName (tempname);
+  SaveAsXHTML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
   if (IsW3Path (tempname))
     /* it's a remote document */
     {
@@ -1539,11 +1551,17 @@ View                view;
 	{
 	  SetNamespacesAndDTD (doc);
 	  if (SaveAsXHTML)
+	    {
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						      TEXT("HTMLTX"));
+	    DocumentMeta[doc]->xmlformat = TRUE;
+	    }
 	  else
+	    {
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						      TEXT("HTMLT"));
+	    DocumentMeta[doc]->xmlformat = FALSE;
+	    }
 	  newLineNumbers = TRUE;
 	}
       /* save a local copy of the current document */
