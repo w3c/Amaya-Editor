@@ -765,6 +765,20 @@ void ControlPointChanged(event)
 			  &maxY);
 }
 
+/*----------------------------------------------------------------------
+ GraphLeafDeleted
+ A GRAPHICS_UNIT element has been deleted. Delete its Label sibling
+ and its parent.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void GraphLeafDeleted (NotifyElement *event)
+#else /* __STDC__*/
+void GraphLeafDeleted(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+   TtaDeleteTree (event->element, event->document);
+}
 
 /*----------------------------------------------------------------------
    CreateGraphicElement
@@ -988,16 +1002,12 @@ int                 construct;
 	 {
 	 /* the document is supposed to be HTML */
 	 childType.ElSSchema = docSchema;
-	 childType.ElTypeNum = HTML_EL_Division;
-	 child = TtaNewElement (doc, childType);
+	 childType.ElTypeNum = HTML_EL_HTMLfragment;
+	 child = TtaNewTree (doc, childType, "");
 	 /* do not check the Thot abstract tree against the structure */
 	 /* schema when inserting this element */
 	 TtaSetStructureChecking (0, doc);
 	 TtaInsertFirstChild (&child, newEl, doc);
-	 /* add an empty element */
-	 childType.ElTypeNum = HTML_EL_Element;
-	 elem = TtaNewElement (doc, childType);
-	 TtaInsertFirstChild (&elem, child, doc);
 	 TtaSetStructureChecking (1, doc);
 	 }
 

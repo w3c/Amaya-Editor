@@ -52,6 +52,8 @@ ELEMENTS
 	ElemPaste.Post -> GraphElemPasted;
    Group:
 	ElemPaste.Post -> GraphElemPasted;
+   GRAPHICS_UNIT:
+	ElemDelete.Post -> GraphLeafDeleted;
 
 ATTRIBUTES
 

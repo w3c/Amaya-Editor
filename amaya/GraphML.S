@@ -252,6 +252,8 @@ EXCEPT
    Polygon:		MoveResize, HighlightChildren;
    Spline:		MoveResize, HighlightChildren;
    ClosedSpline:	MoveResize, HighlightChildren;
+   Text_:		MoveResize;
+   Math:		MoveResize;
    Group:               MoveResize;
    PICTURE:		MoveResize;
 

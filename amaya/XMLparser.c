@@ -235,11 +235,16 @@ char **buffer;
       (*(currentParserCtxt->GetElementName)) (elType, buffer);
    else
       {
+      /* initialize all parser contexts if not done yet */
+      if (firstParserCtxt == NULL)
+         InitParserContexts ();
+
       ctxt = firstParserCtxt;
       while (ctxt != NULL &&
 	    strcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
 	 ctxt = ctxt->NextParserCtxt;
-      if (!strcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
+      if (ctxt != NULL &&
+	  !strcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
 	 (*(ctxt->GetElementName)) (elType, buffer);
       }
 }
@@ -281,6 +286,10 @@ Document doc;
       (*(currentParserCtxt->ElementComplete)) (el, doc);
    else
       {
+      /* initialize all parser contexts if not done yet */
+      if (firstParserCtxt == NULL)
+         InitParserContexts ();
+
       ctxt = firstParserCtxt;
       while (ctxt != NULL &&
 	    strcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
@@ -572,7 +581,8 @@ Document            doc;
     {
       /* The schema is known -> search the corresponding context */
       ctxt = firstParserCtxt;
-      while (ctxt != NULL && !TtaSameSSchemas (elType->ElSSchema, ctxt->XMLSSchema))
+      while (ctxt != NULL &&
+	     strcmp (TtaGetSSchemaName (elType->ElSSchema), ctxt->SSchemaName))
 	  ctxt = ctxt->NextParserCtxt;
       /* get the Thot element number */
       if (ctxt != NULL)
