@@ -445,6 +445,7 @@ HelpMath
 ################# SVG
 [svg]
 ShowGraphicsPalette
+ShowTimeLineWindow
 HelpSVG
 
 ########### STYLE

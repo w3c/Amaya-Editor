@@ -2579,6 +2579,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef _SVG
 	   AddGraphicsButton (doc, 1);
 #endif /* _SVG */
+#ifdef _SVGANIM
+	   AddAnimButton (doc, 1);
+#endif /* _SVGANIM */
 	   if (docType == docAnnot)
 	     {
 	       /* turn off the menus that don't make sense in the annotation view */
@@ -3900,7 +3903,11 @@ void ShowSource (Document document, View view)
 
    if (!DocumentURLs[document])
      /* the document is not loaded yet */
+#ifdef _SVGANIM
+	 ShowSourceOfTimeline (document, view);
+#else
      return;
+#endif /* _SVGANIM */
    if (DocumentTypes[document] != docHTML &&
        DocumentTypes[document] != docSVG &&
 #ifdef XML_GENERIC      
@@ -6222,6 +6229,9 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _SVG
    InitSVG ();
 #endif /* _SVG */
+#ifdef _SVGANIM
+   InitSVGAnim ();
+#endif /* _SVGANIM */
 
    /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);

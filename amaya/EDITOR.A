@@ -16,7 +16,12 @@ USES
 #ifdef _SVG
        , SVG
 #endif
+#ifdef _SVGANIM
+       , Timeline
+#endif
        , TableH;
+
+
 
 DEFAULT
    BEGIN

@@ -3864,3 +3864,235 @@ int TtaGetElementVolume (Element element)
   return vol;
 }
 
+
+
+/* -- Added by P. Geneves, to provide search for SVG animation in Amaya. 
+      This is useful to get differently typed elements in the order they
+	  appear in the document. 
+-- */
+
+/*----------------------------------------------------------------------
+   FwdSearchElementAmong5TypesInSubtree                                        
+  ----------------------------------------------------------------------*/
+PtrElement FwdSearchElementAmong5TypesInSubtree (PtrElement pEl, ThotBool test, 
+											   int typeNum5, int typeNum4, 
+											   int typeNum3, int typeNum2, 
+											   int typeNum1, PtrSSchema pSS5, 
+											   PtrSSchema pSS4, PtrSSchema pSS3, 
+											   PtrSSchema pSS2, PtrSSchema pSS1)
+
+{
+  PtrElement          pRet, pChild;
+
+  pRet = NULL;
+  if (test)
+    {
+      if (EquivalentType (pEl, typeNum1, pSS1) ||
+		  EquivalentType (pEl, typeNum2, pSS2) || 
+		  EquivalentType (pEl, typeNum3, pSS3) ||
+		  EquivalentType (pEl, typeNum4, pSS4) ||
+		  EquivalentType (pEl, typeNum5, pSS5) ||
+		  typeNum1 == 0)
+	/* element found */
+	pRet = pEl;
+    }
+  if (pRet == NULL && !pEl->ElTerminal)
+    /* search the children */
+    {
+      pChild = pEl->ElFirstChild;
+      while (pChild != NULL && pRet == NULL)
+	{
+	  pRet = FwdSearchElementAmong5TypesInSubtree (pChild, TRUE, typeNum5, typeNum4, typeNum3,
+		  typeNum2, typeNum1, pSS5, pSS4, pSS3, pSS2, pSS1);
+	  pChild = pChild->ElNext;
+	}
+    }
+  return pRet;
+}
+
+
+
+
+
+/*----------------------------------------------------------------------
+   FwdSearchElemAmong5Types
+   starting from the element pointed by pEl
+   forward searches in the tree an element of type typeNum1 (defined in the
+   structure scheme pointed by pSS1) or of typeNum2 (defined in the
+   structure scheme pointed by pSS2)...and so on... or of typeNum5 (defined in the
+   structure scheme pointed by pSS5)
+
+   If there is a pSSX NULL, the search will stop on any element whose
+   type number is typeNum1 or typeNum2 or... typeNum5, independently
+   of its structure schema.
+
+   The function returns a pointed to the found element or NULL.
+  ----------------------------------------------------------------------*/
+PtrElement FwdSearchElemAmong5Types (PtrElement pEl, int typeNum5, 
+									 int typeNum4, int typeNum3, 
+									 int typeNum2, int typeNum1, 
+									 PtrSSchema pSS5, PtrSSchema pSS4,
+									 PtrSSchema pSS3, PtrSSchema pSS2, 
+									 PtrSSchema pSS1)
+{
+  PtrElement          pRet, pCur, pAsc;
+  ThotBool            stop;
+
+  pRet = NULL;
+  if (pEl != NULL)
+    /* searches the subtree of the element */
+    {
+      pRet = FwdSearchElementAmong5TypesInSubtree (pEl, FALSE, typeNum5, typeNum4, typeNum3,
+		  typeNum2, typeNum1, pSS5, pSS4, pSS3, pSS2, pSS1);
+      if (pRet == NULL)
+	/* if failure, searches the subtrees of the next siblings of the element */
+	{
+	  pCur = pEl->ElNext;
+	  while (pCur && pCur->ElStructSchema && pRet == NULL)
+	    {
+	      pRet = FwdSearchElementAmong5TypesInSubtree (pCur, TRUE, typeNum5, typeNum4, typeNum3,
+			  typeNum2, typeNum1, pSS5, pSS4, pSS3, pSS2, pSS1);
+	      pCur = pCur->ElNext;
+	    }
+	  /* if failure, searches the first ancestor with a next sibling */
+	  if (pRet == NULL)
+	    {
+	      stop = FALSE;
+	      pAsc = pEl;
+	      do
+		{
+		  pAsc = pAsc->ElParent;
+		  if (pAsc == NULL)
+		    stop = TRUE;
+		  else if (pAsc->ElNext != NULL)
+		    stop = TRUE;
+		}
+	      while (!stop);
+	      if (pAsc != NULL)
+		/* verifies if this element is the one we're looking for */
+		{
+		  pAsc = pAsc->ElNext;
+		  if (pAsc != NULL)
+		    {
+		      if (EquivalentType (pAsc, typeNum1, pSS1) || 
+				  EquivalentType (pAsc, typeNum2, pSS2) || 
+				  EquivalentType (pAsc, typeNum3, pSS3) || 
+				  EquivalentType (pAsc, typeNum4, pSS4) || 
+				  EquivalentType (pAsc, typeNum5, pSS5) || 
+				  typeNum1 == 0)
+			pRet = pAsc;	/* found */
+		      else
+			pRet = FwdSearchElemAmong5Types (pAsc, typeNum5, typeNum4, typeNum3,
+			typeNum2, typeNum1, pSS5, pSS4, pSS3, pSS2, pSS1);
+		    }
+		}
+	    }
+	}
+    }
+  return pRet;
+}
+
+
+/* ----------------------------------------------------------------------
+   SearchElementAmong5Types
+
+   Returns the first element typed among the 5 types provided
+   Searching can be done in a tree or starting from a given element
+   towards the beginning of the abstract tree.
+   Parameters:
+   searchedTypeX: types of element to be searched. If searchedTypeX.ElSSchema
+   is NULL, searchedTypeX must be a basic type ; then the next basic
+   element of that type will be returned, whatever its structure
+   schema.
+   scope: SearchForward or SearchInTree.
+   element: the element that is the root of the tree
+   (if scope = SearchInTree) or the starting element
+   (if scope = SearchForward).
+   Return value:
+   the element found, or NULL if no element has been found.
+   ---------------------------------------------------------------------- */
+Element SearchElementAmong5Types (ElementType searchedType1, ElementType searchedType2,
+								  ElementType searchedType3, ElementType searchedType4,
+								  ElementType searchedType5, SearchDomain scope, 
+								  Element element)
+{
+   PtrElement          pEl;
+   PtrElement          elementFound;
+   ThotBool            ok;
+
+   UserErrorCode = 0;
+   elementFound = NULL;
+   ok = TRUE;
+   if (element == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
+   else if (((PtrElement) element)->ElStructSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+   }
+   else if ((searchedType1.ElSSchema == NULL) ||
+	        (searchedType2.ElSSchema == NULL) ||
+			(searchedType3.ElSSchema == NULL) ||
+			(searchedType4.ElSSchema == NULL) ||
+			(searchedType5.ElSSchema == NULL)) 
+     {
+	if ((searchedType1.ElTypeNum > MAX_BASIC_TYPE) ||
+		(searchedType2.ElTypeNum > MAX_BASIC_TYPE) ||
+		(searchedType3.ElTypeNum > MAX_BASIC_TYPE) ||
+		(searchedType4.ElTypeNum > MAX_BASIC_TYPE) ||
+		(searchedType5.ElTypeNum > MAX_BASIC_TYPE))
+	  {
+	     TtaError (ERR_invalid_element_type);
+	     ok = FALSE;
+	  }
+     }
+   else if ((searchedType1.ElTypeNum < 1 ||
+	    searchedType1.ElTypeNum > ((PtrSSchema) (searchedType1.ElSSchema))->SsNRules) ||
+		
+		(searchedType2.ElTypeNum < 1 ||
+	    searchedType2.ElTypeNum > ((PtrSSchema) (searchedType2.ElSSchema))->SsNRules) ||
+		
+		(searchedType3.ElTypeNum < 1 ||
+	    searchedType3.ElTypeNum > ((PtrSSchema) (searchedType3.ElSSchema))->SsNRules) ||
+		
+		(searchedType4.ElTypeNum < 1 ||
+	    searchedType4.ElTypeNum > ((PtrSSchema) (searchedType4.ElSSchema))->SsNRules) ||
+		
+		(searchedType5.ElTypeNum < 1 ||
+	    searchedType5.ElTypeNum > ((PtrSSchema) (searchedType5.ElSSchema))->SsNRules))
+     {
+	TtaError (ERR_invalid_element_type);
+	ok = FALSE;
+     }
+
+   if (ok)
+     {
+	   pEl = FwdSearchElemAmong5Types ((PtrElement) element,
+									   searchedType1.ElTypeNum,
+									   searchedType2.ElTypeNum,
+									   searchedType3.ElTypeNum,
+									   searchedType4.ElTypeNum,
+									   searchedType5.ElTypeNum,
+									   (PtrSSchema) (searchedType1.ElSSchema),
+									   (PtrSSchema) (searchedType2.ElSSchema),
+									   (PtrSSchema) (searchedType3.ElSSchema),
+									   (PtrSSchema) (searchedType4.ElSSchema),
+									   (PtrSSchema) (searchedType5.ElSSchema));
+
+	if (pEl != NULL)
+	   if (scope == SearchInTree)
+	     {
+		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
+		   pEl = NULL;
+	     }
+	if (pEl != NULL)
+	   elementFound = pEl;
+     }
+   return ((Element) elementFound);
+}
+
+
+
