@@ -1673,6 +1673,8 @@ View                view;
 {
    int                 i;
 
+   /* invalid current loading */
+   W3Loading = 0;
    /* free each loaded document */
    for (i = 1; i < DocumentTableLength; i++)
       if (DocumentURLs[i] != NULL)

@@ -309,6 +309,7 @@ NotifyDialog       *event;
 	CleanDocumentCSS (doc);
 	RemoveDocumentImages (doc);
      }
+
    if (!W3Loading)
      {
 	/* is it the last loaded document ? */
