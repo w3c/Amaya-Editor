@@ -268,10 +268,10 @@ void FrameKilled (int *w, int frame, int *info)
   ----------------------------------------------------------------------*/
 static void   CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 {
+   char      *pString;
+   char      *pDest = lpttt->lpszText;
    int        i;
    int        iButton = lpttt->hdr.idFrom;
-   char      *pString;
-   char      *pDest = lpttt->lpszText;
 
    /* Map command ID to string index */
    for (i = 1; FrameTable[frame].ButtonId[i] != -1; i++) {
