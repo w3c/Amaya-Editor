@@ -9,7 +9,6 @@
  * Handles error messages for Thot applications
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -30,184 +29,91 @@ typedef struct _TabMsg
   {
      PtrTabMsg           TabNext;
      int                 TabLength;
-     STRING*             TabMessages;
+     char              **TabMessages;
   }
 TabMsg;
 
  /* Identification des messages Thot */
-static PtrTabMsg    FirstTableMsg = NULL;
-static CHAR_T       EmptyMsg [1];
-static CHAR_T       result[MAX_TXT_LEN];
-static char         ISOresult[MAX_TXT_LEN];
+static PtrTabMsg       FirstTableMsg = NULL;
+static unsigned char   EmptyMsg [1];
+static unsigned char   result[MAX_TXT_LEN];
 
 #include "dialogapi_f.h"
 #include "memory_f.h"
 #include "message_f.h"
 #include "registry_f.h"
-#include "ustring_f.h"
 
-#ifdef _WINDOWS
-#define isascii(c) __isascii(c)
-#endif
 
 /*----------------------------------------------------------------------
    AsciiTranslate convertit les code d'accents du fichier de message 
    en accents.                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T*             AsciiTranslate (CHAR_T* pBuffer)
-#else  /* __STDC__ */
-CHAR_T*             AsciiTranslate (pBuffer)
-CHAR_T*             pBuffer;
-
-#endif /* __STDC__ */
+unsigned char *AsciiTranslate (char *pBuffer)
 {
-   CHAR_T              nombre[4];
-   int                 uniteid, dixid, centid;
-   int                 i = 0, j = 0, k;
+  unsigned char       number[4];
+  int                 uniteid, dixid, centid;
+  int                 i = 0, j = 0, k;
 
-   while (pBuffer[i] != WC_EOS)
-     {
-	/* On lit jusqu'au premier backslash rencontre */
-	while ((pBuffer[i] != '\\') && (pBuffer[i] != WC_EOS))
-	   result[j++] = pBuffer[i++];
+  while (pBuffer[i] != EOS)
+    {
+      /* On lit jusqu'au premier backslash rencontre */
+      while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
+	result[j++] = pBuffer[i++];
 
-	/* Teste si on est en presence de deux backslashs ou */
-	/* si on se trouve devant un caractere special */
-	if (pBuffer[i] != WC_EOS)
-	  {
-	   if (pBuffer[i + 1] == '\\')
-	     {
-		/* On est dans le cas de deux backslashs consecutifs;
-		   on les prend */
-		result[j++] = pBuffer[i++];
-		result[j++] = pBuffer[i++];
-	     }
-	   else if (pBuffer[i + 1] == 'n')
-	     {
-		/* On est dans le cas d'un \n */
-		i += 2;
-		result[j++] = '\n';
-	     }
-	   else
-	     {
-		/* on saute le backslash */
-		i++;
-		/* on construit le nombre correspondant au caractere */
-		k = 0;
-		while ((pBuffer[i] >= '0')
-		       && (pBuffer[i] <= '9')
-		       && (pBuffer[i] != WC_EOS)
-		       && (k <= 2))
-		   nombre[k++] = pBuffer[i++];
-		nombre[k] = WC_EOS;
+      /* Teste si on est en presence de deux backslashs ou */
+      /* si on se trouve devant un caractere special */
+      if (pBuffer[i] != EOS)
+	{
+	  if (pBuffer[i + 1] == '\\')
+	    {
+	      /* On est dans le cas de deux backslashs consecutifs;
+		 on les prend */
+	      result[j++] = pBuffer[i++];
+	      result[j++] = pBuffer[i++];
+	    }
+	  else if (pBuffer[i + 1] == 'n')
+	    {
+	      /* On est dans le cas d'un \n */
+	      i += 2;
+	      result[j++] = '\n';
+	    }
+	  else
+	    {
+	      /* on saute le backslash */
+	      i++;
+	      /* on construit le number correspondant au caractere */
+	      k = 0;
+	      while (pBuffer[i] >= '0' && pBuffer[i] <= '9' &&
+		     pBuffer[i] != EOS && k <= 2)
+		number[k++] = pBuffer[i++];
+	      number[k] = EOS;
 
-		switch (ustrlen (nombre))
-		      {
-			 case 0:
-			    result[j++] = pBuffer[i++];
-			    break;
-			 case 1:
-			    uniteid = nombre[0] - '0';
-			    result[j++] = uniteid;
-			    break;
-			 case 2:
-			    uniteid = nombre[1] - '0';
-			    dixid = nombre[0] - '0';
-			    result[j++] = uniteid + 8 * dixid;
-			    break;
-			 case 3:
-			    uniteid = nombre[2] - '0';
-			    dixid = nombre[1] - '0';
-			    centid = nombre[0] - '0';
-			    result[j++] = uniteid + 8 * dixid + 64 * centid;
-			    break;
-		      }
-	     }
-	  }
-     }
-   result[j] = WC_EOS;
-   return (result);
-}
-
-/*----------------------------------------------------------------------
-   AsciiTranslate convertit les code d'accents du fichier de message 
-   en accents.                                             
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-char*               ISOAsciiTranslate (char* pBuffer)
-#else  /* __STDC__ */
-char*               ISOAsciiTranslate (pBuffer)
-char*               pBuffer;
-
-#endif /* __STDC__ */
-{
-   char                nombre[4];
-   int                 uniteid, dixid, centid;
-   int                 i = 0, j = 0, k;
-
-   while (pBuffer[i] != EOS)
-     {
-	/* On lit jusqu'au premier backslash rencontre */
-	while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
-	   ISOresult[j++] = pBuffer[i++];
-
-	/* Teste si on est en presence de deux backslashs ou */
-	/* si on se trouve devant un caractere special */
-	if (pBuffer[i] != EOS)
-	  {
-	   if (pBuffer[i + 1] == '\\')
-	     {
-		/* On est dans le cas de deux backslashs consecutifs;
-		   on les prend */
-		ISOresult[j++] = pBuffer[i++];
-		ISOresult[j++] = pBuffer[i++];
-	     }
-	   else if (pBuffer[i + 1] == 'n')
-	     {
-		/* On est dans le cas d'un \n */
-		i += 2;
-		ISOresult[j++] = '\n';
-	     }
-	   else
-	     {
-		/* on saute le backslash */
-		i++;
-		/* on construit le nombre correspondant au caractere */
-		k = 0;
-		while ((pBuffer[i] >= '0')
-		       && (pBuffer[i] <= '9')
-		       && (pBuffer[i] != EOS)
-		       && (k <= 2))
-		   nombre[k++] = pBuffer[i++];
-		nombre[k] = EOS;
-
-		switch (strlen (nombre))
-		      {
-			 case 0:
-			    ISOresult[j++] = pBuffer[i++];
-			    break;
-			 case 1:
-			    uniteid = nombre[0] - '0';
-			    ISOresult[j++] = uniteid;
-			    break;
-			 case 2:
-			    uniteid = nombre[1] - '0';
-			    dixid = nombre[0] - '0';
-			    ISOresult[j++] = uniteid + 8 * dixid;
-			    break;
-			 case 3:
-			    uniteid = nombre[2] - '0';
-			    dixid = nombre[1] - '0';
-			    centid = nombre[0] - '0';
-			    ISOresult[j++] = uniteid + 8 * dixid + 64 * centid;
-			    break;
-		      }
-	     }
-	  }
-     }
-   ISOresult[j] = EOS;
-   return (ISOresult);
+	      switch (strlen (number))
+		{
+		case 0:
+		  result[j++] = pBuffer[i++];
+		  break;
+		case 1:
+		  uniteid = number[0] - '0';
+		  result[j++] = uniteid;
+		  break;
+		case 2:
+		  uniteid = number[1] - '0';
+		  dixid = number[0] - '0';
+		  result[j++] = uniteid + 8 * dixid;
+		  break;
+		case 3:
+		  uniteid = number[2] - '0';
+		  dixid = number[1] - '0';
+		  centid = number[0] - '0';
+		  result[j++] = uniteid + 8 * dixid + 64 * centid;
+		  break;
+		}
+	    }
+	}
+    }
+  result[j] = EOS;
+  return (result);
 }
 
 
@@ -218,36 +124,24 @@ char*               pBuffer;
    identifie' par la valeur origine rendue par la fonction.        
    La fonction rend la valeur -1 si la table n'est pas alloue'e.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaGetMessageTable (CONST CHAR_T* msgName, int msgNumber)
-#else  /* __STDC__ */
-int                 TtaGetMessageTable (msgName, msgNumber)
-CONST CHAR_T*       msgName;
-int                 msgNumber;
-
-#endif /* __STDC__ */
+int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 {
-  FILE*               file;
-  int                 origineid;
-  int                 num;
+  FILE               *file;
   PtrTabMsg           currenttable;
   PtrTabMsg           previoustable;
-  CHAR_T             *s;
-  CHAR_T             *string;
-  CHAR_T              pBuffer[MAX_TXT_LEN];
-  CHAR_T              fileName[MAX_TXT_LEN];
   CHARSET             encoding;
+  char                pBuffer[MAX_TXT_LEN];
+  char                fileName[MAX_TXT_LEN];
   unsigned char       pBuff[MAX_TXT_LEN];
-#ifdef _I18N_
-  unsigned char      *ptrBuff;
-#endif
+  int                 origineid;
+  int                 num;
 
   /* contruction du nom $THOTDIR/bin/$LANG-msgName */
-  ustrcpy (fileName, TtaGetVarLANG ());
+  strcpy (fileName, TtaGetVarLANG ());
   fileName[2] = '-';
   ustrcpy (&fileName[3], msgName);
   SearchFile (fileName, 2, pBuffer);
-  file = ufopen (pBuffer, "r"); 
+  file = fopen (pBuffer, "r"); 
   if (file == NULL)
     {
       printf ("WARNING: cannot open file %s\n", pBuffer);
@@ -257,7 +151,7 @@ int                 msgNumber;
     {
       /* Alloue une nouvelle table */
       currenttable = (PtrTabMsg) TtaGetMemory (sizeof (struct _TabMsg));
-      currenttable->TabMessages = (STRING*) TtaGetMemory (sizeof (STRING) * msgNumber);
+      currenttable->TabMessages = (char **) TtaGetMemory (sizeof (char *) * msgNumber);
       currenttable->TabNext = NULL;
       currenttable->TabLength = msgNumber;
       for (num = 0; num < msgNumber; num++)
@@ -295,21 +189,10 @@ int                 msgNumber;
 	  encoding = ISO_8859_1;
 	}
 
-      /* Charge les messages */
-      while ((fscanf (file, "%d %[^#\r\n]", &num, pBuff)) != EOF &&
+      /* Load messages */
+      while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&
 	     num < msgNumber)
-	{
-#ifdef _I18N_
-	  string = TtaAllocString (MAX_TXT_LEN);
-	  ptrBuff = pBuff;
-	  TtaMBS2WCS (&ptrBuff, &string, encoding);
-#else /* !_I18N_ */
-	  string = pBuff;
-#endif /* !_I18N_ */
-	  s = TtaAllocString (ustrlen (string) + 1);
-	  ustrcpy (s, AsciiTranslate (string));
-	  currenttable->TabMessages[num] = s;
-	}
+	currenttable->TabMessages[num] = TtaStrdup (pBuff);
       fclose (file);
     }
   return (origineid);
@@ -319,7 +202,7 @@ int                 msgNumber;
 /*----------------------------------------------------------------------
   FreeAllMessages
   ----------------------------------------------------------------------*/
-void              FreeAllMessages ()
+void FreeAllMessages ()
 {
    int                 i;
    PtrTabMsg           currenttable;
@@ -340,14 +223,7 @@ void              FreeAllMessages ()
    TtaGetMessage retourne le message correspondant a` l'origine et 
    l'indice 0 a` N donne'.                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-STRING              TtaGetMessage (int origin, int num)
-#else  /* __STDC__ */
-STRING              TtaGetMessage (origin, num)
-int                 origin;
-int                 num;
-
-#endif /* __STDC__ */
+char *TtaGetMessage (int origin, int num)
 {
    int                 i;
    PtrTabMsg           currenttable;
@@ -381,102 +257,88 @@ int                 num;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaDisplayMessage (int msgType, STRING fmt,...)
-#else  /* __STDC__ */
-void                TtaDisplayMessage (msgType, fmt,...)
-int                 msgType;
-STRING              fmt;
-#endif /* __STDC__ */
+void TtaDisplayMessage (int msgType, char *fmt,...)
 {
+#ifndef _WINDOWS
    va_list             pa;
    int                 i, lg, vald;
-   STRING              vals, p;
-   CHAR_T              pBuffer[MAX_PATH];
-
-#  ifdef _WINDOWS
-   int len = ustrlen (fmt);
-    for (i = 0; i < len; i++)
-        if (fmt [i] == '\n')
-           fmt [i] = SPACE;
-#  endif /* _WINDOWS */
+   char               *vals, *p;
+   char                pBuffer[MAX_PATH];
 
    if (fmt)
      {
-      /* construct the final message */
-#     ifdef STDC_HEADERS
-      va_start (pa, fmt);
-#     else  /* STDC_HEADERS */
-      va_start (pa);
-#     endif /* STDC_HEADERS */
-      i = 0;
-      for (p = fmt; *p && i + 1 < MAX_PATH; p++)
-	{
-          if (*p != '%') 
+       /* construct the final message */
+#ifdef STDC_HEADERS
+       va_start (pa, fmt);
+#else  /* STDC_HEADERS */
+       va_start (pa);
+#endif /* STDC_HEADERS */
+       i = 0;
+       for (p = fmt; *p && i + 1 < MAX_PATH; p++)
+	 {
+	   if (*p != '%') 
              pBuffer[i++] = *p;
-          else {
+	   else
+	     {
                p++;
                switch (*p)
 		 {
-                      case 'd':
-                           /* it is a value */
-                           vald = va_arg (pa, int);
-
-                           if (i + 10 < MAX_PATH)
-			     {
-                              usprintf (&pBuffer[i], "%d", vald);
-                              i += ustrlen (&pBuffer[i]);
-			     }
-			   else
-			     i = MAX_PATH;
-			   break;
-
-                      case 's':
-                           /* it is a string */
-                           /* vals = va_arg (pa, char*); */
-                           vals = va_arg (pa, STRING);
-			   if (vals)
-			     {
-			       lg = ustrlen (vals);
-			       if (i + lg < MAX_PATH)
-				 {
-				   ustrcpy (&pBuffer[i], vals);
-				   i += lg;
-				 }
-			       else
-				 i = MAX_PATH;
-			     }
-                           break;
-
-                      default:
-                              /* other value not allowed */
-                              pBuffer[i++] = *p;
-                              break;
+		 case 'd':
+		   /* it is a value */
+		   vald = va_arg (pa, int);
+		   if (i + 10 < MAX_PATH)
+		     {
+		       usprintf (&pBuffer[i], "%d", vald);
+		       i += ustrlen (&pBuffer[i]);
+		     }
+		   else
+		     i = MAX_PATH;
+		   break;
+		 case 's':
+		   /* it is a string */
+		   /* vals = va_arg (pa, char*); */
+		   vals = va_arg (pa, char *);
+		   if (vals)
+		     {
+		       lg = ustrlen (vals);
+		       if (i + lg < MAX_PATH)
+			 {
+			   ustrcpy (&pBuffer[i], vals);
+			   i += lg;
+			 }
+		       else
+			 i = MAX_PATH;
+		     }
+		   break;
+		 default:
+		   /* other value not allowed */
+		   pBuffer[i++] = *p;
+		   break;
 		 } 
-	  } 
-	} 
-      /* Display the final message */
-      pBuffer[i] = EOS;
-      if (msgType == CONFIRM)
-	DisplayConfirmMessage (pBuffer);
-      else
-	DisplayMessage (pBuffer, msgType);
-   }
+	     } 
+	 } 
+       /* Display the final message */
+       pBuffer[i] = EOS;
+       if (msgType == CONFIRM)
+	 DisplayConfirmMessage (pBuffer);
+       else
+	 DisplayMessage (pBuffer, msgType);
+     }
+#endif /* _WINDOWS */
 }
 
 
 /*----------------------------------------------------------------------
    TtaDisplaySimpleMessage construit un message simple.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaDisplaySimpleMessage (int msgType, int origin, int number)
-#else  /* __STDC__ */
-void                TtaDisplaySimpleMessage (msgType, origin, number)
-int                 msgType;
-int                 origin;
-int                 number;
-
-#endif /* __STDC__ */
+void TtaDisplaySimpleMessage (int msgType, int origin, int number)
 {
-   TtaDisplayMessage (msgType, TtaGetMessage (origin, number));
+  char        *ptr;
+
+  ptr = TtaGetMessage (origin, number);
+#ifdef _WINDOWS
+    MessageBox (NULL, ptr, "Fatal error", MB_ICONERROR);
+#else  /* _WINDOWS */
+   TtaDisplayMessage (msgType, ptr);
+#endif /* _WINDOWS */
 }

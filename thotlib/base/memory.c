@@ -162,11 +162,7 @@ void               *TtaGetMemory (unsigned int n)
   res = malloc ((size_t) n);
 
   if (!res)
-#ifdef _WINDOWS
-    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_ENOUGH_MEMORY), "Amaya: fatal error", MB_ICONERROR);
-#else  /* _WINDOWS */
-  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-#endif /* _WINDOWS */
+    TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
   return (res);
 }
 

@@ -6,15 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern CHAR_T* AsciiTranslate ( CHAR_T* pBuffer );
-extern char* ISOAsciiTranslate ( char* pBuffer );
-extern int TtaGetMessageTable ( CONST CHAR_T* msgName,
+extern unsigned char *AsciiTranslate ( char *pBuffer );
+extern int TtaGetMessageTable ( CONST char *msgName,
                                 int msgNumber );
 extern void FreeAllMessages ( void );
-extern STRING TtaGetMessage ( int origin,
-                              int num );
+extern char *TtaGetMessage ( int origin,
+                             int num );
 extern void TtaDisplayMessage ( int msgType,
-                                STRING fmt,
+                                char *fmt,
                                 ... );
 extern void TtaDisplaySimpleMessage ( int msgType,
                                       int origin,
@@ -22,15 +21,14 @@ extern void TtaDisplaySimpleMessage ( int msgType,
 
 #else /* __STDC__ */
 
-extern CHAR_T* AsciiTranslate (/* CHAR_T* pBuffer */);
-extern char* ISOAsciiTranslate (/* char* pBuffer */);
-extern int TtaGetMessageTable (/* CONST CHAR_T* msgName,
+extern unsigned char *AsciiTranslate (/* char *pBuffer */);
+extern int TtaGetMessageTable (/* CONST char *msgName,
                                   int msgNumber */);
 extern void FreeAllMessages (/* void */);
-extern STRING TtaGetMessage (/* int origin,
-                                int num */);
+extern char *TtaGetMessage (/* int origin,
+                               int num */);
 extern void TtaDisplayMessage (/* int msgType,
-                                  STRING fmt,
+                                  char *fmt,
                                   ... */);
 extern void TtaDisplaySimpleMessage (/* int msgType,
                                         int origin,

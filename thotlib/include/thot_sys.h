@@ -113,6 +113,7 @@ typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
 /* added functions */
 void bzero (void *s, size_t n);
 int _getpid (void);
+#define isascii(c) __isascii(c)
 #define strcasecmp(a, b) _stricmp(a, b)
 #define index(str, ch) strchr(str, ch)
 /* function mappings */

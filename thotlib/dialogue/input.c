@@ -1423,7 +1423,7 @@ ThotTranslations      InitTranslations (char *appliname)
 		  if (!strcmp (ch, "TtcInsertChar"))
 		    {
 		      strcat (text, "insert-string(");
-		      strcat (text, ISOAsciiTranslate (&adr[1]));
+		      strcat (text, AsciiTranslate (&adr[1]));
 		    }
 		  else if (!strcmp (ch, "TtcDeleteSelection"))
 		    strcat (text, "delete-selection()");
@@ -1449,10 +1449,10 @@ ThotTranslations      InitTranslations (char *appliname)
 		  /* C'est l'action insert-string */
 		  /* FnCopy la ligne dans le source de la table de translations */
 		  strcat (text, line);
-		  strcat (text, ISOAsciiTranslate (transText));
+		  strcat (text, AsciiTranslate (transText));
 		  strcat (text, "\n");
 		  /* C'est un encodage de caractere */
-		  adr = ISOAsciiTranslate (&transText[len]);
+		  adr = AsciiTranslate (&transText[len]);
 		  MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, (unsigned int) adr[0], 0);
 		}
 	      else if (i < max)
