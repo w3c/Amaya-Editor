@@ -32,7 +32,8 @@ extern ThotBool StartXmlSubTreeParser ( FILE *infile,
                                         ThotBool *isclosed,
                                         Language lang,
                                         int *nbLineRead,
-                                        int *nbCharRead );
+                                        int *nbCharRead,
+                                        ThotBool *endOfFile );
 extern void StartXmlParser ( Document doc,
                              CHAR_T* htmlFileName,
                              CHAR_T* documentName,
@@ -69,7 +70,8 @@ extern ThotBool StartXmlSubTreeParser (/* FILE *infile,
                                           ThotBool *isclosed,
                                           Language lang,
                                           int *nbLineRead,
-                                          int *nbCharRead */);
+                                          int *nbCharRead,
+                                          ThotBool *endOfFile */);
 extern void StartXmlParser (/* Document doc,
                                CHAR_T* htmlFileName,
                                CHAR_T* documentName,

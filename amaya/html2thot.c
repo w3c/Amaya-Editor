@@ -407,6 +407,11 @@ static int	    LastCharInPreviousFileBuffer = 0;
 static int          PreviousNumberOfLinesRead = 0;
 static int          PreviousNumberOfCharRead = 0;
 
+/* Boolean that indicates the end of a HTML file */
+/* It is a static variable because it is used in parameter */
+/* for the call of the new XML parser (EndOfStartGI) */
+static ThotBool     EndOfHtmlFile;
+
 /* input buffer */
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
@@ -3109,10 +3114,7 @@ CHAR_T              c;
 	  else
 	    CurrentBufChar = StartOfTagIndx;
 	  /* Parse the corresponding element with the XML parser */
-	  /*
-	  printf ("    CurrentBufChar = %d, NumberOfCharRead = %d, NumberOfLinesRead= %d\n", CurrentBufChar, NumberOfCharRead, NumberOfLinesRead);
-	  */
-#ifdef LC
+#ifdef EXPAT_PARSER
 	  if (!StartXmlSubTreeParser (stream,
 				      FileBuffer,
 				      &CurrentBufChar,
@@ -3122,7 +3124,8 @@ CHAR_T              c;
 				      &HTMLcontext.lastElementClosed,
 				      HTMLcontext.language,
 				      &NumberOfLinesRead,
-				      &NumberOfCharRead))
+				      &NumberOfCharRead,
+				      &EndOfHtmlFile))
 	    StopParsing ();   /* the XML parser raised an error */
 #else /* EXPAT_PARSER */
 	  if (!ustrcmp (theGI, TEXT("math")))
@@ -3137,9 +3140,6 @@ CHAR_T              c;
 #endif /* EXPAT_PARSER */
 	  /* the whole element has been read by the XML parser */
 	  /* reset the automaton state */
-	  /*
-	  printf ("    CurrentBufChar = %d, NumberOfCharRead = %d, NumberOfLinesRead= %d\n", CurrentBufChar, NumberOfCharRead, NumberOfLinesRead);
-	  */
 	  NormalTransition = FALSE;
 	  currentState = 0;
 	  CharProcessed = TRUE;
@@ -5216,13 +5216,12 @@ char*              HTMLbuf;
    UCHAR_T             charRead; 
    ThotBool            match;
    PtrTransition       trans;
-   ThotBool            endOfFile;
 
    currentState = 0;
    if (HTMLbuf != NULL || infile != NULL)
       {
       InputText = HTMLbuf;
-      endOfFile = FALSE;
+      EndOfHtmlFile = FALSE;
       }
    charRead = WC_EOS;
    HTMLrootClosed = FALSE;
@@ -5233,7 +5232,7 @@ char*              HTMLbuf;
 	/* read one character from the source if the last character */
 	/* read has been processed */
 	if (charRead == WC_EOS)
-	  charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfFile);
+	  charRead = GetNextInputChar (infile, &CurrentBufChar, &EndOfHtmlFile);
 	if (charRead != WC_EOS)
 	  {
 	     /* Check the character read */
@@ -5431,7 +5430,7 @@ char*              HTMLbuf;
 	       }
 	  }
      }
-   while (!endOfFile && !HTMLrootClosed);
+   while (!EndOfHtmlFile && !HTMLrootClosed);
    /* end of HTML file */
 
    if (!HTMLrootClosed)
@@ -5465,16 +5464,17 @@ STRING	           pathURL;
   Element             parent, el, prev;
   ElementType         elType;
   UCHAR_T             charRead;
-  ThotBool            endOfFile;
+  ThotBool            endOfTextFile;
 
   InputText = textbuf;
   LgBuffer = 0;
-  endOfFile = FALSE;
+  endOfTextFile = FALSE;
   NumberOfCharRead = 0;
   NumberOfLinesRead = 1; 
+  CurrentBufChar = 0;
 
   /* initialize input buffer */
-  charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfFile);
+  charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
   parent = TtaGetMainRoot (doc);
   elType = TtaGetElementType (parent);
   el = TtaGetLastChild (parent);
@@ -5502,7 +5502,7 @@ STRING	           pathURL;
   prev = el = NULL;
 
   /* read the text file sequentially */
-  while (!endOfFile)
+  while (!endOfTextFile)
     {
       if (el == NULL)
 	{
@@ -5556,7 +5556,7 @@ STRING	           pathURL;
 	}
 
       /* read next character from the source */
-      charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfFile);
+      charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
     }
   /* close the document */
   if (LgBuffer != 0)
@@ -5595,7 +5595,7 @@ CHARSET        *charset;
   char         *ptr, *end, *org;
   char          charsetname[MAX_LENGTH];
   int           res, i, j, k;
-  ThotBool      endOfFile, beginning;
+  ThotBool      endOfSniffedFile, beginning;
   ThotBool      found;
 
   *xmlDec = FALSE;
@@ -5609,16 +5609,16 @@ CHARSET        *charset;
     {
       InputText = NULL;
       LgBuffer = 0;
-      endOfFile = FALSE;
+      endOfSniffedFile = FALSE;
       beginning = TRUE;
-      while (!endOfFile)
+      while (!endOfSniffedFile)
 	{
 	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
 	  if (res >= 5)
 	    FileBuffer[res] = EOS;
 	  /* check if the file contains "<?xml ..." */
 	  i = 0;
-	  endOfFile = (res < INPUT_FILE_BUFFER_SIZE);
+	  endOfSniffedFile = (res < INPUT_FILE_BUFFER_SIZE);
 	  found = TRUE;
 	  while (found)
 	    {
@@ -5679,7 +5679,7 @@ CHARSET        *charset;
 		      *docType = TRUE;
 		      /* it's not necessary to continue */
 		      found = FALSE;
-		      endOfFile = TRUE;
+		      endOfSniffedFile = TRUE;
 		      end = strstr (&FileBuffer[i], ">");
 		      /* check the current DOCTYPE */
 		      ptr = strstr (&FileBuffer[i], "HTML");
@@ -5716,7 +5716,7 @@ CHARSET        *charset;
 		      i += 5;
 		      /* it's not necessary to continue */
 		      found = FALSE;
-		      endOfFile = TRUE;
+		      endOfSniffedFile = TRUE;
 		      /* by default all HTML tags are accepted */
 		      *parsingLevel = L_Transitional;
 		      end = strstr (&FileBuffer[i], ">");
@@ -5743,12 +5743,12 @@ CHARSET        *charset;
 		      /* it's not a comment */
 		      /* stop the analyze */
 		      found = FALSE;
-		      endOfFile = TRUE;
+		      endOfSniffedFile = TRUE;
 		    }
 		}
 	      else
 		/* it's not necessary to continue */
-		endOfFile = TRUE;
+		endOfSniffedFile = TRUE;
 	      /* we're no longer parsing the beginning of the file */
 	      beginning = FALSE;
 	    }
@@ -6819,6 +6819,10 @@ Document            doc;
    AfterTagPRE = FALSE;
    HTMLcontext.parsingCSS = FALSE;
    CurrentBufChar = 0;
+
+   /* initialize the error file */
+   ErrFile = (FILE*) 0;
+   ErrFileName[0] = WC_EOS;
  }
 
 /*----------------------------------------------------------------------
@@ -7095,8 +7099,10 @@ ThotBool            plainText;
 	/* save the path or URL of the document */
 	TtaExtractName (pathURL, temppath, tempname);
 	TtaSetDocumentDirectory (doc, temppath);
+
 	/* disable auto save */
 	TtaSetDocumentBackUpInterval (doc, 0);
+	
 	/* parse the input file and build the Thot document */
 	if (plainText)
 	  ReadTextFile (stream, NULL, doc, pathURL);

@@ -3521,18 +3521,16 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   StartSubXmlParser
-   Parse the current file (or buffer) starting at the current position
-   and  build the corresponding Thot abstract tree.
+   StartXmlSubTreeParser
+   Parses the current file (or buffer) starting at the current position
+   and complete the corresponding Thot abstract tree.
 
-   DTDname: name of the DTD to be used
    doc: document to which the abstract tree belongs
    el: the previous sibling (if isclosed) or parent of the tree to be built
    lang: current language
-   closingTag: name of the tag that should terminate the tree to be parsed.
    buflen: length of the buffer used in HTML parser
 
-   Return TRUE if the parsing is complete.
+   Return TRUE if the parsing of the sub-tree has no error.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool    StartXmlSubTreeParser (FILE *infile,
@@ -3544,7 +3542,8 @@ ThotBool    StartXmlSubTreeParser (FILE *infile,
 				   ThotBool *isclosed,
 				   Language lang,
 				   int  *nbLineRead,
-				   int  *nbCharRead)
+				   int  *nbCharRead,
+				   ThotBool *endOfFile)
 #else
 ThotBool    StartXmlSubTreeParser (infile,
 				   htmlBuffer,
@@ -3555,7 +3554,8 @@ ThotBool    StartXmlSubTreeParser (infile,
 				   isclosed,
 				   lang,
 				   nbLineRead,
-				   nbCharRead)
+				   nbCharRead,
+				   endOfFile)
 FILE      *infile;
 char      *htmlBuffer;
 int       *index;
@@ -3566,14 +3566,16 @@ ThotBool  *isclosed;
 Language   lang;
 int       *nbLineRead;
 int       *nbCharRead;
+ThotBool  *endOfFile;
 #endif
 {
   int        error;
-  ThotBool   endOfFile = FALSE;
+  ThotBool   endOfParsing = FALSE;
   int        res;
   int        tmpLen = 0;
   int        offset = 0;
-  CHAR_T    *tmpBuffer;
+  CHAR_T    *tmpBuffer = NULL;
+  int        i;
 
   printf ("\n StartXmlSubTreeParser\n");
 
@@ -3609,12 +3611,14 @@ int       *nbCharRead;
   extraOffset = 0;
 
   /* Parse virtual DECL_XML */
+  /*
   if (!XML_Parse (parser, DECL_XML, DECL_XML_LEN, 0))
     {
       XmlParseError (XMLcontext.doc,
 		     (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
       XMLabort = TRUE;
     }
+  */
   /* Parse virtual DOCTYPE */
   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
     {
@@ -3629,18 +3633,21 @@ int       *nbCharRead;
     }
 
   /* Parse the input file and complete the Thot document */
-  while (!endOfFile && !XMLabort)
+  while (!endOfParsing && !XMLabort)
     {
       if (*index == 0)
+	/* read the HTML/XML file sequentialy */
 	{
 	  res = gzread (infile, htmlBuffer, fileBufferLength);
 	  if (res < fileBufferLength)
-	    endOfFile = TRUE;
-
-	  if (!XML_Parse (parser, htmlBuffer, res, endOfFile))
+	    {
+	      *endOfFile = TRUE;
+	      endOfParsing = TRUE;
+	    }
+	  if (!XML_Parse (parser, htmlBuffer, res, *endOfFile))
 	    {
 	      if (XMLrootClosed)
-		  endOfFile = TRUE;
+		  endOfParsing = TRUE;
 	      else
 		{
 		  XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
@@ -3650,14 +3657,15 @@ int       *nbCharRead;
 	}
       else
 	{    
+	  /* parse the HTML/XML buffer */
 	  tmpLen = strlen (htmlBuffer) - *index;
 	  tmpBuffer = TtaGetMemory (tmpLen);
-	  ustrcpy (tmpBuffer, (&htmlBuffer[*index]));
-	  
-	  if (!XML_Parse (parser, tmpBuffer, tmpLen, endOfFile))
+	  for (i = 0; i < tmpLen; i++)
+	    tmpBuffer[i] = htmlBuffer[*index + i];	  
+	  if (!XML_Parse (parser, tmpBuffer, tmpLen, *endOfFile))
 	    {
 	      if (XMLrootClosed)
-		  endOfFile = TRUE;
+		  endOfParsing = TRUE;
 	      else
 		{
 		  XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
@@ -3667,9 +3675,8 @@ int       *nbCharRead;
 	  else
 	    {
 	      *index = 0;
-	      extraOffset = XML_GetCurrentByteIndex (parser);
+	      extraOffset =  extraOffset + tmpLen;
 	    }
-	  TtaFreeMemory (tmpBuffer);   
 	}
     }
 
@@ -3689,6 +3696,9 @@ int       *nbCharRead;
   *isclosed = XMLcontext.lastElementClosed;
 
   /* Free expat parser */ 
+  if (tmpBuffer != NULL)   
+    TtaFreeMemory (tmpBuffer);   
+
   FreeXmlParserContexts ();
   FreeExpatParser ();
 
@@ -3962,6 +3972,10 @@ ThotBool    withDoctype;
 	/* initialize parsing environment */
 	InitializeXmlParsingContext (NULL, FALSE, 0);
 	
+	/* initialize the error file */
+	ErrFile = (FILE*) 0;
+	ErrFileName[0] = WC_EOS;
+
 	/* Specific initialization for expat */
 	InitializeExpatParser ();
 	

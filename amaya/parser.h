@@ -80,10 +80,6 @@ typedef struct _XhtmlEntity
 }
 XhtmlEntity;
 
-/* information about the error file */
-static FILE*        ErrFile = (FILE*) 0;
-static CHAR_T       ErrFileName [80];
-
 #endif /* PARSER_H */
 
 

@@ -314,6 +314,8 @@ THOT_EXPORT ThotBool     SelectionInQuote;
 THOT_EXPORT ThotBool     SelectionInBDO;
 THOT_EXPORT ThotBool     HTMLErrorsFound;
 THOT_EXPORT ThotBool     XMLabort;
+THOT_EXPORT FILE*        ErrFile;
+THOT_EXPORT CHAR_T       ErrFileName [80];
 typedef enum
 {
   docHTML,
