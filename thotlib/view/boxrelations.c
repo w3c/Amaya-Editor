@@ -20,8 +20,16 @@
 #include "typemedia.h"
 #include "frame.h"
 
+#ifdef _GL
+#include "content.h"
+#endif /* _GL */
+
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
+#ifdef _GL
+#include "frame_tv.h"
+#endif /* _GL */
+
 
 #include "absboxes_f.h"
 #include "appli_f.h"
@@ -993,18 +1001,12 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 #ifdef _GL
 	  if (pRefBox->BxAbstractBox &&
 	      pRefBox->BxAbstractBox->AbElement &&
-	      pRefBox->BxAbstractBox->AbElement->ElSystemOrigin)
-	    {
-	      if (pRefBox->BxAbstractBox->AbNext != pAb)
-		{
-		  x = 0;
-		  y = 0;
-		}
-	      else
-		{
-		  x = pRefBox->BxXOrg;
-		  y = pRefBox->BxYOrg;
-		}
+	      pRefBox->BxAbstractBox->AbElement->ElSystemOrigin && 
+	      pRefBox->BxAbstractBox->AbNext != pAb &&
+	      FrameTable[frame].FrView == 1)
+	    {	      
+	      x = 0;
+	      y = 0;
 	    }
 	  else
 	    {
