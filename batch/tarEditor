@@ -25,6 +25,9 @@ do
    Thot/COPYRIGHT \
    Thot/AboutThot \
    Thot/README.2.0b \
+   Thot/batch/PRESEN.GRM \
+   Thot/batch/STRUCT.GRM \
+   Thot/batch/TRANS.GRM \
    Thot/doc/languages.html \
    Thot/doc/languages.toc.html \
    Thot/doc/thoteditor/Bilbon.gif \

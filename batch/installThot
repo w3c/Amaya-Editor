@@ -8,6 +8,8 @@ DIR=/afs/.inria.fr/common/usr/local/thot/$THOTVERSION
 echo "Intallation version " $DIR
 mkdir $DIR
 
+ mkdir $DIR/batch
+   cp -p Thot/batch/*.GRM $DIR/batch/
  mkdir $DIR/config
    cp -p Thot/config/XKeysymDB $DIR/config/
    cp -p Thot/config/thot.ini $DIR/config/
@@ -91,6 +93,8 @@ DIR=/mnt/thot/$THOTVERSION
 echo "Intallation version " $DIR
 mkdir $DIR
 
+ mkdir $DIR/batch
+   cp -p Thot/batch/*.GRM $DIR/batch/
  mkdir $DIR/config
    cp -p Thot/config/XKeysymDB $DIR/config/
    cp -p Thot/config/thot.ini $DIR/config/
