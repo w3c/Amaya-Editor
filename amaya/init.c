@@ -1233,8 +1233,10 @@ CHAR_T*          label;
 #endif /* _WINDOWS */
 }
 
+
+#ifndef _WINDOWS
 /*-------------------------------------------------------------------------
-  FileBrowserForm
+  BrowserForm
   Initializes a form that ask the URI of the opened or new created document.
   -------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1285,6 +1287,7 @@ View              view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FileBrowserForm, FALSE);
 }
+#endif
 
 /*----------------------------------------------------------------------
   InitOpenDocForm initializes a form that ask the URI of the opened or
@@ -4252,7 +4255,10 @@ CHAR_T*             data;
      case FileBrowserForm:
        if (val == 1)
 	 {
-	   /* Confirm */
+	   /* Confirm button */
+#ifndef _WINDOWS
+		/* this code is only valid under Unix. In Windows, we're using
+			a system widget */
 	   tempfile = TtaAllocString (MAX_LENGTH);
 	   memset (tempfile, WC_EOS, MAX_LENGTH);
 	   ustrcpy (tempfile, DirectoryName);
@@ -4261,6 +4267,7 @@ CHAR_T*             data;
 	   TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
 	   TtaFreeMemory (tempfile);
 	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+#endif /* !_WINDOWS */
 	 }
        else if (val == 2)
 	 /* Clear button */
