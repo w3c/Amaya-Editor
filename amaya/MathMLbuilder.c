@@ -287,6 +287,7 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_denomalign, TEXT("right"), MathML_ATTR_denomalign_VAL_right_},
 
  {MathML_ATTR_display, TEXT("block"), MathML_ATTR_display_VAL_block},
+ {MathML_ATTR_display, TEXT("display"), MathML_ATTR_display_VAL_block},
  {MathML_ATTR_display, TEXT("inline"), MathML_ATTR_display_VAL_inline_},
 
  {MathML_ATTR_displaystyle, TEXT("true"), MathML_ATTR_displaystyle_VAL_true},
@@ -314,9 +315,6 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 
  {MathML_ATTR_largeop, TEXT("true"), MathML_ATTR_largeop_VAL_true},
  {MathML_ATTR_largeop, TEXT("false"), MathML_ATTR_largeop_VAL_false},
-
- {MathML_ATTR_mode, TEXT("display"), MathML_ATTR_mode_VAL_display_},
- {MathML_ATTR_mode, TEXT("inline"), MathML_ATTR_mode_VAL_inline_math},
 
  {MathML_ATTR_movablelimits, TEXT("true"), MathML_ATTR_movablelimits_VAL_true},
  {MathML_ATTR_movablelimits, TEXT("false"), MathML_ATTR_movablelimits_VAL_false},

@@ -95,7 +95,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("maxsize"), TEXT(""), 'A', MathML_ATTR_maxsize, L_Other},
    {TEXT("minlabelspacing"), TEXT(""), 'A', MathML_ATTR_minlabelspacing, L_Other},
    {TEXT("minsize"), TEXT(""), 'A', MathML_ATTR_minsize, L_Other},
-   {TEXT("mode"), TEXT(""), 'A', MathML_ATTR_mode},
+   {TEXT("mode"), TEXT(""), 'A', MathML_ATTR_display, L_Other},
    {TEXT("movablelimits"), TEXT(""), 'A', MathML_ATTR_movablelimits, L_Other},
    {TEXT("name"), TEXT(""), 'A', MathML_ATTR_name, L_Other},
    {TEXT("notation"), TEXT(""), 'A', MathML_ATTR_notation, L_Other},

@@ -730,30 +730,6 @@ BOXES
 		END;
         END;
 
-  ATTR_MODE_DISPLAY: BEGIN
-	Content: Text ' mode=display';
-	Visibility: 0;
-        IN Math_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-	END;
-
-  ATTR_MODE_INLINE: BEGIN
-	Content: Text ' mode=inline';
-	Visibility: 0;
-        IN Math_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-	END;
-
  ATTR_fontsize: BEGIN
         Content: Text ' fontsize=';
         Visibility: 0;
@@ -3490,14 +3466,6 @@ ATTRIBUTES
 	CreateBefore(ATTR_alttext);
 	CreateBefore(VALUE_alttext);
 	END;
-
-  mode = display_:
-	BEGIN
-	CreateBefore(ATTR_MODE_DISPLAY);
-	LineBreak: No;
-	END;
-  mode = inline_math:
-	CreateBefore(ATTR_MODE_INLINE);
 
   fontsize:
 	BEGIN
