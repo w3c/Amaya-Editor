@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Rechercher et remplacer</title>
-  <meta name="GENERATOR" content="amaya 8.7.2, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
   />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -12,21 +12,17 @@
 
 <body xml:lang="en" lang="en">
 
-<table border="0" summary="toc">
-  <tbody>
-    <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../../resources/icons/22x22/logo.png" /></p>
-      </td>
-      <td><p><a href="StyleSheets.html.fr" accesskey="p"><img alt="previous"
-        src="../images/left.gif" /></a> <a href="Manual.html.fr"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="SpellChecking.html.fr" accesskey="n"><img alt="next"
-        src="../images/right.gif" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img alt="Amaya"
+src="../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="StyleSheets.html.fr" accesskey="p"><img
+alt="previous" src="../../resources/icons/misc/left.png" /></a> <a
+href="Manual.html.fr" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" /></a> <a
+href="SpellChecking.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="Searching">
 <h2><a name="L1042">Rechercher et remplacer du texte</a></h2>
@@ -35,8 +31,8 @@
 boîte de dialogue <strong>Rechercher</strong>. On appelle cette boîte soit en
 choisissant <strong>Rechercher</strong> dans le menu
 <strong>Édition</strong>, soit en cliquant sur le bouton correspondant <img
-src="../../resources/icons/22x22/find.png" alt="find " />, ou encore en utilisant le raccourci
-clavier (Ctrl-f)</p>
+src="../../resources/icons/22x22/find.png" alt="find " />, ou encore en
+utilisant le raccourci clavier (Ctrl-f)</p>
 
 <p>Cette procédure vous permet de rechercher ou de remplacer du texte selon
 différents critères :</p>
@@ -107,11 +103,5 @@ quel moment en cliquant sur le bouton <strong>Annuler</strong>.</p>
 fonction Défaire (dans le menu Édition, ou par le raccourci clavier
 Ctrl-z).</p>
 </div>
-
-<p><a href="StyleSheets.html.fr#Style"><img alt="previous"
-src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="SpellChecking.html.fr#Spell"><img
-alt="next" src="../images/right.gif" /></a></p>
-<hr />
 </body>
 </html>

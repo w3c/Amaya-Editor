@@ -12,20 +12,15 @@
 
 <body xml:lang="fr" lang="fr">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../../resources/icons/22x22/logo.png" /></td>
-      <td><p align="right"><a href="Selecting.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Document.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="Selecting.html.fr" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
+<a href="Document.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h2>Vues d'un document</h2>
@@ -89,7 +84,7 @@ moment.</p>
 <h3>Ouvrir une vue</h3>
 
 <p>Pour ouvrir une vue, choisissez la commande <strong>Montrer ...</strong>
-correspondante : </p>
+correspondante :</p>
 
 <table border="0" cellspacing="0" cellpadding="0" style="margin-left:.5in">
   <tbody>

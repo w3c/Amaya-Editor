@@ -4,26 +4,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Accessibilité dans Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
 
-<table border="0" summary="toc">
-  <tbody>
-    <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /><img alt="Amaya"
-        src="../../resources/icons/22x22/logo.png" /></p>
-      </td>
-      <td><p><a href="ShortCuts.html.fr" accesskey="p"><img alt="previous"
-        src="../images/left.gif" /></a> <a href="Manual.html.fr"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="ShortCuts.html.fr" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png"
+/></a></p>
+</div>
 
 <div id="Access">
 <h2>Accessibilité dans Amaya</h2>
@@ -101,8 +97,9 @@ l'exception la saisie de texte) sans utiliser le clavier.</p>
 </ul>
 </div>
 
-<p><a href="Configure.html.fr"><img alt="previous" src="../images/left.gif"
-/></a> <a href="Manual.html.fr"><img alt="top" src="../images/up.gif"
+<p><a href="Configure.html.fr"><img alt="previous"
+src="../../resources/icons/misc/left.png" /></a> <a
+href="Manual.html.fr"><img alt="top" src="../../resources/icons/misc/up.png"
 /></a></p>
 <hr />
 </body>

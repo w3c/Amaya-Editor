@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Publication</title>
-  <meta name="GENERATOR" content="amaya 8.7.2, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
   />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -12,21 +12,17 @@
 
 <body xml:lang="fr" lang="fr">
 
-<table border="0" summary="toc">
-  <tbody>
-    <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../../resources/icons/22x22/logo.png" /></p>
-      </td>
-      <td><p><a href="SpellChecking.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Printing.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img alt="Amaya"
+src="../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="SpellChecking.html.fr" accesskey="p"><img
+alt="previous" src="../../resources/icons/misc/left.png" /></a> <a
+href="Manual.html.fr" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" /></a> <a href="Printing.html.fr"
+accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
+/></a></p>
+</div>
 
 <div id="Saving">
 <h2><a name="L1052">Sauver et Publier des documents</a></h2>
@@ -56,19 +52,20 @@ images présentes dans le document.</p>
 <p>La commande sauver peut être invoquée soit en choisissant
 <strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (Ctrl-s pour
 Windows, Ctrl-x, Ctrl-s pour Unix) ou bien en cliquant sur le bouton <img
-alt="floppy" src="../../resources/icons/22x22/save.png" />. Cette commande sauve le document
-courant à son adresse d'origine. Si la réponse du serveur inclut l'en-tête
-HTTP <code>Content-Location</code>, la cible de la sauvegarde sera l'URL
-précisée par cet en-tête. Ceci est utile pour enlever les ambiguïtés induites
-par la négociation du contenu. Soient par exemple "report.html.fr" et
-"report.html.en" deux versions d'un même document, une écrite en français,
-l'autre en anglais. On utilisera l'URL virtuelle report.html pour référencer
-ce document. En fonction de la configuration du client, le serveur retournera
-soit l'un ou l'autre document lors de la consultation de l'URL report.html.
-Si le serveur supporte l'en-tête <code>Content-Location</code>, il indiquera
-dans celle-ci l'URL du document qu'il a actuellement servi, par exemple,
-report.html.fr. Dans ce cas, la sauvegarde du document sera faite vers cette
-URL en préférence de l'URL virtuel report.html.</p>
+alt="floppy" src="../../resources/icons/22x22/save.png" />. Cette commande
+sauve le document courant à son adresse d'origine. Si la réponse du serveur
+inclut l'en-tête HTTP <code>Content-Location</code>, la cible de la
+sauvegarde sera l'URL précisée par cet en-tête. Ceci est utile pour enlever
+les ambiguïtés induites par la négociation du contenu. Soient par exemple
+"report.html.fr" et "report.html.en" deux versions d'un même document, une
+écrite en français, l'autre en anglais. On utilisera l'URL virtuelle
+report.html pour référencer ce document. En fonction de la configuration du
+client, le serveur retournera soit l'un ou l'autre document lors de la
+consultation de l'URL report.html. Si le serveur supporte l'en-tête
+<code>Content-Location</code>, il indiquera dans celle-ci l'URL du document
+qu'il a actuellement servi, par exemple, report.html.fr. Dans ce cas, la
+sauvegarde du document sera faite vers cette URL en préférence de l'URL
+virtuel report.html.</p>
 
 <p>Les images nouvellement ajoutées sont sauvées dans le même répertoire que
 celui du document et aucune confirmation n'est demandée, excepté si le nom du
@@ -217,11 +214,5 @@ local. Les balises HTML sont remplacées par des espaces, sauts de lignes,
 etc. La liste de toutes les URIs utilisées dans le document est listée dans
 ce fichier.</p>
 </div>
-
-<p><a href="SpellChecking.html.fr"><img alt="previous"
-src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="Printing.html.fr"><img alt="next"
-src="../images/right.gif" /></a></p>
-<hr />
 </body>
 </html>

@@ -21,13 +21,13 @@
   <tbody>
     <tr>
       <td><p><img border="0" alt="W3C" src="../images/w3c_home" /> <img
-        border="0" alt="Amaya" src="../../resources/icons/22x22/logo.png" /></p>
+        border="0" alt="Amaya" src="../../resources/icons/22x22/logo.png" />
       </td>
       <td><p align="right"><a href="EditChar.html.ru"><img alt="Предыдущий"
-        src="../images/left.gif" /></a> <a href="Manual.html.ru"><img
-        alt="Вверх" border="0" src="../images/up.gif" /></a> <a
+        src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.ru"><img
+        alt="Вверх" border="0" src="../../resources/icons/misc/up.png" /></a> <a
         href="Changing.html.ru"><img alt="Следующий" border="0"
-        src="../images/right.gif" /></a></p>
+        src="../../resources/icons/misc/right.png" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -353,8 +353,8 @@ Amaya</a>.</p>
 </dl>
 
 <p align="right"><a href="Manual.html.ru"><img alt="top" border="0"
-src="../images/up.gif" /></a> <a href="HTML-elements/infoTypes.html.ru"><img
-alt="next" border="0" src="../images/right.gif" /></a></p>
+src="../../resources/icons/misc/up.png" /></a> <a href="HTML-elements/infoTypes.html.ru"><img
+alt="next" border="0" src="../../resources/icons/misc/right.png" /></a></p>
 <hr />
 
 <p></p>

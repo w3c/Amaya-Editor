@@ -43,12 +43,10 @@ p.Note, p.ProcedureNote
   border-top : thin solid;
 }
 
-/*table {
-  border: thick solid black;
-  text-align : left;
-  vertical-align : middle;
-  width : 100%;
-  }*/
+.nav {
+  /*float: right;*/
+  display: inline;
+}
 
 .characters td {
 border : thin solid black;

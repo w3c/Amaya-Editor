@@ -12,21 +12,16 @@
 
 <body xml:lang="fr" lang="fr">
 
-<table border="0" summary="toc">
-  <tbody>
-    <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../../resources/icons/22x22/logo.png" /></p>
-      </td>
-      <td><p><a href="Publishing.html.fr" accesskey="p"><img alt="previous"
-        src="../images/left.gif" /></a> <a href="Manual.html.fr"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="Numbering.html.fr" accesskey="n"><img alt="next"
-        src="../images/right.gif" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img alt="Amaya"
+src="../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="Publishing.html.fr" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
+<a href="Numbering.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="Printing">
 <h2><a name="L1062">Imprimer des documents</a></h2>
@@ -113,8 +108,7 @@ dialogue.</p>
 feuille de style utilisateur (fichier <code>amaya.css</code> dans votre <a
 href="Configure.html.fr#AmayaHome">répertoire Amaya home</a>) doit
 contenir :</p>
-<pre>
-@media print {a:link {text-decoration: underline} ... }</pre>
+<pre>@media print {a:link {text-decoration: underline} ... }</pre>
 
 <p>Amaya supporte les propriétés de rupture de page CSS :
 "<strong>page-break-before: always</strong>". Quand cette propriété est
@@ -124,11 +118,5 @@ est attachée à un type d'élément à l'intérieur de l'élément style du document
 ou à l'intérieur de la feuille de style CSS externe, elle génère une rupture
 de page avant chaque cas de cet élément.</p>
 </div>
-
-<p><a href="Publishing.html.fr"><img alt="previous" src="../images/left.gif"
-/></a> <a href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a>
-<a href="Numbering.html.fr"><img alt="next" src="../images/right.gif"
-/></a></p>
-<hr />
 </body>
 </html>

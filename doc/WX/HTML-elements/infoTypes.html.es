@@ -15,12 +15,12 @@
   <tbody>
     <tr>
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /></p>
+        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
       </td>
       <td><p align="right"><a href="../HTML.html.es"><img alt="superior"
-        border="0" src="../../images/up.gif" /></a> <a
+        border="0" src="../../../resources/icons/misc/up.png" /></a> <a
         href="structure.html.es"><img alt="siguiente" border="0"
-        src="../../images/right.gif" /></a></p>
+        src="../../../resources/icons/misc/right.png" /></a></p>
       </td>
     </tr>
   </tbody>

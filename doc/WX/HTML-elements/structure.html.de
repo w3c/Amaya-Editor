@@ -19,10 +19,10 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../../resources/icons/22x22/logo.png" /></td>
       <td><a href="creating_new_documents.html.de"><img alt="vorherige Seite"
-        src="../../images/left.gif" /></a> <a href="../Document.html.de"><img
-        alt="erste Seite" src="../../images/up.gif" /></a> <a
+        src="../../../resources/icons/misc/left.png" /></a> <a href="../Document.html.de"><img
+        alt="erste Seite" src="../../../resources/icons/misc/up.png" /></a> <a
         href="infoTypes.html.de"><img alt="nächste Seite"
-        src="../../images/right.gif" /></a></td>
+        src="../../../resources/icons/misc/right.png" /></a></td>
     </tr>
   </tbody>
 </table>

@@ -16,7 +16,7 @@ body {background-color: #FFFFFF}</style>
 
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 
-<h4 style="text-align: center">Version 8.7, septembre 2004<br />
+<h4 style="text-align: center">Version 9.0, février 2005<br />
 <img src="../../resources/icons/22x22/logo.png" alt="Amaya" /></h4>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
