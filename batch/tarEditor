@@ -21,8 +21,8 @@ for MACH in $PLATFORMS
 do
    $TAR - \
    Thot/README \
-   Thot/NEWS.LibThot2.1 \
-   Thot/NEWS.LibThoteditor2.1 \
+   Thot/NEWS.Thot.2.1 \
+   Thot/NEWS.Thoteditor.2.1 \
    Thot/COPYRIGHT \
    Thot/AboutThot \
    Thot/README.thoteditor \
@@ -31,26 +31,24 @@ do
    Thot/batch/TRANS.GRM \
    Thot/doc/languages.html \
    Thot/doc/languages.toc.html \
+   Thot/doc/thoteditor/Thotman-E.PIV \
+   Thot/doc/thoteditor/Thotman-F.PIV \
+   Thot/doc/thoteditor/ManDraw.PIV \
    Thot/doc/thoteditor/Bilbon.gif \
    Thot/doc/thoteditor/COPYRIGHT.html \
-   Thot/doc/thoteditor/Compiling.html \
+   Thot/doc/thoteditor/Compile.html \
    Thot/doc/thoteditor/Configure.html \
-   Thot/doc/thoteditor/EditorArchi.html \
+   Thot/doc/thoteditor/Developers.html \
+   Thot/doc/thoteditor/Download.html \
    Thot/doc/thoteditor/Index.html \
    Thot/doc/thoteditor/Keyboard.html \
    Thot/doc/thoteditor/New.html \
-   Thot/doc/thoteditor/ManDraw.PIV \
-   Thot/doc/thoteditor/Opera.eps \
    Thot/doc/thoteditor/Platforms.html \
-   Thot/doc/thoteditor/Porting.html \
    Thot/doc/thoteditor/Registry.html \
-   Thot/doc/thoteditor/SourceDist.html \
+   Thot/doc/thoteditor/linux.html \
+   Thot/doc/thoteditor/Opera.eps \
    Thot/doc/thoteditor/Sources.fig \
    Thot/doc/thoteditor/Sources.gif \
-   Thot/doc/thoteditor/Sources.html \
-   Thot/doc/thoteditor/Thotman-E.PIV \
-   Thot/doc/thoteditor/Thotman-F.EXT \
-   Thot/doc/thoteditor/Thotman-F.PIV \
    Thot/doc/thoteditor/mainwindow.gif \
    Thot/doc/thoteditor/opera.gif \
    Thot/doc/thoteditor/opera.xpm \
@@ -131,6 +129,7 @@ do
    Thot/schemas/Draw3.S \
    Thot/schemas/Expose.S \
    Thot/schemas/ExtIndex.S \
+   Thot/schemas/ExtCss.S \
    Thot/schemas/Feuille.S \
    Thot/schemas/Fichier.S \
    Thot/schemas/Lettre.S \
@@ -145,6 +144,7 @@ do
    Thot/schemas/Draw3.STR \
    Thot/schemas/Expose.STR \
    Thot/schemas/ExtIndex.STR \
+   Thot/schemas/ExtCss.STR \
    Thot/schemas/Feuille.STR \
    Thot/schemas/Fichier.STR \
    Thot/schemas/Lettre.STR \
@@ -159,6 +159,7 @@ do
    Thot/schemas/Draw3P.P \
    Thot/schemas/ExposeP.P \
    Thot/schemas/ExtIndexP.P \
+   Thot/schemas/ExtCssP.P \
    Thot/schemas/FeuilleP.P \
    Thot/schemas/FichierP.P \
    Thot/schemas/LettreP.P \
@@ -186,6 +187,7 @@ do
    Thot/schemas/ExtIndexPPEnoref.PRS \
    Thot/schemas/ExtIndexPPEnorefUS.PRS \
    Thot/schemas/ExtIndexPPUS.PRS \
+   Thot/schemas/ExtCssP.PRS \
    Thot/schemas/FeuillePI.PRS \
    Thot/schemas/FeuillePIUS.PRS \
    Thot/schemas/FeuillePP.PRS \
@@ -317,6 +319,7 @@ do
    Thot/schemas/Draw3.conf \
    Thot/schemas/Expose.conf \
    Thot/schemas/ExtIndex.conf \
+   Thot/schemas/ExtCss.conf \
    Thot/schemas/Feuille.conf \
    Thot/schemas/Fichier.conf \
    Thot/schemas/Lettre.conf \
@@ -351,6 +354,9 @@ do
    Thot/schemas/Rapport.en \
    Thot/schemas/RefBib.en \
    Thot/schemas/Table.en \
+   Thot/schemas/Paragraphe.trans \
+   Thot/schemas/Rapport.trans \
+   Thot/schemas/README.trans \
    | $COMPRESS  > $DEST/thoteditor-$MACH-$THOTVERSION.tar.gz
 done
 

@@ -14,6 +14,7 @@
 # and   French.tar.gz
 #
 THOTVERSION=2.1d
+
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
