@@ -899,7 +899,7 @@ STRING              data;
     case MenuMaths:
       /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
-      if (!TtaGetDocumentAccessMode (doc))
+      if (!doc || !TtaGetDocumentAccessMode (doc))
 	/* the document is in ReadOnly mode */
 	return;
 

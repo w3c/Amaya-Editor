@@ -3059,239 +3059,166 @@ PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-   PtrBox              pFirstBox;
-   PtrBox              pPieceBox;
-   PtrBox              pParentBox;
-   int                 ascent, h;
-   int                 i, descent;
-   int                 pos;
-   int                 descentDelta;
-   PtrLine             pLine;
-   PtrLine             pNextLine;
+  PtrBox              pFirstBox;
+  PtrBox              pPieceBox;
+  PtrBox              pParentBox;
+  int                 ascent, descent;
+  int                 i, h;
+  int                 pos, linespacing;
+  PtrLine             pLine;
+  PtrLine             pNextLine;
 
-   pParentBox = pAb->AbBox;
-   if (Propagate != ToSiblings || pParentBox->BxVertFlex)
-     {
-	pLine = SearchLine (pBox);
-	/*pDimAb = &pAb->AbHeight; */
+  pParentBox = pAb->AbBox;
+  if (Propagate != ToSiblings || pParentBox->BxVertFlex)
+    {
+      pLine = SearchLine (pBox);
+      if (pLine)
+	{
+	  pNextLine = pLine->LiNext;
+	  ascent = 0;
+	  descent = 0;
+	  linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 
-	if (pLine != NULL)
-	  {
-	     ascent = 0;
-	     descent = 0;
-
-	     /* ===> Est-ce une boite qui echappe a l'englobement (Page) ? */
-	     if (!pBox->BxAbstractBox->AbHorizEnclosing)
-	       {
-		  /* La position de la ligne est inchangee */
-		  ascent = pBox->BxHorizRef;
-		  /* Decalage des lignes suivantes */
-		  descent = pBox->BxHeight - pLine->LiHeight;
-		  pLine->LiHorizRef = ascent;
-		  pLine->LiHeight = pBox->BxHeight;
-		  /* deplace la boite */
-		  i = pParentBox->BxYOrg + pLine->LiYOrg - pBox->BxYOrg;
-		  YMove (pBox, NULL, i, frame);
-
-		  /* decale les lignes suivantes */
-		  if (descent != 0)
-		    {
-		       pNextLine = pLine->LiNext;
-		       while (pNextLine != NULL)
-			 {
-			    pNextLine->LiYOrg += descent;
-			    if (pNextLine->LiFirstPiece != NULL)
-			       pPieceBox = pNextLine->LiFirstPiece;
-			    else
-			       pPieceBox = pNextLine->LiFirstBox;
-
-			    do
-			      {
-
-				 if (pPieceBox->BxType == BoSplit)
-				    pFirstBox = pPieceBox->BxNexChild;
-				 else
-				    pFirstBox = pPieceBox;
-
-				 YMove (pFirstBox, NULL, descent, frame);
-				 pPieceBox = GetNextBox (pFirstBox->BxAbstractBox);
-			      }
-			    while (pPieceBox != NULL && pFirstBox != pNextLine->LiLastBox && pFirstBox != pNextLine->LiLastPiece);
-
-			    pNextLine = pNextLine->LiNext;
-			 }
-
-		       /* met a jour la hauteur du bloc de lignes */
-		       if (pParentBox->BxContentHeight)
-			  ChangeDefaultHeight (pParentBox, pParentBox, pParentBox->BxHeight + descent, frame);
-		    }
-	       }
-	     else
-	       {
-		  /* calcule la base et la hauteur sous-base de la ligne */
-		  if (pLine->LiFirstPiece != NULL)
-		     pPieceBox = pLine->LiFirstPiece;
+	  if (!pBox->BxAbstractBox->AbHorizEnclosing)
+	    {
+	      /* The box is out of lines (like page breaks) */
+	      pLine->LiHorizRef = pBox->BxHorizRef;
+	      pLine->LiHeight = pBox->BxHeight;
+	      /* move the box */
+	      i = pParentBox->BxYOrg + pLine->LiYOrg - pBox->BxYOrg;
+	      YMove (pBox, NULL, i, frame);
+	    }
+	  else
+	    {
+	      /* The box is split in lines */
+	      /* compute the line ascent and the line descent */
+	      pPieceBox = pLine->LiFirstBox;
+	      if (pPieceBox->BxType == BoSplit && pLine->LiFirstPiece)
+		pPieceBox = pLine->LiFirstPiece;
+	      /* loop on included boxes */
+	      do
+		{
+		  if (pPieceBox->BxType == BoSplit)
+		    pFirstBox = pPieceBox->BxNexChild;
 		  else
-		     pPieceBox = pLine->LiFirstBox;
-
-		  /* Boucle sur les boites de la ligne */
+		    pFirstBox = pPieceBox;
+		  
+		  if (ascent < pFirstBox->BxHorizRef)
+		    ascent = pFirstBox->BxHorizRef;
+		  i = pFirstBox->BxHeight - pFirstBox->BxHorizRef;
+		  if (descent < i)
+		    descent = i;
+		  /* next box */
+		  pPieceBox = GetNextBox (pFirstBox->BxAbstractBox);
+		}
+	      while (pPieceBox && pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
+	      if (pLine->LiPrevious)
+		{
+		  /* new position of the current line */
+		  if (linespacing < pLine->LiPrevious->LiHorizRef + ascent)
+		    /* we refuse to overlaps 2 lines */
+		    i = pLine->LiPrevious->LiHorizRef + ascent;
+		  else
+		    i = linespacing;
+		  pos = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHorizRef
+		    + i - ascent;
+		  /* vertical shifting of the current line baseline */
+		  i = pos - pLine->LiYOrg + ascent - pLine->LiHorizRef;
+		}
+	      else
+		{
+		  /* new position of the current line */
+		  pos = pLine->LiYOrg + pLine->LiHorizRef - ascent;
+		  /* vertical shifting of the current line baseline */
+		  i = pos - pLine->LiYOrg + ascent - pLine->LiHorizRef;
+		}
+	      
+	      /* move the line contents */
+	      pLine->LiYOrg = pos;
+	      if (i)
+		{
+		  /* align boxes of the current line */
+		  pPieceBox = pLine->LiFirstBox;
+		  if (pPieceBox->BxType == BoSplit && pLine->LiFirstPiece)
+		    pPieceBox = pLine->LiFirstPiece;
+		  
 		  do
 		    {
-		       if (pPieceBox->BxType == BoSplit)
-			  pFirstBox = pPieceBox->BxNexChild;
-		       else
-			  pFirstBox = pPieceBox;
-
-		       if (ascent < pFirstBox->BxHorizRef)
-			  ascent = pFirstBox->BxHorizRef;
-		       i = pFirstBox->BxHeight - pFirstBox->BxHorizRef;
-		       if (descent < i)
-			  descent = i;
-		       /* passe a la boite suivante */
-		       pPieceBox = GetNextBox (pFirstBox->BxAbstractBox);
+		      if (pPieceBox->BxType == BoSplit)
+			pFirstBox = pPieceBox->BxNexChild;
+		      else
+			pFirstBox = pPieceBox;
+		      
+		      if (pFirstBox != pBox)
+			YMove (pFirstBox, NULL, i, frame);
+		      pPieceBox = GetNextBox (pFirstBox->BxAbstractBox);
 		    }
-		  while (pPieceBox != NULL && pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
-		  /* Valeurs limites du bas de la ligne precedente */
-		  /* et de la position de reference ligne courante */
-		  if (pLine->LiPrevious != NULL)
+		  while (pPieceBox && pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
+		}
+	      
+	      /* change the baseline of the current line */
+	      i = ascent - pLine->LiYOrg;
+	      pLine->LiYOrg = ascent;
+	      if (i)
+		{
+		  /* move the block baseline if it's inherited from the first line */
+		  if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed &&
+		      !pLine->LiPrevious)
+		    MoveHorizRef (pParentBox, NULL, i, frame);
+		}
+	      
+	      /* move the box */
+	      /* vertical shifting of the box */
+	      i = pLine->LiYOrg + pLine->LiHorizRef - pBox->BxHorizRef - pBox->BxYOrg;
+	      if (i)
+		YMove (pBox, NULL, i, frame);
+	      
+	      /* update the rest of the block */
+	      pLine->LiHeight = descent + ascent;
+	      /* baseline position of the following line */
+	      h = pLine->LiYOrg + pLine->LiHeight;
+	    }
+
+	  /* move next lines */
+	  if (pNextLine)
+	    {
+	      /* new position of the next line */
+	      if (linespacing < pLine->LiHorizRef + pNextLine->LiHorizRef)
+		/* we refuse to overlaps 2 lines */
+		i = pLine->LiHorizRef + pNextLine->LiHorizRef;
+	      else
+		i = linespacing;
+	      pos = pLine->LiYOrg + pLine->LiHorizRef + i - pNextLine->LiHorizRef;
+	      /* vertical shifting of the next lines */
+	      h = pos - pNextLine->LiYOrg;
+	      if (h)
+		{
+		  while (pNextLine)
 		    {
-		       h = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;
-		       pos = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHorizRef
-			  + PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification) - ascent;
+		      pNextLine->LiYOrg += h;
+		      pPieceBox = pNextLine->LiFirstBox;
+		      if (pPieceBox->BxType == BoSplit && pNextLine->LiFirstPiece)
+			pPieceBox = pNextLine->LiFirstPiece;
+		      do
+			{
+			  if (pPieceBox->BxType == BoSplit)
+			    pFirstBox = pPieceBox->BxNexChild;
+			  else
+			    pFirstBox = pPieceBox;
+			  YMove (pFirstBox, NULL, h, frame);
+			  pPieceBox = GetNextBox (pFirstBox->BxAbstractBox);
+			}
+		      while (pPieceBox && pFirstBox != pNextLine->LiLastBox &&
+			     pFirstBox != pNextLine->LiLastPiece);
+		  
+		      pNextLine = pNextLine->LiNext;
 		    }
-		  else
-		    {
-		       h = 0;
-		       pos = 0;
-		    }
-
-		  /* place la boite pBox dans la ligne */
-
-		  i = pLine->LiYOrg + pLine->LiHorizRef - pBox->BxHorizRef;
-		  /* Si la boite chevauche la ligne precedente ? */
-		  if (i < h)
-		    {
-		       h -= i;	/* deplacement de la ligne */
-		       i += h;	/* nouvelle origine */
-		       pLine->LiYOrg = i;
-		    }
-		  /* S'il faut remonter la ligne */
-		  else if ((pLine->LiYOrg > pos || pLine->LiPrevious == NULL)
-			   && ascent < pLine->LiHorizRef)
-		    {
-		       /* deplacement du contenu de ligne */
-		       h = ascent - pLine->LiHorizRef;
-		       i += h;
-		    }
-		  else
-		     h = 0;
-
-		  i = i + pParentBox->BxYOrg - pBox->BxYOrg;
-		  YMove (pBox, NULL, i, frame);
-
-		  /* met a jour le bloc de ligne */
-		  /* ecart de ligne de base */
-		  i = ascent - pLine->LiHorizRef;
-		  /*ecart en dessous */
-		  descentDelta = descent - pLine->LiHeight + pLine->LiHorizRef;
-		  pLine->LiHorizRef = ascent;
-		  pLine->LiHeight = descent + ascent;
-
-		  /* Est-ce que la ligne (de base) est deplacee ? */
-		  if (h != 0 || pLine->LiPrevious == NULL)
-		    {
-		       /* Le contenu de la ligne et les lignes suivantes sont affectes */
-		       if (i != 0)
-			 {
-
-			    /* met a jour la base du bloc de lignes   */
-			    /* s'il depend de la premiere boite englobee */
-			    if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed)
-			       MoveHorizRef (pParentBox, NULL, i, frame);
-
-			    /* aligne les boites dans la ligne */
-			    if (pLine->LiFirstPiece != NULL)
-			       pPieceBox = pLine->LiFirstPiece;
-			    else
-			       pPieceBox = pLine->LiFirstBox;
-
-			    do
-			      {
-
-				 if (pPieceBox->BxType == BoSplit)
-				    pFirstBox = pPieceBox->BxNexChild;
-				 else
-				    pFirstBox = pPieceBox;
-
-				 if (pFirstBox != pBox)
-				    YMove (pFirstBox, NULL, i, frame);
-				 pPieceBox = GetNextBox (pFirstBox->BxAbstractBox);
-			      }
-			    while (pPieceBox != NULL && pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
-
-			 }
-
-		    }
-		  /* Sinon la ligne n'est pas deplacee */
-		  else
-		     /* Origine+base constante (mise a jour de l'origine) */
-
-		     pLine->LiYOrg -= i;	/* deplace la ligne */
-
-
-		  /* decale les lignes suivantes */
-		  if (pLine->LiNext != NULL)
-		    {
-
-		       /* Valeurs limites du bas de la ligne courante et */
-		       /* de la position de reference ligne suivante     */
-		       pos = pLine->LiYOrg + pLine->LiHorizRef
-			  + PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification)
-			  - pLine->LiNext->LiHorizRef;
-		       i = pLine->LiYOrg + pLine->LiHeight;
-
-		       /* Si la ligne chevauche la ligne suivante ? */
-		       if (pLine->LiNext->LiYOrg < i)
-			  h = i - pLine->LiNext->LiYOrg;
-		       /* Si les lignes suivantes doivent etre remontees */
-		       else if (pLine->LiNext->LiYOrg > pos && i <= pos)
-			  h = pos - pLine->LiNext->LiYOrg;
-		       else if (pLine->LiNext->LiYOrg > i && i > pos)
-			  h = i - pLine->LiNext->LiYOrg;
-
-		       pNextLine = pLine->LiNext;
-		       while (pNextLine != NULL)
-			 {
-			    pNextLine->LiYOrg += h;
-			    if (pNextLine->LiFirstPiece != NULL)
-			       pPieceBox = pNextLine->LiFirstPiece;
-			    else
-			       pPieceBox = pNextLine->LiFirstBox;
-
-			    do
-			      {
-
-				 if (pPieceBox->BxType == BoSplit)
-				    pFirstBox = pPieceBox->BxNexChild;
-				 else
-				    pFirstBox = pPieceBox;
-
-				 YMove (pFirstBox, NULL, h, frame);
-				 pPieceBox = GetNextBox (pFirstBox->BxAbstractBox);
-			      }
-			    while (pFirstBox != pNextLine->LiLastBox && pFirstBox != pNextLine->LiLastPiece);
-
-			    pNextLine = pNextLine->LiNext;
-			 }
-		    }
-		  else
-		     /* modification de la hauteur du bloc de ligne */
-		     h = i + descentDelta;
-
-		  /* termine la mise a jour du bloc de lignes */
-		  if (h != 0 && pParentBox->BxContentHeight)
-		     ChangeDefaultHeight (pParentBox, pParentBox, pParentBox->BxHeight + h, frame);
-	       }
-	  }
-     }
+	      
+		  /* update the block height */
+		  if (pParentBox->BxContentHeight)
+		    ChangeDefaultHeight (pParentBox, pParentBox, pParentBox->BxHeight + h, frame);
+		}
+	    }
+	}
+    }
 }

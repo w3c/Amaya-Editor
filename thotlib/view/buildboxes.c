@@ -1341,14 +1341,19 @@ int                *carIndex;
 	       }
 	     else
 	       {
-		  /* On ajoute la boite a la fin du chainage */
-		  /* On modifie le chainage a partir de la boite racine */
-		  /* BxNext(RlRoot) -> Debut du chainage                */
-		  /* BxPrevious(RlRoot) -> Fin du chainage              */
+		  /* Add the new box at the end of the displayed boxes list */
+		  /* The list is pointed from the root box */
+		  /* BxNext(Root) -> First displayed box              */
+		  /* BxPrevious(Root) -> Last displayed box           */
 		  pBox = pMainBox->BxPrevious;
 		  pCurrentBox->BxPrevious = pBox;
 		  if (pBox != NULL)
-		     pBox->BxNext = pCurrentBox;
+		    {
+		      pBox->BxNext = pCurrentBox;
+		      if (pBox->BxType == BoPiece)
+			/* update also the split parent box */
+			pBox->BxAbstractBox->AbBox->BxNext = pCurrentBox;
+		    }
 		  pMainBox->BxPrevious = pCurrentBox;
 		  if (pMainBox->BxNext == NULL)
 		     pMainBox->BxNext = pCurrentBox;
@@ -1607,7 +1612,6 @@ PtrBox              pBox;
    PtrBox              pBoxInLine;
    PtrBox              pCurrentBox;
    PtrAbstractBox      pAb;
-   int                 yBox, yLine;
    ThotBool            still;
 
    /* Recherche la ligne englobante */
@@ -1653,26 +1657,8 @@ PtrBox              pBox;
    if (pAb != NULL)
      {
 	pCurrentBox = pAb->AbBox;
-	/* yBox = valeur en y de l'origine la boite par rapport au bloc */
-	yBox = pBox->BxYOrg - pCurrentBox->BxYOrg;
 	pLine = pCurrentBox->BxFirstLine;
-	/* yLine =  valeur en y du bas de la ligne par rapport au bloc */
-	if (pLine == NULL)
-	   yLine = yBox + 1;
-	else
-	   yLine = pLine->LiYOrg + pLine->LiHeight;
-
-	/* On saute toutes les lignes qui precedent */
-	while (yBox >= yLine)
-	  {
-	     pLine = pLine->LiNext;
-	     if (pLine == NULL)
-		yLine = yBox + 1;
-	     else
-		yLine = pLine->LiYOrg + pLine->LiHeight;
-	  }
-
-	/* On verifie que la ligne contient la boite pBox */
+	/* Look for the line which includes the current box */
 	still = TRUE;
 	while (still && pLine != NULL)
 	  {
@@ -1704,13 +1690,8 @@ PtrBox              pBox;
 		    && pBoxInLine != NULL);
 
 	     if (still)
-	       {
-		  pLine = pLine->LiNext;	/* On passe a la ligne suivante */
-		  if (pLine != NULL)
-		     /* sauf si la ligne est au-dela */
-		     if (pLine->LiYOrg > yBox)
-			pLine = NULL;
-	       }
+	       /* On passe a la ligne suivante */
+	       pLine = pLine->LiNext;
 	  }
      }
    return pLine;

@@ -1,5 +1,5 @@
 [thot_lib]
-THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/amaya
+THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/amaya:$(THOTDIR)/annotlib
 THOTFONT=$(THOTDIR)/fonts
 THOTCONFIG=
 DICOPAR=$(THOTDIR)/dicopar
@@ -13,7 +13,7 @@ KAFFEHOME=$(THOTDIR)/classes
 JAVA_PROPERTIES=$(THOTDIR)/config/java.properties
 
 [thot]
-THOTSYSSCH=$(THOTDIR)/schemas
+THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/amaya:$(THOTDIR)/annotlib
 THOTDOC=$(THOTDIR)/doceditor
 HelpDocument=Thotman-E
 RESDYN=YES
