@@ -1,0 +1,35 @@
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description about="http://www.w3.org/2001/03/thread#">
+ <rdfs:comment>A namespace for describing discussion threads</rdfs:comment>
+ <rdfs:comment>$Revision$ $Date$</rdfs:comment>
+ <rdfs:seeAlso rdf:resource="http://www.w3.org/2001/Annotea"/>
+ <rdfs:seeAlso rdf:resource="http://www.w3.org/2000/10/annotation-ns#"/>
+</rdf:Description>
+
+<rdfs:Class rdf:about="http://www.w3.org/2001/03/thread#Reply">
+  <rdfs:label xml:lang="en">Reply</rdfs:label>
+  <rdfs:comment>A resource is a reply if one of its types is Reply.</rdfs:comment>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2001/03/thread#"/>
+</rdfs:Class>
+
+<rdf:Property rdf:about="http://www.w3.org/2001/03/thread#inReplyTo">
+  <rdfs:label xml:lang="en">in reply to</rdfs:label>
+  <rdfs:comment>A resource, regardless of its type, is part of a
+   discussion thread when it has an <em>inReplyTo</em> relationship
+   to another resource.</rdfs:comment>
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2001/03/thread#"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2001/03/thread#root">
+  <rdfs:label xml:lang="en">root of thread</rdfs:label>
+  <rdfs:comment>Every resource that is part of a discussion thread
+   should have a <em>root</em> property to identify the first resource
+   in the thread.  Every resource in the thread will have the same
+   resource as its root.</rdfs:comment>
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2001/03/thread#"/>
+</rdf:Property>
+
+</rdf:RDF>
