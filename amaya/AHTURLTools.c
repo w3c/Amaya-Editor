@@ -424,8 +424,6 @@ Document            doc;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  char                used_sep = URL_SEP;
-  char               *used_str;
   char               *ptr, *basename;
   int                 length;
 
@@ -451,19 +449,7 @@ Document            doc;
 	  TtaGiveTextAttributeValue (attr, basename, &length);
 	  /* base and orgName have to be separated by a DIR_SEP */
 	  length--;
-
-	  if (basename [0] != EOS && strchr (basename, URL_SEP))
-	    {
-	      used_str = URL_STR;
-	      used_sep = URL_SEP;
-	    }
-	  else
-	    {
-	      used_str = DIR_STR;
-	      used_sep = DIR_SEP;
-	    }
-
-	  if (basename[0] != EOS && basename[length] != used_sep) 
+	  if (basename[0] != EOS && basename[length] != URL_SEP && basename[length] != DIR_SEP) 
 	    /* verify if the base has the form "protocol://server:port" */
 	    {
 	      ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS |
@@ -471,27 +457,17 @@ Document            doc;
 				                 AMAYA_PARSE_PUNCTUATION);
 	      if (ptr && !strcmp (ptr, basename))
 		{
-		  /* it has this form, we complete it by adding a DIR_STR  */
-		  strcat (basename, used_str);
+		  /* it has this form, we complete it by adding a URL_STR  */
+		  if (strchr (basename, DIR_SEP))
+		    strcat (basename, DIR_STR);
+		  else
+		    strcat (basename, URL_STR);
 		  length++;
 		}
 	      if (ptr)
 		TtaFreeMemory (ptr);
 	    }
 	}
-      }
-    else
-      {
-	if (basename [0] != EOS && strchr (basename, URL_SEP))
-	  {
-	    used_str = URL_STR;
-	    used_sep = URL_SEP;
-	  }
-	else
-	  {
-	    used_str = DIR_STR;
-	    used_sep = DIR_SEP;
-	  }
       }
   
   /* Remove anything after the last DIR_SEP char. If no such char is found,
@@ -501,7 +477,7 @@ Document            doc;
    */
   length = strlen (basename) - 1;
   /* search for the last DIR_SEP char */
-  while (length >= 0  && basename[length] != used_sep)
+  while (length >= 0  && basename[length] != URL_SEP && basename[length] != DIR_SEP)
     length--;
   if (length >= 0)
     /* found the last DIR_SEP char, end the string there */
@@ -593,8 +569,6 @@ char               *docName;
    char                tempOrgName[MAX_LENGTH];
    char               *ptr;
    int                 length;
-   char                used_sep;
-   char               *used_str;
 
    if (!newName || !docName)
       return;
@@ -604,21 +578,11 @@ char               *docName;
    else
      basename = (char *) NULL;
 
-   /*if (strchr (orgName, URL_SEP) || (basename && strchr (basename, URL_SEP))) {*/
-   if (strchr (orgName, DIR_SEP)) {
-      used_str = DIR_STR;
-      used_sep = DIR_SEP;
-   } else {
-         used_str = URL_STR;
-         used_sep = URL_SEP;
-   }
-
    /*
     * Clean orgName
     * Make sure we have a complete orgName, without any leading or trailing
     * white spaces, or trailinbg new lines
     */
-
    ptr = orgName;
    /* skip leading white space and new line characters */
    while ((*ptr == ' ' || *ptr == EOL) && *ptr++ != EOS);
@@ -652,10 +616,9 @@ char               *docName;
        ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST |
 		      AMAYA_PARSE_PUNCTUATION);
        if (ptr && !strcmp (ptr, newName))
-	 {
-	   /* it has this form, we complete it by adding a DIR_STR  */
-	   strcat (newName, used_str);
-	 }
+	 /* it has this form, we complete it by adding a DIR_STR  */
+	 strcat (newName, URL_STR);
+
        if (ptr)
 	 TtaFreeMemory (ptr);
      }
@@ -664,9 +627,7 @@ char               *docName;
      strcpy (newName, tempOrgName);
    else
      {
-     
        /* Calculate the absolute URL, using the base or document URL */
-
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
        if (ptr)
 	 {
@@ -679,7 +640,6 @@ char               *docName;
      }
 
    TtaFreeMemory (basename);
-
    /*
     * Prepare the docname that will refer to this ressource in the
     * .amaya directory. If the new URL finishes on DIR_SEP, then use
@@ -688,7 +648,7 @@ char               *docName;
    if (newName[0] != EOS)
      {
        length = strlen (newName) - 1;
-       if (newName[length] == used_sep)
+       if (newName[length] == URL_SEP || newName[length] == DIR_SEP)
 	 {
 	   /* docname was not comprised inside the URL, so let's */
 	   /* assign the default ressource name */
@@ -699,14 +659,13 @@ char               *docName;
        else
 	 {
 	   /* docname is comprised inside the URL */
-	   while (length >= 0  && newName[length] != used_sep)
+	   while (length >= 0 && newName[length] != URL_SEP && newName[length] != DIR_SEP)
 	     length--;
 	   if (length < 0)
 	     strcpy (docName, newName);
 	   else
 	     strcpy (docName, &newName[length+1]);
 	 }
-
      }
    else
      docName[0] = EOS;
@@ -860,20 +819,10 @@ HTURI               *parts;
 
 #endif /* __STDC__ */
 {
-  char * p;
-  char * after_access = name;
-  char       used_sep;
+  char      *p;
+  char      *after_access = name;
 
-  if (name && strchr (name, URL_SEP))
-    {
-      used_sep = URL_SEP;
-    }
-  else
-    {
-      used_sep = DIR_SEP;
-    }
-
-  memset(parts, '\0', sizeof(HTURI));
+  memset (parts, '\0', sizeof (HTURI));
   /* Look for fragment identifier */
   if ((p = strrchr(name, '#')) != NULL)
     {
@@ -883,7 +832,7 @@ HTURI               *parts;
     
   for (p=name; *p; p++)
     {
-      if (*p==used_sep || *p=='#' || *p=='?')
+      if (*p == URL_SEP || *p == DIR_SEP || *p=='#' || *p=='?')
 	break;
       if (*p==':')
 	{
@@ -898,7 +847,7 @@ HTURI               *parts;
 	  /*		while (*after_access == 0)*/
 	  /*		    after_access++;*/
 	  after_access = p+1;
-	  if (0==strcasecmp("URL", parts->access))
+	  if (!strcasecmp("URL", parts->access))
 	    /* Ignore IETF's URL: pre-prefix */
 	    parts->access = NULL;
 	  else
@@ -907,17 +856,17 @@ HTURI               *parts;
     }
     
     p = after_access;
-    if (*p==used_sep)
+    if (*p == URL_SEP || *p == DIR_SEP)
       {
-	if (p[1]==used_sep)
+	if (p[1] == URL_SEP)
 	  {
 	    parts->host = p+2;		/* host has been specified 	*/
 	    *p = 0;			/* Terminate access 		*/
 	    /* look for end of host name if any */
-	    p = strchr(parts->host,used_sep);
+	    p = strchr (parts->host, URL_SEP);
 	    if (p)
 	      {
-	        *p=0;			/* Terminate host */
+	        *p = EOS;			/* Terminate host */
 	        parts->absolute = p+1;		/* Root has been found */
 	      }
 	  }
@@ -967,8 +916,7 @@ int            wanted;
   char       used_sep;
   char      *used_str;
 
-  /*if (strchr (aName, URL_SEP) || strchr (relatedName, URL_SEP) )*/
-  if (strchr (aName, DIR_SEP))
+  if (strchr (aName, DIR_SEP) || strchr (relatedName, DIR_SEP))
     {
       used_str = DIR_STR;
       used_sep = DIR_SEP;
