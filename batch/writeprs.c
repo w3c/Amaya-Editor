@@ -941,7 +941,7 @@ PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 {
-   PtrPRule            currentRule, nextRule;
+   PtrPRule            currentRule;
    PtrCondition        pCond;
    DimensionRule      *pDim;
    int                 i;
@@ -1179,6 +1179,8 @@ PtrSSchema          pSS;
 	     WriteSignedShort (pCItem->CiParamValue);
 	     WriteShort (pCItem->CiInitAttr);
 	     WriteShort (pCItem->CiReinitAttr);
+	     WriteShort (pCItem->CiCondAttr);
+	     WriteBoolean (pCItem->CiCondAttrPresent);
 	  }
 	WriteShort (pCntr->CnNPresBoxes);
 	for (j = 0; j < pCntr->CnNPresBoxes; j++)

@@ -528,20 +528,25 @@ typedef enum
 /* an elementary operation on a counter */
 typedef struct _CntrItem
 {
-  CounterOp       CiCntrOp;	/* the operation */
-  int             CiElemType;	/* number of the element type (if CECatElem =
-				   ElementStruct) triggering the operation */
-  int		  CiAscendLevel;  /* level of the parent we wish to count for
-				     recursive structures */
-  int          CiViewNum;	/* number of the view to which the pages to
-				   count refer (if CiElemType is a page) */
-  int             CiParamValue;	/* value of the operation parameter*/
-  int  CiInitAttr;	        /* TtAttribute of an ascendent that gives the
-				   counter its initial value, 0 if the initial
-				   value does not depend on any attribute */
-  int  CiReinitAttr;	        /* TtAttribute that gives its value to the
-				   counter for the element that carries it and the
-				   following elements, 0 if no re-initialization */
+  CounterOp CiCntrOp;	   /* the operation */
+  int       CiElemType;	   /* number of the element type (if CECatElem =
+			      ElementStruct) triggering the operation */
+  int	    CiAscendLevel; /* level of the parent we wish to count for
+			      recursive structures */
+  int       CiViewNum;	   /* number of the view to which the pages to be
+			      counted refer (if CiElemType is a page) */
+  int       CiParamValue;  /* value of the operation parameter */
+  int	    CiInitAttr;	   /* Attribute of an ascendent that gives the counter
+			      its initial value, 0 if the initial value does
+			      not depend on any attribute */
+  int	    CiReinitAttr;  /* Attribute that gives its value to the counter
+			      for the element that carries it and the
+			      following elements, 0 if no re-initialization */
+  int	    CiCondAttr;	   /* Attribute that qualifies the element to be
+			      counted or not, 0 if there is no condition on
+			      attributes */
+  boolean   CiCondAttrPresent; /* if CiCondAttr > 0, indicates whether elements
+			      with that attribute are counted of not */
 } CntrItem;
 
 /* a counter */

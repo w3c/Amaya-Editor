@@ -692,6 +692,7 @@ RULES
  Comment\240: BEGIN
 	NoLineBreak;
  	Create '<!--';
+	NoTranslation;
 	Create '-->\12' after;
 	END;
 

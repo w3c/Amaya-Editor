@@ -1362,6 +1362,8 @@ PtrSSchema          pSS;
 			     TtaReadSignedShort (file, &pCntrItem->CiParamValue);
 			     TtaReadShort (file, &pCntrItem->CiInitAttr);
 			     TtaReadShort (file, &pCntrItem->CiReinitAttr);
+			     TtaReadShort (file, &pCntrItem->CiCondAttr);
+			     TtaReadBool (file, &pCntrItem->CiCondAttrPresent);
 			  }
 		     error = !TtaReadShort (file, &pCntr->CnNPresBoxes);
 		     if (!error)

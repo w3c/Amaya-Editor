@@ -109,7 +109,7 @@ STRUCT
 	     - (PICTURE, Big_text, Small_text, Subscript, Superscript, Font_);
 
   Anchor (ATTR HREF_; NAME = Text; REL; REV; Title;
-	       InternalLink = Reference(Anchor))
+	       InternalLink = Reference(Anchor); ExternalLink = Yes_)
 	= Basic_Set;
 
   Basic_Elem = CASE OF
@@ -373,6 +373,7 @@ EXCEPT
 #ifndef COUGAR
 	Langue:         Invisible;
 #endif
+	ExternalLink:	Invisible;
 	InternalLink:	Invisible;
 	WidthElement:	NewWidth;
 	IntWidthPercent:Invisible;

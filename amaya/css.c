@@ -2472,7 +2472,7 @@ void                InitCSS ()
    if (amaya_save_dir == NULL)
      {
 	fprintf (stderr, "Please set up the environment variable AMAYA_SAVE_DIR :\n\
-It is used for publishing when saving throught the network is unavailable\n\
+It is used for publishing when saving through the network is unavailable\n\
  e.g.: if AMAYA_SAVE_DIR=/users/joe/html, Amaya will try to save an URL\n\
        http://my_server/pub/file.html to :\n\
        /users/joe/html/pub/file.html or\n\

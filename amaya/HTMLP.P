@@ -67,7 +67,7 @@ COUNTERS
    CptToCPage : Rank of Page(Table_of_contents);
 #endif
 #ifdef LINK_NUMBER
-   AnchorCounter : Set 0 on BODY add 1 on Anchor;
+   AnchorCounter : Set 0 on BODY add 1 on Anchor with ExternalLink;
 #endif
    H2Counter : Set 0 on H1 add 1 on H2;
    H3Counter : Set 0 on H2 add 1 on H3;

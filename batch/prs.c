@@ -1428,6 +1428,8 @@ indLine             wi;
 	pCntr->CnItem[pCntr->CnNItems].CiParamValue = 0;
 	pCntr->CnItem[pCntr->CnNItems].CiInitAttr = 0;
 	pCntr->CnItem[pCntr->CnNItems].CiReinitAttr = 0;
+	pCntr->CnItem[pCntr->CnNItems].CiCondAttr = 0;
+	pCntr->CnItem[pCntr->CnNItems].CiCondAttrPresent = FALSE;
 	pCntr->CnNItems++;
      }
 }
@@ -2429,6 +2431,16 @@ indLine             wi;
 		    else
 		       pPSchema->PsPaginatedView[CurView - 1] = True;
 		 }
+	       break;
+	    case KWD_With:
+	       /* With */
+	       pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	       pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttrPresent = TRUE;
+	       break;
+	    case KWD_Without:
+	       /* Without */
+	       pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+	       pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttrPresent = FALSE;
 	       break;
 	    case KWD_TEXT:
 	       /* TEXT */
@@ -4095,6 +4107,7 @@ indLine             wi;
 
 	       else if (!(prevRule == RULE_Attr
 			  || prevRule == RULE_CountFunction
+			  || prevRule == RULE_CondAttr
 			  || prevRule == RULE_Function
 			  || prevRule == RULE_AttrValue
 			  || prevRule == RULE_AttrRelat
@@ -4171,6 +4184,13 @@ indLine             wi;
 			 else
 			    pCntr->CnItem[0].CiReinitAttr = i;
 		      }
+		 }
+	       else if (prevRule == RULE_CondAttr)
+		 {
+		    /* c'est un nom d'attribut apres le mot WITH ou WITHOUT
+		       dans une definition de compteur */
+		    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+		    pCntr->CnItem[pCntr->CnNItems - 1].CiCondAttr = i;
 		 }
 	       else if (prevRule == RULE_AttrRelat)
 		 {

@@ -902,9 +902,11 @@ PtrCondition        pCond;
 	       break;
 	    case PcElemType:
 	       wrnomregle (pCond->CoTypeElAttr);
+	       fprintf (output, " ");
 	       break;
 	    case PcAttribute:
 	       wrnomattr (pCond->CoTypeElAttr);
+	       fprintf (output, " ");
 	       break;
 	    default:
 	       break;
@@ -1446,6 +1448,14 @@ char               *output_file;
 			    fprintf (output, "(");
 			    wrnom (pSc1->PsView[pCp1->CiViewNum - 1]);
 			    fprintf (output, ")");
+			 }
+		       if (pCp1->CiCondAttr > 0)
+			 {
+			    if (pCp1->CiCondAttrPresent)
+			       printf (" with ");
+			    else
+			       printf (" without ");
+			    wrnomattr (pCp1->CiCondAttr);
 			 }
 		    }
 		  if (pCo1->CnItem[0].CiAscendLevel != 0)

@@ -43,10 +43,12 @@ static int              basePrint;
 
 /*----------------------------------------------------------------------
   SetInternalLinks
-  Associate a InternalLink attribute with all anchor (A) elements of the
-  document which designate another anchor in the same document.
+  Associate an InternalLink attribute with all anchor (A) elements of the
+  document which designate an element in the same document.
   InternalLink is a Thot reference attribute that links a source and a
   target anchor and that allows P schemas to display and print cross-references
+  Associate an ExternalLink attribute with all anchor (A) elements of the
+  document which designate an element in another document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void             SetInternalLinks (Document document)
@@ -58,13 +60,13 @@ Document                document;
    Element	        root, el;
    Element		link, target;
    ElementType		elType;
-   Attribute		HrefAttr, IntLinkAttr;
+   Attribute		HrefAttr, IntLinkAttr, ExtLinkAttr;
    AttributeType	attrType;
    int			length;
    int                  status;
    char		       *text;
 
-   /* Memorize the current status of the document */
+   /* Remember the current status of the document */
    status = TtaIsDocumentModified (document);
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
@@ -83,20 +85,33 @@ Document                document;
 	 {
 	 attrType.AttrTypeNum = HTML_ATTR_HREF_;
          HrefAttr = TtaGetAttribute (link, attrType);
-         if (HrefAttr != NULL)
+	 attrType.AttrTypeNum = HTML_ATTR_InternalLink;
+	 IntLinkAttr = TtaGetAttribute (link, attrType);
+	 attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
+	 ExtLinkAttr = TtaGetAttribute (link, attrType);
+         if (HrefAttr == NULL)
+	   /* this anchor is not a link (no href attribute) */
+	   /* remove attributes InternalLink and ExternalLink if they
+	      are present */
+	   {
+	   if (IntLinkAttr != NULL)
+	      TtaRemoveAttribute (link, IntLinkAttr, document);
+	   if (ExtLinkAttr != NULL)
+	      TtaRemoveAttribute (link, ExtLinkAttr, document);	   
+	   }
+	 else
 	   /* this anchor has an HREF attribute */
 	   {
 	   length = TtaGetTextAttributeLength (HrefAttr);
 	   text = TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
 	   if (text[0] == '#')
-	      /* it'a an internal link. Attach an attribute InternalLink to */
+	      /* it's an internal link. Attach an attribute InternalLink to */
 	      /* the link, if this attribute does not exist yet */
 	      {
-	        attrType.AttrTypeNum = HTML_ATTR_InternalLink;
-		IntLinkAttr = TtaGetAttribute (link, attrType);
 		if (IntLinkAttr == NULL)
 		   {
+		     attrType.AttrTypeNum = HTML_ATTR_InternalLink;
 		     IntLinkAttr = TtaNewAttribute (attrType);
 		     TtaAttachAttribute (link, IntLinkAttr, document);
 		   }
@@ -106,6 +121,20 @@ Document                document;
 		   /* set the Thot link */
 		   TtaSetAttributeReference (IntLinkAttr, link, document,
 					     target, document);
+	      }
+	   else
+	      /* it's an external link */
+	      {
+	      /* Remove the InternalLink attribute if it is present */
+	      if (IntLinkAttr != NULL)
+		 TtaRemoveAttribute (link, IntLinkAttr, document);
+	      /* create an ExternalLink attribute if there is none */
+	      if (ExtLinkAttr == NULL)
+	         {
+		 attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
+		 ExtLinkAttr = TtaNewAttribute (attrType);
+		 TtaAttachAttribute (link, ExtLinkAttr, document);
+		 }
 	      }
 	   TtaFreeMemory (text);
 	   }
@@ -186,8 +215,12 @@ Document            document;
    if (withToC)
      strcat (viewsToPrint, "Table_of_contents ");
    if (numberLinks)
+     /* display numbered links */
      {
-       /* display numbered links */
+       /* associate an attribute InternalLink with all anchors refering
+	  a target in the same document.  This allows P schemas to work
+	  properly */
+       SetInternalLinks (docPrint);
        if (PageSize == PP_A4)
 	 TtaSetPrintSchema ("HTMLPLP");
        else
@@ -257,8 +290,6 @@ char               *data;
 	  break;
 	case 2:
 	  /* numberLinks option */
-	  if (!numberLinks)
-	    SetInternalLinks (docPrint);
 	  numberLinks = !numberLinks;
 	  break;
 	}

@@ -34,15 +34,17 @@ CounterList =	  Counter < Counter > .
 Counter =	  CounterName ':' CountFunction ';' .
 CounterName =	  NAME . 
 
-CountFunction =	  'RANK' 'OF' TypeOrPage [ RelAncestorLevel ] [ 'INIT' AttrName ]
-		  [ 'REINIT' AttrName ] /
-		  SetRule < SetRule > AddRule < AddRule > [ 'INIT' AttrName ] /
-		  'RLevel' 'OF' TypeName .
+CountFunction =	  'RANK' 'OF' TypeOrPage [ RelAncestorLevel ]
+			[ 'INIT' AttrName ] [ 'REINIT' AttrName ] /
+		  SetRule < SetRule > AddRule < AddRule >
+			[ 'INIT' AttrName ] /
+		  'RLevel' 'OF' TypeName [ CondAttr ] .
 RelAncestorLevel = [ '-' ] AncestorLevel .
 AncestorLevel =	  NUMBER .
 SetRule =	  'SET' CountValue 'ON' TypeOrPage .
 AddRule =	  'ADD' CountValue 'ON' TypeOrPage .
-TypeOrPage =	  'Page' [ '(' ViewName ')' ] / [ '*' ] TypeName .
+TypeOrPage =	  'Page' [ '(' ViewName ')' ] / [ '*' ] TypeName [ CondAttr ] .
+CondAttr =	  'With' AttrName / 'Without' AttrName .
 CountValue =	  NUMBER .
 
 ConstList =	  Const < Const > .
