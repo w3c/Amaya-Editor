@@ -917,6 +917,13 @@ ThotBool            alone;
 		    }
 		}
 	    }
+	  else if (alone && ind > pAb->AbVolume)
+	    {
+	      /* the selection is outside the box */
+	      w = pBox->BxXOrg + pBox->BxWidth;
+	    DefClip (frame, w, pBox->BxYOrg,
+		     w + 2, pBox->BxYOrg + pBox->BxHeight);
+	    }
 	}
     }
 }
