@@ -1766,19 +1766,18 @@ static int          LoopForStop (AHTReqContext * me)
   old_active_window = GetActiveWindow ();
   libwww_window = HTEventList_getWinHandle (&libwww_msg);
  
-  while (GetMessage (&msg, NULL, 0, 0)
-	 && me->reqStatus != HT_END && me->reqStatus != HT_ERR
-	 && me->reqStatus != HT_ABORT && AmayaIsAlive ())
-    {
-      if (msg.message != WM_QUIT)
-	{
-	  TranslateMessage (&msg);
-	  DispatchMessage (&msg);
-	}
-      else
-	break;
-      
-    }
+  while (me->reqStatus != HT_END && me->reqStatus != HT_ERR
+	     && me->reqStatus != HT_ABORT && AmayaIsAlive () &&
+	     GetMessage (&msg, NULL, 0, 0))
+		{
+         if (msg.message != WM_QUIT)
+			{
+		      TranslateMessage (&msg);
+		      DispatchMessage (&msg);
+			}
+         else
+	        break;      
+		}
   if (!AmayaIsAlive ())
     /* Amaya was killed by one of the callback handlers */
     exit (0);
