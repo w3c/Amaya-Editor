@@ -405,13 +405,13 @@ char * DocumentTypeString (Document document)
 	  if (isXml)
 	    result = "XHTML 1.0 Strict";
 	  else
-	    result = "HTML 1.0 Strict";
+	    result = "HTML Strict";
 	  break;
 	case L_Transitional:
 	  if (isXml)
 	    result = "XHTML 1.0 Transitional";
 	  else
-	    result = "HTML 1.0 Transitional";
+	    result = "HTML Transitional";
 	  break;
 	case L_MathML:
 	  result = "MathML";
