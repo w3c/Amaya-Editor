@@ -1697,10 +1697,12 @@ int                 ym;
 		       /* Reaffiche la selection */
 		       SwitchSelection (frame, FALSE);
 		       draw = GetParentDraw (pBox);
+#              ifndef _WINDOWS
 		       PolyLineModification (frame, &x, &y,
 					     pBox, draw,
 					     pBox->BxNChars,
 					     pointselect, still);
+#              endif /* _WINDOWS */
 		       /* on force le reaffichage de la boite */
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
 #ifdef IV
@@ -1769,7 +1771,9 @@ int                 ym;
 		  ymin -= pFrame->FrYOrg;
 		  ymax -= pFrame->FrYOrg;
 		  /* On initialise la boite fantome */
+#         ifndef _WIN_PRINT
 		  UserGeometryMove (frame, &x, &y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
+#         endif /* _WIN_PRINT */
 
 		  /* On transmet la modification a l'editeur */
 		  x = x + pFrame->FrXOrg - pBox->BxXOrg;
@@ -2062,9 +2066,11 @@ int                 ym;
 		 else if (pAb->AbHeight.DimValue == 0)
 		   percentH = 100;
 	       }
+#        ifndef _WIN_PRINT
 	     UserGeometryResize (frame, x, y, &width, &height, xr, yr,
 				 xmin, xmax, ymin, ymax, xm, ym,
 				 percentW, percentH);
+#        endif /* _WIN_PRINT */
 
 	     /* On transmet la modification a l'editeur */
 	     if (percentW)

@@ -36,6 +36,9 @@
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "frame_tv.h"
+#ifdef _WINDOWS
+#include "thotcolor_tv.h"
+#endif /* _WINDOWS */
 
 #define VoidPixmap (Pixmap)(-1)
 #define EmptyPixmap (Pixmap)(-2)
@@ -80,7 +83,35 @@ static int          NbWhiteSp;
 #include "units_f.h"
 #include "initpses_f.h"
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  DoDrawOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         DoPrintOneLine (int color, int x1, int y1, int x2, int y2)
+#else  /* __STDC__ */
+static void         DoDrawOneLine (color, x1, y1, x2, y2)
+int                 color;
+int                 x1;
+int                 y1;
+int                 x2;
+int                 y2;
 
+#endif /* __STDC__ */
+{
+   HPEN pen ;
+   HPEN hOldPen;
+
+   pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue));
+   hOldPen = SelectObject (TtPrinterDC, pen);
+
+   MoveToEx (TtPrinterDC, x1, y1, NULL);
+   LineTo (TtPrinterDC, x2, y2);
+   SelectObject (TtPrinterDC, hOldPen);
+   if (!DeleteObject (pen))
+      WinErrorBox (WIN_Main_Wd);
+}
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    WriteCar writes s1 or s2 depending on encoding.
@@ -327,8 +358,18 @@ int                 fg;
    int                 j, encoding, width;
    int                 NonJustifiedWhiteSp;
    FILE               *fout;
+#  ifdef _WINDOWS
+   unsigned short      red, green, blue;
+   HFONT               hOldFont;
+   SIZE                size;
+#  endif /* _WINDOWS */
 
+#  ifdef _WINDOWS
+   if (TtPrinterDC == NULL)
+      fout = (FILE *) FrRef[frame];
+#  else  /* _WINDOWS */
    fout = (FILE *) FrRef[frame];
+#  endif /* _WINDOWS */
    encoding = 0;		/* BUG */
    if (y < 0)
       return 0;
@@ -338,78 +379,144 @@ int                 fg;
    NonJustifiedWhiteSp = StartOfCurrentBlock;
 
    /* Is this a new box ? */
-   if (SameBox == 0)
-     {
-	/* Beginning of a new box */
-	SameBox = 1;
-	X = PixelToPoint (x);
-	Y = PixelToPoint (y + FontBase (font));
-	NbWhiteSp = 0;
+   if (SameBox == 0) {
+      /* Beginning of a new box */
+      SameBox = 1;
+      X = PixelToPoint (x);
+      Y = PixelToPoint (y + FontBase (font));
+      NbWhiteSp = 0;
 
-	/* Do we need to change the current color ? */
-	CurrentColor (fout, fg);
+      /* Do we need to change the current color ? */
+#     ifdef _WINDOWS  
+      if (TtPrinterDC) {
+         TtaGiveThotRGB (fg, &red, &green, &blue);
+         SetTextColor (TtPrinterDC, RGB (red, green, blue));
+	  } else
+           CurrentColor (fout, fg);
+#     else  /* _WINDOWS */
+      CurrentColor (fout, fg);
+#     endif /* _WINDOWS */
 
-	/* Do we need to change the current font ? */
-	encoding = CurrentFont (fout, font);
-	fprintf (fout, "(");
-     }
+      /* Do we need to change the current font ? */
+#     ifdef _WINDOWS
+      if (TtPrinterDC)
+         hOldFont = SelectObject (TtPrinterDC, font->FiFont);
+      else {
+          encoding = CurrentFont (fout, font);
+          fprintf (fout, "(");
+	  }
+#     else  /* _WINDOWS */
+      encoding = CurrentFont (fout, font);
+      fprintf (fout, "(");
+#     endif /* _WINDOWS */
+   }
 
    /* Add the justified white space */
-   if (bl > 0)
-     {
-	NbWhiteSp++;
-	Transcode (fout, encoding, ' ');
-     }
+#  ifdef _WINDOWS
+   if (TtPrinterDC) {
+      ptcar = &buff[i - 1];
+      SetMapperFlags (TtPrinterDC, 0);
+      GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
+      width = size.cx;
+      if (ptcar[0] == '\212') {
+         /* skip the Control return char */
+         ptcar++;
+         lg--;
+      }
+      if (lg != 0)
+         /* if (!TextOut (TtPrinterDC, X, Y, (unsigned char*) ptcar, lg)) */
+         if (!TextOut (TtPrinterDC, x, y, (unsigned char*) ptcar, lg))
+            WinErrorBox (NULL);
+      if (hyphen) /* draw the hyphen */
+         if (!TextOut (TtPrinterDC, X + width, Y, "\255", 1))
+            WinErrorBox (NULL);
+      if (lgboite != 0)
+         SameBox = 0;
+   } else {
+        if (bl > 0) {
+           NbWhiteSp++;
+           Transcode (fout, encoding, ' ');
+		}
+
+        /* Emit the chars */
+        ptcar = &buff[i - 1];
+        for (j = 0; j < lg; j++) {
+            /* enumerate the white spaces */
+            if (ptcar[j] == ' ')
+               if (NonJustifiedWhiteSp == 0) {
+                  /* write a justified white space */
+                  NbWhiteSp++;
+                  Transcode (fout, encoding, ptcar[j]);
+			   } else /* write a fixed lenght white space */
+                    fputs ("\\240", fout);
+            else {
+               NonJustifiedWhiteSp = 0;
+               Transcode (fout, encoding, ptcar[j]);
+			}
+		}
+
+        /* Is an hyphen needed ? */
+        if (hyphen)
+           Transcode (fout, encoding, '\255');
+
+        /* is this the end of the box */
+        if (lgboite != 0) {
+           lgboite = PixelToPoint (lgboite);
+           /* Is justification needed ? */
+           if (NbWhiteSp == 0)
+              fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
+           else
+              fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
+           SameBox = 0;
+		}
+   }
+#  else  /* _WINDOWS */
+   if (bl > 0) {
+      NbWhiteSp++;
+      Transcode (fout, encoding, ' ');
+   }
 
    /* Emit the chars */
    ptcar = &buff[i - 1];
-   for (j = 0; j < lg; j++)
-     {
-	/* enumerate the white spaces */
-	if (ptcar[j] == ' ')
-	   if (NonJustifiedWhiteSp == 0)
-	     {
-		/* write a justified white space */
-		NbWhiteSp++;
-		Transcode (fout, encoding, ptcar[j]);
-	     }
-	   else
-	      /* write a fixed lenght white space */
-	      fputs ("\\240", fout);
-	else
-	  {
-	     NonJustifiedWhiteSp = 0;
-	     Transcode (fout, encoding, ptcar[j]);
-	  }
-     }
+   for (j = 0; j < lg; j++) {
+       /* enumerate the white spaces */
+       if (ptcar[j] == ' ')
+          if (NonJustifiedWhiteSp == 0) {
+             /* write a justified white space */
+             NbWhiteSp++;
+             Transcode (fout, encoding, ptcar[j]);
+		  } else /* write a fixed lenght white space */
+               fputs ("\\240", fout);
+       else {
+          NonJustifiedWhiteSp = 0;
+          Transcode (fout, encoding, ptcar[j]);
+	   }
+   }
 
    /* Is an hyphen needed ? */
    if (hyphen)
       Transcode (fout, encoding, '\255');
 
    /* is this the end of the box */
-   if (lgboite != 0)
-     {
-	lgboite = PixelToPoint (lgboite);
-	/* Is justification needed ? */
-	if (NbWhiteSp == 0)
-	   fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
-	else
-	   fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
-	SameBox = 0;
-     }
-
-   if (lg > 0)
-     {
-	/* compute the width of the string */
-	width = 0;
-	j = 0;
-	while (j < lg)
-	   width += CharacterWidth (ptcar[j++], font);
-	return (width);
-     }
-   else
-      return (0);
+   if (lgboite != 0) {
+      lgboite = PixelToPoint (lgboite);
+      /* Is justification needed ? */
+      if (NbWhiteSp == 0)
+         fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
+      else
+         fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
+      SameBox = 0;
+   }
+#  endif /* _WINDOWS */
+   if (lg > 0) {
+      /* compute the width of the string */
+      width = 0;
+      j = 0;
+      while (j < lg)
+            width += CharacterWidth (ptcar[j++], font);
+      return (width);
+   } 
+   return (0);
 }
 
 
@@ -442,7 +549,85 @@ int                 fg;
    int                 l_end;	/* end of the line       */
    int                 shift;	/* shifting of drawing   */
    FILE               *fout;
+#  ifdef _WINDOWS
+   if (TtPrinterDC) {
+      if (lg > 0) {
+         fheight = FontHeight (font);
+         ascent = FontAscent (font);
+         thickness = ((fheight / 20) + 1) * (thick + 1);
+         shift = thick * thickness;
+         height = y + shift;
+         bottom = y + ascent + 2 + shift;
+         middle = y + fheight / 2 - shift;
 
+         /*
+          * for an underline independant of the font add
+          * the following lines here :
+          *         thickness = 1;
+          *         height = y + 2 * thickness;
+          *         bottom = y + ascent + 3;
+          */
+
+         switch (type) {
+                case 1: /* underlined */
+                        DoPrintOneLine (fg, x - lg, bottom, x, bottom);
+                        break;
+
+                case 2: /* overlined */
+                        DoPrintOneLine (fg, x - lg, height, x, height);
+                        break;
+
+                case 3: /* cross-over */
+                        DoPrintOneLine (fg, x - lg, middle, x, middle);
+                        break;
+
+                default: /* not underlined */
+                         break;
+		 } 
+	  } 
+   } else {
+        fout = (FILE *) FrRef[frame];
+        if (y < 0)
+           return;
+        /* The last box must be finished */
+        if (SameBox == 0) {
+           fheight = FontHeight (font);
+           ascent = FontAscent (font);
+           thickness = ((fheight / 20) + 1) * (thick + 1);
+           shift = thick * thickness;
+           height = y + shift;
+           bottom = y + ascent + 2 + shift;
+           middle = y + fheight / 2 - shift;
+           l_start = X;		/* get current X value (cf DrawString) */
+           l_end = X + PixelToPoint (lg);	/* compute the end coordinate */
+
+           /*
+            * for an underline independant of the font add
+            * the following lines here :
+            *         thickness = 1;
+            *         height = y + 2 * thickness;
+            *         bottom = y + ascent + 3;
+            */
+
+           switch (type) {
+                  case 0:	/* nothing */
+                          break;
+
+                  case 1:	/* underlined */
+                          fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", l_end, PixelToPoint (bottom), l_start, PixelToPoint (bottom), 0, thickness, 2);
+                          break;
+
+                  case 2:	/* overlined */
+                          fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", l_end, PixelToPoint (height), l_start, PixelToPoint (height), 0, thickness, 2);
+                          break;
+
+                  case 3:	/* cross-over */
+                          fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", l_end, PixelToPoint (middle), l_start, PixelToPoint (middle), 0, thickness, 2);
+                          break;
+		   }
+		}
+   }
+#  else  /* _WINDOWS */
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
@@ -488,6 +673,7 @@ int                 fg;
 		    break;
 	      }
      }
+#    endif /* _WINDOWS */
 }
 
 
@@ -1075,9 +1261,64 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+   Pixmap pat;  
+   int    xf, yf;
+   HPEN   hPen = 0, hOldPen;
+   HBRUSH hBrush, hOldBrush;
+
+   if (y < 0)   
+      return ;
+
+   xf = PixelToPoint (x + larg);
+   yf = PixelToPoint (y + height);
+   x  = PixelToPoint (x);
+   y  = PixelToPoint (y);
+
+   /* Fill in the rectangle */
+   if (TtPrinterDC) {
+      if (larg > thick + 1)
+         larg = larg - thick - 1;
+      if (height > thick + 1)
+         height = height - thick - 1;
+      x += thick / 2;
+      y += thick / 2;
+
+      pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+      if (pat != 0) {
+         WinLoadGC (TtPrinterDC, fg, RO);
+   
+         hBrush = CreateSolidBrush (Pix_Color[bg]);
+         hOldBrush = SelectObject (TtPrinterDC, hBrush);
+         PatBlt (TtPrinterDC, x, y, larg, height, PATCOPY);
+         SelectObject (TtPrinterDC, hOldBrush);
+         if (!DeleteObject (hBrush))
+            WinErrorBox (WIN_Main_Wd);
+	  }
+
+      if (thick > 0) {
+         if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+            WinErrorBox (WIN_Main_Wd);
+         hOldPen = SelectObject (TtPrinterDC, hPen) ;
+         SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH)) ;
+         Rectangle (TtPrinterDC, x, y, xf, yf);
+         SelectObject (TtPrinterDC, hOldPen);
+         DeleteObject (hPen);
+	  }
+   } else {
+         FILE               *fout;
+         fout = (FILE *) FrRef[frame];
+
+         /* Do we need to change the current color ? */
+         if (thick > 0)
+            CurrentColor (fout, fg);
+
+         FillWithPattern (fout, fg, bg, pattern);
+         fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
+   }
+#  else  /* !_WINDOWS */
    int                 xf, yf;
    FILE               *fout;
-
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
@@ -1093,6 +1334,7 @@ int                 pattern;
 
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
+#  endif /* _WINDOWS */
 }
 
 
@@ -1770,7 +2012,7 @@ int                 pattern;
 
 
 /*----------------------------------------------------------------------
-   DrawVerticalLine draw a vertical line aligned top center or bottom
+   DrawHorizontalLine draw a vertical line aligned top center or bottom
    depending on align value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1793,9 +2035,48 @@ int                 fg;
    int                 ym, yf, xf;
    FILE               *fout;
 
+#  ifdef _WINDOWS 
+   if (TtPrinterDC) {
+      register int        Y;
+
+      if (align == 1)
+         Y = y + (h - thick) / 2;
+      else if (align == 2)
+           Y = y + h - thick - 1;
+      else
+          Y = y;
+
+      if (thick > 0)
+         DoPrintOneLine (fg, x, Y, x + l - 1, Y);
+   } else {
+        fout = (FILE *) FrRef[frame];
+        if (y < 0)
+           return;
+        if (thick <= 0)
+           return;
+
+        /* Do we need to change the current color ? */
+        CurrentColor (fout, fg);
+
+        l--;
+        h--;
+        xf = PixelToPoint (x + l);
+        ym = PixelToPoint (y + h / 2);
+        yf = PixelToPoint (y + h);
+        x = PixelToPoint (x);
+        y = PixelToPoint (y);
+
+        if (align == 0)
+           fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, y, x, y, style, thick, 2);
+        else if (align == 1)
+             fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, thick, 2);
+        else
+           fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, thick, 2);
+   }
+#  else  /* _WINDOWS */
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
+   if (y < 0)
+      return;
    if (thick <= 0)
       return;
 
@@ -1816,6 +2097,7 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, thick, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, thick, 2);
+#  endif /* _WINDOWS */
 }
 
 
@@ -1843,6 +2125,45 @@ int                 fg;
    int                 xm, yf, xf;
    FILE               *fout;
 
+#  ifdef _WINDOWS
+   if (TtPrinterDC) {
+      register int        X;
+
+      if (align == 1)
+         X = x + (l - thick) / 2;
+      else if (align == 2)
+           X = x + l - thick;
+      else
+          X = x;
+
+      if (thick > 0)
+         DoPrintOneLine (fg, X, y, X, y + h);
+   } else {
+        if (thick <= 0)
+           return;
+
+        fout = (FILE *) FrRef[frame];
+        if (y < 0)
+           return;
+        /* Do we need to change the current color ? */
+        CurrentColor (fout, fg);
+
+        l--;
+        h--;
+        xf = PixelToPoint (x + l);
+        xm = PixelToPoint (x + l / 2);
+        yf = PixelToPoint (y + h);
+        x = PixelToPoint (x);
+        y = PixelToPoint (y);
+
+        if (align == 0)
+           fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, style, thick, 2);
+        else if (align == 1)
+             fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
+        else
+            fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, thick, 2);
+   }
+#  else  /* _WINDOWS */
    if (thick <= 0)
       return;
 
@@ -1866,6 +2187,7 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, thick, 2);
+#  endif /* _WINDOWS */
 }
 
 

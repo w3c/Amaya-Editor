@@ -292,7 +292,7 @@ int                 fg;
 
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (fg, RO);
+   WinLoadGC (TtDisplay, fg, RO);
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont (TtDisplay, font);
    TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) str, 1);   
@@ -379,7 +379,7 @@ int                 fg;
 #     ifndef _WINDOWS 
       LoadColor (0, RO, active, fg);
 #     else /* _WINDOWS */
-	  WinLoadGC (fg, RO);
+	  WinLoadGC (TtDisplay, fg, RO);
 #     endif /* _WINDOWS */
 
       if (!ShowSpace) {
@@ -1457,7 +1457,7 @@ int                 pattern;
       XFreePixmap (TtDisplay, pat);
 #  else /* _WINDOWS */
       SelectClipRgn(TtDisplay, clipRgn); 
-      WinLoadGC (fg, RO);
+      WinLoadGC (TtDisplay, fg, RO);
    
       hBrush = CreateSolidBrush (Pix_Color[bg]);
       hOldBrush = SelectObject (TtDisplay, hBrush);
@@ -1677,11 +1677,12 @@ int                 pattern;
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
-   Pixmap              pat;
 
 #  ifdef _WINDOWS 
    HPEN hPen;
    HPEN hOldPen;
+#  else  /* _WINDOWS */
+   Pixmap              pat;
 #  endif /* _WINDOWS */
 
    /* Allocate a table of points */
@@ -2307,10 +2308,11 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
-   Pixmap              pat;
 #  ifdef _WINDOWS
    HPEN hPen;
    HPEN hOldPen;
+#  else  /* _WINDOWS */
+   Pixmap              pat;
 #  endif /* _WINDOWS */
 
    width -= thick + 1;
@@ -2564,7 +2566,7 @@ int                 fg;
    FinishDrawing (0, RO, active);
 #  else /* _WINDOWS */
    WIN_GetDeviceContext (frame);
-   WinLoadGC (fg, RO);
+   WinLoadGC (TtDisplay, fg, RO);
    pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
    hOldPen = SelectObject (TtDisplay, pen);
    Polyline (TtDisplay, point, 3);
@@ -3001,8 +3003,8 @@ int yf;
       BitBlt (TtDisplay, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, width, height,
 	      TtDisplay, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, SRCCOPY);
 	  */
-	  /* ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);  */
-	  ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_ERASE | SW_INVALIDATE); 
+	  /* ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL); */
+	  ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_ERASE | SW_INVALIDATE);
       WIN_ReleaseDeviceContext ();
       /*InvalidateRect (FrRef[frame], NULL, TRUE);*/
 #     endif /* _WINDOWS */

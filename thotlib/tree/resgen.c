@@ -530,9 +530,13 @@ Document dstDoc;
 #endif  /* __STDC__ */
 {
   ElementType elType, targetType;
-  Element elTarget, prev, elParent, elChild;
-  TypeTree target, treeChild, targetParent;
+  Element elTarget, prev, elParent;
+  TypeTree target, targetParent;
   boolean result = FALSE;
+# ifndef _WINDOWS
+  Element elChild;
+  TypeTree treeChild;
+# endif /* _WINDOWS */
   
 #ifdef DEBUG
   ElementType dbgType;
@@ -697,10 +701,13 @@ Document srcDoc;
 Document dstDoc;
 #endif  /* __STDC__ */
 {
-  Element elChild, elCopy, prev;
+  Element elChild;
   ElementType elType;
   boolean result = TRUE;
   TypeTree childTree;
+# ifndef _WINDOWS 
+  Element elCopy, prev;
+# endif /* _WINDOWS */
 
   /* traite succesivement chacun des fils de oldElem */
   elChild = TtaGetFirstChild (srcElem);
