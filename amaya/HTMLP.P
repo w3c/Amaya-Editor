@@ -758,8 +758,6 @@ BOXES
 		END;
 	IN Alternate_view BEGIN
 		Visibility: Enclosing =;
-		VertPos: Top = Previous . Top;
-		HorizPos: Left = Enclosing . Left;
 		END;
 	IN Links_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -3713,6 +3711,12 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Depth: 0;
 		END;
+	IN Alternate_view BEGIN
+		Visibility: 10;
+		Width: Enclosing . Width;
+		VertPos: Top = Previous . Bottom;
+		Depth: 0;
+		END;
 	END;
 
  map:	BEGIN
@@ -3733,8 +3737,10 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
+	IN Alternate_view BEGIN
+		MarginTop: 0;
+		VertPos: Top = Previous . Bottom;
+		END;
 	END;
 
  AREA:	BEGIN
