@@ -142,4 +142,5 @@ extern object* AllocObject(char*);
 extern object* AllocArray(int, int);
 extern object* AllocObjectArray(int, char*);
 
+extern void	addExternalNativeFunc(char*, void*);
 #endif
