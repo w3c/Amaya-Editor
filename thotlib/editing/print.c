@@ -930,6 +930,7 @@ int                *volume;
 	  fprintf (PSfile, "   lineto 1.5 setlinewidth %%1 setlinecap\n");
 	  fprintf (PSfile, "   gsave stroke grestore\n");
 	  fprintf (PSfile, "   lineto lineto 0 setlinejoin 2 setmiterlimit\n");
+	  fprintf (PSfile, "   5 setstyle\n");
 	  fprintf (PSfile, "   0.75 setlinewidth stroke grestore\n");
 	  fprintf (PSfile, " } bind def\n");
 	  fprintf (PSfile, "/Seg	%% (x y)* dash width nb Segments\n");
