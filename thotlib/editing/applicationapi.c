@@ -165,7 +165,6 @@ void                InitErrorHandler ()
 
    signal (SIGINT, QuitHandler);
    signal (SIGTERM, QuitHandler);
-/* #  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -235,10 +234,8 @@ char               *applicationName;
 	       exit (1);
 	 }
 
-/* #ifndef _WINDOWS */
    /* init the system error signal handler */
    InitErrorHandler ();
-/* #endif /* _WINDOWS */
 
 #ifndef NODISPLAY
    /* no external action declared at that time */
@@ -274,7 +271,7 @@ void                TtaQuit ()
          WinErrorBox (WIN_Main_Wd);
 #  endif /* NODISPLAY */
 #  endif /* _WINDOWS */
-
+   FreeAll ();
    exit (0);
 }
 

@@ -8,6 +8,7 @@
 
 extern void *TtaGetMemory ( unsigned int n );
 extern void TtaFreeMemory ( void* ptr );
+extern void FreeAll ();
 extern char *TtaStrdup ( char *str );
 extern void *TtaRealloc ( void *ptr,
                           unsigned int n );
@@ -80,6 +81,7 @@ extern void FreeDictionary ( PtrDict pDict );
 
 extern void *TtaGetMemory (/* unsigned int n */);
 extern void TtaFreeMemory (/* void* ptr */);
+extern void FreeAll ();
 extern char *TtaStrdup (/* char *str */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);
