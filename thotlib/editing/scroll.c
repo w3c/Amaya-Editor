@@ -33,12 +33,14 @@
 
 #include "absboxes_f.h"
 #include "appli_f.h"
+#include "applicationapi_f.h"
 #include "boxselection_f.h"
+#include "buildboxes_f.h"
 #include "frame_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
 #include "windowdisplay_f.h"
-#include "applicationapi_f.h"
+
 
 /*----------------------------------------------------------------------
    VerticalScroll effectue un scroll en avant (delta > 0) ou en arriere   
