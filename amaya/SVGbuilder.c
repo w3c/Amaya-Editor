@@ -615,8 +615,40 @@ static ThotBool EvaluateFeatures (Attribute attr)
   ----------------------------------------------------------------------*/
 static ThotBool EvaluateExtensions (Attribute attr)
 {
-  /* this version of Amaya does not support any SVG extension */
-  return False;
+  int          length;
+  char         *text, *ptr;
+  ThotBool     ok, supported;
+
+  ok = False;
+  length = TtaGetTextAttributeLength (attr);
+  if (length > 0)
+    {
+      text = TtaGetMemory (length + 2);
+      if (text)
+	{
+	  TtaGiveTextAttributeValue (attr, text, &length);
+	  ptr = text;
+	  ptr = TtaSkipBlanks (ptr);
+	  supported = True;
+	  while (*ptr != EOS && supported)
+	    {
+	      /* only XHTML and MathML are considered as supported extensions*/
+	      if (strcmp (ptr, XHTML_URI) && strcmp (ptr, MathML_URI))
+		supported = False;
+	      if (supported)
+		/* this feature is supported. Check to the next one */
+		{
+		  while (*ptr != EOS && *ptr != SPACE && *ptr != BSPACE &&
+			 *ptr != EOL && *ptr != TAB && *ptr != CR)
+		    ptr++;
+		  ptr = TtaSkipBlanks (ptr);
+		}
+	    }
+	  ok = supported;
+	  TtaFreeMemory (text);
+	}
+    }
+  return ok;
 }
 
 /*----------------------------------------------------------------------

@@ -1291,6 +1291,8 @@ void TtcRedo (Document doc, View view)
       pAttr = AbsBoxSelectedAttr->AbCreatorAttr;
       firstSelChar = FirstSelectedCharInAttr;
       lastSelChar = LastSelectedCharInAttr;
+      firstSel = (Element)(AbsBoxSelectedAttr->AbElement);
+      lastSel = (Element)(AbsBoxSelectedAttr->AbElement);
     }
   else
     {

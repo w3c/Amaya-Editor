@@ -16,6 +16,7 @@
 #define THOT_EXPORT
 #include "amaya.h"
 #include "css.h"
+#include "parser.h"
 #include "trans.h"
 #include "view.h"
 #include "content.h"
@@ -54,8 +55,6 @@ static int      GraphButton;
 static Pixmap   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
-
-#define BUFFER_LENGTH 100
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -475,10 +474,11 @@ ThotBool AttrPathDataDelete (NotifyAttribute * event)
 static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
 			    int value, ThotBool delta, ThotBool update)
 {
-  char		buffer[32], unit[32];
-  Attribute             attr;
-  int                   v, e;
-  int                   pval, pe, i;
+#define BUFFER_LENGTH 64
+  char		buffer[BUFFER_LENGTH], unit[BUFFER_LENGTH];
+  Attribute     attr;
+  int           v, e;
+  int           pval, pe, i;
 
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
@@ -495,7 +495,7 @@ static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
   else
     {
       /* get the current unit */
-      i = 32;
+      i = BUFFER_LENGTH - 1;
       TtaGiveTextAttributeValue (attr, buffer, &i);
       /* check if the value includes decimals */
       i = 0;
@@ -579,17 +579,23 @@ static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
     }
 }
 
-
 /*----------------------------------------------------------------------
  UpdatePositionAttribute
  update position attributes (x, y, cx, cy, x1, y1) for element el according
  to parameter pos.
+ If el is a foreignObject, update the position of the alternate text, if
+ there is an alternate text.
  -----------------------------------------------------------------------*/
 static void UpdatePositionAttribute (Element el, Document doc, int pos,
 				     ThotBool horiz)
 {
-  ElementType		elType;
+  ElementType		elType, parentType, siblingType;
   AttributeType	        attrType;
+  Attribute             attr, newAttr;
+  Element               parent, sibling, textEl;
+  int                   length;
+  char                  *value;
+  ThotBool              new;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -626,6 +632,64 @@ static void UpdatePositionAttribute (Element el, Document doc, int pos,
     return;
 
   UpdateAttrText (el, doc, attrType, pos, FALSE, FALSE);
+
+  if (elType.ElTypeNum == SVG_EL_foreignObject)
+    /* it's a foreignObject. If it's a child of a switch element and if
+       its next sibling a SVG text element, this sibling is considered as
+       an alternate text and its position is updated to be the same */
+    {
+      parent = TtaGetParent (el);
+      if (el)
+	{
+	  parentType = TtaGetElementType (parent);
+	  if (parentType.ElTypeNum == SVG_EL_switch &&
+	      parentType.ElSSchema == elType.ElSSchema)
+	    /* it's a child of a switch element */
+	    {
+	      textEl = NULL;
+	      sibling = el;
+	      while (sibling)
+		{
+		  TtaNextSibling (&sibling);
+		  siblingType = TtaGetElementType (sibling);
+		  if (siblingType.ElTypeNum == SVG_EL_text_ &&
+		      siblingType.ElSSchema == elType.ElSSchema)
+		    {
+		      textEl = sibling;
+		      sibling = NULL;
+		    }
+		  else if ((siblingType.ElTypeNum != SVG_EL_XMLcomment &&
+			    siblingType.ElTypeNum != SVG_EL_XMLPI) ||
+			   siblingType.ElSSchema != elType.ElSSchema)
+		    sibling = NULL;
+		}
+	      if (textEl)
+		/* the foreignObject is followed by a text. Copy attribute */
+		{
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr)
+		    {
+		      newAttr = TtaGetAttribute (textEl, attrType);
+		      new = !newAttr;
+		      if (!newAttr)
+			{
+			  newAttr = TtaNewAttribute (attrType);
+			  TtaAttachAttribute (textEl, newAttr, doc);
+			}
+		      length = TtaGetTextAttributeLength (attr);
+		      value = TtaGetMemory (length + 1);
+		      TtaGiveTextAttributeValue (attr, value, &length);
+		      if (!new)
+			TtaRegisterAttributeReplace (newAttr, textEl, doc);
+		      TtaSetAttributeText (newAttr, value, textEl, doc);
+		      if (new)
+			TtaRegisterAttributeCreate (newAttr, textEl, doc);
+		      TtaFreeMemory (value);
+		    }
+		} 
+            } 
+	} 
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1472,12 +1536,13 @@ void CreateGraphicElement (int entry)
 {
   Document	    doc;
   Element	    first, SvgRoot, newEl, sibling, selEl;
-  Element           child, parent, elem, foreignObj;
+  Element           child, parent, elem, foreignObj, altText, leaf;
   ElementType       elType, selType, newType, childType;
   AttributeType     attrType, attrTypeHTML;
   Attribute         attr, inheritedAttr;
   SSchema	    docSchema, SvgSchema;
   DisplayMode       dispMode;
+  Language          lang;
   char		    shape;
   char             *path;
   int		    c1, i, w, h, dir, svgDir;
@@ -1735,14 +1800,20 @@ void CreateGraphicElement (int entry)
 	  selEl = child;
 	}
       else if (newType.ElTypeNum == SVG_EL_switch)
-	/* create a foreignObject containing XHTML div element within the new
-	   element */
+	/* create a foreignObject containing an XHTML div element within the
+	   new element */
 	{
           childType.ElSSchema = SvgSchema;
 	  childType.ElTypeNum = SVG_EL_foreignObject;
 	  TtaAskFirstCreation ();
 	  foreignObj = TtaNewElement (doc, childType);
 	  TtaInsertFirstChild (&foreignObj, newEl, doc);
+	  /* associate a requiredExtensions attribute with the foreignObject
+	     element */
+	  attrType.AttrTypeNum = SVG_ATTR_requiredExtensions;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (foreignObj, attr, doc);
+	  TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
 	  attrType.AttrTypeNum = SVG_ATTR_width_;
 	  UpdateAttrText (foreignObj, doc, attrType, 100, FALSE, TRUE);
 	  attrType.AttrTypeNum = SVG_ATTR_height_;
@@ -1757,6 +1828,17 @@ void CreateGraphicElement (int entry)
 	  TtaSetStructureChecking (0, doc);
 	  TtaInsertFirstChild (&child, foreignObj, doc);
 	  TtaSetStructureChecking (oldStructureChecking, doc);
+		      /* create an alternate SVG text element for viewers
+			 that can't display embedded MathML */
+	  elType.ElSSchema = SvgSchema;
+	  elType.ElTypeNum = SVG_EL_text_;
+	  altText = TtaNewElement (doc, elType);
+	  TtaInsertSibling (altText, foreignObj, FALSE, doc);
+	  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+	  leaf = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&leaf, altText, doc);
+	  lang = TtaGetLanguageIdFromScript('L');
+	  TtaSetTextContent (leaf, "<html>", lang, doc);
 	  /* is there a SVG direction attribute on any ancestor element? */
 	  attrType.AttrTypeNum = SVG_ATTR_direction_;
 	  inheritedAttr = InheritAttribute (foreignObj, attrType);
@@ -1799,6 +1881,8 @@ void CreateGraphicElement (int entry)
 	    }
 	  while (elem != NULL);
 	}
+      /* set the visibility of the alternate text */
+      EvaluateTestAttrs (newEl, doc);
       if (newGraph)
 	TtaRegisterElementCreate (SvgRoot, doc);
       else

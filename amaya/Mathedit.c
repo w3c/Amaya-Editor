@@ -20,6 +20,7 @@
 #include "undo.h"
 #include "interface.h"
 #include "MathML.h"
+#include "parser.h"
 #ifdef _SVG
 #include "SVG.h"
 #endif /* _SVG */
@@ -691,12 +692,13 @@ static void         CreateMathConstruct (int construct)
 {
   Document           doc;
   Element            sibling, el, row, child, leaf, placeholderEl,
-                     parent, new, next, foreignObj;
+                     parent, new, next, foreignObj, altText;
   ElementType        newType, elType, parentType;
   Attribute          attr;
   AttributeType      attrType;
   SSchema            docSchema, mathSchema;
   char              *name;
+  Language           lang;
   DisplayMode        dispMode;
   int                c1, i, len, oldStructureChecking, col;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
@@ -994,8 +996,6 @@ static void         CreateMathConstruct (int construct)
 		  if (sibling)
 		    {
 		      /* create a switch element and insert it */
-		      if (dispMode == DisplayImmediately)
-			TtaSetDisplayMode (doc, dispMode);
 		      el = TtaNewElement (doc, elType);
 		      TtaInsertSibling (el, sibling, FALSE, doc);
 		      /* create a foreignObject element and insert it as
@@ -1004,11 +1004,30 @@ static void         CreateMathConstruct (int construct)
 		      TtaAskFirstCreation ();
 		      foreignObj = TtaNewElement (doc, elType);
 		      TtaInsertFirstChild (&foreignObj, el, doc);
-		      /* register the new element in the Undo queue */
-		      TtaRegisterElementCreate (el, doc);
-		      registered = TRUE;
+		      /* associate a requiredExtensions attribute with the
+			 foreignObject element */
+		      attrType.AttrSSchema = elType.ElSSchema;
+		      attrType.AttrTypeNum = SVG_ATTR_requiredExtensions;
+		      attr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (foreignObj, attr, doc);
+		      TtaSetAttributeText (attr, MathML_URI, foreignObj, doc);
+		      /* create an alternate SVG text element for viewers
+			 that can't display embedded MathML */
+		      elType.ElTypeNum = SVG_EL_text_;
+		      altText = TtaNewElement (doc, elType);
+		      TtaInsertSibling (altText, foreignObj, FALSE, doc);
+		      elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+		      leaf = TtaNewElement (doc, elType);
+		      TtaInsertFirstChild (&leaf, altText, doc);
+		      lang = TtaGetLanguageIdFromScript('L');
+		      TtaSetTextContent (leaf, "<math>", lang, doc);
+		      /* set the visibility of the alternate text */
+		      EvaluateTestAttrs (el, doc);
 		      /* update depth of SVG elements */
 		      SetGraphicDepths (doc, el);
+		      /* register the switch element in the Undo queue*/
+		      TtaRegisterElementCreate (el, doc);
+		      registered = TRUE;
 		      elType.ElSSchema = mathSchema;
 		      elType.ElTypeNum = MathML_EL_MathML;
 		      sibling = foreignObj;
@@ -4311,18 +4330,17 @@ void MathAttrOtherCreated (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void MathEntityModified (NotifyAttribute *event)
 {
-#define buflen 200
   Element        el;
   char          *value;
   int            length, i;
   ThotBool       changed;
 
-  value = TtaGetMemory (buflen);
+  value = TtaGetMemory (BUFLEN);
   value[0] = EOS;
   changed = FALSE;
   length = TtaGetTextAttributeLength (event->attribute);
-  if (length >= buflen)
-    length = buflen - 2;
+  if (length >= BUFLEN)
+    length = BUFLEN - 2;
   if (length <= 0)
     /* entity name emty. Unknown entity. */
     {
@@ -4359,6 +4377,7 @@ void MathEntityModified (NotifyAttribute *event)
   value[length] = EOS;
   if (changed)
     TtaSetAttributeText (event->attribute, value, el, event->document);
+  TtaFreeMemory (value);
   ParseMathString (el, TtaGetParent (el), event->document);
 }
 
@@ -4410,7 +4429,6 @@ void MathDisplaystyleAttrDeleted (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void MathPresentAttrCreated (NotifyAttribute *event)
 {
-#define buflen 200
   char          *value;
   int            length, attrKind;
   AttributeType  attrType;
@@ -4428,11 +4446,11 @@ void MathPresentAttrCreated (NotifyAttribute *event)
     }
   if (doit)
     {
-      value = TtaGetMemory (buflen);
+      value = TtaGetMemory (BUFLEN);
       value[0] = EOS;
       length = TtaGetTextAttributeLength (event->attribute);
-      if (length >= buflen)
-	length = buflen - 1;
+      if (length >= BUFLEN)
+	length = BUFLEN - 1;
       if (length > 0)
 	TtaGiveTextAttributeValue (event->attribute, value, &length);
       /* associate a CSS property with the element */
@@ -4524,11 +4542,11 @@ void MathAttrFontfamilyCreated (NotifyAttribute *event)
   char            *value;
   int              length;
 
-  value = TtaGetMemory (buflen);
+  value = TtaGetMemory (BUFLEN);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
-  if (length >= buflen)
-     length = buflen - 1;
+  if (length >= BUFLEN)
+     length = BUFLEN - 1;
   if (length > 0)
      TtaGiveTextAttributeValue (event->attribute, value, &length);  
   SetFontfamily (event->document, event->element, value);
@@ -4573,11 +4591,11 @@ void MathAttrColorCreated (NotifyAttribute *event)
     }
   if (doit)
     {
-      value = TtaGetMemory (buflen);
+      value = TtaGetMemory (BUFLEN);
       value[0] = EOS;
       length = TtaGetTextAttributeLength (event->attribute);
-      if (length >= buflen)
-	length = buflen - 1;
+      if (length >= BUFLEN)
+	length = BUFLEN - 1;
       if (length > 0)
 	TtaGiveTextAttributeValue (event->attribute, value, &length);  
       HTMLSetForegroundColor (event->document, event->element, value);
@@ -4644,11 +4662,11 @@ void MathAttrBackgroundCreated (NotifyAttribute *event)
     }
   if (doit)
     {
-      value = TtaGetMemory (buflen);
+      value = TtaGetMemory (BUFLEN);
       value[0] = EOS;
       length = TtaGetTextAttributeLength (event->attribute);
-      if (length >= buflen)
-	length = buflen - 1;
+      if (length >= BUFLEN)
+	length = BUFLEN - 1;
       if (length > 0)
 	TtaGiveTextAttributeValue (event->attribute, value, &length);  
       HTMLSetBackgroundColor (event->document, event->element, value);
@@ -4916,32 +4934,32 @@ void AttrOpenCloseChanged (NotifyAttribute *event)
 {
   Element	fence, content;
   int		length;
-  char    text[8];
+  char          text[8];
 
   if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
-     fence = TtaGetFirstChild (event->element);
+    fence = TtaGetFirstChild (event->element);
   else
-     fence = TtaGetLastChild (event->element);
+    fence = TtaGetLastChild (event->element);
   if (fence != NULL)
     {
-    content = TtaGetFirstChild (fence);
-    if (content != NULL)
-      {
-      if (event->attribute == NULL)
-	/* Attribute has been deleted */
-	if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
-	   text[0] = '(';	/* default value for open */
-	else
-	   text[0] = ')';	/* default value for close */
-      else
-	/* attribute has been modified, get its new value */
+      content = TtaGetFirstChild (fence);
+      if (content != NULL)
 	{
-        length = 7;
-        TtaGiveTextAttributeValue (event->attribute, text, &length);
+	  if (event->attribute == NULL)
+	    /* Attribute has been deleted */
+	    if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
+	      text[0] = '(';	/* default value for open */
+	    else
+	      text[0] = ')';	/* default value for close */
+	  else
+	    /* attribute has been modified, get its new value */
+	    {
+	      length = 7;
+	      TtaGiveTextAttributeValue (event->attribute, text, &length);
+	    }
+	  /* set the content of the fence element */
+	  TtaSetGraphicsShape (content, (char)text[0], event->document); 
 	}
-      /* set the content of the fence element */
-      TtaSetGraphicsShape (content, (char)text[0], event->document); 
-      }
     }
 }
 
