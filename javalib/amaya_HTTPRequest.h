@@ -36,6 +36,7 @@ typedef struct Classamaya_HTTPRequest {
 } Classamaya_HTTPRequest;
 HandleTo(amaya_HTTPRequest);
 
+extern void amaya_HTTPRequest_Callback(struct Hamaya_HTTPRequest*, struct Hamaya_HTTPRequest*);
 
 #ifdef __cplusplus
 }

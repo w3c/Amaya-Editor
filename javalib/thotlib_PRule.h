@@ -11,7 +11,7 @@ extern "C" {
 /* Header for class thotlib_PRule */
 
 typedef struct Classthotlib_PRule {
-  jint prule;
+  jlong prule;
 } Classthotlib_PRule;
 HandleTo(thotlib_PRule);
 

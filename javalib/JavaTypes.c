@@ -5,6 +5,7 @@
 
 #include "JavaTypes.h"
 #include "JavaTypes_f.h"
+#include "JavaVMaccesses.h"
 
 #define DEBUG_ARCH
 
@@ -154,6 +155,30 @@ jint FetchIntFromJavaVM(jint *address)
 }
 
 void StoreIntToJavaVM(jint value, jint *address)
+{
+    *address = value;
+}
+
+char FetchCharFromJavaVM(jint *address)
+{
+    char value = (char) *address;
+
+    return(value);
+}
+
+void StoreCharToJavaVM(char value, jint *address)
+{
+    *address = (jint) value;
+}
+
+struct Hjava_lang_String* FetchStrFromJavaVM(struct Hjava_lang_String** address)
+{
+    struct Hjava_lang_String* value = (struct Hjava_lang_String*) *address;
+
+    return(value);
+}
+
+void StoreStrToJavaVM(struct Hjava_lang_String* value, struct Hjava_lang_String** address)
 {
     *address = value;
 }
@@ -316,7 +341,7 @@ jlong CPtr2JavaLong(void *in)
  */
 void JavaElement2CElement(struct Hthotlib_Element *in, Element *out)
 {
-    *out = (Element) FetchPtrFromJavaVM(&(unhand(in)->element));
+    *out = (Element) Get_Element_Ptr_element(in);
 }
 
 /*
@@ -324,90 +349,111 @@ void JavaElement2CElement(struct Hthotlib_Element *in, Element *out)
  */
 void JavaElement2CElementPtr(struct Hthotlib_Element* in, Element **out)
 {
-    *out = (Element *) JavaLongPtr2CIntPtr(&(unhand(in)->element));
+    *out = (Element *) malloc(sizeof(Element));
+    *(*out) = (Element) Get_Element_Ptr_element(in);
 }
 void CElementPtr2JavaElement(Element *in, struct Hthotlib_Element** out)
 {
+    Set_Element_Ptr_element(*(in), *out);
+    free(in);
 }
 
 void JavaElementType2CElementTypePtr(struct Hthotlib_ElementType* in, ElementType **out)
 {
     *out = (ElementType *) malloc(sizeof(ElementType));
-    (*out)->ElSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(in)->sschema));
-    (*out)->ElTypeNum = FetchIntFromJavaVM(&(unhand(in)->type));
+    (*out)->ElSSchema = (SSchema) Get_ElementType_Ptr_sschema(in);
+    (*out)->ElTypeNum = Get_ElementType_Int_type(in);
 }
 void CElementTypePtr2JavaElementType(ElementType *in, struct Hthotlib_ElementType** out)
 {
-    StorePtrToJavaVM(in->ElSSchema, &(unhand(*out)->sschema));
-    StoreIntToJavaVM(in->ElTypeNum, &(unhand(*out)->type));
+    Set_ElementType_Ptr_sschema(in->ElSSchema, *out);
+    Set_ElementType_Int_type(in->ElTypeNum, *out);
     free(in);
 }
 void CElementType2JavaElementType(ElementType in, struct Hthotlib_ElementType* out)
 {
-    StorePtrToJavaVM(in.ElSSchema, &(unhand(out)->sschema));
-    StoreIntToJavaVM(in.ElTypeNum, &(unhand(out)->type));
+    Set_ElementType_Ptr_sschema(in.ElSSchema, out);
+    Set_ElementType_Int_type(in.ElTypeNum, out);
 }
 
 
 void JavaDocument2CDocumentPtr(struct Hthotlib_Document* in, Document **out)
 {
-    *out = (Document *) &(unhand(in)->document);
+    *out = (Document *) malloc(sizeof(Document));
+    *(*out) = (Document) Get_Document_Int_document(in);
 }
 void CDocumentPtr2JavaDocument(Document *in, struct Hthotlib_Document** out)
 {
+    Set_Document_Int_document(*(in), *out);
+    free(in);
 }
 
 void JavaSSchema2CSSchemaPtr(struct Hthotlib_SSchema* in, SSchema **out)
 {
-    *out = (SSchema *) JavaLongPtr2CIntPtr(&(unhand(in)->sschema));
+    *out = (SSchema *) malloc(sizeof(SSchema));
+    *(*out) = (SSchema) Get_SSchema_Ptr_sschema(in);
 }
 void CSSchemaPtr2JavaSSchema(SSchema *in, struct Hthotlib_SSchema** out)
 {
+    Set_SSchema_Ptr_sschema(*(in), *out);
+    free(in);
 }
 
 void JavaAttribute2CAttributePtr(struct Hthotlib_Attribute* in, Attribute **out)
 {
-    *out = (Attribute *) JavaLongPtr2CIntPtr(&(unhand(in)->attribute));
+    *out = (Attribute *) malloc(sizeof(Attribute));
+    *(*out) = (Attribute) Get_Attribute_Ptr_attribute(in);
 }
 void CAttributePtr2JavaAttribute(Attribute *in, struct Hthotlib_Attribute** out)
 {
+    Set_Attribute_Ptr_attribute(*(in), *out);
+    free(in);
 }
 
 void JavaPRule2CPRulePtr(struct Hthotlib_PRule* in, PRule **out)
 {
-    *out = (PRule *) JavaLongPtr2CIntPtr(&(unhand(in)->prule));
+    *out = (PRule *) malloc(sizeof(PRule));
+    **out = (PRule) Get_PRule_Ptr_prule(in);
 }
 void CPRulePtr2JavaPRule(PRule *in, struct Hthotlib_PRule** out)
 {
+    Set_PRule_Ptr_prule(*in, *out);
+    free(in);
 }
 
 void JavaAttributeType2CAttributeTypePtr(struct Hthotlib_AttributeType* in, AttributeType **out)
 {
     *out = (AttributeType *) malloc(sizeof(AttributeType));
-    (*out)->AttrSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(in)->sschema));
-    (*out)->AttrTypeNum = FetchIntFromJavaVM(&(unhand(in)->type));
+    (*out)->AttrSSchema = (SSchema) Get_AttributeType_Ptr_sschema(in);
+    (*out)->AttrTypeNum = Get_AttributeType_Int_type(in);
 }
 void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Hthotlib_AttributeType** out)
 {
-    StorePtrToJavaVM(in->AttrSSchema, &(unhand(*out)->sschema));
-    StoreIntToJavaVM(in->AttrTypeNum, &(unhand(*out)->type));
+    Set_AttributeType_Ptr_sschema(in->AttrSSchema, *out);
+    Set_AttributeType_Int_type(in->AttrTypeNum, *out);
     free(in);
 }
 
 void JavaIntPtr2CintPtr(struct Hthotlib_IntPtr* in, int **out)
 {
-    *out = (int *) &(unhand(in)->value);
+    *out = (int *) malloc(sizeof(int));
+    **out = (int) Get_IntPtr_Int_value(in);
 }
-void CintPtr2JavaIntPtr(int *in, struct Hthotlib_IntPtr** out)
+void CintPtr2JavaIntPtr(int *in, struct Hthotlib_IntPtr **out)
 {
+    Set_IntPtr_Int_value(*in, *out);
+    free(in);
 }
 
 void JavaLanguage2CLanguagePtr(struct Hthotlib_Language* in, Language **out)
 {
-    *out = (Language *) &(unhand(in)->lang);
+    *out = (Language *) malloc(sizeof(Language));
+    *(*out) = (char) Get_Language_Char_lang(in);
 }
 void CLanguagePtr2JavaLanguage(Language *in, struct Hthotlib_Language** out)
 {
+    Set_Language_Char_lang(*(in), *out);
+    free(in);
 }
 
 /*
@@ -500,7 +546,6 @@ void Javalong2CSSchema(jlong in, SSchema *out)
     *out = JavaLong2CPtr(in);
 }
 
-
 void CAttribute2Javalong(Attribute in, jlong *out)
 {
     *out = CPtr2JavaLong(in);
@@ -510,7 +555,6 @@ void Javalong2CAttribute(jlong in, Attribute *out)
     *out = JavaLong2CPtr(in);
 }
 
-
 void CPRule2Javalong(PRule in, jlong *out)
 {
     *out = CPtr2JavaLong(in);
@@ -519,7 +563,6 @@ void Javalong2CPRule(jlong in, PRule *out)
 {
     *out = JavaLong2CPtr(in);
 }
-
 
 void CThotWidget2Javalong(ThotWidget in, jlong *out)
 {

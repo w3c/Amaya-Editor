@@ -15,6 +15,12 @@ extern void StorePtrToJavaVM ( void *ptr,
 extern jint FetchIntFromJavaVM ( jint *address );
 extern void StoreIntToJavaVM ( jint value,
                                jint *address );
+extern char FetchCharFromJavaVM ( jint *address );
+extern void StoreCharToJavaVM ( char value,
+                                jint *address );
+extern struct Hjava_lang_String* FetchStrFromJavaVM ( struct Hjava_lang_String** address );
+extern void StoreStrToJavaVM ( struct Hjava_lang_String* value,
+                               struct Hjava_lang_String** address );
 extern void *JavaLongPtr2CIntPtr ( jlong *in );
 extern void initJavaTypes ( void );
 extern void *JavaLong2CPtr ( jlong in );
@@ -54,7 +60,7 @@ extern void CAttributeTypePtr2JavaAttributeType ( AttributeType *in,
 extern void JavaIntPtr2CintPtr ( struct Hthotlib_IntPtr* in,
                                  int **out );
 extern void CintPtr2JavaIntPtr ( int *in,
-                                 struct Hthotlib_IntPtr** out );
+                                 struct Hthotlib_IntPtr **out );
 extern void JavaLanguage2CLanguagePtr ( struct Hthotlib_Language* in,
                                         Language **out );
 extern void CLanguagePtr2JavaLanguage ( Language *in,
@@ -99,6 +105,12 @@ extern void StorePtrToJavaVM (/* void *ptr,
 extern jint FetchIntFromJavaVM (/* jint *address */);
 extern void StoreIntToJavaVM (/* jint value,
                                  jint *address */);
+extern char FetchCharFromJavaVM (/* jint *address */);
+extern void StoreCharToJavaVM (/* char value,
+                                  jint *address */);
+extern struct Hjava_lang_String* FetchStrFromJavaVM (/* struct Hjava_lang_String** address */);
+extern void StoreStrToJavaVM (/* struct Hjava_lang_String* value,
+                                 struct Hjava_lang_String** address */);
 extern void *JavaLongPtr2CIntPtr (/* jlong *in */);
 extern void initJavaTypes (/* void */);
 extern void *JavaLong2CPtr (/* jlong in */);
@@ -138,7 +150,7 @@ extern void CAttributeTypePtr2JavaAttributeType (/* AttributeType *in,
 extern void JavaIntPtr2CintPtr (/* struct Hthotlib_IntPtr* in,
                                    int **out */);
 extern void CintPtr2JavaIntPtr (/* int *in,
-                                   struct Hthotlib_IntPtr** out */);
+                                   struct Hthotlib_IntPtr **out */);
 extern void JavaLanguage2CLanguagePtr (/* struct Hthotlib_Language* in,
                                           Language **out */);
 extern void CLanguagePtr2JavaLanguage (/* Language *in,

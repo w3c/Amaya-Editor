@@ -15,6 +15,7 @@ typedef struct Classthotlib_Element {
 } Classthotlib_Element;
 HandleTo(thotlib_Element);
 
+extern void thotlib_Element_Debug(struct Hthotlib_Element*);
 
 #ifdef __cplusplus
 }

@@ -15,6 +15,7 @@
 #include "amaya_HTTPRequest.h"
 
 #include "JavaTypes_f.h"
+#include "JavaVMaccesses.h"
 
 /*
  * Callback for amaya/HTTPRequest
@@ -419,8 +420,8 @@ thotlib_Extra_TtaNewAttribute(struct Hthotlib_Extra* none,
     AttributeType att;
     Attribute at;
 
-    att.AttrSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(atType)->sschema));
-    att.AttrTypeNum = FetchIntFromJavaVM(&(unhand(atType)->type));
+    att.AttrSSchema = (SSchema) Get_AttributeType_Ptr_sschema(atType);
+    att.AttrTypeNum = Get_AttributeType_Int_type(atType);
     JavaThotlibLock();
     at = TtaNewAttribute(att);
     JavaThotlibRelease();
@@ -434,8 +435,8 @@ thotlib_Extra_TtaGetAttribute(struct Hthotlib_Extra* none,
     Attribute at;
     Element el = JavaLong2CPtr(element);
 
-    att.AttrSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(atType)->sschema));
-    att.AttrTypeNum = FetchIntFromJavaVM(&(unhand(atType)->type));
+    att.AttrSSchema = (SSchema) Get_AttributeType_Ptr_sschema(atType);
+    att.AttrTypeNum = Get_AttributeType_Int_type(atType);
     JavaThotlibLock();
     at = TtaGetAttribute(el, att);
     JavaThotlibRelease();
@@ -452,14 +453,14 @@ thotlib_Extra_TtaSearchAttribute(struct Hthotlib_Extra* none,
     Element lel;
     Element elem;
 
-    att.AttrSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(atType)->sschema));
-    att.AttrTypeNum = FetchIntFromJavaVM(&(unhand(atType)->type));
+    att.AttrSSchema = (SSchema) Get_AttributeType_Ptr_sschema(atType);
+    att.AttrTypeNum = Get_AttributeType_Int_type(atType);
     elem = (Element) JavaLong2CPtr(element);
     JavaThotlibLock();
     TtaSearchAttribute(att, (SearchDomain) scope, elem, &lel, &lat);
     JavaThotlibRelease();
-    StorePtrToJavaVM(lat, &(unhand(at)->attribute));
-    StorePtrToJavaVM(el, &(unhand(el)->element));
+    Set_Attribute_Ptr_attribute(lat, at);
+    Set_Element_Ptr_element(lel, el);
 }
 
 jlong
@@ -469,9 +470,9 @@ thotlib_Extra_TtaSearchTypedElement(struct Hthotlib_Extra* none,
     ElementType lelt;
     Element lel;
 
-    lelt.ElSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(elType)->sschema));
-    lelt.ElTypeNum = FetchIntFromJavaVM(&(unhand(elType)->type));
-    lel = (Element) FetchPtrFromJavaVM(&(unhand(el)->element));
+    lelt.ElSSchema = (SSchema) Get_ElementType_Ptr_sschema(elType);
+    lelt.ElTypeNum = Get_ElementType_Int_type(elType);
+    lel = (Element) Get_Element_Ptr_element(el);
     JavaThotlibLock();
     lel = TtaSearchTypedElement(lelt, (SearchDomain) scope, lel);
     JavaThotlibRelease();
@@ -484,8 +485,8 @@ thotlib_Extra_TtaNewElement(struct Hthotlib_Extra* none,
     ElementType elt;
     Element el;
 
-    elt.ElSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(elType)->sschema));
-    elt.ElTypeNum = FetchIntFromJavaVM(&(unhand(elType)->type));
+    elt.ElSSchema = (SSchema) Get_ElementType_Ptr_sschema(elType);
+    elt.ElTypeNum = Get_ElementType_Int_type(elType);
     JavaThotlibLock();
     el = TtaNewElement((Document) document, elt);
     JavaThotlibRelease();
@@ -506,8 +507,8 @@ thotlib_Extra_TtaNewTree(struct Hthotlib_Extra* none,
     else
         label_ptr = NULL;
 
-    elt.ElSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(elType)->sschema));
-    elt.ElTypeNum = FetchIntFromJavaVM(&(unhand(elType)->type));
+    elt.ElSSchema = (SSchema) Get_ElementType_Ptr_sschema(elType);
+    elt.ElTypeNum = Get_ElementType_Int_type(elType);
     JavaThotlibLock();
     el = TtaNewTree((Document) document, elt, label_ptr);
     JavaThotlibRelease();
@@ -521,8 +522,8 @@ thotlib_Extra_TtaCreateDescent(struct Hthotlib_Extra* none,
     ElementType elt;
     Element el = (Element) JavaLong2CPtr(element);
 
-    elt.ElSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(elType)->sschema));
-    elt.ElTypeNum = FetchIntFromJavaVM(&(unhand(elType)->type));
+    elt.ElSSchema = (SSchema) Get_ElementType_Ptr_sschema(elType);
+    elt.ElTypeNum = Get_ElementType_Int_type(elType);
     JavaThotlibLock();
     el = TtaCreateDescent((Document) document, el, elt);
     JavaThotlibRelease();
@@ -536,8 +537,8 @@ thotlib_Extra_TtaCreateDescentWithContent(struct Hthotlib_Extra* none,
     ElementType elt;
     Element el = (Element) JavaLong2CPtr(element);
 
-    elt.ElSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(elType)->sschema));
-    elt.ElTypeNum = FetchIntFromJavaVM(&(unhand(elType)->type));
+    elt.ElSSchema = (SSchema) Get_ElementType_Ptr_sschema(elType);
+    elt.ElTypeNum = Get_ElementType_Int_type(elType);
     JavaThotlibLock();
     el = TtaCreateDescentWithContent((Document) document, el, elt);
     JavaThotlibRelease();

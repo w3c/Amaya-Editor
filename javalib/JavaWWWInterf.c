@@ -8,6 +8,8 @@
 #include "JavaTypes_f.h"
 #include "amaya_HTTPRequest.h"
 
+#include "JavaVMaccesses.h"
+
 #define AMAYA_SYNC      1
 #define AMAYA_ASYNC     4
 #define AMAYA_FORM_POST 16
@@ -45,12 +47,14 @@ void *arg;
     struct Hamaya_HTTPRequest* request = (struct Hamaya_HTTPRequest*) arg;
 
     callback = (GetObjectWWWCCallback) 
-               FetchPtrFromJavaVM(&(unhand(request)->callback_f));
-    doc = FetchIntFromJavaVM(&(unhand(request)->doc));
-    status = FetchIntFromJavaVM(&(unhand(request)->status));
-    context = FetchPtrFromJavaVM(&(unhand(request)->callback_arg));
-    javaString2CString(unhand(request)->urlName, urlName, sizeof(urlName));
-    javaString2CString(unhand(request)->filename, outputfile, sizeof(outputfile));
+               Get_HTTPRequest_Ptr_callback_f(request);
+    doc = Get_HTTPRequest_Int_doc(request);
+    status = Get_HTTPRequest_Int_status(request);
+    context = Get_HTTPRequest_Ptr_callback_arg(request);
+    javaString2CString(Get_HTTPRequest_Str_urlName(request),
+                       urlName, sizeof(urlName));
+    javaString2CString(Get_HTTPRequest_Str_filename(request),
+                       outputfile, sizeof(outputfile));
 
 /* fprintf(stderr,"GetObjectWWWCallback : %s : %d\n", urlName, status); */
 
@@ -174,11 +178,6 @@ boolean             error_html;
         filename = makeJavaString(outputfile, strlen(outputfile));
     }
 
-    /*
-     * Call the Java WWW access implementation.
-     * Release the Thot library lock in the interval.
-     */
-    JavaThotlibRelease();
     switch (mode) {
         case AMAYA_SYNC:
 	    type = amaya_HTTPRequest_GET_REQUEST;
@@ -196,16 +195,38 @@ boolean             error_html;
 	    fprintf(stderr,"GetObjectWWW : unsupported mode %d\n", mode);
 	    exit(1);
     }
-    request = do_execute_java_class_method("amaya/HTTPRequest", "StartHTTPRequest",
-"(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJJJ)Lamaya/HTTPRequest;",
-		type, doc, urlName, NULL, postCmd, filename,
-                flag, callback, callback_f, callback_arg);
+
+    /*
+     * Call the Java WWW access implementation.
+     * Release the Thot library lock in the interval.
+     */
+    JavaThotlibRelease();
+
+    request = (struct Hamaya_HTTPRequest*)
+              do_execute_java_class_method("amaya/HTTPRequest",
+                "newHTTPRequest", "(I)Lamaya/HTTPRequest;", type);
+
+    if (mode == AMAYA_ASYNC) {
+	Set_HTTPRequest_Ptr_callback(GetObjectWWWCallback, request);
+	Set_HTTPRequest_Ptr_callback_f(terminate, request);
+	Set_HTTPRequest_Ptr_callback_arg(tcontext, request);
+    }
+    Set_HTTPRequest_Int_doc(doc, request);
+    Set_HTTPRequest_Str_urlName(urlName, request);
+    if (filename != NULL) 
+	Set_HTTPRequest_Str_filename(filename, request);
+    if (postCmd != NULL) 
+	Set_HTTPRequest_Str_postCmd(postCmd, request);
+
+    result = do_execute_java_method(0, (Hjava_lang_Object*) request,
+                    "Start", "(I)I", 0, 0, flag);
+
     JavaThotlibLock();
 
     /*
      * Check the result.
      */
-    result = FetchIntFromJavaVM(&(unhand(request)->status));
+    result = Get_HTTPRequest_Int_status(request);
     switch (result) {
         case 0:
 	    /* not finished */
