@@ -3693,13 +3693,13 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundPosition: parse a CSS BackgroundPosition
+   ParseACSSBackgroundPosition: parse a CSS BackgroundPosition
    attribute string.                                          
   ----------------------------------------------------------------------*/
-static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
-					 PresentationContext ctxt,
-					 char *cssRule, CSSInfoPtr css,
-					 ThotBool isHTML)
+static char *ParseACSSBackgroundPosition (Element element, PSchema tsch,
+					  PresentationContext ctxt,
+					  char *cssRule, CSSInfoPtr css,
+					  ThotBool isHTML)
 {
   PresentationValue     repeat;
   char                 *ptr;
@@ -3717,7 +3717,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
     cssRule = SkipWord (cssRule);
   else if (!strncasecmp (cssRule, "bottom", 6))
     cssRule = SkipWord (cssRule);
-  else if (isdigit (*cssRule) || *cssRule == '.')
+  else if (isdigit (*cssRule) || *cssRule == '.' || *cssRule == '-')
     {
       while (*cssRule != EOS && *cssRule != SPACE &&
 	     *cssRule != ',' && *cssRule != ';')
@@ -3730,7 +3730,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
     {
       /* force no-repeat for that background image */
       ptr = "no-repeat";
-      ParseCSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
+      cssRule = ParseCSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
       /* force realsize for the background image */
       repeat.typed_data.value = REALSIZE;
       repeat.typed_data.unit = UNIT_REL;
@@ -3738,13 +3738,25 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
       /* check if it's an important rule */
       cssRule = CheckImportantRule (cssRule, ctxt);
       /*TtaSetStylePresentation (PRPictureMode, element, tsch, ctxt, repeat);*/
-
-      /* check the second value */
-      cssRule = SkipBlanksAndComments (cssRule);
-      if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
-	cssRule = ParseCSSBackgroundPosition (element, tsch, ctxt,
-					      cssRule, css, isHTML);
     }
+  cssRule = SkipBlanksAndComments (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBackgroundPosition: parse a CSS BackgroundPosition
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
+					 PresentationContext ctxt,
+					 char *cssRule, CSSInfoPtr css,
+					 ThotBool isHTML)
+{
+  cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
+					 cssRule, css, isHTML);
+  if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
+    cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
+					   cssRule, css, isHTML);
   return (cssRule);
 }
 
@@ -3783,8 +3795,8 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
                !strncasecmp (cssRule, "center", 6) ||
                !strncasecmp (cssRule, "top", 3)    ||
                !strncasecmp (cssRule, "bottom", 6) ||
-               isdigit (*cssRule) || *cssRule == '.')
-           cssRule = ParseCSSBackgroundPosition (element, tsch, ctxt,
+               isdigit (*cssRule) || *cssRule == '.' || *cssRule == '-')
+           cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
 						 cssRule, css, isHTML);
       /* perhaps a Background Color */
       else

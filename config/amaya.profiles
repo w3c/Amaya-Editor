@@ -57,8 +57,7 @@ HelpAtW3C
 +base-module
 +bdi-text-module
 +clientside-module
-+basic-style
-+css-style
++attr-style
 +forms
 +hypertext-module
 +image-module
@@ -83,8 +82,7 @@ HelpAtW3C
 +base-module
 +bdi-text-module
 +clientside-module
-+basic-style
-+css-style
++attr-style
 +edit-module
 +forms
 +hypertext-module
@@ -109,7 +107,6 @@ HelpAtW3C
 {XHTML Basic}
 +basic-form-module
 +basic-table-module
-+basic-css-style
 +hypertext-module
 +image-module
 +list-module
@@ -125,8 +122,7 @@ HelpAtW3C
 +base-module
 +bdi-text-module
 +clientside-module
-+basic-style
-+css-style
++attr-style
 +edit-module
 +forms
 +hypertext-module
@@ -142,7 +138,7 @@ HelpAtW3C
 +svg
 +tables
 +text-module
-+Ruby
++ruby
 &CreateXMLElementMenu
 &InsertBefore
 &InsertAfter
@@ -170,8 +166,7 @@ HelpAtW3C
 +base-module
 +bdi-text-module
 +clientside-module
-+basic-style
-+css-style
++attr-style
 +forms
 +hypertext-module
 +image-module
@@ -199,10 +194,6 @@ PostAnnotation
 {Bookmarks}
 AddSeparator
 MoveItem
-
-################# Ruby
-{Ruby}
-&CreateRuby
 
 #-------------------- Modules ---------------------------------------------
 # shorter list of functions
@@ -345,7 +336,7 @@ TtcSearchText
 
 ########### EDITING
 [edit]
-+basic-style
++attr-style
 +clientside-module
 +css-style
 +davbase
@@ -365,6 +356,7 @@ TtcSearchText
 +makeid
 +maths
 +object-module
++ruby
 +script-module
 +spell
 +svg
@@ -494,6 +486,9 @@ ShowTargets
 &CreateObject
 &CreateParameter
 
+[ruby]
+&CreateRuby
+
 [edit-module]
 &SetOnOffINS
 &SetOnOffDEL
@@ -568,7 +563,7 @@ HelpTables
 
 ################# MATHML
 [maths]
-+css-style
+#+css-style
 &CreateMathMenu
 &CreateMTEXT
 &CreateMI
@@ -618,6 +613,14 @@ HelpSVG
 [iframe-module]
 &CreateIFrame
 
+[attr-style]
+&CreateStyle
+&CreateClass
+&ChangeBackgroundImage
+&TtcChangeCharacters
+&TtcChangeColors
+&TtcChangeFormat
+
 [css-browsing]
 OpenCSS
 DisableCSS
@@ -625,22 +628,7 @@ EnableCSS
 ShowAppliedStyle
 HelpStyleSheets
 
-[basic-style]
-&ChangeBackgroundImage
-&TtcChangeCharacters
-&TtcChangeColors
-&TtcChangeFormat
-
 [css-style]
-+css-browsing
-&CreateStyle
-&CreateClass
-&ApplyClass
-&LinkCSS
-&RemoveCSS
-
-[basic-css-style]
-+basic-style
 +css-browsing
 &ApplyClass
 &LinkCSS
