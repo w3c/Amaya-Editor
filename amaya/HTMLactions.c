@@ -1779,7 +1779,39 @@ void DocumentClosed (NotifyDialog * event)
     {
       /* table elements are no longuer selected */
       TableMenuActive = FALSE;
+      TtaSetItemOff (doc, 1, Types, BCaption);
+      TtaSetItemOff (doc, 1, Types, BColgroup);
+      TtaSetItemOff (doc, 1, Types, BCol);
+      TtaSetItemOff (doc, 1, Types, BTHead);
+      TtaSetItemOff (doc, 1, Types, BTBody);
+      TtaSetItemOff (doc, 1, Types, BTFoot);
+      TtaSetItemOff (doc, 1, Types, BDataCell);
+      TtaSetItemOff (doc, 1, Types, BHeadingCell);
+      TtaSetItemOff (doc, 1, Types, BCellHExtend);
+      TtaSetItemOff (doc, 1, Types, BCellVExtend);
+      TtaSetItemOff (doc, 1, Types, BCellHShrink);
+      TtaSetItemOff (doc, 1, Types, BCellVShrink);
+      TtaSetItemOff (doc, 1, Types, BSelectRow);
+      TtaSetItemOff (doc, 1, Types, BCreateRowB);
+      TtaSetItemOff (doc, 1, Types, BCreateRowA);
+      TtaSetItemOff (doc, 1, Types, BSelectColumn);
+      TtaSetItemOff (doc, 1, Types, BCreateColumnB);
+      TtaSetItemOff (doc, 1, Types, BCreateColumnA);
+      TtaSetItemOff (doc, 1, Types, BPasteBefore);
+      TtaSetItemOff (doc, 1, Types, BPasteAfter);
       MTableMenuActive = FALSE;
+      TtaSetItemOff (doc, 1, XMLTypes, BMCellHExtend);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCellVExtend);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCellHShrink);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCellVShrink);
+      TtaSetItemOff (doc, 1, XMLTypes, BMSelectRow);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowB);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowA);
+      TtaSetItemOff (doc, 1, XMLTypes, BMSelectColumn);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnB);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnA);
+      TtaSetItemOff (doc, 1, XMLTypes, BMPasteBefore);
+      TtaSetItemOff (doc, 1, XMLTypes, BMPasteAfter);
     }
   FreeDocumentResource (event->document);
   CleanUpParsingErrors ();  

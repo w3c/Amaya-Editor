@@ -5477,30 +5477,28 @@ static void   XmlParse (FILE *infile, CHARSET charset,
   ------------------------------------------------------------------------------*/
 void StartXmlParser (Document doc, char *fileName,
 		     char *documentName, char *documentDirectory,
-		     char *pathURL, ThotBool xmlDec, ThotBool xmlDoctype)
+		     char *pathURL, ThotBool withDec, ThotBool withDoctype)
 {
   Element         el, oldel;
+  CHARSET         charset;  
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
   char           *s;
   int             error;
-  ThotBool        isXHTML;
-  CHARSET         charset;  
-#ifdef XML_GENERIC
+  ThotBool        isXHTML, xmlDec, xmlDoctype;
   ThotBool        isXml = FALSE;
-#endif /* XML_GENERIC */
 
   /* General initialization */
 #ifdef ANNOTATIONS
   if (DocumentTypes[doc] == docAnnot)
-    {
-      /* we search the start of HTML Root element in the annotation struct */
-      RootElement = ANNOT_GetHTMLRoot (doc, FALSE);
-    }
+    /* we search the start of HTML Root element in the annotation struct */
+    RootElement = ANNOT_GetHTMLRoot (doc, FALSE);
   else
 #endif /* ANNOTATIONS */
     RootElement = TtaGetMainRoot (doc);
 
+  xmlDec = withDec;
+  xmlDoctype = withDoctype;
   InitializeXmlParsingContext (doc, RootElement, FALSE, FALSE);
   /* Specific Initialization */
   XMLcontext.language = TtaGetDefaultLanguage ();

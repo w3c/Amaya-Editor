@@ -23,6 +23,10 @@ extern void ActiveTransfer ( Document document );
 extern void SetStopButton ( Document document );
 extern void DocStatusUpdate ( Document doc,
                               ThotBool modified );
+extern void SetTableMenuOff ( Document doc,
+                              View view );
+extern void SetTableMenuOn ( Document doc,
+                             View view );
 extern void UpdateEditorMenus ( Document doc );
 extern void ChangeToEditorMode ( Document doc );
 extern void ChangeToBrowserMode ( Document doc );
@@ -186,6 +190,10 @@ extern void ActiveTransfer ( Document document );
 extern void SetStopButton ( Document document );
 extern void DocStatusUpdate ( Document doc,
                                 ThotBool modified );
+extern void SetTableMenuOff ( Document doc,
+                                View view );
+extern void SetTableMenuOn ( Document doc,
+                               View view );
 extern void UpdateEditorMenus ( Document doc );
 extern void ChangeToEditorMode ( Document doc );
 extern void ChangeToBrowserMode ( Document doc );
