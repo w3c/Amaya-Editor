@@ -3600,6 +3600,7 @@ RULES
 	HorizPos: VMiddle = Enclosing.VMiddle;
 	Page(ThePage);
 #else
+	{Height: Enclosing . Height min;}
 	Size: DOC_FONTSIZE;
 	HorizPos: Left = Enclosing . Left;
 #endif
@@ -3608,6 +3609,7 @@ RULES
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + 1;
 		Font: Helvetica;
 		END;
@@ -3615,16 +3617,20 @@ RULES
 #ifdef PAGE
 		Page(LinksPage);
 #endif
+		Height: Enclosed . Height;
 		Visibility: 10;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Page(ToCPage);
 #endif
+		Height: Enclosed . Height;
 		Visibility: 10;
 		END;
-	IN Alternate_view
+	IN Alternate_view BEGIN
 		Font: Courier;
+		Height: Enclosed . Height;
+		END;
 	END;
 
  HEAD:	BEGIN
@@ -3674,6 +3680,7 @@ RULES
 	Hyphenate: Yes;
 #else
 	Width: Enclosing . Width - 1 cm;
+	{Height: Enclosing . Height min;}
 	HorizPos: Left = Enclosing . Left + 0.5 cm;
 	Hyphenate: No;
 #endif
@@ -3682,12 +3689,17 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 #ifndef PAGE
 		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
 #endif
 		END;
-	IN Links_view
+	IN Links_view BEGIN
 		Visibility: Enclosing =;
-	IN Table_of_contents
+		Height: Enclosed . Height;
+		END;
+	IN Table_of_contents BEGIN
 		Visibility: 0;
+		Height: Enclosed . Height;
+		END;
 	END;
 
  ISINDEX: BEGIN

@@ -2848,104 +2848,119 @@ DisplayMode         newDisplayMode;
 
 #endif /* __STDC__ */
 {
-   UserErrorCode = 0;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-      /* parameter document is ok */
-     {
-	/* si le document n'a pas de schema de presentation, on ne fait rien */
-	if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
-	   return;
-	if (documentDisplayMode[document - 1] != newDisplayMode)
-	   /* il y a effectivement changement de mode */
-	  {
-	     if (documentDisplayMode[document - 1] == DisplayImmediately &&
-		 (newDisplayMode == DeferredDisplay ||
-		  newDisplayMode == NoComputedDisplay))
-		/* le document passe en mode affichage differe' ou sans calcul d'image */
-	       {
-		  /* eteint la selection */
-		  ExtinguishOrLightSelection (LoadedDocument[document - 1], FALSE);
-		  /* si on passe au mode sans calcul d'image il faut detruire l'image */
-		  if (newDisplayMode == NoComputedDisplay)
-		     DestroyImage (LoadedDocument[document - 1]);
-	       }
-	     else if ((documentDisplayMode[document - 1] == DeferredDisplay
-		  || documentDisplayMode[document - 1] == NoComputedDisplay)
-		      && newDisplayMode == DisplayImmediately)
-		/* le document passe du mode affichage differe' ou sans calcul  */
-		/* d'image au mode  d'affichage immediat */
-	       {
-		  if (documentDisplayMode[document - 1] == NoComputedDisplay
-		      && (!documentNewSelection[document - 1].SDSelActive ||
-		      documentNewSelection[document - 1].SDElemSel == NULL))
-		     /* il faut recalculer l'image , la suite du code est pareil */
-		     RebuildImage (LoadedDocument[document - 1]);
-		  /* reaffiche ce qui a deja ete prepare' */
-		  if (documentDisplayMode[document - 1] == DeferredDisplay
-		      || (!documentNewSelection[document - 1].SDSelActive ||
-		      documentNewSelection[document - 1].SDElemSel == NULL))
-		     RedisplayDocViews (LoadedDocument[document - 1]);
+  DisplayMode       oldDisplayMode;
 
-		  if (!documentNewSelection[document - 1].SDSelActive)
-		     /* la selection n'a pas change', on la rallume */
-		     ExtinguishOrLightSelection (LoadedDocument[document - 1], TRUE);
-		  else
-		     /* la selection a change', on etablit la selection */
-		     /* enregistree */
-		    {
-		       if (documentNewSelection[document - 1].SDElemSel == NULL)
-			  /* c'est une annulation de selection */
-			  ResetSelection (LoadedDocument[document - 1]);
-		       else
-			 {
-			    /* il y a effectivement une selection a etablir */
-			    if (documentNewSelection[document - 1].SDPremCar == 0 &&
-			    documentNewSelection[document - 1].SDDerCar == 0)
-			       /* selection d'un element complet */
-			       SelectElement (LoadedDocument[document - 1],
-					      (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
-			    else
-			       /* selection d'une chaine */
-			       SelectString (LoadedDocument[document - 1],
-					     (PtrElement) (documentNewSelection[document - 1].SDElemSel),
-			       documentNewSelection[document - 1].SDPremCar,
-			       documentNewSelection[document - 1].SDDerCar);
-			    /* il n'y a plus de selection a etablir */
-			    documentNewSelection[document - 1].SDElemSel = NULL;
-			 }
-		       /* etablit l'extension de selection enregistree */
-		       if (documentNewSelection[document - 1].SDElemExt != NULL)
-			  /* il y a une extension de selection a etablir */
-			 {
-			    ExtendSelection ((PtrElement) (documentNewSelection[document - 1].SDElemExt),
-				documentNewSelection[document - 1].SDCarExt,
-					     FALSE, FALSE, FALSE);
-			    /* il n'y a plus d'extension de selection a etablir */
-			    documentNewSelection[document - 1].SDElemExt = NULL;
-			 }
-		       /* plus de selection a faire pour ce document */
-		       documentNewSelection[document - 1].SDSelActive = FALSE;
-		    }
-	       }
-	     else if (documentDisplayMode[document - 1] == DeferredDisplay
-		      && newDisplayMode == NoComputedDisplay)
-		/* le document passe du mode affichage differe'  */
-		/* au mode d'affichage sans calcul d'image  */
+  UserErrorCode = 0;
+  /* Checks the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is ok */
+    {
+      /* si le document n'a pas de schema de presentation, on ne fait rien */
+      if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+	return;
+
+      oldDisplayMode = documentDisplayMode[document - 1];
+      if (oldDisplayMode != newDisplayMode)
+	/* il y a effectivement changement de mode */
+	{
+	  if (oldDisplayMode == DisplayImmediately &&
+	      (newDisplayMode == DeferredDisplay ||
+	       newDisplayMode == NoComputedDisplay))
+	    /* le document passe en mode affichage differe' ou sans calcul d'image */
+	    {
+	      /* eteint la selection */
+	      ExtinguishOrLightSelection (LoadedDocument[document - 1], FALSE);
+	      /* si on passe au mode sans calcul d'image il faut detruire l'image */
+	      if (newDisplayMode == NoComputedDisplay)
 		DestroyImage (LoadedDocument[document - 1]);
-	     else if (documentDisplayMode[document - 1] == NoComputedDisplay
-		      && newDisplayMode == DeferredDisplay)
-		/* le document passe du mode affichage sans calcul d'image   */
-		/* au mode d'affichage differe'  */
+	      /* on met a jour le mode d'affichage */
+	      documentDisplayMode[document - 1] = newDisplayMode;
+	    }
+	  else if ((oldDisplayMode == DeferredDisplay
+		    || oldDisplayMode == NoComputedDisplay)
+		   && newDisplayMode == DisplayImmediately)
+	    /* le document passe du mode affichage differe' ou sans calcul  */
+	    /* d'image au mode  d'affichage immediat */
+	    {
+	      /* on met a jour le mode d'affichage */
+	      documentDisplayMode[document - 1] = newDisplayMode;
+
+	      if (oldDisplayMode == NoComputedDisplay
+		  && (!documentNewSelection[document - 1].SDSelActive ||
+		      documentNewSelection[document - 1].SDElemSel == NULL))
+		/* il faut recalculer l'image , la suite du code est pareil */
 		RebuildImage (LoadedDocument[document - 1]);
-	     /* on met a jour le mode d'affichage */
-	     documentDisplayMode[document - 1] = newDisplayMode;
-	  }
-     }
+	      /* reaffiche ce qui a deja ete prepare' */
+	      if (oldDisplayMode == DeferredDisplay
+		  || (!documentNewSelection[document - 1].SDSelActive ||
+		      documentNewSelection[document - 1].SDElemSel == NULL))
+		RedisplayDocViews (LoadedDocument[document - 1]);
+	      
+	      if (!documentNewSelection[document - 1].SDSelActive)
+		/* la selection n'a pas change', on la rallume */
+		ExtinguishOrLightSelection (LoadedDocument[document - 1], TRUE);
+	      else
+		/* la selection a change', on etablit la selection */
+		/* enregistree */
+		{
+		  if (documentNewSelection[document - 1].SDElemSel == NULL)
+		    /* c'est une annulation de selection */
+		    ResetSelection (LoadedDocument[document - 1]);
+		  else
+		    {
+		      /* il y a effectivement une selection a etablir */
+		      if (documentNewSelection[document - 1].SDPremCar == 0 &&
+			  documentNewSelection[document - 1].SDDerCar == 0)
+			/* selection d'un element complet */
+			SelectElement (LoadedDocument[document - 1],
+				       (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
+		      else
+			/* selection d'une chaine */
+			SelectString (LoadedDocument[document - 1],
+				      (PtrElement) (documentNewSelection[document - 1].SDElemSel),
+				      documentNewSelection[document - 1].SDPremCar,
+				      documentNewSelection[document - 1].SDDerCar);
+		      /* il n'y a plus de selection a etablir */
+		      documentNewSelection[document - 1].SDElemSel = NULL;
+		    }
+		  /* etablit l'extension de selection enregistree */
+		  if (documentNewSelection[document - 1].SDElemExt != NULL)
+		    /* il y a une extension de selection a etablir */
+		    {
+		      ExtendSelection ((PtrElement) (documentNewSelection[document - 1].SDElemExt),
+				       documentNewSelection[document - 1].SDCarExt,
+				       FALSE, FALSE, FALSE);
+		      /* il n'y a plus d'extension de selection a etablir */
+		      documentNewSelection[document - 1].SDElemExt = NULL;
+		    }
+		  /* plus de selection a faire pour ce document */
+		  documentNewSelection[document - 1].SDSelActive = FALSE;
+		}
+	    }
+	  else if (oldDisplayMode == DeferredDisplay
+		   && newDisplayMode == NoComputedDisplay)
+	    {
+	      /* le document passe du mode affichage differe'  */
+	      /* au mode d'affichage sans calcul d'image  */
+	      DestroyImage (LoadedDocument[document - 1]);
+	      /* on met a jour le mode d'affichage */
+	      documentDisplayMode[document - 1] = newDisplayMode;
+	    }
+	  else if (oldDisplayMode == NoComputedDisplay
+		   && newDisplayMode == DeferredDisplay)
+	    {
+	      /* on met a jour le mode d'affichage */
+	      documentDisplayMode[document - 1] = newDisplayMode;
+	      /* le document passe du mode affichage sans calcul d'image   */
+	      /* au mode d'affichage differe'  */
+	      RebuildImage (LoadedDocument[document - 1]);
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

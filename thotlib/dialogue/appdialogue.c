@@ -1872,7 +1872,6 @@ int                 doc;
 		dy = (Dimension) MIN_HAUT;
 	     else
 		dy = (Dimension) haut;
-	     *volume = GetCharsCapacity ((int) dx * (int) dy);	/* volume en caracteres */
 #endif /* _WINDOWS */
 
 	     if (X <= 0)
@@ -2322,7 +2321,8 @@ int                 doc;
 	  }
 	else
 	   ChangeFrameTitle (frame, name);
-
+	/* volume en caracteres */
+	*volume = GetCharsCapacity (FrameTable[frame].FrWidth * FrameTable[frame].FrHeight);
 	FrameTable[frame].FrDoc = doc;
 	FrameTable[frame].FrView = view;
 	InitializeFrameParams (frame, 5, 0);	/* Initialise la visibilite et le zoom de la fenetre */

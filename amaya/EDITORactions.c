@@ -1158,9 +1158,12 @@ char               *shape;
    char               *text, url[MAX_LENGTH];
    int                 length, w, h;
    int                 firstchar, lastchar;
+   DisplayMode         dispMode;
 
+   dispMode = TtaGetDisplayMode (doc);
    /* ask Thot to stop displaying changes made in the document */
-   TtaSetDisplayMode (doc, DeferredDisplay);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
@@ -1294,7 +1297,7 @@ char               *shape;
 	     /*TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);*/
 	  }
 	/* ask Thot to display changes made in the document */
-	TtaSetDisplayMode (doc, DisplayImmediately);
+	TtaSetDisplayMode (doc, dispMode);
 	TtaSelectElement (doc, child);
 	if (shape[0] == 'p')
 	   TtcInsertGraph (doc, 1, 'p');
@@ -1516,9 +1519,12 @@ View                view;
                        child, next, previous;
    int                 firstSelectedChar, lastSelectedChar, i;
    ElementType         elType;
+   DisplayMode         dispMode;
 
+   dispMode = TtaGetDisplayMode (doc);
    /* ask Thot to stop displaying changes made in the document */
-   TtaSetDisplayMode (doc, DeferredDisplay);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &firstSelectedElement,
@@ -1563,7 +1569,7 @@ View                view;
 	  }
      }
    /* ask Thot to display changes made in the document */
-   TtaSetDisplayMode (doc, DisplayImmediately);
+   TtaSetDisplayMode (doc, dispMode);
    /* set the selection */
    if (firstSelectedChar > 1)
      {

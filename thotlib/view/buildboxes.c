@@ -29,12 +29,15 @@
 #include "language.h"
 #include "libmsg.h"
 #include "message.h"
+#include "appdialogue.h"
 
 #define THOT_EXPORT
 #include "boxes_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "font_tv.h"
+#include "edit_tv.h"
+#include "frame_tv.h"
 
 #include "appli_f.h"
 #include "applicationapi_f.h"
@@ -1514,7 +1517,7 @@ int                 frame;
 		FreePolyline (pCurrentBox);
 
 	     if (pAb->AbLeafType == LtPicture)
-	        UnmapImage(pCurrentBox->BxPictInfo);
+	        UnmapImage((PictInfo *)pCurrentBox->BxPictInfo);
 	     pChildAb = pAb->AbFirstEnclosed;
 	     pAb->AbNew = toRemake;
 
@@ -2804,8 +2807,7 @@ PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-   boolean             change;
-   boolean             result;
+   Document            document;
    PtrAbstractBox      pParentAb;
    PtrAbstractBox      pChildAb;
    ViewFrame          *pFrame;
@@ -2815,8 +2817,14 @@ PtrAbstractBox      pAb;
    PtrBox              pChildBox;
    int                 savevisu = 0;
    int                 savezoom = 0;
+   boolean             change;
+   boolean             result;
 
    result = TRUE;
+   document = FrameTable[frame].FrDoc;
+   if (document == 0 || documentDisplayMode[document - 1] == NoComputedDisplay)
+     return result;
+
    pLine = NULL;
    /* Pas de pave en parametre */
    if (pAb == NULL)

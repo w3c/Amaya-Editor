@@ -774,7 +774,9 @@ boolean             createLink;
    AttributeType       attrType;
    Attribute           attr;
    boolean             error;
+   DisplayMode         dispMode;
 
+   dispMode = TtaGetDisplayMode (doc);
    /* get the first and last selected element */
    TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
    TtaGiveLastSelectedElement (doc, &last, &i, &cN);
@@ -842,7 +844,8 @@ boolean             createLink;
 		  return;
 	       }
 	     /* ask Thot to stop displaying changes that will be made in the document */
-	     TtaSetDisplayMode (doc, DeferredDisplay);
+	     if (dispMode == DisplayImmediately)
+	       TtaSetDisplayMode (doc, DeferredDisplay);
 
 	     /* process the first selected element */
 	     elType = TtaGetElementType (first);
@@ -912,7 +915,7 @@ boolean             createLink;
 
    TtaSetDocumentModified (doc);
    /* ask Thot to display changes made in the document */
-   TtaSetDisplayMode (doc, DisplayImmediately);
+   TtaSetDisplayMode (doc, dispMode);
    TtaSelectElement (doc, anchor);
    if (createLink)
      {
@@ -946,10 +949,15 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   TtaSetDisplayMode (event->document, DeferredDisplay);
+   DisplayMode         dispMode;
+
+   dispMode = TtaGetDisplayMode (event->document);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (event->document, DeferredDisplay);
+
    AttrFontSizeDelete (event);
    AttrFontSizeCreated (event);
-   TtaSetDisplayMode (event->document, DisplayImmediately);
+   TtaSetDisplayMode (event->document, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -970,8 +978,11 @@ int                 eltype;
                        length, firstSelectedChar, lastSelectedChar;
    ElementType         elType, selType;
    boolean             remove, done;
+   DisplayMode         dispMode;
 
-   TtaSetDisplayMode (document, DeferredDisplay);
+   dispMode = TtaGetDisplayMode (document);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (document, DeferredDisplay);
    TtaGiveFirstSelectedElement (document, &selectedEl, &firstChar, &lastChar);
    /* get the first leaf in the first selected element */
    elem = selectedEl;
@@ -1061,7 +1072,7 @@ int                 eltype;
 	lastChar = nextLastChar;
      }
 
-   TtaSetDisplayMode (document, DisplayImmediately);
+   TtaSetDisplayMode (document, dispMode);
    if (firstSelectedElem == lastSelectedElem)
       if (firstSelectedChar > 1 || lastSelectedChar > 0)
 	 TtaSelectString (document, firstSelectedElem, firstSelectedChar,

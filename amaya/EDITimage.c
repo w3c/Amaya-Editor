@@ -546,7 +546,9 @@ Document            document;
    Element             el, child;
    char               *text;
    int                 shape, w, h, length;
+   DisplayMode         dispMode;
 
+   dispMode = TtaGetDisplayMode (document);
    /* Search the USEMAP attribute */
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_USEMAP;
@@ -554,7 +556,8 @@ Document            document;
    if (attr != NULL)
      {
 	/* ask Thot to stop displaying changes made in the document */
-	TtaSetDisplayMode (document, DeferredDisplay);
+       if (dispMode == DisplayImmediately)
+	 TtaSetDisplayMode (document, DeferredDisplay);
 
 	/* Search the MAP element associated with IMAGE element */
 	length = TtaGetTextAttributeLength (attr);
@@ -615,5 +618,5 @@ Document            document;
      }
 
    /* ask Thot to display changes made in the document */
-   TtaSetDisplayMode (document, DisplayImmediately);
+   TtaSetDisplayMode (document, dispMode);
 }

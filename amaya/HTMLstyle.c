@@ -2887,62 +2887,92 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   PresentationValue   best;
-   char               *url;
+   Element             el;
+   ElementType         elType;
+   PresentationValue     best;
+   GenericContext        gblock;
+   SpecificContextBlock *sblock;
+   SpecificTarget        elem;
+   char                 *url;
+   char                 *name;
+   boolean               setColor;
 
+   url = NULL;
    best.unit = DRIVERP_UNIT_INVALID;
-
+   setColor = TRUE;
    if (IS_CASE_WORD (attrstr, "url"))
-     {
-	/*
-	 * we don't currently support URL just parse it to skip it.
-	 */
-	attrstr = ParseHTMLURL (attrstr, &url);
-	
-	TtaFreeMemory (url);
-     }
+     /*
+      * we don't currently support URL just parse it to skip it.
+      */
+     attrstr = ParseHTMLURL (attrstr, &url);
+
    attrstr = ParseHTML3StyleColor (attrstr, &best);
+   if (best.unit != DRIVERP_UNIT_INVALID)
+     setColor = False;
 
-   if (best.unit == DRIVERP_UNIT_INVALID)
-     return (attrstr);
-   /*
-    * if the background is set on the HTML or BODY element,
-    * set the background color for the full window.
-    */
-   if (context->drv == &GenericStrategy)
+   if (url || setColor)
      {
-	GenericContext      block = (GenericContext) context;
+       /*
+	* if the background is set on the HTML or BODY element,
+	* set the background color for the full window.
+	*/
+       if (context->drv == &GenericStrategy)
+	 {
+	   gblock = (GenericContext) context;
+	   if ((gblock->type == HTML_EL_HTML) || (gblock->type == HTML_EL_BODY) ||
+	       (gblock->type == HTML_EL_HEAD))
+	     {
+	       if (setColor)
+		 {
+		   CSSSetBackground (gblock->doc, (PSchema) target, best.value);
+		   setColor = False;
+		 }
+	       if (url)
+		 {
+		   /* fetch and display background image of element */
+		   el = TtaGetMainRoot (gblock->doc);
+		   FetchImage (gblock->doc, el, url);
+		 }
+	     }
+	 }
+       else if (context->drv == &SpecificStrategy)
+	 {
+	   sblock = (SpecificContextBlock *) context;
+	   elem = (SpecificTarget) target;
+	   name = GetHTML3Name (elem, sblock->doc);
+	   
+	   if ((!strcmp (name, "HTML")) || (!strcmp (name, "BODY")) ||
+	       (!strcmp (name, "HEAD")))
+	     {
+	       if (setColor)
+		 {
+		   TtaSetViewBackgroundColor (sblock->doc, 1, best.value);
+		   setColor = False;
+		 }
+	       if (url)
+		 {
+		   /* fetch and display background image of element */
+		   el = TtaGetMainRoot (sblock->doc);
+		   FetchImage (sblock->doc, el, url);
+		 }
+	     }
+	 }
 
-	if ((block->type == HTML_EL_HTML) || (block->type == HTML_EL_BODY) ||
-	    (block->type == HTML_EL_HEAD))
-	  {
-	     CSSSetBackground (block->doc, (PSchema) target, best.value);
-	     return (attrstr);
-	  }
+       if (setColor)
+	 {
+	   /* install the new presentation. */
+	   if (context->drv->SetBackgroundColor)
+	     context->drv->SetBackgroundColor (target, context, best);
+	   /* thot specificity : need to set fill pattern for background color */
+	   best.value = 2;
+	   best.unit = DRIVERP_UNIT_REL;
+	   if (context->drv->SetFillPattern)
+	     context->drv->SetFillPattern (target, context, best);
+	 }
      }
-   else if (context->drv == &SpecificStrategy)
-     {
-	SpecificContextBlock *block = (SpecificContextBlock *) context;
-	SpecificTarget      elem = (SpecificTarget) target;
-	char               *name = GetHTML3Name (elem, block->doc);
 
-	if ((!strcmp (name, "HTML")) || (!strcmp (name, "BODY")) ||
-	    (!strcmp (name, "HEAD")))
-	  {
-	     TtaSetViewBackgroundColor (block->doc, 1, best.value);
-	     return (attrstr);
-	  }
-     }
-   /*
-    * install the new presentation.
-    */
-   if (context->drv->SetBackgroundColor)
-      context->drv->SetBackgroundColor (target, context, best);
-   /* thot specificity : need to set fill pattern for background color */
-   best.value = 2;
-   best.unit = DRIVERP_UNIT_REL;
-   if (context->drv->SetFillPattern)
-      context->drv->SetFillPattern (target, context, best);
+   if (url)
+     TtaFreeMemory (url);
    return (attrstr);
 }
 

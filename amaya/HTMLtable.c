@@ -274,7 +274,8 @@ Document            doc;
    DisplayMode         dispMode;
 
    dispMode = TtaGetDisplayMode (doc);
-   TtaSetDisplayMode (doc, DeferredDisplay);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
 #endif
    /* Create an attribute IntVolMax for each Column_head if it does not exist*/
    /* This attribute will contain the volume (number of characters) of the */
@@ -1995,6 +1996,13 @@ Document            doc;
    int                 colspan, shift, rowspanshift;
    char                name[50];
    Document            refdoc;
+#ifndef STANDALONE
+   DisplayMode         dispMode;
+
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+#endif
 
    elType = TtaGetElementType (cell);
    if (elType.ElTypeNum == HTML_EL_Table_cell)
@@ -2006,102 +2014,102 @@ Document            doc;
 	cell = newcell;
      }
    firstcolhead = GetFirstColumnHead (cell);
-   if (firstcolhead == NULL)
-      return;
-#ifndef STANDALONE
-   TtaSetDisplayMode (doc, DeferredDisplay);
-#endif
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_Ref_column;
-   row = TtaGetParent (cell);
-   prevcell = cell;
-   prevcolhead = NULL;
-   colhead = NULL;
-   TtaPreviousSibling (&prevcell);
-   if (prevcell == NULL)
+   if (firstcolhead != NULL)
      {
-	colhead = firstcolhead;
-/********
-	nextcell = cell;
-	TtaNextSibling(&nextcell);
-	if (nextcell == NULL)
-	  colhead = firstcolhead;
-	else
-	  {
-	  attr = TtaGetAttribute(nextcell, attrType);
-	  if (attr != NULL)
-	    TtaGiveReferenceAttributeValue(attr, &colhead, name, &refdoc);
-	  else
-	    colhead = firstcolhead;
-	  }
-********/
-     }
-   else
-     {
-	attr = TtaGetAttribute (prevcell, attrType);
-	if (attr != NULL)
-	  {
-	     TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
-	     if (colhead != NULL)
-	       {
-		  /* is there an attribute colspan for the previous cell ? */
-		  attrType.AttrTypeNum = HTML_ATTR_colspan;
-		  attr = TtaGetAttribute (prevcell, attrType);
-		  if (attr == NULL)
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+       row = TtaGetParent (cell);
+       prevcell = cell;
+       prevcolhead = NULL;
+       colhead = NULL;
+       TtaPreviousSibling (&prevcell);
+       if (prevcell == NULL)
+	 {
+	   colhead = firstcolhead;
+	   /********
+	     nextcell = cell;
+	     TtaNextSibling(&nextcell);
+	     if (nextcell == NULL)
+	     colhead = firstcolhead;
+	     else
+	     {
+	     attr = TtaGetAttribute(nextcell, attrType);
+	     if (attr != NULL)
+	     TtaGiveReferenceAttributeValue(attr, &colhead, name, &refdoc);
+	     else
+	     colhead = firstcolhead;
+	     }
+	     ********/
+	 }
+       else
+	 {
+	   attr = TtaGetAttribute (prevcell, attrType);
+	   if (attr != NULL)
+	     {
+	       TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+	       if (colhead != NULL)
+		 {
+		   /* is there an attribute colspan for the previous cell ? */
+		   attrType.AttrTypeNum = HTML_ATTR_colspan;
+		   attr = TtaGetAttribute (prevcell, attrType);
+		   if (attr == NULL)
 		     colspan = 1;
-		  else
-		    {
+		   else
+		     {
 		       colspan = TtaGetAttributeValue (attr);
 		       if (colspan < 1)
-			  colspan = 1;
-		    }
-		  while (colspan > 0)
-		    {
+			 colspan = 1;
+		     }
+		   while (colspan > 0)
+		     {
 		       prevcolhead = colhead;
 		       TtaNextSibling (&colhead);
 		       if (colhead == NULL)
-			  /* there is not enough Column_heads. Create one */
-			  colhead = NewColumnHead (prevcolhead, doc, TRUE, row);
+			 /* there is not enough Column_heads. Create one */
+			 colhead = NewColumnHead (prevcolhead, doc, TRUE, row);
 		       colspan--;
-		    }
-	       }
-	  }
+		     }
+		 }
+	     }
+	 }
+
+       if (colhead != NULL)
+	 {
+	   /* if some cell above the new cell has an attribute rowspan, the new cell */
+	   /* must be shifted on the right */
+	   rowspanshift = ShiftByRowSpan (cell, row, colhead);
+	   shift = rowspanshift;
+	   while (shift > 0)
+	     {
+	       prevcolhead = colhead;
+	       TtaNextSibling (&colhead);
+	       if (colhead == NULL)
+		 /* there is not enough Column_heads. Create one */
+		 colhead = NewColumnHead (prevcolhead, doc, TRUE, row);
+	       shift--;
+	     }
+	   /* relate the new cell with its Column_head */
+	   RelateCellWithColumnHead (cell, colhead, doc);
+	   /* is there an attribute colspan for that new cell ? */
+	   attrType.AttrTypeNum = HTML_ATTR_colspan;
+	   attr = TtaGetAttribute (cell, attrType);
+	   if (attr == NULL)
+	     colspan = 1;
+	   else
+	     {
+	       colspan = TtaGetAttributeValue (attr);
+	       if (colspan < 1)
+		 colspan = 1;
+	     }
+	   /* shift all following cells to the right */
+	   nextcell = cell;
+	   TtaNextSibling (&nextcell);
+	   if (nextcell != NULL)
+	     ShiftCellsRight (nextcell, row, colspan, TRUE, doc, firstcolhead);
+	 }
      }
-   if (colhead == NULL)
-     return;
-   /* if some cell above the new cell has an attribute rowspan, the new cell */
-   /* must be shifted on the right */
-   rowspanshift = ShiftByRowSpan (cell, row, colhead);
-   shift = rowspanshift;
-   while (shift > 0)
-     {
-	prevcolhead = colhead;
-	TtaNextSibling (&colhead);
-	if (colhead == NULL)
-	   /* there is not enough Column_heads. Create one */
-	   colhead = NewColumnHead (prevcolhead, doc, TRUE, row);
-	shift--;
-     }
-   /* relate the new cell with its Column_head */
-   RelateCellWithColumnHead (cell, colhead, doc);
-   /* is there an attribute colspan for that new cell ? */
-   attrType.AttrTypeNum = HTML_ATTR_colspan;
-   attr = TtaGetAttribute (cell, attrType);
-   if (attr == NULL)
-      colspan = 1;
-   else
-     {
-	colspan = TtaGetAttributeValue (attr);
-	if (colspan < 1)
-	   colspan = 1;
-     }
-   /* shift all following cells to the right */
-   nextcell = cell;
-   TtaNextSibling (&nextcell);
-   if (nextcell != NULL)
-      ShiftCellsRight (nextcell, row, colspan, TRUE, doc, firstcolhead);
 #ifndef STANDALONE
-   TtaSetDisplayMode (doc, DisplayImmediately);
+   TtaSetDisplayMode (doc, dispMode);
 #endif
 }
 

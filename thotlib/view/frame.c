@@ -729,8 +729,6 @@ int                 delta;
 				 (x >= pFrame->FrXOrg) &&
 				 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
 			     UnmapImage (pBox->BxPictInfo);
-			   /****else
-			     DisplayBox (pBox, frame);****/
 			 }
 		       /* Skip to next box */
 		       pBox = pBox->BxNext;

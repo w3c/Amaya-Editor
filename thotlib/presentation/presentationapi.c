@@ -55,15 +55,12 @@ extern int          UserErrorCode;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PRule               TtaNewPRule (int presentationType, View view, Document document)
-
 #else  /* __STDC__ */
 PRule               TtaNewPRule (presentationType, view, document)
 int                 presentationType;
 View                view;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pPres;
    int                 v;
@@ -71,48 +68,40 @@ Document            document;
    UserErrorCode = 0;
    pPres = NULL;
    if (presentationType < 0 || presentationType > PRHyphenate)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
+     /* parameter document is correct */
      {
-	v = 0;
-	if (view < 100)
-	   /* View of the main tree */
-	   if (view < 1 || view > MAX_VIEW_DOC)
-	      TtaError (ERR_invalid_parameter);
-	   else if (LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView == 0)
-	      /* this view is not open */
-	      TtaError (ERR_invalid_parameter);
-	   else
-	      v = LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView;
-	else
-	   /* View of associated elements */
-	if (view - 100 < 1 || view - 100 > MAX_ASSOC_DOC)
+       v = 0;
+       if (view < 100)
+	 /* View of the main tree */
+	 if (view < 1 || view > MAX_VIEW_DOC)
 	   TtaError (ERR_invalid_parameter);
-	else if (LoadedDocument[document - 1]->DocAssocFrame[view - 101] == 0)
+	 else if (LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView == 0)
 	   /* this view is not open */
 	   TtaError (ERR_invalid_parameter);
-	else
+	 else
+	   v = LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView;
+       else
+	 /* View of associated elements */
+	 if (view - 100 < 1 || view - 100 > MAX_ASSOC_DOC)
+	   TtaError (ERR_invalid_parameter);
+	 else if (LoadedDocument[document - 1]->DocAssocFrame[view - 101] == 0)
+	   /* this view is not open */
+	   TtaError (ERR_invalid_parameter);
+	 else
 	   v = 1;
-	if (v > 0)
-	  {
-	     GetPresentRule (&pPres);
-	     pPres->PrType = (PRuleType) presentationType;
-	     pPres->PrNextPRule = NULL;
-	     pPres->PrViewNum = v;
-	  }
+       if (v > 0)
+	 {
+	   GetPresentRule (&pPres);
+	   pPres->PrType = (PRuleType) presentationType;
+	   pPres->PrNextPRule = NULL;
+	   pPres->PrViewNum = v;
+	 }
      }
    return ((PRule) pPres);
 }
@@ -135,48 +124,34 @@ Document            document;
    new presentation rule.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PRule               TtaNewPRuleForView (int presentationType, int view, Document document)
-
 #else  /* __STDC__ */
 PRule               TtaNewPRuleForView (presentationType, view, document)
 int                 presentationType;
 int                 view;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pPres;
 
    UserErrorCode = 0;
    pPres = NULL;
    if (presentationType < 0 || presentationType > PRHyphenate)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if ((view < 1) || (view > MAX_VIEW))
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameters document and view are correct */
+     /* parameters document and view are correct */
      {
-	GetPresentRule (&pPres);
-	pPres->PrType = (PRuleType) presentationType;
-	pPres->PrNextPRule = NULL;
-	pPres->PrViewNum = view;
+       GetPresentRule (&pPres);
+       pPres->PrType = (PRuleType) presentationType;
+       pPres->PrNextPRule = NULL;
+       pPres->PrViewNum = view;
      }
    return ((PRule) pPres);
 }
@@ -199,18 +174,14 @@ Document            document;
    new presentation rule.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PRule               TtaNewPRuleForNamedView (int presentationType, char *viewName, Document document)
-
 #else  /* __STDC__ */
 PRule               TtaNewPRuleForNamedView (presentationType, viewName, document)
 int                 presentationType;
 char               *viewName;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pPres;
    PtrDocument         pDoc;
@@ -221,48 +192,39 @@ Document            document;
    UserErrorCode = 0;
    pPres = NULL;
    if (presentationType < 0 || presentationType > PRHyphenate)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
+     /* parameter document is correct */
      {
-	pDoc = LoadedDocument[document - 1];
-	vue = 0;
-	/* Searching into the main tree views */
-	if (pDoc->DocSSchema->SsPSchema != NULL)
-	   for (v = 1; v <= MAX_VIEW && vue == 0; v++)
-	      if (strcmp (pDoc->DocSSchema->SsPSchema->PsView[v - 1],
-			  viewName) == 0)
-		 vue = v;
-	/* If not found one search into associated elements */
-	if (vue == 0)
-	   for (v = 1; v <= MAX_ASSOC_DOC && vue == 0; v++)
-	     {
-		pEl = pDoc->DocAssocRoot[v - 1];
-		if (pEl != NULL)
-		   if (strcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
-		      vue = 1;
-	     }
-	if (vue == 0)
-	   TtaError (ERR_invalid_parameter);
-	else
-	  {
-	     GetPresentRule (&pPres);
-	     pPres->PrType = (PRuleType) presentationType;
-	     pPres->PrNextPRule = NULL;
-	     pPres->PrViewNum = vue;
-	  }
+       pDoc = LoadedDocument[document - 1];
+       vue = 0;
+       /* Searching into the main tree views */
+       if (pDoc->DocSSchema->SsPSchema != NULL)
+	 for (v = 1; v <= MAX_VIEW && vue == 0; v++)
+	   if (strcmp (pDoc->DocSSchema->SsPSchema->PsView[v - 1], viewName) == 0)
+	     vue = v;
+       /* If not found one search into associated elements */
+       if (vue == 0)
+	 for (v = 1; v <= MAX_ASSOC_DOC && vue == 0; v++)
+	   {
+	     pEl = pDoc->DocAssocRoot[v - 1];
+	     if (pEl != NULL)
+	       if (strcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		 vue = 1;
+	   }
+       if (vue == 0)
+	 TtaError (ERR_invalid_parameter);
+       else
+	 {
+	   GetPresentRule (&pPres);
+	   pPres->PrType = (PRuleType) presentationType;
+	   pPres->PrNextPRule = NULL;
+	   pPres->PrViewNum = vue;
+	 }
      }
    return ((PRule) pPres);
 }
@@ -278,32 +240,25 @@ Document            document;
 
    Return value:
    new presentation rule.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PRule               TtaCopyPRule (PRule pRule)
-
 #else  /* __STDC__ */
 PRule               TtaCopyPRule (pRule)
 PRule               pRule;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            copy;
 
    UserErrorCode = 0;
    copy = NULL;
    if (pRule == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else
      {
-	GetPresentRule (&copy);
-	*copy = *((PtrPRule) pRule);
-	copy->PrNextPRule = NULL;
+       GetPresentRule (&copy);
+       *copy = *((PtrPRule) pRule);
+       copy->PrNextPRule = NULL;
      }
    return ((PRule) copy);
 }
@@ -320,41 +275,28 @@ PRule               pRule;
    document: the document to which the element belongs.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaAttachPRule (Element element, PRule pRule, Document document)
-
 #else  /* __STDC__ */
 void                TtaAttachPRule (element, pRule, document)
 Element             element;
 PRule               pRule;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pPres;
    boolean             stop;
-
 #ifndef NODISPLAY
    boolean             ok;
 
 #endif
    UserErrorCode = 0;
    if (element == NULL || pRule == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
       /* parameter document is correct */
      {
@@ -362,34 +304,34 @@ Document            document;
 	ok = TRUE;
 #endif
 	if (((PtrElement) element)->ElFirstPRule == NULL)
-	   ((PtrElement) element)->ElFirstPRule = (PtrPRule) pRule;
+	  ((PtrElement) element)->ElFirstPRule = (PtrPRule) pRule;
 	else
 	  {
-	     pPres = ((PtrElement) element)->ElFirstPRule;
-	     stop = FALSE;
-	     do
-		if (pPres->PrType == ((PtrPRule) pRule)->PrType &&
-		    pPres->PrViewNum == ((PtrPRule) pRule)->PrViewNum)
-		  {
-		     TtaError (ERR_duplicate_presentation_rule);
+	    pPres = ((PtrElement) element)->ElFirstPRule;
+	    stop = FALSE;
+	    do
+	      if (pPres->PrType == ((PtrPRule) pRule)->PrType &&
+		  pPres->PrViewNum == ((PtrPRule) pRule)->PrViewNum)
+		{
+		  TtaError (ERR_duplicate_presentation_rule);
 #ifndef NODISPLAY
-		     ok = FALSE;
+		  ok = FALSE;
 #endif
-		     stop = TRUE;
-		  }
-		else if (pPres->PrNextPRule == NULL)
-		  {
-		     pPres->PrNextPRule = (PtrPRule) pRule;
-		     ((PtrPRule) pRule)->PrNextPRule = NULL;
-		     stop = TRUE;
-		  }
-		else
-		   pPres = pPres->PrNextPRule;
-	     while (!stop);
+		  stop = TRUE;
+		}
+	      else if (pPres->PrNextPRule == NULL)
+		{
+		  pPres->PrNextPRule = (PtrPRule) pRule;
+		  ((PtrPRule) pRule)->PrNextPRule = NULL;
+		  stop = TRUE;
+		}
+	      else
+		pPres = pPres->PrNextPRule;
+	    while (!stop);
 	  }
 #ifndef NODISPLAY
 	if (ok)
-	   RedisplayNewPRule (document, (PtrElement) element, (PtrPRule) pRule);
+	  RedisplayNewPRule (document, (PtrElement) element, (PtrPRule) pRule);
 #endif
      }
 }
@@ -405,63 +347,49 @@ Document            document;
    document: the document to which the element belongs.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaRemovePRule (Element element, PRule pRule, Document document)
-
 #else  /* __STDC__ */
 void                TtaRemovePRule (element, pRule, document)
 Element             element;
 PRule               pRule;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pPres, pPreviousPres;
 
    UserErrorCode = 0;
    if (element == NULL || pRule == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
+     /* parameter document is correct */
      {
-	pPres = ((PtrElement) element)->ElFirstPRule;
-	pPreviousPres = NULL;
-	while (pPres != NULL && pPres != (PtrPRule) pRule)
-	  {
-	     pPreviousPres = pPres;
-	     pPres = pPres->PrNextPRule;
-	  }
-	if (pPres != (PtrPRule) pRule)
-	   /* This element does not own a presentation rule */
-	  {
-	     TtaError (ERR_invalid_parameter);
-	  }
-	else
-	  {
-	     if (pPreviousPres == NULL)
-		((PtrElement) element)->ElFirstPRule = pPres->PrNextPRule;
-	     else
-		pPreviousPres->PrNextPRule = pPres->PrNextPRule;
+       pPres = ((PtrElement) element)->ElFirstPRule;
+       pPreviousPres = NULL;
+       while (pPres != NULL && pPres != (PtrPRule) pRule)
+	 {
+	   pPreviousPres = pPres;
+	   pPres = pPres->PrNextPRule;
+	 }
+       if (pPres != (PtrPRule) pRule)
+	 /* This element does not own a presentation rule */
+	 TtaError (ERR_invalid_parameter);
+       else
+	 {
+	   if (pPreviousPres == NULL)
+	     ((PtrElement) element)->ElFirstPRule = pPres->PrNextPRule;
+	   else
+	     pPreviousPres->PrNextPRule = pPres->PrNextPRule;
 #ifndef NODISPLAY
-	     RedisplayDefaultPresentation (document, (PtrElement) element,
-				 pPres->PrType, pPres->PrViewNum);
+	   RedisplayDefaultPresentation (document, (PtrElement) element,
+					 pPres->PrType, pPres->PrViewNum);
 #endif
-	     FreePresentRule (pPres);
-	  }
+	   FreePresentRule (pPres);
+	 }
      }
 }
 
@@ -498,19 +426,15 @@ Document            document;
    RForeground: rank of the foreground color in the file thot.color.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetPRuleValue (Element element, PRule pRule, int value, Document document)
-
 #else  /* __STDC__ */
 void                TtaSetPRuleValue (element, pRule, value, document)
 Element             element;
 PRule               pRule;
 int                 value;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
 #ifndef NODISPLAY
    boolean             done;
@@ -1233,29 +1157,21 @@ int                 presentationType;
    RForeground, RHyphenate.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetPRuleType (PRule pRule)
-
 #else  /* __STDC__ */
 int                 TtaGetPRuleType (pRule)
 PRule               pRule;
-
 #endif /* __STDC__ */
-
 {
    int                 presentationType;
 
    UserErrorCode = 0;
    presentationType = 0;
    if (pRule == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else
-     {
-	presentationType = ((PtrPRule) pRule)->PrType;
-     }
+     presentationType = ((PtrPRule) pRule)->PrType;
    return presentationType;
 }
 
@@ -1287,25 +1203,19 @@ PRule               pRule;
    RForeground: rank of the foreground color in the file thot.color.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetPRuleValue (PRule pRule)
-
 #else  /* __STDC__ */
 int                 TtaGetPRuleValue (pRule)
 PRule               pRule;
-
 #endif /* __STDC__ */
-
 {
    int                 value;
 
    UserErrorCode = 0;
    value = 0;
    if (pRule == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else
       switch (((PtrPRule) pRule)->PrType)
 	    {
@@ -1478,17 +1388,13 @@ PRule               pRule;
    0 if both rules are different, 1 if they are identical.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaSamePRules (PRule pRule1, PRule pRule2)
-
 #else  /* __STDC__ */
 int                 TtaSamePRules (pRule1, pRule2)
 PRule               pRule1;
 PRule               pRule2;
-
 #endif /* __STDC__ */
-
 {
    int                 result;
    PtrPRule            pR1, pR2;
@@ -1496,9 +1402,7 @@ PRule               pRule2;
    UserErrorCode = 0;
    result = 0;
    if (pRule1 == NULL || pRule2 == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else
      {
 	pR1 = (PtrPRule) pRule1;
@@ -1568,6 +1472,3 @@ PRule               pRule2;
      }
    return result;
 }
-
-
-/* End of module */

@@ -337,38 +337,36 @@ PictInfo           *imageDesc;
 
 #endif /* __STDC__ */
 {
-   boolean             pixmapok;
-   int                 xpix, ypix, wpix, hpix, bdw, dep;
-   Drawable            root;
+  boolean             pixmapok;
+  int                 xpix, ypix, wpix, hpix, bdw, dep;
+  Drawable            root;
 
-   pixmapok = TRUE;
-   if ((imageDesc->PicPixmap == PictureLogo)
-       || (imageDesc->PicPixmap == EpsfPictureLogo))
-      return TRUE;
-
-   if (imageDesc->PicPixmap == None)
-     {
-	return FALSE;
-     }
-   else
-     {
+  pixmapok = TRUE;
+  if ((imageDesc->PicPixmap == PictureLogo)
+      || (imageDesc->PicPixmap == EpsfPictureLogo))
+    return TRUE;
+  
+  if (imageDesc->PicPixmap == None)
+    return FALSE;
+  else
+    {
 #ifndef _WINDOWS
-	XGetGeometry (TtDisplay, imageDesc->PicPixmap, &root, &xpix, &ypix, &wpix, &hpix, &bdw, &dep);
+      XGetGeometry (TtDisplay, imageDesc->PicPixmap, &root, &xpix, &ypix, &wpix, &hpix, &bdw, &dep);
 #endif /* _WINDOWS */
-	switch (imageDesc->PicPresent)
-	      {
-		 case RealSize:
-		    pixmapok = TRUE;
-		    break;
-		 case ReScale:
-		    pixmapok = ((box->BxWidth == wpix) || (box->BxHeight == hpix));
-		    break;
-		 case FillFrame:
-		    pixmapok = ((box->BxWidth == wpix) && (box->BxHeight == hpix));
-		    break;
-	      }
-	return pixmapok;
-     }
+      switch (imageDesc->PicPresent)
+	{
+	case RealSize:
+	  pixmapok = TRUE;
+	  break;
+	case ReScale:
+	  /*pixmapok = ((box->BxWidth == wpix) || (box->BxHeight == hpix));*/
+	  break;
+	case FillFrame:
+	  /*pixmapok = ((box->BxWidth == wpix) && (box->BxHeight == hpix));*/
+	  break;
+	}
+      return pixmapok;
+    }
 }
 
 
@@ -861,9 +859,7 @@ int                 frame;
 	else
 	  {
 	     if (!IsValid (box, imageDesc))
-	       {
-		  LoadPicture (frame, box, imageDesc);
-	       }
+	       LoadPicture (frame, box, imageDesc);
 	     else
 	       {
 		  if (imageDesc->PicPresent != FillFrame)
@@ -964,105 +960,101 @@ PictInfo           *imageDesc;
    w = 0;
    h = 0;
    switch (status)
+     {
+     case (int) Supported_Format:
+       imageDesc->PicType = typeImage;
+       pres = imageDesc->PicPresent;
+       if (box == NULL)
 	 {
-	    case (int) Supported_Format:
-	       imageDesc->PicType = typeImage;
-	       pres = imageDesc->PicPresent;
-	       if (box == NULL)
-		 {
-		    w = 20;
-		    h = 20;
-		 }
-	       else
-		 {
-		    w = box->BxWidth;
-		    h = box->BxHeight;
-		 }
-
-	       if (!Printing)
-		 {
-		    if (box != NULL)
-		       /* set the colors of the  graphic context GC */
-		       if (TtWDepth == 1)
-			 {
-			    /* Black and white screen */
-			    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
-			    XSetBackground (TtDisplay, TtGraphicGC,
-				       ColorPixel (BackgroundColor[frame]));
-			 }
-		       else if (box->BxAbstractBox->AbSensitive &&
-				!box->BxAbstractBox->AbPresentationBox)
-			 {
-			    /* Set active Box Color */
-			    XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
-			    XSetForeground (TtDisplay, GCpicture, Box_Color);
-			    XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
-			 }
-		       else
-			 {
-			    /* Set Box Color */
-			    XSetForeground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbForeground));
-			    XSetForeground (TtDisplay, GCpicture, ColorPixel (box->BxAbstractBox->AbForeground));
-			    XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
-			 }
-		 }
-
-	       Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
-	       if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
-		 {
-		   if (typeImage >= InlineHandlers)
-		     {
-		       imageDesc->PicWArea = wif = box->BxWidth;
-		       imageDesc->PicHArea = hif = box->BxHeight;
-		       myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName);
-		       xif = imageDesc->PicXArea;
-		       yif = imageDesc->PicYArea;
-		     }
-		   else 
-		     myDrawable = (*(PictureHandlerTable[typeImage].
-				     Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
-		   noCroppingFrame = ((wif == 0) && (hif == 0));
-		 }
-
-	       if (myDrawable == None)
-		 {
-		    myDrawable = PictureLogo;
-		    imageDesc->PicType = -1;
-		    w = 40;
-		    h = 40;
-		    PicMask = None;
-		 }
-	       else
-		 {
-		    if (box != NULL)
-		      {
-			 if (noCroppingFrame)
-			   {
-			      NewDimPicture (box->BxAbstractBox);
-			   }
-			 w = wif;
-			 h = hif;
-		      }
-		 }
-	       break;
-	    case (int) Corrupted_File:
-	    case (int) Unsupported_Format:
-	       myDrawable = PictureLogo;
-	       imageDesc->PicType = -1;
-	       w = 40;
-	       h = 40;
-	       PicMask = None;
-	       break;
+	   w = 20;
+	   h = 20;
 	 }
+       else
+	 {
+	   w = box->BxWidth;
+	   h = box->BxHeight;
+	 }
+       
+       if (!Printing)
+	 {
+	   if (box != NULL)
+	     /* set the colors of the  graphic context GC */
+	     if (TtWDepth == 1)
+	       {
+		 /* Black and white screen */
+		 XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
+		 XSetBackground (TtDisplay, TtGraphicGC,
+				 ColorPixel (BackgroundColor[frame]));
+	       }
+	     else if (box->BxAbstractBox->AbSensitive &&
+		      !box->BxAbstractBox->AbPresentationBox)
+	       {
+		 /* Set active Box Color */
+		 XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
+		 XSetForeground (TtDisplay, GCpicture, Box_Color);
+		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
+	       }
+	     else
+	       {
+		 /* Set Box Color */
+		 XSetForeground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbForeground));
+		 XSetForeground (TtDisplay, GCpicture, ColorPixel (box->BxAbstractBox->AbForeground));
+		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
+	       }
+	 }
+       
+       Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
+       if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
+	 {
+	   if (typeImage >= InlineHandlers)
+	     {
+	       imageDesc->PicWArea = wif = box->BxWidth;
+	       imageDesc->PicHArea = hif = box->BxHeight;
+	       myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName);
+	       xif = imageDesc->PicXArea;
+	       yif = imageDesc->PicYArea;
+	     }
+	   else 
+	     myDrawable = (*(PictureHandlerTable[typeImage].
+			     Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
+	   noCroppingFrame = ((wif == 0) && (hif == 0));
+	 }
+       
+       if (myDrawable == None)
+	 {
+	   myDrawable = PictureLogo;
+	   imageDesc->PicType = -1;
+	   w = 40;
+	   h = 40;
+	   PicMask = None;
+	 }
+       else
+	 {
+	   if (box != NULL)
+	     {
+	       if (noCroppingFrame)
+		 NewDimPicture (box->BxAbstractBox);
+	       w = wif;
+	       h = hif;
+	     }
+	 }
+       break;
+     case (int) Corrupted_File:
+     case (int) Unsupported_Format:
+       myDrawable = PictureLogo;
+       imageDesc->PicType = -1;
+       w = 40;
+       h = 40;
+       PicMask = None;
+       break;
+     }
    imageDesc->PicXArea = xif;
    imageDesc->PicYArea = yif;
    imageDesc->PicWArea = w;
    imageDesc->PicHArea = h;
-
+   
    if (!Printing || imageDesc->PicPixmap != EpsfPictureLogo)
-      UpdatePictInfo (imageDesc, myDrawable, PicMask);
-
-
+     UpdatePictInfo (imageDesc, myDrawable, PicMask);
 #endif /* _WINDOWS */
 }
 

@@ -214,8 +214,8 @@ Document            doc;
 
 #endif
 {
-   TtaSetDisplayMode (doc, NoComputedDisplay);
-   TtaSetDisplayMode (doc, DisplayImmediately);
+  TtaSetDisplayMode (doc, NoComputedDisplay);
+  TtaSetDisplayMode (doc, DisplayImmediately);
 }
 
 /*----------------------------------------------------------------------
