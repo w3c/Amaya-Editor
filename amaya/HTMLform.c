@@ -295,6 +295,52 @@ int                 mode;
 			      break;
 
 			   case HTML_EL_Checkbox_Input:
+			     if (mode == HTML_EL_Submit_Input)
+				{
+				   /* Get the element's current status */
+				   attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+				   attrS = TtaGetAttribute (el, attrTypeS);
+				   if (attrS != NULL &&
+				       TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
+				     {
+				       /* save the NAME attribute of the element el */
+				       length = 200;
+				       TtaGiveTextAttributeValue (attr, name, &length);
+				       /* get the value attribute */
+					attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
+					attrS = TtaGetAttribute (el, attrTypeS);
+					if (attrS != NULL)
+					  {
+					     /* save the Default_Value attribute of the element el */
+					     length = 200;
+					     TtaGiveTextAttributeValue (attrS, value, &length);
+					     AddNameValue (name, value);
+					  }
+					else
+					  /* give a default checkbox value (On) */
+					  AddNameValue (name, "on");
+				     }
+				}
+			      else if (mode == HTML_EL_Reset_Input)
+				{
+				   /* Reset according to the default attribute */
+				   attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
+				   def = TtaGetAttribute (el, attrTypeS);
+				   /* remove previous checked attribute */
+				   attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+				   attrS = TtaGetAttribute (el, attrTypeS);
+				   if (attrS != NULL)
+				      TtaRemoveAttribute (el, attrS, doc);
+				   /* create a new checked attribute */
+				   attrS = TtaNewAttribute (attrTypeS);
+				   TtaAttachAttribute (el, attrS, doc);
+				   if (def != NULL)
+				      TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
+				   else
+				      TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
+				}
+			      break;
+
 			   case HTML_EL_Radio_Input:
 			      if (mode == HTML_EL_Submit_Input)
 				{
@@ -410,7 +456,7 @@ int                 mode;
 
 /*----------------------------------------------------------------------
   DoSubmit
-  submits a form : builds the URL and gets the result			
+  submits a form : builds the query string and sends the request	       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DoSubmit (Document doc, int method, char *action)
