@@ -4036,6 +4036,9 @@
 <label define="AM_NO_INSERT_POINT">
 	<message xml:lang="en">No insert position defined. Please select first</message>
 	<message xml:lang="fr">Pas de position d'insertion définie. Sélectionnez d'abord</message>
+	<message xml:lang="es">>No insert position defined.</message>
+	<message xml:lang="ru">Не определена
+	позиция вставки. Сначала выберите её.</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

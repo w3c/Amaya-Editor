@@ -411,7 +411,8 @@
 <label define="TMSG_LIB_PRINTING_IN_PROGRESS">
 	<message xml:lang="en">Printing in progress</message>
 	<message xml:lang="fr">Impression en cours</message>
-	<message xml:lang="ru">Печать</message>
+	<message xml:lang="es">Imprimiendo</message>
+	<message xml:lang="ru">Идёт печать</message>
 </label>
 <label define="TMSG_LIB_PRINT">
 	<message xml:lang="en">Print</message>

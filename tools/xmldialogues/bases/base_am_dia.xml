@@ -1910,6 +1910,8 @@
 <label define="BMakeToc">
 	<message xml:lang="en">&amp;Generate Table of contents</message>
 	<message xml:lang="fr">&amp;Engendrer la table des matières</message>
+	<message xml:lang="es">&amp;Generar �ndice de materias</message>
+	<message xml:lang="ru">Создать оглавление</message>
 </label>
 <label define="BDate">
 	<message xml:lang="en">Insert time stamp</message>
