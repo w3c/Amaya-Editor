@@ -853,6 +853,9 @@ void ANNOT_UpdateThread (Document doc, AnnotMeta *annot)
     return;
 
   /* find the document where the thread is being shown */
+  if (!annot->inReplyTo)
+    return;
+
   thread_doc = AnnotThread_searchRoot (AnnotMetaData[doc].thread->rootOfThread);
   if (thread_doc == 0)
     return;
