@@ -1743,8 +1743,9 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *uniqueChild)
 static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 {
   PtrBox              pBox, box;
-  PtrAbstractBox      pParent;
+  PtrAbstractBox      pParent, pChildAb;
   PtrFloat            previous, new_;
+  ThotBool            uniqueChild;
 
   if (pAb && !pAb->AbDead)
     {
@@ -1769,10 +1770,44 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 	       pParent->AbBox->BxType == BoFloatBlock ||
 	       pParent->AbBox->BxType == BoBlock))
 	    {
-	      if (pParent->AbBox->BxType == BoComplete)
-		/* mark this new block */
-		pParent->AbBox->BxType = BoFloatBlock;
-	      /* look for the float block */
+	      if (pParent->AbBox->BxType == BoComplete ||
+		  pParent->AbBox->BxType == BoBlock)
+		{
+		  /* skip this element if it only includes the floated box */
+		  uniqueChild = (pAb->AbPrevious == NULL &&
+				 pAb->AbPrevious == NULL);
+		  while (uniqueChild && pParent->AbEnclosing &&
+			 pParent->AbEnclosing->AbBox &&
+			 pParent->AbEnclosing->AbBox->BxType != BoCell &&
+			 /* if it's not the body element */
+			 !TypeHasException (ExcSetWindowBackground,
+					    pParent->AbElement->ElTypeNumber,
+					    pParent->AbElement->ElStructSchema))
+		    {
+		      pParent->AbBox->BxType = BoFloatGhost;
+		      pParent = pParent->AbEnclosing;
+		      HasFloatingChild (pParent, &uniqueChild);
+		    }
+		  /* mark this new block */
+		  if (pParent->AbInLine)
+		    pParent->AbBox->BxType = BoBlock;
+		  else
+		    {
+		      pParent->AbBox->BxType = BoFloatBlock;
+		      pChildAb = pParent->AbFirstEnclosed;
+		      while (pChildAb &&
+			     pChildAb->AbFloat == 'N' &&
+			     pChildAb->AbBox &&
+			     pChildAb->AbBox->BxType != BoFloatGhost)
+			{
+			  /* remove the old position relations */
+			  ClearPosRelation (pChildAb->AbBox, TRUE);
+			  ClearPosRelation (pChildAb->AbBox, FALSE);
+			  pChildAb = pChildAb->AbNext;
+			}
+		    }
+		}
+	      /* get a new float block */
 	      pBox = pParent->AbBox;
 	      new_ = (PtrFloat) TtaGetMemory (sizeof (BFloat));
 	      new_->FlBox = box;
@@ -1922,11 +1957,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		  inlineChildren = inLine;
 		  inlineFloatC = inLineFloat;
 		  if (pAb->AbFirstEnclosed &&
-		      pCurrentBox->BxType != BoFloatGhost)
+		      pCurrentBox->BxType != BoFloatGhost &&
+		      pCurrentBox->BxType != BoFloatBlock &&
+		      !HasFloatingChild (pAb, &uniqueChild))
 		    {
 		      if (inLine || inLineFloat)
-		      /* that block will be skipped */
-		      pCurrentBox->BxType = BoGhost;
+			/* that block will be skipped */
+			pCurrentBox->BxType = BoGhost;
 		    }
 		}
 	      else if (HasFloatingChild (pAb, &uniqueChild))
@@ -1935,19 +1972,35 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		  inlineFloatC = TRUE;
 		  pParent = pAb;
 		  while (uniqueChild && pParent->AbEnclosing &&
-		      /* if it's not the body element */
-		      !TypeHasException (ExcSetWindowBackground,
-					 pParent->AbElement->ElTypeNumber,
-					 pParent->AbElement->ElStructSchema))
+			 pParent->AbEnclosing->AbBox &&
+			 pParent->AbEnclosing->AbBox->BxType != BoCell &&
+			 /* if it's not the body element */
+			 !TypeHasException (ExcSetWindowBackground,
+					    pParent->AbElement->ElTypeNumber,
+					    pParent->AbElement->ElStructSchema))
 		    {
 		      pParent->AbBox->BxType = BoFloatGhost;
 		      pParent = pParent->AbEnclosing;
 		      HasFloatingChild (pParent, &uniqueChild);
 		    }
+		  /* mark this new block */
 		  if (pParent->AbInLine)
 		    pParent->AbBox->BxType = BoBlock;
 		  else
-		    pParent->AbBox->BxType = BoFloatBlock;
+		    {
+		      pParent->AbBox->BxType = BoFloatBlock;
+		      pChildAb = pParent->AbFirstEnclosed;
+		      while (pChildAb &&
+			     pChildAb->AbFloat == 'N' &&
+			     pChildAb->AbBox &&
+			     pChildAb->AbBox->BxType != BoFloatGhost)
+			{
+			  /* remove the old position relations */
+			  ClearPosRelation (pChildAb->AbBox, TRUE);
+			  ClearPosRelation (pChildAb->AbBox, FALSE);
+			  pChildAb = pChildAb->AbNext;
+			}
+		    }
 		  pParent->AbBox->BxFirstLine = NULL;
 		  pParent->AbBox->BxLastLine = NULL;
 		  tableType = pCurrentBox->BxType;
@@ -3014,7 +3067,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   int                 nSpaces;
   int                 i, k, charDelta, adjustDelta;
   ThotBool            condition, inLine, inLineFloat;
-  ThotBool            result, isCell;
+  ThotBool            result, isCell, uniqueChild;
   ThotBool            orgXComplete;
   ThotBool            orgYComplete;
 #ifdef _GL
@@ -3237,11 +3290,15 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 	  if (inLine || inLineFloat)
 	    {
-	      /* the parent becomes ghost */
-	      pParent->AbBox->BxType = BoGhost;
-	      /* the current box won't be displayed */
-	      if (pParent->AbFillBox)
-		pParent->AbBox->BxDisplay = TRUE;
+	      if (!HasFloatingChild (pParent, &uniqueChild) ||
+		  uniqueChild)
+		{
+		  /* the parent becomes ghost */
+		  pParent->AbBox->BxType = BoGhost;
+		  /* the current box won't be displayed */
+		  if (pParent->AbFillBox)
+		    pParent->AbBox->BxDisplay = TRUE;
+		}
 	    }
 	}
 

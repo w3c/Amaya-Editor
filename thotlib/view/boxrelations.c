@@ -931,6 +931,8 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
     }
   else
     {
+if (pAb->AbFloat != 'N')
+  printf ("Create pos relation\n");
       /* Vertical rule */
       if (pRefAb == pAb)
 	{
