@@ -53,7 +53,7 @@
 #include "structselect_f.h"
 #include "selectmenu_f.h"
 
-static PathBuffer   psdir;
+static PathBuffer   PSdir;
 static boolean      PaperPrint;
 static boolean      ManualFeed;
 static boolean      NewPaperPrint;
@@ -66,22 +66,13 @@ static char	    Orientation[MAX_NAME_LENGTH];
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         initImpression (int userOrientation, char *thotDir, char *tempDir, char *dir, char *name, char *realName,
-				    char *printer, int pid, long thotWin, char *thotSch, char *thotDoc, char *printProcessing)
+static void         PrintInit (int userOrientation, char *tempDir, char *dir, char *name)
 #else  /* __STDC__ */
-static void         initImpression (userOrientation, thotDir, tempDir, dir, name, realName, printer, pid, thotWin, thotSch, thotDoc, printProcessing)
+static void         PrintInit (userOrientation, tempDir, dir, name)
 int                 userOrientation;
-char               *thotDir;
 char               *tempDir;
 char               *dir;
 char               *name;
-char               *realName;
-char               *printer;
-int                 pid;
-long                thotWin;
-char               *thotSch;
-char               *thotDoc;
-char               *printProcessing;
 
 #endif /* __STDC__ */
 {
@@ -105,53 +96,17 @@ char               *printProcessing;
    sprintf (pivName, "%s.PIV", name);
    sprintf (cmd, "/bin/mv '%s'/'%s' '%s'/'%s'\n", dir, bakName, tempDir, pivName);
    system (cmd);
-   sprintf (cmd, "printProcessing=%s\n", printProcessing);
-   system (cmd);
-   sprintf (cmd, "export printProcessing\n");
-   system (cmd);
-   sprintf (cmd, "realName=%s\n", realName);
-   system (cmd);
-   sprintf (cmd, "export realName\n");
-   system (cmd);
-   /*  sprintf (cmd, "printer_or_psname=%s\n", printer) ;
-      system (cmd) ;
-      sprintf (cmd, "export printer_or_psname\n") ;
-      system (cmd) ; */
-   sprintf (cmd, "thotpid=%d\n", pid);
-   system (cmd);
-   sprintf (cmd, "export pid\n");
-   system (cmd);
-   sprintf (cmd, "thotwindow=%ld\n", thotWin);
-   system (cmd);
-   sprintf (cmd, "export thotwindow\n");
-   system (cmd);
-   sprintf (cmd, "BIN=%s/bin\n", thotDir);
-   system (cmd);
-   sprintf (cmd, "export BIN\n");
-   system (cmd);
-   sprintf (cmd, "THOTDIR=%s\n", thotDir);
-   system (cmd);
-   sprintf (cmd, "export THOTDIR\n");
-   system (cmd);
-   sprintf (cmd, "THOTSCH=%s\n", thotSch);
-   system (cmd);
-   sprintf (cmd, "export THOTSCH\n");
-   system (cmd);
-   sprintf (cmd, "THOTDOC=%s:%s\n", tempDir, thotDoc);
-   system (cmd);
-   sprintf (cmd, "export THOTDOC\n");
-   system (cmd);
 }
 
 /*----------------------------------------------------------------------
-   Print effectue le lancement du shell pour l'impression.      
+   Print lancement le programme d'impression.      
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void          Print (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *printer, int firstPage, int lastPage, int nbCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
+static void          Print (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *printer, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
 
 #else  /* __STDC__ */
-static void        Print (name, dir, thotSch, thotDoc, thotpres, realName, realDir, printer, firstPage, lastPage, nbCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
+static void        Print (name, dir, thotSch, thotDoc, thotpres, realName, realDir, printer, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
 char               *name;
 char               *dir;
 char               *thotSch;
@@ -162,7 +117,7 @@ char               *realDir;
 char               *printer;
 int                 firstPage;
 int                 lastPage;
-int                 nbCopies;
+int                 nCopies;
 int                 hShift;
 int                 vShift;
 int                 userOrientation;
@@ -191,14 +146,14 @@ char               *viewsToPrint;
    tempDir = (char *) TtaGetMemory (40);
    sprintf (tempDir, "/tmp/Thot%d", pid);
 
-   initImpression (userOrientation, thotDir, tempDir, dir, name, realName, printer, pid, FrRef[0], thotSch, thotDoc, "PRINT");
+   PrintInit (userOrientation, tempDir, dir, name);
    if (printer[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld Print &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, printer, PageSize, nbCopies,
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, printer, PageSize, nCopies,
 	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Print &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, "lp", PageSize, nbCopies,
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld PRINTER &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, "lp", PageSize, nCopies,
 	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
 
    res = system (cmd);
@@ -209,14 +164,15 @@ char               *viewsToPrint;
 
 
 /*----------------------------------------------------------------------
-   SauverPS effectue le lancement du shell pour sauvegarde PS.     
+   PostScriptSave lance le programme d'impression pour sauver un fichier en
+   PostScript
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void          SauverPS (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *psName, int firstPage, int lastPage, int nbCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
+static void          PostScriptSave (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *psName, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
 
 #else  /* __STDC__ */
-static void         SauverPS (name, dir, thotSch, thotDoc, thotpres, realName, realDir, psName, firstPage, lastPage, nbCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
+static void         PostScriptSave (name, dir, thotSch, thotDoc, thotpres, realName, realDir, psName, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
 char               *name;
 char               *dir;
 char               *thotSch;
@@ -227,7 +183,7 @@ char               *realDir;
 char               *psName;
 int                 firstPage;
 int                 lastPage;
-int                 nbCopies;
+int                 nCopies;
 int                 hShift;
 int                 vShift;
 int                 userOrientation;
@@ -256,15 +212,15 @@ char               *viewsToPrint;
      }
    tempDir = (char *) TtaGetMemory (40);
    sprintf (tempDir, "/tmp/Thot%d", pid);
-   initImpression (userOrientation, thotDir, tempDir, dir, name, realName, psName, pid, FrRef[0], thotSch, thotDoc, "SAVEPS");
+   PrintInit (userOrientation, tempDir, dir, name);
 
    if (psName[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Sauver &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, psName, PageSize, nbCopies,
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, psName, PageSize, nCopies,
 	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Sauver &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, "out.ps", PageSize, nbCopies,
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, "out.ps", PageSize, nCopies,
 	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
 
    res = system (cmd);
@@ -290,7 +246,7 @@ static void         ConnectPrint ()
 	   strcpy (pPrinter, "");
 	else
 	   strcpy (pPrinter, ptr);
-	psdir[0] = '\0';
+	PSdir[0] = '\0';
 	PaperPrint = TRUE;
 	ManualFeed = FALSE;
 	strcpy (PageSize, "A4");
@@ -299,7 +255,7 @@ static void         ConnectPrint ()
 
 
 /*----------------------------------------------------------------------
-   TraiteMenuImprimer traite les retours du formulaire d'impression. 
+   TtcPrint traite les retours du formulaire d'impression. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPrint (Document document, View view)
@@ -324,7 +280,7 @@ View                view;
    if (newPres[0] != '\0')
       strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, newPres);
 
-   /* la repagination se fait dans le print */
+   /* la repagination se fait dans le programme d'impression */
    strncpy (dirName, pDocPrint->DocDirectory, MAX_PATH);
    strncpy (docName, pDocPrint->DocDName, MAX_NAME_LENGTH);
 
@@ -358,13 +314,13 @@ View                view;
 		     (int) ManualFeed, 0,
 		     1,
 		     viewsToPrint);
-	else if (psdir[0] != '\0')
-	   SauverPS (pDocPrint->DocDName,
+	else if (PSdir[0] != '\0')
+	   PostScriptSave (pDocPrint->DocDName,
 		     pDocPrint->DocDirectory,
 		     pDocPrint->DocSchemasPath,
 		     DocumentPath,
 		     pDocPrint->DocSSchema->SsDefaultPSchema,
-		     docName, dirName, psdir,
+		     docName, dirName, PSdir,
 		     1, 999, 1, 0, 0, 0,
 		     100, 1, TRUE,
 		     (int) ManualFeed, 0,
@@ -409,7 +365,7 @@ char               *txt;
 				 if (NewPaperPrint)
 				   {
 				      NewPaperPrint = FALSE;
-				      TtaSetTextForm (NumZonePrinterName, psdir);
+				      TtaSetTextForm (NumZonePrinterName, PSdir);
 				   }
 				 break;
 			   }
@@ -437,7 +393,7 @@ char               *txt;
 			   strncpy (pPrinter, txt, MAX_NAME_LENGTH);
 			else
 			   /* zone de saisie du nom du fichier PostScript */
-			   strncpy (psdir, txt, MAX_PATH);
+			   strncpy (PSdir, txt, MAX_PATH);
 		     break;
 		  case NumFormPrint:
 		     /* formulaire Imprimer */
@@ -520,7 +476,7 @@ View                view;
    else
      {
 	TtaSetMenuForm (NumMenuSupport, 1);
-	TtaSetTextForm (NumZonePrinterName, psdir);
+	TtaSetTextForm (NumZonePrinterName, PSdir);
      }
 
    /* active le formulaire "Imprimer" */
