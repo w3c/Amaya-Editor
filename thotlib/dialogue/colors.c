@@ -894,7 +894,7 @@ gboolean CreateExtendedColorSelectionGTK (GtkWidget *widget, gpointer data)
 		    "clicked",
 		    GTK_SIGNAL_FUNC (CloseExtendedColorSelectionGTK),
 		    (gpointer)NULL);
-  tmpw_button = gtk_button_new_with_label ("Apply");
+  tmpw_button = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_APPLY));
   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(tmpw_button), GTK_CAN_DEFAULT);
   gtk_widget_grab_default (GTK_WIDGET(tmpw_button));
   gtk_box_pack_start (GTK_BOX (tmpw_hbox), tmpw_button, FALSE, FALSE, 0);
@@ -1225,7 +1225,7 @@ ThotBool ThotCreatePalette (int x, int y)
 
 
   /******** The foreground and background zone *********/
-  frame3 = gtk_frame_new ("Stat");
+  frame3 = gtk_frame_new ("");
   gtk_widget_show (frame3);
   gtk_box_pack_start (GTK_BOX (vbox2), frame3, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (frame3), 4);
@@ -1288,7 +1288,7 @@ ThotBool ThotCreatePalette (int x, int y)
 
 
   /******** the color palette *******/
-  frame2 = gtk_frame_new ("Color");
+  frame2 = gtk_frame_new (TtaGetMessage (LIB, TMSG_CPCOLORBUTTON));
   gtk_widget_show (frame2);
   gtk_box_pack_start (GTK_BOX (vbox2), frame2, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (frame2), 5);
@@ -1352,10 +1352,10 @@ ThotBool ThotCreatePalette (int x, int y)
 
 
   /******** All the action buttons *********/
-  button4 = gtk_button_new_with_label ("More ...");
+  button4 = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_CPMOREBUTTON));
   gtk_widget_show (button4);
   gtk_box_pack_start (GTK_BOX (vbox4), button4, FALSE, FALSE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (button4), 0);
+  gtk_container_set_border_width (GTK_CONTAINER (button4), 2);
   ConnectSignalGTK (GTK_OBJECT (button4),
 		    "clicked",
 		    GTK_SIGNAL_FUNC (CreateExtendedColorSelectionGTK),
@@ -1366,23 +1366,26 @@ ThotBool ThotCreatePalette (int x, int y)
   gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbox1), 5);
 
-  button1 = gtk_button_new_with_label ("Apply");
+  button1 = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_APPLY));
   gtk_widget_show (button1);
-  gtk_box_pack_start (GTK_BOX (hbox1), button1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox1), button1, FALSE, FALSE, 0); 
+  gtk_container_set_border_width (GTK_CONTAINER (button1), 2);
   ConnectSignalGTK (GTK_OBJECT (button1),
 		    "clicked",
 		    GTK_SIGNAL_FUNC (ApplyColorToSelectedElementGTK),
 		    (gpointer)NULL);
 
-  button2 = gtk_button_new_with_label ("Get");
+  button2 = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_CPGETBUTTON));
   gtk_widget_show (button2);
   gtk_box_pack_start (GTK_BOX (hbox1), button2, FALSE, FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (button2), 2);
   ConnectSignalGTK (GTK_OBJECT (button2),
 		    "clicked",
 		    GTK_SIGNAL_FUNC (GetSelectedElementColorGTK),
 		    (gpointer)NULL);
 
   button3 = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_DONE));
+  gtk_container_set_border_width (GTK_CONTAINER (button3), 2);
   gtk_widget_show (button3);
   gtk_box_pack_start (GTK_BOX (hbox1), button3, FALSE, FALSE, 0);
   ConnectSignalGTK (GTK_OBJECT (button3),

@@ -666,7 +666,8 @@ void TtaInstallMultiKey ()
     Enable_Multikey = TRUE;
   else
     Enable_Multikey = FALSE;
-   TtaKeyboardMapInstalled = 1;
+  gtk_set_locale ();
+  TtaKeyboardMapInstalled = 1;
 #else /* !_GTK */
   KeySym             *keymap;
   Display            *dpy = TtaGetCurrentDisplay ();
