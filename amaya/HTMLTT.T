@@ -270,13 +270,15 @@ RULES
 #endif
  Paragraph:
 	BEGIN
-  	Create '\12\12' After;
+	Create '\12' After;
+	if not within List_Item and not within Definition
+  	    Create '\12' After;
 	END;
 
  Pseudo_paragraph:
 	BEGIN
 	Create '\12' After;
-	if not within List_Item
+	if not within List_Item and not within Definition
 	    Create '\12' After;
 	END;
 
@@ -292,6 +294,7 @@ RULES
 	END;
 
  Definition_List: BEGIN
+	Create '\12' After;
 	END;
 
  Term:	BEGIN
@@ -306,11 +309,13 @@ RULES
  Unnumbered_List: BEGIN
 	Indent +3;
 	Indent -3 After;
+	Create '\12' After;
 	END;
 
  Numbered_List:	BEGIN
 	Indent +3;
 	Indent -3 After;
+	Create '\12' After;
 	END;
 
  Address: BEGIN
