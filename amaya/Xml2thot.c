@@ -3400,6 +3400,8 @@ static void     Hndl_NameSpaceStart (void *userData,
 				     const XML_Char *uri)
 
 {
+  int  i;
+
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);
@@ -3407,22 +3409,26 @@ static void     Hndl_NameSpaceStart (void *userData,
 
   /* Filling up the NameSpace table */
 
-  if (stackLevel >= MAX_NS_TABLE)
+  if (Ns_Level >= MAX_NS_TABLE)
     {
       XmlParseError (errorNotWellFormed, "**FATAL** Too many NameSpaces", 0);
       DisableExpatParser ();
       return;
     }
 
+  if ((char*) uri == NULL)
+    return;
+
+  for (i = 0; i < Ns_Level; i++)
+    /* Namespace already loaded */
+    if (strcmp ((char*) uri, Ns_Uri[i]) == 0)
+      return;
+
+  Ns_Uri[Ns_Level] = TtaStrdup ((char *) uri);
   if ((char*) prefix != NULL)
     Ns_Prefix[Ns_Level] = TtaStrdup ((char *) prefix);
   else
     Ns_Prefix[Ns_Level] = NULL;
-
-  if ((char*) uri != NULL)
-    Ns_Uri[Ns_Level] = TtaStrdup ((char *) uri);
-  else
-    Ns_Uri[Ns_Level] = NULL;
 
   Ns_Level ++;
  
