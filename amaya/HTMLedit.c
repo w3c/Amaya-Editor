@@ -2458,6 +2458,9 @@ void CheckNewLines (NotifyOnTarget *event)
     return;
   firstLeaf = leaf;
   doc = event->document;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docSource || DocumentTypes[doc] == docLog)
+    return;
   undoSeqExtended = FALSE;
 
   /* is there a preformatted or paragraph (or equivalent) ancestor? */

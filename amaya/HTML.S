@@ -917,6 +917,7 @@ EXCEPT
 	Text_Area:	ReturnCreateNL, NoReplicate;
 	HTMLfragment:	NoMove, NoResize, Hidden;
 	Division:	NoMove, NoResize;
+	Form:           NoReplicate;
 
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;

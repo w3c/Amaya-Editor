@@ -282,7 +282,7 @@ Enclosing Form: *+;
 	* > Form:*;
 	}
 
-Remove Form: form{*+};
+Remove Form: form{?*+};
 	{
 	* > :*;
 	}

@@ -3390,16 +3390,24 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
 	Gather: Yes;
+	MarginTop: 0.2;
+	MarginBottom: 0.2;
 	IN Structure_view BEGIN
 	        Gather: No;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		MarginTop: 0;
+		MarginBottom: 0;
 		END;
 	IN Links_view
 		Visibility: 0;
 	IN Alternate_view
+		BEGIN
 		VertPos: Top = Previous . Bottom;
+		MarginTop: 0;
+		MarginBottom: 0;
+		END;
 	END;
 
  Option_Menu: BEGIN
