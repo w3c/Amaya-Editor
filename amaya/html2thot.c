@@ -121,13 +121,13 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* sigma    */ {963, 115}, /* greek small letter sigma, U+03C3 ISOgrk3 */
 /* tau      */ {964, 116}, /* greek small letter tau, U+03C4 ISOgrk3 */
 /* upsilon  */ {965, 117}, /* greek small letter upsilon, U+03C5 ISOgrk3 */
-/* phi      */ {966, 102}, /* greek small letter phi, U+03C6 ISOgrk3 */
+/* phi      */ {966, 106}, /* greek small letter phi, U+03C6 ISOgrk3 */
 /* chi      */ {967, 99},  /* greek small letter chi, U+03C7 ISOgrk3 */
 /* psi      */ {968, 121}, /* greek small letter psi, U+03C8 ISOgrk3 */
 /* omega    */ {969, 119}, /* greek small letter omega, U+03C9 ISOgrk3 */
 /* thetasym */ {977, 74},  /* greek small letter theta symbol, U+03D1 NEW */
 /* upsih    */ {978, 161}, /* greek upsilon with hook symbol, U+03D2 NEW */
-/* phiv     */ {981, 106}, /* greek U+03D5 ISOgrk3 */
+/* phiv     */ {981, 102}, /* greek U+03D5 ISOgrk3 */
 /* piv      */ {982, 118}, /* greek pi symbol, U+03D6 ISOgrk3 */
 /* ensp     */ {8194, 1130}, /* en space, U+2002 ISOpub */
 /* emsp     */ {8195, 1160}, /* em space, U+2003 ISOpub */
