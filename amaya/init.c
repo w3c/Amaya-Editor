@@ -7307,7 +7307,7 @@ char *InitStringForCombobox()
       while (fscanf (urlfile, "%s", urlstring) > 0)
 	{
 	  strcat (buffer, urlstring);
-	  if (urlstring != EOL)
+	  if (*urlstring != EOL)
 	    sprintf (buffer, "%s%c", buffer, EOL);
 	}
       TtaReadClose (urlfile);
