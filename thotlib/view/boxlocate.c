@@ -1532,7 +1532,7 @@ int                 ym;
 		  ymin -= pFrame->FrYOrg;
 		  ymax -= pFrame->FrYOrg;
 		  /* On initialise la boite fantome */
-		  ChPosition (frame, &x, &y, large, haut, xr, yr, Xmin, Xmax, ymin, ymax, xm, ym);
+		  UserGeometryMove (frame, &x, &y, large, haut, xr, yr, Xmin, Xmax, ymin, ymax, xm, ym);
 
 		  /* On transmet la modification a l'editeur */
 		  x = x + pFrame->FrXOrg - pBox->BxXOrg;
@@ -1780,7 +1780,7 @@ int                 ym;
 	     else
 		ymax = ymin;
 	     /* On initialise la boite fantome */
-	     ChDimension (frame, x, y, &large, &haut, xr, yr, Xmin, Xmax, ymin, ymax, xm, ym);
+	     UserGeometryResize (frame, x, y, &large, &haut, xr, yr, Xmin, Xmax, ymin, ymax, xm, ym);
 
 	     /* On transmet la modification a l'editeur */
 	     large = large - pBox->BxWidth;
@@ -1907,7 +1907,7 @@ int                 frame;
 	Xmax -= pFrame->FrXOrg;
 	Ymin -= pFrame->FrYOrg;
 	Ymax -= pFrame->FrYOrg;
-	GeomCreation (frame, &x, &y, xr, yr, &large, &haut,
+	UserGeometryCreate (frame, &x, &y, xr, yr, &large, &haut,
 		      Xmin, Xmax, Ymin, Ymax,
 		      pAb->AbHorizPos.PosUserSpecified,
 		      pAb->AbVertPos.PosUserSpecified,

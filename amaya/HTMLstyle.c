@@ -47,6 +47,13 @@
 #include "HTMLstyle.h"
 #include "html2thot.h"
 
+#ifdef AMAYA_DEBUG
+#define MSG(msg) fprintf(stderr,msg)
+#else
+static char *last_message = NULL;
+#define MSG(msg) last_message = msg
+#endif
+
 #ifdef __STDC__
 int                 EvaluateClassSelector (Element, char *, char *, Document);
 #else

@@ -1,9 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   geom.c : gestion de la geometrie des boites
-   I. Vatton - Juillet 88
+ * geom.c : boxes geometry handling, i.e. interracting with the user
+ *          concerning a box position, or size.
  */
 
 #include "thot_gui.h"
@@ -28,66 +25,62 @@ static int          PasGrille = 1;
 #include "content_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GeomBoite affiche la geometrie de la pseudo-boite dans la       | */
-/* |            frame frame.                                            | */
-/* |            Le parametre avecgrille indique s'il faut ou non        | */
-/* |            visualiser la grille.                                   | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      BoxGeometry set the geometry of the fake box used to interract
+ *		with the user.
+ *		Last parameter withborder indicate whether the border should
+ *		be drawn or not.
+ **/
 #ifdef __STDC__
-static void         GeomBoite (int frame, int x, int y, int large, int haut, int xr, int yr, boolean avecgrille)
+static void         BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr, boolean withborder)
 
 #else  /* __STDC__ */
-static void         GeomBoite (frame, x, y, large, haut, xr, yr, avecgrille)
+static void         BoxGeometry (frame, x, y, width, height, xr, yr, withborder)
 int                 frame;
 int                 x;
 int                 y;
-int                 large;
-int                 haut;
+int                 width;
+int                 height;
 int                 xr;
 int                 yr;
-boolean             avecgrille;
+boolean             withborder;
 
 #endif /* __STDC__ */
 
 {
-#define pas 6
+#define step 6
 
-   if (large > 0)
-      /*cote superieur */
-      Invideo (frame, large, 1, x, y);
-   if (haut > 1)
+   if (width > 0)
+      /*upper border */
+      Invideo (frame, width, 1, x, y);
+   if (height > 1)
      {
-	Invideo (frame, 1, haut - 1, x, y + 1);
-	/*cote gauche */
-	Invideo (frame, 1, haut - 1, x + large - 1, y + 1);
-	/*cote droit */
+	Invideo (frame, 1, height - 1, x, y + 1); /* left border */
+	Invideo (frame, 1, height - 1, x + width - 1, y + 1); /* right border */
      }
-   if (large > 1)
-      /*cote inferieur */
-      Invideo (frame, large - 1, 1, x + 1, y + haut - 1);
-   /*point de reference */
+   if (width > 1)
+      Invideo (frame, width - 1, 1, x + 1, y + height - 1); /* bottom */
+   /* reference point */
    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xr, yr);
 #ifdef IV
-   if (avecgrille)
+   if (withborder)
      {
-	for (i = pas; i < large; i += pas)
-	   Invideo (frame, 1, haut - 1, x + i, y + 1);
-	for (i = pas; i < haut; i += pas)
-	   Invideo (frame, large - 1, 1, x + 1, y + i);
+	for (i = step; i < width; i += step)
+	   Invideo (frame, 1, height - 1, x + i, y + 1);
+	for (i = step; i < height; i += step)
+	   Invideo (frame, width - 1, 1, x + 1, y + i);
      }
 #endif
 }
 
-/*debut */
-/* ---------------------------------------------------------------------- */
-/* |    RedrawPolyLine affiche l'etat courant de la polyline, ferme'e   | */
-/* |            ou non, dans la fenetree^tre frame.                             | */
-/* |    Retourne les coordonnees des points de controles :              | */
-/* |    - x1, y1 coordonnees du point point-1                           | */
-/* |    - x2, y2 coordonnees du point point                             | */
-/* |    - x3, y3 coordonnees du point point+1                           | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      RedrawPolyLine shows the current state of the polyline (closed or
+ *		not) in a given frame.
+ *	This function returns the coordinates of the following control points :
+ *	- x1, y1 predecessor of point
+ *      - x2, y2 point
+ *      - x3, y3 successor of point
+ **/
 
 #ifdef __STDC__
 static void         RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, boolean close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3)
@@ -113,11 +106,11 @@ int                *y3;
 {
 #ifndef NEW_WILLOWS
    ThotPoint          *points;
-   int                 i, j;
+   int                i, j;
    PtrTextBuffer      adbuff;
 
    *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = -1;
-   /* Alloue une table de points */
+   /* allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb));
    adbuff = buffer;
    j = 1;
@@ -127,14 +120,14 @@ int                *y3;
 	  {
 	     if (adbuff->BuNext != NULL)
 	       {
-		  /* Changement de buffer */
+		  /* change the buffer */
 		  adbuff = adbuff->BuNext;
 		  j = 0;
 	       }
 	  }
 	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
 	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
-	/* note les points i-1, i et i+1 */
+	/* write down predecessor and sucessor of point */
 	if (i == point - 1)
 	  {
 	     *x1 = points[i - 1].x;
@@ -153,10 +146,10 @@ int                *y3;
 	j++;
      }
 
-   /* On trace le contour */
+   /* Draw the border */
    if (close && nb > 3)
      {
-	/* La courbe est fermee et contient plus de 2 points */
+	/* This is a closed polyline with more than 2 points */
 	points[nb - 1].x = points[0].x;
 	points[nb - 1].y = points[0].y;
 	if (point == 1)
@@ -174,27 +167,21 @@ int                *y3;
    else
       XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb - 1, CoordModeOrigin);
 
-   /* Libere la table de points */
+   /* free the table of points */
    free ((char *) points);
 #endif	/* NEW_WILLOWS */
 }
 
-
-/* ---------------------------------------------------------------------- */
-/* |    PolyLineCreation saisit les points d'une polyline affiche'e     | */
-/* |            dans la fenetre frame.                                  | */
-/* |            Les valeurs x, y donnent la position de la boi^te dans  | */
-/* |            la fenetree^tre. Le parame`tre Pbuffer pointe sur le    | */
-/* |            premier buffer du pave', donc la liste des points de    | */
-/* |            contro^le de la polyline d'origine. Le parame`tre       | */
-/* |            Bbuffer pointe sur le premier buffer de la boi^te, donc | */
-/* |            la liste des points de contro^le modifie's affiche's.   | */
-/* |            Le premier point de chaque liste donne la largeur et la | */
-/* |            hauteur limite de la polyline.                          | */
-/* |            La procedure met a` jour les deux listes de points      | */
-/* |            de contro^le.                                           | */
-/* |            Retourne le nombre de points de la polyline.            | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      PolyLineCreation interract with the user to read the point forming
+ * 		a polyline in a given frame.
+ *		x and y values gives the position of the box in the frame.
+ *		Pbuffer points to the first buffer of the abstract box, i.e.
+ *		the list of control points modified. The first point in the
+ *		list gives the maximum width and height of the polyline.
+ *		This fonction update both  list of control points and
+ *		returns the number of point in the polyline.
+ **/
 
 #ifdef __STDC__
 int                 PolyLineCreation (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
@@ -212,7 +199,7 @@ PtrTextBuffer      Bbuffer;
 {
 #ifndef NEW_WILLOWS
    float               rapportX, rapportY;
-   int                 large, haut;
+   int                 width, height;
    int                 e, dx, dy;
    int                 ret, f;
    int                 newx, newy, lastx, lasty;
@@ -220,23 +207,23 @@ PtrTextBuffer      Bbuffer;
    ThotWindow          w, wdum;
    XEvent              event;
 
-   /* les dimensions de la boite */
-   large = Bbuffer->BuPoints[0].XCoord;
-   haut = Bbuffer->BuPoints[0].YCoord;
-   /* calcule les rapports de deformation entre la boite et le pave */
-   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) large;
-   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) haut;
-   large = PointToPixel (large / 1000);
-   haut = PointToPixel (haut / 1000);
+   /* box size */
+   width = Bbuffer->BuPoints[0].XCoord;
+   height = Bbuffer->BuPoints[0].YCoord;
+   /* computes the trasformation foctors between the box and the abstract box */
+   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+   width = PointToPixel (width / 1000);
+   height = PointToPixel (height / 1000);
 
-   /*Changement de curseur */
+   /* change the cursor */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
    XMapRaised (TtDisplay, w);
    XFlush (TtDisplay);
    ThotGrab (w, HVCurs, e, 0);
 
-   /* Le pas de la grille commence sur l'origine de l'englobante */
+   /* The grid stepping begins at the origin */
    lastx = x + FrameTable[frame].FrLeftMargin;
    lasty = y + FrameTable[frame].FrTopMargin;
    x1 = -1;
@@ -245,38 +232,38 @@ PtrTextBuffer      Bbuffer;
    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
    XFlush (TtDisplay);
 
-   /* affiche la boite contour */
-   /*Clear(frame, large, haut, x, y); */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
+   /* shows up the box border */
+   /*Clear(frame, width, height, x, y); */
+   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
-   /* BOUCLE d'attente de definition d'un point de controle */
+   /* loop waiting for the user input */
    ret = 0;
    while (ret == 0)
      {
 	if (XPending (TtDisplay) == 0)
 	  {
 
-	     /* position actuelle du curseur */
+	     /* current pointer position */
 	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
-	     /* Verification des coordonnees */
+	     /* coordinate checking */
 	     newx = ALIGNE (newx - FrameTable[frame].FrLeftMargin - x);
 	     newx += x;
 	     newy = ALIGNE (newy - FrameTable[frame].FrTopMargin - y);
 	     newy += y;
-	     if (newx < x || newx > x + large || newy < y || newy > y + haut)
+	     if (newx < x || newx > x + width || newy < y || newy > y + height)
 	       {
-		  /* Il faut revenir dans les bornes de la boite */
+		  /* limit to size of the box */
 		  if (newx < x)
 		     newx = x + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
-		  else if (newx > x + large)
-		     newx = x + large + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
+		  else if (newx > x + width)
+		     newx = x + width + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
 		  else
 		     newx += FrameTable[frame].FrLeftMargin;
 
 		  if (newy < y)
 		     newy = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
-		  else if (newy > y + haut)
-		     newy = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+		  else if (newy > y + height)
+		     newy = y + height + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
 		  else
 		     newy += FrameTable[frame].FrTopMargin;
 		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
@@ -287,7 +274,7 @@ PtrTextBuffer      Bbuffer;
 		  newy += FrameTable[frame].FrTopMargin;
 	       }
 
-	     /* Affiche le segment en construction */
+	     /* refresh the display of teh two adjacent segments */
 	     if (x1 != -1 && (newx != lastx || newy != lasty))
 	       {
 		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
@@ -300,53 +287,51 @@ PtrTextBuffer      Bbuffer;
 	else
 	  {
 	     XNextEvent (TtDisplay, &event);
-	     /* Verification des coordonnees */
+	     /* coordinate checking */
 	     newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
 	     newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
-	     /* Il faut revenir dans les bornes de la boite */
+	     /* limit to size of the box */
 	     if (newx < x)
 		lastx = x + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
-	     else if (newx > x + large)
-		lastx = x + large + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
+	     else if (newx > x + width)
+		lastx = x + width + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
 	     else
 		lastx = newx + FrameTable[frame].FrLeftMargin;
 
 	     if (newy < y)
 		lasty = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
-	     else if (newy > y + haut)
-		lasty = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+	     else if (newy > y + height)
+		lasty = y + height + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
 	     else
 		lasty = newy + FrameTable[frame].FrTopMargin;
 
 	     switch (event.type)
 		   {
-/*-BOUTON ENFONCE-*/
 		      case ButtonPress:
-			 if (newx < x || newx > x + large || newy < y || newy > y + haut)
+			 if (newx < x || newx > x + width || newy < y || newy > y + height)
 			    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
 			 break;
 
-/*-BOUTON RELACHE-*/
 		      case ButtonRelease:
 			 if (event.xbutton.button != Button3)
 			   {
-			      /* Bouton gauche -> garde le dernier segment construit */
-			      /* Note le point de depart du nouveau segment */
+			      /* left button keep the last segment built */
+			      /* keep the new segment first point coordinates */
 			      x1 = lastx;
 			      y1 = lasty;
 			      nbpoints++;
 
-			      /* Met a jour les buffers de la boite */
+			      /* update the box buffer */
 			      newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
 			      newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 			      AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
-			      /* Met a jour les buffers du pave */
+			      /* update the abstract box buffer */
 			      newx = (int) ((float) newx * rapportX);
 			      newy = (int) ((float) newy * rapportY);
 			      AddPointInPolyline (Pbuffer, nbpoints, newx, newy);
 
 			      if (event.xbutton.button != Button1)
-				 /* Un autre bouton -> fin de la construction */
+				 /* any other button : end of user input */
 				 ret = 1;
 			   }
 
@@ -359,20 +344,19 @@ PtrTextBuffer      Bbuffer;
 			 XtDispatchEvent (&event);
 			 break;
 
-/*-OTHER-*/
 		      default:
 			 break;
-		   }		/*switch */
+		   }
 	  }
      }
 
-   /* efface la boite contour */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
+   /* erase box frame */
+   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
-   /* On restaure l'etat anterieur */
+   /* get back to previous state of the library */
    ThotUngrab ();
    XFlush (TtDisplay);
-   /* On impose au moins deux points de controle pour un polyline valide */
+   /* need at least 3 points for a valid polyline */
    if (nbpoints < 3)
      {
 	TtaDisplaySimpleMessage (INFO, LIB, TWO_POINTS_IN_POLYLINE_NEEDED);
@@ -384,23 +368,19 @@ PtrTextBuffer      Bbuffer;
 }				/*PolyLineCreation */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PolyLineModification de'place un point d'une polyline affiche'e | */
-/* |            dans la fenetree^tre frame.                                     | */
-/* |            Les valeurs x, y donnent la position de la boi^te dans  | */
-/* |            la fenetree^tre. Le parame`tre Pbuffer pointe sur le    | */
-/* |            premier buffer du pave', donc la liste des points de    | */
-/* |            contro^le de la polyline d'origine. Le parame`tre       | */
-/* |            Bbuffer pointe sur le premier buffer de la boi^te, donc | */
-/* |            la liste des points de contro^le affiche's.             | */
-/* |            Le premier point de chaque liste donne la largeur et la | */
-/* |            hauteur limite de la polyline.                          | */
-/* |            nbpoints indique le nombre de points de contro^le, y    | */
-/* |            compris le point limite, point indique le point         | */
-/* |            modifie' et close est vrai si la polyline est ferme'e.  | */
-/* |            La procedure met a` jour les deux listes de points      | */
-/* |            de contro^le.                                           | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      PolyLineModification interract with the user to move a point part
+ * 		a polyline in a given frame.
+ *		x and y values gives the position of the box in the frame.
+ *		Pbuffer points to the first buffer of the abstract box, i.e.
+ *		the list of control points modified. Pbuffer points to
+ *		the first buffer of the box, i.e. the list of control points
+ *		as shown. The first point in the lists gives the maximum
+ *		width and height of the polyline.
+ *		nbpoints gives the number of points in the polyline.
+ *		point expricitely indicate the point to be moved.
+ *		This fonction update both  list of control points.
+ **/
 
 #ifdef __STDC__
 void                PolyLineModification (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer, int nbpoints, int point, boolean close)
@@ -421,7 +401,7 @@ boolean             close;
 {
 #ifndef NEW_WILLOWS
    float               rapportX, rapportY;
-   int                 large, haut;
+   int                 width, height;
    int                 e;
    int                 ret, f;
    int                 newx, newy, lastx, lasty;
@@ -430,16 +410,16 @@ boolean             close;
    XEvent              event;
    boolean             wrap;
 
-   /* les dimensions de la boite */
-   large = Bbuffer->BuPoints[0].XCoord;
-   haut = Bbuffer->BuPoints[0].YCoord;
-   /* calcule les rapports de deformation entre la boite et le pave */
-   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) large;
-   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) haut;
-   large = PointToPixel (large / 1000);
-   haut = PointToPixel (haut / 1000);
+   /* box size */
+   width = Bbuffer->BuPoints[0].XCoord;
+   height = Bbuffer->BuPoints[0].YCoord;
+   /* distortion ratios between the abstract box and the box */
+   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+   width = PointToPixel (width / 1000);
+   height = PointToPixel (height / 1000);
 
-   /*Changement de curseur */
+   /* change cursor size */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
    XMapRaised (TtDisplay, w);
@@ -447,46 +427,48 @@ boolean             close;
    wrap = FALSE;
    ThotGrab (w, HVCurs, e, 0);
 
-   /* affiche la boite contour */
-   /*Clear(frame, large, haut, x, y); */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
+   /* shows up the box border */
+   /*Clear(frame, width, height, x, y); */
+   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
    RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		   &x1, &y1, &lastx, &lasty, &x3, &y3);
-   /* Le pas de la grille commence sur l'origine de l'englobante */
+   /* the grid step begins at the origin of the box */
    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
    XFlush (TtDisplay);
 
-   /* BOUCLE d'attente de definition d'un point de controle */
+   /* Loop waiting for user interraction */
    ret = 0;
    while (ret == 0)
      {
 	XNextEvent (TtDisplay, &event);
 
-	/* Verification des coordonnees */
+	/* check the coordinates */
 	newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
 	newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
-	/* Il faut revenir dans les bornes de la boite */
+	/* are limited to the box size */
+	/* Update the X position */
 	if (newx < x)
 	  {
-	     newx = x + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
+	     newx = x + FrameTable[frame].FrLeftMargin;
 	     wrap = TRUE;
 	  }
-	else if (newx > x + large)
+	else if (newx > x + width)
 	  {
-	     newx = x + large + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
+	     newx = x + width + FrameTable[frame].FrLeftMargin;
 	     wrap = TRUE;
 	  }
 	else
 	   newx += FrameTable[frame].FrLeftMargin;
 
+	/* Update the Y position */
 	if (newy < y)
 	  {
-	     newy = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+	     newy = y + FrameTable[frame].FrTopMargin;
 	     wrap = TRUE;
 	  }
-	else if (newy > y + haut)
+	else if (newy > y + height)
 	  {
-	     newy = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+	     newy = y + height + FrameTable[frame].FrTopMargin;
 	     wrap = TRUE;
 	  }
 	else
@@ -494,15 +476,14 @@ boolean             close;
 
 	switch (event.type)
 	      {
-/*-BOUTON RELACHE-*/
 		 case ButtonRelease:
 		    lastx = newx;
 		    lasty = newy;
-		    /* Met a jour les buffers de la boite */
+		    /* update the box buffer */
 		    newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
 		    newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 		    ModifyPointInPolyline (Bbuffer, point, newx, newy);
-		    /* Met a jour les buffers du pave */
+		    /* update the abstract box buffer */
 		    newx = (int) ((float) newx * rapportX);
 		    newy = (int) ((float) newy * rapportY);
 		    ModifyPointInPolyline (Pbuffer, point, newx, newy);
@@ -510,7 +491,7 @@ boolean             close;
 		    break;
 
 		 case MotionNotify:
-		    /* Affiche les segments en construction */
+		    /* shows the new adjacent segment position */
 		    if (newx != lastx || newy != lasty)
 		      {
 			 if (x1 != -1)
@@ -541,40 +522,36 @@ boolean             close;
 		    XtDispatchEvent (&event);
 		    break;
 
-/*-OTHER-*/
 		 default:
 		    break;
 	      }			/*switch */
      }
 
-   /* efface la boite contour */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
+   /* erase the box border */
+   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
-   /* On restaure l'etat anterieur */
+   /* returns to previous state of the Thot library */
    ThotUngrab ();
    XFlush (TtDisplay);
 #endif /* NEW_WILLOWS */
 }				/*PolyModification */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PolyLineExtension ajoute des points apres un point donne' d'une | */
-/* |            polyline affiche'e dans la fenetree^tre frame.          | */
-/* |            Les valeurs x, y donnent la position de la boi^te dans  | */
-/* |            la fenetree^tre. Le parame`tre Pbuffer pointe sur le    | */
-/* |            premier buffer du pave', donc la liste des points de    | */
-/* |            contro^le de la polyline d'origine. Le parame`tre       | */
-/* |            Bbuffer pointe sur le premier buffer de la boi^te, donc | */
-/* |            la liste des points de contro^le affiche's.             | */
-/* |            Le premier point de chaque liste donne la largeur et la | */
-/* |            hauteur limite de la polyline.                          | */
-/* |            nbpoints indique le nombre de points de contro^le, y    | */
-/* |            compris le point limite, point indique le point de      | */
-/* |            re'fe'rence. close est vrai si la polyline est ferme'e. | */
-/* |            La procedure met a` jour les deux listes de points      | */
-/* |            de contro^le.                                           | */
-/* |            Retourne le nombre de points de la polyline.            | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      PolyLineExtension interract with the user to add points to
+ * 		an existing polyline in a given frame.
+ *		x and y values gives the position of the box in the frame.
+ *		Pbuffer points to the first buffer of the abstract box, i.e.
+ *		the list of control points modified. Pbuffer points to
+ *		the first buffer of the box, i.e. the list of control points
+ *		as shown. The first point in the lists gives the maximum
+ *		width and height of the polyline.
+ *		nbpoints gives the number of points in the polyline.
+ *		point expricitely indicate the point to be moved.
+ *		close indicate whether the polyline is closed.
+ *		This fonction update both  list of control points and
+ *		returns the new number of points in the polyline.
+ **/
 
 #ifdef __STDC__
 int                 PolyLineExtension (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer, int nbpoints, int point, boolean close)
@@ -595,7 +572,7 @@ boolean             close;
 {
 #ifndef NEW_WILLOWS
    float               rapportX, rapportY;
-   int                 large, haut;
+   int                 width, height;
    int                 e, dx, dy;
    int                 ret, f;
    int                 newx, newy, lastx, lasty;
@@ -604,18 +581,16 @@ boolean             close;
    XEvent              event;
    boolean             wrap;
 
-   /* boolean ok; */
+   /* the box size */
+   width = Bbuffer->BuPoints[0].XCoord;
+   height = Bbuffer->BuPoints[0].YCoord;
+   /* the box size *ompute the distortion ratios between box and abstract box */
+   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+   width = PointToPixel (width / 1000);
+   height = PointToPixel (height / 1000);
 
-   /* les dimensions de la boite */
-   large = Bbuffer->BuPoints[0].XCoord;
-   haut = Bbuffer->BuPoints[0].YCoord;
-   /* calcule les rapports de deformation entre la boite et le pave */
-   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) large;
-   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) haut;
-   large = PointToPixel (large / 1000);
-   haut = PointToPixel (haut / 1000);
-
-   /*Changement de curseur */
+   /* change the cursor */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
    wrap = FALSE;
@@ -623,46 +598,45 @@ boolean             close;
    XFlush (TtDisplay);
    ThotGrab (w, HVCurs, e, 0);
 
-   /* affiche la boite contour */
-   /*Clear(frame, large, haut, x, y); */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
+   /* draw the box border */
+   /*Clear(frame, width, height, x, y); */
+   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
    RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		   &x1, &y1, &lastx, &lasty, &x3, &y3);
-   /* Le pas de la grille commence sur l'origine de l'englobante */
+   /* the grid step begins at the origin */
    XFlush (TtDisplay);
    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
    x1 = lastx;
    y1 = lasty;
-   /*ok = FALSE; *//* pas encore de point saisi */
 
-   /* BOUCLE d'attente de definition d'un point de controle */
+   /* Loop waiting for user input */
    ret = 0;
    while (ret == 0)
      {
 	if (XPending (TtDisplay) == 0)
 	  {
 
-	     /* position actuelle du curseur */
+	     /* current cursor location */
 	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
-	     /* Verification des coordonnees */
+	     /* check the coordinates */
 	     newx = ALIGNE (newx - FrameTable[frame].FrLeftMargin - x);
 	     newx += x;
 	     newy = ALIGNE (newy - FrameTable[frame].FrTopMargin - y);
 	     newy += y;
-	     if (newx < x || newx > x + large || newy < y || newy > y + haut)
+	     if (newx < x || newx > x + width || newy < y || newy > y + height)
 	       {
-		  /* Il faut revenir dans les bornes de la boite */
+		  /* limit them to the box area */
 		  if (newx < x)
-		     newx = x + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
-		  else if (newx > x + large)
-		     newx = x + large + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
+		     newx = x + FrameTable[frame].FrLeftMargin;
+		  else if (newx > x + width)
+		     newx = x + width + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
 		  else
 		     newx += FrameTable[frame].FrLeftMargin;
 
 		  if (newy < y)
-		     newy = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
-		  else if (newy > y + haut)
-		     newy = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+		     newy = y + FrameTable[frame].FrTopMargin;
+		  else if (newy > y + height)
+		     newy = y + height + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
 		  else
 		     newy += FrameTable[frame].FrTopMargin;
 		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
@@ -673,7 +647,7 @@ boolean             close;
 		  newy += FrameTable[frame].FrTopMargin;
 	       }
 
-	     /* Affiche les segments en construction */
+	     /* Draw the new segments resulting of the new point */
 	     if (newx != lastx || newy != lasty)
 	       {
 		  if (x1 != -1)
@@ -696,18 +670,18 @@ boolean             close;
 	  {
 	     XNextEvent (TtDisplay, &event);
 
-	     /* Verification des coordonnees */
+	     /* check the coordinates */
 	     newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
 	     newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
-	     /* Il faut revenir dans les bornes de la boite */
+	     /* limit them to the box area */
 	     if (newx < x)
 	       {
-		  newx = x + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
+		  newx = x + FrameTable[frame].FrLeftMargin;
 		  wrap = TRUE;
 	       }
-	     else if (newx > x + large)
+	     else if (newx > x + width)
 	       {
-		  newx = x + large + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
+		  newx = x + width + FrameTable[frame].FrLeftMargin;
 		  wrap = TRUE;
 	       }
 	     else
@@ -715,12 +689,12 @@ boolean             close;
 
 	     if (newy < y)
 	       {
-		  newy = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+		  newy = y + FrameTable[frame].FrTopMargin;
 		  wrap = TRUE;
 	       }
-	     else if (newy > y + haut)
+	     else if (newy > y + height)
 	       {
-		  newy = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+		  newy = y + height + FrameTable[frame].FrTopMargin;
 		  wrap = TRUE;
 	       }
 	     else
@@ -728,7 +702,6 @@ boolean             close;
 
 	     switch (event.type)
 		   {
-/*-BOUTON ENFONCE-*/
 		      case ButtonPress:
 			 lastx = newx;
 			 lasty = newy;
@@ -739,30 +712,28 @@ boolean             close;
 			   }
 			 break;
 
-/*-BOUTON RELACHE-*/
 		      case ButtonRelease:
 			 if (event.xbutton.button != Button3)
 			   {
-			      /* Bouton gauche -> garde le nouveau segment construit */
-			      /* Note le point de depart du nouveau segment */
+			      /* left button : keep the new point */
+			      /* write down the new segment start point */
 			      lastx = newx;
 			      lasty = newy;
 			      x1 = lastx;
 			      y1 = lasty;
 			      nbpoints++;
 			      point++;
-			      /*ok = TRUE; */
-			      /* Met a jour les buffers de la boite */
+			      /* update the box buffer */
 			      newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
 			      newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 			      AddPointInPolyline (Bbuffer, point, newx, newy);
-			      /* Met a jour les buffers du pave */
+			      /* update the abstact box buffer */
 			      newx = (int) ((float) newx * rapportX);
 			      newy = (int) ((float) newy * rapportY);
 			      AddPointInPolyline (Pbuffer, point, newx, newy);
 
 			      if (event.xbutton.button != Button1)
-				 /* Un autre bouton -> fin de la construction */
+				 /* any other button : end of interraction */
 				 ret = 1;
 			   }
 			 break;
@@ -774,20 +745,19 @@ boolean             close;
 			 XtDispatchEvent (&event);
 			 break;
 
-/*-OTHER-*/
 		      default:
 			 break;
 		   }		/*switch */
 	  }
      }
 
-   /* efface la boite contour */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
+   /* erase the box border */
+   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
-   /* On restaure l'etat anterieur */
+   /* go back to previous state of Thot library */
    ThotUngrab ();
    XFlush (TtDisplay);
-   /* On impose au moins deux points de controle pour un polyline valide */
+   /* a valid polyline need at least 3 points */
    if (nbpoints < 3)
       return 1;
    else
@@ -796,27 +766,26 @@ boolean             close;
 }				/*PolyLineExtension */
 /*fin */
 
-/* ---------------------------------------------------------------------- */
-/* |    GeomCreation affiche une boite fantome a la position (x,y de la | */
-/* |            frame frame) et de dimensions (large,haut) quand        | */
-/* |            l'utilisateur enfonce le bouton.                        | */
-/* |            Les valeurs xmin, xmax, ymin, ymax donnent les limites  | */
-/* |            du deplacement. La procedure retourne les position et   | */
-/* |            dimension de la boite quand le bouton est relache.      | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      UserGeometryCreate draw a box at a specific (x,y) location in
+ *		frame and of size width x height when interracting with
+ *		the user to mofify a box size (button press).
+ *		xmin, xmax, ymin, ymax are the maximum values allowed.
+ *		this function returns the new values upon button release.
+ **/
 
 #ifdef __STDC__
-void                GeomCreation (int frame, int *x, int *y, int xr, int yr, int *large, int *haut, int xmin, int xmax, int ymin, int ymax, int PosX, int PosY, int DimX, int DimY)
+void                UserGeometryCreate (int frame, int *x, int *y, int xr, int yr, int *width, int *height, int xmin, int xmax, int ymin, int ymax, int PosX, int PosY, int DimX, int DimY)
 
 #else  /* __STDC__ */
-void                GeomCreation (frame, x, y, xr, yr, large, haut, xmin, xmax, ymin, ymax, PosX, PosY, DimX, DimY)
+void                UserGeometryCreate (frame, x, y, xr, yr, width, height, xmin, xmax, ymin, ymax, PosX, PosY, DimX, DimY)
 int                 frame;
 int                *x;
 int                *y;
 int                 xr;
 int                 yr;
-int                *large;
-int                *haut;
+int                *width;
+int                *height;
 int                 xmin;
 int                 xmax;
 int                 ymin;
@@ -835,20 +804,19 @@ int                 DimY;
    int                 nx, ny, f;
    XEvent              event;
    ThotWindow          w, wdum;
-   int                 Adroite, Enbas;
+   int                 RightOrLeft, BottomOrTop;
    int                 warpx, warpy;
 
-   /* Note le decalage du point fixe par rapport a l'origine */
+   /* use relative coordinates */
    xr -= *x;
    yr -= *y;
 
-   /* Met a jour l'etat de l'ecran */
-   /*Changement de curseur */
+   /* change the cursor, modify library state */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
    ThotGrab (w, HVCurs, e, 0);
 
-   /* Position par defaut */
+   /* default position */
    if (*x < xmin)
       *x = xmin;
    else if (*x > xmax)
@@ -858,7 +826,7 @@ int                 DimY;
    else if (*y > ymax)
       *y = ymin;
 
-   /* Le pas de la grille commence sur l'origine de l'englobante */
+   /* the grid origin is base on the englobing box origin */
    dx = ALIGNE (*x - xmin);
    *x = xmin + dx;
    dy = ALIGNE (*y - ymin);
@@ -867,18 +835,18 @@ int                 DimY;
    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
    XFlush (TtDisplay);
 
-   /* Affiche la boite elastique initiale */
-   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
+   /* draw the current box geometry */
+   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 
-   /* BOUCLE d'attente de definition du premier point */
+   /* Loop on user input */
    ret = 0;
    while (ret == 0)
      {
 	if (XPending (TtDisplay) == 0)
 	  {
-	     /* Suivi du curseur */
+	     /* get the cursor location */
 	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &nx, &ny, &e);
-	     /* Verification des coordonnees */
+	     /* check the coordinates are withing limits */
 	     nx = ALIGNE (nx - FrameTable[frame].FrLeftMargin - xmin);
 	     nx += xmin;
 	     ny = ALIGNE (ny - FrameTable[frame].FrTopMargin - ymin);
@@ -887,14 +855,14 @@ int                 DimY;
 		XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
 	     else if ((nx != *x && PosX) || (ny != *y && PosY))
 	       {
-		  GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);	/*Ancienne */
+		  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 		  if (PosX)
 		     *x = nx;
 		  if (PosY)
 		     *y = ny;
-		  GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);	/*Nouvelle */
+		  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 		  XFlush (TtDisplay);
-		  /* Si une position est bloquee */
+		  /* the postion is fixed */
 		  if (!PosX || !PosY)
 		     XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin,
 				   *y + FrameTable[frame].FrTopMargin);
@@ -904,10 +872,9 @@ int                 DimY;
 	  {
 	     XNextEvent (TtDisplay, &event);
 
-	     /* Le seul evenement traite est le bouton enfonce */
+	     /* we only deal with button press events */
 	     switch (event.type)
 		   {
-/*-BOUTON ENFONCE-*/
 		      case ButtonPress:
 			 if (PosX)
 			   {
@@ -922,7 +889,7 @@ int                 DimY;
 			 else
 			    ym = *y;
 
-			 /* Verification des coordonnees */
+			 /* check the coordinates */
 			 if (xm < xmin || xm > xmax || !PosX
 			     || ym < ymin || ym > ymax || !PosY)
 			   {
@@ -940,27 +907,26 @@ int                 DimY;
 			 XtDispatchEvent (&event);
 			 break;
 
-/*-OTHER-*/
 		      default:
 			 break;
 		   }
 	  }
      }
 
-   /* Nouvelle reference pour l'affichage de la boite */
-   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);	/*Ancienne */
+   /* new values for the box geometry */
+   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);	/*Ancienne */
    *x = xm;
    *y = ym;
    xr = 2;
    yr = 2;
    xm += FrameTable[frame].FrLeftMargin;
    ym += FrameTable[frame].FrTopMargin;
-   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
-   /* On indique que l'on part de la valeur initiale */
-   Adroite = 2;
-   Enbas = 2;
+   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+   /* indicate that the original position is the reference */
+   RightOrLeft = 2;
+   BottomOrTop = 2;
 
-   /* BOUCLE d'attente sur le deuxieme point de definition */
+   /* New loop waiting for the second point definition */
    ret = 0;
    while (ret == 0)
      {
@@ -968,24 +934,22 @@ int                 DimY;
 	/* On analyse le type de l'evenement */
 	switch (event.type)
 	      {
-/*-BOUTON RELACHE-*/
 		 case ButtonRelease:
 		    ret = 1;
 
-/*-DEPLACEMENT DE LA SOURIS-*/
 		 case MotionNotify:
 		    warpx = -1;
 		    warpy = -1;
 
-		    /* Si l'evenement concerne la fenetreentre */
+		    /* check this is the correct window */
 		    if (event.xmotion.window == w)
 		      {
-			 /* Nouvelles positions du curseur */
+			 /* new cursor location */
 			 if (DimX)
 			   {
 			      dx = (int) event.xmotion.x - xm;
-			      nx = xmin + ALIGNE (*x + *large + dx - xmin);
-			      dx = nx - *x - *large;
+			      nx = xmin + ALIGNE (*x + *width + dx - xmin);
+			      dx = nx - *x - *width;
 			   }
 			 else
 			    dx = 0;
@@ -993,28 +957,27 @@ int                 DimY;
 			 if (DimY)
 			   {
 			      dy = (int) event.xmotion.y - ym;
-			      ny = ymin + ALIGNE (*y + *haut + dy - ymin);
-			      dy = ny - *y - *haut;
+			      ny = ymin + ALIGNE (*y + *height + dy - ymin);
+			      dy = ny - *y - *height;
 			   }
 			 else
 			    dy = 0;
 
 			 xm += dx;
 			 ym += dy;
-			 /* On remplace la valeur par defaut par la valeur */
-			 /* reelle si la hauteur ou la largeur a saisir    */
-			 /* ne sont pas nulles                             */
+			 /* Echange the defaults values by the actual one */
+			 /* if the width and height are non zero */
 			 if ((dx != 0 || !DimX) && (dy != 0 || !DimY)
-			     && Adroite == 2)
+			     && RightOrLeft == 2)
 			   {
-			      Adroite = 1;
-			      Enbas = 1;
-			      GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
+			      RightOrLeft = 1;
+			      BottomOrTop = 1;
+			      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 			      if (DimX)
-				 *large = 0;
+				 *width = 0;
 			      if (DimY)
-				 *haut = 0;
-			      GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
+				 *height = 0;
+			      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 			   }
 		      }
 		    else
@@ -1023,28 +986,28 @@ int                 DimY;
 			 dy = 0;
 		      }
 
-		    /* Quel est le cote deplace en X ? */
+		    /* left or right position to modify */
 		    if (dx != 0)
-		       if (Adroite > 0)		/* le cote droit */
+		       if (RightOrLeft > 0)		/* right */
 			 {
-			    /* Faut-il inverser les cotes ? */
-			    if (dx < 0 && -dx > *large)
+			    /* should we swap left and right values */
+			    if (dx < 0 && -dx > *width)
 			      {
-				 Adroite = 0;	/* Inversion */
-				 nx = *x + *large + dx;		/*nouvelle origine */
-				 /* Verifie que l'on reste dans les limites */
+				 RightOrLeft = 0;
+				 nx = *x + *width + dx;/* new origin */
+				 /* check that we are still within limits */
 				 if (nx < xmin)
 				   {
 				      nx = xmin;
 				      warpx = xmin;
 				   }
-				 dx = *x - nx;	/*nouvelle largeur */
+				 dx = *x - nx;	/* new width */
 			      }
 			    else
 			      {
-				 nx = *x;	/*nouvelle origine */
-				 dx += *large;	/*nouvelle largeur */
-				 /* Verifie que l'on reste dans les limites */
+				 nx = *x;	/* new origin */
+				 dx += *width;	/* new width */
+				 /* check that we are still within limits */
 				 if (nx + dx > xmax)
 				   {
 				      dx = xmin + ALIGNE (xmax - xmin) - nx;
@@ -1053,15 +1016,13 @@ int                 DimY;
 			      }
 			 }
 		       else
-			  /* le cote gauche */
+			  /* left, treatment is similar to right */
 			 {
-			    /* Faut-il inverser les cotes ? */
-			    if (dx > *large)
+			    if (dx > *width)
 			      {
-				 Adroite = 1;	/* Inversion */
-				 nx = *x + *large;	/*nouvelle origine */
-				 dx -= *large;	/*nouvelle largeur */
-				 /* Verifie que l'on reste dans les limites */
+				 RightOrLeft = 1;
+				 nx = *x + *width;
+				 dx -= *width;
 				 if (nx + dx > xmax)
 				   {
 				      dx = xmin + ALIGNE (xmax - xmin) - nx;
@@ -1070,44 +1031,43 @@ int                 DimY;
 			      }
 			    else
 			      {
-				 nx = *x + dx;	/*nouvelle origine */
-				 /* Verifie que l'on reste dans les limites */
+				 nx = *x + dx;
 				 if (nx < xmin)
 				   {
 				      nx = xmin;
 				      warpx = xmin;
 				   }
-				 dx = *x + *large - nx;		/*nouvelle largeur */
+				 dx = *x + *width - nx;
 			      }
 			 }
 		    else
 		      {
 			 nx = *x;
-			 dx = *large;
+			 dx = *width;
 		      }
 
-		    /* Quel est le cote deplace en Y ? */
+		    /* Top or bottom limit to modify */
 		    if (dy != 0)
-		       if (Enbas > 0)	/* le cote inferieur */
+		       if (BottomOrTop > 0)	/* bottom */
 			 {
-			    /* Faut-il inverser les cotes ? */
-			    if (dy < 0 && -dy > *haut)
+			    /* should we swap bottom and top ? */
+			    if (dy < 0 && -dy > *height)
 			      {
-				 Enbas = 0;	/* Inversion */
-				 ny = *y + *haut + dy;	/*nouvelle origine */
-				 /* Verifie que l'on reste dans les limites */
+				 BottomOrTop = 0;
+				 ny = *y + *height + dy;/* new origin */
+				 /* check for limits */
 				 if (ny < ymin)
 				   {
 				      ny = ymin;
 				      warpy = ymin;
 				   }
-				 dy = *y - ny;	/*nouvelle hauteur */
+				 dy = *y - ny;	/* new height */
 			      }
 			    else
 			      {
-				 ny = *y;	/*nouvelle origine */
-				 dy += *haut;	/*nouvelle hauteur */
-				 /* Verifie que l'on reste dans les limites */
+				 ny = *y;	/*new origin */
+				 dy += *height;	/*new height */
+				 /* check for limits */
 				 if (ny + dy > ymax)
 				   {
 				      dy = ymin + ALIGNE (ymax - ymin) - ny;
@@ -1116,15 +1076,13 @@ int                 DimY;
 			      }
 			 }
 		       else
-			  /* le cote superieur */
+			  /* Top treatemnt similar to bottom */
 			 {
-			    /* Faut-il inverser les cotes ? */
-			    if (dy > *haut)
+			    if (dy > *height)
 			      {
-				 Enbas = 1;	/* Inversion */
-				 ny = *y + *haut;	/*nouvelle origine */
-				 dy -= *haut;	/*nouvelle hauteur */
-				 /* Verifie que l'on reste dans les limites */
+				 BottomOrTop = 1;
+				 ny = *y + *height;
+				 dy -= *height;
 				 if (ny + dy > ymax)
 				   {
 				      dy = ymin + ALIGNE (ymax - ymin) - ny;
@@ -1133,35 +1091,34 @@ int                 DimY;
 			      }
 			    else
 			      {
-				 ny = *y + dy;	/*nouvelle origine */
-				 /* Verifie que l'on reste dans les limites */
+				 ny = *y + dy;
 				 if (ny < ymin)
 				   {
 				      ny = ymin;
 				      warpy = ymin;
 				   }
-				 dy = *y + *haut - ny;	/*nouvelle hauteur */
+				 dy = *y + *height - ny;
 			      }
 			 }
 		    else
 		      {
 			 ny = *y;
-			 dy = *haut;
+			 dy = *height;
 		      }
 
-		    /* Faut-il deplacer la boite elastique */
-		    if (nx != *x || ny != *y || dx != *large || dy != *haut)
+		    /* should we redraw the box because geometry has changed */
+		    if (nx != *x || ny != *y || dx != *width || dy != *height)
 		      {
-			 GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);	/*Ancienne */
-			 GeomBoite (frame, nx, ny, dx, dy, nx + xr, ny + yr, FALSE);	/*Nouvelle */
+			 BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);	/*Ancienne */
+			 BoxGeometry (frame, nx, ny, dx, dy, nx + xr, ny + yr, FALSE);	/*Nouvelle */
 			 XFlush (TtDisplay);
 			 *x = nx;
 			 *y = ny;
-			 *large = dx;
-			 *haut = dy;
+			 *width = dx;
+			 *height = dy;
 		      }
 
-		    /* Faut-il deplacer le curseur */
+		    /* should we move the cursor */
 		    if (warpx >= 0 || warpy >= 0)
 		      {
 			 if (warpx >= 0)
@@ -1172,43 +1129,39 @@ int                 DimY;
 		      }
 		    break;
 
-/*-OTHER-*/
 		 default:
 		    break;
 	      }
      }
 
-   /* On supprime la boite elastique */
-   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
+   /* Erase the box drawing */
+   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 
-   /* On restaure l'etat anterieur */
+   /* restore state of the Thot Library */
    ThotUngrab ();
    XFlush (TtDisplay);
 #endif /* NEW_WILLOWS */
-}				/*GeomCreation */
+}				/*UserGeometryCreate */
 
-/* ---------------------------------------------------------------------- */
-/* |    ChPosition affiche une boite fantome a` la position (x,y de la  | */
-/* |            frame frame) et de dimensions (large,haut) et la deplace| */
-/* |            a` la demande de l'utilisateur.                         | */
-/* |            Les parametres xr,yr donnent la position du point de    | */
-/* |            reference. Les valeurs xmin, xmax, ymin, ymax donnent   | */
-/* |            les limites du deplacement. Les parametres xm,ym donnent| */
-/* |            la position initiale de la souris dans la fenetre.      | */
-/* |            La procedure retourne la nouvelle position quand le     | */
-/* |            bouton est relache'.                                    | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      UserGeometryMove draw a box at a specific (x,y) location in
+ *		frame and of size width x height when interracting with
+ *		the user to mofify the box position (button press).
+ *		xmin, xmax, ymin, ymax are the maximum values allowed.
+ *		xm and ym gives the initial mouse coordinates in the frame.
+ *		this function returns the new position upon button release.
+ **/
 
 #ifdef __STDC__
-void                ChPosition (int frame, int *x, int *y, int large, int haut, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
+void                UserGeometryMove (int frame, int *x, int *y, int width, int height, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
 
 #else  /* __STDC__ */
-void                ChPosition (frame, x, y, large, haut, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
+void                UserGeometryMove (frame, x, y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
 int                 frame;
 int                *x;
 int                *y;
-int                 large;
-int                 haut;
+int                 width;
+int                 height;
 int                 xr;
 int                 yr;
 int                 xmin;
@@ -1227,54 +1180,52 @@ int                 ym;
    ThotWindow          w;
    int                 warpx, warpy;
 
-   /* On repositionne les coordonnees de la souris dans la fenetre */
+   /* reset the cursor coordinate in the frame */
    xm += FrameTable[frame].FrLeftMargin;
    ym += FrameTable[frame].FrTopMargin;
 
-   /* On decale le point de reference pour l'affichage */
+   /* Slight shift for drawing */
    if (xr == *x)
       xr += 2;
-   else if (xr == *x + large)
+   else if (xr == *x + width)
       xr -= 2;
 
    if (yr == *y)
       yr += 2;
-   else if (yr == *y + haut)
+   else if (yr == *y + height)
       yr -= 2;
 
-   /* On choisit le bon curseur */
+   /* Pick the correct cursor */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
-   if ((xmin >= *x) && (xmax <= *x + large))
+   if ((xmin >= *x) && (xmax <= *x + width))
       ThotGrab (w, VCurs, e, 0);
    else
      {
-	if ((ymin >= *y) && (ymax <= *y + haut))
+	if ((ymin >= *y) && (ymax <= *y + height))
 	   ThotGrab (w, HCurs, e, 0);
 	else
 	   ThotGrab (w, HVCurs, e, 0);
      }
 
-   /* On affiche la boite elastique initiale */
-   GeomBoite (frame, *x, *y, large, haut, xr, yr, FALSE);
+   /* Shows the initial box size */
+   BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
 
-   /* BOUCLE de traitement des evenements */
+   /* Loop on user interraction */
    ret = 0;
    while (ret == 0)
      {
 	XNextEvent (TtDisplay, &event);
-	switch (event.type)	/* On analyse le type de l'evenement */
+	switch (event.type)
 	      {
-/*-BOUTON ENFONCE-*/
 		 case ButtonRelease:
 		    ret = 1;
-/*-DEPLACEMENT DE LA SOURIS-*/
 		 case MotionNotify:
 
-		    /* Si l'evenement concerne la fenetre */
+		    /* Check for window ID */
 		    if (event.xmotion.window == w)
 		      {
-			 /* On calcule la nouvelle origine de la boite */
+			 /* compute the new box origin */
 			 nx = *x + (int) event.xmotion.x - xm;
 			 dx = xmin + ALIGNE (nx - xmin) - *x;
 			 ny = *y + (int) event.xmotion.y - ym;
@@ -1288,77 +1239,77 @@ int                 ym;
 		    nx = dx + *x;
 		    ny = dy + *y;
 
-		    /* On verifie que l'on reste dans la limite permise */
+		    /* Checks for limits */
 		    warpx = -1;
 		    warpy = -1;
 		    if (xmin == xmax)
 		      {
-			 nx = xmin;	/*cote gauche */
+			 nx = xmin;	/*left side */
 			 warpx = xm;
 		      }
 		    else if (nx < xmin)
 		      {
-			 nx = xmin;	/*cote gauche */
+			 nx = xmin;	/*left side */
 			 warpx = xm;
 		      }
-		    else if (nx + large > xmax)
+		    else if (nx + width > xmax)
 		      {
-			 if (xmin + large > xmax)
+			 if (xmin + width > xmax)
 			   {
-			      nx = xmin;	/*debordement => sur le cote gauche */
+			      nx = xmin;	/*overflow on left side */
 			      warpx = xm;
 			   }
 			 else
 			   {
-			      nx = xmin + ALIGNE (xmax - large - xmin);		/*cote droit */
+			      nx = xmin + ALIGNE (xmax - width - xmin);		/*cote droit */
 			      warpx = xm + nx - *x;
 			   }
 		      }
 		    else
-		       xm += dx;	/*nouvelle position du curseur */
+		       xm += dx;	/* New cursor location */
 
 		    dx = nx - *x;
 		    if (ymin == ymax)
 		      {
-			 ny = ymin;	/*cote superieur */
+			 ny = ymin;	/*upper border */
 			 warpy = ym;
 		      }
 		    else if (ny < ymin)
 		      {
-			 ny = ymin;	/*cote superieur */
+			 ny = ymin;	/*upper border */
 			 warpy = ym;
 		      }
-		    else if (ny + haut > ymax)
+		    else if (ny + height > ymax)
 		      {
-			 if (ymin + haut > ymax)
+			 if (ymin + height > ymax)
 			   {
-			      ny = ymin;	/*debordement => sur le cote superieur */
+			      ny = ymin;	/*overflow on upper border */
 			      warpy = ym;
 			   }
 			 else
 			   {
-			      ny = ymin + ALIGNE (ymax - haut - ymin);	/*cote inferieur */
+			      ny = ymin + ALIGNE (ymax - height - ymin);	/*cote inferieur */
 			      warpy = ym + ny - *y;
 			   }
 		      }
 		    else
-		       ym += dy;	/*nouvelle position du curseur */
+		       ym += dy;	/* New cursor location */
 		    dy = ny - *y;
 
-		    /* Faut-il deplacer la boite elastique */
+		    /* Should we move the box */
 		    if ((dx != 0) || (dy != 0))
 		      {
-			 GeomBoite (frame, *x, *y, large, haut, xr, yr, FALSE);		/*Ancienne */
+			 BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);		/*Ancienne */
 			 xr += dx;
 			 yr += dy;
-			 GeomBoite (frame, nx, ny, large, haut, xr, yr, FALSE);		/*Nouvelle */
+			 BoxGeometry (frame, nx, ny, width, height, xr, yr, FALSE);		/*Nouvelle */
 			 XFlush (TtDisplay);
 			 *x = nx;
 			 *y = ny;
 
 		      }
 
-		    /* Faut-il deplacer le curseur */
+		    /* Should we move the cursor */
 		    if (warpx >= 0 || warpy >= 0)
 		      {
 			 if (warpx >= 0)
@@ -1368,44 +1319,41 @@ int                 ym;
 			 XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
 		      }
 		    break;
-/*-OTHER-*/
 		 default:
 		    break;
 	      }
      }
 
-   /* On supprime la boite elastique */
-   GeomBoite (frame, *x, *y, large, haut, xr, yr, FALSE);
+   /* Erase the box drawing */
+   BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
 
-   /* On retaure l'etat anterieur */
+   /* restore the Thot Library state */
    ThotUngrab ();
    XFlush (TtDisplay);
 
 #endif /* NEW_WILLOWS */
-}				/*ChPosition */
+}				/*UserGeometryMove */
 
-/* ---------------------------------------------------------------------- */
-/* |    ChDimension affiche une boite fantome a` la position (x,y de la | */
-/* |            frame frame) et de dimensions (large,haut) et la        | */
-/* |            deforme a` la demande de l'utilisateur.                 | */
-/* |            Les parametres xr,yr donnent la position du point de    | */
-/* |            reference. Les valeurs xmin, xmax, ymin, ymax donnent   | */
-/* |            les limites de deplacement. Les parametres xm,ym donnent| */
-/* |            la position initiale de la souris dans la fenetre.      | */
-/* |            La procedure retourne les nouvelles dimensions quand le | */
-/* |            bouton est relache'.                                    | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      UserGeometryResize draw a box at a specific (x,y) location in
+ *		frame and of size width x height when interracting with
+ *		the user to mofify the box geometry (button press).
+ *		xr and yr gives the initial mouse reference point.
+ *		xmin, xmax, ymin, ymax are the maximum values allowed.
+ *		xm and ym gives the initial mouse coordinates in the frame.
+ *		this function returns the new geometry upon button release.
+ **/
 
 #ifdef __STDC__
-void                ChDimension (int frame, int x, int y, int *large, int *haut, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
+void                UserGeometryResize (int frame, int x, int y, int *width, int *height, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
 
 #else  /* __STDC__ */
-void                ChDimension (frame, x, y, large, haut, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
+void                UserGeometryResize (frame, x, y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
 int                 frame;
 int                 x;
 int                 y;
-int                *large;
-int                *haut;
+int                *width;
+int                *height;
 int                 xr;
 int                 yr;
 int                 xmin;
@@ -1427,69 +1375,69 @@ int                 ym;
 #define c_droit 2
 
    int                 ret, e, dx, dy, dl, dh;
-   int                 ref_h, ref_v, sensh, sensv;
+   int                 ref_h, ref_v, HorizontalDirection, VerticalDirection;
    XEvent              event;
    ThotWindow          w;
    int                 warpx, warpy;
 
-   /* On utilise le point de reference pour deplacer la boite */
+   /* Use the reference point to move the box */
    if (xr == x)
      {
 	ref_v = c_gauche;
-	xr += 2;		/* decalage pour l'affichage */
-	/* La boite s'elargit quand le delta x de la souris augmente */
-	sensh = 1;
+	xr += 2;		/* small shift for drawing */
+	/* Box increased when X delta increase */
+	HorizontalDirection = 1;
      }
-   else if (xr == x + *large)
+   else if (xr == x + *width)
      {
 	ref_v = c_droit;
-	xr -= 2;		/* decalage pour l'affichage */
-	/* La boite se retrecit quand le delta x de la souris augmente */
-	sensh = -1;
+	xr -= 2;		/* small shift for drawing */
+	/* Box shortened when X delta increase */
+	HorizontalDirection = -1;
      }
    else
      {
 	ref_v = c_milieuv;
-	/* Le sens depend de la position initiale du curseur dans la boite */
+	/* Direction depends of original cursor location in the frame */
 	if (xm < xr)
-	   sensh = -1;
+	   HorizontalDirection = -1;
 	else
-	   sensh = 1;
+	   HorizontalDirection = 1;
      }
 
    if (yr == y)
      {
 	ref_h = c_sup;
-	yr += 2;		/* decalage pour l'affichage */
-	/* La boite grandit quand le delta y de la souris augmente */
-	sensv = 1;
+	yr += 2;		/* small shift for drawing */
+	/* Box increased when Y delta increase */
+	VerticalDirection = 1;
      }
-   else if (yr == y + *haut)
+   else if (yr == y + *height)
      {
 	ref_h = c_inf;
-	yr -= 2;		/* decalage pour l'affichage */
-	/* La boite retrecit quand le delta y de la souris augmente */
-	sensv = -1;
+	yr -= 2;		/* small shift for drawing */
+	/* Box shortened when Y delta increase */
+	VerticalDirection = -1;
      }
    else
      {
 	ref_h = c_milieuh;
-	/* Le sens depend de la position initiale du curseur dans la boite */
+	/* Direction depends of original cursor location in the frame */
 	if (ym < yr)
-	   sensv = -1;
+	   VerticalDirection = -1;
 	else
-	   sensv = 1;
+	   VerticalDirection = 1;
      }
 
-   /* On repositionne les coordonnees de la souris dans la fenetre */
+   /* reset the cursor coordinate in the frame */
    xm += FrameTable[frame].FrLeftMargin;
    ym += FrameTable[frame].FrTopMargin;
 
-   /* On affiche la boite elastique initiale */
-   GeomBoite (frame, x, y, *large, *haut, xr, yr, FALSE);
+   /* Shows the initial box size */
+   BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
 
-   /* On choisit le bon curseur */
+   /* select the correct cursor */
    w = FrRef[frame];
    if (xmin == xmax)
       ThotGrab (w, VCurs, e, 0);
@@ -1498,30 +1446,27 @@ int                 ym;
    else
       ThotGrab (w, HVCurs, e, 0);
 
-   /* BOUCLE de traitement des evenements */
+   /* Loop on user interraction */
    ret = 0;
    while (ret == 0)
      {
-	/* Pour une raison mysterieuse si on consomme trop rapidement */
-	/* les evenements de la file, de temps en temps X11R4         */
-	/* retourne un evenement avec une valeur de event.xbutton.y=1 */
-	/* Solution: consommer rapidement uniquement les MotionNotify */
+	/* X11R4 bug fix, if events are used too rapidly sometimes    */
+	/* an event with event.xbutton.y=1 arose. Solution, pick only */
+	/* MotionNotify events from the queue !                       */
 	XNextEvent (TtDisplay, &event);
 	if (event.type == MotionNotify)
 
 	   /* On pique le dernier evenement de la file */
 	   while (XPending (TtDisplay))
 	      XNextEvent (TtDisplay, &event);
-	switch (event.type)	/* On analyse le type de l'evenement */
+	switch (event.type)
 	      {
-/*-BOUTON ENFONCE-*/
 		 case ButtonRelease:
 		    ret = 1;
-/*-DEPLACEMENT DE LA SOURIS-*/
 		 case MotionNotify:
 		    if (event.xbutton.window == w)
 		      {
-			 /* On calcule les ecarts de dimension de la boite */
+			 /* comput the deltas */
 			 dl = (int) event.xmotion.x - xm;
 			 dh = (int) event.xmotion.y - ym;
 		      }
@@ -1530,79 +1475,69 @@ int                 ym;
 			 dl = dh = 0;
 		      }
 
-		    /* On verifie que les dimensions sont modifiables */
-		    /* et qu'elles restent toujours positives         */
-		    /* La modification relle de largeur (hauteur) depend */
-		    /* de la position du curseur et du point fixe de la  */
-		    /* boite :                                           */
-		    /* Fixee a gauche et dl>0 -> augmentation largeur    */
-		    /* Fixee a gauche et dl<0 -> diminution largeur      */
-		    /* Fixee a droite et dl>0 -> diminution largeur      */
-		    /* Fixee a droite et dl<0 -> augmentation largeur    */
-		    /* Centree, curseur a gauche et dl>0 -> diminution   */
-		    /* Centree, curseur a gauche et dl<0 -> augmentation */
-		    /* Centree, curseur a droite et dl>0 -> augmentation */
-		    /* Centree, curseur a droite et dl<0 -> diminution   */
+		    /* Check that size can be modified, and stay >= 0    */
+		    /* depending on base point and cursor position,      */
+		    /* increase or decreas width or height accordingly   */
 		    warpx = -1;
 		    warpy = -1;
 		    if (dl != 0)
 		       if (xmin == xmax)
-			  /* Box bloquee en X */
+			  /* X moves frozen */
 			  dl = 0;
 		       else if (ref_v == c_milieuv
-				&& *large + (2 * dl * sensh) < 0)
+				&& *width + (2 * dl * HorizontalDirection) < 0)
 			 {
-			    dl = -ALIGNE (*large / 2) * sensh;
-			    warpx = xm + (dl * sensh);
+			    dl = -ALIGNE (*width / 2) * HorizontalDirection;
+			    warpx = xm + (dl * HorizontalDirection);
 			 }
-		       else if (*large + (dl * sensh) < 0)
+		       else if (*width + (dl * HorizontalDirection) < 0)
 			 {
-			    dl = -ALIGNE (*large) * sensh;
-			    warpx = xm + (dl * sensh);
+			    dl = -ALIGNE (*width) * HorizontalDirection;
+			    warpx = xm + (dl * HorizontalDirection);
 			 }
 
 		    if (dh != 0)
 		       if (ymin == ymax)
-			  /* Box bloquee en Y */
+			  /* Y moves frozen */
 			  dh = 0;
 		       else if (ref_h == c_milieuh
-				&& *haut + (2 * dh * sensv) < 0)
+				&& *height + (2 * dh * VerticalDirection) < 0)
 			 {
-			    dh = -(*haut * sensv * PasGrille) / (2 * PasGrille);
-			    warpy = ym + (dh * sensv);
+			    dh = -(*height * VerticalDirection * PasGrille) / (2 * PasGrille);
+			    warpy = ym + (dh * VerticalDirection);
 			 }
-		       else if (*haut + dh < 0)
+		       else if (*height + dh < 0)
 			 {
-			    dh = -(*haut * sensv * PasGrille) / PasGrille;
-			    warpy = ym + (dh * sensv);
+			    dh = -(*height * VerticalDirection * PasGrille) / PasGrille;
+			    warpy = ym + (dh * VerticalDirection);
 			 }
 
-		    /* On evalue le deplacement horizontal de l'origine de la boite */
+		    /* Compute the horizontal move of the origin */
 		    if (dl != 0)
 		      {
-			 dl = dl * sensh;	/* On tient compte du sens */
+			 dl = dl * HorizontalDirection;	/* Take care for direction */
 			 if (ref_v == c_milieuv)
 			   {
 			      dx = xmin + ALIGNE (x - (dl / 2) - xmin) - x;
-			      /* On verifie la validite du deplacement */
+			      /* Check the move is within limits */
 			      if (x + dx < xmin)
-				 dx = xmin - x;		/*cote gauche */
-			      if (x + *large - dx > xmax)
-				 dx = x + *large - xmin - ALIGNE (xmax - xmin);		/*cote droit */
+				 dx = xmin - x;		/*left side */
+			      if (x + *width - dx > xmax)
+				 dx = x + *width - xmin - ALIGNE (xmax - xmin);		/*cote droit */
 
-			      /* modification effective de la largeur */
+			      /* modify width for real */
 			      dl = -(dx * 2);
 			      if (dx != 0)
-				 warpx = xm - (dx * sensh);
+				 warpx = xm - (dx * HorizontalDirection);
 			   }
 			 else if (ref_v == c_droit)
 			   {
 			      dx = xmin + ALIGNE (x - dl - xmin) - x;
-			      /* On verifie la validite du deplacement */
+			      /* Check the move is within limits */
 			      if (x + dx < xmin)
-				 dx = xmin - x;		/*cote gauche */
+				 dx = xmin - x;		/*left side */
 
-			      /* modification effective de la largeur */
+			      /* modify width for real */
 			      dl = -dx;
 			      if (dx != 0)
 				 warpx = xm + dx;
@@ -1610,9 +1545,9 @@ int                 ym;
 			 else
 			   {
 			      dx = 0;
-			      dl = xmin + ALIGNE (x + *large + dl - xmin) - x - *large;
-			      if (x + *large + dl > xmax)
-				 dl = xmin + ALIGNE (xmax - xmin) - x - *large;		/*cote droit */
+			      dl = xmin + ALIGNE (x + *width + dl - xmin) - x - *width;
+			      if (x + *width + dl > xmax)
+				 dl = xmin + ALIGNE (xmax - xmin) - x - *width;		/*cote droit */
 			      if (dl != 0)
 				 warpx = xm + dl;
 			   }
@@ -1620,30 +1555,30 @@ int                 ym;
 		    else
 		       dx = 0;
 
-		    /* On evalue le deplacement vertical de l'origine de la boite */
+		    /* Compute vertical move */
 		    if (dh != 0)
 		      {
-			 dh = dh * sensv;	/* On tient compte du sens */
+			 dh = dh * VerticalDirection;	/* Take care for direction */
 			 if (ref_h == c_milieuh)
 			   {
 			      dy = ymin + ALIGNE (y - (dh / 2) - ymin) - y;
-			      /* On verifie la validite du deplacement */
+			      /* Check the move is within limits */
 			      if (y + dy < ymin)
-				 dy = ymin - y;		/*cote superieur */
-			      if (y + *haut - dy > ymax)
-				 dy = y + *haut - ymin - ALIGNE (ymax - ymin);	/*cote inferieur */
-			      /* modification effective de la hauteur */
+				 dy = ymin - y;		/*upper border */
+			      if (y + *height - dy > ymax)
+				 dy = y + *height - ymin - ALIGNE (ymax - ymin);	/*cote inferieur */
+			      /* change the height for real */
 			      dh = -(dy * 2);
 			      if (dy != 0)
-				 warpy = ym - (dy * sensv);
+				 warpy = ym - (dy * VerticalDirection);
 			   }
 			 else if (ref_h == c_inf)
 			   {
 			      dy = ymin + ALIGNE (y - dh - ymin) - y;
-			      /* On verifie la validite du deplacement */
+			      /* Check the move is within limits */
 			      if (y + dy < ymin)
-				 dy = ymin - y;		/*cote superieur */
-			      /* modification effective de la hauteur */
+				 dy = ymin - y;		/*upper border */
+			      /* change the height for real */
 			      dh = -dy;
 			      if (dy != 0)
 				 warpy = ym + dy;
@@ -1651,9 +1586,9 @@ int                 ym;
 			 else
 			   {
 			      dy = 0;
-			      dh = ymin + ALIGNE (y + *haut + dh - ymin) - y - *haut;
-			      if (y + *haut + dh > ymax)
-				 dh = ymin + ALIGNE (ymax - ymin) - y - *haut;	/*cote inf */
+			      dh = ymin + ALIGNE (y + *height + dh - ymin) - y - *height;
+			      if (y + *height + dh > ymax)
+				 dh = ymin + ALIGNE (ymax - ymin) - y - *height;	/*cote inf */
 			      if (dh != 0)
 				 warpy = ym + dh;
 			   }
@@ -1661,18 +1596,18 @@ int                 ym;
 		    else
 		       dy = 0;
 
-		    /* Faut-il deplacer la boite elastique */
+		    /* Should we move the box */
 		    if ((dl != 0) || (dh != 0))
 		      {
-			 GeomBoite (frame, x, y, *large, *haut, xr, yr, FALSE);		/*Ancienne */
-			 *large += dl;
-			 *haut += dh;
+			 BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);		/*Ancienne */
+			 *width += dl;
+			 *height += dh;
 			 x += dx;
 			 y += dy;
-			 GeomBoite (frame, x, y, *large, *haut, xr, yr, FALSE);		/*Nouvelle */
+			 BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);		/*Nouvelle */
 		      }
 
-		    /* Faut-il deplacer le curseur */
+		    /* Should we move the cursor */
 		    if (warpx >= 0 || warpy >= 0)
 		      {
 			 if (warpx >= 0)
@@ -1682,18 +1617,17 @@ int                 ym;
 			 XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
 		      }
 		    break;
-/*-OTHER-*/
 		 default:
 		    break;
 	      }
      }
 
-   /* On supprime la boite elastique */
-   GeomBoite (frame, x, y, *large, *haut, xr, yr, FALSE);
+   /* Erase the box drawing */
+   BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
 
-   /* On restaure l'etat anterieur */
+   /* restore the prvious state of the Thot Library */
    ThotUngrab ();
    XFlush (TtDisplay);
 #endif /* NEW_WILLOWS */
 
-}				/*ChDimension */
+}				/*UserGeometryResize */

@@ -35,16 +35,6 @@ void LoadUserStyleSheet(/* doc */);
      { while (((*(ptr)) == ' ') || ((*(ptr)) == '\b') || \
               ((*(ptr)) == '\n') || ((*(ptr)) == '\r')) ptr++; }
 	      
-/* DEBUG_CSS turn on verbose debugging of the CSS manipulations */
-
-#ifdef AMAYA_DEBUG
-#define MSG(msg) fprintf(stderr,msg)
-#else
-static char *last_message = NULL;
-#define MSG(msg) last_message = msg
-#endif
-
-
 typedef enum {
   CSS_Unknown,		/* for detecting uninitialized fields */
   CSS_USER_STYLE,		/* the CSS associated to the browser */

@@ -611,9 +611,9 @@ char               *schpres;
 
 /* Les procedures de geom.c */
 #ifdef __STDC__
-void                ChPosition (int frame, int *x, int *y, int large, int haut, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
+void                UserGeometryMove (int frame, int *x, int *y, int large, int haut, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
 #else  /* __STDC__ */
-void                ChPosition (frame, x, y, large, haut, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
+void                UserGeometryMove (frame, x, y, large, haut, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
 int                 frame;
 int                *x;
 int                *y;
@@ -633,9 +633,9 @@ int                 ym;
 }
 
 #ifdef __STDC__
-void                ChDimension (int frame, int x, int y, int *large, int *haut, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
+void                UserGeometryResize (int frame, int x, int y, int *large, int *haut, int xr, int yr, int xmin, int xmax, int ymin, int ymax, int xm, int ym)
 #else  /* __STDC__ */
-void                ChDimension (frame, x, y, large, haut, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
+void                UserGeometryResize (frame, x, y, large, haut, xr, yr, xmin, xmax, ymin, ymax, xm, ym)
 int                 frame;
 int                 x;
 int                 y;
@@ -655,9 +655,9 @@ int                 ym;
 }
 
 #ifdef __STDC__
-void                GeomCreation (int frame, int *x, int *y, int xr, int yr, int *large, int *haut, int xmin, int xmax, int ymin, int ymax, int PosX, int PosY, int DimX, int DimY)
+void                UserGeometryCreate (int frame, int *x, int *y, int xr, int yr, int *large, int *haut, int xmin, int xmax, int ymin, int ymax, int PosX, int PosY, int DimX, int DimY)
 #else  /* __STDC__ */
-void                GeomCreation (frame, x, y, xr, yr, large, haut, xmin, xmax, ymin, ymax, PosX, PosY, DimX, DimY)
+void                UserGeometryCreate (frame, x, y, xr, yr, large, haut, xmin, xmax, ymin, ymax, PosX, PosY, DimX, DimY)
 int                 frame;
 int                *x;
 int                *y;

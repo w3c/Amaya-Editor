@@ -78,6 +78,13 @@ extern char        *HTMLHistory[CSS_HISTORY_SIZE];
 extern int          CSSHistoryIndex;
 extern int          HTMLHistoryIndex;
 
+#ifdef AMAYA_DEBUG
+#define MSG(msg) fprintf(stderr,msg)
+#else
+static char *last_message = NULL;
+#define MSG(msg) last_message = msg
+#endif
+
 #include "HTMLhistory.h"
 #include "AHTURLTools.h"
 #include "UIcss.h"
