@@ -277,6 +277,9 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
 {
   wxLogDebug(_T("AmayaAttributePanel - ShowAttributValue type=%d"), type );
 
+  if(IsFreezed())
+    return;
+
   m_pVPanelSizer->Show( m_pPanel_Text, false );
   m_pVPanelSizer->Show( m_pPanel_Lang, false );
   m_pVPanelSizer->Show( m_pPanel_Enum, false );
@@ -320,7 +323,11 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
   GetParent()->Layout();
   Layout();
   m_pPanelContentDetach->Layout();
-  
+
+  // resize the popup window if the panel is floating
+  if (IsFloating())
+    GetParent()->Fit();
+
   // remember the current attribut type, used to know what callback must be called
   m_CurrentAttType = type;
 }
