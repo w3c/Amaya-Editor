@@ -732,6 +732,18 @@ static void SaveElement (PtrElement pEl, PtrElement pParent, int doc)
   pNewPasteEl = (PtrPasteElem) TtaGetMemory (sizeof (PasteElemDescr));
   if (pNewPasteEl != NULL)
     {
+      if (FirstSavedElement == NULL || TableRowsSaved)
+	{
+	  if (TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+				pEl->ElStructSchema))
+	    {
+	      if (FirstSavedElement == NULL)
+		TableRowsSaved = TRUE;
+	    }
+	  else
+	    TableRowsSaved = FALSE;
+	}
+
       if (FirstSavedElement == NULL)
 	/* that's the first element saved */
 	{
@@ -755,17 +767,6 @@ static void SaveElement (PtrElement pEl, PtrElement pParent, int doc)
 	  pPasteEl->PeNext = pNewPasteEl;
 	  pEl->ElPrevious = pPasteEl->PeElement;
 	  pPasteEl->PeElement->ElNext = pEl;
-	}
-      if (FirstSavedElement == NULL || TableRowsSaved)
-	{
-	  if (TypeHasException (ExcIsRow, pEl->ElTypeNumber,
-				pEl->ElStructSchema))
-	    {
-	      if (FirstSavedElement == NULL)
-		TableRowsSaved = TRUE;
-	    }
-	  else
-	    TableRowsSaved = FALSE;
 	}
 
       /* notify the application that a cell of a whole row or a whole

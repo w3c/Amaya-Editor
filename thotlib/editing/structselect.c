@@ -476,11 +476,22 @@ PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead,
   found = FALSE;
   while (pCell && !found)
     {
-      if (pColHead == GetColHeadOfCell (pCell) ||
-	  (orPrevious && pCell->ElNext == NULL))
+      if (pColHead == GetColHeadOfCell (pCell))
 	found = TRUE;
       else
         pCell = pCell->ElNext;
+    }
+  if (orPrevious && pColHead && pCell == NULL)
+    {
+      /* look for a cell in a previous column */ 
+      pColHead = pColHead->ElPrevious;
+      while (pColHead &&
+	     !TypeHasException (ExcIsColHead,
+				pColHead->ElTypeNumber,
+				pColHead->ElStructSchema))
+	/* skip comments */
+	pColHead = pColHead->ElPrevious;
+      pCell = GetCellInRow (pRow, pColHead, orPrevious);
     }
   return pCell;
 }
