@@ -1106,13 +1106,19 @@ Element             el;
 
 #endif
 {
+#define MAX_OPTIONS 100
+#define MAX_BUF_LEN 80
    ElementType         elType;
-   Element             option[200], elText;
-   int                 length, nbitems, lgmenu;
-   char                text[200];
+   Element             option[MAX_OPTIONS], elText, menuEl;
+   AttributeType       attrType;
+   Attribute	       attr;
+   int                 length, nbitems, lgmenu, i;
+   char                text[MAX_BUF_LEN];
    char                buffmenu[MAX_LENGTH];
    Language            lang;
    int                 modified;
+   boolean	       selected[MAX_OPTIONS];
+   boolean	       multipleOptions;
 
    if (el == NULL)
       return;
@@ -1123,7 +1129,8 @@ Element             el;
 
    /* search the option element */
    elType = TtaGetElementType (el);
-   while (elType.ElTypeNum != HTML_EL_BODY && elType.ElTypeNum != HTML_EL_Option)
+   while (elType.ElTypeNum != HTML_EL_BODY &&
+	  elType.ElTypeNum != HTML_EL_Option)
      {
 	el = TtaGetParent (el);
 	elType = TtaGetElementType (el);
@@ -1134,11 +1141,21 @@ Element             el;
 	/* create the option menu */
 	lgmenu = 0;
 	nbitems = 0;
-	el = TtaGetParent (el);
-	if (el != NULL)
+	menuEl = TtaGetParent (el);
+	if (menuEl != NULL)
 	  {
-	     el = TtaGetFirstChild (el);
-	     while (nbitems < 200 && el != NULL)
+	     attrType.AttrSSchema = elType.ElSSchema;
+	     attrType.AttrTypeNum = HTML_ATTR_Multiple;
+	     attr = TtaGetAttribute (menuEl, attrType);
+	     if (attr)
+	         /* multiple options are allowed */
+		 multipleOptions = TRUE;
+	     else
+		 multipleOptions = FALSE;
+	     
+	     attrType.AttrTypeNum = HTML_ATTR_Selected;
+	     el = TtaGetFirstChild (menuEl);
+	     while (nbitems < MAX_OPTIONS && el != NULL)
 	       {
 		  elType = TtaGetElementType (el);
 		  if (elType.ElTypeNum == HTML_EL_Option)
@@ -1147,7 +1164,9 @@ Element             el;
 #              ifdef _WINDOWS 
                opOption[nbitems] = el;
 #              endif /* _WINDOWS */
-		       length = 200;
+		       if (multipleOptions)
+		          selected[nbitems] = (TtaGetAttribute (el, attrType) != NULL);
+		       length = MAX_BUF_LEN;
 		       elText = TtaGetFirstChild (el);
 		       TtaGiveTextContent (elText, text, &length, &lang);
 		       if (length >= 50)
@@ -1158,11 +1177,14 @@ Element             el;
 			 }
 		       else
 			  length++;
-		       length++;	/* we have to add the 'B' character */
+		       length++;  /* we have to add the 'B' or 'T' character */
 		       if (lgmenu + length < MAX_LENGTH)
 			 {
 			    /* add an item */
-			    sprintf (&buffmenu[lgmenu], "B%s", text);
+			    if (multipleOptions)
+			       sprintf (&buffmenu[lgmenu], "T%s", text);
+			    else
+			       sprintf (&buffmenu[lgmenu], "B%s", text);
 			    nbitems++;
 			 }
 		       lgmenu += length;
@@ -1174,6 +1196,14 @@ Element             el;
 		  ReturnOption = -1;
 		  TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 			       "", nbitems, buffmenu, NULL, 'L');
+		  if (multipleOptions)
+		     {
+		     for (i = 0; i < nbitems; i++)
+			{
+			if (selected[i])
+			   TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
+			}
+		     }
 		  TtaSetDialoguePosition ();
 		  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 		  /* wait for an answer */
@@ -1183,7 +1213,22 @@ Element             el;
 		       /* make the returned option selected */
 		       el = option[ReturnOption];
 		       modified = TtaIsDocumentModified (doc);
-		       OnlyOneOptionSelected (el, doc, FALSE);
+		       if (!multipleOptions)
+		          OnlyOneOptionSelected (el, doc, FALSE);
+		       else
+			  {
+			  attrType.AttrTypeNum = HTML_ATTR_Selected;
+			  attr = TtaGetAttribute (el, attrType);
+			  if (selected[ReturnOption])
+			     TtaRemoveAttribute (el, attr, doc);
+			  else
+			     {
+			     if (!attr)
+				attr = TtaNewAttribute (attrType);
+			     TtaAttachAttribute (el, attr, doc);
+			     TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el, doc);
+			     }
+			  }
 		       if (!modified)
 			  TtaSetDocumentUnmodified (doc);
 		    }
@@ -1191,13 +1236,3 @@ Element             el;
 	  }
      }
 }
-
-
-
-
-
-
-
-
-
-

@@ -2172,7 +2172,7 @@ BOXES
  Option_gif: BEGIN
 	Content: Picture 'option.gif';
 	HorizPos: Left = Enclosing . Left + 0.2;
-	VertPos: HMiddle = Option . HMiddle;
+	VertPos: HMiddle = Enclosing . Top + 0.5;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -7309,8 +7309,8 @@ RULES
  Option: BEGIN
 	CreateBefore(OPTION_S);
 	Visibility: 0;
-	HorizPos: Left = Previous . Right + 0.2;	
-	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Option_gif . Right + 0.2;	
+	VertPos: Top = Previous Option . Bottom + 0.1;
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
