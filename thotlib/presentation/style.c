@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1315,6 +1315,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
    *      real = TRUE
    *      val = 1115
    */
+  int_unit = UnRelative;
   switch (unit)
     {
     case STYLE_UNIT_REL:
@@ -1368,10 +1369,11 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       value *= 10;
       break;
     case STYLE_UNIT_BOX:
-      int_unit = UnRelative;	/* unused */
+      break;
+    case STYLE_VALUE_AUTO:
+      int_unit = UnAuto;
       break;
     default:
-      int_unit = UnRelative;
       break;
     }
 
@@ -1569,10 +1571,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtIndent:
     case PtLineSpacing:
     case PtLineWeight:
-    case PtMarginTop:
-    case PtMarginLeft:
-    case PtMarginBottom:
-    case PtMarginRight:
     case PtBorderTopWidth:
     case PtBorderLeftWidth:
     case PtBorderBottomWidth:
@@ -1586,6 +1584,23 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       rule->PrMinUnit = int_unit;
       rule->PrMinValue = value;
+      rule->PrMinAttr = FALSE;
+      break;
+    case PtMarginTop:
+    case PtMarginLeft:
+    case PtMarginBottom:
+    case PtMarginRight:
+      rule->PrPresMode = PresImmediate;
+      if (val.typed_data.unit == STYLE_VALUE_AUTO)
+	{
+	  rule->PrMinUnit = UnAuto;
+	  rule->PrMinValue = 0;
+	}
+      else
+	{
+	  rule->PrMinUnit = int_unit;
+	  rule->PrMinValue = value;
+	}
       rule->PrMinAttr = FALSE;
       break;
     case PtSize:
@@ -1788,8 +1803,18 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrAttr = FALSE;
 	  if (absolute)
 	    {
-	      rule->PrDimRule.DrAbsolute = TRUE;
-	      rule->PrDimRule.DrValue = value;
+	      if (val.typed_data.unit == STYLE_VALUE_AUTO)
+		/* it means "height: auto" */
+		{
+		  rule->PrDimRule.DrPosition = FALSE;
+		  rule->PrDimRule.DrAbsolute = FALSE;
+		  rule->PrDimRule.DrRelation = RlEnclosed;
+		}
+	      else
+		{
+		  rule->PrDimRule.DrAbsolute = TRUE;
+		  rule->PrDimRule.DrValue = value;
+		}
 	    }
 	  else
 	    rule->PrDimRule.DrValue = 0;
@@ -1810,7 +1835,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrRelation = RlEnclosing;
 	  rule->PrDimRule.DrNotRelat = FALSE;
 	  rule->PrDimRule.DrRefKind = RkElType;
-	  rule->PrDimRule.DrRefIdent = 0;	  
+	  rule->PrDimRule.DrRefIdent = 0;
 	}
       if (rule->PrDimRule.DrPosition)
           {
@@ -1824,8 +1849,18 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrAttr = FALSE;
 	  if (absolute)
 	    {
-	      rule->PrDimRule.DrAbsolute = TRUE;
-	      rule->PrDimRule.DrValue = value;
+	      if (val.typed_data.unit == STYLE_VALUE_AUTO)
+		/* it means "width: auto" */
+		{
+		  rule->PrDimRule.DrPosition = FALSE;
+		  rule->PrDimRule.DrAbsolute = FALSE;
+		  rule->PrDimRule.DrRelation = RlEnclosed;
+		}
+	      else
+		{
+		  rule->PrDimRule.DrAbsolute = TRUE;
+		  rule->PrDimRule.DrValue = value;
+		}
 	    }
 	  else if (int_unit == UnPercent)
 	    rule->PrDimRule.DrValue = 100 - value;
@@ -2496,7 +2531,7 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
 }
 
 /*----------------------------------------------------------------------
-  TtaSetStylePresentation attachs a presentation rule to an element or to an
+  TtaSetStylePresentation attaches a presentation rule to an element or to an
   extended presentation schema.
   type: type of the presentation rule
   el: element to which the presentation rule must be attached. If NULL,
@@ -2557,7 +2592,6 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
       else
 	pRule = InsertElementPRule ((PtrElement) el, LoadedDocument[doc - 1],
 				    intRule, func, c->cssSpecificity);
-
       if (pRule)
 	{
 	  if (type == PRBackgroundPicture)

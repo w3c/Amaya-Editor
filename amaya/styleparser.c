@@ -4,9 +4,9 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
 /*
- * Everything directly linked to the CSS syntax should now hopefully
+ * Everything directly related to the CSS syntax should now hopefully
  * be contained in this module.
  *
  * Author: I. Vatton
@@ -2194,18 +2194,21 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  if (!strcasecmp (cssRule, "auto"))
-    cssRule = SkipWord (cssRule);
-  else
+  if (!strncasecmp (cssRule, "auto", 4))
     {
-      cssRule = ParseCSSUnit (cssRule, &val);
-      if (val.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
-	{
-	  if (tsch)
-	    cssRule = CheckImportantRule (cssRule, context);
-	  /* install the new presentation */
-	  TtaSetStylePresentation (PRHeight, element, tsch, context, val);
-	}
+      val.typed_data.unit = STYLE_VALUE_AUTO;
+      val.typed_data.value = 0;
+      val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+  if (val.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      /* install the new presentation */
+      TtaSetStylePresentation (PRHeight, element, tsch, context, val);
     }
   return (cssRule);
 }
@@ -2222,18 +2225,21 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  if (!strcasecmp (cssRule, "auto"))
-    cssRule = SkipWord (cssRule);
-  else
+  if (!strncasecmp (cssRule, "auto", 4))
     {
+      val.typed_data.unit = STYLE_VALUE_AUTO;
+      val.typed_data.value = 0;
+      val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
       cssRule = ParseCSSUnit (cssRule, &val);
-      if (val.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
-	{
-	  if (tsch)
-	    cssRule = CheckImportantRule (cssRule, context);
-	  /* install the new presentation */
-	  TtaSetStylePresentation (PRWidth, element, tsch, context, val);
-	}
+  if (val.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      /* install the new presentation */
+      TtaSetStylePresentation (PRWidth, element, tsch, context, val);
     }
   return (cssRule);
 }
@@ -2250,7 +2256,15 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  cssRule = ParseCSSUnit (cssRule, &margin);
+  if (!strncasecmp (cssRule, "auto", 4))
+    {
+      margin.typed_data.unit = STYLE_VALUE_AUTO;
+      margin.typed_data.value = 0;
+      margin.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
      {
        if (tsch)
@@ -2272,7 +2286,15 @@ static char *ParseCSSMarginBottom (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  cssRule = ParseCSSUnit (cssRule, &margin);
+  if (!strncasecmp (cssRule, "auto", 4))
+    {
+      margin.typed_data.unit = STYLE_VALUE_AUTO;
+      margin.typed_data.value = 0;
+      margin.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
      {
        if (tsch)
@@ -2294,7 +2316,15 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  cssRule = ParseCSSUnit (cssRule, &margin);
+  if (!strncasecmp (cssRule, "auto", 4))
+    {
+      margin.typed_data.unit = STYLE_VALUE_AUTO;
+      margin.typed_data.value = 0;
+      margin.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
      {
        if (tsch)
@@ -2316,7 +2346,15 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  cssRule = ParseCSSUnit (cssRule, &margin);
+  if (!strncasecmp (cssRule, "auto", 4))
+    {
+      margin.typed_data.unit = STYLE_VALUE_AUTO;
+      margin.typed_data.value = 0;
+      margin.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
      {
        if (tsch)
@@ -3553,23 +3591,21 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       if (real)
 	sprintf (buffer, "margin-left: %g", fval);
       else
-	sprintf (buffer, "margin-left: %d",
-		  settings->value.typed_data.value);
+	sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginRight:
       if (real)
 	sprintf (buffer, "margin-right: %g", fval);
       else
-	sprintf (buffer, "margin-right: %d",
-		  settings->value.typed_data.value);
+	sprintf (buffer, "margin-right: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRPaddingTop:
       if (real)
 	sprintf (buffer, "padding-top: %g", fval);
       else
-	sprintf (buffer, "padding-top: %d",settings->value.typed_data.value);
+	sprintf (buffer, "padding-top: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRPaddingBottom:
@@ -3584,8 +3620,7 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       if (real)
 	sprintf (buffer, "padding-left: %g", fval);
       else
-	sprintf (buffer, "padding-left: %d",
-		  settings->value.typed_data.value);
+	sprintf (buffer, "padding-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRPaddingRight:

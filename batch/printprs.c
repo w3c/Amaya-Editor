@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -297,11 +297,16 @@ static void         wrsize (PtrPRule pR)
      }
    else if (pR->PrPresMode == PresImmediate)
      {
-	if (pR->PrMinAttr)
-	   wrnomattr (pR->PrMinValue);
-	else
-	   wrnb (pR->PrMinValue);
-	wrdistunit (pR->PrMinUnit);
+       if (pR->PrMinUnit == UnAuto)
+	 printf ("auto");
+       else
+	 {
+	   if (pR->PrMinAttr)
+	     wrnomattr (pR->PrMinValue);
+	   else
+	     wrnb (pR->PrMinValue);
+	   wrdistunit (pR->PrMinUnit);
+	 }
      }
    else
       printf ("??????");
@@ -576,27 +581,27 @@ static void         wrnbherit (PtrPRule pR)
   ----------------------------------------------------------------------*/
 static void         wrminind (PtrPRule pR)
 {
-   if (pR->PrPresMode == PresInherit)
-      wrnbherit (pR);
-   else
-     {
-	if (pR->PrPresMode == PresImmediate)
-	  {
-	     if (pR->PrMinUnit == UnAuto)
-	        printf ("auto");
-	     else
-	        {
-	        if (pR->PrMinAttr)
-		   wrnomattr (pR->PrMinValue);
-	        else
-		   wrnb (pR->PrMinValue);
-	        wrdistunit (pR->PrMinUnit);
-	        }
-	  }
-	else
-	   printf ("??????");
-	printf (";");
-     }
+  if (pR->PrPresMode == PresInherit)
+    wrnbherit (pR);
+  else
+    {
+      if (pR->PrPresMode == PresImmediate)
+	{
+	  if (pR->PrMinUnit == UnAuto)
+	    printf ("auto");
+	  else
+	    {
+	      if (pR->PrMinAttr)
+		wrnomattr (pR->PrMinValue);
+	      else
+		wrnb (pR->PrMinValue);
+	      wrdistunit (pR->PrMinUnit);
+	    }
+	}
+      else
+	printf ("??????");
+      printf (";");
+    }
 }
 
 /*----------------------------------------------------------------------

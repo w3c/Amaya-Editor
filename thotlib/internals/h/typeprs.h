@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -213,8 +213,8 @@ typedef enum
   PtBorderTopStyle, PtBorderRightStyle, PtBorderBottomStyle, PtBorderLeftStyle,
   PtSize, PtStyle, PtWeight, PtFont, PtUnderline, PtThickness,
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
-  PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, PtOpacity,
-  PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
+  PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
+  PtOpacity, PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
   PtXRadius, PtYRadius, PtDisplay,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
@@ -542,6 +542,7 @@ typedef struct _PresRule
 #define PrAttrValue u.s2.u.s0._PrAttrValue_
 #define PrIntValue u.s2.u.s0._PrIntValue_
 #define PrChrValue u.s2.u.s1._PrChrValue_
+#define PrAuto u.s2.u.s2._PrAuto_
 #define PrMinUnit u.s2.u.s2._PrMinUnit_
 #define PrMinAttr u.s2.u.s2._PrMinAttr_
 #define PrMinValue u.s2.u.s2._PrMinValue_

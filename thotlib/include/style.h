@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2002
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -75,11 +75,12 @@ PresentationContextBlock, *PresentationContext;
 #define STYLE_UNIT_IN		4	/* inches                       */
 #define STYLE_UNIT_CM		5	/* centimeters                  */
 #define STYLE_UNIT_MM		6	/* millimeters                  */
-#define STYLE_UNIT_EM		7	/* defined / size of M char     */
-#define STYLE_UNIT_PX		8	/* defined in pixel, bad :-(    */
+#define STYLE_UNIT_EM		7	/* defined / size of char m     */
+#define STYLE_UNIT_PX		8	/* defined in pixels            */
 #define STYLE_UNIT_PERCENT	9	/* a relative size in percent   */
 #define STYLE_UNIT_XHEIGHT	10	/* defined / size of x char     */
-#define STYLE_UNIT_BOX	11	/* this is a box number         */
+#define STYLE_UNIT_BOX	        11	/* this is a box number         */
+#define STYLE_VALUE_AUTO        12      /* not a unit: value = auto     */
 
 typedef union _PresentationValue
  {

@@ -2566,7 +2566,7 @@ static void wrminind (PtrPRule pR, FILE *fileDescriptor)
 	if (pR->PrPresMode == PresImmediate)
 	  {
 	     if (pR->PrMinUnit == UnAuto)
-	        printf ("auto");
+	       fprintf (fileDescriptor, "auto");
 	     else
 	       {
 	       if (pR->PrMinAttr)
@@ -2910,8 +2910,14 @@ static void wrFonctPres (PtrPRule pR, FILE *fileDescriptor)
 	       fprintf (fileDescriptor, "ShowBox");
 	       break;
 	    case FnBackgroundPicture:
-	       fprintf (fileDescriptor, "BackgroundPicture: Cste");
-	       wrnumber (pR->PrPresBox[0], fileDescriptor);
+	       fprintf (fileDescriptor, "BackgroundPicture: ");
+	       if (pR->PrPresBox[0] < 0)
+		 fprintf (fileDescriptor, "none");
+	       else
+		 {
+		   fprintf (fileDescriptor, "Cste");
+		   wrnumber (pR->PrPresBox[0], fileDescriptor);
+		 }
 	       break;
 	    case FnPictureMode:
 	       fprintf (fileDescriptor, "PictureMode: ");

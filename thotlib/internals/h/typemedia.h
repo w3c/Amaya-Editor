@@ -457,7 +457,6 @@ typedef struct _AbstractBox
   int             AbRightStyle;    /* Border Right style */
   int             AbBottomStyle;   /* Border Bottom style */
   int             AbLeftStyle;     /* Border Left style */
-
   int             AbTopMargin;     /* Top Margin */
   int             AbRightMargin;   /* Right Margin */
   int             AbBottomMargin;  /* Bottom Margin */
@@ -480,10 +479,10 @@ typedef struct _AbstractBox
   TypeUnit        AbLineWeightUnit;   /* Unit of thickness */
   TypeUnit        AbLineSpacingUnit;  /* Interlining unit */
 
-  TypeUnit        AbTopMarginUnit;    /* Top Margin Unit */
-  TypeUnit        AbRightMarginUnit;  /* Right Margin Unit */
-  TypeUnit        AbBottomMarginUnit; /* Bottom Margin Unit */
-  TypeUnit        AbLeftMarginUnit;   /* Left Margin Unit */
+  TypeUnit        AbTopMarginUnit;    /* Top Margin Unit (includes auto) */
+  TypeUnit        AbRightMarginUnit;  /* Right Margin Unit (includes auto) */
+  TypeUnit        AbBottomMarginUnit; /* Bottom Margin Unit (includes auto) */
+  TypeUnit        AbLeftMarginUnit;   /* Left Margin Unit (includes auto) */
   TypeUnit        AbTopPaddingUnit;   /* Top Padding Unit */
   TypeUnit        AbRightPaddingUnit; /* Right Padding Unit */
   TypeUnit        AbBottomPaddingUnit;/* Bottom Padding Unit */
