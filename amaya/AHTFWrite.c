@@ -5,40 +5,37 @@
  *
  */
  
-/*                                                          HTFWrite.c
- *    FILE WRITER
- *
- *      (c) COPYRIGHT MIT 1995.
- *      Please first read the full copyright statement in the file COPYRIGH.
- *
- *      This version of the stream object just writes to a C file.
- *      The file is assumed open and left open.
- *
- *      Bugs:
- *              strings written must be less than buffer size.
- *
- *      History:
- *         HFN: wrote it
- *         HWL: converted the caching scheme to be hierachical by taking
- *              AL code from Deamon
- *         HFN: moved cache code to HTCache module
- *
- */
+/*----------------------------------------------------------------------
+  AHTFWrite.c:  it's a rewrite of HTFWrite.c in order  to have a
+  callback to a user defined function each time a new data block
+  is received over the network.  
+  (Adapted from libwww's HTFWrite.c module). See libwww for a more
+  complete documentation.
+  ---------------------------------------------------------------------*/
 
 #define EXPORT extern
 #include "amaya.h"
 
+/*
+   **
+   **              A H T    F W R I T E R   C O N V E R T E R   C L A S S
+   **
+ */
 struct _HTStream
   {
      const HTStreamClass *isa;
      FILE               *fp;
-     BOOL                leave_open;	/* Close file when HT_FREE? */
-     char               *end_command;	/* Command to execute       */
-     BOOL                remove_on_close;	/* Remove file?             */
-     char               *filename;	/* Name of file             */
-     HTRequest          *request;	/* saved for callback       */
+     BOOL                leave_open;	  /* Close file when HT_FREE? */
+     char               *end_command;	  /* Command to execute       */
+     BOOL                remove_on_close; /* Remove file?             */
+     char               *filename;	  /* Name of file             */
+     HTRequest          *request;	  /* saved for callback       */
      HTRequestCallback  *callback;
   };
+
+/***
+  Static function prototypes 
+***/
 
 #ifdef __STDC__
 static int AHTFWriter_flush ( HTStream * me );
@@ -67,19 +64,8 @@ static int AHTFWriter_abort (/* HTStream * me,
 #endif
 
 /*----------------------------------------------------------------------
-   SOCKET WRITER STREAM			     
+  AHTFWriter_put_character
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int         AHTFWriter_flush (HTStream * me)
-#else  /* __STDC__ */
-static int         AHTFWriter_flush (me)
-HTStream           *me
-#endif				/* __STDC__ */
-{
-   return (fflush (me->fp) == EOF) ? HT_ERROR : HT_OK;
-}
-
 #ifdef __STDC__
 static int         AHTFWriter_put_character (HTStream * me, char c)
 #else				/* __STDC__ */
@@ -102,13 +88,15 @@ char                c;
    return status;
 }
 
+/*----------------------------------------------------------------------
+  AHTFWriter_put_string
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTFWriter_put_string (HTStream * me, const char *s)
 #else  /* __STDC__ */
 static int         AHTFWriter_put_string (me, s)
 HTStream           *me;
 const char         *s;
-
 #endif /* __STDC__ */
 {
    int                 status;
@@ -128,6 +116,9 @@ const char         *s;
 }
 
 
+/*----------------------------------------------------------------------
+  AHTFWriter_write
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTFWriter_write (HTStream * me, const char *s, int l)
 #else  /* __STDC__ */
@@ -152,6 +143,23 @@ int                 l;
    return status;
 }
 
+/*----------------------------------------------------------------------
+  AHTFWriter_flush
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int         AHTFWriter_flush (HTStream * me)
+#else  /* __STDC__ */
+static int         AHTFWriter_flush (me)
+HTStream           *me
+#endif				/* __STDC__ */
+{
+   return (fflush (me->fp) == EOF) ? HT_ERROR : HT_OK;
+}
+
+
+/*----------------------------------------------------------------------
+  AHTFWriter_put_HT_FREE
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTFWriter_HT_FREE (HTStream * me)
 #else  /* __STDC__ */
@@ -183,6 +191,9 @@ HTStream           *me;
    return HT_OK;
 }
 
+/*----------------------------------------------------------------------
+  AHTFWriter_abort
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTFWriter_abort (HTStream * me, HTList *e)
 #else  /* __STDC__ */
@@ -210,6 +221,9 @@ HTList             *e;
    return HT_ERROR;
 }
 
+/*      AHTFWriter class stream
+ */
+
 static const HTStreamClass AHTFWriter =	/* As opposed to print etc */
 {
    "FileWriter",
@@ -221,6 +235,10 @@ static const HTStreamClass AHTFWriter =	/* As opposed to print etc */
    AHTFWriter_write
 };
 
+
+/*----------------------------------------------------------------------
+  AHTFWriter_new
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 HTStream           *AHTFWriter_new (HTRequest * request, FILE * fp, BOOL leave_open)
 #else  
@@ -246,3 +264,15 @@ BOOL                leave_open;
    me->request = request;
    return me;
 }
+
+
+/*
+  End of Module AHTFWrite.c
+*/
+
+
+
+
+
+
+

@@ -5,6 +5,12 @@
  *
  */
 
+/*----------------------------------------------------------------------
+  query.c : contains all the functions for requesting iand publishing
+  URLs via libwww. It handles any eventual HTTP error code
+  (redirection, authentication needed, not found, etc.)
+  ---------------------------------------------------------------------*/
+
 /* Amaya includes  */
 #define EXPORT extern
 #include "amaya.h"
@@ -13,8 +19,10 @@
 #define CATCH_SIG
 #endif
 
+/*----------------------------------------------------------------------*/
+
 /* local structures coming from libwww and which are
-   ** not found in any .h file
+   not found in any .h file
  */
 
 struct _HTStream
@@ -60,7 +68,10 @@ struct _HTHost
 
 /* Type definitions and global variables etc. local to this module */
 
+/*----------------------------------------------------------------------*/
+
 /*** private variables ***/
+
 static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
@@ -72,11 +83,14 @@ static int          object_counter = 0;	/* loaded objects counter */
 #include "AHTMemConv_f.h"
 #include "AHTFWrite_f.h"
 
+/*----------------------------------------------------------------------*/
+
 #ifdef CATCH_SIG
 
 /*----------------------------------------------------------------------
-   SetSignal: This function sets up signal handlers. This might not 
-   be necessary to call if the application has its own handlers.    
+  SetSignal
+  this function sets up signal handlers. This might not 
+  be necessary to call if the application has its own handlers.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetSignal (void)
@@ -103,7 +117,8 @@ static void         SetSignal ()
 
 
 /*----------------------------------------------------------------------
-   Gets the status associated to a docid                         
+  GetDocIdStatus
+  gets the status associated to a docid                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 AHTDocId_Status    *GetDocIdStatus (int docid, HTList * documents)
@@ -132,7 +147,9 @@ HTList             *documents;
 }
 
 /*----------------------------------------------------------------------
-   Create a new Amaya Context Object
+  AHTReqContext_new
+  create a new Amaya Context Object and update the global Amaya
+  request status.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static AHTReqContext *AHTReqContext_new (int docid)
@@ -151,16 +168,9 @@ int                 docid;
    /* Bind the Context object together with the Request Object */
 
    me->request = HTRequest_new ();
-
-/*** This is for correcting the keep-alive bug. Is this interfering with */
-/**** libwww v5? */
-
-/* test 
-   me->request->GenMask &= ~((int) HT_G_CONNECTION);
- */
-
+   
    /* Initialize the other members of the structure */
-   me->reqStatus = HT_NEW;
+   me->reqStatus = HT_NEW; /* initial status of a request */
    me->output = NULL;
 #ifdef WWW_XWINDOWS
    me->read_xtinput_id = (XtInputId) NULL;
@@ -173,7 +183,7 @@ int                 docid;
    HTRequest_setOutputFormat (me->request, WWW_SOURCE);
    HTRequest_setContext (me->request, me);
 
-   /* to interface with Eric's new routines */
+   /* an interface to Eric's new routines */
    me->read_ops = 0;
    me->write_ops = 0;
    me->except_ops = 0;
@@ -199,12 +209,14 @@ int                 docid;
    /* error stream handling */
    me->error_stream = (char *) NULL;
    me->error_stream_size = 0;
-
+   
    return me;
 }
 
 /*----------------------------------------------------------------------
-   Delete an Amaya Context Object                                 
+  AHTReqContext_delete
+  Delete an Amaya Context Object and update the global Amaya request
+  status.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -253,6 +265,7 @@ AHTReqContext      *me;
 
 /*----------------------------------------------------------------------
   AHTUpload_callback
+  callback handler for executing the PUT command
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          AHTUpload_callback (HTRequest * request, HTStream * target)
@@ -306,7 +319,8 @@ HTStream           *target;
 }
 
 /*----------------------------------------------------------------------
-   This function deletes the whole list of active threads.           
+  Thread_deleteAll
+  this function deletes the whole list of active threads.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Thread_deleteAll (void)
@@ -331,10 +345,6 @@ static void         Thread_deleteAll ()
 #ifdef WWW_XWINDOWS
 		       RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-		       /*  HTRequest_kill(me->request);
-		          if(me->output)    
-		          fclose(me->output);
-		        */
 		       AHTReqContext_delete (me);
 		    }
 	       }		/* while */
@@ -350,10 +360,10 @@ static void         Thread_deleteAll ()
 }
 
 /*----------------------------------------------------------------------
-   redirection_handler
-   This function is registered to handle permanent and temporary
-   redirections.
-   ----------------------------------------------------------------------*/
+  redirection_handler
+  this function is registered to handle permanent and temporary
+  redirections.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          redirection_handler (HTRequest * request, HTResponse * response, void *param, int status)
 #else
@@ -401,6 +411,7 @@ int                 status;
     **  allows us in an easy way to keep track of the number of redirections
     **  so that we can detect endless loops.
     */
+   
    if (HTRequest_doRetry (request))
      {
 
@@ -435,10 +446,8 @@ int                 status;
 		      me->urlName);
 
 	/* Start request with new credentials */
-
-	me->reqStatus = HT_NEW;
+	me->reqStatus = HT_NEW; /* reset the status */
 	if (me->method == METHOD_PUT || me->method == METHOD_POST)	/* PUT, POST etc. */
-	   /*  HTCopyAnchor((HTAnchor *) HTRequest_anchor(request), request); */
 	   status = HTLoadAbsolute (me->urlName, request);
 	else
 	   HTLoadAnchor (new_anchor, request);
@@ -462,9 +471,8 @@ int                 status;
 }
 
 /*----------------------------------------------------------------------
-   terminate_handler
-   **   This function is registered to handle the result of the request
- 
+  terminate_handler
+  this function is registered to handle the result of the request
   ----------------------------------------------------------------------*/
 #if __STDC__
 static int          terminate_handler (HTRequest * request, HTResponse * response, void *context, int status)
@@ -499,9 +507,9 @@ int                 status;
     */
 
    /* First, we verify if there are any errors and if they are not
-      ** yet written to the error stack. If no, then let's try to write them
-      ** ourselves
-    */
+   ** yet written to the error stack. If no, then let's try to write them
+   ** ourselves
+   */
 
    if (me->output && me->output != stdout)
      {
@@ -539,10 +547,9 @@ int                 status;
 	  me->reqStatus = HT_ERR;
      }				/* if me-output */
 
-   /* setup the request status and invoke the cbf */
-
-   /* work to be done: verify if we can put join all the terminate cbf in
-      only one call after the following lines */
+   /* Second Step: choose a correct treatment in function of the request's
+      being associated with an error, with an interruption, or with a
+      succesful completion */
 
    if (!error_flag  && me->reqStatus != HT_ERR
        && me->reqStatus != HT_ABORT)
@@ -595,11 +602,13 @@ int                 status;
       HTLog_add (request, status);
 
    if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+     /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
+	or in PutObjectWWW */
      {
 	TtaFreeMemory (me->urlName);
 	TtaFreeMemory (me->outputfile);
-	/*      AHTReqContext_delete(me); */
      }
+
    /* don't remove or Xt will hang up during the put */
 
    if (me->method == METHOD_PUT || me->method == METHOD_POST)
@@ -612,9 +621,9 @@ int                 status;
 }
 
 /*----------------------------------------------------------------------
-   Application "AFTER" Callback                                 
-   This function uses all the functionaly that the app part of  
-   the Library gives for handling AFTER a request.              
+  AHTLoadTerminate_handler
+  this is an application "AFTER" Callback. It uses all the functionaly
+  that the app part of the Library gives for handling AFTER a request.              
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -699,81 +708,12 @@ int                 status;
    return HT_OK;
 }
 
-/*
-   **   After filter for handling PUT of document. We should now have the 
- */
-static int          AHTSaveFilter (HTRequest * request, HTResponse * response, void *param, int status)
-{
-   AHTReqContext      *me = HTRequest_context (request);
-
-   if (APP_TRACE)
-      HTTrace ("Save Filter\n");
-
-   /*
-      **  Just ignore authentication in the hope that some other filter will
-      **  handle this.
-    */
-
-   if (status == HT_NO_ACCESS || status == HT_NO_PROXY_ACCESS)
-     {
-	if (APP_TRACE)
-	   HTTrace ("Save Filter. Waiting for authentication\n");
-	status = HT_OK;
-     }
-   else if (status == HT_TEMP_REDIRECT || status == HT_PERM_REDIRECT)
-     {
-	/*
-	   **  The destination entity has been redirected. Ask the user
-	   **  what to do. If there is no user confirmation to go ahead then stop
-	 */
-	/* put here the equiv. code of redirection handler, and a prompt
-	   for user */
-	HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
-	HTAnchor           *redirection = HTResponse_redirection (response);
-
-	if (prompt && redirection)
-	  {
-	     if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_SOURCE_MOVED,
-			    NULL, NULL, NULL) == YES)
-	       {
-		  return HT_OK;
-	       }
-	     else
-	       {
-		  /*
-		     ** Make sure that the operation stops
-		   */
-		  me->reqStatus = HT_ABORT;
-
-		  /* add a message? */
-
-		  status = HT_ERROR;
-	       }
-	  }
-	status = HT_OK;
-     }
-   else if (status == HT_ERROR)
-     {
-	if (me->reqStatus != HT_ABORT && me->reqStatus != HT_END)
-	   me->reqStatus = HT_ERR;
-     }
-   else
-     {
-	/*
-	   ** No authentication or redirection was detected ... let's erase this filter
-	   **
-	 */
-	HTRequest_deleteAfter (request, AHTSaveFilter);
-	status = HT_OK;
-     }
-
-   return status;
-
-}
 
 
 /*----------------------------------------------------------------------
-   BINDINGS BETWEEN A SOURCE MEDIA TYPE AND A DEST MEDIA TYPE (CONVERSION) 
+  AHTConverterInit
+  Bindings between a source media type and a destination media type
+  (conversion).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AHTConverterInit (HTList *c)
@@ -838,22 +778,22 @@ HTList             *c;
 }
 
 /*----------------------------------------------------------------------
-  REGISTER BEFORE AND AFTER FILTERS
-  We register a commonly used set of BEFORE and AFTER filters.
-  Not done automaticly - may be done by application!
-  REGISTER ALL AMAYA SUPPORTED PROTOCOLS
+  AHTProtocolInit
+  Registers all amaya supported protocols.
   ----------------------------------------------------------------------*/
 static void         AHTProtocolInit (void)
 {
 
-   /* NB. Preemptive == YES = Blocking request
-      ** Non-preemptive == NO = Non-blocking request
-    */
+   /* 
+      NB. Preemptive == YES = Blocking request
+      Non-preemptive == NO = Non-blocking request
+   */
 
    HTProtocol_add ("http", "buffered_tcp", NO, HTLoadHTTP, NULL);
    /*   HTProtocol_add ("http", "tcp", NO, HTLoadHTTP, NULL); */
    HTProtocol_add ("file", "local", NO, HTLoadFile, NULL);
    HTProtocol_add ("cache", "local", NO, HTLoadCache, NULL);
+#if 0 /* experimental code */
    HTProtocol_add ("telnet", "", YES, HTLoadTelnet, NULL);
    HTProtocol_add ("tn3270", "", YES, HTLoadTelnet, NULL);
    HTProtocol_add ("rlogin", "", YES, HTLoadTelnet, NULL);
@@ -861,9 +801,12 @@ static void         AHTProtocolInit (void)
    HTProtocol_add ("ftp", "tcp", NO, HTLoadFTP, NULL);
    HTProtocol_add ("nntp", "tcp", NO, HTLoadNews, NULL);
    HTProtocol_add ("news", "tcp", NO, HTLoadNews, NULL);
+#endif
 }
 
 /*----------------------------------------------------------------------
+  AHTNetInit
+  Reegisters "before" and "after" request filters.
   ----------------------------------------------------------------------*/
 static void         AHTNetInit (void)
 {
@@ -905,11 +848,9 @@ static void         AHTNetInit (void)
 #endif
 }
 
-/*      REGISTER CALLBACKS FOR THE ALERT MANAGER
-   **      We register a set of alert messages
- */
-
 /*----------------------------------------------------------------------
+  AHTAlertInit
+  Register alert messages and their callbacks.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AHTAlertInit (void)
@@ -922,17 +863,15 @@ static void         AHTAlertInit ()
    HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
    HTError_setShow (0xFF);	/* process all messages */
-   /*   HTAlert_add (HTError_print, HT_A_MESSAGE); */
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
    HTAlert_add (AHTPrompt, HT_A_PROMPT);
    HTAlert_add (AHTPromptPassword, HT_A_SECRET);
    HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
-   /* Setup a global call to input XtEvents for new sockets */
-   /* should not be necessary anymore */
-
 }
 
 /*----------------------------------------------------------------------
+  AHTProfile_newAmaya
+  creates the Amaya client profile for libwww.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AHTProfile_newAmaya (char *AppName, char *AppVersion)
@@ -994,6 +933,8 @@ char               *AppVersion;
 }
 
 /*----------------------------------------------------------------------
+  AHTProfile_delete
+  deletes the Amaya client profile.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AHTProfile_delete (void)
@@ -1010,12 +951,14 @@ static void         AHTProfile_delete ()
 	/* Clean up all the global preferences */
 	HTFormat_deleteAll ();
 
-	HTLibTerminate ();
 	/* Terminate libwww */
+	HTLibTerminate ();
      }
 }
 
 /*----------------------------------------------------------------------
+  QueryInit
+  initializes the libwww interface 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                QueryInit ()
@@ -1068,8 +1011,10 @@ void                QueryInit ()
 #endif
 
    /* Setting up different network parameters */
+   /* Maximum number of simultaneous open sockets */
    HTNet_setMaxSocket (8);
    HTDNS_setTimeout (3600);
+   /* Cache is disabled in this version */
    HTCacheMode_setEnabled (0);
 
    /* Initialization of the global context */
@@ -1085,6 +1030,8 @@ void                QueryInit ()
 
 
 /*----------------------------------------------------------------------
+  LoopForStop
+  a copy of the Thop event loop so we can handle the stop button.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          LoopForStop (AHTReqContext * me)
@@ -1099,11 +1046,10 @@ static int          LoopForStop (AHTReqContext * me)
    XtInputMask         status;
 
 #endif /* WWW_XWINDOWS */
-   int                 status_req;
+   int                 status_req = HT_OK;
 
    /* to test the async calls  */
-   /* Boucle d'attente des evenements */
-
+   /* Loop while waiting for new events, exists when the request is over */
    while (me->reqStatus != HT_ABORT &&
 	  me->reqStatus != HT_END &&
 	  me->reqStatus != HT_ERR)
@@ -1152,13 +1098,11 @@ static int          LoopForStop (AHTReqContext * me)
 
 /*----------------------------------------------------------------------
   QueryClose
+  closes all existing threads, frees all allocated memory and then
+  ends libwww.
   ----------------------------------------------------------------------*/
 void                QueryClose ()
 {
-/** HTConversion_deleteAll(converters); **/
-   /* Later, the following call should use all the active docids. For the mome
-      nt, it stops everything */
-   /* StopRequest (); */
    Thread_deleteAll ();
 
 #ifndef HACK_WWW
@@ -1173,7 +1117,11 @@ void                QueryClose ()
 
 /*----------------------------------------------------------------------
    GetObjectWWW
-   loads the file designated by urlName in a temporary file.                                                 
+   this function requests a resource designated by a URLname into a
+   temporary filename. The download can come from a simple GET operation,
+   or can come from POSTING/GETTING a form. In the latter
+   case, the function receives a query string to send to the server.
+
    4  file retrieval modes are proposed:                              
    AMAYA_SYNC : blocking mode                            
    AMAYA_ISYNC : incremental, blocking mode              
@@ -1198,7 +1146,7 @@ void                QueryClose ()
    At the end of a succesful request, the urlName string contains the
    name of the actually retrieved URL. As a URL can change over the time,
    (e.g., be redirected elsewhere), it is advised that the function
-   caller verifies the value of the urlName variable at the end of
+   caller verify the value of the urlName variable at the end of
    a request.
 
    Inputs:
@@ -1213,6 +1161,8 @@ void                QueryClose ()
    - terminate_cbf 
    - context_icbf
    Callback and context for a terminate handler
+   -error_html if TRUE, then display any server error message as an
+   HTML document.
 
    Outputs:
    - urlName The URL that was retrieved
@@ -1254,7 +1204,6 @@ boolean             error_html;
 
    if (urlName == NULL || docid == 0 || outputfile == NULL)
      {
-
 	/* no file to be loaded */
 	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL),
 		      urlName);
@@ -1513,13 +1462,15 @@ generated
 }
 
 /*----------------------------------------------------------------------
-   PutObjectWWW uploads a file into a URL                             
-   
+   PutObjectWWW
+   frontend for uploading a resource to a URL. This function downloads
+   a file to be uploaded into memory, it then calls UploadMemWWW to
+   finish the job.
+
    2 upload modes are proposed:                                       
    AMAYA_SYNC : blocking mode                            
    AMAYA_ASYNC : non-blocking mode                       
    
-
    When the function is called with the SYNC mode, the function will
    return only when the file has been uploaded.
    The ASYNC mode will immediately return after setting up the
@@ -1540,7 +1491,6 @@ generated
    - fileName A pointer to the local file to upload
    - urlName The URL to be uploaded (MAX_URL_LENGTH chars length)
    - mode The retrieval mode.
-
    - terminate_cbf 
    - context_icbf
    Callback and context for a terminate handler
@@ -1571,7 +1521,6 @@ void               *context_tcbf;
    int                 status;
 
 #ifdef WWW_XWINDOWS
-/*** Temporary patch (I hope)  ****/
    int                 fd;
    struct stat         file_stat;
    char               *mem_ptr;
@@ -1594,11 +1543,8 @@ void               *context_tcbf;
 
    if ((fd = open (fileName, O_RDONLY)) == -1)
      {
-
 	/* if we could not open the file, exit */
-
 	/*error msg here */
-
 	return (HT_ERROR);
      }
 
@@ -1606,11 +1552,8 @@ void               *context_tcbf;
 
    if (file_stat.st_size == 0)
      {
-
 	/* file was empty */
-
 	/*errmsg here */
-
 	close (fd);
 	return (HT_ERROR);
      }
@@ -1623,9 +1566,7 @@ void               *context_tcbf;
 
    if (mem_ptr == (char *) NULL)
      {
-
 	/* could not allocate enough memory */
-
 	/*errmsg here */
 
 	close (fd);
@@ -1644,12 +1585,13 @@ void               *context_tcbf;
 #endif /*WWW_XWINDOWS */
 
    return (status);
-/*** End of temporary patch */
-
 }
 
 
 /*----------------------------------------------------------------------
+  UploadMemWWW
+  low level interface function to libwww for uploading a block of
+  memory to a URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 UploadMemWWW (int docid, HTMethod method,
@@ -1674,10 +1616,6 @@ char               *outputfile;
    AHTReqContext      *me;
    int                 status;
 
-  /****
-  int basename_flag;
-  ****/
-
    if (mem_ptr == (char *) NULL ||
        block_size == 0 ||
        docid == 0 ||
@@ -1686,7 +1624,6 @@ char               *outputfile;
 	/* nothing to be uploaded */
 	return HT_ERROR;
      }
-   /* if we are doing a post, try to open the destination file */
 
    /* Initialize the request structure */
    me = AHTReqContext_new (docid);
@@ -1710,13 +1647,19 @@ char               *outputfile;
 
    HTRequest_setPreemptive (me->request, NO);
 
+   /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
    HTRequest_setMethod (me->request, METHOD_PUT);
    me->output = stdout;
-   me->outputfile = (char *) NULL;
+   /* we are not expecting to receive any input from the server */
+   me->outputfile = (char *) NULL; 
 
    me->mem_ptr = mem_ptr;
    me->block_size = block_size;
+
+   /* set the callback which will actually copy data into the
+      output stream */
+
    HTRequest_setPostCallback (me->request, AHTUpload_callback);
 
    HTRequest_setOutputStream (me->request,
@@ -1724,41 +1667,26 @@ char               *outputfile;
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (urlName);
 
-   HTAnchor_setFormat ((HTParentAnchor *) me->anchor, HTAtom_for ("text/html"));	/* test */
+   /* First steps towards a full content-negotiation */
+   /*
+     HTAnchor_setFormat ((HTParentAnchor *) me->anchor, HTAtom_for ("text/html"));
+    */
+
    HTAnchor_setLength ((HTParentAnchor *) me->anchor, me->block_size);
    HTRequest_setEntityAnchor (me->request, me->anchor);
-   /*
-      HTRequest_addAfter (me->request, AHTSaveFilter, NULL, NULL, HT_ALL, 
-      HT_FILTER_FIRST, NO);
-    */
    status = HTLoadAbsolute (urlName, me->request);
 
    if (status == HT_ERROR || me->reqStatus == HT_END
        || me->reqStatus == HT_ERR || HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
      {
-	/* just in case ... :-) <-- because it's the case sometimes */
+       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
+		     me->urlName);
 
-#ifdef WWW_XWINDOWS
-    /***
-    if(me->xtinput_id != (XtInputId) NULL) {
-      if (THD_TRACE)
-	fprintf(stderr, "Query: Removing Xtinput: %lu\n",
-		me->xtinput_id);
-      XtRemoveInput(me->xtinput_id);
-    }
-    ***/
-#endif /* WWW_XWINDOWS */
-
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
-		      me->urlName);
-
-	status = HT_ERROR;
-	AHTReqContext_delete (me);
-
+       status = HT_ERROR;
+       AHTReqContext_delete (me);
      }
    else
      {
-
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
 		      me->urlName);
 
@@ -1777,7 +1705,8 @@ char               *outputfile;
 
 
 /*----------------------------------------------------------------------
-   Stop Request stops (kills) all active requests associated with a docid 
+  Stop Request
+  stops (kills) all active requests associated with a docid 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                StopRequest (int docid)
@@ -1810,12 +1739,10 @@ int                 docid;
 
 	     if (me->docid == docid)
 	       {
-
 		  /* kill this request */
 
 		  switch (me->reqStatus)
 			{
-
 			   case HT_ABORT:
 			      break;
 
@@ -1829,10 +1756,6 @@ int                 docid;
 			      RequestKillAllXtevents (me);
 #endif
 			      me->reqStatus = HT_ABORT;
-	  /***
-	    HTNet_kill(me->request);
-	    ***/
-
 			      HTRequest_kill (me->request);
 
 			      if (me->mode == AMAYA_ASYNC ||
@@ -1852,3 +1775,26 @@ int                 docid;
 	  }			/* while */
      }				/* if amaya open requests */
 }				/* StopRequest */
+
+
+/*
+  end of Module query.c
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -77,30 +77,36 @@ typedef enum _DoubleClickEvent
   }
 DoubleClickEvent;
 
-/* The possible request modes */
+/* The possible GET/POST/PUT request modes */
 
-#define AMAYA_SYNC	1	/*0x000001 */
-#define AMAYA_ISYNC	2	/*0x000010 */
+/*synchronous request*/
+#define AMAYA_SYNC	1	/*0x000001 */  
+/*synchronous request with incremental callbacks */
+#define AMAYA_ISYNC	2	/*0x000010 */  
+/*asynchronous request */
 #define AMAYA_ASYNC	4	/*0x000100 */
+/*asynchronous request with incremental callbacks */
 #define AMAYA_IASYNC	8	/*0x001000 */
+/* send the form using the POST HTTP method */
 #define AMAYA_FORM_POST 16	/*0x010000 */
+/* send the form using the GET HTTP method */
 #define AMAYA_FORM_GET  32	/*0x100000 */
 
-typedef char        AmayaReadChar ();
-
-/*typedef void        *PresentationTarget; */
+/* the possible states for a request */
 
 typedef enum _AHTReqStatus
   {
-     HT_NEW = 0,
-     HT_NEW_PENDING = 1,
-     HT_WAITING = 2,
-     HT_BUSY = 4,
-     HT_END = 8,
-     HT_ABORT = 16,
-     HT_ERR = 32
+     HT_NEW = 0,          /* new request */
+     HT_NEW_PENDING = 1,  /* new request, waiting for a socket */
+     HT_WAITING = 2,      /* active request, waiting for socket events */
+     HT_BUSY = 4,         /* the request is currently being processed */
+     HT_END = 8,          /* the request has ended */
+     HT_ABORT = 16,       /* user aborted the request */
+     HT_ERR = 32          /* an error happened during the request */
   }
 AHTReqStatus;
+
+/* The structure used for requests */
 
 typedef void        TIcbf (void *request_context, const char *data_block, int data_block_size, int request_status);
 
@@ -111,7 +117,7 @@ typedef struct _AHTReqContext
      HTRequest          *request;	/* Pointer to the associated request object     */
      HTParentAnchor     *anchor;
      HTMethod            method;	/* What method are we envoking                  */
-     int                 docid;	/* docid to which this request belongs          */
+     int                 docid;	        /* docid to which this request belongs          */
      AHTReqStatus        reqStatus;	/* status of the request                        */
      SockOps             read_ops;	/* The ops operation which must be used during
 					   ** an Xt read callback */
@@ -132,7 +138,7 @@ typedef struct _AHTReqContext
 #endif				/* WWW_XWINDOWS */
      char               *outputfile;	/* file to receive incoming data         */
      FILE               *output;	/* file pointer to outputfile            */
-     int                 mode;	/* Mode of request: SYNC/ASYNC/IASYNC    */
+     int                 mode;	/* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
      char               *urlName;	/* url to retrieve/or that was retrieved */
      TIcbf              *incremental_cbf;	/* For IASYNC mode, @ of callback function */
      /* It'll be called each time a new data package */
@@ -151,11 +157,18 @@ typedef struct _AHTReqContext
      /* of the file to put                           */
 /* For debugging */
      int                *s;	/* socket number                                */
-     char               *error_stream;
-     int                 error_stream_size;
-     boolean                error_html;
+     char               *error_stream;        /* pointer to an error message associated with the
+						 request */
+     int                 error_stream_size;   /* size of the above message */
+     boolean                error_html;       /* If TRUE, means the applications wants to display
+						 error_stream. If false, error_stream is not 
+						 displayed at all */
   }
 AHTReqContext;
+
+typedef char        AmayaReadChar ();
+
+/*typedef void        *PresentationTarget; */
 
 #define NO               0
 #define YES              1
@@ -288,7 +301,7 @@ LoadedImageDesc;
 EXPORT LoadedImageDesc *ImageURLs;
 
 EXPORT HTList      *conv;	/* List of global converters */
-EXPORT AmayaContext *Amaya;	/* Amaya's global context    */
+EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
 
 #define EOS     '\0'
 #define EOL     '\n'

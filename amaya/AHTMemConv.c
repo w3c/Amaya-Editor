@@ -5,28 +5,20 @@
  *
  */
  
-/*                                                          HTFWrite.c
- *    FILE WRITER
- *
- *      (c) COPYRIGHT MIT 1995.
- *      Please first read the full copyright statement in the file COPYRIGH.
- *
- *      This version of the stream object just writes to a C file.
- *      The file is assumed open and left open.
- *
- *      Bugs:
- *              strings written must be less than buffer size.
- *
- *      History:
- *         HFN: wrote it
- *         HWL: converted the caching scheme to be hierachical by taking
- *              AL code from Deamon
- *         HFN: moved cache code to HTCache module
- *
- */
+/*----------------------------------------------------------------------
+  AHTMemConv.c: writes a stream to a memory structure 
+  (Adapted from libwww's HTFWrite.c module). See libwww for a more
+  complete documentation.
+  ---------------------------------------------------------------------*/
 
 #define EXPORT extern
 #include "amaya.h"
+
+/*
+   **
+   **              A H T    M E M   C O N V E R T E R   C L A S S
+   **
+ */
 
 struct _HTStream
   {
@@ -36,19 +28,35 @@ struct _HTStream
 
 #include "AHTMemConv_f.h"
 
-
-
+#ifdef __STDC__
+static int AHTMemConv_put_character ( HTStream * me,
+                                              char c );
+static int AHTMemConv_put_string ( HTStream * me,
+                                           const char *s );
+static int AHTMemConv_write ( HTStream * me,
+                                      const char *s,
+                                      int l );
+static int AHTMemConv_flush ( HTStream * me );
+static int AHTMemConv_HT_FREE ( HTStream * me );
+static int AHTMemConv_abort ( HTStream * me,
+                                      HTList * e );
+#else 
+static int AHTMemConv_put_character (/* HTStream * me,
+                                                char c */);
+static int AHTMemConv_put_string (/* HTStream * me,
+                                             const char *s */);
+static int AHTMemConv_write (/* HTStream * me,
+                                        const char *s,
+                                        int l */);
+static int AHTMemConv_flush (/* HTStream * me */);
+static int AHTMemConv_HT_FREE (/* HTStream * me */);
+static int AHTMemConv_abort (/* HTStream * me,
+                                       HTList * e */);
+#endif
 
 /*----------------------------------------------------------------------
-   BASIC STREAM CLASSES                            
+  AHTMemConv_put_character
   ----------------------------------------------------------------------*/
-
-/*
-   **
-   **              A H T    M E M   C O N V E R T E R   C L A S S
-   **
- */
-
 #ifdef __STDC__
 static int         AHTMemConv_put_character (HTStream * me, char c)
 #else  /* __STDC__ */
@@ -72,6 +80,9 @@ char                c;
    return HT_OK;
 }
 
+/*----------------------------------------------------------------------
+  AHTMemConv_put_string
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTMemConv_put_string (HTStream * me, const char *s)
 #else  /* __STDC__ */
@@ -91,6 +102,9 @@ const char         *s;
    return HT_OK;
 }
 
+/*----------------------------------------------------------------------
+  AHTMemConv_write
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTMemConv_write (HTStream * me, const char *s, int l)
 #else  /* __STDC__ */
@@ -127,6 +141,9 @@ int                 l;
    return HT_OK;
 }
 
+/*----------------------------------------------------------------------
+  AHTMemConv_flush
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTMemConv_flush (HTStream * me)
 #else  /* __STDC__ */
@@ -141,6 +158,10 @@ HTStream           *me;
    return HT_OK;
 }
 
+
+/*----------------------------------------------------------------------
+  AHTMemConv_put_HT_FREE
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTMemConv_HT_FREE (HTStream * me)
 #else  /* __STDC__ */
@@ -155,6 +176,9 @@ HTStream           *me;
    return HT_OK;
 }
 
+/*----------------------------------------------------------------------
+  AHTMemConv_abort
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int         AHTMemConv_abort (HTStream * me, HTList * e)
 #else  /* __STDC__ */
@@ -185,6 +209,9 @@ static const HTStreamClass AHTResponseClass =
    AHTMemConv_write
 };
 
+/*----------------------------------------------------------------------
+  AHTMemConv_new
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 HTStream           *AHTMemConv_new (HTRequest * request)
 #else  /* __STDC__ */
@@ -215,6 +242,9 @@ HTRequest          *request;
    return me;
 }
 
+/*----------------------------------------------------------------------
+  AHTMemConverter
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 HTStream           *AHTMemConverter (HTRequest * request, void *param, HTFormat input_format, HTFormat output_format, HTStream * output_stream)
 #else  /* __STDC__ */
@@ -229,3 +259,8 @@ HTStream           *output_stream;
 {
    return AHTMemConv_new (request);
 }
+
+
+/*
+  End of Module AHTMemConv.c
+*/

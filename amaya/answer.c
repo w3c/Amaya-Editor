@@ -5,6 +5,11 @@
  *
  */
 
+/*----------------------------------------------------------------------
+  answer.c:  contains all the functions for requesting user input for
+  libwww and for displaying request status.
+  ---------------------------------------------------------------------*/
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"
@@ -23,7 +28,8 @@ struct _HTError
   };
 
 /*----------------------------------------------------------------------
-   AHTProgress: Prints in the status bar the current state of a request   
+  AHTProgress 
+  displays in the status bar the current state of a request   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
  BOOL         AHTProgress (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
@@ -43,7 +49,6 @@ void               *input, HTAlertPar * reply;
    if (request && HTRequest_internal (request))
       return NO;
 
-
    if (!me)
       return NO;
 
@@ -54,11 +59,6 @@ void               *input, HTAlertPar * reply;
 	       break;
 	    case HT_PROG_CONNECT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), (char *) input);
-	       /* patch ? */
-	       /*
-	          Add_NewSocket_to_Loop(request, op, msgnum, dfault, input, reply);
-	          break;
-	        */
 	    case HT_PROG_ACCEPT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_CONNECTION), NULL);
 	       break;
@@ -128,6 +128,8 @@ void               *input, HTAlertPar * reply;
 
 
 /*----------------------------------------------------------------------
+  AHTConfirm 
+  opens a form to request user confirmation on an action.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
  BOOL         AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
@@ -159,7 +161,8 @@ HTAlertPar         *reply;
 }
 
 /*----------------------------------------------------------------------
-   	Prompt for answer and get text back				
+  AHTPrompt
+  prompts for a text answer and returns this answer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
  BOOL         AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
@@ -209,7 +212,8 @@ HTAlertPar         *reply;
 
 
 /*----------------------------------------------------------------------
-   	Prompt for password without echoing the reply			
+  AHTPromptPassword
+  prompts for password without echoing the reply.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
  BOOL         AHTPromptPassword (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
@@ -254,13 +258,14 @@ HTAlertPar         *reply;
 
 
 /*----------------------------------------------------------------------
-   	Prompt both username and password				
-   		Msg is the prompting message.				
-   		*username and *password	are char pointers; they are	
-   		changed to point to result strings.			
-   		If *username is not NULL, it is taken to point to a	
-   		default value.						
-   		Initial value of *password is completely discarded.	
+  AHTPromptUsernameAndPassword
+  prompts for  both a username and a password. 
+  msgnum is the prompting message.  
+  *username and *password	are char pointers; they are	
+  changed to point to result strings.			
+  If *username is not NULL, it is taken to point to a	
+  default value.						
+  Initial value of *password is completely discarded.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
  BOOL         AHTPromptUsernameAndPassword (HTRequest * request, HTAlertOpcode op, int msgnum,
@@ -305,11 +310,12 @@ HTAlertPar         *reply;
 }
 
 /*----------------------------------------------------------------------
-   AHTError_print (hacked from HTError_print): Default function that  
-   creates an error message using HTAlert() to put out the contents of
-   the error_stack messages. Furthermore, the error_info structure    
-   contains a name of a help file that might be put up as a link.     
-   This file can then be multi-linguistic.                            
+   AHTError_print (hacked from HTError_print)
+   default function that creates an error message using
+   HTAlert() to put out the contents of the error_stack messages.
+   Furthermore, the error_info structure contains a name of a 
+   help file that might be put up as a link. This file can then be
+   multi-linguistic.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 BOOL                AHTError_print (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
@@ -352,6 +358,9 @@ HTAlertPar         *reply;
 
 /*----------------------------------------------------------------------
    AHTError_MemPrint (hacked from HTError_print)      
+   takes an error message from a request, writes it to a memory pointer,
+   then uses it as the actual server response (useful for displaying
+   errors as HTML code). 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AHTError_MemPrint (HTRequest * request)
@@ -395,7 +404,9 @@ HTRequest          *request;
 }
 
 /*----------------------------------------------------------------------
-   AHTPrintPendingRequestStatus                       
+  AHTPrintPendingRequestStatus
+  displays a message on the status bar that states the number of
+  pending requests.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AHTPrintPendingRequestStatus (Document docid, BOOL last_seconds_of_life)
@@ -408,11 +419,7 @@ BOOL             last_seconds_of_life;
 
 {
    int                 waiting_count = 0;
-
-   /*HTList *cur = Amaya->reqlist; */
    AHTDocId_Status    *docid_status;
-
-   /*AHTReqContext *me; */
    char                buffer[120];
 
    /* verify if there are any requests at all associated with docid */
@@ -432,3 +439,8 @@ BOOL             last_seconds_of_life;
 
      }
 }
+
+
+/*
+  end of Module answer.c
+*/

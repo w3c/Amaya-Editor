@@ -4,7 +4,15 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
+/*----------------------------------------------------------------------
+  HTMLform.c: This module contains all the functions used to handle
+  forms. These are of three types: functions for handling user actions
+  on the elements of the form (e.g., clicking on a radio button), 
+  functions for resetting a form to its default value, and, finally,
+  functions for parsing and for submitting a form.
+ -----------------------------------------------------------------------*/ 
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"
@@ -16,12 +24,14 @@
 #include "HTMLactions_f.h"
 #include "HTMLform_f.h"
 
-static char        *buffer;
-static int          lgbuffer;
+static char        *buffer;    /* temporary buffer used to build the query
+				  string */
+static int          lgbuffer;  /* size of the temporary buffer */
 
 
 /*----------------------------------------------------------------------
-   	writes the equivalent escape code of a car in a string		
+  EscapeChar
+  writes the equivalent escape code of a car in a string		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EscapeChar (char *string, unsigned char c)
@@ -37,7 +47,8 @@ unsigned char       c;
 }
 
 /*----------------------------------------------------------------------
-   	reallocates memory and concatenates a string into buffer	
+  AddToBuffer
+  reallocates memory and concatenates a string into buffer	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AddToBuffer (char *orig)
@@ -71,7 +82,8 @@ char               *orig;
 
 
 /*----------------------------------------------------------------------
-   	add a string into the query buffer				
+  AddElement
+  add a string into the query buffer				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AddElement (unsigned char *element)
@@ -123,7 +135,8 @@ unsigned char      *element;
 }
 
 /*----------------------------------------------------------------------
-   	add a name=value pair, and a trailling & into the query buffer	
+  AddNameValue
+  add a name=value pair, and a trailling & into the query buffer	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AddNameValue (char *name, char *value)
@@ -140,8 +153,9 @@ char               *name, *value,
 }
 
 /*----------------------------------------------------------------------
-   	allocates a text buffer and fills it with the value of the text	
-   	attribute attr							
+  GetAttrValue
+  allocates a text buffer and fills it with the value of the text	
+  attribute attr							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GetAttrValue (char **value, Attribute attr)
@@ -169,7 +183,8 @@ Attribute           attr;
 }
 
 /*----------------------------------------------------------------------
-   ParseForm traverses the tree of element, applying the parse_input 
+   ParseForm
+   traverses the tree of element, applying the parse_input 
    function to each element with an attribute NAME                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -188,7 +203,7 @@ int                 mode;
    AttributeType       attrType, attrTypeS;
    int                 length;
    char                name[MAX_LENGTH], value[MAX_LENGTH];
-   int                 modified;
+   int                 modified = FALSE;
    Language            lang;
 
    if (el)
@@ -360,7 +375,8 @@ int                 mode;
 }
 
 /*----------------------------------------------------------------------
-   	submit a form : builds URL and get the result			
+  DoSubmit
+  submits a form : builds the URL and gets the result			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DoSubmit (Document doc, int method, char *action)
@@ -380,12 +396,18 @@ char               *action;
    /* remove any trailing & */
    if (buffer)
       buffer_size = strlen (buffer);
+   else
+     {
+     buffer_size = 0;
+     buffer = "";
+     }
 
-   if (buffer[buffer_size - 1] == '&')
+   if ((buffer >0)  && (buffer[buffer_size - 1] == '&'))
      {
 	buffer[buffer_size - 1] = EOS;
 	buffer_size--;
      }
+
    switch (method)
 	 {
 
@@ -439,8 +461,9 @@ char               *action;
 
 
 /*----------------------------------------------------------------------
-   	starts the parsing of the form containing the element and sends	
-   	the query to the server						
+  SubmitForm
+  callback handler that launches the parsing of the form containing 
+  the element and sends	the query to the server						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SubmitForm (Document doc, Element element)
@@ -557,8 +580,9 @@ Element             element;
 }
 
 /*----------------------------------------------------------------------
-   SelectCheckbox selects a Checkbox input				
-  ----------------------------------------------------------------------*/
+   SelectCheckbox
+   selects a Checkbox input				
+   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectCheckbox (Document doc, Element el)
 #else
@@ -609,7 +633,8 @@ Element             el;
 }
 
 /*----------------------------------------------------------------------
-   SelectOneRadio selects one Radio input				
+   SelectOneRadio
+   selects one Radio input				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectOneRadio (Document doc, Element el)
@@ -713,6 +738,7 @@ Element             el;
 
 
 /*----------------------------------------------------------------------
+  FrameToSelect
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             FrameToSelect (NotifyElement * event)
@@ -734,7 +760,8 @@ NotifyElement      *event;
 }
 
 /*----------------------------------------------------------------------
-   SelectOneOption selects an option in option menu			
+   SelectOneOption
+   selects an option in option menu			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectOneOption (Document doc, Element el)
@@ -823,3 +850,13 @@ Element             el;
 	  }
      }
 }
+
+
+
+
+
+
+
+
+
+

@@ -5,18 +5,12 @@
  *
  */
  
-/*                                                                  AHTBridge.c
- *      INTERFACE BRIDGE TO XT, LIBWWW, and AMAYA
- *
- *      (c) COPYRIGHT 
- *      Please first read the full copyright statement in the file COPYRIGH.
- *
- *      This module implments the callback setup and handlers between
- *      the Xt, libwww, and Amaya procedures
- *
- * History:
- *
- */
+/*----------------------------------------------------------------------
+  AHTBridge.c : This module implements the callback setup and
+  handlers between the Xt, libwww, and Amaya procedures. It's responsible
+  for assigning, modifying, and supressing Xt events to the active
+  requests.
+ -----------------------------------------------------------------------*/
 
 #define EXPORT extern
 #include "amaya.h"
@@ -28,13 +22,11 @@
 #ifdef WWW_XWINDOWS
 /* Amaya's X appcontext */
 extern XtAppContext app_cont;
-
 #endif
 
 
 #ifndef HACK_WWW
 extern  HTEventCallback *HTEvent_Retrieve (SOCKET, SockOps, HTRequest ** arp);
-
 #endif
 
 /*
@@ -74,10 +66,19 @@ static const SockOps ExceptBits = FD_OOB;
 
 /*--------------------------------------------------------------------
   AHTCallback_bridge
-  Callback that acts as a bridge between X and wwwlib.
-  This function is equivalent to the library's __DoCallback()
-  function, but with a different API, to conform to Xt's event loop
-  specifications. For more info, cf. the library's HTEvntrg.c module.
+  this function acts as a bridge between Xt and libwww. From the Xt
+  point of view, this function is the callback handler whenever there's
+  any activity on the sockets associated with the active requests. From
+  the libwww point of view, this is the function that takes the initiative
+  to invoke the callback function associated with an active request,
+  whenever there's an activity in the socket associated to it.
+  In this latter  aspect, this function is similar to the library's
+  own __DoCallback()  function.
+  Upon activation, the function looks up the request associated with the
+  active socket and then looks up the cbf associated with that request.
+  Upon completion of the execution of the request's cbf, it verifies
+  the state of the request and, if it's an asynchronous request, deletes
+  the memory allocated to it.
   -------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -96,14 +97,13 @@ generate a prototype when there are 2 imbricated ifdefs. ***/
 LONG                AHTCallback_bridge (caddr_t cd, int *s)
 #endif				/* !WWW_XWINDOWS */
 {
-   int                 status;
+   int                 status;  /* the status result of the libwwww call */
    HTRequest          *rqp = NULL;
    AHTReqContext      *me;
-   SOCKET              sock;
-   SockOps             ops=0;	
+   SockOps             ops;	
 
    /* Libwww 5.0a does not take into account the ops parameter
-      for this function call */
+      in the invocation of for this function call */
 
 #ifdef HACK_WWW
    HTEventCallback    *cbf;
@@ -121,10 +121,6 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
 #ifdef WWW_XWINDOWS
    switch ((XtInputId) cd)
 	 {
-	    case XtInputReadMask:
-	       ops = me->read_ops;
-	       ops = FD_READ;
-	       break;
 	    case XtInputWriteMask:
 	       ops = me->write_ops;
 	       ops = FD_WRITE;
@@ -133,19 +129,15 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
 	       ops = me->except_ops;
 	       ops = FD_OOB;
 	       break;
+	 default:
+	    case XtInputReadMask:
+	       ops = me->read_ops;
+	       ops = FD_READ;
+	       break;
 	 }			/* switch */
 #endif /* WWW_XWINDOWS */
 
-   /* 
-    * Liberate the input, so that when a pending socket is activated,
-    * the socket status will be ... available 
-    * 
-    * verify if I can CHKR_LIMIT this to the unregister function 
-    * does not look so
-    *
-    * although it makes no sense, callbacks can be null 
-    */
-
+   /* verify if there's any callback associated with the request */
    if (!cbf || !rqp || rqp->priority == HT_PRIORITY_OFF)
      {
 	if (THD_TRACE)
@@ -154,10 +146,13 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
 	return (0);
      }
 
-   me->reqStatus = HT_BUSY;
-
-   if ((status = (*cbf) (*s, rqp, ops)) != HT_OK)
-      HTTrace ("Callback.... received != HT_OK");
+     /* Invokes the callback associated to the requests */
+     
+     /* first we change the status of the request, to say it
+	has entered a critical section */
+     me->reqStatus = HT_BUSY;
+     if ((status = (*cbf) (*s, rqp, ops)) != HT_OK)
+       HTTrace ("Callback.... received != HT_OK");
 
    /* Several states can happen after this callback. They
     * are indicated by the me->reqStatus structure member and
@@ -173,27 +168,20 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
     * HT_END:     Request has ended
     */
 
-   /* Has the request been stopped? 
-
-    * we verify if the request exists. If it has ended, me will have
-    *  a reqStatus with an HT_END value */
-
-   /* Was the stop button pressed? */
-
 #ifdef WWW_XWINDOWS
    if (me->reqStatus == HT_ABORT)
+   /* Has the user stopped the request? */
      {
 	me->reqStatus = HT_WAITING;
 	StopRequest (me->docid);
 	if (THD_TRACE)
-	   fprintf (stderr, "(BF) removing Xtinput %lu !RWE (Stop buttonl), sock %d\n", me->read_xtinput_id, sock);
+	   fprintf (stderr, "(BF) removing Xtinput %lu !RWE (Stop buttonl), sock %d\n", me->read_xtinput_id, *s);
 	return (0);
      }
 #endif /* WWW_XWINDOWS */
 
-   /* the request is being reissued */
-
    if (me->reqStatus == HT_WAITING)
+   /* the request is being reissued */
      {
 	/*
 	 * (1) The old request has ended and the library
@@ -204,30 +192,36 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
 	 * authentication or redirection directive and
 	 * we are using the same old socket number.
 	 */
-
-	if (THD_TRACE)
-	   fprintf (stderr, "*** detected a reissue of request \n");
-	return (0);
+       
+       if (THD_TRACE)
+	 fprintf (stderr, "*** detected a reissue of request \n");
+       return (0);
      }
 
-   /* verify if the request is still alive !! */
+    /* we verify if the request exists. If it has ended, we will have
+       a reqStatus with an HT_END value */
 
    if ((me->request->net == (HTNet *) NULL) || (me->reqStatus == HT_END || me->reqStatus == HT_ERR))
+     /* request has ended */
      {
-	/* the socket is now being used by a different request, so the request has ended */
 #ifdef WWW_XWINDOWS
 	if (THD_TRACE)
-	   fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
+	  fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
 #endif
 	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+	  /* free the memory allocated for async requests */
 	  {
 	     AHTPrintPendingRequestStatus (me->docid, YES);
 	     AHTReqContext_delete (me);
 	  }
 	else if (me->reqStatus != HT_END && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
+	  /* did the SYNC request end because of an error? If yes, report it back to the caller */
 	   me->reqStatus = HT_ERR;
 	return (0);
      }
+
+   /* The request is still alive, so change it's status to indicate it's out of the
+      critical section */
    me->reqStatus = HT_WAITING;
    return (0);
 }
@@ -235,9 +229,15 @@ LONG                AHTCallback_bridge (caddr_t cd, int *s)
 
 /*----------------------------------------------------------------
   Add_NewSocket_to_Loop
-  This function is called whenever a socket is available
-  for a request. It prepares Xt to handle the
-  asynchronous data requests.
+  when there are more open requests than available sockets, the 
+  requests are put in a "pending state." When a socket becomes
+  available, libwww associates it with a pending request and then
+  calls this callback function. This function is responsible for
+  opening the temporary file where the GET and POST  results
+  will be stored. The function is also responsible for 
+  registering the socket with the Xt event loop.
+  Consult the libwww manual for more details on the signature
+  of this function.
   ----------------------------------------------------------------*/
 #ifdef __STDC__
 int                 Add_NewSocket_to_Loop (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
@@ -252,14 +252,14 @@ HTAlertPar         *reply;
 
 #endif /* __STDC__ */
 {
-   SOCKET              req_socket;
    AHTReqContext      *me = HTRequest_context (request);
 
    if (me->reqStatus == HT_NEW_PENDING)
      {
-	/* we are opening a pending request */
-	if ((me->output = fopen (me->outputfile, "w")) == NULL)
+	/* we are dequeing a pending request */
+	if (me->outputfile && (me->output = fopen (me->outputfile, "w")) == NULL)
 	  {
+	    /* the request is associated with a file */
 	     me->outputfile[0] = '\0';	/* file could not be opened */
 	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
 			   me->outputfile);
@@ -272,55 +272,23 @@ HTAlertPar         *reply;
 			     AHTFWriter_new (me->request, me->output, YES));
      }
 
+   /*change the status of the request */
    me->reqStatus = HT_WAITING;
 
    if (THD_TRACE)
       fprintf (stderr, "(Activating a pending request\n");
 
-   /* reusing this function to save on file descriptors */
-
-   return (HT_OK);
-
-   /* get the socket number associated to the request */
-
-   req_socket = HTNet_socket (request->net);
-
-   if (req_socket == INVSOC)
-     {
-	/* this should never be true */
-	return (HT_ERROR);
-     }
-
-   /* add the input */
-
-#ifdef WWW_XWINDOWS
-   me->write_xtinput_id =
-      XtAppAddInput (app_cont, req_socket, (XtPointer) XtInputWriteMask,
-		     (XtInputCallbackProc) AHTCallback_bridge, NULL);
-   if (THD_TRACE)
-      fprintf (stderr, "(BT) adding   Xtinput %lu Socket %d W \n", me->write_xtinput_id, req_socket);
-
-   if (me->write_xtinput_id == (XtInputId) NULL)
-     {
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_XT_ERROR), me->urlName);
-
-	/* I still need to add some error treatment here, to liberate memory */
-	return (HT_ERROR);
-     }
-
-#endif /* WWW_XWINDOWS */
-
    return (HT_OK);
 }
 
 
-/* 
- * This function is called whenever a socket is available
- * for a request. It  the necessary events to the Xt
- * A small interface to the HTLoadAnchor libwww function.
- * It prepares Xt to handle the asynchronous data requests.
- */
-
+/*----------------------------------------------------------------------
+  AHTEvent_register
+  callback called by libwww whenever a socket is open and associated
+  to a request. It sets the pertinent Xt events so that the Xt Event
+  loops gets an interruption whenever there's action of the socket. 
+  In addition, it registers the request with libwww.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 AHTEvent_register (SOCKET sock, HTRequest * rqp, SockOps ops, HTEventCallback * cbf, HTPriority p)
 #else
@@ -333,8 +301,8 @@ HTPriority          p;
 
 #endif /* __STDC__ */
 {
-   AHTReqContext      *me;
-   int                 status;
+   AHTReqContext      *me;      /* current request */
+   int                 status;  /* libwww status associated with the socket number */
 
    if (sock == INVSOC)
       return (0);
@@ -347,11 +315,9 @@ HTPriority          p;
 
    if (rqp)
      {
-
 	me = HTRequest_context (rqp);
 
 	/* verify if we need to open the fd */
-
 	if (me->reqStatus == HT_NEW_PENDING)
 	  {
 	     /* we are opening a pending request */
@@ -431,22 +397,17 @@ HTPriority          p;
 	  }
      }
 
-
-
-#if 0
-   if (me->xtinput_id == (XtInputId) NULL)
-     {
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_XT_ERROR), me->urlName);
-
-	/* I still need to add some error treatment here, to liberate memory */
-	return (HT_ERROR);
-     }
-
-#endif
-
    return (status);
 }
 
+
+/*----------------------------------------------------------------------
+  AHTEvent_unregister
+  callback called by libwww each time a request is unregistered. This
+  function takes care of unregistering the pertinent Xt events
+  associated with the request's socket. In addition, it unregisters
+  the request from libwww.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 AHTEvent_unregister (SOCKET sock, SockOps ops)
 #else
@@ -461,7 +422,7 @@ SockOps             ops;
    HTRequest          *rqp = NULL;
    AHTReqContext      *me;
 
-   /* Libwww 4.1 does not take into account the third parameter
+   /* Libwww 5.0a does not take into account the third parameter
       **  for this function call */
 
    HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
@@ -491,6 +452,12 @@ SockOps             ops;
    return (status);
 }
 
+
+/*----------------------------------------------------------------------
+  RequestKillAllXtevents
+  front-end for kill all Xt events associated with the request pointed
+  to by "me".
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RequestKillAllXtevents (AHTReqContext * me)
 #else
@@ -509,6 +476,10 @@ AHTReqContext      *me;
 #endif /* WWW_XWINDOWS */
 }
 
+/*----------------------------------------------------------------------
+  RequestKillReadXtevent
+  kills any read Xt event associated with the request pointed to by "me".
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RequestKillReadXtevent (AHTReqContext * me)
 #else
@@ -528,6 +499,11 @@ AHTReqContext      *me;
 #endif /* WWW_XWINDOWS */
 }
 
+/*----------------------------------------------------------------------
+  RequestKillWriteXtevent
+  kills any write Xt event associated with the request pointed to
+  by "me".
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RequestKillWriteXtevent (AHTReqContext * me)
 #else
@@ -547,6 +523,11 @@ AHTReqContext      *me;
 #endif /* WWW_XWINDOWS */
 }
 
+/*----------------------------------------------------------------------
+  RequestKillExceptXtevent
+  kills any exception Xt event associated with the request pointed to
+  by "me".
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RequestKillExceptXtevent (AHTReqContext * me)
 #else
@@ -565,3 +546,12 @@ AHTReqContext      *me;
      }
 #endif /* WWW_XWINDOWS */
 }
+
+/*
+  End of Module AHTBridge.c
+*/
+
+
+
+
+

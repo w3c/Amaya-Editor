@@ -4,6 +4,11 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
+
+/*----------------------------------------------------------------------
+  AHTURLTools.c: contains all the functions for testing, manipulating,
+  and normalizing URLs.
+  ---------------------------------------------------------------------*/
  
 /* Amaya includes  */
 #define EXPORT extern
@@ -14,7 +19,7 @@
 #include "AHTURLTools_f.h"
 
 /*----------------------------------------------------------------------
-   ExplodeURL :                                                   
+  ExplodeURL                                                 
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -29,7 +34,7 @@ char              **file;
 
 #endif
 {
-   char               *cour, *temp;
+   char               *curr, *temp;
 
    if ((url == NULL) || (proto == NULL) || (host == NULL) ||
        (dir == NULL) || (file == NULL))
@@ -41,45 +46,45 @@ char              **file;
    /* skip any leading space */
    while ((*url == SPACE) || (*url == TAB))
       url++;
-   cour = url;
-   if (*cour == 0)
+   curr = url;
+   if (*curr == 0)
       goto finished;
 
    /* go to the end of the URL */
-   while ((*cour != 0) && (*cour != SPACE) && (*cour != '\b') &&
-	  (*cour != '\r') && (*cour != EOL))
-      cour++;
+   while ((*curr != 0) && (*curr != SPACE) && (*curr != '\b') &&
+	  (*curr != '\r') && (*curr != EOL))
+      curr++;
 
    /* mark the end of the chain */
-   *cour = EOS;
-   cour--;
-   if (cour <= url)
+   *curr = EOS;
+   curr--;
+   if (curr <= url)
       goto finished;
 
    /* search the next DIR_SEP indicating the beginning of the file name */
    do
      {
-	cour--;
+	curr--;
      }
-   while ((cour >= url) && (*cour != DIR_SEP));
-   if (cour < url)
+   while ((curr >= url) && (*curr != DIR_SEP));
+   if (curr < url)
       goto finished;
-   *file = cour + 1;
+   *file = curr + 1;
 
    /* mark the end of the dir */
-   *cour = EOS;
-   cour--;
-   if (cour < url)
+   *curr = EOS;
+   curr--;
+   if (curr < url)
       goto finished;
 
    /* search for the "/" indicating the host name start */
-   while ((cour > url) && ((*cour != DIR_SEP) || (*(cour + 1) != DIR_SEP)))
-      cour--;
+   while ((curr > url) && ((*curr != DIR_SEP) || (*(curr + 1) != DIR_SEP)))
+      curr--;
 
    /* if we found it, separate the host name from the directory */
-   if ((*cour == DIR_SEP) && (*(cour + 1) == DIR_SEP))
+   if ((*curr == DIR_SEP) && (*(curr + 1) == DIR_SEP))
      {
-	*host = temp = cour + 2;
+	*host = temp = curr + 2;
 	while ((*temp != 0) && (*temp != DIR_SEP))
 	   temp++;
 	if (*temp == DIR_SEP)
@@ -90,29 +95,29 @@ char              **file;
      }
    else
      {
-	*dir = cour;
+	*dir = curr;
      }
-   if (cour <= url)
+   if (curr <= url)
       goto finished;
 
    /* mark the end of the proto */
-   *cour = EOS;
-   cour--;
-   if (cour < url)
+   *curr = EOS;
+   curr--;
+   if (curr < url)
       goto finished;
 
-   if (*cour == ':')
+   if (*curr == ':')
      {
-	*cour = EOS;
-	cour--;
+	*curr = EOS;
+	curr--;
      }
    else
       goto finished;
-   if (cour < url)
+   if (curr < url)
       goto finished;
-   while ((cour > url) && (isalpha (*cour)))
-      cour--;
-   *proto = cour;
+   while ((curr > url) && (isalpha (*curr)))
+      curr--;
+   *proto = curr;
 
  finished:;
 
@@ -132,7 +137,8 @@ char              **file;
 }
 
 /*----------------------------------------------------------------------
-   IsHTMLName                                                         
+  IsHTMLName                                                         
+  returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -167,7 +173,8 @@ char               *path;
 }
 
 /*----------------------------------------------------------------------
-   IsImageName                                                        
+  IsImageName                                
+  returns TRUE if path points to an image resource.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -202,7 +209,7 @@ char               *path;
 }
 
 /*----------------------------------------------------------------------
-   IsTextName                                                         
+  IsTextName                                                         
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -245,7 +252,8 @@ char               *path;
 }
 
 /*----------------------------------------------------------------------
-   IsHTTPPath                                                         
+  IsHTTPPath                                     
+  returns TRUE if path is in fact an http URL.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -265,24 +273,25 @@ char               *path;
 }
 
 /*----------------------------------------------------------------------
-   IsWithParameters                                                   
+  IsWithParameters                           
+  returns TRUE if url has a concatenated query string.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             IsWithParameters (char *path)
+boolean             IsWithParameters (char *url)
 #else  /* __STDC__ */
-boolean             IsWithParameters (path)
-char               *path;
+boolean             IsWithParameters (url)
+char               *url;
 
 #endif /* __STDC__ */
 {
    int                 i;
 
-   if ((!path) || (path[0] == EOS))
+   if ((!url) || (url[0] == EOS))
       return FALSE;
 
-   i = strlen (path) - 1;
-   while (i > 0 && path[i--] != '?')
+   i = strlen (url) - 1;
+   while (i > 0 && url[i--] != '?')
       if (i < 0)
 	 return FALSE;
 
@@ -291,7 +300,8 @@ char               *path;
 }
 
 /*----------------------------------------------------------------------
-   IsW3Path                                                           
+  IsW3Path                                           
+  returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -311,18 +321,19 @@ char               *path;
 }
 
 /*----------------------------------------------------------------------
-   IsValidProtocol                                                    
+  IsValidProtocol                                                    
+  returns true if the url protocol is supported by Amaya.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             IsValidProtocol (char *path)
+boolean             IsValidProtocol (char *url)
 #else  /* __STDC__ */
-boolean             IsValidProtocol (path)
-char               *path;
+boolean             IsValidProtocol (url)
+char               *url;
 
 #endif /* __STDC__ */
 {
-   if (!strncmp (path, "http:", 5)
+   if (!strncmp (url, "http:", 5)
       /***|| !strncmp (path, "ftp:", 4)
       || !strncmp (path, "news:", 5)***/ )
       return (TRUE);
@@ -331,7 +342,8 @@ char               *path;
 }
 
 /*----------------------------------------------------------------------
-   IsValidNormalizeURL  says which URL's may be normalized            
+  IsValidNormalizeURL
+  says which URLs may be normalized            
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -350,13 +362,13 @@ char               *path;
 
 
 /*----------------------------------------------------------------------
-   NormalizeURL provides the new complete and normalized URL or file  
-   name path and the name of the document.                 
-   orgName is the original requested name.                 
-   doc identifies the document which provides the original 
-   name.                                                   
-   newName is the resulting URL of file name.              
-   docName is the resulting document name.                 
+   NormalizeURL
+   normalizes orgName according to a base associated with doc, and
+   following the standard URL format rules.
+   The function returns the new complete and normalized URL 
+   or file name path (newName) and the name of the document (docName).                 
+   N.B. If the function can't find out what's the docName, it assigns
+   the name "noname.html".
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -506,7 +518,7 @@ char               *docName;
 }
 
 /*----------------------------------------------------------------------
-   IsSameHost                                                         
+  IsSameHost                                                         
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -536,7 +548,10 @@ char               *path;
 
 
 /*----------------------------------------------------------------------
-   AHTMakeRelativeURL                                                
+  AHTMakeRelativeURL                                                
+  converts url into a relative url to base_url.
+  If succesful, returns the new URL, otherwise, it returns NULL.
+  The caller has to free the new URL.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -577,3 +592,6 @@ char                base_url;
 
    return (result);
 }
+
+
+
