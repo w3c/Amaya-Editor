@@ -1225,7 +1225,7 @@ void CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
 /*----------------------------------------------------------------------
    insere dans la boite pBox.                                      
   ----------------------------------------------------------------------*/
-static void LoadSymbol (char c, PtrLine pLine, ThotBool defaultHeight,
+static void LoadSymbol (int c, PtrLine pLine, ThotBool defaultHeight,
 			ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
 			int frame)
 {
@@ -1238,10 +1238,16 @@ static void LoadSymbol (char c, PtrLine pLine, ThotBool defaultHeight,
   if (pDoc == NULL)
     return;
   open = !pDoc->DocEditSequence;
-  if (!APPgraphicModify (pAb->AbElement, (int)c, frame, TRUE, open))
+  if (!APPgraphicModify (pAb->AbElement, c, frame, TRUE, open))
     {
       pAb->AbShape = c;
-      pAb->AbElement->ElGraph = c;
+      if (c <= 255)
+	pAb->AbElement->ElGraph = (char)c;
+      else
+	{
+	  pAb->AbElement->ElGraph = '?';
+	  pAb->AbElement->ElWideChar = c;
+	}
       /* Dimensions du symbole */
       pAb->AbVolume = 1;
       if (defaultWidth || defaultHeight)
@@ -1261,7 +1267,7 @@ static void LoadSymbol (char c, PtrLine pLine, ThotBool defaultHeight,
       BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
       /* adjust the width of some symbols */
       ResizeHeight (pBox, NULL, NULL, 0, 0, 0, frame);
-      APPgraphicModify (pAb->AbElement, (int)c, frame, FALSE, open);
+      APPgraphicModify (pAb->AbElement, c, frame, FALSE, open);
     }
 }
 
@@ -1952,7 +1958,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 		 }
 	       break;
 	    case LtSymbol:
-	       LoadSymbol ((char)clipboard->BuContent[0], pLine, defaultHeight,
+	       LoadSymbol (clipboard->BuContent[0], pLine, defaultHeight,
 			   defaultWidth, pBox, pAb, frame);
 	       break;
 	    case LtPolyLine:
@@ -2497,7 +2503,7 @@ void ContentEditing (int editType)
 		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb,
 			      frame);
 	      else if (pAb->AbLeafType == LtSymbol && NewInsert)
-		LoadSymbol ((char) editType, pLine, defaultHeight,
+		LoadSymbol (editType, pLine, defaultHeight,
 			    defaultWidth, pBox, pAb, frame);
 	      else if ((pAb->AbLeafType == LtGraphics ||
 			pAb->AbLeafType == LtPolyLine) &&

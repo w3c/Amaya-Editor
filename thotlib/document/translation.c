@@ -1064,25 +1064,8 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
     case LtPolyLine:
       /* if it's an Unicode character, output its code */
       if (pEl->ElLeafType == LtSymbol && pEl->ElGraph == '?')
-	{
-	  if (LoadedDocument[doc -1]->DocCharset == UTF_8)
-	    {
-	      /* translate into UTF_8 the unicode value */
-	      PutChar ((wchar_t) pEl->ElWideChar, fnum, NULL, doc,
-		       lineBreak, TRUE, FALSE);
-	    }
-	  else
-	    {
-	      /* write a numeric entity */
-	      PutChar ((wchar_t) '&', fnum, NULL, doc, lineBreak,
-		       FALSE, FALSE);
-	      PutChar ((wchar_t) '#', fnum, NULL, doc, lineBreak,
-		       FALSE, FALSE);
-	      PutInt (pEl->ElWideChar, fnum, NULL, doc, lineBreak);
-	      PutChar ((wchar_t) ';', fnum, NULL, doc, lineBreak,
-		       FALSE, FALSE);
-	    }
-	}
+	PutChar ((wchar_t) pEl->ElWideChar, fnum, NULL, doc, lineBreak, TRUE,
+		 FALSE);
       else if (pTSch != NULL)
 	{
 	  if (!transChar)

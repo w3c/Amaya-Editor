@@ -742,7 +742,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	case 'h':       /* horizontal bar */
 	case 'R':       /* right arrow */
 	  *width = *height;
-	  *height = hfont / 3;
+	  *height = hfont / 2;
 	  break;
 	case 'o':       /* overbrace */
 	case 'u':       /* underbrace */
