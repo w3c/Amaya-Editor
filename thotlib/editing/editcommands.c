@@ -2339,6 +2339,13 @@ int                 editType;
 			    if (width != pBox->BxWidth || height != pBox->BxHeight)
 			      NewDimension (pAb, width, height, frame, TRUE);
 			  }
+#else
+			if (pBox->BxPictInfo != NULL)
+			  {
+			    /* reevalue les points de controle */
+			    free ((char *) pBox->BxPictInfo);
+			    pBox->BxPictInfo = NULL;
+			  }
 #endif
 		      }
 		    else

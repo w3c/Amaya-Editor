@@ -22,7 +22,6 @@
 
 #include "css_f.h"
 #include "init_f.h"
-#include "p2css_f.h"
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
 #endif

@@ -400,16 +400,16 @@ int                 span;
   CheckAllRows
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CheckAllRows (Element table, Document doc)
+void                CheckAllRows (Element table, Document doc)
 #else
-static void         CheckAllRows (table, doc)
+void                CheckAllRows (table, doc)
 Element             table;
 Document            doc;
 #endif
 {
   Element            *colElement;
   Element             row, nextRow, firstrow, colhead;
-  Element             cell, nextCell, group;
+  Element             cell, nextCell, group, new;
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
@@ -461,6 +461,14 @@ Document            doc;
 	    {
 	      nextCell = cell; TtaNextSibling (&nextCell);
 	      elType = TtaGetElementType (cell);
+	      if (elType.ElTypeNum == HTML_EL_Table_cell)
+		{
+		  /* replace the Table_cell by a Data_cell */
+		  elType.ElTypeNum = HTML_EL_Data_cell;
+		  new = TtaNewTree (doc, elType, "");
+		  TtaInsertFirstChild (&new, cell, doc);
+		  cell = new;
+		}
 	      /* process only cell elements */
 	      if (elType.ElTypeNum == HTML_EL_Data_cell ||
 		  elType.ElTypeNum == HTML_EL_Heading_cell)

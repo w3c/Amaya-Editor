@@ -3907,7 +3907,7 @@ char               *buffer;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType;
-  Element             parent, el, styles;
+  Element             parent, el;
   char                c;
   char               *cssRule, *base;
   char               *schemaName;
@@ -3956,10 +3956,7 @@ char               *buffer;
 	  if (el == NULL)
 	    {
 	      el = TtaNewTree (doc, elType, "");
-	      elType.ElTypeNum = HTML_EL_Styles;
-	      styles = TtaNewTree (doc, elType, "");
-	      TtaInsertFirstChild (&styles, parent, doc);
-	      TtaInsertFirstChild (&el, styles, doc);
+	      TtaInsertFirstChild (&el, parent, doc);
 	      attrType.AttrSSchema = elType.ElSSchema;
 	      attrType.AttrTypeNum = HTML_ATTR_Notation;
 	      attr = TtaNewAttribute (attrType);

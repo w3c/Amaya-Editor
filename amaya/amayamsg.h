@@ -143,4 +143,7 @@ int                 AMAYA;
 #define AM_RELOAD_FILES               131
 #define AM_AUTHENTICATION_CONFIRM     132
 #define AM_REDIRECTION_CONFIRM        133
-#define AMAYA_MSG_MAX                 134
+#define AM_ROWS                       134
+#define AM_COLS                       135
+#define AM_BORDER                     136
+#define AMAYA_MSG_MAX                 137

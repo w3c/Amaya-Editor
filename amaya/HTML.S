@@ -61,19 +61,22 @@ STRUCT
   Invalid_element (ATTR Error_type = UnknownTag, BadPosition) = TEXT;
   Comment\240 = LIST OF (Comment_line = TEXT);
 
+  Head_misc =
+	CASE OF
+	STYLE_;
+	SCRIPT;
+	META;
+	LINK;
+	END;
   HEAD								{ HEAD }
      (ATTR profile = Text) =
 	AGGREGATE
-	Document_URL = TEXT;
-	TITLE = TEXT;						{ TITLE }
+	Document_URL = TEXT - (Head_misc);
+	TITLE = TEXT - (Head_misc);						{ TITLE }
       ? ISINDEX (ATTR Prompt = Text) = CONSTANT C_Empty;	{ ISINDEX }
 		    { prompt }
       ? BASE;							{ BASE }
-      ? Styles = LIST OF (STYLE_);
-      ? Scripts = LIST OF (SCRIPT);
-      ? Metas = LIST OF (META);
-      ? Links = LIST OF (LINK);
-	END + (Object);
+	END + (Object, Head_misc);
 
   STYLE_							{ STYLE }
      (ATTR Notation = Text; media = Text) =
@@ -232,7 +235,6 @@ STRUCT
 	Anchor;							{ A }
 	PICTURE;						{ IMG }
 	Applet;							{ APPLET }
-	Object;							{ OBJECT }
 	Font_;							{ FONT }
 	BaseFont;						{ BASEFONT }
 	BR;							{ BR }
@@ -243,6 +245,7 @@ STRUCT
 	Superscript = Basic_Set;				{ SUP }
 	Span = Basic_Set;					{ SPAN }
 	BDO = Basic_Set;					{ BDO }
+	Object;							{ OBJECT }
 	IFRAME;							{ IFRAME }
 #ifdef MATHML
 	Math;							{ MATH }
@@ -762,10 +765,7 @@ EXCEPT
 	Document_URL:	Hidden, NoSpellCheck;
 	C_Empty:	Hidden;
 	C_BR:		NoSelect;
-	Styles:		Hidden;
-	Scripts:	Hidden;
-	Metas:		Hidden;
-	Links:		Hidden;
+	Head_misc:	Hidden;
 	Frames:		Hidden;
 	Frame:		Hidden, NoCut;
 	FRAMESET:	NoCreate;	{ prevent a Return at the end of the

@@ -20,7 +20,6 @@
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
 #endif /* !AMAYA_JAVA  && !AMAYA_ILU */
-#include "p2css_f.h"
 #include "AHTURLTools_f.h"
 #include "UIcss_f.h"
 
@@ -58,7 +57,7 @@ View                view;
 #  ifndef _WINDOWS
 	  if (nb == 0)
 	    /* create the form */
-	    TtaNewForm (BaseDialog + FromCSS, TtaGetViewFrame (doc, 1), 
+	    TtaNewForm (BaseDialog + CSSForm, TtaGetViewFrame (doc, 1), 
 			TtaGetMessage (AMAYA, AM_CSS), FALSE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
 	  /* build the CSS list */
@@ -82,12 +81,12 @@ View                view;
   if (nb > 0)
     {
 #  ifdef _WINDOWS
-	  CreateCSSDlgWindow (BaseDialog, CSSSelect, FromCSS, TtaGetMessage (AMAYA, AM_CSS_FILE), nb, buf);
+	  CreateCSSDlgWindow (BaseDialog, CSSSelect, CSSForm, TtaGetMessage (AMAYA, AM_CSS_FILE), nb, buf);
 #  else  /* !_WINDOWS */
-      TtaNewSelector (BaseDialog + CSSSelect, BaseDialog + FromCSS,
+      TtaNewSelector (BaseDialog + CSSSelect, BaseDialog + CSSForm,
 		      TtaGetMessage (AMAYA, AM_CSS_FILE),
 		      nb, buf, 5, NULL, TRUE, FALSE);
-      TtaShowDialogue (BaseDialog + FromCSS, TRUE);
+      TtaShowDialogue (BaseDialog + CSSForm, TRUE);
 #  endif /* !_WINDOWS */
     }
 }

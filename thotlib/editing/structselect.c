@@ -1200,7 +1200,6 @@ boolean             visible;
 
    Highlight the selected element pEl in view view.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         DisplaySel (PtrElement pEl, int view, int frame, boolean assoc, boolean * abExist)
 
@@ -1211,13 +1210,14 @@ int                 view;
 int                 frame;
 boolean             assoc;
 boolean            *abExist;
-
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAb, pNextAb;
    int                 firstChar, lastChar;
    boolean             first, last, partialSel, unique, active;
+
+   if (TtaGetDisplayMode (FrameTable[frame].FrDoc) != DisplayImmediately)
+     return;
 
    first = TRUE;
    pAb = pEl->ElAbstractBox[view - 1];
@@ -2616,10 +2616,8 @@ int                 lastChar;
    doubleClick: if TRUE, the user has double-clicked without moving the mouse.
    drag: the user extends the selection by dragging.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ChangeSelection (int frame, PtrAbstractBox pAb, int rank, boolean extension, boolean update, boolean doubleClick, boolean drag)
-
 #else  /* __STDC__ */
 void                ChangeSelection (frame, pAb, rank, extension, update, doubleClick, drag)
 int                 frame;
@@ -2629,9 +2627,7 @@ boolean             extension;
 boolean             update;
 boolean             doubleClick;
 boolean             drag;
-
 #endif /* __STDC__ */
-
 {
    PtrDocument         pDoc;
    PtrElement          pEl, pEl1;
@@ -2798,8 +2794,9 @@ boolean             drag;
 		     FirstSelectedCharInAttr = InitSelectedCharInAttr;
 		     LastSelectedCharInAttr = rank;
 		  }
-		SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
-				    LastSelectedCharInAttr, TRUE);
+		if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
+		  SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
+				      LastSelectedCharInAttr, TRUE);
 	     }
 	}
       else
@@ -2967,7 +2964,8 @@ boolean             drag;
 	        /* attribute value */
 	       {
 		  CancelSelection ();
-		  SelectStringInAttr (pDoc, pAb, rank, rank, FALSE);
+		  if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
+		    SelectStringInAttr (pDoc, pAb, rank, rank, FALSE);
 		  InitSelectedCharInAttr = rank;
 	       }
 	     else if (rank > 0 && pEl->ElTerminal &&

@@ -255,12 +255,12 @@ Numbered list:(P|UL|MENU|DIR|PRE|FORM)+;
 !	}
 
 
-Vertical Table: *,*+;
+Vertical Table: *+;
 	{
 	*><TABLE border=1>:TR.TD.*;
 	}
 
-Horizontal Table : *,*+;
+Horizontal Table : *+;
 	{
 	*><TABLE border=1>.TR:TD.*;
 	}

@@ -80,7 +80,7 @@ ELEMENTS
 	ElemDelete.Post -> RowDeleted;
 	END;
 
-   Styles:
+   STYLE_:
 	BEGIN
 	ElemTextModify.Pre -> ChangeStyles;
 	ElemTextModify.Post -> StyleChanged;

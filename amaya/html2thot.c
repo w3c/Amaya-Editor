@@ -6052,13 +6052,9 @@ Document            doc;
       else if (elType.ElTypeNum == HTML_EL_TITLE ||
 	       elType.ElTypeNum == HTML_EL_ISINDEX ||
 	       elType.ElTypeNum == HTML_EL_BASE ||
-	       elType.ElTypeNum == HTML_EL_Styles ||
 	       elType.ElTypeNum == HTML_EL_STYLE_ ||
-	       elType.ElTypeNum == HTML_EL_Scripts ||
 	       elType.ElTypeNum == HTML_EL_SCRIPT ||
-	       elType.ElTypeNum == HTML_EL_Metas ||
 	       elType.ElTypeNum == HTML_EL_META ||
-	       elType.ElTypeNum == HTML_EL_Links ||
 	       elType.ElTypeNum == HTML_EL_LINK)
 	/* this element should be a child of HEAD */
 	{
@@ -6403,8 +6399,7 @@ char               *pathURL;
    Element	el, elHead, elBody, elFrameset, elNoframes, nextEl, newEl,
 		prevEl, lastChild, firstTerm, lastTerm, termList, child,
 		parent, firstEntry, lastEntry, glossary, list, elText,
-		previous, elLinks, lastLink, elMetas, lastMeta, elScripts,
-		lastScript, elStyles, lastStyle;
+		previous;
    boolean	ok, moved;
 
    /* the root element only accepts elements HEAD, BODY, FRAMESET and Comment*/
@@ -6503,120 +6498,37 @@ char               *pathURL;
 		TtaSetTextContent (elText, pathURL, currentLanguage, theDocument);
 	     /* check all chidren of the HEAD Element, except the first one */
 	     /* which is Document_URL */
-	     /* move all Link elements as children of a Links element, */
-	     /* all Meta elements as children of a Metas element, */
-	     /* all Script elements as children of a Scripts element, */
-	     /* and all Style elements as children of a Styles element. */
 	     TtaNextSibling (&el);
-	     elLinks = NULL; lastLink = NULL;
-	     elMetas = NULL; lastMeta = NULL;
-	     elScripts = NULL; lastScript = NULL;
-	     elStyles = NULL; lastStyle = NULL;
 	     lastChild = NULL;
 	     while (el != NULL)
 	       {
 		  nextEl = el;
 		  TtaNextSibling (&nextEl);
 		  elType = TtaGetElementType (el);
-		  if (elType.ElTypeNum == HTML_EL_LINK)
-		    {
-		       /* create the Links element if it does not exist */
-		       if (elLinks == NULL)
-			 {
-			    newElType.ElSSchema = HTMLSSchema;
-			    newElType.ElTypeNum = HTML_EL_Links;
-			    elLinks = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (elLinks, el, TRUE, theDocument);
-			 }
-		       /* move the element as the last child of the Links element */
-		       TtaRemoveTree (el, theDocument);
-		       if (lastLink == NULL)
-			  TtaInsertFirstChild (&el, elLinks, theDocument);
-		       else
-			  TtaInsertSibling (el, lastLink, FALSE, theDocument);
-		       lastLink = el;
-		    }
-		  else if (elType.ElTypeNum == HTML_EL_META)
-		    {
-		       /* create the Metas element if it does not exist */
-		       if (elMetas == NULL)
-			 {
-			    newElType.ElSSchema = HTMLSSchema;
-			    newElType.ElTypeNum = HTML_EL_Metas;
-			    elMetas = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (elMetas, el, TRUE, theDocument);
-			 }
-		       /* move the element as the last child of the Metas element */
-		       TtaRemoveTree (el, theDocument);
-		       if (lastMeta == NULL)
-			  TtaInsertFirstChild (&el, elMetas, theDocument);
-		       else
-			  TtaInsertSibling (el, lastMeta, FALSE, theDocument);
-		       lastMeta = el;
-		    }
-		  else if (elType.ElTypeNum == HTML_EL_SCRIPT)
-		    {
-		       /* create the Scripts element if it does not exist */
-		       if (elScripts == NULL)
-			 {
-			    newElType.ElSSchema = HTMLSSchema;
-			    newElType.ElTypeNum = HTML_EL_Scripts;
-			    elScripts = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (elScripts, el, TRUE, theDocument);
-			 }
-		       /* move the element as the last child of the Scripts element */
-		       TtaRemoveTree (el, theDocument);
-		       if (lastScript == NULL)
-			  TtaInsertFirstChild (&el, elScripts, theDocument);
-		       else
-			  TtaInsertSibling (el, lastScript, FALSE, theDocument);
-		       lastScript = el;
-		    }
-		  else if (elType.ElTypeNum == HTML_EL_STYLE_)
-		    {
-		       /* create the Styles element if it does not exist */
-		       if (elStyles == NULL)
-			 {
-			    newElType.ElSSchema = HTMLSSchema;
-			    newElType.ElTypeNum = HTML_EL_Styles;
-			    elStyles = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (elStyles, el, TRUE, theDocument);
-			 }
-		       /* move the element as the last child of the Styles element */
-		       TtaRemoveTree (el, theDocument);
-		       if (lastStyle == NULL)
-			  TtaInsertFirstChild (&el, elStyles, theDocument);
-		       else
-			  TtaInsertSibling (el, lastStyle, FALSE, theDocument);
-		       lastStyle = el;
-		    }
-		  else
-		    /* is this element allowed in the HEAD? */
-		    {
-		    if (TtaGetRankInAggregate (elType, headElType) <= 0)
-		      /* this element is not a valid component of aggregate
-			 HEAD. It may be an SGML inclusion, let's check */
-		      if (!TtaCanInsertFirstChild (elType, elHead, theDocument))
-		        /* this element cannot be a child of HEAD, move it to
-			the BODY */
-	                {
+		  /* is this element allowed in the HEAD? */
+		  if (TtaGetRankInAggregate (elType, headElType) <= 0)
+		    /* this element is not a valid component of aggregate
+		       HEAD. It may be an SGML inclusion, let's check */
+		    if (!TtaCanInsertFirstChild (elType, elHead, theDocument))
+		      /* this element cannot be a child of HEAD, move it to
+			 the BODY */
+		      {
 		        /* create the BODY element if it does not exist */
 		        if (elBody == NULL)
 		          {
-		             newElType.ElSSchema = HTMLSSchema;
-		             newElType.ElTypeNum = HTML_EL_BODY;
-		             elBody = TtaNewElement (theDocument, newElType);
-			     TtaInsertSibling (elBody, elHead, FALSE, theDocument);
+			    newElType.ElSSchema = HTMLSSchema;
+			    newElType.ElTypeNum = HTML_EL_BODY;
+			    elBody = TtaNewElement (theDocument, newElType);
+			    TtaInsertSibling (elBody, elHead, FALSE, theDocument);
 		          }
 		        /* move the current element into the BODY element */
 		        TtaRemoveTree (el, theDocument);
 		        if (lastChild == NULL)
-		           TtaInsertFirstChild (&el, elBody, theDocument);
+			  TtaInsertFirstChild (&el, elBody, theDocument);
 		        else
-		           TtaInsertSibling (el, lastChild, FALSE, theDocument);
+			  TtaInsertSibling (el, lastChild, FALSE, theDocument);
 		        lastChild = el;
-	                }
-		    }
+		      }
 		  el = nextEl;
 	       }
 	  }

@@ -72,21 +72,26 @@ Element             selectedElement;
 
 #endif /* __STDC__ */
 {
-   UserErrorCode = 0;
+   DisplayMode         dispMode;
 
+   UserErrorCode = 0;
    /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
-   else if (TtaGetDisplayMode (document) == DisplayImmediately)
-      if (selectedElement == NULL)
-	 /* Abort the selection */
-	 ResetSelection (LoadedDocument[document - 1]);
-      else
-	 SelectElement (LoadedDocument[document - 1], (PtrElement) selectedElement, TRUE, FALSE);
    else
-      NewSelection (document, selectedElement, 0, 0);
+     {
+       dispMode = TtaGetDisplayMode (document);
+       if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+	 if (selectedElement == NULL)
+	   /* Abort the selection */
+	   ResetSelection (LoadedDocument[document - 1]);
+	 else
+	   SelectElement (LoadedDocument[document - 1], (PtrElement) selectedElement, TRUE, FALSE);
+       else
+	 NewSelection (document, selectedElement, 0, 0);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -154,6 +159,8 @@ int                 lastCharacter;
 
 #endif /* __STDC__ */
 {
+   DisplayMode         dispMode;
+
    UserErrorCode = 0;
    if (textElement == NULL)
       TtaError (ERR_invalid_parameter);
@@ -168,11 +175,15 @@ int                 lastCharacter;
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
-   else if (TtaGetDisplayMode (document) == DisplayImmediately)
-      SelectString (LoadedDocument[document - 1],
-	       (PtrElement) textElement, firstCharacter, lastCharacter);
    else
-      NewSelection (document, textElement, firstCharacter, lastCharacter);
+     {
+       dispMode = TtaGetDisplayMode (document);
+       if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+	 SelectString (LoadedDocument[document - 1],
+		       (PtrElement) textElement, firstCharacter, lastCharacter);
+       else
+	 NewSelection (document, textElement, firstCharacter, lastCharacter);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -199,6 +210,7 @@ int                 lastCharacter;
 {
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;
+   DisplayMode         dispMode;
    int                 firstChar, lastChar;
    boolean             ok;
    boolean             abort;
@@ -216,7 +228,8 @@ int                 lastCharacter;
      {
 	/* verifies if there is a selection */
 	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
-	if (TtaGetDisplayMode (document) == DisplayImmediately)
+	dispMode = TtaGetDisplayMode (document);
+	if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
 	   /* The document is with an immediat display mode */
 	  {
 	     if (ok)
@@ -233,7 +246,7 @@ int                 lastCharacter;
 	if (!ok)
 	   /* Error: no selection */
 	   TtaError (ERR_no_selection_in_document);
-	else if (TtaGetDisplayMode (document) == DisplayImmediately)
+	else if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
 	   ExtendSelection ((PtrElement) element, lastCharacter, FALSE, FALSE, FALSE);
 	else
 	   NewSelectionExtension (document, element, lastCharacter);
@@ -264,6 +277,7 @@ Element             element;
 {
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;
+   DisplayMode         dispMode;
    int                 firstChar, lastChar;
    boolean             ok;
 
@@ -281,8 +295,9 @@ Element             element;
 	/* is there a current selection */
 	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
 				  &firstChar, &lastChar);
+	dispMode = TtaGetDisplayMode (document);
 	if (ok)
-	  if (TtaGetDisplayMode (document) != DisplayImmediately)
+	  if (dispMode == NoComputedDisplay)
 	     /* accept only if immediate display mode */
 	     ok = FALSE;
 	  else
@@ -308,7 +323,6 @@ Element             element;
 
    Return value:
    No return value
-
   ----------------------------------------------------------------------*/
 void                TtaSelectInterval ()
 {
@@ -326,9 +340,7 @@ void                TtaSelectInterval ()
 
    Return value:
    No return value
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaUnselect (Document document)
 
@@ -411,9 +423,7 @@ void                TtaIsSelectionEmpty ()
    whole element is in the selection.
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaGiveFirstSelectedElement (Document document, Element * selectedElement, int *firstCharacter, int *lastCharacter)
 #else  /* __STDC__ */
@@ -481,7 +491,6 @@ int                *lastCharacter;
    whole element is in the selection.
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
-
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGiveNextSelectedElement (Document document, Element * selectedElement, int *firstCharacter, int *lastCharacter)
@@ -553,9 +562,7 @@ int                *lastCharacter;
    whole element is in the selection.
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaGiveLastSelectedElement (Document document, Element * selectedElement, int *firstCharacter, int *lastCharacter)
 
@@ -606,5 +613,3 @@ int                *lastCharacter;
 	     }
      }
 }
-
-/* End of  module */

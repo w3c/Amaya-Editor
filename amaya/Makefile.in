@@ -195,7 +195,6 @@ AMAYA_OBJ = \
 	HTMLimage.o \
 	EDITimage.o \
 	HTMLpresentation.o \
-	p2css.o \
 	UIcss.o \
 	css.o \
 	javaamaya.o \

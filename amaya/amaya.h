@@ -34,7 +34,7 @@
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
 #define HTAppName "amaya"
-#define HTAppVersion "V1.3b"
+#define HTAppVersion "V1.4"
 
 #define URL_SEP '/'
 #define URL_STR "/"
@@ -110,10 +110,14 @@ typedef char        AmayaReadChar ();
 #define About2		56
 #define About3		57
 #define Version		58
-#define FormAbout      	59
-#define FromCSS         60
+#define AboutForm      	59
+#define CSSForm         60
 #define CSSSelect       61
-#define MAX_REF         62
+#define TableForm       62
+#define TableRows       63
+#define TableCols       64
+#define TableBorder     65
+#define MAX_REF         66
 
 /* The possible GET/POST/PUT request modes */
 
@@ -181,6 +185,9 @@ THOT_EXPORT char        *SavingFile;	/* complete path or URL of the document */
 THOT_EXPORT int          Lg_password;
 THOT_EXPORT int          BaseDialog;
 THOT_EXPORT int          ReturnOption;
+THOT_EXPORT int          NumberRows;
+THOT_EXPORT int          NumberCols;
+THOT_EXPORT int          TBorder;
 THOT_EXPORT int          ReturnOptionMenu;
 THOT_EXPORT Document     CurrentDocument;
 THOT_EXPORT Document     SavingDocument;

@@ -2958,6 +2958,20 @@ char               *data;
      case AClassSelect:
        StyleCallbackDialogue (ref, typedata, data);
        break;
+
+     case TableForm:
+       /* *********Table Form*********** */
+       TtaDestroyDialogue (BaseDialog + TableForm);
+       break;
+     case TableRows:
+       NumberRows = val;
+       break;
+     case TableCols:
+       NumberCols = val;
+       break;
+     case TableBorder:
+       TBorder = val;
+       break;
      }
 }
 
@@ -3472,16 +3486,16 @@ View                view;
 #endif /* AMAYA_DEBUG */
 
 # ifndef _WINDOWS
-  TtaNewDialogSheet (BaseDialog + FormAbout, TtaGetViewFrame (document, view), HTAppName, 1,TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+  TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view), HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
 # endif  /* _WINDOWS */
   strcpy (localname, HTAppName);
   strcat (localname, " - ");
   strcat (localname, HTAppVersion);
 # ifndef _WINDOWS
-  TtaNewLabel(BaseDialog + Version, BaseDialog + FormAbout, localname);
-  TtaNewLabel(BaseDialog + About1, BaseDialog + FormAbout, TtaGetMessage(AMAYA, AM_ABOUT1));
-  TtaNewLabel(BaseDialog + About2, BaseDialog + FormAbout, TtaGetMessage(AMAYA, AM_ABOUT2));
-  TtaShowDialogue (BaseDialog + FormAbout, FALSE);
+  TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
+  TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm, TtaGetMessage(AMAYA, AM_ABOUT1));
+  TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm, TtaGetMessage(AMAYA, AM_ABOUT2));
+  TtaShowDialogue (BaseDialog + AboutForm, FALSE);
 # else  /* _WINDOWS */
   CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname, TtaGetMessage(AMAYA, AM_ABOUT1), TtaGetMessage(AMAYA, AM_ABOUT2));
 # endif /* _WINDOWS */

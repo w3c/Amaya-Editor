@@ -28,6 +28,7 @@
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLstyle_f.h"
+#include "HTMLtable_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -46,7 +47,7 @@ View                view;
    Document            doc;
    boolean             exist;
    ElementType         elType;
-   Element             root, title, text, el, head, child, metas, meta, body;
+   Element             root, title, text, el, head, child, meta, body;
    AttributeType       attrType;
    Attribute	       attr;
 
@@ -101,9 +102,6 @@ View                view;
    elType.ElTypeNum = HTML_EL_HEAD;
    head = TtaSearchTypedElement (elType, SearchInTree, root);
    child = TtaGetLastChild (head);
-   elType.ElTypeNum = HTML_EL_Metas;
-   metas = TtaNewElement (doc, elType);
-   TtaInsertSibling (metas, child, FALSE, doc);
    elType.ElTypeNum = HTML_EL_META;
    meta = TtaNewElement (doc, elType);
    attrType.AttrSSchema = elType.ElSSchema;
@@ -118,7 +116,7 @@ View                view;
    strcat (tempfile, " ");
    strcat (tempfile, HTAppVersion);
    TtaSetAttributeText (attr, tempfile, meta, doc);
-   TtaInsertFirstChild (&meta, metas, doc);
+   TtaInsertSibling (meta, child, FALSE, doc);
 
    /* create a BODY element if there is not */
    elType.ElTypeNum = HTML_EL_BODY;
@@ -253,79 +251,54 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-  MoveWithinHead moves the insertion point according with the element type
-  to be inserted.
+  InsertWithinHead moves the insertion point into the document Head to
+  insert the element type.
   Return TRUE if it succeeds.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      MoveWithinHead (Document document, View view, int elementT)
+static Element   InsertWithinHead (Document document, View view, int elementT)
 #else  /* __STDC__ */
-static boolean      MoveWithinHead (document, view, elementT)
-Document            document;
-View                view;
-int                 elementT;
+static Element   InsertWithinHead (document, view, elementT)
+Document         document;
+View             view;
+int              elementT;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el, child, root;
+   Element             el, head, parent, new;
    SSchema             docSchema;
    int                 i, j;
 
    docSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
      /* not within an HTML document */
-     return (FALSE);
+     return (NULL);
    else
      {
        elType.ElSSchema = docSchema;
-       elType.ElTypeNum = elementT;
-       root = TtaGetMainRoot (document);
-       child = TtaSearchTypedElement (elType, SearchForward, root);
+       elType.ElTypeNum = HTML_EL_HEAD;
+       parent = TtaGetMainRoot (document);
+       head = TtaSearchTypedElement (elType, SearchForward, parent);
        
        /* give current position */
        TtaGiveFirstSelectedElement (document, &el, &i, &j);
-       if (el != NULL)
+       if (el == NULL || el == head || !TtaIsAncestor (el, head))
+	 el = TtaGetLastChild (head);
+       else
 	 {
-	   elType = TtaGetElementType (el);
-	   if (elType.ElSSchema == docSchema && elType.ElTypeNum == elementT)
-	     /* it's OK */
-	     return (TRUE);
-	   else if (elType.ElSSchema == docSchema
-		    && elType.ElTypeNum == HTML_EL_HEAD && child == NULL)
-	     return (TRUE);
-	   else
+	   parent = TtaGetParent (el);
+	   while (parent != head)
 	     {
-	       /* it's not the same element or the HEAD element */
-	       el = TtaGetParent (el);
-	       if (el != NULL)
-		 {
-		   elType = TtaGetElementType (el);
-		   if (elType.ElSSchema == docSchema && elType.ElTypeNum == HTML_EL_HEAD && child == NULL)
-		     /* A child of the HEAD element is selected */
-		     return (TRUE);
-		   else
-		     el = NULL;
-		 }
+	       el = parent;
+	       parent = TtaGetParent (el);
 	     }
 	 }
-       
-       if (el == NULL && child == NULL)
-	 {
-	   /* locate the HEAD element */
-	   elType.ElSSchema = docSchema;
-	   elType.ElTypeNum = HTML_EL_HEAD;
-	   el = TtaSearchTypedElement (elType, SearchForward, root);
-	 }
 
-       if (el != NULL && child == NULL)
-	 /* select the last child of the HEAD */
-	 child = TtaGetLastChild (el);
-
-       if (child != NULL)
-	 TtaSelectElement (document, child);
-       else
-	 TtaSelectElement (document, el);
-       return (TRUE);
+       /* now insert the new element after el */
+       elType.ElTypeNum = elementT;
+       new = TtaNewTree (document, elType, "");
+       TtaInsertSibling (new, el, FALSE, document);
+       return (new);
      }
 }
 
@@ -341,14 +314,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
+  Element             el;
 
-   if (MoveWithinHead (document, view, HTML_EL_BASE))
-     {
-       elType.ElSSchema = TtaGetDocumentSSchema (document);
-       elType.ElTypeNum = HTML_EL_BASE;
-       TtaInsertElement (elType, document);
-     }
+  el = InsertWithinHead (document, view, HTML_EL_BASE);
+  if (el != NULL)
+    TtaSelectElement (document, el);
 }
 
 
@@ -363,14 +333,12 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
+  Element             el;
 
-   if (MoveWithinHead (document, view, HTML_EL_META))
-     {
-       elType.ElSSchema = TtaGetDocumentSSchema (document);
-       elType.ElTypeNum = HTML_EL_META;
-       TtaInsertElement (elType, document);
-     }
+  el = InsertWithinHead (document, view, HTML_EL_META);
+  if (el != NULL)
+    TtaSelectElement (document, el);
+
 }
 
 
@@ -385,24 +353,14 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-   Element             el;
-   int                 firstSelectedChar, i;
+  Element             el;
 
 
-   if (MoveWithinHead (document, view, HTML_EL_LINK))
-     {
-       elType.ElSSchema = TtaGetDocumentSSchema (document);
-       elType.ElTypeNum = HTML_EL_LINK;
-       TtaInsertElement (elType, document);
+  el = InsertWithinHead (document, view, HTML_EL_LINK);
+  if (el != NULL)
+    {
+      TtaSelectElement (document, el);
        /* Select a new destination */
-       TtaGiveFirstSelectedElement (document, &el, &firstSelectedChar, &i);
-       elType = TtaGetElementType (el);
-       while (elType.ElTypeNum != HTML_EL_LINK)
-	 {
-	   el = TtaGetParent (el);
-	   elType = TtaGetElementType (el);
-	 }
        SelectDestination (document, el);
      }
 }
@@ -419,14 +377,12 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
+  Element             el;
 
-   if (MoveWithinHead (document, view, HTML_EL_SCRIPT))
-     {
-       elType.ElSSchema = TtaGetDocumentSSchema (document);
-       elType.ElTypeNum = HTML_EL_SCRIPT;
-       TtaInsertElement (elType, document);
-     }
+
+  el = InsertWithinHead (document, view, HTML_EL_SCRIPT);
+  if (el != NULL)
+    TtaSelectElement (document, el);
 }
 
 
@@ -441,14 +397,12 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
+  Element             el;
 
-   if (MoveWithinHead (document, view, HTML_EL_STYLE_))
-     {
-       elType.ElSSchema = TtaGetDocumentSSchema (document);
-       elType.ElTypeNum = HTML_EL_STYLE_;
-       TtaInsertElement (elType, document);
-     }
+
+  el = InsertWithinHead (document, view, HTML_EL_STYLE_);
+  if (el != NULL)
+    TtaSelectElement (document, el);
 }
 
 
@@ -830,12 +784,13 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
+   Element             el, new, cell, row;
    AttributeType       attrType;
    Attribute           attr;
    int                 firstChar, i;
    boolean             displayTableForm;
 
+   TtaSetDisplayMode (document, DeferredDisplay);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
@@ -843,32 +798,81 @@ View                view;
        displayTableForm = TtaIsSelectionEmpty ();
        if (displayTableForm)
 	 {
+	   NumberRows = 2;
+	   NumberCols = 2;
+	   TBorder = 1;
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
+	   TtaNewDialogSheet (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
+			      TtaGetMessage (1, BTable),
+			      1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
+			     TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
+	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
+			     TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
+	   TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm,
+			     TtaGetMessage (AMAYA, AM_BORDER), 1, 50, TRUE);
+	   TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
+	   TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
+	   TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
+	   TtaShowDialogue (BaseDialog + TableForm, FALSE);
+	   /* wait for an answer */
+	   TtaWaitShowDialogue ();
+#  endif /* !_WINDOWS */
 	 }
+       else
+	 {
+	   NumberRows = 0;
+	   NumberCols = 0;
+	   TBorder = 1;
+	 }
+
        elType.ElTypeNum = HTML_EL_Table;
        TtaCreateElement (elType, document);
-       /* get the new Table */
+
+       /* get the new Table element */
        TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
-       elType = TtaGetElementType (el);
-       while (elType.ElTypeNum != HTML_EL_Table && el != NULL)
-	 {
-	   el = TtaGetParent (el);
-	   if (el != NULL)
-	      elType = TtaGetElementType (el);
-	 }
+       el = TtaGetTypedAncestor (el, elType);
        if (el != NULL)
 	 {
-         /* if the Table has no Border attribute, create one */
-         attrType.AttrSSchema = elType.ElSSchema;
-         attrType.AttrTypeNum = HTML_ATTR_Border;
-         attr = TtaGetAttribute (el, attrType);
-         if (attr == NULL)
-	   {
-	   /* create the Border attribute */
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (el, attr, document);
-	   TtaSetAttributeValue (attr, 1, el, document);
-	   }
+	   /* if the Table has no Border attribute, create one */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_Border;
+	   attr = TtaGetAttribute (el, attrType);
+	   if (attr == NULL && TBorder > 0)
+	     {
+	       /* create the Border attribute */
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (el, attr, document);
+	       TtaSetAttributeValue (attr, TBorder, el, document);
+	     }
+	   else if (attr != NULL && TBorder == 0)
+	     TtaRemoveAttribute (el, attr, document);
+	   if (NumberCols > 1)
+	     {
+	       elType.ElTypeNum = HTML_EL_Data_cell;
+	       cell = TtaSearchTypedElement (elType, SearchInTree, el);
+	       while (NumberCols > 1)
+		 {
+		   new = TtaNewTree (document, elType, "");
+		   TtaInsertSibling (new, cell, FALSE, document);
+		   NumberCols--;
+		 }
+	     }
+	   if (NumberRows > 1)
+	     {
+	       elType.ElTypeNum = HTML_EL_Table_row;
+	       row = TtaSearchTypedElement (elType, SearchInTree, el);
+	       while (NumberRows > 1)
+		 {
+		   new = TtaNewTree (document, elType, "");
+		   TtaInsertSibling (new, row, FALSE, document);
+		   NumberRows--;
+		 }
+	     }
+	   CheckAllRows (el, document);
 	 }
+       TtaSetDisplayMode (document, DisplayImmediately);
      }
 }
 
@@ -1100,15 +1104,9 @@ boolean            *withinP;
    if (el != NULL)
      {
        elType = TtaGetElementType (el);
+       elType.ElTypeNum = HTML_EL_Form;
        /* within HTML element */
-       form = el;
-       while (form != NULL && elType.ElTypeNum != HTML_EL_Form)
-	 {
-	   form = TtaGetParent (form);
-	   if (form != NULL)
-	     elType = TtaGetElementType (form);
-	 }
-
+       form = TtaGetTypedAncestor (el, elType);
        if (form == NULL)
 	 {
 	   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)

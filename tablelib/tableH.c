@@ -1364,7 +1364,7 @@ int             frame;
 				  if (pAb->AbBox->BxHorizEdge == Left ||
 				      pAb->AbBox->BxHorizEdge == VertRef)
 				    {
-				      delta = cell->AbBox->BxXOrg - pAb->AbBox->BxXOrg;
+				      delta = pAb->AbBox->BxXOrg - cell->AbBox->BxXOrg;
 				      if (delta < 0)
 					delta = 0;
 				    }

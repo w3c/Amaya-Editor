@@ -6083,15 +6083,6 @@ RULES
 		Visibility: 0;
 	END;
 
- Styles: BEGIN
-	Visibility: 0;
-	IN Structure_view
-		BEGIN
-		Visibility: Enclosing =;
-		Width: Enclosing . Width;
-		END;
-	END;
-
  STYLE_: BEGIN
 	CreateBefore(STYLE_S);
 	Visibility: 0;
@@ -6100,15 +6091,6 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Visibility: Enclosing =;
-		END;
-	END;
-
- Scripts: BEGIN
-	Visibility: 0;
-	IN Structure_view
-		BEGIN
-		Visibility: Enclosing =;
-		Width: Enclosing . Width;
 		END;
 	END;
 
@@ -6124,14 +6106,6 @@ RULES
 		END;		
 	END;
 
- Metas:	BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Width: Enclosing . Width;
-		END;
-	END;
-
  META:  BEGIN
 	CreateBefore(META_S);
 	Visibility: 0;
@@ -6142,13 +6116,6 @@ RULES
 		Foreground: Enclosing =;
 		Visibility: Enclosing =;
 		END;		
-	END;
-
- Links:	BEGIN
-	Visibility: 0;
-	Width: Enclosing . Width;
-	IN Structure_view
-		Visibility: Enclosing =;
 	END;
 
  LINK:	BEGIN
@@ -9645,11 +9612,8 @@ ATTRIBUTES
 
   Style\240:
 	BEGIN
-	if NOT Styles
-	   BEGIN
-	   CreateBefore(ATTR_STYLE);
-	   CreateBefore(VALUE_STYLE);
-	   END;
+	CreateBefore(ATTR_STYLE);
+	CreateBefore(VALUE_STYLE);
 	END;
 
   profile:
