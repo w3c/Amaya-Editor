@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.1b
+%define version 8.2
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -41,25 +41,27 @@ need to know the HTML or CSS languages.
 
 Authors:
 --------
-    Irene.Vatton@w3.org, Jose.Kahan@w3.org,
-    Vincent.Quint@w3.org, Laurent.Carcone@w3.org
+    Irene.Vatton@inria.fr, Laurent.Carcone@w3.org
+    Vincent.Quint@inria.fr
 
 %changelog
+* Thu Oct 01 2003 Irene Vatton <Irene.Vatton@inria.fr>
+  updated the authors list
 * Thu Aug 21 2003 Irene Vatton <Irene.Vatton@w3.org>
-  Changed the optimization flags to "" as there is a crash
+  changed the optimization flags to "" as there is a crash
   due to the version of compiler.
 * Mon Jul 7 2003 Jose Kahan <jose@w3.org>
   Updated for Amaya 8.1. Added the bookmark compilation rules.
-  Changed the optimization flags to Os as there is a crash on
+  changed the optimization flags to Os as there is a crash on
   with O2 on Redhat 8.0, probably due to the version of compiler.
 * Fri Apr 23 2003 Irene Vatton <Irene.Vatton@w3.org> 
-  Adaptation to redhat 8.0
+  adaptation to redhat 8.0
 * Fri Jan 30 2003 Nabil Layaida (Nabil.Layaida@inria.fr>
-  Adaptation to rpmbuild
+  adaptation to rpmbuild
 * Mon Sep 16 2002 Irene Vatton <Irene.Vatton@w3.org>
   GTK options.
 * Fri Nov 9 2001  Irene Vatton <Irene.Vatton@w3.org>
-  Integration of English and French dictionaries
+  integration of English and French dictionaries
 * Mon Feb 28 2001 Irene Vatton <Irene.Vatton@w3.org>
   updated for amaya-4.2.1
 * Mon Jan 8 2001 Irene Vatton <Irene.Vatton@w3.org>

@@ -17,9 +17,6 @@
 
 #include "thot_gui.h"
 #include "thot_sys.h"
-#ifdef _GL
-#include "glwindowdisplay.h"
-#endif /*_GL*/
 
 #include "constmenu.h"
 #include "constmedia.h"

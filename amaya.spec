@@ -8,17 +8,19 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.1
+%define version 8.2
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya
 Release:      1
-Copyright:    Copyright 1995-2002 (MIT) (INRIA), (L)GPL compatible
+Copyright:    Copyright 1995-2003 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
-Packager:     Irene.Vatton@w3.org
+Packager:     Irene.Vatton@inria.fr
+BuildRoot:    /var/tmp/%{name}-buildroot
+#BuildRoot:     /usr/src/redhat/BUILD/ 
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
@@ -38,10 +40,12 @@ need to know the HTML or CSS languages.
 
 Authors:
 --------
-    Irene.Vatton@w3.org, Jose.Kahan@w3.org,
-    Vincent.Quint@w3.org, Laurent.Carcone@w3.org
+    Irene.Vatton@inria.fr, Laurent.Carcone@w3.org
+    Vincent.Quint@inria.fr
 
 %changelog
+* Thu Oct 01 2003 Irene Vatton <Irene.Vatton@inria.fr>
+  updated the authors list and fixed 
 * Fri Nov 9 2001  Irene Vatton <Irene.Vatton@w3.org>
   Integration of English and French dictionaries
 * Mon Feb 28 2001 Irene Vatton <Irene.Vatton@w3.org>
@@ -54,7 +58,7 @@ Authors:
   Updated for amaya-3.2
   Removed Ramzi Guetari and Daniel Veillard from authors
 * Fri Jun 24 1999 Daniel Veillard <Daniel.Veillard@w3.org>
-  Updated for amaya-2.1
+  updated for amaya-2.1
 * Fri Oct 16 1998 Daniel Veillard <Daniel.Veillard@w3.org>
   took the spec file coming from SuSE-1.3 and updated it for RedHat,
   description, license, and version 1.3b
@@ -71,7 +75,7 @@ mkdir linux
 cd linux
 ln -s /usr/X11R6/lib/libXm.a
 export HOME=`pwd`
-../configure --prefix=/usr/share --exec-prefix=/usr \
+../configure  --without-gtk --prefix=/usr/share --exec=/usr/share \
              --enable-redland --enable-bookmarks
 #cp Options.orig Options
 make all
@@ -80,11 +84,12 @@ if [ -e /usr/bin/amaya ] ; then
   rm -f /usr/bin/amaya
 fi
 cd linux
-make install
-#cd ..
-#cp -a amaya/AmayaPage.html /usr/share/Amaya/amaya
+make install prefix=$RPM_BUILD_ROOT/usr/share
 %files
-%doc COPYRIGHT README.amaya
-/usr/bin/amaya
-/usr/share/Amaya
+%doc README.amaya
+/usr/share/Amaya/
+%post 
+/bin/ln -s /usr/share/Amaya/applis/bin/amaya /usr/bin/amaya
+%postun
+rm -f /usr/bin/amaya
 
