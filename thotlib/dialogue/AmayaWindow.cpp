@@ -652,16 +652,17 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
 
+#if 0
   /* allow other widgets to handel special keys only when the key is not F2 */
   if ((p_combo_box || p_text_ctrl || p_spinctrl) && proceed_key && thot_keysym != WXK_F2)
     {
       event.Skip();
       return true;
     }
+#endif /* 0 */
 
-  /* the TAB key should be used to navigate into current document links only when the focus is ont he canvas 
-   * otherwise the TAB key must be used to navigate into widgets (with focus )*/
-  if (!p_gl_canvas && (thot_keysym == WXK_TAB))
+  /* only allow the F2 special key outside canvas */
+  if (!p_gl_canvas && proceed_key && thot_keysym != WXK_F2)
     {
       event.Skip();
       return true;      
