@@ -168,7 +168,7 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
   Attribute	newAttr;
   AttributeType	attrType;
   ElementType   elType;
-  int		kind, len;
+  int		kind, len, val;
   char	       *oldValue; /* [ATTRLEN]; */
 
   elType = TtaGetElementType (elem);
@@ -194,15 +194,25 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
 	       newAttr = TtaNewAttribute (attrType);
 	       TtaAttachAttribute (span, newAttr, doc);
 	     }
-	  len = TtaGetTextAttributeLength (attr);
-          oldValue = TtaGetMemory (len + 1);
-          TtaGiveTextAttributeValue (attr, oldValue, &len);
-	  TtaSetAttributeText (newAttr, oldValue, span, doc);
+	  if (kind == 2)
+	    /* it's a text attribute */
+	    {
+	      len = TtaGetTextAttributeLength (attr);
+	      oldValue = TtaGetMemory (len + 1);
+	      TtaGiveTextAttributeValue (attr, oldValue, &len);
+	      TtaSetAttributeText (newAttr, oldValue, span, doc);
+	      TtaFreeMemory (oldValue);
+	    }
+	  else if (kind == 0 || kind == 1)
+	    /* enumerate or integer attribute */
+	    {
+	      val = TtaGetAttributeValue (attr);
+	      TtaSetAttributeValue (newAttr, val, span, doc);
+	    }
 	  TtaRegisterAttributeCreate (newAttr, span, doc);
 	  TtaRegisterAttributeDelete (attr, elem, doc);
           TtaRemoveAttribute (elem, attr, doc);
 	  TtaSelectElement (doc, elem);
-          TtaFreeMemory (oldValue);
         }
     }
 }
