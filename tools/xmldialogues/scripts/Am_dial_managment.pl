@@ -12,9 +12,10 @@ my $rep_obj = rep_obj (); #name of the object direcitriy for Amaya
 
 
 #### 	for all the bases
-# directory for bases , label and translated NEW  files
-my $OUT_PUT_directory = "$home/$rep_amaya/Amaya/tools/xmldialogues/docs/";
-
+# directory for bases 
+my $OUT_BASE_directory = "$home/$rep_amaya/Amaya/tools/xmldialogues/";
+# directory  translated NEW  files
+my $OUT_MSG_directory = "$home/$rep_amaya/Amaya/config/";
 
 my %base_name ;	# table for the name of the bases 
 	
@@ -32,21 +33,21 @@ my %index =qw ( 	1	dia
 #### 	for Amaya dialogue => dia or $index {1}
   $head_dir{'dia'} = "$home/$rep_amaya/Amaya/$rep_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
   $head_name {'dia'}= 'EDITOR.h';
-  $lang_dir{'dia'} = "$home/$rep_amaya/Amaya/config/";
+  $lang_dir{'dia'} = $OUT_MSG_directory;
   $lang_sufix {'dia'} = '-amayadialogue';
   $base_name {'dia'} = 'base_am_dia.xml';
 
 ####	for Amayamsg => msg or $index {2}
  $head_dir {'msg'} = "$home/$rep_amaya/Amaya/amaya/";
  $head_name {'msg'} = 'amayamsg.h' ;
- $lang_dir {'msg'} = "$home/$rep_amaya/Amaya/config/";
+ $lang_dir {'msg'} = $OUT_MSG_directory;
  $lang_sufix {'msg'} = '-amayamsg' ;
  $base_name {'msg'} = 'base_am_msg.xml';
 
 ####	for libdialogue => lib or $index {3}
  $head_dir {'lib'} = "$home/$rep_amaya/Amaya/thotlib/include/" ;
  $head_name {'lib'} = 'libmsg.h' ;
- $lang_dir {'lib'} = "$home/$rep_amaya/Amaya/config/";
+ $lang_dir {'lib'} = $OUT_MSG_directory;
  $lang_sufix {'lib'} = '-libdialogue' ;
  $base_name {'lib'} = 'base_am_lib.xml';
 
@@ -54,7 +55,7 @@ my %index =qw ( 	1	dia
 ####	for corrdialogue => corrd or $index {4}
  $head_dir {'corrd'} = "$home/$rep_amaya/Amaya/thotlib/internals/h/" ;
  $head_name {'corrd'} = 'corrmsg.h' ;
- $lang_dir {'corrd'} = "$home/$rep_amaya/Amaya/config/";
+ $lang_dir {'corrd'} = $OUT_MSG_directory;
  $lang_sufix {'corrd'} = '-corrdialogue' ;
  $base_name {'corrd'} = 'base_am_corrd.xml';
 
@@ -82,11 +83,11 @@ menu () ;
 }
 #############################END MAIN###########################################
 sub menu {
-	my @list = ( 	"Rien",
-						"Amaya dialogue",
-						"Amayamsg",
-						"libdialogue",
-						"corrdialogue");
+	my @list = ( 	"Quit",																	#0
+						"Amaya dialogues (menus with xx-amayadialogue files)",	#1	
+						"Amaya general messages ( with xx-amayamsg files)",		#2
+						"Thot library dialogues ( with xx-libdialogue files)",	#3
+						"Spell checker dialogues ( with xx-corrdialogue files)");#4
 	my $count = 0;
 	my $choice = 0;
 
@@ -95,14 +96,17 @@ sub menu {
 			"\t\tGestionnaire des dialogues d'Amaya\n";
 	do {
 		do {
-			print "\nQue voulez-vous traiter?\n";
+			print "\nWhat dialogue type would you like to process?\n";
 			$count = 0;
 			foreach (@list) {
 				print "\t" . $count++ . "=>\t$_\n";
 			}
-			print " Votre choix:\t";
+			print " Our choice [0]:\t";
 			$choice = <STDIN> ;
 			chomp ($choice);
+			if ($choice eq "") {
+				$choice = 0;
+			}
 		}
 		while ( $choice eq "" ||$choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
 		
@@ -122,27 +126,29 @@ sub menu1 {
 	my $choice;
 	my $special; 
 	my @list = ( 
-		"Rien", 											#0
-		"Initialiser la base" ,						#1
-		"Ajouter/ Mettre a jour une langue", 	#2
-		"Editer les fichiers de dialogue",		#3
-		"Ajouter une etiquette",					#4
-		"Supprimer une etiquette");				#5
-	if ($last_choice == 1 )	{						#6 
-		push (@list,"Forcer la base a se mettre en conformite avec \"EDITOR.h\"" ); 
-	}	
+		"Previous menu", 									#0
+		"Init the XML base" ,							#1
+		"Adding/Updating a language", 				#2
+		"Export all dialogues files",					#3
+		"Add a label",										#4
+		"Delete a label",									#5						
+		"Force the base into conformity with \"EDITOR.h\""#6 
+		);
 	my $lang = "";
 	my @command = "";
 			
 	do {
-		print "\nQue voulez-vous lui appliquer?\n";
+		print "\nWhat kind of thing would you proceed?\n";
 		$count = 0;
 		foreach (@list) {
 			print "\t" . $count++ . "=>\t$_\n";
 		}
-		print " Votre choix:\t";
+		print " Our choice [0]:\t";
 		$choice = <STDIN> ;
-		chomp ($choice); 
+		chomp ($choice);
+		if ($choice eq "") {
+			$choice = 0;
+		} 
 	}
 	while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
 	print "\n";
@@ -159,16 +165,12 @@ sub menu1 {
 				&& $_ !~ /^non/i					
 		);
 		if ( /^o/i || /^oui/i ) {
-			if (-r $OUT_PUT_directory . $base_name { $index{ $last_choice} }) {	# To avoid problems.
-				rename ($OUT_PUT_directory . $base_name { $index{ $last_choice} },
-						$OUT_PUT_directory . $base_name { $index{ $last_choice}} . "old" );
-			}
 			Initialisation::create_base ( $head_dir{ $index{ $last_choice} }, 
 													$head_name{ $index{ $last_choice} },
 													$OUT_PUT_directory, 
 													$base_name { $index{ $last_choice} });
 			# to initialise with english
-			print "Remplissage de la base avec l'anglais par default\n";
+			print "now,fill the base with english by default\n";
 			$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
 			$Import_am_msg::basefile = $OUT_PUT_directory . $base_name { $index{ $last_choice}};
 			$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
@@ -180,7 +182,7 @@ sub menu1 {
 	}
 	elsif ($choice == 2) {
 	
-		print "Quelle langue voulez vous traiter?\n";
+		print "What language do you want to treat? (in two letters i.e.: en or fr)\n";
 		$lang = <STDIN>;
 		chomp $lang;
 		{	

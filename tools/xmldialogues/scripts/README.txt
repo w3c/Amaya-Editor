@@ -24,6 +24,8 @@ If its your first used,
 - type 'install Bundle::CPAN'
 now you are loading the module CPAN that functions as RPM but specific to Perl
 let the default mode installation and don't answer yes to parametrability.
+Any parametres will be asked to indicate by exemple the ftp site (if you don't
+have any idee answer ftp://ftp.lib6.fr/pub/perl/CPAN/)
 
 - and 'install XML::Parser'
 - and 'install Unicode::String'

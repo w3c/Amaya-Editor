@@ -46,15 +46,15 @@ use vars  qw(		$in_labelfile
 	
 	
 # declaration static of the files used 
-	my $language_code ;
-	my $in_textfile ;
-	my $newbasefile ;
+	my $language_code = "";
+	my $in_textfile = "";
+	my $newbasefile = "";
 
 # declaration of the global variables used in all the process	
-	my %labels;	#values of label (=key)and their reference 
-	my %texts;	#references (=key) and their text
-	my $current_label;	#to notice the current label occured ,in which we are
-	my $current_tag; #to notice in which tag we are
+	my %labels = ();	#values of label (=key)and their reference 
+	my %texts = ();	#references (=key) and their text
+	my $current_label = "";	#to notice the current label occured ,in which we are
+	my $current_tag = ""; #to notice in which tag we are
 	my $english_text = "";
 	my $found = 0; #boolean used during the parse of a whole label to treat the new adds
 	my $modification_necessary = 0; #boolean used during the parse of a whole label to treat the updating

@@ -91,7 +91,7 @@ sub export {
 								
 # pb pour le cas ou les fichiers existent deja			
 	open ( IN, "<$base") || die "can't read $base because: $! \n";
-	push (@list_of_dialogues_files, "$base") ;
+	#push (@list_of_dialogues_files, "$base") ;
 	
 	$parser->parse (*IN); 
 	
