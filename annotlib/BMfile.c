@@ -1362,8 +1362,12 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
   char *uri_str;
   char *tmp;
 
-  /* make a query for all statements related to a given url */
+  /* update the modified date parameter */
+  if (me->modified)
+    TtaFreeMemory (me->modified);
+  me->modified = StrdupDate ();
 
+  /* make a query for all statements related to a given url */
   subject = librdf_new_node_from_uri_string (world, me->self_url);
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
