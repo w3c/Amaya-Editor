@@ -209,23 +209,23 @@
 207 Vertical
 208 Apaisado
 209 Activar FTP (experimental)
-210 **This document is incomplete, don't save it - See Views/Show parsing errors
+210 El document ha sido truncado. No lo salve - Vea Vistas/Mostrar fichero log
 211 En el perfil actual de Amaya:
 212 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
 213 La codificación de este documento no está soportada por Amaya. Si la edita, puede perder información
-214 **This document has no encoding declaration
-215 **There is no encoding, set it to ISO_8859_1 ?
+214 El documento no tiene una declaracion de codage
+215 Ningun codage declarado. Utilisar ISO_8859_1 ?
 216 No disponible
 217 Navegar
 218 Navegador de ficheros
 219 Selección
-220 **Annotation Local Filter Menu
-221 **Show
-222 **Hide
-223 **Show all
-224 **Hide all
-225 *** means hidden, - means partially hidden
-226 **Filter options
-227 **By author
-228 **By type
-229 **By server
+220 Filtro local de annotaciones
+221 Mostrar
+222 Esconder
+223 Mostrar todo
+224 Esconder todo
+225 * significa escondido, - significa parcialmente escondido
+226 Opciones de filtrado
+227 Por autor
+228 Por typo
+229 Por servidor
