@@ -8,11 +8,7 @@
 
 extern void ParseCharset ( Element el,
                            Document doc );
-extern void XhtmlMapEntity ( STRING entityName,
-                             int *entityValue,
-                             STRING alphabet );
 extern void XhtmlEntityCreated ( int entityValue,
-                                 Language lang,
                                  STRING entityName,
                                  ParserData *context );
 extern void XhtmlElementComplete ( Element el,
@@ -26,11 +22,7 @@ extern void MapHTMLAttributeValue ( CHAR_T* AttrVal,
 
 extern void ParseCharset (/* Element el,
                              Document doc */);
-extern void XhtmlMapEntity (/* STRING entityName,
-                               int *entityValue,
-                               STRING alphabet */);
 extern void XhtmlEntityCreated (/* int entityValue,
-                                   Language lang,
                                    STRING entityName,
                                    ParserData *context */);
 extern void XhtmlElementComplete (/* Element el,

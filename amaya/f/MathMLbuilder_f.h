@@ -21,11 +21,7 @@ extern void MathMLEntityCreated ( USTRING entityValue,
                                   Language lang,
                                   STRING entityName,
                                   Document doc );
-extern void MapMathMLEntityWithExpat ( STRING entityName,
-                                       int* entityValue,
-                                       STRING alphabet );
 extern void MathMLEntityCreatedWithExpat ( int entityValue,
-                                           Language lang,
                                            STRING entityName,
                                            ParserData *XmlContext );
 extern ThotBool ElementNeedsPlaceholder ( Element el );
@@ -99,11 +95,7 @@ extern void MathMLEntityCreated (/* USTRING entityValue,
                                     Language lang,
                                     STRING entityName,
                                     Document doc */);
-extern void MapMathMLEntityWithExpat (/* STRING entityName,
-                                         int* entityValue,
-                                         STRING alphabet */);
 extern void MathMLEntityCreatedWithExpat (/* int entityValue,
-                                             Language lang,
                                              STRING entityName,
                                              ParserData *XmlContext */);
 extern ThotBool ElementNeedsPlaceholder (/* Element el */);

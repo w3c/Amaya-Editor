@@ -86,11 +86,9 @@ typedef struct _XMLparserContext
     Proc	   MapAttribute;	/* returns the Thot attribute corresp.
 					   to an XML attribute name */
     Proc	   MapAttributeValue;	/* returns the Thot value corresp. to
-					   the name of an XML attribute value*/
-    Proc	   MapEntity;		/* returns the value of a XML entity */
-    
+					   the name of an XML attribute value */    
     Proc	   EntityCreated;	/* action to be called when an entity
-					   has been parsed */
+					   has been parsed  */
     Proc	   CheckContext;        /* action to be called to verify if an
 					   element is allowed in the current
 					   structural context */
@@ -340,7 +338,6 @@ static void    InitXmlParserContexts ()
    ctxt->XMLtype = XHTML_TYPE;
    ctxt->MapAttribute = (Proc) MapHTMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
-   ctxt->MapEntity = (Proc) XhtmlMapEntity;
    ctxt->EntityCreated = (Proc) XhtmlEntityCreated;
    ctxt->CheckContext = (Proc) XhtmlCheckContext;
    ctxt->CheckInsert = (Proc) XhtmlCheckInsert;
@@ -373,7 +370,6 @@ static void    InitXmlParserContexts ()
    ctxt->XMLtype = MATH_TYPE;
    ctxt->MapAttribute = (Proc) MapMathMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapMathMLEntityWithExpat;
    ctxt->EntityCreated = (Proc) MathMLEntityCreatedWithExpat;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
@@ -406,7 +402,6 @@ static void    InitXmlParserContexts ()
    ctxt->XMLtype = GRAPH_TYPE;
    ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapGraphMLEntityWithExpat;
    ctxt->EntityCreated = (Proc) GraphMLEntityCreatedWithExpat;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
@@ -439,7 +434,6 @@ static void    InitXmlParserContexts ()
    ctxt->XMLtype = XLINK_TYPE;
    ctxt->MapAttribute = (Proc) MapXLinkAttribute;
    ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
-   ctxt->MapEntity = NULL;
    ctxt->EntityCreated = NULL;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
@@ -2870,22 +2864,17 @@ CHAR_T     *attrValue;
    put the corresponding character in the corresponding element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateXmlEntity (CHAR_T *data, int length)
+static void     CreateXmlEntity (CHAR_T *data, int length)
 #else
-static void         CreateXmlEntity (data, length)
-CHAR_T  *data;
-int      length;
+static void     CreateXmlEntity (data, length)
+CHAR_T    *data;
+int        length;
 #endif
 {
-   CHAR_T         msgBuffer[MaxMsgLength];
-   STRING         buffer;
-   CHAR_T	  alphabet;
-   int            entityValue;	
-   int            i;
-   Language	  lang = 0;
-
-   if (currentParserCtxt == NULL)
-     return;
+   CHAR_T       msgBuffer[MaxMsgLength];
+   STRING       buffer;
+   int          entityValue, i;	
+   ThotBool     found;
 
    /* Name of the entity without '&' or ';' */
    buffer = TtaAllocString (length);
@@ -2895,29 +2884,33 @@ int      length;
      buffer[i-1] = WC_EOS;
    else
      buffer[i] = WC_EOS;
-   
-   /* Search the entity in the corresponding table */
-   (*(currentParserCtxt->MapEntity)) (buffer, &entityValue, &alphabet);
-   
-   if (alphabet == WC_EOS)
+
+  /* Look at the current context if there is one */
+   if (currentParserCtxt != NULL)
      {
-       /* Unknown entity */
-       lang = -1;
+       found = MapXMLEntity (currentParserCtxt->XMLtype,
+			     buffer, &entityValue);
+       if (found)
+	 {
+	   /* Creation of the entity */
+	   if (!currentAttribute)
+	     (*(currentParserCtxt->EntityCreated)) (entityValue,
+						    buffer, &XMLcontext);
+	 }
+       else
+	 {
+	   /* Unknown entity */
+	   usprintf (msgBuffer, TEXT("Unknown XML entity %s"), buffer);
+	   XmlParseError (errorParsing, msgBuffer, 0);
+	 }
+    }
+   else
+     {
+       /* not found */
        usprintf (msgBuffer, TEXT("Unknown XML entity %s"), buffer);
        XmlParseError (errorParsing, msgBuffer, 0);
+       return;
      }
-   else if (alphabet != TEXT(' '))   
-       lang = TtaGetLanguageIdFromAlphabet(alphabet);
-   
-   /* Creation of the entity */
-   if (currentAttribute)
-     {
-       /* Entity in an attribute value */
-     }
-   else     
-     /* Entity in an element */
-     (*(currentParserCtxt->EntityCreated)) (entityValue, lang,
-					    buffer, &XMLcontext);
 
    TtaFreeMemory (buffer);
 }

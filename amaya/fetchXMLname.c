@@ -326,7 +326,6 @@ ElementType      el;
   return ret;
 }
 
-
 /*----------------------------------------------------------------------
    MapXMLAttribute
    Generic function which searchs in the Attribute Mapping Table (table)
@@ -456,4 +455,52 @@ Document          doc;
     return TEXT("");
   else
     return TEXT("???");
+}
+
+/*----------------------------------------------------------------------
+   MapXMLEntity
+   Generic function which searchs in the Entity Mapping Table (table)
+   the entry entityName and give the corresponding decimal value.
+   Returns FALSE if entityName is not found.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
+#else
+ThotBool   MapXMLEntity (XMLtype, entityName, entityValue)
+int        XMLtype;
+STRING     entityName
+int       *entityValue
+#endif
+{
+  int         i;
+  XmlEntity  *ptr;
+  ThotBool    found;
+
+  i = 1;
+  found = FALSE;
+
+  /* Select the right table */
+  if (XMLtype == XHTML_TYPE)
+    ptr = XhtmlEntityTable;
+  else if (XMLtype == MATH_TYPE)
+    ptr = MathEntityTable;
+  else
+    ptr = NULL;
+  
+  if (ptr == NULL)
+    return FALSE;
+
+  /* look for the first concerned entry in the table */
+  for (i = 0; ptr[i].charCode >= 0 && !found; i++)
+    found = !ustrcmp (ptr[i].charName, entityName);
+  
+  if (found)
+    {
+      /* entity found */
+      i--;
+      *entityValue = ptr[i].charCode;
+      return TRUE;
+    }
+  else
+    return FALSE;
 }

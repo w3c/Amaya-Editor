@@ -260,124 +260,69 @@ Document doc;
      }
 }
 
-/*---------------------------------------------------------------------------
-   XhtmlMapEntity
-   Search that entity in the entity table and return the corresponding value.
-  ---------------------------------------------------------------------------*/
-#ifdef __STDC__
-void	XhtmlMapEntity (STRING  entityName, int *entityValue, STRING  alphabet)
-#else
-void	XhtmlMapEntity (entityName, entityValue, alphabet)
-STRING  entityName;
-int    *entityValue;
-STRING  alphabet;
-#endif
-{
-  int        i;
-  ThotBool   found;
-
-  found = FALSE;
-  for (i = 0; pXhtmlEntityTable[i].charCode >= 0 && ! found; i++)
-     found = !ustrcmp (pXhtmlEntityTable[i].charName, entityName);
-
-  if (found)
-    {
-      /* entity found */
-      i--;
-      *entityValue = pXhtmlEntityTable[i].charCode;
-      *alphabet = pXhtmlEntityTable[i].charAlphabet;
-    }
-  else
-    *alphabet = WC_EOS;
-}
-
-/*----------------------------------------------------------------------
-  PutNonISOlatin1Char     
-  Put a Unicode character in the input buffer.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    PutNonISOlatin1Char (int code,
-				    STRING prefix,
-				    STRING entityName,
-				    ParserData *context)
-#else
-static void    PutNonISOlatin1Char (code, prefix, entityName, context)
-int            code;
-STRING         prefix;
-STRING         entityName;
-ParserData    *context;
-#endif
-{
-   Language	 lang, l;
-   ElementType	 elType;
-   Element	 elText;
-   AttributeType attrType;
-   Attribute	 attr;
-   CHAR_T	 buffer[MaxEntityLength+10];
-
-   /* create a new text leaf */
-   elType.ElSSchema = TtaGetDocumentSSchema (context->doc);
-   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-   elText = TtaNewElement (context->doc, elType);
-   XmlSetElemLineNumber (elText);
-   InsertXmlElement (&elText);
-   context->lastElement = elText;
-   context->lastElementClosed = TRUE;
-   
-   /* try to find a fallback character */
-   l = context->language;
-   GetFallbackCharacter (code, buffer, &lang);
-   
-   /* put that fallback character in the new text leaf */
-   TtaSetTextContent (elText, buffer, lang, context->doc);
-   context->language = l;
-   
-   /* make that text leaf read-only */
-   TtaSetAccessRight (elText, ReadOnly, context->doc);
-   
-   /* associate an attribute EntityName with the new text leaf */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (context->doc);
-   attrType.AttrTypeNum = HTML_ATTR_EntityName;
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (elText, attr, context->doc);
-   buffer[0] = '&';
-   ustrcpy (&buffer[1], prefix);
-   ustrcat (buffer, entityName);
-   ustrcat (buffer, TEXT(";"));
-   TtaSetAttributeText (attr, buffer, elText, context->doc);
-   context->mergeText = FALSE;
-}
-
 /*----------------------------------------------------------------------
    XhtmlEntityCreated
    A XTHML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        XhtmlEntityCreated (int entityValue, Language lang,
-				STRING entityName, ParserData *context)
+void        XhtmlEntityCreated (int entityValue,
+				STRING entityName,
+				ParserData *context)
 #else
-void        XhtmlEntityCreated (entityValue, lang, entityName, context)
+void        XhtmlEntityCreated (entityValue, entityName, context)
 int         entityValue;
 Language    lang;
 STRING      entityName;
 ParserData *context;
 #endif
 { 
-  CHAR_T    buffer[2];
-
-  if (lang < 0)
-    PutInXmlElement (entityName);
-  else
+  ElementType	 elType;
+  Element	 elText;
+  AttributeType  attrType;
+  Attribute	 attr;
+  Language	 lang;
+  int		 len;
+  CHAR_T	 buffer[MaxEntityLength+10];
+#define MAX_ENTITY_LENGTH 80
+  
+  if (entityValue < 255)
     {
-      if (entityValue < 255)
-	{
-	  buffer[0] = ((UCHAR_T) entityValue);
-	  buffer[1] = WC_EOS;
-	  PutInXmlElement (buffer);
-	}
-      else
-	PutNonISOlatin1Char (entityValue, TEXT(""), entityName, context);
+      buffer[0] = ((UCHAR_T) entityValue);
+      buffer[1] = WC_EOS;
+      lang = TtaGetLanguageIdFromAlphabet('L');
     }
+  else
+    /* try to find a fallback character */
+    GetFallbackCharacter (entityValue, buffer, &lang);
+
+  /* create a new text leaf */
+  elType.ElSSchema = TtaGetDocumentSSchema (context->doc);
+  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+  elText = TtaNewElement (context->doc, elType);
+  XmlSetElemLineNumber (elText);
+  InsertXmlElement (&elText);
+  TtaSetTextContent (elText, buffer, lang, context->doc);
+  context->lastElement = elText;
+  context->lastElementClosed = TRUE;
+  context->mergeText = FALSE;
+  
+  /* Make that text leaf read-only */
+  TtaSetAccessRight (elText, ReadOnly, context->doc);
+  
+  /* Associate an attribute EntityName with the new text leaf */
+  attrType.AttrSSchema = TtaGetDocumentSSchema (context->doc);
+  attrType.AttrTypeNum = HTML_ATTR_EntityName;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (elText, attr, context->doc);
+
+  len = ustrlen (entityName);
+  if (len > MAX_ENTITY_LENGTH -3)
+    len = MAX_ENTITY_LENGTH -3;
+  buffer[0] = '&';
+  ustrncpy (&buffer[1], entityName, len);
+  buffer[len+1] = ';';
+  buffer[len+2] = WC_EOS;
+  TtaSetAttributeText (attr, buffer, elText, context->doc);
 }
 
 /*----------------------------------------------------------------------

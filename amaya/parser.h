@@ -78,7 +78,6 @@ typedef struct _XmlEntity
 {
   XmlEntityName    charName;      /* entity name */
   int              charCode;      /* decimal code of ISO-Latin1 char */
-  CHAR_T           charAlphabet;  /* 'L' = ISO-Latin-1, 'G' = Symbol */
 }
 XmlEntity;
 

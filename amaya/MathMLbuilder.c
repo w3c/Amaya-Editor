@@ -24,6 +24,7 @@
 #include "style.h"
 #include "undo.h"
 
+
 /* Define a pointer to let parser functions access the Math entity table */
 extern XmlEntity *pMathEntityTable;
 
@@ -247,7 +248,8 @@ STRING  alphabet;
       i--;
       entityValue[0] = (UCHAR_T) pMathEntityTable[i].charCode;
       entityValue[1] = EOS;
-      *alphabet = pMathEntityTable[i].charAlphabet;
+      *alphabet = "G";
+      /* *alphabet = pMathEntityTable[i].charAlphabet;*/
     }
   else
     {
@@ -322,51 +324,18 @@ Document    doc;
    TtaSetAttributeText (attr, buffer, elText, doc);
 }
 
-/*---------------------------------------------------------------------------
-   MapMathMLEntityWithExpat
-   Search that entity in the entity table and return the corresponding value.
-  ---------------------------------------------------------------------------*/
-#ifdef __STDC__
-void	MapMathMLEntityWithExpat (STRING entityName,
-				  int* entityValue,
-				  STRING alphabet)
-#else
-void	MapMathMLEntityWithExpat (entityName, entityValue, alphabet)
-STRING  entityName;
-int    *entityValue;
-STRING  alphabet;
-#endif
-{
-  int       i;
-  ThotBool  found;
-
-  found = FALSE;
-  for (i = 0; pMathEntityTable[i].charCode >= 0 && !found; i++)
-    found = !ustrcmp (pMathEntityTable[i].charName, entityName);
-
-  if (found)
-    /* entity found */
-    {
-      i--;
-      *entityValue = pMathEntityTable[i].charCode;
-      *alphabet = pMathEntityTable[i].charAlphabet;
-    }
-  else
-    *alphabet = EOS;
-}
-
 /*----------------------------------------------------------------------
    MathMLEntityCreatedWithExpat
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void  MathMLEntityCreatedWithExpat (int entityValue, Language lang,
-				    STRING  entityName, ParserData *XmlContext)
+void  MathMLEntityCreatedWithExpat (int entityValue,
+				    STRING entityName,
+				    ParserData *XmlContext)
 #else
-void  MathMLEntityCreatedWithExpat (entityValue, lang, entityName, XmlContext)
+void  MathMLEntityCreatedWithExpat (entityValue, entityName, XmlContext)
 int         entityValue;
-Language    lang;
 STRING      entityName;
 ParserData *XmlContext;
 
@@ -376,43 +345,29 @@ ParserData *XmlContext;
   Element	 elText;
   AttributeType  attrType;
   Attribute	 attr;
-  int		 len, code;
+  int		 len;
+  Language       lang;
 #define MAX_ENTITY_LENGTH 80
   CHAR_T	 buffer[MAX_ENTITY_LENGTH];
   
-  if (lang < 0)
-    /* Unknown entity */
-    {
-      /* By default display a question mark */
-      buffer[0] = '?';
-      buffer[1] = WC_EOS;
-      lang = TtaGetLanguageIdFromAlphabet('L');
-      /* Let's see if we can do more */
-      if (entityName[0] == '#')
-	/* It's a number */
-	{
-	  if (entityName[1] == 'x')
-	    /* It's a hexadecimal number */
-	    usscanf (&entityName[2], TEXT("%x"), &code);
-	  else
-	    /* It's a decimal number */
-	    usscanf (&entityName[1], TEXT("%d"), &code);
-	  
-	  GetFallbackCharacter (code, buffer, &lang);
-	}
-    }
-  else
+  if (entityValue < 255)
     {
       buffer[0] = ((UCHAR_T) entityValue);
       buffer[1] = WC_EOS;
+      lang = TtaGetLanguageIdFromAlphabet('L');
     }
+  else
+    /* Try to find a fallback character */
+    GetFallbackCharacter (entityValue, buffer, &lang);
   
-  elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
+  /* Create a new text leaf */
   elType.ElSSchema = GetMathMLSSchema (XmlContext->doc);
+  elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
   elText = TtaNewElement (XmlContext->doc, elType);
   XmlSetElemLineNumber (elText);
   InsertXmlElement (&elText);
   TtaSetTextContent (elText, buffer, lang, XmlContext->doc);
+  XmlContext->lastElement = elText;
   XmlContext->lastElementClosed = TRUE;
   XmlContext->mergeText = FALSE; 
   
