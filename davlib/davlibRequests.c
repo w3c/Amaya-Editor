@@ -15,7 +15,10 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.10  2002-06-13 16:10:13  kirschpi
+ ** Revision 1.11  2002-06-18 08:21:48  kahan
+ ** JK: removed some compiler warnings when compiling without the DAV_DEBUG flag.
+ **
+ ** Revision 1.10  2002/06/13 16:10:13  kirschpi
  ** New dialogue "WebDAV Preferences"
  ** Corrections due last commit by JK
  ** Manuele
@@ -1506,7 +1509,9 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
 
     AHTReqContext *context = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx  = (context)?context->dav_context:NULL;
+#ifdef DEBUG_DAV
     char          *format  = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
+#endif /* DEBUG_DAV */
     HTList        *matches = NULL;
     char *lockdiscovery    = NULL;
     LockLine     *lockinfo = NULL;
@@ -1723,7 +1728,9 @@ int FilterPropfind_handler (HTRequest * request, HTResponse * response,
 
     AHTReqContext *context = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx  = (context)?context->dav_context:NULL;
+#ifdef DEBUG_DAV
     char          *format  = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
+#endif /* DEBUG_DAV*/
     char *out, *deb;
 
     out = deb = NULL;
@@ -1780,7 +1787,9 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
 
     AHTReqContext *context  = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx   = (context)?context->dav_context:NULL;
+#ifdef DEBUG_DAV
     char          *format   = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
+#endif /* DEBUG_DAV */
     LockLine      *lockinfo = NULL;
     char owner[DAV_LINE_MAX];
     char *out, *deb;
