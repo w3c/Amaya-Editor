@@ -368,7 +368,7 @@ dnl
 dnl  ***************************************************************
 
 THOT_VER="2.2"
-AMAYA_VER="1.5"
+AMAYA_VER="2.5"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -418,7 +418,6 @@ if test "$with_thot" = "no" ; then
     build_thot="no"
 else
   if test ! -f $srcdir/thot/Makefile.in ; then
-    AC_MSG_WARN(Thot editor sources not found, disabling Thot build !)
     build_thot="no"
   fi
 fi

@@ -6255,7 +6255,7 @@ fi
 
 
 THOT_VER="2.2"
-AMAYA_VER="1.5"
+AMAYA_VER="2.5"
 
 CEXTRACT_VER="1.7"
 CEXTRACT_FLAGS="+O"
@@ -6306,7 +6306,6 @@ if test "$with_thot" = "no" ; then
     build_thot="no"
 else
   if test ! -f $srcdir/thot/Makefile.in ; then
-    echo "configure: warning: Thot editor sources not found" 1>&2
     build_thot="no"
   fi
 fi
