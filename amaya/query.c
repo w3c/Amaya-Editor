@@ -37,7 +37,7 @@
 #define DEFAULT_PERSIST_TIMEOUT 60L
 #define DEFAULT_NET_EVENT_TIMEOUT 60000
 /* defines the priority for image content negotiation */
-#define IMAGE_ACCEPT_NEGOTIATION "*/*;q=0.1,image/*,image/gif,image/jpeg,image/png"
+#define IMAGE_ACCEPT_NEGOTIATION "*/*;q=0.1,image/*,image/gif,image/jpeg,image/png,image/svg"
 
 /* Amaya includes  */
 #define THOT_EXPORT extern
