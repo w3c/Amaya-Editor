@@ -21,6 +21,8 @@
 
 struct Langue_Ctl   LangTable[MAX_LANGUAGES];
 static char         Langbuffer[2 * MAX_NAME_LENGTH];
+static char         Langbuffer1[2 * MAX_NAME_LENGTH];
+static char         Langbuffer2[2 * MAX_NAME_LENGTH];
 static char         CodeBuffer[2 * MAX_NAME_LENGTH];
 static int          breakPoints[MAX_POINT_COUP];
 static char         StandardLANG[3];
@@ -705,11 +707,11 @@ char *TtaGetLanguageName (Language languageId)
    if (i >= FreeEntry || i < 0)
      {
 	TtaError (ERR_language_not_found);
-	Langbuffer[0] = EOS;
+	Langbuffer1[0] = EOS;
      }
    else
-      strcpy (Langbuffer, LangTable[i].LangName);
-   return Langbuffer;
+      strcpy (Langbuffer1, LangTable[i].LangName);
+   return Langbuffer1;
 }
 
 
@@ -731,11 +733,11 @@ char *TtaGetLanguageCode (Language languageId)
   if (i >= FreeEntry || i < 0)
     {
       TtaError (ERR_language_not_found);
-      Langbuffer[0] = EOS;
+      Langbuffer2[0] = EOS;
     }
   else
-    strcpy (Langbuffer, LangTable[i].LangCode);
-  return Langbuffer;
+    strcpy (Langbuffer2, LangTable[i].LangCode);
+  return Langbuffer2;
 }
 
 

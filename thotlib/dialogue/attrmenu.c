@@ -223,7 +223,10 @@ static void InitFormLanguage (Document doc, View view,
        else
 	 /* initialise le selecteur sur l'entree correspondante a la valeur */
 	 /* courante de l'attribut langue. */
+	 {
 	 label[0] = EOS;
+         strcat (label, languageValue);
+	 }
      }
 
 #ifndef _WINDOWS 
