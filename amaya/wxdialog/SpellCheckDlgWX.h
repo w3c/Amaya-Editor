@@ -19,6 +19,7 @@ public:
     
   // Constructor.
   SpellCheckDlgWX( int ref,
+		   int base,
 		   wxWindow* parent );
   
   // Destructor.                  
@@ -27,12 +28,22 @@ public:
 private:
     // Override base class functions of a wxDialog.
   void OnCancelButton( wxCommandEvent& event );
+  void OnSkipWithoutButton( wxCommandEvent& event );
+  void OnSkipWithButton( wxCommandEvent& event );
+  void OnReplaceWithoutButton( wxCommandEvent& event );
+  void OnReplaceWithButton( wxCommandEvent& event );
+  void OnIgnoreCapitalsChkBox ( wxCommandEvent& event );
+  void OnIgnoreArabicsChkBox ( wxCommandEvent& event );
+  void OnIgnoreRomansChkBox ( wxCommandEvent& event );
+  void OnIgnoreSpecialsChkBox ( wxCommandEvent& event );
+  void OnAreaRadioBox ( wxCommandEvent& event );
  // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
     
 private:
   wxString   m_Printer;
-  int        m_print;
+  int        m_base;
+  int        m_ref;
 };
 
 #endif  //__SPELLCHECKDLGWX_H__

@@ -553,7 +553,7 @@ void TtcSpellCheck (Document doc, View view)
 #ifdef _WX
   {
     ThotBool created;
-    created = CreateSpellCheckDlgWX (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view));
+    created = CreateSpellCheckDlgWX (SpellingBase + ChkrFormCorrect, SpellingBase, TtaGetViewFrame (doc, view));
     if (created)
       {
 	TtaShowDialogue (SpellingBase + ChkrFormCorrect, FALSE);

@@ -157,6 +157,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE1_CHK">
+	             <size>250,-1</size>
                       <label>words that are all caps         </label>
                     </object>
                     <flag>wxLEFT|wxRIGHT</flag>
@@ -164,6 +165,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE2_CHK">
+	             <size>250,-1</size>
                       <label>words with digits</label>
                     </object>
                     <flag>wxLEFT|wxRIGHT</flag>
@@ -171,6 +173,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE3_CHK">
+	             <size>250,-1</size>
                       <label>Roman numerals</label>
                     </object>
                     <flag>wxLEFT|wxRIGHT</flag>
@@ -178,6 +181,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE4_CHK">
+	             <size>250,-1</size>
                       <label>words containing:     </label>
                     </object>
                     <flag>wxLEFT|wxRIGHT</flag>

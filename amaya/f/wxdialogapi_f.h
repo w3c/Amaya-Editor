@@ -29,6 +29,7 @@ extern ThotBool CreateSearchDlgWX ( int ref,
                                     char* caption,
                                     char* searched,
                                     char* replace,
+                                    ThotBool withReplace,
                                     ThotBool searchAfter );
 extern ThotBool CreatePrintDlgWX ( int ref,
                                    ThotWindow parent,
@@ -61,6 +62,7 @@ extern ThotBool CreatePreferenceDlgWX ( int ref,
                                         ThotWindow parent,
                                         const char *url_list );
 extern ThotBool CreateSpellCheckDlgWX ( int ref,
+                                        int base,
                                         ThotWindow parent );
 
 #else /* __STDC__ */
@@ -88,6 +90,7 @@ extern ThotBool CreateSearchDlgWX ( int ref,
                                       char* caption,
                                       char* searched,
                                       char* replace,
+                                      ThotBool withReplace,
                                       ThotBool searchAfter );
 extern ThotBool CreatePrintDlgWX ( int ref,
                                      ThotWindow parent,
@@ -120,6 +123,7 @@ extern ThotBool CreatePreferenceDlgWX ( int ref,
                                           ThotWindow parent,
                                           const char *url_list );
 extern ThotBool CreateSpellCheckDlgWX ( int ref,
+                                          int base,
                                           ThotWindow parent );
 
 #endif /* __STDC__ */

@@ -4,5 +4,5 @@
 extern ThotBool CreateSearchDlgWX (int ref, ThotWindow parent, char *caption,
 				   char* searched,  char* replace,
 				   ThotBool withReplace, ThotBool searchAfter);
-extern ThotBool CreateSpellCheckDlgWX (int ref, ThotWindow parent);
+extern ThotBool CreateSpellCheckDlgWX (int ref, int base, ThotWindow parent);
 #endif /* _WX */
