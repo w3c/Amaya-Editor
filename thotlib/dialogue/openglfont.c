@@ -59,7 +59,6 @@
 static FT_Library FTlib = NULL;
 static int init_done = 0;
 
-
 /*--------------Font Caching---------------------------*/
 
 /*Font Cache */
@@ -227,14 +226,60 @@ static GL_glyph *Char_index_lookup_cache (GL_font *font,
   Cache->character = FT_Get_Char_Index (font->face, 
 				       idx);
   Cache->next = NULL;  
-  MakeBitmapGlyph (font,
-		   Cache->character,
-		   &Cache->glyph);
+
+  if (GL_TransText ())
+    MakePolygonGlyph (font,
+		      Cache->character,
+		      &Cache->glyph);
+  else
+    MakeBitmapGlyph (font,
+		     Cache->character,
+		     &Cache->glyph);
   
   *glyph_index = Cache->character;
   return (&Cache->glyph);  
 }
 
+/*-------------------------------------------------- Char index lookup 
+ ---------------------------------------------------*/
+GL_glyph *Char_index_lookup_cache_poly (GL_font *font,
+				   unsigned int idx,
+				   unsigned int *glyph_index)
+{
+  Char_Cache_index *Cache;
+
+  Cache = font->Cache;
+  if (Cache)
+    while (1)
+      {
+	if (Cache->index == idx)
+	  {
+	    *glyph_index = Cache->character;
+	    return (&Cache->glyph);  
+	  }
+	
+	if (Cache->next)
+	  Cache = Cache->next;      
+	else break;      
+      }
+
+  if (Cache)
+    {
+      Cache->next = TtaGetMemory (sizeof (Char_Cache_index));
+      Cache = Cache->next;  
+    }
+  else 
+    {
+      font->Cache = TtaGetMemory (sizeof (Char_Cache_index));
+      Cache = font->Cache;      
+    }
+  Cache->index = idx;
+  Cache->character = FT_Get_Char_Index (font->face, idx);
+  Cache->next = NULL;  
+  
+  *glyph_index = Cache->character;
+  return (&Cache->glyph);  
+}
 
 
 /*--------------------------------------------------
@@ -810,7 +855,7 @@ static int FontBind;
 
 void SetTextureScale (ThotBool Scaled)
 {   
-  if (GL_NotInFeedbackMode ())
+  if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
       glEnable (GL_TEXTURE_2D);
 
@@ -839,7 +884,7 @@ void SetTextureScale (ThotBool Scaled)
 }
 void StopTextureScale ()
 {   
-  if (GL_NotInFeedbackMode ())
+  if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
       glDeleteTextures (1, &(FontBind));
       glDisable (GL_TEXTURE_2D);
@@ -926,7 +971,11 @@ int UnicodeFontRender (void *gl_font,
  
   if (text == NULL) 
     return 0;
-  
+
+  if (GL_TransText ())
+    return UnicodeFontRenderPoly (gl_font, text, 
+			     x, y, size);
+                     
   if (size > MAX_STRING)
     {
       while (size > MAX_STRING)
@@ -1013,7 +1062,7 @@ int UnicodeFontRender (void *gl_font,
       n--;  
   if (Height <= 0 ||
       Width <= 0 ||
-      miny == 10000)
+      fabs (miny - 10000) < 0.0001)
     return 0;
   
   bitmap_alloc = sizeof (unsigned char)*Height*Width;

@@ -123,8 +123,10 @@ DISPLAY_OBJ = \
 	view/glgradient.o \
 	view/glwindowdisplay.o \
 	view/gldisplay.o \
-	view/animbox.o \
+	view/printgl.o \
+	dialogue/glglyph.o \
 	dialogue/openglfont.o \
+	view/animbox.o \
 	image/encdec.o \
 	dialogue/fontserver.o \
 	dialogue/fontconfig.o \

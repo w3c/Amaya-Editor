@@ -149,7 +149,7 @@ void GL_SwapEnable (int frame);
 /* Picture */
 void GL_TextureMap (void *Image, 
 		    int xFrame, int yFrame, 
-		    int w, int h);
+		    int w, int h, int frame);
 void *Group_shot (int x, int y, 
 		  int width, int height, int frame, ThotBool is_rgb);
 void GL_SetPicForeground ();
@@ -157,6 +157,16 @@ void ResetMainWindowBackgroundColor (int frame);
 void FreeGlTexture (void *Image);
 void FreeGlTextureNoCache (void *Image);
 unsigned char *test_gradien_linear (); 
+
+ThotBool GL_TransText ();
+void GL_SetTransText (ThotBool value);
+
+/*--------- PRINT------------- */
+void PrintBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
+		 PtrAbstractBox pInitAb);
+
+void PrintBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
+ThotBool GL_Printing ();
 
 #ifdef _WINDOWS
 void WinGL_Swap (HDC hDC);

@@ -51,6 +51,7 @@
 #include "tesse_f.h"
 #include "applicationapi_f.h"
 
+#include "glprint.h"
 
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
@@ -157,12 +158,20 @@ static ThotBool Software_Mode = TRUE;
 
 /*if just computing bounding box*/
 static ThotBool NotFeedBackMode = TRUE;
+ 
+/*if just computing bounding box*/
+static ThotBool PRINTINGMode = FALSE;
 
 /*One Timer to rule them all */
 static int      AnimTimer = 0; 
 
 /*Control When swapping applies*/
 static ThotBool SwapOK[MAX_FRAME];
+
+ThotBool GL_Printing () 
+{
+  return PRINTINGMode;
+}
 
 ThotBool GL_Err() 
 {
@@ -1668,13 +1677,17 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
       switch (Trans->TransType)
 	{
 	case  PtElviewboxScale:
-	  w_scale = (double) (Width / Trans->XScale); 
-	  h_scale = (double) (Height / Trans->YScale);
+	  w_scale = (double) (Width / Trans->XScale);  
+ 	  h_scale = (double) (Height / Trans->YScale); 
 	  is_scaled = TRUE;
 	  break;
 	case PtElviewboxTranslate:
-	  x_trans = Trans->XScale; 
-	  y_trans = Trans->YScale;
+/* 	  x_trans = PixelValue (Trans->XScale, UnPixel, NULL, */
+/* 				ViewFrameTable[ActiveFrame - 1].FrMagnification); */
+/* 	  y_trans = PixelValue (Trans->YScale, UnPixel, NULL, */
+/* 				ViewFrameTable[ActiveFrame - 1].FrMagnification); */
+ 	  x_trans = Trans->XScale;  
+ 	  y_trans = Trans->YScale; 
 	  is_translated = TRUE;
 	  break;
 	default:
@@ -1734,9 +1747,9 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
 	  switch (Trans->TransType)
 	    {
 	    case  PtElScale:
-	      glScalef (Trans->XScale, 
-			Trans->YScale, 
-			1.0);
+	      glScalef (Trans->XScale,  
+			Trans->YScale,  
+ 			1.0); 
 	      break;
 	    case PtElAnimTranslate:
 	    case PtElTranslate:
@@ -2008,8 +2021,43 @@ ThotBool GL_NotInFeedbackMode ()
   return NotFeedBackMode;
 }
 
+static ThotBool TransText = FALSE;
+
+/*---------------------------------------------------
+  GL_TransText : If text must be texture or polygon
+  ----------------------------------------------------*/
+ThotBool GL_TransText ()
+{
+  return TransText;
+}
+
+/*---------------------------------------------------
+  GL_SetTransText : set if text must be texture or polygon
+  ----------------------------------------------------*/
+void GL_SetTransText (ThotBool value)
+{
+  TransText = value;
+}
+
 #define FEEDBUFFERSIZE 32768
 
+/*---------------------------------------------------
+  PrintBox :  	    
+  ----------------------------------------------------*/
+void PrintBox (PtrBox box, int frame, 
+			 int xmin, int xmax, 
+			 int ymin, int ymax)
+{
+  GLfloat feedBuffer[FEEDBUFFERSIZE];
+
+  glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
+  NotFeedBackMode = FALSE;  
+  glRenderMode (GL_FEEDBACK);
+  DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+  NotFeedBackMode = TRUE;
+  GLParseFeedbackBuffer (feedBuffer);
+  NotFeedBackMode = TRUE;
+}
 /*---------------------------------------------------
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
@@ -2021,38 +2069,41 @@ void ComputeBoundingBox (PtrBox box, int frame,
 {
   GLfloat feedBuffer[FEEDBUFFERSIZE];
   GLint   size;
-    
-  glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
-  NotFeedBackMode = FALSE;  
-  glRenderMode (GL_FEEDBACK);
-  DisplayBox (box, frame, xmin, xmax, ymin, ymax);
-  size = glRenderMode (GL_RENDER);
-  NotFeedBackMode = TRUE;
-  if (size > 0)
-    {
-      if (size > FEEDBUFFERSIZE)
-	size = FEEDBUFFERSIZE;
-
-      box->BxClipX = -1;
-      box->BxClipY = -1;
-      getboundingbox (size, feedBuffer, frame,
-		      &box->BxClipX,
-		      &box->BxClipY,
-		      &box->BxClipW,
-		      &box->BxClipH);    
   
-      /* printBuffer (size, feedBuffer); */ 
-	  
-      box->BxBoundinBoxComputed = TRUE; 
-    }
-  else
+  if (NotFeedBackMode)
     {
-      box->BxClipX = box->BxXOrg;
-      box->BxClipY = box->BxYOrg;
-      box->BxClipW = box->BxW;
-      box->BxClipH = box->BxH;
-      box->BxBoundinBoxComputed = FALSE; 
-    }   
+      glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
+      NotFeedBackMode = FALSE;  
+      glRenderMode (GL_FEEDBACK);
+      DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+      size = glRenderMode (GL_RENDER);
+      NotFeedBackMode = TRUE;
+      if (size > 0)
+	{
+	  if (size > FEEDBUFFERSIZE)
+	    size = FEEDBUFFERSIZE;
+
+	  box->BxClipX = -1;
+	  box->BxClipY = -1;
+	  getboundingbox (size, feedBuffer, frame,
+			  &box->BxClipX,
+			  &box->BxClipY,
+			  &box->BxClipW,
+			  &box->BxClipH);    
+  
+	  /* printBuffer (size, feedBuffer); */ 
+	  
+	  box->BxBoundinBoxComputed = TRUE; 
+	}
+      else
+	{
+	  box->BxClipX = box->BxXOrg;
+	  box->BxClipY = box->BxYOrg;
+	  box->BxClipW = box->BxW;
+	  box->BxClipH = box->BxH;
+	  box->BxBoundinBoxComputed = FALSE; 
+	}   
+    }
 }
 
 /*---------------------------------------------------
@@ -2065,24 +2116,27 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
   GLfloat feedBuffer[4096];
   GLint size;
   
-  box->BxBoundinBoxComputed = TRUE; 
-  glFeedbackBuffer (2048, GL_2D, feedBuffer);
-  NotFeedBackMode = FALSE;
-  glRenderMode (GL_FEEDBACK);
-  DrawFilledBox (box->BxAbstractBox, frame, xmin, xmax, ymin, ymax);
-  size = glRenderMode (GL_RENDER);
-  NotFeedBackMode = TRUE;
-  if (size > 0)
+  if (NotFeedBackMode)
     {
-      box->BxClipX = -1;
-      box->BxClipY = -1;
-      getboundingbox (size, feedBuffer, frame,
-		      &box->BxClipX,
-		      &box->BxClipY,
-		      &box->BxClipW,
-		      &box->BxClipH);     
       box->BxBoundinBoxComputed = TRUE; 
-      /* printBuffer (size, feedBuffer); */
+      glFeedbackBuffer (2048, GL_2D, feedBuffer);
+      NotFeedBackMode = FALSE;
+      glRenderMode (GL_FEEDBACK);
+      DrawFilledBox (box->BxAbstractBox, frame, xmin, xmax, ymin, ymax);
+      size = glRenderMode (GL_RENDER);
+      NotFeedBackMode = TRUE;
+      if (size > 0)
+	{
+	  box->BxClipX = -1;
+	  box->BxClipY = -1;
+	  getboundingbox (size, feedBuffer, frame,
+			  &box->BxClipX,
+			  &box->BxClipY,
+			  &box->BxClipW,
+			  &box->BxClipH);     
+	  box->BxBoundinBoxComputed = TRUE; 
+	  /* printBuffer (size, feedBuffer); */
+	}
     }
 }
 /*----------------------------------------------------------------------
@@ -2276,6 +2330,70 @@ static void TtaChangePlay (int frame)
 	    }
       }  
 }
+
+
+void PrintGL (int frame)
+{
+  char             file[2048];
+  FILE             *fp;
+  GLint            viewport[4];
+  ViewFrame        *pFrame;
+
+  if (frame > 0 && 
+      frame < MAX_FRAME && 
+      GL_prepare (frame))
+    {
+      viewport[0] = 0;
+      viewport[1] = 0;
+      viewport[2] = FrameTable[frame].FrWidth;
+      viewport[3] = FrameTable[frame].FrHeight;
+ 
+      file[0] = '\0';
+      strcat (file, "/home/cheyroul/test.ps");
+
+      fp = fopen (file, "w");
+
+      if(!fp)
+	{
+	  printf ("Unable to open file %s for writing\n", file);
+	  exit (1);
+	}
+
+      printf ("Saving image to file %s... ", file);
+      fflush (stdout);
+
+      if (GLBeginPage (file, "test", 
+		       viewport, fp, file))
+	{
+	  NotFeedBackMode = FALSE;
+	  PRINTINGMode = TRUE;
+
+	  glEnable (GL_POLYGON_SMOOTH);  
+	  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); 
+  
+	  pFrame = &ViewFrameTable[frame - 1];
+
+	  PrintBoxes(frame , pFrame->FrXOrg, 
+		     FrameTable[frame].FrWidth + pFrame->FrXOrg, 
+		     pFrame->FrYOrg, 
+		     FrameTable[frame].FrHeight + pFrame->FrYOrg, 
+		     pFrame->FrAbstractBox);
+	 
+	  GLEndPage ();
+
+	  glDisable (GL_POLYGON_SMOOTH);  
+
+	  NotFeedBackMode = TRUE;
+	  PRINTINGMode = FALSE;
+	}
+
+      fclose (fp);
+
+      printf ("Done!\n");
+      fflush (stdout);
+    }
+}
+
 /*----------------------------------------------------------------------
   TtaPlay : Activate/Deactivate Animation (restart)
   ----------------------------------------------------------------------*/
@@ -2286,7 +2404,7 @@ void TtaPlay (Document doc, View view)
   frame = GetWindowNumber (doc, view);
   TtaChangePlay (frame);
   FrameTable[frame].BeginTime = 0;
-  FrameTable[frame].LastTime = 0;
+  FrameTable[frame].LastTime = 0; 
 }
 
 /*----------------------------------------------------------------------
@@ -2318,7 +2436,7 @@ void TtaPause (int frame)
       }
 }
 /*----------------------------------------------------------------------
- SetCurrentTime : Position current time
+  SetCurrentTime : Position current time
   ----------------------------------------------------------------------*/
 void SetAmayaCurrentTime (AnimTime current_time, int frame)
 {
@@ -2356,7 +2474,7 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
 	}
       current_time -= FrameTable[frame].BeginTime; 
       if (current_time - FrameTable[frame].LastTime < INTERVAL)
-	 current_time = -1;
+	current_time = -1;
     }
   else
     current_time = FrameTable[frame].LastTime; 
@@ -2505,16 +2623,17 @@ void SetGlPipelineState ()
      there was no clipping*/
   glDisable (GL_SCISSOR_TEST);
   /* Modulated Transparency*/
-  glDisable (GL_ALPHA_TEST); 	 
+  glDisable (GL_ALPHA_TEST); 
+	 
   /* Polygon are alway filled (until now)
      Because Thot draws outlined polygons with lines
      so...  if blending svg => GL_FRONT_AND_BACK*/
   glPolygonMode (GL_FRONT, GL_FILL);
-  
   /*  Antialiasing 
       Those Options give better 
       quality image upon performance loss
       Must be a user Option  */
+
   glEnable (GL_LINE_SMOOTH); 
   glHint (GL_LINE_SMOOTH_HINT,  
  	  GL_NICEST);  
@@ -2522,18 +2641,17 @@ void SetGlPipelineState ()
   glEnable (GL_POINT_SMOOTH); 
   glHint (GL_POINT_SMOOTH_HINT, 
 	  GL_NICEST);
-     
-  /* For transparency and beautiful antialiasing*/
-  glEnable (GL_BLEND); 
-
-  glBlendFunc (GL_SRC_ALPHA, 
-	       GL_ONE_MINUS_SRC_ALPHA); 
 
   /* Fastest Texture Mapping*/
   glHint (GL_PERSPECTIVE_CORRECTION_HINT, 
 	  GL_NICEST );    
+
   /* Bitmap font Text writing (even in texture font)*/
-  glPixelStorei (GL_UNPACK_ALIGNMENT, 1); 
+  glPixelStorei( GL_UNPACK_LSB_FIRST, GL_FALSE);
+  glPixelStorei( GL_UNPACK_ROW_LENGTH, 0);
+
+  glPixelStorei( GL_UNPACK_ALIGNMENT, 1);
+
   /* Needs to clear buffer after allocating it before drawing*/
 
   glDisable (GL_SCISSOR_TEST);
@@ -2543,12 +2661,12 @@ void SetGlPipelineState ()
 
   /* Not recommended for hardware cards... 
      Global Antialiasing is done elsewhere...*/
-  /*  glEnable (GL_POLYGON_SMOOTH);   */
+  /* glEnable (GL_POLYGON_SMOOTH);    */
+  /* glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); */ 
+
   /* smooth polygon antialiasing */
   /* glBlendFunc (GL_SRC_ALPHA_SATURATE, GL_ONE); */
-  /* glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
-  
-  
+    
   /* Doesn't compute hidden drawing 
      Doesn't work for our tesselated
      polygons   not CGW oriented...
@@ -2556,6 +2674,10 @@ void SetGlPipelineState ()
   /* glEnable (GL_CULL_FACE); */
   /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
   
+  /* For transparency and beautiful antialiasing*/
+  glEnable (GL_BLEND); 
+  glBlendFunc (GL_SRC_ALPHA, 
+	       GL_ONE_MINUS_SRC_ALPHA); 
   GL_SetOpacity (1000);
   if (GL_Err())
 #ifdef _GTK

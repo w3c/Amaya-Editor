@@ -95,6 +95,14 @@ static void           MakeBitmapGlyph (GL_font *font,
 				       unsigned int g,
 				       GL_glyph *BitmapGlyph);
 
+extern void MakePolygonGlyph (GL_font *font,
+		      unsigned int g,
+			      GL_glyph *BitmapGlyph);
+
+
+
+extern int   UnicodeFontRenderPoly (void *gl_font, wchar_t *string, 
+			 float x, float y, int size);
 #ifndef PADDING
 #define PADDING 1
 #endif 

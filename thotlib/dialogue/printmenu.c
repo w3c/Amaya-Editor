@@ -597,6 +597,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
 #endif /* _WINDOWS */
+ 
 }
 
 /*----------------------------------------------------------------------
@@ -894,7 +895,17 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
 
    /* make an automatic backup */
    if (ok)
-     {
+     { 
+#ifdef _GLPRINT
+       {
+	 int frame;
+	 
+	 frame = 0;
+	 while (document != FrameTable[frame].FrDoc)
+	   frame++;	 
+	 PrintGL (frame);
+       }
+#else /* _GL */
        if (PaperPrint)
 	 Print (PrintDocName,
 		PrintDirName,
@@ -923,6 +934,7 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
 		viewNames,
 		cssNames,
 		document);
+#endif /* _GL */
      }
    /* restores the presentation scheme */
    strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);

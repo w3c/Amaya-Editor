@@ -736,6 +736,7 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
 	      box->BxClipY = box->BxYOrg - FrYOrg;
 	      box->BxClipW = box->BxWidth; 
 	      box->BxClipH = box->BxHeight; 
+	      box->BxBoundinBoxComputed = TRUE;
 	      if (box->BxType == BoPiece ||
 		  box->BxType == BoScript ||
 		  box->BxType == BoMulScript ||
@@ -748,6 +749,7 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
 		      box->BxClipY = box->BxYOrg - FrYOrg;
 		      box->BxClipW = box->BxWidth; 
 		      box->BxClipH = box->BxHeight; 
+		      box->BxBoundinBoxComputed = TRUE;
 		      box = box->BxNexChild;
 		    }
 		}
@@ -841,7 +843,8 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
 		{
 		  if (pAb->AbElement->ElSystemOrigin)
 		    DisplayBoxTransformation (pAb->AbElement->ElTransform, 
-					      pFrame->FrXOrg, pFrame->FrYOrg);
+					      pFrame->FrXOrg, 
+					      pFrame->FrYOrg);
 		  if (pAb->AbElement->ElTransform)
 		    DisplayTransformation (frame,
 					   pAb->AbElement->ElTransform, 
@@ -1032,6 +1035,204 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
     pBox->BxBoundinBoxComputed = TRUE;
   else
     pBox->BxBoundinBoxComputed = FALSE;
+}
+
+
+/*----------------------------------------------------------------------------------
+  PrintBoxes : Print each box.
+  --------------------------------------------------------------------------------*/
+void PrintBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
+				  PtrAbstractBox pInitAb)
+{
+  PtrAbstractBox      pAb, specAb;
+  PtrBox              pBox, box;
+  PtrBox              topBox;
+  ViewFrame          *pFrame;
+  /* PictInfo           *imageDesc; */
+  int                 plane;
+  int                 nextplane;
+  int                 winTop, winBottom;
+  int                 bt, bb;
+  int                 l, h;
+  ThotBool            userSpec = FALSE;
+  int                 Clipx, Clipy, Clipw, Cliph; 
+  ThotBool            FormattedFrame;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  GetSizesFrame (frame, &l, &h);
+  if (xmax == 0 && ymax == 0)
+    {
+      xmax = l; 
+      ymax = h;
+    }
+  winTop = pFrame->FrYOrg;
+  winBottom = winTop + h;
+  pBox = pInitAb->AbBox;
+  if (pBox == NULL)
+    return;
+  /* Display planes in reverse order from biggest to lowest */
+  plane = 65536;
+  nextplane = plane - 1;
+  topBox = NULL;
+  Clipx = -1;	  
+  Clipy = -1; 
+  Clipw = 0; 
+  Cliph = 0;  
+  if (FrameTable[frame].FrView == 1)
+    FormattedFrame = TRUE;
+  else
+    FormattedFrame = FALSE;
+  while (plane != nextplane && pInitAb->AbFirstEnclosed)
+    /* there is a new plane to display */
+    {
+      plane = nextplane;
+      /* Draw all the boxes not yet displayed */
+      pAb = pInitAb->AbFirstEnclosed;
+      while (pAb)
+	{ 
+	  if (pAb->AbDepth == plane &&
+	      pAb != pFrame->FrAbstractBox &&
+	      pAb->AbBox)
+	    {
+	      /* box in the current plane */
+	      pBox = pAb->AbBox;
+	      if (pAb->AbElement && FormattedFrame)
+		{
+		  if (pAb->AbElement->ElSystemOrigin)
+		    DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+					      pFrame->FrXOrg, 
+					      pFrame->FrYOrg);
+		  if (pAb->AbElement->ElTransform)
+		    DisplayTransformation (frame,
+					   pAb->AbElement->ElTransform, 
+					   pBox->BxWidth, 
+					   pBox->BxHeight);     
+		}
+	    
+	      if (pAb->AbLeafType == LtCompound)
+		{
+		  
+		  if (pAb->AbVisibility >= pFrame->FrVisibility &&
+		      (pBox->BxDisplay || pAb->AbSelected))
+		    {
+		      ComputeFilledBox (pBox, frame, xmin, xmax, ymin, ymax);
+		    }		      
+		  if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
+		    {
+		      /* this is a new box */
+		      pBox->BxNew = 0;
+		      specAb = pAb;
+		      while (!userSpec && specAb)
+			{
+			  if (specAb->AbWidth.DimIsPosition ||
+			      specAb->AbHeight.DimIsPosition)
+			    specAb = NULL;
+			  else if (specAb->AbHorizPos.PosUserSpecified ||
+				   specAb->AbVertPos.PosUserSpecified ||
+				   specAb->AbWidth.DimUserSpecified ||
+				   specAb->AbHeight.DimUserSpecified)
+			    {
+			      /* one paramater is given by the user */
+			      /* AddBoxToCreate (create, specAb->AbBox, frame); */
+			      userSpec = TRUE;
+			    }
+			  else
+			    specAb = specAb->AbEnclosing;
+			}
+		    }
+		  PrintBoxes (frame, xmin, xmax, ymin, ymax, pAb);		      
+		}
+	      else
+		{
+		  /* look for the box displayed at the top of the window */
+		  if (pBox->BxType == BoMulScript ||
+		      pBox->BxType == BoSplit)
+		    {
+		      /* the box itself doen't give right positions */
+		      box = pBox->BxNexChild;
+		      bt = box->BxClipY;
+		      /* don't take into account the last empty box */
+		      while (box->BxNexChild &&
+			     (box->BxNexChild->BxNChars > 0 ||
+			      box->BxNexChild->BxNexChild))
+			box = box->BxNexChild;
+		      bb = box->BxClipY + box->BxClipH;
+		    }
+		  else
+		    {
+		      bt = pBox->BxClipY;
+		      bb = pBox->BxClipY + pBox->BxClipH;
+		    }
+		  {
+		    if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+		      /* the box itself doen't give right positions */
+		      box = pBox->BxNexChild;
+		    else
+		      box = pBox;
+		    if (topBox == NULL)
+		      topBox = box;
+		    else if (bt >= winTop && topBox->BxClipY < winTop)
+		      /* the top of the box should be visible */
+		      topBox = box;
+		    userSpec = FALSE;
+		    if (pBox->BxNew)
+		      {
+			/* this is a new box */
+			pBox->BxNew = 0;
+			specAb = pAb;
+			while (!userSpec && specAb)
+			  {
+			    if (specAb->AbWidth.DimIsPosition ||
+				specAb->AbHeight.DimIsPosition)
+			      specAb = NULL;
+			    else if (specAb->AbHorizPos.PosUserSpecified ||
+				     specAb->AbVertPos.PosUserSpecified ||
+				     specAb->AbWidth.DimUserSpecified ||
+				     specAb->AbHeight.DimUserSpecified)
+			      {
+				/* one paramater is given by the user */
+				/* AddBoxToCreate (create, specAb->AbBox, frame); */
+				userSpec = TRUE;
+			      }
+			    else
+			      specAb = specAb->AbEnclosing;
+			  }
+		      }
+		    if (!userSpec)
+		      {
+			if (pBox->BxType == BoSplit || 
+			    pBox->BxType == BoMulScript)
+			  while (pBox->BxNexChild)
+			    {
+			      pBox = pBox->BxNexChild;
+			      PrintBox (pBox, frame, xmin, xmax, ymin, ymax);
+			    }
+			else
+			  PrintBox (pBox, frame, xmin, xmax, ymin, ymax);
+
+		      }
+		  }
+		} 
+	      if (pAb->AbElement && FormattedFrame)
+		{
+		  if (pAb->AbElement->ElSystemOrigin)
+		    DisplayTransformationExit ();
+		  if (IsTransformed (pAb->AbElement->ElTransform))
+		    DisplayTransformationExit ();
+		}
+	    }
+	  else if (pAb->AbDepth < plane)
+	    {
+	      /* keep the lowest value for plane depth */
+	      if (plane == nextplane)
+		nextplane = pAb->AbDepth;
+	      else if (pAb->AbDepth > nextplane)
+		nextplane = pAb->AbDepth;
+	    }
+	  /* get the next sibling */
+	  pAb = pAb->AbNext;
+	}
+    }
 }
 #endif /*_GL*/
 
@@ -1325,7 +1526,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
                       y_real_min, y_real_max;
   int                 OldXOrg, OldYOrg, 
                       ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
-  ThotBool            NotGroupOpacityDisplayed;
+  ThotBool            NotGroupOpacityDisplayed, not_in_feedback;
 
   FrameUpdatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  
@@ -1354,6 +1555,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   OldXOrg = 0;
   OldYOrg = 0;
   ClipXOfFirstCoordSys = ClipYOfFirstCoordSys = 0;
+  not_in_feedback =  GL_NotInFeedbackMode ();
   if (pBox->BxDisplay || pAb->AbSelected)
     DrawFilledBox (pAb, frame, xmin, xmax, ymin, ymax);
   while (plane != nextplane)
@@ -1429,7 +1631,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			  /* 			GL_PushClip (pBox->BxClipX, pBox->BxClipY,  */
 			  /* 					pBox->BxClipW, pBox->BxClipH);   */
 			}
-		      if (pAb->AbOpacity != 1000)
+		      if (pAb->AbOpacity != 1000 &&  not_in_feedback)
 			{
 			  if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
 						pAb->AbElement->ElStructSchema) )
@@ -1622,7 +1824,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	    {	 
 	      if (FormattedFrame)
 		{
-		  OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, TRUE);
+		  OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, not_in_feedback);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		} 
@@ -1638,7 +1840,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		{
 		  if (FormattedFrame)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, TRUE);		  	
+		      OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, not_in_feedback);		  	
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		    }
@@ -1647,7 +1849,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		}
 	      if (FormattedFrame)
 		{	
-		  OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, TRUE);
+		  OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, not_in_feedback);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		}
@@ -1657,7 +1859,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		{
 		  if (FormattedFrame)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, TRUE);
+		      OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, not_in_feedback);
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		    }
@@ -2233,7 +2435,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 
 
 /*----------------------------------------------------------------------
-   DisplayFrame display one view of the document in frame.
+  DisplayFrame display one view of the document in frame.
    If a part of the abstract image is selected, the
    corresponding concrete image is centered in the frame.
   ----------------------------------------------------------------------*/

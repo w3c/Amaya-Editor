@@ -3016,11 +3016,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 
 	      /* Compute Bounding Box*/
 	      ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
-
-	      DefRegion (frame, pCurrentBox->BxClipX - k,
-			 pCurrentBox->BxClipY - k,
-			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
-			 pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
+	      
+	      if (k || (pCurrentBox->BxClipH && pCurrentBox->BxClipW))
+		DefRegion (frame, pCurrentBox->BxClipX - k,
+			   pCurrentBox->BxClipY - k,
+			   pCurrentBox->BxClipX + pCurrentBox->BxClipW +pCurrentBox->BxLMargin + k,
+			   pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
 #endif /* _GL */
 	    }
 	}
@@ -3957,12 +3958,17 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  result = TRUE;
 	}
 #ifdef _GL  
-      ComputeABoundingBox (pAb, 
-			   frame);
-      DefRegion (frame, pAb->AbBox->BxClipX,
-		 pAb->AbBox->BxClipY,
-		 pAb->AbBox->BxClipX + pAb->AbBox->BxClipW,
-		 pAb->AbBox->BxClipY + pAb->AbBox->BxClipH);
+      if (pAb->AbBox)
+	{
+	  ComputeABoundingBox (pAb, 
+			       frame);
+     
+	  if (pAb->AbBox->BxClipH && pAb->AbBox->BxClipW)
+	    DefRegion (frame, pAb->AbBox->BxClipX,
+		       pAb->AbBox->BxClipY,
+		       pAb->AbBox->BxClipX + pAb->AbBox->BxClipW + pAb->AbBox->BxLMargin,
+		       pAb->AbBox->BxClipY + pAb->AbBox->BxClipH);
+	}
 #endif /* _GL */
     }
 #ifdef _GL  

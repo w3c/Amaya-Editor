@@ -77,6 +77,12 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
        pBox = pBox->BxNext;
        while (pBox)
 	 {
+#ifdef _GL
+	   if (pBox->BxBoundinBoxComputed &&
+	       pBox->BxClipW && 
+	       pBox->BxClipH)
+	     {
+#endif /* _GL */
 	   pAb = pBox->BxAbstractBox;
 	   if (pAb->AbVisibility >= pFrame->FrVisibility)
 	     {
@@ -156,6 +162,9 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 		   *pointselect = pointIndex;
 		 }
 	     }
+#ifdef _GL
+  }
+#endif /* _GL */
 	   pBox = pBox->BxNext;
 	 }
        /* return the root box if there is no box selected */

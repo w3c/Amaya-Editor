@@ -2323,7 +2323,9 @@ static void ContentEditing (int editType)
 	      pLine = pFrame->FrSelectionBegin.VsLine;
 	      
 	      /* Initialisation du rectangle d'affichage */
-	      DefClip (frame, 0, 0, 0, 0);
+
+	      /*DefClip (frame, 0, 0, 0, 0);*/
+
 	      if (pBox->BxType == BoSplit)
 		{
 		  pSelBox = pBox->BxNexChild;

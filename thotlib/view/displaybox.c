@@ -2344,7 +2344,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
 	  GL_SetStrokeOpacity (1000);
 	  
 	  GL_TextureMap (pAb->AbBox->Pre_computed_Pic,  
-			 x, y, width, height); 
+			 x, y, width, height, frame); 
 	  
 	}
       GL_SetFillOpacity (pAb->AbOpacity);
@@ -2353,7 +2353,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
 
      
       GL_TextureMap (pAb->AbBox->Post_computed_Pic,
-		     x, y, width, height);
+		     x, y, width, height, frame);
 
       GL_SetFillOpacity (1000);
       GL_SetOpacity (1000);
@@ -2523,7 +2523,7 @@ hypot ()
   /*then draw the gradient*/
   GL_TextureMap (box->Pre_computed_Pic, 
 		 x, y, 
-		 width, height);
+		 width, height, frame);
 
   /* disable stenciling, */
   glStencilFunc (GL_NOTEQUAL, 1, 1);

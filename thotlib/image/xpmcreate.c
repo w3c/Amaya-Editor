@@ -1059,8 +1059,8 @@ static unsigned char Const _reverse_byte[0x100] = {
 
 static int
 _XReverse_Bytes(bpt, nb)
-    register unsigned char *bpt;
-    register int nb;
+    unsigned char *bpt;
+    int nb;
 {
     do {
 	*bpt = _reverse_byte[*bpt];

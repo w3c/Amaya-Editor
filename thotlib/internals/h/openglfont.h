@@ -12,6 +12,12 @@ void GL_Font_Change_Height (void *font, int size);
 
 int   UnicodeFontRender (void *gl_font, wchar_t *string, 
 			 float x, float y, int size);
+
+
+int   UnicodeFontRenderPoly (void *gl_font, wchar_t *string, 
+			 float x, float y, int size);
+
+
 int   gl_font_ascent      (void *gl_void_font);
 int   gl_font_height      (void *gl_void_font);
 void *gl_font_init        (const char *font_filename, 

@@ -69,6 +69,9 @@
 #include "xbmhandler_f.h"
 #include "xpmhandler_f.h"
 
+#ifdef _GL
+#include "glprint.h"
+#endif /* _GL */
 
 
 static char*    PictureMenu;
@@ -420,8 +423,8 @@ static void GL_MakeTextureSize(PictInfo *Image,
 static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 {  
 
-  int       p2_w, p2_h;
-  GLfloat   GL_w, GL_h;   
+  int           p2_w, p2_h;
+  GLfloat       GL_w, GL_h;   
   GLint		Mode;
   
   /* Put texture in 3d card memory */
@@ -429,7 +432,7 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
       Image->PicWidth &&
       Image->PicHeight &&
       (Image->PicPixmap || !IsPixmap))
-    {      
+    {
       /* Another way is to split texture in 256x256 
 	 pieces and render them on different quads
 	 Declared to be the faster  */
@@ -477,6 +480,7 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 			   (GLvoid *) Image->PicPixmap);    
 	  if (Image->PicPixmap != PictureLogo)
 	    TtaFreeMemory (Image->PicPixmap);
+
 #else/*  POWER2TEXSUBIMAGE */
 	  GL_MakeTextureSize (Image, p2_w, p2_h);
 	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
@@ -499,6 +503,43 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
     }  
 }
 
+static void PrintPoscriptImage (PictInfo *Image, 
+			   int x, int y, 
+			   int w, int h,
+				int frame)
+{
+  unsigned char *pixels;  
+  int           xBox,yBox,wBox,hBox,width, height;
+  GLenum        Mode;
+  
+  if (Image->PicFileName)
+  {
+    xBox = yBox = wBox = hBox = width = height = 0;
+    pixels = NULL;
+    pixels = (unsigned char *) (*(PictureHandlerTable[Image->PicType].Produce_Picture))
+      (Image->PicFileName, Image, &xBox, &yBox, &wBox, &hBox,
+       0, &width, &height, 0);
+    if (pixels)
+      {
+
+	if (w != width || height != h)
+	  /*try reloading with a magnification factor*/;
+
+	Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
+
+	GLDrawPixelsPoscript (w, h,
+			      x, FrameTable[frame].FrHeight - y - height,
+			      Mode, Mode, 
+			      pixels, 
+			      0.0f, 
+			      0.0f);
+
+	TtaFreeMemory (pixels);
+	Image->PicPixmap = NULL;
+      }
+  }
+}
+
 /*----------------------------------------------------------------------
  GL_TextureMap : map texture on a Quad (sort of a rectangle)
  Drawpixel Method for software implementation, as it's much faster for those
@@ -506,7 +547,7 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
   ----------------------------------------------------------------------*/
 static void GL_TexturePartialMap (void *ImagePt, 
 			   int xFrame, int yFrame, 
-			   int w, int h)
+			   int w, int h, int frame)
 {  
   PictInfo *Image;
   float    texH, texW;
@@ -515,29 +556,44 @@ static void GL_TexturePartialMap (void *ImagePt,
   texH = Image->TexCoordH * ((float)(Image->PicHeight - h) / Image->PicHeight);
   texW = Image->TexCoordW * ((float)(w) / Image->PicWidth);
   GL_SetPicForeground ();
-  glBindTexture (GL_TEXTURE_2D, 
-		 Image->TextureBind); 	
-  glEnable (GL_TEXTURE_2D);
-  /* Not sure of the vertex order 
-     (not the faster one, I think) */
-  glBegin (GL_QUADS);
-  /* Texture coordinates are unrelative 
-     to the size of the square */ 
-  /* lower left */
-  glTexCoord2f (0,  texH); 
-  glVertex2i   (xFrame, yFrame + h);
-  /* upper right*/
-  glTexCoord2f (texW, texH); 
-  glVertex2i   (xFrame + w, yFrame + h);
-  /* lower right */
-  glTexCoord2f (texW, Image->TexCoordH); 
-  glVertex2i   (xFrame + w, yFrame); 
-  /* upper left */
-  glTexCoord2f (0,  Image->TexCoordH); 
-  glVertex2i   (xFrame,yFrame);     
-  glEnd ();	
-  /* State disabling */
-  glDisable (GL_TEXTURE_2D); 
+  if (GL_Printing ())
+    {
+      PrintPoscriptImage (Image, xFrame, yFrame, w, h, frame);
+    }
+  else
+    {
+      if (GL_NotInFeedbackMode ())
+	{
+	  glBindTexture (GL_TEXTURE_2D, 
+			 Image->TextureBind); 	
+	  glEnable (GL_TEXTURE_2D);
+	}
+
+      /* Not sure of the vertex order 
+	 (not the faster one, I think) */
+      glBegin (GL_QUADS);
+      /* Texture coordinates are unrelative 
+	 to the size of the square */ 
+      /* lower left */
+      glTexCoord2f (0,  texH); 
+      glVertex2i   (xFrame, yFrame + h);
+      /* upper right*/
+      glTexCoord2f (texW, texH); 
+      glVertex2i   (xFrame + w, yFrame + h);
+      /* lower right */
+      glTexCoord2f (texW, Image->TexCoordH); 
+      glVertex2i   (xFrame + w, yFrame); 
+      /* upper left */
+      glTexCoord2f (0,  Image->TexCoordH); 
+      glVertex2i   (xFrame,yFrame);     
+      glEnd ();	
+
+      /* State disabling */
+      if (GL_NotInFeedbackMode ())
+	{
+	  glDisable (GL_TEXTURE_2D); 
+	}
+    }
 }
 /*----------------------------------------------------------------------
  GL_TextureMap : map texture on a Quad (sort of a rectangle)
@@ -546,39 +602,49 @@ static void GL_TexturePartialMap (void *ImagePt,
   ----------------------------------------------------------------------*/
 void GL_TextureMap (void *ImagePt, 
 		    int xFrame, int yFrame, 
-		    int w, int h)
+		    int w, int h, int frame)
 {  
   PictInfo *Image;
   
   Image = ImagePt;  
   GL_SetPicForeground (); 
 
-  if (GL_NotInFeedbackMode ())
+  if (GL_Printing ())
     {
-      glBindTexture (GL_TEXTURE_2D, 
-		     Image->TextureBind);
+      PrintPoscriptImage (Image, xFrame, yFrame, w, h, frame);
     }
-  glEnable (GL_TEXTURE_2D);
-  /* Not sure of the vertex order 
-     (not the faster one, I think) */
-  glBegin (GL_QUADS);
-  /* Texture coordinates are unrelative 
-     to the size of the square */      
-  /* lower left */
-  glTexCoord2i (0,    0); 
-  glVertex2i (xFrame,     yFrame + h);
-  /* upper right*/
-  glTexCoord2f (Image->TexCoordW, 0.0); 
-  glVertex2i (xFrame + w, yFrame + h);
-  /* lower right */
-  glTexCoord2f (Image->TexCoordW, Image->TexCoordH); 
-  glVertex2i (xFrame + w, yFrame); 
-  /* upper left */
-  glTexCoord2f (0.0,  Image->TexCoordH); 
-  glVertex2i (xFrame,     yFrame);      
-  glEnd ();	
-  /* State disabling */
-  glDisable (GL_TEXTURE_2D); 
+  else
+    {
+      if (GL_NotInFeedbackMode ())
+	{
+	  glBindTexture (GL_TEXTURE_2D, 
+			 Image->TextureBind);
+	  glEnable (GL_TEXTURE_2D);
+	}
+      /* Not sure of the vertex order 
+	 (not the faster one, I think) */
+      glBegin (GL_QUADS);
+      /* Texture coordinates are unrelative 
+	 to the size of the square */      
+      /* lower left */
+      glTexCoord2i (0,    0); 
+      glVertex2i (xFrame,     yFrame + h);
+      /* upper right*/
+      glTexCoord2f (Image->TexCoordW, 0.0); 
+      glVertex2i (xFrame + w, yFrame + h);
+      /* lower right */
+      glTexCoord2f (Image->TexCoordW, Image->TexCoordH); 
+      glVertex2i (xFrame + w, yFrame); 
+      /* upper left */
+      glTexCoord2f (0.0,  Image->TexCoordH); 
+      glVertex2i (xFrame,     yFrame);      
+      glEnd ();	
+      /* State disabling */
+      if (GL_NotInFeedbackMode ())
+	{
+	  glDisable (GL_TEXTURE_2D); 
+	}
+    }
 }
 #endif /* _GL */
 
@@ -945,7 +1011,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
       clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
       clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
 #ifdef _GL
-      GL_TextureMap (imageDesc, xFrame, yFrame, w, h);
+      GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
 #else /*_GL*/
 #ifndef _WINDOWS
 #ifndef _GTK
@@ -1052,7 +1118,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		  GL_TexturePartialMap (imageDesc, 
 					x + i, y + j,
 					ix, 
-					jy);
+					jy, frame);
 		  i += ix;
 		} 
 	      while (i < w && ix > 0);
@@ -2285,8 +2351,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       return;      
     }
 
-
-
   typeImage = imageDesc->PicType;
   status = PictureFileOk (fileName, &typeImage);
   w = 0;
@@ -3007,7 +3071,7 @@ void GetPictureHandlersList (int *count, char* buffer)
 /*----------------------------------------------------------------------
    LittleXBigEndian allows conversion between big and little endian  
   ----------------------------------------------------------------------*/
-void LittleXBigEndian (register unsigned char *b, register long n)
+void LittleXBigEndian (unsigned char *b, long n)
 {
    do
      {

@@ -1097,7 +1097,7 @@ static void         TextToDocument ()
 #ifdef _OLD_
    ElementType      prevType;
    Element          last;
-#endif _OLD_
+#endif /* _OLD_ */
 
    CloseBuffer ();
    if (HTMLcontext.lastElement != NULL)
@@ -1147,7 +1147,7 @@ static void         TextToDocument ()
 			 ignoreLeadingSpaces = FALSE;
 		       TtaPreviousSibling (&last);
 		     }
-#else _OLD_
+#else /* _OLD_ */
 		   ignoreLeadingSpaces = XhtmlCannotContainText (elType);
 #endif /* _OLD_ */
 		 }

@@ -674,7 +674,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #ifndef _GL
   unsigned char   *buffer2 = NULL;
 #endif /*_GL*/
-  int              ncolors, cpp, bg = -1;
+  int              ncolors = 1, cpp, bg = -1;
   int              w, h, bperpix;
   ThotBool         withAlpha, grayScale;
 

@@ -1861,7 +1861,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  j = i + pBox->BxWidth;
 #else /* _GL */
 	  i = pBox->BxClipX;
-	  j = i + pBox->BxClipW;
+	  j = (pBox->BxClipW > pBox->BxWidth)?pBox->BxClipW:pBox->BxWidth;
+	  j += i;	  
 #endif /* _GL */
 	  /* It's not a stretchable box: clean up the history */
 	  if (!pBox->BxHorizFlex)
@@ -1914,6 +1915,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  
 	  /* inside width */
 	  pBox->BxW += delta;
+#ifdef _GL
+	  pBox->BxClipW += delta;
+#endif /* _GL */
 	  /* outside width */
 	  pBox->BxWidth = pBox->BxWidth + delta + diff;
 	  pBox->BxXOrg += orgTrans;
