@@ -181,7 +181,7 @@ void Clear (int frame, int width, int height, int x, int y)
 {
   y = y + FrameTable[frame].FrTopMargin;
   GL_SetForeground (GL_Background[frame]); 
-  glBegin (GL_QUADS); 
+  glBegin (GL_QUADS);
   glVertex2f (x, y); 
   glVertex2f (x, y + height);
   glVertex2f (x +  width, y + height);
@@ -1621,12 +1621,8 @@ void GL_BackBufferRegionSwapping (int x, int y,
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-    DefRegion (frame, 
-	       xd, yd+FrameTable[frame].FrTopMargin, 
-	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
-
-#ifdef SCROLL_TEST
-  if (!Software_Mode)
+   
+  if (1 || !Software_Mode)
     DefRegion (frame, 
 	       xd, yd+FrameTable[frame].FrTopMargin, 
 	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
@@ -1634,31 +1630,49 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
     {
       if (GL_MakeCurrent (frame))
       	return;
-      /* Copy from backbuffer to backbuffer */
-      glFinish ();
-      glRasterPos2i (xf, yf + height);
-      glCopyPixels (xd,   
- 		    FrameTable[frame].FrHeight   
-		    - (yd + height + FrameTable[frame].FrTopMargin), 
- 		    width, height, GL_COLOR); 
-      /*copy from back to front */
-      GL_Swap (frame);
-      glFinish ();
-      
-      /* glRasterPos2i (xf, yf + height); */
-/*       glCopyPixels (xd,   */
-/* 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin  */
-/* 		    - (yd + height),  */
-/* 		    width, height, GL_COLOR); */
-/*       glDrawBuffer (GL_FRONT); */
-/*       glCopyPixels (xd,  */
-/* 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin  */
-/* 		    - (yd + height),  */
-/* 		    width, height,  */
-/* 		    GL_COLOR); */
-/*       glDrawBuffer (GL_BACK); */
+
+      if ((yf + height + FrameTable[frame].FrTopMargin) > FrameTable[frame].FrHeight) 
+ 	height += (yf + height + FrameTable[frame].FrTopMargin) - FrameTable[frame].FrHeight;
+      if (xd + width > FrameTable[frame].FrWidth) 
+ 	width += (xd + width) - FrameTable[frame].FrWidth;
+      if (xf < 0)
+	{
+	  width -= xf;
+	  xf = 0;
+	}
+      if (xd < 0)
+	{
+	  width -= xd;
+	  xd = 0;	
+	}
+
+      if (width > 0 &&  height  > 0)
+	{
+	  /* Copy from backbuffer to backbuffer */
+	  glFinish ();
+	  glRasterPos2i (xf, yf + height);
+	  glCopyPixels (xd,   
+			FrameTable[frame].FrHeight   
+			- (yd + height + FrameTable[frame].FrTopMargin), 
+			width, height, GL_COLOR); 
+	  /*copy from back to front */
+	  GL_Swap (frame);
+	  glFinish ();
+	  
+	  /* glRasterPos2i (xf, yf + height); */
+	  /*       glCopyPixels (xd,   */
+	  /* 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin  */
+	  /* 		    - (yd + height),  */
+	  /* 		    width, height, GL_COLOR); */
+	  /*       glDrawBuffer (GL_FRONT); */
+	  /*       glCopyPixels (xd,  */
+	  /* 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin  */
+	  /* 		    - (yd + height),  */
+	  /* 		    width, height,  */
+	  /* 		    GL_COLOR); */
+	  /*       glDrawBuffer (GL_BACK); */
+	}
     }
-#endif /*SCROLLTEST*/
 }
 
 

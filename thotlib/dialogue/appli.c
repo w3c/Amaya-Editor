@@ -10,7 +10,7 @@
  *
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Windows version
- *tt
+ *          P. Cheyrou-Lagreze (INRIA) - OpenGL Version
  */
 
 #include "thot_gui.h"
@@ -49,6 +49,8 @@
 #define MAX_ARGS 20
 static Time         T1, T2, T3;
 static XmString     null_string;
+static ThotBool     JumpInProgress = FALSE;
+
 #else /* _GTK */
 #ifdef _GL
 #include <gtkgl/gtkglarea.h>
@@ -59,7 +61,6 @@ static gchar *null_string;
 
 static char         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
-static ThotBool     JumpInProgress = FALSE;
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -681,7 +682,7 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	  gtk_main_iteration ();
 	UpdateScrollbars (frame);
       }
-  return TRUE;  
+  return TRUE;
 }
 #else /* _GL*/
 /*----------------------------------------------------------------------
@@ -689,8 +690,8 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   ----------------------------------------------------------------------*/
 gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
-  int frame;
-  Dimension           width, height;
+  int         frame;
+  Dimension   width, height;
  
   frame = (int )data;
   width = event->width;
@@ -1101,7 +1102,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   int        delta, Xpos, Ypos, width, height, viewed, left;
   static int PreviousPosition = 0;
 
-  /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
   ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
@@ -1126,71 +1126,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   PreviousPosition = (int) w->value;
 }
 
-#ifdef TESTEDSCROLLSOLUTIONDONTWORKATALL
-void FrameVScrolledGTK (GtkAdjustment *w, int frame)
-{
-  int                 delta;
-  int                 h, y;
-  int                 start, end, total;
-  int                 n;
-  int                 view;
-  float               carparpix;  
-  Document            doc;
-
-  /* ne pas traiter si le document est en mode NoComputedDisplay */
-  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return;
-  
-  FrameToView (frame, &doc, &view);
-  /***** printf ("FrameVScrolled\n"); ****/
-  /* Regarde ou se situe l'image abstraite dans le document */
-  n = PositionAbsBox (frame, &start, &end, &total);
-  /* au retour n = 0 si l'image est complete */
-  /* Calcule le nombre de caracteres represente par un pixel */
-  carparpix = (float) total / (float) FrameTable[frame].FrHeight;
-  y = (int) (w->value * carparpix);
-  /******* printf ("  n=%d, y=%d, start=%d, end=%d, total=%d\n", n, y, start, end, total); ****/
-  if (n == 0 || (y >= start && y <= total - end))
-    {
-      /* On se deplace a l'interieur de l'image Concrete */
-      /* Calcule la portion de scroll qui represente l'image Concrete */
-      start = (int) ((float) start / carparpix);
-      end = (int) ((float) end / carparpix);
-      delta = FrameTable[frame].FrHeight - start - end;
-      /* Calcule la position demandee dans cette portion de scroll */
-      /* On detecte quand le deplacement bute en bas du document */
-      if ((int)(w->value + w->page_size) >= FrameTable[frame].FrHeight)
-	y = delta;
-      else
-	y = (int) w->value - start;
-      /***** printf ("  ShowYPosition %d %d\n", y, delta); *****/
-      ShowYPosition (frame, y, delta);
-    }
-  else if (!JumpInProgress)
-    {
-      JumpInProgress = TRUE;
-      /* h is the height of the page */
-      h = (int) w->page_size;
-      /* Absolute move in the document */
-      delta = (int) w->value; 
-      /* On regarde si le deplacement bute en bas du document */
-      if (delta + h >= FrameTable[frame].FrHeight - 4)
-	delta = FrameTable[frame].FrHeight;
-      else if (delta)
-	/* Ou plutot vers le milieu */
-	  delta += h / 2;
-      else 
-      	delta = 0;
-
-      delta = (delta * 100) / FrameTable[frame].FrHeight;
-      /***** printf ("  JumpIntoView %d\n", delta); ****/
-      JumpIntoView (frame, delta);
-      JumpInProgress = FALSE;
-      /* recompute the scroll bars */
-      UpdateScrollbars (frame);
-    }
-}
-#endif /*O*/
 #endif /*_GTK*/
 #endif /* _WINDOWS */
 
@@ -3366,9 +3301,6 @@ void UpdateScrollbars (int frame)
        XtSetValues (vscroll, args, n);
      }
 #else /*_GTK*/
-   /*if (JumpInProgress)
-     return;
-   */
    if (width == l && Xpos == 0)
      gtk_widget_hide (GTK_WIDGET (hscroll));
    else

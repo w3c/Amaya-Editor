@@ -571,14 +571,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
       i++;
     } 
   Height = maxy - miny;
-  y = y - (float) miny;
-  if ((int)y > TotalHeight)
-    {
-      right = (int)y - TotalHeight;
-      y = (float) TotalHeight;
-    }
-  else 
-    right = 0;
+  
   Width = ((int) XWidth);
   data = (unsigned char *) TtaGetMemory (sizeof (unsigned char)
 					  *Height*Width); 
@@ -601,30 +594,40 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 		    Width);
       i++;
     }
+
   x = x  + (float) (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0); 
-  glRasterPos2f (x, y);
-  if (right)
+  y -= (float) miny;
+
+  if ((int)y > TotalHeight)
     {
-      glBitmap (0, 0,
-		0, 0,
-		0, (float) - right,
-		NULL);
-      glDrawPixels (Width,
-		    Height,
-		    GL_ALPHA,
-		    GL_UNSIGNED_BYTE,
-		    (const GLubyte *) data);
-      glBitmap (0, 0,
-		0, 0,
-		0, (float) + right,
-		NULL);
+      left = (int) y - TotalHeight;
+      y = (float) TotalHeight;
     }
-  else
-    glDrawPixels (Width,
-		  Height,
-		  GL_ALPHA,
-		  GL_UNSIGNED_BYTE,
-		  (const GLubyte *) data);
+  else 
+    left = 0;
+  
+  if ((int)x < 0)
+    {
+      right = -(int) x;
+      x = (float) 0;
+    }
+  else 
+    right = 0;
+  
+  glRasterPos2f (x, y);
+  glBitmap (0, 0,
+	    0, 0,
+	    (float) -right, (float) -left,
+	    NULL);
+  glDrawPixels (Width,
+		Height,
+		GL_ALPHA,
+		GL_UNSIGNED_BYTE,
+		(const GLubyte *) data);
+  glBitmap (0, 0,
+	    0, 0,
+	    (float) right, (float) left,
+	    NULL);
   free (data);
   return (((int) Xpos) + (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0) );
 }
