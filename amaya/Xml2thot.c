@@ -3914,10 +3914,16 @@ static void  InitializeExpatParser (CHARSET charset)
     Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
   else if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
 	   charset == ISO_8859_4   || charset == ISO_8859_5   ||
-	   charset == ISO_8859_6   || charset == ISO_8859_6_E ||
-	   charset == ISO_8859_6_I || charset == ISO_8859_7   ||
-	   charset == ISO_8859_8   || charset == ISO_8859_8_E ||
-	   charset == ISO_8859_8_I || charset == ISO_8859_9   ||
+	   charset == ISO_8859_6   || charset == ISO_8859_7   ||
+	   charset == ISO_8859_8   || charset == ISO_8859_9)
+#ifdef _I18N_
+    /* buffers will be converted to UTF-8 by Amaya */
+    Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+#else /* _I18N */
+    Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+#endif /* _I18N */
+  else if (charset == ISO_8859_6_E || charset == ISO_8859_6_I ||
+	   charset == ISO_8859_8_E || charset == ISO_8859_8_I ||
 	   charset == ISO_8859_10  || charset == ISO_8859_15  ||
 	   charset == ISO_8859_supp)
     Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
@@ -4608,17 +4614,19 @@ ThotBool ParseIncludedXml (FILE     *infile,
    XmlParse
    Parses the XML file infile and builds the equivalent Thot abstract tree.
   ---------------------------------------------------------------------------*/
-static void   XmlParse (FILE     *infile,
+static void   XmlParse (FILE     *infile, CHARSET charset,
 			ThotBool *xmlDec,
 			ThotBool *xmlDoctype)
-
 {
 #define	 COPY_BUFFER_SIZE	1024
-   char         bufferRead[COPY_BUFFER_SIZE];
+   char         bufferRead[COPY_BUFFER_SIZE + 1];
+#ifdef _I18N_
+   char        *buffer;
+#endif /* _I18N_ */
    int          i;
    int          res;
-   ThotBool     endOfFile = FALSE;
    int          tmpLineRead = 0;
+   ThotBool     endOfFile = FALSE, okay;
   
    if (infile != NULL)
        endOfFile = FALSE;
@@ -4630,13 +4638,18 @@ static void   XmlParse (FILE     *infile,
    extraOffset = 0;
    htmlLineRead = 0;
    htmlCharRead = 0;
-     
+   /* add a null character at the end of the buffer by security */
+   bufferRead[COPY_BUFFER_SIZE] = EOS;
    while (!endOfFile && !XMLNotWellFormed)
      {
        /* read the XML file */
-       res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
+       res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
        if (res < COPY_BUFFER_SIZE)
+	 {
 	   endOfFile = TRUE;
+	   /* add a null character at the end of the buffer by security */
+	   bufferRead[res] = EOS;
+	 }
        i = 0;
 
        if (!*xmlDoctype)
@@ -4676,7 +4689,24 @@ static void   XmlParse (FILE     *infile,
        /* Standard EXPAT processing */
        if (!XMLNotWellFormed)
 	 {
-	   if (!XML_Parse (Parser, &bufferRead[i], res, endOfFile))
+#ifdef _I18N_
+	   if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
+	       charset == ISO_8859_4   || charset == ISO_8859_5   ||
+	       charset == ISO_8859_6   || charset == ISO_8859_7   ||
+	       charset == ISO_8859_8   || charset == ISO_8859_9)
+	     {
+	       /* convert the original stream into UTF-8 */
+	       buffer = TtaConvertIsoToMbs (&bufferRead[i], charset);
+	       if (buffer)
+		 {
+		   okay = XML_Parse (Parser, buffer, strlen (buffer), endOfFile);
+		   TtaFreeMemory (buffer);
+		 }
+	     }
+	   else
+#endif /* _I18N */
+	     okay = XML_Parse (Parser, &bufferRead[i], res, endOfFile);
+	   if (!okay)
 	     XmlParseError (errorNotWellFormed,
 			    (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	 }
@@ -4807,7 +4837,7 @@ void StartXmlParser (Document doc,
       /* Specific initialization for Expat */
       InitializeExpatParser (charset);
       /* Parse the input file and build the Thot tree */
-      XmlParse (stream, &xmlDec, &xmlDoctype);
+      XmlParse (stream, charset, &xmlDec, &xmlDoctype);
       /* Completes all unclosed elements */
       if (currentParserCtxt != NULL)
 	{

@@ -1070,8 +1070,7 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
   GetFontAndIndexFromSpec return the glyph index and the font
   used to display the wide character c;
   ----------------------------------------------------------------------*/
-unsigned char GetFontAndIndexFromSpec (CHAR_T c,
-				       SpecFont fontset,
+unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 				       PtrFont *font)
 {
 #ifdef _I18N_

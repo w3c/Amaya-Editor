@@ -22,244 +22,245 @@
 20 Redirection fetching of %s
 21 Too many redirections detected
 22 Cannot create local file %s
-23 Waiting for a free socket
-24 Reading %s
-25 Writing %s
-26 Waiting for connection
-27 Contacting %s
-28 Looking up %s
-29 Unknown Status
-30 Authentication Dialogue
-31 Please authenticate for
-32 Authorization failure for %s
-33 %s loaded but no data is available
-34 Transfer interrupted!
-35 %s is not available at the moment. Please retry at some other time
-36 %s loaded
-37 Saving %s
-38 Cannot save in: %s
-39 English system errors messages
-40 An anchor cannot contain these elements
-41 Cannot create an anchor within an anchor
-42 Sorry, no GET support yet for URLs of this type: %s
-43 Sorry, no PUT support yet for URLs of this type: %s
-44 This version of Amaya does not support this feature
-45 Finished writing %s
-46 Could not normalize %s
-47 Could not create temporary file directory %s
-48 No transformation applicable to the selection
-49 Transformation failed
-50 syntax error in file HTML.trans line %s
-51 Maths
-52 Graphics
-53 Save as
-54 Please authenticate for realm \'%s\' at server \'%s\'
-55 Realm: %s
-56 Server: %s
-57 Editor/Browser
-58 Request timeout - server did not respond
-59 %s already exists. Overwrite it?
-60 %s has changed. Overwrite it?
-61 Background image
-62 Background image not allowed here
-63 CSS
-64 Saving will overwrite the following URLs:
-65 Failed to save to URL
-66 Save to disk ?
-67 Copy Images
-68 Transform URLs
-69 Document location
-70 Images directory
-71 Object location
-72 CSS files
-73 W3C's editor/browser for the Web
-74 (mail issues to www-amaya@w3.org)
-75 Can't handle URLs having more than %s chars
-76 Only default type is allowed
-77 Links update: %s%% has been done
-78 Nothing new to be saved
-79 repeat-y
-80 <HTML><HEAD><TITLE>ERROR: Cannot access a URL</TITLE></HEAD><BODY><H1>The requested URL could not be retrieved</H1><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existent.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
-81 Please enter username:
-82 %d outstanding requests
-83 No CSS file available
-84 Interrupt transfer
-85 Previous document
-86 Next document
-87 Reload
-88 Save
-89 Print
-90 Search
-91 Emphasis
-92 Strong
-93 Fixed font
-94 no-repeat
-95 Insert image
-96 Heading level 1
-97 Heading level 2
-98 Heading level 3
-99 Bulleted list
-100 Numbered list
-101 Definition list
-102 Link
-103 Table
-104 Document doesn't have a name. Saving to:
-105 Plugins
-106 Unknown error while saving URL %s
-107 Cannot make a connection to the server
-108 Access to %s is forbidden by the server
-109 Operation succeeded for %s
-110 %s has been created
-111 %s has been updated
-112 Operation completed with a %s status code
-113 Server did not understand the request syntax
-114 Server has no new information to send back
-115 This method is not allowed
-116 Please authenticate to access %s
-117 Verifying ...
-118 Saving to %s failed, Save to disk?
-119 Saving to %s seems corrupted, ignore?
-120 URL %s redirected to %s, ignore?
-121 Reload of %s failed, ignore?
-122 Server reports a 501 error: %s
-123 Server reports a 501 error
-124 Server does not support this request method
-125 Filter
-126 active transfers
-127 queued transfers
-128 Table of contents
-129 Table of links
-130 Repeat Mode
-131 repeat
-132 repeat-x
-133 Your previous Amaya session failed. Do you want to reload backup documents?
-134 Authentication failed. Retry?
-135 Operation will be redirected. Continue?
-136 Number of Rows
-137 Number of Columns
-138 Border
-139 Alternate text
-140 The Alternate text is mandatory
-141 Print URL
-142 Apply
-143 Defaults
-144 Flush cache
-145 Cache Preferences
-146 Enable cache
-147 Cache protected documents
-148 Disconnected mode
-149 Ignore Expires: header
-150 Cache directory
-151 Cache size (Mb)
-152 Cache entry size limit (Mb)
-153 Proxy Preferences
-154 HTTP proxy (e.g., www.w3.org:1234)
-155 Proxy domain list (e.g., lists.w3.org)
-156 General Preferences
-157 Home Page
-158 ToolTip delay (ms)
-159 Double click delay (ms)
-160 Menu font size
-161 Font zoom
-162 Dialogue language
-163 Enable multi-key (`+a=à)
-164 Show background images
-165 Double click activates link
-166 Export CR/LF
-167 Publishing Preferences
-168 Use ETAGS and preconditions
-169 Verify each PUT with a GET
-170 Default name for URLs finishing in '/'
-171 Geometry Preferences
-172 Save current geometry
-173 Restore default geometry
-174 The change will be effective when you open a new window.
-175 Color Preferences
-176 Document foreground color
-177 Document background color
-178 Menu foreground color
-179 Menu background color
-180 Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
-181 Home
-182 List of preferred languages like "en, fr":
-183 Location of profiles definition file
-184 Profile Selection
-185 These changes won't be effective until Amaya is restarted
-186 Profiles Preferences
-187 Enter the URL of the templates server
-188 Templates Preferences
-189 Allow automatic PUT redirections on these domains
-190 Ignore style sheets
-191 Transform type
-192 (separate each entry with a space)
-193 No proxy on these domains
-194 Only proxy these domains
-195 Character name
-196 Amaya user directory
-197 Temporary directory
-198 Use palette
-199 Language Negotiation
-200 Configuration for annotations
-201 Annotation user
-202 Annotation post server
-203 Annotation servers
-204 Autoload local annotations
-205 Autoload remote annotations
-206 Disable remote autoload at each startup (for off-line work)
-207 Selection color
-208 Caret color
-209 Orientation
-210 Portrait
-211 Landscape
-212 Enable FTP (experimental)
-213 Invalid XML - Reload as HTML or show parsing errors?
-214 Invalid XML - Show parsing errors?
-215 Invalid characters - Reload as HTML or show parsing errors?
-216 Invalid characters
-217 For the document profile:
-218 Some tags/attributes are ignored - see Views/Show parsing errors
-219 The encoding of this document is not supported by Amaya
-220 Editing and saving this document will change its type
-221 Not available
-222 Browse
-223 File Browser
-224 Selection
-225 Annotation Local Filter Menu
-226 Show
-227 Hide
-228 Show all
-229 Hide all
-230 * means hidden, - means partially hidden
-231 Filter options
-232 By author
-233 By type
-234 By server
-235 Access keys
-236 Ignore
-237 Style element
-238 Cannot create an XPointer
-239 Impossible to attach a start XPointer on an internal added element
-240 Impossible to attach an end XPointer on an internal added element
-241 Cannot find where to move the annotation
-242 Cannot move the annotation to a different document
-243 You cannot annotate a modified document. Please save it first.
-244 No annotation user declared. Please open the Annotations/Configure menu.
-245 Unable to build an XPointer for this annotation
-246 Make a new annotation
-247 Failed to post the annotation
-248 Failed to delete the annotation
-249 Annotation deleted!
-250 Failed to load the annotation index
-251 Error
-252 Select a Charset
-253 Select a MIME type
-254 Change Charset
-255 Change MIME type
-256 Change
-257 This type of document doesn't support charsets
-258 The target must be an HTTP URL to use this option
-259 Error: invalid MIME type
-260 Unknown
-261 Styles are ignored - see Views/Show parsing errors
-262 This document is already loaded in another Window
-263 Saving that instance may cause a lost update problem
+23 Cannot create directory %s
+24 Waiting for a free socket
+25 Reading %s
+26 Writing %s
+27 Waiting for connection
+28 Contacting %s
+29 Looking up %s
+30 Unknown Status
+31 Authentication Dialogue
+32 Please authenticate for
+33 Authorization failure for %s
+34 %s loaded but no data is available
+35 Transfer interrupted!
+36 %s is not available at the moment. Please retry at some other time
+37 %s loaded
+38 Saving %s
+39 Cannot save in: %s
+40 English system errors messages
+41 An anchor cannot contain these elements
+42 Cannot create an anchor within an anchor
+43 Sorry, no GET support yet for URLs of this type: %s
+44 Sorry, no PUT support yet for URLs of this type: %s
+45 This version of Amaya does not support this feature
+46 Finished writing %s
+47 Could not normalize %s
+48 Could not create temporary file directory %s
+49 No transformation applicable to the selection
+50 Transformation failed
+51 syntax error in file HTML.trans line %s
+52 Maths
+53 Graphics
+54 Save as
+55 Please authenticate for realm \'%s\' at server \'%s\'
+56 Realm: %s
+57 Server: %s
+58 Editor/Browser
+59 Request timeout - server did not respond
+60 %s already exists. Overwrite it?
+61 %s has changed. Overwrite it?
+62 Background image
+63 Background image not allowed here
+64 CSS
+65 Saving will overwrite the following URLs:
+66 Failed to save to URL
+67 Save to disk ?
+68 Copy Images
+69 Transform URLs
+70 Document location
+71 Images directory
+72 Object location
+73 CSS files
+74 W3C's editor/browser for the Web
+75 (mail issues to www-amaya@w3.org)
+76 Can't handle URLs having more than %s chars
+77 Only default type is allowed
+78 Links update: %s%% has been done
+79 Nothing new to be saved
+80 repeat-y
+81 <HTML><HEAD><TITLE>ERROR: Cannot access a URL</TITLE></HEAD><BODY><H1>The requested URL could not be retrieved</H1><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existent.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
+82 Please enter username:
+83 %d outstanding requests
+84 No CSS file available
+85 Interrupt transfer
+86 Previous document
+87 Next document
+88 Reload
+89 Save
+90 Print
+91 Search
+92 Emphasis
+93 Strong
+94 Fixed font
+95 no-repeat
+96 Insert image
+97 Heading level 1
+98 Heading level 2
+99 Heading level 3
+100 Bulleted list
+101 Numbered list
+102 Definition list
+103 Link
+104 Table
+105 Document doesn't have a name. Saving to:
+106 Plugins
+107 Unknown error while saving URL %s
+108 Cannot make a connection to the server
+109 Access to %s is forbidden by the server
+110 Operation succeeded for %s
+111 %s has been created
+112 %s has been updated
+113 Operation completed with a %s status code
+114 Server did not understand the request syntax
+115 Server has no new information to send back
+116 This method is not allowed
+117 Please authenticate to access %s
+118 Verifying ...
+119 Saving to %s failed, Save to disk?
+120 Saving to %s seems corrupted, ignore?
+121 URL %s redirected to %s, ignore?
+122 Reload of %s failed, ignore?
+123 Server reports a 501 error: %s
+124 Server reports a 501 error
+125 Server does not support this request method
+126 Filter
+127 active transfers
+128 queued transfers
+129 Table of contents
+130 Table of links
+131 Repeat Mode
+132 repeat
+133 repeat-x
+134 Your previous Amaya session failed. Do you want to reload backup documents?
+135 Authentication failed. Retry?
+136 Operation will be redirected. Continue?
+137 Number of Rows
+138 Number of Columns
+139 Border
+140 Alternate text
+141 The Alternate text is mandatory
+142 Print URL
+143 Apply
+144 Defaults
+145 Flush cache
+146 Cache Preferences
+147 Enable cache
+148 Cache protected documents
+149 Disconnected mode
+150 Ignore Expires: header
+151 Cache directory
+152 Cache size (Mb)
+153 Cache entry size limit (Mb)
+154 Proxy Preferences
+155 HTTP proxy (e.g., www.w3.org:1234)
+156 Proxy domain list (e.g., lists.w3.org)
+157 General Preferences
+158 Home Page
+159 ToolTip delay (ms)
+160 Double click delay (ms)
+161 Menu font size
+162 Font zoom
+163 Dialogue language
+164 Enable multi-key (`+a=à)
+165 Show background images
+166 Double click activates link
+167 Export CR/LF
+168 Publishing Preferences
+169 Use ETAGS and preconditions
+170 Verify each PUT with a GET
+171 Default name for URLs finishing in '/'
+172 Geometry Preferences
+173 Save current geometry
+174 Restore default geometry
+175 The change will be effective when you open a new window.
+176 Color Preferences
+177 Document foreground color
+178 Document background color
+179 Menu foreground color
+180 Menu background color
+181 Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
+182 Home
+183 List of preferred languages like "en, fr":
+184 Location of profiles definition file
+185 Profile Selection
+186 These changes won't be effective until Amaya is restarted
+187 Profiles Preferences
+188 Enter the URL of the templates server
+189 Templates Preferences
+190 Allow automatic PUT redirections on these domains
+191 Ignore style sheets
+192 Transform type
+193 (separate each entry with a space)
+194 No proxy on these domains
+195 Only proxy these domains
+196 Character name
+197 Amaya user directory
+198 Temporary directory
+199 Use palette
+200 Language Negotiation
+201 Configuration for annotations
+202 Annotation user
+203 Annotation post server
+204 Annotation servers
+205 Autoload local annotations
+206 Autoload remote annotations
+207 Disable remote autoload at each startup (for off-line work)
+208 Selection color
+209 Caret color
+210 Orientation
+211 Portrait
+212 Landscape
+213 Enable FTP (experimental)
+214 Invalid XML - Reload as HTML or show parsing errors?
+215 Invalid XML - Show parsing errors?
+216 Invalid characters - Reload as HTML or show parsing errors?
+217 Invalid characters
+218 For the document profile:
+219 Some tags/attributes are ignored - see Views/Show parsing errors
+220 The encoding of this document is not supported by Amaya
+221 Editing and saving this document will change its type
+222 Not available
+223 Browse
+224 File Browser
+225 Selection
+226 Annotation Local Filter Menu
+227 Show
+228 Hide
+229 Show all
+230 Hide all
+231 * means hidden, - means partially hidden
+232 Filter options
+233 By author
+234 By type
+235 By server
+236 Access keys
+237 Ignore
+238 Style element
+239 Cannot create an XPointer
+240 Impossible to attach a start XPointer on an internal added element
+241 Impossible to attach an end XPointer on an internal added element
+242 Cannot find where to move the annotation
+243 Cannot move the annotation to a different document
+244 You cannot annotate a modified document. Please save it first.
+245 No annotation user declared. Please open the Annotations/Configure menu.
+246 Unable to build an XPointer for this annotation
+247 Make a new annotation
+248 Failed to post the annotation
+249 Failed to delete the annotation
+250 Annotation deleted!
+251 Failed to load the annotation index
+252 Error
+253 Select a Charset
+254 Select a MIME type
+255 Change Charset
+256 Change MIME type
+257 Change
+258 This type of document doesn't support charsets
+259 The target must be an HTTP URL to use this option
+260 Error: invalid MIME type
+261 Unknown
+262 Styles are ignored - see Views/Show parsing errors
+263 This document is already loaded in another Window
+264 Saving that instance may cause a lost update problem

@@ -22,244 +22,245 @@
 20 Lade Weiterleitung: %s
 21 Zu viele Weiterleitungen
 22 Kann lokale Datei nicht anlegen: %s
-23 Warte auf freien Netz-Socket
-24 Lade: %s
-25 Schreibe: %s
-26 Warte auf Verbindung
-27 Kontakt zu: %s
-28 Suche: %s
-29 Unbekannter Status
-30 Anmeldung
-31 Bitte bestätigen Sie
-32 Anmeldungsfehler für %s
-33 %s geladen, aber leer
-34 Übertragung unterbrochen!
-35 %s ist im Moment nicht verfügbar. Bitte später nochmal versuchen!
-36 %s geladen
-37 Speichere: %s
-38 Kann nicht speichern unter: %s
-39 German system errors messages
-40 Ein Verknüpfungsziel kann dieses Element nicht enthalten
-41 Innerhalb eines Verknüpfungszieles kann kein Verknüpfungsziel erstellt werden
-42 GET-Unterstützung noch nicht implementiert für URL-Type: %s
-43 PUT-Unterstützung noch nicht implementiert für URL-Type: %s
-44 Diese Funktion wird von Amaya nicht unterstützt
-45 Schreiben beendet %s
-46 Normalisierung nicht erfolgreich für: %s
-47 Temporäres Dateiverzeichnis konnte nicht angelegt werden: %s
-48 Für die Markierung ist keine Umwandlung anwendbar
-49 Umwandlung fehlerhaft
-50 Syntaxfehler in der HTML-Datei, Zeile %s
-51 Formel
-52 Grafiken
-53 Speichern unter
-54 Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:
-55 Domain: %s
-56 Server: %s
-57 Editor/Browser
-58 Timeout - server antwortet nicht
-59 %s besteht bereits. Überschreiben?
-60 %s wurde geändert. Überschreiben?
-61 Hintergrundbild
-62 Hintergrundbild hier nicht zulässig
-63 CSS
-64 Speichern überschreibt die folgenden URL:
-65 Speichern der URL fehlerhaft
-66 Speichern auf Festplatte?
-67 Grafiken speichern
-68 Absolute Verknüpfungszieladressen
-69 Dokumentenadresse
-70 Grafik(unter)verzeichnis
-71 Objektadresse
-72 Stylesheetdatei wählen
-73 der W3C Web-Browser und -Editor
-74 (Probleme senden an www-amaya@w3.org)
-75 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
-76 Nur Standardtyp erlaubt
-77 Aktualisierung der Verknüpfung : %s%% erfolgreich
-78 Nichts zu speichern
-79 Wiederholung y
-80 <HTML><HEAD><TITLE>ERROR: Kann nicht zugreifen auf URL</TITLE></HEAD><BODY><H1>Die angeforderte URL konnte nicht geladen werden </H1><HR><P>Beim Laden der URL:<A HREF=\"%s\">%s</A></P><P> ist folgender Fehler aufgetreten:</P><UL><LI><STRONG>Verbindung nicht möglich</STRONG></UL><P>Das System meldete:</P><PRE><I>(%d) %s</I></PRE><P>Dies bedeutet, daß:</P><PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.</PRE><PRE>Bitte später noch einmal versuchen.</PRE><P></P><HR>\n</BODY></HTML>
-81 Bitte Usernamen eingeben:
-82 %d offene Anfrage(n)
-83 Keine CSS-Datei vorhanden
-84 Übertragung unterbrechen
-85 Vorheriges Dokument
-86 Nachfolgendes Dokument
-87 Neu laden
-88 Speichern
-89 Drucken
-90 Suchen
-91 Betont
-92 Fett
-93 Feste Schriftbreite
-94 keine Wiederholung
-95 Grafik einfügen
-96 Überschrift Ebene 1
-97 Überschrift Ebene 2
-98 Überschrift Ebene 3
-99 Liste mit Punkten
-100 Numerierte Liste
-101 Definitionsliste
-102 Verknüpfung
-103 Tabelle
-104 Das Dokument ist unbenannt. Speichere unter:
-105 Plugins
-106 Unbekannter Fehler beim Speichern URL %s
-107 Keine Verbindung zum Server
-108 Zugriff auf %s verboten
-109 Operation erfolgreich für: %s
-110 %s wurde erzeugt
-111 %s wurde aktualisiert
-112 Operation wurde beendet mit Code %s .
-113 Der Server konnte die Anfragesyntax nicht verstehen
-114 Der Server hat keine neue Informationen zurückzusenden
-115 Diese Methode ist nicht erlaubt
-116 Bitte einloggen für den Zugriff auf: %s
-117 Überprüfe ...
-118 Speichern unter %s fehlerhaft, Speichern auf Festplatte?
-119 Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?
-120 URL %s weitergeleitet nach %s, Ignorieren?
-121 Neuladen von %s fehlerhaft, Ignorieren?
-122 Der Server meldet einen 501-Fehler: %s
-123 Der Server meldet einen 501-Fehler
-124 Der Server unterstützt diese Anforderungsmethode nicht
-125 Filter
-126 Aktive Übertragungen
-127 Wartende Übertragungen
-128 mit Inhaltsverzeichnis
-129 mit Verknüpfungen
-130 Wiederholungsmodus
-131 Wiederholung
-132 Wiederholung x
-133 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
-134 Login gescheitert. Wiederholen?
-135 Umleitung folgen?
-136 Zeilen:
-137 Spalten:
-138 Rahmen:
-139 Alternativer Text
-140 Alternativer Text ist erforderlich!
-141 mit URLpply
-142 Übernehmen
-143 Zurücksetzen
-144 Cache leeren
-145 Cache Einstellungen
-146 Cache aktivieren
-147 Cache geschützte Dokumente
-148 Offline-Modus
-149 Ignoriere Expires(Gültig bis): header
-150 Cache Verzeichnis
-151 Cachegröße (Mb)
-152 Max. Größe von Cacheeinträgen (Mb)
-153 Proxy Einstellungen
-154 HTTP proxy (e.g., www.w3.org:1234)
-155 Proxy domain list (e.g., lists.w3.org)
-156 Allgemeine Einstellungen
-157 Startseite
-158 Quickinfo Verzögerung (ms)
-159 Doppelklickintervall (ms)
-160 Größe Menüschriftart
-161 Schriftzoom
-162 Dialogsprache
-163 Mehrfachtasten aktivieren (`+a=à)
-164 Hintergrundbilder anzeigen
-165 Doppelklick aktiviert Link
-166 CR/LF exportieren
-167 Einstellungen veröffentlichen
-168 ETAGS und preconditions verwenden
-169 PUT durch GET verifizieren
-170 Dateiname, falls URL mit '/' endet
-171 Einstellungen Fenstergeometrie
-172 Aktuelle Geometrie speichern
-173 Standardgeometrie einstellen
-174 Die Änderungen werden beim öffnen eines neuen Fensters wirksam.
-175 Farbeinstellungen
-176 Schriftfarbe (Dokument)
-177 Hintergrundfarbe (Dokument)
-178 Schriftfarbe (Menüs)
-179 Hintergrundfarbe (Menüs)
-180 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
-181 Anfang
-182 Liste der bevorzugten Sprachen wie "en, fr":
-183 Verzeichnis der Profildefinitionen
-184 Profilauswahl
-185 Diese Änderungen werden erst bei einem Neustart von Amaya wirksam
-186 Profileinstellungen
-187 URL des Vorlagen-Servers angeben
-188 Vorlagen-Einstellungen
-189 Automatische PUT-Umleitung bei diesen Domänen erlauben
-190 Stilvorlagen ignorieren
-191 Umformatieren
-192 (Einträge durch Leerzeichen trennen)
-193 Keinen Proxy für folgende Domänen verwenden
-194 Proxy nur für folgende Domänen verwenden
-195 Zeichenname
-196 Amaya Benutzerverzeichnis
-197 Lokaler filter...
-198 Palette benutzen
-199 Sprachauswahl
-200 Konfiguration für Anmerkungen
-201 Anmerkungsbenutzer
-202 Anmerkungs-Veröffentlichungs-Server
-203 Anmerkungsserver
-204 Local Anmerkungen automatisch laden
-205 Remote Anmerkungen automatisch laden
-206 Kein automatisches Laden vom Remote Server beim Programmstart (Off-line Arbeitsmodus)
-207 Farbe Auswahl
-208 Farbe Cursor
-209 Ausrichtung
-210 Hochformat
-211 Querformat
-212 FTP zulassen (noch in der Erprobung)
-213 Ungültiger XML Code - als HTML laden oder Parsefehler anzeigen?
-214 Ungültiger XML Code - Parsefehler anzeigen?
-215 Ungültige Zeichen - als HTML laden oder Parsefehler anzeigen?
-216 Ungültige Zeichen
-217 Durch gegenwärtigen Dokument Profil:
-218 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-219 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-220 Durch das Bearbeiten und Speichern ändert sich der Dokumententyp
-221 Nicht verfügbar
-222 Browsen
-223 Datei-Browser
-224 Auswahl
-225 Menü für lokale Kommentierungsfilter
-226 Anzeigen
-227 Nicht anzeigen
-228 Alles anzeigen
-229 Nichts anzeigen
-230 * bedeutet verborgen, - bedeutet teilweise verborgen
-231 Filteroptionen
-232 Vom Autor
-233 Vom Typ
-234 Vom Server
-235 Zugriffstasten
-236 Ignorieren
-237 Stilelement
-238 Kann keinen XPointer erzeugen
-239 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
-240 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
-241 Kein Ziel zum Verschieben der Anmerkung [gefunden]
-242 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-243 Annotieren eines geänderten Dokuments ist nicht möglich. Bitte erst speichern.
-244 Kein Benutzer für Annotation vereinbart. Bitte das Menü "Annotationen/Konfiguration" öffnen.
-245 Für diese Annotation kein kein XPointer erzeugt werden
-246 Neue Annotation erzeugen
-247 Abschicken der Annotation gescheitert
-248 Löschen der Annotation gescheitert
-249 Annotation gelöscht!
-250 Laden des Annotationsindex gescheitert
-251 Fehler
-252 Charset auswählen
-253 MIME type auswählen
-254 Anderen Charset auswählen
-255 Anderen MIME type auswählen
-256 Wechseln
-257 Dieser Dokumenttyp unterstützt keine Charsets
-258 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
-259 Fehler: ungültiger MIME type
-260 Unbekannt
-261 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-262 Dieses Dokument wurde bereits in einem anderen Fenster geladen
-263 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
+23 Kann Verzeichnis nicht anlegen: %s
+24 Warte auf freien Netz-Socket
+25 Lade: %s
+26 Schreibe: %s
+27 Warte auf Verbindung
+28 Kontakt zu: %s
+29 Suche: %s
+30 Unbekannter Status
+31 Anmeldung
+32 Bitte bestätigen Sie
+33 Anmeldungsfehler für %s
+34 %s geladen, aber leer
+35 Übertragung unterbrochen!
+36 %s ist im Moment nicht verfügbar. Bitte später nochmal versuchen!
+37 %s geladen
+38 Speichere: %s
+39 Kann nicht speichern unter: %s
+40 German system errors messages
+41 Ein Verknüpfungsziel kann dieses Element nicht enthalten
+42 Innerhalb eines Verknüpfungszieles kann kein Verknüpfungsziel erstellt werden
+43 GET-Unterstützung noch nicht implementiert für URL-Type: %s
+44 PUT-Unterstützung noch nicht implementiert für URL-Type: %s
+45 Diese Funktion wird von Amaya nicht unterstützt
+46 Schreiben beendet %s
+47 Normalisierung nicht erfolgreich für: %s
+48 Temporäres Dateiverzeichnis konnte nicht angelegt werden: %s
+49 Für die Markierung ist keine Umwandlung anwendbar
+50 Umwandlung fehlerhaft
+51 Syntaxfehler in der HTML-Datei, Zeile %s
+52 Formel
+53 Grafiken
+54 Speichern unter
+55 Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:
+56 Domain: %s
+57 Server: %s
+58 Editor/Browser
+59 Timeout - server antwortet nicht
+60 %s besteht bereits. Überschreiben?
+61 %s wurde geändert. Überschreiben?
+62 Hintergrundbild
+63 Hintergrundbild hier nicht zulässig
+64 CSS
+65 Speichern überschreibt die folgenden URL:
+66 Speichern der URL fehlerhaft
+67 Speichern auf Festplatte?
+68 Grafiken speichern
+69 Absolute Verknüpfungszieladressen
+70 Dokumentenadresse
+71 Grafik(unter)verzeichnis
+72 Objektadresse
+73 Stylesheetdatei wählen
+74 der W3C Web-Browser und -Editor
+75 (Probleme senden an www-amaya@w3.org)
+76 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
+77 Nur Standardtyp erlaubt
+78 Aktualisierung der Verknüpfung : %s%% erfolgreich
+79 Nichts zu speichern
+80 Wiederholung y
+81 <HTML><HEAD><TITLE>ERROR: Kann nicht zugreifen auf URL</TITLE></HEAD><BODY><H1>Die angeforderte URL konnte nicht geladen werden </H1><HR><P>Beim Laden der URL:<A HREF=\"%s\">%s</A></P><P> ist folgender Fehler aufgetreten:</P><UL><LI><STRONG>Verbindung nicht möglich</STRONG></UL><P>Das System meldete:</P><PRE><I>(%d) %s</I></PRE><P>Dies bedeutet, daß:</P><PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.</PRE><PRE>Bitte später noch einmal versuchen.</PRE><P></P><HR>\n</BODY></HTML>
+82 Bitte Usernamen eingeben:
+83 %d offene Anfrage(n)
+84 Keine CSS-Datei vorhanden
+85 Übertragung unterbrechen
+86 Vorheriges Dokument
+87 Nachfolgendes Dokument
+88 Neu laden
+89 Speichern
+90 Drucken
+91 Suchen
+92 Betont
+93 Fett
+94 Feste Schriftbreite
+95 keine Wiederholung
+96 Grafik einfügen
+97 Überschrift Ebene 1
+98 Überschrift Ebene 2
+99 Überschrift Ebene 3
+100 Liste mit Punkten
+101 Numerierte Liste
+102 Definitionsliste
+103 Verknüpfung
+104 Tabelle
+105 Das Dokument ist unbenannt. Speichere unter:
+106 Plugins
+107 Unbekannter Fehler beim Speichern URL %s
+108 Keine Verbindung zum Server
+109 Zugriff auf %s verboten
+110 Operation erfolgreich für: %s
+111 %s wurde erzeugt
+112 %s wurde aktualisiert
+113 Operation wurde beendet mit Code %s .
+114 Der Server konnte die Anfragesyntax nicht verstehen
+115 Der Server hat keine neue Informationen zurückzusenden
+116 Diese Methode ist nicht erlaubt
+117 Bitte einloggen für den Zugriff auf: %s
+118 Überprüfe ...
+119 Speichern unter %s fehlerhaft, Speichern auf Festplatte?
+120 Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?
+121 URL %s weitergeleitet nach %s, Ignorieren?
+122 Neuladen von %s fehlerhaft, Ignorieren?
+123 Der Server meldet einen 501-Fehler: %s
+124 Der Server meldet einen 501-Fehler
+125 Der Server unterstützt diese Anforderungsmethode nicht
+126 Filter
+127 Aktive Übertragungen
+128 Wartende Übertragungen
+129 mit Inhaltsverzeichnis
+130 mit Verknüpfungen
+131 Wiederholungsmodus
+132 Wiederholung
+133 Wiederholung x
+134 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
+135 Login gescheitert. Wiederholen?
+136 Umleitung folgen?
+137 Zeilen:
+138 Spalten:
+139 Rahmen:
+140 Alternativer Text
+141 Alternativer Text ist erforderlich!
+142 mit URLpply
+143 Übernehmen
+144 Zurücksetzen
+145 Cache leeren
+146 Cache Einstellungen
+147 Cache aktivieren
+148 Cache geschützte Dokumente
+149 Offline-Modus
+150 Ignoriere Expires(Gültig bis): header
+151 Cache Verzeichnis
+152 Cachegröße (Mb)
+153 Max. Größe von Cacheeinträgen (Mb)
+154 Proxy Einstellungen
+155 HTTP proxy (e.g., www.w3.org:1234)
+156 Proxy domain list (e.g., lists.w3.org)
+157 Allgemeine Einstellungen
+158 Startseite
+159 Quickinfo Verzögerung (ms)
+160 Doppelklickintervall (ms)
+161 Größe Menüschriftart
+162 Schriftzoom
+163 Dialogsprache
+164 Mehrfachtasten aktivieren (`+a=à)
+165 Hintergrundbilder anzeigen
+166 Doppelklick aktiviert Link
+167 CR/LF exportieren
+168 Einstellungen veröffentlichen
+169 ETAGS und preconditions verwenden
+170 PUT durch GET verifizieren
+171 Dateiname, falls URL mit '/' endet
+172 Einstellungen Fenstergeometrie
+173 Aktuelle Geometrie speichern
+174 Standardgeometrie einstellen
+175 Die Änderungen werden beim öffnen eines neuen Fensters wirksam.
+176 Farbeinstellungen
+177 Schriftfarbe (Dokument)
+178 Hintergrundfarbe (Dokument)
+179 Schriftfarbe (Menüs)
+180 Hintergrundfarbe (Menüs)
+181 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
+182 Anfang
+183 Liste der bevorzugten Sprachen wie "en, fr":
+184 Verzeichnis der Profildefinitionen
+185 Profilauswahl
+186 Diese Änderungen werden erst bei einem Neustart von Amaya wirksam
+187 Profileinstellungen
+188 URL des Vorlagen-Servers angeben
+189 Vorlagen-Einstellungen
+190 Automatische PUT-Umleitung bei diesen Domänen erlauben
+191 Stilvorlagen ignorieren
+192 Umformatieren
+193 (Einträge durch Leerzeichen trennen)
+194 Keinen Proxy für folgende Domänen verwenden
+195 Proxy nur für folgende Domänen verwenden
+196 Zeichenname
+197 Amaya Benutzerverzeichnis
+198 Lokaler filter...
+199 Palette benutzen
+200 Sprachauswahl
+201 Konfiguration für Anmerkungen
+202 Anmerkungsbenutzer
+203 Anmerkungs-Veröffentlichungs-Server
+204 Anmerkungsserver
+205 Local Anmerkungen automatisch laden
+206 Remote Anmerkungen automatisch laden
+207 Kein automatisches Laden vom Remote Server beim Programmstart (Off-line Arbeitsmodus)
+208 Farbe Auswahl
+209 Farbe Cursor
+210 Ausrichtung
+211 Hochformat
+212 Querformat
+213 FTP zulassen (noch in der Erprobung)
+214 Ungültiger XML Code - als HTML laden oder Parsefehler anzeigen?
+215 Ungültiger XML Code - Parsefehler anzeigen?
+216 Ungültige Zeichen - als HTML laden oder Parsefehler anzeigen?
+217 Ungültige Zeichen
+218 Durch gegenwärtigen Dokument Profil:
+219 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
+220 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
+221 Durch das Bearbeiten und Speichern ändert sich der Dokumententyp
+222 Nicht verfügbar
+223 Browsen
+224 Datei-Browser
+225 Auswahl
+226 Menü für lokale Kommentierungsfilter
+227 Anzeigen
+228 Nicht anzeigen
+229 Alles anzeigen
+230 Nichts anzeigen
+231 * bedeutet verborgen, - bedeutet teilweise verborgen
+232 Filteroptionen
+233 Vom Autor
+234 Vom Typ
+235 Vom Server
+236 Zugriffstasten
+237 Ignorieren
+238 Stilelement
+239 Kann keinen XPointer erzeugen
+240 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
+241 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
+242 Kein Ziel zum Verschieben der Anmerkung [gefunden]
+243 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
+244 Annotieren eines geänderten Dokuments ist nicht möglich. Bitte erst speichern.
+245 Kein Benutzer für Annotation vereinbart. Bitte das Menü "Annotationen/Konfiguration" öffnen.
+246 Für diese Annotation kein kein XPointer erzeugt werden
+247 Neue Annotation erzeugen
+248 Abschicken der Annotation gescheitert
+249 Löschen der Annotation gescheitert
+250 Annotation gelöscht!
+251 Laden des Annotationsindex gescheitert
+252 Fehler
+253 Charset auswählen
+254 MIME type auswählen
+255 Anderen Charset auswählen
+256 Anderen MIME type auswählen
+257 Wechseln
+258 Dieser Dokumenttyp unterstützt keine Charsets
+259 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
+260 Fehler: ungültiger MIME type
+261 Unbekannt
+262 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
+263 Dieses Dokument wurde bereits in einem anderen Fenster geladen
+264 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)

@@ -22,244 +22,245 @@
 20 Redirezione durante il caricamento di %s
 21 Ho rilevato troppe redirezioni
 22 Non posso creare il file locale %s
-23 Sono in attesa di un socket libero
-24 Sto leggendo %s
-25 Sto scrivendo %s
-26 In attesa della connessione
-27 Sto contattando %s
-28 Sto cercando %s
-29 Stato sconosciuto
-30 Dialogo di autenticazione
-31 Autenticazione per
-32 Autorizzazione fallita per %s
-33 %s caricato, ma non è disponibile alcun dato
-34 Trasferimento interrotto!
-35 %s è indisponibile al momento. Riprova piú tardi
-36 %s caricato
-37 Salvataggio di %s
-38 Non posso salvare su %s
-39 italian system errors messages
-40 Un ancora non può contenere questi elementi
-41 Non posso creare un'ancora all'interno di un'ancora
-42 Il GET di URL di tipo %s non è ancora supportato
-43 Il PUT di URL di tipo %s non è ancora supportato
-44 La presente versione di Amaya non supporta questa funzionalità
-45 Scrittura di %s terminata
-46 Impossibile normalizzare %s
-47 Impossibile creare la directory dei file temporanei %s
-48 Alla selezione non è applicabile alcuna trasformazione
-49 Trasformazione fallita
-50 errore di sintassi nel file HTML.trans alla linea %s
-51 Formule matematiche
-52 Grafica
-53 Salva con nome
-54 Autenticazione per il dominio \'%s\' sul server \'%s\'
-55 Dominio: %s
-56 Server: %s
-57 Editor/Browser
-58 Richiesta scaduta - il server non ha risposto
-59 %s esiste già. Vuoi sovrascriverlo?
-60 %s è cambiato. Vuoi sovrascriverlo?
-61 Immagine di sfondo
-62 L'immagine di background non è consentita qui
-63 CSS
-64 Il salvataggio sovrascriverà i seguenti URL:
-65 Il salvataggio sull'URL è fallito
-66 Salvo su disco ?
-67 Copia immagini
-68 Trasforma URL
-69 Collocazione del documento
-70 Directory delle immagini
-71 Collocazione dell'oggetto
-72 CSS file
-73 il editor/browser del W3C
-74 (scrivere a www-amaya@w3.org per informazioni)
-75 Impossibile gestire URL composti da piú di %s caratteri
-76 consentito il solo tipo di default
-77 Aggiornamento dei collegamenti: %s%% è stato fatto
-78 Niente di nuovo da salvare
-79 repeat-y
-80 <HTML><HEAD><TITLE>ERRORE: Impossibile accedere ad un URL</TITLE></HEAD><BODY><H1>L'URL richiesto non può essere recuperato</H1><HR><P>Tentando di recuperare l'URL:<A HREF=\"%s\">%s</A></P><P>si è verificato il seguente errore:</P><UL><LI><STRONG>Connessione fallita</STRONG></UL><P>Il sistema ha restituito:</P><PRE><I>(%d) %s</I></PRE><P>Ciò significa che:</P><PRE>Il sito o il server remoti possono essere inattivi o inesistenti.</PRE><PRE>Prova ancora piú tardi.</PRE><P></P><HR>\n</BODY></HTML>
-81 Digita lo username:
-82 %d richieste inevase
-83 Non è disponibile nessun file CSS
-84 Interrompi trasferimento
-85 Documento precedente
-86 Documento successivo
-87 Ricarica
-88 Salva
-89 Stampa
-90 Cerca
-91 Enfasi
-92 Forte
-93 Font non proporzionale
-94 no-repeat
-95 Inserisci immagine
-96 Intestazione di livello 1
-97 Intestazione di livello 2
-98 Intestazione di livello 3
-99 Lista puntata
-100 Lista numerata
-101 Lista di definizioni
-102 Collegamento
-103 Tabella
-104 Il documento non ha nome. Salva come:
-105 Plugin
-106 Errore sconosciuto durante il salvataggio dell'URL %s
-107 Impossibile connettersi al server
-108 L'accesso a %s è proibito dal server
-109 L'operazione ha avuto successo per %s
-110 %s è stato creato
-111 %s è stato aggiornato
-112 Operazione completata con codice %s
-113 Il server non ha compreso la sintassi della richiesta
-114 Il server non ha nuove informazioni da inviare
-115 Questo metodo non è consentito
-116 Identificazione richiesta per accedere a %s
-117 Verifica in corso ...
-118 Il salvataggio su %s è fallito, salvo su disco?
-119 Il salvataggio su %s sembra non funzionare, ignora?
-120 L'URL %s è rediretto su %s, ignora ?
-121 Ricaricamento di %s fallito, ignora ?
-122 Il server riporta un errore 501: %s
-123 Il server riporta un errore 501
-124 Il server non supporta questo metodo di richiesta
-125 Filtro
-126 trasferimenti attivi
-127 trasferimenti in coda
-128 Sommario
-129 Sommario dei collegamenti
-130 Repeat Mode
-131 repeat
-132 repeat-x
-133 La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?
-134 Autenticazione fallita. Vuoi riprovare?
-135 L'operazione sarà rediretta. Vuoi continuare?
-136 Numero di righe
-137 Numero di colonne
-138 Bordo
-139 Testo alternativo
-140 Il testo alternativo è obbligatorio
-141 Stampa URL
-142 Applica
-143 Predefinite
-144 Svuota la cache
-145 Preferenze sulla cache
-146 Abilita la cache
-147 Proteggi i documenti nella cache
-148 Modo non in linea
-149 Ignora le scadenze: header
-150 Directory della cache
-151 Dimensione della cache (Mb)
-152 Dimensione dell'indice della cache (Mb)
-153 Preferenze sull'uso dei proxy
-154 HTTP proxy (es., http://groucho.marx.edu)
-155 Domini di proxy (es., www.w3.org)
-156 Preferenze generali
-157 Home Page
-158 Ritardo del ToolTip (ms)
-159 Ritardo del doppio click (ms)
-160 Dimensione dei caratteri dei menu
-161 Ingrandimento della fonte
-162 Lingua delle finestre di dialogo
-163 Abilita le sequenze multitasto
-164 Mostra le immagini di sfondo
-165 Il doppio click attiva il collegamento
-166 **Export CR/LF
-167 Preferenze per la pubblicazione
-168 Usa gli ETAGS e le precondizioni
-169 Verifica ogni PUT con un GET
-170 Nome di default per gli URL che terminano con '/'
-171 Preferenze della geometria
-172 Salva la geometria corrente
-173 Ripristina la geometria di default
-174 La modifica sarà effettiva quando aprirai una nuova finestra.
-175 Preferenze dei colori
-176 Colore in primo piano nei documenti
-177 Colore dello sfondo nei documenti
-178 Colore in primo piano nei menu
-179 Colore dello sfondo nei menu
-180 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
-181 Home
-182 Lista delle lingue preferite, come "it, en, fr":
-183 File di definizione dei profili
-184 Selezione dei profili
-185 Queste modifiche saranno effettive alla prossima esecuzione
-186 Preferenze dei profili
-187 Digita l'URL del server dei modelli
-188 Preferenze sui modelli
-189 Consenti la redirezione automatica dei PUT su questi domini
-190 Ignora gli stili CSS
-191 Trasforma tipo
-192 (separa ogni campo con uno spazio)
-193 Escludi l'utilizzo del proxy su questi domini
-194 Utilizza il proxy solo su questi domini
-195 Nome del carattere
-196 Directory dell'utente
-197 Directory temporanea
-198 Usa la palette
-199 Negoziazione della lingua
-200 Configurazione delle annotazioni
-201 Nome utente
-202 Server per la pubblicazione
-203 Server per le annotazioni
-204 Caricamento automatico delle annotazioni local
-205 Caricamento automatico delle annotazioni remote
-206 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
-207 Colore della selezione
-208 Colore del cursore
-209 Orientamento
-210 Ritratto
-211 Paesaggio
-212 Abilita FTP (sperimentale)
-213 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
-214 XML non valido - Mostro gli errori di parsificazione?
-215 Caratteri non validi - Ricarico come HTML o mostro gli errori di parsificazione?
-216 Caratteri non validi
-217 Con profilo di documento:
-218 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
-219 La codifica per questo documento non e` supportata da Amaya
-220 Editando e salvando questo documento il suo tipo verrà cambiato
-221 Non disponibile
-222 Scorri
-223 File Browser
-224 Selezione
-225 Menu per i filtri locali - annotazioni
-226 Mostra
-227 Nascondi
-228 Mostra tutto
-229 Nascondi tutto
-230 * significa nascosto, - significa parzialmente nascosto
-231 Opzioni per i filtri
-232 Per autore
-233 Per tipo
-234 Per server
-235 Chiavi di accesso
-236 Ignora
-237 Elemento si stile
-238 No posso create un XPointer
-239 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
-240 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
-241 Non trovo dove muovere l'annotazione
-242 Non posso muovere l'annotazione su un diverso documento
-243 Non puoi annotare un documento modificato. Prima salvalo.
-244 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
-245 Non posso creare un XPointer per questa annotazione
-246 Aggiungi una nuova annotazione
-247 Non posso postare l'annotazione
-248 Non posso cancellare l'annotazione
-249 Annotazione cancellata!
-250 Non posso caricare l'indice delle annotazioni
-251 Errore
-252 Seleziona un charset
-253 Seleziona un tipo MIME
-254 Cambia charset
-255 Cambia tipo MIME
-256 Cambia
-257 Questo tipo di documento non supporta i charset
-258 Per usare questa opzione, il target deve essere un'URL HTTP
-259 Errore: MIME type non valido
-260 Sconosciuto
-261 I stili sono ignorati - vedi Viste/Mostra le errore
-262 Questo documento è già caricato in un'altra finestra
-263 Salvare questa istanza può fare perdere degli aggiornamenti
+23 Non posso creare il indice %s
+24 Sono in attesa di un socket libero
+25 Sto leggendo %s
+26 Sto scrivendo %s
+27 In attesa della connessione
+28 Sto contattando %s
+29 Sto cercando %s
+30 Stato sconosciuto
+31 Dialogo di autenticazione
+32 Autenticazione per
+33 Autorizzazione fallita per %s
+34 %s caricato, ma non è disponibile alcun dato
+35 Trasferimento interrotto!
+36 %s è indisponibile al momento. Riprova piú tardi
+37 %s caricato
+38 Salvataggio di %s
+39 Non posso salvare su %s
+40 italian system errors messages
+41 Un ancora non può contenere questi elementi
+42 Non posso creare un'ancora all'interno di un'ancora
+43 Il GET di URL di tipo %s non è ancora supportato
+44 Il PUT di URL di tipo %s non è ancora supportato
+45 La presente versione di Amaya non supporta questa funzionalità
+46 Scrittura di %s terminata
+47 Impossibile normalizzare %s
+48 Impossibile creare la directory dei file temporanei %s
+49 Alla selezione non è applicabile alcuna trasformazione
+50 Trasformazione fallita
+51 errore di sintassi nel file HTML.trans alla linea %s
+52 Formule matematiche
+53 Grafica
+54 Salva con nome
+55 Autenticazione per il dominio \'%s\' sul server \'%s\'
+56 Dominio: %s
+57 Server: %s
+58 Editor/Browser
+59 Richiesta scaduta - il server non ha risposto
+60 %s esiste già. Vuoi sovrascriverlo?
+61 %s è cambiato. Vuoi sovrascriverlo?
+62 Immagine di sfondo
+63 L'immagine di background non è consentita qui
+64 CSS
+65 Il salvataggio sovrascriverà i seguenti URL:
+66 Il salvataggio sull'URL è fallito
+67 Salvo su disco ?
+68 Copia immagini
+69 Trasforma URL
+70 Collocazione del documento
+71 Directory delle immagini
+72 Collocazione dell'oggetto
+73 CSS file
+74 il editor/browser del W3C
+75 (scrivere a www-amaya@w3.org per informazioni)
+76 Impossibile gestire URL composti da piú di %s caratteri
+77 consentito il solo tipo di default
+78 Aggiornamento dei collegamenti: %s%% è stato fatto
+79 Niente di nuovo da salvare
+80 repeat-y
+81 <HTML><HEAD><TITLE>ERRORE: Impossibile accedere ad un URL</TITLE></HEAD><BODY><H1>L'URL richiesto non può essere recuperato</H1><HR><P>Tentando di recuperare l'URL:<A HREF=\"%s\">%s</A></P><P>si è verificato il seguente errore:</P><UL><LI><STRONG>Connessione fallita</STRONG></UL><P>Il sistema ha restituito:</P><PRE><I>(%d) %s</I></PRE><P>Ciò significa che:</P><PRE>Il sito o il server remoti possono essere inattivi o inesistenti.</PRE><PRE>Prova ancora piú tardi.</PRE><P></P><HR>\n</BODY></HTML>
+82 Digita lo username:
+83 %d richieste inevase
+84 Non è disponibile nessun file CSS
+85 Interrompi trasferimento
+86 Documento precedente
+87 Documento successivo
+88 Ricarica
+89 Salva
+90 Stampa
+91 Cerca
+92 Enfasi
+93 Forte
+94 Font non proporzionale
+95 no-repeat
+96 Inserisci immagine
+97 Intestazione di livello 1
+98 Intestazione di livello 2
+99 Intestazione di livello 3
+100 Lista puntata
+101 Lista numerata
+102 Lista di definizioni
+103 Collegamento
+104 Tabella
+105 Il documento non ha nome. Salva come:
+106 Plugin
+107 Errore sconosciuto durante il salvataggio dell'URL %s
+108 Impossibile connettersi al server
+109 L'accesso a %s è proibito dal server
+110 L'operazione ha avuto successo per %s
+111 %s è stato creato
+112 %s è stato aggiornato
+113 Operazione completata con codice %s
+114 Il server non ha compreso la sintassi della richiesta
+115 Il server non ha nuove informazioni da inviare
+116 Questo metodo non è consentito
+117 Identificazione richiesta per accedere a %s
+118 Verifica in corso ...
+119 Il salvataggio su %s è fallito, salvo su disco?
+120 Il salvataggio su %s sembra non funzionare, ignora?
+121 L'URL %s è rediretto su %s, ignora ?
+122 Ricaricamento di %s fallito, ignora ?
+123 Il server riporta un errore 501: %s
+124 Il server riporta un errore 501
+125 Il server non supporta questo metodo di richiesta
+126 Filtro
+127 trasferimenti attivi
+128 trasferimenti in coda
+129 Sommario
+130 Sommario dei collegamenti
+131 Repeat Mode
+132 repeat
+133 repeat-x
+134 La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?
+135 Autenticazione fallita. Vuoi riprovare?
+136 L'operazione sarà rediretta. Vuoi continuare?
+137 Numero di righe
+138 Numero di colonne
+139 Bordo
+140 Testo alternativo
+141 Il testo alternativo è obbligatorio
+142 Stampa URL
+143 Applica
+144 Predefinite
+145 Svuota la cache
+146 Preferenze sulla cache
+147 Abilita la cache
+148 Proteggi i documenti nella cache
+149 Modo non in linea
+150 Ignora le scadenze: header
+151 Directory della cache
+152 Dimensione della cache (Mb)
+153 Dimensione dell'indice della cache (Mb)
+154 Preferenze sull'uso dei proxy
+155 HTTP proxy (es., http://groucho.marx.edu)
+156 Domini di proxy (es., www.w3.org)
+157 Preferenze generali
+158 Home Page
+159 Ritardo del ToolTip (ms)
+160 Ritardo del doppio click (ms)
+161 Dimensione dei caratteri dei menu
+162 Ingrandimento della fonte
+163 Lingua delle finestre di dialogo
+164 Abilita le sequenze multitasto
+165 Mostra le immagini di sfondo
+166 Il doppio click attiva il collegamento
+167 **Export CR/LF
+168 Preferenze per la pubblicazione
+169 Usa gli ETAGS e le precondizioni
+170 Verifica ogni PUT con un GET
+171 Nome di default per gli URL che terminano con '/'
+172 Preferenze della geometria
+173 Salva la geometria corrente
+174 Ripristina la geometria di default
+175 La modifica sarà effettiva quando aprirai una nuova finestra.
+176 Preferenze dei colori
+177 Colore in primo piano nei documenti
+178 Colore dello sfondo nei documenti
+179 Colore in primo piano nei menu
+180 Colore dello sfondo nei menu
+181 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
+182 Home
+183 Lista delle lingue preferite, come "it, en, fr":
+184 File di definizione dei profili
+185 Selezione dei profili
+186 Queste modifiche saranno effettive alla prossima esecuzione
+187 Preferenze dei profili
+188 Digita l'URL del server dei modelli
+189 Preferenze sui modelli
+190 Consenti la redirezione automatica dei PUT su questi domini
+191 Ignora gli stili CSS
+192 Trasforma tipo
+193 (separa ogni campo con uno spazio)
+194 Escludi l'utilizzo del proxy su questi domini
+195 Utilizza il proxy solo su questi domini
+196 Nome del carattere
+197 Directory dell'utente
+198 Directory temporanea
+199 Usa la palette
+200 Negoziazione della lingua
+201 Configurazione delle annotazioni
+202 Nome utente
+203 Server per la pubblicazione
+204 Server per le annotazioni
+205 Caricamento automatico delle annotazioni local
+206 Caricamento automatico delle annotazioni remote
+207 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
+208 Colore della selezione
+209 Colore del cursore
+210 Orientamento
+211 Ritratto
+212 Paesaggio
+213 Abilita FTP (sperimentale)
+214 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
+215 XML non valido - Mostro gli errori di parsificazione?
+216 Caratteri non validi - Ricarico come HTML o mostro gli errori di parsificazione?
+217 Caratteri non validi
+218 Con profilo di documento:
+219 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
+220 La codifica per questo documento non e` supportata da Amaya
+221 Editando e salvando questo documento il suo tipo verrà cambiato
+222 Non disponibile
+223 Scorri
+224 File Browser
+225 Selezione
+226 Menu per i filtri locali - annotazioni
+227 Mostra
+228 Nascondi
+229 Mostra tutto
+230 Nascondi tutto
+231 * significa nascosto, - significa parzialmente nascosto
+232 Opzioni per i filtri
+233 Per autore
+234 Per tipo
+235 Per server
+236 Chiavi di accesso
+237 Ignora
+238 Elemento si stile
+239 No posso create un XPointer
+240 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
+241 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
+242 Non trovo dove muovere l'annotazione
+243 Non posso muovere l'annotazione su un diverso documento
+244 Non puoi annotare un documento modificato. Prima salvalo.
+245 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
+246 Non posso creare un XPointer per questa annotazione
+247 Aggiungi una nuova annotazione
+248 Non posso postare l'annotazione
+249 Non posso cancellare l'annotazione
+250 Annotazione cancellata!
+251 Non posso caricare l'indice delle annotazioni
+252 Errore
+253 Seleziona un charset
+254 Seleziona un tipo MIME
+255 Cambia charset
+256 Cambia tipo MIME
+257 Cambia
+258 Questo tipo di documento non supporta i charset
+259 Per usare questa opzione, il target deve essere un'URL HTTP
+260 Errore: MIME type non valido
+261 Sconosciuto
+262 I stili sono ignorati - vedi Viste/Mostra le errore
+263 Questo documento è già caricato in un'altra finestra
+264 Salvare questa istanza può fare perdere degli aggiornamenti
