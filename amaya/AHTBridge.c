@@ -12,7 +12,7 @@
  * requests.
  *
  * Author: J Kahan
- *         R. Guetari Windows NT/95 routines
+ *         R. Guetari/J. Kahan Windows NT/95 routines
  *
  */
 #ifndef AMAYA_JAVA

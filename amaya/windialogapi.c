@@ -290,7 +290,7 @@ LPARAM lParam;
 							break;
 
 				       case IDCANCEL:
-			                closeDontSave = TRUE;
+					        EndDialog (hwnDlg, IDCANCEL);
 							break;
 				}
 				break;

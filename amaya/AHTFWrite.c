@@ -180,9 +180,9 @@ HTStream           *me;
 	   REMOVE (me->filename);
 	if (me->callback)
 	   (*me->callback) (me->request, me->filename);
-	TtaFreeMemory (me->end_command);
-	TtaFreeMemory (me->filename);
-	HT_FREE(me);
+	HT_FREE (me->end_command);
+	HT_FREE (me->filename);
+	HT_FREE (me);
      }
    return HT_OK;
 }
@@ -207,9 +207,9 @@ HTList             *e;
 	   fclose (me->fp);
 	if (me->remove_on_close)
 	   REMOVE (me->filename);
-	TtaFreeMemory (me->end_command);
-	TtaFreeMemory (me->filename);
-	TtaFreeMemory (me);
+	HT_FREE (me->end_command);
+	HT_FREE (me->filename);
+	HT_FREE (me);
      }
    return HT_ERROR;
 }

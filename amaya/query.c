@@ -10,8 +10,8 @@
  * URLs via libwww. It handles any eventual HTTP error code
  * (redirection, authentication needed, not found, etc.)
  *
- * Author: J. Kahan
- *         R. Guetari (W3C/INRIA) Windows 95/NT routines
+ * Author: J. Kahan	   
+ *         R. Guetari/J. Kahan (W3C/INRIA) Windows 95/NT routines
  */
 
 #ifndef AMAYA_JAVA
@@ -299,7 +299,7 @@ AHTReqContext      *me;
 	HTRequest_delete (me->request);
 
 	if (me->error_stream != (char *) NULL)
-	  TtaFreeMemory (me->error_stream);
+	  HT_FREE (me->error_stream);
 #ifdef WWW_XWINDOWS	
 	if (me->read_xtinput_id || me->write_xtinput_id ||
             me->except_xtinput_id)
@@ -549,6 +549,8 @@ int                 status;
 
    if (!AmayaIsAlive)
       me->reqStatus = HT_ABORT;
+   else
+	  me->reqStatus = HT_OK;
 
    if (status == HT_LOADED || status == HT_CREATED || status == HT_NO_DATA)
        error_flag = FALSE;
@@ -947,7 +949,7 @@ static void         AHTProtocolInit (void)
       Non-preemptive == NO = Non-blocking request
    */
 
-   HTProtocol_add ("http", "buffered_tcp", YES, HTLoadHTTP, NULL);
+   HTProtocol_add ("http", "buffered_tcp", NO, HTLoadHTTP, NULL);
    /*   HTProtocol_add ("http", "tcp", NO, HTLoadHTTP, NULL); */
    HTProtocol_add ("file", "local", NO, HTLoadFile, NULL);
    HTProtocol_add ("cache", "local", NO, HTLoadCache, NULL);
@@ -1010,7 +1012,9 @@ static void         AHTAlertInit ()
 #endif
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
+#ifndef _WINDOWS
    HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
+#endif /* _WINDOWS */
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
    HTError_setShow (~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
@@ -1137,14 +1141,14 @@ void                QueryInit ()
    AmayaIsAlive = TRUE;
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
 
-   /* New AHTBridge stuff */
 
-   HTEvent_setRegisterCallback (AHTEvent_register);
-   HTEvent_setUnregisterCallback (AHTEvent_unregister);
-   
 #  ifdef _WINDOWS
    HTEventInit ();
    WIN_InitializeSockets ();
+#else
+    /* New AHTBridge stuff */
+   HTEvent_setRegisterCallback (AHTEvent_register);
+   HTEvent_setUnregisterCallback (AHTEvent_unregister);
 #  endif _WINDOWS;
 
    /* Setup authentication manager */
@@ -1283,9 +1287,10 @@ void                QueryClose ()
    HTNet_deleteAfter (redirection_handler);
    HTAlertCall_deleteAll (HTAlert_global () );
    HTAlert_setGlobal ((HTList *) NULL);
+#ifndef _WINDOWS
    HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
    HTEvent_setUnregisterCallback ((HTEvent_unregisterCallback *) NULL);
-
+#endif /* !!WINDOWS */
    Thread_deleteAll ();
  
 #ifndef HACK_WWW
@@ -1518,15 +1523,15 @@ boolean error_html;
         tmp[MAX_LENGTH] = EOS;
 	me->urlName = tmp;
 #ifdef _WINDOWS
-    HTRequest_setPreemptive (me->request, YES);
+    HTRequest_setPreemptive (me->request, NO);
    }
    else		 
      {
 	me->outputfile = outputfile;
 	me->urlName = urlName;
+    HTRequest_setPreemptive (me->request, YES);
      }
 
-    HTRequest_setPreemptive (me->request, YES);
 #else /* _WINDOWS */
 
    }
@@ -1587,9 +1592,7 @@ boolean error_html;
 	else
 	  status = HT_OK;
 
-#   ifndef _WINDOWS
 	AHTReqContext_delete (me);
-#   endif /* _WINDOWS */
      }
    else
      {

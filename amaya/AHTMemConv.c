@@ -177,7 +177,6 @@ HTStream           *me;
 {
    if (WWWTRACE)
       HTTrace ("AHTMemConv_free\n");
-	  /* Yet another Jose's @!!$^^#é&è.   Ramzi. */
    HT_FREE (me);
    return HT_OK;
 }
@@ -239,7 +238,7 @@ HTRequest          *request;
 
    if (reqcont->error_stream)
      {
-	TtaFreeMemory (reqcont->error_stream);
+	HT_FREE (reqcont->error_stream);
 	reqcont->error_stream = (char *) NULL;
 	reqcont->error_stream_size = 0;
      }
