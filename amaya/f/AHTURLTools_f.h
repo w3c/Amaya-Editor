@@ -26,6 +26,7 @@ extern ThotBool IsTextName ( const STRING path );
 extern ThotBool IsHTTPPath ( const STRING path );
 extern ThotBool IsWithParameters ( const char *url );
 extern ThotBool IsW3Path ( const CHAR_T* path );
+extern ThotBool IsFilePath ( const CHAR_T* path );
 extern ThotBool IsValidProtocol ( const STRING url );
 extern CHAR_T* GetBaseURL ( Document doc );
 extern CHAR_T* GetLocalPath ( Document doc,
@@ -75,6 +76,7 @@ extern ThotBool IsTextName (/* const STRING path */);
 extern ThotBool IsHTTPPath (/* const STRING path */);
 extern ThotBool IsWithParameters (/* const char *url */);
 extern ThotBool IsW3Path (/* const CHAR_T* path */);
+extern ThotBool IsFilePath (/* const CHAR_T* path */);
 extern ThotBool IsValidProtocol (/* const STRING url */);
 extern CHAR_T* GetBaseURL (/* Document doc */);
 extern CHAR_T* GetLocalPath (/* Document doc,
