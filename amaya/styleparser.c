@@ -3140,11 +3140,11 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 		    {
 		      NormalizeURL (url, 0, tempname, imgname, css->url);
 		      /* fetch and display background image of element */
-		      FetchImage (context->doc, el, tempname, AMAYA_LOAD_IMAGE,
+		      FetchImage (0/*context->doc*/, el, tempname, AMAYA_LOAD_IMAGE,
 				  ParseCSSBackgroundImageCallback, callblock);
 		    }
 		  else
-		    FetchImage (context->doc, el, url, AMAYA_LOAD_IMAGE,
+		    FetchImage (0/*context->doc*/, el, url, AMAYA_LOAD_IMAGE,
 				ParseCSSBackgroundImageCallback, callblock);
 		}
 	    }

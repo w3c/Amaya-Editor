@@ -697,7 +697,8 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
        TtaFreeMemory (FetchImage_ctx);
        
        /* check if this request wasn't aborted */
-       if (strcmp (base_url, DocumentURLs[doc]))
+       if (base_url && DocumentURLs[doc] &&
+	   strcmp (base_url, DocumentURLs[doc]))
 	 {
 	   /* it's not the same url, so let's just return */
 	   TtaFreeMemory (base_url);
@@ -708,7 +709,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	 TtaFreeMemory (base_url);
      }
 
-   if (DocumentURLs[doc] != NULL)
+   if (doc == 0 ||DocumentURLs[doc])
      {
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
@@ -819,12 +820,11 @@ static void libWWWImageLoaded (int doc, int status, char *urlName,
 {
   FetchImage_context *FetchImage_ctx;
 
-  if (DocumentURLs[doc] != NULL)
+  if (doc == 0 || DocumentURLs[doc])
     {
       /* an image of the document is now loaded */
       /* update the stop button status */
       ResetStop (doc);
-
       /* the image could not be loaded */
       if (status != 0)
 	{
@@ -903,7 +903,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
   attr = NULL;
   FetchImage_ctx = NULL;
 
-  if (el != NULL && DocumentURLs[doc] != NULL)
+  if (el && (doc == 0 || DocumentURLs[doc]))
     {
       if (URL == NULL)
 	{

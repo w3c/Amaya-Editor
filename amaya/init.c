@@ -737,55 +737,62 @@ void SetArrowButton (Document document, ThotBool back, ThotBool on)
   ----------------------------------------------------------------------*/
 void ResetStop (Document document)
 {
-  if (FilesLoading[document] != 0)
-    FilesLoading[document]--;
-  if (FilesLoading[document] == 0)
-    /* The last object associated to the document has been loaded */
+  if (document)
     {
-      if (TtaGetViewFrame (document, 1) != 0) 
-	/* this document is displayed */
+      if (FilesLoading[document] != 0)
+	FilesLoading[document]--;
+      if (FilesLoading[document] == 0)
+	/* The last object associated to the document has been loaded */
 	{
-	  if(!(DocNetworkStatus[document] & AMAYA_NET_ERROR) &&
-	     (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
-	    /* if there was no error message, display the LOADED message */
-	    TtaSetStatus (document, 1,
-			  TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-	  TtaChangeButton (document, 1, iStop, stopN, FALSE);
+	  if (TtaGetViewFrame (document, 1) != 0) 
+	    /* this document is displayed */
+	    {
+	      if(!(DocNetworkStatus[document] & AMAYA_NET_ERROR) &&
+		 (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
+		/* if there was no error message, display the LOADED message */
+		TtaSetStatus (document, 1,
+			      TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+	      TtaChangeButton (document, 1, iStop, stopN, FALSE);
+	    }
+	  DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
 	}
-      DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
 }
 
 /*----------------------------------------------------------------------
    ActiveTransfer initialize the current transfer                     
   ----------------------------------------------------------------------*/
-void                ActiveTransfer (Document document)
+void ActiveTransfer (Document document)
 {
-  DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
-  FilesLoading[document] = 1;
-  if (TtaGetViewFrame (document, 1) != 0)
-    /* this document is displayed */
-    TtaChangeButton (document, 1, iStop, stopR, TRUE);
+  if (document)
+    {
+      DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
+      FilesLoading[document] = 1;
+      if (TtaGetViewFrame (document, 1) != 0)
+	/* this document is displayed */
+	TtaChangeButton (document, 1, iStop, stopR, TRUE);
+    }
 }
 
 /*----------------------------------------------------------------------
    SetStopButton Activates the stop button if it's turned off
   ----------------------------------------------------------------------*/
-void                SetStopButton (Document document)
+void SetStopButton (Document document)
 {
-  if (document == 0)
-    return;
-  else if (document != DocBook)
+  if (document)
     {
-      if (DocNetworkStatus[document] != AMAYA_NET_ACTIVE)
-	DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
-      if (FilesLoading[document] == 0)
-	FilesLoading[document] = 1;
-    }
+      if (document != DocBook)
+	{
+	  if (DocNetworkStatus[document] != AMAYA_NET_ACTIVE)
+	    DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
+	  if (FilesLoading[document] == 0)
+	    FilesLoading[document] = 1;
+	}
 
-  if (TtaGetViewFrame (document, 1) != 0)
-    /* this document is displayed */
-    TtaChangeButton (document, 1, iStop, stopR, TRUE);
+      if (TtaGetViewFrame (document, 1) != 0)
+	/* this document is displayed */
+	TtaChangeButton (document, 1, iStop, stopR, TRUE);
+    }
 }
 
 
@@ -793,12 +800,12 @@ void                SetStopButton (Document document)
    SetFormReadWrite
    Set ReadWrite access to input elements
   ----------------------------------------------------------------------*/
-static void	SetFormReadWrite (Element el, Document doc)
+static void SetFormReadWrite (Element el, Document doc)
 {
    ElementType  elType;
    Element      child, next;
 
-   while (el != NULL)
+   while (el)
      {
        /* look at all elements within this form */
        elType = TtaGetElementType (el);
@@ -1445,7 +1452,8 @@ void CheckParsingErrors (Document doc)
   ----------------------------------------------------------------------*/
 void UpdateTransfer (Document document)
 {
-  FilesLoading[document]++;
+  if (document)
+    FilesLoading[document]++;
 }
 
 /*----------------------------------------------------------------------
@@ -7391,6 +7399,8 @@ void CheckAmayaClosed ()
   
   if (i == DocumentTableLength)
     {
+      /* remove images loaded by shared CSS style sheets */
+      RemoveDocumentImages (0);
 #ifdef _SVGLIB
    SVGLIB_FreeDocumentResource ();
 #endif /* _SVGLIB */
@@ -7430,6 +7440,8 @@ void AmayaClose (Document document, View view)
 	    /* the close has been aborted */
 	    return;
 	}
+   /* remove images loaded by shared CSS style sheets */
+   RemoveDocumentImages (0);
 #ifdef _SVGLIB
    SVGLIB_FreeDocumentResource ();
 #endif /* _SVGLIB */

@@ -2882,7 +2882,7 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
    int                 tempsubdir;
    ThotBool            bool_tmp;
 
-   if (urlName == NULL || docid == 0 || outputfile == NULL) 
+   if (urlName == NULL || outputfile == NULL) 
      {
        /* no file to be loaded */
        TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);

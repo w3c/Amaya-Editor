@@ -1306,9 +1306,6 @@ void RemoveDocumentImages (Document doc)
 
    pImage = ImageURLs;
    previous = NULL;
-   if (doc == 0)
-      return;			/* nothing to do */
-
    while (pImage)
      {
 	next = pImage->nextImage;
