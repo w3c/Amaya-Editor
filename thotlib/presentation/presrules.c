@@ -1697,8 +1697,8 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	  else
 	    {
 	      /* initialize the new image context */
-	      lg = ustrlen (pEl->ElText->BuContent);
-	      text = (char *)TtaGetMemory (lg * 2 + 1);
+	      lg = ustrlen (pEl->ElText->BuContent) * 2 + 1;
+	      text = (char *)TtaGetMemory (lg);
 	      CopyBuffer2MBs (pEl->ElText, 0, (unsigned char *)text, lg);
 	      NewPictInfo (pAb, text, UNKNOWN_FORMAT);
 	    }

@@ -97,7 +97,13 @@ int ThotFileExist (CONST char *name)
   else
     status = 1;
 #else /* _WINGUI */
+#ifdef _WINDOWS
+  filedes = open (name, O_RDONLY | _O_BINARY, 0777);
+  if (filedes < 0)
+    filedes = open (name, O_RDWR| _O_BINARY, 0777);
+#else /* _WINDOWS */
   filedes = open (name, O_RDONLY);
+#endif /* _WINDOWS */
   if (filedes < 0)
     status = 0;
   else

@@ -2714,6 +2714,7 @@ ThotBool TransformIntoType (ElementType * resultType, Document doc)
 	    {		
 	      /* the transformation does not produce the given type, it is
 		 desactived */
+		  ok = FALSE;
 	      td->IsActiveTrans = FALSE;
 	      sd = td->Symbols;
 	      while (sd != NULL)

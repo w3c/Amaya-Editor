@@ -137,7 +137,7 @@ void CallbackImage (int ref, int typedata, char *data)
 	  TtaDestroyDialogue (ref);
 	  ImgDocument = 0;
 	}
-      else if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
+      else if (ref == BaseImage + FormImage && ImgAlt[0] == EOS)
 	{
 	  /* IMG element without ALT attribute: error message */
 #ifdef _GTK
@@ -426,7 +426,9 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape, attrRefimg, newuseMap;
    char                *url;
+#ifndef _WX
    char                *utf8value;
+#endif /* _WX */
    int                 length, w, h;
    int                 firstchar, lastchar;
    int                 docModified;
@@ -650,10 +652,14 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	    TtaSelectElement (doc, image);
 	    return;
 	  }
+#ifdef _WX
+	TtaSetAttributeText (attr, ImgAlt, el, doc);
+#else /* _WX */
 	utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
 					   TtaGetDefaultCharset ());
 	TtaSetAttributeText (attr, utf8value, el, doc);
 	TtaFreeMemory (utf8value);
+#endif /* _WX */
 	ImgAlt[0] = EOS;
 	/* The link element is a new created one */
 	IsNewAnchor = TRUE;
@@ -1040,11 +1046,15 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 	  length = TtaGetTextAttributeLength (attr);
 	  utf8value = (char *)TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, utf8value, &length);
+#ifdef _WX
+	  strcpy (ImgAlt, utf8value);
+#else /* _WX */
 	  text = (char *)TtaConvertByteToMbs ((unsigned char *)utf8value,
 					      TtaGetDefaultCharset ());
-	  TtaFreeMemory (utf8value);
 	  strcpy (ImgAlt, text);
 	  TtaFreeMemory (text);
+#endif /* _WX */
+	  TtaFreeMemory (utf8value);
 	}
     }
 
@@ -1106,23 +1116,16 @@ void UpdateSRCattribute (NotifyOnTarget *event)
       else
 	newAttr = FALSE;
       /* copy image name in ALT attribute */
-      if (ImgAlt[0] == EOS)
+      if (ImgAlt[0] != EOS)
 	{
-	  utf8value = (char *)TtaGetMemory (MAX_LENGTH);
-	  pathimage = (char *)TtaGetMemory (MAX_LENGTH);
-	  strcpy (utf8value, " ");
-	  TtaExtractName (text, pathimage, &utf8value[1]);
-	  strcat (utf8value, " ");
-	  TtaSetAttributeText (attr, utf8value, elSRC, doc);
-	  TtaFreeMemory (pathimage);
-	  TtaFreeMemory (utf8value);
-	}
-      else
-	{
+#ifdef _WX
+	  TtaSetAttributeText (attr, ImgAlt, elSRC, doc);
+#else /* _WX */
 	  utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
 						   TtaGetDefaultCharset ());
 	  TtaSetAttributeText (attr, utf8value, elSRC, doc);
 	  TtaFreeMemory (utf8value);
+#endif /* _WX */
 	}
       if (!CreateNewImage)
 	{
@@ -1145,10 +1148,14 @@ void UpdateSRCattribute (NotifyOnTarget *event)
     }
   else
     newAttr = FALSE;
+#ifdef _WX
+  ComputeSRCattribute (elSRC, doc, 0, attr, text);
+#else /* _WX */
   utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)text,
 					   TtaGetDefaultCharset ());
   ComputeSRCattribute (elSRC, doc, 0, attr, utf8value);
   TtaFreeMemory (utf8value);
+#endif /* _WX */
   if (!CreateNewImage)
     {
       if (newAttr)
@@ -1211,7 +1218,14 @@ void SvgImageCreated (NotifyElement *event)
      }
    else
      {
+#ifdef _WX
        TtaSetTextContent (leaf, (unsigned char *)ImgAlt, SPACE, doc);
+#else /* _WX */
+	   utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
+						   TtaGetDefaultCharset ());
+       TtaSetTextContent (leaf, (unsigned char *)utf8value, SPACE, doc);
+	   TtaFreeMemory (utf8value);
+#endif /* _WX */
        ImgAlt[0] = EOS;
      }
    /* search the xlink:href attribute */
@@ -1366,12 +1380,16 @@ void CreateImage (Document doc, View view)
 		{
 		  /* get a buffer for the attribute value */
 		  value = (char *)TtaGetMemory (length);
+#ifdef _WX
+		  TtaGiveTextAttributeValue (attr, ImgAlt, &length);
+#else /* _WX */
 		  /* copy the ALT attribute into the buffer */
 		  TtaGiveTextAttributeValue (attr, value, &length);
 		  name = (char *)TtaConvertMbsToByte ((unsigned char *)value,
 						      TtaGetDefaultCharset ());
 		  strncpy (ImgAlt, name, MAX_LENGTH-1);
 		  TtaFreeMemory (name);
+#endif /* _WX */
 		}
 	    }
 	  /* display the image dialogue box */

@@ -83,7 +83,7 @@
 
 
 0;#Unicode (.or ... JAPANESe)
-1;1=c:\windows\fonts\msmincho.ttc;2=/c:\windows\fonts\msmincho.ttc;3=/c:\windows\fonts\msmincho.ttc;
-2;1=/c:\windows\fonts\msmincho.ttc;2=/c:\windows\fonts\msmincho.ttc;3=/c:\windows\fonts\msmincho.ttc;
-3;1=/c:\windows\fonts\msmincho.ttc;2=/c:\windows\fonts\msmincho.ttc;3=/c:\windows\fonts\msmincho.ttc;
+1;1=c:\windows\fonts\msmincho.ttc;2=c:\windows\fonts\msmincho.ttc;3=c:\windows\fonts\msmincho.ttc;
+2;1=c:\windows\fonts\msmincho.ttc;2=c:\windows\fonts\msmincho.ttc;3=c:\windows\fonts\msmincho.ttc;
+3;1=c:\windows\fonts\msmincho.ttc;2=c:\windows\fonts\msmincho.ttc;3=c:\windows\fonts\msmincho.ttc;
 

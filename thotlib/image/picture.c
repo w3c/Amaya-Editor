@@ -1752,41 +1752,6 @@ void InitPictureHandlers (ThotBool printing)
 }
 
 
-#ifdef _WINGUI
-/*----------------------------------------------------------------------
-  SimpleName
-  If the filename is a complete name returns into simplename the file name.
-  ----------------------------------------------------------------------*/
-static void SimpleName (char *filename, char *simplename)
-{
-   char      *from, *to;
-   char       URL_DIR_SEP;
-
-   if (filename && strchr (filename, '/'))
-     URL_DIR_SEP = '/';
-   else 
-     URL_DIR_SEP = DIR_SEP;
- 
-   to = simplename;
-   *to = EOS;
-   for (from = filename; *from++;) ;
-   for (--from; --from > filename;)
-     {
-        if (*from == URL_DIR_SEP)
-          {
-             ++from;
-             break;
-          }
-     }
-   if (*from == URL_DIR_SEP)
-      ++from;
- 
-   for (; *from;)
-      *to++ = *from++;
-   *to = EOS;
-}
-#endif /* _WINGUI */
-
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
   ----------------------------------------------------------------------*/
