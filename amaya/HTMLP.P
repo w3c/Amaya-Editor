@@ -3440,8 +3440,6 @@ RULES
 		END;
 	IN Anchors_view
 		Visibility: 0;
-	IN Table_of_contents
-		Visibility: 0;
 	END;
 
  Document_URL:	BEGIN
@@ -3612,7 +3610,9 @@ RULES
 		Adjust: VMiddle;
 		END;
 	IN Table_of_contents BEGIN
+		Size: Enclosing =;
 		Visibility: 10;
+		Height: Enclosed . Height;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left;
 		END;
@@ -3647,6 +3647,8 @@ RULES
 		Style: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
+		Size: Enclosing =;
+		Style: Enclosing =;
 		Visibility: 9;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 1;
@@ -3682,6 +3684,8 @@ RULES
 		Style: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
+		Size: Enclosing =;
+		Style: Enclosing =;
 		Visibility: 8;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 2;
@@ -3717,6 +3721,8 @@ RULES
 		Size: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
+		Size: Enclosing =;
+		Style: Enclosing =;
 		Visibility: 7;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 3;
@@ -3748,6 +3754,7 @@ RULES
 	IN Alternate_view
 		Size: Enclosing =;
 	IN Table_of_contents BEGIN
+		Size: Enclosing =;
 		Visibility: 6;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 4;
@@ -3776,6 +3783,7 @@ RULES
 	IN Alternate_view
 		Size: Enclosing =;
 	IN Table_of_contents BEGIN
+		Size: Enclosing =;
 		Visibility: 5;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 5;
@@ -4722,8 +4730,6 @@ RULES
 		HorizPos: Left = Enclosing . Left;
 		VertPos: Top = Previous . Bottom + 1.1;
 		END;
-	IN Table_of_contents
-		Visibility: 0;
 	END;
 
  TEXT_UNIT:	BEGIN

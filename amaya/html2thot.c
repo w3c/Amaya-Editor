@@ -1631,7 +1631,7 @@ Element             parent;
 		     }
 		  /* insert the Text element in the tree */
 		  if (parent == ancestor)
-		     TtaInsertFirstChild (el, newEl, theDocument);
+		     InsertLastChild (el, newEl);
 		  else
 		     InsertLastChild (el, parent);
 		  ret = TRUE;

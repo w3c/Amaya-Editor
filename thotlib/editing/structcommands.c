@@ -2522,7 +2522,12 @@ boolean             Before;
 			    firstChar <= lastSel->ElTextLength) ||
 			   (createAfter && pElem->ElNext != NULL) ||
 			   (!createAfter && pElem->ElPrevious != NULL))
-			  splitElem = TRUE;
+			  if (pElem->ElParent != NULL)
+			     if (AllowedSibling (pElem->ElParent, pSelDoc,
+					pElem->ElParent->ElTypeNumber,
+					pElem->ElParent->ElStructSchema,
+					!createAfter, TRUE, FALSE))
+			        splitElem = TRUE;
 		       pElem = pElem->ElParent;
 		    }
 	       }
