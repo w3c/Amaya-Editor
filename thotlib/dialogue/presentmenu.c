@@ -385,7 +385,7 @@ void         ModifyColor (int colorNum, ThotBool Background)
    CloseInsertion ();
    /* demande quelle est la selection courante */
    selok = GetCurrentSelection (&SelDoc, &pElFirstSel, &pElLastSel, &firstChar, &lastChar);
-   if (selok && SelDoc && SelDoc->DocReadOnly && SelDoc->DocSSchema != NULL)
+   if (selok && SelDoc && !SelDoc->DocReadOnly && SelDoc->DocSSchema != NULL)
      /* le document selectionne' n'a pas ete ferme' */
      {
 	/* eteint la selection courante */
@@ -439,52 +439,50 @@ void         ModifyColor (int colorNum, ThotBool Background)
 	while (pEl != NULL)
 	  {
 	     /* on saute les elements qui sont des copies */
-	     if (!pEl->ElIsCopy)
-		/* on saute les elements non modifiables */
-		if (!ElementIsReadOnly (pEl))
-		   /* on saute les marques de page */
-		   if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-		     {
-			modifFillPattern = FALSE;
-			fillPatternNum = 0;
-			if (Background)
-			   /* on change la couleur de fond avec la souris */
-			  {
-			     pAb = AbsBoxOfEl (pEl, SelectedView);
-			     if (pAb != NULL)
-				if (pAb->AbFillPattern < 2)
-				   /* on force la trame backgroundcolor si la
-				      trame du pave */
-				   /* est nopattern ou foregroundcolor */
-				  {
-				     modifFillPattern = TRUE;
-				     fillPatternNum = 2;
-				  }
-			  }
-			if (colorNum == -1)
-			  {
-			     /* Couleur standard */
-			     RuleSetClr (rulesS);
-			     if (Background)
-			       {
-				  RuleSetPut (rulesS, PtFillPattern);
-				  RuleSetPut (rulesS, PtBackground);
-				  RuleSetPut (rulesS, PtFunction);
-			       }
-			     else
-				RuleSetPut (rulesS, PtForeground);
-			     RemoveSpecPresTree (pEl, SelDoc, rulesS, SelectedView);
-			  }
-			else
-			   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
-					   SPACE, FALSE, 0, FALSE,
-					   modifFillPattern, fillPatternNum,
-					   (ThotBool)Background, colorNum, (ThotBool)(!Background),
-					   colorNum);
-			/* si on est dans un element copie' par inclusion,   */
-			/* on met a jour les copies de cet element. */
-			RedisplayCopies (pEl, SelDoc, TRUE);
-		     }
+	     if (!pEl->ElIsCopy &&
+		 /* on saute les elements non modifiables */
+		 !ElementIsReadOnly (pEl) &&
+		 /* on saute les marques de page */
+		 (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak))
+	       {
+		 modifFillPattern = FALSE;
+		 fillPatternNum = 0;
+		 if (Background)
+		   /* on change la couleur de fond avec la souris */
+		   {
+		     pAb = AbsBoxOfEl (pEl, SelectedView);
+		     if (pAb != NULL && pAb->AbFillPattern < 2)
+		       /* on force la trame backgroundcolor si la trame du pave */
+		       /* est nopattern ou foregroundcolor */
+		       {
+			 modifFillPattern = TRUE;
+			 fillPatternNum = 2;
+		       }
+		   }
+		 if (colorNum == -1)
+		   {
+		     /* Couleur standard */
+		     RuleSetClr (rulesS);
+		     if (Background)
+		       {
+			 RuleSetPut (rulesS, PtFillPattern);
+			 RuleSetPut (rulesS, PtBackground);
+			 RuleSetPut (rulesS, PtFunction);
+		       }
+		     else
+		       RuleSetPut (rulesS, PtForeground);
+		     RemoveSpecPresTree (pEl, SelDoc, rulesS, SelectedView);
+		   }
+		 else
+		   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
+				   SPACE, FALSE, 0, FALSE,
+				   modifFillPattern, fillPatternNum,
+				   (ThotBool)Background, colorNum, (ThotBool)(!Background),
+				   colorNum);
+		 /* si on est dans un element copie' par inclusion,   */
+		 /* on met a jour les copies de cet element. */
+		 RedisplayCopies (pEl, SelDoc, TRUE);
+	       }
 	     /* cherche l'element a traiter ensuite */
 	     pEl = NextInSelection (pEl, pElLastSel);
 	  }
