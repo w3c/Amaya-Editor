@@ -28,7 +28,7 @@ THOT_EXPORT ThotAppContext	app_cont;
 
 #ifdef _WINDOWS
 THOT_EXPORT WNDCLASSEX         RootShell;
-THOT_EXPORT int                currentFrame
+THOT_EXPORT int                currentFrame;
 THOT_EXPORT HINSTANCE          hInstance;
 THOT_EXPORT BOOL               buttonCommand;
 #else /* _WINDOWS */
