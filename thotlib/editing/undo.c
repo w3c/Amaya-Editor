@@ -106,7 +106,8 @@ static PtrEditOperation UnchainLatestOp (PtrDocument pDoc, ThotBool undo)
       editOp = &(pDoc->DocLastUndone);
    last = *editOp;
    *editOp = (*editOp)->EoPreviousOp;
-   (*editOp)->EoNextOp = NULL;
+   if (*editOp)
+     (*editOp)->EoNextOp = NULL;
    last->EoPreviousOp = NULL;
    return last;
 }

@@ -865,6 +865,7 @@ void                CreateRuby (Document document, View view)
 	TtaSetDisplayMode (document, DeferredDisplay);
       selEl = NULL;
       rbEl = NULL;
+      rubyEl = NULL;
       if (TtaIsSelectionEmpty())
 	/* selection is simply a caret */
 	{
@@ -882,6 +883,7 @@ void                CreateRuby (Document document, View view)
 	      TtaNextSibling (&el);
 	      if (el)
 		TtaDeleteTree (el, document);
+	      rubyEl = TtaGetParent (rbEl);
 	    }
 	}
       else if (IsCharacterLevelElement (firstEl))
@@ -1012,6 +1014,16 @@ void                CreateRuby (Document document, View view)
 	  el = TtaGetFirstChild (el);
 	  TtaSetTextContent (el, ")", TtaGetDefaultLanguage (), document);
 	  TtaSetStructureChecking (oldStructureChecking, document);
+	  /* create a text element after the ruby element, to allow the
+	     user to add some more text after the ruby */
+	  el = rubyEl;
+	  TtaNextSibling (&el);
+	  if (!el)
+	    {
+	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	      el = TtaNewElement (document, elType);
+	      TtaInsertSibling (el, rubyEl, FALSE, document);
+	    }
 	}
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (document, dispMode);
