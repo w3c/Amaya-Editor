@@ -2372,7 +2372,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
   int                 ymin, ymax;
   int                 xref, yref;
   int                 pointselect;
-  ThotBool            still, okH, okV;
+  ThotBool            still, okH, okV, send;
 
   pFrame = &ViewFrameTable[frame - 1];
   /* by default no selected point */
@@ -2434,106 +2434,111 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 	      width = pBox->BxWidth;
 	      height = pBox->BxHeight;
 	      pEl = pBox->BxAbstractBox->AbElement;
-	      if (pointselect == 0 ||
-		  !APPgraphicModify (pEl, pointselect, frame, TRUE))
+	      send = FALSE;
+	      if (pointselect != 0 && pBox->BxType != BoPicture)
+		/* moving a single point */
 		{
-		  if (pointselect != 0 && pBox->BxType != BoPicture)
+		  if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'g')
+		    /* moving an end of a line */
 		    {
-		      if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'g')
+		      LineModification (frame, pBox, pointselect, &x, &y);
+		      /* get back current changes */
+		      if (!pAb->AbWidth.DimIsPosition && pAb->AbEnclosing)
+			/* this rule is applied to the parent */
+			pAb = pAb->AbEnclosing;
+		      pBox = pAb->AbBox;
+		      switch (pointselect)
 			{
-			  LineModification (frame, pBox, pointselect, &x, &y);
-			  
-			  /* get back current changes */
-			  if (!pAb->AbWidth.DimIsPosition && pAb->AbEnclosing)
-			    /* this rule is applied to the parent */
-			    pAb = pAb->AbEnclosing;
-			  pBox = pAb->AbBox;
-			  switch (pointselect)
-			    {
-			    case 1:
-			    case 7:
-			      if (pBox->BxHorizInverted)
-				NewDimension (pAb, x, y, frame, TRUE);
-			      else
-				NewPosition (pAb, x, 0, y, 0, frame, TRUE);
-			      break;
-			    case 3:
-			    case 5:
-			      if (pBox->BxHorizInverted)
-				NewPosition (pAb, x, 0, y, 0, frame, TRUE);
-			      else
-				NewDimension (pAb, x, y, frame, TRUE);
-			      break;
-			    default: break;
-			    }
+			case 1:
+			case 7:
+			  if (pBox->BxHorizInverted)
+			    NewDimension (pAb, x, y, frame, TRUE);
+			  else
+			    NewPosition (pAb, x, 0, y, 0, frame, TRUE);
+			  break;
+			case 3:
+			case 5:
+			  if (pBox->BxHorizInverted)
+			    NewPosition (pAb, x, 0, y, 0, frame, TRUE);
+			  else
+			    NewDimension (pAb, x, y, frame, TRUE);
+			  break;
+			default: break;
 			}
-		      else
+		    }
+		  else
+		    /* moving a point in a polyline */
+		    {
+		      /* send an event to the application */
+		      if (!APPgraphicModify (pEl, pointselect, frame,TRUE))
+			/* application agrees */
 			{
-			  /* Moving a point in a polyline */
 			  /* check if the polyline is open or closed */
 			  still = (pAb->AbPolyLineShape == 'p' ||
 				   pAb->AbPolyLineShape == 's');
 			  PolyLineModification (frame, &x, &y, pBox,
-						pBox->BxNChars, pointselect,
-						still);
+						pBox->BxNChars,
+						pointselect, still);
 			  NewContent (pAb);
+			  send = TRUE;
 			}
-		      /* redisplay the box */
-		      DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
-			       pBox->BxYOrg - EXTRA_GRAPH,
-			       pBox->BxXOrg + width + EXTRA_GRAPH,
-			       pBox->BxYOrg + height + EXTRA_GRAPH);
-		      RedrawFrameBottom (frame, 0, NULL);
 		    }
-		  else
-		    {
-		      /* set positions related to the window */
-		      xmin -= pFrame->FrXOrg;
-		      xmax -= pFrame->FrXOrg;
-		      ymin -= pFrame->FrYOrg;
-		      ymax -= pFrame->FrYOrg;
-		      /* execute the interaction */
-		      GeometryMove (frame, &x, &y, width, height, pBox, xmin,
-				    xmax, ymin, ymax, xm, ym);
-		      /* get back changes */
-		      x += pFrame->FrXOrg;
-		      y += pFrame->FrYOrg;
-		      /* get the position of reference point */
-		      switch (pBox->BxHorizEdge)
-			{
-			case Right:
-			  xref = width;
-			  break;
-			case VertMiddle:
-			  xref = width / 2;
-			  break;
-			case VertRef:
-			  xref = pBox->BxVertRef;
-			  break;
-			default:
-			  xref = 0;
-			  break;
-			}
-		      switch (pBox->BxVertEdge)
-			{
-			case Bottom:
-			  yref = height;
-			  break;
-			case HorizMiddle:
-			  yref = height / 2;
-			  break;
-			case HorizRef:
-			  yref = pBox->BxHorizRef;
-			  break;
-			default:
-			  yref = 0;
-			  break;
-			}
-		      NewPosition (pAb, x, xref, y, yref, frame, TRUE);
-		    }
-		  if (pointselect > 0)
-		    APPgraphicModify (pEl, pointselect, frame, FALSE);
+		  /* redisplay the box */
+		  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
+			   pBox->BxYOrg - EXTRA_GRAPH,
+			   pBox->BxXOrg + width + EXTRA_GRAPH,
+			   pBox->BxYOrg + height + EXTRA_GRAPH);
+		  RedrawFrameBottom (frame, 0, NULL);
 		}
+	      else
+		/* moving the whole box */
+		{
+		  /* set positions related to the window */
+		  xmin -= pFrame->FrXOrg;
+		  xmax -= pFrame->FrXOrg;
+		  ymin -= pFrame->FrYOrg;
+		  ymax -= pFrame->FrYOrg;
+		  /* execute the interaction */
+		  GeometryMove (frame, &x, &y, width, height, pBox, xmin,
+				xmax, ymin, ymax, xm, ym);
+		  /* get back changes */
+		  x += pFrame->FrXOrg;
+		  y += pFrame->FrYOrg;
+		  /* get the position of reference point */
+		  switch (pBox->BxHorizEdge)
+		    {
+		    case Right:
+		      xref = width;
+		      break;
+		    case VertMiddle:
+		      xref = width / 2;
+		      break;
+		    case VertRef:
+		      xref = pBox->BxVertRef;
+		      break;
+		    default:
+		      xref = 0;
+		      break;
+		    }
+		  switch (pBox->BxVertEdge)
+		    {
+		    case Bottom:
+		      yref = height;
+		      break;
+		    case HorizMiddle:
+		      yref = height / 2;
+		      break;
+		    case HorizRef:
+		      yref = pBox->BxHorizRef;
+		      break;
+		    default:
+		      yref = 0;
+		      break;
+		    }
+		  NewPosition (pAb, x, xref, y, yref, frame, TRUE);
+		}
+	      if (send)
+		APPgraphicModify (pEl, pointselect, frame, FALSE);
 	    }
 	}
     }
