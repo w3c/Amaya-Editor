@@ -448,7 +448,6 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString ("ANNOT_DIR", ptr2, FALSE);
   TtaFreeMemory (ptr2);
   /* set up the default annotation user name */
-  ptr = TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
   if (!_GetSysUserName (username))
     username[0] = EOS;
   TtaSetDefEnvString ("ANNOT_USER", username, FALSE);
