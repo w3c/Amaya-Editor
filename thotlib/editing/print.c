@@ -2182,6 +2182,19 @@ int                 clipOrg;
   AbPosition         *pPos;
   FILE               *PSfile;
 
+#ifdef PRINT_DEBUG
+FILE     *list;
+CHAR      localname[50];
+static int       n = 1;
+
+   sprintf (localname, "/home/stephane/.amaya/printpave%d.debug", n);
+   n++;
+   list = fopen (localname, "w");
+   NumberAbsBoxes (rootAbsBox);
+   ListAbsBoxes(rootAbsBox, 1, list);
+   fclose (list);
+#endif
+
 # ifdef _WINDOWS
   if (gbAbort)
     return;

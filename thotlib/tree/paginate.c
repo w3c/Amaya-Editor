@@ -42,7 +42,7 @@
 #define THOT_EXPORT
 #include "page_tv.h"
 
-/* #define PRINT_DEBUG */
+/* #define PRINT_DEBUG*/ 
 
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
@@ -1275,7 +1275,7 @@ FILE     *list;
 CHAR      localname[50];
 static int       n = 1;
 
-   sprintf (localname, "/users/guetari/.amaya/print%d.debug", n);
+   sprintf (localname, "/home/stephane/.amaya/printpage%d.debug", n);
    n++;
    list = fopen (localname, "w");
    TtaListBoxes (1, 1, list);
@@ -1347,6 +1347,17 @@ int                 schView;
    boolean             stop;
    boolean             absBoxTooHigh;
 
+#ifdef PRINT_DEBUG
+   FILE     *list;
+   CHAR      localname[50];
+   static int       n = 1;
+   
+   sprintf (localname, "/home/stephane/.amaya/print%d.debug", n);
+   n++;
+   list = fopen (localname, "w");
+   TtaListBoxes (1, 1, list);
+   fclose (list);
+#endif
    pPage = NULL;
    absBoxTooHigh = FALSE;
    /* on recherche le pave de plus haut niveau qui soit insecable et */
@@ -1923,6 +1934,34 @@ boolean             Assoc;
 	       /* si la demande a ete faite */
 	       /* previousPageAbBox contient le pave de la page precedente */
 #ifdef PAGINEETIMPRIME
+	       /* si la marque de page existait auparavant, on la renumerote */
+	       if (! (pPage->ElPageType == PgComputed))
+		 {
+		 /* cherche le compteur de page a appliquer a cette page */
+		   cpt = GetPageCounter (pPage, schView, &pSchP);
+		   if (cpt == 0)
+		     /* page non numerotee */
+		     {
+		       pagesCounter++;
+		       pPage->ElPageNumber = pagesCounter;
+		     }
+		   else
+		     {
+		       /* calcule le numero de page */
+		       pPage->ElPageNumber = CounterVal (cpt, 
+							 pPage->ElStructSchema, 
+							 pSchP, 
+							 pPage, 
+							 schView);
+		       /* on met a jour les boites de presentation des compteurs des */
+		       /* pages suivantes dans le cas de la pagination depuis l'impression */
+		       /* cet appel est fait tout a la fin dans le cas d'une pagination */
+		       /* normale */
+		       
+		       UpdateNumbers (pPage, pPage, pDoc, TRUE);
+		     }
+		   PageHeaderFooter (pPage, schView, &b, &pSchPage);
+		 }
 	       PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[nbView - 1],
 			     rootAbsBox, clipOrg);
 #endif /* PAGINEETIMPRIME */

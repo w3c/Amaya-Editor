@@ -71,6 +71,7 @@
 #include "content_f.h"
 #include "searchref_f.h"
 #include "structlocate_f.h"
+#include "undo_f.h"
 
 /*----------------------------------------------------------------------
    AppendToFreeList append element pFree to the element list	
@@ -145,13 +146,14 @@ PtrSSchema          pSS;
    PtrSSchema          pSSSibling;
    PtrElement          pSavedChild, pSibling, pPastedEl, pFree, pDescRoot,
                        pPrevNew, pParent, pDesc, pCopy, pClose, pCreatedEl,
-                       pElAttr;
+                       pElAttr, firstSel, lastSel;
    PtrAttribute        pInheritLang, pLangAttr;
+   PtrDocument         pSelDoc;
    NotifyElement       notifyEl;
    NotifyOnValue       notifyVal;
    Document            doc;
    int                 view, distance, numAssoc, i, NSiblings, originDoc,
-                       siblingType;
+                       siblingType, firstChar, lastChar;
    boolean             typeOK, creation, list, stop, optional, last, table;
 
    typeOK = FALSE;
@@ -512,7 +514,17 @@ PtrSSchema          pSS;
 		       }
 		  }
 	     }
-
+	   
+	   /* Register Pasted Elements in the editing history */
+	   GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+	   if (pDoc == pSelDoc)
+	     {
+	       OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
+				    lastChar-1);
+	       for (i = 0; i < NCreatedElements; i++)
+		 AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
+	       CloseHistorySequence (pDoc);
+	     }
 	   /* traite dans les elements colle's toutes les references et les */
 	   /* elements reference's ainsi que les exclusions */
 	   for (i = 0; i < NCreatedElements; i++)
@@ -537,6 +549,7 @@ PtrSSchema          pSS;
 	   for (i = 0; i < NCreatedElements; i++)
 	      RegisterExternalRef (CreatedElement[i], pDoc, TRUE);
 
+	
 	   /* envoie l'evenement ElemPaste.Post */
 	   originDoc = IdentDocument (DocOfSavedElements);
 	   if (before)
@@ -575,7 +588,34 @@ PtrSSchema          pSS;
 	   for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i] != NULL)
 		 UpdateRefAttributes (CreatedElement[i], pDoc);
-
+	   if (CreatedElement[0]!=NULL)
+	     {
+	       pPrevNew = CreatedElement[0]->ElPrevious;
+	       if (pPrevNew != NULL)
+		 *firstPastedChar = pPrevNew->ElTextLength + 1;
+	       else
+		 *firstPastedChar = 0;
+	       for (i = 0; i < NCreatedElements ; i++)
+		 {
+		   if (pPrevNew != NULL)
+		     if (IsIdenticalTextType (pPrevNew, pDoc, &pFree))
+		       /* la fusion avec le precedent a eu lieu */
+		       {
+			 CreatedElement[i] = pPrevNew;
+			 /* chaine l'element libere' par la fusion */
+			 AppendToFreeList (pFree, pFirstFree);
+		       }
+		     else if (i == 0)
+		       /* pas de fusion avec l'element precedent */
+		       /* les elements colles */
+		       *firstPastedChar = 0;
+		   pPrevNew = CreatedElement[i];
+		 }
+	       if (IsIdenticalTextType (pPrevNew, pDoc, &pFree))
+		 AppendToFreeList (pFree, pFirstFree);
+	       *pFirstPastedEl = CreatedElement[0];
+	     }
+#ifdef IV
 	   /* cherche a fusionner les nouveaux elements avec leurs voisins */
 	   for (i = NCreatedElements - 1; i >= 0; i--)
 	      if (CreatedElement[i] != NULL)
@@ -609,6 +649,7 @@ PtrSSchema          pSS;
 			AppendToFreeList (pFree, pFirstFree);
 		     }
 		}
+#endif
 	}
 }
 
@@ -1058,67 +1099,87 @@ void                StructPasteCommand ()
   ----------------------------------------------------------------------*/
 void                StructReturnKey ()
 {
-   PtrDocument         pDoc;
-   PtrElement          firstSel, lastSel, pElReplicate, pSibling, pListEl,
-                       pEl, pNewEl, pClose, pNewAncest;
-   NotifyElement       notifyEl;
-   Document            doc;
-   int                 firstChar, lastChar, NSiblings;
-   boolean             ok;
-
-   /* on essaie d'abord de diviser un element */
-   if (BreakElement (NULL, NULL, 0, TRUE, TRUE))
-      /* ca a marche'. On a fini */
-      return;
-   /* ca n'a pas marche', on va essayer de creer un element de meme type */
-   /* que le dernier element selectionne' */
-   pElReplicate = NULL;
-   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (pDoc->DocReadOnly)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else
-     {
-        doc = IdentDocument (pDoc);
-	if (lastSel->ElTerminal &&
-	    ((lastSel->ElLeafType == LtText &&
-	      (lastChar > 0 && lastChar <= lastSel->ElTextLength)) ||
-	     lastSel->ElLeafType == LtPageColBreak))
-	   /* on est au milieur d'une feuille de texte ou sur un saut de page
-	      on abandonne. */
-	   pListEl = NULL;
-	else
-	  {
-	     /* on recherche l'ascendant Liste qui permettrait de creer un
-	        nouvel element de meme type */
-	     pListEl = AncestorList (lastSel);
-	     if (pListEl != NULL)
+  PtrDocument         pDoc;
+  PtrElement          firstSel, lastSel, pElReplicate, pSibling, pListEl,
+    pEl, pNewEl, pClose, pNewAncest;
+  NotifyElement       notifyEl;
+  Document            doc;
+  int                 firstChar, lastChar, NSiblings;
+  boolean             ok, histSeq;
+   
+  ok = FALSE;
+  histSeq = FALSE;
+  if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+  else if (pDoc->DocReadOnly)
+    TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
+  else
+    {
+      /* on essaie d'abord de diviser un element */
+      if (CanSplitElement (firstSel, firstChar, TRUE, &pNewAncest, &pEl,
+				     &pElReplicate))
+        {
+	  OpenHistorySequence (pDoc, firstSel,
+			       lastSel, firstChar, lastChar - 1);
+	  histSeq = TRUE;
+	  AddEditOpInHistory (firstSel, pDoc, TRUE, TRUE);
+  	  
+	  AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
+	  ok = BreakElement (NULL, NULL, 0, TRUE, TRUE);
+	  if (ok)
+	    {	
+	      AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE, TRUE);
+	    }
+	  else
+	    {
+	      CancelLastEditFromHistory (pDoc);
+	    }
+	}
+      if (!ok)
+	{
+	  /* ca n'a pas marche', on va essayer de creer un element de meme type */
+	  /* que le dernier element selectionne' */
+	  pElReplicate = NULL;
+	  doc = IdentDocument (pDoc);
+	  if (lastSel->ElTerminal &&
+	      ((lastSel->ElLeafType == LtText &&
+		(lastChar > 0 && lastChar <= lastSel->ElTextLength)) ||
+	       lastSel->ElLeafType == LtPageColBreak))
+	    /* on est au milieur d'une feuille de texte ou sur un saut de page
+	       on abandonne. */
+	    pListEl = NULL;
+	  else
+	    {
+	      /* on recherche l'ascendant Liste qui permettrait de creer un
+		 nouvel element de meme type */
+	      pListEl = AncestorList (lastSel);
+	      if (pListEl != NULL)
 		if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
 		    pListEl == lastSel->ElParent && lastSel->ElNext == NULL)
-		   /* on est a la fin d'une feuille de texte, fille de
-		      l'element liste trouve'. On cherche un element liste plus
-		      haut dans l'arbre */
-		   pListEl = AncestorList (pListEl);
-	     if (pListEl != NULL && !CanChangeNumberOfElem (pListEl, 1))
+		  /* on est a la fin d'une feuille de texte, fille de
+		     l'element liste trouve'. On cherche un element liste plus
+		     haut dans l'arbre */
+		  pListEl = AncestorList (pListEl);
+	      if (pListEl != NULL && !CanChangeNumberOfElem (pListEl, 1))
 		/* la liste a atteint son nombre max. d'elements. Abandon */
 		pListEl = NULL;
-	  }
-	if (pListEl != NULL)
-	  {
-	     pEl = lastSel;
-	     do
+	    }
+	  if (pListEl != NULL)
+	    {
+	      pEl = lastSel;
+	      do
 		if (TypeHasException (ExcNoCreate, pEl->ElTypeNumber,
 				      pEl->ElStructSchema))
-		   /* abandon */
-		   pListEl = NULL;
+		  /* abandon */
+		  pListEl = NULL;
 		else
 		  {
-		     pElReplicate = pEl;
-		     pEl = pEl->ElParent;
+		    pElReplicate = pEl;
+		    pEl = pEl->ElParent;
 		  }
-	     while (pListEl != NULL && pEl != pListEl);
-	     if (pListEl != NULL)
-	       {
+	      while (pListEl != NULL && pEl != pListEl);
+	      if (pListEl != NULL)
+		{
 		  /* demande a l'application si on peut creer ce type d'element */
 		  notifyEl.event = TteElemNew;
 		  notifyEl.document = doc;
@@ -1129,82 +1190,92 @@ void                StructReturnKey ()
 		  NSiblings = 0;
 		  while (pSibling->ElPrevious != NULL)
 		    {
-		       NSiblings++;
-		       pSibling = pSibling->ElPrevious;
+		      NSiblings++;
+		      pSibling = pSibling->ElPrevious;
 		    }
 		  NSiblings++;
 		  notifyEl.position = NSiblings;
 		  if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-		     /* l'application refuse */
-		     pListEl = NULL;
-	       }
-	  }
-	if (pListEl != NULL)
-	  {
-             /* On determine l'element apres lequel  */
-             /* l'insertion aura effectivement lieu. */
-             pEl = lastSel;
-             while (pEl->ElParent != pListEl)
-               pEl = pEl->ElParent;
-             ok = !CannotInsertNearElement (pEl,
-                                            FALSE); /* After element */
-	     if (ok)
-	       {
+		    /* l'application refuse */
+		    pListEl = NULL;
+		}
+	    }
+	  if (pListEl != NULL)
+	    {
+	      /* On determine l'element apres lequel  */
+	      /* l'insertion aura effectivement lieu. */
+	      pEl = lastSel;
+	      while (pEl->ElParent != pListEl)
+		pEl = pEl->ElParent;
+	      ok = !CannotInsertNearElement (pEl,
+					     FALSE); /* After element */
+	      if (ok)
+		{
 		  TtaClearViewSelections ();
 		  /* cree un element du meme type que le dernier element
 		     de la selection */
 		  pNewEl = NewSubtree (lastSel->ElTypeNumber,
 				       lastSel->ElStructSchema, pDoc,
-			       lastSel->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+				       lastSel->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		  pEl = lastSel;
 		  /* cree des ascendants de meme type */
 		  while (pEl->ElParent != pListEl)
 		    {
-		       pEl = pEl->ElParent;
-		       pNewAncest = ReplicateElement (pEl, pDoc);
-		       InsertFirstChild (pNewAncest, pNewEl);
-		       pNewEl = pNewAncest;
+		      pEl = pEl->ElParent;
+		      pNewAncest = ReplicateElement (pEl, pDoc);
+		      InsertFirstChild (pNewAncest, pNewEl);
+		      pNewEl = pNewAncest;
 		    }
 		  /* Insere les elements cree's */
 		  pClose = pEl->ElNext;
 		  FwdSkipPageBreak (&pClose);
 		  InsertElementAfter (pEl, pNewEl);
 		  if (pClose == NULL)
-		     /* l'element pEl n'est plus le dernier fils de son pere */
-		     ChangeFirstLast (pEl, pDoc, 0, TRUE);
+		    /* l'element pEl n'est plus le dernier fils de son pere */
+		    ChangeFirstLast (pEl, pDoc, 0, TRUE);
+		  if (!histSeq)
+		    {
+		      OpenHistorySequence (pDoc, firstSel,
+					   lastSel, firstChar, lastChar - 1);
+		      histSeq = TRUE;
+		    }
+		  AddEditOpInHistory (pNewEl, pDoc, FALSE, TRUE);
 		  /* traite les exclusions des elements crees */
 		  RemoveExcludedElem (&pNewEl, pDoc);
 		  /* traite les attributs requis des elements crees */
 		  AttachMandatoryAttributes (pNewEl, pDoc);
 		  if (pDoc->DocSSchema != NULL)
-		     /* le document n'a pas ete ferme' entre temps */
+		    /* le document n'a pas ete ferme' entre temps */
 		    {
-		       /* traitement des exceptions */
-		       CreationExceptions (pNewEl, pDoc);
-		       /* mise a jour des images abstraites */
-		       CreateAllAbsBoxesOfEl (pNewEl, pDoc);
-		       /* cree les paves du nouvel element et met a jour ses
-		          voisins */
-		       AbstractImageUpdated (pDoc);
-		       /* affiche les nouveaux elements */
-		       RedisplayDocViews (pDoc);
-		       /* si on est dans un element copie' par inclusion, on
-		          met a jour les copies de cet element. */
-		       RedisplayCopies (pEl, pDoc, TRUE);
-		       pSibling = NextElement (pNewEl);
-		       UpdateNumbers (pSibling, pEl, pDoc, TRUE);
-		       /* marque le document est modifie' */
-		       pDoc->DocModified = TRUE;
-		       pDoc->DocNTypedChars += 20;
-		       /* envoie un evenement ElemNew.Post a l'application */
-		       NotifySubTree (TteElemNew, pDoc, pNewEl, 0);
-		       /* place la selection */
-		       SelectElementWithEvent (pDoc, FirstLeaf (pNewEl), TRUE,
-					       TRUE);
+		      /* traitement des exceptions */
+		      CreationExceptions (pNewEl, pDoc);
+		      /* mise a jour des images abstraites */
+		      CreateAllAbsBoxesOfEl (pNewEl, pDoc);
+		      /* cree les paves du nouvel element et met a jour ses
+			 voisins */
+		      AbstractImageUpdated (pDoc);
+		      /* affiche les nouveaux elements */
+		      RedisplayDocViews (pDoc);
+		      /* si on est dans un element copie' par inclusion, on
+			 met a jour les copies de cet element. */
+		      RedisplayCopies (pEl, pDoc, TRUE);
+		      pSibling = NextElement (pNewEl);
+		      UpdateNumbers (pSibling, pEl, pDoc, TRUE);
+		      /* marque le document est modifie' */
+		      pDoc->DocModified = TRUE;
+		      pDoc->DocNTypedChars += 20;
+		      /* envoie un evenement ElemNew.Post a l'application */
+		      NotifySubTree (TteElemNew, pDoc, pNewEl, 0);
+		      /* place la selection */
+		      SelectElementWithEvent (pDoc, FirstLeaf (pNewEl), TRUE,
+					      TRUE);
 		    }
-	       }
-	  }
-     }
+		}
+	    }
+	}
+      if (histSeq)
+	CloseHistorySequence (pDoc);
+    }
 }
 
 /*----------------------------------------------------------------------
