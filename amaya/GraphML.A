@@ -18,6 +18,13 @@ ELEMENTS
 	ElemNew.Post ->         SVGCreated;
 	ElemExport.Pre ->       SetEmptyShapeAttribute;
 	END;
+{*** Only for SVG "animation" demo. See end of file Graphedit.c ***
+   g:
+	BEGIN
+	ElemTextModify.Pre ->   TextWillChangeInGroup;
+	ElemTextModify.Post ->  TextChangedInGroup;
+	END;
+***}
    Spline:
 	ElemGraphModify.Post -> ControlPointChanged;
    ClosedSpline:
