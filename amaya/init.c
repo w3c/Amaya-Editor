@@ -2898,8 +2898,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /*_GL*/
 #endif /* _SVG */
 #endif /* _WX */
+
+#ifndef _WX
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
 			   TRUE, (Proc)TextURL, URL_list);
+#endif /* _WX */
 
 #ifdef _GTK
 	   /* initial state for menu entries */
@@ -2988,13 +2991,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     }
   
   /* now be sure that the urlbar is setup */
-  /* TODO : changer peutetre les types de documents qui auront des urls */
-  if ( docType != docSource && docType != docCSS &&
-       docType != docText && docType != docMath )
-    {
-      TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-		       TRUE, (Proc)TextURL, URL_list );
-    }
+  TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+   	               TRUE, (Proc)TextURL, URL_list );
+
   if (!isOpen) /* only if this page is not already open */
     {
       /* add the amaya logo after the url bar */
